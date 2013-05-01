@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html ng-app="elicit">
+<head>
+	<title>Preference elicitation</title>
+</head>
+<body ng-controller="SmaaController">
+<h1>Preference Elicitation</h1>
+<h2>{{currentStep.title}}</h2>
+
+<style> label { display: block }</style>
+
+<div ng-show="!currentStep.done">
+<form ng-show="currentStep.type == 'ordinal'">
+	<label>Given the following situation:<br />
+		<span ng-repeat="(criterion, value) in currentStep.reference">
+			{{problem.criteria[criterion].title}} = {{value}} <span ng-show="!$last">,</span>
+		</span>
+	</label>
+
+	<label>Which of these improvements is most desired:</label>
+	<label ng-repeat="(choice, alternative) in currentStep.choices">
+		<input type="radio" ng-model="currentStep.choice" value="{{choice}}" />
+		<span ng-repeat="(criterion, value) in alternative">
+			{{problem.criteria[criterion].title}} = {{value}} <span ng-show="!$last">,</span>
+		</span>
+	</label>
+
+	<button ng-click="nextStep()">Ok</button>
+</form>
+</div>
+
+<pre>{{currentStep|json}}</pre>
+
+<script>
+	window.config = {};
+	window.config.smaaWS = "http://localhost:3000/api/analysis/smaa";
+</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+<script type="text/javascript" src="js/lib/angular-1.0.6/angular.min.js"></script>
+<script type="text/javascript" src="js/app.js"></script>
+</body>
+</html>
