@@ -78,6 +78,9 @@ function SmaaController($scope, DecisionProblem) {
         })()
     };
 
+	var previousSteps = [];
+	var nextSteps = [];
+
     $scope.nextStep = function() {
         var criteria = $scope.problem.criteria;
         var currentStep = $scope.currentStep;
@@ -85,10 +88,24 @@ function SmaaController($scope, DecisionProblem) {
         if(!_.contains(_.keys(criteria), choice)) { 
             return false;
         }
+
+		// History handling
+		previousSteps.push(angular.copy(currentStep));
+		var nextStep = nextSteps.pop();
+		if(nextStep && nextStep.previousChoice === choice) { 
+			$scope.currentStep = nextStep;
+			return true;
+		} else { 
+			nextSteps = [];
+		}
+
+		currentStep.choice = undefined;
+		currentStep.previousChoice = choice;
+
         _.each(currentStep.choices, function(alternative) {
             alternative[choice] = criteria[choice].best();
         });
-        
+
         function next(choice) { 
             delete currentStep.choices[choice];
             currentStep.reference[choice] = criteria[choice].best();
@@ -99,8 +116,16 @@ function SmaaController($scope, DecisionProblem) {
 
         if(_.size(currentStep.choices) == 1) { 
             next(_.keys(currentStep.choices)[0]);
-            currentStep.done = true;
+			currentStep.type = "choose-method";
+			currentStep.methods = {"ratio bound": "Continue with ratio bound preferences", "done": "Done eliciting preferences"};
         }
         return true;
     }
+
+	$scope.previousStep = function() {
+		if(previousSteps.length == 0) return false;
+		nextSteps.push(angular.copy($scope.currentStep));
+		$scope.currentStep = previousSteps.pop();
+		return true;
+	}
 };

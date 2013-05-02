@@ -10,23 +10,32 @@
 <style> label { display: block }</style>
 
 <div ng-show="!currentStep.done">
-<form ng-show="currentStep.type == 'ordinal'">
-	<label>Given the following situation:<br />
-		<span ng-repeat="(criterion, value) in currentStep.reference">
-			{{problem.criteria[criterion].title}} = {{value}} <span ng-show="!$last">,</span>
-		</span>
-	</label>
+	<form ng-show="currentStep.type == 'ordinal'">
+		<label>Given the following situation:<br />
+			<span ng-repeat="(criterion, value) in currentStep.reference">
+				{{problem.criteria[criterion].title}} = {{value}} <span ng-show="!$last">,</span>
+			</span>
+		</label>
 
-	<label>Which of these improvements is most desired:</label>
-	<label ng-repeat="(choice, alternative) in currentStep.choices">
-		<input type="radio" ng-model="currentStep.choice" value="{{choice}}" />
-		<span ng-repeat="(criterion, value) in alternative">
-			{{problem.criteria[criterion].title}} = {{value}} <span ng-show="!$last">,</span>
-		</span>
-	</label>
+		<label>Which of these improvements is most desired:</label>
+		<label ng-repeat="(choice, alternative) in currentStep.choices">
+			<input type="radio" ng-model="currentStep.choice" value="{{choice}}" />
+			<span ng-repeat="(criterion, value) in alternative">
+				{{problem.criteria[criterion].title}} = {{value}} <span ng-show="!$last">,</span>
+			</span>
+		</label>
+	</form>
 
-	<button ng-click="nextStep()">Ok</button>
-</form>
+	<form ng-show="currentStep.type == 'choose-method'">
+		<label>How do you want to continue: </label>
+		<label ng-repeat="(key, method) in currentStep.methods">
+			<input type="radio" ng-model="currentStep.choice" value="{{key}}" />
+			{{method}}
+		</label>
+	</form>
+
+	<button ng-click="previousStep()">Back</button>
+	<button ng-click="nextStep()">Next</button>
 </div>
 
 <pre>{{currentStep|json}}</pre>
