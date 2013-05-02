@@ -3,13 +3,13 @@
 <head>
 	<title>Preference elicitation</title>
 </head>
-<body ng-controller="SmaaController">
+<body ng-controller="ElicitationController">
 <h1>Preference Elicitation</h1>
 <h2>{{currentStep.title}}</h2>
 
 <style> label { display: block }</style>
 
-<div ng-show="!currentStep.done">
+<div ng-show="currentStep.type != 'done'">
 	<form ng-show="currentStep.type == 'ordinal'">
 		<label>Given the following situation:<br />
 			<span ng-repeat="(criterion, value) in currentStep.reference">
@@ -26,7 +26,46 @@
 		</label>
 	</form>
 
-	<form ng-show="currentStep.type == 'choose-method'">
+	<form ng-show="currentStep.type == 'ratio bound'">
+		<label>Determining the relative importance of:<br>
+			<span ng-repeat="criterion in [currentStep.criterionA, currentStep.criterionB]">
+				{{problem.criteria[criterion].title}}
+				({{problem.criteria[criterion].worst()}} &rarr;
+				{{problem.criteria[criterion].best()}}) <br ng-show="!$last">
+			</span>
+		</label>
+
+		<label>Given the following situation:<br>
+			{{problem.criteria[currentStep.criterionA].title}} = 
+				{{problem.criteria[currentStep.criterionA].worst()}},
+			{{problem.criteria[currentStep.criterionB].title}} = 
+				{{problem.criteria[currentStep.criterionB].best()}}
+		</label>
+
+		<label>Adjust the slider:<br>
+			<input type="text" name="lower" ng-model="currentStep.choice.lower" />
+			<input type="text" name="upper" ng-model="currentStep.choice.upper" />
+		<div>
+			So that the following statements are true:
+			<div>
+			{{problem.criteria[currentStep.criterionA].title}} = 
+				{{currentStep.best()}},
+			{{problem.criteria[currentStep.criterionB].title}} = 
+				{{problem.criteria[currentStep.criterionB].worst()}}
+			is clearly better.
+			</div>
+			<div>
+			{{problem.criteria[currentStep.criterionA].title}} = 
+				{{currentStep.worst()}},
+			{{problem.criteria[currentStep.criterionB].title}} = 
+				{{problem.criteria[currentStep.criterionB].worst()}}
+			is clearly worse.
+			</div>
+		</div>
+		</label>
+	</form>
+
+	<form ng-show="currentStep.type == 'choose method'">
 		<label>How do you want to continue: </label>
 		<label ng-repeat="(key, method) in currentStep.methods">
 			<input type="radio" ng-model="currentStep.choice" value="{{key}}" />

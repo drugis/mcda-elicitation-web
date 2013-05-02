@@ -1,15 +1,15 @@
-describe("SmaaController", function() {
+describe("ElicitationController", function() {
 	var scope1;
 	var scope2;
 
 	beforeEach(function() {
 		scope1 = {};
-		var ctrl1 = SmaaController(scope1, exampleProblem());
+		var ctrl1 = ElicitationController(scope1, exampleProblem());
 
 		scope2 = {};
 		var problem = exampleProblem();
 		problem.criteria["Bleed"].pvf.type = "linear-increasing";
-		var ctrl2 = SmaaController(scope2, problem);
+		var ctrl2 = ElicitationController(scope2, problem);
 	});
 
 	it("should have a problem", function() {
@@ -30,34 +30,9 @@ describe("SmaaController", function() {
 		expect(scope2.problem.criteria["Bleed"].best()).toEqual(0.1);
 	});
 
-	describe("The currentStep should be initialized with Ordinal", function() {
-		it("should be described as ordinal", function() {
-			expect(scope1.currentStep).toBeDefined();
-			expect(scope1.currentStep.type).toEqual("ordinal");
-			expect(scope1.currentStep.title).toEqual("Ordinal SWING weighting (1/2)");
-		});
-
-		it("should not be done", function() {
-			expect(scope1.currentStep.type).toEqual("ordinal");
-			expect(scope1.currentStep.done).toEqual(false);
-		});
-
-		it("should have the worst alternative as reference", function() {
-			expect(scope1.currentStep.reference).toEqual({"Prox DVT" : 0.25, "Dist DVT" : 0.4, "Bleed" : 0.1});
-			expect(scope2.currentStep.reference).toEqual({"Prox DVT" : 0.25, "Dist DVT" : 0.4, "Bleed" : 0.0});
-		});
-
-		it("should have a single criterion improved from worst to best in each choice", function() {
-			expect(scope1.currentStep.choices).toEqual({
-				"Prox DVT" : {"Prox DVT" : 0.0,  "Dist DVT" : 0.4,  "Bleed" : 0.1},
-				"Dist DVT" : {"Prox DVT" : 0.25, "Dist DVT" : 0.15, "Bleed" : 0.1},
-				"Bleed"    : {"Prox DVT" : 0.25, "Dist DVT" : 0.4,  "Bleed" : 0.0}
-			});
-		});
-
-		it("should have an empty order", function() {
-			expect(scope1.currentStep.order).toEqual([]);
-		});
+	it("should initialize the currentStep with Ordinal", function() {
+		expect(scope1.currentStep).toBeDefined();
+		expect(scope1.currentStep.type).toEqual("ordinal");
 	});
 
 	describe("Advance to the nextStep()", function() {
@@ -70,45 +45,7 @@ describe("SmaaController", function() {
 		it("should have the choice as new reference", function() {
 			scope1.currentStep.choice = "Prox DVT";
 			expect(scope1.nextStep()).toEqual(true);
-			expect(scope1.currentStep.reference).toEqual({"Prox DVT" : 0.0, "Dist DVT" : 0.4, "Bleed" : 0.1});
 			expect(scope1.currentStep.choice).toBeUndefined();
-			expect(scope1.currentStep.type).toEqual("ordinal");
-			expect(scope1.currentStep.title).toEqual("Ordinal SWING weighting (2/2)");
-
-			scope2.currentStep.choice = "Dist DVT";
-			expect(scope2.nextStep()).toEqual(true);
-			expect(scope2.currentStep.reference).toEqual({"Prox DVT" : 0.25, "Dist DVT" : 0.15, "Bleed" : 0.0});
-			expect(scope2.currentStep.type).toEqual("ordinal");
-		});
-
-		it("should not contain previous choice", function() {
-			scope1.currentStep.choice = "Prox DVT";
-			expect(scope1.nextStep()).toEqual(true);
-			expect(_.keys(scope1.currentStep.choices)).toEqual(["Dist DVT", "Bleed"]);
-		});
-
-		it("should improve previous choice on all choices", function() {
-			scope1.currentStep.choice = "Prox DVT";
-			expect(scope1.nextStep()).toEqual(true);
-			expect(scope1.currentStep.choices).toEqual({
-				"Dist DVT" : {"Prox DVT" : 0.0, "Dist DVT" : 0.15, "Bleed" : 0.1},
-				"Bleed"    : {"Prox DVT" : 0.0, "Dist DVT" : 0.4,  "Bleed" : 0.0}
-			});
-		});
-
-		it("should push the choice onto the order", function() {
-			scope1.currentStep.choice = "Prox DVT";
-			expect(scope1.nextStep()).toEqual(true);
-			expect(scope1.currentStep.order).toEqual(["Prox DVT"]);
-		});
-
-		it("should finish when only a single choice left", function() {
-			scope1.currentStep.choice = "Prox DVT";
-			expect(scope1.nextStep()).toEqual(true);
-			scope1.currentStep.choice = "Dist DVT";
-			expect(scope1.nextStep()).toEqual(true);
-			expect(scope1.currentStep.type).not.toEqual("ordinal");
-			expect(scope1.currentStep.order).toEqual(["Prox DVT", "Dist DVT", "Bleed"]);
 		});
 
 		it("should transition to methods choice when ordinal is done", function() {
@@ -116,10 +53,20 @@ describe("SmaaController", function() {
 			expect(scope1.nextStep()).toEqual(true);
 			scope1.currentStep.choice = "Dist DVT";
 			expect(scope1.nextStep()).toEqual(true);
-			expect(scope1.currentStep.type).toEqual("choose-method");
-			expect(scope1.currentStep.done).toEqual(false);
+			expect(scope1.currentStep.type).toEqual("choose method");
 			expect(scope1.currentStep.choice).toBeUndefined();
-			expect(scope1.currentStep.methods).toEqual({"ratio bound": "Continue with ratio bound preferences", "done": "Done eliciting preferences"});
+			expect(scope1.currentStep.methods).toBeDefined();
+		});
+
+		it("should cleanly transition to done", function() {
+			var state = { title: "Foo", order: ["A", "D"] };
+			scope1.currentStep = (new ChooseMethodHandler()).initialize(state);
+			scope1.currentStep.choice = "done";
+			expect(scope1.nextStep()).toEqual(true);
+			expect(scope1.currentStep.type).toEqual("done");
+			expect(scope1.currentStep.order).toEqual(["A", "D"]);
+			expect(scope1.currentStep.title).toEqual("Done eliciting preferences");
+			expect(state.title).toEqual("Foo");
 		});
 	});
 
