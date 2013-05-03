@@ -1,0 +1,37 @@
+<form ng-show="currentStep.type == 'ratio bound'">
+	<label>Determining the relative importance of:<br>
+		<span ng-repeat="criterion in [currentStep.criterionA, currentStep.criterionB]">
+			{{problem.criteria[criterion].title}}
+			({{problem.criteria[criterion].worst()}} &rarr;
+			{{problem.criteria[criterion].best()}}) <br ng-show="!$last">
+		</span>
+	</label>
+
+	<label>Given the following situation:<br>
+		{{problem.criteria[currentStep.criterionA].title}} = 
+			{{problem.criteria[currentStep.criterionA].worst()}},
+		{{problem.criteria[currentStep.criterionB].title}} = 
+			{{problem.criteria[currentStep.criterionB].best()}}
+	</label>
+
+	<label>Adjust the slider:<br>
+	<slider style="width: 400px; margin-top: 20px" model="currentStep.choice" range="currentStep.range"></slider>
+	<div>
+		So that the following statements are true:
+		<div>
+		{{problem.criteria[currentStep.criterionA].title}} = 
+			{{currentStep.best()}},
+		{{problem.criteria[currentStep.criterionB].title}} = 
+			{{problem.criteria[currentStep.criterionB].worst()}}
+		is clearly better.
+		</div>
+		<div>
+		{{problem.criteria[currentStep.criterionA].title}} = 
+			{{currentStep.worst()}},
+		{{problem.criteria[currentStep.criterionB].title}} = 
+			{{problem.criteria[currentStep.criterionB].worst()}}
+		is clearly worse.
+		</div>
+	</div>
+	</label>
+</form>

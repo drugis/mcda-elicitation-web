@@ -21,7 +21,8 @@ function RatioBoundElicitationHandler(problem) {
 				 worst: function() { return increasing ? this.choice.lower : this.choice.upper },
 				 choice: { lower: bounds[0],
 						   upper: bounds[1]
-						 }
+						 },
+				 range: { from: bounds[0], to: bounds[1] }
 				}
 	}
 

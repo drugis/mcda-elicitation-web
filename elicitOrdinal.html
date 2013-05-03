@@ -1,0 +1,15 @@
+<form ng-show="currentStep.type == 'ordinal'">
+	<label>Given the following situation:<br />
+		<span ng-repeat="(criterion, value) in currentStep.reference">
+			{{problem.criteria[criterion].title}} = {{value}} <span ng-show="!$last">,</span>
+		</span>
+	</label>
+
+	<label>Which of these improvements is most desired:</label>
+	<label ng-repeat="(choice, alternative) in currentStep.choices">
+		<input type="radio" ng-model="currentStep.choice" value="{{choice}}" />
+		<span ng-repeat="(criterion, value) in alternative">
+			{{problem.criteria[criterion].title}} = {{value}} <span ng-show="!$last">,</span>
+		</span>
+	</label>
+</form>

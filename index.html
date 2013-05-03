@@ -1,83 +1,26 @@
 <!DOCTYPE html>
 <html ng-app="elicit">
 <head>
+	<meta charset="utf-8" />
 	<title>Preference elicitation</title>
+<link rel="stylesheet" type="text/css" href="js/lib/jslider/bin/jquery.slider.min.css"></link>
 </head>
 <body ng-controller="ElicitationController">
 <h1>Preference Elicitation</h1>
 <h2>{{currentStep.title}}</h2>
 
-<style> label { display: block }</style>
+<style> label { display: block }
+</style>
 
-<div ng-show="currentStep.type != 'done'">
-	<form ng-show="currentStep.type == 'ordinal'">
-		<label>Given the following situation:<br />
-			<span ng-repeat="(criterion, value) in currentStep.reference">
-				{{problem.criteria[criterion].title}} = {{value}} <span ng-show="!$last">,</span>
-			</span>
-		</label>
-
-		<label>Which of these improvements is most desired:</label>
-		<label ng-repeat="(choice, alternative) in currentStep.choices">
-			<input type="radio" ng-model="currentStep.choice" value="{{choice}}" />
-			<span ng-repeat="(criterion, value) in alternative">
-				{{problem.criteria[criterion].title}} = {{value}} <span ng-show="!$last">,</span>
-			</span>
-		</label>
-	</form>
-
-	<form ng-show="currentStep.type == 'ratio bound'">
-		<label>Determining the relative importance of:<br>
-			<span ng-repeat="criterion in [currentStep.criterionA, currentStep.criterionB]">
-				{{problem.criteria[criterion].title}}
-				({{problem.criteria[criterion].worst()}} &rarr;
-				{{problem.criteria[criterion].best()}}) <br ng-show="!$last">
-			</span>
-		</label>
-
-		<label>Given the following situation:<br>
-			{{problem.criteria[currentStep.criterionA].title}} = 
-				{{problem.criteria[currentStep.criterionA].worst()}},
-			{{problem.criteria[currentStep.criterionB].title}} = 
-				{{problem.criteria[currentStep.criterionB].best()}}
-		</label>
-
-		<label>Adjust the slider:<br>
-			<input type="text" name="lower" ng-model="currentStep.choice.lower" />
-			<input type="text" name="upper" ng-model="currentStep.choice.upper" />
-		<div>
-			So that the following statements are true:
-			<div>
-			{{problem.criteria[currentStep.criterionA].title}} = 
-				{{currentStep.best()}},
-			{{problem.criteria[currentStep.criterionB].title}} = 
-				{{problem.criteria[currentStep.criterionB].worst()}}
-			is clearly better.
-			</div>
-			<div>
-			{{problem.criteria[currentStep.criterionA].title}} = 
-				{{currentStep.worst()}},
-			{{problem.criteria[currentStep.criterionB].title}} = 
-				{{problem.criteria[currentStep.criterionB].worst()}}
-			is clearly worse.
-			</div>
-		</div>
-		</label>
-	</form>
-
-	<form ng-show="currentStep.type == 'choose method'">
-		<label>How do you want to continue: </label>
-		<label ng-repeat="(key, method) in currentStep.methods">
-			<input type="radio" ng-model="currentStep.choice" value="{{key}}" />
-			{{method}}
-		</label>
-	</form>
-
+<div id="wizardStepContainer">
+<ordinal-step current-step="currentStep" problem="problem"></ordinal-step>
+<ratio-bound-step current-step="currentStep" problem="problem"></ratio-bound-step>
+<choose-method-step current-step="currentStep"></choose-method-step>
 	<button ng-click="previousStep()">Back</button>
 	<button ng-click="nextStep()">Next</button>
-</div>
 
-<pre>{{currentStep|json}}</pre>
+	<pre>{{currentStep|json}}</pre>
+</div>
 
 <script>
 	window.config = {};
@@ -85,6 +28,10 @@
 </script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
 <script type="text/javascript" src="js/lib/angular-1.0.6/angular.min.js"></script>
+<script type="text/javascript" src="js/lib/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="js/lib/jslider/bin/jquery.slider.min.js"></script>
+<script type="text/javascript" src="js/components.js"></script>
 <script type="text/javascript" src="js/app.js"></script>
+
 </body>
 </html>
