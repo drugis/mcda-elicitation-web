@@ -27,4 +27,4 @@ function exampleProblem() {
 }
 angular.module('elicit.example', []).factory('DecisionProblem', exampleProblem);
 
-angular.module('elicit', ['elicit.example', 'elicit.components']);
+angular.module('elicit', ['elicit.example', 'elicit.components', 'elicit.services']);

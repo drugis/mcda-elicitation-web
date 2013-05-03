@@ -12,19 +12,21 @@
 <style> label { display: block }
 </style>
 
+<div style="float:right"><img src="{{results.results.smaa[1].url}}"></div>
+
 <div id="wizardStepContainer">
 <ordinal-step current-step="currentStep" problem="problem"></ordinal-step>
 <ratio-bound-step current-step="currentStep" problem="problem"></ratio-bound-step>
 <choose-method-step current-step="currentStep"></choose-method-step>
 	<button ng-click="previousStep()">Back</button>
-	<button ng-click="nextStep()">Next</button>
+	<button ng-click="nextStep() && runSMAA()">Next</button>
 
 	<pre>{{currentStep|json}}</pre>
 </div>
 
 <script>
 	window.config = {};
-	window.config.smaaWS = "http://localhost:3000/api/analysis/smaa";
+	window.config.smaaWS = "http://localhost:3000/api/analysis/";
 </script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
 <script type="text/javascript" src="js/lib/angular-1.0.6/angular.min.js"></script>
@@ -32,6 +34,5 @@
 <script type="text/javascript" src="js/lib/jslider/bin/jquery.slider.min.js"></script>
 <script type="text/javascript" src="js/components.js"></script>
 <script type="text/javascript" src="js/app.js"></script>
-
 </body>
 </html>

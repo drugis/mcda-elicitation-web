@@ -1,4 +1,4 @@
-function ElicitationController($scope, DecisionProblem) {
+function ElicitationController($scope, DecisionProblem, Jobs) {
     $scope.problem = DecisionProblem;
 
 	var handlers = {
@@ -59,4 +59,37 @@ function ElicitationController($scope, DecisionProblem) {
 		$scope.currentStep = previousSteps.pop();
 		return true;
 	}
+
+    $scope.$on('completedAnalysis', function(e, job) {
+        $scope.results = job.results;
+    });
+
+    $scope.runSMAA = function() {
+        var data = { "preferences": {
+		  "1": { "type": "ordinal", "criteria": [ "Prox DVT", "Bleed" ] },
+		  "2": { "type": "ordinal", "criteria": [ "Bleed", "Dist DVT" ] }
+		}}
+
+        var run = function(type) {
+            $.ajax({
+                url: config.smaaWS + type,
+                type: 'POST',
+                data: JSON.stringify(data),
+                dataType: "json",
+                contentType: 'application/json',
+                success: function(responseJSON, textStatus, jqXHR) {
+                    var job = Jobs.add({
+                        data: responseJSON,
+                        type: 'run' + type,
+                        analysis: 1,
+                        broadcast: 'completedAnalysis'
+                    });
+                    $scope.job = job;
+                }
+            });
+        };
+        run('smaa');
+    };
+
+	$scope.runSMAA();
 };
