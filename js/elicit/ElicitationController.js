@@ -35,7 +35,7 @@ function ElicitationController($scope, DecisionProblem) {
 		// History handling
 		previousSteps.push(angular.copy(currentStep));
 		var nextStep = nextSteps.pop();
-		if(nextStep && nextStep.previousChoice === choice) { 
+		if(nextStep && _.isEqual(nextStep.previousChoice, choice)) { 
 			$scope.currentStep = nextStep;
 			return true;
 		} else { 
@@ -43,10 +43,11 @@ function ElicitationController($scope, DecisionProblem) {
 		}
 
 		nextStep = handler.nextState(currentStep);
-		if (nextStep.type != currentStep.type) {
+		if (nextStep.type !== currentStep.type) {
 			var handler = handlers[nextStep.type];
 			nextStep = handler ? handler.initialize(nextStep) : nextStep;
         }
+		nextStep.previousChoice = choice;
 
 		$scope.currentStep = nextStep;
         return true;

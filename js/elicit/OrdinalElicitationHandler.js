@@ -45,7 +45,6 @@ function OrdinalElicitationHandler(problem) {
         var nextState = angular.copy(currentState);
         var choice = currentState.choice;
 		nextState.choice = undefined;
-		nextState.previousChoice = choice;
 
         _.each(nextState.choices, function(alternative) {
             alternative[choice] = problem.criteria[choice].best();

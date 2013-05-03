@@ -137,6 +137,26 @@ describe("ElicitationController", function() {
 			expect(scope1.currentStep.choice).toBeUndefined();
 			expect(scope1.currentStep.order).toEqual(["Prox DVT", "Dist DVT", "Bleed"]);
 		});
+
+		it("correctly handles choice objects", function() {
+			scope1.currentStep.type = "ratio bound";
+			scope1.currentStep.order = ["Prox DVT", "Bleed", "Dist DVT"];
+			scope1.currentStep.criterionA = "Prox DVT";
+			scope1.currentStep.criterionB = "Bleed";
+			scope1.currentStep.range = { from: 0, to: 0.25};
+			scope1.currentStep.choice = { lower: 0.1, upper: 0.2 };
+			expect(scope1.nextStep()).toEqual(true); // Step 2
+			scope1.currentStep.choice.lower = 0.05;
+			expect(scope1.nextStep()).toEqual(true); // Done
+
+			expect(scope1.previousStep()).toEqual(true); // Step 2
+			expect(scope1.currentStep.choice).toEqual({ lower: 0.05, upper: 0.1 });
+
+			expect(scope1.previousStep()).toEqual(true); // Step 1
+			expect(scope1.currentStep.choice).toEqual({ lower: 0.1, upper: 0.2 });
+			expect(scope1.nextStep()).toEqual(true); // Step 2
+			expect(scope1.currentStep.choice).toEqual({ lower: 0.05, upper: 0.1 });
+		});
 	});
 
 });
