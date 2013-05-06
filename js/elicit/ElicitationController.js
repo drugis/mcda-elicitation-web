@@ -17,6 +17,14 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
         }
         criterion.worst = create(0, 1);
         criterion.best = create(1, 0);
+		criterion.pvf.map = function(x) { 
+			var range = Math.abs(criterion.best() - criterion.worst());
+			return criterion.pvf.type === "linear-increasing" ? ((x - criterion.worst()) / range) : ((criterion.worst() - x) / range);
+		 };
+		criterion.pvf.inv = function(x) {
+			var range = Math.abs(criterion.best() - criterion.worst());
+			return criterion.pvf.type === "linear-increasing" ? ((x * range) + criterion.worst()) : (-(x * range) + criterion.worst());
+		};
     });
         
     $scope.currentStep = handlers.ordinal.initialize();
@@ -60,15 +68,16 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
 		return true;
 	}
 
-    $scope.$on('completedAnalysis', function(e, job) {
-        $scope.results = job.results;
-    });
+	$scope.getStandardizedPreferences = function() {
+		var prefs = $scope.currentStep.prefs;
+		return _.flatten(_.map(_.pairs(prefs), function(pref) { 
+			return handlers[pref[0]].standardize(pref[1]);
+		}));
+	};
 
     $scope.runSMAA = function() {
-        var data = { "preferences": {
-		  "1": { "type": "ordinal", "criteria": [ "Prox DVT", "Bleed" ] },
-		  "2": { "type": "ordinal", "criteria": [ "Bleed", "Dist DVT" ] }
-		}}
+		var prefs = $scope.getStandardizedPreferences();
+        var data = { "preferences": _.object(_.range(prefs.length), prefs) };
 
         var run = function(type) {
             $.ajax({
@@ -91,5 +100,10 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
         run('smaa');
     };
 
-	$scope.runSMAA();
+	if ($scope.$on) { // in tests .$on is not defined
+		$scope.$on('completedAnalysis', function(e, job) {
+			$scope.results = job.results;
+		});
+		$scope.runSMAA();
+	}
 };

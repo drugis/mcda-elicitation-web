@@ -19,7 +19,7 @@ function OrdinalElicitationHandler(problem) {
  		return {
 			title: title(1),
 			type: "ordinal",
-			order: [],
+			prefs: { ordinal: [] },
 			reference: getReference(),
 			choices: (function() { 
 				var criteria = problem.criteria;
@@ -53,8 +53,8 @@ function OrdinalElicitationHandler(problem) {
         function next(choice) { 
             delete nextState.choices[choice];
             nextState.reference[choice] = problem.criteria[choice].best();
-            nextState.order.push(choice);
-            nextState.title = title(nextState.order.length + 1);
+            nextState.prefs.ordinal.push(choice);
+            nextState.title = title(nextState.prefs.ordinal.length + 1);
         }
         next(choice);
 
@@ -64,6 +64,14 @@ function OrdinalElicitationHandler(problem) {
         }
         return nextState;
 	}
+	
+	this.standardize = function(order) { 
+		var result = [];
+		for(var i = 0; i < order.length - 1; i++) { 
+			result.push({type: "ordinal", criteria: [order[i], order[i + 1]] });
+		} 
+		return result;
+	};
 
 	return this;
 }

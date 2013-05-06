@@ -20,7 +20,6 @@ describe("OrdinalElicitationHandler", function() {
 	});
 
 	describe("initialize", function() {
-
 		it("should be described as ordinal", function() {
 			expect(state1).toBeDefined();
 			expect(state1.type).toEqual("ordinal");
@@ -45,7 +44,7 @@ describe("OrdinalElicitationHandler", function() {
 		});
 
 		it("should have an empty order", function() {
-			expect(state1.order).toEqual([]);
+			expect(state1.prefs.ordinal).toEqual([]);
 		});
 	});
 
@@ -91,7 +90,7 @@ describe("OrdinalElicitationHandler", function() {
 		it("should push the choice onto the order", function() {
 			state1.choice = "Prox DVT";
 			expect(state1 = handler1.nextState(state1)).toBeDefined();
-			expect(state1.order).toEqual(["Prox DVT"]);
+			expect(state1.prefs.ordinal).toEqual(["Prox DVT"]);
 		});
 
 		it("should finish when only a single choice left", function() {
@@ -101,7 +100,17 @@ describe("OrdinalElicitationHandler", function() {
 			expect(state1 = handler1.nextState(state1)).toBeDefined();
 			//expect(state1.type).not.toEqual("ordinal");
 			expect(state1.type).toEqual("choose method");
-			expect(state1.order).toEqual(["Prox DVT", "Dist DVT", "Bleed"]);
+			expect(state1.prefs.ordinal).toEqual(["Prox DVT", "Dist DVT", "Bleed"]);
+		});
+	});
+
+	describe("standardize", function() {
+		it("should rewrite the order to separate statements", function() {
+			expect(handler1.standardize(["Prox DVT", "Bleed"])).toEqual([{ type: "ordinal", criteria: ["Prox DVT", "Bleed"] }]);
+			expect(handler1.standardize(["Prox DVT", "Bleed", "Dist DVT"])).toEqual([
+				{ type: "ordinal", criteria: ["Prox DVT", "Bleed"] },
+				{ type: "ordinal", criteria: ["Bleed", "Dist DVT"] }
+			]);
 		});
 	});
 });

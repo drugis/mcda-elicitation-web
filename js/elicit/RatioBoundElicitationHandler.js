@@ -27,7 +27,9 @@ function RatioBoundElicitationHandler(problem) {
 	}
 
 	this.initialize = function(state) {
-		return _.extend(state, buildInitial(state.order[0], state.order[1], 1));
+		var state = _.extend(state, buildInitial(state.prefs.ordinal[0], state.prefs.ordinal[1], 1));
+		if (!state.prefs["ratio bound"]) state.prefs["ratio bound"] = [];
+		return state;
 	}
 
 	this.validChoice = function(currentState) {
@@ -38,14 +40,31 @@ function RatioBoundElicitationHandler(problem) {
 
 	this.nextState = function(currentState) {
 		if(!this.validChoice(currentState)) return;
-		var order = currentState.order;
+		var order = currentState.prefs.ordinal;
 
 		var idx = _.indexOf(order, currentState.criterionB);
+		var next;
 		if(idx > order.length - 2) {
-			return _.extend(currentState, {type: "done", title: title(idx + 1)});
+			next = {type: "done", title: title(idx + 1)};
+		} else { 
+			next = buildInitial(order[idx], order[idx + 1], idx + 1);
 		}
-		return _.extend(currentState, buildInitial(order[idx], order[idx + 1], idx + 1));
+		
+		function getRatioBounds(currentState) { 
+			var u = problem.criteria[currentState.criterionA].pvf.map;
+			return Array.sort([1 / u(currentState.choice.lower), 1 / u(currentState.choice.upper)]);
+		}
+
+		next.prefs = angular.copy(currentState.prefs);
+		next.prefs["ratio bound"].push({criteria: [order[idx - 1], order[idx]], bounds: getRatioBounds(currentState)}); 
+		return _.extend(currentState, next);
 	}
+
+	this.standardize = function(prefs) {
+		return _.map(prefs, function(pref) {
+			return _.extend(pref, { type: "ratio bound" });
+		});
+	};
 
 	return this;
 }
