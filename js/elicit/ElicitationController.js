@@ -41,7 +41,7 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
         }
 
 		// History handling
-		previousSteps.push(angular.copy(currentStep));
+		previousSteps.push(currentStep);
 		var nextStep = nextSteps.pop();
 		if(nextStep && _.isEqual(nextStep.previousChoice, choice)) { 
 			$scope.currentStep = nextStep;
@@ -50,6 +50,7 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
 			nextSteps = [];
 		}
 
+		currentStep = _.pick(currentStep, Array.concat(["type", "prefs", "choice"], handler.fields));
 		nextStep = handler.nextState(currentStep);
 		if (nextStep.type !== currentStep.type) {
 			var handler = handlers[nextStep.type];
@@ -68,18 +69,23 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
 		return true;
 	}
 
-	$scope.getStandardizedPreferences = function() {
-		var prefs = $scope.currentStep.prefs;
+	$scope.getStandardizedPreferences = function(currentStep) {
+		var prefs = currentStep.prefs;
 		return _.flatten(_.map(_.pairs(prefs), function(pref) { 
 			return handlers[pref[0]].standardize(pref[1]);
 		}));
 	};
 
-    $scope.runSMAA = function() {
-		var prefs = $scope.getStandardizedPreferences();
+	var waiting = [];
+	var jobId = 0;
+
+    $scope.runSMAA = function(currentStep) {
+		var prefs = $scope.getStandardizedPreferences(currentStep);
         var data = { "preferences": _.object(_.range(prefs.length), prefs) };
 
         var run = function(type) {
+			var id = ++jobId;
+			waiting[id] = currentStep;
             $.ajax({
                 url: config.smaaWS + type,
                 type: 'POST',
@@ -90,20 +96,22 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
                     var job = Jobs.add({
                         data: responseJSON,
                         type: 'run' + type,
-                        analysis: 1,
+                        analysis: id,
                         broadcast: 'completedAnalysis'
                     });
                     $scope.job = job;
                 }
             });
         };
-        run('smaa');
+        if (!currentStep.results && !_.contains(waiting, currentStep)) run('smaa');
     };
 
 	if ($scope.$on) { // in tests .$on is not defined
 		$scope.$on('completedAnalysis', function(e, job) {
-			$scope.results = job.results;
+			var step = waiting[job.analysis];
+			step.results = job.results.results.smaa;
+			delete waiting[job.analysis];
 		});
-		$scope.runSMAA();
+		$scope.runSMAA($scope.currentStep);
 	}
 };

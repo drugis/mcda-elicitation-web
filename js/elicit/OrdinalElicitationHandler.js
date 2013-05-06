@@ -15,6 +15,8 @@ function OrdinalElicitationHandler(problem) {
         return base + " (" + step + "/" + total + ")";
     }
 
+	this.fields = ["reference", "choices"];
+
 	this.initialize = function(state) {
  		return {
 			title: title(1),

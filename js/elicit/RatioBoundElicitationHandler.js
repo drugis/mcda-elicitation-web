@@ -1,4 +1,5 @@
 function RatioBoundElicitationHandler(problem) {
+	this.fields = ["criterionA", "criterionB"];
 	function getBounds(criterionName) { 
 		var criterion = problem.criteria[criterionName];
 		return [criterion.worst(), criterion.best()].sort();

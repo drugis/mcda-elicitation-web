@@ -13,7 +13,6 @@ angular.module('elicit.components', []).
 			function getValue() { return valueToStep($scope.model.lower) + ";" + valueToStep($scope.model.upper); }
 			jQuery($element).empty();
 			jQuery($element).append('<input type="slider"></input>');
-			console.log(jQuery($element).find('input'));
 			jQuery($element).find('input').attr("value", getValue());
 			jQuery($element).find('input').slider({
 				from: 0,
@@ -37,7 +36,6 @@ angular.module('elicit.components', []).
 			}, 
 			controller: function($scope, $element) {
 				$scope.$watch('range', function() {
-					console.log("range update");
 					if ($scope.range) {
 						initialize($scope, $element);
 					}

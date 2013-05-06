@@ -1,4 +1,6 @@
 function ChooseMethodHandler() {
+	this.fields = ["methods"];
+
 	this.initialize = function(state) {
 		var initialized = angular.copy(state);
 		initialized.methods = {"ratio bound": "Continue with ratio bound preferences", "done": "Done eliciting preferences"};

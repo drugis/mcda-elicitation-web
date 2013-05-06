@@ -71,7 +71,6 @@ factory("Jobs", ['$rootScope', '$http', '$timeout', function($rootScope, $http, 
 
 			cancel: function(id) {
 				var job = this.get(id);
-				console.log(job);
 				$http({method:'DELETE', url:job.data.job}).success(function(status) {
 					updateJob(job, status);
 					$rootScope.$broadcast("jobsChange");

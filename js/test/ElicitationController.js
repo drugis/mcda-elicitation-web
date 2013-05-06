@@ -185,7 +185,7 @@ describe("ElicitationController", function() {
 	describe("getStandardizedPreferences", function() {
 		it("rewrites ordinal preferences", function() {
 			scope1.currentStep.prefs = { ordinal : ["Prox DVT", "Bleed", "Dist DVT"] };
-			expect(scope1.getStandardizedPreferences()).toEqual([
+			expect(scope1.getStandardizedPreferences(scope1.currentStep)).toEqual([
 				{ type: "ordinal", criteria: ["Prox DVT", "Bleed"] },
 				{ type: "ordinal", criteria: ["Bleed", "Dist DVT"] }
 			]);
@@ -195,7 +195,7 @@ describe("ElicitationController", function() {
 			scope1.currentStep.prefs = { "ratio bound" : [
 				{ criteria: ["Prox DVT", "Bleed"], bounds: [1.03, 1.52] }
 			] };
-			expect(scope1.getStandardizedPreferences()).toEqual([
+			expect(scope1.getStandardizedPreferences(scope1.currentStep)).toEqual([
 				{ type: "ratio bound", criteria: ["Prox DVT", "Bleed"], bounds: [1.03, 1.52] }
 			]);
 		});
@@ -207,7 +207,7 @@ describe("ElicitationController", function() {
 					{ criteria: ["Prox DVT", "Bleed"], bounds: [1.03, 1.52] }
 				]
 			};
-			expect(scope1.getStandardizedPreferences()).toEqual([
+			expect(scope1.getStandardizedPreferences(scope1.currentStep)).toEqual([
 				{ type: "ordinal", criteria: ["Prox DVT", "Bleed"] },
 				{ type: "ordinal", criteria: ["Bleed", "Dist DVT"] },
 				{ type: "ratio bound", criteria: ["Prox DVT", "Bleed"], bounds: [1.03, 1.52] }
