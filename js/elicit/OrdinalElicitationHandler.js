@@ -1,79 +1,79 @@
 function OrdinalElicitationHandler(problem) {
-    var getReference = function() {
+  var getReference = function() {
+    var criteria = problem.criteria;
+
+    return _.object(
+      _.keys(criteria),
+      _.map(criteria, function(criterion) { return criterion.worst(); })
+    );
+  }
+
+  var title = function(step) {
+    var base = "Ordinal SWING weighting";
+    var total = (_.size(problem.criteria) - 1);
+    if(step > total) return base + " (DONE)";
+    return base + " (" + step + "/" + total + ")";
+  }
+
+  this.fields = ["reference", "choices"];
+
+  this.initialize = function(state) {
+    return {
+      title: title(1),
+      type: "ordinal",
+      prefs: { ordinal: [] },
+      reference: getReference(),
+      choices: (function() {
         var criteria = problem.criteria;
-
-        return _.object(
-            _.keys(criteria), 
-            _.map(criteria, function(criterion) { return criterion.worst(); })
-        );
-    }
-    
-    var title = function(step) { 
-        var base = "Ordinal SWING weighting";
-        var total = (_.size(problem.criteria) - 1);
-        if(step > total) return base + " (DONE)";
-        return base + " (" + step + "/" + total + ")";
-    }
-
-	this.fields = ["reference", "choices"];
-
-	this.initialize = function(state) {
- 		return {
-			title: title(1),
-			type: "ordinal",
-			prefs: { ordinal: [] },
-			reference: getReference(),
-			choices: (function() { 
-				var criteria = problem.criteria;
-				var choices = _.map(_.keys(criteria), function(criterion) { 
-					var reference = getReference();
-					reference[criterion] = criteria[criterion].best();
-					return reference;
-				});
-				return _.object(_.keys(criteria), choices); 
-			})()
-		};
-	}
-
-	this.validChoice = function(currentState) {
-		return _.contains(_.keys(problem.criteria), currentState.choice);
-	}
-
-	this.nextState = function(currentState) {
-        if(!this.validChoice(currentState)) { 
-            return;
-        }
-
-        var nextState = angular.copy(currentState);
-        var choice = currentState.choice;
-		nextState.choice = undefined;
-
-        _.each(nextState.choices, function(alternative) {
-            alternative[choice] = problem.criteria[choice].best();
+        var choices = _.map(_.keys(criteria), function(criterion) {
+          var reference = getReference();
+          reference[criterion] = criteria[criterion].best();
+          return reference;
         });
+        return _.object(_.keys(criteria), choices);
+      })()
+    };
+  }
 
-        function next(choice) { 
-            delete nextState.choices[choice];
-            nextState.reference[choice] = problem.criteria[choice].best();
-            nextState.prefs.ordinal.push(choice);
-            nextState.title = title(nextState.prefs.ordinal.length + 1);
-        }
-        next(choice);
+  this.validChoice = function(currentState) {
+    return _.contains(_.keys(problem.criteria), currentState.choice);
+  }
 
-        if(_.size(nextState.choices) == 1) { 
-            next(_.keys(nextState.choices)[0]);
-			nextState.type = "choose method";
-        }
-        return nextState;
-	}
-	
-	this.standardize = function(order) { 
-		var result = [];
-		for(var i = 0; i < order.length - 1; i++) { 
-			result.push({type: "ordinal", criteria: [order[i], order[i + 1]] });
-		} 
-		return result;
-	};
+  this.nextState = function(currentState) {
+    if(!this.validChoice(currentState)) {
+      return;
+    }
 
-	return this;
+    var nextState = angular.copy(currentState);
+    var choice = currentState.choice;
+    nextState.choice = undefined;
+
+    _.each(nextState.choices, function(alternative) {
+      alternative[choice] = problem.criteria[choice].best();
+    });
+
+    function next(choice) {
+      delete nextState.choices[choice];
+      nextState.reference[choice] = problem.criteria[choice].best();
+      nextState.prefs.ordinal.push(choice);
+      nextState.title = title(nextState.prefs.ordinal.length + 1);
+    }
+    next(choice);
+
+    if(_.size(nextState.choices) == 1) {
+      next(_.keys(nextState.choices)[0]);
+      nextState.type = "choose method";
+    }
+    return nextState;
+  }
+
+  this.standardize = function(order) {
+    var result = [];
+    for(var i = 0; i < order.length - 1; i++) {
+      result.push({type: "ordinal", criteria: [order[i], order[i + 1]] });
+    }
+    return result;
+  };
+
+  return this;
 }

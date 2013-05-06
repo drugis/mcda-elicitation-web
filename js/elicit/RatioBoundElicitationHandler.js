@@ -1,71 +1,71 @@
 function RatioBoundElicitationHandler(problem) {
-	this.fields = ["criterionA", "criterionB"];
-	function getBounds(criterionName) { 
-		var criterion = problem.criteria[criterionName];
-		return [criterion.worst(), criterion.best()].sort();
-	}
-		
-	var title = function(step) { 
-        var base = "Ratio Bound SWING weighting";
-        var total = (_.size(problem.criteria) - 1);
-        if(step > total) return base + " (DONE)";
-        return base + " (" + step + "/" + total + ")";
+  this.fields = ["criterionA", "criterionB"];
+  function getBounds(criterionName) {
+    var criterion = problem.criteria[criterionName];
+    return [criterion.worst(), criterion.best()].sort();
+  }
+
+  var title = function(step) {
+    var base = "Ratio Bound SWING weighting";
+    var total = (_.size(problem.criteria) - 1);
+    if(step > total) return base + " (DONE)";
+    return base + " (" + step + "/" + total + ")";
+  }
+
+  function buildInitial(criterionA, criterionB, step) {
+    var bounds = getBounds(criterionA);
+    var increasing = problem.criteria[criterionA].pvf.type === 'linear-increasing';
+    return { title: title(step),
+      criterionA: criterionA,
+      criterionB: criterionB,
+      best: function() { return increasing ? this.choice.upper : this.choice.lower },
+      worst: function() { return increasing ? this.choice.lower : this.choice.upper },
+      choice: { lower: bounds[0],
+        upper: bounds[1]
+      },
+      range: { from: bounds[0], to: bounds[1] }
     }
-	
-	function buildInitial(criterionA, criterionB, step) { 
-		var bounds = getBounds(criterionA);
-		var increasing = problem.criteria[criterionA].pvf.type === 'linear-increasing';
-		return { title: title(step),
-				 criterionA: criterionA,
-				 criterionB: criterionB,
-				 best: function() { return increasing ? this.choice.upper : this.choice.lower },
-				 worst: function() { return increasing ? this.choice.lower : this.choice.upper },
-				 choice: { lower: bounds[0],
-						   upper: bounds[1]
-						 },
-				 range: { from: bounds[0], to: bounds[1] }
-				}
-	}
+  }
 
-	this.initialize = function(state) {
-		var state = _.extend(state, buildInitial(state.prefs.ordinal[0], state.prefs.ordinal[1], 1));
-		if (!state.prefs["ratio bound"]) state.prefs["ratio bound"] = [];
-		return state;
-	}
+  this.initialize = function(state) {
+    var state = _.extend(state, buildInitial(state.prefs.ordinal[0], state.prefs.ordinal[1], 1));
+    if (!state.prefs["ratio bound"]) state.prefs["ratio bound"] = [];
+    return state;
+  }
 
-	this.validChoice = function(currentState) {
-		var bounds1 = currentState.choice;
-		var bounds2 = getBounds(currentState.criterionA);
-		return bounds1.lower < bounds1.upper && bounds2[0] <= bounds1.lower && bounds2[1] >= bounds1.upper;
-	}
+  this.validChoice = function(currentState) {
+    var bounds1 = currentState.choice;
+    var bounds2 = getBounds(currentState.criterionA);
+    return bounds1.lower < bounds1.upper && bounds2[0] <= bounds1.lower && bounds2[1] >= bounds1.upper;
+  }
 
-	this.nextState = function(currentState) {
-		if(!this.validChoice(currentState)) return;
-		var order = currentState.prefs.ordinal;
+  this.nextState = function(currentState) {
+    if(!this.validChoice(currentState)) return;
+    var order = currentState.prefs.ordinal;
 
-		var idx = _.indexOf(order, currentState.criterionB);
-		var next;
-		if(idx > order.length - 2) {
-			next = {type: "done", title: title(idx + 1)};
-		} else { 
-			next = buildInitial(order[idx], order[idx + 1], idx + 1);
-		}
-		
-		function getRatioBounds(currentState) { 
-			var u = problem.criteria[currentState.criterionA].pvf.map;
-			return Array.sort([1 / u(currentState.choice.lower), 1 / u(currentState.choice.upper)]);
-		}
+    var idx = _.indexOf(order, currentState.criterionB);
+    var next;
+    if(idx > order.length - 2) {
+      next = {type: "done", title: title(idx + 1)};
+    } else {
+      next = buildInitial(order[idx], order[idx + 1], idx + 1);
+    }
 
-		next.prefs = angular.copy(currentState.prefs);
-		next.prefs["ratio bound"].push({criteria: [order[idx - 1], order[idx]], bounds: getRatioBounds(currentState)}); 
-		return _.extend(currentState, next);
-	}
+    function getRatioBounds(currentState) {
+      var u = problem.criteria[currentState.criterionA].pvf.map;
+      return Array.sort([1 / u(currentState.choice.lower), 1 / u(currentState.choice.upper)]);
+    }
 
-	this.standardize = function(prefs) {
-		return _.map(prefs, function(pref) {
-			return _.extend(pref, { type: "ratio bound" });
-		});
-	};
+    next.prefs = angular.copy(currentState.prefs);
+    next.prefs["ratio bound"].push({criteria: [order[idx - 1], order[idx]], bounds: getRatioBounds(currentState)});
+    return _.extend(currentState, next);
+  }
 
-	return this;
+  this.standardize = function(prefs) {
+    return _.map(prefs, function(pref) {
+      return _.extend(pref, { type: "ratio bound" });
+    });
+  };
+
+  return this;
 }
