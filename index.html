@@ -9,10 +9,44 @@
 <h1>Preference Elicitation</h1>
 <h2>{{currentStep.title}}</h2>
 
-<style> label { display: block }
+<style>
+label { display: block }
+
+#results {
+	float: right;
+}
+
+.hidden {
+	display: none;
+}
+
+#results .loader {
+	display: none;
+}
+
+#results.loading > img { 
+	opacity: 0.5;
+}
+
+#results.loading .loader {
+	float: left;
+	position: relative;
+	z-index: 2;
+	display: block;
+	left: 50%;
+	margin-top: 150px;
+	background-color: white;
+	padding: 5px;
+}
 </style>
 
-<div style="float:right"><img src="{{results.results.smaa[1].url}}"></div>
+<div id="results" ng-class="{running: 'loading', queued:'loading'}[job.data.status]" ng-cloak="job.data">
+	<img src="{{results.results.smaa[1].url}}" width="480" height="480" alt="">
+	<div class="loader">
+		<img src="img/loader.gif">
+		<span>Recalculating...</span>
+	</div>
+</div>
 
 <div id="wizardStepContainer">
 <ordinal-step current-step="currentStep" problem="problem"></ordinal-step>
@@ -20,8 +54,6 @@
 <choose-method-step current-step="currentStep"></choose-method-step>
 	<button ng-click="previousStep()">Back</button>
 	<button ng-click="nextStep() && runSMAA()">Next</button>
-
-	<pre>{{currentStep|json}}</pre>
 </div>
 
 <script>
