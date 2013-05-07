@@ -60,7 +60,7 @@ label { display: block }
 </style>
 
 <div id="results" ng-class="{loading: !currentStep.results && !currentStep.error, failed: currentStep.error}">
-	<img src="{{currentStep.results[1].url}}" width="480" height="480" alt="">
+	<img src="{{currentStep.results.ranks_plot.url}}" width="480" height="480" alt="">
 	<div class="loader">
 		<img src="img/loader.gif">
 		<span>Recalculating...</span>

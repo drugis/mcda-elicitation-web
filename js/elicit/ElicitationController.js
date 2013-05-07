@@ -114,7 +114,8 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
 			var step = waiting[job.analysis];
 			if (!step) return;
 			if (job.data.status === "completed") {
-				step.results = job.results.results.smaa;
+				var results = job.results.results.smaa;
+				step.results = _.object(_.map(results, function(x) { return x.name; }), results);
 			} else {
 				step.error = job.data;
 			}
