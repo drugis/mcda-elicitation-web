@@ -5,8 +5,23 @@ angular.module('elicit.components', []).
 
     var from = $scope.range.from;
     var to = $scope.range.to;
+	var fromIncl = !$scope.range.leftOpen;
+	var toIncl = !$scope.range.rightOpen;
     var delta = to - from;
     var steps = 100;
+
+	if (!fromIncl) {
+		from += delta / steps;
+		delta -= delta / steps;
+		--steps;
+	}
+	if (!toIncl) {
+		to -= delta / steps;
+		delta -= delta / steps;
+		--steps;
+	}
+	console.log({from: from, to: to, delta: delta, steps: steps});
+
 
     function stepToValue(step) { return from + (step / steps) * delta; }
     function valueToStep(value) { return (value - from) / delta * steps; }

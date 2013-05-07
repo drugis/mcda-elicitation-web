@@ -23,7 +23,7 @@ function RatioBoundElicitationHandler(problem) {
       choice: { lower: bounds[0],
         upper: bounds[1]
       },
-      range: { from: bounds[0], to: bounds[1] }
+      range: { from: bounds[0], to: bounds[1], rightOpen: true }
     }
   }
 
