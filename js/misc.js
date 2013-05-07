@@ -25,6 +25,14 @@ function exampleProblem() {
         }
     };
 }
-angular.module('elicit.example', []).factory('DecisionProblem', exampleProblem);
+
+angular.module('elicit.example', []).factory('DecisionProblem', function() {
+	var result;
+    $.ajax('thrombolytics.json', {
+       async: false,
+       // other parameters
+    }).success(function(data) { result = data; });
+	return result;
+});
 
 angular.module('elicit', ['elicit.example', 'elicit.components', 'elicit.services']);

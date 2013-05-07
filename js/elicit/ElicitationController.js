@@ -80,8 +80,11 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
 	var jobId = 0;
 
     $scope.runSMAA = function(currentStep) {
+		function workAround(arr) { return _.object(_.range(arr.length), arr); }
+
 		var prefs = $scope.getStandardizedPreferences(currentStep);
-        var data = { "preferences": _.object(_.range(prefs.length), prefs) };
+        var data = _.extend(angular.copy($scope.problem), { "preferences": workAround(prefs) });
+		data.performanceTable = workAround(data.performanceTable); 
 
         var run = function(type) {
 			var id = ++jobId;
@@ -109,7 +112,12 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
 	if ($scope.$on) { // in tests .$on is not defined
 		$scope.$on('completedAnalysis', function(e, job) {
 			var step = waiting[job.analysis];
-			step.results = job.results.results.smaa;
+			if (!step) return;
+			if (job.data.status === "completed") {
+				step.results = job.results.results.smaa;
+			} else {
+				step.error = job.data;
+			}
 			delete waiting[job.analysis];
 		});
 		$scope.runSMAA($scope.currentStep);

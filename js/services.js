@@ -44,6 +44,8 @@ factory("Jobs", ['$rootScope', '$http', '$timeout', function($rootScope, $http, 
 									job.results = data;
 									$rootScope.$broadcast(job.broadcast, job);
 								});
+							} else {
+								$rootScope.$broadcast(job.broadcast, job);
 							}
 							job.executed = true;
 						}
