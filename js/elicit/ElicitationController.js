@@ -1,33 +1,46 @@
 function ElicitationController($scope, DecisionProblem, Jobs) {
-  $scope.problem = DecisionProblem;
+  $scope.problem = {};
+  $scope.currentStep = {};
+  var handlers;
 
-  var handlers = {
-    "ordinal":  new OrdinalElicitationHandler($scope.problem),
-    "ratio bound":  new RatioBoundElicitationHandler($scope.problem),
-    "choose method": new ChooseMethodHandler(),
-    "done": {initialize: function(state) { return _.extend(state, {title: "Done eliciting preferences"}); }  }
-  };
-
-  angular.forEach($scope.problem.criteria, function(criterion) {
-    function create(idx1, idx2) {
-      return function() {
-        var pvf = criterion.pvf;
-        return pvf.type === "linear-increasing" ? pvf.range[idx1] : pvf.range[idx2];
-      }
-    }
-    criterion.worst = create(0, 1);
-    criterion.best = create(1, 0);
-    criterion.pvf.map = function(x) {
-      var range = Math.abs(criterion.best() - criterion.worst());
-      return criterion.pvf.type === "linear-increasing" ? ((x - criterion.worst()) / range) : ((criterion.worst() - x) / range);
-    };
-    criterion.pvf.inv = function(x) {
-      var range = Math.abs(criterion.best() - criterion.worst());
-      return criterion.pvf.type === "linear-increasing" ? ((x * range) + criterion.worst()) : (-(x * range) + criterion.worst());
-    };
+  DecisionProblem.get({example:"thrombolytics.json"}, function(example) {
+    $scope.problem = example;
   });
 
-  $scope.currentStep = handlers.ordinal.initialize();
+  function extendProblem(problem) {
+    angular.forEach(problem.criteria, function(criterion) {
+      function create(idx1, idx2) {
+        return function() {
+          var pvf = criterion.pvf;
+          return pvf.type === "linear-increasing" ? pvf.range[idx1] : pvf.range[idx2];
+        }
+      }
+      criterion.worst = create(0, 1);
+      criterion.best = create(1, 0);
+      criterion.pvf.map = function(x) {
+        var range = Math.abs(criterion.best() - criterion.worst());
+        return criterion.pvf.type === "linear-increasing" ? ((x - criterion.worst()) / range) : ((criterion.worst() - x) / range);
+      };
+      criterion.pvf.inv = function(x) {
+        var range = Math.abs(criterion.best() - criterion.worst());
+        return criterion.pvf.type === "linear-increasing" ? ((x * range) + criterion.worst()) : (-(x * range) + criterion.worst());
+      };
+    });
+  }
+
+  $scope.$watch('problem', function(newVal, oldVal) {
+    if(!_.isEmpty(newVal)) {
+      extendProblem($scope.problem);
+      handlers = {
+        "ordinal":  new OrdinalElicitationHandler(newVal),
+        "ratio bound":  new RatioBoundElicitationHandler(newVal),
+        "choose method": new ChooseMethodHandler(),
+        "done": {initialize: function(state) { return _.extend(state, {title: "Done eliciting preferences"}); }  }
+      };
+      $scope.currentStep = handlers.ordinal.initialize();
+      $scope.runSMAA($scope.currentStep);
+    }
+  });
 
   var previousSteps = [];
   var nextSteps = [];
@@ -80,6 +93,8 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
   var jobId = 0;
 
   $scope.runSMAA = function(currentStep) {
+    if(!config.smaaWS) return;
+
     function workAround(arr) { return _.object(_.range(arr.length), arr); }
 
     var prefs = $scope.getStandardizedPreferences(currentStep);
@@ -120,5 +135,4 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
     }
     delete waiting[job.analysis];
   });
-  $scope.runSMAA($scope.currentStep);
 };

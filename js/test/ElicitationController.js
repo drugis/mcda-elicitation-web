@@ -1,24 +1,33 @@
 describe("ElicitationController", function() {
   var scope1;
   var scope2;
+  var app = angular.module('app', ['elicit.example', 'elicit.services']);
+  var problem;
 
-  function initializeScope(problem) {
-    var ctrl, scope;
-    inject(function($rootScope, $controller) {
+  function initializeScope() {
+    var ctrl, scope, $httpBackend;
+
+    inject(function($injector, $rootScope, $controller) {
+
+      $httpBackend = $injector.get('$httpBackend');
+      $httpBackend.whenGET('thrombolytics.json').respond(problem);
+
       scope = $rootScope.$new();
       ctrl = $controller("ElicitationController",
                           { $scope: scope,
-                            DecisionProblem: problem,
+                            DecisionProblem: $injector.get("DecisionProblem"),
                             Jobs: null});
+      $httpBackend.flush();
     });
     return scope;
   }
 
   beforeEach(function() {
-    scope1 = initializeScope(exampleProblem());
-    var problem = exampleProblem();
+    module('app');
+    problem = exampleProblem();
+    scope1 = initializeScope();
     problem.criteria["Bleed"].pvf.type = "linear-increasing";
-    scope2 = initializeScope(problem);
+    scope2 = initializeScope();
   });
 
   it("should have a problem", function() {

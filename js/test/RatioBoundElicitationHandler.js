@@ -2,21 +2,32 @@ describe("RatioBoundElicitationHandler", function() {
   var scope;
   var handler;
   var state;
+  var app = angular.module('app', ['elicit.example', 'elicit.services']);
+  var problem;
 
-  function initializeScope(problem) {
-    var ctrl, scope;
-    inject(function($rootScope, $controller) {
+  function initializeScope() {
+    var ctrl, scope, $httpBackend;
+
+    inject(function($injector, $rootScope, $controller) {
+
+      $httpBackend = $injector.get('$httpBackend');
+      $httpBackend.whenGET('thrombolytics.json').respond(problem);
+
       scope = $rootScope.$new();
       ctrl = $controller("ElicitationController",
                           { $scope: scope,
-                            DecisionProblem: problem,
+                            DecisionProblem: $injector.get("DecisionProblem"),
                             Jobs: null});
+      $httpBackend.flush();
     });
     return scope;
   }
 
+
   beforeEach(function() {
-    scope = initializeScope(exampleProblem());
+    module('app');
+    problem = exampleProblem();
+    scope = initializeScope();
     handler = new RatioBoundElicitationHandler(scope.problem);
     state = handler.initialize({ prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
   });
@@ -32,9 +43,7 @@ describe("RatioBoundElicitationHandler", function() {
     });
 
     it("should sort the worst and best values", function() {
-      problem = exampleProblem();
-      problem.criteria["Prox DVT"].pvf.type = "linear-increasing";
-      scope = initializeScope(problem);
+      scope.problem.criteria["Prox DVT"].pvf.type = "linear-increasing";
       handler = new RatioBoundElicitationHandler(scope.problem);
       state = handler.initialize({ prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
 
@@ -117,9 +126,7 @@ describe("RatioBoundElicitationHandler", function() {
       expect(state.prefs['ratio bound'][1].bounds[0]).toBeCloseTo(1.67);
       expect(state.prefs['ratio bound'][1].bounds[1]).toBeCloseTo(2.00);
 
-      problem = exampleProblem();
-      problem.criteria["Prox DVT"].pvf.type = "linear-increasing";
-      scope = initializeScope(problem);
+      scope.problem.criteria["Prox DVT"].pvf.type = "linear-increasing";
       handler = new RatioBoundElicitationHandler(scope.problem);
       state = handler.initialize({ prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
 
@@ -133,9 +140,7 @@ describe("RatioBoundElicitationHandler", function() {
     });
 
     it("should sort the worst and best values", function() {
-      problem = exampleProblem();
-      problem.criteria["Prox DVT"].pvf.type = "linear-increasing";
-      scope = initializeScope(problem);
+      scope.problem.criteria["Prox DVT"].pvf.type = "linear-increasing";
       handler = new RatioBoundElicitationHandler(scope.problem);
       state = handler.initialize({ prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
 
