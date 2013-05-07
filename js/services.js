@@ -44,6 +44,8 @@ angular.module('elicit.services', []).
                 job.results = data;
                 $rootScope.$broadcast(job.broadcast, job);
               });
+            } else {
+              $rootScope.$broadcast(job.broadcast, job);
             }
             job.executed = true;
           }

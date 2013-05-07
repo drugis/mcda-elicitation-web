@@ -24,6 +24,10 @@ label { display: block }
 	display: none;
 }
 
+#results .error {
+	display: none;
+}
+
 #results.loading > img { 
 	opacity: 0.5;
 }
@@ -40,13 +44,29 @@ label { display: block }
 	background-color: white;
 	padding: 5px;
 }
+
+#results.failed .error {
+	float: left;
+	position: relative;
+	z-index: 2;
+	display: block;
+	width: 300px;
+	text-align: center;
+	top: 200px;
+	right: 100px;
+	background-color: #ff6666;
+	padding: 5px;
+}
 </style>
 
-<div id="results" ng-class="{loading: !currentStep.results}">
-	<img src="{{currentStep.results[1].url}}" width="480" height="480" alt="">
+<div id="results" ng-class="{loading: !currentStep.results && !currentStep.error, failed: currentStep.error}">
+	<img src="{{currentStep.results.ranks_plot.url}}" width="480" height="480" alt="">
 	<div class="loader">
 		<img src="img/loader.gif">
 		<span>Recalculating...</span>
+	</div>
+	<div class="error">
+		{{currentStep.error.cause}}
 	</div>
 </div>
 
