@@ -1,9 +1,17 @@
-function ElicitationController($scope, DecisionProblem, Jobs) {
+function ElicitationController($scope, DecisionProblem, Jobs, PreferenceStore) {
   $scope.problemSource = DecisionProblem;
+  $scope.saveState = {};
   $scope.problem = {};
   $scope.currentStep = {};
   $scope.initialized = false;
   var handlers;
+
+  $scope.$on('PreferenceStore.saved', function() {
+    $scope.saveState = { success: true };
+  });
+  $scope.$on('PreferenceStore.error', function() {
+    $scope.saveState = { error: PreferenceStore.lastError };
+  });
 
   function extendProblem(problem) {
     angular.forEach(problem.criteria, function(criterion) {
@@ -78,6 +86,11 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
     nextStep.previousChoice = choice;
 
     $scope.currentStep = nextStep;
+
+    if (nextStep.type === 'done' && PreferenceStore) {
+      PreferenceStore.save($scope.getStandardizedPreferences(nextStep));
+    }
+
     return true;
   }
 

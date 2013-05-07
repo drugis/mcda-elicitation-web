@@ -22,6 +22,14 @@
 
 <div ng-controller="ElicitationController" ng-show="initialized">
 <h1>Preference Elicitation</h1>
+
+<div ng-show="saveState.success">Preferences saved.</div>
+<div ng-class="{error: 'saveError', warning: 'saveWarning'}[saveState.error.severity]" ng-show="saveState.error">
+Failed to save preferences.
+{{saveState.error.message}}
+<span ng-show="saveState.error.cause">HTTP Error {{saveState.error.cause}}.</span>
+</div>
+
 <h2>{{currentStep.title}}</h2>
 
 <style>
