@@ -109,18 +109,16 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
     if (!currentStep.results && !_.contains(waiting, currentStep)) run('smaa');
   };
 
-  if ($scope.$on) { // in tests .$on is not defined
-    $scope.$on('completedAnalysis', function(e, job) {
-      var step = waiting[job.analysis];
-      if (!step) return;
-      if (job.data.status === "completed") {
-        var results = job.results.results.smaa;
-        step.results = _.object(_.map(results, function(x) { return x.name; }), results);
-      } else {
-        step.error = job.data;
-      }
-      delete waiting[job.analysis];
-    });
-    $scope.runSMAA($scope.currentStep);
-  }
+  $scope.$on('completedAnalysis', function(e, job) {
+    var step = waiting[job.analysis];
+    if (!step) return;
+    if (job.data.status === "completed") {
+      var results = job.results.results.smaa;
+      step.results = _.object(_.map(results, function(x) { return x.name; }), results);
+    } else {
+      step.error = job.data;
+    }
+    delete waiting[job.analysis];
+  });
+  $scope.runSMAA($scope.currentStep);
 };

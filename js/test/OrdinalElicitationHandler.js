@@ -4,15 +4,25 @@ describe("OrdinalElicitationHandler", function() {
   var state1;
   var state2;
 
-  beforeEach(function() {
-    var scope1 = {};
-    ElicitationController(scope1, exampleProblem());
-    handler1 = new OrdinalElicitationHandler(scope1.problem);
+  function initializeScope(problem) {
+    var ctrl, scope;
+    inject(function($rootScope, $controller) {
+      scope = $rootScope.$new();
+      ctrl = $controller("ElicitationController",
+                          { $scope: scope,
+                            DecisionProblem: problem,
+                            Jobs: null});
+    });
+    return scope;
+  }
 
-    var scope2 = {};
+  beforeEach(function() {
+    scope1 = initializeScope(exampleProblem());
     var problem = exampleProblem();
     problem.criteria["Bleed"].pvf.type = "linear-increasing";
-    ElicitationController(scope2, problem);
+    scope2 = initializeScope(problem);
+
+    handler1 = new OrdinalElicitationHandler(scope1.problem);
     handler2 = new OrdinalElicitationHandler(scope2.problem);
 
     state1 = handler1.initialize({});

@@ -2,14 +2,23 @@ describe("ElicitationController", function() {
   var scope1;
   var scope2;
 
-  beforeEach(function() {
-    scope1 = {};
-    var ctrl1 = ElicitationController(scope1, exampleProblem());
+  function initializeScope(problem) {
+    var ctrl, scope;
+    inject(function($rootScope, $controller) {
+      scope = $rootScope.$new();
+      ctrl = $controller("ElicitationController",
+                          { $scope: scope,
+                            DecisionProblem: problem,
+                            Jobs: null});
+    });
+    return scope;
+  }
 
-    scope2 = {};
+  beforeEach(function() {
+    scope1 = initializeScope(exampleProblem());
     var problem = exampleProblem();
     problem.criteria["Bleed"].pvf.type = "linear-increasing";
-    var ctrl2 = ElicitationController(scope2, problem);
+    scope2 = initializeScope(problem);
   });
 
   it("should have a problem", function() {

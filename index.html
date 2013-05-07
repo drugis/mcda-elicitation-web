@@ -16,23 +16,15 @@ label { display: block }
 	float: right;
 }
 
-.hidden {
+#results .loader, #results .error, .hidden {
 	display: none;
 }
 
-#results .loader {
-	display: none;
-}
-
-#results .error {
-	display: none;
-}
-
-#results.loading > img { 
+#results.loading > img {
 	opacity: 0.5;
 }
 
-#results.loading .loader {
+#results.loading .loader, #results.failed .error	{
 	float: left;
 	position: relative;
 	z-index: 2;
@@ -46,16 +38,7 @@ label { display: block }
 }
 
 #results.failed .error {
-	float: left;
-	position: relative;
-	z-index: 2;
-	display: block;
-	width: 300px;
-	text-align: center;
-	top: 200px;
-	right: 100px;
 	background-color: #ff6666;
-	padding: 5px;
 }
 </style>
 
@@ -71,9 +54,9 @@ label { display: block }
 </div>
 
 <div id="wizardStepContainer">
-<ordinal-step current-step="currentStep" problem="problem"></ordinal-step>
-<ratio-bound-step current-step="currentStep" problem="problem"></ratio-bound-step>
-<choose-method-step current-step="currentStep"></choose-method-step>
+	<ordinal-step current-step="currentStep" problem="problem"></ordinal-step>
+	<ratio-bound-step current-step="currentStep" problem="problem"></ratio-bound-step>
+	<choose-method-step current-step="currentStep"></choose-method-step>
 	<button ng-click="previousStep() && runSMAA(currentStep)">Back</button>
 	<button ng-click="nextStep() && runSMAA(currentStep)">Next</button>
 </div>
@@ -86,6 +69,7 @@ label { display: block }
 </script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
 <script type="text/javascript" src="js/lib/angular-1.0.6/angular.min.js"></script>
+<script type="text/javascript" src="js/lib/angular-1.0.6/angular-resource.min.js"></script>
 <script type="text/javascript" src="js/lib/jquery-1.9.1.min.js"></script>
 <script type="text/javascript" src="js/lib/jslider/bin/jquery.slider.min.js"></script>
 <script type="text/javascript" src="js/components.js"></script>
