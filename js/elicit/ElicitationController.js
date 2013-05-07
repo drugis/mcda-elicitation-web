@@ -3,8 +3,8 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
   $scope.currentStep = {};
   var handlers;
 
-  DecisionProblem.get({example:"thrombolytics.json"}, function(example) {
-    $scope.problem = example;
+  DecisionProblem.get({problem:"thrombolytics.json"}, function(problem) {
+    $scope.problem = problem;
   });
 
   function extendProblem(problem) {

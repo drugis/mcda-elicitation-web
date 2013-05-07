@@ -24,7 +24,6 @@ describe("OrdinalElicitationHandler", function() {
     return scope;
   }
 
-
   beforeEach(function() {
     module('app');
     problem = exampleProblem();
