@@ -3,31 +3,24 @@ describe("RatioBoundElicitationHandler", function() {
   var handler;
   var state;
   var app = angular.module('app', ['elicit.example', 'elicit.services']);
-  var problem;
 
-  function initializeScope() {
+  function initializeScope(problem) {
     var ctrl, scope, $httpBackend;
 
     inject(function($injector, $rootScope, $controller) {
-
-      $httpBackend = $injector.get('$httpBackend');
-      $httpBackend.whenGET('thrombolytics.json').respond(problem);
-
       scope = $rootScope.$new();
       ctrl = $controller("ElicitationController",
                           { $scope: scope,
-                            DecisionProblem: $injector.get("DecisionProblem"),
+                            DecisionProblem: { get: function(callback) { callback(problem); }},
                             Jobs: null});
-      $httpBackend.flush();
     });
     return scope;
   }
 
-
   beforeEach(function() {
     module('app');
-    problem = exampleProblem();
-    scope = initializeScope();
+    var problem = exampleProblem();
+    scope = initializeScope(problem);
     handler = new RatioBoundElicitationHandler(scope.problem);
     state = handler.initialize({ prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
   });

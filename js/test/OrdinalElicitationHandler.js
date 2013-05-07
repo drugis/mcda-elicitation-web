@@ -4,32 +4,27 @@ describe("OrdinalElicitationHandler", function() {
   var state1;
   var state2;
   var app = angular.module('app', ['elicit.example', 'elicit.services']);
-  var problem;
 
-  function initializeScope() {
+  function initializeScope(problem) {
     var ctrl, scope, $httpBackend;
 
     inject(function($injector, $rootScope, $controller) {
-
-      $httpBackend = $injector.get('$httpBackend');
-      $httpBackend.whenGET('thrombolytics.json').respond(problem);
-
       scope = $rootScope.$new();
       ctrl = $controller("ElicitationController",
                           { $scope: scope,
-                            DecisionProblem: $injector.get("DecisionProblem"),
+                            DecisionProblem: { get: function(callback) { callback(problem); }},
                             Jobs: null});
-      $httpBackend.flush();
     });
     return scope;
   }
 
   beforeEach(function() {
     module('app');
+    var problem = exampleProblem();
+    scope1 = initializeScope(problem);
     problem = exampleProblem();
-    scope1 = initializeScope();
     problem.criteria["Bleed"].pvf.type = "linear-increasing";
-    scope2 = initializeScope();
+    scope2 = initializeScope(problem);
 
     handler1 = new OrdinalElicitationHandler(scope1.problem);
     handler2 = new OrdinalElicitationHandler(scope2.problem);

@@ -26,7 +26,7 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
     });
   }
 
-  $scope.$watch('problem', function(newVal, oldVal) {
+  var initialize = function(newVal) {
     if(!_.isEmpty(newVal)) {
       extendProblem($scope.problem);
       handlers = {
@@ -39,12 +39,14 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
       $scope.runSMAA($scope.currentStep);
       $scope.initialized = true;
     }
-  });
+  };
 
-  var getProblem = function() { $scope.problemSource.get(function(data) { $scope.problem = data }) };
-  $scope.$watch('problemSource.url', getProblem);
-  getProblem();
-
+  var getProblem = function() {
+    $scope.problemSource.get( function(data) {
+	  $scope.problem = data;
+	  initialize(data);
+	});
+  };
 
   var previousSteps = [];
   var nextSteps = [];
@@ -139,4 +141,7 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
     }
     delete waiting[job.analysis];
   });
+
+  $scope.$watch('problemSource.url', getProblem);
+  getProblem();
 };
