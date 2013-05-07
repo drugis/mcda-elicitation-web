@@ -119,8 +119,15 @@ describe("OrdinalElicitationHandler", function() {
   });
 
   describe("standardize", function() {
+  	it("adds missing preference data", function() { 
+      expect(handler1.standardize(["Prox DVT"])).toEqual([
+	  { type: "ordinal", criteria: ["Prox DVT", "Bleed"] },
+	  { type: "ordinal", criteria: ["Prox DVT", "Dist DVT"] }]);
+      expect(handler1.standardize(["Prox DVT", "Bleed"])).toEqual([
+	  { type: "ordinal", criteria: ["Prox DVT", "Bleed"] },
+	  { type: "ordinal", criteria: ["Bleed", "Dist DVT"] }]);
+	});
     it("should rewrite the order to separate statements", function() {
-      expect(handler1.standardize(["Prox DVT", "Bleed"])).toEqual([{ type: "ordinal", criteria: ["Prox DVT", "Bleed"] }]);
       expect(handler1.standardize(["Prox DVT", "Bleed", "Dist DVT"])).toEqual([
                                                                               { type: "ordinal", criteria: ["Prox DVT", "Bleed"] },
                                                                               { type: "ordinal", criteria: ["Bleed", "Dist DVT"] }
