@@ -20,8 +20,6 @@ angular.module('elicit.components', []).
 		delta -= delta / steps;
 		--steps;
 	}
-	console.log({from: from, to: to, delta: delta, steps: steps});
-
 
     function stepToValue(step) { return from + (step / steps) * delta; }
     function valueToStep(value) { return (value - from) / delta * steps; }
