@@ -5,7 +5,22 @@
 	<title>Preference elicitation</title>
 <link rel="stylesheet" type="text/css" href="js/lib/jslider/bin/jquery.slider.min.css"></link>
 </head>
-<body ng-controller="ElicitationController">
+<body>
+
+<div ng-controller="ExampleController" ng-hide="done">
+<h1>Choose an Example</h1>
+
+<form>
+	<label ng-repeat="option in list">
+		<input type="radio" ng-model="model.choice" value="{{option.href}}" />
+		<span>{{option.title}}</span>
+	</label>
+	<button ng-click="setProblem(model.choice)">Start</button>
+</form>
+
+</div>
+
+<div ng-controller="ElicitationController" ng-show="initialized">
 <h1>Preference Elicitation</h1>
 <h2>{{currentStep.title}}</h2>
 
@@ -64,6 +79,7 @@ label {
 </div>
 
 <pre>{{currentStep|json}}</pre>
+</div>
 
 <script>
 	window.config = {};

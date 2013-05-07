@@ -95,8 +95,4 @@ function exampleProblem() {
   }
 }
 
-angular.module('elicit.example', ['ngResource']).factory('DecisionProblem', function($resource) {
-  return $resource(':problem', {problem:'@problem'});
-});
-
 angular.module('elicit', ['elicit.example', 'elicit.components', 'elicit.services']);

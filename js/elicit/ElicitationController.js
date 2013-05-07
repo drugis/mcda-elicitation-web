@@ -1,11 +1,9 @@
 function ElicitationController($scope, DecisionProblem, Jobs) {
+  $scope.problemSource = DecisionProblem;
   $scope.problem = {};
   $scope.currentStep = {};
+  $scope.initialized = false;
   var handlers;
-
-  DecisionProblem.get({problem:"thrombolytics.json"}, function(problem) {
-    $scope.problem = problem;
-  });
 
   function extendProblem(problem) {
     angular.forEach(problem.criteria, function(criterion) {
@@ -39,8 +37,14 @@ function ElicitationController($scope, DecisionProblem, Jobs) {
       };
       $scope.currentStep = handlers.ordinal.initialize();
       $scope.runSMAA($scope.currentStep);
+      $scope.initialized = true;
     }
   });
+
+  var getProblem = function() { $scope.problemSource.get(function(data) { $scope.problem = data }) };
+  $scope.$watch('problemSource.url', getProblem);
+  getProblem();
+
 
   var previousSteps = [];
   var nextSteps = [];
