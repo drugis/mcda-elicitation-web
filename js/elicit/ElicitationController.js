@@ -4,6 +4,7 @@ function ElicitationController($scope, DecisionProblem, Jobs, PreferenceStore) {
   $scope.problem = {};
   $scope.currentStep = {};
   $scope.initialized = false;
+  $scope.stacked = "multiples";
   var handlers;
 
   $scope.$on('PreferenceStore.saved', function() {
@@ -63,8 +64,8 @@ function ElicitationController($scope, DecisionProblem, Jobs, PreferenceStore) {
   var nextSteps = [];
 
   $scope.canProceed = function(currentStep) {
-    var handler = handlers[currentStep.type];
-    return handler.validChoice(currentStep);
+    var handler = currentStep.type && handlers[currentStep.type];
+    return (handler && handlers[currentStep.type].validChoice(currentStep)) || false;
   }
 
   $scope.canReturn = function() {

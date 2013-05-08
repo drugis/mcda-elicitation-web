@@ -18,7 +18,7 @@
 		<input type="radio" ng-model="model.choice" value="{{option.href}}">
 		<span>{{option.title}}</span>
 	</label>
-	<button class="small success" ng-click="setProblem(model.choice)">Start</button>
+	<button class="small success" ng-disabled="!model.choice" ng-click="setProblem(model.choice)">Start</button>
 </form>
 </div>
 
@@ -45,13 +45,22 @@
 	<button class="small" ng-disabled="!canProceed(currentStep)" ng-click="nextStep() && runSMAA(currentStep)">Next</button>
 </div>
 
-<div id="results"SWING
+<div id="results"
 	ng-class="{loading: !currentStep.results && !currentStep.error, failed: currentStep.error, 'large-5':true, columns:true}">
-	<img src="{{currentStep.results.ranks_plot.url}}" alt="">
+	<!--<img src="{{currentStep.results.ranks_plot.url}}" alt="">-->
+
 	<div class="loader">
 		<img src="img/loader.gif">
 		<span>Recalculating...</span>
 	</div>
+
+	<form>
+		<label class="right inline" style="margin-left: 15px"><input type="radio" ng-model="stacked" value="multiples"> Multiples</label>
+		<label class="right inline"><input type="radio" ng-model="stacked" value="stacked"> Stacked</label>
+	</form>
+	<bar-chart val="currentStep.results.ranks.data" stacked="stacked"></bar-chart>
+
+
 	<div class="error">
 		{{currentStep.error.cause}}
 	</div>
@@ -63,12 +72,13 @@
 	window.config.smaaWS = "http://localhost:3000/api/analysis/";
 	window.config.examplesRepository = "/examples/";
 </script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
-<script type="text/javascript" src="js/lib/angular-1.0.6/angular.min.js"></script>
-<script type="text/javascript" src="js/lib/angular-1.0.6/angular-resource.min.js"></script>
-<script type="text/javascript" src="js/lib/jquery-1.9.1.min.js"></script>
-<script type="text/javascript" src="js/lib/jslider/bin/jquery.slider.min.js"></script>
-<script type="text/javascript" src="js/components.js"></script>
-<script type="text/javascript" src="js/app.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.0.8/d3.min.js" charset="utf-8"></script>
+<script src="js/lib/angular-1.0.6/angular.min.js"></script>
+<script src="js/lib/angular-1.0.6/angular-resource.min.js"></script>
+<script src="js/lib/jquery-1.9.1.min.js"></script>
+<script src="js/lib/jslider/bin/jquery.slider.min.js"></script>
+<script src="js/components.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>

@@ -15,9 +15,8 @@
 	{{problem.criteria[currentStep.criterionB].title}} =
 	{{problem.criteria[currentStep.criterionB].best()}}
 
+	<br>
 	<strong>Adjust the slider:</strong>
-	<br>
-	<br>
 	<label>
 		<slider style="width: 400px; margin-top: 20px" model="currentStep.choice" range="currentStep.range"></slider>
 	</label>
@@ -25,10 +24,11 @@
 
 	<strong>So that the following statements are true:</strong>
 	<p>
-	{{problem.criteria[currentStep.criterionA].title}} = {{currentStep.best()}},
+	{{problem.criteria[currentStep.criterionA].title}} = <span class="label secondary">{{currentStep.best()}}</span>
+	{{problem.criteria[currentStep.criterionB].title}} = {{problem.criteria[currentStep.criterionB].worst()}}
 	is clearly better.
 	<br>
-	{{problem.criteria[currentStep.criterionA].title}} = {{currentStep.worst()}},
+	{{problem.criteria[currentStep.criterionA].title}} = <span class="label secondary">{{currentStep.worst()}}</span>
 	{{problem.criteria[currentStep.criterionB].title}} = {{problem.criteria[currentStep.criterionB].worst()}}
 	is clearly worse.
 	</p>
