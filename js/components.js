@@ -104,7 +104,7 @@ angular.module('elicit.components', []).
       .y(function(d) { return d.value; })
       .out(function(d, y0) { d.valueOffset = y0; });
 
-      var color = d3.scale.category10();
+      var color = d3.scale.category20c();
 
       var svg = d3.select(element[0]).append("svg")
       .attr("width", width + margin.left + margin.right)
