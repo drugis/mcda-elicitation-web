@@ -2,73 +2,52 @@
 <html ng-app="elicit">
 <head>
 	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
 	<title>Preference elicitation</title>
-<link rel="stylesheet" type="text/css" href="js/lib/jslider/bin/jquery.slider.min.css"></link>
+	<link rel="stylesheet" type="text/css" href="js/lib/jslider/bin/jquery.slider.min.css"></link>
+	<link rel="stylesheet" type="text/css" href="css/foundation.min.css"></link>
+	<link rel="stylesheet" type="text/css" href="css/main.css"></link>
 </head>
 <body>
 
-<div ng-controller="ExampleController" ng-hide="done">
-<h1>Choose an Example</h1>
+<div ng-controller="ExampleController" ng-hide="done" class="row">
+<h2>Choose an Example</h2>
 
 <form>
 	<label ng-repeat="option in list">
-		<input type="radio" ng-model="model.choice" value="{{option.href}}" />
+		<input type="radio" ng-model="model.choice" value="{{option.href}}">
 		<span>{{option.title}}</span>
 	</label>
-	<button ng-click="setProblem(model.choice)">Start</button>
+	<button class="small success" ng-click="setProblem(model.choice)">Start</button>
 </form>
-
 </div>
 
-<div ng-controller="ElicitationController" ng-show="initialized">
-<h1>Preference Elicitation</h1>
+<div ng-controller="ElicitationController" ng-show="initialized" class="row">
+	<h2>Preference Elicitation <small>{{problem.title}}</small></h2>
 
-<div ng-show="saveState.success">Preferences saved.</div>
-<div ng-class="{error: 'saveError', warning: 'saveWarning'}[saveState.error.severity]" ng-show="saveState.error">
-Failed to save preferences.
-{{saveState.error.message}}
-<span ng-show="saveState.error.cause">HTTP Error {{saveState.error.cause}}.</span>
+<div ng-show="currentStep.type == 'done'">
+	<div ng-show="saveState.success">Preferences saved.</div>
+		<div ng-class="{error: 'alert-box alert', warning: 'alert-box'}[saveState.error.severity]" ng-show="saveState.error">
+		Failed to save preferences.
+		{{saveState.error.message}}
+		<span ng-show="saveState.error.cause">HTTP Error {{saveState.error.cause}}.</span>
+	</div>
 </div>
 
-<h2>{{currentStep.title}}</h2>
+<h3>{{currentStep.title}}</h3>
 
-<style>
-label {
-	display: block
-}
 
-#results {
-	float: right;
-}
+<div id="wizardStepContainer" class="columns large-7">
+	<ordinal-step current-step="currentStep" problem="problem"></ordinal-step>
+	<ratio-bound-step current-step="currentStep" problem="problem"></ratio-bound-step>
+	<choose-method-step current-step="currentStep"></choose-method-step>
+	<button class="small" ng-disabled="!canReturn()" ng-click="previousStep() && runSMAA(currentStep)">Back</button>
+	<button class="small" ng-disabled="!canProceed(currentStep)" ng-click="nextStep() && runSMAA(currentStep)">Next</button>
+</div>
 
-#results .loader, #results .error, .hidden {
-	display: none;
-}
-
-#results.loading > img {
-	opacity: 0.5;
-}
-
-#results.loading .loader, #results.failed .error	{
-	float: left;
-	position: relative;
-	z-index: 2;
-	display: block;
-	width: 480px;
-	height: 480px;
-	text-align: center;
-	top: 200px;
-	background-color: white;
-	padding: 5px;
-}
-
-#results.failed .error {
-	background-color: #ff6666;
-}
-</style>
-
-<div id="results" ng-class="{loading: !currentStep.results && !currentStep.error, failed: currentStep.error}">
-	<img src="{{currentStep.results.ranks_plot.url}}" width="480" height="480" alt="">
+<div id="results"SWING
+	ng-class="{loading: !currentStep.results && !currentStep.error, failed: currentStep.error, 'large-5':true, columns:true}">
+	<img src="{{currentStep.results.ranks_plot.url}}" alt="">
 	<div class="loader">
 		<img src="img/loader.gif">
 		<span>Recalculating...</span>
@@ -77,16 +56,6 @@ label {
 		{{currentStep.error.cause}}
 	</div>
 </div>
-
-<div id="wizardStepContainer">
-	<ordinal-step current-step="currentStep" problem="problem"></ordinal-step>
-	<ratio-bound-step current-step="currentStep" problem="problem"></ratio-bound-step>
-	<choose-method-step current-step="currentStep"></choose-method-step>
-	<button ng-click="previousStep() && runSMAA(currentStep)">Back</button>
-	<button ng-click="nextStep() && runSMAA(currentStep)">Next</button>
-</div>
-
-<pre>{{currentStep|json}}</pre>
 </div>
 
 <script>
