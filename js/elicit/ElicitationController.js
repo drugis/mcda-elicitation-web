@@ -4,6 +4,7 @@ function ElicitationController($scope, DecisionProblem, Jobs, PreferenceStore) {
   $scope.problem = {};
   $scope.currentStep = {};
   $scope.initialized = false;
+  $scope.stacked = "multiples";
   var handlers;
 
   $scope.$on('PreferenceStore.saved', function() {
@@ -41,7 +42,10 @@ function ElicitationController($scope, DecisionProblem, Jobs, PreferenceStore) {
         "ordinal":  new OrdinalElicitationHandler(newVal),
         "ratio bound":  new RatioBoundElicitationHandler(newVal),
         "choose method": new ChooseMethodHandler(),
-        "done": {initialize: function(state) { return _.extend(state, {title: "Done eliciting preferences"}); }  }
+        "done": {
+          validChoice: function(state) { return false; },
+          initialize: function(state) { return _.extend(state, {title: "Done eliciting preferences"}); }
+        }
       };
       $scope.currentStep = handlers.ordinal.initialize();
       $scope.runSMAA($scope.currentStep);
@@ -51,21 +55,28 @@ function ElicitationController($scope, DecisionProblem, Jobs, PreferenceStore) {
 
   var getProblem = function() {
     $scope.problemSource.get( function(data) {
-	  $scope.problem = data;
-	  initialize(data);
-	});
+      $scope.problem = data;
+      initialize(data);
+    });
   };
 
   var previousSteps = [];
   var nextSteps = [];
 
+  $scope.canProceed = function(currentStep) {
+    var handler = currentStep.type && handlers[currentStep.type];
+    return (handler && handlers[currentStep.type].validChoice(currentStep)) || false;
+  }
+
+  $scope.canReturn = function() {
+    return previousSteps.length > 0;
+  }
+
   $scope.nextStep = function() {
     var currentStep = $scope.currentStep;
     var choice = currentStep.choice;
     var handler = handlers[currentStep.type];
-    if(!handler.validChoice(currentStep)) {
-      return false;
-    }
+    if(!$scope.canProceed(currentStep)) return false;
 
     // History handling
     previousSteps.push(currentStep);

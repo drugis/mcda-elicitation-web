@@ -1,0 +1,47 @@
+#results .loader, #results .error, .hidden {
+	display: none;
+}
+
+#results.loading > img {
+	opacity: 0.5;
+}
+
+#results.loading .loader, #results.failed .error	{
+	float: left;
+	position: relative;
+	z-index: 2;
+	display: block;
+	width: 480px;
+	height: 480px;
+	text-align: center;
+	top: 200px;
+	background-color: white;
+	padding: 5px;
+}
+
+#results.failed .error {
+	background-color: #ff6666;
+}
+input[type=radio] {
+    display: inline-block;
+    margin-top: 4px;
+    vertical-align: middle;
+}
+text {
+  font: 10px sans-serif;
+}
+
+.axis path {
+  display: none;
+}
+
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.group-label {
+  font-weight: bold;
+  text-anchor: end;
+}
