@@ -95,4 +95,4 @@ function exampleProblem() {
   }
 }
 
-angular.module('elicit', ['elicit.example', 'elicit.components', 'elicit.services']);
+angular.module('elicit', ['clinicico', 'elicit.example', 'elicit.components', 'elicit.services']);

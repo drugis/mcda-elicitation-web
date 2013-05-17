@@ -1,4 +1,4 @@
-function ElicitationController($scope, DecisionProblem, Jobs, PreferenceStore) {
+function ElicitationController($scope, DecisionProblem, Jobs, PreferenceStore, tasks) {
   $scope.problemSource = DecisionProblem;
   $scope.saveState = {};
   $scope.problem = {};
@@ -119,53 +119,32 @@ function ElicitationController($scope, DecisionProblem, Jobs, PreferenceStore) {
     }));
   };
 
-  var waiting = [];
-  var jobId = 0;
-
   $scope.runSMAA = function(currentStep) {
-    if(!config.smaaWS) return;
-
-    function workAround(arr) { return _.object(_.range(arr.length), arr); }
+    if(!clinicico.config.baseUrl) return;
 
     var prefs = $scope.getStandardizedPreferences(currentStep);
-    var data = _.extend(angular.copy($scope.problem), { "preferences": workAround(prefs) });
-    data.performanceTable = workAround(data.performanceTable);
+    var data = _.extend(angular.copy($scope.problem), { "preferences": prefs });
 
     var run = function(type) {
-      var id = ++jobId;
-      waiting[id] = currentStep;
-      $.ajax({
-        url: config.smaaWS + type,
-        type: 'POST',
-        data: JSON.stringify(data),
-        dataType: "json",
-        contentType: 'application/json',
-        success: function(responseJSON, textStatus, jqXHR) {
-          var job = Jobs.add({
-            data: responseJSON,
-            type: 'run' + type,
-            analysis: id,
-            broadcast: 'completedAnalysis'
-          });
-          $scope.job = job;
-        }
-      });
-    };
-    if (!currentStep.results && !_.contains(waiting, currentStep)) run('smaa');
-  };
+      var task = tasks.submit(type, data);
 
-  $scope.$on('completedAnalysis', function(e, job) {
-    var step = waiting[job.analysis];
-    if (!step) return;
-    if (job.data.status === "completed") {
-      var results = job.results.results.smaa;
-      step.results = _.object(_.map(results, function(x) { return x.name; }), results);
-    } else {
-      step.error = job.data;
+      task.results.then(function(results) {
+        currentStep.results = results.body;
+      }, function(reason) {
+        currentStep.error = reason;
+      });
     }
-    delete waiting[job.analysis];
-  });
+
+    if (!currentStep.results) run('smaa');
+  };
 
   $scope.$watch('problemSource.url', getProblem);
   getProblem();
 };
+
+ElicitationController.$inject = [
+  '$scope',
+  'DecisionProblem',
+  'Jobs',
+  'PreferenceStore',
+  'clinicico.tasks'];
