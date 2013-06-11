@@ -63,6 +63,9 @@
     }
   },
   "alternatives": {
+    "Placebo": {
+      "title": "Placebo"
+    },
     "Fluox": {
       "title": "Fluoxetine"
     },
@@ -74,12 +77,9 @@
     },
     "Venla": {
       "title": "Venlafaxine"
-    },
-    "Placebo": {
-      "title": "Placebo"
     }
   },
-  "alternative": ["Fluox", "Parox", "Sertra", "Venla"],
+  "alternative": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
   "performanceTable": [
     {
     "criterion": "HAM-D",
@@ -88,6 +88,7 @@
       "parameters": {
         "baseline": {
           "type": "dnorm",
+          "name": "Placebo",
           "mu": -0.17143575198943867,
           "sigma": 0.11299261988783152
         },
@@ -121,6 +122,7 @@
       "parameters": {
         "baseline": {
           "type": "dnorm",
+          "name": "Placebo",
           "mu": -2.18973652268887,
           "sigma": 0.20745091277030614
         },
@@ -154,6 +156,7 @@
       "parameters": {
         "baseline": {
           "type": "dnorm",
+          "name": "Placebo",
           "mu": -2.229952239997334,
           "sigma": 0.6103081418234848
         },
@@ -186,6 +189,7 @@
       "type": "relative-logit-normal",
       "parameters": {
         "baseline": {
+          "name": "Placebo",
           "type": "dnorm",
           "mu": -1.195990710044872,
           "sigma": 0.2926643940049414
@@ -219,6 +223,7 @@
       "type": "relative-logit-normal",
       "parameters": {
         "baseline": {
+          "name": "Placebo",
           "type": "dnorm",
           "mu": -2.6072766936458627,
           "sigma": 0.19058521932687542
@@ -253,6 +258,7 @@
       "parameters": {
         "baseline": {
           "type": "dnorm",
+          "name": "Placebo",
           "mu": -2.0171705884956532,
           "sigma": 0.191705300034155
         },
