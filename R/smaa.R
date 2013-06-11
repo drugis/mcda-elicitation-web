@@ -1,5 +1,6 @@
 library(smaa)
 library(hitandrun)
+library(mnormt)
 
 wrap.result <- function(result, description) {
     list(data=result, description=description, type=class(result))
@@ -41,10 +42,40 @@ smaa <- function(params) {
     }
   })
 
+  ilogit <- function(x) {
+    1 / (1 + exp(-x))
+  }
+
   meas <- array(dim=c(N,m,n), dimnames=list(NULL, alts, crit))
   for (m in params$performanceTable) {
     if (m$performance$type == 'dbeta') {
       meas[, m$alternative, m$criterion] <- pvf[[m$criterion]](rbeta(N, m$performance$parameters['alpha'], m$performance$parameters['beta']))
+    } else if (m$performance$type == 'relative-logit-normal') {
+      perf <- m$performance$parameters
+      sampleBase <- function() {
+        if (perf$baseline$type == 'dnorm') {
+          rnorm(N, perf$baseline$mu, perf$baseline$sigma)
+        } else {
+          stop(paste("Distribution '", perf$baseline$type, "' not supported", sep=''))
+        }
+      }
+      sampleDeriv <- function(base) {
+        if(perf$relative$type == 'dmnorm') {
+          varcov <- perf$relative$cov
+          covariance <- matrix(unlist(varcov$data),
+                                  nrow=length(varcov$rownames),
+                                  ncol=length(varcov$colnames))
+          rownames(covariance) <- varcov$rownames
+          colnames(covariance) <- varcov$colnames
+          rmnorm(N, mean=base + perf$relative$mean, varcov=covariance)
+        } else {
+          stop(paste("Distribution '", perf$relative$type, "' not supported", sep=''))
+        }
+      }
+      base <- sampleBase()
+      deriv <- sampleDeriv(base)
+      samples <- pvf[[m$criterion]](deriv)
+      meas[, ,m$criterion] <- samples
     } else {
       stop(paste("Performance type '", m$performance$type, "' not supported.", sep=''))
     }
