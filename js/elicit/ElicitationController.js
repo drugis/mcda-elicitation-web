@@ -1,4 +1,4 @@
-function ElicitationController($scope, DecisionProblem, Jobs, PreferenceStore, tasks) {
+function ElicitationController($scope, DecisionProblem, PreferenceStore, tasks) {
   $scope.problemSource = DecisionProblem;
   $scope.saveState = {};
   $scope.problem = {};
@@ -145,6 +145,5 @@ function ElicitationController($scope, DecisionProblem, Jobs, PreferenceStore, t
 ElicitationController.$inject = [
   '$scope',
   'DecisionProblem',
-  'Jobs',
   'PreferenceStore',
   'clinicico.tasks'];
