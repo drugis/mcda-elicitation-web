@@ -193,7 +193,7 @@ angular.module('elicit.components', []).
     replace: true,
     transclude: true,
     scope: { currentStep: '=', problem: '=' },
-    templateUrl: 'elicitOrdinal.html'
+    templateUrl: 'elicit-ordinal.html'
   };
 }).
   directive('chooseMethodStep', function() {
@@ -202,7 +202,7 @@ angular.module('elicit.components', []).
     replace: true,
     transclude: true,
     scope: { currentStep: '=' },
-    templateUrl: 'chooseMethod.html'
+    templateUrl: 'choose-method.html'
   };
 }).
   directive('ratioBoundStep', function() {
@@ -211,6 +211,6 @@ angular.module('elicit.components', []).
     replace: true,
     transclude: true,
     scope: { currentStep: '=', problem: '=' },
-    templateUrl: 'elicitRatioBound.html'
+    templateUrl: 'elicit-ratio-bound.html'
   };
 });

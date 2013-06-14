@@ -1,4 +1,4 @@
-function ElicitationController($scope, DecisionProblem, PreferenceStore, tasks) {
+function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) {
   $scope.problemSource = DecisionProblem;
   $scope.saveState = {};
   $scope.problem = {};
@@ -120,13 +120,13 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, tasks) 
   };
 
   $scope.runSMAA = function(currentStep) {
-    if(!clinicico.config.baseUrl) return;
+    if(!window.clinicico) return;
 
     var prefs = $scope.getStandardizedPreferences(currentStep);
     var data = _.extend(angular.copy($scope.problem), { "preferences": prefs });
 
     var run = function(type) {
-      var task = tasks.submit(type, data);
+      var task = Tasks.submit(type, data);
 
       task.results.then(function(results) {
         currentStep.results = results.body;
@@ -142,8 +142,4 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, tasks) 
   getProblem();
 };
 
-ElicitationController.$inject = [
-  '$scope',
-  'DecisionProblem',
-  'PreferenceStore',
-  'clinicico.tasks'];
+ElicitationController.$inject = ['$scope', 'DecisionProblem', 'PreferenceStore', 'clinicico.tasks'];

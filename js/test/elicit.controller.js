@@ -1,23 +1,23 @@
 describe("ElicitationController", function() {
   var scope1;
   var scope2;
-  var app = angular.module('app', ['elicit.example', 'elicit.services']);
+  var app = angular.module('elicit', ['elicit.example', 'elicit.services', 'clinicico']);
 
   function initializeScope(problem) {
     var ctrl, scope, $httpBackend;
 
-    inject(function($injector, $rootScope, $controller) {
+    inject(function($rootScope, $controller) {
       scope = $rootScope.$new();
       ctrl = $controller("ElicitationController",
                           { $scope: scope,
                             DecisionProblem: { get: function(callback) { callback(problem); }},
-                            Jobs: null});
+                          });
     });
     return scope;
   }
 
   beforeEach(function() {
-    module('app');
+    module('elicit');
     var problem = exampleProblem();
     scope1 = initializeScope(problem);
     problem = exampleProblem();
