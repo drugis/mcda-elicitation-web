@@ -86,8 +86,10 @@ angular.module('elicit.components', []).
       }
 
       var svg = d3.select(element[0]).append("svg")
+      .attr("class", "ordinal-chart")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom);
+
       scope.$watch('val', function(newVal, oldVal) {
         if(!newVal) return;
         nv.addGraph(function() {
@@ -96,6 +98,8 @@ angular.module('elicit.components', []).
 
           chart.yAxis
             .tickFormat(d3.format(',.3f'));
+
+
 
           svg.datum(data)
             .transition().duration(100).call(chart);

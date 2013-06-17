@@ -1,6 +1,6 @@
 library(smaa)
 library(hitandrun)
-library(mnormt)
+library(MASS)
 
 wrap.result <- function(result, description) {
     list(data=result, description=description, type=class(result))
@@ -66,14 +66,7 @@ smaa <- function(params) {
           covariance <- matrix(unlist(varcov$data),
                                   nrow=length(varcov$rownames),
                                   ncol=length(varcov$colnames))
-          rownames(covariance) <- varcov$rownames
-          colnames(covariance) <- varcov$colnames
-          baserow <- which(rownames(covariance) == baseline$name)
-          basecol <- which(colnames(covariance) == baseline$name)
-          covariance <- covariance[-baserow, -basecol]
-          mean <- perf$relative$mu[-which(names(perf$relative$mu) == baseline$name)]
-          samples <- rmnorm(N, mean=base + mean, varcov=covariance)
-          samples <- cbind(base, samples)
+          mvrnorm(N, perf$relative$mu, covariance) + base
         } else {
           stop(paste("Distribution '", perf$relative$type, "' not supported", sep=''))
         }

@@ -45,3 +45,6 @@ text {
   font-weight: bold;
   text-anchor: end;
 }
+.ordinal-chart .nv-x.nv-axis text {
+  opacity: 1 !important;
+}
