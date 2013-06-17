@@ -6,6 +6,7 @@
 	<title>Preference elicitation</title>
 	<link rel="stylesheet" type="text/css" href="js/lib/jslider/bin/jquery.slider.min.css"></link>
 	<link rel="stylesheet" type="text/css" href="css/foundation.min.css"></link>
+	<link rel="stylesheet" type="text/css" href="css/nv.d3.css"></link>
 	<link rel="stylesheet" type="text/css" href="css/main.css"></link>
 </head>
 <body>
@@ -54,12 +55,7 @@
 		<span>Recalculating...</span>
 	</div>
 
-	<form>
-		<label class="right inline" style="margin-left: 15px"><input type="radio" ng-model="stacked" value="multiples"> Multiples</label>
-		<label class="right inline"><input type="radio" ng-model="stacked" value="stacked"> Stacked</label>
-	</form>
 	<bar-chart val="currentStep.results.ranks.data" stacked="stacked"></bar-chart>
-
 
 	<div class="error">
 		{{currentStep.error.cause}}
