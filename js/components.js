@@ -60,33 +60,20 @@ angular.module('elicit.components', []).
     replace: true
   };
 }).
-  directive('barChart', function() {
+  directive('multiBarChart', function() {
   var margin = {top: 10, right: 20, bottom: 20, left: 60},
-  width = 350 - margin.left - margin.right,
-  height = 400 - margin.top - margin.bottom;
+      width = 350 - margin.left - margin.right,
+      height = 400 - margin.top - margin.bottom;
+
   return {
     restrict:'E',
     scope: {
       val: '=',
-      stacked: '='
+      stacked: '=',
+      parseFn: '='
     },
     link: function(scope, element, attrs) {
-      function parseData(data) {
-        var result = [];
-        _.each(_.pairs(data), function(el) {
-          var key = el[0];
-          var values = el[1];
-          for(var i = 0; i < values.length; i++) {
-            var obj = result[i] || { key: "Rank " + (i + 1), values: [] };
-            obj.values.push({x: key, y: values[i]});
-            result[i] = obj;
-          }
-        });
-        return result;
-      }
-
       var svg = d3.select(element[0]).append("svg")
-      .attr("class", "ordinal-chart")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom);
 
@@ -94,12 +81,13 @@ angular.module('elicit.components', []).
         if(!newVal) return;
         nv.addGraph(function() {
           var chart = nv.models.multiBarChart();
-          var data = parseData(newVal);
+          var data = scope.parseFn(newVal) || _.identity(newVal);
 
           chart.yAxis
             .tickFormat(d3.format(',.3f'));
 
-
+          chart.stacked(scope.stacked);
+          chart.reduceXTicks(false);
 
           svg.datum(data)
             .transition().duration(100).call(chart);
@@ -112,8 +100,39 @@ angular.module('elicit.components', []).
     }
   }
 }).
+  directive('barChart', function() {
+  var margin = {top: 10, right: 20, bottom: 20, left: 60},
+      width = 350 - margin.left - margin.right,
+      height = 400 - margin.top - margin.bottom;
+  return {
+    restrict: 'E',
+    replace: true,
+    scope: {
+      val: '=',
+      parseFn: '='
+    },
+    link: function(scope, element, attrs) {
+      var svg = d3.select(element[0]).append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom);
+
+      scope.$watch('val', function(newVal, oldVal) {
+        if(!newVal) return;
+        nv.addGraph(function() {
+          var chart = nv.models.discreteBarChart();
+          var data = scope.parseFn(newVal) || _.identity(newVal);
+
+          svg.datum(data).transition().duration(100).call(chart);
+
+          nv.utils.windowResize(chart.update);
+
+          return chart;
+        });
+      });
+    }
+  }
+}).
   directive('ordinalStep', function() {
-  var w = 300, h = 300;
   return {
     restrict: 'E',
     replace: true,

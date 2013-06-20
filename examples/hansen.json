@@ -79,7 +79,6 @@
       "title": "Venlafaxine"
     }
   },
-  "alternative": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
   "performanceTable": [
     {
     "criterion": "HAM-D",
