@@ -103,15 +103,19 @@ smaa <- function(params) {
   utils <- smaa.values(meas, weights)
   ranks <- smaa.ranks(utils)
 
+  cw <- smaa.cw(ranks, weights)
+  colnames(cw) <- crit
+
   wrap.matrix <- function(m) {
       l <- lapply(rownames(m), function(name) { m[name,] })
       names(l) <- rownames(m)
       l
   }
   results <- list(
-    results = list("parameters"=params,
+    results = list(
+             "cw"=wrap.matrix(cw),
              "ranks"=wrap.matrix(smaa.ra(ranks))),
-    descriptions = list("Parameters", "Rank acceptabilities")
+    descriptions = list("Central Weights", "Rank acceptabilities")
   )
 
   mapply(wrap.result,

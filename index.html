@@ -24,6 +24,7 @@
 </div>
 
 <div ng-controller="ElicitationController" ng-show="initialized" class="row">
+
   <h2>Preference Elicitation <small>{{problem.title}}</small></h2>
 
 <div ng-show="currentStep.type == 'done'">
@@ -37,25 +38,26 @@
 
 <h3>{{currentStep.title}}</h3>
 
-
-<div id="wizardStepContainer" class="columns large-7">
+<div id="wizardStepContainer" class="columns large-8">
   <ordinal-step current-step="currentStep" problem="problem"></ordinal-step>
   <ratio-bound-step current-step="currentStep" problem="problem"></ratio-bound-step>
   <choose-method-step current-step="currentStep"></choose-method-step>
+  <results-step current-step="currentStep" problem="problem"></results-step>
   <button class="small" ng-disabled="!canReturn()" ng-click="previousStep() && runSMAA(currentStep)">Back</button>
   <button class="small" ng-disabled="!canProceed(currentStep)" ng-click="nextStep() && runSMAA(currentStep)">Next</button>
 </div>
 
 <div id="results"
-  ng-class="{loading: !currentStep.results && !currentStep.error, failed: currentStep.error, 'large-5':true, columns:true}">
-
+  ng-class="{loading: !currentStep.results && !currentStep.error, failed: currentStep.error, 'large-4':true, columns:true}"
+  ng-show="currentStep.type != 'done'">
   <div class="loader">
     <img src="img/loader.gif">
     <span>Recalculating...</span>
   </div>
 
-  <multi-bar-chart val="currentStep.results.ranks.data" parse-fn="rankGraphData" stacked="stacked">
-  </multi-bar-chart>
+  <div style="width: 400px; height: 400px">
+    <rank-plot value="currentStep.results.ranks.data" stacked="true" problem="problem"></rank-plot>
+  </div>
 
   <div class="error">
     {{currentStep.error.cause}}

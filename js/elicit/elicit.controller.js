@@ -4,7 +4,7 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
   $scope.problem = {};
   $scope.currentStep = {};
   $scope.initialized = false;
-  $scope.stacked = "multiples";
+  $scope.stacked = true;
   var handlers;
 
   $scope.$on('PreferenceStore.saved', function() {
@@ -128,7 +128,8 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
     var run = function(type) {
       var task = Tasks.submit(type, data);
 
-      task.results.then(function(results) {
+      task.results.then(
+        function(results) {
         currentStep.results = results.body;
       }, function(reason) {
         currentStep.error = reason;
@@ -141,19 +142,6 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
   $scope.$watch('problemSource.url', getProblem);
   getProblem();
 
-  $scope.rankGraphData = function(data) {
-    var result = [];
-    _.each(_.pairs(data), function(el) {
-      var key = $scope.problem.alternatives[el[0]].title;
-      var values = el[1];
-      for(var i = 0; i < values.length; i++) {
-        var obj = result[i] || { key: "Rank " + (i + 1), values: [] };
-        obj.values.push({x: key, y: values[i]});
-        result[i] = obj;
-      }
-    });
-    return result;
-  }
 };
 
 ElicitationController.$inject = ['$scope', 'DecisionProblem', 'PreferenceStore', 'clinicico.tasks'];
