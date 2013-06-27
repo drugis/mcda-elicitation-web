@@ -70,7 +70,12 @@ angular.module('elicit.components', []).
       problem: '='
     },
     link: function(scope, element, attrs) {
-      var svg = d3.select(element[0]).append("svg");
+      var width = element[0].parentNode.clientWidth;
+      var height = element[0].parentNode.clientHeight;
+
+      var svg = d3.select(element[0]).append("svg")
+                  .attr("width", "100%")
+                  .attr("height", "100%");
 
       var rankGraphData = function(data) {
         var result = [];
@@ -89,7 +94,7 @@ angular.module('elicit.components', []).
       scope.$watch('value', function(newVal, oldVal) {
         if(!newVal) return;
         nv.addGraph(function() {
-          var chart = nv.models.multiBarChart();
+          var chart = nv.models.multiBarChart().height(height).width(width);
           var data = rankGraphData(newVal);
 
           chart.yAxis.tickFormat(d3.format(',.3f'))
@@ -116,7 +121,11 @@ angular.module('elicit.components', []).
       parseFn: '='
     },
     link: function(scope, element, attrs) {
-      var svg = d3.select(element[0]).append("svg");
+      var width = element[0].parentNode.clientWidth;
+      var height = element[0].parentNode.clientHeight;
+      var svg = d3.select(element[0]).append("svg")
+                  .attr("width", "100%")
+                  .attr("height", "100%");
 
       scope.$watch('value', function(newVal, oldVal) {
         if(!newVal) return;
@@ -124,6 +133,8 @@ angular.module('elicit.components', []).
           var chart = nv.models.discreteBarChart()
                       .staggerLabels(false)
                       .showValues(true)
+                      .height(height)
+                      .width(width)
                       .tooltips(false)
                       .x(function(d) { return d.label })
                       .y(function(d) { return d.value });
@@ -147,15 +158,18 @@ angular.module('elicit.components', []).
       parseFn: '='
     },
     link: function(scope, element, attrs) {
-      var svg = d3.select(element[0]).append("svg");
+      var width = element[0].parentNode.clientWidth;
+      var height = element[0].parentNode.clientHeight;
+      var svg = d3.select(element[0]).append("svg")
+                  .attr("width", "100%")
+                  .attr("height", "100%");
 
       scope.$watch('value', function(newVal, oldVal) {
         if(!newVal) return;
         var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
 
-        var chart = nv.models.lineChart();
+        var chart = nv.models.lineChart().width(width).height(height);
         chart.xAxis.staggerLabels(false);
-
         chart.xAxis.tickFormat(function(i, obj) {
           if (i % 1 === 0) {
             return data[0].labels[i];
@@ -245,13 +259,13 @@ angular.module('elicit.components', []).
         var name = "Alternatives for rank " + (rank + 1);
         return [{ key: name, values: values }];
       }
-      $scope.$watch('selectedRank', function() {
+      var populateAlternativesByRank = function() {
         var results = $scope.currentStep.results;
         if(results) {
-          $scope.alternativesByRank =
-            getAlterativesByRank(results.ranks.data, $scope.selectedRank);
+          $scope.alternativesByRank = getAlterativesByRank(results.ranks.data, $scope.selectedRank);
         }
-      });
+      };
+      $scope.$watch('selectedRank', populateAlternativesByRank);
 
       var getRanksByAlternative = function(data, alternative) {
         var values = [];
@@ -260,11 +274,22 @@ angular.module('elicit.components', []).
         });
         return [{ key: alternativeTitle(alternative), values: values }];
       }
-      $scope.$watch('selectedAlternative', function() {
+      var populateRanksByAlternative = function() {
         var results = $scope.currentStep.results;
         if(results) {
           $scope.ranksByAlternative =
             getRanksByAlternative(results.ranks.data, $scope.selectedAlternative);
+        }
+      };
+      $scope.$watch('selectedAlternative', populateRanksByAlternative);
+
+      $scope.$watch('currentStep.results', function() {
+        if($($element[0]).is(':visible')) {
+          console.log("visible!");
+          $scope.selectedAlternative = _.keys($scope.problem.alternatives || {})[0];
+          $scope.selectedRank = 0;
+          populateRanksByAlternative();
+          populateAlternativesByRank();
         }
       });
     },
