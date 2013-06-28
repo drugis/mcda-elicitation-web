@@ -11,15 +11,15 @@
   position: relative;
   z-index: 2;
   display: block;
-  width: 480px;
-  height: 480px;
+  width: 400px;
+  height: 400px;
   text-align: center;
   top: 200px;
   background-color: white;
   padding: 5px;
 }
 
-#results.loading svg {
+#results.loading .graph, #results.failed .graph {
   display: none
 }
 
