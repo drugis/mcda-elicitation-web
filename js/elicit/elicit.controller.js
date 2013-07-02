@@ -98,8 +98,11 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
 
     $scope.currentStep = nextStep;
 
-    if (nextStep.type === 'done' && PreferenceStore) {
-      PreferenceStore.save($scope.getStandardizedPreferences(nextStep));
+    if (nextStep.type === 'done') {
+      $scope.currentStep.results = angular.copy(currentStep.results);
+      if(PreferenceStore) {
+        PreferenceStore.save($scope.getStandardizedPreferences(nextStep));
+      }
     }
 
     return true;
@@ -140,7 +143,7 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
       });
     }
 
-    if (!currentStep.results) run('smaa');
+    if (!currentStep.results && $scope.shouldRun(currentStep)) run('smaa');
   };
 
   $scope.$watch('problemSource.url', getProblem);

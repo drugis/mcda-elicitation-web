@@ -22,7 +22,12 @@ function ScaleRangeHandler(problem, Tasks) {
         var from = criterion[1]["2.5%"], to = criterion[1]["97.5%"];
         var margin = 0.25;
         // Set inital model value
-        choices[criterion[0]] = {lower: from, upper: to};
+        var problemRange = problem.criteria[criterion[0]].pvf.range;
+        if (problemRange) {
+          choices[criterion[0]] = { lower: problemRange[0], upper: problemRange[1] };
+        } else {
+          choices[criterion[0]] = { lower: from, upper: to};
+        }
         // Set scales for slider
         scales[criterion[0]] =
           { restrictFrom: from,
@@ -51,7 +56,6 @@ function ScaleRangeHandler(problem, Tasks) {
 
     // Rewrite scale information
     _.each(_.pairs(currentState.choice), function(choice) {
-      console.log(choice);
       problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
     });
 

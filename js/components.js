@@ -48,26 +48,31 @@ angular.module('elicit.components', []).
       skin: "round_plastic",
       onstatechange: _.debounce(function(value) {
         var steps = value.split(';');
-        var values = [parseFloat(stepToValue(steps[0])), parseFloat(stepToValue(steps[1]))];
+        var values = _.map([stepToValue(steps[0]), stepToValue(steps[1])], parseFloat);
 
         function lessThan(a, b) {
-          var epsilon = 0.1;
+          var epsilon = 0.01;
           return (a - b) < epsilon && Math.abs(a - b) > epsilon;
         }
         function greaterThan(a, b) {
-          var epsilon = 0.1;
+          var epsilon = 0.01;
           return (a - b) > epsilon && Math.abs(a - b) > epsilon;
         }
-
+        var slider = $($element).find('input');
+        var apply = true;
         if(greaterThan(values[0], $scope.range.restrictFrom)) {
-          $($element).find('input').slider("value", valueToStep($scope.range.restrictFrom), steps[1]);
+          apply = false;
+          slider.slider("value", valueToStep($scope.range.restrictFrom), steps[1]);
         }
         if(lessThan(values[1], $scope.range.restrictTo)) {
-          $($element).find('input').slider("value", steps[0], valueToStep($scope.range.restrictTo));
+          apply = false;
+          slider.slider("value", steps[0], valueToStep($scope.range.restrictTo));
         }
-        safeApply(function() {
-          $scope.model = { lower: values[0], upper: values[1] }
-        });
+        if(apply) {
+          safeApply(function() {
+            $scope.model = { lower: values[0], upper: values[1] }
+          });
+        }
       }, 100)
     });
   };
@@ -321,15 +326,10 @@ angular.module('elicit.components', []).
       };
       $scope.$watch('selectedAlternative', populateRanksByAlternative);
 
-      $scope.$watch('currentStep.results', function() {
-        if($($element[0]).is(':visible')) {
-          console.log("visible!");
-          $scope.selectedAlternative = _.keys($scope.problem.alternatives || {})[0];
-          $scope.selectedRank = 0;
-          populateRanksByAlternative();
-          populateAlternativesByRank();
-        }
-      });
+        $scope.selectedAlternative = _.keys($scope.problem.alternatives || {})[0];
+        $scope.selectedRank = 0;
+        populateRanksByAlternative();
+        populateAlternativesByRank();
     },
     templateUrl: 'results-page.html'
   };
