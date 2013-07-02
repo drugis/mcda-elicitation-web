@@ -4,7 +4,6 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
   $scope.problem = {};
   $scope.currentStep = {};
   $scope.initialized = false;
-  $scope.stacked = true;
   var handlers;
 
   $scope.$on('PreferenceStore.saved', function() {
@@ -35,19 +34,20 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
     });
   }
 
-  var initialize = function(newVal) {
-    if(!_.isEmpty(newVal)) {
+  var initialize = function(problem) {
+    if(!_.isEmpty(problem)) {
       extendProblem($scope.problem);
       handlers = {
-        "ordinal":  new OrdinalElicitationHandler(newVal),
-        "ratio bound":  new RatioBoundElicitationHandler(newVal),
+        "scale range": new ScaleRangeHandler(problem, Tasks),
+        "ordinal":  new OrdinalElicitationHandler(problem),
+        "ratio bound":  new RatioBoundElicitationHandler(problem),
         "choose method": new ChooseMethodHandler(),
         "done": {
           validChoice: function(state) { return false; },
           initialize: function(state) { return _.extend(state, {title: "Done eliciting preferences"}); }
         }
       };
-      $scope.currentStep = handlers.ordinal.initialize();
+      $scope.currentStep = handlers["scale range"].initialize();
       $scope.runSMAA($scope.currentStep);
       $scope.initialized = true;
     }
@@ -119,20 +119,24 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
     }));
   };
 
+  $scope.shouldRun = function(currentStep) {
+    return !_.contains(["scale range", "done"], currentStep.type);
+  }
+
   $scope.runSMAA = function(currentStep) {
     if(!window.clinicico) return;
 
     var prefs = $scope.getStandardizedPreferences(currentStep);
-    var data = _.extend(angular.copy($scope.problem), { "preferences": prefs });
+    var data = _.extend(angular.copy($scope.problem), { "preferences": prefs, "method": "smaa" });
 
     var run = function(type) {
       var task = Tasks.submit(type, data);
 
       task.results.then(
         function(results) {
-        currentStep.results = results.body;
+          currentStep.results = results.body;
       }, function(reason) {
-        currentStep.error = reason;
+          currentStep.error = reason;
       });
     }
 
@@ -141,7 +145,6 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
 
   $scope.$watch('problemSource.url', getProblem);
   getProblem();
-
 };
 
 ElicitationController.$inject = ['$scope', 'DecisionProblem', 'PreferenceStore', 'clinicico.tasks'];

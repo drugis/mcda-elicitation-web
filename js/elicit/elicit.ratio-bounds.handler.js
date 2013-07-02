@@ -1,15 +1,16 @@
 function RatioBoundElicitationHandler(problem) {
   this.fields = ["criterionA", "criterionB"];
-  function getBounds(criterionName) {
-    var criterion = problem.criteria[criterionName];
-    return [criterion.worst(), criterion.best()].sort();
-  }
 
   var title = function(step) {
     var base = "Ratio Bound SWING weighting";
     var total = (_.size(problem.criteria) - 1);
     if(step > total) return base + " (DONE)";
     return base + " (" + step + "/" + total + ")";
+  }
+
+  function getBounds(criterionName) {
+    var criterion = problem.criteria[criterionName];
+    return [criterion.worst(), criterion.best()].sort();
   }
 
   function buildInitial(criterionA, criterionB, step) {
@@ -20,7 +21,8 @@ function RatioBoundElicitationHandler(problem) {
       criterionB: criterionB,
       best: function() { return increasing ? this.choice.upper : this.choice.lower },
       worst: function() { return increasing ? this.choice.lower : this.choice.upper },
-      choice: { lower: bounds[0],
+      choice: {
+        lower: bounds[0],
         upper: bounds[1]
       },
       range: { from: bounds[0], to: bounds[1], rightOpen: true }

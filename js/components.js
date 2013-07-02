@@ -21,31 +21,60 @@ angular.module('elicit.components', []).
       --steps;
     }
 
+    var safeApply = function(fn) {
+      var phase = $scope.$root.$$phase;
+      if(phase == '$apply' || phase == '$digest') {
+        if(fn && (typeof(fn) === 'function')) {
+          fn();
+        }
+      } else {
+        $scope.$apply(fn);
+      }
+    };
+
     var precision = 3;
-    function stepToValue(step) { return (from + (step / steps) * delta).toFixed(precision); }
+    var stepToValue = function(step) { return (from + (step / steps) * delta).toFixed(precision); }
+
     function valueToStep(value) { return ((value - from) / delta * steps).toFixed(precision); }
     function getValue() { return valueToStep($scope.model.lower) + ";" + valueToStep($scope.model.upper); }
-    jQuery($element).empty();
-    jQuery($element).append('<input type="slider"></input>');
-    jQuery($element).find('input').attr("value", getValue());
-    jQuery($element).find('input').slider({
+    $($element).empty();
+    $($element).append('<input type="slider"></input>');
+    $($element).find('input').attr("value", getValue());
+    $($element).find('input').slider({
       from: 0,
       to: steps,
       step: 1,
       calculate: stepToValue,
       skin: "round_plastic",
-      onstatechange: function(value) {
-        var values = value.split(';');
-        !$scope.$$phase && $scope.$apply(function() {
-          $scope.model.upper = stepToValue(values[1]);
-          $scope.model.lower = stepToValue(values[0]);
+      onstatechange: _.debounce(function(value) {
+        var steps = value.split(';');
+        var values = [parseFloat(stepToValue(steps[0])), parseFloat(stepToValue(steps[1]))];
+
+        function lessThan(a, b) {
+          var epsilon = 0.1;
+          return (a - b) < epsilon && Math.abs(a - b) > epsilon;
+        }
+        function greaterThan(a, b) {
+          var epsilon = 0.1;
+          return (a - b) > epsilon && Math.abs(a - b) > epsilon;
+        }
+
+        if(greaterThan(values[0], $scope.range.restrictFrom)) {
+          $($element).find('input').slider("value", valueToStep($scope.range.restrictFrom), steps[1]);
+        }
+        if(lessThan(values[1], $scope.range.restrictTo)) {
+          $($element).find('input').slider("value", steps[0], valueToStep($scope.range.restrictTo));
+        }
+        safeApply(function() {
+          $scope.model = { lower: values[0], upper: values[1] }
         });
-      }
+      }, 100)
     });
   };
   return {
     restrict: 'E',
     transclude: true,
+    replace: true,
     scope: { model: '=', range: '=' },
     link: function($scope, $element) {
     },
@@ -74,8 +103,8 @@ angular.module('elicit.components', []).
       var height = element[0].parentNode.clientHeight;
 
       var svg = d3.select(element[0]).append("svg")
-                  .attr("width", "100%")
-                  .attr("height", "100%");
+      .attr("width", "100%")
+      .attr("height", "100%");
 
       var rankGraphData = function(data) {
         var result = [];
@@ -102,7 +131,7 @@ angular.module('elicit.components', []).
           chart.reduceXTicks(false);
 
           svg.datum(data)
-            .transition().duration(100).call(chart);
+          .transition().duration(100).call(chart);
 
           nv.utils.windowResize(chart.update);
 
@@ -124,20 +153,20 @@ angular.module('elicit.components', []).
       var width = element[0].parentNode.clientWidth;
       var height = element[0].parentNode.clientHeight;
       var svg = d3.select(element[0]).append("svg")
-                  .attr("width", "100%")
-                  .attr("height", "100%");
+      .attr("width", "100%")
+      .attr("height", "100%");
 
       scope.$watch('value', function(newVal, oldVal) {
         if(!newVal) return;
         nv.addGraph(function() {
           var chart = nv.models.discreteBarChart()
-                      .staggerLabels(false)
-                      .showValues(true)
-                      .height(height)
-                      .width(width)
-                      .tooltips(false)
-                      .x(function(d) { return d.label })
-                      .y(function(d) { return d.value });
+          .staggerLabels(false)
+          .showValues(true)
+          .height(height)
+          .width(width)
+          .tooltips(false)
+          .x(function(d) { return d.label })
+          .y(function(d) { return d.value });
 
           var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
           svg.datum(data).transition().duration(100).call(chart);
@@ -161,8 +190,8 @@ angular.module('elicit.components', []).
       var width = element[0].parentNode.clientWidth;
       var height = element[0].parentNode.clientHeight;
       var svg = d3.select(element[0]).append("svg")
-                  .attr("width", "100%")
-                  .attr("height", "100%");
+      .attr("width", "100%")
+      .attr("height", "100%");
 
       scope.$watch('value', function(newVal, oldVal) {
         if(!newVal) return;
@@ -186,7 +215,7 @@ angular.module('elicit.components', []).
       });
     }
   }
-  }).
+}).
   directive('heat', function() {
   return {
     restrict: 'A',
@@ -202,7 +231,16 @@ angular.module('elicit.components', []).
       });
     }
   };
-  }).
+}).
+  directive('scaleRangeStep', function() {
+  return {
+    restrict: 'E',
+    replace: true,
+    transclude: true,
+    scope: { currentStep: '=', problem: '=' },
+    templateUrl: 'scale-range.html'
+  };
+}).
   directive('ordinalStep', function() {
   return {
     restrict: 'E',
