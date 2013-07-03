@@ -74,9 +74,9 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
 
   $scope.nextStep = function() {
     var currentStep = $scope.currentStep;
+    if(!$scope.canProceed(currentStep)) return false;
     var choice = currentStep.choice;
     var handler = handlers[currentStep.type];
-    if(!$scope.canProceed(currentStep)) return false;
 
     // History handling
     previousSteps.push(currentStep);
@@ -88,6 +88,7 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
       nextSteps = [];
     }
 
+    var previousResults = angular.copy(currentStep.results);
     currentStep = _.pick(currentStep, Array.concat(["type", "prefs", "choice"], handler.fields));
     nextStep = handler.nextState(currentStep);
     if (nextStep.type !== currentStep.type) {
@@ -99,7 +100,7 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
     $scope.currentStep = nextStep;
 
     if (nextStep.type === 'done') {
-      $scope.currentStep.results = angular.copy(currentStep.results);
+      $scope.currentStep.results = previousResults;
       if(PreferenceStore) {
         PreferenceStore.save($scope.getStandardizedPreferences(nextStep));
       }

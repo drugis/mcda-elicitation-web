@@ -104,8 +104,10 @@ angular.module('elicit.components', []).
       problem: '='
     },
     link: function(scope, element, attrs) {
-      var width = element[0].parentNode.clientWidth;
-      var height = element[0].parentNode.clientHeight;
+      function parsePx(str) { return parseInt(str.replace(/px/gi, '')) };
+
+      var width = parsePx($(element[0].parentNode).css('width'));
+      var height = parsePx($(element[0].parentNode).css('height'));
 
       var svg = d3.select(element[0]).append("svg")
       .attr("width", "100%")
@@ -155,8 +157,10 @@ angular.module('elicit.components', []).
       parseFn: '='
     },
     link: function(scope, element, attrs) {
-      var width = element[0].parentNode.clientWidth;
-      var height = element[0].parentNode.clientHeight;
+      function parsePx(str) { return parseInt(str.replace(/px/gi, '')) };
+
+      var width = parsePx($(element[0].parentNode).css('width'));
+      var height = parsePx($(element[0].parentNode).css('height'));
       var svg = d3.select(element[0]).append("svg")
       .attr("width", "100%")
       .attr("height", "100%");
@@ -192,8 +196,10 @@ angular.module('elicit.components', []).
       parseFn: '='
     },
     link: function(scope, element, attrs) {
-      var width = element[0].parentNode.clientWidth;
-      var height = element[0].parentNode.clientHeight;
+      function parsePx(str) { return parseInt(str.replace(/px/gi, '')) };
+
+      var width = parsePx($(element[0].parentNode).css('width'));
+      var height = parsePx($(element[0].parentNode).css('height'));
       var svg = d3.select(element[0]).append("svg")
       .attr("width", "100%")
       .attr("height", "100%");
@@ -325,11 +331,6 @@ angular.module('elicit.components', []).
         }
       };
       $scope.$watch('selectedAlternative', populateRanksByAlternative);
-
-        $scope.selectedAlternative = _.keys($scope.problem.alternatives || {})[0];
-        $scope.selectedRank = 0;
-        populateRanksByAlternative();
-        populateAlternativesByRank();
     },
     templateUrl: 'results-page.html'
   };
