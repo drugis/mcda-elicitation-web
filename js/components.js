@@ -51,30 +51,31 @@ angular.module('elicit.components', []).
         var values = _.map([stepToValue(steps[0]), stepToValue(steps[1])], parseFloat);
 
         function lessThan(a, b) {
-          var epsilon = 0.01;
+          var epsilon = 0.001;
           return (a - b) < epsilon && Math.abs(a - b) > epsilon;
         }
         function greaterThan(a, b) {
-          var epsilon = 0.01;
+          var epsilon = 0.001;
           return (a - b) > epsilon && Math.abs(a - b) > epsilon;
         }
         var slider = $($element).find('input');
-        var apply = true;
         if(greaterThan(values[0], $scope.range.restrictFrom)) {
-          apply = false;
           slider.slider("value", valueToStep($scope.range.restrictFrom), steps[1]);
         }
         if(lessThan(values[1], $scope.range.restrictTo)) {
-          apply = false;
           slider.slider("value", steps[0], valueToStep($scope.range.restrictTo));
         }
-        if(apply) {
-          safeApply(function() {
-            $scope.model = { lower: values[0], upper: values[1] }
-          });
-        }
+        safeApply(function() {
+          $scope.model = { lower: values[0], upper: values[1] }
+        });
       }, 100)
     });
+    if($scope.range.restrictTo && $scope.range.restrictFrom) {
+      $($element).find('.jslider-bg').append('<i class="x"></i>');
+      var width = valueToStep($scope.range.restrictTo) - valueToStep($scope.range.restrictFrom);
+      var left = valueToStep($scope.range.restrictFrom);
+      $($element).find('.jslider-bg .x').attr("style", "left: " + left + "%; width:" + width + "%");
+    }
   };
   return {
     restrict: 'E',
@@ -84,11 +85,14 @@ angular.module('elicit.components', []).
     link: function($scope, $element) {
     },
     controller: function($scope, $element) {
-      $scope.$watch('range', function() {
+      var init = function() {
         if ($scope.range) {
           initialize($scope, $element);
         }
-      });
+      }
+      $scope.$watch('range', init);
+      $scope.$watch('range.from', init);
+      $scope.$watch('range.to', init);
     },
     template: '<div class="slider"></div>',
     replace: true

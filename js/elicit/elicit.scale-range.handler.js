@@ -20,7 +20,6 @@ function ScaleRangeHandler(problem, Tasks) {
     task.results.then(function(results) {
       _.map(_.pairs(results.body[0]), function(criterion) {
         var from = criterion[1]["2.5%"], to = criterion[1]["97.5%"];
-        var margin = 0.25;
         // Set inital model value
         var problemRange = problem.criteria[criterion[0]].pvf.range;
         if (problemRange) {
@@ -28,12 +27,18 @@ function ScaleRangeHandler(problem, Tasks) {
         } else {
           choices[criterion[0]] = { lower: from, upper: to};
         }
+
         // Set scales for slider
+        var margin = 0.5;
+        var fromFudge = (((from < 0) ? -1 : 1) * (nice(from) * margin));
+        var toFudge = (((to < 0) ? -1 : 1) * (nice(to) * margin));
         scales[criterion[0]] =
           { restrictFrom: from,
             restrictTo: to,
-            from: nice(from) - (((from < 0) ? -1 : 1) * (nice(from) * margin)),
-            to: nice(to) + (((from < 0) ? -1 : 1) * (nice(from) * margin)),
+            from: nice(from) - fromFudge,
+            to: nice(to) + toFudge,
+            increaseFrom: function() { this.from = this.from - fromFudge },
+            increaseTo: function() { this.to = this.to + toFudge },
             rightOpen: true };
       });
     });
