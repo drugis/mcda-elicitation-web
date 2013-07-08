@@ -25,7 +25,7 @@ function ScaleRangeHandler(problem, Tasks) {
         if (problemRange) {
           choices[criterion[0]] = { lower: problemRange[0], upper: problemRange[1] };
         } else {
-          choices[criterion[0]] = { lower: from, upper: to};
+          choices[criterion[0]] = { lower: from, upper: to };
         }
 
         // Set scales for slider
@@ -51,8 +51,12 @@ function ScaleRangeHandler(problem, Tasks) {
   }
 
   this.validChoice = function(currentState) {
-    return true;
+    return _.every(currentState.choice, function(choice) {
+      var complete = _.isNumber(choice["upper"]) && _.isNumber(choice["lower"]);
+      return complete && (choice.upper > choice.lower);
+    });
   }
+
 
   this.nextState = function(currentState) {
     if(!this.validChoice(currentState)) {

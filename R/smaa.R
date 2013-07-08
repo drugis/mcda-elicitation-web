@@ -12,6 +12,9 @@ wrap.matrix <- function(m) {
   l
 }
 
+ilogit <- function(x) {
+  1 / (1 + exp(-x))
+}
 
 smaa <- function(params) {
   allowed <- c('scales', 'smaa')
@@ -44,12 +47,12 @@ sample <- function(measurement, N) {
         stop(paste("Distribution '", perf$relative$type, "' not supported", sep=''))
       }
     }
-    sampleDeriv(sampleBase())
+    ilogit(sampleDeriv(sampleBase()))
   }
 }
 
 run_scales <- function(params) {
-  N <- 1000
+  N <- 10000
   crit <- names(params$criteria)
   alts <- names(params$alternatives)
   n <- length(params$criteria)
@@ -104,16 +107,12 @@ run_smaa <- function(params) {
     }
   })
 
-  ilogit <- function(x) {
-    1 / (1 + exp(-x))
-  }
-
   meas <- array(dim=c(N,m,n), dimnames=list(NULL, alts, crit))
   for (m in params$performanceTable) {
     if (m$performance$type == 'dbeta') {
       meas[, m$alternative, m$criterion] <- pvf[[m$criterion]](sample(m, N))
     } else if (m$performance$type == 'relative-logit-normal') {
-      meas[, ,m$criterion] <- pvf[[m$criterion]](ilogit(sample(m, N)))
+      meas[, ,m$criterion] <- pvf[[m$criterion]](sample(m, N))
     } else {
       stop(paste("Performance type '", m$performance$type, "' not supported.", sep=''))
     }

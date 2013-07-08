@@ -1,10 +1,13 @@
 <div ng-show="currentStep.type == 'scale range'">
 
   <p>Defining measurement scales is important because they provide the reference
-  levels at which trade-offs between criteria are assessed.  Without these
+  levels at which trade-offs between criteria are assessed. Without these
   reference levels statements about the relative importance of different
   criteria would be meaningless.</p>
-  <p><i>The area in red indicates the estimated 95% Credible Interval (CrI) of the measurements and cannot be moved into</i></p>
+
+  <p><i>The area in red indicates the estimated 95% Credible Interval (CrI) of
+  the measurements and cannot be moved into.</i></p>
+
   <ul class="no-bullet">
     <li ng-repeat="(key, criterion) in problem.criteria">
     <h5 class="subheader">{{criterion.title}}</h5>

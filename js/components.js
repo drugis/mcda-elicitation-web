@@ -34,9 +34,10 @@ angular.module('elicit.components', []).
 
     var precision = 3;
     var stepToValue = function(step) { return (from + (step / steps) * delta).toFixed(precision); }
-
+    var isRestricted = $scope.range.restrictTo && $scope.range.restrictFrom;
     function valueToStep(value) { return ((value - from) / delta * steps).toFixed(precision); }
     function getValue() { return valueToStep($scope.model.lower) + ";" + valueToStep($scope.model.upper); }
+
     $($element).empty();
     $($element).append('<input type="slider"></input>');
     $($element).find('input').attr("value", getValue());
@@ -50,27 +51,29 @@ angular.module('elicit.components', []).
         var steps = value.split(';');
         var values = _.map([stepToValue(steps[0]), stepToValue(steps[1])], parseFloat);
 
-        function lessThan(a, b) {
-          var epsilon = 0.001;
+        function lessThan(a, b, epsilon) {
           return (a - b) < epsilon && Math.abs(a - b) > epsilon;
         }
-        function greaterThan(a, b) {
-          var epsilon = 0.001;
+        function greaterThan(a, b, epsilon) {
           return (a - b) > epsilon && Math.abs(a - b) > epsilon;
         }
-        var slider = $($element).find('input');
-        if(greaterThan(values[0], $scope.range.restrictFrom)) {
-          slider.slider("value", valueToStep($scope.range.restrictFrom), steps[1]);
-        }
-        if(lessThan(values[1], $scope.range.restrictTo)) {
-          slider.slider("value", steps[0], valueToStep($scope.range.restrictTo));
+
+        if (isRestricted) {
+          var slider = $($element).find('input');
+          var epsilon = 0.001;
+          if(greaterThan(values[0], $scope.range.restrictFrom, epsilon)) {
+            slider.slider("value", valueToStep($scope.range.restrictFrom), steps[1]);
+          }
+          if(lessThan(values[1], $scope.range.restrictTo, epsilon)) {
+            slider.slider("value", steps[0], valueToStep($scope.range.restrictTo));
+          }
         }
         safeApply(function() {
           $scope.model = { lower: values[0], upper: values[1] }
         });
       }, 100)
     });
-    if($scope.range.restrictTo && $scope.range.restrictFrom) {
+    if(isRestricted) {
       $($element).find('.jslider-bg').append('<i class="x"></i>');
       var width = valueToStep($scope.range.restrictTo) - valueToStep($scope.range.restrictFrom);
       var left = valueToStep($scope.range.restrictFrom);
