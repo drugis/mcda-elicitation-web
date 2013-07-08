@@ -21,17 +21,6 @@ angular.module('elicit.components', []).
       --steps;
     }
 
-    var safeApply = function(fn) {
-      var phase = $scope.$root.$$phase;
-      if(phase == '$apply' || phase == '$digest') {
-        if(fn && (typeof(fn) === 'function')) {
-          fn();
-        }
-      } else {
-        $scope.$apply(fn);
-      }
-    };
-
     var precision = 3;
     var stepToValue = function(step) { return (from + (step / steps) * delta).toFixed(precision); }
     var isRestricted = $scope.range.restrictTo && $scope.range.restrictFrom;
@@ -68,7 +57,7 @@ angular.module('elicit.components', []).
             slider.slider("value", steps[0], valueToStep($scope.range.restrictTo));
           }
         }
-        safeApply(function() {
+        $scope.$root.$safeApply($scope, function() {
           $scope.model = { lower: values[0], upper: values[1] }
         });
       }, 100)
@@ -291,54 +280,6 @@ angular.module('elicit.components', []).
     restrict: 'E',
     replace: true,
     scope: { currentStep: '=', problem: '=' },
-    controller: function($scope, $element) {
-      var alternativeTitle = function(id) {
-        return $scope.problem.alternatives[id].title;
-      }
-
-      $scope.centalWeightsData = function(data) {
-        var result = [];
-        _.each(_.pairs(data), function(alternative) {
-          var values = _.map(_.pairs(alternative[1]), function(criterion, index) {
-            return { x: index, label: criterion[0], y: criterion[1] };
-          });
-          var labels = _.map(_.pluck(values, 'label'), function(id) { return $scope.problem.criteria[id].title });
-          result.push({key: alternativeTitle(alternative[0]), labels: labels, values: values});
-        });
-        return result;
-      }
-
-      var getAlterativesByRank = function(data, rank) {
-        var values = _.map(_.pairs(data), function(alternative) {
-          return {label: alternativeTitle(alternative[0]), value: alternative[1][rank] };
-        });
-        var name = "Alternatives for rank " + (rank + 1);
-        return [{ key: name, values: values }];
-      }
-      var populateAlternativesByRank = function() {
-        var results = $scope.currentStep.results;
-        if(results) {
-          $scope.alternativesByRank = getAlterativesByRank(results.ranks.data, $scope.selectedRank);
-        }
-      };
-      $scope.$watch('selectedRank', populateAlternativesByRank);
-
-      var getRanksByAlternative = function(data, alternative) {
-        var values = [];
-        _.each(data[alternative], function(rank, index) {
-          values.push({ label: "Rank " + (index + 1), value: [rank] });
-        });
-        return [{ key: alternativeTitle(alternative), values: values }];
-      }
-      var populateRanksByAlternative = function() {
-        var results = $scope.currentStep.results;
-        if(results) {
-          $scope.ranksByAlternative =
-            getRanksByAlternative(results.ranks.data, $scope.selectedAlternative);
-        }
-      };
-      $scope.$watch('selectedAlternative', populateRanksByAlternative);
-    },
     templateUrl: 'results-page.html'
   };
 });

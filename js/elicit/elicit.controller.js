@@ -42,10 +42,7 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
         "ordinal":  new OrdinalElicitationHandler(problem),
         "ratio bound":  new RatioBoundElicitationHandler(problem),
         "choose method": new ChooseMethodHandler(),
-        "done": {
-          validChoice: function(state) { return false; },
-          initialize: function(state) { return _.extend(state, {title: "Done eliciting preferences"}); }
-        }
+        "done": new ResultsHandler(problem)
       };
       $scope.currentStep = handlers["scale range"].initialize();
       $scope.runSMAA($scope.currentStep);

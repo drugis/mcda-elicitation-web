@@ -96,3 +96,17 @@ function exampleProblem() {
 }
 
 var app = angular.module('elicit', ['clinicico', 'elicit.example', 'elicit.components', 'elicit.services']);
+app.run(['$rootScope', function($rootScope) {
+  $rootScope.$safeApply = function($scope, fn) {
+    fn = fn || function() {};
+    if($scope.$$phase) {
+      //don't worry, the value gets set and AngularJS picks up on it...
+      fn();
+    }
+    else {
+      //this will fire to tell angularjs to notice that a change has happened
+      //if it is outside of it's own behaviour...
+      $scope.$apply(fn);
+    }
+  };
+}]);

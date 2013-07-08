@@ -20,6 +20,8 @@ smaa <- function(params) {
   allowed <- c('scales', 'smaa')
   if(params$method %in% allowed) {
     do.call(paste("run", params$method, sep="_"), list(params))
+  } else {
+    stop("method not allowed")
   }
 }
 
@@ -143,7 +145,6 @@ run_smaa <- function(params) {
 
   cw <- smaa.cw(ranks, weights)
   colnames(cw) <- crit
-
 
   results <- list(
     results = list(
