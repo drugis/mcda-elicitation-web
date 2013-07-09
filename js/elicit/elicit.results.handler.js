@@ -8,7 +8,7 @@ function ResultsHandler(problem) {
   var getCentralWeights = function(data) {
     var result = [];
     _.each(_.pairs(data), function(alternative) {
-      var values = _.map(_.pairs(alternative[1]), function(criterion, index) {
+      var values = _.map(_.pairs(alternative[1]['w']), function(criterion, index) {
         return { x: index, label: criterion[0], y: criterion[1] };
       });
       var labels = _.map(_.pluck(values, 'label'), function(id) { return problem.criteria[id].title });

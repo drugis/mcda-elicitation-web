@@ -54,14 +54,16 @@
     <thead>
       <tr>
         <th>Alternative</th>
+        <th>Confidence</th>
         <th ng-repeat="criterion in problem.criteria">{{criterion.title}}</th>
       </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="(a, alternative) in problem.alternatives">
-      <td>{{alternative.title}}</td>
+    <tr ng-repeat="(a, cw) in currentStep.results.cw.data">
+      <td>{{problem.alternatives[a].title}}</td>
+      <td class="heat">{{cw.cf}}</td>
       <td ng-repeat="(c, criterion) in problem.criteria">
-        {{currentStep.results.cw.data[a][c]}}
+        {{cw.w[c]}}
       </td>
     </tr>
     </tbody>

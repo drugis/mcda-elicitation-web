@@ -146,9 +146,17 @@ run_smaa <- function(params) {
   cw <- smaa.cw(ranks, weights)
   colnames(cw) <- crit
 
+  cf <- diag(apply(cw, 1, function(w) {
+    w <- matrix(w, nrow=N, ncol=n, byrow=TRUE)
+    smaa.ra(smaa.ranks(smaa.values(meas, w)))[,1]
+  }))
+
+  cw <- lapply(alts, function(a) { list(w=cw[a,], cf=unname(cf[a])) })
+  names(cw) <- alts
+
   results <- list(
     results = list(
-             "cw"=wrap.matrix(cw),
+             "cw"=cw,
              "ranks"=wrap.matrix(smaa.ra(ranks))),
     descriptions = list("Central Weights", "Rank acceptabilities")
   )
