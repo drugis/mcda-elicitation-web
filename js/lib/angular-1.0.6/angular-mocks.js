@@ -1385,7 +1385,7 @@ angular.module('ngMock', ['ng']).provider({
   $browser: angular.mock.$BrowserProvider,
   $exceptionHandler: angular.mock.$ExceptionHandlerProvider,
   $log: angular.mock.$LogProvider,
-  $httpBackend: angular.mock.$HttpBackendProvider,
+  //$httpBackend: angular.mock.$HttpBackendProvider,
   $rootElement: angular.mock.$RootElementProvider
 }).config(function($provide) {
   $provide.decorator('$timeout', function($delegate, $browser) {
