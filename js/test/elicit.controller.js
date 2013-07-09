@@ -193,13 +193,13 @@ describe("ElicitationController", function() {
 
       scope1.currentStep.type = "ratio bound";
       scope1.currentStep.prefs.ordinal = ["Prox DVT", "Bleed", "Dist DVT"];
-      // FIXME: should call RatioBoundElicitationHandler.initialize()
+      
       scope1.currentStep.prefs["ratio bound"] = [];
       scope1.currentStep.criterionA = "Prox DVT";
       scope1.currentStep.criterionB = "Bleed";
       scope1.currentStep.range = { from: 0, to: 0.25};
       scope1.currentStep.choice = { lower: 0.1, upper: 0.2 };
-      // END FIXME: should call RatioBoundElicitationHandler.initialize()
+
       expect(scope1.nextStep()).toEqual(true); // Step 2
       scope1.currentStep.choice.lower = 0.05;
       scope1.currentStep.results = {ranks: {}, cw: {}};
