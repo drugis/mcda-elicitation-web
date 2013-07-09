@@ -14,7 +14,7 @@
     <tbody>
     <tr ng-repeat="(key, alternative) in problem.alternatives">
       <td>{{alternative.title}}</td>
-      <td ng-repeat="rank in currentStep.results.ranks.data[key]" heat>
+      <td ng-repeat="rank in currentStep.results.ranks.data[key]" class="heat">
         {{rank}}
       </td>
     </tr>

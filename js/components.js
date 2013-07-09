@@ -219,7 +219,7 @@ angular.module('elicit.components', []).
 }).
   directive('heat', function() {
   return {
-    restrict: 'A',
+    restrict: 'C',
     replace: false,
     transclude: false,
     scope: false,
@@ -231,49 +231,5 @@ angular.module('elicit.components', []).
         $(element[0]).addClass("q" + color(value) + "-9");
       });
     }
-  };
-}).
-  directive('scaleRangeStep', function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    transclude: true,
-    scope: { currentStep: '=', problem: '=' },
-    templateUrl: 'scale-range.html'
-  };
-}).
-  directive('ordinalStep', function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    transclude: true,
-    scope: { currentStep: '=', problem: '=' },
-    templateUrl: 'elicit-ordinal.html'
-  };
-}).
-  directive('chooseMethodStep', function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    transclude: true,
-    scope: { currentStep: '=' },
-    templateUrl: 'choose-method.html'
-  };
-}).
-  directive('ratioBoundStep', function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    transclude: true,
-    scope: { currentStep: '=', problem: '=' },
-    templateUrl: 'elicit-ratio-bound.html'
-  };
-}).
-  directive('resultsStep', function() {
-  return {
-    restrict: 'E',
-    replace: true,
-    scope: { currentStep: '=', problem: '=' },
-    templateUrl: 'results-page.html'
   };
 });

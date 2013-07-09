@@ -95,7 +95,7 @@ function exampleProblem() {
   }
 }
 
-var app = angular.module('elicit', ['clinicico', 'elicit.example', 'elicit.components', 'elicit.services']);
+var app = angular.module('elicit', ['clinicico', 'elicit.example', 'elicit.components', 'elicit.steps', 'elicit.services']);
 app.run(['$rootScope', function($rootScope) {
   $rootScope.$safeApply = function($scope, fn) {
     var phase = $scope.$root.$$phase;
