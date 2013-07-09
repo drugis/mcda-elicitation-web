@@ -23,7 +23,6 @@ angular.module('elicit.components', []).
 
     var precision = 3;
     var stepToValue = function(step) { return (from + (step / steps) * delta).toFixed(precision); }
-    var isRestricted = $scope.range.restrictTo && $scope.range.restrictFrom;
     function valueToStep(value) { return ((value - from) / delta * steps).toFixed(precision); }
     function getValue() { return valueToStep($scope.model.lower) + ";" + valueToStep($scope.model.upper); }
 
@@ -37,6 +36,7 @@ angular.module('elicit.components', []).
       calculate: stepToValue,
       skin: "round_plastic",
       onstatechange: _.debounce(function(value) {
+        var range = $scope.range;
         var steps = value.split(';');
         var values = _.map([stepToValue(steps[0]), stepToValue(steps[1])], parseFloat);
 
@@ -47,22 +47,22 @@ angular.module('elicit.components', []).
           return (a - b) > epsilon && Math.abs(a - b) > epsilon;
         }
 
-        if (isRestricted) {
+        if (_.has(range, "restrictTo") && _.has(range, "restrictFrom")) {
           var slider = $($element).find('input');
           var epsilon = 0.001;
-          if(greaterThan(values[0], $scope.range.restrictFrom, epsilon)) {
-            slider.slider("value", valueToStep($scope.range.restrictFrom), steps[1]);
+          if(greaterThan(values[0], range.restrictFrom, epsilon)) {
+            slider.slider("value", valueToStep(range.restrictFrom), steps[1]);
           }
-          if(lessThan(values[1], $scope.range.restrictTo, epsilon)) {
-            slider.slider("value", steps[0], valueToStep($scope.range.restrictTo));
+          if(lessThan(values[1], range.restrictTo, epsilon)) {
+            slider.slider("value", steps[0], valueToStep(range.restrictTo));
           }
         }
         $scope.$root.$safeApply($scope, function() {
           $scope.model = { lower: values[0], upper: values[1] }
         });
-      }, 100)
+      }, 50)
     });
-    if(isRestricted) {
+    if (_.has($scope.range, "restrictTo") && _.has($scope.range, "restrictFrom")) {
       $($element).find('.jslider-bg').append('<i class="x"></i>');
       var width = valueToStep($scope.range.restrictTo) - valueToStep($scope.range.restrictFrom);
       var left = valueToStep($scope.range.restrictFrom);
@@ -137,14 +137,12 @@ angular.module('elicit.components', []).
           .transition().duration(100).call(chart);
 
           nv.utils.windowResize(chart.update);
-
-          return chart;
         });
-      });
+      }, true);
     }
   }
 }).
-  directive('barChart', function() {
+  directive('barChart', function($timeout) {
   return {
     restrict: 'E',
     replace: true,
@@ -176,10 +174,8 @@ angular.module('elicit.components', []).
           var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
           svg.datum(data).transition().duration(100).call(chart);
           nv.utils.windowResize(chart.update);
-
-          return chart;
         });
-      });
+      }, true);
     }
   }
 }).
@@ -217,9 +213,7 @@ angular.module('elicit.components', []).
         svg.datum(data).call(chart);
         nv.utils.windowResize(chart.update);
 
-        return chart;
-
-      });
+      }, true);
     }
   }
 }).

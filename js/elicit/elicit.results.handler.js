@@ -1,5 +1,5 @@
 function ResultsHandler(problem) {
-  this.fields = [];
+  this.fields = ['results'];
 
   var alternativeTitle = function(id) {
     return problem.alternatives[id].title;
@@ -19,6 +19,7 @@ function ResultsHandler(problem) {
 
   var getAlterativesByRank = function(data, rank) {
     return function(rank) {
+      var rank = parseInt(rank);
       var values = _.map(_.pairs(data), function(alternative) {
         return {label: alternativeTitle(alternative[0]), value: alternative[1][rank] };
       });
@@ -38,7 +39,7 @@ function ResultsHandler(problem) {
   }
 
   this.initialize = function(state) {
-    return {
+    return _.extend(state, {
       type: "done",
       title: "Done eliciting preferences",
       selectedAlternative: _.keys(problem.alternatives)[0],
@@ -46,7 +47,7 @@ function ResultsHandler(problem) {
       ranksByAlternative: getRanksByAlternative(state.results.ranks.data),
       alternativesByRank: getAlterativesByRank(state.results.ranks.data),
       centralWeights: getCentralWeights(state.results.cw.data)
-    }
+    });
   }
 
   this.validChoice = function(currentState) {

@@ -29,6 +29,7 @@
         Rank {{$index + 1}}
         </option>
       </select>
+
       <div style="width: 400px; height: 350px">
         <bar-chart value="currentStep.alternativesByRank(currentStep.selectedRank)"></bar-chart>
       </div>
@@ -39,13 +40,12 @@
         <option ng-repeat="(key, alternative) in problem.alternatives" value="{{key}}" ng-selected="key == currentStep.selectedAlternative">
         {{alternative.title}}
         </option>
+      </select>
+      <div style="width: 400px; height: 350px">
+        <bar-chart value="currentStep.ranksByAlternative(currentStep.selectedAlternative)"></bar-chart>
       </div>
-    </select>
-    <div style="width: 400px; height: 350px">
-      <bar-chart value="currentStep.ranksByAlternative(currentStep.selectedAlternative)"></bar-chart>
     </div>
   </div>
-
   <h5>Central Weights</h5>
   <div style="width: 650px; height: 350px">
     <line-chart value="currentStep.centralWeights"></line-chart>
@@ -58,12 +58,12 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="(a, alternative) in problem.alternatives">
-        <td>{{alternative.title}}</td>
-        <td ng-repeat="(c, criterion) in problem.criteria">
-          {{currentStep.results.cw.data[a][c]}}
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <tr ng-repeat="(a, alternative) in problem.alternatives">
+      <td>{{alternative.title}}</td>
+      <td ng-repeat="(c, criterion) in problem.criteria">
+        {{currentStep.results.cw.data[a][c]}}
+      </td>
+    </tr>
+    </tbody>
+  </table>
 </div>

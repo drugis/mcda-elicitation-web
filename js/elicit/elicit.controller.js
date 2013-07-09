@@ -5,6 +5,7 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
   $scope.currentStep = {};
   $scope.initialized = false;
   var handlers;
+  var LAST_STEP = 'done';
 
   $scope.$on('PreferenceStore.saved', function() {
     $scope.saveState = { success: true };
@@ -86,21 +87,23 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
     }
 
     var previousResults = angular.copy(currentStep.results);
-    currentStep = _.pick(currentStep, Array.concat(["type", "prefs", "choice"], handler.fields));
+
+    currentStep = _.pick(currentStep, ["type", "prefs", "choice"].concat(handler.fields));
     nextStep = handler.nextState(currentStep);
+
     if (nextStep.type !== currentStep.type) {
       var handler = handlers[nextStep.type];
+      if(nextStep.type === LAST_STEP) {
+        nextStep.results = previousResults;
+      }
       nextStep = handler ? handler.initialize(nextStep) : nextStep;
     }
     nextStep.previousChoice = choice;
 
     $scope.currentStep = nextStep;
 
-    if (nextStep.type === 'done') {
-      $scope.currentStep.results = previousResults;
-      if(PreferenceStore) {
-        PreferenceStore.save($scope.getStandardizedPreferences(nextStep));
-      }
+    if (nextStep.type === LAST_STEP && PreferenceStore) {
+      PreferenceStore.save($scope.getStandardizedPreferences(nextStep));
     }
 
     return true;
@@ -121,7 +124,7 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
   };
 
   $scope.shouldRun = function(currentStep) {
-    return !_.contains(["scale range", "done"], currentStep.type);
+    return !_.contains(["scale range", LAST_STEP], currentStep.type);
   }
 
   $scope.runSMAA = function(currentStep) {

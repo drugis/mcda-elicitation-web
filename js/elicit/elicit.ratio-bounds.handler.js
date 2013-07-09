@@ -16,7 +16,8 @@ function RatioBoundElicitationHandler(problem) {
   function buildInitial(criterionA, criterionB, step) {
     var bounds = getBounds(criterionA);
     var increasing = problem.criteria[criterionA].pvf.type === 'linear-increasing';
-    return { title: title(step),
+    return {
+      title: title(step),
       criterionA: criterionA,
       criterionB: criterionB,
       best: function() { return increasing ? this.choice.upper : this.choice.lower },
@@ -57,10 +58,9 @@ function RatioBoundElicitationHandler(problem) {
       var u = problem.criteria[currentState.criterionA].pvf.map;
       return Array.sort([1 / u(currentState.choice.lower), 1 / u(currentState.choice.upper)]);
     }
-
     next.prefs = angular.copy(currentState.prefs);
     next.prefs["ratio bound"].push({criteria: [order[idx - 1], order[idx]], bounds: getRatioBounds(currentState)});
-    return _.extend(currentState, next);
+    return _.extend(angular.copy(currentState), next);
   }
 
   this.standardize = function(prefs) {
