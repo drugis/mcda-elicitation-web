@@ -1,84 +1,88 @@
 <!DOCTYPE html>
 <html ng-app="elicit">
-<head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width" />
-	<title>Preference elicitation</title>
-	<link rel="stylesheet" type="text/css" href="js/lib/jslider/bin/jquery.slider.min.css"></link>
-	<link rel="stylesheet" type="text/css" href="css/foundation.min.css"></link>
-	<link rel="stylesheet" type="text/css" href="css/main.css"></link>
-</head>
-<body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Preference elicitation</title>
+    <link rel="stylesheet" type="text/css" href="js/lib/jslider/bin/jquery.slider.min.css">
+    <link rel="stylesheet" type="text/css" href="css/foundation.min.css">
+    <link rel="stylesheet" type="text/css" href="css/nv.d3.css">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+  </head>
 
-<div ng-controller="ExampleController" ng-hide="done" class="row">
-<h2>Choose an Example</h2>
+  <body>
 
-<form>
-	<label ng-repeat="option in list">
-		<input type="radio" ng-model="model.choice" value="{{option.href}}">
-		<span>{{option.title}}</span>
-	</label>
-	<button class="small success" ng-disabled="!model.choice" ng-click="setProblem(model.choice)">Start</button>
-</form>
-</div>
+  <div ng-controller="ExampleController" ng-hide="done" class="row">
+    <h2>Choose an Example</h2>
 
-<div ng-controller="ElicitationController" ng-show="initialized" class="row">
-	<h2>Preference Elicitation <small>{{problem.title}}</small></h2>
+    <form>
+      <label ng-repeat="option in list">
+        <input type="radio" ng-model="model.choice" value="{{option.href}}">
+        <span>{{option.title}}</span>
+      </label>
+      <button class="small success" ng-disabled="!model.choice" ng-click="setProblem(model.choice)">Start</button>
+    </form>
+  </div>
 
-<div ng-show="currentStep.type == 'done'">
-	<div ng-show="saveState.success">Preferences saved.</div>
-		<div ng-class="{error: 'alert-box alert', warning: 'alert-box'}[saveState.error.severity]" ng-show="saveState.error">
-		Failed to save preferences.
-		{{saveState.error.message}}
-		<span ng-show="saveState.error.cause">HTTP Error {{saveState.error.cause}}.</span>
-	</div>
-</div>
+  <div ng-controller="ElicitationController" ng-show="initialized" class="row">
 
-<h3>{{currentStep.title}}</h3>
+    <h2>Preference Elicitation <small>{{problem.title}}</small></h2>
 
+    <div ng-show="currentStep.type == 'done'">
+      <div ng-show="saveState.success">Preferences saved.</div>
+      <div ng-class="{error: 'alert-box alert', warning: 'alert-box'}[saveState.error.severity]" ng-show="saveState.error">
+        Failed to save preferences.
+        {{saveState.error.message}}
+        <span ng-show="saveState.error.cause">HTTP Error {{saveState.error.cause}}.</span>
+      </div>
+    </div>
 
-<div id="wizardStepContainer" class="columns large-7">
-	<ordinal-step current-step="currentStep" problem="problem"></ordinal-step>
-	<ratio-bound-step current-step="currentStep" problem="problem"></ratio-bound-step>
-	<choose-method-step current-step="currentStep"></choose-method-step>
-	<button class="small" ng-disabled="!canReturn()" ng-click="previousStep() && runSMAA(currentStep)">Back</button>
-	<button class="small" ng-disabled="!canProceed(currentStep)" ng-click="nextStep() && runSMAA(currentStep)">Next</button>
-</div>
+    <h3>{{currentStep.title}}</h3>
 
-<div id="results"
-	ng-class="{loading: !currentStep.results && !currentStep.error, failed: currentStep.error, 'large-5':true, columns:true}">
-	<!--<img src="{{currentStep.results.ranks_plot.url}}" alt="">-->
+    <div id="wizardStepContainer" class="columns large-8">
+      <scale-range-step current-step="currentStep" problem="problem"></scale-range-step>
+      <ordinal-step current-step="currentStep" problem="problem"></ordinal-step>
+      <ratio-bound-step current-step="currentStep" problem="problem"></ratio-bound-step>
+      <choose-method-step current-step="currentStep"></choose-method-step>
+      <results-step current-step="currentStep" problem="problem"></results-step>
+      <button class="small" ng-disabled="!canReturn()" ng-click="previousStep() && runSMAA(currentStep)">Back</button>
+      <button class="small" ng-disabled="!canProceed(currentStep)" ng-click="nextStep() && runSMAA(currentStep)">Next</button>
+    </div>
+    <div class="results-container" ng-show="shouldRun(currentStep)">
+      <div id="results"
+        ng-class="{loading: !currentStep.results && !currentStep.error, failed: currentStep.error, 'large-4':true, columns:true}">
+        <div class="loader">
+          <img src="img/loader.gif">
+          <span>Recalculating...</span>
+        </div>
 
-	<div class="loader">
-		<img src="img/loader.gif">
-		<span>Recalculating...</span>
-	</div>
+        <div style="width: 400px; height: 400px" class="graph">
+          <rank-plot value="currentStep.results.ranks.data" stacked="true" problem="problem"></rank-plot>
+        </div>
 
-	<form>
-		<label class="right inline" style="margin-left: 15px"><input type="radio" ng-model="stacked" value="multiples"> Multiples</label>
-		<label class="right inline"><input type="radio" ng-model="stacked" value="stacked"> Stacked</label>
-	</form>
-	<bar-chart val="currentStep.results.ranks.data" stacked="stacked"></bar-chart>
+        <div class="error">
+          {{currentStep.error.cause}}
+        </div>
+      </div>
+    </div>
+  </div>
 
-
-	<div class="error">
-		{{currentStep.error.cause}}
-	</div>
-</div>
-</div>
-
-<script>
-	window.config = {};
-	window.config.smaaWS = "http://localhost:3000/api/analysis/";
-	window.config.examplesRepository = "/examples/";
-</script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.4.4/underscore-min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.0.8/d3.min.js" charset="utf-8"></script>
-<script src="js/lib/angular-1.0.6/angular.min.js"></script>
-<script src="js/lib/angular-1.0.6/angular-resource.min.js"></script>
-<script src="js/lib/jquery-1.9.1.min.js"></script>
-<script src="js/lib/jslider/bin/jquery.slider.min.js"></script>
-<script src="js/components.js"></script>
-<script src="js/app.js"></script>
-</body>
+  <script>
+    window.config = {};
+    window.clinicico = {};
+    window.clinicico.config = {};
+    window.clinicico.config.baseUrl = "http://localhost:3000/tasks/";
+    window.config.examplesRepository = "/examples/";
+  </script>
+  <script src="js/lib/underscore-min.js"></script>
+  <script src="js/lib/d3.v3.min.js"></script>
+  <script src="js/lib/nv.d3.min.js"></script>
+  <script src="js/lib/angular-1.0.6/angular.min.js"></script>
+  <script src="js/lib/angular-1.0.6/angular-resource.min.js"></script>
+  <script src="js/lib/jquery-1.9.1.min.js"></script>
+  <script src="js/lib/jslider/bin/jquery.slider.min.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/steps.js"></script>
+  <script src="js/app.js"></script>
+  </body>
 </html>

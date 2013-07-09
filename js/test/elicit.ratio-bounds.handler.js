@@ -2,7 +2,7 @@ describe("RatioBoundElicitationHandler", function() {
   var scope;
   var handler;
   var state;
-  var app = angular.module('app', ['elicit.example', 'elicit.services']);
+  var app = angular.module('elicit', ['elicit.example', 'elicit.services', 'clinicico']);
 
   function initializeScope(problem) {
     var ctrl, scope, $httpBackend;
@@ -12,13 +12,13 @@ describe("RatioBoundElicitationHandler", function() {
       ctrl = $controller("ElicitationController",
                           { $scope: scope,
                             DecisionProblem: { get: function(callback) { callback(problem); }},
-                            Jobs: null});
+                          });
     });
     return scope;
   }
 
   beforeEach(function() {
-    module('app');
+    module('elicit');
     var problem = exampleProblem();
     scope = initializeScope(problem);
     handler = new RatioBoundElicitationHandler(scope.problem);

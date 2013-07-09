@@ -1,5 +1,5 @@
 function ChooseMethodHandler() {
-  this.fields = ["methods"];
+  this.fields = ["methods", "results"];
 
   this.initialize = function(state) {
     var initialized = angular.copy(state);

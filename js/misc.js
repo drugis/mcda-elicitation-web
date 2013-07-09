@@ -95,4 +95,13 @@ function exampleProblem() {
   }
 }
 
-angular.module('elicit', ['elicit.example', 'elicit.components', 'elicit.services']);
+var app = angular.module('elicit', ['clinicico', 'elicit.example', 'elicit.components', 'elicit.steps', 'elicit.services']);
+app.run(['$rootScope', function($rootScope) {
+  $rootScope.$safeApply = function($scope, fn) {
+    var phase = $scope.$root.$$phase;
+    if(phase == '$apply' || phase == '$digest')
+      this.$eval(fn);
+    else
+      this.$apply(fn);
+  };
+}]);

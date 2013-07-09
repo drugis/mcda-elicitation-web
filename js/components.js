@@ -22,195 +22,214 @@ angular.module('elicit.components', []).
     }
 
     var precision = 3;
-    function stepToValue(step) { return (from + (step / steps) * delta).toFixed(precision); }
+    var stepToValue = function(step) { return (from + (step / steps) * delta).toFixed(precision); }
     function valueToStep(value) { return ((value - from) / delta * steps).toFixed(precision); }
     function getValue() { return valueToStep($scope.model.lower) + ";" + valueToStep($scope.model.upper); }
-    jQuery($element).empty();
-    jQuery($element).append('<input type="slider"></input>');
-    jQuery($element).find('input').attr("value", getValue());
-    jQuery($element).find('input').slider({
+
+    $($element).empty();
+    $($element).append('<input type="slider"></input>');
+    $($element).find('input').attr("value", getValue());
+    $($element).find('input').slider({
       from: 0,
       to: steps,
       step: 1,
       calculate: stepToValue,
       skin: "round_plastic",
-      onstatechange: function(value) {
-        var values = value.split(';');
-        !$scope.$$phase && $scope.$apply(function() {
-          $scope.model.upper = stepToValue(values[1]);
-          $scope.model.lower = stepToValue(values[0]);
+      onstatechange: _.debounce(function(value) {
+        var range = $scope.range;
+        var steps = value.split(';');
+        var values = _.map([stepToValue(steps[0]), stepToValue(steps[1])], parseFloat);
+
+        function lessThan(a, b, epsilon) {
+          return (a - b) < epsilon && Math.abs(a - b) > epsilon;
+        }
+        function greaterThan(a, b, epsilon) {
+          return (a - b) > epsilon && Math.abs(a - b) > epsilon;
+        }
+
+        if (_.has(range, "restrictTo") && _.has(range, "restrictFrom")) {
+          var slider = $($element).find('input');
+          var epsilon = 0.001;
+          if(greaterThan(values[0], range.restrictFrom, epsilon)) {
+            slider.slider("value", valueToStep(range.restrictFrom), steps[1]);
+          }
+          if(lessThan(values[1], range.restrictTo, epsilon)) {
+            slider.slider("value", steps[0], valueToStep(range.restrictTo));
+          }
+        }
+        $scope.$root.$safeApply($scope, function() {
+          $scope.model = { lower: values[0], upper: values[1] }
         });
-      }
+      }, 50)
     });
+    if (_.has($scope.range, "restrictTo") && _.has($scope.range, "restrictFrom")) {
+      $($element).find('.jslider-bg').append('<i class="x"></i>');
+      var width = valueToStep($scope.range.restrictTo) - valueToStep($scope.range.restrictFrom);
+      var left = valueToStep($scope.range.restrictFrom);
+      $($element).find('.jslider-bg .x').attr("style", "left: " + left + "%; width:" + width + "%");
+    }
   };
   return {
     restrict: 'E',
     transclude: true,
+    replace: true,
     scope: { model: '=', range: '=' },
     link: function($scope, $element) {
     },
     controller: function($scope, $element) {
-      $scope.$watch('range', function() {
+      var init = function() {
         if ($scope.range) {
           initialize($scope, $element);
         }
-      });
+      }
+      $scope.$watch('range', init);
+      $scope.$watch('range.from', init);
+      $scope.$watch('range.to', init);
     },
     template: '<div class="slider"></div>',
     replace: true
   };
 }).
-  directive('barChart', function() {
-  var margin = {top: 10, right: 20, bottom: 20, left: 60},
-  width = 300 - margin.left - margin.right,
-  height = 480 - margin.top - margin.bottom;
+  directive('rankPlot', function() {
   return {
     restrict:'E',
+    replace: true,
     scope: {
-      val: '=',
-      stacked: '='
+      value: '=',
+      stacked: '@',
+      problem: '='
     },
     link: function(scope, element, attrs) {
-      function parseData(data) {
-        var result = _.map(_.pairs(data), function(el) {
-          var key = el[0];
-          var values = el[1];
-          return _.map(_.pairs(values),
-                       function(el) {
-                         return { intervention: key, group: el[0], value: el[1] }
-                       });
-        });
-        return _.flatten(result);
-      }
+      function parsePx(str) { return parseInt(str.replace(/px/gi, '')) };
 
-      var y0 = d3.scale.ordinal()
-      .rangeRoundBands([height, 0], .2);
-
-      var y1 = d3.scale.linear();
-
-      var x = d3.scale.ordinal()
-      .rangeRoundBands([0, width], .1, 0);
-
-      var xAxis = d3.svg.axis()
-      .scale(x)
-      .orient("bottom");
-
-      var nest = d3.nest()
-      .key(function(d) { return d.group; });
-
-      var stack = d3.layout.stack()
-      .values(function(d) { return d.values; })
-      .x(function(d) { return d.intervention; })
-      .y(function(d) { return d.value; })
-      .out(function(d, y0) { d.valueOffset = y0; });
-
-      var color = d3.scale.category20c();
+      var width = parsePx($(element[0].parentNode).css('width'));
+      var height = parsePx($(element[0].parentNode).css('height'));
 
       var svg = d3.select(element[0]).append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      .attr("width", "100%")
+      .attr("height", "100%");
 
-      scope.$watch('val', function(newVal, oldVal) {
-        svg.selectAll('*').remove();
-        if(!newVal) return;
-
-        var data = parseData(newVal);
-        var dataByGroup = nest.entries(data);
-
-        stack(dataByGroup);
-        x.domain(dataByGroup[0].values.map(function(d) { return d.intervention; }));
-        y0.domain(dataByGroup.map(function(d) { return d.key; }));
-        y1.domain([0, d3.max(data, function(d) { return d.value; })]).range([y0.rangeBand(), 0]);
-
-        var group = svg.selectAll(".group")
-        .data(dataByGroup)
-        .enter().append("g")
-        .attr("class", "group")
-        .attr("transform", function(d) { return "translate(0," + y0(d.key) + ")"; });
-
-        group.append("text")
-        .attr("class", "group-label")
-        .attr("x", -6)
-        .attr("y", function(d) { return y1(d.values[0].value / 2); })
-        .attr("dy", ".35em")
-        .text(function(d) {
-          if(d.key == 1) {
-            return "Best"
-          } else if(d.key == dataByGroup.length) {
-            return "Worst"
-          } else {
-            return null;
+      var rankGraphData = function(data) {
+        var result = [];
+        _.each(_.pairs(data), function(el) {
+          var key = scope.problem.alternatives[el[0]].title;
+          var values = el[1];
+          for(var i = 0; i < values.length; i++) {
+            var obj = result[i] || { key: "Rank " + (i + 1), values: [] };
+            obj.values.push({x: key, y: values[i]});
+            result[i] = obj;
           }
         });
-
-        var bars = group.selectAll("g.bar")
-        .data(function(d) { return d.values; })
-        .enter().append("g")
-        .attr("class", "bar");
-
-        bars.append("rect")
-        .style("fill", function(d) { return color(d.group); })
-        .attr("x", function(d) { return x(d.intervention); })
-        .attr("width", x.rangeBand())
-        .attr("y", function(d) { return y1(d.value); })
-        .attr("height", function(d) { return y0.rangeBand() - y1(d.value); });
-
-
-        group.filter(function(d, i) { return !i; }).append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + y0.rangeBand() + ")")
-        .call(xAxis);
-      });
-
-      scope.$watch('stacked', function(newVal, oldVal) {
-        if(newVal === oldVal) return;
-        if (newVal === "multiples") transitionMultiples();
-        else transitionStacked();
-      });
-
-      function transitionMultiples() {
-        var t = svg.transition().duration(750),
-        g = t.selectAll(".group").attr("transform", function(d) { return "translate(0," + y0(d.key) + ")"; });
-        g.selectAll("rect").attr("y", function(d) { return y1(d.value); });
-        g.select(".group-label").attr("y", function(d) { return y1(d.values[0].value / 2); })
+        return result;
       }
 
-      function transitionStacked() {
-        var t = svg.transition().duration(750),
-        g = t.selectAll(".group").attr("transform", "translate(0," + y0(y0.domain()[0]) + ")");
-        g.selectAll("rect").attr("y", function(d) { return y1(d.value + d.valueOffset); });
-        g.select(".group-label").attr("y", function(d) { return y1(d.values[0].value / 2 + d.values[0].valueOffset); })
-      }
+      scope.$watch('value', function(newVal, oldVal) {
+        if(!newVal) return;
+        nv.addGraph(function() {
+          var chart = nv.models.multiBarChart().height(height).width(width);
+          var data = rankGraphData(newVal);
+
+          chart.yAxis.tickFormat(d3.format(',.3f'))
+          chart.stacked(attrs.stacked);
+          chart.reduceXTicks(false);
+
+          svg.datum(data)
+          .transition().duration(100).call(chart);
+
+          nv.utils.windowResize(chart.update);
+        });
+      }, true);
     }
   }
 }).
-  directive('ordinalStep', function() {
-  var w = 300, h = 300;
+  directive('barChart', function($timeout) {
   return {
     restrict: 'E',
     replace: true,
-    transclude: true,
-    scope: { currentStep: '=', problem: '=' },
-    templateUrl: 'elicitOrdinal.html'
-  };
+    scope: {
+      value: '=',
+      parseFn: '='
+    },
+    link: function(scope, element, attrs) {
+      function parsePx(str) { return parseInt(str.replace(/px/gi, '')) };
+
+      var width = parsePx($(element[0].parentNode).css('width'));
+      var height = parsePx($(element[0].parentNode).css('height'));
+      var svg = d3.select(element[0]).append("svg")
+      .attr("width", "100%")
+      .attr("height", "100%");
+
+      scope.$watch('value', function(newVal, oldVal) {
+        if(!newVal) return;
+        nv.addGraph(function() {
+          var chart = nv.models.discreteBarChart()
+          .staggerLabels(false)
+          .showValues(true)
+          .height(height)
+          .width(width)
+          .tooltips(false)
+          .x(function(d) { return d.label })
+          .y(function(d) { return d.value });
+
+          var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
+          svg.datum(data).transition().duration(100).call(chart);
+          nv.utils.windowResize(chart.update);
+        });
+      }, true);
+    }
+  }
 }).
-  directive('chooseMethodStep', function() {
+  directive('lineChart', function() {
   return {
     restrict: 'E',
     replace: true,
-    transclude: true,
-    scope: { currentStep: '=' },
-    templateUrl: 'chooseMethod.html'
-  };
+    scope: {
+      value: '=',
+      parseFn: '='
+    },
+    link: function(scope, element, attrs) {
+      function parsePx(str) { return parseInt(str.replace(/px/gi, '')) };
+
+      var width = parsePx($(element[0].parentNode).css('width'));
+      var height = parsePx($(element[0].parentNode).css('height'));
+      var svg = d3.select(element[0]).append("svg")
+      .attr("width", "100%")
+      .attr("height", "100%");
+
+      scope.$watch('value', function(newVal, oldVal) {
+        if(!newVal) return;
+        var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
+
+        var chart = nv.models.lineChart().width(width).height(height);
+        chart.xAxis.staggerLabels(false);
+        chart.xAxis.tickFormat(function(i, obj) {
+          if (i % 1 === 0) {
+            return data[0].labels[i];
+          } else {
+            return "";
+          }
+        });
+
+        svg.datum(data).call(chart);
+        nv.utils.windowResize(chart.update);
+
+      }, true);
+    }
+  }
 }).
-  directive('ratioBoundStep', function() {
+  directive('heat', function() {
   return {
-    restrict: 'E',
-    replace: true,
-    transclude: true,
-    scope: { currentStep: '=', problem: '=' },
-    templateUrl: 'elicitRatioBound.html'
+    restrict: 'C',
+    replace: false,
+    transclude: false,
+    scope: false,
+    link: function(scope, element, attrs) {
+      scope.$watch(element[0], function() {
+        var value = parseFloat(element[0].innerHTML);
+        var color = d3.scale.quantile().range(d3.range(9)).domain([1, 0]);
+        $(element[0].parentNode).addClass("RdYlGn");
+        $(element[0]).addClass("q" + color(value) + "-9");
+      });
+    }
   };
 });

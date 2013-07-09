@@ -1,9 +1,5 @@
 function RatioBoundElicitationHandler(problem) {
   this.fields = ["criterionA", "criterionB"];
-  function getBounds(criterionName) {
-    var criterion = problem.criteria[criterionName];
-    return [criterion.worst(), criterion.best()].sort();
-  }
 
   var title = function(step) {
     var base = "Ratio Bound SWING weighting";
@@ -12,15 +8,22 @@ function RatioBoundElicitationHandler(problem) {
     return base + " (" + step + "/" + total + ")";
   }
 
+  function getBounds(criterionName) {
+    var criterion = problem.criteria[criterionName];
+    return [criterion.worst(), criterion.best()].sort();
+  }
+
   function buildInitial(criterionA, criterionB, step) {
     var bounds = getBounds(criterionA);
     var increasing = problem.criteria[criterionA].pvf.type === 'linear-increasing';
-    return { title: title(step),
+    return {
+      title: title(step),
       criterionA: criterionA,
       criterionB: criterionB,
       best: function() { return increasing ? this.choice.upper : this.choice.lower },
       worst: function() { return increasing ? this.choice.lower : this.choice.upper },
-      choice: { lower: bounds[0],
+      choice: {
+        lower: bounds[0],
         upper: bounds[1]
       },
       range: { from: bounds[0], to: bounds[1], rightOpen: true }
@@ -55,10 +58,9 @@ function RatioBoundElicitationHandler(problem) {
       var u = problem.criteria[currentState.criterionA].pvf.map;
       return Array.sort([1 / u(currentState.choice.lower), 1 / u(currentState.choice.upper)]);
     }
-
     next.prefs = angular.copy(currentState.prefs);
     next.prefs["ratio bound"].push({criteria: [order[idx - 1], order[idx]], bounds: getRatioBounds(currentState)});
-    return _.extend(currentState, next);
+    return _.extend(angular.copy(currentState), next);
   }
 
   this.standardize = function(prefs) {

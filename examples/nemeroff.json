@@ -1,144 +1,143 @@
 {
-	"title": "Nemeroff and Thase anti-depressants Example",
-	"criteria": {
-		"response": {
-			"title": "Treatment Responders",
-			"pvf": {
-				"range": [0.28, 0.63],
-				"type": "linear-increasing"
-			}
-
-		},
-		"nausea": {
-			"title": "Nausea ADRs",
-			"pvf": {
-				"range": [0.04, 0.50],
-				"type": "linear-decreasing"
-			}
-		},
-		"insomnia": {
-			"title": "Insomnia ADRs",
-			"pvf": {
-				"range": [0.08, 0.31],
-				"type": "linear-decreasing"
-			}
-		},
-		"anxiety": {
-			"title": "Anxiety ADRs",
-			"pvf": {
-				"range": [0.00, 0.17],
-				"type": "linear-decreasing"
-			}
-		}
-	},
-	"alternatives": {
-		"fluox": {
-			"title": "Fluoxetine"
-		},
-		"venla": {
-			"title": "Venlafaxine"
-		},
-		"place": {
-			"title": "Placebo"
-		}
-	},
-	"performanceTable": [
-		{
-			"alternative": "venla",
-			"criterion": "response",
-			"performance": {
-				"type": "dbeta",
-				"parameters": { "alpha": 52, "beta": 46 }
-			}
-		},
-		{
-			"alternative": "fluox",
-			"criterion": "response",
-			"performance": {
-				"type": "dbeta",
-				"parameters": { "alpha": 46, "beta": 56 }
-			}
-		},
-		{
-			"alternative": "place",
-			"criterion": "response",
-			"performance": {
-				"type": "dbeta",
-				"parameters": { "alpha": 38, "beta": 65 }
-			}
-		},
-		{
-			"alternative": "venla",
-			"criterion": "nausea",
-			"performance": {
-				"type": "dbeta",
-				"parameters": { "alpha": 41, "beta": 61 }
-			}
-		},
-		{
-			"alternative": "fluox",
-			"criterion": "nausea",
-			"performance": {
-				"type": "dbeta",
-				"parameters": { "alpha": 23, "beta": 81 }
-			}
-		},
-		{
-			"alternative": "place",
-			"criterion": "nausea",
-			"performance": {
-				"type": "dbeta",
-				"parameters": { "alpha": 9, "beta": 95 }
-			}
-		},
-		{
-			"alternative": "venla",
-			"criterion": "insomnia",
-			"performance": {
-				"type": "dbeta",
-				"parameters": { "alpha": 23, "beta": 79 }
-			}
-		},
-		{
-			"alternative": "fluox",
-			"criterion": "insomnia",
-			"performance": {
-				"type": "dbeta",
-				"parameters": { "alpha": 16, "beta": 88 }
-			}
-		},
-		{
-			"alternative": "place",
-			"criterion": "insomnia",
-			"performance": {
-				"type": "dbeta",
-				"parameters": { "alpha": 15, "beta": 89 }
-			}
-		},
-		{
-			"alternative": "venla",
-			"criterion": "anxiety",
-			"performance": {
-				"type": "dbeta",
-				"parameters": { "alpha": 11, "beta": 91 }
-			}
-		},
-		{
-			"alternative": "fluox",
-			"criterion": "anxiety",
-			"performance": {
-				"type": "dbeta",
-				"parameters": { "alpha": 8, "beta": 96 }
-			}
-		},
-		{
-			"alternative": "place",
-			"criterion": "anxiety",
-			"performance": {
-				"type": "dbeta",
-				"parameters": { "alpha": 2, "beta": 102 }
-			}
-		}
-	],
-	"preferences": {}
+  "title": "Nemeroff and Thase anti-depressants Example",
+  "criteria": {
+    "response": {
+      "title": "Treatment Responders",
+      "pvf": {
+        "range": [0.28, 0.63],
+        "type": "linear-increasing"
+      }
+    },
+    "nausea": {
+      "title": "Nausea ADRs",
+      "pvf": {
+        "range": [0.04, 0.50],
+        "type": "linear-decreasing"
+      }
+    },
+    "insomnia": {
+      "title": "Insomnia ADRs",
+      "pvf": {
+        "range": [0.08, 0.31],
+        "type": "linear-decreasing"
+      }
+    },
+    "anxiety": {
+      "title": "Anxiety ADRs",
+      "pvf": {
+        "range": [0.00, 0.17],
+        "type": "linear-decreasing"
+      }
+    }
+  },
+  "alternatives": {
+    "fluox": {
+      "title": "Fluoxetine"
+    },
+    "venla": {
+      "title": "Venlafaxine"
+    },
+    "place": {
+      "title": "Placebo"
+    }
+  },
+  "performanceTable": [
+    {
+    "alternative": "venla",
+    "criterion": "response",
+    "performance": {
+      "type": "dbeta",
+      "parameters": { "alpha": 52, "beta": 46 }
+    }
+  },
+  {
+    "alternative": "fluox",
+    "criterion": "response",
+    "performance": {
+      "type": "dbeta",
+      "parameters": { "alpha": 46, "beta": 56 }
+    }
+  },
+  {
+    "alternative": "place",
+    "criterion": "response",
+    "performance": {
+      "type": "dbeta",
+      "parameters": { "alpha": 38, "beta": 65 }
+    }
+  },
+  {
+    "alternative": "venla",
+    "criterion": "nausea",
+    "performance": {
+      "type": "dbeta",
+      "parameters": { "alpha": 41, "beta": 61 }
+    }
+  },
+  {
+    "alternative": "fluox",
+    "criterion": "nausea",
+    "performance": {
+      "type": "dbeta",
+      "parameters": { "alpha": 23, "beta": 81 }
+    }
+  },
+  {
+    "alternative": "place",
+    "criterion": "nausea",
+    "performance": {
+      "type": "dbeta",
+      "parameters": { "alpha": 9, "beta": 95 }
+    }
+  },
+  {
+    "alternative": "venla",
+    "criterion": "insomnia",
+    "performance": {
+      "type": "dbeta",
+      "parameters": { "alpha": 23, "beta": 79 }
+    }
+  },
+  {
+    "alternative": "fluox",
+    "criterion": "insomnia",
+    "performance": {
+      "type": "dbeta",
+      "parameters": { "alpha": 16, "beta": 88 }
+    }
+  },
+  {
+    "alternative": "place",
+    "criterion": "insomnia",
+    "performance": {
+      "type": "dbeta",
+      "parameters": { "alpha": 15, "beta": 89 }
+    }
+  },
+  {
+    "alternative": "venla",
+    "criterion": "anxiety",
+    "performance": {
+      "type": "dbeta",
+      "parameters": { "alpha": 11, "beta": 91 }
+    }
+  },
+  {
+    "alternative": "fluox",
+    "criterion": "anxiety",
+    "performance": {
+      "type": "dbeta",
+      "parameters": { "alpha": 8, "beta": 96 }
+    }
+  },
+  {
+    "alternative": "place",
+    "criterion": "anxiety",
+    "performance": {
+      "type": "dbeta",
+      "parameters": { "alpha": 2, "beta": 102 }
+    }
+  }
+  ],
+  "preferences": {}
 }

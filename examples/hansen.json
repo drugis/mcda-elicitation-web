@@ -1,0 +1,266 @@
+{
+  "title": "Hansen et al. 2005 with Placebo as baseline",
+  "criteria": {
+    "HAM-D": {
+      "title": "HAM-D",
+      "pvf": {
+        "type": "linear-increasing"
+      }
+    },
+    "Diarrhea": {
+      "title": "Diarrhea",
+      "pvf": {
+        "type": "linear-decreasing"
+      }
+    },
+    "Dizziness": {
+      "title": "Dizziness",
+      "pvf": {
+        "type": "linear-decreasing"
+      }
+    },
+    "Headache": {
+      "title": "Headache",
+      "pvf": {
+        "type": "linear-decreasing"
+      }
+    },
+    "Insomnia": {
+      "title": "Insomnina",
+      "pvf": {
+        "type": "linear-decreasing"
+      }
+    },
+    "Nausea": {
+      "title": "Nausea",
+      "pvf": {
+        "type": "linear-decreasing"
+      }
+    }
+  },
+  "alternatives": {
+    "Placebo": {
+      "title": "Placebo"
+    },
+    "Fluox": {
+      "title": "Fluoxetine"
+    },
+    "Parox": {
+      "title": "Paroxetine"
+    },
+    "Sertr": {
+      "title": "Sertraline"
+    },
+    "Venla": {
+      "title": "Venlafaxine"
+    }
+  },
+  "performanceTable": [
+    {
+    "criterion": "HAM-D",
+    "performance": {
+      "type": "relative-logit-normal",
+      "parameters": {
+        "baseline": {
+          "type": "dnorm",
+          "name": "Placebo",
+          "mu": -0.17143575198943867,
+          "sigma": 0.11299261988783152
+        },
+        "relative": {
+          "type": "dmnorm",
+          "mu": {
+            "Placebo": 0.00000,
+            "Fluoxetine": 0.4718129,
+            "Paroxetine": 0.7258847,
+            "Sertraline": 0.6715258,
+            "Venlafaxine": 0.8211993
+          },
+          "cov": {
+            "rownames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
+            "colnames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
+            "data":
+              [ [0.00, 0.00, 0.00, 0.00, 0.00],
+                [0.00, 0.013445532, 0.010394690, 0.009881156, 0.010499559],
+                [0.00, 0.010394690, 0.023006616, 0.008196856, 0.010732709],
+                [0.00, 0.009881156, 0.008196856, 0.019023866, 0.009210099],
+                [0.00, 0.010499559, 0.010732709, 0.009210099, 0.019107243]]
+          }
+        }
+      }
+    }
+  },
+  {
+    "criterion": "Diarrhea",
+    "performance": {
+      "type": "relative-logit-normal",
+      "parameters": {
+        "baseline": {
+          "type": "dnorm",
+          "name": "Placebo",
+          "mu": -2.18973652268887,
+          "sigma": 0.20745091277030614
+        },
+        "relative": {
+          "type": "dmnorm",
+          "mu": {
+            "Placebo": 0.00000,
+            "Fluoxetine": 0.60820293,
+            "Paroxetine": 0.14088424,
+            "Sertraline": 0.93203685,
+            "Venlafaxine": 0.09601785
+          },
+          "cov": {
+            "rownames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
+            "colnames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
+            "data":
+              [ [0.00, 0.00, 0.00, 0.00, 0.00],
+                [0.00, 0.05366822, 0.04117003, 0.03407600,  0.03788519],
+                [0.00, 0.04117003, 0.08108542, 0.03778130,  0.04324302],
+                [0.00, 0.03407600, 0.03778130, 0.05394404,  0.03338272],
+                [0.00, 0.03788519, 0.04324302, 0.03338272,  0.09859621]]
+          }
+        }
+      }
+    }
+  },
+  {
+    "criterion": "Dizziness",
+    "performance": {
+      "type": "relative-logit-normal",
+      "parameters": {
+        "baseline": {
+          "type": "dnorm",
+          "name": "Placebo",
+          "mu": -2.229952239997334,
+          "sigma": 0.6103081418234848
+        },
+        "relative": {
+          "type": "dmnorm",
+          "mu": {
+            "Placebo": 0.00000,
+            "Fluoxetine": 0.1203208,
+            "Paroxetine": 0.6538699,
+            "Sertraline": -0.2203627,
+            "Venlafaxine": 1.1915229
+          },
+          "cov": {
+            "rownames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
+            "colnames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
+            "data":
+              [ [0.00, 0.00, 0.00, 0.00, 0.00],
+                [0.00, 0.09124249, 0.07387436, 0.08086186,  0.06457527],
+                [0.00, 0.07387436, 0.14080128, 0.10328788,  0.07030520],
+                [0.00, 0.08086186, 0.10328788, 0.14662864,  0.06920427],
+                [0.00, 0.06457527, 0.07030520, 0.06920427,  0.08590214]]
+          }
+        }
+      }
+    }
+  },
+  {
+    "criterion": "Headache",
+    "performance": {
+      "type": "relative-logit-normal",
+      "parameters": {
+        "baseline": {
+          "name": "Placebo",
+          "type": "dnorm",
+          "mu": -1.195990710044872,
+          "sigma": 0.2926643940049414
+        },
+        "relative": {
+          "type": "dmnorm",
+          "mu": {
+            "Placebo": 0.00000,
+            "Fluoxetine": 0.1964591,
+            "Paroxetine": 0.1263129,
+            "Sertraline": 0.2029933,
+            "Venlafaxine": -0.2254059
+          },
+          "cov": {
+            "rownames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
+            "colnames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
+            "data":
+              [ [0.00, 0.00, 0.00, 0.00, 0.00],
+                [0.00, 0.03519380, 0.02755068, 0.02189916,  0.02919822],
+                [0.00, 0.02755068, 0.04847513, 0.02374509,  0.03277411],
+                [0.00, 0.02189916, 0.02374509, 0.03259199,  0.02356638],
+                [0.00, 0.02919822, 0.03277411, 0.02356638,  0.05920276]]
+          }
+        }
+      }
+    }
+  },
+  {
+    "criterion": "Insomnia",
+    "performance": {
+      "type": "relative-logit-normal",
+      "parameters": {
+        "baseline": {
+          "name": "Placebo",
+          "type": "dnorm",
+          "mu": -2.6072766936458627,
+          "sigma": 0.19058521932687542
+        },
+        "relative": {
+          "type": "dmnorm",
+          "mu": {
+            "Placebo": 0.00000,
+            "Fluoxetine": 0.7978386,
+            "Paroxetine": 0.7486351,
+            "Sertraline": 1.0663029,
+            "Venlafaxine": 0.9744811
+          },
+          "cov": {
+            "rownames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
+            "colnames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
+            "data":
+              [ [0.00, 0.00, 0.00, 0.00, 0.00],
+                [0.00, 0.04388258, 0.03516051, 0.02560003,  0.03283164],
+                [0.00, 0.03516051, 0.06255486, 0.02807280,  0.03474863],
+                [0.00, 0.02560003, 0.02807280, 0.05402063,  0.02592013],
+                [0.00, 0.03283164, 0.03474863, 0.02592013,  0.06738850]]
+          }
+        }
+      }
+    }
+  },
+  {
+    "criterion": "Nausea",
+    "performance": {
+      "type": "relative-logit-normal",
+      "parameters": {
+        "baseline": {
+          "type": "dnorm",
+          "name": "Placebo",
+          "mu": -2.0171705884956532,
+          "sigma": 0.191705300034155
+        },
+        "relative": {
+          "type": "dmnorm",
+          "mu": {
+            "Placebo": 0.00000,
+            "Fluoxetine": 0.3951561,
+            "Paroxetine": 0.6442827,
+            "Sertraline": 0.6469638,
+            "Venlafaxine": 0.9771107
+          },
+          "cov": {
+            "rownames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
+            "colnames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
+            "data":
+              [ [0.00, 0.00, 0.00, 0.00, 0.00],
+                [0.00, 0.04167875, 0.03492591, 0.02952693,  0.03559971],
+                [0.00, 0.03492591, 0.05629741, 0.03102295,  0.03658295],
+                [0.00, 0.02952693, 0.03102295, 0.04396177,  0.02899487],
+                [0.00, 0.03559971, 0.03658295, 0.02899487,  0.05369960]]
+          }
+        }
+      }
+    }
+  }
+  ],
+  "preferences": {}
+}
+
