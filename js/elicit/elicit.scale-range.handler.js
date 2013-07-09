@@ -23,18 +23,18 @@ function ScaleRangeHandler(problem, Tasks) {
         // Set inital model value
         var problemRange = problem.criteria[criterion[0]].pvf.range;
         if (problemRange) {
-          choices[criterion[0]] = { lower: problemRange[0], upper: problemRange[1] };
-        } else {
-          choices[criterion[0]] = { lower: from, upper: to };
+          from = problemRange[0];
+          to = problemRange[1];
         }
+        choices[criterion[0]] = { lower: from, upper: to };
 
         // Set scales for slider
         var margin = 0.5;
         var fromFudge = (((from < 0) ? -1 : 1) * (nice(from) * margin));
         var toFudge = (((to < 0) ? -1 : 1) * (nice(to) * margin));
         scales[criterion[0]] =
-          { restrictFrom: from,
-            restrictTo: to,
+          { restrictFrom: criterion[1]["2.5%"],
+            restrictTo: criterion[1]["97.5%"],
             from: nice(from) - fromFudge,
             to: nice(to) + toFudge,
             increaseFrom: function() { this.from = this.from - fromFudge },
