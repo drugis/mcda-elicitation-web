@@ -1,4 +1,4 @@
-<form ng-show="currentStep.type == 'ratio bound'">
+<div ng-show="currentStep.type == 'ratio bound'">
   <h5 class="subheader">Determining the relative importance of:</h5>
   <ul class="no-bullet">
     <li ng-repeat="criterion in [currentStep.criterionA, currentStep.criterionB]">
@@ -32,4 +32,4 @@
   {{problem.criteria[currentStep.criterionB].title}} = {{problem.criteria[currentStep.criterionB].worst()}}
   is clearly worse.
   </p>
-</form>
+</div>

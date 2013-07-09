@@ -1,4 +1,4 @@
-<form ng-show="currentStep.type == 'ordinal'">
+<div ng-show="currentStep.type == 'ordinal'">
   <h5 class="subheader">Given the following situation:</h5>
   <ul class="inline-list">
     <li ng-repeat="(criterion, value) in currentStep.reference">
@@ -13,4 +13,4 @@
       <li>{{problem.criteria[choice].title}} &rarr; {{alternative[choice]}}</li>
     </ul>
   </label>
-</form>
+</div>
