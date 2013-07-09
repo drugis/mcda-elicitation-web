@@ -10,9 +10,7 @@
   <label ng-repeat="(choice, alternative) in currentStep.choices">
     <input type="radio" style="float: left" ng-model="currentStep.choice" value="{{choice}}" />
     <ul class="inline-list">
-      <li ng-repeat="(criterion, value) in alternative">
-        {{problem.criteria[criterion].title}} = {{value}}
-      </li>
+      <li>{{choice}} &rarr; {{alternative[choice]}}</li>
     </ul>
   </label>
 </form>
