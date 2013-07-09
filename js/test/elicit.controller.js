@@ -4,7 +4,7 @@ describe("ElicitationController", function() {
   var app = angular.module('elicit', ['elicit.example', 'elicit.services', 'clinicico']);
 
   function initializeScope(problem) {
-    var ctrl, scope, $httpBackend;
+    var ctrl, scope;
 
     inject(function($rootScope, $controller) {
       scope = $rootScope.$new();
@@ -63,25 +63,33 @@ describe("ElicitationController", function() {
     expect(scope2.problem.criteria["Bleed"].pvf.inv(0.7)).toBeCloseTo(0.07);
   });
 
-  it("should initialize the currentStep with Ordinal", function() {
+  it("should initialize the currentStep with scale range", function() {
     expect(scope1.currentStep).toBeDefined();
-    expect(scope1.currentStep.type).toEqual("ordinal");
+    expect(scope1.currentStep.type).toEqual("scale range");
   });
 
   describe("Advance to the nextStep()", function() {
     it("should not go to next step without valid selection", function() {
+      // skip scale range since it always returns true
+      expect(scope1.nextStep()).toBeTruthy();
       expect(scope1.nextStep()).toEqual(false);
       scope1.currentStep.choice = "CHF";
       expect(scope1.nextStep()).toEqual(false);
     });
 
     it("should have the choice as new reference", function() {
+      // skip scale range since it always returns true
+      expect(scope1.nextStep()).toBeTruthy();
+
       scope1.currentStep.choice = "Prox DVT";
       expect(scope1.nextStep()).toEqual(true);
       expect(scope1.currentStep.choice).toBeUndefined();
     });
 
     it("should transition to methods choice when ordinal is done", function() {
+      expect(scope1.currentStep.type).toBe("scale range");
+      expect(scope1.nextStep()).toBeTruthy();
+      expect(scope1.currentStep.type).toBe("ordinal");
       scope1.currentStep.choice = "Prox DVT";
       expect(scope1.nextStep()).toEqual(true);
       scope1.currentStep.choice = "Dist DVT";
@@ -95,6 +103,7 @@ describe("ElicitationController", function() {
       var state = { title: "Foo", prefs: { ordinal: ["A", "D"] } };
       scope1.currentStep = (new ChooseMethodHandler()).initialize(state);
       scope1.currentStep.choice = "done";
+      scope1.currentStep.results = {ranks: {}, cw: {}};
       expect(scope1.nextStep()).toEqual(true);
       expect(scope1.currentStep.type).toEqual("done");
       expect(scope1.currentStep.prefs.ordinal).toEqual(["A", "D"]);
@@ -109,6 +118,8 @@ describe("ElicitationController", function() {
     });
 
     it("should reset to the previous state", function() {
+      expect(scope1.nextStep()).toBeTruthy();
+
       scope1.currentStep.choice = "Prox DVT";
       expect(scope1.nextStep()).toEqual(true);
       expect(scope1.previousStep()).toEqual(true);
@@ -120,6 +131,8 @@ describe("ElicitationController", function() {
     });
 
     it("should remember the next state", function() {
+      expect(scope1.nextStep()).toBeTruthy();
+
       scope1.currentStep.choice = "Prox DVT";
       expect(scope1.nextStep()).toEqual(true);
       scope1.currentStep.choice = "Bleed";
@@ -136,6 +149,8 @@ describe("ElicitationController", function() {
     });
 
     it("should reset the next state on a different choice", function() {
+      expect(scope1.nextStep()).toBeTruthy();
+
       scope1.currentStep.choice = "Prox DVT";
       expect(scope1.nextStep()).toEqual(true);
       scope1.currentStep.choice = "Bleed";
@@ -157,6 +172,8 @@ describe("ElicitationController", function() {
     });
 
     it("should correctly reset the last state on a different choice", function() {
+      expect(scope1.nextStep()).toBeTruthy();
+
       scope1.currentStep.choice = "Prox DVT";
       expect(scope1.nextStep()).toEqual(true);
       scope1.currentStep.choice = "Bleed";
@@ -172,6 +189,8 @@ describe("ElicitationController", function() {
     });
 
     it("correctly handles choice objects", function() {
+      expect(scope1.nextStep()).toBeTruthy();
+
       scope1.currentStep.type = "ratio bound";
       scope1.currentStep.prefs.ordinal = ["Prox DVT", "Bleed", "Dist DVT"];
       // FIXME: should call RatioBoundElicitationHandler.initialize()
@@ -183,6 +202,7 @@ describe("ElicitationController", function() {
       // END FIXME: should call RatioBoundElicitationHandler.initialize()
       expect(scope1.nextStep()).toEqual(true); // Step 2
       scope1.currentStep.choice.lower = 0.05;
+      scope1.currentStep.results = {ranks: {}, cw: {}};
       expect(scope1.nextStep()).toEqual(true); // Done
 
       expect(scope1.previousStep()).toEqual(true); // Step 2

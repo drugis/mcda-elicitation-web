@@ -43,7 +43,7 @@ function ResultsHandler(problem) {
       type: "done",
       title: "Done eliciting preferences",
       selectedAlternative: _.keys(problem.alternatives)[0],
-      selectedRank: 1,
+      selectedRank: 0,
       ranksByAlternative: getRanksByAlternative(state.results.ranks.data),
       alternativesByRank: getAlterativesByRank(state.results.ranks.data),
       centralWeights: getCentralWeights(state.results.cw.data)
