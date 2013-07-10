@@ -68,7 +68,7 @@ function ScaleRangeHandler(problem, Tasks) {
     });
 
     var nextState = angular.copy(currentState);
-    nextState.type = "ordinal"
+    nextState.type = "partial value function";
     return nextState;
   }
 

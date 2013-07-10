@@ -8,12 +8,17 @@ describe("ElicitationController", function() {
 
     inject(function($rootScope, $controller) {
       scope = $rootScope.$new();
-      ctrl = $controller("ElicitationController",
-                          { $scope: scope,
-                            DecisionProblem: { get: function(callback) { callback(problem); }},
-                          });
+      var dependencies =
+        { $scope: scope,
+          DecisionProblem: { get: function(callback) { callback(problem); }} }
+      ctrl = $controller("ElicitationController", dependencies);
     });
     return scope;
+  }
+
+  function skipToOrdinal(scope) {
+    scope.nextStep(); // Scale range -> Partial Value Function
+    scope.nextStep(); // Partial Value Function -> Ordinal
   }
 
   beforeEach(function() {
@@ -21,46 +26,12 @@ describe("ElicitationController", function() {
     var problem = exampleProblem();
     scope1 = initializeScope(problem);
     problem = exampleProblem();
-    problem.criteria["Bleed"].pvf.type = "linear-increasing";
+    problem.criteria["Bleed"].pvf.direction = "increasing";
     scope2 = initializeScope(problem);
   });
 
   it("should have a problem", function() {
     expect(scope1.problem);
-  });
-
-  it("should determine worst values", function() {
-    expect(scope1.problem.criteria["Prox DVT"].worst()).toEqual(0.25);
-    expect(scope1.problem.criteria["Bleed"].worst()).toEqual(0.1);
-
-    expect(scope2.problem.criteria["Bleed"].worst()).toEqual(0.0);
-  });
-
-  it("should determine best values", function() {
-    expect(scope1.problem.criteria["Prox DVT"].best()).toEqual(0.0);
-    expect(scope1.problem.criteria["Bleed"].best()).toEqual(0.0);
-
-    expect(scope2.problem.criteria["Bleed"].best()).toEqual(0.1);
-  });
-
-  it("should define the partial value function", function() {
-    expect(scope1.problem.criteria["Prox DVT"].pvf.map(0.0)).toBeCloseTo(1.0);
-    expect(scope1.problem.criteria["Prox DVT"].pvf.map(0.25)).toBeCloseTo(0.0);
-    expect(scope1.problem.criteria["Prox DVT"].pvf.map(0.2)).toBeCloseTo(0.05/0.25);
-
-    expect(scope2.problem.criteria["Bleed"].pvf.map(0.0)).toBeCloseTo(0.0);
-    expect(scope2.problem.criteria["Bleed"].pvf.map(0.1)).toBeCloseTo(1.0);
-    expect(scope2.problem.criteria["Bleed"].pvf.map(0.07)).toBeCloseTo(0.7);
-  });
-
-  it("should define the inverse of the partial value function", function() {
-    expect(scope1.problem.criteria["Prox DVT"].pvf.inv(1.0)).toBeCloseTo(0.0);
-    expect(scope1.problem.criteria["Prox DVT"].pvf.inv(0.0)).toBeCloseTo(0.25);
-    expect(scope1.problem.criteria["Prox DVT"].pvf.inv(0.8)).toBeCloseTo(0.05);
-
-    expect(scope2.problem.criteria["Bleed"].pvf.inv(0.0)).toBeCloseTo(0.0);
-    expect(scope2.problem.criteria["Bleed"].pvf.inv(1.0)).toBeCloseTo(0.1);
-    expect(scope2.problem.criteria["Bleed"].pvf.inv(0.7)).toBeCloseTo(0.07);
   });
 
   it("should initialize the currentStep with scale range", function() {
@@ -70,26 +41,21 @@ describe("ElicitationController", function() {
 
   describe("Advance to the nextStep()", function() {
     it("should not go to next step without valid selection", function() {
-      // skip scale range since it always returns true
-      expect(scope1.nextStep()).toBeTruthy();
+      skipToOrdinal(scope1);
       expect(scope1.nextStep()).toEqual(false);
       scope1.currentStep.choice = "CHF";
       expect(scope1.nextStep()).toEqual(false);
     });
 
     it("should have the choice as new reference", function() {
-      // skip scale range since it always returns true
-      expect(scope1.nextStep()).toBeTruthy();
-
+      skipToOrdinal(scope1);
       scope1.currentStep.choice = "Prox DVT";
       expect(scope1.nextStep()).toEqual(true);
       expect(scope1.currentStep.choice).toBeUndefined();
     });
 
     it("should transition to methods choice when ordinal is done", function() {
-      expect(scope1.currentStep.type).toBe("scale range");
-      expect(scope1.nextStep()).toBeTruthy();
-      expect(scope1.currentStep.type).toBe("ordinal");
+      skipToOrdinal(scope1);
       scope1.currentStep.choice = "Prox DVT";
       expect(scope1.nextStep()).toEqual(true);
       scope1.currentStep.choice = "Dist DVT";
@@ -118,7 +84,7 @@ describe("ElicitationController", function() {
     });
 
     it("should reset to the previous state", function() {
-      expect(scope1.nextStep()).toBeTruthy();
+      skipToOrdinal(scope1);
 
       scope1.currentStep.choice = "Prox DVT";
       expect(scope1.nextStep()).toEqual(true);
@@ -131,7 +97,7 @@ describe("ElicitationController", function() {
     });
 
     it("should remember the next state", function() {
-      expect(scope1.nextStep()).toBeTruthy();
+      skipToOrdinal(scope1);
 
       scope1.currentStep.choice = "Prox DVT";
       expect(scope1.nextStep()).toEqual(true);
@@ -149,7 +115,7 @@ describe("ElicitationController", function() {
     });
 
     it("should reset the next state on a different choice", function() {
-      expect(scope1.nextStep()).toBeTruthy();
+      skipToOrdinal(scope1);
 
       scope1.currentStep.choice = "Prox DVT";
       expect(scope1.nextStep()).toEqual(true);
@@ -172,8 +138,7 @@ describe("ElicitationController", function() {
     });
 
     it("should correctly reset the last state on a different choice", function() {
-      expect(scope1.nextStep()).toBeTruthy();
-
+      skipToOrdinal(scope1);
       scope1.currentStep.choice = "Prox DVT";
       expect(scope1.nextStep()).toEqual(true);
       scope1.currentStep.choice = "Bleed";
@@ -189,11 +154,11 @@ describe("ElicitationController", function() {
     });
 
     it("correctly handles choice objects", function() {
-      expect(scope1.nextStep()).toBeTruthy();
+      skipToOrdinal(scope1);
 
       scope1.currentStep.type = "ratio bound";
       scope1.currentStep.prefs.ordinal = ["Prox DVT", "Bleed", "Dist DVT"];
-      
+
       scope1.currentStep.prefs["ratio bound"] = [];
       scope1.currentStep.criterionA = "Prox DVT";
       scope1.currentStep.criterionB = "Bleed";
@@ -218,33 +183,34 @@ describe("ElicitationController", function() {
   describe("getStandardizedPreferences", function() {
     it("rewrites ordinal preferences", function() {
       scope1.currentStep.prefs = { ordinal : ["Prox DVT", "Bleed", "Dist DVT"] };
-      expect(scope1.getStandardizedPreferences(scope1.currentStep)).toEqual([
-                                                                            { type: "ordinal", criteria: ["Prox DVT", "Bleed"] },
-                                                                            { type: "ordinal", criteria: ["Bleed", "Dist DVT"] }
-      ]);
+      var expected = [
+        { type: "ordinal", criteria: ["Prox DVT", "Bleed"] },
+        { type: "ordinal", criteria: ["Bleed", "Dist DVT"] }
+      ]
+      expect(scope1.getStandardizedPreferences(scope1.currentStep)).toEqual(expected);
     });
 
     it("rewrites ratio bound preferences", function() {
       scope1.currentStep.prefs = { "ratio bound" : [
         { criteria: ["Prox DVT", "Bleed"], bounds: [1.03, 1.52] }
       ] };
-      expect(scope1.getStandardizedPreferences(scope1.currentStep)).toEqual([
-                                                                            { type: "ratio bound", criteria: ["Prox DVT", "Bleed"], bounds: [1.03, 1.52] }
-      ]);
+      var expected = [
+        { type: "ratio bound", criteria: ["Prox DVT", "Bleed"], bounds: [1.03, 1.52] }
+      ]
+      expect(scope1.getStandardizedPreferences(scope1.currentStep)).toEqual(expected);
     });
 
     it("merges standardized preferences from the handlers", function() {
       scope1.currentStep.prefs = {
         ordinal : ["Prox DVT", "Bleed", "Dist DVT"],
-        "ratio bound" : [
-          { criteria: ["Prox DVT", "Bleed"], bounds: [1.03, 1.52] }
-        ]
+        "ratio bound" : [ { criteria: ["Prox DVT", "Bleed"], bounds: [1.03, 1.52] } ]
       };
-      expect(scope1.getStandardizedPreferences(scope1.currentStep)).toEqual([
-                                                                            { type: "ordinal", criteria: ["Prox DVT", "Bleed"] },
-                                                                            { type: "ordinal", criteria: ["Bleed", "Dist DVT"] },
-                                                                            { type: "ratio bound", criteria: ["Prox DVT", "Bleed"], bounds: [1.03, 1.52] }
-      ]);
+      var expected = [
+        { type: "ordinal", criteria: ["Prox DVT", "Bleed"] },
+        { type: "ordinal", criteria: ["Bleed", "Dist DVT"] },
+        { type: "ratio bound", criteria: ["Prox DVT", "Bleed"], bounds: [1.03, 1.52] }
+      ]
+      expect(scope1.getStandardizedPreferences(scope1.currentStep)).toEqual(expected);
     });
   });
 });

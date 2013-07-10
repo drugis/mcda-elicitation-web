@@ -14,32 +14,11 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
     $scope.saveState = { error: PreferenceStore.lastError };
   });
 
-  function extendProblem(problem) {
-    angular.forEach(problem.criteria, function(criterion) {
-      function create(idx1, idx2) {
-        return function() {
-          var pvf = criterion.pvf;
-          return pvf.type === "linear-increasing" ? pvf.range[idx1] : pvf.range[idx2];
-        }
-      }
-      criterion.worst = create(0, 1);
-      criterion.best = create(1, 0);
-      criterion.pvf.map = function(x) {
-        var range = Math.abs(criterion.best() - criterion.worst());
-        return criterion.pvf.type === "linear-increasing" ? ((x - criterion.worst()) / range) : ((criterion.worst() - x) / range);
-      };
-      criterion.pvf.inv = function(x) {
-        var range = Math.abs(criterion.best() - criterion.worst());
-        return criterion.pvf.type === "linear-increasing" ? ((x * range) + criterion.worst()) : (-(x * range) + criterion.worst());
-      };
-    });
-  }
-
   var initialize = function(problem) {
     if(!_.isEmpty(problem)) {
-      extendProblem($scope.problem);
       handlers = {
         "scale range": new ScaleRangeHandler(problem, Tasks),
+        "partial value function": new PartialValueFunctionHandler(problem),
         "ordinal":  new OrdinalElicitationHandler(problem),
         "ratio bound":  new RatioBoundElicitationHandler(problem),
         "choose method": new ChooseMethodHandler(),

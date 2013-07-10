@@ -15,7 +15,7 @@ function RatioBoundElicitationHandler(problem) {
 
   function buildInitial(criterionA, criterionB, step) {
     var bounds = getBounds(criterionA);
-    var increasing = problem.criteria[criterionA].pvf.type === 'linear-increasing';
+    var increasing = problem.criteria[criterionA].pvf.direction === 'increasing';
     return {
       title: title(step),
       criterionA: criterionA,
@@ -59,7 +59,9 @@ function RatioBoundElicitationHandler(problem) {
       return Array.sort([1 / u(currentState.choice.lower), 1 / u(currentState.choice.upper)]);
     }
     next.prefs = angular.copy(currentState.prefs);
-    next.prefs["ratio bound"].push({criteria: [order[idx - 1], order[idx]], bounds: getRatioBounds(currentState)});
+    next.prefs["ratio bound"].push(
+      { criteria: [order[idx - 1], order[idx]],
+        bounds: getRatioBounds(currentState) });
     return _.extend(angular.copy(currentState), next);
   }
 

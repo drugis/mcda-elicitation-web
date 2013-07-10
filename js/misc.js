@@ -9,7 +9,8 @@ function exampleProblem() {
             0.0,
             0.25
           ],
-          "type": "linear-decreasing"
+          "type": "linear",
+          "direction": "decreasing"
         }
       },
       "Dist DVT": {
@@ -19,7 +20,8 @@ function exampleProblem() {
             0.15,
             0.4
           ],
-          "type": "linear-decreasing"
+          "type": "linear",
+          "direction": "decreasing"
         }
       },
       "Bleed": {
@@ -29,7 +31,8 @@ function exampleProblem() {
             0.0,
             0.1
           ],
-          "type": "linear-decreasing"
+          "type": "linear",
+          "direction": "decreasing"
         }
       }
     },

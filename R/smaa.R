@@ -100,9 +100,9 @@ run_smaa <- function(params) {
 
   pvf <- lapply(params$criteria, function(criterion) {
     range <- criterion$pvf$range
-    if (criterion$pvf$type == 'linear-increasing') {
+    if (criterion$pvf$direction == 'increasing') {
       return(partialValue(range[1], range[2]))
-    } else if (criterion$pvf$type == 'linear-decreasing') {
+    } else if (criterion$pvf$direction == 'decreasing') {
       return(partialValue(range[2], range[1]))
     } else {
       stop(paste("PVF type '", criterion$pvf$type, "' not supported.", sep=''))

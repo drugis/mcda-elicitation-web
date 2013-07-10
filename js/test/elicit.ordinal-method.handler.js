@@ -3,34 +3,22 @@ describe("OrdinalElicitationHandler", function() {
   var handler2;
   var state1;
   var state2;
-  var app = angular.module('elicit', ['elicit.example', 'elicit.services', 'clinicico']);
-
-  function initializeScope(problem) {
-    var ctrl, scope, $httpBackend;
-
-    inject(function($injector, $rootScope, $controller) {
-      scope = $rootScope.$new();
-      ctrl = $controller("ElicitationController",
-                          { $scope: scope,
-                            DecisionProblem: { get: function(callback) { callback(problem); }},
-                          });
-    });
-    return scope;
-  }
 
   beforeEach(function() {
-    module('elicit');
-    var problem = exampleProblem();
-    scope1 = initializeScope(problem);
-    problem = exampleProblem();
-    problem.criteria["Bleed"].pvf.type = "linear-increasing";
-    scope2 = initializeScope(problem);
+    var problem1 = exampleProblem();
+    var problem2 = exampleProblem();
 
-    handler1 = new OrdinalElicitationHandler(scope1.problem);
-    handler2 = new OrdinalElicitationHandler(scope2.problem);
+    // ADD PVF's to problem
+    var pvfHandler = new PartialValueFunctionHandler(problem1).initialize();
+    var pvfHandler = new PartialValueFunctionHandler(problem2).initialize();
 
-    state1 = handler1.initialize({});
-    state2 = handler2.initialize({});
+    problem2.criteria["Bleed"].pvf.direction = "increasing";
+
+    handler1 = new OrdinalElicitationHandler(problem1);
+    handler2 = new OrdinalElicitationHandler(problem2);
+
+    state1 = handler1.initialize(problem1);
+    state2 = handler2.initialize(problem2);
   });
 
   describe("initialize", function() {
