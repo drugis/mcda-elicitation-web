@@ -1,4 +1,4 @@
-function ScaleRangeHandler(problem, Tasks) {
+function ScaleRangeHandler(Tasks) {
   this.fields = [];
 
   var log10 = function(x) { return Math.log(x) / Math.log(10); };
@@ -13,15 +13,14 @@ function ScaleRangeHandler(problem, Tasks) {
   }
 
   this.initialize = function(state) {
-    var data = _.extend(angular.copy(problem), { "method": "scales" });
-    var task = Tasks.submit("smaa", data);
+    var task = Tasks.submit("smaa", _.extend(state, { "method": "scales" }));
     var scales = {};
     var choices = {};
     task.results.then(function(results) {
       _.map(_.pairs(results.body[0]), function(criterion) {
         var from = criterion[1]["2.5%"], to = criterion[1]["97.5%"];
         // Set inital model value
-        var problemRange = problem.criteria[criterion[0]].pvf.range;
+        var problemRange = state.criteria[criterion[0]].pvf.range;
         if (problemRange) {
           from = problemRange[0];
           to = problemRange[1];
@@ -42,12 +41,12 @@ function ScaleRangeHandler(problem, Tasks) {
             rightOpen: true };
       });
     });
-    return {
+    return _.extend(state, {
       title: "Measurement scales",
       type: "scale range",
       scales: scales,
       choice: choices
-    };
+    });
   }
 
   this.validChoice = function(currentState) {
@@ -64,7 +63,7 @@ function ScaleRangeHandler(problem, Tasks) {
 
     // Rewrite scale information
     _.each(_.pairs(currentState.choice), function(choice) {
-      problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
+      currentState.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
     });
 
     var nextState = angular.copy(currentState);

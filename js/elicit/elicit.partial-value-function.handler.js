@@ -24,7 +24,8 @@ function PartialValueFunctionHandler(problem) {
   }
 
   this.initialize = function(state) {
-    angular.forEach(problem.criteria, function(criterion) { _.extend(criterion, self.createPartialValueFunction(criterion)) });
+    function addPartialValueFunction(criterion) { _.extend(criterion, self.createPartialValueFunction(criterion)) }
+    angular.forEach(state.criteria, addPartialValueFunction);
     return state;
   }
 

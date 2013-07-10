@@ -1,8 +1,11 @@
-function ResultsHandler(problem) {
+function ResultsHandler() {
+  var alternatives;
+  var criteria;
+
   this.fields = ['results'];
 
   var alternativeTitle = function(id) {
-    return problem.alternatives[id].title;
+    return alternatives[id].title;
   }
 
   var getCentralWeights = function(data) {
@@ -11,7 +14,7 @@ function ResultsHandler(problem) {
       var values = _.map(_.pairs(alternative[1]['w']), function(criterion, index) {
         return { x: index, label: criterion[0], y: criterion[1] };
       });
-      var labels = _.map(_.pluck(values, 'label'), function(id) { return problem.criteria[id].title });
+      var labels = _.map(_.pluck(values, 'label'), function(id) { return criteria[id].title });
       result.push({key: alternativeTitle(alternative[0]), labels: labels, values: values});
     });
     return result;
@@ -39,10 +42,12 @@ function ResultsHandler(problem) {
   }
 
   this.initialize = function(state) {
+    alternatives = state.alternatives;
+    criteria = state.criteria;
     return _.extend(state, {
       type: "done",
       title: "Done eliciting preferences",
-      selectedAlternative: _.keys(problem.alternatives)[0],
+      selectedAlternative: _.keys(alternatives)[0],
       selectedRank: 0,
       ranksByAlternative: getRanksByAlternative(state.results.ranks.data),
       alternativesByRank: getAlterativesByRank(state.results.ranks.data),

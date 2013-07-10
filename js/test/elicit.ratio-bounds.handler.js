@@ -7,10 +7,15 @@ describe("RatioBoundElicitationHandler", function() {
   beforeEach(function() {
     problem = exampleProblem();
 
-    var pvfHandler = new PartialValueFunctionHandler(problem).initialize();
-    handler = new RatioBoundElicitationHandler(problem);
-    state = handler.initialize({ prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
+    problem = new PartialValueFunctionHandler(problem).initialize(problem);
+    problem = _.extend(problem, { prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
+    handler = new RatioBoundElicitationHandler();
+    state = handler.initialize(problem);
   });
+
+  function initProblem(problem) {
+     return new PartialValueFunctionHandler(problem).initialize(problem);
+  }
 
   describe("initialize", function() {
     it("should start comparing the first two criteria", function() {
@@ -24,8 +29,9 @@ describe("RatioBoundElicitationHandler", function() {
 
     it("should sort the worst and best values", function() {
       problem.criteria["Prox DVT"].pvf.direction = "increasing";
-      handler = new RatioBoundElicitationHandler(problem);
-      state = handler.initialize({ prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
+      problem = initProblem(problem);
+      handler = new RatioBoundElicitationHandler();
+      state = handler.initialize(_.extend(problem, { prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } }));
 
       expect(state.choice.lower).toEqual(problem.criteria["Prox DVT"].worst());
       expect(state.worst()).toEqual(problem.criteria["Prox DVT"].worst());
@@ -107,8 +113,9 @@ describe("RatioBoundElicitationHandler", function() {
       expect(state.prefs['ratio bound'][1].bounds[1]).toBeCloseTo(2.00);
 
       problem.criteria["Prox DVT"].pvf.direction = "increasing";
-      handler = new RatioBoundElicitationHandler(problem);
-      state = handler.initialize({ prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
+      problem = initProblem(problem);
+      handler = new RatioBoundElicitationHandler();
+      state = handler.initialize(_.extend(problem, { prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } }));
 
       state.choice.lower = 0.12;
       state.choice.upper = 0.14;
@@ -121,8 +128,9 @@ describe("RatioBoundElicitationHandler", function() {
 
     it("should sort the worst and best values", function() {
       problem.criteria["Prox DVT"].pvf.direction = "increasing";
+      problem = initProblem(problem);
       handler = new RatioBoundElicitationHandler(problem);
-      state = handler.initialize({ prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
+      state = handler.initialize(_.extend(problem, { prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } }));
 
       expect(state.choice.lower).toEqual(problem.criteria["Prox DVT"].worst());
       expect(state.worst()).toEqual(problem.criteria["Prox DVT"].worst());

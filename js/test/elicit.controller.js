@@ -23,15 +23,10 @@ describe("ElicitationController", function() {
 
   beforeEach(function() {
     module('elicit');
+    scope1 = initializeScope(exampleProblem());
     var problem = exampleProblem();
-    scope1 = initializeScope(problem);
-    problem = exampleProblem();
     problem.criteria["Bleed"].pvf.direction = "increasing";
     scope2 = initializeScope(problem);
-  });
-
-  it("should have a problem", function() {
-    expect(scope1.problem);
   });
 
   it("should initialize the currentStep with scale range", function() {
@@ -67,7 +62,7 @@ describe("ElicitationController", function() {
 
     it("should cleanly transition to done", function() {
       var state = { title: "Foo", prefs: { ordinal: ["A", "D"] } };
-      scope1.currentStep = (new ChooseMethodHandler()).initialize(state);
+      scope1.currentStep = (new ChooseMethodHandler()).initialize(_.extend(state, exampleProblem()));
       scope1.currentStep.choice = "done";
       scope1.currentStep.results = {ranks: {}, cw: {}};
       expect(scope1.nextStep()).toEqual(true);
@@ -162,7 +157,7 @@ describe("ElicitationController", function() {
       scope1.currentStep.prefs["ratio bound"] = [];
       scope1.currentStep.criterionA = "Prox DVT";
       scope1.currentStep.criterionB = "Bleed";
-      scope1.currentStep.range = { from: 0, to: 0.25};
+      scope1.currentStep.range = { from: 0, to: 0.25 };
       scope1.currentStep.choice = { lower: 0.1, upper: 0.2 };
 
       expect(scope1.nextStep()).toEqual(true); // Step 2

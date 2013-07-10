@@ -9,8 +9,8 @@ describe("OrdinalElicitationHandler", function() {
     var problem2 = exampleProblem();
 
     // ADD PVF's to problem
-    var pvfHandler = new PartialValueFunctionHandler(problem1).initialize();
-    var pvfHandler = new PartialValueFunctionHandler(problem2).initialize();
+    var pvfHandler = new PartialValueFunctionHandler(problem1).initialize(problem1);
+    var pvfHandler = new PartialValueFunctionHandler(problem2).initialize(problem2);
 
     problem2.criteria["Bleed"].pvf.direction = "increasing";
 

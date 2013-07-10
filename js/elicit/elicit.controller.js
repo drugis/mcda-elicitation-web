@@ -1,11 +1,11 @@
 function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) {
   $scope.problemSource = DecisionProblem;
   $scope.saveState = {};
-  $scope.problem = {};
   $scope.currentStep = {};
   $scope.initialized = false;
   var handlers;
   var LAST_STEP = 'done';
+  var PERSISTENT_FIELDS;
 
   $scope.$on('PreferenceStore.saved', function() {
     $scope.saveState = { success: true };
@@ -17,23 +17,23 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
   var initialize = function(problem) {
     if(!_.isEmpty(problem)) {
       handlers = {
-        "scale range": new ScaleRangeHandler(problem, Tasks),
-        "partial value function": new PartialValueFunctionHandler(problem),
-        "ordinal":  new OrdinalElicitationHandler(problem),
-        "ratio bound":  new RatioBoundElicitationHandler(problem),
+        "scale range": new ScaleRangeHandler(Tasks),
+        "partial value function": new PartialValueFunctionHandler(),
+        "ordinal":  new OrdinalElicitationHandler(),
+        "ratio bound":  new RatioBoundElicitationHandler(),
         "choose method": new ChooseMethodHandler(),
-        "done": new ResultsHandler(problem)
+        "done": new ResultsHandler()
       };
-      $scope.currentStep = handlers["scale range"].initialize();
+      PERSISTENT_FIELDS = _.keys(problem).concat(["type", "prefs", "choice"]);
+      $scope.currentStep = handlers["scale range"].initialize(problem);
       $scope.runSMAA($scope.currentStep);
       $scope.initialized = true;
     }
   };
 
   var getProblem = function() {
-    $scope.problemSource.get( function(data) {
-      $scope.problem = data;
-      initialize(data);
+    $scope.problemSource.get( function(problem) {
+      initialize(problem);
     });
   };
 
@@ -67,7 +67,7 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
 
     var previousResults = angular.copy(currentStep.results);
 
-    currentStep = _.pick(currentStep, ["type", "prefs", "choice"].concat(handler.fields));
+    currentStep = _.pick(currentStep, PERSISTENT_FIELDS.concat(handler.fields));
     nextStep = handler.nextState(currentStep);
 
     if (nextStep.type !== currentStep.type) {
@@ -103,14 +103,15 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
   };
 
   $scope.shouldRun = function(currentStep) {
-    return !_.contains(["scale range", LAST_STEP], currentStep.type);
+    var excluded = ["scale range", "partial value function", LAST_STEP];
+    return !_.contains(excluded, currentStep.type);
   }
 
   $scope.runSMAA = function(currentStep) {
     if(!window.clinicico) return;
 
     var prefs = $scope.getStandardizedPreferences(currentStep);
-    var data = _.extend(angular.copy($scope.problem), { "preferences": prefs, "method": "smaa" });
+    var data = _.extend(currentStep, { "preferences": prefs, "method": "smaa" });
 
     var run = function(type) {
       var task = Tasks.submit(type, data);
