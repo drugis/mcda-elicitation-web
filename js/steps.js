@@ -42,4 +42,12 @@ angular.module('elicit.steps', []).
     scope: { currentStep: '=', problem: '=' },
     templateUrl: 'results-page.html'
   };
+}).
+  directive('partialValueFunctionsStep', function() {
+  return {
+    restrict: 'E',
+    replace: true,
+    scope: { currentStep: '=', problem: '=' },
+    templateUrl: 'partial-value-function.html'
+  };
 });
