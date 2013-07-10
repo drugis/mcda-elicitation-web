@@ -57,7 +57,6 @@ function ScaleRangeHandler(problem, Tasks) {
     });
   }
 
-
   this.nextState = function(currentState) {
     if(!this.validChoice(currentState)) {
       return;

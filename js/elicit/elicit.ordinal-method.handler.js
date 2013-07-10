@@ -1,4 +1,6 @@
 function OrdinalElicitationHandler(problem) {
+  this.fields = ["reference", "choices"];
+
   var getReference = function() {
     var criteria = problem.criteria;
 
@@ -14,8 +16,6 @@ function OrdinalElicitationHandler(problem) {
     if(step > total) return base + " (DONE)";
     return base + " (" + step + "/" + total + ")";
   }
-
-  this.fields = ["reference", "choices"];
 
   this.initialize = function(state) {
     return {

@@ -138,9 +138,9 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
 
       task.results.then(
         function(results) {
-          currentStep.results = results.body;
+        currentStep.results = results.body;
       }, function(reason) {
-          currentStep.error = reason;
+        currentStep.error = reason;
       });
     }
 
