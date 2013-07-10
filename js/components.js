@@ -201,6 +201,7 @@ angular.module('elicit.components', []).
         var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
 
         var chart = nv.models.lineChart().width(width).height(height);
+        chart.forceY([0.0]);
         chart.xAxis.staggerLabels(false);
         chart.xAxis.tickFormat(function(i, obj) {
           if (i % 1 === 0) {
@@ -224,7 +225,7 @@ angular.module('elicit.components', []).
     transclude: false,
     scope: false,
     link: function(scope, element, attrs) {
-      scope.$watch(element[0], function() {
+      scope.$watch(element, function() {
         var value = parseFloat(element[0].innerHTML);
         var color = d3.scale.quantile().range(d3.range(9)).domain([1, 0]);
         $(element[0].parentNode).addClass("RdYlGn");
