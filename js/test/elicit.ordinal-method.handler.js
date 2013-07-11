@@ -3,7 +3,7 @@ describe("OrdinalElicitationHandler", function() {
   var handler2;
   var state1;
   var state2;
-  var app = angular.module('app', ['elicit.example', 'elicit.services']);
+  var app = angular.module('elicit', ['elicit.example', 'elicit.services', 'clinicico']);
 
   function initializeScope(problem) {
     var ctrl, scope, $httpBackend;
@@ -13,13 +13,13 @@ describe("OrdinalElicitationHandler", function() {
       ctrl = $controller("ElicitationController",
                           { $scope: scope,
                             DecisionProblem: { get: function(callback) { callback(problem); }},
-                            Jobs: null});
+                          });
     });
     return scope;
   }
 
   beforeEach(function() {
-    module('app');
+    module('elicit');
     var problem = exampleProblem();
     scope1 = initializeScope(problem);
     problem = exampleProblem();
@@ -119,7 +119,7 @@ describe("OrdinalElicitationHandler", function() {
   });
 
   describe("standardize", function() {
-  	it("adds missing preference data", function() { 
+  	it("adds missing preference data", function() {
       expect(handler1.standardize(["Prox DVT"])).toEqual([
 	  { type: "ordinal", criteria: ["Prox DVT", "Bleed"] },
 	  { type: "ordinal", criteria: ["Prox DVT", "Dist DVT"] }]);

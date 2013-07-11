@@ -1,11 +1,11 @@
-function ElicitationController($scope, DecisionProblem, Jobs, PreferenceStore) {
+function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) {
   $scope.problemSource = DecisionProblem;
   $scope.saveState = {};
   $scope.problem = {};
   $scope.currentStep = {};
   $scope.initialized = false;
-  $scope.stacked = "multiples";
   var handlers;
+  var LAST_STEP = 'done';
 
   $scope.$on('PreferenceStore.saved', function() {
     $scope.saveState = { success: true };
@@ -35,19 +35,17 @@ function ElicitationController($scope, DecisionProblem, Jobs, PreferenceStore) {
     });
   }
 
-  var initialize = function(newVal) {
-    if(!_.isEmpty(newVal)) {
+  var initialize = function(problem) {
+    if(!_.isEmpty(problem)) {
       extendProblem($scope.problem);
       handlers = {
-        "ordinal":  new OrdinalElicitationHandler(newVal),
-        "ratio bound":  new RatioBoundElicitationHandler(newVal),
+        "scale range": new ScaleRangeHandler(problem, Tasks),
+        "ordinal":  new OrdinalElicitationHandler(problem),
+        "ratio bound":  new RatioBoundElicitationHandler(problem),
         "choose method": new ChooseMethodHandler(),
-        "done": {
-          validChoice: function(state) { return false; },
-          initialize: function(state) { return _.extend(state, {title: "Done eliciting preferences"}); }
-        }
+        "done": new ResultsHandler(problem)
       };
-      $scope.currentStep = handlers.ordinal.initialize();
+      $scope.currentStep = handlers["scale range"].initialize();
       $scope.runSMAA($scope.currentStep);
       $scope.initialized = true;
     }
@@ -74,9 +72,9 @@ function ElicitationController($scope, DecisionProblem, Jobs, PreferenceStore) {
 
   $scope.nextStep = function() {
     var currentStep = $scope.currentStep;
+    if(!$scope.canProceed(currentStep)) return false;
     var choice = currentStep.choice;
     var handler = handlers[currentStep.type];
-    if(!$scope.canProceed(currentStep)) return false;
 
     // History handling
     previousSteps.push(currentStep);
@@ -88,17 +86,23 @@ function ElicitationController($scope, DecisionProblem, Jobs, PreferenceStore) {
       nextSteps = [];
     }
 
-    currentStep = _.pick(currentStep, Array.concat(["type", "prefs", "choice"], handler.fields));
+    var previousResults = angular.copy(currentStep.results);
+
+    currentStep = _.pick(currentStep, ["type", "prefs", "choice"].concat(handler.fields));
     nextStep = handler.nextState(currentStep);
+
     if (nextStep.type !== currentStep.type) {
       var handler = handlers[nextStep.type];
+      if(nextStep.type === LAST_STEP) {
+        nextStep.results = previousResults;
+      }
       nextStep = handler ? handler.initialize(nextStep) : nextStep;
     }
     nextStep.previousChoice = choice;
 
     $scope.currentStep = nextStep;
 
-    if (nextStep.type === 'done' && PreferenceStore) {
+    if (nextStep.type === LAST_STEP && PreferenceStore) {
       PreferenceStore.save($scope.getStandardizedPreferences(nextStep));
     }
 
@@ -119,53 +123,32 @@ function ElicitationController($scope, DecisionProblem, Jobs, PreferenceStore) {
     }));
   };
 
-  var waiting = [];
-  var jobId = 0;
+  $scope.shouldRun = function(currentStep) {
+    return !_.contains(["scale range", LAST_STEP], currentStep.type);
+  }
 
   $scope.runSMAA = function(currentStep) {
-    if(!config.smaaWS) return;
-
-    function workAround(arr) { return _.object(_.range(arr.length), arr); }
+    if(!window.clinicico) return;
 
     var prefs = $scope.getStandardizedPreferences(currentStep);
-    var data = _.extend(angular.copy($scope.problem), { "preferences": workAround(prefs) });
-    data.performanceTable = workAround(data.performanceTable);
+    var data = _.extend(angular.copy($scope.problem), { "preferences": prefs, "method": "smaa" });
 
     var run = function(type) {
-      var id = ++jobId;
-      waiting[id] = currentStep;
-      $.ajax({
-        url: config.smaaWS + type,
-        type: 'POST',
-        data: JSON.stringify(data),
-        dataType: "json",
-        contentType: 'application/json',
-        success: function(responseJSON, textStatus, jqXHR) {
-          var job = Jobs.add({
-            data: responseJSON,
-            type: 'run' + type,
-            analysis: id,
-            broadcast: 'completedAnalysis'
-          });
-          $scope.job = job;
-        }
-      });
-    };
-    if (!currentStep.results && !_.contains(waiting, currentStep)) run('smaa');
-  };
+      var task = Tasks.submit(type, data);
 
-  $scope.$on('completedAnalysis', function(e, job) {
-    var step = waiting[job.analysis];
-    if (!step) return;
-    if (job.data.status === "completed") {
-      var results = job.results.results.smaa;
-      step.results = _.object(_.map(results, function(x) { return x.name; }), results);
-    } else {
-      step.error = job.data;
+      task.results.then(
+        function(results) {
+          currentStep.results = results.body;
+      }, function(reason) {
+          currentStep.error = reason;
+      });
     }
-    delete waiting[job.analysis];
-  });
+
+    if (!currentStep.results && $scope.shouldRun(currentStep)) run('smaa');
+  };
 
   $scope.$watch('problemSource.url', getProblem);
   getProblem();
 };
+
+ElicitationController.$inject = ['$scope', 'DecisionProblem', 'PreferenceStore', 'clinicico.tasks'];

@@ -68,15 +68,15 @@ function OrdinalElicitationHandler(problem) {
   }
 
   this.standardize = function(order) {
-  	function ordinal(a, b) { return { type: "ordinal", criteria: [a, b] }; };
+    function ordinal(a, b) { return { type: "ordinal", criteria: [a, b] }; };
     var result = [];
     for (var i = 0; i < order.length - 1; i++) {
       result.push(ordinal(order[i], order[i + 1]));
     }
-	if (order.length > 0) {
-		var remaining = _.difference(_.keys(problem.criteria), order).sort();
-		result = result.concat(_.map(remaining, function(criterion) { return ordinal(_.last(order), criterion); }));
-	}
+    if (order.length > 0) {
+      var remaining = _.difference(_.keys(problem.criteria), order).sort();
+      result = result.concat(_.map(remaining, function(criterion) { return ordinal(_.last(order), criterion); }));
+    }
     return result;
   };
 

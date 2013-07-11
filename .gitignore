@@ -1,3 +1,4 @@
 js/app.js
 js/test.js
 *.swp
+/js/clinicico.js
