@@ -50,10 +50,13 @@ angular.module('elicit.components', []).
         if (_.has(range, "restrictTo") && _.has(range, "restrictFrom")) {
           var slider = $($element).find('input');
           var epsilon = 0.001;
-          if(greaterThan(values[0], range.restrictFrom, epsilon)) {
+          var fromOutOfRange = greaterThan(values[0], range.restrictFrom, epsilon);
+          var toOutOfRange = lessThan(values[1], range.restrictTo, epsilon);
+          if (fromOutOfRange && toOutOfRange) {
+            slider.slider("value", valueToStep(range.restrictFrom), valueToStep(range.restrictTo));
+          } else if(fromOutOfRange) {
             slider.slider("value", valueToStep(range.restrictFrom), steps[1]);
-          }
-          if(lessThan(values[1], range.restrictTo, epsilon)) {
+          } else if(toOutOfRange) {
             slider.slider("value", steps[0], valueToStep(range.restrictTo));
           }
         }
