@@ -2,7 +2,7 @@ function ResultsHandler() {
   var alternatives;
   var criteria;
 
-  this.fields = ['results'];
+  this.fields = [];
 
   var alternativeTitle = function(id) {
     return alternatives[id].title;
@@ -42,8 +42,8 @@ function ResultsHandler() {
   }
 
   this.initialize = function(state) {
-    alternatives = state.alternatives;
-    criteria = state.criteria;
+    alternatives = _.clone(state.problem.alternatives);
+    criteria = _.clone(state.problem.criteria);
     return _.extend(state, {
       type: "done",
       title: "Done eliciting preferences",

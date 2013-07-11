@@ -1,6 +1,6 @@
 <div ng-show="currentStep.type == 'done'">
   <div style="width: 400px; height: 400px">
-    <rank-plot value="currentStep.results.ranks.data" parse-fn="rankGraphData" stacked="true" problem="problem"></rank-plot>
+    <rank-plot value="currentStep.results.ranks.data" parse-fn="rankGraphData" stacked="true" problem="currentStep.problem"></rank-plot>
   </div>
 
   <h5>Rank acceptabilities</h5>
@@ -8,11 +8,11 @@
     <thead>
       <tr>
         <th></th>
-        <th ng-repeat="alternative in problem.alternatives">Rank {{$index + 1}}</th>
+        <th ng-repeat="alternative in currentStep.problem.alternatives">Rank {{$index + 1}}</th>
       </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="(key, alternative) in problem.alternatives">
+    <tr ng-repeat="(key, alternative) in currentStep.problem.alternatives">
       <td>{{alternative.title}}</td>
       <td ng-repeat="rank in currentStep.results.ranks.data[key]" class="heat">
         {{rank}}
@@ -25,7 +25,7 @@
     <div class="columns large-6">
       <h5>Alternatives per rank</h5>
       <select ng-model="currentStep.selectedRank" class="large-3">
-        <option ng-repeat="(k,v) in problem.alternatives" value="{{$index}}" ng-selected="$index == currentStep.selectedRank">
+        <option ng-repeat="(k,v) in currentStep.problem.alternatives" value="{{$index}}" ng-selected="$index == currentStep.selectedRank">
         Rank {{$index + 1}}
         </option>
       </select>
@@ -37,7 +37,7 @@
     <div class="columns large-6">
       <h5>Ranks per alternative</h5>
       <select ng-model="currentStep.selectedAlternative" class="large-3">
-        <option ng-repeat="(key, alternative) in problem.alternatives" value="{{key}}" ng-selected="key == currentStep.selectedAlternative">
+        <option ng-repeat="(key, alternative) in currentStep.problem.alternatives" value="{{key}}" ng-selected="key == currentStep.selectedAlternative">
         {{alternative.title}}
         </option>
       </select>
@@ -55,14 +55,14 @@
       <tr>
         <th>Alternative</th>
         <th>Confidence</th>
-        <th ng-repeat="criterion in problem.criteria">{{criterion.title}}</th>
+        <th ng-repeat="criterion in currentStep.problem.criteria">{{criterion.title}}</th>
       </tr>
     </thead>
     <tbody>
     <tr ng-repeat="(a, cw) in currentStep.results.cw.data">
-      <td>{{problem.alternatives[a].title}}</td>
+      <td>{{currentStep.problem.alternatives[a].title}}</td>
       <td class="heat">{{cw.cf}}</td>
-      <td ng-repeat="(c, criterion) in problem.criteria">
+      <td ng-repeat="(c, criterion) in currentStep.problem.criteria">
         {{cw.w[c]}}
       </td>
     </tr>

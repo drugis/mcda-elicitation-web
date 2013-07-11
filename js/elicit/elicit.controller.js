@@ -5,7 +5,7 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
   $scope.initialized = false;
   var handlers;
   var LAST_STEP = 'done';
-  var PERSISTENT_FIELDS;
+  var PERSISTENT_FIELDS = ["problem", "type", "prefs", "choice"];
 
   $scope.$on('PreferenceStore.saved', function() {
     $scope.saveState = { success: true };
@@ -24,8 +24,7 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
         "choose method": new ChooseMethodHandler(),
         "done": new ResultsHandler()
       };
-      PERSISTENT_FIELDS = _.keys(problem).concat(["type", "prefs", "choice"]);
-      $scope.currentStep = handlers["scale range"].initialize(problem);
+      $scope.currentStep = handlers["scale range"].initialize({ problem: problem });
       $scope.runSMAA($scope.currentStep);
       $scope.initialized = true;
     }
@@ -111,7 +110,7 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
     if(!window.clinicico) return;
 
     var prefs = $scope.getStandardizedPreferences(currentStep);
-    var data = _.extend(currentStep, { "preferences": prefs, "method": "smaa" });
+    var data = _.extend(currentStep.problem, { "preferences": prefs, "method": "smaa" });
 
     var run = function(type) {
       var task = Tasks.submit(type, data);

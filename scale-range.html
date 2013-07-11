@@ -1,5 +1,4 @@
 <div ng-show="currentStep.type == 'scale range'">
-
   <p>Defining measurement scales is important because they provide the reference
   levels at which trade-offs between criteria are assessed. Without these
   reference levels statements about the relative importance of different
@@ -9,7 +8,7 @@
   the measurements and cannot be moved into.</i></p>
 
   <ul class="no-bullet">
-    <li ng-repeat="(key, criterion) in problem.criteria">
+    <li ng-repeat="(key, criterion) in currentStep.problem.criteria">
     <h5 class="subheader">{{criterion.title}}</h5>
     <div class="row">
       <div class="large-1 columns">

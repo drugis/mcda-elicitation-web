@@ -4,18 +4,19 @@ describe("RatioBoundElicitationHandler", function() {
   var problem;
   var app = angular.module('elicit', ['elicit.example', 'elicit.services', 'clinicico']);
 
+  function initProblem(problem) {
+     return (new PartialValueFunctionHandler().initialize({problem: problem})).problem;
+  }
+
   beforeEach(function() {
     problem = exampleProblem();
 
-    problem = new PartialValueFunctionHandler(problem).initialize(problem);
-    problem = _.extend(problem, { prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
+    problem = (new PartialValueFunctionHandler(problem).initialize({ problem: problem })).problem;
+    initial = _.extend({ problem: problem, prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
     handler = new RatioBoundElicitationHandler();
-    state = handler.initialize(problem);
+    state = handler.initialize(initial);
   });
 
-  function initProblem(problem) {
-     return new PartialValueFunctionHandler(problem).initialize(problem);
-  }
 
   describe("initialize", function() {
     it("should start comparing the first two criteria", function() {
@@ -31,7 +32,7 @@ describe("RatioBoundElicitationHandler", function() {
       problem.criteria["Prox DVT"].pvf.direction = "increasing";
       problem = initProblem(problem);
       handler = new RatioBoundElicitationHandler();
-      state = handler.initialize(_.extend(problem, { prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } }));
+      state = handler.initialize({ problem: problem, prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
 
       expect(state.choice.lower).toEqual(problem.criteria["Prox DVT"].worst());
       expect(state.worst()).toEqual(problem.criteria["Prox DVT"].worst());
@@ -115,7 +116,7 @@ describe("RatioBoundElicitationHandler", function() {
       problem.criteria["Prox DVT"].pvf.direction = "increasing";
       problem = initProblem(problem);
       handler = new RatioBoundElicitationHandler();
-      state = handler.initialize(_.extend(problem, { prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } }));
+      state = handler.initialize({ problem: problem, prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
 
       state.choice.lower = 0.12;
       state.choice.upper = 0.14;
@@ -130,7 +131,7 @@ describe("RatioBoundElicitationHandler", function() {
       problem.criteria["Prox DVT"].pvf.direction = "increasing";
       problem = initProblem(problem);
       handler = new RatioBoundElicitationHandler(problem);
-      state = handler.initialize(_.extend(problem, { prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } }));
+      state = handler.initialize({ problem: problem, prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
 
       expect(state.choice.lower).toEqual(problem.criteria["Prox DVT"].worst());
       expect(state.worst()).toEqual(problem.criteria["Prox DVT"].worst());

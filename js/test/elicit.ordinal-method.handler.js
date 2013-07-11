@@ -9,16 +9,16 @@ describe("OrdinalElicitationHandler", function() {
     var problem2 = exampleProblem();
 
     // ADD PVF's to problem
-    var pvfHandler = new PartialValueFunctionHandler(problem1).initialize(problem1);
-    var pvfHandler = new PartialValueFunctionHandler(problem2).initialize(problem2);
+    problem1 = new PartialValueFunctionHandler().initialize({ problem: problem1 });
+    problem2 = new PartialValueFunctionHandler().initialize({ problem: problem2 });
 
-    problem2.criteria["Bleed"].pvf.direction = "increasing";
+    problem2.problem.criteria["Bleed"].pvf.direction = "increasing";
 
-    handler1 = new OrdinalElicitationHandler(problem1);
-    handler2 = new OrdinalElicitationHandler(problem2);
+    handler1 = new OrdinalElicitationHandler();
+    handler2 = new OrdinalElicitationHandler();
 
-    state1 = handler1.initialize(problem1);
-    state2 = handler2.initialize(problem2);
+    state1 = handler1.initialize({ problem: problem1.problem });
+    state2 = handler2.initialize({ problem: problem2.problem });
   });
 
   describe("initialize", function() {

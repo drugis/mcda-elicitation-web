@@ -1,4 +1,4 @@
-function PartialValueFunctionHandler(problem) {
+function PartialValueFunctionHandler() {
   var self = this;
   this.fields = [];
 
@@ -25,7 +25,7 @@ function PartialValueFunctionHandler(problem) {
 
   this.initialize = function(state) {
     function addPartialValueFunction(criterion) { _.extend(criterion, self.createPartialValueFunction(criterion)) }
-    angular.forEach(state.criteria, addPartialValueFunction);
+    angular.forEach(state.problem.criteria, addPartialValueFunction);
     return state;
   }
 

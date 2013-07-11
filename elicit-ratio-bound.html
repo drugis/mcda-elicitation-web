@@ -2,18 +2,18 @@
   <h5 class="subheader">Determining the relative importance of:</h5>
   <ul class="no-bullet">
     <li ng-repeat="criterion in [currentStep.criterionA, currentStep.criterionB]">
-    {{problem.criteria[criterion].title}}
-    ({{problem.criteria[criterion].worst()}} &rarr;
-    {{problem.criteria[criterion].best()}})
+    {{currentStep.problem.criteria[criterion].title}}
+    ({{currentStep.problem.criteria[criterion].worst()}} &rarr;
+    {{currentStep.problem.criteria[criterion].best()}})
     </li>
   </ul>
 
   <strong>Given the following situation:</strong>
   <p>
-  {{problem.criteria[currentStep.criterionA].title}} =
-  {{problem.criteria[currentStep.criterionA].worst()}},
-  {{problem.criteria[currentStep.criterionB].title}} =
-  {{problem.criteria[currentStep.criterionB].best()}}
+  {{currentStep.problem.criteria[currentStep.criterionA].title}} =
+  {{currentStep.problem.criteria[currentStep.criterionA].worst()}},
+  {{currentStep.problem.criteria[currentStep.criterionB].title}} =
+  {{currentStep.problem.criteria[currentStep.criterionB].best()}}
 
   <br>
   <strong>Adjust the slider:</strong>
@@ -24,12 +24,12 @@
 
   <strong>So that the following statements are true:</strong>
   <p>
-  {{problem.criteria[currentStep.criterionA].title}} = <span class="label secondary">{{currentStep.best()}}</span>
-  {{problem.criteria[currentStep.criterionB].title}} = {{problem.criteria[currentStep.criterionB].worst()}}
+  {{currentStep.problem.criteria[currentStep.criterionA].title}} = <span class="label secondary">{{currentStep.best()}}</span>
+  {{currentStep.problem.criteria[currentStep.criterionB].title}} = {{currentStep.problem.criteria[currentStep.criterionB].worst()}}
   is clearly better.
   <br>
-  {{problem.criteria[currentStep.criterionA].title}} = <span class="label secondary">{{currentStep.worst()}}</span>
-  {{problem.criteria[currentStep.criterionB].title}} = {{problem.criteria[currentStep.criterionB].worst()}}
+  {{currentStep.problem.criteria[currentStep.criterionA].title}} = <span class="label secondary">{{currentStep.worst()}}</span>
+  {{currentStep.problem.criteria[currentStep.criterionB].title}} = {{currentStep.problem.criteria[currentStep.criterionB].worst()}}
   is clearly worse.
   </p>
 </div>

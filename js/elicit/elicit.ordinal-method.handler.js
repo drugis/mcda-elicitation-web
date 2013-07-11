@@ -17,14 +17,14 @@ function OrdinalElicitationHandler() {
   }
 
   this.initialize = function(state) {
-    criteria = state.criteria;
+    criteria = state.problem.criteria;
     var fields = {
       title: title(1),
       type: "ordinal",
       prefs: { ordinal: [] },
       reference: getReference(),
       choices: (function() {
-        var criteria = state.criteria;
+        var criteria = state.problem.criteria;
         var choices = _.map(_.keys(criteria), function(criterion) {
           var reference = getReference();
           reference[criterion] = criteria[criterion].best();
@@ -37,7 +37,7 @@ function OrdinalElicitationHandler() {
   }
 
   this.validChoice = function(currentState) {
-    return _.contains(_.keys(currentState.criteria), currentState.choice);
+    return _.contains(_.keys(criteria), currentState.choice);
   }
 
   this.nextState = function(currentState) {
@@ -50,12 +50,12 @@ function OrdinalElicitationHandler() {
     nextState.choice = undefined;
 
     _.each(nextState.choices, function(alternative) {
-      alternative[choice] = currentState.criteria[choice].best();
+      alternative[choice] = criteria[choice].best();
     });
 
     function next(choice) {
       delete nextState.choices[choice];
-      nextState.reference[choice] = currentState.criteria[choice].best();
+      nextState.reference[choice] = currentState.problem.criteria[choice].best();
       nextState.prefs.ordinal.push(choice);
       nextState.title = title(nextState.prefs.ordinal.length + 1);
     }

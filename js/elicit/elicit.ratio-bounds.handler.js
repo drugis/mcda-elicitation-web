@@ -32,8 +32,8 @@ function RatioBoundElicitationHandler() {
   }
 
   this.initialize = function(state) {
-    criteria = state.criteria;
-    var state = _.extend(angular.copy(state), buildInitial(state.prefs.ordinal[0], state.prefs.ordinal[1], 1));
+    criteria = state.problem.criteria;
+    var state = _.extend(state, buildInitial(state.prefs.ordinal[0], state.prefs.ordinal[1], 1));
     if (!state.prefs["ratio bound"]) state.prefs["ratio bound"] = [];
     return state;
   }

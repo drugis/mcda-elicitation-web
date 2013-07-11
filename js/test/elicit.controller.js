@@ -62,7 +62,7 @@ describe("ElicitationController", function() {
 
     it("should cleanly transition to done", function() {
       var state = { title: "Foo", prefs: { ordinal: ["A", "D"] } };
-      scope1.currentStep = (new ChooseMethodHandler()).initialize(_.extend(state, exampleProblem()));
+      scope1.currentStep = (new ChooseMethodHandler()).initialize(_.extend(state, {problem: exampleProblem() }));
       scope1.currentStep.choice = "done";
       scope1.currentStep.results = {ranks: {}, cw: {}};
       expect(scope1.nextStep()).toEqual(true);
@@ -147,11 +147,39 @@ describe("ElicitationController", function() {
       expect(scope1.currentStep.choice).toBeUndefined();
       expect(scope1.currentStep.prefs.ordinal).toEqual(["Prox DVT", "Dist DVT", "Bleed"]);
     });
+    it("correctly carries over state", function() {
+      expect(scope1.currentStep.type).toBe("scale range");
+      expect(scope1.currentStep.problem).toBeDefined();
+      expect(scope1.nextStep()).toBeTruthy();
+      expect(scope1.currentStep.problem).toBeDefined();
+      expect(scope1.currentStep.type).toBe("partial value function");
+      expect(scope1.nextStep()).toBeTruthy();
+      expect(scope1.currentStep.problem).toBeDefined();
+      expect(scope1.currentStep.type).toBe("ordinal");
 
+      scope1.currentStep.choice = "Prox DVT";
+      expect(scope1.nextStep()).toBeTruthy();
+      expect(scope1.currentStep.problem).toBeDefined();
+      scope1.currentStep.choice = "Dist DVT";
+      expect(scope1.nextStep()).toBeTruthy();
+      expect(scope1.currentStep.problem).toBeDefined();
+      expect(scope1.currentStep.type).toEqual("choose method");
+      scope1.currentStep.choice = "ratio bound";
+      expect(scope1.currentStep.problem).toBeDefined();
+      expect(scope1.nextStep()).toBeTruthy();
+      expect(scope1.currentStep.type).toEqual("ratio bound");
+      expect(scope1.currentStep.problem).toBeDefined();
+    });
     it("correctly handles choice objects", function() {
       skipToOrdinal(scope1);
-
-      scope1.currentStep.type = "ratio bound";
+      scope1.currentStep.choice = "Prox DVT";
+      expect(scope1.nextStep()).toBeTruthy();
+      scope1.currentStep.choice = "Bleed";
+      expect(scope1.nextStep()).toBeTruthy();
+      expect(scope1.currentStep.type).toEqual("choose method");
+      scope1.currentStep.choice = "ratio bound";
+      expect(scope1.nextStep()).toBeTruthy();
+      expect(scope1.currentStep.type).toEqual("ratio bound");
       scope1.currentStep.prefs.ordinal = ["Prox DVT", "Bleed", "Dist DVT"];
 
       scope1.currentStep.prefs["ratio bound"] = [];
