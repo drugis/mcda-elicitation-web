@@ -5,28 +5,32 @@
       "title": "Treatment Responders",
       "pvf": {
         "range": [0.28, 0.63],
-        "type": "linear-increasing"
+        "direction": "increasing",
+        "type": "linear"
       }
     },
     "nausea": {
       "title": "Nausea ADRs",
       "pvf": {
         "range": [0.04, 0.50],
-        "type": "linear-decreasing"
+        "direction": "decreasing",
+        "type": "linear"
       }
     },
     "insomnia": {
       "title": "Insomnia ADRs",
       "pvf": {
         "range": [0.08, 0.31],
-        "type": "linear-decreasing"
+        "direction": "decreasing",
+        "type": "linear"
       }
     },
     "anxiety": {
       "title": "Anxiety ADRs",
       "pvf": {
         "range": [0.00, 0.17],
-        "type": "linear-decreasing"
+        "direction": "decreasing",
+        "type": "linear"
       }
     }
   },

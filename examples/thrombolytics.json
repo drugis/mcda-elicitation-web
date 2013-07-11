@@ -8,7 +8,8 @@
           0,
           0.25
         ],
-        "type": "linear-decreasing"
+        "type": "linear",
+        "direction": "decreasing"
       }
     },
     "Dist DVT": {
@@ -18,7 +19,8 @@
           0.15,
           0.4
         ],
-        "type": "linear-decreasing"
+        "type": "linear",
+        "direction": "decreasing"
       }
     },
     "Bleed": {
@@ -28,7 +30,8 @@
           0,
           0.1
         ],
-        "type": "linear-decreasing"
+        "type": "linear",
+        "direction": "decreasing"
       }
     }
   },
