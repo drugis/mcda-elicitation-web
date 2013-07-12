@@ -230,9 +230,9 @@ angular.module('elicit.components', []).
     link: function(scope, element, attrs) {
       scope.$watch(element, function() {
         var value = parseFloat(element[0].innerHTML);
-        var color = d3.scale.quantile().range(d3.range(9)).domain([1, 0]);
+        var color = d3.scale.quantile().range(d3.range(11)).domain([1, 0]);
         $(element[0].parentNode).addClass("RdYlGn");
-        $(element[0]).addClass("q" + color(value) + "-9");
+        $(element[0]).addClass("q" + color(value) + "-11");
       });
     }
   };

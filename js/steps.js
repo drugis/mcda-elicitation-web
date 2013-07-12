@@ -43,7 +43,7 @@ angular.module('elicit.steps', []).
     templateUrl: 'results-page.html'
   };
 }).
-  directive('partialValueFunctionsStep', function() {
+  directive('partialValueFunctionStep', function() {
   return {
     restrict: 'E',
     replace: true,
