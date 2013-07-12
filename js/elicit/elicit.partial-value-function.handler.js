@@ -4,14 +4,14 @@ function PartialValueFunctionHandler() {
 
   this.createPartialValueFunction = function(_criterion) {
     var criterion = angular.copy(_criterion);
-    function create(idx1, idx2) {
+    function extreme(idx1, idx2) {
       return function() {
         var pvf = criterion.pvf;
         return pvf.direction === "increasing" ? pvf.range[idx1] : pvf.range[idx2];
       }
     }
-    criterion.worst = create(0, 1);
-    criterion.best = create(1, 0);
+    criterion.worst = extreme(0, 1);
+    criterion.best = extreme(1, 0);
     criterion.pvf.map = function(x) {
       var range = Math.abs(criterion.best() - criterion.worst());
       return criterion.pvf.direction === "increasing" ? ((x - criterion.worst()) / range) : ((criterion.worst() - x) / range);
@@ -26,6 +26,7 @@ function PartialValueFunctionHandler() {
   this.initialize = function(state) {
     function addPartialValueFunction(criterion) { _.extend(criterion, self.createPartialValueFunction(criterion)) }
     angular.forEach(state.problem.criteria, addPartialValueFunction);
+    state.title = "Partial Value Functions";
     return state;
   }
 
