@@ -8,8 +8,20 @@
     <div class="row">
       <div class="large-4 columns">
         <small>Preferred level</small>
-        <label><input type="radio" ng-model="criterion.pvf.direction" value="decreasing"> {{criterion.pvf.range[0]}} is best</label>
-        <label><input type="radio" ng-model="criterion.pvf.direction" value="increasing"> {{criterion.pvf.range[1]}} is best</label>
+        <label>
+          <input type="radio"
+            ng-model="criterion.pvf.direction"
+            value="decreasing"
+            ng-selected="criterion.pvf.direction =='decreasing'">
+          {{criterion.pvf.range[0]}} is best
+        </label>
+        <label>
+          <input type="radio"
+            ng-model="criterion.pvf.direction"
+            value="increasing"
+            ng-selected="criterion.pvf.direction == 'increasing'">
+          {{criterion.pvf.range[1]}} is best
+        </label>
       </div>
       <!-- <div class="large-4 columns">
         <small>Type of function</small>
