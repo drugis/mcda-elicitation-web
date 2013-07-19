@@ -58,7 +58,7 @@ function RatioBoundElicitationHandler() {
 
     function getRatioBounds(currentState) {
       var u = criteria[currentState.criterionA].pvf.map;
-      return Array.sort([1 / u(currentState.choice.lower), 1 / u(currentState.choice.upper)]);
+      return [1 / u(currentState.choice.lower), 1 / u(currentState.choice.upper)].sort();
     }
 
     next.prefs = angular.copy(currentState.prefs);
