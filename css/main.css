@@ -1,3 +1,7 @@
+label {
+  clear: both
+}
+
 #results .loader, #results .error, .hidden {
   display: none;
 }
