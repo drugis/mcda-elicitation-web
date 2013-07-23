@@ -135,6 +135,7 @@ angular.module('elicit.components', []).
           chart.yAxis.tickFormat(d3.format(',.3f'))
           chart.stacked(attrs.stacked);
           chart.reduceXTicks(false);
+          chart.staggerLabels(true);
 
           svg.datum(data)
           .transition().duration(100).call(chart);
