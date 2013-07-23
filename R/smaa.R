@@ -1,7 +1,3 @@
-library(smaa)
-library(hitandrun)
-library(MASS)
-
 wrap.result <- function(result, description) {
     list(data=result, description=description, type=class(result))
 }
@@ -25,55 +21,70 @@ smaa <- function(params) {
   }
 }
 
-sample <- function(measurement, N) {
-  if (measurement$performance$type == 'dbeta') {
-    rbeta(N, measurement$performance$parameters['alpha'], measurement$performance$parameters['beta'])
-  } else if (measurement$performance$type == 'relative-logit-normal') {
-    perf <- measurement$performance$parameters
-    baseline <- perf$baseline
-    sampleBase <- function() {
-      if (baseline$type == 'dnorm') {
-        rnorm(N, baseline$mu, baseline$sigma)
-      } else {
-        stop(paste("Distribution '", baseline$type, "' not supported", sep=''))
-      }
-    }
-    sampleDeriv <- function(base) {
-      if(perf$relative$type == 'dmnorm') {
-        varcov <- perf$relative$cov
-        covariance <- matrix(unlist(varcov$data),
-                              nrow=length(varcov$rownames),
-                              ncol=length(varcov$colnames))
-        mvrnorm(N, perf$relative$mu, covariance) + base
-      } else {
-        stop(paste("Distribution '", perf$relative$type, "' not supported", sep=''))
-      }
-    }
-    ilogit(sampleDeriv(sampleBase()))
+assign.sample <- function(defn, samples) {
+  N <- dim(samples)[1]
+  if (!is.null(defn$alternative)) {
+    samples[, defn$alternative, defn$criterion] <- sampler(defn$performance, N)
+  } else {
+    samples[, , defn$criterion] <- sampler(defn$performance, N)
   }
+  samples
+}
+
+sampler <- function(perf, N) {
+  fn <- paste('sampler', gsub('-', '_', perf[['type']]), sep='.')
+  do.call(fn, list(perf, N))
+}
+
+sampler.dbeta <- function(perf, N) {
+  rbeta(N, perf$parameters['alpha'], perf$parameters['beta'])
+}
+
+sampler.dnorm <- function(perf, N) {
+  rnorm(N, perf$parameters['mu'], perf$parameters['sigma'])
+}
+
+sampler.relative_normal <- function(perf, N) {
+  baseline <- perf$parameters$baseline
+  relative <- perf$parameters$relative
+
+  baseline$parameters <- unlist(baseline[sapply(baseline, is.numeric)])
+  base <- sampler(baseline, N)
+
+  sampleDeriv <- function(base) {
+    if(relative$type == 'dmnorm') {
+      varcov <- relative$cov
+      covariance <- matrix(unlist(varcov$data),
+                            nrow=length(varcov$rownames),
+                            ncol=length(varcov$colnames))
+      mvrnorm(N, relative$mu, covariance) + base
+    }
+  }
+  sampleDeriv(base)
+}
+
+sampler.relative_logit_normal <- function(perf, N) {
+  ilogit(sampler.relative_normal(perf, N))
+}
+
+sample <- function(alts, crit, performanceTable, N) {
+  meas <- array(dim=c(N,length(alts), length(crit)), dimnames=list(NULL, alts, crit))
+  for (measurement in performanceTable) {
+    meas <- assign.sample(measurement, meas)
+  }
+  meas
 }
 
 run_scales <- function(params) {
-  N <- 10000
+  N <- 1000
   crit <- names(params$criteria)
   alts <- names(params$alternatives)
-  n <- length(params$criteria)
-  m <- length(params$alternatives)
-  meas <- array(dim=c(N,m,n), dimnames=list(NULL, alts, crit))
-  for (m in params$performanceTable) {
-    if (m$performance$type == 'dbeta') {
-      meas[, m$alternative, m$criterion] <- sample(m, N)
-    } else if (m$performance$type == 'relative-logit-normal') {
-      meas[, ,m$criterion] <- sample(m, N)
-    } else {
-      stop(paste("Performance type '", m$performance$type, "' not supported.", sep=''))
-    }
-  }
+  meas <- sample(alts, crit, params$performanceTable, N)
   list(wrap.matrix(t(apply(meas, 3, function(e) { quantile(e, c(0.025, 0.975)) }))))
 }
 
 run_smaa <- function(params) {
-  N <- 10000
+  N <- 1E4
   n <- length(params$criteria)
   m <- length(params$alternatives)
   crit <- names(params$criteria)
@@ -109,15 +120,9 @@ run_smaa <- function(params) {
     }
   })
 
-  meas <- array(dim=c(N,m,n), dimnames=list(NULL, alts, crit))
-  for (m in params$performanceTable) {
-    if (m$performance$type == 'dbeta') {
-      meas[, m$alternative, m$criterion] <- pvf[[m$criterion]](sample(m, N))
-    } else if (m$performance$type == 'relative-logit-normal') {
-      meas[, ,m$criterion] <- pvf[[m$criterion]](sample(m, N))
-    } else {
-      stop(paste("Performance type '", m$performance$type, "' not supported.", sep=''))
-    }
+  meas <- sample(alts, crit, params$performanceTable, N)
+  for (criterion in names(params$criteria)) {
+    meas[,,criterion] <- pvf[[criterion]](meas[,,criterion])
   }
 
   # parse preference information
@@ -139,26 +144,24 @@ run_smaa <- function(params) {
   )
 
   weights <- harSample(constr, n, N)
+  colnames(weights) <- crit
 
   utils <- smaa.values(meas, weights)
   ranks <- smaa.ranks(utils)
 
   cw <- smaa.cw(ranks, weights)
-  colnames(cw) <- crit
+  cf <- smaa.cf(meas, cw)
 
-  cf <- diag(apply(cw, 1, function(w) {
-    w <- matrix(w, nrow=N, ncol=n, byrow=TRUE)
-    smaa.ra(smaa.ranks(smaa.values(meas, w)))[,1]
-  }))
-
-  cw <- lapply(alts, function(a) { list(w=cw[a,], cf=unname(cf[a])) })
+  cw <- lapply(alts, function(alt) {
+    list(cf=unname(cf$cf[alt]), w=cf$cw[alt,])
+  })
   names(cw) <- alts
 
   results <- list(
     results = list(
              "cw"=cw,
              "ranks"=wrap.matrix(smaa.ra(ranks))),
-    descriptions = list("Central Weights", "Rank acceptabilities")
+    descriptions = list("Central weights", "Rank acceptabilities")
   )
 
   mapply(wrap.result,
