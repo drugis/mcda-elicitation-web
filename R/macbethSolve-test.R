@@ -47,5 +47,5 @@ sol <- macbethSolve(min.p, max.p)
 print(sol / max(sol))
 
 ## Values given in paper:
-cutoffs <- c(-62.5, -12.5, 0.0, 100.0, 100.0, 112.5, 150.0, 187.5)
-print(all(abs((sol-sol[6])/(sol[4]-sol[6])*100-rev(cutoffs)) < 2))
+expected <- rev(c(-62.5, -12.5, 0.0, 100.0, 100.0, 112.5, 150.0, 187.5))
+stopifnot(all.equal(expected, (sol-sol[6])/(sol[4]-sol[6])*100,))

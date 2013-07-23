@@ -9,7 +9,8 @@ macbethSolve <- function(min.p, max.p) {
   Q <- max(max.p, na.rm=TRUE)
   nvar <- n + Q + 1
 
-  # Equality constraints: if preference level 0, x_p = x_r:
+  # Equality constraints:
+  # 1. if preference level 0, x_p = x_r:
   I <- which(upper.tri(max.p) & max.p == 0, arr.ind=TRUE)
   eq.con <- t(apply(I, 1, function(pair) {
     p <- pair[1]; r <- pair[2]
@@ -20,11 +21,18 @@ macbethSolve <- function(min.p, max.p) {
   }))
   eq.rhs <- rep(0, nrow(I))
 
-  # dmin is a positive constant
+  # 2. dmin = 0.5
   dmin <- rep(0, nvar)
-  dmin[nvar] <- 0.5
+  dmin[nvar] <- 1
   eq.con <- rbind(eq.con, dmin)
-  eq.rhs <- c(eq.rhs, 1)
+  eq.rhs <- c(eq.rhs, 0.5)
+
+  # 3. d_min - s_1 = 0
+  s1 <- rep(0, nvar)
+  s1[nvar] <- 1
+  s1[n + 1] <- -1
+  eq.con <- rbind(eq.con, s1)
+  eq.rhs <- c(eq.rhs, 0)
 
   # Inequality constraints:
   # 1. For all 1 <= i <= j <= Q, if (a_p, a_r) \in C_i,j      --> s_i + d_min + x_r - x_p <= 0
@@ -67,28 +75,23 @@ macbethSolve <- function(min.p, max.p) {
     }
   }))
 
-  # 3. d_min - s_1 <= 0
-  ineq3 <- rep(0, nvar)
-  ineq3[nvar] <- 1
-  ineq3[n + 1] <- -1
-
-  # 4. For all 2 <= i <= Q, s_i-1 + d_min - s_i <= 0
-  ineq4 <- t(sapply(2:Q, function(i) {
+  # 3. For all 2 <= i <= Q, s_i-1 + 2d_min - s_i <= 0
+  ineq3 <- t(sapply(2:Q, function(i) {
     con <- rep(0, nvar)
     con[n + i - 1] <- 1
-    con[nvar] <- 1
+    con[nvar] <- 2
     con[n + i] <- -1
     con
   }))
 
-  # 5. For all 1 <= p <= n, -x_p <= 0
-  ineq5 <- cbind(-diag(n), matrix(0, nrow=n, ncol=Q + 1))
+  # 4. For all 1 <= p <= n, -x_p <= 0
+  ineq4 <- cbind(-diag(n), matrix(0, nrow=n, ncol=Q + 1))
 
-  # 6. For all 1 <= i <= Q, -s_i <= 0
-  ineq6 <- cbind(matrix(0, nrow=Q, ncol=n), -diag(Q), rep(0, Q))
+  # 5. For all 1 <= i <= Q, -s_i <= 0
+  ineq5 <- cbind(matrix(0, nrow=Q, ncol=n), -diag(Q), rep(0, Q))
 
   # Concatenate all inequality constraints
-  iq.con <- rbind(ineq1, ineq2, ineq3, ineq4, ineq5, ineq6)
+  iq.con <- rbind(ineq1, ineq2, ineq3, ineq4, ineq5)
   iq.rhs <- rep(0, nrow(iq.con))
 
   # Solve LP
