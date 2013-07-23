@@ -3,6 +3,7 @@
   "criteria": {
     "response": {
       "title": "Treatment Responders",
+      "scale": [0.0, 1.0],
       "pvf": {
         "range": [0.28, 0.63],
         "direction": "increasing",
@@ -11,6 +12,7 @@
     },
     "nausea": {
       "title": "Nausea ADRs",
+      "scale": [0.0, 1.0],
       "pvf": {
         "range": [0.04, 0.50],
         "direction": "decreasing",
@@ -19,6 +21,7 @@
     },
     "insomnia": {
       "title": "Insomnia ADRs",
+      "scale": [0.0, 1.0],
       "pvf": {
         "range": [0.08, 0.31],
         "direction": "decreasing",
@@ -27,6 +30,7 @@
     },
     "anxiety": {
       "title": "Anxiety ADRs",
+      "scale": [0.0, 1.0],
       "pvf": {
         "range": [0.00, 0.17],
         "direction": "decreasing",

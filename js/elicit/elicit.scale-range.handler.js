@@ -28,17 +28,26 @@ function ScaleRangeHandler(Tasks) {
         choices[criterion[0]] = { lower: from, upper: to };
 
         // Set scales for slider
-        var margin = 0.5;
-        var fromFudge = (((from < 0) ? -1 : 1) * (nice(from) * margin));
-        var toFudge = (((to < 0) ? -1 : 1) * (nice(to) * margin));
-        scales[criterion[0]] =
-          { restrictFrom: criterion[1]["2.5%"],
-            restrictTo: criterion[1]["97.5%"],
-            from: nice(from) - fromFudge,
-            to: nice(to) + toFudge,
-            increaseFrom: function() { this.from = this.from - fromFudge },
-            increaseTo: function() { this.to = this.to + toFudge },
-            rightOpen: true };
+        var margin = 0.5 * (nice(to) - nice(from));
+        var scale = state.problem.criteria[criterion[0]].scale || [null, null];
+        scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
+        scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
+
+        var boundFrom = function(val) {
+          return val < scale[0] ? scale[0] : val;
+        }
+        var boundTo = function(val) {
+          return val > scale[1] ? scale[1] : val;
+        }
+
+        scales[criterion[0]] = {
+          restrictFrom: criterion[1]["2.5%"],
+          restrictTo: criterion[1]["97.5%"],
+          from: boundFrom(nice(from) - margin),
+          to: boundTo(nice(to) + margin),
+          increaseFrom: function() { this.from = boundFrom(this.from - margin) },
+          increaseTo: function() { this.to = boundTo(this.to + margin) }
+        };
       });
     });
     return _.extend(state, {

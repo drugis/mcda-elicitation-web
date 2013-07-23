@@ -3,6 +3,7 @@
   "criteria": {
     "Prox DVT": {
       "title": "Proximal DVT",
+      "scale": [0.0, 1.0],
       "pvf": {
         "range": [
           0,
@@ -14,6 +15,7 @@
     },
     "Dist DVT": {
       "title": "Distal DVT",
+      "scale": [0.0, 1.0],
       "pvf": {
         "range": [
           0.15,
@@ -25,6 +27,7 @@
     },
     "Bleed": {
       "title": "Major bleeding",
+      "scale": [0.0, 1.0],
       "pvf": {
         "range": [
           0,

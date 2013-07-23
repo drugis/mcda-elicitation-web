@@ -3,6 +3,7 @@
   "criteria" : {
     "ham-d-responders" : {
       "title" : "HAM-D Responders",
+      "scale": [0.0, 1.0],
       "pvf" : {
         "direction" : "increasing",
         "type" : "linear",
@@ -11,6 +12,7 @@
     },
     "diarrhea" : {
       "title" : "Diarrhea",
+      "scale": [0.0, 1.0],
       "pvf" : {
         "direction" : "decreasing",
         "type" : "linear",
@@ -19,6 +21,7 @@
     },
     "dizziness" : {
       "title" : "Dizziness",
+      "scale": [0.0, 1.0],
       "pvf" : {
         "direction" : "decreasing",
         "type" : "linear",
@@ -27,6 +30,7 @@
     },
     "headache" : {
       "title" : "Headache",
+      "scale": [0.0, 1.0],
       "pvf" : {
         "direction" : "decreasing",
         "type" : "linear",
@@ -35,6 +39,7 @@
     },
     "insomnia" : {
       "title" : "Insomnia",
+      "scale": [0.0, 1.0],
       "pvf" : {
         "direction" : "decreasing",
         "type" : "linear",
@@ -43,6 +48,7 @@
     },
     "nausea" : {
       "title" : "Nausea",
+      "scale": [0.0, 1.0],
       "pvf" : {
         "direction" : "decreasing",
         "type" : "linear",
