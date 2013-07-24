@@ -1,6 +1,6 @@
 function PartialValueFunctionHandler() {
   var self = this;
-  this.fields = [];
+  this.fields = ["pvf"];
 
   this.createPartialValueFunction = function(_criterion) {
     var criterion = angular.copy(_criterion);
@@ -57,9 +57,12 @@ function PartialValueFunctionHandler() {
   }
 
   this.initialize = function(state) {
-    function addPartialValueFunction(criterion) { _.extend(criterion, self.createPartialValueFunction(criterion)) }
+    function addPartialValueFunction(criterion) {
+      _.extend(criterion, self.createPartialValueFunction(criterion));
+    }
     angular.forEach(state.problem.criteria, addPartialValueFunction);
     state.title = "Partial Value Functions";
+    state.type = "partial value function";
     return state;
   }
 
@@ -69,7 +72,24 @@ function PartialValueFunctionHandler() {
 
   this.nextState = function(currentState) {
     var nextState = angular.copy(currentState);
-    nextState.type = "ordinal";
+
+    var criteria = _.sortBy(_.pairs(nextState.problem.criteria), function(p) { return p[0]; });
+    var criterion = _.find(criteria, function(c) {
+      return c[1].pvf.type === "piecewise-linear" && !c[1].pvf.cutoffs;
+    });
+
+    if (nextState.pvf && nextState.pvf.subType == 'elicit cutoffs') {
+      nextState.pvf.subType = 'elicit values';
+      nextState.problem.criteria[nextState.pvf.criterion].pvf.values = [];
+    } else if (criterion) {
+      nextState.pvf = {
+        "subType": "elicit cutoffs",
+        "criterion": criterion[0]
+      };
+      nextState.problem.criteria[criterion[0]].pvf.cutoffs = [];
+    } else {
+      nextState.type = "ordinal";
+    }
     return nextState;
   }
 

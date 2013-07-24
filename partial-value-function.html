@@ -1,32 +1,38 @@
 <div ng-show="currentStep.type == 'partial value function'">
-  <p>The partial value functions (<abbr title="partial value function">PVF</abbr>)
-  define the mapping between the measurement values and the
-  utility of that value.</p>
+  <div ng-show="currentStep.pvf == null">
+    <p>The partial value functions (<abbr title="partial value function">PVF</abbr>)
+    define the mapping between the measurement values and the
+    utility of that value.</p>
 
-  <div ng-repeat="criterion in currentStep.problem.criteria">
-    {{criterion.title}}
-    <div class="row">
-      <div class="large-4 columns">
-        <small>Preferred level</small>
-        <label>
-          <input type="radio"
-            ng-model="criterion.pvf.direction"
-            value="decreasing"
-            ng-selected="criterion.pvf.direction =='decreasing'">
-          {{criterion.pvf.range[0]}} is best
-        </label>
-        <label>
-          <input type="radio"
-            ng-model="criterion.pvf.direction"
-            value="increasing"
-            ng-selected="criterion.pvf.direction == 'increasing'">
-          {{criterion.pvf.range[1]}} is best
-        </label>
-      </div>
-      <div class="large-4 columns">
-        <small>Type of function</small>
-        <label><input type="radio" ng-model="criterion.pvf.type" value="linear">Linear</label>
-        <label><input type="radio" ng-model="criterion.pvf.type" value="piecewise-linear">Piece-wise linear</label>
+    <div ng-repeat="criterion in currentStep.problem.criteria">
+      {{criterion.title}}
+      <div class="row">
+        <div class="large-4 columns">
+          <small>Preferred level</small>
+          <label>
+            <input type="radio"
+              ng-model="criterion.pvf.direction"
+              value="decreasing"
+              ng-selected="criterion.pvf.direction =='decreasing'">
+            {{criterion.pvf.range[0]}} is best
+          </label>
+          <label>
+            <input type="radio"
+              ng-model="criterion.pvf.direction"
+              value="increasing"
+              ng-selected="criterion.pvf.direction == 'increasing'">
+            {{criterion.pvf.range[1]}} is best
+          </label>
+        </div>
+        <div class="large-4 columns">
+          <small>Type of function</small>
+          <label><input type="radio" ng-model="criterion.pvf.type" value="linear">Linear</label>
+          <label><input type="radio" ng-model="criterion.pvf.type" value="piecewise-linear">Piece-wise linear</label>
+        </div>
       </div>
     </div>
+  </div> <!-- / subType == null -->
+  <div ng-show="currentStep.pvf">
+    {{currentStep.pvf.subType}} {{currentStep.pvf.criterion}}
   </div>
+</div>

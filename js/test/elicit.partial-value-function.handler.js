@@ -5,7 +5,7 @@ describe("PartialValueFunctionHandler", function() {
     var crit1;
     var crit2;
     beforeEach(function() {
-      handler = new PartialValueFunctionHandler(exampleProblem());
+      handler = new PartialValueFunctionHandler();
       crit1 = handler.createPartialValueFunction({
         "pvf": {
           "type": "linear",
@@ -57,7 +57,7 @@ describe("PartialValueFunctionHandler", function() {
     var crit1;
     var crit2;
     beforeEach(function() {
-      handler = new PartialValueFunctionHandler(exampleProblem());
+      handler = new PartialValueFunctionHandler();
       crit1 = handler.createPartialValueFunction({
         "pvf": {
           "type": "piecewise-linear",
@@ -116,4 +116,74 @@ describe("PartialValueFunctionHandler", function() {
       expect(crit2.pvf.inv(0.0)).toBeCloseTo(100);
       });
   });
+
+  describe("nextState()", function() {
+    var handler;
+    beforeEach(function() {
+      handler = new PartialValueFunctionHandler();
+    });
+
+    it("transitions to ordinal if there are no piecewise PVF's", function() {
+      var problem = exampleProblem();
+      var state = handler.initialize({ problem: problem });
+      state = handler.nextState(state);
+      expect(state.type).toBe('ordinal');
+    });
+
+    it("has subType 'elicit cutoffs' when there are piecewise PVF's without cutoffs", function() {
+      var problem = exampleProblem();
+      var state = handler.initialize({ problem: problem });
+      state.problem.criteria['Bleed'].pvf.type = 'piecewise-linear';
+      state = handler.nextState(state);
+      expect(state.type).toBe('partial value function');
+      expect(state.pvf.subType).toBe('elicit cutoffs');
+      expect(state.pvf.criterion).toBe('Bleed');
+      expect(state.problem.criteria['Bleed'].pvf.cutoffs).toEqual([]);
+    });
+
+    it("should elicit values after cutoffs", function() {
+      var problem = exampleProblem();
+      var state = handler.initialize({ problem: problem });
+      state.problem.criteria['Bleed'].pvf.type = 'piecewise-linear';
+      state = handler.nextState(state);
+      expect(state.pvf.criterion).toBe('Bleed');
+      state.problem.criteria['Bleed'].pvf.cutoffs = [0.08, 0.03];
+      state = handler.nextState(state);
+
+      expect(state.type).toBe('partial value function');
+      expect(state.pvf.subType).toBe('elicit values');
+      expect(state.pvf.criterion).toBe('Bleed');
+      expect(state.problem.criteria['Bleed'].pvf.values).toEqual([]);
+    });
+
+    it("should transition to ordinal when done", function() {
+      var problem = exampleProblem();
+      var state = handler.initialize({ problem: problem });
+      state.problem.criteria['Bleed'].pvf.type = 'piecewise-linear';
+      state = handler.nextState(state);
+      state.problem.criteria['Bleed'].pvf.cutoffs = [0.08, 0.03];
+      state = handler.nextState(state);
+      state.problem.criteria['Bleed'].pvf.values = [0.4, 0.8];
+      state = handler.nextState(state);
+
+      expect(state.type).toBe('ordinal');
+    });
+
+    it("should elicit values before transitioning to next criterion", function() {
+      var problem = exampleProblem();
+      var state = handler.initialize({ problem: problem });
+      state.problem.criteria['Bleed'].pvf.type = 'piecewise-linear';
+      state.problem.criteria['Dist DVT'].pvf.type = 'piecewise-linear';
+      state = handler.nextState(state);
+      expect(state.pvf.criterion).toBe('Bleed');
+      state.problem.criteria['Bleed'].pvf.cutoffs = [0.08, 0.03];
+      state = handler.nextState(state);
+
+      expect(state.type).toBe('partial value function');
+      expect(state.pvf.subType).toBe('elicit values');
+      expect(state.pvf.criterion).toBe('Bleed');
+    });
+
+  });
+
 });
