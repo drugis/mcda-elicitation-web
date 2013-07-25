@@ -56,35 +56,38 @@ function PartialValueFunctionHandler() {
     return criterion;
   }
 
-  this.standardize = function(state) {
-    var state = angular.copy(state);
+  function extendPartialValueFunctions(state) {
     function addPartialValueFunction(criterion) {
       _.extend(criterion, self.createPartialValueFunction(criterion));
     }
     angular.forEach(state.problem.criteria, addPartialValueFunction);
-
-    // Copy choices
-    angular.forEach(_.pairs(state.problem.criteria), function(criterion) {
-      angular.forEach(_.keys(state.choice[criterion[0]]), function(key) {
-        criterion[1].pvf[key] = state.choice[criterion[0]][key];
-      });
-    });
     return state;
   }
 
+  function standardize(state) {
+    // Copy choices to problem
+    angular.forEach(_.pairs(state.problem.criteria), function(criterion) {
+      angular.forEach(_.keys(state.choice.data[criterion[0]]), function(key) {
+        criterion[1].pvf[key] = state.choice.data[criterion[0]][key];
+      });
+    });
+
+    return extendPartialValueFunctions(state);
+  }
+
   this.initialize = function(state) {
-    function pluckPairs(obj, field) {
+    state = extendPartialValueFunctions(state);
+    function pluckObject(obj, field) {
       return _.object(_.map(_.pairs(obj), function(el) {
         return [el[0], el[1][field]];
       }));
     }
-
     var initial = {
       type: "partial value function",
       title: "Partial Value Function",
-      choice: pluckPairs(state.problem.criteria, "pvf")
+      choice: { data: pluckObject(state.problem.criteria, "pvf") },
     }
-    return this.standardize(_.extend(state, initial));
+    return _.extend(state, initial);
   }
 
   this.validChoice = function(currentState) {
@@ -96,22 +99,34 @@ function PartialValueFunctionHandler() {
 
     var criteria = _.keys(nextState.problem.criteria).sort();
     var criterion = _.find(criteria, function(c) {
-      return nextState.choice[c].type === "piecewise-linear" && !nextState.choice[c].cutoffs;
+      return nextState.choice.data[c].type === "piecewise-linear" && !nextState.choice.data[c].cutoffs;
     });
 
-    if (nextState.choice.elicit && nextState.choice.elicit.subType == 'elicit cutoffs') {
-      nextState.choice.elicit.subType = 'elicit values';
-      nextState.choice[nextState.choice.elicit.criterion].values = [];
+    var choice = nextState.choice;
+    var info = nextState.problem.criteria[criterion];
+    if (choice.subType == 'elicit cutoffs') {
+      choice.subType = 'elicit values';
+      choice.data[choice.criterion].values = [];
     } else if (criterion) {
-      nextState.choice.elicit = {
-        "subType": "elicit cutoffs",
-        "criterion": criterion
-      };
-      nextState.choice[criterion].cutoffs = [];
+      choice.subType = "elicit cutoffs";
+      choice.criterion = criterion;
+
+      choice.data[criterion].cutoffs = [];
+      choice.data[criterion].addCutoff = function(cutoff) {
+        choice.data[criterion].cutoffs.push(cutoff);
+        choice.data[criterion].cutoffs.sort(function(a, b) {
+          return info.pvf.direction === "decreasing" ? a - b : b - a;
+        });
+      }
+      choice.data[criterion].validCutoff = function(cutoff) {
+        var allowed = (cutoff < info.best() && cutoff > info.worst()) || (cutoff < info.worst() && cutoff > info.best());
+        var unique = choice.data[criterion].cutoffs.indexOf(cutoff) == -1;
+        return allowed && unique;
+      }
     } else {
       nextState.type = "ordinal";
     }
-    return this.standardize(nextState);
+    return standardize(nextState);
   }
 
   return this;
