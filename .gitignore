@@ -3,3 +3,4 @@ js/test.js
 *.swp
 /js/clinicico.js
 /tags
+/R/service.R
