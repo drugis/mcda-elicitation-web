@@ -133,27 +133,27 @@ describe("PartialValueFunctionHandler", function() {
     it("has subType 'elicit cutoffs' when there are piecewise PVF's without cutoffs", function() {
       var problem = exampleProblem();
       var state = handler.initialize({ problem: problem });
-      state.problem.criteria['Bleed'].pvf.type = 'piecewise-linear';
+      state.choice['Bleed'].type = 'piecewise-linear';
       state = handler.nextState(state);
       expect(state.type).toBe('partial value function');
-      expect(state.pvf.subType).toBe('elicit cutoffs');
-      expect(state.pvf.criterion).toBe('Bleed');
-      expect(state.problem.criteria['Bleed'].pvf.cutoffs).toEqual([]);
+      expect(state.choice.elicit.subType).toBe('elicit cutoffs');
+      expect(state.choice.elicit.criterion).toBe('Bleed');
+      expect(state.choice['Bleed'].cutoffs).toEqual([]);
     });
 
     it("should elicit values after cutoffs", function() {
       var problem = exampleProblem();
       var state = handler.initialize({ problem: problem });
-      state.problem.criteria['Bleed'].pvf.type = 'piecewise-linear';
+      state.choice['Bleed'].type = 'piecewise-linear';
       state = handler.nextState(state);
-      expect(state.pvf.criterion).toBe('Bleed');
+      expect(state.choice.elicit.criterion).toBe('Bleed');
       state.problem.criteria['Bleed'].pvf.cutoffs = [0.08, 0.03];
       state = handler.nextState(state);
 
       expect(state.type).toBe('partial value function');
-      expect(state.pvf.subType).toBe('elicit values');
-      expect(state.pvf.criterion).toBe('Bleed');
-      expect(state.problem.criteria['Bleed'].pvf.values).toEqual([]);
+      expect(state.choice.elicit.subType).toBe('elicit values');
+      expect(state.choice.elicit.criterion).toBe('Bleed');
+      expect(state.choice['Bleed'].values).toEqual([]);
     });
 
     it("should transition to ordinal when done", function() {
@@ -172,16 +172,16 @@ describe("PartialValueFunctionHandler", function() {
     it("should elicit values before transitioning to next criterion", function() {
       var problem = exampleProblem();
       var state = handler.initialize({ problem: problem });
-      state.problem.criteria['Bleed'].pvf.type = 'piecewise-linear';
-      state.problem.criteria['Dist DVT'].pvf.type = 'piecewise-linear';
+      state.choice['Bleed'].type = 'piecewise-linear';
+      state.choice['Dist DVT'].type = 'piecewise-linear';
       state = handler.nextState(state);
-      expect(state.pvf.criterion).toBe('Bleed');
-      state.problem.criteria['Bleed'].pvf.cutoffs = [0.08, 0.03];
+      expect(state.choice.elicit.criterion).toBe('Bleed');
+      state.choice['Bleed'].cutoffs = [0.08, 0.03];
       state = handler.nextState(state);
 
       expect(state.type).toBe('partial value function');
-      expect(state.pvf.subType).toBe('elicit values');
-      expect(state.pvf.criterion).toBe('Bleed');
+      expect(state.choice.elicit.subType).toBe('elicit values');
+      expect(state.choice.elicit.criterion).toBe('Bleed');
     });
 
   });

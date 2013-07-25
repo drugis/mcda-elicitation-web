@@ -114,7 +114,8 @@ describe("RatioBoundElicitationHandler", function() {
       expect(state.prefs['ratio bound'][1].bounds[1]).toBeCloseTo(2.00);
 
       problem.criteria["Prox DVT"].pvf.direction = "increasing";
-      problem = initProblem(problem);
+      problem.criteria["Prox DVT"] = new PartialValueFunctionHandler().createPartialValueFunction(problem.criteria["Prox DVT"]);
+
       handler = new RatioBoundElicitationHandler();
       state = handler.initialize({ problem: problem, prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
 

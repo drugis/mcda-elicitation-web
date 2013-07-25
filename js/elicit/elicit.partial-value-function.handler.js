@@ -1,6 +1,6 @@
 function PartialValueFunctionHandler() {
   var self = this;
-  this.fields = ["pvf"];
+  this.fields = [];
 
   this.createPartialValueFunction = function(_criterion) {
     var criterion = angular.copy(_criterion);
@@ -56,14 +56,35 @@ function PartialValueFunctionHandler() {
     return criterion;
   }
 
-  this.initialize = function(state) {
+  this.standardize = function(state) {
+    var state = angular.copy(state);
     function addPartialValueFunction(criterion) {
       _.extend(criterion, self.createPartialValueFunction(criterion));
     }
     angular.forEach(state.problem.criteria, addPartialValueFunction);
-    state.title = "Partial Value Functions";
-    state.type = "partial value function";
+
+    // Copy choices
+    angular.forEach(_.pairs(state.problem.criteria), function(criterion) {
+      angular.forEach(_.keys(state.choice[criterion[0]]), function(key) {
+        criterion[1].pvf[key] = state.choice[criterion[0]][key];
+      });
+    });
     return state;
+  }
+
+  this.initialize = function(state) {
+    function pluckPairs(obj, field) {
+      return _.object(_.map(_.pairs(obj), function(el) {
+        return [el[0], el[1][field]];
+      }));
+    }
+
+    var initial = {
+      type: "partial value function",
+      title: "Partial Value Function",
+      choice: pluckPairs(state.problem.criteria, "pvf")
+    }
+    return this.standardize(_.extend(state, initial));
   }
 
   this.validChoice = function(currentState) {
@@ -73,24 +94,24 @@ function PartialValueFunctionHandler() {
   this.nextState = function(currentState) {
     var nextState = angular.copy(currentState);
 
-    var criteria = _.sortBy(_.pairs(nextState.problem.criteria), function(p) { return p[0]; });
+    var criteria = _.keys(nextState.problem.criteria).sort();
     var criterion = _.find(criteria, function(c) {
-      return c[1].pvf.type === "piecewise-linear" && !c[1].pvf.cutoffs;
+      return nextState.choice[c].type === "piecewise-linear" && !nextState.choice[c].cutoffs;
     });
 
-    if (nextState.pvf && nextState.pvf.subType == 'elicit cutoffs') {
-      nextState.pvf.subType = 'elicit values';
-      nextState.problem.criteria[nextState.pvf.criterion].pvf.values = [];
+    if (nextState.choice.elicit && nextState.choice.elicit.subType == 'elicit cutoffs') {
+      nextState.choice.elicit.subType = 'elicit values';
+      nextState.choice[nextState.choice.elicit.criterion].values = [];
     } else if (criterion) {
-      nextState.pvf = {
+      nextState.choice.elicit = {
         "subType": "elicit cutoffs",
-        "criterion": criterion[0]
+        "criterion": criterion
       };
-      nextState.problem.criteria[criterion[0]].pvf.cutoffs = [];
+      nextState.choice[criterion].cutoffs = [];
     } else {
       nextState.type = "ordinal";
     }
-    return nextState;
+    return this.standardize(nextState);
   }
 
   return this;

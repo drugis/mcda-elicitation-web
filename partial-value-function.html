@@ -1,38 +1,44 @@
 <div ng-show="currentStep.type == 'partial value function'">
-  <div ng-show="currentStep.pvf == null">
+  <div ng-show="currentStep.choice.elicit == null">
     <p>The partial value functions (<abbr title="partial value function">PVF</abbr>)
     define the mapping between the measurement values and the
     utility of that value.</p>
 
-    <div ng-repeat="criterion in currentStep.problem.criteria">
-      {{criterion.title}}
+    <div ng-repeat="(k, criterion) in currentStep.choice">
+      {{currentStep.problem.criteria[k].title}}
       <div class="row">
         <div class="large-4 columns">
           <small>Preferred level</small>
           <label>
             <input type="radio"
-              ng-model="criterion.pvf.direction"
+              ng-model="criterion.direction"
               value="decreasing"
-              ng-selected="criterion.pvf.direction =='decreasing'">
-            {{criterion.pvf.range[0]}} is best
+              ng-selected="criterion.direction =='decreasing'">
+            {{criterion.range[0]}} is best
           </label>
           <label>
             <input type="radio"
-              ng-model="criterion.pvf.direction"
+              ng-model="criterion.direction"
               value="increasing"
-              ng-selected="criterion.pvf.direction == 'increasing'">
-            {{criterion.pvf.range[1]}} is best
+              ng-selected="criterion.direction == 'increasing'">
+            {{criterion.range[1]}} is best
           </label>
         </div>
         <div class="large-4 columns">
           <small>Type of function</small>
-          <label><input type="radio" ng-model="criterion.pvf.type" value="linear">Linear</label>
-          <label><input type="radio" ng-model="criterion.pvf.type" value="piecewise-linear">Piece-wise linear</label>
+          <label><input type="radio" ng-model="criterion.type" value="linear">Linear</label>
+          <label><input type="radio" ng-model="criterion.type" value="piecewise-linear">Piece-wise linear</label>
         </div>
       </div>
     </div>
   </div> <!-- / subType == null -->
-  <div ng-show="currentStep.pvf">
-    {{currentStep.pvf.subType}} {{currentStep.pvf.criterion}}
+
+  <div ng-show="currentStep.choice.elicit.subType == 'elicit cutoffs'">
+    {{ currentStep.choice.elicit }}
   </div>
+
+  <div ng-show="currentStep.choice.elicit.subType == 'elicit values'">
+    {{ currentStep.choice.elicit }}
+  </div>
+
 </div>
