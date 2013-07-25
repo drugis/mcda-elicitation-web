@@ -13,7 +13,7 @@ ilogit <- function(x) {
 }
 
 smaa <- function(params) {
-  allowed <- c('scales', 'smaa')
+  allowed <- c('scales', 'smaa', 'macbeth')
   if(params$method %in% allowed) {
     do.call(paste("run", params$method, sep="_"), list(params))
   } else {

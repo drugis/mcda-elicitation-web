@@ -1,4 +1,11 @@
-library(rcdd)
+run_macbeth <- function(params) {
+  print(params)
+  pref <- t(sapply(params[['preferences']], rbind))
+  pref[sapply(pref, is.null)] <- NA
+  pref <- matrix(as.numeric(pref), nrow=nrow(pref), ncol=ncol(pref))
+  sol <- macbethSolve(pref, pref)
+  sol / max(sol)
+}
 
 macbethSolve <- function(min.p, max.p) {
   # Evaluation of each reference alternative x_p, x_r (n: one for each row)
@@ -12,13 +19,17 @@ macbethSolve <- function(min.p, max.p) {
   # Equality constraints:
   # 1. if preference level 0, x_p = x_r:
   I <- which(upper.tri(max.p) & max.p == 0, arr.ind=TRUE)
-  eq.con <- t(apply(I, 1, function(pair) {
-    p <- pair[1]; r <- pair[2]
-    con <- rep(0, nvar)
-    con[p] <- 1
-    con[r] <- -1
-    con
-  }))
+  eq.con <- if (nrow(I)) {
+    t(apply(I, 1, function(pair) {
+      p <- pair[1]; r <- pair[2]
+      con <- rep(0, nvar)
+      con[p] <- 1
+      con[r] <- -1
+      con
+    }))
+  } else {
+    matrix(nrow=0, ncol=nvar)
+  }
   eq.rhs <- rep(0, nrow(I))
 
   # 2. dmin = 0.5

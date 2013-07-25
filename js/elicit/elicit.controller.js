@@ -18,7 +18,7 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
     if(!_.isEmpty(problem)) {
       handlers = {
         "scale range": new ScaleRangeHandler(Tasks),
-        "partial value function": new PartialValueFunctionHandler(),
+        "partial value function": new PartialValueFunctionHandler(Tasks),
         "ordinal":  new OrdinalElicitationHandler(),
         "ratio bound":  new RatioBoundElicitationHandler(),
         "choose method": new ChooseMethodHandler(),
