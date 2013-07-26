@@ -66,9 +66,12 @@ function PartialValueFunctionHandler(Tasks) {
 
   function standardize(state) {
     // Copy choices to problem
+    var excluded = ["comp", "base"];
     angular.forEach(_.pairs(state.problem.criteria), function(criterion) {
       angular.forEach(_.keys(state.choice.data[criterion[0]]), function(key) {
-        criterion[1].pvf[key] = state.choice.data[criterion[0]][key];
+        if(excluded.indexOf(key) == -1) {
+          criterion[1].pvf[key] = state.choice.data[criterion[0]][key];
+        }
       });
     });
 
@@ -116,7 +119,7 @@ function PartialValueFunctionHandler(Tasks) {
       choice: { data: pluckObject(state.problem.criteria, "pvf"),
                 calculate: calculate,
                 preferences:
-                  ["Indifferent", "Very Weak", "Weak", "Moderate", "Strong", "Very Strong", "Extreme"],
+                  ["Do not", "Very Weakly", "Weakly", "Moderately", "Strongly", "Very Strongly", "Extremely"],
                 getXY: _.memoize(function(data, criterion) {
                   var y = [1].concat(data[criterion].values).concat([0]);
                   var best = state.problem.criteria[criterion].best();

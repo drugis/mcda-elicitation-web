@@ -1,5 +1,5 @@
 <div>
-  <div ng-show="currentStep.choice.subType == null">
+  <div ng-if="currentStep.choice.subType == null">
     <p>The partial value functions (<abbr title="partial value function">PVF</abbr>)
     define the mapping between the measurement values and the
     utility of that value.</p>
@@ -33,7 +33,7 @@
     </div>
   </div> <!-- / subType == null -->
 
-  <div ng-show="currentStep.choice.subType == 'elicit cutoffs'">
+  <div ng-if="currentStep.choice.subType == 'elicit cutoffs'">
     <div class="row">
       <h3>{{currentStep.problem.criteria[currentStep.choice.criterion].title}}</h3>
       <p>Define the reference levels needed to elict the piecewise <abbr title="partial value function">PVF</abbr>:
@@ -65,22 +65,23 @@
     </div>
   </div> <!-- / subType == 'elicit cutoffs' -->
 
-  <div ng-show="currentStep.choice.subType == 'elicit values'">
+  <div ng-if="currentStep.choice.subType == 'elicit values'">
     <div class="row">
       <h3>{{currentStep.problem.criteria[currentStep.choice.criterion].title}}</h3>
       <div class="columns">
         <div class="row" ng-repeat="(i, base) in currentStep.choice.data[currentStep.choice.criterion].base">
-          <p>Please indicate preference of each of these values
-          over {{base}}:</p>
+          <p>Compare the attractiveness of {{base}} to these other options:</p>
 
           <ul class="no-bullet">
             <li ng-repeat="(j, comp) in currentStep.choice.data[currentStep.choice.criterion].comp[i]">
-            <label class="columns small-6">{{comp}}
-              <select ng-options="p for (k, p) in currentStep.choice.preferences"
-                ng-model="currentStep.choice.data[currentStep.choice.criterion].preferences[i][i + j + 1]"
-                style="width: 12em; float: right">
-                <option value="">-- undefined --</option>
-              </select>
+              <label class="columns small-8">
+                <span style="display: inline-block; width: 12em">Compared to {{comp}}, I</span>
+                <select ng-options="p for (k, p) in currentStep.choice.preferences"
+                  ng-model="currentStep.choice.data[currentStep.choice.criterion].preferences[i][i + j + 1]"
+                  style="width: 14em; display: inline-block;">
+                  <option value="">-- undefined --</option>
+                </select>
+                prefer {{base}}.
             </label>
             </li>
           </ul>
