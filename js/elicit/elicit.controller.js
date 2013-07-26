@@ -30,12 +30,6 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
     }
   };
 
-  var getProblem = function() {
-    $scope.problemSource.get( function(problem) {
-      initialize(problem);
-    });
-  };
-
   var previousSteps = [];
   var nextSteps = [];
 
@@ -126,8 +120,7 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
     if (!currentStep.results && $scope.shouldRun(currentStep)) run('smaa');
   };
 
-  $scope.$watch('problemSource.url', getProblem);
-  getProblem();
+  DecisionProblem.problem.then(initialize);
 };
 
 ElicitationController.$inject = ['$scope', 'DecisionProblem', 'PreferenceStore', 'clinicico.tasks'];

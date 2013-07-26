@@ -39,6 +39,11 @@ label {
   background-image: none;
   display: inline-block;
 }
+
+input[type='file'] {
+  width: auto!important;
+}
+
 /*
  * This product includes color specifications and designs developed by Cynthia
  * Brewer (http://colorbrewer.org/).

@@ -200,7 +200,6 @@ angular.module('elicit.components', []).
       scope.$watch('value', function(newVal, oldVal) {
         if(!newVal) return;
         var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
-        console.log(data);
 
         var chart = nv.models.lineChart().width(width).height(height);
         chart.forceY([0.0]);
@@ -234,6 +233,36 @@ angular.module('elicit.components', []).
         var color = d3.scale.quantile().range(d3.range(9)).domain([1, 0]);
         $(element[0].parentNode).addClass("RdYlGn");
         $(element[0]).addClass("q" + color(value) + "-9");
+      }, true);
+    }
+  };
+})
+  .directive('fileReader', function ($compile) {
+  return {
+    scope: {
+      file: '='
+    },
+    restrict: 'E',
+    template: "<input type='file' onchange='angular.element(this).scope().upload(this)'>",
+    link: function (scope, element, attrs) {
+      scope.upload = function (element) {
+        scope.$apply(function (scope) {
+          scope.file = element.files[0];
+        });
+      };
+
+      scope.$watch('file', function () {
+        if (scope.file) {
+          var reader = new FileReader();
+          reader.onload = (function (file) {
+            return function (env) {
+              scope.$apply(function () {
+                scope.file.contents = env.target.result;
+              });
+            }
+          }(scope.file));
+          reader.readAsText(scope.file);
+        }
       }, true);
     }
   };
