@@ -3,38 +3,56 @@
   "criteria": {
     "HAM-D": {
       "title": "HAM-D",
+      "scale": [0.0, 1.0],
       "pvf": {
-        "type": "linear-increasing"
+        "direction": "increasing",
+        "type": "linear",
+        "range": [0.0, 1.0]
       }
     },
     "Diarrhea": {
       "title": "Diarrhea",
+      "scale": [0.0, 1.0],
       "pvf": {
-        "type": "linear-decreasing"
+        "direction": "decreasing",
+        "type": "linear",
+        "range": [0.0, 1.0]
       }
     },
     "Dizziness": {
       "title": "Dizziness",
+      "scale": [0.0, 1.0],
       "pvf": {
-        "type": "linear-decreasing"
+        "direction": "decreasing",
+        "type": "linear",
+        "range": [0.0, 1.0]
       }
     },
     "Headache": {
       "title": "Headache",
+      "scale": [0.0, 1.0],
       "pvf": {
-        "type": "linear-decreasing"
+        "direction": "decreasing",
+        "type": "linear",
+        "range": [0.0, 1.0]
       }
     },
     "Insomnia": {
       "title": "Insomnina",
+      "scale": [0.0, 1.0],
       "pvf": {
-        "type": "linear-decreasing"
+        "direction": "decreasing",
+        "type": "linear",
+        "range": [0.0, 1.0]
       }
     },
     "Nausea": {
       "title": "Nausea",
+      "scale": [0.0, 1.0],
       "pvf": {
-        "type": "linear-decreasing"
+        "direction": "decreasing",
+        "type": "linear",
+        "range": [0.0, 1.0]
       }
     }
   },

@@ -9,7 +9,8 @@ function exampleProblem() {
             0.0,
             0.25
           ],
-          "type": "linear-decreasing"
+          "type": "linear",
+          "direction": "decreasing"
         }
       },
       "Dist DVT": {
@@ -19,7 +20,8 @@ function exampleProblem() {
             0.15,
             0.4
           ],
-          "type": "linear-decreasing"
+          "type": "linear",
+          "direction": "decreasing"
         }
       },
       "Bleed": {
@@ -29,7 +31,8 @@ function exampleProblem() {
             0.0,
             0.1
           ],
-          "type": "linear-decreasing"
+          "type": "linear",
+          "direction": "decreasing"
         }
       }
     },
@@ -97,6 +100,18 @@ function exampleProblem() {
 
 var app = angular.module('elicit', ['clinicico', 'elicit.example', 'elicit.components', 'elicit.steps', 'elicit.services']);
 app.run(['$rootScope', function($rootScope) {
+  // Add string HashCode
+  String.prototype.hashCode = function(){
+      var hash = 0;
+      if (this.length == 0) return hash;
+      for (var i = 0; i < this.length; i++) {
+          var character = this.charCodeAt(i);
+          hash = ((hash<<5)-hash)+character;
+          hash = hash & hash; // Convert to 32bit integer
+      }
+      return hash;
+  }
+
   $rootScope.$safeApply = function($scope, fn) {
     var phase = $scope.$root.$$phase;
     if(phase == '$apply' || phase == '$digest')

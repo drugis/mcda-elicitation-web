@@ -1,0 +1,252 @@
+{
+  "title" : "Fava et al, 2002 BR",
+  "criteria" : {
+    "ham-d-responders" : {
+      "title" : "HAM-D Responders",
+      "scale": [0.0, 1.0],
+      "pvf" : {
+        "direction" : "increasing",
+        "type" : "linear",
+        "range" : [ 0.5171553859214775, 0.8078871960422865 ]
+      }
+    },
+    "diarrhea" : {
+      "title" : "Diarrhea",
+      "scale": [0.0, 1.0],
+      "pvf" : {
+        "direction" : "decreasing",
+        "type" : "linear",
+        "range" : [ 0.09732465134247342, 0.356531640423518 ]
+      }
+    },
+    "dizziness" : {
+      "title" : "Dizziness",
+      "scale": [0.0, 1.0],
+      "pvf" : {
+        "direction" : "decreasing",
+        "type" : "linear",
+        "range" : [ 0.03628024982782403, 0.2421973035973817 ]
+      }
+    },
+    "headache" : {
+      "title" : "Headache",
+      "scale": [0.0, 1.0],
+      "pvf" : {
+        "direction" : "decreasing",
+        "type" : "linear",
+        "range" : [ 0.14792600963531238, 0.3785782896606996 ]
+      }
+    },
+    "insomnia" : {
+      "title" : "Insomnia",
+      "scale": [0.0, 1.0],
+      "pvf" : {
+        "direction" : "decreasing",
+        "type" : "linear",
+        "range" : [ 0.11893289594950326, 0.356531640423518 ]
+      }
+    },
+    "nausea" : {
+      "title" : "Nausea",
+      "scale": [0.0, 1.0],
+      "pvf" : {
+        "direction" : "decreasing",
+        "type" : "linear",
+        "range" : [ 0.09317817992947135, 0.34541917103483943 ]
+      }
+    }
+  },
+  "alternatives" : {
+    "fluoxetine-200-600-mgday" : {
+      "title" : "Fluoxetine 20.0-60.0 mg/day"
+    },
+    "sertraline-500-2000-mgday" : {
+      "title" : "Sertraline 50.0-200.0 mg/day"
+    },
+    "paroxetine-200-600-mgday" : {
+      "title" : "Paroxetine 20.0-60.0 mg/day"
+    }
+  },
+  "performanceTable" : [ {
+    "alternative" : "fluoxetine-200-600-mgday",
+    "criterion" : "ham-d-responders",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 58.0,
+        "beta" : 36.0
+      }
+    }
+  }, {
+    "alternative" : "sertraline-500-2000-mgday",
+    "criterion" : "ham-d-responders",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 71.0,
+        "beta" : 27.0
+      }
+    }
+  }, {
+    "alternative" : "paroxetine-200-600-mgday",
+    "criterion" : "ham-d-responders",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 65.0,
+        "beta" : 33.0
+      }
+    }
+  }, {
+    "alternative" : "fluoxetine-200-600-mgday",
+    "criterion" : "diarrhea",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 18.0,
+        "beta" : 76.0
+      }
+    }
+  }, {
+    "alternative" : "sertraline-500-2000-mgday",
+    "criterion" : "diarrhea",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 26.0,
+        "beta" : 72.0
+      }
+    }
+  }, {
+    "alternative" : "paroxetine-200-600-mgday",
+    "criterion" : "diarrhea",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 16.0,
+        "beta" : 82.0
+      }
+    }
+  }, {
+    "alternative" : "fluoxetine-200-600-mgday",
+    "criterion" : "dizziness",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 9.0,
+        "beta" : 85.0
+      }
+    }
+  }, {
+    "alternative" : "sertraline-500-2000-mgday",
+    "criterion" : "dizziness",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 8.0,
+        "beta" : 90.0
+      }
+    }
+  }, {
+    "alternative" : "paroxetine-200-600-mgday",
+    "criterion" : "dizziness",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 16.0,
+        "beta" : 82.0
+      }
+    }
+  }, {
+    "alternative" : "fluoxetine-200-600-mgday",
+    "criterion" : "headache",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 24.0,
+        "beta" : 70.0
+      }
+    }
+  }, {
+    "alternative" : "sertraline-500-2000-mgday",
+    "criterion" : "headache",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 28.0,
+        "beta" : 70.0
+      }
+    }
+  }, {
+    "alternative" : "paroxetine-200-600-mgday",
+    "criterion" : "headache",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 22.0,
+        "beta" : 76.0
+      }
+    }
+  }, {
+    "alternative" : "fluoxetine-200-600-mgday",
+    "criterion" : "insomnia",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 18.0,
+        "beta" : 76.0
+      }
+    }
+  }, {
+    "alternative" : "sertraline-500-2000-mgday",
+    "criterion" : "insomnia",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 26.0,
+        "beta" : 72.0
+      }
+    }
+  }, {
+    "alternative" : "paroxetine-200-600-mgday",
+    "criterion" : "insomnia",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 21.0,
+        "beta" : 77.0
+      }
+    }
+  }, {
+    "alternative" : "fluoxetine-200-600-mgday",
+    "criterion" : "nausea",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 15.0,
+        "beta" : 79.0
+      }
+    }
+  }, {
+    "alternative" : "sertraline-500-2000-mgday",
+    "criterion" : "nausea",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 21.0,
+        "beta" : 77.0
+      }
+    }
+  }, {
+    "alternative" : "paroxetine-200-600-mgday",
+    "criterion" : "nausea",
+    "performance" : {
+      "type" : "dbeta",
+      "parameters" : {
+        "alpha" : 25.0,
+        "beta" : 73.0
+      }
+    }
+  } ],
+  "preferences" : { }
+}

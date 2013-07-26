@@ -1,0 +1,141 @@
+{
+  "title" : "Benefit-risk",
+  "criteria" : {
+    "sbp-mean-trough-clinic-sitting" : {
+      "title" : "SBP mean trough (clinic, sitting)",
+      "scale": [null, null],
+      "pvf" : {
+        "direction" : "decreasing",
+        "type" : "linear",
+        "range" : [ -24.852974373229923, 11.15463854746878 ]
+      }
+    },
+    "non-sae" : {
+      "title" : "Non-SAE",
+      "scale": [0.0, 1.0],
+      "pvf" : {
+        "direction" : "decreasing",
+        "type" : "linear",
+        "range" : [ 0.0, 1.0 ]
+      }
+    },
+    "sae" : {
+      "title" : "SAE",
+      "scale": [0.0, 1.0],
+      "pvf" : {
+        "direction" : "decreasing",
+        "type" : "linear",
+        "range" : [ 0.0, 1.0 ]
+      }
+    }
+  },
+  "alternatives" : {
+    "azilsartan-40" : {
+      "title" : "Azilsartan 40"
+    },
+    "azilsartan-80" : {
+      "title" : "Azilsartan 80"
+    },
+    "olmesartan" : {
+      "title" : "Olmesartan"
+    },
+    "placebo" : {
+      "title" : "Placebo"
+    },
+    "ramipril" : {
+      "title" : "Ramipril"
+    },
+    "valsartan" : {
+      "title" : "Valsartan"
+    }
+  },
+  "performanceTable" : [ {
+    "criterion" : "sbp-mean-trough-clinic-sitting",
+    "performance" : {
+      "type" : "relative-normal",
+      "parameters" : {
+        "baseline" : {
+          "type" : "dnorm",
+          "name" : "placebo",
+          "mu" : -2.4394668073957715,
+          "sigma" : 1.325810385587834
+        },
+        "relative" : {
+          "type" : "dmnorm",
+          "mu" : {
+            "azilsartan-40" : -10.531855151210141,
+            "azilsartan-80" : -10.932932298925856,
+            "olmesartan" : -8.661953905656427,
+            "placebo" : 0.0,
+            "ramipril" : -2.1403248208924346,
+            "valsartan" : -6.778127679531316
+          },
+          "cov" : {
+            "colnames" : [ "azilsartan-40", "azilsartan-80", "olmesartan", "placebo", "ramipril", "valsartan" ],
+            "rownames" : [ "azilsartan-40", "azilsartan-80", "olmesartan", "placebo", "ramipril", "valsartan" ],
+            "data" : [ [ 18.502282350946633, 11.939936542940664, 9.459363151727821, 0.0, 15.041482152866363, 10.551405710168641 ], [ 11.939936542940664, 18.76932386621922, 10.252367510342815, 0.0, 15.25439584777816, 10.547550096418453 ], [ 9.459363151727821, 10.252367510342815, 32.379382309902255, 0.0, 9.495580396012985, 13.8223749767061 ], [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ], [ 15.041482152866363, 15.25439584777816, 9.495580396012983, 0.0, 44.916269346154685, 10.015214433803944 ], [ 10.551405710168641, 10.547550096418451, 13.8223749767061, 0.0, 10.015214433803944, 33.63375749615973 ] ]
+          }
+        }
+      }
+    }
+  }, {
+    "criterion" : "non-sae",
+    "performance" : {
+      "type" : "relative-logit-normal",
+      "parameters" : {
+        "baseline" : {
+          "type" : "dnorm",
+          "name" : "placebo",
+          "mu" : -3.072910196402395,
+          "sigma" : 1.1603290882507016
+        },
+        "relative" : {
+          "type" : "dmnorm",
+          "mu" : {
+            "azilsartan-40" : 0.1057502106657408,
+            "azilsartan-80" : -0.07726943095915038,
+            "olmesartan" : 0.2640227077760475,
+            "placebo" : 0.0,
+            "ramipril" : 0.7227378456190654,
+            "valsartan" : 0.21929426199102828
+          },
+          "cov" : {
+            "colnames" : [ "azilsartan-40", "azilsartan-80", "olmesartan", "placebo", "ramipril", "valsartan" ],
+            "rownames" : [ "azilsartan-40", "azilsartan-80", "olmesartan", "placebo", "ramipril", "valsartan" ],
+            "data" : [ [ 0.2713021714957754, 0.18579243383924132, 0.15600003727706918, 0.0, 0.22762870286548384, 0.14849467891864165 ], [ 0.18579243383924132, 0.2791500878144898, 0.15897142300800415, 0.0, 0.2317957397973684, 0.15134943664297168 ], [ 0.15600003727706918, 0.15897142300800418, 0.4155586547725406, 0.0, 0.1587468466985834, 0.1882003284376807 ], [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ], [ 0.22762870286548384, 0.2317957397973684, 0.1587468466985834, 0.0, 0.5733214105376766, 0.15206077905900095 ], [ 0.14849467891864165, 0.15134943664297168, 0.1882003284376807, 0.0, 0.15206077905900095, 0.4108323940854901 ] ]
+          }
+        }
+      }
+    }
+  }, {
+    "criterion" : "sae",
+    "performance" : {
+      "type" : "relative-logit-normal",
+      "parameters" : {
+        "baseline" : {
+          "type" : "dnorm",
+          "name" : "placebo",
+          "mu" : -5.7437851738303785,
+          "sigma" : 1.6951531699328055
+        },
+        "relative" : {
+          "type" : "dmnorm",
+          "mu" : {
+            "azilsartan-40" : 0.7768778587757877,
+            "azilsartan-80" : 0.8340209382528025,
+            "olmesartan" : 1.0123922535020347,
+            "placebo" : 0.0,
+            "ramipril" : 0.28493769241417294,
+            "valsartan" : 0.7104484224283463
+          },
+          "cov" : {
+            "colnames" : [ "azilsartan-40", "azilsartan-80", "olmesartan", "placebo", "ramipril", "valsartan" ],
+            "rownames" : [ "azilsartan-40", "azilsartan-80", "olmesartan", "placebo", "ramipril", "valsartan" ],
+            "data" : [ [ 1.5751680884601909, 1.2499665602556234, 1.1140882172250457, 0.0, 1.4074070894572723, 1.066925966295722 ], [ 1.2499665602556234, 1.5370208769578813, 1.1272180964906324, 0.0, 1.3930626116899758, 1.0751057021178245 ], [ 1.1140882172250457, 1.1272180964906324, 2.0935657865903696, 0.0, 1.1276939411208733, 1.2160902384366437 ], [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ], [ 1.4074070894572723, 1.3930626116899756, 1.1276939411208733, 0.0, 2.464383810690663, 1.0635745848943343 ], [ 1.066925966295722, 1.0751057021178243, 1.2160902384366434, 0.0, 1.063574584894334, 2.083821347870105 ] ]
+          }
+        }
+      }
+    }
+  } ],
+  "preferences" : { }
+}

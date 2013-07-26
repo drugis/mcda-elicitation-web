@@ -1,4 +1,4 @@
-function ScaleRangeHandler(problem, Tasks) {
+function ScaleRangeHandler(Tasks) {
   this.fields = [];
 
   var log10 = function(x) { return Math.log(x) / Math.log(10); };
@@ -13,41 +13,49 @@ function ScaleRangeHandler(problem, Tasks) {
   }
 
   this.initialize = function(state) {
-    var data = _.extend(angular.copy(problem), { "method": "scales" });
-    var task = Tasks.submit("smaa", data);
+    var task = Tasks.submit("smaa", _.extend({ "method": "scales" }, state.problem));
     var scales = {};
     var choices = {};
     task.results.then(function(results) {
       _.map(_.pairs(results.body[0]), function(criterion) {
         var from = criterion[1]["2.5%"], to = criterion[1]["97.5%"];
         // Set inital model value
-        var problemRange = problem.criteria[criterion[0]].pvf.range;
+        var problemRange = state.problem.criteria[criterion[0]].pvf.range;
         if (problemRange) {
-          choices[criterion[0]] = { lower: problemRange[0], upper: problemRange[1] };
-        } else {
-          choices[criterion[0]] = { lower: from, upper: to };
+          from = problemRange[0];
+          to = problemRange[1];
         }
+        choices[criterion[0]] = { lower: from, upper: to };
 
         // Set scales for slider
-        var margin = 0.5;
-        var fromFudge = (((from < 0) ? -1 : 1) * (nice(from) * margin));
-        var toFudge = (((to < 0) ? -1 : 1) * (nice(to) * margin));
-        scales[criterion[0]] =
-          { restrictFrom: from,
-            restrictTo: to,
-            from: nice(from) - fromFudge,
-            to: nice(to) + toFudge,
-            increaseFrom: function() { this.from = this.from - fromFudge },
-            increaseTo: function() { this.to = this.to + toFudge },
-            rightOpen: true };
+        var margin = 0.5 * (nice(to) - nice(from));
+        var scale = state.problem.criteria[criterion[0]].scale || [null, null];
+        scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
+        scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
+
+        var boundFrom = function(val) {
+          return val < scale[0] ? scale[0] : val;
+        }
+        var boundTo = function(val) {
+          return val > scale[1] ? scale[1] : val;
+        }
+
+        scales[criterion[0]] = {
+          restrictFrom: criterion[1]["2.5%"],
+          restrictTo: criterion[1]["97.5%"],
+          from: boundFrom(nice(from) - margin),
+          to: boundTo(nice(to) + margin),
+          increaseFrom: function() { this.from = boundFrom(this.from - margin) },
+          increaseTo: function() { this.to = boundTo(this.to + margin) }
+        };
       });
     });
-    return {
+    return _.extend(state, {
       title: "Measurement scales",
       type: "scale range",
       scales: scales,
       choice: choices
-    };
+    });
   }
 
   this.validChoice = function(currentState) {
@@ -57,19 +65,16 @@ function ScaleRangeHandler(problem, Tasks) {
     });
   }
 
-
   this.nextState = function(currentState) {
-    if(!this.validChoice(currentState)) {
-      return;
-    }
+    if(!this.validChoice(currentState)) return;
 
     // Rewrite scale information
     _.each(_.pairs(currentState.choice), function(choice) {
-      problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
+      currentState.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
     });
 
     var nextState = angular.copy(currentState);
-    nextState.type = "ordinal"
+    nextState.type = "partial value function";
     return nextState;
   }
 
