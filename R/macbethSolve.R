@@ -68,7 +68,7 @@ macbethSolve <- function(min.p, max.p) {
 
   # 2. For all 1 <= i <= j <= Q - 1, if (a_p, a_r) \in C_i,j  --> x_p - x_r + d_min - s_j+1 <= 0
   #     (a_p, a_r) \in C_i,j if max.p[p, r] == i, min.p[p, r] == j.
-  ineq2 <- do.call(rbind, apply(which(upper.tri(diag(Q - 1), diag=TRUE), arr.ind=TRUE), 1, function(pair) {
+  tmp <- apply(which(upper.tri(diag(Q - 1), diag=TRUE), arr.ind=TRUE), 1, function(pair) {
     i <- pair[1]; j <- pair[2]
     Cij <- which(upper.tri(max.p) & max.p == i & min.p == j, arr.ind=TRUE)
     if (nrow(Cij) > 0) {
@@ -84,7 +84,8 @@ macbethSolve <- function(min.p, max.p) {
     } else {
       matrix(ncol=nvar, nrow=0)
     }
-  }))
+  })
+  ineq2 <- if(is.list(tmp)) do.call(rbind, tmp) else matrix(ncol=nvar, nrow=0)
 
   # 3. For all 2 <= i <= Q, s_i-1 + 2d_min - s_i <= 0
   ineq3 <- t(sapply(2:Q, function(i) {

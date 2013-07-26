@@ -83,6 +83,45 @@ run_scales <- function(params) {
   list(wrap.matrix(t(apply(meas, 3, function(e) { quantile(e, c(0.025, 0.975)) }))))
 }
 
+create.pvf <- function(criterion) {
+  pvf <- criterion$pvf
+  if (pvf$direction == 'increasing') {
+    worst <- pvf$range[1]
+    best <- pvf$range[2]
+  } else if (pvf$direction == 'decreasing') {
+    worst <- pvf$range[2]
+    best <- pvf$range[1]
+  } else {
+    stop(paste("Invalid PVF direction '", pvf$direction, "'", sep=""))
+  }
+
+  if (pvf$type == 'piecewise-linear') {
+    return(partialValue(best, worst, pvf$cutoffs, pvf$values))
+  } else if (pvf$type == 'linear') {
+    return(partialValue(best, worst))
+  } else {
+    stop(paste("Invalid PVF type '", pvf$type, "'", sep=""))
+  }
+}
+
+
+partialValue <- function(best, worst, cutoffs=numeric(), values=numeric()) {
+  if (best > worst) {
+    # Increasing
+    v <- c(0, values, 1)
+    y <- c(worst, cutoffs, best)
+  } else {
+    # Decreasing
+    v <- c(1, values, 0)
+    y <- c(best, cutoffs, worst)
+  }
+  function(x) {
+    i <- sapply(x, function(x) { which(y >= x)[1] })
+    i[is.na(i) | i == 1] <- 2
+    v[i - 1] + (x - y[i - 1]) * ((v[i] - v[i - 1]) / (y[i] - y[i - 1]))
+  }
+}
+
 run_smaa <- function(params) {
   N <- 1E4
   n <- length(params$criteria)
@@ -97,29 +136,7 @@ run_smaa <- function(params) {
     har(seedPoint, constr, N=N * (n-1)^3, thin=(n-1)^3, homogeneous=TRUE, transform=transform)$samples
   }
 
-  partialValue <- function(worst, best) {
-    if (best > worst) {
-      function(x) {
-        (x - worst) / (best - worst)
-      }
-    } else {
-      function(x) {
-        (worst - x) / (worst - best)
-      }
-    }
-  }
-
-  pvf <- lapply(params$criteria, function(criterion) {
-    range <- criterion$pvf$range
-    if (criterion$pvf$direction == 'increasing') {
-      return(partialValue(range[1], range[2]))
-    } else if (criterion$pvf$direction == 'decreasing') {
-      return(partialValue(range[2], range[1]))
-    } else {
-      stop(paste("PVF type '", criterion$pvf$type, "' not supported.", sep=''))
-    }
-  })
-
+  pvf <- lapply(params$criteria, create.pvf);
   meas <- sample(alts, crit, params$performanceTable, N)
   for (criterion in names(params$criteria)) {
     meas[,,criterion] <- pvf[[criterion]](meas[,,criterion])
