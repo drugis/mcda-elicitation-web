@@ -1,7 +1,7 @@
-<div ng-show="currentStep.type == 'ratio bound'">
+<div>
   <h5 class="subheader">Determining the relative importance of:</h5>
   <ul class="no-bullet">
-    <li ng-repeat="criterion in [currentStep.criterionA, currentStep.criterionB]">
+    <li ng-repeat="criterion in [currentStep.criterionA, currentStep.criterionB] track by $index">
     {{currentStep.problem.criteria[criterion].title}}
     ({{currentStep.problem.criteria[criterion].worst()}} &rarr;
     {{currentStep.problem.criteria[criterion].best()}})

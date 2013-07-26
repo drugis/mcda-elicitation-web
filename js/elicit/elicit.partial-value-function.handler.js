@@ -95,14 +95,19 @@ function PartialValueFunctionHandler(Tasks) {
         }
         return preferences;
       }
+
       var preferences = rewritePreferences(choice.data[choice.criterion].preferences);
       var task = Tasks.submit("smaa", { method: "macbeth", preferences: preferences });
-      task.results.then(function(results) {
+      task.results.then(
+      function(results) {
         currentStep.results = results.body;
         var values = _.clone(results.body);
         values = values.slice(1, values.length - 1);
         choice.data[choice.criterion].values = values;
-      }, function(error) { currentStep.error = error; });
+        currentStep.error = null;
+      }, function(error) {
+        currentStep.error = error;
+      });
     }
 
     var initial = {
@@ -110,7 +115,23 @@ function PartialValueFunctionHandler(Tasks) {
       title: "Partial Value Function",
       choice: { data: pluckObject(state.problem.criteria, "pvf"),
                 calculate: calculate,
-                preferences: ["Indifferent", "Very Weak", "Weak", "Moderate", "Strong", "Very Strong", "Extreme"]
+                preferences:
+                  ["Indifferent", "Very Weak", "Weak", "Moderate", "Strong", "Very Strong", "Extreme"],
+                getXY: _.memoize(function(data, criterion) {
+                  var y = [1].concat(data[criterion].values).concat([0]);
+                  var best = state.problem.criteria[criterion].best();
+                  var worst = state.problem.criteria[criterion].worst();
+                  var x = [best].concat(data[criterion].cutoffs).concat([worst]);
+                  var values = _.map(_.zip(x, y), function(p) {
+                    return {x: p[0], y: p[1] };
+                  });
+                  return [ { key: "Piecewise PVF", values: values }];
+                }, function(data, criterion) { // Hash function
+                   var values = _.reduce(data[criterion].values, function(sum, x) { return sum + x; })
+                   var cutoffs = _.reduce(data[criterion].cutoffs, function(sum, x) { return sum + x; })
+                   var criterion = criterion.hashCode();
+                   return 31 * values + cutoffs + criterion;
+                })
       }
     }
     return _.extend(state, initial);

@@ -40,12 +40,30 @@
     <h3>{{currentStep.title}}</h3>
 
     <div id="wizardStepContainer" class="columns large-8">
-      <scale-range-step current-step="currentStep"></scale-range-step>
-      <partial-value-function-step current-step="currentStep"></partial-value-function-step>
-      <ordinal-step current-step="currentStep"></ordinal-step>
-      <ratio-bound-step current-step="currentStep"></ratio-bound-step>
-      <choose-method-step current-step="currentStep"></choose-method-step>
-      <results-step current-step="currentStep"></results-step>
+      <div ng-if="currentStep.type == 'scale range'">
+        <scale-range-step current-step="currentStep"></scale-range-step>
+      </div>
+
+      <div ng-if="currentStep.type == 'partial value function'">
+        <partial-value-function-step current-step="currentStep"></partial-value-function-step>
+      </div>
+
+      <div ng-if="currentStep.type == 'ordinal'">
+        <ordinal-step current-step="currentStep"></ordinal-step>
+      </div>
+
+      <div ng-if="currentStep.type == 'ratio bound'">
+        <ratio-bound-step current-step="currentStep"></ratio-bound-step>
+      </div>
+
+      <div ng-if="currentStep.type == 'choose method'">
+        <choose-method-step current-step="currentStep"></choose-method-step>
+      </div>
+
+      <div ng-if="currentStep.type == 'done'">
+        <results-step current-step="currentStep"></results-step>
+      </div>
+
       <button class="small" ng-disabled="!canReturn()" ng-click="previousStep() && runSMAA(currentStep)">Back</button>
       <button class="small" ng-disabled="!canProceed(currentStep)" ng-click="nextStep() && runSMAA(currentStep)">Next</button>
     </div>
@@ -78,8 +96,8 @@
   <script src="js/lib/underscore-min.js"></script>
   <script src="js/lib/d3.v3.min.js"></script>
   <script src="js/lib/nv.d3.min.js"></script>
-  <script src="js/lib/angular-1.0.6/angular.min.js"></script>
-  <script src="js/lib/angular-1.0.6/angular-resource.min.js"></script>
+  <script src="js/lib/angular-1.1.5/angular.min.js"></script>
+  <script src="js/lib/angular-1.1.5/angular-resource.min.js"></script>
   <script src="js/lib/jquery-1.9.1.min.js"></script>
   <script src="js/lib/jslider/bin/jquery.slider.min.js"></script>
   <script src="js/components.js"></script>

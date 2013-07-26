@@ -8,7 +8,7 @@ function ResultsHandler() {
     return alternatives[id].title;
   }
 
-  var getCentralWeights = function(data) {
+  var getCentralWeights = _.memoize(function(data) {
     var result = [];
     _.each(_.pairs(data), function(alternative) {
       var values = _.map(_.pairs(alternative[1]['w']), function(criterion, index) {
@@ -18,27 +18,27 @@ function ResultsHandler() {
       result.push({key: alternativeTitle(alternative[0]), labels: labels, values: values});
     });
     return result;
-  }
+  });
 
   var getAlterativesByRank = function(data, rank) {
-    return function(rank) {
+    return _.memoize(function(rank) {
       var rank = parseInt(rank);
       var values = _.map(_.pairs(data), function(alternative) {
         return {label: alternativeTitle(alternative[0]), value: alternative[1][rank] };
       });
       var name = "Alternatives for rank " + (rank + 1);
       return [{ key: name, values: values }];
-    }
+    });
   }
 
   var getRanksByAlternative = function(data, alternative) {
-    return function(alternative) {
+    return _.memoize(function(alternative) {
       var values = [];
       _.each(data[alternative], function(rank, index) {
         values.push({ label: "Rank " + (index + 1), value: [rank] });
       });
       return [{ key: alternativeTitle(alternative), values: values }];
-    }
+    });
   }
 
   this.initialize = function(state) {

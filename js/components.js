@@ -74,20 +74,17 @@ angular.module('elicit.components', []).
   };
   return {
     restrict: 'E',
-    transclude: true,
     replace: true,
     scope: { model: '=', range: '=' },
     link: function($scope, $element) {
-    },
-    controller: function($scope, $element) {
       var init = function() {
         if ($scope.range) {
           initialize($scope, $element);
         }
       }
-      $scope.$watch('range', init);
-      $scope.$watch('range.from', init);
-      $scope.$watch('range.to', init);
+      $scope.$watch('range', init, true);
+      $scope.$watch('range.from', init, true);
+      $scope.$watch('range.to', init, true);
     },
     template: '<div class="slider"></div>',
     replace: true
@@ -203,22 +200,25 @@ angular.module('elicit.components', []).
       scope.$watch('value', function(newVal, oldVal) {
         if(!newVal) return;
         var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
+        console.log(data);
 
         var chart = nv.models.lineChart().width(width).height(height);
         chart.forceY([0.0]);
         chart.xAxis.staggerLabels(false);
-        chart.xAxis.tickFormat(function(i, obj) {
-          if (i % 1 === 0) {
-            return data[0].labels[i];
-          } else {
-            return "";
-          }
-        });
+        if (_.every(data, function(x) { return !_.isUndefined(x.labels) })) {
+          chart.xAxis.tickFormat(function(i, obj) {
+            if (i % 1 === 0) {
+              return data[0].labels[i];
+            } else {
+              return "";
+            }
+          });
+        }
 
         svg.datum(data).call(chart);
         nv.utils.windowResize(chart.update);
 
-      }, true);
+      });
     }
   }
 }).
@@ -234,7 +234,7 @@ angular.module('elicit.components', []).
         var color = d3.scale.quantile().range(d3.range(9)).domain([1, 0]);
         $(element[0].parentNode).addClass("RdYlGn");
         $(element[0]).addClass("q" + color(value) + "-9");
-      });
+      }, true);
     }
   };
 });
