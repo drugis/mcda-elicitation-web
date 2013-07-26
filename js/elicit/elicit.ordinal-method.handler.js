@@ -1,7 +1,8 @@
-function OrdinalElicitationHandler(problem) {
-  var getReference = function() {
-    var criteria = problem.criteria;
+function OrdinalElicitationHandler() {
+  this.fields = ["reference", "choices"];
+  var criteria = {};
 
+  var getReference = function() {
     return _.object(
       _.keys(criteria),
       _.map(criteria, function(criterion) { return criterion.worst(); })
@@ -10,21 +11,20 @@ function OrdinalElicitationHandler(problem) {
 
   var title = function(step) {
     var base = "Ordinal SWING weighting";
-    var total = (_.size(problem.criteria) - 1);
+    var total = (_.size(criteria) - 1);
     if(step > total) return base + " (DONE)";
     return base + " (" + step + "/" + total + ")";
   }
 
-  this.fields = ["reference", "choices"];
-
   this.initialize = function(state) {
-    return {
+    criteria = state.problem.criteria;
+    var fields = {
       title: title(1),
       type: "ordinal",
       prefs: { ordinal: [] },
       reference: getReference(),
       choices: (function() {
-        var criteria = problem.criteria;
+        var criteria = state.problem.criteria;
         var choices = _.map(_.keys(criteria), function(criterion) {
           var reference = getReference();
           reference[criterion] = criteria[criterion].best();
@@ -33,10 +33,11 @@ function OrdinalElicitationHandler(problem) {
         return _.object(_.keys(criteria), choices);
       })()
     };
+    return _.extend(state, fields);
   }
 
   this.validChoice = function(currentState) {
-    return _.contains(_.keys(problem.criteria), currentState.choice);
+    return _.contains(_.keys(criteria), currentState.choice);
   }
 
   this.nextState = function(currentState) {
@@ -49,12 +50,12 @@ function OrdinalElicitationHandler(problem) {
     nextState.choice = undefined;
 
     _.each(nextState.choices, function(alternative) {
-      alternative[choice] = problem.criteria[choice].best();
+      alternative[choice] = criteria[choice].best();
     });
 
     function next(choice) {
       delete nextState.choices[choice];
-      nextState.reference[choice] = problem.criteria[choice].best();
+      nextState.reference[choice] = currentState.problem.criteria[choice].best();
       nextState.prefs.ordinal.push(choice);
       nextState.title = title(nextState.prefs.ordinal.length + 1);
     }
@@ -74,7 +75,7 @@ function OrdinalElicitationHandler(problem) {
       result.push(ordinal(order[i], order[i + 1]));
     }
     if (order.length > 0) {
-      var remaining = _.difference(_.keys(problem.criteria), order).sort();
+      var remaining = _.difference(_.keys(criteria), order).sort();
       result = result.concat(_.map(remaining, function(criterion) { return ordinal(_.last(order), criterion); }));
     }
     return result;

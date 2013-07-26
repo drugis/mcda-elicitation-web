@@ -1,21 +1,22 @@
-function RatioBoundElicitationHandler(problem) {
+function RatioBoundElicitationHandler() {
   this.fields = ["criterionA", "criterionB"];
+  var criteria = {};
 
   var title = function(step) {
     var base = "Ratio Bound SWING weighting";
-    var total = (_.size(problem.criteria) - 1);
+    var total = (_.size(criteria) - 1);
     if(step > total) return base + " (DONE)";
     return base + " (" + step + "/" + total + ")";
   }
 
   function getBounds(criterionName) {
-    var criterion = problem.criteria[criterionName];
+    var criterion = criteria[criterionName];
     return [criterion.worst(), criterion.best()].sort();
   }
 
   function buildInitial(criterionA, criterionB, step) {
     var bounds = getBounds(criterionA);
-    var increasing = problem.criteria[criterionA].pvf.type === 'linear-increasing';
+    var increasing = criteria[criterionA].pvf.direction === 'increasing';
     return {
       title: title(step),
       criterionA: criterionA,
@@ -31,6 +32,7 @@ function RatioBoundElicitationHandler(problem) {
   }
 
   this.initialize = function(state) {
+    criteria = state.problem.criteria;
     var state = _.extend(state, buildInitial(state.prefs.ordinal[0], state.prefs.ordinal[1], 1));
     if (!state.prefs["ratio bound"]) state.prefs["ratio bound"] = [];
     return state;
@@ -55,11 +57,14 @@ function RatioBoundElicitationHandler(problem) {
     }
 
     function getRatioBounds(currentState) {
-      var u = problem.criteria[currentState.criterionA].pvf.map;
-      return Array.sort([1 / u(currentState.choice.lower), 1 / u(currentState.choice.upper)]);
+      var u = criteria[currentState.criterionA].pvf.map;
+      return [1 / u(currentState.choice.lower), 1 / u(currentState.choice.upper)].sort();
     }
+
     next.prefs = angular.copy(currentState.prefs);
-    next.prefs["ratio bound"].push({criteria: [order[idx - 1], order[idx]], bounds: getRatioBounds(currentState)});
+    next.prefs["ratio bound"].push(
+      { criteria: [order[idx - 1], order[idx]],
+        bounds: getRatioBounds(currentState) });
     return _.extend(angular.copy(currentState), next);
   }
 

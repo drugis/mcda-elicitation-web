@@ -1,48 +1,42 @@
 describe("RatioBoundElicitationHandler", function() {
-  var scope;
   var handler;
   var state;
+  var problem;
   var app = angular.module('elicit', ['elicit.example', 'elicit.services', 'clinicico']);
 
-  function initializeScope(problem) {
-    var ctrl, scope, $httpBackend;
-
-    inject(function($injector, $rootScope, $controller) {
-      scope = $rootScope.$new();
-      ctrl = $controller("ElicitationController",
-                          { $scope: scope,
-                            DecisionProblem: { get: function(callback) { callback(problem); }},
-                          });
-    });
-    return scope;
+  function initProblem(problem) {
+     return (new PartialValueFunctionHandler().initialize({problem: problem})).problem;
   }
 
   beforeEach(function() {
-    module('elicit');
-    var problem = exampleProblem();
-    scope = initializeScope(problem);
-    handler = new RatioBoundElicitationHandler(scope.problem);
-    state = handler.initialize({ prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
+    problem = exampleProblem();
+
+    problem = (new PartialValueFunctionHandler(problem).initialize({ problem: problem })).problem;
+    initial = _.extend({ problem: problem, prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
+    handler = new RatioBoundElicitationHandler();
+    state = handler.initialize(initial);
   });
+
 
   describe("initialize", function() {
     it("should start comparing the first two criteria", function() {
       expect(state.criterionA).toEqual("Prox DVT");
       expect(state.criterionB).toEqual("Bleed");
-      expect(state.choice.lower).toEqual(scope.problem.criteria["Prox DVT"].best());
-      expect(state.choice.upper).toEqual(scope.problem.criteria["Prox DVT"].worst());
-      expect(state.worst()).toEqual(scope.problem.criteria["Prox DVT"].worst());
-      expect(state.best()).toEqual(scope.problem.criteria["Prox DVT"].best());
+      expect(state.choice.lower).toEqual(problem.criteria["Prox DVT"].best());
+      expect(state.choice.upper).toEqual(problem.criteria["Prox DVT"].worst());
+      expect(state.worst()).toEqual(problem.criteria["Prox DVT"].worst());
+      expect(state.best()).toEqual(problem.criteria["Prox DVT"].best());
     });
 
     it("should sort the worst and best values", function() {
-      scope.problem.criteria["Prox DVT"].pvf.type = "linear-increasing";
-      handler = new RatioBoundElicitationHandler(scope.problem);
-      state = handler.initialize({ prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
+      problem.criteria["Prox DVT"].pvf.direction = "increasing";
+      problem = initProblem(problem);
+      handler = new RatioBoundElicitationHandler();
+      state = handler.initialize({ problem: problem, prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
 
-      expect(state.choice.lower).toEqual(scope.problem.criteria["Prox DVT"].worst());
-      expect(state.worst()).toEqual(scope.problem.criteria["Prox DVT"].worst());
-      expect(state.best()).toEqual(scope.problem.criteria["Prox DVT"].best());
+      expect(state.choice.lower).toEqual(problem.criteria["Prox DVT"].worst());
+      expect(state.worst()).toEqual(problem.criteria["Prox DVT"].worst());
+      expect(state.best()).toEqual(problem.criteria["Prox DVT"].best());
     });
 
     it("should make best() and worst() functions of choice", function() {
@@ -85,8 +79,8 @@ describe("RatioBoundElicitationHandler", function() {
       state = handler.nextState(state);
       expect(state.criterionA).toEqual("Bleed");
       expect(state.criterionB).toEqual("Dist DVT");
-      expect(state.choice.lower).toEqual(scope.problem.criteria["Bleed"].best());
-      expect(state.choice.upper).toEqual(scope.problem.criteria["Bleed"].worst());
+      expect(state.choice.lower).toEqual(problem.criteria["Bleed"].best());
+      expect(state.choice.upper).toEqual(problem.criteria["Bleed"].worst());
     });
 
     it("should transition to done when criteria run out", function() {
@@ -119,9 +113,11 @@ describe("RatioBoundElicitationHandler", function() {
       expect(state.prefs['ratio bound'][1].bounds[0]).toBeCloseTo(1.67);
       expect(state.prefs['ratio bound'][1].bounds[1]).toBeCloseTo(2.00);
 
-      scope.problem.criteria["Prox DVT"].pvf.type = "linear-increasing";
-      handler = new RatioBoundElicitationHandler(scope.problem);
-      state = handler.initialize({ prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
+      problem.criteria["Prox DVT"].pvf.direction = "increasing";
+      problem.criteria["Prox DVT"] = new PartialValueFunctionHandler().createPartialValueFunction(problem.criteria["Prox DVT"]);
+
+      handler = new RatioBoundElicitationHandler();
+      state = handler.initialize({ problem: problem, prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
 
       state.choice.lower = 0.12;
       state.choice.upper = 0.14;
@@ -133,13 +129,14 @@ describe("RatioBoundElicitationHandler", function() {
     });
 
     it("should sort the worst and best values", function() {
-      scope.problem.criteria["Prox DVT"].pvf.type = "linear-increasing";
-      handler = new RatioBoundElicitationHandler(scope.problem);
-      state = handler.initialize({ prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
+      problem.criteria["Prox DVT"].pvf.direction = "increasing";
+      problem = initProblem(problem);
+      handler = new RatioBoundElicitationHandler(problem);
+      state = handler.initialize({ problem: problem, prefs: { ordinal: ["Prox DVT", "Bleed", "Dist DVT"] } });
 
-      expect(state.choice.lower).toEqual(scope.problem.criteria["Prox DVT"].worst());
-      expect(state.worst()).toEqual(scope.problem.criteria["Prox DVT"].worst());
-      expect(state.best()).toEqual(scope.problem.criteria["Prox DVT"].best());
+      expect(state.choice.lower).toEqual(problem.criteria["Prox DVT"].worst());
+      expect(state.worst()).toEqual(problem.criteria["Prox DVT"].worst());
+      expect(state.best()).toEqual(problem.criteria["Prox DVT"].best());
     });
   });
 

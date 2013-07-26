@@ -3,7 +3,6 @@ angular.module('elicit.steps', []).
   return {
     restrict: 'E',
     replace: true,
-    transclude: true,
     scope: { currentStep: '=', problem: '=' },
     templateUrl: 'scale-range.html'
   };
@@ -12,7 +11,6 @@ angular.module('elicit.steps', []).
   return {
     restrict: 'E',
     replace: true,
-    transclude: true,
     scope: { currentStep: '=', problem: '=' },
     templateUrl: 'elicit-ordinal.html'
   };
@@ -21,7 +19,6 @@ angular.module('elicit.steps', []).
   return {
     restrict: 'E',
     replace: true,
-    transclude: true,
     scope: { currentStep: '=' },
     templateUrl: 'choose-method.html'
   };
@@ -30,7 +27,6 @@ angular.module('elicit.steps', []).
   return {
     restrict: 'E',
     replace: true,
-    transclude: true,
     scope: { currentStep: '=', problem: '=' },
     templateUrl: 'elicit-ratio-bound.html'
   };
@@ -41,5 +37,13 @@ angular.module('elicit.steps', []).
     replace: true,
     scope: { currentStep: '=', problem: '=' },
     templateUrl: 'results-page.html'
+  };
+}).
+  directive('partialValueFunctionStep', function() {
+  return {
+    restrict: 'E',
+    replace: true,
+    scope: { currentStep: '=', problem: '=' },
+    templateUrl: 'partial-value-function.html'
   };
 });

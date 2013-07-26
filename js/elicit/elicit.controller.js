@@ -1,11 +1,11 @@
 function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) {
   $scope.problemSource = DecisionProblem;
   $scope.saveState = {};
-  $scope.problem = {};
   $scope.currentStep = {};
   $scope.initialized = false;
   var handlers;
   var LAST_STEP = 'done';
+  var PERSISTENT_FIELDS = ["problem", "type", "prefs", "choice"];
 
   $scope.$on('PreferenceStore.saved', function() {
     $scope.saveState = { success: true };
@@ -14,48 +14,20 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
     $scope.saveState = { error: PreferenceStore.lastError };
   });
 
-  function extendProblem(problem) {
-    angular.forEach(problem.criteria, function(criterion) {
-      function create(idx1, idx2) {
-        return function() {
-          var pvf = criterion.pvf;
-          return pvf.type === "linear-increasing" ? pvf.range[idx1] : pvf.range[idx2];
-        }
-      }
-      criterion.worst = create(0, 1);
-      criterion.best = create(1, 0);
-      criterion.pvf.map = function(x) {
-        var range = Math.abs(criterion.best() - criterion.worst());
-        return criterion.pvf.type === "linear-increasing" ? ((x - criterion.worst()) / range) : ((criterion.worst() - x) / range);
-      };
-      criterion.pvf.inv = function(x) {
-        var range = Math.abs(criterion.best() - criterion.worst());
-        return criterion.pvf.type === "linear-increasing" ? ((x * range) + criterion.worst()) : (-(x * range) + criterion.worst());
-      };
-    });
-  }
-
   var initialize = function(problem) {
     if(!_.isEmpty(problem)) {
-      extendProblem($scope.problem);
       handlers = {
-        "scale range": new ScaleRangeHandler(problem, Tasks),
-        "ordinal":  new OrdinalElicitationHandler(problem),
-        "ratio bound":  new RatioBoundElicitationHandler(problem),
+        "scale range": new ScaleRangeHandler(Tasks),
+        "partial value function": new PartialValueFunctionHandler(Tasks),
+        "ordinal":  new OrdinalElicitationHandler(),
+        "ratio bound":  new RatioBoundElicitationHandler(),
         "choose method": new ChooseMethodHandler(),
-        "done": new ResultsHandler(problem)
+        "done": new ResultsHandler()
       };
-      $scope.currentStep = handlers["scale range"].initialize();
+      $scope.currentStep = handlers["scale range"].initialize({ problem: problem });
       $scope.runSMAA($scope.currentStep);
       $scope.initialized = true;
     }
-  };
-
-  var getProblem = function() {
-    $scope.problemSource.get( function(data) {
-      $scope.problem = data;
-      initialize(data);
-    });
   };
 
   var previousSteps = [];
@@ -88,7 +60,7 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
 
     var previousResults = angular.copy(currentStep.results);
 
-    currentStep = _.pick(currentStep, ["type", "prefs", "choice"].concat(handler.fields));
+    currentStep = _.pick(currentStep, PERSISTENT_FIELDS.concat(handler.fields));
     nextStep = handler.nextState(currentStep);
 
     if (nextStep.type !== currentStep.type) {
@@ -124,31 +96,31 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
   };
 
   $scope.shouldRun = function(currentStep) {
-    return !_.contains(["scale range", LAST_STEP], currentStep.type);
+    var excluded = ["scale range", "partial value function", LAST_STEP];
+    return !_.contains(excluded, currentStep.type);
   }
 
   $scope.runSMAA = function(currentStep) {
     if(!window.clinicico) return;
 
     var prefs = $scope.getStandardizedPreferences(currentStep);
-    var data = _.extend(angular.copy($scope.problem), { "preferences": prefs, "method": "smaa" });
+    var data = _.extend(currentStep.problem, { "preferences": prefs, "method": "smaa" });
 
     var run = function(type) {
       var task = Tasks.submit(type, data);
 
       task.results.then(
         function(results) {
-          currentStep.results = results.body;
+        currentStep.results = results.body;
       }, function(reason) {
-          currentStep.error = reason;
+        currentStep.error = reason;
       });
     }
 
     if (!currentStep.results && $scope.shouldRun(currentStep)) run('smaa');
   };
 
-  $scope.$watch('problemSource.url', getProblem);
-  getProblem();
+  DecisionProblem.problem.then(initialize);
 };
 
 ElicitationController.$inject = ['$scope', 'DecisionProblem', 'PreferenceStore', 'clinicico.tasks'];
