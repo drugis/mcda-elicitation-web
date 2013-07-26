@@ -1,7 +1,7 @@
 <div>
   <h5 class="subheader">Given the following situation:</h5>
   <ul class="inline-list">
-    <li ng-repeat="(criterion, value) in currentStep.reference">
+    <li ng-repeat="(criterion, value) in currentStep.reference track by $index">
       {{currentStep.problem.criteria[criterion].title}} = {{value}}
     </li>
   </ul>
