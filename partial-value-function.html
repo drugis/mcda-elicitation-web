@@ -74,7 +74,7 @@
 
           <ul class="no-bullet">
             <li ng-repeat="(j, comp) in currentStep.choice.data[currentStep.choice.criterion].comp[i]">
-              <label class="columns small-8">
+              <label class="columns small-9">
                 <span style="display: inline-block; width: 12em">Compared to {{comp}}, I</span>
                 <select ng-options="p for (k, p) in currentStep.choice.preferences"
                   ng-model="currentStep.choice.data[currentStep.choice.criterion].preferences[i][i + j + 1]"
