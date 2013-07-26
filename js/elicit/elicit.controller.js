@@ -1,5 +1,4 @@
 function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) {
-  $scope.problemSource = DecisionProblem;
   $scope.saveState = {};
   $scope.currentStep = {};
   $scope.initialized = false;
