@@ -1,4 +1,4 @@
-<div ng-show="currentStep.type == 'choose method'">
+<div>
   <h5 class="subheader">How do you want to continue: </h5>
   <label ng-repeat="(key, method) in currentStep.methods">
     <input type="radio" ng-model="currentStep.choice" value="{{key}}" />

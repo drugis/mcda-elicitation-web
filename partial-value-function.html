@@ -85,8 +85,14 @@
             </li>
           </ul>
         </div>
+
+        <div ng-if="currentStep.choice.data[currentStep.choice.criterion].values" style="height: 200px;">
+          <line-chart value="currentStep.choice.getXY(currentStep.choice.data, currentStep.choice.criterion)"></line-chart>
+        </div>
+
+        <button class="success small" ng-click='currentStep.choice.calculate(currentStep)'>Calculate function</button>
+        <span ng-show="currentStep.error" style="color: red">Inconsistent preferences</span>
       </div>
-      <button class="success" ng-click='currentStep.choice.calculate(currentStep)'>Calculate function</button>
     </div>
   </div>
 
