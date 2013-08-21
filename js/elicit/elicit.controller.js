@@ -107,6 +107,9 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
 
     var run = function(type) {
       var task = Tasks.submit(type, data);
+      task.on("update", function(update) {
+        currentStep.progress = update.progress;
+      });
 
       task.results.then(
         function(results) {

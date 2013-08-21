@@ -116,9 +116,7 @@ partialValue <- function(best, worst, cutoffs=numeric(), values=numeric()) {
     y <- c(best, cutoffs, worst)
   }
   function(x) {
-    i <- sapply(x, function(x) { which(y >= x)[1] })
-    i[is.na(i) | i == 1] <- 2
-    v[i - 1] + (x - y[i - 1]) * ((v[i] - v[i - 1]) / (y[i] - y[i - 1]))
+    smaa.pvf(x, y, v, outOfBounds="interpolate")
   }
 }
 
@@ -129,19 +127,35 @@ run_smaa <- function(params) {
   crit <- names(params$criteria)
   alts <- names(params$alternatives)
 
+  update(0)
+
+  harBatches <- 20
+  harBatchProgress <- 4
   harSample <- function(constr, n , N) {
-    transform <- simplex.createTransform(n)
-    constr <- simplex.createConstraints(transform, constr)
-    seedPoint <- createSeedPoint(constr, homogeneous=TRUE)
-    har(seedPoint, constr, N=N * (n-1)^3, thin=(n-1)^3, homogeneous=TRUE, transform=transform)$samples
+    if (length(constr$rhs) > 0) {
+      stopifnot(N %% harBatches == 0)
+      transform <- simplex.createTransform(n)
+      constr <- simplex.createConstraints(transform, constr)
+      seedPoint <- createSeedPoint(constr, homogeneous=TRUE)
+      # reduce number of required samples for small n by log approximation of
+      # required scaling factor based on Fig. 3 of HAR paper.
+      thin <- ceiling(log(n)/4 * (n - 1)^3)
+      xN <- seedPoint
+      samples <- matrix(0, nrow=N, ncol=n)
+      Nb <- N/harBatches
+      for(i in 1:harBatches) {
+        out <- har(xN, constr, N=Nb * thin, thin=thin, homogeneous=TRUE, transform=transform)
+        samples[(1 + Nb * (i - 1)):(Nb * i), ] <- out$samples
+        xN <- out$xN
+        update(i * harBatchProgress)
+      }
+      samples
+    } else {
+      samples <- simplex.sample(n, N)$samples
+      update(harBatches * harBatchProgress)
+      samples
+    }
   }
-
-  pvf <- lapply(params$criteria, create.pvf);
-  meas <- sample(alts, crit, params$performanceTable, N)
-  for (criterion in names(params$criteria)) {
-    meas[,,criterion] <- pvf[[criterion]](meas[,,criterion])
-  }
-
   # parse preference information
   constr <- do.call(mergeConstraints, lapply(params$preferences,
     function(statement) {
@@ -163,11 +177,22 @@ run_smaa <- function(params) {
   weights <- harSample(constr, n, N)
   colnames(weights) <- crit
 
+  pvf <- lapply(params$criteria, create.pvf);
+  meas <- sample(alts, crit, params$performanceTable, N)
+  for (criterion in names(params$criteria)) {
+    meas[,,criterion] <- pvf[[criterion]](meas[,,criterion])
+  }
+  update(95)
+
   utils <- smaa.values(meas, weights)
+  update(96)
   ranks <- smaa.ranks(utils)
+  update(97)
 
   cw <- smaa.cw(ranks, weights)
+  update(98)
   cf <- smaa.cf(meas, cw)
+  update(100)
 
   cw <- lapply(alts, function(alt) {
     list(cf=unname(cf$cf[alt]), w=cf$cw[alt,])
