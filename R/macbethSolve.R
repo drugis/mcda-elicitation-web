@@ -3,11 +3,11 @@ run_macbeth <- function(params) {
   pref <- t(sapply(params[['preferences']], rbind))
   pref[sapply(pref, is.null)] <- NA
   pref <- matrix(as.numeric(pref), nrow=nrow(pref), ncol=ncol(pref))
-  sol <- macbethSolve(pref, pref)
+  sol <- macbethSolve(pref, pref, monotonous=TRUE)
   sol / max(sol)
 }
 
-macbethSolve <- function(min.p, max.p) {
+macbethSolve <- function(min.p, max.p, monotonous=FALSE) {
   # Evaluation of each reference alternative x_p, x_r (n: one for each row)
   # For each level of relative attractiveness, s_i, s_j (Q: one for each level, except 0)
   # A auxiliary variable d_min
@@ -102,8 +102,21 @@ macbethSolve <- function(min.p, max.p) {
   # 5. For all 1 <= i <= Q, -s_i <= 0
   ineq5 <- cbind(matrix(0, nrow=Q, ncol=n), -diag(Q), rep(0, Q))
 
+  ## Extra: enforce monotonicity
+  ineq6 <- if (monotonous) {
+    t(sapply(1:(n-1), function(i) {
+      con <- rep(0, nvar)
+      con[i] <- -1
+      con[i+1] <- 1
+      con[nvar] <- 1
+      con
+    }))
+  } else {
+    matrix(0, nrow=0, ncol=nvar)
+  }
+
   # Concatenate all inequality constraints
-  iq.con <- rbind(ineq1, ineq2, ineq3, ineq4, ineq5)
+  iq.con <- rbind(ineq1, ineq2, ineq3, ineq4, ineq5, ineq6)
   iq.rhs <- rep(0, nrow(iq.con))
 
   # Solve LP
