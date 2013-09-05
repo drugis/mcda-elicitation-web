@@ -115,7 +115,6 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
           });
         }, function(update) {
           $scope.$root.$safeApply($scope, function() {
-            console.log(update);
             currentStep.progress = update;
           });
         });
