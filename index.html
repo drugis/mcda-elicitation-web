@@ -92,20 +92,24 @@
   </div>
 
   <script>
-    window.config = {};
-    window.clinicico = {};
-    window.clinicico.config = {};
-    window.clinicico.config.baseUrl = "http://localhost:3000/tasks/";
-    window.config.examplesRepository = "/examples/";
+    window.config = {
+      examplesRepository: "/examples/"
+    };
   </script>
   <script src="js/lib/underscore-min.js"></script>
+
   <script src="js/lib/d3.v3.min.js"></script>
   <script src="js/lib/nv.d3.min.js"></script>
+
   <script src="js/lib/angular-1.1.5/angular.min.js"></script>
   <script src="js/lib/angular-1.1.5/angular-resource.min.js"></script>
+
   <script src="js/lib/jquery-1.9.1.min.js"></script>
   <script src="js/lib/jquery.knob.js"></script>
   <script src="js/lib/jslider/bin/jquery.slider.min.js"></script>
+
+  <script src="//autobahn.s3.amazonaws.com/js/autobahn.min.js"></script>
+
   <script src="js/components.js"></script>
   <script src="js/steps.js"></script>
   <script src="js/app.js"></script>

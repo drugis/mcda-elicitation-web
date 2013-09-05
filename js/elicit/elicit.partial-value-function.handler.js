@@ -1,4 +1,4 @@
-function PartialValueFunctionHandler(Tasks) {
+function PartialValueFunctionHandler($scope) {
   var self = this;
   this.fields = [];
 
@@ -100,16 +100,19 @@ function PartialValueFunctionHandler(Tasks) {
       }
 
       var preferences = rewritePreferences(choice.data[choice.criterion].preferences);
-      var task = Tasks.submit("smaa", { method: "macbeth", preferences: preferences });
-      task.results.then(
-      function(results) {
-        currentStep.results = results.body;
-        var values = _.clone(results.body);
-        values = values.slice(1, values.length - 1);
-        choice.data[choice.criterion].values = values;
-        currentStep.error = null;
-      }, function(error) {
-        currentStep.error = error;
+      var task = patavi.submit("smaa", { method: "macbeth", preferences: preferences });
+      task.results.then(function(results) {
+        $scope.$root.$safeApply($scope, function() {
+          currentStep.results = results.results;
+          var values = _.clone(results.results);
+          values = values.slice(1, values.length - 1);
+          choice.data[choice.criterion].values = values;
+          currentStep.error = null;
+        });
+      }, function(code, error) {
+        $scope.$root.$safeApply($scope, function() {
+          currentStep.error = code;
+        })
       });
     }
 
