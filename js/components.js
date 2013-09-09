@@ -221,7 +221,23 @@ angular.module('elicit.components', []).
     }
   }
 }).
-  directive('heat', function() {
+  directive('circularProgress', function() {
+  return {
+    restrict: 'E',
+    replace: true,
+    scope: { 'value': '@' },
+    template: '<input type="text" class="dial" data-width="50" data-readOnly="true" data-displayInput="false" data-max="{{value}}">',
+    link: function(scope, element, attrs) {
+      var $el = $(element);
+      $(function() {
+        $el.knob();
+      });
+      scope.$watch('value', function(newVal, oldVal) {
+        $el.val(newVal).trigger('change');
+      });
+    }
+  }})
+  .directive('heat', function() {
   return {
     restrict: 'C',
     replace: false,
@@ -237,7 +253,7 @@ angular.module('elicit.components', []).
     }
   };
 })
-  .directive('fileReader', function ($compile) {
+  .directive('fileReader', function () {
   return {
     scope: {
       file: '='

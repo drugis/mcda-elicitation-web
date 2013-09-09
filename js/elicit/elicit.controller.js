@@ -1,4 +1,4 @@
-function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) {
+function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceStore) {
   $scope.saveState = {};
   $scope.currentStep = {};
   $scope.initialized = false;
@@ -16,16 +16,15 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
   var initialize = function(problem) {
     if(!_.isEmpty(problem)) {
       handlers = {
-        "scale range": new ScaleRangeHandler(Tasks),
-        "partial value function": new PartialValueFunctionHandler(Tasks),
+        "scale range": new ScaleRangeHandler($scope),
+        "partial value function": new PartialValueFunctionHandler($scope),
         "ordinal":  new OrdinalElicitationHandler(),
         "ratio bound":  new RatioBoundElicitationHandler(),
         "choose method": new ChooseMethodHandler(),
         "done": new ResultsHandler()
       };
-      $scope.currentStep = handlers["scale range"].initialize({ problem: problem });
-      $scope.runSMAA($scope.currentStep);
-      $scope.initialized = true;
+    $scope.currentStep = handlers["scale range"].initialize({ problem: problem });
+    $scope.initialized = true;
     }
   };
 
@@ -100,20 +99,25 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
   }
 
   $scope.runSMAA = function(currentStep) {
-    if(!window.clinicico) return;
-
     var prefs = $scope.getStandardizedPreferences(currentStep);
     var data = _.extend(currentStep.problem, { "preferences": prefs, "method": "smaa" });
 
     var run = function(type) {
-      var task = Tasks.submit(type, data);
-
+      var task = patavi.submit(type, data);
       task.results.then(
         function(results) {
-        currentStep.results = results.body;
-      }, function(reason) {
-        currentStep.error = reason;
-      });
+          $scope.$root.$safeApply($scope, function() {
+            currentStep.results = results.results;
+          })
+        }, function(code, reason) {
+          $scope.$root.$safeApply($scope, function() {
+            currentStep.error = reason;
+          });
+        }, function(update) {
+          $scope.$root.$safeApply($scope, function() {
+            currentStep.progress = update;
+          });
+        });
     }
 
     if (!currentStep.results && $scope.shouldRun(currentStep)) run('smaa');
@@ -122,4 +126,4 @@ function ElicitationController($scope, DecisionProblem, PreferenceStore, Tasks) 
   DecisionProblem.problem.then(initialize);
 };
 
-ElicitationController.$inject = ['$scope', 'DecisionProblem', 'PreferenceStore', 'clinicico.tasks'];
+ElicitationController.$inject = ['$rootScope', '$scope', 'DecisionProblem', 'PreferenceStore'];

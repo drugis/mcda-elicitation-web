@@ -77,8 +77,7 @@
       <div id="results"
         ng-class="{loading: !currentStep.results && !currentStep.error, failed: currentStep.error, 'large-4':true, columns:true}">
         <div class="loader">
-          <img src="img/loader.gif">
-          <span>Recalculating...</span>
+          <circular-progress value="{{currentStep.progress}}"></circular-progress>
         </div>
 
         <div style="width: 400px; height: 400px" class="graph">
@@ -93,19 +92,24 @@
   </div>
 
   <script>
-    window.config = {};
-    window.clinicico = {};
-    window.clinicico.config = {};
-    window.clinicico.config.baseUrl = "http://localhost:3000/tasks/";
-    window.config.examplesRepository = "/examples/";
+    window.config = {
+      examplesRepository: "/examples/"
+    };
   </script>
-  <script src="js/lib/underscore-min.js"></script>
-  <script src="js/lib/d3.v3.min.js"></script>
-  <script src="js/lib/nv.d3.min.js"></script>
-  <script src="js/lib/angular-1.1.5/angular.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/nvd3/1.0.0-beta/nv.d3.min.js"></script>
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.5/angular.min.js"></script>
   <script src="js/lib/angular-1.1.5/angular-resource.min.js"></script>
-  <script src="js/lib/jquery-1.9.1.min.js"></script>
+
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <script src="//autobahn.s3.amazonaws.com/js/autobahn.min.js"></script>
+
+  <script src="js/lib/jquery.knob.js"></script>
   <script src="js/lib/jslider/bin/jquery.slider.min.js"></script>
+
   <script src="js/components.js"></script>
   <script src="js/steps.js"></script>
   <script src="js/app.js"></script>
