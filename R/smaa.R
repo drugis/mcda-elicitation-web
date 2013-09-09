@@ -44,6 +44,10 @@ sampler.dnorm <- function(perf, N) {
   rnorm(N, perf$parameters['mu'], perf$parameters['sigma'])
 }
 
+sampler.exact <- function(perf, N) {
+  rep(perf$value, lenght.out=N)
+}
+
 sampler.relative_normal <- function(perf, N) {
   baseline <- perf$parameters$baseline
   relative <- perf$parameters$relative
