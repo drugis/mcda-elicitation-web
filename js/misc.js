@@ -98,7 +98,7 @@ function exampleProblem() {
   }
 }
 
-var app = angular.module('elicit', ['clinicico', 'elicit.example', 'elicit.components', 'elicit.steps', 'elicit.services']);
+var app = angular.module('elicit', ['elicit.example', 'elicit.components', 'elicit.steps', 'elicit.services']);
 app.run(['$rootScope', function($rootScope) {
   // Add string HashCode
   String.prototype.hashCode = function(){
