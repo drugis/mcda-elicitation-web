@@ -111,8 +111,9 @@ function PartialValueFunctionHandler($scope) {
         });
       }, function(code, error) {
         $scope.$root.$safeApply($scope, function() {
-          currentStep.error = code;
-        })
+          currentStep.error = { code:(code && code.desc) ? code.desc : code,
+                                cause: error };
+        });
       });
     }
 

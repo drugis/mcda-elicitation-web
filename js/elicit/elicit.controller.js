@@ -109,9 +109,10 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
           $scope.$root.$safeApply($scope, function() {
             currentStep.results = results.results;
           })
-        }, function(code, reason) {
+        }, function(code, error) {
           $scope.$root.$safeApply($scope, function() {
-            currentStep.error = reason;
+            currentStep.error = { code:(code && code.desc) ? code.desc : code,
+                                  cause: error };
           });
         }, function(update) {
           $scope.$root.$safeApply($scope, function() {

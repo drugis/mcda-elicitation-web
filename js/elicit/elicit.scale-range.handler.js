@@ -16,7 +16,15 @@ function ScaleRangeHandler($scope) {
     var task = patavi.submit("smaa", _.extend({ "method": "scales" }, state.problem));
     var scales = {};
     var choices = {};
-    task.results.then(function(results) {
+
+    var errorHandler = function(code, error) {
+      $scope.$root.$safeApply($scope, function() {
+        state.error = { code:(code && code.desc) ? code.desc : code,
+                        cause: error };
+      });
+    }
+
+    var resultsHandler = function(results) {
       $scope.$root.$safeApply($scope, function() {
         _.map(_.pairs(results.results[0]), function(criterion) {
           var from = criterion[1]["2.5%"], to = criterion[1]["97.5%"];
@@ -51,7 +59,9 @@ function ScaleRangeHandler($scope) {
           };
         });
       });
-    });
+    };
+
+    task.results.then(resultsHandler, errorHandler);
 
     var result = _.extend(state, {
       title: "Measurement scales",

@@ -34,6 +34,13 @@
 
     <h2>Preference Elicitation <small>{{currentStep.problem.title}}</small></h2>
 
+    <div ng-show="currentStep.error">
+      <div class="alert-box alert">
+        Computation failed: {{currentStep.error.code}}
+        <span ng-show="currentStep.error.error">&mdash; {{currentStep.error.error}}</span>
+      </div>
+    </div>
+
     <div ng-show="currentStep.type == 'done'">
       <div ng-show="saveState.success">Preferences saved.</div>
       <div ng-class="{error: 'alert-box alert', warning: 'alert-box'}[saveState.error.severity]" ng-show="saveState.error">
@@ -82,10 +89,6 @@
 
         <div style="width: 400px; height: 400px" class="graph">
           <rank-plot value="currentStep.results.ranks.data" stacked="true" problem="currentStep.problem"></rank-plot>
-        </div>
-
-        <div class="error">
-          {{currentStep.error.cause}}
         </div>
       </div>
     </div>
