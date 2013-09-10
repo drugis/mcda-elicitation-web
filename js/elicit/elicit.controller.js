@@ -20,6 +20,7 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
         "partial value function": new PartialValueFunctionHandler($scope),
         "ordinal":  new OrdinalElicitationHandler(),
         "ratio bound":  new RatioBoundElicitationHandler(),
+        "exact swing":  new ExactSwingElicitationHandler(),
         "choose method": new ChooseMethodHandler(),
         "done": new ResultsHandler()
       };
@@ -111,7 +112,7 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
           })
         }, function(code, error) {
           $scope.$root.$safeApply($scope, function() {
-            currentStep.error = { code:(code && code.desc) ? code.desc : code,
+            currentStep.error = { code: (code && code.desc) ? code.desc : code,
                                   cause: error };
           });
         }, function(update) {

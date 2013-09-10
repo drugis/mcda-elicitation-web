@@ -124,6 +124,14 @@ partialValue <- function(best, worst, cutoffs=numeric(), values=numeric()) {
   }
 }
 
+ratioConstraint <- function(n, i1, i2, x) {
+  a <- rep(0, n)
+  a[i1] <- -1
+  a[i2] <- x
+  list(constr = t(a), rhs = c(0), dir = c("="))
+}
+
+
 run_smaa <- function(params) {
   N <- 1E4
   n <- length(params$criteria)
@@ -160,6 +168,7 @@ run_smaa <- function(params) {
       samples
     }
   }
+
   # parse preference information
   constr <- do.call(mergeConstraints, lapply(params$preferences,
     function(statement) {
@@ -174,6 +183,8 @@ run_smaa <- function(params) {
           lowerRatioConstraint(n, i1, i2, l),
           upperRatioConstraint(n, i1, i2, u)
         )
+      } else if (statement['type'] == "exact swing") {
+        ratioConstraint(n, i1, i2, statement$ratio);
       }
     })
   )

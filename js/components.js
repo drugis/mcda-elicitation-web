@@ -3,6 +3,7 @@ angular.module('elicit.components', []).
   var initialize = function($scope, $element) {
     function log10(x) { return Math.log(x) / Math.log(10); }
 
+    var type = $scope.type;
     var from = $scope.range.from;
     var to = $scope.range.to;
     var fromIncl = !$scope.range.leftOpen;
@@ -24,11 +25,23 @@ angular.module('elicit.components', []).
     var precision = 3;
     var stepToValue = function(step) { return (from + (step / steps) * delta).toFixed(precision); }
     function valueToStep(value) { return ((value - from) / delta * steps).toFixed(precision); }
-    function getValue() { return valueToStep($scope.model.lower) + ";" + valueToStep($scope.model.upper); }
+    function getModelValue() {
+      return type === "point" ? valueToStep($scope.model) :
+        valueToStep($scope.model.lower) + ";" + valueToStep($scope.model.upper);
+    }
+    function getValueModel(value) {
+      if (type === "point") {
+        return parseFloat(stepToValue(value));
+      } else {
+        var steps = value.split(';');
+        var values = _.map([stepToValue(steps[0]), stepToValue(steps[1])], parseFloat);
+        return { lower: values[0], upper: values[1] };
+      }
+    }
 
     $($element).empty();
     $($element).append('<input type="slider"></input>');
-    $($element).find('input').attr("value", getValue());
+    $($element).find('input').attr("value", getModelValue());
     $($element).find('input').slider({
       from: 0,
       to: steps,
@@ -37,8 +50,7 @@ angular.module('elicit.components', []).
       skin: "round_plastic",
       onstatechange: _.debounce(function(value) {
         var range = $scope.range;
-        var steps = value.split(';');
-        var values = _.map([stepToValue(steps[0]), stepToValue(steps[1])], parseFloat);
+        var values = getValueModel(value);
 
         function lessThan(a, b, epsilon) {
           return (a - b) < epsilon && Math.abs(a - b) > epsilon;
@@ -47,7 +59,7 @@ angular.module('elicit.components', []).
           return (a - b) > epsilon && Math.abs(a - b) > epsilon;
         }
 
-        if (_.has(range, "restrictTo") && _.has(range, "restrictFrom")) {
+        if (type === "interval" && _.has(range, "restrictTo") && _.has(range, "restrictFrom")) {
           var slider = $($element).find('input');
           var epsilon = 0.001;
           var fromOutOfRange = greaterThan(values[0], range.restrictFrom, epsilon);
@@ -60,8 +72,9 @@ angular.module('elicit.components', []).
             slider.slider("value", steps[0], valueToStep(range.restrictTo));
           }
         }
+
         $scope.$root.$safeApply($scope, function() {
-          $scope.model = { lower: values[0], upper: values[1] }
+          $scope.model = values;
         });
       }, 50)
     });
@@ -75,7 +88,7 @@ angular.module('elicit.components', []).
   return {
     restrict: 'E',
     replace: true,
-    scope: { model: '=', range: '=' },
+    scope: { type: "@", model: '=', range: '=' },
     link: function($scope, $element) {
       var init = function() {
         if ($scope.range) {

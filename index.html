@@ -69,6 +69,10 @@
         <ratio-bound-step current-step="currentStep"></ratio-bound-step>
       </div>
 
+      <div ng-if="currentStep.type == 'exact swing'">
+        <exact-swing-step current-step="currentStep"></exact-swing-step>
+      </div>
+
       <div ng-if="currentStep.type == 'choose method'">
         <choose-method-step current-step="currentStep"></choose-method-step>
       </div>
