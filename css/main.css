@@ -2,7 +2,7 @@ label {
   clear: both
 }
 
-#results .loader, #results .error, .hidden {
+#results .loader, .hidden {
   display: none;
 }
 
@@ -10,7 +10,7 @@ label {
   opacity: 0.5;
 }
 
-#results.loading .loader, #results.failed .error  {
+#results.loading .loader {
   float: left;
   position: relative;
   z-index: 2;
@@ -23,12 +23,8 @@ label {
   padding: 5px;
 }
 
-#results.loading .graph, #results.failed .graph {
+#results.loading .graph {
   display: none
-}
-
-#results.failed .error {
-  background-color: #ff6666;
 }
 
 .jslider-bg i.x {
