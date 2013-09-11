@@ -92,8 +92,8 @@ function PartialValueFunctionHandler($scope) {
         preferences = angular.copy(preferences);
         for (i = 0; i < preferences.length; ++i) {
           for (j = 0; j < preferences[i].length; ++j) {
-            var level = choice.preferences.indexOf(preferences[i][j]);
-            preferences[i][j] = level == -1 ? null : level;
+            var level = choice.preferences.indexOf(preferences[i][j]) + 1;
+            preferences[i][j] = level == 0 ? null : level;
           }
         }
         return preferences;
@@ -123,7 +123,7 @@ function PartialValueFunctionHandler($scope) {
       choice: { data: pluckObject(state.problem.criteria, "pvf"),
                 calculate: calculate,
                 preferences:
-                  ["Do not", "Very Weakly", "Weakly", "Moderately", "Strongly", "Very Strongly", "Extremely"],
+                  ["Very Weakly", "Weakly", "Moderately", "Strongly", "Very Strongly", "Extremely"],
                 getXY: _.memoize(function(data, criterion) {
                   var y = [1].concat(data[criterion].values).concat([0]);
                   var best = state.problem.criteria[criterion].best();
