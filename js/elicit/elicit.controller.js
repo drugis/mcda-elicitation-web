@@ -57,16 +57,11 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
       nextSteps = [];
     }
 
-    var previousResults = angular.copy(currentStep.results);
-
     currentStep = _.pick(currentStep, PERSISTENT_FIELDS.concat(handler.fields));
     nextStep = handler.nextState(currentStep);
 
     if (nextStep.type !== currentStep.type) {
       var handler = handlers[nextStep.type];
-      if(nextStep.type === LAST_STEP) {
-        nextStep.results = previousResults;
-      }
       nextStep = handler ? handler.initialize(nextStep) : nextStep;
     }
     nextStep.previousChoice = choice;
@@ -95,6 +90,11 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
   };
 
   $scope.shouldRun = function(currentStep) {
+    var excluded = ["scale range", "partial value function"];
+    return !_.contains(excluded, currentStep.type);
+  }
+
+  $scope.showPlot = function(currentStep) {
     var excluded = ["scale range", "partial value function", LAST_STEP];
     return !_.contains(excluded, currentStep.type);
   }
@@ -102,14 +102,13 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
   $scope.runSMAA = function(currentStep) {
     var prefs = $scope.getStandardizedPreferences(currentStep);
     var data = _.extend(currentStep.problem, { "preferences": prefs, "method": "smaa" });
-
     var run = function(type) {
       var task = patavi.submit(type, data);
       task.results.then(
         function(results) {
           $scope.$root.$safeApply($scope, function() {
             currentStep.results = results.results;
-          })
+          });
         }, function(code, error) {
           $scope.$root.$safeApply($scope, function() {
             currentStep.error = { code: (code && code.desc) ? code.desc : code,

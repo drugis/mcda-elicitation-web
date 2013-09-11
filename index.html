@@ -78,13 +78,21 @@
       </div>
 
       <div ng-if="currentStep.type == 'done'">
-        <results-step current-step="currentStep"></results-step>
+        <div ng-if="currentStep.results">
+          <results-step current-step="currentStep"></results-step>
+        </div>
+        <div ng-if="!currentStep.results" class="loader">
+          <div class="progress large-6">
+            <span class="meter" style="width: {{currentStep.progress}}%"></span>
+          </div>
+        </div>
       </div>
 
       <button class="small" ng-disabled="!canReturn()" ng-click="previousStep() && runSMAA(currentStep)">Back</button>
       <button class="small" ng-disabled="!canProceed(currentStep)" ng-click="nextStep() && runSMAA(currentStep)">Next</button>
     </div>
-    <div class="results-container" ng-show="shouldRun(currentStep)">
+
+    <div class="results-container" ng-show="showPlot(currentStep)">
       <div id="results"
         ng-class="{loading: !currentStep.results && !currentStep.error, failed: currentStep.error, 'large-4':true, columns:true}">
         <div class="loader">
