@@ -31,7 +31,7 @@
       </select>
 
       <div style="width: 400px; height: 350px">
-        <bar-chart value="currentStep.alternativesByRank(currentStep.selectedRank)"></bar-chart>
+        <bar-chart value="currentStep.alternativesByRank(currentStep, currentStep.selectedRank)"></bar-chart>
       </div>
     </div>
     <div class="columns large-6">
@@ -42,14 +42,14 @@
         </option>
       </select>
       <div style="width: 400px; height: 350px">
-        <bar-chart value="currentStep.ranksByAlternative(currentStep.selectedAlternative)"></bar-chart>
+        <bar-chart value="currentStep.ranksByAlternative(currentStep, currentStep.selectedAlternative)"></bar-chart>
       </div>
     </div>
   </div>
   <h5>Central Weights</h5>
 
   <div style="width: 650px; height: 350px">
-    <line-chart value="currentStep.centralWeights"></line-chart>
+    <line-chart value="currentStep.centralWeights(currentStep)"></line-chart>
   </div>
 
   <table>

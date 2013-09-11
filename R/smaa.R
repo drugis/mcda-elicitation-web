@@ -124,6 +124,13 @@ partialValue <- function(best, worst, cutoffs=numeric(), values=numeric()) {
   }
 }
 
+ratioConstraint <- function(n, i1, i2, x) {
+  a <- rep(0, n)
+  a[i1] <- -1
+  a[i2] <- x
+  list(constr = t(a), rhs = c(0), dir = c("="))
+}
+
 run_smaa <- function(params) {
   N <- 1E4
   n <- length(params$criteria)
@@ -136,30 +143,53 @@ run_smaa <- function(params) {
   harBatches <- 20
   harBatchProgress <- 4
   harSample <- function(constr, n , N) {
+    stopifnot(N %% harBatches == 0)
     if (length(constr$rhs) > 0) {
-      stopifnot(N %% harBatches == 0)
-      transform <- simplex.createTransform(n)
-      constr <- simplex.createConstraints(transform, constr)
+      # Separate equality from inequality constraints
+      sel.eq <- constr$dir == '='
+      eq.constr <- list(constr = constr$constr[sel.eq, ],
+                        rhs = constr$rhs[sel.eq],
+                        dir = constr$dir[sel.eq])
+      ineq.constr <- list(constr = constr$constr[!sel.eq, ],
+                          rhs = constr$rhs[!sel.eq],
+                          dir = constr$dir[!sel.eq])
+
+      # Add the normalization contraint
+      eq.constr <- mergeConstraints(eq.constr,
+                                    list(constr = t(rep(1, n)), dir = '=', rhs = 1))
+
+      # Generate basis, transform, seed point
+      basis <- solution.basis(eq.constr)
+      transform <- createTransform(basis)
+      constr <- simplex.createConstraints(transform, ineq.constr)
       seedPoint <- createSeedPoint(constr, homogeneous=TRUE)
-      # reduce number of required samples for small n by log approximation of
-      # required scaling factor based on Fig. 3 of HAR paper.
-      thin <- ceiling(log(n)/4 * (n - 1)^3)
-      xN <- seedPoint
-      samples <- matrix(0, nrow=N, ncol=n)
-      Nb <- N/harBatches
-      for(i in 1:harBatches) {
-        out <- har(xN, constr, N=Nb * thin, thin=thin, homogeneous=TRUE, transform=transform)
-        samples[(1 + Nb * (i - 1)):(Nb * i), ] <- out$samples
-        xN <- out$xN
-        update(i * harBatchProgress)
+      if (length(seedPoint) == 1) {
+        samples <- matrix(rep(basis$translate, each=N), nrow=N)
+        update(harBatches * harBatchProgress)
+        samples
+      } else {
+        # reduce number of required samples for small n by log approximation of
+        # required scaling factor based on Fig. 3 of HAR paper.
+        m <- length(seedPoint)
+        thin <- ceiling(log(m)/4 * (m - 1)^3)
+        xN <- seedPoint
+        samples <- matrix(0, nrow=N, ncol=n)
+        Nb <- N/harBatches
+        for(i in 1:harBatches) {
+            out <- har(xN, constr, N=Nb * thin, thin=thin, homogeneous=TRUE, transform=transform)
+            samples[(1 + Nb * (i - 1)):(Nb * i), ] <- out$samples
+            xN <- out$xN
+            update(i * harBatchProgress)
+        }
+        samples
       }
-      samples
     } else {
       samples <- simplex.sample(n, N)$samples
       update(harBatches * harBatchProgress)
       samples
     }
   }
+
   # parse preference information
   constr <- do.call(mergeConstraints, lapply(params$preferences,
     function(statement) {
@@ -174,6 +204,8 @@ run_smaa <- function(params) {
           lowerRatioConstraint(n, i1, i2, l),
           upperRatioConstraint(n, i1, i2, u)
         )
+      } else if (statement['type'] == "exact swing") {
+        ratioConstraint(n, i1, i2, statement$ratio);
       }
     })
   )

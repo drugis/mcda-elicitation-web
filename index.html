@@ -34,6 +34,13 @@
 
     <h2>Preference Elicitation <small>{{currentStep.problem.title}}</small></h2>
 
+    <div ng-show="currentStep.error">
+      <div class="alert-box alert">
+        Computation failed: {{currentStep.error.code}}
+        <span ng-show="currentStep.error.error">&mdash; {{currentStep.error.error}}</span>
+      </div>
+    </div>
+
     <div ng-show="currentStep.type == 'done'">
       <div ng-show="saveState.success">Preferences saved.</div>
       <div ng-class="{error: 'alert-box alert', warning: 'alert-box'}[saveState.error.severity]" ng-show="saveState.error">
@@ -62,18 +69,30 @@
         <ratio-bound-step current-step="currentStep"></ratio-bound-step>
       </div>
 
+      <div ng-if="currentStep.type == 'exact swing'">
+        <exact-swing-step current-step="currentStep"></exact-swing-step>
+      </div>
+
       <div ng-if="currentStep.type == 'choose method'">
         <choose-method-step current-step="currentStep"></choose-method-step>
       </div>
 
       <div ng-if="currentStep.type == 'done'">
-        <results-step current-step="currentStep"></results-step>
+        <div ng-if="currentStep.results">
+          <results-step current-step="currentStep"></results-step>
+        </div>
+        <div ng-if="!currentStep.results" class="loader">
+          <div class="progress large-6">
+            <span class="meter" style="width: {{currentStep.progress}}%"></span>
+          </div>
+        </div>
       </div>
 
       <button class="small" ng-disabled="!canReturn()" ng-click="previousStep() && runSMAA(currentStep)">Back</button>
       <button class="small" ng-disabled="!canProceed(currentStep)" ng-click="nextStep() && runSMAA(currentStep)">Next</button>
     </div>
-    <div class="results-container" ng-show="shouldRun(currentStep)">
+
+    <div class="results-container" ng-show="showPlot(currentStep)">
       <div id="results"
         ng-class="{loading: !currentStep.results && !currentStep.error, failed: currentStep.error, 'large-4':true, columns:true}">
         <div class="loader">
@@ -82,10 +101,6 @@
 
         <div style="width: 400px; height: 400px" class="graph">
           <rank-plot value="currentStep.results.ranks.data" stacked="true" problem="currentStep.problem"></rank-plot>
-        </div>
-
-        <div class="error">
-          {{currentStep.error.cause}}
         </div>
       </div>
     </div>

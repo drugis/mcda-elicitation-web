@@ -31,6 +31,14 @@ angular.module('elicit.steps', []).
     templateUrl: 'elicit-ratio-bound.html'
   };
 }).
+  directive('exactSwingStep', function() {
+  return {
+    restrict: 'E',
+    replace: true,
+    scope: { currentStep: '=', problem: '=' },
+    templateUrl: 'elicit-exact-swing.html'
+  };
+}).
   directive('resultsStep', function() {
   return {
     restrict: 'E',
