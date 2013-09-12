@@ -53,40 +53,7 @@
     <h3>{{currentStep.title}}</h3>
 
     <div id="wizardStepContainer" class="columns large-8">
-      <div ng-if="currentStep.type == 'scale range'">
-        <scale-range-step current-step="currentStep"></scale-range-step>
-      </div>
-
-      <div ng-if="currentStep.type == 'partial value function'">
-        <partial-value-function-step current-step="currentStep"></partial-value-function-step>
-      </div>
-
-      <div ng-if="currentStep.type == 'ordinal'">
-        <ordinal-step current-step="currentStep"></ordinal-step>
-      </div>
-
-      <div ng-if="currentStep.type == 'ratio bound'">
-        <ratio-bound-step current-step="currentStep"></ratio-bound-step>
-      </div>
-
-      <div ng-if="currentStep.type == 'exact swing'">
-        <exact-swing-step current-step="currentStep"></exact-swing-step>
-      </div>
-
-      <div ng-if="currentStep.type == 'choose method'">
-        <choose-method-step current-step="currentStep"></choose-method-step>
-      </div>
-
-      <div ng-if="currentStep.type == 'done'">
-        <div ng-if="currentStep.results">
-          <results-step current-step="currentStep"></results-step>
-        </div>
-        <div ng-if="!currentStep.results" class="loader">
-          <div class="progress large-6">
-            <span class="meter" style="width: {{currentStep.progress}}%"></span>
-          </div>
-        </div>
-      </div>
+      <wizard-step current-step="currentStep" template-url="templateUrl"></wizard-step>
 
       <button class="small" ng-disabled="!canReturn()" ng-click="previousStep() && runSMAA(currentStep)">Back</button>
       <button class="small" ng-disabled="!canProceed(currentStep)" ng-click="nextStep() && runSMAA(currentStep)">Next</button>
