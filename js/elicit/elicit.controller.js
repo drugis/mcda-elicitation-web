@@ -2,8 +2,10 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
   $scope.saveState = {};
   $scope.currentStep = {};
   $scope.initialized = false;
-  var handlers;
+
+  var steps;
   var LAST_STEP = 'done';
+  var FIRST_STEP = 'scale range';
   var PERSISTENT_FIELDS = ["problem", "type", "prefs", "choice"];
 
   $scope.$on('PreferenceStore.saved', function() {
@@ -15,17 +17,33 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
 
   var initialize = function(problem) {
     if(!_.isEmpty(problem)) {
-      handlers = {
-        "scale range": new ScaleRangeHandler($scope),
-        "partial value function": new PartialValueFunctionHandler($scope),
-        "ordinal":  new OrdinalElicitationHandler(),
-        "ratio bound":  new RatioBoundElicitationHandler(),
-        "exact swing":  new ExactSwingElicitationHandler(),
-        "choose method": new ChooseMethodHandler(),
-        "done": new ResultsHandler()
+     steps = {
+        "scale range":
+        { handler: new ScaleRangeHandler($scope),
+          templateUrl: "scale-range.html" },
+        "partial value function":
+        { handler: new PartialValueFunctionHandler($scope),
+          templateUrl: "partial-value-function.html" },
+        "ordinal":
+        { handler: new OrdinalElicitationHandler(),
+          templateUrl: 'elicit-ordinal.html' },
+        "ratio bound":
+        { handler: new RatioBoundElicitationHandler(),
+          templateUrl: 'elicit-ratio-bound.html' },
+        "exact swing":
+        { handler: new ExactSwingElicitationHandler(),
+          templateUrl: 'elicit-exact-swing.html' },
+        "choose method":
+        { handler: new ChooseMethodHandler(),
+          templateUrl: 'choose-method.html' },
+        "done":
+        { handler: new ResultsHandler(),
+          templateUrl: 'results-page.html' }
       };
-    $scope.currentStep = handlers["scale range"].initialize({ problem: problem });
-    $scope.initialized = true;
+      var step = steps[FIRST_STEP];
+      $scope.currentStep = step.handler.initialize({ problem: problem });
+      $scope.templateUrl = step.templateUrl;
+      $scope.initialized = true;
     }
   };
 
@@ -33,8 +51,8 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
   var nextSteps = [];
 
   $scope.canProceed = function(currentStep) {
-    var handler = currentStep.type && handlers[currentStep.type];
-    return (handler && handlers[currentStep.type].validChoice(currentStep)) || false;
+    var handler = currentStep.type && steps[currentStep.type].handler;
+    return (handler && handler.validChoice(currentStep)) || false;
   }
 
   $scope.canReturn = function() {
@@ -45,12 +63,13 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
     var currentStep = $scope.currentStep;
     if(!$scope.canProceed(currentStep)) return false;
     var choice = currentStep.choice;
-    var handler = handlers[currentStep.type];
+    var handler = steps[currentStep.type].handler;
 
     // History handling
     previousSteps.push(currentStep);
     var nextStep = nextSteps.pop();
     if(nextStep && _.isEqual(nextStep.previousChoice, choice)) {
+      $scope.templateUrl = steps[nextStep].templateUrl;
       $scope.currentStep = nextStep;
       return true;
     } else {
@@ -61,7 +80,9 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
     nextStep = handler.nextState(currentStep);
 
     if (nextStep.type !== currentStep.type) {
-      var handler = handlers[nextStep.type];
+      var step = steps[nextStep.type];
+      var handler = step.handler;
+      $scope.templateUrl = step.templateUrl;
       nextStep = handler ? handler.initialize(nextStep) : nextStep;
     }
     nextStep.previousChoice = choice;
@@ -78,14 +99,17 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
   $scope.previousStep = function() {
     if (previousSteps.length == 0) return false;
     nextSteps.push(angular.copy($scope.currentStep));
-    $scope.currentStep = previousSteps.pop();
+
+    var previousStep = previousSteps.pop();
+    $scope.templateUrl = steps[previousStep.type].templateUrl;
+    $scope.currentStep = previousStep;
     return true;
   }
 
   $scope.getStandardizedPreferences = function(currentStep) {
     var prefs = currentStep.prefs;
     return _.flatten(_.map(_.pairs(prefs), function(pref) {
-      return handlers[pref[0]].standardize(pref[1]);
+      return steps[pref[0]].handler.standardize(pref[1]);
     }));
   };
 
