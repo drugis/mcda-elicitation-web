@@ -87,14 +87,13 @@ angular.module('elicit.components', []).
     };
     return {
       restrict: 'E',
+      replace: true,
       scope: { type: "@",
                model: '=',
                range: '=' },
       link: function($scope, $element) {
         var init = function() {
-          if ($scope.range) {
-            initialize($scope, $element);
-          }
+          if ($scope.range) initialize($scope, $element);
         }
         $scope.$watch('range', init, true);
         $scope.$watch('range.from', init, true);
