@@ -106,7 +106,7 @@ angular.module('elicit.components', []).
   directive('wizardStep', ['$compile', '$http', '$templateCache', function($compile, $http, $templateCache) {
     var getTemplate = function(template) {
       var templateLoader,
-      baseUrl = '',
+      baseUrl = 'templates/',
       templateUrl = baseUrl + template;
       templateLoader = $http.get(templateUrl, { cache: $templateCache });
 
