@@ -314,7 +314,7 @@ angular.module('elicit.components', []).
         };
 
         scope.$watch('file', function () {
-          if (scope.file) {
+          if (_.isEmpty(scope.file)) {
             var reader = new FileReader();
             reader.onload = (function (file) {
               return function (env) {
@@ -323,9 +323,8 @@ angular.module('elicit.components', []).
                 });
               }
             }(scope.file));
-            if(!_.isEmpty(scope.file)) {
-              reader.readAsText(scope.file);
-            }
+
+            reader.readAsText(scope.file);
           }
         });
       }
