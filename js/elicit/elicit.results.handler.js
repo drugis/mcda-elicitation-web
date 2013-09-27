@@ -21,24 +21,29 @@ function ResultsHandler() {
       return result;
     });
 
-  var getAlterativesByRank = _.memoize(function(state, rank) {
-      var data = state.results.ranks.data;
-      var rank = parseInt(rank);
-      var values = _.map(_.pairs(data), function(alternative) {
-        return {label: alternativeTitle(alternative[0]), value: alternative[1][rank] };
-      });
-      var name = "Alternatives for rank " + (rank + 1);
-      return [{ key: name, values: values }];
+  var getAlterativesByRank = _.memoize(function(state) {
+    var data = state.results.ranks.data;
+    var rank = parseInt(state.selectedRank);
+    var values = _.map(_.pairs(data), function(alternative) {
+      return {label: alternativeTitle(alternative[0]), value: alternative[1][rank] };
     });
+    var name = "Alternatives for rank " + (rank + 1);
+    return [{ key: name, values: values }];
+  }, function(val) {
+    return 31 * val.selectedRank.hashCode() + angular.toJson(val.results).hashCode();
+  });
 
-  var getRanksByAlternative = _.memoize(function(state, alternative) {
-      var data = state.results.ranks.data;
-      var values = [];
-      _.each(data[alternative], function(rank, index) {
-        values.push({ label: "Rank " + (index + 1), value: [rank] });
-      });
-      return [{ key: alternativeTitle(alternative), values: values }];
+  var getRanksByAlternative = _.memoize(function(state) {
+    var data = state.results.ranks.data;
+    var alternative = state.selectedAlternative;
+    var values = [];
+    _.each(data[alternative], function(rank, index) {
+      values.push({ label: "Rank " + (index + 1), value: [rank] });
     });
+    return [{ key: alternativeTitle(alternative), values: values }];
+  }, function(val) {
+    return 31 * val.selectedAlternative.hashCode() + angular.toJson(val.results).hashCode();
+  });
 
   this.initialize = function(state) {
     alternatives = _.clone(state.problem.alternatives);
@@ -47,7 +52,7 @@ function ResultsHandler() {
       type: "done",
       title: "Done eliciting preferences",
       selectedAlternative: _.keys(alternatives)[0],
-      selectedRank: 0,
+      selectedRank: "0",
       ranksByAlternative: getRanksByAlternative,
       alternativesByRank: getAlterativesByRank,
       centralWeights: getCentralWeights

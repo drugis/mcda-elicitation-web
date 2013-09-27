@@ -173,7 +173,7 @@ angular.module('elicit.components', []).
         }
 
         scope.$watch('value', function(newVal, oldVal) {
-          if(!newVal) return;
+          if (!newVal) return;
           nv.addGraph(function() {
             var chart = nv.models.multiBarChart().height(height).width(width);
             var data = rankGraphData(newVal);
