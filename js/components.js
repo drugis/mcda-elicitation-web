@@ -1,4 +1,5 @@
-angular.module('elicit.components', []).
+define(['angular'], function(angular) {
+return angular.module('elicit.components', []).
   directive('slider', function() {
     var initialize = function($scope, $element) {
       function log10(x) { return Math.log(x) / Math.log(10); }
@@ -330,3 +331,4 @@ angular.module('elicit.components', []).
       }
     };
   });
+});

@@ -1,4 +1,5 @@
-function ChooseMethodHandler() {
+define(['angular', 'elicit'], function(angular, elicit) {
+  return function() {
   this.fields = ["methods"];
 
   this.initialize = function(state) {
@@ -22,4 +23,5 @@ function ChooseMethodHandler() {
     delete nextState.choice;
     return nextState;
   }
-}
+};
+});

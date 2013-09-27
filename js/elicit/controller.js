@@ -1,4 +1,17 @@
-function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceStore) {
+define([
+    'angular',
+    'patavi',
+    'elicit',
+    'elicit/choose-method-handler',
+    'elicit/ordinal-method-handler',
+    'elicit/partial-value-function-handler',
+    'elicit/ratio-bounds-handler',
+    'elicit/results-handler',
+    'elicit/scale-range-handler',
+    'elicit/swing-handler'
+    ], function(angular, patavi, elicit, ChooseMethodHandler, OrdinalElicitationHandler, PartialValueFunctionHandler, RatioBoundElicitationHandler, ResultsHandler, ScaleRangeHandler, ExactSwingElicitationHandler) {
+  return elicit.controller('ElicitationController', ['$rootScope', '$scope', 'DecisionProblem', 'PreferenceStore',
+function($rootScope, $scope, DecisionProblem, PreferenceStore) {
   $scope.saveState = {};
   $scope.currentStep = {};
   $scope.initialized = false;
@@ -149,6 +162,5 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
   };
 
   DecisionProblem.problem.then(initialize);
-};
-
-ElicitationController.$inject = ['$rootScope', '$scope', 'DecisionProblem', 'PreferenceStore'];
+}]);
+});

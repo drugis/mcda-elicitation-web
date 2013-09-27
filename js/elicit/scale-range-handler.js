@@ -1,4 +1,5 @@
-function ScaleRangeHandler($scope) {
+define(['angular', 'patavi'], function(angular, patavi) {
+return function($scope) {
   this.fields = [];
 
   var log10 = function(x) { return Math.log(x) / Math.log(10); };
@@ -94,3 +95,4 @@ function ScaleRangeHandler($scope) {
 
   return this;
 }
+});

@@ -1,4 +1,5 @@
-function OrdinalElicitationHandler() {
+define(['angular'], function(angular) {
+return function() {
   this.fields = ["reference", "choices"];
   var criteria = {};
 
@@ -83,3 +84,4 @@ function OrdinalElicitationHandler() {
 
   return this;
 }
+});

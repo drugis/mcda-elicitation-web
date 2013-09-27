@@ -1,9 +1,10 @@
-function RatioBoundElicitationHandler() {
+define(['angular'], function(angular) {
+return function() {
   this.fields = ["criterionA", "criterionB"];
   var criteria = {};
 
   var title = function(step) {
-    var base = "Ratio Bound SWING weighting";
+    var base = "Exact SWING weighting";
     var total = (_.size(criteria) - 1);
     if(step > total) return base + " (DONE)";
     return base + " (" + step + "/" + total + ")";
@@ -21,12 +22,7 @@ function RatioBoundElicitationHandler() {
       title: title(step),
       criterionA: criterionA,
       criterionB: criterionB,
-      best: function() { return increasing ? this.choice.upper : this.choice.lower },
-      worst: function() { return increasing ? this.choice.lower : this.choice.upper },
-      choice: {
-        lower: bounds[0],
-        upper: bounds[1]
-      },
+      choice: (bounds[0] + bounds[1]) / 2,
       range: { from: bounds[0], to: bounds[1], rightOpen: true }
     }
   }
@@ -34,14 +30,14 @@ function RatioBoundElicitationHandler() {
   this.initialize = function(state) {
     criteria = state.problem.criteria;
     var state = _.extend(state, buildInitial(state.prefs.ordinal[0], state.prefs.ordinal[1], 1));
-    if (!state.prefs["ratio bound"]) state.prefs["ratio bound"] = [];
+    if (!state.prefs["exact swing"]) state.prefs["exact swing"] = [];
     return state;
   }
 
   this.validChoice = function(currentState) {
-    var bounds1 = currentState.choice;
-    var bounds2 = getBounds(currentState.criterionA);
-    return bounds1.lower < bounds1.upper && bounds2[0] <= bounds1.lower && bounds2[1] >= bounds1.upper;
+    var value = currentState.choice;
+    var bounds = getBounds(currentState.criterionA);
+    return value < bounds[1] && value >= bounds[0];
   }
 
   this.nextState = function(currentState) {
@@ -56,23 +52,24 @@ function RatioBoundElicitationHandler() {
       next = buildInitial(order[idx], order[idx + 1], idx + 1);
     }
 
-    function getRatioBounds(currentState) {
+    function getRatio(currentState) {
       var u = criteria[currentState.criterionA].pvf.map;
-      return [1 / u(currentState.choice.lower), 1 / u(currentState.choice.upper)].sort();
+      return 1 / u(currentState.choice);
     }
 
     next.prefs = angular.copy(currentState.prefs);
-    next.prefs["ratio bound"].push(
+    next.prefs["exact swing"].push(
       { criteria: [order[idx - 1], order[idx]],
-        bounds: getRatioBounds(currentState) });
+        ratio: getRatio(currentState) });
     return _.extend(angular.copy(currentState), next);
   }
 
   this.standardize = function(prefs) {
     return _.map(prefs, function(pref) {
-      return _.extend(pref, { type: "ratio bound" });
+      return _.extend(pref, { type: "exact swing" });
     });
   };
 
   return this;
 }
+});

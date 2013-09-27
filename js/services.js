@@ -1,4 +1,5 @@
-angular.module('elicit.services', []).
+define(['angular'], function(angular) {
+return angular.module('elicit.services', []).
   factory('PreferenceStore', ['$http', '$rootScope', function($http, $rootScope) {
     var Store = {
       url: undefined,
@@ -20,3 +21,4 @@ angular.module('elicit.services', []).
     };
   return Store;
   }]);
+});
