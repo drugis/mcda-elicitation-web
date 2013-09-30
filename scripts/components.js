@@ -1,9 +1,7 @@
-define(['angular'], function(angular) {
+define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], function(angular, _, $, d3, nv) {
 return angular.module('elicit.components', []).
   directive('slider', function() {
     var initialize = function($scope, $element) {
-      function log10(x) { return Math.log(x) / Math.log(10); }
-
       var type = $scope.type;
       var from = $scope.range.from;
       var to = $scope.range.to;
@@ -24,7 +22,8 @@ return angular.module('elicit.components', []).
       }
 
       var precision = 3;
-      var stepToValue = function(step) { return (from + (step / steps) * delta).toFixed(precision); }
+      var stepToValue = function(step) { return (from + (step / steps) * delta).toFixed(precision); };
+
       function valueToStep(value) { return ((value - from) / delta * steps).toFixed(precision); }
       function getModelValue() {
         return type === "point" ? valueToStep($scope.model) :
@@ -95,7 +94,7 @@ return angular.module('elicit.components', []).
       link: function($scope, $element) {
         var init = function() {
           if ($scope.range) initialize($scope, $element);
-        }
+        };
         $scope.$watch('range', init, true);
         $scope.$watch('range.from', init, true);
         $scope.$watch('range.to', init, true);
@@ -111,14 +110,14 @@ return angular.module('elicit.components', []).
       templateLoader = $http.get(templateUrl, { cache: $templateCache });
 
       return templateLoader;
-    }
+    };
 
     var linker = function(scope, element, attrs) {
       var getContainer = function() {
         var container = element.children()[0] || element.append("<div></div>");
         $(container).html(""); // clear content
         return $(container).append("<div></div>");
-      }
+      };
 
       scope.$watch('templateUrl', function(newVal, oldVal) {
         var loader = getTemplate(newVal);
@@ -130,7 +129,7 @@ return angular.module('elicit.components', []).
           container.replaceWith($compile(container.html())(scope));
         });
       });
-    }
+    };
 
     return {
       restrict: 'E',
@@ -150,7 +149,9 @@ return angular.module('elicit.components', []).
         problem: '='
       },
       link: function(scope, element, attrs) {
-        function parsePx(str) { return parseInt(str.replace(/px/gi, '')) };
+        function parsePx(str) {
+          return parseInt(str.replace(/px/gi, ''));
+        }
 
         var width = parsePx($(element[0].parentNode).css('width'));
         var height = parsePx($(element[0].parentNode).css('height'));
@@ -171,7 +172,7 @@ return angular.module('elicit.components', []).
             }
           });
           return result;
-        }
+        };
 
         scope.$watch('value', function(newVal, oldVal) {
           if (!newVal) return;
@@ -179,7 +180,7 @@ return angular.module('elicit.components', []).
             var chart = nv.models.multiBarChart().height(height).width(width);
             var data = rankGraphData(newVal);
 
-            chart.yAxis.tickFormat(d3.format(',.3f'))
+            chart.yAxis.tickFormat(d3.format(',.3f'));
             chart.stacked(attrs.stacked);
             chart.reduceXTicks(false);
             chart.staggerLabels(true);
@@ -268,23 +269,7 @@ return angular.module('elicit.components', []).
       }
     }
   }).
-  directive('circularProgress', function() {
-    return {
-      restrict: 'E',
-      replace: true,
-      scope: { 'value': '@' },
-      template: '<input type="text" class="dial" data-width="50" data-readOnly="true" data-displayInput="false" data-max="{{value}}">',
-      link: function(scope, element, attrs) {
-        var $el = $(element);
-        $(function() {
-          $el.knob();
-        });
-        scope.$watch('value', function(newVal, oldVal) {
-          $el.val(newVal).trigger('change');
-        });
-      }
-    }})
-  .directive('heat', function() {
+  directive('heat', function() {
     return {
       restrict: 'C',
       replace: false,
@@ -299,8 +284,7 @@ return angular.module('elicit.components', []).
         });
       }
     };
-  })
-  .directive('fileReader', function () {
+  }).directive('fileReader', function () {
     return {
       scope: {
         file: '='
@@ -313,20 +297,21 @@ return angular.module('elicit.components', []).
             scope.file = element.files[0];
           });
         };
+        var filter = /^(application\/json|text\/plain)$/i;
 
-        scope.$watch('file', function () {
-          if (_.isEmpty(scope.file)) {
-            var reader = new FileReader();
-            reader.onload = (function (file) {
-              return function (env) {
-                scope.$apply(function () {
-                  scope.file.contents = env.target.result;
-                });
-              }
-            }(scope.file));
+        scope.$watch('file', function (newVal, oldVal) {
+          if(!newVal || !filter.test(newVal.type)) return;
+          var reader = new FileReader();
 
-            reader.readAsText(scope.file);
-          }
+          reader.onload = (function (file) {
+            return function (env) {
+              scope.$apply(function () {
+                scope.file.contents = env.target.result;
+              });
+            };
+          }(newVal));
+
+          reader.readAsText(newVal);
         });
       }
     };

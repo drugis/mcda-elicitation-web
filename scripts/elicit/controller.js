@@ -9,9 +9,18 @@ define([
     'elicit/results-handler',
     'elicit/scale-range-handler',
     'elicit/swing-handler'
-    ], function(angular, patavi, elicit, ChooseMethodHandler, OrdinalElicitationHandler, PartialValueFunctionHandler, RatioBoundElicitationHandler, ResultsHandler, ScaleRangeHandler, ExactSwingElicitationHandler) {
-  return elicit.controller('ElicitationController', ['$rootScope', '$scope', 'DecisionProblem', 'PreferenceStore',
-function($rootScope, $scope, DecisionProblem, PreferenceStore) {
+    ], function(angular,
+      patavi,
+      elicit,
+      ChooseMethodHandler,
+      OrdinalElicitationHandler,
+      PartialValueFunctionHandler,
+      RatioBoundElicitationHandler,
+      ResultsHandler,
+      ScaleRangeHandler,
+      ExactSwingElicitationHandler) {
+  return elicit.controller('ElicitationController', ['$scope', 'DecisionProblem', 'PreferenceStore',
+function($scope, DecisionProblem, PreferenceStore) {
   $scope.saveState = {};
   $scope.currentStep = {};
   $scope.initialized = false;
@@ -141,21 +150,25 @@ function($rootScope, $scope, DecisionProblem, PreferenceStore) {
     var data = _.extend(currentStep.problem, { "preferences": prefs, "method": "smaa" });
     var run = function(type) {
       var task = patavi.submit(type, data);
+      currentStep.progress = 0;
       task.results.then(
-        function(results) {
-          $scope.$root.$safeApply($scope, function() {
-            currentStep.results = results.results;
+          function(results) {
+            $scope.$root.$safeApply($scope, function() {
+              currentStep.results = results.results;
+            });
+          }, function(code, error) {
+            $scope.$root.$safeApply($scope, function() {
+              currentStep.error = { code: (code && code.desc) ? code.desc : code,
+                cause: error };
+            });
+          }, function(update) {
+            $scope.$root.$safeApply($scope, function() {
+              var progress = parseFloat(update);
+              if(progress > currentStep.progress) {
+                currentStep.progress = progress;
+              }
+            });
           });
-        }, function(code, error) {
-          $scope.$root.$safeApply($scope, function() {
-            currentStep.error = { code: (code && code.desc) ? code.desc : code,
-                                  cause: error };
-          });
-        }, function(update) {
-          $scope.$root.$safeApply($scope, function() {
-            currentStep.progress = update;
-          });
-        });
     }
 
     if (!currentStep.results && $scope.shouldRun(currentStep)) run('smaa');

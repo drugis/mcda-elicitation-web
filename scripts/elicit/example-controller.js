@@ -24,5 +24,4 @@ return elicit.controller('ExampleController', ['$scope', 'DecisionProblem', func
 
   DecisionProblem.list(function (data) { $scope.list = data });
 }]);
-console.log("Done with elicit.example");
 });

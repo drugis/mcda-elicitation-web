@@ -1,4 +1,4 @@
-define(['angular', 'elicit'], function(angular, elicit) {
+define(['angular'], function(angular) {
   return function() {
   this.fields = ["methods"];
 
