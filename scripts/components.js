@@ -22,7 +22,9 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
         }
 
         var precision = 3;
-        var stepToValue = function(step) { return (from + (step / steps) * delta).toFixed(precision); };
+        var stepToValue = function(step) {
+          return (from + (step / steps) * delta).toFixed(precision);
+        };
 
         function valueToStep(value) { return ((value - from) / delta * steps).toFixed(precision); }
         function getModelValue() {
@@ -267,7 +269,7 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
             nv.utils.windowResize(chart.update);
           });
         }
-      }
+      };
     }).
     directive('heat', function() {
       return {
