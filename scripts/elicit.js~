@@ -1,0 +1,13 @@
+define([], function() {
+  return angular.module('elicit', ['elicit.example', 'elicit.components', 'elicit.services']);
+});
+choose-method.handler.js
+controller.js
+decision.problems.js
+example.controller.js
+ordinal-method.handler.js
+partial-value-function.handler.js
+ratio-bounds.handler.js
+results.handler.js
+scale-range.handler.js
+swing.handler.js

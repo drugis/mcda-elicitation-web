@@ -1,4 +1,5 @@
-angular.module('elicit.example', ['ngResource']).factory('DecisionProblem', function($resource, $q) {
+define(['angular', 'angular-resource'], function(angular, angularResource) {
+return angular.module('elicit.example', ['ngResource']).factory('DecisionProblem', function($resource, $q) {
   var repositoryUrl = config ? config.examplesRepository : '';
   var resource = $resource(repositoryUrl + ':url', {url:'@url'});
   var problem = $q.defer();
@@ -18,4 +19,5 @@ angular.module('elicit.example', ['ngResource']).factory('DecisionProblem', func
     }
   };
   return Problem;
+});
 });

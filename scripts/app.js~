@@ -1,0 +1,47 @@
+require.config({
+  paths: {
+    'jquery': '//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min',
+    'angular': '//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular',
+    'angular-resource': '//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular-resource',
+    'autobahn': '//autobahn.s3.amazonaws.com/js/autobahn'
+  },
+  shim: {
+    'angular': {'exports' : 'angular'},
+    'angular-resource': { deps:['angular'], exports: 'angular-resource'},
+    'jQuery': {'exports' : 'jQuery'},
+    'autobahn': {exports: 'autobahn', deps: ['when']}
+  }
+});
+
+require([
+    'jQuery',
+    'angular',
+    'elicit',
+    'elicit/example-controller',
+    'elicit/controller'], function ($, angular, elicit) {
+  $(function () { // using jQuery because it will run this even if DOM load already happened
+    angular.bootstrap(document , ['elicit']);
+
+    elicit.run(['$rootScope', function($rootScope) {
+      // Add string HashCode
+      String.prototype.hashCode = function(){
+          var hash = 0;
+          if (this.length == 0) return hash;
+          for (var i = 0; i < this.length; i++) {
+              var character = this.charCodeAt(i);
+              hash = ((hash<<5)-hash)+character;
+              hash = hash & hash; // Convert to 32bit integer
+          }
+          return hash;
+      }
+
+      $rootScope.$safeApply = function($scope, fn) {
+        var phase = $scope.$root.$$phase;
+        if(phase == '$apply' || phase == '$digest')
+          this.$eval(fn);
+        else
+          this.$apply(fn);
+      };
+    }]);
+  });
+});
