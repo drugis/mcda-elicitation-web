@@ -1,0 +1,184 @@
+{
+  "title": "Rimonabant case study",
+  "criteria": {
+    "weightLoss": {
+      "title": "Change from baseline in body weight",
+      "scale": [-20, 20],
+      "pvf": {
+        "range": [-10, 0],
+        "direction": "decreasing",
+        "type": "linear"
+      }
+    },
+    "glucose": {
+      "title": "Change from baseline in fasting glucose",
+      "scale": [-1, 0.5],
+      "pvf": {
+        "range": [-2, 2],
+        "direction": "decreasing",
+        "type": "linear"
+      }
+    },
+    "anxiety": {
+      "title": "Anxiety",
+      "scale": [0, 100],
+      "pvf": {
+        "range": [0, 10],
+        "direction": "decreasing",
+        "type": "linear"
+      }
+    },
+    "hypoglyceamia": {
+      "title": "Hypoglyceamia",
+      "scale": [0, 100],
+      "pvf": {
+        "range": [0, 10],
+        "direction": "decreasing",
+        "type": "linear"
+      }
+    },
+    "discont": {
+      "title": "Discontinuations due to adverse events",
+      "scale": [0, 100],
+      "pvf": {
+        "range": [0, 20],
+        "direction": "decreasing",
+        "type": "linear"
+      }
+    }
+  },
+  "alternatives": {
+    "placebo": {
+      "title": "Placebo"
+    },
+    "5mg": {
+      "title": "Rimonabant 5 mg/day"
+    },
+    "20mg": {
+      "title": "Rimonabant 20 mg/day"
+    }
+  },
+  "performanceTable": [
+    {
+    "alternative": "placebo",
+    "criterion": "weightLoss",
+    "performance": {
+      "type": "exact",
+      "value": -1.5
+    }
+  },
+  {
+    "alternative": "5mg",
+    "criterion": "weightLoss",
+    "performance": {
+      "type": "exact",
+      "value": -2.4
+    }
+  },
+  {
+    "alternative": "20mg",
+    "criterion": "weightLoss",
+    "performance": {
+      "type": "exact",
+      "value": -5.5
+    }
+  },  
+  {
+    "alternative": "placebo",
+    "criterion": "glucose",
+    "performance": {
+      "type": "exact",
+      "value": 0.33
+    }
+  },
+  {
+    "alternative": "5mg",
+    "criterion": "glucose",
+    "performance": {
+      "type": "exact",
+      "value": 0.30
+    }
+  },
+  {
+    "alternative": "20mg",
+    "criterion": "glucose",
+    "performance": {
+      "type": "exact",
+      "value": -0.64
+    }
+  },
+  {
+    "alternative": "placebo",
+    "criterion": "anxiety",
+    "performance": {
+      "type": "exact",
+      "value": 3
+    }
+  },
+  {
+    "alternative": "5mg",
+    "criterion": "anxiety",
+    "performance": {
+      "type": "exact",
+      "value": 1
+    }
+  },
+  {
+    "alternative": "20mg",
+    "criterion": "anxiety",
+    "performance": {
+      "type": "exact",
+      "value": 5
+    }
+  },
+  {
+    "alternative": "placebo",
+    "criterion": "hypoglyceamia",
+    "performance": {
+      "type": "exact",
+      "value": 2
+    }
+  },
+  {
+    "alternative": "5mg",
+    "criterion": "hypoglyceamia",
+    "performance": {
+      "type": "exact",
+      "value": 1
+    }
+  },
+  {
+    "alternative": "20mg",
+    "criterion": "hypoglyceamia",
+    "performance": {
+      "type": "exact",
+      "value": 5
+    }
+  },
+  {
+    "alternative": "placebo",
+    "criterion": "discont",
+    "performance": {
+      "type": "exact",
+      "value": 5
+    }
+  },
+  {
+    "alternative": "5mg",
+    "criterion": "discont",
+    "performance": {
+      "type": "exact",
+      "value": 8
+    }
+  },
+  {
+    "alternative": "20mg",
+    "criterion": "discont",
+    "performance": {
+      "type": "exact",
+      "value": 15
+    }
+  }
+  ],
+  "preferences": {}
+}
