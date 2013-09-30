@@ -22,11 +22,11 @@ require.config({
 });
 
 require([
-    'require',
-    'angular',
-    'elicit',
-    'elicit/example-controller',
-    'elicit/controller'
+  'require',
+  'angular',
+  'elicit',
+  'elicit/example-controller',
+  'elicit/controller'
 ], function (require, angular) {
   require(['domReady!'], function (document) {
     angular.bootstrap(document , ['elicit']);
