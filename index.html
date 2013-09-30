@@ -39,7 +39,7 @@
 
     <h2>Preference Elicitation <small>{{currentStep.problem.title}}</small></h2>
 
-    <div ng-show="currentStep.error">
+    <div ng-if="currentStep.error">
       <div class="alert-box alert">
         Computation failed: {{currentStep.error.code}}
         <span ng-show="currentStep.error.error">&mdash; {{currentStep.error.error}}</span>
