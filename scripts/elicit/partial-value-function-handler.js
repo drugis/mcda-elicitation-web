@@ -1,4 +1,5 @@
-function PartialValueFunctionHandler($scope) {
+define(['angular', 'patavi'], function(angular, patavi) {
+return function($scope) {
   var self = this;
   this.fields = [];
 
@@ -215,3 +216,4 @@ function PartialValueFunctionHandler($scope) {
 
   return this;
 }
+});

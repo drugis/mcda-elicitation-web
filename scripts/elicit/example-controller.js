@@ -1,4 +1,5 @@
-function ExampleController($scope, DecisionProblem) {
+define(['angular', 'elicit'], function(angular, elicit) {
+return elicit.controller('ExampleController', ['$scope', 'DecisionProblem', function($scope, DecisionProblem) {
   $scope.done = false;
   $scope.list = [];
   $scope.model = {};
@@ -22,4 +23,5 @@ function ExampleController($scope, DecisionProblem) {
   });
 
   DecisionProblem.list(function (data) { $scope.list = data });
-}
+}]);
+});

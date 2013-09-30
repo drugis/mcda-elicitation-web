@@ -1,4 +1,26 @@
-function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceStore) {
+define([
+    'angular',
+    'patavi',
+    'elicit',
+    'elicit/choose-method-handler',
+    'elicit/ordinal-method-handler',
+    'elicit/partial-value-function-handler',
+    'elicit/ratio-bounds-handler',
+    'elicit/results-handler',
+    'elicit/scale-range-handler',
+    'elicit/swing-handler'
+    ], function(angular,
+      patavi,
+      elicit,
+      ChooseMethodHandler,
+      OrdinalElicitationHandler,
+      PartialValueFunctionHandler,
+      RatioBoundElicitationHandler,
+      ResultsHandler,
+      ScaleRangeHandler,
+      ExactSwingElicitationHandler) {
+  return elicit.controller('ElicitationController', ['$scope', 'DecisionProblem', 'PreferenceStore',
+function($scope, DecisionProblem, PreferenceStore) {
   $scope.saveState = {};
   $scope.currentStep = {};
   $scope.initialized = false;
@@ -128,27 +150,30 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
     var data = _.extend(currentStep.problem, { "preferences": prefs, "method": "smaa" });
     var run = function(type) {
       var task = patavi.submit(type, data);
+      currentStep.progress = 0;
       task.results.then(
-        function(results) {
-          $scope.$root.$safeApply($scope, function() {
-            currentStep.results = results.results;
+          function(results) {
+            $scope.$root.$safeApply($scope, function() {
+              currentStep.results = results.results;
+            });
+          }, function(code, error) {
+            $scope.$root.$safeApply($scope, function() {
+              currentStep.error = { code: (code && code.desc) ? code.desc : code,
+                cause: error };
+            });
+          }, function(update) {
+            $scope.$root.$safeApply($scope, function() {
+              var progress = parseFloat(update);
+              if(progress > currentStep.progress) {
+                currentStep.progress = progress;
+              }
+            });
           });
-        }, function(code, error) {
-          $scope.$root.$safeApply($scope, function() {
-            currentStep.error = { code: (code && code.desc) ? code.desc : code,
-                                  cause: error };
-          });
-        }, function(update) {
-          $scope.$root.$safeApply($scope, function() {
-            currentStep.progress = update;
-          });
-        });
     }
 
     if (!currentStep.results && $scope.shouldRun(currentStep)) run('smaa');
   };
 
   DecisionProblem.problem.then(initialize);
-};
-
-ElicitationController.$inject = ['$rootScope', '$scope', 'DecisionProblem', 'PreferenceStore'];
+}]);
+});

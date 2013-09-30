@@ -1,4 +1,5 @@
-function ResultsHandler() {
+define(['angular'], function(angular) {
+return function() {
   var alternatives;
   var criteria;
 
@@ -69,3 +70,4 @@ function ResultsHandler() {
 
   return this;
 }
+});
