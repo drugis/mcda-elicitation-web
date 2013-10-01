@@ -51,29 +51,7 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
           calculate: stepToValue,
           skin: "round_plastic",
           onstatechange: _.debounce(function(value) {
-            var range = $scope.range;
             var values = getValueModel(value);
-
-            function lessThan(a, b, epsilon) {
-              return (a - b) < epsilon && Math.abs(a - b) > epsilon;
-            }
-            function greaterThan(a, b, epsilon) {
-              return (a - b) > epsilon && Math.abs(a - b) > epsilon;
-            }
-
-            if (type === "interval" && _.has(range, "restrictTo") && _.has(range, "restrictFrom")) {
-              var slider = $($element).find('input');
-              var epsilon = 0.001;
-              var fromOutOfRange = greaterThan(values[0], range.restrictFrom, epsilon);
-              var toOutOfRange = lessThan(values[1], range.restrictTo, epsilon);
-              if (fromOutOfRange && toOutOfRange) {
-                slider.slider("value", valueToStep(range.restrictFrom), valueToStep(range.restrictTo));
-              } else if(fromOutOfRange) {
-                slider.slider("value", valueToStep(range.restrictFrom), steps[1]);
-              } else if(toOutOfRange) {
-                slider.slider("value", steps[0], valueToStep(range.restrictTo));
-              }
-            }
 
             $scope.$root.$safeApply($scope, function() {
               $scope.model = values;
