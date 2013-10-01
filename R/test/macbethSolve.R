@@ -49,3 +49,28 @@ print(sol / max(sol))
 ## Values given in paper:
 expected <- rev(c(-62.5, -12.5, 0.0, 100.0, 100.0, 112.5, 150.0, 187.5))
 stopifnot(all.equal(expected, (sol-sol[6])/(sol[4]-sol[6])*100,))
+
+## An example where the elicited PVF is non-monotonous:
+
+prefs <- rbind(
+  c( 0, 4, 3, 4, 6),
+  rep(NA, 5),
+  rep(NA, 5),
+  rep(NA, 5),
+  rep(NA, 5))
+
+sol <- macbethSolve(prefs, prefs)
+stopifnot(all.equal(c(6, 2, 3, 2, 0), sol))
+
+res <- try(macbethSolve(prefs, prefs, monotonous=TRUE), TRUE)
+stopifnot(inherits(res, "try-error"))
+
+prefs <- rbind(
+  c( 0, 4, 4, 4, 6),
+  rep(NA, 5),
+  rep(NA, 5),
+  rep(NA, 5),
+  rep(NA, 5))
+
+sol <- macbethSolve(prefs, prefs, monotonous=TRUE)
+stopifnot(all.equal(c(7.0, 3.0, 2.5, 2.0, 0.0), sol))

@@ -1,4 +1,4 @@
-function PartialValueFunctionHandler(Tasks) {
+function PartialValueFunctionHandler($scope) {
   var self = this;
   this.fields = [];
 
@@ -92,24 +92,28 @@ function PartialValueFunctionHandler(Tasks) {
         preferences = angular.copy(preferences);
         for (i = 0; i < preferences.length; ++i) {
           for (j = 0; j < preferences[i].length; ++j) {
-            var level = choice.preferences.indexOf(preferences[i][j]);
-            preferences[i][j] = level == -1 ? null : level;
+            var level = choice.preferences.indexOf(preferences[i][j]) + 1;
+            preferences[i][j] = level == 0 ? null : level;
           }
         }
         return preferences;
       }
 
       var preferences = rewritePreferences(choice.data[choice.criterion].preferences);
-      var task = Tasks.submit("smaa", { method: "macbeth", preferences: preferences });
-      task.results.then(
-      function(results) {
-        currentStep.results = results.body;
-        var values = _.clone(results.body);
-        values = values.slice(1, values.length - 1);
-        choice.data[choice.criterion].values = values;
-        currentStep.error = null;
-      }, function(error) {
-        currentStep.error = error;
+      var task = patavi.submit("smaa", { method: "macbeth", preferences: preferences });
+      task.results.then(function(results) {
+        $scope.$root.$safeApply($scope, function() {
+          currentStep.results = results.results;
+          var values = _.clone(results.results);
+          values = values.slice(1, values.length - 1);
+          choice.data[choice.criterion].values = values;
+          currentStep.error = null;
+        });
+      }, function(code, error) {
+        $scope.$root.$safeApply($scope, function() {
+          currentStep.error = { code:(code && code.desc) ? code.desc : code,
+                                cause: error };
+        });
       });
     }
 
@@ -119,7 +123,7 @@ function PartialValueFunctionHandler(Tasks) {
       choice: { data: pluckObject(state.problem.criteria, "pvf"),
                 calculate: calculate,
                 preferences:
-                  ["Do not", "Very Weakly", "Weakly", "Moderately", "Strongly", "Very Strongly", "Extremely"],
+                  ["Very Weakly", "Weakly", "Moderately", "Strongly", "Very Strongly", "Extremely"],
                 getXY: _.memoize(function(data, criterion) {
                   var y = [1].concat(data[criterion].values).concat([0]);
                   var best = state.problem.criteria[criterion].best();

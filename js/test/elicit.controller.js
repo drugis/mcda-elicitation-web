@@ -1,16 +1,17 @@
 describe("ElicitationController", function() {
   var scope1;
   var scope2;
-  var app = angular.module('elicit', ['elicit.example', 'elicit.services', 'clinicico']);
+  var app = angular.module('elicit', ['elicit.example', 'elicit.services', 'DecisionProblem', 'clinicico']);
 
   function initializeScope(problem) {
     var ctrl, scope;
 
-    inject(function($rootScope, $controller) {
+    inject(function(DecisionProblem, $rootScope, $controller) {
       scope = $rootScope.$new();
       var dependencies =
-        { $scope: scope,
-          DecisionProblem: { get: function(callback) { callback(problem); }} }
+        { $scope: scope
+        }
+      DecisionProblem.populateWithData(problem);
       ctrl = $controller("ElicitationController", dependencies);
     });
     return scope;

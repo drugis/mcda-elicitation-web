@@ -44,6 +44,10 @@ sampler.dnorm <- function(perf, N) {
   rnorm(N, perf$parameters['mu'], perf$parameters['sigma'])
 }
 
+sampler.exact <- function(perf, N) {
+  rep(perf$value, lenght.out=N)
+}
+
 sampler.relative_normal <- function(perf, N) {
   baseline <- perf$parameters$baseline
   relative <- perf$parameters$relative
@@ -116,10 +120,15 @@ partialValue <- function(best, worst, cutoffs=numeric(), values=numeric()) {
     y <- c(best, cutoffs, worst)
   }
   function(x) {
-    i <- sapply(x, function(x) { which(y >= x)[1] })
-    i[is.na(i) | i == 1] <- 2
-    v[i - 1] + (x - y[i - 1]) * ((v[i] - v[i - 1]) / (y[i] - y[i - 1]))
+    smaa.pvf(x, y, v, outOfBounds="interpolate")
   }
+}
+
+ratioConstraint <- function(n, i1, i2, x) {
+  a <- rep(0, n)
+  a[i1] <- -1
+  a[i2] <- x
+  list(constr = t(a), rhs = c(0), dir = c("="))
 }
 
 run_smaa <- function(params) {
@@ -129,17 +138,56 @@ run_smaa <- function(params) {
   crit <- names(params$criteria)
   alts <- names(params$alternatives)
 
-  harSample <- function(constr, n , N) {
-    transform <- simplex.createTransform(n)
-    constr <- simplex.createConstraints(transform, constr)
-    seedPoint <- createSeedPoint(constr, homogeneous=TRUE)
-    har(seedPoint, constr, N=N * (n-1)^3, thin=(n-1)^3, homogeneous=TRUE, transform=transform)$samples
-  }
+  update(0)
 
-  pvf <- lapply(params$criteria, create.pvf);
-  meas <- sample(alts, crit, params$performanceTable, N)
-  for (criterion in names(params$criteria)) {
-    meas[,,criterion] <- pvf[[criterion]](meas[,,criterion])
+  harBatches <- 20
+  harBatchProgress <- 4
+  harSample <- function(constr, n , N) {
+    stopifnot(N %% harBatches == 0)
+    if (length(constr$rhs) > 0) {
+      # Separate equality from inequality constraints
+      sel.eq <- constr$dir == '='
+      eq.constr <- list(constr = constr$constr[sel.eq, ],
+                        rhs = constr$rhs[sel.eq],
+                        dir = constr$dir[sel.eq])
+      ineq.constr <- list(constr = constr$constr[!sel.eq, ],
+                          rhs = constr$rhs[!sel.eq],
+                          dir = constr$dir[!sel.eq])
+
+      # Add the normalization contraint
+      eq.constr <- mergeConstraints(eq.constr,
+                                    list(constr = t(rep(1, n)), dir = '=', rhs = 1))
+
+      # Generate basis, transform, seed point
+      basis <- solution.basis(eq.constr)
+      transform <- createTransform(basis)
+      constr <- simplex.createConstraints(transform, ineq.constr)
+      seedPoint <- createSeedPoint(constr, homogeneous=TRUE)
+      if (length(seedPoint) == 1) {
+        samples <- matrix(rep(basis$translate, each=N), nrow=N)
+        update(harBatches * harBatchProgress)
+        samples
+      } else {
+        # reduce number of required samples for small n by log approximation of
+        # required scaling factor based on Fig. 3 of HAR paper.
+        m <- length(seedPoint)
+        thin <- ceiling(log(m)/4 * (m - 1)^3)
+        xN <- seedPoint
+        samples <- matrix(0, nrow=N, ncol=n)
+        Nb <- N/harBatches
+        for(i in 1:harBatches) {
+            out <- har(xN, constr, N=Nb * thin, thin=thin, homogeneous=TRUE, transform=transform)
+            samples[(1 + Nb * (i - 1)):(Nb * i), ] <- out$samples
+            xN <- out$xN
+            update(i * harBatchProgress)
+        }
+        samples
+      }
+    } else {
+      samples <- simplex.sample(n, N)$samples
+      update(harBatches * harBatchProgress)
+      samples
+    }
   }
 
   # parse preference information
@@ -156,6 +204,8 @@ run_smaa <- function(params) {
           lowerRatioConstraint(n, i1, i2, l),
           upperRatioConstraint(n, i1, i2, u)
         )
+      } else if (statement['type'] == "exact swing") {
+        ratioConstraint(n, i1, i2, statement$ratio);
       }
     })
   )
@@ -163,11 +213,22 @@ run_smaa <- function(params) {
   weights <- harSample(constr, n, N)
   colnames(weights) <- crit
 
+  pvf <- lapply(params$criteria, create.pvf);
+  meas <- sample(alts, crit, params$performanceTable, N)
+  for (criterion in names(params$criteria)) {
+    meas[,,criterion] <- pvf[[criterion]](meas[,,criterion])
+  }
+  update(95)
+
   utils <- smaa.values(meas, weights)
+  update(96)
   ranks <- smaa.ranks(utils)
+  update(97)
 
   cw <- smaa.cw(ranks, weights)
+  update(98)
   cf <- smaa.cf(meas, cw)
+  update(100)
 
   cw <- lapply(alts, function(alt) {
     list(cf=unname(cf$cf[alt]), w=cf$cw[alt,])

@@ -1,9 +1,12 @@
 function ChooseMethodHandler() {
-  this.fields = ["methods", "results"];
+  this.fields = ["methods"];
 
   this.initialize = function(state) {
     var initialized = angular.copy(state);
-    initialized.methods = {"ratio bound": "Continue with ratio bound preferences", "done": "Done eliciting preferences"};
+    initialized.methods = {
+      "ratio bound": "Continue with interval SWING weighting",
+      "exact swing": "Continue with exact SWING weighting",
+      "done": "Done eliciting preferences"};
     initialized.type = "choose method";
     return initialized;
   }

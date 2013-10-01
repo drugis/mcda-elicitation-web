@@ -18,18 +18,13 @@
   <br>
   <strong>Adjust the slider:</strong>
   <label>
-    <slider style="width: 400px; margin-top: 20px" model="currentStep.choice" range="currentStep.range"></slider>
+    <slider style="width: 400px; margin-top: 20px" model="currentStep.choice" type="point" range="currentStep.range"></slider>
   </label>
   </p>
 
-  <strong>So that the following statements are true:</strong>
+  <strong>So that the following alternative is equally desirable:</strong>
   <p>
-  {{currentStep.problem.criteria[currentStep.criterionA].title}} = <span class="label secondary">{{currentStep.best()}}</span>
+  {{currentStep.problem.criteria[currentStep.criterionA].title}} = <span class="label secondary">{{currentStep.choice}}</span>
   {{currentStep.problem.criteria[currentStep.criterionB].title}} = {{currentStep.problem.criteria[currentStep.criterionB].worst()}}
-  is clearly better.
-  <br>
-  {{currentStep.problem.criteria[currentStep.criterionA].title}} = <span class="label secondary">{{currentStep.worst()}}</span>
-  {{currentStep.problem.criteria[currentStep.criterionB].title}} = {{currentStep.problem.criteria[currentStep.criterionB].worst()}}
-  is clearly worse.
   </p>
 </div>

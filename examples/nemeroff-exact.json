@@ -1,0 +1,151 @@
+{
+  "title": "Nemeroff and Thase anti-depressants Example",
+  "criteria": {
+    "response": {
+      "title": "Treatment Responders",
+      "scale": [0.0, 1.0],
+      "pvf": {
+        "range": [0.28, 0.63],
+        "direction": "increasing",
+        "type": "linear"
+      }
+    },
+    "nausea": {
+      "title": "Nausea ADRs",
+      "scale": [0.0, 1.0],
+      "pvf": {
+        "range": [0.04, 0.50],
+        "direction": "decreasing",
+        "type": "linear"
+      }
+    },
+    "insomnia": {
+      "title": "Insomnia ADRs",
+      "scale": [0.0, 1.0],
+      "pvf": {
+        "range": [0.08, 0.31],
+        "direction": "decreasing",
+        "type": "linear"
+      }
+    },
+    "anxiety": {
+      "title": "Anxiety ADRs",
+      "scale": [0.0, 1.0],
+      "pvf": {
+        "range": [0.00, 0.17],
+        "direction": "decreasing",
+        "type": "linear"
+      }
+    }
+  },
+  "alternatives": {
+    "fluox": {
+      "title": "Fluoxetine"
+    },
+    "venla": {
+      "title": "Venlafaxine"
+    },
+    "place": {
+      "title": "Placebo"
+    }
+  },
+  "performanceTable": [
+    {
+    "alternative": "venla",
+    "criterion": "response",
+    "performance": {
+      "type": "exact",
+      "value": 0.53
+    }
+  },
+  {
+    "alternative": "fluox",
+    "criterion": "response",
+    "performance": {
+      "type": "exact",
+      "value": 0.45
+    }
+  },
+  {
+    "alternative": "place",
+    "criterion": "response",
+    "performance": {
+      "type": "exact",
+      "value": 0.37
+    }
+  },
+  {
+    "alternative": "venla",
+    "criterion": "nausea",
+    "performance": {
+      "type": "exact",
+      "value": 0.40
+    }
+  },
+  {
+    "alternative": "fluox",
+    "criterion": "nausea",
+    "performance": {
+      "type": "exact",
+      "value": 0.22
+    }
+  },
+  {
+    "alternative": "place",
+    "criterion": "nausea",
+    "performance": {
+      "type": "exact",
+      "value": 0.087
+    }
+  },
+  {
+    "alternative": "venla",
+    "criterion": "insomnia",
+    "performance": {
+      "type": "exact",
+      "value": 0.23
+    }
+  },
+  {
+    "alternative": "fluox",
+    "criterion": "insomnia",
+    "performance": {
+      "type": "exact",
+      "value": 0.15
+    }
+  },
+  {
+    "alternative": "place",
+    "criterion": "insomnia",
+    "performance": {
+      "type": "exact",
+      "value": 0.14
+    }
+  },
+  {
+    "alternative": "venla",
+    "criterion": "anxiety",
+    "performance": {
+      "type": "exact",
+      "value": 0.11
+    }
+  },
+  {
+    "alternative": "fluox",
+    "criterion": "anxiety",
+    "performance": {
+      "type": "exact",
+      "value": 0.077
+    }
+  },
+  {
+    "alternative": "place",
+    "criterion": "anxiety",
+    "performance": {
+      "type": "exact",
+      "value": 0.019
+    }
+  }
+  ],
+  "preferences": {}
+}
