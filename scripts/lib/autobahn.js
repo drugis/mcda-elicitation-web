@@ -17,7 +17,7 @@
 
 "use strict";
 
-define(['when'], function(when) {
+define(['lib/when'], function(when) {
 /** @define {string} */
 var AUTOBAHNJS_VERSION = '?.?.?';
 

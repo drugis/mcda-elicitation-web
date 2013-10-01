@@ -1,5 +1,5 @@
-define(['angular', 'elicit'], function(angular, elicit) {
-return elicit.controller('ExampleController', ['$scope', 'DecisionProblem', function($scope, DecisionProblem) {
+define(['angular', 'app'], function(angular, app) {
+return app.controller('ExampleController', ['$scope', 'DecisionProblem', function($scope, DecisionProblem) {
   $scope.done = false;
   $scope.list = [];
   $scope.model = {};

@@ -1,6 +1,6 @@
 'use strict';
 
-define(['autobahn', 'when'], function(ab, when) {
+define(['lib/autobahn', 'lib/when'], function(ab, when) {
 return (function () {
   var config = window.patavi || {};
   var WS_URI = typeof config['WS_URI'] !== 'undefined' ? config['WS_URI'] : "ws://localhost:3000/ws";

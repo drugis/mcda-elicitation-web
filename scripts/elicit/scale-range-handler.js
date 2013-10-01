@@ -1,4 +1,4 @@
-define(['angular', 'patavi'], function(angular, patavi) {
+define(['angular', 'lib/patavi'], function(angular, patavi) {
 return function($scope) {
   this.fields = [];
 

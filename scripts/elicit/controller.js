@@ -1,7 +1,7 @@
 define([
     'angular',
-    'patavi',
-    'elicit',
+    'lib/patavi',
+    'app',
     'elicit/choose-method-handler',
     'elicit/ordinal-method-handler',
     'elicit/partial-value-function-handler',
@@ -11,7 +11,7 @@ define([
     'elicit/swing-handler'
     ], function(angular,
       patavi,
-      elicit,
+      app,
       ChooseMethodHandler,
       OrdinalElicitationHandler,
       PartialValueFunctionHandler,
@@ -19,7 +19,7 @@ define([
       ResultsHandler,
       ScaleRangeHandler,
       ExactSwingElicitationHandler) {
-  return elicit.controller('ElicitationController', ['$scope', 'DecisionProblem', 'PreferenceStore',
+  return app.controller('ElicitationController', ['$scope', 'DecisionProblem', 'PreferenceStore',
 function($scope, DecisionProblem, PreferenceStore) {
   $scope.saveState = {};
   $scope.currentStep = {};
