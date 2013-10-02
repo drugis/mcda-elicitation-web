@@ -16,7 +16,8 @@ require.config({
     'nvd3': { deps: ['d3'], exports : 'nv'},
     'jQuery': { exports : 'jQuery'},
     'jquery-slider': { deps: ['jQuery'] }
-  }
+  },
+  priority: ['angular']
 });
 
 window.name = "NG_DEFER_BOOTSTRAP!";
