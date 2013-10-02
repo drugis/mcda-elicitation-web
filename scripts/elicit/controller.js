@@ -1,4 +1,25 @@
-function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceStore) {
+define([
+    'angular',
+    'lib/patavi',
+    'elicit/choose-method-handler',
+    'elicit/partial-value-function-handler',
+    'elicit/ordinal-swing-handler',
+    'elicit/interval-swing-handler',
+    'elicit/exact-swing-handler',
+    'elicit/results-handler',
+    'elicit/scale-range-handler'
+    ], function(
+      angular,
+      patavi,
+      ChooseMethodHandler,
+      PartialValueFunctionHandler,
+      OrdinalSwingHandler,
+      IntervalSwingHandler,
+      ExactSwingHandler,
+      ResultsHandler,
+      ScaleRangeHandler) {
+  return angular.module('elicit.controller', []).controller('ElicitationController', ['$scope', 'DecisionProblem', 'PreferenceStore',
+function($scope, DecisionProblem, PreferenceStore) {
   $scope.saveState = {};
   $scope.currentStep = {};
   $scope.initialized = false;
@@ -25,13 +46,13 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
         { handler: new PartialValueFunctionHandler($scope),
           templateUrl: "partial-value-function.html" },
         "ordinal":
-        { handler: new OrdinalElicitationHandler(),
+        { handler: new OrdinalSwingHandler(),
           templateUrl: 'elicit-ordinal.html' },
         "ratio bound":
-        { handler: new RatioBoundElicitationHandler(),
+        { handler: new IntervalSwingHandler(),
           templateUrl: 'elicit-ratio-bound.html' },
         "exact swing":
-        { handler: new ExactSwingElicitationHandler(),
+        { handler: new ExactSwingHandler(),
           templateUrl: 'elicit-exact-swing.html' },
         "choose method":
         { handler: new ChooseMethodHandler(),
@@ -69,7 +90,7 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
     previousSteps.push(currentStep);
     var nextStep = nextSteps.pop();
     if(nextStep && _.isEqual(nextStep.previousChoice, choice)) {
-      $scope.templateUrl = steps[nextStep].templateUrl;
+      $scope.templateUrl = steps[nextStep.type].templateUrl;
       $scope.currentStep = nextStep;
       return true;
     } else {
@@ -118,37 +139,60 @@ function ElicitationController($rootScope, $scope, DecisionProblem, PreferenceSt
     return !_.contains(excluded, currentStep.type);
   }
 
-  $scope.showPlot = function(currentStep) {
-    var excluded = ["scale range", "partial value function", LAST_STEP];
-    return !_.contains(excluded, currentStep.type);
-  }
-
   $scope.runSMAA = function(currentStep) {
     var prefs = $scope.getStandardizedPreferences(currentStep);
     var data = _.extend(currentStep.problem, { "preferences": prefs, "method": "smaa" });
     var run = function(type) {
       var task = patavi.submit(type, data);
+      currentStep.progress = 0;
       task.results.then(
-        function(results) {
-          $scope.$root.$safeApply($scope, function() {
-            currentStep.results = results.results;
+          function(results) {
+            $scope.$root.$safeApply($scope, function() {
+              currentStep.results = results.results;
+            });
+          }, function(code, error) {
+            $scope.$root.$safeApply($scope, function() {
+              currentStep.error = { code: (code && code.desc) ? code.desc : code,
+                cause: error };
+            });
+          }, function(update) {
+            $scope.$root.$safeApply($scope, function() {
+              var progress = parseFloat(update);
+              if(progress > currentStep.progress) {
+                currentStep.progress = progress;
+              }
+            });
           });
-        }, function(code, error) {
-          $scope.$root.$safeApply($scope, function() {
-            currentStep.error = { code: (code && code.desc) ? code.desc : code,
-                                  cause: error };
-          });
-        }, function(update) {
-          $scope.$root.$safeApply($scope, function() {
-            currentStep.progress = update;
-          });
-        });
     }
 
     if (!currentStep.results && $scope.shouldRun(currentStep)) run('smaa');
   };
 
   DecisionProblem.problem.then(initialize);
-};
+}])
+.controller('ExampleController', ['$scope', 'DecisionProblem', function($scope, DecisionProblem) {
+  $scope.done = false;
+  $scope.list = [];
+  $scope.model = {};
+  $scope.local = {};
 
-ElicitationController.$inject = ['$rootScope', '$scope', 'DecisionProblem', 'PreferenceStore'];
+  $scope.setProblem = function() {
+    if ($scope.model.choice === 'local') {
+      if (!_.isEmpty($scope.local.contents)) {
+        DecisionProblem.populateWithData(angular.fromJson($scope.local.contents));
+      }
+    } else {
+      DecisionProblem.populateWithUrl($scope.model.choice);
+    }
+    $scope.done = true;
+  }
+
+  $scope.$watch('local.contents', function(newVal) {
+    if(!_.isEmpty(newVal)) {
+      $scope.model.choice = 'local';
+    };
+  });
+
+  DecisionProblem.list(function (data) { $scope.list = data });
+}]);
+});
