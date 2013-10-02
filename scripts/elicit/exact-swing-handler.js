@@ -1,4 +1,4 @@
-define(['angular'], function(angular) {
+define(['angular', 'underscore'], function(angular, _) {
 return function() {
   this.fields = ["criterionA", "criterionB"];
   var criteria = {};

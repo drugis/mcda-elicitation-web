@@ -1,9 +1,10 @@
 define(['angular',
-    'elicit/decision-problems',
+    'elicit/decision-problem',
+    'elicit/controller',
     'components',
     'services'],
 function(angular) {
-  var app = angular.module('elicit', ['elicit.example', 'elicit.components', 'elicit.services']);
+  var app = angular.module('elicit', ['elicit.controller', 'elicit.problem-resource', 'elicit.components', 'elicit.services']);
 
   // Add string HashCode
   String.prototype.hashCode = function(){
