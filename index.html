@@ -56,29 +56,12 @@
     </div>
 
     <h3>{{currentStep.title}}</h3>
-
-    <div id="wizardStepContainer" class="columns large-8" ng-cloak ng-if="templateUrl">
+    <div id="wizardStepContainer" ng-cloak ng-if="templateUrl">
       <wizard-step current-step="currentStep" template-url="templateUrl"></wizard-step>
-
-      <button class="small" ng-disabled="!canReturn()" ng-click="previousStep() && runSMAA(currentStep)">Back</button>
-      <button class="small" ng-disabled="!canProceed(currentStep)" ng-click="nextStep() && runSMAA(currentStep)">Next</button>
     </div>
 
-    <div class="results-container" ng-show="showPlot(currentStep)">
-      <div id="results"
-        ng-class="{loading: !currentStep.results && !currentStep.error,
-                  failed: currentStep.error, 'large-4':true, columns:true}">
-        <div class="loader">
-          <div class="progress" style="width: 70%">
-            <span class="meter" ng-style="{width: (currentStep.progress || 0) + '%'}"></span>
-          </div>
-        </div>
-
-        <div style="width: 400px; height: 400px" class="graph">
-          <rank-plot value="currentStep.results.ranks.data" stacked="true" problem="currentStep.problem"></rank-plot>
-        </div>
-      </div>
-    </div>
+    <button class="small" ng-disabled="!canReturn()" ng-click="previousStep() && runSMAA(currentStep)">Back</button>
+    <button class="small" ng-disabled="!canProceed(currentStep)" ng-click="nextStep() && runSMAA(currentStep)">Next</button>
   </div>
 
   <script>

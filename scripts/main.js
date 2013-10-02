@@ -36,8 +36,8 @@ String.prototype.hashCode = function(){
 require([
   'require',
   'angular',
-  'app'
-], function (require, angular) {
+  'app'], 
+  function (require, angular) {
   require(['lib/domReady!'], function (document) {
     angular.bootstrap(document , ['elicit']);
   });

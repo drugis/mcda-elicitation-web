@@ -139,11 +139,6 @@ function($scope, DecisionProblem, PreferenceStore) {
     return !_.contains(excluded, currentStep.type);
   }
 
-  $scope.showPlot = function(currentStep) {
-    var excluded = ["scale range", "partial value function", LAST_STEP];
-    return !_.contains(excluded, currentStep.type);
-  }
-
   $scope.runSMAA = function(currentStep) {
     var prefs = $scope.getStandardizedPreferences(currentStep);
     var data = _.extend(currentStep.problem, { "preferences": prefs, "method": "smaa" });

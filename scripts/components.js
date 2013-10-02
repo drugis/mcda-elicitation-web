@@ -249,6 +249,14 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
         }
       };
     }).
+    directive('resultsPartial', function() { 
+      return { 
+        restrict: 'E',
+        replace: true,
+        scope: { 'currentStep' : '=' },
+        templateUrl: 'partials/results.html'
+      }
+    }).
     directive('heat', function() {
       return {
         restrict: 'C',
