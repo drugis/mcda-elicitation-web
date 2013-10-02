@@ -1,4 +1,5 @@
-function ChooseMethodHandler() {
+define(['angular'], function(angular) {
+  return function() {
   this.fields = ["methods"];
 
   this.initialize = function(state) {
@@ -22,4 +23,5 @@ function ChooseMethodHandler() {
     delete nextState.choice;
     return nextState;
   }
-}
+};
+});
