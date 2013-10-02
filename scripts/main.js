@@ -19,6 +19,7 @@ require.config({
   }
 });
 
+window.name = "NG_DEFER_BOOTSTRAP!";
 require([
   'require',
   'angular',
