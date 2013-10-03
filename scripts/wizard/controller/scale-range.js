@@ -1,5 +1,5 @@
 define(['angular', 'lib/patavi'], function(angular, patavi) {
-return function($scope) {
+return ['$scope', function($scope) {
   this.fields = [];
 
   var log10 = function(x) { return Math.log(x) / Math.log(10); };
@@ -92,7 +92,5 @@ return function($scope) {
     nextState.type = "partial value function";
     return nextState;
   }
-
-  return this;
-}
+}];
 });

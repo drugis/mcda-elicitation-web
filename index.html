@@ -17,7 +17,7 @@
   </head>
 
   <body>
-
+  
   <div ng-controller="ExampleController" ng-hide="done" class="row">
     <h2>Choose an Example</h2>
 
@@ -55,13 +55,10 @@
       </div>
     </div>
 
-    <h3>{{currentStep.title}}</h3>
-    <div id="wizardStepContainer" ng-cloak ng-if="templateUrl">
-      <wizard-step current-step="currentStep" template-url="templateUrl"></wizard-step>
-    </div>
+    <div ng-view></div>
 
-    <button class="small" ng-disabled="!canReturn()" ng-click="previousStep() && runSMAA(currentStep)">Back</button>
-    <button class="small" ng-disabled="!canProceed(currentStep)" ng-click="nextStep() && runSMAA(currentStep)">Next</button>
+    <a class="button small" ng-disabled="!canReturn()" href="#/{{step.previousHandler}}/{{step.previousStep}}">Back</a>
+    <a class="button small" ng-disabled="!canProceed()" href="#/{{step.nextHandler}}/{{step.currentStepNext}}">Next</a>
   </div>
 
   <script>

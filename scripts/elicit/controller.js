@@ -1,25 +1,5 @@
-define([
-    'angular',
-    'lib/patavi',
-    'elicit/choose-method-handler',
-    'elicit/partial-value-function-handler',
-    'elicit/ordinal-swing-handler',
-    'elicit/interval-swing-handler',
-    'elicit/exact-swing-handler',
-    'elicit/results-handler',
-    'elicit/scale-range-handler'
-    ], function(
-      angular,
-      patavi,
-      ChooseMethodHandler,
-      PartialValueFunctionHandler,
-      OrdinalSwingHandler,
-      IntervalSwingHandler,
-      ExactSwingHandler,
-      ResultsHandler,
-      ScaleRangeHandler) {
-  return angular.module('elicit.controller', []).controller('ElicitationController', ['$scope', 'DecisionProblem', 'PreferenceStore',
-function($scope, DecisionProblem, PreferenceStore) {
+define(['angular','lib/patavi'], function(angular,patavi) {
+  return angular.module('elicit.controller', []).controller('ElicitationController', ['$scope', 'DecisionProblem', 'PreferenceStore', function($scope, DecisionProblem, PreferenceStore) {
   $scope.saveState = {};
   $scope.currentStep = {};
   $scope.initialized = false;
@@ -29,41 +9,8 @@ function($scope, DecisionProblem, PreferenceStore) {
   var FIRST_STEP = 'scale range';
   var PERSISTENT_FIELDS = ["problem", "type", "prefs", "choice"];
 
-  $scope.$on('PreferenceStore.saved', function() {
-    $scope.saveState = { success: true };
-  });
-  $scope.$on('PreferenceStore.error', function() {
-    $scope.saveState = { error: PreferenceStore.lastError };
-  });
-
   var initialize = function(problem) {
-    if(!_.isEmpty(problem)) {
-     steps = {
-        "scale range":
-        { handler: new ScaleRangeHandler($scope),
-          templateUrl: "scale-range.html" },
-        "partial value function":
-        { handler: new PartialValueFunctionHandler($scope),
-          templateUrl: "partial-value-function.html" },
-        "ordinal":
-        { handler: new OrdinalSwingHandler(),
-          templateUrl: 'elicit-ordinal.html' },
-        "ratio bound":
-        { handler: new IntervalSwingHandler(),
-          templateUrl: 'elicit-ratio-bound.html' },
-        "exact swing":
-        { handler: new ExactSwingHandler(),
-          templateUrl: 'elicit-exact-swing.html' },
-        "choose method":
-        { handler: new ChooseMethodHandler(),
-          templateUrl: 'choose-method.html' },
-        "done":
-        { handler: new ResultsHandler(),
-          templateUrl: 'results-page.html' }
-      };
-      var step = steps[FIRST_STEP];
-      $scope.currentStep = step.handler.initialize({ problem: problem });
-      $scope.templateUrl = step.templateUrl;
+    if(!_.isEmpty(problem)) { 
       $scope.initialized = true;
     }
   };
@@ -109,10 +56,6 @@ function($scope, DecisionProblem, PreferenceStore) {
     nextStep.previousChoice = choice;
 
     $scope.currentStep = nextStep;
-
-    if (nextStep.type === LAST_STEP && PreferenceStore) {
-      PreferenceStore.save($scope.getStandardizedPreferences(nextStep));
-    }
 
     return true;
   }
