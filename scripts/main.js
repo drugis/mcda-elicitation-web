@@ -32,12 +32,12 @@ String.prototype.hashCode = function(){
     hash = hash & hash; // Convert to 32bit integer
   }
   return hash;
-}
+};
 
 require([
   'require',
   'angular',
-  'app'], 
+  'app'],
   function (require, angular) {
   require(['lib/domReady!'], function (document) {
     angular.bootstrap(document , ['elicit']);

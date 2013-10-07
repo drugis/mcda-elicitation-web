@@ -3,8 +3,15 @@ return angular.module('elicit.problem-resource', ['ngResource']).factory('Decisi
   var repositoryUrl = config ? config.examplesRepository : '';
   var resource = $resource(repositoryUrl + ':url', {url:'@url'});
   var problem = $q.defer();
-  var Problem = {
+  var problemList = $q.defer();
+
+  resource.query(function(data) {
+    problemList.resolve(data);
+  });
+
+  return {
     problem: problem.promise,
+    list: problemList.promise,
     populateWithUrl: function(url) {
       var self = this;
       resource.get({url: url}, function(data) {
@@ -13,11 +20,7 @@ return angular.module('elicit.problem-resource', ['ngResource']).factory('Decisi
     },
     populateWithData: function(data) {
       problem.resolve(data);
-    },
-    list: function(callback) {
-      return resource.query(callback);
     }
   };
-  return Problem;
 });
 });

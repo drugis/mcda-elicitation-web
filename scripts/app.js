@@ -2,11 +2,12 @@ define(['angular',
     'require',
     'underscore',
     'elicit/decision-problem',
-    'elicit/controller',
+    'workspace',
     'components',
     'services'],
 function(angular, require, _) {
-  var app = angular.module('elicit', ['elicit.controller', 'elicit.problem-resource', 'elicit.components', 'elicit.services']);
+  var dependencies = ['elicit.problem-resource', 'elicit.components', 'elicit.services', 'elicit.workspace'];
+  var app = angular.module('elicit', dependencies);
 
   app.run(['$rootScope', function($rootScope) {
     $rootScope.$safeApply = function($scope, fn) {
@@ -22,6 +23,9 @@ function(angular, require, _) {
 
   var wizard = {
     'steps' : {
+      "choose-problem": {
+        controller: "ChooseProblemController",
+        templateUrl: "templates/choose-problem.html" },
       "scale-range":
       { controller: 'ScaleRangeController',
         templateUrl: "templates/scale-range.html" },
@@ -44,24 +48,24 @@ function(angular, require, _) {
       { controller: 'ResultsController',
         templateUrl: 'templates/results-page.html' }
     }};
-  
-  app.constant('Wizard', wizard); 
 
-  _.each(_.pairs(wizard.steps), function(step) { 
+  app.constant('Wizard', wizard);
+
+  _.each(_.pairs(wizard.steps), function(step) {
     var name = step[0];
     var config = step[1];
-    app.controller(config.controller, ['$scope', '$injector', function($scope, $injector) { 
+    app.controller(config.controller, ['$scope', '$injector', function($scope, $injector) {
       require(['wizard/controller/' + name], function(controller) {
-	$injector.invoke(controller, this, { '$scope' : $scope });
+        $injector.invoke(controller, this, { '$scope' : $scope });
       });
     }]);
   });
 
   app.config(['Wizard', '$routeProvider', function(Wizard, $routeProvider) {
-    _.each(_.pairs(Wizard.steps), function(step) { 
+    _.each(_.pairs(Wizard.steps), function(step) {
       var name = step[0];
       var config = step[1];
-      $routeProvider.when('/' + name, {templateUrl: config.templateUrl, controller: config.controller});
+      $routeProvider.when('/' + name, { templateUrl: config.templateUrl, controller: config.controller });
     });
     $routeProvider.otherwise({redirectTo: '/'});
   }]);

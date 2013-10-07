@@ -11,7 +11,7 @@ return ['$scope', function($scope) {
       return x <= val * n;
     });
     return (negative ? -1 : 1) * (val * nice);
-  }
+  };
 
   this.initialize = function(state) {
     var task = patavi.submit("smaa", _.extend({ "method": "scales" }, state.problem));
@@ -20,10 +20,10 @@ return ['$scope', function($scope) {
 
     var errorHandler = function(code, error) {
       $scope.$root.$safeApply($scope, function() {
-        state.error = { code:(code && code.desc) ? code.desc : code,
+        state.error = { code: (code && code.desc) ? code.desc : code,
                         cause: error };
       });
-    }
+    };
 
     var resultsHandler = function(results) {
       $scope.$root.$safeApply($scope, function() {
@@ -46,10 +46,10 @@ return ['$scope', function($scope) {
 
           var boundFrom = function(val) {
             return val < scale[0] ? scale[0] : val;
-          }
+          };
           var boundTo = function(val) {
             return val > scale[1] ? scale[1] : val;
-          }
+          };
           scales[criterion[0]] = {
             restrictFrom: criterion[1]["2.5%"],
             restrictTo: criterion[1]["97.5%"],
@@ -71,14 +71,14 @@ return ['$scope', function($scope) {
       choice: choices
     });
     return result;
-  }
+  };
 
   this.validChoice = function(currentState) {
     return _.every(currentState.choice, function(choice) {
       var complete = _.isNumber(choice["upper"]) && _.isNumber(choice["lower"]);
       return complete && (choice.upper > choice.lower);
     });
-  }
+  };
 
   this.nextState = function(currentState) {
     if(!this.validChoice(currentState)) return;
@@ -91,6 +91,6 @@ return ['$scope', function($scope) {
     var nextState = angular.copy(currentState);
     nextState.type = "partial value function";
     return nextState;
-  }
+  };
 }];
 });

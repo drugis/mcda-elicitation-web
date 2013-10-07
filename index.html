@@ -17,49 +17,8 @@
   </head>
 
   <body>
-  
-  <div ng-controller="ExampleController" ng-hide="done" class="row">
-    <h2>Choose an Example</h2>
-
-    <form>
-      <label ng-repeat="option in list">
-        <input type="radio" ng-model="model.choice" value="{{option.href}}">
-        <span>{{option.title}}</span>
-      </label>
-      <label>
-        <input type="radio" ng-model="model.choice" value="local">
-        Local file:
-        <file-reader file="local"></file-reader>
-      </label>
-      <button class="small success" ng-disabled="!model.choice" ng-click="setProblem()">Start</button>
-    </form>
-  </div>
-
-  <div ng-controller="ElicitationController" ng-cloak="true" ng-show="initialized" class="row">
-
-    <h2>Preference Elicitation <small>{{currentStep.problem.title}}</small></h2>
-
-    <div ng-if="currentStep.error">
-      <div class="alert-box alert">
-        Computation failed: {{currentStep.error.code}}
-        <span ng-show="currentStep.error.error">&mdash; {{currentStep.error.error}}</span>
-      </div>
-    </div>
-
-    <div ng-show="currentStep.type == 'done'">
-      <div ng-show="saveState.success">Preferences saved.</div>
-      <div ng-class="{error: 'alert-box alert', warning: 'alert-box'}[saveState.error.severity]" ng-show="saveState.error">
-        Failed to save preferences.
-        {{saveState.error.message}}
-        <span ng-show="saveState.error.cause">HTTP Error {{saveState.error.cause}}.</span>
-      </div>
-    </div>
 
     <div ng-view></div>
-
-    <a class="button small" ng-disabled="!canReturn()" href="#/{{step.previousHandler}}/{{step.previousStep}}">Back</a>
-    <a class="button small" ng-disabled="!canProceed()" href="#/{{step.nextHandler}}/{{step.currentStepNext}}">Next</a>
-  </div>
 
   <script>
     window.config = {
