@@ -12,7 +12,13 @@ define(['angular', 'underscore'], function(angular, _) {
       } else {
         DecisionProblem.populateWithUrl(choice);
       }
-      $location.path("/scale-range");
+      DecisionProblem.problem.then(function(problem) {
+	var workspace = Workspace.create(problem);
+	var nextUrl = "/workspaces/" + workspace.id + "/scale-range";
+	console.log(nextUrl);
+	$location.path(nextUrl);
+
+      });
     };
 
     $scope.$watch('local.contents', function(newVal) {
@@ -27,7 +33,7 @@ define(['angular', 'underscore'], function(angular, _) {
 
     $scope.$apply();
 
-    DecisionProblem.problem.then(Workspace.create);
+
 
   };
 });
