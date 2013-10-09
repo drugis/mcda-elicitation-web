@@ -1,7 +1,6 @@
 define(['angular', 'lib/patavi'], function(angular, patavi) {
 return ['$scope','$routeParams', 'Workspace', function($scope, $routeParams, Workspace) {
-  this.fields = [];
-
+  
   var log10 = function(x) { return Math.log(x) / Math.log(10); };
   var nice = function(x) {
     var negative = x < 0;
@@ -13,7 +12,8 @@ return ['$scope','$routeParams', 'Workspace', function($scope, $routeParams, Wor
     return (negative ? -1 : 1) * (val * nice);
   };
 
-  var state = Workspace.get($routeParams.workspaceId);
+  var workspaceId = $routeParams.workspaceId;
+  var state = Workspace.get(workspaceId);
   var task = patavi.submit("smaa", _.extend({ "method": "scales" }, state.problem));
   var scales = {};
   var choices = {};
@@ -66,28 +66,29 @@ return ['$scope','$routeParams', 'Workspace', function($scope, $routeParams, Wor
 	scales: scales,
 	choice: choices
       });
-      console.log("I got me some results", state, scales, choices);
     });
   };
 
   task.results.then(initialize, errorHandler);
 
-
-  this.validChoice = function(currentState) {
-    return _.every(currentState.choice, function(choice) {
-      var complete = _.isNumber(choice["upper"]) && _.isNumber(choice["lower"]);
-      return complete && (choice.upper > choice.lower);
-    });
+  $scope.validChoice = function(currentState) {
+    if(currentState) {
+      return _.every(currentState.choice, function(choice) {
+	var complete = _.isNumber(choice["upper"]) && _.isNumber(choice["lower"]);
+	return complete && (choice.upper > choice.lower);
+      }); 
+    };
+    return false;
   };
 
-  this.nextState = function(currentState) {
+  $scope.save = function(currentState) {
     if(!this.validChoice(currentState)) return;
-
+     var state = angular.copy(currentState);
     // Rewrite scale information
-    _.each(_.pairs(currentState.choice), function(choice) {
-      currentState.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
+    _.each(_.pairs(state.choice), function(choice) {
+      state.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
     });
-
+    Workspace.save(workspaceId, state);
   };
 }];
 });

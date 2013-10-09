@@ -2,8 +2,8 @@
   <div class="columns large-8">
     <div ng-if="currentStep.choice.subType == null">
       <p>The partial value functions (<abbr title="partial value function">PVF</abbr>)
-      define the mapping between the measurement values and the
-      utility of that value.</p>
+	define the mapping between the measurement values and the
+	utility of that value.</p>
 
       <div ng-repeat="(k, criterion) in currentStep.choice.data">
         {{currentStep.problem.criteria[k].title}}
@@ -12,16 +12,16 @@
             <small>Preferred level</small>
             <label>
               <input type="radio"
-              ng-model="criterion.direction"
-              value="decreasing"
-              ng-selected="criterion.direction =='decreasing'">
+		     ng-model="criterion.direction"
+		     value="decreasing"
+		     ng-selected="criterion.direction =='decreasing'">
               {{criterion.range[0]}} is best
             </label>
             <label>
               <input type="radio"
-              ng-model="criterion.direction"
-              value="increasing"
-              ng-selected="criterion.direction == 'increasing'">
+		     ng-model="criterion.direction"
+		     value="increasing"
+		     ng-selected="criterion.direction == 'increasing'">
               {{criterion.range[1]}} is best
             </label>
           </div>
@@ -41,7 +41,7 @@
         <ul>
           <li><b>{{currentStep.problem.criteria[currentStep.choice.criterion].best()}}</b></li>
           <li ng-repeat="cutoff in currentStep.choice.data[currentStep.choice.criterion].cutoffs">
-          {{cutoff}}
+            {{cutoff}}
           </li>
           <li><b>{{currentStep.problem.criteria[currentStep.choice.criterion].worst()}}</b></li>
         </ul>
@@ -54,13 +54,13 @@
               </div>
               <div class="small-2 columns">
                 <button class="small"
-                  ng-disabled="!currentStep.choice.data[currentStep.choice.criterion].validCutoff(cutoff)"
-                  ng-click="currentStep.choice.data[currentStep.choice.criterion].addCutoff(cutoff)">
+			ng-disabled="!currentStep.choice.data[currentStep.choice.criterion].validCutoff(cutoff)"
+			ng-click="currentStep.choice.data[currentStep.choice.criterion].addCutoff(cutoff)">
                   Add
                 </button>
               </div>
-            </form>
-          </div>
+        </form>
+        </div>
         </div>
       </div>
     </div> <!-- / subType == 'elicit cutoffs' -->
@@ -77,12 +77,12 @@
                 <label class="columns small-9">
                   <span style="display: inline-block; width: 12em">Compared to {{comp}}, I</span>
                   <select ng-options="p for (k, p) in currentStep.choice.preferences"
-                    ng-model="currentStep.choice.data[currentStep.choice.criterion].preferences[i][i + j + 1]"
-                    style="width: 14em; display: inline-block;">
+			  ng-model="currentStep.choice.data[currentStep.choice.criterion].preferences[i][i + j + 1]"
+			  style="width: 14em; display: inline-block;">
                     <option value="">-- undefined --</option>
                   </select>
                   prefer {{base}}.
-              </label>
+		</label>
               </li>
             </ul>
           </div>
