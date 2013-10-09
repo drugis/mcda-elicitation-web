@@ -1,4 +1,4 @@
-define(['angular', 'elicit/partial-value-function-handler'], function(angular, PartialValueFunctionHandler) {
+define(['angular', 'controllers/partialValueFunction'], function(angular, PartialValueFunctionHandler) {
   describe("PartialValueFunctionHandler", function() {
     var handler;
 

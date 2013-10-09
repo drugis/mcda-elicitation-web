@@ -4,13 +4,14 @@ require.config({
     'underscore': '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min',
     'angular': '//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular',
     'angular-resource': '//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular-resource',
-    'angular-mocks': '/scripts/lib/angular-mocks',
-    'jquery-slider': '/scripts/lib/jslider/bin/jquery.slider.min',
+    'angular-mocks': '/app/js/lib/angular-mocks',
+    'jquery-slider': '/app/js/lib/jslider/bin/jquery.slider.min',
     'd3': '//cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min',
     'nvd3': '//cdnjs.cloudflare.com/ajax/libs/nvd3/1.0.0-beta/nv.d3.min',
-    'jasmine': 'lib/jasmine/jasmine',
-    'jasmine-html': 'lib/jasmine/jasmine-html'
+    'jasmine': '/app/js/lib/jasmine/jasmine',
+    'jasmine-html': '/app/js/lib/jasmine/jasmine-html'
   },
+  baseUrl: '/app/js',
   shim: {
     'angular': { exports : 'angular'},
     'angular-resource': { deps:['angular'], exports: 'angular-resource'},
@@ -40,11 +41,11 @@ require([
     return htmlReporter.specFilter(spec);
   };
 
-  var specs = ['test/choose-method-handler', 
-	       'test/ordinal-swing-handler',
-	       'test/partial-value-function-handler',
-	       'test/interval-swing-handler',
-	       'test/controller'];
+  var specs = ['/test/unit/chooseMethod.js', 
+	       '/test/unit/ordinalSwing.js',
+	       '/test/unit/partialValueFunction.js',
+	       '/test/unit/intervalSwing.js',
+	       '/test/unit/controller.js'];
 
   require(specs, function() {
     jasmineEnv.execute();

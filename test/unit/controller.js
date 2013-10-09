@@ -1,9 +1,9 @@
 define(['angular', 
 	'angular-mocks', 
 	'underscore',
-	'elicit/choose-method-handler',
-	'elicit/decision-problem', 
-	'elicit/controller', ], function(angular, mocks, _, ChooseMethodHandler) {
+	'controllers/chooseMethod',
+	'services/decisionProblem', 
+	'controllers/controller' ], function(angular, mocks, _, ChooseMethodHandler) {
   describe("ElicitationController", function() {
     var scope1;
     var scope2;
@@ -16,7 +16,7 @@ define(['angular',
 	var dependencies = { $scope: scope, DecisionProblem: DecisionProblem, PreferenceStore: null };
 	ctrl = $controller("ElicitationController", dependencies);
         DecisionProblem.populateWithData(problem);
-        scope.$apply();
+//        scope.$apply();
       });
       return scope;
     }

@@ -1,4 +1,4 @@
-define(['angular', 'elicit/choose-method-handler'], function(angular, ChooseMethodHandler) {
+define(['angular', 'controllers/chooseMethod'], function(angular, ChooseMethodHandler) {
   describe("ChooseMethodHandler", function() {
     var handler;
 

@@ -182,7 +182,7 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
           parseFn: '='
         },
         link: function(scope, element, attrs) {
-          function parsePx(str) { return parseInt(str.replace(/px/gi, '')) };
+          function parsePx(str) { return parseInt(str.replace(/px/gi, '')); };
 
           var width = parsePx($(element[0].parentNode).css('width'));
           var height = parsePx($(element[0].parentNode).css('height'));
@@ -208,7 +208,7 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
             });
           });
         }
-      }
+      };
     }).
     directive('lineChart', function() {
       return {
@@ -218,7 +218,7 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
           parseFn: '='
         },
         link: function(scope, element, attrs) {
-          function parsePx(str) { return parseInt(str.replace(/px/gi, '')) };
+          function parsePx(str) { return parseInt(str.replace(/px/gi, '')); };
 
           var width = parsePx($(element[0].parentNode).css('width'));
           var height = parsePx($(element[0].parentNode).css('height'));

@@ -1,4 +1,4 @@
-define(['angular', 'elicit/interval-swing-handler', 'elicit/partial-value-function-handler'], function(angular, IntervalSwingHandler, PartialValueFunctionHandler) {
+define(['angular', 'controllers/intervalSwing', 'controllers/partialValueFunction'], function(angular, IntervalSwingHandler, PartialValueFunctionHandler) {
   describe("IntervalSwingHandler", function() {
     var handler;
     var state;
