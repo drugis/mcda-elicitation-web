@@ -56,7 +56,7 @@ define(['angular','lib/patavi'], function(angular, patavi) {
       $scope.currentStep = nextStep;
 
       return true;
-    }
+    };
 
     $scope.previousStep = function() {
       if (previousSteps.length == 0) return false;
@@ -66,7 +66,7 @@ define(['angular','lib/patavi'], function(angular, patavi) {
       $scope.templateUrl = steps[previousStep.type].templateUrl;
       $scope.currentStep = previousStep;
       return true;
-    }
+    };
 
     $scope.getStandardizedPreferences = function(currentStep) {
       var prefs = currentStep.prefs;

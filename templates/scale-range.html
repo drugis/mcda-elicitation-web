@@ -13,17 +13,19 @@
       <h5 class="subheader">{{criterion.title}}</h5>
       <div class="row">
         <div class="large-1 columns">
-          <a href="#" ng-click="currentStep.scales[key].increaseFrom()" style="margin-right: 10px" class="tiny round button">&lt;</a>
+          <a ng-click="currentStep.scales[key].increaseFrom()" style="margin-right: 10px" class="tiny round button">&lt;</a>
         </div>
         <div class="large-8 columns">
           <slider style="width: 400px; margin-top: 4px;" model="currentStep.choice[key]" range="currentStep.scales[key]"></slider>
         </div>
         <div class="large-1 pull-2 columns">
-          <a href="#" ng-click="currentStep.scales[key].increaseTo()" style="margin-left: -20px" class="tiny round button">&gt;</a>
+          <a ng-click="currentStep.scales[key].increaseTo()" style="margin-left: -20px" class="tiny round button">&gt;</a>
         </div>
       </div>
       <br>
       </li>
     </ul>
+    <button class="small success" ng-disabled="!validChoice(currentStep)" ng-click="save(currentStep)">Save</button>
+    <a href="/#/workspaces/workspace_1/partial-value-function">next</a>
   </div>
 </div>

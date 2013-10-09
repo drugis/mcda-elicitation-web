@@ -1,4 +1,4 @@
-define(['angular', 'lib/patavi'], function(angular, patavi) {
+define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
 return function($scope) {
   var self = this;
   this.fields = [];
@@ -11,7 +11,7 @@ return function($scope) {
     function extreme(idx1, idx2) {
       return function() {
         return increasing ? pvf.range[idx1] : pvf.range[idx2];
-      }
+      };
     }
     criterion.worst = extreme(0, 1);
     criterion.best = extreme(1, 0);
@@ -20,13 +20,13 @@ return function($scope) {
       return _.indexOf(arr, _.find(arr, function(elm) {
         return elm >= val;
       })) || 1;
-    }
+    };
 
     var findIndexOfFirstSmallerElement = function(arr, val) {
       return _.indexOf(arr, _.find(arr, function(elm) {
         return elm <= val;
       })) || 1;
-    }
+    };
 
     var cutoffs = [pvf.range[0]].concat(pvf.cutoffs || []);
     cutoffs.push(pvf.range[1]);
@@ -41,7 +41,7 @@ return function($scope) {
         "v0": values[idx - 1],
         "v1": values[idx]
       };
-    }
+    };
 
     criterion.pvf.map = function(x) {
       var idx = findIndexOfFirstLargerElement(cutoffs, x);
@@ -55,7 +55,7 @@ return function($scope) {
       return i.x0 + (v - i.v0) * ((i.x1 - i.x0) / (i.v1 - i.v0));
     };
     return criterion;
-  }
+  };
 
   function extendPartialValueFunctions(state) {
     function addPartialValueFunction(criterion) {
@@ -116,7 +116,7 @@ return function($scope) {
                                 cause: error };
         });
       });
-    }
+    };
 
     var initial = {
       type: "partial value function",
@@ -135,15 +135,14 @@ return function($scope) {
                   });
                   return [ { key: "Piecewise PVF", values: values }];
                 }, function(data, criterion) { // Hash function
-                   var values = _.reduce(data[criterion].values, function(sum, x) { return sum + x; })
-                   var cutoffs = _.reduce(data[criterion].cutoffs, function(sum, x) { return sum + x; })
-                   var criterion = criterion.hashCode();
-                   return 31 * values + cutoffs + criterion;
+                   var values = _.reduce(data[criterion].values, function(sum, x) { return sum + x; });
+                   var cutoffs = _.reduce(data[criterion].cutoffs, function(sum, x) { return sum + x; });
+                   return 31 * values + cutoffs + criterion.hashCode();
                 })
       }
-    }
+    };
     return _.extend(state, initial);
-  }
+  };
 
   this.validChoice = function(currentState) {
     if (currentState.choice.subType === 'elicit values') {
@@ -151,7 +150,7 @@ return function($scope) {
       return currentState.choice.data[criterion].cutoffs.length == currentState.choice.data[criterion].values.length;
     }
     return true;
-  }
+  };
 
   this.nextState = function(currentState) {
     var nextState = angular.copy(currentState);
@@ -162,9 +161,6 @@ return function($scope) {
     });
 
     var choice = nextState.choice;
-    if (choice.subType == 'elicit values') {
-
-    }
 
     if (choice.subType == 'elicit cutoffs') {
       var info = nextState.problem.criteria[choice.criterion];
@@ -202,18 +198,18 @@ return function($scope) {
         choice.data[criterion].cutoffs.sort(function(a, b) {
           return info.pvf.direction === "decreasing" ? a - b : b - a;
         });
-      }
+      };
       choice.data[criterion].validCutoff = function(cutoff) {
         var allowed = (cutoff < info.best() && cutoff > info.worst()) || (cutoff < info.worst() && cutoff > info.best());
         var unique = choice.data[criterion].cutoffs.indexOf(cutoff) == -1;
         return allowed && unique;
-      }
+      };
     } else {
       nextState.type = "ordinal";
     }
     return standardize(nextState);
-  }
+  };
 
   return this;
-}
+};
 });
