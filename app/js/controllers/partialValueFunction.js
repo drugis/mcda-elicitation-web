@@ -114,14 +114,14 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
           });
         }, function(code, error) {
           $scope.$root.$safeApply($scope, function() {
-            currentStep.error = { code:(code && code.desc) ? code.desc : code,
-                                  cause: error };
+            currentStep.error =
+              { code:(code && code.desc) ? code.desc : code,
+                cause: error };
           });
         });
       };
 
       var initial = {
-        type: "partial value function",
         title: "Partial Value Function",
         choice: { data: pluckObject(state.problem.criteria, "pvf"),
                   calculate: calculate,
@@ -156,7 +156,6 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
 
     var nextState = function(currentState) {
       var nextState = angular.copy(currentState);
-      console.log("pvfHandler", currentState);
 
       var criteria = _.keys(nextState.problem.criteria).sort();
       var criterion = _.find(criteria, function(c) {
@@ -207,8 +206,6 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
           var unique = choice.data[criterion].cutoffs.indexOf(cutoff) == -1;
           return allowed && unique;
         };
-      } else {
-        nextState.type = "ordinal";
       }
       return standardize(nextState);
     };

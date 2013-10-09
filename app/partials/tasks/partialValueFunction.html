@@ -96,7 +96,7 @@
         </div>
       </div>
     </div>
+    <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
+    <button class="small button" ng-click="nextStep(currentStep)" ng-disabled="!canProceed(currentStep)">Next</button>
   </div>
-  <button class="small button" ng-click="previousStep()" ng-enabled="canReturn()">Previous</button>
-  <button class="small button" ng-click="nextStep(currentStep)" ng-enabled="canProceed(currentStep)">Next</button>
 </div>

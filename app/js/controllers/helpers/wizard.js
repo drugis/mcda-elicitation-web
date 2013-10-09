@@ -14,7 +14,6 @@ define(['angular','lib/patavi', 'underscore'], function(angular, patavi, _) {
     };
 
     $scope.nextStep = function(currentStep) {
-      console.log("wizard", currentStep);
       if(!$scope.canProceed(currentStep)) return false;
       var choice = currentStep.choice;
 

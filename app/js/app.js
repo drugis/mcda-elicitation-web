@@ -4,9 +4,10 @@ define(
    'underscore',
    'services/decisionProblem',
    'services/workspace',
+   'controllers',
    'components'],
   function(angular, require, _) {
-    var dependencies = ['elicit.problem-resource', 'elicit.workspace', 'elicit.components'];
+    var dependencies = ['elicit.problem-resource', 'elicit.workspace', 'elicit.components', 'elicit.controllers'];
     var app = angular.module('elicit', dependencies);
 
     app.run(['$rootScope', function($rootScope) {
@@ -21,56 +22,59 @@ define(
       };
     }]);
 
-    var wizard = {
-      'steps' : {
-        "choose-problem": {
+    var tasks = {
+      'available' : [
+        { id: "choose-problem",
           controller: "ChooseProblemController",
           templateUrl: "chooseProblem.html" },
-        "scale-range":
-        { controller: 'ScaleRangeController',
+        { id: "scale-range",
+          title: "Define Scale Range",
+          controller: 'ScaleRangeController',
           templateUrl: "scaleRange.html" },
-        "partial-value-function":
-        { controller: 'PartialValueFunctionController',
+        { id: "partial-value-function",
+         title: "Define partial value functions",
+          controller: 'PartialValueFunctionController',
           templateUrl: "partialValueFunction.html" },
-        "ordinal-swing":
-        { controller: 'OrdinalSwingController',
+        { id: "ordinal-swing",
+          title: "Ordinal Swing Elicitation",
+          controller: 'OrdinalSwingController',
           templateUrl: 'ordinalSwing.html' },
-        "interval-swing":
-        { controller: 'IntervalSwingController',
+        { id: "interval-swing",
+          title: "Interval Swing Elicitation",
+          controller: 'IntervalSwingController',
           templateUrl: 'intervalSwing.html' },
-        "exact-swing":
-        { controller: 'ExactSwingController',
+        { id: "exact-swing",
+          title: "Exact Swing Elicitation",
+          controller: 'ExactSwingController',
           templateUrl: 'exactSwing.html' },
-        "choose-method":
-        { controller: 'ChooseMethodController',
+        { id: "choose-method",
+          controller: 'ChooseMethodController',
           templateUrl: 'chooseMethod.html' },
-        "results":
-        { controller: 'ResultsController',
+        { id: "results",
+          title: "Results",
+          controller: 'ResultsController',
           templateUrl: 'results.html' }
-      }};
+      ]};
 
-    app.constant('Wizard', wizard);
+    app.constant('Tasks', tasks);
 
-    _.each(_.pairs(wizard.steps), function(step) {
-      var name = step[0];
-      var config = step[1];
+    _.each(tasks.available, function(task) {
       var camelCase = function (str) { return str.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); }); };
-      app.controller(config.controller, ['$scope', '$injector', function($scope, $injector) {
-        require(['controllers/' + camelCase(name)], function(controller) {
+
+      app.controller(task.controller, ['$scope', '$injector', function($scope, $injector) {
+        require(['controllers/' + camelCase(task.id)], function(controller) {
           $injector.invoke(controller, this, { '$scope' : $scope });
         });
       }]);
     });
 
     // example url: /#/workspaces/<id>/<taskname>
-    app.config(['Wizard', '$routeProvider', function(Wizard, $routeProvider) {
-      _.each(_.pairs(Wizard.steps), function(step) {
-        var name = step[0];
-        var config = step[1];
+    app.config(['Tasks', '$routeProvider', function(Tasks, $routeProvider) {
+      _.each(Tasks.available, function(task) {
         var baseTemplatePath = "app/partials/tasks/";
-        var templateUrl = baseTemplatePath + config.templateUrl;
+        var templateUrl = baseTemplatePath + task.templateUrl;
 
-        $routeProvider.when('/workspaces/:workspaceId/' + name, { templateUrl: templateUrl, controller: config.controller });
+        $routeProvider.when('/workspaces/:workspaceId/' + task.id, { templateUrl: templateUrl, controller: task.controller });
       });
       $routeProvider.otherwise({redirectTo: 'workspaces/new/choose-problem'});
     }]);

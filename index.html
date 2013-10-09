@@ -17,8 +17,15 @@
   </head>
 
   <body>
-
-    <div ng-view></div>
+    <div ng-controller="WorkspaceController">
+      <ul>
+        <li ng-repeat="task in tasks" ng-show="task.title">
+          <a href="#/workspaces/{{route.workspaceId}}/{{task.id}}">{{task.title}}</a>
+        </li>
+      </ul>
+      {{ workspaceId | json }}
+      <div ng-view></div>
+    </div>
 
     <script>
       window.config = { examplesRepository: "/examples/" };
