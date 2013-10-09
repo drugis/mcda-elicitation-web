@@ -1,23 +1,11 @@
-define(['angular','lib/patavi'], function(angular, patavi) {
-  return angular.module('elicit.controller', []).controller('ElicitationController', ['$scope', 'DecisionProblem', function($scope, DecisionProblem) {
-    $scope.saveState = {};
-    $scope.currentStep = {};
-    $scope.initialized = false;
+define(['angular','lib/patavi', 'underscore'], function(angular, patavi, _) {
+  return ['$scope', 'handler', function($scope, handler) {
 
-    var steps;
-    var PERSISTENT_FIELDS = ["problem", "type", "prefs", "choice"];
-
-    var initialize = function(problem) {
-      if(!_.isEmpty(problem)) {
-        $scope.initialized = true;
-      }
-    };
-
+    var PERSISTENT_FIELDS = [];
     var previousSteps = [];
     var nextSteps = [];
 
     $scope.canProceed = function(currentStep) {
-      var handler = currentStep.type && steps[currentStep.type].handler;
       return (handler && handler.validChoice(currentStep)) || false;
     };
 
@@ -25,17 +13,15 @@ define(['angular','lib/patavi'], function(angular, patavi) {
       return previousSteps.length > 0;
     };
 
-    $scope.nextStep = function() {
-      var currentStep = $scope.currentStep;
+    $scope.nextStep = function(currentStep) {
+      console.log("wizard", currentStep);
       if(!$scope.canProceed(currentStep)) return false;
       var choice = currentStep.choice;
-      var handler = steps[currentStep.type].handler;
 
       // History handling
       previousSteps.push(currentStep);
       var nextStep = nextSteps.pop();
       if(nextStep && _.isEqual(nextStep.previousChoice, choice)) {
-        $scope.templateUrl = steps[nextStep.type].templateUrl;
         $scope.currentStep = nextStep;
         return true;
       } else {
@@ -45,12 +31,6 @@ define(['angular','lib/patavi'], function(angular, patavi) {
       currentStep = _.pick(currentStep, PERSISTENT_FIELDS.concat(handler.fields));
       nextStep = handler.nextState(currentStep);
 
-      if (nextStep.type !== currentStep.type) {
-        var step = steps[nextStep.type];
-        var handler = step.handler;
-        $scope.templateUrl = step.templateUrl;
-        nextStep = handler ? handler.initialize(nextStep) : nextStep;
-      }
       nextStep.previousChoice = choice;
 
       $scope.currentStep = nextStep;
@@ -63,21 +43,15 @@ define(['angular','lib/patavi'], function(angular, patavi) {
       nextSteps.push(angular.copy($scope.currentStep));
 
       var previousStep = previousSteps.pop();
-      $scope.templateUrl = steps[previousStep.type].templateUrl;
       $scope.currentStep = previousStep;
       return true;
     };
 
-    $scope.getStandardizedPreferences = function(currentStep) {
+/*    $scope.getStandardizedPreferences = function(currentStep) {
       var prefs = currentStep.prefs;
       return _.flatten(_.map(_.pairs(prefs), function(pref) {
         return steps[pref[0]].handler.standardize(pref[1]);
       }));
-    };
-
-    $scope.shouldRun = function(currentStep) {
-      var excluded = ["scale range", "partial value function"];
-      return !_.contains(excluded, currentStep.type);
     };
 
     $scope.runSMAA = function(currentStep) {
@@ -107,8 +81,7 @@ define(['angular','lib/patavi'], function(angular, patavi) {
       };
 
       if (!currentStep.results && $scope.shouldRun(currentStep)) run('smaa');
-    };
+    }; */
 
-    DecisionProblem.problem.then(initialize);
-  }]);
+  }];
 });

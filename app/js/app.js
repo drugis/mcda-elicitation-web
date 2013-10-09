@@ -6,7 +6,7 @@ define(
    'services/workspace',
    'components'],
   function(angular, require, _) {
-    var dependencies = ['elicit.problem-resource', 'elicit.components', 'elicit.workspace'];
+    var dependencies = ['elicit.problem-resource', 'elicit.workspace', 'elicit.components'];
     var app = angular.module('elicit', dependencies);
 
     app.run(['$rootScope', function($rootScope) {

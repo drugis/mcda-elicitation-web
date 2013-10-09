@@ -1,7 +1,9 @@
-define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
-  return function($scope) {
+define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], function(Wizard, angular, patavi, _) {
+  return ['$scope', '$routeParams', '$injector', 'Workspace', function($scope, $routeParams, $injector, Workspace) {
     var self = this;
-    this.fields = [];
+
+    var workspaceId = $routeParams.workspaceId;
+    var state = Workspace.get(workspaceId);
 
     this.createPartialValueFunction = function(_criterion) {
       var criterion = angular.copy(_criterion);
@@ -65,7 +67,7 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       return state;
     }
 
-    function standardize(state) {
+    var standardize = function(state) {
       // Copy choices to problem
       var excluded = ["comp", "base"];
       angular.forEach(_.pairs(state.problem.criteria), function(criterion) {
@@ -77,9 +79,9 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       });
 
       return extendPartialValueFunctions(state);
-    }
+    };
 
-    this.initialize = function(state) {
+    var initialize = function(state) {
       state = extendPartialValueFunctions(state);
       function pluckObject(obj, field) {
         return _.object(_.map(_.pairs(obj), function(el) {
@@ -144,7 +146,7 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       return _.extend(state, initial);
     };
 
-    this.validChoice = function(currentState) {
+    var validChoice = function(currentState) {
       if (currentState.choice.subType === 'elicit values') {
         var criterion = currentState.choice.criterion;
         return currentState.choice.data[criterion].cutoffs.length == currentState.choice.data[criterion].values.length;
@@ -152,8 +154,9 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       return true;
     };
 
-    this.nextState = function(currentState) {
+    var nextState = function(currentState) {
       var nextState = angular.copy(currentState);
+      console.log("pvfHandler", currentState);
 
       var criteria = _.keys(nextState.problem.criteria).sort();
       var criterion = _.find(criteria, function(c) {
@@ -210,6 +213,16 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       return standardize(nextState);
     };
 
-    return this;
-  };
+    $scope.currentStep = initialize(state);
+
+    $injector.invoke(Wizard, this, {
+      $scope: $scope,
+      handler: { validChoice: validChoice,
+                 fields: ["problem", "type", "prefs", "choice"],
+                 standardize: standardize,
+                 nextState: nextState }
+    });
+    $scope.$apply();
+
+  }];
 });

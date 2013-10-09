@@ -1,4 +1,4 @@
-define(['angular'], function(angular) {
+define(['angular', 'underscore'], function(angular, _) {
   return function() {
     this.fields = ["reference", "choices"];
     var criteria = {};
@@ -67,7 +67,7 @@ define(['angular'], function(angular) {
         nextState.type = "choose method";
       }
       return nextState;
-    }
+    };
 
     this.standardize = function(order) {
       function ordinal(a, b) { return { type: "ordinal", criteria: [a, b] }; };

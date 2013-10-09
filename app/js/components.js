@@ -182,7 +182,7 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
           parseFn: '='
         },
         link: function(scope, element, attrs) {
-          function parsePx(str) { return parseInt(str.replace(/px/gi, '')); };
+          function parsePx(str) { return parseInt(str.replace(/px/gi, '')); }
 
           var width = parsePx($(element[0].parentNode).css('width'));
           var height = parsePx($(element[0].parentNode).css('height'));
@@ -199,8 +199,8 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
                     .height(height)
                     .width(width)
                     .tooltips(false)
-                    .x(function(d) { return d.label })
-                    .y(function(d) { return d.value });
+                    .x(function(d) { return d.label; })
+                    .y(function(d) { return d.value;});
 
               var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
               svg.datum(data).transition().duration(100).call(chart);
@@ -218,7 +218,7 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
           parseFn: '='
         },
         link: function(scope, element, attrs) {
-          function parsePx(str) { return parseInt(str.replace(/px/gi, '')); };
+          function parsePx(str) { return parseInt(str.replace(/px/gi, '')); }
 
           var width = parsePx($(element[0].parentNode).css('width'));
           var height = parsePx($(element[0].parentNode).css('height'));
@@ -233,7 +233,7 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
             var chart = nv.models.lineChart().width(width).height(height);
             chart.forceY([0.0]);
             chart.xAxis.staggerLabels(false);
-            if (_.every(data, function(x) { return !_.isUndefined(x.labels) })) {
+            if (_.every(data, function(x) { return !_.isUndefined(x.labels); })) {
               chart.xAxis.tickFormat(function(i, obj) {
                 if (i % 1 === 0) {
                   return data[0].labels[i];
