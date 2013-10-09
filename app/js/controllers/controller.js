@@ -1,5 +1,5 @@
 define(['angular','lib/patavi'], function(angular, patavi) {
-  return angular.module('elicit.controller', []).controller('ElicitationController', ['$scope', 'DecisionProblem', 'PreferenceStore', function($scope, DecisionProblem, PreferenceStore) {
+  return angular.module('elicit.controller', []).controller('ElicitationController', ['$scope', 'DecisionProblem', function($scope, DecisionProblem) {
     $scope.saveState = {};
     $scope.currentStep = {};
     $scope.initialized = false;

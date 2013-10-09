@@ -79,14 +79,14 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
           $scope.$watch('range.from', init, true);
           $scope.$watch('range.to', init, true);
         },
-        template: '<div class="slider"></div>',
+        template: '<div class="slider"></div>'
       };
     }).
     directive('wizardStep', ['$compile', '$http', '$templateCache', function($compile, $http, $templateCache) {
       var getTemplate = function(template) {
         var templateLoader,
-        baseUrl = 'templates/',
-        templateUrl = baseUrl + template;
+            baseUrl = 'templates/',
+            templateUrl = baseUrl + template;
         templateLoader = $http.get(templateUrl, { cache: $templateCache });
 
         return templateLoader;
@@ -137,8 +137,8 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
           var height = parsePx($(element[0].parentNode).css('height'));
 
           var svg = d3.select(element[0]).append("svg")
-            .attr("width", "100%")
-            .attr("height", "100%");
+                .attr("width", "100%")
+                .attr("height", "100%");
 
           var rankGraphData = function(data) {
             var result = [];
@@ -172,7 +172,7 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
             });
           }, true);
         }
-      }
+      };
     }).
     directive('barChart', function() {
       return {
@@ -187,20 +187,20 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
           var width = parsePx($(element[0].parentNode).css('width'));
           var height = parsePx($(element[0].parentNode).css('height'));
           var svg = d3.select(element[0]).append("svg")
-            .attr("width", "100%")
-            .attr("height", "100%");
+                .attr("width", "100%")
+                .attr("height", "100%");
 
           scope.$watch('value', function(newVal, oldVal) {
             if(!newVal) return;
             nv.addGraph(function() {
               var chart = nv.models.discreteBarChart()
-                .staggerLabels(false)
-                .showValues(true)
-                .height(height)
-                .width(width)
-                .tooltips(false)
-                .x(function(d) { return d.label })
-                .y(function(d) { return d.value });
+                    .staggerLabels(false)
+                    .showValues(true)
+                    .height(height)
+                    .width(width)
+                    .tooltips(false)
+                    .x(function(d) { return d.label })
+                    .y(function(d) { return d.value });
 
               var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
               svg.datum(data).transition().duration(100).call(chart);
@@ -223,8 +223,8 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
           var width = parsePx($(element[0].parentNode).css('width'));
           var height = parsePx($(element[0].parentNode).css('height'));
           var svg = d3.select(element[0]).append("svg")
-            .attr("width", "100%")
-            .attr("height", "100%");
+                .attr("width", "100%")
+                .attr("height", "100%");
 
           scope.$watch('value', function(newVal, oldVal) {
             if(!newVal) return;

@@ -4,10 +4,11 @@ require.config({
     'underscore': '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min',
     'angular': '//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular',
     'angular-resource': '//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular-resource',
-    'jquery-slider': '/scripts/lib/jslider/bin/jquery.slider.min',
+    'jquery-slider': '/app/js/lib/jslider/bin/jquery.slider.min',
     'd3': '//cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min',
     'nvd3': '//cdnjs.cloudflare.com/ajax/libs/nvd3/1.0.0-beta/nv.d3.min'
   },
+	baseUrl: 'app/js',
   shim: {
     'angular': { exports : 'angular'},
     'angular-resource': { deps:['angular'], exports: 'angular-resource'},
@@ -34,11 +35,7 @@ String.prototype.hashCode = function(){
   return hash;
 };
 
-require([
-  'require',
-  'angular',
-  'app'],
-  function (require, angular) {
+require(['require', 'angular', 'app'], function (require, angular) {
   require(['lib/domReady!'], function (document) {
     angular.bootstrap(document , ['elicit']);
   });

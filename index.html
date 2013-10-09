@@ -7,12 +7,12 @@
 
     <title>Preference elicitation</title>
 
-    <link rel="stylesheet" type="text/css" href="scripts/lib/jslider/bin/jquery.slider.min.css">
-    <link rel="stylesheet" type="text/css" href="css/foundation.min.css">
-    <link rel="stylesheet" type="text/css" href="css/nv.d3.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="app/js/lib/jslider/bin/jquery.slider.min.css">
+    <link rel="stylesheet" type="text/css" href="app/css/foundation.min.css">
+    <link rel="stylesheet" type="text/css" href="app/css/nv.d3.css">
+    <link rel="stylesheet" type="text/css" href="app/css/main.css">
 
-    <script src="scripts/require.js" data-main="scripts/main.js"></script>
+    <script src="app/js/lib/require.js" data-main="app/js/main.js"></script>
 
   </head>
 
@@ -20,11 +20,9 @@
 
     <div ng-view></div>
 
-  <script>
-    window.config = {
-      examplesRepository: "/examples/"
-    };
-  </script>
+    <script>
+      window.config = { examplesRepository: "/examples/" };
+    </script>
 
   </body>
 </html>

@@ -4,8 +4,8 @@ define(['angular', 'underscore'], function(angular, _) {
 
     var create = function(problem) {
       var id = _.uniqueId(WORKSPACE_PREFIX);
-      var workspace = { "problem" : problem, 
-		        "id" : id };
+      var workspace = { "problem" : problem,
+		                    "id" : id };
       localStorage.setItem(id, angular.toJson(workspace));
       return workspace;
     };
@@ -20,10 +20,10 @@ define(['angular', 'underscore'], function(angular, _) {
       localStorage.setItem(id, angular.toJson(extended));
       return extended;
     };
-    
+
     return { "create" : create,
-	     "get" : getById,
-	     "save": save };
+	           "get" : getById,
+	           "save": save };
 
   });
 });

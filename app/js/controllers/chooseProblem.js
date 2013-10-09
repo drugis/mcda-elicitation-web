@@ -13,11 +13,9 @@ define(['angular', 'underscore'], function(angular, _) {
         DecisionProblem.populateWithUrl(choice);
       }
       DecisionProblem.problem.then(function(problem) {
-	var workspace = Workspace.create(problem);
-	var nextUrl = "/workspaces/" + workspace.id + "/scale-range";
-	console.log(nextUrl);
-	$location.path(nextUrl);
-
+        var workspace = Workspace.create(problem);
+        var nextUrl = "/workspaces/" + workspace.id + "/scale-range";
+        $location.path(nextUrl);
       });
     };
 
@@ -32,8 +30,5 @@ define(['angular', 'underscore'], function(angular, _) {
     });
 
     $scope.$apply();
-
-
-
   };
 });
