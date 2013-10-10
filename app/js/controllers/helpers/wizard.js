@@ -1,4 +1,4 @@
-define(['angular','lib/patavi', 'underscore'], function(angular, patavi, _) {
+define(['angular', 'underscore'], function(angular, _) {
   return ['$scope', 'handler', function($scope, handler) {
 
     var PERSISTENT_FIELDS = [];

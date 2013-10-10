@@ -58,26 +58,26 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
       };
 
       var initial = {
-        title: "Partial Value Function",
-        choice: { data: pluckObject(state.problem.criteria, "pvf"),
-                  calculate: calculate,
-                  preferences:
-                  ["Very Weakly", "Weakly", "Moderately", "Strongly", "Very Strongly", "Extremely"],
-                  getXY: _.memoize(function(data, criterion) {
-                    var y = [1].concat(data[criterion].values).concat([0]);
-                    var best = state.problem.criteria[criterion].best();
-                    var worst = state.problem.criteria[criterion].worst();
-                    var x = [best].concat(data[criterion].cutoffs).concat([worst]);
-                    var values = _.map(_.zip(x, y), function(p) {
-                      return {x: p[0], y: p[1] };
-                    });
-                    return [ { key: "Piecewise PVF", values: values }];
-                  }, function(data, criterion) { // Hash function
-                    var values = _.reduce(data[criterion].values, function(sum, x) { return sum + x; });
-                    var cutoffs = _.reduce(data[criterion].cutoffs, function(sum, x) { return sum + x; });
-                    return 31 * values + cutoffs + criterion.hashCode();
-                  })
-                }
+        choice:
+        { data: pluckObject(state.problem.criteria, "pvf"),
+          calculate: calculate,
+          preferences:
+          ["Very Weakly", "Weakly", "Moderately", "Strongly", "Very Strongly", "Extremely"],
+          getXY: _.memoize(function(data, criterion) {
+            var y = [1].concat(data[criterion].values).concat([0]);
+            var best = state.problem.criteria[criterion].best();
+            var worst = state.problem.criteria[criterion].worst();
+            var x = [best].concat(data[criterion].cutoffs).concat([worst]);
+            var values = _.map(_.zip(x, y), function(p) {
+              return {x: p[0], y: p[1] };
+            });
+            return [ { key: "Piecewise PVF", values: values }];
+          }, function(data, criterion) { // Hash function
+            var values = _.reduce(data[criterion].values, function(sum, x) { return sum + x; });
+            var cutoffs = _.reduce(data[criterion].cutoffs, function(sum, x) { return sum + x; });
+            return 31 * values + cutoffs + criterion.hashCode();
+          })
+        }
       };
       return _.extend(state, initial);
     };
@@ -100,8 +100,9 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
 
       var choice = nextState.choice;
 
+      var info;
       if (choice.subType == 'elicit cutoffs') {
-        var info = nextState.problem.criteria[choice.criterion];
+        info = nextState.problem.criteria[choice.criterion];
         choice.subType = 'elicit values';
         var cutoffs = choice.data[choice.criterion].cutoffs;
         var size = cutoffs.length + 2;
@@ -125,7 +126,7 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
 
         choice.data[choice.criterion].values = [];
       } else if (criterion) {
-        var info = nextState.problem.criteria[criterion];
+        info = nextState.problem.criteria[criterion];
         choice.subType = "elicit cutoffs";
         choice.criterion = criterion;
 
