@@ -1,6 +1,5 @@
-define(['angular', 'lib/patavi'], function(angular, patavi) {
-  return ['$scope','$routeParams', 'Workspace', function($scope, $routeParams, Workspace) {
-
+define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
+  return function($scope, $routeParams, Workspaces) {
     var log10 = function(x) { return Math.log(x) / Math.log(10); };
     var nice = function(x) {
       var negative = x < 0;
@@ -13,7 +12,9 @@ define(['angular', 'lib/patavi'], function(angular, patavi) {
     };
 
     var workspaceId = $routeParams.workspaceId;
-    var state = Workspace.get(workspaceId);
+    var state = Workspaces.get(workspaceId);
+    
+
     var task = patavi.submit("smaa", _.extend({ "method": "scales" }, state.problem));
     var scales = {};
     var choices = {};
@@ -61,11 +62,11 @@ define(['angular', 'lib/patavi'], function(angular, patavi) {
 
         });
         $scope.currentStep = _.extend(state, {
-          title: "Measurement scales",
           type: "scale range",
           scales: scales,
           choice: choices
         });
+	Workspaces.currentTask[workspaceId] = "scale-range";
       });
     };
 
@@ -88,7 +89,7 @@ define(['angular', 'lib/patavi'], function(angular, patavi) {
       _.each(_.pairs(state.choice), function(choice) {
         state.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
       });
-      Workspace.save(workspaceId, state);
+      Workspaces.save(workspaceId, state);
     };
-  }];
+  };
 });

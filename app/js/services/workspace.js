@@ -1,5 +1,5 @@
 define(['angular', 'underscore', 'services/partialValueFunction'], function(angular, _) {
-  return angular.module('elicit.workspace', ['elicit.pvfService']).factory('Workspace', function(PartialValueFunction) {
+  return angular.module('elicit.workspace', ['elicit.pvfService']).factory('Workspaces', function(PartialValueFunction) {
     var WORKSPACE_PREFIX = "workspace_";
 
     var create = function(problem) {
@@ -25,6 +25,7 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
 
     return { "create" : create,
              "get" : get,
+             "currentTask": {},
              "save": save };
   });
 });

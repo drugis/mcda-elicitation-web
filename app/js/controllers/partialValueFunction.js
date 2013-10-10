@@ -1,8 +1,8 @@
 define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], function(Wizard, angular, patavi, _) {
-  return ['$scope', '$routeParams', '$injector', 'Workspace', function($scope, $routeParams, $injector, Workspace) {
+  return function($scope, $routeParams, $injector, Workspaces) {
 
     var workspaceId = $routeParams.workspaceId;
-    var state = Workspace.get(workspaceId);
+    var state = Workspaces.get(workspaceId);
 
     var standardize = function(state) {
       // Copy choices to problem
@@ -158,5 +158,5 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
     });
     $scope.$apply();
 
-  }];
+  };
 });

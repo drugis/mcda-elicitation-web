@@ -1,5 +1,5 @@
 define(['angular', 'underscore'], function(angular, _) {
-  return function($scope, $location, DecisionProblem, Workspace) {
+  return function($scope, $location, DecisionProblem, Workspaces) {
     $scope.list = [];
     $scope.model = {};
     $scope.local = {};
@@ -13,7 +13,7 @@ define(['angular', 'underscore'], function(angular, _) {
         DecisionProblem.populateWithUrl(choice);
       }
       DecisionProblem.problem.then(function(problem) {
-        var workspace = Workspace.create(problem);
+        var workspace = Workspaces.create(problem);
         var nextUrl = "/workspaces/" + workspace.id + "/scale-range";
         $location.path(nextUrl);
       });
