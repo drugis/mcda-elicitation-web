@@ -1,8 +1,12 @@
 define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
-  return ['$scope', '$routeParams', 'Workspaces', function($scope, $routeParams, Workspaces) {
+  return ['$scope', '$routeParams', 'Workspaces', 'Tasks', function($scope, $routeParams, Workspaces, Tasks) {
 
     var workspaceId = $routeParams.workspaceId;
     var state = Workspaces.get(workspaceId);
+    var taskId = "scale-range";
+    var task = _.find(Tasks.available, function(task) { return task.id === taskId; });
+    Workspaces.currentTask[workspaceId] = taskId;
+    $scope.title = task.title;
 
     var nice = function(x) {
       var log10 = function(x) { return Math.log(x) / Math.log(10); };
@@ -16,9 +20,6 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
     };
 
 
-    var task = patavi.submit("smaa", _.extend({ "method": "scales" }, state.problem));
-    var scales = {};
-    var choices = {};
 
     var errorHandler = function(code, error) {
       $scope.$root.$safeApply($scope, function() {
@@ -27,17 +28,17 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       });
     };
 
-    var initialize = function(results) {
+    var successHandler = function(results) {
+      var scales = {};
+      var choices = {};
       $scope.$root.$safeApply($scope, function() {
         _.map(_.pairs(results.results[0]), function(criterion) {
           var from = criterion[1]["2.5%"], to = criterion[1]["97.5%"];
 
           // Set inital model value
           var problemRange = state.problem.criteria[criterion[0]].pvf.range;
-          if (problemRange) {
-            from = problemRange[0];
-            to = problemRange[1];
-          }
+          from = problemRange[0];
+          to = problemRange[1];
           choices[criterion[0]] = { lower: from, upper: to };
 
           // Set scales for slider
@@ -62,16 +63,16 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
           };
 
         });
+
         $scope.currentStep = _.extend(state, {
-          type: "scale range",
           scales: scales,
           choice: choices
         });
-	Workspaces.currentTask[workspaceId] = "scale-range";
       });
     };
 
-    task.results.then(initialize, errorHandler);
+    var calculateScales = patavi.submit("smaa", _.extend({ "method": "scales" }, state.problem));
+    calculateScales.results.then(successHandler, errorHandler);
 
     $scope.validChoice = function(currentState) {
       if(currentState) {

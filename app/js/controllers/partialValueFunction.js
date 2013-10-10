@@ -1,8 +1,11 @@
 define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], function(Wizard, angular, patavi, _) {
-  return function($scope, $routeParams, $injector, Workspaces) {
+  return function($scope, $routeParams, $injector, Workspaces, Tasks) {
 
     var workspaceId = $routeParams.workspaceId;
     var state = Workspaces.get(workspaceId);
+    var taskId = "partial-value-function";
+    var task = _.find(Tasks.available, function(task) { return task.id === taskId; });
+    Workspaces.currentTask[workspaceId] = taskId;
 
     var standardize = function(state) {
       // Copy choices to problem
@@ -58,6 +61,7 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
       };
 
       var initial = {
+        title: task.title,
         choice:
         { data: pluckObject(state.problem.criteria, "pvf"),
           calculate: calculate,
@@ -152,7 +156,7 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
     $injector.invoke(Wizard, this, {
       $scope: $scope,
       handler: { validChoice: validChoice,
-                 fields: ["problem", "type", "prefs", "choice"],
+                 fields: ["problem", "type", "prefs", "choice", "title"],
                  standardize: standardize,
                  nextState: nextState }
     });
