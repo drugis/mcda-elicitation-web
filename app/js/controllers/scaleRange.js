@@ -1,7 +1,11 @@
 define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
-  return function($scope, $routeParams, Workspaces) {
-    var log10 = function(x) { return Math.log(x) / Math.log(10); };
+  return ['$scope', '$routeParams', 'Workspaces', function($scope, $routeParams, Workspaces) {
+
+    var workspaceId = $routeParams.workspaceId;
+    var state = Workspaces.get(workspaceId);
+
     var nice = function(x) {
+      var log10 = function(x) { return Math.log(x) / Math.log(10); };
       var negative = x < 0;
       x = Math.abs(x);
       var val = Math.pow(10, Math.floor(log10(x)));
@@ -11,9 +15,6 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       return (negative ? -1 : 1) * (val * nice);
     };
 
-    var workspaceId = $routeParams.workspaceId;
-    var state = Workspaces.get(workspaceId);
-    
 
     var task = patavi.submit("smaa", _.extend({ "method": "scales" }, state.problem));
     var scales = {};
@@ -21,8 +22,8 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
 
     var errorHandler = function(code, error) {
       $scope.$root.$safeApply($scope, function() {
-        state.error = { code: (code && code.desc) ? code.desc : code,
-                        cause: error };
+        $scope.error = { code: (code && code.desc) ? code.desc : code,
+                         cause: error };
       });
     };
 
@@ -78,7 +79,7 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
           var complete = _.isNumber(choice["upper"]) && _.isNumber(choice["lower"]);
           return complete && (choice.upper > choice.lower);
         });
-      };
+      }
       return false;
     };
 
@@ -91,5 +92,5 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       });
       Workspaces.save(workspaceId, state);
     };
-  };
+  }];
 });

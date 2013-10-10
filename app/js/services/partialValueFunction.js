@@ -66,6 +66,6 @@ define(['angular', 'underscore'], function(angular, _) {
     };
 
     return { create: create,
-             attach: attach};
+             attach: attach };
   });
 });

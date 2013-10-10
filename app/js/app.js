@@ -74,7 +74,8 @@ define(
         var baseTemplatePath = "app/partials/tasks/";
         var templateUrl = baseTemplatePath + task.templateUrl;
 
-        $routeProvider.when('/workspaces/:workspaceId/' + task.id, { templateUrl: templateUrl, controller: task.controller });
+        $routeProvider
+          .when('/workspaces/:workspaceId/' + task.id, { templateUrl: templateUrl, controller: task.controller });
       });
       $routeProvider.otherwise({redirectTo: 'workspaces/new/choose-problem'});
     }]);
