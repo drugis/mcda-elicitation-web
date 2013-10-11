@@ -10,8 +10,8 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
     var standardize = function(state) {
       // Copy choices to problem
       var excluded = ["comp", "base"];
-      angular.forEach(_.pairs(state.problem.criteria), function(criterion) {
-        angular.forEach(_.keys(state.choice.data[criterion[0]]), function(key) {
+      _.each(_.pairs(state.problem.criteria), function(criterion) {
+        _.each(_.keys(state.choice.data[criterion[0]]), function(key) {
           if(excluded.indexOf(key) == -1) {
             criterion[1].pvf[key] = state.choice.data[criterion[0]][key];
           }
@@ -28,12 +28,12 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
         }));
       }
 
-      var calculate = function(currentStep) {
-        var choice = currentStep.choice;
+      var calculate = function(currentState) {
+        var choice = currentState.choice;
         function rewritePreferences(preferences) {
           preferences = angular.copy(preferences);
-          for (i = 0; i < preferences.length; ++i) {
-            for (j = 0; j < preferences[i].length; ++j) {
+          for (var i = 0; i < preferences.length; ++i) {
+            for (var j = 0; j < preferences[i].length; ++j) {
               var level = choice.preferences.indexOf(preferences[i][j]) + 1;
               preferences[i][j] = level == 0 ? null : level;
             }
@@ -45,16 +45,16 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
         var task = patavi.submit("smaa", { method: "macbeth", preferences: preferences });
         task.results.then(function(results) {
           $scope.$root.$safeApply($scope, function() {
-            currentStep.results = results.results;
+            currentState.results = results.results;
             var values = _.clone(results.results);
             values = values.slice(1, values.length - 1);
             choice.data[choice.criterion].values = values;
-            currentStep.error = null;
+            currentState.error = null;
           });
         }, function(code, error) {
           $scope.$root.$safeApply($scope, function() {
-            currentStep.error =
-              { code:(code && code.desc) ? code.desc : code,
+            currentState.error =
+              { code: (code && code.desc) ? code.desc : code,
                 cause: error };
           });
         });
@@ -73,7 +73,7 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
             var worst = state.problem.criteria[criterion].worst();
             var x = [best].concat(data[criterion].cutoffs).concat([worst]);
             var values = _.map(_.zip(x, y), function(p) {
-              return {x: p[0], y: p[1] };
+              return { x: p[0], y: p[1] };
             });
             return [ { key: "Piecewise PVF", values: values }];
           }, function(data, criterion) { // Hash function
@@ -89,7 +89,8 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
     var validChoice = function(currentState) {
       if (currentState.choice.subType === 'elicit values') {
         var criterion = currentState.choice.criterion;
-        return currentState.choice.data[criterion].cutoffs.length == currentState.choice.data[criterion].values.length;
+        var choice = currentState.choice.data;
+        return choice[criterion].cutoffs.length == choice[criterion].values.length;
       }
       return true;
     };
@@ -113,9 +114,9 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
 
         // Initialize preference matrix
         choice.data[choice.criterion].preferences = [];
-        for (i = 0; i < size; ++i) {
+        for (var i = 0; i < size; ++i) {
           choice.data[choice.criterion].preferences[i] = [];
-          for (j = 0; j < size; ++j) {
+          for (var j = 0; j < size; ++j) {
             choice.data[choice.criterion].preferences[i][j] = i == j ? choice.preferences[0] : null;
           }
         }

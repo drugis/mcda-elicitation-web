@@ -1,11 +1,7 @@
 define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
   return ['$scope', '$routeParams', 'Workspaces', 'Tasks', function($scope, $routeParams, Workspaces, Tasks) {
-
-    var workspaceId = $routeParams.workspaceId;
-    var state = Workspaces.get(workspaceId);
     var taskId = "scale-range";
     var task = _.find(Tasks.available, function(task) { return task.id === taskId; });
-    Workspaces.currentTask[workspaceId] = taskId;
     $scope.title = task.title;
 
     var nice = function(x) {
@@ -19,8 +15,6 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       return (negative ? -1 : 1) * (val * nice);
     };
 
-
-
     var errorHandler = function(code, error) {
       $scope.$root.$safeApply($scope, function() {
         $scope.error = { code: (code && code.desc) ? code.desc : code,
@@ -28,7 +22,7 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       });
     };
 
-    var successHandler = function(results) {
+    var successHandler = function(state, results) {
       var scales = {};
       var choices = {};
       $scope.$root.$safeApply($scope, function() {
@@ -63,7 +57,6 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
           };
 
         });
-
         $scope.currentStep = _.extend(state, {
           scales: scales,
           choice: choices
@@ -71,8 +64,14 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       });
     };
 
-    var calculateScales = patavi.submit("smaa", _.extend({ "method": "scales" }, state.problem));
-    calculateScales.results.then(successHandler, errorHandler);
+    var initialize = function() {
+      var current = Workspaces.current;
+      var calculateScales = patavi.submit("smaa", _.extend({ "method": "scales" }, current.state.problem));
+      calculateScales.results.then(_.partial(successHandler, current.state), errorHandler);
+     };
+
+    $scope.$watch(Workspaces.current, initialize);
+    $scope.$apply();
 
     $scope.validChoice = function(currentState) {
       if(currentState) {
@@ -91,7 +90,6 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       _.each(_.pairs(state.choice), function(choice) {
         state.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
       });
-      Workspaces.save(workspaceId, state);
     };
   }];
 });

@@ -3,7 +3,7 @@ define(['angular', 'underscore'], function(angular,  _) {
     .controller('WorkspaceController', ['$scope', '$routeParams', 'Tasks', 'Workspaces', function($scope, $routeParams, Tasks, Workspaces) {
       $scope.tasks = Tasks.available;
       $scope.route = $routeParams;
-      $scope.currentTask = Workspaces.currentTask;
+      $scope.currentWorkspace = Workspaces.current;
 
     }]);
 });
