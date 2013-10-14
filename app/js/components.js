@@ -1,12 +1,12 @@
 define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], function(angular, _, $, d3, nv) {
   return angular.module('elicit.components', []).
     directive('slider', function() {
-      var initialize = function($scope, $element) {
-        var type = $scope.type;
-        var from = $scope.range.from;
-        var to = $scope.range.to;
-        var fromIncl = !$scope.range.leftOpen;
-        var toIncl = !$scope.range.rightOpen;
+      var initialize = function(scope, $element) {
+        var type = scope.type;
+        var from = scope.range.from;
+        var to = scope.range.to;
+        var fromIncl = !scope.range.leftOpen;
+        var toIncl = !scope.range.rightOpen;
         var delta = to - from;
         var steps = 100;
 
@@ -28,8 +28,8 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
 
         function valueToStep(value) { return ((value - from) / delta * steps).toFixed(precision); }
         function getModelValue() {
-          return type === "point" ? valueToStep($scope.model) :
-            valueToStep($scope.model.lower) + ";" + valueToStep($scope.model.upper);
+          return type === "point" ? valueToStep(scope.model) :
+            valueToStep(scope.model.lower) + ";" + valueToStep(scope.model.upper);
         }
         function getValueModel(value) {
           if (type === "point") {
@@ -53,15 +53,15 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
           onstatechange: _.debounce(function(value) {
             var values = getValueModel(value);
 
-            $scope.$root.$safeApply($scope, function() {
-              $scope.model = values;
+            scope.$root.$safeApply(scope, function() {
+              scope.model = values;
             });
           }, 50)
         });
-        if (_.has($scope.range, "restrictTo") && _.has($scope.range, "restrictFrom")) {
+        if (_.has(scope.range, "restrictTo") && _.has(scope.range, "restrictFrom")) {
           $($element).find('.jslider-bg').append('<i class="x"></i>');
-          var width = valueToStep($scope.range.restrictTo) - valueToStep($scope.range.restrictFrom);
-          var left = valueToStep($scope.range.restrictFrom);
+          var width = valueToStep(scope.range.restrictTo) - valueToStep(scope.range.restrictFrom);
+          var left = valueToStep(scope.range.restrictFrom);
           $($element).find('.jslider-bg .x').attr("style", "left: " + left + "%; width:" + width + "%");
         }
       };
@@ -71,13 +71,13 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
         scope: { type: "@",
                  model: '=',
                  range: '=' },
-        link: function($scope, $element) {
+        link: function(scope, $element) {
           var init = function() {
-            if ($scope.range) initialize($scope, $element);
+            if (scope.range) initialize(scope, $element);
           };
-          $scope.$watch('range', init, true);
-          $scope.$watch('range.from', init, true);
-          $scope.$watch('range.to', init, true);
+          scope.$watch('range', init, true);
+          scope.$watch('range.from', init, true);
+          scope.$watch('range.to', init, true);
         },
         template: '<div class="slider"></div>'
       };

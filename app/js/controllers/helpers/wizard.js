@@ -46,41 +46,5 @@ define(['angular', 'underscore'], function(angular, _) {
       return true;
     };
 
-/*    $scope.getStandardizedPreferences = function(currentStep) {
-      var prefs = currentStep.prefs;
-      return _.flatten(_.map(_.pairs(prefs), function(pref) {
-        return steps[pref[0]].handler.standardize(pref[1]);
-      }));
-    };
-
-    $scope.runSMAA = function(currentStep) {
-      var prefs = $scope.getStandardizedPreferences(currentStep);
-      var data = _.extend(currentStep.problem, { "preferences": prefs, "method": "smaa" });
-      var run = function(type) {
-        var task = patavi.submit(type, data);
-        currentStep.progress = 0;
-        task.results.then(
-          function(results) {
-            $scope.$root.$safeApply($scope, function() {
-              currentStep.results = results.results;
-            });
-          }, function(code, error) {
-            $scope.$root.$safeApply($scope, function() {
-              currentStep.error = { code: (code && code.desc) ? code.desc : code,
-                                    cause: error };
-            });
-          }, function(update) {
-            $scope.$root.$safeApply($scope, function() {
-              var progress = parseFloat(update);
-              if(progress > currentStep.progress) {
-                currentStep.progress = progress;
-              }
-            });
-          });
-      };
-
-      if (!currentStep.results && $scope.shouldRun(currentStep)) run('smaa');
-    }; */
-
   }];
 });

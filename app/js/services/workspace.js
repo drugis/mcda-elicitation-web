@@ -1,7 +1,7 @@
 define(['angular', 'underscore', 'services/partialValueFunction'], function(angular, _) {
   var dependencies = ['elicit.pvfService'];
 
-  var Workspaces = function(PartialValueFunction, $routeParams, $rootScope)  {
+  var Workspaces = function(PartialValueFunction, $routeParams, $rootScope, $q)  {
     var WORKSPACE_PREFIX = "workspace_";
 
     function uniqueId(size, prefix) {
@@ -15,11 +15,10 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
     }
 
     var save = function(id, data) {
-      console.info("saving", id, data);
-      var current = get(id);
-      var extended = _.extend(current, data);
-      localStorage.setItem(id, angular.toJson(extended));
-      return extended;
+      console.log("saving", id, data);
+      var toSave = { id: id, state : data };
+      localStorage.setItem(id, angular.toJson(toSave));
+      return toSave;
     };
 
     var decorate = function(workspace) {
@@ -39,25 +38,27 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
     var create = function(problem) {
       var id = uniqueId(5, WORKSPACE_PREFIX);
       var workspace = { "state" : { problem: problem },
-                        "id" : id,
-                        "currentTask": null };
+                        "id" : id };
       localStorage.setItem(id, angular.toJson(workspace));
       return workspace;
     };
 
-    /* Register watch for change in workspace */
     var scope = $rootScope.$new(true);
-    var current = {};
 
-    var setCurrent = function(id) {
-      console.info("Switched to workspace", id);
-      current = angular.copy(get(id), current);
+    var getCurrent = function() {
+      var deferred = $q.defer();
+
+      var resolver = function(newVal) {
+        if(newVal && newVal.workspaceId) {
+          deferred.resolve(get(newVal.workspaceId));
+        }
+      };
+
+      scope.$watch(function() { return $routeParams; }, resolver, true);
+      return deferred.promise;
     };
 
-    scope.$watch(function() { return $routeParams; },
-                 function(newVal) { setCurrent(newVal.workspaceId); }, true);
-
-    return { "current": current,
+    return { "current": getCurrent,
              "create" : create,
              "get" : get,
              "save": save };

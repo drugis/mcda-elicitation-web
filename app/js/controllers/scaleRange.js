@@ -66,13 +66,14 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       });
     };
 
-    var initialize = function() {
-      var current = Workspaces.current;
-      var calculateScales = patavi.submit("smaa", _.extend({ "method": "scales" }, current.state.problem));
-      calculateScales.results.then(_.partial(successHandler, current.state), errorHandler);
+    var initialize = function(workspace) {
+      $scope.workspace = workspace;
+      var calculateScales = patavi.submit("smaa", _.extend({ "method": "scales" }, workspace.state.problem));
+      calculateScales.results.then(_.partial(successHandler, workspace.state), errorHandler);
      };
 
-    $scope.$watch(Workspaces.current, initialize);
+    Workspaces.current().then(initialize);
+
     $scope.$apply();
 
     $scope.validChoice = function(currentState) {
@@ -92,7 +93,7 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       _.each(_.pairs(state.choice), function(choice) {
         state.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
       });
-      Workspaces.current.save(state);
+      $scope.workspace.save(state);
     };
   };
 

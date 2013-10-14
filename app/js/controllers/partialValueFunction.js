@@ -1,10 +1,7 @@
 define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], function(Wizard, angular, patavi, _) {
-  return function($scope, $injector, Workspaces, Tasks) {
 
-    var workspace = Workspaces.current;
-    var state = workspace.state;
-    var taskId = "partial-value-function";
-    var task = _.find(Tasks.available, function(task) { return task.id === taskId; });
+  var dependencies = ['$scope', '$injector', 'Workspaces'];
+  var PartialValueFunctionController = function($scope, $injector, Workspaces) {
 
     var standardize = function(state) {
       // Copy choices to problem
@@ -60,7 +57,6 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
       };
 
       var initial = {
-        title: task.title,
         choice:
         { data: pluckObject(state.problem.criteria, "pvf"),
           calculate: calculate,
@@ -86,7 +82,7 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
     };
 
     var validChoice = function(currentState) {
-      if (currentState.choice.subType === 'elicit values') {
+      if (currentState && currentState.choice.subType === 'elicit values') {
         var criterion = currentState.choice.criterion;
         var choice = currentState.choice.data;
         return choice[criterion].cutoffs.length == choice[criterion].values.length;
@@ -154,15 +150,19 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
       return standardize(nextState);
     };
 
-    $scope.currentStep = initialize(state);
+    Workspaces.current().then(function(workspace) {
+      $scope.currentStep = initialize(workspace.state);
+      $scope.save = function(state) {
+        workspace.save(standardize(state));
+      };
+    });
 
     $scope.canSave = function(state) {
+      if(!state) return false;
       var criteria = _.keys(state.problem.criteria).sort();
       var criterion = getNextPiecewiseLinear(criteria, state);
       return state.choice.subType !== 'elicit cutoffs' && !criterion;
     };
-
-    $scope.save = Workspaces.current.save;
 
     $injector.invoke(Wizard, this, {
       $scope: $scope,
@@ -174,4 +174,6 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
     $scope.$apply();
 
   };
+
+  return dependencies.concat(PartialValueFunctionController);
 });

@@ -24,24 +24,24 @@ define(['angular', 'underscore'], function(angular, _) {
         criterionB: criterionB,
         choice: (bounds[0] + bounds[1]) / 2,
         range: { from: bounds[0], to: bounds[1], rightOpen: true }
-      }
+      };
     }
 
     this.initialize = function(state) {
       criteria = state.problem.criteria;
-      var state = _.extend(state, buildInitial(state.prefs.ordinal[0], state.prefs.ordinal[1], 1));
+      state = _.extend(state, buildInitial(state.prefs.ordinal[0], state.prefs.ordinal[1], 1));
       if (!state.prefs["exact swing"]) state.prefs["exact swing"] = [];
       return state;
-    }
+    };
 
     this.validChoice = function(currentState) {
       var value = currentState.choice;
       var bounds = getBounds(currentState.criterionA);
       return value < bounds[1] && value >= bounds[0];
-    }
+    };
 
     this.nextState = function(currentState) {
-      if(!this.validChoice(currentState)) return;
+      if(!this.validChoice(currentState)) return null;
       var order = currentState.prefs.ordinal;
 
       var idx = _.indexOf(order, currentState.criterionB);
@@ -62,7 +62,7 @@ define(['angular', 'underscore'], function(angular, _) {
         { criteria: [order[idx - 1], order[idx]],
           ratio: getRatio(currentState) });
       return _.extend(angular.copy(currentState), next);
-    }
+    };
 
     this.standardize = function(prefs) {
       return _.map(prefs, function(pref) {
