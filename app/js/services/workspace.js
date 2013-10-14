@@ -15,7 +15,7 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
     }
 
     var save = function(id, data) {
-      console.log("saving", id, data);
+      console.info("saving", id, data);
       var current = get(id);
       var extended = _.extend(current, data);
       localStorage.setItem(id, angular.toJson(extended));

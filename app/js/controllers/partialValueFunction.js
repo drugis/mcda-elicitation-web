@@ -1,11 +1,10 @@
 define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], function(Wizard, angular, patavi, _) {
-  return function($scope, $routeParams, $injector, Workspaces, Tasks) {
+  return function($scope, $injector, Workspaces, Tasks) {
 
-    var workspaceId = $routeParams.workspaceId;
-    var state = Workspaces.get(workspaceId);
+    var workspace = Workspaces.current;
+    var state = workspace.state;
     var taskId = "partial-value-function";
     var task = _.find(Tasks.available, function(task) { return task.id === taskId; });
-    Workspaces.currentTask[workspaceId] = taskId;
 
     var standardize = function(state) {
       // Copy choices to problem
@@ -35,7 +34,7 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
           for (var i = 0; i < preferences.length; ++i) {
             for (var j = 0; j < preferences[i].length; ++j) {
               var level = choice.preferences.indexOf(preferences[i][j]) + 1;
-              preferences[i][j] = level == 0 ? null : level;
+              preferences[i][j] = level === 0 ? null : level;
             }
           }
           return preferences;
@@ -95,18 +94,21 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
       return true;
     };
 
+    var getNextPiecewiseLinear = function(criteria, state) {
+      return  _.find(criteria, function(c) {
+        return state.choice.data[c].type === "piecewise-linear" && !state.choice.data[c].cutoffs;
+      });
+    };
+
     var nextState = function(currentState) {
       var nextState = angular.copy(currentState);
 
       var criteria = _.keys(nextState.problem.criteria).sort();
-      var criterion = _.find(criteria, function(c) {
-        return nextState.choice.data[c].type === "piecewise-linear" && !nextState.choice.data[c].cutoffs;
-      });
-
+      var criterion = getNextPiecewiseLinear(criteria, nextState);
       var choice = nextState.choice;
 
       var info;
-      if (choice.subType == 'elicit cutoffs') {
+      if (choice.subType === 'elicit cutoffs') {
         info = nextState.problem.criteria[choice.criterion];
         choice.subType = 'elicit values';
         var cutoffs = choice.data[choice.criterion].cutoffs;
@@ -153,6 +155,14 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
     };
 
     $scope.currentStep = initialize(state);
+
+    $scope.canSave = function(state) {
+      var criteria = _.keys(state.problem.criteria).sort();
+      var criterion = getNextPiecewiseLinear(criteria, state);
+      return state.choice.subType !== 'elicit cutoffs' && !criterion;
+    };
+
+    $scope.save = Workspaces.current.save;
 
     $injector.invoke(Wizard, this, {
       $scope: $scope,

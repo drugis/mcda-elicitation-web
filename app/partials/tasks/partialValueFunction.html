@@ -92,5 +92,15 @@
   </div>
 
   <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
-  <button class="small button" ng-click="nextStep(currentStep)" ng-disabled="!canProceed(currentStep)">Next</button>
+
+  <button class="small button"
+          ng-if="!canSave(currentStep)"
+          ng-click="nextStep(currentStep)"
+          ng-disabled="!canProceed(currentStep)">Next</button>
+
+  <button class="small success button"
+          ng-if="canSave(currentStep)"
+          ng-click="save(currentStep)"
+          ng-disabled="!canProceed(currentStep)">Save</button>
+
 </div>

@@ -1,5 +1,7 @@
 define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
-  return ['$scope', '$routeParams', 'Workspaces', 'Tasks', function($scope, $routeParams, Workspaces, Tasks) {
+  var dependencies = ['$scope', 'Workspaces', 'Tasks'];
+
+  var ScaleRangeController = function($scope, Workspaces, Tasks) {
     var taskId = "scale-range";
     var task = _.find(Tasks.available, function(task) { return task.id === taskId; });
     $scope.title = task.title;
@@ -92,5 +94,7 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       });
       Workspaces.current.save(state);
     };
-  }];
+  };
+
+  return dependencies.concat(ScaleRangeController);
 });
