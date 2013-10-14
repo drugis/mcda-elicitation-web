@@ -14,6 +14,28 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
       return prefix ? prefix + text : text;
     }
 
+    var save = function(id, data) {
+      console.log("saving", id, data);
+      var current = get(id);
+      var extended = _.extend(current, data);
+      localStorage.setItem(id, angular.toJson(extended));
+      return extended;
+    };
+
+    var decorate = function(workspace) {
+      if(workspace) {
+        if(workspace.id) { workspace.save = _.partial(save, workspace.id); }
+        if(workspace.state) { PartialValueFunction.attach(workspace.state); }
+      }
+      return workspace;
+    };
+
+    var get = function(id) {
+      var workspace = angular.fromJson(localStorage.getItem(id));
+      return decorate(workspace);
+    };
+
+
     var create = function(problem) {
       var id = uniqueId(5, WORKSPACE_PREFIX);
       var workspace = { "state" : { problem: problem },
@@ -23,27 +45,12 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
       return workspace;
     };
 
-    var get = function(id) {
-      var workspace = angular.fromJson(localStorage.getItem(id));
-      if(workspace && workspace.state) {
-        PartialValueFunction.attach(workspace.state);
-      }
-      return workspace;
-    };
-
-    var save = function(id, data) {
-      var current = get(id);
-      var extended = _.extend(current, data);
-      localStorage.setItem(id, angular.toJson(extended));
-      return extended;
-    };
-
     /* Register watch for change in workspace */
     var scope = $rootScope.$new(true);
     var current = {};
 
     var setCurrent = function(id) {
-      console.log("Switched to workspace", id);
+      console.info("Switched to workspace", id);
       current = angular.copy(get(id), current);
     };
 
