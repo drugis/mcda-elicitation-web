@@ -9,5 +9,5 @@ js/app.js: js/misc.js js/patavi.js js/services.js js/elicit/*.js
 js/test.js: js/test/*.js
 	cat $^ > $@
 
-R/service.R: R/smaa.R R/macbethSolve.R
+R/service.R: R/measurements.R R/smaa.R R/macbethSolve.R
 	cat $^ > $@
