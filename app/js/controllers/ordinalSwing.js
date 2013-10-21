@@ -1,4 +1,6 @@
 define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard, angular, _) {
+  'use strict';
+
   var dependencies = ['$scope', '$injector', 'Workspaces'];
 
   var OrdinalSwingController =  function($scope, $injector, Workspaces) {
@@ -90,6 +92,8 @@ define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard,
 
     $scope.save = function(state) {
       var next = nextState(state);
+      var prefs = next.prefs;
+      next.prefs = standardize(prefs.ordinal);
       $scope.workspace.save(next);
     };
 

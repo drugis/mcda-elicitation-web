@@ -1,58 +1,61 @@
-define(['angular'], function(angular) {
-  return function() {
-    this.fields = ["criterionA", "criterionB"];
-    var criteria = {};
+define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'underscore'], function(Wizard, Util, angular, _) {
+  'use strict';
 
-    var title = function(step) {
-      var base = "Ratio Bound SWING weighting";
-      var total = (_.size(criteria) - 1);
-      if(step > total) return base + " (DONE)";
-      return base + " (" + step + "/" + total + ")";
-    }
+  var dependencies = ['$scope', '$injector', 'Workspaces'];
+
+  var IntervalSwingController = function($scope, $injector, Workspaces) {
+    var criteria = {};
 
     function getBounds(criterionName) {
       var criterion = criteria[criterionName];
       return [criterion.worst(), criterion.best()].sort();
-    }
+    };
 
     function buildInitial(criterionA, criterionB, step) {
       var bounds = getBounds(criterionA);
       var increasing = criteria[criterionA].pvf.direction === 'increasing';
       return {
-        title: title(step),
+        step: step,
+        total: _.size(criteria) - 1,
         criterionA: criterionA,
         criterionB: criterionB,
-        best: function() { return increasing ? this.choice.upper : this.choice.lower },
-        worst: function() { return increasing ? this.choice.lower : this.choice.upper },
+        best: function() { return increasing ? this.choice.upper : this.choice.lower; },
+        worst: function() { return increasing ? this.choice.lower : this.choice.upper; },
         choice: {
           lower: bounds[0],
           upper: bounds[1]
         },
         range: { from: bounds[0], to: bounds[1], rightOpen: true }
-      }
-    }
+      };
+    };
 
-    this.initialize = function(state) {
+    var initialize = function(state) {
       criteria = state.problem.criteria;
-      var state = _.extend(state, buildInitial(state.prefs.ordinal[0], state.prefs.ordinal[1], 1));
-      if (!state.prefs["ratio bound"]) state.prefs["ratio bound"] = [];
+      state = _.extend(state, {'criteriaOrder' : Util.getCriteriaOrder(state.prefs)});
+      state = _.extend(state, buildInitial(state.criteriaOrder[0], state.criteriaOrder[1], 1));
       return state;
-    }
+    };
 
-    this.validChoice = function(currentState) {
-      var bounds1 = currentState.choice;
-      var bounds2 = getBounds(currentState.criterionA);
+    Workspaces.current().then(function(workspace) {
+      $scope.currentStep = initialize(workspace.state);
+      $scope.workspace = workspace;
+    });
+
+    var validChoice = function(state) {
+      if(!state) return false;
+      var bounds1 = state.choice;
+      var bounds2 = getBounds(state.criterionA);
       return bounds1.lower < bounds1.upper && bounds2[0] <= bounds1.lower && bounds2[1] >= bounds1.upper;
-    }
+    };
 
-    this.nextState = function(currentState) {
-      if(!this.validChoice(currentState)) return;
-      var order = currentState.prefs.ordinal;
+    var nextState = function(currentState) {
+      if(!validChoice(currentState)) return null;
+      var order = currentState.criteriaOrder;
 
       var idx = _.indexOf(order, currentState.criterionB);
       var next;
       if(idx > order.length - 2) {
-        next = {type: "done", title: title(idx + 1)};
+        next = {type: "done", step: idx + 1};
       } else {
         next = buildInitial(order[idx], order[idx + 1], idx + 1);
       }
@@ -63,18 +66,30 @@ define(['angular'], function(angular) {
       }
 
       next.prefs = angular.copy(currentState.prefs);
-      next.prefs["ratio bound"].push(
+      next.prefs.push(
         { criteria: [order[idx - 1], order[idx]],
-          bounds: getRatioBounds(currentState) });
+          bounds: getRatioBounds(currentState),
+          type: "ratio bound"});
       return _.extend(angular.copy(currentState), next);
-    }
-
-    this.standardize = function(prefs) {
-      return _.map(prefs, function(pref) {
-        return _.extend(pref, { type: "ratio bound" });
-      });
     };
 
-    return this;
-  }
+    $scope.canSave = function(state) {
+      return state && state.step === state.total;
+    };
+
+    $scope.save = function(state) {
+      state = nextState(state);
+      $scope.workspace.save(state);
+    };
+
+    $injector.invoke(Wizard, this, {
+      $scope: $scope,
+      handler: { validChoice: validChoice,
+                 fields: ["problem", "prefs", "total", "choice", "criteriaOrder", "criterionA", "criterionB"],
+                 nextState: nextState }
+    });
+    $scope.$apply();
+  };
+
+  return dependencies.concat(IntervalSwingController);
 });

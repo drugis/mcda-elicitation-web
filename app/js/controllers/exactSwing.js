@@ -1,14 +1,10 @@
-define(['angular', 'underscore'], function(angular, _) {
-  return function() {
-    this.fields = ["criterionA", "criterionB"];
-    var criteria = {};
+define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'underscore'], function(Wizard, Util, angular, _) {
+  'use strict';
 
-    var title = function(step) {
-      var base = "Exact SWING weighting";
-      var total = (_.size(criteria) - 1);
-      if(step > total) return base + " (DONE)";
-      return base + " (" + step + "/" + total + ")";
-    };
+  var dependencies = ['$scope', '$injector', 'Workspaces'];
+
+  var ExactSwingController = function($scope, $injector, Workspaces) {
+    var criteria = {};
 
     function getBounds(criterionName) {
       var criterion = criteria[criterionName];
@@ -19,7 +15,8 @@ define(['angular', 'underscore'], function(angular, _) {
       var bounds = getBounds(criterionA);
       var increasing = criteria[criterionA].pvf.direction === 'increasing';
       return {
-        title: title(step),
+        step: step,
+        total: _.size(criteria) - 1,
         criterionA: criterionA,
         criterionB: criterionB,
         choice: (bounds[0] + bounds[1]) / 2,
@@ -27,27 +24,33 @@ define(['angular', 'underscore'], function(angular, _) {
       };
     }
 
-    this.initialize = function(state) {
+    var initialize = function(state) {
       criteria = state.problem.criteria;
-      state = _.extend(state, buildInitial(state.prefs.ordinal[0], state.prefs.ordinal[1], 1));
-      if (!state.prefs["exact swing"]) state.prefs["exact swing"] = [];
+      state = _.extend(state, {'criteriaOrder' : Util.getCriteriaOrder(state.prefs)});
+      state = _.extend(state, buildInitial(state.criteriaOrder[0], state.criteriaOrder[1], 1));
       return state;
     };
 
-    this.validChoice = function(currentState) {
+    Workspaces.current().then(function(workspace) {
+      $scope.currentStep = initialize(workspace.state);
+      $scope.workspace = workspace;
+    });
+
+    var validChoice = function(currentState) {
+      if (!currentState) return false;
       var value = currentState.choice;
       var bounds = getBounds(currentState.criterionA);
       return value < bounds[1] && value >= bounds[0];
     };
 
-    this.nextState = function(currentState) {
-      if(!this.validChoice(currentState)) return null;
-      var order = currentState.prefs.ordinal;
+    var nextState = function(currentState) {
+      if(!validChoice(currentState)) return null;
+      var order = currentState.criteriaOrder;
 
       var idx = _.indexOf(order, currentState.criterionB);
       var next;
       if(idx > order.length - 2) {
-        next = {type: "done", title: title(idx + 1)};
+        next = {type: "done", step: idx + 1};
       } else {
         next = buildInitial(order[idx], order[idx + 1], idx + 1);
       }
@@ -58,18 +61,30 @@ define(['angular', 'underscore'], function(angular, _) {
       }
 
       next.prefs = angular.copy(currentState.prefs);
-      next.prefs["exact swing"].push(
+      next.prefs.push(
         { criteria: [order[idx - 1], order[idx]],
-          ratio: getRatio(currentState) });
+          ratio: getRatio(currentState),
+          type: "exact swing"});
       return _.extend(angular.copy(currentState), next);
     };
 
-    this.standardize = function(prefs) {
-      return _.map(prefs, function(pref) {
-        return _.extend(pref, { type: "exact swing" });
-      });
+    $scope.canSave = function(state) {
+      return state && state.step === state.total;
     };
 
-    return this;
+    $scope.save = function(state) {
+      state = nextState(state);
+      $scope.workspace.save(state);
+    };
+
+    $injector.invoke(Wizard, this, {
+      $scope: $scope,
+      handler: { validChoice: validChoice,
+                 fields: ["problem", "prefs", "total", "choice", "criteriaOrder", "criterionA", "criterionB"],
+                 nextState: nextState }
+    });
+    $scope.$apply();
   };
+
+  return dependencies.concat(ExactSwingController);
 });

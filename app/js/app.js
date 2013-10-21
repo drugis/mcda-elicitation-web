@@ -73,7 +73,6 @@ define(
       _.each(Tasks.available, function(task) {
         var baseTemplatePath = "app/partials/tasks/";
         var templateUrl = baseTemplatePath + task.templateUrl;
-
         $routeProvider
           .when('/workspaces/:workspaceId/' + task.id, { templateUrl: templateUrl, controller: task.controller });
       });

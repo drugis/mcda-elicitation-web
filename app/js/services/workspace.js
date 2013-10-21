@@ -2,7 +2,7 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
   var dependencies = ['elicit.pvfService'];
 
   var Workspaces = function(PartialValueFunction, $routeParams, $rootScope, $q)  {
-    var WORKSPACE_PREFIX = "workspace_";
+    var WORKSPACE_PREFIX = "";
 
     function uniqueId(size, prefix) {
       var text = "";

@@ -6,6 +6,5 @@ define(['angular', 'underscore'], function(angular,  _) {
     $scope.route = $routeParams;
   };
 
-
   return angular.module('elicit.controllers', []).controller('WorkspaceController', dependencies.concat(WorkspaceController));
 });
