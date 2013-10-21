@@ -5,13 +5,12 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
 
     var standardize = function(state) {
       // Copy choices to problem
-      var excluded = ["comp", "base"];
-      _.each(_.pairs(state.problem.criteria), function(criterion) {
-        _.each(_.keys(state.choice.data[criterion[0]]), function(key) {
-          if(excluded.indexOf(key) == -1) {
-            criterion[1].pvf[key] = state.choice.data[criterion[0]][key];
-          }
-        });
+      _.each(_.pairs(state.problem.criteria), function(pair) {
+        var name = pair[0], criterion = pair[1];
+        var isLinear = state.choice.data[name].type === "linear";
+        var baseIncluded = ["range", "type", "direction"];
+        var included  = isLinear ? baseIncluded : baseIncluded.concat(["values", "cutoffs"]);
+        criterion.pvf = _.pick(state.choice.data[name], included);
       });
 
       return state;
@@ -168,7 +167,6 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
       $scope: $scope,
       handler: { validChoice: validChoice,
                  fields: ["problem", "type", "prefs", "choice", "title"],
-                 standardize: standardize,
                  nextState: nextState }
     });
     $scope.$apply();
