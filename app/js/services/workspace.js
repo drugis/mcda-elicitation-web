@@ -15,8 +15,9 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
     }
 
     var save = function(id, data) {
-      console.log("saving", id, data);
-      var toSave = { id: id, state : data };
+      var fields = ['problem', 'prefs'];
+      var toSave = { id: id, state : _.pick(data, fields) };
+      console.log("saving", toSave);
       localStorage.setItem(id, angular.toJson(toSave));
       return toSave;
     };

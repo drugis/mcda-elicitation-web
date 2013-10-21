@@ -31,6 +31,7 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
 
     var initialize = function(state) {
       criteria = state.problem.criteria;
+      state.prefs = Util.getOrdinalPreferences(state.prefs); // remove pre-existing ordinal/exact preferences
       state = _.extend(state, {'criteriaOrder' : Util.getCriteriaOrder(state.prefs)});
       state = _.extend(state, buildInitial(state.criteriaOrder[0], state.criteriaOrder[1], 1));
       return state;
