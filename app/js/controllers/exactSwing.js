@@ -37,18 +37,18 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
       $scope.workspace = workspace;
     });
 
-    var validChoice = function(currentState) {
-      if (!currentState) return false;
-      var value = currentState.choice;
-      var bounds = getBounds(currentState.criterionA);
+    var validChoice = function(state) {
+      if (!state) return false;
+      var value = state.choice;
+      var bounds = getBounds(state.criterionA);
       return value < bounds[1] && value >= bounds[0];
     };
 
-    var nextState = function(currentState) {
-      if(!validChoice(currentState)) return null;
-      var order = currentState.criteriaOrder;
+    var nextState = function(state) {
+      if(!validChoice(state)) return null;
+      var order = state.criteriaOrder;
 
-      var idx = _.indexOf(order, currentState.criterionB);
+      var idx = _.indexOf(order, state.criterionB);
       var next;
       if(idx > order.length - 2) {
         next = {type: "done", step: idx + 1};
@@ -56,17 +56,17 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
         next = buildInitial(order[idx], order[idx + 1], idx + 1);
       }
 
-      function getRatio(currentState) {
-        var u = criteria[currentState.criterionA].pvf.map;
-        return 1 / u(currentState.choice);
+      function getRatio(state) {
+        var u = criteria[state.criterionA].pvf.map;
+        return 1 / u(state.choice);
       }
 
-      next.prefs = angular.copy(currentState.prefs);
+      next.prefs = angular.copy(state.prefs);
       next.prefs.push(
         { criteria: [order[idx - 1], order[idx]],
-          ratio: getRatio(currentState),
+          ratio: getRatio(state),
           type: "exact swing"});
-      return _.extend(angular.copy(currentState), next);
+      return _.extend(angular.copy(state), next);
     };
 
     $scope.canSave = function(state) {

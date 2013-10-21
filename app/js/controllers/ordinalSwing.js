@@ -48,13 +48,13 @@ define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard,
       return state && _.contains(_.keys(criteria), state.choice);
     };
 
-    var nextState = function(currentState) {
-      if(!validChoice(currentState)) {
+    var nextState = function(state) {
+      if(!validChoice(state)) {
         return null;
       }
 
-      var nextState = angular.copy(currentState);
-      var choice = currentState.choice;
+      var nextState = angular.copy(state);
+      var choice = state.choice;
       nextState.choice = undefined;
 
       _.each(nextState.choices, function(alternative) {
@@ -63,7 +63,7 @@ define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard,
 
       function next(choice) {
         delete nextState.choices[choice];
-        nextState.reference[choice] = currentState.problem.criteria[choice].best();
+        nextState.reference[choice] = state.problem.criteria[choice].best();
         nextState.prefs.ordinal.push(choice);
         nextState.title = title(nextState.prefs.ordinal.length + 1);
       }

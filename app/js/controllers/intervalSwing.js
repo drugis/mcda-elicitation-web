@@ -49,11 +49,11 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
       return bounds1.lower < bounds1.upper && bounds2[0] <= bounds1.lower && bounds2[1] >= bounds1.upper;
     };
 
-    var nextState = function(currentState) {
-      if(!validChoice(currentState)) return null;
-      var order = currentState.criteriaOrder;
+    var nextState = function(state) {
+      if(!validChoice(state)) return null;
+      var order = state.criteriaOrder;
 
-      var idx = _.indexOf(order, currentState.criterionB);
+      var idx = _.indexOf(order, state.criterionB);
       var next;
       if(idx > order.length - 2) {
         next = {type: "done", step: idx + 1};
@@ -61,17 +61,17 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
         next = buildInitial(order[idx], order[idx + 1], idx + 1);
       }
 
-      function getRatioBounds(currentState) {
-        var u = criteria[currentState.criterionA].pvf.map;
-        return [1 / u(currentState.choice.lower), 1 / u(currentState.choice.upper)].sort();
+      function getRatioBounds(state) {
+        var u = criteria[state.criterionA].pvf.map;
+        return [1 / u(state.choice.lower), 1 / u(state.choice.upper)].sort();
       }
 
-      next.prefs = angular.copy(currentState.prefs);
+      next.prefs = angular.copy(state.prefs);
       next.prefs.push(
         { criteria: [order[idx - 1], order[idx]],
-          bounds: getRatioBounds(currentState),
+          bounds: getRatioBounds(state),
           type: "ratio bound"});
-      return _.extend(angular.copy(currentState), next);
+      return _.extend(angular.copy(state), next);
     };
 
     $scope.canSave = function(state) {
