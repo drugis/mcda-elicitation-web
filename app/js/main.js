@@ -6,17 +6,19 @@ require.config({
     'angular-resource': '//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular-resource',
     'jquery-slider': '/app/js/lib/jslider/bin/jquery.slider.min',
     'd3': '//cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min',
-    'nvd3': '//cdnjs.cloudflare.com/ajax/libs/nvd3/1.0.0-beta/nv.d3.min'
+    'nvd3': '//cdnjs.cloudflare.com/ajax/libs/nvd3/1.0.0-beta/nv.d3.min',
+    'MathJax': '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.2/MathJax.js?config=TeX-MML-AM_HTMLorMML'
   },
   baseUrl: '/app/js',
   shim: {
-    'angular': { exports : 'angular'},
-    'angular-resource': { deps:['angular'], exports: 'angular-resource'},
-    'underscore': { exports : '_'},
-    'd3': { exports : 'd3'},
-    'nvd3': { deps: ['d3'], exports : 'nv'},
-    'jQuery': { exports : 'jQuery'},
-    'jquery-slider': { deps: ['jQuery'] }
+    'angular': { exports : 'angular' },
+    'angular-resource': { deps:['angular'], exports: 'angular-resource' },
+    'underscore': { exports : '_' },
+    'd3': { exports : 'd3' },
+    'nvd3': { deps: ['d3'], exports : 'nv' },
+    'jQuery': { exports : 'jQuery' },
+    'jquery-slider': { deps: ['jQuery'] },
+    'MathJax' : { exports: 'MathJax' }
   },
   priority: ['angular']
 });
@@ -34,6 +36,7 @@ String.prototype.hashCode = function(){
   }
   return hash;
 };
+
 
 require(['require', 'angular', 'app'], function (require, angular) {
   require(['lib/domReady!'], function (document) {

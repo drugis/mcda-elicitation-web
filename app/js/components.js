@@ -1,4 +1,4 @@
-define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], function(angular, _, $, d3, nv) {
+define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'MathJax', 'jquery-slider'], function(angular, _, $, d3, nv, MathJax) {
   return angular.module('elicit.components', []).
     directive('slider', function() {
       var initialize = function(scope, $element) {
@@ -294,6 +294,20 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'jquery-slider'], funct
             reader.readAsText(newVal);
           });
         }
+      };
+    })
+    .directive("mathjaxBind", function() {
+      return {
+        restrict: "A",
+        controller: ["$scope", "$element", "$attrs", function($scope, $element, $attrs) {
+          $scope.$watch($attrs.mathjaxBind, function(value) {
+            var $script = angular.element("<script type='math/tex'>")
+                  .html(value == undefined ? "" : value);
+            $element.html("");
+            $element.append($script);
+            MathJax.Hub.Queue(["Reprocess", MathJax.Hub, $element[0]]);
+          });
+        }]
       };
     });
 });
