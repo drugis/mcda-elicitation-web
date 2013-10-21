@@ -32,7 +32,7 @@ define(
           controller: 'ScaleRangeController',
           templateUrl: "scaleRange.html" },
         { id: "partial-value-function",
-          title: "Define partial value functions",
+          title: "Define Partial Value Functions",
           controller: 'PartialValueFunctionController',
           templateUrl: "partialValueFunction.html" },
         { id: "ordinal-swing",
