@@ -14,7 +14,7 @@ define(['angular', 'underscore'], function(angular, _) {
       }
       DecisionProblem.problem.then(function(problem) {
         var workspace = Workspaces.create(problem);
-        var nextUrl = "/workspaces/" + workspace.id + "/scale-range";
+        var nextUrl = "/workspaces/" + workspace.id + "/overview";
         $location.path(nextUrl);
       });
     };

@@ -2,6 +2,15 @@ label {
   clear: both
 }
 
+dt {
+    display: inline-block;
+    float: left;
+    margin-right: 0.5em;
+}
+dt:after {
+    content: ":";
+}
+
 #results .loader, .hidden {
   display: none;
 }

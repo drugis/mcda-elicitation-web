@@ -1,0 +1,44 @@
+<div class="row">
+  <div class="columns large-12">
+    <h3>Overview</h3>
+    <dl>
+      <dt>Scale Ranges</dt>
+      <dd>{{status.scaleRange}}</dd>
+      <dt>Partial Value Functions</dt>
+      <dd>{{status.partialValueFunction}}</dd>
+      <dt>Preferences</dt>
+      <dd><span ng-repeat="type in status.preferences">{{type}}<span ng-show="!$last">;</span> </span></dd>
+    </dl>
+
+    <h4>Actions</h4>
+    <ul>
+      <li ng-repeat="task in tasks" ng-show="task.title && !$first" ng-class="{active: task.id == currentWorkspace.currentTask}">
+        <a href="#/workspaces/{{route.workspaceId}}/{{task.id}}" ng-bind="task.title"></a>
+      </li>
+    </ul>
+
+
+    <h4>Criteria</h4>
+
+    <div ng-repeat="criterion in problem.criteria">
+    <h5>{{criterion.title}}</h5>
+
+    <ul>
+      <li>Natural scale bounds: {{criterion.scale}}</li>
+      <li>Configured scale range: {{criterion.pvf.range}}</li>
+      <li>Partial value function: {{criterion.pvf.type}}; {{criterion.pvf.direction}}</li>
+    </ul>
+
+    <div style="width: 300px; height: 200px">
+        <line-chart value="getXY(criterion)"></line-chart>
+    </div>
+
+    </div>
+
+    <h4>Trade-offs</h4>
+
+    <div mathjax-bind="preferences"></div>
+
+    <h4>Alternatives</h4>
+  </div>
+</div>

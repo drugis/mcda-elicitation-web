@@ -65,7 +65,19 @@ define(['angular', 'underscore'], function(angular, _) {
       return state;
     };
 
+    var getXY = function(criterion) {
+      var y = [1].concat(criterion.pvf.values || []).concat([0]);
+      var best = criterion.best();
+      var worst = criterion.worst();
+      var x = [best].concat(criterion.pvf.cutoffs || []).concat([worst]);
+      var values = _.map(_.zip(x, y), function(p) {
+        return { x: p[0], y: p[1] };
+      });
+      return [ { key: "Piecewise PVF", values: values }];
+    };
+
     return { create: create,
-             attach: attach };
+             attach: attach,
+             getXY: getXY };
   });
 });
