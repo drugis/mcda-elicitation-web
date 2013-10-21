@@ -1,12 +1,16 @@
 <div>
+  <h3>Results</h3>
   <div ng-if="currentStep.results">
+    <h5>Preferences</h5>
+    <pre>{{currentStep.prefs | json}}</pre>
+
+    <h5>Rank acceptabilities</h5>
     <div style="width: 400px; height: 400px">
       <rank-plot value="currentStep.results.ranks.data"
                  parse-fn="rankGraphData"
                  problem="currentStep.problem">
       </rank-plot>
     </div>
-    <h5>Rank acceptabilities</h5>
     <table>
       <thead>
         <tr>
