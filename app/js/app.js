@@ -2,11 +2,12 @@ define(
   ['angular',
    'require',
    'underscore',
+   'config',
    'services/decisionProblem',
    'services/workspace',
    'controllers',
    'components'],
-  function(angular, require, _) {
+  function(angular, require, _, Config) {
     var dependencies = ['elicit.problem-resource', 'elicit.workspace', 'elicit.components', 'elicit.controllers'];
     var app = angular.module('elicit', dependencies);
 
@@ -22,43 +23,8 @@ define(
       };
     }]);
 
-    var tasks = {
-      'available' : [
-        { id: "choose-problem",
-          controller: "ChooseProblemController",
-          templateUrl: "chooseProblem.html" },
-        { id: "scale-range",
-          title: "Define Scale Range",
-          controller: 'ScaleRangeController',
-          templateUrl: "scaleRange.html" },
-        { id: "partial-value-function",
-          title: "Define Partial Value Functions",
-          controller: 'PartialValueFunctionController',
-          templateUrl: "partialValueFunction.html" },
-        { id: "ordinal-swing",
-          title: "Ordinal Swing Elicitation",
-          controller: 'OrdinalSwingController',
-          templateUrl: 'ordinalSwing.html' },
-        { id: "interval-swing",
-          title: "Interval Swing Elicitation",
-          controller: 'IntervalSwingController',
-          templateUrl: 'intervalSwing.html' },
-        { id: "exact-swing",
-          title: "Exact Swing Elicitation",
-          controller: 'ExactSwingController',
-          templateUrl: 'exactSwing.html' },
-        { id: "choose-method",
-          controller: 'ChooseMethodController',
-          templateUrl: 'chooseMethod.html' },
-        { id: "results",
-          title: "Results",
-          controller: 'ResultsController',
-          templateUrl: 'results.html' }
-      ]};
-
-    app.constant('Tasks', tasks);
-
-    _.each(tasks.available, function(task) {
+    app.constant('Tasks', Config.tasks);
+    _.each(Config.tasks.available, function(task) {
       var camelCase = function (str) { return str.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); }); };
 
       app.controller(task.controller, ['$scope', '$injector', function($scope, $injector) {
