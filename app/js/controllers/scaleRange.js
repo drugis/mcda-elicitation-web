@@ -18,10 +18,9 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
     };
 
     var errorHandler = function(code, error) {
-      $scope.$root.$safeApply($scope, function() {
-        $scope.error = { code: (code && code.desc) ? code.desc : code,
-                         cause: error };
-      });
+      var message = { code: (code && code.desc) ? code.desc : code,
+                      cause: error };
+      $scope.$root.$broadcast("patavi.error", message);
     };
 
     var successHandler = function(state, results) {
