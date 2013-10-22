@@ -1,5 +1,6 @@
 define(['angular', 'underscore'], function(angular, _) {
-  return function($scope, $location, DecisionProblem, Workspaces) {
+  var dependencies = ['$scope', 'DecisionProblem', 'Workspaces'];
+  var ChooseProblemController = function($scope, DecisionProblem, Workspaces) {
     $scope.list = [];
     $scope.model = {};
     $scope.local = {};
@@ -14,8 +15,7 @@ define(['angular', 'underscore'], function(angular, _) {
       }
       DecisionProblem.problem.then(function(problem) {
         var workspace = Workspaces.create(problem);
-        var nextUrl = "/workspaces/" + workspace.id + "/overview";
-        $location.path(nextUrl);
+        workspace.redirectToDefaultView();
       });
     };
 
@@ -31,4 +31,7 @@ define(['angular', 'underscore'], function(angular, _) {
 
     $scope.$apply();
   };
+
+  return dependencies.concat(ChooseProblemController);
+
 });

@@ -7,7 +7,6 @@ define(
    'services/workspace',
    'services/taskDependencies',
    'controllers',
-   'controllers/chooseProblem',
    'components'],
   function(angular, require, _, Config) {
     var dependencies = ['elicit.problem-resource', 'elicit.workspace', 'elicit.components', 'elicit.controllers', 'elicit.taskDependencies'];
@@ -41,6 +40,12 @@ define(
         });
       }]);
     });
+
+    app.controller("ChooseProblemController", ['$scope', '$injector', function($scope, $injector) {
+      require(['controllers/' + 'chooseProblem'], function(controller) {
+        $injector.invoke(controller, this, { '$scope' : $scope });
+      });
+    }]);
 
     // example url: /#/workspaces/<id>/<taskname>
     app.config(['Tasks', '$routeProvider', function(Tasks, $routeProvider) {

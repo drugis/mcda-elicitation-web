@@ -95,6 +95,7 @@ define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard,
       var prefs = next.prefs;
       next.prefs = standardize(prefs.ordinal);
       $scope.workspace.save(next);
+      $scope.workspace.redirectToDefaultView();
     };
 
     $scope.canSave = function(state) {

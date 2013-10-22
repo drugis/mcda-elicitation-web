@@ -81,6 +81,7 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
     $scope.save = function(state) {
       state = nextState(state);
       $scope.workspace.save(state);
+      $scope.workspace.redirectToDefaultView();
     };
 
     $injector.invoke(Wizard, this, {

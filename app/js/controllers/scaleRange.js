@@ -1,4 +1,6 @@
 define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
+  'use strict';
+
   var dependencies = ['$scope', 'Workspaces', 'Tasks'];
 
   var ScaleRangeController = function($scope, Workspaces, Tasks) {
@@ -91,6 +93,7 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
         state.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
       });
       $scope.workspace.save(state);
+      $scope.workspace.redirectToDefaultView();
     };
 
     $scope.$apply();

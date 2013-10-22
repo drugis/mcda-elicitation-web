@@ -1,7 +1,7 @@
-define(['angular', 'underscore', 'services/partialValueFunction'], function(angular, _) {
+define(['config', 'angular', 'underscore', 'services/partialValueFunction'], function(Config, angular, _) {
   var dependencies = ['elicit.pvfService'];
 
-  var Workspaces = function(PartialValueFunction, $routeParams, $rootScope, $q)  {
+  var Workspaces = function(PartialValueFunction, $routeParams, $rootScope, $q, $location)  {
     var WORKSPACE_PREFIX = "";
 
     function uniqueId(size, prefix) {
@@ -26,6 +26,10 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
       if(workspace) {
         if(workspace.id) { workspace.save = _.partial(save, workspace.id); }
         if(workspace.state) { PartialValueFunction.attach(workspace.state); }
+        workspace.redirectToDefaultView = function() {
+          var nextUrl = "/workspaces/" + workspace.id + "/" + Config.defaultView;
+          $location.path(nextUrl);
+        };
       }
       return workspace;
     };
@@ -40,7 +44,7 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
       var workspace = { "state" : { problem: problem },
                         "id" : id };
       localStorage.setItem(id, angular.toJson(workspace));
-      return workspace;
+      return decorate(workspace);
     };
 
     var scope = $rootScope.$new(true);
@@ -48,7 +52,7 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
     var getCurrent = function() {
       var deferred = $q.defer();
 
-      var resolver = function(newVal) {
+      var resolver = function(newVal, oldVal) {
         if(newVal && newVal.workspaceId) {
           deferred.resolve(get(newVal.workspaceId));
         }

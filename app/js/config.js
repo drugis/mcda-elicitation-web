@@ -44,5 +44,8 @@ define([], function() {
           requires: ['scale-ranges'],
           resets: []}
       ]};
+
+  this.defaultView = "overview";
+
   return this;
 });
