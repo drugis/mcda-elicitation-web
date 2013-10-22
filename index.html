@@ -27,7 +27,7 @@
 
     <div class="row">
       <div ng-controller="WorkspaceController">
-	<div class="columns large-3" ng-cloak ng-hide="route.workspaceId == 'new'">
+	<div class="columns large-3" ng-cloak ng-hide="!route.workspaceId">
           <ul class="side-nav">
             <li ng-repeat="task in tasks" ng-show="task.title" ng-class="{active: task.id == currentWorkspace.currentTask}">
               <a href="#/workspaces/{{route.workspaceId}}/{{task.id}}" ng-bind="task.title"></a>

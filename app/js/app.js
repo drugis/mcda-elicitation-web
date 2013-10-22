@@ -5,10 +5,12 @@ define(
    'config',
    'services/decisionProblem',
    'services/workspace',
+   'services/taskDependencies',
    'controllers',
+   'controllers/chooseProblem',
    'components'],
   function(angular, require, _, Config) {
-    var dependencies = ['elicit.problem-resource', 'elicit.workspace', 'elicit.components', 'elicit.controllers'];
+    var dependencies = ['elicit.problem-resource', 'elicit.workspace', 'elicit.components', 'elicit.controllers', 'elicit.taskDependencies'];
     var app = angular.module('elicit', dependencies);
 
     app.run(['$rootScope', function($rootScope) {
@@ -42,13 +44,15 @@ define(
 
     // example url: /#/workspaces/<id>/<taskname>
     app.config(['Tasks', '$routeProvider', function(Tasks, $routeProvider) {
+      var baseTemplatePath = "app/views/";
       _.each(Tasks.available, function(task) {
-        var baseTemplatePath = "app/views/";
         var templateUrl = baseTemplatePath + task.templateUrl;
         $routeProvider
           .when('/workspaces/:workspaceId/' + task.id, { templateUrl: templateUrl, controller: task.controller });
       });
-      $routeProvider.otherwise({redirectTo: 'workspaces/new/choose-problem'});
+      $routeProvider.when('/choose-problem', { templateUrl: baseTemplatePath + 'chooseProblem.html',
+                                               controller: "ChooseProblemController" });
+      $routeProvider.otherwise({redirectTo: '/choose-problem'});
     }]);
 
     return app;

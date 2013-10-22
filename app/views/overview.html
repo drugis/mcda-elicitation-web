@@ -12,8 +12,17 @@
 
     <h4>Actions</h4>
     <ul>
-      <li ng-repeat="task in tasks" ng-show="task.title && !$first" ng-class="{active: task.id == currentWorkspace.currentTask}">
-        <a href="#/workspaces/{{route.workspaceId}}/{{task.id}}" ng-bind="task.title"></a>
+      <li ng-repeat="info in tasks.accessible" ng-show="info.task.id != 'overview'">
+        <a href="#/workspaces/{{route.workspaceId}}/{{info.task.id}}" ng-bind="info.task.title"></a>
+        {{ task | json }}
+      </li>
+      <li ng-repeat="info in tasks.destructive" ng-show="info.task.id != 'overview'">
+        <a style="color: red;" href="#/workspaces/{{route.workspaceId}}/{{info.task.id}}" ng-bind="info.task.title"></a>
+        {{ info.safe.resets | json }}
+      </li>
+      <li ng-repeat="info in tasks.inaccessible" ng-show="info.task.id != 'overview'">
+        <a style="color: gray;" ng-bind="info.task.title"></a>
+        {{ info.accessible.requires | json }}
       </li>
     </ul>
 

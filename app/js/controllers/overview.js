@@ -1,12 +1,26 @@
 define(['angular', 'underscore', 'services/partialValueFunction'], function(angular, _) {
   'use strict';
 
-  var dependencies = ['$scope', 'Workspaces', 'Tasks', 'PartialValueFunction'];
-  var OverviewController =  function($scope, Workspaces, Tasks, PartialValueFunction) {
-    $scope.tasks = Tasks.available;
-
+  var dependencies = ['$scope', 'Workspaces', 'PartialValueFunction', 'Tasks', 'TaskDependencies'];
+  var OverviewController =  function($scope, Workspaces, PartialValueFunction, Tasks, TaskDependencies) {
     Workspaces.current().then(function(workspace) {
-      var problem = workspace.state.problem;
+      var state = workspace.state;
+      var problem = state.problem;
+
+      var tasks = _.map(Tasks.available, function(task) {
+        return { 'task': task,
+                 'accessible': TaskDependencies.isAccessible(task, state),
+                 'safe': TaskDependencies.isSafe(task, state) }; });
+
+      $scope.tasks = {
+        'accessible' : _.filter(tasks, function(task) {
+          return task.accessible.accessible && task.safe.safe; }),
+        'destructive': _.filter(tasks, function(task) {
+          return task.accessible.accessible && !task.safe.safe; }),
+        'inaccessible': _.filter(tasks, function(task) {
+          return !task.accessible.accessible; })
+      };
+
       var linearPVFs = _.filter(problem.criteria, function(criterion) {
         return criterion.pvf.type === "linear";
       }).length;

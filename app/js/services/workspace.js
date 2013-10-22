@@ -35,7 +35,6 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
       return decorate(workspace);
     };
 
-
     var create = function(problem) {
       var id = uniqueId(5, WORKSPACE_PREFIX);
       var workspace = { "state" : { problem: problem },

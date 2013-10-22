@@ -73,8 +73,6 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
 
     Workspaces.current().then(initialize);
 
-    $scope.$apply();
-
     $scope.validChoice = function(currentState) {
       if(currentState) {
         return _.every(currentState.choice, function(choice) {
@@ -94,6 +92,8 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       });
       $scope.workspace.save(state);
     };
+
+    $scope.$apply();
   };
 
   return dependencies.concat(ScaleRangeController);
