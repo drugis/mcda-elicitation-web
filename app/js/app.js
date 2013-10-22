@@ -43,7 +43,7 @@ define(
     // example url: /#/workspaces/<id>/<taskname>
     app.config(['Tasks', '$routeProvider', function(Tasks, $routeProvider) {
       _.each(Tasks.available, function(task) {
-        var baseTemplatePath = "app/partials/tasks/";
+        var baseTemplatePath = "app/views/";
         var templateUrl = baseTemplatePath + task.templateUrl;
         $routeProvider
           .when('/workspaces/:workspaceId/' + task.id, { templateUrl: templateUrl, controller: task.controller });
