@@ -1,23 +1,36 @@
 <div class="row">
   <div class="columns large-12">
     <h3>Overview</h3>
-    <dl>
-      <dt>Scale Ranges</dt>
-      <dd>{{status.scaleRange}}</dd>
-      <dt>Partial Value Functions</dt>
-      <dd>{{status.partialValueFunction}}</dd>
-      <dt>Preferences</dt>
-      <dd><span ng-repeat="type in status.preferences">{{type}}<span ng-show="!$last">;</span> </span></dd>
-    </dl>
+
+    <label>Scenario title</label>
+    <div class="row">
+      <div class="columns large-6">
+        <div class="row collapse">
+          <div class="small-10 columns">
+            <input type="text" ng-model="scenario.title">
+          </div>
+          <div class="small-2 columns">
+            <button class="prefix" ng-click="scenario.save()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="no-bullet">
+      <li><strong>Scale Ranges:</strong> {{status.scaleRange}}</li>
+      <li><strong>Partial Value Functions:</strong> {{status.partialValueFunction}}</li>
+      <li><strong>Preferences:</strong> <span ng-repeat="type in status.preferences">{{type}}<span ng-show="!$last">;</span> </span></li>
+    </ul>
 
     <h4>Actions</h4>
     <ul>
       <li ng-repeat="info in tasks.accessible" ng-show="info.task.id != 'overview'">
-        <a href="#/workspaces/{{route.workspaceId}}/scenarios/{{route.scenarioId}}/{{info.task.id}}" ng-bind="info.task.title"></a>
+
+        <a href="{{createPath(route.workspaceId, route.scenarioId, info.task.id)}}" ng-bind="info.task.title"></a>
         {{ task | json }}
       </li>
       <li ng-repeat="info in tasks.destructive" ng-show="info.task.id != 'overview'">
-        <a style="color: red;" href="#/workspaces/{{route.workspaceId}}/scenarios/{{route.scenarioId}}/{{info.task.id}}" ng-bind="info.task.title"></a>
+        <a style="color: red;" href="{{createPath(route.workspaceId, route.scenarioId, info.task.id)}}" ng-bind="info.task.title"></a>
         {{ info.safe.resets | json }}
       </li>
       <li ng-repeat="info in tasks.inaccessible" ng-show="info.task.id != 'overview'">

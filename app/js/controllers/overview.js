@@ -4,6 +4,7 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
   var dependencies = ['$scope', 'Workspaces', 'PartialValueFunction', 'Tasks', 'TaskDependencies'];
   var OverviewController =  function($scope, Workspaces, PartialValueFunction, Tasks, TaskDependencies) {
     var initialize = function(workspace, scenario) {
+      $scope.scenario = scenario;
       var state = scenario.state;
       var problem = state.problem;
 

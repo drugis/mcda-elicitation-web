@@ -13,13 +13,14 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
     }
 
     var save = function(id, workspace) {
-      var toSave = { id: id, scenarios : workspace.scenarios };
-      console.log("saving", toSave);
-      localStorage.setItem(id, angular.toJson(toSave));
-      return toSave;
+      console.info("saving", workspace);
+      localStorage.setItem(id, angular.toJson(workspace));
+      $rootScope.$broadcast("elicit.scenariosChanged");
+      return workspace;
     };
 
     var redirectToDefaultView = function(workspaceId, scenarioId) {
+      console.info("redirecting to", workspaceId, scenarioId);
       var nextUrl = "/workspaces/" + workspaceId + "/scenarios/" + scenarioId + "/" + Config.defaultView;
       $location.path(nextUrl);
     };
@@ -27,20 +28,24 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
     var scope = $rootScope.$new(true);
 
     var decorate = function(workspace) {
-      workspace.redirectToDefaultView = _.partial(redirectToDefaultView, workspace.id, _.keys(workspace.scenarios)[0]);
+      workspace.redirectToDefaultView = function(scenarioId) {
+        redirectToDefaultView(workspace.id, scenarioId ? scenarioId : _.keys(workspace.scenarios)[0]);
+      };
 
       workspace.getScenario = function(id) {
         var deferred = $q.defer();
-
         var scenario  = workspace.scenarios[id];
         PartialValueFunction.attach(scenario.state);
         scenario.redirectToDefaultView = function() {
           redirectToDefaultView(workspace.id, id);
         };
-        scenario.save = function(state) {
-          var fields = ['problem', 'prefs'];
-          workspace.scenarios[scenario.id] = { "id": scenario.id, "state": _.pick(state, fields) };
+        scenario.save = function() {
           save(workspace.id, workspace);
+        };
+        scenario.update = function(state) {
+          var fields = ['problem', 'prefs'];
+          scenario.state = _.pick(state, fields);
+          scenario.save();
         };
         deferred.resolve(scenario);
         return deferred.promise;
@@ -58,22 +63,41 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
         return deferred.promise;
       };
 
+      workspace.newScenario = function(state) {
+        var id = randomId(5);
+
+        var n = _.size(workspace.scenarios) + 1;
+        var scenario = { "id" : id, "title": "Scenario " + n, "state": state };
+        workspace.scenarios[id] = scenario;
+
+        save(workspace.id, workspace);
+
+        return id;
+      };
+
+      workspace.query = function() {
+        var scenarios = _.sortBy(_.values(workspace.scenarios), "title");
+        return _.object(_.pluck(scenarios, "id"), _.pluck(scenarios, "title"));
+      };
+
       return workspace;
     };
 
-    var get = function(id) {
+    var get = _.memoize(function(id) {
       var workspace = angular.fromJson(localStorage.getItem(id));
       return decorate(workspace);
-    };
+    });
 
     var create = function(problem) {
       var workspaceId = randomId(5);
       var scenarioId = randomId(5);
 
       var scenarios = {};
-      scenarios[scenarioId] = { "id" : scenarioId, "state": { problem: problem }};
+      scenarios[scenarioId] = { "id" : scenarioId, "title": "Default", "state": { problem: problem }};
 
       var workspace = { "scenarios": scenarios,
+                        "title": problem.title,
+                        "problem": problem,
                         "id" : workspaceId };
       localStorage.setItem(workspaceId, angular.toJson(workspace));
       return decorate(workspace);

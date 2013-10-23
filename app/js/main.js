@@ -7,7 +7,10 @@ require.config({
     'jquery-slider': '/app/js/lib/jslider/bin/jquery.slider.min',
     'd3': '//cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min',
     'nvd3': '//cdnjs.cloudflare.com/ajax/libs/nvd3/1.0.0-beta/nv.d3.min',
-    'MathJax': '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.2/MathJax.js?config=TeX-MML-AM_HTMLorMML'
+    'MathJax': '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.2/MathJax.js?config=TeX-MML-AM_HTMLorMML',
+    'foundation': '//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/js/foundation.min',
+    'foundation.dropdown': '//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/js/foundation/foundation.dropdown.min',
+    'foundation.tooltip': '//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/js/foundation/foundation.tooltips.min'
   },
   baseUrl: '/app/js',
   shim: {
@@ -18,7 +21,10 @@ require.config({
     'nvd3': { deps: ['d3'], exports : 'nv' },
     'jQuery': { exports : 'jQuery' },
     'jquery-slider': { deps: ['jQuery'] },
-    'MathJax' : { exports: 'MathJax' }
+    'MathJax' : { exports: 'MathJax' },
+    'foundation':  { deps: ['jQuery'] },
+    'foundation.section':  { deps: ['foundation'] },
+    'foundation.tooltip':  { deps: ['foundation'] }
   },
   priority: ['angular']
 });

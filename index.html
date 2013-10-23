@@ -7,10 +7,14 @@
 
     <title>Preference elicitation</title>
 
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/css/foundation.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css">
+
     <link rel="stylesheet" type="text/css" href="app/js/lib/jslider/bin/jquery.slider.min.css">
-    <link rel="stylesheet" type="text/css" href="app/css/foundation.min.css">
     <link rel="stylesheet" type="text/css" href="app/css/nv.d3.css">
     <link rel="stylesheet" type="text/css" href="app/css/main.css">
+
+    <script src="app/js/lib/modernizr.foundation.js"></script>
 
     <script src="app/js/lib/require.js" data-main="app/js/main.js"></script>
 
@@ -27,10 +31,28 @@
 
     <div class="row">
       <div ng-controller="WorkspaceController">
-	<div class="columns large-3" ng-cloak ng-hide="!route.workspaceId">
+        <h1 ng-bind="workspaceTitle"></h1>
+
+        <div class="tabs" ng-show="route.workspaceId">
+          <ul class="tabsNavigation">
+            <li ng-repeat="(id, title) in scenarios" ng-class="{current: id == route.scenarioId}">
+              <a href="{{createPath(route.workspaceId, id)}}" ng-bind="title"></a>
+            </li>
+            <li>
+              <a href=javaScript:void(0);"" data-dropdown="newScenarioControl"><i class="icon-plus"></i></a>
+              <ul id="newScenarioControl" class="f-dropdown" data-dropdown-content>
+                <li><a ng-click="forkScenario()">Copy current scenario</a></li>
+                <li><a ng-click="newScenario()">Create clean scenario</a></li>
+              </ul>
+            </li>
+          </ul>
+          <div class="fakeTabsContent"></div>
+        </div>
+
+	<div class="columns large-3" ng-show="route.workspaceId">
           <ul class="side-nav">
-            <li ng-repeat="task in tasks" ng-show="task.title" ng-class="{active: task.id == currentWorkspace.currentTask}">
-              <a href="#/workspaces/{{route.workspaceId}}/{{task.id}}" ng-bind="task.title"></a>
+            <li ng-repeat="task in tasks" ng-show="task.title">
+              <a href="{{createPath(route.workspaceId, route.scenarioId, task.id)}}" ng-bind="task.title"></a>
             </li>
           </ul>
 	</div>
@@ -40,7 +62,7 @@
       </div>
     </div>
     <script>
-      window.config = { examplesRepository: "/examples/" };
+     window.config = { examplesRepository: "/examples/" };
     </script>
 
   </body>

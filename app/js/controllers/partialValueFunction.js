@@ -153,7 +153,7 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
       workspace.currentScenario().then(function(scenario) {
         $scope.currentStep = initialize(scenario.state);
         $scope.save = function(state) {
-          scenario.save(standardize(state));
+          scenario.update(standardize(state));
           scenario.redirectToDefaultView();
         };
       });

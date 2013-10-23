@@ -83,7 +83,7 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
 
     $scope.save = function(state) {
       state = nextState(state);
-      scenario.save(state);
+      scenario.update(state);
       scenario.redirectToDefaultView();
     };
 

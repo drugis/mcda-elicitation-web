@@ -4,6 +4,7 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
     var criteria;
 
     var run = function(state) {
+      state = angular.copy(state);
       var data = _.extend(state.problem, { "preferences": state.prefs, "method": "smaa" });
       var task = patavi.submit('smaa', data);
 

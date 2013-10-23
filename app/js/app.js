@@ -6,10 +6,16 @@ define(
    'services/decisionProblem',
    'services/workspace',
    'services/taskDependencies',
+   'foundation.dropdown',
+   'foundation.tooltip',
    'controllers',
    'components'],
   function(angular, require, _, Config) {
-    var dependencies = ['elicit.problem-resource', 'elicit.workspace', 'elicit.components', 'elicit.controllers', 'elicit.taskDependencies'];
+    var dependencies = ['elicit.problem-resource',
+                        'elicit.workspace',
+                        'elicit.components',
+                        'elicit.controllers',
+                        'elicit.taskDependencies'];
     var app = angular.module('elicit', dependencies);
 
     app.run(['$rootScope', function($rootScope) {
@@ -28,6 +34,10 @@ define(
           $rootScope.error = message;
         });
       });
+      $rootScope.createPath = function(workspaceId, scenarioId, taskId) {
+        taskId = taskId ? taskId : Config.defaultView;
+        return "#/workspaces/" + workspaceId + "/scenarios/" + scenarioId + "/" + taskId;
+        };
     }]);
 
     app.constant('Tasks', Config.tasks);
@@ -63,6 +73,16 @@ define(
                                                controller: "ChooseProblemController" });
       $routeProvider.otherwise({redirectTo: '/choose-problem'});
     }]);
+
+    app.run(function() {
+      $(document).foundation();
+      // from http://stackoverflow.com/questions/16952244/what-is-the-best-way-to-close-a-dropdown-in-zurb-foundation-4-when-clicking-on-a
+      $('.f-dropdown').click(function() {
+        if ($(this).hasClass('open')) {
+          $('[data-dropdown="'+$(this).attr('id')+'"]').trigger('click');
+        }
+      });
+    });
 
     return app;
   });

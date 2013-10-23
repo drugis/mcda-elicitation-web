@@ -98,7 +98,7 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       _.each(_.pairs(state.choice), function(choice) {
         state.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
       });
-      scenario.save(state);
+      scenario.update(state);
       scenario.redirectToDefaultView();
     };
 

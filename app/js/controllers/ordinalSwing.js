@@ -98,7 +98,7 @@ define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard,
       var next = nextState(state);
       var prefs = next.prefs;
       next.prefs = standardize(prefs.ordinal);
-      scenario.save(next);
+      scenario.update(next);
       scenario.redirectToDefaultView();
     };
 
