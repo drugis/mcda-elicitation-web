@@ -19,14 +19,14 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
         $scope.$root.$broadcast("patavi.error", message);
       };
 
-      var updateHandler = function(update) {
+      var updateHandler = _.throttle(function(update) {
         $scope.$root.$safeApply($scope, function() {
-          var progress = parseFloat(update);
+          var progress = parseInt(update);
           if(progress > state.progress) {
-            state.progress = progress;
+            state.progress = Math.max(state.progress, progress);
           }
         });
-      };
+      }, 30);
 
       state.progress = 0;
       task.results.then(successHandler, errorHandler, updateHandler);
@@ -58,7 +58,7 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       });
       var name = "Alternatives for rank " + (rank + 1);
       return [{ key: name, values: values }];
-    }, function(val) {
+    }, function(val) { // Hash function
       return 31 * val.selectedRank.hashCode() + angular.toJson(val.results).hashCode();
     });
 
@@ -88,7 +88,9 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
     };
 
     Workspaces.current().then(function(workspace) {
-      $scope.currentStep = initialize(workspace.state);
+      workspace.currentScenario().then(function(scenario) {
+        $scope.currentStep = initialize(scenario.state);
+      });
     });
 
     $scope.$apply();

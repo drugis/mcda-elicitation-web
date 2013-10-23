@@ -3,8 +3,8 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
 
   var dependencies = ['$scope', 'Workspaces', 'PartialValueFunction', 'Tasks', 'TaskDependencies'];
   var OverviewController =  function($scope, Workspaces, PartialValueFunction, Tasks, TaskDependencies) {
-    Workspaces.current().then(function(workspace) {
-      var state = workspace.state;
+    var initialize = function(workspace, scenario) {
+      var state = scenario.state;
       var problem = state.problem;
 
       var tasks = _.map(Tasks.available, function(task) {
@@ -35,7 +35,7 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
         "ordinal": "Ordinal SWING",
         "ratio bound": "Interval SWING",
         "exact swing": "Exact SWING"
-      }, _.unique(_.pluck(workspace.state.prefs, "type"))));
+      }, _.unique(_.pluck(state.prefs, "type"))));
 
       var scaleRange = _.every(problem.criteria, function(criterion) {
         return criterion.pvf.range;
@@ -55,7 +55,7 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
         return "w_" + criterionIndex;
       };
 
-      var eqns = _.map(workspace.state.prefs, function(pref) {
+      var eqns = _.map(state.prefs, function(pref) {
         var crit = _.map(pref.criteria, w);
         if (pref.type === "ordinal") {
           return crit[0] + " & \\geq & " + crit[1] + "\\\\";
@@ -72,7 +72,13 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
       $scope.preferences = eqnArray;
 
       $scope.getXY = _.memoize(PartialValueFunction.getXY, function(arg) { return arg.title.hashCode(); });
+    };
 
+
+    Workspaces.current().then(function(workspace) {
+      workspace.currentScenario().then(function(scenario) {
+        initialize(workspace, scenario);
+      });
     });
 
     $scope.$apply();

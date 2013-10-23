@@ -32,9 +32,12 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
       return state;
     };
 
+    var scenario;
     Workspaces.current().then(function(workspace) {
-      $scope.currentStep = initialize(workspace.state);
-      $scope.workspace = workspace;
+      workspace.currentScenario().then(function(_scenario) {
+        scenario = _scenario;
+        $scope.currentStep = initialize(scenario.state);
+      });
     });
 
     var validChoice = function(state) {
@@ -75,8 +78,8 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
 
     $scope.save = function(state) {
       state = nextState(state);
-      $scope.workspace.save(state);
-      $scope.workspace.redirectToDefaultView();
+      scenario.save(state);
+      scenario.redirectToDefaultView();
     };
 
     $injector.invoke(Wizard, this, {

@@ -44,17 +44,21 @@ define(
     app.controller("ChooseProblemController", ['$scope', '$injector', function($scope, $injector) {
       require(['controllers/' + 'chooseProblem'], function(controller) {
         $injector.invoke(controller, this, { '$scope' : $scope });
-      });
+     });
     }]);
 
     // example url: /#/workspaces/<id>/<taskname>
     app.config(['Tasks', '$routeProvider', function(Tasks, $routeProvider) {
+
       var baseTemplatePath = "app/views/";
       _.each(Tasks.available, function(task) {
         var templateUrl = baseTemplatePath + task.templateUrl;
         $routeProvider
-          .when('/workspaces/:workspaceId/' + task.id, { templateUrl: templateUrl, controller: task.controller });
+          .when('/workspaces/:workspaceId/scenarios/:scenarioId/' + task.id,
+                { templateUrl: templateUrl, controller: task.controller });
       });
+
+      // Default route
       $routeProvider.when('/choose-problem', { templateUrl: baseTemplatePath + 'chooseProblem.html',
                                                controller: "ChooseProblemController" });
       $routeProvider.otherwise({redirectTo: '/choose-problem'});

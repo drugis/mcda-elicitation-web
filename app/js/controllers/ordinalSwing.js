@@ -20,6 +20,7 @@ define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard,
       return base + " (" + step + "/" + total + ")";
     };
 
+
     var initialize = function(state) {
       criteria = state.problem.criteria;
       var fields = {
@@ -39,9 +40,12 @@ define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard,
       return _.extend(state, fields);
     };
 
+    var scenario;
     Workspaces.current().then(function(workspace) {
-      $scope.currentStep = initialize(workspace.state);
-      $scope.workspace = workspace;
+      workspace.currentScenario().then(function(_scenario) {
+        scenario = _scenario;
+        $scope.currentStep = initialize(scenario.state);
+      });
     });
 
     var validChoice = function(state) {
@@ -94,8 +98,8 @@ define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard,
       var next = nextState(state);
       var prefs = next.prefs;
       next.prefs = standardize(prefs.ordinal);
-      $scope.workspace.save(next);
-      $scope.workspace.redirectToDefaultView();
+      scenario.save(next);
+      scenario.redirectToDefaultView();
     };
 
     $scope.canSave = function(state) {

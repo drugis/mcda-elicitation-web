@@ -150,11 +150,13 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
     };
 
     Workspaces.current().then(function(workspace) {
-      $scope.currentStep = initialize(workspace.state);
-      $scope.save = function(state) {
-        workspace.save(standardize(state));
-        workspace.redirectToDefaultView();
-      };
+      workspace.currentScenario().then(function(scenario) {
+        $scope.currentStep = initialize(scenario.state);
+        $scope.save = function(state) {
+          scenario.save(standardize(state));
+          scenario.redirectToDefaultView();
+        };
+      });
     });
 
     $scope.canSave = function(state) {
