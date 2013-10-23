@@ -47,5 +47,11 @@ define([], function() {
 
   this.defaultView = "overview";
 
+  this.createPath = function(workspaceId, scenarioId, taskId) {
+    taskId = taskId ? taskId : this.defaultView;
+    return "#/workspaces/" + workspaceId + "/scenarios/" + scenarioId + "/" + taskId;
+  };
+
+
   return this;
 });

@@ -1,9 +1,7 @@
 define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
   'use strict';
 
-  var dependencies = ['$scope', 'Workspaces', 'Tasks'];
-
-  var ScaleRangeController = function($scope, Workspaces, Tasks) {
+  return function($scope, Tasks, currentScenario) {
     var taskId = "scale-range";
     var task = _.find(Tasks.available, function(task) { return task.id === taskId; });
     $scope.title = task.title;
@@ -67,19 +65,10 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       });
     };
 
-    var scenario;
+    var scenario = currentScenario;
 
-    var initialize = function(workspace, _scenario) {
-      scenario = _scenario;
-      var calculateScales = patavi.submit("smaa", _.extend({ "method": "scales" }, scenario.state.problem));
-      calculateScales.results.then(_.partial(successHandler, scenario.state), errorHandler);
-     };
-
-    Workspaces.current().then(function(workspace) {
-      workspace.currentScenario().then(function(scenario) {
-        initialize(workspace, scenario);
-      });
-    });
+    var calculateScales = patavi.submit("smaa", _.extend({ "method": "scales" }, scenario.state.problem));
+    calculateScales.results.then(_.partial(successHandler, scenario.state), errorHandler);
 
     $scope.validChoice = function(currentState) {
       if(currentState) {
@@ -101,9 +90,5 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       scenario.update(state);
       scenario.redirectToDefaultView();
     };
-
-    $scope.$apply();
   };
-
-  return dependencies.concat(ScaleRangeController);
 });

@@ -4,6 +4,7 @@ require.config({
     'underscore': '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min',
     'angular': '//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular',
     'angular-resource': '//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular-resource',
+    'angular-ui-router': '//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.0/angular-ui-router.min',
     'jquery-slider': '/app/js/lib/jslider/bin/jquery.slider.min',
     'd3': '//cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min',
     'nvd3': '//cdnjs.cloudflare.com/ajax/libs/nvd3/1.0.0-beta/nv.d3.min',
@@ -16,6 +17,7 @@ require.config({
   shim: {
     'angular': { exports : 'angular' },
     'angular-resource': { deps:['angular'], exports: 'angular-resource' },
+    'angular-ui-router': { deps:['angular'] },
     'underscore': { exports : '_' },
     'd3': { exports : 'd3' },
     'nvd3': { deps: ['d3'], exports : 'nv' },

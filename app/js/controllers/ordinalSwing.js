@@ -1,9 +1,6 @@
 define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard, angular, _) {
   'use strict';
-
-  var dependencies = ['$scope', '$injector', 'Workspaces'];
-
-  var OrdinalSwingController =  function($scope, $injector, Workspaces) {
+  return function($scope, $injector, currentScenario) {
     var criteria = {};
 
     var getReference = function() {
@@ -40,13 +37,8 @@ define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard,
       return _.extend(state, fields);
     };
 
-    var scenario;
-    Workspaces.current().then(function(workspace) {
-      workspace.currentScenario().then(function(_scenario) {
-        scenario = _scenario;
-        $scope.currentStep = initialize(scenario.state);
-      });
-    });
+    var scenario = currentScenario;
+    $scope.currentStep = initialize(scenario.state);
 
     var validChoice = function(state) {
       return state && _.contains(_.keys(criteria), state.choice);
@@ -112,8 +104,6 @@ define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard,
                  fields: ["problem", "type", "prefs", "choice", "title", "reference", "choices"],
                  nextState: nextState }
     });
-    $scope.$apply();
   };
 
-  return dependencies.concat(OrdinalSwingController);
 });

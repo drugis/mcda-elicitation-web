@@ -1,5 +1,5 @@
 define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
-  return function($scope, Workspaces) {
+  return function($scope, currentScenario) {
     var alternatives;
     var criteria;
 
@@ -88,12 +88,7 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       return run(next);
     };
 
-    Workspaces.current().then(function(workspace) {
-      workspace.currentScenario().then(function(scenario) {
-        $scope.currentStep = initialize(scenario.state);
-      });
-    });
+    $scope.currentStep = initialize(currentScenario.state);
 
-    $scope.$apply();
   };
 });

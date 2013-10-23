@@ -1,7 +1,7 @@
 define(['config', 'angular', 'underscore', 'services/partialValueFunction'], function(Config, angular, _) {
   var dependencies = ['elicit.pvfService'];
 
-  var Workspaces = function(PartialValueFunction, $routeParams, $rootScope, $q, $location)  {
+  var Workspaces = function(PartialValueFunction, $rootScope, $q, $location)  {
     function randomId(size, prefix) {
       var text = "";
       var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -47,19 +47,10 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
           scenario.state = _.pick(state, fields);
           scenario.save();
         };
-        deferred.resolve(scenario);
-        return deferred.promise;
-      };
 
-      workspace.currentScenario = function() {
-        var deferred = $q.defer();
-        var resolver = function(newVal, oldVal) {
-          if(newVal && newVal.scenarioId) {
-            var scenario = workspace.getScenario(newVal.scenarioId);
-            scenario.then(function() { deferred.resolve(scenario); });
-          }
-        };
-        scope.$watch(function() { return $routeParams; }, resolver, true);
+        scenario.createPath = _.partial(Config.createPath, workspace.id, scenario.id);
+
+        deferred.resolve(scenario);
         return deferred.promise;
       };
 
@@ -84,8 +75,10 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
     };
 
     var get = _.memoize(function(id) {
+      var deferred = $q.defer();
       var workspace = angular.fromJson(localStorage.getItem(id));
-      return decorate(workspace);
+      deferred.resolve(decorate(workspace));
+      return deferred.promise;
     });
 
     var create = function(problem) {
@@ -103,19 +96,7 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
       return decorate(workspace);
     };
 
-    var getCurrent = function() {
-      var deferred = $q.defer();
-      var resolver = function(newVal, oldVal) {
-        if(newVal && newVal.workspaceId) {
-          deferred.resolve(get(newVal.workspaceId));
-        }
-      };
-      scope.$watch(function() { return $routeParams; }, resolver, true);
-      return deferred.promise;
-    };
-
-    return { "current": getCurrent,
-             "create" : create,
+    return { "create" : create,
              "get" : get,
              "save": save };
   };

@@ -1,11 +1,10 @@
 define(['angular', 'underscore'], function(angular,  _) {
-  var dependencies = ['$scope', '$routeParams', '$location', 'Tasks', 'Workspaces'];
+  var dependencies = ['$scope', '$stateParams', '$location', 'Tasks', 'Workspaces'];
 
-  var WorkspaceController = function($scope, $routeParams, $location, Tasks, Workspaces) {
+  var WorkspaceController = function($scope, $stateParams, $location, Tasks, Workspaces) {
     $scope.tasks = Tasks.available;
-    $scope.route = $routeParams;
 
-    Workspaces.current().then(function(workspace) {
+    Workspaces.get($stateParams.workspaceId).then(function(workspace) {
       $scope.workspaceTitle = workspace.title;
 
       $scope.scenarios = workspace.query();

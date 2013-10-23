@@ -1,9 +1,7 @@
 define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'underscore'], function(Wizard, Util, angular, _) {
   'use strict';
 
-  var dependencies = ['$scope', '$injector', 'Workspaces'];
-
-  var ExactSwingController = function($scope, $injector, Workspaces) {
+  return function($scope, $injector, currentScenario) {
     var criteria = {};
 
     function getBounds(criterionName) {
@@ -32,13 +30,8 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
       return state;
     };
 
-    var scenario;
-    Workspaces.current().then(function(workspace) {
-      workspace.currentScenario().then(function(_scenario) {
-        scenario = _scenario;
-        $scope.currentStep = initialize(scenario.state);
-      });
-    });
+    var scenario = currentScenario;
+    $scope.currentStep = initialize(scenario.state);
 
     var validChoice = function(state) {
       if (!state) return false;
@@ -88,8 +81,5 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
                  fields: ["problem", "prefs", "total", "choice", "criteriaOrder", "criterionA", "criterionB"],
                  nextState: nextState }
     });
-    $scope.$apply();
   };
-
-  return dependencies.concat(ExactSwingController);
 });
