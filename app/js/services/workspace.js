@@ -67,8 +67,7 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
       };
 
       workspace.query = function() {
-        var scenarios = _.sortBy(_.values(workspace.scenarios), "title");
-        return _.object(_.pluck(scenarios, "id"), _.pluck(scenarios, "title"));
+        return _.values(workspace.scenarios).sort(function(a, b) { return a.title.localeCompare(b.title); });
       };
 
       return workspace;

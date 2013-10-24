@@ -22,6 +22,14 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
         return !task.accessible.accessible; })
     };
 
+    $scope.dependenciesString = function(dependencies) {
+      var result = "";
+      _.each(dependencies, function(dep) {
+        result = result + "<br> - " + TaskDependencies.definitions[dep].title;
+      });
+      return result;
+    };
+
     var linearPVFs = _.filter(problem.criteria, function(criterion) {
       return criterion.pvf.type === "linear";
     }).length;

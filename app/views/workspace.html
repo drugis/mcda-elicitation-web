@@ -4,8 +4,8 @@
 
     <div class="tabs">
       <ul class="tabsNavigation">
-        <li ng-repeat="(id, title) in scenarios" ng-class="{current: id == scenario.id}">
-          <a href="{{createPath(workspace.id, id)}}" ng-bind="title"></a>
+        <li ng-repeat="s in scenarios" ng-class="{current: s.id == scenario.id}">
+          <a href="{{createPath(s.id)}}" ng-bind="s.title"></a>
         </li>
         <li>
           <a href=javaScript:void(0);"" data-dropdown="newScenarioControl"><i class="icon-plus"></i></a>
@@ -20,9 +20,8 @@
 
     <div class="columns large-3">
       <ul class="side-nav">
-        <li ng-repeat="task in tasks" ng-show="task.title">
-          <a href="{{scenario.createPath(task.id)}}" ng-bind="task.title"></a>
-        </li>
+        <li><a href="{{scenario.createPath()}}"><i class="icon-angle-left"></i> Overview</a></li>
+        <li><a href="{{scenario.createPath('results')}}"><i class="icon-angle-right"></i> Results</a></li>
       </ul>
     </div>
     <div class="columns large-9">

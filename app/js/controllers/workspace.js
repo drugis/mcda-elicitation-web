@@ -1,8 +1,9 @@
-define(['angular', 'underscore'], function(angular,  _) {
-  return function($scope, $stateParams, $location, Tasks, currentWorkspace, currentScenario) {
+define(['angular', 'underscore', 'config'], function(angular,  _, Config) {
+  return function($scope, Tasks, currentWorkspace, currentScenario) {
     $scope.tasks = Tasks.available;
     $scope.workspace = currentWorkspace;
     $scope.scenario = currentScenario;
+    $scope.createPath = _.partial(Config.createPath, currentWorkspace.id);
 
     $scope.scenarios = currentWorkspace.query();
     $scope.$on("elicit.scenariosChanged", function(e, val) {
@@ -19,5 +20,4 @@ define(['angular', 'underscore'], function(angular,  _) {
       currentWorkspace.redirectToDefaultView(scenarioId);
     };
   };
-
 });

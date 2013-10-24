@@ -214,6 +214,7 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'MathJax', 'jquery-slid
       return {
         restrict: 'E',
         scope: {
+          showLegend: "@",
           value: '=',
           parseFn: '='
         },
@@ -232,6 +233,11 @@ define(['angular', 'underscore', 'jQuery', 'd3', 'nvd3', 'MathJax', 'jquery-slid
 
             var chart = nv.models.lineChart().width(width).height(height);
             chart.forceY([0.0]);
+
+            if (attrs.showLegend && attrs.showLegend === "false") {
+              chart.showLegend(false);
+            }
+
             chart.xAxis.staggerLabels(false);
             if (_.every(data, function(x) { return !_.isUndefined(x.labels); })) {
               chart.xAxis.tickFormat(function(i, obj) {
