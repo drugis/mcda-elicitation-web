@@ -6,7 +6,7 @@ define(
    'config',
    'angular-ui-router',
    'services/decisionProblem',
-   'services/workspace',
+   'services/workspaces',
    'services/taskDependencies',
    'foundation.dropdown',
    'foundation.tooltip',
@@ -17,7 +17,7 @@ define(
     var dependencies = [
       'ui.router',
       'elicit.problem-resource',
-      'elicit.workspace',
+      'elicit.workspaces',
       'elicit.directives',
       'elicit.filters',
       'elicit.controllers',

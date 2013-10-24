@@ -100,5 +100,5 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
              "save": save };
   };
 
-  return angular.module('elicit.workspace', dependencies).factory('Workspaces', Workspaces);
+  return angular.module('elicit.workspaces', dependencies).factory('Workspaces', Workspaces);
 });
