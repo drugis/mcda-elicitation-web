@@ -76,8 +76,9 @@ define(['angular', 'underscore'], function(angular, _) {
       return [ { key: "Piecewise PVF", values: values }];
     };
 
-    return { create: create,
+     return { create: create,
              attach: attach,
-             getXY: getXY };
+             getXY: getXY
+           };
   });
 });

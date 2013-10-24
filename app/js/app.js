@@ -79,7 +79,13 @@ define(
           parent: 'workspace',
           url: '/' + task.id,
           templateUrl: templateUrl,
-          controller: task.controller
+          controller: task.controller,
+          resolve : {
+            taskDefinition: function(currentScenario, TaskDependencies) {
+              var def = TaskDependencies.extendTaskDefinition(task);
+              return def;
+            }
+          }
         });
       });
 

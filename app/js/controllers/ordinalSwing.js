@@ -1,6 +1,6 @@
 define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard, angular, _) {
   'use strict';
-  return function($scope, $injector, currentScenario) {
+  return function($scope, $injector, currentScenario, taskDefinition) {
     var criteria = {};
 
     var getReference = function() {
@@ -102,7 +102,7 @@ define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard,
       handler: { validChoice: validChoice,
                  fields: ["choice", "reference", "choices"],
                  nextState: nextState,
-                 initialize: _.partial(initialize, scenario.state),
+                 initialize: _.partial(initialize, taskDefinition.clean(scenario.state)),
                  hasIntermediateResults: true,
                  standardize: standardize }
     });

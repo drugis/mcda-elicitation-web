@@ -1,10 +1,8 @@
 define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
   'use strict';
 
-  return function($scope, Tasks, currentScenario) {
-    var taskId = "scale-range";
-    var task = _.find(Tasks.available, function(task) { return task.id === taskId; });
-    $scope.title = task.title;
+  return function($scope, currentScenario, taskDefinition) {
+    $scope.title = taskDefinition.title;
 
     var nice = function(x) {
       var log10 = function(x) { return Math.log(x) / Math.log(10); };
@@ -28,12 +26,12 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       var choices = {};
       $scope.$root.$safeApply($scope, function() {
         _.map(_.pairs(results.results[0]), function(criterion) {
-          var from = criterion[1]["2.5%"], to = criterion[1]["97.5%"];
 
           // Set inital model value
           var problemRange = state.problem.criteria[criterion[0]].pvf.range;
-          from = problemRange[0];
-          to = problemRange[1];
+          var from = problemRange ? problemRange[0] : criterion[1]["2.5%"];
+          var to = problemRange ? problemRange[1] : criterion[1]["97.5%"];
+
           choices[criterion[0]] = { lower: from, upper: to };
 
           // Set scales for slider
@@ -66,9 +64,10 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
     };
 
     var scenario = currentScenario;
+    var state = taskDefinition.clean(scenario.state);
 
-    var calculateScales = patavi.submit("smaa", _.extend({ "method": "scales" }, scenario.state.problem));
-    calculateScales.results.then(_.partial(successHandler, scenario.state), errorHandler);
+    var calculateScales = patavi.submit("smaa", _.extend(state.problem, { "method": "scales" }));
+    calculateScales.results.then(_.partial(successHandler, state), errorHandler);
 
     $scope.validChoice = function(currentState) {
       if(currentState) {

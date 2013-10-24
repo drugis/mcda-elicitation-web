@@ -1,7 +1,7 @@
 define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'underscore'], function(Wizard, Util, angular, _) {
   'use strict';
 
-  return function($scope, $injector, currentScenario) {
+  return function($scope, $injector, currentScenario, taskDefinition) {
     var criteria = {};
 
     function getBounds(criterionName) {
@@ -85,7 +85,7 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
                  nextState: nextState,
                  standardize: _.identity,
                  hasIntermediateResults: true,
-                 initialize: _.partial(initialize, currentScenario.state)
+                 initialize: _.partial(initialize, taskDefinition.clean(currentScenario.state))
                }
     });
   };

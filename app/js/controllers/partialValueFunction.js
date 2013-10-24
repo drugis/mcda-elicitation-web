@@ -1,6 +1,5 @@
 define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], function(Wizard, angular, patavi, _) {
-  return function($scope, $injector, currentScenario) {
-
+  return function($scope, $injector, currentScenario, taskDefinition, PartialValueFunction) {
     var standardize = function(state) {
       // Copy choices to problem
       _.each(_.pairs(state.problem.criteria), function(pair) {
@@ -147,11 +146,9 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
       return standardize(nextState);
     };
 
-    var scenario = currentScenario;
-    $scope.currentStep = initialize(scenario.state);
     $scope.save = function(state) {
-      scenario.update(standardize(state));
-      scenario.redirectToDefaultView();
+      currentScenario.update(PartialValueFunction.attach(standardize(state)));
+      currentScenario.redirectToDefaultView();
     };
 
     $scope.canSave = function(state) {
@@ -164,7 +161,10 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
     $injector.invoke(Wizard, this, {
       $scope: $scope,
       handler: { validChoice: validChoice,
-                 fields: ["problem", "type", "prefs", "choice", "title"],
+                 fields: ["type", "choice", "title"],
+                 hasIntermediateResults: false,
+                 initialize: _.partial(initialize, taskDefinition.clean(currentScenario.state)),
+                 standardize: _.identity,
                  nextState: nextState }
     });
   };

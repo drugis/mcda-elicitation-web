@@ -85,20 +85,30 @@ define(['underscore', 'angular'], function(_, angular) {
       'non-ordinal-preferences': nonOrdinalPreferences,
       'complete-criteria-ranking': completeCriteriaRanking
     };
+    var remove = function(task, state) {
+      return _.reduce(task.resets, function(memo, reset) {
+        return definitions[reset].remove(memo);
+      }, state);
+    };
+    var isAccessible = function(task, state) {
+      var requires = _.filter(task.requires, function(require) { return !definitions[require].isPresent(state); });
+      return { accessible: _.isEmpty(requires), requires: requires};
+    };
+    var isSafe = function(task, state) {
+      var resets = _.filter(task.resets, function(reset) { return definitions[reset].isPresent(state); });
+      return { safe: _.isEmpty(resets), resets: resets};
+    };
     return {
       definitions: definitions,
-      isAccessible: function(task, state) {
-        var requires = _.filter(task.requires, function(require) { return !definitions[require].isPresent(state); });
-        return { accessible: _.isEmpty(requires), requires: requires};
-      },
-      isSafe: function(task, state) {
-        var resets = _.filter(task.resets, function(reset) { return definitions[reset].isPresent(state); });
-        return { safe: _.isEmpty(resets), resets: resets};
-      },
-      remove: function(task, state) {
-        return _.reduce(task.resets, function(memo, reset) {
-          return definitions[reset].remove(memo);
-        }, state);
+      isAccessible: isAccessible,
+      isSafe: isSafe,
+      remove: remove,
+      extendTaskDefinition: function(task) {
+        return _.extend(task, {
+          clean: _.partial(remove, task),
+          isAccessible: _.partial(isAccessible, task),
+          isSafe: _.partial(isSafe, task)
+        });
       }
     };
   };

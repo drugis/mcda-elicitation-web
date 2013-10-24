@@ -1,11 +1,11 @@
 define(['angular', 'underscore', 'services/partialValueFunction'], function(angular, _) {
   'use strict';
 
-  return function($scope, PartialValueFunction, Tasks, TaskDependencies, currentScenario) {
+  return function($scope, PartialValueFunction, Tasks, TaskDependencies, currentScenario, taskDefinition) {
     var scenario = currentScenario;
     $scope.scenario = scenario;
 
-    var state = scenario.state;
+    var state = taskDefinition.clean(scenario.state);
     var problem = state.problem;
 
     var tasks = _.map(Tasks.available, function(task) {
@@ -83,7 +83,7 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
     var eqnArray = "\\begin{eqnarray} " + _.reduce(eqns, function(memo, eqn) { return memo + eqn; }, "") + " \\end{eqnarray}";
     $scope.preferences = eqnArray;
 
-    $scope.getXY = _.memoize(PartialValueFunction.getXY, function(arg) { return arg.title.hashCode(); });
+    $scope.getXY = _.memoize(PartialValueFunction.getXY, function(arg) { return angular.toJson(arg.pvf); });
   };
 
 });

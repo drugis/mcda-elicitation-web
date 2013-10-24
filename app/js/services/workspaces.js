@@ -39,9 +39,11 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
         scenario.redirectToDefaultView = function() {
           redirectToDefaultView(workspace.id, id);
         };
+
         scenario.save = function() {
           save(workspace.id, workspace);
         };
+
         scenario.update = function(state) {
           var fields = ['problem', 'prefs'];
           scenario.state = _.pick(state, fields);
