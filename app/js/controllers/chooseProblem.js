@@ -28,8 +28,6 @@ define(['angular', 'underscore'], function(angular, _) {
     DecisionProblem.list.then(function(data) {
       $scope.list = data;
     });
-
-    $scope.$apply();
   };
 
   return dependencies.concat(ChooseProblemController);

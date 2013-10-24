@@ -1,30 +1,33 @@
-define(['angular', 'underscore'], function(angular,  _) {
-  var dependencies = ['$scope', '$stateParams', '$location', 'Tasks', 'Workspaces'];
-
-  var WorkspaceController = function($scope, $stateParams, $location, Tasks, Workspaces) {
-    $scope.tasks = Tasks.available;
-
-    Workspaces.get($stateParams.workspaceId).then(function(workspace) {
-      $scope.workspaceTitle = workspace.title;
-
-      $scope.scenarios = workspace.query();
-      $scope.$on("elicit.scenariosChanged", function(e, val) {
-        $scope.scenarios = workspace.query();
-      });
-
-      $scope.forkScenario = function() {
-        workspace.currentScenario().then(function(scenario) {
-          var scenarioId = workspace.newScenario(scenario.state);
-          workspace.redirectToDefaultView(scenarioId);
-        });
-      };
-
-      $scope.newScenario = function() {
-        var scenarioId = workspace.newScenario({ "problem" : workspace.problem });
-        workspace.redirectToDefaultView(scenarioId);
-      };
-    });
-  };
-
-  return angular.module('elicit.controllers', []).controller('WorkspaceController', dependencies.concat(WorkspaceController));
+define([
+  'angular',
+  'underscore',
+  'controllers/chooseProblem',
+  'controllers/workspace',
+  'controllers/overview',
+  'controllers/scaleRange',
+  'controllers/partialValueFunction',
+  'controllers/ordinalSwing',
+  'controllers/intervalSwing',
+  'controllers/exactSwing',
+  'controllers/results'], function(
+    angular, _,
+    ChooseProblemController,
+    WorkspaceController,
+    OverviewController,
+    ScaleRangeController,
+    PartialValueFunctionController,
+    OrdinalSwingController,
+    IntervalSwingController,
+    ExactSwingController,
+    ResultsController) {
+    return angular.module('elicit.controllers', [])
+          .controller('ChooseProblemController', ChooseProblemController)
+          .controller('WorkspaceController', WorkspaceController)
+          .controller('OverviewController', OverviewController)
+          .controller('ScaleRangeController', ScaleRangeController)
+          .controller('PartialValueFunctionController', PartialValueFunctionController)
+          .controller('OrdinalSwingController', OrdinalSwingController)
+          .controller('IntervalSwingController', IntervalSwingController)
+          .controller('ExactSwingController', ExactSwingController)
+          .controller('ResultsController', ResultsController);
 });

@@ -2,6 +2,7 @@ define(
   ['angular',
    'require',
    'underscore',
+   'jQuery',
    'config',
    'angular-ui-router',
    'services/decisionProblem',
@@ -11,7 +12,7 @@ define(
    'foundation.tooltip',
    'controllers',
    'components'],
-  function(angular, require, _, Config) {
+  function(angular, require, _, $, Config) {
     var dependencies = [
       'ui.router',
       'elicit.problem-resource',
@@ -51,34 +52,32 @@ define(
     app.constant('Tasks', Config.tasks);
 
 
-    app.controller("ChooseProblemController", ['$scope', '$injector', function($scope, $injector) {
-      require(['controllers/' + 'chooseProblem'], function(controller) {
-        $injector.invoke(controller, this, { '$scope' : $scope });
-     });
-    }]);
-
-    // example url: /#/workspaces/<id>/scenarios/<id>/<taskname>
     app.config(['Tasks', '$stateProvider', '$urlRouterProvider', function(Tasks, $stateProvider, $urlRouterProvider) {
-
       var baseTemplatePath = "app/views/";
+
+      $stateProvider.state("workspace", {
+        url: '/workspaces/:workspaceId/scenarios/:scenarioId',
+        templateUrl: baseTemplatePath + 'workspace.html',
+        resolve: {
+          currentWorkspace: function($stateParams, Workspaces) {
+            return Workspaces.get($stateParams.workspaceId);
+          },
+          currentScenario: function($stateParams, currentWorkspace) {
+            return currentWorkspace.getScenario($stateParams.scenarioId);
+          }
+        },
+        controller: 'WorkspaceController'
+      });
+
+
       _.each(Tasks.available, function(task) {
-      var camelCase = function (str) { return str.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); }); };
-        require(['controllers/' + camelCase(task.id)], function(controller) {
-        app.controller(task.controller, controller);
-          var templateUrl = baseTemplatePath + task.templateUrl;
-          $stateProvider.state(task.id, {
-            url: '/workspaces/:workspaceId/scenarios/:scenarioId/' + task.id,
-            templateUrl: templateUrl,
-            resolve: {
-              currentWorkspace: function($stateParams, Workspaces) {
-                return Workspaces.get($stateParams.workspaceId);
-              },
-              currentScenario: function($stateParams, currentWorkspace) {
-                return currentWorkspace.getScenario($stateParams.scenarioId);
-              }
-            },
-            controller: controller
-          });
+        var camelCase = function (str) { return str.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); }); };
+        var templateUrl = baseTemplatePath + task.templateUrl;
+        $stateProvider.state(task.id, {
+          parent: 'workspace',
+          url: '/' + task.id,
+          templateUrl: templateUrl,
+          controller: task.controller
         });
       });
 

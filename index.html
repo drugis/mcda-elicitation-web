@@ -29,38 +29,8 @@
       </div>
     </div>
 
-    <div class="row">
-      <div ng-controller="WorkspaceController">
-        <h1 ng-bind="workspaceTitle"></h1>
+    <div ui-view></div>
 
-        <div class="tabs" ng-show="route.workspaceId">
-          <ul class="tabsNavigation">
-            <li ng-repeat="(id, title) in scenarios" ng-class="{current: id == route.scenarioId}">
-              <a href="{{createPath(route.workspaceId, id)}}" ng-bind="title"></a>
-            </li>
-            <li>
-              <a href=javaScript:void(0);"" data-dropdown="newScenarioControl"><i class="icon-plus"></i></a>
-              <ul id="newScenarioControl" class="f-dropdown" data-dropdown-content>
-                <li><a ng-click="forkScenario()">Copy current scenario</a></li>
-                <li><a ng-click="newScenario()">Create clean scenario</a></li>
-              </ul>
-            </li>
-          </ul>
-          <div class="fakeTabsContent"></div>
-        </div>
-
-	<div class="columns large-3" ng-show="route.workspaceId">
-          <ul class="side-nav">
-            <li ng-repeat="task in tasks" ng-show="task.title">
-              <a href="{{createPath(route.workspaceId, route.scenarioId, task.id)}}" ng-bind="task.title"></a>
-            </li>
-          </ul>
-	</div>
-	<div class="columns large-9">
-	  <div ui-view></div>
-	</div>
-      </div>
-    </div>
     <script>
      window.config = { examplesRepository: "/examples/" };
     </script>

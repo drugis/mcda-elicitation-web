@@ -1,0 +1,32 @@
+<div class="row">
+  <div class="columns large-12">
+    <h1 ng-bind="workspace.title"></h1>
+
+    <div class="tabs">
+      <ul class="tabsNavigation">
+        <li ng-repeat="(id, title) in scenarios" ng-class="{current: id == scenario.id}">
+          <a href="{{createPath(workspace.id, id)}}" ng-bind="title"></a>
+        </li>
+        <li>
+          <a href=javaScript:void(0);"" data-dropdown="newScenarioControl"><i class="icon-plus"></i></a>
+          <ul id="newScenarioControl" class="f-dropdown" data-dropdown-content>
+            <li><a ng-click="forkScenario()">Copy current scenario</a></li>
+            <li><a ng-click="newScenario()">Create clean scenario</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div class="fakeTabsContent"></div>
+    </div>
+
+    <div class="columns large-3">
+      <ul class="side-nav">
+        <li ng-repeat="task in tasks" ng-show="task.title">
+          <a href="{{scenario.createPath(task.id)}}" ng-bind="task.title"></a>
+        </li>
+      </ul>
+    </div>
+    <div class="columns large-9">
+      <div ui-view></div>
+    </div>
+  </div>
+</div>

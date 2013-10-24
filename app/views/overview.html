@@ -25,17 +25,22 @@
     <h4>Actions</h4>
     <ul>
       <li ng-repeat="info in tasks.accessible" ng-show="info.task.id != 'overview'">
-
-        <a href="{{createPath(route.workspaceId, route.scenarioId, info.task.id)}}" ng-bind="info.task.title"></a>
-        {{ task | json }}
+        <a href="{{scenario.createPath(info.task.id)}}" ng-bind="info.task.title"></a>
       </li>
       <li ng-repeat="info in tasks.destructive" ng-show="info.task.id != 'overview'">
-        <a style="color: red;" href="{{createPath(route.workspaceId, route.scenarioId, info.task.id)}}" ng-bind="info.task.title"></a>
-        {{ info.safe.resets | json }}
+        <a  data-tooltip
+            class="has-tip tip-top"
+            title="{{ info.safe.resets | json }}"
+            style="color: red;"
+            href="{{scenario.createPath(info.task.id)}}"
+            ng-bind="info.task.title"></a>
       </li>
       <li ng-repeat="info in tasks.inaccessible" ng-show="info.task.id != 'overview'">
-        <a style="color: gray;" ng-bind="info.task.title"></a>
-        {{ info.accessible.requires | json }}
+        <span style="color: gray;"
+              ng-bind="info.task.title"
+              data-tooltip
+              class="has-tip tip-top"
+              title="{{ info.accessible.requires | json }}"></span>
       </li>
     </ul>
 
