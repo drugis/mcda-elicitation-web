@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="columns large-12">
+    <h2>Preference elicitation <small ng-bind="workspace.title"></small></h2>
+
+    <div class="tabs">
+      <ul class="tabsNavigation">
+        <li ng-repeat="s in scenarios" ng-class="{current: s.id == scenario.id}">
+          <a href="{{createPath(s.id)}}" ng-bind="s.title"></a>
+        </li>
+        <li>
+          <a href=javaScript:void(0);"" data-dropdown="newScenarioControl"><i class="icon-plus"></i></a>
+          <ul id="newScenarioControl" class="f-dropdown" data-dropdown-content>
+            <li><a ng-click="forkScenario()">Copy current scenario</a></li>
+            <li><a ng-click="newScenario()">Create clean scenario</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div class="fakeTabsContent"></div>
+    </div>
+
+    <div class="columns large-2">
+      <ul class="side-nav">
+        <li><a href="{{scenario.createPath()}}"><i class="icon-angle-left"></i> Overview</a></li>
+        <li><a href="{{scenario.createPath('results')}}"><i class="icon-angle-right"></i> Results</a></li>
+      </ul>
+    </div>
+    <div class="columns large-10">
+      <div ui-view></div>
+    </div>
+  </div>
+</div>

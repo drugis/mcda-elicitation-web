@@ -1,0 +1,29 @@
+<div>
+  <h2>{{title}}</h2>
+  <p>Defining measurement scales is important because they provide the reference
+    levels at which trade-offs between criteria are assessed. Without these
+    reference levels statements about the relative importance of different
+    criteria would be meaningless.</p>
+
+  <p>The area in red indicates the estimated 95% Credible Interval (CrI) of
+    the measurements and should not be moved into.</p>
+
+  <ul class="no-bullet">
+    <li ng-repeat="(key, criterion) in currentStep.problem.criteria">
+      <h5 class="subheader">{{criterion.title}}</h5>
+      <div class="row">
+        <div class="large-1 columns">
+          <a ng-click="currentStep.scales[key].increaseFrom()" class="tiny round button">&lt;</a>
+        </div>
+        <div class="large-7 columns">
+          <slider model="currentStep.choice[key]" range="currentStep.scales[key]"></slider>
+        </div>
+        <div class="large-1 pull-3 columns">
+          <a ng-click="currentStep.scales[key].increaseTo()"  class="tiny round button">&gt;</a>
+        </div>
+      </div>
+      <br>
+    </li>
+  </ul>
+  <button class="small success" ng-disabled="!validChoice(currentStep)" ng-click="save(currentStep)">Save</button>
+</div>
