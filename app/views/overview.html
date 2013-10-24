@@ -72,12 +72,14 @@
       <li ng-repeat="alternative in problem.alternatives" ng-bind="alternative.title"></li>
     </ul>
 
-    <h4>Trade-offs</h4>
+    <div ng-show="status.preferences.length">
+      <h4>Trade-offs</h4>
 
-    <ul class="no-bullet">
-      <li ng-repeat="criterion in criteria"><span mathjax-bind="criterion.w"></span>: {{criterion.title}}</li>
-    </ul>
-    <div mathjax-bind="preferences"></div>
+      <ul class="no-bullet">
+        <li ng-repeat="criterion in criteria"><span mathjax-bind="criterion.w"></span>: {{criterion.title}}</li>
+      </ul>
+      <div mathjax-bind="preferences"></div>
+    </div>
 
   </div>
 </div>
