@@ -87,44 +87,15 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
     };
   });
 
-  directives.directive('wizardStep', ['$compile', '$http', '$templateCache', function($compile, $http, $templateCache) {
-    var getTemplate = function(template) {
-      var templateLoader,
-          baseUrl = 'templates/',
-          templateUrl = baseUrl + template;
-      templateLoader = $http.get(templateUrl, { cache: $templateCache });
+  function parsePx(str) { return parseInt(str.replace(/px/gi, '')); }
 
-      return templateLoader;
-    };
+  var getParentDimension = function(element) {
+    var width = parsePx($(element[0].parentNode).css('width'));
+    var height = parsePx($(element[0].parentNode).css('height'));
 
-    var linker = function(scope, element, attrs) {
-      var getContainer = function() {
-        var container = element.children()[0] || element.append("<div></div>");
-        $(container).html(""); // clear content
-        return $(container).append("<div></div>");
-      };
+    return { width: width, height: height };
+  };
 
-      scope.$watch('templateUrl', function(newVal, oldVal) {
-        var loader = getTemplate(newVal);
-        var container = getContainer();
-
-        var promise = loader.success(function(html) {
-          container.html(html);
-        }).then(function (response) {
-          container.replaceWith($compile(container.html())(scope));
-        });
-      });
-    };
-
-    return {
-      restrict: 'E',
-      scope: {
-        currentStep: '=',
-        templateUrl: '='
-      },
-      link: linker
-    };
-  }]);
 
   directives.directive('rankPlot', function() {
     return {
@@ -135,16 +106,11 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
         problem: '='
       },
       link: function(scope, element, attrs) {
-        function parsePx(str) {
-          return parseInt(str.replace(/px/gi, ''));
-        }
-
-        var width = parsePx($(element[0].parentNode).css('width'));
-        var height = parsePx($(element[0].parentNode).css('height'));
-
         var svg = d3.select(element[0]).append("svg")
               .attr("width", "100%")
               .attr("height", "100%");
+
+        var dim = getParentDimension(element);
 
         var rankGraphData = function(data) {
           var result = [];
@@ -163,7 +129,7 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
         scope.$watch('value', function(newVal, oldVal) {
           if (!newVal) return;
           nv.addGraph(function() {
-            var chart = nv.models.multiBarChart().height(height).width(width);
+            var chart = nv.models.multiBarChart().height(dim.height).width(dim.width);
             var data = rankGraphData(newVal);
 
             chart.yAxis.tickFormat(d3.format(',.3f'));
@@ -189,10 +155,9 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
         parseFn: '='
       },
       link: function(scope, element, attrs) {
-        function parsePx(str) { return parseInt(str.replace(/px/gi, '')); }
 
-        var width = parsePx($(element[0].parentNode).css('width'));
-        var height = parsePx($(element[0].parentNode).css('height'));
+        var dim = getParentDimension(element);
+
         var svg = d3.select(element[0]).append("svg")
               .attr("width", "100%")
               .attr("height", "100%");
@@ -203,8 +168,8 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
             var chart = nv.models.discreteBarChart()
                   .staggerLabels(false)
                   .showValues(true)
-                  .height(height)
-                  .width(width)
+                  .height(dim.height)
+                  .width(dim.width)
                   .tooltips(false)
                   .x(function(d) { return d.label; })
                   .y(function(d) { return d.value;});
@@ -227,10 +192,7 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
         parseFn: '='
       },
       link: function(scope, element, attrs) {
-        function parsePx(str) { return parseInt(str.replace(/px/gi, '')); }
-
-        var width = parsePx($(element[0].parentNode).css('width'));
-        var height = parsePx($(element[0].parentNode).css('height'));
+        var dim = getParentDimension(element);
         var svg = d3.select(element[0]).append("svg")
               .attr("width", "100%")
               .attr("height", "100%");
@@ -239,7 +201,7 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
           if(!newVal) return;
           var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
 
-          var chart = nv.models.lineChart().width(width).height(height);
+          var chart = nv.models.lineChart().width(dim.width).height(dim.height);
           chart.forceY([0.0]);
 
           if (attrs.showLegend && attrs.showLegend === "false") {
