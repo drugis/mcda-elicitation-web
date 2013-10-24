@@ -42,7 +42,7 @@ define([], function() {
         title: "Results",
         controller: 'ResultsController',
         templateUrl: 'results.html',
-        requires: ['scale-ranges'],
+        requires: ['scale-ranges', 'partial-value-functions'],
         resets: []}
     ]};
 

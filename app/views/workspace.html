@@ -20,8 +20,13 @@
 
     <div class="columns large-2">
       <ul class="side-nav">
-        <li><a href="{{scenario.createPath()}}"><i class="icon-angle-left"></i> Overview</a></li>
-        <li><a href="{{scenario.createPath('results')}}"><i class="icon-angle-right"></i> Results</a></li>
+        <li>
+          <a href="{{scenario.createPath()}}"><i class="icon-angle-left"></i> Overview</a>
+        </li>
+        <li>
+          <a ng-show="resultsAccessible" href="{{scenario.createPath('results')}}"><i class="icon-angle-right"></i> Results</a>
+          <span ng-show="!resultsAccessible" href="{{scenario.createPath('results')}}"><i class="icon-angle-right"></i> Results</span>
+        </li>
       </ul>
     </div>
     <div class="columns large-10">
