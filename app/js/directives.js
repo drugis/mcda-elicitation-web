@@ -293,6 +293,5 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
     };
   });
 
-
   return directives;
 });
