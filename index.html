@@ -7,68 +7,33 @@
 
     <title>Preference elicitation</title>
 
-    <link rel="stylesheet" type="text/css" href="scripts/lib/jslider/bin/jquery.slider.min.css">
-    <link rel="stylesheet" type="text/css" href="css/foundation.min.css">
-    <link rel="stylesheet" type="text/css" href="css/nv.d3.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/css/foundation.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css">
 
-    <script src="scripts/require.js" data-main="scripts/main.js"></script>
+    <link rel="stylesheet" type="text/css" href="app/js/lib/jslider/bin/jquery.slider.min.css">
+    <link rel="stylesheet" type="text/css" href="app/css/nv.d3.css">
+    <link rel="stylesheet" type="text/css" href="app/css/main.css">
+
+    <script src="app/js/lib/modernizr.foundation.js"></script>
+
+    <script src="app/js/lib/require.js" data-main="app/js/main.js"></script>
 
   </head>
 
   <body>
 
-  <div ng-controller="ExampleController" ng-hide="done" class="row">
-    <h2>Choose an Example</h2>
-
-    <form>
-      <label ng-repeat="option in list">
-        <input type="radio" ng-model="model.choice" value="{{option.href}}">
-        <span>{{option.title}}</span>
-      </label>
-      <label>
-        <input type="radio" ng-model="model.choice" value="local">
-        Local file:
-        <file-reader file="local"></file-reader>
-      </label>
-      <button class="small success" ng-disabled="!model.choice" ng-click="setProblem()">Start</button>
-    </form>
-  </div>
-
-  <div ng-controller="ElicitationController" ng-cloak="true" ng-show="initialized" class="row">
-
-    <h2>Preference Elicitation <small>{{currentStep.problem.title}}</small></h2>
-
-    <div ng-if="currentStep.error">
+    <div ng-if="error" ng-cloak>
       <div class="alert-box alert">
-        Computation failed: {{currentStep.error.code}}
-        <span ng-show="currentStep.error.error">&mdash; {{currentStep.error.error}}</span>
+        Computation failed: {{error.code}}
+        <span ng-show="error.error">&mdash; {{error.error}}</span>
       </div>
     </div>
 
-    <div ng-show="currentStep.type == 'done'">
-      <div ng-show="saveState.success">Preferences saved.</div>
-      <div ng-class="{error: 'alert-box alert', warning: 'alert-box'}[saveState.error.severity]" ng-show="saveState.error">
-        Failed to save preferences.
-        {{saveState.error.message}}
-        <span ng-show="saveState.error.cause">HTTP Error {{saveState.error.cause}}.</span>
-      </div>
-    </div>
+    <div ui-view></div>
 
-    <h3>{{currentStep.title}}</h3>
-    <div id="wizardStepContainer" ng-cloak ng-if="templateUrl">
-      <wizard-step current-step="currentStep" template-url="templateUrl"></wizard-step>
-    </div>
-
-    <button class="small" ng-disabled="!canReturn()" ng-click="previousStep() && runSMAA(currentStep)">Back</button>
-    <button class="small" ng-disabled="!canProceed(currentStep)" ng-click="nextStep() && runSMAA(currentStep)">Next</button>
-  </div>
-
-  <script>
-    window.config = {
-      examplesRepository: "/examples/"
-    };
-  </script>
+    <script>
+     window.config = { examplesRepository: "/examples/" };
+    </script>
 
   </body>
 </html>

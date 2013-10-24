@@ -1,0 +1,82 @@
+<div class="row">
+  <div class="columns large-12">
+    <h3>Overview</h3>
+
+    <label>Scenario title</label>
+    <div class="row">
+      <div class="columns large-6">
+        <div class="row collapse">
+          <div class="small-10 columns">
+            <input type="text" ng-model="scenario.title">
+          </div>
+          <div class="small-2 columns">
+            <button class="prefix" ng-click="scenario.save()">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="no-bullet">
+      <li><strong>Scale Ranges:</strong> {{status.scaleRange}}</li>
+      <li><strong>Partial Value Functions:</strong> {{status.partialValueFunction}}</li>
+      <li><strong>Preferences:</strong>
+        <span ng-repeat="type in status.preferences">{{type}}<span ng-show="!$last">;</span> </span>
+        <span ng-show="!status.preferences.length">None</span>
+      </li>
+    </ul>
+
+    <h4>Actions</h4>
+    <ul>
+      <li ng-repeat="info in tasks.accessible" ng-show="info.task.id != 'overview'">
+        <a href="{{scenario.createPath(info.task.id)}}" ng-bind="info.task.title"></a>
+      </li>
+      <li ng-repeat="info in tasks.destructive" ng-show="info.task.id != 'overview'">
+        <a  data-tooltip
+            class="has-tip"
+            title="Doing this will destroy the following information: {{ dependenciesString(info.safe.resets) }}"
+            style="color: red;"
+            href="{{scenario.createPath(info.task.id)}}"
+            ng-bind="info.task.title"></a>
+      </li>
+      <li ng-repeat="info in tasks.inaccessible" ng-show="info.task.id != 'overview'">
+        <span style="color: gray;"
+              ng-bind="info.task.title"
+              data-tooltip
+              class="has-tip"
+              title="The following elicitations are still required: {{ dependenciesString(info.accessible.requires) }}"></span>
+      </li>
+    </ul>
+
+    <h4>Criteria</h4>
+
+    <div ng-repeat="criterion in problem.criteria" class="row">
+      <div class="columns large-6">
+        <h5>{{criterion.title}}</h5>
+        <ul>
+          <li>Natural scale bounds: {{criterion.scale}}</li>
+          <li>Configured scale range: {{criterion.pvf.range}}</li>
+          <li>Partial value function: {{criterion.pvf.type}}; {{criterion.pvf.direction}}</li>
+        </ul>
+      </div>
+      <div class="columns large-6">
+        <div style="width: 250px; height: 180px">
+          <line-chart value="getXY(criterion)" show-legend="false"></line-chart>
+        </div>
+      </div>
+    </div>
+
+    <h4>Alternatives</h4>
+
+    <ul>
+      <li ng-repeat="alternative in problem.alternatives" ng-bind="alternative.title"></li>
+    </ul>
+
+    <h4>Trade-offs</h4>
+
+    <ul class="no-bullet">
+      <li ng-repeat="criterion in criteria"><span mathjax-bind="criterion.w"></span>: {{criterion.title}}</li>
+    </ul>
+    <div mathjax-bind="preferences"></div>
+
+  </div>
+</div>

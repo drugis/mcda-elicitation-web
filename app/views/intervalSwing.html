@@ -1,0 +1,54 @@
+<div class="row">
+  <div class="columns large-12">
+    <h3>Interval SWING weighting (<span ng-bind="currentStep.step"></span>/<span ng-bind="currentStep.total"></span>)</h3>
+    <h5 class="subheader">Determining the relative importance of:</h5>
+    <ul class="no-bullet">
+      <li ng-repeat="criterion in [currentStep.criterionA, currentStep.criterionB] track by $index">
+      {{currentStep.problem.criteria[criterion].title}}
+      ({{currentStep.problem.criteria[criterion].worst()}} &rarr;
+      {{currentStep.problem.criteria[criterion].best()}})
+      </li>
+    </ul>
+
+    <strong>Given the following situation:</strong>
+    <p>
+    {{currentStep.problem.criteria[currentStep.criterionA].title}} =
+    {{currentStep.problem.criteria[currentStep.criterionA].worst()}},
+    {{currentStep.problem.criteria[currentStep.criterionB].title}} =
+    {{currentStep.problem.criteria[currentStep.criterionB].best()}}
+
+    <br>
+    <strong>Adjust the slider:</strong>
+    <label>
+      <slider style="width: 400px; margin-top: 20px" model="currentStep.choice" type="interval" range="currentStep.range"></slider>
+    </label>
+    </p>
+
+    <strong>So that the following statements are true:</strong>
+    <p>
+    {{currentStep.problem.criteria[currentStep.criterionA].title}} = <span class="label secondary">{{currentStep.best()}}</span>
+    {{currentStep.problem.criteria[currentStep.criterionB].title}} = {{currentStep.problem.criteria[currentStep.criterionB].worst()}}
+    is clearly better.
+    <br>
+    {{currentStep.problem.criteria[currentStep.criterionA].title}} = <span class="label secondary">{{currentStep.worst()}}</span>
+    {{currentStep.problem.criteria[currentStep.criterionB].title}} = {{currentStep.problem.criteria[currentStep.criterionB].worst()}}
+    is clearly worse.
+    </p>
+  </div>
+
+  <div class="row">
+    <div class="columns large-12">
+      <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
+      <button class="small button"
+              ng-if="!canSave(currentStep)"
+              ng-click="nextStep(currentStep)"
+              ng-disabled="!canProceed(currentStep)">Next</button>
+
+      <button class="small success button"
+              ng-if="canSave(currentStep)"
+              ng-click="save(currentStep)"
+              ng-disabled="!canProceed(currentStep)">Save</button>
+
+    </div>
+  </div>
+</div>

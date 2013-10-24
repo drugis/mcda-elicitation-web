@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="columns large-12">
+    <h2>Choose an Example</h2>
+    <form>
+      <label ng-repeat="option in list">
+        <input type="radio" ng-model="model.choice" value="{{option.href}}">
+        <span>{{option.title}}</span>
+      </label>
+      <label>
+        <input type="radio" ng-model="model.choice" value="local">
+        Local file:
+        <file-reader file="local"></file-reader>
+      </label>
+      <button class="small success" ng-disabled="!model.choice" ng-click="setProblem(model.choice)">Create workspace</button>
+    </form>
+  </div>
+</div>
