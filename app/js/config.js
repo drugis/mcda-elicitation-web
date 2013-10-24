@@ -1,6 +1,6 @@
+'use strict';
 define([], function() {
-  var self = this;
-  this.tasks = {
+  var tasks = {
     'available' : [
       { id: "overview",
         title: "Overview",
@@ -46,13 +46,16 @@ define([], function() {
         resets: []}
     ]};
 
-  this.defaultView = "overview";
+  var defaultView = "overview";
 
-  this.createPath = function(workspaceId, scenarioId, taskId) {
-    taskId = taskId ? taskId : self.defaultView;
+  var createPath = function(workspaceId, scenarioId, taskId) {
+    taskId = taskId ? taskId : defaultView;
     return "#/workspaces/" + workspaceId + "/scenarios/" + scenarioId + "/" + taskId;
   };
 
-
-  return this;
+  return {
+    tasks: tasks,
+    defaultView: defaultView,
+    createPath: createPath
+  };
 });

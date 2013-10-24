@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
   return function($scope, currentScenario, taskDefinition) {
     var alternatives;

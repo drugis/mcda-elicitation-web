@@ -1,3 +1,4 @@
+'use strict';
 define(['underscore', 'angular'], function(_, angular) {
   var dependencies = [];
 

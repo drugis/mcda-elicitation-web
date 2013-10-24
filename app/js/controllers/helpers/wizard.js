@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'underscore', 'lib/patavi'], function(angular, _, patavi) {
   return ['$scope', 'handler', function($scope, handler) {
 

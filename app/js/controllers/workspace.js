@@ -1,5 +1,5 @@
+'use strict';
 define(['angular', 'underscore', 'config'], function(angular,  _, Config) {
-  'use strict';
 
   return function($scope, Tasks, TaskDependencies, currentWorkspace, currentScenario) {
     $scope.workspace = currentWorkspace;

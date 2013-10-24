@@ -1,5 +1,5 @@
+'use strict';
 define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'underscore'], function(Wizard, Util, angular, _) {
-  'use strict';
 
   return function($scope, $injector, currentScenario, taskDefinition) {
     var criteria = {};

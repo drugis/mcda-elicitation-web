@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'angular-resource'], function(angular, angularResource) {
   return angular.module('elicit.problem-resource', ['ngResource']).factory('DecisionProblem', function($resource, $q) {
     var repositoryUrl = config ? config.examplesRepository : '';

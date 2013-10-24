@@ -1,6 +1,5 @@
+'use strict';
 define(['require', 'angular', 'underscore'] , function(require, angular, _) {
-  'use strict';
-
   var filters = angular.module('elicit.filters', []);
 
   filters.filter('precision', function() {

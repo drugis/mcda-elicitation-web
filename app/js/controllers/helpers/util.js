@@ -1,10 +1,12 @@
+'use strict';
 define(['underscore'], function(_) {
-  this.getOrdinalPreferences = function(prefs) {
+
+  var getOrdinalPreferences = function(prefs) {
     return _.filter(prefs, function(pref) { return pref.type === "ordinal"; });
   };
 
-  this.getCriteriaOrder = function(prefs) {
-    return _.reduce(this.getOrdinalPreferences(prefs), function(memo, statement) {
+  var getCriteriaOrder = function(prefs) {
+    return _.reduce(getOrdinalPreferences(prefs), function(memo, statement) {
       if (memo.length === 0) {
         return statement.criteria;
       } else {
@@ -17,6 +19,7 @@ define(['underscore'], function(_) {
     }, []);
   };
 
-  return this;
+  return { getOrdinalPreferences: getOrdinalPreferences,
+           getCriteriaOrder: getCriteriaOrder };
 
 });

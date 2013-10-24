@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'underscore'], function(angular, _) {
   var dependencies = ['$scope', 'DecisionProblem', 'Workspaces'];
   var ChooseProblemController = function($scope, DecisionProblem, Workspaces) {
