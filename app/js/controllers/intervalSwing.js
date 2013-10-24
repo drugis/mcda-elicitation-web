@@ -35,8 +35,6 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
       return state;
     };
 
-    var scenario = currentScenario;
-    $scope.currentStep = initialize(scenario.state);
 
     var validChoice = function(state) {
       if(!state) return false;
@@ -76,15 +74,19 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
 
     $scope.save = function(state) {
       state = nextState(state);
-      scenario.update(state);
-      scenario.redirectToDefaultView();
+      currentScenario.update(state);
+      currentScenario.redirectToDefaultView();
     };
 
     $injector.invoke(Wizard, this, {
       $scope: $scope,
       handler: { validChoice: validChoice,
-                 fields: ["problem", "prefs", "total", "choice", "criteriaOrder", "criterionA", "criterionB"],
-                 nextState: nextState }
+                 fields: ["total", "choice", "criteriaOrder", "criterionA", "criterionB"],
+                 nextState: nextState,
+                 standardize: _.identity,
+                 hasIntermediateResults: true,
+                 initialize: _.partial(initialize, currentScenario.state)
+               }
     });
   };
 

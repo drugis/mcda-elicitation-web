@@ -38,7 +38,6 @@ define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard,
     };
 
     var scenario = currentScenario;
-    $scope.currentStep = initialize(scenario.state);
 
     var validChoice = function(state) {
       return state && _.contains(_.keys(criteria), state.choice);
@@ -101,8 +100,11 @@ define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard,
     $injector.invoke(Wizard, this, {
       $scope: $scope,
       handler: { validChoice: validChoice,
-                 fields: ["problem", "type", "prefs", "choice", "title", "reference", "choices"],
-                 nextState: nextState }
+                 fields: ["choice", "reference", "choices"],
+                 nextState: nextState,
+                 initialize: _.partial(initialize, scenario.state),
+                 hasIntermediateResults: true,
+                 standardize: standardize }
     });
   };
 

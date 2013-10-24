@@ -1,6 +1,6 @@
 <div>
   <div class="row">
-    <div class="columns large-12">
+    <div class="columns large-7">
       <h3 ng-bind="currentStep.title"></h3>
       <h5 class="subheader">Given the following situation:</h5>
       <ul class="inline-list">
@@ -16,7 +16,10 @@
       </label>
     </div>
 
+    <div ng-include="'app/partials/rankProbabilityChart.html'"></div>
+
   </div>
+
   <div class="row">
     <div class="columns large-12">
       <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>

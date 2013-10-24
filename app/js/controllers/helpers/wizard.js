@@ -1,9 +1,51 @@
-define(['angular', 'underscore'], function(angular, _) {
+define(['angular', 'underscore', 'lib/patavi'], function(angular, _, patavi) {
   return ['$scope', 'handler', function($scope, handler) {
 
-    var PERSISTENT_FIELDS = [];
+    var calculateIntermediateResults = function(state, standardizeFn) {
+      var prefs = standardizeFn(state.prefs);
+      var data = _.extend(state.problem, { "preferences": prefs, "method": "smaa" });
+      var task = patavi.submit('smaa', data);
+
+      var successHandler = function(results) {
+        $scope.$root.$safeApply($scope, function() {
+          state.results = results.results;
+        });
+      };
+
+      var errorHandler = function(code, error) {
+        var message = { code: (code && code.desc) ? code.desc : code,
+                        cause: error };
+        $scope.$root.$broadcast("patavi.error", message);
+      };
+
+      var updateHandler = _.throttle(function(update) {
+        $scope.$root.$safeApply($scope, function() {
+          var progress = parseInt(update);
+          if(progress > state.progress) {
+            state.progress = Math.max(state.progress, progress);
+          }
+        });
+      }, 30);
+
+      state.progress = 0;
+      task.results.then(successHandler, errorHandler, updateHandler);
+      return state;
+    };
+
+    var PERSISTENT_FIELDS = ["problem", "type", "prefs"];
     var previousSteps = [];
     var nextSteps = [];
+
+    $scope.currentStep = (function() {
+      var state;
+      if(!_.isUndefined(handler.initialize)) {
+        state = handler.initialize();
+        if(handler.hasIntermediateResults) {
+          calculateIntermediateResults(state, handler.standardize);
+        }
+      }
+      return state || {};
+    })();
 
     $scope.canProceed = function(currentStep) {
       return (handler && handler.validChoice(currentStep)) || false;
@@ -33,6 +75,10 @@ define(['angular', 'underscore'], function(angular, _) {
       nextStep.previousChoice = choice;
 
       $scope.currentStep = nextStep;
+
+      if(handler.hasIntermediateResults) {
+        calculateIntermediateResults($scope.currentStep, handler.standardize);
+      }
 
       return true;
     };
