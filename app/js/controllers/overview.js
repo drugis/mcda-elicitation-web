@@ -72,9 +72,9 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
       if (pref.type === "ordinal") {
         return crit[0] + " & \\geq & " + crit[1] + "\\\\";
       } else if (pref.type === "ratio bound") {
-        return "\\frac{" + crit[0] + "}{" + crit[1] + "} & \\in & [" + pref.bounds[0] + ", " + pref.bounds[1] + "] \\\\";
+        return "\\frac{" + crit[0] + "}{" + crit[1] + "} & \\in & [" + pref.bounds[0].toFixed(3) + ", " + pref.bounds[1].toFixed(3) + "] \\\\";
       } else if (pref.type === "exact swing") {
-        return "\\frac{" + crit[0] + "}{" + crit[1] + "} & = & " + pref.ratio + " \\\\";
+        return "\\frac{" + crit[0] + "}{" + crit[1] + "} & = & " + pref.ratio.toFixed(3) + " \\\\";
       } else {
         console.error("Unsupported preference type ", pref);
         return "";

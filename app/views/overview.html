@@ -19,7 +19,10 @@
     <ul class="no-bullet">
       <li><strong>Scale Ranges:</strong> {{status.scaleRange}}</li>
       <li><strong>Partial Value Functions:</strong> {{status.partialValueFunction}}</li>
-      <li><strong>Preferences:</strong> <span ng-repeat="type in status.preferences">{{type}}<span ng-show="!$last">;</span> </span></li>
+      <li><strong>Preferences:</strong>
+        <span ng-repeat="type in status.preferences">{{type}}<span ng-show="!$last">;</span> </span>
+        <span ng-show="!status.preferences.length">None</span>
+      </li>
     </ul>
 
     <h4>Actions</h4>
@@ -43,7 +46,6 @@
               title="The following elicitations are still required: {{ dependenciesString(info.accessible.requires) }}"></span>
       </li>
     </ul>
-
 
     <h4>Criteria</h4>
 

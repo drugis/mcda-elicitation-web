@@ -11,13 +11,15 @@ define(
    'foundation.dropdown',
    'foundation.tooltip',
    'controllers',
-   'components'],
+   'directives',
+   'filters'],
   function(angular, require, _, $, Config) {
     var dependencies = [
       'ui.router',
       'elicit.problem-resource',
       'elicit.workspace',
-      'elicit.components',
+      'elicit.directives',
+      'elicit.filters',
       'elicit.controllers',
       'elicit.taskDependencies'];
     var app = angular.module('elicit', dependencies);
