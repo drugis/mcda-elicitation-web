@@ -50,9 +50,12 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
 
     $scope.problem = problem;
 
-    $scope.criteria = _.pluck(problem.criteria, "title").sort();
+    var criteria = _.pluck(problem.criteria, "title").sort();
+    $scope.criteria = _.map(criteria, function(title, idx) {
+      return { "title": title, "w": "w_" + (idx + 1) };
+    });
     var w = function(criterionKey) {
-      var criterionIndex = _.indexOf($scope.criteria, problem.criteria[criterionKey].title) + 1;
+      var criterionIndex = _.indexOf(criteria, problem.criteria[criterionKey].title) + 1;
       return "w_" + criterionIndex;
     };
 
