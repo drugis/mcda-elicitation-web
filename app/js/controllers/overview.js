@@ -34,6 +34,7 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
       return criterion.pvf.type === "linear";
     }).length;
     var pvfStatus = "linear";
+
     if (linearPVFs === 0) {
       pvfStatus = "piece-wise linear";
     } else if (linearPVFs < _.size(problem.criteria)) {
@@ -58,13 +59,12 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
 
     $scope.problem = problem;
 
-    var criteria = _.pluck(problem.criteria, "title").sort();
-    $scope.criteria = _.map(criteria, function(title, idx) {
-      return { "title": title, "w": "w_" + (idx + 1) };
-    });
+    $scope.criteria = _.sortBy(_.map(_.pairs(problem.criteria), function(crit, idx) {
+      return _.extend(crit[1], { id: crit[0], w: "w_" + (idx + 1) });
+    }), "w");
+
     var w = function(criterionKey) {
-      var criterionIndex = _.indexOf(criteria, problem.criteria[criterionKey].title) + 1;
-      return "w_" + criterionIndex;
+     return _.find($scope.criteria, function(crit) {return crit.id === criterionKey; })['w'];
     };
 
     var eqns = _.map(state.prefs, function(pref) {
