@@ -4,8 +4,12 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
   return function($scope, $injector, currentScenario, taskDefinition) {
     var criteria = {};
 
+    var getCriterion = function(criterionName) {
+      return criteria[criterionName];
+    };
+
     function getBounds(criterionName) {
-      var criterion = criteria[criterionName];
+      var criterion = getCriterion(criterionName);
       return [criterion.worst(), criterion.best()].sort();
     };
 
@@ -38,9 +42,10 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
 
     var validChoice = function(state) {
       if(!state) return false;
-      var bounds1 = state.choice;
-      var bounds2 = getBounds(state.criterionA);
-      return bounds1.lower < bounds1.upper && bounds2[0] <= bounds1.lower && bounds2[1] >= bounds1.upper;
+      var choice = _.object(['lower', 'upper'], _.values(state.choice).sort());
+      var other = getCriterion(state.criterionA);
+      console.log(other);
+      return choice.lower <= other.worst() && choice.upper >= other.best();
     };
 
     var nextState = function(state) {
