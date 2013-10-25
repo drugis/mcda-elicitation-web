@@ -1,5 +1,5 @@
+'use strict';
 define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(require, angular, _, $, d3, nv) {
-  'use strict';
 
   var directives = angular.module('elicit.directives', []);
 
@@ -168,7 +168,7 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
             var chart = nv.models.discreteBarChart()
                   .staggerLabels(false)
                   .showValues(true)
-                  .height(dim.height)
+                  .staggerLabels(true)
                   .width(dim.width)
                   .tooltips(false)
                   .x(function(d) { return d.label; })

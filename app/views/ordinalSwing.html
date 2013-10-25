@@ -17,7 +17,6 @@
     </div>
 
     <div ng-include="'app/partials/rankProbabilityChart.html'"></div>
-
   </div>
 
   <div class="row">
@@ -27,11 +26,10 @@
               ng-if="!canSave(currentStep)"
               ng-click="nextStep(currentStep)"
               ng-disabled="!canProceed(currentStep)">Next</button>
-
       <button class="small success button"
               ng-if="canSave(currentStep)"
               ng-click="save(currentStep)"
-              ng-disabled="!canProceed(currentStep)">Save</button>
+              ng-disabled="!canProceed(currentStep) || inTransition">Save</button>
 
     </div>
   </div>

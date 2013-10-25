@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'underscore'], function(angular, _) {
   return angular.module('elicit.pvfService', []).factory('PartialValueFunction', function() {
     var create = function(pvf) {

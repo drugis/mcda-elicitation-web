@@ -1,33 +1,14 @@
-define([
-  'angular',
-  'underscore',
-  'controllers/chooseProblem',
-  'controllers/workspace',
-  'controllers/overview',
-  'controllers/scaleRange',
-  'controllers/partialValueFunction',
-  'controllers/ordinalSwing',
-  'controllers/intervalSwing',
-  'controllers/exactSwing',
-  'controllers/results'], function(
-    angular, _,
-    ChooseProblemController,
-    WorkspaceController,
-    OverviewController,
-    ScaleRangeController,
-    PartialValueFunctionController,
-    OrdinalSwingController,
-    IntervalSwingController,
-    ExactSwingController,
-    ResultsController) {
+'use strict';
+define(function(require) {
+  var angular = require('angular');
     return angular.module('elicit.controllers', [])
-          .controller('ChooseProblemController', ChooseProblemController)
-          .controller('WorkspaceController', WorkspaceController)
-          .controller('OverviewController', OverviewController)
-          .controller('ScaleRangeController', ScaleRangeController)
-          .controller('PartialValueFunctionController', PartialValueFunctionController)
-          .controller('OrdinalSwingController', OrdinalSwingController)
-          .controller('IntervalSwingController', IntervalSwingController)
-          .controller('ExactSwingController', ExactSwingController)
-          .controller('ResultsController', ResultsController);
+          .controller('ChooseProblemController', require('controllers/chooseProblem'))
+          .controller('WorkspaceController', require('controllers/workspace'))
+          .controller('OverviewController', require('controllers/overview'))
+          .controller('ScaleRangeController', require('controllers/scaleRange'))
+          .controller('PartialValueFunctionController', require('controllers/partialValueFunction'))
+          .controller('OrdinalSwingController', require('controllers/ordinalSwing'))
+          .controller('IntervalSwingController', require('controllers/intervalSwing'))
+          .controller('ExactSwingController', require('controllers/exactSwing'))
+          .controller('ResultsController', require('controllers/results'));
 });

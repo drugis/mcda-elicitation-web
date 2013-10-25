@@ -54,8 +54,10 @@
       <div class="columns large-6">
         <h5>{{criterion.title}}</h5>
         <ul>
-          <li>Natural scale bounds: [{{criterion.scale[0] | precision: 3}}, {{criterion.scale[1] | precision: 3}}]</li>
-          <li>Configured scale range: [{{criterion.pvf.range[1] | precision: 3}}, {{criterion.pvf.range[0] | precision: 3}}]</li>
+          <li>Natural scale bounds:
+            [<span ng-repeat="r in criterion.scale">{{r | precision: 3}}<span ng-show="!$last">, </span></span>]</li> </li>
+          <li>Configured scale range:
+            [<span ng-repeat="r in criterion.pvf.range">{{r | precision: 3}}<span ng-show="!$last">, </span></span>]</li>
           <li>Partial value function: {{criterion.pvf.type}}; {{criterion.pvf.direction}}</li>
         </ul>
       </div>
@@ -72,12 +74,17 @@
       <li ng-repeat="alternative in problem.alternatives" ng-bind="alternative.title"></li>
     </ul>
 
-    <h4>Trade-offs</h4>
+    <div ng-show="status.preferences.length">
+      <h4>Trade-offs</h4>
 
-    <ul class="no-bullet">
-      <li ng-repeat="criterion in criteria"><span mathjax-bind="criterion.w"></span>: {{criterion.title}}</li>
-    </ul>
-    <div mathjax-bind="preferences"></div>
+      <ul class="no-bullet">
+        <li ng-repeat="criterion in criteria">
+          <span mathjax-bind="criterion.w"></span>: {{criterion.title}}
+          ({{criterion.worst()}} &rarr; {{criterion.best()}})
+        </li>
+      </ul>
+      <div mathjax-bind="preferences"></div>
+    </div>
 
   </div>
 </div>

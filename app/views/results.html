@@ -5,6 +5,7 @@
     <div style="width: 400px; height: 400px">
       <rank-plot value="currentStep.results.ranks.data"
                  parse-fn="rankGraphData"
+                 stacked="true"
                  problem="currentStep.problem">
       </rank-plot>
     </div>
@@ -78,10 +79,5 @@
         </tr>
       </tbody>
     </table>
-  </div>
-  <div ng-if="!currentStep.results" class="loader">
-    <div class="progress large-6">
-      <span class="meter" ng-style="{width: (currentStep.progress || 0) + '%'}"></span>
-    </div>
   </div>
 </div>

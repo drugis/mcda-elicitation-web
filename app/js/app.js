@@ -1,8 +1,10 @@
+'use strict';
 define(
   ['angular',
    'require',
    'underscore',
    'jQuery',
+   'NProgress',
    'config',
    'angular-ui-router',
    'services/decisionProblem',
@@ -13,7 +15,7 @@ define(
    'controllers',
    'directives',
    'filters'],
-  function(angular, require, _, $, Config) {
+  function(angular, require, _, $, NProgress, Config) {
     var dependencies = [
       'ui.router',
       'elicit.problem-resource',
@@ -50,6 +52,24 @@ define(
           $rootScope.error = message;
         });
       });
+
+      $rootScope.$on('$stateChangeStart', function(e, state) {
+        $rootScope.inTransition = true;
+        !$rootScope.noProgress && NProgress.start();
+      });
+
+      $rootScope.$on('$stateChangeSuccess', function(e, state) {
+        $rootScope.inTransition = false;
+        !$rootScope.noProgress && NProgress.done();
+      });
+
+      $rootScope.$on('$viewContentLoading', function(e, state) {
+        NProgress.inc();
+      });
+
+
+
+
     }]);
     app.constant('Tasks', Config.tasks);
 

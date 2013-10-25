@@ -1,7 +1,10 @@
-define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
-  return function($scope, currentScenario, taskDefinition) {
+'use strict';
+define(['angular', 'lib/patavi', 'underscore', 'NProgress'], function(angular, patavi, _, NProgress) {
+  return function($rootScope, $scope, currentScenario, taskDefinition) {
     var alternatives;
     var criteria;
+
+    $rootScope.noProgress = true;
 
     var run = function(state) {
       state = angular.copy(state);
@@ -11,6 +14,7 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       var successHandler = function(results) {
         $scope.$root.$safeApply($scope, function() {
           state.results = results.results;
+          $rootScope.noProgress = false;
         });
       };
 
@@ -21,12 +25,10 @@ define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
       };
 
       var updateHandler = _.throttle(function(update) {
-        $scope.$root.$safeApply($scope, function() {
-          var progress = parseInt(update);
-          if(progress > state.progress) {
-            state.progress = Math.max(state.progress, progress);
-          }
-        });
+        var progress = parseInt(update);
+        if(progress > state.progress) {
+          NProgress.set(progress / 100);
+        }
       }, 30);
 
       state.progress = 0;

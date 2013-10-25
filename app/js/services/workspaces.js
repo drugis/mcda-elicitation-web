@@ -1,3 +1,4 @@
+'use strict';
 define(['config', 'angular', 'underscore', 'services/partialValueFunction'], function(Config, angular, _) {
   var dependencies = ['elicit.pvfService'];
 

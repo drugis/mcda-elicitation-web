@@ -2,9 +2,7 @@
   <div id="results"
        ng-class="{loading: !currentStep.results && !currentStep.error, failed: currentStep.error}">
     <div class="loader">
-      <div class="progress" style="width: 70%">
-        <span class="meter" ng-style="{width: (currentStep.progress || 0) + '%'}"></span>
-      </div>
+      <i class="icon-spinner icon-large icon-spin"></i>
     </div>
 
     <div style="width: 400px; height: 400px" class="graph">

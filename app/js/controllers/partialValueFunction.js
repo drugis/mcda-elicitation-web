@@ -1,3 +1,4 @@
+'use strict';
 define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], function(Wizard, angular, patavi, _) {
   return function($scope, $injector, currentScenario, taskDefinition, PartialValueFunction) {
     var standardize = function(state) {

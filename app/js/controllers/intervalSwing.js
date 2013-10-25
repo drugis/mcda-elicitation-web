@@ -1,12 +1,12 @@
+'use strict';
 define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'underscore'], function(Wizard, Util, angular, _) {
-  'use strict';
 
   return function($scope, $injector, currentScenario, taskDefinition) {
     var criteria = {};
 
     function getBounds(criterionName) {
       var criterion = criteria[criterionName];
-      return [criterion.worst(), criterion.best()].sort();
+      return [criterion.worst(), criterion.best()].sort(function (a, b) { return a - b;});
     };
 
     function buildInitial(criterionA, criterionB, step) {
@@ -57,7 +57,7 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
 
       function getRatioBounds(state) {
         var u = criteria[state.criterionA].pvf.map;
-        return [1 / u(state.choice.lower), 1 / u(state.choice.upper)].sort();
+        return [1 / u(state.choice.lower), 1 / u(state.choice.upper)].sort(function (a, b) { return a - b;});
       }
 
       next.prefs = angular.copy(state.prefs);
