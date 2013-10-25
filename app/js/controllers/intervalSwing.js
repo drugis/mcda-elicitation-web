@@ -4,13 +4,9 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
   return function($scope, $injector, currentScenario, taskDefinition) {
     var criteria = {};
 
-    var getCriterion = function(criterionName) {
-      return criteria[criterionName];
-    };
-
     function getBounds(criterionName) {
-      var criterion = getCriterion(criterionName);
-      return [criterion.worst(), criterion.best()].sort();
+      var criterion = criteria[criterionName];
+      return [criterion.worst(), criterion.best()].sort(function (a, b) { return a - b;});
     };
 
     function buildInitial(criterionA, criterionB, step) {
@@ -42,9 +38,9 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
 
     var validChoice = function(state) {
       if(!state) return false;
-      var choice = _.object(['lower', 'upper'], _.values(state.choice).sort());
-      var other = getCriterion(state.criterionA);
-      return choice.lower <= other.worst() && choice.upper >= other.best();
+      var bounds1 = state.choice;
+      var bounds2 = getBounds(state.criterionA);
+      return bounds1.lower < bounds1.upper && bounds2[0] <= bounds1.lower && bounds2[1] >= bounds1.upper;
     };
 
     var nextState = function(state) {
@@ -61,7 +57,7 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
 
       function getRatioBounds(state) {
         var u = criteria[state.criterionA].pvf.map;
-        return [1 / u(state.choice.lower), 1 / u(state.choice.upper)].sort();
+        return [1 / u(state.choice.lower), 1 / u(state.choice.upper)].sort(function (a, b) { return a - b;});
       }
 
       next.prefs = angular.copy(state.prefs);

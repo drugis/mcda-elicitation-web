@@ -6,7 +6,7 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
 
     function getBounds(criterionName) {
       var criterion = criteria[criterionName];
-      return [criterion.worst(), criterion.best()].sort();
+      return [criterion.worst(), criterion.best()].sort(function (a, b) { return a - b;});
     }
 
     function buildInitial(criterionA, criterionB, step) {
