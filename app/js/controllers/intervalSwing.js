@@ -44,7 +44,6 @@ define(['controllers/helpers/wizard', 'controllers/helpers/util', 'angular', 'un
       if(!state) return false;
       var choice = _.object(['lower', 'upper'], _.values(state.choice).sort());
       var other = getCriterion(state.criterionA);
-      console.log(other);
       return choice.lower <= other.worst() && choice.upper >= other.best();
     };
 
