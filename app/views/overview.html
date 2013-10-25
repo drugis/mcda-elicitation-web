@@ -54,8 +54,10 @@
       <div class="columns large-6">
         <h5>{{criterion.title}}</h5>
         <ul>
-          <li>Natural scale bounds: [{{criterion.scale[0] | precision: 3}}, {{criterion.scale[1] | precision: 3}}]</li>
-          <li>Configured scale range: [{{criterion.pvf.range[1] | precision: 3}}, {{criterion.pvf.range[0] | precision: 3}}]</li>
+          <li>Natural scale bounds:
+            [<span ng-repeat="r in criterion.scale.sort()">{{r | precision: 3}}<span ng-show="!$last">, </span></span>]</li> </li>
+          <li>Configured scale range:
+            [<span ng-repeat="r in criterion.pvf.range.sort()">{{r | precision: 3}}<span ng-show="!$last">, </span></span>]</li>
           <li>Partial value function: {{criterion.pvf.type}}; {{criterion.pvf.direction}}</li>
         </ul>
       </div>
