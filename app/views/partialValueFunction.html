@@ -101,6 +101,6 @@
   <button class="small success button"
           ng-if="canSave(currentStep)"
           ng-click="save(currentStep)"
-          ng-disabled="!canProceed(currentStep)">Save</button>
+          ng-disabled="!canProceed(currentStep) || inTransition">Save</button>
 
 </div>
