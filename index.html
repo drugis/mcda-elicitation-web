@@ -4,96 +4,36 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width" />
+
     <title>Preference elicitation</title>
-    <link rel="stylesheet" type="text/css" href="js/lib/jslider/bin/jquery.slider.min.css">
-    <link rel="stylesheet" type="text/css" href="css/foundation.min.css">
-    <link rel="stylesheet" type="text/css" href="css/nv.d3.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
+
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/css/foundation.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/3.2.1/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.1.2/nprogress.min.css">
+    <link rel="stylesheet" type="text/css" href="app/js/lib/jslider/bin/jquery.slider.min.css">
+    <link rel="stylesheet" type="text/css" href="app/css/nv.d3.css">
+    <link rel="stylesheet" type="text/css" href="app/css/main.css">
+
+    <script src="app/js/lib/modernizr.foundation.js"></script>
+
+    <script src="app/js/lib/require.js" data-main="app/js/main.js"></script>
+
   </head>
 
   <body>
 
-  <div ng-controller="ExampleController" ng-hide="done" class="row">
-    <h2>Choose an Example</h2>
-
-    <form>
-      <label ng-repeat="option in list">
-        <input type="radio" ng-model="model.choice" value="{{option.href}}">
-        <span>{{option.title}}</span>
-      </label>
-      <label>
-        <input type="radio" ng-model="model.choice" value="local">
-        Local file:
-        <file-reader file="local"></file-reader>
-      </label>
-      <button class="small success" ng-disabled="!model.choice" ng-click="setProblem()">Start</button>
-    </form>
-  </div>
-
-  <div ng-controller="ElicitationController" ng-cloak ng-show="initialized" class="row">
-
-    <h2>Preference Elicitation <small>{{currentStep.problem.title}}</small></h2>
-
-    <div ng-show="currentStep.error">
+    <div ng-if="error" ng-cloak>
       <div class="alert-box alert">
-        Computation failed: {{currentStep.error.code}}
-        <span ng-show="currentStep.error.error">&mdash; {{currentStep.error.error}}</span>
+        Computation failed: {{error.code}}
+        <span ng-show="error.error">&mdash; {{error.error}}</span>
       </div>
     </div>
 
-    <div ng-show="currentStep.type == 'done'">
-      <div ng-show="saveState.success">Preferences saved.</div>
-      <div ng-class="{error: 'alert-box alert', warning: 'alert-box'}[saveState.error.severity]" ng-show="saveState.error">
-        Failed to save preferences.
-        {{saveState.error.message}}
-        <span ng-show="saveState.error.cause">HTTP Error {{saveState.error.cause}}.</span>
-      </div>
-    </div>
+    <div ui-view></div>
 
-    <h3>{{currentStep.title}}</h3>
+    <script>
+     window.config = { examplesRepository: "/examples/" };
+    </script>
 
-    <div id="wizardStepContainer" class="columns large-8">
-      <wizard-step current-step="currentStep" template-url="templateUrl"></wizard-step>
-
-      <button class="small" ng-disabled="!canReturn()" ng-click="previousStep() && runSMAA(currentStep)">Back</button>
-      <button class="small" ng-disabled="!canProceed(currentStep)" ng-click="nextStep() && runSMAA(currentStep)">Next</button>
-    </div>
-
-    <div class="results-container" ng-show="showPlot(currentStep)">
-      <div id="results"
-        ng-class="{loading: !currentStep.results && !currentStep.error, failed: currentStep.error, 'large-4':true, columns:true}">
-        <div class="loader">
-          <circular-progress value="{{currentStep.progress}}"></circular-progress>
-        </div>
-
-        <div style="width: 400px; height: 400px" class="graph">
-          <rank-plot value="currentStep.results.ranks.data" stacked="true" problem="currentStep.problem"></rank-plot>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    window.config = {
-      examplesRepository: "/examples/"
-    };
-  </script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
-
-  <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/nvd3/1.0.0-beta/nv.d3.min.js"></script>
-
-  <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.1.5/angular.min.js"></script>
-  <script src="js/lib/angular-1.1.5/angular-resource.min.js"></script>
-
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-  <script src="//autobahn.s3.amazonaws.com/js/autobahn.min.js"></script>
-
-  <script src="js/lib/jquery.knob.js"></script>
-  <script src="js/lib/jslider/bin/jquery.slider.min.js"></script>
-
-  <script src="js/components.js"></script>
-  <script src="js/steps.js"></script>
-  <script src="js/app.js"></script>
   </body>
 </html>
