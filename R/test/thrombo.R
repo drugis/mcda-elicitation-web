@@ -10,114 +10,72 @@ source('../smaa.R')
 params <- fromJSON('../../examples/thrombolytics.json')
 
 print("=== CI hulls ===")
-print(run_scales(params))
-# [[1]]
-# [[1]]$`Prox DVT`
-#       2.5%      97.5% 
-# 0.03158276 0.20029466 
-# 
-# [[1]]$`Dist DVT`
-#      2.5%     97.5% 
-# 0.1909199 0.3620560 
-# 
-# [[1]]$Bleed
-#         2.5%        97.5% 
-# 0.0003404137 0.0700511641 
+
+expected <- list(structure(
+  list(
+    `Prox DVT` = structure(
+      c(0.0312317469487807, 0.202267162805509),
+      .Names = c("2.5%", "97.5%")),
+    `Dist DVT` = structure(
+      c(0.189206533230964, 0.359563082546533),
+      .Names = c("2.5%", "97.5%")),
+    Bleed = structure(
+      c(0.000383785658019692, 0.0704173191411898),
+      .Names = c("2.5%", "97.5%"))),
+  .Names = c("Prox DVT", "Dist DVT", "Bleed")))
+
+actual <- run_scales(params)
+print(all.equal(expected, actual, tolerance=0.05))
 
 print("=== Preference Free ===")
-print(run_smaa(params))
-# $cw
-# $cw$data
-# $cw$data$Hep
-# $cw$data$Hep$cf
-# [1] 0.6632
-# 
-# $cw$data$Hep$w
-#  Prox DVT  Dist DVT     Bleed 
-# 0.1923458 0.2727509 0.5349033 
-# 
-# 
-# $cw$data$Enox
-# $cw$data$Enox$cf
-# [1] 0.8909
-# 
-# $cw$data$Enox$w
-#  Prox DVT  Dist DVT     Bleed 
-# 0.4054795 0.3649232 0.2295973 
-# 
-# 
-# 
-# $cw$description
-# [1] "Central weights"
-# 
-# $cw$type
-# [1] "list"
-# 
-# 
-# $ranks
-# $ranks$data
-# $ranks$data$Hep
-# [1] 0.3464 0.6536
-# 
-# $ranks$data$Enox
-# [1] 0.6536 0.3464
-# 
-# 
-# $ranks$description
-# [1] "Rank acceptabilities"
-# 
-# $ranks$type
-# [1] "list"
+
+expected <-
+  structure(list(cw = structure(list(data = structure(list(Hep = structure(list(
+    cf = 0.6389, w = structure(c(0.197599538560203, 0.278041542207046, 
+    0.524358919232751), .Names = c("Prox DVT", "Dist DVT", "Bleed"
+    ))), .Names = c("cf", "w")), Enox = structure(list(cf = 0.8925, 
+    w = structure(c(0.411818897723962, 0.357824528300451, 0.230356573975587
+    ), .Names = c("Prox DVT", "Dist DVT", "Bleed"))), .Names = c("cf", 
+"w"))), .Names = c("Hep", "Enox")), description = "Central weights", 
+    type = "list"), .Names = c("data", "description", "type")), 
+    ranks = structure(list(data = structure(list(Hep = c(0.3381, 
+    0.6619), Enox = c(0.6619, 0.3381)), .Names = c("Hep", "Enox"
+    )), description = "Rank acceptabilities", type = "list"), .Names = c("data", 
+    "description", "type"))), .Names = c("cw", "ranks"))
+
+actual <- run_smaa(params)
+print(all.equal(expected$ranks, actual$ranks, tolerance=0.02))
+print(all.equal(expected$cw, actual$cw, tolerance=0.05)) 
+
+### Interval SWING
+print("=== Interval SWING ===")
 
 params$preferences <- list(
   list(criteria=c('Prox DVT', 'Bleed'),
        type='ordinal'),
   list(criteria=c('Bleed', 'Dist DVT'),
        type='ordinal'))
-print("=== Interval SWING ===")
-print(run_smaa(params))
-# $cw
-# $cw$data
-# $cw$data$Hep
-# $cw$data$Hep$cf
-# [1] 0.1817
-# 
-# $cw$data$Hep$w
-#  Prox DVT  Dist DVT     Bleed 
-# 0.5300465 0.1195890 0.3503645 
-# 
-# 
-# $cw$data$Enox
-# $cw$data$Enox$cf
-# [1] 0.9218
-# 
-# $cw$data$Enox$w
-#  Prox DVT  Dist DVT     Bleed 
-# 0.6238480 0.1105783 0.2655737 
-# 
-# 
-# 
-# $cw$description
-# [1] "Central weights"
-# 
-# $cw$type
-# [1] "list"
-# 
-# 
-# $ranks
-# $ranks$data
-# $ranks$data$Hep
-# [1] 0.1311 0.8689
-# 
-# $ranks$data$Enox
-# [1] 0.8689 0.1311
-# 
-# 
-# $ranks$description
-# [1] "Rank acceptabilities"
-# 
-# $ranks$type
-# [1] "list"
+
+expected <- 
+  structure(list(cw = structure(list(data = structure(list(Hep = structure(list(
+    cf = 0.1914, w = structure(c(0.52397265721202, 0.121295521278019, 
+    0.354731821509961), .Names = c("Prox DVT", "Dist DVT", "Bleed"
+    ))), .Names = c("cf", "w")), Enox = structure(list(cf = 0.9174, 
+    w = structure(c(0.622923619837217, 0.110251595486162, 0.266824784676621
+    ), .Names = c("Prox DVT", "Dist DVT", "Bleed"))), .Names = c("cf", 
+"w"))), .Names = c("Hep", "Enox")), description = "Central weights", 
+    type = "list"), .Names = c("data", "description", "type")), 
+    ranks = structure(list(data = structure(list(Hep = c(0.1369, 
+    0.8631), Enox = c(0.8631, 0.1369)), .Names = c("Hep", "Enox"
+    )), description = "Rank acceptabilities", type = "list"), .Names = c("data", 
+    "description", "type"))), .Names = c("cw", "ranks"))
+
+actual <- run_smaa(params)
+print(all.equal(expected$ranks, actual$ranks, tolerance=0.02))
+print(all.equal(expected$cw, actual$cw, tolerance=0.05)) 
+
+### Exact SWING
+print("=== Exact SWING ===")
 
 params$preferences <- list(
   list(criteria=c('Prox DVT', 'Bleed'),
@@ -126,47 +84,21 @@ params$preferences <- list(
   list(criteria=c('Bleed', 'Dist DVT'),
        type='exact swing',
        ratio=2))
-print("=== Exact SWING ===")
-print(run_smaa(params))
-# $cw
-# $cw$data
-# $cw$data$Hep
-# $cw$data$Hep$cf
-# [1] 0.1063
-# 
-# $cw$data$Hep$w
-#  Prox DVT  Dist DVT     Bleed 
-# 0.5714286 0.1428571 0.2857143 
-# 
-# 
-# $cw$data$Enox
-# $cw$data$Enox$cf
-# [1] 0.8937
-# 
-# $cw$data$Enox$w
-#  Prox DVT  Dist DVT     Bleed 
-# 0.5714286 0.1428571 0.2857143 
-# 
-# 
-# 
-# $cw$description
-# [1] "Central weights"
-# 
-# $cw$type
-# [1] "list"
-# 
-# 
-# $ranks
-# $ranks$data
-# $ranks$data$Hep
-# [1] 0.1063 0.8937
-# 
-# $ranks$data$Enox
-# [1] 0.8937 0.1063
-# 
-# 
-# $ranks$description
-# [1] "Rank acceptabilities"
-# 
-# $ranks$type
-# [1] "list"
+
+expected <-
+  structure(list(cw = structure(list(data = structure(list(Hep = structure(list(
+    cf = 0.1049, w = structure(c(0.571428571428571, 0.142857142857143, 
+    0.285714285714286), .Names = c("Prox DVT", "Dist DVT", "Bleed"
+    ))), .Names = c("cf", "w")), Enox = structure(list(cf = 0.8951, 
+    w = structure(c(0.571428571428571, 0.142857142857143, 0.285714285714286
+    ), .Names = c("Prox DVT", "Dist DVT", "Bleed"))), .Names = c("cf", 
+"w"))), .Names = c("Hep", "Enox")), description = "Central weights", 
+    type = "list"), .Names = c("data", "description", "type")), 
+    ranks = structure(list(data = structure(list(Hep = c(0.1049, 
+    0.8951), Enox = c(0.8951, 0.1049)), .Names = c("Hep", "Enox"
+    )), description = "Rank acceptabilities", type = "list"), .Names = c("data", 
+    "description", "type"))), .Names = c("cw", "ranks"))
+
+actual <- run_smaa(params)
+print(all.equal(expected$ranks, actual$ranks, tolerance=0.02))
+print(all.equal(expected$cw, actual$cw, tolerance=0.05)) 
