@@ -58,12 +58,18 @@
             [<span ng-repeat="r in criterion.scale">{{r | precision: 3}}<span ng-show="!$last">, </span></span>]</li> </li>
           <li>Configured scale range:
             [<span ng-repeat="r in criterion.pvf.range">{{r | precision: 3}}<span ng-show="!$last">, </span></span>]</li>
-          <li>Partial value function: {{criterion.pvf.type}}; {{criterion.pvf.direction}}</li>
+          <li>Partial value function:
+            <span ng-show="criterion.pvf.type">
+              {{criterion.pvf.type}}; 
+              {{criterion.pvf.direction}}
+            </span>
+            <span ng-show="!criterion.pvf.type">undefined</span>
+          </li>
         </ul>
       </div>
       <div class="columns large-6">
         <div style="width: 250px; height: 180px">
-          <line-chart value="getXY(criterion)" show-legend="false"></line-chart>
+          <line-chart ng-if="criterion.pvf.type" value="getXY(criterion)" show-legend="false"></line-chart>
         </div>
       </div>
     </div>
