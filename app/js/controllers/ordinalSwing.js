@@ -70,7 +70,8 @@ define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard,
       return nextState;
     };
 
-    var standardize = function(order) {
+    var standardize = function(prefs) {
+      var order = prefs.ordinal;
       function ordinal(a, b) { return { type: "ordinal", criteria: [a, b] }; }
       var result = [];
       for (var i = 0; i < order.length - 1; i++) {
@@ -88,7 +89,7 @@ define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard,
     $scope.save = function(state) {
       var next = nextState(state);
       var prefs = next.prefs;
-      next.prefs = standardize(prefs.ordinal);
+      next.prefs = standardize(prefs);
       scenario.update(next);
       scenario.redirectToDefaultView();
     };
