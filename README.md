@@ -1,5 +1,5 @@
-drugis.org MCDA preference elicitation web interface
-====================================================
+mcda-elicitation-web
+====================
 
 This tool provides a web interface for Multiple Criteria Decision
 Analysis preference elicitation. Currently, it supports eliciting the
@@ -11,19 +11,21 @@ following types of preference information:
  - Exact criteria trade-off ratios (exact SWING)
  - Imprecise criteria trade-off ratios (interval SWING)
 
-The tool uses the [Patavi][patavi] web
-service wrapper for R and the 'hitandrun' and 'smaa' R packages to
-calculate MCDA results during and after the preference elicitation
-process.
+The tool uses the [Patavi][patavi] web service wrapper for R and the
+'hitandrun' and 'smaa' R packages to calculate MCDA results during and
+after the preference elicitation process.
+
+mcda-elicitation-web is a component of the [drugis.org][drugis] ADDIS 2
+project.
 
 Running
 -------
 
 First, generate the `service.R` Patavi service by concatenating the
 files in the `R/` subdirectory. On a UNIX system, run `make` from the
-root of the repository. You then need to run a Patavi server and
-workers to serve this `service.R` file. The following is an example
-command to start the worker:
+root of the repository. You then need to run a Patavi server and workers
+to serve this `service.R` file. The following is an example command to
+start the worker:
 
     lein run --method smaa -n 1 \\
              --file $MCDA_ROOT/R/service.R \\
@@ -37,16 +39,17 @@ configuration. By default,
 
     window.patavi['WS_URI'] = "ws://localhost:3000/ws";
 
-Then, serve the root of the repository using any static web server,
-for example:
+Then, serve the root of the repository using any static web server, for
+example:
 
     python -m SimpleHTTPServer 3001
 
 License
 -------
 
-mcda-elicitation-web is open source, and licensed under [GPLv3][gpl-3]. See
-[LICENSE.txt](LICENSE.txt) for more information.
+mcda-elicitation-web is open source, and licensed under [GPLv3][gpl-3].
+See [LICENSE.txt](LICENSE.txt) for more information.
 
 [patavi]: https://github.com/joelkuiper/patavi
 [gpl-3]: http://gplv3.fsf.org/
+[drugis]: http://drugis.org/
