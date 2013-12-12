@@ -19,6 +19,7 @@ import java.security.Principal;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.servlet.http.HttpServletRequest;
 
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
 import org.springframework.social.connect.ConnectionRepository;
@@ -40,9 +41,14 @@ public class IndexController {
 	}
 
 	@RequestMapping("/")
-	public String index(Principal currentUser, Model model) {
+	public String index(Principal currentUser, Model model, HttpServletRequest request) {
 		model.addAttribute("connectionsToProviders", getConnectionRepository().findAllConnections());
-		model.addAttribute(accountRepository.findAccountByUsername(currentUser.getName()));
+		try {
+			model.addAttribute(accountRepository.findAccountByUsername(currentUser.getName()));
+		} catch (org.springframework.dao.EmptyResultDataAccessException e) {
+			request.getSession().invalidate();
+			return "redirect:/signin";
+		}
 		return "index";
 	}
 	
