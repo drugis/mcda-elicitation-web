@@ -15,7 +15,7 @@ require.config({
     'foundation.dropdown': '//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/js/foundation/foundation.dropdown.min',
     'foundation.tooltip': '//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/js/foundation/foundation.tooltips.min'
   },
-  baseUrl: '/app/js',
+  baseUrl: 'app/js',
   shim: {
     'angular': { exports : 'angular' },
     'angular-resource': { deps:['angular'], exports: 'angular-resource' },
