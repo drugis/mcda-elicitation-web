@@ -32,7 +32,7 @@
     <div ui-view></div>
 
     <script>
-     window.config = { examplesRepository: "/mcda-web/examples/" };
+     window.config = { examplesRepository: "examples/" };
     </script>
 
   </body>
