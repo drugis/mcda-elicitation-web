@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.social.showcase.config;
+package org.drugis.mcdaweb.standalone.config;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;

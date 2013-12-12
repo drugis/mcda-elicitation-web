@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.social.showcase.config;
+package org.drugis.mcdaweb.standalone.config;
 
 import javax.sql.DataSource;
 
+import org.drugis.mcdaweb.standalone.account.JdbcAccountRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
@@ -31,7 +32,6 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.jdbc.datasource.init.DatabasePopulator;
 import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.social.connect.jdbc.JdbcUsersConnectionRepository;
-import org.springframework.social.showcase.account.JdbcAccountRepository;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
@@ -41,15 +41,15 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
  * @author Craig Walls
  */
 @Configuration
-@ComponentScan(basePackages = "org.springframework.social.showcase", excludeFilters = { @Filter(Configuration.class) })
-@PropertySource("classpath:org/springframework/social/showcase/config/application.properties")
+@ComponentScan(basePackages = "org.drugis.mcdaweb.standalone", excludeFilters = { @Filter(Configuration.class) })
+@PropertySource("classpath:org/drugis/mcdaweb/standalone/config/application.properties")
 @EnableTransactionManagement
 public class MainConfig {
 
 	@Bean(destroyMethod = "shutdown")
 	public DataSource dataSource() {
 		EmbeddedDatabaseFactory factory = new EmbeddedDatabaseFactory();
-		factory.setDatabaseName("spring-social-showcase");
+		factory.setDatabaseName("mcda-web");
 		factory.setDatabaseType(EmbeddedDatabaseType.H2);
 		factory.setDatabasePopulator(databasePopulator());
 		return factory.getDatabase();

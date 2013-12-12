@@ -13,17 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.social.showcase.signup;
+package org.drugis.mcdaweb.standalone.signup;
 
 import javax.inject.Inject;
 
+import org.drugis.mcdaweb.standalone.account.Account;
+import org.drugis.mcdaweb.standalone.account.AccountRepository;
+import org.drugis.mcdaweb.standalone.account.UsernameAlreadyInUseException;
+import org.drugis.mcdaweb.standalone.signin.SignInUtils;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.UserProfile;
 import org.springframework.social.connect.web.ProviderSignInUtils;
-import org.springframework.social.showcase.account.Account;
-import org.springframework.social.showcase.account.AccountRepository;
-import org.springframework.social.showcase.account.UsernameAlreadyInUseException;
-import org.springframework.social.showcase.signin.SignInUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

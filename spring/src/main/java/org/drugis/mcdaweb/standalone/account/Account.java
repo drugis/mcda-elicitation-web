@@ -13,18 +13,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.social.showcase.signin;
+package org.drugis.mcdaweb.standalone.account;
 
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
+public class Account {
 
-public class SignInUtils {
-	
-	/**
-	 * Programmatically signs in the user with the given the user ID.
-	 */
-	public static void signin(String userId) {
-		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(userId, null, null));	
+	private final String username;
+
+	private final String firstName;
+
+	private final String lastName;
+
+	public Account(String username, String firstName, String lastName) {
+		this.username = username;
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
-	
+
+	public String getUsername() {
+		return username;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
 }

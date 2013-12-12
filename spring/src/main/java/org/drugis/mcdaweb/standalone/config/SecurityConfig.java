@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.social.showcase.config;
+package org.drugis.mcdaweb.standalone.config;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
+import org.drugis.mcdaweb.standalone.security.SimpleSocialUsersDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -35,7 +36,6 @@ import org.springframework.social.UserIdSource;
 import org.springframework.social.security.AuthenticationNameUserIdSource;
 import org.springframework.social.security.SocialUserDetailsService;
 import org.springframework.social.security.SpringSocialConfigurer;
-import org.springframework.social.showcase.security.SimpleSocialUsersDetailService;
 
 /**
  * Security Configuration.

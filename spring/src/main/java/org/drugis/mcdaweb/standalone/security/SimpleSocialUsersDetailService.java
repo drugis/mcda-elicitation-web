@@ -1,4 +1,4 @@
-package org.springframework.social.showcase.security;
+package org.drugis.mcdaweb.standalone.security;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;

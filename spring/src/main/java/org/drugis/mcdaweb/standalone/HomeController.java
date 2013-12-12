@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.social.showcase;
+package org.drugis.mcdaweb.standalone;
 
 import java.security.Principal;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 
+import org.drugis.mcdaweb.standalone.account.AccountRepository;
 import org.springframework.social.connect.ConnectionRepository;
-import org.springframework.social.showcase.account.AccountRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
