@@ -1,3 +1,8 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf" %>
+<%@ page session="false" %>
+
 <!DOCTYPE html>
 <html ng-app="elicit">
   <head>
@@ -21,7 +26,14 @@
   </head>
 
   <body>
-
+  
+  	<p>Welcome, <c:out value="${account.username}"/>!</p>
+  	
+  	<form method="POST" action="<c:url value="/signout" />">
+		<input type="hidden" name="_csrf" value="<c:out value="${_csrf.token}" />" />
+		<button>Sign Out</button>
+	</form>
+  
     <div ng-if="error" ng-cloak>
       <div class="alert-box alert">
         Computation failed: {{error.code}}
