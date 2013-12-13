@@ -2,6 +2,7 @@ package org.drugis.mcdaweb.standalone.workspace;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Collection;
 
 import javax.inject.Inject;
@@ -9,6 +10,7 @@ import javax.inject.Inject;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
@@ -29,6 +31,10 @@ public class JdbcScenarioRepository implements ScenarioRepository {
 	public Scenario create(int workspaceId, String title, String state) {
 		PreparedStatementCreatorFactory pscf = 
 				new PreparedStatementCreatorFactory("insert into Scenario (workspace, title, state) values (?, ?, ?)");
+		pscf.addParameter(new SqlParameter(Types.INTEGER));
+		pscf.addParameter(new SqlParameter(Types.VARCHAR));
+		pscf.addParameter(new SqlParameter(Types.VARCHAR));
+		
 		KeyHolder keyHolder = new GeneratedKeyHolder();
 		jdbcTemplate.update(
 				pscf.newPreparedStatementCreator(new Object[] {workspaceId, title, state}), keyHolder);
@@ -40,6 +46,10 @@ public class JdbcScenarioRepository implements ScenarioRepository {
 	public Scenario update(int scenarioId, String title, String state) {
 		PreparedStatementCreatorFactory pscf = 
 				new PreparedStatementCreatorFactory("UPDATE Scenario SET title = ?, state = ? WHERE id = ?");
+		pscf.addParameter(new SqlParameter(Types.VARCHAR));
+		pscf.addParameter(new SqlParameter(Types.VARCHAR));
+		pscf.addParameter(new SqlParameter(Types.INTEGER));
+		
 		jdbcTemplate.update(
 				pscf.newPreparedStatementCreator(new Object[] {title, state, scenarioId}));
 		return findById(scenarioId);
@@ -48,7 +58,9 @@ public class JdbcScenarioRepository implements ScenarioRepository {
 	@Override
 	public Collection<Scenario> findByWorkspace(int workspaceId) {
 		PreparedStatementCreatorFactory pscf = 
-				new PreparedStatementCreatorFactory("select id, workspace, title, problem from Scenario where workspace = ?");
+				new PreparedStatementCreatorFactory("select id, workspace, title, state from Scenario where workspace = ?");
+		pscf.addParameter(new SqlParameter(Types.INTEGER));
+
 		return jdbcTemplate.query(
 				pscf.newPreparedStatementCreator(new Object[] { workspaceId }), rowMapper);
 	}

@@ -66,7 +66,9 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
 
         save(workspace.id, workspace);
 
-        return id;
+        var deferred = $q.defer();
+        deferred.resolve(id);
+        return deferred.promise;
       };
 
       workspace.query = function() {
@@ -95,7 +97,10 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
                         "problem": problem,
                         "id" : workspaceId };
       localStorage.setItem(workspaceId, angular.toJson(workspace));
-      return decorate(workspace);
+      
+      var deferred = $q.defer();
+      deferred.resolve(decorate(workspace));
+      return deferred.promise;
     };
 
     return { "create" : create,

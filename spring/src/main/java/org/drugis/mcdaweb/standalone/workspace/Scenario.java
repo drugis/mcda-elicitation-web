@@ -1,10 +1,17 @@
 package org.drugis.mcdaweb.standalone.workspace;
 
+import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.databind.JsonNode;
+
 public class Scenario {
 	private int id;
 	private int workspace;
 	private String title;
-	private String state;
+	private Object state;
+	
+	public Scenario() {
+		
+	}
 	
 	public Scenario(int id, int workspace, String title, String state) {
 		this.id = id;
@@ -21,12 +28,13 @@ public class Scenario {
 		this.title = title;
 	}
 
+	@JsonRawValue
 	public String getState() {
-		return state;
+		return state == null ? "{}" : state.toString();
 	}
 
-	public void setState(String state) {
-		this.state = state;
+	public void setState(JsonNode node) {
+		this.state = node;
 	}
 
 	public int getId() {

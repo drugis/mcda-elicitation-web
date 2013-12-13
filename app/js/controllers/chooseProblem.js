@@ -15,8 +15,9 @@ define(['angular', 'underscore'], function(angular, _) {
         DecisionProblem.populateWithUrl(choice);
       }
       DecisionProblem.problem.then(function(problem) {
-        var workspace = Workspaces.create(problem);
-        workspace.redirectToDefaultView();
+        Workspaces
+          .create(problem)
+          .then(function(workspace) { workspace.redirectToDefaultView(); });
       });
     };
 

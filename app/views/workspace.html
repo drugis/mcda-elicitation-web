@@ -4,7 +4,7 @@
 
     <div class="tabs">
       <ul class="tabsNavigation">
-        <li ng-repeat="s in scenarios" ng-class="{current: s.id == scenario.id}">
+        <li ng-repeat="s in scenarios | orderBy:'title'" ng-class="{current: s.id == scenario.id}">
           <a href="{{createPath(s.id)}}" ng-bind="s.title"></a>
         </li>
         <li>

@@ -9,9 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.drugis.mcdaweb.standalone.account.Account;
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
+import org.drugis.mcdaweb.standalone.workspace.Scenario;
+import org.drugis.mcdaweb.standalone.workspace.ScenarioRepository;
 import org.drugis.mcdaweb.standalone.workspace.Workspace;
 import org.drugis.mcdaweb.standalone.workspace.WorkspaceRepository;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,6 +24,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class WorkspacesController {
 	@Inject	private AccountRepository accountRepository;
 	@Inject	private WorkspaceRepository workspaceRepository;
+	@Inject	private ScenarioRepository scenarioRepository;
+
+	/*
+	 * Workspaces
+	 */
 	
 	@RequestMapping(value="/workspaces", method=RequestMethod.GET)
 	@ResponseBody
@@ -32,17 +38,54 @@ public class WorkspacesController {
 	}
 	
 	@RequestMapping(value="/workspaces", method=RequestMethod.POST)
-	public void create(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @RequestBody Workspace body) {
+	@ResponseBody
+	public Workspace create(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @RequestBody Workspace body) {
 		Account user = accountRepository.findAccountByUsername(currentUser.getName());
 		Workspace workspace = workspaceRepository.create(user.getId(), body.getTitle(), body.getProblem());
 		response.setStatus(HttpServletResponse.SC_CREATED);
-		response.setHeader("Location", request.getRequestURI() + "/" + workspace.getId());
+		response.setHeader("Location", request.getRequestURL() + "/" + workspace.getId());
+		return workspace;
 	}
 	
-	@RequestMapping(value="/workspaces/{workspaceId}", method=RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value="/workspaces/{workspaceId}", method=RequestMethod.GET)
 	@ResponseBody
 	public Workspace get(Principal currentUser, @PathVariable int workspaceId) {
 		return workspaceRepository.findById(workspaceId); // FIXME: check user
 	}
 	
+	/*
+	 * Scenarios
+	 */
+	
+	@RequestMapping(value="/workspaces/{workspaceId}/scenarios", method=RequestMethod.GET)
+	@ResponseBody
+	public Collection<Scenario> queryScenarios(Principal currentUser, @PathVariable int workspaceId) {
+		Collection<Scenario> scenarios = scenarioRepository.findByWorkspace(workspaceId);
+		for (Scenario scenario : scenarios) {
+			scenario.setState(null);
+		}
+		return scenarios;
+	}
+	
+	@RequestMapping(value="/workspaces/{workspaceId}/scenarios", method=RequestMethod.POST)
+	@ResponseBody
+	public Scenario createScenario(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @RequestBody Scenario body) {
+		Scenario scenario = scenarioRepository.create(workspaceId, body.getTitle(), body.getState()); // FIXME: check user
+		response.setStatus(HttpServletResponse.SC_CREATED);
+		response.setHeader("Location", request.getRequestURL() + "/" + scenario.getId());
+		return scenario;
+	}
+	
+	@RequestMapping(value="/workspaces/{workspaceId}/scenarios/{scenarioId}", method=RequestMethod.GET)
+	@ResponseBody
+	public Scenario getScenario(Principal currentUser, @PathVariable int workspaceId, @PathVariable int scenarioId) {
+		return scenarioRepository.findById(scenarioId); // FIXME: check user
+	}
+	
+	@RequestMapping(value="/workspaces/{workspaceId}/scenarios/{scenarioId}", method=RequestMethod.POST)
+	@ResponseBody
+	public Scenario updateScenario(Principal currentUser, @PathVariable int workspaceId, @PathVariable int scenarioId, @RequestBody Scenario body) {
+		Scenario scenario = scenarioRepository.update(scenarioId, body.getTitle(), body.getState()); // FIXME: check user
+		return scenario;
+	}
 }

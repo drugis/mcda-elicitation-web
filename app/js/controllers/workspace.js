@@ -20,15 +20,19 @@ define(['angular', 'underscore', 'config'], function(angular,  _, Config) {
       $scope.scenarios = currentWorkspace.query();
       $scope.resultsAccessible = resultsAccessible();
     });
+    
+    function redirect(scenarioId) { currentWorkspace.redirectToDefaultView(scenarioId); };
 
     $scope.forkScenario = function() {
-      var scenarioId = currentWorkspace.newScenario(currentScenario.state);
-      currentWorkspace.redirectToDefaultView(scenarioId);
+      currentWorkspace
+        .newScenario(currentScenario.state)
+        .then(redirect);
     };
 
     $scope.newScenario = function() {
-      var scenarioId = currentWorkspace.newScenario({ "problem" : currentWorkspace.problem });
-      currentWorkspace.redirectToDefaultView(scenarioId);
+      currentWorkspace
+        .newScenario({ "problem" : currentWorkspace.problem })
+        .then(redirect);
     };
   };
 });
