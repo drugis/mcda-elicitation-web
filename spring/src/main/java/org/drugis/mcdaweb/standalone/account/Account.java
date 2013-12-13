@@ -16,6 +16,7 @@
 package org.drugis.mcdaweb.standalone.account;
 
 public class Account {
+	private final int id;
 
 	private final String username;
 
@@ -24,9 +25,18 @@ public class Account {
 	private final String lastName;
 
 	public Account(String username, String firstName, String lastName) {
+		this (-1, username, firstName, lastName);
+	}
+	
+	public Account(int id, String username, String firstName, String lastName) {
+		this.id = id;
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
+	}
+	
+	public int getId() {
+		return id;
 	}
 
 	public String getUsername() {

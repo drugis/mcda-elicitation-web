@@ -8,7 +8,8 @@ define(
    'config',
    'angular-ui-router',
    'services/decisionProblem',
-   'services/workspaces',
+   'services/localWorkspaces',
+   'services/remoteWorkspaces',
    'services/taskDependencies',
    'foundation.dropdown',
    'foundation.tooltip',
@@ -19,7 +20,8 @@ define(
     var dependencies = [
       'ui.router',
       'elicit.problem-resource',
-      'elicit.workspaces',
+      'elicit.localWorkspaces',
+      'elicit.remoteWorkspaces',
       'elicit.directives',
       'elicit.filters',
       'elicit.controllers',
@@ -81,9 +83,9 @@ define(
         url: '/workspaces/:workspaceId/scenarios/:scenarioId',
         templateUrl: baseTemplatePath + 'workspace.html',
         resolve: {
-          currentWorkspace: function($stateParams, Workspaces) {
+          currentWorkspace: ["$stateParams", config.workspacesRepository.service, function($stateParams, Workspaces) {
             return Workspaces.get($stateParams.workspaceId);
-          },
+          }],
           currentScenario: function($stateParams, currentWorkspace) {
             return currentWorkspace.getScenario($stateParams.scenarioId);
           }
@@ -93,7 +95,6 @@ define(
 
 
       _.each(Tasks.available, function(task) {
-        var camelCase = function (str) { return str.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); }); };
         var templateUrl = baseTemplatePath + task.templateUrl;
         $stateProvider.state(task.id, {
           parent: 'workspace',

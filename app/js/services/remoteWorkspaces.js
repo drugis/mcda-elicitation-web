@@ -1,8 +1,12 @@
 'use strict';
-define(['config', 'angular', 'underscore', 'services/partialValueFunction'], function(Config, angular, _) {
-  var dependencies = ['elicit.pvfService'];
+define(['config', 'angular', 'angular-resource', 'underscore', 'services/partialValueFunction'], function(Config, angular, angularResource, _) {
+  var dependencies = ['elicit.pvfService', 'ngResource'];
 
-  var Workspaces = function(PartialValueFunction, $rootScope, $q, $location)  {
+  var Workspaces = function(PartialValueFunction, $resource, $rootScope, $q, $location) {	
+    var csrfToken = config.workspacesRepository._csrf_token;
+    var csrfHeader = config.workspacesRepository._csrf_header;
+    var repositoryUrl = config.workspacesRepository.url;
+
     function randomId(size, prefix) {
       var text = "";
       var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -83,7 +87,19 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
       return deferred.promise;
     });
 
+    var testResource = function(problem) {
+      console.log("Going to the server ...");
+      var headers = {};
+      headers[csrfHeader] = csrfToken;
+      var Workspace = $resource(repositoryUrl + ":id", {},
+    		  {save: {method: "POST", headers: headers}});
+      var workspace = new Workspace({title: problem.title, problem: problem});
+      workspace.$save(function(data) { console.log("RETURNED: ", data); });
+    };
+
     var create = function(problem) {
+      testResource(problem);
+
       var workspaceId = randomId(5);
       var scenarioId = randomId(5);
 
@@ -103,5 +119,5 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
              "save": save };
   };
 
-  return angular.module('elicit.workspaces', dependencies).factory('Workspaces', Workspaces);
+  return angular.module('elicit.remoteWorkspaces', dependencies).factory('RemoteWorkspaces', Workspaces);
 });

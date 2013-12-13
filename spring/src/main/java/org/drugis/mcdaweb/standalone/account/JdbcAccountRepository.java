@@ -23,7 +23,6 @@ import javax.inject.Inject;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +31,12 @@ public class JdbcAccountRepository implements AccountRepository {
 
 	private final JdbcTemplate jdbcTemplate;
 
+	private RowMapper<Account> rowMapper = new RowMapper<Account>() {
+		public Account mapRow(ResultSet rs, int rowNum) throws SQLException {
+			return new Account(rs.getInt("id"), rs.getString("username"), rs.getString("firstName"), rs.getString("lastName"));
+		}
+	};
+	
 	@Inject
 	public JdbcAccountRepository(JdbcTemplate jdbcTemplate) {
 		this.jdbcTemplate = jdbcTemplate;
@@ -49,12 +54,15 @@ public class JdbcAccountRepository implements AccountRepository {
 	}
 
 	public Account findAccountByUsername(String username) {
-		return jdbcTemplate.queryForObject("select username, firstName, lastName from Account where username = ?",
-				new RowMapper<Account>() {
-					public Account mapRow(ResultSet rs, int rowNum) throws SQLException {
-						return new Account(rs.getString("username"), rs.getString("firstName"), rs.getString("lastName"));
-					}
-				}, username);
+		return jdbcTemplate.queryForObject(
+				"select id, username, firstName, lastName from Account where username = ?",
+				rowMapper, username);
+	}
+
+	public Account findAccountById(int id) {
+		return jdbcTemplate.queryForObject(
+				"select id, username, firstName, lastName from Account where id = ?",
+				rowMapper, id);
 	}
 
 }

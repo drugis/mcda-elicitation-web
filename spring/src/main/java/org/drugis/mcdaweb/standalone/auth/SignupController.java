@@ -13,14 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.drugis.mcdaweb.standalone.signup;
+package org.drugis.mcdaweb.standalone.auth;
 
 import javax.inject.Inject;
 
 import org.drugis.mcdaweb.standalone.account.Account;
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
 import org.drugis.mcdaweb.standalone.account.UsernameAlreadyInUseException;
-import org.drugis.mcdaweb.standalone.signin.SignInUtils;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.UserProfile;
 import org.springframework.social.connect.web.ProviderSignInUtils;

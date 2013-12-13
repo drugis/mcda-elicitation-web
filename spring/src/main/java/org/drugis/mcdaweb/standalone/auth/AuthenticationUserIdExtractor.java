@@ -1,4 +1,4 @@
-package org.drugis.mcdaweb.standalone.security;
+package org.drugis.mcdaweb.standalone.auth;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

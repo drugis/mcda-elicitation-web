@@ -18,6 +18,8 @@ package org.drugis.mcdaweb.standalone.config;
 import javax.sql.DataSource;
 
 import org.drugis.mcdaweb.standalone.account.JdbcAccountRepository;
+import org.drugis.mcdaweb.standalone.workspace.JdbcScenarioRepository;
+import org.drugis.mcdaweb.standalone.workspace.JdbcWorkspaceRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
@@ -76,6 +78,8 @@ public class MainConfig {
 		ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
 		populator.addScript(new ClassPathResource("JdbcUsersConnectionRepository.sql", JdbcUsersConnectionRepository.class));
 		populator.addScript(new ClassPathResource("Account.sql", JdbcAccountRepository.class));
+		populator.addScript(new ClassPathResource("Workspace.sql", JdbcWorkspaceRepository.class));
+		populator.addScript(new ClassPathResource("Scenario.sql", JdbcScenarioRepository.class));
 		return populator;
 	}
 }

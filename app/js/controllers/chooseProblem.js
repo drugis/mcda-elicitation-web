@@ -1,6 +1,6 @@
 'use strict';
 define(['angular', 'underscore'], function(angular, _) {
-  var dependencies = ['$scope', 'DecisionProblem', 'Workspaces'];
+  var dependencies = ['$scope', 'DecisionProblem', config.workspacesRepository.service];
   var ChooseProblemController = function($scope, DecisionProblem, Workspaces) {
     $scope.list = [];
     $scope.model = {};

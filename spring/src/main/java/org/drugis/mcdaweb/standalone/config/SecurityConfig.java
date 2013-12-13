@@ -18,7 +18,7 @@ package org.drugis.mcdaweb.standalone.config;
 import javax.inject.Inject;
 import javax.sql.DataSource;
 
-import org.drugis.mcdaweb.standalone.security.SimpleSocialUsersDetailService;
+import org.drugis.mcdaweb.standalone.auth.SimpleSocialUsersDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;

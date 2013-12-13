@@ -44,7 +44,14 @@
     <div ui-view></div>
 
     <script>
-     window.config = { examplesRepository: "examples/" };
+     window.config = { examplesRepository: "examples/",
+    		 workspacesRepository: {
+    			 service: "RemoteWorkspaces",
+    			 url: "workspaces/",
+        		 _csrf_token: "${_csrf.token}",
+        		 _csrf_header: "${_csrf.headerName}"
+    		 }
+   		 };
     </script>
 
   </body>
