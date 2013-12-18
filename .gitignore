@@ -8,3 +8,5 @@ js/test.js
 \#*\#
 .\#*
 *_archive
+.sass-cache
+app/css/main.css
