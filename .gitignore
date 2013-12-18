@@ -9,4 +9,5 @@ js/test.js
 .\#*
 *_archive
 .sass-cache
-app/css/main.css
+app/css/mcda-plain.css
+app/css/mcda-drugis.css
