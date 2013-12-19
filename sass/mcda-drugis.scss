@@ -2,3 +2,8 @@
 @import "foundation";
 @import "drugis";
 @import "main";
+
+.color-stripe {
+	background: $drugis-color; 
+	height: 0.45rem;	
+}

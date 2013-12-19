@@ -1,12 +1,12 @@
 <div class="row">
   <div class="columns large-12">
-    <h2>Choose an Example</h2>
     <div class="panel">
       <strong>Disclaimer:</strong> this tool comes with <em>absolutely no warranty</em>, to the extent
       permitted by applicable law.<br> No user data is stored or otherwise persisted,
       however no guarantees about the safety of your data can be made.
     </div>
     <form>
+    <h2>Choose an Example</h2>
       <label ng-repeat="option in list">
         <input type="radio" ng-model="model.choice" value="{{option.href}}">
         <span>{{option.title}}</span>
