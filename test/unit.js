@@ -9,7 +9,8 @@ require.config({
     'd3': '//cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min',
     'nvd3': '//cdnjs.cloudflare.com/ajax/libs/nvd3/1.0.0-beta/nv.d3.min',
     'jasmine': '/app/js/lib/jasmine/jasmine',
-    'jasmine-html': '/app/js/lib/jasmine/jasmine-html'
+    'jasmine-html': '/app/js/lib/jasmine/jasmine-html',
+    'NProgress': '//cdnjs.cloudflare.com/ajax/libs/nprogress/0.1.2/nprogress.min'
   },
   baseUrl: '/app/js',
   shim: {
@@ -22,7 +23,8 @@ require.config({
     'jQuery': { exports : 'jQuery'},
     'jquery-slider': { deps: ['jQuery'] },
     'jasmine': { exports: 'jasmine' },
-    'jasmine-html': { deps: ['jasmine'], exports: 'jasmine' }
+    'jasmine-html': { deps: ['jasmine'], exports: 'jasmine' },
+    'NProgress': { deps: ['jQuery'], exports: "NProgress" }
   }
 });
 
