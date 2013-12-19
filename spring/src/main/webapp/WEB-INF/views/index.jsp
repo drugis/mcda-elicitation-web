@@ -37,7 +37,7 @@
     <section class="top-bar-section">
       <!-- Right Nav Section -->
       <ul class="right">
-        <li class="has-dropdown"><a href="#"><c:out value="${account.firstName} ${account.lastName} " /></a>
+        <li class="has-dropdown"><a href="#"><i class="fa fa-user fa-fw"></i> <c:out value="${account.firstName} ${account.lastName} " /></a>
           <ul class="dropdown">
             <li>
               <a href="#" onClick="signout()">Sign out</a>
@@ -70,14 +70,14 @@
       };
      
       function signout(){
-        f=document.getElementById('signout_form');
-        if(f){
-          f.submit();
-          }
+        var signoutForm = document.getElementById('signout_form');
+        
+        if(signoutForm){
+          signoutForm.submit();
         }
+      }
     
-     
-    </script>
+  </script>
 
 </body>
 </html>
