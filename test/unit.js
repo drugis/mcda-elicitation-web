@@ -48,7 +48,8 @@ require([
 	       '/test/unit/partialValueFunction.js',
          '/test/unit/ordinalSwing.js',
 	       '/test/unit/intervalSwing.js',
-	       '/test/unit/controller.js'];
+	       '/test/unit/controller.js'
+         ];
 
   require(specs, function() {
     jasmineEnv.execute();

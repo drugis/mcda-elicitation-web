@@ -26,11 +26,11 @@ define(['angular', 'angular-mocks', 'controllers', 'services/taskDependencies', 
           resets: []
         };
 
-
-        var handler = $controller('OrdinalSwingController', {
-            $scope: scope,
-            currentScenario: scenario,
-            taskDefinition: TaskDependencies.extendTaskDefinition(task)});
+        $controller('OrdinalSwingController', {
+          $scope: scope,
+          currentScenario: scenario,
+          taskDefinition: TaskDependencies.extendTaskDefinition(task)
+        });
       });
       return scope;
     };
