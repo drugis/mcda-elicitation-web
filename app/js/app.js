@@ -29,6 +29,7 @@ define(
     var app = angular.module('elicit', dependencies);
 
     app.run(['$rootScope', function($rootScope) {
+      
       $rootScope.$on('$viewContentLoaded', function () {
         $(document).foundation();
       });
@@ -78,6 +79,8 @@ define(
 
     app.config(['Tasks', '$stateProvider', '$urlRouterProvider', function(Tasks, $stateProvider, $urlRouterProvider) {
       var baseTemplatePath = "app/views/";
+      
+      NProgress.configure({ showSpinner: false });
 
       $stateProvider.state("workspace", {
         url: '/workspaces/:workspaceId/scenarios/:scenarioId',

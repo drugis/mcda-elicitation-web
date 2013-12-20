@@ -169,5 +169,4 @@ define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], fu
                  nextState: nextState }
     });
   };
-
 });

@@ -80,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 					.deleteCookies("JSESSIONID")
 			.and()
 				.authorizeRequests()
-					.antMatchers("/admin/**", "/favicon.ico", "/resources/**", "/auth/**", "/signin/**", "/signup/**", "/disconnect/facebook").permitAll()
+					.antMatchers("/favicon.ico", "/resources/**", "/app/**", "/auth/**", "/signin", "/signup").permitAll()
 					.antMatchers("/**").authenticated()
 			.and()
 				.rememberMe()

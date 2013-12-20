@@ -8,7 +8,7 @@
           <a href="{{createPath(s.id)}}" ng-bind="s.title"></a>
         </li>
         <li>
-          <a href=javaScript:void(0);"" data-dropdown="newScenarioControl"><i class="icon-plus"></i></a>
+          <a href=javaScript:void(0);"" data-dropdown="newScenarioControl"><i class="fa fa-plus"></i></a>
           <ul id="newScenarioControl" class="f-dropdown" data-dropdown-content>
             <li><a ng-click="forkScenario()">Copy current scenario</a></li>
             <li><a ng-click="newScenario()">Create clean scenario</a></li>
@@ -21,11 +21,11 @@
     <div class="columns large-2">
       <ul class="side-nav">
         <li>
-          <a href="{{scenario.createPath()}}"><i class="icon-angle-left"></i> Overview</a>
+          <a href="{{scenario.createPath()}}"><i class="fa fa-angle-left"></i> Overview</a>
         </li>
         <li>
-          <a ng-show="resultsAccessible" href="{{scenario.createPath('results')}}"><i class="icon-angle-right"></i> Results</a>
-          <span ng-show="!resultsAccessible" href="{{scenario.createPath('results')}}"><i class="icon-angle-right"></i> Results</span>
+          <a ng-show="resultsAccessible" href="{{scenario.createPath('results')}}"><i class="fa fa-angle-right"></i> Results</a>
+          <span ng-show="!resultsAccessible" href="{{scenario.createPath('results')}}"><i class="fa fa-angle-right"></i> Results</span>
         </li>
       </ul>
     </div>
