@@ -50,12 +50,6 @@
     <div class="color-stripe"></div>
   </section>
 
-  <div ng-if="error" ng-cloak>
-    <div class="alert-box alert">
-      Computation failed: {{error.code}} <span ng-show="error.error">&mdash; {{error.error}}</span>
-    </div>
-  </div>
-
   <div ui-view></div>
 
   <script>

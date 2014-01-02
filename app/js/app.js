@@ -52,7 +52,7 @@ define(
       };
       $rootScope.$on('patavi.error', function(e, message) {
         $rootScope.$safeApply($rootScope, function() {
-          $rootScope.error = message;
+          $rootScope.error = _.extend(message, { close: function() { delete $rootScope.error; } });
         });
       });
 

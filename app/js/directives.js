@@ -292,6 +292,26 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
       }
     };
   });
+  
+  directives.directive("alert", function() {
+    return {
+      restrict: "E",
+      transclude: true,
+      replace: true,
+      scope: {
+        type: '@',
+        close: '&'
+      },
+      link: function(scope, element, attrs) {
+        scope.animatedClose = function() {
+          $(element).fadeOut(400, function() {
+            scope.close();
+          });
+        };
+      },
+      template: '<div class="alert-box {{type}}"><div ng-transclude></div><a ng-click="animatedClose()" class="close">&times;</a></div>'
+    };
+  });
 
   return directives;
 });
