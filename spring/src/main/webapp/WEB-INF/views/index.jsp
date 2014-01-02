@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width" />
 <link rel="shortcut icon" href="app/img/favicon.ico" type="image/x-icon" />
 
-<title>Preference elicitation</title>
+<title>mcda.drugis.org</title>
 <link rel="stylesheet" type="text/css"
   href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 <link rel="stylesheet" type="text/css"

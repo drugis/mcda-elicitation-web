@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta name="viewport" content="width=device-width" />
 
-<title>Preference elicitation</title>
+<title>mcda.drugis.org</title>
 <link rel="stylesheet" type="text/css"
   href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="app/css/mcda-drugis.css">
