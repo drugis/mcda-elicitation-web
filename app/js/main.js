@@ -1,4 +1,7 @@
 'use strict';
+
+var foundationVersion = "5.0.2";
+
 require.config({
   paths: {
     'jQuery': '//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min',
@@ -11,9 +14,9 @@ require.config({
     'd3': '//cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min',
     'nvd3': '//cdnjs.cloudflare.com/ajax/libs/nvd3/1.0.0-beta/nv.d3.min',
     'MathJax': '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.2/MathJax.js?config=TeX-MML-AM_HTMLorMML',
-    'foundation': '//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/js/foundation.min',
-    'foundation.dropdown': '//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/js/foundation/foundation.dropdown.min',
-    'foundation.tooltip': '//cdnjs.cloudflare.com/ajax/libs/foundation/4.3.2/js/foundation/foundation.tooltips.min'
+    'foundation': '//cdnjs.cloudflare.com/ajax/libs/foundation/' + foundationVersion + '/js/foundation.min',
+    'foundation.dropdown': '//cdnjs.cloudflare.com/ajax/libs/foundation/' + foundationVersion + '/js/foundation/foundation.dropdown.min',
+    'foundation.tooltip': '//cdnjs.cloudflare.com/ajax/libs/foundation/' + foundationVersion + '/js/foundation/foundation.tooltip.min'
   },
   baseUrl: 'app/js',
   shim: {
@@ -28,7 +31,7 @@ require.config({
     'jquery-slider': { deps: ['jQuery'] },
     'NProgress': { deps: ['jQuery'], exports: "NProgress" },
     'foundation':  { deps: ['jQuery'] },
-    'foundation.section':  { deps: ['foundation'] },
+    'foundation.dropdown':  { deps: ['foundation'] },
     'foundation.tooltip':  { deps: ['foundation'] }
   },
   priority: ['angular']
