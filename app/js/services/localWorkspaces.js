@@ -93,6 +93,7 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
       scenarios[scenarioId] = { "id" : scenarioId, "title": "Default", "state": { problem: problem }};
 
       var workspace = { "scenarios": scenarios,
+                        "defaultScenarioId": scenarioId,
                         "title": problem.title,
                         "problem": problem,
                         "id" : workspaceId };

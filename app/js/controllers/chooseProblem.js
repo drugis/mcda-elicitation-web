@@ -28,8 +28,10 @@ define(['angular', 'underscore'], function(angular, _) {
     });
 
     DecisionProblem.list.then(function(data) {
-      $scope.list = data;
+      $scope.examplesList = data;
     });
+    
+    $scope.workspacesList = Workspaces.query();
   };
 
   return dependencies.concat(ChooseProblemController);

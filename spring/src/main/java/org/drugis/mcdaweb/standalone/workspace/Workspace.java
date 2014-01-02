@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class Workspace {
 	private int id;
 	private int owner;
+	private Integer defaultScenarioId;
 	private String title;
 	private Object problem;
 	
@@ -13,9 +14,10 @@ public class Workspace {
 
 	}
 	
-	public Workspace(int id, int owner, String title, String problem) {
+	public Workspace(int id, int owner, Integer defaultScenarioId, String title, String problem) {
 		this.id = id;
 		this.owner = owner;
+		this.defaultScenarioId = defaultScenarioId;
 		this.title = title;
 		this.problem = problem;
 	}
@@ -43,5 +45,13 @@ public class Workspace {
 
 	public int getOwner() {
 		return owner;
+	}
+
+	public Integer getDefaultScenarioId() {
+		return defaultScenarioId;
+	}
+
+	public void setDefaultScenarioId(Integer defaultScenarioId) {
+		this.defaultScenarioId = defaultScenarioId;
 	}
 }

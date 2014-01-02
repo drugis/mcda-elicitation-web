@@ -23,7 +23,7 @@ public class JdbcWorkspaceRepository implements WorkspaceRepository {
 	
 	private RowMapper<Workspace> rowMapper = new RowMapper<Workspace>() {
 		public Workspace mapRow(ResultSet rs, int rowNum) throws SQLException {
-			return new Workspace(rs.getInt("id"), rs.getInt("owner"), rs.getString("title"), rs.getString("problem"));
+			return new Workspace(rs.getInt("id"), rs.getInt("owner"), rs.getInt("defaultScenarioId"), rs.getString("title"), rs.getString("problem"));
 		}
 	};
 	
@@ -40,13 +40,13 @@ public class JdbcWorkspaceRepository implements WorkspaceRepository {
 				pscf.newPreparedStatementCreator(new Object[] {ownerId, title, problem}), keyHolder);
 		int workspaceId = (Integer) keyHolder.getKey();
 		
-		return new Workspace(workspaceId, ownerId, title, problem);
+		return new Workspace(workspaceId, ownerId, null, title, problem);
 	}
 
 	@Override
 	public Collection<Workspace> findByOwnerId(int ownerId) {
 		PreparedStatementCreatorFactory pscf = 
-				new PreparedStatementCreatorFactory("select id, owner, title, problem from Workspace where owner = ?");
+				new PreparedStatementCreatorFactory("select id, owner, defaultScenarioId, title, problem from Workspace where owner = ?");
 		pscf.addParameter(new SqlParameter(Types.INTEGER));
 		return jdbcTemplate.query(
 				pscf.newPreparedStatementCreator(new Object[] { ownerId }), rowMapper);
@@ -55,7 +55,22 @@ public class JdbcWorkspaceRepository implements WorkspaceRepository {
 	@Override
 	public Workspace findById(int workspaceId) {
 		return jdbcTemplate.queryForObject(
-				"select id, owner, title, problem from Workspace where id = ?",
+				"select id, owner, defaultScenarioId, title, problem from Workspace where id = ?",
 				rowMapper, workspaceId);
 	}
+
+	@Transactional
+	public Workspace update(Workspace workspace) {
+		PreparedStatementCreatorFactory pscf = 
+				new PreparedStatementCreatorFactory("UPDATE Workspace SET title = ?, problem = ?, defaultScenarioId = ? WHERE id = ?");
+		pscf.addParameter(new SqlParameter(Types.VARCHAR));
+		pscf.addParameter(new SqlParameter(Types.VARCHAR));
+		pscf.addParameter(new SqlParameter(Types.INTEGER));
+		pscf.addParameter(new SqlParameter(Types.INTEGER));
+
+		jdbcTemplate.update(
+				pscf.newPreparedStatementCreator(new Object[] {workspace.getTitle(), workspace.getProblem(), workspace.getDefaultScenarioId(), workspace.getId()}));
+		return findById(workspace.getId());
+	}
+
 }

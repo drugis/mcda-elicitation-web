@@ -8,4 +8,6 @@ public interface WorkspaceRepository {
 	Collection<Workspace> findByOwnerId(int ownerId);
 	
 	Workspace findById(int workspaceId);
+	
+	Workspace update(Workspace workspace);
 }

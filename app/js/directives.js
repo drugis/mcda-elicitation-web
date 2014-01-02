@@ -312,6 +312,26 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
       template: '<div class="alert-box {{type}}"><div ng-transclude></div><a ng-click="animatedClose()" class="close">&times;</a></div>'
     };
   });
+  
+  directives.directive("modal", function() {
+    return {
+      restrict: "A",
+      replace: true,
+      transclude: true,
+      link: function(scope, element, attrs) {
+        scope.modal = {
+          'show': false,
+          'bgStyle': function(show) { return show ? {'display': 'block'} : {'display': 'none'} },
+          'fgStyle': function(show) { return show ? {'display': 'block', 'visibility' : 'visible'} : {'display': 'none'} },
+          'templateUrl': attrs.modal,
+          'class': attrs.modalClass,
+          'open': function() { scope.modal.show = true; },
+          'close': function() { scope.modal.show = false; }
+        };
+      },
+      templateUrl: 'app/partials/modal.html'
+    };
+  });
 
   return directives;
 });

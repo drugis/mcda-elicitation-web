@@ -53,7 +53,17 @@
     <div class="color-stripe"></div>
   </section>
 
+
+  <div class="row">
+    <div class="columns">
+      <alert class="panel">
+        <strong>Disclaimer:</strong> this is <em>beta</em> software. We store your workspaces on our servers. While we try our best to keep them secure and compatible with future versions, we can make no guarantees.
+      </alert>
+    </div>
+  </div>
+    
   <div ui-view></div>
+
 
   <script>
       window.config = {
