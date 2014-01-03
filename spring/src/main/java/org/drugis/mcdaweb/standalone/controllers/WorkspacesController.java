@@ -1,4 +1,4 @@
-package org.drugis.mcdaweb.standalone;
+package org.drugis.mcdaweb.standalone.controllers;
 
 import java.security.Principal;
 import java.util.Collection;
@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.drugis.mcdaweb.standalone.account.Account;
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
-import org.drugis.mcdaweb.standalone.workspace.Scenario;
-import org.drugis.mcdaweb.standalone.workspace.ScenarioRepository;
-import org.drugis.mcdaweb.standalone.workspace.Workspace;
-import org.drugis.mcdaweb.standalone.workspace.WorkspaceRepository;
+import org.drugis.mcdaweb.standalone.repositories.Scenario;
+import org.drugis.mcdaweb.standalone.repositories.ScenarioRepository;
+import org.drugis.mcdaweb.standalone.repositories.Workspace;
+import org.drugis.mcdaweb.standalone.repositories.WorkspaceRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
