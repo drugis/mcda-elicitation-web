@@ -1,1 +1,3 @@
-../../../../../../examples/index.html
+<%@ page contentType="application/json" %>
+
+<%@ include file="../examples.json" %>
