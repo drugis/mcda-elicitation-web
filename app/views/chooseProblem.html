@@ -25,14 +25,19 @@
         <p>Or a local file:</p>
         <div style="margin-left: 2rem;">
           <label>
-            <input type="radio" ng-model="model.choice" value="local"> Local file: <file-reader file="local"></file-reader>
+            <input type="radio" ng-model="model.choice" value="local"> Local file: <file-reader model="local"></file-reader>
           </label>
         </div>
         
         <div>
           <ul class="button-group">
             <li><a class="button small secondary" ng-click="chooseProblemModal.close()">Cancel</a></li>              
-            <li><a class="button small success" ng-disabled="!model.choice" ng-click="createWorkspace(model.choice)">Create workspace</a></li>
+            <li ng-show="model.choice != 'local'">
+              <a class="button small success" ng-disabled="!model.choice" ng-click="createWorkspace(model.choice)">Create workspace</a>
+            </li>
+            <li ng-show="model.choice == 'local'">
+              <a class="button small success" ng-disabled="!local.contents" ng-click="createWorkspace(model.choice)">Create workspace</a>
+            </li>
           </ul>
         </div>
       </form>

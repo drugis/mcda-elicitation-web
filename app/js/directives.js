@@ -246,31 +246,27 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
   directives.directive('fileReader', function () {
     return {
       scope: {
-        file: '='
+        model: '=',
       },
       restrict: 'E',
-      template: "<input type='file' onchange='angular.element(this).scope().upload(this)'>",
+      template: "<input type='file' accept='.json'>",
       link: function (scope, element, attrs) {
-        scope.upload = function (element) {
-          scope.$apply(function (scope) {
-            scope.file = element.files[0];
-          });
+        function onLoadContents(env) {
+          scope.$apply(function() { scope.model.contents = env.target.result; });
         };
-        var filter = /^(application\/json|text\/plain)$/i;
-
-        scope.$watch('file', function (newVal, oldVal) {
-          if(!newVal || !filter.test(newVal.type)) return;
-          var reader = new FileReader();
-
-          reader.onload = (function (file) {
-            return function (env) {
-              scope.$apply(function () {
-                scope.file.contents = env.target.result;
-              });
-            };
-          }(newVal));
-
-          reader.readAsText(newVal);
+        
+        element.on("change", function(event) {
+          scope.$apply(function (scope) {
+            scope.model.file = event.target.files[0];
+            if(!scope.model.file) {
+              delete scope.model.contents;
+              return;
+            }
+            
+            var reader = new FileReader();
+            reader.onload = onLoadContents;
+            reader.readAsText(scope.model.file);
+          });
         });
       }
     };
