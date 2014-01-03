@@ -1,0 +1,3 @@
+<Context allowLinking="true">
+	<Manager pathname="" /> <!-- disable session persistence since it doesn't work for OAuth anyway -->
+</Context>	

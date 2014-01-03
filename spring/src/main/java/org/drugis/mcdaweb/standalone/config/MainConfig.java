@@ -31,16 +31,14 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @ComponentScan(basePackages = "org.drugis.mcdaweb.standalone", excludeFilters = { @Filter(Configuration.class) })
-@PropertySource("classpath:org/drugis/mcdaweb/standalone/config/application.properties")
 @EnableTransactionManagement
 public class MainConfig {
-
 	@Bean
 	public DataSource dataSource() {
 		JdbcDataSource ds = new JdbcDataSource();
-		ds.setURL("jdbc:h2:./database");
-		ds.setUser("sa");
-		ds.setPassword("sa");
+		ds.setURL(System.getenv("MCDAWEB_DB_URL"));
+		ds.setUser(System.getenv("MCDAWEB_DB_USERNAME"));
+		ds.setPassword(System.getenv("MCDAWEB_DB_PASSWORD"));
 		return ds;
 	}
 	
@@ -53,10 +51,4 @@ public class MainConfig {
 	public JdbcTemplate jdbcTemplate() {
 		return new JdbcTemplate(dataSource());
 	}
-
-	@Bean
-	public PropertySourcesPlaceholderConfigurer propertyPlaceHolderConfigurer() {
-		return new PropertySourcesPlaceholderConfigurer();
-	}
-
 }

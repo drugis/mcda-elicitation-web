@@ -54,7 +54,9 @@ public class SocialConfig extends SocialConfigurerAdapter {
 
 	@Override
 	public void addConnectionFactories(ConnectionFactoryConfigurer cfConfig, Environment env) {
-		cfConfig.addConnectionFactory(new GoogleConnectionFactory(env.getProperty("google.consumerKey"), env.getProperty("google.consumerSecret")));
+		final String key = System.getenv("MCDAWEB_OAUTH_GOOGLE_KEY");
+		final String secret = System.getenv("MCDAWEB_OAUTH_GOOGLE_SECRET");
+		cfConfig.addConnectionFactory(new GoogleConnectionFactory(key, secret));
 	}
 	
 	@Override

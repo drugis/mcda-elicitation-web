@@ -268,6 +268,7 @@
         <version>1.1</version>
         <configuration>
           <path>/mcda-web</path>
+		  <contextFile>tomcat-context.xml</contextFile>
         </configuration>
       </plugin>
       <plugin>
@@ -279,11 +280,11 @@
             <phase>process-resources</phase>
             <configuration>
               <changeLogFile>database.sql</changeLogFile>
-              <driver>org.h2.Driver</driver>
-              <url>jdbc:h2:../database</url>
+              <driver>${env.MCDAWEB_DB_DRIVER}</driver>
+              <url>${env.MCDAWEB_DB_URL}</url>
+              <username>${env.MCDAWEB_DB_USERNAME}</username>
+              <password>${env.MCDAWEB_DB_PASSWORD}</password>
               <promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-              <username>sa</username>
-              <password>sa</password>
             </configuration>
             <goals>
               <goal>update</goal>
