@@ -4,12 +4,11 @@
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta name="viewport" content="width=device-width" />
+<link rel="shortcut icon" href="app/img/favicon.ico" type="image/x-icon" />
 
 <title>mcda.drugis.org</title>
-<link rel="stylesheet" type="text/css"
-  href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="app/css/mcda-drugis.css">
-<link rel="shortcut icon" href="app/img/favicon.ico" type="image/x-icon" />
 
 </head>
 
