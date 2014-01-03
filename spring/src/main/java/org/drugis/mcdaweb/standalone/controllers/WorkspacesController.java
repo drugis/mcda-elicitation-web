@@ -55,6 +55,14 @@ public class WorkspacesController {
 		return workspaceRepository.findById(workspaceId); // FIXME: check user
 	}
 	
+	@RequestMapping(value="/workspaces/{workspaceId}", method=RequestMethod.POST)
+	@ResponseBody
+	public Workspace update(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @RequestBody Workspace body) {
+		Account user = accountRepository.findAccountByUsername(currentUser.getName());
+		Workspace workspace = workspaceRepository.update(body);
+		return workspace;
+	}
+	
 	/*
 	 * Scenarios
 	 */

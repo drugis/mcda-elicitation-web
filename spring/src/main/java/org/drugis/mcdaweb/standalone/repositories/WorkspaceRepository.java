@@ -1,4 +1,4 @@
-package org.drugis.mcdaweb.standalone.workspace;
+package org.drugis.mcdaweb.standalone.repositories;
 
 import java.util.Collection;
 
@@ -8,4 +8,6 @@ public interface WorkspaceRepository {
 	Collection<Workspace> findByOwnerId(int ownerId);
 	
 	Workspace findById(int workspaceId);
+	
+	Workspace update(Workspace workspace);
 }

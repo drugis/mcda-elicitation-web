@@ -4,6 +4,11 @@
 @import "main";
 
 .color-stripe {
-	background: $drugis-color; 
-	height: 0.45rem;	
+  background: $drugis-color; 
+  height: 0.45rem;  
+  margin-bottom: 0.75rem;
+}
+
+.alert-box-message {
+	padding-right: 1.25rem;
 }

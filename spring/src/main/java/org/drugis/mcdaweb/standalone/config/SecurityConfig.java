@@ -37,10 +37,6 @@ import org.springframework.social.security.AuthenticationNameUserIdSource;
 import org.springframework.social.security.SocialUserDetailsService;
 import org.springframework.social.security.SpringSocialConfigurer;
 
-/**
- * Security Configuration.
- * @author Craig Walls
- */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{

@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html ng-app="elicit">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width" />
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width" />
 
-    <title>Preference elicitation</title>
+  <title>Preference elicitation</title>
 
-    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.1.2/nprogress.min.css">
-    <link rel="stylesheet" type="text/css" href="app/js/lib/jslider/bin/jquery.slider.min.css">
-    <link rel="stylesheet" type="text/css" href="app/css/nv.d3.css">
-    <link rel="stylesheet" type="text/css" href="app/css/mcda-plain.css">
+  <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.1.2/nprogress.min.css">
+  <link rel="stylesheet" type="text/css" href="app/js/lib/jslider/bin/jquery.slider.min.css">
+  <link rel="stylesheet" type="text/css" href="app/css/nv.d3.css">
+  <link rel="stylesheet" type="text/css" href="app/css/mcda-plain.css">
 
-    <script src="app/js/lib/modernizr.foundation.js"></script>
+  <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 
-    <script src="app/js/lib/require.js" data-main="app/js/main.js"></script>
+  <script src="app/js/lib/modernizr.foundation.js"></script>
 
-  </head>
-
-  <body>
-
-    <div ng-if="error" ng-cloak>
-      <div class="alert-box alert">
-        Computation failed: {{error.code}}
-        <span ng-show="error.error">&mdash; {{error.error}}</span>
-      </div>
+  <script src="app/js/lib/require.js" data-main="app/js/main.js"></script>
+</head>
+<body>
+  <div class="row">
+    <div class="columns">
+      <alert type="info">
+        <strong>Disclaimer:</strong> this tool comes with <em>absolutely no warranty</em>, to the extent
+        permitted by applicable law. No user data is stored or otherwise persisted,
+        however no guarantees about the safety of your data can be made.
+      </alert>
     </div>
+  </div>
+  <div ui-view></div>
 
-    <div ui-view></div>
-
-    <script>
-     window.config = { examplesRepository: "/examples/",
-	workspacesRepository: { service: "LocalWorkspaces" } };
-    </script>
-
-  </body>
+  <script>
+   window.config = { examplesRepository: "/examples/",
+workspacesRepository: { service: "LocalWorkspaces" } };
+  </script>
+</body>
 </html>
