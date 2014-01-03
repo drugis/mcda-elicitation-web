@@ -26,8 +26,6 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
       $location.path(nextUrl);
     };
 
-    var scope = $rootScope.$new(true);
-
     var decorate = function(workspace) {
       workspace.redirectToDefaultView = function(scenarioId) {
         redirectToDefaultView(workspace.id, scenarioId ? scenarioId : _.keys(workspace.scenarios)[0]);
@@ -80,7 +78,7 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
 
     var get = _.memoize(function(id) {
       var deferred = $q.defer();
-      var workspace = angular.fromJson(localStorage.getItem(id));
+      var workspace = angular.fromJson(localStorage.getItem('workspace.' + id));
       deferred.resolve(decorate(workspace));
       return deferred.promise;
     });
@@ -92,21 +90,35 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
       var scenarios = {};
       scenarios[scenarioId] = { "id" : scenarioId, "title": "Default", "state": { problem: problem }};
 
-      var workspace = { "scenarios": scenarios,
+      var workspace = { "id" : workspaceId,
                         "defaultScenarioId": scenarioId,
                         "title": problem.title,
                         "problem": problem,
-                        "id" : workspaceId };
-      localStorage.setItem(workspaceId, angular.toJson(workspace));
+                        "scenarios": scenarios };
+      localStorage.setItem('workspace.' + workspaceId, angular.toJson(workspace));
       
       var deferred = $q.defer();
       deferred.resolve(decorate(workspace));
       return deferred.promise;
     };
 
+    var query = function() {
+      var items = [];
+
+      for (var key in localStorage) {
+        if (key.match(/^workspace\./)) {
+          var workspace = angular.fromJson(localStorage.getItem(key));
+          items.push(workspace);
+        }
+      }
+
+      return items;
+    };
+
     return { "create" : create,
              "get" : get,
-             "save": save };
+             "save": save,
+             "query": query };
   };
 
   return angular.module('elicit.localWorkspaces', dependencies).factory('LocalWorkspaces', Workspaces);
