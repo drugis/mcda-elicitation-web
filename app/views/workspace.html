@@ -5,8 +5,23 @@
       <alert type="alert" close="error.close()">Computation failed: {{error.code}} <span ng-show="error.error">&mdash; {{error.error}}</span></alert>
     </div>
   
-    <h2>Preference elicitation <small ng-bind="workspace.title"></small></h2>
-  
+    <h2>Preference elicitation</h2>
+    <h3 ng-show="!isEditTitleVisible" class="subheader">
+        <span ng-bind="workspace.title"></span>
+        <a  ng-click="editTitle()"><i class="fa fa-edit"></i></a>
+    </h3>
+    <div class="row" ng-show="isEditTitleVisible">
+      <div class="columns large-8 small-12">
+        <form>
+          <div class="row collapse">
+            <div class="columns small-8"><input type="text" ng-model="workspaceTitle"></div>
+            <div class="columns small-2"><button class="button postfix" ng-click="saveTitle()">Save</button></div>
+            <div class="columns small-2"><button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button></div>            
+         </div>
+        </form>
+      </div>
+    </div>
+    
     <div class="tabs">
       <ul class="tabsNavigation">
         <li ng-repeat="s in scenarios | orderBy:'title'" ng-class="{current: s.id == scenario.id}">

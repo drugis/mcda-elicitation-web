@@ -14,14 +14,12 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
     }
 
     var save = function(id, workspace) {
-      console.info("saving", workspace);
-      localStorage.setItem(id, angular.toJson(workspace));
+      localStorage.setItem('workspace.' + id, angular.toJson(workspace));
       $rootScope.$broadcast("elicit.scenariosChanged");
       return workspace;
     };
 
     var redirectToDefaultView = function(workspaceId, scenarioId) {
-      console.info("redirecting to", workspaceId, scenarioId);
       var nextUrl = "/workspaces/" + workspaceId + "/scenarios/" + scenarioId + "/" + Config.defaultView;
       $location.path(nextUrl);
     };
@@ -68,6 +66,10 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
         deferred.resolve(id);
         return deferred.promise;
       };
+      
+      workspace.$save = function() {
+        save(workspace.id, workspace);  
+      };
 
       workspace.query = function() {
         return _.values(workspace.scenarios).sort(function(a, b) { return a.title.localeCompare(b.title); });
@@ -76,12 +78,12 @@ define(['config', 'angular', 'underscore', 'services/partialValueFunction'], fun
       return workspace;
     };
 
-    var get = _.memoize(function(id) {
+    var get = function(id) {
       var deferred = $q.defer();
       var workspace = angular.fromJson(localStorage.getItem('workspace.' + id));
       deferred.resolve(decorate(workspace));
       return deferred.promise;
-    });
+    };
 
     var create = function(problem) {
       var workspaceId = randomId(5);
