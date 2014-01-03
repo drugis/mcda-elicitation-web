@@ -7,7 +7,6 @@ define(
    'NProgress',
    'config',
    'angular-ui-router',
-   'services/decisionProblem',
    'services/localWorkspaces',
    'services/remoteWorkspaces',
    'services/taskDependencies',
@@ -19,7 +18,6 @@ define(
   function(angular, require, _, $, NProgress, Config) {
     var dependencies = [
       'ui.router',
-      'elicit.problem-resource',
       'elicit.localWorkspaces',
       'elicit.remoteWorkspaces',
       'elicit.directives',
@@ -52,7 +50,7 @@ define(
       };
       $rootScope.$on('patavi.error', function(e, message) {
         $rootScope.$safeApply($rootScope, function() {
-          $rootScope.error = message;
+          $rootScope.error = _.extend(message, { close: function() { delete $rootScope.error; } });
         });
       });
 

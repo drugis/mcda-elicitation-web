@@ -1,4 +1,4 @@
-package org.drugis.mcdaweb.standalone.workspace;
+package org.drugis.mcdaweb.standalone.repositories;
 
 import java.util.Collection;
 

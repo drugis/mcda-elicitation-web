@@ -4,10 +4,10 @@
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta name="viewport" content="width=device-width" />
+<link rel="shortcut icon" href="app/img/favicon.ico" type="image/x-icon" />
 
-<title>Preference elicitation</title>
-<link rel="stylesheet" type="text/css"
-  href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+<title>mcda.drugis.org</title>
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="app/css/mcda-drugis.css">
 
 </head>
@@ -17,35 +17,34 @@
     <ul class="title-area">
       <li class="name">
         <h1>
-          <a>MCDA-elicitation web</a>
+          <a href="#">mcda.drugis.org</a>
         </h1>
       </li>
     </ul>
   </nav>
-  <section>
-    <div class="color-stripe"></div>
-  </section>
 
   <section id="hero">
     <div class="row">
       <div class="large-12 columns">
-        <h1>MCDA-elicitation web</h1>
-        <h4>The cure for what ails you!</h4>
-        <!-- GOOGLE SIGNIN -->
+        <h1>mcda.drugis.org <br/>
+          <small>Decision analysis for drug benefit-risk assessment</small>
+        </h1>
+             
       </div>
     </div>
   </section>
   <section class="content">
     <div class="row">
-      <div class="large-7 small-12 columns">
-        <h2>MCDA Elicitation-web</h2>
-        <p>
-         Welcome to the web portal for elicitation of MCDA preferences.
-          Please sign in to begin.
-        </p>
-        <p>
+      <div class="columns">
+        <p><a href="#">mcda.drugis.org</a> is designed to help policy makers and researchers judge the balance of favorable and unfavorable effects of medicines.
+        This tool is intended to be part of the <a href="http://drugis.org/software/addis2">ADDIS 2</a> decision support system for health care policy.
+        Until then, it serves as a demonstration of our multiple criteria decision analysis (MCDA) methods and our future direction in the development of ADDIS.</p>
+        
+        <div>
           <a class=" button" href="auth/google?scope=openid%20email%20profile">Sign In with Google</a>
-        </p>
+        </div>
+        
+        <p>Right now, you need a Google account to sign in. The information we retrieve from Google is only used to ensure that you continue to have access to the workspaces you create.</p>
       </div>
     </div>
   </section>

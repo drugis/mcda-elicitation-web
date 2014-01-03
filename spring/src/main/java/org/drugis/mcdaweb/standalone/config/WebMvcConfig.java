@@ -25,14 +25,9 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
-/**
- * Spring MVC Configuration.
- * @author Craig Walls
- */
 @Configuration
 @EnableWebMvc
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
-
 	@Bean
 	public ViewResolver viewResolver() {
 		UrlBasedViewResolver viewResolver = new InternalResourceViewResolver();

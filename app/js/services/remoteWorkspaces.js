@@ -19,7 +19,7 @@ define(['config', 'angular', 'angular-resource', 'underscore', 'services/partial
     headers[csrfHeader] = csrfToken;
     var repositoryUrl = config.workspacesRepository.url;
 
-    var WorkspaceResource = $resource(repositoryUrl + ":workspaceId", {},
+    var WorkspaceResource = $resource(repositoryUrl + ":workspaceId", {workspaceId: '@id'},
         {save: {method: "POST", headers: headers}});
     
     var redirectToDefaultView = function(workspaceId, scenarioId) {
@@ -56,9 +56,7 @@ define(['config', 'angular', 'angular-resource', 'underscore', 'services/partial
           };
   
           scenario.createPath = _.partial(Config.createPath, workspace.id, scenario.id);
-          
-          console.log(scenario);
-  
+
           deferred.resolve(scenario);
         });
         return deferred.promise;
@@ -78,18 +76,17 @@ define(['config', 'angular', 'angular-resource', 'underscore', 'services/partial
       workspace.query = function() {
         return ScenarioResource.query();
       };
-
+      
       return workspace;
     };
 
-    var get = _.memoize(function(id) {
+    var get = function(id) {
       var deferred = $q.defer();
-      console.log("Getting " + id);
       WorkspaceResource.get({workspaceId: id}, function(workspace) {
         deferred.resolve(decorate(workspace));
       });
       return deferred.promise;
-    });
+    };
 
     var create = function(problem) {
       var deferred = $q.defer();
@@ -98,20 +95,28 @@ define(['config', 'angular', 'angular-resource', 'underscore', 'services/partial
       workspace.$save(function(workspace) { 
         var Scenario = $resource(repositoryUrl + ":workspaceId/scenarios/:scenarioId",
             { workspaceId: workspace.id },
-            {save: {method: "POST", headers: headers}});
+            { save: {method: "POST", headers: headers} });
         var scenario = new Scenario({"title" : "Default", "state": { problem: problem }});
         scenario.$save(function(scenario) {
-          workspace.scenarios = {};
-          workspace.scenarios[scenario.id] = scenario;
-          deferred.resolve(decorate(workspace));
+          workspace.defaultScenarioId = scenario.id;
+          workspace.$save(function() {
+            workspace.scenarios = {};
+            workspace.scenarios[scenario.id] = scenario;
+            deferred.resolve(decorate(workspace));
+          });
         });
       });
       
       return deferred.promise;
     };
+    
+    var query = function() {
+      return WorkspaceResource.query();
+    };
 
     return { "create" : create,
-             "get" : get };
+             "get" : get,
+             "query": query };
   };
 
   return angular.module('elicit.remoteWorkspaces', dependencies).factory('RemoteWorkspaces', Workspaces);
