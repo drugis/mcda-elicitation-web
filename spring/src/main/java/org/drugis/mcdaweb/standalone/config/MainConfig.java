@@ -17,7 +17,7 @@ package org.drugis.mcdaweb.standalone.config;
 
 import javax.sql.DataSource;
 
-import org.h2.jdbcx.JdbcDataSource;
+import org.springframework.jndi.JndiTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
@@ -35,10 +35,13 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class MainConfig {
 	@Bean
 	public DataSource dataSource() {
-		JdbcDataSource ds = new JdbcDataSource();
-		ds.setURL(System.getenv("MCDAWEB_DB_URL"));
-		ds.setUser(System.getenv("MCDAWEB_DB_USERNAME"));
-		ds.setPassword(System.getenv("MCDAWEB_DB_PASSWORD"));
+		DataSource ds = null;
+		JndiTemplate jndi = new JndiTemplate();
+		try {
+			ds = (DataSource) jndi.lookup("java:/comp/env/jdbc/mcdaweb");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 		return ds;
 	}
 	
