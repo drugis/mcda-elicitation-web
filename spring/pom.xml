@@ -268,7 +268,13 @@
         <version>1.1</version>
         <configuration>
           <path>/mcda-web</path>
-		  <contextFile>tomcat-context.xml</contextFile>
+          <contextFile>tomcat-context.xml</contextFile>
+          <systemProperties>
+            <MCDAWEB_DB_DRIVER>${env.MCDAWEB_DB_DRIVER}</MCDAWEB_DB_DRIVER>
+            <MCDAWEB_DB_URL>${env.MCDAWEB_DB_URL}</MCDAWEB_DB_URL>
+            <MCDAWEB_DB_USERNAME>${env.MCDAWEB_DB_USERNAME}</MCDAWEB_DB_USERNAME>
+            <MCDAWEB_DB_PASSWORD>${env.MCDAWEB_DB_PASSWORD}</MCDAWEB_DB_PASSWORD>
+          </systemProperties>
         </configuration>
       </plugin>
       <plugin>
