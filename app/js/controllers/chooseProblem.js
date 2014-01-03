@@ -32,6 +32,8 @@ define(['angular', 'underscore'], function(angular, _) {
     });
     
     $scope.workspacesList = Workspaces.query();
+    
+    $scope.chooseProblemModal = {};
   };
 
   return dependencies.concat(ChooseProblemController);

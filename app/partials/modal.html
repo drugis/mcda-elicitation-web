@@ -1,8 +1,11 @@
 <div>
-  <a ng-transclude ng-click="modal.open()" class="{{modal.class}}"></a>
-  <div class="reveal-modal-bg" ng-style="modal.bgStyle(modal.show)"></div>
-  <div class="reveal-modal open" ng-style="modal.fgStyle(modal.show)">
-    <div ng-include="modal.templateUrl"></div>
-    <a class="close-reveal-modal" ng-click="modal.close()">&times;</a>
+  <div ng-if="buttonText">
+    <a class="button" ng-click="model.open()">{{buttonText}}</a>
+  </div>
+  
+  <div class="reveal-modal-bg" ng-style="bgStyle(model.show)"></div>
+  <div class="reveal-modal open" ng-style="fgStyle(model.show)">
+    <div ng-transclude></div>
+    <a class="close-reveal-modal" ng-click="model.close()">&times;</a>
   </div>
 </div>

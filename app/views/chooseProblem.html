@@ -11,6 +11,31 @@
       </ul>
     </div>
     
-    <a modal="app/partials/chooseProblemModal.html" modal-class="button"><i class="fa fa-plus"></i> Create workspace</a>
+    <a class="button" ng-click="chooseProblemModal.open()"><i class="fa fa-plus"></i> Create workspace</a>
+    
+    <modal model="chooseProblemModal">
+      <h3>Create a new workspace</h3>
+      <form>
+        <p>Load an example:</p>
+        <div style="margin-left: 2rem;">
+          <label ng-repeat="option in examplesList">
+            <input type="radio" ng-model="model.choice" value="{{option.href}}"> <span>{{option.title}}</span>
+          </label>
+        </div>
+        <p>Or a local file:</p>
+        <div style="margin-left: 2rem;">
+          <label>
+            <input type="radio" ng-model="model.choice" value="local"> Local file: <file-reader file="local"></file-reader>
+          </label>
+        </div>
+        
+        <div>
+          <ul class="button-group">
+            <li><a class="button small secondary" ng-click="chooseProblemModal.close()">Cancel</a></li>              
+            <li><a class="button small success" ng-disabled="!model.choice" ng-click="setProblem(model.choice)">Create workspace</a></li>
+          </ul>
+        </div>
+      </form>
+    </modal>
   </div>
 </div>
