@@ -23,9 +23,10 @@
 </head>
 
 <body>
-<form method="POST" action="<c:url value="/signout" />" id="signout_form">
-                <input type="hidden" name="_csrf" value="<c:out value="${_csrf.token}" />" />
-              </form>
+  <form method="POST" action="<c:url value="/signout" />" id="signout_form">
+    <input type="hidden" name="_csrf" value="<c:out value="${_csrf.token}" />" />
+  </form>
+  
   <nav class="top-bar" data-topbar>
     <ul class="title-area">
       <li class="name">
@@ -54,7 +55,7 @@
 
   <div class="row">
     <div class="columns">
-      <alert class="panel">
+      <alert type="info">
         <strong>Disclaimer:</strong> this is <em>beta</em> software. We store your workspaces on our servers. While we try our best to keep them secure and compatible with future versions, we can make no guarantees.
       </alert>
     </div>
@@ -64,24 +65,23 @@
 
 
   <script>
-      window.config = {
-        examplesRepository : "examples/",
-        workspacesRepository : {
-          service : "RemoteWorkspaces",
-          url : "workspaces/",
-          _csrf_token : "${_csrf.token}",
-          _csrf_header : "${_csrf.headerName}"
-        }
-      };
-     
-      function signout(){
-        var signoutForm = document.getElementById('signout_form');
-        
-        if(signoutForm){
-          signoutForm.submit();
-        }
+    window.config = {
+      examplesRepository : "examples/",
+      workspacesRepository : {
+        service : "RemoteWorkspaces",
+        url : "workspaces/",
+        _csrf_token : "${_csrf.token}",
+        _csrf_header : "${_csrf.headerName}"
       }
-    
+    };
+   
+    function signout(){
+      var signoutForm = document.getElementById('signout_form');
+      
+      if(signoutForm){
+        signoutForm.submit();
+      }
+    }
   </script>
 
 </body>
