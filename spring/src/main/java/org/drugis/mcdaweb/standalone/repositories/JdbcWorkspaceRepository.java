@@ -53,24 +53,25 @@ public class JdbcWorkspaceRepository implements WorkspaceRepository {
 	}
 
 	@Override
-	public Workspace findById(int workspaceId) {
+	public Workspace findById(int workspaceId, int ownerId) {
 		return jdbcTemplate.queryForObject(
-				"select id, owner, defaultScenarioId, title, problem from Workspace where id = ?",
-				rowMapper, workspaceId);
+				"select id, owner, defaultScenarioId, title, problem from Workspace where id = ? and owner = ?",
+				rowMapper, workspaceId, ownerId);
 	}
 
 	@Transactional
-	public Workspace update(Workspace workspace) {
+	public Workspace update(Workspace workspace, int ownerId) {
 		PreparedStatementCreatorFactory pscf = 
-				new PreparedStatementCreatorFactory("UPDATE Workspace SET title = ?, problem = ?, defaultScenarioId = ? WHERE id = ?");
+				new PreparedStatementCreatorFactory("UPDATE Workspace SET title = ?, problem = ?, defaultScenarioId = ? WHERE id = ? AND owner = ?");
 		pscf.addParameter(new SqlParameter(Types.VARCHAR));
 		pscf.addParameter(new SqlParameter(Types.VARCHAR));
+		pscf.addParameter(new SqlParameter(Types.INTEGER));
 		pscf.addParameter(new SqlParameter(Types.INTEGER));
 		pscf.addParameter(new SqlParameter(Types.INTEGER));
 
 		jdbcTemplate.update(
-				pscf.newPreparedStatementCreator(new Object[] {workspace.getTitle(), workspace.getProblem(), workspace.getDefaultScenarioId(), workspace.getId()}));
-		return findById(workspace.getId());
+				pscf.newPreparedStatementCreator(new Object[] {workspace.getTitle(), workspace.getProblem(), workspace.getDefaultScenarioId(), workspace.getId(), ownerId}));
+		return findById(workspace.getId(), ownerId);
 	}
 
 }
