@@ -1,4 +1,4 @@
-package org.drugis.mcdaweb.standalone.workspace;
+package org.drugis.mcdaweb.standalone.controllers;
 
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
 import org.drugis.mcdaweb.standalone.repositories.ScenarioRepository;

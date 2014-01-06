@@ -49,15 +49,23 @@ public class WorkspacesController {
 	
 	@RequestMapping(value="/workspaces/{workspaceId}", method=RequestMethod.GET)
 	@ResponseBody
-	public Workspace get(Principal currentUser, @PathVariable int workspaceId) {
-		return workspaceRepository.findById(workspaceId); // FIXME: check user
+	public Workspace get(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId) {
+		Account user = accountRepository.findAccountByUsername(currentUser.getName());
+		Workspace workspace = workspaceRepository.findById(workspaceId, user.getId());
+		if (workspace == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+		}
+		return workspace;
 	}
 	
 	@RequestMapping(value="/workspaces/{workspaceId}", method=RequestMethod.POST)
 	@ResponseBody
 	public Workspace update(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @RequestBody Workspace body) {
 		Account user = accountRepository.findAccountByUsername(currentUser.getName());
-		Workspace workspace = workspaceRepository.update(body);
+		Workspace workspace = workspaceRepository.update(body, user.getId());
+		if (workspace == null) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+		}
 		return workspace;
 	}
 	
