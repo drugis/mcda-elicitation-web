@@ -86,7 +86,7 @@ public class WorkspacesController {
 	@ResponseBody
 	public Collection<Scenario> queryScenarios(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId) {
 		if (workspaceRepository.findById(workspaceId) == null) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			return null;
 		}
 		Account user = accountRepository.findAccountByUsername(currentUser.getName());
@@ -96,7 +96,7 @@ public class WorkspacesController {
 		}
 		Collection<Scenario> scenarios = scenarioRepository.findByWorkspace(workspaceId);
 		if (scenarios == null) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return null;
 		}
 		for (Scenario scenario : scenarios) {
@@ -110,7 +110,7 @@ public class WorkspacesController {
 	public Scenario createScenario(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @RequestBody Scenario body) {
 		Workspace workspace = workspaceRepository.findById(workspaceId);
 		if (workspace == null) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
 			return null;
 		}
 		Account user = accountRepository.findAccountByUsername(currentUser.getName());
@@ -126,8 +126,22 @@ public class WorkspacesController {
 	
 	@RequestMapping(value="/workspaces/{workspaceId}/scenarios/{scenarioId}", method=RequestMethod.GET)
 	@ResponseBody
-	public Scenario getScenario(Principal currentUser, @PathVariable int workspaceId, @PathVariable int scenarioId) {
-		return scenarioRepository.findById(scenarioId); // FIXME: check user
+	public Scenario getScenario(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @PathVariable int scenarioId) {
+		Workspace workspace = workspaceRepository.findById(workspaceId);
+		if (workspace == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			return null;
+		}
+		Account user = accountRepository.findAccountByUsername(currentUser.getName());
+		if (!workspaceRepository.isWorkspaceOwnedBy(workspaceId, user.getId())) {
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
+		Scenario scenario = scenarioRepository.findById(scenarioId);
+		if (scenario == null) {
+			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+		}
+		return scenario;
 	}
 	
 	@RequestMapping(value="/workspaces/{workspaceId}/scenarios/{scenarioId}", method=RequestMethod.POST)
