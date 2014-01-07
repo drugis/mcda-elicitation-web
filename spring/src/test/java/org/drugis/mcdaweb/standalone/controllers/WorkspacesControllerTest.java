@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.nio.charset.Charset;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -17,9 +18,10 @@ import org.drugis.mcdaweb.standalone.account.Account;
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
 import org.drugis.mcdaweb.standalone.repositories.Workspace;
 import org.drugis.mcdaweb.standalone.repositories.WorkspaceRepository;
+import org.drugis.mcdaweb.standalone.repositories.ScenarioRepository;
+import org.drugis.mcdaweb.standalone.repositories.Scenario;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +43,13 @@ public class WorkspacesControllerTest {
 					MediaType.APPLICATION_JSON.getType(),
 					MediaType.APPLICATION_JSON.getSubtype(),                       
 					Charset.forName("utf8"));
-	private final static String WORKSPACE_PROBLEM = "{\"key\":\"value\"}";
+	private final static String JSON_KEY_VALUE = "{\"key\":\"value\"}";
 	private static Workspace createWorkspace() {
 		int workspaceId = 1;
 		int userId = 1;
 		int defaultScenarioId = 1;
 		final String workspaceName = "mockWorkspace";
-		Workspace workspace = new Workspace(workspaceId, userId, defaultScenarioId, workspaceName, WORKSPACE_PROBLEM);
+		Workspace workspace = new Workspace(workspaceId, userId, defaultScenarioId, workspaceName, JSON_KEY_VALUE);
 		return workspace;
 	}
 	
@@ -59,6 +61,8 @@ public class WorkspacesControllerTest {
 	@Inject
 	private WorkspaceRepository workspaceRepository;
 
+	@Inject
+	private ScenarioRepository scenarioRepository;
 	
 	@Autowired
 	private WebApplicationContext context;
@@ -69,6 +73,7 @@ public class WorkspacesControllerTest {
 	public void setUp() {
 		reset(accountRepository);
 		reset(workspaceRepository);
+		reset(scenarioRepository);
 
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 		user = mock(Principal.class);
@@ -77,6 +82,13 @@ public class WorkspacesControllerTest {
 		when(accountRepository.findAccountByUsername("gert")).thenReturn(gert);
 		
 	}
+	
+	@Test
+	public void testBadURL404() throws Exception {
+		mockMvc.perform(get("nonsenseUrl"))
+			.andExpect(status().isNotFound());
+	}
+	
 	
 	@Test
 	public void testQueryEmptyWorkspaces() throws Exception {
@@ -116,9 +128,9 @@ public class WorkspacesControllerTest {
 
 	@Test
 	public void testCreateWorkspace() throws Exception {
-		String jsonContent = "{\"title\": \"mockWorkspace\", \"problem\":" + WORKSPACE_PROBLEM + "}";
+		String jsonContent = "{\"title\": \"mockWorkspace\", \"problem\":" + JSON_KEY_VALUE + "}";
 		Workspace workspace = createWorkspace();
-		when(workspaceRepository.create(workspace.getOwner(), workspace.getTitle(), WORKSPACE_PROBLEM)).thenReturn(workspace);
+		when(workspaceRepository.create(workspace.getOwner(), workspace.getTitle(), JSON_KEY_VALUE)).thenReturn(workspace);
 		mockMvc.perform(post("/workspaces")
 				.principal(user)
 				.contentType(APPLICATION_JSON_UTF8)
@@ -141,7 +153,10 @@ public class WorkspacesControllerTest {
 	@Test
 	public void testGetWorkspace() throws Exception {
 		Workspace workspace = createWorkspace();
-		when(workspaceRepository.findById(1, 1)).thenReturn(workspace);
+		int workspaceId = 1;
+		int userId = 1;
+		when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
+		when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(true);
 		mockMvc.perform(get("/workspaces/1")
 				.principal(user))
 				.andExpect(status().isOk())
@@ -153,8 +168,8 @@ public class WorkspacesControllerTest {
 				.andExpect(jsonPath("$.problem", hasKey("key")))
 				.andExpect(jsonPath("$.problem", hasValue("value")))
 		;
-				
-		verify(workspaceRepository).findById(1, 1);
+		verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
+		verify(workspaceRepository).findById(1);
 		verify(accountRepository).findAccountByUsername("gert");
 	}
 	
@@ -162,57 +177,197 @@ public class WorkspacesControllerTest {
 	public void testGetUnauthorisedWorkspaceFails() throws Exception {
 		Principal leetHaxor = mock(Principal.class);
 		when(leetHaxor.getName()).thenReturn("skiddie");
-		Account haxAccount = new Account(2, "skiddie", "Script", "Kiddie");
+		int workspaceId = 1;
+		int userId = 2;
+		Workspace workspace = createWorkspace();
+		Account haxAccount = new Account(userId, "skiddie", "Script", "Kiddie");
 		when(accountRepository.findAccountByUsername("skiddie")).thenReturn(haxAccount);
-
-		when(workspaceRepository.findById(1, 2)).thenReturn(null);
+		when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(false);
+		when(workspaceRepository.findById(1)).thenReturn(workspace);
 		mockMvc.perform(get("/workspaces/1")
 				.principal(leetHaxor))
-				.andExpect(status().isNotFound())
+				.andExpect(status().isForbidden())
 		;
+		verify(workspaceRepository).findById(workspaceId);
 		verify(accountRepository).findAccountByUsername("skiddie");
-		verify(workspaceRepository).findById(1, 2);
+		verify(workspaceRepository).isWorkspaceOwnedBy(1, userId);
 	}
 	
 	@Test
 	public void testUpdate() throws Exception {
-	
-		String jsonContent = "{\"id\": 1, \"owner\": 1, \"title\": \"mockWorkspace\", \"defaultScenarioId\" : 1, \"problem\":" + WORKSPACE_PROBLEM + "}";
-		Integer userId = 1;
+		String jsonContent = "{\"id\": 1, \"owner\": 1, \"title\": \"mockWorkspace\", \"defaultScenarioId\" : 1, \"problem\":" + JSON_KEY_VALUE + "}";
 		Workspace workspace = createWorkspace();
-		when(workspaceRepository.update(workspace, userId)).thenReturn(workspace);
-		mockMvc.perform(post("/workspaces/202").principal(user)
-				.contentType(APPLICATION_JSON_UTF8)
-				.content(jsonContent))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-				.andExpect(jsonPath("$.id", is(workspace.getId())))
-				.andExpect(jsonPath("$.owner", is(workspace.getOwner())))
-				.andExpect(jsonPath("$.defaultScenarioId", is(workspace.getDefaultScenarioId())))
-				.andExpect(jsonPath("$.title", is(workspace.getTitle())))
-				.andExpect(jsonPath("$.problem", hasKey("key")))
-				.andExpect(jsonPath("$.problem", hasValue("value")))
+		int workspaceId = 1;
+		int userId = 1;
+		when(workspaceRepository.findById(1)).thenReturn(workspace);
+		when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(true);
+		when(workspaceRepository.update(workspace)).thenReturn(workspace);
+		mockMvc.perform(post("/workspaces/1").principal(user)
+			.contentType(APPLICATION_JSON_UTF8)
+			.content(jsonContent))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.id", is(workspace.getId())))
+			.andExpect(jsonPath("$.owner", is(workspace.getOwner())))
+			.andExpect(jsonPath("$.defaultScenarioId", is(workspace.getDefaultScenarioId())))
+			.andExpect(jsonPath("$.title", is(workspace.getTitle())))
+			.andExpect(jsonPath("$.problem", hasKey("key")))
+			.andExpect(jsonPath("$.problem", hasValue("value")))
 		;
-		
-		verify(workspaceRepository).update(workspace, userId);
+		verify(workspaceRepository).findById(workspaceId);
+		verify(workspaceRepository).update(workspace);
+		verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
 		verify(accountRepository).findAccountByUsername("gert");
 	}
 	
 	// if no workspace is found the request was bad.
 	@Test
 	public void testInvalidUpdate() throws Exception {
-		String jsonContent = "{\"id\": 1, \"owner\": 1, \"title\": \"mockWorkspace\", \"defaultScenarioId\" : 1, \"problem\":" + WORKSPACE_PROBLEM + "}";
-		Integer userId = 1;
+		String jsonContent = "{\"id\": 202, \"owner\": 1, \"title\": \"mockWorkspace\", \"defaultScenarioId\" : 1, \"problem\":" + JSON_KEY_VALUE + "}";
 		Workspace workspace = createWorkspace();
-		when(workspaceRepository.update(workspace, userId)).thenReturn(null);
+		when(workspaceRepository.isWorkspaceOwnedBy(202, 1)).thenReturn(true);
+		when(workspaceRepository.update(workspace)).thenReturn(null);
 		mockMvc.perform(post("/workspaces/202").principal(user)
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(jsonContent))
 				.andExpect(status().isBadRequest())
 		;
-		verify(workspaceRepository).update(workspace, userId);
+		verify(workspaceRepository).findById(202);
+	}
+	
+	@Test
+	public void testUpdateNotOwnedWorkspaceFails() throws Exception {
+		String jsonContent = "{\"id\": 1, \"owner\": 1, \"title\": \"mockWorkspace\", \"defaultScenarioId\" : 1, \"problem\":" + JSON_KEY_VALUE + "}";
+		Workspace workspace = createWorkspace();
+		int workspaceId = 1;
+		int userId = 1;
+		when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(false);
+		when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
+		mockMvc.perform(post("/workspaces/1").principal(user)
+				.contentType(APPLICATION_JSON_UTF8)
+				.content(jsonContent))
+				.andExpect(status().isForbidden())
+		;
+		verify(workspaceRepository).findById(workspaceId);
+		verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
 		verify(accountRepository).findAccountByUsername("gert");
-}
+	}
+	
+	////// Scenarios
+	
+	@Test
+	public void testQueryEmptyScenarios() throws Exception {
+		int workspaceId = 0;
+		int userId = 1;
+		Workspace workspace = createWorkspace();
+		when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
+		when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(true);
+		when(scenarioRepository.findByWorkspace(workspaceId)).thenReturn(Collections.<Scenario>emptyList());
+		mockMvc.perform(get("/workspaces/0/scenarios").principal(user))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$", hasSize(0)))
+		;
+		verify(workspaceRepository).findById(workspaceId);
+		verify(scenarioRepository).findByWorkspace(workspaceId);
+		verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
+		verify(accountRepository).findAccountByUsername("gert");
+	}
+	
+	@Test
+	public void testQueryScenario() throws Exception {
+		int workspaceId = 0;
+		int userId = 1;
+		Workspace workspace = createWorkspace();
+		when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
+		when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(true);
+		when(scenarioRepository.findByWorkspace(0)).thenReturn(Collections.<Scenario>emptyList());
+		Scenario scenario0 = new Scenario(0, 0, "testScenario0", "testState");
+		Scenario scenario1 = new Scenario(1, 0, "testScenario1", "testState");
+		Collection<Scenario> scenarios = new ArrayList<Scenario>(Arrays.asList(scenario0, scenario1));
+		
+		when(scenarioRepository.findByWorkspace(workspaceId)).thenReturn(scenarios);
+		
+		mockMvc.perform(get("/workspaces/0/scenarios").principal(user))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$", hasSize(2)))
+			.andExpect(jsonPath("$[0].id", is(0)))
+			.andExpect(jsonPath("$[1].id", is(1)))
+		;
+		verify(scenarioRepository).findByWorkspace(workspaceId);
+		verify(workspaceRepository).findById(workspaceId);
+		verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
+		verify(accountRepository).findAccountByUsername("gert");
+	}
+	
+	@Test
+	public void testQueryScenarioFromNonexistentWorkspaceFails() throws Exception {
+		int workspaceId = 1;
+		when(scenarioRepository.findByWorkspace(workspaceId)).thenReturn(null);
+		when(workspaceRepository.findById(workspaceId)).thenReturn(null);
+		
+		mockMvc.perform(get("/workspaces/1/scenarios").principal(user))
+			.andExpect(status().isBadRequest());
+		verify(workspaceRepository).findById(workspaceId);
+	}
+
+	@Test
+	public void testCreateScenario() throws Exception {
+		int workspaceId = 1;
+		int userId = 1;
+		String title = "scenarioTitle";
+		Workspace workspace = createWorkspace();
+		Scenario scenario = new Scenario(0, workspaceId, title, JSON_KEY_VALUE);
+		when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
+		when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(true);
+		when(scenarioRepository.create(scenario.getWorkspace(), scenario.getTitle(), JSON_KEY_VALUE)).thenReturn(scenario);
+
+		String jsonContent = "{\"id\": 0, \"title\": \"" + title + "\", \"state\": " + JSON_KEY_VALUE + "}";
+		mockMvc.perform(post("/workspaces/1/scenarios")
+			.principal(user)
+			.contentType(APPLICATION_JSON_UTF8)
+			.content(jsonContent ))
+			.andExpect(status().isCreated())
+			.andExpect(jsonPath("$.id", is(0)))
+		;
+		verify(workspaceRepository).findById(workspaceId);
+		verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
+		verify(scenarioRepository).create(workspaceId, title, JSON_KEY_VALUE);
+		verify(accountRepository).findAccountByUsername("gert");
+	}
+	
+	@Test
+	public void testCreateScenarioInNonexistentWorkspaceFails() throws Exception {
+		int workspaceId = 1;
+		String jsonContent = "{\"id\": 1, \"title\": \"scenarioTitle\", \"state\": " + JSON_KEY_VALUE + "}";
+		when(workspaceRepository.findById(workspaceId)).thenReturn(null);
+		
+		mockMvc.perform(post("/workspaces/1/scenarios")
+			.principal(user)
+			.contentType(APPLICATION_JSON_UTF8)
+			.content(jsonContent))
+			.andExpect(status().isBadRequest())
+		;
+		verify(workspaceRepository).findById(workspaceId);
+	}
+	
+	@Test
+	public void unAuthorisedCreateScenarioFails() throws Exception {
+		int workspaceId = 1;
+		int userId = 1;
+		String jsonContent = "{\"id\": 1, \"title\": \"scenarioTitle\", \"state\": " + JSON_KEY_VALUE + "}";
+		Workspace workspace = createWorkspace();
+		when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
+		when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(false);
+		mockMvc.perform(post("/workspaces/1/scenarios")
+			.principal(user)
+			.contentType(APPLICATION_JSON_UTF8)
+			.content(jsonContent))
+			.andExpect(status().isForbidden())
+		;
+		verify(workspaceRepository).findById(workspaceId);
+		verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
+		verify(accountRepository).findAccountByUsername("gert");
+	}
 	
 	@After
 	public void tearDown() {

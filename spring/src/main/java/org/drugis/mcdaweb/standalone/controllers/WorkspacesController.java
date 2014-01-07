@@ -51,9 +51,13 @@ public class WorkspacesController {
 	@ResponseBody
 	public Workspace get(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId) {
 		Account user = accountRepository.findAccountByUsername(currentUser.getName());
-		Workspace workspace = workspaceRepository.findById(workspaceId, user.getId());
+		Workspace workspace = workspaceRepository.findById(workspaceId);
 		if (workspace == null) {
 			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+		}
+		if(!workspaceRepository.isWorkspaceOwnedBy(workspaceId, user.getId())) {
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
 		}
 		return workspace;
 	}
@@ -61,12 +65,17 @@ public class WorkspacesController {
 	@RequestMapping(value="/workspaces/{workspaceId}", method=RequestMethod.POST)
 	@ResponseBody
 	public Workspace update(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @RequestBody Workspace body) {
-		Account user = accountRepository.findAccountByUsername(currentUser.getName());
-		Workspace workspace = workspaceRepository.update(body, user.getId());
+		Workspace workspace = workspaceRepository.findById(workspaceId); 
 		if (workspace == null) {
 			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return null;
 		}
-		return workspace;
+		Account user = accountRepository.findAccountByUsername(currentUser.getName());
+		if(!workspaceRepository.isWorkspaceOwnedBy(workspaceId, user.getId())) {
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
+		return workspaceRepository.update(body);
 	}
 	
 	/*
@@ -75,8 +84,21 @@ public class WorkspacesController {
 	
 	@RequestMapping(value="/workspaces/{workspaceId}/scenarios", method=RequestMethod.GET)
 	@ResponseBody
-	public Collection<Scenario> queryScenarios(Principal currentUser, @PathVariable int workspaceId) {
+	public Collection<Scenario> queryScenarios(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId) {
+		if (workspaceRepository.findById(workspaceId) == null) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return null;
+		}
+		Account user = accountRepository.findAccountByUsername(currentUser.getName());
+		if (!workspaceRepository.isWorkspaceOwnedBy(workspaceId, user.getId())) {
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
 		Collection<Scenario> scenarios = scenarioRepository.findByWorkspace(workspaceId);
+		if (scenarios == null) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return null;
+		}
 		for (Scenario scenario : scenarios) {
 			scenario.setState(null);
 		}
@@ -86,7 +108,17 @@ public class WorkspacesController {
 	@RequestMapping(value="/workspaces/{workspaceId}/scenarios", method=RequestMethod.POST)
 	@ResponseBody
 	public Scenario createScenario(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @RequestBody Scenario body) {
-		Scenario scenario = scenarioRepository.create(workspaceId, body.getTitle(), body.getState()); // FIXME: check user
+		Workspace workspace = workspaceRepository.findById(workspaceId);
+		if (workspace == null) {
+			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+			return null;
+		}
+		Account user = accountRepository.findAccountByUsername(currentUser.getName());
+		if (!workspaceRepository.isWorkspaceOwnedBy(workspaceId, user.getId())) {
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			return null;
+		}
+		Scenario scenario = scenarioRepository.create(workspaceId, body.getTitle(), body.getState());
 		response.setStatus(HttpServletResponse.SC_CREATED);
 		response.setHeader("Location", request.getRequestURL() + "/" + scenario.getId());
 		return scenario;
