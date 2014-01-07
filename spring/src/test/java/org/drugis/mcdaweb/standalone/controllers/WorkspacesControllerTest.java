@@ -4,7 +4,6 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 
 import java.nio.charset.Charset;
 import java.security.Principal;
@@ -13,20 +12,16 @@ import java.util.Collection;
 import java.util.Collections;
 
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.drugis.mcdaweb.standalone.account.Account;
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
 import org.drugis.mcdaweb.standalone.repositories.Workspace;
 import org.drugis.mcdaweb.standalone.repositories.WorkspaceRepository;
-import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.internal.matchers.Any;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -34,15 +29,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.WebApplicationContext;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.TextNode;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes= {TestConfig.class})
@@ -211,19 +198,20 @@ public class WorkspacesControllerTest {
 		verify(accountRepository).findAccountByUsername("gert");
 	}
 	
-	@Ignore
+	// if no workspace is found the request was bad.
 	@Test
 	public void testInvalidUpdate() throws Exception {
-		String jsonContent = "{\"id\": 2, \"owner\": 1, \"title\": \"mockWorkspace\", \"defaultScenarioId\" : 1, \"problem\":" + WORKSPACE_PROBLEM + "}";
+		String jsonContent = "{\"id\": 1, \"owner\": 1, \"title\": \"mockWorkspace\", \"defaultScenarioId\" : 1, \"problem\":" + WORKSPACE_PROBLEM + "}";
 		Integer userId = 1;
 		Workspace workspace = createWorkspace();
-		when(workspaceRepository.update(workspace, userId)).thenReturn(workspace);
+		when(workspaceRepository.update(workspace, userId)).thenReturn(null);
 		mockMvc.perform(post("/workspaces/202").principal(user)
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(jsonContent))
 				.andExpect(status().isBadRequest())
 		;
 		verify(workspaceRepository).update(workspace, userId);
+		verify(accountRepository).findAccountByUsername("gert");
 }
 	
 	@After
