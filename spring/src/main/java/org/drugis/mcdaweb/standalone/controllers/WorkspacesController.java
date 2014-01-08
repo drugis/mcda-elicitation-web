@@ -13,6 +13,8 @@ import org.drugis.mcdaweb.standalone.repositories.Scenario;
 import org.drugis.mcdaweb.standalone.repositories.ScenarioRepository;
 import org.drugis.mcdaweb.standalone.repositories.Workspace;
 import org.drugis.mcdaweb.standalone.repositories.WorkspaceRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +27,9 @@ import org.springframework.http.HttpStatus;
 
 @Controller
 public class WorkspacesController {
+	
+	final static Logger logger = LoggerFactory.getLogger(WorkspacesController.class);
+
 	public class ResourceNotOwnedException extends Exception {
 		private static final long serialVersionUID = -3342170675559096956L;
 
@@ -141,14 +146,14 @@ public class WorkspacesController {
 	
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(ResourceDoesNotExistException.class)
-	public void handleWorkspaceDoesNotExist() {
-		// FIXME: logging
+	public void handleResourceDoesNotExist(HttpServletRequest request) {
+		logger.error("Resource not found.\n{}", request.getRequestURL());
 	}
 
 	@ResponseStatus(HttpStatus.FORBIDDEN)
 	@ExceptionHandler(ResourceNotOwnedException.class)
-	public void handleWorkspaceNotOwned() {
-		// FIXME: logging
+	public void handleResourceNotOwned(HttpServletRequest request) {
+		logger.error("Access to resource not authorised.\n{}", request.getRequestURL());
 	}
 	
 }
