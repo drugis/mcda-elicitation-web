@@ -14,14 +14,27 @@ import org.drugis.mcdaweb.standalone.repositories.ScenarioRepository;
 import org.drugis.mcdaweb.standalone.repositories.Workspace;
 import org.drugis.mcdaweb.standalone.repositories.WorkspaceRepository;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.http.HttpStatus;
 
 @Controller
 public class WorkspacesController {
+	public class ResourceNotOwnedException extends Exception {
+		private static final long serialVersionUID = -3342170675559096956L;
+
+	}
+
+	public class ResourceDoesNotExistException extends Exception {
+		private static final long serialVersionUID = 9073600696022098494L;
+
+	}
+
 	@Inject	private AccountRepository accountRepository;
 	@Inject	private WorkspaceRepository workspaceRepository;
 	@Inject	private ScenarioRepository scenarioRepository;
@@ -49,32 +62,24 @@ public class WorkspacesController {
 	
 	@RequestMapping(value="/workspaces/{workspaceId}", method=RequestMethod.GET)
 	@ResponseBody
-	public Workspace get(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId) {
-		Account user = accountRepository.findAccountByUsername(currentUser.getName());
+	public Workspace get(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId) throws ResourceDoesNotExistException, ResourceNotOwnedException {
 		Workspace workspace = workspaceRepository.findById(workspaceId);
 		if (workspace == null) {
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			throw new ResourceDoesNotExistException();
 		}
+		Account user = accountRepository.findAccountByUsername(currentUser.getName());
 		if(!workspaceRepository.isWorkspaceOwnedBy(workspaceId, user.getId())) {
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			return null;
+			throw new ResourceNotOwnedException();
 		}
 		return workspace;
 	}
 	
 	@RequestMapping(value="/workspaces/{workspaceId}", method=RequestMethod.POST)
 	@ResponseBody
-	public Workspace update(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @RequestBody Workspace body) {
-		Workspace workspace = workspaceRepository.findById(workspaceId); 
-		if (workspace == null) {
-			response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-			return null;
-		}
-		Account user = accountRepository.findAccountByUsername(currentUser.getName());
-		if(!workspaceRepository.isWorkspaceOwnedBy(workspaceId, user.getId())) {
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		}
+	public Workspace update(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @RequestBody Workspace body) throws ResourceDoesNotExistException, ResourceNotOwnedException {
+		// actual workspace not needed, just check whether it exists and user owns it
+		get(response, currentUser, workspaceId);
+
 		return workspaceRepository.update(body);
 	}
 	
@@ -84,22 +89,17 @@ public class WorkspacesController {
 	
 	@RequestMapping(value="/workspaces/{workspaceId}/scenarios", method=RequestMethod.GET)
 	@ResponseBody
-	public Collection<Scenario> queryScenarios(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId) {
-		if (workspaceRepository.findById(workspaceId) == null) {
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-			return null;
-		}
-		Account user = accountRepository.findAccountByUsername(currentUser.getName());
-		if (!workspaceRepository.isWorkspaceOwnedBy(workspaceId, user.getId())) {
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		}
+	public Collection<Scenario> queryScenarios(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId) throws ResourceDoesNotExistException, ResourceNotOwnedException {
+		// actual workspace not needed, just check whether it exists and user owns it
+		get(response, currentUser, workspaceId);
+
 		Collection<Scenario> scenarios = scenarioRepository.findByWorkspace(workspaceId);
 		if (scenarios == null) {
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 			return null;
 		}
 		for (Scenario scenario : scenarios) {
+			// we don't need the State when showing a list of scenarios 
 			scenario.setState(null);
 		}
 		return scenarios;
@@ -107,17 +107,10 @@ public class WorkspacesController {
 	
 	@RequestMapping(value="/workspaces/{workspaceId}/scenarios", method=RequestMethod.POST)
 	@ResponseBody
-	public Scenario createScenario(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @RequestBody Scenario body) {
-		Workspace workspace = workspaceRepository.findById(workspaceId);
-		if (workspace == null) {
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-			return null;
-		}
-		Account user = accountRepository.findAccountByUsername(currentUser.getName());
-		if (!workspaceRepository.isWorkspaceOwnedBy(workspaceId, user.getId())) {
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		}
+	public Scenario createScenario(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @RequestBody Scenario body) throws ResourceDoesNotExistException, ResourceNotOwnedException {
+		// actual workspace not needed, just check whether it exists and user owns it
+		get(response, currentUser, workspaceId);
+		
 		Scenario scenario = scenarioRepository.create(workspaceId, body.getTitle(), body.getState());
 		response.setStatus(HttpServletResponse.SC_CREATED);
 		response.setHeader("Location", request.getRequestURL() + "/" + scenario.getId());
@@ -126,28 +119,36 @@ public class WorkspacesController {
 	
 	@RequestMapping(value="/workspaces/{workspaceId}/scenarios/{scenarioId}", method=RequestMethod.GET)
 	@ResponseBody
-	public Scenario getScenario(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @PathVariable int scenarioId) {
-		Workspace workspace = workspaceRepository.findById(workspaceId);
-		if (workspace == null) {
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-			return null;
-		}
-		Account user = accountRepository.findAccountByUsername(currentUser.getName());
-		if (!workspaceRepository.isWorkspaceOwnedBy(workspaceId, user.getId())) {
-			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			return null;
-		}
+	public Scenario getScenario(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @PathVariable int scenarioId) throws ResourceDoesNotExistException, ResourceNotOwnedException {
+		Workspace workspace = get(response, currentUser, workspaceId);
 		Scenario scenario = scenarioRepository.findById(scenarioId);
 		if (scenario == null) {
-			response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+			throw new ResourceDoesNotExistException();
+		}
+		if (scenario.getWorkspace() != workspace.getId()) {
+			throw new ResourceNotOwnedException();
 		}
 		return scenario;
 	}
 	
 	@RequestMapping(value="/workspaces/{workspaceId}/scenarios/{scenarioId}", method=RequestMethod.POST)
 	@ResponseBody
-	public Scenario updateScenario(Principal currentUser, @PathVariable int workspaceId, @PathVariable int scenarioId, @RequestBody Scenario body) {
-		Scenario scenario = scenarioRepository.update(scenarioId, body.getTitle(), body.getState()); // FIXME: check user
-		return scenario;
+	public Scenario updateScenario(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @PathVariable int scenarioId, @RequestBody Scenario body) throws ResourceDoesNotExistException, ResourceNotOwnedException {
+		// actual scenario not needed; get used for security/existence checks
+		getScenario(response, currentUser, workspaceId, scenarioId);
+		return scenarioRepository.update(scenarioId, body.getTitle(), body.getState());
 	}
+	
+	@ResponseStatus(HttpStatus.NOT_FOUND)
+	@ExceptionHandler(ResourceDoesNotExistException.class)
+	public void handleWorkspaceDoesNotExist() {
+		// FIXME: logging
+	}
+
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	@ExceptionHandler(ResourceNotOwnedException.class)
+	public void handleWorkspaceNotOwned() {
+		// FIXME: logging
+	}
+	
 }

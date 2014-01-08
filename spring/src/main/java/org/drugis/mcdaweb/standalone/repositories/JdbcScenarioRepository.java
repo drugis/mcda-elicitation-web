@@ -7,6 +7,7 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.core.RowMapper;
@@ -67,9 +68,15 @@ public class JdbcScenarioRepository implements ScenarioRepository {
 
 	@Override
 	public Scenario findById(int scenarioId) {
-		return jdbcTemplate.queryForObject(
-				"select id, workspace, title, state from Scenario where id = ?",
-				rowMapper, scenarioId);
+		Scenario scenario;
+		try {
+			scenario = jdbcTemplate.queryForObject(
+					"select id, workspace, title, state from Scenario where id = ?",
+					rowMapper, scenarioId);
+		} catch(EmptyResultDataAccessException e) {
+			scenario = null;
+		}
+		return scenario;
 	}
 
 }
