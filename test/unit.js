@@ -45,10 +45,9 @@ require([
 
   var specs = [
          '/test/unit/taskDependencies.js',
-	       '/test/unit/partialValueFunction.js',
+         '/test/unit/partialValueFunction.js',
          '/test/unit/ordinalSwing.js',
-	       '/test/unit/intervalSwing.js',
-	       '/test/unit/controller.js'
+         '/test/unit/intervalSwing.js'
          ];
 
   require(specs, function() {

@@ -10,6 +10,7 @@ define(
    'services/localWorkspaces',
    'services/remoteWorkspaces',
    'services/taskDependencies',
+   'services/errorHandling',
    'foundation.dropdown',
    'foundation.tooltip',
    'controllers',
@@ -23,7 +24,8 @@ define(
       'elicit.directives',
       'elicit.filters',
       'elicit.controllers',
-      'elicit.taskDependencies'];
+      'elicit.taskDependencies',
+      'elicit.errorHandling'];
     var app = angular.module('elicit', dependencies);
 
     app.run(['$rootScope', function($rootScope) {
@@ -75,8 +77,10 @@ define(
     app.constant('Tasks', Config.tasks);
 
 
-    app.config(['Tasks', '$stateProvider', '$urlRouterProvider', function(Tasks, $stateProvider, $urlRouterProvider) {
+    app.config(['Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider', function(Tasks, $stateProvider, $urlRouterProvider, $httpProvider) {
       var baseTemplatePath = "app/views/";
+      
+      $httpProvider.interceptors.push('ErrorHandling');
       
       NProgress.configure({ showSpinner: false });
 

@@ -1,12 +1,16 @@
 package org.drugis.mcdaweb.standalone.repositories;
 
+import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Collection;
+import java.util.List;
 
 import javax.inject.Inject;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.core.RowMapper;
@@ -30,7 +34,7 @@ public class JdbcWorkspaceRepository implements WorkspaceRepository {
 	@Transactional
 	public Workspace create(int ownerId, String title, String problem) {
 		PreparedStatementCreatorFactory pscf = 
-				new PreparedStatementCreatorFactory("insert into Workspace (owner, title, problem) values (?, ?, ?)");
+				new PreparedStatementCreatorFactory("INSERT INTO Workspace (owner, title, problem) VALUES (?, ?, ?)");
 		pscf.addParameter(new SqlParameter(Types.INTEGER));
 		pscf.addParameter(new SqlParameter(Types.VARCHAR));
 		pscf.addParameter(new SqlParameter(Types.VARCHAR));
@@ -46,32 +50,48 @@ public class JdbcWorkspaceRepository implements WorkspaceRepository {
 	@Override
 	public Collection<Workspace> findByOwnerId(int ownerId) {
 		PreparedStatementCreatorFactory pscf = 
-				new PreparedStatementCreatorFactory("select id, owner, defaultScenarioId, title, problem from Workspace where owner = ?");
+				new PreparedStatementCreatorFactory("SELECT id, owner, defaultScenarioId, title, problem FROM Workspace WHERE owner = ?");
 		pscf.addParameter(new SqlParameter(Types.INTEGER));
 		return jdbcTemplate.query(
 				pscf.newPreparedStatementCreator(new Object[] { ownerId }), rowMapper);
 	}
 
 	@Override
-	public Workspace findById(int workspaceId, int ownerId) {
-		return jdbcTemplate.queryForObject(
-				"select id, owner, defaultScenarioId, title, problem from Workspace where id = ? and owner = ?",
-				rowMapper, workspaceId, ownerId);
+	public Workspace findById(int workspaceId) {
+		Workspace workspace;
+		try {
+			workspace = jdbcTemplate.queryForObject(
+					"select id, owner, defaultScenarioId, title, problem from Workspace where id = ?",
+					rowMapper, workspaceId);
+		} catch (EmptyResultDataAccessException e ) {
+			workspace = null;
+		}
+		return workspace;
 	}
 
 	@Transactional
-	public Workspace update(Workspace workspace, int ownerId) {
+	public Workspace update(Workspace workspace) {
 		PreparedStatementCreatorFactory pscf = 
-				new PreparedStatementCreatorFactory("UPDATE Workspace SET title = ?, problem = ?, defaultScenarioId = ? WHERE id = ? AND owner = ?");
+				new PreparedStatementCreatorFactory("UPDATE Workspace SET title = ?, problem = ?, defaultScenarioId = ? WHERE id = ?");
 		pscf.addParameter(new SqlParameter(Types.VARCHAR));
 		pscf.addParameter(new SqlParameter(Types.VARCHAR));
-		pscf.addParameter(new SqlParameter(Types.INTEGER));
 		pscf.addParameter(new SqlParameter(Types.INTEGER));
 		pscf.addParameter(new SqlParameter(Types.INTEGER));
 
 		jdbcTemplate.update(
-				pscf.newPreparedStatementCreator(new Object[] {workspace.getTitle(), workspace.getProblem(), workspace.getDefaultScenarioId(), workspace.getId(), ownerId}));
-		return findById(workspace.getId(), ownerId);
+				pscf.newPreparedStatementCreator(new Object[] {workspace.getTitle(), workspace.getProblem(), workspace.getDefaultScenarioId(), workspace.getId()}));
+		return findById(workspace.getId());
+	}
+
+	@Override
+	public boolean isWorkspaceOwnedBy(int workspaceId, int userId) {
+		PreparedStatementCreatorFactory pscf = 
+				new PreparedStatementCreatorFactory("SELECT * FROM Workspace WHERE id = ? AND owner = ?");
+		pscf.addParameter(new SqlParameter(Types.INTEGER));
+		pscf.addParameter(new SqlParameter(Types.INTEGER));
+
+		List<Workspace> query = jdbcTemplate.query(pscf.newPreparedStatementCreator(new Object[] {workspaceId, userId}), rowMapper);
+		return isNotEmpty(query);
 	}
 
 }
