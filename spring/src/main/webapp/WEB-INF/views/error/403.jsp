@@ -23,8 +23,8 @@
     <section id="hero">
     <div class="row">
       <div class="large-12 columns">
-        <h1>404 <br/>
-          <small>Page not found.</small>
+        <h1>403 <br/>
+          <small>Access forbidden.</small>
         </h1>
              
       </div>

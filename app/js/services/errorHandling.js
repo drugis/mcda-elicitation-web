@@ -1,9 +1,9 @@
 'use strict';
 define([ 'angular' ], function(angular) {
-	var ErrorHandling = function($q) {
+	var ErrorHandling = function($q, $window) {
 		return {
 			'responseError' : function(rejection) {
-				console.log("foo");
+				$window.location = '/mcda-web/error/' + rejection.status;
 				return $q.reject(rejection);
 			}
 		};
