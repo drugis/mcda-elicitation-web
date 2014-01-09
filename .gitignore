@@ -8,3 +8,7 @@ js/test.js
 \#*\#
 .\#*
 *_archive
+.sass-cache
+app/css/mcda-plain.css
+app/css/mcda-drugis.css
+database.*

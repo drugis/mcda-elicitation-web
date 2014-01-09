@@ -86,6 +86,8 @@ define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard,
       return result;
     };
 
+    $scope.standardize = standardize;
+
     $scope.save = function(state) {
       var next = nextState(state);
       var prefs = next.prefs;

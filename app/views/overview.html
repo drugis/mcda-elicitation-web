@@ -10,7 +10,7 @@
             <input type="text" ng-model="scenario.title">
           </div>
           <div class="small-2 columns">
-            <button class="prefix" ng-click="scenario.save()">Save</button>
+            <button class="button postfix" ng-click="scenario.save()">Save</button>
           </div>
         </div>
       </div>
@@ -31,7 +31,7 @@
         <a href="{{scenario.createPath(info.task.id)}}" ng-bind="info.task.title"></a>
       </li>
       <li ng-repeat="info in tasks.destructive" ng-show="info.task.id != 'overview'">
-        <i class="has-tip icon-info-sign"
+        <i class="has-tip fa fa-info-circle"
            data-tooltip
            title="Doing this will destroy the following information: {{ dependenciesString(info.safe.resets) }}"></i>
         <a style="color: red;"
@@ -40,7 +40,7 @@
         </a>
       </li>
       <li ng-repeat="info in tasks.inaccessible" ng-show="info.task.id != 'overview'">
-        <i class="has-tip icon-info-sign"
+        <i class="has-tip fa fa-info-circle"
            data-tooltip
            title="The following elicitations are still required: {{ dependenciesString(info.accessible.requires) }}""></i>
         <span style="color: gray;"

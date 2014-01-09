@@ -20,15 +20,36 @@ define(['angular', 'underscore', 'config'], function(angular,  _, Config) {
       $scope.scenarios = currentWorkspace.query();
       $scope.resultsAccessible = resultsAccessible();
     });
+    
+    function redirect(scenarioId) { currentWorkspace.redirectToDefaultView(scenarioId); };
 
     $scope.forkScenario = function() {
-      var scenarioId = currentWorkspace.newScenario(currentScenario.state);
-      currentWorkspace.redirectToDefaultView(scenarioId);
+      currentWorkspace
+        .newScenario(currentScenario.state)
+        .then(redirect);
     };
 
     $scope.newScenario = function() {
-      var scenarioId = currentWorkspace.newScenario({ "problem" : currentWorkspace.problem });
-      currentWorkspace.redirectToDefaultView(scenarioId);
+      currentWorkspace
+        .newScenario({ "problem" : currentWorkspace.problem })
+        .then(redirect);
+    };
+    
+    $scope.isEditTitleVisible = false;
+    
+    $scope.editTitle = function() {
+      $scope.isEditTitleVisible = true;
+      $scope.workspaceTitle = $scope.workspace.title;
+    };
+    
+    $scope.saveTitle = function() {
+      $scope.workspace.title = $scope.workspaceTitle;
+      $scope.workspace.$save();
+      $scope.isEditTitleVisible = false;
+    };
+    
+    $scope.cancelTitle = function() {
+      $scope.isEditTitleVisible = false;
     };
   };
 });

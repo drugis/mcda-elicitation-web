@@ -1,0 +1,4 @@
+[submodule "sass-shared"]
+	path = sass-shared
+	url = https://github.com/drugis/drugis-css.git
+	branch = master

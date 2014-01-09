@@ -1,23 +1,32 @@
 'use strict';
 define(['angular', 'underscore'], function(angular, _) {
-  var dependencies = ['$scope', 'DecisionProblem', 'Workspaces'];
-  var ChooseProblemController = function($scope, DecisionProblem, Workspaces) {
+  var dependencies = ['$scope', '$resource', config.workspacesRepository.service];
+  var ChooseProblemController = function($scope, $resource, Workspaces) {
+    var examplesRepositoryUrl = config ? config.examplesRepository : '';
+    var examplesResource = $resource(examplesRepositoryUrl + ':url', {url:'@url'});
+
+    $scope.examplesList = examplesResource.query();
+    
     $scope.list = [];
     $scope.model = {};
     $scope.local = {};
 
-    $scope.setProblem = function(choice) {
+    $scope.createWorkspace = function(choice) {
+      function createWorkspace(problem) {
+        Workspaces
+          .create(problem)
+          .then(function(workspace) { workspace.redirectToDefaultView(); });
+      }
+      
       if (choice === 'local') {
         if (!_.isEmpty($scope.local.contents)) {
-          DecisionProblem.populateWithData(angular.fromJson($scope.local.contents));
+          createWorkspace(angular.fromJson($scope.local.contents));
         }
       } else {
-        DecisionProblem.populateWithUrl(choice);
+        examplesResource.get({url: choice}, function(problem) {
+          createWorkspace(problem);
+        });
       }
-      DecisionProblem.problem.then(function(problem) {
-        var workspace = Workspaces.create(problem);
-        workspace.redirectToDefaultView();
-      });
     };
 
     $scope.$watch('local.contents', function(newVal) {
@@ -26,9 +35,9 @@ define(['angular', 'underscore'], function(angular, _) {
       }
     });
 
-    DecisionProblem.list.then(function(data) {
-      $scope.list = data;
-    });
+    $scope.workspacesList = Workspaces.query();
+    
+    $scope.chooseProblemModal = {};
   };
 
   return dependencies.concat(ChooseProblemController);

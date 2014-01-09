@@ -1,22 +1,46 @@
 <div class="row">
   <div class="columns large-12">
-    <h2>Choose an Example</h2>
+
+    <h3>Your workspaces</h3>
     <div class="panel">
-      <strong>Disclaimer:</strong> this tool comes with <em>absolutely no warranty</em>, to the extent
-      permitted by applicable law.<br> No user data is stored or otherwise persisted,
-      however no guarantees about the safety of your data can be made.
+      <ul>
+        <li ng-repeat="workspace in workspacesList | orderBy:'title'">
+          <a href="#/workspaces/{{workspace.id}}/scenarios/{{workspace.defaultScenarioId}}/overview"> {{workspace.title}}</a>
+        </li>
+        <li ng-hide="workspacesList.length">No workspaces.</li>      
+      </ul>
     </div>
-    <form>
-      <label ng-repeat="option in list">
-        <input type="radio" ng-model="model.choice" value="{{option.href}}">
-        <span>{{option.title}}</span>
-      </label>
-      <label>
-        <input type="radio" ng-model="model.choice" value="local">
-        Local file:
-        <file-reader file="local"></file-reader>
-      </label>
-      <button class="small success" ng-disabled="!model.choice" ng-click="setProblem(model.choice)">Create workspace</button>
-    </form>
+    
+    <a class="button" ng-click="chooseProblemModal.open()"><i class="fa fa-plus"></i> Create workspace</a>
+    
+    <modal model="chooseProblemModal">
+      <h3>Create a new workspace</h3>
+      <form>
+        <p>Load an example:</p>
+        <div style="margin-left: 2rem;">
+          <label ng-repeat="option in examplesList">
+            <input type="radio" ng-model="model.choice" value="{{option.href}}"> <span>{{option.title}}</span>
+          </label>
+        </div>
+        <p>Or a local file:</p>
+        <div style="margin-left: 2rem;">
+          <label>
+            <input type="radio" ng-model="model.choice" value="local"> Local file: <file-reader model="local"></file-reader>
+          </label>
+        </div>
+        
+        <div>
+          <ul class="button-group">
+            <li><a class="button small secondary" ng-click="chooseProblemModal.close()">Cancel</a></li>              
+            <li ng-show="model.choice != 'local'">
+              <a class="button small success" ng-disabled="!model.choice" ng-click="createWorkspace(model.choice)">Create workspace</a>
+            </li>
+            <li ng-show="model.choice == 'local'">
+              <a class="button small success" ng-disabled="!local.contents" ng-click="createWorkspace(model.choice)">Create workspace</a>
+            </li>
+          </ul>
+        </div>
+      </form>
+    </modal>
   </div>
 </div>

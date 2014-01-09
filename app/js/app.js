@@ -7,9 +7,10 @@ define(
    'NProgress',
    'config',
    'angular-ui-router',
-   'services/decisionProblem',
-   'services/workspaces',
+   'services/localWorkspaces',
+   'services/remoteWorkspaces',
    'services/taskDependencies',
+   'services/errorHandling',
    'foundation.dropdown',
    'foundation.tooltip',
    'controllers',
@@ -18,15 +19,17 @@ define(
   function(angular, require, _, $, NProgress, Config) {
     var dependencies = [
       'ui.router',
-      'elicit.problem-resource',
-      'elicit.workspaces',
+      'elicit.localWorkspaces',
+      'elicit.remoteWorkspaces',
       'elicit.directives',
       'elicit.filters',
       'elicit.controllers',
-      'elicit.taskDependencies'];
+      'elicit.taskDependencies',
+      'elicit.errorHandling'];
     var app = angular.module('elicit', dependencies);
 
     app.run(['$rootScope', function($rootScope) {
+      
       $rootScope.$on('$viewContentLoaded', function () {
         $(document).foundation();
       });
@@ -49,7 +52,7 @@ define(
       };
       $rootScope.$on('patavi.error', function(e, message) {
         $rootScope.$safeApply($rootScope, function() {
-          $rootScope.error = message;
+          $rootScope.error = _.extend(message, { close: function() { delete $rootScope.error; } });
         });
       });
 
@@ -74,16 +77,20 @@ define(
     app.constant('Tasks', Config.tasks);
 
 
-    app.config(['Tasks', '$stateProvider', '$urlRouterProvider', function(Tasks, $stateProvider, $urlRouterProvider) {
+    app.config(['Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider', function(Tasks, $stateProvider, $urlRouterProvider, $httpProvider) {
       var baseTemplatePath = "app/views/";
+      
+      $httpProvider.interceptors.push('ErrorHandling');
+      
+      NProgress.configure({ showSpinner: false });
 
       $stateProvider.state("workspace", {
         url: '/workspaces/:workspaceId/scenarios/:scenarioId',
         templateUrl: baseTemplatePath + 'workspace.html',
         resolve: {
-          currentWorkspace: function($stateParams, Workspaces) {
+          currentWorkspace: ["$stateParams", config.workspacesRepository.service, function($stateParams, Workspaces) {
             return Workspaces.get($stateParams.workspaceId);
-          },
+          }],
           currentScenario: function($stateParams, currentWorkspace) {
             return currentWorkspace.getScenario($stateParams.scenarioId);
           }
@@ -93,7 +100,6 @@ define(
 
 
       _.each(Tasks.available, function(task) {
-        var camelCase = function (str) { return str.replace(/-([a-z])/g, function (g) { return g[1].toUpperCase(); }); };
         var templateUrl = baseTemplatePath + task.templateUrl;
         $stateProvider.state(task.id, {
           parent: 'workspace',
