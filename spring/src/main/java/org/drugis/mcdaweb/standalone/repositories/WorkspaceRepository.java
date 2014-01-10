@@ -7,7 +7,10 @@ public interface WorkspaceRepository {
 	
 	Collection<Workspace> findByOwnerId(int ownerId);
 	
-	Workspace findById(int workspaceId, int ownerId);
+	Workspace findById(int workspaceId);
 	
-	Workspace update(Workspace workspace, int ownerId);
+	Workspace update(Workspace workspace);
+	
+	boolean isWorkspaceOwnedBy(int workspaceId, int userId);
+	
 }

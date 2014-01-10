@@ -1,5 +1,5 @@
-define(['angular', 'angular-mocks', 'controllers', 'services/taskDependencies', 'services/decisionProblem', 'services/partialValueFunction'],
-  function(angular, mocks, controllers, TaskDependencies, DecisionProblem) {
+define(['angular', 'angular-mocks', 'controllers', 'services/taskDependencies', ', 'services/partialValueFunction'],
+  function(angular, mocks, controllers, TaskDependencies) {
 
   describe("OrdinalSwingHandler", function() {
     var $scope1;

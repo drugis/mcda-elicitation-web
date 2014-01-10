@@ -16,6 +16,8 @@
 package org.drugis.mcdaweb.standalone.account;
 
 public class UsernameAlreadyInUseException extends Exception {
+	private static final long serialVersionUID = -7207611471480226780L;
+
 	public UsernameAlreadyInUseException(String username) {
 		super("The username '" + username + "' is already in use.");
 	}
