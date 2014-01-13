@@ -9,14 +9,14 @@
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta name="viewport" content="width=device-width" />
-<link rel="shortcut icon" href="app/img/favicon.ico" type="image/x-icon" />
+<link rel="shortcut icon" href="<c:url value="/app/img/favicon.ico" />" type="image/x-icon" />
 
 <title>mcda.drugis.org</title>
 <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/nprogress/0.1.2/nprogress.min.css">
 <link rel="stylesheet" type="text/css" href="app/js/lib/jslider/bin/jquery.slider.min.css">
 <link rel="stylesheet" type="text/css" href="app/css/nv.d3.css">
-<link rel="stylesheet" type="text/css" href="app/css/mcda-drugis.css">
+<link rel="stylesheet" type="text/css" href="<c:url value="/app/css/mcda-drugis.css" />">
 
 <script src="app/js/lib/require.js" data-main="app/js/main.js"></script>
 

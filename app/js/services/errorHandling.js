@@ -3,7 +3,7 @@ define([ 'angular' ], function(angular) {
 	var ErrorHandling = function($q, $window) {
 		return {
 			'responseError' : function(rejection) {
-				$window.location = '/mcda-web/error/' + rejection.status;
+				$window.location = '/error/' + rejection.status;
 				return $q.reject(rejection);
 			}
 		};
