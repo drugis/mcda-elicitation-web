@@ -65,6 +65,7 @@
 
 
   <script>
+	window.patavi = { "WS_URI": "wss://patavi.drugis.org/ws" };
     window.config = {
       examplesRepository : "examples/",
       workspacesRepository : {
