@@ -217,6 +217,8 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
                 return "";
               }
             });
+          } else {
+            chart.xAxis.tickFormat(d3.format(".3f"));
           }
 
           svg.datum(data).call(chart);

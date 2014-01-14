@@ -86,7 +86,7 @@
       <ul class="no-bullet">
         <li ng-repeat="criterion in criteria">
           <span mathjax-bind="criterion.w"></span>: {{criterion.title}}
-          ({{criterion.worst()}} &rarr; {{criterion.best()}})
+          ({{criterion.worst() | precision: 3}} &rarr; {{criterion.best() | precision: 3}})
         </li>
       </ul>
       <div mathjax-bind="preferences"></div>
