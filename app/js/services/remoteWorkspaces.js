@@ -20,7 +20,7 @@ define(['config', 'angular', 'angular-resource', 'underscore', 'services/partial
     var repositoryUrl = config.workspacesRepository.url;
 
     var WorkspaceResource = $resource(repositoryUrl + ":workspaceId", {workspaceId: '@id'},
-        {save: {method: "POST", headers: headers}});
+                                      {save: {method: "POST", headers: headers}});
     
     var redirectToDefaultView = function(workspaceId, scenarioId) {
       console.info("redirecting to", workspaceId, scenarioId);
@@ -44,19 +44,22 @@ define(['config', 'angular', 'angular-resource', 'underscore', 'services/partial
       };
 
       ScenarioResource.prototype.save = function() {
-        return this.$save(function() {
-            $rootScope.$broadcast("elicit.scenariosChanged");
+        return this.$save(function(scenario) {
+          $rootScope.$broadcast("elicit.scenariosChanged");
         });
       };
 
+      // update state in scenario
       ScenarioResource.prototype.update = function(state) {
-          var fields = ['problem', 'prefs'];
-          this.state = _.pick(state, fields);
-          this.$save();
-      }
+        var fields = ['problem', 'prefs'];
+        this.state = _.pick(state, fields);
+        this.$save().then(function(scenario) {
+          PartialValueFunction.attach(scenario.state);
+        });
+      };
 
       ScenarioResource.prototype.redirectToDefaultView = function() {
-         redirectToDefaultView(this.workspace, this.id);
+        redirectToDefaultView(this.workspace, this.id);
       };
 
       workspace.getScenario = function(id) {
@@ -96,12 +99,12 @@ define(['config', 'angular', 'angular-resource', 'underscore', 'services/partial
 
     var create = function(problem) {
       var deferred = $q.defer();
-     
+      
       var workspace = new WorkspaceResource({title: problem.title, problem: problem});
       workspace.$save(function(workspace) { 
         var Scenario = $resource(repositoryUrl + ":workspaceId/scenarios/:scenarioId",
-            { workspaceId: workspace.id },
-            { save: {method: "POST", headers: headers} });
+                                 { workspaceId: workspace.id },
+                                 { save: {method: "POST", headers: headers} });
         var scenario = new Scenario({"title" : "Default", "state": { problem: problem }});
         scenario.$save(function(scenario) {
           workspace.defaultScenarioId = scenario.id;
