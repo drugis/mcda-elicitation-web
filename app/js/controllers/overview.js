@@ -25,7 +25,7 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
     $scope.dependenciesString = function(dependencies) {
       var result = "";
       _.each(dependencies, function(dep) {
-        result = result + "<br> - " + TaskDependencies.definitions[dep].title;
+        result = result + "\n- " + TaskDependencies.definitions[dep].title;
       });
       return result;
     };
