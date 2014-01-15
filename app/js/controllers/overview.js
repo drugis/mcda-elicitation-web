@@ -64,7 +64,7 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
     }), "w");
 
     var w = function(criterionKey) {
-     return _.find($scope.criteria, function(crit) {return crit.id === criterionKey; })['w'];
+      return _.find($scope.criteria, function(crit) {return crit.id === criterionKey; })['w'];
     };
 
     var eqns = _.map(state.prefs, function(pref) {
@@ -84,6 +84,22 @@ define(['angular', 'underscore', 'services/partialValueFunction'], function(angu
     $scope.preferences = eqnArray;
 
     $scope.getXY = _.memoize(PartialValueFunction.getXY, function(arg) { return angular.toJson(arg.pvf); });
-  };
 
+    $scope.isEditTitleVisible = false;
+    
+    $scope.editTitle = function() {
+      $scope.isEditTitleVisible = true;
+      $scope.scenarioTitleCache = $scope.scenario.title;
+    };
+    
+    $scope.saveTitle = function() {
+      $scope.scenario.title = $scope.scenarioTitleCache;
+      $scope.scenario.save();
+      $scope.isEditTitleVisible = false;
+    };
+    
+    $scope.cancelTitle = function() {
+      $scope.isEditTitleVisible = false;
+    };
+  };
 });

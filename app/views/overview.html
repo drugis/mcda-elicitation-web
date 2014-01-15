@@ -2,21 +2,24 @@
   <div class="columns large-12">
     <h3>Overview</h3>
 
-    <label>Scenario title</label>
-    <div class="row">
-      <div class="columns large-6">
-        <div class="row collapse">
-          <div class="small-10 columns">
-            <input type="text" ng-model="scenario.title">
-          </div>
-          <div class="small-2 columns">
-            <button class="button postfix" ng-click="scenario.save()">Save</button>
+    <ul class="no-bullet">
+      <li><strong>Scenario Title:</strong>
+        <span ng-show="!isEditTitleVisible">
+          <span ng-bind="scenario.title"></span>
+          <a ng-click="editTitle()"><i class="fa fa-edit"></i></a>
+        </span>
+        <div class="row" ng-show="isEditTitleVisible">
+          <div class="columns large-8 small-12">
+            <form>
+              <div class="row collapse">
+                <div class="columns small-8"><input type="text" ng-model="scenarioTitleCache"></div>
+                <div class="columns small-2"><button class="button postfix" ng-click="saveTitle()">Save</button></div>
+                <div class="columns small-2"><button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button></div>            
+              </div>
+            </form>
           </div>
         </div>
-      </div>
-    </div>
-
-    <ul class="no-bullet">
+      </li>
       <li><strong>Scale Ranges:</strong> {{status.scaleRange}}</li>
       <li><strong>Partial Value Functions:</strong> {{status.partialValueFunction}}</li>
       <li><strong>Preferences:</strong>
@@ -42,7 +45,8 @@
       <li ng-repeat="info in tasks.inaccessible" ng-show="info.task.id != 'overview'">
         <i class="has-tip fa fa-info-circle"
            data-tooltip
-           title="The following elicitations are still required: {{ dependenciesString(info.accessible.requires) }}""></i>
+           title="The following elicitations are still required: {{ dependenciesString(info.accessible.requires) }}">
+        </i>
         <span style="color: gray;"
               ng-bind="info.task.title" ></span>
       </li>
@@ -55,7 +59,7 @@
         <h5>{{criterion.title}}</h5>
         <ul>
           <li>Natural scale bounds:
-            [<span ng-repeat="r in criterion.scale">{{r | precision: 3}}<span ng-show="!$last">, </span></span>]</li> </li>
+            [<span ng-repeat="r in criterion.scale">{{r | precision: 3}}<span ng-show="!$last">, </span></span>]</li>
           <li>Configured scale range:
             [<span ng-repeat="r in criterion.pvf.range">{{r | precision: 3}}<span ng-show="!$last">, </span></span>]</li>
           <li>Partial value function:
