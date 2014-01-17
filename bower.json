@@ -1,0 +1,36 @@
+{
+  "name": "mcda-elicitation-web",
+  "version": "0.1",
+  "authors": [
+    "Gert van Valkenhoef <g.h.m.van.valkenhoef@rug.nl>",
+    "Joël Kuiper",
+    "Daan Reid",
+    "Connor Stroomberg"
+  ],
+  "description": "MCDA preference elicitation",
+  "main": "/app/js/main.js",
+  "license": "GPL-3",
+  "homepage": "http://drugis.org/software/addis2/",
+  "private": false,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "2.0.3",
+    "underscore": "1.5.2",
+    "angular": "1.2.6",
+    "angular-resource": "1.2.6",
+    "angular-ui-router": "0.2.7",
+    "nprogress": "0.1.2",
+    "d3": "3.2.2",
+    "nvd3": "1.0.0-beta",
+    "foundation": "5.0.2",
+    "MathJax": "*",
+    "font-awesome": "~4.0.3",
+    "requirejs": "~2.1.10"
+  }
+}

@@ -1,22 +1,18 @@
 'use strict';
 
-var foundationVersion = "5.0.2";
-
 require.config({
   paths: {
-    'jQuery': '//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min',
-    'underscore': '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min',
-    'angular': '//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular',
-    'angular-resource': '//ajax.googleapis.com/ajax/libs/angularjs/1.2.6/angular-resource',
-    'angular-ui-router': '//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.0/angular-ui-router.min',
-    'NProgress': '//cdnjs.cloudflare.com/ajax/libs/nprogress/0.1.2/nprogress.min',
-    'jquery-slider': '/app/js/lib/jslider/bin/jquery.slider.min',
-    'd3': '//cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min',
-    'nvd3': '//cdnjs.cloudflare.com/ajax/libs/nvd3/1.0.0-beta/nv.d3.min',
-    'MathJax': '//cdnjs.cloudflare.com/ajax/libs/mathjax/2.2/MathJax.js?config=TeX-MML-AM_HTMLorMML',
-    'foundation': '//cdnjs.cloudflare.com/ajax/libs/foundation/' + foundationVersion + '/js/foundation.min',
-    'foundation.dropdown': '//cdnjs.cloudflare.com/ajax/libs/foundation/' + foundationVersion + '/js/foundation/foundation.dropdown.min',
-    'foundation.tooltip': '//cdnjs.cloudflare.com/ajax/libs/foundation/' + foundationVersion + '/js/foundation/foundation.tooltip.min'
+    'jQuery': 'bower_components/jquery/jquery.min',
+    'underscore': 'bower_components/underscore/underscore-min',
+    'angular': 'bower_components/angular/angular.min',
+    'angular-resource': 'bower_components/angular-resource/angular-resource.min',
+    'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router.min',
+    'NProgress': 'bower_components/nprogress/nprogress',
+    'jquery-slider': 'lib/jslider/bin/jquery.slider.min',
+    'd3': 'bower_components/d3/d3.min',
+    'nvd3': 'bower_components/nvd3/nv.d3.min',
+    'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML',
+    'foundation': 'bower_components/foundation/js/foundation.min'
   },
   baseUrl: 'app/js',
   shim: {
@@ -30,9 +26,7 @@ require.config({
     'jQuery': { exports : 'jQuery' },
     'jquery-slider': { deps: ['jQuery'] },
     'NProgress': { deps: ['jQuery'], exports: "NProgress" },
-    'foundation':  { deps: ['jQuery'] },
-    'foundation.dropdown':  { deps: ['foundation'] },
-    'foundation.tooltip':  { deps: ['foundation'] }
+    'foundation':  { deps: ['jQuery'] }
   },
   priority: ['angular']
 });
