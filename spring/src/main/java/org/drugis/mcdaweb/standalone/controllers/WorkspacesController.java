@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpStatus;
 
 @Controller
+@RequestMapping(value="/workspaces")
 public class WorkspacesController {
 	
 	final static Logger logger = LoggerFactory.getLogger(WorkspacesController.class);
@@ -48,14 +49,14 @@ public class WorkspacesController {
 	 * Workspaces
 	 */
 	
-	@RequestMapping(value="/workspaces", method=RequestMethod.GET)
+	@RequestMapping(value="", method=RequestMethod.GET)
 	@ResponseBody
 	public Collection<Workspace> query(Principal currentUser) {
 		Account user = accountRepository.findAccountByUsername(currentUser.getName());
 		return workspaceRepository.findByOwnerId(user.getId());
 	}
 	
-	@RequestMapping(value="/workspaces", method=RequestMethod.POST)
+	@RequestMapping(value="", method=RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
 	@ResponseBody
 	public Workspace create(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @RequestBody Workspace body) {
 		Account user = accountRepository.findAccountByUsername(currentUser.getName());
@@ -65,7 +66,7 @@ public class WorkspacesController {
 		return workspace;
 	}
 	
-	@RequestMapping(value="/workspaces/{workspaceId}", method=RequestMethod.GET)
+	@RequestMapping(value="/{workspaceId}", method=RequestMethod.GET)
 	@ResponseBody
 	public Workspace get(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId) throws ResourceDoesNotExistException, ResourceNotOwnedException {
 		Workspace workspace = workspaceRepository.findById(workspaceId);
@@ -92,7 +93,7 @@ public class WorkspacesController {
 	 * Scenarios
 	 */
 	
-	@RequestMapping(value="/workspaces/{workspaceId}/scenarios", method=RequestMethod.GET)
+	@RequestMapping(value="/{workspaceId}/scenarios", method=RequestMethod.GET)
 	@ResponseBody
 	public Collection<Scenario> queryScenarios(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId) throws ResourceDoesNotExistException, ResourceNotOwnedException {
 		// actual workspace not needed, just check whether it exists and user owns it
@@ -110,7 +111,7 @@ public class WorkspacesController {
 		return scenarios;
 	}
 	
-	@RequestMapping(value="/workspaces/{workspaceId}/scenarios", method=RequestMethod.POST)
+	@RequestMapping(value="/{workspaceId}/scenarios", method=RequestMethod.POST)
 	@ResponseBody
 	public Scenario createScenario(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @RequestBody Scenario body) throws ResourceDoesNotExistException, ResourceNotOwnedException {
 		// actual workspace not needed, just check whether it exists and user owns it
@@ -122,7 +123,7 @@ public class WorkspacesController {
 		return scenario;
 	}
 	
-	@RequestMapping(value="/workspaces/{workspaceId}/scenarios/{scenarioId}", method=RequestMethod.GET)
+	@RequestMapping(value="/{workspaceId}/scenarios/{scenarioId}", method=RequestMethod.GET)
 	@ResponseBody
 	public Scenario getScenario(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @PathVariable int scenarioId) throws ResourceDoesNotExistException, ResourceNotOwnedException {
 		Workspace workspace = get(response, currentUser, workspaceId);
@@ -136,7 +137,7 @@ public class WorkspacesController {
 		return scenario;
 	}
 	
-	@RequestMapping(value="/workspaces/{workspaceId}/scenarios/{scenarioId}", method=RequestMethod.POST)
+	@RequestMapping(value="/{workspaceId}/scenarios/{scenarioId}", method=RequestMethod.POST)
 	@ResponseBody
 	public Scenario updateScenario(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @PathVariable int scenarioId, @RequestBody Scenario body) throws ResourceDoesNotExistException, ResourceNotOwnedException {
 		// actual scenario not needed; get used for security/existence checks
