@@ -7,6 +7,16 @@ module.exports = function(config) {
     // base path, that will be used to resolve files and exclude
     basePath: '.',
 
+    // plugins to load
+    plugins : [
+      'karma-qunit',
+      'karma-chrome-launcher',
+      'karma-phantomjs-launcher',
+      'karma-junit-reporter',
+      'karma-jasmine',
+      'karma-requirejs'
+    ],
+
 
     // frameworks to use
     frameworks: ['jasmine', 'requirejs'],
@@ -32,7 +42,10 @@ module.exports = function(config) {
 
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['progress'],
+    reporters: ['progress', 'junit'],
+    junitReporter :{
+      outputFile: 'test-results.xml'
+    },
 
 
     // web server port
@@ -69,6 +82,6 @@ module.exports = function(config) {
 
     // Continuous Integration mode
     // if true, it capture browsers, run tests and exit
-    singleRun: false  
+    singleRun: true  
   });
 };
