@@ -20,7 +20,7 @@ define(['config', 'angular', 'angular-resource', 'underscore', 'services/partial
     var repositoryUrl = config.workspacesRepository.url;
 
     var WorkspaceResource = $resource(repositoryUrl + ":workspaceId", {workspaceId: '@id'},
-        {save: {method: "POST", headers: headers}});
+                                      {save: {method: "POST", headers: headers}});
     
     var redirectToDefaultView = function(workspaceId, scenarioId) {
       console.info("redirecting to", workspaceId, scenarioId);
@@ -29,34 +29,43 @@ define(['config', 'angular', 'angular-resource', 'underscore', 'services/partial
     };
 
     var decorate = function(workspace) {
-      var ScenarioResource = $resource(repositoryUrl + ":workspaceId/scenarios/:scenarioId",
-          { workspaceId: workspace.id, scenarioId: '@id' },
-          {save: {method: "POST", headers: headers}});
+      var ScenarioResource = $resource(
+        repositoryUrl + ":workspaceId/scenarios/:scenarioId",
+        { workspaceId: workspace.id, scenarioId: '@id' },
+        {save: {method: "POST", headers: headers}}
+      );
       
       workspace.redirectToDefaultView = function(scenarioId) {
         redirectToDefaultView(workspace.id, scenarioId ? scenarioId : _.keys(workspace.scenarios)[0]);
+      };
+
+      ScenarioResource.prototype.createPath = function(taskId) {
+        return Config.createPath(this.workspace, this.id, taskId);
+      };
+
+      ScenarioResource.prototype.save = function() {
+        return this.$save(function(scenario) {
+          $rootScope.$broadcast("elicit.scenariosChanged");
+        });
+      };
+
+      // update state in scenario
+      ScenarioResource.prototype.update = function(state) {
+        var fields = ['problem', 'prefs'];
+        this.state = _.pick(state, fields);
+        this.$save().then(function(scenario) {
+          PartialValueFunction.attach(scenario.state);
+        });
+      };
+
+      ScenarioResource.prototype.redirectToDefaultView = function() {
+        redirectToDefaultView(this.workspace, this.id);
       };
 
       workspace.getScenario = function(id) {
         var deferred = $q.defer();
         ScenarioResource.get({ scenarioId: id }, function(scenario) {
           PartialValueFunction.attach(scenario.state);
-          scenario.redirectToDefaultView = function() {
-            redirectToDefaultView(workspace.id, id);
-          };
-
-          scenario.save = function() {
-            return scenario.$save(function() { $rootScope.$broadcast("elicit.scenariosChanged"); });
-          };
-  
-          scenario.update = function(state) {
-            var fields = ['problem', 'prefs'];
-            scenario.state = _.pick(state, fields);
-            scenario.$save();
-          };
-  
-          scenario.createPath = _.partial(Config.createPath, workspace.id, scenario.id);
-
           deferred.resolve(scenario);
         });
         return deferred.promise;
@@ -90,12 +99,12 @@ define(['config', 'angular', 'angular-resource', 'underscore', 'services/partial
 
     var create = function(problem) {
       var deferred = $q.defer();
-     
+      
       var workspace = new WorkspaceResource({title: problem.title, problem: problem});
       workspace.$save(function(workspace) { 
         var Scenario = $resource(repositoryUrl + ":workspaceId/scenarios/:scenarioId",
-            { workspaceId: workspace.id },
-            { save: {method: "POST", headers: headers} });
+                                 { workspaceId: workspace.id },
+                                 { save: {method: "POST", headers: headers} });
         var scenario = new Scenario({"title" : "Default", "state": { problem: problem }});
         scenario.$save(function(scenario) {
           workspace.defaultScenarioId = scenario.id;

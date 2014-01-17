@@ -12,7 +12,7 @@ return (function () {
     this.results = resultsPromise.promise;
 
     var session = ab.connect(WS_URI, function(session) {
-      console.log("Connected to " + WS_URI, session.sessionid());
+      // console.log("Connected to " + WS_URI, session.sessionid());
       // Subscribe to updates
       session.subscribe(BASE_URI + "status#", function(topic, event) {
         resultsPromise.notify(event);
@@ -33,9 +33,9 @@ return (function () {
 
     }, function(code, reason) {
       resultsPromise.reject(reason);
-      console.log(code, reason);
+      // console.log(code, reason);
     });
-  }
+  };
 
   var patavi = {
     submit: function (method, payload) {
