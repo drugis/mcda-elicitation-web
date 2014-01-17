@@ -1,4 +1,5 @@
-define(['angular', 'controllers/intervalSwing', 'controllers/partialValueFunction'], function(angular, IntervalSwingHandler, PartialValueFunctionHandler) {
+define(['angular', 'angular-mocks', 'controllers/intervalSwing', 'controllers/partialValueFunction'], 
+  function(angular, IntervalSwingHandler, PartialValueFunctionHandler) {
   describe("IntervalSwingHandler", function() {
     beforeEach(module('elicit.controllers'));
     beforeEach(module('elicit.taskDependencies'));
