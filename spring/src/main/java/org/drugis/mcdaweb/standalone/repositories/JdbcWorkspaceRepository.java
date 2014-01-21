@@ -2,8 +2,11 @@ package org.drugis.mcdaweb.standalone.repositories;
 
 import static org.apache.commons.collections.CollectionUtils.isNotEmpty;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Types;
 import java.util.Collection;
 import java.util.List;
@@ -12,6 +15,7 @@ import javax.inject.Inject;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
@@ -32,16 +36,18 @@ public class JdbcWorkspaceRepository implements WorkspaceRepository {
 	};
 	
 	@Transactional
-	public Workspace create(int ownerId, String title, String problem) {
-		PreparedStatementCreatorFactory pscf = 
-				new PreparedStatementCreatorFactory("INSERT INTO Workspace (owner, title, problem) VALUES (?, ?, ?)");
-		pscf.addParameter(new SqlParameter(Types.INTEGER));
-		pscf.addParameter(new SqlParameter(Types.VARCHAR));
-		pscf.addParameter(new SqlParameter(Types.VARCHAR));
-		
+	public Workspace create(final int ownerId, final String title, final String problem) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(
-				pscf.newPreparedStatementCreator(new Object[] {ownerId, title, problem}), keyHolder);
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				PreparedStatement ps = con.prepareStatement("INSERT INTO Workspace (owner, title, problem) VALUES (?, ?, ?)", new String[] {"id"});
+				ps.setInt(1, ownerId);
+				ps.setString(2, title);
+				ps.setString(3, problem);
+				return ps;
+			}
+		}, keyHolder);
 		int workspaceId = (Integer) keyHolder.getKey();
 		
 		return new Workspace(workspaceId, ownerId, null, title, problem);

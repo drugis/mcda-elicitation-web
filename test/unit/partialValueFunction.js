@@ -1,5 +1,5 @@
 define(['angular', 'angular-mocks', 'controllers', 'services/taskDependencies', 'services/partialValueFunction'],
- function(angular, mocks, controllers, TaskDependencies) {
+ function(angular, controllers, TaskDependencies) {
   describe("PartialValueFunctionHandler", function() {
     var scope;
 

@@ -1,5 +1,7 @@
 package org.drugis.mcdaweb.standalone.repositories;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -9,6 +11,7 @@ import javax.inject.Inject;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.SqlParameter;
@@ -29,16 +32,18 @@ public class JdbcScenarioRepository implements ScenarioRepository {
 	};
 
 	@Transactional
-	public Scenario create(int workspaceId, String title, String state) {
-		PreparedStatementCreatorFactory pscf = 
-				new PreparedStatementCreatorFactory("insert into Scenario (workspace, title, state) values (?, ?, ?)");
-		pscf.addParameter(new SqlParameter(Types.INTEGER));
-		pscf.addParameter(new SqlParameter(Types.VARCHAR));
-		pscf.addParameter(new SqlParameter(Types.VARCHAR));
-		
+	public Scenario create(final int workspaceId, final String title, final String state) {
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(
-				pscf.newPreparedStatementCreator(new Object[] {workspaceId, title, state}), keyHolder);
+		jdbcTemplate.update(new PreparedStatementCreator() {
+			@Override
+			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+				PreparedStatement ps = con.prepareStatement("insert into Scenario (workspace, title, state) values (?, ?, ?)", new String[] {"id"});
+				ps.setInt(1, workspaceId);
+				ps.setString(2, title);
+				ps.setString(3, state);
+				return ps;
+			}
+		}, keyHolder);
 		int scenarioId = (Integer) keyHolder.getKey();
 		return new Scenario(scenarioId, workspaceId, title, state);
 	}

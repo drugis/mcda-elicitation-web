@@ -1,0 +1,19 @@
+{
+  "name": "d3",
+  "version": "3.2.2",
+  "main": "index-browserify.js",
+  "scripts": [
+    "index-browserify.js",
+    "d3.js"
+  ],
+  "homepage": "https://github.com/mbostock/d3",
+  "_release": "3.2.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v3.2.2",
+    "commit": "d2978942ec0f11bec573ddb2b0d58e6ae9e7d02a"
+  },
+  "_source": "git://github.com/mbostock/d3.git",
+  "_target": "3.2.2",
+  "_originalSource": "d3"
+}
