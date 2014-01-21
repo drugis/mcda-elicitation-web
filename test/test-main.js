@@ -22,18 +22,21 @@ var foundationVersion = "5.0.2";
 
 require.config({
   paths: {
-    'jQuery': '//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min',
-    'underscore': '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min',
-    'angular': '//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular',
-    'angular-resource': '//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular-resource',
-    'angular-mocks': 'lib/angular-mocks',
+    'jQuery': 'bower_components/jquery/jquery.min',
+    'underscore': 'bower_components/underscore/underscore-min',
+    'angular': 'bower_components/angular/angular.min',
+    'angular-resource': 'bower_components/angular-resource/angular-resource.min',
+    'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router.min',
+    'NProgress': 'bower_components/nprogress/nprogress',
     'jquery-slider': 'lib/jslider/bin/jquery.slider.min',
-    'd3': '//cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min',
-    'nvd3': '//cdnjs.cloudflare.com/ajax/libs/nvd3/1.0.0-beta/nv.d3.min',
+    'd3': 'bower_components/d3/d3.min',
+    'nvd3': 'bower_components/nvd3/nv.d3.min',
+    'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML',
+    'foundation': 'bower_components/foundation/js/foundation.min',
     'jasmine': 'lib/jasmine/jasmine',
     'jasmine-html': 'lib/jasmine/jasmine-html',
-    'NProgress': '//cdnjs.cloudflare.com/ajax/libs/nprogress/0.1.2/nprogress.min'
- },
+    'angular-mocks': 'lib/angular-mocks'
+  },
   baseUrl: '/base/app/js',
   shim: {
     'angular': { exports : 'angular'},

@@ -11,9 +11,9 @@ require.config({
     'nvd3': 'bower_components/nvd3/nv.d3.min',
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML',
     'foundation': 'bower_components/foundation/js/foundation.min',
-    'jasmine': '/app/js/lib/jasmine/jasmine',
-    'jasmine-html': '/app/js/lib/jasmine/jasmine-html',
-    'angular-mocks': '/app/js/lib/angular-mocks'
+    'jasmine': 'lib/jasmine/jasmine',
+    'jasmine-html': 'lib/jasmine/jasmine-html',
+    'angular-mocks': 'lib/angular-mocks'
   },
   baseUrl: '/app/js',
   shim: {
