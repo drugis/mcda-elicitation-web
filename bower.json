@@ -32,5 +32,8 @@
     "MathJax": "*",
     "font-awesome": "~4.0.3",
     "requirejs": "~2.1.10"
+  },
+  "resolutions": {
+    "angular": "1.2.10-build.2164+sha.8b395ff"
   }
 }
