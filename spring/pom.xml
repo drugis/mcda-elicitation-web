@@ -160,6 +160,12 @@
       <artifactId>h2</artifactId>
       <version>1.3.159</version>
       </dependency>
+		<!-- PostgreSQL JDBC driver -->
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.1-901-1.jdbc4</version>
+		</dependency>
       
     <!-- CGLIB, only required and used for @Configuration usage -->
     <dependency>
@@ -289,7 +295,7 @@
           <execution>
             <phase>process-resources</phase>
             <configuration>
-              <changeLogFile>database.sql</changeLogFile>
+              <changeLogFile>${env.MCDAWEB_DB_CHANGELOG}</changeLogFile>
               <driver>${env.MCDAWEB_DB_DRIVER}</driver>
               <url>${env.MCDAWEB_DB_URL}</url>
               <username>${env.MCDAWEB_DB_USERNAME}</username>
