@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 
 @Controller
 @RequestMapping(value="/workspaces")
@@ -80,7 +81,7 @@ public class WorkspacesController {
 		return workspace;
 	}
 	
-	@RequestMapping(value="/workspaces/{workspaceId}", method=RequestMethod.POST)
+	@RequestMapping(value="/{workspaceId}", method=RequestMethod.POST)
 	@ResponseBody
 	public Workspace update(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @RequestBody Workspace body) throws ResourceDoesNotExistException, ResourceNotOwnedException {
 		// actual workspace not needed, just check whether it exists and user owns it

@@ -149,7 +149,7 @@ public class WorkspacesControllerTest {
 				.content(jsonContent))
 
 				.andExpect(status().isCreated())
-				.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
 				.andExpect(header().string("Location", is("http://localhost:80/workspaces/1")))
 				.andExpect(jsonPath("$.id", is(workspace.getId())))
 				.andExpect(jsonPath("$.owner", is(workspace.getOwner())))
@@ -216,7 +216,7 @@ public class WorkspacesControllerTest {
 	}
 	
 	@Test
-	public void testUpdate() throws Exception {
+	public void testUpdateWorkspace() throws Exception {
 		String jsonContent = "{\"id\": 1, \"owner\": 1, \"title\": \"mockWorkspace\", \"defaultScenarioId\" : 1, \"problem\":" + JSON_KEY_VALUE + "}";
 		Workspace workspace = createWorkspace();
 		int workspaceId = 1;
