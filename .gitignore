@@ -11,4 +11,6 @@ js/test.js
 .sass-cache
 app/css/mcda-plain.css
 app/css/mcda-drugis.css
-database.*
+database.h2.db
+database.trace.db
+database.lock.db

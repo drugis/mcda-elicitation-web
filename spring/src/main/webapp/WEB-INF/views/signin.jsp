@@ -8,8 +8,9 @@
 <link rel="shortcut icon" href="<c:url value="/app/img/favicon.ico" />" type="image/x-icon" />
 
 <title>mcda.drugis.org</title>
-<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-<link rel="stylesheet" type="text/css" href="<c:url value="/app/css/mcda-drugis.css" />">
+
+  <link rel="stylesheet" type="text/css" href="app/js/bower_components/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="<c:url value="/app/css/mcda-drugis.css" />">
 
 </head>
 
