@@ -22,19 +22,22 @@ var foundationVersion = "5.0.2";
 
 require.config({
   paths: {
-    'jQuery': '//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min',
-    'underscore': '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min',
-    'angular': '//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular',
-    'angular-resource': '//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular-resource',
-    'angular-mocks': '/base/app/js/lib/angular-mocks',
-    'jquery-slider': '/base/app/js/lib/jslider/bin/jquery.slider.min',
-    'd3': '//cdnjs.cloudflare.com/ajax/libs/d3/3.2.2/d3.v3.min',
-    'nvd3': '//cdnjs.cloudflare.com/ajax/libs/nvd3/1.0.0-beta/nv.d3.min',
-    'jasmine': '/app/js/lib/jasmine/jasmine',
-    'jasmine-html': '/base/app/js/lib/jasmine/jasmine-html',
-    'NProgress': '//cdnjs.cloudflare.com/ajax/libs/nprogress/0.1.2/nprogress.min'
- },
-  baseUrl: 'base/app/js',
+    'jQuery': 'bower_components/jquery/jquery.min',
+    'underscore': 'bower_components/underscore/underscore-min',
+    'angular': 'bower_components/angular/angular.min',
+    'angular-resource': 'bower_components/angular-resource/angular-resource.min',
+    'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router.min',
+    'NProgress': 'bower_components/nprogress/nprogress',
+    'jquery-slider': 'lib/jslider/bin/jquery.slider.min',
+    'd3': 'bower_components/d3/d3.min',
+    'nvd3': 'bower_components/nvd3/nv.d3.min',
+    'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML',
+    'foundation': 'bower_components/foundation/js/foundation.min',
+    'jasmine': 'bower_components/jasmine/lib/jasmine-core/jasmine',
+    'jasmine-html': 'bower_components/jasmine/lib/jasmine-core/jasmine-html',
+    'angular-mocks': 'bower_components/angular-mocks/angular-mocks'
+  },
+  baseUrl: '/base/app/js',
   shim: {
     'angular': { exports : 'angular'},
     'angular-resource': { deps:['angular'], exports: 'angular-resource'},
