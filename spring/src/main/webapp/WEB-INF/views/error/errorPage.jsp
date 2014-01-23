@@ -24,10 +24,9 @@
     <section id="hero">
     <div class="row">
       <div class="large-12 columns">
-        <h1>404 <br/>
-          <small>Page not found.</small>
+        <h1><c:out value="${errorCode}"/><br/>
+          <small><c:out value="${reasonPhrase}"/></small>
         </h1>
-             
       </div>
     </div>
   </section>
