@@ -1,0 +1,13 @@
+{
+  "name": "bowser",
+  "homepage": "https://github.com/ded/bowser",
+  "_release": "88589615f4",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "88589615f4d7e1cceb5ba21d25e2947218f2a1b2"
+  },
+  "_source": "git://github.com/ded/bowser.git",
+  "_target": "*",
+  "_originalSource": "bowser"
+}

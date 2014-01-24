@@ -9,12 +9,42 @@
 
 <title>mcda.drugis.org</title>
 
-  <link rel="stylesheet" type="text/css" href="app/js/bower_components/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" type="text/css" href="<c:url value="/app/css/mcda-drugis.css" />">
+<link rel="stylesheet" type="text/css" href="<c:url value="/app/js/bower_components/font-awesome/css/font-awesome.min.css" />">
+
+<!-- Foundation 3 for IE 8 and earlier -->
+<!--[if lt IE 9]>
+<link rel="stylesheet" href="<c:url value="/app/css/mcda-drugis-ie8.css" />">
+<![endif]-->
+<!-- Foundation 5 for IE 9 and earlier -->
+<!--[if gt IE 8]><!-->
+<link rel="stylesheet" href="<c:url value="/app/css/mcda-drugis.css" />">
+<!--<![endif]-->
+<script type="text/javascript" src="<c:url value="/app/js/bower_components/foundation/js/vendor/custom.modernizr.js" />"></script>
+<script type="text/javascript" src="<c:url value="/app/js/bower_components/bowser/bowser.min.js" />"></script>
 
 </head>
 
 <body>
+  <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserCheck">
+    Your browser, <span id="browserVersion1"></span>, is <b>out of date</b>.
+    It has known <b>security flaws</b> and will <b>not run this web application correctly</b>.<br>
+    <a href="http://browser-update.org/update-browser.html#drugis.org">Please update your browser</a> before continuing.
+  </div>
+  <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserUnknown">
+    Your browser is unknown to us.
+    This web application may or may not work correctly using it.
+    Proceed at your own risk, or <a href="http://browser-update.org/update-browser.html#drugis.org">download a well-known browser</a> before continuing.
+  </div>
+  <script type="text/javascript">
+  if (bowser.c || (bowser.msie && bowser.version <= 8)) {
+    document.getElementById("browserVersion1").innerHTML = bowser.name + " " + bowser.version;
+    document.getElementById("browserCheck").style.display = "block";
+  }
+  if (bowser.x) {
+    document.getElementById("browserUnknown").style.display = "block";
+  }
+  </script>
+
   <nav class="top-bar" data-topbar>
     <ul class="title-area">
       <li class="name">
