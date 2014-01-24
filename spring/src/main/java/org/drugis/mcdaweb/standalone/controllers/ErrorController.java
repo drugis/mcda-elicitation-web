@@ -11,10 +11,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class ErrorController {
 	@RequestMapping(value="/error/{code}", method=RequestMethod.GET)
 	public ModelAndView getErrorView(@PathVariable int code) {
-        ModelAndView errorModelAndView = new ModelAndView("error/errorPage");
-        errorModelAndView.addObject("errorCode", code);
-        errorModelAndView.addObject("reasonPhrase", HttpStatus.valueOf(code).getReasonPhrase());
+		ModelAndView errorModelAndView = new ModelAndView("error/errorPage");
+		errorModelAndView.addObject("errorCode", code);
+		errorModelAndView.addObject("reasonPhrase", HttpStatus.valueOf(code).getReasonPhrase());
 		return errorModelAndView;
 	}
-
 }

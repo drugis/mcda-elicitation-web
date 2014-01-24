@@ -102,25 +102,25 @@
 		<error-code>404</error-code>
 		<location>/error/404</location>
 	</error-page>
-    <error-page>
-        <!-- Missing login -->
-        <error-code>401</error-code>
-        <location>/error/errorPage</location>
-    </error-page>
-    <error-page>
-        <!-- Forbidden -->
-        <error-code>403</error-code>
-        <location>/error/errorPage</location>
-    </error-page>
-    <error-page>
-        <!-- Uncaught exception -->
-        <error-code>500</error-code>
-        <location>/error/errorPage</location>
-    </error-page>
-    <error-page>
-        <!-- Service Unavailable -->
-        <error-code>503</error-code>
-        <location>/error/errorPage</location>
-    </error-page>
+	<error-page>
+		<!-- Missing login -->
+		<error-code>401</error-code>
+		<location>/error/401</location>
+	</error-page>
+	<error-page>
+		<!-- Forbidden -->
+		<error-code>403</error-code>
+		<location>/error/403</location>
+	</error-page>
+	<error-page>
+		<!-- Uncaught exception -->
+		<error-code>500</error-code>
+		<location>/error/500</location>
+	</error-page>
+	<error-page>
+		<!-- Service Unavailable -->
+		<error-code>503</error-code>
+		<location>/error/503</location>
+	</error-page>
 		
 </web-app>
