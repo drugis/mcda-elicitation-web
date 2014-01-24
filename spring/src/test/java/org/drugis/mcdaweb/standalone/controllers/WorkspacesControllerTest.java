@@ -9,10 +9,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.nio.charset.Charset;
 import java.security.Principal;
@@ -190,7 +187,9 @@ public class WorkspacesControllerTest {
 	
 		mockMvc.perform(get("/workspaces/1")
 				.principal(user))
-				.andExpect(status().isNotFound());
+				.andExpect(status().isMovedTemporarily())
+                .andExpect(redirectedUrl("/error/404"))
+        ;
 
 		verify(workspaceRepository).findById(workspaceId);
 	}
@@ -208,12 +207,43 @@ public class WorkspacesControllerTest {
 		when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
 		mockMvc.perform(get("/workspaces/1")
 				.principal(leetHaxor))
-				.andExpect(status().isForbidden())
+				.andExpect(status().isMovedTemporarily())
+                .andExpect(redirectedUrl("/error/403"))
 		;
 		verify(workspaceRepository).findById(workspaceId);
 		verify(accountRepository).findAccountByUsername("skiddie");
 		verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
 	}
+
+    @Test
+    public void testGetWorkSpaceResourceDoesNotExistException() throws Exception {
+        Workspace workspace = createWorkspace();
+        int workspaceId = 1;
+        int userId = 1;
+        when(workspaceRepository.findById(workspaceId)).thenReturn(null);
+        when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(true);
+        mockMvc.perform(get("/workspaces/1")
+                .principal(user))
+                .andExpect(status().isMovedTemporarily())
+                .andExpect(redirectedUrl("/error/404"));
+        verify(workspaceRepository).findById(1);
+    }
+
+    @Test
+    public void testGetWorkSpaceResourceNotOwnedException() throws Exception {
+        Workspace workspace = createWorkspace();
+        int workspaceId = 1;
+        int userId = 1;
+        when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
+        when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(false);
+        mockMvc.perform(get("/workspaces/1")
+                .principal(user))
+                .andExpect(status().isMovedTemporarily())
+                .andExpect(redirectedUrl("/error/403"));
+        verify(workspaceRepository).findById(1);
+        verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
+        verify(accountRepository).findAccountByUsername("gert");
+    }
 	
 	@Test
 	public void testUpdateWorkspace() throws Exception {
@@ -351,7 +381,8 @@ public class WorkspacesControllerTest {
 		when(scenarioRepository.findById(scenarioId)).thenReturn(null);
 
 		mockMvc.perform(get("/workspaces/1/scenarios/2").principal(user))
-			.andExpect(status().isNotFound());
+            .andExpect(status().isMovedTemporarily())
+            .andExpect(redirectedUrl("/error/404"));
 
 		verify(scenarioRepository).findById(scenarioId);
 		verify(workspaceRepository).findById(workspaceId);
@@ -370,7 +401,8 @@ public class WorkspacesControllerTest {
 		Scenario scenario = createScenario(scenarioId, workspaceId + 1, "title");
 		when(scenarioRepository.findById(scenarioId)).thenReturn(scenario);
 		mockMvc.perform(get("/workspaces/1/scenarios/2").principal(user))
-			.andExpect(status().isForbidden());
+            .andExpect(status().isMovedTemporarily())
+            .andExpect(redirectedUrl("/error/403"));
 
 		verify(workspaceRepository).findById(workspaceId);
 		verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);

@@ -157,7 +157,7 @@ public class WorkspacesController {
 	@ExceptionHandler(ResourceNotOwnedException.class)
 	public String handleResourceNotOwned(HttpServletRequest request) {
 		logger.error("Access to resource not authorised.\n{}", request.getRequestURL());
-		return "redirect:/error/404";
+		return "redirect:/error/403";
 	}
 	
 }
