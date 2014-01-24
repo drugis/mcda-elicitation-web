@@ -31,7 +31,7 @@
     <a href="http://browser-update.org/update-browser.html#drugis.org">Please update your browser</a> before continuing.
   </div>
   <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserUnknown">
-    Your browser, <span id="browserVersion2"></span>, is unknown to us.
+    Your browser is unknown to us.
     This web application may or may not work correctly using it.
     Proceed at your own risk, or <a href="http://browser-update.org/update-browser.html#drugis.org">download a well-known browser</a> before continuing.
   </div>
@@ -41,7 +41,6 @@
     document.getElementById("browserCheck").style.display = "block";
   }
   if (bowser.x) {
-    document.getElementById("browserVersion2").innerHTML = bowser.name + " " + bowser.version;
     document.getElementById("browserUnknown").style.display = "block";
   }
   </script>
