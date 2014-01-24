@@ -148,14 +148,16 @@ public class WorkspacesController {
 	
 	@ResponseStatus(HttpStatus.NOT_FOUND)
 	@ExceptionHandler(ResourceDoesNotExistException.class)
-	public void handleResourceDoesNotExist(HttpServletRequest request) {
+	public String handleResourceDoesNotExist(HttpServletRequest request) {
 		logger.error("Resource not found.\n{}", request.getRequestURL());
+		return "redirect:/error/404";
 	}
 
 	@ResponseStatus(HttpStatus.FORBIDDEN)
 	@ExceptionHandler(ResourceNotOwnedException.class)
-	public void handleResourceNotOwned(HttpServletRequest request) {
+	public String handleResourceNotOwned(HttpServletRequest request) {
 		logger.error("Access to resource not authorised.\n{}", request.getRequestURL());
+		return "redirect:/error/404";
 	}
 	
 }
