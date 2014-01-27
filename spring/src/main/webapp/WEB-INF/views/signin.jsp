@@ -77,6 +77,13 @@
         </div>
         
         <p>Right now, you need a Google account to sign in. The information we retrieve from Google is only used to ensure that you continue to have access to the workspaces you create.</p>
+
+        <form id="hiddenSignInForm" action="<c:url value='/signin/authenticate'/>" method="POST" style="display: none;">
+          <input type="hidden" name="_csrf" value="<c:out value="${_csrf.token}" />" />
+          <input type='text' name='username' />
+          <input type='password' name='password'>
+          <input name="submit" type="submit">
+        </form>
       </div>
     </div>
   </section>
