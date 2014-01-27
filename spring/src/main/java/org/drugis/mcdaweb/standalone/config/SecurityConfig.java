@@ -51,8 +51,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void registerAuthentication(AuthenticationManagerBuilder auth) throws Exception {
 		auth.jdbcAuthentication()
 				.dataSource(dataSource)
-				.usersByUsernameQuery("select username, password, true from Account where username = ?")
-				.authoritiesByUsernameQuery("select username, 'ROLE_USER' from Account where username = ?")
+				.usersByUsernameQuery("SELECT username, password, TRUE FROM Account WHERE username = ?")
+				.authoritiesByUsernameQuery("SELECT Account.username, COALESCE(AccountRoles.role, 'ROLE_USER') FROM Account" +
+                        " LEFT OUTER JOIN AccountRoles ON Account.id = AccountRoles.accountId WHERE Account.username = ?")
 				.passwordEncoder(passwordEncoder());
 	}
 	
@@ -70,6 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.loginPage("/signin")
 				.loginProcessingUrl("/signin/authenticate")
 				.failureUrl("/signin?param.error=bad_credentials")
+                .defaultSuccessUrl("/")
 			.and()
 				.logout()
 					.logoutUrl("/signout")
@@ -77,6 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.and()
 				.authorizeRequests()
 					.antMatchers("/favicon.ico", "/resources/**", "/app/**", "/auth/**", "/signin", "/signup", "/error/**").permitAll()
+                    .antMatchers("/monitoring").hasRole("MONITORING")
 					.antMatchers("/**").authenticated()
 			.and()
 				.rememberMe()

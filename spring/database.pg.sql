@@ -43,3 +43,11 @@ create table Scenario (id SERIAL NOT NULL,
 -- changeset gertvv:3
 
 ALTER TABLE Workspace ADD CONSTRAINT Workspace_defaultScenarioId_FK FOREIGN KEY (defaultScenarioId) REFERENCES Scenario(id) DEFERRABLE;
+
+-- changeset gertvv:4
+
+CREATE TABLE AccountRoles (
+    accountId INT,
+    role VARCHAR NOT NULL,
+    FOREIGN KEY (accountId) REFERENCES Account(id)
+)
