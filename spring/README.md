@@ -48,7 +48,7 @@ By default, the tests expect the selenium server to be running at http://localho
 
 To enable the integration test user to login you need to add a user to the account table in the database.
 The password should be encrypted using [bcrypt](http://en.wikipedia.org/wiki/Bcrypt).
-For the PostgreSQL database the [pgcrypto module] is needed to encrypt the password.
+For the PostgreSQL database the [pgcrypto module](http://www.postgresql.org/docs/9.3/static/pgcrypto.html) is needed to encrypt the password.
 
     CREATE EXTENSION pgcrypto;
 
