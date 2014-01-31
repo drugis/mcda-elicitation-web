@@ -35,3 +35,26 @@ Set up the environment:
 	export MCDAWEB_DB_PASSWORD=develop
 	export MCDAWEB_OAUTH_GOOGLE_SECRET=w0rp7-_Z_JQk_T0YcvMe3Aky
     export MCDAWEB_OAUTH_GOOGLE_KEY=501575320185-sjffuboubldeaio8ngl1hrgfdj5a2nia.apps.googleusercontent.com
+
+To run the integration tests
+-----------------------
+
+Install [protractor](https://github.com/angular/protractor) with.
+
+    npm install -g protractor
+
+Start up a selenium server (See https://github.com/angular/protractor for help with this).
+By default, the tests expect the selenium server to be running at http://localhost:4444/wd/hub.
+
+To enable the integration test user to login you need to add a user to the account table in the database.
+The password should be encrypted using [bcrypt](http://en.wikipedia.org/wiki/Bcrypt).
+For the PostgreSQL database the [pgcrypto module] is needed to encrypt the password.
+
+    CREATE EXTENSION pgcrypto;
+
+    INSERT INTO account (username, firstname, lastname, password) VALUES ([username], 'firstname', 'lastname', crypt([password], gen_salt('bf', 10)));
+
+Run integration tests by either setting username and password using params as show or user the protractor-conf.js file.
+(See https://github.com/angular/protractor for more information on configuring protractor).
+
+    protractor --seleniumAddress=http://127.0.0.1:4444/wd/hub  --params.login.user=[username] --params.login.password=[password] protractor-conf.js

@@ -1,5 +1,5 @@
-describe('drugis homepage', function() {
-  it('should do something', function() {
+describe('drugis login', function() {
+  it('should go to "/choose-problem" after login', function() {
   	var url = 'http://localhost:8080';
     //browser.get('https://mcda.drugis.org');
 
@@ -21,11 +21,13 @@ describe('drugis homepage', function() {
     findByName('password').sendKeys(ptor.params.login.password);
     findByName('submit').click();
 
-    // do angular get
-    //browser.get(url);
-
-    driver.sleep(3000);
-
     expect(ptor.getCurrentUrl()).toEqual(url + '/#/choose-problem');
+
+    var elem = ptor.findElement(protractor.By.id('create-workspace-btn'));
+    elem.click().then(console.log('oke'));
+
+    var example =  element(by.repeater('option in examplesList').row(1));
+    example.click();
+    driver.sleep(3000);
   });
 });
