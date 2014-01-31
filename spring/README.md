@@ -50,9 +50,10 @@ To enable the integration test user to login you need to add a user to the accou
 The password should be encrypted using [bcrypt](http://en.wikipedia.org/wiki/Bcrypt).
 For the PostgreSQL database the [pgcrypto module](http://www.postgresql.org/docs/9.3/static/pgcrypto.html) is needed to encrypt the password.
 
-    CREATE EXTENSION pgcrypto;
+    sudo apt-get install postgresql-contrib
+    sudo -u postgres psql -d mcdaweb -c "CREATE EXTENSION pgcrypto"
 
-    INSERT INTO account (username, firstname, lastname, password) VALUES ([username], 'firstname', 'lastname', crypt([password], gen_salt('bf', 10)));
+    sudo -u postgres psql -d mcdaweb -c "INSERT INTO account (username, firstname, lastname, password) VALUES ([username], 'firstname', 'lastname', crypt([password], gen_salt('bf', 10)))"
 
 Run integration tests by either setting username and password using params as show or user the protractor-conf.js file.
 (See https://github.com/angular/protractor for more information on configuring protractor).
