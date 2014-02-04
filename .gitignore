@@ -14,3 +14,4 @@ app/css/mcda-drugis.css
 database.h2.db
 database.trace.db
 database.lock.db
+test/test-results.xml
