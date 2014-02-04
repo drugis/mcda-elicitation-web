@@ -9,7 +9,6 @@ module.exports = function(config) {
 
     // plugins to load
     plugins : [
-      'karma-qunit',
       'karma-chrome-launcher',
       'karma-phantomjs-launcher',
       'karma-junit-reporter',
