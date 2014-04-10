@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'underscore', 'services/partialValueFunction'], function(angular, _) {
+define(['angular', 'underscore', 'mcda/services/partialValueFunction'], function(angular, _) {
 
   return function($scope, PartialValueFunction, Tasks, TaskDependencies, currentScenario, taskDefinition) {
     var scenario = currentScenario;

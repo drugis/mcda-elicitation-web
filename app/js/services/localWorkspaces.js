@@ -1,5 +1,5 @@
 'use strict';
-define(['config', 'angular', 'underscore', 'services/partialValueFunction'], function(Config, angular, _) {
+define(['mcda/config', 'angular', 'underscore', 'mcda/services/partialValueFunction'], function(Config, angular, _) {
   var dependencies = ['elicit.pvfService'];
 
   var Workspaces = function(PartialValueFunction, $rootScope, $q, $location)  {

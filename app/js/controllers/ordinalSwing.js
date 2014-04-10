@@ -1,5 +1,5 @@
 'use strict';
-define(['controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard, angular, _) {
+define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard, angular, _) {
   return function($scope, $injector, currentScenario, taskDefinition) {
     var criteria = {};
 

@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'lib/patavi', 'underscore', 'NProgress'], function(angular, patavi, _, NProgress) {
+define(['angular', 'mcda/lib/patavi', 'underscore', 'NProgress'], function(angular, patavi, _, NProgress) {
   return function($rootScope, $scope, currentScenario, taskDefinition) {
     var alternatives;
     var criteria;
