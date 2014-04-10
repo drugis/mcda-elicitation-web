@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'underscore', 'config'], function(angular,  _, Config) {
+define(['angular', 'underscore', 'mcda/config'], function(angular,  _, Config) {
 
   return function($scope, Tasks, TaskDependencies, currentWorkspace, currentScenario) {
     $scope.workspace = currentWorkspace;
