@@ -9,13 +9,6 @@ for (var file in window.__karma__.files) {
   }
 }
 
-// var tests = [
-//   //"/base/test/unit/controller.js",
-//   "/base/test/unit/intervalSwing.js",
-//   "/base/test/unit/ordinalSwing.js",
-//   "/base/test/unit/partialValueFunction.js",
-//   "/base/test/unit/taskDependencies.js"]
-
 console.log(tests);
 
 var foundationVersion = "5.0.2";
@@ -35,7 +28,8 @@ require.config({
     'foundation': 'bower_components/foundation/js/foundation.min',
     'jasmine': 'bower_components/jasmine/lib/jasmine-core/jasmine',
     'jasmine-html': 'bower_components/jasmine/lib/jasmine-core/jasmine-html',
-    'angular-mocks': 'bower_components/angular-mocks/angular-mocks'
+    'angular-mocks': 'bower_components/angular-mocks/angular-mocks',
+    'mcda': '.'
   },
   baseUrl: '/base/app/js',
   shim: {

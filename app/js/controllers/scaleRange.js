@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'lib/patavi', 'underscore'], function(angular, patavi, _) {
+define(['angular', 'mcda/lib/patavi', 'underscore'], function(angular, patavi, _) {
 
   return function($scope, currentScenario, taskDefinition) {
     $scope.title = taskDefinition.title;

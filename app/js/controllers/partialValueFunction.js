@@ -1,5 +1,5 @@
 'use strict';
-define(['controllers/helpers/wizard', 'angular', 'lib/patavi', 'underscore'], function(Wizard, angular, patavi, _) {
+define(['mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'underscore'], function(Wizard, angular, patavi, _) {
   return function($scope, $injector, currentScenario, taskDefinition, PartialValueFunction) {
     var standardize = function(state) {
       // Copy choices to problem

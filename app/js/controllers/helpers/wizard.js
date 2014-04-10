@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'underscore', 'lib/patavi', 'NProgress'], function(angular, _, patavi, NProgress) {
+define(['angular', 'underscore', 'mcda/lib/patavi', 'NProgress'], function(angular, _, patavi, NProgress) {
   return ['$rootScope', '$scope', 'handler', function($rootScope, $scope, handler) {
     $rootScope.noProgress = true;
 

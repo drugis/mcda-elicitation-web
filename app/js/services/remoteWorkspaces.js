@@ -1,5 +1,5 @@
 'use strict';
-define(['config', 'angular', 'angular-resource', 'underscore', 'services/partialValueFunction'], function(Config, angular, angularResource, _) {
+define(['mcda/config', 'angular', 'angular-resource', 'underscore', 'mcda/services/partialValueFunction'], function(Config, angular, angularResource, _) {
   var dependencies = ['elicit.pvfService', 'ngResource'];
   
   function randomId(size, prefix) {
