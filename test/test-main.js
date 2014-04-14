@@ -16,10 +16,10 @@ var foundationVersion = "5.0.2";
 require.config({
   paths: {
     'jQuery': 'bower_components/jquery/jquery.min',
-    'underscore': 'bower_components/underscore/underscore-min',
-    'angular': 'bower_components/angular/angular.min',
-    'angular-resource': 'bower_components/angular-resource/angular-resource.min',
-    'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router.min',
+    'underscore': 'bower_components/underscore/underscore',
+    'angular': 'bower_components/angular/angular',
+    'angular-resource': 'bower_components/angular-resource/angular-resource',
+    'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
     'NProgress': 'bower_components/nprogress/nprogress',
     'jquery-slider': 'lib/jslider/bin/jquery.slider.min',
     'd3': 'bower_components/d3/d3.min',
