@@ -31,7 +31,7 @@ define(['angular', 'underscore', 'mcda/services/partialValueFunction'], function
     };
 
     var linearPVFs = _.filter(problem.criteria, function(criterion) {
-      return criterion.pvf.type === "linear";
+      return criterion.pvf && criterion.pvf.type === "linear";
     }).length;
     var pvfStatus = "linear";
 
@@ -48,7 +48,7 @@ define(['angular', 'underscore', 'mcda/services/partialValueFunction'], function
     }, _.unique(_.pluck(state.prefs, "type"))));
 
     var scaleRange = _.every(problem.criteria, function(criterion) {
-      return criterion.pvf.range;
+      return criterion.pvf && criterion.pvf.range;
     }) ? "defined" : "missing";
 
     $scope.status = {

@@ -1,10 +1,10 @@
 'use strict';
 define(['angular', 'underscore', 'mcda/config'], function(angular,  _, Config) {
 
-  return function($scope, Tasks, TaskDependencies, currentWorkspace, currentScenario) {
+  return function($scope, $location, Tasks, TaskDependencies, currentWorkspace, currentScenario) {
     $scope.workspace = currentWorkspace;
     $scope.scenario = currentScenario;
-    $scope.createPath = _.partial(Config.createPath, currentWorkspace.id);
+    $scope.createPath = _.partial(Config.createPath, $location.path(), currentWorkspace.id);
 
     $scope.scenarios = currentWorkspace.query();
 
