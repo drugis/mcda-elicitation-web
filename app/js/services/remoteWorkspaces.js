@@ -18,7 +18,7 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
       var csrfHeader = config.workspacesRepository._csrf_header;
       var headers = {};
       headers[csrfHeader] = csrfToken;
-      var repositoryUrl = config.workspacesRepository.url;
+      var repositoryUrl = config.workspacesRepository.url || $location.path();
 
       var WorkspaceResource = $resource(repositoryUrl + ":workspaceId", {
         workspaceId: '@id'
