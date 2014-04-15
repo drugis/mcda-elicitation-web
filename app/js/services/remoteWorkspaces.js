@@ -18,7 +18,14 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
       var csrfHeader = config.workspacesRepository._csrf_header;
       var headers = {};
       headers[csrfHeader] = csrfToken;
-      var repositoryUrl = config.workspacesRepository.url || $location.path();
+
+      var repositoryUrl;
+      if ($location.path() === '/choose-problem') {
+        repositoryUrl = config.workspacesRepository.url
+      } else {
+        var path = $location.path();
+        repositoryUrl = path.substr(0, path.lastIndexOf('analyses'));
+      }
 
       var WorkspaceResource = $resource(repositoryUrl + ":workspaceId", {
         workspaceId: '@id'
