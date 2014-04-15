@@ -56,11 +56,13 @@ define(['angular', 'underscore'], function(angular, _) {
 
     var attach = function(state) {
       function addPartialValueFunction(criterion) {
-        var pvf = create(criterion.pvf);
+        if(criterion.pvf) {
+          var pvf = create(criterion.pvf);
 
-        criterion.pvf = _.extend(criterion.pvf, _.pick(pvf, 'map', 'inv'));
-        _.extend(criterion, _.pick(pvf, 'best', 'worst'));
+          criterion.pvf = _.extend(criterion.pvf, _.pick(pvf, 'map', 'inv'));
+          _.extend(criterion, _.pick(pvf, 'best', 'worst'));
 
+        }
       }
       angular.forEach(state.problem.criteria, addPartialValueFunction);
       return state;

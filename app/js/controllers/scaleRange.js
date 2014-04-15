@@ -28,7 +28,8 @@ define(['angular', 'mcda/lib/patavi', 'underscore'], function(angular, patavi, _
         _.map(_.pairs(results.results[0]), function(criterion) {
 
           // Set inital model value
-          var problemRange = state.problem.criteria[criterion[0]].pvf.range;
+          var pvf = state.problem.criteria[criterion[0]].pvf;
+          var problemRange = pvf ? pvf.range : null;
           var from = problemRange ? problemRange[0] : criterion[1]["2.5%"];
           var to = problemRange ? problemRange[1] : criterion[1]["97.5%"];
 
@@ -84,7 +85,10 @@ define(['angular', 'mcda/lib/patavi', 'underscore'], function(angular, patavi, _
       var state = angular.copy(currentState);
       // Rewrite scale information
       _.each(_.pairs(state.choice), function(choice) {
-        state.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
+        var pvf = state.problem.criteria[choice[0]].pvf;
+        if (pvf) {
+          state.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
+        }
       });
       scenario.update(state);
       scenario.redirectToDefaultView();

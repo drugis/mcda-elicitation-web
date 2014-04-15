@@ -24,7 +24,7 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
         repositoryUrl = config.workspacesRepository.url
       } else {
         var path = $location.path();
-        repositoryUrl = path.substr(0, path.lastIndexOf('analyses'));
+         repositoryUrl = path.substr(0, path.lastIndexOf('analyses') + 'analyses'.length + 1);
       }
 
       var WorkspaceResource = $resource(repositoryUrl + ":workspaceId", {
@@ -60,7 +60,8 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
         };
 
         ScenarioResource.prototype.createPath = function(taskId) {
-          return Config.createPath(this.workspace, this.id, taskId);
+          var basePath = $location.path();
+          return Config.createPath(basePath, this.workspace, this.id, taskId);
         };
 
         ScenarioResource.prototype.save = function() {
