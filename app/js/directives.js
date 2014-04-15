@@ -47,7 +47,8 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
         $($element).empty();
         $($element).append('<input type="slider"></input>');
         $($element).find('input').attr("value", getModelValue());
-        $($element).find('input').slider({
+        var myElem = $($element).find('input');
+        myElem.slider({
           from: 0,
           to: steps,
           step: 1,
