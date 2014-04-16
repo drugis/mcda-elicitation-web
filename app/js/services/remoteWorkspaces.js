@@ -1,4 +1,3 @@
-'use strict';
 define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
   function(Config, angular, angularResource, _) {
     var dependencies = ['elicit.pvfService', 'ngResource'];
@@ -16,12 +15,13 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
     var Workspaces = function(PartialValueFunction, $resource, $rootScope, $q, $location) {
       var csrfToken = config.workspacesRepository._csrf_token;
       var csrfHeader = config.workspacesRepository._csrf_header;
+      var path = $location.path();
       var headers = {};
       headers[csrfHeader] = csrfToken;
 
       var repositoryUrl;
-      if ($location.path() === '/choose-problem') {
-        repositoryUrl = config.workspacesRepository.url
+      if (path === '/choose-problem') {
+        repositoryUrl = config.workspacesRepository.url;
       } else {
         var path = $location.path();
          repositoryUrl = path.substr(0, path.lastIndexOf('analyses') + 'analyses'.length + 1);
