@@ -25,14 +25,19 @@ define(['angular', 'angular-mocks', 'services/partialValueFunction', 'services/r
 
     beforeEach(module('elicit.remoteWorkspaces'));
 
-    it('should get the decorated workspace', inject(function($rootScope, $httpBackend, RemoteWorkspaces) {
+    beforeEach(module(function($provide) {
+      var $location = jasmine.createSpyObj('$location', ['path']);
+      $location.path.and.returnValue('/choose-problem');
+      $provide.value('$location', $location);
+    }));
+
+    it('should get the decorated workspace', inject(function($rootScope, $httpBackend, $location, RemoteWorkspaces) {
       var workspaceId = 1,
         mockWorkspace = jasmine.createSpyObj('mockWorkspace', ['test']),
         resolvedValue,
         getPromise;
 
       $httpBackend.when('GET', 'workspaces/1').respond(mockWorkspace);
-
       getPromise = RemoteWorkspaces.get(workspaceId);
 
       getPromise.then(function(value) {
@@ -46,25 +51,6 @@ define(['angular', 'angular-mocks', 'services/partialValueFunction', 'services/r
       expect(typeof resolvedValue.getScenario).toBe('function');
       expect(typeof resolvedValue.newScenario).toBe('function');
       expect(typeof resolvedValue.query).toBe('function');
-    }));
-
-    it('use the config url', inject(function($rootScope, $httpBackend, RemoteWorkspaces) {
-      var workspaceId = 1,
-        mockWorkspace = jasmine.createSpyObj('mockWorkspace', ['test']),
-        resolvedValue,
-        getPromise;
-
-      $httpBackend.when('GET', 'workspaces/1').respond(mockWorkspace);
-
-      getPromise = RemoteWorkspaces.get(workspaceId);
-
-      getPromise.then(function(value) {
-        resolvedValue = value;
-      });
-      $httpBackend.flush();
-      $rootScope.$apply();
-
-      expect(resolvedValue).toBeDefined();
     }));
 
   });
