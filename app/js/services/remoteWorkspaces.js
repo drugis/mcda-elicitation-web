@@ -37,8 +37,7 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
       });
 
       var redirectToDefaultView = function(workspaceId, scenarioId) {
-        console.info("redirecting to", workspaceId, scenarioId);
-        var nextUrl = "/workspaces/" + workspaceId + "/scenarios/" + scenarioId + "/" + Config.defaultView;
+        var nextUrl = repositoryUrl + workspaceId + "/scenarios/" + scenarioId + "/" + Config.defaultView;
         $location.path(nextUrl);
       };
 
