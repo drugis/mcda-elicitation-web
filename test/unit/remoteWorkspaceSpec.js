@@ -1,4 +1,4 @@
-define(['angular', 'angular-mocks', 'services/partialValueFunction', 'services/remoteWorkspaces'], function(angular, $location, RemoteWorkspaces) {
+define(['angular', 'angular-mocks', 'services/partialValueFunction', 'services/remoteWorkspaces'], function(angular, RemoteWorkspaces) {
 
   window.config = {
     examplesRepository: "/examples/",
@@ -25,15 +25,19 @@ define(['angular', 'angular-mocks', 'services/partialValueFunction', 'services/r
 
     beforeEach(module('elicit.remoteWorkspaces'));
 
+    beforeEach(module(function($provide) {
+      var $location = jasmine.createSpyObj('$location', ['path']);
+      $location.path.and.returnValue('/choose-problem');
+      $provide.value('$location', $location);
+    }));
+
     it('should get the decorated workspace', inject(function($rootScope, $httpBackend, $location, RemoteWorkspaces) {
       var workspaceId = 1,
         mockWorkspace = jasmine.createSpyObj('mockWorkspace', ['test']),
         resolvedValue,
         getPromise;
 
-      spyOn($location, 'path').and.returnValue('/choose-problem');
       $httpBackend.when('GET', 'workspaces/1').respond(mockWorkspace);
-
       getPromise = RemoteWorkspaces.get(workspaceId);
 
       getPromise.then(function(value) {
@@ -47,28 +51,6 @@ define(['angular', 'angular-mocks', 'services/partialValueFunction', 'services/r
       expect(typeof resolvedValue.getScenario).toBe('function');
       expect(typeof resolvedValue.newScenario).toBe('function');
       expect(typeof resolvedValue.query).toBe('function');
-    }));
-
-    xit('should use the config url', inject(function($rootScope, $httpBackend, $location, $stateParams, RemoteWorkspaces) {
-      var workspaceId = 1,
-       scenarioId = 2,
-        mockWorkspace = jasmine.createSpyObj('mockWorkspace', ['test']),
-        workspace,
-        getPromise;
-
-      spyOn($location, 'path').and.callFake(function() {});
-
-      $httpBackend.when('GET', 'workspaces/1').respond(mockWorkspace);
-      getPromise = RemoteWorkspaces.get(workspaceId);
-      getPromise.then(function(value) {
-        workspace = value;
-      });
-      $httpBackend.flush();
-      $rootScope.$apply();
-
-      workspace.redirectToDefaultView(scenarioId);
-      expect(workspace).toBeDefined();
-      expect($location.path).toHaveBeenCalled();
     }));
 
   });
