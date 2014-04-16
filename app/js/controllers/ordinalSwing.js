@@ -1,6 +1,6 @@
 'use strict';
 define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard, angular, _) {
-  return function($scope, $injector, currentScenario, taskDefinition) {
+  return function($window, $scope, $injector, currentScenario, taskDefinition) {
     var criteria = {};
 
     var getReference = function() {
@@ -11,10 +11,12 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
     };
 
     var title = function(step) {
-      var base = "Ordinal SWING weighting";
+      var base = 'Ordinal SWING weighting';
       var total = (_.size(criteria) - 1);
-      if(step > total) return base + " (DONE)";
-      return base + " (" + step + "/" + total + ")";
+      if(step > total) {
+        return base + ' (DONE)';
+      }
+      return base + ' (' + step + '/' + total + ')';
     };
 
 
@@ -64,7 +66,7 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
       }
       next(choice);
 
-      if(_.size(nextState.choices) == 1) {
+      if(_.size(nextState.choices) === 1) {
         next(_.keys(nextState.choices)[0]);
       }
       return nextState;
@@ -72,7 +74,7 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
 
     var standardize = function(prefs) {
       var order = prefs.ordinal;
-      function ordinal(a, b) { return { type: "ordinal", criteria: [a, b] }; }
+      function ordinal(a, b) { return { type: 'ordinal', criteria: [a, b] }; }
       var result = [];
       for (var i = 0; i < order.length - 1; i++) {
         result.push(ordinal(order[i], order[i + 1]));
@@ -86,6 +88,8 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
       return result;
     };
 
+    $scope.rankProbabilityChartURL = ($window.mcdaBasePath || '') + '/app/partials/rankProbabilityChart.html';
+
     $scope.standardize = standardize;
 
     $scope.save = function(state) {
@@ -97,13 +101,13 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
     };
 
     $scope.canSave = function(state) {
-      return state && _.size(state.choices) == 2;
+      return state && _.size(state.choices) === 2;
     };
 
     $injector.invoke(Wizard, this, {
       $scope: $scope,
       handler: { validChoice: validChoice,
-                 fields: ["choice", "reference", "choices"],
+                 fields: ['choice', 'reference', 'choices'],
                  nextState: nextState,
                  initialize: _.partial(initialize, taskDefinition.clean(scenario.state)),
                  hasIntermediateResults: true,
