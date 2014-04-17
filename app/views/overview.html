@@ -31,14 +31,14 @@
     <h4>Actions</h4>
     <ul class="no-bullet">
       <li ng-repeat="info in tasks.accessible" ng-show="info.task.id != 'overview'">
-        <a href="{{scenario.createPath(info.task.id)}}" ng-bind="info.task.title"></a>
+        <a ui-sref="{{info.task.id}}" ng-bind="info.task.title"></a>
       </li>
       <li ng-repeat="info in tasks.destructive" ng-show="info.task.id != 'overview'">
         <i class="has-tip fa fa-info-circle"
            data-tooltip
            title="Doing this will destroy the following information: {{ dependenciesString(info.safe.resets) }}"></i>
         <a style="color: red;"
-           href="{{scenario.createPath(info.task.id)}}" >
+           ui-sref="{{info.task.id}}" >
           {{info.task.title}}
         </a>
       </li>
