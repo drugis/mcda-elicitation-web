@@ -36,6 +36,7 @@ require.config({
     'angular': { exports : 'angular'},
     'angular-resource': { deps:['angular'], exports: 'angular-resource'},
     'angular-mocks': { deps: ['angular'], exports: 'angular.mock' },
+    'angular-ui-router': { deps: ['angular'], exports: 'angular-ui-router'},
     'underscore': { exports : '_'},
     'd3': { exports : 'd3'},
     'nvd3': { deps: ['d3'], exports : 'nv'},

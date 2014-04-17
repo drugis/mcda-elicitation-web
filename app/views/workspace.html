@@ -25,7 +25,7 @@
     <div class="tabs">
       <ul class="tabsNavigation">
         <li ng-repeat="s in scenarios | orderBy:'title'" ng-class="{current: s.id == scenario.id}">
-          <a href="{{createPath(s.id)}}" ng-bind="s.title"></a>
+          <a ui-sref="overview({scenarioId: s.id})" ng-bind="s.title"></a>
         </li>
         <li>
           <a href="javaScript:void(0);" data-dropdown="newScenarioControl"><i class="fa fa-plus"></i></a>
@@ -41,11 +41,11 @@
     <div class="columns large-2">
       <ul class="side-nav">
         <li>
-          <a href="{{scenario.createPath()}}"><i class="fa fa-angle-left"></i> Overview</a>
+          <a ui-sref="overview"><i class="fa fa-angle-left"></i> Overview</a>
         </li>
         <li>
-          <a ng-show="resultsAccessible" href="{{scenario.createPath('results')}}"><i class="fa fa-angle-right"></i> Results</a>
-          <span ng-show="!resultsAccessible" href="{{scenario.createPath('results')}}"><i class="fa fa-angle-right"></i> Results</span>
+          <a ng-show="resultsAccessible" ui-sref="results"><i class="fa fa-angle-right"></i> Results</a>
+          <span ng-show="!resultsAccessible" ui-sref="results"><i class="fa fa-angle-right"></i> Results</span>
         </li>
       </ul>
     </div>

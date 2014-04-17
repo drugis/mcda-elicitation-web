@@ -12,7 +12,7 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
       return prefix ? prefix + text : text;
     }
 
-    var Workspaces = function(PartialValueFunction, $resource, $rootScope, $q, $location) {
+    var Workspaces = function(PartialValueFunction, $resource, $rootScope, $q, $location, $state, $window) {
       var csrfToken = config.workspacesRepository._csrf_token;
       var csrfHeader = config.workspacesRepository._csrf_header;
       var path = $location.path();
@@ -23,8 +23,9 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
       if (path === '/choose-problem') {
         repositoryUrl = config.workspacesRepository.url;
       } else {
+        var workspaceName = $window.config.workspaceName || 'workspaces';
         var path = $location.path();
-         repositoryUrl = path.substr(0, path.lastIndexOf('analyses') + 'analyses'.length + 1);
+         repositoryUrl = path.substr(0, path.lastIndexOf(workspaceName) + workspaceName.length + 1);
       }
 
       var WorkspaceResource = $resource(repositoryUrl + ":workspaceId", {
@@ -36,9 +37,8 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
         }
       });
 
-      var redirectToDefaultView = function(workspaceId, scenarioId) {
-        var nextUrl = repositoryUrl + workspaceId + "/scenarios/" + scenarioId + "/" + Config.defaultView;
-        $location.path(nextUrl);
+      var redirectToDefaultView = function() {
+        $state.go(config.defaultView);
       };
 
       var decorate = function(workspace) {
@@ -55,12 +55,7 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
         );
 
         workspace.redirectToDefaultView = function(scenarioId) {
-          redirectToDefaultView(workspace.id, scenarioId ? scenarioId : _.keys(workspace.scenarios)[0]);
-        };
-
-        ScenarioResource.prototype.createPath = function(taskId) {
-          var basePath = $location.path();
-          return Config.createPath(basePath, this.workspace, this.id, taskId);
+          $state.go(config.defaultView);
         };
 
         ScenarioResource.prototype.save = function() {
