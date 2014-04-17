@@ -3,7 +3,6 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
   return function($scope, $location, $state, Tasks, TaskDependencies, currentWorkspace, currentScenario) {
     $scope.workspace = currentWorkspace;
     $scope.scenario = currentScenario;
-    $scope.createPath = _.partial(Config.createPath, $location.path(), currentWorkspace.id);
 
     $scope.scenarios = currentWorkspace.query();
 
