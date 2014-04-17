@@ -41,11 +41,11 @@
     <div class="columns large-2">
       <ul class="side-nav">
         <li>
-          <a href="{{scenario.createPath()}}"><i class="fa fa-angle-left"></i> Overview</a>
+          <a ui-sref="overview"><i class="fa fa-angle-left"></i> Overview</a>
         </li>
         <li>
-          <a ng-show="resultsAccessible" href="{{scenario.createPath('results')}}"><i class="fa fa-angle-right"></i> Results</a>
-          <span ng-show="!resultsAccessible" href="{{scenario.createPath('results')}}"><i class="fa fa-angle-right"></i> Results</span>
+          <a ng-show="resultsAccessible" ui-sref="results"><i class="fa fa-angle-right"></i> Results</a>
+          <span ng-show="!resultsAccessible" ui-sref="results"><i class="fa fa-angle-right"></i> Results</span>
         </li>
       </ul>
     </div>
