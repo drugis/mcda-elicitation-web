@@ -48,22 +48,8 @@ define([], function() {
 
   var defaultView = 'overview';
 
-  var createPath = function(basePath, workspaceId, scenarioId, taskId) {
-    var taskId = taskId ? taskId : defaultView,
-        base = basePath.indexOf('#/workspaces/') === 0 ? basePath : stripBasePath(basePath);
-
-    return '#/' + base + '/' + workspaceId + '/scenarios/' + scenarioId + '/' + taskId;
-  };
-
-
-  var stripBasePath = function(basePath) {
-    // keep '#' in at the front of the path
-    return basePath.substr(1, basePath.lastIndexOf('analyses') + 'analyses'.length - 1);
-  }
-
   return {
     tasks: tasks,
-    defaultView: defaultView,
-    createPath: createPath
+    defaultView: defaultView
   };
 });
