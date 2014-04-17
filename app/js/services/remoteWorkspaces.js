@@ -12,7 +12,7 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
       return prefix ? prefix + text : text;
     }
 
-    var Workspaces = function(PartialValueFunction, $resource, $rootScope, $q, $location, $state) {
+    var Workspaces = function(PartialValueFunction, $resource, $rootScope, $q, $location, $state, $window) {
       var csrfToken = config.workspacesRepository._csrf_token;
       var csrfHeader = config.workspacesRepository._csrf_header;
       var path = $location.path();
@@ -56,11 +56,6 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
 
         workspace.redirectToDefaultView = function(scenarioId) {
           $state.go(config.defaultView);
-        };
-
-        ScenarioResource.prototype.createPath = function(taskId) {
-          var basePath = $location.path();
-          return Config.createPath(basePath, this.workspace, this.id, taskId);
         };
 
         ScenarioResource.prototype.save = function() {
