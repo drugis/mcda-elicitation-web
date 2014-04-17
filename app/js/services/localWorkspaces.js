@@ -47,8 +47,6 @@ define(['mcda/config', 'angular', 'underscore', 'mcda/services/partialValueFunct
           scenario.save();
         };
 
-        scenario.createPath = _.partial(Config.createPath, workspace.id, scenario.id);
-
         deferred.resolve(scenario);
         return deferred.promise;
       };
