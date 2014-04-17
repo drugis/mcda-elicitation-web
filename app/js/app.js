@@ -11,6 +11,7 @@ define(
    'services/remoteWorkspaces',
    'services/taskDependencies',
    'services/errorHandling',
+   'services/hashCodeService',
    'foundation',
    'controllers',
    'directives',
