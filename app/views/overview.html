@@ -59,7 +59,7 @@
         <h5>{{criterion.title}}</h5>
         <ul>
           <li>Natural scale bounds:
-            [<span ng-repeat="r in criterion.scale">{{r | precision: 3}}<span ng-show="!$last">, </span></span>]</li>
+            [<span ng-repeat="r in criterion.scale track by $index"><span ng-if="r != null">{{r | precision: 3}}</span><span ng-show="!$last">, </span></span>]</li>
           <li>Configured scale range:
             [<span ng-repeat="r in criterion.pvf.range">{{r | precision: 3}}<span ng-show="!$last">, </span></span>]</li>
           <li>Partial value function:
