@@ -9,18 +9,18 @@
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta name="viewport" content="width=device-width" />
-<link rel="shortcut icon" href="<c:url value="/app/img/favicon.ico" />" type="image/x-icon" />
+<link rel="shortcut icon" href="<c:url value="/bower_components/mcda-web/app/img/favicon.ico" />" type="image/x-icon" />
 
 <title>mcda.drugis.org</title>
 
-  <link rel="stylesheet" type="text/css" href="app/js/bower_components/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" type="text/css" href="app/js/bower_components/nprogress/nprogress.css">
-  <link rel="stylesheet" type="text/css" href="app/js/lib/jslider/bin/jquery.slider.min.css">
-  <link rel="stylesheet" type="text/css" href="app/js/bower_components/nvd3/src/nv.d3.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/nprogress/nprogress.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/mcda-web/app/lib/jslider/bin/jquery.slider.min.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/nvd3/src/nv.d3.css">
 
-  <link rel="stylesheet" type="text/css" href="<c:url value="/app/css/mcda-drugis.css" />">
+  <link rel="stylesheet" type="text/css" href="<c:url value="/bower_components/mcda-web/app/css/mcda-drugis.css" />">
 
-  <script src="app/js/bower_components/requirejs/require.js" data-main="app/js/main.js"></script>
+  <script src="bower_components/requirejs/require.js" data-main="app/js/main.js"></script>
 
 </head>
 
