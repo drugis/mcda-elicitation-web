@@ -85,24 +85,32 @@ define(
       NProgress.configure({ showSpinner: false });
 
       $stateProvider.state("workspace", {
-        url: '/workspaces/:workspaceId/scenarios/:scenarioId',
+        url: '/workspaces/:workspaceId',
         templateUrl: baseTemplatePath + 'workspace.html',
         resolve: {
           currentWorkspace: ["$stateParams", config.workspacesRepository.service, function($stateParams, Workspaces) {
             return Workspaces.get($stateParams.workspaceId);
-          }],
+          }]
+        },
+        controller: 'WorkspaceController',
+        abstract: true
+      })
+      .state("workspace.scenario", {
+        url: '/scenarios/:scenarioId',
+        templateUrl: baseTemplatePath + 'scenario.html',
+        resolve: {
           currentScenario: function($stateParams, currentWorkspace) {
             return currentWorkspace.getScenario($stateParams.scenarioId);
           }
         },
-        controller: 'WorkspaceController'
+        controller: 'ScenarioController'
       });
 
 
       _.each(Tasks.available, function(task) {
         var templateUrl = baseTemplatePath + task.templateUrl;
         $stateProvider.state(task.id, {
-          parent: 'workspace',
+          parent: 'workspace.scenario',
           url: '/' + task.id,
           templateUrl: templateUrl,
           controller: task.controller,
