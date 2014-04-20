@@ -16,14 +16,15 @@
     "**/.*",
     "node_modules",
     "bower_components",
-    "app/js/bower_components",
     "examples",
     "R",
     "sass",
     "sass-shared",
     "spring",
     "test",
-    "tests"
+    "tests",
+    "app-local",
+    "app-remote"
   ],
   "dependencies": {
     "jquery": "2.0.3",

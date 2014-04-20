@@ -38,6 +38,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 	}
 
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/bower_components/**").addResourceLocations("/resources/bower_components/");
 		registry.addResourceHandler("/app/**").addResourceLocations("/resources/app/");
 		registry.addResourceHandler("/examples/**").addResourceLocations("/resources/examples/");
 	}

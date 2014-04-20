@@ -5,22 +5,22 @@
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta name="viewport" content="width=device-width" />
-<link rel="shortcut icon" href="<c:url value="/app/img/favicon.ico" />" type="image/x-icon" />
+<link rel="shortcut icon" href="<c:url value="/bower_components/mcda-web/app/img/favicon.ico" />" type="image/x-icon" />
 
 <title>mcda.drugis.org</title>
 
-<link rel="stylesheet" type="text/css" href="<c:url value="/app/js/bower_components/font-awesome/css/font-awesome.min.css" />">
+<link rel="stylesheet" type="text/css" href="<c:url value="/bower_components/font-awesome/css/font-awesome.min.css" />">
 
 <!-- Foundation 3 for IE 8 and earlier -->
 <!--[if lt IE 9]>
-<link rel="stylesheet" href="<c:url value="/app/css/mcda-drugis-ie8.css" />">
+<link rel="stylesheet" href="<c:url value="/bower_components/mcda-web/app/css/mcda-drugis-ie8.css" />">
 <![endif]-->
 <!-- Foundation 5 for IE 9 and earlier -->
 <!--[if gt IE 8]><!-->
-<link rel="stylesheet" href="<c:url value="/app/css/mcda-drugis.css" />">
+<link rel="stylesheet" href="<c:url value="/bower_components/mcda-web/app/css/mcda-drugis.css" />">
 <!--<![endif]-->
-<script type="text/javascript" src="<c:url value="/app/js/bower_components/foundation/js/vendor/custom.modernizr.js" />"></script>
-<script type="text/javascript" src="<c:url value="/app/js/bower_components/bowser/bowser.min.js" />"></script>
+<script type="text/javascript" src="<c:url value="/bower_components/foundation/js/vendor/custom.modernizr.js" />"></script>
+<script type="text/javascript" src="<c:url value="/bower_components/bowser/bowser.min.js" />"></script>
 
 </head>
 
