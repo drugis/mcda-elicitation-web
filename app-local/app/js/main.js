@@ -13,6 +13,7 @@ require.config({
     'nvd3': 'bower_components/nvd3/nv.d3.min',
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML',
     'foundation': 'bower_components/foundation/js/foundation.min',
+    'domReady': 'bower_components/requirejs-domready/domReady',
     'mcda': 'bower_components/mcda-web/app/js'
   },
   baseUrl: '.',
@@ -35,7 +36,7 @@ require.config({
 window.name = "NG_DEFER_BOOTSTRAP!";
 
 require(['require', 'angular', 'mcda/app'], function (require, angular) {
-  require(['mcda/lib/domReady!'], function (document) {
+  require(['domReady!'], function (document) {
     angular.bootstrap(document , ['elicit']);
   });
 });

@@ -17,6 +17,7 @@
     "tests"
   ],
   "dependencies": {
-    "mcda-web": "../#develop"
+    "requirejs-domready": "~2.0.1",
+    "mcda-web": "../#bower"
   }
 }
