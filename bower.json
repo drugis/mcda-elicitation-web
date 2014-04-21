@@ -14,17 +14,16 @@
   "private": false,
   "ignore": [
     "**/.*",
-    "node_modules",
-    "bower_components",
     "examples",
     "R",
     "sass",
     "sass-shared",
-    "spring",
     "test",
-    "tests",
     "app-local",
-    "app-remote"
+    "app-remote",
+    "config.rb",
+    "Dockerfile",
+    "Makefile"
   ],
   "dependencies": {
     "jquery": "2.0.3",
