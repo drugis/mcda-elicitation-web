@@ -1,5 +1,4 @@
-js/app.js
-js/test.js
+app/js/bower_components
 *.swp
 /tags
 /R/service.R
