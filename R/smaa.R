@@ -65,7 +65,7 @@ run_smaa <- function(params) {
   }
 
   # parse preference information
-  constr <- do.call(mergeConstraints, lapply(params$preferences,
+  constr <- mergeConstraints(lapply(params$preferences,
     function(statement) {
       i1 <- which(crit == statement$criteria[1])
       i2 <- which(crit == statement$criteria[2])
