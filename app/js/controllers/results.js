@@ -21,7 +21,7 @@ define(['angular', 'mcda/lib/patavi', 'underscore', 'NProgress'], function(angul
       var errorHandler = function(code, error) {
         var message = { code: (code && code.desc) ? code.desc : code,
                         cause: error };
-        $scope.$root.$broadcast("patavi.error", message);
+        $scope.$root.$broadcast("error", message);
         NProgress.done();
       };
 
