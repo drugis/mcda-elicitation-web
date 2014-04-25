@@ -22,7 +22,7 @@ define(['angular', 'mcda/lib/patavi', 'underscore'], function(angular, patavi, _
         code: (code && code.desc) ? code.desc : code,
         cause: error
       };
-      $scope.$root.$broadcast('patavi.error', message);
+      $scope.$root.$broadcast('error', message);
     };
 
     var successHandler = function(state, results) {

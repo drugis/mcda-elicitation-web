@@ -154,7 +154,7 @@ public class WorkspacesController {
   @ResponseBody
   public ErrorResponse handleResourceDoesNotExist(HttpServletRequest request) {
     logger.error("Resource not found.\n{}", request.getRequestURL());
-    return new ErrorResponse(404, "Not found");
+    return new ErrorResponse(404, "Resource not found");
   }
 
   @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -162,7 +162,7 @@ public class WorkspacesController {
   @ResponseBody
   public ErrorResponse handleResourceNotOwned(HttpServletRequest request) {
     logger.error("Access to resource not authorised.\n{}", request.getRequestURL());
-    return new ErrorResponse(403, "Not authorized");
+    return new ErrorResponse(403, "Access to resource not authorised");
   }
 
 }
