@@ -72,7 +72,7 @@
       examplesRepository : "examples/",
       workspacesRepository : {
         service : "RemoteWorkspaces",
-        url : "workspaces/",
+        url : "/workspaces/",
         _csrf_token : "${_csrf.token}",
         _csrf_header : "${_csrf.headerName}"
       }

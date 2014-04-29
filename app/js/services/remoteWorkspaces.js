@@ -37,8 +37,8 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
         }
       });
 
-      var redirectToDefaultView = function() {
-        $state.go(Config.defaultView);
+      var redirectToDefaultView = function(workspaceId, scenarioId) {
+        $state.go(Config.defaultView, {workspaceId: workspaceId, scenarioId: scenarioId});
       };
 
       var decorate = function(workspace) {
@@ -55,7 +55,11 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
         );
 
         workspace.redirectToDefaultView = function(scenarioId) {
-          $state.go(Config.defaultView);
+          if (scenarioId) {
+            redirectToDefaultView(workspace.id, scenarioId);
+          } else {
+            redirectToDefaultView(workspace.id, workspace.defaultScenarioId);
+          }
         };
 
         ScenarioResource.prototype.save = function() {
