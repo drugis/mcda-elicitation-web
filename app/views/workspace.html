@@ -2,7 +2,7 @@
   <div class="columns large-12">
   
     <div ng-if="error" ng-cloak>
-      <alert type="alert" close="error.close()">Computation failed: {{error.code}} <span ng-show="error.error">&mdash; {{error.error}}</span></alert>
+      <alert type="alert" close="error.close()">{{error.code}} {{error.cause}}<span ng-show="error.error">&mdash; {{error.error}}</span></alert>
     </div>
   
     <h2>Preference elicitation</h2>

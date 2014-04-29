@@ -1,6 +1,6 @@
+app-remote/src/main/webapp/resources/bower_components/
 app/js/bower_components
 app-local/bower_components
-app-remote/bower_components
 test/node_modules
 *.swp
 /tags
