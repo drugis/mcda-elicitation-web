@@ -1,25 +1,5 @@
 package org.drugis.mcdaweb.standalone.controllers;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import java.nio.charset.Charset;
-import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-
-import javax.inject.Inject;
-
 import org.drugis.mcdaweb.standalone.account.Account;
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
 import org.drugis.mcdaweb.standalone.repositories.Scenario;
@@ -38,6 +18,21 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import javax.inject.Inject;
+import java.nio.charset.Charset;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes= {TestConfig.class})
@@ -187,9 +182,7 @@ public class WorkspacesControllerTest {
 	
 		mockMvc.perform(get("/workspaces/1")
 				.principal(user))
-				.andExpect(status().isMovedTemporarily())
-                .andExpect(redirectedUrl("/error/404"))
-        ;
+        .andExpect(status().isNotFound());
 
 		verify(workspaceRepository).findById(workspaceId);
 	}
@@ -207,8 +200,7 @@ public class WorkspacesControllerTest {
 		when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
 		mockMvc.perform(get("/workspaces/1")
 				.principal(leetHaxor))
-				.andExpect(status().isMovedTemporarily())
-                .andExpect(redirectedUrl("/error/403"))
+				.andExpect(status().isForbidden())
 		;
 		verify(workspaceRepository).findById(workspaceId);
 		verify(accountRepository).findAccountByUsername("skiddie");
@@ -224,8 +216,7 @@ public class WorkspacesControllerTest {
         when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(true);
         mockMvc.perform(get("/workspaces/1")
                 .principal(user))
-                .andExpect(status().isMovedTemporarily())
-                .andExpect(redirectedUrl("/error/404"));
+                .andExpect(status().isNotFound());
         verify(workspaceRepository).findById(1);
     }
 
@@ -238,8 +229,7 @@ public class WorkspacesControllerTest {
         when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(false);
         mockMvc.perform(get("/workspaces/1")
                 .principal(user))
-                .andExpect(status().isMovedTemporarily())
-                .andExpect(redirectedUrl("/error/403"));
+                .andExpect(status().isForbidden());
         verify(workspaceRepository).findById(1);
         verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
         verify(accountRepository).findAccountByUsername("gert");
@@ -270,9 +260,7 @@ public class WorkspacesControllerTest {
 		verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
 		verify(accountRepository).findAccountByUsername("gert");
 	}
-	
-	////// Scenarios
-	
+
 	@Test
 	public void testQueryEmptyScenarios() throws Exception {
 		int workspaceId = 0;
@@ -381,8 +369,7 @@ public class WorkspacesControllerTest {
 		when(scenarioRepository.findById(scenarioId)).thenReturn(null);
 
 		mockMvc.perform(get("/workspaces/1/scenarios/2").principal(user))
-            .andExpect(status().isMovedTemporarily())
-            .andExpect(redirectedUrl("/error/404"));
+            .andExpect(status().isNotFound());
 
 		verify(scenarioRepository).findById(scenarioId);
 		verify(workspaceRepository).findById(workspaceId);
@@ -401,8 +388,7 @@ public class WorkspacesControllerTest {
 		Scenario scenario = createScenario(scenarioId, workspaceId + 1, "title");
 		when(scenarioRepository.findById(scenarioId)).thenReturn(scenario);
 		mockMvc.perform(get("/workspaces/1/scenarios/2").principal(user))
-            .andExpect(status().isMovedTemporarily())
-            .andExpect(redirectedUrl("/error/403"));
+            .andExpect(status().isForbidden());
 
 		verify(workspaceRepository).findById(workspaceId);
 		verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
