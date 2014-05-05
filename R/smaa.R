@@ -8,7 +8,7 @@ wrap.matrix <- function(m) {
   l
 }
 
-smaa <- function(params) {
+smaa_v2 <- function(params) {
   allowed <- c('scales', 'smaa', 'macbeth')
   if(params$method %in% allowed) {
     do.call(paste("run", params$method, sep="_"), list(params))
@@ -22,7 +22,8 @@ run_scales <- function(params) {
   crit <- names(params$criteria)
   alts <- names(params$alternatives)
   meas <- sample(alts, crit, params$performanceTable, N)
-  list(wrap.matrix(t(apply(meas, 3, function(e) { quantile(e, c(0.025, 0.975)) }))))
+  scales <- apply(meas, c(2, 3), function(e) { quantile(e, c(0.025, 0.5, 0.975)) })
+  apply(aperm(scales, c(3,2,1)), 1, wrap.matrix)
 }
 
 ratioConstraint <- function(n, i1, i2, x) {

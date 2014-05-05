@@ -11,20 +11,18 @@ params <- fromJSON('../../examples/thrombolytics.json')
 
 print("=== CI hulls ===")
 
-expected <- list(structure(
-  list(
-    `Prox DVT` = structure(
-      c(0.0312317469487807, 0.202267162805509),
-      .Names = c("2.5%", "97.5%")),
-    `Dist DVT` = structure(
-      c(0.189206533230964, 0.359563082546533),
-      .Names = c("2.5%", "97.5%")),
-    Bleed = structure(
-      c(0.000383785658019692, 0.0704173191411898),
-      .Names = c("2.5%", "97.5%"))),
-  .Names = c("Prox DVT", "Dist DVT", "Bleed")))
+expected <- structure(list(
+  `Prox DVT` = structure(c(0.0273829683645853, 0.211008623949751), .Names = c("2.5%", "97.5%")),
+  `Dist DVT` = structure(c(0.179207896860712, 0.372992144610352), .Names = c("2.5%", "97.5%")),
+  Bleed = structure(c(0.000174242898524121, 0.0774123400973682), .Names = c("2.5%", "97.5%"))),
+  .Names = c("Prox DVT", "Dist DVT", "Bleed"))
 
-actual <- run_scales(params)
+scales <- run_scales(params)
+actual <- lapply(scales, function(y) {
+  lower <- min(unlist(lapply(y, function(z) { z["2.5%"] })))
+  upper <- max(unlist(lapply(y, function(z) { z["97.5%"] })))
+  c("2.5%"=lower, "97.5%"=upper)
+})
 print(all.equal(expected, actual, tolerance=0.05))
 
 print("=== Preference Free ===")

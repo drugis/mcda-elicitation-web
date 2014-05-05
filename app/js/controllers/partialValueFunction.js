@@ -1,5 +1,5 @@
 'use strict';
-define(['mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'underscore'], function(Wizard, angular, patavi, _) {
+define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'underscore'], function(Config, Wizard, angular, patavi, _) {
   return function($scope, $injector, currentScenario, taskDefinition, PartialValueFunction) {
     var standardize = function(state) {
       // Copy choices to problem
@@ -35,7 +35,7 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'unders
         }
 
         var preferences = rewritePreferences(choice.data[choice.criterion].preferences);
-        var task = patavi.submit("smaa", { method: "macbeth", preferences: preferences });
+        var task = patavi.submit(Config.pataviService, { method: "macbeth", preferences: preferences });
         task.results.then(function(results) {
           $scope.$root.$safeApply($scope, function() {
             currentState.results = results.results;
