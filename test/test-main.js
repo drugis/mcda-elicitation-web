@@ -29,9 +29,9 @@ require.config({
     'jasmine': 'bower_components/jasmine/lib/jasmine-core/jasmine',
     'jasmine-html': 'bower_components/jasmine/lib/jasmine-core/jasmine-html',
     'angular-mocks': 'bower_components/angular-mocks/angular-mocks',
-    'mcda': '.'
+    'mcda': 'app/js'
   },
-  baseUrl: '/base/app/js',
+  baseUrl: '/base',
   shim: {
     'angular': { exports : 'angular'},
     'angular-resource': { deps:['angular'], exports: 'angular-resource'},

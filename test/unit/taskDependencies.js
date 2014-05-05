@@ -1,4 +1,4 @@
-define(['angular', 'services/taskDependencies'], function(angular, TaskDependencies) {
+define(['angular', 'mcda/services/taskDependencies'], function(angular, TaskDependencies) {
   var service;
   beforeEach(function() {
     var $injector = angular.injector([ 'elicit.taskDependencies' ]);

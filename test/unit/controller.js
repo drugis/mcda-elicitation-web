@@ -1,4 +1,4 @@
-define(['angular', 'angular-mocks', 'underscore', 'controllers' ],
+define(['angular', 'angular-mocks', 'underscore', 'mcda/controllers' ],
  function(angular, mocks, _, ChooseMethodHandler) {
       xdescribe("ElicitationController", function() {
         var scope1;
