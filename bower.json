@@ -8,7 +8,7 @@
     "Connor Stroomberg"
   ],
   "description": "MCDA preference elicitation",
-  "main": "/app/js/main.js",
+  "main": "/app/js/mcda-web.js",
   "license": "GPL-3",
   "homepage": "http://drugis.org/software/addis2/",
   "private": false,

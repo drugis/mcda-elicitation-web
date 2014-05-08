@@ -312,7 +312,7 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
     };
   });
   
-  directives.directive("modal", function() {
+  directives.directive("modal", function(mcdaRootPath) {
     return {
       restrict: 'E',
       transclude: true,
@@ -334,7 +334,7 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
         scope.model.open = function() { scope.model.show = true; };
         scope.model.close = function() { scope.model.show = false; };
       },
-      templateUrl: 'app/partials/modal.html'
+      templateUrl: mcdaRootPath + 'partials/modal.html'
     };
   });
 

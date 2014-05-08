@@ -1,7 +1,7 @@
 'use strict';
 define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'angular', 'underscore'], function(Wizard, Util, angular, _) {
 
-  return function($scope, $window, $injector, currentScenario, taskDefinition) {
+  return function($scope, $injector, mcdaRootPath, currentScenario, taskDefinition) {
     var criteria = {};
 
     function getBounds(criterionName) {
@@ -62,7 +62,7 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
       return _.extend(angular.copy(state), next);
     };
 
-    $scope.rankProbabilityChartURL = ($window.mcdaBasePath || '') + 'app/partials/rankProbabilityChart.html';
+    $scope.rankProbabilityChartURL = mcdaRootPath + 'partials/rankProbabilityChart.html';
 
     $scope.canSave = function(state) {
       return state && state.step === state.total;

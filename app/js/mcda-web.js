@@ -76,9 +76,20 @@ define(
     }]);
     app.constant('Tasks', Config.tasks);
 
+    // Detect our location so we can get the templates from the correct place
+    app.constant('mcdaRootPath', (function() {
+      var scripts = document.getElementsByTagName("script");
+      var pattern = /js\/mcda-web.js$/;
+      for (var i = 0; i < scripts.length; ++i) {
+        if ((scripts[i].src || "").match(pattern)) {
+          return scripts[i].src.replace(pattern, '');
+        }
+      }
+      throw "Failed to detect location for mcda-web.";
+    })());
 
-    app.config(['Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider', function(Tasks, $stateProvider, $urlRouterProvider, $httpProvider) {
-      var baseTemplatePath = "app/views/";
+    app.config(['mcdaRootPath', 'Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider', function(basePath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider) {
+      var baseTemplatePath = basePath + "views/";
       
       $httpProvider.interceptors.push('ErrorHandling');
       

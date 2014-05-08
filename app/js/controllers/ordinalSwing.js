@@ -1,6 +1,6 @@
 'use strict';
 define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard, angular, _) {
-  return function($window, $scope, $injector, currentScenario, taskDefinition) {
+  return function($scope, $injector, mcdaRootPath, currentScenario, taskDefinition) {
     var criteria = {};
 
     var getReference = function() {
@@ -88,7 +88,7 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
       return result;
     };
 
-    $scope.rankProbabilityChartURL = ($window.mcdaBasePath || '') + '/app/partials/rankProbabilityChart.html';
+    $scope.rankProbabilityChartURL = mcdaRootPath + 'partials/rankProbabilityChart.html';
 
     $scope.standardize = standardize;
 

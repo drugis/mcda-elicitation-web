@@ -35,7 +35,7 @@ require.config({
 
 window.name = "NG_DEFER_BOOTSTRAP!";
 
-require(['require', 'angular', 'mcda/app'], function (require, angular) {
+require(['require', 'angular', 'mcda/mcda-web'], function (require, angular) {
   require(['domReady!'], function (document) {
     angular.bootstrap(document , ['elicit']);
   });
