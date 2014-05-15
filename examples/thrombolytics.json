@@ -3,6 +3,8 @@
   "criteria": {
     "Prox DVT": {
       "title": "Proximal DVT",
+      "description": "Proximal deep vein thrombolytic events, often associated with serious complications.",
+      "unitOfMeasurement": "Proportion",
       "scale": [0.0, 1.0],
       "pvf": {
         "range": [
@@ -15,6 +17,8 @@
     },
     "Dist DVT": {
       "title": "Distal DVT",
+      "description": "Distal deep vein thrombolytic events.",
+      "unitOfMeasurement": "Proportion",
       "scale": [0.0, 1.0],
       "pvf": {
         "range": [
@@ -27,6 +31,8 @@
     },
     "Bleed": {
       "title": "Major bleeding",
+      "description": "Major bleeding events.",
+      "unitOfMeasurement": "Proportion",
       "scale": [0.0, 1.0],
       "pvf": {
         "range": [
@@ -37,6 +43,28 @@
         "direction": "decreasing"
       }
     }
+  },
+  "valueTree": {
+    "title": "Benefit-risk balance", 
+    "children": [
+      {
+        "title": "Favourable effects",
+        "children": [
+          {
+            "title": "Primary efficacy",
+            "children": [ "Prox DVT" ]
+          },
+          {
+            "title": "Secondary efficacy",
+            "children": [ "Dist DVT" ]
+          }
+        ]
+      },
+      {
+        "title": "Unfavourable effects",
+        "children": [ "Bleed" ]
+      }
+    ]
   },
   "alternatives": {
     "Hep": {
