@@ -52,17 +52,17 @@
         "children": [
           {
             "title": "Primary efficacy",
-            "children": [ "Prox DVT" ]
+            "criteria": [ "Prox DVT" ]
           },
           {
             "title": "Secondary efficacy",
-            "children": [ "Dist DVT" ]
+            "criteria": [ "Dist DVT" ]
           }
         ]
       },
       {
         "title": "Unfavourable effects",
-        "children": [ "Bleed" ]
+        "criteria": [ "Bleed" ]
       }
     ]
   },
