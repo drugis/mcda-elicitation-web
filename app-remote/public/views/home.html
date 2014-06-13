@@ -1,0 +1,111 @@
+<div ng-if="user">
+  <form method="POST" action="/signout" id="signout_form">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+  </form>
+  
+  <nav class="top-bar" data-topbar>
+    <ul class="title-area">
+      <li class="name">
+        <h1>
+          <a href="#">mcda.drugis.org</a>
+        </h1>
+      </li>
+    </ul>
+
+    <section class="top-bar-section">
+      <!-- Right Nav Section -->
+      <ul class="right">
+        <li>
+          <a href="/logout">Sign out</a>
+        </li>
+        <li class="has-dropdown"><a href="#"><i class="fa fa-user fa-fw"></i>{{user.firstname}} {{user.lastname}}</a>
+          <ul class="dropdown">
+            <li>
+              <a href="#" onClick="signout()">Sign out</a>
+            </li>
+          </ul></li>
+      </ul>
+    </section>
+  </nav>
+  <section>
+    <div class="color-stripe"></div>
+  </section>
+
+  <div class="row">
+    <div class="columns">
+      <alert type="info">
+        <strong>Disclaimer:</strong> this is <em>beta</em> software. We store your workspaces on our servers. While we try our best to keep them secure and compatible with future versions, we can make no guarantees.
+      </alert>
+    </div>
+  </div>
+    
+  <div ui-view></div>
+
+  <script>
+	window.patavi = { "WS_URI": "wss://patavi.drugis.org/ws" };
+    window.config = {
+      examplesRepository : "examples/",
+      workspacesRepository : {
+        service : "RemoteWorkspaces",
+        url : "/workspaces/",
+        _csrf_token : "${_csrf.token}",
+        _csrf_header : "${_csrf.headerName}"
+      }
+    };
+   
+    function signout(){
+      var signoutForm = document.getElementById('signout_form');
+      
+      if(signoutForm){
+        signoutForm.submit();
+      }
+    }
+  </script>
+
+  <div class="push"></div>
+</div>
+
+<div ng-if="!user">
+  <nav class="top-bar" data-topbar>
+    <ul class="title-area">
+      <li class="name">
+        <h1>
+          <a href="#">mcda.drugis.org</a>
+        </h1>
+      </li>
+    </ul>
+  </nav>
+
+  <section id="hero">
+    <div class="row">
+      <div class="large-12 columns">
+        <h1>mcda.drugis.org <br/>
+          <small>Decision analysis for drug benefit-risk assessment</small>
+        </h1>
+             
+      </div>
+    </div>
+  </section>
+  <section class="content">
+    <div class="row">
+      <div class="columns">
+        <p><a href="#">mcda.drugis.org</a> is designed to help policy makers and researchers judge the balance of favorable and unfavorable effects of medicines.
+        This tool is intended to be part of the <a href="http://drugis.org/software/addis2">ADDIS 2</a> decision support system for health care policy.
+        Until then, it serves as a demonstration of our multiple criteria decision analysis (MCDA) methods and our future direction in the development of ADDIS.</p>
+        
+        <div>
+          <a class=" button" href="/auth/google">Sign In with Google</a>
+        </div>
+        
+        <p>Right now, you need a Google account to sign in. The information we retrieve from Google is only used to ensure that you continue to have access to the workspaces you create.</p>
+
+        <form id="hiddenSignInForm" action="<c:url value='/signin/authenticate'/>" method="POST" style="display: none;">
+          <input type="hidden" name="_csrf" value="<c:out value="${_csrf.token}" />" />
+          <input type='text' name='username' />
+          <input type='password' name='password'>
+          <input name="submit" type="submit">
+        </form>
+      </div>
+    </div>
+  </section>
+</div>
