@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'mcda/lib/patavi', 'underscore', 'NProgress'], function(angular, patavi, _, NProgress) {
+define(['mcda/config', 'angular', 'mcda/lib/patavi', 'underscore', 'NProgress'], function(Config, angular, patavi, _, NProgress) {
   return function($rootScope, $scope, currentScenario, taskDefinition) {
     var alternatives;
     var criteria;
@@ -9,7 +9,7 @@ define(['angular', 'mcda/lib/patavi', 'underscore', 'NProgress'], function(angul
     var run = function(state) {
       state = angular.copy(state);
       var data = _.extend(state.problem, { "preferences": state.prefs, "method": "smaa" });
-      var task = patavi.submit('smaa', data);
+      var task = patavi.submit(Config.pataviService, data);
 
       var successHandler = function(results) {
         $scope.$root.$safeApply($scope, function() {

@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'underscore', 'mcda/services/partialValueFunction'], function(angular, _) {
+define(['mcda/config', 'mcda/lib/patavi', 'angular', 'underscore', 'mcda/services/partialValueFunction'], function(Config, patavi, angular, _) {
 
   return function($scope, PartialValueFunction, Tasks, TaskDependencies, currentScenario, taskDefinition) {
     var scenario = currentScenario;
@@ -7,6 +7,21 @@ define(['angular', 'underscore', 'mcda/services/partialValueFunction'], function
 
     var state = taskDefinition.clean(scenario.state);
     var problem = state.problem;
+
+    var errorHandler = function(code, error) {
+      var message = { code: (code && code.desc) ? code.desc : code,
+                      cause: error };
+      $scope.$root.$broadcast("error", message);
+      NProgress.done();
+    };
+
+    var data = _.extend(problem, { "method": "scales" });
+    var task = patavi.submit(Config.pataviService, data);
+    $scope.scales = {};
+    task.results.then(function(data) {
+      $scope.$apply(function() { $scope.scales = data.results });
+    }, errorHandler);
+
 
     var tasks = _.map(Tasks.available, function(task) {
       return { 'task': task,

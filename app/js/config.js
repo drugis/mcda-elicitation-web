@@ -50,6 +50,7 @@ define([], function() {
 
   return {
     tasks: tasks,
-    defaultView: defaultView
+    defaultView: defaultView,
+    pataviService: 'smaa_v2'
   };
 });

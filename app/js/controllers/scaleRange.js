@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'mcda/lib/patavi', 'underscore'], function(angular, patavi, _) {
+define(['mcda/config', 'angular', 'mcda/lib/patavi', 'underscore'], function(Config, angular, patavi, _) {
 
   return function($scope, currentScenario, taskDefinition) {
     $scope.title = taskDefinition.title;
@@ -22,20 +22,26 @@ define(['angular', 'mcda/lib/patavi', 'underscore'], function(angular, patavi, _
         code: (code && code.desc) ? code.desc : code,
         cause: error
       };
-      $scope.$root.$broadcast('error', message);
+      $scope.$root.$broadcast('patavi.error', message);
     };
 
     var successHandler = function(state, results) {
       var scales = {};
       var choices = {};
       $scope.$root.$safeApply($scope, function() {
-        _.map(_.pairs(results.results[0]), function(criterion) {
+        _.map(_.pairs(results.results), function(criterion) {
+
+          // Calculate interval hulls
+          var criterionRange = [
+            Math.min.apply(null, _.map(_.values(criterion[1]), function(alt) { return alt["2.5%"] })),
+            Math.max.apply(null, _.map(_.values(criterion[1]), function(alt) { return alt["97.5%"] }))
+          ];
 
           // Set inital model value
           var pvf = state.problem.criteria[criterion[0]].pvf;
           var problemRange = pvf ? pvf.range : null;
-          var from = problemRange ? problemRange[0] : criterion[1]['2.5%'];
-          var to = problemRange ? problemRange[1] : criterion[1]['97.5%'];
+          var from = problemRange ? problemRange[0] : criterionRange[0];
+          var to = problemRange ? problemRange[1] : criterionRange[1];
 
           choices[criterion[0]] = {
             lower: from,
@@ -55,8 +61,8 @@ define(['angular', 'mcda/lib/patavi', 'underscore'], function(angular, patavi, _
             return val > scale[1] ? scale[1] : val;
           };
           scales[criterion[0]] = {
-            restrictFrom: criterion[1]['2.5%'],
-            restrictTo: criterion[1]['97.5%'],
+            restrictFrom: criterionRange[0],
+            restrictTo: criterionRange[1],
             from: boundFrom(nice(from) - margin),
             to: boundTo(nice(to) + margin),
             increaseFrom: function() {
@@ -78,7 +84,7 @@ define(['angular', 'mcda/lib/patavi', 'underscore'], function(angular, patavi, _
     var scenario = currentScenario;
     var state = taskDefinition.clean(scenario.state);
 
-    var calculateScales = patavi.submit('smaa', _.extend(state.problem, {
+    var calculateScales = patavi.submit(Config.pataviService, _.extend(state.problem, {
       'method': 'scales'
     }));
     calculateScales.results.then(_.partial(successHandler, state), errorHandler);

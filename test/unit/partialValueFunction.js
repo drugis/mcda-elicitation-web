@@ -1,4 +1,4 @@
-define(['angular', 'angular-mocks', 'controllers', 'services/taskDependencies', 'services/partialValueFunction'],
+define(['angular', 'angular-mocks', 'mcda/controllers', 'mcda/services/taskDependencies', 'mcda/services/partialValueFunction'],
  function(angular, controllers, TaskDependencies) {
   describe("PartialValueFunctionHandler", function() {
     var scope;

@@ -1,4 +1,4 @@
-define(['angular', 'angular-mocks', 'controllers/intervalSwing', 'controllers/partialValueFunction'],
+define(['angular', 'angular-mocks', 'mcda/controllers/intervalSwing', 'mcda/controllers/partialValueFunction'],
   function(angular, IntervalSwingHandler, PartialValueFunctionHandler) {
     describe("IntervalSwingHandler", function() {
       beforeEach(module('elicit.controllers'));

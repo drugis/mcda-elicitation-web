@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'angular-mocks', 'services/errorHandling'],
+define(['angular', 'angular-mocks', 'mcda/services/errorHandling'],
   function(angular) {
     describe('the errorHandling', function() {
 

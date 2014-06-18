@@ -1,4 +1,4 @@
-define(['angular', 'angular-mocks', 'angular-ui-router', 'services/partialValueFunction', 'services/remoteWorkspaces'],
+define(['angular', 'angular-mocks', 'angular-ui-router', 'mcda/services/partialValueFunction', 'mcda/services/remoteWorkspaces'],
   function(angular, RemoteWorkspaces) {
 
     window.config = {

@@ -1,4 +1,4 @@
-define(['angular-mocks', 'controllers', 'services/taskDependencies', 'services/partialValueFunction'],
+define(['angular-mocks', 'mcda/controllers', 'mcda/services/taskDependencies', 'mcda/services/partialValueFunction'],
   function(controllers, TaskDependencies) {
 
     describe("OrdinalSwingHandler", function() {
