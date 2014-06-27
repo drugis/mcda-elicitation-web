@@ -18,6 +18,10 @@
   ],
   "dependencies": {
     "requirejs-domready": "~2.0.1",
-    "mcda-web": "../#develop"
+    "mcda-web": "../#develop",
+    "angular-foundation": "~0.2.2"
+  },
+  "resolutions": {
+    "angular": "1.2.18"
   }
 }
