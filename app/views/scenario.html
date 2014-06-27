@@ -1,22 +1,39 @@
 <div class="row">
-    <div class="columns large-12">
-        <div class="tabs">
-            <ul class="tabsNavigation">
-                <li ng-repeat="s in scenarios | orderBy:'title'" ng-class="{current: s.id == scenario.id}">
-                    <a ui-sref="overview({scenarioId: s.id})" ng-bind="s.title"></a>
-                </li>
-                <li>
-                    <a href="javaScript:void(0);" data-dropdown="newScenarioControl"><i class="fa fa-plus"></i></a>
-                    <ul id="newScenarioControl" class="f-dropdown" data-dropdown-content>
-                        <li><a ng-click="forkScenario()">Copy current scenario</a></li>
-                        <li><a ng-click="newScenario()">Create clean scenario</a></li>
+    <div class="columns large-12"> 
+ 
+   <div class="tabs">
+
+       <ul id="navbar2" class="tabsNavigation">            
+                <li ng-class="{activetab: taskId==='overview'}"><a ui-sref="overview">Overview</a></li>
+                <li ng-class="{activetab: taskId==='effectstable'}"><a ui-sref="effectstable">Effects table</a></li>
+                <li class="scenario-tab2">
+                    <span>Scenario:&nbsp;&nbsp;<strong>
+                        <a href="javaScript:void(0);" data-dropdown="newScenarioControl"><i class="fa fa-plus" style="color: #fff;"></i></a>
+                        <span ng-class="{current: s.id == scenario.id}" ui-sref="overview({scenarioId: s.id})" ng-bind="scenario.title | limitTo: 50"></span>
+                        </strong></span>                                      
+                           
+                    <ul id="newScenarioControl" class="f-dropdown scenario-menu" data-dropdown-content>
+                                    <li ng-repeat="s in scenarios | orderBy:'title'" ng-class="{current: s.id == scenario.id}">
+                                    <a ui-sref="overview({scenarioId: s.id})" ng-bind="s.title"></a>
+                                    </li>
+                                <li>
+                                    <button ng-click="forkScenario()" class="button scenario-button closebutt ng-pristine ng-valid">Copy current scenario</button>
+                                </li>
+                                <li>
+                                    <button ng-click="newScenario()" class="button scenario-button closebutt ng-pristine ng-valid">Create clean scenario</button>
+                                </li>
+                            </ul>
+                            
+                    <div style="clear: both;"></div>
+                    <ul class="scen-tabs">
+                        <li ng-class="{activetab: taskId==='preferences'}"><a ui-sref="preferences">Preferences</a></li>
+                        <li ng-class="{activetab: taskId==='results'}"><a ui-sref="results">Results</a></li>
                     </ul>
                 </li>
             </ul>
-            <div class="fakeTabsContent"></div>
-        </div>
-
-        <div class="columns large-2">
+       
+        <!--<div class="columns large-2">-->
+        <div class="hidethis">
             <ul class="side-nav">
                 <li>
                     <a ui-sref="overview"><i class="fa fa-angle-left"></i> Overview</a>
@@ -27,8 +44,9 @@
                 </li>
             </ul>
         </div>
-        <div class="columns large-10">
+        <div class="columns large-12">
             <div ui-view></div>
         </div>
     </div>
 </div>
+

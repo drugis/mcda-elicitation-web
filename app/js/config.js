@@ -38,13 +38,26 @@ define([], function() {
         templateUrl: 'exactSwing.html',
         requires: ['complete-criteria-ranking'],
         resets: ['non-ordinal-preferences']},
+      { id: 'preferences',
+        title: 'Preferences',
+        controller: 'OverviewController',
+        templateUrl: 'preferences.html',
+        requires: ['scale-ranges', 'partial-value-functions'],
+        resets:[]},
       { id: 'results',
         title: 'Results',
         controller: 'ResultsController',
         templateUrl: 'results.html',
         requires: ['scale-ranges', 'partial-value-functions'],
-        resets: []}
-    ]};
+        resets: []},
+      {
+        id: 'effectstable',
+        title: 'Effects Table',
+        controller: 'OverviewController',
+        templateUrl: "effectstable.html",
+        requires: ['scale-ranges', 'partial-value-functions'],
+        resets: []},
+        ]};
 
   var defaultView = 'overview';
 

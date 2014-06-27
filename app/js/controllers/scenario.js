@@ -35,5 +35,6 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
         })
         .then(redirect);
     };
+
   };
 });

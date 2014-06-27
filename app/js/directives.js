@@ -1,5 +1,5 @@
 'use strict';
-define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(require, angular, _, $, d3, nv) {
+define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (require, _, $, angular, d3, nv) {
 
   var directives = angular.module('elicit.directives', []);
 
@@ -18,6 +18,7 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
         delta -= delta / steps;
         --steps;
       }
+
       if (!toIncl) {
         to -= delta / steps;
         delta -= delta / steps;
@@ -34,6 +35,7 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
         return type === "point" ? valueToStep(scope.model) :
           valueToStep(scope.model.lower) + ";" + valueToStep(scope.model.upper);
       }
+
       function getValueModel(value) {
         if (type === "point") {
           return parseFloat(stepToValue(value));
@@ -62,6 +64,7 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
             });
           }, 50)
         });
+
         if (_.has(scope.range, "restrictTo") && _.has(scope.range, "restrictFrom")) {
           $($element).find('.jslider-bg').append('<i class="x"></i>');
           var width = valueToStep(scope.range.restrictTo) - valueToStep(scope.range.restrictFrom);
@@ -70,6 +73,7 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
         }
       });
     };
+
     return {
       restrict: 'E',
       replace: true,
@@ -148,6 +152,7 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
     };
   });
 
+
   directives.directive('barChart', function() {
     return {
       restrict: 'E',
@@ -183,6 +188,7 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
       }
     };
   });
+
 
   directives.directive('lineChart', function() {
     return {
@@ -229,6 +235,7 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
     };
   });
 
+
   directives.directive('heat', function() {
     return {
       restrict: 'C',
@@ -245,6 +252,7 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
       }
     };
   });
+
 
   directives.directive('fileReader', function () {
     return {
@@ -275,6 +283,7 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
     };
   });
 
+
   directives.directive("mathjaxBind", function() {
     return {
       restrict: "A",
@@ -292,10 +301,11 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
     };
   });
   
-  directives.directive("alert", function() {
+
+  directives.directive("addis-alert", function() {
     return {
       restrict: "E",
-      transclude: true,
+      transclude: false,
       replace: true,
       scope: {
         type: '@',
@@ -303,7 +313,7 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
       },
       link: function(scope, element, attrs) {
         scope.animatedClose = function() {
-          $(element).fadeOut(400, function() {
+          $(element).fadeOut(800, function() {
             scope.close();
           });
         };
@@ -312,6 +322,7 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
     };
   });
   
+
   directives.directive("modal", function(mcdaRootPath) {
     return {
       restrict: 'E',
@@ -338,5 +349,57 @@ define(['require', 'angular', 'underscore', 'jQuery', 'd3', 'nvd3'], function(re
     };
   });
 
+  directives.directive('remarkblock', function (mcdaRootPath) {
+      return {
+          scope: {
+              remark: '=remark',
+              saveRemarks: '=saveRemarks',
+              model: '&model'
+          },
+          restrict: 'AE',
+          replace: 'true',
+          templateUrl: mcdaRootPath + 'partials/remark.html',
+          link: function (scope, Element, Attrs) {
+              // zet hier de code
+              $(".remarkbutton").click(function () {
+                  $(".f-dropdown").css("display","none");
+              });
+          }
+      };
+  });
+
+    //treeview
+
+    directives.directive('collection', function () {
+      return {
+          restrict: "E",
+          replace: true,
+          scope: {
+              collection: '='
+          },
+          template: "<ul class='fontsize' style='list-style-type: none;'><item ng-repeat='item in collection' item='item'></item></ul>"
+      }
+  })
+
+    directives.directive('item', function ($compile) {
+        return {
+            restrict: "E",
+            replace: true,
+            scope: {
+                item: '='
+            },
+            template: "<li>{{item.title}}</li>",
+            link: function (scope, element, attrs) {
+                if (angular.isArray(scope.item.children)) {
+                    element.append("<collection collection='item.children'></collection>"); 
+                    $compile(element.contents())(scope)
+                }
+            }
+        }
+})
+
   return directives;
 });
+
+
+

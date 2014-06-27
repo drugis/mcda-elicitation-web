@@ -1,23 +1,10 @@
-'use strict';
-    define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfoundation',
-    'underscore'],
-    function (Config, patavi, angular, angularanimate, mmfoundation, _) {
-        var dependencies = ['$scope', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'currentScenario', 'taskDefinition', config.remarksRepository.service];
-        var OverviewController = function ($scope, PartialValueFunction, Tasks, TaskDependencies, currentScenario, taskDefinition, Remarks) {
+﻿'use strict';
+    define(['mcda/config', 'mcda/lib/patavi', 'angular', 'mmfoundation', 'underscore', 'mcda/services/partialValueFunction'],
+      function (Config, patavi, angular, mmfoundation, _) {
 
-            Remarks.get($scope.workspace.id).then(function (remarks) {
-                $scope.remarks = remarks;
-            });
-
-            $scope.saveRemarks = function () {
-                Remarks.save($scope.workspace.id, $scope.remarks);
-                return 1;
-            };
-
+    return function ($scope, PartialValueFunction, Tasks, TaskDependencies, currentScenario, taskDefinition) {
         var scenario = currentScenario;
         $scope.scenario = scenario;
-
-        $scope.$parent.taskId = taskDefinition.id;
 
         var state = taskDefinition.clean(scenario.state);
         var problem = state.problem;
@@ -38,6 +25,7 @@
             $scope.$apply(function () { $scope.scales = data.results });
         }, errorHandler);
 
+
         var tasks = _.map(Tasks.available, function (task) {
             return {
                 'task': task,
@@ -45,43 +33,6 @@
                 'safe': TaskDependencies.isSafe(task, state)
             };
         });
-        
-
-            //treeview
-
-        $scope.vt = [
-            {
-                name: 'Europe',
-                children: [
-                    {
-                        name: 'Italy',
-                        children: [
-                            {
-                                name: 'Rome'
-                            },
-                            {
-                                name: 'Milan'
-                            }
-                        ]
-                    },
-                    {
-                        name: 'Spain'
-                    }
-                ]
-            },
-            {
-                name: 'South America',
-                children: [
-                    {
-                        name: 'Brasil'
-                    },
-                    {
-                        name: 'Peru'
-                    }
-                ]
-            }
-        ];
-
 
         $scope.tasks = {
             'accessible': _.filter(tasks, function (task) {
@@ -153,7 +104,6 @@
                 return "";
             }
         });
-
         var eqnArray = "\\begin{eqnarray} " + _.reduce(eqns, function (memo, eqn) { return memo + eqn; }, "") + " \\end{eqnarray}";
         $scope.preferences = eqnArray;
 
@@ -176,85 +126,5 @@
             $scope.isEditTitleVisible = false;
         };
 
-        $scope.deleteScenario = function () {
-            $scope.isEditTitleVisible = false;
-        }
-
-        $scope.toggleGoSide = function () {
-            $scope.goSide = !$scope.goSide;
-        }
-
-        $scope.alternativeVisible = {};
-
-        var findCriteriaNodes = function (valueTree, criteriaNodes) {
-            if (valueTree.criteria) {
-                criteriaNodes.push(valueTree);
-            } else {
-                angular.forEach(valueTree.children, function (childNode) {
-                    findCriteriaNodes(childNode, criteriaNodes);
-                });
-            }
-        };
-
-
-        var findTreePath = function (criteriaNode, valueTree) {
-            if (valueTree.title === criteriaNode.title) {
-                return [criteriaNode];
-            } else if (valueTree.criteria) {
-                // leaf node that we're not looking for
-                return [];
-            } else {
-                var children = [];
-                angular.forEach(valueTree.children, function (childNode) {
-                    var childPaths = findTreePath(criteriaNode, childNode);
-                    if (childPaths.length > 0) {
-                        children = [valueTree].concat(childPaths);
-                    }
-                });
-                return children;
-            }
-        };
-
-        var buildEffectsTableData = function (problem) {
-            var criteriaNodes = [];
-            var effectsTable = [];
-            findCriteriaNodes(problem.valueTree, criteriaNodes);
-
-            angular.forEach(criteriaNodes, function (criteriaNode) {
-                var path = findTreePath(criteriaNode, problem.valueTree);
-                effectsTable.push({
-                    path: path.slice(1), // omit top-level node
-                    criteria: _.map(criteriaNode.criteria, function (criterionKey) {
-                        return {
-                            key: criterionKey,
-                            value: problem.criteria[criterionKey]
-                        };
-                    })
-                });
-            });
-
-            return effectsTable;
-        };
-
-        $scope.effectsTableData = buildEffectsTableData(problem);
-
-        // show / hide sidepanel
-        $scope.showPanel = true;
-        $scope.toggleSidebar = function (criterion) {
-            $scope.sideParam = {
-                title: criterion.value.title,
-                key: criterion.key,
-                scales: $scope.scales[criterion.key]
-            };
-            $scope.showPanel = !$scope.showPanel;
-        };
-
-        $scope.editRemarkModal = function (node) {
-            console.log(node.remark);
-        };
-
-        };
-
-        return dependencies.concat(OverviewController);
-        
+    };
 });

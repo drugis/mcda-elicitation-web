@@ -4,6 +4,7 @@ define(function(require) {
     return angular.module('elicit.controllers', [])
           .controller('ChooseProblemController', require('mcda/controllers/chooseProblem'))
           .controller('WorkspaceController', require('mcda/controllers/workspace'))
+          .controller('effectstableController', require('mcda/controllers/effectstable'))
           .controller('ScenarioController', require('mcda/controllers/scenario'))
           .controller('OverviewController', require('mcda/controllers/overview'))
           .controller('ScaleRangeController', require('mcda/controllers/scaleRange'))
