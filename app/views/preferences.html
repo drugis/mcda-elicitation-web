@@ -36,30 +36,32 @@
 </div>
 
 <div id="partial-value-functions-block" class="prefs-block">
-    <h3>Partial Value Functions</h3>
+  <h3>Partial Value Functions</h3>
 
-    <div class="row">
-      <div ng-repeat="criterion in problem.criteria" class="small-12 medium-6 large-4 columns">
-        <h5>{{criterion.title}}</h5>
+  <div class="row">
+    <div ng-repeat="criterion in problem.criteria" class="small-12 medium-6 large-4 columns">
+      <h5>{{criterion.title}}</h5>
 
-        <button class="button">Define partial value function</button>
+      <button class="button">Define partial value function</button>
 
-        <div style="width: 250px; height: 180px">
-          <line-chart ng-if="criterion.pvf.type" value="getXY(criterion)" show-legend="false"></line-chart>
-        </div>
+      <div style="width: 250px; height: 180px">
+        <line-chart ng-if="criterion.pvf.type" value="getXY(criterion)" show-legend="false"></line-chart>
       </div>
     </div>
+  </div>
 </div>
 
 <div id="trade-off-block" class="prefs-block">
-    <h3>Trade-offs</h3>
-    <ul class="no-bullet">
-      <li ng-repeat="criterion in criteria">
-        <span mathjax-bind="criterion.w"></span>: {{criterion.title}}
-        ({{criterion.worst() | precision: 3}} &rarr; {{criterion.best() | precision: 3}})
-      </li>
-    </ul>
-    <div mathjax-bind="preferences"></div>
+  <h3>Trade-offs</h3>
+
+  <ul class="no-bullet">
+    <li ng-repeat="criterion in criteria">
+      <span mathjax-bind="criterion.w"></span>: {{criterion.title}}
+      ({{criterion.worst() | precision: 3}} &rarr; {{criterion.best() | precision: 3}})
+    </li>
+  </ul>
+
+  <div mathjax-bind="preferences"></div>
 </div>
     
 
