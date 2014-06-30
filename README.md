@@ -44,6 +44,23 @@ example:
 
     python -m SimpleHTTPServer 3001
 
+Compiling the CSS
+-----------------
+
+Using compass (through `config.rb`):
+
+```
+compass compile
+```
+
+Using node-sass:
+
+```
+node-sass --include-path sass-shared sass/mcda-plain.scss app/css/mcda-plain.css
+node-sass --include-path sass-shared sass/mcda-drugis.scss app/css/mcda-drugis.css
+node-sass --include-path sass-shared sass/mcda-drugis-ie8.scss app/css/mcda-drugis-ie8.css
+```
+
 License
 -------
 
