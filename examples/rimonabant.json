@@ -1,5 +1,6 @@
 {
-  "title": "Rimonabant deterministic analysis",
+  "title": "Rimonabant in type 2 diabetes patients",
+  "description": "Indication: the use of rimonabant as an add-on therapy to an established first-line oral glucose control therapy.\nPatient population: overweight or obese patients with type 2 diabetes mellitus already on metforin or sulphonylurea monotherapy.\nDecision that needs to be taken: marketing authorization",
   "criteria": {
     "Hypo": {
       "title": "Hypoglyceamia",
@@ -72,14 +73,19 @@
     "title": "Benefit-risk balance", 
     "children": [
       {
-        "title": "Favorable effects",
+        "title": "Favourable effects",
         "criteria": [ "Fasting", "Waist", "SBP", "HDL" ]
       },
       {
-        "title": "Unfavorable effects",
+        "title": "Unfavourable effects",
         "criteria": [ "Hypo", "Anxiety" ]
       }
     ]
+  },
+  "remarks": {
+    "Favourable effects": "The beneficial effects of a combined weight reduction and improved glucose regulation could be expected to be greater in patients with type 2 diabetes than in a general overweight population. The treatment alternatives in overweight type 2 diabetes patients failing on oral anti-diabetics are limited and the weight gain that almost inevitably occurs when these patients are given insulin is a common and important clinical problem. However, it is recognised that a prospective confirmatory trial with rimonabant focusing on patients failing on oral anti-diabetics is lacking. Also, no study on rimonabant monotherapy in type 2 diabetes was performed.",
+    "Unfavourable effects": "The main safety issue was the psychiatric AEs, which were considered to have important implications for the use of rimonabant, especially since patients with current depressions were excluded from the clinical studies.",
+    "Anxiety": "There was a dose-response relation between different depressive AEs and rimonabant treatment. Most of the patients with various kinds of depressive symptoms did eventually recover with or without anti-depressants drugs."
   },
   "alternatives": {
     "placebo": {
