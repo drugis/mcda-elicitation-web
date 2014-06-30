@@ -9,8 +9,8 @@
   <div id="results-avail"></div>
 </div>
 
-<div id="effectstable-div" style="margin-bottom: 0rem;">  
-  <h2>1 Scale Ranges</h2>
+<div class="prefs-block">
+  <h3>Scale Ranges</h3>
   <button class="button closebutt ng-pristine ng-valid">Define Scale Ranges</button>
   <p>&nbsp;</p>
   <table id="effectstable" class="effectstable" summary="table summary" data-role="table" data-mode="columntoggle" >
@@ -38,24 +38,12 @@
 <div id="partial-value-functions-block" class="prefs-block">
     <h3>Partial Value Functions</h3>
 
-    <div ng-repeat="criterion in problem.criteria" class="row">
-      <div class="columns large-6">
+    <div class="row">
+      <div ng-repeat="criterion in problem.criteria" class="small-12 medium-6 large-4 columns">
         <h5>{{criterion.title}}</h5>
-        <ul>
-          <li>Natural scale bounds:
-            [<span ng-repeat="r in criterion.scale track by $index"><span ng-if="r != null">{{r | precision: 3}}</span><span ng-show="!$last">, </span></span>]</li>
-          <li>Configured scale range:
-            [<span ng-repeat="r in criterion.pvf.range">{{r | precision: 3}}<span ng-show="!$last">, </span></span>]</li>
-          <li>Partial value function:
-            <span ng-show="criterion.pvf.type">
-              {{criterion.pvf.type}}; 
-              {{criterion.pvf.direction}}
-            </span>
-            <span ng-show="!criterion.pvf.type">undefined</span>
-          </li>
-        </ul>
-      </div>
-      <div class="columns large-6">
+
+        <button class="button">Define partial value function</button>
+
         <div style="width: 250px; height: 180px">
           <line-chart ng-if="criterion.pvf.type" value="getXY(criterion)" show-legend="false"></line-chart>
         </div>
