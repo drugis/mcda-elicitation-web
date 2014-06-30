@@ -5,10 +5,9 @@
       <alert type="alert" close="error.close()">{{error.code}} {{error.cause}}<span ng-show="error.error">&mdash; {{error.error}}</span></alert>
     </div>
   
-    <h2>Preference elicitation</h2>
     <h3 ng-show="!isEditTitleVisible" class="subheader">
-        <span ng-bind="workspace.title"></span>
-        <a  ng-click="editTitle()"><i class="fa fa-edit"></i></a>
+      <span ng-bind="workspace.title"></span>
+      <a ng-click="editTitle()"><i class="fa fa-edit"></i></a>
     </h3>
     <div class="row" ng-show="isEditTitleVisible">
       <div class="columns large-8 small-12">
