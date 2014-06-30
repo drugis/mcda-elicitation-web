@@ -41,6 +41,7 @@
     "jslider": "https://github.com/SalesSeek/jslider.git#1.2.0",
     "bowser": "*",
     "angular-foundation": "~0.2.2",
+    "angular-foundation-assets": "https://github.com/madmimi/angular-foundation.git#0.2.2",
     "angular-animate": "~1.2.18"
   },
   "devDependencies": {
