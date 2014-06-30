@@ -1,51 +1,85 @@
 {
-  "title": "Rimonabant case study",
+  "title": "Rimonabant deterministic analysis",
   "criteria": {
-    "weightLoss": {
-      "title": "Change from baseline in body weight",
-      "scale": [-20, 20],
+    "Hypo": {
+      "title": "Hypoglyceamia",
+      "description": "Incidence of hypoglyceamia.",
+      "unitOfMeasurement": "Proportion",
+      "scale": [0.0, 1.0],
       "pvf": {
-        "range": [-10, 0],
-        "direction": "decreasing",
-        "type": "linear"
+        "range": [0.0, 0.1],
+        "type": "linear",
+        "direction": "decreasing"
       }
     },
-    "glucose": {
-      "title": "Change from baseline in fasting glucose",
-      "scale": [-1, 0.5],
+    "Fasting": {
+      "title": "Fasting glucose",
+      "description": "Change in fasting glucose concentrations from baseline.",
+      "unitOfMeasurement": "mmol/L",
+      "scale": [-5, 3],
       "pvf": {
         "range": [-2, 2],
-        "direction": "decreasing",
-        "type": "linear"
+        "type": "linear",
+        "direction": "decreasing"
       }
     },
-    "anxiety": {
+    "SBP": {
+      "title": "SBP",
+      "description": "Change in systolic blood pressure from baseline.",
+      "unitOfMeasurement": "mm Hg",
+      "scale": [-30, 10],
+      "pvf": {
+        "range": [-10, 5],
+        "type": "linear",
+        "direction": "decreasing"
+      }
+    },
+    "HDL": {
+      "title": "HDL cholesterol",
+      "description": "Change in HDL cholesterol from baseline.",
+      "unitOfMeasurement": "mmol/L",
+      "scale": [-2, 2],
+      "pvf": {
+        "range": [0.0, 1.0],
+        "type": "linear",
+        "direction": "increasing"
+      }
+    },
+    "Anxiety": {
       "title": "Anxiety",
-      "scale": [0, 100],
+      "description": "Incidence of anxiety.",
+      "unitOfMeasurement": "proportion",
+      "scale": [0.0, 1.0],
       "pvf": {
-        "range": [0, 10],
-        "direction": "decreasing",
-        "type": "linear"
+        "range": [0.0, 0.10],
+        "type": "linear",
+        "direction": "decreasing"
       }
     },
-    "hypoglyceamia": {
-      "title": "Hypoglyceamia",
-      "scale": [0, 100],
+     "Waist": {
+      "title": "Waist circumference",
+      "description": "Change in waist circumference from baseline.",
+      "unitOfMeasurement": "cm",
+      "scale": [-15, 5],
       "pvf": {
-        "range": [0, 10],
-        "direction": "decreasing",
-        "type": "linear"
-      }
-    },
-    "discont": {
-      "title": "Discontinuations due to adverse events",
-      "scale": [0, 100],
-      "pvf": {
-        "range": [0, 20],
-        "direction": "decreasing",
-        "type": "linear"
+        "range": [-10, 0],
+        "type": "linear",
+        "direction": "decreasing"
       }
     }
+  },
+  "valueTree": {
+    "title": "Benefit-risk balance", 
+    "children": [
+      {
+        "title": "Favorable effects",
+        "criteria": [ "Fasting", "Waist", "SBP", "HDL" ]
+      },
+      {
+        "title": "Unfavorable effects",
+        "criteria": [ "Hypo", "Anxiety" ]
+      }
+    ]
   },
   "alternatives": {
     "placebo": {
@@ -59,33 +93,33 @@
     }
   },
   "performanceTable": [
-    {
+  {
     "alternative": "placebo",
-    "criterion": "weightLoss",
+    "criterion": "Hypo",
     "performance": {
       "type": "exact",
-      "value": -1.5
+      "value": 0.02
     }
   },
   {
     "alternative": "5mg",
-    "criterion": "weightLoss",
+    "criterion": "Hypo",
     "performance": {
       "type": "exact",
-      "value": -2.4
+      "value": 0.01
     }
   },
   {
     "alternative": "20mg",
-    "criterion": "weightLoss",
+    "criterion": "Hypo",
     "performance": {
       "type": "exact",
-      "value": -5.5
+      "value": 0.05
     }
-  },  
-  {
+  },
+    {
     "alternative": "placebo",
-    "criterion": "glucose",
+    "criterion": "Fasting",
     "performance": {
       "type": "exact",
       "value": 0.33
@@ -93,7 +127,7 @@
   },
   {
     "alternative": "5mg",
-    "criterion": "glucose",
+    "criterion": "Fasting",
     "performance": {
       "type": "exact",
       "value": 0.30
@@ -101,82 +135,106 @@
   },
   {
     "alternative": "20mg",
-    "criterion": "glucose",
+    "criterion": "Fasting",
     "performance": {
       "type": "exact",
       "value": -0.64
     }
   },
-  {
+    {
     "alternative": "placebo",
-    "criterion": "anxiety",
+    "criterion": "SBP",
     "performance": {
       "type": "exact",
-      "value": 3
+      "value": 1.6
     }
   },
   {
     "alternative": "5mg",
-    "criterion": "anxiety",
+    "criterion": "SBP",
     "performance": {
       "type": "exact",
-      "value": 1
+      "value": -0.4
     }
   },
   {
     "alternative": "20mg",
-    "criterion": "anxiety",
+    "criterion": "SBP",
     "performance": {
       "type": "exact",
-      "value": 5
+      "value": -0.8
     }
   },
-  {
+    {
     "alternative": "placebo",
-    "criterion": "hypoglyceamia",
+    "criterion": "HDL",
     "performance": {
       "type": "exact",
-      "value": 2
+      "value": 0.07
     }
   },
   {
     "alternative": "5mg",
-    "criterion": "hypoglyceamia",
+    "criterion": "HDL",
     "performance": {
       "type": "exact",
-      "value": 1
+      "value": 0.11
     }
   },
   {
     "alternative": "20mg",
-    "criterion": "hypoglyceamia",
+    "criterion": "HDL",
     "performance": {
       "type": "exact",
-      "value": 5
+      "value": 0.17
     }
   },
-  {
+    {
     "alternative": "placebo",
-    "criterion": "discont",
+    "criterion": "Anxiety",
     "performance": {
       "type": "exact",
-      "value": 5
+      "value": 0.03
     }
   },
   {
     "alternative": "5mg",
-    "criterion": "discont",
+    "criterion": "Anxiety",
     "performance": {
       "type": "exact",
-      "value": 8
+      "value": 0.01
     }
   },
   {
     "alternative": "20mg",
-    "criterion": "discont",
+    "criterion": "Anxiety",
     "performance": {
       "type": "exact",
-      "value": 15
+      "value": 0.05
+    }
+  },
+   {
+    "alternative": "placebo",
+    "criterion": "Waist",
+    "performance": {
+      "type": "exact",
+      "value": -1.9
+    }
+  },
+  {
+    "alternative": "5mg",
+    "criterion": "Waist",
+    "performance": {
+      "type": "exact",
+      "value": -2.9
+    }
+  },
+  {
+    "alternative": "20mg",
+    "criterion": "Waist",
+    "performance": {
+      "type": "exact",
+      "value": -5.2
     }
   }
   ],
