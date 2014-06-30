@@ -1,0 +1,18 @@
+{
+  "name": "app-local",
+  "version": "0.0.0",
+  "description": "Local storage version of mcda-elicitation-web",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "Gert van Valkenhoef",
+  "license": "GPL-3",
+  "dependencies": {
+    "express": "~4.4.5"
+  }
+}
