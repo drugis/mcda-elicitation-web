@@ -2,8 +2,10 @@
     define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfoundation',
     'underscore'],
     function (Config, patavi, angular, angularanimate, mmfoundation, _) {
-        var dependencies = ['$scope', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'currentScenario', 'taskDefinition', config.remarksRepository.service];
-        var OverviewController = function ($scope, PartialValueFunction, Tasks, TaskDependencies, currentScenario, taskDefinition, Remarks) {
+        var dependencies = ['$scope', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'currentScenario', 'taskDefinition', config.remarksRepository.service];
+        var OverviewController = function ($scope, PartialValueFunction, Tasks, TaskDependencies, intervalHull, currentScenario, taskDefinition, Remarks) {
+
+          $scope.intervalHull = intervalHull;
 
             Remarks.get($scope.workspace.id).then(function (remarks) {
                 $scope.remarks = remarks;

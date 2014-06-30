@@ -1,60 +1,38 @@
-﻿    <h4>Preferences - <span>{{problem.title}}</span></h4>
+<h4>Preferences - <span>{{problem.title}}</span></h4>
 
 <div id="progress-bar-block" class="prefs-block">
-    <p>Follow the four steps below to set your parameters for this scenario. Completing all steps is not required.</p>
-   <div class="inline">Your progress:</div> 
-   <div class="inline">
-       <progressbar max="200" value="166" type="success"></progressbar></div>
+  <p>Follow the four steps below to set your parameters for this scenario. Completing all steps is not required.</p>
+  <div class="inline">Your progress:</div> 
+  <div class="inline">
+    <progressbar max="200" value="166" type="success"></progressbar></div>
   <!--  see http://madmimi.github.io/angular-foundation/#/getting_started for dynamic examples -->
-   <div id="results-avail"></div>
+  <div id="results-avail"></div>
 </div>
 
 <div id="effectstable-div" style="margin-bottom: 0rem;">  
-    <h2>1 Scale Ranges</h2>
-    <button class="button closebutt ng-pristine ng-valid">Define Scale Ranges</button>
-    <p>&nbsp;</p>
-<table id="effectstable" class="effectstable" summary="table summary" data-role="table" data-mode="columntoggle" >
+  <h2>1 Scale Ranges</h2>
+  <button class="button closebutt ng-pristine ng-valid">Define Scale Ranges</button>
+  <p>&nbsp;</p>
+  <table id="effectstable" class="effectstable" summary="table summary" data-role="table" data-mode="columntoggle" >
     <thead>
-    <tr>
+      <tr>
         <th>Criterion</th>
         <th>Theoretical Range</th>
         <th>Observed Range</th>
         <th>Configured Range</th>
         <th>Units</th>
-    </tr>
+      </tr>
     </thead>
     <tbody>   
-        <tr>
-            <td>criterion title</td>
-            <td>0.0, 1.0</td>
-            <td>0.031, 0.177</td>
-            <td><em>Undefined</em></td>
-            <td>Proportion</td>
-        </tr>
-        <tr>
-            <td>criterion title</td>
-            <td>0.0, 1.0</td>
-            <td>0.031, 0.177</td>
-            <td><em>Undefined</em></td>
-            <td>Proportion</td>
-        </tr>
-        <tr>
-            <td>criterion title</td>
-            <td>0.0, 1.0</td>
-            <td>0.031, 0.177</td>
-            <td><em>Undefined</em></td>
-            <td>Proportion</td>
-        </tr>
-        <tr>
-            <td>criterion title</td>
-            <td>0.0, 1.0</td>
-            <td>0.031, 0.177</td>
-            <td><em>Undefined</em></td>
-            <td>Proportion</td>
-        </tr>
+    <tr ng-repeat="(key, criterion) in criteria">
+      <td>{{criterion.title}}</td>
+      <td>{{criterion.scale[0] | number:3}}, {{criterion.scale[1] | number:3}}</td>
+      <td>{{intervalHull(scales[criterion.id])[0] | number:3}}, {{intervalHull(scales[criterion.id])[1] | number:3}}</td>
+      <td>{{criterion.pvf.range[0] | number:3}}, {{criterion.pvf.range[1] | number:3}}</td>
+      <td>{{criterion.unitOfMeasurement}}</td>
+    </tr>
     </tbody>
-
-</table> 
+  </table> 
 </div>
 
 <div id="partial-value-functions-block" class="prefs-block">

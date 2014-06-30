@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 define(['mcda/config', 'angular', 'mcda/lib/patavi', 'underscore'], function(Config, angular, patavi, _) {
 
-  return function($scope, currentScenario, taskDefinition) {
+  return function($scope, currentScenario, taskDefinition, intervalHull) {
     $scope.title = taskDefinition.title;
 
     var nice = function(x) {
@@ -32,10 +32,7 @@ define(['mcda/config', 'angular', 'mcda/lib/patavi', 'underscore'], function(Con
         _.map(_.pairs(results.results), function(criterion) {
 
           // Calculate interval hulls
-          var criterionRange = [
-            Math.min.apply(null, _.map(_.values(criterion[1]), function(alt) { return alt["2.5%"] })),
-            Math.max.apply(null, _.map(_.values(criterion[1]), function(alt) { return alt["97.5%"] }))
-          ];
+          var criterionRange = intervalHull(criterion[1]);
 
           // Set inital model value
           var pvf = state.problem.criteria[criterion[0]].pvf;

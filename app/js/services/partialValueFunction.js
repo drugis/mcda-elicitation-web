@@ -31,9 +31,9 @@ define(['angular', 'underscore'], function(angular, _) {
       var intervalInfo = function(idx) {
         return {
           "x0": cutoffs[idx - 1],
-          "x1": cutoffs[idx],
-          "v0": values[idx - 1],
-          "v1": values[idx]
+            "x1": cutoffs[idx],
+            "v0": values[idx - 1],
+            "v1": values[idx]
         };
       };
 
@@ -49,9 +49,9 @@ define(['angular', 'underscore'], function(angular, _) {
         return i.x0 + (v - i.v0) * ((i.x1 - i.x0) / (i.v1 - i.v0));
       };
       return { map: map,
-               inv: inv,
-               best: extreme(1,0),
-               worst: extreme(0,1) };
+        inv: inv,
+        best: extreme(1,0),
+        worst: extreme(0,1) };
     };
 
     var attach = function(state) {
@@ -79,9 +79,9 @@ define(['angular', 'underscore'], function(angular, _) {
       return [ { key: "Piecewise PVF", values: values }];
     };
 
-     return { create: create,
-             attach: attach,
-             getXY: getXY
-           };
+    return { create: create,
+      attach: attach,
+      getXY: getXY
+    };
   });
 });
