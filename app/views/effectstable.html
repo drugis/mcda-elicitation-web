@@ -26,33 +26,30 @@
     <table id="effectstable" class="effectstable" summary="table summary" data-role="table" data-mode="columntoggle">
       <thead>
         <tr>
-          <th class="rem12">Name</th>
+          <th class="rem12">Criterion</th>
           <th class="rem20">Description</th>
           <th>Units</th>
-          <th>Alternatives</th>
           <th class="rem8 center-text" ng-repeat="(alternativeKey, alternative) in problem.alternatives" ng-show="alternativeVisible[alternativeKey]">{{alternative.title}}{{problem.valueTree.children.children[0].criteria}}</th>
         </tr>
       </thead>
       <tbody>
       <tr ng-repeat-start="effectsTableRow in effectsTableData">
-        <td class="firstheader" colspan="10">
+        <td class="firstheader" colspan="{{3 + nrAlternatives}}">
           <div class="firstheadertext">
             <remarkblock remark="$parent.remarks[effectsTableRow.path[0].title]" save-remarks="saveRemarks"></remarkblock>
             {{effectsTableRow.path[0].title}}</div>
-          <div ng-repeat="node in effectsTableRow.path.slice(1)" class="secondheader rounded-small"><span>
-              <remarkblock remark="$parent.remarks[node.title]" save-remarks="saveRemarks"></remarkblock> {{node.title}}</span>
+          <div ng-repeat="node in effectsTableRow.path.slice(1)" class="secondheader rounded-small">
+            <remarkblock remark="$parent.remarks[node.title]" save-remarks="saveRemarks"></remarkblock>{{node.title}}
           </div>
         </td>
       </tr>
       <tr class="showmore" ng-repeat-end ng-repeat="criterion in effectsTableRow.criteria">
         <td>
           <remarkblock remark="$parent.remarks[criterion.value.title]" save-remarks="saveRemarks"></remarkblock>{{criterion.value.title}}
+          <a ng-click="toggleSidebar(criterion)" class="button radius tiny-icon" style="float:right"><i class="fa fa-list"></i></a>
         </td>
         <td>{{criterion.value.description}}</td>
         <td>{{criterion.value.unitOfMeasurement}}</td>
-        <td class="slidesidepanel">
-          <button ng-click="toggleSidebar(criterion)" ng-model="checked" class="button radius tiny">View</button>
-        </td>
         <td class="center-text" ng-repeat="(alternativeKey, alternative) in problem.alternatives" name="col{{$index}}" id="col{{$index}}" ng-show="alternativeVisible[alternativeKey]">
           {{scales[criterion.key][alternativeKey]['50%'] | number:3}}
           <div class="uncertain">{{scales[criterion.key][alternativeKey]['2.5%'] | number:3}}, {{scales[criterion.key][alternativeKey]['97.5%'] | number:3}}</div>
