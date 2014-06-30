@@ -61,9 +61,5 @@
 </div>
 
 <h4>Remarks</h4>
-<ul class="remarksTree">
-  <li ng-repeat="(key, value) in remarks">
-    <strong>{{key}}</strong><br />
-    <span>{{value}}</span>
-  </li>
-</ul>
+
+<value-tree children='expandedValueTree.children' remarks='remarks'></value-tree>

@@ -150,14 +150,21 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
 
         $scope.alternativeVisible = {};
 
-        var findCriteriaNodes = function (valueTree, criteriaNodes) {
-          if (valueTree.criteria) {
-            criteriaNodes.push(valueTree);
-          } else {
-            angular.forEach(valueTree.children, function (childNode) {
-              findCriteriaNodes(childNode, criteriaNodes);
-            });
-          }
+        var findCriteriaNodes = function (valueTree) {
+          // FIXME: eliminate this internal function
+          function findCriteriaNodesInternal(valueTree, criteriaNodes) {
+            if (valueTree.criteria) {
+              criteriaNodes.push(valueTree);
+            } else {
+              angular.forEach(valueTree.children, function (childNode) {
+                findCriteriaNodesInternal(childNode, criteriaNodes);
+              });
+            }
+          };
+
+          var criteriaNodes = [];
+          findCriteriaNodesInternal(valueTree, criteriaNodes);
+          return criteriaNodes;
         };
 
 
@@ -180,9 +187,8 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
         };
 
         var buildEffectsTableData = function (problem) {
-          var criteriaNodes = [];
+          var criteriaNodes = findCriteriaNodes(problem.valueTree);
           var effectsTable = [];
-          findCriteriaNodes(problem.valueTree, criteriaNodes);
 
           angular.forEach(criteriaNodes, function (criteriaNode) {
             var path = findTreePath(criteriaNode, problem.valueTree);
@@ -218,6 +224,17 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
         };
 
         $scope.nrAlternatives = _.keys(problem.alternatives).length;
+
+        $scope.expandedValueTree = function() {
+          var tree = angular.copy(problem.valueTree);
+          var criteriaNodes = findCriteriaNodes(tree);
+          angular.forEach(criteriaNodes, function(criteriaNode) {
+            criteriaNode.children = _.map(criteriaNode.criteria, function(key) {
+              return problem.criteria[key];
+            });
+          });
+          return tree;
+        }();
 
       };
 

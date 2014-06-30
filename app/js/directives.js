@@ -368,35 +368,37 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
       };
   });
 
-    //treeview
+  //treeview
 
-    directives.directive('collection', function () {
-      return {
-          restrict: "E",
-          replace: true,
-          scope: {
-              collection: '='
-          },
-          template: "<ul class='fontsize' style='list-style-type: none;'><item ng-repeat='item in collection' item='item'></item></ul>"
-      }
-  })
+  directives.directive('valueTree', function () {
+    return {
+      restrict: "E",
+      replace: true,
+      scope: {
+        children: '=',
+        remarks: '='
+      },
+      template: "<ul><value-tree-item ng-repeat='item in children' item='item' remarks='remarks'></value-tree-item></ul>"
+    };
+  });
 
-    directives.directive('item', function ($compile) {
-        return {
-            restrict: "E",
-            replace: true,
-            scope: {
-                item: '='
-            },
-            template: "<li>{{item.title}}</li>",
-            link: function (scope, element, attrs) {
-                if (angular.isArray(scope.item.children)) {
-                    element.append("<collection collection='item.children'></collection>"); 
-                    $compile(element.contents())(scope)
-                }
-            }
+  directives.directive('valueTreeItem', function ($compile) {
+    return {
+      restrict: "E",
+      replace: true,
+      scope: {
+        item: '=',
+        remarks: '='
+      },
+      template: "<li>{{item.title}}<p ng-if='remarks'><span ng-if='!remarks[item.title]'>None.</span>{{remarks[item.title]}}</p></li>",
+      link: function (scope, element, attrs) {
+        if (angular.isArray(scope.item.children)) {
+          element.append("<value-tree children='item.children' remarks='remarks'></value-tree>"); 
+          $compile(element.contents())(scope)
         }
-})
+      }
+    };
+  })
 
   return directives;
 });
