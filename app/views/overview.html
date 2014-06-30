@@ -1,38 +1,22 @@
 <div class="row">
-        <modal model="editRemarkModal">
-      <h3>Remark</h3>
-      <form>
-        <p>Create new remark</p>
-            <textarea ng-model="model.remark" cols="30" rows="9" placeholder="Enter your remark here"> </textarea>        
-        <div>
-          <ul class="button-group">
-            <li><a class="button small secondary" ng-click="editRemarkModal.close()">Cancel</a></li>           
-            <li>
-              <a class="button small success" ng-disabled="!local.contents" ng-click="createRemark(model.choice)">Create remark</a>
-            </li>
-          </ul>
-        </div>
-      </form>
-    </modal>
-
   <div class="columns large-12">
     <h4>Problem description</h4>
-      <p ng-bind="problem.problemDescription" class="fontsize"></p>
+    <p>
+      <span  ng-if="problem.description">{{problem.description}}</span>
+      <span  ng-if="!problem.description">No description given.</span>
+    </p>
 
     <h4>Alternatives</h4>
-    <ul class="fontsize">
+    <ul>
       <li ng-repeat="alternative in problem.alternatives" ng-bind="alternative.title"></li>
     </ul>
 
     <hr />
 
-  <div>
     <h4>Value Tree</h4>
 
-      <div>
-			<collection collection='[problem.valueTree]' class="fontsize" id="vt"></collection>
+    <div>
+			<collection collection='[problem.valueTree]'></collection>
 		</div>      
-
   </div>
-
-
+</div>

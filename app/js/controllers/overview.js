@@ -45,43 +45,6 @@
                 'safe': TaskDependencies.isSafe(task, state)
             };
         });
-        
-
-            //treeview
-
-        $scope.vt = [
-            {
-                name: 'Europe',
-                children: [
-                    {
-                        name: 'Italy',
-                        children: [
-                            {
-                                name: 'Rome'
-                            },
-                            {
-                                name: 'Milan'
-                            }
-                        ]
-                    },
-                    {
-                        name: 'Spain'
-                    }
-                ]
-            },
-            {
-                name: 'South America',
-                children: [
-                    {
-                        name: 'Brasil'
-                    },
-                    {
-                        name: 'Peru'
-                    }
-                ]
-            }
-        ];
-
 
         $scope.tasks = {
             'accessible': _.filter(tasks, function (task) {
