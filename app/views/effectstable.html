@@ -51,7 +51,7 @@
         <td>{{criterion.value.description}}</td>
         <td>{{criterion.value.unitOfMeasurement}}</td>
         <td class="slidesidepanel">
-          <button ng-click="toggleSidebar(criterion)" ng-model="checked" class="button closebutt">View</button>
+          <button ng-click="toggleSidebar(criterion)" ng-model="checked" class="button radius tiny">View</button>
         </td>
         <td class="center-text" ng-repeat="(alternativeKey, alternative) in problem.alternatives" name="col{{$index}}" id="col{{$index}}" ng-show="alternativeVisible[alternativeKey]">
           {{scales[criterion.key][alternativeKey]['50%'] | number:3}}

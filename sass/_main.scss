@@ -244,10 +244,8 @@ input[type='file'] {
 
   
 .effectstable td {
-         vertical-align:top;
       /*padding: 4px 8px 3px 11px;*/
       margin: 0;
-         font-size: 0.78rem;
       position: relative;
       border-left: 1px solid #CDCDCD;
       display: table-cell;
@@ -262,7 +260,7 @@ input[type='file'] {
 }
 
 
-.effectstable td button {
+.effectstable td .button {
       margin-bottom: 0;
   }
 
@@ -372,40 +370,6 @@ input[type='file'] {
        border-top-color: #5697c6;
        border-width: 6px;
        margin-left: -6px;
-}
-
-.editicon {
-    width: 20px !important;
-    height: 20px !important;
-    display: inline-block;
-    background: url("/bower_components/mcda-web/app/img/Edit.gif") !important;
-    margin-right: 0.5rem;
-    border: none !important;
-  }
-
-.helpicon {
-    width: 20px !important;
-    height: 20px !important;
-    display: inline-block;
-    background: url("/bower_components/mcda-web/app/img/help-icon.gif") !important;
-    margin-right: 0.5rem;
-    border: none !important;
-  }
-
-.deleteicon {
-    width: 20px !important;
-    height: 20px !important;
-    display: inline-block;
-    background: url("/bower_components/mcda-web/app/img/Garbage.gif") !important;
-    margin-right: 0.5rem;
-}
-
-.alternativesicon {
-    width: 20px !important;
-    height: 20px !important;
-    display: inline-block;
-    background: url("/bower_components/mcda-web/app/img/alternatives.png") !important;
-    margin-right: 0.5rem;
 }
 
 .secondary {
@@ -601,25 +565,6 @@ background: none;
        width: 20%;
        background: #452F8C;
        color: #fff;
-}
-
-
-
-.button {
-    font-size: 0.75rem;
-    padding: 5px 8px;
-    background: #f5f5f5;
-    color: #452F8C;
-    border: 1px solid #ccc;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -khtml-border-radius: 4px;
-    border-radius: 4px;
-    font-weight: 700 !important;
-}
-
-.closebutt {
-    margin: 0 auto 0 auto;
 }
 
 .alternative {
@@ -922,7 +867,7 @@ padding: 9px 14px;
     position: absolute;
     height: 42px;
     width: 383px;
-    background: url("/bower_components/mcda-web/app/img/result-available.png") !important;
+    background: url("/bower_components/mcda-web/app/img/results-available.png") !important;
     z-index: 999;
     top: 85px;
     left: 570px;
