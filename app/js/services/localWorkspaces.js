@@ -24,7 +24,15 @@ define(['mcda/config', 'angular', 'underscore', 'mcda/services/partialValueFunct
       $location.path(nextUrl);
     };
 
+    function addValueTree(problem) {
+      if (!problem.valueTree) {
+        problem.valueTree = { "title": "Overall value", "criteria": _.keys(problem.criteria) };
+      }
+    }
+
     var decorate = function(workspace) {
+      addValueTree(workspace.problem);
+
       workspace.redirectToDefaultView = function(scenarioId) {
         redirectToDefaultView(workspace.id, scenarioId ? scenarioId : _.keys(workspace.scenarios)[0]);
       };
@@ -33,6 +41,9 @@ define(['mcda/config', 'angular', 'underscore', 'mcda/services/partialValueFunct
         var deferred = $q.defer();
         var scenario  = workspace.scenarios[id];
         PartialValueFunction.attach(scenario.state);
+
+        addValueTree(scenario.state.problem);
+
         scenario.redirectToDefaultView = function() {
           redirectToDefaultView(workspace.id, id);
         };
