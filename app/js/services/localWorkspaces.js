@@ -2,7 +2,7 @@
 define(['mcda/config', 'angular', 'underscore', 'mcda/services/partialValueFunction'], function(Config, angular, _) {
   var dependencies = ['elicit.pvfService'];
 
-  var Workspaces = function(PartialValueFunction, $rootScope, $q, $location)  {
+  var Workspaces = function(PartialValueFunction, LocalRemarks, $rootScope, $q, $location)  {
     function randomId(size, prefix) {
       var text = "";
       var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -107,6 +107,10 @@ define(['mcda/config', 'angular', 'underscore', 'mcda/services/partialValueFunct
                         "problem": problem,
                         "scenarios": scenarios };
       localStorage.setItem('workspace.' + workspaceId, angular.toJson(workspace));
+
+      if (problem.remarks) {
+        LocalRemarks.save(workspaceId, problem.remarks);
+      }
       
       var deferred = $q.defer();
       deferred.resolve(decorate(workspace));
