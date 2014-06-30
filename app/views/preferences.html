@@ -48,6 +48,9 @@
 
       <div style="width: 250px; height: 180px">
         <line-chart ng-if="criterion.pvf.type" value="getXY(criterion)" show-legend="false"></line-chart>
+        <div ng-if="!criterion.pvf.type" style="padding-top: 40px; text-align: center; margin: 0">
+          <i style="font-size: 100px" class="fa fa-question"></i>
+        </div>
       </div>
     </div>
   </div>
