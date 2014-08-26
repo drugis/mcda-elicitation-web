@@ -355,14 +355,19 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
               remark: '=remark',
               saveRemarks: '=saveRemarks',
               model: '&model'
+
           },
           restrict: 'AE',
           replace: 'true',
           templateUrl: mcdaRootPath + 'partials/remark.html',
           link: function (scope, Element, Attrs) {
-              // zet hier de code
               $(".remarkbutton").click(function () {
                   $(".f-dropdown").css("display","none");
+              });
+
+              $(".f-dropdown").click(function(event){
+                console.log('event');
+                event.stopPropagation();
               });
           }
       };
