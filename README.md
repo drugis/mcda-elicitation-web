@@ -18,31 +18,10 @@ after the preference elicitation process.
 mcda-elicitation-web is a component of the [drugis.org][drugis] ADDIS 2
 project.
 
-Running
--------
+Running locally
+---------------
 
-First, generate the `service.R` Patavi service by concatenating the
-files in the `R/` subdirectory. On a UNIX system, run `make` from the
-root of the repository. You then need to run a Patavi server and workers
-to serve this `service.R` file. The following is an example command to
-start the worker:
-
-    lein run --method smaa -n 1 \
-             --file $MCDA_ROOT/R/service.R \
-             --rserve --packages MASS,rcdd,hitandrun,smaa
-
-The server is started with a simple `lein run` command. See the
-[Patavi][patavi] documentation for how to set up Patavi.
-
-If necessary, set the Patavi web service URI in the window.patavi
-configuration. By default,
-
-    window.patavi['WS_URI'] = "ws://localhost:3000/ws";
-
-Then, serve the root of the repository using any static web server, for
-example:
-
-    python -m SimpleHTTPServer 3001
+For instructions to run the app locally, see the REAME.md in the app-local directory
 
 Compiling the CSS
 -----------------
