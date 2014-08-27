@@ -8888,8 +8888,8 @@ div.sidepanel.ng-hide {
 }
 
 /* angular ui-bootstrap pop overs */
-/* line 686, ../../sass/_main.scss */
-.popover {
+/* line 685, ../../sass/_main.scss */
+.mcda-dropdown {
   position: absolute;
   top: 0;
   left: 0;
@@ -8907,26 +8907,23 @@ div.sidepanel.ng-hide {
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
   white-space: normal;
 }
-
-/* line 705, ../../sass/_main.scss */
-.popover-title {
-  margin: 0;
-  padding: 8px 14px;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 18px;
-  background-color: #f7f7f7;
-  border-bottom: 1px solid #ebebeb;
-  border-radius: 5px 5px 0 0;
+/* line 702, ../../sass/_main.scss */
+.mcda-dropdown > *:last-child {
+  margin-bottom: 9px;
 }
 
-/* line 716, ../../sass/_main.scss */
-.popover-content {
-  padding: 9px 14px;
+/* line 708, ../../sass/_main.scss */
+.mcda-dropdown:focus {
+  outline: none;
+}
+
+/* line 712, ../../sass/_main.scss */
+.mcda-dropdown-content {
+  margin: 9px 14px;
 }
 
 /* results page */
-/* line 722, ../../sass/_main.scss */
+/* line 717, ../../sass/_main.scss */
 #ranktable {
   display: inline-block;
   clear: none;
@@ -8935,19 +8932,19 @@ div.sidepanel.ng-hide {
   margin-left: 500px;
 }
 
-/* line 730, ../../sass/_main.scss */
+/* line 725, ../../sass/_main.scss */
 .underlined-div {
   border-bottom: 1px solid #A0D3E8;
   margin-bottom: 1.5rem !important;
 }
 
-/* line 735, ../../sass/_main.scss */
+/* line 730, ../../sass/_main.scss */
 .fontsize {
   font-size: 0.875rem !important;
 }
 
 /* --- overview page ----- */
-/* line 740, ../../sass/_main.scss */
+/* line 735, ../../sass/_main.scss */
 .remarksTree {
   /*margin: 0;*/
   padding: 0;
@@ -8955,35 +8952,35 @@ div.sidepanel.ng-hide {
   list-style-type: none;
 }
 
-/* line 747, ../../sass/_main.scss */
+/* line 742, ../../sass/_main.scss */
 .showRemark p {
   text-align: left;
 }
 
 /* ----- preferences table ------ */
-/* line 753, ../../sass/_main.scss */
+/* line 747, ../../sass/_main.scss */
 .prefs-block {
   padding-bottom: 1.5rem;
   border-bottom: 1px solid #A0D3E8;
   margin-bottom: 1.5rem;
 }
 
-/* line 759, ../../sass/_main.scss */
+/* line 753, ../../sass/_main.scss */
 .inline {
   display: inline-block;
 }
 
-/* line 763, ../../sass/_main.scss */
+/* line 757, ../../sass/_main.scss */
 .block {
   display: block;
 }
 
-/* line 767, ../../sass/_main.scss */
+/* line 761, ../../sass/_main.scss */
 .none {
   display: none !important;
 }
 
-/* line 771, ../../sass/_main.scss */
+/* line 765, ../../sass/_main.scss */
 #results-avail {
   position: absolute;
   height: 42px;
@@ -8996,7 +8993,7 @@ div.sidepanel.ng-hide {
 
 /*----- TREEVIEW -----*/
 /* general tree css */
-/* line 785, ../../sass/_main.scss */
+/* line 779, ../../sass/_main.scss */
 treecontrol {
   /* prevent user selection */
   -moz-user-select: -moz-none;
@@ -9011,7 +9008,7 @@ treecontrol {
   text-decoration: none;
 }
 
-/* line 800, ../../sass/_main.scss */
+/* line 794, ../../sass/_main.scss */
 treecontrol ul {
   margin: 0;
   padding: 0;
@@ -9020,83 +9017,83 @@ treecontrol ul {
   overflow: hidden;
 }
 
-/* line 808, ../../sass/_main.scss */
+/* line 802, ../../sass/_main.scss */
 treecontrol li {
   position: relative;
   padding: 0 0 0 20px;
   line-height: 20px;
 }
 
-/* line 814, ../../sass/_main.scss */
+/* line 808, ../../sass/_main.scss */
 treecontrol li.tree-expanded i.tree-normal, treecontrol li.tree-collapsed i.tree-normal {
   display: none;
 }
 
-/* line 815, ../../sass/_main.scss */
+/* line 809, ../../sass/_main.scss */
 treecontrol li.tree-expanded i.tree-has-children, treecontrol li.tree-collapsed i.tree-has-children {
   display: inline;
 }
 
-/* line 816, ../../sass/_main.scss */
+/* line 810, ../../sass/_main.scss */
 treecontrol li.tree-normal i.tree-has-children {
   display: none;
 }
 
-/* line 817, ../../sass/_main.scss */
+/* line 811, ../../sass/_main.scss */
 treecontrol li.tree-normal i.tree-normal {
   display: inline;
 }
 
-/* line 819, ../../sass/_main.scss */
+/* line 813, ../../sass/_main.scss */
 treecontrol li i {
   cursor: pointer;
 }
 
-/* line 823, ../../sass/_main.scss */
+/* line 817, ../../sass/_main.scss */
 treecontrol li .tree-label {
   cursor: pointer;
   display: inline;
 }
 
 /* classic tree css */
-/* line 830, ../../sass/_main.scss */
+/* line 824, ../../sass/_main.scss */
 treecontrol.tree-classic li.tree-expanded i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/folder.png") no-repeat;
 }
 
-/* line 835, ../../sass/_main.scss */
+/* line 829, ../../sass/_main.scss */
 treecontrol.tree-classic li.tree-collapsed i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/folder-closed.png") no-repeat;
 }
 
-/* line 840, ../../sass/_main.scss */
+/* line 834, ../../sass/_main.scss */
 treecontrol.tree-classic li.tree-normal i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/file.png") no-repeat;
 }
 
-/* line 845, ../../sass/_main.scss */
+/* line 839, ../../sass/_main.scss */
 treecontrol.tree-classic li .tree-selected {
   background-color: #aaddff;
   font-weight: bold;
 }
 
 /* light tree css */
-/* line 852, ../../sass/_main.scss */
+/* line 846, ../../sass/_main.scss */
 treecontrol.tree-light li.tree-expanded i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-opened-2.png") no-repeat;
 }
 
-/* line 857, ../../sass/_main.scss */
+/* line 851, ../../sass/_main.scss */
 treecontrol.tree-light li.tree-collapsed i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-closed-2.png") no-repeat;
 }
 
-/* line 862, ../../sass/_main.scss */
+/* line 856, ../../sass/_main.scss */
 treecontrol.tree-light li.tree-normal i {
   padding: 1px 10px;
   width: 16px;
@@ -9104,25 +9101,25 @@ treecontrol.tree-light li.tree-normal i {
   background: none no-repeat;
 }
 
-/* line 868, ../../sass/_main.scss */
+/* line 862, ../../sass/_main.scss */
 treecontrol.tree-light li .tree-selected {
   font-weight: bold;
 }
 
 /* dark tree css */
-/* line 874, ../../sass/_main.scss */
+/* line 868, ../../sass/_main.scss */
 treecontrol.tree-dark li.tree-expanded i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-opened-light.png") no-repeat;
 }
 
-/* line 879, ../../sass/_main.scss */
+/* line 873, ../../sass/_main.scss */
 treecontrol.tree-dark li.tree-collapsed i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-closed-light.png") no-repeat;
 }
 
-/* line 884, ../../sass/_main.scss */
+/* line 878, ../../sass/_main.scss */
 treecontrol.tree-dark li.tree-normal i {
   padding: 1px 10px;
   width: 16px;
@@ -9130,17 +9127,17 @@ treecontrol.tree-dark li.tree-normal i {
   background: none no-repeat;
 }
 
-/* line 890, ../../sass/_main.scss */
+/* line 884, ../../sass/_main.scss */
 treecontrol.tree-dark li .tree-selected {
   font-weight: bold;
 }
 
-/* line 894, ../../sass/_main.scss */
+/* line 888, ../../sass/_main.scss */
 treecontrol.tree-dark {
   color: #ddd;
 }
 
-/* line 898, ../../sass/_main.scss */
+/* line 892, ../../sass/_main.scss */
 .button.tiny-icon {
   padding-top: 0.325rem;
   padding-right: 0.75rem;

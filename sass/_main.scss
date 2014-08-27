@@ -349,7 +349,7 @@ input[type='file'] {
        min-width: 150rem !important;
 }
 
-  .shadow {
+.shadow {
   -moz-box-shadow: 3px 3px 4px #999; /* Firefox/Mozilla */
   -webkit-box-shadow: 3px 3px 4px #999; /*Safari/Chrome */
   box-shadow: 3px 3px 4px #999; /* Opera & hoe het zou moeten */
@@ -359,7 +359,7 @@ input[type='file'] {
   filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#999999');
 }
 
-    .tableshadow {
+.tableshadow {
     -moz-box-shadow: 0px 0px 10px 1px #6e6e6e; 
        -webkit-box-shadow: 0px 0px 10px 1px #6e6e6e; 
        box-shadow: 0px 0px 10px 1px #6e6e6e; 
@@ -447,13 +447,13 @@ div.sidepanel.ng-hide {
 background: none;      
 }
 
-  .sidepanel table tr:nth-child(even) {
-         background: #0079a1;
-         }
+.sidepanel table tr:nth-child(even) {
+  background: #0079a1;
+}
   
-       .sidepanel table tr:nth-child(odd) {
-               background: #34226E;
-               }
+.sidepanel table tr:nth-child(odd) {
+  background: #34226E;
+}
 
 .sidepanel table td {
        width: 100%;
@@ -681,44 +681,39 @@ background: none;
     width: 115px !important;
    }
 
-   /* angular ui-bootstrap pop overs */
-
-.popover {
-position: absolute;
-top: 0;
-left: 0;
-z-index: 1010;
-display: none;
-max-width: 276px;
-padding: 1px;
-text-align: left;
-background-color: #fff;
-background-clip: padding-box;
-border: 1px solid #ccc;
-border: 1px solid rgba(0,0,0,.2);
-border-radius: 6px;
--webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
-box-shadow: 0 5px 10px rgba(0,0,0,.2);
-white-space: normal;
+/* angular ui-bootstrap pop overs */
+.mcda-dropdown {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1010;
+  display: none;
+  max-width: 276px;
+  padding: 1px;
+  text-align: left;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0,0,0,.2);
+  border-radius: 6px;
+  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+  box-shadow: 0 5px 10px rgba(0,0,0,.2);
+  white-space: normal;
+  > *:last-child {
+    margin-bottom: 9px;
+  }
+  
 }
 
-.popover-title {
-margin: 0;
-padding: 8px 14px;
-font-size: 14px;
-font-weight: 400;
-line-height: 18px;
-background-color: #f7f7f7;
-border-bottom: 1px solid #ebebeb;
-border-radius: 5px 5px 0 0;
-}
+.mcda-dropdown:focus {
+    outline: none;
+  }
 
-.popover-content {
-padding: 9px 14px;
+.mcda-dropdown-content {
+  margin: 9px 14px;
 }
 
 /* results page */
-
 #ranktable {
         display: inline-block;
         clear: none;
@@ -749,7 +744,6 @@ padding: 9px 14px;
 }
 
 /* ----- preferences table ------ */
-
 .prefs-block {
     padding-bottom: 1.5rem;
     border-bottom: 1px solid #A0D3E8;
