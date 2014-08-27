@@ -1,5 +1,5 @@
 'use strict';
-define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (require, _, $, angular, d3, nv) {
+define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(require, _, $, angular, d3, nv) {
 
   var directives = angular.module('elicit.directives', []);
 
@@ -30,7 +30,10 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
         return (from + (step / steps) * delta).toFixed(precision);
       };
 
-      function valueToStep(value) { return ((value - from) / delta * steps).toFixed(precision); }
+      function valueToStep(value) {
+        return ((value - from) / delta * steps).toFixed(precision);
+      }
+
       function getModelValue() {
         return type === "point" ? valueToStep(scope.model) :
           valueToStep(scope.model.lower) + ";" + valueToStep(scope.model.upper);
@@ -42,7 +45,10 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
         } else {
           var steps = value.split(';');
           var values = _.map([stepToValue(steps[0]), stepToValue(steps[1])], parseFloat);
-          return { lower: values[0], upper: values[1] };
+          return {
+            lower: values[0],
+            upper: values[1]
+          };
         }
       }
       require(['jquery-slider'], function() {
@@ -77,9 +83,11 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
     return {
       restrict: 'E',
       replace: true,
-      scope: { type: "@",
-               model: '=',
-               range: '=' },
+      scope: {
+        type: "@",
+        model: '=',
+        range: '='
+      },
       link: function(scope, $element) {
         var init = function() {
           if (scope.range) initialize(scope, $element);
@@ -92,19 +100,24 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
     };
   });
 
-  function parsePx(str) { return parseInt(str.replace(/px/gi, '')); }
+  function parsePx(str) {
+    return parseInt(str.replace(/px/gi, ''));
+  }
 
   var getParentDimension = function(element) {
     var width = parsePx($(element[0].parentNode).css('width'));
     var height = parsePx($(element[0].parentNode).css('height'));
 
-    return { width: width, height: height };
+    return {
+      width: width,
+      height: height
+    };
   };
 
 
   directives.directive('rankPlot', function() {
     return {
-      restrict:'E',
+      restrict: 'E',
       scope: {
         stacked: '@',
         value: '=',
@@ -112,8 +125,8 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
       },
       link: function(scope, element, attrs) {
         var svg = d3.select(element[0]).append("svg")
-              .attr("width", "100%")
-              .attr("height", "100%");
+          .attr("width", "100%")
+          .attr("height", "100%");
 
         var dim = getParentDimension(element);
 
@@ -122,9 +135,15 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
           _.each(_.pairs(data), function(el) {
             var key = scope.problem.alternatives[el[0]].title;
             var values = el[1];
-            for(var i = 0; i < values.length; i++) {
-              var obj = result[i] || { key: "Rank " + (i + 1), values: [] };
-              obj.values.push({x: key, y: values[i]});
+            for (var i = 0; i < values.length; i++) {
+              var obj = result[i] || {
+                key: "Rank " + (i + 1),
+                values: []
+              };
+              obj.values.push({
+                x: key,
+                y: values[i]
+              });
               result[i] = obj;
             }
           });
@@ -165,20 +184,24 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
         var dim = getParentDimension(element);
 
         var svg = d3.select(element[0]).append("svg")
-              .attr("width", "100%")
-              .attr("height", "100%");
+          .attr("width", "100%")
+          .attr("height", "100%");
 
         scope.$watch('value', function(newVal, oldVal) {
-          if(!newVal) return;
+          if (!newVal) return;
           nv.addGraph(function() {
             var chart = nv.models.discreteBarChart()
-                  .staggerLabels(false)
-                  .showValues(true)
-                  .staggerLabels(true)
-                  .width(dim.width)
-                  .tooltips(false)
-                  .x(function(d) { return d.label; })
-                  .y(function(d) { return d.value;});
+              .staggerLabels(false)
+              .showValues(true)
+              .staggerLabels(true)
+              .width(dim.width)
+              .tooltips(false)
+              .x(function(d) {
+                return d.label;
+              })
+              .y(function(d) {
+                return d.value;
+              });
 
             var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
             svg.datum(data).transition().duration(100).call(chart);
@@ -201,11 +224,11 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
       link: function(scope, element, attrs) {
         var dim = getParentDimension(element);
         var svg = d3.select(element[0]).append("svg")
-              .attr("width", "100%")
-              .attr("height", "100%");
+          .attr("width", "100%")
+          .attr("height", "100%");
 
         scope.$watch('value', function(newVal, oldVal) {
-          if(!newVal) return;
+          if (!newVal) return;
           var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
 
           var chart = nv.models.lineChart().width(dim.width).height(dim.height);
@@ -216,7 +239,9 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
           }
 
           chart.xAxis.staggerLabels(false);
-          if (_.every(data, function(x) { return !_.isUndefined(x.labels); })) {
+          if (_.every(data, function(x) {
+            return !_.isUndefined(x.labels);
+          })) {
             chart.xAxis.tickFormat(function(i, obj) {
               if (i % 1 === 0) {
                 return data[0].labels[i];
@@ -254,26 +279,28 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
   });
 
 
-  directives.directive('fileReader', function () {
+  directives.directive('fileReader', function() {
     return {
       scope: {
         model: '=',
       },
       restrict: 'E',
       template: "<input type='file' accept='.json'>",
-      link: function (scope, element, attrs) {
+      link: function(scope, element, attrs) {
         function onLoadContents(env) {
-          scope.$apply(function() { scope.model.contents = env.target.result; });
+          scope.$apply(function() {
+            scope.model.contents = env.target.result;
+          });
         };
-        
+
         element.on("change", function(event) {
-          scope.$apply(function (scope) {
+          scope.$apply(function(scope) {
             scope.model.file = event.target.files[0];
-            if(!scope.model.file) {
+            if (!scope.model.file) {
               delete scope.model.contents;
               return;
             }
-            
+
             var reader = new FileReader();
             reader.onload = onLoadContents;
             reader.readAsText(scope.model.file);
@@ -290,7 +317,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
       link: function(scope, element, attrs) {
         scope.$watch(attrs.mathjaxBind, function(value) {
           var $script = angular.element("<script type='math/tex'>")
-                .html(value == undefined ? "" : value);
+            .html(value == undefined ? "" : value);
           element.html("");
           element.append($script);
           require(['MathJax'], function(MathJax) {
@@ -300,7 +327,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
       }
     };
   });
-  
+
 
   directives.directive("addis-alert", function() {
     return {
@@ -321,7 +348,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
       template: '<div class="alert-box {{type}}"><div class="alert-box-message" ng-transclude></div><a ng-click="animatedClose()" class="close">&times;</a></div>'
     };
   });
-  
+
 
   directives.directive("modal", function(mcdaRootPath) {
     return {
@@ -336,46 +363,57 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
           scope.model = {};
         }
         scope.bgStyle = function(show) {
-          return show ? {'display': 'block'} : {'display': 'none'};
+          return show ? {
+            'display': 'block'
+          } : {
+            'display': 'none'
+          };
         };
         scope.fgStyle = function(show) {
-          return show ? {'display': 'block', 'visibility' : 'visible'} : {'display': 'none'};
+          return show ? {
+            'display': 'block',
+            'visibility': 'visible'
+          } : {
+            'display': 'none'
+          };
         };
 
-        scope.model.open = function() { scope.model.show = true; };
-        scope.model.close = function() { scope.model.show = false; };
+        scope.model.open = function() {
+          scope.model.show = true;
+        };
+        scope.model.close = function() {
+          scope.model.show = false;
+        };
       },
       templateUrl: mcdaRootPath + 'partials/modal.html'
     };
   });
 
-  directives.directive('remarkblock', function (mcdaRootPath) {
-      return {
-          scope: {
-              remark: '=remark',
-              saveRemarks: '=saveRemarks',
-              model: '&model'
+  directives.directive('remarkblock', function(mcdaRootPath) {
+    return {
+      scope: {
+        remark: '=remark',
+        saveRemarks: '=saveRemarks',
+        model: '&model'
+      },
+      restrict: 'AE',
+      replace: 'true',
+      templateUrl: mcdaRootPath + 'partials/remark.html',
+      link: function(scope, element, attrs) {
+        $(".remarkbutton").click(function() {
+          $(".f-dropdown").css("display", "none");
+        });
 
-          },
-          restrict: 'AE',
-          replace: 'true',
-          templateUrl: mcdaRootPath + 'partials/remark.html',
-          link: function (scope, Element, Attrs) {
-              $(".remarkbutton").click(function () {
-                  $(".f-dropdown").css("display","none");
-              });
-
-              $(".f-dropdown").click(function(event){
-                console.log('event');
-                event.stopPropagation();
-              });
-          }
-      };
+        $(".f-dropdown").click(function(event) {
+          event.stopPropagation();
+        });
+      }
+    };
   });
 
   //treeview
 
-  directives.directive('valueTree', function () {
+  directives.directive('valueTree', function() {
     return {
       restrict: "E",
       replace: true,
@@ -387,7 +425,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
     };
   });
 
-  directives.directive('valueTreeItem', function ($compile) {
+  directives.directive('valueTreeItem', function($compile) {
     return {
       restrict: "E",
       replace: true,
@@ -396,9 +434,9 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
         remarks: '='
       },
       template: "<li>{{item.title}}<p ng-if='remarks'><span ng-if='!remarks[item.title]'>None.</span>{{remarks[item.title]}}</p></li>",
-      link: function (scope, element, attrs) {
+      link: function(scope, element, attrs) {
         if (angular.isArray(scope.item.children)) {
-          element.append("<value-tree children='item.children' remarks='remarks'></value-tree>"); 
+          element.append("<value-tree children='item.children' remarks='remarks'></value-tree>");
           $compile(element.contents())(scope)
         }
       }
@@ -407,6 +445,3 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function (r
 
   return directives;
 });
-
-
-
