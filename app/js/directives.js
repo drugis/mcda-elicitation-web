@@ -400,6 +400,10 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       replace: 'true',
       templateUrl: mcdaRootPath + 'partials/remark.html',
       link: function(scope, element, attrs) {
+        var cachedRemark = scope.remark;
+        scope.cancelRemarks = function() {
+          scope.remark = cachedRemark;
+        };
         $(".remarkbutton").click(function() {
           $(".f-dropdown").css("display", "none");
         });
