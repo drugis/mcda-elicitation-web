@@ -12,7 +12,6 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
 
         $scope.saveRemarks = function () {
           Remarks.save($scope.workspace.id, $scope.remarks);
-          return 1;
         };
 
         var scenario = currentScenario;

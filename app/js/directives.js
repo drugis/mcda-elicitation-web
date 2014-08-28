@@ -401,9 +401,13 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       templateUrl: mcdaRootPath + 'partials/remark.html',
       link: function(scope, element, attrs) {
         var cachedRemark = scope.remark;
-        scope.cancelRemarks = function() {
+        scope.model.cancelRemarks = function() {
           scope.remark = cachedRemark;
         };
+        scope.model.saveRemarks = function() {
+          cachedRemark = scope.remark;
+          scope.saveRemarks();
+        }
         $(".remarkbutton").click(function() {
           $(".f-dropdown").css("display", "none");
         });
