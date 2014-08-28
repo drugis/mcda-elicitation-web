@@ -8897,8 +8897,9 @@ div.row .workspace-control-tab {
   text-align: center;
   margin: 0 0 -2px 0;
   text-align: center;
+  float: right;
 }
-/* line 686, ../../sass/_main.scss */
+/* line 687, ../../sass/_main.scss */
 .overview-nav-container .overview-nav > ul {
   bottom: -4px;
   list-style-type: none;
@@ -8907,7 +8908,7 @@ div.row .workspace-control-tab {
   margin: 2px auto 0 auto;
   position: relative;
 }
-/* line 695, ../../sass/_main.scss */
+/* line 696, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li {
   background-color: #0079a1;
   border: 1px solid #4a91c4;
@@ -8920,30 +8921,30 @@ div.row .workspace-control-tab {
   padding: 0.4rem 0.8rem;
   list-style: none;
 }
-/* line 706, ../../sass/_main.scss */
+/* line 707, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li a {
   color: white;
 }
-/* line 711, ../../sass/_main.scss */
+/* line 712, ../../sass/_main.scss */
 .overview-nav-container .overview-nav > li:first-child {
   margin-left: 15px;
 }
-/* line 716, ../../sass/_main.scss */
+/* line 717, ../../sass/_main.scss */
 .overview-nav-container .overview-nav > li > a {
   background: none;
   border: none;
 }
 
-/* line 723, ../../sass/_main.scss */
+/* line 724, ../../sass/_main.scss */
 li.tab-corners.activetab {
   background-color: white;
 }
-/* line 725, ../../sass/_main.scss */
+/* line 726, ../../sass/_main.scss */
 li.tab-corners.activetab a {
   color: black;
 }
 
-/* line 730, ../../sass/_main.scss */
+/* line 731, ../../sass/_main.scss */
 .tab-corners {
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
@@ -8953,13 +8954,13 @@ li.tab-corners.activetab a {
   -webkit-border-top-right-radius: 4px;
 }
 
-/* line 739, ../../sass/_main.scss */
+/* line 740, ../../sass/_main.scss */
 .scenario-menu {
   padding-top: 1.5rem;
 }
 
 /*------------ NAVBAR --------------*/
-/* line 745, ../../sass/_main.scss */
+/* line 746, ../../sass/_main.scss */
 #navbar {
   position: relative;
   width: 100%;
@@ -8969,7 +8970,7 @@ li.tab-corners.activetab a {
   border-bottom: 1px solid #4a91c4;
 }
 
-/* line 754, ../../sass/_main.scss */
+/* line 755, ../../sass/_main.scss */
 #navbar ul {
   bottom: -4px;
   list-style-type: none;
@@ -8979,7 +8980,7 @@ li.tab-corners.activetab a {
   position: relative;
 }
 
-/* line 763, ../../sass/_main.scss */
+/* line 764, ../../sass/_main.scss */
 #navbar li {
   background: #fff;
   border: 1px solid #4a91c4;
@@ -9001,17 +9002,17 @@ li.tab-corners.activetab a {
   padding: 0.4rem 0 0 0;
 }
 
-/* line 784, ../../sass/_main.scss */
+/* line 785, ../../sass/_main.scss */
 #navbar li a {
   color: #333;
 }
 
-/* line 791, ../../sass/_main.scss */
+/* line 792, ../../sass/_main.scss */
 #navbar2 .activetab a {
   color: #fff !important;
 }
 
-/* line 795, ../../sass/_main.scss */
+/* line 796, ../../sass/_main.scss */
 .scenario-tab {
   width: 548px !important;
   height: 45px !important;
@@ -9030,20 +9031,20 @@ li.tab-corners.activetab a {
   -webkit-border-top-right-radius: 6px !important;
 }
 
-/* line 814, ../../sass/_main.scss */
+/* line 815, ../../sass/_main.scss */
 .scenario-tab span {
   float: left;
   margin-top: 11px;
   margin-left: 20px;
 }
 
-/* line 820, ../../sass/_main.scss */
+/* line 821, ../../sass/_main.scss */
 .scenario-tab span em {
   font-weight: bold !important;
   font-style: normal !important;
 }
 
-/* line 827, ../../sass/_main.scss */
+/* line 828, ../../sass/_main.scss */
 .scenario-tab2 {
   width: 720px !important;
   height: 46px !important;
@@ -9063,19 +9064,19 @@ li.tab-corners.activetab a {
   -webkit-border-top-right-radius: 6px !important;
 }
 
-/* line 846, ../../sass/_main.scss */
+/* line 847, ../../sass/_main.scss */
 .scenario-tab2 span {
   margin-top: 1px;
   display: inline-block;
 }
 
-/* line 851, ../../sass/_main.scss */
+/* line 852, ../../sass/_main.scss */
 .scenario-tab2 span em {
   font-weight: bold !important;
   font-style: normal !important;
 }
 
-/* line 856, ../../sass/_main.scss */
+/* line 857, ../../sass/_main.scss */
 .scenario-tab2 .fa {
   left: -5px;
   position: relative;
