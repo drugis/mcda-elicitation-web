@@ -29,15 +29,19 @@ require.config({
     'jasmine': 'bower_components/jasmine/lib/jasmine-core/jasmine',
     'jasmine-html': 'bower_components/jasmine/lib/jasmine-core/jasmine-html',
     'angular-mocks': 'bower_components/angular-mocks/angular-mocks',
-    'mcda': 'app/js'
+    'mmfoundation': 'bower_components/angular-foundation/mm-foundation',
+    'angularanimate': 'bower_components/angular-animate/angular-animate.min',
+    'mcda': 'app/js',
+    'templates': 'app/partials'
   },
   baseUrl: '/base',
   shim: {
     'angular': { exports : 'angular'},
     'angular-resource': { deps:['angular'], exports: 'angular-resource'},
-    'angular-mocks': { deps: ['angular'], exports: 'angular.mock' },
     'angular-ui-router': { deps: ['angular'], exports: 'angular-ui-router'},
+    'angularanimate': {deps: ['angular']},
     'underscore': { exports : '_'},
+    'angular-mocks': { deps: ['angular'], exports: 'angular.mock' },
     'd3': { exports : 'd3'},
     'nvd3': { deps: ['d3'], exports : 'nv'},
     'jQuery': { exports : 'jQuery'},
@@ -45,6 +49,8 @@ require.config({
     'jasmine': { exports: 'jasmine' },
     'jasmine-html': { deps: ['jasmine'], exports: 'jasmine' },
     'NProgress': { deps: ['jQuery'], exports: "NProgress" },
+    'mmfoundation': { deps: ['angular'] },
+    'templates/remark.html': {deps: ['angular']}
   },
   priority: ['angular'],
   
@@ -58,6 +64,7 @@ require.config({
 window.name = "NG_DEFER_BOOTSTRAP!";
 window.config = {
   examplesRepository: "/examples/",
-  workspacesRepository: { service: "LocalWorkspaces" }
+  workspacesRepository: { service: "LocalWorkspaces" },
+  remarksRepository: { service: 'LocalRemarks'}
 };
 

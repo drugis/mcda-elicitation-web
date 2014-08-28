@@ -8464,8 +8464,8 @@ div.sidepanel.ng-hide {
   left: 0;
   z-index: 1010;
   display: none;
-  max-width: 276px;
   padding: 1px;
+  min-width: 400px;
   text-align: left;
   background-color: #fff;
   background-clip: padding-box;
@@ -8723,8 +8723,9 @@ div.row .workspace-control-tab .overview-nav {
 /* line 678, ../../sass/_main.scss */
 .overview-nav-container {
   border-bottom: 1px solid #4a91c4;
+  height: 49px;
 }
-/* line 680, ../../sass/_main.scss */
+/* line 682, ../../sass/_main.scss */
 .overview-nav-container .overview-nav {
   position: relative;
   height: 50px;
@@ -8733,7 +8734,7 @@ div.row .workspace-control-tab .overview-nav {
   margin: 0 0 -2px 0;
   text-align: center;
 }
-/* line 689, ../../sass/_main.scss */
+/* line 691, ../../sass/_main.scss */
 .overview-nav-container .overview-nav > ul {
   bottom: -4px;
   list-style-type: none;
@@ -8742,7 +8743,7 @@ div.row .workspace-control-tab .overview-nav {
   margin: 2px auto 0 auto;
   position: relative;
 }
-/* line 698, ../../sass/_main.scss */
+/* line 700, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li {
   background-color: #0079a1;
   border: 1px solid #4a91c4;
@@ -8755,30 +8756,30 @@ div.row .workspace-control-tab .overview-nav {
   padding: 0.4rem 0.8rem;
   list-style: none;
 }
-/* line 709, ../../sass/_main.scss */
+/* line 711, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li a {
   color: white;
 }
-/* line 714, ../../sass/_main.scss */
+/* line 716, ../../sass/_main.scss */
 .overview-nav-container .overview-nav > li:first-child {
   margin-left: 15px;
 }
-/* line 719, ../../sass/_main.scss */
+/* line 721, ../../sass/_main.scss */
 .overview-nav-container .overview-nav > li > a {
   background: none;
   border: none;
 }
 
-/* line 726, ../../sass/_main.scss */
+/* line 728, ../../sass/_main.scss */
 li.tab-corners.activetab {
   background-color: white;
 }
-/* line 728, ../../sass/_main.scss */
+/* line 730, ../../sass/_main.scss */
 li.tab-corners.activetab a {
   color: black;
 }
 
-/* line 733, ../../sass/_main.scss */
+/* line 735, ../../sass/_main.scss */
 .tab-corners {
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
@@ -8788,13 +8789,13 @@ li.tab-corners.activetab a {
   -webkit-border-top-right-radius: 4px;
 }
 
-/* line 742, ../../sass/_main.scss */
+/* line 744, ../../sass/_main.scss */
 .scenario-menu {
   padding-top: 1.5rem;
 }
 
 /*------------ NAVBAR --------------*/
-/* line 748, ../../sass/_main.scss */
+/* line 750, ../../sass/_main.scss */
 #navbar {
   position: relative;
   width: 100%;
@@ -8804,7 +8805,7 @@ li.tab-corners.activetab a {
   border-bottom: 1px solid #4a91c4;
 }
 
-/* line 757, ../../sass/_main.scss */
+/* line 759, ../../sass/_main.scss */
 #navbar ul {
   bottom: -4px;
   list-style-type: none;
@@ -8814,7 +8815,7 @@ li.tab-corners.activetab a {
   position: relative;
 }
 
-/* line 766, ../../sass/_main.scss */
+/* line 768, ../../sass/_main.scss */
 #navbar li {
   background: #fff;
   border: 1px solid #4a91c4;
@@ -8836,17 +8837,17 @@ li.tab-corners.activetab a {
   padding: 0.4rem 0 0 0;
 }
 
-/* line 787, ../../sass/_main.scss */
+/* line 789, ../../sass/_main.scss */
 #navbar li a {
   color: #333;
 }
 
-/* line 794, ../../sass/_main.scss */
+/* line 796, ../../sass/_main.scss */
 #navbar2 .activetab a {
   color: #fff !important;
 }
 
-/* line 798, ../../sass/_main.scss */
+/* line 800, ../../sass/_main.scss */
 .scenario-tab {
   width: 548px !important;
   height: 45px !important;
@@ -8865,20 +8866,20 @@ li.tab-corners.activetab a {
   -webkit-border-top-right-radius: 6px !important;
 }
 
-/* line 817, ../../sass/_main.scss */
+/* line 819, ../../sass/_main.scss */
 .scenario-tab span {
   float: left;
   margin-top: 11px;
   margin-left: 20px;
 }
 
-/* line 823, ../../sass/_main.scss */
+/* line 825, ../../sass/_main.scss */
 .scenario-tab span em {
   font-weight: bold !important;
   font-style: normal !important;
 }
 
-/* line 830, ../../sass/_main.scss */
+/* line 832, ../../sass/_main.scss */
 .scenario-tab2 {
   width: 720px !important;
   height: 46px !important;
@@ -8898,19 +8899,19 @@ li.tab-corners.activetab a {
   -webkit-border-top-right-radius: 6px !important;
 }
 
-/* line 849, ../../sass/_main.scss */
+/* line 851, ../../sass/_main.scss */
 .scenario-tab2 span {
   margin-top: 1px;
   display: inline-block;
 }
 
-/* line 854, ../../sass/_main.scss */
+/* line 856, ../../sass/_main.scss */
 .scenario-tab2 span em {
   font-weight: bold !important;
   font-style: normal !important;
 }
 
-/* line 859, ../../sass/_main.scss */
+/* line 861, ../../sass/_main.scss */
 .scenario-tab2 .fa {
   left: -5px;
   position: relative;

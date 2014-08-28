@@ -8,8 +8,8 @@
       <h5>Remark:</h5>
       <textarea autofocus ng-model="remark" contenteditable="true" cols="10" rows="4" style="height: 100px;" class="fontsize" required="required"></textarea>
       <div class="button-group">
-        <a class="button small remarkbutton" ng-click="cancelRemarks();show=!show" ng-class="{'active': show}">Cancel</a>
-        <a class="button small success remarkbutton" ng-click="saveRemarks()">Save remark</a>
+        <a id="remark-cancel-btn"class="button small remarkbutton" ng-click="model.cancelRemarks();show=!show" ng-class="{'active': show}">Cancel</a>
+        <a id="remark-succes-btn" class="button small success remarkbutton" ng-click="model.saveRemarks()">Save remark</a>
       </div> 
     </div>
   </div>

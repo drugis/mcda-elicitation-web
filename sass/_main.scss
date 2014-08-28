@@ -462,8 +462,8 @@ div.sidepanel.ng-hide {
   left: 0;
   z-index: 1010;
   display: none;
-  max-width: 276px;
   padding: 1px;
+  min-width: 400px;
   text-align: left;
   background-color: #fff;
   background-clip: padding-box;
@@ -677,6 +677,8 @@ div.row .workspace-control-tab {
 
 .overview-nav-container {
   border-bottom: 1px solid #4a91c4;
+  height: 49px;
+
     .overview-nav {
      position: relative;
      height:50px;
