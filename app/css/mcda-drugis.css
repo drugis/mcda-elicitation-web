@@ -8884,12 +8884,16 @@ div.row .workspace-control-tab {
   background-color: #82cbfe;
   margin-right: 0.5rem;
 }
+/* line 673, ../../sass/_main.scss */
+div.row .workspace-control-tab .overview-nav {
+  float: right;
+}
 
-/* line 675, ../../sass/_main.scss */
+/* line 678, ../../sass/_main.scss */
 .overview-nav-container {
   border-bottom: 1px solid #4a91c4;
 }
-/* line 677, ../../sass/_main.scss */
+/* line 680, ../../sass/_main.scss */
 .overview-nav-container .overview-nav {
   position: relative;
   height: 50px;
@@ -8897,9 +8901,8 @@ div.row .workspace-control-tab {
   text-align: center;
   margin: 0 0 -2px 0;
   text-align: center;
-  float: right;
 }
-/* line 687, ../../sass/_main.scss */
+/* line 689, ../../sass/_main.scss */
 .overview-nav-container .overview-nav > ul {
   bottom: -4px;
   list-style-type: none;
@@ -8908,7 +8911,7 @@ div.row .workspace-control-tab {
   margin: 2px auto 0 auto;
   position: relative;
 }
-/* line 696, ../../sass/_main.scss */
+/* line 698, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li {
   background-color: #0079a1;
   border: 1px solid #4a91c4;
@@ -8921,30 +8924,30 @@ div.row .workspace-control-tab {
   padding: 0.4rem 0.8rem;
   list-style: none;
 }
-/* line 707, ../../sass/_main.scss */
+/* line 709, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li a {
   color: white;
 }
-/* line 712, ../../sass/_main.scss */
+/* line 714, ../../sass/_main.scss */
 .overview-nav-container .overview-nav > li:first-child {
   margin-left: 15px;
 }
-/* line 717, ../../sass/_main.scss */
+/* line 719, ../../sass/_main.scss */
 .overview-nav-container .overview-nav > li > a {
   background: none;
   border: none;
 }
 
-/* line 724, ../../sass/_main.scss */
+/* line 726, ../../sass/_main.scss */
 li.tab-corners.activetab {
   background-color: white;
 }
-/* line 726, ../../sass/_main.scss */
+/* line 728, ../../sass/_main.scss */
 li.tab-corners.activetab a {
   color: black;
 }
 
-/* line 731, ../../sass/_main.scss */
+/* line 733, ../../sass/_main.scss */
 .tab-corners {
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
@@ -8954,13 +8957,13 @@ li.tab-corners.activetab a {
   -webkit-border-top-right-radius: 4px;
 }
 
-/* line 740, ../../sass/_main.scss */
+/* line 742, ../../sass/_main.scss */
 .scenario-menu {
   padding-top: 1.5rem;
 }
 
 /*------------ NAVBAR --------------*/
-/* line 746, ../../sass/_main.scss */
+/* line 748, ../../sass/_main.scss */
 #navbar {
   position: relative;
   width: 100%;
@@ -8970,7 +8973,7 @@ li.tab-corners.activetab a {
   border-bottom: 1px solid #4a91c4;
 }
 
-/* line 755, ../../sass/_main.scss */
+/* line 757, ../../sass/_main.scss */
 #navbar ul {
   bottom: -4px;
   list-style-type: none;
@@ -8980,7 +8983,7 @@ li.tab-corners.activetab a {
   position: relative;
 }
 
-/* line 764, ../../sass/_main.scss */
+/* line 766, ../../sass/_main.scss */
 #navbar li {
   background: #fff;
   border: 1px solid #4a91c4;
@@ -9002,17 +9005,17 @@ li.tab-corners.activetab a {
   padding: 0.4rem 0 0 0;
 }
 
-/* line 785, ../../sass/_main.scss */
+/* line 787, ../../sass/_main.scss */
 #navbar li a {
   color: #333;
 }
 
-/* line 792, ../../sass/_main.scss */
+/* line 794, ../../sass/_main.scss */
 #navbar2 .activetab a {
   color: #fff !important;
 }
 
-/* line 796, ../../sass/_main.scss */
+/* line 798, ../../sass/_main.scss */
 .scenario-tab {
   width: 548px !important;
   height: 45px !important;
@@ -9031,20 +9034,20 @@ li.tab-corners.activetab a {
   -webkit-border-top-right-radius: 6px !important;
 }
 
-/* line 815, ../../sass/_main.scss */
+/* line 817, ../../sass/_main.scss */
 .scenario-tab span {
   float: left;
   margin-top: 11px;
   margin-left: 20px;
 }
 
-/* line 821, ../../sass/_main.scss */
+/* line 823, ../../sass/_main.scss */
 .scenario-tab span em {
   font-weight: bold !important;
   font-style: normal !important;
 }
 
-/* line 828, ../../sass/_main.scss */
+/* line 830, ../../sass/_main.scss */
 .scenario-tab2 {
   width: 720px !important;
   height: 46px !important;
@@ -9064,19 +9067,19 @@ li.tab-corners.activetab a {
   -webkit-border-top-right-radius: 6px !important;
 }
 
-/* line 847, ../../sass/_main.scss */
+/* line 849, ../../sass/_main.scss */
 .scenario-tab2 span {
   margin-top: 1px;
   display: inline-block;
 }
 
-/* line 852, ../../sass/_main.scss */
+/* line 854, ../../sass/_main.scss */
 .scenario-tab2 span em {
   font-weight: bold !important;
   font-style: normal !important;
 }
 
-/* line 857, ../../sass/_main.scss */
+/* line 859, ../../sass/_main.scss */
 .scenario-tab2 .fa {
   left: -5px;
   position: relative;
