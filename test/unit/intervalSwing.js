@@ -29,7 +29,8 @@ define(['angular', 'angular-mocks', 'mcda/controllers/intervalSwing', 'mcda/cont
         $controller('IntervalSwingController', {
           $scope: scope,
           currentScenario: scenario,
-          taskDefinition: TaskDependencies.extendTaskDefinition(task)
+          taskDefinition: TaskDependencies.extendTaskDefinition(task),
+          mcdaRootPath: 'some mcda rootPath'
         });
         return scope;
       }
