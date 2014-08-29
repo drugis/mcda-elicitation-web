@@ -8791,7 +8791,7 @@ li.tab-corners.activetab a {
 
 /* line 744, ../../sass/_main.scss */
 .scenario-menu {
-  padding-top: 1.5rem;
+  padding-top: 1rem;
 }
 
 /*------------ NAVBAR --------------*/
@@ -8848,71 +8848,33 @@ li.tab-corners.activetab a {
 }
 
 /* line 800, ../../sass/_main.scss */
-.scenario-tab {
-  width: 548px !important;
-  height: 45px !important;
-  background: #82cbfe;
-  margin-top: 5px !important;
-  border: none !important;
-  text-align: left;
-  padding: 16px 0 0 20px !important;
-  font-weight: normal !important;
-  font-size: 0.9rem !important;
-  border-top-left-radius: 6px !important;
-  border-top-right-radius: 6px !important;
-  -moz-border-radius-topleft: 6px !important;
-  -moz-border-radius-topright: 6px !important;
-  -webkit-border-top-left-radius: 6px !important;
-  -webkit-border-top-right-radius: 6px !important;
+.scenario-select {
+  display: inline;
+  width: 190px;
+  height: 27px;
+  margin: 2px;
+  padding: 2px 2px;
+  margin: 2px 4px 1px 0px;
 }
 
-/* line 819, ../../sass/_main.scss */
-.scenario-tab span {
-  float: left;
-  margin-top: 11px;
-  margin-left: 20px;
+/* line 809, ../../sass/_main.scss */
+.drop-down-list-item {
+  padding: 0.75rem 0.5rem;
 }
 
-/* line 825, ../../sass/_main.scss */
-.scenario-tab span em {
-  font-weight: bold !important;
-  font-style: normal !important;
+/* line 813, ../../sass/_main.scss */
+.new-scenario-btn {
+  color: white;
 }
 
-/* line 832, ../../sass/_main.scss */
-.scenario-tab2 {
-  width: 720px !important;
-  height: 46px !important;
-  background: #82cbfe;
-  margin-top: 3px !important;
-  margin-bottom: 1.5rem !important;
-  border: none !important;
-  text-align: left;
-  padding: 16px 0 0 20px !important;
-  font-weight: normal !important;
-  font-size: 0.9rem !important;
-  border-top-left-radius: 6px !important;
-  border-top-right-radius: 6px !important;
-  -moz-border-radius-topleft: 6px !important;
-  -moz-border-radius-topright: 6px !important;
-  -webkit-border-top-left-radius: 6px !important;
-  -webkit-border-top-right-radius: 6px !important;
+/* line 817, ../../sass/_main.scss */
+.new-scenario-btn:hover {
+  cursor: pointer;
+  color: #eeeeee;
 }
 
-/* line 851, ../../sass/_main.scss */
-.scenario-tab2 span {
-  margin-top: 1px;
-  display: inline-block;
-}
-
-/* line 856, ../../sass/_main.scss */
-.scenario-tab2 span em {
-  font-weight: bold !important;
-  font-style: normal !important;
-}
-
-/* line 861, ../../sass/_main.scss */
-.scenario-tab2 .fa {
-  left: -5px;
-  position: relative;
+/* line 822, ../../sass/_main.scss */
+#newScenarioControl {
+  margin-left: -10px;
+  margin-top: 6px;
 }
