@@ -400,13 +400,13 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       replace: 'true',
       templateUrl: mcdaRootPath + 'partials/remark.html',
       link: function(scope, element, attrs) {
-        var cachedRemark = scope.remark;
-        scope.connor = "yo connot !";
+        scope.cachedRemark = scope.remark;
+
         scope.model.cancelRemarks = function() {
-          scope.remark = cachedRemark;
+          scope.remark = scope.cachedRemark;
         };
         scope.model.saveRemarks = function() {
-          cachedRemark = scope.remark;
+          scope.cachedRemark = scope.remark;
           scope.saveRemarks();
         }
         $(".remarkbutton").click(function() {

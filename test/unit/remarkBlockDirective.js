@@ -11,26 +11,30 @@ define(['angular', 'angular-mocks', 'mcda/directives'],
       }));
 
       beforeEach(inject(function($rootScope, $compile, $httpBackend, $templateCache) {
-        //$httpBackend.when('GET', 'yopath/partials/remark.html').respond(replacedHtml);
-
-     //   template = $templateCache.get('app/partials/remark.html');
-     //  $templateCache.put('mcda/partials/remark.html',template);
-
-        $rootScope.remarkStr = "initial value";
-        $rootScope.saveRemarks = function() {};
+      
+        $rootScope.remarkStr = 'initial value';
+        $rootScope.saveRemarks = jasmine.createSpy('saveRemarks');
 
         element = angular.element('<remarkblock remark="remarkStr" save-remarks="saveRemarks"></remarkblock>');
         scope = $rootScope;
         element = $compile(element)(scope);
         scope.$digest();
-      //  $httpBackend.flush();
+
       }));
 
-      it('should true', function() {
-        expect(element.html()).not.toBeNull();
-        var btn = $('#remark-succes-btn', element);
-        btn.click(); 
-        
+      it('should put back the old remark when cancelled', function() {
+        var isolateScope = element.isolateScope();
+        isolateScope.remark = 'new value';
+        isolateScope.model.cancelRemarks();
+        expect(isolateScope.remark).toEqual('initial value');
       });
+
+      it('should call save and update the cached remark when saving', function() {
+        var isolateScope = element.isolateScope();
+        isolateScope.remark = 'new value';
+        isolateScope.model.saveRemarks();
+        expect(isolateScope.cachedRemark).toEqual('new value');
+        expect(scope.saveRemarks).toHaveBeenCalled();
+      })
     });
   });
