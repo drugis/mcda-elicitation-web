@@ -1,5 +1,6 @@
 define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
   return function($scope, $location, $state, Tasks, TaskDependencies, currentWorkspace, currentScenario) {
+    $scope.workspace = currentWorkspace;
     $scope.scenario = currentScenario;
     $scope.scenarios = currentWorkspace.query();
 

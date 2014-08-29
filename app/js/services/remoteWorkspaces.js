@@ -25,7 +25,7 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
       } else {
         var workspaceName = $window.config.workspaceName || 'workspaces';
         var path = $location.path();
-         repositoryUrl = path.substr(0, path.lastIndexOf(workspaceName) + workspaceName.length + 1);
+        repositoryUrl = path.substr(0, path.lastIndexOf(workspaceName) + workspaceName.length + 1);
       }
 
       var WorkspaceResource = $resource(repositoryUrl + ":workspaceId", {
@@ -38,10 +38,24 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
       });
 
       var redirectToDefaultView = function(workspaceId, scenarioId) {
-        $state.go(Config.defaultView, {workspaceId: workspaceId, scenarioId: scenarioId});
+        $state.go(Config.defaultView, {
+          workspaceId: workspaceId,
+          scenarioId: scenarioId
+        });
       };
 
+
+      function addValueTree(problem) {
+        if (!problem.valueTree) {
+          problem.valueTree = {
+            "title": "Overall value",
+            "criteria": _.keys(problem.criteria)
+          };
+        }
+      }
       var decorate = function(workspace) {
+        addValueTree(workspace.problem);
+
         var ScenarioResource = $resource(
           repositoryUrl + ":workspaceId/scenarios/:scenarioId", {
             workspaceId: workspace.id,
