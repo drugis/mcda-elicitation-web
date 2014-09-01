@@ -24,7 +24,7 @@
           <div class="columns large-6">
             <ul class="overview-nav">
               <li class="tab-corners " ng-class="{activetab: taskId==='preferences'}"><a ui-sref="preferences">Preferences</a></li>
-              <li class="tab-corners " ng-class="{activetab: taskId==='results'}"><a ui-sref="results">Results</a></li>
+              <li class="tab-corners " ng-class="{activetab: taskId==='results'}"><a ng-if="resultsAccessible" ui-sref="results">Results</a><a ng-if="!resultsAccessible" href="javascript:void(null);">Results</a></li>
             </ul>
           </div>
         </div>
