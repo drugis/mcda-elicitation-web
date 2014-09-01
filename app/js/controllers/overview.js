@@ -1,7 +1,7 @@
 'use strict';
 define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
     function (Config, patavi, angular, angularanimate, mmfoundation, _) {
-      var dependencies = ['$scope', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'currentScenario', 'taskDefinition', config.remarksRepository.service];
+      var dependencies = ['$scope', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'currentScenario', 'taskDefinition', config.workspacesRepository.type + 'Remarks'];
       var OverviewController = function ($scope, PartialValueFunction, Tasks, TaskDependencies, intervalHull, currentScenario, taskDefinition, Remarks) {
 
         $scope.intervalHull = intervalHull;
@@ -20,7 +20,7 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
         $scope.$parent.taskId = taskDefinition.id;
 
         var state = taskDefinition.clean(scenario.state);
-        var problem = state.problem;
+        var problem = $scope.workspace.problem; // don't get the problem from the scenario
 
         var errorHandler = function (code, error) {
           var message = {

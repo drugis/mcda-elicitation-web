@@ -12,6 +12,7 @@ define(
    'angularanimate',
    'mcda/services/localRemarks',
    'mcda/services/localWorkspaces',
+   'mcda/services/remoteRemarks',
    'mcda/services/remoteWorkspaces',
    'mcda/services/taskDependencies',
    'mcda/services/errorHandling',
@@ -26,6 +27,7 @@ define(
       'mm.foundation',
       'elicit.localRemarks',
       'elicit.localWorkspaces',
+      'elicit.remoteRemarks',
       'elicit.remoteWorkspaces',
       'elicit.util',
       'elicit.directives',
@@ -108,7 +110,7 @@ define(
         url: '/workspaces/:workspaceId',
         templateUrl: baseTemplatePath + 'workspace.html',
         resolve: {
-          currentWorkspace: ["$stateParams", config.workspacesRepository.service, function($stateParams, Workspaces) {
+          currentWorkspace: ["$stateParams", config.workspacesRepository.type + 'Workspaces', function($stateParams, Workspaces) {
             return Workspaces.get($stateParams.workspaceId);
           }]
         },

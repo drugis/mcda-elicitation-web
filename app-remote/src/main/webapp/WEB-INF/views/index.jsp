@@ -71,7 +71,7 @@
     window.config = {
       examplesRepository : "examples/",
       workspacesRepository : {
-        service : "RemoteWorkspaces",
+        type : "Remote",
         url : "/workspaces/",
         _csrf_token : "${_csrf.token}",
         _csrf_header : "${_csrf.headerName}"
