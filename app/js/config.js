@@ -40,7 +40,7 @@ define([], function() {
         resets: ['non-ordinal-preferences']},
       { id: 'preferences',
         title: 'Preferences',
-        controller: 'OverviewController',
+        controller: 'PreferencesController',
         templateUrl: 'preferences.html',
         requires: ['scale-ranges', 'partial-value-functions'],
         resets:[]},
