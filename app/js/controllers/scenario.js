@@ -37,5 +37,21 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
         .then(redirect);
     };
 
+    $scope.isEditTitleVisible = false;
+
+    $scope.editTitle = function () {
+      $scope.isEditTitleVisible = true;
+      $scope.scenarioTitleCache = $scope.scenario.title;
+    };
+
+    $scope.saveTitle = function () {
+      $scope.scenario.title = $scope.scenarioTitleCache;
+      $scope.scenario.save();
+      $scope.isEditTitleVisible = false;
+    };
+
+    $scope.cancelTitle = function () {
+      $scope.isEditTitleVisible = false;
+    };
   };
 });

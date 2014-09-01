@@ -51,10 +51,10 @@ define([], function() {
         requires: ['scale-ranges', 'partial-value-functions'],
         resets: []},
       {
-        id: 'effectstable',
-        title: 'Effects Table',
-        controller: 'OverviewController',
-        templateUrl: "effectstable.html",
+        id: 'effectsTable',
+        title: 'Effects table',
+        controller: 'EffectsTableController',
+        templateUrl: "effectsTable.html",
         requires: ['scale-ranges', 'partial-value-functions'],
         resets: []},
         ]};

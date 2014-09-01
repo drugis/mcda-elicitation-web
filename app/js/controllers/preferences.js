@@ -116,23 +116,6 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
         $scope.preferences = eqnArray;
 
         $scope.getXY = _.memoize(PartialValueFunction.getXY, function (arg) { return angular.toJson(arg.pvf); });
-
-        $scope.isEditTitleVisible = false;
-
-        $scope.editTitle = function () {
-          $scope.isEditTitleVisible = true;
-          $scope.scenarioTitleCache = $scope.scenario.title;
-        };
-
-        $scope.saveTitle = function () {
-          $scope.scenario.title = $scope.scenarioTitleCache;
-          $scope.scenario.save();
-          $scope.isEditTitleVisible = false;
-        };
-
-        $scope.cancelTitle = function () {
-          $scope.isEditTitleVisible = false;
-        };
       };
 
       return dependencies.concat(PreferencesController);
