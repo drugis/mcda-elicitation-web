@@ -41,5 +41,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 		registry.addResourceHandler("/bower_components/**").addResourceLocations("/resources/bower_components/");
 		registry.addResourceHandler("/app/**").addResourceLocations("/resources/app/");
 		registry.addResourceHandler("/examples/**").addResourceLocations("/resources/examples/");
+		registry.addResourceHandler("/template/**").addResourceLocations("/resources/bower_components/angular-foundation-assets/template/"); // hack for angular-foundation
 	}
 }
