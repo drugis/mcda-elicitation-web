@@ -30,7 +30,7 @@
       <td>{{criterion.title}}</td>
       <td>{{criterion.scale[0] | number:3}}, {{criterion.scale[1] | number:3}}</td>
       <td>{{intervalHull(scales[criterion.id])[0] | number:3}}, {{intervalHull(scales[criterion.id])[1] | number:3}}</td>
-      <td>{{criterion.pvf.range[0] | number:3}}, {{criterion.pvf.range[1] | number:3}}</td>
+      <td><span ng-if="criterion.pvf.range">{{criterion.pvf.range[0] | number:3}}, {{criterion.pvf.range[1] | number:3}}</span></td>
       <td>{{criterion.unitOfMeasurement}}</td>
     </tr>
     </tbody>
@@ -62,7 +62,7 @@
   <ul class="no-bullet">
     <li ng-repeat="criterion in criteria">
       <span mathjax-bind="criterion.w"></span>: {{criterion.title}}
-      ({{criterion.worst() | precision: 3}} &rarr; {{criterion.best() | precision: 3}})
+      ({{criterion.worst() | number: 3}} &rarr; {{criterion.best() | number: 3}})
     </li>
   </ul>
 

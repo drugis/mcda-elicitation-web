@@ -19,8 +19,7 @@ define(
    'mcda/services/hashCodeService',
    'mcda/services/util',
    'mcda/controllers',
-   'mcda/directives',
-   'mcda/filters'],
+   'mcda/directives'],
   function(angular, require, _, $, NProgress, Config) {
     var dependencies = [
       'ui.router',
@@ -31,7 +30,6 @@ define(
       'elicit.remoteWorkspaces',
       'elicit.util',
       'elicit.directives',
-      'elicit.filters',
       'elicit.controllers',
       'elicit.taskDependencies',
       'elicit.errorHandling'];
