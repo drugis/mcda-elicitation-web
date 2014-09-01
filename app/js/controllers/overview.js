@@ -66,15 +66,15 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
           return result;
         };
 
-        var linearPVFs = _.filter(problem.criteria, function (criterion) {
+        var linearPVFs = _.filter(scenario.state.problem.criteria, function (criterion) {
           return criterion.pvf && criterion.pvf.type === "linear";
         }).length;
         var pvfStatus = "linear";
 
         if (linearPVFs === 0) {
           pvfStatus = "piece-wise linear";
-        } else if (linearPVFs < _.size(problem.criteria)) {
-          pvfStatus = linearPVFs + " linear; " + (_.size(problem.criteria) - linearPVFs) + " piece-wise linear";
+        } else if (linearPVFs < _.size(scenario.state.problem.criteria)) {
+          pvfStatus = linearPVFs + " linear; " + (_.size(problem.state.problem.criteria) - linearPVFs) + " piece-wise linear";
         }
 
         var prefStatus = _.values(_.pick({
@@ -83,7 +83,7 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
             "exact swing": "Exact SWING"
         }, _.unique(_.pluck(state.prefs, "type"))));
 
-        var scaleRange = _.every(problem.criteria, function (criterion) {
+        var scaleRange = _.every(scenario.state.problem.criteria, function (criterion) {
           return criterion.pvf && criterion.pvf.range;
         }) ? "defined" : "missing";
 
@@ -95,7 +95,7 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
 
         $scope.problem = problem;
 
-        $scope.criteria = _.sortBy(_.map(_.pairs(problem.criteria), function (crit, idx) {
+        $scope.criteria = _.sortBy(_.map(_.pairs(scenario.state.problem.criteria), function (crit, idx) {
           return _.extend(crit[1], { id: crit[0], w: "w_" + (idx + 1) });
         }), "w");
 
