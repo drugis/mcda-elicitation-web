@@ -1,5 +1,23 @@
 <div ng-if="currentStep.results">
-      <h3>Results</h3>
+  <h3>Results</h3>
+
+  <h4 ng-show="!isEditTitleVisible" class="subheader">
+    <span ng-bind="scenario.title"></span>
+    <a ng-click="editTitle()"><i class="fa fa-edit"></i></a>
+  </h4>
+  <div class="row" ng-show="isEditTitleVisible">
+    <div class="columns large-8 small-12">
+      <form>
+        <div class="row collapse">
+          <div class="columns small-8"><input type="text" ng-model="scenarioTitle.value"></div>
+          <div class="columns small-2"><button class="button postfix" ng-click="saveTitle()">Save</button></div>
+          <div class="columns small-2"><button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button></div>            
+        </div>
+      </form>
+    </div>
+  </div>
+
+
     <section class="row underlined-div" style="height: 450px;">
     <h5>Rank acceptabilities</h5>
     <div style="width: 400px; height: 400px">

@@ -1,5 +1,7 @@
 <div class="row">
   <div class="columns large-12">
+    <h3>Overview</h3>
+
     <h4>Problem description</h4>
     <p>
       <span style="white-space: pre" ng-if="problem.description">{{problem.description}}</span>
@@ -10,8 +12,6 @@
     <ul>
       <li ng-repeat="alternative in problem.alternatives" ng-bind="alternative.title"></li>
     </ul>
-
-    <hr />
 
     <h4>Value Tree</h4>
     <value-tree children='[expandedValueTree]'></value-tree>

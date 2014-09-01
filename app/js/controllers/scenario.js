@@ -38,14 +38,15 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
     };
 
     $scope.isEditTitleVisible = false;
+    $scope.scenarioTitle = {};
 
     $scope.editTitle = function () {
       $scope.isEditTitleVisible = true;
-      $scope.scenarioTitleCache = $scope.scenario.title;
+      $scope.scenarioTitle.value = $scope.scenario.title;
     };
 
     $scope.saveTitle = function () {
-      $scope.scenario.title = $scope.scenarioTitleCache;
+      $scope.scenario.title = $scope.scenarioTitle.value;
       $scope.scenario.save();
       $scope.isEditTitleVisible = false;
     };
