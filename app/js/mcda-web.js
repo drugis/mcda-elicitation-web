@@ -7,22 +7,29 @@ define(
    'NProgress',
    'mcda/config',
    'foundation',
+   'mmfoundation',
    'angular-ui-router',
+   'angularanimate',
+   'mcda/services/localRemarks',
    'mcda/services/localWorkspaces',
+   'mcda/services/remoteRemarks',
    'mcda/services/remoteWorkspaces',
    'mcda/services/taskDependencies',
    'mcda/services/errorHandling',
    'mcda/services/hashCodeService',
+   'mcda/services/util',
    'mcda/controllers',
-   'mcda/directives',
-   'mcda/filters'],
+   'mcda/directives'],
   function(angular, require, _, $, NProgress, Config) {
     var dependencies = [
       'ui.router',
+      'mm.foundation',
+      'elicit.localRemarks',
       'elicit.localWorkspaces',
+      'elicit.remoteRemarks',
       'elicit.remoteWorkspaces',
+      'elicit.util',
       'elicit.directives',
-      'elicit.filters',
       'elicit.controllers',
       'elicit.taskDependencies',
       'elicit.errorHandling'];
@@ -88,6 +95,7 @@ define(
       throw "Failed to detect location for mcda-web.";
     })());
 
+
     app.config(['mcdaRootPath', 'Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider', function(basePath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider) {
       var baseTemplatePath = basePath + "views/";
       
@@ -95,11 +103,12 @@ define(
       
       NProgress.configure({ showSpinner: false });
 
+        //ui-router code starts here
       $stateProvider.state("workspace", {
         url: '/workspaces/:workspaceId',
         templateUrl: baseTemplatePath + 'workspace.html',
         resolve: {
-          currentWorkspace: ["$stateParams", config.workspacesRepository.service, function($stateParams, Workspaces) {
+          currentWorkspace: ["$stateParams", config.workspacesRepository.type + 'Workspaces', function($stateParams, Workspaces) {
             return Workspaces.get($stateParams.workspaceId);
           }]
         },
@@ -135,11 +144,14 @@ define(
       });
 
       // Default route
-      $stateProvider.state('choose-problem',
-                           { url: '/choose-problem',
-                             templateUrl: baseTemplatePath + 'chooseProblem.html',
-                             controller: "ChooseProblemController" });
-      $urlRouterProvider.otherwise('/choose-problem');
+    $stateProvider.state('choose-problem',
+        { url: '/choose-problem',
+            templateUrl: baseTemplatePath + 'chooseProblem.html',
+            controller: "ChooseProblemController"
+        })
+        ;
+
+    $urlRouterProvider.otherwise('/choose-problem');
     }]);
 
     return app;

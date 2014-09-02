@@ -1,0 +1,115 @@
+<h3>Preferences</h3>
+
+<h4 ng-show="!isEditTitleVisible" class="subheader">
+  <span ng-bind="scenario.title"></span>
+  <a ng-click="editTitle()"><i class="fa fa-edit"></i></a>
+</h4>
+<div class="row" ng-show="isEditTitleVisible">
+  <div class="columns large-8 small-12">
+    <form>
+      <div class="row collapse">
+        <div class="columns small-8"><input type="text" ng-model="scenarioTitle.value"></div>
+        <div class="columns small-2"><button class="button postfix" ng-click="saveTitle()">Save</button></div>
+        <div class="columns small-2"><button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button></div>            
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<div id="progress-bar-block" class="prefs-block">
+  <p>Follow the four steps below to set your parameters for this scenario. Completing all steps is not required.</p>
+  <div class="inline">Your progress:</div> 
+  <div class="inline">
+    <progressbar max="200" value="166" type="success"></progressbar>
+  </div>
+  <!--  see http://madmimi.github.io/angular-foundation/#/getting_started for dynamic examples -->
+  <div id="results-avail"></div>
+</div>
+
+<div class="prefs-block">
+  <h3>Scale Ranges</h3>
+
+  <a class="button" ui-sref="scale-range">Define Scale Ranges</a>
+
+  <table id="effectstable" class="effectstable">
+    <thead>
+      <tr>
+        <th>Criterion</th>
+        <th>Theoretical Range</th>
+        <th>Observed Range</th>
+        <th>Configured Range</th>
+        <th>Units</th>
+      </tr>
+    </thead>
+    <tbody>   
+    <tr ng-repeat="(key, criterion) in criteria">
+      <td>{{criterion.title}}</td>
+      <td>{{criterion.scale[0] | number:3}}, {{criterion.scale[1] | number:3}}</td>
+      <td>{{intervalHull(scales[criterion.id])[0] | number:3}}, {{intervalHull(scales[criterion.id])[1] | number:3}}</td>
+      <td><span ng-if="criterion.pvf.range">{{criterion.pvf.range[0] | number:3}}, {{criterion.pvf.range[1] | number:3}}</span></td>
+      <td>{{criterion.unitOfMeasurement}}</td>
+    </tr>
+    </tbody>
+  </table> 
+</div>
+
+<div id="partial-value-functions-block" class="prefs-block">
+  <h3>Partial Value Functions</h3>
+
+  <div class="row">
+    <div ng-repeat="criterion in scenario.state.problem.criteria" class="small-12 medium-6 large-4 columns">
+      <h5>{{criterion.title}}</h5>
+
+      <a class="button" ui-sref="partial-value-function">Define partial value function</a>
+
+      <div style="width: 250px; height: 180px">
+        <line-chart ng-if="criterion.pvf.type" value="getXY(criterion)" show-legend="false"></line-chart>
+        <div ng-if="!criterion.pvf.type" style="padding-top: 40px; text-align: center; margin: 0">
+          <i style="font-size: 100px" class="fa fa-question"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="trade-off-block" class="prefs-block">
+  <h3>Trade-offs</h3>
+
+  <ul class="no-bullet">
+    <li ng-repeat="criterion in criteria">
+      <span mathjax-bind="criterion.w"></span>: {{criterion.title}}
+      ({{criterion.worst() | number: 3}} &rarr; {{criterion.best() | number: 3}})
+    </li>
+  </ul>
+
+  <div mathjax-bind="preferences"></div>
+</div>
+
+<div id="trade-off-block" class="prefs-block">
+  <h3>Actions</h3>
+  <ul class="no-bullet">
+    <li ng-repeat="info in tasks.accessible" ng-show="info.task.id != 'overview'">
+    <a ui-sref="{{info.task.id}}" ng-bind="info.task.title"></a>
+    </li>
+    <li ng-repeat="info in tasks.destructive" ng-show="info.task.id != 'overview'">
+    <i class="has-tip fa fa-info-circle"
+      data-tooltip
+      title="Doing this will destroy the following information: {{ dependenciesString(info.safe.resets) }}"></i>
+    <a style="color: red;"
+      ui-sref="{{info.task.id}}" >
+      {{info.task.title}}
+    </a>
+    </li>
+    <li ng-repeat="info in tasks.inaccessible" ng-show="info.task.id != 'overview'">
+    <i class="has-tip fa fa-info-circle"
+      data-tooltip
+      title="The following elicitations are still required: {{ dependenciesString(info.accessible.requires) }}">
+    </i>
+    <span style="color: gray;"
+      ng-bind="info.task.title" ></span>
+    </li>
+  </ul>
+</div>
+    
+

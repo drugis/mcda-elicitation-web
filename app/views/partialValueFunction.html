@@ -15,14 +15,14 @@
                    ng-model="criterion.direction"
                    value="decreasing"
                    ng-selected="criterion.direction =='decreasing'">
-            {{criterion.range[0] | precision: 3}} is best
+            {{criterion.range[0] | number: 3}} is best
           </label>
           <label>
             <input type="radio"
                    ng-model="criterion.direction"
                    value="increasing"
                    ng-selected="criterion.direction == 'increasing'">
-            {{criterion.range[1] | precision: 3}} is best
+            {{criterion.range[1] | number: 3}} is best
           </label>
         </div>
         <div class="large-4 columns">
@@ -38,9 +38,9 @@
     <h4>{{currentStep.problem.criteria[currentStep.choice.criterion].title}}</h4>
     <p>Define the reference levels needed to elict the piecewise <abbr title="partial value function">PVF</abbr>: </p>
     <ul>
-      <li><b>{{currentStep.problem.criteria[currentStep.choice.criterion].best() | precision: 3}}</b></li>
+      <li><b>{{currentStep.problem.criteria[currentStep.choice.criterion].best() | number: 3}}</b></li>
       <li ng-repeat="cutoff in currentStep.choice.data[currentStep.choice.criterion].cutoffs">{{cutoff}}</li>
-      <li><b>{{currentStep.problem.criteria[currentStep.choice.criterion].worst() | precision: 3}}</b></li>
+      <li><b>{{currentStep.problem.criteria[currentStep.choice.criterion].worst() | number: 3}}</b></li>
     </ul>
 
     <form name="addCutoff" ng-class="{error: !currentStep.choice.data[currentStep.choice.criterion].validCutoff(cutoff)}" >
@@ -61,18 +61,18 @@
     <h4>{{currentStep.problem.criteria[currentStep.choice.criterion].title}}</h4>
     <div class="row" ng-repeat="(i, base) in currentStep.choice.data[currentStep.choice.criterion].base">
       <div class="columns">
-        <p>Compare the attractiveness of {{base | precision: 3}} to these other options:</p>
+        <p>Compare the attractiveness of {{base | number: 3}} to these other options:</p>
 
         <ul class="no-bullet">
           <li ng-repeat="(j, comp) in currentStep.choice.data[currentStep.choice.criterion].comp[i]">
             <label class="columns large-9">
-              <span style="display: inline-block; width: 12em">Compared to {{comp | precision: 3}}, I</span>
+              <span style="display: inline-block; width: 12em">Compared to {{comp | number: 3}}, I</span>
               <select ng-options="p for (k, p) in currentStep.choice.preferences"
                       ng-model="currentStep.choice.data[currentStep.choice.criterion].preferences[i][i + j + 1]"
                       style="width: 14em; display: inline-block;">
                 <option value="">-- undefined --</option>
               </select>
-              prefer {{base | precision: 3}}.
+              prefer {{base | number: 3}}.
             </label>
           </li>
         </ul>

@@ -1,17 +1,22 @@
-<div class="row">
+<div class="row"> 
   <div class="columns large-12">
+    <div>
+      <strong>Disclaimer:</strong> this tool comes with <em>absolutely no warranty</em>, to the extent
+      permitted by applicable law. No guarantees about the safety of your data can be made.
+    </div> 
 
     <h3>Your workspaces</h3>
     <div class="panel">
-      <ul>
+      <ul class="fontsize">
         <li ng-repeat="workspace in workspacesList | orderBy:'title'">
           <a href="#/workspaces/{{workspace.id}}/scenarios/{{workspace.defaultScenarioId}}/overview"> {{workspace.title}}</a>
+          <a class="deleteicon rounded-small secondary" ng-click="deleteWorkspace()" style="margin-left: 15px;"></a>
         </li>
         <li ng-hide="workspacesList.length">No workspaces.</li>      
       </ul>
     </div>
     
-    <a id="create-workspace-btn" class="button" ng-click="chooseProblemModal.open()"><i class="fa fa-plus"></i> Create workspace</a>
+    <a id="create-workspace-btn" class="button" ng-click="chooseProblemModal.open()" title="Delete workspace"><i class="fa fa-plus"></i> Create workspace</a>
     
     <modal model="chooseProblemModal">
       <h3>Create a new workspace</h3>
@@ -29,7 +34,7 @@
           </label>
         </div>
         
-        <div>
+        <div style="margin:25px 0 0 0;">
           <ul class="button-group">
             <li><a class="button small secondary" ng-click="chooseProblemModal.close()">Cancel</a></li>              
             <li ng-show="model.choice != 'local'">
@@ -44,3 +49,5 @@
     </modal>
   </div>
 </div>
+
+

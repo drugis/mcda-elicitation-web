@@ -2,101 +2,18 @@
   <div class="columns large-12">
     <h3>Overview</h3>
 
-    <ul class="no-bullet">
-      <li><strong>Scenario Title:</strong>
-        <span ng-show="!isEditTitleVisible">
-          <span ng-bind="scenario.title"></span>
-          <a ng-click="editTitle()"><i class="fa fa-edit"></i></a>
-        </span>
-        <div class="row" ng-show="isEditTitleVisible">
-          <div class="columns large-8 small-12">
-            <form>
-              <div class="row collapse">
-                <div class="columns small-8"><input type="text" ng-model="scenarioTitleCache"></div>
-                <div class="columns small-2"><button class="button postfix" ng-click="saveTitle()">Save</button></div>
-                <div class="columns small-2"><button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button></div>            
-              </div>
-            </form>
-          </div>
-        </div>
-      </li>
-      <li><strong>Scale Ranges:</strong> {{status.scaleRange}}</li>
-      <li><strong>Partial Value Functions:</strong> {{status.partialValueFunction}}</li>
-      <li><strong>Preferences:</strong>
-        <span ng-repeat="type in status.preferences">{{type}}<span ng-show="!$last">;</span> </span>
-        <span ng-show="!status.preferences.length">None</span>
-      </li>
-    </ul>
-
-    <pre>{{scales | json}}</pre>
-
-    <h4>Actions</h4>
-    <ul class="no-bullet">
-      <li ng-repeat="info in tasks.accessible" ng-show="info.task.id != 'overview'">
-        <a ui-sref="{{info.task.id}}" ng-bind="info.task.title"></a>
-      </li>
-      <li ng-repeat="info in tasks.destructive" ng-show="info.task.id != 'overview'">
-        <i class="has-tip fa fa-info-circle"
-           data-tooltip
-           title="Doing this will destroy the following information: {{ dependenciesString(info.safe.resets) }}"></i>
-        <a style="color: red;"
-           ui-sref="{{info.task.id}}" >
-          {{info.task.title}}
-        </a>
-      </li>
-      <li ng-repeat="info in tasks.inaccessible" ng-show="info.task.id != 'overview'">
-        <i class="has-tip fa fa-info-circle"
-           data-tooltip
-           title="The following elicitations are still required: {{ dependenciesString(info.accessible.requires) }}">
-        </i>
-        <span style="color: gray;"
-              ng-bind="info.task.title" ></span>
-      </li>
-    </ul>
-
-    <h4>Criteria</h4>
-
-    <div ng-repeat="criterion in problem.criteria" class="row">
-      <div class="columns large-6">
-        <h5>{{criterion.title}}</h5>
-        <ul>
-          <li>Natural scale bounds:
-            [<span ng-repeat="r in criterion.scale track by $index"><span ng-if="r != null">{{r | precision: 3}}</span><span ng-show="!$last">, </span></span>]</li>
-          <li>Configured scale range:
-            [<span ng-repeat="r in criterion.pvf.range">{{r | precision: 3}}<span ng-show="!$last">, </span></span>]</li>
-          <li>Partial value function:
-            <span ng-show="criterion.pvf.type">
-              {{criterion.pvf.type}}; 
-              {{criterion.pvf.direction}}
-            </span>
-            <span ng-show="!criterion.pvf.type">undefined</span>
-          </li>
-        </ul>
-      </div>
-      <div class="columns large-6">
-        <div style="width: 250px; height: 180px">
-          <line-chart ng-if="criterion.pvf.type" value="getXY(criterion)" show-legend="false"></line-chart>
-        </div>
-      </div>
-    </div>
+    <h4>Problem description</h4>
+    <p>
+      <span style="white-space: pre" ng-if="problem.description">{{problem.description}}</span>
+      <span ng-if="!problem.description">No description given.</span>
+    </p>
 
     <h4>Alternatives</h4>
-
     <ul>
       <li ng-repeat="alternative in problem.alternatives" ng-bind="alternative.title"></li>
     </ul>
 
-    <div ng-show="status.preferences.length">
-      <h4>Trade-offs</h4>
-
-      <ul class="no-bullet">
-        <li ng-repeat="criterion in criteria">
-          <span mathjax-bind="criterion.w"></span>: {{criterion.title}}
-          ({{criterion.worst() | precision: 3}} &rarr; {{criterion.best() | precision: 3}})
-        </li>
-      </ul>
-      <div mathjax-bind="preferences"></div>
-    </div>
-
+    <h4>Value Tree</h4>
+    <value-tree children='[expandedValueTree]'></value-tree>
   </div>
 </div>

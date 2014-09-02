@@ -1,6 +1,6 @@
 'use strict';
-define(['angular', 'angular-mocks', 'mcda/services/errorHandling'],
-  function(angular) {
+define(['angular-mocks', 'mcda/services/errorHandling'],
+  function() {
     describe('the errorHandling', function() {
 
       beforeEach(module('elicit.errorHandling'));

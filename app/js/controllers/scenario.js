@@ -1,5 +1,6 @@
 define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
   return function($scope, $location, $state, Tasks, TaskDependencies, currentWorkspace, currentScenario) {
+    $scope.workspace = currentWorkspace;
     $scope.scenario = currentScenario;
     $scope.scenarios = currentWorkspace.query();
 
@@ -34,6 +35,24 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
           "problem": currentWorkspace.problem
         })
         .then(redirect);
+    };
+
+    $scope.isEditTitleVisible = false;
+    $scope.scenarioTitle = {};
+
+    $scope.editTitle = function () {
+      $scope.isEditTitleVisible = true;
+      $scope.scenarioTitle.value = $scope.scenario.title;
+    };
+
+    $scope.saveTitle = function () {
+      $scope.scenario.title = $scope.scenarioTitle.value;
+      $scope.scenario.save();
+      $scope.isEditTitleVisible = false;
+    };
+
+    $scope.cancelTitle = function () {
+      $scope.isEditTitleVisible = false;
     };
   };
 });

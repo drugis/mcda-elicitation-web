@@ -8,6 +8,7 @@ define(['angular-mocks', 'mcda/controllers', 'mcda/services/taskDependencies', '
       beforeEach(module('elicit.controllers'));
       beforeEach(module('elicit.taskDependencies'));
       beforeEach(module('elicit.pvfService'));
+      
 
       function initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, problem) {
         var scope;
@@ -30,7 +31,8 @@ define(['angular-mocks', 'mcda/controllers', 'mcda/services/taskDependencies', '
         $controller('OrdinalSwingController', {
           $scope: scope,
           currentScenario: scenario,
-          taskDefinition: TaskDependencies.extendTaskDefinition(task)
+          taskDefinition: TaskDependencies.extendTaskDefinition(task),
+          mcdaRootPath: 'some mcda rootPath'
         });
         return scope;
       }

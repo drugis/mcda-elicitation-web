@@ -1,12 +1,10 @@
 define(['angular', 'angular-mocks', 'angular-ui-router', 'mcda/services/partialValueFunction', 'mcda/services/remoteWorkspaces'],
   function(angular, RemoteWorkspaces) {
 
-    window.config = {
-      examplesRepository: "/examples/",
-      workspacesRepository: {
-        service: "RemoteWorkspaces",
-        url: "workspaces/"
-      }
+    window.config.examplesRepository = "/examples/";
+    window.config.workspacesRepository = {
+      service: "RemoteWorkspaces",
+      url: "workspaces/"
     };
 
     describe('remote workspace init test', function() {

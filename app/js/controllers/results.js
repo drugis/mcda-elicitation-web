@@ -4,6 +4,7 @@ define(['mcda/config', 'angular', 'mcda/lib/patavi', 'underscore', 'NProgress'],
     var alternatives;
     var criteria;
 
+    $scope.$parent.taskId = taskDefinition.id;
     $rootScope.noProgress = true;
 
     var run = function(state) {
