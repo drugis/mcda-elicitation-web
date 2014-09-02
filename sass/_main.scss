@@ -122,7 +122,7 @@ input[type='file'] {
 /* CSS FOR EFFECTSTABLE */
 
 .check2hide {
-  display: inline-block; 
+  display: inline-block;
   margin-right: 0.8rem;
 }
 
@@ -195,7 +195,7 @@ input[type='file'] {
 
 .effectstable caption span {
   color: #0079A1;
-} 
+}
 
 .effectstable th {
   text-align: left;
@@ -335,9 +335,9 @@ input[type='file'] {
 }
 
 .tableshadow {
-  -moz-box-shadow: 0px 0px 10px 1px #6e6e6e; 
-  -webkit-box-shadow: 0px 0px 10px 1px #6e6e6e; 
-  box-shadow: 0px 0px 10px 1px #6e6e6e; 
+  -moz-box-shadow: 0px 0px 10px 1px #6e6e6e;
+  -webkit-box-shadow: 0px 0px 10px 1px #6e6e6e;
+  box-shadow: 0px 0px 10px 1px #6e6e6e;
 }
 .hidethis {
   display:none;
@@ -419,7 +419,7 @@ div.sidepanel.ng-hide {
 }
 
 .sidepanel tr {
-  background: none;      
+  background: none;
 }
 
 .sidepanel table tr:nth-child(even) {
@@ -464,23 +464,8 @@ div.sidepanel.ng-hide {
   display: none;
   padding: 1px;
   min-width: 400px;
-  text-align: left;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0,0,0,.2);
-  border-radius: 6px;
-  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
-  box-shadow: 0 5px 10px rgba(0,0,0,.2);
-  white-space: normal;
-  > *:last-child {
-    margin-bottom: 9px;
-  }
-  
-}
+  padding: 0.5rem 1rem;
 
-.mcda-dropdown-content {
-  margin: 9px 14px;
 }
 
 /* results page */
@@ -542,7 +527,7 @@ div.sidepanel.ng-hide {
   left: 570px;
 }
 
-/*----- TREEVIEW -----*/ 
+/*----- TREEVIEW -----*/
 
 /* general tree css */
 
@@ -736,7 +721,7 @@ li.tab-corners.activetab {
  border-top-left-radius: 4px;
  border-top-right-radius: 4px;
  -moz-border-radius-topleft: 4px;
- -moz-border-radius-topright: 4px; 
+ -moz-border-radius-topright: 4px;
  -webkit-border-top-left-radius: 4px;
  -webkit-border-top-right-radius: 4px;
 }
@@ -745,7 +730,7 @@ li.tab-corners.activetab {
   padding-top:1rem;
 }
 
-/*------------ NAVBAR --------------*/   
+/*------------ NAVBAR --------------*/
 
 #navbar {
  position: relative;
@@ -772,7 +757,7 @@ li.tab-corners.activetab {
  border-top-left-radius: 4px;
  border-top-right-radius: 4px;
  -moz-border-radius-topleft: 4px;
- -moz-border-radius-topright: 4px; 
+ -moz-border-radius-topright: 4px;
  -webkit-border-top-left-radius: 4px;
  -webkit-border-top-right-radius: 4px;
  float: left;
@@ -812,7 +797,7 @@ li.tab-corners.activetab {
 
 .new-scenario-btn {
   color: white;
-}  
+}
 
 .new-scenario-btn:hover {
   cursor: pointer;

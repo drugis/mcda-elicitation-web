@@ -8635,28 +8635,11 @@ div.sidepanel.ng-hide {
   display: none;
   padding: 1px;
   min-width: 400px;
-  text-align: left;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0, 0, 0, 0.2);
-  border-radius: 6px;
-  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-  white-space: normal;
-}
-/* line 476, ../../sass/_main.scss */
-.mcda-dropdown > *:last-child {
-  margin-bottom: 9px;
-}
-
-/* line 482, ../../sass/_main.scss */
-.mcda-dropdown-content {
-  margin: 9px 14px;
+  padding: 0.5rem 1rem;
 }
 
 /* results page */
-/* line 487, ../../sass/_main.scss */
+/* line 472, ../../sass/_main.scss */
 #ranktable {
   display: inline-block;
   clear: none;
@@ -8665,19 +8648,19 @@ div.sidepanel.ng-hide {
   margin-left: 500px;
 }
 
-/* line 495, ../../sass/_main.scss */
+/* line 480, ../../sass/_main.scss */
 .underlined-div {
   border-bottom: 1px solid #A0D3E8;
   margin-bottom: 1.5rem !important;
 }
 
-/* line 500, ../../sass/_main.scss */
+/* line 485, ../../sass/_main.scss */
 .fontsize {
   font-size: 0.875rem !important;
 }
 
 /* --- overview page ----- */
-/* line 505, ../../sass/_main.scss */
+/* line 490, ../../sass/_main.scss */
 .remarksTree {
   /*margin: 0;*/
   padding: 0;
@@ -8685,35 +8668,35 @@ div.sidepanel.ng-hide {
   list-style-type: none;
 }
 
-/* line 512, ../../sass/_main.scss */
+/* line 497, ../../sass/_main.scss */
 .showRemark p {
   text-align: left;
 }
 
 /* ----- preferences table ------ */
-/* line 517, ../../sass/_main.scss */
+/* line 502, ../../sass/_main.scss */
 .prefs-block {
   padding-bottom: 1.5rem;
   border-bottom: 1px solid #A0D3E8;
   margin-bottom: 1.5rem;
 }
 
-/* line 523, ../../sass/_main.scss */
+/* line 508, ../../sass/_main.scss */
 .inline {
   display: inline-block;
 }
 
-/* line 527, ../../sass/_main.scss */
+/* line 512, ../../sass/_main.scss */
 .block {
   display: block;
 }
 
-/* line 531, ../../sass/_main.scss */
+/* line 516, ../../sass/_main.scss */
 .none {
   display: none !important;
 }
 
-/* line 535, ../../sass/_main.scss */
+/* line 520, ../../sass/_main.scss */
 #results-avail {
   position: absolute;
   height: 42px;
@@ -8726,7 +8709,7 @@ div.sidepanel.ng-hide {
 
 /*----- TREEVIEW -----*/
 /* general tree css */
-/* line 549, ../../sass/_main.scss */
+/* line 534, ../../sass/_main.scss */
 treecontrol {
   /* prevent user selection */
   -moz-user-select: -moz-none;
@@ -8741,7 +8724,7 @@ treecontrol {
   text-decoration: none;
 }
 
-/* line 564, ../../sass/_main.scss */
+/* line 549, ../../sass/_main.scss */
 treecontrol ul {
   margin: 0;
   padding: 0;
@@ -8750,83 +8733,83 @@ treecontrol ul {
   overflow: hidden;
 }
 
-/* line 572, ../../sass/_main.scss */
+/* line 557, ../../sass/_main.scss */
 treecontrol li {
   position: relative;
   padding: 0 0 0 20px;
   line-height: 20px;
 }
 
-/* line 578, ../../sass/_main.scss */
+/* line 563, ../../sass/_main.scss */
 treecontrol li.tree-expanded i.tree-normal, treecontrol li.tree-collapsed i.tree-normal {
   display: none;
 }
 
-/* line 579, ../../sass/_main.scss */
+/* line 564, ../../sass/_main.scss */
 treecontrol li.tree-expanded i.tree-has-children, treecontrol li.tree-collapsed i.tree-has-children {
   display: inline;
 }
 
-/* line 580, ../../sass/_main.scss */
+/* line 565, ../../sass/_main.scss */
 treecontrol li.tree-normal i.tree-has-children {
   display: none;
 }
 
-/* line 581, ../../sass/_main.scss */
+/* line 566, ../../sass/_main.scss */
 treecontrol li.tree-normal i.tree-normal {
   display: inline;
 }
 
-/* line 583, ../../sass/_main.scss */
+/* line 568, ../../sass/_main.scss */
 treecontrol li i {
   cursor: pointer;
 }
 
-/* line 587, ../../sass/_main.scss */
+/* line 572, ../../sass/_main.scss */
 treecontrol li .tree-label {
   cursor: pointer;
   display: inline;
 }
 
 /* classic tree css */
-/* line 594, ../../sass/_main.scss */
+/* line 579, ../../sass/_main.scss */
 treecontrol.tree-classic li.tree-expanded i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/folder.png") no-repeat;
 }
 
-/* line 599, ../../sass/_main.scss */
+/* line 584, ../../sass/_main.scss */
 treecontrol.tree-classic li.tree-collapsed i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/folder-closed.png") no-repeat;
 }
 
-/* line 604, ../../sass/_main.scss */
+/* line 589, ../../sass/_main.scss */
 treecontrol.tree-classic li.tree-normal i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/file.png") no-repeat;
 }
 
-/* line 609, ../../sass/_main.scss */
+/* line 594, ../../sass/_main.scss */
 treecontrol.tree-classic li .tree-selected {
   background-color: #aaddff;
   font-weight: bold;
 }
 
 /* light tree css */
-/* line 616, ../../sass/_main.scss */
+/* line 601, ../../sass/_main.scss */
 treecontrol.tree-light li.tree-expanded i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-opened-2.png") no-repeat;
 }
 
-/* line 621, ../../sass/_main.scss */
+/* line 606, ../../sass/_main.scss */
 treecontrol.tree-light li.tree-collapsed i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-closed-2.png") no-repeat;
 }
 
-/* line 626, ../../sass/_main.scss */
+/* line 611, ../../sass/_main.scss */
 treecontrol.tree-light li.tree-normal i {
   padding: 1px 10px;
   width: 16px;
@@ -8834,25 +8817,25 @@ treecontrol.tree-light li.tree-normal i {
   background: none no-repeat;
 }
 
-/* line 632, ../../sass/_main.scss */
+/* line 617, ../../sass/_main.scss */
 treecontrol.tree-light li .tree-selected {
   font-weight: bold;
 }
 
 /* dark tree css */
-/* line 638, ../../sass/_main.scss */
+/* line 623, ../../sass/_main.scss */
 treecontrol.tree-dark li.tree-expanded i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-opened-light.png") no-repeat;
 }
 
-/* line 643, ../../sass/_main.scss */
+/* line 628, ../../sass/_main.scss */
 treecontrol.tree-dark li.tree-collapsed i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-closed-light.png") no-repeat;
 }
 
-/* line 648, ../../sass/_main.scss */
+/* line 633, ../../sass/_main.scss */
 treecontrol.tree-dark li.tree-normal i {
   padding: 1px 10px;
   width: 16px;
@@ -8860,17 +8843,17 @@ treecontrol.tree-dark li.tree-normal i {
   background: none no-repeat;
 }
 
-/* line 654, ../../sass/_main.scss */
+/* line 639, ../../sass/_main.scss */
 treecontrol.tree-dark li .tree-selected {
   font-weight: bold;
 }
 
-/* line 658, ../../sass/_main.scss */
+/* line 643, ../../sass/_main.scss */
 treecontrol.tree-dark {
   color: #ddd;
 }
 
-/* line 662, ../../sass/_main.scss */
+/* line 647, ../../sass/_main.scss */
 .button.tiny-icon {
   padding-top: 0.325rem;
   padding-right: 0.75rem;
@@ -8879,22 +8862,22 @@ treecontrol.tree-dark {
   font-size: 1rem;
 }
 
-/* line 670, ../../sass/_main.scss */
+/* line 655, ../../sass/_main.scss */
 div.row .workspace-control-tab {
   background-color: #82cbfe;
   margin-right: 0.5rem;
 }
-/* line 673, ../../sass/_main.scss */
+/* line 658, ../../sass/_main.scss */
 div.row .workspace-control-tab .overview-nav {
   float: right;
 }
 
-/* line 678, ../../sass/_main.scss */
+/* line 663, ../../sass/_main.scss */
 .overview-nav-container {
   border-bottom: 1px solid #4a91c4;
   height: 49px;
 }
-/* line 682, ../../sass/_main.scss */
+/* line 667, ../../sass/_main.scss */
 .overview-nav-container .overview-nav {
   position: relative;
   height: 50px;
@@ -8903,7 +8886,7 @@ div.row .workspace-control-tab .overview-nav {
   margin: 0 0 -2px 0;
   text-align: center;
 }
-/* line 691, ../../sass/_main.scss */
+/* line 676, ../../sass/_main.scss */
 .overview-nav-container .overview-nav > ul {
   bottom: -4px;
   list-style-type: none;
@@ -8912,7 +8895,7 @@ div.row .workspace-control-tab .overview-nav {
   margin: 2px auto 0 auto;
   position: relative;
 }
-/* line 700, ../../sass/_main.scss */
+/* line 685, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li {
   background-color: #0079a1;
   border: 1px solid #4a91c4;
@@ -8925,30 +8908,30 @@ div.row .workspace-control-tab .overview-nav {
   padding: 0.4rem 0.8rem;
   list-style: none;
 }
-/* line 711, ../../sass/_main.scss */
+/* line 696, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li a {
   color: white;
 }
-/* line 716, ../../sass/_main.scss */
+/* line 701, ../../sass/_main.scss */
 .overview-nav-container .overview-nav > li:first-child {
   margin-left: 15px;
 }
-/* line 721, ../../sass/_main.scss */
+/* line 706, ../../sass/_main.scss */
 .overview-nav-container .overview-nav > li > a {
   background: none;
   border: none;
 }
 
-/* line 728, ../../sass/_main.scss */
+/* line 713, ../../sass/_main.scss */
 li.tab-corners.activetab {
   background-color: white;
 }
-/* line 730, ../../sass/_main.scss */
+/* line 715, ../../sass/_main.scss */
 li.tab-corners.activetab a {
   color: black;
 }
 
-/* line 735, ../../sass/_main.scss */
+/* line 720, ../../sass/_main.scss */
 .tab-corners {
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
@@ -8958,13 +8941,13 @@ li.tab-corners.activetab a {
   -webkit-border-top-right-radius: 4px;
 }
 
-/* line 744, ../../sass/_main.scss */
+/* line 729, ../../sass/_main.scss */
 .scenario-menu {
   padding-top: 1rem;
 }
 
 /*------------ NAVBAR --------------*/
-/* line 750, ../../sass/_main.scss */
+/* line 735, ../../sass/_main.scss */
 #navbar {
   position: relative;
   width: 100%;
@@ -8974,7 +8957,7 @@ li.tab-corners.activetab a {
   border-bottom: 1px solid #4a91c4;
 }
 
-/* line 759, ../../sass/_main.scss */
+/* line 744, ../../sass/_main.scss */
 #navbar ul {
   bottom: -4px;
   list-style-type: none;
@@ -8984,7 +8967,7 @@ li.tab-corners.activetab a {
   position: relative;
 }
 
-/* line 768, ../../sass/_main.scss */
+/* line 753, ../../sass/_main.scss */
 #navbar li {
   background: #fff;
   border: 1px solid #4a91c4;
@@ -9006,17 +8989,17 @@ li.tab-corners.activetab a {
   padding: 0.4rem 0 0 0;
 }
 
-/* line 789, ../../sass/_main.scss */
+/* line 774, ../../sass/_main.scss */
 #navbar li a {
   color: #333;
 }
 
-/* line 796, ../../sass/_main.scss */
+/* line 781, ../../sass/_main.scss */
 #navbar2 .activetab a {
   color: #fff !important;
 }
 
-/* line 800, ../../sass/_main.scss */
+/* line 785, ../../sass/_main.scss */
 .scenario-select {
   display: inline;
   width: 190px;
@@ -9026,23 +9009,23 @@ li.tab-corners.activetab a {
   margin: 2px 4px 1px 0px;
 }
 
-/* line 809, ../../sass/_main.scss */
+/* line 794, ../../sass/_main.scss */
 .drop-down-list-item {
   padding: 0.75rem 0.5rem;
 }
 
-/* line 813, ../../sass/_main.scss */
+/* line 798, ../../sass/_main.scss */
 .new-scenario-btn {
   color: white;
 }
 
-/* line 817, ../../sass/_main.scss */
+/* line 802, ../../sass/_main.scss */
 .new-scenario-btn:hover {
   cursor: pointer;
   color: #eeeeee;
 }
 
-/* line 822, ../../sass/_main.scss */
+/* line 807, ../../sass/_main.scss */
 #newScenarioControl {
   margin-left: -10px;
   margin-top: 6px;
