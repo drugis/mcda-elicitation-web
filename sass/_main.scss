@@ -691,23 +691,19 @@ div.row .workspace-control-tab {
      margin: 16px 5px 0 5px;
      font-size:0.82rem;
      font-weight: 700;
-     padding: 0.4rem 0.8rem;
      list-style:none;
      a {
-      color: $inactive-tab-color;
+       color: $inactive-tab-color;
+       background: none;
+       border: none;
+       padding: 0.4rem 0.4rem 0.2rem 0.4rem;
+       display: inline-block;
      }
     }
 
     .overview-nav > li:first-child {
       margin-left: 15px;
     }
-
-
-    .overview-nav > li > a {
-      background: none;
-      border: none;
-    }
-
 }
 
 li.tab-corners.activetab {

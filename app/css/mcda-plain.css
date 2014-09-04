@@ -8736,33 +8736,31 @@ div.row .workspace-control-tab .overview-nav {
   margin: 16px 5px 0 5px;
   font-size: 0.82rem;
   font-weight: 700;
-  padding: 0.4rem 0.8rem;
   list-style: none;
 }
-/* line 696, ../../sass/_main.scss */
+/* line 695, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li a {
   color: white;
+  background: none;
+  border: none;
+  padding: 0.4rem 0.4rem 0.2rem 0.4rem;
+  display: inline-block;
 }
-/* line 701, ../../sass/_main.scss */
+/* line 704, ../../sass/_main.scss */
 .overview-nav-container .overview-nav > li:first-child {
   margin-left: 15px;
 }
-/* line 706, ../../sass/_main.scss */
-.overview-nav-container .overview-nav > li > a {
-  background: none;
-  border: none;
-}
 
-/* line 713, ../../sass/_main.scss */
+/* line 709, ../../sass/_main.scss */
 li.tab-corners.activetab {
   background-color: white;
 }
-/* line 715, ../../sass/_main.scss */
+/* line 711, ../../sass/_main.scss */
 li.tab-corners.activetab a {
   color: black;
 }
 
-/* line 720, ../../sass/_main.scss */
+/* line 716, ../../sass/_main.scss */
 .tab-corners {
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
@@ -8772,13 +8770,13 @@ li.tab-corners.activetab a {
   -webkit-border-top-right-radius: 4px;
 }
 
-/* line 729, ../../sass/_main.scss */
+/* line 725, ../../sass/_main.scss */
 .scenario-menu {
   padding-top: 1rem;
 }
 
 /*------------ NAVBAR --------------*/
-/* line 735, ../../sass/_main.scss */
+/* line 731, ../../sass/_main.scss */
 #navbar {
   position: relative;
   width: 100%;
@@ -8788,7 +8786,7 @@ li.tab-corners.activetab a {
   border-bottom: 1px solid #4a91c4;
 }
 
-/* line 744, ../../sass/_main.scss */
+/* line 740, ../../sass/_main.scss */
 #navbar ul {
   bottom: -4px;
   list-style-type: none;
@@ -8798,7 +8796,7 @@ li.tab-corners.activetab a {
   position: relative;
 }
 
-/* line 753, ../../sass/_main.scss */
+/* line 749, ../../sass/_main.scss */
 #navbar li {
   background: #fff;
   border: 1px solid #4a91c4;
@@ -8820,17 +8818,17 @@ li.tab-corners.activetab a {
   padding: 0.4rem 0 0 0;
 }
 
-/* line 774, ../../sass/_main.scss */
+/* line 770, ../../sass/_main.scss */
 #navbar li a {
   color: #333;
 }
 
-/* line 781, ../../sass/_main.scss */
+/* line 777, ../../sass/_main.scss */
 #navbar2 .activetab a {
   color: #fff !important;
 }
 
-/* line 785, ../../sass/_main.scss */
+/* line 781, ../../sass/_main.scss */
 .scenario-select {
   display: inline;
   width: 190px;
@@ -8840,23 +8838,23 @@ li.tab-corners.activetab a {
   margin: 2px 4px 1px 0px;
 }
 
-/* line 794, ../../sass/_main.scss */
+/* line 790, ../../sass/_main.scss */
 .drop-down-list-item {
   padding: 0.75rem 0.5rem;
 }
 
-/* line 798, ../../sass/_main.scss */
+/* line 794, ../../sass/_main.scss */
 .new-scenario-btn {
   color: white;
 }
 
-/* line 802, ../../sass/_main.scss */
+/* line 798, ../../sass/_main.scss */
 .new-scenario-btn:hover {
   cursor: pointer;
   color: #eeeeee;
 }
 
-/* line 807, ../../sass/_main.scss */
+/* line 803, ../../sass/_main.scss */
 #newScenarioControl {
   margin-left: -10px;
   margin-top: 6px;
