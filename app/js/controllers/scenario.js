@@ -2,12 +2,7 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
   return function($scope, $location, $state, Tasks, TaskDependencies, currentWorkspace, currentScenario) {
     $scope.workspace = currentWorkspace;
     $scope.scenarios = currentWorkspace.query();
-
-    $scope.scenarios.$promise.then(function(scenarios) {
-      $scope.scenario = _.find(scenarios, function(scenario) {
-        return scenario.id === currentScenario.id;
-      });
-    });
+    $scope.scenario = currentScenario;
 
     var resultsAccessible = function() {
       var resultsTask = _.find(Tasks.available, function(task) {
