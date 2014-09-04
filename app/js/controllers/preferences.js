@@ -1,20 +1,17 @@
 'use strict';
 define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
   function(Config, patavi, angular, angularanimate, mmfoundation, _) {
-    var dependencies = ['$scope', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'currentScenario', 'taskDefinition'];
-    var PreferencesController = function($scope, PartialValueFunction, Tasks, TaskDependencies, intervalHull, currentScenario, taskDefinition, Remarks) {
-      var state,
-        scenario = currentScenario;
+    var dependencies = ['$scope', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'taskDefinition'];
+    var PreferencesController = function($scope, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition, Remarks) {
+      var state;
 
       $scope.$parent.taskId = taskDefinition.id;
       $scope.intervalHull = intervalHull;
-      $scope.scenario = scenario;
-      state = taskDefinition.clean(scenario.state);
+      state = taskDefinition.clean($scope.scenario.state);
 
       $scope.progress = {
         percentageComplete: 50
       };
-
 
       // FIXME: these calculations really should happen at the workspace level
       // ===========================================
@@ -67,15 +64,15 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
         return result;
       };
 
-      var linearPVFs = _.filter(scenario.state.problem.criteria, function(criterion) {
+      var linearPVFs = _.filter($scope.scenario.state.problem.criteria, function(criterion) {
         return criterion.pvf && criterion.pvf.type === 'linear';
       }).length;
       var pvfStatus = 'linear';
 
       if (linearPVFs === 0) {
         pvfStatus = 'piece-wise linear';
-      } else if (linearPVFs < _.size(scenario.state.problem.criteria)) {
-        pvfStatus = linearPVFs + ' linear; ' + (_.size(scenario.state.problem.criteria) - linearPVFs) + ' piece-wise linear';
+      } else if (linearPVFs < _.size($scope.scenario.state.problem.criteria)) {
+        pvfStatus = linearPVFs + ' linear; ' + (_.size($scope.scenario.state.problem.criteria) - linearPVFs) + ' piece-wise linear';
       }
 
       var prefStatus = _.values(_.pick({
@@ -84,7 +81,7 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
         'exact swing': 'Exact SWING'
       }, _.unique(_.pluck(state.prefs, 'type'))));
 
-      var scaleRange = _.every(scenario.state.problem.criteria, function(criterion) {
+      var scaleRange = _.every($scope.scenario.state.problem.criteria, function(criterion) {
         return criterion.pvf && criterion.pvf.range;
       }) ? 'defined' : 'missing';
 
@@ -96,7 +93,7 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
 
       $scope.problem = $scope.workspace.problem;
 
-      $scope.criteria = _.sortBy(_.map(_.pairs(scenario.state.problem.criteria), function(crit, idx) {
+      $scope.criteria = _.sortBy(_.map(_.pairs($scope.scenario.state.problem.criteria), function(crit, idx) {
         return _.extend(crit[1], {
           id: crit[0],
           w: 'w_' + (idx + 1)

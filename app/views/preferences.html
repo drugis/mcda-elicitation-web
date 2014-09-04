@@ -1,7 +1,7 @@
 <h3>Preferences</h3>
 
 <h4 ng-show="!isEditTitleVisible" class="subheader">
-  <span ng-bind="scenario.title"></span>
+  <span>{{scenario.title}}</span>
   <a ng-click="editTitle()"><i class="fa fa-edit"></i></a>
 </h4>
 <div class="row" ng-show="isEditTitleVisible">
