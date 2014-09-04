@@ -657,17 +657,13 @@ treecontrol.tree-dark {
   font-size: 1rem;
 }
 
-div.row .workspace-control-tab {
+.workspace-control-tab {
   background-color: $workspace-lightblue-color;
   margin-right: 0.5rem;
-  .overview-nav{
-    float: right;
-  }
 }
 
 .overview-nav-container {
-  border-bottom: 1px solid #4a91c4;
-  height: 49px;
+  border-bottom: 1px solid #4a91c4; 
 
     .overview-nav {
      position: relative;
@@ -680,7 +676,6 @@ div.row .workspace-control-tab {
     .overview-nav > ul {
       bottom: -4px;
       list-style-type: none;
-      height: 51px;
       width: 955px;
       margin: 2px auto 0 auto;
       position: relative;
@@ -696,11 +691,12 @@ div.row .workspace-control-tab {
        border-bottom: none;
        color: $inactive-tab-color;
        background-color: $inactive-tab-background-color;
-       padding-top: 6px;
+       padding-top: 4px;
        padding-left: 18px;
        padding-right: 18px;
-       padding-bottom: 1px;
+       padding-bottom: 4px;
        display: inline-block;
+       margin-bottom: -1px;
      }
      a:hover {
       border-color: darken($inactive-tab-background-color, 10%);
