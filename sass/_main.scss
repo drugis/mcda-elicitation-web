@@ -5,6 +5,11 @@ $inactive-tab-color: white;
 $active-tab-color: black;
 $active-tab-background-color: white;
 
+/* remove fire-fox dotted border */
+a:focus { 
+    outline: none; 
+}
+
 
 /* inline results */
 #results .loader, .hidden {
@@ -666,7 +671,6 @@ div.row .workspace-control-tab {
 
     .overview-nav {
      position: relative;
-     height:50px;
      display: block;
      text-align: center;
      margin: 0 0 -2px 0;
@@ -683,38 +687,34 @@ div.row .workspace-control-tab {
     }
 
     .overview-nav li {
-     background-color: $inactive-tab-background-color;
-     border: 1px solid #4a91c4;
-     border-bottom: none;
      float: left;
-     height: 33px;
      margin: 16px 5px 0 5px;
-     font-size:0.82rem;
-     font-weight: 700;
-     padding: 0.4rem 0.8rem;
+
      list-style:none;
      a {
-      color: $inactive-tab-color;
+       border: 1px solid #4a91c4;
+       border-bottom: none;
+       color: $inactive-tab-color;
+       background-color: $inactive-tab-background-color;
+       padding-top: 6px;
+       padding-left: 18px;
+       padding-right: 18px;
+       padding-bottom: 1px;
+       display: inline-block;
+     }
+     a:hover {
+      border-color: darken($inactive-tab-background-color, 10%);
+      background-color: darken($inactive-tab-background-color, 10%);
+     }
+     a.activetab {
+      background-color: $active-tab-background-color;
+      color: $active-tab-color;
      }
     }
 
     .overview-nav > li:first-child {
       margin-left: 15px;
     }
-
-
-    .overview-nav > li > a {
-      background: none;
-      border: none;
-    }
-
-}
-
-li.tab-corners.activetab {
- background-color: $active-tab-background-color;
- a {
-   color: $active-tab-color;
- }
 }
 
 .tab-corners {
@@ -727,59 +727,7 @@ li.tab-corners.activetab {
 }
 
 .scenario-menu {
-  padding-top:1rem;
-}
-
-/*------------ NAVBAR --------------*/
-
-#navbar {
- position: relative;
- width: 100%;
- height:55px;
- display: block;
- text-align: center;
- border-bottom: 1px solid #4a91c4;
-}
-
-#navbar ul {
-  bottom: -4px;
-  list-style-type: none;
-  height: 51px;
-  width: 955px;
-  margin: 2px auto 0 auto;
-  position: relative;
-}
-
-#navbar li {
- background: #fff;
- border: 1px solid #4a91c4;
- border-bottom: none;
- border-top-left-radius: 4px;
- border-top-right-radius: 4px;
- -moz-border-radius-topleft: 4px;
- -moz-border-radius-topright: 4px;
- -webkit-border-top-left-radius: 4px;
- -webkit-border-top-right-radius: 4px;
- float: left;
- width: 185px;
- height: 33px;
- margin-left: 10px;
- margin-top: 17px;
- font-size:0.82rem;
- font-weight: 700;
- color: #333;
- padding: 0.4rem 0 0 0;
-}
-
-#navbar li a {
-  color: #333;
-}
-
-
-
-
-#navbar2 .activetab a {
-  color: #fff !important;
+  padding-top: 18px;
 }
 
 .scenario-select {
