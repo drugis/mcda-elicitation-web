@@ -4,8 +4,8 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
     $scope.scenarios = currentWorkspace.query();
 
     $scope.scenarios.$promise.then(function(scenarios) {
-      $scope.scenario = _.find($scope.scenarios, function(scenario) {
-        return scenario.id = currentScenario.id;
+      $scope.scenario = _.find(scenarios, function(scenario) {
+        return scenario.id === currentScenario.id;
       });
     });
 

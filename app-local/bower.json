@@ -19,8 +19,5 @@
   "dependencies": {
     "requirejs-domready": "~2.0.1",
     "mcda-web": "../#feature/effectsTable"
-  },
-  "resolutions": {
-    "angular": ">=1"
   }
 }

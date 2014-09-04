@@ -34,7 +34,7 @@
       </thead>
       <tbody>
       <tr ng-repeat-start="effectsTableRow in effectsTableData">
-        <td class="group-header" colspan="{{3 + nrAlternatives}}">
+        <td ng-show="effectsTableRow.path.length > 0" class="group-header" colspan="{{3 + nrAlternatives}}">
           <div class="main-header">
             <remarkblock remark="$parent.remarks[effectsTableRow.path[0].title]" save-remarks="saveRemarks"></remarkblock>
             {{effectsTableRow.path[0].title}}</div>
