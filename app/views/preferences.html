@@ -10,7 +10,7 @@
       <div class="row collapse">
         <div class="columns small-8"><input type="text" ng-model="scenarioTitle.value"></div>
         <div class="columns small-2"><button class="button postfix" ng-click="saveTitle()">Save</button></div>
-        <div class="columns small-2"><button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button></div>            
+        <div class="columns small-2"><button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button></div>
       </div>
     </form>
   </div>
@@ -19,7 +19,7 @@
 
 <div id="progress-bar-block" class="prefs-block">
   <p>Follow the four steps below to set your parameters for this scenario. Completing all steps is not required.</p>
-  <div class="inline">Your progress:</div> 
+  <div class="inline">Your progress:</div>
   <div >
     <progressbar max="100" value="progress.percentageComplete" type="success"></progressbar>
   </div>
@@ -42,7 +42,7 @@
         <th>Units</th>
       </tr>
     </thead>
-    <tbody>   
+    <tbody>
     <tr ng-repeat="(key, criterion) in criteria">
       <td>{{criterion.title}}</td>
       <td>{{criterion.scale[0] | number:3}}, {{criterion.scale[1] | number:3}}</td>
@@ -51,7 +51,7 @@
       <td>{{criterion.unitOfMeasurement}}</td>
     </tr>
     </tbody>
-  </table> 
+  </table>
 </div>
 
 <div id="partial-value-functions-block" class="prefs-block">
@@ -61,7 +61,7 @@
     <div ng-repeat="criterion in scenario.state.problem.criteria" class="small-12 medium-6 large-4 columns">
       <h5>{{criterion.title}}</h5>
 
-      <a class="button" ui-sref="partial-value-function">Define partial value function</a>
+      <button ng-disabled="status.scaleRange === 'missing'" ui-sref="partial-value-function">Define partial value function</button>
 
       <div style="width: 250px; height: 180px">
         <line-chart ng-if="criterion.pvf.type" value="getXY(criterion)" show-legend="false"></line-chart>
@@ -111,5 +111,5 @@
     </li>
   </ul>
 </div>
-    
+
 

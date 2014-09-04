@@ -4,7 +4,7 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
     var dependencies = ['$scope', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'currentScenario', 'taskDefinition'];
     var PreferencesController = function($scope, PartialValueFunction, Tasks, TaskDependencies, intervalHull, currentScenario, taskDefinition, Remarks) {
       var state,
-      scenario = currentScenario;
+        scenario = currentScenario;
 
       $scope.$parent.taskId = taskDefinition.id;
       $scope.intervalHull = intervalHull;
@@ -14,7 +14,7 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
       $scope.progress = {
         percentageComplete: 50
       };
- 
+
 
       // FIXME: these calculations really should happen at the workspace level
       // ===========================================
