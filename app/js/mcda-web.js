@@ -24,6 +24,7 @@ define(
     var dependencies = [
       'ui.router',
       'mm.foundation',
+      'ngAnimate',
       'elicit.localRemarks',
       'elicit.localWorkspaces',
       'elicit.remoteRemarks',

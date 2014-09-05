@@ -363,41 +363,25 @@ input[type='file'] {
   color: white;
   z-index: 999;
   border: 1px solid #8F7DC6;
-  border-right: none;
   border-top-left-radius: 6px;
   -moz-border-radius-topleft: 6px;
   border-bottom-left-radius: 6px;
   -moz-border-radius-bottomleft: 6px;
   top: 20%;
+
+}
+
+.animate-hide {
   right: 0px;
-  -webkit-transition: right 0.7s ease-in-out;
-  -moz-transition: right 0.7s ease-in-out;
-  -ms-transition: right 0.7s ease-in-out;
-  -o-transition: right 0.7s ease-in-out;
-  transition: right 0.7s ease-in-out;
+  -webkit-transition:right 0.5s ease-in-out;
+  transition:right 0.5s ease-in-out;
+  -moz-transition: right 0.5s ease-in-out;
+  -ms-transition: right 0.5s ease-in-out;
+  -o-transition: right 0.5s ease-in-out;
 }
 
-.sidepanel .close-reveal-modal {
-  color: #fff !important;
-  float: right !important;
-}
-
-div.sidepanel.ng-hide-add {
-  /* ensure visibility during the transition */
-  display: block !important;
-  right: 0px;
-}
-
-div.sidepanel.ng-hide-remove {
-  /* ensure visibility during the transition */
-  display: block !important;
-  right: 0px;
-  height: 900px;
-}
-
-div.sidepanel.ng-hide {
-  right: -320px !important;
-  display: block !important;
+.animate-hide.ng-hide {
+  right: -520px;
 }
 
 /* ---- //animate sidepanel -------- */
@@ -443,13 +427,6 @@ div.sidepanel.ng-hide {
  font-weight: normal;
  font-size: 0.875rem;
  padding: 0.3rem 0.6rem;
- border-right:1px solid #452F8C;
-}
-
-.sidepanel button {
- width: 20%;
- background: #452F8C;
- color: #fff;
 }
 
 .alternative {
@@ -519,7 +496,7 @@ div.sidepanel.ng-hide {
 }
 
 .none {
-  display: none !important;
+  display: none;
 }
 
 #results-avail {
