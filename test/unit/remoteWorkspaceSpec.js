@@ -43,6 +43,10 @@ define(['angular', 'angular-mocks', 'angular-ui-router', 'mcda/services/partialV
           resolvedValue,
           getPromise;
 
+        mockWorkspace.problem = {
+          criteria: {}
+        };
+
         $httpBackend.when('GET', 'workspaces/1').respond(mockWorkspace);
         getPromise = RemoteWorkspaces.get(workspaceId);
 
