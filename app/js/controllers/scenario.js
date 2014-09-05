@@ -56,5 +56,11 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
     $scope.cancelTitle = function() {
       $scope.isEditTitleVisible = false;
     };
+
+    $scope.scenarioChanged = function(newScenario) {
+      $state.go($scope.taskId, {
+        scenarioId: newScenario.id
+      });
+    }
   };
 });

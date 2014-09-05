@@ -11,7 +11,7 @@
         <div class="tab-corners workspace-control-tab row">
           <div class="columns large-6 scenario-menu">
             <span>Scenario</span>
-            <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenarios track by scenario.id"></select>
+            <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenarios track by scenario.id" ng-change="scenarioChanged(scenario)"></select>
             <i class="fa fa-plus new-scenario-btn" data-dropdown="newScenarioControl"></i>
               <ul id="newScenarioControl" class="f-dropdown" data-dropdown-content>
                 <li class="drop-down-list-item" ng-click="forkScenario()" >

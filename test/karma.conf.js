@@ -26,7 +26,7 @@ module.exports = function(config) {
     files: [
       'test/test-main.js',
       'app/js/misc.js',
-      'app/js/bower_components/angular/angular.js',
+      'bower_components/angular/angular.js',
       {pattern: 'app/partials/*.html'},
       {pattern: 'app/js/**/*.js', included: false},
       {pattern: 'bower_components/**/*.js', included: false},
