@@ -4,6 +4,7 @@ $inactive-tab-background-color: #0079a1;
 $inactive-tab-color: white;
 $active-tab-color: black;
 $active-tab-background-color: white;
+$tab-disabled-opacity: 0.7;
 
 /* remove fire-fox dotted border */
 a:focus { 
@@ -682,6 +683,19 @@ treecontrol.tree-dark {
      a.activetab {
       background-color: $active-tab-background-color;
       color: $active-tab-color;
+     }
+     a.disabledtab {
+      cursor: $cursor-default-value;
+      opacity: $tab-disabled-opacity;
+     // background-color: grey;
+     }
+     a.disabledtab:hover {
+      cursor: $cursor-default-value;
+      opacity: $tab-disabled-opacity;
+      background-color: $inactive-tab-background-color;
+    //  background-color: grey;
+      border: 1px solid #4a91c4;
+      border-bottom: none;
      }
     }
 
