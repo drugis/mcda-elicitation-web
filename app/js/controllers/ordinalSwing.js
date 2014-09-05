@@ -1,6 +1,6 @@
 'use strict';
 define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard, angular, _) {
-  return function($scope, $injector, mcdaRootPath, currentScenario, taskDefinition) {
+  return function($scope, $state, $injector, mcdaRootPath, currentScenario, taskDefinition) {
     var criteria = {};
 
     var getReference = function() {
@@ -97,7 +97,7 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
       var prefs = next.prefs;
       next.prefs = standardize(prefs);
       scenario.update(next);
-      scenario.redirectToDefaultView();
+      $state.go('preferences');
     };
 
     $scope.canSave = function(state) {
