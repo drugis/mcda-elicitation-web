@@ -8524,10 +8524,9 @@ input[type='file'] {
   -moz-border-radius-topleft: 6px;
   border-bottom-left-radius: 6px;
   -moz-border-radius-bottomleft: 6px;
-  top: 20%;
 }
 
-/* line 375, ../../sass/_main.scss */
+/* line 373, ../../sass/_main.scss */
 .animate-hide {
   right: 0px;
   -webkit-transition: right 0.5s ease-in-out;
@@ -8537,19 +8536,19 @@ input[type='file'] {
   -o-transition: right 0.5s ease-in-out;
 }
 
-/* line 384, ../../sass/_main.scss */
+/* line 382, ../../sass/_main.scss */
 .animate-hide.ng-hide {
   right: -520px;
 }
 
 /* ---- //animate sidepanel -------- */
-/* line 390, ../../sass/_main.scss */
+/* line 388, ../../sass/_main.scss */
 .sidepanel h1 {
   color: #ccc;
   font-size: 1.2rem !important;
 }
 
-/* line 394, ../../sass/_main.scss */
+/* line 392, ../../sass/_main.scss */
 .sidepanel table {
   width: 100%;
   margin: 0 1.3rem 0 0;
@@ -8557,7 +8556,7 @@ input[type='file'] {
   border: none;
 }
 
-/* line 401, ../../sass/_main.scss */
+/* line 399, ../../sass/_main.scss */
 .sidepanel table th {
   width: 100%;
   text-align: left;
@@ -8568,22 +8567,22 @@ input[type='file'] {
   margin-top: 1rem;
 }
 
-/* line 411, ../../sass/_main.scss */
+/* line 409, ../../sass/_main.scss */
 .sidepanel tr {
   background: none;
 }
 
-/* line 415, ../../sass/_main.scss */
+/* line 413, ../../sass/_main.scss */
 .sidepanel table tr:nth-child(even) {
   background: #0079a1;
 }
 
-/* line 419, ../../sass/_main.scss */
+/* line 417, ../../sass/_main.scss */
 .sidepanel table tr:nth-child(odd) {
   background: #34226E;
 }
 
-/* line 423, ../../sass/_main.scss */
+/* line 421, ../../sass/_main.scss */
 .sidepanel table td {
   width: 100%;
   margin: 0;
@@ -8594,18 +8593,18 @@ input[type='file'] {
   padding: 0.3rem 0.6rem;
 }
 
-/* line 433, ../../sass/_main.scss */
+/* line 431, ../../sass/_main.scss */
 .alternative {
   display: none;
 }
 
-/* line 437, ../../sass/_main.scss */
+/* line 435, ../../sass/_main.scss */
 .center-text {
   text-align: center !important;
 }
 
 /* angular ui-bootstrap pop overs */
-/* line 442, ../../sass/_main.scss */
+/* line 440, ../../sass/_main.scss */
 .mcda-dropdown {
   position: absolute;
   top: 0;
@@ -8618,7 +8617,7 @@ input[type='file'] {
 }
 
 /* results page */
-/* line 455, ../../sass/_main.scss */
+/* line 453, ../../sass/_main.scss */
 #ranktable {
   display: inline-block;
   clear: none;
@@ -8627,19 +8626,19 @@ input[type='file'] {
   margin-left: 500px;
 }
 
-/* line 463, ../../sass/_main.scss */
+/* line 461, ../../sass/_main.scss */
 .underlined-div {
   border-bottom: 1px solid #A0D3E8;
   margin-bottom: 1.5rem !important;
 }
 
-/* line 468, ../../sass/_main.scss */
+/* line 466, ../../sass/_main.scss */
 .fontsize {
   font-size: 0.875rem !important;
 }
 
 /* --- overview page ----- */
-/* line 473, ../../sass/_main.scss */
+/* line 471, ../../sass/_main.scss */
 .remarksTree {
   /*margin: 0;*/
   padding: 0;
@@ -8647,35 +8646,35 @@ input[type='file'] {
   list-style-type: none;
 }
 
-/* line 480, ../../sass/_main.scss */
+/* line 478, ../../sass/_main.scss */
 .showRemark p {
   text-align: left;
 }
 
 /* ----- preferences table ------ */
-/* line 485, ../../sass/_main.scss */
+/* line 483, ../../sass/_main.scss */
 .prefs-block {
   padding-bottom: 1.5rem;
   border-bottom: 1px solid #A0D3E8;
   margin-bottom: 1.5rem;
 }
 
-/* line 491, ../../sass/_main.scss */
+/* line 489, ../../sass/_main.scss */
 .inline {
   display: inline-block;
 }
 
-/* line 495, ../../sass/_main.scss */
+/* line 493, ../../sass/_main.scss */
 .block {
   display: block;
 }
 
-/* line 499, ../../sass/_main.scss */
+/* line 497, ../../sass/_main.scss */
 .none {
   display: none;
 }
 
-/* line 503, ../../sass/_main.scss */
+/* line 501, ../../sass/_main.scss */
 #results-avail {
   position: absolute;
   height: 42px;
@@ -8688,7 +8687,7 @@ input[type='file'] {
 
 /*----- TREEVIEW -----*/
 /* general tree css */
-/* line 517, ../../sass/_main.scss */
+/* line 515, ../../sass/_main.scss */
 treecontrol {
   /* prevent user selection */
   -moz-user-select: -moz-none;
@@ -8703,7 +8702,7 @@ treecontrol {
   text-decoration: none;
 }
 
-/* line 532, ../../sass/_main.scss */
+/* line 530, ../../sass/_main.scss */
 treecontrol ul {
   margin: 0;
   padding: 0;
@@ -8712,83 +8711,83 @@ treecontrol ul {
   overflow: hidden;
 }
 
-/* line 540, ../../sass/_main.scss */
+/* line 538, ../../sass/_main.scss */
 treecontrol li {
   position: relative;
   padding: 0 0 0 20px;
   line-height: 20px;
 }
 
-/* line 546, ../../sass/_main.scss */
+/* line 544, ../../sass/_main.scss */
 treecontrol li.tree-expanded i.tree-normal, treecontrol li.tree-collapsed i.tree-normal {
   display: none;
 }
 
-/* line 547, ../../sass/_main.scss */
+/* line 545, ../../sass/_main.scss */
 treecontrol li.tree-expanded i.tree-has-children, treecontrol li.tree-collapsed i.tree-has-children {
   display: inline;
 }
 
-/* line 548, ../../sass/_main.scss */
+/* line 546, ../../sass/_main.scss */
 treecontrol li.tree-normal i.tree-has-children {
   display: none;
 }
 
-/* line 549, ../../sass/_main.scss */
+/* line 547, ../../sass/_main.scss */
 treecontrol li.tree-normal i.tree-normal {
   display: inline;
 }
 
-/* line 551, ../../sass/_main.scss */
+/* line 549, ../../sass/_main.scss */
 treecontrol li i {
   cursor: pointer;
 }
 
-/* line 555, ../../sass/_main.scss */
+/* line 553, ../../sass/_main.scss */
 treecontrol li .tree-label {
   cursor: pointer;
   display: inline;
 }
 
 /* classic tree css */
-/* line 562, ../../sass/_main.scss */
+/* line 560, ../../sass/_main.scss */
 treecontrol.tree-classic li.tree-expanded i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/folder.png") no-repeat;
 }
 
-/* line 567, ../../sass/_main.scss */
+/* line 565, ../../sass/_main.scss */
 treecontrol.tree-classic li.tree-collapsed i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/folder-closed.png") no-repeat;
 }
 
-/* line 572, ../../sass/_main.scss */
+/* line 570, ../../sass/_main.scss */
 treecontrol.tree-classic li.tree-normal i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/file.png") no-repeat;
 }
 
-/* line 577, ../../sass/_main.scss */
+/* line 575, ../../sass/_main.scss */
 treecontrol.tree-classic li .tree-selected {
   background-color: #aaddff;
   font-weight: bold;
 }
 
 /* light tree css */
-/* line 584, ../../sass/_main.scss */
+/* line 582, ../../sass/_main.scss */
 treecontrol.tree-light li.tree-expanded i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-opened-2.png") no-repeat;
 }
 
-/* line 589, ../../sass/_main.scss */
+/* line 587, ../../sass/_main.scss */
 treecontrol.tree-light li.tree-collapsed i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-closed-2.png") no-repeat;
 }
 
-/* line 594, ../../sass/_main.scss */
+/* line 592, ../../sass/_main.scss */
 treecontrol.tree-light li.tree-normal i {
   padding: 1px 10px;
   width: 16px;
@@ -8796,25 +8795,25 @@ treecontrol.tree-light li.tree-normal i {
   background: none no-repeat;
 }
 
-/* line 600, ../../sass/_main.scss */
+/* line 598, ../../sass/_main.scss */
 treecontrol.tree-light li .tree-selected {
   font-weight: bold;
 }
 
 /* dark tree css */
-/* line 606, ../../sass/_main.scss */
+/* line 604, ../../sass/_main.scss */
 treecontrol.tree-dark li.tree-expanded i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-opened-light.png") no-repeat;
 }
 
-/* line 611, ../../sass/_main.scss */
+/* line 609, ../../sass/_main.scss */
 treecontrol.tree-dark li.tree-collapsed i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-closed-light.png") no-repeat;
 }
 
-/* line 616, ../../sass/_main.scss */
+/* line 614, ../../sass/_main.scss */
 treecontrol.tree-dark li.tree-normal i {
   padding: 1px 10px;
   width: 16px;
@@ -8822,17 +8821,17 @@ treecontrol.tree-dark li.tree-normal i {
   background: none no-repeat;
 }
 
-/* line 622, ../../sass/_main.scss */
+/* line 620, ../../sass/_main.scss */
 treecontrol.tree-dark li .tree-selected {
   font-weight: bold;
 }
 
-/* line 626, ../../sass/_main.scss */
+/* line 624, ../../sass/_main.scss */
 treecontrol.tree-dark {
   color: #ddd;
 }
 
-/* line 630, ../../sass/_main.scss */
+/* line 628, ../../sass/_main.scss */
 .button.tiny-icon {
   padding-top: 0.325rem;
   padding-right: 0.75rem;
@@ -8841,17 +8840,17 @@ treecontrol.tree-dark {
   font-size: 1rem;
 }
 
-/* line 638, ../../sass/_main.scss */
+/* line 636, ../../sass/_main.scss */
 .workspace-control-tab {
   background-color: #82cbfe;
   margin-right: 0.5rem;
 }
 
-/* line 643, ../../sass/_main.scss */
+/* line 641, ../../sass/_main.scss */
 .overview-nav-container {
   border-bottom: 1px solid #4a91c4;
 }
-/* line 646, ../../sass/_main.scss */
+/* line 644, ../../sass/_main.scss */
 .overview-nav-container .overview-nav {
   position: relative;
   display: block;
@@ -8859,7 +8858,7 @@ treecontrol.tree-dark {
   margin: 0 0 -2px 0;
   text-align: center;
 }
-/* line 654, ../../sass/_main.scss */
+/* line 652, ../../sass/_main.scss */
 .overview-nav-container .overview-nav > ul {
   bottom: -4px;
   list-style-type: none;
@@ -8867,13 +8866,13 @@ treecontrol.tree-dark {
   margin: 2px auto 0 auto;
   position: relative;
 }
-/* line 662, ../../sass/_main.scss */
+/* line 660, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li {
   float: left;
   margin: 16px 5px 0 5px;
   list-style: none;
 }
-/* line 667, ../../sass/_main.scss */
+/* line 665, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li a {
   border: 1px solid #4a91c4;
   border-bottom: none;
@@ -8886,22 +8885,22 @@ treecontrol.tree-dark {
   display: inline-block;
   margin-bottom: -1px;
 }
-/* line 679, ../../sass/_main.scss */
+/* line 677, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li a:hover {
   border-color: #00536e;
   background-color: #00536e;
 }
-/* line 683, ../../sass/_main.scss */
+/* line 681, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li a.activetab {
   background-color: white;
   color: black;
 }
-/* line 687, ../../sass/_main.scss */
+/* line 685, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li a.disabledtab {
   cursor: default;
   opacity: 0.7;
 }
-/* line 692, ../../sass/_main.scss */
+/* line 690, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li a.disabledtab:hover {
   cursor: default;
   opacity: 0.7;
@@ -8909,12 +8908,12 @@ treecontrol.tree-dark {
   border: 1px solid #4a91c4;
   border-bottom: none;
 }
-/* line 702, ../../sass/_main.scss */
+/* line 700, ../../sass/_main.scss */
 .overview-nav-container .overview-nav > li:first-child {
   margin-left: 15px;
 }
 
-/* line 707, ../../sass/_main.scss */
+/* line 705, ../../sass/_main.scss */
 .tab-corners {
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
@@ -8924,12 +8923,12 @@ treecontrol.tree-dark {
   -webkit-border-top-right-radius: 4px;
 }
 
-/* line 716, ../../sass/_main.scss */
+/* line 714, ../../sass/_main.scss */
 .scenario-menu {
   padding-top: 18px;
 }
 
-/* line 720, ../../sass/_main.scss */
+/* line 718, ../../sass/_main.scss */
 .scenario-select {
   display: inline;
   width: 190px;
@@ -8939,26 +8938,77 @@ treecontrol.tree-dark {
   margin: 2px 4px 1px 0px;
 }
 
-/* line 729, ../../sass/_main.scss */
+/* line 727, ../../sass/_main.scss */
 .drop-down-list-item {
   padding: 0.75rem 0.5rem;
 }
 
-/* line 733, ../../sass/_main.scss */
+/* line 731, ../../sass/_main.scss */
 .new-scenario-btn {
   color: white;
 }
 
-/* line 737, ../../sass/_main.scss */
+/* line 735, ../../sass/_main.scss */
 .new-scenario-btn:hover {
   cursor: pointer;
   color: #eeeeee;
 }
 
-/* line 742, ../../sass/_main.scss */
+/* line 740, ../../sass/_main.scss */
 #newScenarioControl {
   margin-left: -10px;
   margin-top: 6px;
+}
+
+/* line 745, ../../sass/_main.scss */
+.inline-list.elicitation-step-list {
+  margin-left: 0px;
+  float: none;
+  list-style: none;
+  overflow: hidden;
+}
+/* line 750, ../../sass/_main.scss */
+.inline-list.elicitation-step-list li {
+  vertical-align: middle;
+  display: table-cell;
+  padding-right: 0px;
+  float: none;
+}
+/* line 755, ../../sass/_main.scss */
+.inline-list.elicitation-step-list li button {
+  min-width: 10.5rem;
+}
+/* line 758, ../../sass/_main.scss */
+.inline-list.elicitation-step-list li button:before {
+  content: " ";
+  display: block;
+  width: 0;
+  height: 0;
+  border-top: 27px solid transparent;
+  border-bottom: 27px solid transparent;
+  border-left: 30px solid white;
+  position: absolute;
+  top: 50%;
+  margin-top: -27px;
+  margin-left: 1px;
+  left: 100%;
+  z-index: 1;
+}
+/* line 773, ../../sass/_main.scss */
+.inline-list.elicitation-step-list li button:after {
+  content: " ";
+  display: block;
+  width: 0;
+  height: 0;
+  border-top: 26px solid transparent;
+  /* Go big on the size, and let overflow hide */
+  border-bottom: 26px solid transparent;
+  border-left: 30px solid #3c2979;
+  position: absolute;
+  top: 50%;
+  margin-top: -26px;
+  left: 100%;
+  z-index: 2;
 }
 
 /* line 6, ../../sass/mcda-drugis.scss */

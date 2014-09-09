@@ -36,24 +36,34 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
       })($scope.workspace.problem);
       // ===========================================
 
-      var tasks = _.map(Tasks.available, function(task) {
-        return {
-          'task': task,
-          'accessible': TaskDependencies.isAccessible(task, state),
-          'safe': TaskDependencies.isSafe(task, state)
-        };
-      });
 
-      $scope.tasks = {
-        'accessible': _.filter(tasks, function(task) {
-          return task.accessible.accessible && task.safe.safe;
-        }),
-        'destructive': _.filter(tasks, function(task) {
-          return task.accessible.accessible && !task.safe.safe;
-        }),
-        'inaccessible': _.filter(tasks, function(task) {
-          return !task.accessible.accessible;
-        })
+      $scope.isAccessible = function(task, state) {
+        return TaskDependencies.isAccessible(task, state);
+      };
+
+      $scope.isScaleRangePresent = function() {
+        return _.every($scope.scenario.state.problem.criteria, function(criterion) {
+          return criterion.pvf && criterion.pvf.range;
+        });
+      };
+
+      $scope.isPartialValueFunctionPresent = function() {
+        return _.every($scope.scenario.state.problem.criteria, function(criterion) {
+          var pvf = criterion.pvf;
+          return pvf && pvf.direction && pvf.type;
+        });
+      };
+
+      $scope.isOrdinalSwingPresent = function() {
+        return $scope.scenario.state.prefs;
+      };
+
+      $scope.isExactSwingPresent = function() {
+        return $scope.scenario.state.prefs && $scope.scenario.state.prefs[1] && $scope.scenario.state.prefs[1].type === 'exact swing';
+      };
+
+      $scope.isIntervalSwingPresent = function() {
+        return $scope.scenario.state.prefs && $scope.scenario.state.prefs[1] && $scope.scenario.state.prefs[1].type === 'ratio bound';
       };
 
       $scope.dependenciesString = function(dependencies) {
@@ -80,16 +90,6 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
         'ratio bound': 'Interval SWING',
         'exact swing': 'Exact SWING'
       }, _.unique(_.pluck(state.prefs, 'type'))));
-
-      var scaleRange = _.every($scope.scenario.state.problem.criteria, function(criterion) {
-        return criterion.pvf && criterion.pvf.range;
-      }) ? 'defined' : 'missing';
-
-      $scope.status = {
-        scaleRange: scaleRange,
-        partialValueFunction: pvfStatus,
-        preferences: prefStatus
-      };
 
       $scope.problem = $scope.workspace.problem;
 

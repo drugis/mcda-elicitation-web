@@ -86,7 +86,7 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
         ScenarioResource.prototype.update = function(state) {
           var fields = ['problem', 'prefs'];
           this.state = _.pick(state, fields);
-          this.$save().then(function(scenario) {
+          this.save().then(function(scenario) {
             PartialValueFunction.attach(scenario.state);
           });
         };

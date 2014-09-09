@@ -45,9 +45,9 @@ define(['angular', 'mcda/services/taskDependencies'], function(angular, TaskDepe
         expect(newState3).toEqual(expected);
       });
     });
-    describe("Dependency description: partial-value-functions", function() {
+    describe("Dependency description: partial-value-function", function() {
       it("isPresent() checks whether partial value functions are defined in the problem", function() {
-        var def = service.definitions['partial-value-functions'];
+        var def = service.definitions['partial-value-function'];
         var criteria = {
           'A' : { 'pvf': { 'range': [0, 1], "type": "linear", "direction": "increasing" } },
           'B' : { 'pvf': { 'range': [0, 1] } }
@@ -62,7 +62,7 @@ define(['angular', 'mcda/services/taskDependencies'], function(angular, TaskDepe
         expect(def.isPresent(state)).toBe(false);
       });
       it("remove() generates a new state with partial value functions removed", function() {
-        var def = service.definitions['partial-value-functions'];
+        var def = service.definitions['partial-value-function'];
         var criteria = {
           'A' : { 'pvf': { 'range': [0, 1], "type": "linear", "direction": "increasing" } },
           'B' : { 'pvf': { 'range': [0, 1], "type": "piecewise-linear", "direction": "decreasing", cutoffs: [0.2, 0.8], values: [0.8, 0.5] } }
@@ -154,11 +154,11 @@ define(['angular', 'mcda/services/taskDependencies'], function(angular, TaskDepe
         'problem': { 'criteria' : { 'A' : {} } }
       };
       var task = {
-        'resets': ['partial-value-functions', 'criteria-trade-offs']
+        'resets': ['partial-value-function', 'criteria-trade-offs']
       };
       expect(service.isSafe(task, state)).toEqual({'safe': true, resets: []});
       state.problem.criteria.A.pvf = { 'range': [0, 1], 'type': 'linear', 'direction': 'increasing' };
-      expect(service.isSafe(task, state)).toEqual({'safe': false, resets: ['partial-value-functions']});
+      expect(service.isSafe(task, state)).toEqual({'safe': false, resets: ['partial-value-function']});
     });
 
     it("remove() uses definition.remove() to destroy existing information", function() {
@@ -166,7 +166,7 @@ define(['angular', 'mcda/services/taskDependencies'], function(angular, TaskDepe
         'problem': { 'criteria' : { 'A' : { 'pvf': { 'range': [0, 1], 'type': 'linear', 'direction': 'increasing' } } } }
       };
       var task = {
-        'resets': ['partial-value-functions', 'criteria-trade-offs']
+        'resets': ['partial-value-function', 'criteria-trade-offs']
       };
 
       var stateCopy = angular.copy(state);

@@ -4,11 +4,14 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
     $scope.scenarios = currentWorkspace.query();
     $scope.scenario = currentScenario;
 
+
+    $scope.tasks = _.reduce(Tasks.available, function(tasks, task) {
+      tasks[task.id] = task;
+      return tasks;
+    }, {});
+
     var resultsAccessible = function() {
-      var resultsTask = _.find(Tasks.available, function(task) {
-        return task.id === "results";
-      });
-      var accessible = TaskDependencies.isAccessible(resultsTask, currentScenario.state);
+      var accessible = TaskDependencies.isAccessible($scope.tasks['results'], currentScenario.state);
       return accessible.accessible;
     };
 

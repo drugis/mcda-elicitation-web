@@ -7,8 +7,8 @@ $active-tab-background-color: white;
 $tab-disabled-opacity: 0.7;
 
 /* remove fire-fox dotted border */
-a:focus { 
-    outline: none; 
+a:focus {
+    outline: none;
 }
 
 
@@ -368,8 +368,6 @@ input[type='file'] {
   -moz-border-radius-topleft: 6px;
   border-bottom-left-radius: 6px;
   -moz-border-radius-bottomleft: 6px;
-  top: 20%;
-
 }
 
 .animate-hide {
@@ -641,7 +639,7 @@ treecontrol.tree-dark {
 }
 
 .overview-nav-container {
-  border-bottom: 1px solid #4a91c4; 
+  border-bottom: 1px solid #4a91c4;
 
     .overview-nav {
      position: relative;
@@ -742,4 +740,49 @@ treecontrol.tree-dark {
 #newScenarioControl {
   margin-left:-10px;
   margin-top: 6px;
+}
+
+.inline-list.elicitation-step-list {
+  margin-left:0px;
+  float: none;
+  list-style: none;
+  overflow: hidden;
+  li {
+    vertical-align: middle;
+    display: table-cell;
+    padding-right: 0px;
+    float: none;
+    button {
+      min-width: 10.5rem;
+    }
+    button:before {
+      content: " ";
+      display: block;
+      width: 0;
+      height: 0;
+      border-top: 27px solid transparent;
+      border-bottom: 27px solid transparent;
+      border-left: 30px solid white;
+      position: absolute;
+      top: 50%;
+      margin-top: -27px;
+      margin-left: 1px;
+      left: 100%;
+      z-index: 1;
+    }
+    button:after {
+      content: " ";
+      display: block;
+      width: 0;
+      height: 0;
+      border-top: 26px solid transparent;           /* Go big on the size, and let overflow hide */
+      border-bottom: 26px solid transparent;
+      border-left: 30px solid #3c2979;
+      position: absolute;
+      top: 50%;
+      margin-top: -26px;
+      left: 100%;
+      z-index: 2;
+    }
+  }
 }
