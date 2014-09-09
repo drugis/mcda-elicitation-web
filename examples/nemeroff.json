@@ -1,9 +1,12 @@
 {
   "title": "Nemeroff and Thase anti-depressants Example",
+  "description": "Based on C.B. Nemeroff & M.E. Thase (2007), \"A double-blind, placebo-controlled comparison of venlafaxine and fluoxetine treatment in depressed outpatients\".",
   "criteria": {
     "response": {
       "title": "Treatment Responders",
       "scale": [0.0, 1.0],
+      "unitOfMeasurement": "Proportion",
+      "description": "Patients responding to treatment (50% or greater decrease on the HAM-D-21 rating scale)",
       "pvf": {
         "range": [0.28, 0.63],
         "direction": "increasing",
@@ -13,6 +16,7 @@
     "nausea": {
       "title": "Nausea ADRs",
       "scale": [0.0, 1.0],
+      "unitOfMeasurement": "Proportion",
       "pvf": {
         "range": [0.04, 0.50],
         "direction": "decreasing",
@@ -21,6 +25,7 @@
     },
     "insomnia": {
       "title": "Insomnia ADRs",
+      "unitOfMeasurement": "Proportion",
       "scale": [0.0, 1.0],
       "pvf": {
         "range": [0.08, 0.31],
@@ -30,6 +35,7 @@
     },
     "anxiety": {
       "title": "Anxiety ADRs",
+      "unitOfMeasurement": "Proportion",
       "scale": [0.0, 1.0],
       "pvf": {
         "range": [0.00, 0.17],

@@ -1,9 +1,12 @@
 {
   "title": "Hansen et al. 2005 with Placebo as baseline",
+  "description": "Based on Hansen et al. (2005), \"Efficacy and Safety of Second-Generation Antidepressants in the Treatment of Major Depressive Disorder\"",
   "criteria": {
     "HAM-D": {
       "title": "HAM-D",
       "scale": [0.0, 1.0],
+      "unitOfMeasurement": "Proportion",
+      "description": "Responders on the HAM-D rating scale",
       "pvf": {
         "direction": "increasing",
         "type": "linear",
@@ -13,6 +16,7 @@
     "Diarrhea": {
       "title": "Diarrhea",
       "scale": [0.0, 1.0],
+      "unitOfMeasurement": "Proportion",
       "pvf": {
         "direction": "decreasing",
         "type": "linear",
@@ -22,6 +26,7 @@
     "Dizziness": {
       "title": "Dizziness",
       "scale": [0.0, 1.0],
+      "unitOfMeasurement": "Proportion",
       "pvf": {
         "direction": "decreasing",
         "type": "linear",
@@ -31,6 +36,7 @@
     "Headache": {
       "title": "Headache",
       "scale": [0.0, 1.0],
+      "unitOfMeasurement": "Proportion",
       "pvf": {
         "direction": "decreasing",
         "type": "linear",
@@ -40,6 +46,7 @@
     "Insomnia": {
       "title": "Insomnia",
       "scale": [0.0, 1.0],
+      "unitOfMeasurement": "Proportion",
       "pvf": {
         "direction": "decreasing",
         "type": "linear",
@@ -49,6 +56,7 @@
     "Nausea": {
       "title": "Nausea",
       "scale": [0.0, 1.0],
+      "unitOfMeasurement": "Proportion",
       "pvf": {
         "direction": "decreasing",
         "type": "linear",
