@@ -1,12 +1,12 @@
 'use strict';
-define(['angular', 'underscore', 'mcda/lib/patavi', 'NProgress'], function(angular, _, patavi, NProgress) {
+define(['mcda/config', 'angular', 'underscore', 'mcda/lib/patavi', 'NProgress'], function(Config, angular, _, patavi, NProgress) {
   return ['$rootScope', '$scope', 'handler', function($rootScope, $scope, handler) {
     $rootScope.noProgress = true;
 
     var calculateIntermediateResults = function(state, standardizeFn) {
       var prefs = standardizeFn(state.prefs);
       var data = _.extend(state.problem, { "preferences": prefs, "method": "smaa" });
-      var task = patavi.submit('smaa', data);
+      var task = patavi.submit(Config.pataviService, data);
 
       var successHandler = function(results) {
         $scope.$root.$safeApply($scope, function() {

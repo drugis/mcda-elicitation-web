@@ -1,12 +1,10 @@
-define(['angular', 'angular-mocks', 'angular-ui-router', 'services/partialValueFunction', 'services/remoteWorkspaces'],
+define(['angular', 'angular-mocks', 'angular-ui-router', 'mcda/services/partialValueFunction', 'mcda/services/remoteWorkspaces'],
   function(angular, RemoteWorkspaces) {
 
-    window.config = {
-      examplesRepository: "/examples/",
-      workspacesRepository: {
-        service: "RemoteWorkspaces",
-        url: "workspaces/"
-      }
+    window.config.examplesRepository = "/examples/";
+    window.config.workspacesRepository = {
+      service: "RemoteWorkspaces",
+      url: "workspaces/"
     };
 
     describe('remote workspace init test', function() {
@@ -44,6 +42,10 @@ define(['angular', 'angular-mocks', 'angular-ui-router', 'services/partialValueF
           mockWorkspace = jasmine.createSpyObj('mockWorkspace', ['test']),
           resolvedValue,
           getPromise;
+
+        mockWorkspace.problem = {
+          criteria: {}
+        };
 
         $httpBackend.when('GET', 'workspaces/1').respond(mockWorkspace);
         getPromise = RemoteWorkspaces.get(workspaceId);

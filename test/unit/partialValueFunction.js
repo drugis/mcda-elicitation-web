@@ -1,7 +1,7 @@
-define(['angular', 'angular-mocks', 'controllers', 'services/taskDependencies', 'services/partialValueFunction'],
+define(['angular', 'angular-mocks', 'mcda/controllers', 'mcda/services/taskDependencies', 'mcda/services/partialValueFunction'],
  function(angular, controllers, TaskDependencies) {
   describe("PartialValueFunctionHandler", function() {
-    var scope;
+    var scope, state;
 
     beforeEach(module('elicit.controllers'));
     beforeEach(module('elicit.taskDependencies'));
@@ -15,9 +15,11 @@ define(['angular', 'angular-mocks', 'controllers', 'services/taskDependencies', 
       };
 
       scope = $rootScope.$new();
+      state = jasmine.createSpyObj('$state', ['go']);
 
       $controller('PartialValueFunctionController', {
         $scope : scope,
+        $state : state,
         currentScenario : scenario,
         taskDefinition : TaskDependencies.extendTaskDefinition(task)
       });

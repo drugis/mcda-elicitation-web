@@ -1,4 +1,4 @@
-define(['angular', 'angular-mocks', 'underscore', 'controllers' ],
+define(['angular', 'angular-mocks', 'underscore', 'mcda/controllers' ],
  function(angular, mocks, _, ChooseMethodHandler) {
       xdescribe("ElicitationController", function() {
         var scope1;
@@ -36,7 +36,7 @@ define(['angular', 'angular-mocks', 'underscore', 'controllers' ],
           expect(scope1.currentStep.type).toEqual("scale range");
         });
 
-        xdescribe("Advance to the nextStep()", function() {
+        describe("Advance to the nextStep()", function() {
           it("should not go to next step without valid selection", function() {
             skipToOrdinal(scope1);
             expect(scope1.nextStep()).toEqual(false);

@@ -48,20 +48,20 @@ define(['angular', 'underscore'], function(angular, _) {
         var i = intervalInfo(idx);
         return i.x0 + (v - i.v0) * ((i.x1 - i.x0) / (i.v1 - i.v0));
       };
-      return { map: map,
-               inv: inv,
-               best: extreme(1,0),
-               worst: extreme(0,1) };
+      return {
+        map: map,
+        inv: inv,
+        best: extreme(1, 0),
+        worst: extreme(0, 1)
+      };
     };
 
     var attach = function(state) {
       function addPartialValueFunction(criterion) {
-        if(criterion.pvf) {
+        if (criterion.pvf) {
           var pvf = create(criterion.pvf);
-
-          criterion.pvf = _.extend(criterion.pvf, _.pick(pvf, 'map', 'inv'));
+          _.extend(criterion.pvf, _.pick(pvf, 'map', 'inv'));
           _.extend(criterion, _.pick(pvf, 'best', 'worst'));
-
         }
       }
       angular.forEach(state.problem.criteria, addPartialValueFunction);
@@ -74,14 +74,21 @@ define(['angular', 'underscore'], function(angular, _) {
       var worst = criterion.worst();
       var x = [best].concat(criterion.pvf.cutoffs || []).concat([worst]);
       var values = _.map(_.zip(x, y), function(p) {
-        return { x: p[0], y: p[1] };
+        return {
+          x: p[0],
+          y: p[1]
+        };
       });
-      return [ { key: "Piecewise PVF", values: values }];
+      return [{
+        key: "Piecewise PVF",
+        values: values
+      }];
     };
 
-     return { create: create,
-             attach: attach,
-             getXY: getXY
-           };
+    return {
+      create: create,
+      attach: attach,
+      getXY: getXY
+    };
   });
 });

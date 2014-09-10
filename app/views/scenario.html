@@ -1,34 +1,45 @@
 <div class="row">
-    <div class="columns large-12">
-        <div class="tabs">
-            <ul class="tabsNavigation">
-                <li ng-repeat="s in scenarios | orderBy:'title'" ng-class="{current: s.id == scenario.id}">
-                    <a ui-sref="overview({scenarioId: s.id})" ng-bind="s.title"></a>
+  <div class="columns large-12">
+    <div class="row overview-nav-container">
+      <div class="columns large-4">
+        <ul class="overview-nav">
+          <li><a class="tab-corners" ng-class="{activetab: taskId==='overview'}" ui-sref="overview">Overview</a></li>
+          <li ><a class="tab-corners" ng-class="{activetab: taskId==='effectsTable'}" ui-sref="effectsTable">Effects table</a></li>
+        </ul>
+      </div>
+      <div class="columns large-8">
+        <div class="tab-corners workspace-control-tab row">
+          <div class="columns large-6 scenario-menu">
+            <span>Scenario</span>
+            <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenarios track by scenario.id" ng-change="scenarioChanged(scenario)"></select>
+            <i class="fa fa-plus new-scenario-btn" data-dropdown="newScenarioControl"></i>
+              <ul id="newScenarioControl" class="f-dropdown" data-dropdown-content>
+                <li class="drop-down-list-item" ng-click="forkScenario()" >
+                  <a>Copy current scenario</a></li>
+                <li class="drop-down-list-item" ng-click="newScenario()">
+                  <a>Create clean scenario</a>
                 </li>
-                <li>
-                    <a href="javaScript:void(0);" data-dropdown="newScenarioControl"><i class="fa fa-plus"></i></a>
-                    <ul id="newScenarioControl" class="f-dropdown" data-dropdown-content>
-                        <li><a ng-click="forkScenario()">Copy current scenario</a></li>
-                        <li><a ng-click="newScenario()">Create clean scenario</a></li>
-                    </ul>
-                </li>
+              </ul>
+          </div>
+          <div class="columns large-6">
+            <ul class="overview-nav">
+              <li>
+                <a class="tab-corners" ng-class="{activetab: taskId==='preferences'}" ui-sref="preferences">Preferences</a>
+              </li>
+              <li>
+                <a class="tab-corners" ng-class="{activetab: taskId === 'results'}" ng-if="resultsAccessible" ui-sref="results">Results</a>
+                <a class="tab-corners disabledtab" ng-if="!resultsAccessible">Results</a>
+              </li>
             </ul>
-            <div class="fakeTabsContent"></div>
+          </div>
         </div>
-
-        <div class="columns large-2">
-            <ul class="side-nav">
-                <li>
-                    <a ui-sref="overview"><i class="fa fa-angle-left"></i> Overview</a>
-                </li>
-                <li>
-                    <a ng-show="resultsAccessible" ui-sref="results"><i class="fa fa-angle-right"></i> Results</a>
-                    <span ng-show="!resultsAccessible" ui-sref="results"><i class="fa fa-angle-right"></i> Results</span>
-                </li>
-            </ul>
-        </div>
-        <div class="columns large-10">
-            <div ui-view></div>
-        </div>
+      </div>
     </div>
+
+    <div class="columns large-12">
+      <div ui-view></div>
+    </div>
+
+  </div>
 </div>
+

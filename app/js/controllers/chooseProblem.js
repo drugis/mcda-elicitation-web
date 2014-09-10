@@ -1,6 +1,6 @@
 'use strict';
 define(['angular', 'underscore'], function(angular, _) {
-  var dependencies = ['$scope', '$resource', config.workspacesRepository.service];
+  var dependencies = ['$scope', '$resource', config.workspacesRepository.type + 'Workspaces'];
   var ChooseProblemController = function($scope, $resource, Workspaces) {
     var examplesRepositoryUrl = config ? config.examplesRepository : '';
     var examplesResource = $resource(examplesRepositoryUrl + ':url', {url:'@url'});

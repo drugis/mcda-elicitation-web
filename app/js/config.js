@@ -13,18 +13,18 @@ define([], function() {
         controller: 'ScaleRangeController',
         templateUrl: 'scaleRange.html',
         requires: [],
-        resets: ['scale-ranges', 'partial-value-functions', 'criteria-trade-offs'] },
+        resets: ['scale-range', 'partial-value-function', 'criteria-trade-offs'] },
       { id: 'partial-value-function',
         title: 'Define Partial Value Functions',
         controller: 'PartialValueFunctionController',
         templateUrl: 'partialValueFunction.html',
-        requires: ['scale-ranges'],
-        resets: ['partial-value-functions', 'criteria-trade-offs'] },
+        requires: ['scale-range'],
+        resets: ['partial-value-function', 'criteria-trade-offs'] },
       { id: 'ordinal-swing',
         title: 'Ordinal Swing Elicitation',
         controller: 'OrdinalSwingController',
         templateUrl: 'ordinalSwing.html',
-        requires: ['partial-value-functions'],
+        requires: ['partial-value-function'],
         resets: ['criteria-trade-offs']},
       { id: 'interval-swing',
         title: 'Interval Swing Elicitation',
@@ -38,18 +38,32 @@ define([], function() {
         templateUrl: 'exactSwing.html',
         requires: ['complete-criteria-ranking'],
         resets: ['non-ordinal-preferences']},
+      { id: 'preferences',
+        title: 'Preferences',
+        controller: 'PreferencesController',
+        templateUrl: 'preferences.html',
+        requires: [],
+        resets:[]},
       { id: 'results',
         title: 'Results',
         controller: 'ResultsController',
         templateUrl: 'results.html',
-        requires: ['scale-ranges', 'partial-value-functions'],
-        resets: []}
-    ]};
+        requires: ['scale-range', 'partial-value-function'],
+        resets: []},
+      {
+        id: 'effectsTable',
+        title: 'Effects table',
+        controller: 'EffectsTableController',
+        templateUrl: "effectsTable.html",
+        requires: ['scale-range', 'partial-value-function'],
+        resets: []},
+        ]};
 
   var defaultView = 'overview';
 
   return {
     tasks: tasks,
-    defaultView: defaultView
+    defaultView: defaultView,
+    pataviService: 'smaa_v2'
   };
 });

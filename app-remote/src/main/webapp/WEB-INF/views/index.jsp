@@ -15,7 +15,7 @@
 
   <link rel="stylesheet" type="text/css" href="bower_components/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="bower_components/nprogress/nprogress.css">
-  <link rel="stylesheet" type="text/css" href="bower_components/mcda-web/app/lib/jslider/bin/jquery.slider.min.css">
+  <link rel="stylesheet" type="text/css" href="bower_components/jslider/dist/jquery.slider.min.css">
   <link rel="stylesheet" type="text/css" href="bower_components/nvd3/src/nv.d3.css">
 
   <link rel="stylesheet" type="text/css" href="<c:url value="/bower_components/mcda-web/app/css/mcda-drugis.css" />">
@@ -71,8 +71,8 @@
     window.config = {
       examplesRepository : "examples/",
       workspacesRepository : {
-        service : "RemoteWorkspaces",
-        url : "workspaces/",
+        type : "Remote",
+        url : "/workspaces/",
         _csrf_token : "${_csrf.token}",
         _csrf_header : "${_csrf.headerName}"
       }

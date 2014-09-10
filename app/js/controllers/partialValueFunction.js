@@ -1,13 +1,13 @@
 'use strict';
-define(['mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'underscore'], function(Wizard, angular, patavi, _) {
-  return function($scope, $injector, currentScenario, taskDefinition, PartialValueFunction) {
+define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'underscore'], function(Config, Wizard, angular, patavi, _) {
+  return function($scope, $state, $injector, taskDefinition, PartialValueFunction) {
     var standardize = function(state) {
       // Copy choices to problem
       _.each(_.pairs(state.problem.criteria), function(pair) {
         var name = pair[0], criterion = pair[1];
-        var isLinear = state.choice.data[name].type === "linear";
-        var baseIncluded = ["range", "type", "direction"];
-        var included  = isLinear ? baseIncluded : baseIncluded.concat(["values", "cutoffs"]);
+        var isLinear = state.choice.data[name].type === 'linear';
+        var baseIncluded = ['range', 'type', 'direction'];
+        var included  = isLinear ? baseIncluded : baseIncluded.concat(['values', 'cutoffs']);
         criterion.pvf = _.pick(state.choice.data[name], included);
       });
 
@@ -35,7 +35,7 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'unders
         }
 
         var preferences = rewritePreferences(choice.data[choice.criterion].preferences);
-        var task = patavi.submit("smaa", { method: "macbeth", preferences: preferences });
+        var task = patavi.submit(Config.pataviService, { method: 'macbeth', preferences: preferences });
         task.results.then(function(results) {
           $scope.$root.$safeApply($scope, function() {
             currentState.results = results.results;
@@ -55,10 +55,10 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'unders
 
       var initial = {
         choice:
-        { data: pluckObject(state.problem.criteria, "pvf"),
+        { data: pluckObject(state.problem.criteria, 'pvf'),
           calculate: calculate,
           preferences:
-          ["Very Weakly", "Weakly", "Moderately", "Strongly", "Very Strongly", "Extremely"],
+          ['Very Weakly', 'Weakly', 'Moderately', 'Strongly', 'Very Strongly', 'Extremely'],
           getXY: _.memoize(function(data, criterion) {
             var y = [1].concat(data[criterion].values).concat([0]);
             var best = state.problem.criteria[criterion].best();
@@ -67,7 +67,7 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'unders
             var values = _.map(_.zip(x, y), function(p) {
               return { x: p[0], y: p[1] };
             });
-            return [ { key: "Piecewise PVF", values: values }];
+            return [ { key: 'Piecewise PVF', values: values }];
           }, function(data, criterion) { // Hash function
             var values = _.reduce(data[criterion].values, function(sum, x) { return sum + x; });
             var cutoffs = _.reduce(data[criterion].cutoffs, function(sum, x) { return sum + x; });
@@ -82,14 +82,14 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'unders
       if (currentState && currentState.choice.subType === 'elicit values') {
         var criterion = currentState.choice.criterion;
         var choice = currentState.choice.data;
-        return choice[criterion].cutoffs.length == choice[criterion].values.length;
+        return choice[criterion].cutoffs.length === choice[criterion].values.length;
       }
       return true;
     };
 
     var getNextPiecewiseLinear = function(criteria, state) {
       return  _.find(criteria, function(c) {
-        return state.choice.data[c].type === "piecewise-linear" && !state.choice.data[c].cutoffs;
+        return state.choice.data[c].type === 'piecewise-linear' && !state.choice.data[c].cutoffs;
       });
     };
 
@@ -112,7 +112,7 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'unders
         for (var i = 0; i < size; ++i) {
           choice.data[choice.criterion].preferences[i] = [];
           for (var j = 0; j < size; ++j) {
-            choice.data[choice.criterion].preferences[i][j] = i == j ? choice.preferences[0] : null;
+            choice.data[choice.criterion].preferences[i][j] = i === j ? choice.preferences[0] : null;
           }
         }
 
@@ -127,7 +127,7 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'unders
         choice.data[choice.criterion].values = [];
       } else if (criterion) {
         info = nextState.problem.criteria[criterion];
-        choice.subType = "elicit cutoffs";
+        choice.subType = 'elicit cutoffs';
         choice.criterion = criterion;
 
         choice.data[criterion].cutoffs = [];
@@ -135,12 +135,12 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'unders
         choice.data[criterion].addCutoff = function(cutoff) {
           choice.data[criterion].cutoffs.push(cutoff);
           choice.data[criterion].cutoffs.sort(function(a, b) {
-            return info.pvf.direction === "decreasing" ? a - b : b - a;
+            return info.pvf.direction === 'decreasing' ? a - b : b - a;
           });
         };
         choice.data[criterion].validCutoff = function(cutoff) {
           var allowed = (cutoff < info.best() && cutoff > info.worst()) || (cutoff < info.worst() && cutoff > info.best());
-          var unique = choice.data[criterion].cutoffs.indexOf(cutoff) == -1;
+          var unique = choice.data[criterion].cutoffs.indexOf(cutoff) === -1;
           return allowed && unique;
         };
       }
@@ -148,23 +148,37 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'unders
     };
 
     $scope.save = function(state) {
-      currentScenario.update(PartialValueFunction.attach(standardize(state)));
-      currentScenario.redirectToDefaultView();
+      $scope.scenario.update(PartialValueFunction.attach(standardize(state)));
+      $state.go('preferences');
     };
 
     $scope.canSave = function(state) {
-      if(!state) return false;
+      if(!state) {
+        return false;
+      }
       var criteria = _.keys(state.problem.criteria).sort();
       var criterion = getNextPiecewiseLinear(criteria, state);
       return state.choice.subType !== 'elicit cutoffs' && !criterion;
     };
 
+    functionclean (state) {
+      var newState = angular.copy(state);
+      var criteria = newState.problem.criteria;
+      _.each(criteria, function(criterion) {
+        var remove = ['type', 'direction', 'cutoffs', 'values'];
+        if (criterion.pvf) {
+          criterion.pvf = _.omit(criterion.pvf, remove);
+        }
+      });
+      return newState;
+    }
+
     $injector.invoke(Wizard, this, {
       $scope: $scope,
       handler: { validChoice: validChoice,
-                 fields: ["type", "choice", "title"],
+                 fields: ['type', 'choice', 'title'],
                  hasIntermediateResults: false,
-                 initialize: _.partial(initialize, taskDefinition.clean(currentScenario.state)),
+                 initialize: _.partial(initialize, clean($scope.scenario.state)),
                  standardize: _.identity,
                  nextState: nextState }
     });

@@ -6,17 +6,17 @@
       <ul class="no-bullet">
         <li ng-repeat="criterion in [currentStep.criterionA, currentStep.criterionB] track by $index">
           {{currentStep.problem.criteria[criterion].title}}
-          ({{currentStep.problem.criteria[criterion].worst() | precision: 3}} &rarr;
-          {{currentStep.problem.criteria[criterion].best() | precision: 3}})
+          ({{currentStep.problem.criteria[criterion].worst() | number: 3}} &rarr;
+          {{currentStep.problem.criteria[criterion].best() | number: 3}})
         </li>
       </ul>
 
       <strong>Given the following situation:</strong>
       <p>
         {{currentStep.problem.criteria[currentStep.criterionA].title}} =
-        {{currentStep.problem.criteria[currentStep.criterionA].worst() | precision: 3}},
+        {{currentStep.problem.criteria[currentStep.criterionA].worst() | number: 3}},
         {{currentStep.problem.criteria[currentStep.criterionB].title}} =
-        {{currentStep.problem.criteria[currentStep.criterionB].best() | precision: 3}}
+        {{currentStep.problem.criteria[currentStep.criterionB].best() | number: 3}}
 
         <br>
         <strong>Adjust the slider:</strong>
@@ -28,16 +28,16 @@
       <strong>So that the following statements are true:</strong>
       <p>
         {{currentStep.problem.criteria[currentStep.criterionA].title}} = <span class="label secondary">{{currentStep.best()}}</span>
-        {{currentStep.problem.criteria[currentStep.criterionB].title}} = {{currentStep.problem.criteria[currentStep.criterionB].worst() | precision: 3}}
+        {{currentStep.problem.criteria[currentStep.criterionB].title}} = {{currentStep.problem.criteria[currentStep.criterionB].worst() | number: 3}}
         is clearly better.
         <br>
         {{currentStep.problem.criteria[currentStep.criterionA].title}} = <span class="label secondary">{{currentStep.worst()}}</span>
-        {{currentStep.problem.criteria[currentStep.criterionB].title}} = {{currentStep.problem.criteria[currentStep.criterionB].worst() | precision: 3}}
+        {{currentStep.problem.criteria[currentStep.criterionB].title}} = {{currentStep.problem.criteria[currentStep.criterionB].worst() | number: 3}}
         is clearly worse.
       </p>
     </div>
 
-    <div ng-include="rankProbabilityChartUrl"></div>
+    <div ng-include="rankProbabilityChartURL"></div>
   </div>
 
   <div class="row">

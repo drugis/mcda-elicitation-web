@@ -3,8 +3,8 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
     var dependencies = ['elicit.pvfService', 'ngResource'];
 
     function randomId(size, prefix) {
-      var text = "";
-      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      var text = '';
+      var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
       for (var i = 0; i < size; i++) {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
@@ -24,43 +24,61 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
         repositoryUrl = config.workspacesRepository.url;
       } else {
         var workspaceName = $window.config.workspaceName || 'workspaces';
-        var path = $location.path();
-         repositoryUrl = path.substr(0, path.lastIndexOf(workspaceName) + workspaceName.length + 1);
+        path = $location.path();
+        repositoryUrl = path.substr(0, path.lastIndexOf(workspaceName) + workspaceName.length + 1);
       }
 
-      var WorkspaceResource = $resource(repositoryUrl + ":workspaceId", {
+      var WorkspaceResource = $resource(repositoryUrl + ':workspaceId', {
         workspaceId: '@id'
       }, {
         save: {
-          method: "POST",
+          method: 'POST',
           headers: headers
         }
       });
 
-      var redirectToDefaultView = function() {
-        $state.go(Config.defaultView);
+      var redirectToDefaultView = function(workspaceId, scenarioId) {
+        $state.go(Config.defaultView, {
+          workspaceId: workspaceId,
+          scenarioId: scenarioId
+        });
       };
 
+      function addValueTree(problem) {
+        if (!problem.valueTree) {
+          problem.valueTree = {
+            'title': 'Overall value',
+            'criteria': _.keys(problem.criteria)
+          };
+        }
+      }
+
       var decorate = function(workspace) {
+        addValueTree(workspace.problem);
+
         var ScenarioResource = $resource(
-          repositoryUrl + ":workspaceId/scenarios/:scenarioId", {
+          repositoryUrl + ':workspaceId/scenarios/:scenarioId', {
             workspaceId: workspace.id,
             scenarioId: '@id'
           }, {
             save: {
-              method: "POST",
+              method: 'POST',
               headers: headers
             }
           }
         );
 
         workspace.redirectToDefaultView = function(scenarioId) {
-          $state.go(Config.defaultView);
+          if (scenarioId) {
+            redirectToDefaultView(workspace.id, scenarioId);
+          } else {
+            redirectToDefaultView(workspace.id, workspace.defaultScenarioId);
+          }
         };
 
         ScenarioResource.prototype.save = function() {
-          return this.$save(function(scenario) {
-            $rootScope.$broadcast("elicit.scenariosChanged");
+          return this.$save(function() {
+            $rootScope.$broadcast('elicit.scenariosChanged');
           });
         };
 
@@ -68,7 +86,7 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
         ScenarioResource.prototype.update = function(state) {
           var fields = ['problem', 'prefs'];
           this.state = _.pick(state, fields);
-          this.$save().then(function(scenario) {
+          this.save().then(function(scenario) {
             PartialValueFunction.attach(scenario.state);
           });
         };
@@ -92,8 +110,8 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
           var deferred = $q.defer();
 
           var scenario = new ScenarioResource({
-            "title": randomId(3, "Scenario "),
-            "state": state
+            'title': randomId(3, 'Scenario '),
+            'state': state
           });
           scenario.$save(function(scenario) {
             deferred.resolve(scenario.id);
@@ -103,7 +121,11 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
         };
 
         workspace.query = function() {
-          return ScenarioResource.query();
+          return ScenarioResource.query(function(scenarios) {
+            angular.forEach(scenarios, function(scenario) {
+              PartialValueFunction.attach(scenario.state);
+            });
+          });
         };
 
         return workspace;
@@ -127,17 +149,17 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
           problem: problem
         });
         workspace.$save(function(workspace) {
-          var Scenario = $resource(repositoryUrl + ":workspaceId/scenarios/:scenarioId", {
+          var Scenario = $resource(repositoryUrl + ':workspaceId/scenarios/:scenarioId', {
             workspaceId: workspace.id
           }, {
             save: {
-              method: "POST",
+              method: 'POST',
               headers: headers
             }
           });
           var scenario = new Scenario({
-            "title": "Default",
-            "state": {
+            'title': 'Default',
+            'state': {
               problem: problem
             }
           });
@@ -159,9 +181,9 @@ define(['mcda/config', 'angular', 'angular-resource', 'underscore'],
       };
 
       return {
-        "create": create,
-        "get": get,
-        "query": query
+        'create': create,
+        'get': get,
+        'query': query
       };
     };
 

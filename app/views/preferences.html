@@ -1,0 +1,97 @@
+<h4 ng-show="!isEditTitleVisible" class="subheader">
+  <span>{{scenario.title}}</span>
+  <a ng-click="editTitle()"><i class="fa fa-edit"></i></a>
+</h4>
+<div class="row" ng-show="isEditTitleVisible">
+  <div class="columns large-8 small-12">
+    <form>
+      <div class="row collapse">
+        <div class="columns small-8"><input type="text" ng-model="scenarioTitle.value"></div>
+        <div class="columns small-2"><button class="button postfix" ng-click="saveTitle()">Save</button></div>
+        <div class="columns small-2"><button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button></div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<div id="trade-off-block" class="prefs-block">
+  <h3>Elicitation Steps</h3>
+  <ul class="inline-list elicitation-step-list">
+    <li>
+    <!-- tooltip="Doing this will remove the folloing elicitation steps" tooltip-placement="bottom" tooltip-animation="false"  -->
+      <button class="arrow-button" ui-sref="scale-range" ng-disabled="!isAccessible(tasks['scale-range'], scenario.state).accessible">Scale Range <i class="fa fa-check" ng-show="isScaleRangePresent()"/></button>
+    </li>
+    <li>
+      <button class="arrow-button" ui-sref="partial-value-function" tooltip-placement="bottom" tooltip-animation="false"
+      ng-disabled="!isAccessible(tasks['partial-value-function'], scenario.state).accessible">Partial Value Functions <i class="fa fa-check" ng-show="isPartialValueFunctionPresent()"/></button>
+    </li>
+    <li>
+      <button class="arrow-button" ui-sref="ordinal-swing" tooltip-placement="bottom" tooltip-animation="false"
+      ng-disabled="!isAccessible(tasks['ordinal-swing'], scenario.state).accessible">Ordinal Swing <i class="fa fa-check" ng-show="isOrdinalSwingPresent()"/></button>
+    </li>
+    <li>
+      <button class="arrow-button" ui-sref="exact-swing" tooltip-placement="bottom" tooltip-animation="false"
+       ng-disabled="!isAccessible(tasks['exact-swing'], scenario.state).accessible">Exact Swing  <i class="fa fa-check" ng-show="isExactSwingPresent()"/></button>
+      <button class="arrow-button" ui-sref="interval-swing" tooltip-placement="bottom" tooltip-animation="false"
+      ng-disabled="!isAccessible(tasks['interval-swing'], scenario.state).accessible">Interval Swing  <i class="fa fa-check" ng-show="isIntervalSwingPresent()"/></button>
+    </li>
+    <li>
+      <button class="success results-button" ui-sref="results" ng-disabled="!isAccessible(tasks['results'], scenario.state).accessible">Results <i class="fa fa-check" ng-show="resultsAccessible"/></button>
+    </li>
+  </ul>
+</div>
+
+<div class="prefs-block">
+  <h3>Scale Ranges</h3>
+
+  <a class="button" ui-sref="scale-range">Define Scale Ranges</a>
+
+  <table id="effectstable" class="effectstable">
+    <thead>
+      <tr>
+        <th>Criterion</th>
+        <th>Theoretical Range</th>
+        <th>Observed Range</th>
+        <th>Configured Range</th>
+        <th>Units</th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="(key, criterion) in criteria">
+      <td>{{criterion.title}}</td>
+      <td>{{criterion.scale[0] | number:3}}, {{criterion.scale[1] | number:3}}</td>
+      <td>{{intervalHull(scales[criterion.id])[0] | number:3}}, {{intervalHull(scales[criterion.id])[1] | number:3}}</td>
+      <td><span ng-if="criterion.pvf.range">{{criterion.pvf.range[0] | number:3}}, {{criterion.pvf.range[1] | number:3}}</span></td>
+      <td>{{criterion.unitOfMeasurement}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="partial-value-functions-block" class="prefs-block">
+  <h3>Partial Value Functions</h3>
+
+  <div class="row">
+    <div ng-repeat="criterion in scenario.state.problem.criteria" class="small-12 medium-6 large-4 columns">
+      <partial-value-function criterion="criterion" is-scale-range-present="isScaleRangePresent" scenario="scenario"/>
+    </div>
+  </div>
+</div>
+
+<div id="trade-off-block" class="prefs-block">
+  <h3>Trade-offs</h3>
+
+  <ul class="no-bullet">
+    <li ng-repeat="criterion in criteria">
+      <span mathjax-bind="criterion.w"></span>: {{criterion.title}}
+      ({{criterion.worst() | number: 3}} &rarr; {{criterion.best() | number: 3}})
+    </li>
+  </ul>
+
+  <div mathjax-bind="preferences"></div>
+</div>
+
+
+
+
