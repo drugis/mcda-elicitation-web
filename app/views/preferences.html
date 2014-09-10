@@ -74,16 +74,7 @@
 
   <div class="row">
     <div ng-repeat="criterion in scenario.state.problem.criteria" class="small-12 medium-6 large-4 columns">
-      <h5>{{criterion.title}}</h5>
-
-      <button ng-disabled="status.scaleRange === 'missing'" ui-sref="partial-value-function">Define partial value function</button>
-
-      <div style="width: 250px; height: 180px">
-        <line-chart ng-if="criterion.pvf.type" value="getXY(criterion)" show-legend="false"></line-chart>
-        <div ng-if="!criterion.pvf.type" style="padding-top: 40px; text-align: center; margin: 0">
-          <i style="font-size: 100px" class="fa fa-question"></i>
-        </div>
-      </div>
+      <partial-value-function criterion="criterion" is-scale-range-present="isScaleRangePresent" scenario="scenario"/>
     </div>
   </div>
 </div>

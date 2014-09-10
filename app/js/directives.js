@@ -452,5 +452,29 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
     };
   })
 
+  directives.directive('partialValueFunction', function(mcdaRootPath, PartialValueFunction) {
+    return {
+      restrict: 'E',
+      replace: true,
+      scope: {
+        criterion: '=',
+        isScaleRangePresent: '&',
+        scenario: '='
+      },
+      link:function(scope, element) {
+
+        scope.isWizardVisible = false;
+
+        scope.getXY = PartialValueFunction.getXY;
+
+        scope.showPVFWizard = function() {
+          scope.isWizardVisible = true;
+        };
+      },
+      templateUrl: mcdaRootPath + 'partials/partialValueFunction.html',
+      controller: 'PartialValueFunctionController'
+    };
+  });
+
   return directives;
 });

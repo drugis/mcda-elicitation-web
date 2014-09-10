@@ -31,9 +31,9 @@ define(['angular', 'underscore'], function(angular, _) {
       var intervalInfo = function(idx) {
         return {
           "x0": cutoffs[idx - 1],
-            "x1": cutoffs[idx],
-            "v0": values[idx - 1],
-            "v1": values[idx]
+          "x1": cutoffs[idx],
+          "v0": values[idx - 1],
+          "v1": values[idx]
         };
       };
 
@@ -51,8 +51,9 @@ define(['angular', 'underscore'], function(angular, _) {
       return {
         map: map,
         inv: inv,
-        best: extreme(1,0),
-        worst: extreme(0,1) };
+        best: extreme(1, 0),
+        worst: extreme(0, 1)
+      };
     };
 
     var attach = function(state) {
@@ -73,12 +74,19 @@ define(['angular', 'underscore'], function(angular, _) {
       var worst = criterion.worst();
       var x = [best].concat(criterion.pvf.cutoffs || []).concat([worst]);
       var values = _.map(_.zip(x, y), function(p) {
-        return { x: p[0], y: p[1] };
+        return {
+          x: p[0],
+          y: p[1]
+        };
       });
-      return [ { key: "Piecewise PVF", values: values }];
+      return [{
+        key: "Piecewise PVF",
+        values: values
+      }];
     };
 
-    return { create: create,
+    return {
+      create: create,
       attach: attach,
       getXY: getXY
     };

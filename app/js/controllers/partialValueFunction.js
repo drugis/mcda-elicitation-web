@@ -1,6 +1,6 @@
 'use strict';
 define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'underscore'], function(Config, Wizard, angular, patavi, _) {
-  return function($scope, $state, $injector, currentScenario, taskDefinition, PartialValueFunction) {
+  return function($scope, $state, $injector, taskDefinition, PartialValueFunction) {
     var standardize = function(state) {
       // Copy choices to problem
       _.each(_.pairs(state.problem.criteria), function(pair) {
@@ -148,7 +148,7 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
     };
 
     $scope.save = function(state) {
-      currentScenario.update(PartialValueFunction.attach(standardize(state)));
+      $scope.scenario.update(PartialValueFunction.attach(standardize(state)));
       $state.go('preferences');
     };
 
@@ -161,12 +161,24 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
       return state.choice.subType !== 'elicit cutoffs' && !criterion;
     };
 
+    functionclean (state) {
+      var newState = angular.copy(state);
+      var criteria = newState.problem.criteria;
+      _.each(criteria, function(criterion) {
+        var remove = ['type', 'direction', 'cutoffs', 'values'];
+        if (criterion.pvf) {
+          criterion.pvf = _.omit(criterion.pvf, remove);
+        }
+      });
+      return newState;
+    }
+
     $injector.invoke(Wizard, this, {
       $scope: $scope,
       handler: { validChoice: validChoice,
                  fields: ['type', 'choice', 'title'],
                  hasIntermediateResults: false,
-                 initialize: _.partial(initialize, taskDefinition.clean(currentScenario.state)),
+                 initialize: _.partial(initialize, clean($scope.scenario.state)),
                  standardize: _.identity,
                  nextState: nextState }
     });
