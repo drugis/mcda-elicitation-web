@@ -161,7 +161,7 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
       return state.choice.subType !== 'elicit cutoffs' && !criterion;
     };
 
-    functionclean (state) {
+    function clean(state) {
       var newState = angular.copy(state);
       var criteria = newState.problem.criteria;
       _.each(criteria, function(criterion) {
