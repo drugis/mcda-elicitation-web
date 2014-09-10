@@ -753,9 +753,15 @@ treecontrol.tree-dark {
     padding-right: 32px;
     float: none;
     button {
-      min-width: 11.5rem;
+      padding-right:1rem;
+      padding-left:1rem;
+      min-width: 9.5rem;
     }
   }
+}
+
+.results-button {
+  margin-left:0.5rem;
 }
 
 .arrow-button:after {

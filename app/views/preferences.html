@@ -19,7 +19,8 @@
   <h3>Elicitation Steps</h3>
   <ul class="inline-list elicitation-step-list">
     <li>
-      <button class="arrow-button" ui-sref="scale-range" font tooltip="Doing this will remove the folloing elicitation steps" tooltip-placement="bottom" tooltip-animation="false" ng-disabled="!isAccessible(tasks['scale-range'], scenario.state).accessible">Scale Range <i class="fa fa-check" ng-show="isScaleRangePresent()"/></button>
+    <!-- tooltip="Doing this will remove the folloing elicitation steps" tooltip-placement="bottom" tooltip-animation="false"  -->
+      <button class="arrow-button" ui-sref="scale-range" ng-disabled="!isAccessible(tasks['scale-range'], scenario.state).accessible">Scale Range <i class="fa fa-check" ng-show="isScaleRangePresent()"/></button>
     </li>
     <li>
       <button class="arrow-button" ui-sref="partial-value-function" tooltip-placement="bottom" tooltip-animation="false"
@@ -35,9 +36,10 @@
       <button class="arrow-button" ui-sref="interval-swing" tooltip-placement="bottom" tooltip-animation="false"
       ng-disabled="!isAccessible(tasks['interval-swing'], scenario.state).accessible">Interval Swing  <i class="fa fa-check" ng-show="isIntervalSwingPresent()"/></button>
     </li>
+    <li>
+      <button class="success results-button" ui-sref="results" ng-disabled="!isAccessible(tasks['results'], scenario.state).accessible">Results <i class="fa fa-check" ng-show="resultsAccessible"/></button>
+    </li>
   </ul>
-      <button class="success" ui-sref="results" tooltip-placement="bottom" tooltip-animation="false" tooltip="Warning: Resetting the scale ranges will destroy all subsequent steps. Proceed with caution. Bacon ipsum." ng-disabled="!isAccessible(tasks['results'], scenario.state).accessible"><i class="fa fa-check" ng-show="resultsAccessible"/> Results</button>
-
 </div>
 
 <div class="prefs-block">

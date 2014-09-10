@@ -8807,10 +8807,17 @@ treecontrol.tree-dark {
 }
 /* line 755, ../../sass/_main.scss */
 .inline-list.elicitation-step-list li button {
-  min-width: 11.5rem;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  min-width: 9.5rem;
 }
 
-/* line 761, ../../sass/_main.scss */
+/* line 763, ../../sass/_main.scss */
+.results-button {
+  margin-left: 0.5rem;
+}
+
+/* line 767, ../../sass/_main.scss */
 .arrow-button:after {
   content: " ";
   display: block;
