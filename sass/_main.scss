@@ -750,39 +750,25 @@ treecontrol.tree-dark {
   li {
     vertical-align: middle;
     display: table-cell;
-    padding-right: 0px;
+    padding-right: 32px;
     float: none;
     button {
-      min-width: 10.5rem;
-    }
-    button:before {
-      content: " ";
-      display: block;
-      width: 0;
-      height: 0;
-      border-top: 27px solid transparent;
-      border-bottom: 27px solid transparent;
-      border-left: 30px solid white;
-      position: absolute;
-      top: 50%;
-      margin-top: -27px;
-      margin-left: 1px;
-      left: 100%;
-      z-index: 1;
-    }
-    button:after {
-      content: " ";
-      display: block;
-      width: 0;
-      height: 0;
-      border-top: 26px solid transparent;           /* Go big on the size, and let overflow hide */
-      border-bottom: 26px solid transparent;
-      border-left: 30px solid #3c2979;
-      position: absolute;
-      top: 50%;
-      margin-top: -26px;
-      left: 100%;
-      z-index: 2;
+      min-width: 11.5rem;
     }
   }
+}
+
+.arrow-button:after {
+  content: " ";
+  display: block;
+  width: 0;
+  height: 0;
+  border-top: 26px solid transparent;           /* Go big on the size, and let overflow hide */
+  border-bottom: 26px solid transparent;
+  border-left: 30px solid $primary-color;
+  position: absolute;
+  top: 50%;
+  margin-top: -26px;
+  left: 100%;
+  z-index: 2;
 }

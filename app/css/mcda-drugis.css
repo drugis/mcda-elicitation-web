@@ -8971,31 +8971,16 @@ treecontrol.tree-dark {
 .inline-list.elicitation-step-list li {
   vertical-align: middle;
   display: table-cell;
-  padding-right: 0px;
+  padding-right: 32px;
   float: none;
 }
 /* line 755, ../../sass/_main.scss */
 .inline-list.elicitation-step-list li button {
-  min-width: 10.5rem;
+  min-width: 11.5rem;
 }
-/* line 758, ../../sass/_main.scss */
-.inline-list.elicitation-step-list li button:before {
-  content: " ";
-  display: block;
-  width: 0;
-  height: 0;
-  border-top: 27px solid transparent;
-  border-bottom: 27px solid transparent;
-  border-left: 30px solid white;
-  position: absolute;
-  top: 50%;
-  margin-top: -27px;
-  margin-left: 1px;
-  left: 100%;
-  z-index: 1;
-}
-/* line 773, ../../sass/_main.scss */
-.inline-list.elicitation-step-list li button:after {
+
+/* line 761, ../../sass/_main.scss */
+.arrow-button:after {
   content: " ";
   display: block;
   width: 0;
@@ -9003,7 +8988,7 @@ treecontrol.tree-dark {
   border-top: 26px solid transparent;
   /* Go big on the size, and let overflow hide */
   border-bottom: 26px solid transparent;
-  border-left: 30px solid #3c2979;
+  border-left: 30px solid #452f8c;
   position: absolute;
   top: 50%;
   margin-top: -26px;
