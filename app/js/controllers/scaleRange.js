@@ -1,8 +1,41 @@
 'use strict';
 define(['mcda/config', 'angular', 'mcda/lib/patavi', 'underscore'], function(Config, angular, patavi, _) {
 
-  return function($scope, currentScenario, taskDefinition) {
+  return function($scope, $state, currentScenario, taskDefinition, intervalHull) {
+
+    var scenario = currentScenario;
+    var state = taskDefinition.clean(scenario.state);
+
     $scope.title = taskDefinition.title;
+
+    $scope.validChoice = function(currentState) {
+      if (currentState) {
+        return _.every(currentState.choice, function(choice) {
+          var complete = _.isNumber(choice.upper) && _.isNumber(choice.lower);
+          return complete && (choice.upper > choice.lower);
+        });
+      }
+      return false;
+    };
+
+    $scope.save = function(currentState) {
+      if (!this.validChoice(currentState)) {
+        return;
+      }
+      var state = angular.copy(currentState);
+      // Rewrite scale information
+      _.each(_.pairs(state.choice), function(choice) {
+        var pvf = state.problem.criteria[choice[0]].pvf;
+        if (!pvf) {
+          state.problem.criteria[choice[0]].pvf = {
+            range: null
+          };
+        }
+        state.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
+      });
+      scenario.update(state);
+      $state.go('preferences');
+    };
 
     var nice = function(x) {
       var log10 = function(x) {
@@ -32,10 +65,7 @@ define(['mcda/config', 'angular', 'mcda/lib/patavi', 'underscore'], function(Con
         _.map(_.pairs(results.results), function(criterion) {
 
           // Calculate interval hulls
-          var criterionRange = [
-            Math.min.apply(null, _.map(_.values(criterion[1]), function(alt) { return alt["2.5%"] })),
-            Math.max.apply(null, _.map(_.values(criterion[1]), function(alt) { return alt["97.5%"] }))
-          ];
+          var criterionRange = intervalHull(criterion[1]);
 
           // Set inital model value
           var pvf = state.problem.criteria[criterion[0]].pvf;
@@ -81,41 +111,11 @@ define(['mcda/config', 'angular', 'mcda/lib/patavi', 'underscore'], function(Con
       });
     };
 
-    var scenario = currentScenario;
-    var state = taskDefinition.clean(scenario.state);
-
     var calculateScales = patavi.submit(Config.pataviService, _.extend(state.problem, {
       'method': 'scales'
     }));
     calculateScales.results.then(_.partial(successHandler, state), errorHandler);
 
-    $scope.validChoice = function(currentState) {
-      if (currentState) {
-        return _.every(currentState.choice, function(choice) {
-          var complete = _.isNumber(choice.upper) && _.isNumber(choice.lower);
-          return complete && (choice.upper > choice.lower);
-        });
-      }
-      return false;
-    };
 
-    $scope.save = function(currentState) {
-      if (!this.validChoice(currentState)) {
-        return;
-      }
-      var state = angular.copy(currentState);
-      // Rewrite scale information
-      _.each(_.pairs(state.choice), function(choice) {
-        var pvf = state.problem.criteria[choice[0]].pvf;
-        if (!pvf) {
-          state.problem.criteria[choice[0]].pvf = {
-            range: null
-          };
-        }
-        state.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
-      });
-      scenario.update(state);
-      scenario.redirectToDefaultView();
-    };
   };
 });

@@ -13,7 +13,8 @@ module.exports = function(config) {
       'karma-phantomjs-launcher',
       'karma-junit-reporter',
       'karma-jasmine',
-      'karma-requirejs'
+      'karma-requirejs',
+      'karma-ng-html2js-preprocessor'
     ],
 
 
@@ -25,6 +26,8 @@ module.exports = function(config) {
     files: [
       'test/test-main.js',
       'app/js/misc.js',
+      'bower_components/angular/angular.js',
+      {pattern: 'app/partials/*.html'},
       {pattern: 'app/js/**/*.js', included: false},
       {pattern: 'bower_components/**/*.js', included: false},
       {pattern: 'test/**/*.js', included: false}
@@ -44,6 +47,28 @@ module.exports = function(config) {
       outputFile: 'test/test-results.xml'
     },
 
+        // generate js files from html templates to expose them during testing.
+
+    preprocessors: {
+      '**/*.html': ['ng-html2js']
+    },
+
+    ngHtml2JsPreprocessor: {
+      // strip this from the file path
+      // stripPrefix: 'public/',
+      // // prepend this to the
+      // prependPrefix: 'served/',
+
+      // // or define a custom transform function
+      // cacheIdFromPath: function(filepath) {
+      //   return cacheId;
+      // },
+
+      // setting this option will create only a single module that contains templates
+      // from all the files, so you can load them all with module('foo')
+      // moduleName: 'templates'
+     
+    },
 
     // web server port
     port: 9876,

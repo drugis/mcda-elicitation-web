@@ -1,51 +1,91 @@
 {
-  "title": "Rimonabant case study",
+  "title": "Rimonabant in type 2 diabetes patients",
+  "description": "Indication: the use of rimonabant as an add-on therapy to an established first-line oral glucose control therapy.\nPatient population: overweight or obese patients with type 2 diabetes mellitus already on metforin or sulphonylurea monotherapy.\nDecision that needs to be taken: marketing authorization",
   "criteria": {
-    "weightLoss": {
-      "title": "Change from baseline in body weight",
-      "scale": [-20, 20],
+    "Hypo": {
+      "title": "Hypoglyceamia",
+      "description": "Incidence of hypoglyceamia.",
+      "unitOfMeasurement": "Proportion",
+      "scale": [0.0, 1.0],
       "pvf": {
-        "range": [-10, 0],
-        "direction": "decreasing",
-        "type": "linear"
+        "range": [0.0, 0.1],
+        "type": "linear",
+        "direction": "decreasing"
       }
     },
-    "glucose": {
-      "title": "Change from baseline in fasting glucose",
-      "scale": [-1, 0.5],
+    "Fasting": {
+      "title": "Fasting glucose",
+      "description": "Change in fasting glucose concentrations from baseline.",
+      "unitOfMeasurement": "mmol/L",
+      "scale": [-5, 3],
       "pvf": {
         "range": [-2, 2],
-        "direction": "decreasing",
-        "type": "linear"
+        "type": "linear",
+        "direction": "decreasing"
       }
     },
-    "anxiety": {
+    "SBP": {
+      "title": "SBP",
+      "description": "Change in systolic blood pressure from baseline.",
+      "unitOfMeasurement": "mm Hg",
+      "scale": [-30, 10],
+      "pvf": {
+        "range": [-10, 5],
+        "type": "linear",
+        "direction": "decreasing"
+      }
+    },
+    "HDL": {
+      "title": "HDL cholesterol",
+      "description": "Change in HDL cholesterol from baseline.",
+      "unitOfMeasurement": "mmol/L",
+      "scale": [-2, 2],
+      "pvf": {
+        "range": [0.0, 1.0],
+        "type": "linear",
+        "direction": "increasing"
+      }
+    },
+    "Anxiety": {
       "title": "Anxiety",
-      "scale": [0, 100],
+      "description": "Incidence of anxiety.",
+      "unitOfMeasurement": "proportion",
+      "scale": [0.0, 1.0],
       "pvf": {
-        "range": [0, 10],
-        "direction": "decreasing",
-        "type": "linear"
+        "range": [0.0, 0.10],
+        "type": "linear",
+        "direction": "decreasing"
       }
     },
-    "hypoglyceamia": {
-      "title": "Hypoglyceamia",
-      "scale": [0, 100],
+     "Waist": {
+      "title": "Waist circumference",
+      "description": "Change in waist circumference from baseline.",
+      "unitOfMeasurement": "cm",
+      "scale": [-15, 5],
       "pvf": {
-        "range": [0, 10],
-        "direction": "decreasing",
-        "type": "linear"
-      }
-    },
-    "discont": {
-      "title": "Discontinuations due to adverse events",
-      "scale": [0, 100],
-      "pvf": {
-        "range": [0, 20],
-        "direction": "decreasing",
-        "type": "linear"
+        "range": [-10, 0],
+        "type": "linear",
+        "direction": "decreasing"
       }
     }
+  },
+  "valueTree": {
+    "title": "Benefit-risk balance", 
+    "children": [
+      {
+        "title": "Favourable effects",
+        "criteria": [ "Fasting", "Waist", "SBP", "HDL" ]
+      },
+      {
+        "title": "Unfavourable effects",
+        "criteria": [ "Hypo", "Anxiety" ]
+      }
+    ]
+  },
+  "remarks": {
+    "Favourable effects": "The beneficial effects of a combined weight reduction and improved glucose regulation could be expected to be greater in patients with type 2 diabetes than in a general overweight population. The treatment alternatives in overweight type 2 diabetes patients failing on oral anti-diabetics are limited and the weight gain that almost inevitably occurs when these patients are given insulin is a common and important clinical problem. However, it is recognised that a prospective confirmatory trial with rimonabant focusing on patients failing on oral anti-diabetics is lacking. Also, no study on rimonabant monotherapy in type 2 diabetes was performed.",
+    "Unfavourable effects": "The main safety issue was the psychiatric AEs, which were considered to have important implications for the use of rimonabant, especially since patients with current depressions were excluded from the clinical studies.",
+    "Anxiety": "There was a dose-response relation between different depressive AEs and rimonabant treatment. Most of the patients with various kinds of depressive symptoms did eventually recover with or without anti-depressants drugs."
   },
   "alternatives": {
     "placebo": {
@@ -59,33 +99,33 @@
     }
   },
   "performanceTable": [
-    {
+  {
     "alternative": "placebo",
-    "criterion": "weightLoss",
+    "criterion": "Hypo",
     "performance": {
       "type": "exact",
-      "value": -1.5
+      "value": 0.02
     }
   },
   {
     "alternative": "5mg",
-    "criterion": "weightLoss",
+    "criterion": "Hypo",
     "performance": {
       "type": "exact",
-      "value": -2.4
+      "value": 0.01
     }
   },
   {
     "alternative": "20mg",
-    "criterion": "weightLoss",
+    "criterion": "Hypo",
     "performance": {
       "type": "exact",
-      "value": -5.5
+      "value": 0.05
     }
-  },  
-  {
+  },
+    {
     "alternative": "placebo",
-    "criterion": "glucose",
+    "criterion": "Fasting",
     "performance": {
       "type": "exact",
       "value": 0.33
@@ -93,7 +133,7 @@
   },
   {
     "alternative": "5mg",
-    "criterion": "glucose",
+    "criterion": "Fasting",
     "performance": {
       "type": "exact",
       "value": 0.30
@@ -101,82 +141,106 @@
   },
   {
     "alternative": "20mg",
-    "criterion": "glucose",
+    "criterion": "Fasting",
     "performance": {
       "type": "exact",
       "value": -0.64
     }
   },
-  {
+    {
     "alternative": "placebo",
-    "criterion": "anxiety",
+    "criterion": "SBP",
     "performance": {
       "type": "exact",
-      "value": 3
+      "value": 1.6
     }
   },
   {
     "alternative": "5mg",
-    "criterion": "anxiety",
+    "criterion": "SBP",
     "performance": {
       "type": "exact",
-      "value": 1
+      "value": -0.4
     }
   },
   {
     "alternative": "20mg",
-    "criterion": "anxiety",
+    "criterion": "SBP",
     "performance": {
       "type": "exact",
-      "value": 5
+      "value": -0.8
     }
   },
-  {
+    {
     "alternative": "placebo",
-    "criterion": "hypoglyceamia",
+    "criterion": "HDL",
     "performance": {
       "type": "exact",
-      "value": 2
+      "value": 0.07
     }
   },
   {
     "alternative": "5mg",
-    "criterion": "hypoglyceamia",
+    "criterion": "HDL",
     "performance": {
       "type": "exact",
-      "value": 1
+      "value": 0.11
     }
   },
   {
     "alternative": "20mg",
-    "criterion": "hypoglyceamia",
+    "criterion": "HDL",
     "performance": {
       "type": "exact",
-      "value": 5
+      "value": 0.17
     }
   },
-  {
+    {
     "alternative": "placebo",
-    "criterion": "discont",
+    "criterion": "Anxiety",
     "performance": {
       "type": "exact",
-      "value": 5
+      "value": 0.03
     }
   },
   {
     "alternative": "5mg",
-    "criterion": "discont",
+    "criterion": "Anxiety",
     "performance": {
       "type": "exact",
-      "value": 8
+      "value": 0.01
     }
   },
   {
     "alternative": "20mg",
-    "criterion": "discont",
+    "criterion": "Anxiety",
     "performance": {
       "type": "exact",
-      "value": 15
+      "value": 0.05
+    }
+  },
+   {
+    "alternative": "placebo",
+    "criterion": "Waist",
+    "performance": {
+      "type": "exact",
+      "value": -1.9
+    }
+  },
+  {
+    "alternative": "5mg",
+    "criterion": "Waist",
+    "performance": {
+      "type": "exact",
+      "value": -2.9
+    }
+  },
+  {
+    "alternative": "20mg",
+    "criterion": "Waist",
+    "performance": {
+      "type": "exact",
+      "value": -5.2
     }
   }
   ],

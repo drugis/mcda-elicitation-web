@@ -12,22 +12,25 @@ define(
    'angularanimate',
    'mcda/services/localRemarks',
    'mcda/services/localWorkspaces',
+   'mcda/services/remoteRemarks',
    'mcda/services/remoteWorkspaces',
    'mcda/services/taskDependencies',
    'mcda/services/errorHandling',
    'mcda/services/hashCodeService',
+   'mcda/services/util',
    'mcda/controllers',
-   'mcda/directives',
-   'mcda/filters'],
+   'mcda/directives'],
   function(angular, require, _, $, NProgress, Config) {
     var dependencies = [
       'ui.router',
       'mm.foundation',
+      'ngAnimate',
       'elicit.localRemarks',
       'elicit.localWorkspaces',
+      'elicit.remoteRemarks',
       'elicit.remoteWorkspaces',
+      'elicit.util',
       'elicit.directives',
-      'elicit.filters',
       'elicit.controllers',
       'elicit.taskDependencies',
       'elicit.errorHandling'];
@@ -106,7 +109,7 @@ define(
         url: '/workspaces/:workspaceId',
         templateUrl: baseTemplatePath + 'workspace.html',
         resolve: {
-          currentWorkspace: ["$stateParams", config.workspacesRepository.service, function($stateParams, Workspaces) {
+          currentWorkspace: ["$stateParams", config.workspacesRepository.type + 'Workspaces', function($stateParams, Workspaces) {
             return Workspaces.get($stateParams.workspaceId);
           }]
         },

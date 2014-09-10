@@ -19,6 +19,5 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
     $scope.cancelTitle = function() {
       $scope.isEditTitleVisible = false;
     };
-
   };
 });
