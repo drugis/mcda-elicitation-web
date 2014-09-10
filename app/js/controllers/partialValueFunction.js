@@ -1,13 +1,17 @@
 'use strict';
 define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'underscore'], function(Config, Wizard, angular, patavi, _) {
-  return function($scope, $state, $injector, taskDefinition, PartialValueFunction) {
+  return function($scope, $state, $injector, PartialValueFunction) {
+
+    $scope.openModal = {};
+
     var standardize = function(state) {
       // Copy choices to problem
       _.each(_.pairs(state.problem.criteria), function(pair) {
-        var name = pair[0], criterion = pair[1];
+        var name = pair[0],
+          criterion = pair[1];
         var isLinear = state.choice.data[name].type === 'linear';
         var baseIncluded = ['range', 'type', 'direction'];
-        var included  = isLinear ? baseIncluded : baseIncluded.concat(['values', 'cutoffs']);
+        var included = isLinear ? baseIncluded : baseIncluded.concat(['values', 'cutoffs']);
         criterion.pvf = _.pick(state.choice.data[name], included);
       });
 
@@ -23,6 +27,7 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
 
       var calculate = function(currentState) {
         var choice = currentState.choice;
+
         function rewritePreferences(preferences) {
           preferences = angular.copy(preferences);
           for (var i = 0; i < preferences.length; ++i) {
@@ -35,7 +40,10 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
         }
 
         var preferences = rewritePreferences(choice.data[choice.criterion].preferences);
-        var task = patavi.submit(Config.pataviService, { method: 'macbeth', preferences: preferences });
+        var task = patavi.submit(Config.pataviService, {
+          method: 'macbeth',
+          preferences: preferences
+        });
         task.results.then(function(results) {
           $scope.$root.$safeApply($scope, function() {
             currentState.results = results.results;
@@ -46,31 +54,41 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
           });
         }, function(code, error) {
           $scope.$root.$safeApply($scope, function() {
-            currentState.error =
-              { code: (code && code.desc) ? code.desc : code,
-                cause: error };
+            currentState.error = {
+              code: (code && code.desc) ? code.desc : code,
+              cause: error
+            };
           });
         });
       };
 
       var initial = {
-        choice:
-        { data: pluckObject(state.problem.criteria, 'pvf'),
+        choice: {
+          data: pluckObject(state.problem.criteria, 'pvf'),
           calculate: calculate,
-          preferences:
-          ['Very Weakly', 'Weakly', 'Moderately', 'Strongly', 'Very Strongly', 'Extremely'],
+          preferences: ['Very Weakly', 'Weakly', 'Moderately', 'Strongly', 'Very Strongly', 'Extremely'],
           getXY: _.memoize(function(data, criterion) {
             var y = [1].concat(data[criterion].values).concat([0]);
             var best = state.problem.criteria[criterion].best();
             var worst = state.problem.criteria[criterion].worst();
             var x = [best].concat(data[criterion].cutoffs).concat([worst]);
             var values = _.map(_.zip(x, y), function(p) {
-              return { x: p[0], y: p[1] };
+              return {
+                x: p[0],
+                y: p[1]
+              };
             });
-            return [ { key: 'Piecewise PVF', values: values }];
+            return [{
+              key: 'Piecewise PVF',
+              values: values
+            }];
           }, function(data, criterion) { // Hash function
-            var values = _.reduce(data[criterion].values, function(sum, x) { return sum + x; });
-            var cutoffs = _.reduce(data[criterion].cutoffs, function(sum, x) { return sum + x; });
+            var values = _.reduce(data[criterion].values, function(sum, x) {
+              return sum + x;
+            });
+            var cutoffs = _.reduce(data[criterion].cutoffs, function(sum, x) {
+              return sum + x;
+            });
             return 31 * values + cutoffs + criterion.hashCode();
           })
         }
@@ -88,8 +106,9 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
     };
 
     var getNextPiecewiseLinear = function(criteria, state) {
-      return  _.find(criteria, function(c) {
-        return state.choice.data[c].type === 'piecewise-linear' && !state.choice.data[c].cutoffs;
+      return _.find(criteria, function(c) {
+        var choice = state.choice.data[c];
+        return choice && choice.type === 'piecewise-linear' && !choice.cutoffs;
       });
     };
 
@@ -153,7 +172,7 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
     };
 
     $scope.canSave = function(state) {
-      if(!state) {
+      if (!state) {
         return false;
       }
       var criteria = _.keys(state.problem.criteria).sort();
@@ -175,12 +194,14 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
 
     $injector.invoke(Wizard, this, {
       $scope: $scope,
-      handler: { validChoice: validChoice,
-                 fields: ['type', 'choice', 'title'],
-                 hasIntermediateResults: false,
-                 initialize: _.partial(initialize, clean($scope.scenario.state)),
-                 standardize: _.identity,
-                 nextState: nextState }
+      handler: {
+        validChoice: validChoice,
+        fields: ['type', 'choice', 'title'],
+        hasIntermediateResults: false,
+        initialize: _.partial(initialize, clean($scope.scenario.state)),
+        standardize: _.identity,
+        nextState: nextState
+      }
     });
   };
 });

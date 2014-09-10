@@ -42,9 +42,10 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
       };
 
       $scope.isScaleRangePresent = function() {
-        return _.every($scope.scenario.state.problem.criteria, function(criterion) {
+        var isPrecent = _.every($scope.scenario.state.problem.criteria, function(criterion) {
           return criterion.pvf && criterion.pvf.range;
         });
+        return isPrecent;
       };
 
       $scope.isPartialValueFunctionPresent = function() {

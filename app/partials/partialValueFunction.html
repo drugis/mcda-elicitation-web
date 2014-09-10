@@ -7,111 +7,112 @@
       <i style="font-size: 100px" class="fa fa-question"></i>
     </div>
   </div>
-  <button ng-disabled="!isScaleRangePresent()" ng-click="showPVFWizard()">Define partial value function</button>
+  <button ng-disabled="!isScaleRangePresent()" ng-click="definePVFModal.open()">Define partial value function</button>
   <modal model="definePVFModal">
-    <div>
-      <h3>Define Partial Value Functions</h3>
+    <div class="row">
+      <div class="columns 12-large">
+        <h3>Define Partial Value Functions</h3>
 
-      <div ng-if="currentStep.choice.subType == null">
-        <p>The partial value functions (<abbr title="partial value function">PVF</abbr>)
-          define the mapping between the measurement values and the
-          utility of that value.</p>
+        <div ng-if="currentStep.choice.subType == null">
+          <p>The partial value functions (<abbr title="partial value function">PVF</abbr>)
+            define the mapping between the measurement values and the
+            utility of that value.</p>
 
-          <div class="row">
-            <div class="large-4 columns">
-              {{currentStep.problem.criteria[k].title}}
-              <label>
-                <input type="radio"
-                ng-model="criterion.direction"
-                value="decreasing"
-                ng-selected="criterion.direction =='decreasing'">
-                {{criterion.range[0] | number: 3}} is best
-              </label>
-              <label>
-                <input type="radio"
-                ng-model="criterion.direction"
-                value="increasing"
-                ng-selected="criterion.direction == 'increasing'">
-                {{criterion.range[1] | number: 3}} is best
-              </label>
-            </div>
-            <div class="large-4 columns">
-              Type of function
-              <label><input type="radio" ng-model="criterion.type" value="linear">Linear</label>
-              <label><input type="radio" ng-model="criterion.type" value="piecewise-linear">Piece-wise linear</label>
-            </div>
-          </div>
-        </div> <!-- / subType == null -->
-
-        <div ng-if="currentStep.choice.subType == 'elicit cutoffs'">
-          <h4>{{currentStep.problem.criteria[currentStep.choice.criterion].title}}</h4>
-          <p>Define the reference levels needed to elict the piecewise <abbr title="partial value function">PVF</abbr>: </p>
-          <ul>
-            <li><b>{{currentStep.problem.criteria[currentStep.choice.criterion].best() | number: 3}}</b></li>
-            <li ng-repeat="cutoff in currentStep.choice.data[currentStep.choice.criterion].cutoffs">{{cutoff}}</li>
-            <li><b>{{currentStep.problem.criteria[currentStep.choice.criterion].worst() | number: 3}}</b></li>
-          </ul>
-
-          <form name="addCutoff" ng-class="{error: !currentStep.choice.data[currentStep.choice.criterion].validCutoff(cutoff)}" >
-            <div class="row collapse">
-              <div class="large-6 columns">
-                <input paceholder="Cutoff at..." ng-model="cutoff" type="number" name="cutoff"></input>
-              </div>
-              <div class="large-2 pull-4 columns">
-                <button class="small"
-                ng-disabled="!currentStep.choice.data[currentStep.choice.criterion].validCutoff(cutoff)"
-                ng-click="currentStep.choice.data[currentStep.choice.criterion].addCutoff(cutoff)"> Add </button>
-              </div>
-            </div>
-          </form>
-        </div> <!-- / subType == 'elicit cutoffs' -->
-
-        <div ng-if="currentStep.choice.subType == 'elicit values'">
-          <h4>{{currentStep.problem.criteria[currentStep.choice.criterion].title}}</h4>
-          <div class="row" ng-repeat="(i, base) in currentStep.choice.data[currentStep.choice.criterion].base">
-            <div class="columns">
-              <p>Compare the attractiveness of {{base | number: 3}} to these other options:</p>
-
-              <ul class="no-bullet">
-                <li ng-repeat="(j, comp) in currentStep.choice.data[currentStep.choice.criterion].comp[i]">
-                  <label class="columns large-9">
-                    <span style="display: inline-block; width: 12em">Compared to {{comp | number: 3}}, I</span>
-                    <select ng-options="p for (k, p) in currentStep.choice.preferences"
-                    ng-model="currentStep.choice.data[currentStep.choice.criterion].preferences[i][i + j + 1]"
-                    style="width: 14em; display: inline-block;">
-                    <option value="">-- undefined --</option>
-                  </select>
-                  prefer {{base | number: 3}}.
+            <div class="row">
+              <div class="large-4 columns">
+                {{currentStep.problem.criteria[k].title}}
+                <label>
+                  <input type="radio"
+                  ng-model="criterion.direction"
+                  value="decreasing"
+                  ng-selected="criterion.direction =='decreasing'">
+                  {{criterion.range[0] | number: 3}} is best
                 </label>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="row">
-          <div class="columns">
-            <div ng-if="currentStep.choice.data[currentStep.choice.criterion].values" style="height: 300px;">
-              <line-chart value="currentStep.choice.getXY(currentStep.choice.data, currentStep.choice.criterion)"></line-chart>
+                <label>
+                  <input type="radio"
+                  ng-model="criterion.direction"
+                  value="increasing"
+                  ng-selected="criterion.direction == 'increasing'">
+                  {{criterion.range[1] | number: 3}} is best
+                </label>
+              </div>
+              <div class="large-4 columns">
+                Type of function
+                <label><input type="radio" ng-model="criterion.type" value="linear">Linear</label>
+                <label><input type="radio" ng-model="criterion.type" value="piecewise-linear">Piece-wise linear</label>
+              </div>
             </div>
+          </div> <!-- / subType == null -->
 
-            <button class="success small" ng-click='currentStep.choice.calculate(currentStep)'>Calculate function</button>
-            <span ng-show="currentStep.error" style="color: red">Inconsistent preferences</span>
+          <div ng-if="currentStep.choice.subType == 'elicit cutoffs'">
+            <h4>{{currentStep.problem.criteria[currentStep.choice.criterion].title}}</h4>
+            <p>Define the reference levels needed to elict the piecewise <abbr title="partial value function">PVF</abbr>: </p>
+            <ul>
+              <li><b>{{currentStep.problem.criteria[currentStep.choice.criterion].best() | number: 3}}</b></li>
+              <li ng-repeat="cutoff in currentStep.choice.data[currentStep.choice.criterion].cutoffs">{{cutoff}}</li>
+              <li><b>{{currentStep.problem.criteria[currentStep.choice.criterion].worst() | number: 3}}</b></li>
+            </ul>
 
+            <form name="addCutoff" ng-class="{error: !currentStep.choice.data[currentStep.choice.criterion].validCutoff(cutoff)}" >
+              <div class="row collapse">
+                <div class="large-6 columns">
+                  <input paceholder="Cutoff at..." ng-model="cutoff" type="number" name="cutoff"></input>
+                </div>
+                <div class="large-2 pull-4 columns">
+                  <button class="small"
+                  ng-disabled="!currentStep.choice.data[currentStep.choice.criterion].validCutoff(cutoff)"
+                  ng-click="currentStep.choice.data[currentStep.choice.criterion].addCutoff(cutoff)"> Add </button>
+                </div>
+              </div>
+            </form>
+          </div> <!-- / subType == 'elicit cutoffs' -->
+
+          <div ng-if="currentStep.choice.subType == 'elicit values'">
+            <h4>{{currentStep.problem.criteria[currentStep.choice.criterion].title}}</h4>
+            <div class="row" ng-repeat="(i, base) in currentStep.choice.data[currentStep.choice.criterion].base">
+              <div class="columns">
+                <p>Compare the attractiveness of {{base | number: 3}} to these other options:</p>
+
+                <ul class="no-bullet">
+                  <li ng-repeat="(j, comp) in currentStep.choice.data[currentStep.choice.criterion].comp[i]">
+                    <label class="columns large-9">
+                      <span style="display: inline-block; width: 12em">Compared to {{comp | number: 3}}, I</span>
+                      <select ng-options="p for (k, p) in currentStep.choice.preferences"
+                      ng-model="currentStep.choice.data[currentStep.choice.criterion].preferences[i][i + j + 1]"
+                      style="width: 14em; display: inline-block;">
+                      <option value="">-- undefined --</option>
+                    </select>
+                    prefer {{base | number: 3}}.
+                  </label>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="columns">
+              <div ng-if="currentStep.choice.data[currentStep.choice.criterion].values" style="height: 300px;">
+                <line-chart value="currentStep.choice.getXY(currentStep.choice.data, currentStep.choice.criterion)"></line-chart>
+              </div>
+
+              <button class="success small" ng-click='currentStep.choice.calculate(currentStep)'>Calculate function</button>
+              <span ng-show="currentStep.error" style="color: red">Inconsistent preferences</span>
+
+            </div>
           </div>
         </div>
+
+        <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
+
+        <button class="small button"
+        ng-if="!canSave(currentStep)"
+        ng-click="nextStep(currentStep)"
+        ng-disabled="!canProceed(currentStep)">Next</button>
+
+        <button class="small success button"
+        ng-if="canSave(currentStep)"
+        ng-click="save(currentStep)"
+        ng-disabled="!canProceed(currentStep) || inTransition">Save</button>
       </div>
-
-      <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
-
-      <button class="small button"
-      ng-if="!canSave(currentStep)"
-      ng-click="nextStep(currentStep)"
-      ng-disabled="!canProceed(currentStep)">Next</button>
-
-      <button class="small success button"
-      ng-if="canSave(currentStep)"
-      ng-click="save(currentStep)"
-      ng-disabled="!canProceed(currentStep) || inTransition">Save</button>
-
     </div>
 
   </modal>

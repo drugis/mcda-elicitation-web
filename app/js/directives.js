@@ -462,14 +462,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         scenario: '='
       },
       link:function(scope, element) {
-
-        scope.isWizardVisible = false;
-
         scope.getXY = PartialValueFunction.getXY;
-
-        scope.showPVFWizard = function() {
-          scope.isWizardVisible = true;
-        };
       },
       templateUrl: mcdaRootPath + 'partials/partialValueFunction.html',
       controller: 'PartialValueFunctionController'
