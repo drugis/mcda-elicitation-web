@@ -372,7 +372,8 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         scope.fgStyle = function(show) {
           return show ? {
             'display': 'block',
-            'visibility': 'visible'
+            'visibility': 'visible',
+            'width': Math.round(window.innerWidth * 0.8)
           } : {
             'display': 'none'
           };
