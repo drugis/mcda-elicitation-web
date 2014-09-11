@@ -1,7 +1,8 @@
 'use strict';
-define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'underscore'], function(Config, Wizard, angular, patavi, _) {
+define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'underscore'], 
+  function(Config, Wizard, angular, patavi, _) {
   return function($scope, $state, $injector, PartialValueFunction) {
-
+     
     $scope.criterionCache = {
       direction: $scope.criterion.pvf.direction,
       type: $scope.criterion.pvf.type

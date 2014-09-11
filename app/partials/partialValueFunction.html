@@ -35,11 +35,22 @@
                   ng-selected="criterion.pvf.direction == 'increasing'">
                   {{criterion.pvf.range[1] | number: 3}} is best
                 </label>
-              </div>
-              <div class="large-4 columns">
+
                 Type of function
                 <label><input type="radio" ng-model="criterion.pvf.type" value="linear">Linear</label>
                 <label><input type="radio" ng-model="criterion.pvf.type" value="piecewise-linear">Piece-wise linear</label>
+
+                <button class="small button" ng-click="definePVFModal.closeCancel()">Cancel</button>
+
+                <button class="small success button"
+                ng-if="canSave(currentStep)"
+                ng-click="save(criterion)"
+                ng-disabled="!canProceed(currentStep) || inTransition">Save</button>
+
+                <button class="small button"
+                ng-if="criterion.pvf.type === 'piecewise-linear'"
+                ng-click="currentStep.choice.subType = 'elicit cutoffs'"
+                ng-disabled="!canProceed(currentStep)">Next</button>   
               </div>
             </div>
           </div> <!-- / subType == null -->
@@ -65,6 +76,14 @@
                 </div>
               </div>
             </form>
+            <button class="small button" ng-click="currentStep.choice.subType = undefined; definePVFModal.closeCancel()">Cancel</button>
+
+            <button class="small button"
+            ng-click="currentStep.choice.subType = undefined">El Previoso</button>
+
+            <button class="small button"
+            ng-click="currentStep.choice.subType = 'elicit values'"
+            ng-disabled="!canProceed(currentStep)">Next</button>   
           </div> <!-- / subType == 'elicit cutoffs' -->
 
           <div ng-if="currentStep.choice.subType == 'elicit values'">
@@ -101,17 +120,7 @@
           </div>
         </div>
 
-        <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
 
-        <button class="small button"
-        ng-if="!canSave(currentStep)"
-        ng-click="nextStep(currentStep)"
-        ng-disabled="!canProceed(currentStep)">Next</button>
-
-        <button class="small success button"
-        ng-if="canSave(currentStep)"
-        ng-click="save(criterion)"
-        ng-disabled="!canProceed(currentStep) || inTransition">Save</button>
       </div>
     </div>
   </modal>
