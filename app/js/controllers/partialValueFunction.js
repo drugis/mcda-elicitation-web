@@ -2,21 +2,20 @@
 define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'underscore'], function(Config, Wizard, angular, patavi, _) {
   return function($scope, $state, $injector, PartialValueFunction) {
 
-    $scope.openModal = {};
-
-    var standardize = function(state) {
+    var standardize = function(state, criterion) {
       // Copy choices to problem
-      _.each(_.pairs(state.problem.criteria), function(pair) {
-        var name = pair[0],
-          criterion = pair[1];
-        var isLinear = state.choice.data[name].type === 'linear';
-        var baseIncluded = ['range', 'type', 'direction'];
-        var included = isLinear ? baseIncluded : baseIncluded.concat(['values', 'cutoffs']);
-        criterion.pvf = _.pick(state.choice.data[name], included);
-      });
+      var localCriterion = state.problem.criteria[criterion.id];
+      var isLinear = criterion.type === 'linear';
+      var baseIncluded = ['range', 'type', 'direction'];
+      var included = isLinear ? baseIncluded : baseIncluded.concat(['values', 'cutoffs']);
+      localCriterion.pvf = criterion.pvf;
 
       return state;
     };
+
+     $scope.isScaleRangePresent = function() {
+        return $scope.criterion.pvf && $scope.criterion.pvf.range;
+     }
 
     var initialize = function(state) {
       function pluckObject(obj, field) {
@@ -166,9 +165,11 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
       return standardize(nextState);
     };
 
-    $scope.save = function(state) {
-      $scope.scenario.update(PartialValueFunction.attach(standardize(state)));
-      $state.go('preferences');
+    $scope.save = function(criterion) {
+      var standardizedState = standardize($scope.scenario.state, criterion);
+      $scope.scenario.update(PartialValueFunction.attach(standardizedState));
+      $scope.myValues = PartialValueFunction.getXY(criterion);
+      $scope.definePVFModal.close();
     };
 
     $scope.canSave = function(state) {
@@ -178,6 +179,10 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
       var criteria = _.keys(state.problem.criteria).sort();
       var criterion = getNextPiecewiseLinear(criteria, state);
       return state.choice.subType !== 'elicit cutoffs' && !criterion;
+    };
+
+    $scope.isPVFDefined = function(criterion) {
+      return criterion.pvf && criterion.pvf.type;
     };
 
     function clean(state) {
@@ -198,7 +203,7 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
         validChoice: validChoice,
         fields: ['type', 'choice', 'title'],
         hasIntermediateResults: false,
-        initialize: _.partial(initialize, clean($scope.scenario.state)),
+        initialize: _.partial(initialize, $scope.scenario.state),
         standardize: _.identity,
         nextState: nextState
       }

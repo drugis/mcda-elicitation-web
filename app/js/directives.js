@@ -459,11 +459,12 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       replace: true,
       scope: {
         criterion: '=',
-        isScaleRangePresent: '&',
         scenario: '='
       },
-      link:function(scope, element) {
-        scope.getXY = PartialValueFunction.getXY;
+      link: function(scope, element) {
+        if (scope.isPVFDefined(scope.criterion)) {
+          scope.myValues = PartialValueFunction.getXY(scope.criterion);
+        }
       },
       templateUrl: mcdaRootPath + 'partials/partialValueFunction.html',
       controller: 'PartialValueFunctionController'
