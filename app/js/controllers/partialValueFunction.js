@@ -2,6 +2,16 @@
 define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'underscore'], function(Config, Wizard, angular, patavi, _) {
   return function($scope, $state, $injector, PartialValueFunction) {
 
+    $scope.criterionCache = {
+      direction: $scope.criterion.pvf.direction,
+      type: $scope.criterion.pvf.type
+    }
+
+    $scope.$on('closeCancelModal', function() {
+      $scope.criterion.pvf.direction = $scope.criterionCache.direction;
+      $scope.criterion.pvf.type = $scope.criterionCache.type;
+    });
+
     var standardize = function(state, criterion) {
       // Copy choices to problem
       var localCriterion = state.problem.criteria[criterion.id];
@@ -13,9 +23,9 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
       return state;
     };
 
-     $scope.isScaleRangePresent = function() {
-        return $scope.criterion.pvf && $scope.criterion.pvf.range;
-     }
+    $scope.isScaleRangePresent = function() {
+      return $scope.criterion.pvf && $scope.criterion.pvf.range;
+    }
 
     var initialize = function(state) {
       function pluckObject(obj, field) {
@@ -165,10 +175,12 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
       return standardize(nextState);
     };
 
-    $scope.save = function(criterion) {
-      var standardizedState = standardize($scope.scenario.state, criterion);
+    $scope.save = function() {
+      var standardizedState = standardize($scope.scenario.state, $scope.criterion);
       $scope.scenario.update(PartialValueFunction.attach(standardizedState));
-      $scope.myValues = PartialValueFunction.getXY(criterion);
+      $scope.xyValues = PartialValueFunction.getXY($scope.criterion);
+      $scope.criterionCache.direction = $scope.criterion.pvf.direction,
+      $scope.criterionCache.type = $scope.criterion.pvf.type
       $scope.definePVFModal.close();
     };
 

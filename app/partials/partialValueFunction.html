@@ -2,7 +2,7 @@
   <h5>{{criterion.title}}</h5>
 
   <div style="width: 250px; height: 180px">
-    <line-chart ng-if="isPVFDefined(criterion)" value="myValues" show-legend="false"></line-chart>
+    <line-chart ng-if="isPVFDefined(criterion)" value="xyValues" show-legend="false"></line-chart>
     <div ng-if="!isPVFDefined(criterion)" style="padding-top: 40px; text-align: center; margin: 0">
       <i style="font-size: 100px" class="fa fa-question"></i>
     </div>

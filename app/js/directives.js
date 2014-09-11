@@ -385,6 +385,10 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         scope.model.close = function() {
           scope.model.show = false;
         };
+        scope.model.closeCancel = function() {
+          scope.$emit('closeCancelModal', element);
+          scope.model.close();
+        };
       },
       templateUrl: mcdaRootPath + 'partials/modal.html'
     };
@@ -463,7 +467,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       },
       link: function(scope, element) {
         if (scope.isPVFDefined(scope.criterion)) {
-          scope.myValues = PartialValueFunction.getXY(scope.criterion);
+          scope.xyValues = PartialValueFunction.getXY(scope.criterion);
         }
       },
       templateUrl: mcdaRootPath + 'partials/partialValueFunction.html',
