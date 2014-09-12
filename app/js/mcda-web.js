@@ -64,23 +64,6 @@ define(
         });
       });
 
-      $rootScope.$on('$stateChangeStart', function(e, state) {
-        $rootScope.inTransition = true;
-        !$rootScope.noProgress && NProgress.start();
-      });
-
-      $rootScope.$on('$stateChangeSuccess', function(e, state) {
-        $rootScope.inTransition = false;
-        !$rootScope.noProgress && NProgress.done();
-      });
-
-      $rootScope.$on('$viewContentLoading', function(e, state) {
-        NProgress.inc();
-      });
-
-
-
-
     }]);
     app.constant('Tasks', Config.tasks);
 

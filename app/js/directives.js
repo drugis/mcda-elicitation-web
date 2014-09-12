@@ -90,7 +90,9 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       },
       link: function(scope, $element) {
         var init = function() {
-          if (scope.range) initialize(scope, $element);
+          if (scope.range){
+            initialize(scope, $element);
+          } 
         };
         scope.$watch('range', init, true);
         scope.$watch('range.from', init, true);
@@ -151,7 +153,9 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         };
 
         scope.$watch('value', function(newVal, oldVal) {
-          if (!newVal) return;
+          if (!newVal) {
+            return;
+          }
           nv.addGraph(function() {
             var chart = nv.models.multiBarChart().height(dim.height).width(dim.width);
             var data = rankGraphData(newVal);
@@ -466,8 +470,11 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         scenario: '='
       },
       link: function(scope, element) {
+        scope.graphInfo = {
+          values: []
+        }
         if (scope.isPVFDefined(scope.criterion)) {
-          scope.xyValues = PartialValueFunction.getXY(scope.criterion);
+          scope.graphInfo.values = PartialValueFunction.getXY(scope.criterion);
         }
       },
       templateUrl: mcdaRootPath + 'partials/partialValueFunction.html',

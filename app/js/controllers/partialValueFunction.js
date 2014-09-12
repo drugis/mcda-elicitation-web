@@ -1,225 +1,207 @@
 'use strict';
-define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'underscore'], 
+define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'underscore'],
   function(Config, Wizard, angular, patavi, _) {
-  return function($scope, $state, $injector, PartialValueFunction) {
-     
-    $scope.criterionCache = {
-      direction: $scope.criterion.pvf.direction,
-      type: $scope.criterion.pvf.type
-    }
+    return function($scope, $state, $injector, PartialValueFunction) {
 
-    $scope.$on('closeCancelModal', function() {
-      $scope.criterion.pvf.direction = $scope.criterionCache.direction;
-      $scope.criterion.pvf.type = $scope.criterionCache.type;
-    });
+      $scope.showMacbethError = false;
 
-    var standardize = function(state, criterion) {
-      // Copy choices to problem
-      var localCriterion = state.problem.criteria[criterion.id];
-      var isLinear = criterion.type === 'linear';
-      var baseIncluded = ['range', 'type', 'direction'];
-      var included = isLinear ? baseIncluded : baseIncluded.concat(['values', 'cutoffs']);
-      localCriterion.pvf = criterion.pvf;
+      $scope.openWizard = function() {
+        $scope.pvfWizardStep = {
+          step: 'elicit type'
+        };
+        $scope.createCriterionCache();
+        $scope.definePVFModal.open();
+      };
 
-      return state;
-    };
+      $scope.createCriterionCache = function() {
+        $scope.criterionCache = {
+          direction: $scope.criterion.pvf.direction,
+          type: $scope.criterion.pvf.type,
+          cutoffs: angular.copy($scope.criterion.pvf.cutoffs),
+          values: $scope.criterion.pvf.values
+        };
+      };
 
-    $scope.isScaleRangePresent = function() {
-      return $scope.criterion.pvf && $scope.criterion.pvf.range;
-    }
+      $scope.$on('closeCancelModal', function() {
+        $scope.criterion.pvf.direction = $scope.criterionCache.direction;
+        $scope.criterion.pvf.type = $scope.criterionCache.type;
+        $scope.criterion.pvf.cutoffs = angular.copy($scope.criterionCache.cutoffs);
+        $scope.criterion.pvf.values = $scope.criterion.pvf.values;
+      });
 
-    var initialize = function(state) {
-      function pluckObject(obj, field) {
-        return _.object(_.map(_.pairs(obj), function(el) {
-          return [el[0], el[1][field]];
-        }));
-      }
-
-      var calculate = function(currentState) {
-        var choice = currentState.choice;
-
-        function rewritePreferences(preferences) {
-          preferences = angular.copy(preferences);
-          for (var i = 0; i < preferences.length; ++i) {
-            for (var j = 0; j < preferences[i].length; ++j) {
-              var level = choice.preferences.indexOf(preferences[i][j]) + 1;
-              preferences[i][j] = level === 0 ? null : level;
-            }
-          }
-          return preferences;
+      var standardize = function(state, criterion) {
+        var localCriterion = state.problem.criteria[criterion.id];
+        localCriterion.pvf = criterion.pvf;
+        if (criterion.pvf.type === 'linear') {
+          criterion.pvf.values = [];
         }
+        return state;
+      };
 
-        var preferences = rewritePreferences(choice.data[choice.criterion].preferences);
+      $scope.isScaleRangePresent = function() {
+        return $scope.criterion.pvf && $scope.criterion.pvf.range;
+      };
+
+      var rewritePreferences = function() {
+        return _.map($scope.criterion.preferences, function(row) {
+          return _.map(row, function(cell) {
+            return cell ? cell.level : null;
+          });
+        });
+      };
+
+      $scope.calculate = function() {
+        var preferences = rewritePreferences();
         var task = patavi.submit(Config.pataviService, {
           method: 'macbeth',
           preferences: preferences
         });
+        $scope.showMacbethError = false;
+
         task.results.then(function(results) {
-          $scope.$root.$safeApply($scope, function() {
-            currentState.results = results.results;
-            var values = _.clone(results.results);
-            values = values.slice(1, values.length - 1);
-            choice.data[choice.criterion].values = values;
-            currentState.error = null;
-          });
+          console.log('result');
+          var values = _.clone(results.results);
+          $scope.criterion.pvf.values = values.slice(1, values.length - 1);
+          $scope.graphInfo.values = PartialValueFunction.getXY($scope.criterion);
+          $scope.$apply();
         }, function(code, error) {
-          $scope.$root.$safeApply($scope, function() {
-            currentState.error = {
-              code: (code && code.desc) ? code.desc : code,
-              cause: error
-            };
-          });
+          console.error('error');
+          $scope.showMacbethError = true;
         });
       };
 
-      var initial = {
-        choice: {
-          data: pluckObject(state.problem.criteria, 'pvf'),
-          calculate: calculate,
-          preferences: ['Very Weakly', 'Weakly', 'Moderately', 'Strongly', 'Very Strongly', 'Extremely'],
-          getXY: _.memoize(function(data, criterion) {
-            var y = [1].concat(data[criterion].values).concat([0]);
-            var best = state.problem.criteria[criterion].best();
-            var worst = state.problem.criteria[criterion].worst();
-            var x = [best].concat(data[criterion].cutoffs).concat([worst]);
-            var values = _.map(_.zip(x, y), function(p) {
-              return {
-                x: p[0],
-                y: p[1]
-              };
-            });
-            return [{
-              key: 'Piecewise PVF',
-              values: values
-            }];
-          }, function(data, criterion) { // Hash function
-            var values = _.reduce(data[criterion].values, function(sum, x) {
-              return sum + x;
-            });
-            var cutoffs = _.reduce(data[criterion].cutoffs, function(sum, x) {
-              return sum + x;
-            });
-            return 31 * values + cutoffs + criterion.hashCode();
-          })
+
+      var initialize = function(state) {
+
+        function pluckObject(obj, field) {
+          return _.object(_.map(_.pairs(obj), function(el) {
+            return [el[0], el[1][field]];
+          }));
         }
+
+        var initial = {
+          choice: {
+            data: pluckObject(state.problem.criteria, 'pvf')
+          }
+        };
+        return _.extend(state, initial);
       };
-      return _.extend(state, initial);
-    };
 
-    var validChoice = function(currentState) {
-      if (currentState && currentState.choice.subType === 'elicit values') {
-        var criterion = currentState.choice.criterion;
-        var choice = currentState.choice.data;
-        return choice[criterion].cutoffs.length === choice[criterion].values.length;
-      }
-      return true;
-    };
+      $scope.validChoice = function() {
+        if ($scope.pvfWizardStep.step === 'elicit values') {
+          return $scope.criterion.pvf.cutoffs.length > 0;
+        }
+        return true;
+      };
 
-    var getNextPiecewiseLinear = function(criteria, state) {
-      return _.find(criteria, function(c) {
-        var choice = state.choice.data[c];
-        return choice && choice.type === 'piecewise-linear' && !choice.cutoffs;
-      });
-    };
+      var getNextPiecewiseLinear = function(criteria, state) {
+        return _.find(criteria, function(c) {
+          var choice = state.choice.data[c];
+          return choice && choice.type === 'piecewise-linear' && !choice.cutoffs;
+        });
+      };
 
-    var nextState = function(currentState) {
-      var nextState = angular.copy(currentState);
+      $scope.addCutoff = function(cutoff) {
+        var criterion = $scope.criterion;
+        if (!criterion.pvf.cutoffs) {
+          criterion.pvf.cutoffs = [];
+        }
+        criterion.pvf.cutoffs.push(cutoff);
+        criterion.pvf.cutoffs.sort(function(a, b) {
+          return criterion.pvf.direction === 'decreasing' ? a - b : b - a;
+        });
+      };
 
-      var criteria = _.keys(nextState.problem.criteria).sort();
-      var criterion = getNextPiecewiseLinear(criteria, nextState);
-      var choice = nextState.choice;
+      $scope.validCutoff = function(cutoff) {
+        var criterion = $scope.criterion;
+        var allowed = (cutoff < criterion.best() && cutoff > criterion.worst()) || (cutoff < criterion.worst() && cutoff > criterion.best());
+        var unique = criterion.pvf.cutoffs.indexOf(cutoff) === -1;
+        return allowed && unique;
+      };
 
-      var info;
-      if (choice.subType === 'elicit cutoffs') {
-        info = nextState.problem.criteria[choice.criterion];
-        choice.subType = 'elicit values';
-        var cutoffs = choice.data[choice.criterion].cutoffs;
-        var size = cutoffs.length + 2;
+      $scope.goToElicitCutoffsStep = function() {
+        if (!$scope.criterion.pvf.cutoffs) {
+          $scope.criterion.pvf.cutoffs = [];
+        }
+        $scope.pvfWizardStep.step = 'elicit cutoffs';
+      };
 
+      $scope.preferenceOptions = [{
+        label: 'Very Weakly',
+        level: 1
+      }, {
+        label: 'Weakly',
+        level: 2
+      }, {
+        label: 'Moderately',
+        level: 3
+      }, {
+        label: 'Strongly',
+        level: 4
+      }, {
+        label: 'Very Strongly',
+        level: 5
+      }, {
+        label: 'Extremely',
+        level: 6
+      }];
+
+      $scope.goToElicitValuesStep = function() {
+        var cutoffs = $scope.criterion.pvf.cutoffs,
+          size = cutoffs.length + 2,
+          criterion = $scope.criterion;
+
+        $scope.showMacbethError = false;
         // Initialize preference matrix
-        choice.data[choice.criterion].preferences = [];
+        criterion.preferences = [];
         for (var i = 0; i < size; ++i) {
-          choice.data[choice.criterion].preferences[i] = [];
+          criterion.preferences[i] = [];
           for (var j = 0; j < size; ++j) {
-            choice.data[choice.criterion].preferences[i][j] = i === j ? choice.preferences[0] : null;
+            criterion.preferences[i][j] = i === j ? $scope.preferenceOptions[0] : null;
           }
         }
 
         // Generate comparator lists
-        var tmp = [info.best()].concat(cutoffs || []).concat([info.worst()]);
-        choice.data[choice.criterion].base = tmp.slice(0, tmp.length - 1);
-        choice.data[choice.criterion].comp = [];
+        var tmp = [$scope.criterion.best()].concat(cutoffs || []).concat([$scope.criterion.worst()]);
+        criterion.base = tmp.slice(0, tmp.length - 1);
+        criterion.comp = [];
         for (i = 0; i < tmp.length - 1; ++i) {
-          choice.data[choice.criterion].comp[i] = tmp.slice(i + 1, tmp.length);
+          criterion.comp[i] = tmp.slice(i + 1, tmp.length);
         }
 
-        choice.data[choice.criterion].values = [];
-      } else if (criterion) {
-        info = nextState.problem.criteria[criterion];
-        choice.subType = 'elicit cutoffs';
-        choice.criterion = criterion;
+        $scope.pvfWizardStep.step = 'elicit values';
+      };
 
-        choice.data[criterion].cutoffs = [];
+      $scope.save = function() {
+        var standardizedState = standardize($scope.scenario.state, $scope.criterion);
+        $scope.scenario.update(PartialValueFunction.attach(standardizedState));
+        $scope.graphInfo.values = PartialValueFunction.getXY($scope.criterion);
+        $scope.criterionCache.direction = $scope.criterion.pvf.direction;
+        $scope.criterionCache.type = $scope.criterion.pvf.type;
+        $scope.definePVFModal.close();
+      };
 
-        choice.data[criterion].addCutoff = function(cutoff) {
-          choice.data[criterion].cutoffs.push(cutoff);
-          choice.data[criterion].cutoffs.sort(function(a, b) {
-            return info.pvf.direction === 'decreasing' ? a - b : b - a;
-          });
-        };
-        choice.data[criterion].validCutoff = function(cutoff) {
-          var allowed = (cutoff < info.best() && cutoff > info.worst()) || (cutoff < info.worst() && cutoff > info.best());
-          var unique = choice.data[criterion].cutoffs.indexOf(cutoff) === -1;
-          return allowed && unique;
-        };
-      }
-      return standardize(nextState);
-    };
+      $scope.canSave = function(state) {
+        if (!state) {
+          return false;
+        }
+        var criteria = _.keys(state.problem.criteria).sort();
+        var criterion = getNextPiecewiseLinear(criteria, state);
+        return state.choice.subType !== 'elicit cutoffs' && !criterion;
+      };
 
-    $scope.save = function() {
-      var standardizedState = standardize($scope.scenario.state, $scope.criterion);
-      $scope.scenario.update(PartialValueFunction.attach(standardizedState));
-      $scope.xyValues = PartialValueFunction.getXY($scope.criterion);
-      $scope.criterionCache.direction = $scope.criterion.pvf.direction,
-      $scope.criterionCache.type = $scope.criterion.pvf.type
-      $scope.definePVFModal.close();
-    };
+      $scope.isPVFDefined = function(criterion) {
+        return criterion.pvf && criterion.pvf.type;
+      };
 
-    $scope.canSave = function(state) {
-      if (!state) {
-        return false;
-      }
-      var criteria = _.keys(state.problem.criteria).sort();
-      var criterion = getNextPiecewiseLinear(criteria, state);
-      return state.choice.subType !== 'elicit cutoffs' && !criterion;
-    };
-
-    $scope.isPVFDefined = function(criterion) {
-      return criterion.pvf && criterion.pvf.type;
-    };
-
-    function clean(state) {
-      var newState = angular.copy(state);
-      var criteria = newState.problem.criteria;
-      _.each(criteria, function(criterion) {
-        var remove = ['type', 'direction', 'cutoffs', 'values'];
-        if (criterion.pvf) {
-          criterion.pvf = _.omit(criterion.pvf, remove);
+      $injector.invoke(Wizard, this, {
+        $scope: $scope,
+        handler: {
+          fields: ['type', 'choice', 'title'],
+          hasIntermediateResults: false,
+          initialize: _.partial(initialize, $scope.scenario.state),
+          standardize: _.identity
         }
       });
-      return newState;
-    }
-
-    $injector.invoke(Wizard, this, {
-      $scope: $scope,
-      handler: {
-        validChoice: validChoice,
-        fields: ['type', 'choice', 'title'],
-        hasIntermediateResults: false,
-        initialize: _.partial(initialize, $scope.scenario.state),
-        standardize: _.identity,
-        nextState: nextState
-      }
-    });
-  };
-});
+    };
+  });

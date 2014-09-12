@@ -2,18 +2,18 @@
   <h5>{{criterion.title}}</h5>
 
   <div style="width: 250px; height: 180px">
-    <line-chart ng-if="isPVFDefined(criterion)" value="xyValues" show-legend="false"></line-chart>
+    <line-chart ng-if="isPVFDefined(criterion)" value="graphInfo.values" show-legend="false"></line-chart>
     <div ng-if="!isPVFDefined(criterion)" style="padding-top: 40px; text-align: center; margin: 0">
       <i style="font-size: 100px" class="fa fa-question"></i>
     </div>
   </div>
-  <button ng-disabled="!isScaleRangePresent()" ng-click="definePVFModal.open()">Define partial value function</button>
+  <button ng-disabled="!isScaleRangePresent()" ng-click="openWizard()">Define partial value function</button>
   <modal model="definePVFModal">
     <div class="row">
       <div class="columns 12-large">
         <h3>Define Partial Value Functions</h3>
 
-        <div ng-if="currentStep.choice.subType == null">
+        <div ng-if="pvfWizardStep.step === 'elicit type'">
           <p>The partial value functions (<abbr title="partial value function">PVF</abbr>)
             define the mapping between the measurement values and the
             utility of that value.</p>
@@ -40,82 +40,80 @@
                 <label><input type="radio" ng-model="criterion.pvf.type" value="linear">Linear</label>
                 <label><input type="radio" ng-model="criterion.pvf.type" value="piecewise-linear">Piece-wise linear</label>
 
-                <button class="small button" ng-click="definePVFModal.closeCancel()">Cancel</button>
+                <button class="small button" ng-click="definePVFModal.closeCancel()">¡Ay, caramba!</button>
 
                 <button class="small success button"
-                ng-if="canSave(currentStep)"
+                ng-if="criterion.pvf.type != 'piecewise-linear'"
                 ng-click="save(criterion)"
-                ng-disabled="!canProceed(currentStep) || inTransition">Save</button>
+                ng-disabled="!criterion.pvf.direction || !criterion.pvf.type">Save</button>
 
                 <button class="small button"
                 ng-if="criterion.pvf.type === 'piecewise-linear'"
-                ng-click="currentStep.choice.subType = 'elicit cutoffs'"
-                ng-disabled="!canProceed(currentStep)">Next</button>   
+                ng-click="goToElicitCutoffsStep()"
+                ng-disabled="!criterion.pvf.direction || !criterion.pvf.type">Next</button>   
               </div>
             </div>
           </div> <!-- / subType == null -->
 
-          <div ng-if="currentStep.choice.subType == 'elicit cutoffs'">
+          <div ng-if="pvfWizardStep.step === 'elicit cutoffs'">
             <h4>{{criterion.title}}</h4>
             <p>Define the reference levels needed to elict the piecewise <abbr title="partial value function">PVF</abbr>: </p>
             <ul>
               <li><b>{{criterion.best() | number: 3}}</b></li>
-              <li ng-repeat="cutoff in criterion.cutoffs">{{cutoff}}</li>
+              <li ng-repeat="cutoff in criterion.pvf.cutoffs">{{cutoff}}</li>
               <li><b>{{criterion.worst() | number: 3}}</b></li>
             </ul>
 
-            <form name="addCutoff" ng-class="{error: !criterion.validCutoff(cutoff)}" >
+            <form novalidate name="addCutoffForm" ng-class="{error: !validCutoff(cutoff)}" >
               <div class="row collapse">
                 <div class="large-6 columns">
                   <input paceholder="Cutoff at..." ng-model="cutoff" type="number" name="cutoff"></input>
                 </div>
                 <div class="large-2 pull-4 columns">
                   <button class="small"
-                  ng-disabled="!currentStep.choice.data[currentStep.choice.criterion].validCutoff(cutoff)"
-                  ng-click="currentStep.choice.data[currentStep.choice.criterion].addCutoff(cutoff)"> Add </button>
+                  ng-disabled="!validCutoff(cutoff)"
+                  ng-click="addCutoff(cutoff)"> Add </button>
                 </div>
               </div>
             </form>
-            <button class="small button" ng-click="currentStep.choice.subType = undefined; definePVFModal.closeCancel()">Cancel</button>
-
-            <button class="small button"
-            ng-click="currentStep.choice.subType = undefined">El Previoso</button>
-
-            <button class="small button"
-            ng-click="currentStep.choice.subType = 'elicit values'"
-            ng-disabled="!canProceed(currentStep)">Next</button>   
+            <button class="small button" ng-click="definePVFModal.closeCancel()">¡Ay, caramba!</button>
+            <button class="small button" ng-click="pvfWizardStep.step = 'elicit type'">El Previoso</button>
+            <button class="small button" ng-click="goToElicitValuesStep()" ng-disabled="criterion.pvf.cutoffs.length === 0">Nexito</button>   
           </div> <!-- / subType == 'elicit cutoffs' -->
 
-          <div ng-if="currentStep.choice.subType == 'elicit values'">
+          <div ng-if="pvfWizardStep.step == 'elicit values'">
             <h4>{{criterion.title}}</h4>
-            <div class="row" ng-repeat="(i, base) in currentStep.choice.data[currentStep.choice.criterion].base">
-              <div class="columns">
-                <p>Compare the attractiveness of {{base | number: 3}} to these other options:</p>
 
+            <div class="row" ng-repeat="baseItem in criterion.base">
+              <div class="columns">
+                <p>Compare the attractiveness of {{baseItem | number: 3}} to these other options:</p>
                 <ul class="no-bullet">
-                  <li ng-repeat="(j, comp) in currentStep.choice.data[currentStep.choice.criterion].comp[i]">
+
+                  <li ng-repeat="compItem in criterion.comp[$index]">
                     <label class="columns large-9">
-                      <span style="display: inline-block; width: 12em">Compared to {{comp | number: 3}}, I</span>
-                      <select ng-options="p for (k, p) in currentStep.choice.preferences"
-                      ng-model="currentStep.choice.data[currentStep.choice.criterion].preferences[i][i + j + 1]"
+                      <span style="display: inline-block; width: 12em">Compared to {{compItem | number: 3}}, I</span>
+                      <select ng-options="preference.label for preference in preferenceOptions"
+                      ng-model="criterion.preferences[$parent.$index][$parent.$index + $index + 1]"
                       style="width: 14em; display: inline-block;">
                       <option value="">-- undefined --</option>
                     </select>
-                    prefer {{base | number: 3}}.
+                    prefer {{baseItem | number: 3}}.
                   </label>
                 </li>
+
               </ul>
             </div>
           </div>
           <div class="row">
             <div class="columns">
-              <div ng-if="currentStep.choice.data[currentStep.choice.criterion].values" style="height: 300px;">
-                <line-chart value="currentStep.choice.getXY(currentStep.choice.data, currentStep.choice.criterion)"></line-chart>
+              <div  style="height: 300px;">
+                <line-chart value="graphInfo.values"></line-chart>
               </div>
-
-              <button class="success small" ng-click='currentStep.choice.calculate(currentStep)'>Calculate function</button>
-              <span ng-show="currentStep.error" style="color: red">Inconsistent preferences</span>
-
+              <button class="success small" ng-click='calculate($scenario.problem.state)'>Calculate function</button>
+              <span ng-show="showMacbethError" style="color: red">Inconsistent preferences</span>
+            <button class="small button" ng-click="definePVFModal.closeCancel()">¡Ay, caramba!</button>
+            <button class="small button" ng-click="pvfWizardStep.step = 'elicit cutoffs'">El Previoso</button>
+            <button class="small button" ng-click="save()" ng-disabled="graphInfo.values.length < 1">Save</button> 
             </div>
           </div>
         </div>
