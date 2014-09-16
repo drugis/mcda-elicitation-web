@@ -26,7 +26,8 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
         $scope.criterion.pvf.direction = $scope.criterionCache.direction;
         $scope.criterion.pvf.type = $scope.criterionCache.type;
         $scope.criterion.pvf.cutoffs = angular.copy($scope.criterionCache.cutoffs);
-        $scope.criterion.pvf.values = $scope.criterion.pvf.values;
+        $scope.criterion.pvf.values = $scope.criterionCache.values;
+        $scope.graphInfo.values = PartialValueFunction.getXY($scope.criterion);
       });
 
       var standardize = function(state, criterion) {
@@ -56,7 +57,9 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
           method: 'macbeth',
           preferences: preferences
         });
-        $scope.showMacbethError = false;
+        $scope.showMacbethError = {
+          show: false
+        };
 
         task.results.then(function(results) {
           console.log('result');
@@ -66,7 +69,8 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
           $scope.$apply();
         }, function(code, error) {
           console.error('error');
-          $scope.showMacbethError = true;
+          $scope.showMacbethError.show = true;
+          $scope.$apply();
         });
       };
 

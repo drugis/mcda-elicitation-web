@@ -50,7 +50,7 @@
                 <button class="small button"
                 ng-if="criterion.pvf.type === 'piecewise-linear'"
                 ng-click="goToElicitCutoffsStep()"
-                ng-disabled="!criterion.pvf.direction || !criterion.pvf.type">Next</button>   
+                ng-disabled="!criterion.pvf.direction || !criterion.pvf.type">Next</button>
               </div>
             </div>
           </div> <!-- / subType == null -->
@@ -78,7 +78,7 @@
             </form>
             <button class="small button" ng-click="definePVFModal.closeCancel()">¡Ay, caramba!</button>
             <button class="small button" ng-click="pvfWizardStep.step = 'elicit type'">El Previoso</button>
-            <button class="small button" ng-click="goToElicitValuesStep()" ng-disabled="criterion.pvf.cutoffs.length === 0">Nexito</button>   
+            <button class="small button" ng-click="goToElicitValuesStep()" ng-disabled="criterion.pvf.cutoffs.length === 0">Nexito</button>
           </div> <!-- / subType == 'elicit cutoffs' -->
 
           <div ng-if="pvfWizardStep.step == 'elicit values'">
@@ -110,10 +110,10 @@
                 <line-chart value="graphInfo.values"></line-chart>
               </div>
               <button class="success small" ng-click='calculate($scenario.problem.state)'>Calculate function</button>
-              <span ng-show="showMacbethError" style="color: red">Inconsistent preferences</span>
+              <span ng-show="showMacbethError.show" style="color: red">Inconsistent preferences</span>
             <button class="small button" ng-click="definePVFModal.closeCancel()">¡Ay, caramba!</button>
             <button class="small button" ng-click="pvfWizardStep.step = 'elicit cutoffs'">El Previoso</button>
-            <button class="small button" ng-click="save()" ng-disabled="graphInfo.values.length < 1">Save</button> 
+            <button class="small button" ng-click="save()" ng-disabled="graphInfo.values.length < 1">Save</button>
             </div>
           </div>
         </div>
