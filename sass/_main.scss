@@ -17,6 +17,8 @@ a:focus {
   margin: 0;
   top:10%;
   min-width: 300px;
+  max-height: 80%;
+  overflow-y: auto;
 }
 
 /* inline results */
