@@ -4,7 +4,6 @@ define(
    'require',
    'underscore',
    'jQuery',
-   'NProgress',
    'mcda/config',
    'foundation',
    'mmfoundation',
@@ -20,7 +19,7 @@ define(
    'mcda/services/util',
    'mcda/controllers',
    'mcda/directives'],
-  function(angular, require, _, $, NProgress, Config) {
+  function(angular, require, _, $, Config) {
     var dependencies = [
       'ui.router',
       'mm.foundation',
@@ -37,7 +36,7 @@ define(
     var app = angular.module('elicit', dependencies);
 
     app.run(['$rootScope', function($rootScope) {
-      
+
       $rootScope.$on('$viewContentLoaded', function () {
         $(document).foundation();
       });
@@ -82,10 +81,8 @@ define(
 
     app.config(['mcdaRootPath', 'Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider', function(basePath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider) {
       var baseTemplatePath = basePath + "views/";
-      
+
       $httpProvider.interceptors.push('ErrorHandling');
-      
-      NProgress.configure({ showSpinner: false });
 
         //ui-router code starts here
       $stateProvider.state("workspace", {

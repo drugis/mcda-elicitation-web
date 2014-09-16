@@ -1,6 +1,6 @@
 'use strict';
-define(['mcda/config', 'angular', 'mcda/lib/patavi', 'underscore', 'NProgress'],
-  function(Config, angular, patavi, _, NProgress) {
+define(['mcda/config', 'angular', 'mcda/lib/patavi', 'underscore'],
+  function(Config, angular, patavi, _) {
   return function($rootScope, $scope, currentScenario, taskDefinition) {
     var alternatives;
     var criteria;
@@ -24,13 +24,12 @@ define(['mcda/config', 'angular', 'mcda/lib/patavi', 'underscore', 'NProgress'],
         var message = { code: (code && code.desc) ? code.desc : code,
                         cause: error };
         $scope.$root.$broadcast('error', message);
-        NProgress.done();
       };
 
       var updateHandler = _.throttle(function(update) {
         var progress = parseInt(update);
         if(progress > state.progress) {
-          NProgress.set(progress / 100);
+          state.progress = progress;
         }
       }, 30);
 
