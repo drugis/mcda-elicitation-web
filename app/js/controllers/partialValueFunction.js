@@ -1,7 +1,7 @@
 'use strict';
 define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'underscore'],
   function(Config, Wizard, angular, patavi, _) {
-    return function($scope, $state, $injector, PartialValueFunction) {
+    return function($scope, $state, $injector, PartialValueFunction, TaskDependencies) {
 
       $scope.showMacbethError = false;
 
@@ -20,6 +20,26 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
           cutoffs: angular.copy($scope.criterion.pvf.cutoffs),
           values: $scope.criterion.pvf.values
         };
+      };
+
+      $scope.save = function() {
+        var standardizedState = standardize($scope.scenario.state, $scope.criterion),
+          pvfTask = TaskDependencies.definitions['criteria-trade-offs'];
+        $scope.scenario.update(PartialValueFunction.attach(standardizedState));
+        $scope.graphInfo.values = PartialValueFunction.getXY($scope.criterion);
+        $scope.criterionCache.direction = $scope.criterion.pvf.direction;
+        $scope.criterionCache.type = $scope.criterion.pvf.type;
+        $scope.scenario.state = pvfTask.remove($scope.scenario.state);
+        $scope.definePVFModal.close();
+      };
+
+      $scope.canSave = function(state) {
+        if (!state) {
+          return false;
+        }
+        var criteria = _.keys(state.problem.criteria).sort();
+        var criterion = getNextPiecewiseLinear(criteria, state);
+        return state.choice.subType !== 'elicit cutoffs' && !criterion;
       };
 
       $scope.$on('closeCancelModal', function() {
@@ -174,24 +194,6 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
         }
 
         $scope.pvfWizardStep.step = 'elicit values';
-      };
-
-      $scope.save = function() {
-        var standardizedState = standardize($scope.scenario.state, $scope.criterion);
-        $scope.scenario.update(PartialValueFunction.attach(standardizedState));
-        $scope.graphInfo.values = PartialValueFunction.getXY($scope.criterion);
-        $scope.criterionCache.direction = $scope.criterion.pvf.direction;
-        $scope.criterionCache.type = $scope.criterion.pvf.type;
-        $scope.definePVFModal.close();
-      };
-
-      $scope.canSave = function(state) {
-        if (!state) {
-          return false;
-        }
-        var criteria = _.keys(state.problem.criteria).sort();
-        var criterion = getNextPiecewiseLinear(criteria, state);
-        return state.choice.subType !== 'elicit cutoffs' && !criterion;
       };
 
       $scope.isPVFDefined = function(criterion) {

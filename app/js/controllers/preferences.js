@@ -1,17 +1,13 @@
 'use strict';
 define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
   function(Config, patavi, angular, angularanimate, mmfoundation, _) {
-    var dependencies = ['$scope', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'taskDefinition'];
-    var PreferencesController = function($scope, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition, Remarks) {
+    var dependencies = ['$scope', '$location', '$anchorScroll', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'taskDefinition'];
+    var PreferencesController = function($scope, $location, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition) {
       var state;
 
       $scope.$parent.taskId = taskDefinition.id;
       $scope.intervalHull = intervalHull;
       state = taskDefinition.clean($scope.scenario.state);
-
-      $scope.progress = {
-        percentageComplete: 50
-      };
 
       // FIXME: these calculations really should happen at the workspace level
       // ===========================================
@@ -75,6 +71,11 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
         return result;
       };
 
+      $scope.scrollToPVFs = function() {
+        $location.hash('partial-value-functions');
+        $anchorScroll();
+      };
+
       var linearPVFs = _.filter($scope.scenario.state.problem.criteria, function(criterion) {
         return criterion.pvf && criterion.pvf.type === 'linear';
       }).length;
@@ -85,12 +86,6 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
       } else if (linearPVFs < _.size($scope.scenario.state.problem.criteria)) {
         pvfStatus = linearPVFs + ' linear; ' + (_.size($scope.scenario.state.problem.criteria) - linearPVFs) + ' piece-wise linear';
       }
-
-      var prefStatus = _.values(_.pick({
-        'ordinal': 'Ordinal SWING',
-        'ratio bound': 'Interval SWING',
-        'exact swing': 'Exact SWING'
-      }, _.unique(_.pluck(state.prefs, 'type'))));
 
       $scope.problem = $scope.workspace.problem;
 
