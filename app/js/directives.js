@@ -401,23 +401,15 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
   directives.directive('remarkblock', function(mcdaRootPath) {
     return {
       scope: {
-        remark: '=remark',
-        saveRemarks: '=saveRemarks',
+        remark: '=',
+        saveRemarks: '&saveRemarks',
+        cancelRemarks: '&cancelRemarks',
         model: '&model'
       },
       restrict: 'AE',
       replace: 'true',
       templateUrl: mcdaRootPath + 'partials/remark.html',
       link: function(scope, element, attrs) {
-        scope.cachedRemark = scope.remark;
-
-        scope.model.cancelRemarks = function() {
-          scope.remark = scope.cachedRemark;
-        };
-        scope.model.saveRemarks = function() {
-          scope.cachedRemark = scope.remark;
-          scope.saveRemarks();
-        }
         $(".remarkbutton").click(function() {
           $(".f-dropdown").css("display", "none");
         });
