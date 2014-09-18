@@ -3,10 +3,10 @@ define(['angular'], function(angular) {
   var dependencies = ['ngResource'];
 
   var RemarksResource = function($resource) {
-    return $resource('/projects/:projectId/analyses/:analysisId/remarks', {
+    return $resource('/projects/:projectId/analyses/:workspaceId/remarks', {
       projectId: '@projectId',
-      analysisId: '@analysisId'
+      workspaceId: '@workspaceId'
     });
   };
-  return angular.module('elicit.remoteRemarks', dependencies).factory('RemoteRemarks', RemarksResource);
+  return angular.module('elicit.remoteRemarks', dependencies).factory('Remarks', RemarksResource);
 });

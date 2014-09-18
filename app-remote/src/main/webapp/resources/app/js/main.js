@@ -4,7 +4,7 @@ require.config({
   paths: {
     'jQuery': 'bower_components/jquery/jquery.min',
     'underscore': 'bower_components/underscore/underscore-min',
-    'angular': 'bower_components/angular/angular.min',
+    'angular': 'bower_components/angular/angular',
     'angular-resource': 'bower_components/angular-resource/angular-resource.min',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router.min',
     'jquery-slider': 'bower_components/jslider/dist/jquery.slider.min',

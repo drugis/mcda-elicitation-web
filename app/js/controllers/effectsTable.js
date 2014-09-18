@@ -1,7 +1,7 @@
-'use strict';
+/*jshint node: true */
 define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
   function(Config, patavi, angular, angularanimate, mmfoundation, _) {
-    var dependencies = ['$scope', '$stateParams', 'taskDefinition', window.config.workspacesRepository.type + 'Remarks', 'ValueTreeUtil'];
+    var dependencies = ['$scope', '$stateParams', 'taskDefinition', 'Remarks', 'ValueTreeUtil'];
     var EffectsTableController = function($scope, $stateParams, taskDefinition, Remarks, ValueTreeUtil) {
 
       var remarksCache;
@@ -25,7 +25,7 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
 
       $scope.cancelRemarks = function() {
         $scope.remarks = angular.copy(remarksCache);
-      }
+      };
 
       $scope.$parent.taskId = taskDefinition.id;
 

@@ -1,16 +1,15 @@
 'use strict';
 define(['mcda/config', 'angular', 'mcda/lib/patavi', 'underscore'], function(Config, angular, patavi, _) {
 
-  return function($scope, $state, currentScenario, taskDefinition, intervalHull) {
+  return function($scope, $state, taskDefinition, intervalHull, PartialValueFunction) {
 
-    var scenario = currentScenario;
-    var state = taskDefinition.clean(scenario.state);
+    var state = taskDefinition.clean($scope.scenario.state);
 
     $scope.title = taskDefinition.title;
 
-    $scope.validChoice = function(currentState) {
-      if (currentState) {
-        return _.every(currentState.choice, function(choice) {
+    $scope.validChoice = function(currentStep) {
+      if (currentStep) {
+        return _.every(currentStep.choice, function(choice) {
           var complete = _.isNumber(choice.upper) && _.isNumber(choice.lower);
           return complete && (choice.upper > choice.lower);
         });
@@ -18,11 +17,11 @@ define(['mcda/config', 'angular', 'mcda/lib/patavi', 'underscore'], function(Con
       return false;
     };
 
-    $scope.save = function(currentState) {
-      if (!this.validChoice(currentState)) {
+    $scope.save = function(currentStep) {
+      if (!this.validChoice(currentStep)) {
         return;
       }
-      var state = angular.copy(currentState);
+      var state = angular.copy(currentStep);
       // Rewrite scale information
       _.each(_.pairs(state.choice), function(choice) {
         var pvf = state.problem.criteria[choice[0]].pvf;
@@ -33,7 +32,15 @@ define(['mcda/config', 'angular', 'mcda/lib/patavi', 'underscore'], function(Con
         }
         state.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
       });
-      scenario.update(state);
+      $scope.scenario.update(state);
+
+      var fields = ['problem', 'prefs'];
+      $scope.scenario.state = _.pick(state, fields);
+      $scope.scenario.save(function(scenario) {
+        PartialValueFunction.attach(scenario.state);
+        $scope.$emit('elicit.scenariosChanged');
+      });
+
       $state.go('preferences');
     };
 

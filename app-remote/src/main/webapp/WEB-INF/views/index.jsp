@@ -69,13 +69,9 @@
   <script>
 	window.patavi = { "WS_URI": "wss://patavi.drugis.org/ws" };
     window.config = {
-      examplesRepository : "examples/",
-      workspacesRepository : {
-        type : "Remote",
-        url : "/workspaces/",
-        _csrf_token : "${_csrf.token}",
-        _csrf_header : "${_csrf.headerName}"
-      }
+     workspacesRepositoryUrl: '/projects/:projectId/analyses/',
+      _csrf_token : "${_csrf.token}",
+      _csrf_header : "${_csrf.headerName}"
     };
    
     function signout(){
