@@ -30,16 +30,18 @@ define(['angular'],
       }
 
       function addValueTree(problem) {
-        if (!problem.valueTree) {
-          problem.valueTree = {
+        var newProblem = angular.copy(problem);
+        if (!newProblem.valueTree) {
+          newProblem.valueTree = {
             'title': 'Overall value',
             'criteria': _.keys(problem.criteria)
           };
         }
-        return problem;
+        return newProblem;
       }
 
       return {
+        addValueTree: addValueTree,
         createWorkspace: createWorkspace
       };
     };

@@ -3,12 +3,14 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
     function (Config, patavi, angular, angularanimate, mmfoundation, _) {
       var dependencies = ['$scope', 'taskDefinition', 'ValueTreeUtil'];
       var OverviewController = function ($scope, taskDefinition, ValueTreeUtil) {
-        var problem = $scope.workspace.problem;
 
         $scope.$parent.taskId = taskDefinition.id;
 
-        $scope.problem = problem;
-        $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree(problem.valueTree, problem.criteria);
+        $scope.workspace.$promise.then(function(workspace) {
+          $scope.problem = workspace.problem;
+          $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree($scope.problem.valueTree, $scope.problem.criteria);
+        });
+
       };
 
       return dependencies.concat(OverviewController);

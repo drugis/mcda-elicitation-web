@@ -1,8 +1,10 @@
 'use strict';
 define([], function() {
 
-  return function($scope, $location, $state, Tasks, TaskDependencies, WorkspaceResource) {
-    $scope.workspace = WorkspaceResource.get();
+  return function($scope, $location, $stateParams, Tasks, TaskDependencies, WorkspaceResource, WorkspaceService) {
+    $scope.workspace = WorkspaceResource.get($stateParams, function(workspace) {
+      workspace.problem = WorkspaceService.addValueTree(workspace.problem);
+    });
 
     $scope.isEditTitleVisible = false;
 

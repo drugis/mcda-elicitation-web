@@ -1,6 +1,6 @@
 'use strict';
 define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
-  return function($scope, $location, $state, Tasks, TaskDependencies, ScenarioResource) {
+  return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, ScenarioResource) {
 
     function randomId(size, prefix) {
       var text = '';
@@ -14,24 +14,26 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
 
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
-    $scope.scenarios = ScenarioResource.query();
-    $scope.scenario = ScenarioResource.get();
+    $scope.scenarios = ScenarioResource.query({workspaceId: $stateParams.workspaceId});
+    ScenarioResource.get($stateParams, function(scenario){
+      $scope.scenario = scenario;
+      $scope.resultsAccessible = resultsAccessible($scope.tasks.results, scenario.state);
+    });
 
     $scope.tasks = _.reduce(Tasks.available, function(tasks, task) {
       tasks[task.id] = task;
       return tasks;
     }, {});
 
-    var resultsAccessible = function() {
-      var accessible = TaskDependencies.isAccessible($scope.tasks.results, $scope.scenario.state);
+    var resultsAccessible = function(results, state) {
+      var accessible = TaskDependencies.isAccessible(results, state);
       return accessible.accessible;
     };
 
-    $scope.resultsAccessible = resultsAccessible();
 
     $scope.$on('elicit.scenariosChanged', function() {
-      $scope.scenarios = ScenarioResource.query();
-      $scope.resultsAccessible = resultsAccessible();
+      $scope.scenarios = ScenarioResource.query($stateParams);
+      $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
     });
 
     var redirect = function(scenarioId) {

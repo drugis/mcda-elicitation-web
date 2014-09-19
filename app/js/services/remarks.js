@@ -1,12 +1,11 @@
 'use strict';
-define(['angular'], function(angular) {
+define(['angular','angular-resource'], function(angular) {
   var dependencies = ['ngResource'];
 
   var RemarksResource = function($resource) {
-    return $resource('/projects/:projectId/analyses/:workspaceId/remarks', {
-      projectId: '@projectId',
+    return $resource(window.config.workspaceRepositoryUrl + ':workspaceId/remarks', {
       workspaceId: '@workspaceId'
     });
   };
-  return angular.module('elicit.remarks', dependencies).factory('Remarks', RemarksResource);
+  return angular.module('elicit.remarks', dependencies).factory('RemarksResource', RemarksResource);
 });

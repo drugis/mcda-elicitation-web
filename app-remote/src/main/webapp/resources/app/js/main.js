@@ -6,7 +6,7 @@ require.config({
     'underscore': 'bower_components/underscore/underscore-min',
     'angular': 'bower_components/angular/angular',
     'angular-resource': 'bower_components/angular-resource/angular-resource.min',
-    'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router.min',
+    'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
     'jquery-slider': 'bower_components/jslider/dist/jquery.slider.min',
     'd3': 'bower_components/d3/d3.min',
     'nvd3': 'bower_components/nvd3/nv.d3.min',

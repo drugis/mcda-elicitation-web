@@ -1,8 +1,8 @@
 /*jshint node: true */
 define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
   function(Config, patavi, angular, angularanimate, mmfoundation, _) {
-    var dependencies = ['$scope', '$stateParams', 'taskDefinition', 'Remarks', 'ValueTreeUtil'];
-    var EffectsTableController = function($scope, $stateParams, taskDefinition, Remarks, ValueTreeUtil) {
+    var dependencies = ['$scope', '$stateParams', 'taskDefinition', 'RemarksResource', 'ValueTreeUtil'];
+    var EffectsTableController = function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil) {
 
       var remarksCache;
 
@@ -10,7 +10,7 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
         analysisId: $scope.analysis.id
       };
 
-      Remarks.get($stateParams, function(remarks) {
+      RemarksResource.get($stateParams, function(remarks) {
         if (remarks.remarks) {
           $scope.remarks = remarks;
         }
@@ -18,7 +18,7 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
       });
 
       $scope.saveRemarks = function() {
-        Remarks.save($stateParams, $scope.remarks, function() {
+        RemarksResource.save($stateParams, $scope.remarks, function() {
           remarksCache = angular.copy($scope.remarks);
         });
       };

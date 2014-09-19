@@ -445,7 +445,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       },
       template: "<li>{{item.title}}<p ng-if='remarks'><span ng-if='!remarks[item.title]'>None.</span>{{remarks[item.title]}}</p></li>",
       link: function(scope, element, attrs) {
-        if (angular.isArray(scope.item.children)) {
+        if (scope.item && angular.isArray(scope.item.children)) {
           element.append("<value-tree children='item.children' remarks='remarks'></value-tree>");
           $compile(element.contents())(scope)
         }

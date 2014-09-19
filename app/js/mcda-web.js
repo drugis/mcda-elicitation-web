@@ -13,6 +13,7 @@ define(
     'mcda/services/remarks',
     'mcda/services/routeFactory',
     'mcda/services/workspaceResource',
+    'mcda/services/scenarioResource',
     'mcda/services/taskDependencies',
     'mcda/services/errorHandling',
     'mcda/services/hashCodeService',
@@ -25,13 +26,15 @@ define(
       'ui.router',
       'mm.foundation',
       'ngAnimate',
+      'elicit.workspaceService',
       'elicit.remarks',
       'elicit.workspaceResource',
+      'elicit.scenarioResource',
       'elicit.util',
       'elicit.directives',
       'elicit.controllers',
       'elicit.taskDependencies',
-      'elicit.errorHandling', 
+      'elicit.errorHandling',
       'elicit.routeFactory'
     ];
     var app = angular.module('elicit', dependencies);
@@ -89,8 +92,8 @@ define(
     })());
 
 
-    app.config(['mcdaRootPath', 'Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider', 'MCDARouteFactory',
-      function(basePath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider, MCDARouteFactory) {
+    app.config(['mcdaRootPath', 'Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider', 'MCDARouteProvider',
+      function(basePath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider, MCDARouteProvider) {
         var baseTemplatePath = basePath + 'views/';
 
         $httpProvider.interceptors.push('ErrorHandling');
@@ -103,7 +106,7 @@ define(
           abstract: true
         });
 
-        MCDARouteFactory.buildRoutes('workspace');
+        MCDARouteProvider.buildRoutes($stateProvider, 'workspace', baseTemplatePath);
 
         // Default route
         $stateProvider.state('choose-problem', {

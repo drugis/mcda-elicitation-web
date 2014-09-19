@@ -31,7 +31,7 @@ define(['angular', 'underscore'], function(angular, _) {
       }
     });
 
-    $scope.workspacesList = WorkspacesResource.query();
+    $scope.workspacesList = WorkspaceResource.query();
 
     $scope.chooseProblemModal = {};
   };
