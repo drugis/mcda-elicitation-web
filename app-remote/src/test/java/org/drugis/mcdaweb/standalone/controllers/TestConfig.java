@@ -1,6 +1,7 @@
 package org.drugis.mcdaweb.standalone.controllers;
 
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
+import org.drugis.mcdaweb.standalone.repositories.JdbcRemarksRepository;
 import org.drugis.mcdaweb.standalone.repositories.RemarksRepository;
 import org.drugis.mcdaweb.standalone.repositories.ScenarioRepository;
 import org.drugis.mcdaweb.standalone.repositories.WorkspaceRepository;
