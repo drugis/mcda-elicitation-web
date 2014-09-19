@@ -1,10 +1,26 @@
 'use strict';
-define([], function() {
+define(['underscore'], function(_) {
 
-  return function($scope, $location, $stateParams, Tasks, TaskDependencies, WorkspaceResource, WorkspaceService) {
+  return function($scope, $location, $stateParams, Tasks, TaskDependencies, WorkspaceResource, WorkspaceService, PataviService) {
+
     $scope.workspace = WorkspaceResource.get($stateParams, function(workspace) {
       workspace.problem = WorkspaceService.addValueTree(workspace.problem);
+      prepareScales(workspace.problem);
     });
+
+    function prepareScales(problem) {
+        var payload = _.extend(problem, {
+          method: 'scales'
+        });
+       PataviService.run(payload).then(function(results) {
+        $scope.scales = results;
+      }, function(error) {
+        $scope.$emit('error', {
+          code: error.code,
+          cause: error.cause
+        });
+      });
+    }
 
     $scope.isEditTitleVisible = false;
 

@@ -3,7 +3,7 @@ define(['angular','angular-resource'], function(angular) {
   var dependencies = ['ngResource'];
 
   var RemarksResource = function($resource) {
-    return $resource(window.config.workspaceRepositoryUrl + ':workspaceId/remarks', {
+    return $resource(window.config.workspacesRepositoryUrl + ':workspaceId/remarks', {
       workspaceId: '@workspaceId'
     });
   };

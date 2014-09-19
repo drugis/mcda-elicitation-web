@@ -6,9 +6,18 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
 
       var remarksCache;
 
-      $scope.remarks = {
-        analysisId: $scope.analysis.id
-      };
+      $scope.remarks = {};
+      $scope.$parent.taskId = taskDefinition.id;
+      $scope.alternativeVisible = {};
+            // show / hide sidepanel
+      $scope.showPanel = false;
+      $scope.onLoadClass = 'animate-hide';
+      $scope.workspace.$promise.then(function(workspace) {
+        var problem = workspace.problem;
+        $scope.effectsTableData = buildEffectsTableData(problem);
+        $scope.nrAlternatives = _.keys(problem.alternatives).length;
+        $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree(problem.valueTree, problem.criteria);
+      })
 
       RemarksResource.get($stateParams, function(remarks) {
         if (remarks.remarks) {
@@ -26,36 +35,6 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
       $scope.cancelRemarks = function() {
         $scope.remarks = angular.copy(remarksCache);
       };
-
-      $scope.$parent.taskId = taskDefinition.id;
-
-      // FIXME: these calculations really should happen at the workspace level
-      // ===========================================
-      (function(problem) {
-        var errorHandler = function(code, error) {
-          var message = {
-            code: (code && code.desc) ? code.desc : code,
-            cause: error
-          };
-          $scope.$root.$broadcast('error', message);
-        };
-        var data = _.extend(problem, {
-          'method': 'scales'
-        });
-        var task = patavi.submit(Config.pataviService, data);
-        $scope.scales = {};
-        task.results.then(function(data) {
-          $scope.$apply(function() {
-            $scope.scales = data.results;
-          });
-        }, errorHandler);
-      })($scope.workspace.problem);
-      // ===========================================
-
-      var problem = $scope.workspace.problem;
-      $scope.problem = problem;
-
-      $scope.alternativeVisible = {};
 
       var buildEffectsTableData = function(problem) {
         var criteriaNodes = ValueTreeUtil.findCriteriaNodes(problem.valueTree);
@@ -77,11 +56,6 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
         return effectsTable;
       };
 
-      $scope.effectsTableData = buildEffectsTableData(problem);
-
-      // show / hide sidepanel
-      $scope.showPanel = false;
-      $scope.onLoadClass = 'animate-hide';
       $scope.toggleSidebar = function(criterion) {
         if ($scope.showPanel && criterion.key === $scope.sideParam.key) {
           $scope.showPanel = !$scope.showPanel;
@@ -99,9 +73,6 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
         console.log(node.remark);
       };
 
-      $scope.nrAlternatives = _.keys(problem.alternatives).length;
-
-      $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree(problem.valueTree, problem.criteria);
     };
 
     return dependencies.concat(EffectsTableController);

@@ -17,6 +17,7 @@ define(
     'mcda/services/taskDependencies',
     'mcda/services/errorHandling',
     'mcda/services/hashCodeService',
+    'mcda/services/pataviService',
     'mcda/services/util',
     'mcda/controllers',
     'mcda/directives'
@@ -32,6 +33,7 @@ define(
       'elicit.scenarioResource',
       'elicit.util',
       'elicit.directives',
+      'elicit.pataviService',
       'elicit.controllers',
       'elicit.taskDependencies',
       'elicit.errorHandling',
