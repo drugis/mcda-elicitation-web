@@ -2,10 +2,8 @@ package org.drugis.mcdaweb.standalone.controllers;
 
 import org.drugis.mcdaweb.standalone.account.Account;
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
-import org.drugis.mcdaweb.standalone.repositories.Scenario;
-import org.drugis.mcdaweb.standalone.repositories.ScenarioRepository;
-import org.drugis.mcdaweb.standalone.repositories.Workspace;
-import org.drugis.mcdaweb.standalone.repositories.WorkspaceRepository;
+import org.drugis.mcdaweb.standalone.model.Remarks;
+import org.drugis.mcdaweb.standalone.repositories.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -25,6 +23,7 @@ public class WorkspacesController {
 
   final static Logger logger = LoggerFactory.getLogger(WorkspacesController.class);
 
+
   public class ResourceNotOwnedException extends Exception {
     private static final long serialVersionUID = -3342170675559096956L;
 
@@ -38,6 +37,7 @@ public class WorkspacesController {
   @Inject	private AccountRepository accountRepository;
   @Inject	private WorkspaceRepository workspaceRepository;
   @Inject	private ScenarioRepository scenarioRepository;
+  @Inject private RemarksRepository remarksRepository;
 
 	/*
 	 * Workspaces
@@ -147,6 +147,12 @@ public class WorkspacesController {
       this.code = code;
       this.message = message;
     }
+  }
+
+  @RequestMapping(value="/{workspaceId}/remarks", method=RequestMethod.GET)
+  @ResponseBody
+  public Remarks findRemarks(@PathVariable int workspaceId) {
+    return remarksRepository.find(workspaceId);
   }
 
   @ResponseStatus(HttpStatus.NOT_FOUND)

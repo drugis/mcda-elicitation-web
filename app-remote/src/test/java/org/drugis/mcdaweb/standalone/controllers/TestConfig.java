@@ -1,6 +1,7 @@
 package org.drugis.mcdaweb.standalone.controllers;
 
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
+import org.drugis.mcdaweb.standalone.repositories.RemarksRepository;
 import org.drugis.mcdaweb.standalone.repositories.ScenarioRepository;
 import org.drugis.mcdaweb.standalone.repositories.WorkspaceRepository;
 import org.mockito.Mockito;
@@ -28,4 +29,9 @@ public class TestConfig {
 	public WorkspaceRepository mockWorkspaceRepository() {
 		return Mockito.mock(WorkspaceRepository.class);
 	}
+
+  @Bean
+  public RemarksRepository mockRemarksRepository() {
+    return Mockito.mock(RemarksRepository.class);
+  }
 }

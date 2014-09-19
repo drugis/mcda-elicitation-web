@@ -2,10 +2,8 @@ package org.drugis.mcdaweb.standalone.controllers;
 
 import org.drugis.mcdaweb.standalone.account.Account;
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
-import org.drugis.mcdaweb.standalone.repositories.Scenario;
-import org.drugis.mcdaweb.standalone.repositories.ScenarioRepository;
-import org.drugis.mcdaweb.standalone.repositories.Workspace;
-import org.drugis.mcdaweb.standalone.repositories.WorkspaceRepository;
+import org.drugis.mcdaweb.standalone.model.Remarks;
+import org.drugis.mcdaweb.standalone.repositories.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,6 +66,9 @@ public class WorkspacesControllerTest {
 
 	@Inject
 	private ScenarioRepository scenarioRepository;
+
+  @Inject
+  private RemarksRepository remarksRepository;
 	
 	@Autowired
 	private WebApplicationContext context;
@@ -425,8 +426,26 @@ public class WorkspacesControllerTest {
 		verify(scenarioRepository).update(scenarioId, scenarioTitle, JSON_KEY_VALUE);
 		verify(accountRepository).findAccountByUsername("gert");
 	}
-	
-	@After
+
+  @Test
+  public void testGetRemarks() throws Exception {
+    Integer remarksId = 1;
+    String remarksStr = "{" +
+            "\"HAM-D responders\":\"test content 1\"" +
+            "}";
+    Integer workspaceId = 2;
+    Remarks remarks = new Remarks(remarksId, workspaceId, remarksStr);
+    when(remarksRepository.find(workspaceId)).thenReturn(remarks);
+    mockMvc.perform(get("/workspaces/2/remarks").principal(user))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("$.id", is(remarksId)))
+            .andExpect(jsonPath("$.workspaceId", is(workspaceId)));
+    verify(remarksRepository).find(workspaceId);
+  }
+
+
+  @After
 	public void tearDown() {
 		verifyNoMoreInteractions(accountRepository, workspaceRepository);
 	}
