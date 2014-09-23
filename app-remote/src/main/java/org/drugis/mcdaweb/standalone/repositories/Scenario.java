@@ -5,17 +5,23 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class Scenario {
 	private int id;
-	private int workspace;
+	private int workspaceId;
 	private String title;
 	private Object state;
 	
 	public Scenario() {
 		
 	}
-	
-	public Scenario(int id, int workspace, String title, String state) {
+
+  public Scenario(int workspaceId, String title, Object state) {
+    this.workspaceId = workspaceId;
+    this.title = title;
+    this.state = state;
+  }
+
+  public Scenario(int id, int workspaceId, String title, String state) {
 		this.id = id;
-		this.workspace = workspace;
+		this.workspaceId = workspaceId;
 		this.title = title;
 		this.state = state;
 	}
@@ -41,7 +47,7 @@ public class Scenario {
 		return id;
 	}
 
-	public int getWorkspace() {
-		return workspace;
+	public int getWorkspaceId() {
+		return workspaceId;
 	}
 }

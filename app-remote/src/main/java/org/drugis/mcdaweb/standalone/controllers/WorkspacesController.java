@@ -4,6 +4,7 @@ import org.drugis.mcdaweb.standalone.account.Account;
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
 import org.drugis.mcdaweb.standalone.model.Remarks;
 import org.drugis.mcdaweb.standalone.repositories.*;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import java.util.Collection;
 public class WorkspacesController {
 
   final static Logger logger = LoggerFactory.getLogger(WorkspacesController.class);
+  public static final String DEFAULT_SCENARIO_TITLE = "Default";
 
 
   public class ResourceNotOwnedException extends Exception {
@@ -55,6 +57,11 @@ public class WorkspacesController {
   public Workspace create(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @RequestBody Workspace body) {
     Account user = accountRepository.findAccountByUsername(currentUser.getName());
     Workspace workspace = workspaceRepository.create(user.getId(), body.getTitle(), body.getProblem());
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put("problem", workspace.getProblem());
+    Scenario defaultScenario = scenarioRepository.create(workspace.getId(), DEFAULT_SCENARIO_TITLE, jsonObject.toString());
+    workspace.setDefaultScenarioId(defaultScenario.getId());
+    workspaceRepository.update(workspace);
     response.setStatus(HttpServletResponse.SC_CREATED);
     response.setHeader("Location", request.getRequestURL() + "/" + workspace.getId());
     return workspace;
@@ -125,7 +132,7 @@ public class WorkspacesController {
     if (scenario == null) {
       throw new ResourceDoesNotExistException();
     }
-    if (scenario.getWorkspace() != workspace.getId()) {
+    if (scenario.getWorkspaceId() != workspace.getId()) {
       throw new ResourceNotOwnedException();
     }
     return scenario;

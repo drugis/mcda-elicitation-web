@@ -1,5 +1,6 @@
 package org.drugis.mcdaweb.standalone.controllers;
 
+import net.minidev.json.JSONObject;
 import org.drugis.mcdaweb.standalone.account.Account;
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
 import org.drugis.mcdaweb.standalone.model.Remarks;
@@ -133,26 +134,33 @@ public class WorkspacesControllerTest {
 
 	@Test
 	public void testCreateWorkspace() throws Exception {
-		String jsonContent = "{\"title\": \"mockWorkspace\", \"problem\":" + JSON_KEY_VALUE + "}";
-		Workspace workspace = createWorkspace();
-		when(workspaceRepository.create(workspace.getOwner(), workspace.getTitle(), JSON_KEY_VALUE)).thenReturn(workspace);
-		mockMvc.perform(post("/workspaces")
-				.principal(user)
-				.contentType(APPLICATION_JSON_UTF8)
-				.content(jsonContent))
+    String jsonContent = "{\"title\": \"mockWorkspace\", \"problem\":" + JSON_KEY_VALUE + "}";
+    Workspace workspace = createWorkspace();
+    when(workspaceRepository.create(workspace.getOwner(), workspace.getTitle(), JSON_KEY_VALUE)).thenReturn(workspace);
+    int scenarioId = 378;
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put("problem", workspace.getProblem());
+    Scenario scenario = new Scenario(scenarioId, workspace.getId(), WorkspacesController.DEFAULT_SCENARIO_TITLE, jsonObject.toJSONString());
+    when(scenarioRepository.create(workspace.getId(), WorkspacesController.DEFAULT_SCENARIO_TITLE, jsonObject.toJSONString())).thenReturn(scenario);
+    mockMvc.perform(post("/workspaces")
+            .principal(user)
+            .contentType(APPLICATION_JSON_UTF8)
+            .content(jsonContent))
 
-				.andExpect(status().isCreated())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(header().string("Location", is("http://localhost:80/workspaces/1")))
-				.andExpect(jsonPath("$.id", is(workspace.getId())))
-				.andExpect(jsonPath("$.owner", is(workspace.getOwner())))
-				.andExpect(jsonPath("$.defaultScenarioId", is(workspace.getDefaultScenarioId())))
-				.andExpect(jsonPath("$.title", is(workspace.getTitle())))
-				.andExpect(jsonPath("$.problem.key", is("value")))
-		;
-		verify(workspaceRepository).create(workspace.getOwner(), workspace.getTitle(), workspace.getProblem() );
-		verify(accountRepository).findAccountByUsername("gert");
-	}
+            .andExpect(status().isCreated())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(header().string("Location", is("http://localhost:80/workspaces/1")))
+            .andExpect(jsonPath("$.id", is(workspace.getId())))
+            .andExpect(jsonPath("$.owner", is(workspace.getOwner())))
+            .andExpect(jsonPath("$.defaultScenarioId", is(workspace.getDefaultScenarioId())))
+            .andExpect(jsonPath("$.title", is(workspace.getTitle())))
+            .andExpect(jsonPath("$.problem.key", is("value")))
+    ;
+    verify(workspaceRepository).create(workspace.getOwner(), workspace.getTitle(), workspace.getProblem());
+    verify(workspaceRepository).update(workspace);
+    verify(scenarioRepository).create(workspace.getId(), WorkspacesController.DEFAULT_SCENARIO_TITLE, jsonObject.toJSONString());
+    verify(accountRepository).findAccountByUsername("gert");
+  }
 	
 	@Test
 	public void testGetWorkspace() throws Exception {
@@ -318,7 +326,7 @@ public class WorkspacesControllerTest {
 		Scenario scenario = createScenario(scenarioId, workspaceId, title);
 		when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
 		when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(true);
-		when(scenarioRepository.create(scenario.getWorkspace(), scenario.getTitle(), JSON_KEY_VALUE)).thenReturn(scenario);
+		when(scenarioRepository.create(scenario.getWorkspaceId(), scenario.getTitle(), JSON_KEY_VALUE)).thenReturn(scenario);
 
 		String jsonContent = "{\"id\": 0, \"title\": \"" + title + "\", \"state\": " + JSON_KEY_VALUE + "}";
 		mockMvc.perform(post("/workspaces/1/scenarios")
@@ -349,7 +357,7 @@ public class WorkspacesControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.id", is(1)))
-			.andExpect(jsonPath("$.workspace", is(1)))
+			.andExpect(jsonPath("$.workspaceId", is(1)))
 			.andExpect(jsonPath("$.title", is("title")))
 			.andExpect(jsonPath("$.state.key", is("value")))
 		;
@@ -488,7 +496,7 @@ public class WorkspacesControllerTest {
 
   @After
 	public void tearDown() {
-		verifyNoMoreInteractions(accountRepository, workspaceRepository, remarksRepository);
+		verifyNoMoreInteractions(accountRepository, workspaceRepository, scenarioRepository, remarksRepository);
 	}
 
 }

@@ -18,6 +18,7 @@ define(
     'mcda/services/errorHandling',
     'mcda/services/hashCodeService',
     'mcda/services/pataviService',
+    'mcda/services/partialValueFunction',
     'mcda/services/util',
     'mcda/controllers',
     'mcda/directives'
@@ -37,7 +38,8 @@ define(
       'elicit.controllers',
       'elicit.taskDependencies',
       'elicit.errorHandling',
-      'elicit.routeFactory'
+      'elicit.routeFactory',
+      'elicit.pvfService'
     ];
     var app = angular.module('elicit', dependencies);
 

@@ -3,20 +3,6 @@ define(['angular'],
     var dependencies = ['ngResource'];
 
     var WorkspaceResource = function($resource) {
-      // var csrfToken = config.workspacesRepository._csrf_token;
-      // var csrfHeader = config.workspacesRepository._csrf_header;
-      // var path = $location.path();
-      // var headers = {};
-      // headers[csrfHeader] = csrfToken;
-
-      // var repositoryUrl;
-      // if (path === '/choose-problem') {
-      //   repositoryUrl = config.workspacesRepository.url;
-      // } else {
-      //   var workspaceName = $window.config.workspaceName || 'workspaces';
-      //   path = $location.path();
-      //   repositoryUrl = path.substr(0, path.lastIndexOf(workspaceName) + workspaceName.length + 1);
-      // }
 
       return $resource(config.workspacesRepositoryUrl + ':workspaceId', {
         workspaceId: '@id'
