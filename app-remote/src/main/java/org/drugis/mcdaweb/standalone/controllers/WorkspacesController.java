@@ -156,7 +156,7 @@ public class WorkspacesController {
       response.setStatus(HttpServletResponse.SC_CREATED);
       return createdRemarks;
     }
-    return remarksRepository.find(workspaceId);
+    return remarksRepository.update(workspaceId, remarks.getRemarks());
   }
 
   public static class ErrorResponse {

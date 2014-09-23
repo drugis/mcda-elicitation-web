@@ -465,7 +465,23 @@ public class WorkspacesControllerTest {
   }
 
   @Test
-  public void updateRemarks() {
+  public void updateRemarks() throws Exception {
+    Integer workspaceId = 1;
+    Integer remarksId  = 2;
+    Integer userId = 1;
+    Workspace workspace = createWorkspace();
+    Remarks remarks = new Remarks(remarksId, workspaceId, "test content yo!");
+    String content = "{\"id\" : 2, \"workspaceId\" : 1, \"remarks\" : \"test content yo!\"}";
+    when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
+    when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(true);
+    when(remarksRepository.update(anyInt(), anyString())).thenReturn(new Remarks(1, remarks.getWorkspaceId(), remarks.getRemarks()));
+    mockMvc.perform(post("/workspaces/1/remarks").principal(user).content(content).contentType(APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(APPLICATION_JSON_UTF8));
+    verify(workspaceRepository).findById(workspaceId);
+    verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
+    verify(remarksRepository).update(anyInt(), anyString());
+    verify(accountRepository).findAccountByUsername("gert");
 
   }
 

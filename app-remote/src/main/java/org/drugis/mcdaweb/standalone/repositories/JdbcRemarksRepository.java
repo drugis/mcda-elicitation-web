@@ -58,4 +58,16 @@ public class JdbcRemarksRepository implements RemarksRepository {
     return new Remarks(remarksId, workspaceId, remarks);
   }
 
+  @Override
+  public Remarks update(Integer workspaceId, String remarks) throws Exception {
+    PreparedStatementCreatorFactory pscf =
+            new PreparedStatementCreatorFactory("UPDATE remarks SET remarks = ? WHERE workspaceId = ?");
+    pscf.addParameter(new SqlParameter(Types.VARCHAR));
+    pscf.addParameter(new SqlParameter(Types.INTEGER));
+
+    jdbcTemplate.update(
+            pscf.newPreparedStatementCreator(new Object[] {remarks, workspaceId}));
+    return find(workspaceId);
+  }
+
 }

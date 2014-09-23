@@ -9,4 +9,6 @@ public interface RemarksRepository {
   Remarks find(Integer workspaceId) throws Exception;
 
   Remarks create(Integer workspaceId, String remarks);
+
+  Remarks update(Integer workspaceId, String remarks) throws Exception;
 }
