@@ -1,9 +1,10 @@
 'use strict';
 define(['underscore'], function(_) {
 
-  return function($scope, $location, $stateParams, Tasks, TaskDependencies, WorkspaceResource, WorkspaceService, PataviService) {
+  return function($scope, $location, $stateParams, Tasks, TaskDependencies, currentWorkspace, WorkspaceService, PataviService) {
 
-    $scope.workspace = WorkspaceResource.get($stateParams, function(workspace) {
+    $scope.workspace = currentWorkspace;
+    $scope.workspace.$promise.then(function(workspace) {
       workspace.problem = WorkspaceService.addValueTree(workspace.problem);
       prepareScales(workspace.problem);
     });

@@ -444,10 +444,35 @@ public class WorkspacesControllerTest {
     verify(remarksRepository).find(workspaceId);
   }
 
+  @Test
+  public void testSaveNewRemarks() throws Exception {
+    Integer workspaceId = 1;
+    Integer userId = 1;
+    Workspace workspace = createWorkspace();
+    Remarks remarks = new Remarks(workspaceId, "test content yo!");
+    String content = "{\"id\" : null, \"workspaceId\" : 1, \"remarks\" : \"test content yo!\"}";
+    when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
+    when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(true);
+    when(remarksRepository.create(anyInt(), anyString())).thenReturn(new Remarks(1, remarks.getWorkspaceId(), remarks.getRemarks()));
+    mockMvc.perform(post("/workspaces/1/remarks").principal(user).content(content).contentType(APPLICATION_JSON_UTF8))
+            .andExpect(status().isCreated())
+            .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("$.workspaceId", is(workspaceId)));
+    verify(workspaceRepository).findById(workspaceId);
+    verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
+    verify(remarksRepository).create(anyInt(), anyString());
+    verify(accountRepository).findAccountByUsername("gert");
+  }
+
+  @Test
+  public void updateRemarks() {
+
+  }
+
 
   @After
 	public void tearDown() {
-		verifyNoMoreInteractions(accountRepository, workspaceRepository);
+		verifyNoMoreInteractions(accountRepository, workspaceRepository, remarksRepository);
 	}
 
 }

@@ -9,7 +9,7 @@ create table UserConnection (userId varchar(255) not null,
   displayName varchar(255),
   profileUrl varchar(512),
   imageUrl varchar(512),
-  accessToken varchar(255) not null,          
+  accessToken varchar(255) not null,
   secret varchar(255),
   refreshToken varchar(255),
   expireTime bigint,
@@ -20,7 +20,7 @@ create unique index UserConnectionRank on UserConnection(userId, providerId, ran
 
 create table Account (id int auto_increment,
             username varchar unique,
-            firstName varchar not null, 
+            firstName varchar not null,
             lastName varchar not null,
             password varchar default '',
             primary key (id));
@@ -51,3 +51,12 @@ CREATE TABLE AccountRoles (
     role VARCHAR NOT NULL,
     FOREIGN KEY (accountId) REFERENCES Account(id)
 )
+
+-- changeset reidd:5
+CREATE TABLE Remarks (
+  id int auto_increment,
+  workspaceId: INT NOT NULL,
+  remarks: VARCHAR NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY(workspaceId) REFERENCES Workspace(id)
+);

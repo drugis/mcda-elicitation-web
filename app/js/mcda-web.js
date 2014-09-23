@@ -105,7 +105,13 @@ define(
           url: '/workspaces/:workspaceId',
           templateUrl: baseTemplatePath + 'workspace.html',
           controller: 'WorkspaceController',
-          abstract: true
+          resolve: {
+            currentWorkspace: ['$stateParams', 'WorkspaceResource',
+              function($stateParams, WorkspaceResource) {
+                return WorkspaceResource.get($stateParams);
+              }
+            ]
+          }
         });
 
         MCDARouteProvider.buildRoutes($stateProvider, 'workspace', baseTemplatePath);

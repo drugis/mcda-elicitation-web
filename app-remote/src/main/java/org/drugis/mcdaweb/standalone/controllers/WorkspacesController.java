@@ -139,6 +139,26 @@ public class WorkspacesController {
     return scenarioRepository.update(scenarioId, body.getTitle(), body.getState());
   }
 
+  @RequestMapping(value="/{workspaceId}/remarks", method=RequestMethod.GET)
+  @ResponseBody
+  public Remarks findRemarks(@PathVariable int workspaceId) throws Exception {
+    return remarksRepository.find(workspaceId);
+  }
+
+  @RequestMapping(value="/{workspaceId}/remarks", method=RequestMethod.POST)
+  @ResponseBody
+  public Remarks updateRemarks(HttpServletResponse response,  Principal currentUser, @PathVariable Integer workspaceId, @RequestBody Remarks remarks) throws Exception {
+    // actual workspace not needed, just check whether it exists and user owns it
+    get(response, currentUser, workspaceId);
+
+    if(remarks.getId() == null) {
+      Remarks createdRemarks =  remarksRepository.create(workspaceId, remarks.getRemarks());
+      response.setStatus(HttpServletResponse.SC_CREATED);
+      return createdRemarks;
+    }
+    return remarksRepository.find(workspaceId);
+  }
+
   public static class ErrorResponse {
     public int code;
     public String message;
@@ -147,12 +167,6 @@ public class WorkspacesController {
       this.code = code;
       this.message = message;
     }
-  }
-
-  @RequestMapping(value="/{workspaceId}/remarks", method=RequestMethod.GET)
-  @ResponseBody
-  public Remarks findRemarks(@PathVariable int workspaceId) {
-    return remarksRepository.find(workspaceId);
   }
 
   @ResponseStatus(HttpStatus.NOT_FOUND)
