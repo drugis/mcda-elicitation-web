@@ -14,9 +14,13 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
 
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
-    $scope.scenario = {};
-    $scope.scenarios = ScenarioResource.query({workspaceId: $stateParams.workspaceId}, function(scenarios) {
-      $scope.scenario = scenarios[0];
+    $scope.scenario = {}; // necessary to prevent empty select option  http://stackoverflow.com/questions/12654631/why-does-angularjs-include-an-empty-option-in-select
+    $scope.scenarios = ScenarioResource.query({
+      workspaceId: $stateParams.workspaceId
+    }, function(scenarios) {
+      $scope.scenario = _.find(scenarios, function(scenario) {
+        return scenario.id == $state.params.scenarioId;
+      });
       $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
     });
 
@@ -38,6 +42,7 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
 
     var redirect = function(scenarioId) {
       $state.go(Config.defaultView, {
+        workspaceId: $scope.workspace.id,
         scenarioId: scenarioId
       });
     };
@@ -47,7 +52,9 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
         'title': randomId(3, 'Scenario '),
         'state': $scope.scenario.state
       };
-      ScenarioResource.save(newScenario, function(savedScenario) {
+      ScenarioResource.save({
+        workspaceId: $scope.workspace.id
+      }, newScenario, function(savedScenario) {
         redirect(savedScenario.id);
       });
     };
@@ -59,7 +66,9 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
           'problem': $scope.workspace.problem
         }
       };
-      ScenarioResource.save(newScenario, function(savedScenario) {
+      ScenarioResource.save({
+        workspaceId: $scope.workspace.id
+      }, newScenario, function(savedScenario) {
         redirect(savedScenario.id);
       });
     };
@@ -81,6 +90,7 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
 
     $scope.scenarioChanged = function(newScenario) {
       $state.go($scope.taskId, {
+        workspaceId: $scope.workspace.id,
         scenarioId: newScenario.id
       });
     };
