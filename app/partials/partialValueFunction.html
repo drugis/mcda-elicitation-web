@@ -40,7 +40,7 @@
                 <label><input type="radio" ng-model="criterion.pvf.type" value="linear">Linear</label>
                 <label><input type="radio" ng-model="criterion.pvf.type" value="piecewise-linear">Piece-wise linear</label>
 
-                <button class="small button" ng-click="definePVFModal.closeCancel()">¡Ay, caramba!</button>
+                <button class="small button" ng-click="definePVFModal.closeCancel()">Cancel</button>
 
                 <button class="small success button"
                 ng-if="criterion.pvf.type != 'piecewise-linear'"
@@ -76,9 +76,9 @@
                 </div>
               </div>
             </form>
-            <button class="small button" ng-click="definePVFModal.closeCancel()">¡Ay, caramba!</button>
-            <button class="small button" ng-click="pvfWizardStep.step = 'elicit type'">El Previoso</button>
-            <button class="small button" ng-click="goToElicitValuesStep()" ng-disabled="criterion.pvf.cutoffs.length === 0">Nexito</button>
+            <button class="small button" ng-click="definePVFModal.closeCancel()">Cancel</button>
+            <button class="small button" ng-click="pvfWizardStep.step = 'elicit type'">Previous</button>
+            <button class="small button" ng-click="goToElicitValuesStep()" ng-disabled="criterion.pvf.cutoffs.length === 0">Next</button>
           </div> <!-- / subType == 'elicit cutoffs' -->
 
           <div ng-if="pvfWizardStep.step == 'elicit values'">
@@ -111,8 +111,8 @@
               </div>
               <button class="success small" ng-click='calculate($scenario.problem.state)'>Calculate function</button>
               <span ng-show="showMacbethError.show" style="color: red">Inconsistent preferences</span>
-            <button class="small button" ng-click="definePVFModal.closeCancel()">¡Ay, caramba!</button>
-            <button class="small button" ng-click="pvfWizardStep.step = 'elicit cutoffs'">El Previoso</button>
+            <button class="small button" ng-click="definePVFModal.closeCancel()">Cancel</button>
+            <button class="small button" ng-click="pvfWizardStep.step = 'elicit cutoffs'">Previous</button>
             <button class="small button" ng-click="save()" ng-disabled="graphInfo.values.length < 1">Save</button>
             </div>
           </div>
