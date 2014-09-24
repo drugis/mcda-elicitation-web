@@ -6,18 +6,42 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
 
       var remarksCache;
 
+
+      function buildEffectsTableData(problem) {
+        var criteriaNodes = ValueTreeUtil.findCriteriaNodes(problem.valueTree);
+        var effectsTable = [];
+
+        angular.forEach(criteriaNodes, function(criteriaNode) {
+          var path = ValueTreeUtil.findTreePath(criteriaNode, problem.valueTree);
+          effectsTable.push({
+            path: path.slice(1), // omit top-level node
+            criteria: _.map(criteriaNode.criteria, function(criterionKey) {
+              return {
+                key: criterionKey,
+                value: problem.criteria[criterionKey]
+              };
+            })
+          });
+        });
+
+        return effectsTable;
+      }
+
+      function initEffectsTable(workspace) {
+        $scope.problem = workspace.problem;
+        $scope.effectsTableData = buildEffectsTableData($scope.problem);
+        $scope.nrAlternatives = _.keys($scope.problem.alternatives).length;
+        $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree($scope.problem.valueTree, $scope.problem.criteria);
+      }
+
       $scope.remarks = {};
       $scope.$parent.taskId = taskDefinition.id;
       $scope.alternativeVisible = {};
-            // show / hide sidepanel
+      // show / hide sidepanel
       $scope.showPanel = false;
       $scope.onLoadClass = 'animate-hide';
-      $scope.workspace.$promise.then(function(workspace) {
-        var problem = workspace.problem;
-        $scope.effectsTableData = buildEffectsTableData(problem);
-        $scope.nrAlternatives = _.keys(problem.alternatives).length;
-        $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree(problem.valueTree, problem.criteria);
-      })
+
+      $scope.workspace.$promise.then(initEffectsTable);
 
       RemarksResource.get($stateParams, function(remarks) {
         if (remarks.remarks) {
@@ -36,25 +60,6 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
         $scope.remarks = angular.copy(remarksCache);
       };
 
-      var buildEffectsTableData = function(problem) {
-        var criteriaNodes = ValueTreeUtil.findCriteriaNodes(problem.valueTree);
-        var effectsTable = [];
-
-        angular.forEach(criteriaNodes, function(criteriaNode) {
-          var path = ValueTreeUtil.findTreePath(criteriaNode, problem.valueTree);
-          effectsTable.push({
-            path: path.slice(1), // omit top-level node
-            criteria: _.map(criteriaNode.criteria, function(criterionKey) {
-              return {
-                key: criterionKey,
-                value: problem.criteria[criterionKey]
-              };
-            })
-          });
-        });
-
-        return effectsTable;
-      };
 
       $scope.toggleSidebar = function(criterion) {
         if ($scope.showPanel && criterion.key === $scope.sideParam.key) {

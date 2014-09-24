@@ -14,9 +14,10 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
 
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
-    $scope.scenarios = ScenarioResource.query({workspaceId: $stateParams.workspaceId});
-    $scope.scenario = ScenarioResource.get($stateParams, function(scenario){
-      $scope.resultsAccessible = resultsAccessible($scope.tasks.results, scenario.state);
+    $scope.scenario = {};
+    $scope.scenarios = ScenarioResource.query({workspaceId: $stateParams.workspaceId}, function(scenarios) {
+      $scope.scenario = scenarios[0];
+      $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
     });
 
     $scope.tasks = _.reduce(Tasks.available, function(tasks, task) {
