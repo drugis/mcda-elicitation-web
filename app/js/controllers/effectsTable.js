@@ -27,12 +27,10 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
         return effectsTable;
       }
 
-      function initEffectsTable(workspace) {
-        $scope.problem = workspace.problem;
-        $scope.effectsTableData = buildEffectsTableData($scope.problem);
-        $scope.nrAlternatives = _.keys($scope.problem.alternatives).length;
-        $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree($scope.problem.valueTree, $scope.problem.criteria);
-      }
+      $scope.problem = $scope.workspace.problem;
+      $scope.effectsTableData = buildEffectsTableData($scope.problem);
+      $scope.nrAlternatives = _.keys($scope.problem.alternatives).length;
+      $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree($scope.problem.valueTree, $scope.problem.criteria);
 
       $scope.remarks = {};
       $scope.$parent.taskId = taskDefinition.id;
@@ -41,7 +39,6 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
       $scope.showPanel = false;
       $scope.onLoadClass = 'animate-hide';
 
-      $scope.workspace.$promise.then(initEffectsTable);
 
       RemarksResource.get($stateParams, function(remarks) {
         if (remarks.remarks) {

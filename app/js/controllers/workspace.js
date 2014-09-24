@@ -2,13 +2,6 @@
 define(['underscore'], function(_) {
 
   return function($scope, $location, $stateParams, Tasks, TaskDependencies, currentWorkspace, WorkspaceService, PataviService) {
-
-    $scope.workspace = currentWorkspace;
-    $scope.workspace.$promise.then(function(workspace) {
-      workspace.problem = WorkspaceService.addValueTree(workspace.problem);
-      prepareScales(workspace.problem);
-    });
-
     function prepareScales(problem) {
         var payload = _.extend(problem, {
           method: 'scales'
@@ -22,6 +15,11 @@ define(['underscore'], function(_) {
         });
       });
     }
+    $scope.workspace = currentWorkspace;
+    $scope.workspace.problem = WorkspaceService.addValueTree($scope.workspace.problem);
+    prepareScales($scope.workspace.problem);
+
+
 
     $scope.isEditTitleVisible = false;
 

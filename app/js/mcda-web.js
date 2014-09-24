@@ -110,7 +110,7 @@ define(
           resolve: {
             currentWorkspace: ['$stateParams', 'WorkspaceResource',
               function($stateParams, WorkspaceResource) {
-                return WorkspaceResource.get($stateParams);
+                return WorkspaceResource.get($stateParams).$promise;
               }
             ]
           }

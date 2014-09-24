@@ -7,12 +7,19 @@ define(['angular', 'mcda/config'],
     var MCDARouteProvider = function() {
 
       return {
-        buildRoutes : function ($stateProvider, parentState, baseTemplatePath) {
+        buildRoutes: function($stateProvider, parentState, baseTemplatePath) {
 
           $stateProvider.state(parentState + '.scenario', {
             url: '/scenarios/:scenarioId',
             templateUrl: baseTemplatePath + 'scenario.html',
-            controller: 'ScenarioController'
+            controller: 'ScenarioController',
+            resolve: {
+              currentScenario: ['$stateParams', 'ScenarioResource',
+                function($stateParams, ScenarioResource) {
+                  return ScenarioResource.get($stateParams).$promise;
+                }
+              ]
+            }
           });
 
           angular.forEach(Config.tasks.available, function(task) {
