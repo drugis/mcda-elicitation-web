@@ -6,19 +6,7 @@ define(['angular', 'mcda/services/taskDependencies'], function(angular, TaskDepe
   });
   describe("TaskDependencies service", function() {
     describe("Dependency description: scale-ranges", function() {
-      it("isPresent() checks whether scale ranges are defined in the problem", function() {
-        var def = service.definitions['scale-ranges'];
-        var criteria = {
-          'A' : {},
-          'B' : {}
-        };
-        var state = { 'problem' : { 'criteria' : criteria } };
-        expect(def.isPresent(state)).toBe(false);
-        criteria.A.pvf = { "range": [0, 1] };
-        expect(def.isPresent(state)).toBe(false);
-        criteria.B.pvf = { "range": [0, 1] };
-        expect(def.isPresent(state)).toBe(true);
-      });
+
       it("remove() generates a new state with scale ranges removed", function() {
         var def = service.definitions['scale-ranges'];
         var criteria = {

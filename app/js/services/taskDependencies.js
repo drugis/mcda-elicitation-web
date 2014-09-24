@@ -116,15 +116,10 @@ define(['underscore', 'angular'], function(_, angular) {
       };
     };
 
-    var isPresent = function(task, state) {
-      return definitions[task.id].isPresent(state);
-    };
-
     return {
       definitions: definitions,
       isAccessible: isAccessible,
       isSafe: isSafe,
-      isPresent: isPresent,
       remove: remove,
       extendTaskDefinition: function(task) {
         return _.extend(task, {
