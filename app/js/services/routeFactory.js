@@ -14,9 +14,11 @@ define(['angular', 'mcda/config'],
             templateUrl: baseTemplatePath + 'scenario.html',
             controller: 'ScenarioController',
             resolve: {
-              currentScenario: ['$stateParams', 'ScenarioResource',
-                function($stateParams, ScenarioResource) {
-                  return ScenarioResource.get($stateParams).$promise;
+              currentScenario: ['$stateParams', 'ScenarioResource', 'PartialValueFunction',
+                function($stateParams, ScenarioResource, PartialValueFunction) {
+                  return ScenarioResource.get($stateParams, function(scenario) {
+                    scenario.state = PartialValueFunction.attach(scenario.state);
+                  }).$promise;
                 }
               ]
             }
