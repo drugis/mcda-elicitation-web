@@ -1,7 +1,7 @@
 'use strict';
-define(['mcda/config', 'angular', 'mcda/lib/patavi', 'underscore'], function(Config, angular, patavi, _) {
+define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
 
-  return function($scope, $state, taskDefinition, intervalHull, PartialValueFunction) {
+  return function($scope, $state, taskDefinition, intervalHull, PartialValueFunction, PataviService) {
 
     var state = taskDefinition.clean($scope.scenario.state);
 
@@ -32,11 +32,9 @@ define(['mcda/config', 'angular', 'mcda/lib/patavi', 'underscore'], function(Con
         }
         state.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
       });
-      $scope.scenario.update(state);
-
       var fields = ['problem', 'prefs'];
       $scope.scenario.state = _.pick(state, fields);
-      $scope.scenario.save(function(scenario) {
+      $scope.scenario.$save(function(scenario) {
         PartialValueFunction.attach(scenario.state);
         $scope.$emit('elicit.scenariosChanged');
       });
@@ -118,10 +116,10 @@ define(['mcda/config', 'angular', 'mcda/lib/patavi', 'underscore'], function(Con
       });
     };
 
-    var calculateScales = patavi.submit(Config.pataviService, _.extend(state.problem, {
+    var calculateScales = PataviService.run(_.extend(state.problem, {
       'method': 'scales'
     }));
-    calculateScales.results.then(_.partial(successHandler, state), errorHandler);
+    calculateScales.then(_.partial(successHandler, state), errorHandler);
 
 
   };
