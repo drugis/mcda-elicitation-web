@@ -15,26 +15,21 @@ define(['angular', 'angular-mocks', 'mcda/directives'],
         $rootScope.remarkStr = 'initial value';
         $rootScope.saveRemarks = jasmine.createSpy('saveRemarks');
 
-        element = angular.element('<remarkblock remark="remarkStr" save-remarks="saveRemarks"></remarkblock>');
+        element = angular.element('<remarkblock remark="remarkStr" save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()"></remarkblock>');
         scope = $rootScope;
         element = $compile(element)(scope);
         scope.$digest();
 
       }));
 
-      it('should put back the old remark when cancelled', function() {
+      it('should have a cancel function', function() {
         var isolateScope = element.isolateScope();
-        isolateScope.remark = 'new value';
-        isolateScope.model.cancelRemarks();
-        expect(isolateScope.remark).toEqual('initial value');
+        expect(isolateScope.cancelRemarks).toBeDefined;
       });
 
-      it('should call save and update the cached remark when saving', function() {
+      it('should have a save function', function() {
         var isolateScope = element.isolateScope();
-        isolateScope.remark = 'new value';
-        isolateScope.model.saveRemarks();
-        expect(isolateScope.cachedRemark).toEqual('new value');
-        expect(scope.saveRemarks).toHaveBeenCalled();
+        expect(isolateScope.saveRemarks).toBeDefined;
       })
     });
   });
