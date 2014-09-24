@@ -14,7 +14,7 @@ define(['underscore'], function(_) {
           method: 'scales'
         });
        PataviService.run(payload).then(function(results) {
-        $scope.scales = results;
+        $scope.scales = results.results;
       }, function(error) {
         $scope.$emit('error', {
           code: error.code,
