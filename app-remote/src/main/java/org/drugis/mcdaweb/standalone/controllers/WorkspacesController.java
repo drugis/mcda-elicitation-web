@@ -57,9 +57,7 @@ public class WorkspacesController {
   public Workspace create(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @RequestBody Workspace body) {
     Account user = accountRepository.findAccountByUsername(currentUser.getName());
     Workspace workspace = workspaceRepository.create(user.getId(), body.getTitle(), body.getProblem());
-    JSONObject jsonObject = new JSONObject();
-    jsonObject.put("problem", workspace.getProblem());
-    Scenario defaultScenario = scenarioRepository.create(workspace.getId(), DEFAULT_SCENARIO_TITLE, jsonObject.toString());
+    Scenario defaultScenario = scenarioRepository.create(workspace.getId(), DEFAULT_SCENARIO_TITLE, "{\"problem\":" + body.getProblem() + "}");
     workspace.setDefaultScenarioId(defaultScenario.getId());
     workspaceRepository.update(workspace);
     response.setStatus(HttpServletResponse.SC_CREATED);
@@ -105,10 +103,6 @@ public class WorkspacesController {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       return null;
     }
-    for (Scenario scenario : scenarios) {
-      // we don't need the State when showing a list of scenarios
-      scenario.setState(null);
-    }
     return scenarios;
   }
 
@@ -143,7 +137,8 @@ public class WorkspacesController {
   public Scenario updateScenario(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @PathVariable int scenarioId, @RequestBody Scenario body) throws ResourceDoesNotExistException, ResourceNotOwnedException {
     // actual scenario not needed; get used for security/existence checks
     getScenario(response, currentUser, workspaceId, scenarioId);
-    return scenarioRepository.update(scenarioId, body.getTitle(), body.getState());
+    Scenario scenario = scenarioRepository.update(scenarioId, body.getTitle(), body.getState());
+    return scenario;
   }
 
   @RequestMapping(value="/{workspaceId}/remarks", method=RequestMethod.GET)

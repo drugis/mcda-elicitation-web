@@ -1,6 +1,6 @@
 package org.drugis.mcdaweb.standalone.controllers;
 
-import net.minidev.json.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.drugis.mcdaweb.standalone.account.Account;
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
 import org.drugis.mcdaweb.standalone.model.Remarks;
@@ -54,7 +54,7 @@ public class WorkspacesControllerTest {
 	}
 	
 	private Scenario createScenario(int scenarioId, int workspaceId, String title) {
-		return new Scenario(scenarioId, workspaceId, title, JSON_KEY_VALUE);
+		return new Scenario(scenarioId, workspaceId, title, "\"state\"");
 	}
 	
 	private MockMvc mockMvc;
@@ -138,10 +138,9 @@ public class WorkspacesControllerTest {
     Workspace workspace = createWorkspace();
     when(workspaceRepository.create(workspace.getOwner(), workspace.getTitle(), JSON_KEY_VALUE)).thenReturn(workspace);
     int scenarioId = 378;
-    JSONObject jsonObject = new JSONObject();
-    jsonObject.put("problem", workspace.getProblem());
-    Scenario scenario = new Scenario(scenarioId, workspace.getId(), WorkspacesController.DEFAULT_SCENARIO_TITLE, jsonObject.toJSONString());
-    when(scenarioRepository.create(workspace.getId(), WorkspacesController.DEFAULT_SCENARIO_TITLE, jsonObject.toJSONString())).thenReturn(scenario);
+    String stateString = "{\"problem\":" + workspace.getProblem() + "}";
+    Scenario scenario = new Scenario(scenarioId, workspace.getId(), WorkspacesController.DEFAULT_SCENARIO_TITLE, stateString);
+    when(scenarioRepository.create(workspace.getId(), WorkspacesController.DEFAULT_SCENARIO_TITLE, stateString)).thenReturn(scenario);
     mockMvc.perform(post("/workspaces")
             .principal(user)
             .contentType(APPLICATION_JSON_UTF8)
@@ -158,7 +157,7 @@ public class WorkspacesControllerTest {
     ;
     verify(workspaceRepository).create(workspace.getOwner(), workspace.getTitle(), workspace.getProblem());
     verify(workspaceRepository).update(workspace);
-    verify(scenarioRepository).create(workspace.getId(), WorkspacesController.DEFAULT_SCENARIO_TITLE, jsonObject.toJSONString());
+    verify(scenarioRepository).create(workspace.getId(), WorkspacesController.DEFAULT_SCENARIO_TITLE, stateString);
     verify(accountRepository).findAccountByUsername("gert");
   }
 	
@@ -359,8 +358,7 @@ public class WorkspacesControllerTest {
 			.andExpect(jsonPath("$.id", is(1)))
 			.andExpect(jsonPath("$.workspaceId", is(1)))
 			.andExpect(jsonPath("$.title", is("title")))
-			.andExpect(jsonPath("$.state.key", is("value")))
-		;
+		.andExpect(jsonPath("$.state", is("state")));
 		verify(scenarioRepository).findById(scenarioId);
 		verify(workspaceRepository).findById(workspaceId);
 		verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
@@ -416,8 +414,10 @@ public class WorkspacesControllerTest {
 		String scenarioTitle = "scenarioTitle";
 		Scenario scenario = createScenario(scenarioId, workspaceId, scenarioTitle);
 		when(scenarioRepository.findById(scenarioId)).thenReturn(scenario);
-		String jsonContent = "{\"id\": 1, \"title\": \"scenarioTitle\", \"state\": " + JSON_KEY_VALUE + "}";
-		when(scenarioRepository.update(scenarioId, scenarioTitle, JSON_KEY_VALUE)).thenReturn(scenario);
+		//String jsonContent = "{\"id\": 1, \"title\": \"scenarioTitle\", \"state\": \"{\"problem\":" + JSON_KEY_VALUE + "}\"}";
+    ObjectMapper objectMapper = new ObjectMapper();
+    String jsonContent = objectMapper.writeValueAsString(scenario);
+    when(scenarioRepository.update(scenarioId, scenarioTitle, scenario.getState())).thenReturn(scenario);
 		
 		mockMvc.perform(post("/workspaces/1/scenarios/1")
 			.principal(user)
@@ -431,7 +431,7 @@ public class WorkspacesControllerTest {
 		verify(workspaceRepository).findById(workspaceId);
 		verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
 		verify(scenarioRepository).findById(scenarioId);
-		verify(scenarioRepository).update(scenarioId, scenarioTitle, JSON_KEY_VALUE);
+		verify(scenarioRepository).update(scenarioId, scenarioTitle, scenario.getState());
 		verify(accountRepository).findAccountByUsername("gert");
 	}
 
