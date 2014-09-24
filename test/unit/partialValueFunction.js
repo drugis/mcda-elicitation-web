@@ -17,6 +17,8 @@ define(['angular', 'angular-mocks', 'mcda/controllers', 'mcda/services/taskDepen
       scope = $rootScope.$new();
       state = jasmine.createSpyObj('$state', ['go']);
 
+      scope.scenario = scenario;
+
       $controller('PartialValueFunctionController', {
         $scope : scope,
         $state : state,
