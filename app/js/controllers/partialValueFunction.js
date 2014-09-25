@@ -1,7 +1,7 @@
 'use strict';
-define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/patavi', 'underscore'],
-  function(Config, Wizard, angular, patavi, _) {
-    return function($scope, $state, $injector, PartialValueFunction, TaskDependencies) {
+define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore'],
+  function(Config, Wizard, angular, _) {
+    return function($scope, $state, $injector, PartialValueFunction, TaskDependencies, PataviService) {
 
       $scope.showMacbethError = false;
 
@@ -73,7 +73,7 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
 
       $scope.calculate = function() {
         var preferences = rewritePreferences();
-        var task = patavi.submit(Config.pataviService, {
+        var task = PataviService.run({
           method: 'macbeth',
           preferences: preferences
         });
@@ -81,7 +81,7 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'mcda/lib/p
           show: false
         };
 
-        task.results.then(function(results) {
+        task.then(function(results) {
           console.log('result');
           var values = _.clone(results.results);
           $scope.criterion.pvf.values = values.slice(1, values.length - 1);
