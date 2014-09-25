@@ -20,24 +20,24 @@
   <ul class="inline-list elicitation-step-list">
     <li>
     <!-- tooltip="Doing this will remove the folloing elicitation steps" tooltip-placement="bottom" tooltip-animation="false"  -->
-      <button class="arrow-button" ui-sref="scale-range" ng-disabled="!isAccessible(tasks['scale-range'], scenario.state).accessible">Scale Range <i class="fa fa-check" ng-show="isScaleRangePresent()"/></button>
+      <button class="arrow-button" ui-sref="scale-range" ng-disabled="!isAccessible(tasks['scale-range'], scenario.state).accessible">Scale Range <span ng-show="isScaleRangePresent()"/>text</span></button>
     </li>
     <li>
       <button class="arrow-button" ng-click="scrollToPVFs()" tooltip-placement="bottom" tooltip-animation="false"
-      ng-disabled="!isAccessible(tasks['partial-value-function'], scenario.state).accessible">Partial Value Functions <i class="fa fa-check" ng-show="isPartialValueFunctionPresent()"/></button>
+      ng-disabled="!isAccessible(tasks['partial-value-function'], scenario.state).accessible">Partial Value Functions <span ng-show="isPartialValueFunctionPresent()"/>text</span></button>
     </li>
     <li>
       <button class="arrow-button" ui-sref="ordinal-swing" tooltip-placement="bottom" tooltip-animation="false"
-      ng-disabled="!isAccessible(tasks['ordinal-swing'], scenario.state).accessible">Ordinal Swing <i class="fa fa-check" ng-show="isOrdinalSwingPresent()"/></button>
+      ng-disabled="!isAccessible(tasks['ordinal-swing'], scenario.state).accessible">Ordinal Swing <span ng-show="isOrdinalSwingPresent()"/>text</span></button>
     </li>
     <li>
       <button class="arrow-button" ui-sref="exact-swing" tooltip-placement="bottom" tooltip-animation="false"
-       ng-disabled="!isAccessible(tasks['exact-swing'], scenario.state).accessible">Exact Swing  <i class="fa fa-check" ng-show="isExactSwingPresent()"/></button>
+       ng-disabled="!isAccessible(tasks['exact-swing'], scenario.state).accessible">Exact Swing  <span ng-show="isExactSwingPresent()"/>text</span></button>
       <button class="arrow-button" ui-sref="interval-swing" tooltip-placement="bottom" tooltip-animation="false"
-      ng-disabled="!isAccessible(tasks['interval-swing'], scenario.state).accessible">Interval Swing  <i class="fa fa-check" ng-show="isIntervalSwingPresent()"/></button>
+      ng-disabled="!isAccessible(tasks['interval-swing'], scenario.state).accessible">Interval Swing  <span ng-show="isIntervalSwingPresent()"/>text</span></button>
     </li>
     <li>
-      <button class="success results-button" ui-sref="results" ng-disabled="!isAccessible(tasks['results'], scenario.state).accessible">Results <i class="fa fa-check" ng-show="resultsAccessible"/></button>
+      <button class="success results-button" ui-sref="results" ng-disabled="!isAccessible(tasks['results'], scenario.state).accessible">Results <span ng-show="resultsAccessible"/>text</span></button>
     </li>
   </ul>
 </div>

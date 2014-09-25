@@ -32,6 +32,8 @@ define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
         }
         state.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
       });
+      $scope.scenario.$save();
+
       var fields = ['problem', 'prefs'];
       $scope.scenario.state = _.pick(state, fields);
       $scope.scenario.$save(function(scenario) {

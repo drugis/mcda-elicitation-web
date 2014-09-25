@@ -1,6 +1,6 @@
 'use strict';
-define(['angular', 'mcda/config'],
-  function(angular, Config) {
+define(['angular', 'mcda/config', 'underscore'],
+  function(angular, Config, _) {
 
     var dependencies = [];
 
@@ -21,15 +21,9 @@ define(['angular', 'mcda/config'],
                   }).$promise;
                 }
               ],
-              scenarios: ['$stateParams', 'ScenarioResource', 'currentScenario',
-                function($stateParams, ScenarioResource, currentScenario) {
-                  return currentScenario.$query($stateParams).$promise.then(
-                    function(result) {
-                      console.log(result);
-                    },
-                    function(error) {
-                      console.log('error' + error);
-                    }).$promise;
+              scenarios: ['$stateParams', 'ScenarioResource', 
+                function($stateParams, ScenarioResource) {
+                  return ScenarioResource.query(_.omit($stateParams, 'id')).$promise;
                 }
               ]
             }

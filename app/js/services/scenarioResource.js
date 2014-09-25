@@ -3,8 +3,8 @@ define(['angular'],
     var dependencies = ['ngResource'];
 
     var ScenarioResource = function($resource) {
-      return $resource(config.workspacesRepositoryUrl + ':workspaceId/scenarios/:scenarioId', {
-        scenarioId: '@id',
+      return $resource(config.workspacesRepositoryUrl + ':workspaceId/scenarios/:id', {
+        id: '@id',
         workspaceId: '@workspaceId'
       });
 

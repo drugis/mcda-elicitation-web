@@ -29,15 +29,13 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
     $scope.scenarios = scenarios;
 
     $scope.$on('elicit.scenariosChanged', function() {
-      $scope.scenarios = ScenarioResource.query($stateParams);
       $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
     });
 
     var redirect = function(scenarioId) {
-      $state.go(Config.defaultView, {
-        workspaceId: $scope.workspace.id,
-        scenarioId: scenarioId
-      });
+      var newState = _.omit($stateParams, 'id');
+      newState.id = scenarioId;
+      $state.go(Config.defaultView, newState);
     };
 
     $scope.forkScenario = function() {
@@ -45,9 +43,7 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
         'title': randomId(3, 'Scenario '),
         'state': $scope.scenario.state
       };
-      ScenarioResource.save({
-        workspaceId: $scope.workspace.id
-      }, newScenario, function(savedScenario) {
+      ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
         redirect(savedScenario.id);
       });
     };
@@ -59,9 +55,7 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
           'problem': $scope.workspace.problem
         }
       };
-      ScenarioResource.save({
-        workspaceId: $scope.workspace.id
-      }, newScenario, function(savedScenario) {
+      ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
         redirect(savedScenario.id);
       });
     };
@@ -84,7 +78,7 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
     $scope.scenarioChanged = function(newScenario) {
       $state.go($scope.taskId, {
         workspaceId: $scope.workspace.id,
-        scenarioId: newScenario.id
+        id: newScenario.id
       });
     };
   };
