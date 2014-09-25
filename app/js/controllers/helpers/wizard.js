@@ -1,8 +1,8 @@
 'use strict';
-define(['mcda/config', 'angular', 'underscore', 'mcda/lib/patavi'],
-  function(Config, angular, _, patavi) {
-    return ['$rootScope', '$scope', 'handler',
-      function($rootScope, $scope, handler) {
+define(['mcda/config', 'angular', 'underscore'],
+  function(Config, angular, _) {
+    return ['$rootScope', '$scope', 'handler', 'PataviService',
+      function($rootScope, $scope, handler, PataviService) {
         $rootScope.noProgress = true;
 
         var calculateIntermediateResults = function(state, standardizeFn) {
@@ -11,7 +11,7 @@ define(['mcda/config', 'angular', 'underscore', 'mcda/lib/patavi'],
             "preferences": prefs,
             "method": "smaa"
           });
-          var task = patavi.submit(Config.pataviService, data);
+          var task = PataviService.run(data);
 
           var successHandler = function(results) {
             $scope.$root.$safeApply($scope, function() {
@@ -36,7 +36,7 @@ define(['mcda/config', 'angular', 'underscore', 'mcda/lib/patavi'],
           }, 30);
 
           state.progress = 0;
-          task.results.then(successHandler, errorHandler, updateHandler);
+          task.then(successHandler, errorHandler, updateHandler);
           return state;
         };
 
