@@ -62,11 +62,15 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
       };
 
       $scope.isExactSwingPresent = function() {
-        return $scope.scenario.state.prefs && $scope.scenario.state.prefs[1] && $scope.scenario.state.prefs[1].type === 'exact swing';
+        return $scope.scenario.state.prefs && _.some($scope.scenario.state.prefs, function(pref) {
+          return pref.type === 'exact swing';
+        });
       };
 
       $scope.isIntervalSwingPresent = function() {
-        return $scope.scenario.state.prefs && $scope.scenario.state.prefs[1] && $scope.scenario.state.prefs[1].type === 'ratio bound';
+        return $scope.scenario.state.prefs && _.some($scope.scenario.state.prefs, function(pref) {
+          return pref.type === 'ratio bound';
+        });
       };
 
       $scope.scrollToPVFs = function() {
