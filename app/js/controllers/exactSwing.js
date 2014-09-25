@@ -2,7 +2,7 @@
 define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'angular', 'underscore'],
   function(Wizard, Util, angular, _) {
 
-    return function($scope, $state, $injector, mcdaRootPath, currentScenario, taskDefinition) {
+    return function($scope, $state, $injector, mcdaRootPath, currentScenario, taskDefinition, PartialValueFunction) {
       var criteria = {};
 
       function getBounds(criterionName) {
@@ -86,8 +86,13 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
 
       $scope.save = function(state) {
         state = nextState(state);
-        currentScenario.update(state);
-        $state.go('preferences');
+
+        $scope.scenario.state = _.pick(state, ['problem', 'prefs']);
+        $scope.scenario.$save(function(scenario) {
+          PartialValueFunction.attach(scenario.state);
+          $state.go('preferences');
+        });
+
       };
 
       $injector.invoke(Wizard, this, {
