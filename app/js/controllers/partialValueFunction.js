@@ -61,7 +61,7 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
         localCriterion.pvf = criterion.pvf;
         if (criterion.pvf.type === 'linear') {
           criterion.pvf.values = [];
-          criterion.pvf.cutoffs = [];
+          criterion.pvf.  cutoffs = [];
         }
         return state;
       };

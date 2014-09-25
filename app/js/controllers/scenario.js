@@ -1,6 +1,6 @@
 'use strict';
 define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
-  return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, currentScenario, ScenarioResource) {
+  return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, currentScenario, scenarios, ScenarioResource) {
 
     function randomId(size, prefix) {
       var text = '';
@@ -26,9 +26,7 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
 
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
-    $scope.scenarios = ScenarioResource.query({
-      workspaceId: $stateParams.workspaceId
-    });
+    $scope.scenarios = scenarios;
 
     $scope.$on('elicit.scenariosChanged', function() {
       $scope.scenarios = ScenarioResource.query($stateParams);

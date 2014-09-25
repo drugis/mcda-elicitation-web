@@ -19,8 +19,6 @@ define(['underscore'], function(_) {
     $scope.workspace.problem = WorkspaceService.addValueTree($scope.workspace.problem);
     prepareScales($scope.workspace.problem);
 
-
-
     $scope.isEditTitleVisible = false;
 
     $scope.editTitle = function() {

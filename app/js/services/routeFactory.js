@@ -10,7 +10,7 @@ define(['angular', 'mcda/config'],
         buildRoutes: function($stateProvider, parentState, baseTemplatePath) {
 
           $stateProvider.state(parentState + '.scenario', {
-            url: '/scenarios/:scenarioId',
+            url: '/scenarios/:id',
             templateUrl: baseTemplatePath + 'scenario.html',
             controller: 'ScenarioController',
             resolve: {
@@ -19,6 +19,17 @@ define(['angular', 'mcda/config'],
                   return ScenarioResource.get($stateParams, function(scenario) {
                     scenario.state = PartialValueFunction.attach(scenario.state);
                   }).$promise;
+                }
+              ],
+              scenarios: ['$stateParams', 'ScenarioResource', 'currentScenario',
+                function($stateParams, ScenarioResource, currentScenario) {
+                  return currentScenario.$query($stateParams).$promise.then(
+                    function(result) {
+                      console.log(result);
+                    },
+                    function(error) {
+                      console.log('error' + error);
+                    }).$promise;
                 }
               ]
             }
