@@ -4,7 +4,7 @@ define(['angular'],
 
     var ScenarioResource = function($resource) {
       return $resource(config.workspacesRepositoryUrl + ':workspaceId/scenarios/:scenarioId', {
-        scenarioId: '@scenarioId',
+        scenarioId: '@id',
         workspaceId: '@workspaceId'
       });
 
