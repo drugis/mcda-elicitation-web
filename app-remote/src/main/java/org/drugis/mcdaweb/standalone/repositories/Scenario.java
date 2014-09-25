@@ -1,7 +1,6 @@
 package org.drugis.mcdaweb.standalone.repositories;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.drugis.mcdaweb.standalone.util.ObjectToStringDeserializer;
 
