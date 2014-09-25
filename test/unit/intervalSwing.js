@@ -1,9 +1,15 @@
-define(['angular', 'angular-mocks', 'mcda/controllers/intervalSwing', 'mcda/controllers/partialValueFunction'],
+define(['angular',
+    'angular-mocks',
+    'mcda/controllers/intervalSwing',
+    'mcda/controllers/partialValueFunction',
+    'mcda/services/pataviService'
+  ],
   function(angular, IntervalSwingHandler, PartialValueFunctionHandler) {
     describe('IntervalSwingHandler', function() {
       beforeEach(module('elicit.controllers'));
       beforeEach(module('elicit.taskDependencies'));
       beforeEach(module('elicit.pvfService'));
+      beforeEach(module('elicit.pataviService'));
 
       function initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, problem) {
         var scope, state;
