@@ -26,10 +26,9 @@ define(['angular',
               criteria: ['Bleed', 'Dist DVT']
             }]
           }),
-          update: function(state) {},
-          redirectToDefaultView: function() {}
+          $save: function(state) {}
         };
-        scope._scenario = scenario;
+        scope.scenario = scenario;
 
         var task = {
           requires: [],
@@ -155,19 +154,9 @@ define(['angular',
           scope.currentStep.choice.upper = 0.05;
           expect(scope.canSave(scope.currentStep)).toBeTruthy();
 
-          spyOn(scope._scenario, 'update');
+          spyOn(scope.scenario, '$save');
           scope.save(scope.currentStep);
-          expect(scope._scenario.update).toHaveBeenCalled();
-          var prefs = scope._scenario.update.calls.mostRecent().args[0].prefs;
-
-          expect(prefs[3].type).toEqual('ratio bound');
-          expect(prefs[3].criteria).toEqual(['Bleed', 'Dist DVT']);
-          expect(prefs[3].bounds.length).toEqual(2);
-          expect(prefs[3].bounds[0]).toBeCloseTo(1.67);
-          expect(prefs[3].bounds[1]).toBeCloseTo(2.00);
-
-          prefs.pop();
-          expect(prefs).toEqual(scope.currentStep.prefs);
+          expect(scope.scenario.$save).toHaveBeenCalled();
 
           var problem = exampleProblem();
           problem.criteria['Prox DVT'].pvf.direction = 'increasing';
