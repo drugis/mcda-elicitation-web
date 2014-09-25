@@ -25,12 +25,18 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
       $scope.save = function() {
         var standardizedState = standardize($scope.scenario.state, $scope.criterion),
           pvfTask = TaskDependencies.definitions['criteria-trade-offs'];
-        $scope.scenario.update(PartialValueFunction.attach(standardizedState));
-        $scope.graphInfo.values = PartialValueFunction.getXY($scope.criterion);
-        $scope.criterionCache.direction = $scope.criterion.pvf.direction;
-        $scope.criterionCache.type = $scope.criterion.pvf.type;
-        $scope.scenario.state = pvfTask.remove($scope.scenario.state);
-        $scope.definePVFModal.close();
+
+        $scope.scenario.state = _.pick(standardizedState, ['problem', 'prefs']);
+        $scope.scenario.$save(function(scenario) {
+          PartialValueFunction.attach(scenario.state);
+          $scope.graphInfo.values = PartialValueFunction.getXY($scope.criterion);
+          $scope.criterionCache.direction = $scope.criterion.pvf.direction;
+          $scope.criterionCache.type = $scope.criterion.pvf.type;
+          $scope.scenario.state = pvfTask.remove($scope.scenario.state);
+          $scope.definePVFModal.close();
+        });
+
+
       };
 
       $scope.canSave = function(state) {

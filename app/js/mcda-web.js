@@ -96,11 +96,14 @@ define(
     })());
 
 
-    app.config(['mcdaRootPath', 'Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider', 'MCDARouteProvider',
-      function(basePath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider, MCDARouteProvider) {
+    app.config(['mcdaRootPath', 'Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider', 'MCDARouteProvider', '$animateProvider',
+      function(basePath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider, MCDARouteProvider, $animateProvider) {
         var baseTemplatePath = basePath + 'views/';
 
         $httpProvider.interceptors.push('ErrorHandling');
+
+        // only animate sidepanel
+        $animateProvider.classNameFilter(/sidepanel/);
 
         //ui-router code starts here
         $stateProvider.state('workspace', {
