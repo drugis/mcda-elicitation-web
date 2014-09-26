@@ -6,7 +6,10 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
 
       var remarksCache;
       $scope.workspace.problem = WorkspaceService.addValueTree($scope.workspace.problem);
-      $scope.scales = WorkspaceService.prepareScales($scope.workspace.problem); 
+      $scope.scales = {};
+      WorkspaceService.prepareScales($scope.workspace.problem).then(function(results) {
+        $scope.scales = results.results;
+      }); 
 
       function buildEffectsTableData(problem) {
         var criteriaNodes = ValueTreeUtil.findCriteriaNodes(problem.valueTree);

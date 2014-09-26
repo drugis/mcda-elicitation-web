@@ -1,12 +1,16 @@
 'use strict';
 define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
   function(Config, patavi, angular, angularanimate, mmfoundation, _) {
-    var dependencies = ['$scope', '$location', '$anchorScroll', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'taskDefinition'];
-    var PreferencesController = function($scope, $location, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition) {
+    var dependencies = ['$scope', '$location', '$anchorScroll', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'taskDefinition', 'WorkspaceService'];
+    var PreferencesController = function($scope, $location, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition, WorkspaceService) {
       var state = taskDefinition.clean($scope.scenario.state);
 
       $scope.$parent.taskId = taskDefinition.id;
       $scope.intervalHull = intervalHull;
+      WorkspaceService.prepareScales($scope.workspace.problem).then(function(results) {
+        $scope.scales = results.results;
+      });
+
 
       var w = function(criterionKey) {
         return _.find($scope.criteria, function(crit) {
