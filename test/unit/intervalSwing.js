@@ -39,6 +39,7 @@ define(['angular',
 
         $controller('IntervalSwingController', {
           $scope: scope,
+          $stateParams: {},
           $state: state,
           currentScenario: scenario,
           taskDefinition: TaskDependencies.extendTaskDefinition(task),

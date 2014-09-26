@@ -34,6 +34,7 @@ define(['angular',
         $controller('PartialValueFunctionController', {
           $scope: scope,
           $state: state,
+          $stateParams: {},
           currentScenario: scenario,
           taskDefinition: TaskDependencies.extendTaskDefinition(task)
         });

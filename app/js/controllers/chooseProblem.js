@@ -15,7 +15,7 @@ define(['angular', 'underscore'], function(angular, _) {
         WorkspaceService.createWorkspace(angular.fromJson($scope.local.contents)).$promise.then(function(workspace) {
           $state.go('overview', {
             workspaceId: workspace.id,
-            scenarioId: workspace.defaultScenarioId
+            id: workspace.defaultScenarioId
           });
         });
       } else {
@@ -26,7 +26,7 @@ define(['angular', 'underscore'], function(angular, _) {
           WorkspaceService.createWorkspace(problem).$promise.then(function(workspace) {
             $state.go('overview', {
               workspaceId: workspace.id,
-              scenarioId: workspace.defaultScenarioId
+              id: workspace.defaultScenarioId
             });
           });
         });

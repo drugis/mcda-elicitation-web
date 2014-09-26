@@ -4,7 +4,7 @@ define(['angular'],
 
     var dependencies = ['elicit.workspaceResource'];
 
-    var WorkspaceService = function(WorkspaceResource) {
+    var WorkspaceService = function(WorkspaceResource, MCDAPataviService) {
 
       function addValueTree(problem) {
         var newProblem = angular.copy(problem);
@@ -26,9 +26,17 @@ define(['angular'],
         return WorkspaceResource.save(workspace);
       }
 
+      function prepareScales(problem) {
+        var payload = _.extend(problem, {
+          method: 'scales'
+        });
+        return MCDAPataviService.run(payload);
+      }
+
       return {
         addValueTree: addValueTree,
-        createWorkspace: createWorkspace
+        createWorkspace: createWorkspace,
+        prepareScales: prepareScales
       };
     };
 

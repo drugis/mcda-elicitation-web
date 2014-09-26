@@ -1,6 +1,6 @@
 'use strict';
 define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard, angular, _) {
-  return function($scope, $state, $injector, mcdaRootPath, currentScenario, taskDefinition, PartialValueFunction) {
+  return function($scope, $state, $stateParams, $injector, mcdaRootPath, currentScenario, taskDefinition, PartialValueFunction) {
     var criteria = {};
 
     var getReference = function() {
@@ -107,7 +107,7 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
       // scenario.update(next);
 
       $scope.scenario.state = _.pick(next, ['problem', 'prefs']);
-      $scope.scenario.$save(function(scenario) {
+      $scope.scenario.$save($stateParams, function(scenario) {
         PartialValueFunction.attach(scenario.state);
         $state.go('preferences');
       });

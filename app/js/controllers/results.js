@@ -1,7 +1,7 @@
 'use strict';
 define(['mcda/config', 'angular', 'underscore'],
   function(Config, angular, _) {
-  return function($rootScope, $scope, currentScenario, taskDefinition, PataviService) {
+  return function($rootScope, $scope, currentScenario, taskDefinition, MCDAPataviService) {
     var alternatives;
     var criteria;
 
@@ -11,7 +11,7 @@ define(['mcda/config', 'angular', 'underscore'],
     var run = function(state) {
       state = angular.copy(state);
       var data = _.extend(state.problem, { 'preferences': state.prefs, 'method': 'smaa' });
-      var task = PataviService.run(data);
+      var task = MCDAPataviService.run(data);
 
       var successHandler = function(results) {
         $scope.$root.$safeApply($scope, function() {

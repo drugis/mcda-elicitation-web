@@ -35,6 +35,7 @@ define(['angular-mocks',
         $controller('OrdinalSwingController', {
           $scope: scope,
           $state: state,
+          $stateParams: {},
           currentScenario: scope.scenario,
           taskDefinition: TaskDependencies.extendTaskDefinition(task),
           mcdaRootPath: 'some mcda rootPath'

@@ -1,11 +1,12 @@
 /*jshint node: true */
 define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
   function(Config, patavi, angular, angularanimate, mmfoundation, _) {
-    var dependencies = ['$scope', '$stateParams', 'taskDefinition', 'RemarksResource', 'ValueTreeUtil'];
-    var EffectsTableController = function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil) {
+    var dependencies = ['$scope', '$stateParams', 'taskDefinition', 'RemarksResource', 'ValueTreeUtil', 'WorkspaceService'];
+    var EffectsTableController = function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil, WorkspaceService) {
 
       var remarksCache;
-
+      $scope.workspace.problem = WorkspaceService.addValueTree($scope.workspace.problem);
+      $scope.scales = WorkspaceService.prepareScales($scope.workspace.problem); 
 
       function buildEffectsTableData(problem) {
         var criteriaNodes = ValueTreeUtil.findCriteriaNodes(problem.valueTree);
@@ -40,7 +41,7 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
       $scope.onLoadClass = 'animate-hide';
 
 
-      RemarksResource.get($stateParams, function(remarks) {
+      RemarksResource.get(_.omit($stateParams, 'id'), function(remarks) {
         if (remarks.remarks) {
           $scope.remarks = remarks;
         }
@@ -48,7 +49,7 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
       });
 
       $scope.saveRemarks = function() {
-        RemarksResource.save($stateParams, $scope.remarks, function() {
+        RemarksResource.save(_.omit($stateParams, 'id'), $scope.remarks, function() {
           remarksCache = angular.copy($scope.remarks);
         });
       };

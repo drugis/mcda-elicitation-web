@@ -1,7 +1,7 @@
 'use strict';
 define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore'],
   function(Config, Wizard, angular, _) {
-    return function($scope, $state, $injector, PartialValueFunction, TaskDependencies, PataviService) {
+    return function($scope, $state, $stateParams, $injector, PartialValueFunction, TaskDependencies, MCDAPataviService) {
 
       $scope.showMacbethError = false;
 
@@ -27,7 +27,7 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
           pvfTask = TaskDependencies.definitions['criteria-trade-offs'];
 
         $scope.scenario.state = _.pick(standardizedState, ['problem', 'prefs']);
-        $scope.scenario.$save(function(scenario) {
+        $scope.scenario.$save($stateParams, function(scenario) {
           PartialValueFunction.attach(scenario.state);
           $scope.graphInfo.values = PartialValueFunction.getXY($scope.criterion);
           $scope.criterionCache.direction = $scope.criterion.pvf.direction;
@@ -80,7 +80,7 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
 
       $scope.calculate = function() {
         var preferences = rewritePreferences();
-        var task = PataviService.run({
+        var task = MCDAPataviService.run({
           method: 'macbeth',
           preferences: preferences
         });

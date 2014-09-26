@@ -45,5 +45,5 @@ define(['angular', 'mcda/lib/autobahn'], function(angular, ab) {
     };
 
   };
-  return angular.module('elicit.pataviService', dependencies).factory('PataviService', PataviService);
+  return angular.module('elicit.pataviService', dependencies).factory('MCDAPataviService', PataviService);
 });
