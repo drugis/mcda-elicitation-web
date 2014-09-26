@@ -88,8 +88,8 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
         state = nextState(state);
 
         $scope.scenario.state = _.pick(state, ['problem', 'prefs']);
+        PartialValueFunction.attach($scope.scenario.state);
         $scope.scenario.$save($stateParams, function(scenario) {
-          PartialValueFunction.attach(scenario.state);
           $state.go('preferences');
         });
 

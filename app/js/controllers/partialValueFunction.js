@@ -27,15 +27,13 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
           pvfTask = TaskDependencies.definitions['criteria-trade-offs'];
 
         $scope.scenario.state = _.pick(standardizedState, ['problem', 'prefs']);
-        $scope.scenario.$save($stateParams, function(scenario) {
-          PartialValueFunction.attach(scenario.state);
-          $scope.graphInfo.values = PartialValueFunction.getXY($scope.criterion);
-          $scope.criterionCache.direction = $scope.criterion.pvf.direction;
-          $scope.criterionCache.type = $scope.criterion.pvf.type;
-          $scope.scenario.state = pvfTask.remove($scope.scenario.state);
-          $scope.definePVFModal.close();
-        });
-
+        PartialValueFunction.attach($scope.scenario.state);
+        $scope.graphInfo.values = PartialValueFunction.getXY($scope.criterion);
+        $scope.criterionCache.direction = $scope.criterion.pvf.direction;
+        $scope.criterionCache.type = $scope.criterion.pvf.type;
+        $scope.scenario.state = pvfTask.remove($scope.scenario.state);
+        $scope.definePVFModal.close();
+        $scope.scenario.$save($stateParams);
 
       };
 
@@ -61,7 +59,7 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
         localCriterion.pvf = criterion.pvf;
         if (criterion.pvf.type === 'linear') {
           criterion.pvf.values = [];
-          criterion.pvf.  cutoffs = [];
+          criterion.pvf.cutoffs = [];
         }
         return state;
       };

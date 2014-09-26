@@ -104,11 +104,10 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
       var next = nextState(state);
       var prefs = next.prefs;
       next.prefs = standardize(prefs);
-      // scenario.update(next);
 
       $scope.scenario.state = _.pick(next, ['problem', 'prefs']);
+      PartialValueFunction.attach($scope.scenario.state);
       $scope.scenario.$save($stateParams, function(scenario) {
-        PartialValueFunction.attach(scenario.state);
         $state.go('preferences');
       });
     };

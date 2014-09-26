@@ -17,9 +17,8 @@
 
 <div id="trade-off-block" class="prefs-block">
   <h3>Elicitation Steps</h3>
-  <ul class="inline-list elicitation-step-list">
+  <ul class="elicitation-step-list no-bullet">
     <li>
-    <!-- tooltip="Doing this will remove the folloing elicitation steps" tooltip-placement="bottom" tooltip-animation="false"  -->
       <button  ui-sref="scale-range" ng-disabled="!isAccessible(tasks['scale-range'], scenario.state).accessible">Scale Range</button>
     </li>
     <li>
@@ -35,11 +34,10 @@
        ng-disabled="!isAccessible(tasks['exact-swing'], scenario.state).accessible">Exact Swing</button>
       <button  ui-sref="interval-swing" tooltip-placement="bottom" tooltip-animation="false"
       ng-disabled="!isAccessible(tasks['interval-swing'], scenario.state).accessible">Interval Swing</button>
-    </li>
-    <li>
-      <button class="success results-button" ui-sref="results" ng-disabled="!isAccessible(tasks['results'], scenario.state).accessible">Results</button>
-    </li>
+    </li>   
   </ul>
+  <button class="success" ui-sref="results" ng-disabled="!isAccessible(tasks['results'], scenario.state).accessible">Results</button>
+    
 </div>
 
 <div class="prefs-block">
