@@ -92,7 +92,6 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
           var values = _.clone(results.results);
           $scope.criterion.pvf.values = values.slice(1, values.length - 1);
           $scope.graphInfo.values = PartialValueFunction.getXY($scope.criterion);
-          $scope.$apply();
         }, function(code, error) {
           console.error('error');
           $scope.showMacbethError.show = true;
