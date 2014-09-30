@@ -6,7 +6,6 @@ define(['mcda/config', 'angular', 'underscore'],
     var criteria;
 
     $scope.$parent.taskId = taskDefinition.id;
-    $rootScope.noProgress = true;
 
     var run = function(state) {
       state = angular.copy(state);
@@ -16,7 +15,6 @@ define(['mcda/config', 'angular', 'underscore'],
       var successHandler = function(results) {
         $scope.$root.$safeApply($scope, function() {
           state.results = results.results;
-          $rootScope.noProgress = false;
         });
       };
 

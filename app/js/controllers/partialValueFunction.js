@@ -3,7 +3,13 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
   function(Config, Wizard, angular, _) {
     return function($scope, $state, $stateParams, $injector, PartialValueFunction, TaskDependencies, MCDAPataviService) {
 
-      $scope.showMacbethError = false;
+      $scope.showMacbethError = {
+        show: true
+      };
+
+      $scope.consistency = {
+        isConsistent: false
+      };
 
       $scope.openWizard = function() {
         $scope.pvfWizardStep = {
@@ -84,19 +90,17 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
           method: 'macbeth',
           preferences: preferences
         });
-        $scope.showMacbethError = {
-          show: false
-        };
 
         task.then(function(results) {
-          console.log('result');
           var values = _.clone(results.results);
           $scope.criterion.pvf.values = values.slice(1, values.length - 1);
           $scope.graphInfo.values = PartialValueFunction.getXY($scope.criterion);
-        }, function(code, error) {
+          $scope.consistency.isConsistent = true;
+          $scope.showMacbethError.show = false;
+        }, function() {
           console.error('error');
+          $scope.consistency.isConsistent = false;
           $scope.showMacbethError.show = true;
-          $scope.$apply();
         });
       };
 
@@ -150,6 +154,8 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
       };
 
       $scope.goToElicitCutoffsStep = function() {
+        PartialValueFunction.attach($scope.scenario.state);
+        $scope.graphInfo.values = PartialValueFunction.getXY($scope.criterion);
         if (!$scope.criterion.pvf.cutoffs) {
           $scope.criterion.pvf.cutoffs = [];
         }
@@ -181,7 +187,7 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
           size = cutoffs.length + 2,
           criterion = $scope.criterion;
 
-        $scope.showMacbethError = false;
+
         // Initialize preference matrix
         criterion.preferences = [];
         for (var i = 0; i < size; ++i) {
@@ -191,6 +197,9 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
           }
         }
 
+        // reset plot values
+        $scope.graphInfo.values = [];
+
         // Generate comparator lists
         var tmp = [$scope.criterion.best()].concat(cutoffs || []).concat([$scope.criterion.worst()]);
         criterion.base = tmp.slice(0, tmp.length - 1);
@@ -198,6 +207,9 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
         for (i = 0; i < tmp.length - 1; ++i) {
           criterion.comp[i] = tmp.slice(i + 1, tmp.length);
         }
+
+        // calculate consistency
+        $scope.calculate();
 
         $scope.pvfWizardStep.step = 'elicit values';
       };

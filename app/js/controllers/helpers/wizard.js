@@ -3,7 +3,6 @@ define(['mcda/config', 'angular', 'underscore'],
   function(Config, angular, _) {
     return ['$rootScope', '$scope', 'handler', 'MCDAPataviService',
       function($rootScope, $scope, handler, MCDAPataviService) {
-        $rootScope.noProgress = true;
 
         var calculateIntermediateResults = function(state, standardizeFn) {
           var prefs = standardizeFn(state.prefs);
@@ -14,10 +13,7 @@ define(['mcda/config', 'angular', 'underscore'],
           var task = MCDAPataviService.run(data);
 
           var successHandler = function(results) {
-            $scope.$root.$safeApply($scope, function() {
-              state.results = results.results;
-              $rootScope.noProgress = false;
-            });
+            state.results = results.results;
           };
 
           var errorHandler = function(code, error) {

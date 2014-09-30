@@ -92,7 +92,8 @@
                   <li ng-repeat="compItem in criterion.comp[$index]">
                     <label class="columns large-9">
                       <span style="display: inline-block; width: 12em">Compared to {{compItem | number: 3}}, I</span>
-                      <select ng-options="preference.label for preference in preferenceOptions"
+                      <select ng-options="preference.label for preference in preferenceOptions track by preference.level"
+                      ng-change="calculate()"
                       ng-model="criterion.preferences[$parent.$index][$parent.$index + $index + 1]"
                       style="width: 14em; display: inline-block;">
                       <option value="">-- undefined --</option>
@@ -109,11 +110,11 @@
               <div  style="height: 300px;">
                 <line-chart value="graphInfo.values"></line-chart>
               </div>
-              <button class="success small" ng-click='calculate($scenario.problem.state)'>Calculate function</button>
-              <span ng-show="showMacbethError.show" style="color: red">Inconsistent preferences</span>
+            
             <button class="small button" ng-click="definePVFModal.closeCancel()">Cancel</button>
             <button class="small button" ng-click="pvfWizardStep.step = 'elicit cutoffs'">Previous</button>
-            <button class="small button" ng-click="save()" ng-disabled="graphInfo.values.length < 1">Save</button>
+            <button class="small button" ng-click="save()" ng-disabled="!consistency.isConsistent">Save</button>
+              <span ng-show="!consistency.isConsistent" style="color: red">Inconsistent preferences</span>
             </div>
           </div>
         </div>
