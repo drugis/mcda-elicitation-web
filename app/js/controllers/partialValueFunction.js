@@ -33,8 +33,9 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
         $scope.criterionCache.type = $scope.criterion.pvf.type;
         $scope.scenario.state = pvfTask.remove($scope.scenario.state);
         $scope.definePVFModal.close();
-        $scope.scenario.$save($stateParams);
-
+        $scope.scenario.$save($stateParams, function() {
+          PartialValueFunction.attach($scope.scenario.state);
+        });
       };
 
       $scope.canSave = function(state) {
