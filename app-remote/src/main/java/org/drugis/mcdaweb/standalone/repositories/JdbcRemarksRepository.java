@@ -20,14 +20,14 @@ public class JdbcRemarksRepository implements RemarksRepository {
 
   private RowMapper<Remarks> rowMapper = new RowMapper<Remarks>() {
     public Remarks mapRow(ResultSet rs, int rowNum) throws SQLException {
-      return new Remarks(rs.getInt("id"), rs.getInt("workspaceId"), rs.getString("remarks"));
+      return new Remarks(rs.getInt("workspaceId"), rs.getString("remarks"));
     }
   };
 
   public Remarks find(Integer workspaceId) throws Exception {
 
       PreparedStatementCreatorFactory pscf =
-              new PreparedStatementCreatorFactory("select id, workspaceId, remarks from Remarks where workspaceId = ?");
+              new PreparedStatementCreatorFactory("select workspaceId, remarks from Remarks where workspaceId = ?");
       pscf.addParameter(new SqlParameter(Types.INTEGER));
 
       List<Remarks> result =  jdbcTemplate.query(
@@ -44,18 +44,16 @@ public class JdbcRemarksRepository implements RemarksRepository {
 
   @Override
   public Remarks create(final Integer workspaceId, final String remarks) {
-    KeyHolder keyHolder = new GeneratedKeyHolder();
     jdbcTemplate.update(new PreparedStatementCreator() {
       @Override
       public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
-        PreparedStatement ps = con.prepareStatement("insert into Remarks (workspaceId, remarks) values (?, ?)", new String[] {"id"});
+        PreparedStatement ps = con.prepareStatement("insert into Remarks (workspaceId, remarks) values (?, ?)");
         ps.setInt(1, workspaceId);
         ps.setString(2, remarks);
         return ps;
       }
-    }, keyHolder);
-    int remarksId = (Integer) keyHolder.getKey();
-    return new Remarks(remarksId, workspaceId, remarks);
+    });;
+    return new Remarks(workspaceId, remarks);
   }
 
   @Override

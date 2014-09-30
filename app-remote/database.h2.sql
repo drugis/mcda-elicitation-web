@@ -54,9 +54,8 @@ CREATE TABLE AccountRoles (
 
 -- changeset reidd:5
 CREATE TABLE Remarks (
-  id int auto_increment,
   workspaceId: INT NOT NULL,
   remarks: VARCHAR NOT NULL,
-  PRIMARY KEY (id),
+  PRIMARY KEY (workspaceId),
   FOREIGN KEY(workspaceId) REFERENCES Workspace(id)
 );

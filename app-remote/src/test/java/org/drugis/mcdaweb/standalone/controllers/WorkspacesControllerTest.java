@@ -81,6 +81,7 @@ public class WorkspacesControllerTest {
 		reset(accountRepository);
 		reset(workspaceRepository);
 		reset(scenarioRepository);
+    reset(remarksRepository);
 
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 		user = mock(Principal.class);
@@ -414,7 +415,6 @@ public class WorkspacesControllerTest {
 		String scenarioTitle = "scenarioTitle";
 		Scenario scenario = createScenario(scenarioId, workspaceId, scenarioTitle);
 		when(scenarioRepository.findById(scenarioId)).thenReturn(scenario);
-		//String jsonContent = "{\"id\": 1, \"title\": \"scenarioTitle\", \"state\": \"{\"problem\":" + JSON_KEY_VALUE + "}\"}";
     ObjectMapper objectMapper = new ObjectMapper();
     String jsonContent = objectMapper.writeValueAsString(scenario);
     when(scenarioRepository.update(scenarioId, scenarioTitle, scenario.getState())).thenReturn(scenario);
@@ -437,17 +437,15 @@ public class WorkspacesControllerTest {
 
   @Test
   public void testGetRemarks() throws Exception {
-    Integer remarksId = 1;
     String remarksStr = "{" +
             "\"HAM-D responders\":\"test content 1\"" +
             "}";
     Integer workspaceId = 2;
-    Remarks remarks = new Remarks(remarksId, workspaceId, remarksStr);
+    Remarks remarks = new Remarks(workspaceId, remarksStr);
     when(remarksRepository.find(workspaceId)).thenReturn(remarks);
     mockMvc.perform(get("/workspaces/2/remarks").principal(user))
             .andExpect(status().isOk())
             .andExpect(content().contentType(APPLICATION_JSON_UTF8))
-            .andExpect(jsonPath("$.id", is(remarksId)))
             .andExpect(jsonPath("$.workspaceId", is(workspaceId)));
     verify(remarksRepository).find(workspaceId);
   }
@@ -458,16 +456,18 @@ public class WorkspacesControllerTest {
     Integer userId = 1;
     Workspace workspace = createWorkspace();
     Remarks remarks = new Remarks(workspaceId, "test content yo!");
-    String content = "{\"id\" : null, \"workspaceId\" : 1, \"remarks\" : \"test content yo!\"}";
+    String content = "{\"workspaceId\" : 1, \"remarks\" : \"test content yo!\"}";
     when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
     when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(true);
-    when(remarksRepository.create(anyInt(), anyString())).thenReturn(new Remarks(1, remarks.getWorkspaceId(), remarks.getRemarks()));
+    when(remarksRepository.find(workspaceId)).thenReturn(null);
+    when(remarksRepository.create(anyInt(), anyString())).thenReturn(new Remarks(remarks.getWorkspaceId(), remarks.getRemarks()));
     mockMvc.perform(post("/workspaces/1/remarks").principal(user).content(content).contentType(APPLICATION_JSON_UTF8))
             .andExpect(status().isCreated())
             .andExpect(content().contentType(APPLICATION_JSON_UTF8))
             .andExpect(jsonPath("$.workspaceId", is(workspaceId)));
     verify(workspaceRepository).findById(workspaceId);
     verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
+    verify(remarksRepository).find(workspaceId);
     verify(remarksRepository).create(anyInt(), anyString());
     verify(accountRepository).findAccountByUsername("gert");
   }
@@ -475,20 +475,21 @@ public class WorkspacesControllerTest {
   @Test
   public void updateRemarks() throws Exception {
     Integer workspaceId = 1;
-    Integer remarksId  = 2;
     Integer userId = 1;
     Workspace workspace = createWorkspace();
-    Remarks remarks = new Remarks(remarksId, workspaceId, "test content yo!");
-    String content = "{\"id\" : 2, \"workspaceId\" : 1, \"remarks\" : \"test content yo!\"}";
+    Remarks remarks = new Remarks(workspaceId, "test content yo!");
+    String content = "{\"workspaceId\" : 1, \"remarks\" : \"test content yo!\"}";
     when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
     when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(true);
-    when(remarksRepository.update(anyInt(), anyString())).thenReturn(new Remarks(1, remarks.getWorkspaceId(), remarks.getRemarks()));
+    when(remarksRepository.find(workspaceId)).thenReturn(remarks);
+    when(remarksRepository.update(anyInt(), anyString())).thenReturn(new Remarks(remarks.getWorkspaceId(), remarks.getRemarks()));
     mockMvc.perform(post("/workspaces/1/remarks").principal(user).content(content).contentType(APPLICATION_JSON_UTF8))
             .andExpect(status().isOk())
             .andExpect(content().contentType(APPLICATION_JSON_UTF8));
     verify(workspaceRepository).findById(workspaceId);
     verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
     verify(remarksRepository).update(anyInt(), anyString());
+    verify(remarksRepository).find(workspaceId);
     verify(accountRepository).findAccountByUsername("gert");
 
   }

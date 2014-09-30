@@ -153,7 +153,7 @@ public class WorkspacesController {
     // actual workspace not needed, just check whether it exists and user owns it
     get(response, currentUser, workspaceId);
 
-    if(remarks.getId() == null) {
+    if(remarksRepository.find(remarks.getWorkspaceId()) == null) {
       Remarks createdRemarks =  remarksRepository.create(workspaceId, remarks.getRemarks());
       response.setStatus(HttpServletResponse.SC_CREATED);
       return createdRemarks;

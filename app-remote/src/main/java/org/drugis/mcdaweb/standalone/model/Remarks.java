@@ -6,8 +6,6 @@ import org.drugis.mcdaweb.standalone.util.ObjectToStringDeserializer;
 
 public class Remarks {
 
-  private Integer id;
-
   private Integer workspaceId;
 
   @JsonRawValue
@@ -19,16 +17,6 @@ public class Remarks {
   public Remarks(Integer workspaceId, String remarks) {
     this.workspaceId = workspaceId;
     this.remarks = remarks;
-  }
-
-  public Remarks(Integer id, Integer workspaceId, String remarks) {
-    this.id = id;
-    this.workspaceId = workspaceId;
-    this.remarks = remarks;
-  }
-
-  public Integer getId() {
-    return id;
   }
 
   public Integer getWorkspaceId() {
@@ -51,17 +39,15 @@ public class Remarks {
 
     Remarks remarks1 = (Remarks) o;
 
-    if (id != null ? !id.equals(remarks1.id) : remarks1.id != null) return false;
     if (remarks != null ? !remarks.equals(remarks1.remarks) : remarks1.remarks != null) return false;
-    if (workspaceId != null ? !workspaceId.equals(remarks1.workspaceId) : remarks1.workspaceId != null) return false;
+    if (!workspaceId.equals(remarks1.workspaceId)) return false;
 
     return true;
   }
 
   @Override
   public int hashCode() {
-    int result = id != null ? id.hashCode() : 0;
-    result = 31 * result + (workspaceId != null ? workspaceId.hashCode() : 0);
+    int result = workspaceId.hashCode();
     result = 31 * result + (remarks != null ? remarks.hashCode() : 0);
     return result;
   }
