@@ -27,8 +27,12 @@
                 <a class="tab-corners" ng-class="{activetab: taskId==='preferences'}" ui-sref="preferences">Preferences</a>
               </li>
               <li>
-                <a class="tab-corners" ng-class="{activetab: taskId === 'results'}" ng-if="resultsAccessible" ui-sref="results">Results</a>
-                <a class="tab-corners disabledtab" ng-if="!resultsAccessible">Results</a>
+                <div ng-if="resultsAccessible.accessible">
+                <a class="tab-corners" ng-class="{activetab: taskId === 'results'}"  ui-sref="results">Results</a>
+                </div>
+                <div ng-if="!resultsAccessible.accessible">
+                <a class="tab-corners disabledtab" ng-if="!resultsAccessible.accessible">Results</a>
+              </div>
               </li>
             </ul>
           </div>

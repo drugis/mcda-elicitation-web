@@ -13,8 +13,7 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
     }
 
     var resultsAccessible = function(results, state) {
-      var accessible = TaskDependencies.isAccessible(results, state);
-      return accessible.accessible;
+      return TaskDependencies.isAccessible(results, state);
     };
 
     $scope.scenario = currentScenario;
@@ -23,6 +22,10 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
       return tasks;
     }, {});
     $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
+    
+    $scope.$on('elicit.partialValueFunctionChanged', function() {
+      $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
+    });
 
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};

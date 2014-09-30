@@ -34,6 +34,7 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
         $scope.scenario.state = pvfTask.remove($scope.scenario.state);
         $scope.definePVFModal.close();
         $scope.scenario.$save($stateParams, function() {
+          $scope.$emit('elicit.partialValueFunctionChanged');
           PartialValueFunction.attach($scope.scenario.state);
         });
       };
