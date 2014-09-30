@@ -70,7 +70,7 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
 
     $scope.saveTitle = function() {
       $scope.scenario.title = $scope.scenarioTitle.value;
-      $scope.scenario.$save(function(){
+      $scope.scenario.$save($stateParams, function(){
         $scope.scenarios = ScenarioResource.query(_.omit($stateParams, 'id'))
       });
       $scope.isEditTitleVisible = false;
