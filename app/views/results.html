@@ -18,13 +18,14 @@
   </div>
 
 
-    <section class="row underlined-div" style="height: 450px;">
-    <h5>Rank acceptabilities</h5>
-    <div style="width: 400px; height: 400px">
-      <rank-plot value="currentStep.results.ranks.data"
-                 parse-fn="rankGraphData"
-                 stacked="true"
-                 problem="currentStep.problem">
+  <section class="row underlined-div" style="height: 450px;">
+    <div class="columns large-12">
+      <h5>Rank acceptabilities</h5>
+      <div style="width: 400px; height: 400px">
+        <rank-plot value="currentStep.results.ranks.data"
+        parse-fn="rankGraphData"
+        stacked="true"
+        problem="currentStep.problem">
       </rank-plot>
     </div>
     <table id="ranktable">
@@ -43,38 +44,41 @@
         </tr>
       </tbody>
     </table>
-    </section>
-    <section class="row underlined-div">
-      <div class="columns large-6">
-        <h5>Alternatives per rank</h5>
-        <select ng-model="currentStep.selectedRank" class="large-3">
-          <option ng-repeat="(k,v) in currentStep.problem.alternatives"
-                  value="{{$index}}"
-                  ng-selected="$index == currentStep.selectedRank">
-            Rank {{$index + 1}}
-          </option>
-        </select>
+  </div>
+</section>
 
-        <div style="width: 400px; height: 350px">
-          <bar-chart value="currentStep.alternativesByRank(currentStep)"></bar-chart>
-        </div>
-      </div>
-      <div class="columns large-6">
-        <h5>Ranks per alternative</h5>
-        <select ng-model="currentStep.selectedAlternative" class="large-3">
-          <option ng-repeat="(key, alternative) in currentStep.problem.alternatives"
-                  value="{{key}}"
-                  ng-selected="key == currentStep.selectedAlternative">
-            {{alternative.title}}
-          </option>
-        </select>
-        <div style="width: 400px; height: 350px">
-          <bar-chart value="currentStep.ranksByAlternative(currentStep)"></bar-chart>
-        </div>
-      </div>
-    </section>
-    <h5>Central Weights</h5>
-    <section class="row">
+<section class="row underlined-div">
+  <div class="columns large-6">
+    <h5>Alternatives per rank</h5>
+    <select ng-model="currentStep.selectedRank" class="large-3">
+      <option ng-repeat="(k,v) in currentStep.problem.alternatives"
+      value="{{$index}}"
+      ng-selected="$index == currentStep.selectedRank">
+      Rank {{$index + 1}}
+    </option>
+  </select>
+
+  <div style="width: 400px; height: 350px">
+    <bar-chart value="currentStep.alternativesByRank(currentStep)"></bar-chart>
+  </div>
+</div>
+<div class="columns large-6">
+  <h5>Ranks per alternative</h5>
+  <select ng-model="currentStep.selectedAlternative" class="large-3">
+    <option ng-repeat="(key, alternative) in currentStep.problem.alternatives"
+    value="{{key}}"
+    ng-selected="key == currentStep.selectedAlternative">
+    {{alternative.title}}
+  </option>
+</select>
+<div style="width: 400px; height: 350px">
+  <bar-chart value="currentStep.ranksByAlternative(currentStep)"></bar-chart>
+</div>
+</div>
+</section>
+<h5>Central Weights</h5>
+<section class="row">
+  <div class="columns large-12">
     <div style="width: 650px; height: 350px">
       <line-chart value="currentStep.centralWeights(currentStep)"></line-chart>
     </div>
@@ -97,6 +101,7 @@
         </tr>
       </tbody>
     </table>
-    </section>
   </div>
+</section>
+</div>
 
