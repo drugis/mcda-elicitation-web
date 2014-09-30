@@ -22,7 +22,7 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
       return tasks;
     }, {});
     $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
-    
+
     $scope.$on('elicit.partialValueFunctionChanged', function() {
       $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
     });
@@ -70,7 +70,9 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
 
     $scope.saveTitle = function() {
       $scope.scenario.title = $scope.scenarioTitle.value;
-      $scope.scenario.save();
+      $scope.scenario.$save(function(){
+        $scope.scenarios = ScenarioResource.query(_.omit($stateParams, 'id'))
+      });
       $scope.isEditTitleVisible = false;
     };
 
@@ -79,6 +81,9 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
     };
 
     $scope.scenarioChanged = function(newScenario) {
+      if (!resultsAccessible($scope.tasks.results, newScenario.state).accessible) {
+        $scope.taskId = 'preferences';
+      }
       $state.go($scope.taskId, {
         workspaceId: $scope.workspace.id,
         id: newScenario.id
