@@ -719,17 +719,64 @@ treecontrol.tree-dark {
   margin-left:0.5rem;
 }
 
-.arrow-button:after {
-  content: " ";
-  display: block;
-  width: 0;
-  height: 0;
-  border-top: 26px solid transparent;           /* Go big on the size, and let overflow hide */
-  border-bottom: 26px solid transparent;
-  border-left: 30px solid $primary-color;
-  position: absolute;
-  top: 50%;
-  margin-top: -26px;
-  left: 100%;
-  z-index: 2;
+.pref-progress {
+  margin: 50px 0px;
+}
+
+.circle-container {
+  // background-color: lightgrey;
+  text-align: center;
+  display: inline-block;
+  padding: 2px 2px;
+  float:left;
+  margin-top:-17px;
+}
+
+.line {
+    background-color: rgb(117, 212, 117);
+    width: 103%;
+    height: 5px;
+    margin-left:40px;
+}
+
+.line-gray {
+    background-color: rgb(155, 155, 155);
+    width: 103%;
+    height: 5px;
+    margin-left:40px;
+}
+
+
+.last-line {
+    height: 5px;
+}
+
+div.columns.large-3.progress-cell.progress-cell {
+  text-align: center;
+  padding:0px;
+  margin:0px;
+}
+
+.circle {
+  margin: 0 auto;
+  background-color: rgb(117, 212, 117);
+  height: 25px;
+  width: 25px;
+  border-radius: 25px;
+  padding-top: 4px;
+  margin-bottom: 8px;
+}
+
+.circle-gray {
+  margin: 0 auto;
+  background-color: rgb(155, 155, 155);
+  height: 25px;
+  width: 25px;
+  border-radius: 25px;
+  padding-top: 4px;
+  margin-bottom: 8px;
+}
+
+.circle-label {
+
 }

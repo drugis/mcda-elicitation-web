@@ -8762,18 +8762,65 @@ treecontrol.tree-dark {
 }
 
 /* line 722, ../../sass/_main.scss */
-.arrow-button:after {
-  content: " ";
-  display: block;
-  width: 0;
-  height: 0;
-  border-top: 26px solid transparent;
-  /* Go big on the size, and let overflow hide */
-  border-bottom: 26px solid transparent;
-  border-left: 30px solid #008cba;
-  position: absolute;
-  top: 50%;
-  margin-top: -26px;
-  left: 100%;
-  z-index: 2;
+.pref-progress {
+  margin: 50px 0px;
+}
+
+/* line 726, ../../sass/_main.scss */
+.circle-container {
+  text-align: center;
+  display: inline-block;
+  padding: 2px 2px;
+  float: left;
+  margin-top: -17px;
+}
+
+/* line 735, ../../sass/_main.scss */
+.line {
+  background-color: #75d475;
+  width: 103%;
+  height: 5px;
+  margin-left: 40px;
+}
+
+/* line 742, ../../sass/_main.scss */
+.line-gray {
+  background-color: #9b9b9b;
+  width: 103%;
+  height: 5px;
+  margin-left: 40px;
+}
+
+/* line 750, ../../sass/_main.scss */
+.last-line {
+  height: 5px;
+}
+
+/* line 754, ../../sass/_main.scss */
+div.columns.large-3.progress-cell.progress-cell {
+  text-align: center;
+  padding: 0px;
+  margin: 0px;
+}
+
+/* line 760, ../../sass/_main.scss */
+.circle {
+  margin: 0 auto;
+  background-color: #75d475;
+  height: 25px;
+  width: 25px;
+  border-radius: 25px;
+  padding-top: 4px;
+  margin-bottom: 8px;
+}
+
+/* line 770, ../../sass/_main.scss */
+.circle-gray {
+  margin: 0 auto;
+  background-color: #9b9b9b;
+  height: 25px;
+  width: 25px;
+  border-radius: 25px;
+  padding-top: 4px;
+  margin-bottom: 8px;
 }

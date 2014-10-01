@@ -15,7 +15,61 @@
 </div>
 
 
-<div id="trade-off-block" class="prefs-block" ng-if="editMode.isUserOwner">
+<!-- <div class="row">
+  <div class="progress-container">
+  <div class="columns meter large-12">
+    <ul class="inline-list progress-track">
+      <li style="left:8%">
+        <span>Scale Ranges</span>
+      </li>
+      <li style="left:33.3%">
+        <span>Partial Value Functions</span>
+      </li>
+      <li style="left: 66.7%">
+        <span>Tradeoff Ordering</span>
+      </li>
+      <li style="left: 92%">
+        <span>Tradeoff Ratios</span>
+        </li>
+    </ul>
+  </div>
+</div>
+</div>
+ -->
+<div class="pref-progress">
+<div class="row">
+  <div class="columns large-3 medium-3 small-3 progress-cell">
+      <div class="line"></div>
+    <div class="circle-container">
+      <div class="circle"><i class="fa fa-check" style="color:white"></i></div>
+      <div class="circle-label">Scale Ranges</div>
+    </div>
+  </div>
+  <div class="columns large-3 medium-3 small-3 progress-cell">
+    <div class="line-gray"></div> 
+    <div class="circle-container">
+      <div class="circle"><i class="fa fa-check" style="color:white"></i></div>
+      <div class="circle-label">Partial Value Functions</div>
+    </div>
+  </div>
+  <div class="columns large-3 medium-3 small-3 progress-cell">
+    <div class="line-gray"></div>
+    <div class="circle-container">
+      <div class="circle-gray"></div>
+      <div class="circle-label">Tradeoff Ordening</div>
+    </div>
+  </div>
+  <div class="columns large-3 medium-3 small-3 progress-cell">
+    <div class="last-line"></div>
+    <div class="circle-container">
+      <div class="circle-gray"></div>
+      <div class="circle-label">Tradeoff Ratios</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- <div id="trade-off-block" class="prefs-block" ng-if="editMode.isUserOwner">
   <h3>Elicitation Steps</h3>
   <ul class="elicitation-step-list no-bullet">
     <li>
@@ -39,7 +93,7 @@
   <button class="success" ui-sref="results" ng-disabled="!isAccessible(tasks['results'], scenario.state).accessible">Results</button>
     
 </div>
-
+ -->
 <div class="prefs-block">
   <h3>Scale Ranges</h3>
 
