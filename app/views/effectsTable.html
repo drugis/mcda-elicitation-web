@@ -40,7 +40,7 @@
         <tr ng-repeat-start="effectsTableRow in effectsTableData">
           <td ng-show="effectsTableRow.path.length > 0" class="group-header" colspan="{{3 + nrAlternatives}}">
             <div class="main-header">
-              <remarkblock remark="$parent.remarks.remarks[effectsTableRow.path[0].title]" save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()"></remarkblock>
+              <remarkblock ng-if="editMode.isUserOwner" remark="$parent.remarks.remarks[effectsTableRow.path[0].title]" save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()"></remarkblock>
               {{effectsTableRow.path[0].title}}</div>
               <span ng-repeat="node in effectsTableRow.path.slice(1)">
                 <i style="font-size: 1.5rem" class="fa fa-angle-right"></i>
@@ -51,8 +51,8 @@
             </td>
           </tr>
           <tr class="showmore" ng-repeat-end ng-repeat="criterion in effectsTableRow.criteria">
-            <td>
-              <remarkblock remark="$parent.remarks.remarks[criterion.value.title]" save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()"></remarkblock>{{criterion.value.title}}
+            <td >
+              <remarkblock ng-if="editMode.isUserOwner" remark="$parent.remarks.remarks[criterion.value.title]" save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()" user="user"></remarkblock>{{criterion.value.title}}
               <a ng-click="toggleSidebar(criterion)" class="button radius tiny-icon" style="float:right"><i class="fa fa-list"></i></a>
             </td>
             <td>{{criterion.value.description}}</td>

@@ -7,7 +7,7 @@
       <i style="font-size: 100px" class="fa fa-question"></i>
     </div>
   </div>
-  <button ng-disabled="!isScaleRangePresent()" ng-click="openWizard()">Define partial value function</button>
+  <button ng-if="editMode().isUserOwner" ng-disabled="!isScaleRangePresent()" ng-click="openWizard()">Define partial value function</button>
   <modal model="definePVFModal">
     <div class="row">
       <div class="columns 12-large">

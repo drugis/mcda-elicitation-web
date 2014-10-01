@@ -42,6 +42,9 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
       // show / hide sidepanel
       $scope.showPanel = false;
       $scope.onLoadClass = 'animate-hide';
+      // $scope.editMode = {
+      //   allowEditing: window.config.user.id === ($scope.project.owner.id + 1)
+      // };
 
 
       RemarksResource.get(_.omit($stateParams, 'id'), function(remarks) {

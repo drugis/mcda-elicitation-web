@@ -395,7 +395,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         };
       },
       templateUrl: mcdaRootPath + 'partials/modal.html'
-    };
+    };v
   });
 
   directives.directive('remarkblock', function(mcdaRootPath) {
@@ -459,7 +459,8 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       replace: true,
       scope: {
         criterion: '=',
-        scenario: '='
+        scenario: '=',
+        editMode: '&'
       },
       link: function(scope, element) {
         scope.graphInfo = {

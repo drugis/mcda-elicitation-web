@@ -1,6 +1,6 @@
 <h4 ng-show="!isEditTitleVisible" class="subheader">
   <span>{{scenario.title}}</span>
-  <a ng-click="editTitle()"><i class="fa fa-edit"></i></a>
+  <a ng-if="editMode.isUserOwner" ng-click="editTitle()"><i class="fa fa-edit"></i></a>
 </h4>
 <div class="row" ng-show="isEditTitleVisible">
   <div class="columns large-8 small-12">
@@ -15,7 +15,7 @@
 </div>
 
 
-<div id="trade-off-block" class="prefs-block">
+<div id="trade-off-block" class="prefs-block" ng-if="editMode.isUserOwner">
   <h3>Elicitation Steps</h3>
   <ul class="elicitation-step-list no-bullet">
     <li>
@@ -43,7 +43,7 @@
 <div class="prefs-block">
   <h3>Scale Ranges</h3>
 
-  <a class="button" ui-sref="scale-range">Define Scale Ranges</a>
+  <button ng-if="editMode.isUserOwner" ui-sref="scale-range">Define Scale Ranges</button>
 
   <table id="effectstable" class="effectstable">
     <thead>
@@ -72,7 +72,7 @@
 
   <div class="row">
     <div id="partial-value-functions" ng-repeat="criterion in scenario.state.problem.criteria" class="small-12 medium-6 large-4 columns">
-      <partial-value-function criterion="criterion" scenario="scenario"/>
+      <partial-value-function criterion="criterion" scenario="scenario" edit-mode="editMode"/>
     </div>
   </div>
 </div>

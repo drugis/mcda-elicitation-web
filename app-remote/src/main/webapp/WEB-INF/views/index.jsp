@@ -71,7 +71,13 @@
      WS_URI: 'wss://patavi.drugis.org/ws',
      workspacesRepositoryUrl: '/workspaces/',
       _csrf_token : "${_csrf.token}",
-      _csrf_header : "${_csrf.headerName}"
+      _csrf_header : "${_csrf.headerName}",
+      user : {
+          id : ${account.id},
+          name : "${account.firstName}",
+          firstName : "${account.firstName}",
+          LastName : "${account.lastName}"
+        }
     };
    
     function signout(){
