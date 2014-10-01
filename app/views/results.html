@@ -3,7 +3,7 @@
 
   <h4 ng-show="!isEditTitleVisible" class="subheader">
     <span>{{scenario.title}}</span>
-    <a ng-click="editTitle()"><i class="fa fa-edit"></i></a>
+    <a ng-if="editMode.isUserOwner" ng-click="editTitle()"><i class="fa fa-edit"></i></a>
   </h4>
   <div class="row" ng-show="isEditTitleVisible">
     <div class="columns large-8 small-12">
