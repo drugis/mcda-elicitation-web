@@ -94,9 +94,9 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
             initialize(scope, $element);
           } 
         };
+        scope.$on('nextstep', init);
+        scope.$on('prevstep', init);
         scope.$watch('range', init, true);
-        scope.$watch('range.from', init, true);
-        scope.$watch('range.to', init, true);
       },
       template: '<div class="slider"></div>'
     };

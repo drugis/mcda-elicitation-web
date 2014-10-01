@@ -60,6 +60,7 @@ define(['mcda/config', 'angular', 'underscore'],
         };
 
         $scope.nextStep = function(currentStep) {
+          $scope.$broadcast('nextstep');
           if (!$scope.canProceed(currentStep)) return false;
           var choice = currentStep.choice;
 
@@ -88,6 +89,7 @@ define(['mcda/config', 'angular', 'underscore'],
         };
 
         $scope.previousStep = function() {
+          $scope.$broadcast('prevstep');
           if (previousSteps.length == 0) return false;
           nextSteps.push(angular.copy($scope.currentStep));
 

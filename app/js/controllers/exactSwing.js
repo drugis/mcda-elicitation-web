@@ -14,7 +14,7 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
 
       function buildInitial(criterionA, criterionB, step) {
         var bounds = getBounds(criterionA);
-        return {
+        var state =  {
           step: step,
           total: _.size(criteria) - 1,
           criterionA: criterionA,
@@ -26,6 +26,7 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
             rightOpen: true
           }
         };
+        return state;
       }
 
       var initialize = function(state) {
@@ -75,6 +76,7 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
           ratio: getRatio(state),
           type: 'exact swing'
         });
+
         return _.extend(angular.copy(state), next);
       };
 
