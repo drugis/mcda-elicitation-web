@@ -15,59 +15,45 @@
 </div>
 
 
-<!-- <div class="row">
-  <div class="progress-container">
-  <div class="columns meter large-12">
-    <ul class="inline-list progress-track">
-      <li style="left:8%">
-        <span>Scale Ranges</span>
-      </li>
-      <li style="left:33.3%">
-        <span>Partial Value Functions</span>
-      </li>
-      <li style="left: 66.7%">
-        <span>Tradeoff Ordering</span>
-      </li>
-      <li style="left: 92%">
-        <span>Tradeoff Ratios</span>
-        </li>
-    </ul>
-  </div>
-</div>
-</div>
- -->
-<div class="pref-progress">
-<div class="row">
-  <div class="columns large-3 medium-3 small-3 progress-cell">
-      <div class="line"></div>
-    <div class="circle-container">
-      <div class="circle"><i class="fa fa-check" style="color:white"></i></div>
-      <div class="circle-label">Scale Ranges</div>
+
+
+    <div class="pref-progress">
+      <div class="row">
+        <div class="columns large-3 medium-3 small-3 progress-cell">
+          <div class="line" ng-class="{accessible: isPartialValueFunctionAccessible()}"></div>
+          <div class="circle-container">
+            <div class="circle" ng-class="{completed: isScaleRangePresent(), 'next-step': !isScaleRangePresent()}">
+              <i ng-if="isScaleRangePresent()" class="fa fa-check" style="color:white"></i></div>
+            <div class="circle-label">Scale Ranges</div>
+          </div>
+        </div>
+        <div class="columns large-3 medium-3 small-3 progress-cell">
+          <div class="line" ng-class="{accessible: isOrdinalSwingAccessible()}"></div> 
+          <div class="circle-container">
+            <div class="circle" ng-class="{'next-step': isScaleRangePresent() && !isPartialValueFunctionPresent(), completed:isPartialValueFunctionPresent()}">
+              <i ng-if="isPartialValueFunctionPresent()" class="fa fa-check" style="color:white"></i></div>
+            <div class="circle-label">Partial Value Functions</div>
+          </div>
+        </div>
+        <div class="columns large-3 medium-3 small-3 progress-cell">
+          <div class="line" ng-class="{accessible: isTradeoffRatiosAccessible()}"></div> 
+          <div class="circle-container">
+            <div class="circle" ng-class="{'next-step': isPartialValueFunctionPresent() && !isOrdinalSwingPresent(), completed:isOrdinalSwingPresent()}">
+              <i ng-if="isOrdinalSwingPresent()" class="fa fa-check" style="color:white"></i></div>
+            <div class="circle-label">Tradeoff Ordening</div>
+          </div>
+        </div>
+        <div class="columns large-3 medium-3 small-3 progress-cell">
+          <div class="last-line"></div>
+          <div class="circle-container">
+            <div class="circle" ng-class="{'next-step': isOrdinalSwingPresent() && !isTradeoffRatiosPresent(), completed:isTradeoffRatiosPresent()}">
+              <i ng-if="isTradeoffRatiosPresent()" class="fa fa-check" style="color:white"></i></div>
+            <div class="circle-label">Tradeoff Ratios</div>
+          </div>
+        </div>
+      </div>
     </div>
-  </div>
-  <div class="columns large-3 medium-3 small-3 progress-cell">
-    <div class="line-gray"></div> 
-    <div class="circle-container">
-      <div class="circle"><i class="fa fa-check" style="color:white"></i></div>
-      <div class="circle-label">Partial Value Functions</div>
-    </div>
-  </div>
-  <div class="columns large-3 medium-3 small-3 progress-cell">
-    <div class="line-gray"></div>
-    <div class="circle-container">
-      <div class="circle-gray"></div>
-      <div class="circle-label">Tradeoff Ordening</div>
-    </div>
-  </div>
-  <div class="columns large-3 medium-3 small-3 progress-cell">
-    <div class="last-line"></div>
-    <div class="circle-container">
-      <div class="circle-gray"></div>
-      <div class="circle-label">Tradeoff Ratios</div>
-    </div>
-  </div>
-</div>
-</div>
+
 
 <!-- <div id="trade-off-block" class="prefs-block" ng-if="editMode.isUserOwner">
   <h3>Elicitation Steps</h3>
@@ -80,20 +66,14 @@
       ng-disabled="!isAccessible(tasks['partial-value-function'], scenario.state).accessible">Partial Value Functions</button>
     </li>
     <li>
-      <button  ui-sref="ordinal-swing" tooltip-placement="bottom" tooltip-animation="false"
-      ng-disabled="!isAccessible(tasks['ordinal-swing'], scenario.state).accessible">Ordinal Swing</button>
     </li>
     <li>
-      <button  ui-sref="exact-swing" tooltip-placement="bottom" tooltip-animation="false"
-       ng-disabled="!isAccessible(tasks['exact-swing'], scenario.state).accessible">Exact Swing</button>
-      <button  ui-sref="interval-swing" tooltip-placement="bottom" tooltip-animation="false"
-      ng-disabled="!isAccessible(tasks['interval-swing'], scenario.state).accessible">Interval Swing</button>
     </li>   
   </ul>
   <button class="success" ui-sref="results" ng-disabled="!isAccessible(tasks['results'], scenario.state).accessible">Results</button>
     
 </div>
- -->
+-->
 <div class="prefs-block">
   <h3>Scale Ranges</h3>
 
@@ -110,13 +90,13 @@
       </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="(key, criterion) in criteria">
-      <td>{{criterion.title}}</td>
-      <td>{{criterion.scale[0] | number:3}}, {{criterion.scale[1] | number:3}}</td>
-      <td>{{intervalHull(scales[criterion.id])[0] | number:3}}, {{intervalHull(scales[criterion.id])[1] | number:3}}</td>
-      <td><span ng-if="criterion.pvf.range">{{criterion.pvf.range[0] | number:3}}, {{criterion.pvf.range[1] | number:3}}</span></td>
-      <td>{{criterion.unitOfMeasurement}}</td>
-    </tr>
+      <tr ng-repeat="(key, criterion) in criteria">
+        <td>{{criterion.title}}</td>
+        <td>{{criterion.scale[0] | number:3}}, {{criterion.scale[1] | number:3}}</td>
+        <td>{{intervalHull(scales[criterion.id])[0] | number:3}}, {{intervalHull(scales[criterion.id])[1] | number:3}}</td>
+        <td><span ng-if="criterion.pvf.range">{{criterion.pvf.range[0] | number:3}}, {{criterion.pvf.range[1] | number:3}}</span></td>
+        <td>{{criterion.unitOfMeasurement}}</td>
+      </tr>
     </tbody>
   </table>
 </div>
@@ -133,6 +113,12 @@
 
 <div id="trade-off-block" class="prefs-block">
   <h3>Trade-offs</h3>
+      <button  ui-sref="ordinal-swing" tooltip-placement="bottom" tooltip-animation="false"
+      ng-disabled="!isAccessible(tasks['ordinal-swing'], scenario.state).accessible">Ordinal Swing</button>
+      <button  ui-sref="exact-swing" tooltip-placement="bottom" tooltip-animation="false"
+       ng-disabled="!isAccessible(tasks['exact-swing'], scenario.state).accessible">Exact Swing</button>
+      <button  ui-sref="interval-swing" tooltip-placement="bottom" tooltip-animation="false"
+      ng-disabled="!isAccessible(tasks['interval-swing'], scenario.state).accessible">Interval Swing</button>
 
   <ul class="no-bullet">
     <li ng-repeat="criterion in criteria">

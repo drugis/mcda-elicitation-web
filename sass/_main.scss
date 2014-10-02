@@ -697,34 +697,17 @@ treecontrol.tree-dark {
   margin-top: 6px;
 }
 
-.inline-list.elicitation-step-list {
-  margin-left:0px;
-  float: none;
-  list-style: none;
-  overflow: hidden;
-  li {
-    vertical-align: middle;
-    display: table-cell;
-    padding-right: 32px;
-    float: none;
-    button {
-      padding-right:1rem;
-      padding-left:1rem;
-      min-width: 9.5rem;
-    }
-  }
-}
-
 .results-button {
   margin-left:0.5rem;
 }
 
+$preferences-progress-inactive-color: #e2e2e2;
+
 .pref-progress {
-  margin: 50px 0px;
+  margin: 50px 60px;
 }
 
 .circle-container {
-  // background-color: lightgrey;
   text-align: center;
   display: inline-block;
   padding: 2px 2px;
@@ -733,50 +716,39 @@ treecontrol.tree-dark {
 }
 
 .line {
-    background-color: rgb(117, 212, 117);
-    width: 103%;
+    background-color: $preferences-progress-inactive-color;
+    width: 100%;
     height: 5px;
-    margin-left:40px;
+    &.accessible {
+      background-color: $success-color;
+    }
 }
-
-.line-gray {
-    background-color: rgb(155, 155, 155);
-    width: 103%;
-    height: 5px;
-    margin-left:40px;
-}
-
 
 .last-line {
     height: 5px;
 }
 
-div.columns.large-3.progress-cell.progress-cell {
-  text-align: center;
+.pref-progress .progress-cell {
   padding:0px;
-  margin:0px;
 }
 
 .circle {
-  margin: 0 auto;
-  background-color: rgb(117, 212, 117);
+  background-color: $preferences-progress-inactive-color;
   height: 25px;
   width: 25px;
   border-radius: 25px;
   padding-top: 4px;
   margin-bottom: 8px;
-}
-
-.circle-gray {
-  margin: 0 auto;
-  background-color: rgb(155, 155, 155);
-  height: 25px;
-  width: 25px;
-  border-radius: 25px;
-  padding-top: 4px;
-  margin-bottom: 8px;
+  margin-left: -15px;
+  &.next-step {
+    background-color: $success-color;
+  }
+  &.completed {
+    background-color: $success-color;
+  }
 }
 
 .circle-label {
-
+  margin-left: -50%;
+  text-align:left;
 }

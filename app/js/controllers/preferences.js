@@ -47,6 +47,18 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
         return TaskDependencies.isAccessible(task, state);
       };
 
+      $scope.isPartialValueFunctionAccessible = function() {
+        return $scope.isAccessible($scope.tasks['partial-value-function'], $scope.scenario.state).accessible;
+      };
+
+      $scope.isOrdinalSwingAccessible = function() {
+        return $scope.isAccessible($scope.tasks['ordinal-swing'], $scope.scenario.state).accessible;
+      }
+
+      $scope.isTradeoffRatiosAccessible = function() {
+        return $scope.isAccessible($scope.tasks['exact-swing'], $scope.scenario.state).accessible;
+      }
+
       $scope.isScaleRangePresent = function() {
         var isPresent = _.every($scope.scenario.state.problem.criteria, function(criterion) {
           return criterion.pvf && criterion.pvf.range;
@@ -76,6 +88,10 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
           return pref.type === 'ratio bound';
         });
       };
+
+      $scope.isTradeoffRatiosPresent = function() {
+        return $scope.isExactSwingPresent() || $scope.isIntervalSwingPresent();
+      }
 
       $scope.scrollToPVFs = function() {
         $location.hash('partial-value-functions');

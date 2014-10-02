@@ -8905,37 +8905,16 @@ treecontrol.tree-dark {
 }
 
 /* line 700, ../../sass/_main.scss */
-.inline-list.elicitation-step-list {
-  margin-left: 0px;
-  float: none;
-  list-style: none;
-  overflow: hidden;
-}
-/* line 705, ../../sass/_main.scss */
-.inline-list.elicitation-step-list li {
-  vertical-align: middle;
-  display: table-cell;
-  padding-right: 32px;
-  float: none;
-}
-/* line 710, ../../sass/_main.scss */
-.inline-list.elicitation-step-list li button {
-  padding-right: 1rem;
-  padding-left: 1rem;
-  min-width: 9.5rem;
-}
-
-/* line 718, ../../sass/_main.scss */
 .results-button {
   margin-left: 0.5rem;
 }
 
-/* line 722, ../../sass/_main.scss */
+/* line 706, ../../sass/_main.scss */
 .pref-progress {
-  margin: 50px 0px;
+  margin: 50px 60px;
 }
 
-/* line 726, ../../sass/_main.scss */
+/* line 710, ../../sass/_main.scss */
 .circle-container {
   text-align: center;
   display: inline-block;
@@ -8944,54 +8923,50 @@ treecontrol.tree-dark {
   margin-top: -17px;
 }
 
-/* line 735, ../../sass/_main.scss */
+/* line 718, ../../sass/_main.scss */
 .line {
-  background-color: #75d475;
-  width: 103%;
+  background-color: #e2e2e2;
+  width: 100%;
   height: 5px;
-  margin-left: 40px;
+}
+/* line 722, ../../sass/_main.scss */
+.line.accessible {
+  background-color: #29a329;
 }
 
-/* line 742, ../../sass/_main.scss */
-.line-gray {
-  background-color: #9b9b9b;
-  width: 103%;
-  height: 5px;
-  margin-left: 40px;
-}
-
-/* line 750, ../../sass/_main.scss */
+/* line 727, ../../sass/_main.scss */
 .last-line {
   height: 5px;
 }
 
-/* line 754, ../../sass/_main.scss */
-div.columns.large-3.progress-cell.progress-cell {
-  text-align: center;
+/* line 731, ../../sass/_main.scss */
+.pref-progress .progress-cell {
   padding: 0px;
-  margin: 0px;
 }
 
-/* line 760, ../../sass/_main.scss */
+/* line 735, ../../sass/_main.scss */
 .circle {
-  margin: 0 auto;
-  background-color: #75d475;
+  background-color: #e2e2e2;
   height: 25px;
   width: 25px;
   border-radius: 25px;
   padding-top: 4px;
   margin-bottom: 8px;
+  margin-left: -15px;
+}
+/* line 743, ../../sass/_main.scss */
+.circle.next-step {
+  background-color: #29a329;
+}
+/* line 746, ../../sass/_main.scss */
+.circle.completed {
+  background-color: #29a329;
 }
 
-/* line 770, ../../sass/_main.scss */
-.circle-gray {
-  margin: 0 auto;
-  background-color: #9b9b9b;
-  height: 25px;
-  width: 25px;
-  border-radius: 25px;
-  padding-top: 4px;
-  margin-bottom: 8px;
+/* line 751, ../../sass/_main.scss */
+.circle-label {
+  margin-left: -50%;
+  text-align: left;
 }
 
 /* line 6, ../../sass/mcda-drugis.scss */
