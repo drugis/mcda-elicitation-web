@@ -8760,22 +8760,18 @@ treecontrol.tree-dark {
   width: 100%;
   height: 5px;
 }
-/* line 722, ../../sass/_main.scss */
-.line.accessible {
-  background-color: #43ac6a;
-}
 
-/* line 727, ../../sass/_main.scss */
+/* line 724, ../../sass/_main.scss */
 .last-line {
   height: 5px;
 }
 
-/* line 731, ../../sass/_main.scss */
+/* line 728, ../../sass/_main.scss */
 .pref-progress .progress-cell {
   padding: 0px;
 }
 
-/* line 735, ../../sass/_main.scss */
+/* line 732, ../../sass/_main.scss */
 .circle {
   background-color: #e2e2e2;
   height: 25px;
@@ -8785,16 +8781,21 @@ treecontrol.tree-dark {
   margin-bottom: 8px;
   margin-left: -15px;
 }
-/* line 743, ../../sass/_main.scss */
-.circle.next-step {
-  background-color: #43ac6a;
-}
-/* line 746, ../../sass/_main.scss */
-.circle.completed {
+
+/* line 744, ../../sass/_main.scss */
+.circle-container.next-step .circle,
+.circle-container.completed .circle,
+.line.accessible {
   background-color: #43ac6a;
 }
 
-/* line 751, ../../sass/_main.scss */
+/* line 749, ../../sass/_main.scss */
+.circle-container.next-step:hover,
+.circle-container.completed:hover {
+  cursor: pointer;
+}
+
+/* line 753, ../../sass/_main.scss */
 .circle-label {
   margin-left: -50%;
   text-align: left;
