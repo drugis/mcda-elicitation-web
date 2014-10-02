@@ -53,11 +53,11 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
 
       $scope.isOrdinalSwingAccessible = function() {
         return $scope.isAccessible($scope.tasks['ordinal-swing'], $scope.scenario.state).accessible;
-      }
+      };
 
       $scope.isTradeoffRatiosAccessible = function() {
         return $scope.isAccessible($scope.tasks['exact-swing'], $scope.scenario.state).accessible;
-      }
+      };
 
       $scope.isScaleRangePresent = function() {
         var isPresent = _.every($scope.scenario.state.problem.criteria, function(criterion) {
@@ -91,11 +91,25 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
 
       $scope.isTradeoffRatiosPresent = function() {
         return $scope.isExactSwingPresent() || $scope.isIntervalSwingPresent();
-      }
+      };
 
-      $scope.scrollToPVFs = function() {
-        $location.hash('partial-value-functions');
-        $anchorScroll();
+      $scope.scrollToScaleRanges = function() {
+          $location.hash('scale-ranges-block');
+          $anchorScroll();
+      };
+
+      $scope.scrollToPVFs = function(scrollEnabled) {
+        if (scrollEnabled) {
+          $location.hash('partial-value-functions-block');
+          $anchorScroll();
+        }
+      };
+
+      $scope.scrollToTradeOffs = function(scrollEnabled) {
+        if (scrollEnabled) {
+          $location.hash('trade-off-block');
+          $anchorScroll();
+        }
       };
 
       $scope.getXY = _.memoize(PartialValueFunction.getXY, function(arg) {
