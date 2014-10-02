@@ -1,3 +1,4 @@
+<h3>Preferences</h3>
 <h4 ng-show="!isEditTitleVisible" class="subheader">
   <span>{{scenario.title}}</span>
   <a ng-if="editMode.isUserOwner" ng-click="editTitle()"><i class="fa fa-edit"></i></a>
@@ -58,8 +59,10 @@
           </div>
         </div>
 
+        <button class="success" ui-sref="results" ng-disabled="!resultsAccessible.accessible">Results</button>
+
 <div id="scale-ranges-block" class="prefs-block">
-  <h3>Scale Ranges</h3>
+  <h4>Scale Ranges</h4>
 
   <button ng-if="editMode.isUserOwner" ui-sref="scale-range">Define Scale Ranges</button>
 
@@ -86,7 +89,7 @@
 </div>
 
 <div id="partial-value-functions-block" class="prefs-block">
-  <h3>Partial Value Functions</h3>
+  <h4>Partial Value Functions</h4>
 
   <div class="row">
     <div id="partial-value-functions" ng-repeat="criterion in scenario.state.problem.criteria" class="small-12 medium-6 large-4 columns">
@@ -96,12 +99,12 @@
 </div>
 
 <div id="trade-off-block" class="prefs-block">
-  <h3>Trade-offs</h3>
-  <button  ui-sref="ordinal-swing" tooltip-placement="bottom" tooltip-animation="false"
+  <h4>Trade-offs</h4>
+  <button ng-if="editMode.isUserOwner" ui-sref="ordinal-swing" tooltip-placement="bottom" tooltip-animation="false"
   ng-disabled="!isAccessible(tasks['ordinal-swing'], scenario.state).accessible">Ordinal Swing</button>
-  <button  ui-sref="exact-swing" tooltip-placement="bottom" tooltip-animation="false"
+  <button ng-if="editMode.isUserOwner" ui-sref="exact-swing" tooltip-placement="bottom" tooltip-animation="false"
   ng-disabled="!isAccessible(tasks['exact-swing'], scenario.state).accessible">Exact Swing</button>
-  <button  ui-sref="interval-swing" tooltip-placement="bottom" tooltip-animation="false"
+  <button ng-if="editMode.isUserOwner" ui-sref="interval-swing" tooltip-placement="bottom" tooltip-animation="false"
   ng-disabled="!isAccessible(tasks['interval-swing'], scenario.state).accessible">Interval Swing</button>
 
   <ul class="no-bullet">
