@@ -395,7 +395,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         };
       },
       templateUrl: mcdaRootPath + 'partials/modal.html'
-    };v
+    };
   });
 
   directives.directive('remarkblock', function(mcdaRootPath) {
