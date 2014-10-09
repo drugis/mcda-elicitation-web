@@ -35,12 +35,12 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       }
 
       function getModelValue() {
-        return type === "point" ? valueToStep(scope.model) :
-          valueToStep(scope.model.lower) + ";" + valueToStep(scope.model.upper);
+        return type === 'point' ? valueToStep(scope.model) :
+          valueToStep(scope.model.lower) + ';' + valueToStep(scope.model.upper);
       }
 
       function getValueModel(value) {
-        if (type === "point") {
+        if (type === 'point') {
           return parseFloat(stepToValue(value));
         } else {
           var steps = value.split(';');
@@ -54,14 +54,14 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       require(['jquery-slider'], function() {
         $($element).empty();
         $($element).append('<input type="slider"></input>');
-        $($element).find('input').attr("value", getModelValue());
+        $($element).find('input').attr('value', getModelValue());
         var myElem = $($element).find('input');
         myElem.slider({
           from: 0,
           to: steps,
           step: 1,
           calculate: stepToValue,
-          skin: "round_plastic",
+          skin: 'round_plastic',
           onstatechange: _.debounce(function(value) {
             var values = getValueModel(value);
 
@@ -71,11 +71,11 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
           }, 50)
         });
 
-        if (_.has(scope.range, "restrictTo") && _.has(scope.range, "restrictFrom")) {
+        if (_.has(scope.range, 'restrictTo') && _.has(scope.range, 'restrictFrom')) {
           $($element).find('.jslider-bg').append('<i class="x"></i>');
           var width = valueToStep(scope.range.restrictTo) - valueToStep(scope.range.restrictFrom);
           var left = valueToStep(scope.range.restrictFrom);
-          $($element).find('.jslider-bg .x').attr("style", "left: " + left + "%; width:" + width + "%");
+          $($element).find('.jslider-bg .x').attr('style', 'left: ' + left + '%; width:' + width + '%');
         }
       });
     };
@@ -84,7 +84,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       restrict: 'E',
       replace: true,
       scope: {
-        type: "@",
+        type: '@',
         model: '=',
         range: '='
       },
@@ -92,7 +92,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         var init = function() {
           if (scope.range){
             initialize(scope, $element);
-          } 
+          }
         };
         scope.$on('nextstep', init);
         scope.$on('prevstep', init);
@@ -126,9 +126,9 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         problem: '='
       },
       link: function(scope, element, attrs) {
-        var svg = d3.select(element[0]).append("svg")
-          .attr("width", "100%")
-          .attr("height", "100%");
+        var svg = d3.select(element[0]).append('svg')
+          .attr('width', '100%')
+          .attr('height', '100%');
 
         var dim = getParentDimension(element);
 
@@ -139,7 +139,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
             var values = el[1];
             for (var i = 0; i < values.length; i++) {
               var obj = result[i] || {
-                key: "Rank " + (i + 1),
+                key: 'Rank ' + (i + 1),
                 values: []
               };
               obj.values.push({
@@ -152,7 +152,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
           return result;
         };
 
-        scope.$watch('value', function(newVal, oldVal) {
+        scope.$watch('value', function(newVal) {
           if (!newVal) {
             return;
           }
@@ -183,16 +183,18 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         value: '=',
         parseFn: '='
       },
-      link: function(scope, element, attrs) {
+      link: function(scope, element) {
 
         var dim = getParentDimension(element);
 
-        var svg = d3.select(element[0]).append("svg")
-          .attr("width", "100%")
-          .attr("height", "100%");
+        var svg = d3.select(element[0]).append('svg')
+          .attr('width', '100%')
+          .attr('height', '100%');
 
-        scope.$watch('value', function(newVal, oldVal) {
-          if (!newVal) return;
+        scope.$watch('value', function(newVal) {
+          if (!newVal) {
+            return;
+          }
           nv.addGraph(function() {
             var chart = nv.models.discreteBarChart()
               .staggerLabels(false)
@@ -221,24 +223,26 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
     return {
       restrict: 'E',
       scope: {
-        showLegend: "@",
+        showLegend: '@',
         value: '=',
         parseFn: '='
       },
       link: function(scope, element, attrs) {
         var dim = getParentDimension(element);
-        var svg = d3.select(element[0]).append("svg")
-          .attr("width", "100%")
-          .attr("height", "100%");
+        var svg = d3.select(element[0]).append('svg')
+          .attr('width', '100%')
+          .attr('height', '100%');
 
-        scope.$watch('value', function(newVal, oldVal) {
-          if (!newVal) return;
+        scope.$watch('value', function(newVal) {
+          if (!newVal)  {
+            return;
+          }
           var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
 
           var chart = nv.models.lineChart().width(dim.width).height(dim.height);
           chart.forceY([0.0]);
 
-          if (attrs.showLegend && attrs.showLegend === "false") {
+          if (attrs.showLegend && attrs.showLegend === 'false') {
             chart.showLegend(false);
           }
 
@@ -246,15 +250,15 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
           if (_.every(data, function(x) {
             return !_.isUndefined(x.labels);
           })) {
-            chart.xAxis.tickFormat(function(i, obj) {
+            chart.xAxis.tickFormat(function(i) {
               if (i % 1 === 0) {
                 return data[0].labels[i];
               } else {
-                return "";
+                return '';
               }
             });
           } else {
-            chart.xAxis.tickFormat(d3.format(".3f"));
+            chart.xAxis.tickFormat(d3.format('.3f'));
           }
 
           svg.datum(data).call(chart);
@@ -271,12 +275,12 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       replace: false,
       transclude: false,
       scope: false,
-      link: function(scope, element, attrs) {
+      link: function(scope, element) {
         scope.$watch(element, function() {
           var value = parseFloat(element[0].innerHTML);
           var color = d3.scale.quantile().range(d3.range(9)).domain([1, 0]);
-          $(element[0].parentNode).addClass("RdYlGn");
-          $(element[0]).addClass("q" + color(value) + "-9");
+          $(element[0].parentNode).addClass('RdYlGn');
+          $(element[0]).addClass('q' + color(value) + '-9');
         });
       }
     };
@@ -289,15 +293,15 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         model: '=',
       },
       restrict: 'E',
-      template: "<input type='file' accept='.json'>",
-      link: function(scope, element, attrs) {
+      template: '<input type="file" accept=".json">',
+      link: function(scope, element) {
         function onLoadContents(env) {
           scope.$apply(function() {
             scope.model.contents = env.target.result;
           });
-        };
+        }
 
-        element.on("change", function(event) {
+        element.on('change', function(event) {
           scope.$apply(function(scope) {
             scope.model.file = event.target.files[0];
             if (!scope.model.file) {
@@ -315,17 +319,17 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
   });
 
 
-  directives.directive("mathjaxBind", function() {
+  directives.directive('mathjaxBind', function() {
     return {
-      restrict: "A",
+      restrict: 'A',
       link: function(scope, element, attrs) {
         scope.$watch(attrs.mathjaxBind, function(value) {
-          var $script = angular.element("<script type='math/tex'>")
-            .html(value == undefined ? "" : value);
-          element.html("");
+          var $script = angular.element('<script type="math/tex">')
+            .html(value === undefined ? '' : value);
+          element.html('');
           element.append($script);
           require(['MathJax'], function(MathJax) {
-            MathJax.Hub.Queue(["Reprocess", MathJax.Hub, element[0]]);
+            MathJax.Hub.Queue(['Reprocess', MathJax.Hub, element[0]]);
           });
         });
       }
@@ -333,28 +337,28 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
   });
 
 
-  directives.directive("addis-alert", function() {
+  directives.directive('addisAlert', function(mcdaRootPath) {
     return {
-      restrict: "E",
-      transclude: false,
+      restrict: 'E',
+      transclude: true,
       replace: true,
       scope: {
         type: '@',
         close: '&'
       },
-      link: function(scope, element, attrs) {
+      link: function(scope, element) {
         scope.animatedClose = function() {
           $(element).fadeOut(800, function() {
             scope.close();
           });
         };
       },
-      template: '<div class="alert-box {{type}}"><div class="alert-box-message" ng-transclude></div><a ng-click="animatedClose()" class="close">&times;</a></div>'
+      templateUrl: mcdaRootPath + 'partials/alert.html'
     };
   });
 
 
-  directives.directive("modal", function(mcdaRootPath) {
+  directives.directive('modal', function(mcdaRootPath) {
     return {
       restrict: 'E',
       transclude: true,
@@ -362,7 +366,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         model: '=',
         buttonText: '@'
       },
-      link: function(scope, element, attrs) {
+      link: function(scope, element) {
         if (!scope.model) {
           scope.model = {};
         }
@@ -395,7 +399,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         };
       },
       templateUrl: mcdaRootPath + 'partials/modal.html'
-    };v
+    };
   });
 
   directives.directive('remarkblock', function(mcdaRootPath) {
@@ -409,12 +413,12 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       restrict: 'AE',
       replace: 'true',
       templateUrl: mcdaRootPath + 'partials/remark.html',
-      link: function(scope, element, attrs) {
-        $(".remarkbutton").click(function() {
-          $(".f-dropdown").css("display", "none");
+      link: function() {
+        $('.remarkbutton').click(function() {
+          $('.f-dropdown').css('display', 'none');
         });
 
-        $(".f-dropdown").click(function(event) {
+        $('.f-dropdown').click(function(event) {
           event.stopPropagation();
         });
       }
@@ -425,33 +429,33 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
 
   directives.directive('valueTree', function() {
     return {
-      restrict: "E",
+      restrict: 'E',
       replace: true,
       scope: {
         children: '=',
         remarks: '='
       },
-      template: "<ul><value-tree-item ng-repeat='item in children' item='item' remarks='remarks'></value-tree-item></ul>"
+      template: '<ul><value-tree-item ng-repeat="item in children" item="item" remarks="remarks"></value-tree-item></ul>'
     };
   });
 
   directives.directive('valueTreeItem', function($compile) {
     return {
-      restrict: "E",
+      restrict: 'E',
       replace: true,
       scope: {
         item: '=',
         remarks: '='
       },
-      template: "<li>{{item.title}}<p ng-if='remarks'><span ng-if='!remarks[item.title]'>None.</span>{{remarks[item.title]}}</p></li>",
-      link: function(scope, element, attrs) {
+      template: '<li>{{item.title}}<p ng-if="remarks"><span ng-if="!remarks[item.title]">None.</span>{{remarks[item.title]}}</p></li>',
+      link: function(scope, element) {
         if (scope.item && angular.isArray(scope.item.children)) {
-          element.append("<value-tree children='item.children' remarks='remarks'></value-tree>");
-          $compile(element.contents())(scope)
+          element.append('<value-tree children="item.children" remarks="remarks"></value-tree>');
+          $compile(element.contents())(scope);
         }
       }
     };
-  })
+  });
 
   directives.directive('partialValueFunction', function(mcdaRootPath, PartialValueFunction) {
     return {
@@ -462,10 +466,10 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         scenario: '=',
         editMode: '&'
       },
-      link: function(scope, element) {
+      link: function(scope) {
         scope.graphInfo = {
           values: []
-        }
+        };
         if (scope.isPVFDefined(scope.criterion)) {
           scope.graphInfo.values = PartialValueFunction.getXY(scope.criterion);
         }
