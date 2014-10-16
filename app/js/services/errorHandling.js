@@ -12,7 +12,7 @@ define(['angular'], function(angular) {
 					};
 				}else {
 					message = {
-						cause: 'a unknown error occurred'
+						cause: 'an unknown error occurred'
 					};
 				}
 
