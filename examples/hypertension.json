@@ -1,9 +1,12 @@
 {
-  "title" : "Benefit-risk",
+  "title" : "EMA Edarbi EPAR (hypertension)",
+  "description": "Case study based on the EMA assessment report on Edarbi for the treatment of hypertension. The pivotal trials were pooled to obtain these results.",
   "criteria" : {
     "sbp-mean-trough-clinic-sitting" : {
-      "title" : "SBP mean trough (clinic, sitting)",
+      "title" : "Blood pressure",
+      "description": "Systolic blood pressure (mean trough, clinic, sitting)",
       "scale": [null, null],
+      "unitOfMeasurement": "mm Hg",
       "pvf" : {
         "direction" : "decreasing",
         "type" : "linear",
@@ -12,7 +15,9 @@
     },
     "non-sae" : {
       "title" : "Non-SAE",
+      "description": "Non-serious adverse events",
       "scale": [0.0, 1.0],
+      "unitOfMeasurement": "Proportion",
       "pvf" : {
         "direction" : "decreasing",
         "type" : "linear",
@@ -21,7 +26,9 @@
     },
     "sae" : {
       "title" : "SAE",
+      "description": "Serious adverse events",
       "scale": [0.0, 1.0],
+      "unitOfMeasurement": "Proportion",
       "pvf" : {
         "direction" : "decreasing",
         "type" : "linear",
