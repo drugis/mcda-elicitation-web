@@ -1,6 +1,6 @@
 {
   "title": "Rimonabant in type 2 diabetes patients",
-  "description": "Indication: the use of rimonabant as an add-on therapy to an established first-line oral glucose control therapy.\nPatient population: overweight or obese patients with type 2 diabetes mellitus already on metforin or sulphonylurea monotherapy.\nDecision that needs to be taken: marketing authorization",
+  "description": "Indication: the use of rimonabant as an add-on therapy to an established first-line oral glucose control therapy.\nPatient population: overweight or obese patients with type 2 diabetes mellitus already on metforin or sulphonylurea monotherapy.\nDecision that needs to be taken: marketing authorization.",
   "criteria": {
     "Hypo": {
       "title": "Hypoglyceamia",
@@ -17,7 +17,7 @@
       "title": "Fasting glucose",
       "description": "Change in fasting glucose concentrations from baseline.",
       "unitOfMeasurement": "mmol/L",
-      "scale": [-5, 3],
+      "scale": [null, null],
       "pvf": {
         "range": [-2, 2],
         "type": "linear",
@@ -28,7 +28,7 @@
       "title": "SBP",
       "description": "Change in systolic blood pressure from baseline.",
       "unitOfMeasurement": "mm Hg",
-      "scale": [-30, 10],
+      "scale": [null, null],
       "pvf": {
         "range": [-10, 5],
         "type": "linear",
@@ -39,7 +39,7 @@
       "title": "HDL cholesterol",
       "description": "Change in HDL cholesterol from baseline.",
       "unitOfMeasurement": "mmol/L",
-      "scale": [-2, 2],
+      "scale": [null, null],
       "pvf": {
         "range": [0.0, 1.0],
         "type": "linear",
@@ -61,7 +61,7 @@
       "title": "Waist circumference",
       "description": "Change in waist circumference from baseline.",
       "unitOfMeasurement": "cm",
-      "scale": [-15, 5],
+      "scale": [null, null],
       "pvf": {
         "range": [-10, 0],
         "type": "linear",
