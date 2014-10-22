@@ -20,6 +20,7 @@ define(
     'mcda/services/pataviService',
     'mcda/services/partialValueFunction',
     'mcda/services/util',
+    'mcda/services/scaleRangeService',
     'mcda/controllers',
     'mcda/directives'
   ],
@@ -29,6 +30,7 @@ define(
       'mm.foundation',
       'ngAnimate',
       'elicit.workspaceService',
+      'elicit.scaleRangeService',
       'elicit.remarks',
       'elicit.workspaceResource',
       'elicit.scenarioResource',

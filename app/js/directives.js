@@ -90,9 +90,10 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       },
       link: function(scope, $element) {
         var init = function() {
-          if (scope.range){
+          if (scope.range) {
+            console.log('range from' + scope.range.from + ' to ' + scope.range.to)
             initialize(scope, $element);
-          } 
+          }
         };
         scope.$on('nextstep', init);
         scope.$on('prevstep', init);

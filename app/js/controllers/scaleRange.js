@@ -1,7 +1,7 @@
 'use strict';
 define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
 
-  return function($scope, $state, $stateParams, taskDefinition, intervalHull, PartialValueFunction, MCDAPataviService, ScenarioResource) {
+  return function($scope, $state, $stateParams, taskDefinition, intervalHull, PartialValueFunction, MCDAPataviService, ScaleRangeService) {
 
     var state = taskDefinition.clean($scope.scenario.state);
 
@@ -43,19 +43,6 @@ define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
 
     };
 
-    var nice = function(x) {
-      var log10 = function(x) {
-        return Math.log(x) / Math.log(10);
-      };
-      var negative = x < 0;
-      x = Math.abs(x);
-      var val = Math.pow(10, Math.floor(log10(x)));
-      var nice = _.find(_.range(1, 11), function(n) {
-        return x <= val * n;
-      });
-      return (negative ? -1 : 1) * (val * nice);
-    };
-
     var errorHandler = function(code, error) {
       var message = {
         code: (code && code.desc) ? code.desc : code,
@@ -85,7 +72,7 @@ define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
           };
 
           // Set scales for slider
-          var margin = 0.5 * (nice(to) - nice(from));
+          var margin = 0.5 * (ScaleRangeService.nice(to) - ScaleRangeService.nice(from));
           var scale = state.problem.criteria[criterion[0]].scale || [null, null];
           scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
           scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
@@ -99,8 +86,8 @@ define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
           scales[criterion[0]] = {
             restrictFrom: criterionRange[0],
             restrictTo: criterionRange[1],
-            from: boundFrom(nice(from) - margin),
-            to: boundTo(nice(to) + margin),
+            from: boundFrom(ScaleRangeService.nice(from) - margin),
+            to: boundTo(ScaleRangeService.nice(to) + margin),
             increaseFrom: function() {
               this.from = boundFrom(this.from - margin);
             },
