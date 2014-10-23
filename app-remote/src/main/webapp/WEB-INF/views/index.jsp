@@ -55,11 +55,11 @@
   </section>
 
 
-  <div class="row">
+  <div ng-cloak class="row">
     <div class="columns">
-      <alert type="info">
+      <addis-alert type="info">
         <strong>Disclaimer:</strong> this is <em>beta</em> software. We store your workspaces on our servers. While we try our best to keep them secure and compatible with future versions, we can make no guarantees.
-      </alert>
+      </addis-alert>
     </div>
   </div>
     
