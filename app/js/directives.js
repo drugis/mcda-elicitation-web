@@ -3,7 +3,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
 
   var directives = angular.module('elicit.directives', []);
 
-  directives.directive('slider', function() {
+  directives.directive('slider', function($filter) {
     var initialize = function(scope, $element) {
       var type = scope.type;
       var from = scope.range.from;
@@ -25,13 +25,12 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         --steps;
       }
 
-      var precision = 3;
       var stepToValue = function(step) {
-        return (from + (step / steps) * delta).toFixed(precision);
+        return $filter('number')((from + (step / steps) * delta));
       };
 
       function valueToStep(value) {
-        return ((value - from) / delta * steps).toFixed(precision);
+        return $filter('number')(((value - from) / delta * steps));
       }
 
       function getModelValue() {
@@ -91,7 +90,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       link: function(scope, $element) {
         var init = function() {
           if (scope.range) {
-            console.log('range from' + scope.range.from + ' to ' + scope.range.to)
+            console.log('range from' + scope.range.from + ' to ' + scope.range.to);
             initialize(scope, $element);
           }
         };

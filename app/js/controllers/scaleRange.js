@@ -72,29 +72,8 @@ define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
           };
 
           // Set scales for slider
-          var margin = 0.5 * (ScaleRangeService.nice(to) - ScaleRangeService.nice(from));
-          var scale = state.problem.criteria[criterion[0]].scale || [null, null];
-          scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
-          scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
-
-          var boundFrom = function(val) {
-            return val < scale[0] ? scale[0] : val;
-          };
-          var boundTo = function(val) {
-            return val > scale[1] ? scale[1] : val;
-          };
-          scales[criterion[0]] = {
-            restrictFrom: criterionRange[0],
-            restrictTo: criterionRange[1],
-            from: boundFrom(ScaleRangeService.nice(from) - margin),
-            to: boundTo(ScaleRangeService.nice(to) + margin),
-            increaseFrom: function() {
-              this.from = boundFrom(this.from - margin);
-            },
-            increaseTo: function() {
-              this.to = boundTo(this.to + margin);
-            }
-          };
+          var criterionScale = state.problem.criteria[criterion[0]].scale;
+          scales[criterion[0]] = ScaleRangeService.calculateScales(criterionScale, from, to, criterionRange);
 
         });
         $scope.currentStep = _.extend(state, {
