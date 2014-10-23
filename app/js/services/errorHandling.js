@@ -10,7 +10,7 @@ define(['angular'], function(angular) {
 						code: data.code,
 						cause: data.message
 					};
-				}else {
+				} else {
 					message = {
 						cause: 'an unknown error occurred'
 					};

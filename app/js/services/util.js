@@ -3,13 +3,21 @@ define(['underscore', 'angular'], function(_, angular) {
   return angular.module('elicit.util', [])
 
   .factory('intervalHull', function() {
+
     return function(scaleRanges) {
-      if (!scaleRanges) return [Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY];
+      if (!scaleRanges) {
+        return [Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY];
+      }
       return [
-        Math.min.apply(null, _.map(_.values(scaleRanges), function(alt) { return alt["2.5%"] })),
-        Math.max.apply(null, _.map(_.values(scaleRanges), function(alt) { return alt["97.5%"] }))
+        Math.min.apply(null, _.map(_.values(scaleRanges), function(alt) {
+          return alt["2.5%"];
+        })),
+        Math.max.apply(null, _.map(_.values(scaleRanges), function(alt) {
+          return alt["97.5%"];
+        }))
       ];
     };
+
   })
 
   .factory('ValueTreeUtil', function() {
@@ -19,16 +27,16 @@ define(['underscore', 'angular'], function(_, angular) {
         if (valueTree.criteria) {
           criteriaNodes.push(valueTree);
         } else {
-          angular.forEach(valueTree.children, function (childNode) {
+          angular.forEach(valueTree.children, function(childNode) {
             findCriteriaNodesInternal(childNode, criteriaNodes);
           });
         }
-      };
+      }
 
       var criteriaNodes = [];
       findCriteriaNodesInternal(valueTree, criteriaNodes);
       return criteriaNodes;
-    };
+    }
 
 
     function findTreePath(criteriaNode, valueTree) {
@@ -39,7 +47,7 @@ define(['underscore', 'angular'], function(_, angular) {
         return [];
       } else {
         var children = [];
-        angular.forEach(valueTree.children, function (childNode) {
+        angular.forEach(valueTree.children, function(childNode) {
           var childPaths = findTreePath(criteriaNode, childNode);
           if (childPaths.length > 0) {
             children = [valueTree].concat(childPaths);
@@ -47,7 +55,7 @@ define(['underscore', 'angular'], function(_, angular) {
         });
         return children;
       }
-    };
+    }
 
     /**
      * Insert the criteria objects into the value tree.
@@ -64,10 +72,10 @@ define(['underscore', 'angular'], function(_, angular) {
         });
       });
       return tree;
-    };
+    }
 
     return {
-      'findCriteriaNodes' : findCriteriaNodes,
+      'findCriteriaNodes': findCriteriaNodes,
       'findTreePath': findTreePath,
       'addCriteriaToValueTree': addCriteriaToValueTree
     };
