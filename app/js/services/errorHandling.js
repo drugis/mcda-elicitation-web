@@ -3,11 +3,19 @@ define(['angular'], function(angular) {
 	var ErrorHandling = function($q, $rootScope) {
 		return {
 			'responseError': function(rejection) {
-				var data = rejection.data;
-				var message = {
-					code: data.code,
-					cause: data.message
-				};
+				var data, message;
+				if (rejection && rejection.data && rejection.data != "") {
+					data = rejection.data;
+					message = {
+						code: data.code,
+						cause: data.message
+					};
+				} else {
+					message = {
+						cause: 'an unknown error occurred'
+					};
+				}
+
 				$rootScope.$broadcast('error', message);
 				return $q.reject(rejection);
 			}

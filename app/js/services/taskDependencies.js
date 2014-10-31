@@ -2,16 +2,18 @@
 define(['underscore', 'angular'], function(_, angular) {
   var dependencies = [];
 
-  var scaleRanges =  {
+  var scaleRanges = {
     'isPresent': function(state) {
-      var hasScale =  function(criterion) { return criterion.pvf && criterion.pvf.range; };
-      return  _.every(state.problem.criteria, hasScale);
+      var hasScale = function(criterion) {
+        return criterion.pvf && criterion.pvf.range;
+      };
+      return _.every(state.problem.criteria, hasScale);
     },
     'remove': function(state) {
       var newState = angular.copy(state);
       var criteria = newState.problem.criteria;
       _.each(criteria, function(criterion) {
-        if(criterion.pvf) {
+        if (criterion.pvf) {
           delete criterion.pvf.range;
         }
       });
@@ -33,7 +35,7 @@ define(['underscore', 'angular'], function(_, angular) {
       var criteria = newState.problem.criteria;
       _.each(criteria, function(criterion) {
         var remove = ['type', 'direction', 'cutoffs', 'values'];
-        if(criterion.pvf) {
+        if (criterion.pvf) {
           criterion.pvf = _.omit(criterion.pvf, remove);
         }
       });
@@ -69,19 +71,23 @@ define(['underscore', 'angular'], function(_, angular) {
   };
 
   var nonOrdinalPreferences = new PreferenceFilter(
-    function(pref) { return pref.type !== "ordinal"; },
+    function(pref) {
+      return pref.type !== "ordinal";
+    },
     'non-ordinal preferences');
 
   // This heuristic is not complete; it only checks whether there are ordinal preferences at all.
   // Currently, there is no way to create ordinal preferences that are not a complete ranking.
   var completeCriteriaRanking = new PreferenceFilter(
-    function(pref) { return pref.type === "ordinal"; },
+    function(pref) {
+      return pref.type === "ordinal";
+    },
     'complete criteria ranking');
 
-  var TaskDependencies =  function() {
+  var TaskDependencies = function() {
     var definitions = {
-      'scale-ranges': scaleRanges,
-      'partial-value-functions': partialValueFunctions,
+      'scale-range': scaleRanges,
+      'partial-value-function': partialValueFunctions,
       'criteria-trade-offs': criteriaTradeOffs,
       'non-ordinal-preferences': nonOrdinalPreferences,
       'complete-criteria-ranking': completeCriteriaRanking
@@ -92,13 +98,24 @@ define(['underscore', 'angular'], function(_, angular) {
       }, state);
     };
     var isAccessible = function(task, state) {
-      var requires = _.filter(task.requires, function(require) { return !definitions[require].isPresent(state); });
-      return { accessible: _.isEmpty(requires), requires: requires};
+      var requires = _.filter(task.requires, function(require) {
+        return !definitions[require].isPresent(state);
+      });
+      return {
+        accessible: _.isEmpty(requires),
+        requires: requires
+      };
     };
     var isSafe = function(task, state) {
-      var resets = _.filter(task.resets, function(reset) { return definitions[reset].isPresent(state); });
-      return { safe: _.isEmpty(resets), resets: resets};
+      var resets = _.filter(task.resets, function(reset) {
+        return definitions[reset].isPresent(state);
+      });
+      return {
+        safe: _.isEmpty(resets),
+        resets: resets
+      };
     };
+
     return {
       definitions: definitions,
       isAccessible: isAccessible,

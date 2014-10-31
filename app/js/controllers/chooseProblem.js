@@ -1,42 +1,46 @@
 'use strict';
 define(['angular', 'underscore'], function(angular, _) {
-  var dependencies = ['$scope', '$resource', config.workspacesRepository.type + 'Workspaces'];
-  var ChooseProblemController = function($scope, $resource, Workspaces) {
-    var examplesRepositoryUrl = config ? config.examplesRepository : '';
-    var examplesResource = $resource(examplesRepositoryUrl + ':url', {url:'@url'});
+  var dependencies = ['$scope', '$state', '$resource', 'WorkspaceResource', 'WorkspaceService'];
+  var ChooseProblemController = function($scope, $state, $resource, WorkspaceResource, WorkspaceService) {
+    var examplesResource = $resource('examples/:url', {
+      url: '@url'
+    });
 
     $scope.examplesList = examplesResource.query();
-    
-    $scope.list = [];
     $scope.model = {};
     $scope.local = {};
 
     $scope.createWorkspace = function(choice) {
-      function createWorkspace(problem) {
-        Workspaces
-          .create(problem)
-          .then(function(workspace) { workspace.redirectToDefaultView(); });
-      }
-      
-      if (choice === 'local') {
-        if (!_.isEmpty($scope.local.contents)) {
-          createWorkspace(angular.fromJson($scope.local.contents));
-        }
+      if (choice === 'local' && !_.isEmpty($scope.local.contents)) {
+        WorkspaceService.createWorkspace(angular.fromJson($scope.local.contents)).$promise.then(function(workspace) {
+          $state.go('overview', {
+            workspaceId: workspace.id,
+            id: workspace.defaultScenarioId
+          });
+        });
       } else {
-        examplesResource.get({url: choice}, function(problem) {
-          createWorkspace(problem);
+        var example = {
+          url: choice
+        };
+        examplesResource.get(example, function(problem) {
+          WorkspaceService.createWorkspace(problem).$promise.then(function(workspace) {
+            $state.go('overview', {
+              workspaceId: workspace.id,
+              id: workspace.defaultScenarioId
+            });
+          });
         });
       }
     };
 
     $scope.$watch('local.contents', function(newVal) {
-      if(!_.isEmpty(newVal)) {
+      if (!_.isEmpty(newVal)) {
         $scope.model.choice = 'local';
       }
     });
 
-    $scope.workspacesList = Workspaces.query();
-    
+    $scope.workspacesList = WorkspaceResource.query();
+
     $scope.chooseProblemModal = {};
   };
 

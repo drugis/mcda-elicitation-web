@@ -2,13 +2,17 @@ package org.drugis.mcdaweb.standalone.repositories;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.drugis.mcdaweb.standalone.util.ObjectToStringDeserializer;
 
 public class Workspace {
 	private int id;
 	private int owner;
 	private Integer defaultScenarioId;
 	private String title;
-	private Object problem;
+
+  @JsonRawValue
+	private String problem;
 	
 	public Workspace() {
 
@@ -32,11 +36,12 @@ public class Workspace {
 
 	@JsonRawValue
 	public String getProblem() {
-		return problem == null ? "{}" : problem.toString();
+		return problem;
 	}
 
-	public void setProblem(JsonNode node) {
-		this.problem = node.toString();
+  @JsonDeserialize(using = ObjectToStringDeserializer.class)
+  public void setProblem(String problem) {
+		this.problem = problem;
 	}
 
 	public int getId() {

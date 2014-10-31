@@ -1,21 +1,30 @@
 package org.drugis.mcdaweb.standalone.repositories;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
-import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.drugis.mcdaweb.standalone.util.ObjectToStringDeserializer;
 
 public class Scenario {
 	private int id;
-	private int workspace;
+	private int workspaceId;
 	private String title;
-	private Object state;
+
+  @JsonRawValue
+	private String state;
 	
 	public Scenario() {
 		
 	}
-	
-	public Scenario(int id, int workspace, String title, String state) {
+
+  public Scenario(int workspaceId, String title, String state) {
+    this.workspaceId = workspaceId;
+    this.title = title;
+    this.state = state;
+  }
+
+  public Scenario(int id, int workspaceId, String title, String state) {
 		this.id = id;
-		this.workspace = workspace;
+		this.workspaceId = workspaceId;
 		this.title = title;
 		this.state = state;
 	}
@@ -24,24 +33,21 @@ public class Scenario {
 		return title;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	@JsonRawValue
+  @JsonRawValue
 	public String getState() {
-		return state == null ? "{}" : state.toString();
+		return this.state;
 	}
 
-	public void setState(JsonNode node) {
-		this.state = node;
-	}
+  @JsonDeserialize(using = ObjectToStringDeserializer.class)
+  public void setState(String state) {
+    this.state = state;
+  }
 
 	public int getId() {
 		return id;
 	}
 
-	public int getWorkspace() {
-		return workspace;
+	public int getWorkspaceId() {
+		return workspaceId;
 	}
 }

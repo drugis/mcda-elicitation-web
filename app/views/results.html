@@ -2,8 +2,8 @@
   <h3>Results</h3>
 
   <h4 ng-show="!isEditTitleVisible" class="subheader">
-    <span ng-bind="scenario.title"></span>
-    <a ng-click="editTitle()"><i class="fa fa-edit"></i></a>
+    <span>{{scenario.title}}</span>
+    <a ng-if="editMode.isUserOwner" ng-click="editTitle()"><i class="fa fa-edit"></i></a>
   </h4>
   <div class="row" ng-show="isEditTitleVisible">
     <div class="columns large-8 small-12">
@@ -11,20 +11,21 @@
         <div class="row collapse">
           <div class="columns small-8"><input type="text" ng-model="scenarioTitle.value"></div>
           <div class="columns small-2"><button class="button postfix" ng-click="saveTitle()">Save</button></div>
-          <div class="columns small-2"><button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button></div>            
+          <div class="columns small-2"><button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button></div>
         </div>
       </form>
     </div>
   </div>
 
 
-    <section class="row underlined-div" style="height: 450px;">
-    <h5>Rank acceptabilities</h5>
-    <div style="width: 400px; height: 400px">
-      <rank-plot value="currentStep.results.ranks.data"
-                 parse-fn="rankGraphData"
-                 stacked="true"
-                 problem="currentStep.problem">
+  <section class="row underlined-div" style="height: 450px;">
+    <div class="columns large-12">
+      <h4>Rank acceptabilities</h4>
+      <div style="width: 400px; height: 400px">
+        <rank-plot value="currentStep.results.ranks.data"
+        parse-fn="rankGraphData"
+        stacked="true"
+        problem="currentStep.problem">
       </rank-plot>
     </div>
     <table id="ranktable">
@@ -43,38 +44,41 @@
         </tr>
       </tbody>
     </table>
-    </section>
-    <section class="row underlined-div">
-      <div class="columns large-6">
-        <h5>Alternatives per rank</h5>
-        <select ng-model="currentStep.selectedRank" class="large-3">
-          <option ng-repeat="(k,v) in currentStep.problem.alternatives"
-                  value="{{$index}}"
-                  ng-selected="$index == currentStep.selectedRank">
-            Rank {{$index + 1}}
-          </option>
-        </select>
+  </div>
+</section>
 
-        <div style="width: 400px; height: 350px">
-          <bar-chart value="currentStep.alternativesByRank(currentStep)"></bar-chart>
-        </div>
-      </div>
-      <div class="columns large-6">
-        <h5>Ranks per alternative</h5>
-        <select ng-model="currentStep.selectedAlternative" class="large-3">
-          <option ng-repeat="(key, alternative) in currentStep.problem.alternatives"
-                  value="{{key}}"
-                  ng-selected="key == currentStep.selectedAlternative">
-            {{alternative.title}}
-          </option>
-        </select>
-        <div style="width: 400px; height: 350px">
-          <bar-chart value="currentStep.ranksByAlternative(currentStep)"></bar-chart>
-        </div>
-      </div>
-    </section>
-    <h5>Central Weights</h5>
-    <section class="row">
+<section class="row underlined-div">
+  <div class="columns large-6">
+    <h4>Alternatives per rank</h4>
+    <select ng-model="currentStep.selectedRank" class="large-3">
+      <option ng-repeat="(k,v) in currentStep.problem.alternatives"
+      value="{{$index}}"
+      ng-selected="$index == currentStep.selectedRank">
+      Rank {{$index + 1}}
+    </option>
+  </select>
+
+  <div style="width: 400px; height: 350px">
+    <bar-chart value="currentStep.alternativesByRank(currentStep)"></bar-chart>
+  </div>
+</div>
+<div class="columns large-6">
+  <h4>Ranks per alternative</h4>
+  <select ng-model="currentStep.selectedAlternative" class="large-3">
+    <option ng-repeat="(key, alternative) in currentStep.problem.alternatives"
+    value="{{key}}"
+    ng-selected="key == currentStep.selectedAlternative">
+    {{alternative.title}}
+  </option>
+</select>
+<div style="width: 400px; height: 350px">
+  <bar-chart value="currentStep.ranksByAlternative(currentStep)"></bar-chart>
+</div>
+</div>
+</section>
+<h4>Central Weights</h4>
+<section class="row">
+  <div class="columns large-12">
     <div style="width: 650px; height: 350px">
       <line-chart value="currentStep.centralWeights(currentStep)"></line-chart>
     </div>
@@ -97,6 +101,7 @@
         </tr>
       </tbody>
     </table>
-    </section>
   </div>
+</section>
+</div>
 

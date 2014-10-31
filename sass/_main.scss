@@ -4,7 +4,22 @@ $inactive-tab-background-color: #0079a1;
 $inactive-tab-color: white;
 $active-tab-color: black;
 $active-tab-background-color: white;
+$tab-disabled-opacity: 0.7;
 
+/* remove fire-fox dotted border */
+a:focus {
+    outline: none;
+}
+
+.reveal-modal.mcda-reveal-modal {
+  position: fixed;
+  left: 10%;
+  margin: 0;
+  top:10%;
+  min-width: 300px;
+  max-height: 80%;
+  overflow-y: auto;
+}
 
 /* inline results */
 #results .loader, .hidden {
@@ -122,7 +137,7 @@ input[type='file'] {
 /* CSS FOR EFFECTSTABLE */
 
 .check2hide {
-  display: inline-block; 
+  display: inline-block;
   margin-right: 0.8rem;
 }
 
@@ -195,7 +210,7 @@ input[type='file'] {
 
 .effectstable caption span {
   color: #0079A1;
-} 
+}
 
 .effectstable th {
   text-align: left;
@@ -272,58 +287,6 @@ input[type='file'] {
   margin: 0 auto 0 auto;
 }
 
-.rem7 {
- min-width: 7rem;
-}
-
-.rem8 {
- min-width: 8rem;
-}
-
-.rem10 {
- min-width: 10rem !important;
-}
-
-.rem12 {
- min-width: 12rem !important;
-}
-
-.rem14 {
- min-width: 14rem !important;
-}
-
-.rem20 {
- min-width: 20rem !important;
-}
-
-.rem25 {
- min-width: 25rem !important;
-}
-
-.rem30 {
- min-width: 30rem !important;
-}
-
-.rem40 {
- min-width: 40rem !important;
-}
-
-.rem50 {
- min-width: 50rem !important;
-}
-
-.rem75 {
- min-width: 75rem !important;
-}
-
-.rem100 {
- min-width: 100rem !important;
-}
-
-.rem150 {
- min-width: 150rem !important;
-}
-
 .shadow {
   -moz-box-shadow: 3px 3px 4px #999; /* Firefox/Mozilla */
   -webkit-box-shadow: 3px 3px 4px #999; /*Safari/Chrome */
@@ -335,9 +298,9 @@ input[type='file'] {
 }
 
 .tableshadow {
-  -moz-box-shadow: 0px 0px 10px 1px #6e6e6e; 
-  -webkit-box-shadow: 0px 0px 10px 1px #6e6e6e; 
-  box-shadow: 0px 0px 10px 1px #6e6e6e; 
+  -moz-box-shadow: 0px 0px 10px 1px #6e6e6e;
+  -webkit-box-shadow: 0px 0px 10px 1px #6e6e6e;
+  box-shadow: 0px 0px 10px 1px #6e6e6e;
 }
 .hidethis {
   display:none;
@@ -353,46 +316,28 @@ input[type='file'] {
 .sidepanel {
   background: #210F5B;
   position: fixed;
-  width: 20%;
+  width: 25%;
   padding: 1rem  1rem 1.5rem 1rem;
   color: white;
   z-index: 999;
   border: 1px solid #8F7DC6;
-  border-right: none;
   border-top-left-radius: 6px;
   -moz-border-radius-topleft: 6px;
   border-bottom-left-radius: 6px;
   -moz-border-radius-bottomleft: 6px;
-  top: 20%;
+}
+
+.animate-hide {
   right: 0px;
-  -webkit-transition: right 0.7s ease-in-out;
-  -moz-transition: right 0.7s ease-in-out;
-  -ms-transition: right 0.7s ease-in-out;
-  -o-transition: right 0.7s ease-in-out;
-  transition: right 0.7s ease-in-out;
+  -webkit-transition:right 0.5s ease-in-out;
+  transition:right 0.5s ease-in-out;
+  -moz-transition: right 0.5s ease-in-out;
+  -ms-transition: right 0.5s ease-in-out;
+  -o-transition: right 0.5s ease-in-out;
 }
 
-.sidepanel .close-reveal-modal {
-  color: #fff !important;
-  float: right !important;
-}
-
-div.sidepanel.ng-hide-add {
-  /* ensure visibility during the transition */
-  display: block !important;
-  right: 0px;
-}
-
-div.sidepanel.ng-hide-remove {
-  /* ensure visibility during the transition */
-  display: block !important;
-  right: 0px;
-  height: 900px;
-}
-
-div.sidepanel.ng-hide {
-  right: -320px !important;
-  display: block !important;
+.animate-hide.ng-hide {
+  right: -1024px;
 }
 
 /* ---- //animate sidepanel -------- */
@@ -409,7 +354,6 @@ div.sidepanel.ng-hide {
 }
 
 .sidepanel table th {
- width: 100%;
  text-align: left;
  color: #fff;
  background: #210F5B;
@@ -419,7 +363,7 @@ div.sidepanel.ng-hide {
 }
 
 .sidepanel tr {
-  background: none;      
+  background: none;
 }
 
 .sidepanel table tr:nth-child(even) {
@@ -431,20 +375,12 @@ div.sidepanel.ng-hide {
 }
 
 .sidepanel table td {
- width: 100%;
  margin: 0;
  background: none;
  color: #fff;
  font-weight: normal;
  font-size: 0.875rem;
  padding: 0.3rem 0.6rem;
- border-right:1px solid #452F8C;
-}
-
-.sidepanel button {
- width: 20%;
- background: #452F8C;
- color: #fff;
 }
 
 .alternative {
@@ -464,23 +400,8 @@ div.sidepanel.ng-hide {
   display: none;
   padding: 1px;
   min-width: 400px;
-  text-align: left;
-  background-color: #fff;
-  background-clip: padding-box;
-  border: 1px solid #ccc;
-  border: 1px solid rgba(0,0,0,.2);
-  border-radius: 6px;
-  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
-  box-shadow: 0 5px 10px rgba(0,0,0,.2);
-  white-space: normal;
-  > *:last-child {
-    margin-bottom: 9px;
-  }
-  
-}
+  padding: 0.5rem 1rem;
 
-.mcda-dropdown-content {
-  margin: 9px 14px;
 }
 
 /* results page */
@@ -529,7 +450,7 @@ div.sidepanel.ng-hide {
 }
 
 .none {
-  display: none !important;
+  display: none;
 }
 
 #results-avail {
@@ -542,7 +463,7 @@ div.sidepanel.ng-hide {
   left: 570px;
 }
 
-/*----- TREEVIEW -----*/ 
+/*----- TREEVIEW -----*/
 
 /* general tree css */
 
@@ -667,21 +588,16 @@ treecontrol.tree-dark {
   font-size: 1rem;
 }
 
-div.row .workspace-control-tab {
+.workspace-control-tab {
   background-color: $workspace-lightblue-color;
   margin-right: 0.5rem;
-  .overview-nav{
-    float: right;
-  }
 }
 
 .overview-nav-container {
   border-bottom: 1px solid #4a91c4;
-  height: 49px;
 
     .overview-nav {
      position: relative;
-     height:50px;
      display: block;
      text-align: center;
      margin: 0 0 -2px 0;
@@ -691,110 +607,67 @@ div.row .workspace-control-tab {
     .overview-nav > ul {
       bottom: -4px;
       list-style-type: none;
-      height: 51px;
       width: 955px;
       margin: 2px auto 0 auto;
       position: relative;
     }
 
     .overview-nav li {
-     background-color: $inactive-tab-background-color;
-     border: 1px solid #4a91c4;
-     border-bottom: none;
      float: left;
-     height: 33px;
      margin: 16px 5px 0 5px;
-     font-size:0.82rem;
-     font-weight: 700;
-     padding: 0.4rem 0.8rem;
+
      list-style:none;
      a {
-      color: $inactive-tab-color;
+       border: 1px solid #4a91c4;
+       border-bottom: none;
+       color: $inactive-tab-color;
+       background-color: $inactive-tab-background-color;
+       padding-top: 4px;
+       padding-left: 18px;
+       padding-right: 18px;
+       padding-bottom: 4px;
+       display: inline-block;
+       margin-bottom: -1px;
+     }
+     a:hover {
+      border-color: darken($inactive-tab-background-color, 10%);
+      background-color: darken($inactive-tab-background-color, 10%);
+     }
+     a.activetab {
+      background-color: $active-tab-background-color;
+      color: $active-tab-color;
+     }
+     a.disabledtab {
+      cursor: $cursor-default-value;
+      opacity: $tab-disabled-opacity;
+     // background-color: grey;
+     }
+     a.disabledtab:hover {
+      cursor: $cursor-default-value;
+      opacity: $tab-disabled-opacity;
+      background-color: $inactive-tab-background-color;
+    //  background-color: grey;
+      border: 1px solid #4a91c4;
+      border-bottom: none;
      }
     }
 
     .overview-nav > li:first-child {
       margin-left: 15px;
     }
-
-
-    .overview-nav > li > a {
-      background: none;
-      border: none;
-    }
-
-}
-
-li.tab-corners.activetab {
- background-color: $active-tab-background-color;
- a {
-   color: $active-tab-color;
- }
 }
 
 .tab-corners {
  border-top-left-radius: 4px;
  border-top-right-radius: 4px;
  -moz-border-radius-topleft: 4px;
- -moz-border-radius-topright: 4px; 
+ -moz-border-radius-topright: 4px;
  -webkit-border-top-left-radius: 4px;
  -webkit-border-top-right-radius: 4px;
 }
 
 .scenario-menu {
-  padding-top:1rem;
-}
-
-/*------------ NAVBAR --------------*/   
-
-#navbar {
- position: relative;
- width: 100%;
- height:55px;
- display: block;
- text-align: center;
- border-bottom: 1px solid #4a91c4;
-}
-
-#navbar ul {
-  bottom: -4px;
-  list-style-type: none;
-  height: 51px;
-  width: 955px;
-  margin: 2px auto 0 auto;
-  position: relative;
-}
-
-#navbar li {
- background: #fff;
- border: 1px solid #4a91c4;
- border-bottom: none;
- border-top-left-radius: 4px;
- border-top-right-radius: 4px;
- -moz-border-radius-topleft: 4px;
- -moz-border-radius-topright: 4px; 
- -webkit-border-top-left-radius: 4px;
- -webkit-border-top-right-radius: 4px;
- float: left;
- width: 185px;
- height: 33px;
- margin-left: 10px;
- margin-top: 17px;
- font-size:0.82rem;
- font-weight: 700;
- color: #333;
- padding: 0.4rem 0 0 0;
-}
-
-#navbar li a {
-  color: #333;
-}
-
-
-
-
-#navbar2 .activetab a {
-  color: #fff !important;
+  padding-top: 18px;
 }
 
 .scenario-select {
@@ -812,7 +685,7 @@ li.tab-corners.activetab {
 
 .new-scenario-btn {
   color: white;
-}  
+}
 
 .new-scenario-btn:hover {
   cursor: pointer;
@@ -822,4 +695,62 @@ li.tab-corners.activetab {
 #newScenarioControl {
   margin-left:-10px;
   margin-top: 6px;
+}
+
+.results-button {
+  margin-left:0.5rem;
+}
+
+$preferences-progress-inactive-color: #e2e2e2;
+
+.pref-progress {
+  margin: 50px 60px;
+}
+
+.circle-container {
+  text-align: center;
+  display: inline-block;
+  padding: 2px 2px;
+  float:left;
+  margin-top:-17px;
+}
+
+.line {
+    background-color: $preferences-progress-inactive-color;
+    width: 100%;
+    height: 5px;
+}
+
+.last-line {
+    height: 5px;
+}
+
+.pref-progress .progress-cell {
+  padding:0px;
+}
+
+.circle {
+  background-color: $preferences-progress-inactive-color;
+  height: 25px;
+  width: 25px;
+  border-radius: 25px;
+  padding-top: 4px;
+  margin-bottom: 8px;
+  margin-left: -15px;
+}
+
+.circle-container.next-step .circle,
+.circle-container.completed .circle,
+.line.accessible {
+  background-color: $success-color;
+}
+
+.circle-container.next-step:hover,
+.circle-container.completed:hover {
+  cursor: pointer;
+} 
+
+.circle-label {
+  margin-left: -50%;
+  text-align:left;
 }

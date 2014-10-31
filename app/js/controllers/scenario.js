@@ -1,58 +1,93 @@
+'use strict';
 define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
-  return function($scope, $location, $state, Tasks, TaskDependencies, currentWorkspace, currentScenario) {
-    $scope.workspace = currentWorkspace;
+  return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, currentScenario, scenarios, ScenarioResource) {
+
+    function randomId(size, prefix) {
+      var text = '';
+      var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+      for (var i = 0; i < size; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+      }
+      return prefix ? prefix + text : text;
+    }
+
+    var resultsAccessible = function(results, state) {
+      return TaskDependencies.isAccessible(results, state);
+    };
+
     $scope.scenario = currentScenario;
-    $scope.scenarios = currentWorkspace.query();
+    $scope.tasks = _.reduce(Tasks.available, function(tasks, task) {
+      tasks[task.id] = task;
+      return tasks;
+    }, {});
+    $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
 
-    var resultsAccessible = function() {
-      var resultsTask = _.find(Tasks.available, function(task) {
-        return task.id === "results";
-      });
-      var accessible = TaskDependencies.isAccessible(resultsTask, currentScenario.state);
-      return accessible.accessible;
-    };
-
-    $scope.resultsAccessible = resultsAccessible();
-
-    $scope.$on("elicit.scenariosChanged", function(e, val) {
-      $scope.scenarios = currentWorkspace.query();
-      $scope.resultsAccessible = resultsAccessible();
+    $scope.$on('elicit.partialValueFunctionChanged', function() {
+      $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
     });
-
-    var redirect = function(scenarioId) {
-      $state.go(Config.defaultView, {scenarioId: scenarioId});
-    };
-
-    $scope.forkScenario = function() {
-      currentWorkspace
-        .newScenario(currentScenario.state)
-        .then(redirect);
-    };
-
-    $scope.newScenario = function() {
-      currentWorkspace
-        .newScenario({
-          "problem": currentWorkspace.problem
-        })
-        .then(redirect);
-    };
 
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
+    $scope.scenarios = scenarios;
 
-    $scope.editTitle = function () {
+    $scope.$on('elicit.scenariosChanged', function() {
+      $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
+    });
+
+    var redirect = function(scenarioId) {
+      var newState = _.omit($stateParams, 'id');
+      newState.id = scenarioId;
+      $state.go(Config.defaultView, newState);
+    };
+
+    $scope.forkScenario = function() {
+      var newScenario = {
+        'title': randomId(3, 'Scenario '),
+        'state': $scope.scenario.state
+      };
+      ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
+        redirect(savedScenario.id);
+      });
+    };
+
+    $scope.newScenario = function() {
+      var newScenario = {
+        'title': randomId(3, 'Scenario '),
+        'state': {
+          'problem': $scope.workspace.problem
+        }
+      };
+      ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
+        redirect(savedScenario.id);
+      });
+    };
+
+    $scope.editTitle = function() {
       $scope.isEditTitleVisible = true;
       $scope.scenarioTitle.value = $scope.scenario.title;
     };
 
-    $scope.saveTitle = function () {
+    $scope.saveTitle = function() {
       $scope.scenario.title = $scope.scenarioTitle.value;
-      $scope.scenario.save();
+      $scope.scenario.$save($stateParams, function(){
+        $scope.scenarios = ScenarioResource.query(_.omit($stateParams, 'id'))
+      });
       $scope.isEditTitleVisible = false;
     };
 
-    $scope.cancelTitle = function () {
+    $scope.cancelTitle = function() {
       $scope.isEditTitleVisible = false;
+    };
+
+    $scope.scenarioChanged = function(newScenario) {
+      if (!resultsAccessible($scope.tasks.results, newScenario.state).accessible) {
+        $scope.taskId = 'preferences';
+      }
+      $state.go($scope.taskId, {
+        workspaceId: $scope.workspace.id,
+        id: newScenario.id
+      });
     };
   };
 });

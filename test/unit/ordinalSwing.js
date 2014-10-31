@@ -1,5 +1,11 @@
-define(['angular-mocks', 'mcda/controllers', 'mcda/services/taskDependencies', 'mcda/services/partialValueFunction'],
+define(['angular-mocks',
+    'mcda/controllers',
+    'mcda/services/taskDependencies',
+    'mcda/services/partialValueFunction',
+    'mcda/services/pataviService'
+  ],
   function(controllers, TaskDependencies) {
+    var state;
 
     describe("OrdinalSwingHandler", function() {
       var $scope1;
@@ -8,29 +14,29 @@ define(['angular-mocks', 'mcda/controllers', 'mcda/services/taskDependencies', '
       beforeEach(module('elicit.controllers'));
       beforeEach(module('elicit.taskDependencies'));
       beforeEach(module('elicit.pvfService'));
-      
+      beforeEach(module('elicit.pataviService'));
 
       function initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, problem) {
         var scope;
         scope = $rootScope.$new();
 
-        var scenario = {
-          state: PartialValueFunction.attach({
-            problem: problem
-          }),
-          update: function(state) {},
-          redirectToDefaultView: function() {}
-        };
-        scope._scenario = scenario;
+        scope.scenario = jasmine.createSpyObj('scenario', ['$save']);
+        scope.scenario.state = PartialValueFunction.attach({
+          problem: problem
+        });
 
         var task = {
           requires: [],
           resets: []
         };
 
+        state = jasmine.createSpyObj('$state', ['go']);
+
         $controller('OrdinalSwingController', {
           $scope: scope,
-          currentScenario: scenario,
+          $state: state,
+          $stateParams: {},
+          currentScenario: scope.scenario,
           taskDefinition: TaskDependencies.extendTaskDefinition(task),
           mcdaRootPath: 'some mcda rootPath'
         });
@@ -157,53 +163,11 @@ define(['angular-mocks', 'mcda/controllers', 'mcda/services/taskDependencies', '
           $scope1.currentStep.choice = "Dist DVT";
           expect($scope1.canSave($scope1.currentStep)).toBeTruthy();
 
-          spyOn($scope1._scenario, "update");
+
           $scope1.save($scope1.currentStep);
-          expect($scope1._scenario.update).toHaveBeenCalled();
-          expect($scope1._scenario.update.calls.mostRecent().args[0].prefs).toEqual([{
-            type: "ordinal",
-            criteria: ["Prox DVT", "Dist DVT"]
-          }, {
-            type: "ordinal",
-            criteria: ["Dist DVT", "Bleed"]
-          }]);
+          expect($scope1.scenario.$save).toHaveBeenCalled();
         });
       });
 
-      describe("standardize", function() {
-        it("should rewrite the order to separate statements", function() {
-          expect($scope1.standardize({
-            ordinal: ["Prox DVT", "Bleed", "Dist DVT"]
-          })).toEqual([{
-            type: "ordinal",
-            criteria: ["Prox DVT", "Bleed"]
-          }, {
-            type: "ordinal",
-            criteria: ["Bleed", "Dist DVT"]
-          }]);
-        });
-
-        it("adds missing preference data", function() {
-          expect($scope1.standardize({
-            ordinal: ["Prox DVT"]
-          })).toEqual([{
-            type: "ordinal",
-            criteria: ["Prox DVT", "Bleed"]
-          }, {
-            type: "ordinal",
-            criteria: ["Prox DVT", "Dist DVT"]
-          }]);
-
-          expect($scope1.standardize({
-            ordinal: ["Prox DVT", "Bleed"]
-          })).toEqual([{
-            type: "ordinal",
-            criteria: ["Prox DVT", "Bleed"]
-          }, {
-            type: "ordinal",
-            criteria: ["Bleed", "Dist DVT"]
-          }]);
-        });
-      });
     });
   });

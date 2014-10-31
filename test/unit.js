@@ -5,7 +5,6 @@ require.config({
     'angular': 'bower_components/angular/angular.min',
     'angular-resource': 'bower_components/angular-resource/angular-resource.min',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router.min',
-    'NProgress': 'bower_components/nprogress/nprogress',
     'jquery-slider': 'lib/jslider/bin/jquery.slider.min',
     'd3': 'bower_components/d3/d3.min',
     'nvd3': 'bower_components/nvd3/nv.d3.min',
@@ -26,8 +25,7 @@ require.config({
     'jQuery': { exports : 'jQuery'},
     'jquery-slider': { deps: ['jQuery'] },
     'jasmine': { exports: 'jasmine' },
-    'jasmine-html': { deps: ['jasmine'], exports: 'jasmine' },
-    'NProgress': { deps: ['jQuery'], exports: "NProgress" }
+    'jasmine-html': { deps: ['jasmine'], exports: 'jasmine' }
   }
 });
 

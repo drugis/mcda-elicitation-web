@@ -1,9 +1,12 @@
 {
   "title" : "Fava et al, 2002 BR",
+  "description": "Based on Fava et al. (2002), \"Acute Efficacy of Fluoxetine Versus Sertraline and Paroxetine in Major Depressive Disorder Including Effects of Baseline Insomnia\".",
   "criteria" : {
     "ham-d-responders" : {
       "title" : "HAM-D Responders",
       "scale": [0.0, 1.0],
+      "unitOfMeasurement": "Proportion",
+      "description": "Responders on the HAM-D rating scale",
       "pvf" : {
         "direction" : "increasing",
         "type" : "linear",
@@ -13,6 +16,7 @@
     "diarrhea" : {
       "title" : "Diarrhea",
       "scale": [0.0, 1.0],
+      "unitOfMeasurement": "Proportion",
       "pvf" : {
         "direction" : "decreasing",
         "type" : "linear",
@@ -22,6 +26,7 @@
     "dizziness" : {
       "title" : "Dizziness",
       "scale": [0.0, 1.0],
+      "unitOfMeasurement": "Proportion",
       "pvf" : {
         "direction" : "decreasing",
         "type" : "linear",
@@ -31,6 +36,7 @@
     "headache" : {
       "title" : "Headache",
       "scale": [0.0, 1.0],
+      "unitOfMeasurement": "Proportion",
       "pvf" : {
         "direction" : "decreasing",
         "type" : "linear",
@@ -40,6 +46,7 @@
     "insomnia" : {
       "title" : "Insomnia",
       "scale": [0.0, 1.0],
+      "unitOfMeasurement": "Proportion",
       "pvf" : {
         "direction" : "decreasing",
         "type" : "linear",
@@ -49,6 +56,7 @@
     "nausea" : {
       "title" : "Nausea",
       "scale": [0.0, 1.0],
+      "unitOfMeasurement": "Proportion",
       "pvf" : {
         "direction" : "decreasing",
         "type" : "linear",

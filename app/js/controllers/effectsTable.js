@@ -1,85 +1,88 @@
-'use strict';
+/*jshint node: true */
 define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
-    function (Config, patavi, angular, angularanimate, mmfoundation, _) {
-      var dependencies = ['$scope', 'taskDefinition', config.workspacesRepository.type + 'Remarks', 'ValueTreeUtil'];
-      var EffectsTableController = function ($scope, taskDefinition, Remarks, ValueTreeUtil) {
+  function(Config, patavi, angular, angularanimate, mmfoundation, _) {
+    var dependencies = ['$scope', '$stateParams', 'taskDefinition', 'RemarksResource', 'ValueTreeUtil', 'WorkspaceService'];
+    var EffectsTableController = function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil, WorkspaceService) {
 
-        Remarks.get($scope.workspace.id).then(function (remarks) {
-          $scope.remarks = remarks;
+      var remarksCache;
+      $scope.workspace.problem = WorkspaceService.addValueTree($scope.workspace.problem);
+      $scope.scales = {};
+      WorkspaceService.prepareScales($scope.workspace.problem).then(function(results) {
+        $scope.scales = results.results;
+      }); 
+
+      function buildEffectsTableData(problem) {
+        var criteriaNodes = ValueTreeUtil.findCriteriaNodes(problem.valueTree);
+        var effectsTable = [];
+
+        angular.forEach(criteriaNodes, function(criteriaNode) {
+          var path = ValueTreeUtil.findTreePath(criteriaNode, problem.valueTree);
+          effectsTable.push({
+            path: path.slice(1), // omit top-level node
+            criteria: _.map(criteriaNode.criteria, function(criterionKey) {
+              return {
+                key: criterionKey,
+                value: problem.criteria[criterionKey]
+              };
+            })
+          });
         });
 
-        $scope.saveRemarks = function () {
-          Remarks.save($scope.workspace.id, $scope.remarks);
-        };
+        return effectsTable;
+      }
 
-        $scope.$parent.taskId = taskDefinition.id;
+      $scope.problem = $scope.workspace.problem;
+      $scope.effectsTableData = buildEffectsTableData($scope.problem);
+      $scope.nrAlternatives = _.keys($scope.problem.alternatives).length;
+      $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree($scope.problem.valueTree, $scope.problem.criteria);
 
-        // FIXME: these calculations really should happen at the workspace level
-        // ===========================================
-        (function (problem) {
-          var errorHandler = function (code, error) {
-            var message = {
-              code: (code && code.desc) ? code.desc : code,
-              cause: error
-            };
-            $scope.$root.$broadcast("error", message);
-            NProgress.done();
-          };
-          var data = _.extend(problem, { "method": "scales" });
-          var task = patavi.submit(Config.pataviService, data);
-          $scope.scales = {};
-          task.results.then(function (data) {
-            $scope.$apply(function () { $scope.scales = data.results });
-          }, errorHandler);
-        })($scope.workspace.problem);
-        // ===========================================
+      $scope.remarks = {};
+      $scope.$parent.taskId = taskDefinition.id;
+      $scope.alternativeVisible = {};
+      // show / hide sidepanel
+      $scope.showPanel = false;
+      $scope.onLoadClass = 'animate-hide';
+      // $scope.editMode = {
+      //   allowEditing: window.config.user.id === ($scope.project.owner.id + 1)
+      // };
 
-        var problem = $scope.workspace.problem;
-        $scope.problem = problem;
 
-        $scope.alternativeVisible = {};
+      RemarksResource.get(_.omit($stateParams, 'id'), function(remarks) {
+        if (remarks.remarks) {
+          $scope.remarks = remarks;
+        }
+        remarksCache = angular.copy(remarks);
+      });
 
-        var buildEffectsTableData = function (problem) {
-          var criteriaNodes = ValueTreeUtil.findCriteriaNodes(problem.valueTree);
-          var effectsTable = [];
-
-          angular.forEach(criteriaNodes, function (criteriaNode) {
-            var path = ValueTreeUtil.findTreePath(criteriaNode, problem.valueTree);
-            effectsTable.push({
-              path: path.slice(1), // omit top-level node
-              criteria: _.map(criteriaNode.criteria, function (criterionKey) {
-                return {
-                  key: criterionKey,
-              value: problem.criteria[criterionKey]
-                };
-              })
-            });
-          });
-
-          return effectsTable;
-        };
-
-        $scope.effectsTableData = buildEffectsTableData(problem);
-
-        // show / hide sidepanel
-        $scope.showPanel = true;
-        $scope.toggleSidebar = function (criterion) {
-          $scope.sideParam = {
-            title: criterion.value.title,
-            key: criterion.key,
-            scales: $scope.scales[criterion.key]
-          };
-          $scope.showPanel = !$scope.showPanel;
-        };
-
-        $scope.editRemarkModal = function (node) {
-          console.log(node.remark);
-        };
-
-        $scope.nrAlternatives = _.keys(problem.alternatives).length;
-
-        $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree(problem.valueTree, problem.criteria);
+      $scope.saveRemarks = function() {
+        RemarksResource.save(_.omit($stateParams, 'id'), $scope.remarks, function() {
+          remarksCache = angular.copy($scope.remarks);
+        });
       };
 
-      return dependencies.concat(EffectsTableController);
-    });
+      $scope.cancelRemarks = function() {
+        $scope.remarks = angular.copy(remarksCache);
+      };
+
+
+      $scope.toggleSidebar = function(criterion) {
+        if ($scope.showPanel && criterion.key === $scope.sideParam.key) {
+          $scope.showPanel = !$scope.showPanel;
+        } else {
+          $scope.showPanel = true;
+        }
+        $scope.sideParam = {
+          title: criterion.value.title,
+          key: criterion.key,
+          scales: $scope.scales[criterion.key]
+        };
+      };
+
+      $scope.editRemarkModal = function(node) {
+        console.log(node.remark);
+      };
+
+    };
+
+    return dependencies.concat(EffectsTableController);
+  });

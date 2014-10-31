@@ -2,12 +2,12 @@
 define(['mcda/config', 'angular', 'underscore', 'mcda/services/partialValueFunction'], function(Config, angular, _) {
   var dependencies = ['elicit.pvfService'];
 
-  var Workspaces = function(PartialValueFunction, LocalRemarks, $rootScope, $q, $location)  {
+  var Workspaces = function(PartialValueFunction, LocalRemarks, $rootScope, $q, $location) {
     function randomId(size, prefix) {
       var text = "";
       var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-      for(var i = 0; i < size; i++ ) {
+      for (var i = 0; i < size; i++) {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
       }
       return prefix ? prefix + text : text;
@@ -26,7 +26,10 @@ define(['mcda/config', 'angular', 'underscore', 'mcda/services/partialValueFunct
 
     function addValueTree(problem) {
       if (!problem.valueTree) {
-        problem.valueTree = { "title": "Overall value", "criteria": _.keys(problem.criteria) };
+        problem.valueTree = {
+          "title": "Overall value",
+          "criteria": _.keys(problem.criteria)
+        };
       }
     }
 
@@ -39,7 +42,7 @@ define(['mcda/config', 'angular', 'underscore', 'mcda/services/partialValueFunct
 
       workspace.getScenario = function(id) {
         var deferred = $q.defer();
-        var scenario  = workspace.scenarios[id];
+        var scenario = workspace.scenarios[id];
         PartialValueFunction.attach(scenario.state);
 
         addValueTree(scenario.state.problem);
@@ -66,7 +69,11 @@ define(['mcda/config', 'angular', 'underscore', 'mcda/services/partialValueFunct
         var id = randomId(5);
 
         var n = _.size(workspace.scenarios) + 1;
-        var scenario = { "id" : id, "title": "Scenario " + n, "state": state };
+        var scenario = {
+          "id": id,
+          "title": "Scenario " + n,
+          "state": state
+        };
         workspace.scenarios[id] = scenario;
 
         save(workspace.id, workspace);
@@ -75,13 +82,20 @@ define(['mcda/config', 'angular', 'underscore', 'mcda/services/partialValueFunct
         deferred.resolve(id);
         return deferred.promise;
       };
-      
+
       workspace.$save = function() {
-        save(workspace.id, workspace);  
+        save(workspace.id, workspace);
       };
 
+
       workspace.query = function() {
-        return _.values(workspace.scenarios).sort(function(a, b) { return a.title.localeCompare(b.title); });
+        var sortedValues = _.values(workspace.scenarios).sort(function(a, b) {
+          return a.title.localeCompare(b.title);
+        });
+        var deferred = $q.defer();
+        deferred.resolve(sortedValues);
+        sortedValues.$promise = deferred.promise;
+        return sortedValues;
       };
 
       return workspace;
@@ -99,19 +113,27 @@ define(['mcda/config', 'angular', 'underscore', 'mcda/services/partialValueFunct
       var scenarioId = randomId(5);
 
       var scenarios = {};
-      scenarios[scenarioId] = { "id" : scenarioId, "title": "Default", "state": { problem: problem }};
+      scenarios[scenarioId] = {
+        "id": scenarioId,
+        "title": "Default",
+        "state": {
+          problem: problem
+        }
+      };
 
-      var workspace = { "id" : workspaceId,
-                        "defaultScenarioId": scenarioId,
-                        "title": problem.title,
-                        "problem": problem,
-                        "scenarios": scenarios };
+      var workspace = {
+        "id": workspaceId,
+        "defaultScenarioId": scenarioId,
+        "title": problem.title,
+        "problem": problem,
+        "scenarios": scenarios
+      };
       localStorage.setItem('workspace.' + workspaceId, angular.toJson(workspace));
 
       if (problem.remarks) {
         LocalRemarks.save(workspaceId, problem.remarks);
       }
-      
+
       var deferred = $q.defer();
       deferred.resolve(decorate(workspace));
       return deferred.promise;
@@ -130,10 +152,12 @@ define(['mcda/config', 'angular', 'underscore', 'mcda/services/partialValueFunct
       return items;
     };
 
-    return { "create" : create,
-             "get" : get,
-             "save": save,
-             "query": query };
+    return {
+      "create": create,
+      "get": get,
+      "save": save,
+      "query": query
+    };
   };
 
   return angular.module('elicit.localWorkspaces', dependencies).factory('LocalWorkspaces', Workspaces);

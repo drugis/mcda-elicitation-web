@@ -55,11 +55,11 @@
   </section>
 
 
-  <div class="row">
+  <div ng-cloak class="row">
     <div class="columns">
-      <alert type="info">
+      <addis-alert type="info">
         <strong>Disclaimer:</strong> this is <em>beta</em> software. We store your workspaces on our servers. While we try our best to keep them secure and compatible with future versions, we can make no guarantees.
-      </alert>
+      </addis-alert>
     </div>
   </div>
     
@@ -67,15 +67,17 @@
 
 
   <script>
-	window.patavi = { "WS_URI": "wss://patavi.drugis.org/ws" };
     window.config = {
-      examplesRepository : "examples/",
-      workspacesRepository : {
-        type : "Remote",
-        url : "/workspaces/",
-        _csrf_token : "${_csrf.token}",
-        _csrf_header : "${_csrf.headerName}"
-      }
+     WS_URI: 'wss://patavi.drugis.org/ws',
+     workspacesRepositoryUrl: '/workspaces/',
+      _csrf_token : "${_csrf.token}",
+      _csrf_header : "${_csrf.headerName}",
+      user : {
+          id : ${account.id},
+          name : "${account.firstName}",
+          firstName : "${account.firstName}",
+          LastName : "${account.lastName}"
+        }
     };
    
     function signout(){

@@ -1,7 +1,14 @@
-define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
+'use strict';
+define([], function() {
 
-  return function($scope, $location, $state, Tasks, TaskDependencies, currentWorkspace) {
+  return function($scope, $location, $stateParams, Tasks, TaskDependencies, currentWorkspace, WorkspaceService) {
+
+    $scope.editMode = {
+      isUserOwner: currentWorkspace.owner === window.config.user.id
+    };
     $scope.workspace = currentWorkspace;
+    $scope.workspace.problem = WorkspaceService.addValueTree($scope.workspace.problem);
+    WorkspaceService.prepareScales($scope.workspace.problem);
 
     $scope.isEditTitleVisible = false;
 

@@ -2,10 +2,9 @@ package org.drugis.mcdaweb.standalone.controllers;
 
 import org.drugis.mcdaweb.standalone.account.Account;
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
-import org.drugis.mcdaweb.standalone.repositories.Scenario;
-import org.drugis.mcdaweb.standalone.repositories.ScenarioRepository;
-import org.drugis.mcdaweb.standalone.repositories.Workspace;
-import org.drugis.mcdaweb.standalone.repositories.WorkspaceRepository;
+import org.drugis.mcdaweb.standalone.model.Remarks;
+import org.drugis.mcdaweb.standalone.repositories.*;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -24,6 +23,8 @@ import java.util.Collection;
 public class WorkspacesController {
 
   final static Logger logger = LoggerFactory.getLogger(WorkspacesController.class);
+  public static final String DEFAULT_SCENARIO_TITLE = "Default";
+
 
   public class ResourceNotOwnedException extends Exception {
     private static final long serialVersionUID = -3342170675559096956L;
@@ -38,6 +39,7 @@ public class WorkspacesController {
   @Inject	private AccountRepository accountRepository;
   @Inject	private WorkspaceRepository workspaceRepository;
   @Inject	private ScenarioRepository scenarioRepository;
+  @Inject private RemarksRepository remarksRepository;
 
 	/*
 	 * Workspaces
@@ -55,6 +57,9 @@ public class WorkspacesController {
   public Workspace create(HttpServletRequest request, HttpServletResponse response, Principal currentUser, @RequestBody Workspace body) {
     Account user = accountRepository.findAccountByUsername(currentUser.getName());
     Workspace workspace = workspaceRepository.create(user.getId(), body.getTitle(), body.getProblem());
+    Scenario defaultScenario = scenarioRepository.create(workspace.getId(), DEFAULT_SCENARIO_TITLE, "{\"problem\":" + body.getProblem() + "}");
+    workspace.setDefaultScenarioId(defaultScenario.getId());
+    workspaceRepository.update(workspace);
     response.setStatus(HttpServletResponse.SC_CREATED);
     response.setHeader("Location", request.getRequestURL() + "/" + workspace.getId());
     return workspace;
@@ -98,10 +103,6 @@ public class WorkspacesController {
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
       return null;
     }
-    for (Scenario scenario : scenarios) {
-      // we don't need the State when showing a list of scenarios
-      scenario.setState(null);
-    }
     return scenarios;
   }
 
@@ -125,7 +126,7 @@ public class WorkspacesController {
     if (scenario == null) {
       throw new ResourceDoesNotExistException();
     }
-    if (scenario.getWorkspace() != workspace.getId()) {
+    if (scenario.getWorkspaceId() != workspace.getId()) {
       throw new ResourceNotOwnedException();
     }
     return scenario;
@@ -136,7 +137,28 @@ public class WorkspacesController {
   public Scenario updateScenario(HttpServletResponse response, Principal currentUser, @PathVariable int workspaceId, @PathVariable int scenarioId, @RequestBody Scenario body) throws ResourceDoesNotExistException, ResourceNotOwnedException {
     // actual scenario not needed; get used for security/existence checks
     getScenario(response, currentUser, workspaceId, scenarioId);
-    return scenarioRepository.update(scenarioId, body.getTitle(), body.getState());
+    Scenario scenario = scenarioRepository.update(scenarioId, body.getTitle(), body.getState());
+    return scenario;
+  }
+
+  @RequestMapping(value="/{workspaceId}/remarks", method=RequestMethod.GET)
+  @ResponseBody
+  public Remarks findRemarks(@PathVariable int workspaceId) throws Exception {
+    return remarksRepository.find(workspaceId);
+  }
+
+  @RequestMapping(value="/{workspaceId}/remarks", method=RequestMethod.POST)
+  @ResponseBody
+  public Remarks updateRemarks(HttpServletResponse response,  Principal currentUser, @PathVariable Integer workspaceId, @RequestBody Remarks remarks) throws Exception {
+    // actual workspace not needed, just check whether it exists and user owns it
+    get(response, currentUser, workspaceId);
+
+    if(remarksRepository.find(remarks.getWorkspaceId()) == null) {
+      Remarks createdRemarks =  remarksRepository.create(workspaceId, remarks.getRemarks());
+      response.setStatus(HttpServletResponse.SC_CREATED);
+      return createdRemarks;
+    }
+    return remarksRepository.update(workspaceId, remarks.getRemarks());
   }
 
   public static class ErrorResponse {

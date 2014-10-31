@@ -1,11 +1,10 @@
 package org.drugis.mcdaweb.standalone.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.drugis.mcdaweb.standalone.account.Account;
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
-import org.drugis.mcdaweb.standalone.repositories.Scenario;
-import org.drugis.mcdaweb.standalone.repositories.ScenarioRepository;
-import org.drugis.mcdaweb.standalone.repositories.Workspace;
-import org.drugis.mcdaweb.standalone.repositories.WorkspaceRepository;
+import org.drugis.mcdaweb.standalone.model.Remarks;
+import org.drugis.mcdaweb.standalone.repositories.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +54,7 @@ public class WorkspacesControllerTest {
 	}
 	
 	private Scenario createScenario(int scenarioId, int workspaceId, String title) {
-		return new Scenario(scenarioId, workspaceId, title, JSON_KEY_VALUE);
+		return new Scenario(scenarioId, workspaceId, title, "\"state\"");
 	}
 	
 	private MockMvc mockMvc;
@@ -68,6 +67,9 @@ public class WorkspacesControllerTest {
 
 	@Inject
 	private ScenarioRepository scenarioRepository;
+
+  @Inject
+  private RemarksRepository remarksRepository;
 	
 	@Autowired
 	private WebApplicationContext context;
@@ -79,6 +81,7 @@ public class WorkspacesControllerTest {
 		reset(accountRepository);
 		reset(workspaceRepository);
 		reset(scenarioRepository);
+    reset(remarksRepository);
 
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 		user = mock(Principal.class);
@@ -132,26 +135,32 @@ public class WorkspacesControllerTest {
 
 	@Test
 	public void testCreateWorkspace() throws Exception {
-		String jsonContent = "{\"title\": \"mockWorkspace\", \"problem\":" + JSON_KEY_VALUE + "}";
-		Workspace workspace = createWorkspace();
-		when(workspaceRepository.create(workspace.getOwner(), workspace.getTitle(), JSON_KEY_VALUE)).thenReturn(workspace);
-		mockMvc.perform(post("/workspaces")
-				.principal(user)
-				.contentType(APPLICATION_JSON_UTF8)
-				.content(jsonContent))
+    String jsonContent = "{\"title\": \"mockWorkspace\", \"problem\":" + JSON_KEY_VALUE + "}";
+    Workspace workspace = createWorkspace();
+    when(workspaceRepository.create(workspace.getOwner(), workspace.getTitle(), JSON_KEY_VALUE)).thenReturn(workspace);
+    int scenarioId = 378;
+    String stateString = "{\"problem\":" + workspace.getProblem() + "}";
+    Scenario scenario = new Scenario(scenarioId, workspace.getId(), WorkspacesController.DEFAULT_SCENARIO_TITLE, stateString);
+    when(scenarioRepository.create(workspace.getId(), WorkspacesController.DEFAULT_SCENARIO_TITLE, stateString)).thenReturn(scenario);
+    mockMvc.perform(post("/workspaces")
+            .principal(user)
+            .contentType(APPLICATION_JSON_UTF8)
+            .content(jsonContent))
 
-				.andExpect(status().isCreated())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-				.andExpect(header().string("Location", is("http://localhost:80/workspaces/1")))
-				.andExpect(jsonPath("$.id", is(workspace.getId())))
-				.andExpect(jsonPath("$.owner", is(workspace.getOwner())))
-				.andExpect(jsonPath("$.defaultScenarioId", is(workspace.getDefaultScenarioId())))
-				.andExpect(jsonPath("$.title", is(workspace.getTitle())))
-				.andExpect(jsonPath("$.problem.key", is("value")))
-		;
-		verify(workspaceRepository).create(workspace.getOwner(), workspace.getTitle(), workspace.getProblem() );
-		verify(accountRepository).findAccountByUsername("gert");
-	}
+            .andExpect(status().isCreated())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(header().string("Location", is("http://localhost:80/workspaces/1")))
+            .andExpect(jsonPath("$.id", is(workspace.getId())))
+            .andExpect(jsonPath("$.owner", is(workspace.getOwner())))
+            .andExpect(jsonPath("$.defaultScenarioId", is(workspace.getDefaultScenarioId())))
+            .andExpect(jsonPath("$.title", is(workspace.getTitle())))
+            .andExpect(jsonPath("$.problem.key", is("value")))
+    ;
+    verify(workspaceRepository).create(workspace.getOwner(), workspace.getTitle(), workspace.getProblem());
+    verify(workspaceRepository).update(workspace);
+    verify(scenarioRepository).create(workspace.getId(), WorkspacesController.DEFAULT_SCENARIO_TITLE, stateString);
+    verify(accountRepository).findAccountByUsername("gert");
+  }
 	
 	@Test
 	public void testGetWorkspace() throws Exception {
@@ -317,7 +326,7 @@ public class WorkspacesControllerTest {
 		Scenario scenario = createScenario(scenarioId, workspaceId, title);
 		when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
 		when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(true);
-		when(scenarioRepository.create(scenario.getWorkspace(), scenario.getTitle(), JSON_KEY_VALUE)).thenReturn(scenario);
+		when(scenarioRepository.create(scenario.getWorkspaceId(), scenario.getTitle(), JSON_KEY_VALUE)).thenReturn(scenario);
 
 		String jsonContent = "{\"id\": 0, \"title\": \"" + title + "\", \"state\": " + JSON_KEY_VALUE + "}";
 		mockMvc.perform(post("/workspaces/1/scenarios")
@@ -348,10 +357,9 @@ public class WorkspacesControllerTest {
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.id", is(1)))
-			.andExpect(jsonPath("$.workspace", is(1)))
+			.andExpect(jsonPath("$.workspaceId", is(1)))
 			.andExpect(jsonPath("$.title", is("title")))
-			.andExpect(jsonPath("$.state.key", is("value")))
-		;
+		.andExpect(jsonPath("$.state", is("state")));
 		verify(scenarioRepository).findById(scenarioId);
 		verify(workspaceRepository).findById(workspaceId);
 		verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
@@ -407,8 +415,9 @@ public class WorkspacesControllerTest {
 		String scenarioTitle = "scenarioTitle";
 		Scenario scenario = createScenario(scenarioId, workspaceId, scenarioTitle);
 		when(scenarioRepository.findById(scenarioId)).thenReturn(scenario);
-		String jsonContent = "{\"id\": 1, \"title\": \"scenarioTitle\", \"state\": " + JSON_KEY_VALUE + "}";
-		when(scenarioRepository.update(scenarioId, scenarioTitle, JSON_KEY_VALUE)).thenReturn(scenario);
+    ObjectMapper objectMapper = new ObjectMapper();
+    String jsonContent = objectMapper.writeValueAsString(scenario);
+    when(scenarioRepository.update(scenarioId, scenarioTitle, scenario.getState())).thenReturn(scenario);
 		
 		mockMvc.perform(post("/workspaces/1/scenarios/1")
 			.principal(user)
@@ -422,13 +431,73 @@ public class WorkspacesControllerTest {
 		verify(workspaceRepository).findById(workspaceId);
 		verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
 		verify(scenarioRepository).findById(scenarioId);
-		verify(scenarioRepository).update(scenarioId, scenarioTitle, JSON_KEY_VALUE);
+		verify(scenarioRepository).update(scenarioId, scenarioTitle, scenario.getState());
 		verify(accountRepository).findAccountByUsername("gert");
 	}
-	
-	@After
+
+  @Test
+  public void testGetRemarks() throws Exception {
+    String remarksStr = "{" +
+            "\"HAM-D responders\":\"test content 1\"" +
+            "}";
+    Integer workspaceId = 2;
+    Remarks remarks = new Remarks(workspaceId, remarksStr);
+    when(remarksRepository.find(workspaceId)).thenReturn(remarks);
+    mockMvc.perform(get("/workspaces/2/remarks").principal(user))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("$.workspaceId", is(workspaceId)));
+    verify(remarksRepository).find(workspaceId);
+  }
+
+  @Test
+  public void testSaveNewRemarks() throws Exception {
+    Integer workspaceId = 1;
+    Integer userId = 1;
+    Workspace workspace = createWorkspace();
+    Remarks remarks = new Remarks(workspaceId, "test content yo!");
+    String content = "{\"workspaceId\" : 1, \"remarks\" : \"test content yo!\"}";
+    when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
+    when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(true);
+    when(remarksRepository.find(workspaceId)).thenReturn(null);
+    when(remarksRepository.create(anyInt(), anyString())).thenReturn(new Remarks(remarks.getWorkspaceId(), remarks.getRemarks()));
+    mockMvc.perform(post("/workspaces/1/remarks").principal(user).content(content).contentType(APPLICATION_JSON_UTF8))
+            .andExpect(status().isCreated())
+            .andExpect(content().contentType(APPLICATION_JSON_UTF8))
+            .andExpect(jsonPath("$.workspaceId", is(workspaceId)));
+    verify(workspaceRepository).findById(workspaceId);
+    verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
+    verify(remarksRepository).find(workspaceId);
+    verify(remarksRepository).create(anyInt(), anyString());
+    verify(accountRepository).findAccountByUsername("gert");
+  }
+
+  @Test
+  public void updateRemarks() throws Exception {
+    Integer workspaceId = 1;
+    Integer userId = 1;
+    Workspace workspace = createWorkspace();
+    Remarks remarks = new Remarks(workspaceId, "test content yo!");
+    String content = "{\"workspaceId\" : 1, \"remarks\" : \"test content yo!\"}";
+    when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
+    when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(true);
+    when(remarksRepository.find(workspaceId)).thenReturn(remarks);
+    when(remarksRepository.update(anyInt(), anyString())).thenReturn(new Remarks(remarks.getWorkspaceId(), remarks.getRemarks()));
+    mockMvc.perform(post("/workspaces/1/remarks").principal(user).content(content).contentType(APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(APPLICATION_JSON_UTF8));
+    verify(workspaceRepository).findById(workspaceId);
+    verify(workspaceRepository).isWorkspaceOwnedBy(workspaceId, userId);
+    verify(remarksRepository).update(anyInt(), anyString());
+    verify(remarksRepository).find(workspaceId);
+    verify(accountRepository).findAccountByUsername("gert");
+
+  }
+
+
+  @After
 	public void tearDown() {
-		verifyNoMoreInteractions(accountRepository, workspaceRepository);
+		verifyNoMoreInteractions(accountRepository, workspaceRepository, scenarioRepository, remarksRepository);
 	}
 
 }

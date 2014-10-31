@@ -1,26 +1,12 @@
 'use strict';
-define(['angular'], function (angular) {
-    var dependencies = [];
+define(['angular'], function(angular) {
+  var dependencies = ['ngResource'];
 
-    var Remarks = function ($q) {
-
-        function get(workspaceId) {
-            var deferred = $q.defer();
-            var remarks = angular.fromJson(localStorage.getItem('remarks.' + workspaceId));
-            remarks = remarks ? remarks : {};
-            deferred.resolve(remarks);
-            return deferred.promise;
-        }
-
-        function save(workspaceId, remarks) {
-            localStorage.setItem('remarks.' + workspaceId, angular.toJson(remarks));
-            return remarks;
-        }
-
-        return {
-            get: get,
-            save: save
-        };
-    };
-    return angular.module('elicit.remoteRemarks', dependencies).factory('RemoteRemarks', Remarks);
+  var RemarksResource = function($resource) {
+    return $resource('/projects/:projectId/analyses/:workspaceId/remarks', {
+      projectId: '@projectId',
+      workspaceId: '@workspaceId'
+    });
+  };
+  return angular.module('elicit.remoteRemarks', dependencies).factory('Remarks', RemarksResource);
 });
