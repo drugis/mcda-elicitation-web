@@ -75,10 +75,12 @@ everyauth.google
   })
   .redirectPath('/');
 
+var bower_path = '/src/main/webapp/resources/bower_components';
 var app = express();
 app
   .use(express.static(__dirname + '/public'))
-  .use('/template', express.static(__dirname + '/public/bower_components/angular-foundation-assets/template'))
+  .use('/bower_components', express.static(__dirname + bower_path))
+  .use('/template', express.static(__dirname + bower_path + '/angular-foundation-assets/template'))
   .use('/examples', express.static(__dirname + '/../examples'))
   .use(bodyParser())
   .use(cookieParser('very secret secret'))
