@@ -47,24 +47,27 @@ everyauth.google
                 done();
                 return user.fail(error);
               }
-              client.query("INSERT INTO Account (username, firstName, lastName) VALUES ($1, $2, $3)",
+              client.query("INSERT INTO Account (username, firstName, lastName) VALUES ($1, $2, $3) RETURNING id",
                 [googleUser.id, googleUser.given_name, googleUser.family_name],
                 function(error, result) {
                   done();
                   if (error)  {
                     return user.fail(error);
                   }
+                  var row = result.rows[0];
+                  console.log("created user", row);
                   user.fulfill({
-                    "id": result.row[0],
-                    "username": result.row[1],
-                    "firstName": result.row[2],
-                    "lastName": result.row[3]});
+                    "id": row.id,
+                    "username": googleUser.id,
+                    "firstName": googleUser.given_name,
+                    "lastName": googleUser.family_name});
                 });
             });
           return;
         }
         done();
         row = result.rows[0];
+        console.log("found user", row);
         user.fulfill(row);
       });
     });
@@ -75,6 +78,8 @@ everyauth.google
 var app = express();
 app
   .use(express.static(__dirname + '/public'))
+  .use('/template', express.static(__dirname + '/public/bower_components/angular-foundation-assets/template'))
+  .use('/examples', express.static(__dirname + '/../examples'))
   .use(bodyParser())
   .use(cookieParser('very secret secret'))
   .use(session())
