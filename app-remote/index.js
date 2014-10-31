@@ -100,7 +100,7 @@ app.get("/signin", function(req, res, next) {
 });
 
 app.get("/main.js", function(req, res, next) { // FIXME: should not be needed?
-  res.sendfile(__dirname + '/public/main.js');
+  res.sendfile(__dirname + '/src/main/webapp/resources/app/js/main.js');
 });
 
 app.listen(8080);
