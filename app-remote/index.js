@@ -78,7 +78,6 @@ everyauth.google
 var bower_path = '/src/main/webapp/resources/bower_components';
 var app = express();
 app
-  .use(express.static(__dirname + '/public'))
   .use('/bower_components', express.static(__dirname + bower_path))
   .use('/template', express.static(__dirname + bower_path + '/angular-foundation-assets/template'))
   .use('/examples', express.static(__dirname + '/../examples'))
@@ -88,27 +87,20 @@ app
   .use(csrf())
   .use(everyauth.middleware());
 
-app.get("/me", function(req, res) {
-  res.type("application/json");
-  console.log(req.session);
-  console.log(req.cookies);
-  console.log(req.user);
-  if (req.session.auth) console.log(req.session.auth.google);
-  res.send(req.user);
+app.get("/", function(req, res, next) {
+  if (req.user) {
+    res.sendfile(__dirname + '/public/index.html');
+  } else {
+    res.redirect('/signin');
+  }
 });
 
-app.get("/test", function(req, res) {
-  pg.connect(conf.pgConStr, function(error, client, done) {
-    if (error) return console.error("Error fetching client from pool", error);
+app.get("/signin", function(req, res, next) {
+  res.sendfile(__dirname + '/public/signin.html');
+});
 
-    client.query("SELECT * FROM UserConnection", function(error, result) {
-      done();
-
-      if (error) return console.error("Error running query", error);
-
-      res.send(result);
-    });
-  });
+app.get("/main.js", function(req, res, next) { // FIXME: should not be needed?
+  res.sendfile(__dirname + '/public/main.js');
 });
 
 app.listen(8080);

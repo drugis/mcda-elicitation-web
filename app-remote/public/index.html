@@ -15,7 +15,7 @@
 
   <link rel="stylesheet" type="text/css" href="/bower_components/mcda-web/app/css/mcda-drugis.css">
 
-  <script src="bower_components/requirejs/require.js" data-main="main.js"></script>
+  <script src="/bower_components/requirejs/require.js" data-main="main.js"></script>
 
   <script>
     window.config = {
@@ -25,7 +25,72 @@
 
 </head>
 
-<body ui-view>
+<body>
+
+  <form method="POST" action="/signout" id="signout_form">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+  </form>
+  
+  <nav class="top-bar" data-topbar>
+    <ul class="title-area">
+      <li class="name">
+        <h1>
+          <a href="#">mcda.drugis.org</a>
+        </h1>
+      </li>
+    </ul>
+
+    <section class="top-bar-section">
+      <!-- Right Nav Section -->
+      <ul class="right">
+        <li>
+          <a href="/logout">Sign out</a>
+        </li>
+        <li class="has-dropdown"><a href="#"><i class="fa fa-user fa-fw"></i>{{user.firstname}} {{user.lastname}}</a>
+          <ul class="dropdown">
+            <li>
+              <a href="#" onClick="signout()">Sign out</a>
+            </li>
+          </ul></li>
+      </ul>
+    </section>
+  </nav>
+  <section>
+    <div class="color-stripe"></div>
+  </section>
+
+  <div class="row">
+    <div class="columns">
+      <alert type="info">
+        <strong>Disclaimer:</strong> this is <em>beta</em> software. We store your workspaces on our servers. While we try our best to keep them secure and compatible with future versions, we can make no guarantees.
+      </alert>
+    </div>
+  </div>
+    
+  <div ui-view></div>
+
+  <script>
+	window.patavi = { "WS_URI": "wss://patavi.drugis.org/ws" };
+    window.config = {
+      examplesRepository : "examples/",
+      workspacesRepository : {
+        service : "RemoteWorkspaces",
+        url : "/workspaces/",
+        _csrf_token : "${_csrf.token}",
+        _csrf_header : "${_csrf.headerName}"
+      }
+    };
+   
+    function signout(){
+      var signoutForm = document.getElementById('signout_form');
+      
+      if(signoutForm){
+        signoutForm.submit();
+      }
+    }
+  </script>
+
+  <div class="push"></div>
 
 </body>
 </html>
