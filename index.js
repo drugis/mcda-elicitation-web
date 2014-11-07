@@ -75,10 +75,11 @@ everyauth.google
   })
   .redirectPath('/');
 
-var bower_path = '/src/main/webapp/resources/bower_components';
+var bower_path = '/bower_components';
 var app = express();
 app
   .use('/bower_components', express.static(__dirname + bower_path))
+  .use('/app', express.static(__dirname + '/app'))
   .use('/template', express.static(__dirname + bower_path + '/angular-foundation-assets/template'))
   .use('/examples', express.static(__dirname + '/../examples'))
   .use(bodyParser())
@@ -100,7 +101,7 @@ app.get("/signin", function(req, res, next) {
 });
 
 app.get("/main.js", function(req, res, next) { // FIXME: should not be needed?
-  res.sendfile(__dirname + '/src/main/webapp/resources/app/js/main.js');
+  res.sendfile(__dirname + '/app/js/main.js');
 });
 
 app.listen(8080);

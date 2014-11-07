@@ -16,3 +16,5 @@ database.h2.db
 database.trace.db
 database.lock.db
 test/test-results.xml
+node_modules
+.project

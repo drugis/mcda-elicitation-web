@@ -13,7 +13,7 @@ require.config({
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML',
     'foundation': 'bower_components/foundation/js/foundation.min',
     'domReady': 'bower_components/requirejs-domready/domReady',
-    'mcda': 'bower_components/mcda-web/app/js',
+    'mcda': '/app/js',
     'mmfoundation': 'bower_components/angular-foundation/mm-foundation',
     'angularanimate': 'bower_components/angular-animate/angular-animate.min'
   },
