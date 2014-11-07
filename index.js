@@ -81,7 +81,7 @@ app
   .use('/bower_components', express.static(__dirname + bower_path))
   .use('/app', express.static(__dirname + '/app'))
   .use('/template', express.static(__dirname + bower_path + '/angular-foundation-assets/template'))
-  .use('/examples', express.static(__dirname + '/../examples'))
+  .use('/examples', express.static(__dirname + '/examples'))
   .use(bodyParser())
   .use(cookieParser('very secret secret'))
   .use(session())
