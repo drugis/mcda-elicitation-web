@@ -9,6 +9,7 @@ define(
     'mmfoundation',
     'angular-ui-router',
     'angularanimate',
+    'angular-cookies',
     'mcda/services/workspaceService',
     'mcda/services/remarks',
     'mcda/services/routeFactory',
@@ -41,16 +42,19 @@ define(
       'elicit.taskDependencies',
       'elicit.errorHandling',
       'elicit.routeFactory',
-      'elicit.pvfService'
+      'elicit.pvfService',
+      'ngCookies'
     ];
     var app = angular.module('elicit', dependencies);
 
-    app.run(['$rootScope', '$window', '$http',
-      function($rootScope, $window, $http) {
-        var csrfToken = $window.config._csrf_token;
-        var csrfHeader = $window.config._csrf_header;
-
-        $http.defaults.headers.common[csrfHeader] = csrfToken;
+    app.run(['$rootScope', '$window', '$http', '$cookies',
+      function($rootScope, $window, $http, $cookies) {
+        //var csrfToken = $window.config._csrf_token;
+        //var csrfHeader = $window.config._csrf_header;
+        //$http.defaults.headers.common[csrfHeader] = csrfToken;
+      
+        var tmp = $cookies['XSRF-TOKEN'];
+        // TODO: Generate Header
 
         $rootScope.$on('$viewContentLoaded', function() {
           $(document).foundation();

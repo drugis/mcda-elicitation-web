@@ -12,25 +12,31 @@ define(['angular', 'underscore'], function(angular, _) {
 
     $scope.createWorkspace = function(choice) {
       if (choice === 'local' && !_.isEmpty($scope.local.contents)) {
-        WorkspaceService.createWorkspace(angular.fromJson($scope.local.contents)).$promise.then(function(workspace) {
-          $state.go('overview', {
-            workspaceId: workspace.id,
-            id: workspace.defaultScenarioId
-          });
-        });
+        //WorkspaceService.createWorkspace(angular.fromJson($scope.local.contents)).$promise.then(function(workspace) {
+        //  $state.go('overview', {
+        //    workspaceId: workspace.id,
+        //    id: workspace.defaultScenarioId
+        //  });
+        // });
       } else {
         var example = {
-          url: choice
+            url: choice
+        }
+          console.log('vanaf hier!', example);
+          WorkspaceResource.save(example);
+          console.log('na submitPost');
         };
-        examplesResource.get(example, function(problem) {
-          WorkspaceService.createWorkspace(problem).$promise.then(function(workspace) {
-            $state.go('overview', {
-              workspaceId: workspace.id,
-              id: workspace.defaultScenarioId
-            });
-          });
-        });
-      }
+        // var example = {
+        //   url: choice
+        // };
+        // examplesResource.get(example, function(problem) {
+        //  WorkspaceService.createWorkspace(problem).$promise.then(function(workspace) {
+        //    $state.go('overview', {
+        //      workspaceId: workspace.id,
+        //      id: workspace.defaultScenarioId
+        //    });
+        //  });
+        //});
     };
 
     $scope.$watch('local.contents', function(newVal) {

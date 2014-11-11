@@ -15,12 +15,14 @@ require.config({
     'domReady': 'bower_components/requirejs-domready/domReady',
     'mcda': '/app/js',
     'mmfoundation': 'bower_components/angular-foundation/mm-foundation',
-    'angularanimate': 'bower_components/angular-animate/angular-animate.min'
+    'angularanimate': 'bower_components/angular-animate/angular-animate.min',
+    'angular-cookies': 'bower_components/angular-cookies/angular-cookies.min'
   },
   baseUrl: '.',
   shim: {
     'angular': { exports : 'angular' },
     'angular-resource': { deps:['angular'], exports: 'angular-resource' },
+    'angular-cookies': {deps: ['angular'], exposrt: 'angular-cookies'},
     'angular-ui-router': { deps:['angular'] },
     'angularanimate': {deps: ['angular']},
     'underscore': { exports : '_' },

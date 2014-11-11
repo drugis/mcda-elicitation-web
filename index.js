@@ -9,12 +9,10 @@ var express = require('express'),
 var pg = require('pg');
 var deferred = require('deferred');
 
-
 everyauth.everymodule
   .findUserById(function(id, callback) {
     pg.connect(conf.pgConStr, function(error, client, done) {
       if (error) return console.error("Error fetching client from pool", error);
-      console.log('everyauth.everymodule id:' + id);
       client.query("SELECT id, username, firstName, lastName FROM Account WHERE id = $1", [id], function(error, result) {
         done();
         if (error) callback(error);
@@ -88,6 +86,12 @@ app
   .use(csrf())
   .use(everyauth.middleware());
 
+// get csrf token
+app.use(function (req, res, next) {  
+  res.cookie('XSRF-TOKEN', req.session._csrf);
+  next();
+});
+
 // See if user is logged in, if not redirect to signin
 app.get("/", function(req, res, next) {
   if (req.user) {
@@ -106,7 +110,7 @@ app.get("/index", function(req, res, next) {
   res.sendfile(__dirname + '/public/index.html');
 });
 
-// Retrieve workspace info
+// Retrieve workspace info for current user
 app.get("/workspaces", function(req, res) {
   pg.connect(conf.pgConStr, function(err, client, done) {
     if(err) {
@@ -118,11 +122,18 @@ app.get("/workspaces", function(req, res) {
         return console.error('error running query', err);
       }
       row = result.rows[0];
-      console.log('workspace returns: ', row);
-      //output: 1
+      res.send(result.rows);
     });
   });
 });
+
+// Extra app.post om workspace aan te maken en die informatie naar DB te schrijven
+app.post("/api/post", function (req, res){
+  console.log('nodejs kant');
+});
+
+// Nog een exra app.get om workspaces bij /:id op te halen.
+
 
 //FIXME: should not be needed?
 app.get("/main.js", function(req, res, next) { 
