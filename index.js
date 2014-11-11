@@ -14,7 +14,7 @@ everyauth.everymodule
   .findUserById(function(id, callback) {
     pg.connect(conf.pgConStr, function(error, client, done) {
       if (error) return console.error("Error fetching client from pool", error);
-      console.log(id);
+      console.log('everyauth.everymodule id:' + id);
       client.query("SELECT id, username, firstName, lastName FROM Account WHERE id = $1", [id], function(error, result) {
         done();
         if (error) callback(error);
@@ -88,9 +88,10 @@ app
   .use(csrf())
   .use(everyauth.middleware());
 
+// See if user is logged in, if not redirect to signin
 app.get("/", function(req, res, next) {
   if (req.user) {
-    res.sendfile(__dirname + '/public/index.html');
+    res.redirect('/index');
   } else {
     res.redirect('/signin');
   }
@@ -100,7 +101,31 @@ app.get("/signin", function(req, res, next) {
   res.sendfile(__dirname + '/public/signin.html');
 });
 
-app.get("/main.js", function(req, res, next) { // FIXME: should not be needed?
+// If logged in, serve index
+app.get("/index", function(req, res, next) {
+  res.sendfile(__dirname + '/public/index.html');
+});
+
+// Retrieve workspace info
+app.get("/workspaces", function(req, res) {
+  pg.connect(conf.pgConStr, function(err, client, done) {
+    if(err) {
+      return console.error('error fetching client from pool', err);
+    }
+    client.query('SELECT id, owner, title, problem, defaultScenarioId from Workspace WHERE owner = $1', ['1'], function(err, result) {
+      done();
+      if(err) {
+        return console.error('error running query', err);
+      }
+      row = result.rows[0];
+      console.log('workspace returns: ', row);
+      //output: 1
+    });
+  });
+});
+
+//FIXME: should not be needed?
+app.get("/main.js", function(req, res, next) { 
   res.sendfile(__dirname + '/app/js/main.js');
 });
 
