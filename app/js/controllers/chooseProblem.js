@@ -12,31 +12,13 @@ define(['angular', 'underscore'], function(angular, _) {
 
     $scope.createWorkspace = function(choice) {
       if (choice === 'local' && !_.isEmpty($scope.local.contents)) {
-        //WorkspaceService.createWorkspace(angular.fromJson($scope.local.contents)).$promise.then(function(workspace) {
-        //  $state.go('overview', {
-        //    workspaceId: workspace.id,
-        //    id: workspace.defaultScenarioId
-        //  });
-        // });
       } else {
+        // TODO: Include user data here, or from request?
         var example = {
             url: choice
         }
-          console.log('vanaf hier!', example);
           WorkspaceResource.save(example);
-          console.log('na submitPost');
         };
-        // var example = {
-        //   url: choice
-        // };
-        // examplesResource.get(example, function(problem) {
-        //  WorkspaceService.createWorkspace(problem).$promise.then(function(workspace) {
-        //    $state.go('overview', {
-        //      workspaceId: workspace.id,
-        //      id: workspace.defaultScenarioId
-        //    });
-        //  });
-        //});
     };
 
     $scope.$watch('local.contents', function(newVal) {

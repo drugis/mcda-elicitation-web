@@ -124,7 +124,7 @@ app.get("/workspaces", function(req, res) {
     if(err) {
       return console.error('error fetching client from pool', err);
     }
-    client.query('SELECT id, owner, title, problem, defaultScenarioId from Workspace WHERE owner = $1', ['1'], function(err, result) {
+    client.query('SELECT id, owner, title, problem, defaultScenarioId FROM Workspace WHERE owner = $1', ['1'], function(err, result) {
       done();
       if(err) {
         return console.error('error running query', err);
@@ -135,9 +135,24 @@ app.get("/workspaces", function(req, res) {
   });
 });
 
-// Extra app.post om workspace aan te maken en die informatie naar DB te schrijven
+// Extra app.post to create a workspace and write this info to the DB
 app.post("/workspaces", function (req, res){
-  console.log('nodejs kant');
+  console.log(res);
+  pg.connect(conf.pgConStr, function(err, client, done) {
+    if(err) {
+      return console.error('error fetching client from pool', err);
+    }
+    client.query('INSERT INTO Workspace (owner, title, problem) VALUES ($1, $2, $3)', [res.user[username], 1, 1], function(err, result) {
+      done();
+      if(err) {
+        return console.error('error running query', err);
+      }
+      row = result.rows[0];
+      res.send(result.rows);
+    });
+  });
+  // Write to DB
+  // .redirectPath('/'); // Workspace URL
 });
 
 // Nog een exra app.get om workspaces bij /:id op te halen.
