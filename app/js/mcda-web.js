@@ -49,12 +49,7 @@ define(
 
     app.run(['$rootScope', '$window', '$http', '$cookies',
       function($rootScope, $window, $http, $cookies) {
-        //var csrfToken = $window.config._csrf_token;
-        //var csrfHeader = $window.config._csrf_header;
-        //$http.defaults.headers.common[csrfHeader] = csrfToken;
-      
-        var tmp = $cookies['XSRF-TOKEN'];
-        // TODO: Generate Header
+        var csrfToken = $cookies['XSRF-TOKEN'];
 
         $rootScope.$on('$viewContentLoaded', function() {
           $(document).foundation();

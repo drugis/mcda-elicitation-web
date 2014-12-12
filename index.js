@@ -5,7 +5,8 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
     session = require('express-session'),
-    csrf = require('csrf');
+    csurf = require('csurf');
+
 var pg = require('pg');
 var deferred = require('deferred');
 
@@ -74,6 +75,13 @@ everyauth.google
   .redirectPath('/');
 
 var bower_path = '/bower_components';
+var csrfValue = function(req) {
+  var token = (req.body && req.body._csrf)
+    || (req.query && req.query._csrf)
+    || (req.headers['x-csrf-token'])
+    || (req.headers['x-xsrf-token']);
+  return token;
+};
 var app = express();
 app
   .use('/bower_components', express.static(__dirname + bower_path))
@@ -83,12 +91,11 @@ app
   .use(bodyParser())
   .use(cookieParser('very secret secret'))
   .use(session())
-  .use(csrf())
-  .use(everyauth.middleware());
+  .use(everyauth.middleware())
+  .use(csurf({ cookie: true }));
 
-// get csrf token
-app.use(function (req, res, next) {  
-  res.cookie('XSRF-TOKEN', req.session._csrf);
+app.use(function (req, res, next) {
+  res.cookie('XSRF-TOKEN', req.csrfToken());
   next();
 });
 
@@ -111,6 +118,7 @@ app.get("/index", function(req, res, next) {
 });
 
 // Retrieve workspace info for current user
+// TODO replace the '1' value that is now used as the id.
 app.get("/workspaces", function(req, res) {
   pg.connect(conf.pgConStr, function(err, client, done) {
     if(err) {
@@ -128,7 +136,7 @@ app.get("/workspaces", function(req, res) {
 });
 
 // Extra app.post om workspace aan te maken en die informatie naar DB te schrijven
-app.post("/api/post", function (req, res){
+app.post("/workspaces", function (req, res){
   console.log('nodejs kant');
 });
 
