@@ -1,6 +1,7 @@
 var conf = require('./conf');
 var everyauth = require('everyauth');
 var _ = require('underscore');
+
 var express = require('express'),
     bodyParser = require('body-parser'),
     cookieParser = require('cookie-parser'),
@@ -10,11 +11,15 @@ var express = require('express'),
 var pg = require('pg');
 var deferred = require('deferred');
 
+// TODO Deze werkt nu niet, volgende punt
 everyauth.everymodule
   .findUserById(function(id, callback) {
+    console.log('!!!!!!!!!!!!!!!!');
     pg.connect(conf.pgConStr, function(error, client, done) {
+      console.log(2);
       if (error) return console.error("Error fetching client from pool", error);
       client.query("SELECT id, username, firstName, lastName FROM Account WHERE id = $1", [id], function(error, result) {
+        console.log(3);
         done();
         if (error) callback(error);
         else if (result.rows.length == 0) callback("ID " + id + " not found");
@@ -91,13 +96,13 @@ app
   .use(bodyParser())
   .use(cookieParser('very secret secret'))
   .use(session())
-  .use(everyauth.middleware())
+  .use(everyauth.middleware(app))
   .use(csurf({ cookie: true }));
 
-app.use(function (req, res, next) {
-  res.cookie('XSRF-TOKEN', req.csrfToken());
-  next();
-});
+//app.use(function (req, res, next) {
+//  res.cookie('XSRF-TOKEN', req.csrfToken());
+//  next();
+//});
 
 // See if user is logged in, if not redirect to signin
 app.get("/", function(req, res, next) {
@@ -135,14 +140,17 @@ app.get("/workspaces", function(req, res) {
   });
 });
 
-// Extra app.post to create a workspace and write this info to the DB
-app.post("/workspaces", function (req, res){
-  console.log(res);
+
+function postWorkspace(req, res){
+  // Object.keys(req), returned alle object keys in array form.
+  return res.json(req.users)
   pg.connect(conf.pgConStr, function(err, client, done) {
     if(err) {
       return console.error('error fetching client from pool', err);
     }
-    client.query('INSERT INTO Workspace (owner, title, problem) VALUES ($1, $2, $3)', [res.user[username], 1, 1], function(err, result) {
+    
+    
+    client.query('INSERT INTO Workspace (owner, title, problem) VALUES ($1, $2, $3)', [req.user['username'], 1, 1], function(err, result) {
       done();
       if(err) {
         return console.error('error running query', err);
@@ -151,9 +159,10 @@ app.post("/workspaces", function (req, res){
       res.send(result.rows);
     });
   });
-  // Write to DB
-  // .redirectPath('/'); // Workspace URL
-});
+}
+
+// Extra app.post to create a workspace and write this info to the DB
+app.post("/workspaces", [postWorkspace]);
 
 // Nog een exra app.get om workspaces bij /:id op te halen.
 
