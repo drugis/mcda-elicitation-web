@@ -99,7 +99,6 @@ app.use(function (req, res, next) {
   next();
 });
 
-// See if user is logged in, if not redirect to signin
 app.get("/", function(req, res, next) {
   if (req.user) {
     res.redirect('/index');
@@ -112,12 +111,10 @@ app.get("/signin", function(req, res, next) {
   res.sendfile(__dirname + '/public/signin.html');
 });
 
-// If logged in, serve index
 app.get("/index", function(req, res, next) {
   res.sendfile(__dirname + '/public/index.html');
 });
 
-// Retrieve workspace info for current user
 app.get("/workspaces", function(req, res) {
   pg.connect(conf.pgConStr, function(err, client, done) {
     if(err) {
@@ -134,24 +131,44 @@ app.get("/workspaces", function(req, res) {
   });
 });
 
-// Extra app.post to create a workspace and write this info to the DB
 app.post("/workspaces", function(req, res) {
   pg.connect(conf.pgConStr, function(err, client, done) {
     if(err) {
       return console.error('error entering workspace in pool', err);
     }
     client.query('INSERT INTO Workspace (owner, title, problem) VALUES ($1, $2, $3)', [req.user.id, req.body.title, req.body.problem], function(err, result) {
-      done();
       if(err) {
+        done();
         return console.error('error running query', err);
       }
-      row = result.rows[0];
-      res.send(result.rows);
+      client.query('SELECT id Workspace WHERE problem = $1 )', [req.body.problem], function(err, result) {
+        if(err) {
+          done();
+          return console.error('error running query', err);
+        }
+        console.log('log', result.rows[0]);
+        var workspaceId = result.rows[0].id;
+        client.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3)', [workspaceId, 'Default', { problem: req.body.problem }], function(err, result) {
+          if(err) {
+            done();
+            return console.error('error running query', err);
+          }
+          var scenarioId = result.rows[0].id;
+          client.query('UPDATE workspace SET defaultscenarioid = $1 WHERE id = $2;', [scenarioId, workspaceId], function(err, result) {
+            if(err) {
+              done();
+              return console.error('error running query', err);
+            }
+            done();
+            row = result.rows[0];
+            res.send(result.rows);
+          });
+        });
+      });
     });
   });
 });
 
-// Exra app.get to retrieve a scenario
 app.get("/workspaces/:id", function(req, res) {
   pg.connect(conf.pgConStr, function(err, client, done) {
     if(err) {
