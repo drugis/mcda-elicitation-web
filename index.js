@@ -11,15 +11,11 @@ var express = require('express'),
 var pg = require('pg');
 var deferred = require('deferred');
 
-// TODO Deze werkt nu niet, volgende punt
 everyauth.everymodule
   .findUserById(function(id, callback) {
-    console.log('!!!!!!!!!!!!!!!!');
     pg.connect(conf.pgConStr, function(error, client, done) {
-      console.log(2);
       if (error) return console.error("Error fetching client from pool", error);
       client.query("SELECT id, username, firstName, lastName FROM Account WHERE id = $1", [id], function(error, result) {
-        console.log(3);
         done();
         if (error) callback(error);
         else if (result.rows.length == 0) callback("ID " + id + " not found");
@@ -71,7 +67,6 @@ everyauth.google
         }
         done();
         row = result.rows[0];
-        console.log("found user", row);
         user.fulfill(row);
       });
     });
@@ -99,10 +94,10 @@ app
   .use(everyauth.middleware(app))
   .use(csurf({ cookie: true }));
 
-//app.use(function (req, res, next) {
-//  res.cookie('XSRF-TOKEN', req.csrfToken());
-//  next();
-//});
+app.use(function (req, res, next) {
+  res.cookie('XSRF-TOKEN', req.csrfToken());
+  next();
+});
 
 // See if user is logged in, if not redirect to signin
 app.get("/", function(req, res, next) {
@@ -123,13 +118,12 @@ app.get("/index", function(req, res, next) {
 });
 
 // Retrieve workspace info for current user
-// TODO replace the '1' value that is now used as the id.
 app.get("/workspaces", function(req, res) {
   pg.connect(conf.pgConStr, function(err, client, done) {
     if(err) {
       return console.error('error fetching client from pool', err);
     }
-    client.query('SELECT id, owner, title, problem, defaultScenarioId FROM Workspace WHERE owner = $1', ['1'], function(err, result) {
+    client.query('SELECT id, owner, title, problem, defaultScenarioId FROM Workspace WHERE owner = $1', [req.user.id], function(err, result) {
       done();
       if(err) {
         return console.error('error running query', err);
@@ -140,17 +134,13 @@ app.get("/workspaces", function(req, res) {
   });
 });
 
-
-function postWorkspace(req, res){
-  // Object.keys(req), returned alle object keys in array form.
-  return res.json(req.users)
+// Extra app.post to create a workspace and write this info to the DB
+app.post("/workspaces", function(req, res) {
   pg.connect(conf.pgConStr, function(err, client, done) {
     if(err) {
       return console.error('error fetching client from pool', err);
     }
-    
-    
-    client.query('INSERT INTO Workspace (owner, title, problem) VALUES ($1, $2, $3)', [req.user['username'], 1, 1], function(err, result) {
+    client.query('INSERT INTO Workspace (owner, title, problem) VALUES ($1, $2, $3)', [req.user.id, req.body.title, req.body.problem], function(err, result) {
       done();
       if(err) {
         return console.error('error running query', err);
@@ -159,13 +149,25 @@ function postWorkspace(req, res){
       res.send(result.rows);
     });
   });
-}
+});
 
-// Extra app.post to create a workspace and write this info to the DB
-app.post("/workspaces", [postWorkspace]);
-
-// Nog een exra app.get om workspaces bij /:id op te halen.
-
+// Exra app.get to retrieve a scenario
+// TODO this next
+app.get("/workspaces/:id", function(req, res) {
+  pg.connect(conf.pgConStr, function(err, client, done) {
+    if(err) {
+      return console.error('error fetching client from pool', err);
+    }
+    client.query('INSERT INTO Workspace (owner, title, problem) VALUES ($1, $2, $3)', [req.user.id, req.body.title, req.body.problem], function(err, result) {
+      done();
+      if(err) {
+        return console.error('error running query', err);
+      }
+      row = result.rows[0];
+      res.send(result.rows);
+    });
+  });
+});
 
 //FIXME: should not be needed?
 app.get("/main.js", function(req, res, next) { 
