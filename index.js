@@ -138,7 +138,7 @@ app.get("/workspaces", function(req, res) {
 app.post("/workspaces", function(req, res) {
   pg.connect(conf.pgConStr, function(err, client, done) {
     if(err) {
-      return console.error('error fetching client from pool', err);
+      return console.error('error entering workspace in pool', err);
     }
     client.query('INSERT INTO Workspace (owner, title, problem) VALUES ($1, $2, $3)', [req.user.id, req.body.title, req.body.problem], function(err, result) {
       done();
@@ -152,13 +152,29 @@ app.post("/workspaces", function(req, res) {
 });
 
 // Exra app.get to retrieve a scenario
-// TODO this next
 app.get("/workspaces/:id", function(req, res) {
   pg.connect(conf.pgConStr, function(err, client, done) {
     if(err) {
-      return console.error('error fetching client from pool', err);
+      return console.error('error fetching workspace from pool', err);
     }
-    client.query('INSERT INTO Workspace (owner, title, problem) VALUES ($1, $2, $3)', [req.user.id, req.body.title, req.body.problem], function(err, result) {
+    client.query('SELECT problem FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
+      done();
+      if(err) {
+        return console.error('error running query', err);
+      }
+      row = result.rows[0];
+      res.send(result.rows);
+    });
+  });
+});
+
+app.get("/workspaces/:id/scenarios", function(req, res) {
+  pg.connect(conf.pgConStr, function(err, client, done) {
+    if(err) {
+      return console.error('error fetching workspace from pool', err);
+    }
+    console.log(req, Object.keys(req));
+    client.query('SELECT state FROM scenario WHERE workspace = $1', [req.params.id], function(err, result) {
       done();
       if(err) {
         return console.error('error running query', err);
