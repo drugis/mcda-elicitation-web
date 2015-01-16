@@ -7,7 +7,6 @@ test/node_modules
 /tags
 /R/service.R
 /js/patavi.js
-*~
 \#*\#
 .\#*
 *_archive
@@ -16,3 +15,26 @@ database.h2.db
 database.trace.db
 database.lock.db
 test/test-results.xml
+
+# Numerous always-ignore extensions
+*.diff
+*.err
+*.orig
+*.log
+*.aux
+*.rej
+*.swo
+*.swp
+*.vi
+*~
+# OS or Editor folders
+.DS_Store
+Thumbs.db
+.cache
+.project
+.settings
+.tmproj
+*.esproj
+nbproject
+*.sublime-project
+*.sublime-workspace
