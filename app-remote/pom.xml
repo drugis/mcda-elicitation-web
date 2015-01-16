@@ -9,8 +9,8 @@
   <version>0.1-SNAPSHOT</version>
   <properties>
     <java-version>1.7</java-version>
-    <org.springframework.social-version>1.1.0.BUILD-SNAPSHOT</org.springframework.social-version>
-    <spring-social-google-version>1.0.0.M3</spring-social-google-version>
+    <org.springframework.social-version>1.1.0.RELEASE</org.springframework.social-version>
+    <spring-social-google-version>1.0.0.RELEASE</spring-social-google-version>
     <org.springframework-version>3.2.6.RELEASE</org.springframework-version>
     <org.springframework.security-version>3.2.0.RC1</org.springframework.security-version>
     <org.slf4j-version>1.7.5</org.slf4j-version>
@@ -151,7 +151,7 @@
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <version>1.0.13</version>
-      <scope>runtime</scope>      
+      <scope>runtime</scope>
     </dependency>
 
     <!-- javamelody-core -->
@@ -182,7 +182,7 @@
     </dependency>
 
 
-    
+
     <!-- Embedded DB -->
     <dependency>
       <groupId>com.h2database</groupId>
@@ -195,21 +195,21 @@
       <artifactId>postgresql</artifactId>
       <version>9.1-901-1.jdbc4</version>
     </dependency>
-    
+
     <!-- CGLIB, only required and used for @Configuration usage -->
     <dependency>
       <groupId>cglib</groupId>
       <artifactId>cglib-nodep</artifactId>
       <version>2.2</version>
     </dependency>
-    
+
     <!-- @Inject -->
     <dependency>
       <groupId>javax.inject</groupId>
       <artifactId>javax.inject</artifactId>
       <version>1</version>
     </dependency>
-    
+
     <!-- Servlet -->
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -233,7 +233,7 @@
       <groupId>javax.servlet.jsp.jstl</groupId>
       <artifactId>jstl-api</artifactId>
       <version>1.2</version>
-    </dependency>   
+    </dependency>
     <dependency>
       <groupId>org.glassfish.web</groupId>
       <artifactId>jstl-impl</artifactId>

@@ -18,6 +18,11 @@ Then do:
 
 Make sure you've run `make` in the repository root first to generate the CSS.
 
+Then download and compile the required Javascript libraries and frameworks with
+bower:
+
+  bower install
+
 Running with PostgreSQL
 -----------------------
 
