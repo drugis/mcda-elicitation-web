@@ -18,10 +18,13 @@ after the preference elicitation process.
 mcda-elicitation-web is a component of the [drugis.org][drugis] ADDIS 2
 project.
 
-Running locally
----------------
+Initialize submodules
+---------------------
 
-For instructions to run the app locally, see the REAME.md in the app-local directory
+```
+git submodule init
+git submodule update
+```
 
 Compiling the CSS
 -----------------
@@ -39,6 +42,11 @@ node-sass --include-path sass-shared sass/mcda-plain.scss app/css/mcda-plain.css
 node-sass --include-path sass-shared sass/mcda-drugis.scss app/css/mcda-drugis.css
 node-sass --include-path sass-shared sass/mcda-drugis-ie8.scss app/css/mcda-drugis-ie8.css
 ```
+
+App remote
+----------
+Follow the instructions in the README.md of the app-remote directory to run
+a version with a database.
 
 License
 -------
