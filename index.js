@@ -120,12 +120,11 @@ app.get("/workspaces", function(req, res) {
     if(err) {
       return console.error('error fetching client from pool', err);
     }
-    client.query('SELECT id, owner, title, problem, defaultScenarioId FROM Workspace WHERE owner = $1', [req.user.id], function(err, result) {
+    client.query('SELECT id, owner, title, defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1', [req.user.id], function(err, result) {
       done();
       if(err) {
         return console.error('error running query', err);
       }
-      row = result.rows[0];
       res.send(result.rows);
     });
   });
@@ -136,25 +135,20 @@ app.post("/workspaces", function(req, res) {
     if(err) {
       return console.error('error entering workspace in pool', err);
     }
-    client.query('INSERT INTO Workspace (owner, title, problem) VALUES ($1, $2, $3)', [req.user.id, req.body.title, req.body.problem], function(err, result) {
+    client.query('INSERT INTO workspace (owner, title, problem) VALUES ($1, $2, $3) RETURNING id', [req.user.id, req.body.title, req.body.problem], function(err, result) {
       if(err) {
         done();
         return console.error('error running query', err);
       }
-      client.query('SELECT id Workspace WHERE problem = $1 )', [req.body.problem], function(err, result) {
-        if(err) {
-          done();
-          return console.error('error running query', err);
-        }
-        console.log('log', result.rows[0]);
-        var workspaceId = result.rows[0].id;
-        client.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3)', [workspaceId, 'Default', { problem: req.body.problem }], function(err, result) {
+      console.log('log', result.rows[0]);
+      var workspaceId = result.rows[0].id;
+      client.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3) RETURNING id', [workspaceId, 'Default', { problem: req.body.problem }], function(err, result) {
           if(err) {
             done();
             return console.error('error running query', err);
           }
           var scenarioId = result.rows[0].id;
-          client.query('UPDATE workspace SET defaultscenarioid = $1 WHERE id = $2;', [scenarioId, workspaceId], function(err, result) {
+          client.query('UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2', [scenarioId, workspaceId], function(err, result) {
             if(err) {
               done();
               return console.error('error running query', err);
@@ -165,7 +159,6 @@ app.post("/workspaces", function(req, res) {
           });
         });
       });
-    });
   });
 });
 
@@ -174,12 +167,11 @@ app.get("/workspaces/:id", function(req, res) {
     if(err) {
       return console.error('error fetching workspace from pool', err);
     }
-    client.query('SELECT problem FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
+    client.query('SELECT id, problem::json, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
       done();
       if(err) {
         return console.error('error running query', err);
       }
-      row = result.rows[0];
       res.send(result.rows);
     });
   });
@@ -191,12 +183,11 @@ app.get("/workspaces/:id/scenarios", function(req, res) {
       return console.error('error fetching workspace from pool', err);
     }
     console.log(req, Object.keys(req));
-    client.query('SELECT state FROM scenario WHERE workspace = $1', [req.params.id], function(err, result) {
+    client.query('SELECT id, title, state::json, workspace AS "workspaceId" FROM scenario WHERE workspace = $1', [req.params.id], function(err, result) {
       done();
       if(err) {
         return console.error('error running query', err);
       }
-      row = result.rows[0];
       res.send(result.rows);
     });
   });
