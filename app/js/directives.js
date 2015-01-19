@@ -290,7 +290,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
   directives.directive('fileReader', function() {
     return {
       scope: {
-        model: '=',
+        model: '='
       },
       restrict: 'E',
       template: '<input type="file" accept=".json">',
@@ -454,28 +454,6 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
           $compile(element.contents())(scope);
         }
       }
-    };
-  });
-
-  directives.directive('partialValueFunction', function(mcdaRootPath, PartialValueFunction) {
-    return {
-      restrict: 'E',
-      replace: true,
-      scope: {
-        criterion: '=',
-        scenario: '=',
-        editMode: '&'
-      },
-      link: function(scope) {
-        scope.graphInfo = {
-          values: []
-        };
-        if (scope.isPVFDefined(scope.criterion)) {
-          scope.graphInfo.values = PartialValueFunction.getXY(scope.criterion);
-        }
-      },
-      templateUrl: mcdaRootPath + 'partials/partialValueFunction.html',
-      controller: 'PartialValueFunctionController'
     };
   });
 
