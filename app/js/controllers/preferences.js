@@ -1,6 +1,6 @@
 'use strict';
-define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
-  function(Config, patavi, angular, angularanimate, mmfoundation, _) {
+define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
+  function(Config, angular, angularanimate, mmfoundation, _) {
     var dependencies = ['$scope', '$location', '$anchorScroll', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'taskDefinition', 'WorkspaceService'];
     var PreferencesController = function($scope, $location, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition, WorkspaceService)
     {

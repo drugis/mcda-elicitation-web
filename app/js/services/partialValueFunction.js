@@ -48,6 +48,7 @@ define(['angular', 'underscore'], function(angular, _) {
         var i = intervalInfo(idx);
         return i.x0 + (v - i.v0) * ((i.x1 - i.x0) / (i.v1 - i.v0));
       };
+
       return {
         map: map,
         inv: inv,
@@ -56,14 +57,16 @@ define(['angular', 'underscore'], function(angular, _) {
       };
     };
 
-    var attach = function(state) {
-      function addPartialValueFunction(criterion) {
-        if (criterion.pvf) {
-          var pvf = create(criterion.pvf);
-          _.extend(criterion.pvf, _.pick(pvf, 'map', 'inv'));
-          _.extend(criterion, _.pick(pvf, 'best', 'worst'));
-        }
+    var addPartialValueFunction = function(criterion) {
+      if (criterion.pvf) {
+        var pvf = create(criterion.pvf);
+        _.extend(criterion.pvf, _.pick(pvf, 'map', 'inv'));
+        _.extend(criterion, _.pick(pvf, 'best', 'worst'));
       }
+      return criterion;
+    };
+
+    var attach = function(state) {
       angular.forEach(state.problem.criteria, addPartialValueFunction);
       return state;
     };
@@ -86,6 +89,7 @@ define(['angular', 'underscore'], function(angular, _) {
     };
 
     return {
+      add: addPartialValueFunction,
       create: create,
       attach: attach,
       getXY: getXY

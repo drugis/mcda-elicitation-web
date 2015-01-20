@@ -102,7 +102,7 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
         $scope: $scope,
         handler: {
           validChoice: validChoice,
-          fields: ['problem', 'prefs', 'total', 'choice', 'criteriaOrder', 'criterionA', 'criterionB'],
+          fields: ['prefs', 'total', 'choice', 'criteriaOrder', 'criterionA', 'criterionB'],
           nextState: nextState,
           hasIntermediateResults: true,
           standardize: _.identity,

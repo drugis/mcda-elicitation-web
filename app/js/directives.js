@@ -67,10 +67,10 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
             scope.$root.$safeApply(scope, function() {
               scope.model = values;
             });
-          }, 50)
+          }, 25)
         });
 
-        if (_.has(scope.range, 'restrictTo') && _.has(scope.range, 'restrictFrom')) {
+        if (scope.range && _.has(scope.range, 'restrictTo') && _.has(scope.range, 'restrictFrom')) {
           $($element).find('.jslider-bg').append('<i class="x"></i>');
           var width = valueToStep(scope.range.restrictTo) - valueToStep(scope.range.restrictFrom);
           var left = valueToStep(scope.range.restrictFrom);
@@ -90,7 +90,6 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       link: function(scope, $element) {
         var init = function() {
           if (scope.range) {
-            console.log('range from' + scope.range.from + ' to ' + scope.range.to);
             initialize(scope, $element);
           }
         };

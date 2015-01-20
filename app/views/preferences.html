@@ -101,7 +101,7 @@
         </div>
 
         <button ng-if="editMode.isUserOwner"
-                ng-disabled="!isPartialValueFunctionPresent()"
+                ng-disabled="!isAccessible(tasks['partial-value-function'], scenario.state).accessible"
                 ui-sref="partial-value-function({criterion: criterion.id})">Define partial value function</button>
       </div>
 
