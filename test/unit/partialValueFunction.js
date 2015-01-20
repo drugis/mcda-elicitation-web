@@ -41,8 +41,7 @@ define(['angular',
       }));
 
       describe("Create Linear Partial Value function", function() {
-        var crit1,
-          crit2;
+        var crit1, crit2;
 
         beforeEach(inject(function(PartialValueFunction) {
           crit1 = PartialValueFunction.create({
@@ -89,8 +88,8 @@ define(['angular',
       });
 
       describe("Create Piecewise Partial Value function", function() {
-        var crit1;
-        var crit2;
+        var crit1, crit2;
+
         beforeEach(inject(function(PartialValueFunction) {
           crit1 = PartialValueFunction.create({
             "type": "piecewise-linear",
