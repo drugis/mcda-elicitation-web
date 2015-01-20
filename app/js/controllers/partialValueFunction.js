@@ -48,7 +48,7 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
           }
 
           nextState.choice.pvf.values[ref] = (bisection[0] + bisection[1]) / 2;
-          nextState.choice.pvf.cutoffs[ref] = Math.abs(to - from) / 2;
+          nextState.choice.pvf.cutoffs[ref] = (to + from) / 2;
 
           nextState = _.extend(nextState, {
             ref: ref + 1,
