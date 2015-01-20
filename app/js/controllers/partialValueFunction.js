@@ -65,8 +65,8 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
       };
 
       var sortByValues = function(criterion) {
-        /* sorts the values and cutoffs according to the cutoffs (x-values)
-         returns an object containing the values and cuttoffs */
+        /* sorts the values and cutoffs according to the values (y-axis)
+           returns an object containing the values and cuttoffs */
         var newCutoffs = criterion.pvf.cutoffs.slice();
         var newValues = criterion.pvf.values.slice();
 
