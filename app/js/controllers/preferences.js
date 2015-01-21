@@ -11,6 +11,7 @@ define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'
       WorkspaceService.prepareScales($scope.workspace.problem).then(function(results) {
         $scope.scales = results.results;
       });
+      $scope.pvf = PartialValueFunction;
 
 
       var w = function(criterionKey) {

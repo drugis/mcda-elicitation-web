@@ -3,6 +3,7 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
   function(Config, Wizard, angular, _) {
     return function($scope, $state, $stateParams, $injector, currentScenario, PartialValueFunction, TaskDependencies)
     {
+      $scope.pvf = PartialValueFunction;
 
       var scenario = currentScenario;
       var criterionId = $stateParams.criterion;
@@ -24,7 +25,6 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
       var nextState = function(state) {
         var nextState = angular.copy(state);
         var ref = nextState.ref;
-        nextState.choice = PartialValueFunction.add(nextState.choice);
 
         if(state.type === 'elicit type') {
           nextState.type = "bisection";
@@ -37,14 +37,15 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
           }
 
           var bisection = nextState.bisections[ref];
+          var inv = PartialValueFunction.inv(nextState.choice);
 
           var from, to;
           if(nextState.choice.direction === "increasing") {
-            from = nextState.choice.pvf.inv(bisection[0]);
-            to = nextState.choice.pvf.inv(bisection[1]);
+            from = inv(bisection[0]);
+            to = inv(bisection[1]);
           } else {
-            from = nextState.choice.pvf.inv(bisection[1]);
-            to = nextState.choice.pvf.inv(bisection[0]);
+            from = inv(bisection[1]);
+            to = inv(bisection[0]);
           }
 
           nextState.choice.pvf.values[ref] = (bisection[0] + bisection[1]) / 2;
@@ -90,13 +91,16 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
       };
 
       var standardizeCriterion = function(criterion) {
-        if (criterion.pvf.type === 'linear') {
-          criterion.pvf.values = undefined;
-          criterion.pvf.cutoffs = undefined;
+        var newCriterion = angular.copy(criterion);
+        if (newCriterion.pvf.type === 'linear') {
+          newCriterion.pvf.values = undefined;
+          newCriterion.pvf.cutoffs = undefined;
         } else {
-          criterion.pvf = _.extend(criterion.pvf, sortByValues(criterion));
+          if(newCriterion.pvf.cutoffs && newCriterion.pvf.values) {
+            newCriterion.pvf = _.extend(newCriterion.pvf, sortByValues(newCriterion));
+          }
         }
-        return criterion;
+        return newCriterion;
       };
 
 
@@ -107,7 +111,6 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
 
         $scope.scenario.$save($stateParams, function() {
           $scope.$emit('elicit.partialValueFunctionChanged');
-          PartialValueFunction.attach($scope.scenario.state);
           $state.go('preferences');
         });
       };
@@ -124,14 +127,9 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
       };
 
       $scope.getXY = _.memoize(function(criterion) {
-        var newCriterion = angular.copy(criterion);
-        if(criterion.pvf.cutoffs && criterion.pvf.values) {
-          newCriterion.pvf = _.extend(newCriterion.pvf, sortByValues(newCriterion));
-        }
-
-        return PartialValueFunction.getXY(newCriterion);
-      }, function(arg) {
-        return angular.toJson(arg.pvf);
+        return PartialValueFunction.getXY(standardizeCriterion(criterion));
+      }, function(criterion) { // hash
+        return angular.toJson(standardizeCriterion(criterion).pvf);
       });
 
       $scope.cancel = function() {
