@@ -76,9 +76,9 @@
     <tbody>
       <tr ng-repeat="(key, criterion) in criteria">
         <td>{{criterion.title}}</td>
-        <td>{{criterion.scale[0] | number:3}}, {{criterion.scale[1] | number:3}}</td>
-        <td>{{intervalHull(scales[criterion.id])[0] | number:3}}, {{intervalHull(scales[criterion.id])[1] | number:3}}</td>
-        <td><span ng-if="criterion.pvf.range">{{criterion.pvf.range[0] | number:3}}, {{criterion.pvf.range[1] | number:3}}</span></td>
+        <td>{{criterion.scale[0] | number}}, {{criterion.scale[1] | number}}</td>
+        <td>{{intervalHull(scales[criterion.id])[0] | number}}, {{intervalHull(scales[criterion.id])[1] | number}}</td>
+        <td><span ng-if="criterion.pvf.range">{{criterion.pvf.range[0] | number}}, {{criterion.pvf.range[1] | number}}</span></td>
         <td>{{criterion.unitOfMeasurement}}</td>
       </tr>
     </tbody>
@@ -132,7 +132,7 @@
   <ul class="no-bullet">
     <li ng-repeat="criterion in criteria">
       <span mathjax-bind="criterion.w"></span>: {{criterion.title}}
-      ({{criterion.worst() | number: 3}} &rarr; {{criterion.best() | number: 3}})
+      ({{pvf.worst(criterion) | number}} &rarr; {{pvf.best(criterion) | number}})
     </li>
   </ul>
 

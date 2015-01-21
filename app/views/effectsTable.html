@@ -10,7 +10,7 @@
     <tbody>
       <tr ng-repeat="(alternativeKey, alternative) in problem.alternatives">
         <td>{{alternative.title}}</td>
-        <td>{{sideParam.scales[alternativeKey]['50%'] | number:3}} ({{sideParam.scales[alternativeKey]['2.5%'] | number:3}}, {{sideParam.scales[alternativeKey]['97.5%'] | number:3}})</td>
+        <td>{{sideParam.scales[alternativeKey]['50%'] | number}} ({{sideParam.scales[alternativeKey]['2.5%'] | number}}, {{sideParam.scales[alternativeKey]['97.5%'] | number}})</td>
       </tr>
     </tbody>
   </table>
@@ -58,8 +58,8 @@
             <td>{{criterion.value.description}}</td>
             <td>{{criterion.value.unitOfMeasurement}}</td>
             <td class="center-text" ng-repeat="(alternativeKey, alternative) in problem.alternatives" name="col{{$index}}" id="col{{$index}}" ng-show="alternativeVisible[alternativeKey]">
-              {{scales[criterion.key][alternativeKey]['50%'] | number:3}}
-              <div class="uncertain">{{scales[criterion.key][alternativeKey]['2.5%'] | number:3}}, {{scales[criterion.key][alternativeKey]['97.5%'] | number:3}}</div>
+              {{scales[criterion.key][alternativeKey]['50%'] | number}}
+              <div class="uncertain">{{scales[criterion.key][alternativeKey]['2.5%'] | number}}, {{scales[criterion.key][alternativeKey]['97.5%'] | number}}</div>
             </td>
           </tr>
         </tbody>

@@ -6,17 +6,17 @@
       <ul class="no-bullet">
         <li ng-repeat="criterion in [currentStep.criterionA, currentStep.criterionB] track by $index">
           {{currentStep.problem.criteria[criterion].title}}
-          ({{currentStep.problem.criteria[criterion].worst() | number: 3}} &rarr;
-          {{currentStep.problem.criteria[criterion].best() | number: 3}})
+          ({{pvf.worst(currentStep.problem.criteria[criterion]) | number}} &rarr;
+          {{pvf.best(currentStep.problem.criteria[criterion]) | number}})
         </li>
       </ul>
 
       <strong>Given the following situation:</strong>
       <p>
         {{currentStep.problem.criteria[currentStep.criterionA].title}} =
-        {{currentStep.problem.criteria[currentStep.criterionA].worst() | number: 3}},
+        {{pvf.worst(currentStep.problem.criteria[currentStep.criterionA]) | number}},
         {{currentStep.problem.criteria[currentStep.criterionB].title}} =
-        {{currentStep.problem.criteria[currentStep.criterionB].best() | number: 3}}
+        {{pvf.best(currentStep.problem.criteria[currentStep.criterionB]) | number}}
 
         <br>
         <strong>Adjust the slider:</strong>
@@ -28,7 +28,7 @@
       <strong>So that the following alternative is equally desirable:</strong>
       <p>
         {{currentStep.problem.criteria[currentStep.criterionA].title}} = <span class="label secondary">{{currentStep.choice}}</span>
-        {{currentStep.problem.criteria[currentStep.criterionB].title}} = {{currentStep.problem.criteria[currentStep.criterionB].worst() | number: 3}}
+        {{currentStep.problem.criteria[currentStep.criterionB].title}} = {{pvf.worst(currentStep.problem.criteria[currentStep.criterionB]) | number}}
       </p>
     </div>
 

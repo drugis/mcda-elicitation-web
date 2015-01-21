@@ -2,12 +2,13 @@
 define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard, angular, _) {
   return function($scope, $state, $stateParams, $injector, mcdaRootPath, currentScenario, taskDefinition, PartialValueFunction) {
     var criteria = {};
+    var pvf = PartialValueFunction;
 
     var getReference = function() {
       return _.object(
         _.keys(criteria),
         _.map(criteria, function(criterion) {
-          return criterion.worst();
+          return pvf.worst(criterion);
         })
       );
     };
@@ -34,7 +35,7 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
           var criteria = state.problem.criteria;
           var choices = _.map(_.keys(criteria), function(criterion) {
             var reference = getReference();
-            reference[criterion] = criteria[criterion].best();
+            reference[criterion] = pvf.best(criteria[criterion]);
             return reference;
           });
           return _.object(_.keys(criteria), choices);
@@ -59,12 +60,12 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
       nextState.choice = undefined;
 
       _.each(nextState.choices, function(alternative) {
-        alternative[choice] = criteria[choice].best();
+        alternative[choice] = pvf.best(criteria[choice]);
       });
 
       function next(choice) {
         delete nextState.choices[choice];
-        nextState.reference[choice] = state.problem.criteria[choice].best();
+        nextState.reference[choice] = pvf.best(state.problem.criteria[choice]);
         nextState.prefs.ordinal.push(choice);
         nextState.title = title(nextState.prefs.ordinal.length + 1);
       }
@@ -106,9 +107,7 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
       next.prefs = standardize(prefs);
 
       $scope.scenario.state = _.pick(next, ['problem', 'prefs']);
-      PartialValueFunction.attach($scope.scenario.state);
       $scope.scenario.$save($stateParams, function(scenario) {
-        PartialValueFunction.attach($scope.scenario.state);
         $state.go('preferences');
       });
     };
@@ -129,5 +128,4 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
       }
     });
   };
-
 });

@@ -16,11 +16,9 @@ define(
             controller: 'ScenarioController',
             resolve: {
               currentScenario:
-              ['$stateParams', 'ScenarioResource', 'PartialValueFunction',
-               function($stateParams, ScenarioResource, PartialValueFunction) {
-                 return ScenarioResource.get($stateParams, function(scenario) {
-                   scenario.state = PartialValueFunction.attach(scenario.state);
-                 }).$promise;
+              ['$stateParams', 'ScenarioResource',
+               function($stateParams, ScenarioResource) {
+                 return ScenarioResource.get($stateParams).$promise;
                }
               ],
               scenarios:

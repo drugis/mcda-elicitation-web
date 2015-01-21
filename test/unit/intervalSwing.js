@@ -1,22 +1,21 @@
 define(['angular',
     'angular-mocks',
     'mcda/controllers/intervalSwing',
-    'mcda/controllers/partialValueFunction',
     'mcda/services/pataviService'
   ],
-  function(angular, IntervalSwingHandler, PartialValueFunctionHandler) {
+  function(angular, IntervalSwingHandler) {
     describe('IntervalSwingHandler', function() {
       beforeEach(module('elicit.controllers'));
       beforeEach(module('elicit.taskDependencies'));
       beforeEach(module('elicit.pvfService'));
       beforeEach(module('elicit.pataviService'));
 
-      function initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, problem) {
+      function initializeScope($controller, $rootScope, TaskDependencies,  problem) {
         var scope, state;
         scope = $rootScope.$new();
 
         var scenario = {
-          state: PartialValueFunction.attach({
+          state: {
             problem: problem,
             prefs: [{
               type: 'ordinal',
@@ -25,7 +24,7 @@ define(['angular',
               type: 'ordinal',
               criteria: ['Bleed', 'Dist DVT']
             }]
-          }),
+          },
           $save: function(state) {}
         };
         scope.scenario = scenario;
@@ -50,29 +49,29 @@ define(['angular',
 
       describe('initialize', function() {
         it('should start comparing the first two criteria', inject(function($controller, $rootScope, TaskDependencies, PartialValueFunction) {
-          var scope = initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, exampleProblem());
+          var scope = initializeScope($controller, $rootScope, TaskDependencies, exampleProblem());
           var problem = scope.currentStep.problem;
           expect(scope.currentStep.criterionA).toEqual('Prox DVT');
           expect(scope.currentStep.criterionB).toEqual('Bleed');
-          expect(scope.currentStep.choice.lower).toEqual(problem.criteria['Prox DVT'].best());
-          expect(scope.currentStep.choice.upper).toEqual(problem.criteria['Prox DVT'].worst());
-          expect(scope.currentStep.worst()).toEqual(problem.criteria['Prox DVT'].worst());
-          expect(scope.currentStep.best()).toEqual(problem.criteria['Prox DVT'].best());
+          expect(scope.currentStep.choice.lower).toEqual(PartialValueFunction.best(problem.criteria['Prox DVT']));
+          expect(scope.currentStep.choice.upper).toEqual(PartialValueFunction.worst(problem.criteria['Prox DVT']));
+          expect(scope.currentStep.worst()).toEqual(PartialValueFunction.worst(problem.criteria['Prox DVT']));
+          expect(scope.currentStep.best()).toEqual(PartialValueFunction.best(problem.criteria['Prox DVT']));
         }));
 
 
         it('should sort the worst and best values', inject(function($controller, $rootScope, TaskDependencies, PartialValueFunction) {
           var problem = exampleProblem();
           problem.criteria['Prox DVT'].pvf.direction = 'increasing';
-          var scope = initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, problem);
+          var scope = initializeScope($controller, $rootScope, TaskDependencies, problem);
 
-          expect(scope.currentStep.choice.lower).toEqual(problem.criteria['Prox DVT'].worst());
-          expect(scope.currentStep.worst()).toEqual(problem.criteria['Prox DVT'].worst());
-          expect(scope.currentStep.best()).toEqual(problem.criteria['Prox DVT'].best());
+          expect(scope.currentStep.choice.lower).toEqual(PartialValueFunction.worst(problem.criteria['Prox DVT']));
+          expect(scope.currentStep.worst()).toEqual(PartialValueFunction.worst(problem.criteria['Prox DVT']));
+          expect(scope.currentStep.best()).toEqual(PartialValueFunction.best(problem.criteria['Prox DVT']));
         }));
 
         it('should make best() and worst() functions of choice', inject(function($controller, $rootScope, TaskDependencies, PartialValueFunction) {
-          var scope = initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, exampleProblem());
+          var scope = initializeScope($controller, $rootScope, TaskDependencies, exampleProblem());
           scope.currentStep.choice = {
             lower: 0.1,
             upper: 0.2
@@ -82,7 +81,7 @@ define(['angular',
         }));
 
         it('should set the progress information', inject(function($controller, $rootScope, TaskDependencies, PartialValueFunction) {
-          var scope = initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, exampleProblem());
+          var scope = initializeScope($controller, $rootScope, TaskDependencies, exampleProblem());
           expect(scope.currentStep.step).toEqual(1);
           expect(scope.currentStep.total).toEqual(2);
         }));
@@ -90,7 +89,7 @@ define(['angular',
 
       describe('validChoice', function() {
         it('should check that lower < upper', inject(function($controller, $rootScope, TaskDependencies, PartialValueFunction) {
-          var scope = initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, exampleProblem());
+          var scope = initializeScope($controller, $rootScope, TaskDependencies, exampleProblem());
           scope.currentStep.choice.lower = 0.2;
           scope.currentStep.choice.upper = 0.1;
           expect(scope.canProceed(scope.currentStep)).toEqual(false);
@@ -101,7 +100,7 @@ define(['angular',
         }));
 
         it('should check that the choice is contained in the scale range', inject(function($controller, $rootScope, TaskDependencies, PartialValueFunction) {
-          var scope = initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, exampleProblem());
+          var scope = initializeScope($controller, $rootScope, TaskDependencies, exampleProblem());
           scope.currentStep.choice.lower = -0.05;
           scope.currentStep.choice.upper = 0.26;
           expect(scope.canProceed(scope.currentStep)).toEqual(false);
@@ -116,31 +115,31 @@ define(['angular',
 
       describe('nextState', function() {
         it('should transition to the next two criteria', inject(function($controller, $rootScope, TaskDependencies, PartialValueFunction) {
-          var scope = initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, exampleProblem());
+          var scope = initializeScope($controller, $rootScope, TaskDependencies, exampleProblem());
           var problem = scope.currentStep.problem;
           scope.nextStep(scope.currentStep);
           expect(scope.currentStep.criterionA).toEqual('Bleed');
           expect(scope.currentStep.criterionB).toEqual('Dist DVT');
-          expect(scope.currentStep.choice.lower).toEqual(problem.criteria.Bleed.best());
-          expect(scope.currentStep.choice.upper).toEqual(problem.criteria.Bleed.worst());
+          expect(scope.currentStep.choice.lower).toEqual(PartialValueFunction.best(problem.criteria.Bleed));
+          expect(scope.currentStep.choice.upper).toEqual(PartialValueFunction.worst(problem.criteria.Bleed));
         }));
 
         it('should transition to done when criteria run out', inject(function($controller, $rootScope, TaskDependencies, PartialValueFunction) {
-          var scope = initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, exampleProblem());
+          var scope = initializeScope($controller, $rootScope, TaskDependencies, exampleProblem());
           scope.nextStep(scope.currentStep);
           scope.nextStep(scope.currentStep);
           expect(scope.currentStep.type).toEqual('done');
         }));
 
         it('should set the title', inject(function($controller, $rootScope, TaskDependencies, PartialValueFunction) {
-          var scope = initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, exampleProblem());
+          var scope = initializeScope($controller, $rootScope, TaskDependencies, exampleProblem());
           scope.nextStep(scope.currentStep);
           expect(scope.currentStep.step).toEqual(2);
           expect(scope.currentStep.total).toEqual(2);
         }));
 
         it('should store the preference information', inject(function($controller, $rootScope, TaskDependencies, PartialValueFunction) {
-          var scope = initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, exampleProblem());
+          var scope = initializeScope($controller, $rootScope, TaskDependencies, exampleProblem());
           scope.currentStep.choice.lower = 0.11;
           scope.currentStep.choice.upper = 0.13;
           scope.nextStep(scope.currentStep);
@@ -161,7 +160,7 @@ define(['angular',
 
           var problem = exampleProblem();
           problem.criteria['Prox DVT'].pvf.direction = 'increasing';
-          scope = initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, problem);
+          scope = initializeScope($controller, $rootScope, TaskDependencies, problem);
 
           scope.currentStep.choice.lower = 0.12;
           scope.currentStep.choice.upper = 0.14;
@@ -176,10 +175,10 @@ define(['angular',
         it('should sort the worst and best values', inject(function($controller, $rootScope, TaskDependencies, PartialValueFunction) {
           var problem = exampleProblem();
           problem.criteria['Prox DVT'].pvf.direction = 'increasing';
-          var scope = initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, problem);
-          expect(scope.currentStep.choice.lower).toEqual(problem.criteria['Prox DVT'].worst());
-          expect(scope.currentStep.worst()).toEqual(problem.criteria['Prox DVT'].worst());
-          expect(scope.currentStep.best()).toEqual(problem.criteria['Prox DVT'].best());
+          var scope = initializeScope($controller, $rootScope, TaskDependencies, problem);
+          expect(scope.currentStep.choice.lower).toEqual(PartialValueFunction.worst(problem.criteria['Prox DVT']));
+          expect(scope.currentStep.worst()).toEqual(PartialValueFunction.worst(problem.criteria['Prox DVT']));
+          expect(scope.currentStep.best()).toEqual(PartialValueFunction.best(problem.criteria['Prox DVT']));
         }));
       });
     });
