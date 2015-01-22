@@ -17,6 +17,10 @@ define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
       return false;
     };
 
+    $scope.cancel = function() {
+      $state.go('preferences');
+    };
+
     $scope.save = function(currentStep) {
       if (!this.validChoice(currentStep)) {
         return;
