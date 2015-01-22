@@ -67,7 +67,7 @@
 
 
         <p>
-          What is the value of x such that an improvement in {{currentStep.choice.title}} from {{pvf.worst(currentStep.choice) | number}} ({{currentStep.choice.unitOfMeasurement}}) to x is equivalent to an improvement from x to {{pvf.best(currentStep.choice) | number}} ({{currentStep.choice.unitOfMeasurement}})?
+          What is the value of x such that an improvement in {{currentStep.choice.title}} from {{currentStep.range.from | number}} ({{currentStep.choice.unitOfMeasurement}}) to x is equivalent to an improvement from x to {{currentStep.range.to | number}} ({{currentStep.choice.unitOfMeasurement}})?
         </p>
 
         <strong>Adjust the slider:</strong>
@@ -80,8 +80,8 @@
 
         <strong>So that the following statement is true:</strong>
         <p>
-          The improvement from {{pvf.worst(currentStep.choice) | number}} to {{currentStep.choice.pvf.cutoffs[currentStep.choice.pvf.values.length - 1] | number}}<br>
-          is equivalent to the improvement from {{currentStep.choice.pvf.cutoffs[currentStep.choice.pvf.values.length - 1] | number}} to {{pvf.best(currentStep.choice) | number}}.
+          The improvement from {{currentStep.range.from | number}} to {{currentStep.choice.pvf.cutoffs[currentStep.choice.pvf.values.length - 1] | number}}<br>
+          is equivalent to the improvement from {{currentStep.choice.pvf.cutoffs[currentStep.choice.pvf.values.length - 1] | number}} to {{currentStep.range.to | number}}.
         </p>
 
       </div>

@@ -8,7 +8,6 @@ define([], function() {
     };
     $scope.workspace = currentWorkspace;
     $scope.workspace.problem = WorkspaceService.addValueTree($scope.workspace.problem);
-    WorkspaceService.prepareScales($scope.workspace.problem);
 
     $scope.isEditTitleVisible = false;
 

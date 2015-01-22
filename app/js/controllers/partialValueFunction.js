@@ -55,9 +55,7 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
             ref: ref + 1,
             range: {
               from: from,
-              to: to,
-              rightOpen: true,
-              leftOpen: true
+              to: to
             }
           });
         }
@@ -102,7 +100,6 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
         }
         return newCriterion;
       };
-
 
       $scope.save = function(state) {
         state.problem.criteria[criterionId] = standardizeCriterion(state.choice);
