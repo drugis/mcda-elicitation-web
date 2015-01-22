@@ -2,6 +2,7 @@
 define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
   function(Config, angular, angularanimate, mmfoundation, _) {
     var dependencies = ['$scope', '$location', '$anchorScroll', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'taskDefinition', 'WorkspaceService'];
+
     var PreferencesController = function($scope, $location, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition, WorkspaceService)
     {
       var state = taskDefinition.clean($scope.scenario.state);

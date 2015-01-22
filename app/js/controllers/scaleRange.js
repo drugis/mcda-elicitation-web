@@ -1,7 +1,7 @@
 'use strict';
 define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
 
-  return function($scope, $state, $stateParams, taskDefinition, intervalHull, MCDAPataviService, ScaleRangeService) {
+  return function($scope, $state, $stateParams, taskDefinition, intervalHull, WorkspaceService, ScaleRangeService) {
 
     var state = taskDefinition.clean($scope.scenario.state);
 
@@ -82,11 +82,7 @@ define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
       });
     };
 
-    var calculateScales = MCDAPataviService.run(_.extend(state.problem, {
-      'method': 'scales'
-    }));
-    calculateScales.then(_.partial(successHandler, state), errorHandler);
-
+    WorkspaceService.prepareScales($scope.workspace.problem).then(_.partial(successHandler, state), errorHandler);
 
   };
 });
