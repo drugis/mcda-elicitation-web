@@ -1,6 +1,6 @@
 /*jshint node: true */
-define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
-  function(Config, patavi, angular, angularanimate, mmfoundation, _) {
+define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
+  function(Config, angular, angularanimate, mmfoundation, _) {
     var dependencies = ['$scope', '$stateParams', 'taskDefinition', 'RemarksResource', 'ValueTreeUtil', 'WorkspaceService'];
     var EffectsTableController = function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil, WorkspaceService) {
 
@@ -9,7 +9,7 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
       $scope.scales = {};
       WorkspaceService.prepareScales($scope.workspace.problem).then(function(results) {
         $scope.scales = results.results;
-      }); 
+      });
 
       function buildEffectsTableData(problem) {
         var criteriaNodes = ValueTreeUtil.findCriteriaNodes(problem.valueTree);

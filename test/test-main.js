@@ -15,7 +15,7 @@ var foundationVersion = "5.0.2";
 
 require.config({
   paths: {
-    'jQuery': 'bower_components/jquery/jquery.min',
+    'jQuery': 'bower_components/jquery/dist/jquery.min',
     'underscore': 'bower_components/underscore/underscore',
     'angular': 'bower_components/angular/angular',
     'angular-resource': 'bower_components/angular-resource/angular-resource',
@@ -65,4 +65,3 @@ window.config = {
   workspacesRepository: { service: "LocalWorkspaces" },
   remarksRepository: { service: 'LocalRemarks'}
 };
-

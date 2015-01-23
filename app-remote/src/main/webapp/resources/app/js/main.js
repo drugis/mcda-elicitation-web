@@ -2,7 +2,7 @@
 
 require.config({
   paths: {
-    'jQuery': 'bower_components/jquery/jquery.min',
+    'jQuery': 'bower_components/jquery/dist/jquery.min',
     'underscore': 'bower_components/underscore/underscore-min',
     'angular': 'bower_components/angular/angular',
     'angular-resource': 'bower_components/angular-resource/angular-resource.min',
@@ -10,7 +10,7 @@ require.config({
     'jquery-slider': 'bower_components/jslider/dist/jquery.slider.min',
     'd3': 'bower_components/d3/d3.min',
     'nvd3': 'bower_components/nvd3/nv.d3.min',
-    'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML',
+    'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-AMS_HTML',
     'foundation': 'bower_components/foundation/js/foundation.min',
     'domReady': 'bower_components/requirejs-domready/domReady',
     'mcda': 'bower_components/mcda-web/app/js',

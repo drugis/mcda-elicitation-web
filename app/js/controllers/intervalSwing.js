@@ -3,16 +3,10 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
 
   return function($scope, $state, $stateParams, $injector, mcdaRootPath, currentScenario, taskDefinition, PartialValueFunction) {
     var criteria = {};
-
-    function getBounds(criterionName) {
-      var criterion = criteria[criterionName];
-      return [criterion.worst(), criterion.best()].sort(function(a, b) {
-        return a - b;
-      });
-    }
+    $scope.pvf = PartialValueFunction;
 
     function buildInitial(criterionA, criterionB, step) {
-      var bounds = getBounds(criterionA);
+      var bounds = PartialValueFunction.getBounds(criteria[criterionA]);
       var increasing = criteria[criterionA].pvf.direction === 'increasing';
       return {
         step: step,
@@ -53,7 +47,7 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
         return false;
       }
       var bounds1 = state.choice;
-      var bounds2 = getBounds(state.criterionA);
+      var bounds2 = PartialValueFunction.getBounds(criteria[state.criterionA]);
       return bounds1.lower < bounds1.upper && bounds2[0] <= bounds1.lower && bounds2[1] >= bounds1.upper;
     };
 
@@ -75,7 +69,7 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
       }
 
       function getRatioBounds(state) {
-        var u = criteria[state.criterionA].pvf.map;
+        var u = PartialValueFunction.map(criteria[state.criterionA]);
         return [1 / u(state.choice.lower), 1 / u(state.choice.upper)].sort(function(a, b) {
           return a - b;
         });
@@ -99,9 +93,7 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
     $scope.save = function(state) {
       state = nextState(state);
       $scope.scenario.state = _.pick(state, ['problem', 'prefs']);
-      PartialValueFunction.attach($scope.scenario.state);
       $scope.scenario.$save($stateParams, function(scenario) {
-        PartialValueFunction.attach($scope.scenario.state);
         $state.go('preferences');
       });
 

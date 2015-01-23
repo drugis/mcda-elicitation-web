@@ -5,14 +5,14 @@
       <h5 class="subheader">Given the following situation:</h5>
       <ul class="inline-list">
         <li ng-repeat="(criterion, value) in currentStep.reference track by $index">
-          {{currentStep.problem.criteria[criterion].title}} = {{value | number: 3}}
+          {{currentStep.problem.criteria[criterion].title}} = {{value | number }}
         </li>
       </ul>
 
       <h5 class="subheader">Which of these improvements is most desired:</h5>
       <label ng-repeat="(choice, alternative) in currentStep.choices">
         <input type="radio" ng-model="currentStep.choice" value="{{choice}}" />
-        {{currentStep.problem.criteria[choice].title}} &rarr; {{alternative[choice] | number: 3}}
+        {{currentStep.problem.criteria[choice].title}} &rarr; {{alternative[choice] | number }}
       </label>
     </div>
 

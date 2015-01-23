@@ -1,8 +1,8 @@
 'use strict';
-define(['mcda/config', 'angular', 'underscore', 'mcda/services/partialValueFunction'], function(Config, angular, _) {
-  var dependencies = ['elicit.pvfService'];
+define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
+  var dependencies = [];
 
-  var Workspaces = function(PartialValueFunction, LocalRemarks, $rootScope, $q, $location) {
+  var Workspaces = function(LocalRemarks, $rootScope, $q, $location) {
     function randomId(size, prefix) {
       var text = "";
       var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -43,7 +43,6 @@ define(['mcda/config', 'angular', 'underscore', 'mcda/services/partialValueFunct
       workspace.getScenario = function(id) {
         var deferred = $q.defer();
         var scenario = workspace.scenarios[id];
-        PartialValueFunction.attach(scenario.state);
 
         addValueTree(scenario.state.problem);
 

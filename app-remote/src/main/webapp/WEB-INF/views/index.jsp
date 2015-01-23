@@ -28,12 +28,12 @@
   <form method="POST" action="<c:url value="/signout" />" id="signout_form">
     <input type="hidden" name="_csrf" value="<c:out value="${_csrf.token}" />" />
   </form>
-  
+
   <nav class="top-bar" data-topbar>
     <ul class="title-area">
       <li class="name">
         <h1>
-          <a href="#">mcda.drugis.org</a>
+          <a href="#/">mcda.drugis.org</a>
         </h1>
       </li>
     </ul>
@@ -62,7 +62,7 @@
       </addis-alert>
     </div>
   </div>
-    
+
   <div ui-view></div>
 
 
@@ -79,10 +79,10 @@
           LastName : "${account.lastName}"
         }
     };
-   
+
     function signout(){
       var signoutForm = document.getElementById('signout_form');
-      
+
       if(signoutForm){
         signoutForm.submit();
       }
