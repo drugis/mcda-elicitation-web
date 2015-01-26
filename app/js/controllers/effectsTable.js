@@ -5,7 +5,7 @@ define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'
     var EffectsTableController = function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil) {
 
       var remarksCache;
-      $scope.scales = $scope.workspace.$$scales;
+      $scope.scales = $scope.workspace.$$scales.observed;
       $scope.valueTree = $scope.workspace.$$valueTree;
 
       function buildEffectsTableData(problem, valueTree) {
