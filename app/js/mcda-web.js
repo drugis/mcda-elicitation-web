@@ -113,9 +113,9 @@ define(
           templateUrl: baseTemplatePath + 'workspace.html',
           controller: 'WorkspaceController',
           resolve: {
-            currentWorkspace: ['$stateParams', 'WorkspaceResource',
-              function($stateParams, WorkspaceResource) {
-                return WorkspaceResource.get($stateParams).$promise;
+            currentWorkspace: ['$stateParams', 'WorkspaceService',
+              function($stateParams, WorkspaceService) {
+                return WorkspaceService.getWorkspace($stateParams);
               }
             ]
           }

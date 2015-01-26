@@ -1,7 +1,7 @@
 'use strict';
 define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
 
-  return function($scope, $state, $stateParams, taskDefinition, intervalHull, WorkspaceService, ScaleRangeService) {
+  return function($scope, $state, $stateParams, taskDefinition, intervalHull, ScaleRangeService) {
 
     var state = taskDefinition.clean($scope.scenario.state);
 
@@ -46,19 +46,11 @@ define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
 
     };
 
-    var errorHandler = function(code, error) {
-      var message = {
-        code: (code && code.desc) ? code.desc : code,
-        cause: error
-      };
-      $scope.$root.$broadcast('patavi.error', message);
-    };
-
-    var successHandler = function(state, results) {
+    var initialize = function(state, observed) {
       var scales = {};
       var choices = {};
       $scope.$root.$safeApply($scope, function() {
-        _.map(_.pairs(results.results), function(criterion) {
+        _.map(_.pairs(observed), function(criterion) {
 
           // Calculate interval hulls
           var criterionRange = intervalHull(criterion[1]);
@@ -86,7 +78,7 @@ define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
       });
     };
 
-    WorkspaceService.prepareScales($scope.workspace.problem).then(_.partial(successHandler, state), errorHandler);
+    initialize(state, $scope.workspace._scales);
 
   };
 });

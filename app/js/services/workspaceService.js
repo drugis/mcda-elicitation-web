@@ -4,7 +4,7 @@ define(['angular'],
 
     var dependencies = ['elicit.workspaceResource'];
 
-    var WorkspaceService = function(WorkspaceResource, MCDAPataviService) {
+    var WorkspaceService = function($q, WorkspaceResource, MCDAPataviService) {
 
       function addValueTree(problem) {
         var newProblem = angular.copy(problem);
@@ -33,10 +33,23 @@ define(['angular'],
         return MCDAPataviService.run(payload);
       }
 
+      function getWorkspace($stateParams) {
+        var deferred = $q.defer();
+
+        WorkspaceResource.get($stateParams, function(workspace) {
+          prepareScales(workspace.problem).then(function(results) {
+            workspace.problem = addValueTree(workspace.problem);
+            workspace._scales = results.results;
+            deferred.resolve(workspace);
+          });
+        });
+
+        return deferred.promise;
+      }
+
       return {
-        addValueTree: addValueTree,
         createWorkspace: createWorkspace,
-        prepareScales: prepareScales
+        getWorkspace: getWorkspace
       };
     };
 

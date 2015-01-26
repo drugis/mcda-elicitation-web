@@ -1,15 +1,11 @@
 /*jshint node: true */
 define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
   function(Config, angular, angularanimate, mmfoundation, _) {
-    var dependencies = ['$scope', '$stateParams', 'taskDefinition', 'RemarksResource', 'ValueTreeUtil', 'WorkspaceService'];
-    var EffectsTableController = function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil, WorkspaceService) {
+    var dependencies = ['$scope', '$stateParams', 'taskDefinition', 'RemarksResource', 'ValueTreeUtil'];
+    var EffectsTableController = function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil) {
 
       var remarksCache;
-      $scope.workspace.problem = WorkspaceService.addValueTree($scope.workspace.problem);
-      $scope.scales = {};
-      WorkspaceService.prepareScales($scope.workspace.problem).then(function(results) {
-        $scope.scales = results.results;
-      });
+      $scope.scales = $scope.workspace._scales;
 
       function buildEffectsTableData(problem) {
         var criteriaNodes = ValueTreeUtil.findCriteriaNodes(problem.valueTree);
