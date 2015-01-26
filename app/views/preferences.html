@@ -60,9 +60,6 @@
 
 <div id="scale-ranges-block" class="prefs-block">
   <h4>Scale Ranges</h4>
-
-  <button ng-if="editMode.isUserOwner" ui-sref="scale-range">Define Scale Ranges</button>
-
   <table id="effectstable" class="effectstable">
     <thead>
       <tr>
@@ -83,6 +80,8 @@
       </tr>
     </tbody>
   </table>
+
+  <button ng-if="editMode.isUserOwner" ui-sref="scale-range">Define Scale Ranges</button>
 </div>
 
 <div id="partial-value-functions-block" class="prefs-block">
