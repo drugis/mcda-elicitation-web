@@ -1,17 +1,17 @@
 'use strict';
 define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
   function(Config, angular, angularanimate, mmfoundation, _) {
-    var dependencies = ['$scope', '$location', '$anchorScroll', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'taskDefinition', 'WorkspaceService'];
+    var dependencies = ['$scope', '$location', '$anchorScroll', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'taskDefinition'];
 
-    var PreferencesController = function($scope, $location, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition, WorkspaceService)
+    var PreferencesController = function($scope, $location, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition)
     {
       var state = taskDefinition.clean($scope.scenario.state);
 
       $scope.$parent.taskId = taskDefinition.id;
       $scope.intervalHull = intervalHull;
-      WorkspaceService.prepareScales($scope.workspace.problem).then(function(results) {
-        $scope.scales = results.results;
-      });
+
+      $scope.scales = $scope.workspace.$$scales;
+
       $scope.pvf = PartialValueFunction;
 
 

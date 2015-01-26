@@ -41,7 +41,7 @@
            ng-class="{'next-step': isPartialValueFunctionPresent() && !isOrdinalSwingPresent(), completed:isOrdinalSwingPresent()}">
         <div class="circle">
           <i ng-if="isOrdinalSwingPresent()" class="fa fa-check" style="color:white"></i></div>
-        <div class="circle-label">Tradeoff Ordening</div>
+        <div class="circle-label">Trade-off Order</div>
       </div>
     </div>
     <div class="columns large-3 medium-3 small-3 progress-cell">
@@ -50,7 +50,7 @@
            ng-class="{'next-step': isOrdinalSwingPresent() && !isTradeoffRatiosPresent(), completed:isTradeoffRatiosPresent()}">
         <div class="circle">
           <i ng-if="isTradeoffRatiosPresent()" class="fa fa-check" style="color:white"></i></div>
-        <div class="circle-label">Tradeoff Ratios</div>
+        <div class="circle-label">Trade-off Ratios</div>
       </div>
     </div>
   </div>
@@ -60,9 +60,6 @@
 
 <div id="scale-ranges-block" class="prefs-block">
   <h4>Scale Ranges</h4>
-
-  <button ng-if="editMode.isUserOwner" ui-sref="scale-range">Define Scale Ranges</button>
-
   <table id="effectstable" class="effectstable">
     <thead>
       <tr>
@@ -76,13 +73,15 @@
     <tbody>
       <tr ng-repeat="(key, criterion) in criteria">
         <td>{{criterion.title}}</td>
-        <td>{{criterion.scale[0] | number}}, {{criterion.scale[1] | number}}</td>
-        <td>{{intervalHull(scales[criterion.id])[0] | number}}, {{intervalHull(scales[criterion.id])[1] | number}}</td>
+        <td>{{scales.theoretical[criterion.id][0]}}, {{scales.theoretical[criterion.id][1]}}</td>
+        <td>{{intervalHull(scales.observed[criterion.id])[0] | number}}, {{intervalHull(scales.observed[criterion.id])[1] | number}}</td>
         <td><span ng-if="criterion.pvf.range">{{criterion.pvf.range[0] | number}}, {{criterion.pvf.range[1] | number}}</span></td>
         <td>{{criterion.unitOfMeasurement}}</td>
       </tr>
     </tbody>
   </table>
+
+  <button ng-if="editMode.isUserOwner" ui-sref="scale-range">Define Scale Ranges</button>
 </div>
 
 <div id="partial-value-functions-block" class="prefs-block">

@@ -1,6 +1,5 @@
 'use strict';
-define(['angular'],
-  function(angular) {
+define(['angular', 'underscore'], function(angular, _) {
 
     var dependencies = [];
 
@@ -30,12 +29,6 @@ define(['angular'],
           deNormalised = ceiled * Math.pow(10, -factor);
         }
 
-        // console.log('when x=' + x + ' log10X = ' + log10X);
-        // console.log('when x=' + x + ' factor = ' + factor);
-        // console.log('when x=' + x + ' normalised = ' + normalised);
-        // console.log('when x=' + x + ' ceiled = ' + ceiled);
-        // console.log('when x=' + x + ' deNormalised = ' + deNormalised);
-
         return deNormalised;
       }
 
@@ -49,15 +42,14 @@ define(['angular'],
 
 
       function calculateScales(criterionScale, from, to, criterionRange) {
-        var
-          boundFrom = function(val) {
-            return val < scale[0] ? scale[0] : val;
-          },
-          boundTo = function(val) {
-            return val > scale[1] ? scale[1] : val;
-          },
-          margin = 0.5 * (to - from),
-          scale = criterionScale || [null, null];
+        var boundFrom = function(val) {
+          return val < scale[0] ? scale[0] : val;
+        };
+        var boundTo = function(val) {
+          return val > scale[1] ? scale[1] : val;
+        };
+        var margin = 0.5 * (to - from);
+        var scale = criterionScale || [null, null];
 
         scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
         scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];

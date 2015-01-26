@@ -1,22 +1,19 @@
 /*jshint node: true */
 define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
   function(Config, angular, angularanimate, mmfoundation, _) {
-    var dependencies = ['$scope', '$stateParams', 'taskDefinition', 'RemarksResource', 'ValueTreeUtil', 'WorkspaceService'];
-    var EffectsTableController = function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil, WorkspaceService) {
+    var dependencies = ['$scope', '$stateParams', 'taskDefinition', 'RemarksResource', 'ValueTreeUtil'];
+    var EffectsTableController = function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil) {
 
       var remarksCache;
-      $scope.workspace.problem = WorkspaceService.addValueTree($scope.workspace.problem);
-      $scope.scales = {};
-      WorkspaceService.prepareScales($scope.workspace.problem).then(function(results) {
-        $scope.scales = results.results;
-      });
+      $scope.scales = $scope.workspace.$$scales;
+      $scope.valueTree = $scope.workspace.$$valueTree;
 
-      function buildEffectsTableData(problem) {
-        var criteriaNodes = ValueTreeUtil.findCriteriaNodes(problem.valueTree);
+      function buildEffectsTableData(problem, valueTree) {
+        var criteriaNodes = ValueTreeUtil.findCriteriaNodes(valueTree);
         var effectsTable = [];
 
         angular.forEach(criteriaNodes, function(criteriaNode) {
-          var path = ValueTreeUtil.findTreePath(criteriaNode, problem.valueTree);
+          var path = ValueTreeUtil.findTreePath(criteriaNode, valueTree);
           effectsTable.push({
             path: path.slice(1), // omit top-level node
             criteria: _.map(criteriaNode.criteria, function(criterionKey) {
@@ -32,9 +29,9 @@ define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'
       }
 
       $scope.problem = $scope.workspace.problem;
-      $scope.effectsTableData = buildEffectsTableData($scope.problem);
+      $scope.effectsTableData = buildEffectsTableData($scope.problem, $scope.valueTree);
       $scope.nrAlternatives = _.keys($scope.problem.alternatives).length;
-      $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree($scope.problem.valueTree, $scope.problem.criteria);
+      $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree($scope.valueTree, $scope.problem.criteria);
 
       $scope.remarks = {};
       $scope.$parent.taskId = taskDefinition.id;
@@ -42,10 +39,6 @@ define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'
       // show / hide sidepanel
       $scope.showPanel = false;
       $scope.onLoadClass = 'animate-hide';
-      // $scope.editMode = {
-      //   allowEditing: window.config.user.id === ($scope.project.owner.id + 1)
-      // };
-
 
       RemarksResource.get(_.omit($stateParams, 'id'), function(remarks) {
         if (remarks.remarks) {
@@ -74,7 +67,7 @@ define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'
         $scope.sideParam = {
           title: criterion.value.title,
           key: criterion.key,
-          scales: $scope.scales[criterion.key]
+          scales: $scope.scales.observed[criterion.key]
         };
       };
 

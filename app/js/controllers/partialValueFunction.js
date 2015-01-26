@@ -41,11 +41,11 @@ define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore
 
           var from, to;
           if(nextState.choice.direction === "increasing") {
-            from = inv(bisection[0]);
-            to = inv(bisection[1]);
-          } else {
             from = inv(bisection[1]);
             to = inv(bisection[0]);
+          } else {
+            from = inv(bisection[0]);
+            to = inv(bisection[1]);
           }
 
           nextState.choice.pvf.values[ref] = (bisection[0] + bisection[1]) / 2;
