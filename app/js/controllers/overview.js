@@ -6,7 +6,7 @@ define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'
 
         $scope.$parent.taskId = taskDefinition.id;
         $scope.problem = $scope.workspace.problem;
-        $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree($scope.problem.valueTree, $scope.problem.criteria);
+        $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree($scope.workspace.$$valueTree, $scope.problem.criteria);
 
       };
 

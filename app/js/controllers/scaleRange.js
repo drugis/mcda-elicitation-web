@@ -78,7 +78,7 @@ define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
       });
     };
 
-    initialize(state, $scope.workspace._scales);
+    initialize(state, $scope.workspace.$$scales);
 
   };
 });

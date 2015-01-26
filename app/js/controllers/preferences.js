@@ -10,7 +10,7 @@ define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'
       $scope.$parent.taskId = taskDefinition.id;
       $scope.intervalHull = intervalHull;
 
-      $scope.scales = $scope.workspace._scales;
+      $scope.scales = $scope.workspace.$$scales;
 
       $scope.pvf = PartialValueFunction;
 
