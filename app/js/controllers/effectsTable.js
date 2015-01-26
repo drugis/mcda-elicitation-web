@@ -67,12 +67,11 @@ define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'
         $scope.sideParam = {
           title: criterion.value.title,
           key: criterion.key,
-          scales: $scope.scales.observed[criterion.key]
+          scales: $scope.scales[criterion.key]
         };
       };
 
       $scope.editRemarkModal = function(node) {
-        console.log(node.remark);
       };
 
     };
