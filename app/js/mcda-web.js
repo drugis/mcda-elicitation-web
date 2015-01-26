@@ -9,7 +9,6 @@ define(
     'mmfoundation',
     'angular-ui-router',
     'angularanimate',
-    'mcda/services/workspaceService',
     'mcda/services/remarks',
     'mcda/services/routeFactory',
     'mcda/services/workspaceResource',
@@ -29,7 +28,6 @@ define(
       'ui.router',
       'mm.foundation',
       'ngAnimate',
-      'elicit.workspaceService',
       'elicit.scaleRangeService',
       'elicit.remarks',
       'elicit.workspaceResource',
@@ -113,9 +111,9 @@ define(
           templateUrl: baseTemplatePath + 'workspace.html',
           controller: 'WorkspaceController',
           resolve: {
-            currentWorkspace: ['$stateParams', 'WorkspaceService',
-              function($stateParams, WorkspaceService) {
-                return WorkspaceService.getWorkspace($stateParams);
+            currentWorkspace: ['$stateParams', 'WorkspaceResource',
+              function($stateParams, WorkspaceResource) {
+                return WorkspaceResource.get($stateParams).$promise;
               }
             ]
           }

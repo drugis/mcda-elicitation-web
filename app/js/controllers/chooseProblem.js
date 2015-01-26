@@ -1,7 +1,7 @@
 'use strict';
 define(['angular', 'underscore'], function(angular, _) {
-  var dependencies = ['$scope', '$state', '$resource', 'WorkspaceResource', 'WorkspaceService'];
-  var ChooseProblemController = function($scope, $state, $resource, WorkspaceResource, WorkspaceService) {
+  var dependencies = ['$scope', '$state', '$resource', 'WorkspaceResource'];
+  var ChooseProblemController = function($scope, $state, $resource, WorkspaceResource) {
     var examplesResource = $resource('examples/:url', {
       url: '@url'
     });
@@ -12,7 +12,7 @@ define(['angular', 'underscore'], function(angular, _) {
 
     $scope.createWorkspace = function(choice) {
       if (choice === 'local' && !_.isEmpty($scope.local.contents)) {
-        WorkspaceService.createWorkspace(angular.fromJson($scope.local.contents)).$promise.then(function(workspace) {
+        WorkspaceResource.create(angular.fromJson($scope.local.contents)).$promise.then(function(workspace) {
           $state.go('overview', {
             workspaceId: workspace.id,
             id: workspace.defaultScenarioId
@@ -23,7 +23,7 @@ define(['angular', 'underscore'], function(angular, _) {
           url: choice
         };
         examplesResource.get(example, function(problem) {
-          WorkspaceService.createWorkspace(problem).$promise.then(function(workspace) {
+          WorkspaceResource.create(problem).$promise.then(function(workspace) {
             $state.go('overview', {
               workspaceId: workspace.id,
               id: workspace.defaultScenarioId
