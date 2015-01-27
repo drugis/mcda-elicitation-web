@@ -2,20 +2,19 @@
 
 require.config({
   paths: {
-    'jQuery': 'bower_components/jquery/dist/jquery.min',
-    'underscore': 'bower_components/underscore/underscore-min',
+    'jQuery': 'bower_components/jquery/dist/jquery',
+    'underscore': 'bower_components/underscore/underscore',
     'angular': 'bower_components/angular/angular',
-    'angular-resource': 'bower_components/angular-resource/angular-resource.min',
+    'angular-resource': 'bower_components/angular-resource/angular-resource',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
-    'jquery-slider': 'bower_components/jslider/dist/jquery.slider.min',
+    'jquery-slider': 'bower_components/jslider/dist/jquery.slider',
     'd3': 'bower_components/d3/d3.min',
     'nvd3': 'bower_components/nvd3/nv.d3.min',
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-AMS_HTML',
-    'foundation': 'bower_components/foundation/js/foundation.min',
     'domReady': 'bower_components/requirejs-domready/domReady',
     'mcda': 'bower_components/mcda-web/app/js',
-    'mmfoundation': 'bower_components/angular-foundation/mm-foundation',
-    'angularanimate': 'bower_components/angular-animate/angular-animate.min'
+    'mmfoundation': 'bower_components/angular-foundation/mm-foundation-tpls',
+    'angularanimate': 'bower_components/angular-animate/angular-animate'
   },
   baseUrl: '.',
   shim: {
@@ -29,7 +28,6 @@ require.config({
     'nvd3': { deps: ['d3'], exports : 'nv' },
     'jQuery': { exports : 'jQuery' },
     'jquery-slider': { deps: ['jQuery'] },
-    'foundation':  { deps: ['jQuery'] },
     'mmfoundation': { deps: ['angular'] }
   },
   priority: ['angular']

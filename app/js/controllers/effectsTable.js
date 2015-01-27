@@ -1,6 +1,7 @@
 /*jshint node: true */
-define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
-  function(Config, angular, angularanimate, mmfoundation, _) {
+define(
+  ['mcda/config', 'angular', 'underscore'],
+  function(Config, angular, _) {
     var dependencies = ['$scope', '$stateParams', 'taskDefinition', 'RemarksResource', 'ValueTreeUtil'];
     var EffectsTableController = function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil) {
 
@@ -36,9 +37,6 @@ define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'
       $scope.remarks = {};
       $scope.$parent.taskId = taskDefinition.id;
       $scope.alternativeVisible = {};
-      // show / hide sidepanel
-      $scope.showPanel = false;
-      $scope.onLoadClass = 'animate-hide';
 
       RemarksResource.get(_.omit($stateParams, 'id'), function(remarks) {
         if (remarks.remarks) {
@@ -55,23 +53,6 @@ define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'
 
       $scope.cancelRemarks = function() {
         $scope.remarks = angular.copy(remarksCache);
-      };
-
-
-      $scope.toggleSidebar = function(criterion) {
-        if ($scope.showPanel && criterion.key === $scope.sideParam.key) {
-          $scope.showPanel = !$scope.showPanel;
-        } else {
-          $scope.showPanel = true;
-        }
-        $scope.sideParam = {
-          title: criterion.value.title,
-          key: criterion.key,
-          scales: $scope.scales[criterion.key]
-        };
-      };
-
-      $scope.editRemarkModal = function(node) {
       };
 
     };
