@@ -7,7 +7,7 @@
   </label>
 </form>
 
-<table data-mode="columntoggle" class="fullWidth">
+<table data-mode="columntoggle" class="full-width effects-table">
   <thead>
     <tr>
       <th>Criterion</th>
@@ -32,8 +32,17 @@
     </tr>
     <tr class="showmore" ng-repeat-end ng-repeat="criterion in effectsTableRow.criteria">
       <td>
-        <remarkblock ng-if="editMode.isUserOwner" remark="$parent.remarks.remarks[criterion.value.title]" save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()" user="user"></remarkblock>
-        <a dropdown-toggle="#dropdown-{{criterion.key}}" class="tiny-icon"><i class="fa fa-list"></i></a>
+        <div class="td-container">
+          <div class="td-content">
+            <remarkblock ng-if="editMode.isUserOwner" remark="$parent.remarks.remarks[criterion.value.title]" save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()" user="user"></remarkblock>
+            <a dropdown-toggle="#dropdown-{{criterion.key}}" class="tiny-icon"><i class="fa fa-list"></i></a>
+            {{::criterion.value.title}}
+          </div>
+          <div class="td-spacer">
+            {{::criterion.value.title}}
+          </div>
+          <span>&nbsp;</span>
+        </div>
 
         <div id="dropdown-{{criterion.key}}" class="f-dropdown details">
           <table cellspacing="0px" class="no-border">
@@ -53,7 +62,7 @@
             </tbody>
           </table>
         </div>
-        {{::criterion.value.title}}
+
       </td>
       <td>
         <div class="td-container">

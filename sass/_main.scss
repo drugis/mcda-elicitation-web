@@ -3,9 +3,9 @@
 
 $workspace-color: $ghost;
 $inactive-tab-background-color: $primary-color;
-$inactive-tab-color: white;
-$active-tab-color: black;
-$active-tab-background-color: white;
+$inactive-tab-color: $white;
+$active-tab-color: $black;
+$active-tab-background-color: $white;
 $tab-disabled-opacity: 0.7;
 
 .reveal-modal.mcda-reveal-modal {
@@ -143,12 +143,11 @@ input[type='file'] {
     margin-right: 0.8rem;
 }
 
-.fullWidth {
+.full-width {
     width: 100% !important;
     border-collapse: collapse;
 
     .td-container {
-        display: inline-block;
         position: relative;
     }
 
@@ -165,8 +164,21 @@ input[type='file'] {
     }
 
     .main tr > td:first-child {
-        max-width: 270px;
-        max-width: 200px;
+        max-width: 340px;
+        min-width: 200px;
+    }
+
+    .main-header {
+        display: inline-block;
+        font-weight: bold;
+        margin-right: 1rem;
+    }
+
+    .secondary-header {
+        display: inline-block;
+        font-weight: bold;
+        margin-left: 1rem;
+        margin-right: 1rem;
     }
 
     .details {
@@ -176,11 +188,21 @@ input[type='file'] {
         table {
             border: none;
             width: 100% !important;
+
+            td {
+                height: $table-line-height;
+            }
         }
 
         table tr > td:first-child  {
             width: auto;
         }
+    }
+}
+
+.effects-table {
+    td {
+        height: $table-line-height * 3.5;
     }
 }
 
@@ -265,120 +287,6 @@ input[type='file'] {
 
 /*----- TREEVIEW -----*/
 
-/* general tree css */
-
-treecontrol {
-    /* prevent user selection */
-    -moz-user-select: -moz-none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-
-    /* default */
-    font-family: Verdana, Helvetica, Arial, sans-serif;
-    font-size:13px;
-    color: #555;
-    text-decoration: none;
-}
-
-treecontrol ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    border: none;
-    overflow: hidden;
-}
-
-treecontrol li {
-    position: relative;
-    padding: 0 0 0 20px;
-    line-height: 20px;
-}
-
-treecontrol li.tree-expanded i.tree-normal, treecontrol li.tree-collapsed i.tree-normal {display:none;}
-treecontrol li.tree-expanded i.tree-has-children, treecontrol li.tree-collapsed i.tree-has-children {display:inline;}
-treecontrol li.tree-normal i.tree-has-children {display:none;}
-treecontrol li.tree-normal i.tree-normal {display:inline;}
-
-treecontrol li i {
-    cursor: pointer;
-}
-
-treecontrol li .tree-label {
-    cursor: pointer;
-    display: inline;
-}
-
-/* classic tree css */
-
-treecontrol.tree-classic li.tree-expanded i {
-    padding: 1px 10px;
-    background: url("https://raw.github.com/wix/angular.treecontrol/master/images/folder.png") no-repeat;
-}
-
-treecontrol.tree-classic li.tree-collapsed i {
-    padding: 1px 10px;
-    background: url("https://raw.github.com/wix/angular.treecontrol/master/images/folder-closed.png") no-repeat;
-}
-
-treecontrol.tree-classic li.tree-normal i {
-    padding: 1px 10px;
-    background: url("https://raw.github.com/wix/angular.treecontrol/master/images/file.png") no-repeat;
-}
-
-treecontrol.tree-classic li .tree-selected {
-    background-color: #aaddff;
-    font-weight: bold;
-}
-
-/* light tree css */
-
-treecontrol.tree-light li.tree-expanded i {
-    padding: 1px 10px;
-    background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-opened-2.png") no-repeat;
-}
-
-treecontrol.tree-light li.tree-collapsed i {
-    padding: 1px 10px;
-    background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-closed-2.png") no-repeat;
-}
-
-treecontrol.tree-light li.tree-normal i {
-    padding: 1px 10px;
-    width: 16px; height: 16px;
-    background: none no-repeat;
-}
-
-treecontrol.tree-light li .tree-selected {
-    font-weight: bold;
-}
-
-/* dark tree css */
-
-treecontrol.tree-dark li.tree-expanded i {
-    padding: 1px 10px;
-    background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-opened-light.png") no-repeat;
-}
-
-treecontrol.tree-dark li.tree-collapsed i {
-    padding: 1px 10px;
-    background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-closed-light.png") no-repeat;
-}
-
-treecontrol.tree-dark li.tree-normal i {
-    padding: 1px 10px;
-    width: 16px; height: 16px;
-    background: none no-repeat;
-}
-
-treecontrol.tree-dark li .tree-selected {
-    font-weight: bold;
-}
-
-treecontrol.tree-dark {
-    color: $smoke;
-}
 
 .button.tiny-icon {
     padding-top: 0.325rem;
@@ -394,7 +302,7 @@ treecontrol.tree-dark {
 }
 
 .overview-nav-container {
-    border-bottom: 1px solid darken($primary-color, 16%);
+    border-bottom: 1px solid darken($primary-color, 12%);
 
     -webkit-user-select: none; /* Chrome/Safari */
     -moz-user-select: none; /* Firefox */
@@ -426,7 +334,7 @@ treecontrol.tree-dark {
 
         list-style:none;
         a {
-            border: 1px solid darken($primary-color, 16%);
+            border: 1px solid darken($primary-color, 12%);
             border-bottom: none;
             color: $inactive-tab-color;
             background-color: $inactive-tab-background-color;
@@ -455,7 +363,7 @@ treecontrol.tree-dark {
             opacity: $tab-disabled-opacity;
             background-color: $inactive-tab-background-color;
             //  background-color: grey;
-            border: 1px solid darken($primary-color, 16%);
+            border: 1px solid darken($primary-color, 12%);
             border-bottom: none;
         }
     }
@@ -466,12 +374,12 @@ treecontrol.tree-dark {
 }
 
 .tab-corners {
-    border-top-left-radius: 2px;
-    border-top-right-radius: 2px;
-    -moz-border-radius-topleft: 2px;
-    -moz-border-radius-topright: 2px;
-    -webkit-border-top-left-radius: 2px;
-    -webkit-border-top-right-radius: 2px;
+    border-top-left-radius: $global-radius;
+    border-top-right-radius: $global-radius;
+    -moz-border-radius-topleft: $global-radius;
+    -moz-border-radius-topright: $global-radius;
+    -webkit-border-top-left-radius: $global-radius;
+    -webkit-border-top-right-radius: $global-radius;
 }
 
 .scenario-menu {
@@ -538,7 +446,7 @@ $preferences-progress-inactive-color: #e2e2e2;
     height: 25px;
     width: 25px;
     border-radius: 25px;
-    padding-top: 2px;
+    padding-top: 1px;
     margin-bottom: 8px;
     margin-left: -15px;
 }
