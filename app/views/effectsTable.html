@@ -30,21 +30,12 @@
         </span>
       </td>
     </tr>
-    <tr class="showmore" ng-repeat-end ng-repeat="criterion in effectsTableRow.criteria">
+    <tr class="showmore" ng-repeat-end ng-repeat="criterion in effectsTableRow.criteria track by $index">
       <td>
-        <div class="td-container">
-          <div class="td-content">
-            <remarkblock ng-if="editMode.isUserOwner" remark="$parent.remarks.remarks[criterion.value.title]" save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()" user="user"></remarkblock>
-            <a dropdown-toggle="#dropdown-{{criterion.key}}" class="tiny-icon"><i class="fa fa-list"></i></a>
-            {{::criterion.value.title}}
-          </div>
-          <div class="td-spacer">
-            {{::criterion.value.title}}
-          </div>
-          <span>&nbsp;</span>
-        </div>
-
-        <div id="dropdown-{{criterion.key}}" class="f-dropdown details">
+        <remarkblock ng-if="editMode.isUserOwner" remark="$parent.remarks.remarks[criterion.value.title]" save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()" user="user"></remarkblock>
+        <a dropdown-toggle="#dropdown-{{$index}}" class="tiny-icon"><i class="fa fa-list"></i></a>
+        {{::criterion.value.title}}
+        <div id="dropdown-{{$index}}" class="f-dropdown details">
           <table cellspacing="0px" class="no-border">
             <thead>
               <tr>
