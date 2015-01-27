@@ -6210,7 +6210,7 @@ html, body {
 /* standard */
 /* line 123, ../../sass-shared/_drugis.scss */
 pre {
-  margin-bottom: rem-calc(20);
+  margin-bottom: 1.25rem;
   border: 1px solid #b4b4b4;
   background-color: #e7e7e7;
   padding: 0.8em;

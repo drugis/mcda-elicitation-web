@@ -1,6 +1,8 @@
 /* variables */
-$workspace-color: #f7f7f7;
-$inactive-tab-background-color: #0079a1;
+@import "settings";
+
+$workspace-color: $ghost;
+$inactive-tab-background-color: $primary-color;
 $inactive-tab-color: white;
 $active-tab-color: black;
 $active-tab-background-color: white;
@@ -141,246 +143,61 @@ input[type='file'] {
     margin-right: 0.8rem;
 }
 
-#effectstable-div {
-    display: block;
-    margin: 0 0 4rem 0;
-    min-width: 48.7rem;
-}
+.fullWidth {
+    width: 100% !important;
+    border-collapse: collapse;
 
-#effectstable-div form {
-    padding: 0.875rem 0.875rem 0.3rem 0.875rem;
-    border: 1px solid #E0E0E0;
-    background: #f0f0f0;
-    margin: 0 0 1rem 0;
-}
+    .td-container {
+        display: inline-block;
+        position: relative;
+    }
 
-#effectstable-div label {
-    color: #4D4D4D;
-    cursor: pointer;
-    display: inline-block;
-    font-size: 0.875rem;
-    font-weight: normal;
-    margin-bottom: -0.3rem;
-    margin-right: 0.875rem;
-}
+    .td-content {
+        position: absolute;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .td-spacer {
+        height: 0;
+        overflow: hidden;
+    }
 
-#effectstable-div input {
-    margin-right: 0.4rem;
-}
+    .main tr > td:first-child {
+        max-width: 260px;
+    }
 
-#effectstable-container {
-    /*overflow-x: scroll;*/
-    display: block;
-}
-
-.effectstable {
-    border-collapse:collapse;
-    position: relative;
-    font-family: arial;
-    min-width: 100%;
-    margin-bottom: 0px;
-    border: none;
-    border-bottom: #E0E0E0 1px solid !important;
-    margin: 0 0 1.5rem;
-}
-
-.effectstable tr {
-    display: table-row;
-}
-
-.effectstable tr:nth-child(even) {
-    background: #e6e6e6;
-}
-
-.effectstable tr:nth-child(odd) {
-    background: #f5f5f5;
-}
+    .details {
+        max-width: 400px !important;
 
 
-.effectstable caption {
-    font-family: "Open Sans", "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-    font-weight: 300;
-    font-style: normal;
-    color: #222222;
-    text-rendering: optimizeLegibility;
-    margin-bottom: 1rem;
-    font-size: 1.6875rem;
-    text-align: left;
-}
+        table {
+            width: 100% !important;
+        }
 
-.effectstable caption span {
-    color: #0079A1;
-}
-
-.effectstable th {
-    text-align: left;
-    color: #fff;
-    vertical-align: middle;
-    font-weight: normal;
-    padding: 0.5rem 0.8rem;
-    border-right: 1px solid #148DB5;
-    background: #0079a1;
-    border-top: 1px solid #0079a1;
-    height: 3.5rem;
-}
-
-.effectstable td {
-    /*padding: 4px 8px 3px 11px;*/
-    margin: 0;
-    position: relative;
-    border-left: 1px solid #CDCDCD;
-    display: table-cell;
-}
-
-.effectstable td:first-child {
-    border-left: none;
-}
-
-.effectstable td:last-child {
-    border-right: none;
-}
-
-
-.effectstable td .button {
-    margin-bottom: 0;
-}
-
-.effectstable td.group-header {
-    height: 2.5rem;
-    background: #d7d7d7;
-}
-
-.effectstable td.group-header .main-header {
-    display: inline-block;
-    font-weight: bold;
-    margin-right: 1rem;
-}
-
-.effectstable td.group-header .secondary-header {
-    display: inline-block;
-    font-weight: bold;
-    margin-left: 1rem;
-    margin-right: 1rem;
+        table tr > td:first-child  {
+            width: auto;
+        }
+    }
 }
 
 .uncertain {
     padding: 0.1rem;
     color: grey;
     font-size: 0.7rem;
-    background: #D7D7D7;
+    background: $smoke;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     -khtml-border-radius: 4px;
     border-radius: 4px;
-    display: block;
+    display: inline-block;
     text-align: center;
     width: 5rem;
     margin: 0 auto 0 auto;
 }
 
-.shadow {
-    -moz-box-shadow: 3px 3px 4px #999; /* Firefox/Mozilla */
-    -webkit-box-shadow: 3px 3px 4px #999; /*Safari/Chrome */
-    box-shadow: 3px 3px 4px #999; /* Opera & hoe het zou moeten */
-    /* Voor IE 8 */
-    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#999999')";
-    /* Voor IE 5.5 - 7 */
-    filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#999999');
-}
 
-.tableshadow {
-    -moz-box-shadow: 0px 0px 10px 1px #6e6e6e;
-    -webkit-box-shadow: 0px 0px 10px 1px #6e6e6e;
-    box-shadow: 0px 0px 10px 1px #6e6e6e;
-}
-.hidethis {
-    display:none;
-}
-
-.rounded-small {
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -khtml-border-radius: 4px;
-    border-radius: 4px;
-}
-
-.sidepanel {
-    background: #210F5B;
-    position: fixed;
-    width: 25%;
-    padding: 1rem  1rem 1.5rem 1rem;
-    color: white;
-    z-index: 999;
-    border: 1px solid #8F7DC6;
-    border-top-left-radius: 6px;
-    -moz-border-radius-topleft: 6px;
-    border-bottom-left-radius: 6px;
-    -moz-border-radius-bottomleft: 6px;
-}
-
-.animate-hide {
-    right: 0px;
-    -webkit-transition:right 0.5s ease-in-out;
-    transition:right 0.5s ease-in-out;
-    -moz-transition: right 0.5s ease-in-out;
-    -ms-transition: right 0.5s ease-in-out;
-    -o-transition: right 0.5s ease-in-out;
-}
-
-.animate-hide.ng-hide {
-    right: -1024px;
-}
-
-/* ---- //animate sidepanel -------- */
-
-.sidepanel h1 {
-    color: #ccc;
-    font-size: 1.2rem !important;
-}
-.sidepanel table {
-    width: 100%;
-    margin: 0 1.3rem 0 0;
-    background: none;
-    border: none;
-}
-
-.sidepanel table th {
-    text-align: left;
-    color: #fff;
-    background: #210F5B;
-    font-weight: normal;
-    padding: 0.4rem 0.6rem;
-    margin-top: 1rem;
-}
-
-.sidepanel tr {
-    background: none;
-}
-
-.sidepanel table tr:nth-child(even) {
-    background: #0079a1;
-}
-
-.sidepanel table tr:nth-child(odd) {
-    background: #34226E;
-}
-
-.sidepanel table td {
-    margin: 0;
-    background: none;
-    color: #fff;
-    font-weight: normal;
-    font-size: 0.875rem;
-    padding: 0.3rem 0.6rem;
-}
-
-.alternative {
-    display:none;
-}
-
-.center-text {
-    text-align:center !important;
-}
 
 /* angular ui-bootstrap pop overs */
 .mcda-dropdown {
@@ -405,7 +222,7 @@ input[type='file'] {
 }
 
 .underlined-div {
-    border-bottom: 1px solid #A0D3E8;
+    border-bottom: 1px solid $smoke;
     margin-bottom: 1.5rem !important;
 }
 
@@ -428,7 +245,7 @@ input[type='file'] {
 /* ----- preferences table ------ */
 .prefs-block {
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid #A0D3E8;
+    border-bottom: 1px solid $smoke;
     margin-bottom: 1.5rem;
 }
 
@@ -568,7 +385,7 @@ treecontrol.tree-dark li .tree-selected {
 }
 
 treecontrol.tree-dark {
-    color: #ddd;
+    color: $smoke;
 }
 
 .button.tiny-icon {
@@ -585,8 +402,7 @@ treecontrol.tree-dark {
 }
 
 .overview-nav-container {
-    border-bottom: 1px solid #4a91c4;
-
+    border-bottom: 1px solid darken($primary-color, 16%);
     .overview-nav {
         position: relative;
         display: block;
@@ -609,7 +425,7 @@ treecontrol.tree-dark {
 
         list-style:none;
         a {
-            border: 1px solid #4a91c4;
+            border: 1px solid darken($primary-color, 16%);
             border-bottom: none;
             color: $inactive-tab-color;
             background-color: $inactive-tab-background-color;
@@ -638,7 +454,7 @@ treecontrol.tree-dark {
             opacity: $tab-disabled-opacity;
             background-color: $inactive-tab-background-color;
             //  background-color: grey;
-            border: 1px solid #4a91c4;
+            border: 1px solid darken($primary-color, 16%);
             border-bottom: none;
         }
     }
