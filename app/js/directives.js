@@ -66,7 +66,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
             scope.$root.$safeApply(scope, function() {
               scope.model = values;
             });
-          }, 25)
+          }, 10)
         });
 
         if (scope.range && _.has(scope.range, 'restrictTo') && _.has(scope.range, 'restrictFrom')) {
@@ -352,7 +352,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       },
       link: function(scope, element) {
         scope.animatedClose = function() {
-          $(element).fadeOut(800, function() {
+          $(element).fadeOut(200, function() {
             scope.close();
           });
         };
