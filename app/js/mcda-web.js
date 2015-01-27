@@ -5,7 +5,6 @@ define(
     'underscore',
     'jQuery',
     'mcda/config',
-    'foundation',
     'mmfoundation',
     'angular-ui-router',
     'angularanimate',
@@ -50,17 +49,6 @@ define(
 
         $http.defaults.headers.common[csrfHeader] = csrfToken;
 
-        $rootScope.$on('$viewContentLoaded', function() {
-          $(document).foundation();
-        });
-
-        // from http://stackoverflow.com/questions/16952244/what-is-the-best-way-to-close-a-dropdown-in-zurb-foundation-4-when-clicking-on-a
-        $('.f-dropdown').click(function() {
-          if ($(this).hasClass('open')) {
-            $('[data-dropdown="' + $(this).attr('id') + '"]').trigger('click');
-          }
-        });
-
         $rootScope.$safeApply = function($scope, fn) {
           var phase = $scope.$root.$$phase;
           if (phase === '$apply' || phase === '$digest') {
@@ -96,41 +84,43 @@ define(
     })());
 
 
-    app.config(['mcdaRootPath', 'Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider', 'MCDARouteProvider', '$animateProvider',
-      function(basePath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider, MCDARouteProvider, $animateProvider) {
-        var baseTemplatePath = basePath + 'views/';
+    app.config(
+      ['mcdaRootPath', 'Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider','$compileProvider', 'MCDARouteProvider', '$animateProvider',
+       function(basePath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider, $compileProvider, MCDARouteProvider, $animateProvider) {
+         var baseTemplatePath = basePath + 'views/';
 
-        $httpProvider.interceptors.push('ErrorHandling');
+         $httpProvider.interceptors.push('ErrorHandling');
 
-        // only animate sidepanel
-        $animateProvider.classNameFilter(/sidepanel/);
+         // only animate sidepanel
+         $animateProvider.classNameFilter(/sidepanel/);
 
-        //ui-router code starts here
-        $stateProvider.state('workspace', {
-          url: '/workspaces/:workspaceId',
-          templateUrl: baseTemplatePath + 'workspace.html',
-          controller: 'WorkspaceController',
-          resolve: {
-            currentWorkspace: ['$stateParams', 'WorkspaceResource',
-              function($stateParams, WorkspaceResource) {
-                return WorkspaceResource.get($stateParams).$promise;
-              }
-            ]
-          }
-        });
+         //ui-router code starts here
+         $stateProvider.state('workspace', {
+           url: '/workspaces/:workspaceId',
+           templateUrl: baseTemplatePath + 'workspace.html',
+           controller: 'WorkspaceController',
+           resolve: {
+             currentWorkspace: [
+               '$stateParams', 'WorkspaceResource',
+               function($stateParams, WorkspaceResource) {
+                 return WorkspaceResource.get($stateParams).$promise;
+               }
+             ]
+           }
+         });
 
-        MCDARouteProvider.buildRoutes($stateProvider, 'workspace', baseTemplatePath);
+         MCDARouteProvider.buildRoutes($stateProvider, 'workspace', baseTemplatePath);
 
-        // Default route
-        $stateProvider.state('choose-problem', {
-          url: '/choose-problem',
-          templateUrl: baseTemplatePath + 'chooseProblem.html',
-          controller: 'ChooseProblemController'
-        });
-
-        $urlRouterProvider.otherwise('/choose-problem');
-      }
-    ]);
+         // Default route
+         $stateProvider.state('choose-problem', {
+           url: '/choose-problem',
+           templateUrl: baseTemplatePath + 'chooseProblem.html',
+           controller: 'ChooseProblemController'
+         });
+         $compileProvider.debugInfoEnabled(false);
+         $urlRouterProvider.otherwise('/choose-problem');
+       }
+      ]);
 
     return app;
   });

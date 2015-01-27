@@ -1,6 +1,7 @@
 /*jshint node: true */
-define(['mcda/config', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
-  function(Config, angular, angularanimate, mmfoundation, _) {
+define(
+  ['mcda/config', 'angular', 'underscore'],
+  function(Config, angular, _) {
     var dependencies = ['$scope', '$stateParams', 'taskDefinition', 'RemarksResource', 'ValueTreeUtil'];
     var EffectsTableController = function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil) {
 
