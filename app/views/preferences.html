@@ -87,25 +87,22 @@
 <div id="partial-value-functions-block" class="prefs-block">
   <h4>Partial Value Functions</h4>
 
-  <div class="row">
-    <div id="partial-value-functions" ng-repeat="criterion in scenario.state.problem.criteria" class="small-12 medium-6 large-4 columns">
-      <div>
-        <h5>{{criterion.title}}</h5>
+  <ul id="partial-value-functions" class="large-block-grid-3">
+    <li ng-repeat="criterion in scenario.state.problem.criteria">
+      <h5>{{criterion.title}}</h5>
 
-        <div style="width: 250px; height: 180px">
-          <line-chart ng-if="isPVFDefined(criterion)" value="getXY(criterion)" show-legend="false"></line-chart>
-          <div ng-if="!isPVFDefined(criterion)" style="padding-top: 40px; text-align: center; margin: 0">
-            <i style="font-size: 100px" class="fa fa-question"></i>
-          </div>
+      <div style="width: 250px; height: 180px">
+        <line-chart ng-if="isPVFDefined(criterion)" value="getXY(criterion)" show-legend="false"></line-chart>
+        <div ng-if="!isPVFDefined(criterion)" style="padding-top: 40px; text-align: center; margin: 0">
+          <i style="font-size: 100px" class="fa fa-question"></i>
         </div>
-
-        <button ng-if="editMode.isUserOwner"
-                ng-disabled="!isAccessible(tasks['partial-value-function'], scenario.state).accessible"
-                ui-sref="partial-value-function({criterion: criterion.id})">Define partial value function</button>
       </div>
 
-    </div>
-  </div>
+      <button ng-if="editMode.isUserOwner"
+              ng-disabled="!isAccessible(tasks['partial-value-function'], scenario.state).accessible"
+              ui-sref="partial-value-function({criterion: criterion.id})">Define partial value function</button>
+    </li>
+  </ul>
 </div>
 
 <div id="trade-off-block" class="prefs-block">
