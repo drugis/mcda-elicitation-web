@@ -4,13 +4,13 @@
 
     <h4>Problem description</h4>
     <p>
-      <span ng-if="problem.description">{{problem.description}}</span>
+      <span ng-if="problem.description">{{::problem.description}}</span>
       <span ng-if="!problem.description">No description given.</span>
     </p>
 
     <h4>Alternatives</h4>
     <ul>
-      <li ng-repeat="alternative in problem.alternatives" ng-bind="alternative.title"></li>
+      <li ng-repeat="alternative in problem.alternatives">{{::alternative.title}}</li>
     </ul>
 
     <h4>Value Tree</h4>
