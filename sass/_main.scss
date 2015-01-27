@@ -165,7 +165,8 @@ input[type='file'] {
     }
 
     .main tr > td:first-child {
-        max-width: 260px;
+        max-width: 270px;
+        max-width: 200px;
     }
 
     .details {
@@ -173,6 +174,7 @@ input[type='file'] {
 
 
         table {
+            border: none;
             width: 100% !important;
         }
 
@@ -259,16 +261,6 @@ input[type='file'] {
 
 .none {
     display: none;
-}
-
-#results-avail {
-    position: absolute;
-    height: 42px;
-    width: 383px;
-    background: url("/bower_components/mcda-web/app/img/results-available.png") !important;
-    z-index: 999;
-    top: 85px;
-    left: 570px;
 }
 
 /*----- TREEVIEW -----*/
@@ -474,12 +466,12 @@ treecontrol.tree-dark {
 }
 
 .tab-corners {
-    border-top-left-radius: 4px;
-    border-top-right-radius: 4px;
-    -moz-border-radius-topleft: 4px;
-    -moz-border-radius-topright: 4px;
-    -webkit-border-top-left-radius: 4px;
-    -webkit-border-top-right-radius: 4px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    -moz-border-radius-topleft: 2px;
+    -moz-border-radius-topright: 2px;
+    -webkit-border-top-left-radius: 2px;
+    -webkit-border-top-right-radius: 2px;
 }
 
 .scenario-menu {
@@ -493,10 +485,6 @@ treecontrol.tree-dark {
     margin: 2px;
     padding: 2px 2px;
     margin:  2px 4px 1px 0px;
-}
-
-.drop-down-list-item {
-    padding: 0.75rem 0.5rem;
 }
 
 .new-scenario-btn {

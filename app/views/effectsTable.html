@@ -10,10 +10,10 @@
 <table data-mode="columntoggle" class="fullWidth">
   <thead>
     <tr>
-      <th class="rem12">Criterion</th>
-      <th class="rem20">Description</th>
+      <th>Criterion</th>
+      <th>Description</th>
       <th>Units</th>
-      <th class="rem8 center-text" ng-repeat="(alternativeKey, alternative) in problem.alternatives" ng-show="alternativeVisible[alternativeKey]">{{::alternative.title}}{{::problem.valueTree.children.children[0].criteria}}</th>
+      <th class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives" ng-show="alternativeVisible[alternativeKey]">{{::alternative.title}}{{::problem.valueTree.children.children[0].criteria}}</th>
     </tr>
   </thead>
   <tbody class="main"">
@@ -36,7 +36,7 @@
         <a dropdown-toggle="#dropdown-{{criterion.key}}" class="tiny-icon"><i class="fa fa-list"></i></a>
 
         <div id="dropdown-{{criterion.key}}" class="f-dropdown details">
-          <table cellspacing="0px">
+          <table cellspacing="0px" class="no-border">
             <thead>
               <tr>
                 <th scope="col">Alternative</th>
@@ -46,7 +46,9 @@
             <tbody>
               <tr ng-repeat="(alternativeKey, alternative) in problem.alternatives">
                 <td>{{::alternative.title}}</td>
-                <td>{{::scales[criterion.key][alternativeKey]['50%'] | number}} ({{::scales[criterion.key][alternativeKey]['2.5%'] | number}}, {{::scales[criterion.key][alternativeKey]['97.5%'] | number}})</td>
+                <td>
+                  {{::scales[criterion.key][alternativeKey]['50%'] | number}} ({{::scales[criterion.key][alternativeKey]['2.5%'] | number}}, {{::scales[criterion.key][alternativeKey]['97.5%'] | number}})
+                </td>
               </tr>
             </tbody>
           </table>

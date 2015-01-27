@@ -9463,22 +9463,24 @@ input[type='file'] {
 }
 /* line 167, ../../sass/_main.scss */
 .fullWidth .main tr > td:first-child {
-  max-width: 260px;
+  max-width: 270px;
+  max-width: 200px;
 }
-/* line 171, ../../sass/_main.scss */
+/* line 172, ../../sass/_main.scss */
 .fullWidth .details {
   max-width: 400px !important;
 }
-/* line 175, ../../sass/_main.scss */
+/* line 176, ../../sass/_main.scss */
 .fullWidth .details table {
+  border: none;
   width: 100% !important;
 }
-/* line 179, ../../sass/_main.scss */
+/* line 181, ../../sass/_main.scss */
 .fullWidth .details table tr > td:first-child {
   width: auto;
 }
 
-/* line 185, ../../sass/_main.scss */
+/* line 187, ../../sass/_main.scss */
 .uncertain {
   padding: 0.1rem;
   color: grey;
@@ -9495,7 +9497,7 @@ input[type='file'] {
 }
 
 /* angular ui-bootstrap pop overs */
-/* line 203, ../../sass/_main.scss */
+/* line 205, ../../sass/_main.scss */
 .mcda-dropdown {
   position: absolute;
   top: 0;
@@ -9508,7 +9510,7 @@ input[type='file'] {
 }
 
 /* results page */
-/* line 216, ../../sass/_main.scss */
+/* line 218, ../../sass/_main.scss */
 #ranktable {
   display: inline-block;
   clear: none;
@@ -9517,19 +9519,19 @@ input[type='file'] {
   margin-left: 500px;
 }
 
-/* line 224, ../../sass/_main.scss */
+/* line 226, ../../sass/_main.scss */
 .underlined-div {
   border-bottom: 1px solid #EEEEEE;
   margin-bottom: 1.5rem !important;
 }
 
-/* line 229, ../../sass/_main.scss */
+/* line 231, ../../sass/_main.scss */
 .fontsize {
   font-size: 0.875rem !important;
 }
 
 /* --- overview page ----- */
-/* line 234, ../../sass/_main.scss */
+/* line 236, ../../sass/_main.scss */
 .remarksTree {
   /*margin: 0;*/
   padding: 0;
@@ -9537,48 +9539,37 @@ input[type='file'] {
   list-style-type: none;
 }
 
-/* line 241, ../../sass/_main.scss */
+/* line 243, ../../sass/_main.scss */
 .showRemark p {
   text-align: left;
 }
 
 /* ----- preferences table ------ */
-/* line 246, ../../sass/_main.scss */
+/* line 248, ../../sass/_main.scss */
 .prefs-block {
   padding-bottom: 1.5rem;
   border-bottom: 1px solid #EEEEEE;
   margin-bottom: 1.5rem;
 }
 
-/* line 252, ../../sass/_main.scss */
+/* line 254, ../../sass/_main.scss */
 .inline {
   display: inline-block;
 }
 
-/* line 256, ../../sass/_main.scss */
+/* line 258, ../../sass/_main.scss */
 .block {
   display: block;
 }
 
-/* line 260, ../../sass/_main.scss */
+/* line 262, ../../sass/_main.scss */
 .none {
   display: none;
 }
 
-/* line 264, ../../sass/_main.scss */
-#results-avail {
-  position: absolute;
-  height: 42px;
-  width: 383px;
-  background: url("/bower_components/mcda-web/app/img/results-available.png") !important;
-  z-index: 999;
-  top: 85px;
-  left: 570px;
-}
-
 /*----- TREEVIEW -----*/
 /* general tree css */
-/* line 278, ../../sass/_main.scss */
+/* line 270, ../../sass/_main.scss */
 treecontrol {
   /* prevent user selection */
   -moz-user-select: -moz-none;
@@ -9593,7 +9584,7 @@ treecontrol {
   text-decoration: none;
 }
 
-/* line 293, ../../sass/_main.scss */
+/* line 285, ../../sass/_main.scss */
 treecontrol ul {
   margin: 0;
   padding: 0;
@@ -9602,83 +9593,83 @@ treecontrol ul {
   overflow: hidden;
 }
 
-/* line 301, ../../sass/_main.scss */
+/* line 293, ../../sass/_main.scss */
 treecontrol li {
   position: relative;
   padding: 0 0 0 20px;
   line-height: 20px;
 }
 
-/* line 307, ../../sass/_main.scss */
+/* line 299, ../../sass/_main.scss */
 treecontrol li.tree-expanded i.tree-normal, treecontrol li.tree-collapsed i.tree-normal {
   display: none;
 }
 
-/* line 308, ../../sass/_main.scss */
+/* line 300, ../../sass/_main.scss */
 treecontrol li.tree-expanded i.tree-has-children, treecontrol li.tree-collapsed i.tree-has-children {
   display: inline;
 }
 
-/* line 309, ../../sass/_main.scss */
+/* line 301, ../../sass/_main.scss */
 treecontrol li.tree-normal i.tree-has-children {
   display: none;
 }
 
-/* line 310, ../../sass/_main.scss */
+/* line 302, ../../sass/_main.scss */
 treecontrol li.tree-normal i.tree-normal {
   display: inline;
 }
 
-/* line 312, ../../sass/_main.scss */
+/* line 304, ../../sass/_main.scss */
 treecontrol li i {
   cursor: pointer;
 }
 
-/* line 316, ../../sass/_main.scss */
+/* line 308, ../../sass/_main.scss */
 treecontrol li .tree-label {
   cursor: pointer;
   display: inline;
 }
 
 /* classic tree css */
-/* line 323, ../../sass/_main.scss */
+/* line 315, ../../sass/_main.scss */
 treecontrol.tree-classic li.tree-expanded i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/folder.png") no-repeat;
 }
 
-/* line 328, ../../sass/_main.scss */
+/* line 320, ../../sass/_main.scss */
 treecontrol.tree-classic li.tree-collapsed i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/folder-closed.png") no-repeat;
 }
 
-/* line 333, ../../sass/_main.scss */
+/* line 325, ../../sass/_main.scss */
 treecontrol.tree-classic li.tree-normal i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/file.png") no-repeat;
 }
 
-/* line 338, ../../sass/_main.scss */
+/* line 330, ../../sass/_main.scss */
 treecontrol.tree-classic li .tree-selected {
   background-color: #aaddff;
   font-weight: bold;
 }
 
 /* light tree css */
-/* line 345, ../../sass/_main.scss */
+/* line 337, ../../sass/_main.scss */
 treecontrol.tree-light li.tree-expanded i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-opened-2.png") no-repeat;
 }
 
-/* line 350, ../../sass/_main.scss */
+/* line 342, ../../sass/_main.scss */
 treecontrol.tree-light li.tree-collapsed i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-closed-2.png") no-repeat;
 }
 
-/* line 355, ../../sass/_main.scss */
+/* line 347, ../../sass/_main.scss */
 treecontrol.tree-light li.tree-normal i {
   padding: 1px 10px;
   width: 16px;
@@ -9686,25 +9677,25 @@ treecontrol.tree-light li.tree-normal i {
   background: none no-repeat;
 }
 
-/* line 361, ../../sass/_main.scss */
+/* line 353, ../../sass/_main.scss */
 treecontrol.tree-light li .tree-selected {
   font-weight: bold;
 }
 
 /* dark tree css */
-/* line 367, ../../sass/_main.scss */
+/* line 359, ../../sass/_main.scss */
 treecontrol.tree-dark li.tree-expanded i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-opened-light.png") no-repeat;
 }
 
-/* line 372, ../../sass/_main.scss */
+/* line 364, ../../sass/_main.scss */
 treecontrol.tree-dark li.tree-collapsed i {
   padding: 1px 10px;
   background: url("https://raw.github.com/wix/angular.treecontrol/master/images/node-closed-light.png") no-repeat;
 }
 
-/* line 377, ../../sass/_main.scss */
+/* line 369, ../../sass/_main.scss */
 treecontrol.tree-dark li.tree-normal i {
   padding: 1px 10px;
   width: 16px;
@@ -9712,17 +9703,17 @@ treecontrol.tree-dark li.tree-normal i {
   background: none no-repeat;
 }
 
-/* line 383, ../../sass/_main.scss */
+/* line 375, ../../sass/_main.scss */
 treecontrol.tree-dark li .tree-selected {
   font-weight: bold;
 }
 
-/* line 387, ../../sass/_main.scss */
+/* line 379, ../../sass/_main.scss */
 treecontrol.tree-dark {
   color: #EEEEEE;
 }
 
-/* line 391, ../../sass/_main.scss */
+/* line 383, ../../sass/_main.scss */
 .button.tiny-icon {
   padding-top: 0.325rem;
   padding-right: 0.75rem;
@@ -9731,13 +9722,13 @@ treecontrol.tree-dark {
   font-size: 1rem;
 }
 
-/* line 399, ../../sass/_main.scss */
+/* line 391, ../../sass/_main.scss */
 .workspace-control-tab {
   background-color: #FAFAFA;
   margin-right: 0.5rem;
 }
 
-/* line 404, ../../sass/_main.scss */
+/* line 396, ../../sass/_main.scss */
 .overview-nav-container {
   border-bottom: 1px solid #271a4f;
   -webkit-user-select: none;
@@ -9750,7 +9741,7 @@ treecontrol.tree-dark {
   -o-user-select: none;
   user-select: none;
 }
-/* line 415, ../../sass/_main.scss */
+/* line 407, ../../sass/_main.scss */
 .overview-nav-container .overview-nav {
   position: relative;
   display: block;
@@ -9758,7 +9749,7 @@ treecontrol.tree-dark {
   margin: 0 0 -2px 0;
   text-align: center;
 }
-/* line 423, ../../sass/_main.scss */
+/* line 415, ../../sass/_main.scss */
 .overview-nav-container .overview-nav > ul {
   bottom: -4px;
   list-style-type: none;
@@ -9766,13 +9757,13 @@ treecontrol.tree-dark {
   margin: 2px auto 0 auto;
   position: relative;
 }
-/* line 431, ../../sass/_main.scss */
+/* line 423, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li {
   float: left;
   margin: 16px 5px 0 5px;
   list-style: none;
 }
-/* line 436, ../../sass/_main.scss */
+/* line 428, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li a {
   border: 1px solid #271a4f;
   border-bottom: none;
@@ -9785,22 +9776,22 @@ treecontrol.tree-dark {
   display: inline-block;
   margin-bottom: -1px;
 }
-/* line 448, ../../sass/_main.scss */
+/* line 440, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li a:hover {
   border-color: #322266;
   background-color: #322266;
 }
-/* line 452, ../../sass/_main.scss */
+/* line 444, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li a.activetab {
   background-color: white;
   color: black;
 }
-/* line 456, ../../sass/_main.scss */
+/* line 448, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li a.disabledtab {
   cursor: default;
   opacity: 0.7;
 }
-/* line 461, ../../sass/_main.scss */
+/* line 453, ../../sass/_main.scss */
 .overview-nav-container .overview-nav li a.disabledtab:hover {
   cursor: default;
   opacity: 0.7;
@@ -9808,27 +9799,27 @@ treecontrol.tree-dark {
   border: 1px solid #271a4f;
   border-bottom: none;
 }
-/* line 471, ../../sass/_main.scss */
+/* line 463, ../../sass/_main.scss */
 .overview-nav-container .overview-nav > li:first-child {
   margin-left: 15px;
 }
 
-/* line 476, ../../sass/_main.scss */
+/* line 468, ../../sass/_main.scss */
 .tab-corners {
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-  -moz-border-radius-topleft: 4px;
-  -moz-border-radius-topright: 4px;
-  -webkit-border-top-left-radius: 4px;
-  -webkit-border-top-right-radius: 4px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+  -moz-border-radius-topleft: 2px;
+  -moz-border-radius-topright: 2px;
+  -webkit-border-top-left-radius: 2px;
+  -webkit-border-top-right-radius: 2px;
 }
 
-/* line 485, ../../sass/_main.scss */
+/* line 477, ../../sass/_main.scss */
 .scenario-menu {
   padding-top: 17px;
 }
 
-/* line 489, ../../sass/_main.scss */
+/* line 481, ../../sass/_main.scss */
 .scenario-select {
   display: inline;
   width: 190px;
@@ -9838,39 +9829,34 @@ treecontrol.tree-dark {
   margin: 2px 4px 1px 0px;
 }
 
-/* line 498, ../../sass/_main.scss */
-.drop-down-list-item {
-  padding: 0.75rem 0.5rem;
-}
-
-/* line 502, ../../sass/_main.scss */
+/* line 490, ../../sass/_main.scss */
 .new-scenario-btn {
   color: #008CBA;
 }
 
-/* line 506, ../../sass/_main.scss */
+/* line 494, ../../sass/_main.scss */
 .new-scenario-btn:hover {
   cursor: pointer;
   color: #007095;
 }
 
-/* line 511, ../../sass/_main.scss */
+/* line 499, ../../sass/_main.scss */
 #newScenarioControl {
   margin-left: -10px;
   margin-top: 6px;
 }
 
-/* line 516, ../../sass/_main.scss */
+/* line 504, ../../sass/_main.scss */
 .results-button {
   margin-left: 0.5rem;
 }
 
-/* line 522, ../../sass/_main.scss */
+/* line 510, ../../sass/_main.scss */
 .pref-progress {
   margin: 50px 60px;
 }
 
-/* line 526, ../../sass/_main.scss */
+/* line 514, ../../sass/_main.scss */
 .circle-container {
   text-align: center;
   display: inline-block;
@@ -9879,24 +9865,24 @@ treecontrol.tree-dark {
   margin-top: -17px;
 }
 
-/* line 534, ../../sass/_main.scss */
+/* line 522, ../../sass/_main.scss */
 .line {
   background-color: #e2e2e2;
   width: 100%;
   height: 5px;
 }
 
-/* line 540, ../../sass/_main.scss */
+/* line 528, ../../sass/_main.scss */
 .last-line {
   height: 5px;
 }
 
-/* line 544, ../../sass/_main.scss */
+/* line 532, ../../sass/_main.scss */
 .pref-progress .progress-cell {
   padding: 0px;
 }
 
-/* line 548, ../../sass/_main.scss */
+/* line 536, ../../sass/_main.scss */
 .circle {
   background-color: #e2e2e2;
   height: 25px;
@@ -9907,26 +9893,26 @@ treecontrol.tree-dark {
   margin-left: -15px;
 }
 
-/* line 558, ../../sass/_main.scss */
+/* line 546, ../../sass/_main.scss */
 .circle-container.next-step .circle,
 .circle-container.completed .circle,
 .line.accessible {
   background-color: #29A329;
 }
 
-/* line 564, ../../sass/_main.scss */
+/* line 552, ../../sass/_main.scss */
 .circle-container.next-step:hover,
 .circle-container.completed:hover {
   cursor: pointer;
 }
 
-/* line 569, ../../sass/_main.scss */
+/* line 557, ../../sass/_main.scss */
 .circle-label {
   margin-left: -50%;
   text-align: left;
 }
 
-/* line 574, ../../sass/_main.scss */
+/* line 562, ../../sass/_main.scss */
 .alert-box-message {
   padding-right: 1.25rem;
 }
