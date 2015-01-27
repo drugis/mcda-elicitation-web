@@ -37,9 +37,6 @@ define(
       $scope.remarks = {};
       $scope.$parent.taskId = taskDefinition.id;
       $scope.alternativeVisible = {};
-      // show / hide sidepanel
-      $scope.showPanel = false;
-      $scope.onLoadClass = 'animate-hide';
 
       RemarksResource.get(_.omit($stateParams, 'id'), function(remarks) {
         if (remarks.remarks) {
@@ -56,23 +53,6 @@ define(
 
       $scope.cancelRemarks = function() {
         $scope.remarks = angular.copy(remarksCache);
-      };
-
-
-      $scope.toggleSidebar = function(criterion) {
-        if ($scope.showPanel && criterion.key === $scope.sideParam.key) {
-          $scope.showPanel = !$scope.showPanel;
-        } else {
-          $scope.showPanel = true;
-        }
-        $scope.sideParam = {
-          title: criterion.value.title,
-          key: criterion.key,
-          scales: $scope.scales[criterion.key]
-        };
-      };
-
-      $scope.editRemarkModal = function(node) {
       };
 
     };
