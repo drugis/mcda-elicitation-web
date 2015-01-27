@@ -49,14 +49,6 @@ define(
 
         $http.defaults.headers.common[csrfHeader] = csrfToken;
 
-        $rootScope.$safeApply = function($scope, fn) {
-          var phase = $scope.$root.$$phase;
-          if (phase === '$apply' || phase === '$digest') {
-            this.$eval(fn);
-          } else {
-            this.$apply(fn);
-          }
-        };
         $rootScope.$on('error', function(e, message) {
           $rootScope.$safeApply($rootScope, function() {
             $rootScope.error = _.extend(message, {
@@ -117,6 +109,7 @@ define(
            templateUrl: baseTemplatePath + 'chooseProblem.html',
            controller: 'ChooseProblemController'
          });
+
          $compileProvider.debugInfoEnabled(false);
          $urlRouterProvider.otherwise('/choose-problem');
        }

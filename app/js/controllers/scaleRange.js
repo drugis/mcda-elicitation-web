@@ -49,32 +49,30 @@ define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
     var initialize = function(state, observed) {
       var scales = {};
       var choices = {};
-      $scope.$root.$safeApply($scope, function() {
-        _.map(_.pairs(observed), function(criterion) {
+      _.map(_.pairs(observed), function(criterion) {
 
-          // Calculate interval hulls
-          var criterionRange = intervalHull(criterion[1]);
+        // Calculate interval hulls
+        var criterionRange = intervalHull(criterion[1]);
 
-          // Set inital model value
-          var pvf = state.problem.criteria[criterion[0]].pvf;
-          var problemRange = pvf ? pvf.range : null;
-          var from = problemRange ? problemRange[0] : criterionRange[0];
-          var to = problemRange ? problemRange[1] : criterionRange[1];
+        // Set inital model value
+        var pvf = state.problem.criteria[criterion[0]].pvf;
+        var problemRange = pvf ? pvf.range : null;
+        var from = problemRange ? problemRange[0] : criterionRange[0];
+        var to = problemRange ? problemRange[1] : criterionRange[1];
 
-          choices[criterion[0]] = {
-            lower: from,
-            upper: to
-          };
+        choices[criterion[0]] = {
+          lower: from,
+          upper: to
+        };
 
-          // Set scales for slider
-          var criterionScale = state.problem.criteria[criterion[0]].scale;
-          scales[criterion[0]] = ScaleRangeService.calculateScales(criterionScale, from, to, criterionRange);
+        // Set scales for slider
+        var criterionScale = state.problem.criteria[criterion[0]].scale;
+        scales[criterion[0]] = ScaleRangeService.calculateScales(criterionScale, from, to, criterionRange);
 
-        });
-        $scope.currentStep = _.extend(state, {
-          scales: scales,
-          choice: choices
-        });
+      });
+      $scope.currentStep = _.extend(state, {
+        scales: scales,
+        choice: choices
       });
     };
 
