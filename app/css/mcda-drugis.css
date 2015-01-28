@@ -5648,7 +5648,7 @@ ul.pagination li {
 
 /* line 166, ../../sass-shared/foundation/components/_reveal.scss */
 .reveal-modal-bg {
-  position: absolute;
+  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
@@ -5810,7 +5810,7 @@ dialog {
 }
 /* line 206, ../../sass-shared/foundation/components/_reveal.scss */
 dialog::backdrop, dialog + .backdrop {
-  position: absolute;
+  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
@@ -7546,7 +7546,7 @@ a {
 }
 /* line 222, ../../sass-shared/foundation/components/_type.scss */
 a:hover, a:focus {
-  color: #332368;
+  color: #2d1f5b;
 }
 /* line 230, ../../sass-shared/foundation/components/_type.scss */
 a img {
