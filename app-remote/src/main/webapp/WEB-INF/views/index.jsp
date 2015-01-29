@@ -40,7 +40,9 @@
           <!-- Right Nav Section -->
           <ul class="right">
             <li has-dropdown>
-              <a href="#"><c:out value="${account.firstName} ${account.lastName}" /></a>
+              <a href="#">
+                <i class="fa fa-user fa-fw"></i>
+                <c:out value="${account.firstName} ${account.lastName}" /></a>
               <ul top-bar-dropdown>
                 <li><a href="#" onClick="signout()">Sign out</a></li>
               </ul>
