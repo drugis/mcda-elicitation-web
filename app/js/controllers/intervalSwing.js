@@ -5,6 +5,15 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
     var criteria = {};
     $scope.pvf = PartialValueFunction;
 
+    $scope.title = function(step, total) {
+      var base = 'Interval SWING weighting';
+      if (step > total) {
+        return base + ' (DONE)';
+      }
+      return base + ' (' + step + '/' + total + ')';
+    };
+
+
     function buildInitial(criterionA, criterionB, step) {
       var bounds = PartialValueFunction.getBounds(criteria[criterionA]);
       var increasing = criteria[criterionA].pvf.direction === 'increasing';
@@ -87,7 +96,7 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
     $scope.rankProbabilityChartURL = mcdaRootPath + 'partials/rankProbabilityChart.html';
 
     $scope.canSave = function(state) {
-      return state && state.step === state.total;
+      return state && state.step === state.total + 1;
     };
 
     $scope.save = function(state) {
@@ -96,8 +105,6 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
       $scope.scenario.$save($stateParams, function(scenario) {
         $state.go('preferences');
       });
-
-
     };
 
     $injector.invoke(Wizard, this, {

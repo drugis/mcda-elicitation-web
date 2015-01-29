@@ -6,6 +6,9 @@ define(['mcda/config', 'angular', 'underscore'],
 
         var calculateIntermediateResults = function(state, standardizeFn) {
           var prefs = standardizeFn(state.prefs);
+
+          state.intermediate = prefs;
+
           var data = _.extend(state.problem, {
             "preferences": prefs,
             "method": "smaa"

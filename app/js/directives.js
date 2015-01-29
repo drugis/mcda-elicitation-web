@@ -168,7 +168,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
 
             nv.utils.windowResize(chart.update);
           });
-        }, true);
+        });
       }
     };
   });
@@ -428,6 +428,71 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       }
     };
   });
+
+  directives.directive('tradeOffs', function($filter, mcdaRootPath, PartialValueFunction) {
+    return {
+      restrict: 'E',
+      replace: true,
+      scope: {
+        problem: '=',
+        preferences: '='
+      },
+      link: function(scope, element) {
+        scope.pvf = PartialValueFunction;
+        scope.criteria = _.sortBy(_.map(_.pairs(scope.problem.criteria), function(crit, idx) {
+          return _.extend(crit[1], {
+            id: crit[0],
+            w: 'w_' + (idx + 1)
+          });
+        }), 'w');
+
+
+        var w = function(criterionKey) {
+          return _.find(scope.criteria, function(crit) {
+            return crit.id === criterionKey;
+          }).w;
+        };
+
+        scope.$watch('preferences', function(newValue, oldValue) {
+          var order = _.map(newValue, function(pref) {
+            var crit = _.map(pref.criteria, w);
+            if (pref.type === 'ordinal') {
+              return crit[0] + ' & \\geq & ' + crit[1] + '\\\\';
+            } else {
+              return '';
+            };
+          });
+
+          var ratios  = _.map(newValue, function(pref) {
+            var crit = _.map(pref.criteria, w);
+            if (pref.type === 'ratio bound') {
+              return '\\frac{' + crit[0] + '}{' + crit[1]
+                + '} & \\in & ['
+                + $filter('number')(pref.bounds[0])
+                + ', '
+                + $filter('number')(pref.bounds[1])
+                + '] \\\\';
+            } else if (pref.type === 'exact swing') {
+              return '\\frac{'
+                + crit[0]
+                + '}{'
+                + crit[1]
+                + '} & = & '
+                + $filter('number')(pref.ratio)
+                + ' \\\\';
+            } else {
+              return '';
+            }
+          });
+
+          scope.order = '\\begin{eqnarray} ' + _.reduce(order, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
+          scope.ratios = '\\begin{eqnarray} ' + _.reduce(ratios, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
+        });
+      },
+      templateUrl: mcdaRootPath + 'partials/tradeOffs.html'
+    };
+  });
+
 
   //treeview
 

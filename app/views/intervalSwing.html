@@ -1,7 +1,7 @@
-<div>
+<div ng-show="currentStep.step <= currentStep.total">
   <div class="row">
-    <div class="columns large-7">
-      <h3>Interval SWING weighting (<span ng-bind="currentStep.step"></span>/<span ng-bind="currentStep.total"></span>)</h3>
+    <div class="columns large-8">
+      <h3>{{title(currentStep.step, currentStep.total)}}</h3>
       <h5 class="subheader">Determining the relative importance of:</h5>
       <ul class="no-bullet">
         <li ng-repeat="criterion in [currentStep.criterionA, currentStep.criterionB] track by $index">
@@ -47,7 +47,25 @@
               ng-if="!canSave(currentStep)"
               ng-click="nextStep(currentStep)"
               ng-disabled="!canProceed(currentStep)">Next</button>
+    </div>
+  </div>
+</div>
 
+<div ng-show="currentStep.step > currentStep.total">
+  <div class="row">
+    <div class="columns large-8">
+      <h3>{{title(currentStep.step, currentStep.total)}}</h3>
+      <p>You have given the following trade-offs:</p>
+      <trade-offs problem="currentStep.problem" preferences="currentStep.intermediate"></trade-offs>
+      <br>
+    </div>
+
+    <div ng-include="rankProbabilityChartURL"></div>
+  </div>
+
+  <div class="row">
+    <div class="columns large-12">
+      <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
       <button class="small success button"
               ng-if="canSave(currentStep)"
               ng-click="save(currentStep)"
