@@ -158,7 +158,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
             var chart = nv.models.multiBarChart().height(dim.height).width(dim.width);
             var data = rankGraphData(newVal);
 
-            chart.yAxis.tickFormat(d3.format(',.3f'));
+            chart.yAxis.tickFormat(d3.format(',.3g'));
             chart.stacked(attrs.stacked);
             chart.reduceXTicks(false);
             chart.staggerLabels(true);
@@ -262,9 +262,11 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
             });
           } else {
             var y = d3.scale.linear().domain(chart.yAxis.scale().domain());
-            chart.yAxis.tickValues(y.ticks(4));
+            chart.yAxis.tickValues(y.ticks(6));
+            chart.yAxis.tickFormat(d3.format(',.3g'));
 
             var x = d3.scale.linear().domain(chart.xAxis.scale().domain());
+            chart.xAxis.tickFormat(d3.format(',.3g'));
             chart.xAxis.tickValues(x.ticks(4));
           }
 
