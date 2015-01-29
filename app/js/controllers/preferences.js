@@ -1,6 +1,6 @@
 'use strict';
-define(['mcda/config', 'angular', 'underscore'],
-  function(Config, angular, _) {
+define(['angular', 'underscore'],
+  function(angular, _) {
     var dependencies = ['$scope', '$filter', '$location', '$anchorScroll', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'taskDefinition'];
 
     var PreferencesController = function($scope, $filter, $location, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition)

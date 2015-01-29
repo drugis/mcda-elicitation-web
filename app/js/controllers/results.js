@@ -1,7 +1,7 @@
 'use strict';
 define(
-  ['mcda/config', 'angular', 'underscore'],
-  function(Config, angular, _) {
+  ['angular', 'underscore'],
+  function(angular, _) {
     return function($rootScope, $scope, currentScenario, taskDefinition, MCDAPataviService) {
       var alternatives;
       var criteria;

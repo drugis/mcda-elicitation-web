@@ -1,6 +1,6 @@
 'use strict';
-define(['mcda/config', 'mcda/controllers/helpers/wizard', 'angular', 'underscore'],
-  function(Config, Wizard, angular, _) {
+define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'],
+  function(Wizard, angular, _) {
     return function($scope, $state, $stateParams, $injector, currentScenario, PartialValueFunction, TaskDependencies)
     {
       $scope.pvf = PartialValueFunction;
