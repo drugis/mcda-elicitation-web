@@ -13,15 +13,13 @@ require.config({
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_SVG',
     'domReady': 'bower_components/requirejs-domready/domReady',
     'mcda': 'bower_components/mcda-web/app/js',
-    'mmfoundation': 'bower_components/angular-foundation/mm-foundation-tpls',
-    'angularanimate': 'bower_components/angular-animate/angular-animate'
+    'mmfoundation': 'bower_components/angular-foundation/mm-foundation-tpls'
   },
   baseUrl: '.',
   shim: {
     'angular': { exports : 'angular' },
     'angular-resource': { deps:['angular'], exports: 'angular-resource' },
     'angular-ui-router': { deps:['angular'] },
-    'angularanimate': {deps: ['angular']},
     'underscore': { exports : '_' },
     'MathJax' : { exports: 'MathJax' },
     'd3': { exports : 'd3' },
