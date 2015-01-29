@@ -10,7 +10,7 @@ require.config({
     'jquery-slider': 'bower_components/jslider/dist/jquery.slider',
     'd3': 'bower_components/d3/d3.min',
     'nvd3': 'bower_components/nvd3/nv.d3.min',
-    'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-AMS_HTML',
+    'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_SVG',
     'domReady': 'bower_components/requirejs-domready/domReady',
     'mcda': 'bower_components/mcda-web/app/js',
     'mmfoundation': 'bower_components/angular-foundation/mm-foundation-tpls',

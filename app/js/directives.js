@@ -329,8 +329,9 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
             MathJax.Hub.Config({
               skipStartupTypeset: true,
               messageStyle: "none",
-              "HTML-CSS": {
-                showMathMenu: false
+              showMathMenu: false,
+              "SVG": {
+                font: "Latin-Modern"
               }
             });
             MathJax.Hub.Queue(['Reprocess', MathJax.Hub, element[0]]);
