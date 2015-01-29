@@ -15,7 +15,7 @@
 
     <link rel="stylesheet" type="text/css" href="bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="bower_components/jslider/dist/jquery.slider.min.css">
-    <link rel="stylesheet" type="text/css" href="bower_components/nvd3/src/nv.d3.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/nvd3-community/build/nv.d3.min.css">
 
     <link rel="stylesheet" type="text/css" href="<c:url value="/bower_components/mcda-web/app/css/mcda-drugis.css" />">
 

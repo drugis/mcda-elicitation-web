@@ -228,8 +228,8 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       link: function(scope, element, attrs) {
         var dim = getParentDimension(element);
         var svg = d3.select(element[0]).append('svg')
-          .attr('width', '100%')
-          .attr('height', '100%');
+              .attr('width', '100%')
+              .attr('height', '100%');
 
         scope.$watch('value', function(newVal) {
           if (!newVal)  {
@@ -238,16 +238,21 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
           var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
 
           var chart = nv.models.lineChart().width(dim.width).height(dim.height);
-          chart.forceY([0.0]);
+
+
+          chart.useVoronoi(true);
 
           if (attrs.showLegend && attrs.showLegend === 'false') {
             chart.showLegend(false);
           }
 
-          chart.xAxis.staggerLabels(false);
-          if (_.every(data, function(x) {
+          svg.datum(data).call(chart);
+
+          var hasLabels = _.every(data, function(x) {
             return !_.isUndefined(x.labels);
-          })) {
+          });
+
+          if (hasLabels) {
             chart.xAxis.tickFormat(function(i) {
               if (i % 1 === 0) {
                 return data[0].labels[i];
@@ -256,11 +261,15 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
               }
             });
           } else {
-            chart.xAxis.tickFormat(d3.format('.3f'));
+            var y = d3.scale.linear().domain(chart.yAxis.scale().domain());
+            chart.yAxis.tickValues(y.ticks(4));
+
+            var x = d3.scale.linear().domain(chart.xAxis.scale().domain());
+            chart.xAxis.tickValues(x.ticks(4));
           }
 
-          svg.datum(data).call(chart);
-          nv.utils.windowResize(chart.update);
+          chart.update();
+
         });
       }
     };
