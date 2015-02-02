@@ -1,162 +1,70 @@
-define(['angular'],
-  function(angular) {
-    var dependencies = ['ngResource'];
+define(['angular', 'underscore'], function(angular, _) {
+  var dependencies = ['ngResource'];
 
-    var WorkspaceResource = function($resource) {
+  var WorkspaceResource = function($q, $resource, $filter, MCDAPataviService) {
 
-      return $resource(config.workspacesRepositoryUrl + ':workspaceId', {
-        workspaceId: '@id'
-      });
-
-      // var redirectToDefaultView = function(workspaceId, scenarioId) {
-      //   $state.go(Config.defaultView, {
-      //     workspaceId: workspaceId,
-      //     scenarioId: scenarioId
-      //   });
-      // };
-
-      // function addValueTree(problem) {
-      //   if (!problem.valueTree) {
-      //     problem.valueTree = {
-      //       'title': 'Overall value',
-      //       'criteria': _.keys(problem.criteria)
-      //     };
-      //   }
-      // }
-
-      // var decorate = function(workspace) {
-      //   addValueTree(workspace.problem);
-
-      //   var ScenarioResource = $resource(
-      //     repositoryUrl + ':workspaceId/scenarios/:scenarioId', {
-      //       workspaceId: workspace.id,
-      //       scenarioId: '@id'
-      //     }, {
-      //       save: {
-      //         method: 'POST',
-      //         headers: headers
-      //       }
-      //     }
-      //   );
-
-      //   workspace.redirectToDefaultView = function(scenarioId) {
-      //     if (scenarioId) {
-      //       redirectToDefaultView(workspace.id, scenarioId);
-      //     } else {
-      //       redirectToDefaultView(workspace.id, workspace.defaultScenarioId);
-      //     }
-      //   };
-
-      //   ScenarioResource.prototype.save = function() {
-      //     return this.$save(function() {
-      //       $rootScope.$broadcast('elicit.scenariosChanged');
-      //     });
-      //   };
-
-      //   // update state in scenario
-      //   ScenarioResource.prototype.update = function(state) {
-      //     var fields = ['problem', 'prefs'];
-      //     this.state = _.pick(state, fields);
-      //     this.save().then(function(scenario) {
-      //       PartialValueFunction.attach(scenario.state);
-      //     });
-      //   };
-
-      //   ScenarioResource.prototype.redirectToDefaultView = function() {
-      //     redirectToDefaultView(this.workspace, this.id);
-      //   };
-
-      //   workspace.getScenario = function(id) {
-      //     var deferred = $q.defer();
-      //     ScenarioResource.get({
-      //       scenarioId: id
-      //     }, function(scenario) {
-      //       PartialValueFunction.attach(scenario.state);
-      //       deferred.resolve(scenario);
-      //     });
-      //     return deferred.promise;
-      //   };
-
-      //   workspace.newScenario = function(state) {
-      //     var deferred = $q.defer();
-
-      //     var scenario = new ScenarioResource({
-      //       'title': randomId(3, 'Scenario '),
-      //       'state': state
-      //     });
-      //     scenario.$save(function(scenario) {
-      //       deferred.resolve(scenario.id);
-      //     });
-
-      //     return deferred.promise;
-      //   };
-
-      //   workspace.query = function() {
-      //     return ScenarioResource.query(function(scenarios) {
-      //       angular.forEach(scenarios, function(scenario) {
-      //         PartialValueFunction.attach(scenario.state);
-      //       });
-      //     });
-      //   };
-
-      //   return workspace;
-      // };
-
-      // var get = function(id) {
-      //   var deferred = $q.defer();
-      //   WorkspaceResource.get({
-      //     workspaceId: id
-      //   }, function(workspace) {
-      //     deferred.resolve(decorate(workspace));
-      //   });
-      //   return deferred.promise;
-      // };
-
-      // var create = function(problem) {
-      //   var deferred = $q.defer();
-
-      //   var workspace = new WorkspaceResource({
-      //     title: problem.title,
-      //     problem: problem
-      //   });
-      //   workspace.$save(function(workspace) {
-      //     var Scenario = $resource(repositoryUrl + ':workspaceId/scenarios/:scenarioId', {
-      //       workspaceId: workspace.id
-      //     }, {
-      //       save: {
-      //         method: 'POST',
-      //         headers: headers
-      //       }
-      //     });
-      //     var scenario = new Scenario({
-      //       'title': 'Default',
-      //       'state': {
-      //         problem: problem
-      //       }
-      //     });
-      //     scenario.$save(function(scenario) {
-      //       workspace.defaultScenarioId = scenario.id;
-      //       workspace.$save(function() {
-      //         workspace.scenarios = {};
-      //         workspace.scenarios[scenario.id] = scenario;
-      //         deferred.resolve(decorate(workspace));
-      //       });
-      //     });
-      //   });
-
-      //   return deferred.promise;
-      // };
-
-      // var query = function() {
-      //   return WorkspaceResource.query();
-      // };
-
-      // return {
-      //   'create': create,
-      //   'get': get,
-      //   'query': query
-      // };
+    var valueTree =  function(problem) {
+      return {
+        'title': 'Overall value',
+        'criteria': _.keys(problem.criteria)
+      };
     };
 
-    return angular.module('elicit.workspaceResource', dependencies).factory('WorkspaceResource', WorkspaceResource);
-  });
+    var prepareScales = function(problem) {
+      var payload = _.extend(problem, {
+        method: 'scales'
+      });
+      return MCDAPataviService.run(payload);
+    };
+
+    var theoreticalScales = function(problem) {
+      return _.object(_.map(problem.criteria, function(val, key) {
+        var scale = val.scale || [null, null];
+
+        // TODO: This should /not/ be nessecary when 1.4.0 lands
+        scale[0] = _.isNull(scale[0]) ? '-\u221e' : $filter('number')(scale[0]);
+        scale[1] = _.isNull(scale[1]) ? '\u221e' : $filter('number')(scale[1]);
+
+        return [key, scale];
+      }));
+    };
+
+    var addDerived = function(response) {
+      var deferred = $q.defer();
+      var resource = response.resource;
+      var problem = resource.problem;
+
+      prepareScales(problem).then(function(results) {
+        /* The $$ properties are reserved for Angular's internal functionality.
+           They get stripped when calling toJson (or resource.$save)
+           We (ab)use this feature to store derived values in the resource
+         */
+        resource.$$valueTree = problem.valueTree || valueTree(problem);
+        resource.$$scales =
+          { observed: results.results,
+            theoretical: theoreticalScales(problem)
+          };
+        deferred.resolve(resource);
+      });
+
+      return deferred.promise;
+    };
+
+    var resource = $resource(
+      config.workspacesRepositoryUrl + ':workspaceId', { workspaceId: '@id' }, {
+        get:    { method:'GET', interceptor: { response: addDerived }},
+        save:   { method:'POST', interceptor: { response: addDerived }},
+        create: { method:'POST', transformRequest: function(problem, headersGetter) {
+          return angular.toJson({
+            title: problem.title,
+            problem: problem
+          });
+        }}
+      }
+    );
+
+    return resource;
+  };
+
+  return angular.module('elicit.workspaceResource', dependencies).factory('WorkspaceResource', WorkspaceResource);
+});

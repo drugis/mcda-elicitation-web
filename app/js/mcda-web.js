@@ -5,12 +5,10 @@ define(
     'underscore',
     'jQuery',
     'mcda/config',
-    'foundation',
     'mmfoundation',
     'angular-ui-router',
     'angularanimate',
     'angular-cookies',
-    'mcda/services/workspaceService',
     'mcda/services/remarks',
     'mcda/services/routeFactory',
     'mcda/services/workspaceResource',
@@ -30,7 +28,6 @@ define(
       'ui.router',
       'mm.foundation',
       'ngAnimate',
-      'elicit.workspaceService',
       'elicit.scaleRangeService',
       'elicit.remarks',
       'elicit.workspaceResource',
@@ -46,42 +43,31 @@ define(
       'ngCookies'
     ];
     var app = angular.module('elicit', dependencies);
+    app.run(['$rootScope', '$window', '$http', '$cookies', function($rootScope, $window, $http, $cookies) {
+      var csrfToken = $cookies['XSRF-TOKEN'];
 
-    app.run(['$rootScope', '$window', '$http', '$cookies',
-      function($rootScope, $window, $http, $cookies) {
-        var csrfToken = $cookies['XSRF-TOKEN'];
+      $rootScope.$safeApply = function($scope, fn) {
+        var phase = $scope.$root.$$phase;
+        if (phase === '$apply' || phase === '$digest') {
+          this.$eval(fn);
+        } else {
+          this.$apply(fn);
+        }
+      };
 
-        $rootScope.$on('$viewContentLoaded', function() {
-          $(document).foundation();
-        });
-
-        // from http://stackoverflow.com/questions/16952244/what-is-the-best-way-to-close-a-dropdown-in-zurb-foundation-4-when-clicking-on-a
-        $('.f-dropdown').click(function() {
-          if ($(this).hasClass('open')) {
-            $('[data-dropdown="' + $(this).attr('id') + '"]').trigger('click');
-          }
-        });
-
-        $rootScope.$safeApply = function($scope, fn) {
-          var phase = $scope.$root.$$phase;
-          if (phase === '$apply' || phase === '$digest') {
-            this.$eval(fn);
-          } else {
-            this.$apply(fn);
-          }
-        };
-        $rootScope.$on('error', function(e, message) {
-          $rootScope.$safeApply($rootScope, function() {
-            $rootScope.error = _.extend(message, {
-              close: function() {
-                delete $rootScope.error;
-              }
-            });
+      $rootScope.$on('error', function(e, message) {
+        $rootScope.$safeApply($rootScope, function() {
+          $rootScope.error = _.extend(message, {
+            close: function() {
+              delete $rootScope.error;
+            }
           });
         });
+      });
 
-      }
+    }
     ]);
+
     app.constant('Tasks', Config.tasks);
 
     // Detect our location so we can get the templates from the correct place
@@ -97,41 +83,44 @@ define(
     })());
 
 
-    app.config(['mcdaRootPath', 'Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider', 'MCDARouteProvider', '$animateProvider',
-      function(basePath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider, MCDARouteProvider, $animateProvider) {
-        var baseTemplatePath = basePath + 'views/';
+    app.config(
+      ['mcdaRootPath', 'Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider','$compileProvider', 'MCDARouteProvider', '$animateProvider',
+       function(basePath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider, $compileProvider, MCDARouteProvider, $animateProvider) {
+         var baseTemplatePath = basePath + 'views/';
 
-        $httpProvider.interceptors.push('ErrorHandling');
+         $httpProvider.interceptors.push('ErrorHandling');
 
-        // only animate sidepanel
-        $animateProvider.classNameFilter(/sidepanel/);
+         // only animate sidepanel
+         $animateProvider.classNameFilter(/sidepanel/);
 
-        //ui-router code starts here
-        $stateProvider.state('workspace', {
-          url: '/workspaces/:workspaceId',
-          templateUrl: baseTemplatePath + 'workspace.html',
-          controller: 'WorkspaceController',
-          resolve: {
-            currentWorkspace: ['$stateParams', 'WorkspaceResource',
-              function($stateParams, WorkspaceResource) {
-                return WorkspaceResource.get($stateParams).$promise;
-              }
-            ]
-          }
-        });
+         //ui-router code starts here
+         $stateProvider.state('workspace', {
+           url: '/workspaces/:workspaceId',
+           templateUrl: baseTemplatePath + 'workspace.html',
+           controller: 'WorkspaceController',
+           resolve: {
+             currentWorkspace: [
+               '$stateParams', 'WorkspaceResource',
+               function($stateParams, WorkspaceResource) {
+                 return WorkspaceResource.get($stateParams).$promise;
+               }
+             ]
+           }
+         });
 
-        MCDARouteProvider.buildRoutes($stateProvider, 'workspace', baseTemplatePath);
+         MCDARouteProvider.buildRoutes($stateProvider, 'workspace', baseTemplatePath);
 
-        // Default route
-        $stateProvider.state('choose-problem', {
-          url: '/choose-problem',
-          templateUrl: baseTemplatePath + 'chooseProblem.html',
-          controller: 'ChooseProblemController'
-        });
+         // Default route
+         $stateProvider.state('choose-problem', {
+           url: '/choose-problem',
+           templateUrl: baseTemplatePath + 'chooseProblem.html',
+           controller: 'ChooseProblemController'
+         });
 
-        $urlRouterProvider.otherwise('/choose-problem');
-      }
-    ]);
+         $compileProvider.debugInfoEnabled(false);
+         $urlRouterProvider.otherwise('/choose-problem');
+       }
+      ]);
 
     return app;
   });

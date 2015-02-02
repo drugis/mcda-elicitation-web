@@ -12,8 +12,8 @@
           <div class="columns medium-6 large-6 scenario-menu">
             <span>Scenario</span>
             <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenarios track by scenario.id" ng-change="scenarioChanged(scenario)"></select>
-            <i ng-if="editMode.isUserOwner" class="fa fa-plus new-scenario-btn" data-dropdown="newScenarioControl"></i>
-              <ul id="newScenarioControl" class="f-dropdown" data-dropdown-content>
+            <i ng-if="editMode.isUserOwner" class="fa fa-plus new-scenario-btn" dropdown-toggle="#newScenarioControl"></i>
+              <ul id="newScenarioControl" class="f-dropdown">
                 <li class="drop-down-list-item" ng-click="forkScenario()" >
                   <a>Copy current scenario</a></li>
                 <li class="drop-down-list-item" ng-click="newScenario()">
@@ -40,10 +40,9 @@
       </div>
     </div>
 
-    <div class="columns large-12">
+    <div class="columns large-12 large-collapse">
       <div ui-view></div>
     </div>
 
   </div>
 </div>
-

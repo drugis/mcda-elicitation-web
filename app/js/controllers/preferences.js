@@ -1,15 +1,18 @@
 'use strict';
-define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfoundation', 'underscore'],
-  function(Config, patavi, angular, angularanimate, mmfoundation, _) {
-    var dependencies = ['$scope', '$location', '$anchorScroll', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'taskDefinition', 'WorkspaceService'];
-    var PreferencesController = function($scope, $location, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition, WorkspaceService) {
+define(['mcda/config', 'angular', 'underscore'],
+  function(Config, angular, _) {
+    var dependencies = ['$scope', '$location', '$anchorScroll', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'taskDefinition'];
+
+    var PreferencesController = function($scope, $location, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition)
+    {
       var state = taskDefinition.clean($scope.scenario.state);
 
       $scope.$parent.taskId = taskDefinition.id;
       $scope.intervalHull = intervalHull;
-      WorkspaceService.prepareScales($scope.workspace.problem).then(function(results) {
-        $scope.scales = results.results;
-      });
+
+      $scope.scales = $scope.workspace.$$scales;
+
+      $scope.pvf = PartialValueFunction;
 
 
       var w = function(criterionKey) {
@@ -42,6 +45,11 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
         return memo + eqn;
       }, '') + ' \\end{eqnarray}';
       $scope.preferences = eqnArray;
+
+
+      $scope.isPVFDefined = function(criterion) {
+        return criterion.pvf && criterion.pvf.type;
+      };
 
       $scope.isAccessible = function(task, state) {
         return TaskDependencies.isAccessible(task, state);
@@ -94,8 +102,8 @@ define(['mcda/config', 'mcda/lib/patavi', 'angular', 'angularanimate', 'mmfounda
       };
 
       $scope.scrollToScaleRanges = function() {
-          $location.hash('scale-ranges-block');
-          $anchorScroll();
+        $location.hash('scale-ranges-block');
+        $anchorScroll();
       };
 
       $scope.scrollToPVFs = function(scrollEnabled) {

@@ -1,0 +1,109 @@
+<div>
+  <div ng-if="currentStep.type == 'elicit type'">
+    <div class="row">
+      <div class="columns large-12">
+        <h3>Define Partial Value Function for: {{currentStep.choice.title}}</h3>
+      </div>
+
+      <div class="columns large-7">
+        <p>The partial value functions (<abbr title="partial value function">PVF</abbr>)
+          define the mapping between the measurement values and the
+          utility of that value.</p>
+
+        {{currentStep.choice.title}}
+        <label>
+          <input type="radio"
+                 ng-model="currentStep.choice.pvf.direction"
+                 value="decreasing"
+                 ng-selected="currentStep.choice.pvf.direction =='decreasing'">
+          {{currentStep.choice.pvf.range[0] | number}} is best
+        </label>
+        <label>
+          <input type="radio"
+                 ng-model="currentStep.choice.pvf.direction"
+                 value="increasing"
+                 ng-selected="currentStep.choice.pvf.direction == 'increasing'">
+          {{currentStep.choice.pvf.range[1] | number}} is best
+        </label>
+
+        Type of function
+        <label><input type="radio" ng-model="currentStep.choice.pvf.type" value="linear">Linear</label>
+        <label><input type="radio" ng-model="currentStep.choice.pvf.type" value="piecewise-linear">Piece-wise linear</label>
+      </div>
+
+
+      <div class="columns large-5">
+        <div style="width: 400px; height: 400px">
+          <line-chart value="getXY(currentStep.choice)" show-legend="false"></line-chart>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="columns large-12">
+
+        <button class="small button" ng-click="cancel()">Cancel</button>
+        <button class="small button"
+                ng-if="!canSave(currentStep)"
+                ng-click="nextStep(currentStep)"
+                ng-disabled="!canProceed(currentStep)">Next</button>
+        <button class="small success button"
+                ng-if="canSave(currentStep)"
+                ng-click="save(currentStep)"
+                ng-disabled="!canProceed(currentStep)">Save</button>
+      </div>
+    </div>
+
+  </div> <!-- / subType == null -->
+
+  <div ng-if="currentStep.type == 'bisection'">
+    <div class="row">
+      <div class="columns large-12">
+
+        <h3>Define Partial Value Function for: {{currentStep.choice.title}}</h3>
+      </div>
+      <div class="columns large-7">
+        <p>
+          What is the value of x such that an improvement in {{currentStep.choice.title}} from {{currentStep.range.from | number}} ({{currentStep.choice.unitOfMeasurement}}) to x is equivalent to an improvement from x to {{currentStep.range.to | number}} ({{currentStep.choice.unitOfMeasurement}})?
+        </p>
+
+        <strong>Adjust the slider:</strong>
+        <label>
+          <slider style="width: 400px; margin-top: 20px"
+                  model="currentStep.choice.pvf.cutoffs[currentStep.choice.pvf.values.length - 1]"
+                  type="point"
+                  range="currentStep.range"></slider>
+        </label>
+
+        <strong>So that the following statement is true:</strong>
+        <p>
+          The improvement from {{currentStep.range.from | number}} to {{currentStep.choice.pvf.cutoffs[currentStep.choice.pvf.values.length - 1] | number}}<br>
+          is equivalent to the improvement from {{currentStep.choice.pvf.cutoffs[currentStep.choice.pvf.values.length - 1] | number}} to {{currentStep.range.to | number}}.
+        </p>
+
+      </div>
+      <div class="columns large-5">
+
+        <div style="width: 400px; height: 400px">
+          <line-chart value="getXY(currentStep.choice)" show-legend="false"></line-chart>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="columns large-12">
+
+        <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
+        <button class="small button"
+                ng-if="!canSave(currentStep)"
+                ng-click="nextStep(currentStep)"
+                ng-disabled="!canProceed(currentStep)">Next</button>
+        <button class="small success button"
+                ng-if="canSave(currentStep)"
+                ng-click="save(currentStep)"
+                ng-disabled="!canProceed(currentStep)">Save</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,7 +1,7 @@
 'use strict';
 define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
 
-  return function($scope, $state, $stateParams, taskDefinition, intervalHull, PartialValueFunction, MCDAPataviService, ScaleRangeService) {
+  return function($scope, $state, $stateParams, taskDefinition, intervalHull, ScaleRangeService) {
 
     var state = taskDefinition.clean($scope.scenario.state);
 
@@ -15,6 +15,10 @@ define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
         });
       }
       return false;
+    };
+
+    $scope.cancel = function() {
+      $state.go('preferences');
     };
 
     $scope.save = function(currentStep) {
@@ -36,58 +40,43 @@ define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
       var fields = ['problem', 'prefs'];
       $scope.scenario.state = _.pick(state, fields);
       $scope.scenario.$save($stateParams, function(scenario) {
-        PartialValueFunction.attach(scenario.state);
         $scope.$emit('elicit.scenariosChanged');
         $state.go('preferences');
       });
 
     };
 
-    var errorHandler = function(code, error) {
-      var message = {
-        code: (code && code.desc) ? code.desc : code,
-        cause: error
-      };
-      $scope.$root.$broadcast('patavi.error', message);
-    };
-
-    var successHandler = function(state, results) {
+    var initialize = function(state, observed) {
       var scales = {};
       var choices = {};
-      $scope.$root.$safeApply($scope, function() {
-        _.map(_.pairs(results.results), function(criterion) {
+      _.map(_.pairs(observed), function(criterion) {
 
-          // Calculate interval hulls
-          var criterionRange = intervalHull(criterion[1]);
+        // Calculate interval hulls
+        var criterionRange = intervalHull(criterion[1]);
 
-          // Set inital model value
-          var pvf = state.problem.criteria[criterion[0]].pvf;
-          var problemRange = pvf ? pvf.range : null;
-          var from = problemRange ? problemRange[0] : criterionRange[0];
-          var to = problemRange ? problemRange[1] : criterionRange[1];
+        // Set inital model value
+        var pvf = state.problem.criteria[criterion[0]].pvf;
+        var problemRange = pvf ? pvf.range : null;
+        var from = problemRange ? problemRange[0] : criterionRange[0];
+        var to = problemRange ? problemRange[1] : criterionRange[1];
 
-          choices[criterion[0]] = {
-            lower: from,
-            upper: to
-          };
+        choices[criterion[0]] = {
+          lower: from,
+          upper: to
+        };
 
-          // Set scales for slider
-          var criterionScale = state.problem.criteria[criterion[0]].scale;
-          scales[criterion[0]] = ScaleRangeService.calculateScales(criterionScale, from, to, criterionRange);
+        // Set scales for slider
+        var criterionScale = state.problem.criteria[criterion[0]].scale;
+        scales[criterion[0]] = ScaleRangeService.calculateScales(criterionScale, from, to, criterionRange);
 
-        });
-        $scope.currentStep = _.extend(state, {
-          scales: scales,
-          choice: choices
-        });
+      });
+      $scope.currentStep = _.extend(state, {
+        scales: scales,
+        choice: choices
       });
     };
 
-    var calculateScales = MCDAPataviService.run(_.extend(state.problem, {
-      'method': 'scales'
-    }));
-    calculateScales.then(_.partial(successHandler, state), errorHandler);
-
+    initialize(state, $scope.workspace.$$scales.observed);
 
   };
 });

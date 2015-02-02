@@ -63,14 +63,13 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
           skin: 'round_plastic',
           onstatechange: _.debounce(function(value) {
             var values = getValueModel(value);
-
             scope.$root.$safeApply(scope, function() {
               scope.model = values;
             });
-          }, 50)
+          }, 10)
         });
 
-        if (_.has(scope.range, 'restrictTo') && _.has(scope.range, 'restrictFrom')) {
+        if (scope.range && _.has(scope.range, 'restrictTo') && _.has(scope.range, 'restrictFrom')) {
           $($element).find('.jslider-bg').append('<i class="x"></i>');
           var width = valueToStep(scope.range.restrictTo) - valueToStep(scope.range.restrictFrom);
           var left = valueToStep(scope.range.restrictFrom);
@@ -90,7 +89,6 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       link: function(scope, $element) {
         var init = function() {
           if (scope.range) {
-            console.log('range from' + scope.range.from + ' to ' + scope.range.to);
             initialize(scope, $element);
           }
         };
@@ -290,7 +288,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
   directives.directive('fileReader', function() {
     return {
       scope: {
-        model: '=',
+        model: '='
       },
       restrict: 'E',
       template: '<input type="file" accept=".json">',
@@ -324,11 +322,17 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       restrict: 'A',
       link: function(scope, element, attrs) {
         scope.$watch(attrs.mathjaxBind, function(value) {
-          var $script = angular.element('<script type="math/tex">')
-            .html(value === undefined ? '' : value);
+          var $script = angular.element('<script type="math/tex">').html(value === undefined ? '' : value);
           element.html('');
           element.append($script);
           require(['MathJax'], function(MathJax) {
+            MathJax.Hub.Config({
+              skipStartupTypeset: true,
+              messageStyle: "none",
+              "HTML-CSS": {
+                showMathMenu: false
+              }
+            });
             MathJax.Hub.Queue(['Reprocess', MathJax.Hub, element[0]]);
           });
         });
@@ -348,7 +352,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       },
       link: function(scope, element) {
         scope.animatedClose = function() {
-          $(element).fadeOut(800, function() {
+          $(element).fadeOut(200, function() {
             scope.close();
           });
         };
@@ -454,28 +458,6 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
           $compile(element.contents())(scope);
         }
       }
-    };
-  });
-
-  directives.directive('partialValueFunction', function(mcdaRootPath, PartialValueFunction) {
-    return {
-      restrict: 'E',
-      replace: true,
-      scope: {
-        criterion: '=',
-        scenario: '=',
-        editMode: '&'
-      },
-      link: function(scope) {
-        scope.graphInfo = {
-          values: []
-        };
-        if (scope.isPVFDefined(scope.criterion)) {
-          scope.graphInfo.values = PartialValueFunction.getXY(scope.criterion);
-        }
-      },
-      templateUrl: mcdaRootPath + 'partials/partialValueFunction.html',
-      controller: 'PartialValueFunctionController'
     };
   });
 

@@ -21,9 +21,6 @@ define(['angular-mocks',
         scope = $rootScope.$new();
 
         scope.scenario = jasmine.createSpyObj('scenario', ['$save']);
-        scope.scenario.state = PartialValueFunction.attach({
-          problem: problem
-        });
 
         var task = {
           requires: [],
@@ -31,6 +28,7 @@ define(['angular-mocks',
         };
 
         state = jasmine.createSpyObj('$state', ['go']);
+        scope.scenario.state = { problem: problem };
 
         $controller('OrdinalSwingController', {
           $scope: scope,

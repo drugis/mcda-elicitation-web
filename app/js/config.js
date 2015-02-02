@@ -17,6 +17,7 @@ define([], function() {
       resets: ['scale-range', 'partial-value-function', 'criteria-trade-offs']
     }, {
       id: 'partial-value-function',
+      url: '/partial-value-function/:criterion',
       title: 'Define Partial Value Functions',
       controller: 'PartialValueFunctionController',
       templateUrl: 'partialValueFunction.html',

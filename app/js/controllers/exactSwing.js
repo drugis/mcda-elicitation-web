@@ -4,16 +4,11 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
 
     return function($scope, $state, $stateParams, $injector, mcdaRootPath, currentScenario, taskDefinition, PartialValueFunction) {
       var criteria = {};
-
-      function getBounds(criterionName) {
-        var criterion = criteria[criterionName];
-        return [criterion.worst(), criterion.best()].sort(function(a, b) {
-          return a - b;
-        });
-      }
+      var pvf = PartialValueFunction;
+      $scope.pvf = pvf;
 
       function buildInitial(criterionA, criterionB, step) {
-        var bounds = getBounds(criterionA);
+        var bounds = pvf.getBounds(criteria[criterionA]);
         var state =  {
           step: step,
           total: _.size(criteria) - 1,
@@ -44,7 +39,7 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
           return false;
         }
         var value = state.choice;
-        var bounds = getBounds(state.criterionA);
+        var bounds = pvf.getBounds(criteria[state.criterionA]);
         return value < bounds[1] && value >= bounds[0];
       };
 
@@ -66,7 +61,7 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
         }
 
         function getRatio(state) {
-          var u = criteria[state.criterionA].pvf.map;
+          var u = pvf.map(criteria[state.criterionA]);
           return 1 / u(state.choice);
         }
 
@@ -90,9 +85,7 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
         state = nextState(state);
 
         $scope.scenario.state = _.pick(state, ['problem', 'prefs']);
-        PartialValueFunction.attach($scope.scenario.state);
         $scope.scenario.$save($stateParams, function(scenario) {
-          PartialValueFunction.attach($scope.scenario.state);
           $state.go('preferences');
         });
 
@@ -102,7 +95,7 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
         $scope: $scope,
         handler: {
           validChoice: validChoice,
-          fields: ['problem', 'prefs', 'total', 'choice', 'criteriaOrder', 'criterionA', 'criterionB'],
+          fields: ['prefs', 'total', 'choice', 'criteriaOrder', 'criterionA', 'criterionB'],
           nextState: nextState,
           hasIntermediateResults: true,
           standardize: _.identity,

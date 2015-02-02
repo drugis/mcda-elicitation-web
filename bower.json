@@ -1,6 +1,6 @@
 {
   "name": "mcda-elicitation-web",
-  "version": "0.8.2",
+  "version": "0.9",
   "authors": [
     "Gert van Valkenhoef <g.h.m.van.valkenhoef@rug.nl>",
     "Joël Kuiper",
@@ -26,31 +26,29 @@
     "Makefile"
   ],
   "dependencies": {
-    "jquery": "2.0.3",
-    "underscore": "1.5.2",
-    "angular": "1.3.0-rc.0",
-    "angular-resource": "1.3.0-rc.0",
+    "jquery": "2.1.3",
+    "underscore": "1.7.0",
+    "angular": "1.3.9",
+    "angular-resource": "1.3.9",
     "angular-ui-router": "0.2.7",
     "nprogress": "0.1.2",
-    "d3": "3.2.2",
-    "nvd3": "1.0.0-beta",
-    "foundation": "5.0.2",
+    "d3": "3.5.3",
+    "nvd3": "1.1.15-beta",
     "MathJax": "*",
     "font-awesome": "~4.0.3",
     "requirejs": "~2.1.15",
     "jslider": "https://github.com/SalesSeek/jslider.git#1.2.0",
     "bowser": "*",
-    "angular-foundation": "~0.2.2",
-    "angular-foundation-assets": "https://github.com/pineconellc/angular-foundation.git#0.2.2",
-    "angular-animate": "1.3.0-rc.0",
     "domready": "~1.0.7",
     "requirejs-domready": "~2.0.1",
-    "angular-cookies": "~1.3.9"
+    "angular-cookies": "~1.3.9",
+    "angular-foundation": "~0.5.1",
+    "angular-animate": "1.3.9"
   },
   "devDependencies": {
-    "angular-mocks": "1.3.0-rc.0"
+    "angular-mocks": "1.3.9"
   },
   "resolutions": {
-    "angular": "1.3.2"
+    "d3": "3.5.3"
   }
 }
