@@ -2,6 +2,7 @@
 define(['angular', 'mcda/lib/autobahn'], function(angular, ab) {
   var dependencies = [];
   var PataviService = function($q) {
+    var config = window.patavi || {};
     var WS_URI = typeof config['WS_URI'] !== 'undefined' ? config['WS_URI'] : "ws://localhost:3000/ws";
     var BASE_URI = 'http://api.patavi.com/';
 
