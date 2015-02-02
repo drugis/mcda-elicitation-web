@@ -9,14 +9,12 @@ require.config({
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
     'jquery-slider': 'bower_components/jslider/dist/jquery.slider.min',
     'd3': 'bower_components/d3/d3.min',
-    'nvd3': 'bower_components/nvd3/nv.d3.min',
-    'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML',
-    'foundation': 'bower_components/foundation/js/foundation.min',
+    'nvd3': 'bower_components/nvd3-community/build/nv.d3',
+    'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_SVG',
     'domReady': 'bower_components/requirejs-domready/domReady',
     'mcda': '/app/js',
-    'mmfoundation': 'bower_components/angular-foundation/mm-foundation',
-    'angularanimate': 'bower_components/angular-animate/angular-animate.min',
-    'angular-cookies': 'bower_components/angular-cookies/angular-cookies.min'
+    'mmfoundation': 'bower_components/angular-foundation/mm-foundation-tpls',
+		'angular-cookies': 'bower_components/angular-cookies/angular-cookies.min'
   },
   baseUrl: '.',
   shim: {
@@ -24,7 +22,6 @@ require.config({
     'angular-resource': { deps:['angular'], exports: 'angular-resource' },
     'angular-cookies': {deps: ['angular'], exposrt: 'angular-cookies'},
     'angular-ui-router': { deps:['angular'] },
-    'angularanimate': {deps: ['angular']},
     'underscore': { exports : '_' },
     'MathJax' : { exports: 'MathJax' },
     'd3': { exports : 'd3' },

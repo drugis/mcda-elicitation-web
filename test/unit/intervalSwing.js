@@ -152,7 +152,6 @@ define(['angular',
 
           scope.currentStep.choice.lower = 0.04;
           scope.currentStep.choice.upper = 0.05;
-          expect(scope.canSave(scope.currentStep)).toBeTruthy();
 
           spyOn(scope.scenario, '$save');
           scope.save(scope.currentStep);

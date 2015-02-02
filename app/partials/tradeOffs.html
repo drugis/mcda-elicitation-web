@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="columns large-12">
+    <ul class="no-bullet">
+      <li ng-repeat="criterion in criteria">
+        <span mathjax-bind="criterion.w"></span>: {{::criterion.title}}
+        ({{::pvf.worst(criterion) | number}} &rarr; {{::pvf.best(criterion) | number}})
+      </li>
+    </ul>
+  </div>
+  <div class="columns large-2">
+    <div mathjax-bind="order"></div>
+  </div>
+  <div class="columns large-2 large-offset-1 end">
+    <div mathjax-bind="ratios"></div>
+  </div>
+</div>

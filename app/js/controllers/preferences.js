@@ -1,9 +1,9 @@
 'use strict';
-define(['mcda/config', 'angular', 'underscore'],
-  function(Config, angular, _) {
-    var dependencies = ['$scope', '$location', '$anchorScroll', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'taskDefinition'];
+define(['angular', 'underscore'],
+  function(angular, _) {
+    var dependencies = ['$scope', '$filter', '$location', '$anchorScroll', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'taskDefinition'];
 
-    var PreferencesController = function($scope, $location, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition)
+    var PreferencesController = function($scope, $filter, $location, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition)
     {
       var state = taskDefinition.clean($scope.scenario.state);
 
@@ -14,37 +14,12 @@ define(['mcda/config', 'angular', 'underscore'],
 
       $scope.pvf = PartialValueFunction;
 
-
-      var w = function(criterionKey) {
-        return _.find($scope.criteria, function(crit) {
-          return crit.id === criterionKey;
-        }).w;
-      };
-
-      $scope.criteria = _.sortBy(_.map(_.pairs($scope.scenario.state.problem.criteria), function(crit, idx) {
+      $scope.criteria = _.sortBy(_.map(_.pairs(state.problem.criteria), function(crit, idx) {
         return _.extend(crit[1], {
           id: crit[0],
           w: 'w_' + (idx + 1)
         });
       }), 'w');
-
-      var eqns = _.map(state.prefs, function(pref) {
-        var crit = _.map(pref.criteria, w);
-        if (pref.type === 'ordinal') {
-          return crit[0] + ' & \\geq & ' + crit[1] + '\\\\';
-        } else if (pref.type === 'ratio bound') {
-          return '\\frac{' + crit[0] + '}{' + crit[1] + '} & \\in & [' + pref.bounds[0].toFixed(3) + ', ' + pref.bounds[1].toFixed(3) + '] \\\\';
-        } else if (pref.type === 'exact swing') {
-          return '\\frac{' + crit[0] + '}{' + crit[1] + '} & = & ' + pref.ratio.toFixed(3) + ' \\\\';
-        } else {
-          console.error('Unsupported preference type ', pref);
-          return '';
-        }
-      });
-      var eqnArray = '\\begin{eqnarray} ' + _.reduce(eqns, function(memo, eqn) {
-        return memo + eqn;
-      }, '') + ' \\end{eqnarray}';
-      $scope.preferences = eqnArray;
 
 
       $scope.isPVFDefined = function(criterion) {

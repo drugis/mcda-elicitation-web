@@ -1,4 +1,4 @@
-<div>
+<div ng-show="currentStep.type == 'elicit'">
   <div class="row">
     <div class="columns large-7">
       <h3 ng-bind="currentStep.title"></h3>
@@ -26,10 +26,31 @@
               ng-if="!canSave(currentStep)"
               ng-click="nextStep(currentStep)"
               ng-disabled="!canProceed(currentStep)">Next</button>
+    </div>
+  </div>
+</div>
+
+
+<div ng-show="currentStep.type == 'review'">
+  <div class="row">
+    <div class="columns large-7">
+      <h3 ng-bind="currentStep.title"></h3>
+      <p>You have given the following trade-offs:</p>
+      <trade-offs problem="currentStep.problem" preferences="currentStep.intermediate"></trade-offs>
+      <br>
+    </div>
+
+    <div ng-include="rankProbabilityChartURL"></div>
+  </div>
+
+
+  <div class="row">
+    <div class="columns large-12">
+      <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
       <button class="small success button"
               ng-if="canSave(currentStep)"
               ng-click="save(currentStep)"
-              ng-disabled="!canProceed(currentStep)">Save</button>
+              ng-disabled="!canSave(currentStep)">Save</button>
 
     </div>
   </div>

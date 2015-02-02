@@ -7,6 +7,14 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
       var pvf = PartialValueFunction;
       $scope.pvf = pvf;
 
+      $scope.title = function(step, total) {
+        var base = 'Exact SWING weighting';
+        if (step > total) {
+          return base + ' (DONE)';
+        }
+        return base + ' (' + step + '/' + total + ')';
+      };
+
       function buildInitial(criterionA, criterionB, step) {
         var bounds = pvf.getBounds(criteria[criterionA]);
         var state =  {
@@ -78,7 +86,7 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
       $scope.rankProbabilityChartURL = mcdaRootPath + 'partials/rankProbabilityChart.html';
 
       $scope.canSave = function(state) {
-        return state && state.step === state.total;
+        return state && state.step === state.total + 1;
       };
 
       $scope.save = function(state) {
