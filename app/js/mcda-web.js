@@ -1,32 +1,29 @@
 'use strict';
 define(
   ['angular',
-    'require',
-    'underscore',
-    'jQuery',
-    'mcda/config',
-    'mmfoundation',
-    'angular-ui-router',
-    'angularanimate',
-    'mcda/services/remarks',
-    'mcda/services/routeFactory',
-    'mcda/services/workspaceResource',
-    'mcda/services/scenarioResource',
-    'mcda/services/taskDependencies',
-    'mcda/services/errorHandling',
-    'mcda/services/hashCodeService',
-    'mcda/services/pataviService',
-    'mcda/services/partialValueFunction',
-    'mcda/services/util',
-    'mcda/services/scaleRangeService',
-    'mcda/controllers',
-    'mcda/directives'
+   'require',
+   'underscore',
+   'mcda/config',
+   'mmfoundation',
+   'angular-ui-router',
+   'mcda/services/remarks',
+   'mcda/services/routeFactory',
+   'mcda/services/workspaceResource',
+   'mcda/services/scenarioResource',
+   'mcda/services/taskDependencies',
+   'mcda/services/errorHandling',
+   'mcda/services/hashCodeService',
+   'mcda/services/pataviService',
+   'mcda/services/partialValueFunction',
+   'mcda/services/util',
+   'mcda/services/scaleRangeService',
+   'mcda/controllers',
+   'mcda/directives'
   ],
-  function(angular, require, _, $, Config) {
+  function(angular, require, _, Config) {
     var dependencies = [
       'ui.router',
       'mm.foundation',
-      'ngAnimate',
       'elicit.scaleRangeService',
       'elicit.remarks',
       'elicit.workspaceResource',
@@ -67,8 +64,7 @@ define(
         });
       });
 
-    }
-    ]);
+    }]);
 
     app.constant('Tasks', Config.tasks);
 
@@ -86,14 +82,11 @@ define(
 
 
     app.config(
-      ['mcdaRootPath', 'Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider','$compileProvider', 'MCDARouteProvider', '$animateProvider',
-       function(basePath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider, $compileProvider, MCDARouteProvider, $animateProvider) {
+      ['mcdaRootPath', 'Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider','$compileProvider', 'MCDARouteProvider',
+       function(basePath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider, $compileProvider, MCDARouteProvider) {
          var baseTemplatePath = basePath + 'views/';
 
          $httpProvider.interceptors.push('ErrorHandling');
-
-         // only animate sidepanel
-         $animateProvider.classNameFilter(/sidepanel/);
 
          //ui-router code starts here
          $stateProvider.state('workspace', {

@@ -158,7 +158,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
             var chart = nv.models.multiBarChart().height(dim.height).width(dim.width);
             var data = rankGraphData(newVal);
 
-            chart.yAxis.tickFormat(d3.format(',.3f'));
+            chart.yAxis.tickFormat(d3.format(',.3g'));
             chart.stacked(attrs.stacked);
             chart.reduceXTicks(false);
             chart.staggerLabels(true);
@@ -168,7 +168,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
 
             nv.utils.windowResize(chart.update);
           });
-        }, true);
+        });
       }
     };
   });
@@ -228,8 +228,8 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       link: function(scope, element, attrs) {
         var dim = getParentDimension(element);
         var svg = d3.select(element[0]).append('svg')
-          .attr('width', '100%')
-          .attr('height', '100%');
+              .attr('width', '100%')
+              .attr('height', '100%');
 
         scope.$watch('value', function(newVal) {
           if (!newVal)  {
@@ -238,16 +238,21 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
           var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
 
           var chart = nv.models.lineChart().width(dim.width).height(dim.height);
-          chart.forceY([0.0]);
+
+
+          chart.useVoronoi(true);
 
           if (attrs.showLegend && attrs.showLegend === 'false') {
             chart.showLegend(false);
           }
 
-          chart.xAxis.staggerLabels(false);
-          if (_.every(data, function(x) {
+          svg.datum(data).call(chart);
+
+          var hasLabels = _.every(data, function(x) {
             return !_.isUndefined(x.labels);
-          })) {
+          });
+
+          if (hasLabels) {
             chart.xAxis.tickFormat(function(i) {
               if (i % 1 === 0) {
                 return data[0].labels[i];
@@ -256,11 +261,17 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
               }
             });
           } else {
-            chart.xAxis.tickFormat(d3.format('.3f'));
+            var y = d3.scale.linear().domain(chart.yAxis.scale().domain());
+            chart.yAxis.tickValues(y.ticks(6));
+            chart.yAxis.tickFormat(d3.format(',.3g'));
+
+            var x = d3.scale.linear().domain(chart.xAxis.scale().domain());
+            chart.xAxis.tickFormat(d3.format(',.3g'));
+            chart.xAxis.tickValues(x.ticks(4));
           }
 
-          svg.datum(data).call(chart);
-          nv.utils.windowResize(chart.update);
+          chart.update();
+
         });
       }
     };
@@ -329,8 +340,9 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
             MathJax.Hub.Config({
               skipStartupTypeset: true,
               messageStyle: "none",
-              "HTML-CSS": {
-                showMathMenu: false
+              showMathMenu: false,
+              "SVG": {
+                font: "Latin-Modern"
               }
             });
             MathJax.Hub.Queue(['Reprocess', MathJax.Hub, element[0]]);
@@ -428,6 +440,71 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       }
     };
   });
+
+  directives.directive('tradeOffs', function($filter, mcdaRootPath, PartialValueFunction) {
+    return {
+      restrict: 'E',
+      replace: true,
+      scope: {
+        problem: '=',
+        preferences: '='
+      },
+      link: function(scope, element) {
+        scope.pvf = PartialValueFunction;
+        scope.criteria = _.sortBy(_.map(_.pairs(scope.problem.criteria), function(crit, idx) {
+          return _.extend(crit[1], {
+            id: crit[0],
+            w: 'w_' + (idx + 1)
+          });
+        }), 'w');
+
+
+        var w = function(criterionKey) {
+          return _.find(scope.criteria, function(crit) {
+            return crit.id === criterionKey;
+          }).w;
+        };
+
+        scope.$watch('preferences', function(newValue, oldValue) {
+          var order = _.map(newValue, function(pref) {
+            var crit = _.map(pref.criteria, w);
+            if (pref.type === 'ordinal') {
+              return crit[0] + ' & \\geq & ' + crit[1] + '\\\\';
+            } else {
+              return '';
+            };
+          });
+
+          var ratios  = _.map(newValue, function(pref) {
+            var crit = _.map(pref.criteria, w);
+            if (pref.type === 'ratio bound') {
+              return '\\frac{' + crit[0] + '}{' + crit[1]
+                + '} & \\in & ['
+                + $filter('number')(pref.bounds[0])
+                + ', '
+                + $filter('number')(pref.bounds[1])
+                + '] \\\\';
+            } else if (pref.type === 'exact swing') {
+              return '\\frac{'
+                + crit[0]
+                + '}{'
+                + crit[1]
+                + '} & = & '
+                + $filter('number')(pref.ratio)
+                + ' \\\\';
+            } else {
+              return '';
+            }
+          });
+
+          scope.order = '\\begin{eqnarray} ' + _.reduce(order, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
+          scope.ratios = '\\begin{eqnarray} ' + _.reduce(ratios, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
+        });
+      },
+      templateUrl: mcdaRootPath + 'partials/tradeOffs.html'
+    };
+  });
+
 
   //treeview
 

@@ -1,7 +1,7 @@
 /* variables */
 @import "settings";
 
-$workspace-color: $ghost;
+$workspace-color: $white-smoke;
 $inactive-tab-background-color: $primary-color;
 $inactive-tab-color: $white;
 $active-tab-color: $black;
@@ -145,7 +145,6 @@ input[type='file'] {
 
 .full-width {
     width: 100% !important;
-    border-collapse: collapse;
 
     .td-container {
         position: relative;
@@ -202,7 +201,7 @@ input[type='file'] {
 
 .effects-table {
     td {
-        height: $table-line-height * 3.5;
+        height: $table-line-height * 3.25;
     }
 }
 
@@ -211,10 +210,10 @@ input[type='file'] {
     color: grey;
     font-size: 0.7rem;
     background: $smoke;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-    -khtml-border-radius: 4px;
-    border-radius: 4px;
+    -moz-border-radius: $global-radius;
+    -webkit-border-radius: $global-radius;
+    -khtml-border-radius: $global-radius;
+    border-radius: $global-radius;
     display: inline-block;
     text-align: center;
     width: 5rem;
@@ -248,10 +247,6 @@ input[type='file'] {
 .underlined-div {
     border-bottom: 1px solid $smoke;
     margin-bottom: 1.5rem !important;
-}
-
-.fontsize {
-    font-size: 0.875rem !important;
 }
 
 /* --- overview page ----- */
