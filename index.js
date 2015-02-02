@@ -96,6 +96,9 @@ app
 
 app.use(function (req, res, next) {
   res.cookie('XSRF-TOKEN', req.csrfToken());
+  if (req.user) {
+    res.cookie('LOGGED-IN-USER', JSON.stringify(req.user));
+  }
   next();
 });
 
@@ -172,7 +175,7 @@ app.get("/workspaces/:id", function(req, res) {
       if(err) {
         return console.error('error running query', err);
       }
-      res.send(result.rows);
+      res.send(result.rows[0]);
     });
   });
 });
@@ -182,16 +185,33 @@ app.get("/workspaces/:id/scenarios", function(req, res) {
     if(err) {
       return console.error('error fetching workspace from pool', err);
     }
-    console.log(req, Object.keys(req));
     client.query('SELECT id, title, state::json, workspace AS "workspaceId" FROM scenario WHERE workspace = $1', [req.params.id], function(err, result) {
       done();
       if(err) {
         return console.error('error running query', err);
       }
-      row = result.rows[0];
       res.send(result.rows);
     });
   });
+});
+
+app.get("/workspaces/:id/scenarios/:id", function(req, res) {
+  pg.connect(conf.pgConStr, function(err, client, done) {
+    if(err) {
+      return console.error('error fetching workspace from pool', err);
+    }
+    client.query('SELECT id, title, state::json, workspace AS "workspaceId" FROM scenario WHERE id = $1', [req.params.id], function(err, result) {
+      done();
+      if(err) {
+        return console.error('error running query', err);
+      }
+      res.send(result.rows[0]);
+    });
+  });
+});
+
+app.get("/me", function(req, res) {
+  res.send(req.user);
 });
 
 //FIXME: should not be needed?
