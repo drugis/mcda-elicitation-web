@@ -154,17 +154,6 @@ define(['angular-mocks',
           $scope1.nextStep($scope1.currentStep);
           expect($scope1.currentStep.prefs.ordinal).toEqual(["Prox DVT"]);
         });
-
-        it("should finish when only a single choice left", function() {
-          $scope1.currentStep.choice = "Prox DVT";
-          $scope1.nextStep($scope1.currentStep);
-          $scope1.currentStep.choice = "Dist DVT";
-          expect($scope1.canSave($scope1.currentStep)).toBeTruthy();
-
-
-          $scope1.save($scope1.currentStep);
-          expect($scope1.scenario.$save).toHaveBeenCalled();
-        });
       });
 
     });

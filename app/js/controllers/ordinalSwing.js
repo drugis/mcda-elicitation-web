@@ -3,6 +3,9 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
   return function($scope, $state, $stateParams, $injector, mcdaRootPath, currentScenario, taskDefinition, PartialValueFunction) {
     var criteria = {};
     var pvf = PartialValueFunction;
+    var scenario = currentScenario;
+
+    $scope.pvf = pvf;
 
     var getReference = function() {
       return _.object(
@@ -22,11 +25,11 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
       return base + ' (' + step + '/' + total + ')';
     };
 
-
     var initialize = function(state) {
       criteria = state.problem.criteria;
       var fields = {
         title: title(1),
+        type: 'elicit',
         prefs: {
           ordinal: []
         },
@@ -44,7 +47,6 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
       return _.extend(state, fields);
     };
 
-    var scenario = currentScenario;
 
     var validChoice = function(state) {
       return state && _.contains(_.keys(criteria), state.choice);
@@ -73,7 +75,10 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
 
       if (_.size(nextState.choices) === 1) {
         next(_.keys(nextState.choices)[0]);
+        nextState.type = 'review';
       }
+
+
       return nextState;
     };
 
@@ -102,25 +107,23 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
     $scope.rankProbabilityChartURL = mcdaRootPath + 'partials/rankProbabilityChart.html';
 
     $scope.save = function(state) {
-      var next = nextState(state);
-      var prefs = next.prefs;
-      next.prefs = standardize(prefs);
+      state.prefs = standardize(state.prefs);
 
-      $scope.scenario.state = _.pick(next, ['problem', 'prefs']);
+      $scope.scenario.state = _.pick(state, ['problem', 'prefs']);
       $scope.scenario.$save($stateParams, function(scenario) {
         $state.go('preferences');
       });
     };
 
     $scope.canSave = function(state) {
-      return state && _.size(state.choices) === 2;
+      return state && _.size(state.choices) === 0;
     };
 
     $injector.invoke(Wizard, this, {
       $scope: $scope,
       handler: {
         validChoice: validChoice,
-        fields: ['choice', 'reference', 'choices'],
+        fields: ['choice', 'reference', 'choices', 'type', 'standardized'],
         nextState: nextState,
         initialize: _.partial(initialize, taskDefinition.clean(scenario.state)),
         hasIntermediateResults: true,

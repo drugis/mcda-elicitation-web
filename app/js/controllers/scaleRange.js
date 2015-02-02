@@ -1,5 +1,5 @@
 'use strict';
-define(['mcda/config', 'angular', 'underscore'], function(Config, angular, _) {
+define(['angular', 'underscore'], function(angular, _) {
 
   return function($scope, $state, $stateParams, taskDefinition, intervalHull, ScaleRangeService) {
 

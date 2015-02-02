@@ -1,7 +1,7 @@
 'use strict';
 define(
-  ['mcda/config', 'angular', 'underscore'],
-  function(Config, angular, _) {
+  ['angular', 'underscore'],
+  function(angular, _) {
     return function($rootScope, $scope, currentScenario, taskDefinition, MCDAPataviService) {
       var alternatives;
       var criteria;
@@ -25,12 +25,12 @@ define(
 
         var updateHandler = _.throttle(function(update) {
           var progress = parseInt(update);
-          if(progress > state.progress) {
-            state.progress = progress;
+          if(progress > $scope.progress) {
+            $scope.progress = progress;
           }
         }, 30);
 
-        state.progress = 0;
+        $scope.progress = 0;
         task.then(successHandler, errorHandler, updateHandler);
         return state;
       };
