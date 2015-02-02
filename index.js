@@ -141,28 +141,22 @@ app.post("/workspaces", function(req, res) {
         done();
         return console.error('error running query', err);
       }
-      client.query('SELECT id Workspace WHERE problem = $1 )', [req.body.problem], function(err, result) {
+      console.log('log', result.rows[0]);
+      var workspaceId = result.rows[0].id;
+      client.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3)', [workspaceId, 'Default', { problem: req.body.problem }], function(err, result) {
         if(err) {
           done();
           return console.error('error running query', err);
         }
-        console.log('log', result.rows[0]);
-        var workspaceId = result.rows[0].id;
-        client.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3)', [workspaceId, 'Default', { problem: req.body.problem }], function(err, result) {
+        var scenarioId = result.rows[0].id;
+        client.query('UPDATE workspace SET defaultscenarioid = $1 WHERE id = $2;', [scenarioId, workspaceId], function(err, result) {
           if(err) {
             done();
             return console.error('error running query', err);
           }
-          var scenarioId = result.rows[0].id;
-          client.query('UPDATE workspace SET defaultscenarioid = $1 WHERE id = $2;', [scenarioId, workspaceId], function(err, result) {
-            if(err) {
-              done();
-              return console.error('error running query', err);
-            }
-            done();
-            row = result.rows[0];
-            res.send(result.rows);
-          });
+          done();
+          row = result.rows[0];
+          res.send(result.rows);
         });
       });
     });
