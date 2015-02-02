@@ -144,14 +144,12 @@ app.post("/workspaces", function(req, res) {
         return console.error('error running query', err);
       }
       var workspaceId = result.rows[0].id;
-      console.log('workspaceId', workspaceId);
       client.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3) RETURNING id', [workspaceId, 'Default', { problem: req.body.problem }], function(err, result) {
         if(err) {  
         done();
           return console.error('error running query', err);
         }
         var scenarioId = result.rows[0].id;
-        console.log('scenarioId', scenarioId);
         client.query('UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2', [scenarioId, workspaceId], function(err, result) {
           if(err) {
             done();
@@ -217,7 +215,22 @@ app.get("/workspaces/:id/scenarios/:id", function(req, res) {
 });
 
 app.get("/workspaces/:id/remarks", function(req, res) {
-  res.send(req.user);
+  pg.connect(conf.pgConStr, function(err, client, done) {
+    if(err) {
+      return console.error('error fetching remarks from pool', err);
+    }
+    client.query('SELECT workspaceid AS "workspaceId", remarks FROM remarks WHERE workspaceid = $1', [req.params.id], function(err, result) {
+      done();
+      if(err) {
+        return console.error('error running query', err);
+      }
+      res.send(result.rows[0]);
+    });
+  });
+});
+
+app.post("/workspaces/:id/remarks", function(req, res) {
+  console.log('yo');
 });
 
 //FIXME: should not be needed?
