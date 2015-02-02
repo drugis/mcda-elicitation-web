@@ -3,7 +3,7 @@ define([], function() {
 
   return function($scope, $location, $stateParams, $cookies, Tasks, TaskDependencies, currentWorkspace) {
     var user = angular.fromJson($cookies["LOGGED-IN-USER"]);
-
+    
     $scope.editMode = {
       isUserOwner: user ? currentWorkspace.owner === user.id : false
     };

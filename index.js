@@ -155,7 +155,7 @@ app.post("/workspaces", function(req, res) {
             done();
             return console.error('error running query', err);
           }
-          client.query('SELECT id, problem::json, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [workspaceId], function(err, result) {
+          client.query('SELECT id, owner, problem::json, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [workspaceId], function(err, result) {
             if(err) {
               done();
               return console.error('error running query', err);
@@ -174,7 +174,7 @@ app.get("/workspaces/:id", function(req, res) {
     if(err) {
       return console.error('error fetching workspace from pool', err);
     }
-    client.query('SELECT id, problem::json, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
+    client.query('SELECT id, owner, problem::json, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
       done();
       if(err) {
         return console.error('error running query', err);
