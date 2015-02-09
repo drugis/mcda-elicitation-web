@@ -418,7 +418,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
     };
   });
 
-  directives.directive('remarkblock', function(mcdaRootPath) {
+  directives.directive('remarkBlock', function(mcdaRootPath) {
     return {
       scope: {
         remark: '=',
