@@ -1,7 +1,7 @@
 define(['angular', 'underscore'], function(angular, _) {
   var dependencies = ['ngResource'];
 
-  var WorkspaceResource = function($q, $resource, $filter, MCDAPataviService) {
+  var WorkspaceResource = function($q, $resource, $filter, $rootScope, MCDAPataviService) {
 
     var valueTree =  function(problem) {
       return {
@@ -34,10 +34,10 @@ define(['angular', 'underscore'], function(angular, _) {
       var resource = response.resource;
       var problem = resource.problem;
 
-      prepareScales(problem).then(function(results) {
+      var successHandler = function(results) {
         /* The $$ properties are reserved for Angular's internal functionality.
-           They get stripped when calling toJson (or resource.$save)
-           We (ab)use this feature to store derived values in the resource
+         They get stripped when calling toJson (or resource.$save)
+         We (ab)use this feature to store derived values in the resource
          */
         resource.$$valueTree = problem.valueTree || valueTree(problem);
         resource.$$scales =
@@ -45,7 +45,24 @@ define(['angular', 'underscore'], function(angular, _) {
             theoretical: theoreticalScales(problem)
           };
         deferred.resolve(resource);
-      });
+      };
+
+      var errorHandler = function(code, error) {
+        var message = { code: (code && code.desc) ? code.desc : code,
+                        cause: error };
+        $rootScope.$broadcast('error', message);
+
+        resource.$$valueTree = problem.valueTree || valueTree(problem);
+        resource.$$scales =
+          { observed: theoreticalScales(problem),
+            theoretical: theoreticalScales(problem)
+          };
+
+        deferred.resolve(resource);
+      };
+
+
+      prepareScales(problem).then(successHandler, errorHandler);
 
       return deferred.promise;
     };
