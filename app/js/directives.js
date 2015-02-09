@@ -497,8 +497,12 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
             }
           });
 
-          scope.order = '\\begin{eqnarray} ' + _.reduce(order, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
-          scope.ratios = '\\begin{eqnarray} ' + _.reduce(ratios, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
+          scope.hasTradeoffs = !_.isEmpty(order);
+
+          if(scope.hasTradeoffs) {
+            scope.order = '\\begin{eqnarray} ' + _.reduce(order, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
+            scope.ratios = '\\begin{eqnarray} ' + _.reduce(ratios, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
+          }
         });
       },
       templateUrl: mcdaRootPath + 'partials/tradeOffs.html'
