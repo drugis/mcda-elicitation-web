@@ -73,6 +73,10 @@ define([], function() {
   return {
     tasks: tasks,
     defaultView: defaultView,
-    pataviService: 'smaa_v2'
+    pataviService: 'smaa_v2',
+    patavi: {
+      WS_URI: "wss://patavi.drugis.org/ws",
+      BASE_URI: "http://api.patavi.com/"
+    }
   };
 });

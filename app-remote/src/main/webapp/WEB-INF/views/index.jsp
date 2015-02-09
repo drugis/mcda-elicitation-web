@@ -77,7 +77,6 @@
 
     <script>
      window.config = {
-         WS_URI: 'wss://patavi.drugis.org/foo',
          workspacesRepositoryUrl: '/workspaces/',
          _csrf_token : "${_csrf.token}",
          _csrf_header : "${_csrf.headerName}",
