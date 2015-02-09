@@ -422,14 +422,15 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
     return {
       scope: {
         remark: '=',
+        editMode: '=',
         saveRemarks: '&saveRemarks',
         cancelRemarks: '&cancelRemarks',
         model: '&model'
       },
-      restrict: 'AE',
+      restrict: 'E',
       replace: 'true',
       templateUrl: mcdaRootPath + 'partials/remark.html',
-      link: function() {
+      link: function(scope, element) {
         $('.remarkbutton').click(function() {
           $('.f-dropdown').css('display', 'none');
         });
