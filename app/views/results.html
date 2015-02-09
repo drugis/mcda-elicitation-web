@@ -48,7 +48,7 @@
           <tr ng-repeat="(key, alternative) in currentStep.problem.alternatives">
             <td>{{::alternative.title}}</td>
             <td ng-repeat="rank in currentStep.results.ranks.data[key] track by $index" class="heat">
-              {{::rank}}
+              {{::rank | number}}
             </td>
           </tr>
         </tbody>
