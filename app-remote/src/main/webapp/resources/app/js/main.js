@@ -31,7 +31,9 @@ require.config({
   priority: ['angular']
 });
 
+define(function (require) {
+  var angular = require("angular");
+  require("mcda/mcda-web");
 
-require(['require', 'angular', 'mcda/mcda-web'], function (require, angular) {
-  angular.bootstrap(document , ['elicit']);
+  angular.bootstrap(document, ['elicit']);
 });
