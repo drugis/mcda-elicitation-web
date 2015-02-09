@@ -21,9 +21,8 @@ define(['angular', 'underscore'], function(angular, _) {
       return _.object(_.map(problem.criteria, function(val, key) {
         var scale = val.scale || [null, null];
 
-        // TODO: This should /not/ be nessecary when 1.4.0 lands
-        scale[0] = _.isNull(scale[0]) ? '-\u221e' : $filter('number')(scale[0]);
-        scale[1] = _.isNull(scale[1]) ? '\u221e' : $filter('number')(scale[1]);
+        scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
+        scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
 
         return [key, scale];
       }));

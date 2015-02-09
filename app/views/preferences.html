@@ -73,7 +73,7 @@
     <tbody>
       <tr ng-repeat="(key, criterion) in criteria">
         <td>{{::criterion.title}}</td>
-        <td>{{::scales.theoretical[criterion.id][0]}}, {{::scales.theoretical[criterion.id][1]}}</td>
+        <td>{{::scales.theoretical[criterion.id][0] | number}}, {{::scales.theoretical[criterion.id][1] | number}}</td>
         <td>{{::intervalHull(scales.observed[criterion.id])[0] | number}}, {{::intervalHull(scales.observed[criterion.id])[1] | number}}</td>
         <td><span ng-if="criterion.pvf.range">{{::criterion.pvf.range[0] | number}}, {{::criterion.pvf.range[1] | number}}</span></td>
         <td>{{::criterion.unitOfMeasurement}}</td>
