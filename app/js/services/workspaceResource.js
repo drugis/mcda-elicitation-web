@@ -53,7 +53,7 @@ define(['angular', 'underscore'], function(angular, _) {
 
         resource.$$valueTree = problem.valueTree || valueTree(problem);
         resource.$$scales =
-          { observed: theoreticalScales(problem),
+          { observed: undefined,
             theoretical: theoreticalScales(problem)
           };
 
