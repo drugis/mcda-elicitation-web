@@ -4,7 +4,7 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="sf"%>
 <%@ page session="false"%>
 
-<html ng-app="elicit">
+<html>
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -55,6 +55,13 @@
     <section>
       <div class="color-stripe"></div>
     </section>
+
+    <div ng-if="error" class="row" ng-cloak>
+      <div class="columns">
+      <addis-alert type="alert" close="error.close()">{{error.code}} {{error.cause}}<span ng-show="error.error">&mdash; {{error.error}}</span></addis-alert>
+      </div>
+    </div>
+
 
     <div ng-cloak class="row">
       <div class="columns">

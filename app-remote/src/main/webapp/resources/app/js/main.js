@@ -31,10 +31,9 @@ require.config({
   priority: ['angular']
 });
 
-window.name = "NG_DEFER_BOOTSTRAP!";
+define(function (require) {
+  var angular = require("angular");
+  require("mcda/mcda-web");
 
-require(['require', 'angular', 'mcda/mcda-web'], function (require, angular) {
-  require(['domReady!'], function (document) {
-    angular.bootstrap(document , ['elicit']);
-  });
+  angular.bootstrap(document, ['elicit']);
 });

@@ -38,34 +38,6 @@ define(
       'elicit.pvfService'
     ];
     var app = angular.module('elicit', dependencies);
-
-    app.run(['$rootScope', '$window', '$http', function($rootScope, $window, $http) {
-      var csrfToken = $window.config._csrf_token;
-      var csrfHeader = $window.config._csrf_header;
-
-      $http.defaults.headers.common[csrfHeader] = csrfToken;
-
-      $rootScope.$safeApply = function($scope, fn) {
-        var phase = $scope.$root.$$phase;
-        if (phase === '$apply' || phase === '$digest') {
-          this.$eval(fn);
-        } else {
-          this.$apply(fn);
-        }
-      };
-
-      $rootScope.$on('error', function(e, message) {
-        $rootScope.$safeApply($rootScope, function() {
-          $rootScope.error = _.extend(message, {
-            close: function() {
-              delete $rootScope.error;
-            }
-          });
-        });
-      });
-
-    }]);
-
     app.constant('Tasks', Config.tasks);
 
     // Detect our location so we can get the templates from the correct place
@@ -79,7 +51,6 @@ define(
       }
       throw 'Failed to detect location for mcda-web.';
     })());
-
 
     app.config(
       ['mcdaRootPath', 'Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider','$compileProvider', 'MCDARouteProvider',
@@ -116,6 +87,35 @@ define(
          $urlRouterProvider.otherwise('/choose-problem');
        }
       ]);
+
+    app.run(['$rootScope', '$window', '$http', function($rootScope, $window, $http) {
+      var csrfToken = $window.config._csrf_token;
+      var csrfHeader = $window.config._csrf_header;
+
+      $http.defaults.headers.common[csrfHeader] = csrfToken;
+
+      $rootScope.$safeApply = function($scope, fn) {
+        var phase = $scope.$root.$$phase;
+        if (phase === '$apply' || phase === '$digest') {
+          this.$eval(fn);
+        } else {
+          this.$apply(fn);
+        }
+      };
+
+      $rootScope.$on('error', function(e, message) {
+        $rootScope.$safeApply($rootScope, function() {
+          $rootScope.error = _.extend(message, {
+            close: function() {
+              delete $rootScope.error;
+            }
+          });
+        });
+      });
+
+    }]);
+
+
 
     return app;
   });
