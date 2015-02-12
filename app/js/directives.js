@@ -558,11 +558,10 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         var isDimensionless = !c.unitOfMeasurement || dimensionlessUnits.indexOf(c.unitOfMeasurement.toLowerCase()) !== -1;
 
         var text;
-
         if(hasDescription) {
           text = c.description.replace(/(\.$)/g, "") + " (" + c.title + (!isDimensionless ? ", " + c.unitOfMeasurement : "") + ")";
         } else {
-          text = c.title + " (" + c.title + (!isDimensionless ? ", " + c.unitOfMeasurement : "") + ")";
+          text = c.title + (!isDimensionless ? " " + c.unitOfMeasurement : "");
 
         }
         scope.text = text;
