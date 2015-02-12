@@ -95,7 +95,7 @@
 
   <ul id="partial-value-functions" class="large-block-grid-3">
     <li ng-repeat="criterion in scenario.state.problem.criteria">
-      <h5>{{criterion.title}}</h5>
+      <h5>{{::criterion.title}}</h5>
 
       <div style="width: 250px; height: 180px">
         <line-chart ng-if="isPVFDefined(criterion)" value="getXY(criterion)" show-legend="false"></line-chart>
