@@ -543,5 +543,33 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
     };
   });
 
+  directives.directive('criterion', function() {
+    return {
+      restrict: "E",
+      replace: true,
+      scope: {
+        criterion: '=of'
+      },
+      link: function(scope, element) {
+        var c = scope.criterion;
+
+        var hasDescription = !!c.description;
+        var dimensionlessUnits = ["proportion"];
+        var isDimensionless = !c.unitOfMeasurement || dimensionlessUnits.indexOf(c.unitOfMeasurement.toLowerCase()) !== -1;
+
+        var text;
+
+        if(hasDescription) {
+          text = c.description.replace(/(\.$)/g, "") + " (" + c.title + (!isDimensionless ? ", " + c.unitOfMeasurement : "") + ")";
+        } else {
+          text = c.title + " (" + c.title + (!isDimensionless ? ", " + c.unitOfMeasurement : "") + ")";
+
+        }
+        scope.text = text;
+      },
+      template: "<span>{{text}}</span>"
+    };
+  });
+
   return directives;
 });
