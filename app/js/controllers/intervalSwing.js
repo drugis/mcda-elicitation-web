@@ -35,7 +35,8 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
         range: {
           from: bounds[0],
           to: bounds[1],
-          rightOpen: true
+          rightOpen: true,
+          leftOpen: true
         }
       };
     }
