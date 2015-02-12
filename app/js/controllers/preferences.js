@@ -21,6 +21,19 @@ define(['angular', 'underscore'],
         });
       }), 'w');
 
+      var willReset = function(safe) {
+        var resets = safe.resets.map(function(reset) {
+          return TaskDependencies.definitions[reset].title;
+        }).join(", ").replace(/,([^,]*)$/, ' & $1');
+
+        return resets ? "Saving this preference will reset: " + resets : null;
+      };
+
+      $scope.isSafe = function(taskName) {
+        var safe = TaskDependencies.isSafe($scope.tasks[taskName], $scope.scenario.state);
+        safe.tooltip = willReset(safe);
+        return safe;
+      };
 
       $scope.isPVFDefined = function(criterion) {
         return criterion.pvf && criterion.pvf.type;

@@ -10,7 +10,7 @@
 
   <ul class="no-bullet">
     <li ng-repeat="(key, criterion) in currentStep.problem.criteria">
-      <h5 class="subheader">{{criterion.title}}</h5>
+      <h5 class="subheader"><criterion of="criterion"></criterion></h5>
       <div class="row">
         <div class="large-1 columns">
           <a ng-click="currentStep.scales[key].increaseFrom()" class="tiny round button">&lt;</a>

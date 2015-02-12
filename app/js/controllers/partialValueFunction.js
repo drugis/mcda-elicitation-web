@@ -1,7 +1,7 @@
 'use strict';
 define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'],
   function(Wizard, angular, _) {
-    return function($scope, $state, $stateParams, $injector, currentScenario, PartialValueFunction, TaskDependencies)
+    return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction)
     {
       $scope.pvf = PartialValueFunction;
 
@@ -140,7 +140,7 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'],
           validChoice: function() { return true; },
           hasIntermediateResults: false,
           nextState: nextState,
-          initialize: _.partial(initialize, $scope.scenario.state),
+          initialize: _.partial(initialize, taskDefinition.clean($scope.scenario.state)),
           standardize: _.identity
         }
       });
