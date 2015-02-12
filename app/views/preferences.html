@@ -81,7 +81,13 @@
     </tbody>
   </table>
 
-  <button ng-if="editMode.isUserOwner" ui-sref="scale-range">Define Scale Ranges</button>
+    <button ng-if="editMode.isUserOwner"
+            ui-sref="scale-range"
+            tooltip-animation="false"
+            ng-class="{alert: !isSafe['scale-range'].safe}"
+            tooltip="{{isSafe['scale-range'].tooltip}}">
+      Define Scale Ranges
+    </button>
 </div>
 
 <div id="partial-value-functions-block" class="prefs-block">
@@ -98,32 +104,53 @@
         </div>
       </div>
 
-      <button ng-if="editMode.isUserOwner"
-              ng-disabled="!isAccessible(tasks['partial-value-function'], scenario.state).accessible"
-              ui-sref="partial-value-function({criterion: criterion.id})">Define partial value function</button>
+        <button ng-if="editMode.isUserOwner"
+                ng-class="{alert: !isSafe['partial-value-function'].safe}"
+                tooltip="{{isSafe['partial-value-function'].tooltip}}"
+                tooltip-animation="false"
+                ng-disabled="!isAccessible(tasks['partial-value-function'], scenario.state).accessible"
+                ui-sref="partial-value-function({criterion: criterion.id})">Define partial value function</button>
     </li>
   </ul>
 </div>
 
 <div id="trade-off-block" class="prefs-block">
   <h4>Trade-offs</h4>
-  <button ng-if="editMode.isUserOwner"
-          ui-sref="ordinal-swing"
-          tooltip-placement="bottom"
-          tooltip-animation="false"
-          ng-disabled="!isAccessible(tasks['ordinal-swing'], scenario.state).accessible">Ordinal Swing</button>
+  <ul class="button-group">
+    <li>
+      <button ng-if="editMode.isUserOwner"
+              ui-sref="ordinal-swing"
+              tooltip-animation="false"
+              ng-disabled="!isAccessible(tasks['ordinal-swing'], scenario.state).accessible"
+              ng-class="{alert: !isSafe['ordinal-swing'].safe}"
+              tooltip="{{isSafe['ordinal-swing'].tooltip}}">
+        Ordinal Swing
+      </button>
+    </li>
 
-  <button ng-if="editMode.isUserOwner"
-          ui-sref="exact-swing"
-          tooltip-placement="bottom"
-          tooltip-animation="false"
-          ng-disabled="!isAccessible(tasks['exact-swing'], scenario.state).accessible">Exact Swing</button>
 
-  <button ng-if="editMode.isUserOwner"
-          ui-sref="interval-swing"
-          tooltip-placement="bottom"
-          tooltip-animation="false"
-          ng-disabled="!isAccessible(tasks['interval-swing'], scenario.state).accessible">Interval Swing</button>
+    <li>
+      <button ng-if="editMode.isUserOwner"
+              ui-sref="exact-swing"
+              tooltip-animation="false"
+              ng-disabled="!isAccessible(tasks['exact-swing'], scenario.state).accessible"
+              ng-class="{alert: !isSafe['exact-swing'].safe}"
+              tooltip="{{isSafe['exact-swing'].tooltip}}">
+        Exact Swing
+      </button>
+    </li>
+
+    <li>
+      <button ng-if="editMode.isUserOwner"
+              tooltip-animation="false"
+              ui-sref="interval-swing"
+              ng-disabled="!isAccessible(tasks['interval-swing'], scenario.state).accessible"
+              ng-class="{alert: !isSafe['interval-swing'].safe}"
+              tooltip="{{isSafe['interval-swing'].tooltip}}" >
+        Interval Swing
+      </button>
+    </li>
+  </ul>
 
   <trade-offs problem="scenario.state.problem" preferences="scenario.state.prefs"></trade-offs>
 </div>

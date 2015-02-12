@@ -21,6 +21,24 @@ define(['angular', 'underscore'],
         });
       }), 'w');
 
+      var willReset = function(safe) {
+        var resets = safe.resets.map(function(reset) {
+          return TaskDependencies.definitions[reset].title;
+        }).join(", ").replace(/,([^,]*)$/, ' & $1');
+
+        return resets ? "Saving this preference will reset: " + resets : null;
+      };
+
+      var isSafe = function(taskId) {
+        var safe = TaskDependencies.isSafe($scope.tasks[taskId], $scope.scenario.state);
+        safe.tooltip = willReset(safe);
+        return safe;
+      };
+
+      $scope.isSafe = _.reduce($scope.tasks, function(obj, task) {
+        obj[task.id] = isSafe(task.id);
+        return obj;
+      }, {});
 
       $scope.isPVFDefined = function(criterion) {
         return criterion.pvf && criterion.pvf.type;

@@ -14,7 +14,7 @@ define([], function() {
       controller: 'ScaleRangeController',
       templateUrl: 'scaleRange.html',
       requires: [],
-      resets: ['scale-range', 'partial-value-function', 'criteria-trade-offs']
+      resets: ['partial-value-function', 'criteria-trade-offs']
     }, {
       id: 'partial-value-function',
       url: '/partial-value-function/:criterion',
@@ -22,14 +22,14 @@ define([], function() {
       controller: 'PartialValueFunctionController',
       templateUrl: 'partialValueFunction.html',
       requires: ['scale-range'],
-      resets: ['partial-value-function', 'criteria-trade-offs']
+      resets: ['criteria-trade-offs']
     }, {
       id: 'ordinal-swing',
       title: 'Ordinal Swing Elicitation',
       controller: 'OrdinalSwingController',
       templateUrl: 'ordinalSwing.html',
       requires: ['partial-value-function'],
-      resets: ['criteria-trade-offs']
+      resets: ['non-ordinal-preferences']
     }, {
       id: 'interval-swing',
       title: 'Interval Swing Elicitation',
