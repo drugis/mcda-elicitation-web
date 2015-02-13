@@ -3,9 +3,9 @@
     <div class="columns large-7">
       <h3>{{title(currentStep.step, currentStep.total)}}</h3>
       <h5 class="subheader">Determining the relative importance of:</h5>
-      <ul class="no-bullet">
+      <ul>
         <li ng-repeat="criterion in [currentStep.criterionA, currentStep.criterionB] track by $index">
-          {{currentStep.problem.criteria[criterion].title}}
+          <criterion of="currentStep.problem.criteria[criterion]"></criterion>
           ({{pvf.worst(currentStep.problem.criteria[criterion]) | number }} &rarr;
           {{pvf.best(currentStep.problem.criteria[criterion]) | number}})
         </li>

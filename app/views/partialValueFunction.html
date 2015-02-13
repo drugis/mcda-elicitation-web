@@ -9,7 +9,7 @@
         define the mapping between the measurement values and the
         utility of that value.</p>
 
-      {{currentStep.choice.title}}
+      <criterion of="currentStep.choice"></criterion>
       <label>
         <input type="radio"
                ng-model="currentStep.choice.pvf.direction"
@@ -64,7 +64,8 @@
     </div>
     <div class="columns large-7">
       <p>
-        What is the value of x such that an improvement in {{currentStep.choice.title}} from {{currentStep.range.from | number}} ({{currentStep.choice.unitOfMeasurement}}) to x is equivalent to an improvement from x to {{currentStep.range.to | number}} ({{currentStep.choice.unitOfMeasurement}})?
+        What is the value of x such that an improvement in <criterion of="currentStep.choice"></criterion> from {{currentStep.range.from | number}} to x
+        is equivalent to an improvement from x to {{currentStep.range.to | number}}?
       </p>
 
       <strong>Adjust the slider:</strong>

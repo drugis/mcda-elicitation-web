@@ -8,7 +8,7 @@ require.config({
     'angular-resource': 'bower_components/angular-resource/angular-resource',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
     'jquery-slider': 'bower_components/jslider/dist/jquery.slider',
-    'd3': 'bower_components/d3/d3.min',
+    'd3': 'bower_components/d3/d3',
     'nvd3': 'bower_components/nvd3-community/build/nv.d3',
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_SVG',
     'domReady': 'bower_components/requirejs-domready/domReady',

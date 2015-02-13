@@ -73,8 +73,7 @@ define(['underscore', 'angular'], function(_, angular) {
   var nonOrdinalPreferences = new PreferenceFilter(
     function(pref) {
       return pref.type !== "ordinal";
-    },
-    'non-ordinal preferences');
+    }, 'non-ordinal preferences');
 
   // This heuristic is not complete; it only checks whether there are ordinal preferences at all.
   // Currently, there is no way to create ordinal preferences that are not a complete ranking.
