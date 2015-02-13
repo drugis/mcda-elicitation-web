@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="columns large-12">
+  <div class="columns large-12" ng-if="hasTradeoffs">
     <ul class="no-bullet">
       <li ng-repeat="criterion in criteria">
         <span mathjax-bind="criterion.w"></span>: {{::criterion.title}}
@@ -13,4 +13,10 @@
   <div class="columns large-2 large-offset-1 end">
     <div mathjax-bind="ratios"></div>
   </div>
+
+
+  <div class="columns large-12" ng-if="!hasTradeoffs">
+    <h5 class="subheader">No trade-offs have been specified</h5>
+  </div>
+
 </div>

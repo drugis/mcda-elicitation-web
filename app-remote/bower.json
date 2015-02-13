@@ -21,6 +21,6 @@
     "mcda-web": "../#develop"
   },
   "resolutions": {
-    "d3": "3.5.3"
+    "d3": "3.5.5"
   }
 }

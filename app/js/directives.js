@@ -418,18 +418,19 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
     };
   });
 
-  directives.directive('remarkblock', function(mcdaRootPath) {
+  directives.directive('remarkBlock', function(mcdaRootPath) {
     return {
       scope: {
         remark: '=',
+        editMode: '=',
         saveRemarks: '&saveRemarks',
         cancelRemarks: '&cancelRemarks',
         model: '&model'
       },
-      restrict: 'AE',
+      restrict: 'E',
       replace: 'true',
       templateUrl: mcdaRootPath + 'partials/remark.html',
-      link: function() {
+      link: function(scope, element) {
         $('.remarkbutton').click(function() {
           $('.f-dropdown').css('display', 'none');
         });
@@ -497,8 +498,12 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
             }
           });
 
-          scope.order = '\\begin{eqnarray} ' + _.reduce(order, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
-          scope.ratios = '\\begin{eqnarray} ' + _.reduce(ratios, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
+          scope.hasTradeoffs = !_.isEmpty(order);
+
+          if(scope.hasTradeoffs) {
+            scope.order = '\\begin{eqnarray} ' + _.reduce(order, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
+            scope.ratios = '\\begin{eqnarray} ' + _.reduce(ratios, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
+          }
         });
       },
       templateUrl: mcdaRootPath + 'partials/tradeOffs.html'
@@ -535,6 +540,33 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
           $compile(element.contents())(scope);
         }
       }
+    };
+  });
+
+  directives.directive('criterion', function() {
+    return {
+      restrict: "E",
+      replace: true,
+      scope: {
+        criterion: '=of'
+      },
+      link: function(scope, element) {
+        var c = scope.criterion;
+
+        var hasDescription = !!c.description;
+        var dimensionlessUnits = ["proportion"];
+        var isDimensionless = !c.unitOfMeasurement || dimensionlessUnits.indexOf(c.unitOfMeasurement.toLowerCase()) !== -1;
+
+        var text;
+        if(hasDescription) {
+          text = c.description.replace(/(\.$)/g, "") + " (" + c.title + (!isDimensionless ? ", " + c.unitOfMeasurement : "") + ")";
+        } else {
+          text = c.title + (!isDimensionless ? " " + c.unitOfMeasurement : "");
+
+        }
+        scope.text = text;
+      },
+      template: "<span>{{text}}</span>"
     };
   });
 
