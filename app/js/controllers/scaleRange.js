@@ -1,5 +1,7 @@
 'use strict';
-define(['angular', 'underscore'], function(angular, _) {
+define(function(require) {
+  var angular = require("angular");
+  var _ = require("underscore");
 
   return function($scope, $state, $stateParams, taskDefinition, intervalHull, ScaleRangeService) {
 

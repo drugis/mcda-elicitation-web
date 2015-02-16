@@ -1,8 +1,6 @@
 'use strict';
-define([], function() {
-
+define(function(require) {
   return function($scope, $location, $stateParams, Tasks, TaskDependencies, currentWorkspace) {
-
     $scope.editMode = {
       isUserOwner: currentWorkspace.owner === window.config.user.id
     };

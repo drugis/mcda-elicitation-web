@@ -1,5 +1,8 @@
 'use strict';
-define(['underscore', 'angular'], function(_, angular) {
+define(function(require) {
+  var angular = require("angular");
+  var _ = require("underscore");
+
   var dependencies = [];
 
   var scaleRanges = {

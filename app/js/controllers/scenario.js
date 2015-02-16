@@ -1,5 +1,9 @@
 'use strict';
-define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
+define(function(require) {
+  var angular = require("angular");
+  var _ = require("underscore");
+  var Config = require("mcda/config");
+
   return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, currentScenario, scenarios, ScenarioResource) {
 
     function randomId(size, prefix) {
@@ -71,7 +75,7 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
     $scope.saveTitle = function() {
       $scope.scenario.title = $scope.scenarioTitle.value;
       $scope.scenario.$save($stateParams, function(){
-        $scope.scenarios = ScenarioResource.query(_.omit($stateParams, 'id'))
+        $scope.scenarios = ScenarioResource.query(_.omit($stateParams, 'id'));
       });
       $scope.isEditTitleVisible = false;
     };

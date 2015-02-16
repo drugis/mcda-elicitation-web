@@ -47,7 +47,10 @@
               <tr ng-repeat="(alternativeKey, alternative) in problem.alternatives">
                 <td>{{::alternative.title}}</td>
                 <td>
-                  {{::scales[criterion.key][alternativeKey]['50%'] | number}} ({{::scales[criterion.key][alternativeKey]['2.5%'] | number}}, {{::scales[criterion.key][alternativeKey]['97.5%'] | number}})
+                  {{::scales[criterion.key][alternativeKey]['50%'] | number}}
+                  <span ng-show="!isExact(criterion.key, alternativeKey)">
+                    ({{::scales[criterion.key][alternativeKey]['2.5%'] | number}}, {{::scales[criterion.key][alternativeKey]['97.5%'] | number}})
+                  </span>
                 </td>
               </tr>
             </tbody>
@@ -68,7 +71,9 @@
       <td class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives" name="col{{$index}}" id="col{{$index}}" ng-show="alternativeVisible[alternativeKey]">
         {{::scales[criterion.key][alternativeKey]['50%'] | number}}
         <br>
-        <div class="uncertain">{{::scales[criterion.key][alternativeKey]['2.5%'] | number}}, {{::scales[criterion.key][alternativeKey]['97.5%'] | number}}</div>
+        <div class="uncertain" ng-show="!isExact(criterion.key, alternativeKey)">
+          {{::scales[criterion.key][alternativeKey]['2.5%'] | number}},
+          {{::scales[criterion.key][alternativeKey]['97.5%'] | number}}</div>
       </td>
     </tr>
   </tbody>

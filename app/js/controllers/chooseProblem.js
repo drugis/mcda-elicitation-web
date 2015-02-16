@@ -1,7 +1,9 @@
 'use strict';
-define(['angular', 'underscore'], function(angular, _) {
-  var dependencies = ['$scope', '$state', '$resource', 'WorkspaceResource'];
-  var ChooseProblemController = function($scope, $state, $resource, WorkspaceResource) {
+define(function(require) {
+  var angular = require("angular");
+  var _ = require("underscore");
+
+  return function($scope, $state, $resource, WorkspaceResource) {
     var examplesResource = $resource('examples/:url', {
       url: '@url'
     });
@@ -43,7 +45,4 @@ define(['angular', 'underscore'], function(angular, _) {
 
     $scope.chooseProblemModal = {};
   };
-
-  return dependencies.concat(ChooseProblemController);
-
 });

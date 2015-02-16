@@ -1,8 +1,11 @@
 'use strict';
-define(['angular', 'mcda/lib/autobahn'], function(angular, ab) {
+define(function(require) {
+  var angular = require("angular");
+  var ab = require("mcda/lib/autobahn");
+
   var dependencies = [];
   var PataviService = function($q) {
-    var WS_URI = typeof config['WS_URI'] !== 'undefined' ? config['WS_URI'] : "ws://localhost:3000/ws";
+    var WS_URI = typeof window.config['WS_URI'] !== 'undefined' ? window.config['WS_URI'] : "ws://localhost:3000/ws";
     var BASE_URI = 'http://api.patavi.com/';
 
     var Task = function(payload) {

@@ -1,4 +1,4 @@
-define([], function() {
+define(function(require) {
   // Add string HashCode
   String.prototype.hashCode = function() {
     var hash = 0;
