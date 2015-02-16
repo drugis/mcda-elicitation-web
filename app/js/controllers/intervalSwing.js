@@ -1,5 +1,9 @@
 'use strict';
-define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'angular', 'underscore'], function(Wizard, Util, angular, _) {
+define(function(require) {
+  var angular = require("angular");
+  var _ = require("underscore");
+  var Util = require("mcda/controllers/helpers/util");
+  var Wizard = require("mcda/controllers/helpers/wizard");
 
   return function($scope, $state, $stateParams, $injector, mcdaRootPath, currentScenario, taskDefinition, PartialValueFunction) {
     var criteria = {};

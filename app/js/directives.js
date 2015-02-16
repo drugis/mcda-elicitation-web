@@ -1,5 +1,10 @@
 'use strict';
-define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(require, _, $, angular, d3, nv) {
+define(function(require) {
+  var _ = require("underscore");
+  var $ = require("jQuery");
+  var angular = require("angular");
+  var d3 = require("d3");
+  var nv = require("nvd3");
 
   var directives = angular.module('elicit.directives', []);
 
@@ -51,32 +56,31 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         }
       };
 
-      require(['jquery-slider'], function() {
-        $($element).empty();
-        $($element).append('<input type="slider"></input>');
-        $($element).find('input').attr('value', getModelValue());
-        var myElem = $($element).find('input');
-        myElem.slider({
-          from: 0,
-          to: steps,
-          step: 1,
-          calculate: stepToValue,
-          skin: 'round_plastic',
-          onstatechange: _.debounce(function(value) {
-            var values = getValueModel(value);
-            scope.$root.$safeApply(scope, function() {
-              scope.model = values;
-            });
-          }, 10)
-        });
-
-        if (scope.range && _.has(scope.range, 'restrictTo') && _.has(scope.range, 'restrictFrom')) {
-          $($element).find('.jslider-bg').append('<i class="x"></i>');
-          var width = valueToStep(scope.range.restrictTo) - valueToStep(scope.range.restrictFrom);
-          var left = valueToStep(scope.range.restrictFrom);
-          $($element).find('.jslider-bg .x').attr('style', 'left: ' + left + '%; width:' + width + '%');
-        }
+      require("jquery-slider");
+      $($element).empty();
+      $($element).append('<input type="slider"></input>');
+      $($element).find('input').attr('value', getModelValue());
+      var myElem = $($element).find('input');
+      myElem.slider({
+        from: 0,
+        to: steps,
+        step: 1,
+        calculate: stepToValue,
+        skin: 'round_plastic',
+        onstatechange: _.debounce(function(value) {
+          var values = getValueModel(value);
+          scope.$root.$safeApply(scope, function() {
+            scope.model = values;
+          });
+        }, 10)
       });
+
+      if (scope.range && _.has(scope.range, 'restrictTo') && _.has(scope.range, 'restrictFrom')) {
+        $($element).find('.jslider-bg').append('<i class="x"></i>');
+        var width = valueToStep(scope.range.restrictTo) - valueToStep(scope.range.restrictFrom);
+        var left = valueToStep(scope.range.restrictFrom);
+        $($element).find('.jslider-bg .x').attr('style', 'left: ' + left + '%; width:' + width + '%');
+      }
     };
 
     return {
@@ -126,8 +130,8 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       },
       link: function(scope, element, attrs) {
         var svg = d3.select(element[0]).append('svg')
-          .attr('width', '100%')
-          .attr('height', '100%');
+              .attr('width', '100%')
+              .attr('height', '100%');
 
         var dim = getParentDimension(element);
 
@@ -187,8 +191,8 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         var dim = getParentDimension(element);
 
         var svg = d3.select(element[0]).append('svg')
-          .attr('width', '100%')
-          .attr('height', '100%');
+              .attr('width', '100%')
+              .attr('height', '100%');
 
         scope.$watch('value', function(newVal) {
           if (!newVal) {
@@ -196,17 +200,17 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
           }
           nv.addGraph(function() {
             var chart = nv.models.discreteBarChart()
-              .staggerLabels(false)
-              .showValues(true)
-              .staggerLabels(true)
-              .width(dim.width)
-              .tooltips(false)
-              .x(function(d) {
-                return d.label;
-              })
-              .y(function(d) {
-                return d.value;
-              });
+                  .staggerLabels(false)
+                  .showValues(true)
+                  .staggerLabels(true)
+                  .width(dim.width)
+                  .tooltips(false)
+                  .x(function(d) {
+                    return d.label;
+                  })
+                  .y(function(d) {
+                    return d.value;
+                  });
 
             var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
             svg.datum(data).transition().duration(100).call(chart);
@@ -337,17 +341,16 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
           var $script = angular.element('<script type="math/tex">').html(value === undefined ? '' : value);
           element.html('');
           element.append($script);
-          require(['MathJax'], function(MathJax) {
-            MathJax.Hub.Config({
-              skipStartupTypeset: true,
-              messageStyle: "none",
-              showMathMenu: false,
-              "SVG": {
-                font: "Latin-Modern"
-              }
-            });
-            MathJax.Hub.Queue(['Reprocess', MathJax.Hub, element[0]]);
+          var MathJax = require("MathJax");
+          MathJax.Hub.Config({
+            skipStartupTypeset: true,
+            messageStyle: "none",
+            showMathMenu: false,
+            "SVG": {
+              font: "Latin-Modern"
+            }
           });
+          MathJax.Hub.Queue(['Reprocess', MathJax.Hub, element[0]]);
         });
       }
     };

@@ -1,4 +1,8 @@
-define(['angular', 'underscore'], function(angular, _) {
+'use strict';
+define(function(require) {
+  var angular = require("angular");
+  var _ = require("underscore");
+
   var dependencies = ['ngResource'];
 
   var WorkspaceResource = function($q, $resource, $filter, $rootScope, MCDAPataviService) {

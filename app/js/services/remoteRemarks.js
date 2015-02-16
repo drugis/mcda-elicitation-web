@@ -1,5 +1,7 @@
 'use strict';
-define(['angular'], function(angular) {
+define(function(require) {
+  var angular = require("angular");
+
   var dependencies = ['ngResource'];
 
   var RemarksResource = function($resource) {
@@ -8,5 +10,6 @@ define(['angular'], function(angular) {
       workspaceId: '@workspaceId'
     });
   };
+
   return angular.module('elicit.remoteRemarks', dependencies).factory('Remarks', RemarksResource);
 });

@@ -1,121 +1,118 @@
 'use strict';
-define(
-  ['angular',
-   'require',
-   'underscore',
-   'mcda/config',
-   'mmfoundation',
-   'angular-ui-router',
-   'mcda/services/remarks',
-   'mcda/services/routeFactory',
-   'mcda/services/workspaceResource',
-   'mcda/services/scenarioResource',
-   'mcda/services/taskDependencies',
-   'mcda/services/errorHandling',
-   'mcda/services/hashCodeService',
-   'mcda/services/pataviService',
-   'mcda/services/partialValueFunction',
-   'mcda/services/util',
-   'mcda/services/scaleRangeService',
-   'mcda/controllers',
-   'mcda/directives'
-  ],
-  function(angular, require, _, Config) {
-    var dependencies = [
-      'ui.router',
-      'mm.foundation',
-      'elicit.scaleRangeService',
-      'elicit.remarks',
-      'elicit.workspaceResource',
-      'elicit.scenarioResource',
-      'elicit.util',
-      'elicit.directives',
-      'elicit.pataviService',
-      'elicit.controllers',
-      'elicit.taskDependencies',
-      'elicit.errorHandling',
-      'elicit.routeFactory',
-      'elicit.pvfService'
-    ];
-    var app = angular.module('elicit', dependencies);
-    app.constant('Tasks', Config.tasks);
+define(function(require) {
+  var angular = require("angular");
+  var _ = require("underscore");
+  var Config = require("mcda/config");
 
-    // Detect our location so we can get the templates from the correct place
-    app.constant('mcdaRootPath', (function() {
-      var scripts = document.getElementsByTagName('script');
-      var pattern = /js\/mcda-web.js$/;
-      for (var i = 0; i < scripts.length; ++i) {
-        if ((scripts[i].src || '').match(pattern)) {
-          return scripts[i].src.replace(pattern, '');
-        }
+
+  require('mmfoundation');
+  require('angular-ui-router');
+  require('angular-resource');
+  require('mcda/services/remarks');
+  require('mcda/services/routeFactory');
+  require('mcda/services/workspaceResource');
+  require('mcda/services/scenarioResource');
+  require('mcda/services/taskDependencies');
+  require('mcda/services/errorHandling');
+  require('mcda/services/hashCodeService');
+  require('mcda/services/pataviService');
+  require('mcda/services/partialValueFunction');
+  require('mcda/services/util');
+  require('mcda/services/scaleRangeService');
+  require('mcda/controllers');
+  require('mcda/directives');
+
+  var dependencies = [
+    'ngResource',
+    'ui.router',
+    'mm.foundation',
+    'elicit.scaleRangeService',
+    'elicit.remarks',
+    'elicit.workspaceResource',
+    'elicit.scenarioResource',
+    'elicit.util',
+    'elicit.directives',
+    'elicit.pataviService',
+    'elicit.controllers',
+    'elicit.taskDependencies',
+    'elicit.errorHandling',
+    'elicit.routeFactory',
+    'elicit.pvfService'
+  ];
+
+  var app = angular.module('elicit', dependencies);
+  app.constant('Tasks', Config.tasks);
+
+  // Detect our location so we can get the templates from the correct place
+  app.constant('mcdaRootPath', (function() {
+    var scripts = document.getElementsByTagName('script');
+    var pattern = /js\/mcda-web.js$/;
+    for (var i = 0; i < scripts.length; ++i) {
+      if ((scripts[i].src || '').match(pattern)) {
+        return scripts[i].src.replace(pattern, '');
       }
-      throw 'Failed to detect location for mcda-web.';
-    })());
+    }
+    throw 'Failed to detect location for mcda-web.';
+  })());
 
-    app.config(
-      ['mcdaRootPath', 'Tasks', '$stateProvider', '$urlRouterProvider', '$httpProvider','$compileProvider', 'MCDARouteProvider',
-       function(basePath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider, $compileProvider, MCDARouteProvider) {
-         var baseTemplatePath = basePath + 'views/';
+  app.config(function(mcdaRootPath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider, $compileProvider, MCDARouteProvider) {
+    var baseTemplatePath = mcdaRootPath + 'views/';
 
-         $httpProvider.interceptors.push('ErrorHandling');
+    $httpProvider.interceptors.push('ErrorHandling');
 
-         //ui-router code starts here
-         $stateProvider.state('workspace', {
-           url: '/workspaces/:workspaceId',
-           templateUrl: baseTemplatePath + 'workspace.html',
-           controller: 'WorkspaceController',
-           resolve: {
-             currentWorkspace: [
-               '$stateParams', 'WorkspaceResource',
-               function($stateParams, WorkspaceResource) {
-                 return WorkspaceResource.get($stateParams).$promise;
-               }
-             ]
-           }
-         });
+    //ui-router code starts here
+    $stateProvider.state('workspace', {
+      url: '/workspaces/:workspaceId',
+      templateUrl: baseTemplatePath + 'workspace.html',
+      controller: 'WorkspaceController',
+      resolve: {
+        currentWorkspace: [
+          '$stateParams', 'WorkspaceResource',
+          function($stateParams, WorkspaceResource) {
+            return WorkspaceResource.get($stateParams).$promise;
+          }
+        ]
+      }
+    });
 
-         MCDARouteProvider.buildRoutes($stateProvider, 'workspace', baseTemplatePath);
+    MCDARouteProvider.buildRoutes($stateProvider, 'workspace', baseTemplatePath);
 
-         // Default route
-         $stateProvider.state('choose-problem', {
-           url: '/choose-problem',
-           templateUrl: baseTemplatePath + 'chooseProblem.html',
-           controller: 'ChooseProblemController'
-         });
+    // Default route
+    $stateProvider.state('choose-problem', {
+      url: '/choose-problem',
+      templateUrl: baseTemplatePath + 'chooseProblem.html',
+      controller: 'ChooseProblemController'
+    });
 
-         $compileProvider.debugInfoEnabled(false);
-         $urlRouterProvider.otherwise('/choose-problem');
-       }
-      ]);
+    $compileProvider.debugInfoEnabled(false);
+    $urlRouterProvider.otherwise('/choose-problem');
+  });
 
-    app.run(['$rootScope', '$window', '$http', function($rootScope, $window, $http) {
-      var csrfToken = $window.config._csrf_token;
-      var csrfHeader = $window.config._csrf_header;
+  app.run(function($rootScope, $window, $http) {
+    var csrfToken = $window.config._csrf_token;
+    var csrfHeader = $window.config._csrf_header;
 
-      $http.defaults.headers.common[csrfHeader] = csrfToken;
+    $http.defaults.headers.common[csrfHeader] = csrfToken;
 
-      $rootScope.$safeApply = function($scope, fn) {
-        var phase = $scope.$root.$$phase;
-        if (phase === '$apply' || phase === '$digest') {
-          this.$eval(fn);
-        } else {
-          this.$apply(fn);
-        }
-      };
+    $rootScope.$safeApply = function($scope, fn) {
+      var phase = $scope.$root.$$phase;
+      if (phase === '$apply' || phase === '$digest') {
+        this.$eval(fn);
+      } else {
+        this.$apply(fn);
+      }
+    };
 
-      $rootScope.$on('error', function(e, message) {
-        $rootScope.$safeApply($rootScope, function() {
-          $rootScope.error = _.extend(message, {
-            close: function() {
-              delete $rootScope.error;
-            }
-          });
+    $rootScope.$on('error', function(e, message) {
+      $rootScope.$safeApply($rootScope, function() {
+        $rootScope.error = _.extend(message, {
+          close: function() {
+            delete $rootScope.error;
+          }
         });
       });
-
-    }]);
-
-
-
-    return app;
+    });
   });
+
+  return app;
+});

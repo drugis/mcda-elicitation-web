@@ -1,5 +1,5 @@
 'use strict';
-define([], function() {
+define(function(require) {
   var tasks = {
     'available': [{
       id: 'overview',

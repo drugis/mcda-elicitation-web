@@ -1,5 +1,7 @@
-'use strict';
-define(['angular', 'underscore'], function(angular, _) {
+define(function(require) {
+  var angular = require("angular");
+  var _ = require("underscore");
+
   return angular.module('elicit.pvfService', []).factory('PartialValueFunction', function() {
 
     var findIndexOfFirstLargerElement = function(arr, val) {

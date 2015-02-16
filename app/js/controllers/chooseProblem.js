@@ -1,5 +1,8 @@
 'use strict';
-define(['angular', 'underscore'], function(angular, _) {
+define(function(require) {
+  var angular = require("angular");
+  var _ = require("underscore");
+
   var dependencies = ['$scope', '$state', '$resource', 'WorkspaceResource'];
   var ChooseProblemController = function($scope, $state, $resource, WorkspaceResource) {
     var examplesResource = $resource('examples/:url', {
