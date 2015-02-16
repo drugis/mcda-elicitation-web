@@ -59,7 +59,7 @@ define(function(require) {
       requires: ['scale-range', 'partial-value-function'],
       resets: []
     }, {
-      id: 'effectsTable',
+      id: 'effects-table',
       title: 'Effects table',
       controller: 'EffectsTableController',
       templateUrl: 'effectsTable.html',
