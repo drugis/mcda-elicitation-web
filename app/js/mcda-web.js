@@ -55,7 +55,7 @@ define(function(require) {
     throw 'Failed to detect location for mcda-web.';
   })());
 
-  app.config(function(mcdaRootPath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider, $compileProvider, MCDARouteProvider) {
+  app.config(function(mcdaRootPath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider, MCDARouteProvider) {
     var baseTemplatePath = mcdaRootPath + 'views/';
 
     $httpProvider.interceptors.push('ErrorHandling');
@@ -66,13 +66,9 @@ define(function(require) {
       templateUrl: baseTemplatePath + 'workspace.html',
       controller: 'WorkspaceController',
       resolve: {
-        currentWorkspace: [
-          '$stateParams', 'WorkspaceResource',
-          function($stateParams, WorkspaceResource) {
-            return WorkspaceResource.get($stateParams).$promise;
-          }
-        ]
-      }
+        currentWorkspace: function($stateParams, WorkspaceResource) {
+          return WorkspaceResource.get($stateParams).$promise;
+        }}
     });
 
     MCDARouteProvider.buildRoutes($stateProvider, 'workspace', baseTemplatePath);
@@ -84,7 +80,6 @@ define(function(require) {
       controller: 'ChooseProblemController'
     });
 
-    $compileProvider.debugInfoEnabled(false);
     $urlRouterProvider.otherwise('/choose-problem');
   });
 

@@ -33,7 +33,10 @@ require.config({
 
 define(function (require) {
   var angular = require("angular");
-  require("mcda/mcda-web");
+  var app = require("mcda/mcda-web");
 
-  angular.bootstrap(document, ['elicit']);
+  var $html = angular.element(document.getElementsByTagName('html')[0]);
+  angular.element().ready(function() {
+    angular.bootstrap(document, ['elicit']);
+  });
 });

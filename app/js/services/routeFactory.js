@@ -7,10 +7,8 @@ define(function(require) {
   var dependencies = [];
 
   var MCDARouteProvider = function() {
-
     return {
       buildRoutes: function($stateProvider, parentState, baseTemplatePath) {
-
         $stateProvider.state(parentState + '.scenario', {
           url: '/scenarios/:id',
           templateUrl: baseTemplatePath + 'scenario.html',
