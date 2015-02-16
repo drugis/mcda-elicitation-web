@@ -286,8 +286,7 @@ app.post("/workspaces/:id/scenarios/:id", function(req, res) {
     if(err) {
       return console.error('error fetching remarks from pool', err);
     }
-    console.log(req.body)
-    client.query('UPDATE scenario SET state = $1 WHERE id = $2', [{ problem: req.body.state.problem }, req.body.id], function(err, result) {
+    client.query('UPDATE scenario SET state = $1, title = $2 WHERE id = $3', [{ problem: req.body.state.problem }, req.body.title, req.body.id], function(err, result) {
       done();
       if(err) {
         return console.error('error running query', err);
