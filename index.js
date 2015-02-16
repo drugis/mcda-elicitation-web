@@ -144,7 +144,7 @@ app.post("/workspaces", function(req, res) {
         return console.error('error running query', err);
       }
       var workspaceId = result.rows[0].id;
-      client.query('INSERT INTO remarks (workspaceid, remarks) VALUES ($1, $2)', [workspaceId, ''], function(err, result) {
+      client.query('INSERT INTO remarks (workspaceid, remarks) VALUES ($1, $2)', [workspaceId, {}], function(err, result) {
         if(err) {  
         done();
           return console.error('error running query', err);
@@ -225,7 +225,7 @@ app.get("/workspaces/:id/remarks", function(req, res) {
     if(err) {
       return console.error('error fetching remarks from pool', err);
     }
-    client.query('SELECT workspaceid AS "workspaceId", remarks FROM remarks WHERE workspaceid = $1', [req.params.id], function(err, result) {
+    client.query('SELECT workspaceid AS "workspaceId", remarks::json FROM remarks WHERE workspaceid = $1', [req.params.id], function(err, result) {
       done();
       if(err) {
         return console.error('error running query', err);
@@ -240,7 +240,24 @@ app.post("/workspaces/:id/remarks", function(req, res) {
     if(err) {
       return console.error('error fetching remarks from pool', err);
     }
+    console.log(req.body.remarks)
     client.query('UPDATE remarks SET remarks = $1 WHERE workspaceid = $2', [req.body.remarks, req.params.id], function(err, result) {
+      done();
+      if(err) {
+        return console.error('error running query', err);
+      }
+      res.send(result.rows[0]);
+    });
+  });
+});
+
+app.post("/workspaces/:id", function(req, res) {
+  pg.connect(conf.pgConStr, function(err, client, done) {
+    if(err) {
+      return console.error('error fetching remarks from pool', err);
+    }
+    console.log(req.body.problem);
+    client.query('UPDATE workspace SET title = $1, problem = $2 WHERE id = $3 ', [req.body.problem.title, req.body.problem, req.params.id], function(err, result) {
       done();
       if(err) {
         return console.error('error running query', err);
