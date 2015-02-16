@@ -6,7 +6,7 @@ define(['underscore', 'angular'], function(_, angular) {
 
     return function(scaleRanges) {
       if (!scaleRanges) {
-        return [Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY];
+        return [-Infinity, +Infinity];
       }
       return [
         Math.min.apply(null, _.map(_.values(scaleRanges), function(alt) {

@@ -29,6 +29,13 @@ define(
         return effectsTable;
       }
 
+      $scope.isExact = function(criterion, alternative) {
+        var perf = _.find($scope.problem.performanceTable, function(performance) {
+          return performance.alternative === alternative && performance.criterion === criterion;
+        });
+        return perf.performance.type === "exact";
+      };
+
       $scope.problem = $scope.workspace.problem;
       $scope.effectsTableData = buildEffectsTableData($scope.problem, $scope.valueTree);
       $scope.nrAlternatives = _.keys($scope.problem.alternatives).length;
