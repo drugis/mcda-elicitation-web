@@ -13,11 +13,11 @@ define([], function() {
 
     $scope.editTitle = function() {
       $scope.isEditTitleVisible = true;
-      $scope.workspaceTitle = $scope.workspace.title;
+      $scope.workspace.title = $scope.workspace.problem.title;
     };
 
     $scope.saveTitle = function() {
-      $scope.workspace.title = $scope.workspaceTitle;
+      $scope.workspace.problem.title = $scope.workspace.title;
       $scope.workspace.$save();
       $scope.isEditTitleVisible = false;
     };

@@ -256,7 +256,6 @@ app.post("/workspaces/:id", function(req, res) {
     if(err) {
       return console.error('error fetching remarks from pool', err);
     }
-    console.log(req.body.problem);
     client.query('UPDATE workspace SET title = $1, problem = $2 WHERE id = $3 ', [req.body.problem.title, req.body.problem, req.params.id], function(err, result) {
       done();
       if(err) {
