@@ -266,6 +266,21 @@ app.post("/workspaces/:id", function(req, res) {
   });
 });
 
+app.post("/workspaces/:id/scenarios", function(req, res) {
+  pg.connect(conf.pgConStr, function(err, client, done) {
+    if(err) {
+      return console.error('error fetching remarks from pool', err);
+    }
+    client.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3) RETURNING id', [req.params.id, req.body.title, { problem: req.body.state.problem }], function(err, result) {
+      done();
+      if(err) {
+        return console.error('error running query', err);
+      }
+      res.send(result.rows[0]);
+    });
+  });
+});
+
 //FIXME: should not be needed?
 app.get("/main.js", function(req, res, next) { 
   res.sendfile(__dirname + '/app/js/main.js');
