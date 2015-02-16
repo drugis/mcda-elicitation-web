@@ -40,7 +40,7 @@
       <table id="ranktable">
         <thead>
           <tr>
-            <th></th>
+            <th><heat-legend></heat-legend></th>
             <th ng-repeat="alternative in currentStep.problem.alternatives">Rank {{::$index + 1}}</th>
           </tr>
         </thead>
@@ -96,7 +96,7 @@
         <thead>
           <tr>
             <th>Alternative</th>
-            <th>Confidence</th>
+            <th>Confidence <heat-legend></heat-legend></th>
             <th ng-repeat="criterion in currentStep.problem.criteria">{{criterion.title}}</th>
           </tr>
         </thead>

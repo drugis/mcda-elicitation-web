@@ -300,6 +300,22 @@ define(function(require) {
     };
   });
 
+  directives.directive('heatLegend', function() {
+    return {
+      link: function(scope, element) {
+        var color = d3.scale.quantile().range(d3.range(9)).domain([1, 0]);
+        var style = "display: inline-block; text-align: center; height: 2.5em; width: 2.5em; padding: 5px; line-height: 1.9em; margin: 1px;";
+
+        var block = function(val) {
+          var col = 'q' + color(val) + '-9';
+          return '<div style="'+ style +'" class="' + col + '">'+ val + '</div>';
+        };
+
+        scope.heat = '<div class="RdYlGn">' + block(0.0) + block(0.25) +  block(0.75) + block(1.0) + '</div>';
+      },
+      template: '<a tooltip-html-unsafe="{{heat}}" tooltip-animation="false" class="tiny-icon" style="cursor: help"><i class="fa fa-lg fa-question"></i></a>'
+    };
+  });
 
   directives.directive('fileReader', function() {
     return {
@@ -477,7 +493,7 @@ define(function(require) {
               return crit[0] + ' & \\geq & ' + crit[1] + '\\\\';
             } else {
               return '';
-            };
+            }
           });
 
           var ratios  = _.map(newValue, function(pref) {
