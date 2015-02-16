@@ -35,8 +35,5 @@ define(function (require) {
   var angular = require("angular");
   var app = require("mcda/mcda-web");
 
-  var $html = angular.element(document.getElementsByTagName('html')[0]);
-  angular.element().ready(function() {
-    angular.bootstrap(document, ['elicit']);
-  });
+  angular.bootstrap(document, ['elicit']);
 });
