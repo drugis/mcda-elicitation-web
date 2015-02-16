@@ -144,24 +144,30 @@ app.post("/workspaces", function(req, res) {
         return console.error('error running query', err);
       }
       var workspaceId = result.rows[0].id;
-      client.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3) RETURNING id', [workspaceId, 'Default', { problem: req.body.problem }], function(err, result) {
+      client.query('INSERT INTO remarks (workspaceid, remarks) VALUES ($1, $2)', [workspaceId, ''], function(err, result) {
         if(err) {  
         done();
           return console.error('error running query', err);
         }
-        var scenarioId = result.rows[0].id;
-        client.query('UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2', [scenarioId, workspaceId], function(err, result) {
-          if(err) {
-            done();
+        client.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3) RETURNING id', [workspaceId, 'Default', { problem: req.body.problem }], function(err, result) {
+          if(err) {  
+          done();
             return console.error('error running query', err);
           }
-          client.query('SELECT id, owner, problem::json, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [workspaceId], function(err, result) {
+          var scenarioId = result.rows[0].id;
+          client.query('UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2', [scenarioId, workspaceId], function(err, result) {
             if(err) {
               done();
               return console.error('error running query', err);
             }
-            done();
-            res.send(result.rows[0]);
+            client.query('SELECT id, owner, problem::json, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [workspaceId], function(err, result) {
+              if(err) {
+                done();
+                return console.error('error running query', err);
+              }
+              done();
+              res.send(result.rows[0]);
+            });
           });
         });
       });
@@ -230,7 +236,18 @@ app.get("/workspaces/:id/remarks", function(req, res) {
 });
 
 app.post("/workspaces/:id/remarks", function(req, res) {
-  console.log('yo');
+  pg.connect(conf.pgConStr, function(err, client, done) {
+    if(err) {
+      return console.error('error fetching remarks from pool', err);
+    }
+    client.query('UPDATE remarks SET remarks = $1 WHERE workspaceid = $2', [req.body.remarks, req.params.id], function(err, result) {
+      done();
+      if(err) {
+        return console.error('error running query', err);
+      }
+      res.send(result.rows[0]);
+    });
+  });
 });
 
 //FIXME: should not be needed?
