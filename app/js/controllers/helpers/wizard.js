@@ -3,8 +3,7 @@ define(function(require) {
   var angular = require("angular");
   var _ = require("underscore");
 
-  return ['$rootScope', '$scope', 'handler', 'MCDAPataviService', function($rootScope, $scope, handler, MCDAPataviService) {
-
+  return function($rootScope, $scope, handler, MCDAPataviService) {
     var calculateIntermediateResults = function(state, standardizeFn) {
       var prefs = standardizeFn(state.prefs);
 
@@ -101,6 +100,5 @@ define(function(require) {
       $scope.currentStep = previousStep;
       return true;
     };
-
-  }];
+  };
 });

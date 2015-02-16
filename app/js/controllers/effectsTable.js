@@ -2,9 +2,8 @@
 define(function(require) {
   var angular = require("angular");
   var _ = require("underscore");
-  var dependencies = ['$scope', '$stateParams', 'taskDefinition', 'RemarksResource', 'ValueTreeUtil'];
 
-  var EffectsTableController = function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil) {
+  return function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil) {
 
     var remarksCache;
     $scope.scales = $scope.workspace.$$scales.observed;
@@ -64,6 +63,4 @@ define(function(require) {
     };
 
   };
-
-  return dependencies.concat(EffectsTableController);
 });

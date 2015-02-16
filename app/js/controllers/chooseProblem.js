@@ -3,8 +3,7 @@ define(function(require) {
   var angular = require("angular");
   var _ = require("underscore");
 
-  var dependencies = ['$scope', '$state', '$resource', 'WorkspaceResource'];
-  var ChooseProblemController = function($scope, $state, $resource, WorkspaceResource) {
+  return function($scope, $state, $resource, WorkspaceResource) {
     var examplesResource = $resource('examples/:url', {
       url: '@url'
     });
@@ -46,7 +45,4 @@ define(function(require) {
 
     $scope.chooseProblemModal = {};
   };
-
-  return dependencies.concat(ChooseProblemController);
-
 });

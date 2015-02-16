@@ -3,9 +3,7 @@ define(function(require) {
   var angular = require("angular");
   var _ = require("underscore");
 
-  var dependencies = ['$scope', '$filter', '$location', '$anchorScroll', 'PartialValueFunction', 'Tasks', 'TaskDependencies', 'intervalHull', 'taskDefinition'];
-
-  var PreferencesController = function($scope, $filter, $location, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition) {
+  return function($scope, $filter, $location, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition) {
     var state = taskDefinition.clean($scope.scenario.state);
 
     $scope.$parent.taskId = taskDefinition.id;
@@ -119,6 +117,4 @@ define(function(require) {
     });
 
   };
-
-  return dependencies.concat(PreferencesController);
 });
