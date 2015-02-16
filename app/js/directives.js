@@ -29,16 +29,16 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         return $filter('number')((from + (step / steps) * delta));
       };
 
-      function valueToStep(value) {
+      var valueToStep = function(value) {
         return $filter('number')(((value - from) / delta * steps));
-      }
+      };
 
-      function getModelValue() {
+      var getModelValue = function() {
         return type === 'point' ? valueToStep(scope.model) :
           valueToStep(scope.model.lower) + ';' + valueToStep(scope.model.upper);
-      }
+      };
 
-      function getValueModel(value) {
+      var getValueModel = function(value) {
         if (type === 'point') {
           return parseFloat(stepToValue(value));
         } else {
@@ -49,7 +49,8 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
             upper: values[1]
           };
         }
-      }
+      };
+
       require(['jquery-slider'], function() {
         $($element).empty();
         $($element).append('<input type="slider"></input>');
@@ -100,9 +101,9 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
     };
   });
 
-  function parsePx(str) {
+  var parsePx = function(str) {
     return parseInt(str.replace(/px/gi, ''));
-  }
+  };
 
   var getParentDimension = function(element) {
     var width = parsePx($(element[0].parentNode).css('width'));
