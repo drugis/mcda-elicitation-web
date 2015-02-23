@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html ng-app="temp">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width">
+<link rel="shortcut icon" href="/bower_components/mcda-web/app/img/favicon.ico" type="image/x-icon">
+
+<title>mcda.drugis.org is cool</title>
+
+  <link rel="stylesheet" type="text/css" href="/bower_components/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" type="text/css" href="/bower_components/nprogress/nprogress.css">
+  <link rel="stylesheet" type="text/css" href="/bower_components/jslider/dist/jquery.slider.min.css">
+  <link rel="stylesheet" type="text/css" href="/bower_components/nvd3/src/nv.d3.css">
+
+  <link rel="stylesheet" type="text/css" href="app/css/mcda-drugis.css">
+
+  <script src="/bower_components/requirejs/require.js" data-main="main.js"></script>
+
+</head>
+
+<body>
+
+  <form method="POST" action="/signout" id="signout_form">
+    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
+  </form>
+  
+  <nav class="top-bar" data-topbar>
+    <ul class="title-area">
+      <li class="name">
+        <h1>
+          <a href="#">mcda.drugis.org</a>
+        </h1>
+      </li>
+    </ul>
+
+    <section class="top-bar-section">
+      <!-- Right Nav Section -->
+      <ul class="right">
+        <li>
+          <a href="/logout">Sign out</a>
+        </li>
+        <li class="has-dropdown"><a href="#"><i class="fa fa-user fa-fw"></i>{{user.firstname}} {{user.lastname}}</a>
+          <ul class="dropdown">
+            <li>
+              <a href="#" onClick="signout()">Sign out</a>
+            </li>
+          </ul></li>
+      </ul>
+    </section>
+  </nav>
+  <section>
+    <div class="color-stripe"></div>
+  </section>
+
+  <div class="row">
+    <div class="columns">
+      <alert type="info">
+        <strong>404</strong> Page not found
+      </alert>
+    </div>
+  </div>
+
+</body>
+</html>

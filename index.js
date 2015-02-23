@@ -325,6 +325,11 @@ app.get("/main.js", function(req, res, next) {
   res.sendfile(__dirname + '/app/js/main.js');
 });
 
+//The 404 Route (ALWAYS Keep this as the last route)
+app.get('*', function(req, res){
+  res.status(404).sendfile(__dirname + '/public/error.html');
+});
+
 app.listen(8080);
 
 module.exports = app;
