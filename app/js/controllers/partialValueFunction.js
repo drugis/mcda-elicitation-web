@@ -131,7 +131,7 @@ define(function(require) {
     var isValid = function(state) {
       switch(state.type) {
       case 'elicit type':
-        return state.choice.pvf.type  && state.choice.pvf.type;
+        return state.choice.pvf.type  && state.choice.pvf.direction;
       case 'bisection':
         return true;
       default:
