@@ -13,6 +13,9 @@ define(function(require) {
 
     var initialize = function(state) {
       var criterion = angular.copy(scenario.state.problem.criteria[criterionId]);
+      // set defaults
+      criterion.pvf.direction = "decreasing";
+      criterion.pvf.type = "linear";
 
       var initial = {
         ref: 0,
@@ -125,6 +128,17 @@ define(function(require) {
       }
     };
 
+    var isValid = function(state) {
+      switch(state.type) {
+      case 'elicit type':
+        return state.choice.pvf.type  && state.choice.pvf.direction;
+      case 'bisection':
+        return true;
+      default:
+        return false;
+      }
+    };
+
     $scope.getXY = _.memoize(function(criterion) {
       return PartialValueFunction.getXY(standardizeCriterion(criterion));
     }, function(criterion) { // hash
@@ -139,7 +153,7 @@ define(function(require) {
       $scope: $scope,
       handler: {
         fields: ['type', 'choice','bisections', 'ref'],
-        validChoice: function() { return true; },
+        validChoice: isValid,
         hasIntermediateResults: false,
         nextState: nextState,
         initialize: _.partial(initialize, taskDefinition.clean($scope.scenario.state)),
