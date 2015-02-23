@@ -105,7 +105,7 @@ function requireUserIsOwner(req, res, next) {
         return console.error('error running query', err);
       }
       if (!req.user || result.rows[0].owner != req.user.id) {
-        res.status(403).sendfile(__dirname + '/public/403error.html');
+        res.status(403).send({"code":403,"message":"Access to resource not authorised"});
       } else {
         next();
       }
@@ -140,10 +140,6 @@ app.get("/signin", function(req, res, next) {
 
 app.get("/index", function(req, res, next) {
   res.sendfile(__dirname + '/public/index.html');
-});
-
-app.get("/error", function(req, res, next) {
-  return console.error('helemaal niks!');
 });
 
 app.get("/workspaces", function(req, res) {
