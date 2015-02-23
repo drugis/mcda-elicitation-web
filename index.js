@@ -99,6 +99,22 @@ app.use(function (req, res, next) {
   if (req.user) {
     res.cookie('LOGGED-IN-USER', JSON.stringify(req.user));
   }
+  if (req.body.state != undefined) {
+    pg.connect(conf.pgConStr, function(err, client, done) {
+      if(err) {
+        return console.error('error fetching client from pool', err);
+      }
+      client.query('SELECT owner FROM workspace WHERE id = $1', [req.body.workspaceId], function(err, result) {
+        done();
+        if(err) {
+          return console.error('error running query', err);
+        }
+        if ( result.rows[0].owner != req.user.id ) {
+          res.redirect('/error');
+        }
+      });
+    });
+  }
   next();
 });
 
@@ -116,6 +132,11 @@ app.get("/signin", function(req, res, next) {
 
 app.get("/index", function(req, res, next) {
   res.sendfile(__dirname + '/public/index.html');
+});
+
+
+app.get("/error", function(req, res, next) {
+  return console.error('helemaal niks!');
 });
 
 app.get("/workspaces", function(req, res) {
