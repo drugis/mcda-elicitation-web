@@ -32,7 +32,6 @@ everyauth.google
     var user = this.Promise();
     pg.connect(conf.pgConStr, function(error, client, done) {
       if (error) return console.error("Error fetching client from pool", error);
-
       client.query("SELECT id, username, firstName, lastName FROM UserConnection LEFT JOIN Account ON UserConnection.userid = Account.username WHERE providerUserId = $1 AND providerId = 'google'", [googleUser.id], function(error, result) {
         if (error) {
           done();
@@ -184,7 +183,7 @@ app.post("/workspaces", function(req, res) {
               done();
               return console.error('error running query', err);
             }
-            client.query('SELECT id, owner, problem::json, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [workspaceId], function(err, result) {
+            client.query('SELECT id, owner, problem, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [workspaceId], function(err, result) {
               if(err) {
                 done();
                 return console.error('error running query', err);
@@ -204,7 +203,7 @@ app.get("/workspaces/:id", function(req, res) {
     if(err) {
       return console.error('error fetching workspace from pool', err);
     }
-    client.query('SELECT id, owner, problem::json, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
+    client.query('SELECT id, owner, problem, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
       done();
       if(err) {
         return console.error('error running query', err);
@@ -219,7 +218,7 @@ app.get("/workspaces/:id/scenarios", function(req, res) {
     if(err) {
       return console.error('error fetching workspace from pool', err);
     }
-    client.query('SELECT id, title, state::json, workspace AS "workspaceId" FROM scenario WHERE workspace = $1', [req.params.id], function(err, result) {
+    client.query('SELECT id, title, state, workspace AS "workspaceId" FROM scenario WHERE workspace = $1', [req.params.id], function(err, result) {
       done();
       if(err) {
         return console.error('error running query', err);
@@ -234,7 +233,7 @@ app.get("/workspaces/:id/scenarios/:id", function(req, res) {
     if(err) {
       return console.error('error fetching workspace from pool', err);
     }
-    client.query('SELECT id, title, state::json, workspace AS "workspaceId" FROM scenario WHERE id = $1', [req.params.id], function(err, result) {
+    client.query('SELECT id, title, state, workspace AS "workspaceId" FROM scenario WHERE id = $1', [req.params.id], function(err, result) {
       done();
       if(err) {
         return console.error('error running query', err);
@@ -249,7 +248,7 @@ app.get("/workspaces/:id/remarks", function(req, res) {
     if(err) {
       return console.error('error fetching remarks from pool', err);
     }
-    client.query('SELECT workspaceid AS "workspaceId", remarks::json FROM remarks WHERE workspaceid = $1', [req.params.id], function(err, result) {
+    client.query('SELECT workspaceid AS "workspaceId", remarks FROM remarks WHERE workspaceid = $1', [req.params.id], function(err, result) {
       done();
       if(err) {
         return console.error('error running query', err);

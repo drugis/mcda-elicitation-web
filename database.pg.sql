@@ -28,7 +28,7 @@ create table Account (id SERIAL NOT NULL,
 create table Workspace (id SERIAL NOT NULL,
             owner int,
             title varchar not null,
-            problem TEXT not null,
+            problem json not null,
             defaultScenarioId int,
             primary key (id),
             FOREIGN KEY(owner) REFERENCES Account(id));
@@ -36,7 +36,7 @@ create table Workspace (id SERIAL NOT NULL,
 create table Scenario (id SERIAL NOT NULL,
             workspace int,
             title varchar not null,
-            state TEXT not null,
+            state json not null,
             primary key (id),
             FOREIGN KEY(workspace) REFERENCES Workspace(id));
 
@@ -55,6 +55,6 @@ CREATE TABLE AccountRoles (
 -- changeset reidd:5
 CREATE TABLE Remarks (
   workspaceId INT NOT NULL,
-  remarks VARCHAR NOT NULL,
+  remarks json NOT NULL,
   PRIMARY KEY (workspaceId),
   FOREIGN KEY(workspaceId) REFERENCES Workspace(id));
