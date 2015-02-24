@@ -1,0 +1,166 @@
+{
+  "title": "Regorafenib - Initial marketing authorization application",
+  "description": "The indication sought for regorafenib was the treatment of adult patients with metastatic colorectal cancer (mCRC) \nwho have been previously treated with, or are not considered candidates for, available therapies. Data in support \nof this indication were mainly obtained from one pivotal randomized, double-blind, placebo-controlled trial \ncomparing regorafenib plus best supportive care (BSC) versus placebo plus BSC in patients with mCRC who have \nprogressed after standard therapy. A detailed description of the design of this phase III study can be found in \nthe EPAR of this product (EPAR EMA/CHMP/403683/2013 available from the EMA website).",
+  "criteria": {
+    "OS": {
+      "title": "Overall survival",
+      "description": "Median overall survival time",
+      "unitOfMeasurement": "Months",
+      "scale": [0, null],
+      "pvf": {
+        "range": [4,8],
+        "type": "linear",
+        "direction": "increasing"
+      }
+    },
+    "HFSR": {
+      "title": "Hand-foot skin reaction",
+      "description": "Incidence of grade 3 events",
+      "unitOfMeasurement": "%",
+      "scale": [0,100],
+      "pvf": {
+        "range": [0,20],
+        "type": "linear",
+        "direction": "decreasing"
+      }
+    },
+    "Hypertension": {
+      "title": "Hypertension",
+      "description": "Incidence of grade 3 events",
+      "unitOfMeasurement": "%",
+      "scale": [0, 100],
+      "pvf": {
+        "range": [0,10],
+        "type": "linear",
+        "direction": "decreasing"
+      }
+    },
+    "Haemorrhage": {
+      "title": "Haemorrhage",
+      "description": "Incidence of grade 3-5 events",
+      "unitOfMeasurement": "%",
+      "scale": [0, 100],
+      "pvf": {
+        "range": [0,5],
+        "type": "linear",
+        "direction": "decreasing"
+      }
+    },
+     "Liver": {
+      "title": "Hyperbilirubinaemia",
+      "description": "Incidence",
+      "unitOfMeasurement": "%",
+      "scale": [0, 100],
+      "pvf": {
+        "range": [5,20],
+        "type": "linear",
+        "direction": "decreasing"
+      }
+    }
+  },
+  "valueTree": {
+    "title": "Benefit-risk balance", 
+    "children": [
+      {
+        "title": "Favourable effects",
+        "criteria": [ "OS" ]
+      },
+      {
+        "title": "Unfavourable effects",
+        "criteria": [ "HFSR", "Hypertension", "Haemorrhage", "Liver" ]
+      }
+    ]
+  },
+  "alternatives": {
+    "regorafenib": {
+      "title": "Regorafenib"
+    },
+    "placebo": {
+      "title": "Placebo"
+    }
+  },
+  "performanceTable": [
+  {
+    "alternative": "placebo",
+    "criterion": "OS",
+    "performance": {
+      "type": "exact",
+      "value": 4.96
+    }
+  },
+  {
+    "alternative": "regorafenib",
+    "criterion": "OS",
+    "performance": {
+      "type": "exact",
+      "value": 6.44
+    }
+  },
+    {
+    "alternative": "placebo",
+    "criterion": "HFSR",
+    "performance": {
+      "type": "exact",
+      "value": 0.4
+    }
+  },
+  {
+    "alternative": "regorafenib",
+    "criterion": "HFSR",
+    "performance": {
+      "type": "exact",
+      "value": 16.6
+    }
+  },
+    {
+    "alternative": "placebo",
+    "criterion": "Hypertension",
+    "performance": {
+      "type": "exact",
+      "value": 0.8
+    }
+  },
+  {
+    "alternative": "regorafenib",
+    "criterion": "Hypertension",
+    "performance": {
+      "type": "exact",
+      "value": 7.6
+    }
+  },
+    {
+    "alternative": "placebo",
+    "criterion": "Haemorrhage",
+    "performance": {
+      "type": "exact",
+      "value": 0.8
+    }
+  },
+  {
+    "alternative": "regorafenib",
+    "criterion": "Haemorrhage",
+    "performance": {
+      "type": "exact",
+      "value": 2.0
+    }
+  },
+ 
+  {
+    "alternative": "placebo",
+    "criterion": "Liver",
+    "performance": {
+      "type": "exact",
+      "value": 9.5
+    }
+  },
+  {
+    "alternative": "regorafenib",
+    "criterion": "Liver",
+    "performance": {
+      "type": "exact",
+      "value": 20.0
+    }
+  }
+  ],
+  "preferences": {}
+}
