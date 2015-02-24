@@ -54,7 +54,6 @@ everyauth.google
                     return user.fail(error);
                   }
                   var row = result.rows[0];
-                  console.log("created user", row);
                   user.fulfill({
                     "id": row.id,
                     "username": googleUser.id,
@@ -263,7 +262,6 @@ app.post("/workspaces/:id/remarks", function(req, res) {
     if(err) {
       return console.error('error fetching remarks from pool', err);
     }
-    console.log(req.body.remarks)
     client.query('UPDATE remarks SET remarks = $1 WHERE workspaceid = $2', [req.body.remarks, req.params.id], function(err, result) {
       done();
       if(err) {
