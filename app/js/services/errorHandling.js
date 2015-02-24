@@ -1,10 +1,11 @@
-'use strict';
-define(['angular'], function(angular) {
+define(function(require) {
+  var angular = require("angular");
+
 	var ErrorHandling = function($q, $rootScope) {
 		return {
 			'responseError': function(rejection) {
 				var data, message;
-				if (rejection && rejection.data && rejection.data != "") {
+				if (rejection && rejection.data && rejection.data !== "") {
 					data = rejection.data;
 					message = {
 						code: data.code,
@@ -22,6 +23,5 @@ define(['angular'], function(angular) {
 		};
 	};
 
-	return angular.module('elicit.errorHandling', []).factory(
-		'ErrorHandling', ErrorHandling);
+	return angular.module('elicit.errorHandling', []).factory('ErrorHandling', ErrorHandling);
 });

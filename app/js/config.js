@@ -1,5 +1,5 @@
 'use strict';
-define([], function() {
+define(function(require) {
   var tasks = {
     'available': [{
       id: 'overview',
@@ -59,7 +59,7 @@ define([], function() {
       requires: ['scale-range', 'partial-value-function'],
       resets: []
     }, {
-      id: 'effectsTable',
+      id: 'effects-table',
       title: 'Effects table',
       controller: 'EffectsTableController',
       templateUrl: 'effectsTable.html',

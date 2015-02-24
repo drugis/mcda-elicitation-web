@@ -81,13 +81,13 @@
     </tbody>
   </table>
 
-    <button ng-if="editMode.isUserOwner"
-            ui-sref="scale-range"
-            tooltip-animation="false"
-            ng-class="{alert: !isSafe['scale-range'].safe}"
-            tooltip="{{isSafe['scale-range'].tooltip}}">
-      Define Scale Ranges
-    </button>
+  <button ng-if="editMode.isUserOwner"
+          ui-sref="scale-range"
+          tooltip-animation="false"
+          ng-class="{alert: !isSafe['scale-range'].safe}"
+          tooltip="{{isSafe['scale-range'].tooltip}}">
+    Define Scale Ranges
+  </button>
 </div>
 
 <div id="partial-value-functions-block" class="prefs-block">
@@ -104,12 +104,12 @@
         </div>
       </div>
 
-        <button ng-if="editMode.isUserOwner"
-                ng-class="{alert: !isSafe['partial-value-function'].safe}"
-                tooltip="{{isSafe['partial-value-function'].tooltip}}"
-                tooltip-animation="false"
-                ng-disabled="!isAccessible(tasks['partial-value-function'], scenario.state).accessible"
-                ui-sref="partial-value-function({criterion: criterion.id})">Define partial value function</button>
+      <button ng-if="editMode.isUserOwner"
+              ng-class="{alert: !isSafe['partial-value-function'].safe}"
+              tooltip="{{isSafe['partial-value-function'].tooltip}}"
+              tooltip-animation="false"
+              ng-disabled="!isAccessible(tasks['partial-value-function'], scenario.state).accessible"
+              ui-sref="partial-value-function({criterion: criterion.id})">Define partial value function</button>
     </li>
   </ul>
 </div>
