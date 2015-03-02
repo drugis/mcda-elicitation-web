@@ -108,7 +108,6 @@ define(function(require) {
         validChoice: validChoice,
         fields: ['prefs', 'total', 'choice', 'criteriaOrder', 'criterionA', 'criterionB'],
         nextState: nextState,
-        hasIntermediateResults: true,
         standardize: _.identity,
         initialize: _.partial(initialize, taskDefinition.clean(currentScenario.state))
       }

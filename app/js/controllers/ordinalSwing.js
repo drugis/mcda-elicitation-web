@@ -130,7 +130,6 @@ define(function(require) {
         fields: ['choice', 'reference', 'choices', 'type', 'standardized'],
         nextState: nextState,
         initialize: _.partial(initialize, taskDefinition.clean(scenario.state)),
-        hasIntermediateResults: true,
         standardize: standardize
       }
     });

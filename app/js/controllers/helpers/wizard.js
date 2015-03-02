@@ -4,41 +4,6 @@ define(function(require) {
   var _ = require("underscore");
 
   return function($rootScope, $scope, handler, MCDAPataviService) {
-    var calculateIntermediateResults = function(state, standardizeFn) {
-      var prefs = standardizeFn(state.prefs);
-
-      state.intermediate = prefs;
-
-      var data = _.extend(state.problem, {
-        "preferences": prefs,
-        "method": "smaa"
-      });
-      var task = MCDAPataviService.run(data);
-
-      var successHandler = function(results) {
-        state.results = results.results;
-      };
-
-      var errorHandler = function(code, error) {
-        var message = {
-          code: (code && code.desc) ? code.desc : code,
-          cause: error
-        };
-        $scope.$root.$broadcast("error", message);
-      };
-
-      var updateHandler = _.throttle(function(update) {
-        var progress = parseInt(update);
-        if (progress > state.progress) {
-          state.progrss = progress;
-        }
-      }, 30);
-
-      state.progress = 0;
-      task.then(successHandler, errorHandler, updateHandler);
-      return state;
-    };
-
     var PERSISTENT_FIELDS = ["problem", "type", "prefs"];
     var previousSteps = [];
     var nextSteps = [];
@@ -47,9 +12,6 @@ define(function(require) {
       var state;
       if (!_.isUndefined(handler.initialize)) {
         state = handler.initialize();
-        if (handler.hasIntermediateResults) {
-          calculateIntermediateResults(state, handler.standardize);
-        }
       }
       return state || {};
     })();
@@ -82,13 +44,12 @@ define(function(require) {
 
       nextStep.previousChoice = choice;
 
+      nextStep.intermediate =  handler.standardize(nextStep.prefs);
+
       $scope.currentStep = nextStep;
 
-      if (handler.hasIntermediateResults) {
-        calculateIntermediateResults($scope.currentStep, handler.standardize);
-      }
 
-      return true;
+     return true;
     };
 
     $scope.previousStep = function() {
