@@ -6,6 +6,7 @@ define(function(require) {
       title: 'Overview',
       controller: 'OverviewController',
       templateUrl: 'overview.html',
+      activeTab: "overview",
       requires: [],
       resets: []
     }, {
@@ -14,7 +15,7 @@ define(function(require) {
       controller: 'ScaleRangeController',
       templateUrl: 'scaleRange.html',
       requires: [],
-      isPreference: true,
+      activeTab: "preferences",
       resets: ['partial-value-function', 'criteria-trade-offs']
     }, {
       id: 'partial-value-function',
@@ -23,7 +24,7 @@ define(function(require) {
       controller: 'PartialValueFunctionController',
       templateUrl: 'partialValueFunction.html',
       requires: ['scale-range'],
-      isPreference: true,
+      activeTab: "preferences",
       resets: ['criteria-trade-offs']
     }, {
       id: 'ordinal-swing',
@@ -31,7 +32,7 @@ define(function(require) {
       controller: 'OrdinalSwingController',
       templateUrl: 'ordinalSwing.html',
       requires: ['partial-value-function'],
-      isPreference: true,
+      activeTab: "preferences",
       resets: ['non-ordinal-preferences']
     }, {
       id: 'interval-swing',
@@ -46,7 +47,7 @@ define(function(require) {
       title: 'Exact Swing Elicitation',
       controller: 'ExactSwingController',
       templateUrl: 'exactSwing.html',
-      isPreference: true,
+      activeTab: "preferences",
       requires: ['complete-criteria-ranking'],
       resets: ['non-ordinal-preferences']
     }, {
@@ -54,6 +55,7 @@ define(function(require) {
       title: 'Preferences',
       controller: 'PreferencesController',
       templateUrl: 'preferences.html',
+      activeTab: "preferences",
       requires: [],
       resets: []
     }, {
@@ -61,6 +63,7 @@ define(function(require) {
       title: 'Results',
       controller: 'ResultsController',
       templateUrl: 'results.html',
+      activeTab: "results",
       requires: ['scale-range', 'partial-value-function'],
       resets: []
     }, {
@@ -68,6 +71,7 @@ define(function(require) {
       title: 'Effects table',
       controller: 'EffectsTableController',
       templateUrl: 'effectsTable.html',
+      activeTab: "effects-table",
       requires: ['scale-range', 'partial-value-function'],
       resets: []
     }]

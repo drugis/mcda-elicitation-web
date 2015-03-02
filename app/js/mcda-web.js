@@ -102,15 +102,13 @@ define(function(require) {
       return _.find(Tasks.available, function(task) { return task.id === taskId; });
     };
 
-    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-      $rootScope.$safeApply($rootScope, function() {
-        var task = getTask(toState.name);
-        if(task && task.isPreference) {
-          $rootScope.taskId = "preferences";
-        } else {
-          $rootScope.taskId = toState.name;
-        }
-      });
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+      var task = getTask(toState.name);
+      if(task && task.activeTab) {
+        $rootScope.activeTab = task.activeTab;
+      } else {
+        $rootScope.activeTab = toState.name;
+      }
     });
 
     $rootScope.$on('error', function(e, message) {
