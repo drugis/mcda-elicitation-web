@@ -6,7 +6,6 @@ define(function(require) {
   return function($scope, $filter, $location, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition) {
     var state = taskDefinition.clean($scope.scenario.state);
 
-    $scope.$parent.taskId = taskDefinition.id;
     $scope.intervalHull = intervalHull;
 
     $scope.scales = $scope.workspace.$$scales;

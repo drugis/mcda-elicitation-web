@@ -83,7 +83,7 @@ define(function(require) {
     $urlRouterProvider.otherwise('/choose-problem');
   });
 
-  app.run(function($rootScope, $window, $http) {
+  app.run(function($rootScope, $window, $http, Tasks) {
     var csrfToken = $window.config._csrf_token;
     var csrfHeader = $window.config._csrf_header;
 
@@ -97,6 +97,21 @@ define(function(require) {
         this.$apply(fn);
       }
     };
+
+    var getTask = function(taskId) {
+      return _.find(Tasks.available, function(task) { return task.id === taskId; });
+    };
+
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+      $rootScope.$safeApply($rootScope, function() {
+        var task = getTask(toState.name);
+        if(task && task.isPreference) {
+          $rootScope.taskId = "preferences";
+        } else {
+          $rootScope.taskId = toState.name;
+        }
+      });
+    });
 
     $rootScope.$on('error', function(e, message) {
       $rootScope.$safeApply($rootScope, function() {

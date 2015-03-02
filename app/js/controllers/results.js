@@ -7,8 +7,6 @@ define(function(require) {
     var alternatives;
     var criteria;
 
-    $scope.$parent.taskId = taskDefinition.id;
-
     var run = function(state) {
       state = angular.copy(state);
       var data = _.extend(state.problem, { 'preferences': state.prefs, 'method': 'smaa' });

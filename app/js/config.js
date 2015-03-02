@@ -14,6 +14,7 @@ define(function(require) {
       controller: 'ScaleRangeController',
       templateUrl: 'scaleRange.html',
       requires: [],
+      isPreference: true,
       resets: ['partial-value-function', 'criteria-trade-offs']
     }, {
       id: 'partial-value-function',
@@ -22,6 +23,7 @@ define(function(require) {
       controller: 'PartialValueFunctionController',
       templateUrl: 'partialValueFunction.html',
       requires: ['scale-range'],
+      isPreference: true,
       resets: ['criteria-trade-offs']
     }, {
       id: 'ordinal-swing',
@@ -29,12 +31,14 @@ define(function(require) {
       controller: 'OrdinalSwingController',
       templateUrl: 'ordinalSwing.html',
       requires: ['partial-value-function'],
+      isPreference: true,
       resets: ['non-ordinal-preferences']
     }, {
       id: 'interval-swing',
       title: 'Interval Swing Elicitation',
       controller: 'IntervalSwingController',
       templateUrl: 'intervalSwing.html',
+      isPreference: true,
       requires: ['complete-criteria-ranking'],
       resets: ['non-ordinal-preferences']
     }, {
@@ -42,6 +46,7 @@ define(function(require) {
       title: 'Exact Swing Elicitation',
       controller: 'ExactSwingController',
       templateUrl: 'exactSwing.html',
+      isPreference: true,
       requires: ['complete-criteria-ranking'],
       resets: ['non-ordinal-preferences']
     }, {

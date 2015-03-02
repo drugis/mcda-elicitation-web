@@ -83,8 +83,7 @@ define(function(require) {
   var completeCriteriaRanking = new PreferenceFilter(
     function(pref) {
       return pref.type === "ordinal";
-    },
-    'complete criteria ranking');
+    }, 'complete criteria ranking');
 
   var TaskDependencies = function() {
     var definitions = {
