@@ -1,6 +1,6 @@
 <div ng-show="currentStep.step <= currentStep.total">
-  <div class="row">
-    <div class="columns large-7">
+  <div class="row" style="min-height: 450px">
+    <div class="columns large-10">
       <h3>{{title(currentStep.step, currentStep.total)}}</h3>
       <h5 class="subheader">Determining the relative importance of:</h5>
       <ul>
@@ -31,8 +31,6 @@
         {{currentStep.problem.criteria[currentStep.criterionB].title}} = {{pvf.worst(currentStep.problem.criteria[currentStep.criterionB]) | number}}
       </p>
     </div>
-
-    <div ng-include="rankProbabilityChartURL"></div>
   </div>
 
   <div class="row">
@@ -47,15 +45,13 @@
 </div>
 
 <div ng-show="currentStep.step > currentStep.total">
-  <div class="row">
-    <div class="columns large-7">
+  <div class="row" style="min-height: 450px">
+    <div class="columns large-10">
       <h3>{{title(currentStep.step, currentStep.total)}}</h3>
       <p>You have given the following trade-offs:</p>
       <trade-offs problem="currentStep.problem" preferences="currentStep.intermediate"></trade-offs>
       <br>
     </div>
-
-    <div ng-include="rankProbabilityChartURL"></div>
   </div>
 
   <div class="row">

@@ -42,7 +42,6 @@ define(function(require) {
     $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree($scope.valueTree, $scope.problem.criteria);
 
     $scope.remarks = {};
-    $scope.$parent.taskId = taskDefinition.id;
     $scope.alternativeVisible = {};
 
     RemarksResource.get(_.omit($stateParams, 'id'), function(remarks) {

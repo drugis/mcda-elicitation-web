@@ -85,9 +85,6 @@ define(function(require) {
     };
 
     $scope.scenarioChanged = function(newScenario) {
-      if (!resultsAccessible($scope.tasks.results, newScenario.state).accessible) {
-        $scope.taskId = 'preferences';
-      }
       $state.go($scope.taskId, {
         workspaceId: $scope.workspace.id,
         id: newScenario.id

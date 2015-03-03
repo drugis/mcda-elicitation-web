@@ -14,17 +14,13 @@ define(function(require) {
           templateUrl: baseTemplatePath + 'scenario.html',
           controller: 'ScenarioController',
           resolve: {
-            currentScenario:
-            ['$stateParams', 'ScenarioResource',
-             function($stateParams, ScenarioResource) {
-               return ScenarioResource.get($stateParams).$promise;
-             }
-            ],
+            currentScenario: function($stateParams, ScenarioResource) {
+              return ScenarioResource.get($stateParams).$promise;
+            } ,
             scenarios:
-            ['$stateParams', 'ScenarioResource',
-             function($stateParams, ScenarioResource) {
-               return ScenarioResource.query(_.omit($stateParams, 'id')).$promise;
-             }]}
+            function($stateParams, ScenarioResource) {
+              return ScenarioResource.query(_.omit($stateParams, 'id')).$promise;
+            }}
         });
 
         angular.forEach(Config.tasks.available, function(task) {
