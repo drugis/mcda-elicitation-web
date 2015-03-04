@@ -1,6 +1,6 @@
 <div ng-show="currentStep.type == 'elicit'">
   <div class="row" style="min-height: 450px">
-    <div class="columns large-10">
+    <div class="columns large-12">
       <h3 ng-bind="currentStep.title"></h3>
       <h5 class="subheader">Given the following situation:</h5>
       <ul class="inline-list">
@@ -31,7 +31,7 @@
 
 <div ng-show="currentStep.type == 'review'">
   <div class="row" style="min-height: 450px">
-    <div class="columns large-10">
+    <div class="columns large-12">
       <h3 ng-bind="currentStep.title"></h3>
       <p>You have given the following trade-offs:</p>
       <trade-offs problem="currentStep.problem" preferences="currentStep.intermediate"></trade-offs>

@@ -32,8 +32,7 @@ define(function(require) {
             controller: task.controller,
             resolve: {
               taskDefinition: function(TaskDependencies) {
-                var def = TaskDependencies.extendTaskDefinition(task);
-                return def;
+                return TaskDependencies.extendTaskDefinition(task);
               }
             }
           });

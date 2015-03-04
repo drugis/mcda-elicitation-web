@@ -29,7 +29,6 @@ require.config({
     'jasmine-html': 'bower_components/jasmine/lib/jasmine-core/jasmine-html',
     'angular-mocks': 'bower_components/angular-mocks/angular-mocks',
     'mmfoundation': 'bower_components/angular-foundation/mm-foundation',
-    'angularanimate': 'bower_components/angular-animate/angular-animate.min',
     'mcda': 'app/js',
     'templates': 'app/partials'
   },
@@ -38,7 +37,6 @@ require.config({
     'angular': { exports : 'angular'},
     'angular-resource': { deps:['angular'], exports: 'angular-resource'},
     'angular-ui-router': { deps: ['angular'], exports: 'angular-ui-router'},
-    'angularanimate': {deps: ['angular']},
     'underscore': { exports : '_'},
     'angular-mocks': { deps: ['angular'], exports: 'angular.mock' },
     'd3': { exports : 'd3'},

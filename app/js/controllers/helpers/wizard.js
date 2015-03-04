@@ -3,7 +3,7 @@ define(function(require) {
   var angular = require("angular");
   var _ = require("underscore");
 
-  return function($rootScope, $scope, handler, MCDAPataviService) {
+  return function($rootScope, $scope, handler) {
     var PERSISTENT_FIELDS = ["problem", "type", "prefs"];
     var previousSteps = [];
     var nextSteps = [];
@@ -54,7 +54,7 @@ define(function(require) {
 
     $scope.previousStep = function() {
       $scope.$broadcast('prevstep');
-      if (previousSteps.length == 0) return false;
+      if (previousSteps.length === 0) return false;
       nextSteps.push(angular.copy($scope.currentStep));
 
       var previousStep = previousSteps.pop();

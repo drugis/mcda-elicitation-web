@@ -4,7 +4,6 @@ define(function(require) {
   var _ = require("underscore");
   var Config = require("mcda/config");
 
-
   require('mmfoundation');
   require('angular-ui-router');
   require('angular-resource');
@@ -45,14 +44,7 @@ define(function(require) {
 
   // Detect our location so we can get the templates from the correct place
   app.constant('mcdaRootPath', (function() {
-    var scripts = document.getElementsByTagName('script');
-    var pattern = /js\/mcda-web.js$/;
-    for (var i = 0; i < scripts.length; ++i) {
-      if ((scripts[i].src || '').match(pattern)) {
-        return scripts[i].src.replace(pattern, '');
-      }
-    }
-    throw 'Failed to detect location for mcda-web.';
+    return require.toUrl(".").replace("js", "");
   })());
 
   app.config(function(mcdaRootPath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider, MCDARouteProvider) {
