@@ -1,12 +1,12 @@
 <div class="large-5 columns">
   <div id="results"
-       ng-class="{loading: !currentStep.results && !currentStep.error, failed: currentStep.error}">
+       ng-class="{loading: !state.results && !state.error, failed: state.error}">
     <div class="loader">
       <i class="fa fa-spinner fa-lg fa-spin"></i>
     </div>
 
     <div style="width: 400px; height: 400px" class="graph">
-      <rank-plot value="currentStep.results.ranks.data" stacked="true" problem="currentStep.problem"></rank-plot>
+      <rank-plot value="state.results.ranks.data" stacked="true" problem="state.problem"></rank-plot>
     </div>
   </div>
 </div>

@@ -5,7 +5,7 @@ define(function(require) {
   var Util = require("mcda/controllers/helpers/util");
   var Wizard = require("mcda/controllers/helpers/wizard");
 
-  return function($scope, $state, $stateParams, $injector, mcdaRootPath, currentScenario, taskDefinition, PartialValueFunction) {
+  return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
     var criteria = {};
     $scope.pvf = PartialValueFunction;
 
@@ -97,8 +97,6 @@ define(function(require) {
       });
       return _.extend(angular.copy(state), next);
     };
-
-    $scope.rankProbabilityChartURL = mcdaRootPath + 'partials/rankProbabilityChart.html';
 
     $scope.canSave = function(state) {
       return state && state.step === state.total + 1;

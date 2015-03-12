@@ -1,18 +1,18 @@
-<div ng-show="currentStep.type == 'elicit'">
+<div ng-show="state.type == 'elicit'">
   <div class="row" style="min-height: 450px">
     <div class="columns large-12">
-      <h3 ng-bind="currentStep.title"></h3>
+      <h3 ng-bind="state.title"></h3>
       <h5 class="subheader">Given the following situation:</h5>
       <ul class="inline-list">
-        <li ng-repeat="(criterion, value) in currentStep.reference track by $index">
-          {{currentStep.problem.criteria[criterion].title}} = {{value | number }}
+        <li ng-repeat="(criterion, value) in state.reference track by $index">
+          {{state.problem.criteria[criterion].title}} = {{value | number }}
         </li>
       </ul>
 
       <h5 class="subheader">Which of these improvements is most desired:</h5>
-      <label ng-repeat="(choice, alternative) in currentStep.choices">
-        <input type="radio" ng-model="currentStep.choice" value="{{choice}}" />
-        <criterion of="currentStep.problem.criteria[choice]"></criterion> &rarr; {{alternative[choice] | number }}
+      <label ng-repeat="(choice, alternative) in state.choices">
+        <input type="radio" ng-model="state.choice" value="{{choice}}" />
+        <criterion of="state.problem.criteria[choice]"></criterion> &rarr; {{alternative[choice] | number }}
       </label>
     </div>
   </div>
@@ -21,20 +21,20 @@
     <div class="columns large-12">
       <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
       <button class="small button"
-              ng-if="!canSave(currentStep)"
-              ng-click="nextStep(currentStep)"
-              ng-disabled="!canProceed(currentStep)">Next</button>
+              ng-if="!canSave(state)"
+              ng-click="nextStep(state)"
+              ng-disabled="!canProceed(state)">Next</button>
     </div>
   </div>
 </div>
 
 
-<div ng-show="currentStep.type == 'review'">
+<div ng-show="state.type == 'review'">
   <div class="row" style="min-height: 450px">
     <div class="columns large-12">
-      <h3 ng-bind="currentStep.title"></h3>
+      <h3 ng-bind="state.title"></h3>
       <p>You have given the following trade-offs:</p>
-      <trade-offs problem="currentStep.problem" preferences="currentStep.intermediate"></trade-offs>
+      <trade-offs problem="state.problem" preferences="state.intermediate"></trade-offs>
       <br>
     </div>
   </div>
@@ -43,9 +43,9 @@
     <div class="columns large-12">
       <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
       <button class="small success button"
-              ng-if="canSave(currentStep)"
-              ng-click="save(currentStep)"
-              ng-disabled="!canSave(currentStep)">Save</button>
+              ng-if="canSave(state)"
+              ng-click="save(state)"
+              ng-disabled="!canSave(state)">Save</button>
 
     </div>
   </div>

@@ -9,22 +9,22 @@
     the measurements and should not be moved into.</p>
 
   <ul class="no-bullet">
-    <li ng-repeat="(key, criterion) in currentStep.problem.criteria">
+    <li ng-repeat="(key, criterion) in state.problem.criteria">
       <h5 class="subheader"><criterion of="criterion"></criterion></h5>
       <div class="row">
         <div class="large-1 columns">
-          <a ng-click="currentStep.scales[key].increaseFrom()" class="tiny round button">&lt;</a>
+          <a ng-click="state.scales[key].increaseFrom()" class="tiny round button">&lt;</a>
         </div>
         <div class="large-7 columns">
-          <slider model="currentStep.choice[key]" range="currentStep.scales[key]"></slider>
+          <slider model="state.choice[key]" range="state.scales[key]"></slider>
         </div>
         <div class="large-1 pull-3 columns">
-          <a ng-click="currentStep.scales[key].increaseTo()"  class="tiny round button">&gt;</a>
+          <a ng-click="state.scales[key].increaseTo()"  class="tiny round button">&gt;</a>
         </div>
       </div>
       <br>
     </li>
   </ul>
   <button class="small" ng-click="cancel()">Cancel</button>
-  <button class="small success" ng-disabled="!validChoice(currentStep)" ng-click="save(currentStep)">Save</button>
+  <button class="small success" ng-disabled="!validChoice(state)" ng-click="save(state)">Save</button>
 </div>

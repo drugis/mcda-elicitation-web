@@ -4,7 +4,7 @@ define(function(require) {
   var _ = require("underscore");
   var Wizard = require("mcda/controllers/helpers/wizard");
 
-  return function($scope, $state, $stateParams, $injector, mcdaRootPath, currentScenario, taskDefinition, PartialValueFunction) {
+  return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
     var criteria = {};
     var pvf = PartialValueFunction;
     var scenario = currentScenario;
@@ -82,7 +82,6 @@ define(function(require) {
         nextState.type = 'review';
       }
 
-
       return nextState;
     };
 
@@ -107,8 +106,6 @@ define(function(require) {
       }
       return result;
     }
-
-    $scope.rankProbabilityChartURL = mcdaRootPath + 'partials/rankProbabilityChart.html';
 
     $scope.save = function(state) {
       state.prefs = standardize(state.prefs);

@@ -88,7 +88,7 @@ define(function(require) {
       return run(next);
     };
 
-    $scope.currentStep = initialize(taskDefinition.clean(currentScenario.state));
+    $scope.state = initialize(taskDefinition.clean(currentScenario.state));
 
   };
 });

@@ -51,22 +51,22 @@ define(['angular-mocks',
 
       describe("initialize", function() {
         it("should be described as ordinal", function() {
-          expect($scope1.currentStep).toBeDefined();
-          expect($scope1.currentStep.title).toEqual("Ordinal SWING weighting (1/2)");
+          expect($scope1.state).toBeDefined();
+          expect($scope1.state.title).toEqual("Ordinal SWING weighting (1/2)");
         });
 
         it("should not be the final state", function() {
-          expect($scope1.canSave($scope1.currentStep)).toBeFalsy();
-          expect($scope1.canProceed($scope1.currentStep)).toBeFalsy();
+          expect($scope1.canSave($scope1.state)).toBeFalsy();
+          expect($scope1.canProceed($scope1.state)).toBeFalsy();
         });
 
         it("should have the worst alternative as reference", function() {
-          expect($scope1.currentStep.reference).toEqual({
+          expect($scope1.state.reference).toEqual({
             "Prox DVT": 0.25,
             "Dist DVT": 0.4,
             "Bleed": 0.1
           });
-          expect($scope2.currentStep.reference).toEqual({
+          expect($scope2.state.reference).toEqual({
             "Prox DVT": 0.25,
             "Dist DVT": 0.4,
             "Bleed": 0.0
@@ -74,7 +74,7 @@ define(['angular-mocks',
         });
 
         it("should have a single criterion improved from worst to best in each choice", function() {
-          expect($scope1.currentStep.choices).toEqual({
+          expect($scope1.state.choices).toEqual({
             "Prox DVT": {
               "Prox DVT": 0.0,
               "Dist DVT": 0.4,
@@ -94,32 +94,32 @@ define(['angular-mocks',
         });
 
         it("should have an empty order", function() {
-          expect($scope1.currentStep.prefs.ordinal).toEqual([]);
+          expect($scope1.state.prefs.ordinal).toEqual([]);
         });
       });
 
       describe("nextState", function() {
         it("should not go to next step without valid selection", function() {
-          expect($scope1.canProceed($scope1.currentStep)).toEqual(false);
-          $scope1.currentStep.choice = "CHF";
-          expect($scope1.canProceed($scope1.currentStep)).toEqual(false);
+          expect($scope1.canProceed($scope1.state)).toEqual(false);
+          $scope1.state.choice = "CHF";
+          expect($scope1.canProceed($scope1.state)).toEqual(false);
         });
 
         it("should have the choice as new reference", function() {
-          $scope1.currentStep.choice = "Prox DVT";
-          expect($scope1.canProceed($scope1.currentStep)).toEqual(true);
-          $scope1.nextStep($scope1.currentStep);
-          expect($scope1.currentStep.reference).toEqual({
+          $scope1.state.choice = "Prox DVT";
+          expect($scope1.canProceed($scope1.state)).toEqual(true);
+          $scope1.nextStep($scope1.state);
+          expect($scope1.state.reference).toEqual({
             "Prox DVT": 0.0,
             "Dist DVT": 0.4,
             "Bleed": 0.1
           });
-          expect($scope1.currentStep.choice).toBeUndefined();
-          expect($scope1.currentStep.title).toEqual("Ordinal SWING weighting (2/2)");
+          expect($scope1.state.choice).toBeUndefined();
+          expect($scope1.state.title).toEqual("Ordinal SWING weighting (2/2)");
 
-          $scope2.currentStep.choice = "Dist DVT";
-          $scope2.nextStep($scope2.currentStep);
-          expect($scope2.currentStep.reference).toEqual({
+          $scope2.state.choice = "Dist DVT";
+          $scope2.nextStep($scope2.state);
+          expect($scope2.state.reference).toEqual({
             "Prox DVT": 0.25,
             "Dist DVT": 0.15,
             "Bleed": 0.0
@@ -127,15 +127,15 @@ define(['angular-mocks',
         });
 
         it("should not contain previous choice", function() {
-          $scope1.currentStep.choice = "Prox DVT";
-          $scope1.nextStep($scope1.currentStep);
-          expect(_.keys($scope1.currentStep.choices)).toEqual(["Dist DVT", "Bleed"]);
+          $scope1.state.choice = "Prox DVT";
+          $scope1.nextStep($scope1.state);
+          expect(_.keys($scope1.state.choices)).toEqual(["Dist DVT", "Bleed"]);
         });
 
         it("should improve previous choice on all choices", function() {
-          $scope1.currentStep.choice = "Prox DVT";
-          $scope1.nextStep($scope1.currentStep);
-          expect($scope1.currentStep.choices).toEqual({
+          $scope1.state.choice = "Prox DVT";
+          $scope1.nextStep($scope1.state);
+          expect($scope1.state.choices).toEqual({
             "Dist DVT": {
               "Prox DVT": 0.0,
               "Dist DVT": 0.15,
@@ -150,9 +150,9 @@ define(['angular-mocks',
         });
 
         it("should push the choice onto the order", function() {
-          $scope1.currentStep.choice = "Prox DVT";
-          $scope1.nextStep($scope1.currentStep);
-          expect($scope1.currentStep.prefs.ordinal).toEqual(["Prox DVT"]);
+          $scope1.state.choice = "Prox DVT";
+          $scope1.nextStep($scope1.state);
+          expect($scope1.state.prefs.ordinal).toEqual(["Prox DVT"]);
         });
       });
 

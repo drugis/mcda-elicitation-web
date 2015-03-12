@@ -5,7 +5,7 @@ define(function(require) {
 
   var dependencies = ['ngResource'];
 
-  var WorkspaceResource = function($q, $resource, $filter, $rootScope, MCDAPataviService) {
+  var WorkspaceResource = function($q, $resource, $rootScope, MCDAPataviService) {
 
     var valueTree =  function(problem) {
       return {
@@ -71,7 +71,7 @@ define(function(require) {
     };
 
     var resource = $resource(
-      config.workspacesRepositoryUrl + ':workspaceId', { workspaceId: '@id' }, {
+      window.config.workspacesRepositoryUrl + ':workspaceId', { workspaceId: '@id' }, {
         get:    { method:'GET', interceptor: { response: addDerived }},
         save:   { method:'POST', interceptor: { response: addDerived }},
         create: { method:'POST', transformRequest: function(problem, headersGetter) {

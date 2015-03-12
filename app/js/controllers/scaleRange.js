@@ -9,9 +9,9 @@ define(function(require) {
 
     $scope.title = taskDefinition.title;
 
-    $scope.validChoice = function(currentStep) {
-      if (currentStep) {
-        return _.every(currentStep.choice, function(choice) {
+    $scope.validChoice = function(state) {
+      if (state) {
+        return _.every(state.choice, function(choice) {
           var complete = _.isNumber(choice.upper) && _.isNumber(choice.lower);
           return complete && (choice.upper > choice.lower);
         });
@@ -23,11 +23,11 @@ define(function(require) {
       $state.go('preferences');
     };
 
-    $scope.save = function(currentStep) {
-      if (!this.validChoice(currentStep)) {
+    $scope.save = function(state) {
+      if (!this.validChoice(state)) {
         return;
       }
-      var state = angular.copy(currentStep);
+      var state = angular.copy(state);
       // Rewrite scale information
       _.each(_.pairs(state.choice), function(choice) {
         var pvf = state.problem.criteria[choice[0]].pvf;
@@ -72,7 +72,7 @@ define(function(require) {
         scales[criterion[0]] = ScaleRangeService.calculateScales(criterionScale, from, to, criterionRange);
 
       });
-      $scope.currentStep = _.extend(state, {
+      $scope.state = _.extend(state, {
         scales: scales,
         choice: choices
       });
