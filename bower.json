@@ -33,7 +33,7 @@
     "angular-ui-router": "0.2.13",
     "d3": "3.5.5",
     "nvd3-community": "~1.7",
-    "MathJax": "2.5.0",
+    "MathJax": "2.4.0",
     "font-awesome": "4.3.0",
     "requirejs": "~2.1.10",
     "jslider": "https://github.com/SalesSeek/jslider.git#1.2.0",
