@@ -13,13 +13,7 @@
 
     <title>mcda.drugis.org</title>
 
-    <link rel="stylesheet" type="text/css" href="bower_components/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="bower_components/jslider/dist/jquery.slider.min.css">
-    <link rel="stylesheet" type="text/css" href="bower_components/nvd3-community/build/nv.d3.min.css">
-
-    <link rel="stylesheet" type="text/css" href="<c:url value="/bower_components/mcda-web/app/css/mcda-drugis.css" />">
-
-    <script src="bower_components/requirejs/require.js" data-main="app/js/main.js"></script>
+   <script src="bower_components/requirejs/require.js" data-main="app/js/main.js"></script>
 
   </head>
 
@@ -100,3 +94,8 @@
 
   </body>
 </html>
+<link rel="stylesheet" type="text/css" href="bower_components/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="bower_components/jslider/dist/jquery.slider.min.css">
+<link rel="stylesheet" type="text/css" href="bower_components/nvd3-community/build/nv.d3.min.css">
+
+<link rel="stylesheet" type="text/css" href="<c:url value="/bower_components/mcda-web/app/css/mcda-drugis.css" />">
