@@ -20,8 +20,9 @@ import java.security.Principal;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
-
+import org.drugis.mcdaweb.standalone.account.Account;
 import org.drugis.mcdaweb.standalone.account.AccountRepository;
+import org.springframework.util.DigestUtils;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,9 +30,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class IndexController {
-	
+
 	private final Provider<ConnectionRepository> connectionRepositoryProvider;
-	
+
 	private final AccountRepository accountRepository;
 
 	@Inject
@@ -44,14 +45,17 @@ public class IndexController {
 	public String index(Principal currentUser, Model model, HttpServletRequest request) {
 		model.addAttribute("connectionsToProviders", getConnectionRepository().findAllConnections());
 		try {
-			model.addAttribute(accountRepository.findAccountByUsername(currentUser.getName()));
+			Account account = accountRepository.findAccountByUsername(currentUser.getName());
+			model.addAttribute(account);
+			String md5String = DigestUtils.md5DigestAsHex(account.getUsername().getBytes());
+			model.addAttribute("userMD5", md5String); // user email MD5 hash needed to retrieve gravatar image
 		} catch (org.springframework.dao.EmptyResultDataAccessException e) {
 			request.getSession().invalidate();
 			return "redirect:/signin";
 		}
 		return "index";
 	}
-	
+
 	private ConnectionRepository getConnectionRepository() {
 		return connectionRepositoryProvider.get();
 	}

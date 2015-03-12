@@ -34,9 +34,7 @@
           <!-- Right Nav Section -->
           <ul class="right">
             <li has-dropdown>
-              <a href="#">
-                <i class="fa fa-user fa-fw"></i>
-                <c:out value="${account.firstName} ${account.lastName}" /></a>
+              <a href="#"><img class="user-image" src="https://secure.gravatar.com/avatar/${userMD5}?s=43&d=mm"> <c:out value="${account.firstName} ${account.lastName} " /></a>
               <ul top-bar-dropdown>
                 <li><a href="#" onClick="signout()">Sign out</a></li>
               </ul>
