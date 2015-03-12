@@ -9,10 +9,6 @@ for (var file in window.__karma__.files) {
   }
 }
 
-console.log(tests);
-
-var foundationVersion = "5.0.2";
-
 require.config({
   paths: {
     'jQuery': 'bower_components/jquery/dist/jquery.min',
@@ -20,7 +16,7 @@ require.config({
     'angular': 'bower_components/angular/angular',
     'angular-resource': 'bower_components/angular-resource/angular-resource',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
-    'jquery-slider': 'lib/jslider/bin/jquery.slider.min',
+    'jquery-slider': 'bower_components/jslider/dist/jquery.slider',
     'd3': 'bower_components/d3/d3.min',
     'nvd3': 'bower_components/nvd3/nv.d3.min',
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML',

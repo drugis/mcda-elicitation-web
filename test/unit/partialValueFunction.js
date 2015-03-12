@@ -59,7 +59,6 @@ define(['angular',
 
 
         it("determines worst values", inject(function(PartialValueFunction) {
-          console.log(crit1);
           expect(PartialValueFunction.worst(crit1)).toEqual(-0.15);
           expect(PartialValueFunction.worst(crit2)).toEqual(100);
         }));

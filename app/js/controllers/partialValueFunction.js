@@ -13,6 +13,7 @@ define(function(require) {
 
     var initialize = function(state) {
       var criterion = angular.copy(scenario.state.problem.criteria[criterionId]);
+      if(!criterion) return {};
       // set defaults
       criterion.pvf.direction = "decreasing";
       criterion.pvf.type = "linear";
