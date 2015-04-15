@@ -9045,6 +9045,14 @@ th.hide-for-touch {
 }
 /* variables */
 /* line 11, ../../sass/_main.scss */
+.user-image {
+  margin-top: -1px;
+  margin-right: 4px;
+  height: 32px;
+  border-radius: 15px;
+}
+
+/* line 18, ../../sass/_main.scss */
 .reveal-modal.mcda-reveal-modal, dialog.mcda-reveal-modal {
   position: fixed;
   left: 10%;
@@ -9056,17 +9064,17 @@ th.hide-for-touch {
 }
 
 /* inline results */
-/* line 22, ../../sass/_main.scss */
+/* line 29, ../../sass/_main.scss */
 #results .loader, .hidden {
   display: none;
 }
 
-/* line 26, ../../sass/_main.scss */
+/* line 33, ../../sass/_main.scss */
 #results.loading > img {
   opacity: 0.5;
 }
 
-/* line 30, ../../sass/_main.scss */
+/* line 37, ../../sass/_main.scss */
 #results.loading .loader {
   float: left;
   position: relative;
@@ -9080,12 +9088,12 @@ th.hide-for-touch {
   padding: 5px;
 }
 
-/* line 43, ../../sass/_main.scss */
+/* line 50, ../../sass/_main.scss */
 #results.loading .graph {
   display: none;
 }
 
-/* line 47, ../../sass/_main.scss */
+/* line 54, ../../sass/_main.scss */
 .jslider-bg i.x {
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
@@ -9095,29 +9103,21 @@ th.hide-for-touch {
   display: inline-block;
 }
 
-/* line 56, ../../sass/_main.scss */
+/* line 63, ../../sass/_main.scss */
 input[type='file'] {
   width: auto !important;
 }
 
-/* line 60, ../../sass/_main.scss */
+/* line 67, ../../sass/_main.scss */
 .alert-box {
   margin-top: 0.5rem;
   margin-bottom: 0.25rem;
 }
 
-/* line 65, ../../sass/_main.scss */
+/* line 72, ../../sass/_main.scss */
 .color-stripe {
   background: #CC3333;
   height: 0.45rem;
-}
-
-/* line 70, ../../sass/_main.scss */
-.user-image {
-  margin-top: -1px;
-  margin-right: 4px;
-  height: 32px;
-  border-radius: 15px;
 }
 
 /*
