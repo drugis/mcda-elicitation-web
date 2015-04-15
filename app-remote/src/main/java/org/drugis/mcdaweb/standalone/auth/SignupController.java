@@ -58,7 +58,11 @@ public class SignupController {
 	
 	private Account createAccount(UserProfile profile) {
 		try {
-			Account account = new Account(profile.getUsername(), profile.getFirstName(), profile.getLastName());
+			Account account = new Account(
+					profile.getUsername(), 
+					profile.getFirstName(),
+					profile.getLastName(),
+					profile.getEmail());
 			accountRepository.createAccount(account);
 			return account;
 		} catch (UsernameAlreadyInUseException e) {

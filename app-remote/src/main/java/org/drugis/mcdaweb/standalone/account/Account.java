@@ -23,16 +23,19 @@ public class Account {
 	private final String firstName;
 
 	private final String lastName;
+	
+	private final String email;
 
-	public Account(String username, String firstName, String lastName) {
-		this (-1, username, firstName, lastName);
+	public Account(String username, String firstName, String lastName, String email) {
+		this (-1, username, firstName, lastName,  email);
 	}
 	
-	public Account(int id, String username, String firstName, String lastName) {
+	public Account(int id, String username, String firstName, String lastName, String email) {
 		this.id = id;
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.email = email;
 	}
 	
 	public int getId() {
@@ -49,5 +52,9 @@ public class Account {
 
 	public String getLastName() {
 		return lastName;
+	}
+	
+	public String getEmail() { 
+		return email;
 	}
 }

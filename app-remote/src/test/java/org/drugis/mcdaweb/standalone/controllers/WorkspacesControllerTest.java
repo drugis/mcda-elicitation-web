@@ -86,7 +86,7 @@ public class WorkspacesControllerTest {
 		mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
 		user = mock(Principal.class);
 		when(user.getName()).thenReturn("gert");
-		Account gert = new Account(1, "gert", "Gert", "van Valkenhoef");
+		Account gert = new Account(1, "gert", "Gert", "van Valkenhoef", "gert@example.com");
 		when(accountRepository.findAccountByUsername("gert")).thenReturn(gert);
 		
 	}
@@ -203,7 +203,7 @@ public class WorkspacesControllerTest {
 		int workspaceId = 1;
 		int userId = 2;
 		Workspace workspace = createWorkspace();
-		Account haxAccount = new Account(userId, "skiddie", "Script", "Kiddie");
+		Account haxAccount = new Account(userId, "skiddie", "Script", "Kiddie", "1337@h4xxor.com");
 		when(accountRepository.findAccountByUsername("skiddie")).thenReturn(haxAccount);
 		when(workspaceRepository.isWorkspaceOwnedBy(workspaceId, userId)).thenReturn(false);
 		when(workspaceRepository.findById(workspaceId)).thenReturn(workspace);
