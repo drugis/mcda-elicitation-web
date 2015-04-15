@@ -20,24 +20,23 @@ define(function(require) {
       return TaskDependencies.isAccessible(results, state);
     };
 
+    $scope.$on('elicit.scenariosChanged', function() {
+      $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
+    });
+
     $scope.scenario = currentScenario;
+
     $scope.tasks = _.reduce(Tasks.available, function(tasks, task) {
       tasks[task.id] = task;
       return tasks;
     }, {});
-    $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
 
-    $scope.$on('elicit.partialValueFunctionChanged', function() {
-      $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
-    });
+    $scope.resultsAccessible = resultsAccessible($scope.tasks.results,
+                                                 $scope.scenario.state);
 
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
     $scope.scenarios = scenarios;
-
-    $scope.$on('elicit.scenariosChanged', function() {
-      $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
-    });
 
     var redirect = function(scenarioId) {
       var newState = _.omit($stateParams, 'id');
@@ -85,7 +84,7 @@ define(function(require) {
     };
 
     $scope.scenarioChanged = function(newScenario) {
-      $state.go($scope.taskId, {
+      $state.go($state.current.name, {
         workspaceId: $scope.workspace.id,
         id: newScenario.id
       });

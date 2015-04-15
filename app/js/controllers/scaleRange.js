@@ -3,9 +3,9 @@ define(function(require) {
   var angular = require("angular");
   var _ = require("underscore");
 
-  return function($scope, $state, $stateParams, taskDefinition, intervalHull, ScaleRangeService) {
+  return function($scope, $state, $stateParams, currentScenario, taskDefinition, intervalHull, ScaleRangeService) {
 
-    var state = taskDefinition.clean($scope.scenario.state);
+    var state = taskDefinition.clean(currentScenario.state);
 
     $scope.title = taskDefinition.title;
 
@@ -23,11 +23,8 @@ define(function(require) {
       $state.go('preferences');
     };
 
-    $scope.save = function(state) {
-      if (!this.validChoice(state)) {
-        return;
-      }
-      var state = angular.copy(state);
+    $scope.save = function(currentState) {
+      var state = angular.copy(currentState);
       // Rewrite scale information
       _.each(_.pairs(state.choice), function(choice) {
         var pvf = state.problem.criteria[choice[0]].pvf;
@@ -39,10 +36,8 @@ define(function(require) {
         state.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
       });
 
-      var fields = ['problem', 'prefs'];
-      $scope.scenario.state = _.pick(state, fields);
+      $scope.scenario.state = _.pick(state, ['problem', 'prefs']);
       $scope.scenario.$save($stateParams, function(scenario) {
-        $scope.$emit('elicit.scenariosChanged');
         $state.go('preferences', {}, { reload: true });
       });
 

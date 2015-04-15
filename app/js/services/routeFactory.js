@@ -16,9 +16,8 @@ define(function(require) {
           resolve: {
             currentScenario: function($stateParams, ScenarioResource) {
               return ScenarioResource.get($stateParams).$promise;
-            } ,
-            scenarios:
-            function($stateParams, ScenarioResource) {
+            },
+            scenarios: function($stateParams, ScenarioResource) {
               return ScenarioResource.query(_.omit($stateParams, 'id')).$promise;
             }}
         });

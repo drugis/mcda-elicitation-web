@@ -52,7 +52,7 @@ define(function(require) {
       return !_.isUndefined(state.prefs);
     },
     'remove': function(state) {
-      return _.omit(state, 'prefs');
+      return _.omit(angular.copy(state), 'prefs');
     },
     title: 'all criteria trade-off preferences'
   };

@@ -44,7 +44,7 @@ define(function(require) {
 
       nextState.previousChoice = choice;
 
-      nextState.intermediate = handler.standardize(nextState.prefs);
+      nextState.intermediate = handler.standardize(nextState);
 
       $scope.state = nextState;
       return true;

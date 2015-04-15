@@ -29,12 +29,12 @@
 </div>
 
 
-<div ng-show="state.type == 'review'">
+<div ng-if="state.type == 'review'">
   <div class="row" style="min-height: 450px">
     <div class="columns large-12">
       <h3 ng-bind="state.title"></h3>
       <p>You have given the following trade-offs:</p>
-      <trade-offs problem="state.problem" preferences="state.intermediate"></trade-offs>
+      <trade-offs problem="state.problem" preferences="state.intermediate.prefs"></trade-offs>
       <br>
     </div>
   </div>
