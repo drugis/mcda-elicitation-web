@@ -112,9 +112,8 @@ define(function(require) {
 
       $scope.scenario.state = _.pick(state, ['problem', 'prefs']);
 
-      $scope.scenario.$save($stateParams, function() {
-        $scope.$emit('elicit.partialValueFunctionChanged');
-        $state.go('preferences');
+      $scope.scenario.$save($stateParams, function(scenario) {
+        $state.go('preferences', {}, { reload: true });
       });
     };
 

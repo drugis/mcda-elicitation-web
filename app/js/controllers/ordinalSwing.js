@@ -112,7 +112,7 @@ define(function(require) {
 
       $scope.scenario.state = _.pick(state, ['problem', 'prefs']);
       $scope.scenario.$save($stateParams, function(scenario) {
-        $state.go('preferences');
+        $state.go('preferences', {}, { reload: true });
       });
     };
 

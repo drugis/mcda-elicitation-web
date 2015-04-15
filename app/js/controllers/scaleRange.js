@@ -43,7 +43,7 @@ define(function(require) {
       $scope.scenario.state = _.pick(state, fields);
       $scope.scenario.$save($stateParams, function(scenario) {
         $scope.$emit('elicit.scenariosChanged');
-        $state.go('preferences');
+        $state.go('preferences', {}, { reload: true });
       });
 
     };
