@@ -8,6 +8,13 @@ $active-tab-color: $black;
 $active-tab-background-color: $white;
 $tab-disabled-opacity: 0.7;
 
+.user-image {
+    margin-top: -1px;
+    margin-right: 4px;
+    height: 32px;
+    border-radius: 15px;
+}
+
 .reveal-modal.mcda-reveal-modal {
     position: fixed;
     left: 10%;
@@ -65,13 +72,6 @@ input[type='file'] {
 .color-stripe {
     background: $drugis-color;
     height: 0.45rem;
-}
-
-.user-image {
-    margin-top: -1px;
-    margin-right: 4px;
-    height: 32px;
-    border-radius: 15px;
 }
 
 /*
