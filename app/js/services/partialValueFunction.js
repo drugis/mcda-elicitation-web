@@ -102,6 +102,7 @@ define(function(require) {
     };
 
     return {
+      isIncreasing: isIncreasing,
       map: map,
       inv: inv,
       best: best,
