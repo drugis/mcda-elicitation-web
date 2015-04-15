@@ -20,9 +20,15 @@ define(function(require) {
       var pvf = criterion.pvf;
       var increasing = isIncreasing(criterion);
 
-      var cutoffs = [pvf.range[0]].concat(pvf.cutoffs || []);
+      var cutoffs = pvf.cutoffs || [];
+
+      cutoffs = [pvf.range[0]].concat(pvf.cutoffs || []);
 
       cutoffs.push(pvf.range[1]);
+
+      if(increasing) { // if the function is increasing, so should the cutoffs
+        cutoffs.sort();
+      }
 
       var values = [increasing ? 0.0 : 1.0].concat(pvf.values || []);
       values.push(increasing ? 1.0 : 0.0);

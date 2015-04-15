@@ -13,7 +13,6 @@ define(['angular',
       beforeEach(module('elicit.pataviService'));
 
 
-
       beforeEach(inject(function($rootScope, $controller, TaskDependencies) {
         var task = {
             requires: [],
@@ -150,5 +149,22 @@ define(['angular',
         }));
       });
 
+      describe("Piecwise Partial Value Functions map", function() {
+
+        var crit =  {
+          pvf: {
+            "type": "piecewise-linear",
+            "direction": "increasing",
+            "range": [4, 8],
+            "cutoffs": [6.5, 5, 4.5],
+            "values": [0.75, 0.5, 0.25]
+          }
+        };
+
+        it("works for three cutoffs", inject(function(PartialValueFunction) {
+          var map = PartialValueFunction.map(crit);
+          expect(map(5)).toBeCloseTo(0.5);
+        }));
+      });
     });
   });

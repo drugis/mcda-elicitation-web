@@ -18,7 +18,7 @@ require.config({
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
     'jquery-slider': 'bower_components/jslider/dist/jquery.slider',
     'd3': 'bower_components/d3/d3.min',
-    'nvd3': 'bower_components/nvd3/nv.d3.min',
+    'nvd3': 'bower_components/nvd3-community/build/nv.d3',
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML',
     'foundation': 'bower_components/foundation/js/foundation.min',
     'jasmine': 'bower_components/jasmine/lib/jasmine-core/jasmine',
