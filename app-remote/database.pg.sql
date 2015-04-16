@@ -60,4 +60,4 @@ CREATE TABLE Remarks (
   FOREIGN KEY(workspaceId) REFERENCES Workspace(id));
   
 -- changeset joelkuiper:6
-ALTER TABLE Account ADD COLUMN email VARCHAR;
+ALTER TABLE Account ADD COLUMN email VARCHAR DEFAULT '';
