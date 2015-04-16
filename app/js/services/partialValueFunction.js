@@ -3,6 +3,9 @@ define(function(require) {
   var _ = require("underscore");
 
   return angular.module('elicit.pvfService', []).factory('PartialValueFunction', function() {
+    var sortNumber = function(a,b) { // Seriously
+      return a - b;
+    };
 
     var findIndexOfFirstLargerElement = function(arr, val) {
       return _.indexOf(arr, _.find(arr, function(elm) {
@@ -20,15 +23,13 @@ define(function(require) {
       var pvf = criterion.pvf;
       var increasing = isIncreasing(criterion);
 
-      var cutoffs = pvf.cutoffs || [];
+      var cutoffs = (pvf.cutoffs || []).slice();
 
-      cutoffs = [pvf.range[0]].concat(pvf.cutoffs || []);
+      cutoffs = [pvf.range[0]].concat(cutoffs);
 
       cutoffs.push(pvf.range[1]);
 
-      if(increasing) { // if the function is increasing, so should the cutoffs
-        cutoffs.sort();
-      }
+      cutoffs.sort(sortNumber);
 
       var values = [increasing ? 0.0 : 1.0].concat(pvf.values || []);
       values.push(increasing ? 1.0 : 0.0);
