@@ -21,6 +21,7 @@
     "mcda-web": "../#develop"
   },
   "resolutions": {
-    "d3": "3.5.5"
+    "d3": "3.5.5",
+    "angular": "~1.4.0-beta.5"
   }
 }

@@ -13,7 +13,9 @@
     "karma-requirejs": "~0.2.1",
     "requirejs": "~2.1.11"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "karma-ng-html2js-preprocessor": "^0.1.2"
+  },
   "repository": "",
   "author": "",
   "license": "GPL-3"

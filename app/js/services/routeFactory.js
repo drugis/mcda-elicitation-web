@@ -16,9 +16,8 @@ define(function(require) {
           resolve: {
             currentScenario: function($stateParams, ScenarioResource) {
               return ScenarioResource.get($stateParams).$promise;
-            } ,
-            scenarios:
-            function($stateParams, ScenarioResource) {
+            },
+            scenarios: function($stateParams, ScenarioResource) {
               return ScenarioResource.query(_.omit($stateParams, 'id')).$promise;
             }}
         });
@@ -32,8 +31,7 @@ define(function(require) {
             controller: task.controller,
             resolve: {
               taskDefinition: function(TaskDependencies) {
-                var def = TaskDependencies.extendTaskDefinition(task);
-                return def;
+                return TaskDependencies.extendTaskDefinition(task);
               }
             }
           });

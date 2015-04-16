@@ -58,3 +58,6 @@ CREATE TABLE Remarks (
   remarks VARCHAR NOT NULL,
   PRIMARY KEY (workspaceId),
   FOREIGN KEY(workspaceId) REFERENCES Workspace(id));
+  
+-- changeset joelkuiper:6
+ALTER TABLE Account ADD COLUMN email VARCHAR;

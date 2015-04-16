@@ -3,15 +3,15 @@ define(function(require) {
   var angular = require("angular");
   var _ = require("underscore");
 
-  return function($scope, $state, $stateParams, taskDefinition, intervalHull, ScaleRangeService) {
+  return function($scope, $state, $stateParams, currentScenario, taskDefinition, intervalHull, ScaleRangeService) {
 
-    var state = taskDefinition.clean($scope.scenario.state);
+    var state = taskDefinition.clean(currentScenario.state);
 
     $scope.title = taskDefinition.title;
 
-    $scope.validChoice = function(currentStep) {
-      if (currentStep) {
-        return _.every(currentStep.choice, function(choice) {
+    $scope.validChoice = function(state) {
+      if (state) {
+        return _.every(state.choice, function(choice) {
           var complete = _.isNumber(choice.upper) && _.isNumber(choice.lower);
           return complete && (choice.upper > choice.lower);
         });
@@ -23,11 +23,8 @@ define(function(require) {
       $state.go('preferences');
     };
 
-    $scope.save = function(currentStep) {
-      if (!this.validChoice(currentStep)) {
-        return;
-      }
-      var state = angular.copy(currentStep);
+    $scope.save = function(currentState) {
+      var state = angular.copy(currentState);
       // Rewrite scale information
       _.each(_.pairs(state.choice), function(choice) {
         var pvf = state.problem.criteria[choice[0]].pvf;
@@ -39,11 +36,9 @@ define(function(require) {
         state.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
       });
 
-      var fields = ['problem', 'prefs'];
-      $scope.scenario.state = _.pick(state, fields);
+      $scope.scenario.state = _.pick(state, ['problem', 'prefs']);
       $scope.scenario.$save($stateParams, function(scenario) {
-        $scope.$emit('elicit.scenariosChanged');
-        $state.go('preferences');
+        $state.go('preferences', {}, { reload: true });
       });
 
     };
@@ -72,7 +67,7 @@ define(function(require) {
         scales[criterion[0]] = ScaleRangeService.calculateScales(criterionScale, from, to, criterionRange);
 
       });
-      $scope.currentStep = _.extend(state, {
+      $scope.state = _.extend(state, {
         scales: scales,
         choice: choices
       });

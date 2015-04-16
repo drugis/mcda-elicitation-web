@@ -97,8 +97,8 @@ define(function(require) {
             initialize(scope, $element);
           }
         };
-        scope.$on('nextstep', init);
-        scope.$on('prevstep', init);
+        scope.$on('nextState', init);
+        scope.$on('prevState', init);
         scope.$watch('range', init, true);
       },
       template: '<div class="slider"></div>'

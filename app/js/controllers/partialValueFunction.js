@@ -7,12 +7,10 @@ define(function(require) {
   return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
     $scope.pvf = PartialValueFunction;
 
-    var scenario = currentScenario;
-    var criterionId = $stateParams.criterion;
-
-
     var initialize = function(state) {
-      var criterion = angular.copy(scenario.state.problem.criteria[criterionId]);
+    var criterionId = $stateParams.criterion;
+      var criterion = angular.copy(state.problem.criteria[criterionId]);
+      if(!criterion) return {};
       // set defaults
       criterion.pvf.direction = "decreasing";
       criterion.pvf.type = "linear";
@@ -86,7 +84,6 @@ define(function(require) {
         newCutoffs[k] = list[k].cutoff;
         newValues[k] = list[k].value;
       }
-
       return {
         values: newValues,
         cutoffs: newCutoffs
@@ -107,13 +104,13 @@ define(function(require) {
     };
 
     $scope.save = function(state) {
+      var criterionId = $stateParams.criterion;
       state.problem.criteria[criterionId] = standardizeCriterion(state.choice);
 
       $scope.scenario.state = _.pick(state, ['problem', 'prefs']);
 
-      $scope.scenario.$save($stateParams, function() {
-        $scope.$emit('elicit.partialValueFunctionChanged');
-        $state.go('preferences');
+      $scope.scenario.$save($stateParams, function(scenario) {
+        $state.go('preferences', {}, { reload: true });
       });
     };
 
@@ -142,7 +139,7 @@ define(function(require) {
     $scope.getXY = _.memoize(function(criterion) {
       return PartialValueFunction.getXY(standardizeCriterion(criterion));
     }, function(criterion) { // hash
-      return angular.toJson(standardizeCriterion(criterion).pvf);
+      return angular.toJson(criterion.pvf);
     });
 
     $scope.cancel = function() {
@@ -154,9 +151,8 @@ define(function(require) {
       handler: {
         fields: ['type', 'choice','bisections', 'ref'],
         validChoice: isValid,
-        hasIntermediateResults: false,
         nextState: nextState,
-        initialize: _.partial(initialize, taskDefinition.clean($scope.scenario.state)),
+        initialize: _.partial(initialize, taskDefinition.clean(currentScenario.state)),
         standardize: _.identity
       }
     });

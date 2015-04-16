@@ -5,8 +5,7 @@ define(function(require) {
   var Util = require("mcda/controllers/helpers/util");
   var Wizard = require("mcda/controllers/helpers/wizard");
 
-  return function($scope, $state, $stateParams, $injector, mcdaRootPath, currentScenario, taskDefinition, PartialValueFunction) {
-    var criteria = {};
+  return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
     var pvf = PartialValueFunction;
     $scope.pvf = pvf;
 
@@ -18,7 +17,7 @@ define(function(require) {
       return base + ' (' + step + '/' + total + ')';
     };
 
-    function buildInitial(criterionA, criterionB, step) {
+    function buildInitial(criteria, criterionA, criterionB, step) {
       var bounds = pvf.getBounds(criteria[criterionA]);
       var state =  {
         step: step,
@@ -36,16 +35,17 @@ define(function(require) {
     }
 
     var initialize = function(state) {
-      criteria = state.problem.criteria;
+      var criteria = state.problem.criteria;
       state.prefs = Util.getOrdinalPreferences(state.prefs); // remove pre-existing ordinal/exact preferences
       state = _.extend(state, {
         'criteriaOrder': Util.getCriteriaOrder(state.prefs)
       });
-      state = _.extend(state, buildInitial(state.criteriaOrder[0], state.criteriaOrder[1], 1));
+      state = _.extend(state, buildInitial(criteria, state.criteriaOrder[0], state.criteriaOrder[1], 1));
       return state;
     };
 
     var validChoice = function(state) {
+      var criteria = state.problem.criteria;
       if (!state) {
         return false;
       }
@@ -55,6 +55,8 @@ define(function(require) {
     };
 
     var nextState = function(state) {
+      var criteria = state.problem.criteria;
+
       if (!validChoice(state)) {
         return null;
       }
@@ -68,7 +70,7 @@ define(function(require) {
           step: idx + 1
         };
       } else {
-        next = buildInitial(order[idx], order[idx + 1], idx + 1);
+        next = buildInitial(criteria, order[idx], order[idx + 1], idx + 1);
       }
 
       function getRatio(state) {
@@ -86,8 +88,6 @@ define(function(require) {
       return _.extend(angular.copy(state), next);
     };
 
-    $scope.rankProbabilityChartURL = mcdaRootPath + 'partials/rankProbabilityChart.html';
-
     $scope.canSave = function(state) {
       return state && state.step === state.total + 1;
     };
@@ -97,7 +97,7 @@ define(function(require) {
 
       $scope.scenario.state = _.pick(state, ['problem', 'prefs']);
       $scope.scenario.$save($stateParams, function(scenario) {
-        $state.go('preferences');
+        $state.go('preferences', {}, { reload: true });
       });
 
     };

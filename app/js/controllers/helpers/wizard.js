@@ -3,12 +3,12 @@ define(function(require) {
   var angular = require("angular");
   var _ = require("underscore");
 
-  return function($rootScope, $scope, handler, MCDAPataviService) {
+  return function($scope, handler) {
     var PERSISTENT_FIELDS = ["problem", "type", "prefs"];
-    var previousSteps = [];
-    var nextSteps = [];
+    var previousStates =  [];
+    var nextStates = [];
 
-    $scope.currentStep = (function() {
+    $scope.state = (function() {
       var state;
       if (!_.isUndefined(handler.initialize)) {
         state = handler.initialize();
@@ -16,49 +16,49 @@ define(function(require) {
       return state || {};
     })();
 
-    $scope.canProceed = function(currentStep) {
-      return (handler && handler.validChoice(currentStep)) || false;
+    $scope.canProceed = function(state) {
+      return (handler && handler.validChoice(state)) || false;
     };
 
     $scope.canReturn = function() {
-      return previousSteps.length > 0;
+      return previousStates.length > 0;
     };
 
-    $scope.nextStep = function(currentStep) {
-      $scope.$broadcast('nextstep');
-      if (!$scope.canProceed(currentStep)) return false;
-      var choice = currentStep.choice;
+    $scope.nextStep = function(state) {
+      $scope.$broadcast('nextState');
+      if (!$scope.canProceed(state)) return false;
+      var choice = state.choice;
 
       // History handling
-      previousSteps.push(currentStep);
-      var nextStep = nextSteps.pop();
-      if (nextStep && _.isEqual(nextStep.previousChoice, choice)) {
-        $scope.currentStep = nextStep;
+      previousStates.push(state);
+      var nextState = nextStates.pop();
+      if (nextState && _.isEqual(nextState.previousChoice, choice)) {
+        $scope.state = nextState;
         return true;
       } else {
-        nextSteps = [];
+        nextStates = [];
       }
 
-      currentStep = _.pick(currentStep, PERSISTENT_FIELDS.concat(handler.fields));
-      nextStep = handler.nextState(currentStep);
+      state = _.pick(state, PERSISTENT_FIELDS.concat(handler.fields));
+      nextState = handler.nextState(state);
 
-      nextStep.previousChoice = choice;
+      nextState.previousChoice = choice;
 
-      nextStep.intermediate =  handler.standardize(nextStep.prefs);
+      nextState.intermediate = handler.standardize(nextState);
 
-      $scope.currentStep = nextStep;
-
-
-     return true;
+      $scope.state = nextState;
+      return true;
     };
 
-    $scope.previousStep = function() {
-      $scope.$broadcast('prevstep');
-      if (previousSteps.length == 0) return false;
-      nextSteps.push(angular.copy($scope.currentStep));
+    $scope.isFinished = handler.isFinished;
 
-      var previousStep = previousSteps.pop();
-      $scope.currentStep = previousStep;
+    $scope.previousStep = function() {
+      $scope.$broadcast('prevState');
+      if (previousStates.length === 0) return false;
+      nextStates.push(angular.copy($scope.state));
+
+      var previousState = previousStates.pop();
+      $scope.state = previousState;
       return true;
     };
   };

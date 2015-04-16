@@ -1,4 +1,4 @@
-<div ng-if="!currentStep.results">
+<div ng-if="!state.results">
   <div class="row" style="margin-top: 15em">
     <div class="small-6 large-centered columns">
 
@@ -7,7 +7,7 @@
   </div>
 </div>
 
-<div ng-if="currentStep.results">
+<div ng-if="state.results">
   <h3>Results</h3>
 
   <h4 ng-show="!isEditTitleVisible" class="subheader">
@@ -31,23 +31,23 @@
     <div class="columns large-12">
       <h4>Rank acceptabilities</h4>
       <div style="width: 400px; height: 400px">
-        <rank-plot value="currentStep.results.ranks.data"
+        <rank-plot value="state.results.ranks.data"
                    parse-fn="rankGraphData"
                    stacked="true"
-                   problem="currentStep.problem">
+                   problem="state.problem">
         </rank-plot>
       </div>
       <table id="ranktable">
         <thead>
           <tr>
             <th><heat-legend></heat-legend></th>
-            <th ng-repeat="alternative in currentStep.problem.alternatives">Rank {{::$index + 1}}</th>
+            <th ng-repeat="alternative in state.problem.alternatives">Rank {{::$index + 1}}</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="(key, alternative) in currentStep.problem.alternatives">
+          <tr ng-repeat="(key, alternative) in state.problem.alternatives">
             <td>{{::alternative.title}}</td>
-            <td ng-repeat="rank in currentStep.results.ranks.data[key] track by $index" class="heat">
+            <td ng-repeat="rank in state.results.ranks.data[key] track by $index" class="heat">
               {{::rank | number}}
             </td>
           </tr>
@@ -59,29 +59,29 @@
   <section class="row underlined-div">
     <div class="columns large-6">
       <h4>Alternatives per rank</h4>
-      <select ng-model="currentStep.selectedRank" class="large-3">
-        <option ng-repeat="(k,v) in currentStep.problem.alternatives"
+      <select ng-model="state.selectedRank" class="large-3">
+        <option ng-repeat="(k,v) in state.problem.alternatives"
                 value="{{$index}}"
-                ng-selected="$index == currentStep.selectedRank">
+                ng-selected="$index == state.selectedRank">
           Rank {{::$index + 1}}
         </option>
       </select>
 
       <div style="width: 400px; height: 350px">
-        <bar-chart value="currentStep.alternativesByRank(currentStep)"></bar-chart>
+        <bar-chart value="state.alternativesByRank(state)"></bar-chart>
       </div>
     </div>
     <div class="columns large-6">
       <h4>Ranks per alternative</h4>
-      <select ng-model="currentStep.selectedAlternative" class="large-3">
-        <option ng-repeat="(key, alternative) in currentStep.problem.alternatives"
+      <select ng-model="state.selectedAlternative" class="large-3">
+        <option ng-repeat="(key, alternative) in state.problem.alternatives"
                 value="{{key}}"
-                ng-selected="key == currentStep.selectedAlternative">
+                ng-selected="key == state.selectedAlternative">
           {{::alternative.title}}
         </option>
       </select>
       <div style="width: 400px; height: 350px">
-        <bar-chart value="currentStep.ranksByAlternative(currentStep)"></bar-chart>
+        <bar-chart value="state.ranksByAlternative(state)"></bar-chart>
       </div>
     </div>
   </section>
@@ -89,7 +89,7 @@
   <section class="row">
     <div class="columns large-12">
       <div style="width: 650px; height: 350px">
-        <line-chart value="currentStep.centralWeights(currentStep)"></line-chart>
+        <line-chart value="state.centralWeights(state)"></line-chart>
       </div>
 
       <table>
@@ -97,14 +97,14 @@
           <tr>
             <th>Alternative</th>
             <th>Confidence <heat-legend></heat-legend></th>
-            <th ng-repeat="criterion in currentStep.problem.criteria">{{criterion.title}}</th>
+            <th ng-repeat="criterion in state.problem.criteria">{{criterion.title}}</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="(a, cw) in currentStep.results.cw.data">
-            <td>{{currentStep.problem.alternatives[a].title}}</td>
+          <tr ng-repeat="(a, cw) in state.results.cw.data">
+            <td>{{state.problem.alternatives[a].title}}</td>
             <td class="heat">{{::cw.cf | number}}</td>
-            <td ng-repeat="(c, criterion) in currentStep.problem.criteria">
+            <td ng-repeat="(c, criterion) in state.problem.criteria">
               {{::cw.w[c] | number}}
             </td>
           </tr>

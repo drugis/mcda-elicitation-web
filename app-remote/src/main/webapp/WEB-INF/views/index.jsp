@@ -9,15 +9,15 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="shortcut icon" href="<c:url value="/bower_components/mcda-web/app/img/favicon.ico" />" type="image/x-icon" />
-
-    <title>mcda.drugis.org</title>
-
     <link rel="stylesheet" type="text/css" href="bower_components/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="bower_components/jslider/dist/jquery.slider.min.css">
     <link rel="stylesheet" type="text/css" href="bower_components/nvd3-community/build/nv.d3.min.css">
 
     <link rel="stylesheet" type="text/css" href="<c:url value="/bower_components/mcda-web/app/css/mcda-drugis.css" />">
+
+    <link rel="shortcut icon" href="<c:url value="/bower_components/mcda-web/app/img/favicon.ico" />" type="image/x-icon" />
+
+    <title>mcda.drugis.org</title>
 
     <script src="bower_components/requirejs/require.js" data-main="app/js/main.js"></script>
 
@@ -40,9 +40,7 @@
           <!-- Right Nav Section -->
           <ul class="right">
             <li has-dropdown>
-              <a href="#">
-                <i class="fa fa-user fa-fw"></i>
-                <c:out value="${account.firstName} ${account.lastName}" /></a>
+              <a href="#"><img class="user-image" src="https://secure.gravatar.com/avatar/${userMD5}?s=43&d=mm"> <c:out value="${account.firstName} ${account.lastName} " /></a>
               <ul top-bar-dropdown>
                 <li><a href="#" onClick="signout()">Sign out</a></li>
               </ul>
@@ -58,7 +56,7 @@
 
     <div ng-if="error" class="row" ng-cloak>
       <div class="columns">
-      <addis-alert type="alert" close="error.close()">{{error.code}} {{error.cause}}<span ng-show="error.error">&mdash; {{error.error}}</span></addis-alert>
+        <addis-alert type="alert" close="error.close()">{{error.code}} {{error.cause}}<span ng-show="error.error">&mdash; {{error.error}}</span></addis-alert>
       </div>
     </div>
 
