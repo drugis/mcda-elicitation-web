@@ -3,8 +3,9 @@ define(function(require) {
   var angular = require("angular");
   var _ = require("underscore");
 
-  return function($scope, $filter, $location, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition) {
-    var state = taskDefinition.clean($scope.scenario.state);
+  return function($scope, $filter, $location, currentScenario, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition) {
+    var state = taskDefinition.clean(currentScenario.state);
+    $scope.scenario = currentScenario;
 
     $scope.intervalHull = intervalHull;
 

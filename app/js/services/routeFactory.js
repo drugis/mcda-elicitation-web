@@ -9,33 +9,42 @@ define(function(require) {
   var MCDARouteProvider = function() {
     return {
       buildRoutes: function($stateProvider, parentState, baseTemplatePath) {
-        $stateProvider.state(parentState + '.scenario', {
+
+        var parent = {
+          name: parentState + '.scenario',
           url: '/scenarios/:id',
           templateUrl: baseTemplatePath + 'scenario.html',
           controller: 'ScenarioController',
           resolve: {
-            currentScenario: function($stateParams, ScenarioResource) {
-              return ScenarioResource.get($stateParams).$promise;
-            },
             scenarios: function($stateParams, ScenarioResource) {
               return ScenarioResource.query(_.omit($stateParams, 'id')).$promise;
             }}
-        });
+        };
 
-        angular.forEach(Config.tasks.available, function(task) {
+        var children = Config.tasks.available.map(function(task) {
           var templateUrl = baseTemplatePath + task.templateUrl;
-          $stateProvider.state(task.id, {
-            parent: parentState + '.scenario',
+          return {
+            name: task.id,
+            parent: parent,
             url: task.url ? task.url : '/' + task.id,
             templateUrl: templateUrl,
             controller: task.controller,
             resolve: {
+              currentScenario: function($stateParams, ScenarioResource) {
+                return ScenarioResource.get($stateParams).$promise;
+              },
               taskDefinition: function(TaskDependencies) {
                 return TaskDependencies.extendTaskDefinition(task);
               }
             }
-          });
+          };
         });
+
+        $stateProvider.state(parent);
+        children.forEach(function(child) {
+          $stateProvider.state(child);
+        });
+
       },
       $get: function() {}
     };

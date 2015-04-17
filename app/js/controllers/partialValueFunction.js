@@ -107,10 +107,10 @@ define(function(require) {
       var criterionId = $stateParams.criterion;
       state.problem.criteria[criterionId] = standardizeCriterion(state.choice);
 
-      $scope.scenario.state = _.pick(state, ['problem', 'prefs']);
-
-      $scope.scenario.$save($stateParams, function(scenario) {
-        $state.go('preferences', {}, { reload: true });
+      currentScenario.state = _.pick(state, ['problem', 'prefs']);
+      currentScenario.$save($stateParams, function(scenario) {
+        $scope.$emit("elicit.resultsAccessible", scenario);
+        $state.go('preferences');
       });
     };
 
