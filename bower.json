@@ -38,7 +38,7 @@
     "requirejs": "~2.1.10",
     "jslider": "https://github.com/SalesSeek/jslider.git#1.2.0",
     "bowser": "*",
-    "angular-foundation": "~0.5.1"
+    "angular-foundation": "~0.6.0"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0-rc.0"
