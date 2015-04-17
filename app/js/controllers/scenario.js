@@ -69,10 +69,11 @@ define(function(require) {
 
     $scope.saveTitle = function() {
       $scope.__scenario.title = $scope.scenarioTitle.value;
+      $scope.isEditTitleVisible = false;
       $scope.__scenario.$save($stateParams, function(){
         $scope.scenarios = ScenarioResource.query(_.omit($stateParams, 'id'));
+        redirect($stateParams.id);
       });
-      $scope.isEditTitleVisible = false;
     };
 
     $scope.cancelTitle = function() {
