@@ -17,7 +17,6 @@ define(function(require) {
     }
 
     var setResultsAccessible = function(state) {
-      console.log("newState", state);
       $scope.resultsAccessible =
             TaskDependencies.isAccessible($scope.tasks.results, state);
     };
