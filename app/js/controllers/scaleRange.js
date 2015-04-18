@@ -4,7 +4,6 @@ define(function(require) {
   var _ = require("underscore");
 
   return function($scope, $state, $stateParams, currentScenario, taskDefinition, intervalHull, ScaleRangeService) {
-
     var state = taskDefinition.clean(currentScenario.state);
 
     $scope.title = taskDefinition.title;
@@ -36,9 +35,10 @@ define(function(require) {
         state.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
       });
 
-      $scope.scenario.state = _.pick(state, ['problem', 'prefs']);
-      $scope.scenario.$save($stateParams, function(scenario) {
-        $state.go('preferences', {}, { reload: true });
+      currentScenario.state = _.pick(state, ['problem', 'prefs']);
+      currentScenario.$save($stateParams, function(scenario) {
+        $scope.$emit("elicit.resultsAccessible", scenario);
+        $state.go('preferences');
       });
 
     };

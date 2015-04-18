@@ -95,9 +95,9 @@ define(function(require) {
     $scope.save = function(state) {
       state = nextState(state);
 
-      $scope.scenario.state = _.pick(state, ['problem', 'prefs']);
-      $scope.scenario.$save($stateParams, function(scenario) {
-        $state.go('preferences', {}, { reload: true });
+      currentScenario.state = _.pick(state, ['problem', 'prefs']);
+      currentScenario.$save($stateParams, function(scenario) {
+        $state.go('preferences');
       });
 
     };

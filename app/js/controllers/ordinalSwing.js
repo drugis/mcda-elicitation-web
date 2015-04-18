@@ -6,7 +6,6 @@ define(function(require) {
 
   return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
     var pvf = PartialValueFunction;
-
     $scope.pvf = pvf;
 
     var getReference = function(criteria) {
@@ -115,9 +114,9 @@ define(function(require) {
     $scope.save = function(state) {
       var nextState = standardize(state);
 
-      $scope.scenario.state = _.pick(nextState, ['problem', 'prefs']);
-      $scope.scenario.$save($stateParams, function(scenario) {
-        $state.go('preferences', {}, { reload: true });
+      currentScenario.state = _.pick(nextState, ['problem', 'prefs']);
+      currentScenario.$save($stateParams, function(scenario) {
+        $state.go('preferences');
       });
     };
 

@@ -4,8 +4,7 @@ define(function(require) {
   var _ = require("underscore");
 
   return function($rootScope, $scope, currentScenario, taskDefinition, MCDAPataviService) {
-    var alternatives;
-    var criteria;
+    $scope.scenario = currentScenario;
 
     var run = function(state) {
       state = angular.copy(state);
@@ -35,17 +34,19 @@ define(function(require) {
     };
 
     var alternativeTitle = function(id) {
-      return alternatives[id].title;
+      var problem = currentScenario.state.problem;
+      return problem.alternatives[id].title;
     };
 
     var getCentralWeights = _.memoize(function(state) {
+      var problem = state.problem;
       var data = state.results.cw.data;
       var result = [];
       _.each(_.pairs(data), function(alternative) {
         var values = _.map(_.pairs(alternative[1].w), function(criterion, index) {
           return { x: index, label: criterion[0], y: criterion[1] };
         });
-        var labels = _.map(_.pluck(values, 'label'), function(id) { return criteria[id].title; });
+        var labels = _.map(_.pluck(values, 'label'), function(id) { return problem.criteria[id].title; });
         result.push({ key: alternativeTitle(alternative[0]), labels: labels, values: values });
       });
       return result;
@@ -76,10 +77,8 @@ define(function(require) {
     });
 
     var initialize = function(state) {
-      alternatives = _.clone(state.problem.alternatives);
-      criteria = _.clone(state.problem.criteria);
       var next = _.extend(state, {
-        selectedAlternative: _.keys(alternatives)[0],
+        selectedAlternative: _.keys(state.problem.alternatives)[0],
         selectedRank: '0',
         ranksByAlternative: getRanksByAlternative,
         alternativesByRank: getAlterativesByRank,
