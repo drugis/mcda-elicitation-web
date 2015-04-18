@@ -15,7 +15,6 @@ define(function(require) {
       criterion.pvf.direction = "decreasing";
       criterion.pvf.type = "linear";
       criterion.pvf.cutoffs = criterion.pvf.values = undefined;
-      console.log(criterion);
 
       var initial = {
         ref: 0,
