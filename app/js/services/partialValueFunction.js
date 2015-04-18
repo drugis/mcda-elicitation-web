@@ -81,7 +81,7 @@ define(function(require) {
       });
     };
 
-    var sortByValues = function(criterion) {
+    var _sortByValues = function(criterion) {
       /* sorts the values and cutoffs according to the values (y-axis)
        returns an object containing the values and cuttoffs */
       if(!criterion.pvf.cutoffs || !criterion.pvf.values) {
@@ -107,12 +107,12 @@ define(function(require) {
       return criterion;
     };
 
-
     var getXY = function(criterion) {
-      var newCriterion = sortByValues(angular.copy(criterion));
+      var newCriterion = _sortByValues(angular.copy(criterion));
 
       var y = [1].concat(newCriterion.pvf.values || []).concat([0]);
       var x = [best(newCriterion)].concat(newCriterion.pvf.cutoffs || []).concat([worst(newCriterion)]);
+
       var values = _.map(_.zip(x, y), function(p) {
         return {
           x: p[0],

@@ -157,7 +157,7 @@ define(['angular',
             "direction": "increasing",
             "range": [4, 8],
             "cutoffs": [4.5, 5, 6.5],
-            "values": [0.75, 0.5, 0.25]
+            "values": [0.25, 0.5, 0.75]
           }
         };
 
