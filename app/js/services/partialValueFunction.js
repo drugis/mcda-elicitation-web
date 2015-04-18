@@ -3,10 +3,6 @@ define(function(require) {
   var _ = require("underscore");
 
   return angular.module('elicit.pvfService', []).factory('PartialValueFunction', function() {
-    var sortNumber = function(a,b) { // Seriously
-      return a - b;
-    };
-
     var findIndexOfFirstLargerElement = function(arr, val) {
       return _.indexOf(arr, _.find(arr, function(elm) {
         return elm >= val;
@@ -23,13 +19,11 @@ define(function(require) {
       var pvf = criterion.pvf;
       var increasing = isIncreasing(criterion);
 
-      var cutoffs = (pvf.cutoffs || []).slice();
+      var cutoffs = pvf.cutoffs || [];
 
       cutoffs = [pvf.range[0]].concat(cutoffs);
 
       cutoffs.push(pvf.range[1]);
-
-      cutoffs.sort(sortNumber);
 
       var values = [increasing ? 0.0 : 1.0].concat(pvf.values || []);
       values.push(increasing ? 1.0 : 0.0);
@@ -87,9 +81,38 @@ define(function(require) {
       });
     };
 
+    var sortByValues = function(criterion) {
+      /* sorts the values and cutoffs according to the values (y-axis)
+       returns an object containing the values and cuttoffs */
+      if(!criterion.pvf.cutoffs || !criterion.pvf.values) {
+        return criterion;
+      }
+      var newCutoffs = criterion.pvf.cutoffs;
+      var newValues = criterion.pvf.values;
+
+      var list = [];
+      for (var j = 0; j < newCutoffs.length; j++) {
+        list.push({'cutoff': newCutoffs[j], 'value': newValues[j]});
+      }
+      list.sort(function(a,b) {
+        return ((b.value < a.value) ? - 1 : ((b.value === a.value) ? 0 : 1));
+      });
+
+      for (var k = 0; k < list.length; k++) {
+        newCutoffs[k] = list[k].cutoff;
+        newValues[k] = list[k].value;
+      }
+      criterion.pvf.values = newValues;
+      criterion.pvf.cutoffs = newCutoffs;
+      return criterion;
+    };
+
+
     var getXY = function(criterion) {
-      var y = [1].concat(criterion.pvf.values || []).concat([0]);
-      var x = [best(criterion)].concat(criterion.pvf.cutoffs || []).concat([worst(criterion)]);
+      var newCriterion = sortByValues(angular.copy(criterion));
+
+      var y = [1].concat(newCriterion.pvf.values || []).concat([0]);
+      var x = [best(newCriterion)].concat(newCriterion.pvf.cutoffs || []).concat([worst(newCriterion)]);
       var values = _.map(_.zip(x, y), function(p) {
         return {
           x: p[0],

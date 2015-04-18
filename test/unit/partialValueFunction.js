@@ -156,7 +156,7 @@ define(['angular',
             "type": "piecewise-linear",
             "direction": "increasing",
             "range": [4, 8],
-            "cutoffs": [6.5, 5, 4.5],
+            "cutoffs": [4.5, 5, 6.5],
             "values": [0.75, 0.5, 0.25]
           }
         };

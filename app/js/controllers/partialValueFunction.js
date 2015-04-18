@@ -8,12 +8,14 @@ define(function(require) {
     $scope.pvf = PartialValueFunction;
 
     var initialize = function(state) {
-    var criterionId = $stateParams.criterion;
+      var criterionId = $stateParams.criterion;
       var criterion = angular.copy(state.problem.criteria[criterionId]);
       if(!criterion) return {};
       // set defaults
       criterion.pvf.direction = "decreasing";
       criterion.pvf.type = "linear";
+      criterion.pvf.cutoffs = criterion.pvf.values = undefined;
+      console.log(criterion);
 
       var initial = {
         ref: 0,
@@ -66,39 +68,11 @@ define(function(require) {
       return nextState;
     };
 
-    var sortByValues = function(criterion) {
-      /* sorts the values and cutoffs according to the values (y-axis)
-       returns an object containing the values and cuttoffs */
-      var newCutoffs = criterion.pvf.cutoffs.slice();
-      var newValues = criterion.pvf.values.slice();
-
-      var list = [];
-      for (var j = 0; j < newCutoffs.length; j++) {
-        list.push({'cutoff': newCutoffs[j], 'value': newValues[j]});
-      }
-      list.sort(function(a,b) {
-        return ((b.value < a.value) ? - 1 : ((b.value === a.value) ? 0 : 1));
-      });
-
-      for (var k = 0; k < list.length; k++) {
-        newCutoffs[k] = list[k].cutoff;
-        newValues[k] = list[k].value;
-      }
-      return {
-        values: newValues,
-        cutoffs: newCutoffs
-      };
-    };
-
     var standardizeCriterion = function(criterion) {
       var newCriterion = angular.copy(criterion);
       if (newCriterion.pvf.type === 'linear') {
         newCriterion.pvf.values = undefined;
         newCriterion.pvf.cutoffs = undefined;
-      } else {
-        if(newCriterion.pvf.cutoffs && newCriterion.pvf.values) {
-          newCriterion.pvf = _.extend(newCriterion.pvf, sortByValues(newCriterion));
-        }
       }
       return newCriterion;
     };
@@ -136,10 +110,8 @@ define(function(require) {
       }
     };
 
-    $scope.getXY = _.memoize(function(criterion) {
-      return PartialValueFunction.getXY(standardizeCriterion(criterion));
-    }, function(criterion) { // hash
-      return angular.toJson(criterion.pvf);
+    $scope.getXY = _.memoize(PartialValueFunction.getXY, function(arg) {
+      return angular.toJson(arg.pvf);
     });
 
     $scope.cancel = function() {

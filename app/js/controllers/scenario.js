@@ -17,12 +17,18 @@ define(function(require) {
     }
 
     var setResultsAccessible = function(state) {
+      if(!state || !state.problem) {
+        $scope.resultsAccessible = false;
+        return;
+      }
       $scope.resultsAccessible =
             TaskDependencies.isAccessible($scope.tasks.results, state);
     };
 
     $scope.$watch("__scenario.state", setResultsAccessible);
-    $scope.$on("elicit.resultsAccessible", function(e, scenario) { setResultsAccessible(scenario.state); });
+    $scope.$on("elicit.resultsAccessible", function(e, scenario) {
+      setResultsAccessible(scenario.state);
+    });
     $scope.__scenario = ScenarioResource.get($stateParams);
 
     $scope.tasks = _.reduce(Tasks.available, function(tasks, task) {
