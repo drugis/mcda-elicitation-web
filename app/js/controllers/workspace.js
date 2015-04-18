@@ -7,10 +7,10 @@ define(function(require) {
     $scope.workspace = currentWorkspace;
 
     $scope.isEditTitleVisible = false;
+    $scope.workspaceTitle = $scope.workspace.title;
 
     $scope.editTitle = function() {
       $scope.isEditTitleVisible = true;
-      $scope.workspaceTitle = $scope.workspace.title;
     };
 
     $scope.saveTitle = function() {
