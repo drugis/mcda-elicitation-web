@@ -93,8 +93,6 @@ define(function(require) {
     };
 
     $scope.save = function(state) {
-      state = nextState(state);
-
       currentScenario.state = _.pick(state, ['problem', 'prefs']);
       currentScenario.$save($stateParams, function(scenario) {
         $state.go('preferences');

@@ -4,7 +4,6 @@ define(function(require) {
   var _ = require("underscore");
 
   return function($scope, $filter, $location, currentScenario, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition) {
-    var state = taskDefinition.clean(currentScenario.state);
     $scope.scenario = currentScenario;
 
     $scope.intervalHull = intervalHull;
@@ -13,7 +12,7 @@ define(function(require) {
 
     $scope.pvf = PartialValueFunction;
 
-    $scope.criteria = _.sortBy(_.map(_.pairs(state.problem.criteria), function(crit, idx) {
+    $scope.criteria = _.sortBy(_.map(_.pairs(currentScenario.state.problem.criteria), function(crit, idx) {
       return _.extend(crit[1], {
         id: crit[0],
         w: 'w_' + (idx + 1)
