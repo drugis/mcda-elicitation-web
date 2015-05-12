@@ -17,19 +17,21 @@ define(function(require) {
     }
 
     var setResultsAccessible = function(state) {
-      if(!state || !state.problem) {
+      if (!state || !state.problem) {
         $scope.resultsAccessible = false;
         return;
       }
-      $scope.resultsAccessible =
-            TaskDependencies.isAccessible($scope.tasks.results, state);
+      $scope.resultsAccessible = TaskDependencies.isAccessible($scope.tasks.results, state);
     };
 
     $scope.$watch("__scenario.state", setResultsAccessible);
     $scope.$on("elicit.resultsAccessible", function(e, scenario) {
       setResultsAccessible(scenario.state);
     });
-    $scope.__scenario = ScenarioResource.get($stateParams);
+
+    ScenarioResource.get($stateParams).$promise.then(function(result) {
+      $scope.__scenario = result;
+    });
 
     $scope.tasks = _.reduce(Tasks.available, function(tasks, task) {
       tasks[task.id] = task;
@@ -43,7 +45,9 @@ define(function(require) {
     var redirect = function(scenarioId) {
       var newState = _.omit($stateParams, 'id');
       newState.id = scenarioId;
-      $state.go($state.current.name, newState, { reload: true });
+      $state.go($state.current.name, newState, {
+        reload: true
+      });
     };
 
     $scope.forkScenario = function() {
@@ -76,7 +80,7 @@ define(function(require) {
     $scope.saveTitle = function() {
       $scope.__scenario.title = $scope.scenarioTitle.value;
       $scope.isEditTitleVisible = false;
-      $scope.__scenario.$save($stateParams, function(){
+      $scope.__scenario.$save($stateParams, function() {
         $scope.scenarios = ScenarioResource.query(_.omit($stateParams, 'id'));
         redirect($stateParams.id);
       });
