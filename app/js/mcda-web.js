@@ -10,7 +10,7 @@ define(function(require) {
   require('mcda/services/remarks');
   require('mcda/services/routeFactory');
   require('mcda/services/workspaceResource');
-  require('mcda/services/valueTreeService');
+  require('mcda/services/workspaceService');
   require('mcda/services/scenarioResource');
   require('mcda/services/taskDependencies');
   require('mcda/services/errorHandling');
@@ -29,7 +29,7 @@ define(function(require) {
     'elicit.scaleRangeService',
     'elicit.remarks',
     'elicit.workspaceResource',
-    'elicit.valueTreeService',
+    'elicit.workspaceService',
     'elicit.scenarioResource',
     'elicit.util',
     'elicit.directives',

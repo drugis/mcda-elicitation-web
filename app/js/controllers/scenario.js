@@ -1,32 +1,25 @@
 'use strict';
 define(function(require) {
-  var angular = require("angular");
-  var _ = require("underscore");
-  var Config = require("mcda/config");
+  var angular = require('angular');
+  var _ = require('underscore');
+  var Config = require('mcda/config');
 
-  return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, scenarios, ScenarioResource) {
+  return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, scenarios, ScenarioResource, WorkspaceService) {
 
-    function randomId(size, prefix) {
-      var text = '';
-      var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-      for (var i = 0; i < size; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-      }
-      return prefix ? prefix + text : text;
-    }
-
-    var setResultsAccessible = function(state) {
-      if (!state || !state.problem) {
-        $scope.resultsAccessible = false;
-        return;
-      }
+    $scope.$watch('__scenario.state', function(state) {
       $scope.resultsAccessible = TaskDependencies.isAccessible($scope.tasks.results, state);
-    };
+    });
+    $scope.$on('elicit.resultsAccessible', function(event, scenario) {
+      $scope.resultsAccessible = TaskDependencies.isAccessible($scope.tasks.results, scenario.state);
+    });
 
-    $scope.$watch("__scenario.state", setResultsAccessible);
-    $scope.$on("elicit.resultsAccessible", function(e, scenario) {
-      setResultsAccessible(scenario.state);
+    var currentProblem = $scope.workspace.problem;
+    $scope.workspace.$$valueTree = WorkspaceService.buildValueTree(currentProblem);
+    $scope.workspace.$$scales = {};
+    $scope.workspace.$$scales.theoreticalScales = WorkspaceService.buildTheoreticalScales(currentProblem);
+
+    WorkspaceService.getObservedScales(currentProblem).then(function(observedScales) {
+      $scope.workspace.$$scales.observed = observedScales;
     });
 
     ScenarioResource.get($stateParams).$promise.then(function(result) {
@@ -42,13 +35,24 @@ define(function(require) {
     $scope.scenarioTitle = {};
     $scope.scenarios = scenarios;
 
-    var redirect = function(scenarioId) {
+    function randomId(size, prefix) {
+      var text = '';
+      var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+      for (var i = 0; i < size; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+      }
+      return prefix ? prefix + text : text;
+    }
+
+
+    function redirect(scenarioId) {
       var newState = _.omit($stateParams, 'id');
       newState.id = scenarioId;
       $state.go($state.current.name, newState, {
         reload: true
       });
-    };
+    }
 
     $scope.forkScenario = function() {
       var newScenario = {
