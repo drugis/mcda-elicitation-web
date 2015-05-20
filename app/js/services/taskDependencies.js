@@ -98,7 +98,11 @@ define(function(require) {
         return definitions[reset].remove(memo);
       }, state);
     };
+
     var isAccessible = function(task, state) {
+      if (!state || !state.problem) {
+        return false;
+      }
       var requires = _.filter(task.requires, function(require) {
         return !definitions[require].isPresent(state);
       });
@@ -107,6 +111,7 @@ define(function(require) {
         requires: requires
       };
     };
+
     var isSafe = function(task, state) {
       var resets = _.filter(task.resets, function(reset) {
         return definitions[reset].isPresent(state);
