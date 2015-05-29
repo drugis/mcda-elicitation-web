@@ -1,6 +1,10 @@
 'use strict';
-define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
-  return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, currentScenario, scenarios, ScenarioResource) {
+define(function(require) {
+  var angular = require("angular");
+  var _ = require("underscore");
+  var Config = require("mcda/config");
+
+  return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, scenarios, ScenarioResource) {
 
     function randomId(size, prefix) {
       var text = '';
@@ -12,39 +16,40 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
       return prefix ? prefix + text : text;
     }
 
-    var resultsAccessible = function(results, state) {
-      return TaskDependencies.isAccessible(results, state);
+    var setResultsAccessible = function(state) {
+      if(!state || !state.problem) {
+        $scope.resultsAccessible = false;
+        return;
+      }
+      $scope.resultsAccessible =
+            TaskDependencies.isAccessible($scope.tasks.results, state);
     };
 
-    $scope.scenario = currentScenario;
+    $scope.$watch("__scenario.state", setResultsAccessible);
+    $scope.$on("elicit.resultsAccessible", function(e, scenario) {
+      setResultsAccessible(scenario.state);
+    });
+    $scope.__scenario = ScenarioResource.get($stateParams);
+
     $scope.tasks = _.reduce(Tasks.available, function(tasks, task) {
       tasks[task.id] = task;
       return tasks;
     }, {});
-    $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
-
-    $scope.$on('elicit.partialValueFunctionChanged', function() {
-      $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
-    });
 
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
     $scope.scenarios = scenarios;
 
-    $scope.$on('elicit.scenariosChanged', function() {
-      $scope.resultsAccessible = resultsAccessible($scope.tasks.results, $scope.scenario.state);
-    });
-
     var redirect = function(scenarioId) {
       var newState = _.omit($stateParams, 'id');
       newState.id = scenarioId;
-      $state.go(Config.defaultView, newState);
+      $state.go($state.current.name, newState, { reload: true });
     };
 
     $scope.forkScenario = function() {
       var newScenario = {
         'title': randomId(3, 'Scenario '),
-        'state': $scope.scenario.state
+        'state': $scope.__scenario.state
       };
       ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
         redirect(savedScenario.id);
@@ -65,15 +70,16 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
 
     $scope.editTitle = function() {
       $scope.isEditTitleVisible = true;
-      $scope.scenarioTitle.value = $scope.scenario.title;
+      $scope.scenarioTitle.value = $scope.__scenario.title;
     };
 
     $scope.saveTitle = function() {
-      $scope.scenario.title = $scope.scenarioTitle.value;
-      $scope.scenario.$save($stateParams, function(){
-        $scope.scenarios = ScenarioResource.query(_.omit($stateParams, 'id'))
-      });
+      $scope.__scenario.title = $scope.scenarioTitle.value;
       $scope.isEditTitleVisible = false;
+      $scope.__scenario.$save($stateParams, function(){
+        $scope.scenarios = ScenarioResource.query(_.omit($stateParams, 'id'));
+        redirect($stateParams.id);
+      });
     };
 
     $scope.cancelTitle = function() {
@@ -81,10 +87,7 @@ define(['angular', 'underscore', 'mcda/config'], function(angular, _, Config) {
     };
 
     $scope.scenarioChanged = function(newScenario) {
-      if (!resultsAccessible($scope.tasks.results, newScenario.state).accessible) {
-        $scope.taskId = 'preferences';
-      }
-      $state.go($scope.taskId, {
+      $state.go($state.current.name, {
         workspaceId: $scope.workspace.id,
         id: newScenario.id
       });

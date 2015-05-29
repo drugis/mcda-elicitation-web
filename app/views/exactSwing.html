@@ -1,70 +1,66 @@
-<div ng-show="currentStep.step <= currentStep.total">
-  <div class="row">
-    <div class="columns large-7">
-      <h3>{{title(currentStep.step, currentStep.total)}}</h3>
+<div ng-show="state.step <= state.total">
+  <div class="row" style="min-height: 450px">
+    <div class="columns large-12">
+      <h3>{{title(state.step, state.total)}}</h3>
       <h5 class="subheader">Determining the relative importance of:</h5>
-      <ul class="no-bullet">
-        <li ng-repeat="criterion in [currentStep.criterionA, currentStep.criterionB] track by $index">
-          {{currentStep.problem.criteria[criterion].title}}
-          ({{pvf.worst(currentStep.problem.criteria[criterion]) | number}} &rarr;
-          {{pvf.best(currentStep.problem.criteria[criterion]) | number}})
+      <ul>
+        <li ng-repeat="criterion in [state.criterionA, state.criterionB] track by $index">
+          <criterion of="state.problem.criteria[criterion]"></criterion>
+          ({{pvf.worst(state.problem.criteria[criterion]) | number}} &rarr;
+          {{pvf.best(state.problem.criteria[criterion]) | number}})
         </li>
       </ul>
 
       <strong>Given the following situation:</strong>
       <p>
-        {{currentStep.problem.criteria[currentStep.criterionA].title}} =
-        {{pvf.worst(currentStep.problem.criteria[currentStep.criterionA]) | number}},
-        {{currentStep.problem.criteria[currentStep.criterionB].title}} =
-        {{pvf.best(currentStep.problem.criteria[currentStep.criterionB]) | number}}
+        {{state.problem.criteria[state.criterionA].title}} =
+        {{pvf.worst(state.problem.criteria[state.criterionA]) | number}},
+        {{state.problem.criteria[state.criterionB].title}} =
+        {{pvf.best(state.problem.criteria[state.criterionB]) | number}}
 
         <br>
         <strong>Adjust the slider:</strong>
         <label>
-          <slider style="width: 400px; margin-top: 20px" model="currentStep.choice" type="point" range="currentStep.range"></slider>
+          <slider style="width: 400px; margin-top: 20px" model="state.choice" type="point" range="state.range"></slider>
         </label>
       </p>
 
       <strong>So that the following alternative is equally desirable:</strong>
       <p>
-        {{currentStep.problem.criteria[currentStep.criterionA].title}} = <span class="label secondary">{{currentStep.choice}}</span>
-        {{currentStep.problem.criteria[currentStep.criterionB].title}} = {{pvf.worst(currentStep.problem.criteria[currentStep.criterionB]) | number}}
+        {{state.problem.criteria[state.criterionA].title}} = <span class="label secondary">{{state.choice}}</span>
+        {{state.problem.criteria[state.criterionB].title}} = {{pvf.worst(state.problem.criteria[state.criterionB]) | number}}
       </p>
     </div>
-
-    <div ng-include="rankProbabilityChartURL"></div>
   </div>
 
   <div class="row">
     <div class="columns large-12">
       <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
       <button class="small button"
-              ng-if="!canSave(currentStep)"
-              ng-click="nextStep(currentStep)"
-              ng-disabled="!canProceed(currentStep)">Next</button>
+              ng-if="!canSave(state)"
+              ng-click="nextStep(state)"
+              ng-disabled="!canProceed(state)">Next</button>
     </div>
   </div>
 </div>
 
-<div ng-show="currentStep.step > currentStep.total">
-  <div class="row">
-    <div class="columns large-7">
-      <h3>{{title(currentStep.step, currentStep.total)}}</h3>
+<div ng-show="state.step > state.total">
+  <div class="row" style="min-height: 450px">
+    <div class="columns large-12">
+      <h3>{{title(state.step, state.total)}}</h3>
       <p>You have given the following trade-offs:</p>
-      <trade-offs problem="currentStep.problem" preferences="currentStep.intermediate"></trade-offs>
+      <trade-offs problem="state.problem" preferences="state.intermediate.prefs"></trade-offs>
       <br>
     </div>
-
-    <div ng-include="rankProbabilityChartURL"></div>
   </div>
 
   <div class="row">
     <div class="columns large-12">
       <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
       <button class="small success button"
-              ng-if="canSave(currentStep)"
-              ng-click="save(currentStep)"
-              ng-disabled="!canProceed(currentStep)">Save</button>
+              ng-if="canSave(state)"
+              ng-click="save(state)"
+              ng-disabled="!canProceed(state)">Save</button>
     </div>
   </div>
 </div>

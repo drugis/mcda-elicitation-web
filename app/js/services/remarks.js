@@ -1,5 +1,7 @@
 'use strict';
-define(['angular','angular-resource'], function(angular) {
+define(function(require) {
+  var angular = require("angular");
+
   var dependencies = ['ngResource'];
 
   var RemarksResource = function($resource) {

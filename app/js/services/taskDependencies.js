@@ -1,5 +1,8 @@
 'use strict';
-define(['underscore', 'angular'], function(_, angular) {
+define(function(require) {
+  var angular = require("angular");
+  var _ = require("underscore");
+
   var dependencies = [];
 
   var scaleRanges = {
@@ -49,7 +52,7 @@ define(['underscore', 'angular'], function(_, angular) {
       return !_.isUndefined(state.prefs);
     },
     'remove': function(state) {
-      return _.omit(state, 'prefs');
+      return _.omit(angular.copy(state), 'prefs');
     },
     title: 'all criteria trade-off preferences'
   };
@@ -73,16 +76,14 @@ define(['underscore', 'angular'], function(_, angular) {
   var nonOrdinalPreferences = new PreferenceFilter(
     function(pref) {
       return pref.type !== "ordinal";
-    },
-    'non-ordinal preferences');
+    }, 'non-ordinal preferences');
 
   // This heuristic is not complete; it only checks whether there are ordinal preferences at all.
   // Currently, there is no way to create ordinal preferences that are not a complete ranking.
   var completeCriteriaRanking = new PreferenceFilter(
     function(pref) {
       return pref.type === "ordinal";
-    },
-    'complete criteria ranking');
+    }, 'complete criteria ranking');
 
   var TaskDependencies = function() {
     var definitions = {

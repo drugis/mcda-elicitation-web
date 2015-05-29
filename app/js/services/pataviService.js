@@ -1,5 +1,8 @@
 'use strict';
-define(['angular', 'mcda/lib/autobahn'], function(angular, ab) {
+define(function(require) {
+  var angular = require("angular");
+  var ab = require("mcda/lib/autobahn");
+
   var dependencies = [];
   var PataviService = function($q) {
     var config = window.patavi || {};

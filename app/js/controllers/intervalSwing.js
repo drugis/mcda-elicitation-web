@@ -1,8 +1,11 @@
 'use strict';
-define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'angular', 'underscore'], function(Wizard, Util, angular, _) {
+define(function(require) {
+  var angular = require("angular");
+  var _ = require("underscore");
+  var Util = require("mcda/controllers/helpers/util");
+  var Wizard = require("mcda/controllers/helpers/wizard");
 
-  return function($scope, $state, $stateParams, $injector, mcdaRootPath, currentScenario, taskDefinition, PartialValueFunction) {
-    var criteria = {};
+  return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
     $scope.pvf = PartialValueFunction;
 
     $scope.title = function(step, total) {
@@ -14,9 +17,9 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
     };
 
 
-    function buildInitial(criterionA, criterionB, step) {
+    function buildInitial(criteria, criterionA, criterionB, step) {
       var bounds = PartialValueFunction.getBounds(criteria[criterionA]);
-      var increasing = criteria[criterionA].pvf.direction === 'increasing';
+      var increasing = PartialValueFunction.isIncreasing(criteria[criterionA]);
       return {
         step: step,
         total: _.size(criteria) - 1,
@@ -35,18 +38,19 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
         range: {
           from: bounds[0],
           to: bounds[1],
-          rightOpen: true
+          rightOpen: true,
+          leftOpen: true
         }
       };
     }
 
     var initialize = function(state) {
-      criteria = state.problem.criteria;
+      var criteria = state.problem.criteria;
       state.prefs = Util.getOrdinalPreferences(state.prefs); // remove pre-existing ordinal/exact preferences
       state = _.extend(state, {
         'criteriaOrder': Util.getCriteriaOrder(state.prefs)
       });
-      state = _.extend(state, buildInitial(state.criteriaOrder[0], state.criteriaOrder[1], 1));
+      state = _.extend(state, buildInitial(criteria, state.criteriaOrder[0], state.criteriaOrder[1], 1));
       return state;
     };
 
@@ -55,6 +59,8 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
       if (!state) {
         return false;
       }
+
+      var criteria = state.problem.criteria;
       var bounds1 = state.choice;
       var bounds2 = PartialValueFunction.getBounds(criteria[state.criterionA]);
       return bounds1.lower < bounds1.upper && bounds2[0] <= bounds1.lower && bounds2[1] >= bounds1.upper;
@@ -65,6 +71,7 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
         return null;
       }
       var order = state.criteriaOrder;
+      var criteria = state.problem.criteria;
 
       var idx = _.indexOf(order, state.criterionB);
       var next;
@@ -74,7 +81,7 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
           step: idx + 1
         };
       } else {
-        next = buildInitial(order[idx], order[idx + 1], idx + 1);
+        next = buildInitial(criteria, order[idx], order[idx + 1], idx + 1);
       }
 
       function getRatioBounds(state) {
@@ -93,16 +100,13 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
       return _.extend(angular.copy(state), next);
     };
 
-    $scope.rankProbabilityChartURL = mcdaRootPath + 'partials/rankProbabilityChart.html';
-
     $scope.canSave = function(state) {
       return state && state.step === state.total + 1;
     };
 
     $scope.save = function(state) {
-      state = nextState(state);
-      $scope.scenario.state = _.pick(state, ['problem', 'prefs']);
-      $scope.scenario.$save($stateParams, function(scenario) {
+      currentScenario.state = _.pick(state, ['problem', 'prefs']);
+      currentScenario.$save($stateParams, function(scenario) {
         $state.go('preferences');
       });
     };
@@ -114,7 +118,6 @@ define(['mcda/controllers/helpers/wizard', 'mcda/controllers/helpers/util', 'ang
         fields: ['total', 'choice', 'criteriaOrder', 'criterionA', 'criterionB'],
         nextState: nextState,
         standardize: _.identity,
-        hasIntermediateResults: true,
         initialize: _.partial(initialize, taskDefinition.clean(currentScenario.state))
       }
     });

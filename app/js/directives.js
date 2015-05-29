@@ -1,5 +1,10 @@
 'use strict';
-define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(require, _, $, angular, d3, nv) {
+define(function(require) {
+  var _ = require("underscore");
+  var $ = require("jQuery");
+  var angular = require("angular");
+  var d3 = require("d3");
+  var nv = require("nvd3");
 
   var directives = angular.module('elicit.directives', []);
 
@@ -29,16 +34,16 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         return $filter('number')((from + (step / steps) * delta));
       };
 
-      function valueToStep(value) {
+      var valueToStep = function(value) {
         return $filter('number')(((value - from) / delta * steps));
-      }
+      };
 
-      function getModelValue() {
+      var getModelValue = function() {
         return type === 'point' ? valueToStep(scope.model) :
           valueToStep(scope.model.lower) + ';' + valueToStep(scope.model.upper);
-      }
+      };
 
-      function getValueModel(value) {
+      var getValueModel = function(value) {
         if (type === 'point') {
           return parseFloat(stepToValue(value));
         } else {
@@ -49,33 +54,33 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
             upper: values[1]
           };
         }
-      }
-      require(['jquery-slider'], function() {
-        $($element).empty();
-        $($element).append('<input type="slider"></input>');
-        $($element).find('input').attr('value', getModelValue());
-        var myElem = $($element).find('input');
-        myElem.slider({
-          from: 0,
-          to: steps,
-          step: 1,
-          calculate: stepToValue,
-          skin: 'round_plastic',
-          onstatechange: _.debounce(function(value) {
-            var values = getValueModel(value);
-            scope.$root.$safeApply(scope, function() {
-              scope.model = values;
-            });
-          }, 10)
-        });
+      };
 
-        if (scope.range && _.has(scope.range, 'restrictTo') && _.has(scope.range, 'restrictFrom')) {
-          $($element).find('.jslider-bg').append('<i class="x"></i>');
-          var width = valueToStep(scope.range.restrictTo) - valueToStep(scope.range.restrictFrom);
-          var left = valueToStep(scope.range.restrictFrom);
-          $($element).find('.jslider-bg .x').attr('style', 'left: ' + left + '%; width:' + width + '%');
-        }
+      require("jquery-slider");
+      $($element).empty();
+      $($element).append('<input type="slider"></input>');
+      $($element).find('input').attr('value', getModelValue());
+      var myElem = $($element).find('input');
+      myElem.slider({
+        from: 0,
+        to: steps,
+        step: 1,
+        calculate: stepToValue,
+        skin: 'round_plastic',
+        onstatechange: _.debounce(function(value) {
+          var values = getValueModel(value);
+          scope.$root.$safeApply(scope, function() {
+            scope.model = values;
+          });
+        }, 10)
       });
+
+      if (scope.range && _.has(scope.range, 'restrictTo') && _.has(scope.range, 'restrictFrom')) {
+        $($element).find('.jslider-bg').append('<i class="x"></i>');
+        var width = valueToStep(scope.range.restrictTo) - valueToStep(scope.range.restrictFrom);
+        var left = valueToStep(scope.range.restrictFrom);
+        $($element).find('.jslider-bg .x').attr('style', 'left: ' + left + '%; width:' + width + '%');
+      }
     };
 
     return {
@@ -92,17 +97,17 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
             initialize(scope, $element);
           }
         };
-        scope.$on('nextstep', init);
-        scope.$on('prevstep', init);
+        scope.$on('nextState', init);
+        scope.$on('prevState', init);
         scope.$watch('range', init, true);
       },
       template: '<div class="slider"></div>'
     };
   });
 
-  function parsePx(str) {
+  var parsePx = function(str) {
     return parseInt(str.replace(/px/gi, ''));
-  }
+  };
 
   var getParentDimension = function(element) {
     var width = parsePx($(element[0].parentNode).css('width'));
@@ -125,8 +130,8 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
       },
       link: function(scope, element, attrs) {
         var svg = d3.select(element[0]).append('svg')
-          .attr('width', '100%')
-          .attr('height', '100%');
+              .attr('width', '100%')
+              .attr('height', '100%');
 
         var dim = getParentDimension(element);
 
@@ -186,8 +191,8 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
         var dim = getParentDimension(element);
 
         var svg = d3.select(element[0]).append('svg')
-          .attr('width', '100%')
-          .attr('height', '100%');
+              .attr('width', '100%')
+              .attr('height', '100%');
 
         scope.$watch('value', function(newVal) {
           if (!newVal) {
@@ -195,17 +200,17 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
           }
           nv.addGraph(function() {
             var chart = nv.models.discreteBarChart()
-              .staggerLabels(false)
-              .showValues(true)
-              .staggerLabels(true)
-              .width(dim.width)
-              .tooltips(false)
-              .x(function(d) {
-                return d.label;
-              })
-              .y(function(d) {
-                return d.value;
-              });
+                  .staggerLabels(false)
+                  .showValues(true)
+                  .staggerLabels(true)
+                  .width(dim.width)
+                  .tooltips(false)
+                  .x(function(d) {
+                    return d.label;
+                  })
+                  .y(function(d) {
+                    return d.value;
+                  });
 
             var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
             svg.datum(data).transition().duration(100).call(chart);
@@ -295,6 +300,22 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
     };
   });
 
+  directives.directive('heatLegend', function() {
+    return {
+      link: function(scope, element) {
+        var color = d3.scale.quantile().range(d3.range(9)).domain([1, 0]);
+        var style = "display: inline-block; text-align: center; height: 2.5em; width: 2.5em; padding: 5px; line-height: 1.9em; margin: 1px;";
+
+        var block = function(val) {
+          var col = 'q' + color(val) + '-9';
+          return '<div style="'+ style +'" class="' + col + '">'+ val + '</div>';
+        };
+
+        scope.heat = '<div class="RdYlGn">' + block(0.0) + block(0.25) +  block(0.75) + block(1.0) + '</div>';
+      },
+      template: '<a tooltip-html-unsafe="{{heat}}" tooltip-animation="false" class="tiny-icon" style="cursor: help"><i class="fa fa-lg fa-question"></i></a>'
+    };
+  });
 
   directives.directive('fileReader', function() {
     return {
@@ -336,17 +357,16 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
           var $script = angular.element('<script type="math/tex">').html(value === undefined ? '' : value);
           element.html('');
           element.append($script);
-          require(['MathJax'], function(MathJax) {
-            MathJax.Hub.Config({
-              skipStartupTypeset: true,
-              messageStyle: "none",
-              showMathMenu: false,
-              "SVG": {
-                font: "Latin-Modern"
-              }
-            });
-            MathJax.Hub.Queue(['Reprocess', MathJax.Hub, element[0]]);
+          var MathJax = require("MathJax");
+          MathJax.Hub.Config({
+            skipStartupTypeset: true,
+            messageStyle: "none",
+            showMathMenu: false,
+            "SVG": {
+              font: "Latin-Modern"
+            }
           });
+          MathJax.Hub.Queue(['Reprocess', MathJax.Hub, element[0]]);
         });
       }
     };
@@ -418,18 +438,19 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
     };
   });
 
-  directives.directive('remarkblock', function(mcdaRootPath) {
+  directives.directive('remarkBlock', function(mcdaRootPath) {
     return {
       scope: {
         remark: '=',
+        editMode: '=',
         saveRemarks: '&saveRemarks',
         cancelRemarks: '&cancelRemarks',
         model: '&model'
       },
-      restrict: 'AE',
+      restrict: 'E',
       replace: 'true',
       templateUrl: mcdaRootPath + 'partials/remark.html',
-      link: function() {
+      link: function(scope, element) {
         $('.remarkbutton').click(function() {
           $('.f-dropdown').css('display', 'none');
         });
@@ -472,7 +493,7 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
               return crit[0] + ' & \\geq & ' + crit[1] + '\\\\';
             } else {
               return '';
-            };
+            }
           });
 
           var ratios  = _.map(newValue, function(pref) {
@@ -497,8 +518,12 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
             }
           });
 
-          scope.order = '\\begin{eqnarray} ' + _.reduce(order, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
-          scope.ratios = '\\begin{eqnarray} ' + _.reduce(ratios, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
+          scope.hasTradeoffs = !_.isEmpty(order);
+
+          if(scope.hasTradeoffs) {
+            scope.order = '\\begin{eqnarray} ' + _.reduce(order, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
+            scope.ratios = '\\begin{eqnarray} ' + _.reduce(ratios, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
+          }
         });
       },
       templateUrl: mcdaRootPath + 'partials/tradeOffs.html'
@@ -535,6 +560,33 @@ define(['require', 'underscore', 'jQuery', 'angular', 'd3', 'nvd3'], function(re
           $compile(element.contents())(scope);
         }
       }
+    };
+  });
+
+  directives.directive('criterion', function() {
+    return {
+      restrict: "E",
+      replace: true,
+      scope: {
+        criterion: '=of'
+      },
+      link: function(scope, element) {
+        var c = scope.criterion;
+
+        var hasDescription = !!c.description;
+        var dimensionlessUnits = ["proportion"];
+        var isDimensionless = !c.unitOfMeasurement || dimensionlessUnits.indexOf(c.unitOfMeasurement.toLowerCase()) !== -1;
+
+        var text;
+        if(hasDescription) {
+          text = c.description.replace(/(\.$)/g, "") + " (" + c.title + (!isDimensionless ? ", " + c.unitOfMeasurement : "") + ")";
+        } else {
+          text = c.title + (!isDimensionless ? " " + c.unitOfMeasurement : "");
+
+        }
+        scope.text = text;
+      },
+      template: "<span>{{text}}</span>"
     };
   });
 

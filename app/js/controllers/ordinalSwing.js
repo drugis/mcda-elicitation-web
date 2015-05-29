@@ -1,13 +1,14 @@
 'use strict';
-define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wizard, angular, _) {
-  return function($scope, $state, $stateParams, $injector, mcdaRootPath, currentScenario, taskDefinition, PartialValueFunction) {
-    var criteria = {};
-    var pvf = PartialValueFunction;
-    var scenario = currentScenario;
+define(function(require) {
+  var angular = require("angular");
+  var _ = require("underscore");
+  var Wizard = require("mcda/controllers/helpers/wizard");
 
+  return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
+    var pvf = PartialValueFunction;
     $scope.pvf = pvf;
 
-    var getReference = function() {
+    var getReference = function(criteria) {
       return _.object(
         _.keys(criteria),
         _.map(criteria, function(criterion) {
@@ -16,9 +17,8 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
       );
     };
 
-    var title = function(step) {
+    var title = function(step, total) {
       var base = 'Ordinal SWING weighting';
-      var total = (_.size(criteria) - 1);
       if (step > total) {
         return base + ' (DONE)';
       }
@@ -26,18 +26,18 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
     };
 
     var initialize = function(state) {
-      criteria = state.problem.criteria;
+      var criteria = state.problem.criteria;
       var fields = {
-        title: title(1),
+        title: title(1, _.size(criteria) - 1),
         type: 'elicit',
         prefs: {
           ordinal: []
         },
-        reference: getReference(),
+        reference: getReference(criteria),
         choices: (function() {
           var criteria = state.problem.criteria;
           var choices = _.map(_.keys(criteria), function(criterion) {
-            var reference = getReference();
+            var reference = getReference(criteria);
             reference[criterion] = pvf.best(criteria[criterion]);
             return reference;
           });
@@ -49,6 +49,7 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
 
 
     var validChoice = function(state) {
+      var criteria = state.problem.criteria;
       return state && _.contains(_.keys(criteria), state.choice);
     };
 
@@ -58,6 +59,8 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
       }
 
       var nextState = angular.copy(state);
+      var criteria = nextState.problem.criteria;
+
       var choice = state.choice;
       nextState.choice = undefined;
 
@@ -69,7 +72,7 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
         delete nextState.choices[choice];
         nextState.reference[choice] = pvf.best(state.problem.criteria[choice]);
         nextState.prefs.ordinal.push(choice);
-        nextState.title = title(nextState.prefs.ordinal.length + 1);
+        nextState.title = title(nextState.prefs.ordinal.length + 1, _.size(criteria) - 1);
       }
       next(choice);
 
@@ -78,13 +81,15 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
         nextState.type = 'review';
       }
 
-
       return nextState;
     };
 
-    function standardize(prefs) {
-      var order = prefs.ordinal;
+    function standardize(state) {
+      var standardized = angular.copy(state);
 
+      var criteria = standardized.problem.criteria;
+      var prefs = standardized.prefs;
+      var order = prefs.ordinal;
       function ordinal(a, b) {
         return {
           type: 'ordinal',
@@ -101,16 +106,16 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
           return ordinal(_.last(order), criterion);
         }));
       }
-      return result;
+
+      standardized.prefs = result;
+      return standardized;
     }
 
-    $scope.rankProbabilityChartURL = mcdaRootPath + 'partials/rankProbabilityChart.html';
-
     $scope.save = function(state) {
-      state.prefs = standardize(state.prefs);
+      var nextState = standardize(state);
 
-      $scope.scenario.state = _.pick(state, ['problem', 'prefs']);
-      $scope.scenario.$save($stateParams, function(scenario) {
+      currentScenario.state = _.pick(nextState, ['problem', 'prefs']);
+      currentScenario.$save($stateParams, function(scenario) {
         $state.go('preferences');
       });
     };
@@ -125,8 +130,7 @@ define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'], function(Wi
         validChoice: validChoice,
         fields: ['choice', 'reference', 'choices', 'type', 'standardized'],
         nextState: nextState,
-        initialize: _.partial(initialize, taskDefinition.clean(scenario.state)),
-        hasIntermediateResults: true,
+        initialize: _.partial(initialize, taskDefinition.clean(currentScenario.state)),
         standardize: standardize
       }
     });

@@ -13,7 +13,6 @@ define(['angular',
       beforeEach(module('elicit.pataviService'));
 
 
-
       beforeEach(inject(function($rootScope, $controller, TaskDependencies) {
         var task = {
             requires: [],
@@ -59,7 +58,6 @@ define(['angular',
 
 
         it("determines worst values", inject(function(PartialValueFunction) {
-          console.log(crit1);
           expect(PartialValueFunction.worst(crit1)).toEqual(-0.15);
           expect(PartialValueFunction.worst(crit2)).toEqual(100);
         }));
@@ -151,5 +149,22 @@ define(['angular',
         }));
       });
 
+      describe("Piecwise Partial Value Functions map", function() {
+
+        var crit =  {
+          pvf: {
+            "type": "piecewise-linear",
+            "direction": "increasing",
+            "range": [4, 8],
+            "cutoffs": [4.5, 5, 6.5],
+            "values": [0.25, 0.5, 0.75]
+          }
+        };
+
+        it("works for three cutoffs", inject(function(PartialValueFunction) {
+          var map = PartialValueFunction.map(crit);
+          expect(map(5)).toBeCloseTo(0.5);
+        }));
+      });
     });
   });

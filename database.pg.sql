@@ -65,3 +65,6 @@ CREATE TABLE Remarks (
 ALTER TABLE Workspace ALTER COLUMN problem TYPE JSON USING problem::JSON;
 ALTER TABLE Scenario ALTER COLUMN state TYPE JSON USING state::JSON;
 ALTER TABLE Remarks ALTER COLUMN remarks TYPE JSON USING remarks::JSON;
+  
+-- changeset joelkuiper:7
+ALTER TABLE Account ADD COLUMN email VARCHAR DEFAULT '';

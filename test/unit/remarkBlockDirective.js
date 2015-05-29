@@ -11,11 +11,11 @@ define(['angular', 'angular-mocks', 'mcda/directives'],
       }));
 
       beforeEach(inject(function($rootScope, $compile, $httpBackend, $templateCache) {
-      
+
         $rootScope.remarkStr = 'initial value';
         $rootScope.saveRemarks = jasmine.createSpy('saveRemarks');
 
-        element = angular.element('<remarkblock remark="remarkStr" save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()"></remarkblock>');
+        element = angular.element('<remark-block remark="remarkStr" save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()"></remark-block>');
         scope = $rootScope;
         element = $compile(element)(scope);
         scope.$digest();

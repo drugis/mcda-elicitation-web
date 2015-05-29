@@ -1,148 +1,131 @@
 'use strict';
-define(['mcda/controllers/helpers/wizard', 'angular', 'underscore'],
-  function(Wizard, angular, _) {
-    return function($scope, $state, $stateParams, $injector, currentScenario, PartialValueFunction, TaskDependencies)
-    {
-      $scope.pvf = PartialValueFunction;
+define(function(require) {
+  var angular = require("angular");
+  var _ = require("underscore");
+  var Wizard = require("mcda/controllers/helpers/wizard");
 
-      var scenario = currentScenario;
+  return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
+    $scope.pvf = PartialValueFunction;
+
+    var initialize = function(state) {
       var criterionId = $stateParams.criterion;
+      var criterion = angular.copy(state.problem.criteria[criterionId]);
+      if(!criterion) return {};
+      // set defaults
+      criterion.pvf.direction = "decreasing";
+      criterion.pvf.type = "linear";
+      criterion.pvf.cutoffs = criterion.pvf.values = undefined;
 
-
-      var initialize = function(state) {
-        var criterion = angular.copy(scenario.state.problem.criteria[criterionId]);
-
-        var initial = {
-          ref: 0,
-          bisections: [[0,1], [0,0.5], [0.5,1]],
-          type: 'elicit type',
-          choice: criterion
-        };
-
-        return _.extend(state, initial);
+      var initial = {
+        ref: 0,
+        bisections: [[0,1], [0,0.5], [0.5,1]],
+        type: 'elicit type',
+        choice: criterion
       };
 
-      var nextState = function(state) {
-        var nextState = angular.copy(state);
-        var ref = nextState.ref;
+      return _.extend(state, initial);
+    };
 
-        if(state.type === 'elicit type') {
-          nextState.type = "bisection";
+    var nextState = function(state) {
+      var nextState = angular.copy(state);
+      var ref = nextState.ref;
+
+      if(state.type === 'elicit type') {
+        nextState.type = "bisection";
+      }
+
+      if(nextState.type === "bisection") {
+        if(ref === 0) {
+          nextState.choice.pvf.values = [];
+          nextState.choice.pvf.cutoffs = [];
         }
 
-        if(nextState.type === "bisection") {
-          if(ref === 0) {
-            nextState.choice.pvf.values = [];
-            nextState.choice.pvf.cutoffs = [];
-          }
+        var bisection = nextState.bisections[ref];
+        var inv = PartialValueFunction.inv(nextState.choice);
 
-          var bisection = nextState.bisections[ref];
-          var inv = PartialValueFunction.inv(nextState.choice);
-
-          var from, to;
-          if(nextState.choice.direction === "increasing") {
-            from = inv(bisection[1]);
-            to = inv(bisection[0]);
-          } else {
-            from = inv(bisection[0]);
-            to = inv(bisection[1]);
-          }
-
-          nextState.choice.pvf.values[ref] = (bisection[0] + bisection[1]) / 2;
-          nextState.choice.pvf.cutoffs[ref] = (to + from) / 2;
-
-          nextState = _.extend(nextState, {
-            ref: ref + 1,
-            range: {
-              from: from,
-              to: to
-            }
-          });
-        }
-
-        return nextState;
-      };
-
-      var sortByValues = function(criterion) {
-        /* sorts the values and cutoffs according to the values (y-axis)
-           returns an object containing the values and cuttoffs */
-        var newCutoffs = criterion.pvf.cutoffs.slice();
-        var newValues = criterion.pvf.values.slice();
-
-        var list = [];
-        for (var j = 0; j < newCutoffs.length; j++) {
-          list.push({'cutoff': newCutoffs[j], 'value': newValues[j]});
-        }
-        list.sort(function(a,b) {
-          return ((b.value < a.value) ? - 1 : ((b.value === a.value) ? 0 : 1));
-        });
-
-        for (var k = 0; k < list.length; k++) {
-          newCutoffs[k] = list[k].cutoff;
-          newValues[k] = list[k].value;
-        }
-
-        return {
-          values: newValues,
-          cutoffs: newCutoffs
-        };
-      };
-
-      var standardizeCriterion = function(criterion) {
-        var newCriterion = angular.copy(criterion);
-        if (newCriterion.pvf.type === 'linear') {
-          newCriterion.pvf.values = undefined;
-          newCriterion.pvf.cutoffs = undefined;
+        var from, to;
+        if(nextState.choice.direction === "increasing") {
+          from = inv(bisection[1]);
+          to = inv(bisection[0]);
         } else {
-          if(newCriterion.pvf.cutoffs && newCriterion.pvf.values) {
-            newCriterion.pvf = _.extend(newCriterion.pvf, sortByValues(newCriterion));
+          from = inv(bisection[0]);
+          to = inv(bisection[1]);
+        }
+
+        nextState.choice.pvf.values[ref] = (bisection[0] + bisection[1]) / 2;
+        nextState.choice.pvf.cutoffs[ref] = (to + from) / 2;
+
+        nextState = _.extend(nextState, {
+          ref: ref + 1,
+          range: {
+            from: from,
+            to: to
           }
-        }
-        return newCriterion;
-      };
-
-      $scope.save = function(state) {
-        state.problem.criteria[criterionId] = standardizeCriterion(state.choice);
-
-        $scope.scenario.state = _.pick(state, ['problem', 'prefs']);
-
-        $scope.scenario.$save($stateParams, function() {
-          $scope.$emit('elicit.partialValueFunctionChanged');
-          $state.go('preferences');
         });
-      };
+      }
 
-      $scope.canSave = function(state) {
-        switch(state.type) {
-        case 'elicit type':
-          return state.choice.pvf.type === "linear";
-        case 'bisection':
-          return state.ref === state.bisections.length;
-        default:
-          return false;
-        }
-      };
+      return nextState;
+    };
 
-      $scope.getXY = _.memoize(function(criterion) {
-        return PartialValueFunction.getXY(standardizeCriterion(criterion));
-      }, function(criterion) { // hash
-        return angular.toJson(standardizeCriterion(criterion).pvf);
-      });
+    var standardizeCriterion = function(criterion) {
+      var newCriterion = angular.copy(criterion);
+      if (newCriterion.pvf.type === 'linear') {
+        newCriterion.pvf.values = undefined;
+        newCriterion.pvf.cutoffs = undefined;
+      }
+      return newCriterion;
+    };
 
-      $scope.cancel = function() {
+    $scope.save = function(state) {
+      var criterionId = $stateParams.criterion;
+      state.problem.criteria[criterionId] = standardizeCriterion(state.choice);
+
+      currentScenario.state = _.pick(state, ['problem', 'prefs']);
+      currentScenario.$save($stateParams, function(scenario) {
+        $scope.$emit("elicit.resultsAccessible", scenario);
         $state.go('preferences');
-      };
-
-      $injector.invoke(Wizard, this, {
-        $scope: $scope,
-        handler: {
-          fields: ['type', 'choice','bisections', 'ref'],
-          validChoice: function() { return true; },
-          hasIntermediateResults: false,
-          nextState: nextState,
-          initialize: _.partial(initialize, $scope.scenario.state),
-          standardize: _.identity
-        }
       });
     };
-  });
+
+    $scope.canSave = function(state) {
+      switch(state.type) {
+      case 'elicit type':
+        return state.choice.pvf.type === "linear";
+      case 'bisection':
+        return state.ref === state.bisections.length;
+      default:
+        return false;
+      }
+    };
+
+    var isValid = function(state) {
+      switch(state.type) {
+      case 'elicit type':
+        return state.choice.pvf.type  && state.choice.pvf.direction;
+      case 'bisection':
+        return true;
+      default:
+        return false;
+      }
+    };
+
+    $scope.getXY = _.memoize(PartialValueFunction.getXY, function(arg) {
+      return angular.toJson(arg.pvf);
+    });
+
+    $scope.cancel = function() {
+      $state.go('preferences');
+    };
+
+    $injector.invoke(Wizard, this, {
+      $scope: $scope,
+      handler: {
+        fields: ['type', 'choice','bisections', 'ref'],
+        validChoice: isValid,
+        nextState: nextState,
+        initialize: _.partial(initialize, taskDefinition.clean(currentScenario.state)),
+        standardize: _.identity
+      }
+    });
+  };
+});

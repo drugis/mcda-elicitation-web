@@ -19,19 +19,19 @@
     <tr ng-repeat-start="effectsTableRow in effectsTableData">
       <td ng-show="effectsTableRow.path.length > 0" class="group-header" colspan="{{3 + nrAlternatives}}">
         <div class="main-header">
-          <remarkblock ng-if="editMode.isUserOwner" remark="$parent.remarks.remarks[effectsTableRow.path[0].title]" save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()"></remarkblock>
+          <remark-block edit-mode="editMode" remark="$parent.remarks.remarks[effectsTableRow.path[0].title]" save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()"></remark-block>
           {{::effectsTableRow.path[0].title}}</div>
         <span ng-repeat="node in effectsTableRow.path.slice(1)">
           <i style="font-size: 1.5rem" class="fa fa-angle-right"></i>
           <div class="secondary-header">
-            <remarkblock remark="$parent.remarks.remarks[node.title]" save-remarks="saveRemarks"></remarkblock>{{::node.title}}
+            <remark-block edit-mode="editMode" remark="$parent.remarks.remarks[node.title]" save-remarks="saveRemarks"></remark-block>{{::node.title}}
           </div>
         </span>
       </td>
     </tr>
     <tr class="showmore" ng-repeat-end ng-repeat="criterion in effectsTableRow.criteria track by $index">
       <td>
-        <remarkblock ng-if="editMode.isUserOwner" remark="$parent.remarks.remarks[criterion.value.title]" save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()" user="user"></remarkblock>
+        <remark-block edit-mode="editMode" remark="$parent.remarks.remarks[criterion.value.title]" save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()" user="user"></remark-block>
         <a dropdown-toggle="#dropdown-{{$index}}" class="tiny-icon"><i class="fa fa-list"></i></a>
         {{::criterion.value.title}}
         <div id="dropdown-{{$index}}" class="f-dropdown details">
@@ -46,7 +46,10 @@
               <tr ng-repeat="(alternativeKey, alternative) in problem.alternatives">
                 <td>{{::alternative.title}}</td>
                 <td>
-                  {{::scales[criterion.key][alternativeKey]['50%'] | number}} ({{::scales[criterion.key][alternativeKey]['2.5%'] | number}}, {{::scales[criterion.key][alternativeKey]['97.5%'] | number}})
+                  {{::scales[criterion.key][alternativeKey]['50%'] | number}}
+                  <span ng-show="!isExact(criterion.key, alternativeKey)">
+                    ({{::scales[criterion.key][alternativeKey]['2.5%'] | number}}, {{::scales[criterion.key][alternativeKey]['97.5%'] | number}})
+                  </span>
                 </td>
               </tr>
             </tbody>
@@ -67,7 +70,9 @@
       <td class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives" name="col{{$index}}" id="col{{$index}}" ng-show="alternativeVisible[alternativeKey]">
         {{::scales[criterion.key][alternativeKey]['50%'] | number}}
         <br>
-        <div class="uncertain">{{::scales[criterion.key][alternativeKey]['2.5%'] | number}}, {{::scales[criterion.key][alternativeKey]['97.5%'] | number}}</div>
+        <div class="uncertain" ng-show="!isExact(criterion.key, alternativeKey)">
+          {{::scales[criterion.key][alternativeKey]['2.5%'] | number}},
+          {{::scales[criterion.key][alternativeKey]['97.5%'] | number}}</div>
       </td>
     </tr>
   </tbody>

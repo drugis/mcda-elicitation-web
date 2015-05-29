@@ -1,12 +1,14 @@
-define(['angular'],
-  function(angular) {
-    var dependencies = ['ngResource'];
+'use strict';
+define(function(require) {
+  var angular = require("angular");
 
-    var Workspaces = function($resource) {
-      var WorkspaceResource = $resource(config.workspacesRepositoryUrl + ':workspaceId', {
-        workspaceId: '@id'
-      });
-    };
+  var dependencies = ['ngResource'];
 
-    return angular.module('elicit.remoteWorkspaces', dependencies).factory('WorkspaceResource', Workspaces);
-  });
+  var Workspaces = function($resource) {
+    var WorkspaceResource = $resource(config.workspacesRepositoryUrl + ':workspaceId', {
+      workspaceId: '@id'
+    });
+  };
+
+  return angular.module('elicit.remoteWorkspaces', dependencies).factory('WorkspaceResource', Workspaces);
+});

@@ -1,104 +1,65 @@
 'use strict';
-define(['angular', 'underscore'],
-  function(angular, _) {
-    return ['$rootScope', '$scope', 'handler', 'MCDAPataviService', function($rootScope, $scope, handler, MCDAPataviService) {
+define(function(require) {
+  var angular = require("angular");
+  var _ = require("underscore");
 
-      var calculateIntermediateResults = function(state, standardizeFn) {
-        var prefs = standardizeFn(state.prefs);
+  return function($scope, handler) {
+    var PERSISTENT_FIELDS = ["problem", "type", "prefs"];
+    var previousStates =  [];
+    var nextStates = [];
 
-        state.intermediate = prefs;
+    $scope.state = (function() {
+      var state;
+      if (!_.isUndefined(handler.initialize)) {
+        state = handler.initialize();
+      }
+      return state || {};
+    })();
 
-        var data = _.extend(state.problem, {
-          "preferences": prefs,
-          "method": "smaa"
-        });
-        var task = MCDAPataviService.run(data);
+    $scope.canProceed = function(state) {
+      return (handler && handler.validChoice(state)) || false;
+    };
 
-        var successHandler = function(results) {
-          state.results = results.results;
-        };
+    $scope.canReturn = function() {
+      return previousStates.length > 0;
+    };
 
-        var errorHandler = function(code, error) {
-          var message = {
-            code: (code && code.desc) ? code.desc : code,
-            cause: error
-          };
-          $scope.$root.$broadcast("error", message);
-        };
+    $scope.nextStep = function(state) {
+      $scope.$broadcast('nextState');
+      if (!$scope.canProceed(state)) return false;
+      var choice = state.choice;
 
-        var updateHandler = _.throttle(function(update) {
-          var progress = parseInt(update);
-          if (progress > state.progress) {
-            state.progrss = progress;
-          }
-        }, 30);
-
-        state.progress = 0;
-        task.then(successHandler, errorHandler, updateHandler);
-        return state;
-      };
-
-      var PERSISTENT_FIELDS = ["problem", "type", "prefs"];
-      var previousSteps = [];
-      var nextSteps = [];
-
-      $scope.currentStep = (function() {
-        var state;
-        if (!_.isUndefined(handler.initialize)) {
-          state = handler.initialize();
-          if (handler.hasIntermediateResults) {
-            calculateIntermediateResults(state, handler.standardize);
-          }
-        }
-        return state || {};
-      })();
-
-      $scope.canProceed = function(currentStep) {
-        return (handler && handler.validChoice(currentStep)) || false;
-      };
-
-      $scope.canReturn = function() {
-        return previousSteps.length > 0;
-      };
-
-      $scope.nextStep = function(currentStep) {
-        $scope.$broadcast('nextstep');
-        if (!$scope.canProceed(currentStep)) return false;
-        var choice = currentStep.choice;
-
-        // History handling
-        previousSteps.push(currentStep);
-        var nextStep = nextSteps.pop();
-        if (nextStep && _.isEqual(nextStep.previousChoice, choice)) {
-          $scope.currentStep = nextStep;
-          return true;
-        } else {
-          nextSteps = [];
-        }
-
-        currentStep = _.pick(currentStep, PERSISTENT_FIELDS.concat(handler.fields));
-        nextStep = handler.nextState(currentStep);
-
-        nextStep.previousChoice = choice;
-
-        $scope.currentStep = nextStep;
-
-        if (handler.hasIntermediateResults) {
-          calculateIntermediateResults($scope.currentStep, handler.standardize);
-        }
-
+      // History handling
+      previousStates.push(state);
+      var nextState = nextStates.pop();
+      if (nextState && _.isEqual(nextState.previousChoice, choice)) {
+        $scope.state = nextState;
         return true;
-      };
+      } else {
+        nextStates = [];
+      }
 
-      $scope.previousStep = function() {
-        $scope.$broadcast('prevstep');
-        if (previousSteps.length == 0) return false;
-        nextSteps.push(angular.copy($scope.currentStep));
+      state = _.pick(state, PERSISTENT_FIELDS.concat(handler.fields));
+      nextState = handler.nextState(state);
 
-        var previousStep = previousSteps.pop();
-        $scope.currentStep = previousStep;
-        return true;
-      };
+      nextState.previousChoice = choice;
 
-    }];
-  });
+      nextState.intermediate = handler.standardize(nextState);
+
+      $scope.state = nextState;
+      return true;
+    };
+
+    $scope.isFinished = handler.isFinished;
+
+    $scope.previousStep = function() {
+      $scope.$broadcast('prevState');
+      if (previousStates.length === 0) return false;
+      nextStates.push(angular.copy($scope.state));
+
+      var previousState = previousStates.pop();
+      $scope.state = previousState;
+      return true;
+    };
+  };
+});
