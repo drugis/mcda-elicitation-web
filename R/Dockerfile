@@ -10,7 +10,6 @@ RUN R -e 'install.packages("hitandrun", repos="http://cran.rstudio.com/"); if (!
 RUN R -e 'install.packages("smaa", repos="http://cran.rstudio.com/"); if (!require("smaa")) quit(save="no", status=8)'
 
 ADD measurements.R /tmp/
-ADD macbethSolve.R /tmp/
 ADD smaa.R /tmp/
 RUN cat /tmp/*.R > /var/lib/patavi/smaa_service.R
 

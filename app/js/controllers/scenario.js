@@ -1,10 +1,39 @@
 'use strict';
 define(function(require) {
-  var angular = require("angular");
-  var _ = require("underscore");
-  var Config = require("mcda/config");
+  var angular = require('angular');
+  var _ = require('underscore');
+  var Config = require('mcda/config');
 
-  return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, scenarios, ScenarioResource) {
+  return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, scenarios, ScenarioResource, WorkspaceService) {
+
+    $scope.$watch('__scenario.state', function(state) {
+      $scope.resultsAccessible = TaskDependencies.isAccessible($scope.tasks.results, state);
+    });
+    $scope.$on('elicit.resultsAccessible', function(event, scenario) {
+      $scope.resultsAccessible = TaskDependencies.isAccessible($scope.tasks.results, scenario.state);
+    });
+
+    var currentProblem = $scope.workspace.problem;
+    $scope.workspace.$$valueTree = WorkspaceService.buildValueTree(currentProblem);
+    $scope.workspace.$$scales = {};
+    $scope.workspace.$$scales.theoreticalScales = WorkspaceService.buildTheoreticalScales(currentProblem);
+
+    WorkspaceService.getObservedScales(currentProblem).then(function(observedScales) {
+      $scope.workspace.$$scales.observed = observedScales;
+    });
+
+    ScenarioResource.get($stateParams).$promise.then(function(result) {
+      $scope.__scenario = result;
+    });
+
+    $scope.tasks = _.reduce(Tasks.available, function(tasks, task) {
+      tasks[task.id] = task;
+      return tasks;
+    }, {});
+
+    $scope.isEditTitleVisible = false;
+    $scope.scenarioTitle = {};
+    $scope.scenarios = scenarios;
 
     function randomId(size, prefix) {
       var text = '';
@@ -16,35 +45,14 @@ define(function(require) {
       return prefix ? prefix + text : text;
     }
 
-    var setResultsAccessible = function(state) {
-      if(!state || !state.problem) {
-        $scope.resultsAccessible = false;
-        return;
-      }
-      $scope.resultsAccessible =
-            TaskDependencies.isAccessible($scope.tasks.results, state);
-    };
 
-    $scope.$watch("__scenario.state", setResultsAccessible);
-    $scope.$on("elicit.resultsAccessible", function(e, scenario) {
-      setResultsAccessible(scenario.state);
-    });
-    $scope.__scenario = ScenarioResource.get($stateParams);
-
-    $scope.tasks = _.reduce(Tasks.available, function(tasks, task) {
-      tasks[task.id] = task;
-      return tasks;
-    }, {});
-
-    $scope.isEditTitleVisible = false;
-    $scope.scenarioTitle = {};
-    $scope.scenarios = scenarios;
-
-    var redirect = function(scenarioId) {
+    function redirect(scenarioId) {
       var newState = _.omit($stateParams, 'id');
       newState.id = scenarioId;
-      $state.go($state.current.name, newState, { reload: true });
-    };
+      $state.go($state.current.name, newState, {
+        reload: true
+      });
+    }
 
     $scope.forkScenario = function() {
       var newScenario = {
@@ -76,7 +84,7 @@ define(function(require) {
     $scope.saveTitle = function() {
       $scope.__scenario.title = $scope.scenarioTitle.value;
       $scope.isEditTitleVisible = false;
-      $scope.__scenario.$save($stateParams, function(){
+      $scope.__scenario.$save($stateParams, function() {
         $scope.scenarios = ScenarioResource.query(_.omit($stateParams, 'id'));
         redirect($stateParams.id);
       });
