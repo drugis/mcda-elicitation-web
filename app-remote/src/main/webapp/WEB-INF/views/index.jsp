@@ -60,15 +60,6 @@
       </div>
     </div>
 
-
-    <div ng-cloak class="row">
-      <div class="columns">
-        <addis-alert type="info">
-          <strong>Disclaimer:</strong> this is <em>beta</em> software. We store your workspaces on our servers. While we try our best to keep them secure and compatible with future versions, we can make no guarantees.
-        </addis-alert>
-      </div>
-    </div>
-
     <div ui-view></div>
 
     <div class="push"></div>
