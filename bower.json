@@ -16,7 +16,6 @@
     "**/.*",
     "examples",
     "R",
-    "sass",
     "sass-shared",
     "test",
     "app-local",
