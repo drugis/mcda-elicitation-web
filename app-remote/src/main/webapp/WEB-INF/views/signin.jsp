@@ -5,7 +5,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta name="viewport" content="width=device-width" />
-<link rel="shortcut icon" href="<c:url value="/bower_components/mcda-web/app/img/favicon.ico" />" type="image/x-icon" />
+<link rel="shortcut icon" href="<c:url value="/app/img/favicon.png" />" type="image/x-icon" />
 
 <title>mcda.drugis.org</title>
 
@@ -69,14 +69,13 @@
     <div class="row">
       <div class="columns">
         <p><a href="#">mcda.drugis.org</a> is designed to help policy makers and researchers judge the balance of favorable and unfavorable effects of medicines.
-        This tool is intended to be part of the <a href="http://drugis.org/software/addis2">ADDIS 2</a> decision support system for health care policy.
-        Until then, it serves as a demonstration of our multiple criteria decision analysis (MCDA) methods and our future direction in the development of ADDIS.</p>
-        
+        This tool is part of the <a href="http://drugis.org/software/addis2">ADDIS 2</a> decision support system for health care policy, but can also be used on its own.</p>
+
         <div>
           <a class=" button" href="auth/google?scope=openid%20email%20profile">Sign In with Google</a>
         </div>
         
-        <p>Right now, you need a Google account to sign in. The information we retrieve from Google is only used to ensure that you continue to have access to the workspaces you create.</p>
+        <p>You need a Google account to sign in. The information we retrieve from Google is only used to ensure that you continue to have access to the workspaces you create.</p>
 
         <form id="hiddenSignInForm" action="<c:url value='/signin/authenticate'/>" method="POST" style="display: none;">
           <input type="hidden" name="_csrf" value="<c:out value="${_csrf.token}" />" />

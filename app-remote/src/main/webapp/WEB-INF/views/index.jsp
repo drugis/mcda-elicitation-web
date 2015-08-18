@@ -15,7 +15,7 @@
 
     <link rel="stylesheet" type="text/css" href="<c:url value="/bower_components/mcda-web/app/css/mcda-drugis.css" />">
 
-    <link rel="shortcut icon" href="<c:url value="/bower_components/mcda-web/app/img/favicon.ico" />" type="image/x-icon" />
+    <link rel="shortcut icon" href="<c:url value="/app/img/favicon.png" />" type="image/x-icon" />
 
     <title>mcda.drugis.org</title>
 
@@ -57,15 +57,6 @@
     <div ng-if="error" class="row" ng-cloak>
       <div class="columns">
         <addis-alert type="alert" close="error.close()">{{error.code}} {{error.cause}}<span ng-show="error.error">&mdash; {{error.error}}</span></addis-alert>
-      </div>
-    </div>
-
-
-    <div ng-cloak class="row">
-      <div class="columns">
-        <addis-alert type="info">
-          <strong>Disclaimer:</strong> this is <em>beta</em> software. We store your workspaces on our servers. While we try our best to keep them secure and compatible with future versions, we can make no guarantees.
-        </addis-alert>
       </div>
     </div>
 
