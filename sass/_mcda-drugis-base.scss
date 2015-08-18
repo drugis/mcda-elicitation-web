@@ -5,13 +5,6 @@ $active-tab-color: $black;
 $active-tab-background-color: $white;
 $tab-disabled-opacity: 0.7;
 
-.user-image {
-    margin-top: -1px;
-    margin-right: 4px;
-    height: 32px;
-    border-radius: 15px;
-}
-
 .reveal-modal.mcda-reveal-modal {
     position: fixed;
     left: 10%;
@@ -59,20 +52,6 @@ $tab-disabled-opacity: 0.7;
 
 input[type='file'] {
     width: auto!important;
-}
-
-.alert-box {
-    margin-top: 0.5rem;
-    margin-bottom: 0.25rem;
-}
-
-.color-stripe {
-  background: $drugis-color;
-  height: 0.45rem;
-  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
-  -moz-box-shadow:    0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
-  box-shadow:         0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
-  margin-bottom: 1rem;
 }
 
 /*
@@ -280,7 +259,7 @@ input[type='file'] {
     display: inline-block;
 }
 
-.block{
+.block {
     display: block;
 }
 
@@ -470,6 +449,3 @@ $preferences-progress-inactive-color: #e2e2e2;
     text-align:left;
 }
 
-.alert-box-message {
-    padding-right: 1.25rem;
-}
