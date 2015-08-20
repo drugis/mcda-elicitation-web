@@ -17,8 +17,8 @@
     </tr>
   </thead>
   <tbody class="main"">
-    <tr ng-repeat-start="effectsTableRow in effectsTableData">
-      <td ng-show="effectsTableRow.path.length > 0" class="group-header" colspan="{{3 + nrAlternatives}}">
+    <tr ng-repeat-start="effectsTableRow in effectsTableData" ng-show="effectsTableRow.path.length > 0">
+      <td class="group-header" colspan="{{3 + nrAlternatives}}">
         <div class="main-header">
           <remark-block edit-mode="editMode" remark="$parent.remarks.remarks[effectsTableRow.path[0].title]" save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()"></remark-block>
           {{effectsTableRow.path[0].title}}</div>
