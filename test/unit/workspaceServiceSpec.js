@@ -28,6 +28,21 @@ define(['angular', 'angular-mocks', 'mcda/services/workspaceService'], function(
           expect(result.title).toEqual('Overall value');
           expect(result.criteria).toEqual(['crit 1', 'crit 2']);
         }));
+
+      it('should pass back the old valueTree if the problem already has a valueTree',
+        inject(function(WorkspaceService) {
+          var valueTree = {title: 'old tree'};
+          var problem = {
+            criteria: {
+              'crit 1': 'val1',
+              'crit 2': 'val2',
+            },
+            valueTree: valueTree
+          };
+
+          var result = WorkspaceService.buildValueTree(problem);
+          expect(result).toEqual(valueTree);
+        }));
     });
 
     describe('buildTheoreticalScales', function() {

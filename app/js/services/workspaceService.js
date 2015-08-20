@@ -8,10 +8,14 @@ define(function(require) {
   var WorkspaceService = function(MCDAPataviService) {
 
     var buildValueTree = function(problem) {
-      return {
-        'title': 'Overall value',
-        'criteria': _.keys(problem.criteria)
-      };
+      if (problem.valueTree) {
+        return problem.valueTree;
+      } else {
+        return {
+          'title': 'Overall value',
+          'criteria': _.keys(problem.criteria)
+        };
+      }
     };
 
     // var prepareScales = function(problem) {
