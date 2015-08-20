@@ -92,19 +92,6 @@ define(function(require) {
       }
     };
 
-    var getTask = function(taskId) {
-      return _.find(Tasks.available, function(task) { return task.id === taskId; });
-    };
-
-    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-      var task = getTask(toState.name);
-      if(task && task.activeTab) {
-        $rootScope.activeTab = task.activeTab;
-      } else {
-        $rootScope.activeTab = toState.name;
-      }
-    });
-
     $rootScope.$on('error', function(e, message) {
       $rootScope.$safeApply($rootScope, function() {
         $rootScope.error = _.extend(message, {

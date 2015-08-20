@@ -355,6 +355,7 @@
           </execution>
         </executions>
         <configuration>
+          <karmaExecutable>${user.home}/npm-global/bin/karma</karmaExecutable>
           <configFile>../test/karma.conf.js</configFile>
           <junitReportFile>../test/test-results.xml</junitReportFile>
           <browsers>PhantomJS</browsers>

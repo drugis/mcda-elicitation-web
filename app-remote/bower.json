@@ -18,7 +18,7 @@
   ],
   "dependencies": {
     "requirejs-domready": "~2.0.1",
-    "mcda-web": "../#develop"
+    "mcda-web": "../#bugfix"
   },
   "resolutions": {
     "d3": "3.5.5",
