@@ -5,7 +5,8 @@ define(function(require) {
 
   var dependencies = [];
   var PataviService = function($q) {
-    var WS_URI = typeof window.config['WS_URI'] !== 'undefined' ? window.config['WS_URI'] : "ws://localhost:3000/ws";
+    var config = window.patavi || {};
+    var WS_URI = typeof config['WS_URI'] !== 'undefined' ? config['WS_URI'] : "ws://localhost:3000/ws";
     var BASE_URI = 'http://api.patavi.com/';
 
     var Task = function(payload) {

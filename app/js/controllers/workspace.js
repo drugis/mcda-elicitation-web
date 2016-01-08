@@ -1,8 +1,10 @@
 'use strict';
-define(function(require) {
-  return function($scope, $location, $stateParams, Tasks, TaskDependencies, currentWorkspace) {
+define([], function() {
+
+  return function($scope, $location, $stateParams, $cookies, Tasks, TaskDependencies, currentWorkspace) {
+    var user = angular.fromJson($cookies["LOGGED-IN-USER"]);
     $scope.editMode = {
-      isUserOwner: currentWorkspace.owner === window.config.user.id
+      isUserOwner: user ? currentWorkspace.owner === user.id : false
     };
     $scope.workspace = currentWorkspace;
 
@@ -11,10 +13,11 @@ define(function(require) {
 
     $scope.editTitle = function() {
       $scope.isEditTitleVisible = true;
+      $scope.workspace.title = $scope.workspace.problem.title;
     };
 
     $scope.saveTitle = function() {
-      $scope.workspace.title = $scope.workspaceTitle;
+      $scope.workspace.problem.title = $scope.workspace.title;
       $scope.workspace.$save();
       $scope.isEditTitleVisible = false;
     };

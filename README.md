@@ -43,10 +43,13 @@ node-sass --include-path sass-shared sass/mcda-drugis.scss app/css/mcda-drugis.c
 node-sass --include-path sass-shared sass/mcda-drugis-ie8.scss app/css/mcda-drugis-ie8.css
 ```
 
-App remote
+Running
 ----------
-Follow the instructions in the README.md of the app-remote directory to run
-a version with a database.
+
+npm install
+bower install
+
+node index.js
 
 License
 -------

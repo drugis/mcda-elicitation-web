@@ -7,6 +7,7 @@ define(function(require) {
   require('mmfoundation');
   require('angular-ui-router');
   require('angular-resource');
+  require('angular-cookies');
   require('mcda/services/remarks');
   require('mcda/services/routeFactory');
   require('mcda/services/workspaceResource');
@@ -38,10 +39,35 @@ define(function(require) {
     'elicit.taskDependencies',
     'elicit.errorHandling',
     'elicit.routeFactory',
-    'elicit.pvfService'
+    'elicit.pvfService',
+    'ngCookies'
   ];
 
   var app = angular.module('elicit', dependencies);
+  app.run(['$rootScope', '$window', '$http', '$cookies', function($rootScope, $window, $http, $cookies) {
+    var csrfToken = $cookies['XSRF-TOKEN'];
+
+    $rootScope.$safeApply = function($scope, fn) {
+      var phase = $scope.$root.$$phase;
+      if (phase === '$apply' || phase === '$digest') {
+        this.$eval(fn);
+      } else {
+        this.$apply(fn);
+      }
+    };
+
+    $rootScope.$on('error', function(e, message) {
+      $rootScope.$safeApply($rootScope, function() {
+        $rootScope.error = _.extend(message, {
+          close: function() {
+            delete $rootScope.error;
+          }
+        });
+      });
+    });
+
+  }]);
+
   app.constant('Tasks', Config.tasks);
 
   // Detect our location so we can get the templates from the correct place

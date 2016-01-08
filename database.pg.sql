@@ -18,31 +18,31 @@ create unique index UserConnectionRank on UserConnection(userId, providerId, ran
 
 -- changeset gertvv:2
 
-create table Account (id int auto_increment,
+create table Account (id SERIAL NOT NULL,
             username varchar unique,
             firstName varchar not null,
             lastName varchar not null,
             password varchar default '',
             primary key (id));
 
-create table Workspace (id int auto_increment,
+create table Workspace (id SERIAL NOT NULL,
             owner int,
             title varchar not null,
-            problem CLOB not null,
+            problem TEXT not null,
             defaultScenarioId int,
             primary key (id),
             FOREIGN KEY(owner) REFERENCES Account(id));
 
-create table Scenario (id int auto_increment,
+create table Scenario (id SERIAL NOT NULL,
             workspace int,
             title varchar not null,
-            state CLOB not null,
+            state TEXT not null,
             primary key (id),
             FOREIGN KEY(workspace) REFERENCES Workspace(id));
 
 -- changeset gertvv:3
 
-ALTER TABLE Workspace ADD CONSTRAINT Workspace_defaultScenarioId_FK FOREIGN KEY (defaultScenarioId) REFERENCES Scenario(id);
+ALTER TABLE Workspace ADD CONSTRAINT Workspace_defaultScenarioId_FK FOREIGN KEY (defaultScenarioId) REFERENCES Scenario(id) DEFERRABLE;
 
 -- changeset gertvv:4
 
@@ -50,12 +50,21 @@ CREATE TABLE AccountRoles (
     accountId INT,
     role VARCHAR NOT NULL,
     FOREIGN KEY (accountId) REFERENCES Account(id)
-)
+);
 
 -- changeset reidd:5
+
 CREATE TABLE Remarks (
   workspaceId INT NOT NULL,
   remarks VARCHAR NOT NULL,
   PRIMARY KEY (workspaceId),
-  FOREIGN KEY(workspaceId) REFERENCES Workspace(id)
-);
+  FOREIGN KEY(workspaceId) REFERENCES Workspace(id));
+	
+-- changeset bobgoe:6
+
+ALTER TABLE Workspace ALTER COLUMN problem TYPE JSON USING problem::JSON;
+ALTER TABLE Scenario ALTER COLUMN state TYPE JSON USING state::JSON;
+ALTER TABLE Remarks ALTER COLUMN remarks TYPE JSON USING remarks::JSON;
+  
+-- changeset joelkuiper:7
+ALTER TABLE Account ADD COLUMN email VARCHAR DEFAULT '';
