@@ -3,6 +3,7 @@ var everyauth = require('everyauth');
 var _ = require('underscore');
 var loginUtils = require('./node-backend/loginUtils');
 var logger = require('./node-backend/logger');
+var db = require('./node-backend/db')(conf.pgConStr);
 
 var express = require('express'),
   bodyParser = require('body-parser'),
@@ -148,63 +149,55 @@ app.get("/index", function(req, res, next) {
 
 app.get("/workspaces", function(req, res) {
   logger.debug('GET /workspaces');
-  pg.connect(conf.pgConStr, function(err, client, done) {
+  db.query('SELECT id, owner, title, problem, defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1', [req.user.id], function(err, result) {
     if (err) {
-      return console.error('error fetching client from pool', err);
+      logger.error('error running query', err);
+      next({
+        statusCode: 500,
+        message: err
+      });
     }
-    client.query('SELECT id, owner, title, problem, defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1', [req.user.id], function(err, result) {
-      done();
-      if (err) {
-        return console.error('error running query', err);
-      }
-      res.send(result.rows);
-    });
+    res.send(result.rows);
   });
+
 });
 
 app.post("/workspaces", function(req, res) {
   logger.debug('POST /workspaces');
-  pg.connect(conf.pgConStr, function(err, client, done) {
+  db.query('INSERT INTO workspace (owner, title, problem) VALUES ($1, $2, $3) RETURNING id', [req.user.id, req.body.title, req.body.problem], function(err, result) {
     if (err) {
-      return console.error('error entering workspace in pool', err);
+      return console.error('error running query', err);
     }
-    client.query('INSERT INTO workspace (owner, title, problem) VALUES ($1, $2, $3) RETURNING id', [req.user.id, req.body.title, req.body.problem], function(err, result) {
+    var workspaceId = result.rows[0].id;
+    db.query('INSERT INTO remarks (workspaceid, remarks) VALUES ($1, $2)', [workspaceId, {}], function(err, result) {
       if (err) {
-        done();
         return console.error('error running query', err);
       }
-      var workspaceId = result.rows[0].id;
-      client.query('INSERT INTO remarks (workspaceid, remarks) VALUES ($1, $2)', [workspaceId, {}], function(err, result) {
+      db.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3) RETURNING id', [workspaceId, 'Default', {
+        problem: req.body.problem
+      }], function(err, result) {
         if (err) {
-          done();
+
           return console.error('error running query', err);
         }
-        client.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3) RETURNING id', [workspaceId, 'Default', {
-          problem: req.body.problem
-        }], function(err, result) {
+        var scenarioId = result.rows[0].id;
+        db.query('UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2', [scenarioId, workspaceId], function(err, result) {
           if (err) {
-            done();
+
             return console.error('error running query', err);
           }
-          var scenarioId = result.rows[0].id;
-          client.query('UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2', [scenarioId, workspaceId], function(err, result) {
+          db.query('SELECT id, owner, problem, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [workspaceId], function(err, result) {
             if (err) {
-              done();
+
               return console.error('error running query', err);
             }
-            client.query('SELECT id, owner, problem, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [workspaceId], function(err, result) {
-              if (err) {
-                done();
-                return console.error('error running query', err);
-              }
-              done();
-              res.send(result.rows[0]);
-            });
+            res.send(result.rows[0]);
           });
         });
       });
     });
   });
+
 });
 
 app.get("/workspaces/:id", function(req, res) {
