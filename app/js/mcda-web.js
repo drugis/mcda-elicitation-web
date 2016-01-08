@@ -22,7 +22,7 @@ define(function(require) {
   require('mcda/services/scaleRangeService');
   require('mcda/controllers');
   require('mcda/directives');
-  require('mcda/util/util');
+  require('mcda/navbar/navbar');
 
   var dependencies = [
     'ngResource',
@@ -41,7 +41,7 @@ define(function(require) {
     'elicit.errorHandling',
     'elicit.routeFactory',
     'elicit.pvfService',
-    'elicit.util',
+    'elicit.navbar',
     'ngCookies'
   ];
 

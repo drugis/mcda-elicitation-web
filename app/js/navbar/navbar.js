@@ -4,13 +4,13 @@ define(function (require) {
   var angular = require('angular');
   var dependencies = ['ngResource'];
 
-  return angular.module('elicit.util', dependencies)
+  return angular.module('elicit.navbar', dependencies)
 
     //resources
-    .factory('UserResource', require('mcda/util/userResource'))
+    .factory('UserResource', require('mcda/navbar/userResource'))
 
     // directive
-    .directive('navbarDirective', require('mcda/util/navbarDirective'))
+    .directive('navbarDirective', require('mcda/navbar/navbarDirective'))
 
     // controllers
 

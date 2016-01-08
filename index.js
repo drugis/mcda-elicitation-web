@@ -2,6 +2,7 @@ var conf = require('./conf');
 var everyauth = require('everyauth');
 var _ = require('underscore');
 var loginUtils = require('./node-backend/loginUtils');
+var logger = require('./node-backend/logger');
 
 var express = require('express'),
     bodyParser = require('body-parser'),
@@ -142,6 +143,7 @@ app.get("/index", function(req, res, next) {
 });
 
 app.get("/workspaces", function(req, res) {
+  logger.debug('GET /workspaces');
   pg.connect(conf.pgConStr, function(err, client, done) {
     if(err) {
       return console.error('error fetching client from pool', err);
@@ -157,6 +159,7 @@ app.get("/workspaces", function(req, res) {
 });
 
 app.post("/workspaces", function(req, res) {
+  logger.debug('POST /workspaces');
   pg.connect(conf.pgConStr, function(err, client, done) {
     if(err) {
       return console.error('error entering workspace in pool', err);
@@ -199,6 +202,7 @@ app.post("/workspaces", function(req, res) {
 });
 
 app.get("/workspaces/:id", function(req, res) {
+  logger.debug('GET /workspaces/:id');
   pg.connect(conf.pgConStr, function(err, client, done) {
     if(err) {
       return console.error('error fetching workspace from pool', err);
@@ -208,12 +212,17 @@ app.get("/workspaces/:id", function(req, res) {
       if(err) {
         return console.error('error running query', err);
       }
-      res.send(result.rows[0]);
+
+      // bug fix for mcda-node-version, maybe change table structure to result json instead of string 'state'
+      var workspace = result.rows[0];
+      workspace.problem = JSON.parse(workspace.problem);
+      res.send(workspace);
     });
   });
 });
 
 app.get("/workspaces/:id/scenarios", function(req, res) {
+  logger.debug('GET /workspaces/:id/scenarios');
   pg.connect(conf.pgConStr, function(err, client, done) {
     if(err) {
       return console.error('error fetching workspace from pool', err);
@@ -229,6 +238,7 @@ app.get("/workspaces/:id/scenarios", function(req, res) {
 });
 
 app.get("/workspaces/:id/scenarios/:id", function(req, res) {
+    logger.debug('GET /workspaces/:id/scenarios/:id');
   pg.connect(conf.pgConStr, function(err, client, done) {
     if(err) {
       return console.error('error fetching workspace from pool', err);
@@ -238,7 +248,12 @@ app.get("/workspaces/:id/scenarios/:id", function(req, res) {
       if(err) {
         return console.error('error running query', err);
       }
-      res.send(result.rows[0]);
+
+      // bug fix for mcda-node-version, maybe change table structure to result json instead of string 'state'
+      var scenario = result.rows[0];
+      scenario.state = JSON.parse(scenario.state);
+      
+      res.send(scenario);
     });
   });
 });
