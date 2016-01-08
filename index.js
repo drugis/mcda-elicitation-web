@@ -1,6 +1,7 @@
 var conf = require('./conf');
 var everyauth = require('everyauth');
 var _ = require('underscore');
+var loginUtils = require('./node-backend/loginUtils');
 
 var express = require('express'),
     bodyParser = require('body-parser'),
@@ -316,6 +317,8 @@ app.post("/workspaces/:id/scenarios/:id", function(req, res) {
     });
   });
 });
+
+app.get('/user', loginUtils.emailHashMiddleware);
 
 //FIXME: should not be needed?
 app.get("/main.js", function(req, res, next) { 

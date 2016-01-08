@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width">
-<link rel="shortcut icon" href="/bower_components/mcda-web/app/img/favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="app/img/favicon.png" type="image/x-icon">
 
 <title>mcda.drugis.org is cool</title>
 
@@ -19,58 +19,33 @@
 
 </head>
 
-<body>
+<body class="f-topbar-fixed">
+  <navbar-directive>
+  </navbar-directive>
 
-  <form method="POST" action="/signout" id="signout_form">
-    <input type="hidden" name="_csrf" value="{{csrfToken}}" />
-  </form>
-  
-  <nav class="top-bar" data-topbar>
-    <ul class="title-area">
-      <li class="name">
-        <h1>
-          <a href="#">mcda.drugis.org</a>
-        </h1>
-      </li>
-    </ul>
-
-    <section class="top-bar-section">
-      <!-- Right Nav Section -->
-      <ul class="right">
-        <li>
-          <a href="/logout">Sign out</a>
-        </li>
-        <li class="has-dropdown"><a href="#"><i class="fa fa-user fa-fw"></i>{{user.firstname}} {{user.lastname}}</a>
-          <ul class="dropdown">
-            <li>
-              <a href="#" onClick="signout()">Sign out</a>
-            </li>
-          </ul></li>
-      </ul>
-    </section>
-  </nav>
-  <section>
-    <div class="color-stripe"></div>
-  </section>
-
-  <div class="row">
+  <div ng-if="error" class="row" ng-cloak>
     <div class="columns">
-      <alert type="info">
-        <strong>Disclaimer:</strong> this is <em>beta</em> software. We store your workspaces on our servers. While we try our best to keep them secure and compatible with future versions, we can make no guarantees.
-      </alert>
+      <app-alert type="alert" close="error.close()" error="error"></span></app-alert>
     </div>
   </div>
-    
+
   <div ui-view></div>
+  <div class="push"></div>
 
   <script>
   
     window.patavi = { "WS_URI": "wss://patavi.drugis.org/ws" };
 
     window.config = {
-      examplesRepository : "examples/",
-      workspacesRepositoryUrl: '/workspaces/'
-    };
+         WS_URI: 'wss://patavi.drugis.org/ws',
+         examplesRepository : "examples/",
+         workspacesRepositoryUrl: '/workspaces/',
+     };
+
+    if(window.location.host.indexOf("test") > -1) {
+       document.body.className += " test";
+       document.title = "test-" + document.title;
+    }
 
     function signout(){
       var signoutForm = document.getElementById('signout_form');
