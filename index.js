@@ -27,6 +27,9 @@ everyauth.everymodule
   });
 
 everyauth.google
+  .authQueryParam({
+    approval_prompt: 'auto'
+  })
   .appId(conf.google.clientId)
   .appSecret(conf.google.clientSecret)
   .scope('https://www.googleapis.com/auth/userinfo.profile email')
