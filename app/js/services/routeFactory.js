@@ -1,8 +1,8 @@
 'use strict';
 define(function(require) {
-  var angular = require("angular");
-  var Config = require("mcda/config");
-  var _ = require("underscore");
+  var angular = require('angular');
+  var Config = require('mcda/config');
+  var _ = require('underscore');
 
   var dependencies = [];
 
@@ -17,8 +17,9 @@ define(function(require) {
           controller: 'ScenarioController',
           resolve: {
             scenarios: function($stateParams, ScenarioResource) {
-              return ScenarioResource.query(_.omit($stateParams, 'id')).$promise;
-            }}
+              return ScenarioResource.query(_.omit($stateParams, 'id'));
+            }
+          }
         };
 
         var children = Config.tasks.available.map(function(task) {

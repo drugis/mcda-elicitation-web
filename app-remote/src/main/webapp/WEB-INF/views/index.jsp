@@ -15,7 +15,7 @@
 
     <link rel="stylesheet" type="text/css" href="<c:url value="/bower_components/mcda-web/app/css/mcda-drugis.css" />">
 
-    <link rel="shortcut icon" href="<c:url value="/bower_components/mcda-web/app/img/favicon.ico" />" type="image/x-icon" />
+    <link rel="shortcut icon" href="<c:url value="/app/img/favicon.png" />" type="image/x-icon" />
 
     <title>mcda.drugis.org</title>
 
@@ -78,6 +78,11 @@
          }
      };
 
+     if(window.location.host.indexOf("test") > -1) {
+       document.body.className += " test";
+       document.title = "test-" + document.title;
+     }
+
      function signout(){
          var signoutForm = document.getElementById('signout_form');
 
@@ -86,6 +91,5 @@
          }
      }
     </script>
-
   </body>
 </html>

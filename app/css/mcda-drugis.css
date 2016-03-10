@@ -1,3 +1,5 @@
+@charset "UTF-8";
+@import url("//fonts.googleapis.com/css?family=Droid+Sans:400,700");
 /* line 347, ../../sass-shared/foundation/components/_global.scss */
 meta.foundation-version {
   font-family: "/{{VERSION}}/";
@@ -9042,7 +9044,7 @@ th.hide-for-touch {
     display: table-cell !important;
   }
 }
-/* line 1, ../../sass-shared/_drugis.scss */
+/* line 3, ../../sass-shared/_drugis.scss */
 #hero {
   background: #1976D2;
   height: 420px;
@@ -9051,7 +9053,148 @@ th.hide-for-touch {
   padding: 100px 20px 0 20px;
 }
 
-/* line 9, ../../sass-shared/_drugis.scss */
+/* line 11, ../../sass-shared/_drugis.scss */
+.color-stripe {
+  background: #1976D2;
+  height: 0.45rem;
+}
+
+/* line 17, ../../sass-shared/_drugis.scss */
+.user-image {
+  margin-top: -1px;
+  margin-right: 4px;
+  height: 32px;
+  border-radius: 15px;
+}
+
+/* line 24, ../../sass-shared/_drugis.scss */
+.inline-header {
+  display: inline;
+}
+
+/* line 28, ../../sass-shared/_drugis.scss */
+navbar-directive ul li > a.manual:hover {
+  text-decoration: underline;
+}
+
+/* line 32, ../../sass-shared/_drugis.scss */
+.alert {
+  color: #E66464;
+}
+
+/* line 35, ../../sass-shared/_drugis.scss */
+.warning {
+  color: #f2973c;
+}
+
+/* line 38, ../../sass-shared/_drugis.scss */
+.info {
+  color: #77c0de;
+}
+
+/* line 42, ../../sass-shared/_drugis.scss */
+.error-message {
+  display: block;
+  color: #1976D2;
+}
+
+/* line 47, ../../sass-shared/_drugis.scss */
+.alert-box-message {
+  padding-right: 1.25rem;
+}
+
+/* line 51, ../../sass-shared/_drugis.scss */
+body.test {
+  background-image: url("../img/test.png");
+  background-repeat: repeat-x repeat-y;
+}
+
+/* line 58, ../../sass-shared/_drugis.scss */
+table {
+  border-collapse: collapse;
+}
+/* line 59, ../../sass-shared/_drugis.scss */
+table caption {
+  text-align: left;
+  font-weight: lighter;
+}
+/* line 65, ../../sass-shared/_drugis.scss */
+table tr:nth-of-type(even) {
+  background-color: transparent;
+}
+/* line 68, ../../sass-shared/_drugis.scss */
+table tr {
+  height: 1rem;
+}
+/* line 70, ../../sass-shared/_drugis.scss */
+table tr th.sortable {
+  cursor: pointer;
+}
+/* line 73, ../../sass-shared/_drugis.scss */
+table tr th {
+  text-align: center;
+  background-color: #F5F5F5;
+}
+/* line 77, ../../sass-shared/_drugis.scss */
+table tr th, table tr td {
+  border: solid 1px gainsboro;
+}
+/* line 79, ../../sass-shared/_drugis.scss */
+table tr th a:hover, table tr td a:hover {
+  text-decoration: underline;
+}
+/* line 83, ../../sass-shared/_drugis.scss */
+table tr td.button-cell {
+  text-align: center;
+}
+/* line 85, ../../sass-shared/_drugis.scss */
+table tr td.button-cell button {
+  margin-bottom: 0;
+  font-size: 0.875rem;
+}
+
+/* line 92, ../../sass-shared/_drugis.scss */
+tr.clickable td {
+  color: #1976D2;
+}
+
+/* line 95, ../../sass-shared/_drugis.scss */
+td.empty-cell {
+  background-color: gainsboro;
+}
+
+/* line 99, ../../sass-shared/_drugis.scss */
+tr.on-hover:hover {
+  background: #e6e6e6;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* line 106, ../../sass-shared/_drugis.scss */
+.error-message {
+  display: block;
+  color: #1976D2;
+}
+
+/* line 111, ../../sass-shared/_drugis.scss */
+.application-link a {
+  text-decoration: underline;
+}
+
+/* line 116, ../../sass-shared/_drugis.scss */
+input[type="number"],
+input[type="text"],
+select,
+select option {
+  line-height: 1.1rem;
+}
+
+/* line 124, ../../sass-shared/_drugis.scss */
+body.f-topbar-fixed {
+  padding-top: 6rem;
+}
+
+/* line 130, ../../sass-shared/_drugis.scss */
 #hero h1 {
   font-size: 4em;
   color: white;
@@ -9060,19 +9203,19 @@ th.hide-for-touch {
   line-height: 100%;
 }
 
-/* line 17, ../../sass-shared/_drugis.scss */
+/* line 138, ../../sass-shared/_drugis.scss */
 #hero h1 small {
   color: white;
 }
 
-/* line 21, ../../sass-shared/_drugis.scss */
+/* line 142, ../../sass-shared/_drugis.scss */
 #hero h4 {
   font-size: 1.35em;
   color: white;
   font-weight: 300;
 }
 
-/* line 27, ../../sass-shared/_drugis.scss */
+/* line 148, ../../sass-shared/_drugis.scss */
 header {
   background: #1976D2;
   text-align: left;
@@ -9080,7 +9223,7 @@ header {
   padding: 25px 20px 35px 0px;
 }
 
-/* line 34, ../../sass-shared/_drugis.scss */
+/* line 155, ../../sass-shared/_drugis.scss */
 header h2 {
   font-size: 3.5em;
   color: white;
@@ -9089,69 +9232,69 @@ header h2 {
   line-height: 100%;
 }
 
-/* line 42, ../../sass-shared/_drugis.scss */
+/* line 163, ../../sass-shared/_drugis.scss */
 header h4 {
   color: white;
 }
 
-/* line 46, ../../sass-shared/_drugis.scss */
+/* line 167, ../../sass-shared/_drugis.scss */
 header small {
   color: white;
 }
 
-/* line 50, ../../sass-shared/_drugis.scss */
+/* line 171, ../../sass-shared/_drugis.scss */
 .content {
   padding-top: 20px;
 }
 
-/* line 54, ../../sass-shared/_drugis.scss */
+/* line 175, ../../sass-shared/_drugis.scss */
 h3 img {
   float: right;
   margin-right: 10px;
 }
 
-/* line 59, ../../sass-shared/_drugis.scss */
+/* line 180, ../../sass-shared/_drugis.scss */
 .row-divider {
   margin: 2rem 0;
 }
 
-/* line 63, ../../sass-shared/_drugis.scss */
+/* line 184, ../../sass-shared/_drugis.scss */
 .screen-shot {
   border: 1px solid #dddddd;
   padding: 4px;
   margin: 0.5rem;
 }
 
-/* line 69, ../../sass-shared/_drugis.scss */
+/* line 190, ../../sass-shared/_drugis.scss */
 .footer {
   background: #333333;
   padding: 24px 0 10px;
 }
 
-/* line 74, ../../sass-shared/_drugis.scss */
+/* line 195, ../../sass-shared/_drugis.scss */
 .footer a,
 .footer h4,
 .footer p {
   color: #666666;
 }
 
-/* line 80, ../../sass-shared/_drugis.scss */
+/* line 201, ../../sass-shared/_drugis.scss */
 .footer a:hover {
   color: #777777;
 }
 
 /* ---------sticky footer --------------*/
-/* line 86, ../../sass-shared/_drugis.scss */
+/* line 207, ../../sass-shared/_drugis.scss */
 * {
   margin: 0;
 }
 
-/* line 90, ../../sass-shared/_drugis.scss */
+/* line 211, ../../sass-shared/_drugis.scss */
 html, body {
   height: 100%;
 }
 
-/* line 94, ../../sass-shared/_drugis.scss */
+/* line 215, ../../sass-shared/_drugis.scss */
 .wrapper {
   min-height: 100%;
   height: auto !important;
@@ -9159,34 +9302,34 @@ html, body {
   margin: 0 auto -4rem;
 }
 
-/* line 101, ../../sass-shared/_drugis.scss */
+/* line 222, ../../sass-shared/_drugis.scss */
 .push {
   height: 4.5rem;
 }
 
-/* line 105, ../../sass-shared/_drugis.scss */
+/* line 226, ../../sass-shared/_drugis.scss */
 .footer {
   height: 4.5rem;
 }
 
-/* line 109, ../../sass-shared/_drugis.scss */
+/* line 230, ../../sass-shared/_drugis.scss */
 .footer, .push {
   clear: both;
 }
 
-/* line 113, ../../sass-shared/_drugis.scss */
+/* line 234, ../../sass-shared/_drugis.scss */
 .copyright {
   display: inline;
 }
 
 /* -------- end sticky footer---------*/
-/* line 118, ../../sass-shared/_drugis.scss */
+/* line 239, ../../sass-shared/_drugis.scss */
 #map_canvas {
   height: 280px;
 }
 
 /* standard */
-/* line 123, ../../sass-shared/_drugis.scss */
+/* line 244, ../../sass-shared/_drugis.scss */
 pre {
   margin-bottom: 1.25rem;
   border: 1px solid #b4b4b4;
@@ -9196,29 +9339,54 @@ pre {
   overflow-x: auto;
 }
 
-/* line 132, ../../sass-shared/_drugis.scss */
+/* line 253, ../../sass-shared/_drugis.scss */
 pre code {
   border: none;
   background: none;
   padding: 0px;
 }
 
-/* line 138, ../../sass-shared/_drugis.scss */
+/* line 259, ../../sass-shared/_drugis.scss */
 code {
   border: 1px solid #b4b4b4;
   background-color: #e7e7e7;
   padding: 0 0.2em 0 0.2em;
 }
 
-/* line 8, ../../sass/_main.scss */
-.user-image {
-  margin-top: -1px;
-  margin-right: 4px;
-  height: 32px;
-  border-radius: 15px;
+/* -------- inline help directive---------*/
+/* line 267, ../../sass-shared/_drugis.scss */
+inline-help {
+  margin: 1rem;
 }
 
-/* line 15, ../../sass/_main.scss */
+/* line 271, ../../sass-shared/_drugis.scss */
+.joyride-content-wrapper a {
+  color: #008CBA;
+}
+
+/* line 275, ../../sass-shared/_drugis.scss */
+body .joyride-tip-guide {
+  z-index: 1006;
+}
+
+/* line 279, ../../sass-shared/_drugis.scss */
+inline-help a {
+  color: grey;
+}
+
+/* line 283, ../../sass-shared/_drugis.scss */
+inline-help a:hover {
+  color: #676767;
+}
+
+/* -------- end inline help directive---------*/
+/* line 289, ../../sass-shared/_drugis.scss */
+.reveal-modal, dialog {
+  overflow-x: auto;
+  min-width: 540px;
+}
+
+/* line 8, ../../sass/_mcda-drugis-base.scss */
 .reveal-modal.mcda-reveal-modal, dialog.mcda-reveal-modal {
   position: fixed;
   left: 10%;
@@ -9230,17 +9398,17 @@ code {
 }
 
 /* inline results */
-/* line 26, ../../sass/_main.scss */
+/* line 19, ../../sass/_mcda-drugis-base.scss */
 #results .loader, .hidden {
   display: none;
 }
 
-/* line 30, ../../sass/_main.scss */
+/* line 23, ../../sass/_mcda-drugis-base.scss */
 #results.loading > img {
   opacity: 0.5;
 }
 
-/* line 34, ../../sass/_main.scss */
+/* line 27, ../../sass/_mcda-drugis-base.scss */
 #results.loading .loader {
   float: left;
   position: relative;
@@ -9254,12 +9422,12 @@ code {
   padding: 5px;
 }
 
-/* line 47, ../../sass/_main.scss */
+/* line 40, ../../sass/_mcda-drugis-base.scss */
 #results.loading .graph {
   display: none;
 }
 
-/* line 51, ../../sass/_main.scss */
+/* line 44, ../../sass/_mcda-drugis-base.scss */
 .jslider-bg i.x {
   -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
   -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
@@ -9269,362 +9437,346 @@ code {
   display: inline-block;
 }
 
-/* line 60, ../../sass/_main.scss */
+/* line 53, ../../sass/_mcda-drugis-base.scss */
 input[type='file'] {
   width: auto !important;
-}
-
-/* line 64, ../../sass/_main.scss */
-.alert-box {
-  margin-top: 0.5rem;
-  margin-bottom: 0.25rem;
-}
-
-/* line 69, ../../sass/_main.scss */
-.color-stripe {
-  background: #1976D2;
-  height: 0.45rem;
-  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
-  -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.14), 0 4px 8px rgba(0, 0, 0, 0.28);
-  margin-bottom: 1rem;
 }
 
 /*
 * This product includes color specifications and designs developed by Cynthia
 * Brewer (http://colorbrewer.org/).
 */
-/* line 82, ../../sass/_main.scss */
+/* line 61, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q0-3 {
   background-color: #fc8d59;
 }
 
-/* line 83, ../../sass/_main.scss */
+/* line 62, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q1-3 {
   background-color: #ffffbf;
 }
 
-/* line 84, ../../sass/_main.scss */
+/* line 63, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q2-3 {
   background-color: #91cf60;
 }
 
-/* line 85, ../../sass/_main.scss */
+/* line 64, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q0-4 {
   background-color: #d7191c;
 }
 
-/* line 86, ../../sass/_main.scss */
+/* line 65, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q1-4 {
   background-color: #fdae61;
 }
 
-/* line 87, ../../sass/_main.scss */
+/* line 66, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q2-4 {
   background-color: #a6d96a;
 }
 
-/* line 88, ../../sass/_main.scss */
+/* line 67, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q3-4 {
   background-color: #1a9641;
 }
 
-/* line 89, ../../sass/_main.scss */
+/* line 68, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q0-5 {
   background-color: #d7191c;
 }
 
-/* line 90, ../../sass/_main.scss */
+/* line 69, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q1-5 {
   background-color: #fdae61;
 }
 
-/* line 91, ../../sass/_main.scss */
+/* line 70, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q2-5 {
   background-color: #ffffbf;
 }
 
-/* line 92, ../../sass/_main.scss */
+/* line 71, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q3-5 {
   background-color: #a6d96a;
 }
 
-/* line 93, ../../sass/_main.scss */
+/* line 72, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q4-5 {
   background-color: #1a9641;
 }
 
-/* line 94, ../../sass/_main.scss */
+/* line 73, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q0-6 {
   background-color: #d73027;
 }
 
-/* line 95, ../../sass/_main.scss */
+/* line 74, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q1-6 {
   background-color: #fc8d59;
 }
 
-/* line 96, ../../sass/_main.scss */
+/* line 75, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q2-6 {
   background-color: #fee08b;
 }
 
-/* line 97, ../../sass/_main.scss */
+/* line 76, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q3-6 {
   background-color: #d9ef8b;
 }
 
-/* line 98, ../../sass/_main.scss */
+/* line 77, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q4-6 {
   background-color: #91cf60;
 }
 
-/* line 99, ../../sass/_main.scss */
+/* line 78, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q5-6 {
   background-color: #1a9850;
 }
 
-/* line 100, ../../sass/_main.scss */
+/* line 79, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q0-7 {
   background-color: #d73027;
 }
 
-/* line 101, ../../sass/_main.scss */
+/* line 80, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q1-7 {
   background-color: #fc8d59;
 }
 
-/* line 102, ../../sass/_main.scss */
+/* line 81, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q2-7 {
   background-color: #fee08b;
 }
 
-/* line 103, ../../sass/_main.scss */
+/* line 82, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q3-7 {
   background-color: #ffffbf;
 }
 
-/* line 104, ../../sass/_main.scss */
+/* line 83, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q4-7 {
   background-color: #d9ef8b;
 }
 
-/* line 105, ../../sass/_main.scss */
+/* line 84, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q5-7 {
   background-color: #91cf60;
 }
 
-/* line 106, ../../sass/_main.scss */
+/* line 85, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q6-7 {
   background-color: #1a9850;
 }
 
-/* line 107, ../../sass/_main.scss */
+/* line 86, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q0-8 {
   background-color: #d73027;
 }
 
-/* line 108, ../../sass/_main.scss */
+/* line 87, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q1-8 {
   background-color: #f46d43;
 }
 
-/* line 109, ../../sass/_main.scss */
+/* line 88, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q2-8 {
   background-color: #fdae61;
 }
 
-/* line 110, ../../sass/_main.scss */
+/* line 89, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q3-8 {
   background-color: #fee08b;
 }
 
-/* line 111, ../../sass/_main.scss */
+/* line 90, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q4-8 {
   background-color: #d9ef8b;
 }
 
-/* line 112, ../../sass/_main.scss */
+/* line 91, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q5-8 {
   background-color: #a6d96a;
 }
 
-/* line 113, ../../sass/_main.scss */
+/* line 92, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q6-8 {
   background-color: #66bd63;
 }
 
-/* line 114, ../../sass/_main.scss */
+/* line 93, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q7-8 {
   background-color: #1a9850;
 }
 
-/* line 115, ../../sass/_main.scss */
+/* line 94, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q0-9 {
   background-color: #d73027;
 }
 
-/* line 116, ../../sass/_main.scss */
+/* line 95, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q1-9 {
   background-color: #f46d43;
 }
 
-/* line 117, ../../sass/_main.scss */
+/* line 96, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q2-9 {
   background-color: #fdae61;
 }
 
-/* line 118, ../../sass/_main.scss */
+/* line 97, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q3-9 {
   background-color: #fee08b;
 }
 
-/* line 119, ../../sass/_main.scss */
+/* line 98, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q4-9 {
   background-color: #ffffbf;
 }
 
-/* line 120, ../../sass/_main.scss */
+/* line 99, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q5-9 {
   background-color: #d9ef8b;
 }
 
-/* line 121, ../../sass/_main.scss */
+/* line 100, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q6-9 {
   background-color: #a6d96a;
 }
 
-/* line 122, ../../sass/_main.scss */
+/* line 101, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q7-9 {
   background-color: #66bd63;
 }
 
-/* line 123, ../../sass/_main.scss */
+/* line 102, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q8-9 {
   background-color: #1a9850;
 }
 
-/* line 124, ../../sass/_main.scss */
+/* line 103, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q0-10 {
   background-color: #a50026;
 }
 
-/* line 125, ../../sass/_main.scss */
+/* line 104, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q1-10 {
   background-color: #d73027;
 }
 
-/* line 126, ../../sass/_main.scss */
+/* line 105, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q2-10 {
   background-color: #f46d43;
 }
 
-/* line 127, ../../sass/_main.scss */
+/* line 106, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q3-10 {
   background-color: #fdae61;
 }
 
-/* line 128, ../../sass/_main.scss */
+/* line 107, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q4-10 {
   background-color: #fee08b;
 }
 
-/* line 129, ../../sass/_main.scss */
+/* line 108, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q5-10 {
   background-color: #d9ef8b;
 }
 
-/* line 130, ../../sass/_main.scss */
+/* line 109, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q6-10 {
   background-color: #a6d96a;
 }
 
-/* line 131, ../../sass/_main.scss */
+/* line 110, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q7-10 {
   background-color: #66bd63;
 }
 
-/* line 132, ../../sass/_main.scss */
+/* line 111, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q8-10 {
   background-color: #1a9850;
 }
 
-/* line 133, ../../sass/_main.scss */
+/* line 112, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q9-10 {
   background-color: #006837;
 }
 
-/* line 134, ../../sass/_main.scss */
+/* line 113, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q0-11 {
   background-color: #a50026;
 }
 
-/* line 135, ../../sass/_main.scss */
+/* line 114, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q1-11 {
   background-color: #d73027;
 }
 
-/* line 136, ../../sass/_main.scss */
+/* line 115, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q2-11 {
   background-color: #f46d43;
 }
 
-/* line 137, ../../sass/_main.scss */
+/* line 116, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q3-11 {
   background-color: #fdae61;
 }
 
-/* line 138, ../../sass/_main.scss */
+/* line 117, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q4-11 {
   background-color: #fee08b;
 }
 
-/* line 139, ../../sass/_main.scss */
+/* line 118, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q5-11 {
   background-color: #ffffbf;
 }
 
-/* line 140, ../../sass/_main.scss */
+/* line 119, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q6-11 {
   background-color: #d9ef8b;
 }
 
-/* line 141, ../../sass/_main.scss */
+/* line 120, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q7-11 {
   background-color: #a6d96a;
 }
 
-/* line 142, ../../sass/_main.scss */
+/* line 121, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q8-11 {
   background-color: #66bd63;
 }
 
-/* line 143, ../../sass/_main.scss */
+/* line 122, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q9-11 {
   background-color: #1a9850;
 }
 
-/* line 144, ../../sass/_main.scss */
+/* line 123, ../../sass/_mcda-drugis-base.scss */
 .RdYlGn .q10-11 {
   background-color: #006837;
 }
 
 /* CSS FOR EFFECTSTABLE */
-/* line 149, ../../sass/_main.scss */
+/* line 128, ../../sass/_mcda-drugis-base.scss */
 .check2hide {
   display: inline-block;
   margin-right: 0.8rem;
 }
 
-/* line 154, ../../sass/_main.scss */
+/* line 133, ../../sass/_mcda-drugis-base.scss */
 .full-width {
   width: 100% !important;
 }
-/* line 157, ../../sass/_main.scss */
+/* line 136, ../../sass/_mcda-drugis-base.scss */
 .full-width .td-container {
   position: relative;
 }
-/* line 161, ../../sass/_main.scss */
+/* line 140, ../../sass/_mcda-drugis-base.scss */
 .full-width .td-content {
   position: absolute;
   max-width: 100%;
@@ -9632,53 +9784,53 @@ input[type='file'] {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* line 168, ../../sass/_main.scss */
+/* line 147, ../../sass/_mcda-drugis-base.scss */
 .full-width .td-spacer {
   height: 0;
   overflow: hidden;
 }
-/* line 173, ../../sass/_main.scss */
+/* line 152, ../../sass/_mcda-drugis-base.scss */
 .full-width .main tr > td:first-child {
   max-width: 340px;
   min-width: 200px;
 }
-/* line 178, ../../sass/_main.scss */
+/* line 157, ../../sass/_mcda-drugis-base.scss */
 .full-width .main-header {
   display: inline-block;
   font-weight: bold;
   margin-right: 1rem;
 }
-/* line 184, ../../sass/_main.scss */
+/* line 163, ../../sass/_mcda-drugis-base.scss */
 .full-width .secondary-header {
   display: inline-block;
   font-weight: bold;
   margin-left: 1rem;
   margin-right: 1rem;
 }
-/* line 191, ../../sass/_main.scss */
+/* line 170, ../../sass/_mcda-drugis-base.scss */
 .full-width .details {
   max-width: 400px !important;
 }
-/* line 195, ../../sass/_main.scss */
+/* line 174, ../../sass/_mcda-drugis-base.scss */
 .full-width .details table {
   border: none;
   width: 100% !important;
 }
-/* line 199, ../../sass/_main.scss */
+/* line 178, ../../sass/_mcda-drugis-base.scss */
 .full-width .details table td {
   height: 1.125rem;
 }
-/* line 204, ../../sass/_main.scss */
+/* line 183, ../../sass/_mcda-drugis-base.scss */
 .full-width .details table tr > td:first-child {
   width: auto;
 }
 
-/* line 211, ../../sass/_main.scss */
+/* line 190, ../../sass/_mcda-drugis-base.scss */
 .effects-table td {
   height: 3.65625rem;
 }
 
-/* line 216, ../../sass/_main.scss */
+/* line 195, ../../sass/_mcda-drugis-base.scss */
 .uncertain {
   padding: 0.1rem;
   color: grey;
@@ -9695,7 +9847,7 @@ input[type='file'] {
 }
 
 /* angular ui-bootstrap pop overs */
-/* line 234, ../../sass/_main.scss */
+/* line 213, ../../sass/_mcda-drugis-base.scss */
 .mcda-dropdown {
   position: absolute;
   top: 0;
@@ -9708,7 +9860,7 @@ input[type='file'] {
 }
 
 /* results page */
-/* line 247, ../../sass/_main.scss */
+/* line 226, ../../sass/_mcda-drugis-base.scss */
 #ranktable {
   display: inline-block;
   clear: none;
@@ -9717,14 +9869,14 @@ input[type='file'] {
   margin-left: 500px;
 }
 
-/* line 255, ../../sass/_main.scss */
+/* line 234, ../../sass/_mcda-drugis-base.scss */
 .underlined-div {
   border-bottom: 1px solid #EEEEEE;
   margin-bottom: 1.5rem !important;
 }
 
 /* --- overview page ----- */
-/* line 261, ../../sass/_main.scss */
+/* line 240, ../../sass/_mcda-drugis-base.scss */
 .remarksTree {
   /*margin: 0;*/
   padding: 0;
@@ -9732,36 +9884,36 @@ input[type='file'] {
   list-style-type: none;
 }
 
-/* line 268, ../../sass/_main.scss */
+/* line 247, ../../sass/_mcda-drugis-base.scss */
 .showRemark p {
   text-align: left;
 }
 
 /* ----- preferences table ------ */
-/* line 273, ../../sass/_main.scss */
+/* line 252, ../../sass/_mcda-drugis-base.scss */
 .prefs-block {
   padding-bottom: 1.5rem;
   border-bottom: 1px solid #EEEEEE;
   margin-bottom: 1.5rem;
 }
 
-/* line 279, ../../sass/_main.scss */
+/* line 258, ../../sass/_mcda-drugis-base.scss */
 .inline {
   display: inline-block;
 }
 
-/* line 283, ../../sass/_main.scss */
+/* line 262, ../../sass/_mcda-drugis-base.scss */
 .block {
   display: block;
 }
 
-/* line 287, ../../sass/_main.scss */
+/* line 266, ../../sass/_mcda-drugis-base.scss */
 .none {
   display: none;
 }
 
 /*----- TREEVIEW -----*/
-/* line 294, ../../sass/_main.scss */
+/* line 273, ../../sass/_mcda-drugis-base.scss */
 .button.tiny-icon {
   padding-top: 0.325rem;
   padding-right: 0.75rem;
@@ -9770,13 +9922,13 @@ input[type='file'] {
   font-size: 1rem;
 }
 
-/* line 302, ../../sass/_main.scss */
+/* line 281, ../../sass/_mcda-drugis-base.scss */
 .workspace-control-tab {
   background-color: #F5F5F5;
   margin-right: 0.5rem;
 }
 
-/* line 307, ../../sass/_main.scss */
+/* line 286, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container {
   border-bottom: 1px solid #1976D2;
   -webkit-user-select: none;
@@ -9789,7 +9941,7 @@ input[type='file'] {
   -o-user-select: none;
   user-select: none;
 }
-/* line 318, ../../sass/_main.scss */
+/* line 297, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav {
   position: relative;
   display: block;
@@ -9797,7 +9949,7 @@ input[type='file'] {
   margin: 0 0 -2px 0;
   text-align: center;
 }
-/* line 326, ../../sass/_main.scss */
+/* line 305, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav > ul {
   bottom: -4px;
   list-style-type: none;
@@ -9805,13 +9957,13 @@ input[type='file'] {
   margin: 2px auto 0 auto;
   position: relative;
 }
-/* line 334, ../../sass/_main.scss */
+/* line 313, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li {
   float: left;
   margin: 16px 5px 0 5px;
   list-style: none;
 }
-/* line 339, ../../sass/_main.scss */
+/* line 318, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li a {
   border: 1px solid #1976D2;
   border-bottom: none;
@@ -9824,22 +9976,22 @@ input[type='file'] {
   display: inline-block;
   margin-bottom: -1px;
 }
-/* line 351, ../../sass/_main.scss */
+/* line 330, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li a:hover {
   border-color: #145ca4;
   background-color: #145ca4;
 }
-/* line 355, ../../sass/_main.scss */
+/* line 334, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li a.activetab {
   background-color: #FFFFFF;
   color: #000000;
 }
-/* line 359, ../../sass/_main.scss */
+/* line 338, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li a.disabledtab {
   cursor: default;
   opacity: 0.7;
 }
-/* line 364, ../../sass/_main.scss */
+/* line 343, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li a.disabledtab:hover {
   cursor: default;
   opacity: 0.7;
@@ -9847,12 +9999,12 @@ input[type='file'] {
   border: 1px solid #1976D2;
   border-bottom: none;
 }
-/* line 374, ../../sass/_main.scss */
+/* line 353, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav > li:first-child {
   margin-left: 15px;
 }
 
-/* line 379, ../../sass/_main.scss */
+/* line 358, ../../sass/_mcda-drugis-base.scss */
 .tab-corners {
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
@@ -9862,12 +10014,12 @@ input[type='file'] {
   -webkit-border-top-right-radius: 2px;
 }
 
-/* line 388, ../../sass/_main.scss */
+/* line 367, ../../sass/_mcda-drugis-base.scss */
 .scenario-menu {
   padding-top: 17px;
 }
 
-/* line 392, ../../sass/_main.scss */
+/* line 371, ../../sass/_mcda-drugis-base.scss */
 .scenario-select {
   display: inline;
   width: 190px;
@@ -9877,34 +10029,34 @@ input[type='file'] {
   margin: 2px 4px 1px 0px;
 }
 
-/* line 401, ../../sass/_main.scss */
+/* line 380, ../../sass/_mcda-drugis-base.scss */
 .new-scenario-btn {
   color: #1976D2;
 }
 
-/* line 405, ../../sass/_main.scss */
+/* line 384, ../../sass/_mcda-drugis-base.scss */
 .new-scenario-btn:hover {
   cursor: pointer;
   color: #145ea8;
 }
 
-/* line 410, ../../sass/_main.scss */
+/* line 389, ../../sass/_mcda-drugis-base.scss */
 #newScenarioControl {
   margin-left: -10px;
   margin-top: 6px;
 }
 
-/* line 415, ../../sass/_main.scss */
+/* line 394, ../../sass/_mcda-drugis-base.scss */
 .results-button {
   margin-left: 0.5rem;
 }
 
-/* line 421, ../../sass/_main.scss */
+/* line 400, ../../sass/_mcda-drugis-base.scss */
 .pref-progress {
   margin: 50px 60px;
 }
 
-/* line 425, ../../sass/_main.scss */
+/* line 404, ../../sass/_mcda-drugis-base.scss */
 .circle-container {
   text-align: center;
   display: inline-block;
@@ -9913,24 +10065,24 @@ input[type='file'] {
   margin-top: -17px;
 }
 
-/* line 433, ../../sass/_main.scss */
+/* line 412, ../../sass/_mcda-drugis-base.scss */
 .line {
   background-color: #e2e2e2;
   width: 100%;
   height: 5px;
 }
 
-/* line 439, ../../sass/_main.scss */
+/* line 418, ../../sass/_mcda-drugis-base.scss */
 .last-line {
   height: 5px;
 }
 
-/* line 443, ../../sass/_main.scss */
+/* line 422, ../../sass/_mcda-drugis-base.scss */
 .pref-progress .progress-cell {
   padding: 0px;
 }
 
-/* line 447, ../../sass/_main.scss */
+/* line 426, ../../sass/_mcda-drugis-base.scss */
 .circle {
   background-color: #e2e2e2;
   height: 25px;
@@ -9941,26 +10093,21 @@ input[type='file'] {
   margin-left: -15px;
 }
 
-/* line 457, ../../sass/_main.scss */
+/* line 436, ../../sass/_mcda-drugis-base.scss */
 .circle-container.next-step .circle,
 .circle-container.completed .circle,
 .line.accessible {
   background-color: #29A329;
 }
 
-/* line 463, ../../sass/_main.scss */
+/* line 442, ../../sass/_mcda-drugis-base.scss */
 .circle-container.next-step:hover,
 .circle-container.completed:hover {
   cursor: pointer;
 }
 
-/* line 468, ../../sass/_main.scss */
+/* line 447, ../../sass/_mcda-drugis-base.scss */
 .circle-label {
   margin-left: -50%;
   text-align: left;
-}
-
-/* line 473, ../../sass/_main.scss */
-.alert-box-message {
-  padding-right: 1.25rem;
 }

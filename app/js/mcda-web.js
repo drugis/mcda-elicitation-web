@@ -10,7 +10,7 @@ define(function(require) {
   require('mcda/services/remarks');
   require('mcda/services/routeFactory');
   require('mcda/services/workspaceResource');
-  require('mcda/services/valueTreeService');
+  require('mcda/services/workspaceService');
   require('mcda/services/scenarioResource');
   require('mcda/services/taskDependencies');
   require('mcda/services/errorHandling');
@@ -29,7 +29,7 @@ define(function(require) {
     'elicit.scaleRangeService',
     'elicit.remarks',
     'elicit.workspaceResource',
-    'elicit.valueTreeService',
+    'elicit.workspaceService',
     'elicit.scenarioResource',
     'elicit.util',
     'elicit.directives',
@@ -91,19 +91,6 @@ define(function(require) {
         this.$apply(fn);
       }
     };
-
-    var getTask = function(taskId) {
-      return _.find(Tasks.available, function(task) { return task.id === taskId; });
-    };
-
-    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-      var task = getTask(toState.name);
-      if(task && task.activeTab) {
-        $rootScope.activeTab = task.activeTab;
-      } else {
-        $rootScope.activeTab = toState.name;
-      }
-    });
 
     $rootScope.$on('error', function(e, message) {
       $rootScope.$safeApply($rootScope, function() {
