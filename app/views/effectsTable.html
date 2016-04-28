@@ -24,7 +24,7 @@
         <span ng-repeat="node in effectsTableRow.path.slice(1)">
           <i style="font-size: 1.5rem" class="fa fa-angle-right"></i>
           <div class="secondary-header">
-            <remark-block edit-mode="editMode" remark="$parent.remarks.remarks[node.title]" save-remarks="saveRemarks"></remark-block>{{node.title}}
+            <remark-block edit-mode="editMode" remark="$parent.remarks.remarks[node.title]" save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()"></remark-block>{{node.title}}
           </div>
         </span>
       </td>
