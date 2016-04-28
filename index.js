@@ -17,18 +17,59 @@ var express = require('express'),
 var pg = require('pg');
 var deferred = require('deferred');
 
-everyauth.everymodule
-  .findUserById(function(id, callback) {
-    pg.connect(dbUri, function(error, client, done) {
-      if (error) return console.error("Error fetching client from pool", error);
-      client.query("SELECT id, username, firstName, lastName FROM Account WHERE id = $1", [id], function(error, result) {
-        done();
-        if (error) callback(error);
-        else if (result.rows.length == 0) callback("ID " + id + " not found");
-        else callback(null, result.rows[0]);
-      });
-    });
+everyauth.everymodule.findUserById(function(id, callback) {
+  db.query("SELECT id, username, firstName, lastName FROM Account WHERE id = $1", [id], function(error, result) {
+    if (error) callback(error);
+    else if (result.rows.length == 0) callback("ID " + id + " not found");
+    else callback(null, result.rows[0]);
   });
+});
+
+function findOrCreateUser(sess, accessToken, extra, googleUser) {
+  var user = this.Promise();
+
+  function userTransaction(client, callback) {
+    client.query("SELECT id, username, firstName, lastName FROM UserConnection LEFT JOIN Account ON UserConnection.userid = Account.username WHERE providerUserId = $1 AND providerId = 'google'", [googleUser.id], function(error, result) {
+      if (error) {
+        return callback(error);
+      }
+      if (result.rows.length == 0) {
+        client.query("INSERT INTO UserConnection (userId, providerId, providerUserId, rank, displayName, profileUrl, accessToken, refreshToken, expireTime)" +
+          " VALUES ($1, 'google', $2, 1, $3, $4, $5, $6, $7)", [googleUser.id, googleUser.id, googleUser.name, googleUser.link, accessToken, extra.refresh_token, extra.expires_in],
+          function(error, result) {
+            if (error) {
+              return callback(error);
+            }
+            client.query("INSERT INTO Account (username, firstName, lastName) VALUES ($1, $2, $3) RETURNING id", [googleUser.id, googleUser.given_name, googleUser.family_name],
+              function(error, result) {
+                if (error) {
+                  return callback(error);
+                }
+                var row = result.rows[0];
+                return callback(null, {
+                  "id": row.id,
+                  "username": googleUser.id,
+                  "firstName": googleUser.given_name,
+                  "lastName": googleUser.family_name
+                });
+              });
+          });
+      } else {
+        row = result.rows[0];
+        callback(null, row);
+      }
+    });
+  }
+
+  db.runInTransaction(userTransaction, function(error, result) {
+    if (error) {
+      return user.fail(error);
+    }
+    user.fulfill(result);
+  });
+
+  return user;
+}
 
 everyauth.google
   .authQueryParam({
@@ -37,47 +78,7 @@ everyauth.google
   .appId(process.env.MCDAWEB_GOOGLE_KEY)
   .appSecret(process.env.MCDAWEB_GOOGLE_SECRET)
   .scope('https://www.googleapis.com/auth/userinfo.profile email')
-  .findOrCreateUser(function(sess, accessToken, extra, googleUser) {
-    var user = this.Promise();
-    pg.connect(dbUri, function(error, client, done) {
-      if (error) return console.error("Error fetching client from pool", error);
-      client.query("SELECT id, username, firstName, lastName FROM UserConnection LEFT JOIN Account ON UserConnection.userid = Account.username WHERE providerUserId = $1 AND providerId = 'google'", [googleUser.id], function(error, result) {
-        if (error) {
-          done();
-          return user.fail(error);
-        }
-        if (result.rows.length == 0) {
-          client.query("INSERT INTO UserConnection (userId, providerId, providerUserId, rank, displayName, profileUrl, accessToken, refreshToken, expireTime)" +
-            " VALUES ($1, 'google', $2, 1, $3, $4, $5, $6, $7)", [googleUser.id, googleUser.id, googleUser.name, googleUser.link, accessToken, extra.refresh_token, extra.expires_in],
-            function(error, result) {
-              if (error) {
-                done();
-                return user.fail(error);
-              }
-              client.query("INSERT INTO Account (username, firstName, lastName) VALUES ($1, $2, $3) RETURNING id", [googleUser.id, googleUser.given_name, googleUser.family_name],
-                function(error, result) {
-                  done();
-                  if (error) {
-                    return user.fail(error);
-                  }
-                  var row = result.rows[0];
-                  user.fulfill({
-                    "id": row.id,
-                    "username": googleUser.id,
-                    "firstName": googleUser.given_name,
-                    "lastName": googleUser.family_name
-                  });
-                });
-            });
-          return;
-        }
-        done();
-        row = result.rows[0];
-        user.fulfill(row);
-      });
-    });
-    return user;
-  })
+  .findOrCreateUser(findOrCreateUser)
   .redirectPath('/');
 
 var bower_path = '/bower_components';
@@ -100,24 +101,19 @@ app
   }));
 
 function requireUserIsOwner(req, res, next) {
-  pg.connect(dbUri, function(err, client, done) {
+  db.query('SELECT owner FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
     if (err) {
-      return console.error('error fetching client from pool', err);
+      err.status = 500;
+      next(err);
     }
-    client.query('SELECT owner FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
-      done();
-      if (err) {
-        return console.error('error running query', err);
-      }
-      if (!req.user || result.rows[0].owner != req.user.id) {
-        res.status(403).send({
-          "code": 403,
-          "message": "Access to resource not authorised"
-        });
-      } else {
-        next();
-      }
-    });
+    if (!req.user || result.rows[0].owner != req.user.id) {
+      res.status(403).send({
+        "code": 403,
+        "message": "Access to resource not authorised"
+      });
+    } else {
+      next();
+    }
   });
 }
 
@@ -220,150 +216,110 @@ app.post("/workspaces", function(req, res, next) {
       return next(err);
     }
     res.json(result);
-  })
+  });
 });
 
-app.get("/workspaces/:id", function(req, res) {
+app.get("/workspaces/:id", function(req, res, next) {
   logger.debug('GET /workspaces/:id');
-  pg.connect(dbUri, function(err, client, done) {
+  db.query('SELECT id, owner, problem, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
     if (err) {
-      return console.error('error fetching workspace from pool', err);
+      err.status = 500;
+      return next(err);
     }
-    client.query('SELECT id, owner, problem, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
-      done();
-      if (err) {
-        return console.error('error running query', err);
-      }
 
-      res.json(result.rows[0]);
-    });
+    res.json(result.rows[0]);
   });
 });
 
-app.get("/workspaces/:id/scenarios", function(req, res) {
+app.get("/workspaces/:id/scenarios", function(req, res, next) {
   logger.debug('GET /workspaces/:id/scenarios');
-  pg.connect(dbUri, function(err, client, done) {
+  db.query('SELECT id, title, state, workspace AS "workspaceId" FROM scenario WHERE workspace = $1', [req.params.id], function(err, result) {
     if (err) {
-      return console.error('error fetching workspace from pool', err);
+      err.status = 500;
+      return next(err);
     }
-    client.query('SELECT id, title, state, workspace AS "workspaceId" FROM scenario WHERE workspace = $1', [req.params.id], function(err, result) {
-      done();
-      if (err) {
-        return console.error('error running query', err);
-      }
-      res.json(result.rows);
-    });
+    res.json(result.rows);
   });
 });
 
-app.get("/workspaces/:id/scenarios/:id", function(req, res) {
+app.get("/workspaces/:id/scenarios/:id", function(req, res, next) {
   logger.debug('GET /workspaces/:id/scenarios/:id');
-  pg.connect(dbUri, function(err, client, done) {
+  db.query('SELECT id, title, state, workspace AS "workspaceId" FROM scenario WHERE id = $1', [req.params.id], function(err, result) {
     if (err) {
-      return console.error('error fetching workspace from pool', err);
+      err.status = 500;
+      return next(err);
     }
-    client.query('SELECT id, title, state, workspace AS "workspaceId" FROM scenario WHERE id = $1', [req.params.id], function(err, result) {
-      done();
-      if (err) {
-        return console.error('error running query', err);
-      }
 
-      res.json(result.rows[0]);
-    });
+    res.json(result.rows[0]);
   });
 });
 
-app.get("/workspaces/:id/remarks", function(req, res) {
+app.get("/workspaces/:id/remarks", function(req, res, next) {
   logger.debug('GET /workspaces/:id/remarks');
-  pg.connect(dbUri, function(err, client, done) {
+  db.query('SELECT workspaceid AS "workspaceId", remarks::jsonb FROM remarks WHERE workspaceid = $1', [req.params.id], function(err, result) {
     if (err) {
-      var message = 'error fetching remarks from pool';
-      logger.error(message, err);
-      res.status(500).send(message);
+      err.status = 500;
+      return next(err);
     }
-    client.query('SELECT workspaceid AS "workspaceId", remarks::jsonb FROM remarks WHERE workspaceid = $1', [req.params.id], function(err, result) {
-      done();
-      if (err) {
-        var message = 'error fetching remarks from database';
-        logger.error(message, err);
-        res.status(500).send(message);
-      }
-      res.send(result.rows[0]);
-    });
+    res.send(result.rows[0]);
   });
 });
 
-app.post("/workspaces/:id/remarks", function(req, res) {
-  pg.connect(dbUri, function(err, client, done) {
+app.post("/workspaces/:id/remarks", function(req, res, next) {
+  db.query('UPDATE remarks SET remarks = $1 WHERE workspaceid = $2', [req.body.remarks, req.params.id], function(err, result) {
     if (err) {
-      return console.error('error fetching remarks from pool', err);
+      err.status = 500;
+      return next(err);
     }
-    client.query('UPDATE remarks SET remarks = $1 WHERE workspaceid = $2', [req.body.remarks, req.params.id], function(err, result) {
-      done();
-      if (err) {
-        return console.error('error running query', err);
-      }
-      res.send(result.rows[0]);
-    });
+    res.end();
   });
 });
 
-app.post("/workspaces/:id", function(req, res) {
-  pg.connect(dbUri, function(err, client, done) {
+app.post("/workspaces/:id", function(req, res, next) {
+  db.query('UPDATE workspace SET title = $1, problem = $2 WHERE id = $3 ', [req.body.problem.title, req.body.problem, req.params.id], function(err, result) {
     if (err) {
-      return console.error('error fetching remarks from pool', err);
+      err.status = 500;
+      return next(err);
     }
-    client.query('UPDATE workspace SET title = $1, problem = $2 WHERE id = $3 ', [req.body.problem.title, req.body.problem, req.params.id], function(err, result) {
-      done();
-      if (err) {
-        return console.error('error running query', err);
-      }
-      res.send(result.rows[0]);
-    });
+    res.end();
   });
 });
 
-app.post("/workspaces/:id/scenarios", function(req, res) {
-  pg.connect(dbUri, function(err, client, done) {
+app.post("/workspaces/:id/scenarios", function(req, res, next) {
+  db.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3) RETURNING id', [req.params.id, req.body.title, {
+    problem: req.body.state.problem,
+    prefs: req.body.state.prefs
+  }], function(err, result) {
     if (err) {
-      return console.error('error fetching remarks from pool', err);
+      err.status = 500;
+      next(err);
     }
-    client.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3) RETURNING id', [req.params.id, req.body.title, {
-      problem: req.body.state.problem,
-      prefs: req.body.state.prefs
-    }], function(err, result) {
-      done();
-      if (err) {
-        return console.error('error running query', err);
-      }
-      res.send(result.rows[0]);
-    });
+    res.json(result.rows[0]);
   });
 });
 
-app.post("/workspaces/:id/scenarios/:id", function(req, res) {
-  pg.connect(dbUri, function(err, client, done) {
+app.post("/workspaces/:id/scenarios/:id", function(req, res, next) {
+  db.query('UPDATE scenario SET state = $1, title = $2 WHERE id = $3', [{
+    problem: req.body.state.problem,
+    prefs: req.body.state.prefs
+  }, req.body.title, req.body.id], function(err, result) {
     if (err) {
-      return console.error('error fetching remarks from pool', err);
+      err.status = 500;
+      next(err);
     }
-    client.query('UPDATE scenario SET state = $1, title = $2 WHERE id = $3', [{
-      problem: req.body.state.problem,
-      prefs: req.body.state.prefs
-    }, req.body.title, req.body.id], function(err, result) {
-      done();
-      if (err) {
-        return console.error('error running query', err);
-      }
-      res.send(result.rows[0]);
-    });
+    res.end();
   });
 });
 
-app.post('/patavi', function(req, res) { // FIXME: separate routes for scales and results
+app.post('/patavi', function(req, res, next) { // FIXME: separate routes for scales and results
   patavi.create(req.body, function(err, taskUri) {
+    if (err) {
+      err.status = 500;
+      next(err);
+    }
     res.location(taskUri);
     res.status(201);
-    res.send({ 'href': taskUri });
+    res.json({ 'href': taskUri });
   });
 });
 
