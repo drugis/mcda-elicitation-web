@@ -6,6 +6,7 @@ var dbUri = 'postgres://' + process.env.MCDAWEB_DB_USER + ':' + process.env.MCDA
 console.log(dbUri);
 var db = require('./node-backend/db')(dbUri);
 var patavi = require('./node-backend/patavi');
+var async = require('async');
 
 var express = require('express'),
   bodyParser = require('body-parser'),
@@ -160,42 +161,66 @@ app.get("/workspaces", function(req, res) {
 
 });
 
-app.post("/workspaces", function(req, res) {
+app.post("/workspaces", function(req, res, next) {
   logger.debug('POST /workspaces');
-  db.query('INSERT INTO workspace (owner, title, problem) VALUES ($1, $2, $3) RETURNING id', [req.user.id, req.body.title, req.body.problem], function(err, result) {
-    if (err) {
-      return console.error('error running query', err);
-    }
-    var workspaceId = result.rows[0].id;
-    db.query('INSERT INTO remarks (workspaceid, remarks) VALUES ($1, $2)', [workspaceId, {}], function(err, result) {
-      if (err) {
-        return console.error('error running query', err);
-      }
-      db.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3) RETURNING id', [workspaceId, 'Default', {
-        problem: req.body.problem
-      }], function(err, result) {
+
+  function workspaceTransaction(client, callback) {
+    function createWorkspace(callback) {
+      client.query('INSERT INTO workspace (owner, title, problem) VALUES ($1, $2, $3) RETURNING id', [req.user.id, req.body.title, req.body.problem], function(err, result) {
         if (err) {
-
-          return console.error('error running query', err);
+          return callback(err);
         }
-        var scenarioId = result.rows[0].id;
-        db.query('UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2', [scenarioId, workspaceId], function(err, result) {
-          if (err) {
-
-            return console.error('error running query', err);
-          }
-          db.query('SELECT id, owner, problem, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [workspaceId], function(err, result) {
-            if (err) {
-
-              return console.error('error running query', err);
-            }
-            res.json(result.rows[0]);
-          });
-        });
+        callback(null, result.rows[0].id);
       });
-    });
-  });
+    }
 
+    function createRemarks(workspaceId, callback) {
+      client.query('INSERT INTO remarks (workspaceid, remarks) VALUES ($1, $2)', [workspaceId, {}], function(err, result) {
+        callback(err, workspaceId);
+      });
+    }
+
+    function createScenario(workspaceId, callback) {
+      var state = { problem: req.body.problem };
+      client.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3) RETURNING id', [workspaceId, 'Default', state], function(err, result) {
+        if (err) {
+          return callback(err);
+        }
+        callback(null, workspaceId, result.rows[0].id);
+      });
+    }
+
+    function setDefaultScenario(workspaceId, scenarioId, callback) {
+      client.query('UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2', [scenarioId, workspaceId], function(err, result) {
+        callback(err, workspaceId);
+      });
+    }
+
+    function getWorkspaceInfo(workspaceId, callback) {
+      client.query('SELECT id, owner, problem, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [workspaceId], function(err, result) {
+        if (err) {
+          return callback(err);
+        }
+        callback(null, result.rows[0]);
+      }); 
+    }
+
+    async.waterfall([
+      createWorkspace,
+      createRemarks,
+      createScenario,
+      setDefaultScenario,
+      getWorkspaceInfo
+    ], callback);
+  }
+
+  db.runInTransaction(workspaceTransaction, function(err, result) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.json(result);
+  })
 });
 
 app.get("/workspaces/:id", function(req, res) {
