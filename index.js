@@ -1,9 +1,11 @@
-var conf = require('./conf');
 var everyauth = require('everyauth');
 var _ = require('underscore');
 var loginUtils = require('./node-backend/loginUtils');
 var logger = require('./node-backend/logger');
-var db = require('./node-backend/db')(conf.pgConStr);
+var dbUri = 'postgres://' + process.env.MCDAWEB_DB_USER + ':' + process.env.MCDAWEB_DB_PASSWORD + '@' + process.env.MCDAWEB_DB_HOST + '/' + process.env.MCDAWEB_DB_NAME; // FIXME
+console.log(dbUri);
+var db = require('./node-backend/db')(dbUri);
+var patavi = require('./node-backend/patavi');
 
 var express = require('express'),
   bodyParser = require('body-parser'),
@@ -16,7 +18,7 @@ var deferred = require('deferred');
 
 everyauth.everymodule
   .findUserById(function(id, callback) {
-    pg.connect(conf.pgConStr, function(error, client, done) {
+    pg.connect(dbUri, function(error, client, done) {
       if (error) return console.error("Error fetching client from pool", error);
       client.query("SELECT id, username, firstName, lastName FROM Account WHERE id = $1", [id], function(error, result) {
         done();
@@ -31,12 +33,12 @@ everyauth.google
   .authQueryParam({
     approval_prompt: 'auto'
   })
-  .appId(conf.google.clientId)
-  .appSecret(conf.google.clientSecret)
+  .appId(process.env.MCDAWEB_GOOGLE_KEY)
+  .appSecret(process.env.MCDAWEB_GOOGLE_SECRET)
   .scope('https://www.googleapis.com/auth/userinfo.profile email')
   .findOrCreateUser(function(sess, accessToken, extra, googleUser) {
     var user = this.Promise();
-    pg.connect(conf.pgConStr, function(error, client, done) {
+    pg.connect(dbUri, function(error, client, done) {
       if (error) return console.error("Error fetching client from pool", error);
       client.query("SELECT id, username, firstName, lastName FROM UserConnection LEFT JOIN Account ON UserConnection.userid = Account.username WHERE providerUserId = $1 AND providerId = 'google'", [googleUser.id], function(error, result) {
         if (error) {
@@ -97,7 +99,7 @@ app
   }));
 
 function requireUserIsOwner(req, res, next) {
-  pg.connect(conf.pgConStr, function(err, client, done) {
+  pg.connect(dbUri, function(err, client, done) {
     if (err) {
       return console.error('error fetching client from pool', err);
     }
@@ -133,7 +135,7 @@ app.use(function(req, res, next) {
 
 app.get("/", function(req, res, next) {
   if (req.user) {
-    res.redirect('/index');
+    res.sendfile(__dirname + '/public/index.html');
   } else {
     res.redirect('/signin');
   }
@@ -141,10 +143,6 @@ app.get("/", function(req, res, next) {
 
 app.get("/signin", function(req, res, next) {
   res.sendfile(__dirname + '/public/signin.html');
-});
-
-app.get("/index", function(req, res, next) {
-  res.sendfile(__dirname + '/public/index.html');
 });
 
 app.get("/workspaces", function(req, res) {
@@ -157,7 +155,7 @@ app.get("/workspaces", function(req, res) {
         message: err
       });
     }
-    res.send(result.rows);
+    res.json(result.rows);
   });
 
 });
@@ -191,7 +189,7 @@ app.post("/workspaces", function(req, res) {
 
               return console.error('error running query', err);
             }
-            res.send(result.rows[0]);
+            res.json(result.rows[0]);
           });
         });
       });
@@ -202,24 +200,24 @@ app.post("/workspaces", function(req, res) {
 
 app.get("/workspaces/:id", function(req, res) {
   logger.debug('GET /workspaces/:id');
-  pg.connect(conf.pgConStr, function(err, client, done) {
+  pg.connect(dbUri, function(err, client, done) {
     if (err) {
       return console.error('error fetching workspace from pool', err);
     }
-    client.query('SELECT id, owner, problem::jsonb, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
+    client.query('SELECT id, owner, problem, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
       done();
       if (err) {
         return console.error('error running query', err);
       }
 
-      res.send(result.rows[0]);
+      res.json(result.rows[0]);
     });
   });
 });
 
 app.get("/workspaces/:id/scenarios", function(req, res) {
   logger.debug('GET /workspaces/:id/scenarios');
-  pg.connect(conf.pgConStr, function(err, client, done) {
+  pg.connect(dbUri, function(err, client, done) {
     if (err) {
       return console.error('error fetching workspace from pool', err);
     }
@@ -228,31 +226,31 @@ app.get("/workspaces/:id/scenarios", function(req, res) {
       if (err) {
         return console.error('error running query', err);
       }
-      res.send(result.rows);
+      res.json(result.rows);
     });
   });
 });
 
 app.get("/workspaces/:id/scenarios/:id", function(req, res) {
   logger.debug('GET /workspaces/:id/scenarios/:id');
-  pg.connect(conf.pgConStr, function(err, client, done) {
+  pg.connect(dbUri, function(err, client, done) {
     if (err) {
       return console.error('error fetching workspace from pool', err);
     }
-    client.query('SELECT id, title, state::jsonb, workspace AS "workspaceId" FROM scenario WHERE id = $1', [req.params.id], function(err, result) {
+    client.query('SELECT id, title, state, workspace AS "workspaceId" FROM scenario WHERE id = $1', [req.params.id], function(err, result) {
       done();
       if (err) {
         return console.error('error running query', err);
       }
 
-      res.send(result.rows[0]);
+      res.json(result.rows[0]);
     });
   });
 });
 
 app.get("/workspaces/:id/remarks", function(req, res) {
   logger.debug('GET /workspaces/:id/remarks');
-  pg.connect(conf.pgConStr, function(err, client, done) {
+  pg.connect(dbUri, function(err, client, done) {
     if (err) {
       var message = 'error fetching remarks from pool';
       logger.error(message, err);
@@ -271,7 +269,7 @@ app.get("/workspaces/:id/remarks", function(req, res) {
 });
 
 app.post("/workspaces/:id/remarks", function(req, res) {
-  pg.connect(conf.pgConStr, function(err, client, done) {
+  pg.connect(dbUri, function(err, client, done) {
     if (err) {
       return console.error('error fetching remarks from pool', err);
     }
@@ -286,7 +284,7 @@ app.post("/workspaces/:id/remarks", function(req, res) {
 });
 
 app.post("/workspaces/:id", function(req, res) {
-  pg.connect(conf.pgConStr, function(err, client, done) {
+  pg.connect(dbUri, function(err, client, done) {
     if (err) {
       return console.error('error fetching remarks from pool', err);
     }
@@ -301,7 +299,7 @@ app.post("/workspaces/:id", function(req, res) {
 });
 
 app.post("/workspaces/:id/scenarios", function(req, res) {
-  pg.connect(conf.pgConStr, function(err, client, done) {
+  pg.connect(dbUri, function(err, client, done) {
     if (err) {
       return console.error('error fetching remarks from pool', err);
     }
@@ -318,7 +316,7 @@ app.post("/workspaces/:id/scenarios", function(req, res) {
 });
 
 app.post("/workspaces/:id/scenarios/:id", function(req, res) {
-  pg.connect(conf.pgConStr, function(err, client, done) {
+  pg.connect(dbUri, function(err, client, done) {
     if (err) {
       return console.error('error fetching remarks from pool', err);
     }
@@ -334,6 +332,14 @@ app.post("/workspaces/:id/scenarios/:id", function(req, res) {
   });
 });
 
+app.post('/patavi', function(req, res) { // FIXME: separate routes for scales and results
+  patavi.create(req.body, function(err, taskUri) {
+    res.location(taskUri);
+    res.status(201);
+    res.send({ 'href': taskUri });
+  });
+});
+
 app.get('/user', loginUtils.emailHashMiddleware);
 
 //FIXME: should not be needed?
@@ -346,6 +352,6 @@ app.get('*', function(req, res) {
   res.status(404).sendfile(__dirname + '/public/error.html');
 });
 
-app.listen(8080);
-
-module.exports = app;
+app.listen(8080, function() {
+  console.log("Listening on http://localhost:8080");
+});

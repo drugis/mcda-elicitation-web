@@ -3,33 +3,48 @@ define(function(require) {
   var angular = require("angular");
   var _ = require("underscore");
 
-  return function($rootScope, $scope, currentScenario, taskDefinition, MCDAPataviService) {
+  return function($rootScope, $scope, currentScenario, taskDefinition, PataviService, $http) {
     $scope.scenario = currentScenario;
 
     var run = function(state) {
       state = angular.copy(state);
       var data = _.extend(state.problem, { 'preferences': state.prefs, 'method': 'smaa' });
-      var task = MCDAPataviService.run(data);
 
       var successHandler = function(results) {
         state.results = results.results;
       };
 
-      var errorHandler = function(code, error) {
-        var message = { code: (code && code.desc) ? code.desc : code,
-                        cause: error };
-        $scope.$root.$broadcast('error', message);
+      var errorHandler = function(pataviError) {
+        $scope.$root.$broadcast('error', {
+          type: 'patavi',
+          message: pataviError.desc
+        });
       };
 
       var updateHandler = _.throttle(function(update) {
-        var progress = parseInt(update);
-        if(progress > $scope.progress) {
-          $scope.progress = progress;
+        if (update && update.eventType == "progress" && update.eventData && $.isNumeric(update.eventData)) {
+          var progress = parseInt(update.eventData);
+          if(progress > $scope.progress) {
+            $scope.progress = progress;
+          }
         }
       }, 30);
 
       $scope.progress = 0;
-      task.then(successHandler, errorHandler, updateHandler);
+
+      $http.post('/patavi', data).then(function(result) {
+        var uri = result.headers("Location");
+        console.log(uri);
+        if (result.status == 201 && uri) {
+          return uri.replace(/^https/, "wss") + '/updates'; // FIXME
+        }
+      }, function(error) {
+        console.log(error);
+        $scope.$root.$broadcast('error', error);
+      })
+      .then(PataviService.listen)
+      .then(successHandler, errorHandler, updateHandler);
+
       return state;
     };
 

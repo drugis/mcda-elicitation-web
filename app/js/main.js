@@ -14,7 +14,8 @@ require.config({
     'domReady': 'bower_components/requirejs-domready/domReady',
     'mcda': '/app/js',
     'mmfoundation': 'bower_components/angular-foundation/mm-foundation-tpls',
-		'angular-cookies': 'bower_components/angular-cookies/angular-cookies'
+		'angular-cookies': 'bower_components/angular-cookies/angular-cookies',
+    'angular-patavi-client': 'bower_components/angular-patavi-client/patavi'
   },
   baseUrl: '.',
   shim: {

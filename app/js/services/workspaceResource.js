@@ -5,7 +5,7 @@ define(function(require) {
 
   var dependencies = ['ngResource'];
 
-  var WorkspaceResource = function($q, $resource, $rootScope, MCDAPataviService) {
+  var WorkspaceResource = function($q, $resource, $rootScope) {
 
     var resource = $resource(
       window.config.workspacesRepositoryUrl + ':workspaceId', { workspaceId: '@id' }, {

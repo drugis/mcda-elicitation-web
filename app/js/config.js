@@ -81,7 +81,6 @@ define(function(require) {
 
   return {
     tasks: tasks,
-    defaultView: defaultView,
-    pataviService: 'smaa_v2'
+    defaultView: defaultView
   };
 });

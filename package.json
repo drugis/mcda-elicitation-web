@@ -19,7 +19,7 @@
     "express": "~4.4.3",
     "express-session": "~1.2.1",
     "http-status-codes": "^1.0.5",
-    "pg": "^3.3.0",
+    "pg": "^4.3.0",
     "underscore": "~1.6.0",
     "winston": "^1.0.0"
   }

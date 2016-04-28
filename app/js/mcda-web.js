@@ -8,6 +8,7 @@ define(function(require) {
   require('angular-ui-router');
   require('angular-resource');
   require('angular-cookies');
+  require('angular-patavi-client');
   require('mcda/services/remarks');
   require('mcda/services/routeFactory');
   require('mcda/services/workspaceResource');
@@ -16,7 +17,6 @@ define(function(require) {
   require('mcda/services/taskDependencies');
   require('mcda/services/errorHandling');
   require('mcda/services/hashCodeService');
-  require('mcda/services/pataviService');
   require('mcda/services/partialValueFunction');
   require('mcda/services/util');
   require('mcda/services/scaleRangeService');
@@ -28,6 +28,7 @@ define(function(require) {
     'ngResource',
     'ui.router',
     'mm.foundation',
+    'patavi',
     'elicit.scaleRangeService',
     'elicit.remarks',
     'elicit.workspaceResource',
@@ -35,7 +36,6 @@ define(function(require) {
     'elicit.scenarioResource',
     'elicit.util',
     'elicit.directives',
-    'elicit.pataviService',
     'elicit.controllers',
     'elicit.taskDependencies',
     'elicit.errorHandling',
