@@ -304,7 +304,8 @@ app.post("/workspaces/:id/scenarios", function(req, res) {
       return console.error('error fetching remarks from pool', err);
     }
     client.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3) RETURNING id', [req.params.id, req.body.title, {
-      problem: req.body.state.problem
+      problem: req.body.state.problem,
+      prefs: req.body.state.prefs
     }], function(err, result) {
       done();
       if (err) {
@@ -321,7 +322,8 @@ app.post("/workspaces/:id/scenarios/:id", function(req, res) {
       return console.error('error fetching remarks from pool', err);
     }
     client.query('UPDATE scenario SET state = $1, title = $2 WHERE id = $3', [{
-      problem: req.body.state.problem
+      problem: req.body.state.problem,
+      prefs: req.body.state.prefs
     }, req.body.title, req.body.id], function(err, result) {
       done();
       if (err) {
