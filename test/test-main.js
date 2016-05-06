@@ -12,22 +12,23 @@ for (var file in window.__karma__.files) {
 
 require.config({
   paths: {
-    'jQuery': 'bower_components/jquery/dist/jquery.min',
-    'underscore': 'bower_components/underscore/underscore',
     'angular': 'bower_components/angular/angular',
+    'angular-mocks': 'bower_components/angular-mocks/angular-mocks',
     'angular-resource': 'bower_components/angular-resource/angular-resource',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
-    'jquery-slider': 'bower_components/jslider/dist/jquery.slider',
     'd3': 'bower_components/d3/d3.min',
-    'nvd3': 'bower_components/nvd3-community/build/nv.d3',
-    'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML',
     'foundation': 'bower_components/foundation/js/foundation.min',
     'jasmine': 'bower_components/jasmine/lib/jasmine-core/jasmine',
     'jasmine-html': 'bower_components/jasmine/lib/jasmine-core/jasmine-html',
-    'angular-mocks': 'bower_components/angular-mocks/angular-mocks',
-    'mmfoundation': 'bower_components/angular-foundation/mm-foundation',
+    'jQuery': 'bower_components/jquery/dist/jquery.min',
+    'jquery-slider': 'bower_components/jslider/dist/jquery.slider',
+    'lodash': 'bower_components/lodash/lodash',
+    'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML',
     'mcda': 'app/js',
-    'templates': 'app/partials'
+    'mmfoundation': 'bower_components/angular-foundation/mm-foundation',
+    'nvd3': 'bower_components/nvd3-community/build/nv.d3',
+    'templates': 'app/partials',
+    'underscore': 'bower_components/underscore/underscore'
   },
   baseUrl: '/base',
   shim: {

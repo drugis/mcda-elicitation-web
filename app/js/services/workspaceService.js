@@ -18,13 +18,6 @@ define(function(require) {
       }
     };
 
-    // var prepareScales = function(problem) {
-    //   var payload = _.extend(problem, {
-    //     method: 'scales'
-    //   });
-    //   return MCDAPataviService.run(payload);
-    // };
-
     var buildTheoreticalScales = function(problem) {
       return _.object(_.map(problem.criteria, function(val, key) {
         var scale = val.scale || [null, null];
@@ -35,46 +28,6 @@ define(function(require) {
         return [key, scale];
       }));
     };
-
-    // var addDerived = function(response) {
-    //   var deferred = $q.defer();
-    //   var resource = response.resource;
-    //   var problem = resource.problem;
-
-    //   var successHandler = function(results) {
-    //     /* The $$ properties are reserved for Angular's internal functionality.
-    //      They get stripped when calling toJson (or resource.$save)
-    //      We (ab)use this feature to store derived values in the resource
-    //      */
-    //     resource.$$valueTree = problem.valueTree || valueTree(problem);
-    //     resource.$$scales = {
-    //       observed: results.results,
-    //       theoretical: theoreticalScales(problem)
-    //     };
-    //     deferred.resolve(resource);
-    //   };
-
-    //   var errorHandler = function(code, error) {
-    //     var message = {
-    //       code: (code && code.desc) ? code.desc : code,
-    //       cause: error
-    //     };
-    //     $rootScope.$broadcast('error', message);
-
-    //     resource.$$valueTree = problem.valueTree || valueTree(problem);
-    //     resource.$$scales = {
-    //       observed: undefined,
-    //       theoretical: theoreticalScales(problem)
-    //     };
-
-    //     deferred.resolve(resource);
-    //   };
-
-
-    //   prepareScales(problem).then(successHandler, errorHandler);
-
-    //   return deferred.promise;
-    // };
 
     function getObservedScales(problem) {
       return MCDAPataviService.run(_.extend(problem, {method: 'scales'})).then(function(result){

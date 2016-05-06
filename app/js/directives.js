@@ -470,7 +470,7 @@ define(function(require) {
         problem: '=',
         preferences: '='
       },
-      link: function(scope, element) {
+      link: function(scope) {
         scope.pvf = PartialValueFunction;
         scope.criteria = _.sortBy(_.map(_.pairs(scope.problem.criteria), function(crit, idx) {
           return _.extend(crit[1], {
@@ -486,7 +486,7 @@ define(function(require) {
           }).w;
         };
 
-        scope.$watch('preferences', function(newValue, oldValue) {
+        scope.$watch('preferences', function(newValue) {
           var order = _.map(newValue, function(pref) {
             var crit = _.map(pref.criteria, w);
             if (pref.type === 'ordinal') {
@@ -499,20 +499,13 @@ define(function(require) {
           var ratios  = _.map(newValue, function(pref) {
             var crit = _.map(pref.criteria, w);
             if (pref.type === 'ratio bound') {
-              return '\\frac{' + crit[0] + '}{' + crit[1]
-                + '} & \\in & ['
-                + $filter('number')(pref.bounds[0])
-                + ', '
-                + $filter('number')(pref.bounds[1])
-                + '] \\\\';
+              return '\\frac{' + crit[0] + '}{' + crit[1] + '} & \\in & [' +
+               $filter('number')(pref.bounds[0]) +
+              ', ' + $filter('number')(pref.bounds[1]) +'] \\\\';
             } else if (pref.type === 'exact swing') {
-              return '\\frac{'
-                + crit[0]
-                + '}{'
-                + crit[1]
-                + '} & = & '
-                + $filter('number')(pref.ratio)
-                + ' \\\\';
+              return '\\frac{' + crit[0] + '}{' + crit[1] + '} & = & ' +
+                $filter('number')(pref.ratio) +
+                ' \\\\';
             } else {
               return '';
             }
@@ -588,6 +581,22 @@ define(function(require) {
       },
       template: "<span>{{text}}</span>"
     };
+  });
+
+  directives.directive('rankAcceptabilityPlot', function(){
+    return {
+      restrict: 'E',
+      replace: true,
+      scope: {
+        data: '=',
+        parseFn: '=',
+        problem: '='
+      },
+      link: function(scope) {
+        console.log('something');
+      },
+      template: '<div style="width: 400px; height: 400px"><rank-plot value="data" parse-fn="parseFn" stacked="true" problem="problem"></rank-plot></div>'
+    }
   });
 
   return directives;

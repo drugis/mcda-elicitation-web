@@ -1,8 +1,8 @@
 'use strict';
 define(function(require) {
-  var angular = require("angular");
-  var _ = require("underscore");
-  var Config = require("mcda/config");
+  var angular = require('angular');
+  var _ = require('underscore');
+  var Config = require('mcda/config');
 
   require('mmfoundation');
   require('angular-ui-router');
@@ -16,6 +16,8 @@ define(function(require) {
   require('mcda/services/errorHandling');
   require('mcda/services/hashCodeService');
   require('mcda/services/pataviService');
+  require('mcda/services/effectsTableService');
+  require('mcda/services/resultsService');
   require('mcda/services/partialValueFunction');
   require('mcda/services/util');
   require('mcda/services/scaleRangeService');
@@ -34,6 +36,8 @@ define(function(require) {
     'elicit.util',
     'elicit.directives',
     'elicit.pataviService',
+    'elicit.effectsTableService',
+    'elicit.resultsService',
     'elicit.controllers',
     'elicit.taskDependencies',
     'elicit.errorHandling',
@@ -46,10 +50,10 @@ define(function(require) {
 
   // Detect our location so we can get the templates from the correct place
   app.constant('mcdaRootPath', (function() {
-    return require.toUrl(".").replace("js", "");
+    return require.toUrl('.').replace('js', '');
   })());
 
-  app.config(function(mcdaRootPath, Tasks, $stateProvider, $urlRouterProvider, $httpProvider, MCDARouteProvider) {
+  app.config(function(mcdaRootPath, $stateProvider, $urlRouterProvider, $httpProvider, MCDARouteProvider) {
     var baseTemplatePath = mcdaRootPath + 'views/';
 
     $httpProvider.interceptors.push('ErrorHandling');
@@ -77,7 +81,7 @@ define(function(require) {
     $urlRouterProvider.otherwise('/choose-problem');
   });
 
-  app.run(function($rootScope, $window, $http, Tasks) {
+  app.run(function($rootScope, $window, $http) {
     var csrfToken = $window.config._csrf_token;
     var csrfHeader = $window.config._csrf_header;
 

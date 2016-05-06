@@ -1,7 +1,7 @@
 'use strict';
 define(function(require) {
   var angular = require('angular');
-  return angular.module('elicit.controllers', [])
+  return angular.module('elicit.controllers', ['elicit.effectsTableService'])
     .controller('ChooseProblemController', require('mcda/controllers/chooseProblem'))
     .controller('WorkspaceController', require('mcda/controllers/workspace'))
     .controller('ScenarioController', require('mcda/controllers/scenario'))

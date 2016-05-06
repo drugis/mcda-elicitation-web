@@ -3,31 +3,11 @@ define(function(require) {
   var angular = require("angular");
   var _ = require("underscore");
 
-  return function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil) {
+  return function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil, EffectsTableService) {
 
     var remarksCache;
     $scope.scales = $scope.workspace.$$scales.observed;
     $scope.valueTree = $scope.workspace.$$valueTree;
-
-    function buildEffectsTableData(problem, valueTree) {
-      var criteriaNodes = ValueTreeUtil.findCriteriaNodes(valueTree);
-      var effectsTable = [];
-
-      angular.forEach(criteriaNodes, function(criteriaNode) {
-        var path = ValueTreeUtil.findTreePath(criteriaNode, valueTree);
-        effectsTable.push({
-          path: path.slice(1), // omit top-level node
-          criteria: _.map(criteriaNode.criteria, function(criterionKey) {
-            return {
-              key: criterionKey,
-              value: problem.criteria[criterionKey]
-            };
-          })
-        });
-      });
-
-      return effectsTable;
-    }
 
     $scope.isExact = function(criterion, alternative) {
       var perf = _.find($scope.problem.performanceTable, function(performance) {
@@ -37,7 +17,7 @@ define(function(require) {
     };
 
     $scope.problem = $scope.workspace.problem;
-    $scope.effectsTableData = buildEffectsTableData($scope.problem, $scope.valueTree);
+    $scope.effectsTableData = EffectsTableService.buildEffectsTableData($scope.problem, $scope.valueTree);
     $scope.nrAlternatives = _.keys($scope.problem.alternatives).length;
     $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree($scope.valueTree, $scope.problem.criteria);
 

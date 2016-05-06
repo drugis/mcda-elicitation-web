@@ -19,7 +19,6 @@ define(function(require) {
           }))
         ];
       };
-
     })
 
     .factory('ValueTreeUtil', function() {

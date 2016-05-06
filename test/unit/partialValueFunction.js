@@ -1,12 +1,15 @@
 define(['angular',
     'angular-mocks',
     'mcda/services/taskDependencies',
-    'mcda/services/pataviService'
+    'mcda/services/pataviService',
+    'mcda/services/util',
+    'mcda/services/effectsTableService'
   ],
   function(angular, controllers, TaskDependencies) {
     describe("PartialValueFunctionHandler", function() {
       var scope, state;
 
+      beforeEach(module('elicit.effectsTableService'));
       beforeEach(module('elicit.controllers'));
       beforeEach(module('elicit.taskDependencies'));
       beforeEach(module('elicit.pvfService'));

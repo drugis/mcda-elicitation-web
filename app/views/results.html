@@ -30,13 +30,9 @@
   <section class="row underlined-div" style="height: 450px;">
     <div class="columns large-12">
       <h4>Rank acceptabilities</h4>
-      <div style="width: 400px; height: 400px">
-        <rank-plot value="state.results.ranks.data"
-                   parse-fn="rankGraphData"
-                   stacked="true"
-                   problem="state.problem">
-        </rank-plot>
-      </div>
+      <rank-acceptability-plot
+        data="state.results.ranks.data"
+        problem="state.problem"></rank-acceptability-plot>
       <table id="ranktable">
         <thead>
           <tr>

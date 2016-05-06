@@ -16,7 +16,7 @@
       <th class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives" ng-show="alternativeVisible[alternativeKey]">{{alternative.title}}{{problem.valueTree.children.children[0].criteria}}</th>
     </tr>
   </thead>
-  <tbody class="main"">
+  <tbody class="main">
     <tr ng-repeat-start="effectsTableRow in effectsTableData" ng-show="effectsTableRow.path.length > 0">
       <td class="group-header" colspan="{{3 + nrAlternatives}}">
         <div class="main-header">
