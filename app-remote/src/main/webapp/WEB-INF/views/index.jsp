@@ -78,6 +78,11 @@
          }
      };
 
+     if(window.location.host.indexOf("test") > -1) {
+       document.body.className += " test";
+       document.title = "test-" + document.title;
+     }
+
      function signout(){
          var signoutForm = document.getElementById('signout_form');
 
@@ -86,6 +91,5 @@
          }
      }
     </script>
-
   </body>
 </html>

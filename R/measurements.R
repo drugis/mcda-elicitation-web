@@ -4,6 +4,10 @@ ilogit <- function(x) {
   1 / (1 + exp(-x))
 }
 
+icloglog <- function(x) {
+  1 - exp(-exp(x))
+}
+
 assign.sample <- function(defn, samples) {
   N <- dim(samples)[1]
   if (!is.null(defn$alternative)) {
@@ -52,6 +56,14 @@ sampler.relative_normal <- function(perf, N) {
 
 sampler.relative_logit_normal <- function(perf, N) {
   ilogit(sampler.relative_normal(perf, N))
+}
+
+sampler.relative_log_normal <- function(perf, N) {
+  exp(sampler.relative_normal(perf, N))
+}
+
+sampler.relative_cloglog_normal <- function(perf, N) {
+  icloglog(sampler.relative_normal(perf, N))
 }
 
 sample <- function(alts, crit, performanceTable, N) {
