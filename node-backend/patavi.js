@@ -1,11 +1,9 @@
+'use strict';
 var fs = require('fs');
 var https = require('https');
 var logger = require('./logger');
 var _ = require('underscore');
 
-module.exports = {
-  create: createPataviTask
-};
 
 var httpsOptions = {
   hostname: process.env.PATAVI_HOST,
@@ -25,7 +23,7 @@ function createPataviTask(problem, callback) {
     }
   };
   var postReq = https.request(_.extend(httpsOptions, reqOptions), function(res) {
-    if (res.statusCode == 201 && res.headers.location) {
+    if (res.statusCode === 201 && res.headers.location) {
       callback(null, res.headers.location);
     } else {
       callback('Error queueing task: server returned code ' + res.statusCode);
@@ -34,3 +32,7 @@ function createPataviTask(problem, callback) {
   postReq.write(JSON.stringify(problem));
   postReq.end();
 }
+
+module.exports = {
+  create: createPataviTask
+};

@@ -1,5 +1,5 @@
+'use strict';
 var everyauth = require('everyauth');
-var _ = require('underscore');
 var loginUtils = require('./node-backend/loginUtils');
 var logger = require('./node-backend/logger');
 var dbUri = 'postgres://' + process.env.MCDAWEB_DB_USER + ':' + process.env.MCDAWEB_DB_PASSWORD + '@' + process.env.MCDAWEB_DB_HOST + '/' + process.env.MCDAWEB_DB_NAME; // FIXME
@@ -14,14 +14,15 @@ var express = require('express'),
   session = require('express-session'),
   csurf = require('csurf');
 
-var pg = require('pg');
-var deferred = require('deferred');
-
 everyauth.everymodule.findUserById(function(id, callback) {
   db.query("SELECT id, username, firstName, lastName FROM Account WHERE id = $1", [id], function(error, result) {
-    if (error) callback(error);
-    else if (result.rows.length == 0) callback("ID " + id + " not found");
-    else callback(null, result.rows[0]);
+    if (error) {
+      callback(error);
+    } else if (result.rows.length === 0) {
+     callback("ID " + id + " not found");
+    } else {
+      callback(null, result.rows[0]);
+    }
   });
 });
 
@@ -33,10 +34,10 @@ function findOrCreateUser(sess, accessToken, extra, googleUser) {
       if (error) {
         return callback(error);
       }
-      if (result.rows.length == 0) {
+      if (result.rows.length === 0) {
         client.query("INSERT INTO UserConnection (userId, providerId, providerUserId, rank, displayName, profileUrl, accessToken, refreshToken, expireTime)" +
           " VALUES ($1, 'google', $2, 1, $3, $4, $5, $6, $7)", [googleUser.id, googleUser.id, googleUser.name, googleUser.link, accessToken, extra.refresh_token, extra.expires_in],
-          function(error, result) {
+          function(error) {
             if (error) {
               return callback(error);
             }
@@ -55,8 +56,7 @@ function findOrCreateUser(sess, accessToken, extra, googleUser) {
               });
           });
       } else {
-        row = result.rows[0];
-        callback(null, row);
+        callback(null, result.rows[0]);
       }
     });
   }
@@ -82,10 +82,6 @@ everyauth.google
   .redirectPath('/');
 
 var bower_path = '/bower_components';
-var csrfValue = function(req) {
-  var token = (req.body && req.body._csrf) || (req.query && req.query._csrf) || (req.headers['x-csrf-token']) || (req.headers['x-xsrf-token']);
-  return token;
-};
 var app = express();
 app
   .use('/bower_components', express.static(__dirname + bower_path))
@@ -106,7 +102,7 @@ function requireUserIsOwner(req, res, next) {
       err.status = 500;
       next(err);
     }
-    if (!req.user || result.rows[0].owner != req.user.id) {
+    if (!req.user || result.rows[0].owner !== req.user.id) {
       res.status(403).send({
         "code": 403,
         "message": "Access to resource not authorised"
@@ -130,7 +126,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.get("/", function(req, res, next) {
+app.get("/", function(req, res) {
   if (req.user) {
     res.sendfile(__dirname + '/public/index.html');
   } else {
@@ -138,11 +134,11 @@ app.get("/", function(req, res, next) {
   }
 });
 
-app.get("/signin", function(req, res, next) {
+app.get("/signin", function(req, res) {
   res.sendfile(__dirname + '/public/signin.html');
 });
 
-app.get("/workspaces", function(req, res) {
+app.get("/workspaces", function(req, res, next) {
   logger.debug('GET /workspaces');
   db.query('SELECT id, owner, title, problem, defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1', [req.user.id], function(err, result) {
     if (err) {
@@ -171,7 +167,7 @@ app.post("/workspaces", function(req, res, next) {
     }
 
     function createRemarks(workspaceId, callback) {
-      client.query('INSERT INTO remarks (workspaceid, remarks) VALUES ($1, $2)', [workspaceId, {}], function(err, result) {
+      client.query('INSERT INTO remarks (workspaceid, remarks) VALUES ($1, $2)', [workspaceId, {}], function(err) {
         callback(err, workspaceId);
       });
     }
@@ -187,7 +183,7 @@ app.post("/workspaces", function(req, res, next) {
     }
 
     function setDefaultScenario(workspaceId, scenarioId, callback) {
-      client.query('UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2', [scenarioId, workspaceId], function(err, result) {
+      client.query('UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2', [scenarioId, workspaceId], function(err) {
         callback(err, workspaceId);
       });
     }
@@ -198,7 +194,7 @@ app.post("/workspaces", function(req, res, next) {
           return callback(err);
         }
         callback(null, result.rows[0]);
-      }); 
+      });
     }
 
     async.waterfall([
