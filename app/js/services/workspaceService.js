@@ -3,9 +3,9 @@ define(function(require) {
   var angular = require('angular');
   var _ = require('underscore');
 
-  var dependencies = ['elicit.pataviService'];
+  var dependencies = ['$http', 'PataviService'];
 
-  var WorkspaceService = function(MCDAPataviService) {
+  var WorkspaceService = function($http, PataviService) {
 
     var buildValueTree = function(problem) {
       if (problem.valueTree) {
@@ -30,13 +30,25 @@ define(function(require) {
     };
 
     function getObservedScales(problem) {
-      return MCDAPataviService.run(_.extend(problem, {method: 'scales'})).then(function(result){
-        console.log('MCDAPataviService.run succes');
-        console.log('result = ' + JSON.stringify(result));
-        return result.results;
-      }, function(code, error){
-        console.log('MCDAPataviService.run error');
-      });
+      return $http.post('/patavi', _.extend(problem, {method: 'scales'})).then(function(result) {
+        var uri = result.headers("Location");
+        if (result.status == 201 && uri) {
+          return uri.replace(/^https/, "wss") + '/updates'; // FIXME
+        }
+      }, function(error) {
+        $scope.$root.$broadcast('error', error);
+      })
+      .then(PataviService.listen)
+      .then(
+        function(result) {
+          return result.results;
+        },
+        function(pataviError) {
+          $scope.$root.$broadcast('error', {
+            type: 'patavi',
+            message: pataviError.desc
+          });
+        });
     }
 
     return {
@@ -46,5 +58,5 @@ define(function(require) {
     };
   };
 
-  return angular.module('elicit.workspaceService', dependencies).factory('WorkspaceService', WorkspaceService);
+  return angular.module('elicit.workspaceService', []).service('WorkspaceService', dependencies.concat(WorkspaceService));
 });

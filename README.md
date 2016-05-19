@@ -43,10 +43,30 @@ node-sass --include-path sass-shared sass/mcda-drugis.scss app/css/mcda-drugis.c
 node-sass --include-path sass-shared sass/mcda-drugis-ie8.scss app/css/mcda-drugis-ie8.css
 ```
 
-App remote
+Running
 ----------
-Follow the instructions in the README.md of the app-remote directory to run
-a version with a database.
+
+Set environment variables:
+
+```
+export MCDAWEB_DB_USER=mcdaweb
+export MCDAWEB_DB_PASSWORD=develop
+export MCDAWEB_DB_HOST=localhost
+export MCDAWEB_DB_NAME=mcdaweb
+export MCDAWEB_GOOGLE_KEY=<something>
+export MCDAWEB_GOOGLE_SECRET=<something-else>
+export PATAVI_HOST=localhost
+export PATAVI_PORT=3000
+export PATAVI_CLIENT_KEY=path/to/key
+export PATAVI_CLIENT_CRT=/path/to/crt
+export PATAVI_CA=/path/to/ca
+```
+
+
+npm install
+bower install
+
+node index.js
 
 License
 -------

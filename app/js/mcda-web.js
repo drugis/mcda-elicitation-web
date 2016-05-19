@@ -7,6 +7,8 @@ define(function(require) {
   require('mmfoundation');
   require('angular-ui-router');
   require('angular-resource');
+  require('angular-cookies');
+  require('angular-patavi-client');
   require('mcda/services/remarks');
   require('mcda/services/routeFactory');
   require('mcda/services/workspaceResource');
@@ -23,11 +25,13 @@ define(function(require) {
   require('mcda/services/scaleRangeService');
   require('mcda/controllers');
   require('mcda/directives');
+  require('mcda/navbar/navbar');
 
   var dependencies = [
     'ngResource',
     'ui.router',
     'mm.foundation',
+    'patavi',
     'elicit.scaleRangeService',
     'elicit.remarks',
     'elicit.workspaceResource',
@@ -35,17 +39,46 @@ define(function(require) {
     'elicit.scenarioResource',
     'elicit.util',
     'elicit.directives',
+<<<<<<< HEAD
     'elicit.pataviService',
     'elicit.effectsTableService',
     'elicit.resultsService',
+=======
+>>>>>>> feature/nodejs
     'elicit.controllers',
     'elicit.taskDependencies',
     'elicit.errorHandling',
     'elicit.routeFactory',
-    'elicit.pvfService'
+    'elicit.pvfService',
+    'elicit.navbar',
+    'ngCookies'
   ];
 
   var app = angular.module('elicit', dependencies);
+  app.run(['$rootScope', '$window', '$http', '$cookies', function($rootScope, $window, $http, $cookies) {
+    var csrfToken = $cookies['XSRF-TOKEN'];
+
+    $rootScope.$safeApply = function($scope, fn) {
+      var phase = $scope.$root.$$phase;
+      if (phase === '$apply' || phase === '$digest') {
+        this.$eval(fn);
+      } else {
+        this.$apply(fn);
+      }
+    };
+
+    $rootScope.$on('error', function(e, message) {
+      $rootScope.$safeApply($rootScope, function() {
+        $rootScope.error = _.extend(message, {
+          close: function() {
+            delete $rootScope.error;
+          }
+        });
+      });
+    });
+
+  }]);
+
   app.constant('Tasks', Config.tasks);
 
   // Detect our location so we can get the templates from the correct place
