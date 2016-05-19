@@ -39,12 +39,9 @@ define(function(require) {
     'elicit.scenarioResource',
     'elicit.util',
     'elicit.directives',
-<<<<<<< HEAD
     'elicit.pataviService',
     'elicit.effectsTableService',
     'elicit.resultsService',
-=======
->>>>>>> feature/nodejs
     'elicit.controllers',
     'elicit.taskDependencies',
     'elicit.errorHandling',
