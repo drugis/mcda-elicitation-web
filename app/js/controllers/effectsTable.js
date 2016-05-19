@@ -6,6 +6,9 @@ define(function(require) {
   return function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil, EffectsTableService) {
 
     var remarksCache;
+    $scope.$watch('workspace.$$scales.observed', function(newValue){
+      $scope.scales = newValue;
+    },true);
     $scope.scales = $scope.workspace.$$scales.observed;
     $scope.valueTree = $scope.workspace.$$valueTree;
 

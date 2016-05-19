@@ -2,20 +2,21 @@
 
 require.config({
   paths: {
-    'jQuery': 'bower_components/jquery/dist/jquery.min',
-    'underscore': 'bower_components/underscore/underscore-min',
     'angular': 'bower_components/angular/angular',
+    'angular-cookies': 'bower_components/angular-cookies/angular-cookies',
+    'angular-patavi-client': 'bower_components/angular-patavi-client/patavi',
     'angular-resource': 'bower_components/angular-resource/angular-resource.min',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
+    'domReady': 'bower_components/requirejs-domready/domReady',
+    'jQuery': 'bower_components/jquery/dist/jquery.min',
     'jquery-slider': 'bower_components/jslider/dist/jquery.slider.min',
     'd3': 'bower_components/d3/d3.min',
-    'nvd3': 'bower_components/nvd3-community/build/nv.d3',
+    'lodash': 'bower_components/lodash/lodash',
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_SVG',
-    'domReady': 'bower_components/requirejs-domready/domReady',
+    'nvd3': 'bower_components/nvd3-community/build/nv.d3',
     'mcda': '/app/js',
     'mmfoundation': 'bower_components/angular-foundation/mm-foundation-tpls',
-		'angular-cookies': 'bower_components/angular-cookies/angular-cookies',
-    'angular-patavi-client': 'bower_components/angular-patavi-client/patavi'
+    'underscore': 'bower_components/underscore/underscore-min'
   },
   baseUrl: '.',
   shim: {

@@ -1,7 +1,7 @@
 'use strict';
 define(function(require) {
-  var angular = require("angular");
-  var _ = require("underscore");
+  var angular = require('angular');
+  var _ = require('underscore');
 
   return function($rootScope, $scope, currentScenario, taskDefinition, PataviService, $http) {
     $scope.scenario = currentScenario;
@@ -22,7 +22,7 @@ define(function(require) {
       };
 
       var updateHandler = _.throttle(function(update) {
-        if (update && update.eventType === "progress" && update.eventData && $.isNumeric(update.eventData)) {
+        if (update && update.eventType === 'progress' && update.eventData && $.isNumeric(update.eventData)) {
           var progress = parseInt(update.eventData);
           if(progress > $scope.progress) {
             $scope.progress = progress;
@@ -33,10 +33,10 @@ define(function(require) {
       $scope.progress = 0;
 
       $http.post('/patavi', data).then(function(result) {
-        var uri = result.headers("Location");
+        var uri = result.headers('Location');
         console.log(uri);
         if (result.status === 201 && uri) {
-          return uri.replace(/^https/, "wss") + '/updates'; // FIXME
+          return uri.replace(/^https/, 'wss') + '/updates'; // FIXME
         }
       }, function(error) {
         console.log(error);

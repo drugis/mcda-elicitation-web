@@ -3,9 +3,9 @@ define(function(require) {
   var angular = require('angular');
   var _ = require('lodash');
 
-  var dependencies = ['elicit.pataviService'];
+  var dependencies = [];
 
-  var MCDAResultsService = function(MCDAPataviService) {
+  var MCDAResultsService = function() {
 
     function run($scope, state) {
       function successHandler(results) {
@@ -31,7 +31,7 @@ define(function(require) {
         'preferences': state.prefs,
         'method': 'smaa'
       });
-      var task = MCDAPataviService.run(data);
+      // var task = MCDAPataviService.run(data);
 
       $scope.progress = 0;
       task.then(successHandler, errorHandler, updateHandler);

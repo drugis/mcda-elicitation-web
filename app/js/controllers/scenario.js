@@ -72,7 +72,7 @@ define(function(require) {
 
     function redirect(scenarioId) {
       var newState = _.omit($stateParams, 'id');
-      newState.id = scenarioId; 
+      newState.id = scenarioId;
       $state.go($state.current.name, newState, {
         reload: true
       });

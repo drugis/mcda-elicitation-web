@@ -2,7 +2,7 @@
 var fs = require('fs');
 var https = require('https');
 var logger = require('./logger');
-var _ = require('underscore');
+var _ = require('lodash');
 
 
 var httpsOptions = {

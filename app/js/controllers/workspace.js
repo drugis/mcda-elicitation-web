@@ -1,5 +1,5 @@
 'use strict';
-define([], function() {
+define(['angular'], function(angular) {
 
   return function($scope, $location, $stateParams, $cookies, Tasks, TaskDependencies, currentWorkspace) {
     var user = angular.fromJson($cookies.get("LOGGED-IN-USER"));

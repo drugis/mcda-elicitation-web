@@ -1,9 +1,10 @@
+'use strict';
 var crypto = require('crypto'),
   httpStatus = require('http-status-codes'),
   logger = require('./logger');
 
 // check if startsWith is not a language feature
-if (typeof String.prototype.startsWith != 'function') {
+if (typeof String.prototype.startsWith !== 'function') {
   String.prototype.startsWith = function(str) {
     return this.indexOf(str) === 0;
   };
@@ -11,7 +12,7 @@ if (typeof String.prototype.startsWith != 'function') {
 
 module.exports = {
 
-  emailHashMiddleware: function(request, response, next) {
+  emailHashMiddleware: function(request, response) {
     logger.debug('loginUtils.emailHashMiddleware; request.headers.host = ' + (request.headers ? request.headers.host : 'unknown host'));
     if (!request.session.auth) {
       response.status = httpStatus.FORBIDDEN;

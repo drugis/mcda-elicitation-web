@@ -1,6 +1,5 @@
 'use strict';
 var pg = require('pg');
-var _ = require('underscore');
 var async = require('async');
 var logger = require('./logger');
 
@@ -34,7 +33,7 @@ module.exports = function(url) {
     // result). The work will be run in a transaction, and if workCallback is
     // called with an error, the transaction is aborted. Otherwise, the
     // transaction is committed.
-    // 
+    //
     // If the transaction completed, callback(error, result) will be called
     // with the result of work, otherwise with an error.
     runInTransaction: function(work, callback) {
@@ -71,11 +70,11 @@ module.exports = function(url) {
           callback(err);
           return done();
         }
-        var query = client.query(text, values, function(err, result) {
+        client.query(text, values, function(err, result) {
           done();
           callback(err, result);
         });
       });
     }
   };
-}
+};
