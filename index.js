@@ -72,6 +72,7 @@ function findOrCreateUser(sess, accessToken, extra, googleUser) {
 }
 
 everyauth.google
+  .myHostname(process.env.MCDA_HOST)
   .authQueryParam({
     approval_prompt: 'auto'
   })
