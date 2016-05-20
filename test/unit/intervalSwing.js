@@ -8,7 +8,6 @@ define(['angular',
       beforeEach(module('elicit.controllers'));
       beforeEach(module('elicit.taskDependencies'));
       beforeEach(module('elicit.pvfService'));
-      beforeEach(module('elicit.pataviService'));
 
       function initializeScope($controller, $rootScope, TaskDependencies,  problem) {
         var scope, state;

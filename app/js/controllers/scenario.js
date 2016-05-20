@@ -47,7 +47,7 @@ define(function(require) {
     $scope.workspace.$$scales = {};
     $scope.workspace.$$scales.theoreticalScales = WorkspaceService.buildTheoreticalScales(currentProblem);
 
-    WorkspaceService.getObservedScales(currentProblem).then(function(observedScales) {
+    WorkspaceService.getObservedScales($scope, currentProblem).then(function(observedScales) {
       $scope.workspace.$$scales.observed = observedScales;
     });
 

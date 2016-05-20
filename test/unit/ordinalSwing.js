@@ -14,7 +14,6 @@ define(['angular-mocks',
       beforeEach(module('elicit.controllers'));
       beforeEach(module('elicit.taskDependencies'));
       beforeEach(module('elicit.pvfService'));
-      beforeEach(module('elicit.pataviService'));
 
       function initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, problem) {
         var scope;

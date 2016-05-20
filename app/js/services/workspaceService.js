@@ -29,14 +29,14 @@ define(function(require) {
       }));
     };
 
-    function getObservedScales(problem) {
+    function getObservedScales(scope, problem) {
       return $http.post('/patavi', _.extend(problem, {method: 'scales'})).then(function(result) {
         var uri = result.headers("Location");
-        if (result.status == 201 && uri) {
+        if (result.status === 201 && uri) {
           return uri.replace(/^https/, "wss") + '/updates'; // FIXME
         }
       }, function(error) {
-        $scope.$root.$broadcast('error', error);
+        scope.$root.$broadcast('error', error);
       })
       .then(PataviService.listen)
       .then(
@@ -44,7 +44,7 @@ define(function(require) {
           return result.results;
         },
         function(pataviError) {
-          $scope.$root.$broadcast('error', {
+          scope.$root.$broadcast('error', {
             type: 'patavi',
             message: pataviError.desc
           });

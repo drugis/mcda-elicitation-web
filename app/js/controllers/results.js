@@ -3,50 +3,8 @@ define(function(require) {
   var angular = require('angular');
   var _ = require('underscore');
 
-  return function($rootScope, $scope, currentScenario, taskDefinition, PataviService, $http) {
+  return function($rootScope, $scope, currentScenario, taskDefinition, MCDAResultsService) {
     $scope.scenario = currentScenario;
-
-    var run = function(state) {
-      state = angular.copy(state);
-      var data = _.extend(state.problem, { 'preferences': state.prefs, 'method': 'smaa' });
-
-      var successHandler = function(results) {
-        state.results = results.results;
-      };
-
-      var errorHandler = function(pataviError) {
-        $scope.$root.$broadcast('error', {
-          type: 'patavi',
-          message: pataviError.desc
-        });
-      };
-
-      var updateHandler = _.throttle(function(update) {
-        if (update && update.eventType === 'progress' && update.eventData && $.isNumeric(update.eventData)) {
-          var progress = parseInt(update.eventData);
-          if(progress > $scope.progress) {
-            $scope.progress = progress;
-          }
-        }
-      }, 30);
-
-      $scope.progress = 0;
-
-      $http.post('/patavi', data).then(function(result) {
-        var uri = result.headers('Location');
-        console.log(uri);
-        if (result.status === 201 && uri) {
-          return uri.replace(/^https/, 'wss') + '/updates'; // FIXME
-        }
-      }, function(error) {
-        console.log(error);
-        $scope.$root.$broadcast('error', error);
-      })
-      .then(PataviService.listen)
-      .then(successHandler, errorHandler, updateHandler);
-
-      return state;
-    };
 
     var alternativeTitle = function(id) {
       var problem = currentScenario.state.problem;
@@ -99,7 +57,7 @@ define(function(require) {
         alternativesByRank: getAlterativesByRank,
         centralWeights: getCentralWeights
       });
-      return run(next);
+      return MCDAResultsService.getResults($scope, next);
     };
 
     $scope.state = initialize(taskDefinition.clean(currentScenario.state));
