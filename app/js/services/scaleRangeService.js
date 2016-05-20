@@ -12,7 +12,9 @@ define(function(require) {
     };
 
     function nice(x, dirFun) {
-      if(x === 0) return 0;
+      if(x === 0) {
+        return 0;
+      }
       var absX = Math.abs(x);
       var log10X = log10(absX);
       var factor;
