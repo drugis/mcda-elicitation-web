@@ -58,6 +58,7 @@ module.exports = function(url) {
             rollback(client, done);
             return callback(err);
           }
+          done();
           callback(null, result);
         });
       });
