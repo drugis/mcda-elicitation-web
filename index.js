@@ -19,7 +19,7 @@ everyauth.everymodule.findUserById(function(id, callback) {
     if (error) {
       callback(error);
     } else if (result.rows.length === 0) {
-     callback("ID " + id + " not found");
+      callback("ID " + id + " not found");
     } else {
       callback(null, result.rows[0]);
     }
@@ -174,7 +174,9 @@ app.post("/workspaces", function(req, res, next) {
     }
 
     function createScenario(workspaceId, callback) {
-      var state = { problem: req.body.problem };
+      var state = {
+        problem: req.body.problem
+      };
       client.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3) RETURNING id', [workspaceId, 'Default', state], function(err, result) {
         if (err) {
           return callback(err);
@@ -297,9 +299,11 @@ app.post("/workspaces/:id/scenarios", function(req, res, next) {
 
 app.post("/workspaces/:id/scenarios/:id", function(req, res, next) {
   db.query('UPDATE scenario SET state = $1, title = $2 WHERE id = $3', [{
-    problem: req.body.state.problem,
-    prefs: req.body.state.prefs
-  }, req.body.title, req.body.id], function(err, result) {
+      problem: req.body.state.problem,
+      prefs: req.body.state.prefs
+    },
+    req.body.title, req.body.id
+  ], function(err, result) {
     if (err) {
       err.status = 500;
       next(err);
@@ -316,7 +320,9 @@ app.post('/patavi', function(req, res, next) { // FIXME: separate routes for sca
     }
     res.location(taskUri);
     res.status(201);
-    res.json({ 'href': taskUri });
+    res.json({
+      'href': taskUri
+    });
   });
 });
 
@@ -332,6 +338,12 @@ app.get('*', function(req, res) {
   res.status(404).sendfile(__dirname + '/public/error.html');
 });
 
-app.listen(8080, function() {
-  console.log("Listening on http://localhost:8080");
+
+var port = 8080;
+if (process.argv[2] === 'port' && process.argv[3]) {
+  port = process.argv[3];
+}
+
+app.listen(port, function() {
+  console.log("Listening on http://localhost:" + port);
 });
