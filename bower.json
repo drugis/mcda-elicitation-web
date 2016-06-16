@@ -28,7 +28,7 @@
     "angular": "1.4.8",
     "angular-cookies": "~1.5.0",
     "angular-foundation": "~0.6.0",
-    "angular-patavi-client": "https://github.com/gertvv/angular-patavi-client.git#1.0.0",
+    "angular-patavi-client": "https://github.com/ConnorStroomberg/angular-patavi-client.git#issue/chrome-wss-bug",
     "angular-resource": "1.4.8",
     "angular-ui-router": "0.2.13",
     "bowser": "*",
@@ -43,13 +43,14 @@
     "nvd3-community": "~1.7",
     "requirejs": "~2.1.15",
     "requirejs-domready": "~2.0.1",
-    "underscore": "1.8.3"
+    "underscore": "1.8.3",
+    "error-reporting": "https://github.com/connorstroomberg/error-reporting.git#develop"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.8"
   },
   "resolutions": {
-    "angular": "1.5.5",
+    "angular": "1.5.7",
     "d3": "3.5.5"
   }
 }

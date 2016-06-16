@@ -7,25 +7,31 @@ define(function(require) {
 
   var WorkspaceService = function($http, PataviService) {
     function getObservedScales(scope, problem) {
-      return $http.post('/patavi', _.extend(problem, {method: 'scales'})).then(function(result) {
-        var uri = result.headers("Location");
-        if (result.status === 201 && uri) {
-          return uri.replace(/^https/, "wss") + '/updates'; // FIXME
-        }
-      }, function(error) {
-        scope.$root.$broadcast('error', error);
-      })
-      .then(PataviService.listen)
-      .then(
-        function(result) {
-          return result.results;
-        },
-        function(pataviError) {
+      return $http.post('/patavi', _.extend(problem, {
+          method: 'scales'
+        })).then(function(result) {
+          var uri = result.headers("Location");
+          if (result.status === 201 && uri) {
+            return uri.replace(/^https/, "wss") + '/updates'; // FIXME
+          }
+        }, function(error) {
           scope.$root.$broadcast('error', {
-            type: 'patavi',
-            message: pataviError.desc
+            type: 'BACK_END_ERROR',
+            code: error.code || undefined,
+            message: 'unable to submit the problem to the server'
           });
-        });
+        })
+        .then(PataviService.listen)
+        .then(
+          function(result) {
+            return result.results;
+          },
+          function(pataviError) {
+            scope.$root.$broadcast('error', {
+              type: 'PATAVI',
+              message: pataviError.desc
+            });
+          });
     }
 
     return {

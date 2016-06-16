@@ -9,15 +9,18 @@ define(function(require) {
 
     function run($scope, inState) {
       var state = angular.copy(inState);
-      var data = _.extend(state.problem, { 'preferences': state.prefs, 'method': 'smaa' });
+      var data = _.extend(state.problem, {
+        'preferences': state.prefs,
+        'method': 'smaa'
+      });
 
       var successHandler = function(results) {
         state.results = results.results;
       };
 
-      var errorHandler = function(pataviError) {
+      var pataviErrorHandler = function(pataviError) {
         $scope.$root.$broadcast('error', {
-          type: 'patavi',
+          type: 'PATAVI',
           message: pataviError.desc
         });
       };
@@ -25,7 +28,7 @@ define(function(require) {
       var updateHandler = _.throttle(function(update) {
         if (update && update.eventType === 'progress' && update.eventData && $.isNumeric(update.eventData)) {
           var progress = parseInt(update.eventData);
-          if(progress > $scope.progress) {
+          if (progress > $scope.progress) {
             $scope.progress = progress;
           }
         }
@@ -40,11 +43,15 @@ define(function(require) {
           return uri.replace(/^https/, 'wss') + '/updates'; // FIXME
         }
       }, function(error) {
-        console.log(error);
-        $scope.$root.$broadcast('error', error);
+        console.error(error);
+        $scope.$root.$broadcast('error', {
+          type: 'BACK_END_ERROR',
+          code: error.code || undefined,
+          message: 'unable to submit the problem to the server'
+        });
       })
-      .then(PataviService.listen)
-      .then(successHandler, errorHandler, updateHandler);
+        .then(PataviService.listen)
+        .then(successHandler, pataviErrorHandler, updateHandler);
 
       return state;
     }
