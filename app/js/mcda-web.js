@@ -9,6 +9,7 @@ define(function(require) {
   require('angular-resource');
   require('angular-cookies');
   require('angular-patavi-client');
+  require('error-reporting');
   require('mcda/services/remarks');
   require('mcda/services/routeFactory');
   require('mcda/services/workspaceResource');
@@ -16,7 +17,6 @@ define(function(require) {
   require('mcda/services/scalesService');
   require('mcda/services/scenarioResource');
   require('mcda/services/taskDependencies');
-  require('mcda/services/errorHandling');
   require('mcda/services/hashCodeService');
   require('mcda/services/effectsTableService');
   require('mcda/services/resultsService');
@@ -44,35 +44,26 @@ define(function(require) {
     'elicit.resultsService',
     'elicit.controllers',
     'elicit.taskDependencies',
-    'elicit.errorHandling',
     'elicit.routeFactory',
     'elicit.pvfService',
     'elicit.navbar',
-    'ngCookies'
+    'ngCookies',
+    'errorReporting'
   ];
 
   var app = angular.module('elicit', dependencies);
-  app.run(['$rootScope', '$window', '$http', '$cookies', function($rootScope, $window, $http, $cookies) {
-    $rootScope.$safeApply = function($scope, fn) {
-      var phase = $scope.$root.$$phase;
-      if (phase === '$apply' || phase === '$digest') {
-        this.$eval(fn);
-      } else {
-        this.$apply(fn);
-      }
-    };
-
-    $rootScope.$on('error', function(e, message) {
-      $rootScope.$safeApply($rootScope, function() {
-        $rootScope.error = _.extend(message, {
-          close: function() {
-            delete $rootScope.error;
-          }
-        });
-      });
-    });
-
-  }]);
+  app.run(['$rootScope', '$window', '$http', '$cookies',
+    function($rootScope, $window, $http, $cookies) {
+      $rootScope.$safeApply = function($scope, fn) {
+        var phase = $scope.$root.$$phase;
+        if (phase === '$apply' || phase === '$digest') {
+          this.$eval(fn);
+        } else {
+          this.$apply(fn);
+        }
+      };
+    }
+  ]);
 
   app.constant('Tasks', Config.tasks);
 
@@ -84,8 +75,6 @@ define(function(require) {
   app.config(function(mcdaRootPath, $stateProvider, $urlRouterProvider, $httpProvider, MCDARouteProvider) {
     var baseTemplatePath = mcdaRootPath + 'views/';
 
-    $httpProvider.interceptors.push('ErrorHandling');
-
     //ui-router code starts here
     $stateProvider.state('workspace', {
       url: '/workspaces/:workspaceId',
@@ -94,7 +83,8 @@ define(function(require) {
       resolve: {
         currentWorkspace: function($stateParams, WorkspaceResource) {
           return WorkspaceResource.get($stateParams).$promise;
-        }}
+        }
+      }
     });
 
     MCDARouteProvider.buildRoutes($stateProvider, 'workspace', baseTemplatePath);
@@ -124,15 +114,6 @@ define(function(require) {
       }
     };
 
-    $rootScope.$on('error', function(e, message) {
-      $rootScope.$safeApply($rootScope, function() {
-        $rootScope.error = _.extend(message, {
-          close: function() {
-            delete $rootScope.error;
-          }
-        });
-      });
-    });
   });
 
   return app;

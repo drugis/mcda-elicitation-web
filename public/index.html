@@ -19,15 +19,12 @@
 
 </head>
 
-<body class="f-topbar-fixed">
+<!-- added inline style to override drugis general styling to clean fixed breadcrumbbar -->
+<body class="f-topbar-fixed" style="padding-top: 52px;">
   <navbar-directive>
   </navbar-directive>
 
-  <div ng-if="error" class="row" ng-cloak>
-    <div class="columns">
-      <app-alert type="alert" close="error.close()" error="error"></span></app-alert>
-    </div>
-  </div>
+  <error-reporting></error-reporting>
 
   <div ui-view></div>
   <div class="push"></div>

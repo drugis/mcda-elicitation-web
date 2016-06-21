@@ -1,8 +1,6 @@
 <div class="row">
   <div class="columns large-12">
-    <div ng-if="error" ng-cloak>
-      <addis-alert type="alert" close="error.close()">{{error.code}} {{error.cause}}<span ng-show="error.error">&mdash; {{error.error}}</span></addis-alert>
-    </div>
+
     <h3 ng-if="!isEditTitleVisible" class="subheader">
       <span ng-bind="workspace.problem.title"></span>
       <a ng-click="editTitle()"><i class="fa fa-edit"></i></a>
