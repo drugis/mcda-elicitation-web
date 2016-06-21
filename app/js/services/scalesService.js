@@ -12,7 +12,7 @@ define(function(require) {
         })).then(function(result) {
           var uri = result.headers("Location");
           if (result.status === 201 && uri) {
-            return uri.replace(/^https/, "wss") + '/updates'; // FIXME
+            return uri;
           }
         }, function(error) {
           scope.$root.$broadcast('error', {

@@ -38,9 +38,8 @@ define(function(require) {
 
       $http.post('/patavi', data).then(function(result) {
         var uri = result.headers('Location');
-        console.log(uri);
         if (result.status === 201 && uri) {
-          return uri.replace(/^https/, 'wss') + '/updates'; // FIXME
+          return uri;
         }
       }, function(error) {
         console.error(error);
