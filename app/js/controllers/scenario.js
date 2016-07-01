@@ -11,7 +11,9 @@ define(function(require) {
     $scope.scenarios = scenarios;
 
     var getTask = function(taskId) {
-      return _.find(Tasks.available, function(task) { return task.id === taskId; });
+      return _.find(Tasks.available, function(task) {
+        return task.id === taskId;
+      });
     };
 
     function determineActiveTab() {
@@ -35,7 +37,7 @@ define(function(require) {
 
     $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
       var task = getTask(toState.name);
-      if(task && task.activeTab) {
+      if (task && task.activeTab) {
         $scope.activeTab = task.activeTab;
       } else {
         $scope.activeTab = toState.name;
@@ -119,6 +121,9 @@ define(function(require) {
     };
 
     $scope.scenarioChanged = function(newScenario) {
+      if (!newScenario) {
+        return; // just a title edit
+      }
       $state.go($state.current.name, {
         workspaceId: $scope.workspace.id,
         id: newScenario.id
