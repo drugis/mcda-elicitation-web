@@ -593,7 +593,6 @@ define(function(require) {
         problem: '='
       },
       link: function(scope) {
-        console.log('something');
       },
       template: '<div style="width: 400px; height: 400px"><rank-plot value="data" parse-fn="parseFn" stacked="true" problem="problem"></rank-plot></div>'
     }
