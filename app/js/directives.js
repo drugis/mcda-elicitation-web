@@ -21,13 +21,13 @@ define(function(require) {
       if (!fromIncl) {
         from += delta / steps;
         delta -= delta / steps;
-        --steps;
+        steps-=1;
       }
 
       if (!toIncl) {
         to -= delta / steps;
         delta -= delta / steps;
-        --steps;
+        steps-=1;
       }
 
       var stepToValue = function(step) {
@@ -130,8 +130,8 @@ define(function(require) {
       },
       link: function(scope, element, attrs) {
         var svg = d3.select(element[0]).append('svg')
-              .attr('width', '100%')
-              .attr('height', '100%');
+          .attr('width', '100%')
+          .attr('height', '100%');
 
         var dim = getParentDimension(element);
 
@@ -140,7 +140,7 @@ define(function(require) {
           _.each(_.pairs(data), function(el) {
             var key = scope.problem.alternatives[el[0]].title;
             var values = el[1];
-            for (var i = 0; i < values.length; i++) {
+            for (var i = 0; i < values.length; i+=1) {
               var obj = result[i] || {
                 key: 'Rank ' + (i + 1),
                 values: []
@@ -191,8 +191,8 @@ define(function(require) {
         var dim = getParentDimension(element);
 
         var svg = d3.select(element[0]).append('svg')
-              .attr('width', '100%')
-              .attr('height', '100%');
+          .attr('width', '100%')
+          .attr('height', '100%');
 
         scope.$watch('value', function(newVal) {
           if (!newVal) {
@@ -200,17 +200,17 @@ define(function(require) {
           }
           nv.addGraph(function() {
             var chart = nv.models.discreteBarChart()
-                  .staggerLabels(false)
-                  .showValues(true)
-                  .staggerLabels(true)
-                  .width(dim.width)
-                  .tooltips(false)
-                  .x(function(d) {
-                    return d.label;
-                  })
-                  .y(function(d) {
-                    return d.value;
-                  });
+              .staggerLabels(false)
+              .showValues(true)
+              .staggerLabels(true)
+              .width(dim.width)
+              .tooltips(false)
+              .x(function(d) {
+                return d.label;
+              })
+              .y(function(d) {
+                return d.value;
+              });
 
             var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
             svg.datum(data).transition().duration(100).call(chart);
@@ -233,11 +233,11 @@ define(function(require) {
       link: function(scope, element, attrs) {
         var dim = getParentDimension(element);
         var svg = d3.select(element[0]).append('svg')
-              .attr('width', '100%')
-              .attr('height', '100%');
+          .attr('width', '100%')
+          .attr('height', '100%');
 
         scope.$watch('value', function(newVal) {
-          if (!newVal)  {
+          if (!newVal) {
             return;
           }
           var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
@@ -308,10 +308,10 @@ define(function(require) {
 
         var block = function(val) {
           var col = 'q' + color(val) + '-9';
-          return '<div style="'+ style +'" class="' + col + '">'+ val + '</div>';
+          return '<div style="' + style + '" class="' + col + '">' + val + '</div>';
         };
 
-        scope.heat = '<div class="RdYlGn">' + block(0.0) + block(0.25) +  block(0.75) + block(1.0) + '</div>';
+        scope.heat = '<div class="RdYlGn">' + block(0.0) + block(0.25) + block(0.75) + block(1.0) + '</div>';
       },
       template: '<a tooltip-html-unsafe="{{heat}}" tooltip-animation="false" class="tiny-icon" style="cursor: help"><i class="fa fa-lg fa-question"></i></a>'
     };
@@ -496,12 +496,12 @@ define(function(require) {
             }
           });
 
-          var ratios  = _.map(newValue, function(pref) {
+          var ratios = _.map(newValue, function(pref) {
             var crit = _.map(pref.criteria, w);
             if (pref.type === 'ratio bound') {
               return '\\frac{' + crit[0] + '}{' + crit[1] + '} & \\in & [' +
-               $filter('number')(pref.bounds[0]) +
-              ', ' + $filter('number')(pref.bounds[1]) +'] \\\\';
+                $filter('number')(pref.bounds[0]) +
+                ', ' + $filter('number')(pref.bounds[1]) + '] \\\\';
             } else if (pref.type === 'exact swing') {
               return '\\frac{' + crit[0] + '}{' + crit[1] + '} & = & ' +
                 $filter('number')(pref.ratio) +
@@ -513,9 +513,13 @@ define(function(require) {
 
           scope.hasTradeoffs = !_.isEmpty(order);
 
-          if(scope.hasTradeoffs) {
-            scope.order = '\\begin{eqnarray} ' + _.reduce(order, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
-            scope.ratios = '\\begin{eqnarray} ' + _.reduce(ratios, function(memo, eqn) {return memo + eqn;}, '') + ' \\end{eqnarray}';
+          if (scope.hasTradeoffs) {
+            scope.order = '\\begin{eqnarray} ' + _.reduce(order, function(memo, eqn) {
+              return memo + eqn;
+            }, '') + ' \\end{eqnarray}';
+            scope.ratios = '\\begin{eqnarray} ' + _.reduce(ratios, function(memo, eqn) {
+              return memo + eqn;
+            }, '') + ' \\end{eqnarray}';
           }
         });
       },
@@ -563,7 +567,7 @@ define(function(require) {
       scope: {
         criterion: '=of'
       },
-      link: function(scope, element) {
+      link: function(scope) {
         var c = scope.criterion;
 
         var hasDescription = !!c.description;
@@ -571,7 +575,7 @@ define(function(require) {
         var isDimensionless = !c.unitOfMeasurement || dimensionlessUnits.indexOf(c.unitOfMeasurement.toLowerCase()) !== -1;
 
         var text;
-        if(hasDescription) {
+        if (hasDescription) {
           text = c.description.replace(/(\.$)/g, "") + " (" + c.title + (!isDimensionless ? ", " + c.unitOfMeasurement : "") + ")";
         } else {
           text = c.title + (!isDimensionless ? " " + c.unitOfMeasurement : "");
@@ -583,7 +587,7 @@ define(function(require) {
     };
   });
 
-  directives.directive('rankAcceptabilityPlot', function(){
+  directives.directive('rankAcceptabilityPlot', function() {
     return {
       restrict: 'E',
       replace: true,
@@ -592,10 +596,9 @@ define(function(require) {
         parseFn: '=',
         problem: '='
       },
-      link: function(scope) {
-      },
+      link: function() {},
       template: '<div style="width: 400px; height: 400px"><rank-plot value="data" parse-fn="parseFn" stacked="true" problem="problem"></rank-plot></div>'
-    }
+    };
   });
 
   return directives;
