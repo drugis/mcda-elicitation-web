@@ -9,7 +9,7 @@ define(function(require) {
 
     var resource = $resource(
       window.config.workspacesRepositoryUrl + ':workspaceId', { workspaceId: '@id' }, {
-        create: { method:'POST', transformRequest: function(problem, headersGetter) {
+        create: { method:'POST', transformRequest: function(problem) {
           return angular.toJson({
             title: problem.title,
             problem: problem

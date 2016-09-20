@@ -24,7 +24,7 @@ define(function(require) {
         .then(PataviService.listen)
         .then(
           function(result) {
-            return result.results;
+            return result;
           },
           function(pataviError) {
             scope.$root.$broadcast('error', {
