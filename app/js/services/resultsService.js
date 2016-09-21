@@ -15,7 +15,7 @@ define(function(require) {
       });
 
       var successHandler = function(results) {
-        state.results = results.results;
+        state.results = results;
       };
 
       var pataviErrorHandler = function(pataviError) {
