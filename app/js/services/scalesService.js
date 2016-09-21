@@ -10,7 +10,7 @@ define(function(require) {
       return $http.post('/patavi', _.extend(problem, {
           method: 'scales'
         })).then(function(result) {
-          var uri = result.headers("Location");
+          var uri = result.headers('Location');
           if (result.status === 201 && uri) {
             return uri;
           }
