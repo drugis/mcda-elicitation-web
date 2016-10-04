@@ -329,7 +329,7 @@ app.post('/patavi', function(req, res, next) { // FIXME: separate routes for sca
 app.get('/user', loginUtils.emailHashMiddleware);
 
 //FIXME: should not be needed?
-app.get("/main.js", function(req, res, next) {
+app.get("/main.js", function(req, res) {
   res.sendfile(__dirname + '/app/js/main.js');
 });
 

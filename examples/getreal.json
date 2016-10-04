@@ -1,0 +1,111 @@
+{
+  "title": "GetReal course LU 4, activity 4.4",
+  "description": "Hypothetical new cancer treatment example.",
+  "criteria": {
+    "OS": {
+      "title": "2-year survival",
+      "description": "Proportion of patients surviving for 2 years or longer",
+      "unitOfMeasurement": "%",
+      "scale": [0,100],
+      "pvf": {
+        "range": [45,65],
+        "type": "linear",
+        "direction": "increasing"
+      }
+    },
+    "severe": {
+      "title": "Severe toxicity",
+      "description": "Proportion of patients experiencing severe side-effects",
+      "unitOfMeasurement": "%",
+      "scale": [0,100],
+      "pvf": {
+        "range": [0,80],
+        "type": "linear",
+        "direction": "decreasing"
+      }
+    },
+    "moderate": {
+      "title": "Moderate toxicity",
+      "description": "Proportion of patients experiencing long-lasting moderate side-effects",
+      "unitOfMeasurement": "%",
+      "scale": [0, 100],
+      "pvf": {
+        "range": [0,40],
+        "type": "linear",
+        "direction": "decreasing"
+      }
+    }
+  },
+  "valueTree": {
+    "title": "Benefit-risk balance", 
+    "children": [
+      {
+        "title": "Favourable effects",
+        "criteria": [ "OS" ]
+      },
+      {
+        "title": "Unfavourable effects",
+        "criteria": [ "severe", "moderate" ]
+      }
+    ]
+  },
+  "alternatives": {
+    "alt1": {
+      "title": "New treatment"
+    },
+    "alt2": {
+      "title": "Control"
+    }
+  },
+  "performanceTable": [
+  {
+    "alternative": "alt1",
+    "criterion": "OS",
+    "performance": {
+      "type": "exact",
+      "value": 60
+    }
+  },
+  {
+    "alternative": "alt2",
+    "criterion": "OS",
+    "performance": {
+      "type": "exact",
+      "value": 50
+    }
+  },
+    {
+    "alternative": "alt1",
+    "criterion": "severe",
+    "performance": {
+      "type": "exact",
+      "value": 60
+    }
+  },
+  {
+    "alternative": "alt2",
+    "criterion": "severe",
+    "performance": {
+      "type": "exact",
+      "value": 20
+    }
+  },
+    {
+    "alternative": "alt1",
+    "criterion": "moderate",
+    "performance": {
+      "type": "exact",
+      "value": 35
+    }
+  },
+  {
+    "alternative": "alt2",
+    "criterion": "moderate",
+    "performance": {
+      "type": "exact",
+      "value": 5
+    }
+  }
+  ], 
+  "preferences": {}
+}
