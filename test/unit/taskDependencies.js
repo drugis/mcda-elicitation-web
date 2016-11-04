@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'mcda/services/taskDependencies'], function(angular, TaskDependencies) {
   var service;
   beforeEach(function() {
