@@ -1,15 +1,3 @@
-\acrodef{MAVT}{multi\hyp{}attribute value theory}
-\acrodef{SMAA}{stochastic multi\hyp{}criteria acceptability analysis}
-\acrodef{EMA}{European Medicines Agency}
-\acrodef{BRAT}{Benefit Risk Action Team}
-\acrodef{PhRMA}{Pharmaceutical Research and Manufacturers of America}
-\acrodef{MCDA}{multi-criteria decision analysis}
-\acrodef{ADDIS}{Aggregated Drug Data Information System}
-\acrodef{NMA}{network meta-analysis}
-\acrodef{INB}{incremental net benefit}
-\acrodef{MAUT}{Multi-attribute utility theory}
-\acrodef{AHP}{analytic hierarchy process}
-
 <h2 id="mcda-benefit-risk-analysis">Benefit-risk analysis</h2>
 
 <p>
@@ -17,45 +5,67 @@ In a benefit-risk analysis, two or more alternatives are evaluated on multiple c
 </p>
 
 <p>
-Quantitative benefit-risk analysis in ADDIS is based on a mathematical approach called \ac{SMAA}, which combines \ac{MAVT} to formally represent a decision maker's preference structure with stochastic simulation to handle uncertainty in the effect size estimates and incompleteness or imprecision in the provided preference statements. 
+Quantitative benefit-risk analysis in ADDIS is based on a mathematical approach called SMAA, which combines MAVT to formally represent a decision maker's preference structure with stochastic simulation to handle uncertainty in the effect size estimates and incompleteness or imprecision in the provided preference statements.
 </p>
 
 <p>
-Although in reality a benefit-risk assessment usually includes more than two criteria, the underlying concepts are best explained in two dimensions, where the preference structures underlying the constructed preference models can still be presented graphically. Most of the discussion below will therefore be centered around a simple benefit-risk assessment problem in which there are only two criteria. This toy problem is introduced in the next section. 
+Although in reality a benefit-risk assessment usually includes more than two criteria, the underlying concepts are best explained in two dimensions, where the preference structures underlying the constructed preference models can still be presented graphically. Most of the discussion below will therefore be centered around a simple benefit-risk assessment problem in which there are only two criteria. This toy problem is introduced in the next section.
 </p>
 
 <h3 id="mcda-running-example">Running example</h3>
 
 <p>
-Although nowadays withdrawn from the market due to the high incidence of severe depression and suicidal thoughts in post-marketing surveillance studies, rimonabant was previously indicated as an adjunct to diet and exercise for the weight management of overweight and obese patients. For illustrative purposes, we turn back time a few years and consider the question of whether this medicinal product should also be granted marketing authorization for the treatment of type 2 diabetes mellitus (DM2). The indication for which the benefit-risk assessment is conducted is the use of rimobanant as an add-on therapy to either metformin or sulphonylurea monotherapy, and the patient population consists of overweight or obese DM2 patients who remained inadequately controlled after having been treated with either of these established first-line therapies for a period of at least 6 months. The alternatives under consideration are rimonabant 5 mg/day, rimonabant 20 mg/day, and placebo, and the criteria based on which the assessment is conducted are the change in fasting plasma glucose (favourable effect) and the incidence in hypoglyceamia (unfavourable effect). The performance of the tree treatments on these two criteria is summarized in Table~\ref{tab:ETrimonabant}. 
+Although nowadays withdrawn from the market due to the high incidence of severe depression and suicidal thoughts in post-marketing surveillance studies, rimonabant was previously indicated as an adjunct to diet and exercise for the weight management of overweight and obese patients. For illustrative purposes, we turn back time a few years and consider the question of whether this medicinal product should also be granted marketing authorization for the treatment of type 2 diabetes mellitus (DM2). The indication for which the benefit-risk assessment is conducted is the use of rimobanant as an add-on therapy to either metformin or sulphonylurea monotherapy, and the patient population consists of overweight or obese DM2 patients who remained inadequately controlled after having been treated with either of these established first-line therapies for a period of at least 6 months. The alternatives under consideration are rimonabant 5 mg/day, rimonabant 20 mg/day, and placebo, and the criteria based on which the assessment is conducted are the change in fasting plasma glucose (favourable effect) and the incidence in hypoglyceamia (unfavourable effect). The performance of the three treatments on these two criteria is summarized here:
 </p>
 
-\begin{table}[h]
-\caption{Effects Table for rimonabant 5 mg/day, rimonabant 20 mg/day, and placebo. The data used to construct this table were taken from a single study published in the Lancet in 2006.}
-\label{tab:ETrimonabant}
-\begin{center}
-\begin{tabular}{|l|l|l|l|l|l|}
-\hline
-Effect & Description & Unit & Placebo & 5 mg/day & 20 mg/day \\
-\hline
-Fasting & Change in fasting & mmol/L & 0.33 & 0.30 & -0.64 \\
-glucose & glucose (1 year) & & & & \\
-\hline
-Hypoglyceamia & Incidence of & \% & 2 & 1 & 5 \\
-& hypoglyceamia (1 year) & & & & \\
-\hline
-\end{tabular}
-\end{center}
-\end{table}
+<table>
+  <thead>
+    <tr>
+      <th>Effect</th>
+      <th>Description</th>
+      <th>Unit</th>
+      <th>Placebo</th>
+      <th>5 mg/day</th>
+      <th>20 mg/day</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Fasting</td>
+      <td>Change in fasting</td>
+      <td>mmol/L</td>
+      <td>0.33</td>
+      <td>0.30</td>
+      <td>-0.64</td>
+    </tr>
+    <tr>
+      <td>Glucose</td>
+      <td>glucose (1 year)</td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>Hypoglyceamia</td>
+      <td>Incidence of</td>
+      <td>%</td>
+      <td>2</td>
+      <td>1</td>
+      <td>5</td>
+    </tr>
+  </tbody>
+  <caption>Table 1: Effects Table for rimonabant 5 mg/day, rimonabant 20 mg/day, and placebo. The data used to construct this table were taken from a single study published in the Lancet in 2006.</caption>
+</table>
 
 <h3 id="mcda-mavt">Multi-attribute value theory</h3>
 
 <p>
-The purpose of \ac{MAVT} is to represent a decision maker's preferences for different medicinal products by means of a mathematical function \( v \) that associates with each alternative \( x \) a real number \( v(x) \) that indicates how the decision maker values this alternative relative to all the other alternatives. This function, which is constructed in such a way that alternatives with a higher value are preferred to alternatives with a lower value, is called a \emph{value function}. For example, suppose that the decision maker's preferences for the three treatments considered in our case study can be described by means of the function \( v(x)=-10 \cdot x_{1} - x_{2} \), where the subscripts 1 and 2 refer to the levels of performance with respect to the change in fasting glucose and the incidence of hypoglyceamia, respectively. Using this function, placebo is given a value of \( -10 \cdot 0.33 - 2 = -5.3 \), rimonabant 5 mg/day is given a value of \( -10 \cdot 0.30 - 1 = -4 \), and rimonabant 20 mg/day is given a value of \( -10 \cdot (-0.64) - 5 = 1.4 \). As alternatives with a higher value are preferred to alternative with a lower value, we can conclude that, in the opinion of the decision maker, rimonabant 20 mg/day is the best alternative, rimonabant 5 mg/day the second best alternative, and placebo the worst alternative. 
+The purpose of MAVT is to represent a decision maker's preferences for different medicinal products by means of a mathematical function \( v \) that associates with each alternative \( x \) a real number \( v(x) \) that indicates how the decision maker values this alternative relative to all the other alternatives. This function, which is constructed in such a way that alternatives with a higher value are preferred to alternatives with a lower value, is called a \emph{value function}. For example, suppose that the decision maker's preferences for the three treatments considered in our case study can be described by means of the function \( v(x)=-10 \cdot x_{1} - x_{2} \), where the subscripts 1 and 2 refer to the levels of performance with respect to the change in fasting glucose and the incidence of hypoglyceamia, respectively. Using this function, placebo is given a value of \( -10 \cdot 0.33 - 2 = -5.3 \), rimonabant 5 mg/day is given a value of \( -10 \cdot 0.30 - 1 = -4 \), and rimonabant 20 mg/day is given a value of \( -10 \cdot (-0.64) - 5 = 1.4 \). As alternatives with a higher value are preferred to alternative with a lower value, we can conclude that, in the opinion of the decision maker, rimonabant 20 mg/day is the best alternative, rimonabant 5 mg/day the second best alternative, and placebo the worst alternative.
 </p>
 
 <p>
-As the above example illustrates, it is relatively straightforward to conduct a quantitative benefit-risk assessment once a value function has been specified. However, how do we know whether such a function exist, and, if so, whether is has a convenient algebraic shape that can be described in terms of only a few parameters? An answer to these two fundamental questions is provided in the next sections. 
+As the above example illustrates, it is relatively straightforward to conduct a quantitative benefit-risk assessment once a value function has been specified. However, how do we know whether such a function exist, and, if so, whether is has a convenient algebraic shape that can be described in terms of only a few parameters? An answer to these two fundamental questions is provided in the next sections.
 </p>
 
 <h4>Scale ranges, value functions, and indifference curves</h4>
@@ -65,15 +75,15 @@ The first step in a quantitative benefit-risk assessment is to explicitly define
 </p>
 
 <p>
-To make thinks more concrete, consider the rimonabant case study introduced in the previous section. For fasting glucose, we construct a local scale by setting $[x^{\min}_{1},x^{\max}_{1}]$ equal to $[-0.7,0.4]$, which are the to one digit rounded minimum and maximum values listed in Table~\ref{tab:ETrimonabant}. For hypoglyceamia, however, we consider the use of a global scale more appropriate as this allows us at a later stage of the analysis to perform an extensive sensitivity analysis with respect to the performance measurements on this criterion. We therefore set $[x^{\min}_{2},x^{\max}_{2}]$ equal to $[0\%, 15\%]$, where 15\% is the highest event rate that we expect to observe in post-authorization surveillance studies.  
+To make thinks more concrete, consider the rimonabant case study introduced in the previous section. For fasting glucose, we construct a local scale by setting \([x^{\min}_{1},x^{\max}_{1}]\) equal to \([-0.7,0.4]\), which are the to one digit rounded minimum and maximum values listed in Table 1. For hypoglyceamia, however, we consider the use of a global scale more appropriate as this allows us at a later stage of the analysis to perform an extensive sensitivity analysis with respect to the performance measurements on this criterion. We therefore set \([x^{\min}_{2},x^{\max}_{2}]\) equal to \([0\%, 15\%]\), where 15% is the highest event rate that we expect to observe in post-authorization surveillance studies.
 </p>
 
 <p>
-At first glance, our decision to construct a local scale for the change in fasting glucose and a global scale for the incidence of hypoglyceamia may seem a bit arbitrary to some readers. It is therefore important to mention that the selection of the scale ranges only affects the region over which preferences are elicited from the decision maker and not the final results of the benefit-risk assessment. This is because for multi-attribute value models, a change in the scale range of one criterion would also result in a rescaling of the model parameters corresponding to the other scale ranges. For this type of model, the rank ordering of the alternatives is therefore not affected by the decision of whether to use a local or a global scale, provided that the parameters of the value function are adjusted accordingly. 
+At first glance, our decision to construct a local scale for the change in fasting glucose and a global scale for the incidence of hypoglyceamia may seem a bit arbitrary to some readers. It is therefore important to mention that the selection of the scale ranges only affects the region over which preferences are elicited from the decision maker and not the final results of the benefit-risk assessment. This is because for multi-attribute value models, a change in the scale range of one criterion would also result in a rescaling of the model parameters corresponding to the other scale ranges. For this type of model, the rank ordering of the alternatives is therefore not affected by the decision of whether to use a local or a global scale, provided that the parameters of the value function are adjusted accordingly.
 </p>
 
 <p>
-When combined, the two scale ranges form a $2$-dimensional consequence space $X$ as is illustrated for the rimonabant case study in Figure~\ref{fig:consSpaceRimonabant}. Some of the outcomes in $X$ correspond to a real alternative (e.g., the outcome $x^{\mathrm{plc}}=(0.33,3)$ in Figure~\ref{fig:consSpaceRimonabant} corresponds to placebo), while the other outcomes correspond to hypothetical alternatives that serve to construct a quantitative model of the decision maker's preferences. To be able to proceed in such a formal manner, we have to make two basic assumptions. First, we have to assume that any two outcomes $x^{1}$ and $x^{2}$ in $X$ are comparable in the sense that the decision maker either prefers $x^{1}$ to $x^{2}$, or prefers $x^{2}$ to $x^{1}$, or is indifferent between $x^{1}$ and $x^{2}$. Second, we have to assume that the above preference relations are transitive, meaning that if $x^{1}$ is preferred to $x^{2}$ and $x^{2}$ is preferred to $x^{3}$ then it must also hold that $x^{1}$ is preferred to $x^{3}$, and similarly for the indifference relation. Together, these two assumptions imply that it is possible to represent the decision maker's preference structure by means of a value function.
+When combined, the two scale ranges form a 2-dimensional consequence space \(X\) as is illustrated for the rimonabant case study in Figure~\ref{fig:consSpaceRimonabant}. Some of the outcomes in \(X\) correspond to a real alternative (e.g., the outcome \(x^{\mathrm{plc}}=(0.33,3)\) in Figure~\ref{fig:consSpaceRimonabant} corresponds to placebo), while the other outcomes correspond to hypothetical alternatives that serve to construct a quantitative model of the decision maker's preferences. To be able to proceed in such a formal manner, we have to make two basic assumptions. First, we have to assume that any two outcomes \(x^{1}\) and \(x^{2}\) in \(X\) are comparable in the sense that the decision maker either prefers \(x^{1}\) to \(x^{2}\), or prefers \(x^{2}\) to \(x^{1}\), or is indifferent between \(x^{1}\) and \(x^{2}\). Second, we have to assume that the above preference relations are transitive, meaning that if \(x^{1}\) is preferred to \(x^{2}\) and \(x^{2}\) is preferred to \(x^{3}\) then it must also hold that \(x^{1}\) is preferred to \(x^{3}\), and similarly for the indifference relation. Together, these two assumptions imply that it is possible to represent the decision maker's preference structure by means of a value function.
 </p>
 
 <div class="figure">
@@ -82,20 +92,20 @@ When combined, the two scale ranges form a $2$-dimensional consequence space $X$
 </div>
 
 <p>
-To illustrate how this might work, consider again the $2$-dimensional consequence space defined for the rimonabant case study, which we have repeated in Figure~\ref{fig:IndifferenceCurve10}. We start the construction of the value function in the lower-right corner at $x^{1}=(0.4,0)$, which can be seen as an extreme outcome in the sense that the change in fasting glucose is at its worst possible value while the incidence of hypoglyceamia is at its best possible value (note that for both criteria it holds that lower values are preferred to higher values). As the value of each outcome is expressed on an ordinal scale (i.e., a difference in value between any two outcomes does not have any meaning beyond the fact that the outcome with the higher value is preferred to the outcome with the lower value), we can arbitrarily scale the value function by setting $v(x^{1})=10$. Next, we improve the performance on the benefit criterion by a small amount, say 0.2, and ask the decision maker to adjust the value of $\delta$ so that he is indifferent between $(0.4,0)$ and $(0.2,\delta)$. Suppose that the decision maker states that at $(0.4,0)$ he is willing to accept a 3\% increase in the incidence of hypoglyceamia for a 0.2 mmol/L improvement in the change in fasting glucose. We then know that the points $x^{1}=(0.4,0)$ and $x^{2}=(0.2,3)$ are equally desirable and should therefore be given the same value when evaluated with our value function. We thus proceed by setting $v(x_{2})=v(x_{1})=10$. Continuing from $x^{2}=(0.2,3)$, we again improve the performance on the benefit criterion by 0.2, and ask the decision maker to adjust the value of $\delta$ so that he is indifferent between $(0.2,3)$ and $(0,\delta)$. Suppose that the decision maker replies by saying that $\delta$ equals 2. We then have a third outcome $x^{3}=(0,5)$ that according to the decision maker has the same value as either $x^{1}=(0.4,0)$ or $x^{2}=(0.2,3)$. In fact, we can obtain the \emph{indifference curve} $v(x)=10$ by connecting all outcomes in $X$ that according to the decision maker are equally desirable to either $x^{1}$, $x^{2}$, or $x^{3}$. For this, we continue the process of stepwise increasing the performance on the benefit criterion until we have reached the boundary of $X$, at which stage we have collected enough information to fair in the indifference curve $v(x)=10$ as is illustrated in Figure~\ref{fig:IndifferenceCurve10}. 
+To illustrate how this might work, consider again the 2-dimensional consequence space defined for the rimonabant case study, which we have repeated in Figure~\ref{fig:IndifferenceCurve10}. We start the construction of the value function in the lower-right corner at \(x^{1}=(0.4,0)\), which can be seen as an extreme outcome in the sense that the change in fasting glucose is at its worst possible value while the incidence of hypoglyceamia is at its best possible value (note that for both criteria it holds that lower values are preferred to higher values). As the value of each outcome is expressed on an ordinal scale (i.e., a difference in value between any two outcomes does not have any meaning beyond the fact that the outcome with the higher value is preferred to the outcome with the lower value), we can arbitrarily scale the value function by setting \(v(x^{1})=10\). Next, we improve the performance on the benefit criterion by a small amount, say 0.2, and ask the decision maker to adjust the value of \(\delta\) so that he is indifferent between \((0.4,0)\) and \((0.2,\delta)\). Suppose that the decision maker states that at \((0.4,0)\) he is willing to accept a 3% increase in the incidence of hypoglyceamia for a 0.2 mmol/L improvement in the change in fasting glucose. We then know that the points \(x^{1}=(0.4,0)\) and \(x^{2}=(0.2,3)\) are equally desirable and should therefore be given the same value when evaluated with our value function. We thus proceed by setting \(v(x_{2})=v(x_{1})=10\). Continuing from \(x^{2}=(0.2,3)\), we again improve the performance on the benefit criterion by 0.2, and ask the decision maker to adjust the value of \(\delta\) so that he is indifferent between \((0.2,3)\) and \((0,\delta)\). Suppose that the decision maker replies by saying that \(\delta\) equals 2. We then have a third outcome \(x^{3}=(0,5)\) that according to the decision maker has the same value as either \(x^{1}=(0.4,0)\) or \(x^{2}=(0.2,3)\). In fact, we can obtain the \emph{indifference curve} \(v(x)=10\) by connecting all outcomes in \(X\) that according to the decision maker are equally desirable to either \(x^{1}\), \(x^{2}\), or \(x^{3}\). For this, we continue the process of stepwise increasing the performance on the benefit criterion until we have reached the boundary of \(X\), at which stage we have collected enough information to fair in the indifference curve \(v(x)=10\) as is illustrated in Figure~\ref{fig:IndifferenceCurve10}.
 </p>
 
 <div class="figure">
 <img src="/manual/graphics/IndifferenceCurve10.png" />
-<div class="caption">Indifference curve connecting all the outcomes in $X$ that according to the decision maker are equally desirable as $x^{1}$. These outcomes have arbitrarily been assigned a value of 10.</div>
+<div class="caption">Indifference curve connecting all the outcomes in \(X\) that according to the decision maker are equally desirable as \(x^{1}\). These outcomes have arbitrarily been assigned a value of 10.</div>
 </div>
 
 <p>
-When looking at Figure~\ref{fig:IndifferenceCurve10}, we see that the outcome corresponding to placebo is positioned above the indifference curve $v(x)=10$. Given that the preference direction on both criteria is decreasing, it must therefore hold that placebo lies on a lower indifference curve (in terms of value; not in terms of positioning on the graph), whose outcomes are all considered to be less desirable to those on the indifference curve $v(x)=10$. Similarly, as the outcomes corresponding to rimonabant 5 mg/day and rimonabant 20 mg/day are both positioned below the indifference curve $v(x)=10$, it must hold that both of these outcomes lie on a higher indifference curve, whose outcomes are all preferred to those on the indifference curve $v(x)=10$. From Figure~\ref{fig:IndifferenceCurve10}, we can therefore conclude that placebo is the worst alternative, but we do not yet have elicited enough preference statements to determine the rank order the two remaining alternatives. 
+When looking at Figure~\ref{fig:IndifferenceCurve10}, we see that the outcome corresponding to placebo is positioned above the indifference curve \(v(x)=10\). Given that the preference direction on both criteria is decreasing, it must therefore hold that placebo lies on a lower indifference curve (in terms of value; not in terms of positioning on the graph), whose outcomes are all considered to be less desirable to those on the indifference curve \(v(x)=10\). Similarly, as the outcomes corresponding to rimonabant 5 mg/day and rimonabant 20 mg/day are both positioned below the indifference curve \(v(x)=10\), it must hold that both of these outcomes lie on a higher indifference curve, whose outcomes are all preferred to those on the indifference curve \(v(x)=10\). From Figure~\ref{fig:IndifferenceCurve10}, we can therefore conclude that placebo is the worst alternative, but we do not yet have elicited enough preference statements to determine the rank order the two remaining alternatives.
 </p>
 
 <p>
-To proceed with formalizing the decision maker's preference structure, consider the outcome $x^{4}=(0,0)$ to the west of $x^{1}=(0.4,0)$. Compared to $x^{1}$, the outcome $x^{4}$ performs better with respect to the change in fasting glucose while scoring the same with respect to the incidence of hypoglyceamia. Similar to the discussion above, it must therefore hold that $x^{4}$ lies on a higher indifference curve than $x^{1}$. Because value is measured on an ordinal scale, we can arbitrarily set $v(x^{4})$ to any number larger than 10, say $v(x^{4})=15$, after which we repeat the previously conducted questioning procedure to obtain the indifference curve $v(x)=15$. By subsequently repeating this process for several outcomes in between $x^{1}$ and $x^{4}$, we ultimately end up with enough indifference curves to rank order all three alternatives as is illustrated in Figure~\ref{fig:IndifferenceCurves}. 
+To proceed with formalizing the decision maker's preference structure, consider the outcome \(x^{4}=(0,0)\) to the west of \(x^{1}=(0.4,0)\). Compared to \(x^{1}\), the outcome \(x^{4}\) performs better with respect to the change in fasting glucose while scoring the same with respect to the incidence of hypoglyceamia. Similar to the discussion above, it must therefore hold that \(x^{4}\) lies on a higher indifference curve than \(x^{1}\). Because value is measured on an ordinal scale, we can arbitrarily set \(v(x^{4})\) to any number larger than 10, say \(v(x^{4})=15\), after which we repeat the previously conducted questioning procedure to obtain the indifference curve \(v(x)=15\). By subsequently repeating this process for several outcomes in between \(x^{1}\) and \(x^{4}\), we ultimately end up with enough indifference curves to rank order all three alternatives as is illustrated in Figure~\ref{fig:IndifferenceCurves}.
 </p>
 
 <div class="figure">
@@ -104,45 +114,43 @@ To proceed with formalizing the decision maker's preference structure, consider 
 </div>
 
 <p>
-The previously described questioning procedure is very general in the sense that it does not put any additional restrictions on the decision maker's preferences besides that they are complete and transitive. A downside of this approach is however that many questions need to be posed to just obtain a single indifference curve while multiple of these curves are generally required to be able to determine the rank order of the decision alternatives. A practical way forward is therefore to introduce additional assumptions about the decision maker's preferences so that his preference structure can be represented by means of a simple parametric function that consists of only a few parameters. In real-life applications of \ac{MAVT}, this is usually achieved by assuming that the decision maker's preferences satisfy the conditions for applying the additive value model. This model is discussed in more detail in the next section. 
+The previously described questioning procedure is very general in the sense that it does not put any additional restrictions on the decision maker's preferences besides that they are complete and transitive. A downside of this approach is however that many questions need to be posed to just obtain a single indifference curve while multiple of these curves are generally required to be able to determine the rank order of the decision alternatives. A practical way forward is therefore to introduce additional assumptions about the decision maker's preferences so that his preference structure can be represented by means of a simple parametric function that consists of only a few parameters. In real-life applications of MAVT, this is usually achieved by assuming that the decision maker's preferences satisfy the conditions for applying the additive value model. This model is discussed in more detail in the next section.
 </p>
 
 <h4>The additive value model</h4>
 
 <p>
 A value function is called \emph{additive} when it has the following algebraic structure:
-\begin{equation}
+\[
 v(x) = w_{1} v_{1}(x_{1}) + w_{2} v_{2}(x_{2}),
-\label{eq:value}
-\end{equation}
-where $v_{1}$ and $v_{2}$ are partial value functions that reflect the relative desirability of different levels of achievement on the individual criteria, and $w_{1}$ and $w_{2}$ are scaling constants that reflect how much more important the change from worst to best on criterion 1 is compared to the change from worst to best on criterion 2. 
+\]
+where \(v_{1}\) and \(v_{2}\) are partial value functions that reflect the relative desirability of different levels of achievement on the individual criteria, and \(w_{1}\) and \(w_{2}\) are scaling constants that reflect how much more important the change from worst to best on criterion 1 is compared to the change from worst to best on criterion 2.
 </p>
 
 <h5>Specifying the partial value functions</h5>
 
 <p>
-ADDIS uses bisection to specify the partial functions. To illustrate how this approach works, we use bisection to specify the partial value functions for the change in fasting glucose and the incidence of hypoglyceamia, which we denote by $v_{1}$ and $v_{2}$, respectively. As the procedure needs to be repeated for each criterion, we start by specifying $v_{1}$ and then proceed with specifying $v_{2}$.
+ADDIS uses bisection to specify the partial functions. To illustrate how this approach works, we use bisection to specify the partial value functions for the change in fasting glucose and the incidence of hypoglyceamia, which we denote by \(v_{1}\) and \(v_{2}\), respectively. As the procedure needs to be repeated for each criterion, we start by specifying \(v_{1}\) and then proceed with specifying \(v_{2}\).
 </p>
 
 <p>
-The first step in applying the bisection method is to normalize the range of $v_{1}$ by assigning a value of 0 to the worst possible outcome with respect to the change in fasting glucose and a value of 1 to the best possible outcome with respect to the change in fasting glucose. As the scale range defined for this criterion is $[-0.7,0.4]$ and the preference direction for this criterion is decreasing, this is achieved by setting $v_{1}(0.4)=0$ and $v_{1}(-0.7)=1$. Next, to determine the value associated with a third outcome with respect to the change in fasting glucose, we ask the decision maker to provide a value of $\delta$ such that he is willing to accept the same increase in the incidence of hypoglyceamia for an improvement in the change in fasting glucose from $0.4$ mmol/L to $\delta$ mmol/L as for an improvement in the change in fasting glucose from $\delta$ mmol/L to $-0.7$ mmol/L. Suppose that the decision maker responds that these two improvements in the change in fasting glucose are equal in value when $\delta=-0.3$. It then follows from the algebraic structure of the additive value function that it must hold that
-\begin{equation}
+The first step in applying the bisection method is to normalize the range of \(v_{1}\) by assigning a value of 0 to the worst possible outcome with respect to the change in fasting glucose and a value of 1 to the best possible outcome with respect to the change in fasting glucose. As the scale range defined for this criterion is \([-0.7,0.4]\) and the preference direction for this criterion is decreasing, this is achieved by setting \(v_{1}(0.4)=0\) and \(v_{1}(-0.7)=1\). Next, to determine the value associated with a third outcome with respect to the change in fasting glucose, we ask the decision maker to provide a value of \(\delta\) such that he is willing to accept the same increase in the incidence of hypoglyceamia for an improvement in the change in fasting glucose from \(0.4\) mmol/L to \(\delta\) mmol/L as for an improvement in the change in fasting glucose from \(\delta\) mmol/L to \(-0.7\) mmol/L. Suppose that the decision maker responds that these two improvements in the change in fasting glucose are equal in value when \(\delta=-0.3\). It then follows from the algebraic structure of the additive value function that it must hold that
+\[
 w_{1} (v_{1}(-0.3)-v_{1}(0.4)) = w_{1} (v_{1}(-0.7)-v_{1}(-0.3)),
-\end{equation}
+\]
 which, after applying some basic algebraic manipulation, can be rewritten as
-\begin{equation}
+\[
 v_{1}(-0.3) = \frac{v_{1}(-0.7) + v_{1}(0.4)}{2}.
-\label{eq:corTradeOff2}
-\end{equation}
-Finally, given that $v_{1}(-0.7)=1$ and $v_{1}(0.4)=0$, we can conclude from Equation~\ref{eq:corTradeOff2} that $v_{1}(-0.3)=0.5$. The value of $\delta$ such that the decision maker considers an improvement in the change in fasting glucose from $0.4$ mmol/L to $\delta$ mmol/L to be equal in value to an improvement in the change in fasting glucose from $\delta$ mmol/L to $-0.7$ mmol/L is called the \emph{midvalue point} of the interval $[-0.7,0.4]$. 
+\]
+Finally, given that \(v_{1}(-0.7)=1\) and \(v_{1}(0.4)=0\), we can conclude from Equation~\ref{eq:corTradeOff2} that \(v_{1}(-0.3)=0.5\). The value of \(\delta\) such that the decision maker considers an improvement in the change in fasting glucose from \(0.4\) mmol/L to \(\delta\) mmol/L to be equal in value to an improvement in the change in fasting glucose from \(\delta\) mmol/L to \(-0.7\) mmol/L is called the \emph{midvalue point} of the interval \([-0.7,0.4]\).
 </p>
 
 <p>
-To determine the value associated with a fourth and fifth outcome with respect to the change in fasting glucose, we can repeat the above questioning procedure to determine the midvalue points of the intervals $[-0.7,-0.3]$ and $[-0.3,0.4]$, which, by following the same argument as above, must have a value of 0.75 and 0.25, respectively. For example, suppose that the decision maker considers an improvement in the change in fasting glucose from $-0.3$ mmol/L to $-0.55$ mmol/L to be equal in value to an improvement in the change in fasting glucose from $-0.55$ mmol/L to $-0.7$ mmol/L. We then know that the midvalue point of the interval $[-0.7,-0.3]$ is equal to -0.55, meaning that $v_{1}(-0.55)=0.75$. Similarly, suppose that the midvalue point of the interval $[-0.3,0.4]$ is equal to 0, so that $v_{1}(0)=0.25$. 
+To determine the value associated with a fourth and fifth outcome with respect to the change in fasting glucose, we can repeat the above questioning procedure to determine the midvalue points of the intervals \([-0.7,-0.3]\) and \([-0.3,0.4]\), which, by following the same argument as above, must have a value of 0.75 and 0.25, respectively. For example, suppose that the decision maker considers an improvement in the change in fasting glucose from \(-0.3\) mmol/L to \(-0.55\) mmol/L to be equal in value to an improvement in the change in fasting glucose from \(-0.55\) mmol/L to \(-0.7\) mmol/L. We then know that the midvalue point of the interval \([-0.7,-0.3]\) is equal to -0.55, meaning that \(v_{1}(-0.55)=0.75\). Similarly, suppose that the midvalue point of the interval \([-0.3,0.4]\) is equal to 0, so that \(v_{1}(0)=0.25\).
 </p>
 
 <p>
-In total, we have now established the value of $v_{1}$ for five different outcomes with respect to the change in fasting glucose. To further specify $v_{1}$, we can either perform another round of bisection to determine the value associated with the midvalue points of the intervals $[-0.7,-0.55]$, $[-0.55,-0.3]$, $[-0.3,0]$, and $[0,0.4]$ or use a form of curve fitting to interpolate the value of all remaining outcomes from the value of the previously assessed outcomes. Here, we opt for the latter and complete the curve of $v_{1}$ by drawing straight lines between the five data points for which the value of $v_{1}$ was determined previously. The resulting piecewise linear partial value function for the change in fasting glucose is depicted in Figure~\ref{fig:partialValue}.
+In total, we have now established the value of \(v_{1}\) for five different outcomes with respect to the change in fasting glucose. To further specify \(v_{1}\), we can either perform another round of bisection to determine the value associated with the midvalue points of the intervals \([-0.7,-0.55]\), \([-0.55,-0.3]\), \([-0.3,0]\), and \([0,0.4]\) or use a form of curve fitting to interpolate the value of all remaining outcomes from the value of the previously assessed outcomes. Here, we opt for the latter and complete the curve of \(v_{1}\) by drawing straight lines between the five data points for which the value of \(v_{1}\) was determined previously. The resulting piecewise linear partial value function for the change in fasting glucose is depicted in Figure~\ref{fig:partialValue}.
 </p>
 
 <div class="figure">
@@ -151,11 +159,11 @@ In total, we have now established the value of $v_{1}$ for five different outcom
 </div>
 
 <p>
-Now that we have completely specified $v_{1}$, we can focus our attention on the specification of $v_{2}$. The first step is again to normalize the range of $v_{2}$ by assigning a value of 0 to the worst possible outcome with respect to the incidence of hypoglyceamia and a value of 1 to the best possible outcome with respect to the incidence of hypoglyceamia. This is achieved by setting $v_{2}(15)=0$ and $v_{2}(0)=1$. However, rather than proceeding with eliciting the midvalue point of the interval $[0,15]$, we take a shortcut by assuming that $v_{2}$ is a straight line. The resulting linear partial value function for the incidence of hypoglyceamia is depicted in Figure~\ref{fig:partialValue}. 
+Now that we have completely specified \(v_{1}\), we can focus our attention on the specification of \(v_{2}\). The first step is again to normalize the range of \(v_{2}\) by assigning a value of 0 to the worst possible outcome with respect to the incidence of hypoglyceamia and a value of 1 to the best possible outcome with respect to the incidence of hypoglyceamia. This is achieved by setting \(v_{2}(15)=0\) and \(v_{2}(0)=1\). However, rather than proceeding with eliciting the midvalue point of the interval \([0,15]\), we take a shortcut by assuming that \(v_{2}\) is a straight line. The resulting linear partial value function for the incidence of hypoglyceamia is depicted in Figure~\ref{fig:partialValue}.
 </p>
 
 <p>
-To get a better understanding of what the use of a linear partial value function implies for the decision maker's preferences, consider two arbitrarily selected outcomes $x_{a}$ and $x_{b}$ which are sorted in such a way that $x_{b} > x_{a}$. Then, for the partial value function to be linear, it must hold that the midvalue point of the interval $[x_{a},x_{b}]$ is equal to $\frac{x_{a} + x_{b}}{2}$. For example, for the incidence of hypoglyceamia, we can ask the decision maker to provide the midvalue point of the interval $[2,8]$. If he responds that this midvalue point is equal to 5, then his answer is concordant with the assumption of a linear partial value function. 
+To get a better understanding of what the use of a linear partial value function implies for the decision maker's preferences, consider two arbitrarily selected outcomes \(x_{a}\) and \(x_{b}\) which are sorted in such a way that \(x_{b} > x_{a}\). Then, for the partial value function to be linear, it must hold that the midvalue point of the interval \([x_{a},x_{b}]\) is equal to \(\frac{x_{a} + x_{b}}{2}\). For example, for the incidence of hypoglyceamia, we can ask the decision maker to provide the midvalue point of the interval \([2,8]\). If he responds that this midvalue point is equal to 5, then his answer is concordant with the assumption of a linear partial value function.
 </p>
 
 <p>
@@ -165,55 +173,55 @@ Both linear and piecewise linear partial value functions can by specified in the
 <h5>Specifying the scaling constants</h5>
 
 <p>
-The scaling constants $w_{1}$ and $w_{2}$ indicate how much more important the swing from worst to best on the benefit criterion is compared to the swing from worst to best on the risk criterion. They can be obtained by applying a two-step procedure called swing weighting, which can again best be illustrated by means of an example. 
+The scaling constants \(w_{1}\) and \(w_{2}\) indicate how much more important the swing from worst to best on the benefit criterion is compared to the swing from worst to best on the risk criterion. They can be obtained by applying a two-step procedure called swing weighting, which can again best be illustrated by means of an example.
 </p>
 
 <p>
-The first step in swing weighting is to obtain an ordinal ranking of $w_{1}$ and $w_{2}$. For the rimonant case study, this can be achieved by letting the decision maker choose between the following two hypothetical alternatives:
-\begin{enumerate}
-\item{the outcome $x^{1}=(-0.7,15)$ that performs best with respect to the benefit criterion but worst with respect to the risk criterion}
-\item{the outcome $x^{2}=(0.4,0)$ that performs worst with respect to the benefit criterion but best with respect to the risk criterion}
-\end{enumerate}
-Suppose that the decision maker responds that given these two outcomes he would prefer $x^{1}$. From the definition of the value function, we then know that $v(x^{1})>v(x^{2})$. For the additive value function, this therefore results in the following inequality:
+The first step in swing weighting is to obtain an ordinal ranking of \(w_{1}\) and \(w_{2}\). For the rimonant case study, this can be achieved by letting the decision maker choose between the following two hypothetical alternatives:
+<ul>
+  <li>the outcome \(x^{1}=(-0.7,15)\) that performs best with respect to the benefit criterion but worst with respect to the risk criterion</li>
+  <li>the outcome \(x^{2}=(0.4,0)\) that performs worst with respect to the benefit criterion but best with respect to the risk criterion</li>
+</ul>
+Suppose that the decision maker responds that given these two outcomes he would prefer \(x^{1}\). From the definition of the value function, we then know that \(v(x^{1})>v(x^{2})\). For the additive value function, this therefore results in the following inequality:
 \begin{equation}
 w_{1} v_{1}(-0.7) + w_{2} v_{2}(15) > w_{1} v_{1}(0.4) + w_{2} v_{2}(0).
 \label{eq:ordinalSwing}
 \end{equation}
-Given that we have normalized the partial value functions in such a way that $v_{1}(-0.7) = v_{2}(0) = 1$ and $v_{1}(0.4) = v_{2}(15) = 0$, we can conclude from Equation~\ref{eq:ordinalSwing} that it must hold that $w_{1}>w_{2}$.
+Given that we have normalized the partial value functions in such a way that \(v_{1}(-0.7) = v_{2}(0) = 1\) and \(v_{1}(0.4) = v_{2}(15) = 0\), we can conclude from Equation~\ref{eq:ordinalSwing} that it must hold that \(w_{1}>w_{2}\).
 </p>
 
 <p>
-Now that we have obtained the ordinal ranking \( w_{1} > w_{2} \), we can proceed with the second step of the swing weighting procedure. For this, we ask the decision maker to give a value of \( \delta \) such that 
+Now that we have obtained the ordinal ranking \( w_{1} > w_{2} \), we can proceed with the second step of the swing weighting procedure. For this, we ask the decision maker to give a value of \( \delta \) such that
 \[
 (0.4,0) \sim (\delta,15).
 \]
-Suppose that the decision maker responds that $\delta=-0.3$, so that he is indifferent between the outcomes $x^{2}$ and $x^{3}=(-0.3,15)$. This preference statement can then be translated into the following equality for the additive value function:
+Suppose that the decision maker responds that \(\delta=-0.3\), so that he is indifferent between the outcomes \(x^{2}\) and \(x^{3}=(-0.3,15)\). This preference statement can then be translated into the following equality for the additive value function:
 \begin{equation}
 w_{1} v_{1}(-0.3) + w_{2} v_{2}(15) = w_{1} v_{1}(0.4) + w_{2} v_{2}(0).
 \label{eq:cardinalSwing1}
 \end{equation}
-Finally, given that we have previously established that $v_{1}(-0.3)=0.5$, $v_{2}(15) = v_{1}(0.4) = 0$, and $v_{2}(0)=1$, it now immediately follows from Equation~\ref{eq:cardinalSwing1} that
+Finally, given that we have previously established that \(v_{1}(-0.3)=0.5\), \(v_{2}(15) = v_{1}(0.4) = 0\), and \(v_{2}(0)=1\), it now immediately follows from Equation~\ref{eq:cardinalSwing1} that
 \begin{equation}
 w_{2} = 0.5 w_{1},
 \label{eq:cardinalSwing2}
 \end{equation}
-thereby completing the swing weighting procedure. 
+thereby completing the swing weighting procedure.
 </p>
 
 <p>
-From Equation~\ref{eq:cardinalSwing2}, we can conclude that the decision maker considers an improvement in the change in fasting glucose from 0.4 mmol/L to -0.7 mmol/L to be twice as important as an improvement in the incidence of hypoglyceamia from 15\% to 0\%. To obtain concrete values of the scaling constants, we can therefore arbitrarily set $w_{1}$ to a value that is twice as large as $w_{2}$. Here, we opt to normalize the scaling constants such that $w_{1} + w_{2} = 1$, which is achieved by setting $w_{1}=0.67$ and $w_{2}=0.33$.
+From Equation~\ref{eq:cardinalSwing2}, we can conclude that the decision maker considers an improvement in the change in fasting glucose from 0.4 mmol/L to -0.7 mmol/L to be twice as important as an improvement in the incidence of hypoglyceamia from 15% to 0%. To obtain concrete values of the scaling constants, we can therefore arbitrarily set \(w_{1}\) to a value that is twice as large as \(w_{2}\). Here, we opt to normalize the scaling constants such that \(w_{1} + w_{2} = 1\), which is achieved by setting \(w_{1}=0.67\) and \(w_{2}=0.33\).
 </p>
 
 <h5>Using the additive value function to rank order the decision alternatives</h5>
 
 <p>
-Now that we have fully specified all the different components of the additive value function, we can use this function to rank order the decision alternatives. In particular, it follows from Figure~\ref{fig:partialValue} that the partial values associated with the change in fasting glucose and the incidence of hypoglyceamia are equal to 0.04 and 0.87 for placebo, 0.06 and 0.93 for rimonabant 5 mg/day, and 0.90 and 0.67 for rimonabant 20 mg/day. When combined with the previously established values for the scaling constants, this results in a total value of $0.67 \cdot 0.04 + 0.33 \cdot 0.87 = 0.31$ for placebo, a total value of $0.67 \cdot 0.06 + 0.33 \cdot 0.93 = 0.35$ for rimonabant 5 mg/day, and a total value of $0.67 \cdot 0.90 + 0.33 \cdot 0.67 = 0.82$ for rimonabant 20 mg/day. Also the use of the additive value model therefore results in the conclusion that rimonabant 20 mg/day is the best alternative, rimonabant 5 mg/day the second best alternative, and placebo the worst alternative.
+Now that we have fully specified all the different components of the additive value function, we can use this function to rank order the decision alternatives. In particular, it follows from Figure~\ref{fig:partialValue} that the partial values associated with the change in fasting glucose and the incidence of hypoglyceamia are equal to 0.04 and 0.87 for placebo, 0.06 and 0.93 for rimonabant 5 mg/day, and 0.90 and 0.67 for rimonabant 20 mg/day. When combined with the previously established values for the scaling constants, this results in a total value of \(0.67 \cdot 0.04 + 0.33 \cdot 0.87 = 0.31\) for placebo, a total value of \(0.67 \cdot 0.06 + 0.33 \cdot 0.93 = 0.35\) for rimonabant 5 mg/day, and a total value of \(0.67 \cdot 0.90 + 0.33 \cdot 0.67 = 0.82\) for rimonabant 20 mg/day. Also the use of the additive value model therefore results in the conclusion that rimonabant 20 mg/day is the best alternative, rimonabant 5 mg/day the second best alternative, and placebo the worst alternative.
 </p>
 
 <h3 id="mcda-n-dim">Generalizing to any dimension</h3>
 
 <p>
-For didactic purposes, we have so far limited our discussion of \ac{MAVT} to decision problems involving 2 criteria. However, when it comes to the benefit-risk assessment of medicinal products, there is a general need to be able to consider a larger number of criteria. Fortunately, the previously described additive value model generalizes easily to $n$ dimensions: we simply extend the number of terms in the weighted sum formulation of the additive value function in Equation~\ref{eq:value} such that each criterion has its own partial value function and scaling constant. As the interpretation of the partial value functions and the scaling constants does not depend on the number of criteria, they can be elicited in exactly the same way as we described in the previous section. However, we do have to slightly extend the swing weighting procedure to account for the fact that there now are $n$ instead of 2 scaling constants. How this can be achieved is illustrated in the case study conducted in the next chapter. 
+For didactic purposes, we have so far limited our discussion of MAVT to decision problems involving 2 criteria. However, when it comes to the benefit-risk assessment of medicinal products, there is a general need to be able to consider a larger number of criteria. Fortunately, the previously described additive value model generalizes easily to \(n\) dimensions: we simply extend the number of terms in the weighted sum formulation of the additive value function in Equation~\ref{eq:value} such that each criterion has its own partial value function and scaling constant. As the interpretation of the partial value functions and the scaling constants does not depend on the number of criteria, they can be elicited in exactly the same way as we described in the previous section. However, we do have to slightly extend the swing weighting procedure to account for the fact that there now are \(n\) instead of 2 scaling constants. How this can be achieved is illustrated in the case study conducted in the next chapter.
 </p>
 
 <h2 id="mcda-interface">Benefit-risk analysis interface</h2>
@@ -242,7 +250,7 @@ The overall survival endpoint can both be reached through death associated with 
 <h3 id="mcda-summary-of-data">Summary of the available data</h3>
 
 <p>
-The performance of regorafenib and placebo with respect to the criteria is summarized in the Effects Table provided in Figure~\ref{fig:ADDIS-ET}. The effect size estimates displayed in this table were directly obtained from the EPAR of this product. 
+The performance of regorafenib and placebo with respect to the criteria is summarized in the Effects Table provided in Figure~\ref{fig:ADDIS-ET}. The effect size estimates displayed in this table were directly obtained from the EPAR of this product.
 </p>
 
 <div class="figure">
@@ -253,7 +261,7 @@ The performance of regorafenib and placebo with respect to the criteria is summa
 <h3 id="mcda-value-tradeoffs">Value trade-offs</h3>
 
 <p>
-The first step in formalizing the decision maker's preferences is to define suitable scale ranges for each of the criteria. By default, ADDIS generates local scales based on the effect size estimates provided in the Effects Table. Each of these local scales can be transformed into a global scale by moving the sliders away from the red area reflecting the local scale range. This is illustrated in Figure~\ref{fig:ADDIS-scales}, where we have created a global scale for each of the four criteria. 
+The first step in formalizing the decision maker's preferences is to define suitable scale ranges for each of the criteria. By default, ADDIS generates local scales based on the effect size estimates provided in the Effects Table. Each of these local scales can be transformed into a global scale by moving the sliders away from the red area reflecting the local scale range. This is illustrated in Figure~\ref{fig:ADDIS-scales}, where we have created a global scale for each of the four criteria.
 </p>
 
 <div class="figure">
@@ -262,7 +270,7 @@ The first step in formalizing the decision maker's preferences is to define suit
 </div>
 
 <p>
-After having configured the scale ranges, the next step is to specify the decision maker's partial value functions. For the unfavourable effects, it holds that equal size ranges in percentages (e.g., 5-10\% and 10-15\%) reflect the same number of affected patients. The partial value functions for these criteria were therefore assumed to be linear. The partial value function for overall survival was obtained through application of the bisection method (Figure~\ref{fig:ADDIS-bisection}). 
+After having configured the scale ranges, the next step is to specify the decision maker's partial value functions. For the unfavourable effects, it holds that equal size ranges in percentages (e.g., 5-10% and 10-15%) reflect the same number of affected patients. The partial value functions for these criteria were therefore assumed to be linear. The partial value function for overall survival was obtained through application of the bisection method (Figure~\ref{fig:ADDIS-bisection}).
 </p>
 
 <div class="figure">
@@ -271,21 +279,21 @@ After having configured the scale ranges, the next step is to specify the decisi
 </div>
 
 <p>
-Once all the partial value functions have been specified, one can proceed with eliciting the weights. As the values of the weights reflect the relative importance of the swing from worst to best on one criterion compared to that on another criterion (e.g., the relative importance of an increase in the median overall survival time from 4 months to 8 months compared to a reduction in the incidence of haemorrhage from 5\% to 0\%), an ordinal ranking of the weights can be easily obtained by asking the decision maker to rank the criteria scale swings from most important to least important. Suppose that for our case study we have obtained the following ranking of the criteria scale swings: overall survival $\succ$ haemorrhage $\succ$ hand-foot skin reaction $\succ$  hypertension. In terms of the weights, we then know that $w_{1} > w_{4} > w_{2} > w_{3}$, but we do not know how much larger one weight is compared to another. For this, we need to further assess the trade-offs that the decision maker is willing to make between the different criteria. 
+Once all the partial value functions have been specified, one can proceed with eliciting the weights. As the values of the weights reflect the relative importance of the swing from worst to best on one criterion compared to that on another criterion (e.g., the relative importance of an increase in the median overall survival time from 4 months to 8 months compared to a reduction in the incidence of haemorrhage from 5% to 0%), an ordinal ranking of the weights can be easily obtained by asking the decision maker to rank the criteria scale swings from most important to least important. Suppose that for our case study we have obtained the following ranking of the criteria scale swings: overall survival \(\succ\) haemorrhage \(\succ\) hand-foot skin reaction \(\succ\)  hypertension. In terms of the weights, we then know that \(w_{1} > w_{4} > w_{2} > w_{3}\), but we do not know how much larger one weight is compared to another. For this, we need to further assess the trade-offs that the decision maker is willing to make between the different criteria.
 </p>
 
 <p>
-Figure~\ref{fig:ADDIS-exact} shows how the trade-off between overall survival and haemorrhage was assessed using the ADDIS software. Under the additive value model, the amount by which the median overall survival time needs to be increased in order to compensate for an increase in the incidence of haemorrhage from 0\% to 5\% may depend on the level of survival that is currently achieved (4 months in the situation provided), but it does not depend on the levels of achievement on the other three criteria. Because of this, the levels of achievement on the remaining criteria are not explicitly mentioned in the text provided in Figure~\ref{fig:ADDIS-exact}. From the position of the slider, it follows that the decision maker is indifferent between an alternative with a median overall survival time of 4 months and an incidence of haemorrhage of 0\% and an alternative with a median overall survival time of 5 months and an incidence of haemorrhage of 5\%. For the underlying value function, it must therefore hold that
+Figure~\ref{fig:ADDIS-exact} shows how the trade-off between overall survival and haemorrhage was assessed using the ADDIS software. Under the additive value model, the amount by which the median overall survival time needs to be increased in order to compensate for an increase in the incidence of haemorrhage from 0% to 5% may depend on the level of survival that is currently achieved (4 months in the situation provided), but it does not depend on the levels of achievement on the other three criteria. Because of this, the levels of achievement on the remaining criteria are not explicitly mentioned in the text provided in Figure~\ref{fig:ADDIS-exact}. From the position of the slider, it follows that the decision maker is indifferent between an alternative with a median overall survival time of 4 months and an incidence of haemorrhage of 0% and an alternative with a median overall survival time of 5 months and an incidence of haemorrhage of 5\%. For the underlying value function, it must therefore hold that
 \begin{equation}
 w_{1} v_{1}(4) + w_{4} v_{4}(0) = w_{1} v_{1}(5) + w_{4} v_{4}(5).
 \label{eq:os_haem1}
 \end{equation}
-From the previously defined partial value functions, it follows that $v_{1}(4)=0$, $v_{4}(0)=1$, $v_{1}(5)=0.3125$, and $v_{4}(5)=0$. After substituting these values in Equation (\ref{eq:os_haem1}), we obtain
+From the previously defined partial value functions, it follows that \(v_{1}(4)=0\), \(v_{4}(0)=1\), \(v_{1}(5)=0.3125\), and \(v_{4}(5)=0\). After substituting these values in Equation (\ref{eq:os_haem1}), we obtain
 \begin{equation}
-w_{4} = 0.3125 \cdot w_{1}, 
+w_{4} = 0.3125 \cdot w_{1},
 \label{eq:os_haem2}
 \end{equation}
-which, when expressed as a ratio between $w_{1}$ and $w_{4}$, results in the constraint $\frac{w_{1}}{w_{4}} = 3.2$.
+which, when expressed as a ratio between \(w_{1}\) and \(w_{4}\), results in the constraint \(\frac{w_{1}}{w_{4}} = 3.2\).
 </p>
 
 <div class="figure">
@@ -294,11 +302,11 @@ which, when expressed as a ratio between $w_{1}$ and $w_{4}$, results in the con
 </div>
 
 <p>
-From the decision maker's response to the other two exact swing weighting questions (sreenshots not shown), it similarly follows that $\frac{w_{4}}{w_{2}} = 2.5$ and $\frac{w_{4}}{w_{2}} = 2.5$. If we combine these ratio constraints with the normalization constraint $w_{1}+w_{2}+w_{3}+w_{4}=1$, we obtain the following values of the weights: $w_{1}=0.672$, $w_{2}=0.084$, $w_{3}=0.034$, $w_{4}=0.210$. Together with the previously defined partial value functions, this completes the specification of the decision maker's additive value function. 
+From the decision maker's response to the other two exact swing weighting questions (sreenshots not shown), it similarly follows that \(\frac{w_{4}}{w_{2}} = 2.5\) and \(\frac{w_{4}}{w_{2}} = 2.5\). If we combine these ratio constraints with the normalization constraint \(w_{1}+w_{2}+w_{3}+w_{4}=1\), we obtain the following values of the weights: \(w_{1}=0.672\), \(w_{2}=0.084\), \(w_{3}=0.034\), \(w_{4}=0.210\). Together with the previously defined partial value functions, this completes the specification of the decision maker's additive value function.
 </p>
 
 <h3 id="mcda-benefit-risk-balance">Benefit-risk balance</h3>
 
 <p>
-Once the decision maker's value function has been completely specified, we can use it to assess the benefit-risk balance of regorafenib in a formal manner. For example, we can read from the Effects Table (Figure~\ref{fig:ADDIS-ET}) that the incidence of hand-foot skin reaction is 16.6\% for regorafenib and 0.4\% for placebo. Compared to placebo, the use of regorafenib therefore results in a loss of value of $w_{2}v_{2}(16.6) - w_{2}v_{2}(0.4) = 0.084 \cdot 0.17 - 0.084 \cdot 0.98 = -0.068$ for hand-foot skin reaction. Similarly, if follows that the loss of value is -0.023 for hypertension and -0.05 for haemorrhage. When added, the total loss of value associated with regorafenib's unfavourable effects is equal to -0.141. The median overall survival time is 6.44 months for regorafenib and 4.96 months for placebo. Compared to placebo, the use of regorafenib therefore results in a gain in value of $w_{1}v_{1}(6.44) - w_{1}v_{1}(4.96) = 0.672 \cdot 0.698 - 0.672 \cdot 0.3 = 0.268$ for overall survival. As the gain in value associated with overall survival is sufficient to compensate for the loss of value associated with the treatment's unfavourable effects, we conclude that the benefit-risk balance of regorafenib is positive. 
+Once the decision maker's value function has been completely specified, we can use it to assess the benefit-risk balance of regorafenib in a formal manner. For example, we can read from the Effects Table (Figure~\ref{fig:ADDIS-ET}) that the incidence of hand-foot skin reaction is 16.6\% for regorafenib and 0.4\% for placebo. Compared to placebo, the use of regorafenib therefore results in a loss of value of \(w_{2}v_{2}(16.6) - w_{2}v_{2}(0.4) = 0.084 \cdot 0.17 - 0.084 \cdot 0.98 = -0.068\) for hand-foot skin reaction. Similarly, if follows that the loss of value is -0.023 for hypertension and -0.05 for haemorrhage. When added, the total loss of value associated with regorafenib's unfavourable effects is equal to -0.141. The median overall survival time is 6.44 months for regorafenib and 4.96 months for placebo. Compared to placebo, the use of regorafenib therefore results in a gain in value of \(w_{1}v_{1}(6.44) - w_{1}v_{1}(4.96) = 0.672 \cdot 0.698 - 0.672 \cdot 0.3 = 0.268\) for overall survival. As the gain in value associated with overall survival is sufficient to compensate for the loss of value associated with the treatment's unfavourable effects, we conclude that the benefit-risk balance of regorafenib is positive.
 </p>
