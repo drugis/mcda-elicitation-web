@@ -14,6 +14,7 @@
   <link rel="stylesheet" type="text/css" href="/bower_components/nvd3-community/build/nv.d3.css">
 
   <link rel="stylesheet" type="text/css" href="app/css/mcda-drugis.css">
+  <script src="/bower_components/requirejs/require.js" data-main="main.js"></script>
 
 </head>
 
@@ -27,6 +28,18 @@
         </h1>
       </li>
     </ul>
+    <section class="top-bar-section">
+      <!-- Left Nav Section -->
+      <ng-transclude></ng-transclude>
+      <!-- Right Nav Section -->
+      <ul class="right">
+        <li>
+          <a class="manual" href="/manual" target="_blank">
+            <i class="fa fa-book"></i> Manual
+          </a>
+        </li>
+      </ul>
+    </section>
   </nav>
 
   <section id="hero">
@@ -35,7 +48,7 @@
         <h1>mcda.drugis.org <br/>
           <small>Decision analysis for drug benefit-risk assessment</small>
         </h1>
-             
+
       </div>
     </div>
   </section>
@@ -45,11 +58,11 @@
         <p><a href="#">mcda.drugis.org</a> is designed to help policy makers and researchers judge the balance of favorable and unfavorable effects of medicines.
         This tool is intended to be part of the <a href="http://drugis.org/software/addis2">ADDIS 2</a> decision support system for health care policy.
         Until then, it serves as a demonstration of our multiple criteria decision analysis (MCDA) methods and our future direction in the development of ADDIS.</p>
-        
+
         <div>
           <a class=" button" href="/auth/google">Sign In with Google</a>
         </div>
-        
+
         <p>Right now, you need a Google account to sign in. The information we retrieve from Google is only used to ensure that you continue to have access to the workspaces you create.</p>
 
         <form id="hiddenSignInForm" action="<c:url value='/signin/authenticate'/>" method="POST" style="display: none;">
