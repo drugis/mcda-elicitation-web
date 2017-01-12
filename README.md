@@ -16,7 +16,7 @@ The tool uses the [Patavi][patavi] web service wrapper for R and the
 after the preference elicitation process.
 
 mcda-elicitation-web is a component of the [drugis.org][drugis] ADDIS 2
-project.
+project. For more information on all components of the drugis project, please refer to the OVERALL-README.md in the root folder of the ADDIS-CORE project.
 
 Initialize submodules
 ---------------------
