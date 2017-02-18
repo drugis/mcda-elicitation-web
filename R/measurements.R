@@ -13,7 +13,8 @@ assign.sample <- function(defn, samples) {
   if (!is.null(defn$alternative)) {
     samples[, defn$alternative, defn$criterion] <- sampler(defn$performance, N)
   } else {
-    samples[, , defn$criterion] <- sampler(defn$performance, N)
+    x <- sampler(defn$performance, N)
+    samples[, colnames(x), defn$criterion] <- x
   }
   samples
 }
@@ -48,7 +49,7 @@ sampler.relative_normal <- function(perf, N) {
       covariance <- matrix(unlist(varcov$data),
                             nrow=length(varcov$rownames),
                             ncol=length(varcov$colnames))
-      mvrnorm(N, relative$mu, covariance) + base
+      mvrnorm(N, relative$mu[varcov$rownames], covariance) + base
     }
   }
   sampleDeriv(base)
