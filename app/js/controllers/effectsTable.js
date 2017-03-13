@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 define(function(require) {
-  var angular = require("angular");
-  var _ = require("underscore");
+  var angular = require('angular');
+  var _ = require('underscore');
 
   return function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil, EffectsTableService) {
 
@@ -16,7 +16,7 @@ define(function(require) {
       var perf = _.find($scope.problem.performanceTable, function(performance) {
         return performance.alternative === alternative && performance.criterion === criterion;
       });
-      return !!perf && perf.performance.type === "exact";
+      return !!perf && perf.performance.type === 'exact';
     };
 
     $scope.problem = $scope.workspace.problem;
@@ -43,6 +43,6 @@ define(function(require) {
     $scope.cancelRemarks = function() {
       $scope.remarks = angular.copy(remarksCache);
     };
-
+    
   };
 });
