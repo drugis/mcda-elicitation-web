@@ -29,7 +29,7 @@ sampler.dbeta <- function(perf, N) {
 }
 
 sampler.dbeta_logit <- function(perf, N) {
-  ilogit(rbeta(N, perf$parameters['alpha'], perf$parameters['beta']))
+  logit(rbeta(N, perf$parameters['alpha'], perf$parameters['beta']))
 }
 
 sampler.dnorm <- function(perf, N) {
