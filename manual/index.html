@@ -80,7 +80,7 @@
       <div class="columns large-offset-2 large-8 medium-12 end">
         <h1>mcda.drugis.org<br/><small>User manual</small></h1>
 
-        <p style="margin-top: 30px; color: white;">Douwe Postmus and Gert van Valkenhoef</p>
+        <p style="margin-top: 30px; color: white;">Douwe Postmus, Daan Reid and Gert van Valkenhoef</p>
       </div>
     </div>
   </section>
@@ -101,11 +101,124 @@
 
       <h2 id="mcda-introduction">Introduction</h2>
 
-      <p>Introduction here</p>
+      <p>This is the manual for the MCDA user interface for benefit-risk analysis. It starts with instructions about uploading your own dataset to the system, followed by a brief introduction to benefit-risk analysis, and a guide to the MCDA user interface itself.
+      </p>
 
       <h3 id="mcda-preparing-dataset">Preparing your dataset</h3>
 
-      <p>Basic introduction here, link to more elaborate documentation?</p>
+      <p>This section only applies to the stand-alone version of MCDA, hosted on https://mcda.drugis.org/. In ADDIS (https://addis.drugis.org/), this step is not necessary.</p>
+
+      <p>After signing in to MCDA, you will be redirected to your personal home page. It contains a list of your previously created workspaces (which will be empty until you create one), and a button to create a new workspace. Clicking this button will open the “New workspace dialog, where you can choose to use one of the example datasets we provided, or upload your own.</p>
+
+      <p>
+        Datasets can be uploaded in JSON format. The JSON should contain the following entries (note that JSON is case-sensitive):
+        <ul>
+          <li>title</li>
+          <li>description</li>
+          <li>criteria</li>
+          <li>alternatives</li>
+          <li>performanceTable</li>
+          <li>preferences</li>
+        </ul>
+      </p>
+      <p>
+        The title and description properties should contain text.
+      </p>
+      <p>
+        The criteria property should contain a series of properties with the names and details of the different criteria in your analysis. The following is an example of JSON describing a single criterion (HAM-D):
+        <pre>
+          "criteria": {
+            "HAM-D": {
+              "title": "HAM-D",
+              "scale": [0.0, 1.0],
+              "unitOfMeasurement": "Proportion",
+              "description": "Responders on the HAM-D rating scale",
+              "pvf": {
+                "direction": "increasing",
+                "type": "linear",
+                "range": [0.0, 1.0]
+              }
+            }
+          }
+        </pre>
+
+      </p>
+      <p>
+        The alternatives property should contain the alternatives under investigation. For example:
+        <pre>
+          "alternatives": {
+            "Placebo": {
+              "title": "Placebo"
+            },
+            "Fluox": {
+              "title": "Fluoxetine"
+            },
+            "Parox": {
+              "title": "Paroxetine"
+            }
+          }
+        </pre>
+      </p>
+      <p>
+        The performanceTable property should contain the actual data of the measurements for each criterion for each alternative.
+        Performance can be measured either in relative or exact terms. If relative, the performance should contain a baseline plus a matrix of relative deviations. If exact, simply the value suffices.
+      </p>
+      <p>
+        An example of exact performance:
+        <pre>
+          "performanceTable": [
+            {
+              "alternative": "placebo",
+              "criterion": "Hypo",
+              "performance": {
+                "type": "exact",
+                "value": 0.02
+              }
+            }
+          ]
+        </pre>
+        An example of relative performance:
+        <pre>
+          "performanceTable": [
+            {
+            "criterion": "HAM-D",
+            "performance": {
+              "type": "relative-logit-normal",
+              "parameters": {
+                "baseline": {
+                  "type": "dnorm",
+                  "name": "Placebo",
+                  "mu": -0.17143575198943867,
+                  "sigma": 0.11299261988783152
+                },
+                "relative": {
+                  "type": "dmnorm",
+                  "mu": {
+                    "Placebo": 0.00000,
+                    "Fluoxetine": 0.4718129,
+                    "Paroxetine": 0.7258847
+                  },
+                  "cov": {
+                    "rownames": ["Placebo", "Fluox", "Parox"],
+                    "colnames": ["Placebo", "Fluox", "Parox"],
+                    "data":
+                      [ [0.00, 0.00, 0.00],
+                        [0.00, 0.013445532, 0.010394690],
+                        [0.00, 0.010394690, 0.023006616] ]
+                  }
+                }
+              }
+            }
+          }]
+        </pre>
+      </p>
+      <p>
+        The preferences property should generally consist of an empty object. This will be filled in by performincg preference elicitation within the MCDA app.
+      </p>
+      <p>
+        A list of complete examples is available on the <a href="https://github.com/drugis/mcda-elicitation-web/tree/master/examples" target="_blank">MCDA repository</a>.
+      </p>
+
 
       <div id="mcda-shared-content"></div>
 
