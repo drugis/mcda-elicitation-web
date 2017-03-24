@@ -5,7 +5,7 @@ define(function(require) {
 
   var dependencies = ['$http', 'PataviService'];
 
-  var WorkspaceService = function($http, PataviService) {
+  var ScalesService = function($http, PataviService) {
     function getObservedScales(scope, problem) {
       return $http.post('/patavi', _.extend(problem, {
           method: 'scales'
@@ -39,5 +39,5 @@ define(function(require) {
     };
   };
 
-  return angular.module('elicit.scalesService', []).service('ScalesService', dependencies.concat(WorkspaceService));
+  return angular.module('elicit.scalesService', []).service('ScalesService', dependencies.concat(ScalesService));
 });

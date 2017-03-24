@@ -1,5 +1,9 @@
 # Required packages: MASS
 
+logit <- function(x) {
+  log(x/(1-x))
+}
+
 ilogit <- function(x) {
   1 / (1 + exp(-x))
 }
@@ -13,7 +17,8 @@ assign.sample <- function(defn, samples) {
   if (!is.null(defn$alternative)) {
     samples[, defn$alternative, defn$criterion] <- sampler(defn$performance, N)
   } else {
-    samples[, , defn$criterion] <- sampler(defn$performance, N)
+    x <- sampler(defn$performance, N)
+    samples[, colnames(x), defn$criterion] <- x
   }
   samples
 }
@@ -27,12 +32,21 @@ sampler.dbeta <- function(perf, N) {
   rbeta(N, perf$parameters['alpha'], perf$parameters['beta'])
 }
 
+sampler.dbeta_logit <- function(perf, N) {
+  logit(rbeta(N, perf$parameters['alpha'], perf$parameters['beta']))
+}
+
 sampler.dnorm <- function(perf, N) {
   rnorm(N, perf$parameters['mu'], perf$parameters['sigma'])
 }
 
 sampler.exact <- function(perf, N) {
   rep(perf$value, lenght.out=N)
+}
+
+sampler.dt <- function(perf, N) {
+  print(perf)
+  perf$parameters['mu'] + perf$parameters['stdErr'] * rt(N, perf$parameters['dof'])
 }
 
 sampler.relative_normal <- function(perf, N) {
@@ -48,7 +62,7 @@ sampler.relative_normal <- function(perf, N) {
       covariance <- matrix(unlist(varcov$data),
                             nrow=length(varcov$rownames),
                             ncol=length(varcov$colnames))
-      mvrnorm(N, relative$mu, covariance) + base
+      mvrnorm(N, relative$mu[varcov$rownames], covariance) + base
     }
   }
   sampleDeriv(base)
