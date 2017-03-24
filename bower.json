@@ -1,11 +1,12 @@
 {
   "name": "mcda-elicitation-web",
-  "version": "0.10.2",
+  "version": "0.10.3",
   "authors": [
     "Gert van Valkenhoef <g.h.m.van.valkenhoef@rug.nl>",
     "Joël Kuiper",
     "Daan Reid",
-    "Connor Stroomberg"
+    "Connor Stroomberg",
+    "Joris de Keijser"
   ],
   "description": "MCDA preference elicitation",
   "main": "/app/js/mcda-web.js",
