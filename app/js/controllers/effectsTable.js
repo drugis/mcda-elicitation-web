@@ -2,13 +2,14 @@
 define(function(require) {
   var angular = require('angular');
   var _ = require('underscore');
-
+  var lodash = require('lodash');
+  
   return function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil, EffectsTableService) {
 
     var remarksCache;
-    $scope.$watch('workspace.$$scales.observed', function(newValue){
+    $scope.$watch('workspace.$$scales.observed', function(newValue) {
       $scope.scales = newValue;
-    },true);
+    }, true);
     $scope.scales = $scope.workspace.$$scales.observed;
     $scope.valueTree = $scope.workspace.$$valueTree;
 
@@ -26,6 +27,10 @@ define(function(require) {
 
     $scope.remarks = {};
     $scope.alternativeVisible = {};
+    lodash.forEach($scope.problem.alternatives, function(alternativeObject) {
+      
+      $scope.alternativeVisible[alternativeObject.alternative] = true;
+    });
 
     RemarksResource.get(_.omit($stateParams, 'id'), function(remarks) {
       if (remarks.remarks) {
@@ -43,6 +48,6 @@ define(function(require) {
     $scope.cancelRemarks = function() {
       $scope.remarks = angular.copy(remarksCache);
     };
-    
+
   };
 });

@@ -1,7 +1,6 @@
 'use strict';
 define(function(require) {
   var angular = require('angular');
-  var _ = require('lodash');
   var Config = require('mcda/config');
 
   require('mmfoundation');
@@ -19,6 +18,7 @@ define(function(require) {
   require('mcda/services/taskDependencies');
   require('mcda/services/hashCodeService');
   require('mcda/services/effectsTableService');
+  require('mcda/services/effectsTableResource');
   require('mcda/services/resultsService');
   require('mcda/services/partialValueFunction');
   require('mcda/services/util');
@@ -41,6 +41,7 @@ define(function(require) {
     'elicit.util',
     'elicit.directives',
     'elicit.effectsTableService',
+    'elicit.effectsTableResource',
     'elicit.resultsService',
     'elicit.controllers',
     'elicit.taskDependencies',
