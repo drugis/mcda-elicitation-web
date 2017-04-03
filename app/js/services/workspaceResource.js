@@ -1,7 +1,6 @@
 'use strict';
 define(function(require) {
-  var angular = require("angular");
-  var _ = require("underscore");
+  var angular = require('angular');
 
   var dependencies = ['ngResource'];
 

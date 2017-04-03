@@ -1,7 +1,7 @@
 'use strict';
 define(function(require) {
-  var angular = require("angular");
-  var _ = require("underscore");
+  var angular = require('angular');
+  var _ = require('underscore');
 
   var dependencies = [];
 
@@ -75,14 +75,14 @@ define(function(require) {
 
   var nonOrdinalPreferences = new PreferenceFilter(
     function(pref) {
-      return pref.type !== "ordinal";
+      return pref.type !== 'ordinal';
     }, 'non-ordinal preferences');
 
   // This heuristic is not complete; it only checks whether there are ordinal preferences at all.
   // Currently, there is no way to create ordinal preferences that are not a complete ranking.
   var completeCriteriaRanking = new PreferenceFilter(
     function(pref) {
-      return pref.type === "ordinal";
+      return pref.type === 'ordinal';
     }, 'complete criteria ranking');
 
   var TaskDependencies = function() {

@@ -1,6 +1,6 @@
 'use strict';
 define(function(require) {
-  var angular = require("angular");
+  var angular = require('angular');
 
   var dependencies = ['ngResource'];
 
@@ -28,9 +28,9 @@ define(function(require) {
         id: '@id',
         workspaceId: '@workspaceId'
       }, {
-        query: { method: "GET", isArray: true},
+        query: { method: 'GET', isArray: true},
         get:   { cache: cache, method: 'GET'},
-        save:  { method: "POST", interceptor: { response: resetCache }}
+        save:  { method: 'POST', interceptor: { response: resetCache }}
       });
 
 

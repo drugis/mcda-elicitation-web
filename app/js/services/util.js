@@ -1,7 +1,7 @@
 'use strict';
 define(function(require) {
-  var angular = require("angular");
-  var _ = require("underscore");
+  var angular = require('angular');
+  var _ = require('underscore');
 
   return angular.module('elicit.util', [])
     .factory('intervalHull', function() {
@@ -12,10 +12,10 @@ define(function(require) {
         }
         return [
           Math.min.apply(null, _.map(_.values(scaleRanges), function(alt) {
-            return alt["2.5%"];
+            return alt['2.5%'];
           })),
           Math.max.apply(null, _.map(_.values(scaleRanges), function(alt) {
-            return alt["97.5%"];
+            return alt['97.5%'];
           }))
         ];
       };
