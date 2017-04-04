@@ -3,8 +3,8 @@ define(function(require) {
   var angular = require('angular');
   var _ = require('underscore');
   var lodash = require('lodash');
-  
-  return function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil, EffectsTableService) {
+
+  return function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil, EffectsTableService, EffectsTableResource) {
 
     var remarksCache;
     $scope.$watch('workspace.$$scales.observed', function(newValue) {
@@ -26,10 +26,15 @@ define(function(require) {
     $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree($scope.valueTree, $scope.problem.criteria);
 
     $scope.remarks = {};
-    $scope.alternativeVisible = {};
+    $scope.alternativeVisible = EffectsTableResource.getEffectsTable($stateParams);
     lodash.forEach($scope.problem.alternatives, function(alternativeObject) {
-      
-      $scope.alternativeVisible[alternativeObject.alternative] = true;
+      if (!lodash.find($scope.alternativeVisible, function(alt) {
+          return alt[alternativeObject.alternative] !== undefined;
+        })) {
+        EffectsTableResource.setPairOfEffectsTable($stateParams, alternativeObject);
+      }
+
+
     });
 
     RemarksResource.get(_.omit($stateParams, 'id'), function(remarks) {
