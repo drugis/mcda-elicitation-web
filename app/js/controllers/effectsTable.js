@@ -4,7 +4,12 @@ define(function(require) {
   var _ = require('underscore');
   var lodash = require('lodash');
 
-  return function($scope, $stateParams, taskDefinition, RemarksResource, ValueTreeUtil, EffectsTableService, EffectsTableResource) {
+  return function($scope, $stateParams,
+    taskDefinition,
+    RemarksResource,
+    ValueTreeUtil,
+    EffectsTableService,
+    EffectsTableResource) {
 
     var remarksCache;
     $scope.$watch('workspace.$$scales.observed', function(newValue) {
@@ -26,16 +31,31 @@ define(function(require) {
     $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree($scope.valueTree, $scope.problem.criteria);
 
     $scope.remarks = {};
-    $scope.alternativeVisible = EffectsTableResource.getEffectsTable($stateParams);
-    lodash.forEach($scope.problem.alternatives, function(alternativeObject) {
-      if (!lodash.find($scope.alternativeVisible, function(alt) {
-          return alt[alternativeObject.alternative] !== undefined;
-        })) {
-        EffectsTableResource.setPairOfEffectsTable($stateParams, alternativeObject);
-      }
 
 
+    // EffectsTableResource.getEffectsTable({
+    //   projectId: $stateParams.projectId,
+    //   analysisId: $stateParams.analysisId
+    // });
+    // lodash.forEach($scope.problem.alternatives, function(alternativeObject) {
+    // if (!lodash.find($scope.alternativeExclusions, function(alt) {
+    //     return alt[alternativeObject.alternative] !== undefined;
+    //   })) {
+    //   // EffectsTableResource.setPairOfEffectsTable($stateParams, alternativeObject);
+    // }
+    // $scope.alternativeExclusions[alternativeObject.alternative] = true;
+
+    // });
+    $scope.alternativeExclusions = {};
+    EffectsTableResource.getEffectsTableExclusions($stateParams, function(exclusions) {
+      lodash.forEach(exclusions, function(exclusion) {
+        $scope.alternativeExclusions[exclusion.alternativeId] = true;
+      });
     });
+
+    $scope.hideAlternative = function(alternativeId){
+      EffectsTableResource.setEffectsTableExclusion($stateParams, alternativeId);
+    };
 
     RemarksResource.get(_.omit($stateParams, 'id'), function(remarks) {
       if (remarks.remarks) {
