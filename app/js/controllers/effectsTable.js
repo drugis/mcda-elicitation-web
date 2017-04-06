@@ -29,33 +29,17 @@ define(function(require) {
     $scope.effectsTableData = EffectsTableService.buildEffectsTableData($scope.problem, $scope.valueTree);
     $scope.nrAlternatives = _.keys($scope.problem.alternatives).length;
     $scope.expandedValueTree = ValueTreeUtil.addCriteriaToValueTree($scope.valueTree, $scope.problem.criteria);
-
     $scope.remarks = {};
 
-
-    // EffectsTableResource.getEffectsTable({
-    //   projectId: $stateParams.projectId,
-    //   analysisId: $stateParams.analysisId
-    // });
-    // lodash.forEach($scope.problem.alternatives, function(alternativeObject) {
-    // if (!lodash.find($scope.alternativeExclusions, function(alt) {
-    //     return alt[alternativeObject.alternative] !== undefined;
-    //   })) {
-    //   // EffectsTableResource.setPairOfEffectsTable($stateParams, alternativeObject);
-    // }
-    // $scope.alternativeExclusions[alternativeObject.alternative] = true;
-
-    // });
-    $scope.alternativeExclusions = {};
-    EffectsTableResource.getEffectsTableExclusions($stateParams, function(exclusions) {
+    $scope.alternativeInclusions = {};
+    lodash.map($scope.problem.alternatives, function(alternative){
+      $scope.alternativeInclusions[alternative.alternative] = true;
+    });
+    EffectsTableResource.query($stateParams, function(exclusions) {
       lodash.forEach(exclusions, function(exclusion) {
-        $scope.alternativeExclusions[exclusion.alternativeId] = true;
+        $scope.alternativeInclusions[exclusion.alternativeId] = false;
       });
     });
-
-    $scope.hideAlternative = function(alternativeId){
-      EffectsTableResource.setEffectsTableExclusion($stateParams, alternativeId);
-    };
 
     RemarksResource.get(_.omit($stateParams, 'id'), function(remarks) {
       if (remarks.remarks) {
@@ -63,6 +47,10 @@ define(function(require) {
       }
       remarksCache = angular.copy(remarks);
     });
+
+    $scope.toggleVisibility = function(alternativeId){
+      EffectsTableResource.toggleExclusion($stateParams, alternativeId);
+    };
 
     $scope.saveRemarks = function() {
       RemarksResource.save(_.omit($stateParams, 'id'), $scope.remarks, function() {

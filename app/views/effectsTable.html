@@ -1,8 +1,8 @@
 <h3>Effects table</h3>
-<h6>Hide alternatives</h6>
+<h6>Show alternatives</h6>
 <form>
   <label ng-repeat="(alternativeKey, alternative) in problem.alternatives" class="check2hide">
-    <input class="check2hide" type="checkbox" name="col{{$index}}" ng-model="z[alternativeKey]" ng-change="hideAlternative(alternativeKey)">{{alternative.title}}
+    <input ng-disabled="!editMode.isUserOwner" class="check2hide" type="checkbox" ng-model="alternativeInclusions[alternativeKey]" ng-change="toggleVisibility(alternativeKey)" >{{alternative.title}}
   </label>
 </form>
 
@@ -13,7 +13,7 @@
       <th>Description</th>
       <th>Units</th>
       <th class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives"
-        ng-show="!alternativeExclusions[alternativeKey]">{{alternative.title}}{{problem.valueTree.children.children[0].criteria}}</th>
+        ng-show="alternativeInclusions[alternativeKey]">{{alternative.title}}{{problem.valueTree.children.children[0].criteria}}</th>
     </tr>
   </thead>
   <tbody class="main">
@@ -72,7 +72,7 @@
       </td>
       <td>{{criterion.value.unitOfMeasurement}}</td>
       <td class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives"
-        name="col{{$index}}" id="col{{$index}}" ng-show="!alternativeExclusions[alternativeKey]">
+        name="col{{$index}}" id="col{{$index}}" ng-show="alternativeInclusions[alternativeKey]">
         {{scales[criterion.key][alternativeKey]['50%'] | number}}
         <br>
         <div class="uncertain" ng-show="!isExact(criterion.key, alternativeKey)">
