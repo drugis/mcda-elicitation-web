@@ -12,5 +12,6 @@ define(function() {
       }
     });
   };
-  return angular.module('elicit.effectsTableResource', dependencies).factory('EffectsTableResource', EffectsTableResource);
+  return angular.module('elicit.effectsTableResource', dependencies)
+    .factory('EffectsTableResource', EffectsTableResource);
 });
