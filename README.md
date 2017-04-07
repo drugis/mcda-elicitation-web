@@ -69,6 +69,20 @@ bower install
 
 node index.js
 
+Running the patavi worker
+-------------------------
+
+As a prerequisite, build the patavi worker image from the patavi repository.
+
+Then, build the worker itself, in the `R` directory:
+
+    docker build --tag patavi/worker-smaa_v2 .
+
+Run the worker:
+
+    docker run -d --link <rabbitmq-container-name>:rabbit --name patavi-smaa_v2 patavi/worker-smaa_v2
+
+
 License
 -------
 
