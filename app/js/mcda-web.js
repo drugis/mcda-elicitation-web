@@ -100,12 +100,7 @@ define(function(require) {
     $urlRouterProvider.otherwise('/choose-problem');
   });
 
-  app.run(function($rootScope, $window, $http) {
-    var csrfToken = $window.config._csrf_token;
-    var csrfHeader = $window.config._csrf_header;
-
-    $http.defaults.headers.common[csrfHeader] = csrfToken;
-
+  app.run(function($rootScope, $window) {
     $rootScope.$safeApply = function($scope, fn) {
       var phase = $scope.$root.$$phase;
       if (phase === '$apply' || phase === '$digest') {
