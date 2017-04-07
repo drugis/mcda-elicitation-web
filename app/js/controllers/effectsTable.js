@@ -32,9 +32,10 @@ define(function(require) {
     $scope.remarks = {};
 
     $scope.alternativeInclusions = {};
-    lodash.map($scope.problem.alternatives, function(alternative){
-      $scope.alternativeInclusions[alternative.alternative] = true;
+    lodash.map($scope.problem.alternatives, function(alternative, alternativeKey){
+      $scope.alternativeInclusions[alternativeKey] = true;
     });
+    
     EffectsTableResource.query($stateParams, function(exclusions) {
       lodash.forEach(exclusions, function(exclusion) {
         $scope.alternativeInclusions[exclusion.alternativeId] = false;
@@ -49,7 +50,7 @@ define(function(require) {
     });
 
     $scope.toggleVisibility = function(alternativeId){
-      EffectsTableResource.toggleExclusion($stateParams, alternativeId);
+      EffectsTableResource.toggleExclusion($stateParams, {alternativeId: alternativeId});
     };
 
     $scope.saveRemarks = function() {
