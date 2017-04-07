@@ -1,5 +1,5 @@
 'use strict';
-define(function() {
+define(function(require) {
   var dependencies = ['ngResource'];
   var angular = require('angular');
   var EffectsTableResource = function($resource) {
