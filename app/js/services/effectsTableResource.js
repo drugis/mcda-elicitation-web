@@ -1,22 +1,16 @@
 'use strict';
 define(function() {
-
-  var dependencies = ['$resource'];
-
+  var dependencies = ['ngResource'];
+  var angular = require('angular');
   var EffectsTableResource = function($resource) {
-    return $resource('/projects/:projectId/analyses/:workspaceId/effectsTable', {
-      projectId: '@projectId',
+    return $resource(window.config.workspacesRepositoryUrl + ':workspaceId/effectsTable', {
       workspaceId: '@workspaceId'
     }, {
-      setPairOfEffectsTable: {
-        url: '/projects/:projectId/analyses/:workspaceId/effectsTable',
+      'toggleExclusion': {
+        url: window.config.workspacesRepositoryUrl + ':workspaceId/effectsTable',
         method: 'POST'
-      }, getEffectsTable: {
-        url: '/projects/:projectId/analyses/:workspaceId/effectsTable',
-        method: 'GET'
       }
     });
   };
-
-  return dependencies.concat(EffectsTableResource);
+  return angular.module('elicit.effectsTableResource', dependencies).factory('EffectsTableResource', EffectsTableResource);
 });

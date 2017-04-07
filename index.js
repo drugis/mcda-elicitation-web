@@ -15,11 +15,11 @@ var express = require('express'),
   csurf = require('csurf');
 
 everyauth.everymodule.findUserById(function(id, callback) {
-  db.query("SELECT id, username, firstName, lastName FROM Account WHERE id = $1", [id], function(error, result) {
+  db.query('SELECT id, username, firstName, lastName FROM Account WHERE id = $1', [id], function(error, result) {
     if (error) {
       callback(error);
     } else if (result.rows.length === 0) {
-      callback("ID " + id + " not found");
+      callback('ID ' + id + ' not found');
     } else {
       callback(null, result.rows[0]);
     }
@@ -48,10 +48,10 @@ function findOrCreateUser(sess, accessToken, extra, googleUser) {
                 }
                 var row = result.rows[0];
                 return callback(null, {
-                  "id": row.id,
-                  "username": googleUser.id,
-                  "firstName": googleUser.given_name,
-                  "lastName": googleUser.family_name
+                  'id': row.id,
+                  'username': googleUser.id,
+                  'firstName': googleUser.given_name,
+                  'lastName': googleUser.family_name
                 });
               });
           });
@@ -106,8 +106,8 @@ function requireUserIsOwner(req, res, next) {
     }
     if (!req.user || result.rows[0].owner !== req.user.id) {
       res.status(403).send({
-        "code": 403,
-        "message": "Access to resource not authorised"
+        'code': 403,
+        'message': 'Access to resource not authorised'
       });
     } else {
       next();
@@ -128,7 +128,7 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.get("/", function(req, res) {
+app.get('/', function(req, res) {
   if (req.user) {
     res.sendfile(__dirname + '/public/index.html');
   } else {
@@ -136,11 +136,11 @@ app.get("/", function(req, res) {
   }
 });
 
-app.get("/signin", function(req, res) {
+app.get('/signin', function(req, res) {
   res.sendfile(__dirname + '/public/signin.html');
 });
 
-app.get("/workspaces", function(req, res, next) {
+app.get('/workspaces', function(req, res, next) {
   logger.debug('GET /workspaces');
   db.query('SELECT id, owner, title, problem, defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1', [req.user.id], function(err, result) {
     if (err) {
@@ -155,7 +155,7 @@ app.get("/workspaces", function(req, res, next) {
 
 });
 
-app.post("/workspaces", function(req, res, next) {
+app.post('/workspaces', function(req, res, next) {
   logger.debug('POST /workspaces');
 
   function workspaceTransaction(client, callback) {
@@ -219,7 +219,7 @@ app.post("/workspaces", function(req, res, next) {
   });
 });
 
-app.get("/workspaces/:id", function(req, res, next) {
+app.get('/workspaces/:id', function(req, res, next) {
   logger.debug('GET /workspaces/:id');
   db.query('SELECT id, owner, problem, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
     if (err) {
@@ -231,7 +231,7 @@ app.get("/workspaces/:id", function(req, res, next) {
   });
 });
 
-app.get("/workspaces/:id/scenarios", function(req, res, next) {
+app.get('/workspaces/:id/scenarios', function(req, res, next) {
   logger.debug('GET /workspaces/:id/scenarios');
   db.query('SELECT id, title, state, workspace AS "workspaceId" FROM scenario WHERE workspace = $1', [req.params.id], function(err, result) {
     if (err) {
@@ -242,7 +242,7 @@ app.get("/workspaces/:id/scenarios", function(req, res, next) {
   });
 });
 
-app.get("/workspaces/:id/scenarios/:id", function(req, res, next) {
+app.get('/workspaces/:id/scenarios/:id', function(req, res, next) {
   logger.debug('GET /workspaces/:id/scenarios/:id');
   db.query('SELECT id, title, state, workspace AS "workspaceId" FROM scenario WHERE id = $1', [req.params.id], function(err, result) {
     if (err) {
@@ -254,7 +254,7 @@ app.get("/workspaces/:id/scenarios/:id", function(req, res, next) {
   });
 });
 
-app.get("/workspaces/:id/remarks", function(req, res, next) {
+app.get('/workspaces/:id/remarks', function(req, res, next) {
   logger.debug('GET /workspaces/:id/remarks');
   db.query('SELECT workspaceid AS "workspaceId", remarks::jsonb FROM remarks WHERE workspaceid = $1', [req.params.id], function(err, result) {
     if (err) {
@@ -265,7 +265,7 @@ app.get("/workspaces/:id/remarks", function(req, res, next) {
   });
 });
 
-app.post("/workspaces/:id/remarks", function(req, res, next) {
+app.post('/workspaces/:id/remarks', function(req, res, next) {
   db.query('UPDATE remarks SET remarks = $1 WHERE workspaceid = $2', [req.body.remarks, req.params.id], function(err, result) {
     if (err) {
       err.status = 500;
@@ -275,7 +275,7 @@ app.post("/workspaces/:id/remarks", function(req, res, next) {
   });
 });
 
-app.post("/workspaces/:id", function(req, res, next) {
+app.post('/workspaces/:id', function(req, res, next) {
   db.query('UPDATE workspace SET title = $1, problem = $2 WHERE id = $3 ', [req.body.problem.title, req.body.problem, req.params.id], function(err, result) {
     if (err) {
       err.status = 500;
@@ -285,7 +285,7 @@ app.post("/workspaces/:id", function(req, res, next) {
   });
 });
 
-app.post("/workspaces/:id/scenarios", function(req, res, next) {
+app.post('/workspaces/:id/scenarios', function(req, res, next) {
   db.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3) RETURNING id', [req.params.id, req.body.title, {
     problem: req.body.state.problem,
     prefs: req.body.state.prefs
@@ -298,7 +298,7 @@ app.post("/workspaces/:id/scenarios", function(req, res, next) {
   });
 });
 
-app.post("/workspaces/:id/scenarios/:id", function(req, res, next) {
+app.post('/workspaces/:id/scenarios/:id', function(req, res, next) {
   db.query('UPDATE scenario SET state = $1, title = $2 WHERE id = $3', [{
       problem: req.body.state.problem,
       prefs: req.body.state.prefs
@@ -312,6 +312,33 @@ app.post("/workspaces/:id/scenarios/:id", function(req, res, next) {
     res.end();
   });
 });
+
+app.get('/workspaces/:id/effectsTable', function(req, res, next) {
+  logger.debug('GET /workspaces/:id/effectsTable');
+  db.query('FROM effectsTable WHERE workspaceid = $1', [req.params.id], function(err, result) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.send(result.rows[0]);
+  });
+});
+
+app.post('/workspaces/:id/effectsTable', function(req, res, next) {
+  db.query('IF EXISTS (SELECT * FROM effectsTableExclusion WHERE workspaceId=$1 alternativeId=$2)' +
+    'DELETE (SELECT * FROM effectsTableExclusion WHERE workspaceId=$1 alternativeId=$2)' +
+    'ELSE' +
+      'INSERT effectsTableExclusion (workspaceId, alternativeId)' +
+      'VALUES ($1, $2)', [req.params.id, req.body.alternativeId],
+    function(err, result) {
+      if (err) {
+        err.status = 500;
+        return next(err);
+      }
+      res.end();
+    });
+});
+
 
 app.post('/patavi', function(req, res, next) { // FIXME: separate routes for scales and results
   patavi.create(req.body, function(err, taskUri) {
@@ -330,7 +357,7 @@ app.post('/patavi', function(req, res, next) { // FIXME: separate routes for sca
 app.get('/user', loginUtils.emailHashMiddleware);
 
 //FIXME: should not be needed?
-app.get("/main.js", function(req, res) {
+app.get('/main.js', function(req, res) {
   res.sendfile(__dirname + '/app/js/main.js');
 });
 
@@ -346,5 +373,5 @@ if (process.argv[2] === 'port' && process.argv[3]) {
 }
 
 app.listen(port, function() {
-  console.log("Listening on http://localhost:" + port);
+  console.log('Listening on http://localhost:' + port);
 });

@@ -31,17 +31,17 @@
 
   <script>
 
-    window.patavi = { "WS_URI": "wss://patavi.drugis.org/ws" };
+    window.patavi = { 'WS_URI': 'wss://patavi.drugis.org/ws' };
 
     window.config = {
          WS_URI: 'wss://patavi.drugis.org/ws',
-         examplesRepository : "examples/",
+         examplesRepository : 'examples/',
          workspacesRepositoryUrl: '/workspaces/',
      };
 
-    if(window.location.host.indexOf("test") > -1) {
-       document.body.className += " test";
-       document.title = "test-" + document.title;
+    if(window.location.host.indexOf('test') > -1) {
+       document.body.className += ' test';
+       document.title = 'test-' + document.title;
     }
 
     function signout(){

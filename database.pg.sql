@@ -68,3 +68,10 @@ ALTER TABLE Remarks ALTER COLUMN remarks TYPE JSON USING remarks::JSON;
   
 -- changeset joelkuiper:7
 ALTER TABLE Account ADD COLUMN email VARCHAR DEFAULT '';
+
+-- changeset keijserj:8
+CREATE TABLE effectsTableExclusion (
+  workspaceId INT NOT NULL,
+  alternativeId INT NOT NULL,
+  PRIMARY KEY (workspaceId, alternativeId)
+);
