@@ -20,6 +20,8 @@ define(function(require) {
             id: workspace.defaultScenarioId
           });
         });
+      } else if (choice === 'manual') {
+        $state.go('manualInputStep1');
       } else {
         var example = {
           url: choice

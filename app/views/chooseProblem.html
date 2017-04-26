@@ -28,7 +28,12 @@
             <input type="radio" ng-model="model.choice" value="local"> Local file: <file-reader model="local"></file-reader>
           </label>
         </div>
-
+        <p>Or manually input data:</p>
+        <div style="margin-left: 2rem;">
+          <label>
+            <input type="radio" ng-model="model.choice" value="manual"> Manual input 
+          </label>
+        </div>
         <div style="margin:25px 0 0 0;">
           <ul class="button-group">
             <li><a class="button small secondary" ng-click="chooseProblemModal.close()">Cancel</a></li>

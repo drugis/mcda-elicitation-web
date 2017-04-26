@@ -53,8 +53,8 @@ define(function(require) {
   ];
 
   var app = angular.module('elicit', dependencies);
-  app.run(['$rootScope', '$window', '$http', '$cookies',
-    function($rootScope, $window, $http, $cookies) {
+  app.run(['$rootScope',
+    function($rootScope) {
       $rootScope.$safeApply = function($scope, fn) {
         var phase = $scope.$root.$$phase;
         if (phase === '$apply' || phase === '$digest') {
@@ -91,16 +91,26 @@ define(function(require) {
     MCDARouteProvider.buildRoutes($stateProvider, 'workspace', baseTemplatePath);
 
     // Default route
-    $stateProvider.state('choose-problem', {
-      url: '/choose-problem',
-      templateUrl: baseTemplatePath + 'chooseProblem.html',
-      controller: 'ChooseProblemController'
-    });
-
+    $stateProvider
+      .state('choose-problem', {
+        url: '/choose-problem',
+        templateUrl: baseTemplatePath + 'chooseProblem.html',
+        controller: 'ChooseProblemController'
+      })
+      .state('manualInputStep1', {
+        url: '/manual-input-step-1',
+        templateUrl: mcdaRootPath + 'js/manualInput/manualInputStep1.html',
+        controller: 'ManualInputController'
+      })
+      .state('manualInputStep2', {
+        url: '/manual-input-step-2',
+        templateUrl: mcdaRootPath + 'js/manualInput/manualInputStep2.html',
+        controller: 'ManualInputController'
+      });
     $urlRouterProvider.otherwise('/choose-problem');
   });
 
-  app.run(function($rootScope, $window) {
+  app.run(function($rootScope) {
     $rootScope.$safeApply = function($scope, fn) {
       var phase = $scope.$root.$$phase;
       if (phase === '$apply' || phase === '$digest') {

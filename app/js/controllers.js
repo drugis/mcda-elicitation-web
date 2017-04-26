@@ -13,5 +13,7 @@ define(function(require) {
     .controller('OrdinalSwingController', require('mcda/controllers/ordinalSwing'))
     .controller('IntervalSwingController', require('mcda/controllers/intervalSwing'))
     .controller('ExactSwingController', require('mcda/controllers/exactSwing'))
-    .controller('ResultsController', require('mcda/controllers/results'));
+    .controller('ResultsController', require('mcda/controllers/results'))
+    .controller('ManualInputController', require('mcda/manualInput/manualInputController'))
+    .controller('AddCriterionController', require('mcda/manualInput/addCriterionController'));
 });

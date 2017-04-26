@@ -1,0 +1,59 @@
+<div>
+  <form ng-submit="addCriterion(criterion)">
+    <div class="row">
+      <div class="columns large-6">
+        <h2>Add criterion</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns large-6">
+        <label>
+          Name
+        </label>
+        <input type="text" ng-model="criterion.name">
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns large-6">
+        <label>Direction</label>
+        <label>
+          <input type="radio" ng-model="criterion.direction" value="Lower is better"> Lower is better
+        </label>
+        <label>
+          <input type="radio" ng-model="criterion.direction" value="Higher is better"> Higher is better
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns large-6">
+        <label>Favorability</label>
+        <label>
+          <input type="checkbox" ng-model="criterion.isFavorable"> Is favorable?
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns large-6">
+        <label>Unit of measurement (optional)</label>
+        <input type="text" ng-model="criterion.unitOfMeasurement">
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns large-6">
+        <label>Description (optional)</label>
+        <input type="text" ng-model="criterion.description">
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns large-6">
+        <button ng-disabled="isCreationBlocked(criterion)" type="submit">Add{{isCreationBlocked(criterion) ? '*':''}}</button>
+        <button type="button" ng-click="cancel()">Cancel</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns large-6" ng-if="isCreationBlocked(criterion)">
+        <em>*{{blockedReason}}}</em>
+      </div>
+    </div>
+  </form>
+</div>
