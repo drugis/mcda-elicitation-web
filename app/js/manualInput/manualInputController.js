@@ -1,16 +1,33 @@
 'use strict';
-define([], function() {
-  var dependencies = ['$scope', '$modal'];
-  var ManualInputStep1Controller = function($scope, $modal) {
+define(['lodash'], function(_) {
+  var dependencies = ['$scope', '$modal', '$state', 'ManualInputService'];
+  var ManualInputController = function($scope, $modal, $state, ManualInputService) {
 
     $scope.openCriterionModal = openCriterionModal;
+    $scope.addTreatment = addTreatment;
+    $scope.isDuplicateName = isDuplicateName;
+    $scope.criteria = $scope.criteria ? $scope.criteria : [];
+    $scope.treatments = [];
+    $scope.treatmentName = undefined;
+    $scope.goToStep2 = goToStep2;
 
-    $scope.criteria = [];
+    function addTreatment(name) {
+      $scope.treatments.push({
+        name: name
+      });
+      $scope.treatmentName = undefined;
+    }
+
+    function isDuplicateName(name) {
+      return _.find($scope.treatments, ['name', name]);
+
+    }
 
     function openCriterionModal() {
       $modal.open({
         templateUrl: '/app/js/manualInput/addCriterion.html',
-        controller: 'AddCriterionController', resolve: {
+        controller: 'AddCriterionController',
+        resolve: {
           criteria: function() {
             return $scope.criteria;
           },
@@ -23,6 +40,14 @@ define([], function() {
       });
     }
 
+    function goToStep2() {
+      ManualInputService.saveStep1({
+        criteria: $scope.criteria,
+        treatments: $scope.treatments,
+        title: $scope.title
+      });
+      $state.go('manualInputStep2', $scope);
+    }
   };
-  return dependencies.concat(ManualInputStep1Controller);
+  return dependencies.concat(ManualInputController);
 });

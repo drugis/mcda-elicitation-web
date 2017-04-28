@@ -46,13 +46,13 @@
     </div>
     <div class="row">
       <div class="columns large-6">
-        <button ng-disabled="isCreationBlocked(criterion)" type="submit">Add{{isCreationBlocked(criterion) ? '*':''}}</button>
+        <button ng-disabled="isCreationBlocked(criterion)" type="submit">Add</button>
         <button type="button" ng-click="cancel()">Cancel</button>
       </div>
     </div>
     <div class="row">
-      <div class="columns large-6" ng-if="isCreationBlocked(criterion)">
-        <em>*{{blockedReason}}}</em>
+      <div class="columns large-6" ng-if="isCreationBlocked(criterion)" style="color:red;">
+        <em>{{blockedReason}}</em>
       </div>
     </div>
   </form>
