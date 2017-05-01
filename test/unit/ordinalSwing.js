@@ -1,10 +1,10 @@
+'use strict';
 define(['angular-mocks',
     'mcda/controllers',
     'mcda/services/taskDependencies',
-    'mcda/services/partialValueFunction',
-    'mcda/services/pataviService'
+    'mcda/services/partialValueFunction'
   ],
-  function(controllers, TaskDependencies) {
+  function() {
     var state;
 
     describe("OrdinalSwingHandler", function() {

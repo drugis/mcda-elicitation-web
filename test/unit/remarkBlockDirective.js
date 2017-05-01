@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'angular-mocks', 'mcda/directives'],
   function(angular) {
     var element, scope,
