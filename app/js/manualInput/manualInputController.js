@@ -1,26 +1,32 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modal', '$state', 'ManualInputService'];
-  var ManualInputController = function($scope, $modal, $state, ManualInputService) {
-
+  var dependencies = ['$scope', '$modal', '$state', 'ManualInputService', 'WorkspaceResource'];
+  var ManualInputController = function($scope, $modal, $state, ManualInputService, WorkspaceResource) {
+    // functions
     $scope.openCriterionModal = openCriterionModal;
     $scope.addTreatment = addTreatment;
     $scope.isDuplicateName = isDuplicateName;
+    $scope.goToStep1 = goToStep1;
+    $scope.goToStep2 = goToStep2;
+    $scope.createProblem = createProblem;
+
+    // vars
     $scope.criteria = $scope.criteria ? $scope.criteria : [];
     $scope.treatments = [];
-    $scope.treatmentName = undefined;
-    $scope.goToStep2 = goToStep2;
+    $scope.state = {
+      step: 'step1',
+      treatmentName: ''
+    };
 
     function addTreatment(name) {
       $scope.treatments.push({
         name: name
       });
-      $scope.treatmentName = undefined;
+      $scope.state.treatmentName = '';
     }
 
     function isDuplicateName(name) {
       return _.find($scope.treatments, ['name', name]);
-
     }
 
     function openCriterionModal() {
@@ -40,13 +46,32 @@ define(['lodash'], function(_) {
       });
     }
 
+    function goToStep1() {
+      $scope.state.step = 'step1';
+    }
+
     function goToStep2() {
-      ManualInputService.saveStep1({
-        criteria: $scope.criteria,
-        treatments: $scope.treatments,
-        title: $scope.title
+      $scope.state.step = 'step2';
+      var inputData = {};
+      _.forEach($scope.criteria, function(criterion) {
+        inputData[criterion.name] = {};
+        _.forEach($scope.treatments, function(treatment) {
+          inputData[criterion.name][treatment.name] = 0;
+        });
       });
-      $state.go('manualInputStep2', $scope);
+      $scope.inputData = inputData;
+    }
+
+    function createProblem() {
+      var problem = ManualInputService.createProblem($scope.criteria, $scope.treatments, $scope.state.title, $scope.state.description, $scope.inputData);
+      // post problem to mcda
+      WorkspaceResource.create(problem).$promise.then(function(workspace) {
+        $state.go('overview', {
+          workspaceId: workspace.id,
+          id: workspace.defaultScenarioId
+        });
+      });
+      return problem;
     }
   };
   return dependencies.concat(ManualInputController);

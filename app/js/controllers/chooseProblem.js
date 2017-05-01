@@ -1,7 +1,7 @@
 'use strict';
 define(function(require) {
-  var angular = require("angular");
-  var _ = require("underscore");
+  var angular = require('angular');
+  var _ = require('underscore');
 
   return function($scope, $state, $resource, WorkspaceResource) {
     var examplesResource = $resource('examples/:url', {
@@ -21,7 +21,7 @@ define(function(require) {
           });
         });
       } else if (choice === 'manual') {
-        $state.go('manualInputStep1');
+        $state.go('manualInput');
       } else {
         var example = {
           url: choice

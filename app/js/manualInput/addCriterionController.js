@@ -5,7 +5,6 @@ define(['lodash'], function(_) {
     // vars
     $scope.blockedReason = '';
     $scope.criterion = {
-      direction: 'Lower is better',
       isFavorable: false
     };
     $scope.isAddingCriterion = false;

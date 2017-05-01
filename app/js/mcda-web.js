@@ -23,6 +23,7 @@ define(function(require) {
   require('mcda/services/partialValueFunction');
   require('mcda/services/util');
   require('mcda/services/scaleRangeService');
+  require('mcda/manualInput/manualInputService');
   require('mcda/controllers');
   require('mcda/directives');
   require('mcda/navbar/navbar');
@@ -48,6 +49,7 @@ define(function(require) {
     'elicit.routeFactory',
     'elicit.pvfService',
     'elicit.navbar',
+    'manualInput.manualInputService',
     'ngCookies',
     'errorReporting'
   ];
@@ -97,14 +99,9 @@ define(function(require) {
         templateUrl: baseTemplatePath + 'chooseProblem.html',
         controller: 'ChooseProblemController'
       })
-      .state('manualInputStep1', {
-        url: '/manual-input-step-1',
-        templateUrl: mcdaRootPath + 'js/manualInput/manualInputStep1.html',
-        controller: 'ManualInputController'
-      })
-      .state('manualInputStep2', {
-        url: '/manual-input-step-2',
-        templateUrl: mcdaRootPath + 'js/manualInput/manualInputStep2.html',
+      .state('manualInput', {
+        url: '/manual-input',
+        templateUrl: mcdaRootPath + 'js/manualInput/manualInput.html',
         controller: 'ManualInputController'
       });
     $urlRouterProvider.otherwise('/choose-problem');
