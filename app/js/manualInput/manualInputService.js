@@ -13,24 +13,14 @@ define(function(require) {
           title: 'Benefit-risk balance',
           children: [{
             title: 'Favourable effects',
-            criteria: _.reduce(criteria, function(accum, criterion) {
-              if (criterion.isFavorable) {
-                accum.push(criterion.name);
-                return accum;
-              } else {
-                return accum;
-              }
-            }, [])
+            criteria: _.map(_.filter(criteria, ['isFavorable',true]), function(criterion){
+              return criterion.name;
+            })
           }, {
             title: 'Unfavourable effects',
-            criteria: _.reduce(criteria, function(accum, criterion) {
-              if (!criterion.isFavorable) {
-                accum.push(criterion.name);
-                return accum;
-              } else {
-                return accum;
-              }
-            }, [])
+            criteria: _.map(_.filter(criteria, ['isFavorable',false]), function(criterion){
+              return criterion.name;
+            })
           }]
         },
         criteria: getCriteriaRight(criteria, getMinMax(performanceTable)),
