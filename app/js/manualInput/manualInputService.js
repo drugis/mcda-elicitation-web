@@ -1,7 +1,8 @@
 'use strict';
-define(['lodash'], function(_) {
+define(function(require) {
   var dependencies = [];
   var angular = require('angular');
+  var _ = require('lodash');
   var ManualInputService = function() {
     // Exposed functions
     function createProblem(criteria, treatments, title, description, performanceTable) {
@@ -14,9 +15,11 @@ define(['lodash'], function(_) {
             title: 'Favourable effects',
             criteria: _.reduce(criteria, function(accum, criterion) {
               if (criterion.isFavorable) {
-                 accum.push(criterion.name);
-                 return accum;
-              } else{return accum;}
+                accum.push(criterion.name);
+                return accum;
+              } else {
+                return accum;
+              }
             }, [])
           }, {
             title: 'Unfavourable effects',
@@ -24,7 +27,9 @@ define(['lodash'], function(_) {
               if (!criterion.isFavorable) {
                 accum.push(criterion.name);
                 return accum;
-              } else{return accum;}
+              } else {
+                return accum;
+              }
             }, [])
           }]
         },
@@ -32,8 +37,18 @@ define(['lodash'], function(_) {
         alternatives: getAlternativesRight(treatments),
         performanceTable: getPerformanceTableRight(performanceTable, criteria, treatments)
       };
-
       return problem;
+    }
+
+    function preparePerformanceTable(criteria, treatments) {
+      var inputData = {};
+      _.forEach(criteria, function(criterion) {
+        inputData[criterion.name] = {};
+        _.forEach(treatments, function(treatment) {
+          inputData[criterion.name][treatment.name] = 0;
+        });
+      });
+      return inputData;
     }
 
     // Private functions
@@ -95,9 +110,10 @@ define(['lodash'], function(_) {
       return [minimum, maximum];
     }
     return {
-      createProblem: createProblem
+      createProblem: createProblem,
+      preparePerformanceTable: preparePerformanceTable
     };
   };
 
-  return angular.module('manualInput.manualInputService', dependencies).factory('ManualInputService', ManualInputService);
+  return angular.module('elicit.manualInputService', dependencies).factory('ManualInputService', ManualInputService);
 });

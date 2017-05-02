@@ -1,36 +1,67 @@
 'use strict';
-define(['angular',
-    'angular-mocks',
-    'mcda/manualInput/manualInputService'
-  ],
-  function(angular,angularMocks, ManualInputService) {
-    fdescribe('The manualInputService', function() {
-      var manualInputService;
+define(['angular-mocks', 'mcda/manualInput/manualInputService'], function() {
+  describe('The manualInputService', function() {
+    var manualInputService;
+    beforeEach(module('elicit.manualInputService'));
+    beforeEach(inject(function(ManualInputService) {
+      manualInputService = ManualInputService;
+    }));
 
-      beforeEach(function() {
-        module('manualInput.manualInputService');
-          manualInputService = ManualInputService;
-      });
-
-      describe('createProblem', function() {
-        it('should create a problem, ready to go to the workspace', function() {
-          var title = 'title';
-          var description = 'A random description of a random problem';
-          var treatments = {
+    describe('createProblem', function() {
+      it('should create a problem, ready to go to the workspace', function() {
+        var title = 'title';
+        var description = 'A random description of a random problem';
+        var treatments = {
+          treatment1: {
+            name: 'treatment1'
+          },
+          treatment2: {
+            name: 'treatment2'
+          }
+        };
+        var criteria = [{
+          name: 'criterion title',
+          description: 'some crit description',
+          unitOfMeasurement: 'particles',
+          isFavorable: true
+        }];
+        var performanceTable = {
+          'criterion title': {
+            'treatment1': 10,
+            'treatment2': 5
+          }
+        };
+        var result = manualInputService.createProblem(criteria, treatments, title, description, performanceTable);
+        var expectedResult = {
+          title: title,
+          description: description,
+          valueTree: {
+            title: 'Benefit-risk balance',
+            children: [{
+              title: 'Favourable effects',
+              criteria: ['criterion title']
+            }, {
+              title: 'Unfavourable effects',
+              criteria: []
+            }]
+          },
+          criteria: {
+            'criterion title': {
+              title: 'criterion title',
+              description: 'some crit description',
+              unitOfMeasurement: 'particles',
+              scale: [5, 10]
+            }
+          },
+          alternatives: {
             treatment1: {
-              name: 'treatment1'
+              title: 'treatment1'
             },
             treatment2: {
-              name: 'treatment2'
+              title: 'treatment2'
             }
-          };
-          var criteria = {
-            title: 'criterion title',
-            description: 'some crit description',
-            unitOfMeasurement: 'particles',
-            scale: [0, 1]
-          };
-          var performanceTable = [{
+          },
+          performanceTable: [{
             alternative: 'treatment1',
             criterion: 'criterion title',
             performance: {
@@ -44,11 +75,41 @@ define(['angular',
               type: 'exact',
               value: 5
             }
-          }];
-          var result = manualInputService.createProblem(criteria, treatments, title, description, performanceTable);
-          var expectedResult = {};
-          expect(result).toEqual(expectedResult);
-        });
+          }]
+        };
+        expect(result).toEqual(expectedResult);
       });
     });
+
+    describe('preparePerformanceTable', function() {
+      it('should prepare a zero initialized table', function() {
+        var treatments = {
+          treatment1: {
+            name: 'treatment1'
+          },
+          treatment2: {
+            name: 'treatment2'
+          }
+        };
+        var criteria = [{
+          name: 'criterion 1 title'
+        }, {
+          name: 'criterion 2 title'
+        }];
+        var result = manualInputService.preparePerformanceTable(criteria, treatments);
+        var expectedResult = {
+          'criterion 1 title': {
+            treatment1: 0,
+            treatment2: 0
+          },
+          'criterion 2 title': {
+            treatment1: 0,
+            treatment2: 0
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
   });
+});

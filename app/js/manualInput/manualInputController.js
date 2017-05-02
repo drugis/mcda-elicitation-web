@@ -11,7 +11,7 @@ define(['lodash'], function(_) {
     $scope.createProblem = createProblem;
 
     // vars
-    $scope.criteria = $scope.criteria ? $scope.criteria : [];
+    $scope.criteria = [];
     $scope.treatments = [];
     $scope.state = {
       step: 'step1',
@@ -52,19 +52,11 @@ define(['lodash'], function(_) {
 
     function goToStep2() {
       $scope.state.step = 'step2';
-      var inputData = {};
-      _.forEach($scope.criteria, function(criterion) {
-        inputData[criterion.name] = {};
-        _.forEach($scope.treatments, function(treatment) {
-          inputData[criterion.name][treatment.name] = 0;
-        });
-      });
-      $scope.inputData = inputData;
+      $scope.inputData = ManualInputService.preparePerformanceTable($scope.criteria, $scope.treatments);
     }
 
     function createProblem() {
       var problem = ManualInputService.createProblem($scope.criteria, $scope.treatments, $scope.state.title, $scope.state.description, $scope.inputData);
-      // post problem to mcda
       WorkspaceResource.create(problem).$promise.then(function(workspace) {
         $state.go('overview', {
           workspaceId: workspace.id,

@@ -49,7 +49,7 @@ define(function(require) {
     'elicit.routeFactory',
     'elicit.pvfService',
     'elicit.navbar',
-    'manualInput.manualInputService',
+    'elicit.manualInputService',
     'ngCookies',
     'errorReporting'
   ];
