@@ -2,32 +2,32 @@
   <div class="row">
     <div class="columns large-12">
       <h3>Create workspace manually — step 1 of 2</h3>
-      <h4>Define criteria</h4>
+      <h4>Define criteria and treatments</h4>
     </div>
   </div>
   <div class="row">
     <div class="columns large-6">
       <label>Workspace title
-        <input type="text" ng-model="state.title">
+        <input type="text" ng-model="state.title" width="100%">
       </label>
     </div>
-  </div>  
+  </div>
   <div class="row">
     <div class="columns large-6">
       <label>Workspace description
-        <input type="text" ng-model="state.description">
+        <input type="text" ng-model="state.description" width="100%">
       </label>
     </div>
   </div>
   <div class="row">
     <div class="columns large-12">
-      <div class="columns large-4">
-        <h4>Criteria</h4>
-      </div>
-      <div class="columns large-4 end">
-        <button type="button" class="tiny" ng-click="openCriterionModal()">Add Criterion</button>
-      </div>
-      <table>
+      <h4>Criteria</h4>
+      <button type="button" class="tiny" ng-click="openCriterionModal()">Add Criterion</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns large-6">
+      <table width="100%">
         <thead>
           <tr>
             <th>Name</th>
@@ -50,33 +50,33 @@
           </tr>
         </tbody>
       </table>
+
     </div>
   </div>
+
   <div class="row">
     <div class="columns large-12">
-      <div class="columns large-4">
-        <h4>Treatments</h4>
-      </div>
+      <h4>Treatments</h4>
     </div>
   </div>
   <div class="row">
     <div class="columns large-4">
       <label>
-        Treament name:
-        <input class="text" ng-model=state.treatmentName>
+        Treatment name:
+        <input class="text" ng-model="state.treatmentName"  onkeyup="if(event.keyCode===13) document.getElementById('treatmentButton').click()">
       </label>
     </div>
     <div class="columns large-4 end">
-      <button ng-disabled="!state.treatmentName || isDuplicateName(state.treatmentName)" type="button"
-        class="tiny" ng-click="addTreatment(state.treatmentName)">Add Treatment</button>
+      <button ng-disabled="!state.treatmentName || isDuplicateName(state.treatmentName)"
+        type="button" class="tiny" ng-click="addTreatment(state.treatmentName)" id="treatmentButton">Add Treatment</button>
     </div>
   </div>
   <div class="row">
-    <div class="columns large-8">
-      <table>
+    <div class="columns large-6">
+      <table width="100%">
         <thead>
           <tr>
-            <th width="450">Treatment name</th>
+            <th>Treatment name</th>
           </tr>
         </thead>
         <tbody>
@@ -94,20 +94,28 @@
   </div>
   <div class="row">
     <div class="columns large-12">
-      <button ng-disabled="!state.title || !criteria.length || !treatments.length" type="button"
-        ng-click="goToStep2()">
+      <button ng-disabled="!state.title || criteria.length < 2|| treatments.length < 2"
+        type="button" ng-click="goToStep2()">
         Enter data
       </button>
     </div>
+    <div class="columns large-12" ng-if="!state.title">
+      <em>No title entered</em>
+    </div>
+    <div class="columns large-12" ng-if="criteria.length < 2">
+      <em>Not enough criteria, define at least two</em>
+    </div>
+    <div class="columns large-12" ng-if="treatments.length < 2">
+      <em>Not enough treatments, define at least two</em>
+    </div>
   </div>
 </div>
-
 
 <div ng-if="state.step==='step2'">
   <div class="row">
     <div class="columns large-12">
       <h3>Create workspace manually — step 2 of 2</h3>
-      <h4>Enter data</h4>
+      <h4>Enter data in effects table</h4>
     </div>
   </div>
   <div class="row">
@@ -118,13 +126,15 @@
       <thead>
         <tr>
           <th></th>
-          <th ng-repeat="treatment in treatments">{{treatment.name}}</th>
+          <th ng-repeat="treatment in treatments" style="min-width:80px">{{treatment.name}}</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="criterion in criteria">
           <td>{{criterion.name}}</td>
-          <td ng-repeat="treatment in treatments"><input type="number" ng-model="inputData[criterion.name][treatment.name]"></td>
+          <td ng-repeat="treatment in treatments">
+            <input type="number" ng-model="inputData[criterion.name][treatment.name]">
+          </td>
         </tr>
       </tbody>
     </table>
@@ -137,5 +147,4 @@
       <button type="button" ng-click="goToStep1()">Back</button>
     </div>
   </div>
-
 </div>
