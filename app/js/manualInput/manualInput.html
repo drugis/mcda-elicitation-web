@@ -100,13 +100,13 @@
       </button>
     </div>
     <div class="columns large-12" ng-if="!state.title">
-      <em>No title entered</em>
+      <em>Missing title</em>
     </div>
     <div class="columns large-12" ng-if="criteria.length < 2">
-      <em>Not enough criteria, define at least two</em>
+      <em>Two criteria required</em>
     </div>
     <div class="columns large-12" ng-if="treatments.length < 2">
-      <em>Not enough treatments, define at least two</em>
+      <em>Two treatments required</em>
     </div>
   </div>
 </div>
@@ -121,27 +121,28 @@
   <div class="row">
     <div class="columns large-12">
       <h4>{{state.title}}</h4>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th ng-repeat="treatment in treatments" style="min-width:80px">{{treatment.name}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="criterion in criteria">
+            <td>{{criterion.name}}</td>
+            <td class="input-cell" ng-repeat="treatment in treatments">
+              <input type="number" ng-model="inputData[criterion.name][treatment.name]" ng-change="checkInputData()"
+                ng-model-options="{ debounce: 300 }">
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th></th>
-          <th ng-repeat="treatment in treatments" style="min-width:80px">{{treatment.name}}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="criterion in criteria">
-          <td>{{criterion.name}}</td>
-          <td ng-repeat="treatment in treatments">
-            <input type="number" ng-model="inputData[criterion.name][treatment.name]">
-          </td>
-        </tr>
-      </tbody>
-    </table>
   </div>
   <div class="row">
     <div class="columns large-12">
-      <button type="button" ng-click="createProblem()">
+      <button ng-disabled="!state.isInputDataValid" type="button" ng-click="createProblem()">
         Done
       </button>
       <button type="button" ng-click="goToStep1()">Back</button>

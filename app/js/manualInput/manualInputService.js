@@ -13,19 +13,15 @@ define(function(require) {
           title: 'Benefit-risk balance',
           children: [{
             title: 'Favourable effects',
-            criteria: _.map(_.filter(criteria, ['isFavorable',true]), function(criterion){
-              return criterion.name;
-            })
+            criteria: _.map(_.filter(criteria, 'isFavorable'), 'name')
           }, {
             title: 'Unfavourable effects',
-            criteria: _.map(_.filter(criteria, ['isFavorable',false]), function(criterion){
-              return criterion.name;
-            })
+            criteria: _.map(_.reject(criteria, 'isFavorable'), 'name')
           }]
         },
-        criteria: getCriteriaRight(criteria, getMinMax(performanceTable)),
-        alternatives: getAlternativesRight(treatments),
-        performanceTable: getPerformanceTableRight(performanceTable, criteria, treatments)
+        criteria: buildCriteria(criteria, performanceTable),
+        alternatives: buildAlternatives(treatments),
+        performanceTable: buildPerformanceTable(performanceTable, criteria, treatments)
       };
       return problem;
     }
@@ -42,21 +38,19 @@ define(function(require) {
     }
 
     // Private functions
-    function getCriteriaRight(criteria, minMax) {
-      var newCriteria = {};
-      _.forEach(criteria, function(criterion) {
-        var newCriterion = {
+    function buildCriteria(criteria, performanceTable) {
+      var newCriteria = _.map(criteria, function(criterion) {
+        return {
           title: criterion.name,
           description: criterion.description,
           unitOfMeasurement: criterion.unitOfMeasurement,
-          scale: minMax
+          scale: getMinMax(criterion, performanceTable)
         };
-        newCriteria[newCriterion.title] = newCriterion;
       });
-      return newCriteria;
+      return _.keyBy(newCriteria, 'title');
     }
 
-    function getAlternativesRight(treatments) {
+    function buildAlternatives(treatments) {
       var alternatives = {};
       _.forEach(treatments, function(treatment) {
         alternatives[treatment.name] = {
@@ -66,7 +60,7 @@ define(function(require) {
       return alternatives;
     }
 
-    function getPerformanceTableRight(performanceTable, criteria, treatments) {
+    function buildPerformanceTable(performanceTable, criteria, treatments) {
       var newPerformanceTable = [];
       _.forEach(criteria, function(criterion) {
         _.forEach(treatments, function(treatment) {
@@ -83,22 +77,21 @@ define(function(require) {
       return newPerformanceTable;
     }
 
-    function getMinMax(performanceTable) {
+    function getMinMax(criterion, performanceTable) {
       var minimum = Infinity;
       var maximum = -Infinity;
-      _.forEach(performanceTable, function(row) {
-        _.forEach(row, function(cell) {
-          if (cell < minimum) {
-            minimum = cell;
-          }
-          if (cell > maximum) {
-            maximum = cell;
-          }
 
-        });
+      _.forEach(performanceTable[criterion.name], function(cell) {
+        if (cell < minimum) {
+          minimum = cell;
+        }
+        if (cell > maximum) {
+          maximum = cell;
+        }
       });
       return [minimum, maximum];
     }
+
     return {
       createProblem: createProblem,
       preparePerformanceTable: preparePerformanceTable

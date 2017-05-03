@@ -20,15 +20,24 @@ define(['angular-mocks', 'mcda/manualInput/manualInputService'], function() {
           }
         };
         var criteria = [{
-          name: 'criterion title',
+          name: 'favorable criterion',
           description: 'some crit description',
           unitOfMeasurement: 'particles',
           isFavorable: true
+        }, {
+          name: 'unfavorable criterion',
+          description: 'some crit description',
+          unitOfMeasurement: 'particles',
+          isFavorable: false
         }];
         var performanceTable = {
-          'criterion title': {
+          'favorable criterion': {
             'treatment1': 10,
             'treatment2': 5
+          },
+          'unfavorable criterion': {
+            'treatment1': 20,
+            'treatment2': 30
           }
         };
         var result = manualInputService.createProblem(criteria, treatments, title, description, performanceTable);
@@ -39,18 +48,24 @@ define(['angular-mocks', 'mcda/manualInput/manualInputService'], function() {
             title: 'Benefit-risk balance',
             children: [{
               title: 'Favourable effects',
-              criteria: ['criterion title']
+              criteria: ['favorable criterion']
             }, {
               title: 'Unfavourable effects',
-              criteria: []
+              criteria: ['unfavorable criterion']
             }]
           },
           criteria: {
-            'criterion title': {
-              title: 'criterion title',
+            'favorable criterion': {
+              title: 'favorable criterion',
               description: 'some crit description',
               unitOfMeasurement: 'particles',
               scale: [5, 10]
+            },
+            'unfavorable criterion': {
+              title: 'unfavorable criterion',
+              description: 'some crit description',
+              unitOfMeasurement: 'particles',
+              scale: [20, 30]
             }
           },
           alternatives: {
@@ -63,17 +78,31 @@ define(['angular-mocks', 'mcda/manualInput/manualInputService'], function() {
           },
           performanceTable: [{
             alternative: 'treatment1',
-            criterion: 'criterion title',
+            criterion: 'favorable criterion',
             performance: {
               type: 'exact',
               value: 10
             }
           }, {
             alternative: 'treatment2',
-            criterion: 'criterion title',
+            criterion: 'favorable criterion',
             performance: {
               type: 'exact',
               value: 5
+            }
+          }, {
+            alternative: 'treatment1',
+            criterion: 'unfavorable criterion',
+            performance: {
+              type: 'exact',
+              value: 20
+            }
+          }, {
+            alternative: 'treatment2',
+            criterion: 'unfavorable criterion',
+            performance: {
+              type: 'exact',
+              value: 30
             }
           }]
         };
