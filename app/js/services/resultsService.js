@@ -9,7 +9,7 @@ define(function(require) {
 
     function run($scope, inState) {
       var state = angular.copy(inState);
-      var data = _.extend(state.problem, {
+      var data = _.merge({}, state.problem, {
         'preferences': state.prefs,
         'method': 'smaa'
       });
@@ -37,18 +37,18 @@ define(function(require) {
       $scope.progress = 0;
 
       $http.post('/patavi', data).then(function(result) {
-        var uri = result.headers('Location');
-        if (result.status === 201 && uri) {
-          return uri;
-        }
-      }, function(error) {
-        console.error(error);
-        $scope.$root.$broadcast('error', {
-          type: 'BACK_END_ERROR',
-          code: error.code || undefined,
-          message: 'unable to submit the problem to the server'
-        });
-      })
+          var uri = result.headers('Location');
+          if (result.status === 201 && uri) {
+            return uri;
+          }
+        }, function(error) {
+          console.error(error);
+          $scope.$root.$broadcast('error', {
+            type: 'BACK_END_ERROR',
+            code: error.code || undefined,
+            message: 'unable to submit the problem to the server'
+          });
+        })
         .then(PataviService.listen)
         .then(successHandler, pataviErrorHandler, updateHandler);
 
@@ -120,8 +120,10 @@ define(function(require) {
     });
 
     var getResults = function(scope, state) {
-      var next = _.extend(state, {
-        selectedAlternative: _.keys(state.problem.alternatives)[0],
+      var next = _.merge({}, {
+        problem: scope.workspace.problem
+      }, state, {
+        selectedAlternative: _.keys(scope.workspace.problem.alternatives)[0],
         selectedRank: '0',
         ranksByAlternative: getRanksByAlternative,
         alternativesByRank: getAlterativesByRank,

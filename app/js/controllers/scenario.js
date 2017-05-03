@@ -1,8 +1,6 @@
 'use strict';
 define(function(require) {
-  var angular = require('angular');
   var _ = require('underscore');
-  var Config = require('mcda/config');
 
   return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, scenarios, ScenarioResource, WorkspaceService) {
 
@@ -35,7 +33,7 @@ define(function(require) {
       $scope.resultsAccessible = TaskDependencies.isAccessible($scope.tasks.results, scenario.state);
     });
 
-    $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+    $scope.$on('$stateChangeStart', function(event, toState) {
       var task = getTask(toState.name);
       if (task && task.activeTab) {
         $scope.activeTab = task.activeTab;
@@ -81,20 +79,33 @@ define(function(require) {
     }
 
     $scope.forkScenario = function() {
-      var newScenario = {
-        'title': randomId(3, 'Scenario '),
-        'state': $scope.__scenario.state
-      };
-      ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
-        redirect(savedScenario.id);
+      ScenarioResource.get($stateParams, function(scenario) { // reload because child scopes may have changed scenario
+        var newScenario = {
+          'title': randomId(3, 'Scenario '),
+          'state': scenario.state
+        };
+        ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
+          redirect(savedScenario.id);
+        });
       });
     };
 
     $scope.newScenario = function() {
+
+      function reduceProblem(problem) {
+        var criteria = _.reduce(problem.criteria, function(accum, criterion, key) {
+          accum[key] = _.pick(criterion, ['scale', 'pvf']);
+          return accum;
+        }, {});
+        return {
+          criteria: criteria,
+          prefs: problem.prefs
+        };
+      }
       var newScenario = {
         'title': randomId(3, 'Scenario '),
         'state': {
-          'problem': $scope.workspace.problem
+          'problem': reduceProblem($scope.workspace.problem)
         }
       };
       ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {

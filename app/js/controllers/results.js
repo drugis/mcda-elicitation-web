@@ -51,7 +51,7 @@ define(function(require) {
 
     var initialize = function(state) {
       var next = _.extend(state, {
-        selectedAlternative: _.keys(state.problem.alternatives)[0],
+        selectedAlternative: _.keys($scope.workspace.problem.alternatives)[0],
         selectedRank: '0',
         ranksByAlternative: getRanksByAlternative,
         alternativesByRank: getAlterativesByRank,
