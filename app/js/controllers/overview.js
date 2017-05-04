@@ -4,7 +4,7 @@ define(function() {
   var lodash = require('lodash');
 
   return function($scope, $stateParams, RemarksResource, EffectsTableResource, EffectsTableService) {
-   var remarksCache;
+    var remarksCache;
     $scope.scales = $scope.workspace.$$scales.observed;
     $scope.valueTree = $scope.workspace.$$valueTree;
 
@@ -14,10 +14,10 @@ define(function() {
     $scope.remarks = {};
     $scope.alternativeInclusions = {};
 
-    lodash.map($scope.problem.alternatives, function(alternative, alternativeKey){
+    lodash.map($scope.problem.alternatives, function(alternative, alternativeKey) {
       $scope.alternativeInclusions[alternativeKey] = true;
     });
-    
+
     EffectsTableResource.query($stateParams, function(exclusions) {
       lodash.forEach(exclusions, function(exclusion) {
         $scope.alternativeInclusions[exclusion.alternativeId] = false;
@@ -27,14 +27,14 @@ define(function() {
     RemarksResource.get(_.omit($stateParams, 'id'), function(remarks) {
       if (remarks.remarks) {
         $scope.remarks = remarks;
-      remarksCache = lodash.cloneDeep(remarks);
       }
+      remarksCache = lodash.cloneDeep(remarks);
     });
 
     $scope.$watch('workspace.$$scales.observed', function(newValue) {
       $scope.scales = newValue;
     }, true);
-    
+
     $scope.isExact = function(criterion, alternative) {
       var perf = _.find($scope.problem.performanceTable, function(performance) {
         return performance.alternative === alternative && performance.criterion === criterion;
@@ -42,18 +42,20 @@ define(function() {
       return !!perf && perf.performance.type === 'exact';
     };
 
-    $scope.toggleVisibility = function(alternativeId){
-      EffectsTableResource.toggleExclusion($stateParams, {alternativeId: alternativeId});
-    };
-
-    $scope.saveRemarks = function() {
-        remarksCache = lodash.cloneDeep($scope.remarks);
-      RemarksResource.save(_.omit($stateParams, 'id'), $scope.remarks, function() {
+    $scope.toggleVisibility = function(alternativeId) {
+      EffectsTableResource.toggleExclusion($stateParams, {
+        alternativeId: alternativeId
       });
     };
 
-      $scope.remarks = lodash.cloneDeep(remarksCache);
+    $scope.saveRemarks = function() {
+      RemarksResource.save(_.omit($stateParams, 'id'), $scope.remarks, function() {
+        remarksCache = lodash.cloneDeep($scope.remarks);
+      });
+    };
+
     $scope.cancelRemarks = function() {
+      $scope.remarks = lodash.cloneDeep(remarksCache);
     };
   };
 });
