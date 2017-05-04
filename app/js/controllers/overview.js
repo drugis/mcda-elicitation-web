@@ -27,7 +27,7 @@ define(function() {
     RemarksResource.get(_.omit($stateParams, 'id'), function(remarks) {
       if (remarks.remarks) {
         $scope.remarks = remarks;
-      remarksCache = _.cloneDeep(remarks);
+      remarksCache = lodash.cloneDeep(remarks);
       }
     });
 
@@ -47,12 +47,12 @@ define(function() {
     };
 
     $scope.saveRemarks = function() {
-        remarksCache = _.cloneDeep($scope.remarks);
+        remarksCache = lodash.cloneDeep($scope.remarks);
       RemarksResource.save(_.omit($stateParams, 'id'), $scope.remarks, function() {
       });
     };
 
-      $scope.remarks = _.cloneDeep(remarksCache);
+      $scope.remarks = lodash.cloneDeep(remarksCache);
     $scope.cancelRemarks = function() {
     };
   };
