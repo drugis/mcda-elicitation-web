@@ -33,10 +33,22 @@ define(function(require) {
       return ScalesService.getObservedScales(scope, problem);
     }
 
+    function reduceProblem(problem) {
+      var criteria = _.reduce(problem.criteria, function(accum, criterion, key) {
+        accum[key] = _.pick(criterion, ['scale', 'pvf']);
+        return accum;
+      }, {});
+      return {
+        criteria: criteria,
+        prefs: problem.prefs
+      };
+    }
+
     return {
       getObservedScales: getObservedScales,
       buildTheoreticalScales: buildTheoreticalScales,
-      buildValueTree: buildValueTree
+      buildValueTree: buildValueTree,
+      reduceProblem: reduceProblem
     };
   };
 

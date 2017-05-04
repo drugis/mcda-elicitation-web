@@ -2,7 +2,8 @@
 define(function(require) {
   var _ = require('underscore');
 
-  return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, scenarios, ScenarioResource, WorkspaceService) {
+  return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, scenarios, 
+    ScenarioResource, WorkspaceService) {
 
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
@@ -92,20 +93,10 @@ define(function(require) {
 
     $scope.newScenario = function() {
 
-      function reduceProblem(problem) {
-        var criteria = _.reduce(problem.criteria, function(accum, criterion, key) {
-          accum[key] = _.pick(criterion, ['scale', 'pvf']);
-          return accum;
-        }, {});
-        return {
-          criteria: criteria,
-          prefs: problem.prefs
-        };
-      }
       var newScenario = {
         'title': randomId(3, 'Scenario '),
         'state': {
-          'problem': reduceProblem($scope.workspace.problem)
+          'problem': WorkspaceService.reduceProblem($scope.workspace.problem)
         }
       };
       ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
