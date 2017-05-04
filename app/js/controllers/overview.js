@@ -1,7 +1,7 @@
 'use strict';
 define(function() {
-  var _ = require('underscore');
-  var lodash = require('lodash');
+  var lodash = require(['lodash']);
+  var _ = require(['underscore']);
 
   return function($scope, $stateParams, RemarksResource, EffectsTableResource, EffectsTableService) {
     var remarksCache;
@@ -57,5 +57,6 @@ define(function() {
     $scope.cancelRemarks = function() {
       $scope.remarks = lodash.cloneDeep(remarksCache);
     };
+
   };
 });
