@@ -1,6 +1,8 @@
 'use strict';
 define(function() {
-  var _ = require('lodash');
+  var _ = require('underscore');
+  var lodash = require('lodash');
+
   return function($scope, $stateParams, RemarksResource, EffectsTableResource, EffectsTableService) {
    var remarksCache;
     $scope.scales = $scope.workspace.$$scales.observed;
@@ -12,12 +14,12 @@ define(function() {
     $scope.remarks = {};
     $scope.alternativeInclusions = {};
 
-    _.map($scope.problem.alternatives, function(alternative, alternativeKey){
+    lodash.map($scope.problem.alternatives, function(alternative, alternativeKey){
       $scope.alternativeInclusions[alternativeKey] = true;
     });
     
     EffectsTableResource.query($stateParams, function(exclusions) {
-      _.forEach(exclusions, function(exclusion) {
+      lodash.forEach(exclusions, function(exclusion) {
         $scope.alternativeInclusions[exclusion.alternativeId] = false;
       });
     });
