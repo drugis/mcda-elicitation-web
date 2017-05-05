@@ -74,7 +74,7 @@
     "Parox": {
       "title": "Paroxetine"
     },
-    "Sertr": {
+    "Sertra": {
       "title": "Sertraline"
     },
     "Venla": {
@@ -97,10 +97,10 @@
           "type": "dmnorm",
           "mu": {
             "Placebo": 0.00000,
-            "Fluoxetine": 0.4718129,
-            "Paroxetine": 0.7258847,
-            "Sertraline": 0.6715258,
-            "Venlafaxine": 0.8211993
+            "Fluox": 0.4718129,
+            "Parox": 0.7258847,
+            "Sertra": 0.6715258,
+            "Venla": 0.8211993
           },
           "cov": {
             "rownames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
@@ -131,10 +131,10 @@
           "type": "dmnorm",
           "mu": {
             "Placebo": 0.00000,
-            "Fluoxetine": 0.60820293,
-            "Paroxetine": 0.14088424,
-            "Sertraline": 0.93203685,
-            "Venlafaxine": 0.09601785
+            "Fluox": 0.60820293,
+            "Parox": 0.14088424,
+            "Sertra": 0.93203685,
+            "Venla": 0.09601785
           },
           "cov": {
             "rownames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
@@ -165,10 +165,10 @@
           "type": "dmnorm",
           "mu": {
             "Placebo": 0.00000,
-            "Fluoxetine": 0.1203208,
-            "Paroxetine": 0.6538699,
-            "Sertraline": -0.2203627,
-            "Venlafaxine": 1.1915229
+            "Fluox": 0.1203208,
+            "Parox": 0.6538699,
+            "Sertra": -0.2203627,
+            "Venla": 1.1915229
           },
           "cov": {
             "rownames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
@@ -199,10 +199,10 @@
           "type": "dmnorm",
           "mu": {
             "Placebo": 0.00000,
-            "Fluoxetine": 0.1964591,
-            "Paroxetine": 0.1263129,
-            "Sertraline": 0.2029933,
-            "Venlafaxine": -0.2254059
+            "Fluox": 0.1964591,
+            "Parox": 0.1263129,
+            "Sertra": 0.2029933,
+            "Venla": -0.2254059
           },
           "cov": {
             "rownames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
@@ -233,10 +233,10 @@
           "type": "dmnorm",
           "mu": {
             "Placebo": 0.00000,
-            "Fluoxetine": 0.7978386,
-            "Paroxetine": 0.7486351,
-            "Sertraline": 1.0663029,
-            "Venlafaxine": 0.9744811
+            "Fluox": 0.7978386,
+            "Parox": 0.7486351,
+            "Sertra": 1.0663029,
+            "Venla": 0.9744811
           },
           "cov": {
             "rownames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
@@ -267,10 +267,10 @@
           "type": "dmnorm",
           "mu": {
             "Placebo": 0.00000,
-            "Fluoxetine": 0.3951561,
-            "Paroxetine": 0.6442827,
-            "Sertraline": 0.6469638,
-            "Venlafaxine": 0.9771107
+            "Fluox": 0.3951561,
+            "Parox": 0.6442827,
+            "Sertra": 0.6469638,
+            "Venla": 0.9771107
           },
           "cov": {
             "rownames": ["Placebo", "Fluox", "Parox", "Sertra", "Venla"],
