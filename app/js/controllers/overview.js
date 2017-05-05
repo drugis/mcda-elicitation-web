@@ -1,5 +1,5 @@
 'use strict';
-define(function() {
+define(function(require) {
   var _ = require('lodash');
 
   return function($scope, $stateParams, RemarksResource, EffectsTableResource, EffectsTableService) {
