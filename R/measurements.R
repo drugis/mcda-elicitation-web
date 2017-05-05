@@ -45,7 +45,6 @@ sampler.exact <- function(perf, N) {
 }
 
 sampler.dt <- function(perf, N) {
-  print(perf)
   perf$parameters['mu'] + perf$parameters['stdErr'] * rt(N, perf$parameters['dof'])
 }
 
