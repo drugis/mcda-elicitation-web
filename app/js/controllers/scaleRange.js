@@ -1,7 +1,7 @@
 'use strict';
 define(function(require) {
   var angular = require("angular");
-  var _ = require("underscore");
+  var _ = require("lodash");
 
   return function($scope, $state, $stateParams, currentScenario, taskDefinition, intervalHull, ScaleRangeService) {
     var state = taskDefinition.clean(currentScenario.state);
@@ -25,7 +25,7 @@ define(function(require) {
     $scope.save = function(currentState) {
       var state = angular.copy(currentState);
       // Rewrite scale information
-      _.each(_.pairs(state.choice), function(choice) {
+      _.each(_.toPairs(state.choice), function(choice) {
         var pvf = state.problem.criteria[choice[0]].pvf;
         if (!pvf) {
           state.problem.criteria[choice[0]].pvf = {
@@ -46,7 +46,7 @@ define(function(require) {
     var initialize = function(state, observed) {
       var scales = {};
       var choices = {};
-      _.map(_.pairs(observed), function(criterion) {
+      _.map(_.toPairs(observed), function(criterion) {
 
         // Calculate interval hulls
         var criterionRange = intervalHull(criterion[1]);

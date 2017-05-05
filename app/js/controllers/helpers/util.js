@@ -1,6 +1,6 @@
 'use strict';
 define(function(require) {
-  var _ = require("underscore");
+  var _ = require("lodash");
 
   var getOrdinalPreferences = function(prefs) {
     return _.filter(prefs, function(pref) { return pref.type === "ordinal"; });

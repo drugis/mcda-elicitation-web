@@ -34,22 +34,17 @@
         <tr ng-repeat-start="effectsTableRow in effectsTableData" ng-show="effectsTableRow.path.length > 0">
           <td class="group-header" colspan="{{3 + nrAlternatives}}">
             <div class="main-header">
-              <remark-block edit-mode="editMode" remark="$parent.remarks.remarks[effectsTableRow.path[0].title]"
-                save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()"></remark-block>
               {{effectsTableRow.path[0].title}}</div>
             <span ng-repeat="node in effectsTableRow.path.slice(1)">
               <i style="font-size: 1.5rem" class="fa fa-angle-right"></i>
               <div class="secondary-header">
-                <remark-block edit-mode="editMode" remark="$parent.remarks.remarks[node.title]" save-remarks="saveRemarks()"
-                  cancel-remarks="cancelRemarks()"></remark-block>{{node.title}}
+                {{node.title}}
               </div>
             </span>
           </td>
         </tr>
         <tr class="showmore" ng-repeat-end ng-repeat="criterion in effectsTableRow.criteria track by $index">
           <td>
-            <remark-block edit-mode="editMode" remark="$parent.remarks.remarks[criterion.value.title]"
-              save-remarks="saveRemarks()" cancel-remarks="cancelRemarks()" user="user"></remark-block>
             <a dropdown-toggle="#dropdown-{{$index}}" class="tiny-icon"><i class="fa fa-list"></i></a>            {{criterion.value.title}}
             <div id="dropdown-{{$index}}" class="f-dropdown details">
               <table cellspacing="0px" class="no-border">

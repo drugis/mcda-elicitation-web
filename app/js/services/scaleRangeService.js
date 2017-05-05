@@ -1,7 +1,7 @@
 'use strict';
 define(function(require) {
   var angular = require("angular");
-  var _ = require("underscore");
+  var _ = require("lodash");
 
   var dependencies = [];
 

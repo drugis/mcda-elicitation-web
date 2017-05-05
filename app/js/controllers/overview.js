@@ -1,7 +1,6 @@
 'use strict';
 define(function() {
-  var lodash = require(['lodash']);
-  var _ = require(['underscore']);
+  var _ = require('lodash');
 
   return function($scope, $stateParams, RemarksResource, EffectsTableResource, EffectsTableService) {
     var remarksCache;
@@ -14,12 +13,12 @@ define(function() {
     $scope.remarks = {};
     $scope.alternativeInclusions = {};
 
-    lodash.map($scope.problem.alternatives, function(alternative, alternativeKey) {
+    _.map($scope.problem.alternatives, function(alternative, alternativeKey) {
       $scope.alternativeInclusions[alternativeKey] = true;
     });
 
     EffectsTableResource.query($stateParams, function(exclusions) {
-      lodash.forEach(exclusions, function(exclusion) {
+      _.forEach(exclusions, function(exclusion) {
         $scope.alternativeInclusions[exclusion.alternativeId] = false;
       });
     });
@@ -28,7 +27,7 @@ define(function() {
       if (remarks.remarks) {
         $scope.remarks = remarks;
       }
-      remarksCache = lodash.cloneDeep(remarks);
+      remarksCache = _.cloneDeep(remarks);
     });
 
     $scope.$watch('workspace.$$scales.observed', function(newValue) {
@@ -50,12 +49,12 @@ define(function() {
 
     $scope.saveRemarks = function() {
       RemarksResource.save(_.omit($stateParams, 'id'), $scope.remarks, function() {
-        remarksCache = lodash.cloneDeep($scope.remarks);
+        remarksCache = _.cloneDeep($scope.remarks);
       });
     };
 
     $scope.cancelRemarks = function() {
-      $scope.remarks = lodash.cloneDeep(remarksCache);
+      $scope.remarks = _.cloneDeep(remarksCache);
     };
 
   };

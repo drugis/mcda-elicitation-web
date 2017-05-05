@@ -1,7 +1,7 @@
 'use strict';
 define(function(require) {
   var angular = require("angular");
-  var _ = require("underscore");
+  var _ = require("lodash");
   var Wizard = require("mcda/controllers/helpers/wizard");
 
   return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
@@ -9,7 +9,7 @@ define(function(require) {
     $scope.pvf = pvf;
 
     var getReference = function(criteria) {
-      return _.object(
+      return _.zipObject(
         _.keys(criteria),
         _.map(criteria, function(criterion) {
           return pvf.worst(criterion);
@@ -25,6 +25,16 @@ define(function(require) {
       return base + ' (' + step + '/' + total + ')';
     };
 
+    function makeChoices(state) {
+      var criteria = state.problem.criteria;
+      var choices = _.map(_.keys(criteria), function(criterion) {
+        var reference = getReference(criteria);
+        reference[criterion] = pvf.best(criteria[criterion]);
+        return reference;
+      });
+      return _.zipObject(_.keys(criteria), choices);
+    }
+
     var initialize = function(state) {
       var criteria = state.problem.criteria;
       var fields = {
@@ -34,15 +44,7 @@ define(function(require) {
           ordinal: []
         },
         reference: getReference(criteria),
-        choices: (function() {
-          var criteria = state.problem.criteria;
-          var choices = _.map(_.keys(criteria), function(criterion) {
-            var reference = getReference(criteria);
-            reference[criterion] = pvf.best(criteria[criterion]);
-            return reference;
-          });
-          return _.object(_.keys(criteria), choices);
-        })()
+        choices: makeChoices(state)
       };
       return _.extend(state, fields);
     };
@@ -50,7 +52,7 @@ define(function(require) {
 
     var validChoice = function(state) {
       var criteria = state.problem.criteria;
-      return state && _.contains(_.keys(criteria), state.choice);
+      return state && _.includes(_.keys(criteria), state.choice);
     };
 
     var nextState = function(state) {
@@ -90,6 +92,7 @@ define(function(require) {
       var criteria = standardized.problem.criteria;
       var prefs = standardized.prefs;
       var order = prefs.ordinal;
+
       function ordinal(a, b) {
         return {
           type: 'ordinal',

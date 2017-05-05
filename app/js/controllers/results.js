@@ -1,7 +1,7 @@
 'use strict';
 define(function(require) {
   var angular = require('angular');
-  var _ = require('underscore');
+  var _ = require('lodash');
 
   return function($rootScope, $scope, currentScenario, taskDefinition, MCDAResultsService) {
     $scope.scenario = currentScenario;
@@ -15,8 +15,8 @@ define(function(require) {
       var problem = state.problem;
       var data = state.results.cw.data;
       var result = [];
-      _.each(_.pairs(data), function(alternative) {
-        var values = _.map(_.pairs(alternative[1].w), function(criterion, index) {
+      _.each(_.toPairs(data), function(alternative) {
+        var values = _.map(_.toPairs(alternative[1].w), function(criterion, index) {
           return { x: index, label: criterion[0], y: criterion[1] };
         });
         var labels = _.map(_.pluck(values, 'label'), function(id) { return problem.criteria[id].title; });
@@ -28,7 +28,7 @@ define(function(require) {
     var getAlterativesByRank = _.memoize(function(state) {
       var data = state.results.ranks.data;
       var rank = parseInt(state.selectedRank);
-      var values = _.map(_.pairs(data), function(alternative) {
+      var values = _.map(_.toPairs(data), function(alternative) {
         return {label: alternativeTitle(alternative[0]), value: alternative[1][rank] };
       });
       var name = 'Alternatives for rank ' + (rank + 1);

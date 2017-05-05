@@ -1,6 +1,6 @@
 'use strict';
 define(function(require) {
-  var _ = require('underscore');
+  var _ = require('lodash');
 
   return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, scenarios, 
     ScenarioResource, WorkspaceService) {

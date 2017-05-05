@@ -1,6 +1,6 @@
 define(function(require) {
   var angular = require("angular");
-  var _ = require("underscore");
+  var _ = require("lodash");
 
   return angular.module('elicit.pvfService', []).factory('PartialValueFunction', function() {
     var findIndexOfFirstLargerElement = function(arr, val) {

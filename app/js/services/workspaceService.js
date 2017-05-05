@@ -1,7 +1,7 @@
 'use strict';
 define(function(require) {
   var angular = require('angular');
-  var _ = require('underscore');
+  var _ = require('lodash');
 
   var dependencies = ['ScalesService'];
 
@@ -19,7 +19,7 @@ define(function(require) {
     };
 
     var buildTheoreticalScales = function(problem) {
-      return _.object(_.map(problem.criteria, function(val, key) {
+      return _.fromPairs(_.map(problem.criteria, function(val, key) {
         var scale = val.scale || [null, null];
 
         scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];

@@ -45,7 +45,6 @@
     "nvd3-community": "~1.7",
     "requirejs": "~2.1.15",
     "requirejs-domready": "~2.0.1",
-    "underscore": "1.8.3",
     "KaTeX": "katex#^0.6.0",
     "scrollup": "^2.4.1",
     "foundation": "^5.5.3"
