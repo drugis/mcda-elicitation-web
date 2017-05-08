@@ -10,14 +10,17 @@ define(function(require) {
     return {
       buildRoutes: function($stateProvider, parentState, baseTemplatePath) {
 
-        var parent = {
+        var scenarioState = {
           name: parentState + '.scenario',
-          url: '/scenarios/:id',
+          url: 'problems/:problemId/scenarios/:id',
           templateUrl: baseTemplatePath + 'scenario.html',
           controller: 'ScenarioController',
           resolve: {
             scenarios: function($stateParams, ScenarioResource) {
               return ScenarioResource.query(_.omit($stateParams, 'id'));
+            },
+            problems: function($stateParams, SubProblemResource) {
+              return SubProblemResource.query(_.omit($stateParams, 'id'));
             }
           }
         };
@@ -26,7 +29,7 @@ define(function(require) {
           var templateUrl = baseTemplatePath + task.templateUrl;
           return {
             name: task.id,
-            parent: parent,
+            parent: scenarioState,
             url: task.url ? task.url : '/' + task.id,
             templateUrl: templateUrl,
             controller: task.controller,
@@ -41,7 +44,7 @@ define(function(require) {
           };
         });
 
-        $stateProvider.state(parent);
+        $stateProvider.state(scenarioState);
         children.forEach(function(child) {
           $stateProvider.state(child);
         });

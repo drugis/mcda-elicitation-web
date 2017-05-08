@@ -267,7 +267,7 @@ app.get('/workspaces/:id/remarks', function(req, res, next) {
 });
 
 app.post('/workspaces/:id/remarks', function(req, res, next) {
-  db.query('UPDATE remarks SET remarks = $1 WHERE workspaceid = $2', [req.body.remarks, req.params.id], function(err, result) {
+  db.query('UPDATE remarks SET remarks = $1 WHERE workspaceid = $2', [req.body.remarks, req.params.id], function(err) {
     if (err) {
       err.status = 500;
       return next(err);
@@ -277,7 +277,7 @@ app.post('/workspaces/:id/remarks', function(req, res, next) {
 });
 
 app.post('/workspaces/:id', function(req, res, next) {
-  db.query('UPDATE workspace SET title = $1, problem = $2 WHERE id = $3 ', [req.body.problem.title, req.body.problem, req.params.id], function(err, result) {
+  db.query('UPDATE workspace SET title = $1, problem = $2 WHERE id = $3 ', [req.body.problem.title, req.body.problem, req.params.id], function(err) {
     if (err) {
       err.status = 500;
       return next(err);
@@ -305,7 +305,7 @@ app.post('/workspaces/:id/scenarios/:id', function(req, res, next) {
       prefs: req.body.state.prefs
     },
     req.body.title, req.body.id
-  ], function(err, result) {
+  ], function(err) {
     if (err) {
       err.status = 500;
       next(err);
