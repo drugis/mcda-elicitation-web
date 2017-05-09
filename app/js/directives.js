@@ -302,7 +302,7 @@ define(function(require) {
 
   directives.directive('heatLegend', function() {
     return {
-      link: function(scope, element) {
+      link: function(scope) {
         var color = d3.scale.quantile().range(d3.range(9)).domain([1, 0]);
         var style = 'display: inline-block; text-align: center; height: 2.5em; width: 2.5em; padding: 5px; line-height: 1.9em; margin: 1px;';
 
@@ -450,7 +450,7 @@ define(function(require) {
       restrict: 'E',
       replace: 'true',
       templateUrl: mcdaRootPath + 'partials/remark.html',
-      link: function(scope, element) {
+      link: function() {
         $('.remarkbutton').click(function() {
           $('.f-dropdown').css('display', 'none');
         });

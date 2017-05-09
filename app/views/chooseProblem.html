@@ -4,7 +4,7 @@
     <div class="panel">
       <ul class="fontsize">
         <li ng-repeat="workspace in workspacesList | orderBy:'title'">
-          <a ui-sref="overview({workspaceId: workspace.id, id: workspace.defaultScenarioId})"> {{workspace.title}}</a>
+          <a ui-sref="overview({workspaceId: workspace.id, problemId: workspace.defaultProblemId, id: workspace.defaultScenarioId})"> {{workspace.title}}</a>
           <a class="deleteicon rounded-small secondary" ng-click="deleteWorkspace()" style="margin-left: 15px;"></a>
         </li>
         <li ng-hide="workspacesList.length">No workspaces.</li>
