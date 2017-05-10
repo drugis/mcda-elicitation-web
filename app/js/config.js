@@ -67,12 +67,12 @@ define(function() {
       requires: ['scale-range', 'partial-value-function'],
       resets: []
     }, {
-      id: 'effects-table',
-      title: 'Effects table',
-      controller: 'EffectsTableController',
-      templateUrl: 'effectsTable.html',
-      activeTab: 'effects-table',
-      requires: ['scale-range', 'partial-value-function'],
+      id: 'problem',
+      title: 'Problem',
+      controller: 'SubProblemController',
+      templateUrl: 'subProblem.html',
+      activeTab: 'problem',
+      requires: [],
       resets: []
     }]
   };

@@ -1,0 +1,45 @@
+<div class="row">
+  <div class="columns large-12">
+    <table class="full-width effects-table">
+      <thead>
+        <tr>
+          <th>Criterion</th>
+          <th>Description</th>
+          <th>Units</th>
+          <th class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives">
+            {{alternative.title}}{{problem.valueTree.children.children[0].criteria}}
+          </th>
+        </tr>
+      </thead>
+      <tbody class="main">
+        <tr ng-repeat="(criterionKey, criterion) in problem.criteria">
+          <td>
+            <input type="checkbox" ng-model="problemState.criterionInclusions[criterionKey]"
+              ng-change="updateInclusions()" ng-disabled="problemState.criterionInclusions[criterionKey] && problemState.numberOfCriteriaSelected < 3"> {{criterion.title}}
+          </td>
+          <td>
+            <div class="td-container">
+              <div class="td-content">{{criterion.description}}</div>
+              <div class="td-spacer">{{criterion.description}}</div>
+              <span>&nbsp;</span>
+            </div>
+          </td>
+          <td>{{criterion.unitOfMeasurement}}</td>
+          <td class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives"
+            name="col{{$index}}" id="col{{$index}}">
+            {{scales[criterionKey][alternativeKey]['50%'] | number}}
+            <br>
+            <div class="uncertain" ng-if="!isExact(criterionKey, alternativeKey)">
+              {{scales[criterionKey][alternativeKey]['2.5%'] | number}}, {{scales[criterionKey][alternativeKey]['97.5%']
+              | number}}</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="columns large-12">
+    <button class="success" ng-click="openCreateProblemDialog()" ng-disabled="!problemState.isChanged">Create problem</button>
+  </div>
+</div>

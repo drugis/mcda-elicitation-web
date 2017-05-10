@@ -6,7 +6,7 @@ define(function(require) {
     .controller('WorkspaceController', require('mcda/controllers/workspace'))
     .controller('ScenarioController', require('mcda/controllers/scenario'))
     .controller('EvidenceController', require('mcda/controllers/evidenceController'))
-    .controller('EffectsTableController', require('mcda/controllers/effectsTable'))
+    .controller('SubProblemController', require('mcda/controllers/subProblemController'))
     .controller('PreferencesController', require('mcda/controllers/preferences'))
     .controller('ScaleRangeController', require('mcda/controllers/scaleRange'))
     .controller('PartialValueFunctionController', require('mcda/controllers/partialValueFunction'))

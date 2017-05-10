@@ -1,19 +1,35 @@
 'use strict';
 define(function(require) {
   var _ = require('lodash');
+  var dependencies = ['$scope', '$location', '$state', '$stateParams', 'Tasks', 'TaskDependencies', 'scenarios',
+    'ScenarioResource', 'SubProblemResource', 'WorkspaceService'
+  ];
 
-  return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, scenarios, 
-    ScenarioResource, WorkspaceService) {
+  function ScenarioController($scope, $location, $state, $stateParams, Tasks, TaskDependencies, scenarios,
+    ScenarioResource, SubProblemResource, WorkspaceService) {
+
+    var currentProblem = $scope.workspace.problem;
 
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
     $scope.scenarios = scenarios;
+    $scope.workspace.$$valueTree = WorkspaceService.buildValueTree(currentProblem);
+    $scope.workspace.$$scales = {};
+    $scope.workspace.$$scales.theoreticalScales = WorkspaceService.buildTheoreticalScales(currentProblem);
 
-    var getTask = function(taskId) {
+    // functions
+    $scope.forkScenario = forkScenario;
+    $scope.newScenario = newScenario;
+    $scope.editTitle = editTitle;
+    $scope.saveTitle = saveTitle;
+    $scope.cancelTitle = cancelTitle;
+    $scope.scenarioChanged = scenarioChanged;
+
+    function getTask(taskId) {
       return _.find(Tasks.available, function(task) {
         return task.id === taskId;
       });
-    };
+    }
 
     function determineActiveTab() {
       var path = $location.path();
@@ -43,13 +59,15 @@ define(function(require) {
       }
     });
 
-    var currentProblem = $scope.workspace.problem;
-    $scope.workspace.$$valueTree = WorkspaceService.buildValueTree(currentProblem);
-    $scope.workspace.$$scales = {};
-    $scope.workspace.$$scales.theoreticalScales = WorkspaceService.buildTheoreticalScales(currentProblem);
-
     WorkspaceService.getObservedScales($scope, currentProblem).then(function(observedScales) {
       $scope.workspace.$$scales.observed = observedScales;
+    });
+
+    $scope.subProblemPromise = SubProblemResource.get(_.extend({
+      problemId: $stateParams.id
+    }, $stateParams)).$promise.then(function(result) {
+      $scope.subProblem = result;
+      return result;
     });
 
     ScenarioResource.get($stateParams).$promise.then(function(result) {
@@ -79,7 +97,7 @@ define(function(require) {
       });
     }
 
-    $scope.forkScenario = function() {
+    function forkScenario() {
       ScenarioResource.get($stateParams, function(scenario) { // reload because child scopes may have changed scenario
         var newScenario = {
           'title': randomId(3, 'Scenario '),
@@ -89,40 +107,42 @@ define(function(require) {
           redirect(savedScenario.id);
         });
       });
-    };
+    }
 
-    $scope.newScenario = function() {
+    function newScenario() {
 
       var newScenario = {
         'title': randomId(3, 'Scenario '),
         'state': {
           'problem': WorkspaceService.reduceProblem($scope.workspace.problem)
-        }
+        },
+        workspace: $scope.workspace.id,
+        subProblemId: $scope.subProblem.id
       };
       ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
         redirect(savedScenario.id);
       });
-    };
+    }
 
-    $scope.editTitle = function() {
+    function editTitle() {
       $scope.isEditTitleVisible = true;
       $scope.scenarioTitle.value = $scope.__scenario.title;
-    };
+    }
 
-    $scope.saveTitle = function() {
+    function saveTitle() {
       $scope.__scenario.title = $scope.scenarioTitle.value;
       $scope.isEditTitleVisible = false;
       $scope.__scenario.$save($stateParams, function() {
         $scope.scenarios = ScenarioResource.query(_.omit($stateParams, 'id'));
         redirect($stateParams.id);
       });
-    };
+    }
 
-    $scope.cancelTitle = function() {
+    function cancelTitle() {
       $scope.isEditTitleVisible = false;
-    };
+    }
 
-    $scope.scenarioChanged = function(newScenario) {
+    function scenarioChanged(newScenario) {
       if (!newScenario) {
         return; // just a title edit
       }
@@ -130,6 +150,7 @@ define(function(require) {
         workspaceId: $scope.workspace.id,
         id: newScenario.id
       });
-    };
-  };
+    }
+  }
+  return dependencies.concat(ScenarioController);
 });

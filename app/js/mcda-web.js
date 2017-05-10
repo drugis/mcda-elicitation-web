@@ -15,6 +15,7 @@ define(function(require) {
   require('mcda/services/workspaceService');
   require('mcda/services/scalesService');
   require('mcda/services/scenarioResource');
+  require('mcda/services/subProblemResource');
   require('mcda/services/taskDependencies');
   require('mcda/services/hashCodeService');
   require('mcda/services/effectsTableService');
@@ -39,6 +40,7 @@ define(function(require) {
     'elicit.workspaceService',
     'elicit.scalesService',
     'elicit.scenarioResource',
+    'elicit.subProblemResource',
     'elicit.util',
     'elicit.directives',
     'elicit.effectsTableService',

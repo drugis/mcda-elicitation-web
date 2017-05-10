@@ -12,7 +12,7 @@ define(function(require) {
 
         var scenarioState = {
           name: parentState + '.scenario',
-          url: 'problems/:problemId/scenarios/:id',
+          url: '/problems/:problemId/scenarios/:id',
           templateUrl: baseTemplatePath + 'scenario.html',
           controller: 'ScenarioController',
           resolve: {
@@ -20,7 +20,7 @@ define(function(require) {
               return ScenarioResource.query(_.omit($stateParams, 'id'));
             },
             problems: function($stateParams, SubProblemResource) {
-              return SubProblemResource.query(_.omit($stateParams, 'id'));
+              return SubProblemResource.query(_.omit($stateParams, 'problemId'));
             }
           }
         };
