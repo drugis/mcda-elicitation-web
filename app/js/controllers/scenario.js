@@ -22,7 +22,7 @@ define(function(require) {
       if (activeTask) {
         $scope.activeTab = activeTask.activeTab;
       } else {
-        $scope.activeTab = 'overview';
+        $scope.activeTab = 'evidence';
       }
     }
     determineActiveTab();
