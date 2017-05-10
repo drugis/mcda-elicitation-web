@@ -2,11 +2,11 @@
 define(function() {
   var tasks = {
     'available': [{
-      id: 'overview',
-      title: 'Overview',
-      controller: 'OverviewController',
-      templateUrl: 'overview.html',
-      activeTab: 'overview',
+      id: 'evidence',
+      title: 'Evidence',
+      controller: 'EvidenceController',
+      templateUrl: 'evidence.html',
+      activeTab: 'evidence',
       requires: [],
       resets: []
     }, {
@@ -77,7 +77,7 @@ define(function() {
     }]
   };
 
-  var defaultView = 'overview';
+  var defaultView = 'evidence';
 
   return {
     tasks: tasks,

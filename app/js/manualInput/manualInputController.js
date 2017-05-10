@@ -67,7 +67,7 @@ define(['lodash'], function(_) {
     function createProblem() {
       var problem = ManualInputService.createProblem($scope.criteria, $scope.treatments, $scope.state.title, $scope.state.description, $scope.inputData);
       WorkspaceResource.create(problem).$promise.then(function(workspace) {
-        $state.go('overview', {
+        $state.go('evidence', {
           workspaceId: workspace.id,
           id: workspace.defaultScenarioId
         });

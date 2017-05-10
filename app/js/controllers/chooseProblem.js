@@ -15,7 +15,7 @@ define(function(require) {
     $scope.createWorkspace = function(choice) {
       if (choice === 'local' && !_.isEmpty($scope.local.contents)) {
         WorkspaceResource.create(angular.fromJson($scope.local.contents)).$promise.then(function(workspace) {
-          $state.go('overview', {
+          $state.go('evidence', {
             workspaceId: workspace.id,
             id: workspace.defaultScenarioId
           });
@@ -28,7 +28,7 @@ define(function(require) {
         };
         examplesResource.get(example, function(problem) {
           WorkspaceResource.create(problem).$promise.then(function(workspace) {
-            $state.go('overview', {
+            $state.go('evidence', {
               workspaceId: workspace.id,
               id: workspace.defaultScenarioId
             });
