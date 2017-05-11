@@ -15,7 +15,7 @@ define(function() {
       controller: 'ScaleRangeController',
       templateUrl: 'scaleRange.html',
       requires: [],
-      activeTab: 'preferences',
+      activeTab: 'problem',
       resets: ['partial-value-function', 'criteria-trade-offs']
     }, {
       id: 'partial-value-function',

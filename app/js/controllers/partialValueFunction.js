@@ -10,7 +10,9 @@ define(function(require) {
     var initialize = function(state) {
       var criterionId = $stateParams.criterion;
       var criterion = angular.copy(state.problem.criteria[criterionId]);
-      if(!criterion) return {};
+      if (!criterion) {
+        return {};
+      }
       // set defaults
       criterion.pvf.direction = "decreasing";
       criterion.pvf.type = "linear";
@@ -18,7 +20,11 @@ define(function(require) {
 
       var initial = {
         ref: 0,
-        bisections: [[0,1], [0,0.5], [0.5,1]],
+        bisections: [
+          [0, 1],
+          [0, 0.5],
+          [0.5, 1]
+        ],
         type: 'elicit type',
         choice: criterion
       };
@@ -30,12 +36,12 @@ define(function(require) {
       var nextState = angular.copy(state);
       var ref = nextState.ref;
 
-      if(state.type === 'elicit type') {
+      if (state.type === 'elicit type') {
         nextState.type = "bisection";
       }
 
-      if(nextState.type === "bisection") {
-        if(ref === 0) {
+      if (nextState.type === "bisection") {
+        if (ref === 0) {
           nextState.choice.pvf.values = [];
           nextState.choice.pvf.cutoffs = [];
         }
@@ -44,7 +50,7 @@ define(function(require) {
         var inv = PartialValueFunction.inv(nextState.choice);
 
         var from, to;
-        if(nextState.choice.direction === "increasing") {
+        if (nextState.choice.direction === "increasing") {
           from = inv(bisection[1]);
           to = inv(bisection[0]);
         } else {
@@ -88,24 +94,24 @@ define(function(require) {
     };
 
     $scope.canSave = function(state) {
-      switch(state.type) {
-      case 'elicit type':
-        return state.choice.pvf.type === "linear";
-      case 'bisection':
-        return state.ref === state.bisections.length;
-      default:
-        return false;
+      switch (state.type) {
+        case 'elicit type':
+          return state.choice.pvf.type === "linear";
+        case 'bisection':
+          return state.ref === state.bisections.length;
+        default:
+          return false;
       }
     };
 
     var isValid = function(state) {
-      switch(state.type) {
-      case 'elicit type':
-        return state.choice.pvf.type  && state.choice.pvf.direction;
-      case 'bisection':
-        return true;
-      default:
-        return false;
+      switch (state.type) {
+        case 'elicit type':
+          return state.choice.pvf.type && state.choice.pvf.direction;
+        case 'bisection':
+          return true;
+        default:
+          return false;
       }
     };
 
@@ -120,7 +126,7 @@ define(function(require) {
     $injector.invoke(Wizard, this, {
       $scope: $scope,
       handler: {
-        fields: ['type', 'choice','bisections', 'ref'],
+        fields: ['type', 'choice', 'bisections', 'ref'],
         validChoice: isValid,
         nextState: nextState,
         initialize: _.partial(initialize, taskDefinition.clean(currentScenario.state)),

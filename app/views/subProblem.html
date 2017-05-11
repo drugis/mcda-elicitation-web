@@ -1,3 +1,25 @@
+<h4 ng-show="!isEditTitleVisible" class="subheader">
+  <span>{{subProblem.title}}</span>
+  <a ng-if="editMode.isUserOwner" ng-click="editTitle()"><i class="fa fa-edit"></i></a>
+</h4>
+<div class="row" ng-show="isEditTitleVisible">
+  <div class="columns large-8 small-12">
+    <form>
+      <div class="row collapse">
+        <div class="columns small-8">
+          <input type="text" ng-model="subProblem.title">
+        </div>
+        <div class="columns small-2">
+          <button class="button postfix" ng-click="saveTitle()">Save</button>
+        </div>
+        <div class="columns small-2">
+          <button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div class="row">
   <div class="columns large-12">
     <table class="full-width effects-table">
@@ -27,10 +49,10 @@
           <td>{{criterion.unitOfMeasurement}}</td>
           <td class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives"
             name="col{{$index}}" id="col{{$index}}">
-            {{scales[criterionKey][alternativeKey]['50%'] | number}}
+            {{scales.observed[criterionKey][alternativeKey]['50%'] | number}}
             <br>
             <div class="uncertain" ng-if="!isExact(criterionKey, alternativeKey)">
-              {{scales[criterionKey][alternativeKey]['2.5%'] | number}}, {{scales[criterionKey][alternativeKey]['97.5%']
+              {{scales.observed[criterionKey][alternativeKey]['2.5%'] | number}}, {{scales.observed[criterionKey][alternativeKey]['97.5%']
               | number}}</div>
           </td>
         </tr>
@@ -38,8 +60,44 @@
     </table>
   </div>
 </div>
+
 <div class="row">
   <div class="columns large-12">
-    <button class="success" ng-click="openCreateProblemDialog()" ng-disabled="!problemState.isChanged">Create problem</button>
+    <h4>Scale Ranges</h4>
+    <table class="full-width">
+      <thead>
+        <tr>
+          <th>Criterion</th>
+          <th>Theoretical Range</th>
+          <th>Observed Range</th>
+          <th>Configured Range</th>
+          <th>Units</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="(key, criterion) in criteria">
+          <td>{{::criterion.title}}</td>
+          <td>{{::scales.theoreticalScales[criterion.id][0] | number}}, {{::scales.theoreticalScales[criterion.id][1]
+            | number}}</td>
+          <td>
+            <span ng-bind="::intervalHull(scales.observed[criterion.id])[0] | number"></span>,
+            <span ng-bind="::intervalHull(scales.observed[criterion.id])[1] | number"></span>
+          </td>
+          <td>
+            <span ng-if="criterion.pvf.range">{{::criterion.pvf.range[0] | number}}, {{::criterion.pvf.range[1] | number}}</span>
+          </td>
+          <td>{{::criterion.unitOfMeasurement}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <button ng-if="editMode.isUserOwner" ui-sref="scale-range">
+      Define Scale Ranges
+    </button>
+  </div>
+</div>
+
+<div class="row">
+  <div class="columns large-12">
+    <button class="success" ng-click="saveProblemConfiguration()" ng-disabled="!problemState.isChanged || (!problemState.hasScaleRange && problemState.isChanged)">Create problem</button>
   </div>
 </div>

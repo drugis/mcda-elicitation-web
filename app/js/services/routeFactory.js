@@ -39,6 +39,9 @@ define(function(require) {
               },
               taskDefinition: function(TaskDependencies) {
                 return TaskDependencies.extendTaskDefinition(task);
+              }, 
+              currentProblem: function($stateParams, SubProblemResource){
+                return SubProblemResource.get($stateParams).$promise;
               }
             }
           };
