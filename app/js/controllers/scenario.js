@@ -151,6 +151,7 @@ define(function(require) {
         id: newScenario.id
       });
     }
+
   }
   return dependencies.concat(ScenarioController);
 });

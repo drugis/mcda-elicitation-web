@@ -36,8 +36,9 @@
       <tbody class="main">
         <tr ng-repeat="(criterionKey, criterion) in problem.criteria">
           <td>
-            <input type="checkbox" ng-model="problemState.criterionInclusions[criterionKey]"
-              ng-change="updateInclusions()" ng-disabled="problemState.criterionInclusions[criterionKey] && problemState.numberOfCriteriaSelected < 3"> {{criterion.title}}
+            <label>
+              <input type="checkbox" ng-if="editMode.isUserOwner" ng-model="problemState.criterionInclusions[criterionKey]"
+                ng-change="updateInclusions()" ng-disabled="problemState.criterionInclusions[criterionKey] && problemState.numberOfCriteriaSelected < 3"> {{criterion.title}}</label>
           </td>
           <td>
             <div class="td-container">
@@ -75,29 +76,33 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="(key, criterion) in criteria">
-          <td>{{::criterion.title}}</td>
-          <td>{{::scales.theoreticalScales[criterion.id][0] | number}}, {{::scales.theoreticalScales[criterion.id][1]
+        <tr ng-class="{'disabled-row': !problemState.criterionInclusions[criterion.id]}"
+          ng-repeat="criterion in criteriaForScales">
+          <td>{{criterion.title}}</td>
+          <td>{{scales.theoreticalScales[criterion.id][0] | number}}, {{scales.theoreticalScales[criterion.id][1]
             | number}}</td>
           <td>
-            <span ng-bind="::intervalHull(scales.observed[criterion.id])[0] | number"></span>,
-            <span ng-bind="::intervalHull(scales.observed[criterion.id])[1] | number"></span>
+            <span ng-bind="intervalHull(scales.observed[criterion.id])[0] | number"></span>,
+            <span ng-bind="intervalHull(scales.observed[criterion.id])[1] | number"></span>
           </td>
           <td>
-            <span ng-if="criterion.pvf.range">{{::criterion.pvf.range[0] | number}}, {{::criterion.pvf.range[1] | number}}</span>
+            <span ng-if="criterion.pvf.range">{{criterion.pvf.range[0] | number}}, {{criterion.pvf.range[1] | number}}</span>
           </td>
-          <td>{{::criterion.unitOfMeasurement}}</td>
+          <td>{{criterion.unitOfMeasurement}}</td>
         </tr>
       </tbody>
     </table>
-    <button ng-if="editMode.isUserOwner" ui-sref="scale-range">
+    <button ng-if="editMode.isUserOwner" ng-click="openScaleRangeDialog()">
       Define Scale Ranges
     </button>
   </div>
 </div>
 
-<div class="row">
+<div class="row" ng-if="editMode.isUserOwner">
   <div class="columns large-12">
-    <button class="success" ng-click="saveProblemConfiguration()" ng-disabled="!problemState.isChanged || (!problemState.hasScaleRange && problemState.isChanged)">Create problem</button>
+    <button class="success" ng-click="saveProblemConfiguration()" ng-disabled="isCreationAllowed()">Create problem</button>
+    <button ng-click="reset(subProblem)">Reset</button>
+    <span class="alert" ng-if="!problemState.hasScaleRange">Missing scale ranges</span>
+
   </div>
 </div>

@@ -3,22 +3,42 @@ define(function(require) {
   require("angular");
   var _ = require("lodash");
 
-  return function($scope, $state, $stateParams, taskDefinition, intervalHull, ScaleRangeService) {
-    $scope.state = {
-      problem: $scope.workspace.problem
-    };
-    $scope.title = taskDefinition.title;
-    
+  var dependencies = [
+    '$scope',
+    '$state',
+    '$stateParams',
+    '$modalInstance',
+    'intervalHull',
+    'ScaleRangeService',
+    'criteria',
+    'observedScales',
+    'callback'
+  ];
+
+  var ScaleRangeController = function(
+    $scope,
+    $state,
+    $stateParams,
+    $modalInstance,
+    intervalHull,
+    ScaleRangeService,
+    criteria,
+    observedScales,
+    callback) {
+
+    $scope.criteria = _.keyBy(criteria, 'id');
+    $scope.observedScales = observedScales;
+
     // functions
     $scope.validChoice = validChoice;
     $scope.cancel = cancel;
     $scope.save = save;
 
-    initialize($scope.workspace.$$scales.observed);
+    initialize($scope.observedScales);
 
     function validChoice() {
-      if ($scope.state) {
-        return _.every($scope.state.choice, function(choice) {
+      if ($scope.choice) {
+        return _.every($scope.choice, function(choice) {
           var complete = _.isNumber(choice.upper) && _.isNumber(choice.lower);
           return complete && (choice.upper > choice.lower);
         });
@@ -29,13 +49,13 @@ define(function(require) {
     function initialize(observed) {
       var scales = {};
       var choices = {};
-      _.map(_.toPairs(observed), function(criterion) {
+      _.forEach(_.toPairs(observed), function(criterion) {
 
         // Calculate interval hulls
         var criterionRange = intervalHull(criterion[1]);
 
         // Set inital model value
-        var pvf = $scope.state.problem.criteria[criterion[0]].pvf;
+        var pvf = $scope.criteria[criterion[0]].pvf;
         var problemRange = pvf ? pvf.range : null;
         var from = problemRange ? problemRange[0] : criterionRange[0];
         var to = problemRange ? problemRange[1] : criterionRange[1];
@@ -46,32 +66,32 @@ define(function(require) {
         };
 
         // Set scales for slider
-        var criterionScale = $scope.state.problem.criteria[criterion[0]].scale;
+        var criterionScale = $scope.criteria[criterion[0]].scale;
         scales[criterion[0]] = ScaleRangeService.calculateScales(criterionScale, from, to, criterionRange);
 
       });
-      $scope.state = _.extend($scope.state, {
-        scales: scales,
-        choice: choices
-      });
+      $scope.scales = scales;
+      $scope.choice = choices;
     }
 
     function save() {
       // Rewrite scale information
-      _.each(_.toPairs($scope.state.choice), function(choice) {
-        var pvf = $scope.state.problem.criteria[choice[0]].pvf;
+      _.each(_.toPairs($scope.choice), function(choice) {
+        var pvf = $scope.criteria[choice[0]].pvf;
         if (!pvf) {
-          $scope.state.problem.criteria[choice[0]].pvf = {
+          $scope.criteria[choice[0]].pvf = {
             range: null
           };
         }
-        $scope.state.problem.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
+        $scope.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
       });
-      $state.go('problem');
+      callback(criteria);
+      $modalInstance.close();
     }
 
     function cancel() {
-      $state.go('problem');
+      $modalInstance.dismiss('cancel');
     }
   };
+  return dependencies.concat(ScaleRangeController);
 });

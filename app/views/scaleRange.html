@@ -1,5 +1,5 @@
 <div>
-  <h2>{{title}}</h2>
+  <h2>Define Scale Range</h2>
   <p>Defining measurement scales is important because they provide the reference
     levels at which trade-offs between criteria are assessed. Without these
     reference levels ments about the relative importance of different
@@ -9,17 +9,17 @@
     the measurements and should not be moved into.</p>
 
   <ul class="no-bullet">
-    <li ng-repeat="(key, criterion) in state.problem.criteria">
+    <li ng-repeat="(key, criterion) in criteria">
       <h5 class="subheader"><criterion of="criterion"></criterion></h5>
       <div class="row">
         <div class="large-1 columns">
-          <a ng-click="state.scales[key].increaseFrom()" class="tiny round button">&lt;</a>
+          <a ng-click="scales[key].increaseFrom()" class="tiny round button">&lt;</a>
         </div>
         <div class="large-7 columns">
-          <slider model="state.choice[key]" range="state.scales[key]"></slider>
+          <slider model="choice[key]" range="scales[key]"></slider>
         </div>
         <div class="large-1 pull-3 columns">
-          <a ng-click="state.scales[key].increaseTo()"  class="tiny round button">&gt;</a>
+          <a ng-click="scales[key].increaseTo()"  class="tiny round button">&gt;</a>
         </div>
       </div>
       <br>
