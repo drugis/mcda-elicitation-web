@@ -204,14 +204,13 @@ define(function(require) {
               .showValues(true)
               .staggerLabels(true)
               .width(dim.width)
-              .tooltips(false)
               .x(function(d) {
                 return d.label;
               })
               .y(function(d) {
                 return d.value;
-              });
-
+              })              ;
+            chart.tooltip.enabled(false);
             var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
             svg.datum(data).transition().duration(100).call(chart);
             nv.utils.windowResize(chart.update);
