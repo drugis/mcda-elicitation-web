@@ -51,7 +51,8 @@ define(function(require) {
       subProblem.definition.criteria = $scope.problem.criteria;
       var subProblemCommand = {
         definition: JSON.stringify(subProblem.definition, 2, null),
-        title: subProblem.title
+        title: subProblem.title, 
+        scenarioState: '' //TODO: placeholder
       };
       SubProblemResource.save(_.omit($stateParams, ['id', 'problemId', 'userUid']), subProblemCommand)
         .$promise.then(function() {
@@ -74,9 +75,12 @@ define(function(require) {
             return _.pick($scope.scales.observed, _.map(includedCriteria, 'id'));
           },
           callback: function() {
-            return function() {
+            return function(criteria) {
               $scope.problemState.hasScaleRange = true;
               $scope.problemState.scaleRangeChanged = true;
+              _.forEach(criteria, function(criterion){
+                $scope.problem.criteria[criterion.id].pvf = criterion.pvf;
+              });
             };
           }
         }

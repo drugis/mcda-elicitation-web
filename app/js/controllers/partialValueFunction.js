@@ -3,17 +3,20 @@ define(function(require) {
   var angular = require("angular");
   var _ = require("lodash");
   var Wizard = require("mcda/controllers/helpers/wizard");
+  var dependencies = ['$scope', '$state', '$stateParams', '$injector', 'currentScenario', 'taskDefinition', 'PartialValueFunction'];
 
-  return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
+  var PartialValueFunctionController = function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
     $scope.pvf = PartialValueFunction;
+    $scope.problem = $scope.workspace.problem;
 
     var initialize = function(state) {
       var criterionId = $stateParams.criterion;
-      var criterion = angular.copy(state.problem.criteria[criterionId]);
+      var criterion = angular.copy($scope.problem.criteria[criterionId]);
       if (!criterion) {
         return {};
       }
       // set defaults
+      criterion.pvf = !criterion.pvf ? {} : criterion.pvf;
       criterion.pvf.direction = "decreasing";
       criterion.pvf.type = "linear";
       criterion.pvf.cutoffs = criterion.pvf.values = undefined;
@@ -134,4 +137,5 @@ define(function(require) {
       }
     });
   };
+  return dependencies.concat(PartialValueFunctionController);
 });

@@ -23,7 +23,7 @@ define(function() {
       title: 'Define Partial Value Functions',
       controller: 'PartialValueFunctionController',
       templateUrl: 'partialValueFunction.html',
-      requires: ['scale-range'],
+      requires: [],
       activeTab: 'preferences',
       resets: ['criteria-trade-offs']
     }, {
@@ -64,7 +64,7 @@ define(function() {
       controller: 'ResultsController',
       templateUrl: 'results.html',
       activeTab: 'results',
-      requires: ['scale-range', 'partial-value-function'],
+      requires: ['partial-value-function'],
       resets: []
     }, {
       id: 'problem',

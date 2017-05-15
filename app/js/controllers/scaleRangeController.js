@@ -85,7 +85,7 @@ define(function(require) {
         }
         $scope.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
       });
-      callback(criteria);
+      callback($scope.criteria);
       $modalInstance.close();
     }
 
