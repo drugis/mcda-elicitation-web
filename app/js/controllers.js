@@ -5,7 +5,7 @@ define(function(require) {
     .controller('ChooseProblemController', require('mcda/controllers/chooseProblem'))
     .controller('WorkspaceController', require('mcda/controllers/workspace'))
     .controller('ScenarioController', require('mcda/controllers/scenario'))
-    .controller('OverviewController', require('mcda/controllers/overview'))
+    .controller('EvidenceController', require('mcda/controllers/evidenceController'))
     .controller('EffectsTableController', require('mcda/controllers/effectsTable'))
     .controller('PreferencesController', require('mcda/controllers/preferences'))
     .controller('ScaleRangeController', require('mcda/controllers/scaleRange'))
