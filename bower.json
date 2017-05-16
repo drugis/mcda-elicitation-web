@@ -42,7 +42,7 @@
     "lodash": "~4.2.0",
     "MathJax": "2.4.0",
     "nprogress": "~0.2.0",
-    "nvd3-community": "~1.7",
+    "nvd3": "1.8.5",
     "requirejs": "~2.1.15",
     "requirejs-domready": "~2.0.1",
     "KaTeX": "katex#^0.6.0",
