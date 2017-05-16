@@ -75,17 +75,8 @@ define(function(require) {
     }
 
     function save() {
-      // Rewrite scale information
-      _.each(_.toPairs($scope.choice), function(choice) {
-        var pvf = $scope.criteria[choice[0]].pvf;
-        if (!pvf) {
-          $scope.criteria[choice[0]].pvf = {
-            range: null
-          };
-        }
-        $scope.criteria[choice[0]].pvf.range = [choice[1].lower, choice[1].upper];
-      });
-      callback($scope.criteria);
+      var pvfObject = ScaleRangeService.createRanges($scope.choice);
+      callback(pvfObject);
       $modalInstance.close();
     }
 

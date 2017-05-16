@@ -1,7 +1,7 @@
 'use strict';
 define(function(require) {
-  var angular = require("angular");
-  var _ = require("lodash");
+  var angular = require('angular');
+  var _ = require('lodash');
 
   var dependencies = [];
 
@@ -12,7 +12,7 @@ define(function(require) {
     };
 
     function nice(x, dirFun) {
-      if(x === 0) {
+      if (x === 0) {
         return 0;
       }
       var absX = Math.abs(x);
@@ -72,11 +72,22 @@ define(function(require) {
       };
     }
 
+    function createRanges(choices) {
+      return _.fromPairs(_.map(choices, function(choice, criterionId) {
+        return [criterionId, {
+          pvf: {
+            range: [choice.lower, choice.upper]
+          }
+        }];
+      }));
+    }
+
     return {
       nice: nice,
       niceTo: niceTo,
       niceFrom: niceFrom,
-      calculateScales: calculateScales
+      calculateScales: calculateScales,
+      createRanges: createRanges
     };
   };
 

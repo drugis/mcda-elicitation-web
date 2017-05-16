@@ -61,5 +61,35 @@ define(['angular', 'angular-mocks', 'mcda/services/scaleRangeService'], function
         expect(ScaleRangeService.niceTo(0)).toEqual(0);
       }));
     });
+    describe('createRanges', function() {
+      it('should create ranges for each scales choices', inject(function(ScaleRangeService) {
+        var choices = {
+          headacheId: {
+            lower: 10,
+            upper: 20
+          },
+          nauseaId: {
+            lower: 30,
+            upper: 40
+          }
+        };
+        
+        var ranges = ScaleRangeService.createRanges(choices);
+
+        var expectedRanges = {
+          headacheId: {
+            pvf: {
+              range: [10, 20]
+            }
+          }, nauseaId: {
+            pvf: {
+              range: [30, 40]
+            }
+          }
+        };
+
+        expect(ranges).toEqual(expectedRanges);
+      }));
+    });
   });
 });

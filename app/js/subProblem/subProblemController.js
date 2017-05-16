@@ -3,14 +3,14 @@ define(function(require) {
   require('angular');
   var _ = require('lodash');
 
-  var dependencies = ['$scope', '$stateParams', '$modal', '$state', 'intervalHull', 'SubProblemResource', 'mcdaRootPath'];
+  var dependencies = ['$scope', '$stateParams', '$modal', '$state', 'intervalHull', 'SubProblemResource', 'SubProblemService', 'mcdaRootPath'];
 
-  var SubProblemController = function($scope, $stateParams, $modal, $state, intervalHull, SubProblemResource, mcdaRootPath) {
+  var SubProblemController = function($scope, $stateParams, $modal, $state, intervalHull, SubProblemResource, SubProblemService, mcdaRootPath) {
     // vars 
     $scope.problem = $scope.workspace.problem;
     $scope.scales = $scope.workspace.$$scales;
     $scope.criteriaForScales = makeCriteriaForScales($scope.problem.criteria);
-    $scope.problemState = {};
+    $scope.subProblemState = {};
 
     // functions
     $scope.intervalHull = intervalHull;
@@ -21,6 +21,7 @@ define(function(require) {
     $scope.openScaleRangeDialog = openScaleRangeDialog;
     $scope.isCreationAllowed = isCreationAllowed;
     $scope.reset = initSubProblem;
+    $scope.checkDuplicateTitle = checkDuplicateTitle;
 
     //init
     $scope.$watch('workspace.$$scales.observed', function(newValue) {
@@ -30,10 +31,16 @@ define(function(require) {
       $scope.subProblem = subProblem;
       initSubProblem(subProblem);
     });
+    SubProblemResource.query({
+      projectId: $stateParams.projectId,
+      analysisId: $stateParams.analysisId
+    }).$promise.then(function(subProblems) {
+      $scope.subProblems = subProblems;
+    });
 
     function updateInclusions() {
-      $scope.problemState.isChanged = !_.isEqual($scope.problemState.criterionInclusions, $scope.originalInclusions);
-      $scope.problemState.numberOfCriteriaSelected = _.reduce($scope.problemState.criterionInclusions, function(accum, inclusion) {
+      $scope.subProblemState.isChanged = !_.isEqual($scope.subProblemState.criterionInclusions, $scope.originalInclusions);
+      $scope.subProblemState.numberOfCriteriaSelected = _.reduce($scope.subProblemState.criterionInclusions, function(accum, inclusion) {
         return inclusion ? accum + 1 : accum;
       }, 0);
     }
@@ -46,23 +53,28 @@ define(function(require) {
       $scope.isEditTitleVisible = false;
     }
 
+    function checkDuplicateTitle(title) {
+      $scope.subProblemState.isTitleDuplicate = _.find($scope.subProblems, function(subProblem) {
+        return title === subProblem.title;
+      });
+    }
+
     function saveProblemConfiguration() {
-      var subProblem = _.omit($scope.subProblem, ['id', 'workspaceId']);
-      subProblem.definition.criteria = $scope.problem.criteria;
       var subProblemCommand = {
-        definition: JSON.stringify(subProblem.definition, 2, null),
-        title: subProblem.title, 
-        scenarioState: '' //TODO: placeholder
+        definition: SubProblemService.createDefinition($scope.problem, $scope.subProblemState),
+        title: $scope.subProblem.title,
+        scenarioState: SubProblemService.createDefaultScenarioState($scope.problem, $scope.subProblemState)
       };
       SubProblemResource.save(_.omit($stateParams, ['id', 'problemId', 'userUid']), subProblemCommand)
-        .$promise.then(function() {
+        .$promise.then(function(newProblem) {
+          //TODO use newly made problem id
           $state.go('preferences');
         });
     }
 
     function openScaleRangeDialog() {
       var includedCriteria = _.filter($scope.criteriaForScales, function(criterion) {
-        return $scope.problemState.criterionInclusions[criterion.id];
+        return $scope.subProblemState.criterionInclusions[criterion.id];
       });
       $modal.open({
         templateUrl: mcdaRootPath + 'views/scaleRange.html',
@@ -75,12 +87,10 @@ define(function(require) {
             return _.pick($scope.scales.observed, _.map(includedCriteria, 'id'));
           },
           callback: function() {
-            return function(criteria) {
-              $scope.problemState.hasScaleRange = true;
-              $scope.problemState.scaleRangeChanged = true;
-              _.forEach(criteria, function(criterion){
-                $scope.problem.criteria[criterion.id].pvf = criterion.pvf;
-              });
+            return function(ranges) {
+              $scope.subProblemState.hasScaleRange = true;
+              $scope.subProblemState.scaleRangeChanged = true;
+              $scope.subProblemState.ranges = ranges;
             };
           }
         }
@@ -89,7 +99,7 @@ define(function(require) {
 
     function initSubProblem(subProblem) {
       $scope.originalInclusions = createInclusions(subProblem);
-      $scope.problemState = {
+      $scope.subProblemState = {
         criterionInclusions: _.cloneDeep($scope.originalInclusions),
         hasScaleRange: checkScaleRanges($scope.problem.criteria),
         scaleRangeChanged: false
@@ -98,7 +108,7 @@ define(function(require) {
     }
 
     function isCreationAllowed() {
-      return !$scope.problemState.hasScaleRange || (!$scope.problemState.isChanged && !$scope.problemState.scaleRangeChanged);
+      return !$scope.subProblemState.hasScaleRange || (!$scope.subProblemState.isChanged && !$scope.subProblemState.scaleRangeChanged);
     }
 
     // private functions

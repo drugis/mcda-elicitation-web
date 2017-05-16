@@ -8,8 +8,8 @@ define(function(require) {
   function ScenarioController($scope, $location, $state, $stateParams, Tasks, TaskDependencies, scenarios,
     ScenarioResource, SubProblemResource, WorkspaceService) {
 
+    // vars
     var currentProblem = $scope.workspace.problem;
-
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
     $scope.scenarios = scenarios;
@@ -24,6 +24,14 @@ define(function(require) {
     $scope.saveTitle = saveTitle;
     $scope.cancelTitle = cancelTitle;
     $scope.scenarioChanged = scenarioChanged;
+
+    // init
+    SubProblemResource.query({
+      projectId: $stateParams.projectId,
+      analysisId: $stateParams.analysisId
+    }).$promise.then(function(subProblems) {
+      $scope.subProblems = subProblems;
+    });
 
     function getTask(taskId) {
       return _.find(Tasks.available, function(task) {

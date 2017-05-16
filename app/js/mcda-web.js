@@ -24,7 +24,8 @@ define(function(require) {
   require('mcda/services/partialValueFunction');
   require('mcda/services/util');
   require('mcda/services/scaleRangeService');
-  require('mcda/manualInput/manualInputService');
+  require('mcda/manualInput/manualInput');
+  require('mcda/subProblem/subProblem');
   require('mcda/controllers');
   require('mcda/directives');
   require('mcda/navbar/navbar');
@@ -51,7 +52,8 @@ define(function(require) {
     'elicit.routeFactory',
     'elicit.pvfService',
     'elicit.navbar',
-    'elicit.manualInputService',
+    'elicit.manualInput',
+    'elicit.subProblem',
     'ngCookies',
     'errorReporting'
   ];

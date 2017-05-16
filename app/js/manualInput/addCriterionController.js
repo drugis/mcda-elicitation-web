@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash'], function(_) {
   var dependencies = ['$scope', '$modalInstance', 'criteria', 'callback'];
-  var ManualInputStep1Controller = function($scope, $modalInstance, criteria, callback) {
+  var AddCriterionController = function($scope, $modalInstance, criteria, callback) {
     // vars
     $scope.blockedReason = '';
     $scope.criterion = {
@@ -35,5 +35,5 @@ define(['lodash'], function(_) {
       return _.find(criteria, ['name', name]);
     }
   };
-  return dependencies.concat(ManualInputStep1Controller);
+  return dependencies.concat(AddCriterionController);
 });

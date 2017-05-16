@@ -1,8 +1,8 @@
 'use strict';
 define(function(require) {
-  var angular = require("angular");
-  var _ = require("lodash");
-  var Wizard = require("mcda/controllers/helpers/wizard");
+  var angular = require('angular');
+  var _ = require('lodash');
+  var Wizard = require('mcda/controllers/helpers/wizard');
   var dependencies = ['$scope', '$state', '$stateParams', '$injector', 'currentScenario', 'taskDefinition', 'PartialValueFunction'];
 
   var PartialValueFunctionController = function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
@@ -17,8 +17,8 @@ define(function(require) {
       }
       // set defaults
       criterion.pvf = !criterion.pvf ? {} : criterion.pvf;
-      criterion.pvf.direction = "decreasing";
-      criterion.pvf.type = "linear";
+      criterion.pvf.direction = 'decreasing';
+      criterion.pvf.type = 'linear';
       criterion.pvf.cutoffs = criterion.pvf.values = undefined;
 
       var initial = {
@@ -40,10 +40,10 @@ define(function(require) {
       var ref = nextState.ref;
 
       if (state.type === 'elicit type') {
-        nextState.type = "bisection";
+        nextState.type = 'bisection';
       }
 
-      if (nextState.type === "bisection") {
+      if (nextState.type === 'bisection') {
         if (ref === 0) {
           nextState.choice.pvf.values = [];
           nextState.choice.pvf.cutoffs = [];
@@ -53,7 +53,7 @@ define(function(require) {
         var inv = PartialValueFunction.inv(nextState.choice);
 
         var from, to;
-        if (nextState.choice.direction === "increasing") {
+        if (nextState.choice.direction === 'increasing') {
           from = inv(bisection[1]);
           to = inv(bisection[0]);
         } else {
@@ -91,7 +91,7 @@ define(function(require) {
 
       currentScenario.state = _.pick(state, ['problem', 'prefs']);
       currentScenario.$save($stateParams, function(scenario) {
-        $scope.$emit("elicit.resultsAccessible", scenario);
+        $scope.$emit('elicit.resultsAccessible', scenario);
         $state.go('preferences');
       });
     };
@@ -99,7 +99,7 @@ define(function(require) {
     $scope.canSave = function(state) {
       switch (state.type) {
         case 'elicit type':
-          return state.choice.pvf.type === "linear";
+          return state.choice.pvf.type === 'linear';
         case 'bisection':
           return state.ref === state.bisections.length;
         default:

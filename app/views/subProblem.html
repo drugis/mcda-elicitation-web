@@ -7,14 +7,15 @@
     <form>
       <div class="row collapse">
         <div class="columns small-8">
-          <input type="text" ng-model="subProblem.title">
+          <input type="text" ng-change="checkDuplicateTitle(subProblem.title)" ng-model="subProblem.title">
         </div>
         <div class="columns small-2">
-          <button class="button postfix" ng-click="saveTitle()">Save</button>
+          <button class="button postfix" ng-disabled="subProblemState.isTitleDubplicate" ng-click="saveTitle()">Save</button>
         </div>
         <div class="columns small-2">
           <button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button>
         </div>
+        <div ng-if="subProblemState.isTitleDuplicate"><em>Duplicate name</em></div>
       </div>
     </form>
   </div>
@@ -37,8 +38,8 @@
         <tr ng-repeat="(criterionKey, criterion) in problem.criteria">
           <td>
             <label>
-              <input type="checkbox" ng-if="editMode.isUserOwner" ng-model="problemState.criterionInclusions[criterionKey]"
-                ng-change="updateInclusions()" ng-disabled="problemState.criterionInclusions[criterionKey] && problemState.numberOfCriteriaSelected < 3"> {{criterion.title}}</label>
+              <input type="checkbox" ng-if="editMode.isUserOwner" ng-model="subProblemState.criterionInclusions[criterionKey]"
+                ng-change="updateInclusions()" ng-disabled="subProblemState.criterionInclusions[criterionKey] && subProblemState.numberOfCriteriaSelected < 3"> {{criterion.title}}</label>
           </td>
           <td>
             <div class="td-container">
@@ -76,7 +77,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-class="{'disabled-row': !problemState.criterionInclusions[criterion.id]}"
+        <tr ng-class="{'disabled-row': !subProblemState.criterionInclusions[criterion.id]}"
           ng-repeat="criterion in criteriaForScales">
           <td>{{criterion.title}}</td>
           <td>{{scales.theoreticalScales[criterion.id][0] | number}}, {{scales.theoreticalScales[criterion.id][1]
@@ -102,7 +103,7 @@
   <div class="columns large-12">
     <button class="success" ng-click="saveProblemConfiguration()" ng-disabled="isCreationAllowed()">Create problem</button>
     <button ng-click="reset(subProblem)">Reset</button>
-    <span class="alert" ng-if="!problemState.hasScaleRange">Missing scale ranges</span>
+    <span class="alert" ng-if="!subProblemState.hasScaleRange">Missing scale ranges</span>
 
   </div>
 </div>

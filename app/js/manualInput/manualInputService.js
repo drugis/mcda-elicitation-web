@@ -1,7 +1,6 @@
 'use strict';
 define(function(require) {
   var dependencies = [];
-  var angular = require('angular');
   var _ = require('lodash');
   var ManualInputService = function() {
     // Exposed functions
@@ -98,5 +97,5 @@ define(function(require) {
     };
   };
 
-  return angular.module('elicit.manualInputService', dependencies).factory('ManualInputService', ManualInputService);
+  return dependencies.concat(ManualInputService);
 });

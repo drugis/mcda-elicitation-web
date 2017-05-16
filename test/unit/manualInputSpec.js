@@ -1,8 +1,8 @@
 'use strict';
-define(['angular-mocks', 'mcda/manualInput/manualInputService'], function() {
+define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
   describe('The manualInputService', function() {
     var manualInputService;
-    beforeEach(module('elicit.manualInputService'));
+    beforeEach(module('elicit.manualInput'));
     beforeEach(inject(function(ManualInputService) {
       manualInputService = ManualInputService;
     }));
