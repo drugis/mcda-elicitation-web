@@ -1,5 +1,5 @@
 'use strict';
-define(function() {
+define(function(require) {
   var dependencies = ['ngResource'];
   var angular = require('angular');
   var EffectsTableResource = function($resource) {
@@ -12,5 +12,6 @@ define(function() {
       }
     });
   };
-  return angular.module('elicit.effectsTableResource', dependencies).factory('EffectsTableResource', EffectsTableResource);
+  return angular.module('elicit.effectsTableResource', dependencies)
+    .factory('EffectsTableResource', EffectsTableResource);
 });

@@ -319,7 +319,6 @@ app.get('/workspaces/:id/effectsTable', function(req, res, next) {
       err.status = 500;
       return next(err);
     }
-    console.log(JSON.stringify(result.rows));
     res.send(result.rows);
   });
 });

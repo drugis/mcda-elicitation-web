@@ -23,6 +23,7 @@ define(function(require) {
   require('mcda/services/partialValueFunction');
   require('mcda/services/util');
   require('mcda/services/scaleRangeService');
+  require('mcda/manualInput/manualInputService');
   require('mcda/controllers');
   require('mcda/directives');
   require('mcda/navbar/navbar');
@@ -48,13 +49,14 @@ define(function(require) {
     'elicit.routeFactory',
     'elicit.pvfService',
     'elicit.navbar',
+    'elicit.manualInputService',
     'ngCookies',
     'errorReporting'
   ];
 
   var app = angular.module('elicit', dependencies);
-  app.run(['$rootScope', '$window', '$http', '$cookies',
-    function($rootScope, $window, $http, $cookies) {
+  app.run(['$rootScope',
+    function($rootScope) {
       $rootScope.$safeApply = function($scope, fn) {
         var phase = $scope.$root.$$phase;
         if (phase === '$apply' || phase === '$digest') {
@@ -91,16 +93,21 @@ define(function(require) {
     MCDARouteProvider.buildRoutes($stateProvider, 'workspace', baseTemplatePath);
 
     // Default route
-    $stateProvider.state('choose-problem', {
-      url: '/choose-problem',
-      templateUrl: baseTemplatePath + 'chooseProblem.html',
-      controller: 'ChooseProblemController'
-    });
-
+    $stateProvider
+      .state('choose-problem', {
+        url: '/choose-problem',
+        templateUrl: baseTemplatePath + 'chooseProblem.html',
+        controller: 'ChooseProblemController'
+      })
+      .state('manualInput', {
+        url: '/manual-input',
+        templateUrl: mcdaRootPath + 'js/manualInput/manualInput.html',
+        controller: 'ManualInputController'
+      });
     $urlRouterProvider.otherwise('/choose-problem');
   });
 
-  app.run(function($rootScope, $window) {
+  app.run(function($rootScope) {
     $rootScope.$safeApply = function($scope, fn) {
       var phase = $scope.$root.$$phase;
       if (phase === '$apply' || phase === '$digest') {

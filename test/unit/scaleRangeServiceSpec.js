@@ -1,3 +1,4 @@
+'use strict';
 define(['angular', 'angular-mocks', 'mcda/services/scaleRangeService'], function() {
 
   // - the lower bound must be lower than the lower end of the observed range

@@ -1,10 +1,10 @@
 'use strict';
 define(function(require) {
-  var _ = require("underscore");
-  var $ = require("jQuery");
-  var angular = require("angular");
-  var d3 = require("d3");
-  var nv = require("nvd3");
+  var _ = require('underscore');
+  var $ = require('jQuery');
+  var angular = require('angular');
+  var d3 = require('d3');
+  var nv = require('nvd3');
 
   var directives = angular.module('elicit.directives', []);
 
@@ -56,7 +56,7 @@ define(function(require) {
         }
       };
 
-      require("jquery-slider");
+      require('jquery-slider');
       $($element).empty();
       $($element).append('<input type="slider"></input>');
       $($element).find('input').attr('value', getModelValue());
@@ -304,7 +304,7 @@ define(function(require) {
     return {
       link: function(scope, element) {
         var color = d3.scale.quantile().range(d3.range(9)).domain([1, 0]);
-        var style = "display: inline-block; text-align: center; height: 2.5em; width: 2.5em; padding: 5px; line-height: 1.9em; margin: 1px;";
+        var style = 'display: inline-block; text-align: center; height: 2.5em; width: 2.5em; padding: 5px; line-height: 1.9em; margin: 1px;';
 
         var block = function(val) {
           var col = 'q' + color(val) + '-9';
@@ -357,13 +357,13 @@ define(function(require) {
           var $script = angular.element('<script type="math/tex">').html(value === undefined ? '' : value);
           element.html('');
           element.append($script);
-          var MathJax = require("MathJax");
+          var MathJax = require('MathJax');
           MathJax.Hub.Config({
             skipStartupTypeset: true,
-            messageStyle: "none",
+            messageStyle: 'none',
             showMathMenu: false,
-            "SVG": {
-              font: "Latin-Modern"
+            'SVG': {
+              font: 'Latin-Modern'
             }
           });
           MathJax.Hub.Queue(['Reprocess', MathJax.Hub, element[0]]);
@@ -562,7 +562,7 @@ define(function(require) {
 
   directives.directive('criterion', function() {
     return {
-      restrict: "E",
+      restrict: 'E',
       replace: true,
       scope: {
         criterion: '=of'
@@ -571,7 +571,7 @@ define(function(require) {
         var c = scope.criterion;
 
         var hasDescription = !!c.description;
-        var dimensionlessUnits = ["proportion"];
+        var dimensionlessUnits = ['proportion'];
         var isDimensionless = !c.unitOfMeasurement || dimensionlessUnits.indexOf(c.unitOfMeasurement.toLowerCase()) !== -1;
 
         var text;

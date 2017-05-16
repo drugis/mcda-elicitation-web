@@ -9156,46 +9156,67 @@ table tr td.button-cell button {
   margin-bottom: 0;
   font-size: 0.875rem;
 }
-
+/* line 94, ../../sass-shared/_drugis.scss */
+table tr td.input-cell {
+  padding: 0;
+}
 /* line 96, ../../sass-shared/_drugis.scss */
+table tr td.input-cell select,
+table tr td.input-cell input[type="number"] {
+  margin: 0;
+  border: 0;
+  text-align: center;
+}
+/* line 102, ../../sass-shared/_drugis.scss */
+table tr td.input-cell select {
+  padding-right: 1rem;
+}
+/* line 105, ../../sass-shared/_drugis.scss */
+table tr td.input-cell input[type="number"].ng-invalid,
+table tr td.input-cell input[type="number"].ng-invalid-number,
+table tr td.input-cell input[type="number"].invalid-trialverse-number {
+  background-color: #ed9090;
+}
+
+/* line 113, ../../sass-shared/_drugis.scss */
 tr.clickable td {
   color: #1976D2;
 }
 
-/* line 99, ../../sass-shared/_drugis.scss */
+/* line 116, ../../sass-shared/_drugis.scss */
 td.empty-cell {
   background-color: gainsboro;
 }
 
-/* line 103, ../../sass-shared/_drugis.scss */
+/* line 120, ../../sass-shared/_drugis.scss */
 tr.on-hover:hover {
   background: #e6e6e6;
   cursor: pointer;
   text-decoration: none;
 }
 
-/* line 109, ../../sass-shared/_drugis.scss */
+/* line 126, ../../sass-shared/_drugis.scss */
 table.layout-table {
   border: none;
   background-color: #F3F0FA;
 }
-/* line 112, ../../sass-shared/_drugis.scss */
+/* line 129, ../../sass-shared/_drugis.scss */
 table.layout-table td {
   border: none;
 }
 
-/* line 119, ../../sass-shared/_drugis.scss */
+/* line 136, ../../sass-shared/_drugis.scss */
 .error-message {
   display: block;
   color: #1976D2;
 }
 
-/* line 124, ../../sass-shared/_drugis.scss */
+/* line 141, ../../sass-shared/_drugis.scss */
 .application-link a {
   text-decoration: underline;
 }
 
-/* line 129, ../../sass-shared/_drugis.scss */
+/* line 146, ../../sass-shared/_drugis.scss */
 input[type="number"],
 input[type="text"],
 select,
@@ -9203,12 +9224,12 @@ select option {
   line-height: 1.1rem;
 }
 
-/* line 137, ../../sass-shared/_drugis.scss */
+/* line 154, ../../sass-shared/_drugis.scss */
 body.f-topbar-fixed {
-  padding-top: 19px;
+  padding-top: 4rem;
 }
 
-/* line 143, ../../sass-shared/_drugis.scss */
+/* line 160, ../../sass-shared/_drugis.scss */
 #hero h1 {
   font-size: 4em;
   color: white;
@@ -9217,19 +9238,19 @@ body.f-topbar-fixed {
   line-height: 100%;
 }
 
-/* line 151, ../../sass-shared/_drugis.scss */
+/* line 168, ../../sass-shared/_drugis.scss */
 #hero h1 small {
   color: white;
 }
 
-/* line 155, ../../sass-shared/_drugis.scss */
+/* line 172, ../../sass-shared/_drugis.scss */
 #hero h4 {
   font-size: 1.35em;
   color: white;
   font-weight: 300;
 }
 
-/* line 161, ../../sass-shared/_drugis.scss */
+/* line 178, ../../sass-shared/_drugis.scss */
 header {
   background: #1976D2;
   text-align: left;
@@ -9237,7 +9258,7 @@ header {
   padding: 25px 20px 35px 0px;
 }
 
-/* line 168, ../../sass-shared/_drugis.scss */
+/* line 185, ../../sass-shared/_drugis.scss */
 header h2 {
   font-size: 3.5em;
   color: white;
@@ -9246,69 +9267,69 @@ header h2 {
   line-height: 100%;
 }
 
-/* line 176, ../../sass-shared/_drugis.scss */
+/* line 193, ../../sass-shared/_drugis.scss */
 header h4 {
   color: white;
 }
 
-/* line 180, ../../sass-shared/_drugis.scss */
+/* line 197, ../../sass-shared/_drugis.scss */
 header small {
   color: white;
 }
 
-/* line 184, ../../sass-shared/_drugis.scss */
+/* line 201, ../../sass-shared/_drugis.scss */
 .content {
   padding-top: 20px;
 }
 
-/* line 188, ../../sass-shared/_drugis.scss */
+/* line 205, ../../sass-shared/_drugis.scss */
 h3 img {
   float: right;
   margin-right: 10px;
 }
 
-/* line 193, ../../sass-shared/_drugis.scss */
+/* line 210, ../../sass-shared/_drugis.scss */
 .row-divider {
   margin: 2rem 0;
 }
 
-/* line 197, ../../sass-shared/_drugis.scss */
+/* line 214, ../../sass-shared/_drugis.scss */
 .screen-shot {
   border: 1px solid #dddddd;
   padding: 4px;
   margin: 0.5rem;
 }
 
-/* line 203, ../../sass-shared/_drugis.scss */
+/* line 220, ../../sass-shared/_drugis.scss */
 .footer {
   background: #333333;
   padding: 24px 0 10px;
 }
 
-/* line 208, ../../sass-shared/_drugis.scss */
+/* line 225, ../../sass-shared/_drugis.scss */
 .footer a,
 .footer h4,
 .footer p {
   color: #666666;
 }
 
-/* line 214, ../../sass-shared/_drugis.scss */
+/* line 231, ../../sass-shared/_drugis.scss */
 .footer a:hover {
   color: #777777;
 }
 
 /* ---------sticky footer --------------*/
-/* line 220, ../../sass-shared/_drugis.scss */
+/* line 237, ../../sass-shared/_drugis.scss */
 * {
   margin: 0;
 }
 
-/* line 224, ../../sass-shared/_drugis.scss */
+/* line 241, ../../sass-shared/_drugis.scss */
 html, body {
   height: 100%;
 }
 
-/* line 228, ../../sass-shared/_drugis.scss */
+/* line 245, ../../sass-shared/_drugis.scss */
 .wrapper {
   min-height: 100%;
   height: auto !important;
@@ -9316,34 +9337,34 @@ html, body {
   margin: 0 auto -4rem;
 }
 
-/* line 235, ../../sass-shared/_drugis.scss */
+/* line 252, ../../sass-shared/_drugis.scss */
 .push {
   height: 4.5rem;
 }
 
-/* line 239, ../../sass-shared/_drugis.scss */
+/* line 256, ../../sass-shared/_drugis.scss */
 .footer {
   height: 4.5rem;
 }
 
-/* line 243, ../../sass-shared/_drugis.scss */
+/* line 260, ../../sass-shared/_drugis.scss */
 .footer, .push {
   clear: both;
 }
 
-/* line 247, ../../sass-shared/_drugis.scss */
+/* line 264, ../../sass-shared/_drugis.scss */
 .copyright {
   display: inline;
 }
 
 /* -------- end sticky footer---------*/
-/* line 252, ../../sass-shared/_drugis.scss */
+/* line 269, ../../sass-shared/_drugis.scss */
 #map_canvas {
   height: 280px;
 }
 
 /* standard */
-/* line 257, ../../sass-shared/_drugis.scss */
+/* line 274, ../../sass-shared/_drugis.scss */
 pre {
   margin-bottom: 1.25rem;
   border: 1px solid #b4b4b4;
@@ -9353,14 +9374,14 @@ pre {
   overflow-x: auto;
 }
 
-/* line 266, ../../sass-shared/_drugis.scss */
+/* line 283, ../../sass-shared/_drugis.scss */
 pre code {
   border: none;
   background: none;
   padding: 0px;
 }
 
-/* line 272, ../../sass-shared/_drugis.scss */
+/* line 289, ../../sass-shared/_drugis.scss */
 code {
   border: 1px solid #b4b4b4;
   background-color: #e7e7e7;
@@ -9368,35 +9389,35 @@ code {
 }
 
 /* -------- inline help directive---------*/
-/* line 280, ../../sass-shared/_drugis.scss */
+/* line 297, ../../sass-shared/_drugis.scss */
 inline-help {
   margin: 1rem;
 }
 
-/* line 284, ../../sass-shared/_drugis.scss */
+/* line 301, ../../sass-shared/_drugis.scss */
 .joyride-content-wrapper a {
   color: #008CBA;
 }
 
-/* line 288, ../../sass-shared/_drugis.scss */
+/* line 305, ../../sass-shared/_drugis.scss */
 body .joyride-tip-guide {
   z-index: 1006;
   margin-top: -32px;
   margin-left: -1.45rem !important;
 }
 
-/* line 294, ../../sass-shared/_drugis.scss */
+/* line 311, ../../sass-shared/_drugis.scss */
 inline-help a {
   color: grey;
 }
 
-/* line 298, ../../sass-shared/_drugis.scss */
+/* line 315, ../../sass-shared/_drugis.scss */
 inline-help a:hover {
   color: #676767;
 }
 
 /* -------- end inline help directive---------*/
-/* line 304, ../../sass-shared/_drugis.scss */
+/* line 321, ../../sass-shared/_drugis.scss */
 .reveal-modal, dialog {
   overflow-x: auto;
   min-width: 540px;

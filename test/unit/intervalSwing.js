@@ -1,9 +1,9 @@
+'use strict';
 define(['angular',
     'angular-mocks',
-    'mcda/controllers/intervalSwing',
-    'mcda/services/pataviService'
+    'mcda/controllers/intervalSwing'
   ],
-  function(angular, IntervalSwingHandler) {
+  function() {
     describe('IntervalSwingHandler', function() {
       beforeEach(module('elicit.controllers'));
       beforeEach(module('elicit.taskDependencies'));
@@ -24,7 +24,7 @@ define(['angular',
               criteria: ['Bleed', 'Dist DVT']
             }]
           },
-          $save: function(state) {}
+          $save: function() {}
         };
         scope.scenario = scenario;
 

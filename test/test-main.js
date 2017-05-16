@@ -3,7 +3,7 @@
 var tests = [];
 for (var file in window.__karma__.files) {
   if (window.__karma__.files.hasOwnProperty(file)) {
-    if (file.indexOf("/unit/") != -1 && file.indexOf("bower_components") == -1 && file.indexOf("node_modules") == -1) {
+    if (file.indexOf('/unit/') !== -1 && file.indexOf('bower_components') === -1 && file.indexOf('node_modules') === -1) {
       console.log('file: ' + file);
       tests.push(file);
     }
@@ -32,19 +32,50 @@ require.config({
   },
   baseUrl: '/base',
   shim: {
-    'angular': { exports : 'angular'},
-    'angular-resource': { deps:['angular'], exports: 'angular-resource'},
-    'angular-ui-router': { deps: ['angular'], exports: 'angular-ui-router'},
-    'underscore': { exports : '_'},
-    'angular-mocks': { deps: ['angular'], exports: 'angular.mock' },
-    'd3': { exports : 'd3'},
-    'nvd3': { deps: ['d3'], exports : 'nv'},
-    'jQuery': { exports : 'jQuery'},
-    'jquery-slider': { deps: ['jQuery'] },
-    'jasmine': { exports: 'jasmine' },
-    'jasmine-html': { deps: ['jasmine'], exports: 'jasmine' },
-    'mmfoundation': { deps: ['angular'] },
-    'templates/remark.html': {deps: ['angular']}
+    'angular': {
+      exports: 'angular'
+    },
+    'angular-resource': {
+      deps: ['angular'],
+      exports: 'angular-resource'
+    },
+    'angular-ui-router': {
+      deps: ['angular'],
+      exports: 'angular-ui-router'
+    },
+    'underscore': {
+      exports: '_'
+    },
+    'angular-mocks': {
+      deps: ['angular'],
+      exports: 'angular.mock'
+    },
+    'd3': {
+      exports: 'd3'
+    },
+    'nvd3': {
+      deps: ['d3'],
+      exports: 'nv'
+    },
+    'jQuery': {
+      exports: 'jQuery'
+    },
+    'jquery-slider': {
+      deps: ['jQuery']
+    },
+    'jasmine': {
+      exports: 'jasmine'
+    },
+    'jasmine-html': {
+      deps: ['jasmine'],
+      exports: 'jasmine'
+    },
+    'mmfoundation': {
+      deps: ['angular']
+    },
+    'templates/remark.html': {
+      deps: ['angular']
+    }
   },
   priority: ['angular'],
 
@@ -58,6 +89,10 @@ require.config({
 window.name = "NG_DEFER_BOOTSTRAP!";
 window.config = {
   examplesRepository: "/examples/",
-  workspacesRepository: { service: "LocalWorkspaces" },
-  remarksRepository: { service: 'LocalRemarks'}
+  workspacesRepository: {
+    service: "LocalWorkspaces"
+  },
+  remarksRepository: {
+    service: 'LocalRemarks'
+  }
 };

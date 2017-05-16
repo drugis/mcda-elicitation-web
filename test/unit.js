@@ -1,3 +1,4 @@
+'use strict';
 require.config({
   paths: {
     'jQuery': 'bower_components/jquery/jquery.min',
