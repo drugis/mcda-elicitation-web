@@ -1,7 +1,7 @@
 'use strict';
 define(function(require) {
   var angular = require('angular');
-  var _ = require('underscore');
+  var _ = require('lodash');
 
   var dependencies = ['ScalesService'];
 
@@ -19,7 +19,7 @@ define(function(require) {
     };
 
     var buildTheoreticalScales = function(problem) {
-      return _.object(_.map(problem.criteria, function(val, key) {
+      return _.fromPairs(_.map(problem.criteria, function(val, key) {
         var scale = val.scale || [null, null];
 
         scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
@@ -33,10 +33,22 @@ define(function(require) {
       return ScalesService.getObservedScales(scope, problem);
     }
 
+    function reduceProblem(problem) {
+      var criteria = _.reduce(problem.criteria, function(accum, criterion, key) {
+        accum[key] = _.pick(criterion, ['scale', 'pvf', 'title']);
+        return accum;
+      }, {});
+      return {
+        criteria: criteria,
+        prefs: problem.prefs
+      };
+    }
+
     return {
       getObservedScales: getObservedScales,
       buildTheoreticalScales: buildTheoreticalScales,
-      buildValueTree: buildValueTree
+      buildValueTree: buildValueTree,
+      reduceProblem: reduceProblem
     };
   };
 

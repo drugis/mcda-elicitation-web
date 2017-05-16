@@ -1,10 +1,9 @@
 'use strict';
 define(function(require) {
-  var angular = require('angular');
-  var _ = require('underscore');
-  var Config = require('mcda/config');
+  var _ = require('lodash');
 
-  return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, scenarios, ScenarioResource, WorkspaceService) {
+  return function($scope, $location, $state, $stateParams, Tasks, TaskDependencies, scenarios, 
+    ScenarioResource, WorkspaceService) {
 
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
@@ -35,7 +34,7 @@ define(function(require) {
       $scope.resultsAccessible = TaskDependencies.isAccessible($scope.tasks.results, scenario.state);
     });
 
-    $scope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+    $scope.$on('$stateChangeStart', function(event, toState) {
       var task = getTask(toState.name);
       if (task && task.activeTab) {
         $scope.activeTab = task.activeTab;
@@ -81,20 +80,23 @@ define(function(require) {
     }
 
     $scope.forkScenario = function() {
-      var newScenario = {
-        'title': randomId(3, 'Scenario '),
-        'state': $scope.__scenario.state
-      };
-      ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
-        redirect(savedScenario.id);
+      ScenarioResource.get($stateParams, function(scenario) { // reload because child scopes may have changed scenario
+        var newScenario = {
+          'title': randomId(3, 'Scenario '),
+          'state': scenario.state
+        };
+        ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
+          redirect(savedScenario.id);
+        });
       });
     };
 
     $scope.newScenario = function() {
+
       var newScenario = {
         'title': randomId(3, 'Scenario '),
         'state': {
-          'problem': $scope.workspace.problem
+          'problem': WorkspaceService.reduceProblem($scope.workspace.problem)
         }
       };
       ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {

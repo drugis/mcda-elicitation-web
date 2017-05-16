@@ -1,6 +1,6 @@
 'use strict';
 define(function(require) {
-  var _ = require('underscore');
+  var _ = require('lodash');
   var $ = require('jQuery');
   var angular = require('angular');
   var d3 = require('d3');
@@ -137,7 +137,7 @@ define(function(require) {
 
         var rankGraphData = function(data) {
           var result = [];
-          _.each(_.pairs(data), function(el) {
+          _.each(_.toPairs(data), function(el) {
             var key = scope.problem.alternatives[el[0]].title;
             var values = el[1];
             for (var i = 0; i < values.length; i+=1) {
@@ -472,7 +472,7 @@ define(function(require) {
       },
       link: function(scope) {
         scope.pvf = PartialValueFunction;
-        scope.criteria = _.sortBy(_.map(_.pairs(scope.problem.criteria), function(crit, idx) {
+        scope.criteria = _.sortBy(_.map(_.toPairs(scope.problem.criteria), function(crit, idx) {
           return _.extend(crit[1], {
             id: crit[0],
             w: 'w_' + (idx + 1)

@@ -6,6 +6,7 @@ var dbUri = 'postgres://' + process.env.MCDAWEB_DB_USER + ':' + process.env.MCDA
 console.log(dbUri);
 var db = require('./node-backend/db')(dbUri);
 var patavi = require('./node-backend/patavi');
+var util = require('./node-backend/util');
 var async = require('async');
 
 var express = require('express'),
@@ -176,7 +177,7 @@ app.post('/workspaces', function(req, res, next) {
 
     function createScenario(workspaceId, callback) {
       var state = {
-        problem: req.body.problem
+        problem: util.reduceProblem(req.body.problem)
       };
       client.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3) RETURNING id', [workspaceId, 'Default', state], function(err, result) {
         if (err) {

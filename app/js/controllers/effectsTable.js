@@ -1,8 +1,7 @@
 'use strict';
 define(function(require) {
   var angular = require('angular');
-  var _ = require('underscore');
-  var lodash = require('lodash');
+  var _ = require('lodash');
 
   return function($scope, $stateParams,
     taskDefinition,
@@ -32,12 +31,12 @@ define(function(require) {
     $scope.remarks = {};
 
     $scope.alternativeInclusions = {};
-    lodash.map($scope.problem.alternatives, function(alternative, alternativeKey){
+    _.map($scope.problem.alternatives, function(alternative, alternativeKey) {
       $scope.alternativeInclusions[alternativeKey] = true;
     });
-    
+
     EffectsTableResource.query($stateParams, function(exclusions) {
-      lodash.forEach(exclusions, function(exclusion) {
+      _.forEach(exclusions, function(exclusion) {
         $scope.alternativeInclusions[exclusion.alternativeId] = false;
       });
     });
@@ -49,8 +48,10 @@ define(function(require) {
       remarksCache = angular.copy(remarks);
     });
 
-    $scope.toggleVisibility = function(alternativeId){
-      EffectsTableResource.toggleExclusion($stateParams, {alternativeId: alternativeId});
+    $scope.toggleVisibility = function(alternativeId) {
+      EffectsTableResource.toggleExclusion($stateParams, {
+        alternativeId: alternativeId
+      });
     };
 
     $scope.saveRemarks = function() {

@@ -16,8 +16,7 @@ require.config({
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_SVG',
     'nvd3': 'bower_components/nvd3-community/build/nv.d3',
     'mcda': '/app/js',
-    'mmfoundation': 'bower_components/angular-foundation/dist/mm-foundation-tpls-0.9.0-SNAPSHOT.min',
-    'underscore': 'bower_components/underscore/underscore-min'
+    'mmfoundation': 'bower_components/angular-foundation/dist/mm-foundation-tpls-0.9.0-SNAPSHOT.min'
   },
   baseUrl: '.',
   shim: {
@@ -35,7 +34,7 @@ require.config({
     'angular-ui-router': {
       deps: ['angular']
     },
-    'underscore': {
+    'lodash': {
       exports: '_'
     },
     'MathJax': {

@@ -1,7 +1,7 @@
 'use strict';
 define(function(require) {
   var angular = require("angular");
-  var _ = require("underscore");
+  var _ = require("lodash");
 
   return function($scope, $filter, $location, currentScenario, $anchorScroll, PartialValueFunction, Tasks, TaskDependencies, intervalHull, taskDefinition) {
     $scope.scenario = currentScenario;
@@ -12,7 +12,7 @@ define(function(require) {
 
     $scope.pvf = PartialValueFunction;
 
-    $scope.criteria = _.sortBy(_.map(_.pairs(currentScenario.state.problem.criteria), function(crit, idx) {
+    $scope.criteria = _.sortBy(_.map(_.toPairs(currentScenario.state.problem.criteria), function(crit, idx) {
       return _.extend(crit[1], {
         id: crit[0],
         w: 'w_' + (idx + 1)

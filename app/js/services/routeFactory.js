@@ -2,7 +2,7 @@
 define(function(require) {
   var angular = require('angular');
   var Config = require('mcda/config');
-  var _ = require('underscore');
+  var _ = require('lodash');
 
   var dependencies = [];
 
