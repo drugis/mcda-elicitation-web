@@ -472,14 +472,7 @@ define(function(require) {
       },
       link: function(scope) {
         scope.pvf = PartialValueFunction;
-        scope.criteria = _.sortBy(_.map(_.toPairs(scope.problem.criteria), function(crit, idx) {
-          return _.extend(crit[1], {
-            id: crit[0],
-            w: 'w_' + (idx + 1)
-          });
-        }), 'w');
-
-
+       
         var w = function(criterionKey) {
           return _.find(scope.criteria, function(crit) {
             return crit.id === criterionKey;

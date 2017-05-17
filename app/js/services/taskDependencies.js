@@ -27,7 +27,7 @@ define(function(require) {
 
   var partialValueFunctions = {
     'isPresent': function(state) {
-      var criteria = state.problem.criteria;
+      var criteria = state.criteria;
       return _.every(criteria, function(criterion) {
         var pvf = criterion.pvf;
         return pvf && pvf.direction && pvf.type;
@@ -100,7 +100,7 @@ define(function(require) {
     };
 
     var isAccessible = function(task, state) {
-      if (!state || !state.problem) {
+      if (!state) {
         return false;
       }
       var requires = _.filter(task.requires, function(require) {

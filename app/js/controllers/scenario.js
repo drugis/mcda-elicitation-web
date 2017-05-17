@@ -1,21 +1,26 @@
 'use strict';
 define(function(require) {
   var _ = require('lodash');
-  var dependencies = ['$scope', '$location', '$state', '$stateParams', 'Tasks', 'TaskDependencies', 'scenarios',
-    'ScenarioResource', 'SubProblemResource', 'WorkspaceService'
+  var dependencies = ['$scope', '$location', '$state', '$stateParams', 'Tasks', 'TaskDependencies',
+    'ScenarioResource', 'SubProblemResource', 'WorkspaceService', 'subProblems', 'currentSubProblem', 'scenarios', 'currentScenario'
   ];
 
-  function ScenarioController($scope, $location, $state, $stateParams, Tasks, TaskDependencies, scenarios,
-    ScenarioResource, SubProblemResource, WorkspaceService) {
+  function ScenarioController($scope, $location, $state, $stateParams, Tasks, TaskDependencies,
+    ScenarioResource, SubProblemResource, WorkspaceService, subProblems, currentSubProblem, scenarios, currentScenario) {
 
     // vars
-    var currentProblem = $scope.workspace.problem;
+    var baseProblem = $scope.workspace.problem;
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
+    $scope.selections = {};
     $scope.scenarios = scenarios;
-    $scope.workspace.$$valueTree = WorkspaceService.buildValueTree(currentProblem);
+    $scope.scenario = currentScenario;
+    $scope.aggregateProblem = WorkspaceService.buildAggregateProblem(baseProblem, currentSubProblem, currentScenario);
+    $scope.subProblems = subProblems;
+    $scope.subProblem = currentSubProblem;
+    $scope.workspace.$$valueTree = WorkspaceService.buildValueTree(baseProblem);
     $scope.workspace.$$scales = {};
-    $scope.workspace.$$scales.theoreticalScales = WorkspaceService.buildTheoreticalScales(currentProblem);
+    $scope.workspace.$$scales.theoreticalScales = WorkspaceService.buildTheoreticalScales(baseProblem);
 
     // functions
     $scope.forkScenario = forkScenario;
@@ -24,14 +29,9 @@ define(function(require) {
     $scope.saveTitle = saveTitle;
     $scope.cancelTitle = cancelTitle;
     $scope.scenarioChanged = scenarioChanged;
+    $scope.subProblemChanged = subProblemChanged;
 
     // init
-    SubProblemResource.query({
-      projectId: $stateParams.projectId,
-      analysisId: $stateParams.analysisId
-    }).$promise.then(function(subProblems) {
-      $scope.subProblems = subProblems;
-    });
 
     function getTask(taskId) {
       return _.find(Tasks.available, function(task) {
@@ -67,15 +67,8 @@ define(function(require) {
       }
     });
 
-    WorkspaceService.getObservedScales($scope, currentProblem).then(function(observedScales) {
+    WorkspaceService.getObservedScales($scope, baseProblem).then(function(observedScales) {
       $scope.workspace.$$scales.observed = observedScales;
-    });
-
-    $scope.subProblemPromise = SubProblemResource.get(_.extend({
-      problemId: $stateParams.id
-    }, $stateParams)).$promise.then(function(result) {
-      $scope.subProblem = result;
-      return result;
     });
 
     ScenarioResource.get($stateParams).$promise.then(function(result) {
@@ -108,8 +101,9 @@ define(function(require) {
     function forkScenario() {
       ScenarioResource.get($stateParams, function(scenario) { // reload because child scopes may have changed scenario
         var newScenario = {
-          'title': randomId(3, 'Scenario '),
-          'state': scenario.state
+          title: randomId(3, 'Scenario '),
+          state: scenario.state,
+          subProblemId: $scope.subProblem.id
         };
         ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
           redirect(savedScenario.id);
@@ -118,11 +112,10 @@ define(function(require) {
     }
 
     function newScenario() {
-
       var newScenario = {
-        'title': randomId(3, 'Scenario '),
-        'state': {
-          'problem': WorkspaceService.reduceProblem($scope.workspace.problem)
+        title: randomId(3, 'Scenario '),
+        state: {
+          problem: WorkspaceService.reduceProblem($scope.workspace.problem)
         },
         workspace: $scope.workspace.id,
         subProblemId: $scope.subProblem.id
@@ -156,7 +149,21 @@ define(function(require) {
       }
       $state.go($state.current.name, {
         workspaceId: $scope.workspace.id,
+        problemId: $scope.subProblem.id,
         id: newScenario.id
+      });
+    }
+
+    function subProblemChanged(newSubProblem) {
+      var coords = _.omit($stateParams, 'id');
+      coords.problemId = newSubProblem.id;
+      ScenarioResource.query(coords).$promise.then(function(scenarios) {
+        $state.go($state.current.name, {
+          workspaceId: $scope.workspace.id,
+          problemId: newSubProblem.id,
+          id: scenarios[0].id
+        });
+
       });
     }
 

@@ -7,7 +7,7 @@ define(function(require) {
 
   var PartialValueFunctionController = function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
     $scope.pvf = PartialValueFunction;
-    $scope.problem = $scope.workspace.problem;
+    $scope.problem = $scope.aggregateProblem;
 
     var initialize = function(state) {
       var criterionId = $stateParams.criterion;
@@ -87,9 +87,12 @@ define(function(require) {
 
     $scope.save = function(state) {
       var criterionId = $stateParams.criterion;
-      state.problem.criteria[criterionId] = standardizeCriterion(state.choice);
-
-      currentScenario.state = _.pick(state, ['problem', 'prefs']);
+      var standardizedCriterion = standardizeCriterion(state.choice);
+      var criteria = {};
+      criteria[criterionId] = standardizedCriterion;
+      currentScenario.state = _.merge({}, currentScenario.state, {
+        criteria: criteria
+      });
       currentScenario.$save($stateParams, function(scenario) {
         $scope.$emit('elicit.resultsAccessible', scenario);
         $state.go('preferences');

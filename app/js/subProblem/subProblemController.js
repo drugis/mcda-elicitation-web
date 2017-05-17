@@ -3,40 +3,28 @@ define(function(require) {
   require('angular');
   var _ = require('lodash');
 
-  var dependencies = ['$scope', '$stateParams', '$modal', '$state', 'intervalHull', 'SubProblemResource', 'SubProblemService', 'mcdaRootPath'];
+  var dependencies = ['$scope', '$stateParams', '$modal', '$state', 'intervalHull', 'SubProblemResource', 'SubProblemService', 'WorkspaceService', 'mcdaRootPath'];
 
-  var SubProblemController = function($scope, $stateParams, $modal, $state, intervalHull, SubProblemResource, SubProblemService, mcdaRootPath) {
+  var SubProblemController = function($scope, $stateParams, $modal, $state, intervalHull, SubProblemResource, SubProblemService, WorkspaceService, mcdaRootPath) {
     // vars 
     $scope.problem = $scope.workspace.problem;
     $scope.scales = $scope.workspace.$$scales;
     $scope.criteriaForScales = makeCriteriaForScales($scope.problem.criteria);
-    $scope.subProblemState = {};
 
     // functions
     $scope.intervalHull = intervalHull;
     $scope.updateInclusions = updateInclusions;
-    $scope.saveProblemConfiguration = saveProblemConfiguration;
-    $scope.editTitle = editTitle;
-    $scope.saveTitle = saveTitle;
     $scope.openScaleRangeDialog = openScaleRangeDialog;
     $scope.isCreationAllowed = isCreationAllowed;
     $scope.reset = initSubProblem;
-    $scope.checkDuplicateTitle = checkDuplicateTitle;
+    $scope.openSaveDialog = openSaveDialog;
 
     //init
     $scope.$watch('workspace.$$scales.observed', function(newValue) {
       $scope.scales.observed = newValue;
     }, true);
-    $scope.subProblemPromise.then(function(subProblem) {
-      $scope.subProblem = subProblem;
-      initSubProblem(subProblem);
-    });
-    SubProblemResource.query({
-      projectId: $stateParams.projectId,
-      analysisId: $stateParams.analysisId
-    }).$promise.then(function(subProblems) {
-      $scope.subProblems = subProblems;
-    });
+    $scope.mergedProblem = WorkspaceService.mergeBaseAndSubProblem($scope.problem, $scope.subProblem.definition);
+    initSubProblem($scope.subProblem);
 
     function updateInclusions() {
       $scope.subProblemState.isChanged = !_.isEqual($scope.subProblemState.criterionInclusions, $scope.originalInclusions);
@@ -45,31 +33,30 @@ define(function(require) {
       }, 0);
     }
 
-    function editTitle() {
-      $scope.isEditTitleVisible = true;
-    }
-
-    function saveTitle() {
-      $scope.isEditTitleVisible = false;
-    }
-
-    function checkDuplicateTitle(title) {
-      $scope.subProblemState.isTitleDuplicate = _.find($scope.subProblems, function(subProblem) {
-        return title === subProblem.title;
+    function openSaveDialog() {
+      $modal.open({
+        templateUrl: mcdaRootPath + 'views/createSubProblem.html',
+        controller: 'CreateSubProblemController',
+        resolve: {
+          subProblemState: function() {
+            return $scope.subProblemState;
+          },
+          subProblems: function() {
+            return $scope.subProblems;
+          },
+          problem: function() {
+            return $scope.mergedProblem;
+          },
+          callback: function() {
+            return function(newProblemId, newScenarioId) {
+              $state.go('preferences', _.extend({}, $stateParams, {
+                problemId: newProblemId,
+                id: newScenarioId
+              }));
+            };
+          }
+        }
       });
-    }
-
-    function saveProblemConfiguration() {
-      var subProblemCommand = {
-        definition: SubProblemService.createDefinition($scope.problem, $scope.subProblemState),
-        title: $scope.subProblem.title,
-        scenarioState: SubProblemService.createDefaultScenarioState($scope.problem, $scope.subProblemState)
-      };
-      SubProblemResource.save(_.omit($stateParams, ['id', 'problemId', 'userUid']), subProblemCommand)
-        .$promise.then(function(newProblem) {
-          //TODO use newly made problem id
-          $state.go('preferences');
-        });
     }
 
     function openScaleRangeDialog() {
@@ -101,7 +88,8 @@ define(function(require) {
       $scope.originalInclusions = createInclusions(subProblem);
       $scope.subProblemState = {
         criterionInclusions: _.cloneDeep($scope.originalInclusions),
-        hasScaleRange: checkScaleRanges($scope.problem.criteria),
+        hasScaleRange: checkScaleRanges($scope.mergedProblem.criteria),
+        ranges: _.cloneDeep(subProblem.definition.ranges),
         scaleRangeChanged: false
       };
       updateInclusions();
@@ -113,8 +101,8 @@ define(function(require) {
 
     // private functions
     function createInclusions(subProblem) {
-      return _.mapValues($scope.problem.criteria, function(key) {
-        return !_.find(subProblem.definition.excludedCriteria, key);
+      return _.mapValues($scope.problem.criteria, function(criterion, key) {
+        return subProblem.definition && !_.includes(subProblem.definition.excludedCriteria, key);
       });
     }
 

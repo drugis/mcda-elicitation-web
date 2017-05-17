@@ -1,0 +1,32 @@
+<div>
+  <form ng-submit="createProblemConfiguration()">
+    <div class="row">
+      <div class="columns large-6">
+        <h2>
+          Create problem
+        </h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class=columns large-6>
+        Enter problem name
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns large-6">
+        <input type="text" ng-change="checkDuplicateTitle(subProblemState.title)" ng-model="subProblemState.title">
+      </div>
+      <div class="columns large 6">
+        <span style="display:block" class="alert" ng-if="isTitleDuplicate">
+          <em>&nbsp;Duplicate name</em>
+        </span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns large-6">
+        <button class="success" type="submit" ng-disabled="isTitleDuplicate">Create</button>
+      </div>
+    </div>
+    <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+  </form>
+</div>

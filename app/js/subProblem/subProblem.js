@@ -4,6 +4,7 @@ define(function(require) {
   return angular.module('elicit.subProblem', [])
 
     .controller('SubProblemController', require('mcda/subProblem/subProblemController'))
+    .controller('CreateSubProblemController', require('mcda/subProblem/createSubProblemController'))
     .factory('SubProblemService', require('mcda/subProblem/subProblemService'))
     ;
 

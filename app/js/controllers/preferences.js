@@ -27,7 +27,7 @@ define(function(require) {
     // vars
     $scope.scenario = currentScenario;
     $scope.scales = $scope.workspace.$$scales;
-    $scope.criteria = _.sortBy(_.map(_.toPairs(currentScenario.state.problem.criteria), function(crit, idx) {
+    $scope.criteria = _.sortBy(_.map(_.toPairs($scope.aggregateProblem.criteria), function(crit, idx) {
       return _.extend(crit[1], {
         id: crit[0],
         w: 'w_' + (idx + 1)
@@ -52,7 +52,7 @@ define(function(require) {
     }
 
     function isSafe(taskId) {
-      var safe = TaskDependencies.isSafe($scope.tasks[taskId], $scope.scenario.state);
+      var safe = TaskDependencies.isSafe($scope.tasks[taskId], $scope.aggregateProblem);
       safe.tooltip = willReset(safe);
       return safe;
     }

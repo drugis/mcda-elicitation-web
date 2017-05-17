@@ -24,7 +24,7 @@
   <h4>Partial Value Functions</h4>
 
   <ul id="partial-value-functions" class="large-block-grid-3">
-    <li ng-repeat="criterion in scenario.state.problem.criteria">
+    <li ng-repeat="criterion in aggregateProblem.criteria">
       <h5>{{::criterion.title}}</h5>
 
       <div style="width: 250px; height: 180px">
@@ -36,7 +36,7 @@
 
       <button ng-if="editMode.isUserOwner" ng-class="{alert: !isSafe['partial-value-function'].safe}"
         tooltip="{{isSafe['partial-value-function'].tooltip}}" tooltip-animation="false"
-        ng-disabled="!isAccessible(tasks['partial-value-function'], scenario.state).accessible"
+        ng-disabled="!isAccessible(tasks['partial-value-function'], aggregateProblem).accessible"
         ui-sref="partial-value-function({criterion: criterion.id})">Define partial value function</button>
     </li>
   </ul>

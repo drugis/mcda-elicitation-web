@@ -17,11 +17,17 @@ define(function(require) {
           controller: 'ScenarioController',
           resolve: {
             scenarios: function($stateParams, ScenarioResource) {
-              return ScenarioResource.query(_.omit($stateParams, 'id'));
+              return ScenarioResource.query(_.omit($stateParams, 'id')).$promise;
             },
-            problems: function($stateParams, SubProblemResource) {
-              return SubProblemResource.query(_.omit($stateParams, 'problemId'));
-            }
+            currentScenario: function($stateParams, ScenarioResource) {
+              return ScenarioResource.get($stateParams).$promise;
+            },
+            subProblems: function($stateParams, SubProblemResource) {
+              return SubProblemResource.query(_.omit($stateParams, 'problemId')).$promise;
+            },
+            currentSubProblem: function($stateParams, SubProblemResource) {
+              return SubProblemResource.get(($stateParams)).$promise;
+            },
           }
         };
 
@@ -39,9 +45,6 @@ define(function(require) {
               },
               taskDefinition: function(TaskDependencies) {
                 return TaskDependencies.extendTaskDefinition(task);
-              }, 
-              currentProblem: function($stateParams, SubProblemResource){
-                return SubProblemResource.get($stateParams).$promise;
               }
             }
           };

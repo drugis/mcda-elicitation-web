@@ -44,11 +44,29 @@ define(function(require) {
       };
     }
 
+    function mergeBaseAndSubProblem(baseProblem, subProblemDefinition) {
+      var newProblem = _.cloneDeep(baseProblem);
+      if(subProblemDefinition.excludedCriteria) {
+        newProblem.criteria = _.omit(newProblem.criteria, subProblemDefinition.excludedCriteria);
+        newProblem.performanceTable = _.reject(newProblem.performanceTable, function(performanceEntry) {
+          return _.includes(subProblemDefinition.excludedCriteria, performanceEntry.criterionUri);
+        });
+      }
+      newProblem.criteria = _.merge(newProblem.criteria, subProblemDefinition.ranges);
+      return newProblem;
+    }
+
+    function buildAggregateProblem(baseProblem, subProblem, scenario) {
+      return _.merge({}, mergeBaseAndSubProblem(baseProblem, subProblem.definition), scenario.state);
+    }
+
     return {
       getObservedScales: getObservedScales,
       buildTheoreticalScales: buildTheoreticalScales,
       buildValueTree: buildValueTree,
-      reduceProblem: reduceProblem
+      reduceProblem: reduceProblem,
+      buildAggregateProblem: buildAggregateProblem,
+      mergeBaseAndSubProblem: mergeBaseAndSubProblem
     };
   };
 

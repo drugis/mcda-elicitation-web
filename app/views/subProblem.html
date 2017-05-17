@@ -1,26 +1,3 @@
-<h4 ng-show="!isEditTitleVisible" class="subheader">
-  <span>{{subProblem.title}}</span>
-  <a ng-if="editMode.isUserOwner" ng-click="editTitle()"><i class="fa fa-edit"></i></a>
-</h4>
-<div class="row" ng-show="isEditTitleVisible">
-  <div class="columns large-8 small-12">
-    <form>
-      <div class="row collapse">
-        <div class="columns small-8">
-          <input type="text" ng-change="checkDuplicateTitle(subProblem.title)" ng-model="subProblem.title">
-        </div>
-        <div class="columns small-2">
-          <button class="button postfix" ng-disabled="subProblemState.isTitleDubplicate" ng-click="saveTitle()">Save</button>
-        </div>
-        <div class="columns small-2">
-          <button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button>
-        </div>
-        <div ng-if="subProblemState.isTitleDuplicate"><em>Duplicate name</em></div>
-      </div>
-    </form>
-  </div>
-</div>
-
 <div class="row">
   <div class="columns large-12">
     <table class="full-width effects-table">
@@ -87,7 +64,7 @@
             <span ng-bind="intervalHull(scales.observed[criterion.id])[1] | number"></span>
           </td>
           <td>
-            <span ng-if="criterion.pvf.range">{{criterion.pvf.range[0] | number}}, {{criterion.pvf.range[1] | number}}</span>
+            <span ng-if="subProblemState.ranges[criterion.id].pvf.range">{{subProblemState.ranges[criterion.id].pvf.range[0] | number}}, {{subProblemState.ranges[criterion.id].pvf.range[1] | number}}</span>
           </td>
           <td>{{criterion.unitOfMeasurement}}</td>
         </tr>
@@ -101,9 +78,8 @@
 
 <div class="row" ng-if="editMode.isUserOwner">
   <div class="columns large-12">
-    <button class="success" ng-click="saveProblemConfiguration()" ng-disabled="isCreationAllowed()">Create problem</button>
+    <button class="success" ng-click="openSaveDialog()" ng-disabled="isCreationAllowed()">Create problem</button>
     <button ng-click="reset(subProblem)">Reset</button>
     <span class="alert" ng-if="!subProblemState.hasScaleRange">Missing scale ranges</span>
-
-  </div>
+   </div>
 </div>

@@ -13,7 +13,7 @@ define(function(require) {
     function createDefinition(problem, subProblemState) {
       return {
         ranges: filterToObject(subProblemState.ranges, subProblemState.criterionInclusions),
-        includedCriteria: filterToObject(problem.criteria, subProblemState.criterionInclusions)
+        excludedCriteria: _.keys(_.omitBy(subProblemState.criterionInclusions)) // values are boolean
       };
     }
 

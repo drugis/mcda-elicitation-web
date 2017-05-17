@@ -32,6 +32,9 @@ define(['angular',
         state = jasmine.createSpyObj('$state', ['go']);
 
         scope.scenario = scenario;
+        scope.workspace = {
+          problem: exampleProblem()
+        };
 
         $controller('PartialValueFunctionController', {
           $scope: scope,
