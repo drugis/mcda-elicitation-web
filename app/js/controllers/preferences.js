@@ -6,7 +6,6 @@ define(function(require) {
   var dependencies = [
     '$scope',
     '$filter',
-    '$location',
     '$anchorScroll',
     'sortCriteriaWithW',
     'PartialValueFunction',
@@ -18,7 +17,6 @@ define(function(require) {
   var PreferencesController = function(
     $scope,
     $filter,
-    $location,
     $anchorScroll,
     sortCriteriaWithW,
     PartialValueFunction,
@@ -36,9 +34,11 @@ define(function(require) {
     $scope.isPVFDefined = isPVFDefined;
     $scope.isAccessible = isAccessible;
 
+    // init
     $scope.getXY = _.memoize(PartialValueFunction.getXY, function(arg) {
       return angular.toJson(arg.pvf);
     });
+    createIsSafeObject();
 
     function willReset(safe) {
       var resets = safe.resets.map(function(reset) {
@@ -48,23 +48,25 @@ define(function(require) {
       return resets ? "Saving this preference will reset: " + resets : null;
     }
 
-    function isSafe(taskId) {
-      var safe = TaskDependencies.isSafe($scope.tasks[taskId], $scope.aggregateState.problem);
+    function isTaskSafe(taskId) {
+      var safe = TaskDependencies.isSafe($scope.tasks[taskId], $scope.aggregateState);
       safe.tooltip = willReset(safe);
       return safe;
     }
 
-    $scope.isSafe = _.reduce($scope.tasks, function(obj, task) {
-      obj[task.id] = isSafe(task.id);
-      return obj;
-    }, {});
+    function createIsSafeObject() {
+      $scope.isSafe = _.reduce($scope.tasks, function(obj, task) {
+        obj[task.id] = isTaskSafe(task.id);
+        return obj;
+      }, {});
+    }
 
     function isPVFDefined(criterion) {
       return criterion.pvf && criterion.pvf.type;
     }
 
-    function isAccessible(task, state) {
-      return TaskDependencies.isAccessible(task, state);
+    function isAccessible(task) {
+      return TaskDependencies.isAccessible(task, $scope.aggregateState);
     }
 
   };

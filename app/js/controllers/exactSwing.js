@@ -1,9 +1,9 @@
 'use strict';
 define(function(require) {
-  var angular = require("angular");
-  var _ = require("lodash");
-  var Util = require("mcda/controllers/helpers/util");
-  var Wizard = require("mcda/controllers/helpers/wizard");
+  var angular = require('angular');
+  var _ = require('lodash');
+  var Util = require('mcda/controllers/helpers/util');
+  var Wizard = require('mcda/controllers/helpers/wizard');
 
   return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
     var pvf = PartialValueFunction;
@@ -95,6 +95,7 @@ define(function(require) {
     $scope.save = function(state) {
       currentScenario.state = _.pick(state, ['problem', 'prefs']);
       currentScenario.$save($stateParams, function(scenario) {
+        $scope.$emit('elicit.resultsAccessible', scenario);
         $state.go('preferences');
       });
 

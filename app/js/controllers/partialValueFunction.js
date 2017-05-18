@@ -3,9 +3,12 @@ define(function(require) {
   var angular = require('angular');
   var _ = require('lodash');
   var Wizard = require('mcda/controllers/helpers/wizard');
-  var dependencies = ['$scope', '$state', '$stateParams', '$injector', 'currentScenario', 'taskDefinition', 'PartialValueFunction'];
+  var dependencies = ['$scope', '$state', '$stateParams', '$injector',
+    'currentScenario', 'taskDefinition', 'PartialValueFunction', 'TaskDependencies'
+  ];
 
-  var PartialValueFunctionController = function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
+  var PartialValueFunctionController = function($scope, $state, $stateParams, $injector,
+    currentScenario, taskDefinition, PartialValueFunction, TaskDependencies) {
     $scope.pvf = PartialValueFunction;
     $scope.problem = $scope.aggregateState.problem;
 
@@ -90,9 +93,10 @@ define(function(require) {
       var standardizedCriterion = standardizeCriterion(state.choice);
       var criteria = {};
       criteria[criterionId] = standardizedCriterion;
-      currentScenario.state.problem  = _.merge({}, currentScenario.state.problem, {
+      currentScenario.state.problem = _.merge({}, currentScenario.state.problem, {
         criteria: criteria
       });
+      currentScenario.state = TaskDependencies.remove(taskDefinition, currentScenario.state);
       currentScenario.$save($stateParams, function(scenario) {
         $scope.$emit('elicit.resultsAccessible', scenario);
         $state.go('preferences');

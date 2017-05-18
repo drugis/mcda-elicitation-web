@@ -21,14 +21,19 @@
       </ul>
     </li>
     <li>
-      <a class="tab-corners" ng-class="{activetab: activeTab ==='preferences'}" ui-sref="preferences">Preferences</a>
+      <div ng-if="tasksAccessibility.preferences">
+        <a class="tab-corners" ng-class="{activetab: activeTab ==='preferences'}" ui-sref="preferences">Preferences</a>
+      </div>
+      <div ng-if="!tasksAccessibility.preferences">
+        <a class="tab-corners disabledtab">Preferences</a>
+      </div>
     </li>
     <li>
-      <div ng-if="resultsAccessible.accessible">
+      <div ng-if="tasksAccessibility.results">
         <a class="tab-corners" ng-class="{activetab: activeTab === 'results'}" ui-sref="results">Results</a>
       </div>
-      <div ng-if="!resultsAccessible.accessible">
-        <a class="tab-corners disabledtab" ng-if="!resultsAccessible.accessible">Results</a>
+      <div ng-if="!tasksAccessibility.results">
+        <a class="tab-corners disabledtab">Results</a>
       </div>
     </li>
   </ul>

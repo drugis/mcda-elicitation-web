@@ -51,12 +51,10 @@ define(function(require) {
     }
     determineActiveTab();
 
-    $scope.$watch('__scenario.state', function(state) {
-      $scope.resultsAccessible = TaskDependencies.isAccessible($scope.tasks.results, state);
-    });
+    $scope.$watch('__scenario.state', updateTaskAccessibility);
     $scope.$on('elicit.resultsAccessible', function(event, scenario) {
       $scope.aggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
-      $scope.resultsAccessible = TaskDependencies.isAccessible($scope.tasks.results, scenario.state);
+      updateTaskAccessibility();
     });
 
     $scope.$on('$stateChangeStart', function(event, toState) {
@@ -81,6 +79,14 @@ define(function(require) {
       return tasks;
     }, {});
 
+    function updateTaskAccessibility() {
+      $scope.tasksAccessibility = {
+        preferences: TaskDependencies.isAccessible($scope.tasks.preferences, $scope.aggregateState).accessible,
+        results: TaskDependencies.isAccessible($scope.tasks.results, $scope.aggregateState).accessible
+      };
+    }
+
+
     function randomId(size, prefix) {
       var text = '';
       var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -91,10 +97,10 @@ define(function(require) {
       return prefix ? prefix + text : text;
     }
 
-    function redirect(scenarioId) {
+    function redirect(scenarioId, stateName) {
       var newState = _.omit($stateParams, 'id');
       newState.id = scenarioId;
-      $state.go($state.current.name, newState, {
+      $state.go(stateName, newState, {
         reload: true
       });
     }
@@ -107,7 +113,7 @@ define(function(require) {
           subProblemId: $scope.subProblem.id
         };
         ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
-          redirect(savedScenario.id);
+          redirect(savedScenario.id, $state.current.name);
         });
       });
     }
@@ -123,7 +129,8 @@ define(function(require) {
         subProblemId: $scope.subProblem.id
       };
       ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
-        redirect(savedScenario.id);
+        var newStateName = $scope.tasksAccessibility.preferences ? 'preferences' : 'problem';
+        redirect(savedScenario.id, newStateName);
       });
     }
 
@@ -137,7 +144,7 @@ define(function(require) {
       $scope.isEditTitleVisible = false;
       $scope.__scenario.$save($stateParams, function() {
         $scope.scenarios = ScenarioResource.query(_.omit($stateParams, 'id'));
-        redirect($stateParams.id);
+        redirect($stateParams.id, $state.current.name);
       });
     }
 
@@ -149,7 +156,7 @@ define(function(require) {
       if (!newScenario) {
         return; // just a title edit
       }
-      $state.go($state.current.name, {
+      $state.go('preferences', {
         workspaceId: $scope.workspace.id,
         problemId: $scope.subProblem.id,
         id: newScenario.id
@@ -160,7 +167,7 @@ define(function(require) {
       var coords = _.omit($stateParams, 'id');
       coords.problemId = newSubProblem.id;
       ScenarioResource.query(coords).$promise.then(function(scenarios) {
-        $state.go($state.current.name, {
+        $state.go('problem', {
           workspaceId: $scope.workspace.id,
           problemId: newSubProblem.id,
           id: scenarios[0].id

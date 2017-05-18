@@ -20,10 +20,7 @@
   <div class="row">
     <div class="columns large-12">
       <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
-      <button class="small button"
-              ng-if="!canSave(state)"
-              ng-click="nextStep(state)"
-              ng-disabled="!canProceed(state)">Next</button>
+      <button class="small button" ng-if="!canSave(state)" ng-click="nextStep(state)" ng-disabled="!canProceed(state)">Next</button>
     </div>
   </div>
 </div>
@@ -42,11 +39,8 @@
   <div class="row">
     <div class="columns large-12">
       <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
-      <button class="small success button"
-              ng-if="canSave(state)"
-              ng-click="save(state)"
-              ng-disabled="!canSave(state)">Save</button>
-
+      <button class="small success button" ng-if="canSave(state)" ng-click="save(state)"
+        ng-disabled="!canSave(state)">Save</button>
     </div>
   </div>
 </div>

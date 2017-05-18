@@ -107,6 +107,7 @@ define(function(require) {
     $scope.save = function(state) {
       currentScenario.state = _.pick(state, ['problem', 'prefs']);
       currentScenario.$save($stateParams, function(scenario) {
+        $scope.$emit('elicit.resultsAccessible', scenario);
         $state.go('preferences');
       });
     };

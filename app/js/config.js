@@ -10,14 +10,6 @@ define(function() {
       requires: [],
       resets: []
     }, {
-      id: 'scale-range',
-      title: 'Define Scale Range',
-      controller: 'ScaleRangeController',
-      templateUrl: 'scaleRange.html',
-      requires: [],
-      activeTab: 'problem',
-      resets: ['partial-value-function', 'criteria-trade-offs']
-    }, {
       id: 'partial-value-function',
       url: '/partial-value-function/:criterion',
       title: 'Define Partial Value Functions',
@@ -48,7 +40,7 @@ define(function() {
       controller: 'ExactSwingController',
       templateUrl: 'exactSwing.html',
       activeTab: 'preferences',
-      requires: ['complete-criteria-ranking'],
+      requires: [ 'complete-criteria-ranking'],
       resets: ['non-ordinal-preferences']
     }, {
       id: 'preferences',
@@ -56,7 +48,7 @@ define(function() {
       controller: 'PreferencesController',
       templateUrl: 'preferences.html',
       activeTab: 'preferences',
-      requires: [],
+      requires: ['scale-range'],
       resets: []
     }, {
       id: 'results',

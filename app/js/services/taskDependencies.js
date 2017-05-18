@@ -22,12 +22,12 @@ define(function(require) {
       });
       return newState;
     },
-    'title': 'criterion scale ranges'
+    title: 'criterion scale ranges'
   };
 
   var partialValueFunctions = {
     'isPresent': function(state) {
-      var criteria = state.criteria;
+      var criteria = state.problem.criteria;
       return _.every(criteria, function(criterion) {
         var pvf = criterion.pvf;
         return pvf && pvf.direction && pvf.type;
@@ -100,7 +100,7 @@ define(function(require) {
     };
 
     var isAccessible = function(task, state) {
-      if (!state) {
+      if (!state || !state.problem) {
         return false;
       }
       var requires = _.filter(task.requires, function(require) {
