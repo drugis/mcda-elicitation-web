@@ -121,9 +121,9 @@ define(function(require) {
 
     var getResults = function(scope, state) {
       var next = _.merge({}, {
-        problem: scope.workspace.problem
+        problem: scope.aggregateState.problem
       }, state, {
-        selectedAlternative: _.keys(scope.workspace.problem.alternatives)[0],
+        selectedAlternative: _.keys(scope.aggregateState.problem.alternatives)[0],
         selectedRank: '0',
         ranksByAlternative: getRanksByAlternative,
         alternativesByRank: getAlterativesByRank,

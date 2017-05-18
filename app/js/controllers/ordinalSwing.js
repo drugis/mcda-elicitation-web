@@ -5,6 +5,7 @@ define(function(require) {
   var Wizard = require("mcda/controllers/helpers/wizard");
 
   return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
+    $scope.problem = $scope.aggregateState.problem;
     var pvf = PartialValueFunction;
     $scope.pvf = pvf;
 
@@ -25,8 +26,8 @@ define(function(require) {
       return base + ' (' + step + '/' + total + ')';
     };
 
-    function makeChoices(state) {
-      var criteria = state.problem.criteria;
+    function makeChoices() {
+      var criteria = $scope.problem.criteria;
       var choices = _.map(_.keys(criteria), function(criterion) {
         var reference = getReference(criteria);
         reference[criterion] = pvf.best(criteria[criterion]);
@@ -36,7 +37,7 @@ define(function(require) {
     }
 
     var initialize = function(state) {
-      var criteria = state.problem.criteria;
+      var criteria = $scope.problem.criteria;
       var fields = {
         title: title(1, _.size(criteria) - 1),
         type: 'elicit',
@@ -51,7 +52,7 @@ define(function(require) {
 
 
     var validChoice = function(state) {
-      var criteria = state.problem.criteria;
+      var criteria = $scope.problem.criteria;
       return state && _.includes(_.keys(criteria), state.choice);
     };
 
@@ -61,7 +62,7 @@ define(function(require) {
       }
 
       var nextState = angular.copy(state);
-      var criteria = nextState.problem.criteria;
+      var criteria = $scope.problem.criteria;
 
       var choice = state.choice;
       nextState.choice = undefined;
@@ -72,7 +73,7 @@ define(function(require) {
 
       function next(choice) {
         delete nextState.choices[choice];
-        nextState.reference[choice] = pvf.best(state.problem.criteria[choice]);
+        nextState.reference[choice] = pvf.best($scope.problem.criteria[choice]);
         nextState.prefs.ordinal.push(choice);
         nextState.title = title(nextState.prefs.ordinal.length + 1, _.size(criteria) - 1);
       }
@@ -89,7 +90,7 @@ define(function(require) {
     function standardize(state) {
       var standardized = angular.copy(state);
 
-      var criteria = standardized.problem.criteria;
+      var criteria = $scope.problem.criteria;
       var prefs = standardized.prefs;
       var order = prefs.ordinal;
 

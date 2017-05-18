@@ -7,7 +7,7 @@ define(function(require) {
     $scope.scenario = currentScenario;
 
     var alternativeTitle = function(id) {
-      var problem = currentScenario.state.problem;
+      var problem = $scope.aggregateState.problem;
       return problem.alternatives[id].title;
     };
 
@@ -51,7 +51,7 @@ define(function(require) {
 
     var initialize = function(state) {
       var next = _.extend(state, {
-        selectedAlternative: _.keys($scope.workspace.problem.alternatives)[0],
+        selectedAlternative: _.keys($scope.aggregateState.problem.alternatives)[0],
         selectedRank: '0',
         ranksByAlternative: getRanksByAlternative,
         alternativesByRank: getAlterativesByRank,
@@ -60,6 +60,6 @@ define(function(require) {
       return MCDAResultsService.getResults($scope, next);
     };
 
-    $scope.state = initialize(taskDefinition.clean(currentScenario.state));
+    $scope.state = initialize(taskDefinition.clean($scope.aggregateState));
   };
 });

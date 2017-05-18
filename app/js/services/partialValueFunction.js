@@ -1,7 +1,7 @@
 'use strict';
 define(function(require) {
-  var angular = require("angular");
-  var _ = require("lodash");
+  var angular = require('angular');
+  var _ = require('lodash');
 
   return angular.module('elicit.pvfService', []).factory('PartialValueFunction', function() {
     var findIndexOfFirstLargerElement = function(arr, val) {
@@ -31,18 +31,18 @@ define(function(require) {
 
       var atIndex = function(idx) {
         return {
-          "x0": cutoffs[idx - 1],
-          "x1": cutoffs[idx],
-          "v0": values[idx - 1],
-          "v1": values[idx]
+          'x0': cutoffs[idx - 1],
+          'x1': cutoffs[idx],
+          'v0': values[idx - 1],
+          'v1': values[idx]
         };
       };
 
       return {
-        "isIncreasing": increasing,
-        "values": values,
-        "cutoffs": cutoffs,
-        "atIndex": atIndex
+        'isIncreasing': increasing,
+        'values': values,
+        'cutoffs': cutoffs,
+        'atIndex': atIndex
       };
     };
 
@@ -65,7 +65,7 @@ define(function(require) {
     };
 
     var isIncreasing = function(criterion) {
-      return criterion.pvf.direction === "increasing";
+      return criterion.pvf.direction === 'increasing';
     };
 
     var best = function(criterion) {
@@ -121,7 +121,7 @@ define(function(require) {
         };
       });
       return [{
-        key: "Partial Value Function",
+        key: 'Partial Value Function',
         values: values
       }];
     };

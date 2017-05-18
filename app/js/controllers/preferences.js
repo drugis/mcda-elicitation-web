@@ -8,31 +8,28 @@ define(function(require) {
     '$filter',
     '$location',
     '$anchorScroll',
-    'currentScenario',
+    'sortCriteriaWithW',
     'PartialValueFunction',
     'Tasks',
     'TaskDependencies',
-    'taskDefinition'
+    'taskDefinition',
+    'currentScenario'
   ];
   var PreferencesController = function(
     $scope,
     $filter,
     $location,
     $anchorScroll,
-    currentScenario,
+    sortCriteriaWithW,
     PartialValueFunction,
     Tasks,
     TaskDependencies,
-    taskDefinition) {
+    taskDefinition,
+    currentScenario) {
     // vars
     $scope.scenario = currentScenario;
     $scope.scales = $scope.workspace.$$scales;
-    $scope.criteria = _.sortBy(_.map(_.toPairs($scope.aggregateProblem.criteria), function(crit, idx) {
-      return _.extend(crit[1], {
-        id: crit[0],
-        w: 'w_' + (idx + 1)
-      });
-    }), 'w');
+    $scope.criteria = $scope.aggregateState.criteria;
 
     // functions
     $scope.pvf = PartialValueFunction;
@@ -52,7 +49,7 @@ define(function(require) {
     }
 
     function isSafe(taskId) {
-      var safe = TaskDependencies.isSafe($scope.tasks[taskId], $scope.aggregateProblem);
+      var safe = TaskDependencies.isSafe($scope.tasks[taskId], $scope.aggregateState.problem);
       safe.tooltip = willReset(safe);
       return safe;
     }

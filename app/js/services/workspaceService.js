@@ -3,9 +3,9 @@ define(function(require) {
   var angular = require('angular');
   var _ = require('lodash');
 
-  var dependencies = ['ScalesService'];
+  var dependencies = ['ScalesService', 'sortCriteriaWithW'];
 
-  var WorkspaceService = function(ScalesService) {
+  var WorkspaceService = function(ScalesService, sortCriteriaWithW) {
 
     var buildValueTree = function(problem) {
       if (problem.valueTree) {
@@ -39,14 +39,13 @@ define(function(require) {
         return accum;
       }, {});
       return {
-        criteria: criteria,
-        prefs: problem.prefs
+        criteria: criteria
       };
     }
 
     function mergeBaseAndSubProblem(baseProblem, subProblemDefinition) {
       var newProblem = _.cloneDeep(baseProblem);
-      if(subProblemDefinition.excludedCriteria) {
+      if (subProblemDefinition.excludedCriteria) {
         newProblem.criteria = _.omit(newProblem.criteria, subProblemDefinition.excludedCriteria);
         newProblem.performanceTable = _.reject(newProblem.performanceTable, function(performanceEntry) {
           return _.includes(subProblemDefinition.excludedCriteria, performanceEntry.criterionUri);
@@ -56,8 +55,12 @@ define(function(require) {
       return newProblem;
     }
 
-    function buildAggregateProblem(baseProblem, subProblem, scenario) {
-      return _.merge({}, mergeBaseAndSubProblem(baseProblem, subProblem.definition), scenario.state);
+    function buildAggregateState(baseProblem, subProblem, scenario) {
+      var newState = _.merge({}, {
+        problem: mergeBaseAndSubProblem(baseProblem, subProblem.definition)
+      }, scenario.state);
+      newState.problem.criteria = _.keyBy(sortCriteriaWithW(newState.problem.criteria), 'id');
+      return newState;
     }
 
     return {
@@ -65,7 +68,7 @@ define(function(require) {
       buildTheoreticalScales: buildTheoreticalScales,
       buildValueTree: buildValueTree,
       reduceProblem: reduceProblem,
-      buildAggregateProblem: buildAggregateProblem,
+      buildAggregateState: buildAggregateState,
       mergeBaseAndSubProblem: mergeBaseAndSubProblem
     };
   };

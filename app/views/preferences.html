@@ -24,7 +24,7 @@
   <h4>Partial Value Functions</h4>
 
   <ul id="partial-value-functions" class="large-block-grid-3">
-    <li ng-repeat="criterion in aggregateProblem.criteria">
+    <li ng-repeat="criterion in aggregateState.problem.criteria">
       <h5>{{::criterion.title}}</h5>
 
       <div style="width: 250px; height: 180px">
@@ -36,7 +36,7 @@
 
       <button ng-if="editMode.isUserOwner" ng-class="{alert: !isSafe['partial-value-function'].safe}"
         tooltip="{{isSafe['partial-value-function'].tooltip}}" tooltip-animation="false"
-        ng-disabled="!isAccessible(tasks['partial-value-function'], aggregateProblem).accessible"
+        ng-disabled="!isAccessible(tasks['partial-value-function'], aggregateState.problem).accessible"
         ui-sref="partial-value-function({criterion: criterion.id})">Define partial value function</button>
     </li>
   </ul>
@@ -71,48 +71,7 @@
     </li>
   </ul>
 
-  <trade-offs problem="scenario.state.problem" preferences="scenario.state.prefs"></trade-offs>
+  <trade-offs problem="aggregateState.problem" preferences="scenario.state.prefs"></trade-offs>
 </div>
 
 <button class="success" ui-sref="results" ng-disabled="!resultsAccessible.accessible">Results</button>
-
-<!-- 
-<div class="pref-progress">
-  <div class="row">
-    <div class="columns large-3 medium-3 small-3 progress-cell">
-      <div class="line" ng-class="{accessible: isPartialValueFunctionAccessible()}"></div>
-      <div ng-click="scrollToScaleRanges()" class="circle-container" ng-class="{completed: isScaleRangePresent(), 'next-step': !isScaleRangePresent()}">
-        <div class="circle">
-          <i ng-if="isScaleRangePresent()" class="fa fa-check" style="color:white"></i></div>
-        <div class="circle-label">Scale Ranges</div>
-      </div>
-    </div>
-    <div class="columns large-3 medium-3 small-3 progress-cell">
-      <div class="line" ng-class="{accessible: isOrdinalSwingAccessible()}"></div>
-      <div class="circle-container" ng-click="scrollToPVFs(isScaleRangePresent())" ng-class="{'next-step': isScaleRangePresent() && !isPartialValueFunctionPresent(), completed:isPartialValueFunctionPresent()}">
-        <div class="circle">
-          <i ng-if="isPartialValueFunctionPresent()" class="fa fa-check" style="color:white"></i></div>
-        <div class="circle-label">Partial Value Functions</div>
-      </div>
-    </div>
-    <div class="columns large-3 medium-3 small-3 progress-cell">
-      <div class="line" ng-class="{accessible: isTradeoffRatiosAccessible()}"></div>
-      <div ng-click="scrollToTradeOffs(isPartialValueFunctionPresent())" class="circle-container"
-        ng-class="{'next-step': isPartialValueFunctionPresent() && !isOrdinalSwingPresent(), completed:isOrdinalSwingPresent()}">
-        <div class="circle">
-          <i ng-if="isOrdinalSwingPresent()" class="fa fa-check" style="color:white"></i></div>
-        <div class="circle-label">Trade-off Order</div>
-      </div>
-    </div>
-    <div class="columns large-3 medium-3 small-3 progress-cell">
-      <div class="last-line"></div>
-      <div ng-click="scrollToTradeOffs(isOrdinalSwingPresent())" class="circle-container"
-        ng-class="{'next-step': isOrdinalSwingPresent() && !isTradeoffRatiosPresent(), completed:isTradeoffRatiosPresent()}">
-        <div class="circle">
-          <i ng-if="isTradeoffRatiosPresent()" class="fa fa-check" style="color:white"></i></div>
-        <div class="circle-label">Trade-off Ratios</div>
-      </div>
-    </div>
-  </div>
-</div>
- -->

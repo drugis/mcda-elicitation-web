@@ -15,7 +15,7 @@ define(function(require) {
     $scope.selections = {};
     $scope.scenarios = scenarios;
     $scope.scenario = currentScenario;
-    $scope.aggregateProblem = WorkspaceService.buildAggregateProblem(baseProblem, currentSubProblem, currentScenario);
+    $scope.aggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, currentScenario);
     $scope.subProblems = subProblems;
     $scope.subProblem = currentSubProblem;
     $scope.workspace.$$valueTree = WorkspaceService.buildValueTree(baseProblem);
@@ -55,6 +55,7 @@ define(function(require) {
       $scope.resultsAccessible = TaskDependencies.isAccessible($scope.tasks.results, state);
     });
     $scope.$on('elicit.resultsAccessible', function(event, scenario) {
+      $scope.aggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
       $scope.resultsAccessible = TaskDependencies.isAccessible($scope.tasks.results, scenario.state);
     });
 
@@ -112,10 +113,11 @@ define(function(require) {
     }
 
     function newScenario() {
+      var mergedProblem = WorkspaceService.mergeBaseAndSubProblem($scope.workspace.problem, $scope.subProblem.definition);
       var newScenario = {
         title: randomId(3, 'Scenario '),
         state: {
-          problem: WorkspaceService.reduceProblem($scope.workspace.problem)
+          problem: WorkspaceService.reduceProblem(mergedProblem)
         },
         workspace: $scope.workspace.id,
         subProblemId: $scope.subProblem.id

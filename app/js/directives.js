@@ -462,7 +462,7 @@ define(function(require) {
     };
   });
 
-  directives.directive('tradeOffs', function($filter, mcdaRootPath, PartialValueFunction) {
+  directives.directive('tradeOffs', function($filter, mcdaRootPath, PartialValueFunction, sortCriteriaWithW) {
     return {
       restrict: 'E',
       replace: true,
@@ -472,7 +472,8 @@ define(function(require) {
       },
       link: function(scope) {
         scope.pvf = PartialValueFunction;
-       
+        scope.criteria = sortCriteriaWithW(scope.problem.criteria);
+
         var w = function(criterionKey) {
           return _.find(scope.criteria, function(crit) {
             return crit.id === criterionKey;
