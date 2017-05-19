@@ -1,7 +1,6 @@
 <div ng-if="!state.results">
   <div class="row" style="margin-top: 15em">
     <div class="small-6 large-centered columns">
-
       <progressbar value="progress"></progressbar>
     </div>
   </div>
@@ -10,7 +9,6 @@
 <div ng-if="state.results">
   <h4 ng-show="!isEditTitleVisible" class="subheader">
     <span>{{scenario.title}}</span>
-    <a ng-if="editMode.isUserOwner" ng-click="editTitle()"><i class="fa fa-edit"></i></a>
   </h4>
   <div class="row" ng-show="isEditTitleVisible">
     <div class="columns large-8 small-12">

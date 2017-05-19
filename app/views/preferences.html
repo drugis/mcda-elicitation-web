@@ -1,7 +1,18 @@
-<h4 ng-show="!isEditTitleVisible" class="subheader">
-  <span>{{scenario.title}}</span>
-  <a ng-if="editMode.isUserOwner" ng-click="editTitle()"><i class="fa fa-edit"></i></a>
-</h4>
+<div class="row">
+  <div class="columns large-12">
+    <em>Here you can set the partial value functions and trade-offs of the scenario.
+      Changes here will change the current scenario.</em>
+  </div>
+</div>
+<div class="row">
+  <div class="columns large-12">
+    <h4 ng-show="!isEditTitleVisible">
+      Scenario name:
+      <span class="subheader">{{scenario.title}}</span>
+      <a ng-if="editMode.isUserOwner" ng-click="editTitle()"><i class="fa fa-edit"></i></a>
+    </h4>
+  </div>
+</div>
 <div class="row" ng-show="isEditTitleVisible">
   <div class="columns large-8 small-12">
     <form>
