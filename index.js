@@ -161,6 +161,7 @@ app.post('/workspaces', function(req, res, next) {
 
   function workspaceTransaction(client, callback) {
     function createWorkspace(callback) {
+      // create a new workspace
       client.query('INSERT INTO workspace (owner, title, problem) VALUES ($1, $2, $3) RETURNING id', [req.user.id, req.body.title, req.body.problem], function(err, result) {
         if (err) {
           return callback(err);

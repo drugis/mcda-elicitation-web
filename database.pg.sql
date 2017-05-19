@@ -75,3 +75,18 @@ CREATE TABLE effectsTableExclusion (
   alternativeId VARCHAR(255) NOT NULL,
   PRIMARY KEY (workspaceId, alternativeId)
 );
+
+--chageset keijserj:9
+CREATE TABLE subProblem(
+  id SERIAL NOT NULL,
+  workspaceId INT NOT NULL,
+  definition VARCHAR NOT NULL,
+  title VARCHAR NOT NULL,
+  PRIMARY KEY(id),
+  FOREIGN KEY(workspaceId) REFERENCES workspace(id) ON DELETE CASCADE
+);
+INSERT INTO subProblem (workspaceId, definition, title) SELECT id, '{}', 'Default' FROM workspace;
+ALTER TABLE scenario ADD COLUMN subProblemId INT;
+UPDATE scenario SET subProblemId = subProblem.id FROM subProblem WHERE subProblem.workspaceId = scenario.workspace;
+ALTER TABLE scenario ALTER COLUMN subProblemId SET NOT NULL;
+ALTER TABLE scenario ADD FOREIGN KEY (subProblemId) REFERENCES subProblem (id) ON DELETE CASCADE;

@@ -17,6 +17,7 @@ define(function(require) {
         WorkspaceResource.create(angular.fromJson($scope.local.contents)).$promise.then(function(workspace) {
           $state.go('evidence', {
             workspaceId: workspace.id,
+            problemId: workspace.defaultProblemId,
             id: workspace.defaultScenarioId
           });
         });
@@ -30,6 +31,7 @@ define(function(require) {
           WorkspaceResource.create(problem).$promise.then(function(workspace) {
             $state.go('evidence', {
               workspaceId: workspace.id,
+              problemId: workspace.defaultProblemId,
               id: workspace.defaultScenarioId
             });
           });
