@@ -13,21 +13,21 @@ define(function(require) {
         var scenarioState = {
           name: parentState + '.scenario',
           url: '/problems/:problemId/scenarios/:id',
-          templateUrl: baseTemplatePath + 'scenario.html',
-          controller: 'ScenarioController',
+          templateUrl: baseTemplatePath + 'mcdaBenefitRisk.html',
+          controller: 'MCDABenefitRiskController',
           resolve: {
+            subProblems: function($stateParams, SubProblemResource) {
+              return SubProblemResource.query(_.omit($stateParams, 'problemId')).$promise;
+            },
             scenarios: function($stateParams, ScenarioResource) {
               return ScenarioResource.query(_.omit($stateParams, 'id')).$promise;
             },
             currentScenario: function($stateParams, ScenarioResource) {
               return ScenarioResource.get($stateParams).$promise;
             },
-            subProblems: function($stateParams, SubProblemResource) {
-              return SubProblemResource.query(_.omit($stateParams, 'problemId')).$promise;
-            },
             currentSubProblem: function($stateParams, SubProblemResource) {
               return SubProblemResource.get(($stateParams)).$promise;
-            },
+            }
           }
         };
 

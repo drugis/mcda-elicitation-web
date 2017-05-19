@@ -39,3 +39,14 @@ Thumbs.db
 nbproject
 *.sublime-project
 *.sublime-workspace
+.idea/
+.jshintrc
+Chrome_58.0.3029_(Linux_0.0.0)/
+R/.RData
+R/.Rhistory
+R/dbeta.json
+R/hansenFail.json
+app/js/results/
+zet-op-live.sh
+zet-op-test.sh
+

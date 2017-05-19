@@ -2,16 +2,16 @@
 define(function(require) {
   var angular = require('angular');
   return angular.module('elicit.controllers', ['elicit.effectsTableService'])
-    .controller('ChooseProblemController', require('mcda/controllers/chooseProblem'))
-    .controller('WorkspaceController', require('mcda/controllers/workspace'))
-    .controller('ScenarioController', require('mcda/controllers/scenario'))
-    .controller('EvidenceController', require('mcda/controllers/evidenceController'))
-    .controller('PreferencesController', require('mcda/controllers/preferences'))
-    .controller('ScaleRangeController', require('mcda/controllers/scaleRangeController'))
-    .controller('PartialValueFunctionController', require('mcda/controllers/partialValueFunction'))
-    .controller('OrdinalSwingController', require('mcda/controllers/ordinalSwing'))
-    .controller('IntervalSwingController', require('mcda/controllers/intervalSwing'))
-    .controller('ExactSwingController', require('mcda/controllers/exactSwing'))
-    .controller('ResultsController', require('mcda/controllers/results'))
+    .controller('ChooseProblemController', require('mcda/controllers/chooseProblemController'))
+    .controller('WorkspaceController', require('mcda/controllers/workspaceController'))
+    .controller('MCDABenefitRiskController', require('mcda/benefitRisk/mcdaBenefitRiskController'))
+    .controller('EvidenceController', require('mcda/evidence/evidenceController'))
+    .controller('PreferencesController', require('mcda/preferences/preferencesController'))
+    .controller('ScaleRangeController', require('mcda/subProblem/scaleRangeController'))
+    .controller('PartialValueFunctionController', require('mcda/preferences/partialValueFunctionController'))
+    .controller('OrdinalSwingController', require('mcda/preferences/ordinalSwingController'))
+    .controller('IntervalSwingController', require('mcda/preferences/intervalSwingController'))
+    .controller('ExactSwingController', require('mcda/preferences/exactSwingController'))
+    .controller('ResultsController', require('mcda/results/resultsController'))
     ;
 });

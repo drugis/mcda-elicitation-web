@@ -5,7 +5,7 @@ define(function(require) {
     'ScenarioResource', 'SubProblemResource', 'WorkspaceService', 'subProblems', 'currentSubProblem', 'scenarios', 'currentScenario'
   ];
 
-  function ScenarioController($scope, $location, $state, $stateParams, Tasks, TaskDependencies,
+  function MCDABenefitRiskController($scope, $location, $state, $stateParams, Tasks, TaskDependencies,
     ScenarioResource, SubProblemResource, WorkspaceService, subProblems, currentSubProblem, scenarios, currentScenario) {
 
     // vars
@@ -177,5 +177,5 @@ define(function(require) {
     }
 
   }
-  return dependencies.concat(ScenarioController);
+  return dependencies.concat(MCDABenefitRiskController);
 });
