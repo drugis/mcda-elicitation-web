@@ -169,12 +169,6 @@ app.post('/workspaces', function(req, res, next) {
       });
     }
 
-    function createRemarks(workspaceId, callback) {
-      client.query('INSERT INTO remarks (workspaceid, remarks) VALUES ($1, $2)', [workspaceId, {}], function(err) {
-        callback(err, workspaceId);
-      });
-    }
-
     function createScenario(workspaceId, callback) {
       var state = {
         problem: util.reduceProblem(req.body.problem)
@@ -204,7 +198,6 @@ app.post('/workspaces', function(req, res, next) {
 
     async.waterfall([
       createWorkspace,
-      createRemarks,
       createScenario,
       setDefaultScenario,
       getWorkspaceInfo
@@ -227,7 +220,6 @@ app.get('/workspaces/:id', function(req, res, next) {
       err.status = 500;
       return next(err);
     }
-
     res.json(result.rows[0]);
   });
 });
@@ -252,27 +244,6 @@ app.get('/workspaces/:id/scenarios/:id', function(req, res, next) {
     }
 
     res.json(result.rows[0]);
-  });
-});
-
-app.get('/workspaces/:id/remarks', function(req, res, next) {
-  logger.debug('GET /workspaces/:id/remarks');
-  db.query('SELECT workspaceid AS "workspaceId", remarks::jsonb FROM remarks WHERE workspaceid = $1', [req.params.id], function(err, result) {
-    if (err) {
-      err.status = 500;
-      return next(err);
-    }
-    res.send(result.rows[0]);
-  });
-});
-
-app.post('/workspaces/:id/remarks', function(req, res, next) {
-  db.query('UPDATE remarks SET remarks = $1 WHERE workspaceid = $2', [req.body.remarks, req.params.id], function(err) {
-    if (err) {
-      err.status = 500;
-      return next(err);
-    }
-    res.end();
   });
 });
 

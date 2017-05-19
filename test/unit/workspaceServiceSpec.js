@@ -5,14 +5,21 @@ define(['angular', 'angular-mocks', 'mcda/services/workspaceService'], function(
   describe('The WorkspaceService, ', function() {
     var workspaceService;
     var scalesServiceMock = jasmine.createSpyObj('ScalesService', ['getObservedScales']);
-
+    var criteriaWithW = [{
+      id: 'critId2',
+      w: 'w_2'
+    }, {
+      id: 'critId4',
+      w: 'w_4'
+    }];
+    var sortCriteriaWithW = jasmine.createSpy('sortCriteriaWithW').and.returnValue(criteriaWithW);
     beforeEach(module('elicit.workspaceService', function($provide) {
       $provide.value('ScalesService', scalesServiceMock);
+      $provide.value('sortCriteriaWithW', sortCriteriaWithW);
     }));
 
     beforeEach(inject(function(WorkspaceService) {
       workspaceService = WorkspaceService;
-
     }));
 
 
@@ -145,7 +152,7 @@ define(['angular', 'angular-mocks', 'mcda/services/workspaceService'], function(
     });
 
 
-    describe('buildAggregateProblem', function() {
+    describe('buildAggregateState', function() {
       it('should aggregate the problem with the subproblem and the scenario', function() {
         var problem = {
           criteria: {
@@ -184,26 +191,29 @@ define(['angular', 'angular-mocks', 'mcda/services/workspaceService'], function(
         };
         var scenario = {
           state: {
-            criteria: {
-              
-            }
+            criteria: {}
           }
         };
-        var result = workspaceService.buildAggregateProblem(problem, subProblem, scenario);
+        var result = workspaceService.buildAggregateState(problem, subProblem, scenario);
         var expectedResult = {
-          criteria: {
-            critId1: {
-              pvf: {
-                range: [0, 1]
+          criteria: {},
+          problem: {
+            criteria: {
+              critId2: {
+                id: 'critId2',
+                w: 'w_2'
+              },
+              critId4: {
+                id: 'critId4',
+                w: 'w_4'
               }
             },
-            critId2: {
-              pvf: {
-                range: [2, 3]
-              }
-            }
-          },
-          performanceTable: {}
+            performanceTable: [{
+              criterionUri: 'critId2'
+            }, {
+              criterionUri: 'critId4'
+            }]
+          }
         };
         expect(result).toEqual(expectedResult);
       });

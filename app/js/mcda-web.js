@@ -35,7 +35,6 @@ define(function(require) {
     'mm.foundation',
     'patavi',
     'elicit.scaleRangeService',
-    'elicit.remarks',
     'elicit.workspaceResource',
     'elicit.workspaceService',
     'elicit.scalesService',
