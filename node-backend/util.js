@@ -12,6 +12,15 @@ function reduceProblem(problem) {
   };
 }
 
+function getRanges(problem){
+  var ranges = _.reduce(problem.criteria, function(accum, criterion, key) {
+    accum[key] = _.pick(criterion, ['pvf.range']);
+    return accum;
+  }, {});
+  return ranges;
+}
+
 module.exports = {
-  reduceProblem: reduceProblem
-};
+  reduceProblem: reduceProblem,
+  getRanges: getRanges
+}; 

@@ -117,7 +117,7 @@ define(function(require) {
 
     function checkScaleRanges(criteria) {
       var isMissingScaleRange = _.find(criteria, function(criterion) {
-        return !(criterion.pvf && criterion.pvf.range && criterion.pvf.range[0] && criterion.pvf.range[1]);
+        return !(criterion.pvf && criterion.pvf.range && criterion.pvf.range[0] !== undefined && criterion.pvf.range[1] !== undefined);
       });
       return !isMissingScaleRange;
     }

@@ -23,10 +23,11 @@ define(function(require) {
     };
 
     var resource = $resource(
-      window.config.workspacesRepositoryUrl + ':workspaceId/scenarios/:id',
+      window.config.workspacesRepositoryUrl + ':workspaceId/problems/:problemId/scenarios/:id',
       {
         id: '@id',
-        workspaceId: '@workspaceId'
+        workspaceId: '@workspaceId',
+        problemId: '@problemId'
       }, {
         query: { method: 'GET', isArray: true},
         get:   { cache: cache, method: 'GET'},

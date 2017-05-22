@@ -141,9 +141,11 @@ app.get('/signin', function(req, res) {
   res.sendfile(__dirname + '/public/signin.html');
 });
 
+
+// Workspaces
 app.get('/workspaces', function(req, res, next) {
   logger.debug('GET /workspaces');
-  db.query('SELECT id, owner, title, problem, defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1', [req.user.id], function(err, result) {
+  db.query('SELECT id, owner, title, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1', [req.user.id], function(err, result) {
     if (err) {
       logger.error('error running query', err);
       next({
@@ -153,7 +155,6 @@ app.get('/workspaces', function(req, res, next) {
     }
     res.json(result.rows);
   });
-
 });
 
 app.post('/workspaces', function(req, res, next) {
@@ -161,6 +162,8 @@ app.post('/workspaces', function(req, res, next) {
 
   function workspaceTransaction(client, callback) {
     function createWorkspace(callback) {
+      logger.debug('creating workspace');
+
       // create a new workspace
       client.query('INSERT INTO workspace (owner, title, problem) VALUES ($1, $2, $3) RETURNING id', [req.user.id, req.body.title, req.body.problem], function(err, result) {
         if (err) {
@@ -170,11 +173,37 @@ app.post('/workspaces', function(req, res, next) {
       });
     }
 
-    function createScenario(workspaceId, callback) {
+    function createSubProblem(workspaceId, callback) {
+      logger.debug('creating subproblem');
+      var definition = {
+        ranges: util.getRanges(req.body.problem)
+      };
+      logger.debug('created definition ' + JSON.stringify(definition));
+      client.query('INSERT INTO subProblem (workspaceid, title, definition) VALUES ($1, $2, $3) RETURNING id', 
+        [workspaceId, 'Default', definition], function(err, result) {
+        if (err) {
+          logger.debug('error creating subproblem');
+          return callback(err);
+        }
+        logger.debug('done creating subproblem');
+        callback(null, workspaceId, result.rows[0].id);
+      });
+    }
+
+    function setDefaultSubProblem(workspaceId, subProblemId, callback) {
+      logger.debug('setting default subproblem');
+      client.query('UPDATE workspace SET defaultsubproblemId = $1 WHERE id = $2', [subProblemId, workspaceId], function(err) {
+        callback(err, workspaceId, subProblemId);
+      });
+    }
+
+    function createScenario(workspaceId, subProblemId, callback) {
+      logger.debug('creating scenario');
       var state = {
         problem: util.reduceProblem(req.body.problem)
       };
-      client.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3) RETURNING id', [workspaceId, 'Default', state], function(err, result) {
+      client.query('INSERT INTO scenario (workspace, subproblemId, title, state) VALUES ($1, $2, $3, $4) RETURNING id',
+        [workspaceId, subProblemId, 'Default', state], function(err, result) {
         if (err) {
           return callback(err);
         }
@@ -183,13 +212,16 @@ app.post('/workspaces', function(req, res, next) {
     }
 
     function setDefaultScenario(workspaceId, scenarioId, callback) {
+      logger.debug('setting default scenario');
       client.query('UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2', [scenarioId, workspaceId], function(err) {
         callback(err, workspaceId);
       });
     }
 
     function getWorkspaceInfo(workspaceId, callback) {
-      client.query('SELECT id, owner, problem, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [workspaceId], function(err, result) {
+      logger.debug('getting workspace info');
+      client.query('SELECT id, owner, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1',
+        [workspaceId], function(err, result) {
         if (err) {
           return callback(err);
         }
@@ -199,6 +231,8 @@ app.post('/workspaces', function(req, res, next) {
 
     async.waterfall([
       createWorkspace,
+      createSubProblem,
+      setDefaultSubProblem,
       createScenario,
       setDefaultScenario,
       getWorkspaceInfo
@@ -216,34 +250,11 @@ app.post('/workspaces', function(req, res, next) {
 
 app.get('/workspaces/:id', function(req, res, next) {
   logger.debug('GET /workspaces/:id');
-  db.query('SELECT id, owner, problem, defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
+  db.query('SELECT id, owner, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
     if (err) {
       err.status = 500;
       return next(err);
     }
-    res.json(result.rows[0]);
-  });
-});
-
-app.get('/workspaces/:id/scenarios', function(req, res, next) {
-  logger.debug('GET /workspaces/:id/scenarios');
-  db.query('SELECT id, title, state, workspace AS "workspaceId" FROM scenario WHERE workspace = $1', [req.params.id], function(err, result) {
-    if (err) {
-      err.status = 500;
-      return next(err);
-    }
-    res.json(result.rows);
-  });
-});
-
-app.get('/workspaces/:id/scenarios/:id', function(req, res, next) {
-  logger.debug('GET /workspaces/:id/scenarios/:id');
-  db.query('SELECT id, title, state, workspace AS "workspaceId" FROM scenario WHERE id = $1', [req.params.id], function(err, result) {
-    if (err) {
-      err.status = 500;
-      return next(err);
-    }
-
     res.json(result.rows[0]);
   });
 });
@@ -258,8 +269,62 @@ app.post('/workspaces/:id', function(req, res, next) {
   });
 });
 
-app.post('/workspaces/:id/scenarios', function(req, res, next) {
-  db.query('INSERT INTO scenario (workspace, title, state) VALUES ($1, $2, $3) RETURNING id', [req.params.id, req.body.title, {
+//Subproblems
+app.get('/workspaces/:workspaceId/problems', function(req, res, next) {
+  logger.debug('GET /workspaces/:id1/subProblem/:id2/scenarios');
+  db.query('SELECT id, workspaceId AS "workspaceId", title, definition FROM subProblem WHERE workspaceId = $1', 
+    [req.params.workspaceId], function(err, result) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.json(result.rows);
+  });
+});
+
+app.get('/workspaces/:workspaceId/problems/:subProblemId', function(req, res, next) {
+  logger.debug('GET /workspaces/:id/scenarios/:id');
+  db.query('SELECT id, workspaceId AS "workspaceId", title, definition FROM subProblem WHERE workspaceId = $1 AND id = $2', 
+    [req.params.workspaceId, req.params.subProblemId], function(err, result) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.json(result.rows[0]);
+  });
+});
+
+
+
+//Scenarios
+app.get('/workspaces/:workspaceId/problems/:subProblemId/scenarios', function(req, res, next) {
+  logger.debug('GET /workspaces/:id1/subProblem/:id2/scenarios');
+  db.query('SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1 AND subProblemId = $2', 
+    [req.params.workspaceId, req.params.subProblemId], function(err, result) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.json(result.rows);
+  });
+});
+
+app.get('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', function(req, res, next) {
+  logger.debug('GET /workspaces/:id/scenarios/:id');
+  db.query('SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE id = $1', 
+    [req.params.id], function(err, result) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+
+    res.json(result.rows[0]);
+  });
+});
+
+app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios', function(req, res, next) {
+  db.query('INSERT INTO scenario (workspace, subProblemId, title, state) VALUES ($1, $2, $3, $4) RETURNING id', 
+    [req.params.workspaceId, req.params.subProblemId, req.body.title, {
     problem: req.body.state.problem,
     prefs: req.body.state.prefs
   }], function(err, result) {
@@ -271,7 +336,7 @@ app.post('/workspaces/:id/scenarios', function(req, res, next) {
   });
 });
 
-app.post('/workspaces/:id/scenarios/:id', function(req, res, next) {
+app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', function(req, res, next) {
   db.query('UPDATE scenario SET state = $1, title = $2 WHERE id = $3', [{
       problem: req.body.state.problem,
       prefs: req.body.state.prefs
@@ -286,8 +351,10 @@ app.post('/workspaces/:id/scenarios/:id', function(req, res, next) {
   });
 });
 
+// effects table exclusions
 app.get('/workspaces/:id/effectsTable', function(req, res, next) {
-  db.query('SELECT workspaceid AS "workspaceId", alternativeId AS "alternativeId" FROM effectsTableExclusion WHERE workspaceId=$1', [req.params.id], function(err, result) {
+  db.query('SELECT workspaceid AS "workspaceId", alternativeId AS "alternativeId" FROM effectsTableExclusion WHERE workspaceId=$1', 
+    [req.params.id], function(err, result) {
     if (err) {
       err.status = 500;
       return next(err);
@@ -323,7 +390,7 @@ app.post('/workspaces/:id/effectsTable', function(req, res, next) {
     });
 });
 
-
+// rest
 app.post('/patavi', function(req, res, next) { // FIXME: separate routes for scales and results
   patavi.create(req.body, function(err, taskUri) {
     if (err) {

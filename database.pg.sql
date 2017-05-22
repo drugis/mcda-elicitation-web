@@ -80,13 +80,18 @@ CREATE TABLE effectsTableExclusion (
 CREATE TABLE subProblem(
   id SERIAL NOT NULL,
   workspaceId INT NOT NULL,
-  definition VARCHAR NOT NULL,
+  definition JSONB NOT NULL,
   title VARCHAR NOT NULL,
   PRIMARY KEY(id),
   FOREIGN KEY(workspaceId) REFERENCES workspace(id) ON DELETE CASCADE
 );
 INSERT INTO subProblem (workspaceId, definition, title) SELECT id, '{}', 'Default' FROM workspace;
 ALTER TABLE scenario ADD COLUMN subProblemId INT;
+ALTER TABLE workspace ADD COLUMN defaultSubProblemId INT;
+UPDATE workspace SET defaultSubProblemId = subProblem.id FROM subProblem WHERE subProblem.workspaceId = workspace.id;
+ALTER TABLE workspace ADD FOREIGN KEY (defaultSubProblemId) REFERENCES subProblem (id) ON DELETE CASCADE;
 UPDATE scenario SET subProblemId = subProblem.id FROM subProblem WHERE subProblem.workspaceId = scenario.workspace;
 ALTER TABLE scenario ALTER COLUMN subProblemId SET NOT NULL;
 ALTER TABLE scenario ADD FOREIGN KEY (subProblemId) REFERENCES subProblem (id) ON DELETE CASCADE;
+DROP TABLE remarks;
+ALTER TABLE workspace ALTER COLUMN owner SET NOT NULL;
