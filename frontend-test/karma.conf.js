@@ -24,13 +24,13 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'test/test-main.js',
+      'frontend-test/test-main.js',
       'app/js/misc.js',
       'bower_components/angular/angular.js',
       {pattern: 'app/partials/*.html'},
       {pattern: 'app/js/**/*.js', included: false},
       {pattern: 'bower_components/**/*.js', included: false},
-      {pattern: 'test/**/*.js', included: false}
+      {pattern: 'frontend-test/**/*.js', included: false}
     ],
 
 
@@ -44,7 +44,7 @@ module.exports = function(config) {
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
     reporters: ['progress', 'junit'],
     junitReporter :{
-      outputFile: 'test/test-results.xml'
+      outputFile: 'frontend-test/test-results.xml'
     },
 
         // generate js files from html templates to expose them during testing.
