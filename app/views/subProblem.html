@@ -1,7 +1,6 @@
 <div class="row">
   <div class="columns large-12">
-    <em>Here you can select the criteria, and set the scale ranges for a new problem. Changes here will not affect
-      already existing problems. </em>
+    Here you see the current problem definition. If you want to work with a different problem you can define a new one based on the current one, which may include different criteria and scale ranges. Scale ranges must be defined for all selected criteria. 
   </div>
 </div>
 <div class="row">
@@ -67,7 +66,8 @@
           <td>{{scales.theoreticalScales[criterion.id][0] | number}}, {{scales.theoreticalScales[criterion.id][1]
             | number}}</td>
           <td>
-            <span ng-bind="intervalHull(scales.observed[criterion.id])[0] | number"></span>,
+            <span ng-bind="intervalHull(scales.observed[criterion.id])[0] | number"></span>
+            ,
             <span ng-bind="intervalHull(scales.observed[criterion.id])[1] | number"></span>
           </td>
           <td>
@@ -86,7 +86,7 @@
 
 <div class="row" ng-if="editMode.isUserOwner">
   <div class="columns large-12">
-    <button class="success" ng-click="openSaveDialog()" ng-disabled="isCreationAllowed()">Create problem</button>
+    <button class="success" ng-click="openSaveDialog()" ng-disabled="isCreationAllowed()">Save new problem</button>
     <button ng-click="reset(subProblem)">Reset</button>
     <span class="alert" ng-if="!subProblemState.hasScaleRange">Missing scale ranges</span>
   </div>

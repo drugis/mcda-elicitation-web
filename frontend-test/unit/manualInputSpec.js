@@ -59,13 +59,13 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
               title: 'favorable criterion',
               description: 'some crit description',
               unitOfMeasurement: 'particles',
-              scale: [5, 10]
+              scale: [-Infinity, Infinity]
             },
             'unfavorable criterion': {
               title: 'unfavorable criterion',
               description: 'some crit description',
               unitOfMeasurement: 'particles',
-              scale: [20, 30]
+              scale: [-Infinity, Infinity]
             }
           },
           alternatives: {

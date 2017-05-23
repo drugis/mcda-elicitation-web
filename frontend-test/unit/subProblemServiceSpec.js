@@ -27,7 +27,7 @@ define(['angular-mocks', 'mcda/subProblem/subProblem'], function() {
         };
         var result = subProblemService.createDefaultScenarioState(problem, subProblemState);
         var expectedResult = {
-          preferences: {
+          prefs: {
             headacheId: {}
           }
         };

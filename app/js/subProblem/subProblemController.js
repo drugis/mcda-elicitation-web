@@ -15,16 +15,20 @@ define(function(require) {
     $scope.intervalHull = intervalHull;
     $scope.updateInclusions = updateInclusions;
     $scope.openScaleRangeDialog = openScaleRangeDialog;
-    $scope.isCreationAllowed = isCreationAllowed;
+    $scope.isCreationBlocked = isCreationBlocked;
     $scope.reset = initSubProblem;
     $scope.openSaveDialog = openSaveDialog;
 
     //init
-    $scope.$watch('workspace.$$scales.observed', function(newValue) {
-      $scope.scales.observed = newValue;
+    $scope.$watch('workspace.$$scales.observed', function(newScales, oldScalesIfAny) {
+      if (newScales === oldScalesIfAny) {
+        return;
+      }
+      var mergedProblem = WorkspaceService.mergeBaseAndSubProblem($scope.problem, $scope.subProblem.definition);
+      $scope.mergedProblem = WorkspaceService.setDefaultObservedScales(mergedProblem, newScales);
+      $scope.scales.observed = newScales;
+      initSubProblem($scope.subProblem);
     }, true);
-    $scope.mergedProblem = WorkspaceService.mergeBaseAndSubProblem($scope.problem, $scope.subProblem.definition);
-    initSubProblem($scope.subProblem);
 
     function updateInclusions() {
       $scope.subProblemState.isChanged = !_.isEqual($scope.subProblemState.criterionInclusions, $scope.originalInclusions);
@@ -89,14 +93,14 @@ define(function(require) {
       $scope.subProblemState = {
         criterionInclusions: _.cloneDeep($scope.originalInclusions),
         hasScaleRange: checkScaleRanges($scope.mergedProblem.criteria),
-        ranges: _.cloneDeep(subProblem.definition.ranges),
+        ranges: _.cloneDeep($scope.mergedProblem.criteria),
         scaleRangeChanged: false
       };
       updateInclusions();
     }
 
-    function isCreationAllowed() {
-      return !$scope.subProblemState.hasScaleRange || (!$scope.subProblemState.isChanged && !$scope.subProblemState.scaleRangeChanged);
+    function isCreationBlocked() {
+      return  !$scope.subProblemState || !$scope.subProblemState.hasScaleRange || (!$scope.subProblemState.isChanged && !$scope.subProblemState.scaleRangeChanged);
     }
 
     // private functions

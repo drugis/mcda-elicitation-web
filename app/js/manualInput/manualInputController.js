@@ -69,6 +69,7 @@ define(['lodash'], function(_) {
       WorkspaceResource.create(problem).$promise.then(function(workspace) {
         $state.go('evidence', {
           workspaceId: workspace.id,
+          problemId: workspace.defaultSubProblemId,
           id: workspace.defaultScenarioId
         });
       });

@@ -48,7 +48,8 @@ define(function(require) {
       if (subProblemDefinition.excludedCriteria) {
         newProblem.criteria = _.omit(newProblem.criteria, subProblemDefinition.excludedCriteria);
         newProblem.performanceTable = _.reject(newProblem.performanceTable, function(performanceEntry) {
-          return _.includes(subProblemDefinition.excludedCriteria, performanceEntry.criterionUri);
+          return _.includes(subProblemDefinition.excludedCriteria, performanceEntry.criterionUri) ||
+            _.includes(subProblemDefinition.excludedCriteria, performanceEntry.criterion); // addis/mcda standalone difference
         });
       }
       newProblem.criteria = _.merge(newProblem.criteria, subProblemDefinition.ranges);
@@ -63,13 +64,43 @@ define(function(require) {
       return newState;
     }
 
+    function setDefaultObservedScales(problem, observedScales) {
+      var newProblem = _.cloneDeep(problem);
+      _.forEach(newProblem.criteria, function(criterion, key) {
+        var scale = observedScales[key];
+        if (!criterion.pvf || _.isEmpty(criterion.pvf.range)) {
+          criterion.pvf = {
+            range: getMinMax(scale)
+          };
+        }
+      });
+      return newProblem;
+    }
+
+    function getMinMax(scales) {
+      var minimum = Infinity;
+      var maximum = -Infinity;
+      _.forEach(scales, function(scale) {
+        _.forEach(scale, function(value) {
+          if (value < minimum) {
+            minimum = value;
+          }
+          if (value > maximum) {
+            maximum = value;
+          }
+        });
+      });
+      return [minimum, maximum];
+    }
+
     return {
       getObservedScales: getObservedScales,
       buildTheoreticalScales: buildTheoreticalScales,
       buildValueTree: buildValueTree,
       reduceProblem: reduceProblem,
       buildAggregateState: buildAggregateState,
-      mergeBaseAndSubProblem: mergeBaseAndSubProblem
+      mergeBaseAndSubProblem: mergeBaseAndSubProblem,
+      setDefaultObservedScales: setDefaultObservedScales
     };
   };
 

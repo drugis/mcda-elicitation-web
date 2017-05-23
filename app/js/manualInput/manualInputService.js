@@ -18,7 +18,7 @@ define(function(require) {
             criteria: _.map(_.reject(criteria, 'isFavorable'), 'name')
           }]
         },
-        criteria: buildCriteria(criteria, performanceTable),
+        criteria: buildCriteria(criteria),
         alternatives: buildAlternatives(treatments),
         performanceTable: buildPerformanceTable(performanceTable, criteria, treatments)
       };
@@ -37,13 +37,13 @@ define(function(require) {
     }
 
     // Private functions
-    function buildCriteria(criteria, performanceTable) {
+    function buildCriteria(criteria) {
       var newCriteria = _.map(criteria, function(criterion) {
         return {
           title: criterion.name,
           description: criterion.description,
           unitOfMeasurement: criterion.unitOfMeasurement,
-          scale: getMinMax(criterion, performanceTable)
+          scale: [-Infinity, Infinity]
         };
       });
       return _.keyBy(newCriteria, 'title');

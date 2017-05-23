@@ -49,7 +49,7 @@ define(function(require) {
 
   var criteriaTradeOffs = {
     'isPresent': function(state) {
-      return !_.isUndefined(state.prefs);
+      return !_.isEmpty(state.prefs);
     },
     'remove': function(state) {
       return _.omit(angular.copy(state), 'prefs');

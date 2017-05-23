@@ -105,11 +105,11 @@ define(['angular', 'angular-mocks', 'mcda/services/workspaceService'], function(
             critId4: {}
           },
           performanceTable: [{
-            criterionUri: 'critId1'
+            criterion: 'critId1'
           }, {
-            criterionUri: 'critId2'
+            criterion: 'critId2'
           }, {
-            criterionUri: 'critId4'
+            criterion: 'critId4'
           }]
         };
         var subProblemDefinition = {
@@ -142,9 +142,9 @@ define(['angular', 'angular-mocks', 'mcda/services/workspaceService'], function(
             }
           },
           performanceTable: [{
-            criterionUri: 'critId2'
+            criterion: 'critId2'
           }, {
-            criterionUri: 'critId4'
+            criterion: 'critId4'
           }]
         };
         expect(result).toEqual(expectedResult);
@@ -165,11 +165,11 @@ define(['angular', 'angular-mocks', 'mcda/services/workspaceService'], function(
             critId4: {}
           },
           performanceTable: [{
-            criterionUri: 'critId1'
+            criterion: 'critId1'
           }, {
-            criterionUri: 'critId2'
+            criterion: 'critId2'
           }, {
-            criterionUri: 'critId4'
+            criterion: 'critId4'
           }]
         };
         var subProblem = {
@@ -209,16 +209,134 @@ define(['angular', 'angular-mocks', 'mcda/services/workspaceService'], function(
               }
             },
             performanceTable: [{
-              criterionUri: 'critId2'
+              criterion: 'critId2'
             }, {
-              criterionUri: 'critId4'
+              criterion: 'critId4'
             }]
           }
         };
         expect(result).toEqual(expectedResult);
       });
-
     });
 
+    describe('setDefaultObservedScales', function() {
+      it('should set observed scale ranges if none are on the problem & subproblem', function() {
+        var scales = {
+          observed: {
+            crit1: {
+              alt1: {
+                '50%': 1,
+                '2.5%': 2,
+                '97.5%': 3
+              },
+              alt2: {
+                '50%': 4,
+                '2.5%': 5,
+                '97.5%': 6
+              }
+            },
+            crit2: {
+              alt1: {
+                '50%': 7,
+                '2.5%': 8,
+                '97.5%': 9
+              },
+              alt2: {
+                '50%': 10,
+                '2.5%': 11,
+                '97.5%': 12
+              }
+            }
+          }
+        };
+        var problem = {
+          criteria: {
+            crit1: {},
+            crit2: {}
+          }
+        };
+
+        var result = workspaceService.setDefaultObservedScales(problem, scales.observed);
+
+        var expectedProblem = {
+          criteria: {
+            crit1: {
+              pvf: {
+                range: [1, 6]
+              }
+            },
+            crit2: {
+              pvf: {
+                range: [7, 12]
+              }
+            }
+          }
+        };
+        expect(result).toEqual(expectedProblem);
+      });
+      it('should not override already-configured scale ranges on the problem or subproblem', function() {
+        var scales = {
+          observed: {
+            crit1: {
+              alt1: {
+                '50%': 1,
+                '2.5%': 2,
+                '97.5%': 3
+              },
+              alt2: {
+                '50%': 4,
+                '2.5%': 5,
+                '97.5%': 6
+              }
+            },
+            crit2: {
+              alt1: {
+                '50%': 7,
+                '2.5%': 8,
+                '97.5%': 9
+              },
+              alt2: {
+                '50%': 10,
+                '2.5%': 11,
+                '97.5%': 12
+              }
+            },
+            crit3ThatShouldBeIgnored: {
+              any: 'thing'
+            }
+          }
+        };
+        var problem = {
+          criteria: {
+            crit1: {
+              pvf: {
+                range: [3, 5]
+              }
+            },
+            crit2: {}
+          }
+        };
+
+        var result = workspaceService.setDefaultObservedScales(problem, scales.observed);
+
+        var expectedProblem = {
+          criteria: {
+            crit1: {
+              pvf: {
+                range: [3,
+                  5
+                ]
+              }
+            },
+            crit2: {
+              pvf: {
+                range: [7, 12]
+              }
+            }
+          }
+        };
+        expect(result).toEqual(expectedProblem);
+      });
+    });
   });
 });

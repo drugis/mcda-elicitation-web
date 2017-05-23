@@ -64,7 +64,7 @@ module.exports = function(url) {
       });
     },
     query: function(text, values, callback) {
-      logger.debug('db.query; text: ' + text + ' values' + values);
+      logger.debug('db.query; text: ' + text + ' values: ' + values);
       pg.connect(dbUrl, function(err, client, done) {
         if (err) {
           logger.error(err);

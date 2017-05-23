@@ -76,7 +76,7 @@ CREATE TABLE effectsTableExclusion (
   PRIMARY KEY (workspaceId, alternativeId)
 );
 
---chageset keijserj:9
+-- changeset keijserj:9
 CREATE TABLE subProblem(
   id SERIAL NOT NULL,
   workspaceId INT NOT NULL,

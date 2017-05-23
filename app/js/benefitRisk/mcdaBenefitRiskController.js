@@ -54,6 +54,9 @@ define(function(require) {
     $scope.$watch('__scenario.state', updateTaskAccessibility);
     $scope.$on('elicit.resultsAccessible', function(event, scenario) {
       $scope.aggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
+      if ($scope.workspace.$$scales.observed) {
+        $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales($scope.aggregateState.problem, $scope.workspace.$$scales.observed);
+      }
       updateTaskAccessibility();
     });
 
@@ -68,6 +71,8 @@ define(function(require) {
 
     WorkspaceService.getObservedScales($scope, baseProblem).then(function(observedScales) {
       $scope.workspace.$$scales.observed = observedScales;
+      $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales($scope.aggregateState.problem, observedScales);
+      updateTaskAccessibility();
     });
 
     ScenarioResource.get($stateParams).$promise.then(function(result) {

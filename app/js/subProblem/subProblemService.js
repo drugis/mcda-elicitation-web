@@ -6,7 +6,7 @@ define(function(require) {
     // Exposed functions
     function createDefaultScenarioState(problem, subProblemState) {
       return {
-        preferences: filterToObject(problem.preferences, subProblemState.criterionInclusions)
+        prefs: filterToObject(problem.preferences, subProblemState.criterionInclusions)
       };
     }
 

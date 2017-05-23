@@ -1,12 +1,8 @@
-app-remote/src/main/webapp/resources/bower_components/
 bower_components
-app-local/bower_components
-app-local/node_modules
-test/node_modules
+frontend-test/node_modules
 *.swp
 /tags
 /R/service.R
-/js/patavi.js
 \#*\#
 .\#*
 *_archive
@@ -14,7 +10,7 @@ test/node_modules
 database.h2.db
 database.trace.db
 database.lock.db
-test/test-results.xml
+frontend-test/test-results.xml
 node_modules
 
 # Numerous always-ignore extensions
@@ -30,7 +26,6 @@ node_modules
 *~
 # OS or Editor folders
 .DS_Store
-Thumbs.db
 .cache
 .project
 .settings
@@ -41,12 +36,9 @@ nbproject
 *.sublime-workspace
 .idea/
 .jshintrc
-Chrome_58.0.3029_(Linux_0.0.0)/
-R/.RData
+Chrome_*
+.RData
 R/.Rhistory
-R/dbeta.json
-R/hansenFail.json
-app/js/results/
-zet-op-live.sh
-zet-op-test.sh
+R/*.json
+*.sh
 
