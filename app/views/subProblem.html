@@ -86,7 +86,7 @@
 
 <div class="row" ng-if="editMode.isUserOwner">
   <div class="columns large-12">
-    <button class="success" ng-click="openSaveDialog()" ng-disabled="isCreationAllowed()">Save new problem</button>
+    <button class="success" ng-click="openSaveDialog()" ng-disabled="isCreationBlocked()">Save new problem</button>
     <button ng-click="reset(subProblem)">Reset</button>
     <span class="alert" ng-if="!subProblemState.hasScaleRange">Missing scale ranges</span>
   </div>

@@ -21,9 +21,6 @@ define(function(require) {
 
     //init
     $scope.$watch('workspace.$$scales.observed', function(newScales, oldScalesIfAny) {
-      if (newScales === oldScalesIfAny) {
-        return;
-      }
       var mergedProblem = WorkspaceService.mergeBaseAndSubProblem($scope.problem, $scope.subProblem.definition);
       $scope.mergedProblem = WorkspaceService.setDefaultObservedScales(mergedProblem, newScales);
       $scope.scales.observed = newScales;
