@@ -1,4 +1,3 @@
-ds
 'use strict';
 define(function(require) {
   var angular = require('angular');
