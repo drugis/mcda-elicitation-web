@@ -20,7 +20,10 @@ define(function(require) {
     $scope.openSaveDialog = openSaveDialog;
 
     //init
-    $scope.$watch('workspace.$$scales.observed', function(newScales, oldScalesIfAny) {
+    $scope.$watch('workspace.$$scales.observed', function(newScales) {
+      if (!newScales) {
+        return;
+      }
       var mergedProblem = WorkspaceService.mergeBaseAndSubProblem($scope.problem, $scope.subProblem.definition);
       $scope.mergedProblem = WorkspaceService.setDefaultObservedScales(mergedProblem, newScales);
       $scope.scales.observed = newScales;
@@ -97,7 +100,7 @@ define(function(require) {
     }
 
     function isCreationBlocked() {
-      return  !$scope.subProblemState || !$scope.subProblemState.hasScaleRange || (!$scope.subProblemState.isChanged && !$scope.subProblemState.scaleRangeChanged);
+      return !$scope.subProblemState || !$scope.subProblemState.hasScaleRange || (!$scope.subProblemState.isChanged && !$scope.subProblemState.scaleRangeChanged);
     }
 
     // private functions

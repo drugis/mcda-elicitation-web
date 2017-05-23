@@ -135,7 +135,7 @@ define(function(require) {
         validChoice: validChoice,
         fields: ['choice', 'reference', 'choices', 'type', 'standardized'],
         nextState: nextState,
-        initialize: _.partial(initialize, taskDefinition.clean(currentScenario.state)),
+        initialize: _.partial(initialize, taskDefinition.clean($scope.aggregateState)),
         standardize: standardize
       }
     });
