@@ -54,7 +54,7 @@ define(function(require) {
           },
           callback: function() {
             return function(newProblemId, newScenarioId) {
-              $state.go('preferences', _.extend({}, $stateParams, {
+              $state.go('problem', _.extend({}, $stateParams, {
                 problemId: newProblemId,
                 id: newScenarioId
               }));
