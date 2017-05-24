@@ -18,6 +18,7 @@ define(function(require) {
     $scope.isCreationBlocked = isCreationBlocked;
     $scope.reset = initSubProblem;
     $scope.openSaveDialog = openSaveDialog;
+    $scope.isExact = isExact;
 
     //init
     $scope.$watch('workspace.$$scales.observed', function(newScales) {
@@ -124,6 +125,13 @@ define(function(require) {
         return !(criterion.pvf && criterion.pvf.range && criterion.pvf.range[0] !== undefined && criterion.pvf.range[1] !== undefined);
       });
       return !isMissingScaleRange;
+    }
+
+    function isExact(criterion, alternative) {
+      var perf = _.find($scope.problem.performanceTable, function(performance) {
+        return performance.alternative === alternative && performance.criterion === criterion;
+      });
+      return !!perf && perf.performance.type === 'exact';
     }
 
   };
