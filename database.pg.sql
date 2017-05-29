@@ -95,3 +95,7 @@ ALTER TABLE scenario ALTER COLUMN subProblemId SET NOT NULL;
 ALTER TABLE scenario ADD FOREIGN KEY (subProblemId) REFERENCES subProblem (id) ON DELETE CASCADE;
 DROP TABLE remarks;
 ALTER TABLE workspace ALTER COLUMN owner SET NOT NULL;
+
+--changeset keijserj:10
+ALTER TABLE effectsTableExclusion RENAME TO effectsTableAlternativeInclusion;
+

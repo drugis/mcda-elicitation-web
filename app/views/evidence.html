@@ -13,10 +13,14 @@
 
     <h4>Effects Table</h4>
     <h6>Show alternatives</h6>
+          <div>
+        <button ng-if="editMode.isUserOwner" class="tiny" ng-click="selectAllAlternatives()">Select all</button>
+        <button ng-if="editMode.isUserOwner" class="tiny" ng-click="deselectAllAlternatives()">Deselect all</button>
+      </div>
     <form>
       <label ng-repeat="(alternativeKey, alternative) in problem.alternatives" class="check2hide">
         <input ng-disabled="!editMode.isUserOwner" class="check2hide" type="checkbox" ng-model="alternativeInclusions[alternativeKey]"
-          ng-change="toggleVisibility(alternativeKey)">{{alternative.title}}
+          ng-change="toggleVisibility()">{{alternative.title}}
       </label>
     </form>
 

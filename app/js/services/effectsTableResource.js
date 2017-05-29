@@ -6,7 +6,7 @@ define(function(require) {
     return $resource(window.config.workspacesRepositoryUrl + ':workspaceId/effectsTable', {
       workspaceId: '@workspaceId'
     }, {
-      'toggleExclusion': {
+      'setEffectsTableInclusions': {
         url: window.config.workspacesRepositoryUrl + ':workspaceId/effectsTable',
         method: 'POST'
       }

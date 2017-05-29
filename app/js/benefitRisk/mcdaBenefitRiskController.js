@@ -180,7 +180,6 @@ define(function(require) {
 
       });
     }
-
   }
   return dependencies.concat(MCDABenefitRiskController);
 });
