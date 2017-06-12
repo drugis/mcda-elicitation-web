@@ -3,7 +3,7 @@ define(function(require) {
   var angular = require('angular');
   var _ = require('lodash');
 
-  return function($scope, $state, $resource, WorkspaceResource) {
+  return function($scope, $state, $resource, WorkspaceResource, EffectsTableResource) {
     var examplesResource = $resource('examples/:url', {
       url: '@url'
     });
@@ -15,6 +15,11 @@ define(function(require) {
     $scope.createWorkspace = function(choice) {
       if (choice === 'local' && !_.isEmpty($scope.local.contents)) {
         WorkspaceResource.create(angular.fromJson($scope.local.contents)).$promise.then(function(workspace) {
+          EffectsTableResource.setEffectsTableInclusions({ workspaceId: workspace.id }, {
+            alternativeIds: _.map(workspace.problem.alternatives, function(alternative, key) {
+              return key;
+            })
+          });
           $state.go('evidence', {
             workspaceId: workspace.id,
             problemId: workspace.defaultSubProblemId,
@@ -29,6 +34,11 @@ define(function(require) {
         };
         examplesResource.get(example, function(problem) {
           WorkspaceResource.create(problem).$promise.then(function(workspace) {
+            EffectsTableResource.setEffectsTableInclusions({ workspaceId: workspace.id }, {
+              alternativeIds: _.map(problem.alternatives, function(alternative, key) {
+                return key;
+              })
+            });
             $state.go('evidence', {
               workspaceId: workspace.id,
               problemId: workspace.defaultSubProblemId,

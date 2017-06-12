@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modal', '$state', 'ManualInputService', 'WorkspaceResource'];
-  var ManualInputController = function($scope, $modal, $state, ManualInputService, WorkspaceResource) {
+  var dependencies = ['$scope', '$modal', '$state', 'ManualInputService', 'WorkspaceResource', 'EffectsTableResource'];
+  var ManualInputController = function($scope, $modal, $state, ManualInputService, WorkspaceResource, EffectsTableResource) {
     // functions
     $scope.openCriterionModal = openCriterionModal;
     $scope.addTreatment = addTreatment;
@@ -67,6 +67,11 @@ define(['lodash'], function(_) {
     function createProblem() {
       var problem = ManualInputService.createProblem($scope.criteria, $scope.treatments, $scope.state.title, $scope.state.description, $scope.inputData);
       WorkspaceResource.create(problem).$promise.then(function(workspace) {
+        EffectsTableResource.setEffectsTableInclusions({workspaceId: workspace.id}, {
+          alternativeIds: _.map(problem.alternatives, function(alternative, key) {
+              return key;
+          })
+        });
         $state.go('evidence', {
           workspaceId: workspace.id,
           problemId: workspace.defaultSubProblemId,
