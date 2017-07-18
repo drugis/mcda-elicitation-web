@@ -10,16 +10,16 @@ define(function(require) {
     $scope.effectsTableData = EffectsTableService.buildEffectsTableData($scope.problem, $scope.valueTree);
     $scope.nrAlternatives = _.keys($scope.problem.alternatives).length;
     $scope.alternativeInclusions = {};
+    $scope.selectAllAlternatives = selectAllAlternatives;
+    $scope.deselectAllAlternatives = deselectAllAlternatives;
+    $scope.toggleVisibility = toggleVisibility;
 
-    _.map($scope.problem.alternatives, function(alternative, alternativeKey) {
-      $scope.alternativeInclusions[alternativeKey] = true;
-    });
-
-    EffectsTableResource.query($stateParams, function(exclusions) {
-      _.forEach(exclusions, function(exclusion) {
-        $scope.alternativeInclusions[exclusion.alternativeId] = false;
+    EffectsTableResource.query($stateParams,
+      function(inclusions) {
+        _.forEach(inclusions, function(inclusion) {
+          $scope.alternativeInclusions[inclusion.alternativeId] = true;
+        });
       });
-    });
 
     $scope.$watch('workspace.$$scales.observed', function(newValue) {
       $scope.scales = newValue;
@@ -32,10 +32,32 @@ define(function(require) {
       return !!perf && perf.performance.type === 'exact';
     };
 
-    $scope.toggleVisibility = function(alternativeId) {
-      EffectsTableResource.toggleExclusion($stateParams, {
-        alternativeId: alternativeId
+    function toggleVisibility() {
+      EffectsTableResource.setEffectsTableInclusions($stateParams, {
+        alternativeIds: alternativeInclusionsToList()
       });
-    };
+    }
+
+    function alternativeInclusionsToList() {
+      return _.reduce($scope.alternativeInclusions, function(accum, inclusion, key) {
+        if (inclusion) {
+          accum.push(key);
+        }
+        return accum;
+      }, []);
+    }
+
+    function selectAllAlternatives() {
+      $scope.alternativeInclusions = _.reduce($scope.problem.alternatives, function(accum, alternative, alternativeKey) {
+        accum[alternativeKey] = true;
+        return accum;
+      }, {});
+      toggleVisibility();
+    }
+
+    function deselectAllAlternatives() {
+      $scope.alternativeInclusions = {};
+      toggleVisibility();
+    }
   };
 });

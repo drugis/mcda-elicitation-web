@@ -8,6 +8,7 @@ var db = require('./node-backend/db')(dbUri);
 var patavi = require('./node-backend/patavi');
 var util = require('./node-backend/util');
 var async = require('async');
+var _ = require('lodash');
 
 var express = require('express'),
   bodyParser = require('body-parser'),
@@ -397,9 +398,9 @@ app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', functi
   });
 });
 
-// effects table exclusions
+// effects table inclusions
 app.get('/workspaces/:id/effectsTable', function(req, res, next) {
-  db.query('SELECT workspaceid AS "workspaceId", alternativeId AS "alternativeId" FROM effectsTableExclusion WHERE workspaceId=$1', [req.params.id], function(err, result) {
+  db.query('SELECT workspaceid AS "workspaceId", alternativeId AS "alternativeId" FROM effectsTableAlternativeInclusion WHERE workspaceId=$1', [req.params.id], function(err, result) {
     if (err) {
       err.status = 500;
       return next(err);
@@ -410,27 +411,34 @@ app.get('/workspaces/:id/effectsTable', function(req, res, next) {
 
 app.post('/workspaces/:id/effectsTable', function(req, res, next) {
   db.query(
-    'SELECT * FROM effectsTableExclusion WHERE (workspaceId=$1 AND alternativeId=$2)', [req.params.id, req.body.alternativeId],
+    'SELECT workspaceid AS "workspaceId", alternativeId AS "alternativeId" FROM effectsTableAlternativeInclusion WHERE workspaceId=$1', [req.params.id],
     function(err, result) {
       if (err) {
         err.status = 500;
         return next(err);
       }
-      if (result.rows.length < 1) {
-        db.query('INSERT INTO effectsTableExclusion VALUES ($1, $2)', [req.params.id, req.body.alternativeId], function(err) {
+      _.forEach(req.body.alternativeIds, function(alternativeId) {
+        console.log(alternativeId);
+        db.query('INSERT INTO effectsTableAlternativeInclusion VALUES ($1, $2) ON CONFLICT DO NOTHING', [req.params.id, alternativeId], function(err) {
           if (err) {
             err.status = 500;
             return next(err);
           }
         });
-      } else {
-        db.query('DELETE FROM effectsTableExclusion WHERE (workspaceId=$1 AND alternativeId=$2)', [req.params.id, req.body.alternativeId], function(err) {
-          if (err) {
-            err.status = 500;
-            return next(err);
-          }
-        });
-      }
+      });
+      _.forEach(result.rows, function(dbAlternative) {
+        console.log(dbAlternative);
+        if (!_.find(req.body.alternativeIds, function(alternativeId){
+          return alternativeId === dbAlternative.alternativeId;
+        })) {
+          db.query('DELETE FROM effectsTableAlternativeInclusion WHERE (workspaceId=$1 AND alternativeid=$2)', [dbAlternative.workspaceId, dbAlternative.alternativeId], function(err) {
+            if (err) {
+              err.status = 500;
+              return next(err);
+            }
+          });
+        }
+      });
       res.end();
     });
 });
