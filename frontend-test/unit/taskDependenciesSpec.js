@@ -34,7 +34,7 @@ define(['angular', 'mcda/services/taskDependencies'], function(angular) {
         expect(newState3).toEqual(expected);
       });
     });
-    xdescribe("Dependency description: partial-value-function", function() {
+    describe("Dependency description: partial-value-function", function() {
       it("isPresent() checks whether partial value functions are defined in the problem", function() {
         var def = service.definitions['partial-value-function'];
         var criteria = {
@@ -74,12 +74,12 @@ define(['angular', 'mcda/services/taskDependencies'], function(angular) {
       });
     });
 
-    xdescribe("Dependency description: criteria-trade-offs", function() {
+    describe("Dependency description: criteria-trade-offs", function() {
       it("isPresent() checks whether prefs are present", function() {
         var def = service.definitions['criteria-trade-offs'];
         var state = { 'problem' : {} };
         expect(def.isPresent(state)).toBe(false);
-        state.prefs = {};
+        state.prefs = {some: 'thing'};
         expect(def.isPresent(state)).toBe(true);
       });
       it("remove() generates a new state with prefs removed", function() {
@@ -94,7 +94,7 @@ define(['angular', 'mcda/services/taskDependencies'], function(angular) {
       });
     });
 
-    xdescribe("Dependency description: non-ordinal-preferences", function() {
+    describe("Dependency description: non-ordinal-preferences", function() {
       it("isPresent() checks whether non-ordinal prefs are present", function() {
         var def = service.definitions['non-ordinal-preferences'];
         var state = { 'problem': {}, prefs: [ { "type" : "ordinal" } ] };
@@ -115,7 +115,7 @@ define(['angular', 'mcda/services/taskDependencies'], function(angular) {
       });
     });
 
-    xdescribe("Dependency description: complete-criteria-ranking", function() {
+    describe("Dependency description: complete-criteria-ranking", function() {
       it("isPresent() checks whether ordinal prefs are present (which currently always implies a full ranking)", function() {
         var def = service.definitions['complete-criteria-ranking'];
         var state = { 'problem': {}, prefs: [ { "type" : "ordinal" } ] };
