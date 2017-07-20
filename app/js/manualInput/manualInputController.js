@@ -21,6 +21,17 @@ define(['lodash'], function(_) {
       treatmentName: '',
       isInputDataValid: false
     };
+    $scope.distributionOptions = [{
+      name: 'exact values',
+      type: 'exact'
+    }, {
+      name: 'normal distribution',
+      type: 'normal' //check if correct
+    }, {
+      name: 'beta distribution',
+      type: 'dbeta'
+    }];
+
 
     function addTreatment(name) {
       $scope.treatments.push({
@@ -78,6 +89,7 @@ define(['lodash'], function(_) {
     function goToStep2() {
       $scope.state.step = 'step2';
       $scope.inputData = ManualInputService.preparePerformanceTable($scope.criteria, $scope.treatments);
+      $scope.dataTypes = ManualInputService.prepareDataTypes($scope.criteria,$scope.treatments);
       checkInputData();
     }
 

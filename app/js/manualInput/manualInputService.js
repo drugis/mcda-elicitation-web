@@ -36,6 +36,17 @@ define(function(require) {
       return inputData;
     }
 
+    function prepareDataTypes(criteria, treatments) {
+      var dataTypes = {};
+      _.forEach(criteria, function(criterion) {
+        dataTypes[criterion.name] = {};
+        _.forEach(treatments, function(treatment) {
+          dataTypes[criterion.name][treatment.name] = 'exact';
+        });
+      });
+      return dataTypes;
+    }
+
     // Private functions
     function buildCriteria(criteria) {
       var newCriteria = _.map(criteria, function(criterion) {
@@ -67,7 +78,7 @@ define(function(require) {
             alternative: treatment.name,
             criterion: criterion.name,
             performance: {
-              type: 'exact',
+              type: performanceTable[criterion.name][treatment.name].type,
               value: performanceTable[criterion.name][treatment.name]
             }
           });
@@ -93,7 +104,8 @@ define(function(require) {
 
     return {
       createProblem: createProblem,
-      preparePerformanceTable: preparePerformanceTable
+      preparePerformanceTable: preparePerformanceTable,
+      prepareDataTypes: prepareDataTypes
     };
   };
 

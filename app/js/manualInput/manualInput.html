@@ -44,9 +44,8 @@
           </tr>
           <tr ng-repeat="criterion in criteria">
             <td>
-              <a ng-click="removeCriterion(criterion)"><i class="fa fa-trash" style="color:red"></i></a> 
-              <a ng-click="openCriterionModal(criterion)"><i class="fa fa-edit""></i></a> 
-              {{criterion.name}}
+              <a ng-click="removeCriterion(criterion)"><i class="fa fa-trash" style="color:red"></i></a>
+              <a ng-click="openCriterionModal(criterion)"><i class="fa fa-edit""></i></a>              {{criterion.name}}
             </td>
             <td>{{criterion.isFavorable}}</td>
             <td>{{criterion.unitOfMeasurement}}</td>
@@ -125,6 +124,54 @@
   <div class="row">
     <div class="columns large-12">
       <h4>{{state.title}}</h4>
+
+      <div ng-repeat="criterion in criteria">
+        <table>
+          <thead>
+            <tr>
+              <th>
+                {{criterion.name}}
+              </th>
+              <th>
+                <select ng-model="aapjes" ng-change="setAllDistributions(criterion,distributionOption.type)" ng-options="distributionOption.type as distributionOption.name for distributionOption in distributionOptions track by distributionOption.type">
+              </th>
+              <th>value/mu/alpha</th>
+              <th>sigma/beta</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="treatment in treatments">
+              <td>{{treatment.name}}</td>
+              <td>
+                <select ng-model="dataTypes[criterion.name][treatment.name]" ng-options="distributionOption.type as distributionOption.name for distributionOption in distributionOptions track by distributionOption.type">
+              </td>
+              <td ng-if="dataTypes[criterion.name][treatment.name] === 'exact'" class="input-cell">
+                <input type="number" ng-model="inputData[criterion.name][treatment.name]" ng-change="checkInputData()"
+                  ng-model-options="{ debounce: 300 }">
+              </td>
+              <td ng-if="dataTypes[criterion.name][treatment.name] === 'exact'"> </td>
+              <td ng-if="dataTypes[criterion.name][treatment.name] === 'normal'" class="input-cell">
+                <input type="number" ng-model="inputData[criterion.name][treatment.name].mu"
+                  ng-change="checkInputData()" ng-model-options="{ debounce: 300 }">
+              </td>
+              <td ng-if="dataTypes[criterion.name][treatment.name] === 'normal'" class="input-cell">
+                <input type="number" ng-model="inputData[criterion.name][treatment.name].sigma"
+                  ng-change="checkInputData()" ng-model-options="{ debounce: 300 }">
+              </td>
+              <td ng-if="dataTypes[criterion.name][treatment.name] === 'dbeta'" class="input-cell">
+                <input type="number" ng-model="inputData[criterion.name][treatment.name].alpha" ng-change="checkInputData()"
+                  ng-model-options="{ debounce: 300 }">
+              </td>
+              <td ng-if="dataTypes[criterion.name][treatment.name] === 'dbeta'" class="input-cell">
+                <input type="number" ng-model="inputData[criterion.name][treatment.name].beta" ng-change="checkInputData()"
+                  ng-model-options="{ debounce: 300 }">
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <table>
         <thead>
           <tr>
