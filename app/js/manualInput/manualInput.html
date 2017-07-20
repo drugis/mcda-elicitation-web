@@ -43,7 +43,11 @@
             </td>
           </tr>
           <tr ng-repeat="criterion in criteria">
-            <td>{{criterion.name}}</td>
+            <td>
+              <a ng-click="removeCriterion(criterion)"><i class="fa fa-trash" style="color:red"></i></a> 
+              <a ng-click="openCriterionModal(criterion)"><i class="fa fa-wrench""></i></a> 
+              {{criterion.name}}
+            </td>
             <td>{{criterion.isFavorable}}</td>
             <td>{{criterion.unitOfMeasurement}}</td>
             <td>{{criterion.description}}</td>
@@ -86,7 +90,7 @@
             </td>
           </tr>
           <tr ng-repeat="treatment in treatments">
-            <td>{{treatment.name}}</td>
+            <td><a ng-click="removeTreatment(treatment)"><i class="fa fa-trash" style="color:red"></i></a>              {{treatment.name}}</td>
           </tr>
         </tbody>
       </table>

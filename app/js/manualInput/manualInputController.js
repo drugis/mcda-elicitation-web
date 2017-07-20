@@ -5,10 +5,12 @@ define(['lodash'], function(_) {
     // functions
     $scope.openCriterionModal = openCriterionModal;
     $scope.addTreatment = addTreatment;
+    $scope.removeTreatment = removeTreatment;
     $scope.isDuplicateName = isDuplicateName;
     $scope.goToStep1 = goToStep1;
     $scope.goToStep2 = goToStep2;
     $scope.createProblem = createProblem;
+    $scope.removeCriterion = removeCriterion;
     $scope.checkInputData = checkInputData;
 
     // vars
@@ -27,11 +29,19 @@ define(['lodash'], function(_) {
       $scope.state.treatmentName = '';
     }
 
+    function removeTreatment(treatment) {
+      $scope.treatments = _.reject($scope.treatments, ['name', treatment.name]);
+    }
+
     function isDuplicateName(name) {
       return _.find($scope.treatments, ['name', name]);
     }
 
-    function openCriterionModal() {
+    function removeCriterion(criterion) {
+      $scope.criteria = _.reject($scope.criteria, ['name', criterion.name]);
+    }
+
+    function openCriterionModal(criterion) {
       $modal.open({
         templateUrl: '/app/js/manualInput/addCriterion.html',
         controller: 'AddCriterionController',
@@ -41,12 +51,19 @@ define(['lodash'], function(_) {
           },
           callback: function() {
             return function(newCriterion) {
+              if (criterion) {
+                removeCriterion(criterion);
+              }
               $scope.criteria.push(newCriterion);
             };
+          },
+          oldCriterion: function() {
+            return criterion;
           }
         }
       });
     }
+
 
     function checkInputData() {
       $scope.state.isInputDataValid = !_.find($scope.inputData, function(row) {
@@ -67,9 +84,11 @@ define(['lodash'], function(_) {
     function createProblem() {
       var problem = ManualInputService.createProblem($scope.criteria, $scope.treatments, $scope.state.title, $scope.state.description, $scope.inputData);
       WorkspaceResource.create(problem).$promise.then(function(workspace) {
-        EffectsTableResource.setEffectsTableInclusions({workspaceId: workspace.id}, {
+        EffectsTableResource.setEffectsTableInclusions({
+          workspaceId: workspace.id
+        }, {
           alternativeIds: _.map(problem.alternatives, function(alternative, key) {
-              return key;
+            return key;
           })
         });
         $state.go('evidence', {
