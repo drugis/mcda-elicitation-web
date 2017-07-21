@@ -12,6 +12,8 @@ define(['lodash'], function(_) {
     $scope.createProblem = createProblem;
     $scope.removeCriterion = removeCriterion;
     $scope.checkInputData = checkInputData;
+    $scope.setAllDistributions = setAllDistributions;
+    $scope.render = render;
 
     // vars
     $scope.criteria = [];
@@ -26,12 +28,12 @@ define(['lodash'], function(_) {
       type: 'exact'
     }, {
       name: 'normal distribution',
-      type: 'normal' //check if correct
+      type: 'dnorm' //check if correct
     }, {
       name: 'beta distribution',
       type: 'dbeta'
     }];
-
+    $scope.setAll={};
 
     function addTreatment(name) {
       $scope.treatments.push({
@@ -78,7 +80,8 @@ define(['lodash'], function(_) {
 
     function checkInputData() {
       $scope.state.isInputDataValid = !_.find($scope.inputData, function(row) {
-        return _.includes(row, null) || _.includes(row, undefined);
+        return _.includes(row.firstValue, null) || _.includes(row.firstValue, undefined) ||
+          _.includes(row.secondValue, null) || _.includes(row.secondValue, undefined);
       });
     }
 
@@ -89,12 +92,32 @@ define(['lodash'], function(_) {
     function goToStep2() {
       $scope.state.step = 'step2';
       $scope.inputData = ManualInputService.preparePerformanceTable($scope.criteria, $scope.treatments);
-      $scope.dataTypes = ManualInputService.prepareDataTypes($scope.criteria,$scope.treatments);
+      $scope.dataTypes = ManualInputService.prepareDataTypes($scope.criteria, $scope.treatments);
       checkInputData();
     }
 
+    function setAllDistributions(criterion) {
+      _.forEach($scope.treatments, function(treatment) {
+        $scope.dataTypes[criterion.name][treatment.name] = $scope.setAll.criterionTypeSetter;
+      });
+    }
+
+    function render(criterionName, treatmentName){
+      var type = $scope.dataTypes[criterionName][treatmentName];
+      if(type === 'exact'){return $scope.inputData[criterionName][treatmentName].firstValue;}
+      else if(type === 'dbeta'){
+        return 'beta('+$scope.inputData[criterionName][treatmentName].firstValue+', '+
+        $scope.inputData[criterionName][treatmentName].secondValue +')';
+      } else{
+          return 'N('+$scope.inputData[criterionName][treatmentName].firstValue+', '+
+        $scope.inputData[criterionName][treatmentName].secondValue +')';
+        
+      }
+    }
+
     function createProblem() {
-      var problem = ManualInputService.createProblem($scope.criteria, $scope.treatments, $scope.state.title, $scope.state.description, $scope.inputData);
+      var problem = ManualInputService.createProblem($scope.criteria, $scope.treatments,
+        $scope.state.title, $scope.state.description, $scope.inputData);
       WorkspaceResource.create(problem).$promise.then(function(workspace) {
         EffectsTableResource.setEffectsTableInclusions({
           workspaceId: workspace.id

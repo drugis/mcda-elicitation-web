@@ -30,7 +30,10 @@ define(function(require) {
       _.forEach(criteria, function(criterion) {
         inputData[criterion.name] = {};
         _.forEach(treatments, function(treatment) {
-          inputData[criterion.name][treatment.name] = 0;
+          inputData[criterion.name][treatment.name] = {
+            firstValue: 0,
+            secondValue: 0
+          };
         });
       });
       return inputData;
@@ -78,8 +81,10 @@ define(function(require) {
             alternative: treatment.name,
             criterion: criterion.name,
             performance: {
-              type: performanceTable[criterion.name][treatment.name].type,
-              value: performanceTable[criterion.name][treatment.name]
+              type: performanceTable[criterion.name][treatment.name].type,//'dbeta exact relative-logit-normal'
+              value: performanceTable[criterion.name][treatment.name]// voor beta:  parameters: {alpha: xx, beta: xx}
+              // voor normal: parameters: {baseline: {mu: xx, sigma: xx, scale: 'log odds', type: 'dnorm'},
+            // relative:{cov: {covariance matrix}, mu: {treat1: x, treat2: x}, type:'dnorm'}}
             }
           });
         });
@@ -87,20 +92,20 @@ define(function(require) {
       return newPerformanceTable;
     }
 
-    function getMinMax(criterion, performanceTable) {
-      var minimum = Infinity;
-      var maximum = -Infinity;
+    // function getMinMax(criterion, performanceTable) {
+    //   var minimum = Infinity;
+    //   var maximum = -Infinity;
 
-      _.forEach(performanceTable[criterion.name], function(cell) {
-        if (cell < minimum) {
-          minimum = cell;
-        }
-        if (cell > maximum) {
-          maximum = cell;
-        }
-      });
-      return [minimum, maximum];
-    }
+    //   _.forEach(performanceTable[criterion.name], function(cell) {
+    //     if (cell < minimum) {
+    //       minimum = cell;
+    //     }
+    //     if (cell > maximum) {
+    //       maximum = cell;
+    //     }
+    //   });
+    //   return [minimum, maximum];
+    // }
 
     return {
       createProblem: createProblem,
