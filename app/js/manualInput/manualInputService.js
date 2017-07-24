@@ -3,6 +3,39 @@ define(function(require) {
   var dependencies = [];
   var _ = require('lodash');
   var ManualInputService = function() {
+    var distributionKnowledge = {
+      exact: {
+        isValidInput: function(input) {
+          return isNullOrUndefined(input.value);
+        },
+        buildPerformance: function(data) {
+          return _.pick(data, ['type', 'value']);
+        }
+      },
+      dnorm: {
+        isValidInput: function(input) {
+          return isNullOrUndefined(input.mu) || isNullOrUndefined(input.sigma);
+        },
+        buildPerformance: function(data) {
+          return {
+            type: data.type,
+            parameters: _.pick(data, ['mu', 'sigma'])
+          };
+        }
+      },
+      dbeta: {
+        isValidInput: function(input) {
+          return isNullOrUndefined(input.alpha) || isNullOrUndefined(input.beta);
+        },
+        buildPerformance: function(data) {
+          return {
+            type: data.type,
+            parameters: _.pick(data, ['alpha', 'beta'])
+          };
+        }
+      }
+    };
+
     // Exposed functions
     function createProblem(criteria, treatments, title, description, performanceTable) {
       var problem = {
@@ -25,29 +58,18 @@ define(function(require) {
       return problem;
     }
 
-    function preparePerformanceTable(criteria, treatments) {
+    function prepareInputData(criteria, treatments) {
       var inputData = {};
       _.forEach(criteria, function(criterion) {
         inputData[criterion.name] = {};
         _.forEach(treatments, function(treatment) {
           inputData[criterion.name][treatment.name] = {
-            firstValue: 0,
-            secondValue: 0
+            type: 'exact',
+            value: 0
           };
         });
       });
       return inputData;
-    }
-
-    function prepareDataTypes(criteria, treatments) {
-      var dataTypes = {};
-      _.forEach(criteria, function(criterion) {
-        dataTypes[criterion.name] = {};
-        _.forEach(treatments, function(treatment) {
-          dataTypes[criterion.name][treatment.name] = 'exact';
-        });
-      });
-      return dataTypes;
     }
 
     // Private functions
@@ -73,44 +95,37 @@ define(function(require) {
       return alternatives;
     }
 
-    function buildPerformanceTable(performanceTable, criteria, treatments) {
+    function buildPerformanceTable(inputData, criteria, treatments) {
       var newPerformanceTable = [];
       _.forEach(criteria, function(criterion) {
         _.forEach(treatments, function(treatment) {
+          var data = inputData[criterion.name][treatment.name];
           newPerformanceTable.push({
             alternative: treatment.name,
             criterion: criterion.name,
-            performance: {
-              type: performanceTable[criterion.name][treatment.name].type,//'dbeta exact relative-logit-normal'
-              value: performanceTable[criterion.name][treatment.name]// voor beta:  parameters: {alpha: xx, beta: xx}
-              // voor normal: parameters: {baseline: {mu: xx, sigma: xx, scale: 'log odds', type: 'dnorm'},
-            // relative:{cov: {covariance matrix}, mu: {treat1: x, treat2: x}, type:'dnorm'}}
-            }
+            performance: distributionKnowledge[data.type].buildPerformance(data)
           });
         });
       });
       return newPerformanceTable;
     }
 
-    // function getMinMax(criterion, performanceTable) {
-    //   var minimum = Infinity;
-    //   var maximum = -Infinity;
+    function isNullOrUndefined(value) {
+      return value === null || value === undefined;
+    }
 
-    //   _.forEach(performanceTable[criterion.name], function(cell) {
-    //     if (cell < minimum) {
-    //       minimum = cell;
-    //     }
-    //     if (cell > maximum) {
-    //       maximum = cell;
-    //     }
-    //   });
-    //   return [minimum, maximum];
-    // }
+    function isValidInputData(inputData) {
+      return !_.find(inputData, function(row) {
+        return _.find(row, function(cell) {
+          return distributionKnowledge[cell.type].isValidInput(cell);
+        });
+      });
+    }
 
     return {
       createProblem: createProblem,
-      preparePerformanceTable: preparePerformanceTable,
-      prepareDataTypes: prepareDataTypes
+      prepareInputData: prepareInputData,
+      isValidInputData: isValidInputData
     };
   };
 

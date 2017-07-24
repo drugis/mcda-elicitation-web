@@ -124,47 +124,6 @@
   <div class="row">
     <div class="columns large-12">
       <h4>{{state.title}}</h4>
-
-      <div ng-repeat="criterion in criteria">
-        <div class="columns large-12">
-          <h5>{{criterion.name}}</h5>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>
-                {{criterion.name}}
-              </th>
-              <th>
-                <select ng-model="setAll.criterionTypeSetter" ng-options="distributionOption.type as distributionOption.name for distributionOption in distributionOptions track by distributionOption.type"
-                  ng-change="setAllDistributions(criterion)">
-              </th>
-              <th>value/mu/alpha</th>
-              <th>sigma/beta</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-repeat="treatment in treatments">
-              <td>{{treatment.name}}</td>
-              <td>
-                <select ng-model="dataTypes[criterion.name][treatment.name]" ng-options="distributionOption.type as distributionOption.name for distributionOption in distributionOptions track by distributionOption.type">
-              </td>
-              <td class="input-cell">
-                <input type="number" ng-model="inputData[criterion.name][treatment.name].firstValue"
-                  ng-change="checkInputData()" ng-model-options="{ debounce: 300 }">
-              </td>
-              <td ng-if="dataTypes[criterion.name][treatment.name] === 'exact'" class="input-cell">
-              </td>
-
-              <td ng-if="dataTypes[criterion.name][treatment.name] !== 'exact'" class="input-cell">
-                <input type="number" ng-model="inputData[criterion.name][treatment.name].secondValue"
-                  ng-change="checkInputData()" ng-model-options="{ debounce: 300 }">
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
       <table>
         <thead>
           <tr>
@@ -176,28 +135,48 @@
           <tr ng-repeat="criterion in criteria">
             <td>{{criterion.name}}</td>
             <td ng-repeat="treatment in treatments">
-              <a dropdown-toggle="#editCellToggle" aria-autoclose="false">
+              <a dropdown-toggle="#editCellToggle-{{$parent.$index}}-{{$index}}">
                 <div>
                   {{render(criterion.name,treatment.name)}}
                 </div>
               </a>
-              <div id="editCellToggle" class="f-dropdown">
-                <div class="columns large-12">
-                  <select ng-model="dataTypes[criterion.name][treatment.name]" ng-options="distributionOption.type as distributionOption.name for distributionOption in distributionOptions track by distributionOption.type">
+              <div id="editCellToggle-{{$parent.$index}}-{{$index}}" class="row f-dropdown">
+                <div class="columns large-4">
+                  <label>Distribution
+                    <select ng-model="inputData[criterion.name][treatment.name].type" ng-options="distributionOption.type as distributionOption.name for distributionOption in distributionOptions"></select>
+                  </label>
                 </div>
-                <div class="columns large-12" ng-if="dataTypes[criterion.name][treatment.name] === 'dbeta'">alpha</div>
-                <div class="columns large-12" ng-if="dataTypes[criterion.name][treatment.name] === 'dnorm'">mu</div>
-                <div class="columns large-12" class="input-cell">
-                  <input type="number" ng-model="inputData[criterion.name][treatment.name].firstValue"
-                    ng-change="checkInputData()" ng-model-options="{ debounce: 300}">
+                <!-- first values -->
+                <div class="columns large-4" ng-if="inputData[criterion.name][treatment.name].type === 'dbeta'">
+                  <label> &alpha;
+                    <input type="number" ng-model="inputData[criterion.name][treatment.name].alpha" ng-change="checkInputData()"
+                      ng-model-options="{ debounce: 300 }" step="1">
+                  </label>
                 </div>
-                <div class="columns large-12" ng-if="dataTypes[criterion.name][treatment.name] !== 'exact'">
-                  <div class="columns large-12" ng-if="dataTypes[criterion.name][treatment.name] === 'dbeta'">beta</div>
-                  <div class="columns large-12" ng-if="dataTypes[criterion.name][treatment.name] === 'dnorm'">sigma</div>
-                  <div class="columns large-12" class="input-cell">
-                    <input type="number" ng-model="inputData[criterion.name][treatment.name].secondValue"
-                      ng-change="checkInputData()" ng-model-options="{ debounce: 300}">
-                  </div>
+                <div class="columns large-4" ng-if="inputData[criterion.name][treatment.name].type === 'dnorm'">
+                  <label> &mu;
+                    <input type="number" ng-model="inputData[criterion.name][treatment.name].mu" ng-change="checkInputData()"
+                      ng-model-options="{ debounce: 300 }">
+                  </label>
+                </div>
+                <div class="columns large-8" ng-if="inputData[criterion.name][treatment.name].type === 'exact'">
+                  <label> value
+                    <input type="number" ng-model="inputData[criterion.name][treatment.name].value" ng-change="checkInputData()"
+                      ng-model-options="{ debounce: 300 }">
+                  </label>
+                </div>
+                <!-- second values -->
+                <div class="columns large-4" ng-if="inputData[criterion.name][treatment.name].type === 'dbeta'">
+                  <label> &beta;
+                    <input type="number" ng-model="inputData[criterion.name][treatment.name].beta" ng-change="checkInputData()"
+                      ng-model-options="{ debounce: 300 }" step="1">
+                  </label>
+                </div>
+                <div class="columns large-4" ng-if="inputData[criterion.name][treatment.name].type === 'dnorm'">
+                  <label> &sigma;
+                    <input type="number" ng-model="inputData[criterion.name][treatment.name].sigma" ng-change="checkInputData()"
+                      ng-model-options="{ debounce: 300 }">
+                  </label>
                 </div>
               </div>
             </td>

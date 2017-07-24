@@ -6174,7 +6174,7 @@ table tr td.button-cell {
 /* line 89, ../../sass-shared/_drugis.scss */
 table tr td.button-cell button {
   margin-bottom: 0;
-  font-size: 0.875rem;
+  font-size: rem-calc(14);
 }
 /* line 94, ../../sass-shared/_drugis.scss */
 table tr td.input-cell {
@@ -6392,7 +6392,7 @@ html, body {
 /* standard */
 /* line 279, ../../sass-shared/_drugis.scss */
 pre {
-  margin-bottom: 1.25rem;
+  margin-bottom: rem-calc(20);
   border: 1px solid #b4b4b4;
   background-color: #e7e7e7;
   padding: 0.8em;

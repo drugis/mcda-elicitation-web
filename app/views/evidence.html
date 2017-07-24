@@ -20,7 +20,7 @@
     <form>
       <label ng-repeat="(alternativeKey, alternative) in problem.alternatives" class="check2hide">
         <input ng-disabled="!editMode.isUserOwner" class="check2hide" type="checkbox" ng-model="alternativeInclusions[alternativeKey]"
-          ng-change="toggleVisibility()">{{alternative.title}}
+          ng-change="toggleVisibility()"> {{alternative.title}}
       </label>
     </form>
 

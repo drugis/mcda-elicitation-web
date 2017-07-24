@@ -2,6 +2,6 @@
 $drugis-color: #1976D2;
 $primary-color: #1976D2;
 $row-width: rem-calc(1500);
-@import "foundation";
+@import"../bower_components/foundation/scss/foundation.scss";
 @import "drugis";
 @import "mcda-drugis-base";

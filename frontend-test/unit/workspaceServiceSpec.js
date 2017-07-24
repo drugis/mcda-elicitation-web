@@ -68,7 +68,6 @@ define(['angular', 'angular-mocks', 'mcda/services/workspaceService'], function(
           }
         };
         var result = WorkspaceService.buildTheoreticalScales(problem);
-        console.log(JSON.stringify(result));
         expect(result.crit1[0]).toBe(-Infinity);
         expect(result.crit1[1]).toBe(Infinity);
         expect(result.crit2[0]).toBe(problem.criteria.crit2.scale[0]);

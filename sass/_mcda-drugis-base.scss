@@ -448,3 +448,7 @@ $preferences-progress-inactive-color: #e2e2e2;
     text-align:left;
 }
 
+/* fix triangle for angular foundation dropdowns */
+.row .columns .row:before, .row .columns .row:after {
+  display:block;
+}

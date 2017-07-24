@@ -11,17 +11,21 @@ define(['lodash'], function(_) {
     $scope.goToStep2 = goToStep2;
     $scope.createProblem = createProblem;
     $scope.removeCriterion = removeCriterion;
-    $scope.checkInputData = checkInputData;
-    $scope.setAllDistributions = setAllDistributions;
+    $scope.checkInputData =  checkInputData;
     $scope.render = render;
 
     // vars
     $scope.criteria = [];
-    $scope.treatments = [];
+    $scope.treatments = [{
+      name: 't1'
+    }, {
+      name: 't2'
+    }];
     $scope.state = {
       step: 'step1',
       treatmentName: '',
-      isInputDataValid: false
+      isInputDataValid: false,
+      title: 'title'
     };
     $scope.distributionOptions = [{
       name: 'exact values',
@@ -33,7 +37,6 @@ define(['lodash'], function(_) {
       name: 'beta distribution',
       type: 'dbeta'
     }];
-    $scope.setAll={};
 
     function addTreatment(name) {
       $scope.treatments.push({
@@ -77,12 +80,8 @@ define(['lodash'], function(_) {
       });
     }
 
-
-    function checkInputData() {
-      $scope.state.isInputDataValid = !_.find($scope.inputData, function(row) {
-        return _.includes(row.firstValue, null) || _.includes(row.firstValue, undefined) ||
-          _.includes(row.secondValue, null) || _.includes(row.secondValue, undefined);
-      });
+    function checkInputData(){
+      $scope.state.isInputDataValid = ManualInputService.isValidInputData($scope.inputData);
     }
 
     function goToStep1() {
@@ -91,27 +90,21 @@ define(['lodash'], function(_) {
 
     function goToStep2() {
       $scope.state.step = 'step2';
-      $scope.inputData = ManualInputService.preparePerformanceTable($scope.criteria, $scope.treatments);
-      $scope.dataTypes = ManualInputService.prepareDataTypes($scope.criteria, $scope.treatments);
+      $scope.inputData = ManualInputService.prepareInputData($scope.criteria, $scope.treatments);
       checkInputData();
     }
 
-    function setAllDistributions(criterion) {
-      _.forEach($scope.treatments, function(treatment) {
-        $scope.dataTypes[criterion.name][treatment.name] = $scope.setAll.criterionTypeSetter;
-      });
-    }
+    function render(criterionName, treatmentName) {
+      var type = $scope.inputData[criterionName][treatmentName].type;
+      if (type === 'exact') {
+        return 'exact(' + $scope.inputData[criterionName][treatmentName].value + ')';
+      } else if (type === 'dbeta') {
+        return 'Beta(' + $scope.inputData[criterionName][treatmentName].alpha + ', ' +
+          $scope.inputData[criterionName][treatmentName].beta + ')';
+      } else if (type === 'dnorm') {
+        return 'N(' + $scope.inputData[criterionName][treatmentName].mu + ', ' +
+          $scope.inputData[criterionName][treatmentName].sigma + ')';
 
-    function render(criterionName, treatmentName){
-      var type = $scope.dataTypes[criterionName][treatmentName];
-      if(type === 'exact'){return $scope.inputData[criterionName][treatmentName].firstValue;}
-      else if(type === 'dbeta'){
-        return 'beta('+$scope.inputData[criterionName][treatmentName].firstValue+', '+
-        $scope.inputData[criterionName][treatmentName].secondValue +')';
-      } else{
-          return 'N('+$scope.inputData[criterionName][treatmentName].firstValue+', '+
-        $scope.inputData[criterionName][treatmentName].secondValue +')';
-        
       }
     }
 
