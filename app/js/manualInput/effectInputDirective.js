@@ -53,6 +53,7 @@ define(['lodash'], function(_) {
             scope.inputData.label = ManualInputService.inputToString(scope.inputData);
             scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
             scope.changeCallback();
+            scope.$apply();
             scope.$broadcast('dropdown.closeEvent');
           }
         }
