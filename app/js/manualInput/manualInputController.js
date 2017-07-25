@@ -11,32 +11,16 @@ define(['lodash'], function(_) {
     $scope.goToStep2 = goToStep2;
     $scope.createProblem = createProblem;
     $scope.removeCriterion = removeCriterion;
-    $scope.checkInputData =  checkInputData;
-    $scope.render = render;
+    $scope.checkInputData = checkInputData;
 
     // vars
     $scope.criteria = [];
-    $scope.treatments = [{
-      name: 't1'
-    }, {
-      name: 't2'
-    }];
+    $scope.treatments = [];
     $scope.state = {
       step: 'step1',
       treatmentName: '',
-      isInputDataValid: false,
-      title: 'title'
+      isInputDataValid: false
     };
-    $scope.distributionOptions = [{
-      name: 'exact values',
-      type: 'exact'
-    }, {
-      name: 'normal distribution',
-      type: 'dnorm' //check if correct
-    }, {
-      name: 'beta distribution',
-      type: 'dbeta'
-    }];
 
     function addTreatment(name) {
       $scope.treatments.push({
@@ -80,8 +64,10 @@ define(['lodash'], function(_) {
       });
     }
 
-    function checkInputData(){
-      $scope.state.isInputDataValid = ManualInputService.isValidInputData($scope.inputData);
+    function checkInputData() {
+      $scope.state.isInputDataValid = !_.find($scope.inputData, function(row) {
+        return _.find(row, 'isInvalid');
+      });
     }
 
     function goToStep1() {
@@ -91,21 +77,7 @@ define(['lodash'], function(_) {
     function goToStep2() {
       $scope.state.step = 'step2';
       $scope.inputData = ManualInputService.prepareInputData($scope.criteria, $scope.treatments);
-      checkInputData();
-    }
-
-    function render(criterionName, treatmentName) {
-      var type = $scope.inputData[criterionName][treatmentName].type;
-      if (type === 'exact') {
-        return 'exact(' + $scope.inputData[criterionName][treatmentName].value + ')';
-      } else if (type === 'dbeta') {
-        return 'Beta(' + $scope.inputData[criterionName][treatmentName].alpha + ', ' +
-          $scope.inputData[criterionName][treatmentName].beta + ')';
-      } else if (type === 'dnorm') {
-        return 'N(' + $scope.inputData[criterionName][treatmentName].mu + ', ' +
-          $scope.inputData[criterionName][treatmentName].sigma + ')';
-
-      }
+      $scope.state.isInputDataValid = true;
     }
 
     function createProblem() {

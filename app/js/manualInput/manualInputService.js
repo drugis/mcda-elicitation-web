@@ -5,7 +5,10 @@ define(function(require) {
   var ManualInputService = function() {
     var distributionKnowledge = {
       exact: {
-        isValidInput: function(input) {
+        toString: function(input) {
+          return 'exact(' + input.value + ')';
+        },
+        isInvalidInput: function(input) {
           return isNullOrUndefined(input.value);
         },
         buildPerformance: function(data) {
@@ -13,7 +16,10 @@ define(function(require) {
         }
       },
       dnorm: {
-        isValidInput: function(input) {
+        toString: function(input) {
+          return 'N(' + input.mu + ', ' + input.sigma + ')';
+        },
+        isInvalidInput: function(input) {
           return isNullOrUndefined(input.mu) || isNullOrUndefined(input.sigma);
         },
         buildPerformance: function(data) {
@@ -24,7 +30,10 @@ define(function(require) {
         }
       },
       dbeta: {
-        isValidInput: function(input) {
+        toString: function(input) {
+          return 'Beta(' + input.alpha + ', ' + input.beta + ')';
+        },
+        isInvalidInput: function(input) {
           return isNullOrUndefined(input.alpha) || isNullOrUndefined(input.beta);
         },
         buildPerformance: function(data) {
@@ -65,7 +74,8 @@ define(function(require) {
         _.forEach(treatments, function(treatment) {
           inputData[criterion.name][treatment.name] = {
             type: 'exact',
-            value: 0
+            value: 0,
+            label: 'exact(0)'
           };
         });
       });
@@ -114,18 +124,21 @@ define(function(require) {
       return value === null || value === undefined;
     }
 
-    function isValidInputData(inputData) {
-      return !_.find(inputData, function(row) {
-        return _.find(row, function(cell) {
-          return distributionKnowledge[cell.type].isValidInput(cell);
-        });
-      });
+
+    function isInvalidCell(cell) {
+      return distributionKnowledge[cell.type].isInvalidInput(cell);
+
+    }
+
+    function inputToString(inputData) {
+      return distributionKnowledge[inputData.type].toString(inputData);
     }
 
     return {
       createProblem: createProblem,
       prepareInputData: prepareInputData,
-      isValidInputData: isValidInputData
+      inputToString: inputToString,
+      isInvalidCell: isInvalidCell
     };
   };
 

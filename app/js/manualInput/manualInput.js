@@ -7,6 +7,8 @@ define(function(require) {
     .controller('AddCriterionController', require('mcda/manualInput/addCriterionController'))
 
     .factory('ManualInputService', require('mcda/manualInput/manualInputService'))
+
+    .directive('effectInput', require('mcda/manualInput/effectInputDirective'))
     ;
 
   });

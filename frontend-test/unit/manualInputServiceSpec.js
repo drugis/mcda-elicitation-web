@@ -7,95 +7,63 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
       manualInputService = ManualInputService;
     }));
 
-    describe('isValidInputData', function() {
+    describe('isInvalidCell', function() {
       it('should be true for valid data of all types', function() {
-        var inputData = {
-          crit1: {
-            treatment1: {
-              type: 'exact',
-              value: 0
-            },
-            treatment2: {
-              type: 'dbeta',
-              alpha: 2,
-              beta: 3
-            }
-          },
-          crit2: {
-            treatment1: {
-              type: 'dnorm',
-              mu: 0.3,
-              sigma: 10
-            }
-          }
+        var validExact = {
+          type: 'exact',
+          value: 0
         };
-        expect(manualInputService.isValidInputData(inputData)).toBeTruthy();
+        var validBeta = {
+          type: 'dbeta',
+          alpha: 2,
+          beta: 3
+        };
+        var validNorm = {
+          type: 'dnorm',
+          mu: 0.3,
+          sigma: 10
+        };
+        expect(manualInputService.isInvalidCell(validExact)).toBeFalsy();
+        expect(manualInputService.isInvalidCell(validBeta)).toBeFalsy();
+        expect(manualInputService.isInvalidCell(validNorm)).toBeFalsy();
       });
       it('should be falsy for invalid data', function() {
         var invalidExact = {
-          crit1: {
-            treatment1: {
-              type: 'exact'
-            }
-          }
+          type: 'exact'
         };
-        expect(manualInputService.isValidInputData(invalidExact)).toBeFalsy();
+        expect(manualInputService.isInvalidCell(invalidExact)).toBeTruthy();
         var invalidAlpha = {
-          crit1: {
-            treatment1: {
-              type: 'dbeta',
-              alpha: null,
-              beta: 3
-            }
-          }
+          type: 'dbeta',
+          alpha: null,
+          beta: 3
         };
-        expect(manualInputService.isValidInputData(invalidAlpha)).toBeFalsy();
+        expect(manualInputService.isInvalidCell(invalidAlpha)).toBeTruthy();
         var invalidBeta = {
-          crit1: {
-            treatment1: {
-              type: 'dbeta',
-              alpha: null
-            }
-          }
+          type: 'dbeta',
+          alpha: null
         };
-        expect(manualInputService.isValidInputData(invalidBeta)).toBeFalsy();
+        expect(manualInputService.isInvalidCell(invalidBeta)).toBeTruthy();
         var invalidSigma = {
-          crit1: {
-            treatment1: {
-              type: 'dnorm',
-              mu: 3
-            }
-          }
+          type: 'dnorm',
+          mu: 3
         };
-        expect(manualInputService.isValidInputData(invalidSigma)).toBeFalsy();
+        expect(manualInputService.isInvalidCell(invalidSigma)).toBeTruthy();
         var invalidMu = {
-          crit1: {
-            treatment1: {
-              type: 'dnorm',
-              mu: null,
-              sigma: 3
-            }
-          }
+          type: 'dnorm',
+          mu: null,
+          sigma: 3
         };
-        expect(manualInputService.isValidInputData(invalidMu)).toBeFalsy();
+        expect(manualInputService.isInvalidCell(invalidMu)).toBeTruthy();
         var invalidNorm = {
-          crit1: {
-            treatment1: {
-              type: 'dnorm'
-            }
-          }
+          type: 'dnorm'
         };
-        expect(manualInputService.isValidInputData(invalidNorm)).toBeFalsy();
+        expect(manualInputService.isInvalidCell(invalidNorm)).toBeTruthy();
         var invalidType = {
-          crit1: {
-            treatment1: {
-              type: 'somethingsomething'
-            }
-          }
+          type: 'somethingsomething'
         };
         expect(function() {
-          manualInputService.isValidInputData(invalidType);
-        }).toThrow(new TypeError('Cannot read property \'isValidInput\' of undefined'));
+          manualInputService.isInvalidCell(invalidType);
+        }).toThrow(new TypeError('Cannot read property \'isInvalidInput\' of undefined'));
 
       });
     });
@@ -231,29 +199,44 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
           name: 'criterion 2 title'
         }];
         var result = manualInputService.prepareInputData(criteria, treatments);
+        var newCell = {
+              type: 'exact',
+              value: 0,
+              label: 'exact(0)'
+            };
         var expectedResult = {
           'criterion 1 title': {
-            treatment1: {
-              type: 'exact',
-              value: 0
-            },
-            treatment2: {
-              type: 'exact',
-              value: 0
-            }
+            treatment1: newCell,
+            treatment2: newCell
           },
           'criterion 2 title': {
-            treatment1: {
-              type: 'exact',
-              value: 0
-            },
-            treatment2: {
-              type: 'exact',
-              value: 0
-            }
+            treatment1: newCell,
+            treatment2: newCell
           }
         };
         expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('inputToString', function() {
+      it('should render exact, beta and normal effects', function() {
+        var normal = {
+          type: 'dnorm',
+          mu: 2,
+          sigma: 3
+        };
+        expect(manualInputService.inputToString(normal)).toEqual('N(2, 3)');
+        var beta = {
+          type: 'dbeta',
+          alpha: 10,
+          beta: 20
+        };
+        expect(manualInputService.inputToString(beta)).toEqual('Beta(10, 20)');
+        var exact = {
+          type: 'exact',
+          value: 3.14
+        };
+        expect(manualInputService.inputToString(exact)).toEqual('exact(3.14)');
       });
     });
 
