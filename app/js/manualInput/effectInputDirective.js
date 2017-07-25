@@ -3,9 +3,9 @@ define(['lodash'], function(_) {
   var ESC = 27;
   var ENTER = 13;
 
-  var dependencies = ['ManualInputService'];
+  var dependencies = ['ManualInputService', '$timeout'];
 
-  var EffectInputDirective = function(ManualInputService) {
+  var EffectInputDirective = function(ManualInputService, $timeout) {
     return {
       restrict: 'E',
       scope: {
@@ -33,12 +33,14 @@ define(['lodash'], function(_) {
         }];
 
         scope.$on('dropdown.hasClosed', function() {
-          scope.inputData = scope.inputState;
-          scope.inputData.label = ManualInputService.inputToString(scope.inputData);
-          scope.$apply();
-          scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
-          scope.changeCallback();
-          scope.$apply();
+          $timeout(function() {
+            scope.inputData = scope.inputState;
+            scope.inputData.label = ManualInputService.inputToString(scope.inputData);
+            scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
+          });
+          $timeout(function() {
+            scope.changeCallback();
+          });
         });
 
         function cacheInput() {
@@ -52,13 +54,14 @@ define(['lodash'], function(_) {
             scope.inputData = scope.inputState;
             scope.inputData.label = ManualInputService.inputToString(scope.inputData);
             scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
-            scope.changeCallback();
-            scope.$apply();
+            $timeout(function() {
+              scope.changeCallback();
+            });
             scope.$broadcast('dropdown.closeEvent');
           }
         }
       }
-    }
-  }
+    };
+  };
   return dependencies.concat(EffectInputDirective);
 });

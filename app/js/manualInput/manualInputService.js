@@ -82,6 +82,10 @@ define(function(require) {
       return inputData;
     }
 
+    function isInvalidCell(cell) {
+      return distributionKnowledge[cell.type].isInvalidInput(cell);
+    }
+
     // Private functions
     function buildCriteria(criteria) {
       var newCriteria = _.map(criteria, function(criterion) {
@@ -122,12 +126,6 @@ define(function(require) {
 
     function isNullOrUndefined(value) {
       return value === null || value === undefined;
-    }
-
-
-    function isInvalidCell(cell) {
-      return distributionKnowledge[cell.type].isInvalidInput(cell);
-
     }
 
     function inputToString(inputData) {
