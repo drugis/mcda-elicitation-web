@@ -14,12 +14,29 @@ define(['lodash'], function(_) {
     $scope.checkInputData = checkInputData;
 
     // vars
-    $scope.criteria = [];
-    $scope.treatments = [];
+    $scope.criteria = [{
+      name: 'criterion1'
+    }, {
+      name: 'criterion2'
+    }, {
+      name: 'criterion3'
+    }, {
+      name: 'criterion4'
+    }];
+    $scope.treatments = [{
+      name: 'treatment1'
+    }, {
+      name: 'treatment2'
+    }, {
+      name: 'treatment3'
+    }, {
+      name: 'treatment4'
+    }];
     $scope.state = {
       step: 'step1',
       treatmentName: '',
-      isInputDataValid: false
+      isInputDataValid: false,
+      title: 'awesome title'
     };
 
     function addTreatment(name) {

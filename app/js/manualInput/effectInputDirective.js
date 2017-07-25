@@ -37,8 +37,6 @@ define(['lodash'], function(_) {
             scope.inputData = scope.inputState;
             scope.inputData.label = ManualInputService.inputToString(scope.inputData);
             scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
-          });
-          $timeout(function() {
             scope.changeCallback();
           });
         });
@@ -51,13 +49,13 @@ define(['lodash'], function(_) {
           if (event.keyCode === ESC) {
             scope.$broadcast('dropdown.closeEvent');
           } else if (event.keyCode === ENTER) {
-            scope.inputData = scope.inputState;
-            scope.inputData.label = ManualInputService.inputToString(scope.inputData);
-            scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
             $timeout(function() {
+              scope.inputData = scope.inputState;
+              scope.inputData.label = ManualInputService.inputToString(scope.inputData);
+              scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
               scope.changeCallback();
+              scope.$broadcast('dropdown.closeEvent');
             });
-            scope.$broadcast('dropdown.closeEvent');
           }
         }
       }

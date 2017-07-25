@@ -8,28 +8,28 @@
   <!-- first values -->
   <div class="columns large-4" ng-if="inputState.type === 'dbeta'">
     <label> &alpha;
-      <input type="number" ng-model="inputState.alpha" ng-model-options="{ debounce: 300 }" step="1">
+      <input type="number" ng-model="inputState.alpha" step="1">
     </label>
   </div>
   <div class="columns large-4" ng-if="inputState.type === 'dnorm'">
     <label> &mu;
-      <input type="number" ng-model="inputState.mu" ng-model-options="{ debounce: 300 }">
+      <input type="number" ng-model="inputState.mu">
     </label>
   </div>
   <div class="columns large-8" ng-if="inputState.type === 'exact'">
     <label> value
-      <input type="number" ng-model="inputState.value" ng-model-options="{ debounce: 300 }">
+      <input type="number" ng-model="inputState.value">
     </label>
   </div>
   <!-- second values -->
   <div class="columns large-4" ng-if="inputState.type === 'dbeta'">
     <label> &beta;
-      <input type="number" ng-model="inputState.beta" ng-model-options="{ debounce: 300 }" step="1">
+      <input type="number" ng-model="inputState.beta" step="1">
     </label>
   </div>
   <div class="columns large-4" ng-if="inputState.type === 'dnorm'">
     <label> &sigma;
-      <input type="number" ng-model="inputState.sigma" ng-model-options="{ debounce: 300 }">
+      <input type="number" ng-model="inputState.sigma">
     </label>
   </div>
 </div>
