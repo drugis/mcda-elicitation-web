@@ -19,7 +19,7 @@ define(function(require) {
   require('mcda/services/effectsTableService');
   require('mcda/services/effectsTableResource');
   require('mcda/services/util');
-  require('mcda/results/resultsService');
+  require('mcda/results/results');
   require('mcda/preferences/partialValueFunctionService');
   require('mcda/manualInput/manualInput');
   require('mcda/subProblem/scaleRangeService');
@@ -44,7 +44,7 @@ define(function(require) {
     'elicit.directives',
     'elicit.effectsTableService',
     'elicit.effectsTableResource',
-    'elicit.resultsService',
+    'elicit.results',
     'elicit.controllers',
     'elicit.taskDependencies',
     'elicit.routeFactory',

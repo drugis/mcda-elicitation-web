@@ -3,7 +3,7 @@ define(function(require) {
   var angular = require('angular');
   var _ = require('lodash');
 
-  var dependencies = ['patavi'];
+  var dependencies = ['$http','PataviService'];
 
   var MCDAResultsService = function($http, PataviService) {
 
@@ -136,5 +136,5 @@ define(function(require) {
     };
   };
 
-  return angular.module('elicit.resultsService', dependencies).factory('MCDAResultsService', MCDAResultsService);
+  return dependencies.concat(MCDAResultsService);
 });

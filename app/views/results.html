@@ -14,25 +14,74 @@
     <div class="columns large-8 small-12">
       <form>
         <div class="row collapse">
-          <div class="columns small-8"><input type="text" ng-model="scenarioTitle.value"></div>
-          <div class="columns small-2"><button class="button postfix" ng-click="saveTitle()">Save</button></div>
-          <div class="columns small-2"><button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button></div>
+          <div class="columns small-8">
+            <input type="text" ng-model="scenarioTitle.value">
+          </div>
+          <div class="columns small-2">
+            <button class="button postfix" ng-click="saveTitle()">Save</button>
+          </div>
+          <div class="columns small-2">
+            <button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button>
+          </div>
         </div>
       </form>
     </div>
   </div>
 
+  <div class="row">
+    <div class="columns large-12">
+      <button ng-click="state.showSensitivity = !state.showSensitivity" class="button">
+        {{state.showSensitivity ? 'Hide' : 'Show'}} sensitivity analysis
+      </button>
+    </div>
+
+    <div class="columns large-12" ng-show="state.showSensitivity">
+      <table class="full-width effects-table">
+        <thead>
+          <tr>
+            <th>Criterion</th>
+            <th class="text-center" ng-repeat="alternative in alternatives">
+              {{alternative.title}}{{state.problem.valueTree.children.children[0].criteria}}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="main">
+          <tr ng-repeat="criterion in criteria">
+            <td>
+              <label>
+                {{criterion.title}}</label>
+            </td>
+            <td class="text-center" ng-repeat="alternative in alternatives"
+              name="col{{$index}}" id="col{{$index}}">
+              <sensitivity-input
+                criterion="criterion"
+                alternative="alternative"
+                observed-scales="scales.observed"
+                change-callback="sensitivityScalesChanged"
+                type="types[criterion.id][alternative.id]"
+                ></sensitivity-input>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="columns large-12">
+      <button class="button small" ng-show="state.showSensitivity" ng-click="recalculateResults()">
+        Recalculate results
+      </button>
+    </div>
+  </div>
 
   <section class="row underlined-div" style="height: 450px;">
     <div class="columns large-12">
       <h4>Rank acceptabilities</h4>
-      <rank-acceptability-plot
-        data="state.results.ranks.data"
-        problem="state.problem"></rank-acceptability-plot>
+      <rank-acceptability-plot data="state.results.ranks.data" problem="state.problem"></rank-acceptability-plot>
       <table id="ranktable">
         <thead>
           <tr>
-            <th><heat-legend></heat-legend></th>
+            <th>
+              <heat-legend></heat-legend>
+            </th>
             <th ng-repeat="alternative in state.problem.alternatives">Rank {{::$index + 1}}</th>
           </tr>
         </thead>
@@ -52,9 +101,7 @@
     <div class="columns large-6">
       <h4>Alternatives per rank</h4>
       <select ng-model="state.selectedRank" class="large-3">
-        <option ng-repeat="(k,v) in state.problem.alternatives"
-                value="{{$index}}"
-                ng-selected="$index == state.selectedRank">
+        <option ng-repeat="(k,v) in state.problem.alternatives" value="{{$index}}" ng-selected="$index == state.selectedRank">
           Rank {{::$index + 1}}
         </option>
       </select>
@@ -66,9 +113,8 @@
     <div class="columns large-6">
       <h4>Ranks per alternative</h4>
       <select ng-model="state.selectedAlternative" class="large-3">
-        <option ng-repeat="(key, alternative) in state.problem.alternatives"
-                value="{{key}}"
-                ng-selected="key == state.selectedAlternative">
+        <option ng-repeat="(key, alternative) in state.problem.alternatives" value="{{key}}"
+          ng-selected="key == state.selectedAlternative">
           {{::alternative.title}}
         </option>
       </select>
@@ -88,7 +134,9 @@
         <thead>
           <tr>
             <th>Alternative</th>
-            <th>Confidence <heat-legend></heat-legend></th>
+            <th>Confidence
+              <heat-legend></heat-legend>
+            </th>
             <th ng-repeat="criterion in state.problem.criteria">{{criterion.title}}</th>
           </tr>
         </thead>
