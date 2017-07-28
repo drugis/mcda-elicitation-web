@@ -22,13 +22,13 @@ define(['lodash'], function(_) {
         scope.render = ManualInputService.inputToString;
         scope.cacheInput = cacheInput;
         scope.distributionOptions = [{
-          name: 'exact values',
+          name: 'exact',
           type: 'exact'
         }, {
-          name: 'normal distribution',
+          name: 'normal',
           type: 'dnorm'
         }, {
-          name: 'beta distribution',
+          name: 'beta',
           type: 'dbeta'
         }];
 
