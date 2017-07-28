@@ -13,35 +13,43 @@ define(['lodash'], function(_) {
         'alternative': '=',
         'observedScales': '=',
         'changeCallback': '=',
-        'type':'='
+        'type': '='
       },
       templateUrl: 'app/js/results/sensitivityInputDirective.html',
       link: function(scope) {
+        function refreshSlider() {
+          $timeout(function() {
+            scope.$broadcast('rzSliderForceRender');
+          });
+        }
         scope.keyCheck = keyCheck;
-        scope.render = ManualInputService.inputToString;
-        scope.cacheInput = cacheInput;
+        refreshSlider();
+        scope.slider = {
+          value: scope.observedScales[scope.criterion.id][scope.alternative.id]['50%'],
+          options: {
+            floor: scope.criterion.pvf.range[0],
+            ceil: scope.criterion.pvf.range[1],
+            step: 1
+          }
+        };
 
         scope.$on('dropdown.hasClosed', function() {
           $timeout(function() {
-            scope.inputData = scope.inputState;
-            scope.inputData.label = ManualInputService.inputToString(scope.inputData);
-            scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
+            // scope.inputData = scope.inputState;
+            // scope.inputData.label = ManualInputService.inputToString(scope.inputData);
+            // scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
             scope.changeCallback();
           });
         });
-
-        function cacheInput() {
-          scope.inputState = _.cloneDeep(scope.inputData);
-        }
 
         function keyCheck(event) {
           if (event.keyCode === ESC) {
             scope.$broadcast('dropdown.closeEvent');
           } else if (event.keyCode === ENTER) {
             $timeout(function() {
-              scope.inputData = scope.inputState;
-              scope.inputData.label = ManualInputService.inputToString(scope.inputData);
-              scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
+              // scope.inputData = scope.inputState;
+              // scope.inputData.label = ManualInputService.inputToString(scope.inputData);
+              // scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
               scope.changeCallback();
               scope.$broadcast('dropdown.closeEvent');
             });

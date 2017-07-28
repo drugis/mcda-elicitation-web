@@ -5,12 +5,13 @@
 </a>
 <div id="editCellToggle-{{criterion.hash}}-{{alternative.hash}}" class="row f-dropdown" ng-keyup="keyCheck($event)" ng-keydown="keyCheck($event)" ng-keypress="keyCheck($event)">
   <div class="columns large-8">
-    <rzslider fz-slider-model></rzslider>
+    <rzslider rz-slider-options="slider.options" rz-slider-model="slider.value"></rzslider>
   </div>
   <div class="columns large-4">
     <label> value
-      <input type="number" ng-model="observedScales[criterion.id][alternative.id]['50%']" ng-change="checkInput">
+      <input type="number" ng-model="slider.value" ng-change="checkInput">
     </label>
+    <button ng-click="refreshSlider()">asdf</button>
   </div>
 </div>
 <div class="row uncertain" ng-if="type!=='exact'">

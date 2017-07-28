@@ -28,7 +28,7 @@ define(function(require) {
   require('mcda/controllers');
   require('mcda/directives');
   require('mcda/navbar/navbar');
-
+  require('angularjs-slider');
   var dependencies = [
     'ngResource',
     'ui.router',
@@ -53,9 +53,10 @@ define(function(require) {
     'elicit.manualInput',
     'elicit.subProblem',
     'ngCookies',
-    'errorReporting'
+    'errorReporting',
+    'rzModule'
   ];
-
+  
   var app = angular.module('elicit', dependencies);
   app.run(['$rootScope',
     function($rootScope) {
