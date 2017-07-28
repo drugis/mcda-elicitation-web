@@ -54,6 +54,10 @@
     "angular-mocks": "~1.6"
   },
   "resolutions": {
-    "d3": "3.5.5"
+    "d3": "3.5.5",
+    "angular": "~1.6.5",
+    "angular-patavi-client": "2.0.3",
+    "angular-resource": "~1.6.5",
+    "font-awesome": "4.3.0"
   }
 }
