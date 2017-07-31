@@ -1,30 +1,32 @@
+<link rel="stylesheet" type="text/css" href="bower_components/angularjs-slider/dist/rzslider.css">
 <a ng-if="type === 'exact'" dropdown-toggle="#editCellToggle-{{criterion.hash}}-{{alternative.hash}}" ng-style="inputData.isInvalid ? {color:'red'} : {}" ng-click="showSlider()">
   <div>
-    {{observedScales[criterion.id][alternative.id]['50%'] | number}}
+    {{newScales[criterion.id][alternative.id]['50%'] | number}}
   </div>
 </a>
 <div id="editCellToggle-{{criterion.hash}}-{{alternative.hash}}" class="row f-dropdown" ng-keyup="keyCheck($event)" ng-keydown="keyCheck($event)" ng-keypress="keyCheck($event)">
-  <div class="columns large-8">
-    <rzslider rz-slider-options="slider.options" rz-slider-model="slider.value"></rzslider>
+  <div class="columns large-12">
+    <rzslider rz-slider-model="slider.value" rz-slider-options="slider.options"></rzslider>
   </div>
-  <div class="columns large-4">
+  <div class="columns large-12">
     <label> value
-      <input type="number" ng-model="slider.value" ng-change="checkInput">
+      <input type="number" ng-model="slider.value" ng-change="checkInput()">
     </label>
-    <button ng-click="refreshSlider()">asdf</button>
   </div>
 </div>
 <div class="row uncertain" ng-if="type!=='exact'">
   <div class="columns large-12">
     <a dropdown-toggle="#editNotAvailableToggle" ng-style="{color:'grey'}">
-      {{observedScales[criterion.id][alternative.id]['50%'] | number}}
-      <br> {{observedScales[criterion.id][alternative.id]['2.5%'] | number}},
-      {{observedScales[criterion.id][alternative.id]['97.5%'] | number}}
+      {{newScales[criterion.id][alternative.id]['50%'] | number}}
+      <br> {{newScales[criterion.id][alternative.id]['2.5%'] | number}},
+      {{newScales[criterion.id][alternative.id]['97.5%'] | number}}
     </a>
   </div>
-  <div id="editNotAvailableToggle" class="row f-dropdown">
-    <div class="columns large-12">
-      Sensitivity analysis is not yet implemented for convidence intervals
+  <div id="editNotAvailableToggle" class="f-dropdown">
+    <div class="row">
+      <div class="columns large-12">
+        Sensitivity analysis is not yet implemented for convidence intervals
+      </div>
     </div>
   </div>
 </div>

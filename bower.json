@@ -32,7 +32,7 @@
     "angular-patavi-client": "https://github.com/drugis/angular-patavi-client.git#2.0.3",
     "angular-resource": "~1.6.5",
     "angular-ui-router": "~1.0.5",
-    "angularjs-slider": "^6.2.3",
+    "angularjs-slider": "~6.2.3",
     "bowser": "0.7.3",
     "d3": "3.5.5",
     "domready": "~1.0.7",

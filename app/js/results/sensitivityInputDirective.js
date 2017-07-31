@@ -17,41 +17,65 @@ define(['lodash'], function(_) {
       },
       templateUrl: 'app/js/results/sensitivityInputDirective.html',
       link: function(scope) {
-        function refreshSlider() {
-          $timeout(function() {
-            scope.$broadcast('rzSliderForceRender');
-          });
-        }
+        // functions
         scope.keyCheck = keyCheck;
-        refreshSlider();
-        scope.slider = {
-          value: scope.observedScales[scope.criterion.id][scope.alternative.id]['50%'],
-          options: {
-            floor: scope.criterion.pvf.range[0],
-            ceil: scope.criterion.pvf.range[1],
-            step: 1
-          }
-        };
+        scope.checkInput = checkInput;
+        scope.showSlider = showSlider;
 
+        // init
+        scope.newScales = _.cloneDeep(scope.observedScales);
         scope.$on('dropdown.hasClosed', function() {
           $timeout(function() {
-            // scope.inputData = scope.inputState;
-            // scope.inputData.label = ManualInputService.inputToString(scope.inputData);
-            // scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
-            scope.changeCallback();
+            closeAndSave();
           });
         });
+        scope.$watch('observedScales', function() {
+          scope.newScales = _.cloneDeep(scope.observedScales);
+        });
+
+        function showSlider() {
+          $timeout(function() {
+            scope.$broadcast('rzSliderForceRender');
+            scope.$broadcast('reCalcViewDimensions');
+          });
+
+          scope.slider = initSlider();
+        }
+
+        function initSlider() {
+          return {
+            value: scope.newScales[scope.criterion.id][scope.alternative.id]['50%'],
+            options: {
+              floor: scope.criterion.pvf.range[0],
+              ceil: scope.criterion.pvf.range[1],
+              step: 0.0001,
+              precision: 10
+            }
+          };
+        }
+
+        function checkInput() {
+          if (scope.slider.value > scope.slider.options.ceil) {
+            scope.slider.value = scope.slider.options.ceil;
+          } else if (scope.slider.value < scope.slider.options.floor) {
+            scope.slider.value = scope.slider.options.floor;
+          }
+        }
+
+        function closeAndSave() {
+          if (!isNaN(scope.slider.value)) {
+            scope.newScales[scope.criterion.id][scope.alternative.id]['50%'] = scope.slider.value;
+            scope.changeCallback(scope.newScales);
+          }
+          scope.$broadcast('dropdown.closeEvent');
+        }
 
         function keyCheck(event) {
           if (event.keyCode === ESC) {
             scope.$broadcast('dropdown.closeEvent');
           } else if (event.keyCode === ENTER) {
             $timeout(function() {
-              // scope.inputData = scope.inputState;
-              // scope.inputData.label = ManualInputService.inputToString(scope.inputData);
-              // scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
-              scope.changeCallback();
-              scope.$broadcast('dropdown.closeEvent');
+              closeAndSave();
             });
           }
         }

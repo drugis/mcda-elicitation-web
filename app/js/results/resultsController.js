@@ -11,13 +11,38 @@ define(function(require) {
     $scope.scales = $scope.workspace.$$scales;
 
     // funcs
+    $scope.sensitivityScalesChanged = sensitivityScalesChanged;
+    $scope.recalculateResults = recalculateResults;
+
+    // init
+    $scope.state = initialize(taskDefinition.clean($scope.aggregateState));
+
+    $scope.$watch('scales.observed', function() {
+      $scope.modifiableScales = _.cloneDeep($scope.scales.observed);
+    });
 
 
+    function sensitivityScalesChanged(newScales) {
+      $scope.modifiableScales = newScales;
+    }
 
-    var alternativeTitle = function(id) {
+    function recalculateResults() {
+      var alternativeState = _.cloneDeep($scope.aggregateState);
+      alternativeState.problem.performanceTable = _.map($scope.aggregateState.problem.performanceTable, function(tableEntry) {
+        var newEntry = _.cloneDeep(tableEntry);
+        if (newEntry.performance.type === 'exact') {
+          newEntry.performance.value = $scope.modifiableScales[newEntry.criterion][newEntry.alternative]['50%'];
+        }
+        return newEntry;
+      });
+      $scope.state = initialize(taskDefinition.clean(alternativeState));
+      $scope.state.showSensitivity = true;
+    }
+
+    function alternativeTitle(id) {
       var problem = $scope.aggregateState.problem;
       return problem.alternatives[id].title;
-    };
+    }
 
     var getCentralWeights = _.memoize(function(state) {
       var problem = state.problem;
@@ -79,7 +104,7 @@ define(function(require) {
       return 31 * val.selectedAlternative.hashCode() + angular.toJson(val.results).hashCode();
     });
 
-    var initialize = function(state) {
+    function initialize(state) {
       var next = _.extend(state, {
         selectedAlternative: _.keys(state.problem.alternatives)[0],
         selectedRank: '0',
@@ -101,9 +126,8 @@ define(function(require) {
         return accum;
       }, {});
       return MCDAResultsService.getResults($scope, next);
-    };
+    }
 
-    $scope.state = initialize(taskDefinition.clean($scope.aggregateState));
   };
   return dependencies.concat(ResultsController);
 });

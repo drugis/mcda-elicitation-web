@@ -7,7 +7,7 @@ require.config({
     'angular-patavi-client': 'bower_components/angular-patavi-client/patavi',
     'angular-resource': 'bower_components/angular-resource/angular-resource.min',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
-    'angularjs-slider': 'bower_components/angularjs-slider/dist/rzslider.min',
+    'angularjs-slider': 'bower_components/angularjs-slider/dist/rzslider',
     'domReady': 'bower_components/requirejs-domready/domReady',
     'error-reporting': 'bower_components/error-reporting/errorReportingDirective',
     'jQuery': 'bower_components/jquery/dist/jquery.min',
