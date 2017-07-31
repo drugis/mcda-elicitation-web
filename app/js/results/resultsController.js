@@ -13,6 +13,7 @@ define(function(require) {
     // funcs
     $scope.sensitivityScalesChanged = sensitivityScalesChanged;
     $scope.recalculateResults = recalculateResults;
+    $scope.resetSensitivityAnalysis = resetSensitivityAnalysis;
 
     // init
     $scope.state = initialize(taskDefinition.clean($scope.aggregateState));
@@ -21,6 +22,9 @@ define(function(require) {
       $scope.modifiableScales = _.cloneDeep($scope.scales.observed);
     });
 
+    function resetSensitivityAnalysis(){
+      $scope.modifiableScales = _.cloneDeep($scope.scales.observed);
+    }    
 
     function sensitivityScalesChanged(newScales) {
       $scope.modifiableScales = newScales;
