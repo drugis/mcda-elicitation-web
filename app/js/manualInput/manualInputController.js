@@ -28,13 +28,12 @@ define(['lodash'], function(_) {
     $scope.resetRow = resetRow;
 
     // vars
-    $scope.criteria = [{ name: 'criterion 1' }, { name: 'criterion 2' }];
-    $scope.treatments = [{ name: 'treatment 1' }, { name: 'treatment 2' }];
+    $scope.criteria = [];
+    $scope.treatments = [];
     $scope.state = {
       step: 'step1',
       treatmentName: '',
       isInputDataValid: false,
-      title: 'titel!', // debug
       inputMethod: 'distribution',
       studyType: {}
     };
