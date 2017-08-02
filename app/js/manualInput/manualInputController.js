@@ -1,7 +1,19 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modal', '$state', 'ManualInputService', 'WorkspaceResource', 'EffectsTableResource'];
-  var ManualInputController = function($scope, $modal, $state, ManualInputService, WorkspaceResource, EffectsTableResource) {
+
+  var dependencies = ['$scope', '$modal', '$state',
+    'ManualInputService',
+    'WorkspaceResource',
+    'EffectsTableResource',
+    'addKeyHashToObject'
+  ];
+  var ManualInputController = function($scope, $modal, $state,
+    ManualInputService,
+    WorkspaceResource,
+    EffectsTableResource,
+    addKeyHashToObject
+  ) {
+
     // functions
     $scope.openCriterionModal = openCriterionModal;
     $scope.addTreatment = addTreatment;
@@ -12,15 +24,36 @@ define(['lodash'], function(_) {
     $scope.createProblem = createProblem;
     $scope.removeCriterion = removeCriterion;
     $scope.checkInputData = checkInputData;
+    $scope.resetData = resetData;
+    $scope.resetRow = resetRow;
 
     // vars
-    $scope.criteria = [];
-    $scope.treatments = [];
+    $scope.criteria = [{ name: 'criterion 1' }, { name: 'criterion 2' }];
+    $scope.treatments = [{ name: 'treatment 1' }, { name: 'treatment 2' }];
     $scope.state = {
       step: 'step1',
       treatmentName: '',
-      isInputDataValid: false
+      isInputDataValid: false,
+      title: 'titel!', // debug
+      inputMethod: 'distribution',
+      studyType: {}
     };
+
+    function resetData() {
+      $scope.inputData = ManualInputService.prepareInputData($scope.criteria, $scope.treatments);
+      $scope.state.studyType = _.reduce($scope.criteria, function(accum, criterion) {
+        accum[criterion.hash] = 'dichotomous';
+        return accum;
+      }, {});
+      $scope.state.isInputDataValid = false;
+    }
+
+    function resetRow(hash) {
+      _.forEach($scope.inputData[hash], function(cell) {
+        cell.label = 'No data entered';
+        cell.isInvalid = true;
+      });
+    }
 
     function addTreatment(name) {
       $scope.treatments.push({
@@ -76,8 +109,18 @@ define(['lodash'], function(_) {
 
     function goToStep2() {
       $scope.state.step = 'step2';
+      $scope.inputMethod = 'distribution';
+      $scope.treatments = _.map($scope.treatments, function(treatment) {
+        return addKeyHashToObject(treatment, treatment.name);
+      });
+      $scope.criteria = _.map($scope.criteria, function(criterion) {
+        return addKeyHashToObject(criterion, criterion.name);
+      });
+      $scope.state.studyType = _.reduce($scope.criteria, function(accum, criterion) {
+        accum[criterion.hash] = 'dichotomous';
+        return accum;
+      }, {});
       $scope.inputData = ManualInputService.prepareInputData($scope.criteria, $scope.treatments);
-      $scope.state.isInputDataValid = true;
     }
 
     function createProblem() {

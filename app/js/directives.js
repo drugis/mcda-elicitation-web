@@ -437,30 +437,6 @@ define(function(require) {
     };
   });
 
-  directives.directive('remarkBlock', function(mcdaRootPath) {
-    return {
-      scope: {
-        remark: '=',
-        editMode: '=',
-        saveRemarks: '&saveRemarks',
-        cancelRemarks: '&cancelRemarks',
-        model: '&model'
-      },
-      restrict: 'E',
-      replace: 'true',
-      templateUrl: mcdaRootPath + 'partials/remark.html',
-      link: function() {
-        $('.remarkbutton').click(function() {
-          $('.f-dropdown').css('display', 'none');
-        });
-
-        $('.f-dropdown').click(function(event) {
-          event.stopPropagation();
-        });
-      }
-    };
-  });
-
   directives.directive('tradeOffs', function($filter, mcdaRootPath, PartialValueFunction, sortCriteriaWithW) {
     return {
       restrict: 'E',

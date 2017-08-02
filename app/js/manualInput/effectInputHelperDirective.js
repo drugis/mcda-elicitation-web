@@ -5,35 +5,29 @@ define(['lodash'], function(_) {
 
   var dependencies = ['ManualInputService', '$timeout'];
 
-  var EffectInputDirective = function(ManualInputService, $timeout) {
+  var EffectInputHelperDirective = function(ManualInputService, $timeout) {
     return {
       restrict: 'E',
       scope: {
         'criterion': '=',
         'treatment': '=',
         'inputData': '=',
+        'studyType': '=',
         'changeCallback': '='
       },
-      templateUrl: 'app/js/manualInput/effectInputDirective.html',
+      templateUrl: 'app/js/manualInput/effectInputHelperDirective.html',
       link: function(scope) {
         // functions
         scope.keyCheck = keyCheck;
-        scope.cacheInput = cacheInput;
         // variables
-        scope.distributionOptions = [{
-          name: 'exact',
-          type: 'exact'
-        }, {
-          name: 'normal',
-          type: 'dnorm'
-        }, {
-          name: 'beta',
-          type: 'dbeta'
-        }];
+        scope.continuous = {
+          type: 'standard deviation'
+        };
+        scope.inputState = {};
 
         scope.$on('dropdown.hasClosed', function() {
           $timeout(function() {
-            scope.inputData = scope.inputState;
+            scope.inputData = createDistribution(scope.inputData, scope.inputState);
             scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
             scope.inputData.label = ManualInputService.inputToString(scope.inputData);
             $timeout(function() {
@@ -42,8 +36,24 @@ define(['lodash'], function(_) {
           });
         });
 
-        function cacheInput() {
-          scope.inputState = _.cloneDeep(scope.inputData);
+        function createDistribution(inputData, inputState) {
+          var newData = _.cloneDeep(inputData);
+          if (scope.studyType === 'dichotomous') {
+            newData.alpha = inputState.count + 1;
+            newData.beta = inputState.sampleSize - inputState.count + 1;
+            newData.type = 'dbeta';
+          } else {
+            newData.mu = inputState.mu;
+            if (scope.continuous.type === 'standard deviation') {
+              newData.sigma = inputState.sigma;
+              newData.type = 'dnorm';
+            } else {
+              newData.stdErr = inputState.stdErr;
+              newData.dof = inputState.sampleSize - 1;
+              newData.type = 'dt';
+            }
+          }
+          return newData;
         }
 
         function keyCheck(event) {
@@ -51,7 +61,7 @@ define(['lodash'], function(_) {
             scope.$broadcast('dropdown.closeEvent');
           } else if (event.keyCode === ENTER) {
             $timeout(function() {
-              scope.inputData = scope.inputState;
+              scope.inputData = createDistribution(scope.inputData, scope.inputState);
               scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
               scope.inputData.label = ManualInputService.inputToString(scope.inputData);
               scope.changeCallback();
@@ -62,5 +72,5 @@ define(['lodash'], function(_) {
       }
     };
   };
-  return dependencies.concat(EffectInputDirective);
+  return dependencies.concat(EffectInputHelperDirective);
 });

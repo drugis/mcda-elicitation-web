@@ -23,9 +23,16 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
           mu: 0.3,
           sigma: 10
         };
+        var validT = {
+          type: 'dt',
+          mu: 1.5,
+          stdErr: 0.5,
+          dof: 15
+        }
         expect(manualInputService.isInvalidCell(validExact)).toBeFalsy();
         expect(manualInputService.isInvalidCell(validBeta)).toBeFalsy();
         expect(manualInputService.isInvalidCell(validNorm)).toBeFalsy();
+        expect(manualInputService.isInvalidCell(validT)).toBeFalsy();
       });
       it('should be falsy for invalid data', function() {
         var invalidExact = {
@@ -58,6 +65,31 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
           type: 'dnorm'
         };
         expect(manualInputService.isInvalidCell(invalidNorm)).toBeTruthy();
+        var invalidT = {
+          type: 'dt'
+        };
+        expect(manualInputService.isInvalidCell(invalidT)).toBeTruthy();
+        var invalidTmu = {
+          type: 'dt',
+          mu: NaN,
+          stdErr: 1.4,
+          dof: 123
+        };
+        expect(manualInputService.isInvalidCell(invalidTmu)).toBeTruthy();
+        var invalidTstdErr = {
+          type: 'dt',
+          mu: 12,
+          stdErr: null,
+          dof: 123
+        };
+        expect(manualInputService.isInvalidCell(invalidTstdErr)).toBeTruthy();
+        var invalidTdof = {
+          type: 'dt',
+          mu: 12,
+          stdErr: 2,
+          dof: undefined
+        };
+        expect(manualInputService.isInvalidCell(invalidTdof)).toBeTruthy();
         var invalidType = {
           type: 'somethingsomething'
         };
@@ -74,42 +106,50 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
         var description = 'A random description of a random problem';
         var treatments = {
           treatment1: {
-            name: 'treatment1'
+            name: 'treatment1',
+            hash: 'treatment1'
           },
           treatment2: {
-            name: 'treatment2'
+            name: 'treatment2',
+            hash: 'treatment2'
           }
         };
         var criteria = [{
           name: 'favorable criterion',
           description: 'some crit description',
           unitOfMeasurement: 'particles',
-          isFavorable: true
+          isFavorable: true,
+          hash: 'favorable criterion'
         }, {
           name: 'unfavorable criterion',
           description: 'some crit description',
           unitOfMeasurement: 'particles',
-          isFavorable: false
+          isFavorable: false,
+          hash: 'unfavorable criterion',
         }];
         var performanceTable = {
           'favorable criterion': {
             'treatment1': {
               type: 'exact',
-              value: 10
+              value: 10,
+              hash: 'treatment1'
             },
             'treatment2': {
               type: 'exact',
-              value: 5
+              value: 5,
+              hash: 'treatment2'
             }
           },
           'unfavorable criterion': {
             'treatment1': {
               type: 'exact',
-              value: 20
+              value: 20,
+              hash: 'treatment1'
             },
             'treatment2': {
               type: 'exact',
-              value: 30
+              value: 30,
+              hash: 'treatment2'
             }
           }
         };
@@ -187,23 +227,29 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
       it('should prepare a zero initialized table', function() {
         var treatments = {
           treatment1: {
-            name: 'treatment1'
+            name: 'treatment1',
+            hash: 'treatment1'
           },
           treatment2: {
-            name: 'treatment2'
+            name: 'treatment2',
+            hash: 'treatment2'
           }
         };
         var criteria = [{
-          name: 'criterion 1 title'
+          name: 'criterion 1 title',
+          hash: 'criterion 1 title'
         }, {
-          name: 'criterion 2 title'
+          name: 'criterion 2 title',
+          hash: 'criterion 2 title'
         }];
         var result = manualInputService.prepareInputData(criteria, treatments);
         var newCell = {
-              type: 'exact',
-              value: 0,
-              label: 'exact(0)'
-            };
+          type: 'exact',
+          value: undefined,
+          label: 'No data entered',
+          source: 'distribution',
+          isInvalid: true
+        };
         var expectedResult = {
           'criterion 1 title': {
             treatment1: newCell,
@@ -219,7 +265,7 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
     });
 
     describe('inputToString', function() {
-      it('should render exact, beta and normal effects', function() {
+      it('should render exact, beta, normal, and t effects', function() {
         var normal = {
           type: 'dnorm',
           mu: 2,
@@ -237,7 +283,15 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
           value: 3.14
         };
         expect(manualInputService.inputToString(exact)).toEqual('exact(3.14)');
+        var t = {
+          type: 'dt',
+          mu: 3.14,
+          stdErr: 1.23,
+          dof: 37
+        };
+        expect(manualInputService.inputToString(t)).toEqual('t(3.14, 1.23, 37)');
       });
+
     });
 
   });

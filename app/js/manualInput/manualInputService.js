@@ -6,10 +6,10 @@ define(function(require) {
     var distributionKnowledge = {
       exact: {
         toString: function(input) {
-          return 'exact(' + input.value + ')';
+          return input.isInvalid ? 'Invalid input' : 'exact(' + input.value + ')';
         },
         isInvalidInput: function(input) {
-          return isNullOrUndefined(input.value);
+          return isNullNaNOrUndefined(input.value);
         },
         buildPerformance: function(data) {
           return _.pick(data, ['type', 'value']);
@@ -17,10 +17,10 @@ define(function(require) {
       },
       dnorm: {
         toString: function(input) {
-          return 'N(' + input.mu + ', ' + input.sigma + ')';
+          return input.isInvalid ? 'Invalid input' : 'N(' + input.mu + ', ' + input.sigma + ')';
         },
         isInvalidInput: function(input) {
-          return isNullOrUndefined(input.mu) || isNullOrUndefined(input.sigma);
+          return isNullNaNOrUndefined(input.mu) || isNullNaNOrUndefined(input.sigma);
         },
         buildPerformance: function(data) {
           return {
@@ -31,15 +31,27 @@ define(function(require) {
       },
       dbeta: {
         toString: function(input) {
-          return 'Beta(' + input.alpha + ', ' + input.beta + ')';
+          return input.isInvalid ? 'Invalid input' : 'Beta(' + input.alpha + ', ' + input.beta + ')';
         },
         isInvalidInput: function(input) {
-          return isNullOrUndefined(input.alpha) || isNullOrUndefined(input.beta);
+          return isNullNaNOrUndefined(input.alpha) || isNullNaNOrUndefined(input.beta);
         },
         buildPerformance: function(data) {
           return {
             type: data.type,
             parameters: _.pick(data, ['alpha', 'beta'])
+          };
+        }
+      },
+      dt: {
+        toString: function(input) {
+          return input.isInvalid ? 'Invalid input' : 't(' + input.mu + ', ' + input.stdErr + ', ' + input.dof + ')';
+        } ,       isInvalidInput: function(input) {
+          return isNullNaNOrUndefined(input.mu) || isNullNaNOrUndefined(input.stdErr) || isNullNaNOrUndefined(input.dof);
+        }, buildPerformance: function(data) {
+          return {
+            type: data.type,
+            parameters: _.pick(data, ['mu', 'stdErr','dof'])
           };
         }
       }
@@ -70,12 +82,14 @@ define(function(require) {
     function prepareInputData(criteria, treatments) {
       var inputData = {};
       _.forEach(criteria, function(criterion) {
-        inputData[criterion.name] = {};
+        inputData[criterion.hash] = {};
         _.forEach(treatments, function(treatment) {
-          inputData[criterion.name][treatment.name] = {
+          inputData[criterion.hash][treatment.hash] = {
             type: 'exact',
-            value: 0,
-            label: 'exact(0)'
+            value: undefined,
+            label: 'No data entered',
+            source: 'distribution',
+            isInvalid: true
           };
         });
       });
@@ -113,7 +127,7 @@ define(function(require) {
       var newPerformanceTable = [];
       _.forEach(criteria, function(criterion) {
         _.forEach(treatments, function(treatment) {
-          var data = inputData[criterion.name][treatment.name];
+          var data = inputData[criterion.hash][treatment.hash];
           newPerformanceTable.push({
             alternative: treatment.name,
             criterion: criterion.name,
@@ -124,8 +138,8 @@ define(function(require) {
       return newPerformanceTable;
     }
 
-    function isNullOrUndefined(value) {
-      return value === null || value === undefined;
+    function isNullNaNOrUndefined(value) {
+      return value === null || value === undefined || isNaN(value);
     }
 
     function inputToString(inputData) {
