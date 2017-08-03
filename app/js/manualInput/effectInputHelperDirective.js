@@ -21,9 +21,26 @@ define(['lodash'], function(_) {
         scope.keyCheck = keyCheck;
         // variables
         scope.continuous = {
-          type: 'standard deviation'
+          type: 'SEt'
         };
         scope.inputState = {};
+        scope.continuousOptions = [{
+            label: 'Mean, SE (normal distribution)',
+            short: 'SEnorm'
+          },
+          {
+            label: 'Mean, std. dev., N (normal distribution)',
+            short: 'SDnorm'
+          },
+          {
+            label: 'Mean, SE, N (t distribution)',
+            short: 'SEt'
+          },
+          {
+            label: 'Mean, std. dev., N (t distribution)',
+            short: 'SDt'
+          }
+        ];
 
         scope.$on('dropdown.hasClosed', function() {
           $timeout(function() {
@@ -44,11 +61,18 @@ define(['lodash'], function(_) {
             newData.type = 'dbeta';
           } else {
             newData.mu = inputState.mu;
-            if (scope.continuous.type === 'standard deviation') {
-              newData.sigma = inputState.sigma;
+            if (scope.continuous.type === 'SEnorm') {
+              newData.sigma = inputState.stdErr;
               newData.type = 'dnorm';
-            } else {
+            } else if (scope.continuous.type === 'SDnorm') {
+              newData.sigma = inputState.sigma / Math.sqrt(inputState.sampleSize);
+              newData.type = 'dnorm';
+            } else if (scope.continuous.type === 'SEt') {
               newData.stdErr = inputState.stdErr;
+              newData.dof = inputState.sampleSize - 1;
+              newData.type = 'dt';
+            } else if (scope.continuous.type === 'SDt') {
+              newData.stdErr = inputState.sigma / Math.sqrt(inputState.sampleSize);
               newData.dof = inputState.sampleSize - 1;
               newData.type = 'dt';
             }
