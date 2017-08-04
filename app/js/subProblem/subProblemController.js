@@ -3,9 +3,12 @@ define(function(require) {
   require('angular');
   var _ = require('lodash');
 
-  var dependencies = ['$scope', '$stateParams', '$modal', '$state', 'intervalHull', 'SubProblemResource', 'SubProblemService', 'WorkspaceService', 'mcdaRootPath'];
+  var dependencies = ['$scope', '$stateParams', '$modal', '$state', '$transitions',
+    'intervalHull', 'SubProblemResource', 'SubProblemService', 'WorkspaceService', 'mcdaRootPath'
+  ];
 
-  var SubProblemController = function($scope, $stateParams, $modal, $state, intervalHull, SubProblemResource, SubProblemService, WorkspaceService, mcdaRootPath) {
+  var SubProblemController = function($scope, $stateParams, $modal, $state, $transitions,
+    intervalHull, SubProblemResource, SubProblemService, WorkspaceService, mcdaRootPath) {
     // vars 
     $scope.problem = $scope.workspace.problem;
     $scope.scales = $scope.workspace.$$scales;
@@ -30,6 +33,18 @@ define(function(require) {
       $scope.scales.observed = newScales;
       initSubProblem($scope.subProblem);
     }, true);
+
+    $transitions.onStart({}, function(transition) {
+      if ($scope.subProblemState.isChanged || $scope.subProblemState.scaleRangeChanged) {
+        var answer = confirm('There are unsaved changes, are you sure you want to navigate away from this page?');
+        if (!answer) {
+          transition.abort();
+        } else {
+          $scope.subProblemState.isChanged = false;
+          $scope.subProblemState.scaleRangeChanged = false;
+        }
+      }
+    });
 
     function updateInclusions() {
       $scope.subProblemState.isChanged = !_.isEqual($scope.subProblemState.criterionInclusions, $scope.originalInclusions);
