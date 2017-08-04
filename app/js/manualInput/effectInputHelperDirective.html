@@ -1,4 +1,4 @@
-<a dropdown-toggle="#editCellToggle-{{criterion.hash}}-{{treatment.hash}}" ng-style="inputData.isInvalid ? {color:'red'} : {}" ng-click="cacheInput()">{{inputData.label}}</a>
+<a dropdown-toggle="#editCellToggle-{{criterion.hash}}-{{treatment.hash}}" ng-style="inputData.isInvalid ? {color:'red'} : {}">{{inputData.label}}</a>
 <div id="editCellToggle-{{criterion.hash}}-{{treatment.hash}}" class="row f-dropdown" ng-keyup="keyCheck($event)" ng-keydown="keyCheck($event)" ng-keypress="keyCheck($event)">
     <!-- dichotomous -->
     <div class="columns large-6" ng-if="studyType === 'dichotomous'">

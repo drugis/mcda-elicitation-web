@@ -9,8 +9,7 @@
     </li>
     <li>
       <span>Scenario:</span>
-      <select class="scenario-select" ng-model="__scenario" ng-options="scenario.title for scenario in scenarios track by scenario.id"
-        ng-change="scenarioChanged(__scenario)"></select>
+      <select class="scenario-select" ng-model="__scenario" ng-options="scenario.title for scenario in scenarios track by scenario.id" ng-change="scenarioChanged(__scenario)"></select>
       <i ng-if="editMode.isUserOwner" class="fa fa-plus new-scenario-btn" dropdown-toggle="#newScenarioControl"></i>
       <ul id="newScenarioControl" class="f-dropdown">
         <li class="drop-down-list-item" ng-click="forkScenario()">
@@ -33,12 +32,11 @@
         <a class="tab-corners" ng-class="{activetab: activeTab === 'results'}" ui-sref="results">Results</a>
       </div>
       <div ng-if="!tasksAccessibility.results">
-        <a class="tab-corners disabledtab">Results</a>
+        <a class="tab-corners disabledtab" tooltip="Tab unavailable because not all partial value functions are set">Results</a>
       </div>
     </li>
   </ul>
 </div>
-
 <div class="row">
   <div class="columns large-12 large-centered">
     <div ui-view></div>
