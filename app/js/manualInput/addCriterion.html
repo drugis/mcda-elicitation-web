@@ -35,6 +35,20 @@
     </div>
     <div class="row">
       <div class="columns large-6">
+        <label>Source (optional)</label>
+          <input type="radio" ng-model="criterion.source" ng-value="undefined"> None
+          <input type="radio" ng-model="criterion.source" ng-value="'study'"> single study
+          <input type="radio" ng-model="criterion.source" ng-value="'meta analysis'"> meta analysis
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns large-6">
+        <label>Source link (optional)</label>
+        <input ng-disabled="criterion.source===undefined" type="text" ng-model="criterion.sourceLink">
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns large-6">
         <button ng-disabled="isCreationBlocked(criterion)" type="submit">Add</button>
         <button type="button" ng-click="cancel()">Cancel</button>
       </div>

@@ -13,7 +13,13 @@ define(function(require) {
     $scope.selectAllAlternatives = selectAllAlternatives;
     $scope.deselectAllAlternatives = deselectAllAlternatives;
     $scope.toggleVisibility = toggleVisibility;
-
+    $scope.references = {
+      has: _.find($scope.effectsTableData, function(effectsTableRow) {
+        return _.find(effectsTableRow.criteria, function(criterion) {
+          return criterion.value.source;
+        });
+      })
+    };
     EffectsTableResource.query($stateParams,
       function(inclusions) {
         _.forEach(inclusions, function(inclusion) {
