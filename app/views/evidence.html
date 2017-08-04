@@ -32,7 +32,7 @@
       </thead>
       <tbody class="main">
         <tr ng-repeat-start="effectsTableRow in effectsTableData" ng-show="effectsTableRow.path.length > 0">
-          <td class="group-header" colspan="{{3 + nrAlternatives}}">
+          <td class="group-header" colspan="{{(references.has ? 4 : 3) + nrAlternatives}}">
             <div class="main-header">
               {{effectsTableRow.path[0].title}}</div>
             <span ng-repeat="node in effectsTableRow.path.slice(1)">
@@ -43,31 +43,9 @@
             </span>
           </td>
         </tr>
-        <tr class="showmore" ng-repeat-end ng-repeat="criterion in effectsTableRow.criteria track by $index">
+        <tr ng-repeat-end ng-repeat="criterion in effectsTableRow.criteria track by $index">
           <td>
-            <a dropdown-toggle="#dropdown-{{$index}}" class="tiny-icon"><i class="fa fa-list"></i></a> {{criterion.value.title}}
-            <div id="dropdown-{{$index}}" class="f-dropdown details">
-              <table cellspacing="0px" class="no-border">
-                <thead>
-                  <tr>
-                    <th scope="col">Alternative</th>
-                    <th scope="col">{{criterion.value.unitOfMeasurement}}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr ng-repeat="(alternativeKey, alternative) in problem.alternatives">
-                    <td>{{alternative.title}}</td>
-                    <td>
-                      {{scales[criterion.key][alternativeKey]['50%'] | number}}
-                      <span ng-show="!isExact(criterion.key, alternativeKey)">
-                        ({{scales[criterion.key][alternativeKey]['2.5%'] | number}}, {{scales[criterion.key][alternativeKey]['97.5%']
-                        | number}})
-                      </span>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            {{criterion.value.title}}
           </td>
           <td>
             <div class="td-container">
@@ -77,7 +55,7 @@
             </div>
           </td>
           <td>{{criterion.value.unitOfMeasurement}}</td>
-          <td ng-if="references.has"><a href="criterion.value.sourceLink">{{criterion.value.source}}</a></td>
+          <td ng-if="references.has"><a href="{{criterion.value.sourceLink}}">{{criterion.value.source}}</a></td>
           <td class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives" name="col{{$index}}" id="col{{$index}}" ng-show="alternativeInclusions[alternativeKey]">
             {{scales[criterion.key][alternativeKey]['50%'] | number}}
             <br>

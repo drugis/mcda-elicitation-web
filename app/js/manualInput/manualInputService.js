@@ -107,7 +107,9 @@ define(function(require) {
           title: criterion.name,
           description: criterion.description,
           unitOfMeasurement: criterion.unitOfMeasurement,
-          scale: [-Infinity, Infinity]
+          scale: [-Infinity, Infinity],
+          source: criterion.source,
+          sourceLink: criterion.sourceLink
         };
       });
       return _.keyBy(newCriteria, 'title');
