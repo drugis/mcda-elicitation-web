@@ -35,7 +35,7 @@ define(function(require) {
     }, true);
 
     $transitions.onStart({}, function(transition) {
-      if ($scope.subProblemState.isChanged || $scope.subProblemState.scaleRangeChanged) {
+      if (($scope.subProblemState.isChanged || $scope.subProblemState.scaleRangeChanged) && !$scope.subProblemState.savingProblem){
         var answer = confirm('There are unsaved changes, are you sure you want to navigate away from this page?');
         if (!answer) {
           transition.abort();
@@ -69,6 +69,7 @@ define(function(require) {
           },
           callback: function() {
             return function(newProblemId, newScenarioId) {
+              $scope.subProblemState.savingProblem = true;
               $state.go('problem', _.extend({}, $stateParams, {
                 problemId: newProblemId,
                 id: newScenarioId
