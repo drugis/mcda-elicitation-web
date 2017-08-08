@@ -35,7 +35,7 @@ define(function(require) {
     }, true);
 
     $transitions.onStart({}, function(transition) {
-      if (($scope.subProblemState.isChanged || $scope.subProblemState.scaleRangeChanged) && !$scope.subProblemState.savingProblem){
+      if (($scope.subProblemState.isChanged || $scope.subProblemState.scaleRangeChanged) && !$scope.subProblemState.savingProblem) {
         var answer = confirm('There are unsaved changes, are you sure you want to navigate away from this page?');
         if (!answer) {
           transition.abort();
@@ -47,8 +47,12 @@ define(function(require) {
     });
 
     function updateInclusions() {
-      $scope.subProblemState.isChanged = !_.isEqual($scope.subProblemState.criterionInclusions, $scope.originalInclusions);
+      $scope.subProblemState.isChanged = !_.isEqual($scope.subProblemState.criterionInclusions, $scope.originalCriterionInclusions) ||
+        !_.isEqual($scope.subProblemState.alternativeInclusions, $scope.originalAlternativeInclusions);
       $scope.subProblemState.numberOfCriteriaSelected = _.reduce($scope.subProblemState.criterionInclusions, function(accum, inclusion) {
+        return inclusion ? accum + 1 : accum;
+      }, 0);
+      $scope.subProblemState.numberOfAlternativesSelected = _.reduce($scope.subProblemState.alternativeInclusions, function(accum, inclusion) {
         return inclusion ? accum + 1 : accum;
       }, 0);
     }
@@ -106,9 +110,11 @@ define(function(require) {
     }
 
     function initSubProblem(subProblem) {
-      $scope.originalInclusions = createInclusions(subProblem);
+      $scope.originalCriterionInclusions = createCriterionInclusions(subProblem);
+      $scope.originalAlternativeInclusions = createAlternativeInclusions(subProblem);
       $scope.subProblemState = {
-        criterionInclusions: _.cloneDeep($scope.originalInclusions),
+        criterionInclusions: _.cloneDeep($scope.originalCriterionInclusions),
+        alternativeInclusions: _.cloneDeep($scope.originalAlternativeInclusions),
         hasScaleRange: checkScaleRanges($scope.mergedProblem.criteria),
         ranges: _.cloneDeep($scope.mergedProblem.criteria),
         scaleRangeChanged: false
@@ -121,10 +127,16 @@ define(function(require) {
     }
 
     // private functions
-    function createInclusions(subProblem) {
+    function createCriterionInclusions(subProblem) {
       return _.mapValues($scope.problem.criteria, function(criterion, key) {
         return subProblem.definition && !_.includes(subProblem.definition.excludedCriteria, key);
       });
+    }
+
+    function createAlternativeInclusions(subProblem) {
+      return _.mapValues($scope.problem.alternatives, function(alternative, key) {
+        return subProblem.definition && !_.includes(subProblem.definition.excludedAlternatives, key);
+      }); //FIXME
     }
 
     function makeCriteriaForScales(criteria) {

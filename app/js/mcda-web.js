@@ -18,7 +18,6 @@ define(function(require) {
   require('mcda/services/taskDependencies');
   require('mcda/services/hashCodeService');
   require('mcda/services/effectsTableService');
-  require('mcda/services/effectsTableResource');
   require('mcda/services/util');
   require('mcda/results/results');
   require('mcda/preferences/partialValueFunctionService');
@@ -44,7 +43,6 @@ define(function(require) {
     'elicit.util',
     'elicit.directives',
     'elicit.effectsTableService',
-    'elicit.effectsTableResource',
     'elicit.results',
     'elicit.controllers',
     'elicit.taskDependencies',

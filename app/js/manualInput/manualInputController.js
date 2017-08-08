@@ -4,13 +4,11 @@ define(['lodash'], function(_) {
   var dependencies = ['$scope', '$modal', '$state',
     'ManualInputService',
     'WorkspaceResource',
-    'EffectsTableResource',
     'addKeyHashToObject'
   ];
   var ManualInputController = function($scope, $modal, $state,
     ManualInputService,
     WorkspaceResource,
-    EffectsTableResource,
     addKeyHashToObject
   ) {
 
@@ -126,13 +124,6 @@ define(['lodash'], function(_) {
       var problem = ManualInputService.createProblem($scope.criteria, $scope.treatments,
         $scope.state.title, $scope.state.description, $scope.inputData);
       WorkspaceResource.create(problem).$promise.then(function(workspace) {
-        EffectsTableResource.setEffectsTableInclusions({
-          workspaceId: workspace.id
-        }, {
-          alternativeIds: _.map(problem.alternatives, function(alternative, key) {
-            return key;
-          })
-        });
         $state.go('evidence', {
           workspaceId: workspace.id,
           problemId: workspace.defaultSubProblemId,
