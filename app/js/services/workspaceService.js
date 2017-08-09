@@ -54,10 +54,18 @@ define(function(require) {
       }
       if (subProblemDefinition.excludedAlternatives) {
         newProblem.alternatives = _.omit(newProblem.alternatives, subProblemDefinition.excludedAlternatives);
-        newProblem.performanceTable = _.forEach(newProblem.performanceTable, function(performanceEntry) {
+        var newPerformanceTable = [];
           var names = _.map(subProblemDefinition.excludedAlternatives, function(alternative) {
             return alternative.name;
           });
+        for(var i=0;i<newProblem.performanceTable.length;++i){
+          if(){
+
+          }
+        }
+
+        newProblem.performanceTable = _.forEach(newProblem.performanceTable, function(performanceEntry) {
+
           performanceEntry.parameters.relative.cov.colnames = _.omitBy(performanceEntry.parameters.relative.cov.colnames, names);
 
           performanceEntry.parameters.relative.cov.rownames = _.omitBy(performanceEntry.parameters.relative.cov.rownames, names);
