@@ -52,6 +52,25 @@ define(function(require) {
             _.includes(subProblemDefinition.excludedCriteria, performanceEntry.criterion); // addis/mcda standalone difference
         });
       }
+      if (subProblemDefinition.excludedAlternatives) {
+        newProblem.alternatives = _.omit(newProblem.alternatives, subProblemDefinition.excludedAlternatives);
+        newProblem.performanceTable = _.forEach(newProblem.performanceTable, function(performanceEntry) {
+          var names = _.map(subProblemDefinition.excludedAlternatives, function(alternative) {
+            return alternative.name;
+          });
+          performanceEntry.parameters.relative.cov.colnames = _.omitBy(performanceEntry.parameters.relative.cov.colnames, names);
+
+          performanceEntry.parameters.relative.cov.rownames = _.omitBy(performanceEntry.parameters.relative.cov.rownames, names);
+        });
+
+
+        _.reject(newProblem.performanceTable, function(performanceEntry) {
+          return _.includes(subProblemDefinition.excludedCriteria, performanceEntry.criterionUri) ||
+            _.includes(subProblemDefinition.excludedCriteria, performanceEntry.criterion); // addis/mcda standalone difference
+        });
+      }
+
+
       newProblem.criteria = _.merge(newProblem.criteria, subProblemDefinition.ranges);
       return newProblem;
     }
