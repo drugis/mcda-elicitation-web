@@ -14,7 +14,7 @@
           <th>Units</th>
           <th class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives">
             <label>
-              <input type="checkbox" ng-if="editMode.isUserOwner" ng-model="subProblemState.alternativeInclusions[alternativeKey]" ng-change="updateInclusions()" ng-disabled="(subProblemState.alternativeInclusions[alternativeKey] && subProblemState.numberOfAlternativesSelected < 3) || alternative.isBaseline"> {{alternative.title}}{{problem.valueTree.children.children[0].criteria}}
+              <input type="checkbox" ng-if="editMode.isUserOwner" ng-model="subProblemState.alternativeInclusions[alternativeKey]" ng-change="updateInclusions()" ng-disabled="(subProblemState.alternativeInclusions[alternativeKey] && subProblemState.numberOfAlternativesSelected < 3) || isBaseline[alternativeKey]"> {{alternative.title}}{{problem.valueTree.children.children[0].criteria}}
             </label>
           </th>
         </tr>

@@ -19,103 +19,44 @@ define(function(require) {
     $scope.state = initialize(taskDefinition.clean($scope.aggregateState));
 
     $scope.$watch('scales.observed', function() {
-      $scope.modifiableScales = _.cloneDeep($scope.scales.observed);
+      resetSensitivityAnalysis();
     });
 
-    function resetSensitivityAnalysis(){
-      $scope.modifiableScales = _.cloneDeep($scope.scales.observed);
-    }    
+    function resetSensitivityAnalysis() {
+      var modifiableScales = _.cloneDeep($scope.scales.observed);
+      $scope.modifiableScales = _.reduce(modifiableScales, function(accum,criterion, criterionKey) {
+        accum[criterionKey] = _.reduce(criterion, function(accum, scale, key) {
+          if (_.find($scope.state.problem.alternatives, function(alternative, alternativeKey) {
+              return alternativeKey === key;
+            })) {
+            accum[key] = scale;
+            return accum;
+          } else {
+            return accum;
+          }
+        }, {});
+        return accum;
+      }, {});
+    }
 
     function sensitivityScalesChanged(newScales) {
       $scope.modifiableScales = newScales;
     }
 
     function recalculateResults() {
-      var alternativeState = _.cloneDeep($scope.aggregateState);
-      alternativeState.problem.performanceTable = _.map($scope.aggregateState.problem.performanceTable, function(tableEntry) {
+      var alteredState = _.cloneDeep($scope.aggregateState);
+      alteredState.problem.performanceTable = _.map($scope.aggregateState.problem.performanceTable, function(tableEntry) {
         var newEntry = _.cloneDeep(tableEntry);
         if (newEntry.performance.type === 'exact') {
           newEntry.performance.value = $scope.modifiableScales[newEntry.criterion][newEntry.alternative]['50%'];
         }
         return newEntry;
       });
-      $scope.state = initialize(taskDefinition.clean(alternativeState));
+      $scope.state = initialize(taskDefinition.clean(alteredState));
       $scope.state.showSensitivity = true;
     }
 
-    function alternativeTitle(id) {
-      var problem = $scope.aggregateState.problem;
-      return problem.alternatives[id].title;
-    }
-
-    var getCentralWeights = _.memoize(function(state) {
-      var problem = state.problem;
-      var data = state.results.cw.data;
-      var result = [];
-      _.each(_.toPairs(data), function(alternative) {
-        var values = _.map(_.toPairs(alternative[1].w), function(criterion, index) {
-          return {
-            x: index,
-            label: criterion[0],
-            y: criterion[1]
-          };
-        });
-        var labels = _.map(_.pluck(values, 'label'), function(id) {
-          return problem.criteria[id].title;
-        });
-        result.push({
-          key: alternativeTitle(alternative[0]),
-          labels: labels,
-          values: values
-        });
-      });
-      return result;
-    });
-
-    var getAlterativesByRank = _.memoize(function(state) {
-      var data = state.results.ranks.data;
-      var rank = parseInt(state.selectedRank);
-      var values = _.map(_.toPairs(data), function(alternative) {
-        return {
-          label: alternativeTitle(alternative[0]),
-          value: alternative[1][rank]
-        };
-      });
-      var name = 'Alternatives for rank ' + (rank + 1);
-      return [{
-        key: name,
-        values: values
-      }];
-    }, function(val) { // Hash function
-      return 31 * val.selectedRank.hashCode() + angular.toJson(val.results).hashCode();
-    });
-
-    var getRanksByAlternative = _.memoize(function(state) {
-      var data = state.results.ranks.data;
-      var alternative = state.selectedAlternative;
-      var values = [];
-      _.each(data[alternative], function(rank, index) {
-        values.push({
-          label: 'Rank ' + (index + 1),
-          value: [rank]
-        });
-      });
-      return [{
-        key: alternativeTitle(alternative),
-        values: values
-      }];
-    }, function(val) {
-      return 31 * val.selectedAlternative.hashCode() + angular.toJson(val.results).hashCode();
-    });
-
     function initialize(state) {
-      var next = _.extend(state, {
-        selectedAlternative: _.keys(state.problem.alternatives)[0],
-        selectedRank: '0',
-        ranksByAlternative: getRanksByAlternative,
-        alternativesByRank: getAlterativesByRank,
-        centralWeights: getCentralWeights
-      });
       $scope.alternatives = _.map(state.problem.alternatives, function(alternative, key) {
         return addKeyHashToObject(alternative, key);
       });
@@ -129,7 +70,7 @@ define(function(require) {
         accum[tableEntry.criterion][tableEntry.alternative] = tableEntry.performance.type;
         return accum;
       }, {});
-      return MCDAResultsService.getResults($scope, next);
+      return MCDAResultsService.getResults($scope);
     }
 
   };

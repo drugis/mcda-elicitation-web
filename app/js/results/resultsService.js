@@ -3,7 +3,7 @@ define(function(require) {
   var angular = require('angular');
   var _ = require('lodash');
 
-  var dependencies = ['$http','PataviService'];
+  var dependencies = ['$http', 'PataviService'];
 
   var MCDAResultsService = function($http, PataviService) {
 
@@ -13,7 +13,6 @@ define(function(require) {
         'preferences': state.prefs,
         'method': 'smaa'
       });
-
       var successHandler = function(results) {
         state.results = results;
       };
@@ -119,10 +118,10 @@ define(function(require) {
       return 31 * val.selectedAlternative.hashCode() + angular.toJson(val.results).hashCode();
     });
 
-    var getResults = function(scope, state) {
+    var getResults = function(scope) {
       var next = _.merge({}, {
         problem: scope.aggregateState.problem
-      }, state, {
+      }, {
         selectedAlternative: _.keys(scope.aggregateState.problem.alternatives)[0],
         selectedRank: '0',
         ranksByAlternative: getRanksByAlternative,

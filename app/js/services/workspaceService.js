@@ -52,35 +52,56 @@ define(function(require) {
             _.includes(subProblemDefinition.excludedCriteria, performanceEntry.criterion); // addis/mcda standalone difference
         });
       }
-      if (subProblemDefinition.excludedAlternatives) {
-        newProblem.alternatives = _.omit(newProblem.alternatives, subProblemDefinition.excludedAlternatives);
-        var newPerformanceTable = [];
-          var names = _.map(subProblemDefinition.excludedAlternatives, function(alternative) {
-            return alternative.name;
-          });
-        for(var i=0;i<newProblem.performanceTable.length;++i){
-          if(){
 
-          }
-        }
+      if (subProblemDefinition.excludedAlternatives) { //FIXME tests
+        newProblem.alternatives = _.reduce(newProblem.alternatives, function(accum,alternative, key){
+          if(!_.includes(subProblemDefinition.excludedAlternatives, key)){
+            accum[key] = alternative;
+          } 
+          return accum;
+        },{});
 
-        newProblem.performanceTable = _.forEach(newProblem.performanceTable, function(performanceEntry) {
-
-          performanceEntry.parameters.relative.cov.colnames = _.omitBy(performanceEntry.parameters.relative.cov.colnames, names);
-
-          performanceEntry.parameters.relative.cov.rownames = _.omitBy(performanceEntry.parameters.relative.cov.rownames, names);
+        var names = subProblemDefinition.excludedAlternatives;
+        // remove all exact entries that are excluded
+        newProblem.performanceTable = _.reject(newProblem.performanceTable, function(performanceEntry) {
+          return performanceEntry.performance.type === 'exact' && _.includes(names, performanceEntry.alternative);
         });
-
-
-        _.reject(newProblem.performanceTable, function(performanceEntry) {
-          return _.includes(subProblemDefinition.excludedCriteria, performanceEntry.criterionUri) ||
-            _.includes(subProblemDefinition.excludedCriteria, performanceEntry.criterion); // addis/mcda standalone difference
+        // remove all relative entries that are excluded
+        _.forEach(newProblem.performanceTable, function(performanceEntry) {
+          if (performanceEntry.performance.type !== 'exact') {
+            performanceEntry.performance.parameters.relative.cov =
+              reduceCov(performanceEntry.performance.parameters.relative.cov, names);
+            performanceEntry.performance.parameters.relative.mu =
+              _.reject(performanceEntry.performance.parameters.relative.mu,
+                function(muValue, key) {
+                  return _.includes(subProblemDefinition.excludedAlternatives, key);
+                });
+          }
         });
       }
 
-
       newProblem.criteria = _.merge(newProblem.criteria, subProblemDefinition.ranges);
       return newProblem;
+    }
+
+    function reduceCov(oldCov, names) {
+      var newCov = _.cloneDeep(oldCov);
+      _.forEach(names, function(name) {
+        var idx = newCov.colnames.indexOf(name);
+        newCov.colnames.splice(idx, 1);
+        newCov.rownames.splice(idx, 1);
+        newCov.data = reduceMatrix(newCov.data, idx);
+      });
+      return newCov;
+    }
+
+    function reduceMatrix(cov, idx) {
+      var newCov = _.cloneDeep(cov);
+      newCov.splice(idx, 1);
+      _.forEach(newCov, function(row) {
+        row = row.splice(idx, 1);
+      });
+      return newCov;
     }
 
     function buildAggregateState(baseProblem, subProblem, scenario) {

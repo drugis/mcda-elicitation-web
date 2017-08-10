@@ -22,7 +22,7 @@ define(function(require) {
     $scope.reset = initSubProblem;
     $scope.openSaveDialog = openSaveDialog;
     $scope.isExact = isExact;
-
+    $scope.isBaseline = {}; // TODO: determine baseline
     //init
     $scope.$watch('workspace.$$scales.observed', function(newScales) {
       if (!newScales) {
@@ -136,7 +136,7 @@ define(function(require) {
     function createAlternativeInclusions(subProblem) {
       return _.mapValues($scope.problem.alternatives, function(alternative, key) {
         return subProblem.definition && !_.includes(subProblem.definition.excludedAlternatives, key);
-      }); //FIXME
+      });
     }
 
     function makeCriteriaForScales(criteria) {
