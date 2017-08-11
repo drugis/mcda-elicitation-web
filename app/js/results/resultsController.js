@@ -70,7 +70,7 @@ define(function(require) {
         accum[tableEntry.criterion][tableEntry.alternative] = tableEntry.performance.type;
         return accum;
       }, {});
-      return MCDAResultsService.getResults($scope);
+      return MCDAResultsService.getResults($scope, state.problem);
     }
 
   };

@@ -54,12 +54,12 @@ define(function(require) {
       }
 
       if (subProblemDefinition.excludedAlternatives) { //FIXME tests
-        newProblem.alternatives = _.reduce(newProblem.alternatives, function(accum,alternative, key){
-          if(!_.includes(subProblemDefinition.excludedAlternatives, key)){
+        newProblem.alternatives = _.reduce(newProblem.alternatives, function(accum, alternative, key) {
+          if (!_.includes(subProblemDefinition.excludedAlternatives, key)) {
             accum[key] = alternative;
-          } 
+          }
           return accum;
-        },{});
+        }, {});
 
         var names = subProblemDefinition.excludedAlternatives;
         // remove all exact entries that are excluded
@@ -71,11 +71,8 @@ define(function(require) {
           if (performanceEntry.performance.type !== 'exact') {
             performanceEntry.performance.parameters.relative.cov =
               reduceCov(performanceEntry.performance.parameters.relative.cov, names);
-            performanceEntry.performance.parameters.relative.mu =
-              _.reject(performanceEntry.performance.parameters.relative.mu,
-                function(muValue, key) {
-                  return _.includes(subProblemDefinition.excludedAlternatives, key);
-                });
+            performanceEntry.performance.parameters.relative.mu = reduceMu(performanceEntry.performance.parameters.relative.mu,
+              subProblemDefinition.excludedAlternatives);
           }
         });
       }
@@ -102,6 +99,15 @@ define(function(require) {
         row = row.splice(idx, 1);
       });
       return newCov;
+    }
+
+    function reduceMu(mu, excludedAlternatives) {
+      return _.reduce(mu, function(accum, muValue, key) {
+        if (!_.includes(excludedAlternatives, key)) {
+          accum[key] = muValue;
+        }
+        return accum;
+      }, {});
     }
 
     function buildAggregateState(baseProblem, subProblem, scenario) {

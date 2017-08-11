@@ -10,19 +10,19 @@ define(function(require) {
     function run($scope, inState) {
       var state = angular.copy(inState);
       var data = _.merge({}, state.problem, {
-        'preferences': state.prefs,
+        'preferences': state.prefs, //Does this do anything?
         'method': 'smaa'
       });
-      var successHandler = function(results) {
+      function successHandler(results) {
         state.results = results;
-      };
+      }
 
-      var pataviErrorHandler = function(pataviError) {
+      function pataviErrorHandler(pataviError) {
         $scope.$root.$broadcast('error', {
           type: 'PATAVI',
           message: pataviError.desc
         });
-      };
+      }
 
       var updateHandler = _.throttle(function(update) {
         if (update && update.eventType === 'progress' && update.eventData && $.isNumeric(update.eventData)) {
@@ -118,18 +118,18 @@ define(function(require) {
       return 31 * val.selectedAlternative.hashCode() + angular.toJson(val.results).hashCode();
     });
 
-    var getResults = function(scope) {
-      var next = _.merge({}, {
-        problem: scope.aggregateState.problem
-      }, {
-        selectedAlternative: _.keys(scope.aggregateState.problem.alternatives)[0],
+    function getResults(scope, problem) {
+      var nextState = {
+        problem: problem,
+        selectedAlternative: _.keys(problem.alternatives)[0],
         selectedRank: '0',
         ranksByAlternative: getRanksByAlternative,
         alternativesByRank: getAlterativesByRank,
         centralWeights: getCentralWeights
-      });
-      return run(scope, next);
-    };
+      };
+      return run(scope, nextState);
+    }
+
     return {
       getResults: getResults
     };
