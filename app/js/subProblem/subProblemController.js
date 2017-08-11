@@ -22,8 +22,9 @@ define(function(require) {
     $scope.reset = initSubProblem;
     $scope.openSaveDialog = openSaveDialog;
     $scope.isExact = isExact;
-    $scope.isBaseline = {}; // TODO: determine baseline
-    //init
+
+        //init
+    $scope.isBaseline = determineBaseline();
     $scope.$watch('workspace.$$scales.observed', function(newScales) {
       if (!newScales) {
         return;
@@ -46,6 +47,19 @@ define(function(require) {
       }
     });
 
+    function determineBaseline() {
+      return _.reduce($scope.problem.performanceTable, function(accum, performanceEntry) {
+        if (performanceEntry.performance.parameters.baseline) {
+          _.forEach($scope.problem.alternatives, function(alternative, key) {
+            if (alternative.title === performanceEntry.performance.parameters.baseline.name) {
+              accum[key] = true;
+            }
+          });
+        }
+        return accum;
+      }, {});
+    }
+    
     function updateInclusions() {
       $scope.subProblemState.isChanged = !_.isEqual($scope.subProblemState.criterionInclusions, $scope.originalCriterionInclusions) ||
         !_.isEqual($scope.subProblemState.alternativeInclusions, $scope.originalAlternativeInclusions);

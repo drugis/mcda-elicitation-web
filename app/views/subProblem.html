@@ -13,9 +13,16 @@
           <th>Description</th>
           <th>Units</th>
           <th class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives">
-            <label>
-              <input type="checkbox" ng-if="editMode.isUserOwner" ng-model="subProblemState.alternativeInclusions[alternativeKey]" ng-change="updateInclusions()" ng-disabled="(subProblemState.alternativeInclusions[alternativeKey] && subProblemState.numberOfAlternativesSelected < 3) || isBaseline[alternativeKey]"> {{alternative.title}}{{problem.valueTree.children.children[0].criteria}}
-            </label>
+            <span ng-if="isBaseline[alternativeKey]" tooltip="Cannot deselect baseline">
+              <label>
+                <input type="checkbox" ng-if="editMode.isUserOwner" ng-model="subProblemState.alternativeInclusions[alternativeKey]" ng-change="updateInclusions()" ng-disabled="(subProblemState.alternativeInclusions[alternativeKey] && subProblemState.numberOfAlternativesSelected < 3) || isBaseline[alternativeKey]"> {{alternative.title}}{{problem.valueTree.children.children[0].criteria}}
+              </label>
+            </span>
+            <span ng-if="!isBaseline[alternativeKey]">
+              <label>
+                <input type="checkbox" ng-if="editMode.isUserOwner" ng-model="subProblemState.alternativeInclusions[alternativeKey]" ng-change="updateInclusions()" ng-disabled="(subProblemState.alternativeInclusions[alternativeKey] && subProblemState.numberOfAlternativesSelected < 3) || isBaseline[alternativeKey]"> {{alternative.title}}{{problem.valueTree.children.children[0].criteria}}
+              </label>
+           </span>
           </th>
         </tr>
       </thead>
@@ -36,11 +43,11 @@
           <td>{{criterion.unitOfMeasurement}}</td>
           <td class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives" name="col{{$index}}" id="col{{$index}}">
             <div ng-if="subProblemState.alternativeInclusions[alternativeKey]">
-            {{scales.observed[criterionKey][alternativeKey]['50%'] | number}}
-            <br>
-            <div class="uncertain" ng-if="!isExact(criterionKey, alternativeKey)">
-              {{scales.observed[criterionKey][alternativeKey]['2.5%'] | number}}, {{scales.observed[criterionKey][alternativeKey]['97.5%'] | number}}</div>
-              </div>
+              {{scales.observed[criterionKey][alternativeKey]['50%'] | number}}
+              <br>
+              <div class="uncertain" ng-if="!isExact(criterionKey, alternativeKey)">
+                {{scales.observed[criterionKey][alternativeKey]['2.5%'] | number}}, {{scales.observed[criterionKey][alternativeKey]['97.5%'] | number}}</div>
+            </div>
           </td>
         </tr>
       </tbody>
