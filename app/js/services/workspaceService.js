@@ -21,10 +21,8 @@ define(function(require) {
     var buildTheoreticalScales = function(problem) {
       return _.fromPairs(_.map(problem.criteria, function(val, key) {
         var scale = val.scale || [null, null];
-
         scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
         scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
-
         return [key, scale];
       }));
     };
@@ -53,7 +51,7 @@ define(function(require) {
         });
       }
 
-      if (subProblemDefinition.excludedAlternatives) { //FIXME tests
+      if (subProblemDefinition.excludedAlternatives) { 
         newProblem.alternatives = _.reduce(newProblem.alternatives, function(accum, alternative, key) {
           if (!_.includes(subProblemDefinition.excludedAlternatives, key)) {
             accum[key] = alternative;

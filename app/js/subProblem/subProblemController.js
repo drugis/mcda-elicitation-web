@@ -24,7 +24,7 @@ define(function(require) {
     $scope.isExact = isExact;
 
         //init
-    $scope.isBaseline = determineBaseline();
+    $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable,$scope.problem.alternatives);
     $scope.$watch('workspace.$$scales.observed', function(newScales) {
       if (!newScales) {
         return;
@@ -46,19 +46,6 @@ define(function(require) {
         }
       }
     });
-
-    function determineBaseline() {
-      return _.reduce($scope.problem.performanceTable, function(accum, performanceEntry) {
-        if (performanceEntry.performance.parameters.baseline) {
-          _.forEach($scope.problem.alternatives, function(alternative, key) {
-            if (alternative.title === performanceEntry.performance.parameters.baseline.name) {
-              accum[key] = true;
-            }
-          });
-        }
-        return accum;
-      }, {});
-    }
     
     function updateInclusions() {
       $scope.subProblemState.isChanged = !_.isEqual($scope.subProblemState.criterionInclusions, $scope.originalCriterionInclusions) ||

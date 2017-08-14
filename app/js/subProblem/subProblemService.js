@@ -18,6 +18,19 @@ define(function(require) {
       };
     }
 
+    function determineBaseline(performanceTable, alternatives) {
+      return _.reduce(performanceTable, function(accum, performanceEntry) {
+        if (performanceEntry.performance.parameters.baseline) {
+          _.forEach(alternatives, function(alternative, key) {
+            if (alternative.title === performanceEntry.performance.parameters.baseline.name) {
+              accum[key] = true;
+            }
+          });
+        }
+        return accum;
+      }, {});
+    }
+
     function filterToObject(objects, inclusions) {
       var returnObject = {};
       _.forEach(objects, function(object, objectId) {
@@ -29,7 +42,8 @@ define(function(require) {
     }
     return {
       createDefaultScenarioState: createDefaultScenarioState,
-      createDefinition: createDefinition
+      createDefinition: createDefinition,
+      determineBaseline: determineBaseline
     };
   };
 

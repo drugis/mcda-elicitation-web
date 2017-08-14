@@ -55,6 +55,10 @@ define(['angular-mocks', 'mcda/subProblem/subProblem'], function() {
             headacheId: true,
             nauseaId: false
           },
+          alternativeInclusions: {
+            aspirine: true,
+            paracetamol: false
+          },
           ranges: {
             headacheId: {
               pvf: {
@@ -72,8 +76,33 @@ define(['angular-mocks', 'mcda/subProblem/subProblem'], function() {
               }
             }
           },
-          excludedCriteria: ['nauseaId']
+          excludedCriteria: ['nauseaId'],
+          excludedAlternatives: ['paracetamol']
         };
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('determineBaseline', function() {
+      it('should determine the baseline alternative', function() {
+        var performanceTable = [{
+          performance: {
+            parameters: {
+              baseline: {
+                name: 'Placebo'
+              }
+            }
+          }
+        }];
+        var alternatives = {
+          placebo: { title: 'Placebo' },
+          fluox: { title: 'Fluoxitine' },
+          parox: { title: 'Paroxitine' }
+        };
+        var expectedResult = {
+          placebo: true
+        };
+        var result = subProblemService.determineBaseline(performanceTable, alternatives);
         expect(result).toEqual(expectedResult);
       });
     });
