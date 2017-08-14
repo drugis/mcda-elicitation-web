@@ -1,6 +1,5 @@
 'use strict';
 define(function(require) {
-  var angular = require('angular');
   var _ = require('lodash');
 
   var dependencies = ['$rootScope', '$scope', 'currentScenario', 'taskDefinition', 'MCDAResultsService', 'addKeyHashToObject'];
@@ -24,7 +23,7 @@ define(function(require) {
 
     function resetSensitivityAnalysis() {
       var modifiableScales = _.cloneDeep($scope.scales.observed);
-      $scope.modifiableScales = _.reduce(modifiableScales, function(accum,criterion, criterionKey) {
+      $scope.modifiableScales = _.reduce(modifiableScales, function(accum, criterion, criterionKey) {
         accum[criterionKey] = _.reduce(criterion, function(accum, scale, key) {
           if (_.find($scope.state.problem.alternatives, function(alternative, alternativeKey) {
               return alternativeKey === key;
@@ -67,7 +66,11 @@ define(function(require) {
         if (!accum[tableEntry.criterion]) {
           accum[tableEntry.criterion] = {};
         }
-        accum[tableEntry.criterion][tableEntry.alternative] = tableEntry.performance.type;
+        if (tableEntry.alternative) {
+          accum[tableEntry.criterion][tableEntry.alternative] = tableEntry.performance.type;
+        } else {
+          accum[tableEntry.criterion] = tableEntry.performance.type;
+        }
         return accum;
       }, {});
       return MCDAResultsService.getResults($scope, state.problem);
