@@ -21,10 +21,15 @@
           <em>&nbsp;Duplicate name</em>
         </span>
       </div>
+            <div class="columns large 6">
+        <span style="display:block" class="alert" ng-if="!subProblemState.title">
+          <em>&nbsp;No name entered</em>
+        </span>
+      </div>
     </div>
     <div class="row">
       <div class="columns large-6">
-        <button class="success" type="submit" ng-disabled="isTitleDuplicate">Create</button>
+        <button class="success" type="submit" ng-disabled="isTitleDuplicate || !subProblemState.title">Create</button>
       </div>
     </div>
     <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
