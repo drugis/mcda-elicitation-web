@@ -11,7 +11,7 @@ define(function(require) {
     intervalHull, SubProblemResource, SubProblemService, WorkspaceService, mcdaRootPath) {
     // vars 
     $scope.problem = $scope.workspace.problem;
-    $scope.scales = $scope.workspace.$$scales;
+    $scope.scales = _.cloneDeep($scope.workspace.$$scales);
     $scope.criteriaForScales = makeCriteriaForScales($scope.problem.criteria);
 
     // functions
@@ -23,15 +23,15 @@ define(function(require) {
     $scope.openSaveDialog = openSaveDialog;
     $scope.isExact = isExact;
 
-        //init
-    $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable,$scope.problem.alternatives);
+    // init
+    $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
     $scope.$watch('workspace.$$scales.observed', function(newScales) {
       if (!newScales) {
         return;
       }
       var mergedProblem = WorkspaceService.mergeBaseAndSubProblem($scope.problem, $scope.subProblem.definition);
       $scope.mergedProblem = WorkspaceService.setDefaultObservedScales(mergedProblem, newScales);
-      $scope.scales.observed = newScales;
+      $scope.originalObserved = newScales;
       initSubProblem($scope.subProblem);
     }, true);
 
@@ -46,7 +46,7 @@ define(function(require) {
         }
       }
     });
-    
+
     function updateInclusions() {
       $scope.subProblemState.isChanged = !_.isEqual($scope.subProblemState.criterionInclusions, $scope.originalCriterionInclusions) ||
         !_.isEqual($scope.subProblemState.alternativeInclusions, $scope.originalAlternativeInclusions);
@@ -56,6 +56,15 @@ define(function(require) {
       $scope.subProblemState.numberOfAlternativesSelected = _.reduce($scope.subProblemState.alternativeInclusions, function(accum, inclusion) {
         return inclusion ? accum + 1 : accum;
       }, 0);
+      $scope.scales.observed = _.reduce($scope.originalObserved, function(accum, criterion, critKey) {
+        accum[critKey] = _.reduce(criterion, function(accum, alternative, altKey) {
+          if ($scope.subProblemState.alternativeInclusions[altKey]) {
+            accum[altKey] = alternative;
+          }
+          return accum;
+        }, {});
+        return accum;
+      }, {});
     }
 
     function openSaveDialog() {
