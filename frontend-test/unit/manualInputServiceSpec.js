@@ -28,7 +28,7 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
           mu: 1.5,
           stdErr: 0.5,
           dof: 15
-        }
+        };
         expect(manualInputService.isInvalidCell(validExact)).toBeFalsy();
         expect(manualInputService.isInvalidCell(validBeta)).toBeFalsy();
         expect(manualInputService.isInvalidCell(validNorm)).toBeFalsy();
@@ -172,13 +172,17 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
               title: 'favorable criterion',
               description: 'some crit description',
               unitOfMeasurement: 'particles',
-              scale: [-Infinity, Infinity]
+              scale: [-Infinity, Infinity],
+              source: undefined,
+              sourceLink: undefined
             },
             'unfavorable criterion': {
               title: 'unfavorable criterion',
               description: 'some crit description',
               unitOfMeasurement: 'particles',
-              scale: [-Infinity, Infinity]
+              scale: [-Infinity, Infinity],
+              source: undefined,
+              sourceLink: undefined
             }
           },
           alternatives: {

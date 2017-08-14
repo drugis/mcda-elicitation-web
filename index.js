@@ -398,51 +398,6 @@ app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', functi
   });
 });
 
-// effects table inclusions
-app.get('/workspaces/:id/effectsTable', function(req, res, next) {
-  db.query('SELECT workspaceid AS "workspaceId", alternativeId AS "alternativeId" FROM effectsTableAlternativeInclusion WHERE workspaceId=$1', [req.params.id], function(err, result) {
-    if (err) {
-      err.status = 500;
-      return next(err);
-    }
-    res.send(result.rows);
-  });
-});
-
-app.post('/workspaces/:id/effectsTable', function(req, res, next) {
-  db.query(
-    'SELECT workspaceid AS "workspaceId", alternativeId AS "alternativeId" FROM effectsTableAlternativeInclusion WHERE workspaceId=$1', [req.params.id],
-    function(err, result) {
-      if (err) {
-        err.status = 500;
-        return next(err);
-      }
-      _.forEach(req.body.alternativeIds, function(alternativeId) {
-        console.log(alternativeId);
-        db.query('INSERT INTO effectsTableAlternativeInclusion VALUES ($1, $2) ON CONFLICT DO NOTHING', [req.params.id, alternativeId], function(err) {
-          if (err) {
-            err.status = 500;
-            return next(err);
-          }
-        });
-      });
-      _.forEach(result.rows, function(dbAlternative) {
-        console.log(dbAlternative);
-        if (!_.find(req.body.alternativeIds, function(alternativeId){
-          return alternativeId === dbAlternative.alternativeId;
-        })) {
-          db.query('DELETE FROM effectsTableAlternativeInclusion WHERE (workspaceId=$1 AND alternativeid=$2)', [dbAlternative.workspaceId, dbAlternative.alternativeId], function(err) {
-            if (err) {
-              err.status = 500;
-              return next(err);
-            }
-          });
-        }
-      });
-      res.end();
-    });
-});
-
 // rest
 app.post('/patavi', function(req, res, next) { // FIXME: separate routes for scales and results
   patavi.create(req.body, function(err, taskUri) {

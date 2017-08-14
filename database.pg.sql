@@ -99,3 +99,5 @@ ALTER TABLE workspace ALTER COLUMN owner SET NOT NULL;
 --changeset keijserj:10
 ALTER TABLE effectsTableExclusion RENAME TO effectsTableAlternativeInclusion;
 
+--changeset keijserj:11
+DROP TABLE effectsTableAlternativeInclusion;

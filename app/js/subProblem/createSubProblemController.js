@@ -37,7 +37,6 @@ define(function(require) {
         });
     }
 
-
     function checkDuplicateTitle(title) {
       $scope.isTitleDuplicate = _.find($scope.subProblems, ['title', title]);
     }

@@ -1,6 +1,6 @@
 <div class="row">
   <div class="columns large-12">
-    Here you see the current problem definition. If you want to work with a different problem you can define a new one based on the current one, which may include different criteria and scale ranges. Scale ranges must be defined for all selected criteria. 
+    Here you see the current problem definition. If you want to work with a different problem you can define a new one based on the current one, which may include different criteria and scale ranges. Scale ranges must be defined for all selected criteria.
   </div>
 </div>
 <div class="row">
@@ -13,7 +13,16 @@
           <th>Description</th>
           <th>Units</th>
           <th class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives">
-            {{alternative.title}}{{problem.valueTree.children.children[0].criteria}}
+            <span ng-if="isBaseline[alternativeKey]" tooltip="Cannot deselect baseline">
+              <label>
+                <input type="checkbox" ng-if="editMode.isUserOwner" ng-model="subProblemState.alternativeInclusions[alternativeKey]" ng-change="updateInclusions()" ng-disabled="(subProblemState.alternativeInclusions[alternativeKey] && subProblemState.numberOfAlternativesSelected < 3) || isBaseline[alternativeKey]"> {{alternative.title}}{{problem.valueTree.children.children[0].criteria}}
+              </label>
+            </span>
+            <span ng-if="!isBaseline[alternativeKey]">
+              <label>
+                <input type="checkbox" ng-if="editMode.isUserOwner" ng-model="subProblemState.alternativeInclusions[alternativeKey]" ng-change="updateInclusions()" ng-disabled="(subProblemState.alternativeInclusions[alternativeKey] && subProblemState.numberOfAlternativesSelected < 3) || isBaseline[alternativeKey]"> {{alternative.title}}{{problem.valueTree.children.children[0].criteria}}
+              </label>
+           </span>
           </th>
         </tr>
       </thead>
@@ -21,8 +30,8 @@
         <tr ng-repeat="(criterionKey, criterion) in problem.criteria">
           <td>
             <label>
-              <input type="checkbox" ng-if="editMode.isUserOwner" ng-model="subProblemState.criterionInclusions[criterionKey]"
-                ng-change="updateInclusions()" ng-disabled="subProblemState.criterionInclusions[criterionKey] && subProblemState.numberOfCriteriaSelected < 3"> {{criterion.title}}</label>
+              <input type="checkbox" ng-if="editMode.isUserOwner" ng-model="subProblemState.criterionInclusions[criterionKey]" ng-change="updateInclusions()" ng-disabled="subProblemState.criterionInclusions[criterionKey] && subProblemState.numberOfCriteriaSelected < 3"> {{criterion.title}}
+            </label>
           </td>
           <td>
             <div class="td-container">
@@ -32,20 +41,19 @@
             </div>
           </td>
           <td>{{criterion.unitOfMeasurement}}</td>
-          <td class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives"
-            name="col{{$index}}" id="col{{$index}}">
-            {{scales.observed[criterionKey][alternativeKey]['50%'] | number}}
-            <br>
-            <div class="uncertain" ng-if="!isExact(criterionKey, alternativeKey)">
-              {{scales.observed[criterionKey][alternativeKey]['2.5%'] | number}}, {{scales.observed[criterionKey][alternativeKey]['97.5%']
-              | number}}</div>
+          <td class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives" name="col{{$index}}" id="col{{$index}}">
+            <div ng-if="subProblemState.alternativeInclusions[alternativeKey]">
+              {{scales.observed[criterionKey][alternativeKey]['50%'] | number}}
+              <br>
+              <div class="uncertain" ng-if="!isExact(criterionKey, alternativeKey)">
+                {{scales.observed[criterionKey][alternativeKey]['2.5%'] | number}}, {{scales.observed[criterionKey][alternativeKey]['97.5%'] | number}}</div>
+            </div>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
-
 <div class="row">
   <div class="columns large-12">
     <h4>Scale Ranges</h4>
@@ -60,14 +68,11 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-class="{'disabled-row': !subProblemState.criterionInclusions[criterion.id]}"
-          ng-repeat="criterion in criteriaForScales">
+        <tr ng-class="{'disabled-row': !subProblemState.criterionInclusions[criterion.id]}" ng-repeat="criterion in criteriaForScales">
           <td>{{criterion.title}}</td>
-          <td>{{scales.theoreticalScales[criterion.id][0] | number}}, {{scales.theoreticalScales[criterion.id][1]
-            | number}}</td>
+          <td>{{scales.theoreticalScales[criterion.id][0] | number}}, {{scales.theoreticalScales[criterion.id][1] | number}}</td>
           <td>
-            <span ng-bind="intervalHull(scales.observed[criterion.id])[0] | number"></span>
-            ,
+            <span ng-bind="intervalHull(scales.observed[criterion.id])[0] | number"></span> ,
             <span ng-bind="intervalHull(scales.observed[criterion.id])[1] | number"></span>
           </td>
           <td>
@@ -83,7 +88,6 @@
     </button>
   </div>
 </div>
-
 <div class="row" ng-if="editMode.isUserOwner">
   <div class="columns large-12">
     <button class="success" ng-click="openSaveDialog()" ng-disabled="isCreationBlocked()">Save new problem</button>

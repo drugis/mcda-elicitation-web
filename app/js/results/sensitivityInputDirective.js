@@ -3,9 +3,9 @@ define(['lodash'], function(_) {
   var ESC = 27;
   var ENTER = 13;
 
-  var dependencies = ['ManualInputService', '$timeout'];
+  var dependencies = ['$timeout', 'mcdaRootPath'];
 
-  var SensitivityInputDirective = function(ManualInputService, $timeout) {
+  var SensitivityInputDirective = function($timeout, mcdaRootPath) {
     return {
       restrict: 'E',
       scope: {
@@ -15,7 +15,7 @@ define(['lodash'], function(_) {
         'changeCallback': '=',
         'type': '='
       },
-      templateUrl: 'app/js/results/sensitivityInputDirective.html',
+      templateUrl: mcdaRootPath + 'js/results/sensitivityInputDirective.html',
       link: function(scope) {
         // functions
         scope.keyCheck = keyCheck;
