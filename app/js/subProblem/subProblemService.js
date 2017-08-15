@@ -1,7 +1,8 @@
 'use strict';
 define(function(require) {
-  var dependencies = [];
   var _ = require('lodash');
+  
+  var dependencies = [];
   var SubProblemService = function() {
     // Exposed functions
     function createDefaultScenarioState(problem, subProblemState) {

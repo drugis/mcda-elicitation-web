@@ -7,7 +7,7 @@ define(function(require) {
 
   var WorkspaceService = function(ScalesService, sortCriteriaWithW) {
 
-    var buildValueTree = function(problem) {
+    function buildValueTree(problem) {
       if (problem.valueTree) {
         return problem.valueTree;
       } else {
@@ -16,16 +16,16 @@ define(function(require) {
           'criteria': _.keys(problem.criteria)
         };
       }
-    };
+    }
 
-    var buildTheoreticalScales = function(problem) {
+    function buildTheoreticalScales(problem) {
       return _.fromPairs(_.map(problem.criteria, function(val, key) {
         var scale = val.scale || [null, null];
         scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
         scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
         return [key, scale];
       }));
-    };
+    }
 
     function getObservedScales(scope, problem) {
       return ScalesService.getObservedScales(scope, problem);

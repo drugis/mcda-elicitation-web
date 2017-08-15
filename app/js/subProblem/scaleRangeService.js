@@ -7,9 +7,9 @@ define(function(require) {
 
   var ScaleRangeService = function() {
 
-    var log10 = function(x) {
+    function log10(x) {
       return Math.log(x) / Math.log(10);
-    };
+    }
 
     function nice(x, dirFun) {
       if (x === 0) {

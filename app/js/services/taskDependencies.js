@@ -57,7 +57,7 @@ define(function(require) {
     title: 'all criteria trade-off preferences'
   };
 
-  var PreferenceFilter = function(test, title) {
+  function PreferenceFilter(test, title) {
     this.isPresent = function(state) {
       return _.some(state.prefs, test);
     };
@@ -71,7 +71,7 @@ define(function(require) {
     this.title = title;
 
     return this;
-  };
+  }
 
   var nonOrdinalPreferences = new PreferenceFilter(
     function(pref) {
@@ -85,7 +85,7 @@ define(function(require) {
       return pref.type === 'ordinal';
     }, 'complete criteria ranking');
 
-  var TaskDependencies = function() {
+  function TaskDependencies() {
     var definitions = {
       'scale-range': scaleRanges,
       'partial-value-function': partialValueFunctions,
@@ -93,13 +93,13 @@ define(function(require) {
       'non-ordinal-preferences': nonOrdinalPreferences,
       'complete-criteria-ranking': completeCriteriaRanking
     };
-    var remove = function(task, state) {
+    function remove(task, state) {
       return _.reduce(task.resets, function(memo, reset) {
         return definitions[reset].remove(memo);
       }, state);
-    };
+    }
 
-    var isAccessible = function(task, state) {
+    function isAccessible(task, state) {
       if (!state || !state.problem) {
         return false;
       }
@@ -110,9 +110,9 @@ define(function(require) {
         accessible: _.isEmpty(requires),
         requires: requires
       };
-    };
+    }
 
-    var isSafe = function(task, state) {
+    function isSafe(task, state) {
       var resets = _.filter(task.resets, function(reset) {
         return definitions[reset].isPresent(state);
       });
@@ -120,7 +120,7 @@ define(function(require) {
         safe: _.isEmpty(resets),
         resets: resets
       };
-    };
+    }
 
     return {
       definitions: definitions,
@@ -135,7 +135,7 @@ define(function(require) {
         });
       }
     };
-  };
+  }
 
   return angular.module('elicit.taskDependencies', dependencies).factory('TaskDependencies', TaskDependencies);
 });

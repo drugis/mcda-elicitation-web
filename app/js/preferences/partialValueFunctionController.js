@@ -11,8 +11,11 @@ define(function(require) {
     currentScenario, taskDefinition, PartialValueFunction, TaskDependencies) {
     $scope.pvf = PartialValueFunction;
     $scope.problem = $scope.aggregateState.problem;
-
-    var initialize = function(state) {
+    $scope.save = save;
+    $scope.canSave = canSave;
+    $scope.cancel = cancel;
+    
+    function initialize(state) {
       var criterionId = $stateParams.criterion;
       var criterion = angular.copy($scope.problem.criteria[criterionId]);
       if (!criterion) {
@@ -36,9 +39,9 @@ define(function(require) {
       };
 
       return _.extend(state, initial);
-    };
+    }
 
-    var nextState = function(state) {
+    function nextState(state) {
       var nextState = angular.copy(state);
       var ref = nextState.ref;
 
@@ -77,18 +80,18 @@ define(function(require) {
       }
 
       return nextState;
-    };
+    }
 
-    var standardizeCriterion = function(criterion) {
+    function standardizeCriterion(criterion) {
       var newCriterion = angular.copy(criterion);
       if (newCriterion.pvf.type === 'linear') {
         newCriterion.pvf.values = undefined;
         newCriterion.pvf.cutoffs = undefined;
       }
       return newCriterion;
-    };
+    }
 
-    $scope.save = function(state) {
+    function save(state) {
       var criterionId = $stateParams.criterion;
       var standardizedCriterion = standardizeCriterion(state.choice);
       var criteria = {};
@@ -101,9 +104,9 @@ define(function(require) {
         $scope.$emit('elicit.resultsAccessible', scenario);
         $state.go('preferences');
       });
-    };
+    }
 
-    $scope.canSave = function(state) {
+    function canSave(state) {
       switch (state.type) {
         case 'elicit type':
           return state.choice.pvf.type === 'linear';
@@ -112,9 +115,9 @@ define(function(require) {
         default:
           return false;
       }
-    };
+    }
 
-    var isValid = function(state) {
+    function isValid(state) {
       switch (state.type) {
         case 'elicit type':
           return state.choice.pvf.type && state.choice.pvf.direction;
@@ -123,15 +126,15 @@ define(function(require) {
         default:
           return false;
       }
-    };
+    }
 
     $scope.getXY = _.memoize(PartialValueFunction.getXY, function(arg) {
       return angular.toJson(arg.pvf);
     });
 
-    $scope.cancel = function() {
+    function cancel() {
       $state.go('preferences');
-    };
+    }
 
     $injector.invoke(Wizard, this, {
       $scope: $scope,

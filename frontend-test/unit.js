@@ -2,10 +2,10 @@
 require.config({
   paths: {
     'jQuery': 'bower_components/jquery/jquery.min',
-    'underscore': 'bower_components/underscore/underscore-min',
     'angular': 'bower_components/angular/angular.min',
     'angular-resource': 'bower_components/angular-resource/angular-resource.min',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router.min',
+    'angularjs-slider': 'bower_components/angularjs-slider/dist/rzslider',
     'jquery-slider': 'lib/jslider/bin/jquery.slider.min',
     'd3': 'bower_components/d3/d3.min',
     'nvd3': 'bower_components/nvd3/nv.d3.min',
@@ -20,7 +20,6 @@ require.config({
     'angular': { exports : 'angular'},
     'angular-resource': { deps:['angular'], exports: 'angular-resource'},
     'angular-mocks': { deps: ['angular'], exports: 'angular.mock' },
-    'underscore': { exports : '_'},
     'd3': { exports : 'd3'},
     'nvd3': { deps: ['d3'], exports : 'nv'},
     'jQuery': { exports : 'jQuery'},
