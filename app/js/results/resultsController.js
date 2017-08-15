@@ -22,20 +22,8 @@ define(function(require) {
     });
 
     function resetSensitivityAnalysis() {
-      var modifiableScales = _.cloneDeep($scope.scales.observed);
-      $scope.modifiableScales = _.reduce(modifiableScales, function(accum, criterion, criterionKey) {
-        accum[criterionKey] = _.reduce(criterion, function(accum, scale, key) {
-          if (_.find($scope.state.problem.alternatives, function(alternative, alternativeKey) {
-              return alternativeKey === key;
-            })) {
-            accum[key] = scale;
-            return accum;
-          } else {
-            return accum;
-          }
-        }, {});
-        return accum;
-      }, {});
+      $scope.modifiableScales = MCDAResultsService.resetModifiableScales(
+        $scope.scales.observed, $scope.state.problem.alternatives);
     }
 
     function sensitivityScalesChanged(newScales) {

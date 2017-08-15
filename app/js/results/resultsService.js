@@ -13,6 +13,7 @@ define(function(require) {
         'preferences': state.prefs, //Does this do anything?
         'method': 'smaa'
       });
+
       function successHandler(results) {
         state.results = results;
       }
@@ -130,8 +131,27 @@ define(function(require) {
       return run(scope, nextState);
     }
 
+    function resetModifiableScales(observed, alternatives) {
+      var modifiableScales = _.cloneDeep(observed);
+      modifiableScales = _.reduce(modifiableScales, function(accum, criterion, criterionKey) {
+        accum[criterionKey] = _.reduce(criterion, function(accum, scale, key) {
+          if (_.find(alternatives, function(alternative, alternativeKey) {
+              return alternativeKey === key;
+            })) {
+            accum[key] = scale;
+            return accum;
+          } else {
+            return accum;
+          }
+        }, {});
+        return accum;
+      }, {});
+      return modifiableScales;
+    }
+
     return {
-      getResults: getResults
+      getResults: getResults,
+      resetModifiableScales: resetModifiableScales
     };
   };
 
