@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html ng-app="temp">
+
 <head>
-<meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport" content="width=device-width">
-<link rel="shortcut icon" href="/app/img/favicon.png" type="image/x-icon">
-
-<title>mcda.drugis.org manual</title>
-
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width">
+  <link rel="shortcut icon" href="/app/img/favicon.png" type="image/x-icon">
+  <title>mcda.drugis.org manual</title>
   <link rel="stylesheet" type="text/css" href="/bower_components/font-awesome/css/font-awesome.min.css">
-
   <link rel="stylesheet" type="text/css" href="/app/css/mcda-drugis.css">
-
   <script src="/bower_components/foundation/js/vendor/modernizr.js"></script>
   <script src="/bower_components/bowser/bowser.min.js"></script>
   <link rel="stylesheet" href="/bower_components/KaTeX/dist/katex.min.css">
@@ -19,42 +16,40 @@
   <script src="/bower_components/KaTeX/dist/contrib/auto-render.min.js"></script>
   <script src="/bower_components/jquery/dist/jquery.min.js"></script>
   <script src="/bower_components/scrollup/dist/jquery.scrollUp.min.js"></script>
-
   <style type="text/css">
-    #scrollUp {
-        bottom: 20px;
-        right: 20px;
-        padding: 10px 20px;
-        background-color: #555;
-        color: #fff;
-    }
+  #scrollUp {
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #555;
+    color: #fff;
+  }
 
-    .figure {
-      text-align: center;
-      margin-bottom: 1em;
-    }
-    .figure img {
-      padding: 5px;
-      border: 1px solid gray;
-    }
-    .figure .caption {
-      font-style: italic;
-    }
+  .figure {
+    text-align: center;
+    margin-bottom: 1em;
+  }
+
+  .figure img {
+    padding: 5px;
+    border: 1px solid gray;
+  }
+
+  .figure .caption {
+    font-style: italic;
+  }
   </style>
-
 </head>
-
 <!-- added inline style to override drugis general styling to clean fixed breadcrumbbar -->
+
 <body>
   <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserCheck">
-    Your browser, <span id="browserVersion1"></span>, is <b>out of date</b>.
-    It has known <b>security flaws</b> and will <b>not run this web application correctly</b>.<br>
+    Your browser, <span id="browserVersion1"></span>, is <b>out of date</b>. It has known <b>security flaws</b> and will <b>not run this web application correctly</b>.
+    <br>
     <a href="http://browser-update.org/update-browser.html#drugis.org">Please update your browser</a> before continuing.
   </div>
   <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserUnknown">
-    Your browser is unknown to us.
-    This web application may or may not work correctly using it.
-    Proceed at your own risk, or <a href="http://browser-update.org/update-browser.html#drugis.org">download a well-known browser</a> before continuing.
+    Your browser is unknown to us. This web application may or may not work correctly using it. Proceed at your own risk, or <a href="http://browser-update.org/update-browser.html#drugis.org">download a well-known browser</a> before continuing.
   </div>
   <script type="text/javascript">
   if (bowser.c || (bowser.msie && bowser.version <= 8)) {
@@ -65,7 +60,6 @@
     document.getElementById("browserUnknown").style.display = "block";
   }
   </script>
-
   <nav class="top-bar" data-topbar="">
     <ul class="title-area">
       <li class="name">
@@ -79,54 +73,43 @@
     <div class="row">
       <div class="columns large-offset-2 large-8 medium-12 end">
         <h1>mcda.drugis.org<br/><small>User manual</small></h1>
-
         <p style="margin-top: 30px; color: white;">Douwe Postmus, Daan Reid and Gert van Valkenhoef</p>
       </div>
     </div>
   </section>
-
   <section class="content">
-
     <div class="row">
       <div class="columns large-3">
         <ul class="side-nav">
           <li class="heading"><a href="#mcda-introduction" style="padding-left : 0;">Introduction</a></li>
           <li><a href="#mcda-preparing-dataset">Preparing your dataset</a></li>
-
           <div id="mcda-shared-toc"></div>
-
         </ul>
       </div>
       <div class="columns large-8 medium-12 end">
-
-      <h2 id="mcda-introduction">Introduction</h2>
-
-      <p>This is the manual for the MCDA user interface for benefit-risk analysis. It starts with instructions about uploading your own dataset to the system, followed by a brief introduction to benefit-risk analysis, and a guide to the MCDA user interface itself.
-      </p>
-
-      <h3 id="mcda-preparing-dataset">Preparing your dataset</h3>
-
-      <p>This section only applies to the stand-alone version of MCDA, hosted on <a href="https://mcda.drugis.org/">https://mcda.drugis.org/</a>. In ADDIS (<a href="https://addis.drugis.org/">https://addis.drugis.org/</a>), this step is not necessary.</p>
-
-      <p>After signing in to MCDA, you will be redirected to your personal home page. It contains a list of your previously created workspaces (which will be empty until you create one), and a button to create a new workspace. Clicking this button will open the “New workspace dialog, where you can choose to use one of the example datasets we provided, or upload your own.</p>
-
-      <p>
-        Datasets can be uploaded in JSON format. The JSON should contain the following entries (note that JSON is case-sensitive):
-        <ul>
-          <li>title</li>
-          <li>description</li>
-          <li>criteria</li>
-          <li>alternatives</li>
-          <li>performanceTable</li>
-          <li>preferences</li>
-        </ul>
-      </p>
-      <p>
-        The title and description properties should contain text.
-      </p>
-      <p>
-        The criteria property should contain a series of properties with the names and details of the different criteria in your analysis. The following is an example of JSON describing a single criterion (HAM-D):
-        <pre>
+        <h2 id="mcda-introduction">Introduction</h2>
+        <p>This is the manual for the MCDA user interface for benefit-risk analysis. It starts with instructions about uploading your own dataset to the system, followed by a brief introduction to benefit-risk analysis, and a guide to the MCDA user interface itself.
+        </p>
+        <h3 id="mcda-preparing-dataset">Preparing your dataset</h3>
+        <p>This section only applies to the stand-alone version of MCDA, hosted on <a href="https://mcda.drugis.org/">https://mcda.drugis.org/</a>. In ADDIS (<a href="https://addis.drugis.org/">https://addis.drugis.org/</a>), this step is not necessary.</p>
+        <p>After signing in to MCDA, you will be redirected to your personal home page. It contains a list of your previously created workspaces (which will be empty until you create one), and a button to create a new workspace. Clicking this button will open the “New workspace dialog, where you can choose to use one of the example datasets we provided, or upload your own.</p>
+        <p>
+          Datasets can be uploaded in JSON format. The JSON should contain the following entries (note that JSON is case-sensitive):
+          <ul>
+            <li>title</li>
+            <li>description</li>
+            <li>criteria</li>
+            <li>alternatives</li>
+            <li>performanceTable</li>
+            <li>preferences</li>
+          </ul>
+        </p>
+        <p>
+          The title and description properties should contain text.
+        </p>
+        <p>
+          The criteria property should contain a series of properties with the names and details of the different criteria in your analysis. The following is an example of JSON describing a single criterion (HAM-D):
+          <pre>
           "criteria": {
             "HAM-D": {
               "title": "HAM-D",
@@ -141,11 +124,10 @@
             }
           }
         </pre>
-
-      </p>
-      <p>
-        The alternatives property should contain the alternatives under investigation. For example:
-        <pre>
+        </p>
+        <p>
+          The alternatives property should contain the alternatives under investigation. For example:
+          <pre>
           "alternatives": {
             "Placebo": {
               "title": "Placebo"
@@ -158,14 +140,13 @@
             }
           }
         </pre>
-      </p>
-      <p>
-        The performanceTable property should contain the actual data of the measurements for each criterion for each alternative.
-        Performance can be measured either in relative or exact terms. If relative, the performance should contain a baseline plus a matrix of relative deviations. If exact, simply the value suffices.
-      </p>
-      <p>
-        An example of exact performance:
-        <pre>
+        </p>
+        <p>
+          The performanceTable property should contain the actual data of the measurements for each criterion for each alternative. Performance can be measured either in relative or exact terms. If relative, the performance should contain a baseline plus a matrix of relative deviations. If exact, simply the value suffices.
+        </p>
+        <p>
+          An example of exact performance:
+          <pre>
           "performanceTable": [
             {
               "alternative": "Placebo",
@@ -176,9 +157,8 @@
               }
             }
           ]
-        </pre>
-        An example of relative performance:
-        <pre>
+        </pre> An example of relative performance:
+          <pre>
           "performanceTable": [
             {
             "criterion": "HAM-D",
@@ -211,29 +191,34 @@
             }
           }]
         </pre>
-      </p>
-      <p>
-        The preferences property should generally consist of an empty object. This will be filled in by performincg preference elicitation within the MCDA app.
-      </p>
-      <p>
-        A list of complete examples is available on the <a href="https://github.com/drugis/mcda-elicitation-web/tree/master/examples" target="_blank">MCDA repository</a>.
-      </p>
-
-
-      <div id="mcda-shared-content"></div>
-
+        </p>
+        <p>
+          The preferences property should generally consist of an empty object. This will be filled in by performincg preference elicitation within the MCDA app.
+        </p>
+        <p>
+          A list of complete examples is available on the <a href="https://github.com/drugis/mcda-elicitation-web/tree/master/examples" target="_blank">MCDA repository</a>.
+        </p>
+        <div id="mcda-shared-content"></div>
       </div>
     </div>
   </section>
-
   <script>
-    $("#mcda-shared-toc").load("/manual/shared-toc.html");
-    $("#mcda-shared-content").load("/manual/shared.html", function() {
-      renderMathInElement(document.body);
-      $(function () {
-        $.scrollUp();
-      });
+  $("#mcda-shared-toc").load("/manual/shared-toc.html");
+  $("#mcda-shared-content").load("/manual/shared.html", function() {
+    renderMathInElement(document.body);
+    $(function() {
+      $.scrollUp();
     });
+    if (window.location.hash) {
+      setTimeout(function() { // wait for reflows to finish
+        $('html, body').animate({
+          scrollTop: $(window.location.hash).offset().top
+        }, 1000);
+      }, 1);
+    }
+
+  });
   </script>
 </body>
+
 </html>
