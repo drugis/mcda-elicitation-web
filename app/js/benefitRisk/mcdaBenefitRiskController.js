@@ -1,11 +1,11 @@
 'use strict';
 define(function(require) {
   var _ = require('lodash');
-  var dependencies = ['$scope', '$location', '$state', '$stateParams', 'Tasks', 'TaskDependencies',
+  var dependencies = ['$scope', '$transitions', '$state', '$stateParams', 'Tasks', 'TaskDependencies',
     'ScenarioResource', 'SubProblemResource', 'WorkspaceService', 'subProblems', 'currentSubProblem', 'scenarios', 'currentScenario'
   ];
 
-  function MCDABenefitRiskController($scope, $location, $state, $stateParams, Tasks, TaskDependencies,
+  function MCDABenefitRiskController($scope, $transitions, $state, $stateParams, Tasks, TaskDependencies,
     ScenarioResource, SubProblemResource, WorkspaceService, subProblems, currentSubProblem, scenarios, currentScenario) {
 
     // vars
@@ -32,6 +32,7 @@ define(function(require) {
     $scope.subProblemChanged = subProblemChanged;
 
     // init
+    determineActiveTab();
 
     function getTask(taskId) {
       return _.find(Tasks.available, function(task) {
@@ -40,16 +41,20 @@ define(function(require) {
     }
 
     function determineActiveTab() {
-      var path = $location.path();
-      var activeStateName = path.substr(path.lastIndexOf('/') + 1);
+      setActiveTab($state.current.name, 'evidence');
+    }
+    $transitions.onStart({}, function(transition) {
+      setActiveTab(transition.to().name, transition.to().name);
+    });
+
+    function setActiveTab(activeStateName, defaultStateName) {
       var activeTask = getTask(activeStateName);
       if (activeTask) {
         $scope.activeTab = activeTask.activeTab;
       } else {
-        $scope.activeTab = 'evidence';
+        $scope.activeTab = defaultStateName;
       }
     }
-    determineActiveTab();
 
     $scope.$watch('__scenario.state', updateTaskAccessibility);
     $scope.$on('elicit.resultsAccessible', function(event, scenario) {
@@ -60,14 +65,7 @@ define(function(require) {
       updateTaskAccessibility();
     });
 
-    $scope.$on('$stateChangeStart', function(event, toState) {
-      var task = getTask(toState.name);
-      if (task && task.activeTab) {
-        $scope.activeTab = task.activeTab;
-      } else {
-        $scope.activeTab = toState.name;
-      }
-    });
+
 
     WorkspaceService.getObservedScales($scope, baseProblem).then(function(observedScales) {
       $scope.workspace.$$scales.observed = observedScales;
