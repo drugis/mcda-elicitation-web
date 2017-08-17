@@ -15,6 +15,7 @@ define(function(require) {
     $scope.selections = {};
     $scope.scenarios = scenarios;
     $scope.scenario = currentScenario;
+    $scope.isDuplicateScenarioTitle = false;
     $scope.aggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, currentScenario);
     $scope.subProblems = subProblems;
     $scope.subProblem = currentSubProblem;
@@ -30,6 +31,7 @@ define(function(require) {
     $scope.cancelTitle = cancelTitle;
     $scope.scenarioChanged = scenarioChanged;
     $scope.subProblemChanged = subProblemChanged;
+    $scope.checkDuplicateScenarioTitle = checkDuplicateScenarioTitle;
 
     // init
     determineActiveTab();
@@ -56,7 +58,7 @@ define(function(require) {
       }
     }
 
-    $scope.$watch('__scenario.state', updateTaskAccessibility);
+    $scope.$watch('scenario.state', updateTaskAccessibility);
     $scope.$on('elicit.resultsAccessible', function(event, scenario) {
       $scope.aggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
       if ($scope.workspace.$$scales.observed) {
@@ -65,16 +67,10 @@ define(function(require) {
       updateTaskAccessibility();
     });
 
-
-
     WorkspaceService.getObservedScales($scope, baseProblem).then(function(observedScales) {
       $scope.workspace.$$scales.observed = observedScales;
       $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales($scope.aggregateState.problem, observedScales);
       updateTaskAccessibility();
-    });
-
-    ScenarioResource.get($stateParams).$promise.then(function(result) {
-      $scope.__scenario = result;
     });
 
     $scope.tasks = _.reduce(Tasks.available, function(tasks, task) {
@@ -139,15 +135,21 @@ define(function(require) {
 
     function editTitle() {
       $scope.isEditTitleVisible = true;
-      $scope.scenarioTitle.value = $scope.__scenario.title;
+      $scope.scenarioTitle.value = $scope.scenario.title;
     }
 
     function saveTitle() {
-      $scope.__scenario.title = $scope.scenarioTitle.value;
+      $scope.scenario.title = $scope.scenarioTitle.value;
       $scope.isEditTitleVisible = false;
-      $scope.__scenario.$save($stateParams, function() {
+      ScenarioResource.save($stateParams, $scope.scenario, function(savedScenario) {
         $scope.scenarios = ScenarioResource.query(_.omit($stateParams, 'id'));
-        redirect($stateParams.id, $state.current.name);
+        redirect(savedScenario.id, $state.current.name);
+      });
+    }
+
+    function checkDuplicateScenarioTitle() {
+      $scope.isDuplicateScenarioTitle = _.find($scope.scenarios, function(scenario) {
+        return scenario.id !== $scope.scenario.id && scenario.title === $scope.scenarioTitle.value;
       });
     }
 
