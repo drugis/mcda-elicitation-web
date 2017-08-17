@@ -1,7 +1,7 @@
 'use strict';
 define(function(require) {
-  var angular = require("angular");
-  var _ = require("lodash");
+  var angular = require('angular');
+  var _ = require('lodash');
 
   var dependencies = [
     '$scope',
@@ -43,9 +43,9 @@ define(function(require) {
     function willReset(safe) {
       var resets = safe.resets.map(function(reset) {
         return TaskDependencies.definitions[reset].title;
-      }).join(", ").replace(/,([^,]*)$/, ' & $1');
+      }).join(', ').replace(/,([^,]*)$/, ' & $1');
 
-      return resets ? "Saving this preference will reset: " + resets : null;
+      return resets ? 'Saving this preference will reset: ' + resets : null;
     }
 
     function isTaskSafe(taskId) {
