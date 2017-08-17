@@ -1,7 +1,7 @@
 'use strict';
 define(function(require) {
   var _ = require('lodash');
-  
+
   var dependencies = [];
   var SubProblemService = function() {
     // Exposed functions
@@ -21,7 +21,7 @@ define(function(require) {
 
     function determineBaseline(performanceTable, alternatives) {
       return _.reduce(performanceTable, function(accum, performanceEntry) {
-        if (performanceEntry.performance.parameters.baseline) {
+        if (performanceEntry.performance.parameters && performanceEntry.performance.parameters.baseline) {
           _.forEach(alternatives, function(alternative, key) {
             if (alternative.title === performanceEntry.performance.parameters.baseline.name) {
               accum[key] = true;
