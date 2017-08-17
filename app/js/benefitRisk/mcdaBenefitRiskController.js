@@ -10,6 +10,7 @@ define(function(require) {
 
     // vars
     var baseProblem = $scope.workspace.problem;
+    var deregisterTransitionListener;
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
     $scope.selections = {};
@@ -45,9 +46,11 @@ define(function(require) {
     function determineActiveTab() {
       setActiveTab($state.current.name, 'evidence');
     }
-    $transitions.onStart({}, function(transition) {
+    deregisterTransitionListener = $transitions.onStart({}, function(transition) {
       setActiveTab(transition.to().name, transition.to().name);
     });
+
+    $scope.$on('$destroy', deregisterTransitionListener);
 
     function setActiveTab(activeStateName, defaultStateName) {
       var activeTask = getTask(activeStateName);
