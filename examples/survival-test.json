@@ -1,0 +1,100 @@
+{
+  "title": "Multiple myeloma - survival data test",
+  "description": "Survival data test",
+  "criteria": {
+    "PFS": {
+      "title": "PFS",
+      "description": "1-year PFS",
+      "unitOfMeasurement": "%",
+      "scale": [0, 100],
+      "pvf": {
+        "range": [
+          0,
+          100
+        ],
+        "type": "linear",
+        "direction": "increasing"
+      }
+    },
+    "G34": {
+      "title": "Severe toxicity",
+      "description": "Incidence of grade 3/4 events",
+      "unitOfMeasurement": "%",
+      "scale": [0,100],
+      "pvf": {
+        "range": [
+          0,
+          100
+        ],
+        "type": "linear",
+        "direction": "decreasing"
+      }
+    }
+  },
+  "valueTree": {
+    "title": "Benefit-risk balance", 
+    "children": [
+      {
+        "title": "Favourable effects",
+        "criteria": [ "PFS" ]
+      },
+      {
+        "title": "Unfavourable effects",
+        "criteria": [ "G34"]
+      }
+    ]
+  },
+  "alternatives": {
+    "treatment": {
+      "title": "Treatment"
+    },
+    "control": {
+      "title": "Control"
+    }
+  },
+  "performanceTable": [
+  {
+    "alternative": "treatment",
+    "criterion": "PFS",
+    "performance": {
+      "type": "dsurv",
+      "parameters": {
+        "alpha": 179.001,
+        "beta": 5276.001,
+        "summaryMeasure": "survivalAtTime",
+        "time": 12
+      }
+    }
+  },
+  {
+    "alternative": "control",
+    "criterion": "PFS",
+    "performance": {
+      "type": "dsurv",
+      "parameters": {
+        "alpha": 205.001,
+        "beta": 4430.001,
+        "summaryMeasure": "survivalAtTime",
+        "time": 12
+      }
+    }
+  },
+  {
+    "alternative": "treatment",
+    "criterion": "G34",
+    "performance": {
+      "type": "exact",
+      "value": 83
+    }
+  },
+  {
+    "alternative": "control",
+    "criterion": "G34",
+    "performance": {
+      "type": "exact",
+      "value": 57
+    }
+  }
+  ],
+  "preferences": {}
+}

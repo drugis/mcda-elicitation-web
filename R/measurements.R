@@ -14,10 +14,10 @@ icloglog <- function(x) {
 
 assign.sample <- function(defn, samples) {
   N <- dim(samples)[1]
-  if (!is.null(defn$alternative)) {
+  if (!is.null(defn$alternative)) { # performance table based on relative effect estimates + baseline effect distribution
     samples[, defn$alternative, defn$criterion] <- sampler(defn$performance, N)
   } else {
-    x <- sampler(defn$performance, N)
+    x <- sampler(defn$performance, N) # performance table based on absolute effect estimates
     samples[, colnames(x), defn$criterion] <- x
   }
   samples
@@ -26,6 +26,32 @@ assign.sample <- function(defn, samples) {
 sampler <- function(perf, N) {
   fn <- paste('sampler', gsub('-', '_', perf[['type']]), sep='.')
   do.call(fn, list(perf, N))
+}
+
+sampler.dgamma <- function(perf, N) {
+  rgamma(N, perf$parameters[['alpha']], perf$parameters[['beta']])
+}
+
+sampler.dsurv <- function(perf, N) {
+  
+  # Sample from the posterior distribution of the rate parameter lambda of the exponential survival function
+  samples <- sampler.dgamma(perf, N)
+  
+  # Transform samples based on the selected summary measure
+  if (perf$parameters$summaryMeasure=='mean') { # Determine mean of exponential distribution
+    samples <- 1/samples
+  }
+  
+  if (perf$parameters$summaryMeasure=='median') { # Determine median of exponential distribution
+    samples <- qexp(rep(0.5,N),samples)
+  }
+  
+  if (perf$parameters$summaryMeasure=='survivalAtTime') { # Read survival from the survival function (expressed in %)
+    samples <- pexp(rep(perf$parameters$time,N),samples,lower.tail=F)*100
+  }
+  
+  samples
+  
 }
 
 sampler.dbeta <- function(perf, N) {
