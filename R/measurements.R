@@ -12,12 +12,42 @@ icloglog <- function(x) {
   1 - exp(-exp(x))
 }
 
+survival.mean <- function(x) {
+  1/x
+}
+
+survival.median <- function(x) {
+  qexp(0.5,x)
+}
+
+survival.at.time <- function(t,x) { # survival at time t expressed in %
+  pexp(t,x,lower.tail=F)*100
+}
+
+survival.transform <- function(perf, samples) {
+  
+  if (perf$parameters$summaryMeasure=='mean') {
+    samples <- survival.mean(samples)
+  }
+  
+  if (perf$parameters$summaryMeasure=='median') {
+    samples <- survival.median(samples)
+  }
+  
+  if (perf$parameters$summaryMeasure=='survivalAtTime') {
+    samples <- survival.at.time(perf$parameters[['time']],samples)
+  }
+  
+  samples
+  
+}
+
 assign.sample <- function(defn, samples) {
   N <- dim(samples)[1]
-  if (!is.null(defn$alternative)) {
+  if (!is.null(defn$alternative)) { # performance table based on relative effect estimates + baseline effect distribution
     samples[, defn$alternative, defn$criterion] <- sampler(defn$performance, N)
   } else {
-    x <- sampler(defn$performance, N)
+    x <- sampler(defn$performance, N) # performance table based on absolute effect estimates
     samples[, colnames(x), defn$criterion] <- x
   }
   samples
@@ -26,6 +56,20 @@ assign.sample <- function(defn, samples) {
 sampler <- function(perf, N) {
   fn <- paste('sampler', gsub('-', '_', perf[['type']]), sep='.')
   do.call(fn, list(perf, N))
+}
+
+sampler.dgamma <- function(perf, N) {
+  rgamma(N, perf$parameters[['alpha']], perf$parameters[['beta']])
+}
+
+sampler.dsurv <- function(perf, N) {
+  
+  # Sample from the posterior distribution of the rate parameter lambda of the exponential survival function
+  samples <- sampler.dgamma(perf, N)
+  
+  # Transform samples based on the selected summary measure
+  survival.transform(perf, samples)
+  
 }
 
 sampler.dbeta <- function(perf, N) {
@@ -46,6 +90,29 @@ sampler.exact <- function(perf, N) {
 
 sampler.dt <- function(perf, N) {
   perf$parameters['mu'] + perf$parameters['stdErr'] * rt(N, perf$parameters['dof'])
+}
+
+sampler.relative_survival <- function(perf, N) {
+  baseline <- perf$parameters$baseline
+  relative <- perf$parameters$relative
+  
+  baseline$parameters <- unlist(baseline[sapply(baseline, is.numeric)])
+  base <- sampler(baseline, N)
+  
+  sampleDeriv <- function(base) {
+    if(relative$type == 'dmnorm') {
+      varcov <- relative$cov
+      covariance <- matrix(unlist(varcov$data),
+                           nrow=length(varcov$rownames),
+                           ncol=length(varcov$colnames))
+      exp(mvrnorm(N, relative$mu[varcov$rownames], covariance) + log(base))
+    }
+  }
+  samples <- sampleDeriv(base)
+  
+  # Transform samples based on the selected summary measure
+  survival.transform(perf, samples)
+  
 }
 
 sampler.relative_normal <- function(perf, N) {
