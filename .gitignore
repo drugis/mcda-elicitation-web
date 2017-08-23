@@ -37,6 +37,7 @@ nbproject
 .idea/
 .jshintrc
 Chrome_*
+Chromium_*
 .RData
 R/.Rhistory
 R/*.json
