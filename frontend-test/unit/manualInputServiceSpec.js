@@ -101,19 +101,19 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
     });
 
     describe('createProblem', function() {
+      var title = 'title';
+      var description = 'A random description of a random problem';
+      var treatments = {
+        treatment1: {
+          name: 'treatment1',
+          hash: 'treatment1'
+        },
+        treatment2: {
+          name: 'treatment2',
+          hash: 'treatment2'
+        }
+      };
       it('should create a problem, ready to go to the workspace', function() {
-        var title = 'title';
-        var description = 'A random description of a random problem';
-        var treatments = {
-          treatment1: {
-            name: 'treatment1',
-            hash: 'treatment1'
-          },
-          treatment2: {
-            name: 'treatment2',
-            hash: 'treatment2'
-          }
-        };
         var criteria = [{
           name: 'favorable criterion',
           description: 'some crit description',
@@ -225,6 +225,132 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
         };
         expect(result).toEqual(expectedResult);
       });
+      it('should create a problem with survival data', function() {
+        var criteria = [{
+          name: 'favorable survival',
+          dataType: 'survival',
+          summaryMeasure: 'mean',
+          timeScale: 'hour',
+          description: 'some crit description',
+          unitOfMeasurement: 'hour',
+          isFavorable: true,
+          hash: 'favorable criterion'
+        }, {
+          name: 'unfavorable criterion',
+          dataType: 'survival',
+          summaryMeasure: 'survivalAtTime',
+          timeScale: 'minute',
+          timePointOfInterest: 3,
+          description: 'some crit description',
+          unitOfMeasurement: 'Proportion',
+          isFavorable: false,
+          hash: 'unfavorable criterion',
+        }];
+
+        var expectedResult = {
+          title: title,
+          description: description,
+          valueTree: {
+            title: 'Benefit-risk balance',
+            children: [{
+              title: 'Favourable effects',
+              criteria: ['favorable criterion']
+            }, {
+              title: 'Unfavourable effects',
+              criteria: ['unfavorable criterion']
+            }]
+          },
+          criteria: {
+            'favorable criterion': {
+              title: 'favorable criterion',
+              description: 'some crit description',
+              unitOfMeasurement: 'hour',
+              scale: [0, Infinity],
+              source: undefined,
+              sourceLink: undefined
+            },
+            'unfavorable criterion': {
+              title: 'unfavorable criterion',
+              description: 'some crit description',
+              unitOfMeasurement: 'particles',
+              scale: [0, 1],
+              source: undefined,
+              sourceLink: undefined
+            }
+          },
+          alternatives: {
+            treatment1: {
+              title: 'treatment1'
+            },
+            treatment2: {
+              title: 'treatment2'
+            }
+          },
+          performanceTable: [{
+            alternative: 'treatment1',
+            criterion: 'favorable criterion',
+            performance: {
+              type: 'exact',
+              value: 10
+            }
+          }, {
+            alternative: 'treatment2',
+            criterion: 'favorable criterion',
+            performance: {
+              type: 'exact',
+              value: 5
+            }
+          }, {
+            alternative: 'treatment1',
+            criterion: 'unfavorable criterion',
+            performance: {
+              type: 'exact',
+              value: 20
+            }
+          }, {
+            alternative: 'treatment2',
+            criterion: 'unfavorable criterion',
+            performance: {
+              type: 'exact',
+              value: 30
+            }
+          }]
+        };
+        var performanceTable = {
+          'favorable survival': {
+            'treatment1': {
+              type: 'dsurv',
+              alpha: 3,
+              beta: 5,
+              hash: 'treatment1'
+            },
+            'treatment2': {
+              type: 'dsurv',
+              alpha: 3,
+              beta: 5,
+              hash: 'treatment2'
+            }
+          },
+          'unfavorable survival': {
+            'treatment1': {
+              type: 'dsurv',
+              alpha: 3,
+              beta: 5,
+              hash: 'treatment1'
+            },
+            'treatment2': {
+              type: 'dsurv',
+              alpha: 3,
+              beta: 5,
+              hash: 'treatment2'
+            }
+          }
+        };
+        //
+        var result = manualInputService.createProblem(criteria, treatments, title, description, performanceTable);
+        //
+        expect(result).toEqual(expectedResult);
+      });
     });
 
     describe('prepareInputData', function() {
@@ -269,33 +395,134 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
     });
 
     describe('inputToString', function() {
-      it('should render exact, beta, normal, and t effects', function() {
-        var normal = {
-          type: 'dnorm',
-          mu: 2,
-          sigma: 3
-        };
-        expect(manualInputService.inputToString(normal)).toEqual('N(2, 3)');
-        var beta = {
-          type: 'dbeta',
-          alpha: 10,
-          beta: 20
-        };
-        expect(manualInputService.inputToString(beta)).toEqual('Beta(10, 20)');
-        var exact = {
-          type: 'exact',
-          value: 3.14
-        };
-        expect(manualInputService.inputToString(exact)).toEqual('exact(3.14)');
-        var t = {
-          type: 'dt',
-          mu: 3.14,
-          stdErr: 1.23,
-          dof: 37
-        };
-        expect(manualInputService.inputToString(t)).toEqual('t(3.14, 1.23, 37)');
+      describe('for exact effects', function() {
+        it('should give missing data for an incomplete effect', function() {
+          var exact = {
+            type: 'exact'
+          };
+          expect(manualInputService.inputToString(exact)).toEqual('Missing input');
+        });
+        it('should render a complete effect', function() {
+          var exact = {
+            type: 'exact',
+            value: 3.14
+          };
+          expect(manualInputService.inputToString(exact)).toEqual('exact(3.14)');
+        });
       });
-
+      describe('for beta effects', function() {
+        it('should give missing data for an incomplete effect', function() {
+          var missingAlpha = {
+            type: 'dbeta',
+            beta: 20
+          };
+          var missingBeta = {
+            type: 'dbeta',
+            beta: 20
+          };
+          var missingBoth = {
+            type: 'dbeta'
+          };
+          expect(manualInputService.inputToString(missingAlpha)).toEqual('Missing input');
+          expect(manualInputService.inputToString(missingBeta)).toEqual('Missing input');
+          expect(manualInputService.inputToString(missingBoth)).toEqual('Missing input');
+        });
+        it('should render a complete effect', function() {
+          var beta = {
+            type: 'dbeta',
+            alpha: 10,
+            beta: 20
+          };
+          expect(manualInputService.inputToString(beta)).toEqual('Beta(10, 20)');
+        });
+      });
+      describe('for normal effects', function() {
+        it('should give missing data for an incomplete effect', function() {
+          var missingMu = {
+            type: 'dnorm',
+            sigma: 4
+          };
+          var missingSigma = {
+            type: 'dnorm',
+            mu: 20
+          };
+          var missingBoth = {
+            type: 'dnorm'
+          };
+          expect(manualInputService.inputToString(missingMu)).toEqual('Missing input');
+          expect(manualInputService.inputToString(missingSigma)).toEqual('Missing input');
+          expect(manualInputService.inputToString(missingBoth)).toEqual('Missing input');
+        });
+        it('should render a complete effect', function() {
+          var normal = {
+            type: 'dnorm',
+            mu: 2,
+            sigma: 3
+          };
+          expect(manualInputService.inputToString(normal)).toEqual('N(2, 3)');
+        });
+      });
+      describe('for t effects', function() {
+        it('should give missing data for an incomplete effect', function() {
+          var missingMu = {
+            type: 'dt',
+            stdErr: 4,
+            dof: 4
+          };
+          var missingStdErr = {
+            type: 'dt',
+            mu: 20,
+            dof: 45
+          };
+          var missingDof = {
+            type: 'dt',
+            mu: 43,
+            stdErr: 53
+          };
+          var missingAll = {
+            type: 'dt'
+          };
+          expect(manualInputService.inputToString(missingMu)).toEqual('Missing input');
+          expect(manualInputService.inputToString(missingStdErr)).toEqual('Missing input');
+          expect(manualInputService.inputToString(missingDof)).toEqual('Missing input');
+          expect(manualInputService.inputToString(missingAll)).toEqual('Missing input');
+        });
+        it('should render a complete effect', function() {
+          var t = {
+            type: 'dt',
+            mu: 3.14,
+            stdErr: 1.23,
+            dof: 37
+          };
+          expect(manualInputService.inputToString(t)).toEqual('t(3.14, 1.23, 37)');
+        });
+      });
+      describe('for surv effects', function() {
+        it('should give missing data for an incomplete effect', function() {
+          var missingAlpha = {
+            type: 'dsurv',
+            beta: 20
+          };
+          var missingBeta = {
+            type: 'dsurv',
+            beta: 20
+          };
+          var missingBoth = {
+            type: 'dsurv'
+          };
+          expect(manualInputService.inputToString(missingAlpha)).toEqual('Missing input');
+          expect(manualInputService.inputToString(missingBeta)).toEqual('Missing input');
+          expect(manualInputService.inputToString(missingBoth)).toEqual('Missing input');
+        });
+        it('should render a complete effect', function() {
+          var beta = {
+            type: 'dsurv',
+            alpha: 10,
+            beta: 20
+          };
+          expect(manualInputService.inputToString(beta)).toEqual('Gamma(10, 20)');
+        });
+      });
     });
 
   });

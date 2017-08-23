@@ -81,7 +81,7 @@ define(['lodash'], function(_) {
           },
           callback: function() {
             return function(newCriterion) {
-              if (criterion) {
+              if (criterion) { // editing not adding
                 removeCriterion(criterion);
               }
               $scope.criteria.push(newCriterion);

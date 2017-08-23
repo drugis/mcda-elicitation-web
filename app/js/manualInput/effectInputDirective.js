@@ -20,16 +20,29 @@ define(['lodash'], function(_) {
         scope.keyCheck = keyCheck;
         scope.cacheInput = cacheInput;
         // variables
-        scope.distributionOptions = [{
-          name: 'exact',
-          type: 'exact'
-        }, {
-          name: 'normal',
-          type: 'dnorm'
-        }, {
-          name: 'beta',
-          type: 'dbeta'
-        }];
+        if (scope.criterion.dataType === 'continuous') {
+          scope.distributionOptions = [{
+            name: 'exact',
+            type: 'exact'
+          }, {
+            name: 'Normal',
+            type: 'dnorm'
+          }];
+        } else if (scope.criterion.dataType === 'dichotomous') {
+          scope.distributionOptions = [{
+            name: 'exact',
+            type: 'exact'
+          }, {
+            name: 'Beta',
+            type: 'dbeta'
+          }];
+        } else if (scope.criterion.dataType === 'survival') {
+          scope.distributionOptions = [{
+            name: 'hazard(Gamma)',
+            type: 'dsurv'
+          }];
+        }
+        scope.inputData.label = ManualInputService.inputToString(scope.inputData);
 
         scope.$on('dropdown.hasClosed', function() {
           $timeout(function() {

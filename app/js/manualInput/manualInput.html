@@ -33,6 +33,7 @@
           <tr>
             <th>Name</th>
             <th>Is favorable?</th>
+            <th>Data type</th>
             <th>Unit</th>
             <th>description</th>
             <th>Source</th>
@@ -41,7 +42,7 @@
         </thead>
         <tbody>
           <tr ng-if="!criteria.length">
-            <td colspan="5">
+            <td colspan="7">
               <em>No criteria defined</em>
             </td>
           </tr>
@@ -51,6 +52,7 @@
               <a ng-click="openCriterionModal(criterion)"><i class="fa fa-edit icon-fixed-width"></i></a> {{criterion.name}}
             </td>
             <td>{{criterion.isFavorable}}</td>
+            <td>{{criterion.dataType}}</td>
             <td>{{criterion.unitOfMeasurement}}</td>
             <td>{{criterion.description}}</td>
             <td>{{criterion.source}}</td>
@@ -172,7 +174,7 @@
           <tr ng-repeat="criterion in criteria">
             <td>{{criterion.name}}</td>
             <td>
-              <select ng-change="resetRow(criterion.hash)" ng-model="state.studyType[criterion.hash]" ng-options="option as option for option in ['dichotomous','continuous']"></select> 
+              <select ng-change="resetRow(criterion.hash)" ng-model="state.studyType[criterion.hash]" ng-options="option as option for option in ['dichotomous','continuous']"></select>
             </td>
             <td ng-repeat="treatment in treatments">
               <effect-input-helper criterion="criterion" treatment="treatment" input-data="inputData[criterion.hash][treatment.hash]" study-type="state.studyType[criterion.hash]" change-callback="checkInputData"></effect-input-helper>

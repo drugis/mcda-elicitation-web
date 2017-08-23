@@ -6,7 +6,16 @@ define(function(require) {
     var distributionKnowledge = {
       exact: {
         toString: function(input) {
-          return input.isInvalid ? 'Invalid input' : 'exact(' + input.value + ')';
+          if (distributionKnowledge.exact.isMissingInput(input)) {
+            return 'Missing input';
+          } else if (distributionKnowledge.exact.isInvalidInput(input)) {
+            return 'Invalid input';
+          } else {
+            return 'exact(' + input.value + ')';
+          }
+        },
+        isMissingInput: function(input) {
+          return isNullOrUndefined(input.value);
         },
         isInvalidInput: function(input) {
           return isNullNaNOrUndefined(input.value);
@@ -17,7 +26,16 @@ define(function(require) {
       },
       dnorm: {
         toString: function(input) {
-          return input.isInvalid ? 'Invalid input' : 'N(' + input.mu + ', ' + input.sigma + ')';
+          if (distributionKnowledge.dnorm.isMissingInput(input)) {
+            return 'Missing input';
+          } else if (distributionKnowledge.dnorm.isInvalidInput(input)) {
+            return 'Invalid input';
+          } else {
+            return 'N(' + input.mu + ', ' + input.sigma + ')';
+          }
+        },
+        isMissingInput: function(input) {
+          return isNullOrUndefined(input.mu) || isNullOrUndefined(input.sigma);
         },
         isInvalidInput: function(input) {
           return isNullNaNOrUndefined(input.mu) || isNullNaNOrUndefined(input.sigma);
@@ -31,7 +49,16 @@ define(function(require) {
       },
       dbeta: {
         toString: function(input) {
-          return input.isInvalid ? 'Invalid input' : 'Beta(' + input.alpha + ', ' + input.beta + ')';
+          if (distributionKnowledge.dbeta.isMissingInput(input)) {
+            return 'Missing input';
+          } else if (distributionKnowledge.dbeta.isInvalidInput(input)) {
+            return 'Invalid input';
+          } else {
+            return 'Beta(' + input.alpha + ', ' + input.beta + ')';
+          }
+        },
+        isMissingInput: function(input) {
+          return isNullOrUndefined(input.alpha) || isNullOrUndefined(input.beta);
         },
         isInvalidInput: function(input) {
           return isNullNaNOrUndefined(input.alpha) || isNullNaNOrUndefined(input.beta);
@@ -45,13 +72,47 @@ define(function(require) {
       },
       dt: {
         toString: function(input) {
-          return input.isInvalid ? 'Invalid input' : 't(' + input.mu + ', ' + input.stdErr + ', ' + input.dof + ')';
-        } ,       isInvalidInput: function(input) {
+          if (distributionKnowledge.dt.isMissingInput(input)) {
+            return 'Missing input';
+          } else if (distributionKnowledge.dt.isInvalidInput(input)) {
+            return 'Invalid input';
+          } else {
+            return 't(' + input.mu + ', ' + input.stdErr + ', ' + input.dof + ')';
+          }
+        },
+        isMissingInput: function(input) {
+          return isNullOrUndefined(input.mu) || isNullOrUndefined(input.stdErr) || isNullOrUndefined(input.dof);
+        },
+        isInvalidInput: function(input) {
           return isNullNaNOrUndefined(input.mu) || isNullNaNOrUndefined(input.stdErr) || isNullNaNOrUndefined(input.dof);
-        }, buildPerformance: function(data) {
+        },
+        buildPerformance: function(data) {
           return {
             type: data.type,
-            parameters: _.pick(data, ['mu', 'stdErr','dof'])
+            parameters: _.pick(data, ['mu', 'stdErr', 'dof'])
+          };
+        }
+      },
+      dsurv: {
+        toString: function(input) {
+          if (distributionKnowledge.dsurv.isMissingInput(input)) {
+            return 'Missing input';
+          } else if (distributionKnowledge.dsurv.isInvalidInput(input)) {
+            return 'Invalid input';
+          } else {
+            return 'Gamma(' + input.alpha + ', ' + input.beta + ')';
+          }
+        },
+        isMissingInput: function(input) {
+          return isNullOrUndefined(input.alpha) || isNullOrUndefined(input.beta);
+        },
+        isInvalidInput: function(input) {
+          return isNullNaNOrUndefined(input.alpha) || isNullNaNOrUndefined(input.beta);
+        },
+        buildPerformance: function(data) {
+          return {
+            type: data.type,
+            parameters: _.pick(data, ['alpha', 'beta', 'summaryMeasure'])
           };
         }
       }
@@ -85,7 +146,7 @@ define(function(require) {
         inputData[criterion.hash] = {};
         _.forEach(treatments, function(treatment) {
           inputData[criterion.hash][treatment.hash] = {
-            type: 'exact',
+            type: criterion.dataType === 'survival' ? 'dsurv' : 'exact',
             value: undefined,
             label: 'No data entered',
             source: 'distribution',
@@ -141,7 +202,11 @@ define(function(require) {
     }
 
     function isNullNaNOrUndefined(value) {
-      return value === null || value === undefined || isNaN(value);
+      return isNullOrUndefined(value) || isNaN(value);
+    }
+
+    function isNullOrUndefined(value) {
+      return value === null || value === undefined;
     }
 
     function inputToString(inputData) {
