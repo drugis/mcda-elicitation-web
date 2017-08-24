@@ -31,11 +31,11 @@ define(function(require) {
       }
 
       var stepToValue = function(step) {
-        return $filter('number')((from + (step / steps) * delta));
+        return $filter('number')((from + (step / steps) * delta)).replace(',', '');
       };
 
       var valueToStep = function(value) {
-        return $filter('number')(((value - from) / delta * steps));
+        return $filter('number')(((value - from) / delta * steps)).replace(',', '');
       };
 
       var getModelValue = function() {
