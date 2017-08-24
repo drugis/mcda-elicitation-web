@@ -44,16 +44,16 @@
         <label for="survival-at-time">Survival at time</label>
       </div>
     </div>
-    <div class="row" ng-if="criterion.dataType === 'survival'">
-      <div class="columns large-5 large-offset-1">
-        <label>Time scale</label>
-        <input type="text" ng-model="criterion.timeScale" ng-model-options="{debounce:300}" ng-change="timeScaleChanged()">
-      </div>
-    </div>
     <div class="row" ng-if="criterion.dataType === 'survival' && criterion.summaryMeasure === 'survivalAtTime'">
       <div class="columns large-5 large-offset-1">
         <label>Time point of interest</label>
         <input type="number" ng-model="criterion.timePointOfInterest" min="0" ng-model-options="{debounce:300}" ng-change="timePointOfInterestChanged()">
+      </div>
+    </div>
+    <div class="row" ng-if="criterion.dataType === 'survival'">
+      <div class="columns large-5 large-offset-1">
+        <label>Time scale</label>
+        <input type="text" ng-model="criterion.timeScale" ng-model-options="{debounce:300}" ng-change="timeScaleChanged()">
       </div>
     </div>
     <div class="row" ng-show="isInvalidTimePointOfInterest">
