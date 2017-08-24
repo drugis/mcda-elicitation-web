@@ -166,18 +166,14 @@
         <thead>
           <tr>
             <th></th>
-            <th>Data type</th>
             <th ng-repeat="treatment in treatments" style="min-width:80px">{{treatment.name}}</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="criterion in criteria">
             <td>{{criterion.name}}</td>
-            <td>
-              <select ng-change="resetRow(criterion.hash)" ng-model="state.studyType[criterion.hash]" ng-options="option as option for option in ['dichotomous','continuous']"></select>
-            </td>
             <td ng-repeat="treatment in treatments">
-              <effect-input-helper criterion="criterion" treatment="treatment" input-data="inputData[criterion.hash][treatment.hash]" study-type="state.studyType[criterion.hash]" change-callback="checkInputData"></effect-input-helper>
+              <effect-input-helper criterion="criterion" treatment="treatment" input-data="inputData[criterion.hash][treatment.hash]" study-type="criterion.dataType" change-callback="checkInputData"></effect-input-helper>
             </td>
           </tr>
         </tbody>

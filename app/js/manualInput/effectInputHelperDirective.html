@@ -1,44 +1,55 @@
 <a dropdown-toggle="#editCellToggle-{{criterion.hash}}-{{treatment.hash}}" ng-style="inputData.isInvalid ? {color:'red'} : {}">{{inputData.label}}</a>
 <div id="editCellToggle-{{criterion.hash}}-{{treatment.hash}}" class="row f-dropdown" ng-keyup="keyCheck($event)" ng-keydown="keyCheck($event)" ng-keypress="keyCheck($event)">
-    <!-- dichotomous -->
-    <div class="columns large-6" ng-if="studyType === 'dichotomous'">
-        <label> Count (subject with event)
-            <input type="number" ng-model="inputState.count" step="1">
-        </label>
-    </div>
-    <div class="columns large-6" ng-if="studyType === 'dichotomous'">
-        <label> Sample size (N)
-            <input type="number" ng-model="inputState.sampleSize" step="1">
-        </label>
-    </div>
-    <!-- continuous -->
-    <div class="columns large-3" ng-if="studyType === 'continuous'">
-        <label>
-            Input parameters
-            <select ng-model="continuous.type" ng-options="option.short as option.label for option in continuousOptions"></select>
-        </label>
-    </div>
-    <div class="columns large-3" ng-if="studyType === 'continuous'">
-        <label> Mean
-            <input type="number" ng-model="inputState.mu">
-        </label>
-    </div>
-    <!-- with standard error -->
-    <div class="columns large-3 end" ng-if="studyType === 'continuous' && (continuous.type === 'SEnorm'
+  <!-- dichotomous -->
+  <div class="columns large-6" ng-if="studyType === 'dichotomous'">
+    <label> Count (subject with event)
+      <input type="number" ng-model="inputState.count" step="1" min="0">
+    </label>
+  </div>
+  <div class="columns large-6" ng-if="studyType === 'dichotomous'">
+    <label> Sample size (N)
+      <input type="number" ng-model="inputState.sampleSize" step="1" min="1">
+    </label>
+  </div>
+  <!-- continuous -->
+  <div class="columns large-3" ng-if="studyType === 'continuous'">
+    <label>
+      Input parameters
+      <select ng-model="continuous.type" ng-options="option.short as option.label for option in continuousOptions"></select>
+    </label>
+  </div>
+  <div class="columns large-3" ng-if="studyType === 'continuous'">
+    <label> Mean
+      <input type="number" ng-model="inputState.mu">
+    </label>
+  </div>
+  <!--  continuous with standard error -->
+  <div class="columns large-3 end" ng-if="studyType === 'continuous' && (continuous.type === 'SEnorm'
       || continuous.type === 'SEt')">
-        <label> Standard error
-            <input type="number" ng-model="inputState.stdErr">
-        </label>
-    </div>
-    <!-- with standard deviation -->
-    <div class="columns large-3" ng-if="studyType === 'continuous' && (continuous.type === 'SDnorm' || continuous.type === 'SDt')">
-        <label> Standard deviation
-            <input type="number" ng-model="inputState.sigma">
-        </label>
-    </div>
-    <div class="columns large-3" ng-if="studyType === 'continuous' && (continuous.type === 'SDnorm' || continuous.type === 'SEt' || continuous.type === 'SDt')">
-        <label> Sample size (N)
-            <input type="number" ng-model="inputState.sampleSize">
-        </label>
-    </div>
+    <label> Standard error
+      <input type="number" ng-model="inputState.stdErr">
+    </label>
+  </div>
+  <!-- continuous with standard deviation -->
+  <div class="columns large-3" ng-if="studyType === 'continuous' && (continuous.type === 'SDnorm' || continuous.type === 'SDt')">
+    <label> Standard deviation
+      <input type="number" ng-model="inputState.sigma">
+    </label>
+  </div>
+  <div class="columns large-3" ng-if="studyType === 'continuous' && (continuous.type === 'SDnorm' || continuous.type === 'SEt' || continuous.type === 'SDt')">
+    <label> Sample size (N)
+      <input type="number" ng-model="inputState.sampleSize" step="1" min="1">
+    </label>
+  </div>
+  <!-- survival -->
+  <div class="columns large-6" ng-if="studyType === 'survival'">
+    <label> Subjects with event
+      <input type="number" ng-model="inputState.events" step="1" min="0">
+    </label>
+  </div>
+  <div class="columns large-6" ng-if="studyType === 'survival'">
+    <label> Total exposure time
+      <input type="number" ng-model="inputState.exposure" min="0">
+    </label>
+  </div>
 </div>

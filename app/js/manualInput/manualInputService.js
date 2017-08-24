@@ -61,7 +61,7 @@ define(function(require) {
           return isNullOrUndefined(input.alpha) || isNullOrUndefined(input.beta);
         },
         isInvalidInput: function(input) {
-          return isNullNaNOrUndefined(input.alpha) || isNullNaNOrUndefined(input.beta);
+          return isNullNaNOrUndefined(input.alpha) || input.alpha <= 0 || isNullNaNOrUndefined(input.beta) || input.beta <= 0;
         },
         buildPerformance: function(data) {
           return {
@@ -107,12 +107,12 @@ define(function(require) {
           return isNullOrUndefined(input.alpha) || isNullOrUndefined(input.beta);
         },
         isInvalidInput: function(input) {
-          return isNullNaNOrUndefined(input.alpha) || isNullNaNOrUndefined(input.beta);
+          return isNullNaNOrUndefined(input.alpha) || input.alpha <= 0 || isNullNaNOrUndefined(input.beta) || input.beta <= 0;
         },
         buildPerformance: function(data, criterion) {
-          var parameters = _.pick(data, ['alpha', 'beta', 'summaryMeasure']);
-          parameters.summaryMeasure =criterion.summaryMeasure;
-          if(criterion.summaryMeasure === 'survivalAtTime') {
+          var parameters = _.pick(data, ['alpha', 'beta']);
+          parameters.summaryMeasure = criterion.summaryMeasure;
+          if (criterion.summaryMeasure === 'survivalAtTime') {
             parameters.time = criterion.timePointOfInterest;
           }
           return {
@@ -153,7 +153,6 @@ define(function(require) {
           inputData[criterion.hash][treatment.hash] = {
             type: criterion.dataType === 'survival' ? 'dsurv' : 'exact',
             value: undefined,
-            label: 'No data entered',
             source: 'distribution',
             isInvalid: true
           };

@@ -41,6 +41,7 @@ define(['lodash'], function(_) {
             short: 'SDt'
           }
         ];
+        scope.inputData.label = ManualInputService.inputToString(scope.inputData);
 
         scope.$on('dropdown.hasClosed', function() {
           $timeout(function() {
@@ -59,7 +60,7 @@ define(['lodash'], function(_) {
             newData.alpha = inputState.count + 1;
             newData.beta = inputState.sampleSize - inputState.count + 1;
             newData.type = 'dbeta';
-          } else {
+          } else if (scope.studyType === 'continuous') {
             newData.mu = inputState.mu;
             if (scope.continuous.type === 'SEnorm') {
               newData.sigma = inputState.stdErr;
@@ -76,6 +77,13 @@ define(['lodash'], function(_) {
               newData.dof = inputState.sampleSize - 1;
               newData.type = 'dt';
             }
+          } else {
+            //survival
+            if (_.isNumber(inputState.events) && _.isNumber(inputState.exposure)) {
+              newData.alpha = inputState.events + 0.001;
+              newData.beta = inputState.exposure + 0.001;
+            }
+            newData.type = 'dsurv';
           }
           return newData;
         }

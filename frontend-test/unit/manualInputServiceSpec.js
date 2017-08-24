@@ -394,7 +394,6 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
         var newCell = {
           type: 'exact',
           value: undefined,
-          label: 'No data entered',
           source: 'distribution',
           isInvalid: true
         };
