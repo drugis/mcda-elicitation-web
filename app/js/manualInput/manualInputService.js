@@ -109,10 +109,15 @@ define(function(require) {
         isInvalidInput: function(input) {
           return isNullNaNOrUndefined(input.alpha) || isNullNaNOrUndefined(input.beta);
         },
-        buildPerformance: function(data) {
+        buildPerformance: function(data, criterion) {
+          var parameters = _.pick(data, ['alpha', 'beta', 'summaryMeasure']);
+          parameters.summaryMeasure =criterion.summaryMeasure;
+          if(criterion.summaryMeasure === 'survivalAtTime') {
+            parameters.time = criterion.timePointOfInterest;
+          }
           return {
             type: data.type,
-            parameters: _.pick(data, ['alpha', 'beta', 'summaryMeasure'])
+            parameters: parameters
           };
         }
       }
@@ -161,6 +166,24 @@ define(function(require) {
       return distributionKnowledge[cell.type].isInvalidInput(cell);
     }
 
+    function buildScale(criterion) {
+      var scale;
+      if (criterion.dataType === 'dichotomous') {
+        scale = [0, 1];
+      } else if (criterion.dataType === 'continuous') {
+        scale = [-Infinity, Infinity];
+      } else if (criterion.dataType === 'survival') {
+        if (criterion.summaryMeasure === 'mean' || criterion.summaryMeasure === 'median') {
+          scale = [0, Infinity];
+        } else if (criterion.summaryMeasure === 'survivalAtTime') {
+          scale = [0, 1];
+        }
+      } else {
+        scale = [-Infinity, Infinity];
+      }
+      return scale;
+    }
+
     // Private functions
     function buildCriteria(criteria) {
       var newCriteria = _.map(criteria, function(criterion) {
@@ -168,7 +191,7 @@ define(function(require) {
           title: criterion.name,
           description: criterion.description,
           unitOfMeasurement: criterion.unitOfMeasurement,
-          scale: [-Infinity, Infinity],
+          scale: buildScale(criterion),
           source: criterion.source,
           sourceLink: criterion.sourceLink
         };
@@ -194,7 +217,7 @@ define(function(require) {
           newPerformanceTable.push({
             alternative: treatment.name,
             criterion: criterion.name,
-            performance: distributionKnowledge[data.type].buildPerformance(data)
+            performance: distributionKnowledge[data.type].buildPerformance(data, criterion)
           });
         });
       });

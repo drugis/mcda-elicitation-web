@@ -227,16 +227,16 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
       });
       it('should create a problem with survival data', function() {
         var criteria = [{
-          name: 'favorable survival',
+          name: 'survival mean',
           dataType: 'survival',
           summaryMeasure: 'mean',
           timeScale: 'hour',
           description: 'some crit description',
           unitOfMeasurement: 'hour',
           isFavorable: true,
-          hash: 'favorable criterion'
+          hash: 'survival mean'
         }, {
-          name: 'unfavorable criterion',
+          name: 'survival at time',
           dataType: 'survival',
           summaryMeasure: 'survivalAtTime',
           timeScale: 'minute',
@@ -244,80 +244,11 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
           description: 'some crit description',
           unitOfMeasurement: 'Proportion',
           isFavorable: false,
-          hash: 'unfavorable criterion',
+          hash: 'survival at time',
         }];
 
-        var expectedResult = {
-          title: title,
-          description: description,
-          valueTree: {
-            title: 'Benefit-risk balance',
-            children: [{
-              title: 'Favourable effects',
-              criteria: ['favorable criterion']
-            }, {
-              title: 'Unfavourable effects',
-              criteria: ['unfavorable criterion']
-            }]
-          },
-          criteria: {
-            'favorable criterion': {
-              title: 'favorable criterion',
-              description: 'some crit description',
-              unitOfMeasurement: 'hour',
-              scale: [0, Infinity],
-              source: undefined,
-              sourceLink: undefined
-            },
-            'unfavorable criterion': {
-              title: 'unfavorable criterion',
-              description: 'some crit description',
-              unitOfMeasurement: 'particles',
-              scale: [0, 1],
-              source: undefined,
-              sourceLink: undefined
-            }
-          },
-          alternatives: {
-            treatment1: {
-              title: 'treatment1'
-            },
-            treatment2: {
-              title: 'treatment2'
-            }
-          },
-          performanceTable: [{
-            alternative: 'treatment1',
-            criterion: 'favorable criterion',
-            performance: {
-              type: 'exact',
-              value: 10
-            }
-          }, {
-            alternative: 'treatment2',
-            criterion: 'favorable criterion',
-            performance: {
-              type: 'exact',
-              value: 5
-            }
-          }, {
-            alternative: 'treatment1',
-            criterion: 'unfavorable criterion',
-            performance: {
-              type: 'exact',
-              value: 20
-            }
-          }, {
-            alternative: 'treatment2',
-            criterion: 'unfavorable criterion',
-            performance: {
-              type: 'exact',
-              value: 30
-            }
-          }]
-        };
         var performanceTable = {
-          'favorable survival': {
+          'survival mean': {
             'treatment1': {
               type: 'dsurv',
               alpha: 3,
@@ -331,7 +262,7 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
               hash: 'treatment2'
             }
           },
-          'unfavorable survival': {
+          'survival at time': {
             'treatment1': {
               type: 'dsurv',
               alpha: 3,
@@ -349,6 +280,93 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
         //
         var result = manualInputService.createProblem(criteria, treatments, title, description, performanceTable);
         //
+        var expectedResult = {
+          title: title,
+          description: description,
+          valueTree: {
+            title: 'Benefit-risk balance',
+            children: [{
+              title: 'Favourable effects',
+              criteria: ['survival mean']
+            }, {
+              title: 'Unfavourable effects',
+              criteria: ['survival at time']
+            }]
+          },
+          criteria: {
+            'survival mean': {
+              title: 'survival mean',
+              description: 'some crit description',
+              unitOfMeasurement: 'hour',
+              scale: [0, Infinity],
+              source: undefined,
+              sourceLink: undefined
+            },
+            'survival at time': {
+              title: 'survival at time',
+              description: 'some crit description',
+              unitOfMeasurement: 'Proportion',
+              scale: [0, 1],
+              source: undefined,
+              sourceLink: undefined
+            }
+          },
+          alternatives: {
+            treatment1: {
+              title: 'treatment1'
+            },
+            treatment2: {
+              title: 'treatment2'
+            }
+          },
+          performanceTable: [{
+            alternative: 'treatment1',
+            criterion: 'survival mean',
+            performance: {
+              type: 'dsurv',
+              parameters: {
+                alpha: 3,
+                beta: 5,
+                summaryMeasure: 'mean'
+              }
+            }
+          }, {
+            alternative: 'treatment2',
+            criterion: 'survival mean',
+            performance: {
+              type: 'dsurv',
+              parameters: {
+                alpha: 3,
+                beta: 5,
+                summaryMeasure: 'mean'
+              }
+            }
+          }, {
+            alternative: 'treatment1',
+            criterion: 'survival at time',
+            performance: {
+              type: 'dsurv',
+              parameters: {
+                alpha: 3,
+                beta: 5,
+                summaryMeasure: 'survivalAtTime',
+                time: 3
+              }
+            }
+          }, {
+            alternative: 'treatment2',
+            criterion: 'survival at time',
+            performance: {
+              type: 'dsurv',
+              parameters: {
+                alpha: 3,
+                beta: 5,
+                summaryMeasure: 'survivalAtTime',
+                time: 3
+              }
+            }
+          }]
+        };
         expect(result).toEqual(expectedResult);
       });
     });
