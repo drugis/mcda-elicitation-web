@@ -59,20 +59,26 @@ define(function(require) {
           return accum;
         }, {});
 
-        var names = subProblemDefinition.excludedAlternatives;
+        var excludedAlternativeNames = subProblemDefinition.excludedAlternatives;
         // remove all exact entries that are excluded
         newProblem.performanceTable = _.reject(newProblem.performanceTable, function(performanceEntry) {
-          return performanceEntry.performance.type === 'exact' && _.includes(names, performanceEntry.alternative);
+          return performanceEntry.performance.type === 'exact' && _.includes(excludedAlternativeNames, performanceEntry.alternative);
         });
+        // remove all survival entries that are excluded
+        newProblem.performanceTable = _.reject(newProblem.performanceTable, function(performanceEntry) {
+          return performanceEntry.performance.type === 'dsurv' && _.includes(excludedAlternativeNames, performanceEntry.alternative);
+        });
+        
         // remove all relative entries that are excluded
         _.forEach(newProblem.performanceTable, function(performanceEntry) {
-          if (performanceEntry.performance.type !== 'exact') {
+          if (performanceEntry.performance.type !== 'exact' && performanceEntry.performance.type !== 'dsurv') {
             performanceEntry.performance.parameters.relative.cov =
-              reduceCov(performanceEntry.performance.parameters.relative.cov, names);
+              reduceCov(performanceEntry.performance.parameters.relative.cov, excludedAlternativeNames);
             performanceEntry.performance.parameters.relative.mu = reduceMu(performanceEntry.performance.parameters.relative.mu,
               subProblemDefinition.excludedAlternatives);
           }
         });
+
       }
 
       newProblem.criteria = _.merge(newProblem.criteria, subProblemDefinition.ranges);

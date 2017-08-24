@@ -9,11 +9,6 @@ define(function(require) {
 
   var SubProblemController = function($scope, $stateParams, $modal, $state, $transitions,
     intervalHull, SubProblemResource, SubProblemService, WorkspaceService, mcdaRootPath) {
-    // vars 
-    $scope.problem = $scope.workspace.problem;
-    $scope.scales = _.cloneDeep($scope.workspace.$$scales);
-    $scope.criteriaForScales = makeCriteriaForScales($scope.problem.criteria);
-
     // functions
     $scope.intervalHull = intervalHull;
     $scope.updateInclusions = updateInclusions;
@@ -22,6 +17,11 @@ define(function(require) {
     $scope.reset = initSubProblem;
     $scope.openSaveDialog = openSaveDialog;
     $scope.isExact = isExact;
+
+    // vars 
+    $scope.problem = $scope.workspace.problem;
+    $scope.scales = _.cloneDeep($scope.workspace.$$scales);
+    $scope.criteriaForScales = makeCriteriaForScales($scope.problem.criteria);
 
     // init
     $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
