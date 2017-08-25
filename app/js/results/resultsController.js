@@ -61,7 +61,7 @@ define(function(require) {
         }
         return accum;
       }, {});
-      return MCDAResultsService.getResults($scope, $scope.aggregateState);
+      return MCDAResultsService.getResults($scope, state);
     }
 
   };

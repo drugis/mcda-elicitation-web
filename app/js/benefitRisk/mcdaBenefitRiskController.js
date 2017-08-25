@@ -64,6 +64,7 @@ define(function(require) {
     $scope.$watch('scenario.state', updateTaskAccessibility);
     $scope.$on('elicit.resultsAccessible', function(event, scenario) {
       $scope.aggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
+      $scope.scenario = scenario;
       if ($scope.workspace.$$scales.observed) {
         $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales($scope.aggregateState.problem, $scope.workspace.$$scales.observed);
       }
