@@ -119,10 +119,11 @@ define(function(require) {
       return 31 * val.selectedAlternative.hashCode() + angular.toJson(val.results).hashCode();
     });
 
-    function getResults(scope, problem) {
+    function getResults(scope, state) {
       var nextState = {
-        problem: problem,
-        selectedAlternative: _.keys(problem.alternatives)[0],
+        problem: state.problem,
+        prefs: state.prefs,
+        selectedAlternative: _.keys(state.problem.alternatives)[0],
         selectedRank: '0',
         ranksByAlternative: getRanksByAlternative,
         alternativesByRank: getAlterativesByRank,
