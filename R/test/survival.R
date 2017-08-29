@@ -7,7 +7,6 @@ library(hitandrun)
 source('../measurements.R')
 
 params <- fromJSON('../../examples/survival-test.json')
-#params$preferences <- list() # Remove preference statements
 
 meas <- sample.partialValues(params, 1E4)
 

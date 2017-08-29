@@ -50,8 +50,9 @@ run_deterministic <- function(params) {
   results <- list(
     results = list(
       "weights"=weights,
-      "value"=wrap.matrix(meas)),
-    descriptions = list("Representative weights", "Value profile")
+      "value"=wrap.matrix(meas),
+      "total"=rowSums(meas)),
+    descriptions = list("Representative weights", "Value profile", "Total value")
   )
   
   mapply(wrap.result,
@@ -60,7 +61,6 @@ run_deterministic <- function(params) {
          SIMPLIFY=F)
   
 }
-
 
 genRepresentativeWeights <- function(params) {
   N <- 1E4
@@ -102,6 +102,55 @@ genHARconstraint <- function(statement,crit) {
   } else if (statement['type'] == "exact swing") {
     ratioConstraint(n, i1, i2, statement$ratio);
   }
+}
+
+oneWaySensitivityMeasurements <- function(params,alt,crit,value) {
+  
+  weights <- genRepresentativeWeights(params)
+  
+  meas <- genMedianMeasurements(params)
+  meas[alt,crit] <- value # Replace median value by the desired value for the sensitivity analysis
+  
+  # Use PVFs to rescale the criteria measurements and multiply by weight to obtain value contributions
+  pvf <- lapply(params$criteria, create.pvf)
+  for (criterion in names(params$criteria)) {
+    meas[,criterion] <- pvf[[criterion]](meas[,criterion]) * weights[criterion]
+  }
+  
+  rowSums(meas)
+  
+}
+
+oneWaySensitivityWeights <- function(params,crit,value) {
+  
+  weights <- genRepresentativeWeights(params)
+  
+  n <- length(weights)
+  lhs <- rep(0,n)
+  lhs[which(names(weights)==crit)] <- 1
+  constr <- list(constr=lhs,dir="=",rhs=value)
+  constr <- mergeConstraints(constr,simplexConstraints(n)) 
+  for (i in names(params$criteria)) { # Keep the ratio between the other criteria weights fixed
+    for (j in names(params$criteria)) {
+      if (j>i & i!=crit & j!=crit) {
+        constr <- mergeConstraints(constr,exactRatioConstraint(n,which(names(weights)==i),which(names(weights)==j),weights[i]/weights[j]))
+      }
+    }
+  }
+  
+  weights <- as.numeric(hitandrun(constr,n.samples=1))
+  names(weights) <- names(params$criteria)
+  
+  meas <- genMedianMeasurements(params)
+  
+  # Use PVFs to rescale the criteria measurements and multiply by weight to obtain value contributions
+  pvf <- lapply(params$criteria, create.pvf)
+  for (criterion in names(params$criteria)) {
+    meas[,criterion] <- pvf[[criterion]](meas[,criterion]) * weights[criterion]
+  }
+  
+  rowSums(meas)
+  
 }
 
 run_smaa <- function(params) {
