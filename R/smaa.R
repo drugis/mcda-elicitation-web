@@ -9,7 +9,7 @@ wrap.matrix <- function(m) {
 }
 
 smaa_v2 <- function(params) {
-  allowed <- c('scales', 'smaa', 'macbeth')
+  allowed <- c('scales', 'smaa', 'macbeth', 'deterministic')
   if(params$method %in% allowed) {
     do.call(paste("run", params$method, sep="_"), list(params))
   } else {
@@ -31,6 +31,77 @@ ratioConstraint <- function(n, i1, i2, x) {
   a[i1] <- -1
   a[i2] <- x
   list(constr = t(a), rhs = c(0), dir = c("="))
+}
+
+run_deterministic <- function(params) {
+  
+  # Generate representative weights
+  weights <- genRepresentativeWeights(params)
+  
+  # Determine median criteria measurements
+  meas <- genMedianMeasurements(params) 
+  
+  # Use PVFs to rescale the criteria measurements and multiply by weight to obtain value contributions
+  pvf <- lapply(params$criteria, create.pvf)
+  for (criterion in names(params$criteria)) {
+    meas[,criterion] <- pvf[[criterion]](meas[,criterion]) * weights[criterion]
+  }
+  
+  results <- list(
+    results = list(
+      "weights"=weights,
+      "value"=wrap.matrix(meas)),
+    descriptions = list("Representative weights", "Value profile")
+  )
+  
+  mapply(wrap.result,
+         results$results,
+         results$descriptions,
+         SIMPLIFY=F)
+  
+}
+
+
+genRepresentativeWeights <- function(params) {
+  N <- 1E4
+  crit <- names(params$criteria)
+  n <- length(crit)
+  
+  constr <- mergeConstraints(lapply(params$preferences,genHARconstraint,crit=crit))
+  constr <- mergeConstraints(simplexConstraints(n),constr)
+  
+  samples <- hitandrun(constr, n.samples=N)
+  rep.weights <- colMeans(samples)
+  names(rep.weights) <- crit
+  
+  rep.weights
+  
+}
+
+genMedianMeasurements <- function(params) {
+  N <- 1E4
+  crit <- names(params$criteria)
+  alts <- names(params$alternatives)
+  meas <- sample(alts, crit, params$performanceTable, N)
+  apply(meas, c(2, 3), median)
+}
+
+genHARconstraint <- function(statement,crit) {
+  n <- length(crit)
+  i1 <- which(crit == statement$criteria[1])
+  i2 <- which(crit == statement$criteria[2])
+  if (statement$type == "ordinal") {
+    ordinalConstraint(n, i1, i2)
+  } else if (statement['type'] == "ratio bound") {
+    l <- statement$bounds[1]
+    u <- statement$bounds[2]
+    mergeConstraints(
+      lowerRatioConstraint(n, i1, i2, l),
+      upperRatioConstraint(n, i1, i2, u)
+    )
+  } else if (statement['type'] == "exact swing") {
+    ratioConstraint(n, i1, i2, statement$ratio);
+  }
 }
 
 run_smaa <- function(params) {
@@ -66,25 +137,8 @@ run_smaa <- function(params) {
   }
 
   # parse preference information
-  constr <- mergeConstraints(lapply(params$preferences,
-    function(statement) {
-      i1 <- which(crit == statement$criteria[1])
-      i2 <- which(crit == statement$criteria[2])
-      if (statement$type == "ordinal") {
-        ordinalConstraint(n, i1, i2)
-      } else if (statement['type'] == "ratio bound") {
-        l <- statement$bounds[1]
-        u <- statement$bounds[2]
-        mergeConstraints(
-          lowerRatioConstraint(n, i1, i2, l),
-          upperRatioConstraint(n, i1, i2, u)
-        )
-      } else if (statement['type'] == "exact swing") {
-        ratioConstraint(n, i1, i2, statement$ratio);
-      }
-    })
-  )
-
+  constr <- mergeConstraints(lapply(params$preferences,genHARconstraint,crit=crit))
+  
   weights <- harSample(constr, n, N)
   colnames(weights) <- crit
 
