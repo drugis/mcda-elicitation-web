@@ -13,8 +13,8 @@ params <- fromJSON('../../examples/getreal-ordinalWeights.json')
 # Conduct deterministic MCDA
 run_deterministic(params)
 
-# Perform one-way sensitivity analysis on the weight given to OS
-oneWaySensitivityWeights(params,"OS",0.3)
+# Perform multi-way sensitivity analysis on the measurements of OS for alt1 and alt2
+run_sensitivityMeasurements(params)
 
-# Perform one-way sensitivity analysis on the measurement of OS for alt1
-oneWaySensitivityMeasurements(params,"alt1","OS",58)
+# Perform one-way sensitivity analysis on the weight given to OS
+run_sensitivityWeights(params)

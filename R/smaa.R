@@ -9,7 +9,7 @@ wrap.matrix <- function(m) {
 }
 
 smaa_v2 <- function(params) {
-  allowed <- c('scales', 'smaa', 'macbeth', 'deterministic')
+  allowed <- c('scales', 'smaa', 'macbeth', 'deterministic', 'sensitivityMeasurements', 'sensitivityWeights')
   if(params$method %in% allowed) {
     do.call(paste("run", params$method, sep="_"), list(params))
   } else {
@@ -35,23 +35,16 @@ ratioConstraint <- function(n, i1, i2, x) {
 
 run_deterministic <- function(params) {
   
-  # Generate representative weights
-  weights <- genRepresentativeWeights(params)
-  
-  # Determine median criteria measurements
   meas <- genMedianMeasurements(params) 
-  
-  # Use PVFs to rescale the criteria measurements and multiply by weight to obtain value contributions
-  pvf <- lapply(params$criteria, create.pvf)
-  for (criterion in names(params$criteria)) {
-    meas[,criterion] <- pvf[[criterion]](meas[,criterion]) * weights[criterion]
-  }
+  weights <- genRepresentativeWeights(params)
+  valueProfiles <- calculateTotalValue(params,meas,weights)
+  totalValue <- rowSums(valueProfiles)
   
   results <- list(
     results = list(
       "weights"=weights,
-      "value"=wrap.matrix(meas),
-      "total"=rowSums(meas)),
+      "value"=wrap.matrix(valueProfiles),
+      "total"=totalValue),
     descriptions = list("Representative weights", "Value profile", "Total value")
   )
   
@@ -104,27 +97,49 @@ genHARconstraint <- function(statement,crit) {
   }
 }
 
-oneWaySensitivityMeasurements <- function(params,alt,crit,value) {
-  
-  weights <- genRepresentativeWeights(params)
-  
-  meas <- genMedianMeasurements(params)
-  meas[alt,crit] <- value # Replace median value by the desired value for the sensitivity analysis
-  
-  # Use PVFs to rescale the criteria measurements and multiply by weight to obtain value contributions
+# Use PVFs to rescale the criteria measurements and multiply by weight to obtain value contributions
+calculateTotalValue <- function(params,meas,weights) {
   pvf <- lapply(params$criteria, create.pvf)
   for (criterion in names(params$criteria)) {
     meas[,criterion] <- pvf[[criterion]](meas[,criterion]) * weights[criterion]
   }
-  
-  rowSums(meas)
-  
+  meas
 }
 
-oneWaySensitivityWeights <- function(params,crit,value) {
+run_sensitivityMeasurements <- function(params) {
+  
+  meas <- genMedianMeasurements(params)
+  for (entry in params$sensitivityAnalysis$meas) {
+    meas[entry$alternative,entry$criterion] <- entry$value # Replace median value by the desired value for the sensitivity analysis
+  }
   
   weights <- genRepresentativeWeights(params)
   
+  valueProfiles <- calculateTotalValue(params,meas,weights)
+  totalValue <- rowSums(valueProfiles)
+  
+  results <- list(
+    results = list(
+      "value"=wrap.matrix(valueProfiles),
+      "total"=totalValue),
+    descriptions = list("Value profile", "Total value")
+  )
+  
+  mapply(wrap.result,
+         results$results,
+         results$descriptions,
+         SIMPLIFY=F)
+  
+}
+
+run_sensitivityWeights <- function(params) {
+  
+  crit <- params$sensitivityAnalysis$weights[[1]]$criterion
+  value <- params$sensitivityAnalysis$weights[[1]]$value
+  
+  meas <- genMedianMeasurements(params)
+  
+  weights <- genRepresentativeWeights(params)
   n <- length(weights)
   lhs <- rep(0,n)
   lhs[which(names(weights)==crit)] <- 1
@@ -137,19 +152,24 @@ oneWaySensitivityWeights <- function(params,crit,value) {
       }
     }
   }
-  
   weights <- as.numeric(hitandrun(constr,n.samples=1))
   names(weights) <- names(params$criteria)
   
-  meas <- genMedianMeasurements(params)
+  valueProfiles <- calculateTotalValue(params,meas,weights)
+  totalValue <- rowSums(valueProfiles)
   
-  # Use PVFs to rescale the criteria measurements and multiply by weight to obtain value contributions
-  pvf <- lapply(params$criteria, create.pvf)
-  for (criterion in names(params$criteria)) {
-    meas[,criterion] <- pvf[[criterion]](meas[,criterion]) * weights[criterion]
-  }
+  results <- list(
+    results = list(
+      "weights"=weights,
+      "value"=wrap.matrix(valueProfiles),
+      "total"=totalValue),
+    descriptions = list("Weights", "Value profile", "Total value")
+  )
   
-  rowSums(meas)
+  mapply(wrap.result,
+         results$results,
+         results$descriptions,
+         SIMPLIFY=F)
   
 }
 
