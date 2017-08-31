@@ -39,7 +39,6 @@ survival.transform <- function(perf, samples) {
   }
 
   samples
-
 }
 
 assign.sample <- function(defn, samples) {
@@ -97,6 +96,8 @@ sampler.relative_survival <- function(perf, N) {
   relative <- perf$parameters$relative
 
   baseline$parameters <- unlist(baseline[sapply(baseline, is.numeric)])
+  baseline$parameters$summaryMeasure <- baseline$summaryMeasure
+
   base <- sampler(baseline, N)
 
   sampleDeriv <- function(base) {
@@ -111,7 +112,7 @@ sampler.relative_survival <- function(perf, N) {
   samples <- sampleDeriv(base)
 
   # Transform samples based on the selected summary measure
-  survival.transform(perf, samples)
+  survival.transform(baseline, samples)
 
 }
 
