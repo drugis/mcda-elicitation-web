@@ -10,8 +10,8 @@ define(function(require) {
     function run($scope, inState) {
       var state = angular.copy(inState);
       var data = _.merge({}, state.problem, {
-        'preferences': state.prefs, //Does this do anything?
-        'method': 'smaa'
+        preferences: state.prefs,
+        method: 'smaa'
       });
 
       function successHandler(results) {
@@ -119,11 +119,10 @@ define(function(require) {
       return 31 * val.selectedAlternative.hashCode() + angular.toJson(val.results).hashCode();
     });
 
-    function getResults(scope, state) {
+    function getResults(scope, problem) {
       var nextState = {
-        problem: state.problem,
-        prefs: state.prefs,
-        selectedAlternative: _.keys(state.problem.alternatives)[0],
+        problem: problem,
+        selectedAlternative: _.keys(problem.alternatives)[0],
         selectedRank: '0',
         ranksByAlternative: getRanksByAlternative,
         alternativesByRank: getAlterativesByRank,
