@@ -8,6 +8,7 @@ define(function(require) {
   require('angular-resource');
   require('angular-cookies');
   require('angular-patavi-client');
+  require('angularjs-slider');
   require('error-reporting');
   require('mcda/services/routeFactory');
   require('mcda/services/workspaceResource');
@@ -17,9 +18,8 @@ define(function(require) {
   require('mcda/services/taskDependencies');
   require('mcda/services/hashCodeService');
   require('mcda/services/effectsTableService');
-  require('mcda/services/effectsTableResource');
   require('mcda/services/util');
-  require('mcda/results/resultsService');
+  require('mcda/results/results');
   require('mcda/preferences/partialValueFunctionService');
   require('mcda/manualInput/manualInput');
   require('mcda/subProblem/scaleRangeService');
@@ -43,8 +43,7 @@ define(function(require) {
     'elicit.util',
     'elicit.directives',
     'elicit.effectsTableService',
-    'elicit.effectsTableResource',
-    'elicit.resultsService',
+    'elicit.results',
     'elicit.controllers',
     'elicit.taskDependencies',
     'elicit.routeFactory',
@@ -55,7 +54,7 @@ define(function(require) {
     'ngCookies',
     'errorReporting'
   ];
-
+  
   var app = angular.module('elicit', dependencies);
   app.run(['$rootScope',
     function($rootScope) {

@@ -1,7 +1,8 @@
 'use strict';
 define(function(require) {
-  var dependencies = [];
   var _ = require('lodash');
+
+  var dependencies = [];
   var SubProblemService = function() {
     // Exposed functions
     function createDefaultScenarioState(problem, subProblemState) {
@@ -13,8 +14,22 @@ define(function(require) {
     function createDefinition(problem, subProblemState) {
       return {
         ranges: filterToObject(subProblemState.ranges, subProblemState.criterionInclusions),
-        excludedCriteria: _.keys(_.omitBy(subProblemState.criterionInclusions)) // values are boolean
+        excludedCriteria: _.keys(_.omitBy(subProblemState.criterionInclusions)), // values are boolean
+        excludedAlternatives: _.keys(_.omitBy(subProblemState.alternativeInclusions))
       };
+    }
+
+    function determineBaseline(performanceTable, alternatives) {
+      return _.reduce(performanceTable, function(accum, performanceEntry) {
+        if (performanceEntry.performance.parameters && performanceEntry.performance.parameters.baseline) {
+          _.forEach(alternatives, function(alternative, key) {
+            if (alternative.title === performanceEntry.performance.parameters.baseline.name) {
+              accum[key] = true;
+            }
+          });
+        }
+        return accum;
+      }, {});
     }
 
     function filterToObject(objects, inclusions) {
@@ -28,7 +43,8 @@ define(function(require) {
     }
     return {
       createDefaultScenarioState: createDefaultScenarioState,
-      createDefinition: createDefinition
+      createDefinition: createDefinition,
+      determineBaseline: determineBaseline
     };
   };
 

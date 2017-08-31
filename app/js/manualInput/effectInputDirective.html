@@ -6,7 +6,7 @@
     </label>
   </div>
   <!-- first values -->
-  <div class="columns large-4" ng-if="inputState.type === 'dbeta'">
+  <div class="columns large-4" ng-if="inputState.type === 'dbeta' || inputState.type === 'dsurv'">
     <label> &alpha;
       <input type="number" ng-model="inputState.alpha" step="1">
     </label>
@@ -22,7 +22,7 @@
     </label>
   </div>
   <!-- second values -->
-  <div class="columns large-4" ng-if="inputState.type === 'dbeta'">
+  <div class="columns large-4" ng-if="inputState.type === 'dbeta' || inputState.type === 'dsurv'">
     <label> &beta;
       <input type="number" ng-model="inputState.beta" step="1">
     </label>

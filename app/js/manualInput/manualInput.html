@@ -1,3 +1,4 @@
+<!-- step 1 -->
 <div ng-if="state.step==='step1'">
   <div class="row">
     <div class="columns large-12">
@@ -32,31 +33,35 @@
           <tr>
             <th>Name</th>
             <th>Is favorable?</th>
+            <th>Data type</th>
             <th>Unit</th>
             <th>description</th>
+            <th>Source</th>
+            <th>Source link</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-if="!criteria.length">
-            <td colspan="5">
+            <td colspan="7">
               <em>No criteria defined</em>
             </td>
           </tr>
           <tr ng-repeat="criterion in criteria">
             <td>
               <a ng-click="removeCriterion(criterion)"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a>
-              <a ng-click="openCriterionModal(criterion)"><i class="fa fa-edit icon-fixed-width"></i></a>              {{criterion.name}}
+              <a ng-click="openCriterionModal(criterion)"><i class="fa fa-edit icon-fixed-width"></i></a> {{criterion.name}}
             </td>
             <td>{{criterion.isFavorable}}</td>
+            <td>{{criterion.dataType}}</td>
             <td>{{criterion.unitOfMeasurement}}</td>
             <td>{{criterion.description}}</td>
+            <td>{{criterion.source}}</td>
+            <td>{{criterion.sourceLink}}</td>
           </tr>
         </tbody>
       </table>
-
     </div>
   </div>
-
   <div class="row">
     <div class="columns large-12">
       <h4>Treatments</h4>
@@ -70,8 +75,7 @@
       </label>
     </div>
     <div class="columns large-4 end">
-      <button ng-disabled="!state.treatmentName || isDuplicateName(state.treatmentName)"
-        type="button" class="tiny" ng-click="addTreatment(state.treatmentName)" id="treatmentButton">Add Treatment</button>
+      <button ng-disabled="!state.treatmentName || isDuplicateName(state.treatmentName)" type="button" class="tiny" ng-click="addTreatment(state.treatmentName)" id="treatmentButton">Add Treatment</button>
     </div>
   </div>
   <div class="row">
@@ -89,7 +93,7 @@
             </td>
           </tr>
           <tr ng-repeat="treatment in treatments">
-            <td><a ng-click="removeTreatment(treatment)"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a>              {{treatment.name}}
+            <td><a ng-click="removeTreatment(treatment)"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a> {{treatment.name}}
             </td>
           </tr>
         </tbody>
@@ -98,8 +102,7 @@
   </div>
   <div class="row">
     <div class="columns large-12">
-      <button ng-disabled="!state.title || criteria.length < 2|| treatments.length < 2"
-        type="button" ng-click="goToStep2()">
+      <button ng-disabled="!state.title || criteria.length < 2|| treatments.length < 2" type="button" ng-click="goToStep2()">
         Enter data
       </button>
     </div>
@@ -114,7 +117,7 @@
     </div>
   </div>
 </div>
-
+<!-- step 2 -->
 <div ng-if="state.step==='step2'">
   <div class="row">
     <div class="columns large-12">
@@ -123,6 +126,18 @@
     </div>
   </div>
   <div class="row">
+    <div class="columns large-12">
+      <h4>Choose input method</h4>
+    </div>
+    <div class="columns large-12">
+      <form>
+        <input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="distribution"> Effect distributions
+        <input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="study"> Study data
+      </form>
+    </div>
+  </div>
+  <!-- input through distributions -->
+  <div class="row" ng-if="state.inputMethod === 'distribution'">
     <div class="columns large-12">
       <h4>{{state.title}}</h4>
       <table>
@@ -136,14 +151,36 @@
           <tr ng-repeat="criterion in criteria">
             <td>{{criterion.name}}</td>
             <td ng-repeat="treatment in treatments">
-              <effect-input criterion="criterion" treatment="treatment" input-data="inputData[criterion.name][treatment.name]"
-                change-callback="checkInputData"></effect-input>
+              <effect-input criterion="criterion" treatment="treatment" input-data="inputData[criterion.hash][treatment.hash]" change-callback="checkInputData"></effect-input>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
+  <!-- input through source data -->
+  <div class="row" ng-if="state.inputMethod === 'study'">
+    <div class="columns large-12">
+      <h4>{{state.title}}</h4>
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th ng-repeat="treatment in treatments" style="min-width:80px">{{treatment.name}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="criterion in criteria">
+            <td>{{criterion.name}}</td>
+            <td ng-repeat="treatment in treatments">
+              <effect-input-helper criterion="criterion" treatment="treatment" input-data="inputData[criterion.hash][treatment.hash]" study-type="criterion.dataType" change-callback="checkInputData"></effect-input-helper>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- buttons -->
   <div class="row">
     <div class="columns large-12">
       <button ng-disabled="!state.isInputDataValid" type="button" ng-click="createProblem()">

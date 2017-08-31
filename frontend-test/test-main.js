@@ -14,8 +14,10 @@ require.config({
   paths: {
     'angular': 'bower_components/angular/angular',
     'angular-mocks': 'bower_components/angular-mocks/angular-mocks',
+    'angular-patavi-client': 'bower_components/angular-patavi-client/patavi',
     'angular-resource': 'bower_components/angular-resource/angular-resource',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
+    'angularjs-slider': 'bower_components/angularjs-slider/dist/rzslider',
     'd3': 'bower_components/d3/d3.min',
     'foundation': 'bower_components/foundation/js/foundation.min',
     'jasmine': 'bower_components/jasmine/lib/jasmine-core/jasmine',
@@ -27,8 +29,7 @@ require.config({
     'mcda': 'app/js',
     'mmfoundation': 'bower_components/angular-foundation/mm-foundation',
     'nvd3': 'bower_components/nvd3-community/build/nv.d3',
-    'templates': 'app/partials',
-    'underscore': 'bower_components/underscore/underscore'
+    'templates': 'app/partials'
   },
   baseUrl: '/base',
   shim: {
@@ -42,9 +43,6 @@ require.config({
     'angular-ui-router': {
       deps: ['angular'],
       exports: 'angular-ui-router'
-    },
-    'underscore': {
-      exports: '_'
     },
     'angular-mocks': {
       deps: ['angular'],
@@ -72,9 +70,6 @@ require.config({
     },
     'mmfoundation': {
       deps: ['angular']
-    },
-    'templates/remark.html': {
-      deps: ['angular']
     }
   },
   priority: ['angular'],
@@ -91,8 +86,5 @@ window.config = {
   examplesRepository: "/examples/",
   workspacesRepository: {
     service: "LocalWorkspaces"
-  },
-  remarksRepository: {
-    service: 'LocalRemarks'
   }
 };

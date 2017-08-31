@@ -104,12 +104,44 @@ define(['angular', 'angular-mocks', 'mcda/services/workspaceService'], function(
             critId4: {}
           },
           performanceTable: [{
-            criterion: 'critId1'
+            criterion: 'critId1',
+            performance: {
+              type: 'exact'
+            }
           }, {
-            criterion: 'critId2'
+            criterion: 'critId2',
+            performance: {
+              type: 'exact'
+            }
           }, {
-            criterion: 'critId4'
-          }]
+            criterion: 'critId4',
+            performance: {
+              type: 'dbeta',
+              parameters: {
+                relative: {
+                  cov: {
+                    colnames: ['alt1', 'alt2', 'alt3'],
+                    rownames: ['alt1', 'alt2', 'alt3'],
+                    data: [
+                      [1, 2, 3],
+                      [4, 5, 6],
+                      [7, 8, 9]
+                    ]
+                  },
+                  mu: {
+                    alt1: 2,
+                    alt2: 5,
+                    alt3: 8
+                  }
+                }
+              }
+            }
+          }],
+          alternatives: {
+            alt1: 'altId1',
+            alt2: 'altId2',
+            alt3: 'altId3'
+          }
         };
         var subProblemDefinition = {
           ranges: {
@@ -124,7 +156,8 @@ define(['angular', 'angular-mocks', 'mcda/services/workspaceService'], function(
               }
             }
           },
-          excludedCriteria: ['critId1']
+          excludedCriteria: ['critId1'],
+          excludedAlternatives: ['alt1']
         };
         var result = workspaceService.mergeBaseAndSubProblem(problem, subProblemDefinition);
         var expectedResult = {
@@ -140,16 +173,41 @@ define(['angular', 'angular-mocks', 'mcda/services/workspaceService'], function(
               }
             }
           },
+          alternatives: {
+            alt2: 'altId2',
+            alt3: 'altId3'
+          },
           performanceTable: [{
-            criterion: 'critId2'
+            criterion: 'critId2',
+            performance: {
+              type: 'exact'
+            }
           }, {
-            criterion: 'critId4'
+            criterion: 'critId4',
+            performance: {
+              type: 'dbeta',
+              parameters: {
+                relative: {
+                  cov: {
+                    colnames: ['alt2', 'alt3'],
+                    rownames: ['alt2', 'alt3'],
+                    data: [
+                      [5, 6],
+                      [8, 9]
+                    ]
+                  },
+                  mu: {
+                    alt2: 5,
+                    alt3: 8
+                  }
+                }
+              }
+            }
           }]
         };
         expect(result).toEqual(expectedResult);
       });
     });
-
 
     describe('buildAggregateState', function() {
       it('should aggregate the problem with the subproblem and the scenario', function() {
@@ -335,6 +393,36 @@ define(['angular', 'angular-mocks', 'mcda/services/workspaceService'], function(
           }
         };
         expect(result).toEqual(expectedProblem);
+      });
+    });
+
+    describe('reduceProblem', function() {
+      it('should reduce the problem', function() {
+        var problem = {
+          criteria: {
+            crit1: {
+              title: 'critId1',
+              somthing: 'else'
+            },
+            crit2: {
+              title: 'critId2',
+              scale: [0, 1],
+              pvf: 'pvf'
+            }
+          }
+        };
+        var expectedResult = {
+          criteria: {
+            crit1: { title: 'critId1' },
+            crit2: {
+              title: 'critId2',
+              scale: [0, 1],
+              pvf: 'pvf'
+            }
+          }
+        };
+        var result = workspaceService.reduceProblem(problem);
+        expect(result).toEqual(expectedResult);
       });
     });
   });

@@ -1,7 +1,17 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modal', '$state', 'ManualInputService', 'WorkspaceResource', 'EffectsTableResource'];
-  var ManualInputController = function($scope, $modal, $state, ManualInputService, WorkspaceResource, EffectsTableResource) {
+
+  var dependencies = ['$scope', '$modal', '$state',
+    'ManualInputService',
+    'WorkspaceResource',
+    'addKeyHashToObject'
+  ];
+  var ManualInputController = function($scope, $modal, $state,
+    ManualInputService,
+    WorkspaceResource,
+    addKeyHashToObject
+  ) {
+
     // functions
     $scope.openCriterionModal = openCriterionModal;
     $scope.addTreatment = addTreatment;
@@ -12,6 +22,8 @@ define(['lodash'], function(_) {
     $scope.createProblem = createProblem;
     $scope.removeCriterion = removeCriterion;
     $scope.checkInputData = checkInputData;
+    $scope.resetData = resetData;
+    $scope.resetRow = resetRow;
 
     // vars
     $scope.criteria = [];
@@ -19,8 +31,26 @@ define(['lodash'], function(_) {
     $scope.state = {
       step: 'step1',
       treatmentName: '',
-      isInputDataValid: false
+      isInputDataValid: false,
+      inputMethod: 'distribution',
+      studyType: {}
     };
+
+    function resetData() {
+      $scope.inputData = ManualInputService.prepareInputData($scope.criteria, $scope.treatments);
+      $scope.state.studyType = _.reduce($scope.criteria, function(accum, criterion) {
+        accum[criterion.hash] = 'dichotomous';
+        return accum;
+      }, {});
+      $scope.state.isInputDataValid = false;
+    }
+
+    function resetRow(hash) {
+      _.forEach($scope.inputData[hash], function(cell) {
+        cell.label = 'No data entered';
+        cell.isInvalid = true;
+      });
+    }
 
     function addTreatment(name) {
       $scope.treatments.push({
@@ -51,7 +81,7 @@ define(['lodash'], function(_) {
           },
           callback: function() {
             return function(newCriterion) {
-              if (criterion) {
+              if (criterion) { // editing not adding
                 removeCriterion(criterion);
               }
               $scope.criteria.push(newCriterion);
@@ -76,21 +106,24 @@ define(['lodash'], function(_) {
 
     function goToStep2() {
       $scope.state.step = 'step2';
+      $scope.inputMethod = 'distribution';
+      $scope.treatments = _.map($scope.treatments, function(treatment) {
+        return addKeyHashToObject(treatment, treatment.name);
+      });
+      $scope.criteria = _.map($scope.criteria, function(criterion) {
+        return addKeyHashToObject(criterion, criterion.name);
+      });
+      $scope.state.studyType = _.reduce($scope.criteria, function(accum, criterion) {
+        accum[criterion.hash] = 'dichotomous';
+        return accum;
+      }, {});
       $scope.inputData = ManualInputService.prepareInputData($scope.criteria, $scope.treatments);
-      $scope.state.isInputDataValid = true;
     }
 
     function createProblem() {
       var problem = ManualInputService.createProblem($scope.criteria, $scope.treatments,
         $scope.state.title, $scope.state.description, $scope.inputData);
       WorkspaceResource.create(problem).$promise.then(function(workspace) {
-        EffectsTableResource.setEffectsTableInclusions({
-          workspaceId: workspace.id
-        }, {
-          alternativeIds: _.map(problem.alternatives, function(alternative, key) {
-            return key;
-          })
-        });
         $state.go('evidence', {
           workspaceId: workspace.id,
           problemId: workspace.defaultSubProblemId,

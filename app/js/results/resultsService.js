@@ -3,27 +3,27 @@ define(function(require) {
   var angular = require('angular');
   var _ = require('lodash');
 
-  var dependencies = ['patavi'];
+  var dependencies = ['$http', 'PataviService'];
 
   var MCDAResultsService = function($http, PataviService) {
 
     function run($scope, inState) {
       var state = angular.copy(inState);
       var data = _.merge({}, state.problem, {
-        'preferences': state.prefs,
-        'method': 'smaa'
+        preferences: state.prefs,
+        method: 'smaa'
       });
 
-      var successHandler = function(results) {
+      function successHandler(results) {
         state.results = results;
-      };
+      }
 
-      var pataviErrorHandler = function(pataviError) {
+      function pataviErrorHandler(pataviError) {
         $scope.$root.$broadcast('error', {
           type: 'PATAVI',
           message: pataviError.desc
         });
-      };
+      }
 
       var updateHandler = _.throttle(function(update) {
         if (update && update.eventType === 'progress' && update.eventData && $.isNumeric(update.eventData)) {
@@ -119,22 +119,41 @@ define(function(require) {
       return 31 * val.selectedAlternative.hashCode() + angular.toJson(val.results).hashCode();
     });
 
-    var getResults = function(scope, state) {
-      var next = _.merge({}, {
-        problem: scope.aggregateState.problem
-      }, state, {
-        selectedAlternative: _.keys(scope.aggregateState.problem.alternatives)[0],
+    function getResults(scope, problem) {
+      var nextState = {
+        problem: problem,
+        selectedAlternative: _.keys(problem.alternatives)[0],
         selectedRank: '0',
         ranksByAlternative: getRanksByAlternative,
         alternativesByRank: getAlterativesByRank,
         centralWeights: getCentralWeights
-      });
-      return run(scope, next);
-    };
+      };
+      return run(scope, nextState);
+    }
+
+    function resetModifiableScales(observed, alternatives) {
+      var modifiableScales = _.cloneDeep(observed);
+      modifiableScales = _.reduce(modifiableScales, function(accum, criterion, criterionKey) {
+        accum[criterionKey] = _.reduce(criterion, function(accum, scale, key) {
+          if (_.find(alternatives, function(alternative, alternativeKey) {
+              return alternativeKey === key;
+            })) {
+            accum[key] = scale;
+            return accum;
+          } else {
+            return accum;
+          }
+        }, {});
+        return accum;
+      }, {});
+      return modifiableScales;
+    }
+
     return {
-      getResults: getResults
+      getResults: getResults,
+      resetModifiableScales: resetModifiableScales
     };
   };
 
-  return angular.module('elicit.resultsService', dependencies).factory('MCDAResultsService', MCDAResultsService);
+  return dependencies.concat(MCDAResultsService);
 });

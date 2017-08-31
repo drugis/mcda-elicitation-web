@@ -31,11 +31,11 @@ define(function(require) {
       }
 
       var stepToValue = function(step) {
-        return $filter('number')((from + (step / steps) * delta));
+        return $filter('number')((from + (step / steps) * delta)).replace(',', '');
       };
 
       var valueToStep = function(value) {
-        return $filter('number')(((value - from) / delta * steps));
+        return $filter('number')(((value - from) / delta * steps)).replace(',', '');
       };
 
       var getModelValue = function() {
@@ -434,30 +434,6 @@ define(function(require) {
         };
       },
       templateUrl: mcdaRootPath + 'partials/modal.html'
-    };
-  });
-
-  directives.directive('remarkBlock', function(mcdaRootPath) {
-    return {
-      scope: {
-        remark: '=',
-        editMode: '=',
-        saveRemarks: '&saveRemarks',
-        cancelRemarks: '&cancelRemarks',
-        model: '&model'
-      },
-      restrict: 'E',
-      replace: 'true',
-      templateUrl: mcdaRootPath + 'partials/remark.html',
-      link: function() {
-        $('.remarkbutton').click(function() {
-          $('.f-dropdown').css('display', 'none');
-        });
-
-        $('.f-dropdown').click(function(event) {
-          event.stopPropagation();
-        });
-      }
     };
   });
 

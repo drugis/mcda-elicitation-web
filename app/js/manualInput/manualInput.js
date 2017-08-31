@@ -9,6 +9,7 @@ define(function(require) {
     .factory('ManualInputService', require('mcda/manualInput/manualInputService'))
 
     .directive('effectInput', require('mcda/manualInput/effectInputDirective'))
+    .directive('effectInputHelper', require('mcda/manualInput/effectInputHelperDirective'))
     ;
 
   });

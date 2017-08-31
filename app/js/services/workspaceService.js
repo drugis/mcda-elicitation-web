@@ -7,7 +7,7 @@ define(function(require) {
 
   var WorkspaceService = function(ScalesService, sortCriteriaWithW) {
 
-    var buildValueTree = function(problem) {
+    function buildValueTree(problem) {
       if (problem.valueTree) {
         return problem.valueTree;
       } else {
@@ -16,18 +16,16 @@ define(function(require) {
           'criteria': _.keys(problem.criteria)
         };
       }
-    };
+    }
 
-    var buildTheoreticalScales = function(problem) {
+    function buildTheoreticalScales(problem) {
       return _.fromPairs(_.map(problem.criteria, function(val, key) {
         var scale = val.scale || [null, null];
-
         scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
         scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
-
         return [key, scale];
       }));
-    };
+    }
 
     function getObservedScales(scope, problem) {
       return ScalesService.getObservedScales(scope, problem);
@@ -52,8 +50,68 @@ define(function(require) {
             _.includes(subProblemDefinition.excludedCriteria, performanceEntry.criterion); // addis/mcda standalone difference
         });
       }
+
+      if (subProblemDefinition.excludedAlternatives) { 
+        newProblem.alternatives = _.reduce(newProblem.alternatives, function(accum, alternative, key) {
+          if (!_.includes(subProblemDefinition.excludedAlternatives, key)) {
+            accum[key] = alternative;
+          }
+          return accum;
+        }, {});
+
+        var excludedAlternativeNames = subProblemDefinition.excludedAlternatives;
+        // remove all exact entries that are excluded
+        newProblem.performanceTable = _.reject(newProblem.performanceTable, function(performanceEntry) {
+          return performanceEntry.performance.type === 'exact' && _.includes(excludedAlternativeNames, performanceEntry.alternative);
+        });
+        // remove all survival entries that are excluded
+        newProblem.performanceTable = _.reject(newProblem.performanceTable, function(performanceEntry) {
+          return performanceEntry.performance.type === 'dsurv' && _.includes(excludedAlternativeNames, performanceEntry.alternative);
+        });
+        
+        // remove all relative entries that are excluded
+        _.forEach(newProblem.performanceTable, function(performanceEntry) {
+          if (performanceEntry.performance.type !== 'exact' && performanceEntry.performance.type !== 'dsurv') {
+            performanceEntry.performance.parameters.relative.cov =
+              reduceCov(performanceEntry.performance.parameters.relative.cov, excludedAlternativeNames);
+            performanceEntry.performance.parameters.relative.mu = reduceMu(performanceEntry.performance.parameters.relative.mu,
+              subProblemDefinition.excludedAlternatives);
+          }
+        });
+
+      }
+
       newProblem.criteria = _.merge(newProblem.criteria, subProblemDefinition.ranges);
       return newProblem;
+    }
+
+    function reduceCov(oldCov, names) {
+      var newCov = _.cloneDeep(oldCov);
+      _.forEach(names, function(name) {
+        var idx = newCov.colnames.indexOf(name);
+        newCov.colnames.splice(idx, 1);
+        newCov.rownames.splice(idx, 1);
+        newCov.data = reduceMatrix(newCov.data, idx);
+      });
+      return newCov;
+    }
+
+    function reduceMatrix(cov, idx) {
+      var newCov = _.cloneDeep(cov);
+      newCov.splice(idx, 1);
+      _.forEach(newCov, function(row) {
+        row = row.splice(idx, 1);
+      });
+      return newCov;
+    }
+
+    function reduceMu(mu, excludedAlternatives) {
+      return _.reduce(mu, function(accum, muValue, key) {
+        if (!_.includes(excludedAlternatives, key)) {
+          accum[key] = muValue;
+        }
+        return accum;
+      }, {});
     }
 
     function buildAggregateState(baseProblem, subProblem, scenario) {

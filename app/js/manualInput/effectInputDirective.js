@@ -16,28 +16,42 @@ define(['lodash'], function(_) {
       },
       templateUrl: 'app/js/manualInput/effectInputDirective.html',
       link: function(scope) {
-        scope.criterion.hash = scope.criterion.$$hashKey.split(':')[1];
-        scope.treatment.hash = scope.treatment.$$hashKey.split(':')[1];
+        // functions
         scope.keyCheck = keyCheck;
-        scope.render = ManualInputService.inputToString;
         scope.cacheInput = cacheInput;
-        scope.distributionOptions = [{
-          name: 'exact',
-          type: 'exact'
-        }, {
-          name: 'normal',
-          type: 'dnorm'
-        }, {
-          name: 'beta',
-          type: 'dbeta'
-        }];
+        // variables
+        if (scope.criterion.dataType === 'continuous') {
+          scope.distributionOptions = [{
+            name: 'exact',
+            type: 'exact'
+          }, {
+            name: 'Normal',
+            type: 'dnorm'
+          }];
+        } else if (scope.criterion.dataType === 'dichotomous') {
+          scope.distributionOptions = [{
+            name: 'exact',
+            type: 'exact'
+          }, {
+            name: 'Beta',
+            type: 'dbeta'
+          }];
+        } else if (scope.criterion.dataType === 'survival') {
+          scope.distributionOptions = [{
+            name: 'hazard(Gamma)',
+            type: 'dsurv'
+          }];
+        }
+        scope.inputData.label = ManualInputService.inputToString(scope.inputData);
 
         scope.$on('dropdown.hasClosed', function() {
           $timeout(function() {
             scope.inputData = scope.inputState;
-            scope.inputData.label = ManualInputService.inputToString(scope.inputData);
             scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
-            scope.changeCallback();
+            scope.inputData.label = ManualInputService.inputToString(scope.inputData);
+            $timeout(function() {
+              scope.changeCallback();
+            });
           });
         });
 
@@ -51,8 +65,8 @@ define(['lodash'], function(_) {
           } else if (event.keyCode === ENTER) {
             $timeout(function() {
               scope.inputData = scope.inputState;
-              scope.inputData.label = ManualInputService.inputToString(scope.inputData);
               scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
+              scope.inputData.label = ManualInputService.inputToString(scope.inputData);
               scope.changeCallback();
               scope.$broadcast('dropdown.closeEvent');
             });

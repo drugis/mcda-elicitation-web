@@ -10,16 +10,54 @@
         <label>
           Name
         </label>
-        <input type="text" ng-model="criterion.name">
+        <input type="text" ng-model="criterion.name" ng-change="isCreationBlocked()">
       </div>
     </div>
     <div class="row">
       <div class="columns large-6">
         <label>Favorability</label>
-        <label>
-          <input type="checkbox" ng-model="criterion.isFavorable"> Is favorable?
-        </label>
+        <input type="radio" ng-model="criterion.isFavorable" ng-value="true" id="favorable">
+        <label for="favorable">Favorable</label>
+        <input type="radio" ng-model="criterion.isFavorable" ng-value="false" id="not-favorable">
+        <label for="not-favorable">Not favorable</label>
       </div>
+    </div>
+    <div class="row">
+      <div class="columns large-6">
+        <label>Data type</label>
+        <input type="radio" ng-model="criterion.dataType" ng-change="dataTypeChanged()" ng-value="'continuous'" id="continuous">
+        <label for="continuous">Continuous</label>
+        <input type="radio" ng-model="criterion.dataType" ng-change="dataTypeChanged()" ng-value="'dichotomous'" id="dichotomous">
+        <label for="dichotomous">Proportion</label>
+        <input type="radio" ng-model="criterion.dataType" ng-change="dataTypeChanged()" ng-value="'survival'" id="survival">
+        <label for="survival">Survival</label>
+      </div>
+    </div>
+    <div class="row" ng-if="criterion.dataType==='survival'">
+      <div class="columns large-5 large-offset-1">
+        <label>Summary measure</label>
+        <input type="radio" ng-model="criterion.summaryMeasure" ng-change="summaryMeasureChanged()" ng-value="'mean'" id="mean">
+        <label for="mean">Mean</label>
+        <input type="radio" ng-model="criterion.summaryMeasure" ng-change="summaryMeasureChanged()" ng-value="'median'" id="median">
+        <label for="median">Median</label>
+        <input type="radio" ng-model="criterion.summaryMeasure" ng-change="summaryMeasureChanged()" ng-value="'survivalAtTime'" id="survival-at-time">
+        <label for="survival-at-time">Survival at time</label>
+      </div>
+    </div>
+    <div class="row" ng-if="criterion.dataType === 'survival' && criterion.summaryMeasure === 'survivalAtTime'">
+      <div class="columns large-5 large-offset-1">
+        <label>Time point of interest</label>
+        <input type="number" ng-model="criterion.timePointOfInterest" min="0" ng-model-options="{debounce:300}" ng-change="timePointOfInterestChanged()">
+      </div>
+    </div>
+    <div class="row" ng-if="criterion.dataType === 'survival'">
+      <div class="columns large-5 large-offset-1">
+        <label>Time scale</label>
+        <input type="text" ng-model="criterion.timeScale" ng-model-options="{debounce:300}" ng-change="timeScaleChanged()">
+      </div>
+    </div>
+    <div class="row" ng-show="isInvalidTimePointOfInterest">
+      <div class="alert columns large-5 large-offset-1">Time point of interest must be a number >= 0</div>
     </div>
     <div class="row">
       <div class="columns large-6">
@@ -35,13 +73,30 @@
     </div>
     <div class="row">
       <div class="columns large-6">
-        <button ng-disabled="isCreationBlocked(criterion)" type="submit">Add</button>
+        <label>Source (optional)</label>
+        <input type="radio" ng-model="criterion.source" ng-value="undefined" id="no-source">
+        <label for="no-source">None</label>
+        <input type="radio" ng-model="criterion.source" ng-value="'study'" id="study">
+        <label for="study">Single study</label>
+        <input type="radio" ng-model="criterion.source" ng-value="'meta analysis'" id="meta-analysis">
+        <label for="meta-analysis">Meta analysis</label>
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns large-6">
+        <label>Source link (optional)</label>
+        <input ng-disabled="criterion.source === undefined" type="text" ng-model="criterion.sourceLink">
+      </div>
+    </div>
+    <div class="row">
+      <div class="columns large-6">
+        <button ng-disabled="blockedReasons.length" type="submit">Add</button>
         <button type="button" ng-click="cancel()">Cancel</button>
       </div>
     </div>
     <div class="row">
-      <div class="columns large-6" ng-if="isCreationBlocked(criterion)" style="color:red;">
-        <em>{{blockedReason}}</em>
+      <div class="columns large-6" ng-when="blockedReasons.length">
+        <em ng-repeat="blockedReason in blockedReasons" class="alert">{{blockedReason}}<br /></em>
       </div>
     </div>
     <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>

@@ -1,20 +1,22 @@
 'use strict';
 define(function(require) {
   var _ = require('lodash');
-  var dependencies = ['$scope', '$location', '$state', '$stateParams', 'Tasks', 'TaskDependencies',
+  var dependencies = ['$scope', '$transitions', '$state', '$stateParams', 'Tasks', 'TaskDependencies',
     'ScenarioResource', 'SubProblemResource', 'WorkspaceService', 'subProblems', 'currentSubProblem', 'scenarios', 'currentScenario'
   ];
 
-  function MCDABenefitRiskController($scope, $location, $state, $stateParams, Tasks, TaskDependencies,
+  function MCDABenefitRiskController($scope, $transitions, $state, $stateParams, Tasks, TaskDependencies,
     ScenarioResource, SubProblemResource, WorkspaceService, subProblems, currentSubProblem, scenarios, currentScenario) {
 
     // vars
     var baseProblem = $scope.workspace.problem;
+    var deregisterTransitionListener;
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
     $scope.selections = {};
     $scope.scenarios = scenarios;
     $scope.scenario = currentScenario;
+    $scope.isDuplicateScenarioTitle = false;
     $scope.aggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, currentScenario);
     $scope.subProblems = subProblems;
     $scope.subProblem = currentSubProblem;
@@ -30,8 +32,10 @@ define(function(require) {
     $scope.cancelTitle = cancelTitle;
     $scope.scenarioChanged = scenarioChanged;
     $scope.subProblemChanged = subProblemChanged;
+    $scope.checkDuplicateScenarioTitle = checkDuplicateScenarioTitle;
 
     // init
+    determineActiveTab();
 
     function getTask(taskId) {
       return _.find(Tasks.available, function(task) {
@@ -40,43 +44,37 @@ define(function(require) {
     }
 
     function determineActiveTab() {
-      var path = $location.path();
-      var activeStateName = path.substr(path.lastIndexOf('/') + 1);
+      setActiveTab($state.current.name, 'evidence');
+    }
+    deregisterTransitionListener = $transitions.onStart({}, function(transition) {
+      setActiveTab(transition.to().name, transition.to().name);
+    });
+
+    $scope.$on('$destroy', deregisterTransitionListener);
+
+    function setActiveTab(activeStateName, defaultStateName) {
       var activeTask = getTask(activeStateName);
       if (activeTask) {
         $scope.activeTab = activeTask.activeTab;
       } else {
-        $scope.activeTab = 'evidence';
+        $scope.activeTab = defaultStateName;
       }
     }
-    determineActiveTab();
 
-    $scope.$watch('__scenario.state', updateTaskAccessibility);
+    $scope.$watch('scenario.state', updateTaskAccessibility);
     $scope.$on('elicit.resultsAccessible', function(event, scenario) {
       $scope.aggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
+      $scope.scenario = scenario;
       if ($scope.workspace.$$scales.observed) {
         $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales($scope.aggregateState.problem, $scope.workspace.$$scales.observed);
       }
       updateTaskAccessibility();
     });
 
-    $scope.$on('$stateChangeStart', function(event, toState) {
-      var task = getTask(toState.name);
-      if (task && task.activeTab) {
-        $scope.activeTab = task.activeTab;
-      } else {
-        $scope.activeTab = toState.name;
-      }
-    });
-
     WorkspaceService.getObservedScales($scope, baseProblem).then(function(observedScales) {
       $scope.workspace.$$scales.observed = observedScales;
       $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales($scope.aggregateState.problem, observedScales);
       updateTaskAccessibility();
-    });
-
-    ScenarioResource.get($stateParams).$promise.then(function(result) {
-      $scope.__scenario = result;
     });
 
     $scope.tasks = _.reduce(Tasks.available, function(tasks, task) {
@@ -141,15 +139,21 @@ define(function(require) {
 
     function editTitle() {
       $scope.isEditTitleVisible = true;
-      $scope.scenarioTitle.value = $scope.__scenario.title;
+      $scope.scenarioTitle.value = $scope.scenario.title;
     }
 
     function saveTitle() {
-      $scope.__scenario.title = $scope.scenarioTitle.value;
+      $scope.scenario.title = $scope.scenarioTitle.value;
       $scope.isEditTitleVisible = false;
-      $scope.__scenario.$save($stateParams, function() {
+      ScenarioResource.save($stateParams, $scope.scenario, function(savedScenario) {
         $scope.scenarios = ScenarioResource.query(_.omit($stateParams, 'id'));
-        redirect($stateParams.id, $state.current.name);
+        redirect(savedScenario.id, $state.current.name);
+      });
+    }
+
+    function checkDuplicateScenarioTitle() {
+      $scope.isDuplicateScenarioTitle = _.find($scope.scenarios, function(scenario) {
+        return scenario.id !== $scope.scenario.id && scenario.title === $scope.scenarioTitle.value;
       });
     }
 

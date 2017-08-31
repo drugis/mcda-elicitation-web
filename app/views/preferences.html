@@ -18,66 +18,57 @@
     <form>
       <div class="row collapse">
         <div class="columns small-8">
-          <input type="text" ng-model="scenarioTitle.value">
+          <input type="text" ng-change="checkDuplicateScenarioTitle()" ng-model="scenarioTitle.value">
         </div>
         <div class="columns small-2">
-          <button class="button postfix" ng-click="saveTitle()">Save</button>
+          <button ng-disabled="!scenarioTitle.value || isDuplicateScenarioTitle" class="button postfix" ng-click="saveTitle()">Save</button>
         </div>
         <div class="columns small-2">
           <button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button>
         </div>
       </div>
+      <div class="row" ng-show="isDuplicateScenarioTitle">
+        <div class="columns large-12">
+          <span class="alert">Duplicate title</span>
+        </div>
+      </div>
     </form>
   </div>
 </div>
-
 <div id="partial-value-functions-block" class="prefs-block">
   <h4>Partial Value Functions</h4>
-
   <ul id="partial-value-functions" class="large-block-grid-3">
     <li ng-repeat="criterion in aggregateState.problem.criteria">
       <h5>{{::criterion.title}}</h5>
-
       <div style="width: 250px; height: 180px">
         <line-chart ng-if="isPVFDefined(criterion)" value="getXY(criterion)" show-legend="false"></line-chart>
         <div ng-if="!isPVFDefined(criterion)" style="padding-top: 40px; text-align: center; margin: 0">
           <i style="font-size: 100px" class="fa fa-question"></i>
         </div>
       </div>
-
-      <button ng-if="editMode.isUserOwner" ng-class="{alert: !isSafe['partial-value-function'].safe}"
-        tooltip="{{isSafe['partial-value-function'].tooltip}}" tooltip-animation="false"
-        ng-disabled="!isAccessible(tasks['partial-value-function']).accessible" ui-sref="partial-value-function({criterion: criterion.id})">Define partial value function</button>
+      <button ng-if="editMode.isUserOwner" ng-class="{alert: !isSafe['partial-value-function'].safe}" tooltip="{{isSafe['partial-value-function'].tooltip}}" tooltip-animation="false" ng-disabled="!isAccessible(tasks['partial-value-function']).accessible" ui-sref="partial-value-function({criterion: criterion.id})">Define partial value function</button>
     </li>
   </ul>
 </div>
-
 <div id="trade-off-block" class="prefs-block">
   <h4>Trade-offs</h4>
   <ul class="button-group" ng-if="editMode.isUserOwner">
     <li>
-      <button ui-sref="ordinal-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['ordinal-swing']).accessible"
-        ng-class="{alert: !isSafe['ordinal-swing'].safe}" tooltip="{{isSafe['ordinal-swing'].tooltip}}">
+      <button ui-sref="ordinal-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['ordinal-swing']).accessible" ng-class="{alert: !isSafe['ordinal-swing'].safe}" tooltip="{{isSafe['ordinal-swing'].tooltip}}">
         Ordinal Swing
       </button>
     </li>
-
     <li>
-      <button ui-sref="exact-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['exact-swing']).accessible"
-        ng-class="{alert: !isSafe['exact-swing'].safe}" tooltip="{{isSafe['exact-swing'].tooltip}}">
+      <button ui-sref="exact-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['exact-swing']).accessible" ng-class="{alert: !isSafe['exact-swing'].safe}" tooltip="{{isSafe['exact-swing'].tooltip}}">
         Exact Swing
       </button>
     </li>
-
     <li>
-      <button ui-sref="interval-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['interval-swing']).accessible"
-        ng-class="{alert: !isSafe['interval-swing'].safe}" tooltip="{{isSafe['interval-swing'].tooltip}}">
+      <button ui-sref="interval-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['interval-swing']).accessible" ng-class="{alert: !isSafe['interval-swing'].safe}" tooltip="{{isSafe['interval-swing'].tooltip}}">
         Interval Swing
       </button>
     </li>
   </ul>
-
   <trade-offs problem="aggregateState.problem" preferences="scenario.state.prefs"></trade-offs>
 </div>
-
 <button class="success" ui-sref="results" ng-disabled="!tasksAccessibility.results">Results</button>

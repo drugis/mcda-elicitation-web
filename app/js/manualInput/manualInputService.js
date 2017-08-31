@@ -6,10 +6,19 @@ define(function(require) {
     var distributionKnowledge = {
       exact: {
         toString: function(input) {
-          return 'exact(' + input.value + ')';
+          if (distributionKnowledge.exact.isMissingInput(input)) {
+            return 'Missing input';
+          } else if (distributionKnowledge.exact.isInvalidInput(input)) {
+            return 'Invalid input';
+          } else {
+            return 'exact(' + input.value + ')';
+          }
+        },
+        isMissingInput: function(input) {
+          return isNullOrUndefined(input.value);
         },
         isInvalidInput: function(input) {
-          return isNullOrUndefined(input.value);
+          return isNullNaNOrUndefined(input.value);
         },
         buildPerformance: function(data) {
           return _.pick(data, ['type', 'value']);
@@ -17,10 +26,19 @@ define(function(require) {
       },
       dnorm: {
         toString: function(input) {
-          return 'N(' + input.mu + ', ' + input.sigma + ')';
+          if (distributionKnowledge.dnorm.isMissingInput(input)) {
+            return 'Missing input';
+          } else if (distributionKnowledge.dnorm.isInvalidInput(input)) {
+            return 'Invalid input';
+          } else {
+            return 'N(' + input.mu + ', ' + input.sigma + ')';
+          }
+        },
+        isMissingInput: function(input) {
+          return isNullOrUndefined(input.mu) || isNullOrUndefined(input.sigma);
         },
         isInvalidInput: function(input) {
-          return isNullOrUndefined(input.mu) || isNullOrUndefined(input.sigma);
+          return isNullNaNOrUndefined(input.mu) || isNullNaNOrUndefined(input.sigma);
         },
         buildPerformance: function(data) {
           return {
@@ -31,15 +49,75 @@ define(function(require) {
       },
       dbeta: {
         toString: function(input) {
-          return 'Beta(' + input.alpha + ', ' + input.beta + ')';
+          if (distributionKnowledge.dbeta.isMissingInput(input)) {
+            return 'Missing input';
+          } else if (distributionKnowledge.dbeta.isInvalidInput(input)) {
+            return 'Invalid input';
+          } else {
+            return 'Beta(' + input.alpha + ', ' + input.beta + ')';
+          }
+        },
+        isMissingInput: function(input) {
+          return isNullOrUndefined(input.alpha) || isNullOrUndefined(input.beta);
         },
         isInvalidInput: function(input) {
-          return isNullOrUndefined(input.alpha) || isNullOrUndefined(input.beta);
+          return isNullNaNOrUndefined(input.alpha) || input.alpha <= 0 || isNullNaNOrUndefined(input.beta) || input.beta <= 0;
         },
         buildPerformance: function(data) {
           return {
             type: data.type,
             parameters: _.pick(data, ['alpha', 'beta'])
+          };
+        }
+      },
+      dt: {
+        toString: function(input) {
+          if (distributionKnowledge.dt.isMissingInput(input)) {
+            return 'Missing input';
+          } else if (distributionKnowledge.dt.isInvalidInput(input)) {
+            return 'Invalid input';
+          } else {
+            return 't(' + input.mu + ', ' + input.stdErr + ', ' + input.dof + ')';
+          }
+        },
+        isMissingInput: function(input) {
+          return isNullOrUndefined(input.mu) || isNullOrUndefined(input.stdErr) || isNullOrUndefined(input.dof);
+        },
+        isInvalidInput: function(input) {
+          return isNullNaNOrUndefined(input.mu) || isNullNaNOrUndefined(input.stdErr) || isNullNaNOrUndefined(input.dof);
+        },
+        buildPerformance: function(data) {
+          return {
+            type: data.type,
+            parameters: _.pick(data, ['mu', 'stdErr', 'dof'])
+          };
+        }
+      },
+      dsurv: {
+        toString: function(input) {
+          if (distributionKnowledge.dsurv.isMissingInput(input)) {
+            return 'Missing input';
+          } else if (distributionKnowledge.dsurv.isInvalidInput(input)) {
+            return 'Invalid input';
+          } else {
+            return 'Gamma(' + input.alpha + ', ' + input.beta + ')';
+          }
+        },
+        isMissingInput: function(input) {
+          return isNullOrUndefined(input.alpha) || isNullOrUndefined(input.beta);
+        },
+        isInvalidInput: function(input) {
+          return isNullNaNOrUndefined(input.alpha) || input.alpha <= 0 || isNullNaNOrUndefined(input.beta) || input.beta <= 0;
+        },
+        buildPerformance: function(data, criterion) {
+          var parameters = _.pick(data, ['alpha', 'beta']);
+          parameters.summaryMeasure = criterion.summaryMeasure;
+          if (criterion.summaryMeasure === 'survivalAtTime') {
+            parameters.time = criterion.timePointOfInterest;
+          }
+          return {
+            type: data.type,
+            parameters: parameters
           };
         }
       }
@@ -70,12 +148,13 @@ define(function(require) {
     function prepareInputData(criteria, treatments) {
       var inputData = {};
       _.forEach(criteria, function(criterion) {
-        inputData[criterion.name] = {};
+        inputData[criterion.hash] = {};
         _.forEach(treatments, function(treatment) {
-          inputData[criterion.name][treatment.name] = {
-            type: 'exact',
-            value: 0,
-            label: 'exact(0)'
+          inputData[criterion.hash][treatment.hash] = {
+            type: criterion.dataType === 'survival' ? 'dsurv' : 'exact',
+            value: undefined,
+            source: 'distribution',
+            isInvalid: true
           };
         });
       });
@@ -86,6 +165,24 @@ define(function(require) {
       return distributionKnowledge[cell.type].isInvalidInput(cell);
     }
 
+    function buildScale(criterion) {
+      var scale;
+      if (criterion.dataType === 'dichotomous') {
+        scale = [0, 1];
+      } else if (criterion.dataType === 'continuous') {
+        scale = [-Infinity, Infinity];
+      } else if (criterion.dataType === 'survival') {
+        if (criterion.summaryMeasure === 'mean' || criterion.summaryMeasure === 'median') {
+          scale = [0, Infinity];
+        } else if (criterion.summaryMeasure === 'survivalAtTime') {
+          scale = [0, 1];
+        }
+      } else {
+        scale = [-Infinity, Infinity];
+      }
+      return scale;
+    }
+
     // Private functions
     function buildCriteria(criteria) {
       var newCriteria = _.map(criteria, function(criterion) {
@@ -93,7 +190,9 @@ define(function(require) {
           title: criterion.name,
           description: criterion.description,
           unitOfMeasurement: criterion.unitOfMeasurement,
-          scale: [-Infinity, Infinity]
+          scale: buildScale(criterion),
+          source: criterion.source,
+          sourceLink: criterion.sourceLink
         };
       });
       return _.keyBy(newCriteria, 'title');
@@ -113,15 +212,19 @@ define(function(require) {
       var newPerformanceTable = [];
       _.forEach(criteria, function(criterion) {
         _.forEach(treatments, function(treatment) {
-          var data = inputData[criterion.name][treatment.name];
+          var data = inputData[criterion.hash][treatment.hash];
           newPerformanceTable.push({
             alternative: treatment.name,
             criterion: criterion.name,
-            performance: distributionKnowledge[data.type].buildPerformance(data)
+            performance: distributionKnowledge[data.type].buildPerformance(data, criterion)
           });
         });
       });
       return newPerformanceTable;
+    }
+
+    function isNullNaNOrUndefined(value) {
+      return isNullOrUndefined(value) || isNaN(value);
     }
 
     function isNullOrUndefined(value) {
