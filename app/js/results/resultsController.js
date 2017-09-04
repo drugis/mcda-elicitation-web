@@ -5,9 +5,6 @@ define(function(require) {
   var dependencies = ['$rootScope', '$scope', 'currentScenario', 'taskDefinition', 'MCDAResultsService', 'addKeyHashToObject'];
 
   var ResultsController = function($rootScope, $scope, currentScenario, taskDefinition, MCDAResultsService, addKeyHashToObject) {
-    // vars
-    $scope.scenario = currentScenario;
-    $scope.scales = $scope.workspace.$$scales;
 
     // funcs
     $scope.sensitivityScalesChanged = sensitivityScalesChanged;
@@ -15,6 +12,8 @@ define(function(require) {
     $scope.resetSensitivityAnalysis = resetSensitivityAnalysis;
 
     // init
+    $scope.scenario = currentScenario;
+    $scope.scales = $scope.workspace.$$scales;
     $scope.state = initialize(taskDefinition.clean($scope.aggregateState));
 
     $scope.$watch('scales.observed', function() {
@@ -61,7 +60,7 @@ define(function(require) {
         }
         return accum;
       }, {});
-      return MCDAResultsService.getResults($scope, state);
+      return MCDAResultsService.getResults($scope, state.problem);
     }
 
   };
