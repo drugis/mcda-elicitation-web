@@ -5,8 +5,7 @@ define(function(require) {
   var dependencies = ['$rootScope', '$scope', 'currentScenario', 'taskDefinition', 'MCDAResultsService', 'addKeyHashToObject'];
 
   var ResultsController = function($rootScope, $scope, currentScenario, taskDefinition, MCDAResultsService, addKeyHashToObject) {
-
-    // funcs
+    // functions
     $scope.sensitivityScalesChanged = sensitivityScalesChanged;
     $scope.recalculateResults = recalculateResults;
     $scope.resetSensitivityAnalysis = resetSensitivityAnalysis;
@@ -60,7 +59,7 @@ define(function(require) {
         }
         return accum;
       }, {});
-      return MCDAResultsService.getResults($scope, state.problem);
+      return MCDAResultsService.getResults($scope, state);
     }
 
   };

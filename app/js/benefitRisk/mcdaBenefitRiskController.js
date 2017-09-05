@@ -7,8 +7,17 @@ define(function(require) {
 
   function MCDABenefitRiskController($scope, $transitions, $state, $stateParams, Tasks, TaskDependencies,
     ScenarioResource, SubProblemResource, WorkspaceService, subProblems, currentSubProblem, scenarios, currentScenario) {
+    // functions
+    $scope.forkScenario = forkScenario;
+    $scope.newScenario = newScenario;
+    $scope.editTitle = editTitle;
+    $scope.saveTitle = saveTitle;
+    $scope.cancelTitle = cancelTitle;
+    $scope.scenarioChanged = scenarioChanged;
+    $scope.subProblemChanged = subProblemChanged;
+    $scope.checkDuplicateScenarioTitle = checkDuplicateScenarioTitle;
 
-    // vars
+    // init
     var baseProblem = $scope.workspace.problem;
     var deregisterTransitionListener;
     $scope.isEditTitleVisible = false;
@@ -23,18 +32,6 @@ define(function(require) {
     $scope.workspace.$$valueTree = WorkspaceService.buildValueTree(baseProblem);
     $scope.workspace.$$scales = {};
     $scope.workspace.$$scales.theoreticalScales = WorkspaceService.buildTheoreticalScales(baseProblem);
-
-    // functions
-    $scope.forkScenario = forkScenario;
-    $scope.newScenario = newScenario;
-    $scope.editTitle = editTitle;
-    $scope.saveTitle = saveTitle;
-    $scope.cancelTitle = cancelTitle;
-    $scope.scenarioChanged = scenarioChanged;
-    $scope.subProblemChanged = subProblemChanged;
-    $scope.checkDuplicateScenarioTitle = checkDuplicateScenarioTitle;
-
-    // init
     determineActiveTab();
 
     function getTask(taskId) {

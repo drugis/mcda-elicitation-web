@@ -24,10 +24,6 @@ define(function(require) {
     TaskDependencies,
     taskDefinition,
     currentScenario) {
-    // vars
-    $scope.scenario = currentScenario;
-    $scope.scales = $scope.workspace.$$scales;
-    $scope.criteria = $scope.aggregateState.criteria;
 
     // functions
     $scope.pvf = PartialValueFunction;
@@ -35,6 +31,9 @@ define(function(require) {
     $scope.isAccessible = isAccessible;
 
     // init
+    $scope.scenario = currentScenario;
+    $scope.scales = $scope.workspace.$$scales;
+    $scope.criteria = $scope.aggregateState.criteria;
     $scope.getXY = _.memoize(PartialValueFunction.getXY, function(arg) {
       return angular.toJson(arg.pvf);
     });

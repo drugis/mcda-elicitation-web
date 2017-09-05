@@ -9,10 +9,6 @@ define(function(require) {
 
     function run($scope, inState) {
       var state = angular.copy(inState);
-      var data = _.merge({}, state.problem, {
-        preferences: state.prefs,
-        method: 'smaa'
-      });
 
       function successHandler(results) {
         state.results = results;
@@ -36,7 +32,7 @@ define(function(require) {
 
       $scope.progress = 0;
 
-      $http.post('/patavi', data).then(function(result) {
+      $http.post('/patavi', state.problem).then(function(result) {
           var uri = result.headers('Location');
           if (result.status === 201 && uri) {
             return uri;
@@ -119,14 +115,18 @@ define(function(require) {
       return 31 * val.selectedAlternative.hashCode() + angular.toJson(val.results).hashCode();
     });
 
-    function getResults(scope, problem) {
+    function getResults(scope, state) {
       var nextState = {
-        problem: problem,
-        selectedAlternative: _.keys(problem.alternatives)[0],
+        problem: _.merge({}, state.problem, {
+          preferences: state.prefs,
+          method: 'smaa'
+        }),
+        selectedAlternative: _.keys(state.problem.alternatives)[0],
         selectedRank: '0',
         ranksByAlternative: getRanksByAlternative,
         alternativesByRank: getAlterativesByRank,
-        centralWeights: getCentralWeights
+        centralWeights: getCentralWeights,
+
       };
       return run(scope, nextState);
     }
