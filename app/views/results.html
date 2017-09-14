@@ -6,11 +6,11 @@
   </div>
 </div>
 <div ng-if="state.results">
-  <h4 ng-show="!isEditTitleVisible" class="subheader">
-    <span>{{scenario.title}}</span>
-  </h4>
   <div class="row" ng-show="isEditTitleVisible">
     <div class="columns large-8 small-12">
+      <h4 ng-show="!isEditTitleVisible" class="subheader">
+        <span>{{scenario.title}}</span>
+      </h4>
       <form>
         <div class="row collapse">
           <div class="columns small-8">
@@ -42,6 +42,26 @@
       </table>
       <h4>Value profiles</h4>
       <value-profile-plot values="deterministicResults.results" criteria="criteria" alternatives="alternatives"></value-profile-plot>
+    </div>
+  </div>
+  <div class="row">
+    <h3>Deterministic analysis &mdash; one-way sensitivity analysis</h3>
+    <div class="columns medium-6">
+      <h4>Measurements</h4>
+      <div class="row">
+        <div class="columns medium-6">
+          <label>Alternative<select ng-options="alternative.title for alternative in alternatives" ng-model="oneWaySensitivityAlternative"></select></label>
+        </div>
+        <div class="columns medium-6">
+          <label>Criterion<select ng-options="criterion.title for criterion in criteria" ng-model="oneWaySensitivityCriterion"></select></label>
+        </div>
+        <div height="100%" width="100%">
+          <measurements-sensitivity-plot values-promise="measurementSentitivityValuesPromise" criteria="criteria" alternatives="alternatives"></measurements-sensitivity-plot>
+        </div>
+      </div>
+    </div>
+    <div class="columns medium-6">
+      <h4>Measurements</h4>
     </div>
   </div>
   <div class="row">
@@ -79,7 +99,7 @@
       <button class="button small" ng-show="state.showSensitivity" ng-click="resetSensitivityAnalysis()">
         Reset
       </button>
-    </div>    
+    </div>
   </div>
   <section class="row underlined-div" style="height: 450px;">
     <div class="columns large-12">

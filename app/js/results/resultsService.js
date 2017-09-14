@@ -12,6 +12,7 @@ define(function(require) {
 
       function successHandler(results) {
         state.results = results;
+        return state;
       }
 
       function pataviErrorHandler(pataviError) {
@@ -32,7 +33,7 @@ define(function(require) {
 
       $scope.progress = 0;
 
-      $http.post('/patavi', state.problem).then(function(result) {
+      state.resultsPromise = $http.post('/patavi', state.problem).then(function(result) {
           var uri = result.headers('Location');
           if (result.status === 201 && uri) {
             return uri;
@@ -163,6 +164,23 @@ define(function(require) {
       });
     }
 
+    function pataviResultToLineValues(lower, upper, criteria, alternatives) {
+      return _.map(criteria, function(criterion) {
+        return {
+          key: criterion.title,
+          values: _.reduce(alternatives, function(accum, alternative) {
+            return accum.concat({
+              x: criterion.pvf.range[0],
+              y: lower.value.data[alternative.id][criterion.id]
+            }, {
+              x: criterion.pvf.range[1],
+              y: upper.value.data[alternative.id][criterion.id]
+            });
+          }, [])
+        };
+      });
+    }
+
     function getDeterministicResults(scope, state) {
       var nextState = {
         problem: _.merge({}, state.problem, {
@@ -173,11 +191,48 @@ define(function(require) {
       return run(scope, nextState);
     }
 
+    function getMeasurementsSensitivityResultsLower(scope, state) {
+      var nextState = {
+        problem: _.merge({}, state.problem, {
+          preferences: state.prefs,
+          method: 'sensitivityMeasurements',
+          sensitivity: {
+            meas: [{
+              alternative: scope.oneWaySensitivityAlternative.id,
+              criterion: scope.oneWaySensitivityCriterion.id,
+              value: scope.oneWaySensitivityCriterion.pvf.range[0]
+            }]
+          }
+        })
+      };
+      return run(scope, nextState);
+    }
+
+    function getMeasurementsSensitivityResultsUpper(scope, state) {
+      var nextState = {
+        problem: _.merge({}, state.problem, {
+          preferences: state.prefs,
+          method: 'sensitivityMeasurements',
+          sensitivity: {
+            meas: [{
+              alternative: scope.oneWaySensitivityAlternative.id,
+              criterion: scope.oneWaySensitivityCriterion.id,
+              value: scope.oneWaySensitivityCriterion.pvf.range[0]
+            }]
+          }
+        })
+      };
+      return run(scope, nextState);
+    }
+
     return {
       getResults: getResults,
       resetModifiableScales: resetModifiableScales,
       pataviResultToValueProfile: pataviResultToValueProfile,
-      getDeterministicResults: getDeterministicResults
+      pataviResultToLineValues: pataviResultToLineValues,
+      getDeterministicResults: getDeterministicResults,
+      getMeasurementsSensitivityResultsLower: getMeasurementsSensitivityResultsLower,
+      getMeasurementsSensitivityResultsUpper: getMeasurementsSensitivityResultsUpper
     };
   };
 

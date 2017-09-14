@@ -243,7 +243,6 @@ define(function(require) {
 
           var chart = nv.models.lineChart().width(dim.width).height(dim.height);
 
-
           chart.useVoronoi(true);
 
           if (attrs.showLegend && attrs.showLegend === 'false') {
