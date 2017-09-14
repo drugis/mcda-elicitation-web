@@ -63,5 +63,80 @@ define(['angular-mocks', 'mcda/results/results', 'angular-patavi-client', 'angul
         expect(result).toEqual(expectedResult);
       });
     });
+
+    describe('pataviResultToValueProfile', function() {
+      it('should create valid input data for a nvd3 multibarchart', function() {
+        var inData = {
+          value: {
+            data: {
+              alt1: {
+                OS: 1,
+                severe: 2,
+                moderate: 3
+              },
+              alt2: {
+                OS: 4,
+                severe: 5,
+                moderate: 6
+              }
+            },
+            description: 'Value profile',
+            type: 'list'
+          }
+        };
+        var criteria = [{
+          id: 'OS',
+          title: 'OS'
+        }, {
+          id: 'severe',
+          title: 'severe'
+        }, {
+          id: 'moderate',
+          title: 'moderate'
+        }];
+
+        var alternatives = [{
+          id: 'alt1',
+          title: 'alt1'
+        }, {
+          id: 'alt2',
+          title: 'alt2'
+        }];
+
+        ///
+        var result = resultsService.pataviResultToValueProfile(inData, criteria, alternatives);
+        //
+
+        var expectedResult = [{
+          key: 'OS',
+          values: [{
+            x: 'alt1',
+            y: 1
+          }, {
+            x: 'alt2',
+            y: 4
+          }]
+        }, {
+          key: 'severe',
+          values: [{
+            x: 'alt1',
+            y: 2
+          }, {
+            x: 'alt2',
+            y: 5
+          }]
+        }, {
+          key: 'moderate',
+          values: [{
+            x: 'alt1',
+            y: 3
+          }, {
+            x: 'alt2',
+            y: 6
+          }]
+        }];
+        expect(result).toEqual(expectedResult);
+      });
+    });
   });
 });
