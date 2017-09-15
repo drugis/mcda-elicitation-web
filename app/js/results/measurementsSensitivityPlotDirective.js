@@ -13,8 +13,8 @@ define([], function() {
       template: '<line-chart value="lineValues"></line-chart>',
       link: function(scope) {
         scope.$watch('valuesPromise', function(newPromise){
-          newPromise.then(function(values) {
-            scope.lineValues = ResultsService.pataviResultToMeasurementsSensitivityLineValues(values[0].results, values[1].results, 
+          newPromise.then(function(result) {
+            scope.lineValues = ResultsService.pataviResultToMeasurementsSensitivityLineValues(result.results, 
               scope.selectedCriterion, scope.alternatives);
           });
         });

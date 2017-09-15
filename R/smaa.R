@@ -107,7 +107,7 @@ calculateTotalValue <- function(params,meas,weights) {
 run_sensitivityWeightPlot <- function(params) {
   
   meas <- genMedianMeasurements(params)
-  crit <- params$sensitivityAnalysis$measurementsPlot["criterion"]
+  crit <- params$sensitivityAnalysis$weightPlot["criterion"]
   
   weights <- seq(0,1,length.out=10)
   

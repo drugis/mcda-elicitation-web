@@ -164,19 +164,16 @@ define(function(require) {
       });
     }
 
-    function pataviResultToMeasurementsSensitivityLineValues(lower, upper, criterion, alternatives) {
+    function pataviResultToMeasurementsSensitivityLineValues(results, criterion, alternatives) {
       return _.map(alternatives, function(alternative) {
         return {
           key: alternative.title,
-          values: [{
-              x: criterion.pvf.range[0],
-              y: lower.total.data[alternative.id]
-            },
-            {
-              x: criterion.pvf.range[1],
-              y: upper.total.data[alternative.id]
-            }
-          ]
+          values: _.map(results.total.data[alternative.id], function(entryValue, entryKey) {
+            return {
+              x: entryKey,
+              y: entryValue
+            };
+          })
         };
       });
     }
@@ -208,37 +205,31 @@ define(function(require) {
       return run(scope, nextState);
     }
 
-    function getMeasurementsSensitivityResultsLower(scope, state) {
+    function getMeasurementsSensitivityResults(scope, state) {
       var nextState = {
         problem: _.merge({}, state.problem, {
           preferences: state.prefs,
-          method: 'sensitivityMeasurements',
+          method: 'sensitivityMeasurementsPlot',
           sensitivityAnalysis: {
-            meas: [{
+            measurementsPlot: {
               alternative: scope.sensitivityMeasurements.alternative.id,
-              criterion: scope.sensitivityMeasurements.criterion.id,
-              value: scope.sensitivityMeasurements.criterion.pvf.range[0]
-            }], 
-            weights: [{
-              criterion: scope.sensitivityMeasurements.criterion.id,
-              value: 5
-            }]
+              criterion: scope.sensitivityMeasurements.criterion.id
+            }
           }
         })
       };
       return run(scope, nextState);
     }
 
-    function getMeasurementsSensitivityResultsUpper(scope, state) {
+    function getPreferencesSensitivityResults(scope, state) {
       var nextState = {
         problem: _.merge({}, state.problem, {
           preferences: state.prefs,
-          method: 'sensitivityMeasurementsPlot',
+          method: 'sensitivityWeightPlot',
           sensitivityAnalysis: {
-            measurementsPlot: [{
-              alternative: scope.sensitivityMeasurements.alternative.id,
-              criterion: scope.sensitivityMeasurements.criterion.id
-            }]
+            weightPlot: {
+              criterion: scope.sensitivityMeasurements.weightsCriterion
+            }
           }
         })
       };
@@ -252,8 +243,8 @@ define(function(require) {
       pataviResultToMeasurementsSensitivityLineValues: pataviResultToMeasurementsSensitivityLineValues,
       pataviResultToPreferencesMeasurementsLineValues: pataviResultToPreferencesMeasurementsLineValues,
       getDeterministicResults: getDeterministicResults,
-      getMeasurementsSensitivityResultsLower: getMeasurementsSensitivityResultsLower,
-      getMeasurementsSensitivityResultsUpper: getMeasurementsSensitivityResultsUpper
+      getMeasurementsSensitivityResults: getMeasurementsSensitivityResults,
+      getPreferencesSensitivityResults: getPreferencesSensitivityResults
     };
   };
 
