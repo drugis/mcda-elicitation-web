@@ -28,6 +28,36 @@
   </div>
   <div class="row">
     <div class="columns large-12">
+      <h3>Deterministic analysis &mdash; base case</h3>
+      <h4>Representative weights</h4>
+      <table>
+        <thead>
+          <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td ng-repeat="criterion in criteria">{{deterministicResults.results.weights.data[criterion.id]}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <h4>Total value</h4>
+      <table>
+        <thead>
+          <th ng-repeat="alternative in alternatives">{{alternative.title}}</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td ng-repeat="alternative in alternatives">{{deterministicResults.results.total.data[alternative.id]}}</td>
+          </tr>
+        </tbody>
+      </table>
+      
+      <h4>Value profiles</h4>
+      <value-profile-plot values="deterministicResults.results" criteria="criteria" alternatives="alternatives"></value-profile-plot>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns large-12">
       <button ng-click="state.showSensitivity = !state.showSensitivity" class="button">
         {{state.showSensitivity ? 'Hide' : 'Show'}} sensitivity analysis
       </button>

@@ -5,6 +5,7 @@ define(function(require) {
 
     .controller('ResultsController', require('mcda/results/resultsController'))
     .directive('sensitivityInput', require('mcda/results/sensitivityInputDirective'))
+    .directive('valueProfilePlot', require('mcda/results/valueProfilePlotDirective'))
     .factory('MCDAResultsService', require('mcda/results/resultsService'))
     ;
 

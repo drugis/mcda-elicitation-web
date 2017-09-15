@@ -34,7 +34,6 @@ ratioConstraint <- function(n, i1, i2, x) {
 }
 
 run_deterministic <- function(params) {
-  
   meas <- genMedianMeasurements(params) 
   weights <- genRepresentativeWeights(params)
   valueProfiles <- calculateTotalValue(params,meas,weights)
@@ -52,7 +51,6 @@ run_deterministic <- function(params) {
          results$results,
          results$descriptions,
          SIMPLIFY=F)
-  
 }
 
 genRepresentativeWeights <- function(params) {

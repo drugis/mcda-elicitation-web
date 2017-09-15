@@ -43,6 +43,13 @@ node-sass --include-path sass-shared sass/mcda-drugis.scss app/css/mcda-drugis.c
 node-sass --include-path sass-shared sass/mcda-drugis-ie8.scss app/css/mcda-drugis-ie8.css
 ```
 
+Setting up the database
+-----------------------
+
+`sudo -u postgres psql -c "CREATE USER mcdaweb WITH PASSWORD 'develop'"`
+`sudo -u postgres psql -c "CREATE DATABASE mcdaweb ENCODING 'utf-8' OWNER mcdaweb"`
+`psql -d mcdaweb -U mcdaweb -f database.pg.sql`
+
 Running
 ----------
 

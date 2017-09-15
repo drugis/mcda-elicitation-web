@@ -14,7 +14,6 @@ define(function(require) {
     $scope.scenario = currentScenario;
     $scope.scales = $scope.workspace.$$scales;
     $scope.state = initialize(taskDefinition.clean($scope.aggregateState));
-
     $scope.$watch('scales.observed', function() {
       resetSensitivityAnalysis();
     });
@@ -59,6 +58,7 @@ define(function(require) {
         }
         return accum;
       }, {});
+      $scope.deterministicResults = MCDAResultsService.getDeterministicResults($scope, state);
       return MCDAResultsService.getResults($scope, state);
     }
 

@@ -149,9 +149,35 @@ define(function(require) {
       return modifiableScales;
     }
 
+    function pataviResultToValueProfile(result, criteria, alternatives) {
+      return _.map(criteria, function(criterion) {
+        return {
+          key: criterion.title,
+          values: _.map(alternatives, function(alternative) {
+            return {
+              x: alternative.title,
+              y: result.value.data[alternative.id][criterion.id]
+            };
+          })
+        };
+      });
+    }
+
+    function getDeterministicResults(scope, state) {
+      var nextState = {
+        problem: _.merge({}, state.problem, {
+          preferences: state.prefs,
+          method: 'deterministic'
+        })
+      };
+      return run(scope, nextState);
+    }
+
     return {
       getResults: getResults,
-      resetModifiableScales: resetModifiableScales
+      resetModifiableScales: resetModifiableScales,
+      pataviResultToValueProfile: pataviResultToValueProfile,
+      getDeterministicResults: getDeterministicResults
     };
   };
 
