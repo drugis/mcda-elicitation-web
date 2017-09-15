@@ -110,6 +110,8 @@
   "preferences":[{"type":"ordinal","criteria":["OS","severe"]}, {"type":"ordinal","criteria":["severe","moderate"]}],
   "sensitivityAnalysis": {
     "meas": [{"alternative": "alt1", "criterion": "OS", "value": 65},{"alternative": "alt2", "criterion": "OS", "value": 45}],
-    "weights": [{"criterion": "OS", "value": 0.3}]
+    "weights": [{"criterion": "OS", "value": 0.3}],
+    "measurementsPlot": {"alternative": "alt1", "criterion": "OS"},
+    "weightPlot": {"criterion": "OS"}	
   }
 }
