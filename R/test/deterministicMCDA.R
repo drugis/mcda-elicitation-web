@@ -10,8 +10,6 @@ source('../SMAA.R')
 # Load test problem
 params <- fromJSON('../../examples/getreal-ordinalWeights.json')
 
-params <- fromJSON('voorDouwe2.json')$problem
-
 # Conduct deterministic MCDA
 run_deterministic(params)
 
@@ -21,5 +19,9 @@ run_sensitivityMeasurements(params)
 # Perform one-way sensitivity analysis on the weight given to OS
 run_sensitivityWeights(params)
 
-# Obtain coordinates for the mmeasurementsPlot
+# Obtain coordinates for the measurementsPlot
 run_sensitivityMeasurementsPlot(params)
+
+# Obtain coordinates for the weightPlot
+run_sensitivityWeightPlot(params)
+

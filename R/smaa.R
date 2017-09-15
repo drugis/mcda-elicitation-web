@@ -9,7 +9,7 @@ wrap.matrix <- function(m) {
 }
 
 smaa_v2 <- function(params) {
-  allowed <- c('scales', 'smaa', 'macbeth', 'deterministic', 'sensitivityMeasurements', 'sensitivityWeights','sensitivityMeasurementsPlot')
+  allowed <- c('scales','smaa','deterministic','sensitivityMeasurements', 'sensitivityWeights','sensitivityMeasurementsPlot','sensitivityWeightPlot')
   if(params$method %in% allowed) {
     do.call(paste("run", params$method, sep="_"), list(params))
   } else {
@@ -104,6 +104,36 @@ calculateTotalValue <- function(params,meas,weights) {
   meas
 }
 
+run_sensitivityWeightPlot <- function(params) {
+  
+  meas <- genMedianMeasurements(params)
+  crit <- params$sensitivityAnalysis$measurementsPlot["criterion"]
+  
+  weights <- seq(0,1,length.out=10)
+  
+  total.value <- c()
+  for (value in weights) {
+    params$sensitivityAnalysis$weights <- list(list(criterion=crit,value=value))
+    total.value <- cbind(total.value,run_sensitivityWeights(params)$total$data)
+  }
+  
+  colnames(total.value) <- weights
+  
+  results <- list(
+    results = list(
+      "crit"=crit,
+      "values"=weights,
+      "total"=wrap.matrix(total.value)),
+    descriptions = list("Criterion","Weight given to criterion", "Total value")
+  )
+  
+  mapply(wrap.result,
+         results$results,
+         results$descriptions,
+         SIMPLIFY=F)
+  
+} 
+
 run_sensitivityMeasurementsPlot <- function(params) {
   
   weights <- genRepresentativeWeights(params)
@@ -130,7 +160,7 @@ run_sensitivityMeasurementsPlot <- function(params) {
       "crit"=crit,
       "values"=x,
       "total"=wrap.matrix(total.value)),
-    descriptions = list("Alternative","Criterion","Evaluated values of crit for alt", "Total value")
+    descriptions = list("Alternative","Criterion","Criterion measurements for alternative", "Total value")
   )
   
   mapply(wrap.result,
