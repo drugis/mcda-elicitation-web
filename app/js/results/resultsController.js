@@ -9,15 +9,17 @@ define(function(require) {
     $scope.sensitivityScalesChanged = sensitivityScalesChanged;
     $scope.recalculateResults = recalculateResults;
     $scope.resetSensitivityAnalysis = resetSensitivityAnalysis;
+    $scope.doMeasurementSensitivity = doMeasurementSensitivity;
 
     // init
     $scope.scenario = currentScenario;
     $scope.scales = $scope.workspace.$$scales;
+    $scope.sensitivityMeasurements = {};
     $scope.state = initialize(taskDefinition.clean($scope.aggregateState));
     $scope.$watch('scales.observed', function() {
       resetSensitivityAnalysis();
     });
-
+    
     function resetSensitivityAnalysis() {
       $scope.modifiableScales = MCDAResultsService.resetModifiableScales(
         $scope.scales.observed, $scope.state.problem.alternatives);
@@ -44,11 +46,13 @@ define(function(require) {
       $scope.alternatives = _.map(state.problem.alternatives, function(alternative, key) {
         return addKeyHashToObject(alternative, key);
       });
-      $scope.oneWaySensitivityAlternative = $scope.alternatives[0];
+      $scope.sensitivityMeasurements.alternative = $scope.alternatives[0];
       $scope.criteria = _.map(state.problem.criteria, function(criterion, key) {
         return addKeyHashToObject(criterion, key);
       });
-      $scope.oneWaySensitivityCriterion = $scope.criteria[0];
+      $scope.sensitivityMeasurements.criterion = $scope.criteria[0];
+      $scope.sensitivityMeasurements.weightCriterion = $scope.criteria[0];
+      
       $scope.types = _.reduce(state.problem.performanceTable, function(accum, tableEntry) {
         if (!accum[tableEntry.criterion]) {
           accum[tableEntry.criterion] = {};
@@ -61,15 +65,18 @@ define(function(require) {
         return accum;
       }, {});
       $scope.deterministicResults = MCDAResultsService.getDeterministicResults($scope, state);
-      var measurementsSensitivityResultsLower = MCDAResultsService.getMeasurementsSensitivityResultsLower($scope, state);
-      var measurementsSensitivityResultsUpper = MCDAResultsService.getMeasurementsSensitivityResultsUpper($scope, state);
-      $scope.measurementSentitivityValuesPromise = $q.all([
-        measurementsSensitivityResultsLower.resultsPromise,
-        measurementsSensitivityResultsUpper.resultsPromise
-      ]);
+      doMeasurementSensitivity(state);
       return MCDAResultsService.getResults($scope, state);
     }
 
+    function doMeasurementSensitivity(state){
+      var measurementsSensitivityResultsLower = MCDAResultsService.getMeasurementsSensitivityResultsLower($scope, state);
+      var measurementsSensitivityResultsUpper = MCDAResultsService.getMeasurementsSensitivityResultsUpper($scope, state);
+      $scope.sensitivityMeasurements.valuesPromise = $q.all([
+        measurementsSensitivityResultsLower.resultsPromise,
+        measurementsSensitivityResultsUpper.resultsPromise
+      ]);
+    }
   };
   return dependencies.concat(ResultsController);
 });
