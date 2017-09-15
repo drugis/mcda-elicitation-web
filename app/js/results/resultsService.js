@@ -217,7 +217,7 @@ define(function(require) {
             meas: [{
               alternative: scope.oneWaySensitivityAlternative.id,
               criterion: scope.oneWaySensitivityCriterion.id,
-              value: scope.oneWaySensitivityCriterion.pvf.range[0]
+              value: scope.oneWaySensitivityCriterion.pvf.range[1]
             }]
           }
         })
