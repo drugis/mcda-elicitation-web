@@ -40,6 +40,18 @@
           </tr>
         </tbody>
       </table>
+      <h4>Total value</h4>
+      <table>
+        <thead>
+          <th ng-repeat="alternative in alternatives">{{alternative.title}}</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td ng-repeat="alternative in alternatives">{{deterministicResults.results.total.data[alternative.id]}}</td>
+          </tr>
+        </tbody>
+      </table>
+      
       <h4>Value profiles</h4>
       <value-profile-plot values="deterministicResults.results" criteria="criteria" alternatives="alternatives"></value-profile-plot>
     </div>
