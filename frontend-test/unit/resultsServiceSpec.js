@@ -15,11 +15,6 @@ define(['angular-mocks', 'mcda/results/results', 'angular-patavi-client', 'angul
       resultsService = MCDAResultsService;
     }));
 
-    // describe('getResults', function() { //TODO: write this test
-    //   it('should return the next state', function() {
-    //     expect(result).toEqual(expectedResult);
-    //   });
-    // });
     describe('resetModifiableScales', function() {
       it('it should reset the scales to their original values', function() {
         var alternatives = {
@@ -133,6 +128,57 @@ define(['angular-mocks', 'mcda/results/results', 'angular-patavi-client', 'angul
           }, {
             x: 'alt2',
             y: 6
+          }]
+        }];
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('pataviResultToLineValues', function() {
+      it('should transform a measurements or preferences patavi result to linevalues for the plot', function() {
+        var pataviResult = {
+          total: {
+            data: {
+              Fluox: {
+                0: 1,
+                0.11: 3, // check sorting as well
+                1: 6
+              },
+              Parox: {
+                0: 4,
+                2: 5
+              }
+            }
+          }
+        };
+        var alternatives = [{
+          id: 'Fluox',
+          title: 'Fluoxetine'
+        }, {
+          id: 'Parox',
+          title: 'Paroxetine'
+        }];
+        var result = resultsService.pataviResultToLineValues(pataviResult, alternatives);
+        var expectedResult = [{
+          key: 'Fluoxetine',
+          values: [{
+            x: 0,
+            y: 1
+          }, {
+            x: 0.11,
+            y: 3
+          },{
+            x: 1,
+            y: 6
+          }]
+        }, {
+          key: 'Paroxetine',
+          values: [{
+            x: 0,
+            y: 4
+          }, {
+            x: 2,
+            y: 5
           }]
         }];
         expect(result).toEqual(expectedResult);

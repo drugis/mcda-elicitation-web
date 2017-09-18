@@ -57,6 +57,9 @@ define(function(require) {
     }
 
     var getCentralWeights = _.memoize(function(state) {
+      if (!state.results) {
+        return [];
+      }
       var problem = state.problem;
       var data = state.results.cw.data;
       var result = [];
@@ -78,9 +81,18 @@ define(function(require) {
         });
       });
       return result;
+    }, function(val) {
+      if (val.results) {
+        return 31 * val.selectedAlternative.hashCode() + angular.toJson(val.results).hashCode();
+      } else {
+        return 31 * val.selectedAlternative.hashCode();
+      }
     });
 
     var getAlterativesByRank = _.memoize(function(state) {
+      if (!state.results) {
+        return [];
+      }
       var data = state.results.ranks.data;
       var rank = parseInt(state.selectedRank);
       var values = _.map(_.toPairs(data), function(alternative) {
@@ -95,10 +107,17 @@ define(function(require) {
         values: values
       }];
     }, function(val) { // Hash function
-      return 31 * val.selectedRank.hashCode() + angular.toJson(val.results).hashCode();
+      if (val.results) {
+        return 31 * val.selectedRank.hashCode() + angular.toJson(val.results).hashCode();
+      } else {
+        return 31 * val.selectedAlternative.hashCode();
+      }
     });
 
     var getRanksByAlternative = _.memoize(function(state) {
+      if (!state.results) {
+        return [];
+      }
       var data = state.results.ranks.data;
       var alternative = state.selectedAlternative;
       var values = [];
@@ -113,7 +132,11 @@ define(function(require) {
         values: values
       }];
     }, function(val) {
-      return 31 * val.selectedAlternative.hashCode() + angular.toJson(val.results).hashCode();
+      if (val.results) {
+        return 31 * val.selectedAlternative.hashCode() + angular.toJson(val.results).hashCode();
+      } else {
+        return 31 * val.selectedAlternative.hashCode();
+      }
     });
 
     function getResults(scope, state) {
@@ -164,33 +187,18 @@ define(function(require) {
       });
     }
 
-    function pataviResultToMeasurementsSensitivityLineValues(results, criterion, alternatives) {
+    function pataviResultToLineValues(results, alternatives) {
       return _.map(alternatives, function(alternative) {
         return {
           key: alternative.title,
-          values: _.map(results.total.data[alternative.id], function(entryValue, entryKey) {
-            return {
-              x: entryKey,
-              y: entryValue
-            };
-          })
-        };
-      });
-    }
-
-    function pataviResultToPreferencesMeasurementsLineValues(lower, upper, criterion, alternatives) {
-      return _.map(alternatives, function(alternative) {
-        return {
-          key: alternative.title,
-          values: [{
-              x: 0,
-              y: lower.weight.data[alternative.id]
-            },
-            {
-              x: 1,
-              y: upper.weight.data[alternative.id]
-            }
-          ]
+          values: _(results.total.data[alternative.id]).map(function(entryValue, entryKey) {
+              return {
+                x: parseFloat(entryKey),
+                y: entryValue
+              };
+            })
+            .sortBy('x')
+            .value()
         };
       });
     }
@@ -211,10 +219,8 @@ define(function(require) {
           preferences: state.prefs,
           method: 'sensitivityMeasurementsPlot',
           sensitivityAnalysis: {
-            measurementsPlot: {
-              alternative: scope.sensitivityMeasurements.alternative.id,
-              criterion: scope.sensitivityMeasurements.criterion.id
-            }
+            alternative: scope.sensitivityMeasurements.measurementsAlternative.id,
+            criterion: scope.sensitivityMeasurements.measurementsCriterion.id
           }
         })
       };
@@ -227,9 +233,8 @@ define(function(require) {
           preferences: state.prefs,
           method: 'sensitivityWeightPlot',
           sensitivityAnalysis: {
-            weightPlot: {
-              criterion: scope.sensitivityMeasurements.weightsCriterion
-            }
+            criterion: scope.sensitivityMeasurements.preferencesCriterion.id
+
           }
         })
       };
@@ -240,8 +245,7 @@ define(function(require) {
       getResults: getResults,
       resetModifiableScales: resetModifiableScales,
       pataviResultToValueProfile: pataviResultToValueProfile,
-      pataviResultToMeasurementsSensitivityLineValues: pataviResultToMeasurementsSensitivityLineValues,
-      pataviResultToPreferencesMeasurementsLineValues: pataviResultToPreferencesMeasurementsLineValues,
+      pataviResultToLineValues: pataviResultToLineValues,
       getDeterministicResults: getDeterministicResults,
       getMeasurementsSensitivityResults: getMeasurementsSensitivityResults,
       getPreferencesSensitivityResults: getPreferencesSensitivityResults

@@ -59,150 +59,155 @@
     <div class="columns large-12">
       <h3>Deterministic analysis &mdash; one-way sensitivity analysis</h3>
     </div>
-    <div class="columns medium-6">
+  </div>
+  <div class="row">
+    <div class="columns medium-6 large-6">
       <h4>Measurements</h4>
       <div class="row">
-        <div class="columns medium-6">
+        <div class="columns medium-6 large-6">
           <label>Alternative
-            <select ng-options="alternative.title for alternative in alternatives" ng-model="sensitivityMeasurements.alternative" ng-change="doMeasurementSensitivity(state)"></select>
+            <select ng-options="alternative.title for alternative in alternatives" ng-model="sensitivityMeasurements.measurementsAlternative" ng-change="doMeasurementSensitivity(state)"></select>
           </label>
         </div>
         <div class="columns medium-6">
           <label>Criterion
-            <select ng-options="criterion.title for criterion in criteria" ng-model="sensitivityMeasurements.criterion" ng-change="doMeasurementSensitivity(state)"></select>
+            <select ng-options="criterion.title for criterion in criteria" ng-model="sensitivityMeasurements.measurementsCriterion" ng-change="doMeasurementSensitivity(state)"></select>
           </label>
         </div>
-        <div class="columns medium-6" style="height: 450px; width: 100%">
-          <measurements-sensitivity-plot values-promise="sensitivityMeasurements.valuesPromise" selected-criterion="sensitivityMeasurements.criterion" alternatives="alternatives"></measurements-sensitivity-plot>
+      </div>
+      <div class="row">
+        <div class="columns medium-6" style="height: 450px; width: 450px">
+          <line-chart label-x-axis="sensitivityMeasurements.measurementsCriterion.title" label-y-axis="'total value'" value="measurementValues"></line-chart>
         </div>
       </div>
     </div>
-    <div class="columns medium-6">
+    <div class="columns medium-6 large-6">
       <h4>Preferences</h4>
       <div class="row">
         <div class="columns medium-6">
           <label>Weight given to
-            <select ng-options="criterion.title for criterion in criteria" ng-model="sensitivityMeasurements.weightCriterion" ng-change="doPreferencesSensitivity(state)"></select>
+            <select ng-options="criterion.title for criterion in criteria" ng-model="sensitivityMeasurements.preferencesCriterion" ng-change="doPreferencesSensitivity(state)"></select>
           </label>
         </div>
-        <div class="columns medium-6" style="height: 450px; width: 100%">
-          <measurements-sensitivity-plot values-promise="sensitivityMeasurements.preferencesValuesPromise" selected-criterion="sensitivityMeasurements.weightCriterion" alternatives="alternatives"></measurements-sensitivity-plot>
+      </div>
+      <div class="row">
+        <div class="columns medium-6" style="height: 450px; width: 450px">
+          <line-chart label-x-axis="'Weight given to ' + sensitivityMeasurements.preferencesCriterion.title" label-y-axis="'total value'" value="preferencesValues"></line-chart>
         </div>
       </div>
     </div>
   </div>
-</div>
-<div class="row">
-  <div class="columns large-12">
-    <button ng-click="state.showSensitivity = !state.showSensitivity" class="button">
-      {{state.showSensitivity ? 'Hide' : 'Show'}} sensitivity analysis
-    </button>
-  </div>
-  <div class="columns large-12" ng-show="state.showSensitivity">
-    <table class="full-width effects-table">
-      <thead>
-        <tr>
-          <th>Criterion</th>
-          <th class="text-center" ng-repeat="alternative in alternatives">
-            {{alternative.title}}
-          </th>
-        </tr>
-      </thead>
-      <tbody class="main">
-        <tr ng-repeat="criterion in criteria">
-          <td>
-            <label>{{criterion.title}}</label>
-          </td>
-          <td class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}">
-            <sensitivity-input criterion="criterion" alternative="alternative" observed-scales="modifiableScales" change-callback="sensitivityScalesChanged" type="types[criterion.id][alternative.id]"></sensitivity-input>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="columns large-12">
-    <button class="button small" ng-show="state.showSensitivity" ng-click="recalculateResults()">
-      Recalculate results
-    </button>
-    <button class="button small" ng-show="state.showSensitivity" ng-click="resetSensitivityAnalysis()">
-      Reset
-    </button>
-  </div>
-</div>
-<section class="row underlined-div" style="height: 450px;">
-  <div class="columns large-12">
-    <h4>Rank acceptabilities</h4>
-    <rank-acceptability-plot data="state.results.ranks.data" problem="state.problem"></rank-acceptability-plot>
-    <table id="ranktable">
-      <thead>
-        <tr>
-          <th>
-            <heat-legend></heat-legend>
-          </th>
-          <th ng-repeat="alternative in state.problem.alternatives">Rank {{::$index + 1}}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="(key, alternative) in state.problem.alternatives">
-          <td>{{::alternative.title}}</td>
-          <td ng-repeat="rank in state.results.ranks.data[key] track by $index" class="heat">
-            {{::rank | number}}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-<section class="row underlined-div">
-  <div class="columns large-6">
-    <h4>Alternatives per rank</h4>
-    <select ng-model="state.selectedRank" class="large-3">
-      <option ng-repeat="(k,v) in state.problem.alternatives" value="{{$index}}" ng-selected="$index == state.selectedRank">
-        Rank {{::$index + 1}}
-      </option>
-    </select>
-    <div style="width: 400px; height: 350px">
-      <bar-chart value="state.alternativesByRank(state)"></bar-chart>
+  <div class="row">
+    <div class="columns large-12">
+      <button ng-click="state.showSensitivity = !state.showSensitivity" class="button">
+        {{state.showSensitivity ? 'Hide' : 'Show'}} sensitivity analysis
+      </button>
+    </div>
+    <div class="columns large-12" ng-show="state.showSensitivity">
+      <table class="full-width effects-table">
+        <thead>
+          <tr>
+            <th>Criterion</th>
+            <th class="text-center" ng-repeat="alternative in alternatives">
+              {{alternative.title}}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="main">
+          <tr ng-repeat="criterion in criteria">
+            <td>
+              <label>{{criterion.title}}</label>
+            </td>
+            <td class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}">
+              <sensitivity-input criterion="criterion" alternative="alternative" observed-scales="modifiableScales" change-callback="sensitivityScalesChanged" type="types[criterion.id][alternative.id]"></sensitivity-input>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="columns large-12">
+      <button class="button small" ng-show="state.showSensitivity" ng-click="recalculateResults()">
+        Recalculate results
+      </button>
+      <button class="button small" ng-show="state.showSensitivity" ng-click="resetSensitivityAnalysis()">
+        Reset
+      </button>
     </div>
   </div>
-  <div class="columns large-6">
-    <h4>Ranks per alternative</h4>
-    <select ng-model="state.selectedAlternative" class="large-3">
-      <option ng-repeat="(key, alternative) in state.problem.alternatives" value="{{key}}" ng-selected="key == state.selectedAlternative">
-        {{::alternative.title}}
-      </option>
-    </select>
-    <div style="width: 400px; height: 350px">
-      <bar-chart value="state.ranksByAlternative(state)"></bar-chart>
+  <section class="row underlined-div" style="height: 450px;">
+    <div class="columns large-12">
+      <h4>Rank acceptabilities</h4>
+      <rank-acceptability-plot data="state.results.ranks.data" problem="state.problem"></rank-acceptability-plot>
+      <table id="ranktable">
+        <thead>
+          <tr>
+            <th>
+              <heat-legend></heat-legend>
+            </th>
+            <th ng-repeat="alternative in state.problem.alternatives">Rank {{::$index + 1}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="(key, alternative) in state.problem.alternatives">
+            <td>{{::alternative.title}}</td>
+            <td ng-repeat="rank in state.results.ranks.data[key] track by $index" class="heat">
+              {{::rank | number}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-  </div>
-</section>
-<h4>Central Weights</h4>
-<section class="row">
-  <div class="columns large-12">
-    <div style="width: 650px; height: 350px">
-      <line-chart value="state.centralWeights(state)"></line-chart>
+  </section>
+  <section class="row underlined-div">
+    <div class="columns large-6">
+      <h4>Alternatives per rank</h4>
+      <select ng-model="state.selectedRank" class="large-3">
+        <option ng-repeat="(k,v) in state.problem.alternatives" value="{{$index}}" ng-selected="$index == state.selectedRank">
+          Rank {{::$index + 1}}
+        </option>
+      </select>
+      <div style="width: 400px; height: 350px">
+        <bar-chart value="state.alternativesByRank(state)"></bar-chart>
+      </div>
     </div>
-    <table>
-      <thead>
-        <tr>
-          <th>Alternative</th>
-          <th>Confidence
-            <heat-legend></heat-legend>
-          </th>
-          <th ng-repeat="criterion in state.problem.criteria">{{criterion.title}}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="(a, cw) in state.results.cw.data">
-          <td>{{state.problem.alternatives[a].title}}</td>
-          <td class="heat">{{::cw.cf | number}}</td>
-          <td ng-repeat="(c, criterion) in state.problem.criteria">
-            {{::cw.w[c] | number}}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
+    <div class="columns large-6">
+      <h4>Ranks per alternative</h4>
+      <select ng-model="state.selectedAlternative" class="large-3">
+        <option ng-repeat="(key, alternative) in state.problem.alternatives" value="{{key}}" ng-selected="key == state.selectedAlternative">
+          {{::alternative.title}}
+        </option>
+      </select>
+      <div style="width: 400px; height: 350px">
+        <bar-chart value="state.ranksByAlternative(state)"></bar-chart>
+      </div>
+    </div>
+  </section>
+  <h4>Central Weights</h4>
+  <section class="row">
+    <div class="columns large-12">
+      <div style="width: 650px; height: 350px">
+        <line-chart value="state.centralWeights(state)"></line-chart>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Alternative</th>
+            <th>Confidence
+              <heat-legend></heat-legend>
+            </th>
+            <th ng-repeat="criterion in state.problem.criteria">{{criterion.title}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="(a, cw) in state.results.cw.data">
+            <td>{{state.problem.alternatives[a].title}}</td>
+            <td class="heat">{{::cw.cf | number}}</td>
+            <td ng-repeat="(c, criterion) in state.problem.criteria">
+              {{::cw.w[c] | number}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 </div>

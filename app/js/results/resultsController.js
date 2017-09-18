@@ -47,12 +47,12 @@ define(function(require) {
       $scope.alternatives = _.map(state.problem.alternatives, function(alternative, key) {
         return addKeyHashToObject(alternative, key);
       });
-      $scope.sensitivityMeasurements.alternative = $scope.alternatives[0];
+      $scope.sensitivityMeasurements.measurementsAlternative = $scope.alternatives[0];
       $scope.criteria = _.map(state.problem.criteria, function(criterion, key) {
         return addKeyHashToObject(criterion, key);
       });
-      $scope.sensitivityMeasurements.criterion = $scope.criteria[0];
-      $scope.sensitivityMeasurements.weightCriterion = $scope.criteria[0];
+      $scope.sensitivityMeasurements.measurementsCriterion = $scope.criteria[0];
+      $scope.sensitivityMeasurements.preferencesCriterion = $scope.criteria[0];
 
       $scope.types = _.reduce(state.problem.performanceTable, function(accum, tableEntry) {
         if (!accum[tableEntry.criterion]) {
@@ -66,19 +66,24 @@ define(function(require) {
         return accum;
       }, {});
       $scope.deterministicResults = MCDAResultsService.getDeterministicResults($scope, state);
+      var overallResults = MCDAResultsService.getResults($scope, state);
       doMeasurementSensitivity(state);
       doPreferencesSensitivity(state);
-      return MCDAResultsService.getResults($scope, state);
+      return overallResults;
     }
 
     function doMeasurementSensitivity(state) {
-      var measurementsSensitivityResults = MCDAResultsService.getMeasurementsSensitivityResults($scope, state);
-      $scope.sensitivityMeasurements.valuesPromise = measurementsSensitivityResults.resultsPromise;
+      delete $scope.measurementValues;
+      MCDAResultsService.getMeasurementsSensitivityResults($scope, state).resultsPromise.then(function(result) {
+        $scope.measurementValues = MCDAResultsService.pataviResultToLineValues(result.results, $scope.alternatives);
+      });
     }
 
     function doPreferencesSensitivity(state) {
-      var preferencesSensitivityResults = MCDAResultsService.getPreferencesSensitivityResults($scope, state);
-      $scope.sensitivityMeasurements.preferencesValuesPromise = preferencesSensitivityResults.resultsPromise;
+      delete $scope.preferencesValues;
+      MCDAResultsService.getPreferencesSensitivityResults($scope, state).resultsPromise.then(function(result) {
+        $scope.preferencesValues = MCDAResultsService.pataviResultToLineValues(result.results, $scope.alternatives);
+      });
     }
   };
   return dependencies.concat(ResultsController);

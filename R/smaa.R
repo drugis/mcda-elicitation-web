@@ -107,7 +107,7 @@ calculateTotalValue <- function(params,meas,weights) {
 run_sensitivityWeightPlot <- function(params) {
   
   meas <- genMedianMeasurements(params)
-  crit <- params$sensitivityAnalysis$weightPlot["criterion"]
+  crit <- params$sensitivityAnalysis["criterion"]
   
   weights <- seq(0,1,length.out=10)
   
@@ -122,9 +122,8 @@ run_sensitivityWeightPlot <- function(params) {
   results <- list(
     results = list(
       "crit"=crit,
-      "values"=weights,
       "total"=wrap.matrix(total.value)),
-    descriptions = list("Criterion","Weight given to criterion", "Total value")
+    descriptions = list("Criterion","Total value")
   )
   
   mapply(wrap.result,
@@ -139,28 +138,27 @@ run_sensitivityMeasurementsPlot <- function(params) {
   weights <- genRepresentativeWeights(params)
   
   meas <- genMedianMeasurements(params)
-  alt <- params$sensitivityAnalysis$measurementsPlot["alternative"]
-  crit <- params$sensitivityAnalysis$measurementsPlot["criterion"]
+  alt <- params$sensitivityAnalysis["alternative"]
+  crit <- params$sensitivityAnalysis["criterion"]
   
   range <- params$criteria[[crit]]$pvf$range
-  x <- seq(range[1],range[2],length.out=10)
+  xCoordinates <- seq(range[1],range[2],length.out=10)
   
   total.value <- c()
-  for (value in x) {
+  for (value in xCoordinates) {
     cur.meas <- meas
     cur.meas[alt,crit] <- value
     total.value <- cbind(total.value,rowSums(calculateTotalValue(params,cur.meas,weights)))
   }
   
-  colnames(total.value) <- x
+  colnames(total.value) <- xCoordinates
   
   results <- list(
     results = list(
       "alt"=alt,
       "crit"=crit,
-      "values"=x,
       "total"=wrap.matrix(total.value)),
-    descriptions = list("Alternative","Criterion","Criterion measurements for alternative", "Total value")
+    descriptions = list("Alternative","Criterion","Total value")
   )
   
   mapply(wrap.result,

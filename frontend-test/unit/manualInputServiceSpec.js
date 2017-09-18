@@ -95,7 +95,7 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
         };
         expect(function() {
           manualInputService.isInvalidCell(invalidType);
-        }).toThrow(new TypeError('Cannot read property \'isInvalidInput\' of undefined'));
+        }).toThrowError(TypeError);
 
       });
     });

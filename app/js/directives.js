@@ -226,6 +226,8 @@ define(function(require) {
       restrict: 'E',
       scope: {
         showLegend: '@',
+        labelXAxis: '=',
+        labelYAxis: '=',
         value: '=',
         parseFn: '='
       },
@@ -237,6 +239,7 @@ define(function(require) {
 
         scope.$watch('value', function(newVal) {
           if (!newVal) {
+            svg.selectAll('g').remove();
             return;
           }
           var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
@@ -264,13 +267,19 @@ define(function(require) {
               }
             });
           } else {
-            var y = d3.scale.linear().domain(chart.yAxis.scale().domain());
-            chart.yAxis.tickValues(y.ticks(6));
-            chart.yAxis.tickFormat(d3.format(',.3g'));
-
             var x = d3.scale.linear().domain(chart.xAxis.scale().domain());
             chart.xAxis.tickFormat(d3.format(',.3g'));
             chart.xAxis.tickValues(x.ticks(4));
+            if(scope.labelXAxis) {
+              chart.xAxis.axisLabel(scope.labelXAxis);
+            }
+
+            var y = d3.scale.linear().domain(chart.yAxis.scale().domain());
+            chart.yAxis.tickValues(y.ticks(6));
+            chart.yAxis.tickFormat(d3.format(',.3g'));
+            if(scope.labelYAxis) {
+              chart.yAxis.axisLabel(scope.labelYAxis);
+            }
           }
 
           chart.update();
