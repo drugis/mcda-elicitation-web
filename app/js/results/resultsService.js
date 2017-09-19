@@ -159,9 +159,7 @@ define(function(require) {
       var modifiableScales = _.cloneDeep(observed);
       modifiableScales = _.reduce(modifiableScales, function(accum, criterion, criterionKey) {
         accum[criterionKey] = _.reduce(criterion, function(accum, scale, key) {
-          if (_.find(alternatives, function(alternative, alternativeKey) {
-              return alternativeKey === key;
-            })) {
+          if (alternatives[key]) {
             accum[key] = scale;
             return accum;
           } else {

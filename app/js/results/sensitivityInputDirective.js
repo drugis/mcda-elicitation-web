@@ -11,9 +11,9 @@ define(['lodash'], function(_) {
       scope: {
         'criterion': '=',
         'alternative': '=',
-        'observedScales': '=',
-        'changeCallback': '=',
-        'type': '='
+        'originalData': '=',
+        'currentData': '=',
+        'changeCallback': '='
       },
       templateUrl: mcdaRootPath + 'js/results/sensitivityInputDirective.html',
       link: function(scope) {
@@ -23,7 +23,7 @@ define(['lodash'], function(_) {
         scope.showSlider = showSlider;
 
         // init
-        scope.newScales = _.cloneDeep(scope.observedScales);
+        scope.newData = scope.currentData;
         scope.$on('dropdown.hasClosed', function() {
           $timeout(function() {
             closeAndSave();
@@ -44,7 +44,7 @@ define(['lodash'], function(_) {
 
         function initSlider() {
           return {
-            value: scope.newScales[scope.criterion.id][scope.alternative.id]['50%'],
+            value: scope.currentData,
             options: {
               floor: scope.criterion.pvf.range[0],
               ceil: scope.criterion.pvf.range[1],
@@ -64,8 +64,8 @@ define(['lodash'], function(_) {
 
         function closeAndSave() {
           if (!isNaN(scope.slider.value)) {
-            scope.newScales[scope.criterion.id][scope.alternative.id]['50%'] = scope.slider.value;
-            scope.changeCallback(scope.newScales);
+            scope.newData = scope.slider.value;
+            scope.changeCallback(scope.newData, scope.criterion, scope.alternative);
           }
           scope.$broadcast('dropdown.closeEvent');
         }

@@ -40,7 +40,6 @@ define(function(require) {
         return newEntry;
       });
       $scope.state = initialize(taskDefinition.clean(alteredState));
-      $scope.state.showSensitivity = true;
     }
 
     function initialize(state) {
@@ -54,17 +53,7 @@ define(function(require) {
       $scope.sensitivityMeasurements.measurementsCriterion = $scope.criteria[0];
       $scope.sensitivityMeasurements.preferencesCriterion = $scope.criteria[0];
 
-      $scope.types = _.reduce(state.problem.performanceTable, function(accum, tableEntry) {
-        if (!accum[tableEntry.criterion]) {
-          accum[tableEntry.criterion] = {};
-        }
-        if (tableEntry.alternative) {
-          accum[tableEntry.criterion][tableEntry.alternative] = tableEntry.performance.type;
-        } else {
-          accum[tableEntry.criterion] = tableEntry.performance.type;
-        }
-        return accum;
-      }, {});
+
       $scope.deterministicResults = MCDAResultsService.getDeterministicResults($scope, state);
       var overallResults = MCDAResultsService.getResults($scope, state);
       doMeasurementSensitivity(state);

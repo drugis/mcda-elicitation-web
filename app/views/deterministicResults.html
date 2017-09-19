@@ -45,7 +45,7 @@
               <label>{{criterion.title}}</label>
             </td>
             <td class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}">
-              <sensitivity-input criterion="criterion" alternative="alternative" observed-scales="modifiableScales" change-callback="sensitivityScalesChanged" type="types[criterion.id][alternative.id]"></sensitivity-input>
+              <sensitivity-input criterion="criterion" alternative="alternative" original-data="scales.observed[criterion.id][alternative.id]['50%']" current-data="modifiableScales[criterion.id][alternative.id]['50%']" change-callback="sensitivityScalesChanged" ></sensitivity-input>
             </td>
           </tr>
         </tbody>
