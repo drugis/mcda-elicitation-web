@@ -1,0 +1,141 @@
+<div ng-if="!state.results">
+  <div class="row" style="margin-top: 15em">
+    <div class="small-6 large-centered columns">
+      <progressbar value="progress"></progressbar>
+    </div>
+  </div>
+</div>
+<div ng-if="state.results">
+  <div class="row" ng-show="isEditTitleVisible">
+    <div class="columns large-8 small-12">
+      <h4 ng-show="!isEditTitleVisible" class="subheader">
+        <span>{{scenario.title}}</span>
+      </h4>
+      <form>
+        <div class="row collapse">
+          <div class="columns small-8">
+            <input type="text" ng-model="scenarioTitle.value">
+          </div>
+          <div class="columns small-2">
+            <button class="button postfix" ng-click="saveTitle()">Save</button>
+          </div>
+          <div class="columns small-2">
+            <button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns large-12">
+      <h3>Deterministic analysis results</h3>
+      <button ui-sref="smaa-results">SMAA results</button>
+      <table class="full-width effects-table">
+        <thead>
+          <tr>
+            <th>Criterion</th>
+            <th class="text-center" ng-repeat="alternative in alternatives">
+              {{alternative.title}}
+            </th>
+          </tr>
+        </thead>
+        <tbody class="main">
+          <tr ng-repeat="criterion in criteria">
+            <td>
+              <label>{{criterion.title}}</label>
+            </td>
+            <td class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}">
+              <sensitivity-input criterion="criterion" alternative="alternative" observed-scales="modifiableScales" change-callback="sensitivityScalesChanged" type="types[criterion.id][alternative.id]"></sensitivity-input>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns large-12">
+      <button class="button small" ng-click="recalculateResults()">
+        Recalculate results
+      </button>
+      <button class="button small" ng-click="resetSensitivityAnalysis()">
+        Reset
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns large-12">
+      <h3>Deterministic analysis &mdash; base case</h3>
+      <h4>Representative weights</h4>
+      <table>
+        <thead>
+          <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td ng-repeat="criterion in criteria">{{deterministicResults.results.weights.data[criterion.id]}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <h4>Total value</h4>
+      <table>
+        <thead>
+          <th ng-repeat="alternative in alternatives">{{alternative.title}}</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td ng-repeat="alternative in alternatives">{{deterministicResults.results.total.data[alternative.id]}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <h4>Value profiles</h4>
+      <value-profile-plot values="deterministicResults.results" criteria="criteria" alternatives="alternatives"></value-profile-plot>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns large-12">
+      <h3>Deterministic analysis &mdash; one-way sensitivity analysis</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns medium-6 large-6">
+      <h4>Measurements</h4>
+      <div class="row">
+        <div class="columns medium-6 large-6">
+          <label>Alternative
+            <select ng-options="alternative.title for alternative in alternatives" ng-model="sensitivityMeasurements.measurementsAlternative" ng-change="doMeasurementSensitivity(state)"></select>
+          </label>
+        </div>
+        <div class="columns medium-6">
+          <label>Criterion
+            <select ng-options="criterion.title for criterion in criteria" ng-model="sensitivityMeasurements.measurementsCriterion" ng-change="doMeasurementSensitivity(state)"></select>
+          </label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="columns medium-6" style="height: 450px; width: 450px">
+          <line-chart label-x-axis="sensitivityMeasurements.measurementsCriterion.title" label-y-axis="'total value'" value="measurementValues"></line-chart>
+        </div>
+      </div>
+    </div>
+    <div class="columns medium-6 large-6">
+      <h4>Preferences</h4>
+      <div class="row">
+        <div class="columns medium-6">
+          <label>Weight given to
+            <select ng-options="criterion.title for criterion in criteria" ng-model="sensitivityMeasurements.preferencesCriterion" ng-change="doPreferencesSensitivity(state)"></select>
+          </label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="columns medium-6" style="height: 450px; width: 450px">
+          <line-chart label-x-axis="'Weight given to ' + sensitivityMeasurements.preferencesCriterion.title" label-y-axis="'total value'" value="preferencesValues"></line-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns large-12">
+      <button ui-sref="smaa-results">SMAA results</button>
+    </div>
+  </div>
+</div>

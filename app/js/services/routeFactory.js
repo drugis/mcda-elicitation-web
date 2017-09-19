@@ -33,21 +33,26 @@ define(function(require) {
 
         var children = Config.tasks.available.map(function(task) {
           var templateUrl = baseTemplatePath + task.templateUrl;
-          return {
+          var state = {
             name: task.id,
             parent: scenarioState,
             url: task.url ? task.url : '/' + task.id,
-            templateUrl: templateUrl,
-            controller: task.controller,
-            resolve: {
+          };
+          if (task.redirectTo) {
+            state.redirectTo = task.redirectTo;
+          } else {
+            state.controller = task.controller;
+            state.templateUrl = templateUrl;
+            state.resolve = {
               currentScenario: function($stateParams, ScenarioResource) {
                 return ScenarioResource.get($stateParams).$promise;
               },
               taskDefinition: function(TaskDependencies) {
                 return TaskDependencies.extendTaskDefinition(task);
               }
-            }
-          };
+            };
+          }
+          return state;
         });
 
         $stateProvider.state(scenarioState);

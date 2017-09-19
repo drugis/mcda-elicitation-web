@@ -1,0 +1,108 @@
+<div ng-if="!state.results">
+  <div class="row" style="margin-top: 15em">
+    <div class="small-6 large-centered columns">
+      <progressbar value="progress"></progressbar>
+    </div>
+  </div>
+</div>
+<div ng-if="state.results">
+  <div class="row" ng-show="isEditTitleVisible">
+    <div class="columns large-8 small-12">
+      <h4 ng-show="!isEditTitleVisible" class="subheader">
+        <span>{{scenario.title}}</span>
+      </h4>
+      <form>
+        <div class="row collapse">
+          <div class="columns small-8">
+            <input type="text" ng-model="scenarioTitle.value">
+          </div>
+          <div class="columns small-2">
+            <button class="button postfix" ng-click="saveTitle()">Save</button>
+          </div>
+          <div class="columns small-2">
+            <button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <section class="row underlined-div" style="height: 450px;">
+    <div class="columns large-12">
+      <h3>SMAA results</h3>
+      <button ui-sref="deterministic-results">Deterministic analysis</button>
+      <h4>Rank acceptabilities</h4>
+      <rank-acceptability-plot data="state.results.ranks.data" problem="state.problem"></rank-acceptability-plot>
+      <table id="ranktable">
+        <thead>
+          <tr>
+            <th>
+              <heat-legend></heat-legend>
+            </th>
+            <th ng-repeat="alternative in state.problem.alternatives">Rank {{::$index + 1}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="(key, alternative) in state.problem.alternatives">
+            <td>{{::alternative.title}}</td>
+            <td ng-repeat="rank in state.results.ranks.data[key] track by $index" class="heat">
+              {{::rank | number}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+  <section class="row underlined-div">
+    <div class="columns large-6">
+      <h4>Alternatives per rank</h4>
+      <select ng-model="state.selectedRank" class="large-3">
+        <option ng-repeat="(k,v) in state.problem.alternatives" value="{{$index}}" ng-selected="$index == state.selectedRank">
+          Rank {{::$index + 1}}
+        </option>
+      </select>
+      <div style="width: 400px; height: 350px">
+        <bar-chart value="state.alternativesByRank(state)"></bar-chart>
+      </div>
+    </div>
+    <div class="columns large-6">
+      <h4>Ranks per alternative</h4>
+      <select ng-model="state.selectedAlternative" class="large-3">
+        <option ng-repeat="(key, alternative) in state.problem.alternatives" value="{{key}}" ng-selected="key == state.selectedAlternative">
+          {{::alternative.title}}
+        </option>
+      </select>
+      <div style="width: 400px; height: 350px">
+        <bar-chart value="state.ranksByAlternative(state)"></bar-chart>
+      </div>
+    </div>
+  </section>
+  <h4>Central Weights</h4>
+  <section class="row">
+    <div class="columns large-12">
+      <div style="width: 650px; height: 350px">
+        <line-chart value="state.centralWeights(state)"></line-chart>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Alternative</th>
+            <th>Confidence
+              <heat-legend></heat-legend>
+            </th>
+            <th ng-repeat="criterion in state.problem.criteria">{{criterion.title}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="(a, cw) in state.results.cw.data">
+            <td>{{state.problem.alternatives[a].title}}</td>
+            <td class="heat">{{::cw.cf | number}}</td>
+            <td ng-repeat="(c, criterion) in state.problem.criteria">
+              {{::cw.w[c] | number}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <button ui-sref="deterministic-results">Deterministic analysis</button>
+    </div>
+  </section>
+</div>

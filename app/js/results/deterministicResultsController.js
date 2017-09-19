@@ -2,9 +2,9 @@
 define(function(require) {
   var _ = require('lodash');
 
-  var dependencies = ['$scope', '$q', 'currentScenario', 'taskDefinition', 'MCDAResultsService', 'addKeyHashToObject'];
+  var dependencies = ['$scope', 'currentScenario', 'taskDefinition', 'MCDAResultsService', 'addKeyHashToObject'];
 
-  var ResultsController = function($scope, $q, currentScenario, taskDefinition, MCDAResultsService, addKeyHashToObject) {
+  var DeterministicResultsController = function($scope, currentScenario, taskDefinition, MCDAResultsService, addKeyHashToObject) {
     // functions
     $scope.sensitivityScalesChanged = sensitivityScalesChanged;
     $scope.recalculateResults = recalculateResults;
@@ -86,5 +86,5 @@ define(function(require) {
       });
     }
   };
-  return dependencies.concat(ResultsController);
+  return dependencies.concat(DeterministicResultsController);
 });

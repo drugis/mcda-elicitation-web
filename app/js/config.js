@@ -40,7 +40,7 @@ define(function() {
       controller: 'ExactSwingController',
       templateUrl: 'exactSwing.html',
       activeTab: 'preferences',
-      requires: [ 'complete-criteria-ranking'],
+      requires: ['complete-criteria-ranking'],
       resets: ['non-ordinal-preferences']
     }, {
       id: 'preferences',
@@ -53,8 +53,22 @@ define(function() {
     }, {
       id: 'results',
       title: 'Results',
-      controller: 'ResultsController',
-      templateUrl: 'results.html',
+      requires: ['partial-value-function'],
+      redirectTo: 'smaa-results',
+      resets: []
+    }, {
+      id: 'smaa-results',
+      title: 'Results',
+      controller: 'SmaaResultsController',
+      templateUrl: 'smaaResults.html',
+      activeTab: 'results',
+      requires: ['partial-value-function'],
+      resets: []
+    }, {
+      id: 'deterministic-results',
+      title: 'Results',
+      controller: 'DeterministicResultsController',
+      templateUrl: 'deterministicResults.html',
       activeTab: 'results',
       requires: ['partial-value-function'],
       resets: []
