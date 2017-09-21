@@ -211,6 +211,19 @@ define(function(require) {
       return run(scope, nextState);
     }
 
+    function getRecalculatedDeterministicResulsts(scope, state) {
+      var nextState = {
+        problem: _.merge({}, state.problem, {
+          preferences: state.prefs,
+          method: 'sensitivityMeasurements',
+          sensitivityAnalysis: {
+            meas: scope.sensitivityMeasurements.alteredTableCells
+          }
+        })
+      };
+      return run(scope, nextState);
+    }
+
     function getMeasurementsSensitivityResults(scope, state) {
       var nextState = {
         problem: _.merge({}, state.problem, {
@@ -245,6 +258,7 @@ define(function(require) {
       pataviResultToValueProfile: pataviResultToValueProfile,
       pataviResultToLineValues: pataviResultToLineValues,
       getDeterministicResults: getDeterministicResults,
+      getRecalculatedDeterministicResulsts: getRecalculatedDeterministicResulsts,
       getMeasurementsSensitivityResults: getMeasurementsSensitivityResults,
       getPreferencesSensitivityResults: getPreferencesSensitivityResults
     };

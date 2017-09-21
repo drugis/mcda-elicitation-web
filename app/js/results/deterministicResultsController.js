@@ -15,7 +15,9 @@ define(function(require) {
     // init
     $scope.scenario = currentScenario;
     $scope.scales = $scope.workspace.$$scales;
-    $scope.sensitivityMeasurements = {};
+    $scope.sensitivityMeasurements = {
+      alteredTableCells: []
+    };
     $scope.state = initialize(taskDefinition.clean($scope.aggregateState));
     $scope.$watch('scales.observed', function() {
       resetSensitivityAnalysis();
@@ -24,22 +26,22 @@ define(function(require) {
     function resetSensitivityAnalysis() {
       $scope.modifiableScales = MCDAResultsService.resetModifiableScales(
         $scope.scales.observed, $scope.state.problem.alternatives);
+      delete $scope.recalculatedDeterministicResults;
+      $scope.sensitivityMeasurements.alteredTableCells = [];
     }
 
-    function sensitivityScalesChanged(newScales) {
-      $scope.modifiableScales = newScales;
+    function sensitivityScalesChanged(newValue, criterion, alternative) {
+      $scope.modifiableScales[criterion.id][alternative.id]['50%'] = newValue;
+      $scope.sensitivityMeasurements.alteredTableCells.push( {
+        criterion: criterion.id,
+        alternative: alternative.id,
+        value: newValue
+      });
     }
 
     function recalculateResults() {
-      var alteredState = _.cloneDeep($scope.aggregateState);
-      alteredState.problem.performanceTable = _.map($scope.aggregateState.problem.performanceTable, function(tableEntry) {
-        var newEntry = _.cloneDeep(tableEntry);
-        if (newEntry.performance.type === 'exact') {
-          newEntry.performance.value = $scope.modifiableScales[newEntry.criterion][newEntry.alternative]['50%'];
-        }
-        return newEntry;
-      });
-      $scope.state = initialize(taskDefinition.clean(alteredState));
+      delete $scope.recalculatedDeterministicResults;
+      $scope.recalculatedDeterministicResults = MCDAResultsService.getRecalculatedDeterministicResulsts($scope, $scope.state);
     }
 
     function initialize(state) {
@@ -52,7 +54,6 @@ define(function(require) {
       });
       $scope.sensitivityMeasurements.measurementsCriterion = $scope.criteria[0];
       $scope.sensitivityMeasurements.preferencesCriterion = $scope.criteria[0];
-
 
       $scope.deterministicResults = MCDAResultsService.getDeterministicResults($scope, state);
       var overallResults = MCDAResultsService.getResults($scope, state);

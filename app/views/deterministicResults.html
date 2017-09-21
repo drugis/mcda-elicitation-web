@@ -30,6 +30,11 @@
     <div class="columns large-12">
       <h3>Deterministic analysis results</h3>
       <button ui-sref="smaa-results">SMAA results</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="columns large-12">
+      <h3>Effects table (exact or median values only)</h3>
       <table class="full-width effects-table">
         <thead>
           <tr>
@@ -45,7 +50,7 @@
               <label>{{criterion.title}}</label>
             </td>
             <td class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}">
-              <sensitivity-input criterion="criterion" alternative="alternative" original-data="scales.observed[criterion.id][alternative.id]['50%']" current-data="modifiableScales[criterion.id][alternative.id]['50%']" change-callback="sensitivityScalesChanged" ></sensitivity-input>
+              <sensitivity-input criterion="criterion" alternative="alternative" original-value="scales.observed[criterion.id][alternative.id]['50%']" current-value="modifiableScales[criterion.id][alternative.id]['50%']" change-callback="sensitivityScalesChanged"></sensitivity-input>
             </td>
           </tr>
         </tbody>
@@ -55,7 +60,7 @@
   <div class="row">
     <div class="columns large-12">
       <button class="button small" ng-click="recalculateResults()">
-        Recalculate results
+        Recalculate value profiles
       </button>
       <button class="button small" ng-click="resetSensitivityAnalysis()">
         Reset
@@ -64,36 +69,66 @@
   </div>
   <div class="row">
     <div class="columns large-12">
-      <h3>Deterministic analysis &mdash; base case</h3>
-      <h4>Representative weights</h4>
-      <table>
-        <thead>
-          <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td ng-repeat="criterion in criteria">{{deterministicResults.results.weights.data[criterion.id]}}</td>
-          </tr>
-        </tbody>
-      </table>
-      <h4>Total value</h4>
-      <table>
-        <thead>
-          <th ng-repeat="alternative in alternatives">{{alternative.title}}</th>
-        </thead>
-        <tbody>
-          <tr>
-            <td ng-repeat="alternative in alternatives">{{deterministicResults.results.total.data[alternative.id]}}</td>
-          </tr>
-        </tbody>
-      </table>
-      <h4>Value profiles</h4>
-      <value-profile-plot values="deterministicResults.results" criteria="criteria" alternatives="alternatives"></value-profile-plot>
+      <h3>Multi-way sensitivity analysis</h3>
+      <div class="row">
+        <div class="columns large-12">
+          <h4>Representative weights</h4>
+          <table>
+            <thead>
+              <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td ng-repeat="criterion in criteria">{{deterministicResults.results.weights.data[criterion.id]}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <div class="columns large-6">
+          <h4>Total value (base case)</h4>
+          <table>
+            <thead>
+              <th ng-repeat="alternative in alternatives">{{alternative.title}}</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td ng-repeat="alternative in alternatives">{{deterministicResults.results.total.data[alternative.id]}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div ng-if="recalculatedDeterministicResults" class="columns large-6">
+          <h4>Total value (recalculated case)</h4>
+          <table>
+            <thead>
+              <th ng-repeat="alternative in alternatives">{{alternative.title}}</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td ng-repeat="alternative in alternatives">{{recalculatedDeterministicResults.results.total.data[alternative.id]}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="row">
+        <h4>Value profiles</h4>
+        <div class="columns large-6">
+          <h3>Base case</h3>
+          <value-profile-plot values="deterministicResults.results" criteria="criteria" alternatives="alternatives"></value-profile-plot>
+        </div>
+        <div ng-if="recalculatedDeterministicResults" class="columns large-6">
+          <h3>Recalculated case</h3>
+          <value-profile-plot values="recalculatedDeterministicResults.results" criteria="criteria" alternatives="alternatives"></value-profile-plot>
+        </div>
+      </div>
     </div>
   </div>
   <div class="row">
     <div class="columns large-12">
-      <h3>Deterministic analysis &mdash; one-way sensitivity analysis</h3>
+      <h3>One-way sensitivity analysis</h3>
     </div>
   </div>
   <div class="row">

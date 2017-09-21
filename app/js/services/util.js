@@ -27,7 +27,7 @@ define(function(require) {
         newObject.hash = _.map(key, function(f) {
           return f.charCodeAt(0);
         }).join('');
-        newObject.id = JSON.stringify(key);
+        newObject.id = key;
         return newObject;
       };
     })

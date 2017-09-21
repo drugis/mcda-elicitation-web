@@ -1,7 +1,10 @@
 <a dropdown-toggle="#editCellToggle-{{criterion.hash}}-{{alternative.hash}}" ng-style="inputData.isInvalid ? {color:'red'} : {}" ng-click="showSlider()">
-  <div>
-    {{newValue | number}} ({{originalValue | number}})
-  </div>
+  <span>
+    {{currentValue | number}}
+  </span>
+  <span ng-show="currentValue!==originalValue" style="color: grey">
+    ({{originalValue | number}})
+  </span>
 </a>
 <div id="editCellToggle-{{criterion.hash}}-{{alternative.hash}}" class="row f-dropdown" ng-keyup="keyCheck($event)" ng-keydown="keyCheck($event)" ng-keypress="keyCheck($event)">
   <div class="columns large-12">

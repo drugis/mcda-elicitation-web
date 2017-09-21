@@ -11,8 +11,8 @@ define(['lodash'], function(_) {
       scope: {
         'criterion': '=',
         'alternative': '=',
-        'originalData': '=',
-        'currentData': '=',
+        'originalValue': '=',
+        'currentValue': '=',
         'changeCallback': '='
       },
       templateUrl: mcdaRootPath + 'js/results/sensitivityInputDirective.html',
@@ -23,28 +23,27 @@ define(['lodash'], function(_) {
         scope.showSlider = showSlider;
 
         // init
-        scope.newData = scope.currentData;
+        scope.newValue = scope.currentValue;
         scope.$on('dropdown.hasClosed', function() {
           $timeout(function() {
             closeAndSave();
           });
         });
-        scope.$watch('observedScales', function() {
-          scope.newScales = _.cloneDeep(scope.observedScales);
+        scope.$watch('currentValue', function() {
+          scope.newValue = scope.currentValue; //needed for reset button
         });
 
         function showSlider() {
+          scope.slider = initSlider();
           $timeout(function() {
             scope.$broadcast('rzSliderForceRender');
             scope.$broadcast('reCalcViewDimensions');
           });
-
-          scope.slider = initSlider();
         }
 
         function initSlider() {
           return {
-            value: scope.currentData,
+            value: scope.currentValue,
             options: {
               floor: scope.criterion.pvf.range[0],
               ceil: scope.criterion.pvf.range[1],
@@ -64,8 +63,8 @@ define(['lodash'], function(_) {
 
         function closeAndSave() {
           if (!isNaN(scope.slider.value)) {
-            scope.newData = scope.slider.value;
-            scope.changeCallback(scope.newData, scope.criterion, scope.alternative);
+            scope.newValue = scope.slider.value;
+            scope.changeCallback(scope.newValue, scope.criterion, scope.alternative);
           }
           scope.$broadcast('dropdown.closeEvent');
         }

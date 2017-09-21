@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'd3', 'nvd3'], function(_, d3, nv) {
+define(['d3', 'nvd3'], function(d3, nv) {
   var dependencies = [ 'MCDAResultsService'];
 
   var ValueProfilePlot = function(ResultsService) {
