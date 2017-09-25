@@ -1,23 +1,40 @@
 'use strict';
-define(function(require) {
-  var angular = require('angular');
-  var _ = require('lodash');
-  var Wizard = require('mcda/controllers/helpers/wizard');
-  var dependencies = ['$scope', '$state', '$stateParams', '$injector',
-    'currentScenario', 'taskDefinition', 'PartialValueFunction', 'TaskDependencies'
+define(['angular','lodash', 'mcda/controllers/helpers/wizard'],function(angular, _, Wizard) {
+  var dependencies = [
+    '$scope',
+    '$state',
+    '$stateParams',
+    '$injector',
+    'currentScenario',
+    'taskDefinition',
+    'PartialValueFunction',
+    'TaskDependencies'
   ];
 
-  var PartialValueFunctionController = function($scope, $state, $stateParams, $injector,
-    currentScenario, taskDefinition, PartialValueFunction, TaskDependencies) {
-    $scope.pvf = PartialValueFunction;
-    $scope.problem = $scope.aggregateState.problem;
+  var PartialValueFunctionController = function(
+    $scope,
+    $state,
+    $stateParams,
+    $injector,
+    currentScenario,
+    taskDefinition,
+    PartialValueFunction,
+    TaskDependencies) {
+    // functions
     $scope.save = save;
     $scope.canSave = canSave;
     $scope.cancel = cancel;
-    
+    $scope.getXY = _.memoize(PartialValueFunction.getXY, function(arg) {
+      return angular.toJson(arg.pvf);
+    });
+
+    // init
+    $scope.pvf = PartialValueFunction;
+    $scope.problem = $scope.aggregateState.problem;
+
     function initialize(state) {
       var criterionId = $stateParams.criterion;
-      var criterion = angular.copy($scope.problem.criteria[criterionId]);
+      var criterion = _.cloneDeep($scope.problem.criteria[criterionId]);
       if (!criterion) {
         return {};
       }
@@ -25,7 +42,8 @@ define(function(require) {
       criterion.pvf = !criterion.pvf ? {} : criterion.pvf;
       criterion.pvf.direction = 'decreasing';
       criterion.pvf.type = 'linear';
-      criterion.pvf.cutoffs = criterion.pvf.values = undefined;
+      criterion.pvf.cutoffs = undefined;
+      criterion.pvf.values = undefined;
 
       var initial = {
         ref: 0,
@@ -42,7 +60,7 @@ define(function(require) {
     }
 
     function nextState(state) {
-      var nextState = angular.copy(state);
+      var nextState = _.cloneDeep(state);
       var ref = nextState.ref;
 
       if (state.type === 'elicit type') {
@@ -78,12 +96,11 @@ define(function(require) {
           }
         });
       }
-
       return nextState;
     }
 
     function standardizeCriterion(criterion) {
-      var newCriterion = angular.copy(criterion);
+      var newCriterion = _.cloneDeep(criterion);
       if (newCriterion.pvf.type === 'linear') {
         newCriterion.pvf.values = undefined;
         newCriterion.pvf.cutoffs = undefined;
@@ -94,11 +111,10 @@ define(function(require) {
     function save(state) {
       var criterionId = $stateParams.criterion;
       var standardizedCriterion = standardizeCriterion(state.choice);
-      var criteria = {};
+      var criteria = _.cloneDeep(currentScenario.state.problem.criteria);
       criteria[criterionId] = standardizedCriterion;
-      currentScenario.state.problem = _.merge({}, currentScenario.state.problem, {
-        criteria: criteria
-      });
+      currentScenario.state.problem.criteria = criteria;
+
       currentScenario.state = TaskDependencies.remove(taskDefinition, currentScenario.state);
       currentScenario.$save($stateParams, function(scenario) {
         $scope.$emit('elicit.resultsAccessible', scenario);
@@ -127,10 +143,6 @@ define(function(require) {
           return false;
       }
     }
-
-    $scope.getXY = _.memoize(PartialValueFunction.getXY, function(arg) {
-      return angular.toJson(arg.pvf);
-    });
 
     function cancel() {
       $state.go('preferences');
