@@ -12,6 +12,10 @@ icloglog <- function(x) {
   1 - exp(-exp(x))
 }
 
+cloglog <- function(x) {
+  log(-log(1-x))
+}
+
 survival.mean <- function(x) {
   1/x
 }
@@ -73,6 +77,10 @@ sampler.dsurv <- function(perf, N) {
 
 sampler.dbeta <- function(perf, N) {
   rbeta(N, perf$parameters['alpha'], perf$parameters['beta'])
+}
+
+sampler.dbeta_cloglog <- function(perf, N) {
+  cloglog(rbeta(N, perf$parameters['alpha'], perf$parameters['beta']))
 }
 
 sampler.dbeta_logit <- function(perf, N) {
