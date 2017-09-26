@@ -9,7 +9,9 @@
       "scale": [0,100],
       "pvf": {
         "range": [45,65],
-        "type": "linear",
+        "type": "piecewise-linear",
+        "cutoffs": [48.6,49.8,61.5],
+        "values": [0.25,0.5,0.75],
         "direction": "increasing"
       }
     },
@@ -107,9 +109,9 @@
     }
   }
   ], 
-  "preferences":[{"type":"ordinal","criteria":["OS","severe"]}, {"type":"ordinal","criteria":["severe","moderate"]}],
+  "preferences": {},
   "sensitivityAnalysis": {
-    "meas": [{"alternative": "alt1", "criterion": "OS", "value": 65},{"alternative": "alt2", "criterion": "OS", "value": 45}],
-    "weights": [{"criterion": "OS", "value": 0.3}]
+    "alternative": "alt1",
+    "criterion": "OS"
   }
 }
