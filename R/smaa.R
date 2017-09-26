@@ -139,7 +139,6 @@ run_sensitivityMeasurementsPlot <- function(params) {
   crit <- params$sensitivityAnalysis["criterion"]
   
   range <- params$criteria[[crit]]$pvf$range
-  #xCoordinates <- seq(range[1],range[2],length.out=10)
   if (params$criteria[[crit]]$pvf$type=='linear') {
     xCoordinates <- range
   } else {
