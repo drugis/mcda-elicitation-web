@@ -9,7 +9,7 @@ wrap.matrix <- function(m) {
 }
 
 smaa_v2 <- function(params) {
-  allowed <- c('scales','smaa','deterministic','sensitivityMeasurements', 'sensitivityWeights','sensitivityMeasurementsPlot','sensitivityWeightPlot')
+  allowed <- c('scales','smaa','deterministic','sensitivityMeasurements','sensitivityMeasurementsPlot','sensitivityWeightPlot')
   if(params$method %in% allowed) {
     do.call(paste("run", params$method, sep="_"), list(params))
   } else {
@@ -104,26 +104,23 @@ calculateTotalValue <- function(params,meas,weights) {
   meas
 }
 
-run_sensitivityWeightPlot <- function(params) {
+run_sensitivityMeasurements <- function(params) {
   
   meas <- genMedianMeasurements(params)
-  crit <- params$sensitivityAnalysis["criterion"]
-  
-  weights <- seq(0,1,length.out=10)
-  
-  total.value <- c()
-  for (value in weights) {
-    params$sensitivityAnalysis$weights <- list(list(criterion=crit,value=value))
-    total.value <- cbind(total.value,run_sensitivityWeights(params)$total$data)
+  for (entry in params$sensitivityAnalysis$meas) {
+    meas[entry$alternative,entry$criterion] <- entry$value # Replace median value by the desired value for the sensitivity analysis
   }
   
-  colnames(total.value) <- weights
+  weights <- genRepresentativeWeights(params)
+  
+  valueProfiles <- calculateTotalValue(params,meas,weights)
+  totalValue <- rowSums(valueProfiles)
   
   results <- list(
     results = list(
-      "crit"=crit,
-      "total"=wrap.matrix(total.value)),
-    descriptions = list("Criterion","Total value")
+      "value"=wrap.matrix(valueProfiles),
+      "total"=totalValue),
+    descriptions = list("Value profile", "Total value")
   )
   
   mapply(wrap.result,
@@ -131,7 +128,7 @@ run_sensitivityWeightPlot <- function(params) {
          results$descriptions,
          SIMPLIFY=F)
   
-} 
+}
 
 run_sensitivityMeasurementsPlot <- function(params) {
   
@@ -168,64 +165,47 @@ run_sensitivityMeasurementsPlot <- function(params) {
   
 }
 
-run_sensitivityMeasurements <- function(params) {
+run_sensitivityWeightPlot <- function(params) {
+  
+  crit <- params$sensitivityAnalysis["criterion"]
   
   meas <- genMedianMeasurements(params)
-  for (entry in params$sensitivityAnalysis$meas) {
-    meas[entry$alternative,entry$criterion] <- entry$value # Replace median value by the desired value for the sensitivity analysis
-  }
-  
   weights <- genRepresentativeWeights(params)
   
-  valueProfiles <- calculateTotalValue(params,meas,weights)
-  totalValue <- rowSums(valueProfiles)
+  weight.crit <- seq(0,1,length.out=11)
   
-  results <- list(
-    results = list(
-      "value"=wrap.matrix(valueProfiles),
-      "total"=totalValue),
-    descriptions = list("Value profile", "Total value")
-  )
-  
-  mapply(wrap.result,
-         results$results,
-         results$descriptions,
-         SIMPLIFY=F)
-  
-}
-
-run_sensitivityWeights <- function(params) {
-  
-  crit <- params$sensitivityAnalysis$weights[[1]]$criterion
-  value <- params$sensitivityAnalysis$weights[[1]]$value
-  
-  meas <- genMedianMeasurements(params)
-  
-  weights <- genRepresentativeWeights(params)
-  n <- length(weights)
-  lhs <- rep(0,n)
-  lhs[which(names(weights)==crit)] <- 1
-  constr <- list(constr=lhs,dir="=",rhs=value)
-  constr <- mergeConstraints(constr,simplexConstraints(n)) 
-  for (i in names(params$criteria)) { # Keep the ratio between the other criteria weights fixed
-    for (j in names(params$criteria)) {
-      if (j>i & i!=crit & j!=crit) {
-        constr <- mergeConstraints(constr,exactRatioConstraint(n,which(names(weights)==i),which(names(weights)==j),weights[i]/weights[j]))
+  total.value <- c()
+  for (value in weight.crit) {
+    
+    n <- length(weights)
+    lhs <- rep(0,n)
+    lhs[which(names(weights)==crit)] <- 1
+    constr <- list(constr=lhs,dir="=",rhs=value)
+    constr <- mergeConstraints(constr,simplexConstraints(n)) 
+    
+    for (i in names(params$criteria)) { # Keep the ratio between the other criteria weights fixed
+      for (j in names(params$criteria)) {
+        if (j>i & i!=crit & j!=crit) {
+          constr <- mergeConstraints(constr,exactRatioConstraint(n,which(names(weights)==i),which(names(weights)==j),weights[i]/weights[j]))
+        }
       }
     }
+    
+    cur.weights <- as.numeric(hitandrun(constr,n.samples=1))
+    names(cur.weights) <- names(params$criteria)
+    
+    valueProfiles <- calculateTotalValue(params,meas,cur.weights)
+    total.value <- cbind(total.value,rowSums(valueProfiles))
+    
   }
-  weights <- as.numeric(hitandrun(constr,n.samples=1))
-  names(weights) <- names(params$criteria)
   
-  valueProfiles <- calculateTotalValue(params,meas,weights)
-  totalValue <- rowSums(valueProfiles)
+  colnames(total.value) <- weight.crit
   
   results <- list(
     results = list(
-      "weights"=weights,
-      "value"=wrap.matrix(valueProfiles),
-      "total"=totalValue),
-    descriptions = list("Weights", "Value profile", "Total value")
+      "crit"=crit,
+      "total"=wrap.matrix(total.value)),
+    descriptions = list("Criterion","Total value")
   )
   
   mapply(wrap.result,
@@ -233,7 +213,7 @@ run_sensitivityWeights <- function(params) {
          results$descriptions,
          SIMPLIFY=F)
   
-}
+} 
 
 run_smaa <- function(params) {
   N <- 1E4
