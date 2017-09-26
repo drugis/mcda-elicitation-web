@@ -1,5 +1,5 @@
 'use strict';
-define(['angular','lodash', 'mcda/controllers/helpers/wizard'],function(angular, _, Wizard) {
+define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angular, _, Wizard) {
   var dependencies = [
     '$scope',
     '$state',
@@ -104,6 +104,12 @@ define(['angular','lodash', 'mcda/controllers/helpers/wizard'],function(angular,
       if (newCriterion.pvf.type === 'linear') {
         newCriterion.pvf.values = undefined;
         newCriterion.pvf.cutoffs = undefined;
+      } else if (newCriterion.pvf.type === 'piecewise-linear') {
+        newCriterion.pvf.cutoffs.sort();
+        newCriterion.pvf.values.sort();
+        if (newCriterion.pvf.direction === 'decreasing') {
+          newCriterion.pvf.values.reverse();
+        }
       }
       return newCriterion;
     }
