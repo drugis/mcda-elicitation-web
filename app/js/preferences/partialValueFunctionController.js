@@ -99,24 +99,9 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
       return nextState;
     }
 
-    function standardizeCriterion(criterion) {
-      var newCriterion = _.cloneDeep(criterion);
-      if (newCriterion.pvf.type === 'linear') {
-        newCriterion.pvf.values = undefined;
-        newCriterion.pvf.cutoffs = undefined;
-      } else if (newCriterion.pvf.type === 'piecewise-linear') {
-        newCriterion.pvf.cutoffs.sort();
-        newCriterion.pvf.values.sort();
-        if (newCriterion.pvf.direction === 'decreasing') {
-          newCriterion.pvf.values.reverse();
-        }
-      }
-      return newCriterion;
-    }
-
     function save(state) {
       var criterionId = $stateParams.criterion;
-      var standardizedCriterion = standardizeCriterion(state.choice);
+      var standardizedCriterion = PartialValueFunction.standardizeCriterion(state.choice);
       var criteria = _.cloneDeep(currentScenario.state.problem.criteria);
       criteria[criterionId] = standardizedCriterion;
       currentScenario.state.problem.criteria = criteria;

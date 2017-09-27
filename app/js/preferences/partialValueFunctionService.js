@@ -126,6 +126,21 @@ define(function(require) {
       }];
     }
 
+    function standardizeCriterion(criterion) {
+      var newCriterion = _.cloneDeep(criterion);
+      if (newCriterion.pvf.type === 'linear') {
+        delete newCriterion.pvf.values;
+        delete newCriterion.pvf.cutoffs;
+      } else if (newCriterion.pvf.type === 'piecewise-linear') {
+        newCriterion.pvf.cutoffs = _.sortBy(newCriterion.pvf.cutoffs);
+        newCriterion.pvf.values = _.sortBy(newCriterion.pvf.values);
+        if (newCriterion.pvf.direction === 'decreasing') {
+          newCriterion.pvf.values.reverse();
+        }
+      }
+      return newCriterion;
+    }
+
     return {
       isIncreasing: isIncreasing,
       map: map,
@@ -133,7 +148,8 @@ define(function(require) {
       best: best,
       worst: worst,
       getXY: getXY,
-      getBounds: getBounds
+      getBounds: getBounds,
+      standardizeCriterion:standardizeCriterion
     };
   });
 });

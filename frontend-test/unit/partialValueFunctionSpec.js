@@ -159,7 +159,6 @@ define(['angular',
       });
 
       describe('Piecwise Partial Value Functions map', function() {
-
         var crit = {
           pvf: {
             'type': 'piecewise-linear',
@@ -173,6 +172,65 @@ define(['angular',
         it('works for three cutoffs', inject(function(PartialValueFunction) {
           var map = PartialValueFunction.map(crit);
           expect(map(5)).toBeCloseTo(0.5);
+        }));
+      });
+
+      describe('standardizeCriterion', function() {
+        it('should sort the cutoffs and values of an piecewise-linear pvf', inject(function(PartialValueFunction) {
+          var crit = {
+            pvf: {
+              'type': 'piecewise-linear',
+              'direction': 'increasing',
+              'cutoffs': [75, 7.5, 50],
+              'values': [0.25, 0.5, 0.75]
+            }
+          };
+          var result = PartialValueFunction.standardizeCriterion(crit);
+          var expectedResult = {
+            pvf: {
+              'type': 'piecewise-linear',
+              'direction': 'increasing',
+              'cutoffs': [7.5, 50, 75],
+              'values': [0.25, 0.5, 0.75]
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        }));
+        it('should sort the cutoffs and reverse-sort the values of an  decreasing piecewise-linear pvf', inject(function(PartialValueFunction) {
+          var crit = {
+            pvf: {
+              'type': 'piecewise-linear',
+              'direction': 'decreasing',
+              'cutoffs': [75, 7.5, 50],
+              'values': [0.25, 0.5, 0.75]
+            }
+          };
+          var result = PartialValueFunction.standardizeCriterion(crit);
+          var expectedResult = {
+            pvf: {
+              'type': 'piecewise-linear',
+              'direction': 'decreasing',
+              'cutoffs': [7.5, 50, 75],
+              'values': [0.75, 0.5, 0.25]
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        }));
+        it('should delete the cutoffs and values, if any, from a linear pvf', inject(function(PartialValueFunction) {
+          var crit = {
+            pvf: {
+              'type': 'linear',
+              'cutoffs': [75, 7.5, 50],
+              'values': [0.25, 0.5, 0.75]
+            }
+          };
+          var result = PartialValueFunction.standardizeCriterion(crit);
+          var expectedResult = {
+            pvf: {
+              'type': 'linear',
+            }
+          };
+          expect(result).toEqual(expectedResult);
         }));
       });
     });
