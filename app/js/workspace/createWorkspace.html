@@ -1,0 +1,39 @@
+<div class="grid-container">
+  <div class="grid-x">
+    <div class="cell">
+      <h3>Create a new workspace</h3>
+      <form>
+        <p>Load an example:</p>
+        <div style="margin-left: 2rem;">
+          <label ng-repeat="option in examplesList">
+            <input type="radio" ng-model="model.choice" value="{{option.href}}"> <span>{{option.title}}</span>
+          </label>
+        </div>
+        <p>Or a local file:</p>
+        <div style="margin-left: 2rem;">
+          <label>
+            <input type="radio" ng-model="model.choice" value="local"> Local file:
+            <file-reader model="local"></file-reader>
+          </label>
+        </div>
+        <p>Or manually input data:</p>
+        <div style="margin-left: 2rem;">
+          <label>
+            <input type="radio" ng-model="model.choice" value="manual"> Manual input
+          </label>
+        </div>
+        <div style="margin:25px 0 0 0;">
+          <div class="button-group">
+            <button class="button small secondary" ng-click="close()">Cancel</button>
+            <button ng-show="model.choice != 'local'" class="button small success" ng-disabled="!model.choice || isCreating" ng-click="createWorkspace(model.choice)">Create workspace</button>
+            <button ng-show="model.choice == 'local'" class="button small success" ng-disabled="!local.contents || isCreating" ng-click="createWorkspace(model.choice)">Create workspace</button>
+            </li>
+          </div>
+        </div>
+      </form>
+      <button ng-click="close()" class="close-button" aria-label="Close reveal" type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+</div>

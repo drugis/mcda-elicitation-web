@@ -6,6 +6,7 @@ require.config({
     'angular-cookies': 'bower_components/angular-cookies/angular-cookies',
     'angular-patavi-client': 'bower_components/angular-patavi-client/patavi',
     'angular-resource': 'bower_components/angular-resource/angular-resource.min',
+    'angular-touch': 'bower_components/angular-touch/angular-touch',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
     'angularjs-slider': 'bower_components/angularjs-slider/dist/rzslider',
     'domReady': 'bower_components/requirejs-domready/domReady',
@@ -15,9 +16,9 @@ require.config({
     'd3': 'bower_components/d3/d3.min',
     'lodash': 'bower_components/lodash/lodash',
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_SVG',
+    'mmfoundation': 'bower_components/angular-foundation-6/dist/angular-foundation',
     'nvd3': 'bower_components/nvd3/build/nv.d3',
-    'mcda': '/app/js',
-    'mmfoundation': 'bower_components/angular-foundation/dist/mm-foundation-tpls-0.9.0-SNAPSHOT'
+    'mcda': '/app/js'
   },
   baseUrl: '.',
   shim: {
@@ -30,7 +31,11 @@ require.config({
     },
     'angular-cookies': {
       deps: ['angular'],
-      exposrt: 'angular-cookies'
+      exports: 'angular-cookies'
+    },
+    'angular-touch': {
+      deps: ['angular'],
+      exports: 'ngTouch'
     },
     'angular-ui-router': {
       deps: ['angular']

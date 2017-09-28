@@ -6063,7 +6063,7 @@ table.show-for-xlarge, table.show-for-large, table.hide-for-small, table.hide-fo
     margin: 0;
   }
 }
-/* line 3, ../../sass-shared/_drugis.scss */
+/* line 6, ../../sass-shared/_drugis.scss */
 #hero {
   background: #CC3333;
   height: 420px;
@@ -6072,13 +6072,13 @@ table.show-for-xlarge, table.show-for-large, table.hide-for-small, table.hide-fo
   padding: 100px 20px 0 20px;
 }
 
-/* line 11, ../../sass-shared/_drugis.scss */
+/* line 14, ../../sass-shared/_drugis.scss */
 .color-stripe {
   background: #CC3333;
   height: 0.45rem;
 }
 
-/* line 17, ../../sass-shared/_drugis.scss */
+/* line 20, ../../sass-shared/_drugis.scss */
 .user-image {
   margin-top: -1px;
   margin-right: 4px;
@@ -6086,163 +6086,165 @@ table.show-for-xlarge, table.show-for-large, table.hide-for-small, table.hide-fo
   border-radius: 15px;
 }
 
-/* line 24, ../../sass-shared/_drugis.scss */
+/* line 27, ../../sass-shared/_drugis.scss */
 .inline-header {
   display: inline;
 }
 
-/* line 28, ../../sass-shared/_drugis.scss */
+/* line 31, ../../sass-shared/_drugis.scss */
 .indent-one {
   margin-left: 2rem;
 }
 
-/* line 32, ../../sass-shared/_drugis.scss */
+/* line 35, ../../sass-shared/_drugis.scss */
 navbar-directive ul li > a.manual:hover {
   text-decoration: underline;
 }
 
-/* line 36, ../../sass-shared/_drugis.scss */
+/* line 39, ../../sass-shared/_drugis.scss */
 .alert {
-  color: #E66464;
+  color: #df3a3a;
 }
 
-/* line 39, ../../sass-shared/_drugis.scss */
+/* line 43, ../../sass-shared/_drugis.scss */
 .warning {
   color: #f2973c;
 }
 
-/* line 42, ../../sass-shared/_drugis.scss */
+/* line 47, ../../sass-shared/_drugis.scss */
 .info {
   color: #77c0de;
 }
 
-/* line 46, ../../sass-shared/_drugis.scss */
+/* line 51, ../../sass-shared/_drugis.scss */
 .error-message {
   display: block;
   color: #CC3333;
 }
 
-/* line 51, ../../sass-shared/_drugis.scss */
+/* line 56, ../../sass-shared/_drugis.scss */
 .alert-box-message {
   padding-right: 1.25rem;
 }
 
-/* line 55, ../../sass-shared/_drugis.scss */
+/* line 60, ../../sass-shared/_drugis.scss */
 body.test {
   background-image: url("../img/test.png");
   background-repeat: repeat-x repeat-y;
 }
 
-/* line 62, ../../sass-shared/_drugis.scss */
+/* line 67, ../../sass-shared/_drugis.scss */
 table {
   border-collapse: collapse;
 }
-/* line 63, ../../sass-shared/_drugis.scss */
+/* line 68, ../../sass-shared/_drugis.scss */
 table caption {
   text-align: left;
   font-weight: lighter;
 }
-/* line 69, ../../sass-shared/_drugis.scss */
+/* line 73, ../../sass-shared/_drugis.scss */
 table tr:nth-of-type(even) {
   background-color: transparent;
 }
-/* line 72, ../../sass-shared/_drugis.scss */
+/* line 76, ../../sass-shared/_drugis.scss */
 table tr {
   height: 1rem;
 }
-/* line 74, ../../sass-shared/_drugis.scss */
+/* line 78, ../../sass-shared/_drugis.scss */
 table tr th.sortable {
   cursor: pointer;
 }
-/* line 77, ../../sass-shared/_drugis.scss */
+/* line 81, ../../sass-shared/_drugis.scss */
 table tr th {
   text-align: center;
   background-color: #F5F5F5;
 }
-/* line 81, ../../sass-shared/_drugis.scss */
-table tr th, table tr td {
-  border: solid 1px gainsboro;
+/* line 85, ../../sass-shared/_drugis.scss */
+table tr th,
+table tr td {
+  border: solid 1px #cacaca;
 }
-/* line 83, ../../sass-shared/_drugis.scss */
-table tr th a:hover, table tr td a:hover {
+/* line 88, ../../sass-shared/_drugis.scss */
+table tr th a:hover,
+table tr td a:hover {
   text-decoration: underline;
 }
-/* line 87, ../../sass-shared/_drugis.scss */
+/* line 92, ../../sass-shared/_drugis.scss */
 table tr td.button-cell {
   text-align: center;
 }
-/* line 89, ../../sass-shared/_drugis.scss */
+/* line 94, ../../sass-shared/_drugis.scss */
 table tr td.button-cell button {
   margin-bottom: 0;
-  font-size: 0.875rem;
+  font-size: 100%;
 }
-/* line 94, ../../sass-shared/_drugis.scss */
+/* line 99, ../../sass-shared/_drugis.scss */
 table tr td.input-cell {
   padding: 0;
 }
-/* line 96, ../../sass-shared/_drugis.scss */
+/* line 101, ../../sass-shared/_drugis.scss */
 table tr td.input-cell select,
 table tr td.input-cell input[type="number"] {
   margin: 0;
   border: 0;
   text-align: center;
 }
-/* line 102, ../../sass-shared/_drugis.scss */
+/* line 107, ../../sass-shared/_drugis.scss */
 table tr td.input-cell select {
   padding-right: 1rem;
 }
-/* line 105, ../../sass-shared/_drugis.scss */
+/* line 110, ../../sass-shared/_drugis.scss */
 table tr td.input-cell input[type="number"].ng-invalid,
 table tr td.input-cell input[type="number"].ng-invalid-number,
 table tr td.input-cell input[type="number"].invalid-trialverse-number {
-  background-color: #ed9090;
+  background-color: #e66666;
 }
 
-/* line 113, ../../sass-shared/_drugis.scss */
+/* line 119, ../../sass-shared/_drugis.scss */
 tr.disabled-row td {
   background: lightgrey;
   color: #666;
 }
 
-/* line 118, ../../sass-shared/_drugis.scss */
+/* line 124, ../../sass-shared/_drugis.scss */
 tr.clickable td {
   color: #452F8C;
 }
 
-/* line 121, ../../sass-shared/_drugis.scss */
+/* line 128, ../../sass-shared/_drugis.scss */
 td.empty-cell {
-  background-color: gainsboro;
+  background-color: #cacaca;
 }
 
-/* line 125, ../../sass-shared/_drugis.scss */
+/* line 133, ../../sass-shared/_drugis.scss */
 tr.on-hover:hover {
-  background: #e6e6e6;
+  background: #757575;
   cursor: pointer;
   text-decoration: none;
 }
 
-/* line 131, ../../sass-shared/_drugis.scss */
+/* line 139, ../../sass-shared/_drugis.scss */
 table.layout-table {
   border: none;
   background-color: #F3F0FA;
 }
-/* line 134, ../../sass-shared/_drugis.scss */
+/* line 142, ../../sass-shared/_drugis.scss */
 table.layout-table td {
   border: none;
 }
 
-/* line 141, ../../sass-shared/_drugis.scss */
+/* line 148, ../../sass-shared/_drugis.scss */
 .error-message {
   display: block;
   color: #CC3333;
 }
 
-/* line 146, ../../sass-shared/_drugis.scss */
+/* line 153, ../../sass-shared/_drugis.scss */
 .application-link a {
   text-decoration: underline;
 }
 
-/* line 151, ../../sass-shared/_drugis.scss */
+/* line 158, ../../sass-shared/_drugis.scss */
 input[type="number"],
 input[type="text"],
 select,
@@ -6250,12 +6252,18 @@ select option {
   line-height: 1.1rem;
 }
 
-/* line 159, ../../sass-shared/_drugis.scss */
-body.f-topbar-fixed {
-  padding-top: 4rem;
+/* line 166, ../../sass-shared/_drugis.scss */
+.menu a, .menu a:hover, .menu a:active {
+  color: white;
 }
 
-/* line 165, ../../sass-shared/_drugis.scss */
+/* line 169, ../../sass-shared/_drugis.scss */
+.breadcrumbs {
+  background: #f4f4f4;
+  padding: 0.4rem 0.7rem;
+}
+
+/* line 175, ../../sass-shared/_drugis.scss */
 #hero h1 {
   font-size: 4em;
   color: white;
@@ -6264,19 +6272,19 @@ body.f-topbar-fixed {
   line-height: 100%;
 }
 
-/* line 173, ../../sass-shared/_drugis.scss */
+/* line 183, ../../sass-shared/_drugis.scss */
 #hero h1 small {
   color: white;
 }
 
-/* line 177, ../../sass-shared/_drugis.scss */
+/* line 187, ../../sass-shared/_drugis.scss */
 #hero h4 {
   font-size: 1.35em;
   color: white;
   font-weight: 300;
 }
 
-/* line 183, ../../sass-shared/_drugis.scss */
+/* line 193, ../../sass-shared/_drugis.scss */
 header {
   background: #CC3333;
   text-align: left;
@@ -6284,7 +6292,7 @@ header {
   padding: 25px 20px 35px 0px;
 }
 
-/* line 190, ../../sass-shared/_drugis.scss */
+/* line 200, ../../sass-shared/_drugis.scss */
 header h2 {
   font-size: 3.5em;
   color: white;
@@ -6293,69 +6301,70 @@ header h2 {
   line-height: 100%;
 }
 
-/* line 198, ../../sass-shared/_drugis.scss */
+/* line 208, ../../sass-shared/_drugis.scss */
 header h4 {
   color: white;
 }
 
-/* line 202, ../../sass-shared/_drugis.scss */
+/* line 212, ../../sass-shared/_drugis.scss */
 header small {
   color: white;
 }
 
-/* line 206, ../../sass-shared/_drugis.scss */
+/* line 216, ../../sass-shared/_drugis.scss */
 .content {
   padding-top: 20px;
 }
 
-/* line 210, ../../sass-shared/_drugis.scss */
+/* line 220, ../../sass-shared/_drugis.scss */
 h3 img {
   float: right;
   margin-right: 10px;
 }
 
-/* line 215, ../../sass-shared/_drugis.scss */
+/* line 225, ../../sass-shared/_drugis.scss */
 .row-divider {
   margin: 2rem 0;
 }
 
-/* line 219, ../../sass-shared/_drugis.scss */
+/* line 229, ../../sass-shared/_drugis.scss */
 .screen-shot {
   border: 1px solid #dddddd;
   padding: 4px;
   margin: 0.5rem;
 }
 
-/* line 225, ../../sass-shared/_drugis.scss */
+/* line 235, ../../sass-shared/_drugis.scss */
 .footer {
   background: #333333;
   padding: 24px 0 10px;
 }
 
-/* line 230, ../../sass-shared/_drugis.scss */
+/* line 240, ../../sass-shared/_drugis.scss */
 .footer a,
 .footer h4,
 .footer p {
   color: #666666;
 }
 
-/* line 236, ../../sass-shared/_drugis.scss */
+/* line 246, ../../sass-shared/_drugis.scss */
 .footer a:hover {
   color: #777777;
 }
 
 /* ---------sticky footer --------------*/
-/* line 242, ../../sass-shared/_drugis.scss */
+/* line 257, ../../sass-shared/_drugis.scss */
 * {
   margin: 0;
 }
 
-/* line 246, ../../sass-shared/_drugis.scss */
-html, body {
+/* line 261, ../../sass-shared/_drugis.scss */
+html,
+body {
   height: 100%;
 }
 
-/* line 250, ../../sass-shared/_drugis.scss */
+/* line 266, ../../sass-shared/_drugis.scss */
 .wrapper {
   min-height: 100%;
   height: auto !important;
@@ -6363,87 +6372,88 @@ html, body {
   margin: 0 auto -4rem;
 }
 
-/* line 257, ../../sass-shared/_drugis.scss */
+/* line 273, ../../sass-shared/_drugis.scss */
 .push {
   height: 4.5rem;
 }
 
-/* line 261, ../../sass-shared/_drugis.scss */
+/* line 277, ../../sass-shared/_drugis.scss */
 .footer {
   height: 4.5rem;
 }
 
-/* line 265, ../../sass-shared/_drugis.scss */
-.footer, .push {
+/* line 281, ../../sass-shared/_drugis.scss */
+.footer,
+.push {
   clear: both;
 }
 
-/* line 269, ../../sass-shared/_drugis.scss */
+/* line 286, ../../sass-shared/_drugis.scss */
 .copyright {
   display: inline;
 }
 
 /* -------- end sticky footer---------*/
-/* line 274, ../../sass-shared/_drugis.scss */
+/* line 296, ../../sass-shared/_drugis.scss */
 #map_canvas {
   height: 280px;
 }
 
 /* standard */
-/* line 279, ../../sass-shared/_drugis.scss */
+/* line 306, ../../sass-shared/_drugis.scss */
 pre {
-  margin-bottom: 1.25rem;
-  border: 1px solid #b4b4b4;
-  background-color: #e7e7e7;
+  margin-bottom: 1rem;
+  border: 1px solid #434343;
+  background-color: #767676;
   padding: 0.8em;
-  font-size: 1rem;
+  font-size: 100%;
   overflow-x: auto;
 }
 
-/* line 288, ../../sass-shared/_drugis.scss */
+/* line 315, ../../sass-shared/_drugis.scss */
 pre code {
   border: none;
   background: none;
   padding: 0px;
 }
 
-/* line 294, ../../sass-shared/_drugis.scss */
+/* line 321, ../../sass-shared/_drugis.scss */
 code {
-  border: 1px solid #b4b4b4;
-  background-color: #e7e7e7;
+  border: 1px solid #434343;
+  background-color: #767676;
   padding: 0 0.2em 0 0.2em;
 }
 
 /* -------- inline help directive---------*/
-/* line 302, ../../sass-shared/_drugis.scss */
+/* line 334, ../../sass-shared/_drugis.scss */
 inline-help {
   margin: 1rem;
 }
 
-/* line 306, ../../sass-shared/_drugis.scss */
+/* line 338, ../../sass-shared/_drugis.scss */
 .joyride-content-wrapper a {
   color: #008CBA;
 }
 
-/* line 310, ../../sass-shared/_drugis.scss */
+/* line 342, ../../sass-shared/_drugis.scss */
 body .joyride-tip-guide {
   z-index: 1006;
   margin-top: -32px;
   margin-left: -1.45rem !important;
 }
 
-/* line 316, ../../sass-shared/_drugis.scss */
+/* line 348, ../../sass-shared/_drugis.scss */
 inline-help a {
   color: grey;
 }
 
-/* line 320, ../../sass-shared/_drugis.scss */
+/* line 352, ../../sass-shared/_drugis.scss */
 inline-help a:hover {
   color: #676767;
 }
 
 /* -------- end inline help directive---------*/
-/* line 326, ../../sass-shared/_drugis.scss */
+/* line 362, ../../sass-shared/_drugis.scss */
 .reveal-modal {
   overflow-x: auto;
   min-width: 540px;

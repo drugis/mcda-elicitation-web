@@ -1,4 +1,4 @@
-$workspace-color: $white-smoke;
+$workspace-color: $light-gray;
 $inactive-tab-background-color: $primary-color;
 $inactive-tab-color: $white;
 $active-tab-color: $black;
@@ -176,7 +176,7 @@ input[type='file'] {
             width: 100% !important;
 
             td {
-                height: $table-line-height;
+                height: $global-lineheight;
             }
         }
 
@@ -188,7 +188,7 @@ input[type='file'] {
 
 .effects-table {
     td {
-        height: $table-line-height * 3.25;
+        height: $global-lineheight * 3.25;
     }
 }
 
@@ -196,7 +196,7 @@ input[type='file'] {
     padding: 0.1rem;
     color: grey;
     font-size: 0.7rem;
-    background: $smoke;
+    background: $medium-gray;
     -moz-border-radius: $global-radius;
     -webkit-border-radius: $global-radius;
     -khtml-border-radius: $global-radius;
@@ -232,7 +232,7 @@ input[type='file'] {
 }
 
 .underlined-div {
-    border-bottom: 1px solid $smoke;
+    border-bottom: 1px solid $medium-gray;
     margin-bottom: 1.5rem !important;
 }
 
@@ -251,7 +251,7 @@ input[type='file'] {
 /* ----- preferences table ------ */
 .prefs-block {
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid $smoke;
+    border-bottom: 1px solid $medium-gray;
     margin-bottom: 1.5rem;
 }
 
@@ -350,12 +350,12 @@ input[type='file'] {
             color: $active-tab-color;
         }
         a.disabledtab {
-            cursor: $cursor-default-value;
+            cursor: $global-button-cursor;
             opacity: $tab-disabled-opacity;
             // background-color: grey;
         }
         a.disabledtab:hover {
-            cursor: $cursor-default-value;
+            cursor: $global-button-cursor;
             opacity: $tab-disabled-opacity;
             background-color: $inactive-tab-background-color;
             //  background-color: grey;
@@ -392,12 +392,12 @@ input[type='file'] {
 }
 
 .new-scenario-btn {
-    color: $button-bg-color;
+    color: $button-background;
 }
 
 .new-scenario-btn:hover {
     cursor: pointer;
-    color: $button-bg-hover;
+    color: $button-background-hover;
 }
 
 #newScenarioControl {

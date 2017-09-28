@@ -1,33 +1,33 @@
 <!-- step 1 -->
 <div ng-if="state.step==='step1'">
-  <div class="row">
-    <div class="columns large-12">
+  <div class="grid-x">
+    <div class="cell">
       <h3>Create workspace manually — step 1 of 2</h3>
       <h4>Define criteria and treatments</h4>
     </div>
   </div>
-  <div class="row">
-    <div class="columns large-6">
+  <div class="grid-x">
+    <div class="cell large-6">
       <label>Workspace title
         <input type="text" ng-model="state.title" width="100%">
       </label>
     </div>
   </div>
-  <div class="row">
-    <div class="columns large-6">
+  <div class="grid-x">
+    <div class="cell large-6">
       <label>Workspace description
         <textarea ng-model="state.description" width="100%" rows="5"></textarea>
       </label>
     </div>
   </div>
-  <div class="row">
-    <div class="columns large-12">
+  <div class="grid-x">
+    <div class="cell">
       <h4>Criteria</h4>
-      <button type="button" class="tiny" ng-click="openCriterionModal()">Add Criterion</button>
+      <button class="button small" type="button" ng-click="openCriterionModal()"><i class="fa fa-plus"></i> Add Criterion</button>
     </div>
   </div>
-  <div class="row">
-    <div class="columns large-6">
+  <div class="grid-x">
+    <div class="cell large-10">
       <table width="100%">
         <thead>
           <tr>
@@ -62,24 +62,24 @@
       </table>
     </div>
   </div>
-  <div class="row">
-    <div class="columns large-12">
+  <div class="grid-x">
+    <div class="cell">
       <h4>Treatments</h4>
     </div>
   </div>
-  <div class="row">
-    <div class="columns large-4">
-      <label>
-        Treatment name:
-        <input class="text" ng-model="state.treatmentName" onkeyup="if(event.keyCode===13) document.getElementById('treatmentButton').click()">
-      </label>
-    </div>
-    <div class="columns large-4 end">
-      <button ng-disabled="!state.treatmentName || isDuplicateName(state.treatmentName)" type="button" class="tiny" ng-click="addTreatment(state.treatmentName)" id="treatmentButton">Add Treatment</button>
+  <div class="grid-x">
+    <div class="cell input-group large-6">
+      <span class="input-group-label">
+        Treatment name
+      </span>
+      <input class="text input-group-field" ng-model="state.treatmentName" onkeyup="if(event.keyCode===13) document.getElementById('treatmentButton').click()">
+      <div class="input-group-button">
+        <button ng-disabled="!state.treatmentName || isDuplicateName(state.treatmentName)" type="button" class="button tiny" ng-click="addTreatment(state.treatmentName)" id="treatmentButton"><i class="fa fa-plus"></i> Add Treatment</button>
+      </div>
     </div>
   </div>
-  <div class="row">
-    <div class="columns large-6">
+  <div class="grid-x">
+    <div class="cell large-6">
       <table width="100%">
         <thead>
           <tr>
@@ -100,36 +100,36 @@
       </table>
     </div>
   </div>
-  <div class="row">
-    <div class="columns large-12">
-      <button ng-disabled="!state.title || criteria.length < 2|| treatments.length < 2" type="button" ng-click="goToStep2()">
+  <div class="grid-x">
+    <div class="cell">
+      <button class="button" ng-disabled="!state.title || criteria.length < 2|| treatments.length < 2" type="button" ng-click="goToStep2()">
         Enter data
       </button>
     </div>
-    <div class="columns large-12" ng-if="!state.title">
+    <div class="cell" ng-if="!state.title">
       <em>Missing title</em>
     </div>
-    <div class="columns large-12" ng-if="criteria.length < 2">
+    <div class="cell" ng-if="criteria.length < 2">
       <em>Two criteria required</em>
     </div>
-    <div class="columns large-12" ng-if="treatments.length < 2">
+    <div class="cell" ng-if="treatments.length < 2">
       <em>Two treatments required</em>
     </div>
   </div>
 </div>
 <!-- step 2 -->
 <div ng-if="state.step==='step2'">
-  <div class="row">
-    <div class="columns large-12">
+  <div class="grid-x">
+    <div class="cell">
       <h3>Create workspace manually — step 2 of 2</h3>
       <h4>Enter data in effects table</h4>
     </div>
   </div>
-  <div class="row">
-    <div class="columns large-12">
+  <div class="grid-x">
+    <div class="cell">
       <h4>Choose input method</h4>
     </div>
-    <div class="columns large-12">
+    <div class="cell">
       <form>
         <input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="distribution"> Effect distributions
         <input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="study"> Study data
@@ -137,8 +137,8 @@
     </div>
   </div>
   <!-- input through distributions -->
-  <div class="row" ng-if="state.inputMethod === 'distribution'">
-    <div class="columns large-12">
+  <div class="grid-x" ng-if="state.inputMethod === 'distribution'">
+    <div class="cell">
       <h4>{{state.title}}</h4>
       <table>
         <thead>
@@ -159,8 +159,8 @@
     </div>
   </div>
   <!-- input through source data -->
-  <div class="row" ng-if="state.inputMethod === 'study'">
-    <div class="columns large-12">
+  <div class="grid-x" ng-if="state.inputMethod === 'study'">
+    <div class="cell">
       <h4>{{state.title}}</h4>
       <table>
         <thead>
@@ -181,8 +181,8 @@
     </div>
   </div>
   <!-- buttons -->
-  <div class="row">
-    <div class="columns large-12">
+  <div class="grid-x">
+    <div class="cell">
       <button ng-disabled="!state.isInputDataValid" type="button" ng-click="createProblem()">
         Done
       </button>

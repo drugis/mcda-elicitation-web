@@ -6,6 +6,9 @@ define(function(require) {
   var dependencies = ['$scope', '$state', '$modal', '$resource', 'mcdaRootPath', 'WorkspaceResource'];
 
   var ChooseProblemController = function($scope, $state, $modal, $resource, mcdaRootPath, WorkspaceResource) {
+    $scope.model = {};
+    $scope.local = {};
+
     $scope.openChooseProblemModal = openChooseProblemModal;
 
     function openChooseProblemModal() {

@@ -2,8 +2,6 @@
 define(function(require) {
   var angular = require('angular');
   return angular.module('elicit.controllers', ['elicit.effectsTableService', 'elicit.util'])
-    .controller('ChooseProblemController', require('mcda/controllers/chooseProblemController'))
-    .controller('WorkspaceController', require('mcda/controllers/workspaceController'))
     .controller('MCDABenefitRiskController', require('mcda/benefitRisk/mcdaBenefitRiskController'))
     .controller('EvidenceController', require('mcda/evidence/evidenceController'))
     .controller('PreferencesController', require('mcda/preferences/preferencesController'))

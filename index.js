@@ -402,8 +402,10 @@ app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', functi
 app.post('/patavi', function(req, res, next) { // FIXME: separate routes for scales and results
   patavi.create(req.body, function(err, taskUri) {
     if (err) {
-      err.status = 500;
-      next(err);
+      next({
+        err: err,
+        status: 500
+      });
     }
     res.location(taskUri);
     res.status(201);
