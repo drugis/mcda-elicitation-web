@@ -1,10 +1,10 @@
-<div class="row">
-  <div class="columns large-12">
+<div class="grid-x">
+  <div class="cell">
     Here you see the current problem definition. If you want to work with a different problem you can define a new one based on the current one, which may include different criteria and scale ranges. Scale ranges must be defined for all selected criteria.
   </div>
 </div>
-<div class="row">
-  <div class="columns large-12">
+<div class="grid-x">
+  <div class="cell">
     <h4>Criterion selection</h4>
     <table class="full-width effects-table">
       <thead>
@@ -54,8 +54,8 @@
     </table>
   </div>
 </div>
-<div class="row">
-  <div class="columns large-12">
+<div class="grid-x">
+  <div class="cell">
     <h4>Scale Ranges</h4>
     <table class="full-width">
       <thead>
@@ -83,15 +83,15 @@
         </tr>
       </tbody>
     </table>
-    <button ng-if="editMode.isUserOwner" ng-click="openScaleRangeDialog()">
+    <button class="button" ng-if="editMode.isUserOwner" ng-click="openScaleRangeDialog()">
       Define Scale Ranges
     </button>
   </div>
 </div>
-<div class="row" ng-if="editMode.isUserOwner">
-  <div class="columns large-12">
-    <button class="success" ng-click="openSaveDialog()" ng-disabled="isCreationBlocked()">Save new problem</button>
-    <button ng-click="reset(subProblem)">Reset</button>
+<div class="grid-x" ng-if="editMode.isUserOwner">
+  <div class="cell">
+    <button class="button success" ng-click="openSaveDialog()" ng-disabled="isCreationBlocked()">Save new problem</button>
+    <button class="button" ng-click="reset(subProblem)">Reset</button>
     <span class="alert" ng-if="!subProblemState.hasScaleRange">Missing scale ranges</span>
   </div>
 </div>

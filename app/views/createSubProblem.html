@@ -1,37 +1,39 @@
 <div>
   <form ng-submit="createProblemConfiguration()">
-    <div class="row">
-      <div class="columns large-6">
+    <div class="grid-x">
+      <div class="cell large-6">
         <h2>
           Save new problem
         </h2>
       </div>
     </div>
-    <div class="row">
-      <div class=columns large-6>
+    <div class="grid-x">
+      <div class=cell large-6>
         Enter new problem name
       </div>
     </div>
-    <div class="row">
-      <div class="columns large-6">
+    <div class="grid-x">
+      <div class="cell large-6">
         <input type="text" ng-change="checkDuplicateTitle(subProblemState.title)" ng-model="subProblemState.title">
       </div>
-      <div class="columns large 6">
+      <div class="cell large 6">
         <span style="display:block" class="alert" ng-if="isTitleDuplicate">
           <em>&nbsp;Duplicate name</em>
         </span>
       </div>
-            <div class="columns large 6">
+            <div class="cell large 6">
         <span style="display:block" class="alert" ng-if="!subProblemState.title">
           <em>&nbsp;No name entered</em>
         </span>
       </div>
     </div>
-    <div class="row">
-      <div class="columns large-6">
-        <button class="success" type="submit" ng-disabled="isTitleDuplicate || !subProblemState.title">Create</button>
+    <div class="grid-x">
+      <div class="cell large-6">
+        <button class="button success" type="submit" ng-disabled="isTitleDuplicate || !subProblemState.title">Create</button>
       </div>
     </div>
-    <a class="close-reveal-modal" ng-click="cancel()">&#215;</a>
+        <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </form>
 </div>

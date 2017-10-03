@@ -1,6 +1,6 @@
 <div ng-show="state.type == 'elicit'">
-  <div class="row" style="min-height: 450px">
-    <div class="columns large-12">
+  <div class="grid-x" style="min-height: 450px">
+    <div class="cell">
       <h3 ng-bind="state.title"></h3>
       <h5 class="subheader">Given the following situation:</h5>
       <ul class="inline-list">
@@ -17,18 +17,18 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="columns large-12">
-      <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
-      <button class="small button" ng-if="!canSave(state)" ng-click="nextStep(state)" ng-disabled="!canProceed(state)">Next</button>
+  <div class="grid-x">
+    <div class="cell">
+      <button class="button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
+      <button class="button" ng-if="!canSave(state)" ng-click="nextStep(state)" ng-disabled="!canProceed(state)">Next</button>
     </div>
   </div>
 </div>
 
 
 <div ng-if="state.type == 'review'">
-  <div class="row" style="min-height: 450px">
-    <div class="columns large-12">
+  <div class="grid-x" style="min-height: 450px">
+    <div class="cell">
       <h3 ng-bind="state.title"></h3>
       <p>You have given the following trade-offs:</p>
       <trade-offs problem="problem" preferences="state.intermediate.prefs"></trade-offs>
@@ -36,10 +36,10 @@
     </div>
   </div>
 
-  <div class="row">
-    <div class="columns large-12">
-      <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
-      <button class="small success button" ng-if="canSave(state)" ng-click="save(state)"
+  <div class="grid-x">
+    <div class="cell">
+      <button class="button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
+      <button class="success button" ng-if="canSave(state)" ng-click="save(state)"
         ng-disabled="!canSave(state)">Save</button>
     </div>
   </div>

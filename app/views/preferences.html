@@ -1,11 +1,11 @@
-<div class="row">
-  <div class="columns large-12">
+<div class="grid-x">
+  <div class="cell">
     <em>Here you can set the partial value functions and trade-offs of the scenario.
       Changes here will change the current scenario.</em>
   </div>
 </div>
-<div class="row">
-  <div class="columns large-12">
+<div class="grid-x">
+  <div class="cell">
     <h4 ng-show="!isEditTitleVisible">
       Scenario name:
       <span class="subheader">{{scenario.title}}</span>
@@ -13,22 +13,20 @@
     </h4>
   </div>
 </div>
-<div class="row" ng-show="isEditTitleVisible">
-  <div class="columns large-8 small-12">
+<div class="grid-x" ng-show="isEditTitleVisible">
+  <div class="cell large-8 small-12">
     <form>
-      <div class="row collapse">
-        <div class="columns small-8">
+      <div class="grid-x collapse">
+        <div class="cell small-8">
           <input type="text" ng-change="checkDuplicateScenarioTitle()" ng-model="scenarioTitle.value">
         </div>
-        <div class="columns small-2">
+        <div class="cell small-2 button-group expanded">
           <button ng-disabled="!scenarioTitle.value || isDuplicateScenarioTitle" class="button postfix" ng-click="saveTitle()">Save</button>
-        </div>
-        <div class="columns small-2">
           <button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button>
         </div>
       </div>
-      <div class="row" ng-show="isDuplicateScenarioTitle">
-        <div class="columns large-12">
+      <div class="grid-x" ng-show="isDuplicateScenarioTitle">
+        <div class="cell">
           <span class="alert">Duplicate title</span>
         </div>
       </div>
@@ -46,29 +44,27 @@
           <i style="font-size: 100px" class="fa fa-question"></i>
         </div>
       </div>
-      <button ng-if="editMode.isUserOwner" ng-class="{alert: !isSafe['partial-value-function'].safe}" tooltip="{{isSafe['partial-value-function'].tooltip}}" tooltip-animation="false" ng-disabled="!isAccessible(tasks['partial-value-function']).accessible" ui-sref="partial-value-function({criterion: criterion.id})">Define partial value function</button>
+      <button class="button" ng-if="editMode.isUserOwner" ng-class="{alert: !isSafe['partial-value-function'].safe}" tooltip="{{isSafe['partial-value-function'].tooltip}}" tooltip-animation="false" ng-disabled="!isAccessible(tasks['partial-value-function']).accessible" ui-sref="partial-value-function({criterion: criterion.id})">Define partial value function</button>
     </li>
   </ul>
 </div>
-<div id="trade-off-block" class="prefs-block">
-  <h4>Trade-offs</h4>
-  <ul class="button-group" ng-if="editMode.isUserOwner">
-    <li>
-      <button ui-sref="ordinal-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['ordinal-swing']).accessible" ng-class="{alert: !isSafe['ordinal-swing'].safe}" tooltip="{{isSafe['ordinal-swing'].tooltip}}">
-        Ordinal Swing
-      </button>
-    </li>
-    <li>
-      <button ui-sref="exact-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['exact-swing']).accessible" ng-class="{alert: !isSafe['exact-swing'].safe}" tooltip="{{isSafe['exact-swing'].tooltip}}">
-        Exact Swing
-      </button>
-    </li>
-    <li>
-      <button ui-sref="interval-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['interval-swing']).accessible" ng-class="{alert: !isSafe['interval-swing'].safe}" tooltip="{{isSafe['interval-swing'].tooltip}}">
-        Interval Swing
-      </button>
-    </li>
-  </ul>
-  <trade-offs problem="aggregateState.problem" preferences="scenario.state.prefs"></trade-offs>
+<div class="grid-x" id="trade-off-block" class="prefs-block">
+  <div class="cell">
+    <h4>Trade-offs</h4>
+  </div>
+  <div class="cell large-4 button-group" ng-if="editMode.isUserOwner">
+    <button class="button" ui-sref="ordinal-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['ordinal-swing']).accessible" ng-class="{alert: !isSafe['ordinal-swing'].safe}" tooltip="{{isSafe['ordinal-swing'].tooltip}}">
+      Ordinal Swing
+    </button>
+    <button class="button" ui-sref="exact-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['exact-swing']).accessible" ng-class="{alert: !isSafe['exact-swing'].safe}" tooltip="{{isSafe['exact-swing'].tooltip}}">
+      Exact Swing
+    </button>
+    <button class="button" ui-sref="interval-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['interval-swing']).accessible" ng-class="{alert: !isSafe['interval-swing'].safe}" tooltip="{{isSafe['interval-swing'].tooltip}}">
+      Interval Swing
+    </button>
+  </div>
+  <div class="cell">
+    <trade-offs problem="aggregateState.problem" preferences="scenario.state.prefs"></trade-offs>
+  </div>
 </div>
-<button class="success" ui-sref="results" ng-disabled="!tasksAccessibility.results">Results</button>
+<button class="button success" ui-sref="results" ng-disabled="!tasksAccessibility.results">Results</button>

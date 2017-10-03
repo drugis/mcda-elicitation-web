@@ -11,20 +11,20 @@
   <ul class="no-bullet">
     <li ng-repeat="(key, criterion) in criteria">
       <h5 class="subheader"><criterion of="criterion"></criterion></h5>
-      <div class="row">
-        <div class="large-1 columns">
+      <div class="grid-x">
+        <div class="cell large-1">
           <a ng-click="scales[key].increaseFrom()" class="tiny round button">&lt;</a>
         </div>
-        <div class="large-7 columns">
+        <div class="cell large-7">
           <slider model="choice[key]" range="scales[key]"></slider>
         </div>
-        <div class="large-1 pull-3 columns">
+        <div class="cell large-1 pull-3">
           <a ng-click="scales[key].increaseTo()"  class="tiny round button">&gt;</a>
         </div>
       </div>
       <br>
     </li>
   </ul>
-  <button class="small" ng-click="cancel()">Cancel</button>
-  <button class="small success" ng-disabled="!validChoice()" ng-click="save()">Save</button>
+  <button class="button" ng-click="cancel()">Cancel</button>
+  <button class="button success" ng-disabled="!validChoice()" ng-click="save()">Save</button>
 </div>

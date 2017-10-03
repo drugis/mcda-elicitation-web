@@ -1,19 +1,19 @@
-<div class="row">
-  <div class="columns large-12">
+<div class="grid-x">
+  <div class="cell">
     <h3 ng-if="!isEditTitleVisible" class="subheader">
       <span ng-bind="workspace.problem.title"></span>
       <a ng-click="editTitle()"><i class="fa fa-edit"></i></a>
     </h3>
-    <div class="row" ng-show="isEditTitleVisible">
-      <div class="columns large-8 small-12">
-        <div class="row large-collapse">
-          <div class="columns small-8">
+    <div class="grid-x" ng-show="isEditTitleVisible">
+      <div class="cell large-8 small-12">
+        <div class="grid-x large-collapse">
+          <div class="cell small-8">
             <input type="text" ng-model="workspace.title">
           </div>
-          <div class="columns small-2">
+          <div class="cell small-2">
             <button class="button postfix" ng-click="saveTitle()">Save</button>
           </div>
-          <div class="columns small-2">
+          <div class="cell small-2">
             <button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button>
           </div>
         </div>

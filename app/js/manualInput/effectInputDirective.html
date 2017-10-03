@@ -1,5 +1,7 @@
 <dropdown-toggle close-on-click="true">
-  <toggle><a ng-style="inputData.isInvalid ? {color:'red'} : {}" ng-click="cacheInput()">{{inputData.label}}</a></toggle>
+  <toggle>
+    <a ng-style="inputData.isInvalid ? {color:'red'} : {}" ng-click="cacheInput()">{{inputData.label}}</a>
+  </toggle>
   <pane ng-keydown="keyCheck($event, $close)" ng-keypress="keyCheck($event, $close)">
     <div class="grid-container">
       <div class="grid-x">

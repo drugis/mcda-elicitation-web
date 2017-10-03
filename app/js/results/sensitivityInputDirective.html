@@ -1,18 +1,24 @@
-<a dropdown-toggle="#editCellToggle-{{criterion.hash}}-{{alternative.hash}}" ng-style="inputData.isInvalid ? {color:'red'} : {}" ng-click="showSlider()">
+<dropdown-toggle close-on-click="true">
+  <toggle>
+    <a ng-style="inputData.isInvalid ? {color:'red'} : {}" ng-click="showSlider()"></a>
+  </toggle>
   <span>
     {{currentValue | number}}
   </span>
   <span ng-show="currentValue!==originalValue" style="color: grey">
     ({{originalValue | number}})
   </span>
-</a>
-<div id="editCellToggle-{{criterion.hash}}-{{alternative.hash}}" class="row f-dropdown" ng-keyup="keyCheck($event)" ng-keydown="keyCheck($event)" ng-keypress="keyCheck($event)">
-  <div class="columns large-12">
-    <rzslider rz-slider-model="slider.value" rz-slider-options="slider.options"></rzslider>
-  </div>
-  <div class="columns large-12">
-    <label> value
-      <input type="number" ng-model="slider.value" ng-change="checkInput()">
-    </label>
-  </div>
-</div>
+  </a>
+  <pane ng-keydown="keyCheck($event)" ng-keypress="keyCheck($event)">
+    <div class=grid-x>
+      <div class="cell">
+        <rzslider rz-slider-model="slider.value" rz-slider-options="slider.options"></rzslider>
+      </div>
+      <div class="cell">
+        <label> value
+          <input type="number" ng-model="slider.value" ng-change="checkInput()">
+        </label>
+      </div>
+    </div>
+  </pane>
+</dropdown-toggle>

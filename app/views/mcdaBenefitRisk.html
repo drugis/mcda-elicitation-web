@@ -1,41 +1,49 @@
-<div class="row overview-nav-container">
-  <ul class="overview-nav">
-    <li><a class="tab-corners" ng-class="{activetab: activeTab ==='evidence'}" ui-sref="evidence">Evidence</a></li>
-    <li>
-      <span>Problem:</span>
-      <select class="scenario-select" ng-model="subProblem" ng-options="subProblem.title for subProblem in subProblems track by subProblem.id" ng-change="subProblemChanged(subProblem)"></select>
-    </li>
-    <li><a class="tab-corners" ng-class="{activetab: activeTab ==='problem'}" ui-sref="problem">Problem definition</a>
-    </li>
-    <li>
-      <span>Scenario:</span>
-      <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenarios track by scenario.id" ng-change="scenarioChanged(scenario)"></select>
-      <i ng-if="editMode.isUserOwner" class="fa fa-plus new-scenario-btn" dropdown-toggle="#newScenarioControl"></i>
-      <div id="newScenarioControl" class="f-dropdown">
-          <a class="scenario-action" ng-click="forkScenario()">Copy current scenario</a>
-          <a class="scenario-action" ng-click="newScenario()">Create clean scenario</a>
-      </div>
-    </li>
-    <li>
-      <div ng-if="tasksAccessibility.preferences">
-        <a class="tab-corners" ng-class="{activetab: activeTab ==='preferences'}" ui-sref="preferences">Preferences</a>
-      </div>
-      <div ng-if="!tasksAccessibility.preferences">
-        <a class="tab-corners disabledtab">Preferences</a>
-      </div>
-    </li>
-    <li>
-      <div ng-if="tasksAccessibility.results">
-        <a class="tab-corners" ng-class="{activetab: activeTab === 'results'}" ui-sref="results">Results</a>
-      </div>
-      <div ng-if="!tasksAccessibility.results">
-        <a class="tab-corners disabledtab" tooltip="Tab unavailable because not all partial value functions are set">Results</a>
-      </div>
-    </li>
-  </ul>
+<div class="grid-x overview-nav-container">
+  <div class="cell">
+    <ul class="overview-nav">
+      <li><a class="tab-corners" ng-class="{activetab: activeTab ==='evidence'}" ui-sref="evidence">Evidence</a></li>
+      <li>
+        <span>Problem:</span>
+        <select class="scenario-select" ng-model="subProblem" ng-options="subProblem.title for subProblem in subProblems track by subProblem.id" ng-change="subProblemChanged(subProblem)"></select>
+      </li>
+      <li><a class="tab-corners" ng-class="{activetab: activeTab ==='problem'}" ui-sref="problem">Problem definition</a>
+      </li>
+      <li>
+        <span>Scenario:</span>
+        <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenarios track by scenario.id" ng-change="scenarioChanged(scenario)"></select>
+        <dropdown-toggle close-on-click="true" ng-if="editMode.isUserOwner">
+          <toggle>
+            <i class="fa fa-plus new-scenario-btn"></i>
+          </toggle>
+          <pane>
+            <div id="newScenarioControl" class="f-dropdown">
+              <a class="scenario-action" ng-click="forkScenario()">Copy current scenario</a>
+              <a class="scenario-action" ng-click="newScenario()">Create clean scenario</a>
+            </div>
+          </pane>
+        </dropdown-toggle>
+      </li>
+      <li>
+        <div ng-if="tasksAccessibility.preferences">
+          <a class="tab-corners" ng-class="{activetab: activeTab ==='preferences'}" ui-sref="preferences">Preferences</a>
+        </div>
+        <div ng-if="!tasksAccessibility.preferences">
+          <a class="tab-corners disabledtab">Preferences</a>
+        </div>
+      </li>
+      <li>
+        <div ng-if="tasksAccessibility.results">
+          <a class="tab-corners" ng-class="{activetab: activeTab === 'results'}" ui-sref="results">Results</a>
+        </div>
+        <div ng-if="!tasksAccessibility.results">
+          <a class="tab-corners disabledtab" tooltip="Tab unavailable because not all partial value functions are set">Results</a>
+        </div>
+      </li>
+    </ul>
+  </div>
 </div>
-<div class="row">
-  <div class="columns large-12 large-centered">
+<div class="grid-x">
+  <div class="cell large-centered">
     <div ui-view></div>
   </div>
 </div>
