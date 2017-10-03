@@ -20,6 +20,7 @@ define(['lodash'], function(_) {
         // functions
         scope.keyCheck = keyCheck;
         // variables
+        var isEscPressed = false;
         scope.continuous = {
           type: 'SEt'
         };
@@ -43,62 +44,33 @@ define(['lodash'], function(_) {
         ];
         scope.inputData.label = ManualInputService.inputToString(scope.inputData);
 
-        scope.$on('dropdown.hasClosed', function() {
+        scope.$on('open.af.dropdownToggle', function() {
+          isEscPressed = false;
+        });
+
+        scope.$on('close.af.dropdownToggle', function() {
+          if (!isEscPressed) {
+            saveState();
+          }
+        });
+
+        function saveState() {
           $timeout(function() {
-            scope.inputData = createDistribution(scope.inputData, scope.inputState);
+            scope.inputData = ManualInputService.createDistribution(scope.inputData, scope.inputState, scope.studyType, scope.continuous.type);
             scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
             scope.inputData.label = ManualInputService.inputToString(scope.inputData);
             $timeout(function() {
               scope.changeCallback();
             });
           });
-        });
-
-        function createDistribution(inputData, inputState) {
-          var newData = _.cloneDeep(inputData);
-          if (scope.studyType === 'dichotomous') {
-            newData.alpha = inputState.count + 1;
-            newData.beta = inputState.sampleSize - inputState.count + 1;
-            newData.type = 'dbeta';
-          } else if (scope.studyType === 'continuous') {
-            newData.mu = inputState.mu;
-            if (scope.continuous.type === 'SEnorm') {
-              newData.sigma = inputState.stdErr;
-              newData.type = 'dnorm';
-            } else if (scope.continuous.type === 'SDnorm') {
-              newData.sigma = inputState.sigma / Math.sqrt(inputState.sampleSize);
-              newData.type = 'dnorm';
-            } else if (scope.continuous.type === 'SEt') {
-              newData.stdErr = inputState.stdErr;
-              newData.dof = inputState.sampleSize - 1;
-              newData.type = 'dt';
-            } else if (scope.continuous.type === 'SDt') {
-              newData.stdErr = inputState.sigma / Math.sqrt(inputState.sampleSize);
-              newData.dof = inputState.sampleSize - 1;
-              newData.type = 'dt';
-            }
-          } else {
-            //survival
-            if (_.isNumber(inputState.events) && _.isNumber(inputState.exposure)) {
-              newData.alpha = inputState.events + 0.001;
-              newData.beta = inputState.exposure + 0.001;
-            }
-            newData.type = 'dsurv';
-          }
-          return newData;
         }
 
         function keyCheck(event) {
           if (event.keyCode === ESC) {
-            scope.$broadcast('dropdown.closeEvent');
+            isEscPressed = true;
+            scope.$broadcast('doClose.af.dropdownToggle');
           } else if (event.keyCode === ENTER) {
-            $timeout(function() {
-              scope.inputData = createDistribution(scope.inputData, scope.inputState);
-              scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
-              scope.inputData.label = ManualInputService.inputToString(scope.inputData);
-              scope.changeCallback();
-              scope.$broadcast('dropdown.closeEvent');
-            });
+            scope.$broadcast('doClose.af.dropdownToggle');
           }
         }
       }

@@ -192,6 +192,11 @@ input[type='file'] {
     }
 }
 
+.dropdown-pane {
+    padding:0;
+    width: auto;
+}
+
 .uncertain {
     padding: 0.1rem;
     color: grey;
@@ -207,21 +212,6 @@ input[type='file'] {
     margin: 0 auto 0 auto;
 }
 
-
-
-/* angular ui-bootstrap pop overs */
-.mcda-dropdown {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1010;
-    display: none;
-    padding: 1px;
-    min-width: 400px;
-    padding: 0.5rem 1rem;
-
-}
-
 /* results page */
 #ranktable {
     display: inline-block;
@@ -234,18 +224,6 @@ input[type='file'] {
 .underlined-div {
     border-bottom: 1px solid $medium-gray;
     margin-bottom: 1.5rem !important;
-}
-
-/* --- overview page ----- */
-.remarksTree {
-    /*margin: 0;*/
-    padding: 0;
-    width:700px;
-    list-style-type: none;
-}
-
-.showRemark p {
-    text-align: left;
 }
 
 /* ----- preferences table ------ */
@@ -461,9 +439,4 @@ $preferences-progress-inactive-color: #e2e2e2;
 .circle-label {
     margin-left: -50%;
     text-align:left;
-}
-
-/* fix triangle for angular foundation dropdowns */
-.row .columns .row:before, .row .columns .row:after {
-  display:block;
 }

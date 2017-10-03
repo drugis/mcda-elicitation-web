@@ -1,8 +1,8 @@
 'use strict';
 define(function(require) {
-  var dependencies = [];
+  var dependencies = ['numberFilter'];
   var _ = require('lodash');
-  var ManualInputService = function() {
+  var ManualInputService = function(numberFilter) {
     var distributionKnowledge = {
       exact: {
         toString: function(input) {
@@ -31,7 +31,7 @@ define(function(require) {
           } else if (distributionKnowledge.dnorm.isInvalidInput(input)) {
             return 'Invalid input';
           } else {
-            return 'N(' + input.mu + ', ' + input.sigma + ')';
+            return 'N(' + numberFilter(input.mu, 3) + ', ' + input.sigma + ')';
           }
         },
         isMissingInput: function(input) {
@@ -161,6 +161,41 @@ define(function(require) {
       return inputData;
     }
 
+
+    function createDistribution(inputData, inputState, studyType, continuousType) {
+      var newData = _.cloneDeep(inputData);
+      if (studyType === 'dichotomous') {
+        newData.alpha = inputState.count + 1;
+        newData.beta = inputState.sampleSize - inputState.count + 1;
+        newData.type = 'dbeta';
+      } else if (studyType === 'continuous') {
+        newData.mu = inputState.mu;
+        if (continuousType === 'SEnorm') {
+          newData.sigma = inputState.stdErr;
+          newData.type = 'dnorm';
+        } else if (continuousType === 'SDnorm') {
+          newData.sigma = inputState.sigma / Math.sqrt(inputState.sampleSize);
+          newData.type = 'dnorm';
+        } else if (continuousType === 'SEt') {
+          newData.stdErr = inputState.stdErr;
+          newData.dof = inputState.sampleSize - 1;
+          newData.type = 'dt';
+        } else if (continuousType === 'SDt') {
+          newData.stdErr = inputState.sigma / Math.sqrt(inputState.sampleSize);
+          newData.dof = inputState.sampleSize - 1;
+          newData.type = 'dt';
+        }
+      } else {
+        //survival
+        if (_.isNumber(inputState.events) && _.isNumber(inputState.exposure)) {
+          newData.alpha = inputState.events + 0.001;
+          newData.beta = inputState.exposure + 0.001;
+        }
+        newData.type = 'dsurv';
+      }
+      return newData;
+    }
+
     function isInvalidCell(cell) {
       return distributionKnowledge[cell.type].isInvalidInput(cell);
     }
@@ -235,8 +270,11 @@ define(function(require) {
       return distributionKnowledge[inputData.type].toString(inputData);
     }
 
+
+
     return {
       createProblem: createProblem,
+      createDistribution: createDistribution,
       prepareInputData: prepareInputData,
       inputToString: inputToString,
       isInvalidCell: isInvalidCell

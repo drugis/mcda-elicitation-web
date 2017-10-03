@@ -131,8 +131,8 @@
     </div>
     <div class="cell">
       <form>
-        <input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="distribution"> Effect distributions
-        <input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="study"> Study data
+        <label><input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="distribution"> Effect distributions</label>
+        <label><input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="study"> Study data</label>
       </form>
     </div>
   </div>
@@ -183,10 +183,10 @@
   <!-- buttons -->
   <div class="grid-x">
     <div class="cell">
-      <button ng-disabled="!state.isInputDataValid" type="button" ng-click="createProblem()">
+      <button ng-disabled="!state.isInputDataValid" class="button" type="button" ng-click="createProblem()">
         Done
       </button>
-      <button type="button" ng-click="goToStep1()">Back</button>
+      <button type="button" ng-click="goToStep1()" type="button" class="button">Back</button>
       <div ng-if="!state.isInputDataValid">
         <em>Invalid input data</em>
       </div>

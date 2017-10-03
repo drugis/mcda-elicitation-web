@@ -28,7 +28,7 @@
   "dependencies": {
     "angular": "~1.6.5",
     "angular-cookies": "~1.6.5",
-    "angular-foundation-6": "~0.11",
+    "angular-foundation-6": "https://github.com/drugis/angular-foundation.git#popoverExpanded",
     "angular-patavi-client": "https://github.com/drugis/angular-patavi-client.git#2.0.3",
     "angular-resource": "~1.6.5",
     "angular-ui-router": "~1.0.5",

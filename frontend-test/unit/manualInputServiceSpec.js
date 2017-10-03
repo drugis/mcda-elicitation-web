@@ -371,6 +371,88 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
       });
     });
 
+    describe('createDistribution', function() {
+      it('should create correct distributions for all cases', function() {
+        var dichotomousState = {
+          count: 0,
+          sampleSize: 10
+        };
+        var expectedDichotomousResult = {
+          alpha: 1,
+          beta: 11,
+          type: 'dbeta'
+        };
+        var dichotomousResult = manualInputService.createDistribution({}, dichotomousState, 'dichotomous');
+        expect(dichotomousResult).toEqual(expectedDichotomousResult);
+
+        var survivalState = {
+          events: 10,
+          exposure: 100
+        };
+        var expectedSurvivalResult = {
+          alpha: 10.001,
+          beta: 100.001,
+          type: 'dsurv'
+        };
+        var survivalResult = manualInputService.createDistribution({}, survivalState, 'survival');
+        expect(survivalResult).toEqual(expectedSurvivalResult);
+
+        var continuousStandardErrorNormalState = {
+          mu: 5,
+          stdErr: 0.5
+        };
+        var expectedContinuousStandardErrorNormalResult = {
+          mu: 5,
+          sigma: 0.5,
+          type: 'dnorm'
+        };
+        var continuousStandardErrorNormalResult = manualInputService.createDistribution({}, continuousStandardErrorNormalState, 'continuous', 'SEnorm');
+        expect(continuousStandardErrorNormalResult).toEqual(expectedContinuousStandardErrorNormalResult);
+
+        var continuousStandardDeviationNormalState = {
+          mu: 5,
+          sigma: 6,
+          sampleSize: 9
+        };
+        var expectedContinuousStandardDeviationNormalResult = {
+          mu: 5,
+          sigma: 2,
+          type: 'dnorm'
+        };
+        var continuousStandardDeviationNormalResult = manualInputService.createDistribution({}, continuousStandardDeviationNormalState, 'continuous', 'SDnorm');
+        expect(continuousStandardDeviationNormalResult).toEqual(expectedContinuousStandardDeviationNormalResult);
+
+        var continuousStandardErrorStudentTState = {
+          mu: 5,
+          stdErr: 6,
+          sampleSize: 9
+        };
+        var expectedContinuousStandardErrorStudentTResult = {
+          mu: 5,
+          stdErr: 6,
+          dof: 8,
+          type: 'dt'
+        };
+        var continuousStandardErrorStudentTResult = manualInputService.createDistribution({}, continuousStandardErrorStudentTState, 'continuous', 'SEt');
+        expect(continuousStandardErrorStudentTResult).toEqual(expectedContinuousStandardErrorStudentTResult);
+
+        var continuousStandardDeviationStudentTState = {
+          mu: 5,
+          sigma: 6,
+          sampleSize: 9
+        };
+        var expectedContinuousStandardDeviationStudentTResult = {
+          mu: 5,
+          stdErr: 2,
+          dof: 8,
+          type: 'dt'
+        };
+        var continuousStandardDeviationStudentTResult = manualInputService.createDistribution({}, continuousStandardDeviationStudentTState, 'continuous', 'SDt');
+        expect(continuousStandardDeviationStudentTResult).toEqual(expectedContinuousStandardDeviationStudentTResult);
+
+      });
+    });
+
     describe('prepareInputData', function() {
       it('should prepare a zero initialized table', function() {
         var treatments = {

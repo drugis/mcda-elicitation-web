@@ -20,6 +20,8 @@ define(['lodash'], function(_) {
         scope.keyCheck = keyCheck;
         scope.cacheInput = cacheInput;
         // variables
+        var isEscPressed = false;
+
         if (scope.criterion.dataType === 'continuous') {
           scope.distributionOptions = [{
             name: 'exact',
@@ -44,7 +46,21 @@ define(['lodash'], function(_) {
         }
         scope.inputData.label = ManualInputService.inputToString(scope.inputData);
 
-        scope.$on('dropdown.hasClosed', function() {
+        scope.$on('open.af.dropdownToggle', function() {
+          isEscPressed = false;
+        });
+
+        scope.$on('close.af.dropdownToggle', function() {
+          if (!isEscPressed) {
+            saveState();
+          }
+        });
+
+        function cacheInput() {
+          scope.inputState = _.cloneDeep(scope.inputData);
+        }
+
+        function saveState() {
           $timeout(function() {
             scope.inputData = scope.inputState;
             scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
@@ -53,23 +69,14 @@ define(['lodash'], function(_) {
               scope.changeCallback();
             });
           });
-        });
-
-        function cacheInput() {
-          scope.inputState = _.cloneDeep(scope.inputData);
         }
 
         function keyCheck(event) {
           if (event.keyCode === ESC) {
-            scope.$broadcast('dropdown.closeEvent');
+            isEscPressed = true;
+            scope.$broadcast('doClose.af.dropdownToggle');
           } else if (event.keyCode === ENTER) {
-            $timeout(function() {
-              scope.inputData = scope.inputState;
-              scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
-              scope.inputData.label = ManualInputService.inputToString(scope.inputData);
-              scope.changeCallback();
-              scope.$broadcast('dropdown.closeEvent');
-            });
+            scope.$broadcast('doClose.af.dropdownToggle');
           }
         }
       }
