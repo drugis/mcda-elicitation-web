@@ -35,8 +35,8 @@
 </div>
 <div id="partial-value-functions-block" class="prefs-block">
   <h4>Partial Value Functions</h4>
-  <ul id="partial-value-functions" class="large-block-grid-3">
-    <li ng-repeat="criterion in aggregateState.problem.criteria">
+  <div id="partial-value-functions" class="grid-x grid-padding-x small-up-1 medium-up-2 large-up-3">
+    <div class="cell" ng-repeat="criterion in aggregateState.problem.criteria">
       <h5>{{::criterion.title}}</h5>
       <div style="width: 250px; height: 180px">
         <line-chart ng-if="isPVFDefined(criterion)" value="getXY(criterion)" show-legend="false"></line-chart>
@@ -45,8 +45,8 @@
         </div>
       </div>
       <button class="button" ng-if="editMode.isUserOwner" ng-class="{alert: !isSafe['partial-value-function'].safe}" tooltip="{{isSafe['partial-value-function'].tooltip}}" tooltip-animation="false" ng-disabled="!isAccessible(tasks['partial-value-function']).accessible" ui-sref="partial-value-function({criterion: criterion.id})">Define partial value function</button>
-    </li>
-  </ul>
+    </div>
+  </div>
 </div>
 <div class="grid-x" id="trade-off-block" class="prefs-block">
   <div class="cell">

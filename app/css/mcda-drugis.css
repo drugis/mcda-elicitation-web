@@ -3489,13 +3489,13 @@ h6, .h6 {
 /* line 371, ../../bower_components/foundation-sites/scss/typography/_base.scss */
 a {
   line-height: inherit;
-  color: #452F8C;
+  color: #1976D2;
   text-decoration: none;
   cursor: pointer;
 }
 /* line 378, ../../bower_components/foundation-sites/scss/typography/_base.scss */
 a:hover, a:focus {
-  color: #2d1f5b;
+  color: #104d89;
 }
 /* line 386, ../../bower_components/foundation-sites/scss/typography/_base.scss */
 a img {
@@ -3840,7 +3840,7 @@ ul.no-bullet, ol.no-bullet {
   line-height: 1;
   text-align: center;
   cursor: pointer;
-  background-color: #452F8C;
+  background-color: #1976D2;
   color: #fefefe;
 }
 /* line 202, ../../bower_components/foundation-sites/scss/util/_mixins.scss */
@@ -3849,7 +3849,7 @@ ul.no-bullet, ol.no-bullet {
 }
 /* line 150, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button:hover, .button:focus {
-  background-color: #3b2877;
+  background-color: #1564b3;
   color: #fefefe;
 }
 /* line 267, ../../bower_components/foundation-sites/scss/components/_button.scss */
@@ -3873,12 +3873,12 @@ ul.no-bullet, ol.no-bullet {
 }
 /* line 277, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.primary {
-  background-color: #452F8C;
+  background-color: #1976D2;
   color: #fefefe;
 }
 /* line 150, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.primary:hover, .button.primary:focus {
-  background-color: #372670;
+  background-color: #145ea8;
   color: #fefefe;
 }
 /* line 277, ../../bower_components/foundation-sites/scss/components/_button.scss */
@@ -3923,27 +3923,27 @@ ul.no-bullet, ol.no-bullet {
 }
 /* line 293, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.disabled, .button[disabled] {
-  opacity: 0.25;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 /* line 207, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.disabled, .button.disabled:hover, .button.disabled:focus, .button[disabled], .button[disabled]:hover, .button[disabled]:focus {
-  background-color: #452F8C;
+  background-color: #1976D2;
   color: #fefefe;
 }
 /* line 298, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.disabled.primary, .button[disabled].primary {
-  opacity: 0.25;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 /* line 207, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.disabled.primary, .button.disabled.primary:hover, .button.disabled.primary:focus, .button[disabled].primary, .button[disabled].primary:hover, .button[disabled].primary:focus {
-  background-color: #452F8C;
+  background-color: #1976D2;
   color: #fefefe;
 }
 /* line 298, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.disabled.secondary, .button[disabled].secondary {
-  opacity: 0.25;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 /* line 207, ../../bower_components/foundation-sites/scss/components/_button.scss */
@@ -3953,7 +3953,7 @@ ul.no-bullet, ol.no-bullet {
 }
 /* line 298, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.disabled.success, .button[disabled].success {
-  opacity: 0.25;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 /* line 207, ../../bower_components/foundation-sites/scss/components/_button.scss */
@@ -3963,7 +3963,7 @@ ul.no-bullet, ol.no-bullet {
 }
 /* line 298, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.disabled.warning, .button[disabled].warning {
-  opacity: 0.25;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 /* line 207, ../../bower_components/foundation-sites/scss/components/_button.scss */
@@ -3973,7 +3973,7 @@ ul.no-bullet, ol.no-bullet {
 }
 /* line 298, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.disabled.alert, .button[disabled].alert {
-  opacity: 0.25;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 /* line 207, ../../bower_components/foundation-sites/scss/components/_button.scss */
@@ -3983,8 +3983,8 @@ ul.no-bullet, ol.no-bullet {
 }
 /* line 306, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.hollow {
-  border: 1px solid #452F8C;
-  color: #452F8C;
+  border: 1px solid #1976D2;
+  color: #1976D2;
 }
 /* line 158, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.hollow, .button.hollow:hover, .button.hollow:focus {
@@ -3996,28 +3996,28 @@ ul.no-bullet, ol.no-bullet {
 }
 /* line 182, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.hollow:hover, .button.hollow:focus {
-  border-color: #231846;
-  color: #231846;
+  border-color: #0d3b69;
+  color: #0d3b69;
 }
 /* line 185, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.hollow:hover.disabled, .button.hollow:hover[disabled], .button.hollow:focus.disabled, .button.hollow:focus[disabled] {
-  border: 1px solid #452F8C;
-  color: #452F8C;
+  border: 1px solid #1976D2;
+  color: #1976D2;
 }
 /* line 311, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.hollow.primary {
-  border: 1px solid #452F8C;
-  color: #452F8C;
+  border: 1px solid #1976D2;
+  color: #1976D2;
 }
 /* line 182, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.hollow.primary:hover, .button.hollow.primary:focus {
-  border-color: #231846;
-  color: #231846;
+  border-color: #0d3b69;
+  color: #0d3b69;
 }
 /* line 185, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.hollow.primary:hover.disabled, .button.hollow.primary:hover[disabled], .button.hollow.primary:focus.disabled, .button.hollow.primary:focus[disabled] {
-  border: 1px solid #452F8C;
-  color: #452F8C;
+  border: 1px solid #1976D2;
+  color: #1976D2;
 }
 /* line 311, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.hollow.secondary {
@@ -4081,8 +4081,8 @@ ul.no-bullet, ol.no-bullet {
 }
 /* line 320, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.clear {
-  border: 1px solid #452F8C;
-  color: #452F8C;
+  border: 1px solid #1976D2;
+  color: #1976D2;
 }
 /* line 158, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.clear, .button.clear:hover, .button.clear:focus {
@@ -4094,13 +4094,13 @@ ul.no-bullet, ol.no-bullet {
 }
 /* line 182, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.clear:hover, .button.clear:focus {
-  border-color: #231846;
-  color: #231846;
+  border-color: #0d3b69;
+  color: #0d3b69;
 }
 /* line 185, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.clear:hover.disabled, .button.clear:hover[disabled], .button.clear:focus.disabled, .button.clear:focus[disabled] {
-  border: 1px solid #452F8C;
-  color: #452F8C;
+  border: 1px solid #1976D2;
+  color: #1976D2;
 }
 /* line 325, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.clear, .button.clear.disabled, .button.clear[disabled], .button.clear:hover, .button.clear:hover.disabled, .button.clear:hover[disabled], .button.clear:focus, .button.clear:focus.disabled, .button.clear:focus[disabled] {
@@ -4108,18 +4108,18 @@ ul.no-bullet, ol.no-bullet {
 }
 /* line 331, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.clear.primary {
-  border: 1px solid #452F8C;
-  color: #452F8C;
+  border: 1px solid #1976D2;
+  color: #1976D2;
 }
 /* line 182, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.clear.primary:hover, .button.clear.primary:focus {
-  border-color: #231846;
-  color: #231846;
+  border-color: #0d3b69;
+  color: #0d3b69;
 }
 /* line 185, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.clear.primary:hover.disabled, .button.clear.primary:hover[disabled], .button.clear.primary:focus.disabled, .button.clear.primary:focus[disabled] {
-  border: 1px solid #452F8C;
-  color: #452F8C;
+  border: 1px solid #1976D2;
+  color: #1976D2;
 }
 /* line 336, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.clear.primary, .button.clear.primary.disabled, .button.clear.primary[disabled], .button.clear.primary:hover, .button.clear.primary:hover.disabled, .button.clear.primary:hover[disabled], .button.clear.primary:focus, .button.clear.primary:focus.disabled, .button.clear.primary:focus[disabled] {
@@ -4219,11 +4219,11 @@ ul.no-bullet, ol.no-bullet {
 }
 /* line 358, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.dropdown.hollow::after {
-  border-top-color: #452F8C;
+  border-top-color: #1976D2;
 }
 /* line 364, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.dropdown.hollow.primary::after {
-  border-top-color: #452F8C;
+  border-top-color: #1976D2;
 }
 /* line 364, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button.dropdown.hollow.secondary::after {
@@ -4588,7 +4588,7 @@ select[multiple] {
 }
 /* line 99, ../../bower_components/foundation-sites/scss/components/_breadcrumbs.scss */
 .breadcrumbs a {
-  color: #452F8C;
+  color: #1976D2;
 }
 /* line 102, ../../bower_components/foundation-sites/scss/components/_breadcrumbs.scss */
 .breadcrumbs a:hover {
@@ -4648,12 +4648,12 @@ select[multiple] {
 }
 /* line 212, ../../bower_components/foundation-sites/scss/components/_button-group.scss */
 .button-group.primary .button {
-  background-color: #452F8C;
+  background-color: #1976D2;
   color: #fefefe;
 }
 /* line 150, ../../bower_components/foundation-sites/scss/components/_button.scss */
 .button-group.primary .button:hover, .button-group.primary .button:focus {
-  background-color: #372670;
+  background-color: #145ea8;
   color: #fefefe;
 }
 /* line 212, ../../bower_components/foundation-sites/scss/components/_button-group.scss */
@@ -4920,12 +4920,12 @@ select[multiple] {
 }
 /* line 444, ../../bower_components/foundation-sites/scss/components/_menu.scss */
 .menu .is-active > a {
-  background: #452F8C;
+  background: #1976D2;
   color: #fefefe;
 }
 /* line 450, ../../bower_components/foundation-sites/scss/components/_menu.scss */
 .menu .active > a {
-  background: #452F8C;
+  background: #1976D2;
   color: #fefefe;
 }
 /* line 456, ../../bower_components/foundation-sites/scss/components/_menu.scss */
@@ -5065,7 +5065,7 @@ select[multiple] {
 }
 /* line 93, ../../bower_components/foundation-sites/scss/components/_callout.scss */
 .callout.primary {
-  background-color: #e0dbf3;
+  background-color: #daeafb;
   color: #0a0a0a;
 }
 /* line 93, ../../bower_components/foundation-sites/scss/components/_callout.scss */
@@ -5172,7 +5172,7 @@ select[multiple] {
   content: '';
   border-right-width: 0;
   border-left-style: solid;
-  border-color: transparent transparent transparent #452F8C;
+  border-color: transparent transparent transparent #1976D2;
 }
 /* line 57, ../../bower_components/foundation-sites/scss/components/_drilldown.scss */
 .drilldown.align-left .is-drilldown-submenu-parent > a::after {
@@ -5209,7 +5209,7 @@ select[multiple] {
   content: '';
   border-left-width: 0;
   border-right-style: solid;
-  border-color: transparent #452F8C transparent transparent;
+  border-color: transparent #1976D2 transparent transparent;
   border-left-width: 0;
   display: inline-block;
   vertical-align: middle;
@@ -5642,12 +5642,12 @@ select[multiple] {
   line-height: 1;
   white-space: nowrap;
   cursor: default;
-  background: #452F8C;
+  background: #1976D2;
   color: #fefefe;
 }
 /* line 58, ../../bower_components/foundation-sites/scss/components/_label.scss */
 .label.primary {
-  background: #452F8C;
+  background: #1976D2;
   color: #fefefe;
 }
 /* line 58, ../../bower_components/foundation-sites/scss/components/_label.scss */
@@ -6339,7 +6339,7 @@ select[multiple] {
 /* line 165, ../../bower_components/foundation-sites/scss/components/_pagination.scss */
 .pagination .current {
   padding: 0.1875rem 0.625rem;
-  background: #452F8C;
+  background: #1976D2;
   color: #fefefe;
   cursor: default;
 }
@@ -6385,7 +6385,7 @@ select[multiple] {
 }
 /* line 48, ../../bower_components/foundation-sites/scss/components/_progress-bar.scss */
 .progress.primary .progress-meter {
-  background-color: #452F8C;
+  background-color: #1976D2;
 }
 /* line 48, ../../bower_components/foundation-sites/scss/components/_progress-bar.scss */
 .progress.secondary .progress-meter {
@@ -6410,7 +6410,7 @@ select[multiple] {
   display: block;
   width: 0%;
   height: 100%;
-  background-color: #452F8C;
+  background-color: #1976D2;
   border-radius: 2px;
 }
 
@@ -6468,7 +6468,7 @@ select[multiple] {
   width: 1.4rem;
   height: 1.4rem;
   border-radius: 2px;
-  background-color: #452F8C;
+  background-color: #1976D2;
   transition: all 0.2s ease-in-out;
   touch-action: manipulation;
 }
@@ -6478,7 +6478,7 @@ select[multiple] {
 }
 /* line 67, ../../bower_components/foundation-sites/scss/components/_slider.scss */
 .slider-handle:hover {
-  background-color: #3b2877;
+  background-color: #1564b3;
 }
 /* line 71, ../../bower_components/foundation-sites/scss/components/_slider.scss */
 .slider-handle.is-dragging {
@@ -6731,7 +6731,7 @@ input + .switch-paddle {
 }
 /* line 127, ../../bower_components/foundation-sites/scss/components/_switch.scss */
 input:checked ~ .switch-paddle {
-  background: #452F8C;
+  background: #1976D2;
 }
 /* line 130, ../../bower_components/foundation-sites/scss/components/_switch.scss */
 input:checked ~ .switch-paddle::after {
@@ -6996,7 +6996,7 @@ table.hover:not(.unstriped) tr:nth-of-type(even):hover {
 
 /* line 168, ../../bower_components/foundation-sites/scss/components/_tabs.scss */
 .tabs.primary {
-  background: #452F8C;
+  background: #1976D2;
 }
 /* line 171, ../../bower_components/foundation-sites/scss/components/_tabs.scss */
 .tabs.primary > li > a {
@@ -7004,7 +7004,7 @@ table.hover:not(.unstriped) tr:nth-of-type(even):hover {
 }
 /* line 174, ../../bower_components/foundation-sites/scss/components/_tabs.scss */
 .tabs.primary > li > a:hover, .tabs.primary > li > a:focus {
-  background: #4b3398;
+  background: #1870c8;
 }
 
 /* line 181, ../../bower_components/foundation-sites/scss/components/_tabs.scss */
@@ -7017,17 +7017,17 @@ table.hover:not(.unstriped) tr:nth-of-type(even):hover {
   padding: 1.25rem 1.5rem;
   font-size: 0.75rem;
   line-height: 1;
-  color: #452F8C;
+  color: #1976D2;
 }
 /* line 100, ../../bower_components/foundation-sites/scss/components/_tabs.scss */
 .tabs-title > a:hover {
   background: #fefefe;
-  color: #3b2878;
+  color: #1665b5;
 }
 /* line 105, ../../bower_components/foundation-sites/scss/components/_tabs.scss */
 .tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {
   background: #e6e6e6;
-  color: #452F8C;
+  color: #1976D2;
 }
 
 /* line 185, ../../bower_components/foundation-sites/scss/components/_tabs.scss */
@@ -7072,7 +7072,7 @@ a.thumbnail {
 }
 /* line 49, ../../bower_components/foundation-sites/scss/components/_thumbnail.scss */
 a.thumbnail:hover, a.thumbnail:focus {
-  box-shadow: 0 0 6px 1px rgba(69, 47, 140, 0.5);
+  box-shadow: 0 0 6px 1px rgba(25, 118, 210, 0.5);
 }
 /* line 54, ../../bower_components/foundation-sites/scss/components/_thumbnail.scss */
 a.thumbnail image {
@@ -7787,7 +7787,7 @@ a.thumbnail image {
 }
 
 /* line 34, ../../sass-shared/_drugis.scss */
-navbar-directive ul li > a.manual:hover {
+a.manual:hover {
   text-decoration: underline;
 }
 
@@ -7903,7 +7903,7 @@ tr.disabled-row td {
 
 /* line 127, ../../sass-shared/_drugis.scss */
 tr.clickable td {
-  color: #452F8C;
+  color: #1976D2;
 }
 
 /* line 131, ../../sass-shared/_drugis.scss */
@@ -8754,12 +8754,27 @@ input[type='file'] {
 }
 
 /* line 244, ../../sass/_mcda-drugis-base.scss */
+.round {
+  border-radius: 20px;
+}
+
+/* line 248, ../../sass/_mcda-drugis-base.scss */
+.slider-buttons {
+  margin-top: 0.5rem;
+}
+
+/* line 251, ../../sass/_mcda-drugis-base.scss */
+.jslider {
+  top: 0em;
+}
+
+/* line 255, ../../sass/_mcda-drugis-base.scss */
 .none {
   display: none;
 }
 
 /*----- TREEVIEW -----*/
-/* line 251, ../../sass/_mcda-drugis-base.scss */
+/* line 262, ../../sass/_mcda-drugis-base.scss */
 .button.tiny-icon {
   padding-top: 0.325rem;
   padding-right: 0.75rem;
@@ -8768,15 +8783,15 @@ input[type='file'] {
   font-size: 1rem;
 }
 
-/* line 259, ../../sass/_mcda-drugis-base.scss */
+/* line 270, ../../sass/_mcda-drugis-base.scss */
 .workspace-control-tab {
   background-color: #e6e6e6;
   margin-right: 0.5rem;
 }
 
-/* line 264, ../../sass/_mcda-drugis-base.scss */
+/* line 275, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container {
-  border-bottom: 1px solid #452F8C;
+  border-bottom: 1px solid #1976D2;
   -webkit-user-select: none;
   /* Chrome/Safari */
   -moz-user-select: none;
@@ -8787,7 +8802,7 @@ input[type='file'] {
   -o-user-select: none;
   user-select: none;
 }
-/* line 275, ../../sass/_mcda-drugis-base.scss */
+/* line 286, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav {
   position: relative;
   display: block;
@@ -8795,39 +8810,38 @@ input[type='file'] {
   margin: 0 0 -2px 0;
   text-align: center;
 }
-/* line 283, ../../sass/_mcda-drugis-base.scss */
+/* line 294, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav > ul {
   bottom: -4px;
   list-style-type: none;
   margin: 2px auto 0 auto;
   position: relative;
 }
-/* line 290, ../../sass/_mcda-drugis-base.scss */
+/* line 301, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li {
   float: left;
   margin: 16px 5px 0 5px;
   list-style: none;
 }
-/* line 294, ../../sass/_mcda-drugis-base.scss */
+/* line 305, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li .scenario-action {
   background: white;
   color: black;
   border: none;
-  padding-bottom: 0;
   background-color: white;
   border-color: white;
 }
-/* line 303, ../../sass/_mcda-drugis-base.scss */
+/* line 313, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li .scenario-action:hover {
   background-color: white;
   border-color: white;
 }
-/* line 310, ../../sass/_mcda-drugis-base.scss */
+/* line 320, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li a {
-  border: 1px solid #452F8C;
+  border: 1px solid #1976D2;
   border-bottom: none;
   color: #fefefe;
-  background-color: #452F8C;
+  background-color: #1976D2;
   padding-top: 4px;
   padding-left: 18px;
   padding-right: 18px;
@@ -8835,35 +8849,35 @@ input[type='file'] {
   display: inline-block;
   margin-bottom: -1px;
 }
-/* line 322, ../../sass/_mcda-drugis-base.scss */
+/* line 332, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li a:hover {
-  border-color: #322266;
-  background-color: #322266;
+  border-color: #145ca4;
+  background-color: #145ca4;
 }
-/* line 326, ../../sass/_mcda-drugis-base.scss */
+/* line 336, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li a.activetab {
   background-color: #fefefe;
   color: #0a0a0a;
 }
-/* line 330, ../../sass/_mcda-drugis-base.scss */
+/* line 340, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li a.disabledtab {
   cursor: auto;
   opacity: 0.7;
 }
-/* line 335, ../../sass/_mcda-drugis-base.scss */
+/* line 345, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li a.disabledtab:hover {
   cursor: auto;
   opacity: 0.7;
-  background-color: #452F8C;
-  border: 1px solid #452F8C;
+  background-color: #1976D2;
+  border: 1px solid #1976D2;
   border-bottom: none;
 }
-/* line 345, ../../sass/_mcda-drugis-base.scss */
+/* line 355, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav > li:first-child {
   margin-left: 15px;
 }
 
-/* line 350, ../../sass/_mcda-drugis-base.scss */
+/* line 360, ../../sass/_mcda-drugis-base.scss */
 .tab-corners {
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
@@ -8873,49 +8887,50 @@ input[type='file'] {
   -webkit-border-top-right-radius: 2px;
 }
 
-/* line 359, ../../sass/_mcda-drugis-base.scss */
+/* line 369, ../../sass/_mcda-drugis-base.scss */
 .scenario-menu {
   padding-top: 17px;
 }
 
-/* line 363, ../../sass/_mcda-drugis-base.scss */
+/* line 373, ../../sass/_mcda-drugis-base.scss */
 .scenario-select {
   display: inline;
   width: 190px;
   height: 27px;
   margin: 2px;
-  padding: 2px 2px;
+  padding: 2px 20px 2px 2px;
   margin: 2px 4px 1px 0px;
 }
 
-/* line 372, ../../sass/_mcda-drugis-base.scss */
+/* line 382, ../../sass/_mcda-drugis-base.scss */
 .new-scenario-btn {
-  color: #452F8C;
-}
-
-/* line 376, ../../sass/_mcda-drugis-base.scss */
-.new-scenario-btn:hover {
-  cursor: pointer;
-  color: #3b2877;
-}
-
-/* line 381, ../../sass/_mcda-drugis-base.scss */
-#newScenarioControl {
-  margin-left: -10px;
-  margin-top: 6px;
+  color: #1976D2;
 }
 
 /* line 386, ../../sass/_mcda-drugis-base.scss */
+.new-scenario-btn:hover {
+  cursor: pointer;
+  color: #1564b3;
+}
+
+/* line 391, ../../sass/_mcda-drugis-base.scss */
+#newScenarioControl {
+  margin-left: -10px;
+  margin: 6px;
+  width: 220px;
+}
+
+/* line 397, ../../sass/_mcda-drugis-base.scss */
 .results-button {
   margin-left: 0.5rem;
 }
 
-/* line 392, ../../sass/_mcda-drugis-base.scss */
+/* line 403, ../../sass/_mcda-drugis-base.scss */
 .pref-progress {
   margin: 50px 60px;
 }
 
-/* line 396, ../../sass/_mcda-drugis-base.scss */
+/* line 407, ../../sass/_mcda-drugis-base.scss */
 .circle-container {
   text-align: center;
   display: inline-block;
@@ -8924,24 +8939,24 @@ input[type='file'] {
   margin-top: -17px;
 }
 
-/* line 404, ../../sass/_mcda-drugis-base.scss */
+/* line 415, ../../sass/_mcda-drugis-base.scss */
 .line {
   background-color: #e2e2e2;
   width: 100%;
   height: 5px;
 }
 
-/* line 410, ../../sass/_mcda-drugis-base.scss */
+/* line 421, ../../sass/_mcda-drugis-base.scss */
 .last-line {
   height: 5px;
 }
 
-/* line 414, ../../sass/_mcda-drugis-base.scss */
+/* line 425, ../../sass/_mcda-drugis-base.scss */
 .pref-progress .progress-cell {
   padding: 0px;
 }
 
-/* line 418, ../../sass/_mcda-drugis-base.scss */
+/* line 429, ../../sass/_mcda-drugis-base.scss */
 .circle {
   background-color: #e2e2e2;
   height: 25px;
@@ -8952,20 +8967,20 @@ input[type='file'] {
   margin-left: -15px;
 }
 
-/* line 428, ../../sass/_mcda-drugis-base.scss */
+/* line 439, ../../sass/_mcda-drugis-base.scss */
 .circle-container.next-step .circle,
 .circle-container.completed .circle,
 .line.accessible {
   background-color: #29A329;
 }
 
-/* line 434, ../../sass/_mcda-drugis-base.scss */
+/* line 445, ../../sass/_mcda-drugis-base.scss */
 .circle-container.next-step:hover,
 .circle-container.completed:hover {
   cursor: pointer;
 }
 
-/* line 439, ../../sass/_mcda-drugis-base.scss */
+/* line 450, ../../sass/_mcda-drugis-base.scss */
 .circle-label {
   margin-left: -50%;
   text-align: left;

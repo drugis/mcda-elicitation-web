@@ -64,7 +64,7 @@
           </table>
         </div>
       </div>
-      <div class="grid-x">
+      <div class="grid-x grid-margin-x">
         <div class="cell large-6">
           <h4>Total value (base case)</h4>
           <table>
@@ -92,7 +92,7 @@
           </table>
         </div>
       </div>
-      <div class="grid-x">
+      <div class="grid-x grid-margin-x">
         <div class="cell">
           <h4>Value profiles</h4>
         </div>
@@ -114,10 +114,10 @@
       <h3>One-way sensitivity analysis</h3>
     </div>
   </div>
-  <div class="grid-x underlined-div">
+  <div class="grid-x underlined-div grid-margin-x">
     <div class="cell medium-6 large-6">
       <h4>Measurements</h4>
-      <div class="grid-x">
+      <div class="grid-x grid-margin-x">
         <div class="cell medium-6 large-6">
           <label>Alternative
             <select ng-options="alternative.title for alternative in alternatives" ng-model="sensitivityMeasurements.measurementsAlternative" ng-change="doMeasurementSensitivity(state)"></select>

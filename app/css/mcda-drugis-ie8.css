@@ -6097,7 +6097,7 @@ table.show-for-xlarge, table.show-for-large, table.hide-for-small, table.hide-fo
 }
 
 /* line 34, ../../sass-shared/_drugis.scss */
-navbar-directive ul li > a.manual:hover {
+a.manual:hover {
   text-decoration: underline;
 }
 
@@ -6213,7 +6213,7 @@ tr.disabled-row td {
 
 /* line 127, ../../sass-shared/_drugis.scss */
 tr.clickable td {
-  color: #452F8C;
+  color: #1976D2;
 }
 
 /* line 131, ../../sass-shared/_drugis.scss */

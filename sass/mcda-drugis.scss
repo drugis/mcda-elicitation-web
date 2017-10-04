@@ -1,6 +1,14 @@
-@import "settings";
 $drugis-color: #1976D2;
-$primary-color: #1976D2;
+$foundation-palette: (
+  primary: $drugis-color,
+  secondary: #767676,
+  success:  #29A329,
+  warning: lighten(#f08a24, 5%),
+  alert: #E66464
+);
+@import "settings";
+$button-opacity-disabled: 0.5;
+
 $row-width: rem-calc(1500);
 @import "foundation";
 @include foundation-global-styles;

@@ -241,6 +241,17 @@ input[type='file'] {
     display: block;
 }
 
+.round {
+    border-radius: 20px;
+}
+
+.slider-buttons {
+    margin-top: 0.5rem;
+}
+.jslider {
+    top:0em;
+}
+
 .none {
     display: none;
 }
@@ -295,7 +306,6 @@ input[type='file'] {
           background: white;
           color: black;
           border: none;
-          padding-bottom: 0;
           background-color: white;
           border-color: white;
         }
@@ -365,7 +375,7 @@ input[type='file'] {
     width: 190px;
     height: 27px;
     margin: 2px;
-    padding: 2px 2px;
+    padding: 2px 20px 2px 2px;
     margin:  2px 4px 1px 0px;
 }
 
@@ -380,7 +390,8 @@ input[type='file'] {
 
 #newScenarioControl {
     margin-left:-10px;
-    margin-top: 6px;
+    margin: 6px;
+    width: 220px;
 }
 
 .results-button {

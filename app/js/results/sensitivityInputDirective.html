@@ -1,14 +1,14 @@
 <dropdown-toggle close-on-click="true">
   <toggle>
-    <a ng-style="inputData.isInvalid ? {color:'red'} : {}" ng-click="showSlider()"></a>
+    <a ng-style="inputData.isInvalid ? {color:'red'} : {}" ng-click="showSlider()">
+      <span>
+        {{currentValue | number}}
+      </span>
+      <span ng-show="currentValue!==originalValue" style="color: grey">
+        ({{originalValue | number}})
+      </span>
+    </a>
   </toggle>
-  <span>
-    {{currentValue | number}}
-  </span>
-  <span ng-show="currentValue!==originalValue" style="color: grey">
-    ({{originalValue | number}})
-  </span>
-  </a>
   <pane ng-keydown="keyCheck($event)" ng-keypress="keyCheck($event)">
     <div class=grid-x>
       <div class="cell">

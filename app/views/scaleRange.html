@@ -1,30 +1,34 @@
-<div>
-  <h2>Define Scale Range</h2>
-  <p>Defining measurement scales is important because they provide the reference
-    levels at which trade-offs between criteria are assessed. Without these
-    reference levels ments about the relative importance of different
-    criteria would be meaningless.</p>
-
-  <p>The area in red indicates the estimated 95% Credible Interval (CrI) of
-    the measurements and should not be moved into.</p>
-
-  <ul class="no-bullet">
-    <li ng-repeat="(key, criterion) in criteria">
-      <h5 class="subheader"><criterion of="criterion"></criterion></h5>
-      <div class="grid-x">
-        <div class="cell large-1">
-          <a ng-click="scales[key].increaseFrom()" class="tiny round button">&lt;</a>
-        </div>
-        <div class="cell large-7">
-          <slider model="choice[key]" range="scales[key]"></slider>
-        </div>
-        <div class="cell large-1 pull-3">
-          <a ng-click="scales[key].increaseTo()"  class="tiny round button">&gt;</a>
-        </div>
-      </div>
-      <br>
-    </li>
-  </ul>
-  <button class="button" ng-click="cancel()">Cancel</button>
-  <button class="button success" ng-disabled="!validChoice()" ng-click="save()">Save</button>
+<div class="grid-container">
+  <div class="grid-x">
+    <div class="cell">
+      <h2>Define Scale Range</h2>
+      <p>Defining measurement scales is important because they provide the reference levels at which trade-offs between criteria are assessed. Without these reference levels statements about the relative importance of different criteria would be meaningless.</p>
+      <p>The area in red indicates the estimated 95% Credible Interval (CrI) of the measurements and should not be moved into.</p>
+    </div>
+    <div class="cell">
+      <ul class="no-bullet">
+        <li ng-repeat="(key, criterion) in criteria">
+          <h5 class="subheader"><criterion of="criterion"></criterion></h5>
+          <div class="grid-x">
+            <div class="cell large-1 text-center">
+              <a ng-click="scales[key].increaseFrom()" class="tiny round button slider-buttons">&lt;</a>
+            </div>
+            <div class="cell large-10">
+              <slider model="choice[key]" range="scales[key]"></slider>
+            </div>
+            <div class="cell large-1 pull-3 text-center">
+              <a ng-click="scales[key].increaseTo()" class="tiny round button slider-buttons">&gt;</a>
+            </div>
+          </div>
+          <br>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid-x">
+    <div class="cell button-group expanded large-4">
+      <button class="button" ng-click="cancel()">Cancel</button>
+      <button class="button success" ng-disabled="!validChoice()" ng-click="save()">Save</button>
+    </div>
+  </div>
 </div>

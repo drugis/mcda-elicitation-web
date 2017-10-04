@@ -23,12 +23,20 @@ define(['lodash'], function(_) {
         scope.showSlider = showSlider;
 
         // init
+        var isEscPressed = false;
         scope.newValue = scope.currentValue;
-        scope.$on('dropdown.hasClosed', function() {
-          $timeout(function() {
-            closeAndSave();
-          });
+        scope.slider = initSlider();
+
+        scope.$on('open.af.dropdownToggle', function() {
+          isEscPressed = false;
         });
+
+        scope.$on('close.af.dropdownToggle', function() {
+          if (!isEscPressed) {
+            closeAndSave();
+          }
+        });
+
         scope.$watch('currentValue', function() {
           scope.newValue = scope.currentValue; //needed for reset button
         });
@@ -62,20 +70,20 @@ define(['lodash'], function(_) {
         }
 
         function closeAndSave() {
-          if (!isNaN(scope.slider.value)) {
-            scope.newValue = scope.slider.value;
-            scope.changeCallback(scope.newValue, scope.criterion, scope.alternative);
-          }
-          scope.$broadcast('dropdown.closeEvent');
+          $timeout(function() {
+            if (!isNaN(scope.slider.value)) {
+              scope.newValue = scope.slider.value;
+              scope.changeCallback(scope.newValue, scope.criterion, scope.alternative);
+            }
+          });
         }
 
         function keyCheck(event) {
           if (event.keyCode === ESC) {
-            scope.$broadcast('dropdown.closeEvent');
+            isEscPressed = true;
+            scope.$broadcast('doClose.af.dropdownToggle');
           } else if (event.keyCode === ENTER) {
-            $timeout(function() {
-              closeAndSave();
-            });
+            scope.$broadcast('doClose.af.dropdownToggle');
           }
         }
       }
