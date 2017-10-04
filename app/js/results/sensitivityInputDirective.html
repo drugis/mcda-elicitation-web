@@ -10,14 +10,16 @@
     </a>
   </toggle>
   <pane ng-keydown="keyCheck($event)" ng-keypress="keyCheck($event)">
-    <div class=grid-x>
-      <div class="cell">
-        <rzslider rz-slider-model="slider.value" rz-slider-options="slider.options"></rzslider>
-      </div>
-      <div class="cell">
-        <label> value
-          <input type="number" ng-model="slider.value" ng-change="checkInput()">
-        </label>
+    <div class="grid-container" style="margin-top:1rem;">
+      <div class=grid-x>
+        <div class="cell">
+          <rzslider rz-slider-model="slider.value" rz-slider-options="slider.options"></rzslider>
+        </div>
+        <div class="cell">
+          <label> value
+            <input type="number" ng-model="slider.value" ng-change="checkInput()">
+          </label>
+        </div>
       </div>
     </div>
   </pane>
