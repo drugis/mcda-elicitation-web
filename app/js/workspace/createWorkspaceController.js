@@ -1,14 +1,19 @@
-define(['angular', 'lodash'], function(angular, _) {
-  var dependencies = ['$scope', '$modalInstance', 'ExampleResource', 'WorkspaceResource', 'callback'];
+'use strict';
+define(['lodash'], function(_) {
+  var dependencies = ['$scope', '$modalInstance',
+    'ExampleResource', 'WorkspaceResource', 'callback'
+  ];
 
-  var CreateWorkspaceController = function($scope, $modalInstance, ExampleResource, WorkspaceResource, callback) {
+  var CreateWorkspaceController = function($scope, $modalInstance,
+    ExampleResource, WorkspaceResource, callback) {
+    // functions
+    $scope.createWorkspace = createWorkspace;
+    $scope.close = $modalInstance.close;
+
+    // init
     $scope.isCreating = false;
     $scope.model = {};
     $scope.local = {};
-    $scope.close = $modalInstance.close;
-
-    $scope.createWorkspace = createWorkspace;
-
     $scope.examplesList = ExampleResource.query();
 
     function createWorkspace(choice) {
@@ -32,7 +37,7 @@ define(['angular', 'lodash'], function(angular, _) {
           });
         });
       }
-    };
+    }
 
   };
   return dependencies.concat(CreateWorkspaceController);

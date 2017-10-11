@@ -4,6 +4,7 @@
     <div class="callout secondary">
       <ul class="fontsize">
         <li ng-repeat="workspace in workspacesList | orderBy:'title'">
+          <a class="fa fa-trash" style="color : red" ng-click="deleteWorkspace(workspace)">  </a>
           <a ui-sref="evidence({workspaceId: workspace.id, problemId: workspace.defaultSubProblemId, id: workspace.defaultScenarioId})"> {{workspace.title}}</a>
         </li>
         <li ng-hide="workspacesList.length">No workspaces.</li>

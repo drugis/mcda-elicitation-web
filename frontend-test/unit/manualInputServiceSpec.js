@@ -558,7 +558,7 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
             mu: 2,
             sigma: 3
           };
-          expect(manualInputService.inputToString(normal)).toEqual('N(2, 3)');
+          expect(manualInputService.inputToString(normal)).toEqual('N(2.000, 3)');
         });
       });
       describe('for t effects', function() {

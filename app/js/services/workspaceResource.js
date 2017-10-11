@@ -1,23 +1,25 @@
 'use strict';
-define(function(require) {
-  var angular = require('angular');
-
+define([],function() {
   var dependencies = ['ngResource'];
-
-  var WorkspaceResource = function($q, $resource) {
-
-    var resource = $resource(
-      window.config.workspacesRepositoryUrl + ':workspaceId', { workspaceId: '@id' }, {
-        create: { method:'POST', transformRequest: function(problem) {
-          return angular.toJson({
-            title: problem.title,
-            problem: problem
-          });
-        }}
+  var WorkspaceResource = function($resource) {
+    return $resource(
+      window.config.workspacesRepositoryUrl + ':workspaceId', {
+        workspaceId: '@workspaceId'
+      }, {
+        create: {
+          method: 'POST',
+          transformRequest: function(problem) {
+            return angular.toJson({
+              title: problem.title,
+              problem: problem
+            });
+          }
+        },
+        delete: {
+          method: 'DELETE'
+        }
       }
     );
-
-    return resource;
   };
 
   return angular.module('elicit.workspaceResource', dependencies).factory('WorkspaceResource', WorkspaceResource);

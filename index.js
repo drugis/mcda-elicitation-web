@@ -120,6 +120,7 @@ function requireUserIsOwner(req, res, next) {
 var router = express.Router();
 router.get('/workspaces/:id*', requireUserIsOwner);
 router.post('/workspaces/:id*', requireUserIsOwner);
+router.delete('/workspaces/:id*', requireUserIsOwner);
 app.use(router);
 
 app.use(function(req, res, next) {
@@ -265,6 +266,59 @@ app.post('/workspaces/:id', function(req, res, next) {
     }
     res.end();
   });
+});
+
+app.delete('/workspaces/:id', function(req, res, next) {
+  logger.debug('DELETE /workspaces/:id');
+
+  function deleteWorkspace(client, callback) {
+    function deleteSubproblems(callback) {
+      client.query('DELETE FROM subproblem WHERE workspaceid=$1', [req.params.id], function(err) {
+        if (err) {
+          logger.debug('error deleting subproblem');
+          return callback(err);
+        }
+        logger.debug('done deleting subproblem');
+        callback(null, req.params.id);
+      });
+    }
+
+    function deleteScenarios() {
+      client.query('DELETE FROM scenario WHERE workspace=$1', [req.params.id], function(err) {
+        if (err) {
+          logger.debug('error deleting scenario');
+          return callback(err);
+        }
+        logger.debug('done deleting scenario');
+        callback(null, req.params.id);
+      });
+    }
+
+    function deleteWorkspaceRemnants() {
+      client.query('DELETE FROM scenario WHERE workspace=$1;DELETE FROM workspace WHERE id=$1', [req.params.id], function(err) {
+        if (err) {
+          logger.debug('error deleting workspace');
+          return callback(err);
+        }
+        logger.debug('done deleting workspace');
+        callback(null, req.params.id);
+      });
+    }
+    async.waterfall([
+      deleteSubproblems,
+      deleteScenarios,
+      deleteWorkspaceRemnants
+    ], callback);
+  }
+
+  db.runInTransaction(deleteWorkspace, function(err, result) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.json(result);
+  });
+
 });
 
 //Subproblems
