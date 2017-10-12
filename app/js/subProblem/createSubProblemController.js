@@ -49,7 +49,7 @@ define(function(require) {
       $scope.subProblemState.numberOfAlternativesSelected = _.reduce($scope.subProblemState.alternativeInclusions, function(accum, inclusion) {
         return inclusion ? accum + 1 : accum;
       }, 0);
-      $scope.observedScales.observed = _.reduce($scope.originalObserved, function(accum, criterion, critKey) {
+      $scope.observedScales = _.reduce($scope.originalObserved, function(accum, criterion, critKey) {
         accum[critKey] = _.reduce(criterion, function(accum, alternative, altKey) {
           if ($scope.subProblemState.alternativeInclusions[altKey]) {
             accum[altKey] = alternative;
