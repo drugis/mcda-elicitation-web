@@ -11,75 +11,54 @@ define(function(require) {
     intervalHull, SubProblemResource, SubProblemService, WorkspaceService, mcdaRootPath) {
     // functions
     $scope.intervalHull = intervalHull;
-    $scope.updateInclusions = updateInclusions;
     $scope.openScaleRangeDialog = openScaleRangeDialog;
     $scope.isCreationBlocked = isCreationBlocked;
-    $scope.reset = initSubProblem;
     $scope.openSaveDialog = openSaveDialog;
     $scope.isExact = isExact;
 
-    // vars 
+    // init
     $scope.problem = $scope.workspace.problem;
     $scope.scales = _.cloneDeep($scope.workspace.$$scales);
     $scope.criteriaForScales = makeCriteriaForScales($scope.problem.criteria);
-
-    // init
     $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
-    $scope.$watch('workspace.$$scales.observed', function(newScales) {
-      if (!newScales) {
+    $scope.$watch('workspace.$$scales.observed', function(newObservedScales) {
+      if (!newObservedScales) {
         return;
       }
       var mergedProblem = WorkspaceService.mergeBaseAndSubProblem($scope.problem, $scope.subProblem.definition);
-      $scope.mergedProblem = WorkspaceService.setDefaultObservedScales(mergedProblem, newScales);
-      $scope.originalObserved = newScales;
-      initSubProblem($scope.subProblem);
+      $scope.mergedProblem = WorkspaceService.setDefaultObservedScales(mergedProblem, newObservedScales);
+      $scope.originalObserved = newObservedScales;
     }, true);
 
-    $transitions.onStart({}, function(transition) {
-      if (($scope.subProblemState.isChanged || $scope.subProblemState.scaleRangeChanged) && !$scope.subProblemState.savingProblem) {
-        var answer = confirm('There are unsaved changes, are you sure you want to navigate away from this page?');
-        if (!answer) {
-          transition.abort();
-        } else {
-          $scope.subProblemState.isChanged = false;
-          $scope.subProblemState.scaleRangeChanged = false;
-        }
-      }
-    });
-
-    function updateInclusions() {
-      $scope.subProblemState.isChanged = !_.isEqual($scope.subProblemState.criterionInclusions, $scope.originalCriterionInclusions) ||
-        !_.isEqual($scope.subProblemState.alternativeInclusions, $scope.originalAlternativeInclusions);
-      $scope.subProblemState.numberOfCriteriaSelected = _.reduce($scope.subProblemState.criterionInclusions, function(accum, inclusion) {
-        return inclusion ? accum + 1 : accum;
-      }, 0);
-      $scope.subProblemState.numberOfAlternativesSelected = _.reduce($scope.subProblemState.alternativeInclusions, function(accum, inclusion) {
-        return inclusion ? accum + 1 : accum;
-      }, 0);
-      $scope.scales.observed = _.reduce($scope.originalObserved, function(accum, criterion, critKey) {
-        accum[critKey] = _.reduce(criterion, function(accum, alternative, altKey) {
-          if ($scope.subProblemState.alternativeInclusions[altKey]) {
-            accum[altKey] = alternative;
-          }
-          return accum;
-        }, {});
-        return accum;
-      }, {});
-    }
+    // $transitions.onStart({}, function(transition) {
+    //   if (($scope.subProblemState.isChanged || $scope.subProblemState.scaleRangeChanged) && !$scope.subProblemState.savingProblem) {
+    //     var answer = confirm('There are unsaved changes, are you sure you want to navigate away from this page?');
+    //     if (!answer) {
+    //       transition.abort();
+    //     } else {
+    //       $scope.subProblemState.isChanged = false;
+    //       $scope.subProblemState.scaleRangeChanged = false;
+    //     }
+    //   }
+    // });
 
     function openSaveDialog() {
       $modal.open({
         templateUrl: mcdaRootPath + 'views/createSubProblem.html',
         controller: 'CreateSubProblemController',
+        size: 'large',
         resolve: {
-          subProblemState: function() {
-            return $scope.subProblemState;
-          },
           subProblems: function() {
             return $scope.subProblems;
           },
+          subProblem: function() {
+            return $scope.subProblem;
+          },
           problem: function() {
             return $scope.mergedProblem;
+          },
+          scales: function() {
+            return {observed: $scope.newObservedScales};
           },
           callback: function() {
             return function(newProblemId, newScenarioId) {
@@ -119,18 +98,6 @@ define(function(require) {
       });
     }
 
-    function initSubProblem(subProblem) {
-      $scope.originalCriterionInclusions = createCriterionInclusions(subProblem);
-      $scope.originalAlternativeInclusions = createAlternativeInclusions(subProblem);
-      $scope.subProblemState = {
-        criterionInclusions: _.cloneDeep($scope.originalCriterionInclusions),
-        alternativeInclusions: _.cloneDeep($scope.originalAlternativeInclusions),
-        hasScaleRange: checkScaleRanges($scope.mergedProblem.criteria),
-        ranges: _.cloneDeep($scope.mergedProblem.criteria),
-        scaleRangeChanged: false
-      };
-      updateInclusions();
-    }
 
     function isCreationBlocked() {
       return !$scope.subProblemState || !$scope.subProblemState.hasScaleRange || (!$scope.subProblemState.isChanged && !$scope.subProblemState.scaleRangeChanged);
