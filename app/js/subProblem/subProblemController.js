@@ -4,47 +4,29 @@ define(function(require) {
   var _ = require('lodash');
 
   var dependencies = ['$scope', '$stateParams', '$modal', '$state', '$transitions',
-    'intervalHull', 'SubProblemResource', 'SubProblemService', 'WorkspaceService', 'mcdaRootPath'
+    'intervalHull', 'SubProblemService', 'WorkspaceService', 'mcdaRootPath'
   ];
 
   var SubProblemController = function($scope, $stateParams, $modal, $state, $transitions,
-    intervalHull, SubProblemResource, SubProblemService, WorkspaceService, mcdaRootPath) {
-    // functions
+    intervalHull, SubProblemService, WorkspaceService, mcdaRootPath) {
     $scope.intervalHull = intervalHull;
-    $scope.openScaleRangeDialog = openScaleRangeDialog;
-    $scope.isCreationBlocked = isCreationBlocked;
-    $scope.openSaveDialog = openSaveDialog;
-    $scope.isExact = isExact;
+    $scope.openCreateDialog = openCreateDialog;
+    $scope.problem = _.cloneDeep($scope.workspace.problem);
+    $scope.isExact = _.partial(SubProblemService.isExact, $scope.problem.performanceTable);
+    $scope.scalesPromise.then(function(scales) {
+      $scope.scales = scales;
+    });
+    
+    $scope.mergedProblem = {
+      alternatives: _.cloneDeep(_.omit($scope.problem.alternatives, $scope.subProblem.definition.excludedAlternatives)),
+      criteria: _.cloneDeep(_.omit($scope.problem.criteria, $scope.subProblem.definition.excludedCriteria))
+    };
 
-    // init
-    $scope.problem = $scope.workspace.problem;
-    $scope.scales = _.cloneDeep($scope.workspace.$$scales);
-    $scope.criteriaForScales = makeCriteriaForScales($scope.problem.criteria);
-    $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
-    $scope.$watch('workspace.$$scales.observed', function(newObservedScales) {
-      if (!newObservedScales) {
-        return;
-      }
-      var mergedProblem = WorkspaceService.mergeBaseAndSubProblem($scope.problem, $scope.subProblem.definition);
-      $scope.mergedProblem = WorkspaceService.setDefaultObservedScales(mergedProblem, newObservedScales);
-      $scope.originalObserved = newObservedScales;
-    }, true);
+    $scope.mergedProblem.criteria = _.merge($scope.mergedProblem.criteria, $scope.subProblem.definition.ranges);
 
-    // $transitions.onStart({}, function(transition) {
-    //   if (($scope.subProblemState.isChanged || $scope.subProblemState.scaleRangeChanged) && !$scope.subProblemState.savingProblem) {
-    //     var answer = confirm('There are unsaved changes, are you sure you want to navigate away from this page?');
-    //     if (!answer) {
-    //       transition.abort();
-    //     } else {
-    //       $scope.subProblemState.isChanged = false;
-    //       $scope.subProblemState.scaleRangeChanged = false;
-    //     }
-    //   }
-    // });
-
-    function openSaveDialog() {
+    function openCreateDialog() {
       $modal.open({
-        templateUrl: mcdaRootPath + 'views/createSubProblem.html',
+        templateUrl: mcdaRootPath + 'js/subProblem/createSubProblem.html',
         controller: 'CreateSubProblemController',
         size: 'large',
         resolve: {
@@ -55,14 +37,13 @@ define(function(require) {
             return $scope.subProblem;
           },
           problem: function() {
-            return $scope.mergedProblem;
+            return $scope.problem;
           },
           scales: function() {
-            return {observed: $scope.newObservedScales};
+            return $scope.scales;
           },
           callback: function() {
             return function(newProblemId, newScenarioId) {
-              $scope.subProblemState.savingProblem = true;
               $state.go('problem', _.extend({}, $stateParams, {
                 problemId: newProblemId,
                 id: newScenarioId
@@ -71,72 +52,6 @@ define(function(require) {
           }
         }
       });
-    }
-
-    function openScaleRangeDialog() {
-      var includedCriteria = _.filter($scope.criteriaForScales, function(criterion) {
-        return $scope.subProblemState.criterionInclusions[criterion.id];
-      });
-      $modal.open({
-        templateUrl: mcdaRootPath + 'views/scaleRange.html',
-        controller: 'ScaleRangeController',
-        resolve: {
-          criteria: function() {
-            return includedCriteria;
-          },
-          observedScales: function() {
-            return _.pick($scope.scales.observed, _.map(includedCriteria, 'id'));
-          },
-          callback: function() {
-            return function(ranges) {
-              $scope.subProblemState.hasScaleRange = true;
-              $scope.subProblemState.scaleRangeChanged = true;
-              $scope.subProblemState.ranges = ranges;
-            };
-          }
-        }
-      });
-    }
-
-
-    function isCreationBlocked() {
-      return !$scope.subProblemState || !$scope.subProblemState.hasScaleRange || (!$scope.subProblemState.isChanged && !$scope.subProblemState.scaleRangeChanged);
-    }
-
-    // private functions
-    function createCriterionInclusions(subProblem) {
-      return _.mapValues($scope.problem.criteria, function(criterion, key) {
-        return subProblem.definition && !_.includes(subProblem.definition.excludedCriteria, key);
-      });
-    }
-
-    function createAlternativeInclusions(subProblem) {
-      return _.mapValues($scope.problem.alternatives, function(alternative, key) {
-        return subProblem.definition && !_.includes(subProblem.definition.excludedAlternatives, key);
-      });
-    }
-
-    function makeCriteriaForScales(criteria) {
-      return _.map(_.toPairs(criteria), function(crit, idx) {
-        return _.extend({}, crit[1], {
-          id: crit[0],
-          w: 'w_' + (idx + 1)
-        });
-      });
-    }
-
-    function checkScaleRanges(criteria) {
-      var isMissingScaleRange = _.find(criteria, function(criterion) {
-        return !(criterion.pvf && criterion.pvf.range && criterion.pvf.range[0] !== undefined && criterion.pvf.range[1] !== undefined);
-      });
-      return !isMissingScaleRange;
-    }
-
-    function isExact(criterion, alternative) {
-      var perf = _.find($scope.problem.performanceTable, function(performance) {
-        return performance.alternative === alternative && performance.criterion === criterion;
-      });
-      return !!perf && perf.performance.type === 'exact';
     }
 
   };

@@ -19,16 +19,17 @@ define(function(require) {
 
     function buildInitial(criteria, criterionA, criterionB, step) {
       var bounds = pvf.getBounds(criteria[criterionA]);
-      var state =  {
+      var state = {
         step: step,
         total: _.size(criteria) - 1,
         criterionA: criterionA,
         criterionB: criterionB,
         choice: (bounds[0] + bounds[1]) / 2,
-        range: {
-          from: bounds[0],
-          to: bounds[1],
-          rightOpen: true
+        sliderOptions: {
+          floor: bounds[0],
+          ceil: bounds[1],
+          step: Math.abs(bounds[0]-bounds[1])/100,
+          precision: 2
         }
       };
       return state;
@@ -48,6 +49,9 @@ define(function(require) {
       var criteria = state.problem.criteria;
       if (!state) {
         return false;
+      }
+      if(state.type === 'done'){
+        return true;
       }
       var value = state.choice;
       var bounds = pvf.getBounds(criteria[state.criterionA]);

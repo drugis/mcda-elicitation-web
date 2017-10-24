@@ -14,7 +14,7 @@ define(function(require) {
 
     // init
     $scope.scenario = currentScenario;
-    $scope.scales = $scope.workspace.$$scales;
+    $scope.scales = $scope.workspace.scales;
     $scope.sensitivityMeasurements = {
       alteredTableCells: []
     };

@@ -11,9 +11,9 @@ define(function(require) {
       };
     }
 
-    function createDefinition(problem, subProblemState) {
+    function createDefinition(problem, subProblemState, scales) {
       return {
-        ranges: filterToObject(subProblemState.ranges, subProblemState.criterionInclusions),
+        ranges: createRanges(scales),
         excludedCriteria: _.keys(_.omitBy(subProblemState.criterionInclusions)), // values are boolean
         excludedAlternatives: _.keys(_.omitBy(subProblemState.alternativeInclusions))
       };
@@ -41,10 +41,52 @@ define(function(require) {
       });
       return returnObject;
     }
+
+    function createCriterionInclusions(problem, subProblem) {
+      return _.mapValues(problem.criteria, function(criterion, key) {
+        return subProblem.definition && !_.includes(subProblem.definition.excludedCriteria, key);
+      });
+    }
+
+    function createAlternativeInclusions(problem, subProblem) {
+      return _.mapValues(problem.alternatives, function(alternative, key) {
+        return subProblem.definition && !_.includes(subProblem.definition.excludedAlternatives, key);
+      });
+    }
+
+    function checkScaleRanges(criteria) {
+      var isMissingScaleRange = _.find(criteria, function(criterion) {
+        return !(criterion.pvf && criterion.pvf.range && criterion.pvf.range[0] !== undefined && criterion.pvf.range[1] !== undefined);
+      });
+      return !isMissingScaleRange;
+    }
+
+    function isExact(performanceTable, criterion, alternative) {
+      var perf = _.find(performanceTable, function(performance) {
+        return performance.alternative === alternative && performance.criterion === criterion;
+      });
+      return !!perf && perf.performance.type === 'exact';
+    }
+
+    // private functions
+    function createRanges(scales) {
+      return _.fromPairs(_.map(scales, function(scale, criterionId) {
+        return [criterionId, {
+          pvf: {
+            range: [scale.from, scale.to]
+          }
+        }];
+      }));
+    }
+
     return {
       createDefaultScenarioState: createDefaultScenarioState,
       createDefinition: createDefinition,
-      determineBaseline: determineBaseline
+      determineBaseline: determineBaseline,
+      createCriterionInclusions: createCriterionInclusions,
+      createAlternativeInclusions: createAlternativeInclusions,
+      checkScaleRanges: checkScaleRanges,
+      isExact: isExact
     };
   };
 

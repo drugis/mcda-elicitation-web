@@ -3,29 +3,33 @@ define(function(require) {
   require('angular');
   var _ = require('lodash');
 
-  var dependencies = ['$scope', '$stateParams', '$modalInstance', 'ScenarioResource', 'SubProblemResource', 'SubProblemService',
-    'subProblemState', 'subProblems', 'subProblem', 'problem', 'observedScales', 'callback'
+  var dependencies = ['$scope', '$stateParams', '$modalInstance', '$timeout',
+    'ScenarioResource', 'SubProblemResource', 'intervalHull',
+    'SubProblemService', 'ScaleRangeService', 'subProblems', 'subProblem', 'problem', 'scales', 'callback'
   ];
-  var CreateSubProblemController = function($scope, $stateParams, $modalInstance, ScenarioResource, SubProblemResource, SubProblemService,
-    subProblemState, subProblems, subProblem, problem, observedScales, callback) {
+  var CreateSubProblemController = function($scope, $stateParams, $modalInstance, $timeout,
+    ScenarioResource, SubProblemResource, intervalHull,
+    SubProblemService, ScaleRangeService,
+    subProblems, subProblem, problem, scales, callback) {
     // functions
     $scope.checkDuplicateTitle = checkDuplicateTitle;
     $scope.updateInclusions = updateInclusions;
     $scope.createProblemConfiguration = createProblemConfiguration;
-    $scope.cancel = $modalInstance.close();
+    $scope.isCreationBlocked = isCreationBlocked;
+    $scope.cancel = $modalInstance.close;
+    $scope.reset = reset;
 
     // init
-    $scope.subProblemState = _.cloneDeep(subProblemState);
-    $scope.subProblems = _.cloneDeep(subProblems);
-    $scope.subProblem = _.cloneDeep(subProblem);
-    $scope.problem = _.cloneDeep(problem);
-    $scope.originalObserved = _.cloneDeep(observedScales);
-    initSubProblem($scope.subProblem);
+    $scope.subProblems = subProblems;
+    $scope.originalScales = _.cloneDeep(scales);
+    $scope.scales = _.cloneDeep(scales); //FIXME
+    initSubProblem(_.cloneDeep(subProblem), _.cloneDeep(problem));
     checkDuplicateTitle($scope.subProblemState.title);
+    $scope.isExact = _.partial(SubProblemService.isExact, $scope.problem.performanceTable);
 
     function createProblemConfiguration() {
       var subProblemCommand = {
-        definition: SubProblemService.createDefinition($scope.problem, $scope.subProblemState),
+        definition: SubProblemService.createDefinition($scope.problem, $scope.subProblemState, $scope.choices),
         title: $scope.subProblemState.title,
         scenarioState: SubProblemService.createDefaultScenarioState($scope.problem, $scope.subProblemState)
       };
@@ -40,60 +44,79 @@ define(function(require) {
         });
     }
 
-    function updateInclusions() {
-      $scope.subProblemState.isChanged = !_.isEqual($scope.subProblemState.criterionInclusions, $scope.originalCriterionInclusions) ||
-        !_.isEqual($scope.subProblemState.alternativeInclusions, $scope.originalAlternativeInclusions);
-      $scope.subProblemState.numberOfCriteriaSelected = _.reduce($scope.subProblemState.criterionInclusions, function(accum, inclusion) {
-        return inclusion ? accum + 1 : accum;
-      }, 0);
-      $scope.subProblemState.numberOfAlternativesSelected = _.reduce($scope.subProblemState.alternativeInclusions, function(accum, inclusion) {
-        return inclusion ? accum + 1 : accum;
-      }, 0);
-      $scope.observedScales = _.reduce($scope.originalObserved, function(accum, criterion, critKey) {
-        accum[critKey] = _.reduce(criterion, function(accum, alternative, altKey) {
-          if ($scope.subProblemState.alternativeInclusions[altKey]) {
-            accum[altKey] = alternative;
-          }
-          return accum;
-        }, {});
-        return accum;
-      }, {});
-    }
-
-    function initSubProblem(subProblem) {
-      $scope.originalCriterionInclusions = createCriterionInclusions(subProblem);
-      $scope.originalAlternativeInclusions = createAlternativeInclusions(subProblem);
+    function initSubProblem(subProblem, problem) {
+      $scope.problem = problem;
+      $scope.originalCriterionInclusions = SubProblemService.createCriterionInclusions($scope.problem, subProblem);
+      $scope.originalAlternativeInclusions = SubProblemService.createAlternativeInclusions($scope.problem, subProblem);
       $scope.subProblemState = {
-        criterionInclusions: _.cloneDeep($scope.originalCriterionInclusions),
-        alternativeInclusions: _.cloneDeep($scope.originalAlternativeInclusions),
-        hasScaleRange: checkScaleRanges($scope.mergedProblem.criteria),
-        ranges: _.cloneDeep($scope.mergedProblem.criteria),
-        scaleRangeChanged: false
+        criterionInclusions: $scope.originalCriterionInclusions,
+        alternativeInclusions: $scope.originalAlternativeInclusions,
+        ranges: _.merge($scope.problem.criteria, subProblem.definition.ranges)
       };
       updateInclusions();
+      $timeout(function() {
+        $scope.$broadcast('rzSliderForceRender');
+      },100);
     }
+
+    function updateInclusions() {
+      $scope.subProblemState.numberOfCriteriaSelected = _.filter($scope.subProblemState.criterionInclusions).length;
+      $scope.subProblemState.numberOfAlternativesSelected = _.filter($scope.subProblemState.alternativeInclusions).length;
+      var includedCriteria = _.keys(_.pickBy($scope.subProblemState.criterionInclusions));
+      var includedAlternatives = _.keys(_.pickBy($scope.subProblemState.alternativeInclusions));
+
+      $scope.criteria = _.pick($scope.problem.criteria, includedCriteria);
+
+      var includedScales = _.pick($scope.originalScales.observed, includedCriteria);
+      $scope.observedScales = _.mapValues(includedScales, function(value) {
+        return _.pick(value, includedAlternatives);
+      });
+      initializeScales();
+    }
+
+    function initializeScales() {
+      var scales = {};
+      var choices = {};
+      _.forEach(_.toPairs($scope.observedScales), function(criterion) {
+
+        // Calculate interval hulls
+        var criterionRange = intervalHull(criterion[1]);
+
+        // Set inital model value
+        var pvf = $scope.criteria[criterion[0]].pvf;
+        var problemRange = pvf ? pvf.range : null;
+        var from = problemRange ? problemRange[0] : criterionRange[0];
+        var to = problemRange ? problemRange[1] : criterionRange[1];
+        choices[criterion[0]] = {
+          from: from,
+          to: to
+        };
+
+        // Set scales for slider
+        var criterionScale = $scope.criteria[criterion[0]].scale;
+        scales[criterion[0]] = ScaleRangeService.calculateScales(criterionScale, from, to, criterionRange);
+
+      });
+      $scope.scalesState = scales;
+      $scope.choices = choices;
+    }
+
+    function reset() {
+      initSubProblem({
+        definition: {
+          excludedCriteria: [],
+          excludedAlternatives: []
+        }
+      }, _.cloneDeep(problem));
+    }
+
     // private functions
-    function createCriterionInclusions(subProblem) {
-      return _.mapValues($scope.problem.criteria, function(criterion, key) {
-        return subProblem.definition && !_.includes(subProblem.definition.excludedCriteria, key);
-      });
-    }
-
-    function checkScaleRanges(criteria) {
-      var isMissingScaleRange = _.find(criteria, function(criterion) {
-        return !(criterion.pvf && criterion.pvf.range && criterion.pvf.range[0] !== undefined && criterion.pvf.range[1] !== undefined);
-      });
-      return !isMissingScaleRange;
-    }
-
-    function createAlternativeInclusions(subProblem) {
-      return _.mapValues($scope.problem.alternatives, function(alternative, key) {
-        return subProblem.definition && !_.includes(subProblem.definition.excludedAlternatives, key);
-      });
-    }
-
     function checkDuplicateTitle(title) {
       $scope.isTitleDuplicate = _.find($scope.subProblems, ['title', title]);
+    }
+
+    function isCreationBlocked() {
+      return !$scope.subProblemState || !$scope.subProblemState.hasScaleRange || (!$scope.subProblemState.isChanged && !$scope.subProblemState.scaleRangeChanged);
     }
   };
   return dependencies.concat(CreateSubProblemController);

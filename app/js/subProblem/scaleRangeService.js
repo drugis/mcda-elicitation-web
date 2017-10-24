@@ -59,15 +59,22 @@ define(function(require) {
       scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
 
       return {
-        restrictFrom: criterionRange[0],
-        restrictTo: criterionRange[1],
-        from: niceFrom(from),
-        to: niceTo(to),
         increaseFrom: function() {
-          this.from = niceFrom(boundFrom(this.from - margin));
+          this.sliderOptions.floor = niceFrom(boundFrom(this.sliderOptions.floor - margin));
         },
         increaseTo: function() {
-          this.to = niceTo(boundTo(this.to + margin));
+          this.sliderOptions.ceil = niceTo(boundTo(this.sliderOptions.ceil + margin));
+        },
+        sliderOptions: {
+          restrictedRange: {
+            from: criterionRange[0],
+            to: criterionRange[1]
+          },
+          floor: niceFrom(from),
+          ceil: niceTo(to),
+          step: (niceFrom(to)-niceTo(from))/100,
+          precision: 2,
+          noSwitching: true
         }
       };
     }
@@ -76,7 +83,7 @@ define(function(require) {
       return _.fromPairs(_.map(choices, function(choice, criterionId) {
         return [criterionId, {
           pvf: {
-            range: [choice.lower, choice.upper]
+            range: [choice.from, choice.to]
           }
         }];
       }));

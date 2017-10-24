@@ -3,7 +3,7 @@ define(function(require) {
   var _ = require('lodash');
 
   return function($scope, $stateParams, EffectsTableService) {
-    $scope.scales = $scope.workspace.$$scales.observed;
+    $scope.scales = $scope.workspace.scales.observed;
     $scope.valueTree = $scope.workspace.$$valueTree;
 
     $scope.problem = $scope.workspace.problem;
@@ -18,7 +18,7 @@ define(function(require) {
       })
     };
 
-    $scope.$watch('workspace.$$scales.observed', function(newValue) {
+    $scope.$watch('workspace.scales.observed', function(newValue) {
       $scope.scales = newValue;
     }, true);
 

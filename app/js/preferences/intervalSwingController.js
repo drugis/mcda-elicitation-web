@@ -1,11 +1,11 @@
 'use strict';
 define(function(require) {
-  var angular = require("angular");
-  var _ = require("lodash");
-  var Util = require("mcda/controllers/helpers/util");
-  var Wizard = require("mcda/controllers/helpers/wizard");
+  var angular = require('angular');
+  var _ = require('lodash');
+  var Util = require('mcda/controllers/helpers/util');
+  var Wizard = require('mcda/controllers/helpers/wizard');
 
-  return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
+  return function($scope, $state, $stateParams, $injector, $timeout, currentScenario, taskDefinition, PartialValueFunction) {
     $scope.pvf = PartialValueFunction;
 
     $scope.title = function(step, total) {
@@ -35,11 +35,12 @@ define(function(require) {
           lower: bounds[0],
           upper: bounds[1]
         },
-        range: {
-          from: bounds[0],
-          to: bounds[1],
-          rightOpen: true,
-          leftOpen: true
+        sliderOptions: {
+          floor: bounds[0],
+          ceil: bounds[1],
+          step: Math.abs(bounds[0] - bounds[1]) / 100,
+          precision: 2,
+          noSwitching: true
         }
       };
     }
@@ -51,6 +52,9 @@ define(function(require) {
         'criteriaOrder': Util.getCriteriaOrder(state.prefs)
       });
       state = _.extend(state, buildInitial(criteria, state.criteriaOrder[0], state.criteriaOrder[1], 1));
+      $timeout(function() {
+        $scope.$broadcast('rzSliderForceRender');
+      }, 100);
       return state;
     };
 
@@ -59,7 +63,9 @@ define(function(require) {
       if (!state) {
         return false;
       }
-
+      if(state.type === 'done'){
+        return true;
+      }
       var criteria = state.problem.criteria;
       var bounds1 = state.choice;
       var bounds2 = PartialValueFunction.getBounds(criteria[state.criterionA]);

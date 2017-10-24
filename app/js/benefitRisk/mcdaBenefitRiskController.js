@@ -30,8 +30,8 @@ define(function(require) {
     $scope.subProblems = subProblems;
     $scope.subProblem = currentSubProblem;
     $scope.workspace.$$valueTree = WorkspaceService.buildValueTree(baseProblem);
-    $scope.workspace.$$scales = {};
-    $scope.workspace.$$scales.theoreticalScales = WorkspaceService.buildTheoreticalScales(baseProblem);
+    $scope.workspace.scales = {};
+    $scope.workspace.scales.theoreticalScales = WorkspaceService.buildTheoreticalScales(baseProblem);
     determineActiveTab();
 
     function getTask(taskId) {
@@ -62,16 +62,17 @@ define(function(require) {
     $scope.$on('elicit.resultsAccessible', function(event, scenario) {
       $scope.aggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
       $scope.scenario = scenario;
-      if ($scope.workspace.$$scales.observed) {
-        $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales($scope.aggregateState.problem, $scope.workspace.$$scales.observed);
+      if ($scope.workspace.scales.observed) {
+        $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales($scope.aggregateState.problem, $scope.workspace.scales.observed);
       }
       updateTaskAccessibility();
     });
 
-    WorkspaceService.getObservedScales($scope, baseProblem).then(function(observedScales) {
-      $scope.workspace.$$scales.observed = observedScales;
+    $scope.scalesPromise = WorkspaceService.getObservedScales($scope, baseProblem).then(function(observedScales) {
+      $scope.workspace.scales.observed = observedScales;
       $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales($scope.aggregateState.problem, observedScales);
       updateTaskAccessibility();
+      return $scope.workspace.scales;
     });
 
     $scope.tasks = _.reduce(Tasks.available, function(tasks, task) {

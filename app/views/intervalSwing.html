@@ -14,9 +14,9 @@
         {{state.problem.criteria[state.criterionA].title}} = {{pvf.worst(state.problem.criteria[state.criterionA]) | number }}, {{state.problem.criteria[state.criterionB].title}} = {{pvf.best(state.problem.criteria[state.criterionB]) | number }}
         <br>
         <strong>Adjust the slider:</strong>
-        <label>
-          <slider style="width: 400px; margin-top: 20px" model="state.choice" type="interval" range="state.range"></slider>
-        </label>
+        <p>
+          <rzslider style="width: 400px; margin-top: 20px" rz-slider-model="state.choice.lower" rz-slider-high="state.choice.upper" rz-slider-options="state.sliderOptions"></rzslider>
+        </p>
       </p>
       <strong>So that the following statements are true:</strong>
       <p>

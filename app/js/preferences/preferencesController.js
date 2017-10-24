@@ -32,7 +32,7 @@ define(function(require) {
 
     // init
     $scope.scenario = currentScenario;
-    $scope.scales = $scope.workspace.$$scales;
+    $scope.scales = $scope.workspace.scales;
     $scope.criteria = $scope.aggregateState.criteria;
     $scope.getXY = _.memoize(PartialValueFunction.getXY, function(arg) {
       return angular.toJson(arg.pvf);
