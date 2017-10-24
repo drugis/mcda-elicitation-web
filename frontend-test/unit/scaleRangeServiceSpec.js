@@ -21,8 +21,10 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
         var criterionRange = [from, to];
 
         var result = ScaleRangeService.calculateScales(criterionScale, from, to, criterionRange);
-        expect(result.from).toEqual(-20);
-        expect(result.to).toEqual(-10);
+        expect(result.sliderOptions.floor).toEqual(-20);
+        expect(result.sliderOptions.ceil).toEqual(-10);
+        expect(result.sliderOptions.restrictedRange.from).toEqual(-16.123);
+        expect(result.sliderOptions.restrictedRange.to).toEqual(-12.123);
       }));
     });
 
@@ -65,12 +67,12 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
       it('should create ranges for each scales choices', inject(function(ScaleRangeService) {
         var choices = {
           headacheId: {
-            lower: 10,
-            upper: 20
+            from: 10,
+            to: 20
           },
           nauseaId: {
-            lower: 30,
-            upper: 40
+            from: 30,
+            to: 40
           }
         };
         

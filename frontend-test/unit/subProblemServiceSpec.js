@@ -67,7 +67,13 @@ define(['angular-mocks', 'mcda/subProblem/subProblem'], function() {
             }
           }
         };
-        var result = subProblemService.createDefinition(problem, subProblemState);
+        var scales = {
+          headacheId: {
+            from: 1,
+            to: 2
+          }
+        };
+        var result = subProblemService.createDefinition(problem, subProblemState, scales);
         var expectedResult = {
           ranges: {
             headacheId: {
