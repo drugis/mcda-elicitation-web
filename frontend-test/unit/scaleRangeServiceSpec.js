@@ -11,7 +11,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
 
   describe('The scaleRange service', function() {
 
-    beforeEach(module('elicit.scaleRangeService'));
+    beforeEach(module(['elicit.subProblem','elicit.util']));
 
     describe('calculateScales', function() {
       it('on unbounded scales, bounds should lie outside the observed range', inject(function(ScaleRangeService) {
@@ -75,7 +75,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
             to: 40
           }
         };
-        
+
         var ranges = ScaleRangeService.createRanges(choices);
 
         var expectedRanges = {
@@ -83,14 +83,33 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
             pvf: {
               range: [10, 20]
             }
-          }, nauseaId: {
+          },
+          nauseaId: {
             pvf: {
               range: [30, 40]
             }
           }
         };
-
         expect(ranges).toEqual(expectedRanges);
+      }));
+    });
+    describe('getScaleStateAndChoices', function() {
+      it('should return the scale state and the choices', inject(function(ScaleRangeService) {
+        var observedScales = {};
+        var criteria = {}; 
+        var result = ScaleRangeService.getScaleStateAndChoices(observedScales, criteria);
+        var expectedResult = {
+          choices: {headacheId: {
+            from: 10,
+            to: 20
+          },
+          nauseaId: {
+            from: 30,
+            to: 40
+          }},
+          scaleState: {}
+        };
+        expect(result).toEqual(expectedResult);
       }));
     });
   });

@@ -75,30 +75,9 @@ define(function(require) {
     }
 
     function initializeScales() {
-      var scales = {};
-      var choices = {};
-      _.forEach(_.toPairs($scope.observedScales), function(criterion) {
-
-        // Calculate interval hulls
-        var criterionRange = intervalHull(criterion[1]);
-
-        // Set inital model value
-        var pvf = $scope.criteria[criterion[0]].pvf;
-        var problemRange = pvf ? pvf.range : null;
-        var from = problemRange ? problemRange[0] : criterionRange[0];
-        var to = problemRange ? problemRange[1] : criterionRange[1];
-        choices[criterion[0]] = {
-          from: from,
-          to: to
-        };
-
-        // Set scales for slider
-        var criterionScale = $scope.criteria[criterion[0]].scale;
-        scales[criterion[0]] = ScaleRangeService.calculateScales(criterionScale, from, to, criterionRange);
-
-      });
-      $scope.scalesState = scales;
-      $scope.choices = choices;
+      var stateAndChoices = ScaleRangeService.getScaleStateAndChoices($scope.observedScales, $scope.criteria);
+      $scope.scalesState = stateAndChoices.scaleState;
+      $scope.choices = stateAndChoices.choices;
     }
 
     function reset() {

@@ -12,7 +12,6 @@ require.config({
     'domReady': 'bower_components/requirejs-domready/domReady',
     'error-reporting': 'bower_components/error-reporting/errorReportingDirective',
     'jQuery': 'bower_components/jquery/dist/jquery.min',
-    'jquery-slider': 'bower_components/jslider/dist/jquery.slider.min',
     'd3': 'bower_components/d3/d3.min',
     'lodash': 'bower_components/lodash/lodash',
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_SVG',
@@ -55,9 +54,6 @@ require.config({
     },
     'jQuery': {
       exports: 'jQuery'
-    },
-    'jquery-slider': {
-      deps: ['jQuery']
     },
     'foundation': {
       deps: ['jQuery']

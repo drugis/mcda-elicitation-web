@@ -36,20 +36,6 @@ define(['angular-mocks', 'mcda/subProblem/subProblem'], function() {
     });
     describe('createDefinition', function() {
       it('should create the definition for the subproblem', function() {
-        var problem = {
-          criteria: {
-            headacheId: {
-              id: 'headacheId'
-            },
-            nauseaId: {
-              id: 'nauseaId'
-            }
-          },
-          preferences: {
-            headacheId: {},
-            nauseaId: {}
-          }
-        };
         var subProblemState = {
           criterionInclusions: {
             headacheId: true,
@@ -73,7 +59,7 @@ define(['angular-mocks', 'mcda/subProblem/subProblem'], function() {
             to: 2
           }
         };
-        var result = subProblemService.createDefinition(problem, subProblemState, scales);
+        var result = subProblemService.createDefinition(subProblemState, scales);
         var expectedResult = {
           ranges: {
             headacheId: {

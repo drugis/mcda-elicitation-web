@@ -11,7 +11,7 @@ define(function(require) {
       };
     }
 
-    function createDefinition(problem, subProblemState, scales) {
+    function createDefinition(subProblemState, scales) {
       return {
         ranges: createRanges(scales),
         excludedCriteria: _.keys(_.omitBy(subProblemState.criterionInclusions)), // values are boolean

@@ -3,9 +3,9 @@ define(function(require) {
   var angular = require('angular');
   var _ = require('lodash');
 
-  var dependencies = [];
+  var dependencies = ['intervalHull'];
 
-  var ScaleRangeService = function() {
+  var ScaleRangeService = function(intervalHull) {
 
     function log10(x) {
       return Math.log(x) / Math.log(10);
@@ -72,7 +72,7 @@ define(function(require) {
           },
           floor: niceFrom(from),
           ceil: niceTo(to),
-          step: (niceFrom(to)-niceTo(from))/100,
+          step: (niceFrom(to) - niceTo(from)) / 100,
           precision: 2,
           noSwitching: true
         }
@@ -89,14 +89,44 @@ define(function(require) {
       }));
     }
 
+    function getScaleStateAndChoices(observedScales, criteria) {
+      var scaleState = {};
+      var choices = {};
+      _.forEach(_.toPairs(observedScales), function(criterion) {
+
+        // Calculate interval hulls
+        var criterionRange = intervalHull(criterion[1]);
+
+        // Set inital model value
+        var pvf = criteria[criterion[0]].pvf;
+        var problemRange = pvf ? pvf.range : null;
+        var from = problemRange ? problemRange[0] : criterionRange[0];
+        var to = problemRange ? problemRange[1] : criterionRange[1];
+        choices[criterion[0]] = {
+          from: from,
+          to: to
+        };
+
+        // Set scales for slider
+        var criterionScale = criteria[criterion[0]].scale;
+        scaleState[criterion[0]] = calculateScales(criterionScale, from, to, criterionRange);
+
+      });
+      return {
+        scaleState: scaleState,
+        choices: choices
+      };
+    }
+
     return {
       nice: nice,
       niceTo: niceTo,
       niceFrom: niceFrom,
       calculateScales: calculateScales,
-      createRanges: createRanges
+      createRanges: createRanges,
+      getScaleStateAndChoices: getScaleStateAndChoices
     };
   };
 
-  return angular.module('elicit.scaleRangeService', dependencies).factory('ScaleRangeService', ScaleRangeService);
+  return dependencies.concat(ScaleRangeService);
 });

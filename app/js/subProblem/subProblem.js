@@ -6,6 +6,6 @@ define(function(require) {
     .controller('SubProblemController', require('mcda/subProblem/subProblemController'))
     .controller('CreateSubProblemController', require('mcda/subProblem/createSubProblemController'))
     .factory('SubProblemService', require('mcda/subProblem/subProblemService'))
-    ;
+    .factory('ScaleRangeService', require('mcda/subProblem/scaleRangeService'));
 
   });
