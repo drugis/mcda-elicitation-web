@@ -9,7 +9,9 @@
       "scale": [0,100],
       "pvf": {
         "range": [45,65],
-        "type": "linear",
+        "type": "piecewise-linear",
+        "cutoffs": [48,48.8,56.9],
+        "values": [0.25,0.5,0.75],
         "direction": "increasing"
       }
     },
@@ -107,6 +109,9 @@
     }
   }
   ], 
-  "preferences":[{"type":"ordinal","criteria":["OS","severe"]}, {"type":"ordinal","criteria":["severe","moderate"]}],
-  "sensitivityAnalysis": {"criterion": "OS"}
+  "preferences": {},
+  "sensitivityAnalysis": {
+    "alternative": "alt1",
+    "criterion": "OS"
+  }
 }
