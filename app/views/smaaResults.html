@@ -15,9 +15,7 @@
       <table id="ranktable">
         <thead>
           <tr>
-            <th>
-              <heat-legend></heat-legend>
-            </th>
+            <th></th>
             <th ng-repeat="alternative in state.problem.alternatives">Rank {{::$index + 1}}</th>
           </tr>
         </thead>
@@ -66,9 +64,7 @@
         <thead>
           <tr>
             <th>Alternative</th>
-            <th>Confidence
-              <heat-legend></heat-legend>
-            </th>
+            <th>Confidence</th>
             <th ng-repeat="criterion in state.problem.criteria">{{criterion.title}}</th>
           </tr>
         </thead>
