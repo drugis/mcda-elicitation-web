@@ -29,7 +29,7 @@ define(function(require) {
 
     function createProblemConfiguration() {
       var subProblemCommand = {
-        definition: SubProblemService.createDefinition($scope.problem, $scope.subProblemState, $scope.choices),
+        definition: SubProblemService.createDefinition($scope.subProblemState, $scope.choices),
         title: $scope.subProblemState.title,
         scenarioState: SubProblemService.createDefaultScenarioState($scope.problem, $scope.subProblemState)
       };
