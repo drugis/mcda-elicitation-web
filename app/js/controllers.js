@@ -5,7 +5,6 @@ define(function(require) {
     .controller('MCDABenefitRiskController', require('mcda/benefitRisk/mcdaBenefitRiskController'))
     .controller('EvidenceController', require('mcda/evidence/evidenceController'))
     .controller('PreferencesController', require('mcda/preferences/preferencesController'))
-    .controller('ScaleRangeController', require('mcda/subProblem/scaleRangeController'))
     .controller('PartialValueFunctionController', require('mcda/preferences/partialValueFunctionController'))
     .controller('OrdinalSwingController', require('mcda/preferences/ordinalSwingController'))
     .controller('IntervalSwingController', require('mcda/preferences/intervalSwingController'))

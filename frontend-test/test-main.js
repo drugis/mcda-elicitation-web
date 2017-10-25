@@ -23,7 +23,6 @@ require.config({
     'jasmine': 'bower_components/jasmine/lib/jasmine-core/jasmine',
     'jasmine-html': 'bower_components/jasmine/lib/jasmine-core/jasmine-html',
     'jQuery': 'bower_components/jquery/dist/jquery.min',
-    'jquery-slider': 'bower_components/jslider/dist/jquery.slider',
     'lodash': 'bower_components/lodash/lodash',
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML',
     'mcda': 'app/js',
@@ -57,9 +56,6 @@ require.config({
     },
     'jQuery': {
       exports: 'jQuery'
-    },
-    'jquery-slider': {
-      deps: ['jQuery']
     },
     'jasmine': {
       exports: 'jasmine'

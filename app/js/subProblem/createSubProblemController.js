@@ -4,12 +4,11 @@ define(function(require) {
   var _ = require('lodash');
 
   var dependencies = ['$scope', '$stateParams', '$modalInstance', '$timeout',
-    'ScenarioResource', 'SubProblemResource', 'intervalHull',
+    'ScenarioResource', 'SubProblemResource',
     'SubProblemService', 'ScaleRangeService', 'subProblems', 'subProblem', 'problem', 'scales', 'callback'
   ];
   var CreateSubProblemController = function($scope, $stateParams, $modalInstance, $timeout,
-    ScenarioResource, SubProblemResource, intervalHull,
-    SubProblemService, ScaleRangeService,
+    ScenarioResource, SubProblemResource, SubProblemService, ScaleRangeService,
     subProblems, subProblem, problem, scales, callback) {
     // functions
     $scope.checkDuplicateTitle = checkDuplicateTitle;
@@ -26,6 +25,7 @@ define(function(require) {
     initSubProblem(_.cloneDeep(subProblem), _.cloneDeep(problem));
     checkDuplicateTitle($scope.subProblemState.title);
     $scope.isExact = _.partial(SubProblemService.isExact, $scope.problem.performanceTable);
+    $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
 
     function createProblemConfiguration() {
       var subProblemCommand = {
@@ -56,7 +56,7 @@ define(function(require) {
       updateInclusions();
       $timeout(function() {
         $scope.$broadcast('rzSliderForceRender');
-      },100);
+      }, 100);
     }
 
     function updateInclusions() {
@@ -81,12 +81,14 @@ define(function(require) {
     }
 
     function reset() {
+      var titleCache = $scope.subProblemState.title;
       initSubProblem({
         definition: {
           excludedCriteria: [],
           excludedAlternatives: []
         }
       }, _.cloneDeep(problem));
+      $scope.subProblemState.title = titleCache;
     }
 
     // private functions

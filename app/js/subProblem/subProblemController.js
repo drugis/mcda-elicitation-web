@@ -3,16 +3,17 @@ define(function(require) {
   require('angular');
   var _ = require('lodash');
 
-  var dependencies = ['$scope', '$stateParams', '$modal', '$state', '$transitions',
-    'intervalHull', 'SubProblemService', 'WorkspaceService', 'mcdaRootPath'
+  var dependencies = ['$scope', '$stateParams', '$modal', '$state',
+    'intervalHull', 'SubProblemService', 'mcdaRootPath'
   ];
 
-  var SubProblemController = function($scope, $stateParams, $modal, $state, $transitions,
-    intervalHull, SubProblemService, WorkspaceService, mcdaRootPath) {
+  var SubProblemController = function($scope, $stateParams, $modal, $state,
+    intervalHull, SubProblemService, mcdaRootPath) {
     $scope.intervalHull = intervalHull;
     $scope.openCreateDialog = openCreateDialog;
     $scope.problem = _.cloneDeep($scope.workspace.problem);
     $scope.isExact = _.partial(SubProblemService.isExact, $scope.problem.performanceTable);
+    $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
     $scope.scalesPromise.then(function(scales) {
       $scope.scales = scales;
     });

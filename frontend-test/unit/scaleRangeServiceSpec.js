@@ -11,7 +11,8 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
 
   describe('The scaleRange service', function() {
 
-    beforeEach(module(['elicit.subProblem','elicit.util']));
+    beforeEach(module('elicit.util'));
+    beforeEach(module('elicit.subProblem'));
 
     describe('calculateScales', function() {
       it('on unbounded scales, bounds should lie outside the observed range', inject(function(ScaleRangeService) {
@@ -95,21 +96,82 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
     });
     describe('getScaleStateAndChoices', function() {
       it('should return the scale state and the choices', inject(function(ScaleRangeService) {
-        var observedScales = {};
-        var criteria = {}; 
-        var result = ScaleRangeService.getScaleStateAndChoices(observedScales, criteria);
-        var expectedResult = {
-          choices: {headacheId: {
-            from: 10,
-            to: 20
+        var observedScales = {
+          headacheId: {
+            alt1: {
+              '2.5%': 10,
+              '50%': 20,
+              '97.5%': 30
+            }
           },
           nauseaId: {
-            from: 30,
-            to: 40
-          }},
-          scaleState: {}
+            alt1: {
+              '2.5%': 15,
+              '50%': 25,
+              '97.5%': 35
+            }
+          }
         };
-        expect(result).toEqual(expectedResult);
+        var criteria = {
+          headacheId: {
+            pvf: {
+              range: [0, 40]
+            }
+          },
+          nauseaId: {
+            pvf: {
+              range: [10, 40]
+            }
+          }
+        };
+        var result = ScaleRangeService.getScaleStateAndChoices(observedScales, criteria);
+        var expectedResult = {
+          choices: {
+            headacheId: {
+              from: 0,
+              to: 40
+            },
+            nauseaId: {
+              from: 10,
+              to: 40
+            }
+          },
+          scaleState: {
+            headacheId: {
+              sliderOptions: {
+                restrictedRange: {
+                  from: 10,
+                  to: 30
+                },
+                floor: 0,
+                ceil: 40,
+                step: 0.4,
+                precision: 2,
+                noSwitching: true
+              }
+            },
+            nauseaId: {
+              sliderOptions: {
+                restrictedRange: {
+                  from: 15,
+                  to: 35
+                },
+                floor: 10,
+                ceil: 40,
+                step: 0.3,
+                precision: 2,
+                noSwitching: true
+              }
+            }
+          }
+        };
+        expect(typeof result.scaleState.headacheId.increaseFrom).toBe('function');
+        expect(typeof result.scaleState.headacheId.increaseTo).toBe('function');
+        expect(result.scaleState.headacheId.sliderOptions).toEqual(expectedResult.scaleState.headacheId.sliderOptions);
+        expect(typeof result.scaleState.nauseaId.increaseFrom).toBe('function');
+        expect(typeof result.scaleState.nauseaId.increaseTo).toBe('function');
+        expect(result.scaleState.nauseaId.sliderOptions).toEqual(expectedResult.scaleState.nauseaId.sliderOptions);
+        expect(result.choices).toEqual(expectedResult.choices);
       }));
     });
   });
