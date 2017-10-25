@@ -71,7 +71,8 @@ define(function(require) {
         
         // remove all relative entries that are excluded
         _.forEach(newProblem.performanceTable, function(performanceEntry) {
-          if (performanceEntry.performance.type !== 'exact' && performanceEntry.performance.type !== 'dsurv') {
+          if (performanceEntry.performance.type !== 'exact' && performanceEntry.performance.type !== 'dsurv' &&
+            performanceEntry.performance.parameters.relative) {
             performanceEntry.performance.parameters.relative.cov =
               reduceCov(performanceEntry.performance.parameters.relative.cov, excludedAlternativeNames);
             performanceEntry.performance.parameters.relative.mu = reduceMu(performanceEntry.performance.parameters.relative.mu,
