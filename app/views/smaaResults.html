@@ -7,28 +7,37 @@
 </div>
 <div ng-if="state.results">
   <div class="grid-x underlined-div">
-    <div class="cell">
-      <h3>SMAA results</h3>
-      <button class="button" ui-sref="deterministic-results">Deterministic analysis</button>
-      <h4>Rank acceptabilities</h4>
-      <rank-acceptability-plot data="state.results.ranks.data" problem="state.problem"></rank-acceptability-plot>
-      <table id="ranktable">
-        <thead>
-          <tr>
-            <th></th>
-            <th ng-repeat="alternative in state.problem.alternatives">Rank {{::$index + 1}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="(key, alternative) in state.problem.alternatives">
-            <td>{{::alternative.title}}</td>
-            <td ng-repeat="rank in state.results.ranks.data[key] track by $index" class="heat">
-              {{::rank | number}}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  </div>
+  <div class="cell">
+    <h4>Rank acceptabilities</h4>
+  </div>
+  <div class="cell">
+    <h3>SMAA results</h3>
+    <button class="button" ui-sref="deterministic-results">Deterministic analysis</button>
+  </div>
+  <div class="cell large-offset-11">
+    <button class="button clipboard-button" data-clipboard-target="#ranktable">
+      <i class="fa fa-clipboard"></i> Copy to clipboard
+    </button>
+  </div>
+  <div class="cell">
+    <rank-acceptability-plot data="state.results.ranks.data" problem="state.problem"></rank-acceptability-plot>
+    <table id="ranktable">
+      <thead>
+        <tr>
+          <th></th>
+          <th ng-repeat="alternative in state.problem.alternatives">Rank {{::$index + 1}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="(key, alternative) in state.problem.alternatives">
+          <td>{{::alternative.title}}</td>
+          <td ng-repeat="rank in state.results.ranks.data[key] track by $index" class="heat">
+            {{::rank | number}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   <div class="grid-x underlined-div">
     <div class="cell large-6">
@@ -60,7 +69,12 @@
       <div style="width: 650px; height: 350px">
         <line-chart value="state.centralWeights(state)"></line-chart>
       </div>
-      <table>
+      <div class="cell large-offset-11">
+        <button class="button clipboard-button" data-clipboard-target="#centralweightstable">
+          <i class="fa fa-clipboard"></i> Copy to clipboard
+        </button>
+      </div>
+      <table id="centralweightstable">
         <thead>
           <tr>
             <th>Alternative</th>

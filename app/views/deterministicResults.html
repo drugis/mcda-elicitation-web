@@ -13,9 +13,16 @@
     </div>
   </div>
   <div class="grid-x">
-    <div class="cell">
+    <div class="cell large-10">
       <h3>Effects table (exact or median values only)</h3>
-      <table class="full-width effects-table">
+    </div>
+    <div clas="cell large-2">
+      <button class="button clipboard-button" data-clipboard-target="#effectstable">
+        <i class="fa fa-clipboard"></i> Copy to clipboard
+      </button>
+    </div>
+    <div class="cell">
+      <table class="full-width effects-table" id="effectstable">
         <thead>
           <tr>
             <th>Criterion</th>
@@ -50,9 +57,16 @@
   <div class="grid-x underlined-div">
     <div class="cell">
       <div class="grid-x">
-        <div class="cell">
+        <div class="cell large-10">
           <h4>Representative weights</h4>
-          <table>
+        </div>
+        <div clas="cell large-2">
+          <button class="button clipboard-button" data-clipboard-target="#weighttable">
+            <i class="fa fa-clipboard"></i> Copy to clipboard
+          </button>
+        </div>
+        <div class="cell">
+          <table id="weighttable">
             <thead>
               <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
             </thead>
@@ -65,9 +79,25 @@
         </div>
       </div>
       <div class="grid-x grid-margin-x">
-        <div class="cell large-6">
+        <div class="cell large-4">
           <h4>Total value (base case)</h4>
-          <table>
+        </div>
+        <div class="cell large-2">
+          <button class="button clipboard-button" data-clipboard-target="#basecasetable">
+            <i class="fa fa-clipboard"></i> Copy to clipboard
+          </button>
+        </div>
+        <div ng-if="recalculatedDeterministicResults" class="cell large-4">
+          <h4>Total value (recalculated case)</h4>
+        </div>
+        <div class="cell large-2" ng-if="recalculatedDeterministicResults">
+          <button class="button clipboard-button" data-clipboard-target="#recalculatedcasetable">
+            <i class="fa fa-clipboard"></i> Copy to clipboard
+          </button>
+        </div>
+        <div class="cell large-6" ng-if="!recalculatedDeterministicResults"></div><!-- make sure everything stays in its place  -->
+        <div class="cell large-6">
+          <table id="basecasetable">
             <thead>
               <th ng-repeat="alternative in alternatives">{{alternative.title}}</th>
             </thead>
@@ -78,9 +108,8 @@
             </tbody>
           </table>
         </div>
-        <div ng-if="recalculatedDeterministicResults" class="cell large-6">
-          <h4>Total value (recalculated case)</h4>
-          <table>
+        <div class="cell large-6" ng-if="recalculatedDeterministicResults"ng-if="recalculatedDeterministicResults" >
+          <table id="recalculatedcasetable">
             <thead>
               <th ng-repeat="alternative in alternatives">{{alternative.title}}</th>
             </thead>

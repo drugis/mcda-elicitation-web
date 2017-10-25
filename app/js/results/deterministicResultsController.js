@@ -1,5 +1,5 @@
 'use strict';
-define(function(require) {
+define(['clipboard'],function(Clipboard) {
   var _ = require('lodash');
 
   var dependencies = ['$scope', 'currentScenario', 'taskDefinition', 'MCDAResultsService', 'addKeyHashToObject'];
@@ -22,6 +22,7 @@ define(function(require) {
     $scope.$watch('scales.observed', function() {
       resetSensitivityAnalysis();
     });
+    var clipboard = new Clipboard('.clipboard-button');
 
     function resetSensitivityAnalysis() {
       $scope.modifiableScales = MCDAResultsService.resetModifiableScales(

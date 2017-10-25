@@ -9,6 +9,7 @@ require.config({
     'angular-touch': 'bower_components/angular-touch/angular-touch',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
     'angularjs-slider': 'bower_components/angularjs-slider/dist/rzslider',
+    'clipboard': 'bower_components/clipboard/dist/clipboard.min',
     'domReady': 'bower_components/requirejs-domready/domReady',
     'error-reporting': 'bower_components/error-reporting/errorReportingDirective',
     'jQuery': 'bower_components/jquery/dist/jquery.min',
