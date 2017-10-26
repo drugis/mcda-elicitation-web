@@ -7,92 +7,103 @@
 </div>
 <div ng-if="state.results">
   <div class="grid-x underlined-div">
+    <div class="cell">
+      <h3>SMAA results</h3>
+      <button class="button" ui-sref="deterministic-results">Deterministic analysis</button>
+    </div>
   </div>
-  <div class="cell">
-    <h4>Rank acceptabilities</h4>
-  </div>
-  <div class="cell">
-    <h3>SMAA results</h3>
-    <button class="button" ui-sref="deterministic-results">Deterministic analysis</button>
-  </div>
-  <div class="cell large-offset-11">
-    <button class="button small clipboard-button" data-clipboard-target="#ranktable">
-      <i class="fa fa-clipboard"></i> Copy to clipboard
-    </button>
-  </div>
-  <div class="cell">
-    <rank-acceptability-plot data="state.results.ranks.data" problem="state.problem"></rank-acceptability-plot>
-    <table id="ranktable">
-      <thead>
-        <tr>
-          <th></th>
-          <th ng-repeat="alternative in state.problem.alternatives">Rank {{::$index + 1}}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="(key, alternative) in state.problem.alternatives">
-          <td>{{::alternative.title}}</td>
-          <td ng-repeat="rank in state.results.ranks.data[key] track by $index" class="heat">
-            {{::rank | number}}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="grid-x underlined-div">
+    <div class="cell">
+      <h4>Rank acceptabilities</h4>
+    </div>
+    <div class="cell large-offset-11 large-1">
+      <button class="button small info clipboard-button" data-clipboard-target="#ranktable">
+        <i class="fa fa-clipboard"></i> Copy to clipboard
+      </button>
+    </div>
+    <div class="cell">
+      <div export file-name="'rank-acceptability-plot'">
+        <rank-acceptability-plot data="state.results.ranks.data" problem="state.problem"></rank-acceptability-plot>
+      </div>
+    </div>
+    <div class="cell">
+      <table id="ranktable">
+        <thead>
+          <tr>
+            <th></th>
+            <th ng-repeat="alternative in state.problem.alternatives">Rank {{::$index + 1}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="(key, alternative) in state.problem.alternatives">
+            <td>{{::alternative.title}}</td>
+            <td ng-repeat="rank in state.results.ranks.data[key] track by $index" class="heat">
+              {{::rank | number}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
   <div class="grid-x underlined-div">
     <div class="cell large-6">
-      <h4>Alternatives per rank</h4>
-      <select ng-model="state.selectedRank" class="large-3">
-        <option ng-repeat="(k,v) in state.problem.alternatives" value="{{$index}}" ng-selected="$index == state.selectedRank">
-          Rank {{::$index + 1}}
-        </option>
-      </select>
-      <div style="width: 400px; height: 350px">
-        <bar-chart value="state.alternativesByRank(state)"></bar-chart>
+      <div export file-name="'alternatives-per-rank'">
+        <h4>Alternatives per rank</h4>
+        <select ng-model="state.selectedRank" class="large-3">
+          <option ng-repeat="(k,v) in state.problem.alternatives" value="{{$index}}" ng-selected="$index == state.selectedRank">
+            Rank {{::$index + 1}}
+          </option>
+        </select>
+        <div style="width: 400px; height: 350px">
+          <bar-chart value="state.alternativesByRank(state)"></bar-chart>
+        </div>
       </div>
     </div>
     <div class="cell large-6">
-      <h4>Ranks per alternative</h4>
-      <select ng-model="state.selectedAlternative" class="large-3">
-        <option ng-repeat="(key, alternative) in state.problem.alternatives" value="{{key}}" ng-selected="key == state.selectedAlternative">
-          {{::alternative.title}}
-        </option>
-      </select>
-      <div style="width: 400px; height: 350px">
-        <bar-chart value="state.ranksByAlternative(state)"></bar-chart>
+      <div export file-name="'ranks-per-alterative'">
+        <h4>Ranks per alternative</h4>
+        <select ng-model="state.selectedAlternative" class="large-3">
+          <option ng-repeat="(key, alternative) in state.problem.alternatives" value="{{key}}" ng-selected="key == state.selectedAlternative">
+            {{::alternative.title}}
+          </option>
+        </select>
+        <div style="width: 400px; height: 350px">
+          <bar-chart value="state.ranksByAlternative(state)"></bar-chart>
+        </div>
       </div>
     </div>
   </div>
   <h4>Central Weights</h4>
   <div class="grid-x">
     <div class="cell">
-      <div style="width: 650px; height: 350px">
+      <div style="width: 650px; height: 350px" export file-name="'central-weights'">
         <line-chart value="state.centralWeights(state)"></line-chart>
       </div>
-      <div class="cell large-offset-11">
-        <button class="button small clipboard-button" data-clipboard-target="#centralweightstable">
-          <i class="fa fa-clipboard"></i> Copy to clipboard
-        </button>
-      </div>
-      <table id="centralweightstable">
-        <thead>
-          <tr>
-            <th>Alternative</th>
-            <th>Confidence</th>
-            <th ng-repeat="criterion in state.problem.criteria">{{criterion.title}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="(a, cw) in state.results.cw.data">
-            <td>{{state.problem.alternatives[a].title}}</td>
-            <td class="heat">{{::cw.cf | number}}</td>
-            <td ng-repeat="(c, criterion) in state.problem.criteria">
-              {{::cw.w[c] | number}}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <button class="button" ui-sref="deterministic-results">Deterministic analysis</button>
     </div>
+    <div class="cell large-1 large-offset-11">
+      <button class="button small clipboard-button" data-clipboard-target="#centralweightstable">
+        <i class="fa fa-clipboard"></i> Copy to clipboard
+      </button>
+    </div>
+    <table id="centralweightstable">
+      <thead>
+        <tr>
+          <th>Alternative</th>
+          <th>Confidence</th>
+          <th ng-repeat="criterion in state.problem.criteria">{{criterion.title}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="(a, cw) in state.results.cw.data">
+          <td>{{state.problem.alternatives[a].title}}</td>
+          <td class="heat">{{::cw.cf | number}}</td>
+          <td ng-repeat="(c, criterion) in state.problem.criteria">
+            {{::cw.w[c] | number}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button class="button" ui-sref="deterministic-results">Deterministic analysis</button>
   </div>
+</div>
 </div>

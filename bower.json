@@ -38,6 +38,7 @@
     "d3": "3.5.5",
     "domready": "~1.0.7",
     "error-reporting": "https://github.com/drugis/error-reporting.git#1.2.1",
+    "export-directive": "https://github.com/chinook25/export-directive.git#master",
     "font-awesome": "4.3.0",
     "foundation-sites": "~6",
     "jquery": "~3.2.1",

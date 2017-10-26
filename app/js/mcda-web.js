@@ -12,6 +12,7 @@ define(['angular',
     'angularjs-slider',
     'angular-patavi-client',
     'error-reporting',
+    'export-directive',
     'mcda/services/routeFactory',
     'mcda/services/workspaceResource',
     'mcda/services/workspaceService',
@@ -56,7 +57,8 @@ define(['angular',
       'elicit.subProblem',
       'elicit.workspace',
       'ngCookies',
-      'errorReporting'
+      'errorReporting',
+      'export-directive'
     ];
 
     var app = angular.module('elicit', dependencies);
