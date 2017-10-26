@@ -1,5 +1,5 @@
 'use strict';
-define(function(require) {
+define(['clipboard','require'], function(Clipboard, require) {
   var _ = require('lodash');
 
   return function($scope, $stateParams, EffectsTableService) {
@@ -21,7 +21,8 @@ define(function(require) {
     $scope.$watch('workspace.scales.observed', function(newValue) {
       $scope.scales = newValue;
     }, true);
-
+    var clipboard = new Clipboard('.clipboard-button');
+    
     $scope.isExact = function(criterion, alternative) {
       var perf = _.find($scope.problem.performanceTable, function(performance) {
         return performance.alternative === alternative && performance.criterion === criterion;

@@ -1,5 +1,5 @@
 'use strict';
-define(function(require) {
+define(['clipboard', 'require'],function(Clipboard, require) {
   require('angular');
   var _ = require('lodash');
 
@@ -17,13 +17,14 @@ define(function(require) {
     $scope.scalesPromise.then(function(scales) {
       $scope.scales = scales;
     });
-    
+
     $scope.mergedProblem = {
       alternatives: _.cloneDeep(_.omit($scope.problem.alternatives, $scope.subProblem.definition.excludedAlternatives)),
       criteria: _.cloneDeep(_.omit($scope.problem.criteria, $scope.subProblem.definition.excludedCriteria))
     };
 
     $scope.mergedProblem.criteria = _.merge($scope.mergedProblem.criteria, $scope.subProblem.definition.ranges);
+    var clipboard = new Clipboard('.clipboard-button');
 
     function openCreateDialog() {
       $modal.open({
