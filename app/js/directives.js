@@ -72,7 +72,8 @@ define(function(require) {
 
             svg.datum(data)
               .transition().duration(100).call(chart);
-
+            svg.style('background', 'white');
+              
             nv.utils.windowResize(chart.update);
           });
         });
@@ -115,6 +116,8 @@ define(function(require) {
             chart.tooltip.enabled(false);
             var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
             svg.datum(data).transition().duration(100).call(chart);
+            svg.style('background', 'white');
+
             nv.utils.windowResize(chart.update);
           });
         });
@@ -155,6 +158,7 @@ define(function(require) {
           }
 
           svg.datum(data).call(chart);
+          svg.style('background', 'white');
 
           var hasLabels = _.every(data, function(x) {
             return !_.isUndefined(x.labels);
@@ -209,23 +213,6 @@ define(function(require) {
     };
   });
 
-  directives.directive('heatLegend', function() {
-    return {
-      link: function(scope) {
-        var color = d3.scale.quantile().range(d3.range(9)).domain([1, 0]);
-        var style = 'display: inline-block; text-align: center; height: 2.5em; width: 2.5em; padding: 5px; line-height: 1.9em; margin: 1px;';
-
-        var block = function(val) {
-          var col = 'q' + color(val) + '-9';
-          return '<div style="' + style + '" class="' + col + '">' + val + '</div>';
-        };
-
-        scope.heat = '<div class="RdYlGn">' + block(0.0) + block(0.25) + block(0.75) + block(1.0) + '</div>';
-      },
-      template: '<a tooltip-html-unsafe="{{heat}}" tooltip-animation="false" class="tiny-icon" style="cursor: help"><i class="fa fa-lg fa-question"></i></a>'
-    };
-  });
-
   directives.directive('fileReader', function() {
     return {
       scope: {
@@ -257,7 +244,6 @@ define(function(require) {
     };
   });
 
-
   directives.directive('mathjaxBind', function() {
     return {
       restrict: 'A',
@@ -281,7 +267,6 @@ define(function(require) {
     };
   });
 
-
   directives.directive('addisAlert', function(mcdaRootPath) {
     return {
       restrict: 'E',
@@ -301,7 +286,6 @@ define(function(require) {
       templateUrl: mcdaRootPath + 'partials/alert.html'
     };
   });
-
 
   directives.directive('modal', function(mcdaRootPath) {
     return {
@@ -406,9 +390,7 @@ define(function(require) {
     };
   });
 
-
   //treeview
-
   directives.directive('valueTree', function() {
     return {
       restrict: 'E',

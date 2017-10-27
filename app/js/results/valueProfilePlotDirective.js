@@ -45,7 +45,8 @@ define(['d3', 'nvd3'], function(d3, nv) {
             chart.showControls(false);
 
             svg.datum(data).transition().duration(100).call(chart);
-
+            svg.style('background', 'white');
+              
             nv.utils.windowResize(chart.update);
           });
         });
