@@ -17,7 +17,7 @@
       <h3>Effects table (exact or median values only)</h3>
     </div>
     <div clas="cell large-2">
-      <button class="button small clipboard-button" data-clipboard-target="#effectstable">
+      <button class="button small info clipboard-button" data-clipboard-target="#effectstable">
         <i class="fa fa-clipboard"></i> Copy to clipboard
       </button>
     </div>
@@ -61,7 +61,7 @@
           <h4>Representative weights</h4>
         </div>
         <div clas="cell large-2">
-          <button class="button small clipboard-button" data-clipboard-target="#weighttable">
+          <button class="button small info clipboard-button" data-clipboard-target="#weighttable">
             <i class="fa fa-clipboard"></i> Copy to clipboard
           </button>
         </div>
@@ -83,7 +83,7 @@
           <h4>Total value (base case)</h4>
         </div>
         <div class="cell large-2">
-          <button class="button small clipboard-button" data-clipboard-target="#basecasetable">
+          <button class="button small info clipboard-button" data-clipboard-target="#basecasetable">
             <i class="fa fa-clipboard"></i> Copy to clipboard
           </button>
         </div>
@@ -91,11 +91,12 @@
           <h4>Total value (recalculated case)</h4>
         </div>
         <div class="cell large-2" ng-if="recalculatedDeterministicResults">
-          <button class="button small clipboard-button" data-clipboard-target="#recalculatedcasetable">
+          <button class="button small info clipboard-button" data-clipboard-target="#recalculatedcasetable">
             <i class="fa fa-clipboard"></i> Copy to clipboard
           </button>
         </div>
-        <div class="cell large-6" ng-if="!recalculatedDeterministicResults"></div><!-- make sure everything stays in its place  -->
+        <div class="cell large-6" ng-if="!recalculatedDeterministicResults"></div>
+        <!-- make sure everything stays in its place  -->
         <div class="cell large-6">
           <table id="basecasetable">
             <thead>
@@ -108,7 +109,7 @@
             </tbody>
           </table>
         </div>
-        <div class="cell large-6" ng-if="recalculatedDeterministicResults"ng-if="recalculatedDeterministicResults" >
+        <div class="cell large-6" ng-if="recalculatedDeterministicResults" ng-if="recalculatedDeterministicResults">
           <table id="recalculatedcasetable">
             <thead>
               <th ng-repeat="alternative in alternatives">{{alternative.title}}</th>
@@ -129,11 +130,15 @@
       <div class="grid-x">
         <div class="cell large-6">
           <h5>Base case</h5>
-          <value-profile-plot values="deterministicResults.results" criteria="criteria" alternatives="alternatives"></value-profile-plot>
+          <div export file-name="'basecaseplot'">
+            <value-profile-plot values="deterministicResults.results" criteria="criteria" alternatives="alternatives"></value-profile-plot>
+          </div>
         </div>
         <div ng-if="recalculatedDeterministicResults" class="cell large-6">
           <h5>Recalculated case</h5>
-          <value-profile-plot values="recalculatedDeterministicResults.results" criteria="criteria" alternatives="alternatives"></value-profile-plot>
+          <div export file-name="'recalculatedcaseplot'">
+            <value-profile-plot values="recalculatedDeterministicResults.results" criteria="criteria" alternatives="alternatives"></value-profile-plot>
+          </div>
         </div>
       </div>
     </div>
@@ -158,8 +163,8 @@
           </label>
         </div>
       </div>
-      <div class="grid-x">
-        <div class="cell medium-6" style="height: 450px; width: 450px">
+      <div class="grid-x" export file-name="'onewaymeasurementsplot'">
+        <div class="cell" style="height: 450px; width: 450px">
           <line-chart label-x-axis="sensitivityMeasurements.measurementsCriterion.title" label-y-axis="'total value'" value="measurementValues"></line-chart>
         </div>
       </div>
@@ -167,14 +172,14 @@
     <div class="cell medium-6 large-6">
       <h4>Preferences</h4>
       <div class="grid-x">
-        <div class="cell medium-6">
+        <div class="cell medium-6 large-6 ">
           <label>Weight given to
             <select ng-options="criterion.title for criterion in criteria" ng-model="sensitivityMeasurements.preferencesCriterion" ng-change="doPreferencesSensitivity(state)"></select>
           </label>
         </div>
       </div>
-      <div class="grid-x">
-        <div class="cell medium-6" style="height: 450px; width: 450px">
+      <div class="grid-x" export file-name="'onewaypreferencesplot'">
+        <div class="cell" style="height: 450px; width: 450px">
           <line-chart label-x-axis="'Weight given to ' + sensitivityMeasurements.preferencesCriterion.title" label-y-axis="'total value'" value="preferencesValues"></line-chart>
         </div>
       </div>
