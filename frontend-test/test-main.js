@@ -18,6 +18,7 @@ require.config({
     'angular-resource': 'bower_components/angular-resource/angular-resource',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
     'angularjs-slider': 'bower_components/angularjs-slider/dist/rzslider',
+    'clipboard': 'bower_components/clipboard/dist/clipboard.min',
     'd3': 'bower_components/d3/d3.min',
     'foundation': 'bower_components/foundation/js/foundation.min',
     'jasmine': 'bower_components/jasmine/lib/jasmine-core/jasmine',
