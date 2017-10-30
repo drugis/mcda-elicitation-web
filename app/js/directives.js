@@ -142,23 +142,23 @@ define(function(require) {
           .attr('width', '100%')
           .attr('height', '100%');
 
-        scope.$watch('value', function(newVal) {
+        scope.$watch('value', function(newVal) { 
           if (!newVal) {
             svg.selectAll('g').remove();
             return;
           }
           var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
-
+          
           var chart = nv.models.lineChart().width(dim.width).height(dim.height);
 
-          chart.useVoronoi(true);
+          chart.useVoronoi(true); //         ??
 
           if (attrs.showLegend && attrs.showLegend === 'false') {
             chart.showLegend(false);
           }
 
-          svg.datum(data).call(chart);
           svg.style('background', 'white');
+          svg.datum(data).call(chart);
 
           var hasLabels = _.every(data, function(x) {
             return !_.isUndefined(x.labels);
