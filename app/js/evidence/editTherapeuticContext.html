@@ -1,0 +1,16 @@
+<form ng-submit="save()">
+  <div class="grid-x">
+    <div class="cell">
+      <h3> Edit therapeutic context</h3>
+    </div>
+    <div class="cell">
+      <textarea rows="8" ng-model="context.therapeuticContext"></textarea>
+    </div>
+    <div class="cell">
+      <button class="button success" type="submit">Save</button>
+    </div>
+    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</form>
