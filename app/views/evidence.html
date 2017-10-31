@@ -1,11 +1,20 @@
 <div class="grid-x">
   <div class="cell">
-    <h4>Therapeutic context</h4>
-    <p>
-      <span ng-if="problem.description">{{::problem.description}}</span>
-      <span ng-if="!problem.description">No description given.</span>
-    </p>
+    <h4>
+      Therapeutic context
+      <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editTherapeuticContext()">
+        <i class="fa fa-edit"></i>
+      </a>
+    </h4>
+  </div>
+  <div class="cell">
+    <span ng-if="problem.description">{{problem.description}}</span>
+    <span ng-if="!problem.description">No description given.</span>
+  </div>
+  <div class="cell">
     <h4>Alternatives</h4>
+  </div>
+  <div class="cell">
     <ul>
       <li ng-repeat="alternative in problem.alternatives">{{::alternative.title}}</li>
     </ul>

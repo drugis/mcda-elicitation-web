@@ -2,11 +2,11 @@
 define(function(require) {
   var _ = require('lodash');
   var dependencies = ['$scope', '$transitions', '$state', '$stateParams', 'Tasks', 'TaskDependencies',
-    'ScenarioResource', 'SubProblemResource', 'WorkspaceService', 'subProblems', 'currentSubProblem', 'scenarios', 'currentScenario'
+    'ScenarioResource', 'WorkspaceService', 'subProblems', 'currentSubProblem', 'scenarios', 'currentScenario'
   ];
 
   function MCDABenefitRiskController($scope, $transitions, $state, $stateParams, Tasks, TaskDependencies,
-    ScenarioResource, SubProblemResource, WorkspaceService, subProblems, currentSubProblem, scenarios, currentScenario) {
+    ScenarioResource, WorkspaceService, subProblems, currentSubProblem, scenarios, currentScenario) {
     // functions
     $scope.forkScenario = forkScenario;
     $scope.newScenario = newScenario;

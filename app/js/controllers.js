@@ -3,7 +3,6 @@ define(function(require) {
   var angular = require('angular');
   return angular.module('elicit.controllers', ['elicit.effectsTableService', 'elicit.util'])
     .controller('MCDABenefitRiskController', require('mcda/benefitRisk/mcdaBenefitRiskController'))
-    .controller('EvidenceController', require('mcda/evidence/evidenceController'))
     .controller('PreferencesController', require('mcda/preferences/preferencesController'))
     .controller('PartialValueFunctionController', require('mcda/preferences/partialValueFunctionController'))
     .controller('OrdinalSwingController', require('mcda/preferences/ordinalSwingController'))
