@@ -43,10 +43,10 @@
         What is the value of x such that an improvement in
         <criterion of="state.choice"></criterion> from {{state.range.from | number}} to x is equivalent to an improvement from x to {{state.range.to | number}}?
       </p>
-      <strong>Adjust the slider:</strong>
-      <label>
-        <slider style="width: 400px; margin-top: 20px; margin-bottom: 10px" model="state.choice.pvf.cutoffs[state.choice.pvf.values.length - 1]" type="point" range="state.range"></slider>
-      </label>
+      <p><strong>Adjust the slider:</strong></p>
+      <p>
+        <rzslider style="width: 400px; margin-top: 20px;" rz-slider-model="state.choice.pvf.cutoffs[state.choice.pvf.values.length - 1]" rz-slider-options="state.sliderOptions"></rzslider>
+      </p>
       <strong>So that the following statement is true:</strong>
       <p>
         The improvement from {{state.range.from | number}} to {{state.choice.pvf.cutoffs[state.choice.pvf.values.length - 1] | number}}

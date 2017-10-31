@@ -2,6 +2,7 @@
 define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angular, _, Wizard) {
   var dependencies = [
     '$scope',
+    '$timeout',
     '$state',
     '$stateParams',
     '$injector',
@@ -13,6 +14,7 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
 
   var PartialValueFunctionController = function(
     $scope,
+    $timeout,
     $state,
     $stateParams,
     $injector,
@@ -30,11 +32,11 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
 
     // init
     $scope.pvf = PartialValueFunction;
-    $scope.problem = $scope.aggregateState.problem;
+    var aggregateProblem = $scope.aggregateState.problem;
 
     function initialize(state) {
       var criterionId = $stateParams.criterion;
-      var criterion = _.cloneDeep($scope.problem.criteria[criterionId]);
+      var criterion = _.cloneDeep(aggregateProblem.criteria[criterionId]);
       if (!criterion) {
         return {};
       }
@@ -55,7 +57,9 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
         type: 'elicit type',
         choice: criterion
       };
-
+      $timeout(function() {
+        $scope.$broadcast('rzSliderForceRender');
+      }, 100);
       return _.extend(state, initial);
     }
 
@@ -93,6 +97,13 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
           range: {
             from: from,
             to: to
+          },
+          sliderOptions: {
+            floor: Math.min(from, to),
+            ceil: Math.max(from, to),
+            precision: 2,
+            step: Math.abs(to - from) / 100,
+            rightToLeft: to < from
           }
         });
       }
@@ -102,9 +113,14 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
     function save(state) {
       var criterionId = $stateParams.criterion;
       var standardizedCriterion = PartialValueFunction.standardizeCriterion(state.choice);
-      var criteria = _.cloneDeep(currentScenario.state.problem.criteria);
+      var criteria = _.cloneDeep(aggregateProblem.criteria);
       criteria[criterionId] = standardizedCriterion;
-      currentScenario.state.problem.criteria = criteria;
+      currentScenario.state = {
+        prefs: {},
+        problem: {
+          criteria: criteria
+        }
+      };
 
       currentScenario.state = TaskDependencies.remove(taskDefinition, currentScenario.state);
       currentScenario.$save($stateParams, function(scenario) {
