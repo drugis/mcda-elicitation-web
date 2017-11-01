@@ -5,10 +5,10 @@ define(['angular', 'mcda/services/taskDependencies'], function(angular) {
     var $injector = angular.injector([ 'elicit.taskDependencies' ]);
     service = $injector.get( 'TaskDependencies' );
   });
-  describe("TaskDependencies service", function() {
-    describe("Dependency description: scale-ranges", function() {
+  describe('TaskDependencies service', function() {
+    describe('Dependency description: scale-ranges', function() {
 
-      it("remove() generates a new state with scale ranges removed", function() {
+      it('remove() generates a new state with scale ranges removed', function() {
         var def = service.definitions['scale-range'];
         var criteria = {
           'A' : { pvf: { range: [0, 1] }, title: 'Amsterdam' },
@@ -34,27 +34,27 @@ define(['angular', 'mcda/services/taskDependencies'], function(angular) {
         expect(newState3).toEqual(expected);
       });
     });
-    describe("Dependency description: partial-value-function", function() {
-      it("isPresent() checks whether partial value functions are defined in the problem", function() {
+    describe('Dependency description: partial-value-function', function() {
+      it('isPresent() checks whether partial value functions are defined in the problem', function() {
         var def = service.definitions['partial-value-function'];
         var criteria = {
-          'A' : { 'pvf': { 'range': [0, 1], "type": "linear", "direction": "increasing" } },
+          'A' : { 'pvf': { 'range': [0, 1], 'type': 'linear', 'direction': 'increasing' } },
           'B' : { 'pvf': { 'range': [0, 1] } }
         };
         var state = { 'problem' : { 'criteria' : criteria } };
         expect(def.isPresent(state)).toBe(false);
-        criteria.B.pvf.type = "linear";
+        criteria.B.pvf.type = 'linear';
         expect(def.isPresent(state)).toBe(false);
-        criteria.B.pvf.direction = "decreasing";
+        criteria.B.pvf.direction = 'decreasing';
         expect(def.isPresent(state)).toBe(true);
         delete state.problem.criteria.A.pvf;
         expect(def.isPresent(state)).toBe(false);
       });
-      it("remove() generates a new state with partial value functions removed", function() {
+      it('remove() generates a new state with partial value functions removed', function() {
         var def = service.definitions['partial-value-function'];
         var criteria = {
-          'A' : { 'pvf': { 'range': [0, 1], "type": "linear", "direction": "increasing" } },
-          'B' : { 'pvf': { 'range': [0, 1], "type": "piecewise-linear", "direction": "decreasing", cutoffs: [0.2, 0.8], values: [0.8, 0.5] } }
+          'A' : { 'pvf': { 'range': [0, 1], 'type': 'linear', 'direction': 'increasing' } },
+          'B' : { 'pvf': { 'range': [0, 1], 'type': 'piecewise-linear', 'direction': 'decreasing', cutoffs: [0.2, 0.8], values: [0.8, 0.5] } }
         };
         var state = { 'problem' : { 'criteria' : criteria, 'alternatives': {} }, 'preferences': {} };
 
@@ -74,15 +74,15 @@ define(['angular', 'mcda/services/taskDependencies'], function(angular) {
       });
     });
 
-    describe("Dependency description: criteria-trade-offs", function() {
-      it("isPresent() checks whether prefs are present", function() {
+    describe('Dependency description: criteria-trade-offs', function() {
+      it('isPresent() checks whether prefs are present', function() {
         var def = service.definitions['criteria-trade-offs'];
         var state = { 'problem' : {} };
         expect(def.isPresent(state)).toBe(false);
         state.prefs = {some: 'thing'};
         expect(def.isPresent(state)).toBe(true);
       });
-      it("remove() generates a new state with prefs removed", function() {
+      it('remove() generates a new state with prefs removed', function() {
         var def = service.definitions['criteria-trade-offs'];
         var state = { 'problem' : {}, 'prefs': [] };
         var stateCopy = angular.copy(state);
@@ -94,17 +94,17 @@ define(['angular', 'mcda/services/taskDependencies'], function(angular) {
       });
     });
 
-    describe("Dependency description: non-ordinal-preferences", function() {
-      it("isPresent() checks whether non-ordinal prefs are present", function() {
+    describe('Dependency description: non-ordinal-preferences', function() {
+      it('isPresent() checks whether non-ordinal prefs are present', function() {
         var def = service.definitions['non-ordinal-preferences'];
-        var state = { 'problem': {}, prefs: [ { "type" : "ordinal" } ] };
+        var state = { 'problem': {}, prefs: [ { 'type' : 'ordinal' } ] };
         expect(def.isPresent(state)).toBe(false);
-        state.prefs.push({"type" : "ratio bound"});
+        state.prefs.push({'type' : 'ratio bound'});
         expect(def.isPresent(state)).toBe(true);
       });
-      it("remove() generates a new state with non-ordinal prefs removed", function() {
+      it('remove() generates a new state with non-ordinal prefs removed', function() {
         var def = service.definitions['non-ordinal-preferences'];
-        var state = { 'problem': {}, prefs: [ {"type" : "ratio bound" }, { "type" : "ordinal" } ] };
+        var state = { 'problem': {}, prefs: [ {'type' : 'ratio bound' }, { 'type' : 'ordinal' } ] };
 
         var stateCopy = angular.copy(state);
         var expected = angular.copy(state);
@@ -115,19 +115,19 @@ define(['angular', 'mcda/services/taskDependencies'], function(angular) {
       });
     });
 
-    describe("Dependency description: complete-criteria-ranking", function() {
-      it("isPresent() checks whether ordinal prefs are present (which currently always implies a full ranking)", function() {
+    describe('Dependency description: complete-criteria-ranking', function() {
+      it('isPresent() checks whether ordinal prefs are present (which currently always implies a full ranking)', function() {
         var def = service.definitions['complete-criteria-ranking'];
-        var state = { 'problem': {}, prefs: [ { "type" : "ordinal" } ] };
+        var state = { 'problem': {}, prefs: [ { 'type' : 'ordinal' } ] };
         expect(def.isPresent(state)).toBe(true);
-        state.prefs[0].type = "ratio bound";
+        state.prefs[0].type = 'ratio bound';
         expect(def.isPresent(state)).toBe(false);
         state.prefs = [];
         expect(def.isPresent(state)).toBe(false);
       });
-      it("remove() generates a new state with ordinal prefs removed", function() {
+      it('remove() generates a new state with ordinal prefs removed', function() {
         var def = service.definitions['complete-criteria-ranking'];
-        var state = { 'problem': {}, prefs: [ {"type" : "ratio bound" }, { "type" : "ordinal" } ] };
+        var state = { 'problem': {}, prefs: [ {'type' : 'ratio bound' }, { 'type' : 'ordinal' } ] };
 
         var stateCopy = angular.copy(state);
         var expected = angular.copy(state);
@@ -138,7 +138,7 @@ define(['angular', 'mcda/services/taskDependencies'], function(angular) {
       });
     });
 
-    it("isSafe checks if the task can be entered without destroying existing information", function() {
+    it('isSafe checks if the task can be entered without destroying existing information', function() {
       var state = {
         'problem': { 'criteria' : { 'A' : {} } }
       };
@@ -150,7 +150,7 @@ define(['angular', 'mcda/services/taskDependencies'], function(angular) {
       expect(service.isSafe(task, state)).toEqual({'safe': false, resets: ['partial-value-function']});
     });
 
-    it("remove() uses definition.remove() to destroy existing information", function() {
+    it('remove() uses definition.remove() to destroy existing information', function() {
       var state = {
         'problem': { 'criteria' : { 'A' : { 'pvf': { 'range': [0, 1], 'type': 'linear', 'direction': 'increasing' } } } }
       };

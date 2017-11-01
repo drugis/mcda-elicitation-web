@@ -1,7 +1,5 @@
 'use strict';
-define(function(require) {
-  var _ = require('lodash');
-
+define(['lodash', 'angular'],function(_) {
   var dependencies = [];
   var SubProblemService = function() {
     // Exposed functions

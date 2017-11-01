@@ -112,6 +112,11 @@ define(['angular',
           url: '/manual-input',
           templateUrl: mcdaRootPath + 'js/manualInput/manualInput.html',
           controller: 'ManualInputController'
+        })
+        .state('manualInputInProgress', {
+          url: '/manual-input/:inProgressId',
+          templateUrl: mcdaRootPath + 'js/manualInput/manualInput.html',
+          controller: 'ManualInputController'
         });
       $urlRouterProvider.otherwise('/choose-problem');
     });

@@ -72,9 +72,9 @@
       <span class="input-group-label">
         Treatment name
       </span>
-      <input class="text input-group-field" ng-model="state.treatmentName" onkeyup="if(event.keyCode===13) document.getElementById('treatmentButton').click()">
+      <input class="text input-group-field" ng-model="state.treatmentInputField" onkeyup="if(event.keyCode===13) document.getElementById('treatmentButton').click()">
       <div class="input-group-button">
-        <button ng-disabled="!state.treatmentName || isDuplicateName(state.treatmentName)" type="button" class="button tiny" ng-click="addTreatment(state.treatmentName)" id="treatmentButton"><i class="fa fa-plus"></i> Add Treatment</button>
+        <button ng-disabled="!state.treatmentInputField || isDuplicateName(state.treatmentInputField)" type="button" class="button tiny" ng-click="addTreatment(state.treatmentInputField)" id="treatmentButton"><i class="fa fa-plus"></i> Add Treatment</button>
       </div>
     </div>
   </div>
@@ -105,6 +105,7 @@
       <button class="button" ng-disabled="!state.title || criteria.length < 2|| treatments.length < 2" type="button" ng-click="goToStep2()">
         Enter data
       </button>
+      <button class="button" ng-click="saveInProgress()" ng-disabled="!state.title">Save</button>
     </div>
     <div class="cell" ng-if="!state.title">
       <em>Missing title</em>
@@ -131,8 +132,8 @@
     </div>
     <div class="cell">
       <form>
-        <label><input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="distribution"> Effect distributions</label>
         <label><input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="study"> Study data</label>
+        <label><input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="distribution"> Effect distributions</label>
       </form>
     </div>
   </div>
@@ -186,6 +187,7 @@
       <button ng-disabled="!state.isInputDataValid" class="button" type="button" ng-click="createProblem()">
         Done
       </button>
+      <button class="button" ng-click="saveInProgress()">Save</button>
       <button type="button" ng-click="goToStep1()" type="button" class="button">Back</button>
       <div ng-if="!state.isInputDataValid">
         <em>Invalid input data</em>

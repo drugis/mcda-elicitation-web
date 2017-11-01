@@ -101,3 +101,12 @@ ALTER TABLE effectsTableExclusion RENAME TO effectsTableAlternativeInclusion;
 
 --changeset keijserj:11
 DROP TABLE effectsTableAlternativeInclusion;
+
+--changeset reidd:12
+CREATE TABLE inProgressWorkspace(
+  id SERIAL NOT NULL,
+  owner INT NOT NULL,
+  state  JSONB NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY(owner) REFERENCES Account(id)
+);

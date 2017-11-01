@@ -1,5 +1,5 @@
 'use strict';
-define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
+define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() {
   describe('The manualInputService', function() {
     var manualInputService;
     beforeEach(module('elicit.manualInput'));
@@ -472,7 +472,7 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
           name: 'criterion 2 title',
           hash: 'criterion 2 title'
         }];
-        var result = manualInputService.prepareInputData(criteria, treatments);
+        var result = manualInputService.prepareInputData(criteria, treatments, 'distribution');
         var newCell = {
           type: 'exact',
           value: undefined,
@@ -487,6 +487,92 @@ define(['angular-mocks', 'mcda/manualInput/manualInput'], function() {
           'criterion 2 title': {
             treatment1: newCell,
             treatment2: newCell
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should preserve data if there is old data supplied and the criterion type has not changed', function() {
+        var treatments = {
+          treatment1: {
+            name: 'treatment1',
+            hash: 'treatment1'
+          },
+          treatment2: {
+            name: 'treatment2',
+            hash: 'treatment2'
+          }
+        };
+        var criteria = [{
+          name: 'survival to exact',
+          hash: 'survival to exact',
+          dataType: 'exact'
+        }, {
+          name: 'survival stays the same',
+          hash: 'survival stays the same',
+          dataType: 'survival'
+        }, {
+          name: 'exact to survival',
+          hash: 'exact to survival',
+          dataType: 'survival'
+        }];
+        var oldCell = {
+          type: 'dsurv',
+          value: 5,
+          source: 'distribution',
+          isInvalid: false
+        };
+        var oldInputData = {
+          'survival to exact': {
+            treatment1: {
+              type: 'dsurv'
+            },
+            treatment2: {
+              type: 'dsurv'
+            }
+          },
+          'survival stays the same': {
+            treatment1: oldCell,
+            treatment2: oldCell
+          },
+          'removed': {
+            treatment1: oldCell,
+            treatment2: oldCell
+          },
+          'exact to survival': {
+            treatment1: {
+              type: 'exact'
+            },
+            treatment2: {
+              type: 'exact'
+            }
+          }
+        };
+        var result = manualInputService.prepareInputData(criteria, treatments, 'distribution', oldInputData);
+        var newCellExact = {
+          type: 'exact',
+          value: undefined,
+          source: 'distribution',
+          isInvalid: true
+        };
+        var newCellSurvival = {
+          type: 'dsurv',
+          value: undefined,
+          source: 'distribution',
+          isInvalid: true
+        };
+        var expectedResult = {
+          'survival to exact': {
+            treatment1: newCellExact,
+            treatment2: newCellExact
+          },
+          'survival stays the same': {
+            treatment1: oldCell,
+            treatment2: oldCell
+          },
+          'exact to survival': {
+            treatment1: newCellSurvival,
+            treatment2: newCellSurvival
           }
         };
         expect(result).toEqual(expectedResult);

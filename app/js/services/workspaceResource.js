@@ -15,9 +15,6 @@ define(function(require) {
               problem: problem
             });
           }
-        },
-        delete: {
-          method: 'DELETE'
         }
       }
     );

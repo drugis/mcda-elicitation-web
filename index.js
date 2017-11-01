@@ -100,7 +100,7 @@ app
     cookie: true
   }));
 
-function requireUserIsOwner(req, res, next) {
+function requireUserIsWorkspaceOwner(req, res, next) {
   db.query('SELECT owner FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
     if (err) {
       err.status = 500;
@@ -117,10 +117,30 @@ function requireUserIsOwner(req, res, next) {
   });
 }
 
+function requireUserIsInProgressWorkspaceOwner(req, res, next) {
+  db.query('SELECT owner FROM inProgressWorkspace WHERE id = $1', [req.params.id], function(err, result) {
+    if (err) {
+      err.status = 500;
+      next(err);
+    }
+    if (!req.user || result.rows[0].owner !== req.user.id) {
+      res.status(403).send({
+        'code': 403,
+        'message': 'Access to resource not authorised'
+      });
+    } else {
+      next();
+    }
+  });
+}
+
 var router = express.Router();
-router.get('/workspaces/:id*', requireUserIsOwner);
-router.post('/workspaces/:id*', requireUserIsOwner);
-router.delete('/workspaces/:id*', requireUserIsOwner);
+router.get('/workspaces/:id*', requireUserIsWorkspaceOwner);
+router.post('/workspaces/:id*', requireUserIsWorkspaceOwner);
+router.delete('/workspaces/:id*', requireUserIsWorkspaceOwner);
+router.get('/workspaces/inProgress/:id', requireUserIsInProgressWorkspaceOwner);
+router.put('/workspaces/inProgress/:id', requireUserIsInProgressWorkspaceOwner);
+router.delete('/workspaces/inProgress/:id', requireUserIsInProgressWorkspaceOwner);
 app.use(router);
 
 app.use(function(req, res, next) {
@@ -244,6 +264,63 @@ app.post('/workspaces', function(req, res, next) {
       return next(err);
     }
     res.json(result);
+  });
+});
+
+app.post('/inProgress', function(req, res, next) {
+  logger.debug('creating in-progress workspace');
+
+  db.query('INSERT INTO inProgressWorkspace (owner, state) VALUES ($1, $2) RETURNING id', 
+    [req.user.id, req.body], function(err, result) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.json({ id: result.rows[0].id });
+  });
+});
+
+app.put('/inProgress/:id', function(req, res, next) {
+  logger.debug('updating in-progress workspace');
+  db.query('UPDATE inProgressWorkspace SET state = $1 WHERE id = $2 ', [req.body, req.params.id], function(err) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.end();
+  });
+});
+
+app.get('/inProgress/:id', function(req, res, next) {
+  logger.debug('GET /inProgress/:id');
+  db.query('SELECT id, owner, state FROM inProgressWorkspace WHERE id = $1', [req.params.id], function(err, result) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.json(result.rows[0]);
+  });
+});
+
+app.get('/inProgress', function(req, res, next) {
+  logger.debug('GET /inProgress/');
+  db.query('SELECT id, owner, state FROM inProgressWorkspace WHERE owner = $1', [req.user.id], function(err, result) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.json(result.rows);
+  });
+});
+
+app.delete('/inProgress/:id', function(req, res, next) {
+  db.query('DELETE FROM inProgressWorkspace WHERE id=$1', [req.params.id], function(err) {
+    if (err) {
+      logger.debug('error deleting workspace in progress');
+      err.status = 500;
+      return next(err);
+    }
+    res.end();
   });
 });
 

@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define([], function() {
   var dependencies = ['$scope', '$modalInstance', 'WorkspaceResource', 'workspace', 'callback'];
 
   var DeleteWorkspaceController = function($scope, $modalInstance, WorkspaceResource, workspace, callback) {
@@ -11,8 +11,11 @@ define(['lodash'], function(_) {
     $scope.workspace = workspace;
 
     function deleteWorkspace() {
-      WorkspaceResource.delete({workspaceId:workspace.id});
-      callback();
+      WorkspaceResource.delete({
+        workspaceId: workspace.id
+      }).$promise.then(function() {
+        callback();
+      });
       $scope.close();
     }
   };

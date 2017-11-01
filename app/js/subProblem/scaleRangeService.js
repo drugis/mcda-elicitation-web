@@ -1,8 +1,5 @@
 'use strict';
-define(function(require) {
-  var angular = require('angular');
-  var _ = require('lodash');
-
+define(['lodash', 'angular'], function(_) {
   var dependencies = ['intervalHull'];
 
   var ScaleRangeService = function(intervalHull) {

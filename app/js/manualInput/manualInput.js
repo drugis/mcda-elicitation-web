@@ -1,7 +1,7 @@
 'use strict';
 define(function(require) {
   var angular = require('angular');
-  return angular.module('elicit.manualInput', [])
+  return angular.module('elicit.manualInput', ['ngResource'])
 
     .controller('ManualInputController', require('mcda/manualInput/manualInputController'))
     .controller('AddCriterionController', require('mcda/manualInput/addCriterionController'))
@@ -10,6 +10,8 @@ define(function(require) {
 
     .directive('effectInput', require('mcda/manualInput/effectInputDirective'))
     .directive('effectInputHelper', require('mcda/manualInput/effectInputHelperDirective'))
+
+    .service('InProgressResource', require('mcda/manualInput/inProgressResource'))
     ;
 
   });

@@ -1,7 +1,6 @@
 'use strict';
-define(function(require) {
+define(['lodash', 'angular'], function(_) {
   var dependencies = ['numberFilter'];
-  var _ = require('lodash');
   var ManualInputService = function(numberFilter) {
     var distributionKnowledge = {
       exact: {
@@ -145,22 +144,33 @@ define(function(require) {
       return problem;
     }
 
-    function prepareInputData(criteria, treatments) {
+    function isOldDataInconsistent(newDataType, oldInput) {
+      return newDataType === 'survival' && oldInput.type !== 'dsurv' ||
+        oldInput.type === 'dsurv' && newDataType !== 'survival';
+    }
+
+    function prepareInputData(criteria, treatments, source, oldInputData) {
       var inputData = {};
       _.forEach(criteria, function(criterion) {
         inputData[criterion.hash] = {};
+        var defaultData = {
+          type: criterion.dataType === 'survival' ? 'dsurv' : 'exact',
+          value: undefined,
+          source: source,
+          isInvalid: true
+        };
         _.forEach(treatments, function(treatment) {
-          inputData[criterion.hash][treatment.hash] = {
-            type: criterion.dataType === 'survival' ? 'dsurv' : 'exact',
-            value: undefined,
-            source: 'distribution',
-            isInvalid: true
-          };
+          if (oldInputData && oldInputData[criterion.hash] && oldInputData[criterion.hash][treatment.hash]) {
+            var oldInput = oldInputData[criterion.hash][treatment.hash];
+            inputData[criterion.hash][treatment.hash] = isOldDataInconsistent(criterion.dataType, oldInput) ?
+              defaultData : oldInput;
+          } else {
+            inputData[criterion.hash][treatment.hash] = defaultData;
+          }
         });
       });
       return inputData;
     }
-
 
     function createDistribution(inputData, inputState, studyType, continuousType) {
       var newData = _.cloneDeep(inputData);

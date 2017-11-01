@@ -2,18 +2,19 @@
 define(function(require) {
   var _ = require('lodash');
 
-  var dependencies = ['$scope', '$state', '$modal', 'mcdaRootPath', 'WorkspaceResource'];
+  var dependencies = ['$scope', '$state', '$modal', 'mcdaRootPath', 'WorkspaceResource', 'InProgressResource'];
 
-  var ChooseProblemController = function($scope, $state, $modal, mcdaRootPath, WorkspaceResource) {
+  var ChooseProblemController = function($scope, $state, $modal, mcdaRootPath, WorkspaceResource, InProgressResource) {
     // functions
     $scope.openChooseProblemModal = openChooseProblemModal;
     $scope.deleteWorkspace = deleteWorkspace;
+    $scope.deleteInProgress = deleteInProgress;
 
     // init
     $scope.model = {};
     $scope.local = {};
-    $scope.chooseProblemModal = {};
     $scope.workspacesList = WorkspaceResource.query();
+    $scope.inProgressWorkspaces = InProgressResource.query();
 
     $scope.$watch('local.contents', function(newVal) {
       if (!_.isEmpty(newVal)) {
@@ -55,6 +56,26 @@ define(function(require) {
           },
           workspace: function() {
             return workspace;
+          }
+        }
+      });
+    }
+
+    function deleteInProgress(id, title) {
+      $modal.open({
+        templateUrl: mcdaRootPath + 'js/workspace/deleteWorkspace.html',
+        controller: 'DeleteInProgressController',
+        resolve: {
+          callback: function() {
+            return function() {
+              $scope.inProgressWorkspaces = _.reject($scope.inProgressWorkspaces, ['id', id]);
+            };
+          },
+          inProgressId: function() {
+            return id;
+          },
+          title: function(){
+            return title;
           }
         }
       });

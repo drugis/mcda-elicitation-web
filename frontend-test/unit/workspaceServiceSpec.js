@@ -1,7 +1,5 @@
 'use strict';
 define(['angular', 'angular-mocks', 'mcda/services/workspaceService'], function() {
-
-
   describe('The WorkspaceService, ', function() {
     var workspaceService;
     var scalesServiceMock = jasmine.createSpyObj('ScalesService', ['getObservedScales']);

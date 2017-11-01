@@ -1,18 +1,28 @@
 <div class="grid-x">
   <div class="cell">
     <h3>Your workspaces</h3>
-    <div class="callout secondary">
-      <ul class="fontsize">
-        <li ng-repeat="workspace in workspacesList | orderBy:'title'">
-          <a class="fa fa-trash" style="color : red" ng-click="deleteWorkspace(workspace)">  </a>
-          <a ui-sref="evidence({workspaceId: workspace.id, problemId: workspace.defaultSubProblemId, id: workspace.defaultScenarioId})"> {{workspace.title}}</a>
-        </li>
-        <li ng-hide="workspacesList.length">No workspaces.</li>
-      </ul>
-    </div>
-
+  </div>
+  <div class="cell callout secondary">
+    <ul>
+      <li ng-repeat="workspace in workspacesList | orderBy:'title'">
+        <a class="fa fa-trash" style="color : red" ng-click="deleteWorkspace(workspace)">  </a>
+        <a ui-sref="evidence({workspaceId: workspace.id, problemId: workspace.defaultSubProblemId, id: workspace.defaultScenarioId})"> {{workspace.title}}</a>
+      </li>
+      <li ng-hide="workspacesList.length">No workspaces.</li>
+    </ul>
+  </div>
+  <div class="cell" ng-show="inProgressWorkspaces.length">
+    <h3>
+      Your workspaces with incomplete entry
+    </h3>
+    <ul>
+      <li ng-repeat="inProgressWorkspace in inProgressWorkspaces">
+        <a class="fa fa-trash" style="color : red" ng-click="deleteInProgress(inProgressWorkspace.id, inProgressWorkspace.state.state.title)">  </a>
+        <a ui-sref="manualInputInProgress({inProgressId: inProgressWorkspace.id})"> {{inProgressWorkspace.state.state.title}}</a>
+      </li>
+    </ul>
+  </div>
+  <div class="cell">
     <button id="create-workspace-btn" class="button" ng-click="openChooseProblemModal()"><i class="fa fa-plus"></i> Create workspace</button>
   </div>
 </div>
-
-

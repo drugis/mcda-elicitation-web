@@ -1,8 +1,5 @@
 'use strict';
-define(function(require) {
-  var angular = require('angular');
-  var _ = require('lodash');
-
+define(['angular', 'lodash'], function(angular, _) {
   var dependencies = ['ScalesService', 'sortCriteriaWithW'];
 
   var WorkspaceService = function(ScalesService, sortCriteriaWithW) {
