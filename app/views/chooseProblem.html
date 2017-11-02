@@ -17,8 +17,8 @@
     </h3>
     <ul>
       <li ng-repeat="inProgressWorkspace in inProgressWorkspaces">
-        <a class="fa fa-trash" style="color : red" ng-click="deleteInProgress(inProgressWorkspace.id, inProgressWorkspace.state.state.title)">  </a>
-        <a ui-sref="manualInputInProgress({inProgressId: inProgressWorkspace.id})"> {{inProgressWorkspace.state.state.title}}</a>
+        <a class="fa fa-trash" style="color : red" ng-click="deleteInProgress(inProgressWorkspace.id, inProgressWorkspace.state.title)">  </a>
+        <a ui-sref="manualInputInProgress({inProgressId: inProgressWorkspace.id})"> {{inProgressWorkspace.state.title}}</a>
       </li>
     </ul>
   </div>

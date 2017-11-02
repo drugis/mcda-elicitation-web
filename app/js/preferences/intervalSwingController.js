@@ -1,9 +1,5 @@
 'use strict';
-define(function(require) {
-  var angular = require('angular');
-  var _ = require('lodash');
-  var Util = require('mcda/controllers/helpers/util');
-  var Wizard = require('mcda/controllers/helpers/wizard');
+define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/helpers/wizard'], function(_, angular, Util, Wizard) {
 
   return function($scope, $state, $stateParams, $injector, $timeout, currentScenario, taskDefinition, PartialValueFunction) {
     $scope.pvf = PartialValueFunction;

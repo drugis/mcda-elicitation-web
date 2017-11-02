@@ -1,28 +1,16 @@
 'use strict';
-define(function(require) {
-  var angular = require('angular');
-  var _ = require('lodash');
+define(['lodash', 'angular'], function(_, angular) {
 
   var dependencies = [
     '$scope',
-    '$filter',
-    '$anchorScroll',
-    'sortCriteriaWithW',
     'PartialValueFunction',
-    'Tasks',
     'TaskDependencies',
-    'taskDefinition',
     'currentScenario'
   ];
   var PreferencesController = function(
     $scope,
-    $filter,
-    $anchorScroll,
-    sortCriteriaWithW,
     PartialValueFunction,
-    Tasks,
     TaskDependencies,
-    taskDefinition,
     currentScenario) {
 
     // functions

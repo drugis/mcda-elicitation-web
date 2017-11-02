@@ -3,6 +3,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
   describe('The manualInputService', function() {
     var manualInputService;
     beforeEach(module('elicit.manualInput'));
+    beforeEach(inject(function() {}));
     beforeEach(inject(function(ManualInputService) {
       manualInputService = ManualInputService;
     }));
@@ -119,37 +120,43 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           description: 'some crit description',
           unitOfMeasurement: 'particles',
           isFavorable: true,
-          hash: 'favorable criterion'
+          hash: 'favorable criterion',
+          dataType: 'continuous'
         }, {
           name: 'unfavorable criterion',
           description: 'some crit description',
           unitOfMeasurement: 'particles',
           isFavorable: false,
           hash: 'unfavorable criterion',
+          dataType: 'continuous'
         }];
         var performanceTable = {
           'favorable criterion': {
             'treatment1': {
               type: 'exact',
               value: 10,
-              hash: 'treatment1'
+              hash: 'treatment1',
+              source: 'distribution'
             },
             'treatment2': {
               type: 'exact',
               value: 5,
-              hash: 'treatment2'
+              hash: 'treatment2',
+              source: 'distribution'
             }
           },
           'unfavorable criterion': {
             'treatment1': {
               type: 'exact',
               value: 20,
-              hash: 'treatment1'
+              hash: 'treatment1',
+              source: 'distribution'
             },
             'treatment2': {
               type: 'exact',
               value: 30,
-              hash: 'treatment2'
+              hash: 'treatment2',
+              source: 'distribution'
             }
           }
         };
@@ -251,28 +258,28 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           'survival mean': {
             'treatment1': {
               type: 'dsurv',
-              alpha: 3,
-              beta: 5,
+              events: 3,
+              exposure: 5,
               hash: 'treatment1'
             },
             'treatment2': {
               type: 'dsurv',
-              alpha: 3,
-              beta: 5,
+              events: 3,
+              exposure: 5,
               hash: 'treatment2'
             }
           },
           'survival at time': {
             'treatment1': {
               type: 'dsurv',
-              alpha: 3,
-              beta: 5,
+              events: 3,
+              exposure: 5,
               hash: 'treatment1'
             },
             'treatment2': {
               type: 'dsurv',
-              alpha: 3,
-              beta: 5,
+              events: 3,
+              exposure: 5,
               hash: 'treatment2'
             }
           }
@@ -325,8 +332,8 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
             performance: {
               type: 'dsurv',
               parameters: {
-                alpha: 3,
-                beta: 5,
+                alpha: 3.001,
+                beta: 5.001,
                 summaryMeasure: 'mean'
               }
             }
@@ -336,8 +343,8 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
             performance: {
               type: 'dsurv',
               parameters: {
-                alpha: 3,
-                beta: 5,
+                alpha: 3.001,
+                beta: 5.001,
                 summaryMeasure: 'mean'
               }
             }
@@ -347,8 +354,8 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
             performance: {
               type: 'dsurv',
               parameters: {
-                alpha: 3,
-                beta: 5,
+                alpha: 3.001,
+                beta: 5.001,
                 summaryMeasure: 'survivalAtTime',
                 time: 3
               }
@@ -359,8 +366,8 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
             performance: {
               type: 'dsurv',
               parameters: {
-                alpha: 3,
-                beta: 5,
+                alpha: 3.001,
+                beta: 5.001,
                 summaryMeasure: 'survivalAtTime',
                 time: 3
               }
@@ -382,7 +389,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           beta: 11,
           type: 'dbeta'
         };
-        var dichotomousResult = manualInputService.createDistribution({}, dichotomousState, 'dichotomous');
+        var dichotomousResult = manualInputService.createDistribution(dichotomousState, 'dichotomous');
         expect(dichotomousResult).toEqual(expectedDichotomousResult);
 
         var survivalState = {
@@ -394,38 +401,41 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           beta: 100.001,
           type: 'dsurv'
         };
-        var survivalResult = manualInputService.createDistribution({}, survivalState, 'survival');
+        var survivalResult = manualInputService.createDistribution(survivalState, 'survival');
         expect(survivalResult).toEqual(expectedSurvivalResult);
 
         var continuousStandardErrorNormalState = {
           mu: 5,
-          stdErr: 0.5
+          stdErr: 0.5,
+          continuousType: 'SEnorm'
         };
         var expectedContinuousStandardErrorNormalResult = {
           mu: 5,
           sigma: 0.5,
           type: 'dnorm'
         };
-        var continuousStandardErrorNormalResult = manualInputService.createDistribution({}, continuousStandardErrorNormalState, 'continuous', 'SEnorm');
+        var continuousStandardErrorNormalResult = manualInputService.createDistribution(continuousStandardErrorNormalState, 'continuous');
         expect(continuousStandardErrorNormalResult).toEqual(expectedContinuousStandardErrorNormalResult);
 
         var continuousStandardDeviationNormalState = {
           mu: 5,
           sigma: 6,
-          sampleSize: 9
+          sampleSize: 9,
+          continuousType: 'SDnorm'
         };
         var expectedContinuousStandardDeviationNormalResult = {
           mu: 5,
           sigma: 2,
           type: 'dnorm'
         };
-        var continuousStandardDeviationNormalResult = manualInputService.createDistribution({}, continuousStandardDeviationNormalState, 'continuous', 'SDnorm');
+        var continuousStandardDeviationNormalResult = manualInputService.createDistribution(continuousStandardDeviationNormalState, 'continuous');
         expect(continuousStandardDeviationNormalResult).toEqual(expectedContinuousStandardDeviationNormalResult);
 
         var continuousStandardErrorStudentTState = {
           mu: 5,
           stdErr: 6,
-          sampleSize: 9
+          sampleSize: 9,
+          continuousType: 'SEt'
         };
         var expectedContinuousStandardErrorStudentTResult = {
           mu: 5,
@@ -433,13 +443,14 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           dof: 8,
           type: 'dt'
         };
-        var continuousStandardErrorStudentTResult = manualInputService.createDistribution({}, continuousStandardErrorStudentTState, 'continuous', 'SEt');
+        var continuousStandardErrorStudentTResult = manualInputService.createDistribution(continuousStandardErrorStudentTState, 'continuous');
         expect(continuousStandardErrorStudentTResult).toEqual(expectedContinuousStandardErrorStudentTResult);
 
         var continuousStandardDeviationStudentTState = {
           mu: 5,
           sigma: 6,
-          sampleSize: 9
+          sampleSize: 9,
+          continuousType: 'SDt'
         };
         var expectedContinuousStandardDeviationStudentTResult = {
           mu: 5,
@@ -447,7 +458,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           dof: 8,
           type: 'dt'
         };
-        var continuousStandardDeviationStudentTResult = manualInputService.createDistribution({}, continuousStandardDeviationStudentTState, 'continuous', 'SDt');
+        var continuousStandardDeviationStudentTResult = manualInputService.createDistribution(continuousStandardDeviationStudentTState, 'continuous');
         expect(continuousStandardDeviationStudentTResult).toEqual(expectedContinuousStandardDeviationStudentTResult);
 
       });
@@ -581,11 +592,11 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
 
     describe('inputToString', function() {
       describe('for exact effects', function() {
-        it('should give missing data for an incomplete effect', function() {
+        it('should give missing or invalid data for an incomplete effect', function() {
           var exact = {
             type: 'exact'
           };
-          expect(manualInputService.inputToString(exact)).toEqual('Missing input');
+          expect(manualInputService.inputToString(exact)).toEqual('Missing or invalid input');
         });
         it('should render a complete effect', function() {
           var exact = {
@@ -596,7 +607,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
         });
       });
       describe('for beta effects', function() {
-        it('should give missing data for an incomplete effect', function() {
+        it('should give missing or invalid  data for an incomplete effect', function() {
           var missingAlpha = {
             type: 'dbeta',
             beta: 20
@@ -608,9 +619,9 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           var missingBoth = {
             type: 'dbeta'
           };
-          expect(manualInputService.inputToString(missingAlpha)).toEqual('Missing input');
-          expect(manualInputService.inputToString(missingBeta)).toEqual('Missing input');
-          expect(manualInputService.inputToString(missingBoth)).toEqual('Missing input');
+          expect(manualInputService.inputToString(missingAlpha)).toEqual('Missing or invalid input');
+          expect(manualInputService.inputToString(missingBeta)).toEqual('Missing or invalid input');
+          expect(manualInputService.inputToString(missingBoth)).toEqual('Missing or invalid input');
         });
         it('should render a complete effect', function() {
           var beta = {
@@ -622,7 +633,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
         });
       });
       describe('for normal effects', function() {
-        it('should give missing data for an incomplete effect', function() {
+        it('should give missing or invalid  data or invalid for an incomplete effect', function() {
           var missingMu = {
             type: 'dnorm',
             sigma: 4
@@ -634,9 +645,9 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           var missingBoth = {
             type: 'dnorm'
           };
-          expect(manualInputService.inputToString(missingMu)).toEqual('Missing input');
-          expect(manualInputService.inputToString(missingSigma)).toEqual('Missing input');
-          expect(manualInputService.inputToString(missingBoth)).toEqual('Missing input');
+          expect(manualInputService.inputToString(missingMu)).toEqual('Missing or invalid input');
+          expect(manualInputService.inputToString(missingSigma)).toEqual('Missing or invalid input');
+          expect(manualInputService.inputToString(missingBoth)).toEqual('Missing or invalid input');
         });
         it('should render a complete effect', function() {
           var normal = {
@@ -648,7 +659,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
         });
       });
       describe('for t effects', function() {
-        it('should give missing data for an incomplete effect', function() {
+        it('should give missing or invalid  data for an incomplete effect', function() {
           var missingMu = {
             type: 'dt',
             stdErr: 4,
@@ -667,10 +678,10 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           var missingAll = {
             type: 'dt'
           };
-          expect(manualInputService.inputToString(missingMu)).toEqual('Missing input');
-          expect(manualInputService.inputToString(missingStdErr)).toEqual('Missing input');
-          expect(manualInputService.inputToString(missingDof)).toEqual('Missing input');
-          expect(manualInputService.inputToString(missingAll)).toEqual('Missing input');
+          expect(manualInputService.inputToString(missingMu)).toEqual('Missing or invalid input');
+          expect(manualInputService.inputToString(missingStdErr)).toEqual('Missing or invalid input');
+          expect(manualInputService.inputToString(missingDof)).toEqual('Missing or invalid input');
+          expect(manualInputService.inputToString(missingAll)).toEqual('Missing or invalid input');
         });
         it('should render a complete effect', function() {
           var t = {
@@ -683,7 +694,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
         });
       });
       describe('for surv effects', function() {
-        it('should give missing data for an incomplete effect', function() {
+        it('should give missing or invalid  data for an incomplete effect', function() {
           var missingAlpha = {
             type: 'dsurv',
             beta: 20
@@ -695,9 +706,9 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           var missingBoth = {
             type: 'dsurv'
           };
-          expect(manualInputService.inputToString(missingAlpha)).toEqual('Missing input');
-          expect(manualInputService.inputToString(missingBeta)).toEqual('Missing input');
-          expect(manualInputService.inputToString(missingBoth)).toEqual('Missing input');
+          expect(manualInputService.inputToString(missingAlpha)).toEqual('Missing or invalid input');
+          expect(manualInputService.inputToString(missingBeta)).toEqual('Missing or invalid input');
+          expect(manualInputService.inputToString(missingBoth)).toEqual('Missing or invalid input');
         });
         it('should render a complete effect', function() {
           var beta = {

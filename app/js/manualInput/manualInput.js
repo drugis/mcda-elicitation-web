@@ -1,17 +1,32 @@
 'use strict';
-define(function(require) {
-  var angular = require('angular');
+var requires = [
+  'mcda/manualInput/manualInputController',
+  'mcda/manualInput/addCriterionController',
+  'mcda/manualInput/manualInputService',
+  'mcda/manualInput/effectInputDirective',
+  'mcda/manualInput/effectInputHelperDirective',
+  'mcda/manualInput/inProgressResource'
+];
+define(['angular', 'angular-resource'].concat(requires), function(
+  angular,
+  ngResource,
+  ManualInputController,
+  AddCriterionController,
+  ManualInputService,
+  effectInput,
+  effectInputHelper,
+  InProgressResource
+) {
   return angular.module('elicit.manualInput', ['ngResource'])
 
-    .controller('ManualInputController', require('mcda/manualInput/manualInputController'))
-    .controller('AddCriterionController', require('mcda/manualInput/addCriterionController'))
+    .controller('ManualInputController', ManualInputController)
+    .controller('AddCriterionController', AddCriterionController)
 
-    .factory('ManualInputService', require('mcda/manualInput/manualInputService'))
+    .factory('ManualInputService', ManualInputService)
 
-    .directive('effectInput', require('mcda/manualInput/effectInputDirective'))
-    .directive('effectInputHelper', require('mcda/manualInput/effectInputHelperDirective'))
+    .directive('effectInput', effectInput)
+    .directive('effectInputHelper', effectInputHelper)
 
-    .service('InProgressResource', require('mcda/manualInput/inProgressResource'))
-    ;
+    .service('InProgressResource', InProgressResource);
 
-  });
+});

@@ -1,11 +1,20 @@
 'use strict';
-define(function(require) {
-  var angular = require('angular');
+var requires = [
+  'mcda/subProblem/subProblemController',
+  'mcda/subProblem/createSubProblemController',
+  'mcda/subProblem/subProblemService',
+  'mcda/subProblem/scaleRangeService'
+];
+define(['angular'].concat(requires), function(
+  angular,
+  SubProblemController,
+  CreateSubProblemController,
+  SubProblemService,
+  ScaleRangeService
+) {
   return angular.module('elicit.subProblem', [])
-
-    .controller('SubProblemController', require('mcda/subProblem/subProblemController'))
-    .controller('CreateSubProblemController', require('mcda/subProblem/createSubProblemController'))
-    .factory('SubProblemService', require('mcda/subProblem/subProblemService'))
-    .factory('ScaleRangeService', require('mcda/subProblem/scaleRangeService'));
-
-  });
+    .controller('SubProblemController', SubProblemController)
+    .controller('CreateSubProblemController', CreateSubProblemController)
+    .factory('SubProblemService', SubProblemService)
+    .factory('ScaleRangeService', ScaleRangeService);
+});

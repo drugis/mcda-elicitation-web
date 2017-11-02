@@ -1,13 +1,25 @@
 'use strict';
-define(function(require) {
-  var angular = require('angular');
+var requires = [
+'mcda/results/smaaResultsController',
+  'mcda/results/deterministicResultsController',
+  'mcda/results/sensitivityInputDirective',
+  'mcda/results/valueProfilePlotDirective',
+  'mcda/results/resultsService'
+];
+define(['angular'].concat(requires), function(
+  angular,
+  SmaaResultsController,
+  DeterministicResultsController,
+  sensitivityInputDirective,
+  valueProfilePlotDirective,
+  MCDAResultsService
+) {
   return angular.module('elicit.results', ['patavi', 'rzModule'])
 
-    .controller('SmaaResultsController', require('mcda/results/smaaResultsController'))
-    .controller('DeterministicResultsController', require('mcda/results/deterministicResultsController'))
-    .directive('sensitivityInput', require('mcda/results/sensitivityInputDirective'))
-    .directive('valueProfilePlot', require('mcda/results/valueProfilePlotDirective'))
-    .factory('MCDAResultsService', require('mcda/results/resultsService'))
-    ;
+    .controller('SmaaResultsController', SmaaResultsController)
+    .controller('DeterministicResultsController', DeterministicResultsController)
+    .directive('sensitivityInput', sensitivityInputDirective)
+    .directive('valueProfilePlot', valueProfilePlotDirective)
+    .factory('MCDAResultsService', MCDAResultsService);
 
-  });
+});

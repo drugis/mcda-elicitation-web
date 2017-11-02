@@ -24,7 +24,8 @@ define(['lodash'], function(_) {
         scope.continuous = {
           type: 'SEt'
         };
-        scope.inputState = {};
+        scope.inputState = _.cloneDeep(scope.inputData);
+        scope.inputState.continuousType = scope.inputState.continuousType ? scope.inputState.continuousType : 'SEt';
         scope.continuousOptions = [{
             label: 'Mean, SE (normal distribution)',
             short: 'SEnorm'
@@ -42,7 +43,8 @@ define(['lodash'], function(_) {
             short: 'SDt'
           }
         ];
-        scope.inputData.label = ManualInputService.inputToString(scope.inputData);
+        scope.inputData.label = ManualInputService.inputToString(
+          ManualInputService.createDistribution(scope.inputState, scope.studyType));
 
         scope.$on('open.af.dropdownToggle', function() {
           isEscPressed = false;
@@ -56,9 +58,11 @@ define(['lodash'], function(_) {
 
         function saveState() {
           $timeout(function() {
-            scope.inputData = ManualInputService.createDistribution(scope.inputData, scope.inputState, scope.studyType, scope.continuous.type);
-            scope.inputData.isInvalid = ManualInputService.isInvalidCell(scope.inputData);
-            scope.inputData.label = ManualInputService.inputToString(scope.inputData);
+            var distributionData = ManualInputService.createDistribution(
+              scope.inputState, scope.studyType);
+            scope.inputData = scope.inputState;
+            scope.inputData.isInvalid = ManualInputService.isInvalidCell(distributionData);
+            scope.inputData.label = ManualInputService.inputToString(distributionData);
             $timeout(function() {
               scope.changeCallback();
             });

@@ -21,7 +21,6 @@ module.exports = function(config) {
     // frameworks to use
     frameworks: ['jasmine', 'requirejs'],
 
-
     // list of files / patterns to load in the browser
     files: [
       'frontend-test/test-main.js',

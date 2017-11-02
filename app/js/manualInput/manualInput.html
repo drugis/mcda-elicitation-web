@@ -41,12 +41,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-if="!criteria.length">
+          <tr ng-if="!state.criteria.length">
             <td colspan="7">
               <em>No criteria defined</em>
             </td>
           </tr>
-          <tr ng-repeat="criterion in criteria">
+          <tr ng-repeat="criterion in state.criteria">
             <td>
               <a ng-click="removeCriterion(criterion)"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a>
               <a ng-click="openCriterionModal(criterion)"><i class="fa fa-edit icon-fixed-width"></i></a> {{criterion.name}}
@@ -72,9 +72,9 @@
       <span class="input-group-label">
         Treatment name
       </span>
-      <input class="text input-group-field" ng-model="state.treatmentInputField" onkeyup="if(event.keyCode===13) document.getElementById('treatmentButton').click()">
+      <input class="text input-group-field" ng-model="treatmentInputField.value" onkeyup="if(event.keyCode===13) document.getElementById('treatmentButton').click()">
       <div class="input-group-button">
-        <button ng-disabled="!state.treatmentInputField || isDuplicateName(state.treatmentInputField)" type="button" class="button tiny" ng-click="addTreatment(state.treatmentInputField)" id="treatmentButton"><i class="fa fa-plus"></i> Add Treatment</button>
+        <button ng-disabled="!treatmentInputField.value || isDuplicateName(treatmentInputField.value)" type="button" class="button tiny" ng-click="addTreatment(treatmentInputField.value)" id="treatmentButton"><i class="fa fa-plus"></i> Add Treatment</button>
       </div>
     </div>
   </div>
@@ -87,12 +87,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-if="!treatments.length">
+          <tr ng-if="!state.treatments.length">
             <td>
               <em>No treatments defined</em>
             </td>
           </tr>
-          <tr ng-repeat="treatment in treatments">
+          <tr ng-repeat="treatment in state.treatments">
             <td><a ng-click="removeTreatment(treatment)"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a> {{treatment.name}}
             </td>
           </tr>
@@ -102,18 +102,18 @@
   </div>
   <div class="grid-x">
     <div class="cell">
-      <button class="button" ng-disabled="!state.title || criteria.length < 2|| treatments.length < 2" type="button" ng-click="goToStep2()">
+      <button class="button" ng-disabled="!state.title || state.criteria.length < 2|| state.treatments.length < 2" type="button" ng-click="goToStep2()">
         Enter data
       </button>
-      <button class="button" ng-click="saveInProgress()" ng-disabled="!state.title">Save</button>
+      <button class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty">Save</button>
     </div>
     <div class="cell" ng-if="!state.title">
       <em>Missing title</em>
     </div>
-    <div class="cell" ng-if="criteria.length < 2">
+    <div class="cell" ng-if="state.criteria.length < 2">
       <em>Two criteria required</em>
     </div>
-    <div class="cell" ng-if="treatments.length < 2">
+    <div class="cell" ng-if="state.treatments.length < 2">
       <em>Two treatments required</em>
     </div>
   </div>
@@ -132,8 +132,8 @@
     </div>
     <div class="cell">
       <form>
-        <label><input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="study"> Study data</label>
-        <label><input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="distribution"> Effect distributions</label>
+        <label><input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="study">Study data</label>
+        <label><input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="distribution">Exact values and effect distributions</label>
       </form>
     </div>
   </div>
@@ -145,14 +145,14 @@
         <thead>
           <tr>
             <th></th>
-            <th ng-repeat="treatment in treatments" style="min-width:80px">{{treatment.name}}</th>
+            <th ng-repeat="treatment in state.treatments" style="min-width:80px">{{treatment.name}}</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="criterion in criteria">
+          <tr ng-repeat="criterion in state.criteria">
             <td>{{criterion.name}}</td>
-            <td ng-repeat="treatment in treatments">
-              <effect-input criterion="criterion" treatment="treatment" input-data="inputData[criterion.hash][treatment.hash]" change-callback="checkInputData"></effect-input>
+            <td ng-repeat="treatment in state.treatments">
+              <effect-input criterion="criterion" treatment="treatment" input-data="state.inputData[criterion.hash][treatment.hash]" change-callback="checkInputData"></effect-input>
             </td>
           </tr>
         </tbody>
@@ -167,14 +167,14 @@
         <thead>
           <tr>
             <th></th>
-            <th ng-repeat="treatment in treatments" style="min-width:80px">{{treatment.name}}</th>
+            <th ng-repeat="treatment in state.treatments" style="min-width:80px">{{treatment.name}}</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="criterion in criteria">
+          <tr ng-repeat="criterion in state.criteria">
             <td>{{criterion.name}}</td>
-            <td ng-repeat="treatment in treatments">
-              <effect-input-helper criterion="criterion" treatment="treatment" input-data="inputData[criterion.hash][treatment.hash]" study-type="criterion.dataType" change-callback="checkInputData"></effect-input-helper>
+            <td ng-repeat="treatment in state.treatments">
+              <effect-input-helper criterion="criterion" treatment="treatment" input-data="state.inputData[criterion.hash][treatment.hash]" study-type="criterion.dataType" change-callback="checkInputData"></effect-input-helper>
             </td>
           </tr>
         </tbody>
@@ -187,7 +187,7 @@
       <button ng-disabled="!state.isInputDataValid" class="button" type="button" ng-click="createProblem()">
         Done
       </button>
-      <button class="button" ng-click="saveInProgress()">Save</button>
+      <button class="button" ng-click="saveInProgress()" ng-disabled="!dirty">Save</button>
       <button type="button" ng-click="goToStep1()" type="button" class="button">Back</button>
       <div ng-if="!state.isInputDataValid">
         <em>Invalid input data</em>

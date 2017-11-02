@@ -1,13 +1,12 @@
 'use strict';
-define(['lodash', 'angular'], function(_) {
-
-  var dependencies = ['$scope', '$modal', '$state', '$stateParams',
+define(['lodash', 'angular'], function(_, angular) {
+  var dependencies = ['$scope', '$modal', '$state', '$stateParams', '$transitions',
     'InProgressResource',
     'ManualInputService',
     'WorkspaceResource',
     'addKeyHashToObject'
   ];
-  var ManualInputController = function($scope, $modal, $state, $stateParams,
+  var ManualInputController = function($scope, $modal, $state, $stateParams, $transitions,
     InProgressResource,
     ManualInputService,
     WorkspaceResource,
@@ -20,70 +19,90 @@ define(['lodash', 'angular'], function(_) {
     $scope.removeTreatment = removeTreatment;
     $scope.isDuplicateName = isDuplicateName;
     $scope.goToStep1 = goToStep1;
-    $scope.goToStep2 = goToStep2;
-    $scope.createProblem = createProblem;
+    $scope.goToStep2 = goToStep2;    $scope.createProblem = createProblem;
     $scope.removeCriterion = removeCriterion;
     $scope.checkInputData = checkInputData;
     $scope.resetData = resetData;
     $scope.resetRow = resetRow;
     $scope.saveInProgress = saveInProgress;
 
-    // vars
-    $scope.criteria = [];
-    $scope.treatments = [];
-    $scope.state = initState();
+    // init
+    $scope.treatmentInputField = {}; //scoping
+    initState();
+
+    $transitions.onStart({}, function(transition) {
+      if ($scope.dirty) {
+        var answer = confirm('There are unsaved changes, are you sure you want to leave this page?');
+        if (!answer) {
+          transition.abort();
+        } else {
+          $scope.dirty = false;
+        }
+      }
+    });
 
     function initState() {
       if (!$stateParams.inProgressId) {
-        return {
+        $scope.state = {
           step: 'step1',
-          treatmentInputField: '',
-          isInputDataValid: false
+          isInputDataValid: false,
+          criteria: [],
+          treatments: []
         };
+        setStateWatcher();
       } else {
         InProgressResource.get($stateParams).$promise.then(function(response) {
-          $scope = _.merge($scope, response.state);
+          $scope.state = response.state;
+          setStateWatcher();
         });
       }
     }
 
+    function setStateWatcher() {
+      $scope.$watch('state', function(newValue, oldValue) {
+        if (!angular.equals(newValue, oldValue)) {
+          $scope.dirty = true;
+        }
+      }, true);
+    }
+
     function resetData() {
-      $scope.inputData = ManualInputService.prepareInputData($scope.criteria, $scope.treatments, $scope.state.inputMethod);
+      $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.treatments, $scope.state.inputMethod);
       $scope.state.studyType = resetStudyTypes();
       $scope.state.isInputDataValid = false;
     }
 
     function resetStudyTypes() {
-      return _.reduce($scope.criteria, function(accum, criterion) {
+      return _.reduce($scope.state.criteria, function(accum, criterion) {
         accum[criterion.hash] = 'dichotomous';
         return accum;
       }, {});
     }
 
     function resetRow(hash) {
-      _.forEach($scope.inputData[hash], function(cell) {
+      _.forEach($scope.state.inputData[hash], function(cell) {
         cell.label = 'No data entered';
         cell.isInvalid = true;
       });
     }
 
     function addTreatment(name) {
-      $scope.treatments.push({
+      $scope.state.treatments.push({
         name: name
       });
-      $scope.state.treatmentInputField = '';
+      $scope.treatmentInputField.value = '';
     }
 
     function removeTreatment(treatment) {
-      $scope.treatments = _.reject($scope.treatments, ['name', treatment.name]);
+      $scope.state.treatments = _.reject($scope.state.treatments, ['name', treatment.name]);
     }
 
     function isDuplicateName(name) {
-      return _.find($scope.treatments, ['name', name]);
+      return _.find($scope.state.treatments, ['name', name]);
     }
 
     function removeCriterion(criterion) {
-      $scope.criteria = _.reject($scope.criteria, ['name', criterion.name]);
+      $scope.state.criteria = _.reject($scope.state.criteria, ['name', criterion.name]);
     }
 
     function openCriterionModal(criterion) {
@@ -92,14 +111,14 @@ define(['lodash', 'angular'], function(_) {
         controller: 'AddCriterionController',
         resolve: {
           criteria: function() {
-            return $scope.criteria;
+            return $scope.state.criteria;
           },
           callback: function() {
             return function(newCriterion) {
               if (criterion) { // editing not adding
                 removeCriterion(criterion);
               }
-              $scope.criteria.push(newCriterion);
+              $scope.state.criteria.push(newCriterion);
             };
           },
           oldCriterion: function() {
@@ -110,7 +129,7 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function checkInputData() {
-      $scope.state.isInputDataValid = !_.find($scope.inputData, function(row) {
+      $scope.state.isInputDataValid = !_.find($scope.state.inputData, function(row) {
         return _.find(row, 'isInvalid');
       });
     }
@@ -122,21 +141,21 @@ define(['lodash', 'angular'], function(_) {
     function goToStep2() {
       $scope.state.step = 'step2';
       $scope.state.inputMethod = $scope.state.inputMethod ? $scope.state.inputMethod : 'study';
-      $scope.treatments = _.map($scope.treatments, function(treatment) {
+      $scope.state.treatments = _.map($scope.state.treatments, function(treatment) {
         return addKeyHashToObject(treatment, treatment.name);
       });
-      $scope.criteria = _.map($scope.criteria, function(criterion) {
+      $scope.state.criteria = _.map($scope.state.criteria, function(criterion) {
         return addKeyHashToObject(criterion, criterion.name);
       });
       $scope.state.studyType = $scope.state.studyType ? $scope.state.studyType : resetStudyTypes();
-      $scope.inputData = ManualInputService.prepareInputData($scope.criteria, $scope.treatments, $scope.inputMethod, $scope.inputData);
+      $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.treatments, $scope.inputMethod, $scope.state.inputData);
     }
 
     function createProblem() {
-      var problem = ManualInputService.createProblem($scope.criteria, $scope.treatments,
-        $scope.state.title, $scope.state.description, $scope.inputData);
+      var problem = ManualInputService.createProblem($scope.state.criteria, $scope.state.treatments,
+        $scope.state.title, $scope.state.description, $scope.state.inputData);
       WorkspaceResource.create(problem).$promise.then(function(workspace) {
-        InProgressResource.delete($stateParams); 
+        InProgressResource.delete($stateParams);
         $state.go('evidence', {
           workspaceId: workspace.id,
           problemId: workspace.defaultSubProblemId,
@@ -147,17 +166,14 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function saveInProgress() {
-      var blob = {
-        criteria: $scope.criteria,
-        treatments: $scope.treatments,
-        inputData: $scope.inputData,
-        state: $scope.state
-      };
+      $scope.dirty = false;
       if ($stateParams.inProgressId) {
-        InProgressResource.put($stateParams, blob);
+        InProgressResource.put($stateParams, $scope.state);
       } else {
-        InProgressResource.save(blob).$promise.then(function(response){
-          $state.go('manualInputInProgress', {inProgressId: response.id});
+        InProgressResource.save($scope.state).$promise.then(function(response) {
+          $state.go('manualInputInProgress', {
+            inProgressId: response.id
+          });
         });
       }
     }

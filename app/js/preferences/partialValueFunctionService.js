@@ -1,8 +1,5 @@
 'use strict';
-define(function(require) {
-  var angular = require('angular');
-  var _ = require('lodash');
-
+define(['lodash', 'angular'], function(_, angular) {
   return angular.module('elicit.pvfService', []).factory('PartialValueFunction', function() {
     function findIndexOfFirstLargerElement(arr, val) {
       return _.indexOf(arr, _.find(arr, function(elm) {

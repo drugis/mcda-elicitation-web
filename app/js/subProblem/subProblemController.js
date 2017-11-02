@@ -1,7 +1,5 @@
 'use strict';
-define(['clipboard', 'require'],function(Clipboard, require) {
-  require('angular');
-  var _ = require('lodash');
+define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
 
   var dependencies = ['$scope', '$stateParams', '$modal', '$state',
     'intervalHull', 'SubProblemService', 'mcdaRootPath'

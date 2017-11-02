@@ -5,16 +5,11 @@ define(['lodash', 'angular'], function(_) {
     var distributionKnowledge = {
       exact: {
         toString: function(input) {
-          if (distributionKnowledge.exact.isMissingInput(input)) {
-            return 'Missing input';
-          } else if (distributionKnowledge.exact.isInvalidInput(input)) {
-            return 'Invalid input';
+          if (distributionKnowledge.exact.isInvalidInput(input)) {
+            return 'Missing or invalid input';
           } else {
             return 'exact(' + input.value + ')';
           }
-        },
-        isMissingInput: function(input) {
-          return isNullOrUndefined(input.value);
         },
         isInvalidInput: function(input) {
           return isNullNaNOrUndefined(input.value);
@@ -25,16 +20,11 @@ define(['lodash', 'angular'], function(_) {
       },
       dnorm: {
         toString: function(input) {
-          if (distributionKnowledge.dnorm.isMissingInput(input)) {
-            return 'Missing input';
-          } else if (distributionKnowledge.dnorm.isInvalidInput(input)) {
-            return 'Invalid input';
+          if (distributionKnowledge.dnorm.isInvalidInput(input)) {
+            return 'Missing or invalid input';
           } else {
             return 'N(' + numberFilter(input.mu, 3) + ', ' + input.sigma + ')';
           }
-        },
-        isMissingInput: function(input) {
-          return isNullOrUndefined(input.mu) || isNullOrUndefined(input.sigma);
         },
         isInvalidInput: function(input) {
           return isNullNaNOrUndefined(input.mu) || isNullNaNOrUndefined(input.sigma);
@@ -48,16 +38,11 @@ define(['lodash', 'angular'], function(_) {
       },
       dbeta: {
         toString: function(input) {
-          if (distributionKnowledge.dbeta.isMissingInput(input)) {
-            return 'Missing input';
-          } else if (distributionKnowledge.dbeta.isInvalidInput(input)) {
-            return 'Invalid input';
+          if (distributionKnowledge.dbeta.isInvalidInput(input)) {
+            return 'Missing or invalid input';
           } else {
             return 'Beta(' + input.alpha + ', ' + input.beta + ')';
           }
-        },
-        isMissingInput: function(input) {
-          return isNullOrUndefined(input.alpha) || isNullOrUndefined(input.beta);
         },
         isInvalidInput: function(input) {
           return isNullNaNOrUndefined(input.alpha) || input.alpha <= 0 || isNullNaNOrUndefined(input.beta) || input.beta <= 0;
@@ -71,16 +56,11 @@ define(['lodash', 'angular'], function(_) {
       },
       dt: {
         toString: function(input) {
-          if (distributionKnowledge.dt.isMissingInput(input)) {
-            return 'Missing input';
-          } else if (distributionKnowledge.dt.isInvalidInput(input)) {
-            return 'Invalid input';
+          if (distributionKnowledge.dt.isInvalidInput(input)) {
+            return 'Missing or invalid input';
           } else {
             return 't(' + input.mu + ', ' + input.stdErr + ', ' + input.dof + ')';
           }
-        },
-        isMissingInput: function(input) {
-          return isNullOrUndefined(input.mu) || isNullOrUndefined(input.stdErr) || isNullOrUndefined(input.dof);
         },
         isInvalidInput: function(input) {
           return isNullNaNOrUndefined(input.mu) || isNullNaNOrUndefined(input.stdErr) || isNullNaNOrUndefined(input.dof);
@@ -94,16 +74,11 @@ define(['lodash', 'angular'], function(_) {
       },
       dsurv: {
         toString: function(input) {
-          if (distributionKnowledge.dsurv.isMissingInput(input)) {
-            return 'Missing input';
-          } else if (distributionKnowledge.dsurv.isInvalidInput(input)) {
-            return 'Invalid input';
+          if (distributionKnowledge.dsurv.isInvalidInput(input)) {
+            return 'Missing or invalid input';
           } else {
             return 'Gamma(' + input.alpha + ', ' + input.beta + ')';
           }
-        },
-        isMissingInput: function(input) {
-          return isNullOrUndefined(input.alpha) || isNullOrUndefined(input.beta);
         },
         isInvalidInput: function(input) {
           return isNullNaNOrUndefined(input.alpha) || input.alpha <= 0 || isNullNaNOrUndefined(input.beta) || input.beta <= 0;
@@ -149,12 +124,27 @@ define(['lodash', 'angular'], function(_) {
         oldInput.type === 'dsurv' && newDataType !== 'survival';
     }
 
+    function determineInitialDistributionType(source, criterion) {
+      if (source === 'study') {
+        if (criterion.dataType === 'survival') {
+          return 'dsurv';
+        } else if (criterion.dataType === 'dichotomous') {
+          return 'dbeta';
+        } else if (criterion.dataType === 'continuous') {
+          return 'dt';
+        }
+      } else { // direct distribution input
+        return criterion.dataType === 'survival' ? 'dsurv' : 'exact';
+      }
+
+    }
+
     function prepareInputData(criteria, treatments, source, oldInputData) {
       var inputData = {};
       _.forEach(criteria, function(criterion) {
         inputData[criterion.hash] = {};
         var defaultData = {
-          type: criterion.dataType === 'survival' ? 'dsurv' : 'exact',
+          type: determineInitialDistributionType(source, criterion),
           value: undefined,
           source: source,
           isInvalid: true
@@ -172,31 +162,37 @@ define(['lodash', 'angular'], function(_) {
       return inputData;
     }
 
-    function createDistribution(inputData, inputState, studyType, continuousType) {
-      var newData = _.cloneDeep(inputData);
-      if (studyType === 'dichotomous') {
+    function createDistribution(inputState, criterionType) {
+      // Distribution input
+      if (inputState.source === 'distribution') {
+        return inputState;
+      }
+
+      // Study data input
+      var newData = {};
+      if (criterionType === 'dichotomous') {
         newData.alpha = inputState.count + 1;
         newData.beta = inputState.sampleSize - inputState.count + 1;
         newData.type = 'dbeta';
-      } else if (studyType === 'continuous') {
-        newData.mu = inputState.mu;
-        if (continuousType === 'SEnorm') {
+      } else if (criterionType === 'continuous') {
+        newData.mu = inputState.mu; // All these possibilities have a mu
+        if (inputState.continuousType === 'SEnorm') {
           newData.sigma = inputState.stdErr;
           newData.type = 'dnorm';
-        } else if (continuousType === 'SDnorm') {
+        } else if (inputState.continuousType === 'SDnorm') {
           newData.sigma = inputState.sigma / Math.sqrt(inputState.sampleSize);
           newData.type = 'dnorm';
-        } else if (continuousType === 'SEt') {
+        } else if (inputState.continuousType === 'SEt') {
           newData.stdErr = inputState.stdErr;
           newData.dof = inputState.sampleSize - 1;
           newData.type = 'dt';
-        } else if (continuousType === 'SDt') {
+        } else if (inputState.continuousType === 'SDt') {
           newData.stdErr = inputState.sigma / Math.sqrt(inputState.sampleSize);
           newData.dof = inputState.sampleSize - 1;
           newData.type = 'dt';
         }
-      } else {
-        //survival
+      } else if (criterionType === 'survival') {
+        // survival
         if (_.isNumber(inputState.events) && _.isNumber(inputState.exposure)) {
           newData.alpha = inputState.events + 0.001;
           newData.beta = inputState.exposure + 0.001;
@@ -257,7 +253,7 @@ define(['lodash', 'angular'], function(_) {
       var newPerformanceTable = [];
       _.forEach(criteria, function(criterion) {
         _.forEach(treatments, function(treatment) {
-          var data = inputData[criterion.hash][treatment.hash];
+          var data = createDistribution(inputData[criterion.hash][treatment.hash], criterion.dataType);
           newPerformanceTable.push({
             alternative: treatment.name,
             criterion: criterion.name,
@@ -279,8 +275,6 @@ define(['lodash', 'angular'], function(_) {
     function inputToString(inputData) {
       return distributionKnowledge[inputData.type].toString(inputData);
     }
-
-
 
     return {
       createProblem: createProblem,

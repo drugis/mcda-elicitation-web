@@ -1,12 +1,26 @@
 'use strict';
-define(function(require) {
-  var angular = require('angular');
+var requires = [
+  'mcda/benefitRisk/mcdaBenefitRiskController',
+  'mcda/preferences/preferencesController',
+  'mcda/preferences/partialValueFunctionController',
+  'mcda/preferences/ordinalSwingController',
+  'mcda/preferences/intervalSwingController',
+  'mcda/preferences/exactSwingController'
+];
+define(['angular'].concat(requires), function(
+  angular,
+  MCDABenefitRiskController,
+  PreferencesController,
+  PartialValueFunctionController,
+  OrdinalSwingController,
+  IntervalSwingController,
+  ExactSwingController
+) {
   return angular.module('elicit.controllers', ['elicit.effectsTableService', 'elicit.util'])
-    .controller('MCDABenefitRiskController', require('mcda/benefitRisk/mcdaBenefitRiskController'))
-    .controller('PreferencesController', require('mcda/preferences/preferencesController'))
-    .controller('PartialValueFunctionController', require('mcda/preferences/partialValueFunctionController'))
-    .controller('OrdinalSwingController', require('mcda/preferences/ordinalSwingController'))
-    .controller('IntervalSwingController', require('mcda/preferences/intervalSwingController'))
-    .controller('ExactSwingController', require('mcda/preferences/exactSwingController'))
-    ;
+    .controller('MCDABenefitRiskController', MCDABenefitRiskController)
+    .controller('PreferencesController', PreferencesController)
+    .controller('PartialValueFunctionController', PartialValueFunctionController)
+    .controller('OrdinalSwingController', OrdinalSwingController)
+    .controller('IntervalSwingController', IntervalSwingController)
+    .controller('ExactSwingController', ExactSwingController);
 });

@@ -1,7 +1,5 @@
 'use strict';
-define(function(require) {
-  require('angular');
-  var _ = require('lodash');
+define(['lodash', 'angular'], function(_, angular) {
 
   var dependencies = ['$scope', '$stateParams', '$modalInstance', '$timeout',
     'ScenarioResource', 'SubProblemResource',

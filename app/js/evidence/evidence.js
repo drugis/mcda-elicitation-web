@@ -1,10 +1,14 @@
 'use strict';
-define(function(require) {
-  var angular = require('angular');
+var requires = [
+  'mcda/evidence/evidenceController',
+  'mcda/evidence/editTherapeuticContextController'
+];
+define(['angular'].concat(requires), function(
+  angular,
+  EvidenceController,
+  EditTherapeuticContextController
+) {
   return angular.module('elicit.evidence', [])
-
-    .controller('EvidenceController', require('mcda/evidence/evidenceController'))
-    .controller('EditTherapeuticContextController', require('mcda/evidence/editTherapeuticContextController'))
-		;
-
-  });
+    .controller('EvidenceController', EvidenceController)
+    .controller('EditTherapeuticContextController', EditTherapeuticContextController);
+});

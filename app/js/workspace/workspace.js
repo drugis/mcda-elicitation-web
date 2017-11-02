@@ -1,12 +1,26 @@
 'use strict';
-define(function(require) {
-  var angular = require('angular');
+var requires = [
+  'mcda/workspace/chooseProblemController',
+  'mcda/workspace/createWorkspaceController',
+  'mcda/workspace/deleteWorkspaceController',
+  'mcda/workspace/deleteInProgressController',
+  'mcda/workspace/workspaceController',
+  'mcda/workspace/exampleResource'
+];
+define(['angular'].concat(requires), function(
+  angular,
+  ChooseProblemController,
+  CreateWorkspaceController,
+  DeleteWorkspaceController,
+  DeleteInProgressController,
+  WorkspaceController,
+  ExampleResource
+) {
   return angular.module('elicit.workspace', [])
-    .controller('ChooseProblemController', require('mcda/workspace/chooseProblemController'))
-    .controller('CreateWorkspaceController', require('mcda/workspace/createWorkspaceController'))
-    .controller('DeleteWorkspaceController', require('mcda/workspace/deleteWorkspaceController'))
-    .controller('DeleteInProgressController', require('mcda/workspace/deleteInProgressController'))
-    .controller('WorkspaceController', require('mcda/workspace/workspaceController'))
-    .service('ExampleResource', require('mcda/workspace/exampleResource'))
-    ;
-  });
+    .controller('ChooseProblemController', ChooseProblemController)
+    .controller('CreateWorkspaceController', CreateWorkspaceController)
+    .controller('DeleteWorkspaceController', DeleteWorkspaceController)
+    .controller('DeleteInProgressController', DeleteInProgressController)
+    .controller('WorkspaceController', WorkspaceController)
+    .service('ExampleResource', ExampleResource);
+});
