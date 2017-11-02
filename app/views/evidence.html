@@ -28,7 +28,7 @@
     </button>
   </div>
   <div class="cell">
-    <table data-mode="columntoggle" class="full-width effects-table" id="effectstable">
+    <table class="full-width effects-table" id="effectstable">
       <thead>
         <tr>
           <th>Criterion</th>
@@ -42,7 +42,8 @@
         <tr ng-repeat-start="effectsTableRow in effectsTableData" ng-show="effectsTableRow.path.length > 0">
           <td class="group-header" colspan="{{(references.has ? 4 : 3) + nrAlternatives}}">
             <div class="main-header">
-              {{effectsTableRow.path[0].title}}</div>
+              {{effectsTableRow.path[0].title}}
+            </div>
             <span ng-repeat="node in effectsTableRow.path.slice(1)">
               <i style="font-size: 1.5rem" class="fa fa-angle-right"></i>
               <div class="secondary-header">
@@ -53,7 +54,9 @@
         </tr>
         <tr ng-repeat-end ng-repeat="criterion in effectsTableRow.criteria track by $index">
           <td>
-            {{criterion.value.title}}
+            <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editCriterion(criterion)">
+              <i class="fa fa-edit"></i>
+            </a>{{criterion.value.title}}
           </td>
           <td>
             <div class="td-container">

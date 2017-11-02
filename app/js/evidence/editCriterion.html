@@ -1,0 +1,25 @@
+<form ng-submit="save()">
+  <div class="grid-x">
+    <div class="cell">
+      <h3> Edit criterion</h3>
+    </div>
+    <div class="cell">
+      <h5>Name</h5>
+    </div>
+    <div class="cell">
+      <input class="text"  ng-model="criterion.value.title">
+    </div>
+    <div class="cell">
+      <h5>Description</h5>
+    </div>
+    <div class="cell">
+      <textarea rows="8" ng-model="criterion.value.description"></textarea>
+    </div>
+    <div class="cell">
+      <button class="button success" type="submit">Save</button>
+    </div>
+    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</form>

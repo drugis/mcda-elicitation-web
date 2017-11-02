@@ -14,6 +14,7 @@ define(['clipboard', 'require'], function(Clipboard, require) {
     // functions
     $scope.isExact = isExact;
     $scope.editTherapeuticContext = editTherapeuticContext;
+    $scope.editCriterion = editCriterion;
 
     // init
     $scope.scales = $scope.workspace.scales.observed;
@@ -53,6 +54,25 @@ define(['clipboard', 'require'], function(Clipboard, require) {
           callback: function() {
             return function(newTherapeuticContext) {
               $scope.problem.description = newTherapeuticContext;
+              WorkspaceResource.save($stateParams, $scope.workspace);
+            };
+          }
+        }
+      });
+    }
+
+    function editCriterion(criterion) {
+      $modal.open({
+        templateUrl: '/app/js/evidence/editCriterion.html',
+        controller: 'EditCriterionController',
+        resolve: {
+          criterion: function() {
+            return criterion;
+          },
+          callback: function() {
+            return function(newCriterion) {
+              criterion = newCriterion;
+              $scope.effectsTableData = EffectsTableService.buildEffectsTableData($scope.problem, $scope.valueTree);
               WorkspaceResource.save($stateParams, $scope.workspace);
             };
           }
