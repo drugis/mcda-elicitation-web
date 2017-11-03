@@ -8,9 +8,7 @@ define(['lodash'], function(_) {
     $scope.criterion = _.cloneDeep(criterion);
 
     function save() {
-      var obj={};
-      obj[$scope.criterion.value.title] = $scope.criterion.value;
-      callback(obj);
+      callback($scope.criterion);
       $modalInstance.close();
     }
 

@@ -1,14 +1,20 @@
 'use strict';
 define(['clipboard', 'require'], function(Clipboard, require) {
   var _ = require('lodash');
-  var dependencies = ['$scope', '$stateParams', '$modal',
+  var dependencies = ['$scope', '$state', '$stateParams', '$modal', '$q',
     'EffectsTableService',
+    'EvidenceService',
+    'SubProblemResource',
+    'ScenarioResource',
     'WorkspaceResource',
     'mcdaRootPath'
   ];
 
-  var EvidenceController = function($scope, $stateParams, $modal,
+  var EvidenceController = function($scope, $state, $stateParams, $modal, $q,
     EffectsTableService,
+    EvidenceService,
+    SubProblemResource,
+    ScenarioResource,
     WorkspaceResource,
     mcdaRootPath) {
     // functions
@@ -26,7 +32,7 @@ define(['clipboard', 'require'], function(Clipboard, require) {
     $scope.references = {
       has: _.find($scope.effectsTableData, function(effectsTableRow) {
         return _.find(effectsTableRow.criteria, function(criterion) {
-          return criterion.value.source;
+          return criterion.source;
         });
       })
     };
@@ -71,9 +77,32 @@ define(['clipboard', 'require'], function(Clipboard, require) {
           },
           callback: function() {
             return function(newCriterion) {
-              criterion = newCriterion;
-              $scope.effectsTableData = EffectsTableService.buildEffectsTableData($scope.problem, $scope.valueTree);
-              WorkspaceResource.save($stateParams, $scope.workspace);
+              $scope.workspace.problem = EvidenceService.editCriterion(criterion, newCriterion, $scope.problem);
+              var workspacePromise = WorkspaceResource.save($stateParams, $scope.workspace).$promise;
+              if (criterion.title !== newCriterion.title) {
+                var subProblemPromises;
+                SubProblemResource.query().$promise.then(function(subProblems) {
+                  var newProblems = EvidenceService.renameCriterionInSubProblems(criterion, newCriterion, subProblems);
+                  subProblemPromises = _.map(newProblems, function(newProblem) {
+                    return SubProblemResource.save(newProblem).$promise;
+                  });
+                });
+
+                var scenarioPromises;
+                ScenarioResource.query().$promise.then(function(scenarios) {
+                  var newScenarios = EvidenceService.renameCriterionInScenarios(criterion, newCriterion, scenarios);
+                  scenarioPromises = _.map(newScenarios, function(newScenario) {
+                    return ScenarioResource.save(newScenario).$promise;
+                  });
+                });
+
+                $q.all(subProblemPromises.concat(scenarioPromises).concat([workspacePromise])).then($state.reload);
+
+              } else {
+                workspacePromise.then(function() {
+                  $state.reload();
+                });
+              }
             };
           }
         }

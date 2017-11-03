@@ -4,22 +4,44 @@
       <h3> Edit criterion</h3>
     </div>
     <div class="cell">
-      <h5>Name</h5>
+      <label>Name</label>
     </div>
     <div class="cell">
-      <input class="text"  ng-model="criterion.value.title">
+      <input type="text" ng-model="criterion.title">
     </div>
     <div class="cell">
-      <h5>Description</h5>
+      <label>Description</label>
     </div>
     <div class="cell">
-      <textarea rows="8" ng-model="criterion.value.description"></textarea>
+      <textarea rows="4" ng-model="criterion.description"></textarea>
     </div>
     <div class="cell">
-      <button class="button success" type="submit">Save</button>
+      <label>Unit of measurement</label>
     </div>
-    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <div class="cell">
+      <input type="text" ng-model="criterion.unitOfMeasurement">
+    </div>
+    <div class="cell">
+      <label>Source</label>
+    </div>
+    <div class="cell">
+      <input type="radio" ng-model="criterion.source" ng-value="undefined" id="no-source">
+      <label for="no-source">None</label>
+      <input type="radio" ng-model="criterion.source" ng-value="'study'" id="study">
+      <label for="study">Single study</label>
+      <input type="radio" ng-model="criterion.source" ng-value="'meta analysis'" id="meta-analysis">
+      <label for="meta-analysis">Meta analysis</label>
+    </div>
+    <div class="cell">
+      <label>Source link</label>
+    </div>
+    <div class="cell">
+      <input type="text" ng-disabled="criterion.source === undefined" ng-model="criterion.sourceLink">
+    </div>
+    <button class="button success" type="submit">Save</button>
+  </div>
+  <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+    <span aria-hidden="true">&times;</span>
+  </button>
   </div>
 </form>

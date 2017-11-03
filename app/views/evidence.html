@@ -54,7 +54,7 @@
         </tr>
         <tr ng-repeat-end ng-repeat="criterion in effectsTableRow.criteria track by $index">
           <td>
-            <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editCriterion(criterion)">
+            <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editCriterion(problem.criteria[criterion.key])">
               <i class="fa fa-edit"></i>
             </a>{{criterion.value.title}}
           </td>

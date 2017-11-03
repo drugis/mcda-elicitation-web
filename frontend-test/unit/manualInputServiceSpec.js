@@ -3,7 +3,6 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
   describe('The manualInputService', function() {
     var manualInputService;
     beforeEach(module('elicit.manualInput'));
-    beforeEach(inject(function() {}));
     beforeEach(inject(function(ManualInputService) {
       manualInputService = ManualInputService;
     }));
