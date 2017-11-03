@@ -1,7 +1,5 @@
 'use strict';
-define(function(require) {
-  var angular = require("angular");
-
+define(['angular'],function(angular) {
   var dependencies = ['ngResource'];
 
   var Workspaces = function($resource) {

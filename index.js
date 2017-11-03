@@ -270,8 +270,7 @@ app.post('/workspaces', function(req, res, next) {
 app.post('/inProgress', function(req, res, next) {
   logger.debug('creating in-progress workspace');
 
-  db.query('INSERT INTO inProgressWorkspace (owner, state) VALUES ($1, $2) RETURNING id', 
-    [req.user.id, req.body], function(err, result) {
+  db.query('INSERT INTO inProgressWorkspace (owner, state) VALUES ($1, $2) RETURNING id', [req.user.id, req.body], function(err, result) {
     if (err) {
       err.status = 500;
       return next(err);
@@ -411,8 +410,10 @@ app.get('/workspaces/:workspaceId/problems', function(req, res, next) {
 });
 
 app.get('/workspaces/:workspaceId/problems/:subProblemId', function(req, res, next) {
-  logger.debug('GET /workspaces/:id/scenarios/:id');
-  db.query('SELECT id, workspaceId AS "workspaceId", title, definition FROM subProblem WHERE workspaceId = $1 AND id = $2', [req.params.workspaceId, req.params.subProblemId], function(err, result) {
+  logger.debug('GET /workspaces/:id/problems/:subProblemId');
+  db.query('SELECT id, workspaceId AS "workspaceId", title, definition FROM subProblem WHERE workspaceId = $1 AND id = $2', [
+    req.params.workspaceId, req.params.subProblemId
+  ], function(err, result) {
     if (err) {
       err.status = 500;
       return next(err);
@@ -477,7 +478,32 @@ app.post('/workspaces/:workspaceId/problems', function(req, res, next) {
   });
 });
 
+app.post('/workspaces/:workspaceId/problems/:subProblemId', function(req, res, next) {
+  logger.debug('UPDATE /workspaces/:id/problems/:subProblemId');
+  db.query('UPDATE subProblem SET definition = $1WHERE id = $2', [
+    req.body.definition,
+    req.params.subProblemId
+  ], function(err) {
+    if (err) {
+      err.status = 500;
+      next(err);
+    }
+    res.end();
+  });
+});
+
 //Scenarios
+app.get('/workspaces/:workspaceId/scenarios', function(req, res, next) {
+  logger.debug('GET /workspaces/scenarios');
+  db.query('SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1', [req.params.workspaceId], function(err, result) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.json(result.rows);
+  });
+});
+
 app.get('/workspaces/:workspaceId/problems/:subProblemId/scenarios', function(req, res, next) {
   logger.debug('GET /workspaces/:id1/subProblem/:id2/scenarios');
   db.query('SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1 AND subProblemId = $2', [req.params.workspaceId, req.params.subProblemId], function(err, result) {
@@ -515,6 +541,7 @@ app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios', function(r
 });
 
 app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', function(req, res, next) {
+  logger.debug('updating scenario :id');
   db.query('UPDATE scenario SET state = $1, title = $2 WHERE id = $3', [{
       problem: req.body.state.problem,
       prefs: req.body.state.prefs

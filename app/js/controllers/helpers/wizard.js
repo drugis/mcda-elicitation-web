@@ -1,11 +1,9 @@
 'use strict';
-define(function(require) {
-  var angular = require("angular");
-  var _ = require("lodash");
+define(['lodash', 'angular'], function(_, angular) {
 
   return function($scope, handler) {
-    var PERSISTENT_FIELDS = ["problem", "type", "prefs"];
-    var previousStates =  [];
+    var PERSISTENT_FIELDS = ['problem', 'type', 'prefs'];
+    var previousStates = [];
     var nextStates = [];
 
     $scope.state = (function() {
@@ -26,7 +24,9 @@ define(function(require) {
 
     $scope.nextStep = function(state) {
       $scope.$broadcast('nextState');
-      if (!$scope.canProceed(state)) return false;
+      if (!$scope.canProceed(state)) {
+        return false;
+      }
       var choice = state.choice;
 
       // History handling
@@ -54,7 +54,9 @@ define(function(require) {
 
     $scope.previousStep = function() {
       $scope.$broadcast('prevState');
-      if (previousStates.length === 0) return false;
+      if (previousStates.length === 0) {
+        return false;
+      }
       nextStates.push(angular.copy($scope.state));
 
       var previousState = previousStates.pop();

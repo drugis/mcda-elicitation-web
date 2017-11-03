@@ -1,9 +1,10 @@
 'use strict';
-define(function(require) {
-  var _ = require("lodash");
+define(['lodash'], function(_) {
 
   var getOrdinalPreferences = function(prefs) {
-    return _.filter(prefs, function(pref) { return pref.type === "ordinal"; });
+    return _.filter(prefs, function(pref) {
+      return pref.type === 'ordinal';
+    });
   };
 
   var getCriteriaOrder = function(prefs) {
@@ -19,7 +20,9 @@ define(function(require) {
     }, []);
   };
 
-  return { getOrdinalPreferences: getOrdinalPreferences,
-           getCriteriaOrder: getCriteriaOrder };
+  return {
+    getOrdinalPreferences: getOrdinalPreferences,
+    getCriteriaOrder: getCriteriaOrder
+  };
 
 });

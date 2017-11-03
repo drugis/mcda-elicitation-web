@@ -73,7 +73,86 @@ define(['angular', 'angular-mocks', 'mcda/evidence/evidence'], function(angular)
           }]
         };
         expect(result).toEqual(expectedResult);
-
+      });
+    });
+    describe('renameCriterionInSubProblems', function() {
+      it('should change all references to the old name into the new name of the criterion in all subproblems', function() {
+        var subProblems = [{
+          id: 1,
+          definition: {
+            excludedCriteria: ['oldCrit'],
+            ranges: {}
+          }
+        }, {
+          id: 2,
+          definition: {
+            excludedCriteria: [],
+            ranges: {
+              oldCrit: [0, 1]
+            }
+          }
+        }];
+        var oldCriterion = {
+          title: 'oldCrit'
+        };
+        var newCriterion = {
+          title: 'newCrit'
+        };
+        var result = evidenceService.renameCriterionInSubProblems(oldCriterion, newCriterion, subProblems);
+        var expectedResult = [{
+          id: 1,
+          definition: {
+            excludedCriteria: ['newCrit'],
+            ranges: {}
+          }
+        }, {
+          id: 2,
+          definition: {
+            excludedCriteria: [],
+            ranges: {
+              newCrit: [0, 1]
+            }
+          }
+        }];
+        expect(result).toEqual(expectedResult);
+      });
+    });
+    describe('renameCriterionInScenarios', function() {
+      it('shouldhould change all references to the old name into the new name of the criterion in all scenarios', function() {
+        var scenarios = [{
+          state: {
+            problem: {
+              criteria: {
+                oldCrit: {
+                  id: 'oldCrit'
+                }
+              }
+            }
+          }
+        }];
+        var oldCriterion = {
+          title: 'oldCrit'
+        };
+        var newCriterion = {
+          title: 'newCrit'
+        };
+        var result = evidenceService.renameCriterionInScenarios(oldCriterion, newCriterion, scenarios);
+        var expectedResult = [{
+          state: {
+            problem: {
+              criteria: {
+                newCrit: {
+                  id: 'newCrit'
+                }
+              }
+            },
+            prefs: [{ //FIXME
+              criteria: ['crit1', 'crit2'],
+              type: 'ordinal'
+            }]
+          }
+        }];
+        expect(result).toEqual(expectedResult);
       });
     });
   });

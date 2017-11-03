@@ -1,6 +1,5 @@
 'use strict';
-define(['clipboard', 'require'], function(Clipboard, require) {
-  var _ = require('lodash');
+define(['clipboard', 'lodash'], function(Clipboard, _) {
   var dependencies = ['$scope', '$state', '$stateParams', '$modal', '$q',
     'EffectsTableService',
     'EvidenceService',
@@ -80,23 +79,38 @@ define(['clipboard', 'require'], function(Clipboard, require) {
               $scope.workspace.problem = EvidenceService.editCriterion(criterion, newCriterion, $scope.problem);
               var workspacePromise = WorkspaceResource.save($stateParams, $scope.workspace).$promise;
               if (criterion.title !== newCriterion.title) {
-                var subProblemPromises;
-                SubProblemResource.query().$promise.then(function(subProblems) {
+
+                var subProblemPromises = [];
+                var subProm = SubProblemResource.query({
+                  workspaceId: $stateParams.workspaceId
+                }).$promise.then(function(subProblems) {
                   var newProblems = EvidenceService.renameCriterionInSubProblems(criterion, newCriterion, subProblems);
                   subProblemPromises = _.map(newProblems, function(newProblem) {
-                    return SubProblemResource.save(newProblem).$promise;
+                    return SubProblemResource.save({
+                      problemId: newProblem.id,
+                      workspaceId: newProblem.workspaceId
+                    }, newProblem).$promise;
                   });
                 });
 
-                var scenarioPromises;
-                ScenarioResource.query().$promise.then(function(scenarios) {
+                var scenarioPromises = [];
+                var sceProm = ScenarioResource.queryAll({
+                  workspaceId: $stateParams.workspaceId
+                }).$promise.then(function(scenarios) {
                   var newScenarios = EvidenceService.renameCriterionInScenarios(criterion, newCriterion, scenarios);
                   scenarioPromises = _.map(newScenarios, function(newScenario) {
-                    return ScenarioResource.save(newScenario).$promise;
+                    return ScenarioResource.save({
+                      id: newScenario.id,
+                      workspaceId: newScenario.workspaceId,
+                      problemId: newScenario.subProblemId
+                    }, newScenario).$promise;
                   });
                 });
 
-                $q.all(subProblemPromises.concat(scenarioPromises).concat([workspacePromise])).then($state.reload);
+                $q.all(subProblemPromises.concat(scenarioPromises).concat([workspacePromise, sceProm, subProm])).then(
+                  function() {
+                    $state.reload();
+                  });
 
               } else {
                 workspacePromise.then(function() {
@@ -108,7 +122,6 @@ define(['clipboard', 'require'], function(Clipboard, require) {
         }
       });
     }
-
   };
   return dependencies.concat(EvidenceController);
 });

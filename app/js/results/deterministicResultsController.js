@@ -1,7 +1,5 @@
 'use strict';
-define(['clipboard'],function(Clipboard) {
-  var _ = require('lodash');
-
+define(['clipboard', 'lodash'], function(Clipboard, _) {
   var dependencies = ['$scope', 'currentScenario', 'taskDefinition', 'MCDAResultsService', 'addKeyHashToObject'];
 
   var DeterministicResultsController = function($scope, currentScenario, taskDefinition, MCDAResultsService, addKeyHashToObject) {
@@ -33,7 +31,7 @@ define(['clipboard'],function(Clipboard) {
 
     function sensitivityScalesChanged(newValue, criterion, alternative) {
       $scope.modifiableScales[criterion.id][alternative.id]['50%'] = newValue;
-      $scope.sensitivityMeasurements.alteredTableCells.push( {
+      $scope.sensitivityMeasurements.alteredTableCells.push({
         criterion: criterion.id,
         alternative: alternative.id,
         value: newValue

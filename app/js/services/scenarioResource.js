@@ -22,15 +22,28 @@ define(['angular'], function(angular) {
     };
 
     var resource = $resource(
-      window.config.workspacesRepositoryUrl + ':workspaceId/problems/:problemId/scenarios/:id',
-      {
+      window.config.workspacesRepositoryUrl + ':workspaceId/problems/:problemId/scenarios/:id', {
         id: '@id',
         workspaceId: '@workspaceId',
         problemId: '@problemId'
       }, {
-        query: { method: 'GET', isArray: true},
-        get:   { cache: cache, method: 'GET'},
-        save:  { method: 'POST', interceptor: { response: resetCache }}
+        query: {
+          method: 'GET',
+          isArray: true
+        },
+        queryAll: {
+          url: window.config.workspacesRepositoryUrl + ':workspaceId/scenarios',
+          method: 'GET',
+          isArray: true
+        },
+        get: {
+          cache: cache,
+          method: 'GET'
+        },
+        save: {
+          method: 'POST',
+          interceptor: { response: resetCache }
+        }
       });
 
 

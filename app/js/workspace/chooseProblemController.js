@@ -1,7 +1,5 @@
 'use strict';
-define(function(require) {
-  var _ = require('lodash');
-
+define(['lodash'],function(_) {
   var dependencies = ['$scope', '$state', '$modal', 'mcdaRootPath', 'WorkspaceResource', 'InProgressResource'];
 
   var ChooseProblemController = function($scope, $state, $modal, mcdaRootPath, WorkspaceResource, InProgressResource) {

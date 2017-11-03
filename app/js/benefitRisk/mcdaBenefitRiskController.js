@@ -1,6 +1,5 @@
 'use strict';
-define(function(require) {
-  var _ = require('lodash');
+define(['lodash'],function(_) {
   var dependencies = ['$scope', '$transitions', '$state', '$stateParams', 'Tasks', 'TaskDependencies',
     'ScenarioResource', 'WorkspaceService', 'subProblems', 'currentSubProblem', 'scenarios', 'currentScenario'
   ];
@@ -86,7 +85,6 @@ define(function(require) {
         results: TaskDependencies.isAccessible($scope.tasks.results, $scope.aggregateState).accessible
       };
     }
-
 
     function randomId(size, prefix) {
       var text = '';
