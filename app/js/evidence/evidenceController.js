@@ -74,6 +74,9 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
           criterion: function() {
             return criterion;
           },
+          criteria: function(){
+            return _.keys($scope.problem.criteria);
+          },
           callback: function() {
             return function(newCriterion) {
               $scope.workspace.problem = EvidenceService.editCriterion(criterion, newCriterion, $scope.problem);

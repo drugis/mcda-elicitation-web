@@ -39,20 +39,23 @@ define(['lodash', 'angular'], function(_) {
     function renameCriterionInScenarios(oldCriterion, newCriterion, scenarios) {
       return _.map(scenarios, function(scenario) {
         var newScenario = _.cloneDeep(scenario);
-        var scenariosCriterion =_.find(scenario.state.problem.criteria, ['id', oldCriterion.title]); 
+        var scenariosCriterion = _.find(scenario.state.problem.criteria, ['title', oldCriterion.title]);
         if (scenariosCriterion) {
-          scenariosCriterion.id  = newCriterion.title; 
+          scenariosCriterion.title = newCriterion.title;
           newScenario.state.problem.criteria[newCriterion.title] = scenariosCriterion;
           delete newScenario.state.problem.criteria[oldCriterion.title];
         }
-        newScenario.state.prefs = _.map(scenario.state.prefs, function(pref){
-          var idx = pref.criteria.indexOf(oldCriterion.title);
-          var newPref = _.cloneDeep(pref);
-          if(idx){
-            newPref.criteria[idx] = newCriterion.title;
+
+        if (newScenario.state.prefs) {
+          for (var i = 0; i < newScenario.state.prefs.length; i++) {
+            if (newScenario.state.prefs[i].criteria[0] === oldCriterion.title) {
+              newScenario.state.prefs[i].criteria[0] = newCriterion.title;
+            }
+            if (newScenario.state.prefs[i].criteria[1] === oldCriterion.title) {
+              newScenario.state.prefs[i].criteria[1] = newCriterion.title;
+            }
           }
-          return pref;
-        });
+        }
         return newScenario;
       });
     }

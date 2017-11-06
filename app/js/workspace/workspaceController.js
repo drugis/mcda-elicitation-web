@@ -1,7 +1,7 @@
 'use strict';
 define(['angular'], function(angular) {
 
-  return function($scope, $location, $stateParams, $cookies, Tasks, TaskDependencies, currentWorkspace) {
+  return function($scope, $cookies, currentWorkspace) {
     // functions
     $scope.editTitle = editTitle;
     $scope.saveTitle = saveTitle;

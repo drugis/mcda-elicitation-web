@@ -7,7 +7,7 @@
       <label>Name</label>
     </div>
     <div class="cell">
-      <input type="text" ng-model="criterion.title">
+      <input type="text" ng-model="criterion.title" ng-change="checkForDuplicateNames()">
     </div>
     <div class="cell">
       <label>Description</label>
@@ -38,7 +38,7 @@
     <div class="cell">
       <input type="text" ng-disabled="criterion.source === undefined" ng-model="criterion.sourceLink">
     </div>
-    <button class="button success" type="submit">Save</button>
+    <button class="button success" type="submit" ng-disabled="!criterion.title || !isTitleUnique">Save</button>
   </div>
   <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
     <span aria-hidden="true">&times;</span>

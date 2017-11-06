@@ -124,10 +124,20 @@ define(['angular', 'angular-mocks', 'mcda/evidence/evidence'], function(angular)
             problem: {
               criteria: {
                 oldCrit: {
-                  id: 'oldCrit'
+                  title: 'oldCrit'
+                }, 
+                otherOldCrit: {
+                	title: 'otherOldCrit'
                 }
               }
-            }
+            },
+            prefs: [{ 
+              criteria: ['oldCrit', 'otherOldCrit'],
+              type: 'ordinal'
+            },{ 
+              criteria: ['otherOldCrit', 'oldCrit'],
+              type: 'ordinal'
+            }]
           }
         }];
         var oldCriterion = {
@@ -142,12 +152,18 @@ define(['angular', 'angular-mocks', 'mcda/evidence/evidence'], function(angular)
             problem: {
               criteria: {
                 newCrit: {
-                  id: 'newCrit'
+                  title: 'newCrit'
+                }, 
+                otherOldCrit: {
+                	title: 'otherOldCrit'
                 }
               }
             },
-            prefs: [{ //FIXME
-              criteria: ['crit1', 'crit2'],
+            prefs: [{ 
+              criteria: ['newCrit', 'otherOldCrit'],
+              type: 'ordinal'
+            },{ 
+              criteria: ['otherOldCrit', 'newCrit'],
               type: 'ordinal'
             }]
           }

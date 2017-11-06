@@ -33,29 +33,7 @@ define(['lodash'],function(_) {
     $scope.workspace.scales.theoreticalScales = WorkspaceService.buildTheoreticalScales(baseProblem);
     determineActiveTab();
 
-    function getTask(taskId) {
-      return _.find(Tasks.available, function(task) {
-        return task.id === taskId;
-      });
-    }
-
-    function determineActiveTab() {
-      setActiveTab($state.current.name, 'evidence');
-    }
-    deregisterTransitionListener = $transitions.onStart({}, function(transition) {
-      setActiveTab(transition.to().name, transition.to().name);
-    });
-
     $scope.$on('$destroy', deregisterTransitionListener);
-
-    function setActiveTab(activeStateName, defaultStateName) {
-      var activeTask = getTask(activeStateName);
-      if (activeTask) {
-        $scope.activeTab = activeTask.activeTab;
-      } else {
-        $scope.activeTab = defaultStateName;
-      }
-    }
 
     $scope.$watch('scenario.state', updateTaskAccessibility);
     $scope.$on('elicit.resultsAccessible', function(event, scenario) {
@@ -78,6 +56,29 @@ define(['lodash'],function(_) {
       tasks[task.id] = task;
       return tasks;
     }, {});
+
+    deregisterTransitionListener = $transitions.onStart({}, function(transition) {
+      setActiveTab(transition.to().name, transition.to().name);
+    });
+    
+    function getTask(taskId) {
+      return _.find(Tasks.available, function(task) {
+        return task.id === taskId;
+      });
+    }
+
+    function determineActiveTab() {
+      setActiveTab($state.current.name, 'evidence');
+    }
+
+    function setActiveTab(activeStateName, defaultStateName) {
+      var activeTask = getTask(activeStateName);
+      if (activeTask) {
+        $scope.activeTab = activeTask.activeTab;
+      } else {
+        $scope.activeTab = defaultStateName;
+      }
+    }
 
     function updateTaskAccessibility() {
       $scope.tasksAccessibility = {
