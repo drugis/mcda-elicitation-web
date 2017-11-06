@@ -1,0 +1,57 @@
+{
+  "criterion": {
+    "title": "Criterion",
+    "text": "A criterion is an outcome of interest to be used in a benefit-risk analysis, e.g. \"mood improvement\" or \"nausea\".",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "criterion-datatype": {
+    "title": "Criterion data type",
+    "text": "Criterion data can be reported in several ways, either as a proportion (e.g. \"fifty out of a hundred\"), a continuous value (e.g. \"weight increase in grams\") or as survival data (e.g. \"median survival after 20 days)\"",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "criterion-source": {
+    "title": "Criterion data source",
+    "text": "An optional indication of where the data for this criterion comes from (single study or meta-analysis)",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "criterion-source-link": {
+    "title": "Source link",
+    "text": "An optional hyperlink that leads to the source of this criterion's data",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "criterion-unit": {
+    "title": "Unit of measurement",
+    "text": "In which unit of measurement the criterion's data are reported (e.g. \"proportion\", \"gram\")",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "favorability": {
+    "title": "Favorability",
+    "text": "Whether or not an increase in the criterion is seen as favorable.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "survival-summary-measure": {
+    "title": "Survival summary measure",
+    "text": "Which specific aspect of survival is reported, ie. mean, median, or at a specific moment.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "survival-time-point-of-interest": {
+    "title": "Survival summary measure",
+    "text": "At which specific moment in time the survival data is reported.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "survival-time-scale": {
+    "title": "Survival time scale",
+    "text": "On which time scale the survival data are reported.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "treatment": {
+    "title": "Treatment",
+    "text": "A treatment is an intervention of interest to be used in a benefit-risk analysis, e.g. \"Aspirin 20 mg/day\" or \"Meditation\".",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "workspace":  {
+    "title": "Workspace",
+    "text": "A workspace contains your base data, and any definitions you have based thereon, ie. subselections of criteria and interventions (subproblems) and sets of preferences (scenarios).",
+    "link": "/manual.html#mcda-preparing-dataset"
+  }
+}

@@ -10,11 +10,12 @@ require.config({
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
     'angularjs-slider': 'bower_components/angularjs-slider/dist/rzslider',
     'clipboard': 'bower_components/clipboard/dist/clipboard.min',
+    'd3': 'bower_components/d3/d3.min',
     'domReady': 'bower_components/requirejs-domready/domReady',
     'error-reporting': 'bower_components/error-reporting/errorReportingDirective',
     'export-directive': 'bower_components/export-directive/export-directive',
+    'help-popup': 'bower_components/help-popup/help-directive',
     'jQuery': 'bower_components/jquery/dist/jquery.min',
-    'd3': 'bower_components/d3/d3.min',
     'lodash': 'bower_components/lodash/lodash',
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_SVG',
     'mmfoundation': 'bower_components/angular-foundation-6/dist/angular-foundation',
@@ -39,6 +40,9 @@ require.config({
       exports: 'ngTouch'
     },
     'angular-ui-router': {
+      deps: ['angular']
+    },
+    'help-popup': {
       deps: ['angular']
     },
     'lodash': {

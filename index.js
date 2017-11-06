@@ -8,7 +8,6 @@ var db = require('./node-backend/db')(dbUri);
 var patavi = require('./node-backend/patavi');
 var util = require('./node-backend/util');
 var async = require('async');
-var _ = require('lodash');
 
 var express = require('express'),
   bodyParser = require('body-parser'),

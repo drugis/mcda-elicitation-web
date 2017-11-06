@@ -5,6 +5,9 @@
       <h3>Create workspace manually — step 1 of 2</h3>
       <h4>Define criteria and treatments</h4>
     </div>
+    <div class="cell">
+      Here you can enter the data for an analysis manually. In this first step, create the criteria and treatments you wish to analyse. Treatments are simply a name, while criteria are more complex.
+    </div>
   </div>
   <div class="grid-x">
     <div class="cell large-6">
@@ -22,7 +25,9 @@
   </div>
   <div class="grid-x">
     <div class="cell">
-      <h4>Criteria</h4>
+      <h4>Criteria
+        <inline-help help-key="criterion"></inline-help>
+      </h4>
       <button class="button small" type="button" ng-click="openCriterionModal()"><i class="fa fa-plus"></i> Add Criterion</button>
     </div>
   </div>
@@ -64,7 +69,9 @@
   </div>
   <div class="grid-x">
     <div class="cell">
-      <h4>Treatments</h4>
+      <h4>Treatments
+        <inline-help help-key="treatment"></inline-help>
+      </h4>
     </div>
   </div>
   <div class="grid-x">
@@ -131,8 +138,10 @@
     </div>
     <div class="cell">
       <form>
-        <label><input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="distribution"> Effect distributions</label>
-        <label><input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="study"> Study data</label>
+        <label>
+          <input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="distribution"> Effect distributions</label>
+        <label>
+          <input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="study"> Study data</label>
       </form>
     </div>
   </div>
