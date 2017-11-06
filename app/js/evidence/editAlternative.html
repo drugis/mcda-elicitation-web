@@ -1,0 +1,18 @@
+<form ng-submit="save()">
+  <div class="grid-x">
+    <div class="cell">
+      <h3> Edit Alternative</h3>
+    </div>
+    <div class="cell">
+      <label>Name</label>
+    </div>
+    <div class="cell">
+      <input type="text" ng-model="alternative.title" ng-change="checkForDuplicateNames()">
+    </div>
+    <button class="button success" type="submit" ng-disabled="!alternative.title || !isTitleUnique">Save</button>
+  </div>
+  <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  </div>
+</form>

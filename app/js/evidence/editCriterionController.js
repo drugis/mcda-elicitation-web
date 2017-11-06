@@ -23,8 +23,8 @@ define(['lodash'], function(_) {
     }
 
     function checkForDuplicateNames() {
-      if (_.find($scope.criteria, function(crit) {
-          return crit === $scope.criterion.title;
+      if (_.find($scope.criteria, function(criterion) {
+          return criterion === $scope.criterion.title;
         }) && $scope.originalTitle !== $scope.criterion.title) {
         $scope.isTitleUnique = false;
       } else {

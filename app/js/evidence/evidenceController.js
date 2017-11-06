@@ -20,6 +20,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.isExact = isExact;
     $scope.editTherapeuticContext = editTherapeuticContext;
     $scope.editCriterion = editCriterion;
+    $scope.editAlternative = editAlternative;
 
     // init
     $scope.scales = $scope.workspace.scales.observed;
@@ -124,6 +125,29 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
           }
         }
       });
+
+      }
+      function editAlternative(alternative) {
+        $modal.open({
+          templateUrl: '/app/js/evidence/editAlternative.html',
+          controller: 'EditAlternativeController',
+          resolve: {
+            alternative: function() {
+              return alternative;
+            },
+            alternatives: function() {
+              return $scope.problem.alternatives;
+            },
+            callback: function() {
+              return function(newAlternative) {
+                alternative.title = newAlternative.title;
+                WorkspaceResource.save($stateParams, $scope.workspace).$promise.then(function(){
+                  $state.reload();
+                });
+              };
+            }
+          }
+        });
     }
   };
   return dependencies.concat(EvidenceController);

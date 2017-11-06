@@ -35,7 +35,10 @@
           <th>Description</th>
           <th>Units</th>
           <th ng-if="references.has">References</th>
-          <th class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives">{{alternative.title}}{{problem.valueTree.children.children[0].criteria}}</th>
+          <th class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives">
+            <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editAlternative(problem.alternatives[alternativeKey])">
+              <i class="fa fa-edit"></i>
+            </a>{{alternative.title}}{{problem.valueTree.children.children[0].criteria}}</th>
         </tr>
       </thead>
       <tbody class="main">
