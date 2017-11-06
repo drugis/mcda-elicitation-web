@@ -1,14 +1,19 @@
 'use strict';
-define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
+define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
 
   var dependencies = ['$scope', '$stateParams', '$modal', '$state',
-    'intervalHull', 'SubProblemService', 'mcdaRootPath'
+    'intervalHull', 'SubProblemService', 'ScenarioResource', 'mcdaRootPath', 'subProblems'
   ];
 
   var SubProblemController = function($scope, $stateParams, $modal, $state,
-    intervalHull, SubProblemService, mcdaRootPath) {
+    intervalHull, SubProblemService, ScenarioResource, mcdaRootPath, subProblems) {
+    // functions 
     $scope.intervalHull = intervalHull;
     $scope.openCreateDialog = openCreateDialog;
+    $scope.subProblemChanged = subProblemChanged;
+
+    // init
+    $scope.subProblems = subProblems;
     $scope.problem = _.cloneDeep($scope.workspace.problem);
     $scope.isExact = _.partial(SubProblemService.isExact, $scope.problem.performanceTable);
     $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
@@ -54,6 +59,17 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
       });
     }
 
+    function subProblemChanged(newSubProblem) {
+      var coords = _.omit($stateParams, 'id');
+      coords.problemId = newSubProblem.id;
+      ScenarioResource.query(coords).$promise.then(function(scenarios) {
+        $state.go('problem', {
+          workspaceId: $scope.workspace.id,
+          problemId: newSubProblem.id,
+          id: scenarios[0].id
+        });
+      });
+    }
   };
 
   return dependencies.concat(SubProblemController);

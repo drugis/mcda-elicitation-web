@@ -1,6 +1,10 @@
 <div class="grid-x">
   <div class="cell">
-    Here you see the current problem definition. If you want to work with a different problem you can define a new one based on the current one, which may include different criteria and scale ranges. Scale ranges must be defined for all selected criteria.
+    <h4>Problem selection</h4>
+  </div>
+  <div class="cell">
+    <span>Problem:</span>
+    <select class="scenario-select" ng-model="subProblem" ng-options="subProblem.title for subProblem in subProblems track by subProblem.id" ng-change="subProblemChanged(subProblem)"></select>
   </div>
 </div>
 <div class="grid-x">

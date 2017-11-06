@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'],function(_) {
+define(['lodash'], function(_) {
   var dependencies = ['$scope', '$transitions', '$state', '$stateParams', 'Tasks', 'TaskDependencies',
     'ScenarioResource', 'WorkspaceService', 'subProblems', 'currentSubProblem', 'scenarios', 'currentScenario'
   ];
@@ -13,7 +13,6 @@ define(['lodash'],function(_) {
     $scope.saveTitle = saveTitle;
     $scope.cancelTitle = cancelTitle;
     $scope.scenarioChanged = scenarioChanged;
-    $scope.subProblemChanged = subProblemChanged;
     $scope.checkDuplicateScenarioTitle = checkDuplicateScenarioTitle;
 
     // init
@@ -60,7 +59,7 @@ define(['lodash'],function(_) {
     deregisterTransitionListener = $transitions.onStart({}, function(transition) {
       setActiveTab(transition.to().name, transition.to().name);
     });
-    
+
     function getTask(taskId) {
       return _.find(Tasks.available, function(task) {
         return task.id === taskId;
@@ -161,25 +160,31 @@ define(['lodash'],function(_) {
     function scenarioChanged(newScenario) {
       if (!newScenario) {
         return; // just a title edit
+      } else {
+
+        // TODO: some check wether results are available
+
+        if ($state.current.name === 'smaa-results') {
+
+          $state.go('smaa-results', {
+            workspaceId: $scope.workspace.id,
+            problemId: $scope.subProblem.id,
+            id: newScenario.id
+          });
+        } else if ($state.current.name === 'deterministic-results') {
+          $state.go('deterministic-results', {
+            workspaceId: $scope.workspace.id,
+            problemId: $scope.subProblem.id,
+            id: newScenario.id
+          });
+        } else {
+          $state.go('preferences', {
+            workspaceId: $scope.workspace.id,
+            problemId: $scope.subProblem.id,
+            id: newScenario.id
+          });
+        }
       }
-      $state.go('preferences', {
-        workspaceId: $scope.workspace.id,
-        problemId: $scope.subProblem.id,
-        id: newScenario.id
-      });
-    }
-
-    function subProblemChanged(newSubProblem) {
-      var coords = _.omit($stateParams, 'id');
-      coords.problemId = newSubProblem.id;
-      ScenarioResource.query(coords).$promise.then(function(scenarios) {
-        $state.go('problem', {
-          workspaceId: $scope.workspace.id,
-          problemId: newSubProblem.id,
-          id: scenarios[0].id
-        });
-
-      });
     }
   }
   return dependencies.concat(MCDABenefitRiskController);

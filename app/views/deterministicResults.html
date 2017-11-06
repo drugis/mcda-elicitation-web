@@ -8,6 +8,10 @@
 <div ng-if="state.results">
   <div class="grid-x">
     <div class="cell">
+      <span>Scenario:</span>
+      <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenarios track by scenario.id" ng-change="scenarioChanged(scenario)"></select>
+    </div>
+    <div class="cell">
       <h3>Deterministic analysis results</h3>
       <button class="button" ui-sref="smaa-results">SMAA results</button>
     </div>

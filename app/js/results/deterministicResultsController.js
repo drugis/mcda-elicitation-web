@@ -1,8 +1,15 @@
 'use strict';
 define(['clipboard', 'lodash'], function(Clipboard, _) {
-  var dependencies = ['$scope', 'currentScenario', 'taskDefinition', 'MCDAResultsService', 'addKeyHashToObject'];
+  var dependencies = ['$scope', '$state',
+    'currentScenario', 'taskDefinition',
+    'MCDAResultsService', 'addKeyHashToObject',
+    'TaskDependencies'
+  ];
 
-  var DeterministicResultsController = function($scope, currentScenario, taskDefinition, MCDAResultsService, addKeyHashToObject) {
+  var DeterministicResultsController = function($scope, $state,
+    currentScenario, taskDefinition,
+    MCDAResultsService, addKeyHashToObject,
+    TaskDependencies) {
     // functions
     $scope.sensitivityScalesChanged = sensitivityScalesChanged;
     $scope.recalculateResults = recalculateResults;
@@ -11,16 +18,24 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.doPreferencesSensitivity = doPreferencesSensitivity;
 
     // init
-    $scope.scenario = currentScenario;
-    $scope.scales = $scope.workspace.scales;
-    $scope.sensitivityMeasurements = {
-      alteredTableCells: []
-    };
-    $scope.state = initialize(taskDefinition.clean($scope.aggregateState));
-    $scope.$watch('scales.observed', function() {
-      resetSensitivityAnalysis();
-    });
-    var clipboard = new Clipboard('.clipboard-button');
+    if (!TaskDependencies.isAccessible($scope.tasks.results, $scope.aggregateState).accessible) {
+      $state.go('preferences', {
+        workspaceId: $scope.workspace.id,
+        problemId: $scope.subProblem.id,
+        id: currentScenario.id
+      });
+    } else {
+      $scope.scenario = currentScenario;
+      $scope.scales = $scope.workspace.scales;
+      $scope.sensitivityMeasurements = {
+        alteredTableCells: []
+      };
+      $scope.state = initialize(taskDefinition.clean($scope.aggregateState));
+      $scope.$watch('scales.observed', function() {
+        resetSensitivityAnalysis();
+      });
+      var clipboard = new Clipboard('.clipboard-button');
+    }
 
     function resetSensitivityAnalysis() {
       $scope.modifiableScales = MCDAResultsService.resetModifiableScales(

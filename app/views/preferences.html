@@ -12,6 +12,12 @@
       <a ng-if="editMode.isUserOwner" ng-click="editTitle()"><i class="fa fa-edit"></i></a>
     </h4>
   </div>
+  <div class="cell">
+    <span>Scenario:</span>
+    <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenarios track by scenario.id" ng-change="scenarioChanged(scenario)"></select>
+    <button class="button" ng-click="forkScenario()">Copy current scenario</button>
+    <button class="button" ng-click="newScenario()">Create clean scenario</button>
+  </div>
 </div>
 <div class="grid-x" ng-show="isEditTitleVisible">
   <div class="cell large-8 small-12">
