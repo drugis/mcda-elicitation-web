@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/helpers/wizard'], function(_, angular, Util, Wizard) {
-  return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
-    var pvf = PartialValueFunction;
+  return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunctionService) {
+    var pvf = PartialValueFunctionService;
     $scope.pvf = pvf;
 
     $scope.title = function(step, total) {

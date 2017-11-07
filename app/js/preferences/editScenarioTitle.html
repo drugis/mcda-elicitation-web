@@ -1,0 +1,17 @@
+<form ng-submit="save()">
+  <div class="grid-x">
+    <div class="cell">
+      <h3> Edit scenario title</h3>
+    </div>
+    <div class="cell">
+      <input type="text" rows="8" ng-model="scenario.title" ng-change="checkDuplicateScenarioTitle()">
+    </div>
+    <div class="cell">
+      <button class="button success" ng-disabled="!scenario.title || isDuplicateScenarioTitle" type="submit">Save</button>
+    </div>
+    <div class="cell alert" ng-if="isDuplicateScenarioTitle">Duplicate title</div> 
+    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</form>

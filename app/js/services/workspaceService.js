@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'lodash'], function(angular, _) {
+define(['lodash', 'angular'], function(_) {
   var dependencies = ['ScalesService', 'sortCriteriaWithW'];
 
   var WorkspaceService = function(ScalesService, sortCriteriaWithW) {
@@ -76,7 +76,6 @@ define(['angular', 'lodash'], function(angular, _) {
               subProblemDefinition.excludedAlternatives);
           }
         });
-
       }
 
       newProblem.criteria = _.merge(newProblem.criteria, subProblemDefinition.ranges);
@@ -149,12 +148,12 @@ define(['angular', 'lodash'], function(angular, _) {
       return [minimum, maximum];
     }
 
-    function filterScenariosWithResults(scenarios){
-      return _.filter(scenarios, function(scenario){
+    function filterScenariosWithResults(scenarios) {
+      return _.filter(scenarios, function(scenario) {
         var hasPvf = true;
-        _.forEach(scenario.state.problem.criteria,function(criterion){
-          if(!criterion.pvf){
-            hasPvf =  false;
+        _.forEach(scenario.state.problem.criteria, function(criterion) {
+          if (!criterion.pvf) {
+            hasPvf = false;
           }
         });
         return hasPvf;
@@ -173,5 +172,5 @@ define(['angular', 'lodash'], function(angular, _) {
     };
   };
 
-  return angular.module('elicit.workspaceService', []).service('WorkspaceService', dependencies.concat(WorkspaceService));
+  return dependencies.concat(WorkspaceService);
 });

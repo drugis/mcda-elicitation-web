@@ -8,7 +8,7 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
     '$injector',
     'currentScenario',
     'taskDefinition',
-    'PartialValueFunction',
+    'PartialValueFunctionService',
     'TaskDependencies'
   ];
 
@@ -20,18 +20,18 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
     $injector,
     currentScenario,
     taskDefinition,
-    PartialValueFunction,
+    PartialValueFunctionService,
     TaskDependencies) {
     // functions
     $scope.save = save;
     $scope.canSave = canSave;
     $scope.cancel = cancel;
-    $scope.getXY = _.memoize(PartialValueFunction.getXY, function(arg) {
+    $scope.getXY = _.memoize(PartialValueFunctionService.getXY, function(arg) {
       return angular.toJson(arg.pvf);
     });
 
     // init
-    $scope.pvf = PartialValueFunction;
+    $scope.pvf = PartialValueFunctionService;
     var aggregateProblem = $scope.aggregateState.problem;
 
     function initialize(state) {
@@ -78,7 +78,7 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
         }
 
         var bisection = nextState.bisections[ref];
-        var inv = PartialValueFunction.inv(nextState.choice);
+        var inv = PartialValueFunctionService.inv(nextState.choice);
 
         var from, to;
         if (nextState.choice.direction === 'increasing') {
@@ -112,7 +112,7 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
 
     function save(state) {
       var criterionId = $stateParams.criterion;
-      var standardizedCriterion = PartialValueFunction.standardizeCriterion(state.choice);
+      var standardizedCriterion = PartialValueFunctionService.standardizeCriterion(state.choice);
       var criteria = _.cloneDeep(aggregateProblem.criteria);
       criteria[criterionId] = standardizedCriterion;
       currentScenario.state = {

@@ -1,6 +1,7 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
-  return angular.module('elicit.pvfService', []).factory('PartialValueFunction', function() {
+  var dependencies = [];
+  var PartialValueFunctionService = function() {
     function findIndexOfFirstLargerElement(arr, val) {
       return _.indexOf(arr, _.find(arr, function(elm) {
         return elm >= val;
@@ -148,5 +149,6 @@ define(['lodash', 'angular'], function(_, angular) {
       getBounds: getBounds,
       standardizeCriterion:standardizeCriterion
     };
-  });
+  };
+  return dependencies.concat(PartialValueFunctionService);
 });

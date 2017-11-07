@@ -1,9 +1,9 @@
 'use strict';
 define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, angular, Wizard) {
 
-  return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunction) {
+  return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunctionService) {
     $scope.problem = $scope.aggregateState.problem;
-    var pvf = PartialValueFunction;
+    var pvf = PartialValueFunctionService;
     $scope.pvf = pvf;
 
     var getReference = function(criteria) {

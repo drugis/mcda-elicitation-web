@@ -326,7 +326,7 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
       };
     });
 
-    directives.directive('tradeOffs', function($filter, mcdaRootPath, PartialValueFunction, sortCriteriaWithW) {
+    directives.directive('tradeOffs', function($filter, mcdaRootPath, PartialValueFunctionService, sortCriteriaWithW) {
       return {
         restrict: 'E',
         replace: true,
@@ -335,7 +335,7 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
           preferences: '='
         },
         link: function(scope) {
-          scope.pvf = PartialValueFunction;
+          scope.pvf = PartialValueFunctionService;
           scope.criteria = sortCriteriaWithW(scope.problem.criteria);
 
           var w = function(criterionKey) {

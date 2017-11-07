@@ -7,7 +7,7 @@ define(['lodash', 'angular'], function(_, angular) {
     '$stateParams',
     '$state',
     'ScenarioResource',
-    'PartialValueFunction',
+    'PartialValueFunctionService',
     'TaskDependencies',
     'currentScenario'
   ];
@@ -17,12 +17,12 @@ define(['lodash', 'angular'], function(_, angular) {
     $stateParams,
     $state,
     ScenarioResource,
-    PartialValueFunction,
+    PartialValueFunctionService,
     TaskDependencies,
     currentScenario) {
 
     // functions
-    $scope.pvf = PartialValueFunction;
+    $scope.pvf = PartialValueFunctionService;
     $scope.isPVFDefined = isPVFDefined;
     $scope.isAccessible = isAccessible;
     $scope.editScenarioTitle = editScenarioTitle;
@@ -31,7 +31,7 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.scenario = currentScenario;
     $scope.scales = $scope.workspace.scales;
     $scope.criteria = $scope.aggregateState.criteria;
-    $scope.getXY = _.memoize(PartialValueFunction.getXY, function(arg) {
+    $scope.getXY = _.memoize(PartialValueFunctionService.getXY, function(arg) {
       return angular.toJson(arg.pvf);
     });
     createIsSafeObject();

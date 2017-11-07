@@ -15,7 +15,7 @@ define(['angular-mocks',
       beforeEach(module('elicit.taskDependencies'));
       beforeEach(module('elicit.pvfService'));
 
-      function initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, problem) {
+      function initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunctionService, problem) {
         var scope;
         scope = $rootScope.$new();
 
@@ -41,12 +41,12 @@ define(['angular-mocks',
         return scope;
       }
 
-      beforeEach(inject(function($controller, $rootScope, TaskDependencies, PartialValueFunction) {
-        $scope1 = initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, exampleProblem());
+      beforeEach(inject(function($controller, $rootScope, TaskDependencies, PartialValueFunctionService) {
+        $scope1 = initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunctionService, exampleProblem());
 
         var problem2 = exampleProblem();
         problem2.criteria.Bleed.pvf.direction = "increasing";
-        $scope2 = initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunction, problem2);
+        $scope2 = initializeScope($controller, $rootScope, TaskDependencies, PartialValueFunctionService, problem2);
       }));
 
       describe("initialize", function() {

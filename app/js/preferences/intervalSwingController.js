@@ -1,8 +1,8 @@
 'use strict';
 define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/helpers/wizard'], function(_, angular, Util, Wizard) {
 
-  return function($scope, $state, $stateParams, $injector, $timeout, currentScenario, taskDefinition, PartialValueFunction) {
-    $scope.pvf = PartialValueFunction;
+  return function($scope, $state, $stateParams, $injector, $timeout, currentScenario, taskDefinition, PartialValueFunctionService) {
+    $scope.pvf = PartialValueFunctionService;
 
     $scope.title = function(step, total) {
       var base = 'Interval SWING weighting';
@@ -14,8 +14,8 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
 
 
     function buildInitial(criteria, criterionA, criterionB, step) {
-      var bounds = PartialValueFunction.getBounds(criteria[criterionA]);
-      var increasing = PartialValueFunction.isIncreasing(criteria[criterionA]);
+      var bounds = PartialValueFunctionService.getBounds(criteria[criterionA]);
+      var increasing = PartialValueFunctionService.isIncreasing(criteria[criterionA]);
       return {
         step: step,
         total: _.size(criteria) - 1,
@@ -64,7 +64,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       }
       var criteria = state.problem.criteria;
       var bounds1 = state.choice;
-      var bounds2 = PartialValueFunction.getBounds(criteria[state.criterionA]);
+      var bounds2 = PartialValueFunctionService.getBounds(criteria[state.criterionA]);
       return bounds1.lower < bounds1.upper && bounds2[0] <= bounds1.lower && bounds2[1] >= bounds1.upper;
     };
 
@@ -87,7 +87,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       }
 
       function getRatioBounds(state) {
-        var u = PartialValueFunction.map(criteria[state.criterionA]);
+        var u = PartialValueFunctionService.map(criteria[state.criterionA]);
         return [1 / u(state.choice.lower), 1 / u(state.choice.upper)].sort(function(a, b) {
           return a - b;
         });

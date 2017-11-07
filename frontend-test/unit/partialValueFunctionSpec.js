@@ -6,7 +6,7 @@ define(['angular',
     'mcda/services/effectsTableService'
   ],
   function() {
-    describe('PartialValueFunctionHandler', function() {
+    describe('PartialValueFunctionServiceHandler', function() {
       var scope, state;
 
       beforeEach(module('elicit.effectsTableService'));
@@ -38,7 +38,7 @@ define(['angular',
           problem: exampleProblem()
         };
 
-        $controller('PartialValueFunctionController', {
+        $controller('PartialValueFunctionServiceController', {
           $scope: scope,
           $state: state,
           $stateParams: {},
@@ -66,34 +66,34 @@ define(['angular',
         };
 
 
-        it('determines worst values', inject(function(PartialValueFunction) {
-          expect(PartialValueFunction.worst(crit1)).toEqual(-0.15);
-          expect(PartialValueFunction.worst(crit2)).toEqual(100);
+        it('determines worst values', inject(function(PartialValueFunctionService) {
+          expect(PartialValueFunctionService.worst(crit1)).toEqual(-0.15);
+          expect(PartialValueFunctionService.worst(crit2)).toEqual(100);
         }));
 
-        it('determines best values', inject(function(PartialValueFunction) {
-          expect(PartialValueFunction.best(crit1)).toEqual(0.35);
-          expect(PartialValueFunction.best(crit2)).toEqual(50);
+        it('determines best values', inject(function(PartialValueFunctionService) {
+          expect(PartialValueFunctionService.best(crit1)).toEqual(0.35);
+          expect(PartialValueFunctionService.best(crit2)).toEqual(50);
         }));
 
-        it('defines the partial value function', inject(function(PartialValueFunction) {
-          expect(PartialValueFunction.map(crit1)(0.35)).toBeCloseTo(1.0);
-          expect(PartialValueFunction.map(crit1)(-0.15)).toBeCloseTo(0.0);
-          expect(PartialValueFunction.map(crit1)(0.1)).toBeCloseTo(0.5);
+        it('defines the partial value function', inject(function(PartialValueFunctionService) {
+          expect(PartialValueFunctionService.map(crit1)(0.35)).toBeCloseTo(1.0);
+          expect(PartialValueFunctionService.map(crit1)(-0.15)).toBeCloseTo(0.0);
+          expect(PartialValueFunctionService.map(crit1)(0.1)).toBeCloseTo(0.5);
 
-          expect(PartialValueFunction.map(crit2)(50)).toBeCloseTo(1.0);
-          expect(PartialValueFunction.map(crit2)(100)).toBeCloseTo(0.0);
-          expect(PartialValueFunction.map(crit2)(75)).toBeCloseTo(0.5);
+          expect(PartialValueFunctionService.map(crit2)(50)).toBeCloseTo(1.0);
+          expect(PartialValueFunctionService.map(crit2)(100)).toBeCloseTo(0.0);
+          expect(PartialValueFunctionService.map(crit2)(75)).toBeCloseTo(0.5);
         }));
 
-        it('defines the inverse of the partial value function', inject(function(PartialValueFunction) {
-          expect(PartialValueFunction.inv(crit1)(1.0)).toBeCloseTo(0.35);
-          expect(PartialValueFunction.inv(crit1)(0.0)).toBeCloseTo(-0.15);
-          expect(PartialValueFunction.inv(crit1)(0.5)).toBeCloseTo(0.1);
+        it('defines the inverse of the partial value function', inject(function(PartialValueFunctionService) {
+          expect(PartialValueFunctionService.inv(crit1)(1.0)).toBeCloseTo(0.35);
+          expect(PartialValueFunctionService.inv(crit1)(0.0)).toBeCloseTo(-0.15);
+          expect(PartialValueFunctionService.inv(crit1)(0.5)).toBeCloseTo(0.1);
 
-          expect(PartialValueFunction.inv(crit2)(1.0)).toBeCloseTo(50);
-          expect(PartialValueFunction.inv(crit2)(0.0)).toBeCloseTo(100);
-          expect(PartialValueFunction.inv(crit2)(0.5)).toBeCloseTo(75);
+          expect(PartialValueFunctionService.inv(crit2)(1.0)).toBeCloseTo(50);
+          expect(PartialValueFunctionService.inv(crit2)(0.0)).toBeCloseTo(100);
+          expect(PartialValueFunctionService.inv(crit2)(0.5)).toBeCloseTo(75);
         }));
       });
 
@@ -119,42 +119,42 @@ define(['angular',
           }
         };
 
-        it('determines worst values', inject(function(PartialValueFunction) {
-          expect(PartialValueFunction.worst(crit1)).toEqual(-0.15);
-          expect(PartialValueFunction.worst(crit2)).toEqual(100);
+        it('determines worst values', inject(function(PartialValueFunctionService) {
+          expect(PartialValueFunctionService.worst(crit1)).toEqual(-0.15);
+          expect(PartialValueFunctionService.worst(crit2)).toEqual(100);
         }));
 
-        it('determines best values', inject(function(PartialValueFunction) {
-          expect(PartialValueFunction.best(crit1)).toEqual(0.35);
-          expect(PartialValueFunction.best(crit2)).toEqual(50);
+        it('determines best values', inject(function(PartialValueFunctionService) {
+          expect(PartialValueFunctionService.best(crit1)).toEqual(0.35);
+          expect(PartialValueFunctionService.best(crit2)).toEqual(50);
         }));
 
-        it('defines the partial value function', inject(function(PartialValueFunction) {
-          expect(PartialValueFunction.map(crit1)(0.35)).toBeCloseTo(1.0);
-          expect(PartialValueFunction.map(crit1)(-0.15)).toBeCloseTo(0.0);
-          expect(PartialValueFunction.map(crit1)(0.0)).toBeCloseTo(0.1);
-          expect(PartialValueFunction.map(crit1)(0.25)).toBeCloseTo(0.9);
-          expect(PartialValueFunction.map(crit1)(0.1)).toBeCloseTo(2 / 5 * 0.8 + 0.1);
+        it('defines the partial value function', inject(function(PartialValueFunctionService) {
+          expect(PartialValueFunctionService.map(crit1)(0.35)).toBeCloseTo(1.0);
+          expect(PartialValueFunctionService.map(crit1)(-0.15)).toBeCloseTo(0.0);
+          expect(PartialValueFunctionService.map(crit1)(0.0)).toBeCloseTo(0.1);
+          expect(PartialValueFunctionService.map(crit1)(0.25)).toBeCloseTo(0.9);
+          expect(PartialValueFunctionService.map(crit1)(0.1)).toBeCloseTo(2 / 5 * 0.8 + 0.1);
 
-          expect(PartialValueFunction.map(crit2)(50)).toBeCloseTo(1.0);
-          expect(PartialValueFunction.map(crit2)(60)).toBeCloseTo(1 - (2 / 5 * 0.2));
-          expect(PartialValueFunction.map(crit2)(75)).toBeCloseTo(0.8);
-          expect(PartialValueFunction.map(crit2)(90)).toBeCloseTo(0.5);
-          expect(PartialValueFunction.map(crit2)(100)).toBeCloseTo(0.0);
+          expect(PartialValueFunctionService.map(crit2)(50)).toBeCloseTo(1.0);
+          expect(PartialValueFunctionService.map(crit2)(60)).toBeCloseTo(1 - (2 / 5 * 0.2));
+          expect(PartialValueFunctionService.map(crit2)(75)).toBeCloseTo(0.8);
+          expect(PartialValueFunctionService.map(crit2)(90)).toBeCloseTo(0.5);
+          expect(PartialValueFunctionService.map(crit2)(100)).toBeCloseTo(0.0);
         }));
 
-        it('defines the inverse of the partial value function', inject(function(PartialValueFunction) {
-          expect(PartialValueFunction.inv(crit1)(1.0)).toBeCloseTo(0.35);
-          expect(PartialValueFunction.inv(crit1)(0.0)).toBeCloseTo(-0.15);
-          expect(PartialValueFunction.inv(crit1)(0.1)).toBeCloseTo(0.0);
-          expect(PartialValueFunction.inv(crit1)(0.9)).toBeCloseTo(0.25);
-          expect(PartialValueFunction.inv(crit1)(2 / 5 * 0.8 + 0.1)).toBeCloseTo(0.1);
+        it('defines the inverse of the partial value function', inject(function(PartialValueFunctionService) {
+          expect(PartialValueFunctionService.inv(crit1)(1.0)).toBeCloseTo(0.35);
+          expect(PartialValueFunctionService.inv(crit1)(0.0)).toBeCloseTo(-0.15);
+          expect(PartialValueFunctionService.inv(crit1)(0.1)).toBeCloseTo(0.0);
+          expect(PartialValueFunctionService.inv(crit1)(0.9)).toBeCloseTo(0.25);
+          expect(PartialValueFunctionService.inv(crit1)(2 / 5 * 0.8 + 0.1)).toBeCloseTo(0.1);
 
-          expect(PartialValueFunction.inv(crit2)(1.0)).toBeCloseTo(50);
-          expect(PartialValueFunction.inv(crit2)(1 - 2 / 5 * 0.2)).toBeCloseTo(60);
-          expect(PartialValueFunction.inv(crit2)(0.8)).toBeCloseTo(75);
-          expect(PartialValueFunction.inv(crit2)(0.5)).toBeCloseTo(90);
-          expect(PartialValueFunction.inv(crit2)(0.0)).toBeCloseTo(100);
+          expect(PartialValueFunctionService.inv(crit2)(1.0)).toBeCloseTo(50);
+          expect(PartialValueFunctionService.inv(crit2)(1 - 2 / 5 * 0.2)).toBeCloseTo(60);
+          expect(PartialValueFunctionService.inv(crit2)(0.8)).toBeCloseTo(75);
+          expect(PartialValueFunctionService.inv(crit2)(0.5)).toBeCloseTo(90);
+          expect(PartialValueFunctionService.inv(crit2)(0.0)).toBeCloseTo(100);
         }));
       });
 
@@ -169,14 +169,14 @@ define(['angular',
           }
         };
 
-        it('works for three cutoffs', inject(function(PartialValueFunction) {
-          var map = PartialValueFunction.map(crit);
+        it('works for three cutoffs', inject(function(PartialValueFunctionService) {
+          var map = PartialValueFunctionService.map(crit);
           expect(map(5)).toBeCloseTo(0.5);
         }));
       });
 
       describe('standardizeCriterion', function() {
-        it('should sort the cutoffs and values of an piecewise-linear pvf', inject(function(PartialValueFunction) {
+        it('should sort the cutoffs and values of an piecewise-linear pvf', inject(function(PartialValueFunctionService) {
           var crit = {
             pvf: {
               'type': 'piecewise-linear',
@@ -185,7 +185,7 @@ define(['angular',
               'values': [0.25, 0.5, 0.75]
             }
           };
-          var result = PartialValueFunction.standardizeCriterion(crit);
+          var result = PartialValueFunctionService.standardizeCriterion(crit);
           var expectedResult = {
             pvf: {
               'type': 'piecewise-linear',
@@ -196,7 +196,7 @@ define(['angular',
           };
           expect(result).toEqual(expectedResult);
         }));
-        it('should sort the cutoffs and reverse-sort the values of an  decreasing piecewise-linear pvf', inject(function(PartialValueFunction) {
+        it('should sort the cutoffs and reverse-sort the values of an  decreasing piecewise-linear pvf', inject(function(PartialValueFunctionService) {
           var crit = {
             pvf: {
               'type': 'piecewise-linear',
@@ -205,7 +205,7 @@ define(['angular',
               'values': [0.25, 0.5, 0.75]
             }
           };
-          var result = PartialValueFunction.standardizeCriterion(crit);
+          var result = PartialValueFunctionService.standardizeCriterion(crit);
           var expectedResult = {
             pvf: {
               'type': 'piecewise-linear',
@@ -216,7 +216,7 @@ define(['angular',
           };
           expect(result).toEqual(expectedResult);
         }));
-        it('should delete the cutoffs and values, if any, from a linear pvf', inject(function(PartialValueFunction) {
+        it('should delete the cutoffs and values, if any, from a linear pvf', inject(function(PartialValueFunctionService) {
           var crit = {
             pvf: {
               'type': 'linear',
@@ -224,7 +224,7 @@ define(['angular',
               'values': [0.25, 0.5, 0.75]
             }
           };
-          var result = PartialValueFunction.standardizeCriterion(crit);
+          var result = PartialValueFunctionService.standardizeCriterion(crit);
           var expectedResult = {
             pvf: {
               'type': 'linear',
