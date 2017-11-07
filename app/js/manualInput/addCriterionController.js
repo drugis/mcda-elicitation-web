@@ -11,12 +11,14 @@ define(['lodash'], function(_) {
     $scope.timeScaleChanged = timeScaleChanged;
     $scope.timePointOfInterestChanged = timePointOfInterestChanged;
     $scope.generateDescription = generateDescription;
+    $scope.dataSourceChanged = dataSourceChanged;
 
     // vars
     $scope.blockedReason = '';
     $scope.criterion = {
       isFavorable: false,
-      dataType: 'continuous'
+      dataType: 'continuous',
+      dataSource: 'study'
     };
     $scope.isAddingCriterion = false;
 
@@ -124,6 +126,14 @@ define(['lodash'], function(_) {
         }
       } else {
         delete criterion.description;
+      }
+    }
+
+    function dataSourceChanged(){
+      if($scope.criterion.dataSource === 'exact'){
+        $scope.criterion.dataType = 'exact';
+      } else {
+        $scope.criterion.dataType = 'continuous';
       }
     }
   };

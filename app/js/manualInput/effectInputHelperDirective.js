@@ -12,7 +12,6 @@ define(['lodash'], function(_) {
         'criterion': '=',
         'treatment': '=',
         'inputData': '=',
-        'studyType': '=',
         'changeCallback': '='
       },
       templateUrl: 'app/js/manualInput/effectInputHelperDirective.html',
@@ -24,8 +23,8 @@ define(['lodash'], function(_) {
         scope.continuous = {
           type: 'SEt'
         };
-        scope.inputState = _.cloneDeep(scope.inputData);
-        scope.inputState.continuousType = scope.inputState.continuousType ? scope.inputState.continuousType : 'SEt';
+        scope.inputCell = _.cloneDeep(scope.inputData);
+        scope.inputCell.continuousType = scope.inputCell.continuousType ? scope.inputCell.continuousType : 'SEt';
         scope.continuousOptions = [{
             label: 'Mean, SE (normal distribution)',
             short: 'SEnorm'
@@ -44,7 +43,7 @@ define(['lodash'], function(_) {
           }
         ];
         scope.inputData.label = ManualInputService.inputToString(
-          ManualInputService.createDistribution(scope.inputState, scope.studyType));
+          ManualInputService.createDistribution(scope.inputCell, scope.criterion));
 
         scope.$on('open.af.dropdownToggle', function() {
           isEscPressed = false;
@@ -59,8 +58,8 @@ define(['lodash'], function(_) {
         function saveState() {
           $timeout(function() {
             var distributionData = ManualInputService.createDistribution(
-              scope.inputState, scope.studyType);
-            scope.inputData = scope.inputState;
+              scope.inputCell, scope.criterion);
+            scope.inputData = scope.inputCell;
             scope.inputData.isInvalid = ManualInputService.isInvalidCell(distributionData);
             scope.inputData.label = ManualInputService.inputToString(distributionData);
             $timeout(function() {

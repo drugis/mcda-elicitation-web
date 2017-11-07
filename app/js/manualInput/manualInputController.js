@@ -19,7 +19,8 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.removeTreatment = removeTreatment;
     $scope.isDuplicateName = isDuplicateName;
     $scope.goToStep1 = goToStep1;
-    $scope.goToStep2 = goToStep2;    $scope.createProblem = createProblem;
+    $scope.goToStep2 = goToStep2;
+    $scope.createProblem = createProblem;
     $scope.removeCriterion = removeCriterion;
     $scope.checkInputData = checkInputData;
     $scope.resetData = resetData;
@@ -67,7 +68,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function resetData() {
-      $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.treatments, $scope.state.inputMethod);
+      $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.treatments);
       $scope.state.studyType = resetStudyTypes();
       $scope.state.isInputDataValid = false;
     }
@@ -140,7 +141,6 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function goToStep2() {
       $scope.state.step = 'step2';
-      $scope.state.inputMethod = $scope.state.inputMethod ? $scope.state.inputMethod : 'study';
       $scope.state.treatments = _.map($scope.state.treatments, function(treatment) {
         return addKeyHashToObject(treatment, treatment.name);
       });
@@ -148,7 +148,7 @@ define(['lodash', 'angular'], function(_, angular) {
         return addKeyHashToObject(criterion, criterion.name);
       });
       $scope.state.studyType = $scope.state.studyType ? $scope.state.studyType : resetStudyTypes();
-      $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.treatments, $scope.inputMethod, $scope.state.inputData);
+      $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.treatments, $scope.state.inputData);
     }
 
     function createProblem() {
@@ -156,6 +156,7 @@ define(['lodash', 'angular'], function(_, angular) {
         $scope.state.title, $scope.state.description, $scope.state.inputData);
       WorkspaceResource.create(problem).$promise.then(function(workspace) {
         InProgressResource.delete($stateParams);
+        $scope.dirty = false;
         $state.go('evidence', {
           workspaceId: workspace.id,
           problemId: workspace.defaultSubProblemId,

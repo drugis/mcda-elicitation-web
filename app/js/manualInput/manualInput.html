@@ -123,24 +123,17 @@
   <div class="grid-x">
     <div class="cell">
       <h3>Create workspace manually — step 2 of 2</h3>
+    </div>
+    <div class="cell">
       <h4>Enter data in effects table</h4>
     </div>
   </div>
+  <!-- input -->
   <div class="grid-x">
     <div class="cell">
-      <h4>Choose input method</h4>
-    </div>
-    <div class="cell">
-      <form>
-        <label><input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="study">Study data</label>
-        <label><input ng-change="resetData()" type="radio" ng-model="state.inputMethod" value="distribution">Exact values and effect distributions</label>
-      </form>
-    </div>
-  </div>
-  <!-- input through distributions -->
-  <div class="grid-x" ng-if="state.inputMethod === 'distribution'">
-    <div class="cell">
       <h4>{{state.title}}</h4>
+    </div>
+    <div class="cell">
       <table>
         <thead>
           <tr>
@@ -152,29 +145,7 @@
           <tr ng-repeat="criterion in state.criteria">
             <td>{{criterion.name}}</td>
             <td ng-repeat="treatment in state.treatments">
-              <effect-input criterion="criterion" treatment="treatment" input-data="state.inputData[criterion.hash][treatment.hash]" change-callback="checkInputData"></effect-input>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <!-- input through source data -->
-  <div class="grid-x" ng-if="state.inputMethod === 'study'">
-    <div class="cell">
-      <h4>{{state.title}}</h4>
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th ng-repeat="treatment in state.treatments" style="min-width:80px">{{treatment.name}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="criterion in state.criteria">
-            <td>{{criterion.name}}</td>
-            <td ng-repeat="treatment in state.treatments">
-              <effect-input-helper criterion="criterion" treatment="treatment" input-data="state.inputData[criterion.hash][treatment.hash]" study-type="criterion.dataType" change-callback="checkInputData"></effect-input-helper>
+              <effect-input-helper criterion="criterion" treatment="treatment" input-data="state.inputData[criterion.hash][treatment.hash]" change-callback="checkInputData"></effect-input-helper>
             </td>
           </tr>
         </tbody>

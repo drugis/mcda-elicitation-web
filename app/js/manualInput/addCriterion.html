@@ -4,16 +4,12 @@
       <div class="cell">
         <h2>Add criterion</h2>
       </div>
-    </div>
-    <div class="grid-x">
       <div class="cell">
         <label>
           Name
         </label>
         <input type="text" ng-model="criterion.name" ng-change="isCreationBlocked()">
       </div>
-    </div>
-    <div class="grid-x">
       <div class="cell">
         <label>Favorability</label>
         <input type="radio" ng-model="criterion.isFavorable" ng-value="true" id="favorable">
@@ -21,9 +17,14 @@
         <input type="radio" ng-model="criterion.isFavorable" ng-value="false" id="not-favorable">
         <label for="not-favorable">Not favorable</label>
       </div>
-    </div>
-    <div class="grid-x">
       <div class="cell">
+        <label>Data source</label>
+        <input type="radio" ng-model="criterion.dataSource" ng-value="'study'" id="study-data" ng-change="dataSourceChanged()">
+        <label for="study-data">Study data</label>
+        <input type="radio" ng-model="criterion.dataSource" ng-value="'exact'" id="exact-values" ng-change="dataSourceChanged()">
+        <label for="exact-values">Exact values</label>
+      </div>
+      <div class="cell" ng-hide="criterion.dataSource==='exact'">
         <label>Data type</label>
         <input type="radio" ng-model="criterion.dataType" ng-change="dataTypeChanged()" ng-value="'continuous'" id="continuous">
         <label for="continuous">Continuous</label>
@@ -32,9 +33,7 @@
         <input type="radio" ng-model="criterion.dataType" ng-change="dataTypeChanged()" ng-value="'survival'" id="survival">
         <label for="survival">Survival</label>
       </div>
-    </div>
-    <div class="grid-x" ng-if="criterion.dataType==='survival'">
-      <div class="cell large-8 large-offset-1">
+      <div class="cell large-8 large-offset-1" ng-if="criterion.dataType==='survival'">
         <label>Summary measure</label>
         <input type="radio" ng-model="criterion.summaryMeasure" ng-change="summaryMeasureChanged()" ng-value="'mean'" id="mean">
         <label for="mean">Mean</label>
@@ -43,35 +42,23 @@
         <input type="radio" ng-model="criterion.summaryMeasure" ng-change="summaryMeasureChanged()" ng-value="'survivalAtTime'" id="survival-at-time">
         <label for="survival-at-time">Survival at time</label>
       </div>
-    </div>
-    <div class="grid-x" ng-if="criterion.dataType === 'survival' && criterion.summaryMeasure === 'survivalAtTime'">
-      <div class="cell large-5 large-offset-1">
+      <div class="cell large-5 large-offset-1" ng-if="criterion.dataType === 'survival' && criterion.summaryMeasure === 'survivalAtTime'">
         <label>Time point of interest</label>
         <input type="number" ng-model="criterion.timePointOfInterest" min="0" ng-model-options="{debounce:300}" ng-change="timePointOfInterestChanged()">
       </div>
-    </div>
-    <div class="grid-x" ng-if="criterion.dataType === 'survival'">
-      <div class="cell large-5 large-offset-1">
+      <div class="cell large-5 large-offset-1" ng-if="criterion.dataType === 'survival'">
         <label>Time scale</label>
         <input type="text" ng-model="criterion.timeScale" ng-model-options="{debounce:300}" ng-change="timeScaleChanged()">
       </div>
-    </div>
-    <div class="grid-x" ng-show="isInvalidTimePointOfInterest">
-      <div class="alert cell large-5 large-offset-1">Time point of interest must be a number >= 0</div>
-    </div>
-    <div class="grid-x">
+      <div class="alert cell large-5 large-offset-1" ng-show="isInvalidTimePointOfInterest">Time point of interest must be a number >= 0</div>
       <div class="cell">
         <label>Unit of measurement (optional)</label>
         <input type="text" ng-model="criterion.unitOfMeasurement">
       </div>
-    </div>
-    <div class="grid-x">
       <div class="cell">
         <label>Description (optional)</label>
         <input type="text" ng-model="criterion.description">
       </div>
-    </div>
-    <div class="grid-x">
       <div class="cell">
         <label>Source (optional)</label>
         <input type="radio" ng-model="criterion.source" ng-value="undefined" id="no-source">
@@ -81,20 +68,14 @@
         <input type="radio" ng-model="criterion.source" ng-value="'meta analysis'" id="meta-analysis">
         <label for="meta-analysis">Meta analysis</label>
       </div>
-    </div>
-    <div class="grid-x">
       <div class="cell">
         <label>Source link (optional)</label>
         <input ng-disabled="criterion.source === undefined" type="text" ng-model="criterion.sourceLink">
       </div>
-    </div>
-    <div class="grid-x">
       <div class="cell button-group">
         <button class="button" ng-disabled="blockedReasons.length" type="submit">Add</button>
         <button class="button" type="button" ng-click="cancel()">Cancel</button>
       </div>
-    </div>
-    <div class="grid-x">
       <div class="cell" ng-when="blockedReasons.length">
         <em ng-repeat="blockedReason in blockedReasons" class="alert">{{blockedReason}}<br /></em>
       </div>

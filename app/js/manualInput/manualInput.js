@@ -3,7 +3,6 @@ var requires = [
   'mcda/manualInput/manualInputController',
   'mcda/manualInput/addCriterionController',
   'mcda/manualInput/manualInputService',
-  'mcda/manualInput/effectInputDirective',
   'mcda/manualInput/effectInputHelperDirective',
   'mcda/manualInput/inProgressResource'
 ];
@@ -13,7 +12,6 @@ define(['angular', 'angular-resource'].concat(requires), function(
   ManualInputController,
   AddCriterionController,
   ManualInputService,
-  effectInput,
   effectInputHelper,
   InProgressResource
 ) {
@@ -24,7 +22,6 @@ define(['angular', 'angular-resource'].concat(requires), function(
 
     .factory('ManualInputService', ManualInputService)
 
-    .directive('effectInput', effectInput)
     .directive('effectInputHelper', effectInputHelper)
 
     .service('InProgressResource', InProgressResource);

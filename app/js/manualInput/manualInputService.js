@@ -124,8 +124,8 @@ define(['lodash', 'angular'], function(_) {
         oldInput.type === 'dsurv' && newDataType !== 'survival';
     }
 
-    function determineInitialDistributionType(source, criterion) {
-      if (source === 'study') {
+    function determineInitialDistributionType(criterion) {
+      if (criterion.dataSource === 'study') {
         if (criterion.dataType === 'survival') {
           return 'dsurv';
         } else if (criterion.dataType === 'dichotomous') {
@@ -139,14 +139,14 @@ define(['lodash', 'angular'], function(_) {
 
     }
 
-    function prepareInputData(criteria, treatments, source, oldInputData) {
+    function prepareInputData(criteria, treatments, oldInputData) {
       var inputData = {};
       _.forEach(criteria, function(criterion) {
         inputData[criterion.hash] = {};
         var defaultData = {
-          type: determineInitialDistributionType(source, criterion),
+          type: determineInitialDistributionType(criterion),
           value: undefined,
-          source: source,
+          source: criterion.dataSource,
           isInvalid: true
         };
         _.forEach(treatments, function(treatment) {
@@ -162,40 +162,40 @@ define(['lodash', 'angular'], function(_) {
       return inputData;
     }
 
-    function createDistribution(inputState, criterionType) {
+    function createDistribution(inputCell, criterion) {
       // Distribution input
-      if (inputState.source === 'distribution') {
-        return inputState;
+      if (criterion.dataSource !== 'study') {
+        return inputCell;
       }
 
       // Study data input
       var newData = {};
-      if (criterionType === 'dichotomous') {
-        newData.alpha = inputState.count + 1;
-        newData.beta = inputState.sampleSize - inputState.count + 1;
+      if (criterion.dataType === 'dichotomous') {
+        newData.alpha = inputCell.count + 1;
+        newData.beta = inputCell.sampleSize - inputCell.count + 1;
         newData.type = 'dbeta';
-      } else if (criterionType === 'continuous') {
-        newData.mu = inputState.mu; // All these possibilities have a mu
-        if (inputState.continuousType === 'SEnorm') {
-          newData.sigma = inputState.stdErr;
+      } else if (criterion.dataType === 'continuous') {
+        newData.mu = inputCell.mu; // All these possibilities have a mu
+        if (inputCell.continuousType === 'SEnorm') {
+          newData.sigma = inputCell.stdErr;
           newData.type = 'dnorm';
-        } else if (inputState.continuousType === 'SDnorm') {
-          newData.sigma = inputState.sigma / Math.sqrt(inputState.sampleSize);
+        } else if (inputCell.continuousType === 'SDnorm') {
+          newData.sigma = inputCell.sigma / Math.sqrt(inputCell.sampleSize);
           newData.type = 'dnorm';
-        } else if (inputState.continuousType === 'SEt') {
-          newData.stdErr = inputState.stdErr;
-          newData.dof = inputState.sampleSize - 1;
+        } else if (inputCell.continuousType === 'SEt') {
+          newData.stdErr = inputCell.stdErr;
+          newData.dof = inputCell.sampleSize - 1;
           newData.type = 'dt';
-        } else if (inputState.continuousType === 'SDt') {
-          newData.stdErr = inputState.sigma / Math.sqrt(inputState.sampleSize);
-          newData.dof = inputState.sampleSize - 1;
+        } else if (inputCell.continuousType === 'SDt') {
+          newData.stdErr = inputCell.sigma / Math.sqrt(inputCell.sampleSize);
+          newData.dof = inputCell.sampleSize - 1;
           newData.type = 'dt';
         }
-      } else if (criterionType === 'survival') {
+      } else if (criterion.dataType === 'survival') {
         // survival
-        if (_.isNumber(inputState.events) && _.isNumber(inputState.exposure)) {
-          newData.alpha = inputState.events + 0.001;
-          newData.beta = inputState.exposure + 0.001;
+        if (_.isNumber(inputCell.events) && _.isNumber(inputCell.exposure)) {
+          newData.alpha = inputCell.events + 0.001;
+          newData.beta = inputCell.exposure + 0.001;
         }
         newData.type = 'dsurv';
       }
@@ -253,7 +253,7 @@ define(['lodash', 'angular'], function(_) {
       var newPerformanceTable = [];
       _.forEach(criteria, function(criterion) {
         _.forEach(treatments, function(treatment) {
-          var data = createDistribution(inputData[criterion.hash][treatment.hash], criterion.dataType);
+          var data = createDistribution(inputData[criterion.hash][treatment.hash], criterion);
           newPerformanceTable.push({
             alternative: treatment.name,
             criterion: criterion.name,
