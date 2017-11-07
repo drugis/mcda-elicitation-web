@@ -9,12 +9,8 @@ define(['lodash'], function(_) {
     // functions
     $scope.forkScenario = forkScenario;
     $scope.newScenario = newScenario;
-    $scope.editTitle = editTitle;
-    $scope.saveTitle = saveTitle;
-    $scope.cancelTitle = cancelTitle;
     $scope.scenarioChanged = scenarioChanged;
-    $scope.checkDuplicateScenarioTitle = checkDuplicateScenarioTitle;
-
+    
     // init
     var baseProblem = $scope.workspace.problem;
     var deregisterTransitionListener;
@@ -22,6 +18,7 @@ define(['lodash'], function(_) {
     $scope.scenarioTitle = {};
     $scope.selections = {};
     $scope.scenarios = scenarios;
+    $scope.scenariosWithResults = WorkspaceService.filterScenariosWithResults(scenarios);
     $scope.scenario = currentScenario;
     $scope.isDuplicateScenarioTitle = false;
     $scope.aggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, currentScenario);
@@ -133,37 +130,10 @@ define(['lodash'], function(_) {
       });
     }
 
-    function editTitle() {
-      $scope.isEditTitleVisible = true;
-      $scope.scenarioTitle.value = $scope.scenario.title;
-    }
-
-    function saveTitle() {
-      $scope.scenario.title = $scope.scenarioTitle.value;
-      $scope.isEditTitleVisible = false;
-      ScenarioResource.save($stateParams, $scope.scenario, function(savedScenario) {
-        $scope.scenarios = ScenarioResource.query(_.omit($stateParams, 'id'));
-        redirect(savedScenario.id, $state.current.name);
-      });
-    }
-
-    function checkDuplicateScenarioTitle() {
-      $scope.isDuplicateScenarioTitle = _.find($scope.scenarios, function(scenario) {
-        return scenario.id !== $scope.scenario.id && scenario.title === $scope.scenarioTitle.value;
-      });
-    }
-
-    function cancelTitle() {
-      $scope.isEditTitleVisible = false;
-    }
-
     function scenarioChanged(newScenario) {
       if (!newScenario) {
         return; // just a title edit
       } else {
-
-        // TODO: some check wether results are available
-
         if ($state.current.name === 'smaa-results') {
 
           $state.go('smaa-results', {

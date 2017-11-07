@@ -3,12 +3,20 @@ define(['lodash', 'angular'], function(_, angular) {
 
   var dependencies = [
     '$scope',
+    '$modal',
+    '$stateParams',
+    '$state',
+    'ScenarioResource',
     'PartialValueFunction',
     'TaskDependencies',
     'currentScenario'
   ];
   var PreferencesController = function(
     $scope,
+    $modal,
+    $stateParams,
+    $state,
+    ScenarioResource,
     PartialValueFunction,
     TaskDependencies,
     currentScenario) {
@@ -17,6 +25,7 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.pvf = PartialValueFunction;
     $scope.isPVFDefined = isPVFDefined;
     $scope.isAccessible = isAccessible;
+    $scope.editScenarioTitle = editScenarioTitle;
 
     // init
     $scope.scenario = currentScenario;
@@ -56,6 +65,28 @@ define(['lodash', 'angular'], function(_, angular) {
       return TaskDependencies.isAccessible(task, $scope.aggregateState);
     }
 
+    function editScenarioTitle() {
+      $modal.open({
+        templateUrl: '/app/js/preferences/editScenarioTitle.html',
+        controller: 'EditScenarioTitleController',
+        resolve: {
+          scenario: function() {
+            return $scope.scenario;
+          },
+          scenarios: function() {
+            return $scope.scenarios;
+          },
+          callback: function() {
+            return function(newTitle) {
+              $scope.scenario.title = newTitle;
+              ScenarioResource.save($stateParams, $scope.scenario).$promise.then(function(){
+                $state.reload();
+              });
+            };
+          }
+        }
+      });
+    }
   };
   return dependencies.concat(PreferencesController);
 });

@@ -423,5 +423,50 @@ define(['angular', 'angular-mocks', 'mcda/services/workspaceService'], function(
         expect(result).toEqual(expectedResult);
       });
     });
+
+    describe('filterScenariosWithResults', function() {
+      it('should only return the scenarios in which all criteria have defined pvfs', function() {
+        var scenarios = [{
+          state: {
+            problem: {
+              criteria: {
+                crit1: {
+                  title: 'crit1',
+                  pvf: {
+                    range: [0, 1]
+                  }
+                }
+              }
+            }
+          }
+        }, {
+          state: {
+            problem: {
+              criteria: {
+                crit1: {
+                  title: 'crit1'
+                }
+              }
+            }
+          }
+        }];
+        var result = workspaceService.filterScenariosWithResults(scenarios);
+        var expectedResult = [{
+          state: {
+            problem: {
+              criteria: {
+                crit1: {
+                  title: 'crit1',
+                  pvf: {
+                    range: [0, 1]
+                  }
+                }
+              }
+            }
+          }
+        }];
+        expect(result).toEqual(expectedResult);
+      });
+    });
   });
 });

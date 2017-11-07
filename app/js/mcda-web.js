@@ -31,7 +31,8 @@ define(['angular',
     'mcda/workspace/workspace',
     'mcda/controllers',
     'mcda/directives',
-    'mcda/navbar/navbar'
+    'mcda/navbar/navbar',
+    'mcda/preferences/preferences'
   ],
   function(angular, require, Config) {
 
@@ -60,7 +61,8 @@ define(['angular',
       'elicit.workspace',
       'ngCookies',
       'errorReporting',
-      'export-directive'
+      'export-directive',
+      'elicit.preferences'
     ];
 
     var app = angular.module('elicit', dependencies);

@@ -1,42 +1,13 @@
 <div class="grid-x">
   <div class="cell">
-    <em>Here you can set the partial value functions and trade-offs of the scenario.
-      Changes here will change the current scenario.</em>
+    <span>Scenario:</span>
+    <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenarios track by scenario.id" ng-change="scenarioChanged(scenario)"></select><a ng-if="editMode.isUserOwner" ng-click="editScenarioTitle()"><i class="fa fa-edit"></i></a>
   </div>
 </div>
 <div class="grid-x">
   <div class="cell">
-    <h4 ng-show="!isEditTitleVisible">
-      Scenario name:
-      <span class="subheader">{{scenario.title}}</span>
-      <a ng-if="editMode.isUserOwner" ng-click="editTitle()"><i class="fa fa-edit"></i></a>
-    </h4>
-  </div>
-  <div class="cell">
-    <span>Scenario:</span>
-    <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenarios track by scenario.id" ng-change="scenarioChanged(scenario)"></select>
-    <button class="button" ng-click="forkScenario()">Copy current scenario</button>
-    <button class="button" ng-click="newScenario()">Create clean scenario</button>
-  </div>
-</div>
-<div class="grid-x" ng-show="isEditTitleVisible">
-  <div class="cell large-8 small-12">
-    <form>
-      <div class="grid-x collapse">
-        <div class="cell small-8">
-          <input type="text" ng-change="checkDuplicateScenarioTitle()" ng-model="scenarioTitle.value">
-        </div>
-        <div class="cell small-2 button-group expanded">
-          <button ng-disabled="!scenarioTitle.value || isDuplicateScenarioTitle" class="button postfix" ng-click="saveTitle()">Save</button>
-          <button class="button secondary postfix" ng-click="cancelTitle()">Cancel</button>
-        </div>
-      </div>
-      <div class="grid-x" ng-show="isDuplicateScenarioTitle">
-        <div class="cell">
-          <span class="alert">Duplicate title</span>
-        </div>
-      </div>
-    </form>
+    <button class="button small" ng-click="forkScenario()">Copy current scenario</button>
+    <button class="button small" ng-click="newScenario()">Create clean scenario</button>
   </div>
 </div>
 <div id="partial-value-functions-block" class="prefs-block">

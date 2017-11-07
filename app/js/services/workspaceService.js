@@ -48,7 +48,7 @@ define(['angular', 'lodash'], function(angular, _) {
         });
       }
 
-      if (subProblemDefinition.excludedAlternatives) { 
+      if (subProblemDefinition.excludedAlternatives) {
         newProblem.alternatives = _.reduce(newProblem.alternatives, function(accum, alternative, key) {
           if (!_.includes(subProblemDefinition.excludedAlternatives, key)) {
             accum[key] = alternative;
@@ -65,7 +65,7 @@ define(['angular', 'lodash'], function(angular, _) {
         newProblem.performanceTable = _.reject(newProblem.performanceTable, function(performanceEntry) {
           return performanceEntry.performance.type === 'dsurv' && _.includes(excludedAlternativeNames, performanceEntry.alternative);
         });
-        
+
         // remove all relative entries that are excluded
         _.forEach(newProblem.performanceTable, function(performanceEntry) {
           if (performanceEntry.performance.type !== 'exact' && performanceEntry.performance.type !== 'dsurv' &&
@@ -149,6 +149,18 @@ define(['angular', 'lodash'], function(angular, _) {
       return [minimum, maximum];
     }
 
+    function filterScenariosWithResults(scenarios){
+      return _.filter(scenarios, function(scenario){
+        var hasPvf = true;
+        _.forEach(scenario.state.problem.criteria,function(criterion){
+          if(!criterion.pvf){
+            hasPvf =  false;
+          }
+        });
+        return hasPvf;
+      });
+    }
+
     return {
       getObservedScales: getObservedScales,
       buildTheoreticalScales: buildTheoreticalScales,
@@ -156,7 +168,8 @@ define(['angular', 'lodash'], function(angular, _) {
       reduceProblem: reduceProblem,
       buildAggregateState: buildAggregateState,
       mergeBaseAndSubProblem: mergeBaseAndSubProblem,
-      setDefaultObservedScales: setDefaultObservedScales
+      setDefaultObservedScales: setDefaultObservedScales,
+      filterScenariosWithResults: filterScenariosWithResults
     };
   };
 
