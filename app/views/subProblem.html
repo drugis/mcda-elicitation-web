@@ -1,12 +1,8 @@
 <div class="grid-x">
-  <div class="cell large-6 input-group">
-    <span class="input-group-label">
+  <div class="cell">
       Problem:
-    </span>
-    <select class="scenario-select input-group-field" ng-model="subProblem" ng-options="subProblem.title for subProblem in subProblems track by subProblem.id" ng-change="subProblemChanged(subProblem)"></select>
-    <div class="input-group-button">
-      <button class="button tiny success" ng-click="openCreateDialog()" ng-if="editMode.isUserOwner">Create new problem</button>
-    </div>
+    <select class="scenario-select" ng-model="subProblem" ng-options="subProblem.title for subProblem in subProblems track by subProblem.id" ng-change="subProblemChanged(subProblem)"></select>
+      <button class="button tiny success" style="margin: 0" ng-click="openCreateDialog()" ng-if="editMode.isUserOwner">Create new problem</button>
   </div>
 </div>
 <div class="grid-x">
