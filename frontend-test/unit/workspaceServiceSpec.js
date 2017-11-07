@@ -1,7 +1,16 @@
 'use strict';
-define(['angular', 'angular-mocks', 'mcda/services/workspaceService'], function() {
+define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
   describe('The WorkspaceService, ', function() {
     var workspaceService;
+    beforeEach(module('elicit.workspace', function($provide) {
+      $provide.value('ScalesService', scalesServiceMock);
+      $provide.value('sortCriteriaWithW', sortCriteriaWithW);
+    }));
+
+    beforeEach(inject(function(WorkspaceService) {
+      workspaceService = WorkspaceService;
+    }));
+
     var scalesServiceMock = jasmine.createSpyObj('ScalesService', ['getObservedScales']);
     var criteriaWithW = [{
       id: 'critId2',
@@ -11,15 +20,6 @@ define(['angular', 'angular-mocks', 'mcda/services/workspaceService'], function(
       w: 'w_4'
     }];
     var sortCriteriaWithW = jasmine.createSpy('sortCriteriaWithW').and.returnValue(criteriaWithW);
-    beforeEach(module('elicit.workspaceService', function($provide) {
-      $provide.value('ScalesService', scalesServiceMock);
-      $provide.value('sortCriteriaWithW', sortCriteriaWithW);
-    }));
-
-    beforeEach(inject(function(WorkspaceService) {
-      workspaceService = WorkspaceService;
-    }));
-
 
     describe('buildValueTree', function() {
       it('should build the value tree from the problem criteria',

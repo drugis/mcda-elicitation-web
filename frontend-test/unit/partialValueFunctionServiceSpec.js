@@ -3,16 +3,16 @@ define(['angular',
     'angular-mocks',
     'mcda/services/taskDependencies',
     'mcda/services/util',
-    'mcda/services/effectsTableService'
+    'mcda/services/effectsTableService',
+    'mcda/preferences/preferences'
   ],
   function() {
     describe('PartialValueFunctionServiceHandler', function() {
       var scope, state;
 
-      beforeEach(module('elicit.effectsTableService'));
-      beforeEach(module('elicit.controllers'));
+      beforeEach(module('elicit.preferences'));
       beforeEach(module('elicit.taskDependencies'));
-      beforeEach(module('elicit.pvfService'));
+      beforeEach(module('elicit.effectsTableService'));
 
 
       beforeEach(inject(function($rootScope, $controller, TaskDependencies) {
@@ -38,7 +38,7 @@ define(['angular',
           problem: exampleProblem()
         };
 
-        $controller('PartialValueFunctionServiceController', {
+        $controller('PartialValueFunctionController', {
           $scope: scope,
           $state: state,
           $stateParams: {},

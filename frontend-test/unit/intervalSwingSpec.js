@@ -1,13 +1,12 @@
 'use strict';
 define(['angular',
     'angular-mocks',
-    'mcda/preferences/intervalSwingController'
+    'mcda/preferences/preferences'
   ],
   function() {
     describe('IntervalSwingHandler', function() {
-      beforeEach(module('elicit.controllers'));
+      beforeEach(module('elicit.preferences'));
       beforeEach(module('elicit.taskDependencies'));
-      beforeEach(module('elicit.pvfService'));
 
       function initializeScope($controller, $rootScope, TaskDependencies,  problem) {
         var scope, state;

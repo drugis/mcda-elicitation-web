@@ -120,42 +120,42 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           unitOfMeasurement: 'particles',
           isFavorable: true,
           hash: 'favorable criterion',
-          dataType: 'continuous'
+          dataSource: 'exact'
         }, {
           name: 'unfavorable criterion',
           description: 'some crit description',
           unitOfMeasurement: 'particles',
           isFavorable: false,
           hash: 'unfavorable criterion',
-          dataType: 'continuous'
+          dataSource: 'exact'
         }];
         var performanceTable = {
           'favorable criterion': {
-            'treatment1': {
+            treatment1: {
               type: 'exact',
               value: 10,
               hash: 'treatment1',
-              source: 'distribution'
+              source: 'exact'
             },
-            'treatment2': {
+            treatment2: {
               type: 'exact',
               value: 5,
               hash: 'treatment2',
-              source: 'distribution'
+              source: 'exact'
             }
           },
           'unfavorable criterion': {
-            'treatment1': {
+            treatment1: {
               type: 'exact',
               value: 20,
               hash: 'treatment1',
-              source: 'distribution'
+              source: 'exact'
             },
-            'treatment2': {
+            treatment2: {
               type: 'exact',
               value: 30,
               hash: 'treatment2',
-              source: 'distribution'
+              source: 'exact'
             }
           }
         };
@@ -240,7 +240,8 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           description: 'some crit description',
           unitOfMeasurement: 'hour',
           isFavorable: true,
-          hash: 'survival mean'
+          hash: 'survival mean',
+          dataSource: 'study'
         }, {
           name: 'survival at time',
           dataType: 'survival',
@@ -251,6 +252,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           unitOfMeasurement: 'Proportion',
           isFavorable: false,
           hash: 'survival at time',
+          dataSource: 'study'
         }];
 
         var performanceTable = {
@@ -379,6 +381,21 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
 
     describe('createDistribution', function() {
       it('should create correct distributions for all cases', function() {
+        // criteria
+        var dichotomousCriterion = {
+          dataSource: 'study',
+          dataType: 'dichotomous'
+        };
+        var survivalCriterion = {
+          dataSource: 'study',
+          dataType: 'survival'
+        };
+        var continuousCriterion = {
+          dataSource: 'study',
+          dataType: 'continuous'
+        };
+
+        // tests
         var dichotomousState = {
           count: 0,
           sampleSize: 10
@@ -388,7 +405,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           beta: 11,
           type: 'dbeta'
         };
-        var dichotomousResult = manualInputService.createDistribution(dichotomousState, 'dichotomous');
+        var dichotomousResult = manualInputService.createDistribution(dichotomousState, dichotomousCriterion);
         expect(dichotomousResult).toEqual(expectedDichotomousResult);
 
         var survivalState = {
@@ -400,7 +417,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           beta: 100.001,
           type: 'dsurv'
         };
-        var survivalResult = manualInputService.createDistribution(survivalState, 'survival');
+        var survivalResult = manualInputService.createDistribution(survivalState, survivalCriterion);
         expect(survivalResult).toEqual(expectedSurvivalResult);
 
         var continuousStandardErrorNormalState = {
@@ -413,8 +430,10 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           sigma: 0.5,
           type: 'dnorm'
         };
-        var continuousStandardErrorNormalResult = manualInputService.createDistribution(continuousStandardErrorNormalState, 'continuous');
-        expect(continuousStandardErrorNormalResult).toEqual(expectedContinuousStandardErrorNormalResult);
+        var continuousStandardErrorNormalResult = manualInputService
+          .createDistribution(continuousStandardErrorNormalState, continuousCriterion);
+        expect(continuousStandardErrorNormalResult)
+          .toEqual(expectedContinuousStandardErrorNormalResult);
 
         var continuousStandardDeviationNormalState = {
           mu: 5,
@@ -427,8 +446,10 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           sigma: 2,
           type: 'dnorm'
         };
-        var continuousStandardDeviationNormalResult = manualInputService.createDistribution(continuousStandardDeviationNormalState, 'continuous');
-        expect(continuousStandardDeviationNormalResult).toEqual(expectedContinuousStandardDeviationNormalResult);
+        var continuousStandardDeviationNormalResult = manualInputService
+          .createDistribution(continuousStandardDeviationNormalState, continuousCriterion);
+        expect(continuousStandardDeviationNormalResult)
+          .toEqual(expectedContinuousStandardDeviationNormalResult);
 
         var continuousStandardErrorStudentTState = {
           mu: 5,
@@ -442,8 +463,10 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           dof: 8,
           type: 'dt'
         };
-        var continuousStandardErrorStudentTResult = manualInputService.createDistribution(continuousStandardErrorStudentTState, 'continuous');
-        expect(continuousStandardErrorStudentTResult).toEqual(expectedContinuousStandardErrorStudentTResult);
+        var continuousStandardErrorStudentTResult = manualInputService
+          .createDistribution(continuousStandardErrorStudentTState, continuousCriterion);
+        expect(continuousStandardErrorStudentTResult)
+          .toEqual(expectedContinuousStandardErrorStudentTResult);
 
         var continuousStandardDeviationStudentTState = {
           mu: 5,
@@ -457,8 +480,10 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           dof: 8,
           type: 'dt'
         };
-        var continuousStandardDeviationStudentTResult = manualInputService.createDistribution(continuousStandardDeviationStudentTState, 'continuous');
-        expect(continuousStandardDeviationStudentTResult).toEqual(expectedContinuousStandardDeviationStudentTResult);
+        var continuousStandardDeviationStudentTResult = manualInputService
+          .createDistribution(continuousStandardDeviationStudentTState, continuousCriterion);
+        expect(continuousStandardDeviationStudentTResult)
+          .toEqual(expectedContinuousStandardDeviationStudentTResult);
 
       });
     });
@@ -477,16 +502,18 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
         };
         var criteria = [{
           name: 'criterion 1 title',
-          hash: 'criterion 1 title'
+          hash: 'criterion 1 title',
+          dataSource: 'exact'
         }, {
           name: 'criterion 2 title',
-          hash: 'criterion 2 title'
+          hash: 'criterion 2 title',
+          dataSource: 'exact'
         }];
-        var result = manualInputService.prepareInputData(criteria, treatments, 'distribution');
+        var result = manualInputService.prepareInputData(criteria, treatments);
         var newCell = {
           type: 'exact',
           value: undefined,
-          source: 'distribution',
+          source: 'exact',
           isInvalid: true
         };
         var expectedResult = {
@@ -516,15 +543,18 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
         var criteria = [{
           name: 'survival to exact',
           hash: 'survival to exact',
-          dataType: 'exact'
+          dataType: 'exact',
+          dataSource: 'exact'
         }, {
           name: 'survival stays the same',
           hash: 'survival stays the same',
-          dataType: 'survival'
+          dataType: 'survival',
+          dataSource: 'study'
         }, {
           name: 'exact to survival',
           hash: 'exact to survival',
-          dataType: 'survival'
+          dataType: 'survival',
+          dataSource: 'study'
         }];
         var oldCell = {
           type: 'dsurv',
@@ -558,17 +588,17 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
             }
           }
         };
-        var result = manualInputService.prepareInputData(criteria, treatments, 'distribution', oldInputData);
+        var result = manualInputService.prepareInputData(criteria, treatments, oldInputData);
         var newCellExact = {
           type: 'exact',
           value: undefined,
-          source: 'distribution',
+          source: 'exact',
           isInvalid: true
         };
         var newCellSurvival = {
           type: 'dsurv',
           value: undefined,
-          source: 'distribution',
+          source: 'study',
           isInvalid: true
         };
         var expectedResult = {
