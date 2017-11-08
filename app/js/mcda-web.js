@@ -83,6 +83,9 @@ define(['angular',
       return require.toUrl('.').replace('js', '');
     })());
 
+    app.constant('isMcdaStandalone', true);
+
+
     app.config(function(mcdaRootPath, $stateProvider, $urlRouterProvider, $httpProvider, MCDARouteProvider) {
       var baseTemplatePath = mcdaRootPath + 'views/';
 

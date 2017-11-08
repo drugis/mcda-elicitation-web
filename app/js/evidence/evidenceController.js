@@ -6,7 +6,8 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     'SubProblemResource',
     'ScenarioResource',
     'WorkspaceResource',
-    'mcdaRootPath'
+    'mcdaRootPath',
+    'isMcdaStandalone'
   ];
 
   var EvidenceController = function($scope, $state, $stateParams, $modal, $q,
@@ -15,7 +16,8 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     SubProblemResource,
     ScenarioResource,
     WorkspaceResource,
-    mcdaRootPath) {
+    mcdaRootPath,
+    isMcdaStandalone) {
     // functions
     $scope.isExact = isExact;
     $scope.editTherapeuticContext = editTherapeuticContext;
@@ -28,7 +30,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.problem = $scope.workspace.problem;
     $scope.effectsTableData = EffectsTableService.buildEffectsTableData($scope.problem, $scope.valueTree);
     $scope.nrAlternatives = _.keys($scope.problem.alternatives).length;
-    $scope.isStandAlone = mcdaRootPath === '/app/';
+    $scope.isStandAlone = isMcdaStandalone;
     $scope.references = {
       has: _.find($scope.effectsTableData, function(effectsTableRow) {
         return _.find(effectsTableRow.criteria, function(criterion) {
@@ -69,7 +71,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
 
     function editCriterion(criterion) {
       $modal.open({
-        templateUrl: '/app/js/evidence/editCriterion.html',
+        templateUrl: '/js/evidence/editCriterion.html',
         controller: 'EditCriterionController',
         resolve: {
           criterion: function() {
@@ -129,7 +131,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       }
       function editAlternative(alternative) {
         $modal.open({
-          templateUrl: '/app/js/evidence/editAlternative.html',
+          templateUrl: '/js/evidence/editAlternative.html',
           controller: 'EditAlternativeController',
           resolve: {
             alternative: function() {

@@ -87,7 +87,7 @@ var bower_path = '/bower_components';
 var app = express();
 app
   .use(express.static('manual'))
-  .use(express.static('/bower_components'))
+  .use('/bower_components', express.static(__dirname + '/bower_components'))
   .use(express.static('app'))
   .use('/template', express.static(__dirname + bower_path + '/angular-foundation-assets/template'))
   .use('/examples', express.static(__dirname + '/examples'))

@@ -20,6 +20,7 @@ define(['lodash'], function(_) {
       dataType: 'continuous',
       dataSource: 'study'
     };
+    $scope.isAddOperation = !oldCriterion;
     $scope.isAddingCriterion = false;
 
     // init

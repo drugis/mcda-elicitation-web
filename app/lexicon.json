@@ -18,11 +18,15 @@
     "title": "Configured range",
     "text": "Which range the user has actually configured to be used. Without user intervention the default scales are the observed ranges.",
     "link": "/manual.html#mcda-preparing-dataset"
-
   },
   "criterion": {
     "title": "Criterion",
     "text": "A criterion is an outcome of interest to be used in a benefit-risk analysis, e.g. \"mood improvement\" or \"nausea\".",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "criterion-data-source": {
+    "title": "Criterion data source",
+    "text": "Criterion data can be entered as either study data, or an exact-value distribution.",
     "link": "/manual.html#mcda-preparing-dataset"
   },
   "criterion-datatype": {
@@ -63,6 +67,11 @@
   "favorability": {
     "title": "Favorability",
     "text": "Whether or not an increase in the criterion is seen as favorable.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "incomplete-workspaces": {
+    "title": "Incomplete workspaces",
+    "text": "The process of manually creating a workspace can be paused at any point. This list shows those unfinished workspaces.",
     "link": "/manual.html#mcda-preparing-dataset"
   },
   "interval-swing": {

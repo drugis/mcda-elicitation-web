@@ -2,7 +2,7 @@
   <form ng-submit="addCriterion(criterion)">
     <div class="grid-x">
       <div class="cell">
-        <h2>Add criterion</h2>
+        <h2>{{isAddOperation ? 'Add' : 'Edit'}} criterion</h2>
       </div>
       <div class="cell">
         <label>
@@ -20,7 +20,9 @@
         <label for="not-favorable">Not favorable</label>
       </div>
       <div class="cell">
-        <label>Data source</label>
+        <label>Data source
+          <inline-help help-key="criterion-data-source"></inline-help>
+        </label>
         <input type="radio" ng-model="criterion.dataSource" ng-value="'study'" id="study-data" ng-change="dataSourceChanged()">
         <label for="study-data">Study data</label>
         <input type="radio" ng-model="criterion.dataSource" ng-value="'exact'" id="exact-values" ng-change="dataSourceChanged()">
@@ -89,7 +91,7 @@
         <input ng-disabled="criterion.source === undefined" type="text" ng-model="criterion.sourceLink">
       </div>
       <div class="cell button-group">
-        <button class="button" ng-disabled="blockedReasons.length" type="submit">Add</button>
+        <button class="button" ng-disabled="blockedReasons.length" type="submit">{{isAddOperation ? 'Add' : 'Edit'}}</button>
         <button class="button" type="button" ng-click="cancel()">Cancel</button>
       </div>
       <div class="cell" ng-when="blockedReasons.length">

@@ -1,7 +1,7 @@
 <form ng-submit="save()">
   <div class="grid-x">
     <div class="cell">
-      <h3> Edit criterion</h3>
+      <h3>Edit criterion</h3>
     </div>
     <div class="cell">
       <label>Name</label>
@@ -16,13 +16,13 @@
       <textarea rows="4" ng-model="criterion.description"></textarea>
     </div>
     <div class="cell">
-      <label>Unit of measurement</label>
+      <label>Unit of measurement <inline-help help-key="criterion-unit"></inline-help></label>
     </div>
     <div class="cell">
       <input type="text" ng-model="criterion.unitOfMeasurement">
     </div>
     <div class="cell">
-      <label>Source</label>
+      <label>Source <inline-help help-key="criterion-source"></inline-help></label>
     </div>
     <div class="cell">
       <input type="radio" ng-model="criterion.source" ng-value="undefined" id="no-source">
@@ -33,7 +33,7 @@
       <label for="meta-analysis">Meta analysis</label>
     </div>
     <div class="cell">
-      <label>Source link</label>
+      <label>Source link <inline-help help-key="criterion-source-link"></inline-help></label>
     </div>
     <div class="cell">
       <input type="text" ng-disabled="criterion.source === undefined" ng-model="criterion.sourceLink">
