@@ -425,7 +425,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
     });
 
     describe('filterScenariosWithResults', function() {
-      it('should only return the scenarios in which all criteria have defined pvfs', function() {
+      it('should only return the scenarios in which all criteria have fully defined pvfs', function() {
         var scenarios = [{
           state: {
             problem: {
@@ -433,7 +433,8 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
                 crit1: {
                   title: 'crit1',
                   pvf: {
-                    range: [0, 1]
+                    range: [0, 1],
+                    direction: 'increasing'
                   }
                 }
               }
@@ -449,6 +450,19 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
               }
             }
           }
+        }, {
+          state: {
+            problem: {
+              criteria: {
+                crit1: {
+                  title: 'crit1',
+                  pvf: {
+                    range: [0,1]
+                  }
+                }
+              }
+            }
+          }
         }];
         var result = workspaceService.filterScenariosWithResults(scenarios);
         var expectedResult = [{
@@ -458,7 +472,8 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
                 crit1: {
                   title: 'crit1',
                   pvf: {
-                    range: [0, 1]
+                    range: [0, 1],
+                    direction: 'increasing'
                   }
                 }
               }

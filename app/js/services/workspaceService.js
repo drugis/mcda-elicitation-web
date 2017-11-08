@@ -152,9 +152,9 @@ define(['lodash', 'angular'], function(_) {
       return _.filter(scenarios, function(scenario) {
         var hasPvf = true;
         _.forEach(scenario.state.problem.criteria, function(criterion) {
-          if (!criterion.pvf) {
+          if (!criterion.pvf || !criterion.pvf.direction) {
             hasPvf = false;
-          }
+          } 
         });
         return hasPvf;
       });
