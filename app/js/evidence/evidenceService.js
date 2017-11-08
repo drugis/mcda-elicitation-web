@@ -39,13 +39,14 @@ define(['lodash', 'angular'], function(_) {
     function renameCriterionInScenarios(oldCriterion, newCriterion, scenarios) {
       return _.map(scenarios, function(scenario) {
         var newScenario = _.cloneDeep(scenario);
-        var scenariosCriterion = _.find(scenario.state.problem.criteria, ['title', oldCriterion.title]);
-        if (scenariosCriterion) {
-          scenariosCriterion.title = newCriterion.title;
-          newScenario.state.problem.criteria[newCriterion.title] = scenariosCriterion;
-          delete newScenario.state.problem.criteria[oldCriterion.title];
+        if (newScenario.state.problem) {
+          var scenariosCriterion = _.find(scenario.state.problem.criteria, ['title', oldCriterion.title]);
+          if (scenariosCriterion) {
+            scenariosCriterion.title = newCriterion.title;
+            newScenario.state.problem.criteria[newCriterion.title] = scenariosCriterion;
+            delete newScenario.state.problem.criteria[oldCriterion.title];
+          }
         }
-
         if (newScenario.state.prefs) {
           for (var i = 0; i < newScenario.state.prefs.length; i++) {
             if (newScenario.state.prefs[i].criteria[0] === oldCriterion.title) {

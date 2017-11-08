@@ -5,9 +5,6 @@ define(['lodash', 'angular'], function(_) {
     // Exposed functions
     function createDefaultScenarioState(problem, subProblemState) {
       return {
-        problem: {
-          criteria: filterToObject(problem.criteria, subProblemState.criterionInclusions)
-        },
         prefs: filterToObject(problem.preferences, subProblemState.criterionInclusions)
       };
     }

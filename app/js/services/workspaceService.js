@@ -151,12 +151,16 @@ define(['lodash', 'angular'], function(_) {
     function filterScenariosWithResults(scenarios) {
       return _.filter(scenarios, function(scenario) {
         var hasPvf = true;
-        _.forEach(scenario.state.problem.criteria, function(criterion) {
-          if (!criterion.pvf || !criterion.pvf.direction) {
-            hasPvf = false;
-          } 
-        });
-        return hasPvf;
+        if (scenario.state.problem) {
+          _.forEach(scenario.state.problem.criteria, function(criterion) {
+            if (!criterion.pvf || !criterion.pvf.direction) {
+              hasPvf = false;
+            }
+          });
+          return hasPvf;
+        } else {
+          return false;
+        }
       });
     }
 
