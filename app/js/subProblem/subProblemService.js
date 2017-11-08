@@ -1,10 +1,13 @@
 'use strict';
-define(['lodash', 'angular'],function(_) {
+define(['lodash', 'angular'], function(_) {
   var dependencies = [];
   var SubProblemService = function() {
     // Exposed functions
     function createDefaultScenarioState(problem, subProblemState) {
       return {
+        problem: {
+          criteria: filterToObject(problem.criteria, subProblemState.criterionInclusions)
+        },
         prefs: filterToObject(problem.preferences, subProblemState.criterionInclusions)
       };
     }
@@ -32,9 +35,9 @@ define(['lodash', 'angular'],function(_) {
 
     function filterToObject(objects, inclusions) {
       var returnObject = {};
-      _.forEach(objects, function(object, objectId) {
-        if (inclusions[objectId]) {
-          returnObject[objectId] = object;
+      _.forEach(objects, function(object, objectKey) {
+        if (inclusions[objectKey]) {
+          returnObject[objectKey] = object;
         }
       });
       return returnObject;
