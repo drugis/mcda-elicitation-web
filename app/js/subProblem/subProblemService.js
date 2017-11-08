@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'],function(_) {
+define(['lodash', 'angular'], function(_) {
   var dependencies = [];
   var SubProblemService = function() {
     // Exposed functions
@@ -32,9 +32,9 @@ define(['lodash', 'angular'],function(_) {
 
     function filterToObject(objects, inclusions) {
       var returnObject = {};
-      _.forEach(objects, function(object, objectId) {
-        if (inclusions[objectId]) {
-          returnObject[objectId] = object;
+      _.forEach(objects, function(object, objectKey) {
+        if (inclusions[objectKey]) {
+          returnObject[objectKey] = object;
         }
       });
       return returnObject;
