@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['lodash', 'angular'], function(_) {
 
   var dependencies = ['$scope', '$stateParams', '$modalInstance', '$timeout',
     'ScenarioResource', 'SubProblemResource',
@@ -19,7 +19,7 @@ define(['lodash', 'angular'], function(_, angular) {
     // init
     $scope.subProblems = subProblems;
     $scope.originalScales = _.cloneDeep(scales);
-    $scope.scales = _.cloneDeep(scales); //FIXME
+    $scope.scales = _.cloneDeep(scales); //FIXME // ??
     initSubProblem(_.cloneDeep(subProblem), _.cloneDeep(problem));
     checkDuplicateTitle($scope.subProblemState.title);
     $scope.isExact = _.partial(SubProblemService.isExact, $scope.problem.performanceTable);

@@ -1,16 +1,21 @@
 'use strict';
 define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/helpers/wizard'], function(_, angular, Util, Wizard) {
   return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunctionService) {
+    $scope.title = title;
+    $scope.initialize = initialize;
+    $scope.canSave = canSave;
+    $scope.save = save;
+
     var pvf = PartialValueFunctionService;
     $scope.pvf = pvf;
 
-    $scope.title = function(step, total) {
+    function title(step, total) {
       var base = 'Exact SWING weighting';
       if (step > total) {
         return base + ' (DONE)';
       }
       return base + ' (' + step + '/' + total + ')';
-    };
+    }
 
     function buildInitial(criteria, criterionA, criterionB, step) {
       var bounds = pvf.getBounds(criteria[criterionA]);
@@ -30,7 +35,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       return state;
     }
 
-    var initialize = function(state) {
+    function initialize(state) {
       var criteria = state.problem.criteria;
       state.prefs = Util.getOrdinalPreferences(state.prefs); // remove pre-existing ordinal/exact preferences
       state = _.extend(state, {
@@ -38,9 +43,10 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       });
       state = _.extend(state, buildInitial(criteria, state.criteriaOrder[0], state.criteriaOrder[1], 1));
       return state;
-    };
+    }
 
-    var validChoice = function(state) {
+
+    function validChoice(state) {
       var criteria = state.problem.criteria;
       if (!state) {
         return false;
@@ -50,10 +56,10 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       }
       var value = state.choice;
       var bounds = pvf.getBounds(criteria[state.criterionA]);
-      return value < bounds[1] && value >= bounds[0];
-    };
+      return value < bounds[1] && value > bounds[0];
+    }
 
-    var nextState = function(state) {
+    function nextState(state) {
       var criteria = state.problem.criteria;
 
       if (!validChoice(state)) {
@@ -85,20 +91,19 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       });
 
       return _.extend(angular.copy(state), next);
-    };
+    }
 
-    $scope.canSave = function(state) {
+    function canSave(state) {
       return state && state.step === state.total + 1;
-    };
+    }
 
-    $scope.save = function(state) {
+    function save(state) {
       currentScenario.state = _.pick(state, ['problem', 'prefs']);
       currentScenario.$save($stateParams, function(scenario) {
         $scope.$emit('elicit.resultsAccessible', scenario);
         $state.go('preferences');
       });
-
-    };
+    }
 
     $injector.invoke(Wizard, this, {
       $scope: $scope,

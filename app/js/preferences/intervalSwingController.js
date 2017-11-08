@@ -59,13 +59,18 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       if (!state) {
         return false;
       }
-      if(state.type === 'done'){
+      if (state.type === 'done') {
         return true;
       }
       var criteria = state.problem.criteria;
-      var bounds1 = state.choice;
-      var bounds2 = PartialValueFunctionService.getBounds(criteria[state.criterionA]);
-      return bounds1.lower < bounds1.upper && bounds2[0] <= bounds1.lower && bounds2[1] >= bounds1.upper;
+      var chosenBounds = state.choice;
+      if (chosenBounds.lower === 0) {
+        chosenBounds.lower += ((rangeBounds[0] + rangeBounds[1]) / 100);
+      } // prevent division by zero
+      var rangeBounds = PartialValueFunctionService.getBounds(criteria[state.criterionA]);
+      return chosenBounds.lower < chosenBounds.upper &&
+        rangeBounds[0] <= chosenBounds.lower &&
+        rangeBounds[1] >= chosenBounds.upper;
     };
 
     var nextState = function(state) {
