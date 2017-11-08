@@ -51,7 +51,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
 
     function editTherapeuticContext() {
       $modal.open({
-        templateUrl: '/app/js/evidence/editTherapeuticContext.html',
+        templateUrl: '/js/evidence/editTherapeuticContext.html',
         controller: 'EditTherapeuticContextController',
         resolve: {
           therapeuticContext: function() {

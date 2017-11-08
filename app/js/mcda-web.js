@@ -13,6 +13,7 @@ define(['angular',
     'angular-patavi-client',
     'error-reporting',
     'export-directive',
+    'help-popup',
     'mcda/evidence/evidence',
     'mcda/services/routeFactory',
     'mcda/services/workspaceResource',
@@ -39,6 +40,7 @@ define(['angular',
       'ui.router',
       'mm.foundation',
       'patavi',
+      'help-directive',
       'elicit.controllers',
       'elicit.directives',
       'elicit.effectsTableService',
@@ -62,18 +64,17 @@ define(['angular',
     ];
 
     var app = angular.module('elicit', dependencies);
-    app.run(['$rootScope',
-      function($rootScope) {
-        $rootScope.$safeApply = function($scope, fn) {
-          var phase = $scope.$root.$$phase;
-          if (phase === '$apply' || phase === '$digest') {
-            this.$eval(fn);
-          } else {
-            this.$apply(fn);
-          }
-        };
-      }
-    ]);
+    app.run(['$rootScope', '$http', 'HelpPopupService', function($rootScope, $http, HelpPopupService) {
+      $rootScope.$safeApply = function($scope, fn) {
+        var phase = $scope.$root.$$phase;
+        if (phase === '$apply' || phase === '$digest') {
+          this.$eval(fn);
+        } else {
+          this.$apply(fn);
+        }
+      };
+      HelpPopupService.loadLexicon($http.get('lexicon.json'));
+    }]);
 
     app.constant('Tasks', Config.tasks);
 
