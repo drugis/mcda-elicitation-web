@@ -1,7 +1,7 @@
 <div ng-show="state.step <= state.total">
   <div class="grid-x" style="min-height: 450px">
     <div class="cell">
-      <h3>{{title(state.step, state.total)}}</h3>
+      <h3>{{state.title}} <inline-help help-key="exact-swing"></inline-help></h3>
       <h5 class="subheader">Determining the relative importance of:</h5>
       <ul>
         <li ng-repeat="criterion in [state.criterionA, state.criterionB] track by $index">

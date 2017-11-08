@@ -75,7 +75,7 @@ define(['angular',
           this.$apply(fn);
         }
       };
-      HelpPopupService.loadLexicon($http.get('app/lexicon.json'));
+      HelpPopupService.loadLexicon($http.get('lexicon.json'));
     }]);
 
     app.constant('Tasks', Config.tasks);

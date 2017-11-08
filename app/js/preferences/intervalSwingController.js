@@ -8,7 +8,7 @@ define(function(require) {
   return function($scope, $state, $stateParams, $injector, $timeout, currentScenario, taskDefinition, PartialValueFunction) {
     $scope.pvf = PartialValueFunction;
 
-    $scope.title = function(step, total) {
+    function title(step, total) {
       var base = 'Interval SWING weighting';
       if (step > total) {
         return base + ' (DONE)';
@@ -49,7 +49,8 @@ define(function(require) {
       var criteria = state.problem.criteria;
       state.prefs = Util.getOrdinalPreferences(state.prefs); // remove pre-existing ordinal/exact preferences
       state = _.extend(state, {
-        'criteriaOrder': Util.getCriteriaOrder(state.prefs)
+        'criteriaOrder': Util.getCriteriaOrder(state.prefs),
+        title: title(1, _.size(criteria) - 1),
       });
       state = _.extend(state, buildInitial(criteria, state.criteriaOrder[0], state.criteriaOrder[1], 1));
       $timeout(function() {
@@ -103,6 +104,7 @@ define(function(require) {
         bounds: getRatioBounds(state),
         type: 'ratio bound'
       });
+      next.title = title(next.step, next.total);
       return _.extend(angular.copy(state), next);
     };
 

@@ -1,7 +1,8 @@
 <div class="grid-x">
   <div class="cell">
-    <em>Here you can set the partial value functions and trade-offs of the scenario.
-      Changes here will change the current scenario.</em>
+    <h3>
+      Scenario <inline-help help-key="scenario"></inline-help>
+    </h3>
   </div>
 </div>
 <div class="grid-x">
@@ -34,7 +35,7 @@
   </div>
 </div>
 <div id="partial-value-functions-block" class="prefs-block">
-  <h4>Partial Value Functions</h4>
+  <h4>Partial Value Functions <inline-help help-key="partial-value-function"></inline-help></h4>
   <div id="partial-value-functions" class="grid-x grid-padding-x small-up-1 medium-up-2 large-up-3">
     <div class="cell" ng-repeat="criterion in aggregateState.problem.criteria">
       <h5>{{::criterion.title}}</h5>
@@ -50,7 +51,9 @@
 </div>
 <div class="grid-x" id="trade-off-block" class="prefs-block">
   <div class="cell">
-    <h4>Trade-offs</h4>
+    <h4>Trade-offs
+      <inline-help help-key="trade-offs"></inline-help>
+    </h4>
   </div>
   <div class="cell large-4 button-group" ng-if="editMode.isUserOwner">
     <button class="button" ui-sref="ordinal-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['ordinal-swing']).accessible" ng-class="{alert: !isSafe['ordinal-swing'].safe}" tooltip="{{isSafe['ordinal-swing'].tooltip}}">

@@ -15,7 +15,7 @@ define(['lodash'], function(_) {
         'studyType': '=',
         'changeCallback': '='
       },
-      templateUrl: 'app/js/manualInput/effectInputHelperDirective.html',
+      templateUrl: 'js/manualInput/effectInputHelperDirective.html',
       link: function(scope) {
         // functions
         scope.keyCheck = keyCheck;

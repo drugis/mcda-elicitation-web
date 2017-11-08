@@ -1,5 +1,8 @@
 <form ng-submit="createProblemConfiguration()">
   <div class="grid-x">
+    <div class="cell">
+      <em>Here you can define a new problem as a subset of all evidence (by excluding criteria and alternatives), and with different scale ranges.</em>
+    </div>
     <div class="cell large-6">
       <h3>Save new problem</h3>
     </div>
@@ -35,9 +38,13 @@
       <table class="full-width effects-table">
         <thead>
           <tr>
-            <th>Criterion</th>
+            <th>Criterion
+              <inline-help help-key="criterion"></inline-help>
+            </th>
             <th>Description</th>
-            <th>Units</th>
+            <th>Units
+              <inline-help help-key="criterion-unit"></inline-help>
+            </th>
             <th ng-class="{'disabled-header' : !subProblemState.alternativeInclusions[alternativeKey]}" class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives">
               <span ng-if="isBaseline[alternativeKey]" tooltip="Cannot deselect baseline">
               <label>
@@ -82,8 +89,10 @@
   </div>
   <div class="grid-x">
     <div class="cell">
-      <h4>Scale ranges</h4>
-      <p>The area in red indicates the estimated 95% Credible Interval (CrI) of the measurements and should not be moved into.</p>
+      <h4>Scale ranges
+        <inline-help help-key="scale-ranges"></inline-help>
+      </h4>
+      <p>The area in red indicates the estimated 95% Credible Interval (CrI) of the measurements and should not be moved into or over.</p>
     </div>
     <div class="cell">
       <ul class="no-bullet">

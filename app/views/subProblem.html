@@ -1,11 +1,14 @@
 <div class="grid-x">
   <div class="cell">
-    Here you see the current problem definition. If you want to work with a different problem you can define a new one based on the current one, which may include different criteria and scale ranges. Scale ranges must be defined for all selected criteria.
+    <h3>
+      Problem definition
+      <inline-help help-key="problem"></inline-help>
+    </h3>
   </div>
 </div>
 <div class="grid-x">
   <div class="cell large-10">
-    <h4>Criterion selection</h4>
+    <h4>Effects table<inline-help help-key="effects-table"></inline-help></h4>
   </div>
   <div class="cell large-2">
     <button class="button small info clipboard-button" data-clipboard-target="#effecttable">
@@ -16,9 +19,9 @@
     <table class="full-width effects-table" id="effecttable">
       <thead>
         <tr>
-          <th>Criterion</th>
+          <th>Criterion <inline-help help-key="criterion"></inline-help></th>
           <th>Description</th>
-          <th>Units</th>
+          <th>Units <inline-help help-key="criterion-unit"></inline-help></th>
           <th class="text-center" ng-repeat="(alternativeKey, alternative) in mergedProblem.alternatives">
             <label>
               {{alternative.title}}
@@ -54,7 +57,9 @@
 </div>
 <div class="grid-x">
   <div class="cell large-10">
-    <h4>Scale Ranges</h4>
+    <h4>Scale Ranges
+      <inline-help help-key="scale-ranges"></inline-help>
+    </h4>
   </div>
   <div class="cell large-2">
     <button class="button small info clipboard-button" data-clipboard-target="#scalestable">
@@ -65,11 +70,21 @@
     <table class="full-width" id="scalestable">
       <thead>
         <tr>
-          <th>Criterion</th>
-          <th>Theoretical Range</th>
-          <th>Observed Range</th>
-          <th>Configured Range</th>
-          <th>Units</th>
+          <th>Criterion
+            <inline-help help-key="criterion"></inline-help>
+          </th>
+          <th>Theoretical Range
+            <inline-help help-key="theoretical-range"></inline-help>
+          </th>
+          <th>Observed Range
+            <inline-help help-key="observed-range"></inline-help>
+          </th>
+          <th>Configured Range
+            <inline-help help-key="configured-range"></inline-help>
+          </th>
+          <th>Units
+            <inline-help help-key="criterion-unit"></inline-help>
+          </th>
         </tr>
       </thead>
       <tbody>

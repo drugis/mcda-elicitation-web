@@ -86,9 +86,9 @@ everyauth.google
 var bower_path = '/bower_components';
 var app = express();
 app
-  .use('/manual', express.static(__dirname + '/manual'))
-  .use('/bower_components', express.static(__dirname + bower_path))
-  .use('/app', express.static(__dirname + '/app'))
+  .use(express.static('manual'))
+  .use(express.static('/bower_components'))
+  .use(express.static('app'))
   .use('/template', express.static(__dirname + bower_path + '/angular-foundation-assets/template'))
   .use('/examples', express.static(__dirname + '/examples'))
   .use(bodyParser())

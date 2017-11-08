@@ -8,25 +8,25 @@
 <div ng-if="state.results">
   <div class="grid-x underlined-div">
     <div class="cell">
-      <h3>SMAA results</h3>
+      <h3>SMAA results <inline-help help-key="smaa-results"></inline-help></h3>
       <button class="button" ui-sref="deterministic-results">Deterministic analysis</button>
     </div>
   </div>
   <div class="grid-x underlined-div">
     <div class="cell">
-      <h4>Rank acceptabilities</h4>
+      <h4>Rank acceptabilities <inline-help help-key="rank-acceptabilities"></inline-help></h4>
     </div>
     <div class="cell large-2 large-offset-9">
       <button class="button small info clipboard-button" data-clipboard-target="#ranktable">
         <i class="fa fa-clipboard"></i> Copy to clipboard
       </button>
     </div>
-    <div class="cell">
+    <div class="cell large-6">
       <div export file-name="'rank-acceptability-plot'">
         <rank-acceptability-plot data="state.results.ranks.data" problem="state.problem"></rank-acceptability-plot>
       </div>
     </div>
-    <div class="cell">
+    <div class="cell large-6">
       <table id="ranktable">
         <thead>
           <tr>
@@ -48,7 +48,7 @@
   <div class="grid-x underlined-div">
     <div class="cell large-6">
       <div export file-name="'alternatives-per-rank'">
-        <h4>Alternatives per rank</h4>
+        <h4>Alternatives per rank <inline-help help-key="alternatives-per-rank"></inline-help></h4>
         <select ng-model="state.selectedRank" class="large-3">
           <option ng-repeat="(k,v) in state.problem.alternatives" value="{{$index}}" ng-selected="$index == state.selectedRank">
             Rank {{::$index + 1}}
@@ -60,8 +60,8 @@
       </div>
     </div>
     <div class="cell large-6">
-      <div export file-name="'ranks-per-alterative'">
-        <h4>Ranks per alternative</h4>
+      <div export file-name="'ranks-per-alternative'">
+        <h4>Ranks per alternative <inline-help help-key="ranks-per-alternative"></inline-help></h4>
         <select ng-model="state.selectedAlternative" class="large-3">
           <option ng-repeat="(key, alternative) in state.problem.alternatives" value="{{key}}" ng-selected="key == state.selectedAlternative">
             {{::alternative.title}}
