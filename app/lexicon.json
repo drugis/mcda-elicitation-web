@@ -36,7 +36,7 @@
   },
   "criterion-source": {
     "title": "Criterion data source",
-    "text": "An optional indication of where the data for this criterion comes from (single study or meta-analysis)",
+    "text": "An optional indication of where the data for this criterion comes from (single study or meta-analysis).",
     "link": "/manual.html#mcda-preparing-dataset"
   },
   "criterion-source-link": {
