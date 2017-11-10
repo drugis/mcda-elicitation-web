@@ -96,7 +96,7 @@
   },
   "observed-range": {
     "title": "Observed range",
-    "text": "The observed range within which all the effects of a given analysis lie. The lower bound is the lowest among the effects (or of their low end of the 95% CrI in the case of non-exact effect distributions). She upper bound is the maximum of these values.",
+    "text": "The observed range within which all the effects of a given analysis lie. The lower bound is the lowest among the effects (or of their low end of the 95% CrI in the case of non-exact effect distributions). The upper bound is the maximum of these values.",
     "link": "/manual.html#mcda-value-tradeoffs"
   },
   "one-way-sensitivity-analysis": {
@@ -156,7 +156,7 @@
   },
   "survival-summary-measure": {
     "title": "Survival summary measure",
-    "text": "Which specific aspect of survival is reported, ie. mean, median, or at a specific moment.",
+    "text": "Which specific aspect of survival is reported, i.e. mean, median, or at a specific moment.",
     "link": "/manual.html#mcda-preparing-dataset"
   },
   "survival-time-point-of-interest": {
@@ -172,7 +172,7 @@
   "theoretical-range": {
     "title": "Theoretical range",
     "text": "The theoretically maximal range in which effect sizes can lie",
-    "link": "/manual.html#mcda-value-tradeoffs"
+    "link": "/manual.html#mcda-value-tradeoffs."
   },
   "therapeutic-context": {
     "title": "Therapeutic context",
@@ -181,12 +181,12 @@
   },
   "total-value": {
     "title": "Total value",
-    "text": "How valuable (ie. helpful for each criterion) each alternative is overall.",
+    "text": "How valuable (i.e. helpful for each criterion) each alternative is overall.",
     "link": "/manual.html#deterministic-results"
   },
   "trade-offs": {
     "title": "Trade-offs",
-    "text": "Trade-offs indicate what weight the user places on improving each criterion. First, criteria are ordered by weight of importance, and then the trade-offs can be elicited, ie. \"How much improvement on criterion A would be an equivalent trade-off for some improvement on criterion B?\"",
+    "text": "Trade-offs indicate what weight the user places on improving each criterion. First, criteria are ordered by weight of importance, and then the trade-offs can be elicited, i.e. \"How much improvement on criterion A would be an equivalent trade-off for some improvement on criterion B?\"",
     "link": "/manual.html#mcda-value-tradeoffs"
   },
   "treatment": {
@@ -201,7 +201,7 @@
   },
   "workspace":  {
     "title": "Workspace",
-    "text": "A workspace contains your base data, and any definitions you have based thereon, ie. subselections of criteria and interventions (subproblems) and sets of preferences (scenarios).",
+    "text": "A workspace contains your base data, and any definitions you have based thereon, i.e. subselections of criteria and interventions (subproblems) and sets of preferences (scenarios).",
     "link": "/manual.html#mcda-preparing-dataset"
   }
 }
