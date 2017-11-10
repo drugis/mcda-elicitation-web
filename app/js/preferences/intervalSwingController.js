@@ -4,7 +4,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
   return function($scope, $state, $stateParams, $injector, $timeout, currentScenario, taskDefinition, PartialValueFunctionService) {
     $scope.pvf = PartialValueFunctionService;
 
-    $scope.title = function(step, total) {
+    function title(step, total) {
       var base = 'Interval SWING weighting';
       if (step > total) {
         return base + ' (DONE)';
@@ -45,7 +45,8 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       var criteria = state.problem.criteria;
       state.prefs = Util.getOrdinalPreferences(state.prefs); // remove pre-existing ordinal/exact preferences
       state = _.extend(state, {
-        'criteriaOrder': Util.getCriteriaOrder(state.prefs)
+        'criteriaOrder': Util.getCriteriaOrder(state.prefs),
+        title: title(1, _.size(criteria) - 1),
       });
       state = _.extend(state, buildInitial(criteria, state.criteriaOrder[0], state.criteriaOrder[1], 1));
       $timeout(function() {
@@ -104,6 +105,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
         bounds: getRatioBounds(state),
         type: 'ratio bound'
       });
+      next.title = title(next.step, next.total);
       return _.extend(angular.copy(state), next);
     };
 

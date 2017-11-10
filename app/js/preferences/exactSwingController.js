@@ -28,7 +28,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
         sliderOptions: {
           floor: bounds[0],
           ceil: bounds[1],
-          step: Math.abs(bounds[0]-bounds[1])/100,
+          step: Math.abs(bounds[0] - bounds[1]) / 100,
           precision: 2
         }
       };
@@ -39,7 +39,9 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       var criteria = state.problem.criteria;
       state.prefs = Util.getOrdinalPreferences(state.prefs); // remove pre-existing ordinal/exact preferences
       state = _.extend(state, {
-        'criteriaOrder': Util.getCriteriaOrder(state.prefs)
+        'criteriaOrder': Util.getCriteriaOrder(state.prefs),
+        title: title(1, _.size(criteria) - 1)
+
       });
       state = _.extend(state, buildInitial(criteria, state.criteriaOrder[0], state.criteriaOrder[1], 1));
       return state;
@@ -51,7 +53,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       if (!state) {
         return false;
       }
-      if(state.type === 'done'){
+      if (state.type === 'done') {
         return true;
       }
       var value = state.choice;
@@ -89,6 +91,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
         ratio: getRatio(state),
         type: 'exact swing'
       });
+      next.title = title(next.step, next.total);
 
       return _.extend(angular.copy(state), next);
     }

@@ -1,0 +1,207 @@
+{
+  "alternative": {
+    "title": "Alternative",
+    "text": "An alternative is one of the different options for treatment/intervention being explored in a benefit-risk analysis, e.g. \"aspirin 40 mg/day\" or \"meditation therapy\".",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "alternatives-per-rank": {
+    "title" :"Alternatives per rank",
+    "text": "How likely each alterntive is to have a specific rank (with 1 being best) overall.",
+    "link": "/manual.html#mcda-smaa-results"
+  },
+  "central-weights": {
+    "title": "Central weights",
+    "text": "The central weight for each alternative, per criterion.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "configured-range": {
+    "title": "Configured range",
+    "text": "Which range the user has actually configured to be used. Without user intervention the default scales are the observed ranges.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "criterion": {
+    "title": "Criterion",
+    "text": "A criterion is an outcome of interest to be used in a benefit-risk analysis, e.g. \"mood improvement\" or \"nausea\".",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "criterion-data-source": {
+    "title": "Criterion data source",
+    "text": "Criterion data can be entered as either study data, or an exact-value distribution.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "criterion-datatype": {
+    "title": "Criterion data type",
+    "text": "Criterion data can be reported in several ways, either as a proportion (e.g. \"fifty out of a hundred\"), a continuous value (e.g. \"weight increase in grams\") or as survival data (e.g. \"median survival after 20 days)\"",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "criterion-source": {
+    "title": "Criterion data source",
+    "text": "An optional indication of where the data for this criterion comes from (single study or meta-analysis)",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "criterion-source-link": {
+    "title": "Source link",
+    "text": "An optional hyperlink that leads to the source of this criterion's data",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "criterion-unit": {
+    "title": "Unit of measurement",
+    "text": "In which unit of measurement the criterion's data are reported (e.g. \"proportion\", \"gram\")",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "deterministic-analysis-results" : {
+    "title": "Deterministic analysis results",
+    "text": "This section shows the results of deterministic analysis (representative weights, total value), allows for sensitivity analysis, and allows modification of the effects table to explore the problem space.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "effects-table": {
+    "title": "Effects table",
+    "text": "The effects table shows the size of the effects on each criterion for each alternative. In the case of a known distribution of an effect the values shown are the median value and the 95% credible interval. If the effect is an exact distribution value only that value is shown.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "exact-swing": {
+    "title": "Exact SWING weighting",
+    "text": "Elicitation of the user's exact trade-off weights between the different criteria. This results in exact weight ratios between all the criteria, e.g. increasing effectiveness by 5% is equally desirable to decreasing mortality by 10%.",
+    "link": "/manual.html#mcda-value-tradeoffs"
+  },
+  "favorability": {
+    "title": "Favorability",
+    "text": "Whether or not an increase in the criterion is seen as favorable.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "incomplete-workspaces": {
+    "title": "Incomplete workspaces",
+    "text": "The process of manually creating a workspace can be paused at any point. This list shows those unfinished workspaces.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "interval-swing": {
+    "title": "Interval SWING weighting",
+    "text": "Elicitation of the user's  weigh trade-offs between the different criteria, via the interval method. This method allows specification of an interval (rather than an exact value) where changes to two criteria are equivalent. This results in weight ratios between all the criteria, e.g. increasing effectiveness by 5-10% is equally desirable to decreasing mortality by 10-20%.",
+    "link": "/manual.html#mcda-value-tradeoffs"
+  },
+  "mcda-input-method": {
+    "title": "Input method",
+    "text": "In mcda, it is possible to input data directly as a distribution of the effects for the treatment for a criterion, or to input the data measured in a study, after which the application will calculate the corresponding distribution automatically.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "sensitivity-measurements" : {
+    "title": "Measurements sensitivity analysis",
+    "text": "How the value of a specific alternative changes as the weight of a specific criterion changes between 0 and 1. All other alternatives' values are kept constant at the current default for comparison.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "sensitivity-preferences" : {
+    "title": "Preferences sensitivity analysis",
+    "text": "How the value of all alternatives changes as the weight of a specific criterion changes between 0 and 1.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "observed-range": {
+    "title": "Observed range",
+    "text": "The observed range within which all the effects of a given analysis lie. The lower bound is the lowest among the effects (or of their low end of the 95% CrI in the case of non-exact effect distributions). She upper bound is the maximum of these values.",
+    "link": "/manual.html#mcda-value-tradeoffs"
+  },
+  "one-way-sensitivity-analysis": {
+    "title": "One-way sensitivity analysis",
+    "text": "A section that allows exploring of the sensitivity of the results by allowing only one thing to change.",
+    "link": "/manual.html#mcda-deterministic-results"
+  },
+  "ordinal-swing": {
+    "title": "Ordinal SWING weighting",
+    "text": "Elicitation of the user's ordinal ranking of the weight of the included criteria.",
+    "link": "/manual.html#mcda-value-tradeoffs"
+  },
+  "partial-value-function": {
+    "title": "Partial Value Function",
+    "text": "A partial value function indicates how the desirability of a criterion's outcome varies with its value.",
+    "link": "manual/#mcda-mavt"
+  },
+  "problem": {
+    "title": "Problem definition",
+    "text": "The problem definition is a lens through which to view the data for analysis. Criteria and alternatives can be omitted, and scale ranges can be changed.",
+    "link": "/manual.html"
+  },
+  "pvf-type": {
+    "title": "Type of partial value function",
+    "text": "Partial vlaue functions can be either linear (a straight line between two points) or piece-wise linear, meaning the function consists of several linear segments.",
+    "link": "/manual.html#mcda-value-tradeoffs"
+  },
+  "rank-acceptabilities": {
+    "title": "Rank acceptabilities",
+    "text": "How likely each intervention is to overall be the best, worst, or any rank in between, based on the SMAA model results for the given preferences and data.",
+    "link": "/manual.html#mcda-benefit-risk-analysis"
+  },
+  "ranks-per-alternative": {
+    "title" :"Ranks per alternative",
+    "text": "How likely a specific alterntive is to have each rank (with 1 being best) overall.",
+    "link": "/manual.html#mcda-smaa-results"
+  },
+  "representative-weights": {
+    "title": "Representative weights",
+    "text": "Weights representative of how important each criterion is. The total weights add up to one.",
+    "link": "/manual.html#mcda-deterministic-results"
+  },
+  "scale-ranges": {
+    "title": "Scale ranges",
+    "text": "For each criterion there is a theoretical maximum range within which the effects may lie (infinite for continuous criteria, between zero and one), as well as a minimum range (determined by the effects). In most cases only a portion of this range is actually relevant to the data. Here you can adjust these scales to your liking.",
+    "link": "/manual.html#mcda-value-tradeoffs"
+  },
+  "scenario": {
+    "title": "Scenario",
+    "text": "A scenario is a collection of preferences to feed into the MCDA models. This consists of a partial value function for each criterion, and an optional set of trade-offs (ordinal swing, exact swing or interval swing).",
+    "link": ""
+  },
+  "smaa-results": {
+    "title": "SMAA results",
+    "text":"The results of stochastic multicriteria acceptability analysis (SMAA) for the given preferences.",
+    "link": "/manual.html#mcda-value-tradeoffs"
+  },
+  "survival-summary-measure": {
+    "title": "Survival summary measure",
+    "text": "Which specific aspect of survival is reported, ie. mean, median, or at a specific moment.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "survival-time-point-of-interest": {
+    "title": "Survival summary measure",
+    "text": "At which specific moment in time the survival data is reported.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "survival-time-scale": {
+    "title": "Survival time scale",
+    "text": "On which time scale the survival data are reported.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "theoretical-range": {
+    "title": "Theoretical range",
+    "text": "The theoretically maximal range in which effect sizes can lie",
+    "link": "/manual.html#mcda-value-tradeoffs"
+  },
+  "therapeutic-context": {
+    "title": "Therapeutic context",
+    "text": "Background information about the context in which the data should be interpreted, e.g. information about studies or meta-analyses from which the data comes.",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "total-value": {
+    "title": "Total value",
+    "text": "How valuable (ie. helpful for each criterion) each alternative is overall.",
+    "link": "/manual.html#deterministic-results"
+  },
+  "trade-offs": {
+    "title": "Trade-offs",
+    "text": "Trade-offs indicate what weight the user places on improving each criterion. First, criteria are ordered by weight of importance, and then the trade-offs can be elicited, ie. \"How much improvement on criterion A would be an equivalent trade-off for some improvement on criterion B?\"",
+    "link": "/manual.html#mcda-value-tradeoffs"
+  },
+  "treatment": {
+    "title": "Treatment",
+    "text": "A treatment is an intervention of interest to be used in a benefit-risk analysis, e.g. \"Aspirin 20 mg/day\" or \"Meditation\".",
+    "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "value-profiles": {
+    "title": "Value profiles",
+    "text": "How the total value of each alternative is composed out of its value for each criterion.",
+    "link": "/manual.html#deterministic-results"
+  },
+  "workspace":  {
+    "title": "Workspace",
+    "text": "A workspace contains your base data, and any definitions you have based thereon, ie. subselections of criteria and interventions (subproblems) and sets of preferences (scenarios).",
+    "link": "/manual.html#mcda-preparing-dataset"
+  }
+}

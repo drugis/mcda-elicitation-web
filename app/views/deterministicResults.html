@@ -12,13 +12,14 @@
       <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id" ng-change="scenarioChanged(scenario)"></select>
     </div>
     <div class="cell">
-      <h3>Deterministic analysis results</h3>
+      <h3>Deterministic analysis results <inline-help help-key="deterministic-analysis-results"></inline-help></h3>
       <button class="button" ui-sref="smaa-results">SMAA results</button>
     </div>
   </div>
   <div class="grid-x">
     <div class="cell large-10">
-      <h3>Effects table (exact or median values only)</h3>
+      <h3>Effects table (exact or median values only) <inline-help help-key="effects-table"></inline-help></h3>
+      <p><em>Values can be changed by clicking them.</em></p>
     </div>
     <div clas="cell large-2">
       <button class="button small info clipboard-button" data-clipboard-target="#effectstable">
@@ -29,7 +30,7 @@
       <table class="full-width effects-table" id="effectstable">
         <thead>
           <tr>
-            <th>Criterion</th>
+            <th>Criterion <inline-help help-key="criterion"></inline-help></th>
             <th class="text-center" ng-repeat="alternative in alternatives">
               {{alternative.title}}
             </th>
@@ -62,7 +63,7 @@
     <div class="cell">
       <div class="grid-x">
         <div class="cell large-10">
-          <h4>Representative weights</h4>
+          <h4>Representative weights <inline-help help-key="representative-weights"></inline-help></h4>
         </div>
         <div clas="cell large-2">
           <button class="button small info clipboard-button" data-clipboard-target="#weighttable">
@@ -84,7 +85,7 @@
       </div>
       <div class="grid-x grid-margin-x">
         <div class="cell large-4">
-          <h4>Total value (base case)</h4>
+          <h4>Total value (base case) <inline-help help-key="total-value"></inline-help></h4>
         </div>
         <div class="cell large-2">
           <button class="button small info clipboard-button" data-clipboard-target="#basecasetable">
@@ -92,7 +93,7 @@
           </button>
         </div>
         <div ng-if="recalculatedDeterministicResults" class="cell large-4">
-          <h4>Total value (recalculated case)</h4>
+          <h4>Total value (recalculated case) <inline-help help-key="total-value"></inline-help></h4>
         </div>
         <div class="cell large-2" ng-if="recalculatedDeterministicResults">
           <button class="button small info clipboard-button" data-clipboard-target="#recalculatedcasetable">
@@ -128,7 +129,7 @@
       </div>
       <div class="grid-x grid-margin-x">
         <div class="cell">
-          <h4>Value profiles</h4>
+          <h4>Value profiles <inline-help help-key="value-profiles"></inline-help></h4>
         </div>
       </div>
       <div class="grid-x">
@@ -149,12 +150,12 @@
   </div>
   <div class="grid-x">
     <div class="cell">
-      <h3>One-way sensitivity analysis</h3>
+      <h3>One-way sensitivity analysis <inline-help help-key="one-way-sensitivity-analysis"></inline-help></h3>
     </div>
   </div>
   <div class="grid-x underlined-div grid-margin-x">
     <div class="cell medium-6 large-6">
-      <h4>Measurements</h4>
+      <h4>Measurements <inline-help help-key="sensitivity-measurements"></inline-help></h4>
       <div class="grid-x grid-margin-x">
         <div class="cell medium-6 large-6">
           <label>Alternative
@@ -174,7 +175,7 @@
       </div>
     </div>
     <div class="cell medium-6 large-6">
-      <h4>Preferences</h4>
+      <h4>Preferences <inline-help help-key="sensitivity-preferences"></inline-help></h4>
       <div class="grid-x">
         <div class="cell medium-6 large-6 ">
           <label>Weight given to

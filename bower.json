@@ -41,6 +41,7 @@
     "export-directive": "https://github.com/drugis/export-directive.git#master",
     "font-awesome": "4.3.0",
     "foundation-sites": "~6",
+    "help-popup": "https://github.com/drugis/help-popup.git#0.3.0",
     "jquery": "~3.2.1",
     "KaTeX": "katex#^0.6.0",
     "lodash": "~4.2.0",

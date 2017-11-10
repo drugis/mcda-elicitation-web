@@ -1,6 +1,8 @@
 <div class="grid-x">
   <div class="cell">
-    <h3>Your workspaces</h3>
+    <h3>Your workspaces
+      <inline-help help-key="workspace"></inline-help>
+    </h3>
   </div>
   <div class="cell callout secondary">
     <ul>
@@ -13,7 +15,7 @@
   </div>
   <div class="cell" ng-show="inProgressWorkspaces.length">
     <h3>
-      Your workspaces with incomplete entry
+      Your workspaces with incomplete entry <inline-help help-key="incomplete-workspaces"></inline-help>
     </h3>
     <ul>
       <li ng-repeat="inProgressWorkspace in inProgressWorkspaces">

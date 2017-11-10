@@ -1,7 +1,7 @@
 <div class="grid-x">
   <div class="cell">
     <h4>
-      Therapeutic context
+      Therapeutic context <inline-help help-key="therapeutic-context"></inline-help>
       <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editTherapeuticContext()">
         <i class="fa fa-edit"></i>
       </a>
@@ -12,7 +12,9 @@
     <span ng-if="!problem.description">No description given.</span>
   </div>
   <div class="cell">
-    <h4>Alternatives</h4>
+    <h4>Alternatives
+      <inline-help help-key="alternative"></inline-help>
+    </h4>
   </div>
   <div class="cell">
     <ul>
@@ -20,7 +22,9 @@
     </ul>
   </div>
   <div class="cell large-10">
-    <h4>Effects Table</h4>
+    <h4>Effects Table
+      <inline-help help-key="effects-table"></inline-help>
+    </h4>
   </div>
   <div class="cell large-2">
     <button class="button small info clipboard-button" data-clipboard-target="#effectstable">
@@ -31,9 +35,9 @@
     <table class="full-width effects-table" id="effectstable">
       <thead>
         <tr>
-          <th>Criterion</th>
+          <th>Criterion <inline-help help-key="criterion"></inline-help></th>
           <th>Description</th>
-          <th>Units</th>
+          <th>Units <inline-help help-key="criterion-unit"></inline-help></th>
           <th ng-if="references.has">References</th>
           <th class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives">
             <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editAlternative(problem.alternatives[alternativeKey])">
