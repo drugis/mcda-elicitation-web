@@ -2,21 +2,13 @@
 define(['clipboard', 'lodash'], function(Clipboard, _) {
   var dependencies = ['$scope', '$state', '$stateParams', '$modal', '$q',
     'EffectsTableService',
-    'EvidenceService',
-    'SubProblemResource',
-    'ScenarioResource',
     'WorkspaceResource',
-    'mcdaRootPath',
     'isMcdaStandalone'
   ];
 
   var EvidenceController = function($scope, $state, $stateParams, $modal, $q,
     EffectsTableService,
-    EvidenceService,
-    SubProblemResource,
-    ScenarioResource,
     WorkspaceResource,
-    mcdaRootPath,
     isMcdaStandalone) {
     // functions
     $scope.isExact = isExact;
@@ -69,7 +61,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       });
     }
 
-    function editCriterion(criterion) {
+    function editCriterion(criterion, criterionKey) {
       $modal.open({
         templateUrl: '/js/evidence/editCriterion.html',
         controller: 'EditCriterionController',
@@ -77,79 +69,43 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
           criterion: function() {
             return criterion;
           },
-          criteria: function(){
-            return _.keys($scope.problem.criteria);
+          criteria: function() {
+            return _.pick($scope.problem.criteria, 'title');
           },
           callback: function() {
             return function(newCriterion) {
-              $scope.workspace.problem = EvidenceService.editCriterion(criterion, newCriterion, $scope.problem);
-              var workspacePromise = WorkspaceResource.save($stateParams, $scope.workspace).$promise;
-              if (criterion.title !== newCriterion.title) {
-
-                var subProblemPromises = [];
-                var subProm = SubProblemResource.query({
-                  workspaceId: $stateParams.workspaceId
-                }).$promise.then(function(subProblems) {
-                  var newProblems = EvidenceService.renameCriterionInSubProblems(criterion, newCriterion, subProblems);
-                  subProblemPromises = _.map(newProblems, function(newProblem) {
-                    return SubProblemResource.save({
-                      problemId: newProblem.id,
-                      workspaceId: newProblem.workspaceId
-                    }, newProblem).$promise;
-                  });
-                });
-
-                var scenarioPromises = [];
-                var sceProm = ScenarioResource.queryAll({
-                  workspaceId: $stateParams.workspaceId
-                }).$promise.then(function(scenarios) {
-                  var newScenarios = EvidenceService.renameCriterionInScenarios(criterion, newCriterion, scenarios);
-                  scenarioPromises = _.map(newScenarios, function(newScenario) {
-                    return ScenarioResource.save({
-                      id: newScenario.id,
-                      workspaceId: newScenario.workspaceId,
-                      problemId: newScenario.subProblemId
-                    }, newScenario).$promise;
-                  });
-                });
-
-                $q.all(subProblemPromises.concat(scenarioPromises).concat([workspacePromise, sceProm, subProm])).then(
-                  function() {
-                    $state.reload();
-                  });
-
-              } else {
-                workspacePromise.then(function() {
-                  $state.reload();
-                });
-              }
+              $scope.workspace.problem.criteria[criterionKey] = newCriterion;
+              WorkspaceResource.save($stateParams, $scope.workspace).$promise.then(function() {
+                $state.reload();
+              });
             };
           }
         }
       });
 
-      }
-      function editAlternative(alternative) {
-        $modal.open({
-          templateUrl: '/js/evidence/editAlternative.html',
-          controller: 'EditAlternativeController',
-          resolve: {
-            alternative: function() {
-              return alternative;
-            },
-            alternatives: function() {
-              return $scope.problem.alternatives;
-            },
-            callback: function() {
-              return function(newAlternative) {
-                alternative.title = newAlternative.title;
-                WorkspaceResource.save($stateParams, $scope.workspace).$promise.then(function(){
-                  $state.reload();
-                });
-              };
-            }
+    }
+
+    function editAlternative(alternative) {
+      $modal.open({
+        templateUrl: '/js/evidence/editAlternative.html',
+        controller: 'EditAlternativeController',
+        resolve: {
+          alternative: function() {
+            return alternative;
+          },
+          alternatives: function() {
+            return $scope.problem.alternatives;
+          },
+          callback: function() {
+            return function(newAlternative) {
+              alternative.title = newAlternative.title;
+              WorkspaceResource.save($stateParams, $scope.workspace).$promise.then(function() {
+                $state.reload();
+              });
+            };
           }
-        });
+        }
+      });
     }
   };
   return dependencies.concat(EvidenceController);

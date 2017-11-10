@@ -1,16 +1,12 @@
 <div class="grid-x">
   <div class="cell">
+    <h3>Scenario <inline-help help-key="scenario"></inline-help></h3>
+  </div>
+  <div class="cell">
     <span>Scenario:</span>
     <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenarios track by scenario.id" ng-change="scenarioChanged(scenario)"></select><a ng-if="editMode.isUserOwner" ng-click="editScenarioTitle()"><i class="fa fa-edit"></i></a>
-    <h3>
-      Scenario <inline-help help-key="scenario"></inline-help>
-    </h3>
-  </div>
-</div>
-<div class="grid-x">
-  <div class="cell">
-    <button class="button small" ng-click="forkScenario()">Copy current scenario</button>
-    <button class="button small" ng-click="newScenario()">Create clean scenario</button>
+    <button class="button tiny" ng-click="forkScenario()">Copy current scenario</button>
+    <button class="button tiny" ng-click="newScenario()">Create clean scenario</button>
   </div>
 </div>
 <div id="partial-value-functions-block" class="prefs-block">

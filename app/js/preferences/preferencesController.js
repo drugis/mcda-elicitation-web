@@ -67,7 +67,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function editScenarioTitle() {
       $modal.open({
-        templateUrl: '/app/js/preferences/editScenarioTitle.html',
+        templateUrl: '/js/preferences/editScenarioTitle.html',
         controller: 'EditScenarioTitleController',
         resolve: {
           scenario: function() {

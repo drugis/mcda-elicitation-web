@@ -4,7 +4,6 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
     var workspaceService;
     beforeEach(module('elicit.workspace', function($provide) {
       $provide.value('ScalesService', scalesServiceMock);
-      $provide.value('sortCriteriaWithW', sortCriteriaWithW);
     }));
 
     beforeEach(inject(function(WorkspaceService) {
@@ -12,14 +11,6 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
     }));
 
     var scalesServiceMock = jasmine.createSpyObj('ScalesService', ['getObservedScales']);
-    var criteriaWithW = [{
-      id: 'critId2',
-      w: 'w_2'
-    }, {
-      id: 'critId4',
-      w: 'w_4'
-    }];
-    var sortCriteriaWithW = jasmine.createSpy('sortCriteriaWithW').and.returnValue(criteriaWithW);
 
     describe('buildValueTree', function() {
       it('should build the value tree from the problem criteria',
@@ -256,11 +247,17 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
             criteria: {
               critId2: {
                 id: 'critId2',
-                w: 'w_2'
+                w: 'w_1',
+                pvf: {
+                  range: [2, 3]
+                }
               },
               critId4: {
                 id: 'critId4',
-                w: 'w_4'
+                w: 'w_2',
+                pvf: {
+                  range: [6, 7]
+                }
               }
             },
             performanceTable: [{
@@ -425,54 +422,88 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
     });
 
     describe('filterScenariosWithResults', function() {
+      var problem = {
+        criteria: {
+          crit1: {
+            pvf: {
+              range: [1, 2],
+              direction: 'decreasing'
+            }
+          },
+          crit2: {},
+          crit3: {}
+        },
+        performanceTable: [{
+          criterion: 'crit1'
+        }, {
+          criterion: 'crit2'
+        }]
+      };
+      var subProblem = {
+        definition: {
+          ranges: {
+            crit1: {
+              pvf: {
+                range: [1, 2]
+              }
+            },
+            crit2: {
+              pvf: {
+                range: [4, 5]
+              }
+            }
+          }
+        }
+      };
+
       it('should only return the scenarios in which all criteria have fully defined pvfs', function() {
         var scenarios = [{
           state: {
+            prefs: {}
+          }
+        }, {
+          state: {
             problem: {
               criteria: {
-                crit1: {
-                  title: 'crit1',
+                crit1: {}
+              }
+            }
+          }
+        }, {
+          state: {
+            problem: {
+              criteria: {
+                crit2: {
                   pvf: {
-                    range: [0, 1],
+                    range: [4, 5],
+                    direction: 'increasing'
+                  }
+                },
+                crit3: {
+                  pvf: {
+                    range: [5, 6],
                     direction: 'increasing'
                   }
                 }
               }
             }
           }
-        }, {
-          state: {
-            problem: {
-              criteria: {
-                crit1: {
-                  title: 'crit1'
-                }
-              }
-            }
-          }
-        }, {
-          state: {
-            problem: {
-              criteria: {
-                crit1: {
-                  title: 'crit1',
-                  pvf: {
-                    range: [0,1]
-                  }
-                }
-              }
-            }
-          }
         }];
-        var result = workspaceService.filterScenariosWithResults(scenarios);
+
+        var result = workspaceService.filterScenariosWithResults(problem, subProblem, scenarios);
         var expectedResult = [{
           state: {
             problem: {
               criteria: {
-                crit1: {
-                  title: 'crit1',
+                crit2: {
                   pvf: {
-                    range: [0, 1],
+                    range: [4, 5],
+                    direction: 'increasing'
+                  }
+                },
+                crit3: {
+                  pvf: {
+                    range: [5, 6],
                     direction: 'increasing'
                   }
                 }

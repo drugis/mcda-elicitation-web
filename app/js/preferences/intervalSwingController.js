@@ -3,6 +3,8 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
 
   return function($scope, $state, $stateParams, $injector, $timeout, currentScenario, taskDefinition, PartialValueFunctionService) {
     $scope.pvf = PartialValueFunctionService;
+    $scope.canSave = canSave;
+    $scope.save = save;
 
     function title(step, total) {
       var base = 'Interval SWING weighting';
@@ -10,8 +12,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
         return base + ' (DONE)';
       }
       return base + ' (' + step + '/' + total + ')';
-    };
-
+    }
 
     function buildInitial(criteria, criterionA, criterionB, step) {
       var bounds = PartialValueFunctionService.getBounds(criteria[criterionA]);
@@ -41,7 +42,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       };
     }
 
-    var initialize = function(state) {
+    function initialize(state) {
       var criteria = state.problem.criteria;
       state.prefs = Util.getOrdinalPreferences(state.prefs); // remove pre-existing ordinal/exact preferences
       state = _.extend(state, {
@@ -53,10 +54,9 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
         $scope.$broadcast('rzSliderForceRender');
       }, 100);
       return state;
-    };
+    }
 
-
-    var validChoice = function(state) {
+    function validChoice(state) {
       if (!state) {
         return false;
       }
@@ -64,17 +64,11 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
         return true;
       }
       var criteria = state.problem.criteria;
-      var chosenBounds = state.choice;
-      if (chosenBounds.lower === 0) {
-        chosenBounds.lower += ((rangeBounds[0] + rangeBounds[1]) / 100);
-      } // prevent division by zero
-      var rangeBounds = PartialValueFunctionService.getBounds(criteria[state.criterionA]);
-      return chosenBounds.lower < chosenBounds.upper &&
-        rangeBounds[0] <= chosenBounds.lower &&
-        rangeBounds[1] >= chosenBounds.upper;
-    };
+      return state.choice.lower !== PartialValueFunctionService.worst(criteria[state.criterionA]) &&
+        state.choice.upper !== PartialValueFunctionService.worst(criteria[state.criterionA]);
+    }
 
-    var nextState = function(state) {
+    function nextState(state) {
       if (!validChoice(state)) {
         return null;
       }
@@ -107,19 +101,19 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       });
       next.title = title(next.step, next.total);
       return _.extend(angular.copy(state), next);
-    };
+    }
 
-    $scope.canSave = function(state) {
+    function canSave(state) {
       return state && state.step === state.total + 1;
-    };
+    }
 
-    $scope.save = function(state) {
+    function save(state) {
       currentScenario.state = _.pick(state, ['problem', 'prefs']);
       currentScenario.$save($stateParams, function(scenario) {
         $scope.$emit('elicit.resultsAccessible', scenario);
         $state.go('preferences');
       });
-    };
+    }
 
     $injector.invoke(Wizard, this, {
       $scope: $scope,

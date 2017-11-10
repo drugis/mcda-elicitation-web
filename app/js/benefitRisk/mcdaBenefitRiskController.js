@@ -18,7 +18,7 @@ define(['lodash'], function(_) {
     $scope.scenarioTitle = {};
     $scope.selections = {};
     $scope.scenarios = scenarios;
-    $scope.scenariosWithResults = WorkspaceService.filterScenariosWithResults(scenarios);
+    $scope.scenariosWithResults = WorkspaceService.filterScenariosWithResults(baseProblem, currentSubProblem, scenarios);
     $scope.scenario = currentScenario;
     $scope.isDuplicateScenarioTitle = false;
     $scope.aggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, currentScenario);

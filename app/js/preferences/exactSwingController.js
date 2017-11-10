@@ -56,9 +56,9 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       if (state.type === 'done') {
         return true;
       }
-      var value = state.choice;
-      var bounds = pvf.getBounds(criteria[state.criterionA]);
-      return value < bounds[1] && value > bounds[0];
+      // criterionA always has higher weight than B. The value may not be equal to the worst value of the most
+      // important criterion, to prevent divide by zero.
+      return state.choice !== PartialValueFunctionService.worst(criteria[state.criterionA]);
     }
 
     function nextState(state) {

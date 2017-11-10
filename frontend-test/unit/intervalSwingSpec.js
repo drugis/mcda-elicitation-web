@@ -86,28 +86,15 @@ define(['angular',
       });
 
       describe('validChoice', function() {
-        it('should check that lower < upper', inject(function($controller, $rootScope, TaskDependencies, PartialValueFunctionService) {
+        it('should check that the worst value is not set to the worst value of the higher weighted criterion ', inject(function($controller, $rootScope, TaskDependencies, PartialValueFunctionService) {
           var scope = initializeScope($controller, $rootScope, TaskDependencies, exampleProblem());
-          scope.state.choice.lower = 0.2;
-          scope.state.choice.upper = 0.1;
-          expect(scope.canProceed(scope.state)).toEqual(false);
-          scope.state.choice.upper = 0.2;
-          expect(scope.canProceed(scope.state)).toEqual(false);
-          scope.state.choice.upper = 0.21;
-          expect(scope.canProceed(scope.state)).toEqual(true);
-        }));
-
-        it('should check that the choice is contained in the scale range', inject(function($controller, $rootScope, TaskDependencies, PartialValueFunctionService) {
-          var scope = initializeScope($controller, $rootScope, TaskDependencies, exampleProblem());
-          scope.state.choice.lower = -0.05;
-          scope.state.choice.upper = 0.26;
-          expect(scope.canProceed(scope.state)).toEqual(false);
+          scope.state.choice.lower = 0;
           scope.state.choice.upper = 0.25;
           expect(scope.canProceed(scope.state)).toEqual(false);
-          scope.state.choice.lower = 0.0;
+          scope.state.choice.upper = 0.2;
           expect(scope.canProceed(scope.state)).toEqual(true);
-          scope.state.choice.upper = 0.26;
-          expect(scope.canProceed(scope.state)).toEqual(false);
+          scope.state.choice.lower = 0.2;
+          expect(scope.canProceed(scope.state)).toEqual(true);
         }));
       });
 
@@ -115,6 +102,7 @@ define(['angular',
         it('should transition to the next two criteria', inject(function($controller, $rootScope, TaskDependencies, PartialValueFunctionService) {
           var scope = initializeScope($controller, $rootScope, TaskDependencies, exampleProblem());
           var problem = scope.state.problem;
+          scope.state.choice.upper = 0.2; // make the upper bound a valid choice
           scope.nextStep(scope.state);
           expect(scope.state.criterionA).toEqual('Bleed');
           expect(scope.state.criterionB).toEqual('Dist DVT');
@@ -124,13 +112,16 @@ define(['angular',
 
         it('should transition to done when criteria run out', inject(function($controller, $rootScope, TaskDependencies, PartialValueFunctionService) {
           var scope = initializeScope($controller, $rootScope, TaskDependencies, exampleProblem());
+          scope.state.choice.upper = 0.2;
           scope.nextStep(scope.state);
+          scope.state.choice.upper = 0.2;
           scope.nextStep(scope.state);
           expect(scope.state.type).toEqual('done');
         }));
 
         it('should set the title', inject(function($controller, $rootScope, TaskDependencies, PartialValueFunctionService) {
           var scope = initializeScope($controller, $rootScope, TaskDependencies, exampleProblem());
+          scope.state.choice.upper = 0.2;
           scope.nextStep(scope.state);
           expect(scope.state.step).toEqual(2);
           expect(scope.state.total).toEqual(2);

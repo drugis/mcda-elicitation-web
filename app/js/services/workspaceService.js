@@ -148,11 +148,12 @@ define(['lodash', 'angular'], function(_) {
       return [minimum, maximum];
     }
 
-    function filterScenariosWithResults(scenarios) {
+    function filterScenariosWithResults(baseProblem, currentSubProblem, scenarios) {
       return _.filter(scenarios, function(scenario) {
         var hasPvf = true;
-        if (scenario.state.problem) {
-          _.forEach(scenario.state.problem.criteria, function(criterion) {
+        var state = buildAggregateState(baseProblem, currentSubProblem, scenario);
+        if (state.problem) {
+          _.forEach(state.problem.criteria, function(criterion) {
             if (!criterion.pvf || !criterion.pvf.direction) {
               hasPvf = false;
             }

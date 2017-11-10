@@ -18,7 +18,7 @@ define(['angular'].concat(requires), function(
   WorkspaceService,
   ExampleResource
 ) {
-  return angular.module('elicit.workspace', [])
+  return angular.module('elicit.workspace', ['elicit.util'])
     .controller('ChooseProblemController', ChooseProblemController)
     .controller('CreateWorkspaceController', CreateWorkspaceController)
     .controller('DeleteWorkspaceController', DeleteWorkspaceController)
