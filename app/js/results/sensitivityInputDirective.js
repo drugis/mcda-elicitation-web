@@ -13,7 +13,8 @@ define(['lodash'], function(_) {
         'alternative': '=',
         'originalValue': '=',
         'currentValue': '=',
-        'changeCallback': '='
+        'changeCallback': '=',
+        'isEditing': '='
       },
       templateUrl: mcdaRootPath + 'js/results/sensitivityInputDirective.html',
       link: function(scope) {
@@ -28,10 +29,12 @@ define(['lodash'], function(_) {
         scope.slider = initSlider();
 
         scope.$on('open.af.dropdownToggle', function() {
+          scope.isEditing(true);
           isEscPressed = false;
         });
 
         scope.$on('close.af.dropdownToggle', function() {
+          scope.isEditing(false);
           if (!isEscPressed) {
             closeAndSave();
           }

@@ -39,7 +39,7 @@
               <label>{{criterion.title}}</label>
             </td>
             <td class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}">
-              <sensitivity-input criterion="criterion" alternative="alternative" original-value="scales.observed[criterion.id][alternative.id]['50%']" current-value="modifiableScales[criterion.id][alternative.id]['50%']" change-callback="sensitivityScalesChanged"></sensitivity-input>
+              <sensitivity-input criterion="criterion" alternative="alternative" original-value="scales.observed[criterion.id][alternative.id]['50%']" current-value="modifiableScales[criterion.id][alternative.id]['50%']" change-callback="sensitivityScalesChanged" is-editing="isEditing"></sensitivity-input>
             </td>
           </tr>
         </tbody>
@@ -48,7 +48,7 @@
   </div>
   <div class="grid-x underlined-div">
     <div class="cell large-4 button-group small expanded">
-      <button class="button" ng-click="recalculateResults()">
+      <button class="button" ng-click="recalculateResults()" ng-disabled="sensitivityMeasurements.isEditing">
         Recalculate value profiles
       </button>
       <button class="button" ng-click="resetSensitivityAnalysis()">

@@ -14,18 +14,24 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.resetSensitivityAnalysis = resetSensitivityAnalysis;
     $scope.doMeasurementSensitivity = doMeasurementSensitivity;
     $scope.doPreferencesSensitivity = doPreferencesSensitivity;
+    $scope.isEditing = isEditing;
 
     // init
     $scope.scenario = currentScenario;
     $scope.scales = $scope.workspace.scales;
     $scope.sensitivityMeasurements = {
-      alteredTableCells: []
+      alteredTableCells: [],
+      isEditing: false
     };
     $scope.state = initialize(taskDefinition.clean($scope.aggregateState));
     $scope.$watch('scales.observed', function() {
       resetSensitivityAnalysis();
     });
     var clipboard = new Clipboard('.clipboard-button');
+
+    function isEditing(value) {
+      $scope.sensitivityMeasurements.isEditing = value;
+    }
 
     function resetSensitivityAnalysis() {
       $scope.modifiableScales = MCDAResultsService.resetModifiableScales(
