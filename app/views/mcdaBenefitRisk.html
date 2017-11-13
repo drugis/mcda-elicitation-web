@@ -1,7 +1,7 @@
 <div class="grid-x overview-nav-container">
   <div class="cell">
     <ul class="overview-nav">
-      <li><a class="tab-corners" ng-class="{activetab: activeTab ==='evidence'}" ui-sref="evidence">Evidence</a></li>
+      <li><a class="tab-corners" ng-class="{activetab: activeTab ==='evidence'}" ui-sref="evidence">Overview</a></li>
       <li><a class="tab-corners" ng-class="{activetab: activeTab ==='problem'}" ui-sref="problem">Problem definition</a></li>
       <li>
         <div ng-if="tasksAccessibility.preferences">
@@ -13,10 +13,18 @@
       </li>
       <li>
         <div ng-if="tasksAccessibility.results">
-          <a class="tab-corners" ng-class="{activetab: activeTab === 'results'}" ui-sref="results">Results</a>
+          <a class="tab-corners" ng-class="{activetab: activeTab === 'deterministic-results'}" ui-sref="deterministic-results">Deterministic results</a>
         </div>
         <div ng-if="!tasksAccessibility.results">
-          <a class="tab-corners disabledtab" tooltip="Tab unavailable because not all partial value functions are set">Results</a>
+          <a class="tab-corners disabledtab" tooltip="Tab unavailable because not all partial value functions are set">Deterministic results</a>
+        </div>
+      </li>
+      <li>
+        <div ng-if="tasksAccessibility.results">
+          <a class="tab-corners" ng-class="{activetab: activeTab === 'smaa-results'}" ui-sref="smaa-results">SMAA results</a>
+        </div>
+        <div ng-if="!tasksAccessibility.results">
+          <a class="tab-corners disabledtab" tooltip="Tab unavailable because not all partial value functions are set">SMAA results</a>
         </div>
       </li>
     </ul>

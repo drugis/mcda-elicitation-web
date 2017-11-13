@@ -11,14 +11,11 @@
       <span>Scenario:</span>
       <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id" ng-change="scenarioChanged(scenario)"></select>
     </div>
-    <div class="cell">
-      <h3>Deterministic analysis results <inline-help help-key="deterministic-analysis-results"></inline-help></h3>
-      <button class="button" ui-sref="smaa-results">SMAA results</button>
-    </div>
   </div>
+  <br>
   <div class="grid-x">
     <div class="cell large-10">
-      <h3>Effects table (exact or median values only) <inline-help help-key="effects-table"></inline-help></h3>
+      <h4>Effects table (exact or median values only) <inline-help help-key="effects-table"></inline-help></h4>
       <p><em>Values can be changed by clicking them.</em></p>
     </div>
     <div clas="cell large-2">
@@ -128,12 +125,12 @@
   </div>
   <div class="grid-x">
     <div class="cell">
-      <h3>One-way sensitivity analysis <inline-help help-key="one-way-sensitivity-analysis"></inline-help></h3>
+      <h4>One-way sensitivity analysis <inline-help help-key="one-way-sensitivity-analysis"></inline-help></h4>
     </div>
   </div>
   <div class="grid-x underlined-div grid-margin-x">
     <div class="cell medium-6 large-6">
-      <h4>Measurements <inline-help help-key="sensitivity-measurements"></inline-help></h4>
+      <h5>Measurements <inline-help help-key="sensitivity-measurements"></inline-help></h5>
       <div class="grid-x grid-margin-x">
         <div class="cell medium-6 large-6">
           <label>Alternative
@@ -153,7 +150,7 @@
       </div>
     </div>
     <div class="cell medium-6 large-6">
-      <h4>Preferences <inline-help help-key="sensitivity-preferences"></inline-help></h4>
+      <h5>Preferences <inline-help help-key="sensitivity-preferences"></inline-help></h5>
       <div class="grid-x">
         <div class="cell medium-6 large-6 ">
           <label>Weight given to
@@ -166,11 +163,6 @@
           <line-chart label-x-axis="'Weight given to ' + sensitivityMeasurements.preferencesCriterion.title" label-y-axis="'total value'" value="preferencesValues"></line-chart>
         </div>
       </div>
-    </div>
-  </div>
-  <div class="grid-x">
-    <div class="cell">
-      <button class="button" ui-sref="smaa-results">SMAA results</button>
     </div>
   </div>
 </div>

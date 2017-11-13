@@ -58,18 +58,18 @@ define(function() {
       resets: []
     }, {
       id: 'smaa-results',
-      title: 'Results',
+      title: 'Smaa results',
       controller: 'SmaaResultsController',
       templateUrl: 'smaaResults.html',
-      activeTab: 'results',
+      activeTab: 'smaa-results',
       requires: ['partial-value-function'],
       resets: []
     }, {
       id: 'deterministic-results',
-      title: 'Results',
+      title: 'Deterministic results',
       controller: 'DeterministicResultsController',
       templateUrl: 'deterministicResults.html',
-      activeTab: 'results',
+      activeTab: 'deterministic-results',
       requires: ['partial-value-function'],
       resets: []
     }, {

@@ -18,7 +18,7 @@
   </div>
   <div class="grid-x">
     <div class="cell large-6">
-      <label>Workspace description
+      <label>Therapeutic context <inline-help help-key="therapeutic-context"></inline-help>
         <textarea ng-model="state.description" width="100%" rows="5"></textarea>
       </label>
     </div>
@@ -39,7 +39,7 @@
             <th>Title</th>
             <th>Is favorable?</th>
             <th>Data type</th>
-            <th>Unit</th>
+            <th>Unit <inline-help help-key="criterion-unit"></inline-help></th>
             <th>description</th>
             <th>Source</th>
             <th>Source link</th>
@@ -69,19 +69,19 @@
   </div>
   <div class="grid-x">
     <div class="cell">
-      <h4>Treatments
-        <inline-help help-key="treatment"></inline-help>
+      <h4>Alternatives
+        <inline-help help-key="alternative"></inline-help>
       </h4>
     </div>
   </div>
   <div class="grid-x">
     <div class="cell input-group large-6">
       <span class="input-group-label">
-        Treatment title
+        Alternative title
       </span>
       <input class="text input-group-field" ng-model="treatmentInputField.value" onkeyup="if(event.keyCode===13) document.getElementById('treatmentButton').click()">
       <div class="input-group-button">
-        <button ng-disabled="!treatmentInputField.value || isDuplicateTitle(treatmentInputField.value)" type="button" class="button tiny" ng-click="addTreatment(treatmentInputField.value)" id="treatmentButton"><i class="fa fa-plus"></i> Add Treatment</button>
+        <button ng-disabled="!treatmentInputField.value || isDuplicateTitle(treatmentInputField.value)" type="button" class="button tiny" ng-click="addTreatment(treatmentInputField.value)" id="treatmentButton"><i class="fa fa-plus"></i> Add Alternative</button>
       </div>
     </div>
   </div>
@@ -90,13 +90,13 @@
       <table width="100%">
         <thead>
           <tr>
-            <th>Treatment title</th>
+            <th>Alternative title</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-if="!state.treatments.length">
             <td>
-              <em>No treatments defined</em>
+              <em>No alternatives defined</em>
             </td>
           </tr>
           <tr ng-repeat="treatment in state.treatments">
@@ -121,7 +121,7 @@
       <em>Two criteria required</em>
     </div>
     <div class="cell" ng-if="state.treatments.length < 2">
-      <em>Two treatments required</em>
+      <em>Two alternatives required</em>
     </div>
   </div>
 </div>
@@ -135,7 +135,7 @@
       <h4>Enter data in effects table <inline-help help-key="effects-table"></inline-help></h4>
     </div>
     <div class="cell">
-      Here you enter the data for each combination of criterion and treatment, in the form of results from studies. The corresponding distribution is calculated and displayed in the table. Begin entering data by clicking any of the cells' text.
+      Here you enter the data for each combination of criterion and alternative, in the form of results from studies. The corresponding distribution is calculated and displayed in the table. Begin entering data by clicking any of the cells' text.
     </div>
   </div>
   <!-- input -->

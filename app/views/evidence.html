@@ -7,10 +7,65 @@
       </a>
     </h4>
   </div>
-  <div class="cell">
+  <div class="cell underlined-div">
     <span ng-if="problem.description">{{problem.description}}</span>
     <span ng-if="!problem.description">No description given.</span>
   </div>
+
+  <div class="cell">
+    <h4>Criteria <inline-help help-key="criterion"></inline-help></h4>
+  </div>
+  <div class="cell large-10">
+    <table width="100%">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Unit
+            <inline-help help-key="criterion-unit"></inline-help>
+          </th>
+          <th>description</th>
+          <th>Source</th>
+          <th>Source link</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="(criterionKey, criterion) in problem.criteria">
+          <td>
+            <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editCriterion(criterion, criterionKey)">
+              <i class="fa fa-edit"></i>
+            </a> {{criterion.title}}
+          </td>
+          <td>{{criterion.unitOfMeasurement}}</td>
+          <td>{{criterion.description}}</td>
+          <td>{{criterion.source}}</td>
+          <td>{{criterion.sourceLink}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cell">
+    <h4>Alternatives <inline-help help-key="alternative"></inline-help></h4>
+  </div>
+  <div class="cell large-6">
+    <table width="100%">
+      <thead>
+        <tr>
+          <th>Alternative title</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="alternative in problem.alternatives">
+          <td>
+            <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editAlternative(alternative)">
+              <i class="fa fa-edit"></i>
+            </a> {{alternative.title}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cell underlined-div"></div>
   <div class="cell large-10">
     <h4>Effects Table
       <inline-help help-key="effects-table"></inline-help>
@@ -25,14 +80,16 @@
     <table class="full-width effects-table" id="effectstable">
       <thead>
         <tr>
-          <th>Criterion <inline-help help-key="criterion"></inline-help></th>
+          <th>Criterion
+            <inline-help help-key="criterion"></inline-help>
+          </th>
           <th>Description</th>
-          <th>Units <inline-help help-key="criterion-unit"></inline-help></th>
+          <th>Units
+            <inline-help help-key="criterion-unit"></inline-help>
+          </th>
           <th ng-if="references.has">References</th>
           <th class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives">
-            <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editAlternative(problem.alternatives[alternativeKey])">
-              <i class="fa fa-edit"></i>
-            </a>{{alternative.title}}{{problem.valueTree.children.children[0].criteria}}</th>
+            {{alternative.title}}</th>
         </tr>
       </thead>
       <tbody class="main">
@@ -51,9 +108,7 @@
         </tr>
         <tr ng-repeat-end ng-repeat="criterion in effectsTableRow.criteria track by $index">
           <td>
-            <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editCriterion(criterion.value, criterion.key)">
-              <i class="fa fa-edit"></i>
-            </a>{{criterion.value.title}}
+            {{criterion.value.title}}
           </td>
           <td>
             <div class="td-container">
