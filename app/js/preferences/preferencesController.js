@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
 
   var dependencies = [
     '$scope',
@@ -9,7 +9,8 @@ define(['lodash', 'angular'], function(_, angular) {
     'ScenarioResource',
     'PartialValueFunctionService',
     'TaskDependencies',
-    'currentScenario'
+    'currentScenario',
+    'MCDAResultsService'
   ];
   var PreferencesController = function(
     $scope,
@@ -19,7 +20,8 @@ define(['lodash', 'angular'], function(_, angular) {
     ScenarioResource,
     PartialValueFunctionService,
     TaskDependencies,
-    currentScenario) {
+    currentScenario,
+    MCDAResultsService) {
 
     // functions
     $scope.pvf = PartialValueFunctionService;
@@ -30,11 +32,26 @@ define(['lodash', 'angular'], function(_, angular) {
     // init
     $scope.scenario = currentScenario;
     $scope.scales = $scope.workspace.scales;
-    $scope.criteria = $scope.aggregateState.criteria;
     $scope.getXY = _.memoize(PartialValueFunctionService.getXY, function(arg) {
       return angular.toJson(arg.pvf);
     });
     createIsSafeObject();
+    if (doAllCriteriaHavePvf()) {
+      MCDAResultsService.getDeterministicResults($scope, $scope.aggregateState).resultsPromise.then(function(result) {
+        $scope.deterministicResults = result.results;
+      });
+    }
+    var clipboard = new Clipboard('.clipboard-button');
+
+    function doAllCriteriaHavePvf(){
+      var havePvf = true;
+      _.forEach($scope.aggregateState.problem.criteria, function(criterion){
+        if(!isPVFDefined(criterion)){
+          havePvf = false;
+        }
+      });
+      return havePvf;
+    }
 
     function willReset(safe) {
       var resets = safe.resets.map(function(reset) {
@@ -51,9 +68,9 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function createIsSafeObject() {
-      $scope.isSafe = _.reduce($scope.tasks, function(obj, task) {
-        obj[task.id] = isTaskSafe(task.id);
-        return obj;
+      $scope.isSafe = _.reduce($scope.tasks, function(accum, task) {
+        accum[task.id] = isTaskSafe(task.id);
+        return accum;
       }, {});
     }
 
@@ -79,7 +96,7 @@ define(['lodash', 'angular'], function(_, angular) {
           callback: function() {
             return function(newTitle) {
               $scope.scenario.title = newTitle;
-              ScenarioResource.save($stateParams, $scope.scenario).$promise.then(function(){
+              ScenarioResource.save($stateParams, $scope.scenario).$promise.then(function() {
                 $state.reload();
               });
             };

@@ -24,7 +24,7 @@
     </div>
   </div>
 </div>
-<div class="grid-x" id="trade-off-block" class="prefs-block">
+<div class="grid-x underlined-div prefs-block" id="trade-off-block">
   <div class="cell">
     <h4>Trade-offs
       <inline-help help-key="trade-offs"></inline-help>
@@ -43,6 +43,31 @@
   </div>
   <div class="cell">
     <trade-offs problem="aggregateState.problem" preferences="scenario.state.prefs"></trade-offs>
+  </div>
+</div>
+<div class="grid-x underlined-div">
+  <div class="cell large-9">
+    <h4>Representative weights <inline-help help-key="representative-weights"></inline-help></h4>
+  </div>
+  <div class="cell large-3" ng-if="deterministicResults">
+    <button class="button small info clipboard-button" data-clipboard-target="#weighttable">
+      <i class="fa fa-clipboard"></i> Copy to clipboard
+    </button>
+  </div>
+  <div class="cell" ng-if="deterministicResults">
+    <table id="weighttable">
+      <thead>
+        <th ng-repeat="criterion in aggregateState.problem.criteria">{{criterion.title}}</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td ng-repeat="criterion in aggregateState.problem.criteria">{{deterministicResults.weights.data[criterion.id]}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cell alert" ng-if="!deterministicResults">
+    Weights cannot be shown if there are criteria with missing PVFs.
   </div>
 </div>
 <button class="button success" ui-sref="results" ng-disabled="!tasksAccessibility.results">Results</button>
