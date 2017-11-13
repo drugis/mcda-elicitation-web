@@ -17,7 +17,7 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.openCriterionModal = openCriterionModal;
     $scope.addTreatment = addTreatment;
     $scope.removeTreatment = removeTreatment;
-    $scope.isDuplicateName = isDuplicateName;
+    $scope.isDuplicateTitle = isDuplicateTitle;
     $scope.goToStep1 = goToStep1;
     $scope.goToStep2 = goToStep2;
     $scope.createProblem = createProblem;
@@ -87,23 +87,23 @@ define(['lodash', 'angular'], function(_, angular) {
       });
     }
 
-    function addTreatment(name) {
+    function addTreatment(title) {
       $scope.state.treatments.push({
-        name: name
+        title: title
       });
       $scope.treatmentInputField.value = '';
     }
 
     function removeTreatment(treatment) {
-      $scope.state.treatments = _.reject($scope.state.treatments, ['name', treatment.name]);
+      $scope.state.treatments = _.reject($scope.state.treatments, ['title', treatment.title]);
     }
 
-    function isDuplicateName(name) {
-      return _.find($scope.state.treatments, ['name', name]);
+    function isDuplicateTitle(title) {
+      return _.find($scope.state.treatments, ['title', title]);
     }
 
     function removeCriterion(criterion) {
-      $scope.state.criteria = _.reject($scope.state.criteria, ['name', criterion.name]);
+      $scope.state.criteria = _.reject($scope.state.criteria, ['title', criterion.title]);
     }
 
     function openCriterionModal(criterion) {
@@ -142,10 +142,10 @@ define(['lodash', 'angular'], function(_, angular) {
     function goToStep2() {
       $scope.state.step = 'step2';
       $scope.state.treatments = _.map($scope.state.treatments, function(treatment) {
-        return addKeyHashToObject(treatment, treatment.name);
+        return addKeyHashToObject(treatment, treatment.title);
       });
       $scope.state.criteria = _.map($scope.state.criteria, function(criterion) {
-        return addKeyHashToObject(criterion, criterion.name);
+        return addKeyHashToObject(criterion, criterion.title);
       });
       $scope.state.studyType = $scope.state.studyType ? $scope.state.studyType : resetStudyTypes();
       $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.treatments, $scope.state.inputData);

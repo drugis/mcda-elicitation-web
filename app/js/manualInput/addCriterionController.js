@@ -38,11 +38,11 @@ define(['lodash'], function(_) {
     function isCreationBlocked() {
       var criterion = $scope.criterion;
       $scope.blockedReasons = [];
-      if (!criterion.name && !$scope.isAddingCriterion) {
-        $scope.blockedReasons.push('No name entered');
+      if (!criterion.title && !$scope.isAddingCriterion) {
+        $scope.blockedReasons.push('No title entered');
       }
-      if (isNameDuplicate(criterion.name) && !$scope.isAddingCriterion && !oldCriterion) {
-        $scope.blockedReasons.push('Duplicate name');
+      if (isTitleDuplicate(criterion.title) && !$scope.isAddingCriterion && !oldCriterion) {
+        $scope.blockedReasons.push('Duplicate title');
       }
       if(criterion.dataType === 'survival' && !criterion.timeScale) {
         $scope.blockedReasons.push('Missing time scale');
@@ -56,8 +56,8 @@ define(['lodash'], function(_) {
       }
     }
 
-    function isNameDuplicate(name) {
-      return _.find(criteria, ['name', name]);
+    function isTitleDuplicate(title) {
+      return _.find(criteria, ['title', title]);
     }
 
     function dataTypeChanged() {

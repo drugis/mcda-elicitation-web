@@ -6,7 +6,7 @@
       <h4>Define criteria and treatments</h4>
     </div>
     <div class="cell">
-      Here you can enter the data for an analysis manually. In this first step, create the criteria and treatments you wish to analyse. Treatments are simply a name, while criteria are more complex.
+      Here you can enter the data for an analysis manually. In this first step, create the criteria and treatments you wish to analyse. Treatments are simply a title, while criteria are more complex.
     </div>
   </div>
   <div class="grid-x">
@@ -36,7 +36,7 @@
       <table width="100%">
         <thead>
           <tr>
-            <th>Name</th>
+            <th>Title</th>
             <th>Is favorable?</th>
             <th>Data type</th>
             <th>Unit</th>
@@ -54,7 +54,7 @@
           <tr ng-repeat="criterion in state.criteria">
             <td>
               <a ng-click="removeCriterion(criterion)"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a>
-              <a ng-click="openCriterionModal(criterion)"><i class="fa fa-edit icon-fixed-width"></i></a> {{criterion.name}}
+              <a ng-click="openCriterionModal(criterion)"><i class="fa fa-edit icon-fixed-width"></i></a> {{criterion.title}}
             </td>
             <td>{{criterion.isFavorable}}</td>
             <td>{{criterion.dataType}}</td>
@@ -77,11 +77,11 @@
   <div class="grid-x">
     <div class="cell input-group large-6">
       <span class="input-group-label">
-        Treatment name
+        Treatment title
       </span>
       <input class="text input-group-field" ng-model="treatmentInputField.value" onkeyup="if(event.keyCode===13) document.getElementById('treatmentButton').click()">
       <div class="input-group-button">
-        <button ng-disabled="!treatmentInputField.value || isDuplicateName(treatmentInputField.value)" type="button" class="button tiny" ng-click="addTreatment(treatmentInputField.value)" id="treatmentButton"><i class="fa fa-plus"></i> Add Treatment</button>
+        <button ng-disabled="!treatmentInputField.value || isDuplicateTitle(treatmentInputField.value)" type="button" class="button tiny" ng-click="addTreatment(treatmentInputField.value)" id="treatmentButton"><i class="fa fa-plus"></i> Add Treatment</button>
       </div>
     </div>
   </div>
@@ -90,7 +90,7 @@
       <table width="100%">
         <thead>
           <tr>
-            <th>Treatment name</th>
+            <th>Treatment title</th>
           </tr>
         </thead>
         <tbody>
@@ -100,7 +100,7 @@
             </td>
           </tr>
           <tr ng-repeat="treatment in state.treatments">
-            <td><a ng-click="removeTreatment(treatment)"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a> {{treatment.name}}
+            <td><a ng-click="removeTreatment(treatment)"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a> {{treatment.title}}
             </td>
           </tr>
         </tbody>
@@ -148,12 +148,12 @@
         <thead>
           <tr>
             <th></th>
-            <th ng-repeat="treatment in state.treatments" style="min-width:80px">{{treatment.name}}</th>
+            <th ng-repeat="treatment in state.treatments" style="min-width:80px">{{treatment.title}}</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="criterion in state.criteria">
-            <td>{{criterion.name}}</td>
+            <td>{{criterion.title}}</td>
             <td ng-repeat="treatment in state.treatments">
               <effect-input-helper criterion="criterion" treatment="treatment" input-data="state.inputData[criterion.hash][treatment.hash]" change-callback="checkInputData"></effect-input-helper>
             </td>

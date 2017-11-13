@@ -105,24 +105,24 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
       var description = 'A random description of a random problem';
       var treatments = {
         treatment1: {
-          name: 'treatment1',
+          title: 'treatment1',
           hash: 'treatment1'
         },
         treatment2: {
-          name: 'treatment2',
+          title: 'treatment2',
           hash: 'treatment2'
         }
       };
       it('should create a problem, ready to go to the workspace', function() {
         var criteria = [{
-          name: 'favorable criterion',
+          title: 'favorable criterion',
           description: 'some crit description',
           unitOfMeasurement: 'particles',
           isFavorable: true,
           hash: 'favorable criterion',
           dataSource: 'exact'
         }, {
-          name: 'unfavorable criterion',
+          title: 'unfavorable criterion',
           description: 'some crit description',
           unitOfMeasurement: 'particles',
           isFavorable: false,
@@ -233,7 +233,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
       });
       it('should create a problem with survival data', function() {
         var criteria = [{
-          name: 'survival mean',
+          title: 'survival mean',
           dataType: 'survival',
           summaryMeasure: 'mean',
           timeScale: 'hour',
@@ -243,7 +243,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           hash: 'survival mean',
           dataSource: 'study'
         }, {
-          name: 'survival at time',
+          title: 'survival at time',
           dataType: 'survival',
           summaryMeasure: 'survivalAtTime',
           timeScale: 'minute',
@@ -492,20 +492,20 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
       it('should prepare a zero initialized table', function() {
         var treatments = {
           treatment1: {
-            name: 'treatment1',
+            title: 'treatment1',
             hash: 'treatment1'
           },
           treatment2: {
-            name: 'treatment2',
+            title: 'treatment2',
             hash: 'treatment2'
           }
         };
         var criteria = [{
-          name: 'criterion 1 title',
+          title: 'criterion 1 title',
           hash: 'criterion 1 title',
           dataSource: 'exact'
         }, {
-          name: 'criterion 2 title',
+          title: 'criterion 2 title',
           hash: 'criterion 2 title',
           dataSource: 'exact'
         }];
@@ -532,26 +532,26 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
       it('should preserve data if there is old data supplied and the criterion type has not changed', function() {
         var treatments = {
           treatment1: {
-            name: 'treatment1',
+            title: 'treatment1',
             hash: 'treatment1'
           },
           treatment2: {
-            name: 'treatment2',
+            title: 'treatment2',
             hash: 'treatment2'
           }
         };
         var criteria = [{
-          name: 'survival to exact',
+          title: 'survival to exact',
           hash: 'survival to exact',
           dataType: 'exact',
           dataSource: 'exact'
         }, {
-          name: 'survival stays the same',
+          title: 'survival stays the same',
           hash: 'survival stays the same',
           dataType: 'survival',
           dataSource: 'study'
         }, {
-          name: 'exact to survival',
+          title: 'exact to survival',
           hash: 'exact to survival',
           dataType: 'survival',
           dataSource: 'study'

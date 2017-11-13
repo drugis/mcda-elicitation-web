@@ -106,10 +106,10 @@ define(['lodash', 'angular'], function(_) {
           title: 'Benefit-risk balance',
           children: [{
             title: 'Favourable effects',
-            criteria: _.map(_.filter(criteria, 'isFavorable'), 'name')
+            criteria: _.map(_.filter(criteria, 'isFavorable'), 'title')
           }, {
             title: 'Unfavourable effects',
-            criteria: _.map(_.reject(criteria, 'isFavorable'), 'name')
+            criteria: _.map(_.reject(criteria, 'isFavorable'), 'title')
           }]
         },
         criteria: buildCriteria(criteria),
@@ -228,7 +228,7 @@ define(['lodash', 'angular'], function(_) {
     function buildCriteria(criteria) {
       var newCriteria = _.map(criteria, function(criterion) {
         return {
-          title: criterion.name,
+          title: criterion.title,
           description: criterion.description,
           unitOfMeasurement: criterion.unitOfMeasurement,
           scale: buildScale(criterion),
@@ -242,8 +242,8 @@ define(['lodash', 'angular'], function(_) {
     function buildAlternatives(treatments) {
       var alternatives = {};
       _.forEach(treatments, function(treatment) {
-        alternatives[treatment.name] = {
-          title: treatment.name
+        alternatives[treatment.title] = {
+          title: treatment.title
         };
       });
       return alternatives;
@@ -255,8 +255,8 @@ define(['lodash', 'angular'], function(_) {
         _.forEach(treatments, function(treatment) {
           var data = createDistribution(inputData[criterion.hash][treatment.hash], criterion);
           newPerformanceTable.push({
-            alternative: treatment.name,
-            criterion: criterion.name,
+            alternative: treatment.title,
+            criterion: criterion.title,
             performance: distributionKnowledge[data.type].buildPerformance(data, criterion)
           });
         });
