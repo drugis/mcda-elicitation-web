@@ -29,14 +29,14 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
           return increasing ? this.choice.lower : this.choice.upper;
         },
         choice: {
-          lower: bounds[0],
-          upper: bounds[1]
+          lower: Math.ceil(bounds[0]*100)/100, // make sure 
+          upper: Math.floor(bounds[1]*100)/100
         },
         sliderOptions: {
-          floor: bounds[0],
-          ceil: bounds[1],
+          floor: Math.ceil(bounds[0]*1000)/1000,
+          ceil: Math.floor(bounds[1]*1000)/1000,
           step: Math.abs(bounds[0] - bounds[1]) / 100,
-          precision: 2,
+          precision: 3,
           noSwitching: true
         }
       };

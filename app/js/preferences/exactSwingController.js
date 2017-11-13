@@ -26,8 +26,8 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
         criterionB: criterionB,
         choice: (bounds[0] + bounds[1]) / 2,
         sliderOptions: {
-          floor: bounds[0],
-          ceil: bounds[1],
+          floor: Math.ceil(bounds[0]*1000)/1000,
+          ceil: Math.floor(bounds[1]*1000)/1000,
           step: Math.abs(bounds[0] - bounds[1]) / 100,
           precision: 2
         }
