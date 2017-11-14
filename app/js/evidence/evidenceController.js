@@ -1,12 +1,12 @@
 'use strict';
 define(['clipboard', 'lodash'], function(Clipboard, _) {
-  var dependencies = ['$scope', '$state', '$stateParams', '$modal', '$q',
+  var dependencies = ['$scope', '$state', '$stateParams', '$modal',
     'EffectsTableService',
     'WorkspaceResource',
     'isMcdaStandalone'
   ];
 
-  var EvidenceController = function($scope, $state, $stateParams, $modal, $q,
+  var EvidenceController = function($scope, $state, $stateParams, $modal,
     EffectsTableService,
     WorkspaceResource,
     isMcdaStandalone) {

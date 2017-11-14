@@ -30,7 +30,7 @@ define(['lodash', 'angular'], function(_) {
 
     function reduceProblem(problem) {
       var criteria = _.reduce(problem.criteria, function(accum, criterion, key) {
-        accum[key] = _.pick(criterion, ['scale', 'pvf', 'title']);
+        accum[key] = _.pick(criterion, ['scale', 'pvf']);
         return accum;
       }, {});
       return {
@@ -112,9 +112,9 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function buildAggregateState(baseProblem, subProblem, scenario) {
-      var newState = _.merge({}, {
+      var newState = _.merge({}, scenario.state, {
         problem: mergeBaseAndSubProblem(baseProblem, subProblem.definition)
-      }, scenario.state);
+      });
       newState.problem.criteria = _.keyBy(sortCriteriaWithW(newState.problem.criteria), 'id');
       return newState;
     }
