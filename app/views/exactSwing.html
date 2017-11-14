@@ -29,6 +29,9 @@
       <button class="button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
       <button class="button" ng-if="!canSave(state)" ng-click="nextStep(state)" ng-disabled="!canProceed(state)">Next</button>
     </div>
+    <div class="cell alert" ng-if="!canProceed(state)">
+      Cannot proceed because the chosen value should not be equal to the worst possible value of {{state.criterionA}}.
+    </div>
   </div>
 </div>
 <div ng-show="state.step > state.total">
