@@ -29,11 +29,11 @@ define(['lodash', 'angular'], function(_) {
       $scope.invalidSlider = false;
       _.forEach(_.keys($scope.criteria), function(criterionKey) {
         // check if there are two values at the same side of the red bar
-        if (($scope.choices[criterionKey].from < $scope.scalesState[criterionKey].sliderOptions.restrictedRange.from &&
-            $scope.choices[criterionKey].to < $scope.scalesState[criterionKey].sliderOptions.restrictedRange.from) ||
-          ($scope.choices[criterionKey].from > $scope.scalesState[criterionKey].sliderOptions.restrictedRange.to &&
-            $scope.choices[criterionKey].to > $scope.scalesState[criterionKey].sliderOptions.restrictedRange.to) ||
-          $scope.choices[criterionKey].from === $scope.choices[criterionKey].to) {
+        if (
+          ($scope.choices[criterionKey].from <= $scope.scalesState[criterionKey].sliderOptions.restrictedRange.from &&
+            $scope.choices[criterionKey].to <= $scope.scalesState[criterionKey].sliderOptions.restrictedRange.from) ||
+          ($scope.choices[criterionKey].from >= $scope.scalesState[criterionKey].sliderOptions.restrictedRange.to &&
+            $scope.choices[criterionKey].to >= $scope.scalesState[criterionKey].sliderOptions.restrictedRange.to) ) {
           $scope.invalidSlider = true;
         }
       });
