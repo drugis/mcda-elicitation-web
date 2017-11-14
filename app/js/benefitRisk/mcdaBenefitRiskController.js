@@ -39,6 +39,10 @@ define(['lodash'], function(_) {
         $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales($scope.aggregateState.problem, $scope.workspace.scales.observed);
       }
       updateTaskAccessibility();
+      ScenarioResource.query(_.omit($stateParams, ['id'])).$promise.then(function(scenarios){
+        $scope.scenarios = scenarios;
+        $scope.scenariosWithResults = WorkspaceService.filterScenariosWithResults(baseProblem, currentSubProblem, scenarios);
+      });
     });
 
     $scope.scalesPromise = WorkspaceService.getObservedScales($scope, baseProblem).then(function(observedScales) {
