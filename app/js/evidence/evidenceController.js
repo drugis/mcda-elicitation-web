@@ -24,10 +24,8 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.nrAlternatives = _.keys($scope.problem.alternatives).length;
     $scope.isStandAlone = isMcdaStandalone;
     $scope.references = {
-      has: _.find($scope.effectsTableData, function(effectsTableRow) {
-        return _.find(effectsTableRow.criteria, function(criterion) {
+      has: _.find($scope.problem.criteria, function(criterion) {
           return criterion.source;
-        });
       })
     };
 
