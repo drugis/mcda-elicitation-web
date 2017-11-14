@@ -114,10 +114,11 @@
         </li>
       </ul>
     </div>
+    <div class="cell alert"><em>Invalid scale range</em></div>
   </div>
   <div class="grid-x">
     <div class="cell large-6">
-      <button class="button success" type="submit" ng-disabled="isTitleDuplicate || !subProblemState.title">Create</button>
+      <button class="button success" type="submit" ng-disabled="isTitleDuplicate || !subProblemState.title || invalidSlider">Create</button>
     </div>
   </div>
   <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">

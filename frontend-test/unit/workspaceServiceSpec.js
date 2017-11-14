@@ -408,9 +408,8 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
         };
         var expectedResult = {
           criteria: {
-            crit1: { title: 'critId1' },
+            crit1: { },
             crit2: {
-              title: 'critId2',
               scale: [0, 1],
               pvf: 'pvf'
             }
