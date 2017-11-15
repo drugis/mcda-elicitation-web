@@ -10,7 +10,8 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     'PartialValueFunctionService',
     'TaskDependencies',
     'currentScenario',
-    'MCDAResultsService'
+    'MCDAResultsService',
+    'mcdaRootPath'
   ];
   var PreferencesController = function(
     $scope,
@@ -21,7 +22,9 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     PartialValueFunctionService,
     TaskDependencies,
     currentScenario,
-    MCDAResultsService) {
+    MCDAResultsService,
+    mcdaRootPath
+  ) {
 
     // functions
     $scope.pvf = PartialValueFunctionService;
@@ -43,10 +46,10 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     }
     var clipboard = new Clipboard('.clipboard-button');
 
-    function doAllCriteriaHavePvf(){
+    function doAllCriteriaHavePvf() {
       var havePvf = true;
-      _.forEach($scope.aggregateState.problem.criteria, function(criterion){
-        if(!isPVFDefined(criterion)){
+      _.forEach($scope.aggregateState.problem.criteria, function(criterion) {
+        if (!isPVFDefined(criterion)) {
           havePvf = false;
         }
       });
@@ -84,7 +87,7 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
 
     function editScenarioTitle() {
       $modal.open({
-        templateUrl: '/js/preferences/editScenarioTitle.html',
+        templateUrl: mcdaRootPath + 'js/preferences/editScenarioTitle.html',
         controller: 'EditScenarioTitleController',
         resolve: {
           scenario: function() {

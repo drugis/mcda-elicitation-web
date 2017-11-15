@@ -32,7 +32,7 @@
     </div>
   </div>
   <div class="cell alert" ng-if="!canProceed(state)">
-    Cannot proceed because the chosen limit of the interval should not be equal to the worst possible value of {{state.criterionA}}. 
+    Cannot proceed because the chosen limit of the interval should not be equal to the worst possible value of {{state.problem.criteria[state.criterionA].title}}. 
   </div>
 </div>
 <div ng-show="state.step > state.total">

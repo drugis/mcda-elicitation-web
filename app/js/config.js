@@ -15,8 +15,8 @@ define(function() {
       title: 'Define Partial Value Functions',
       controller: 'PartialValueFunctionController',
       templateUrl: 'partialValueFunction.html',
-      requires: [],
       activeTab: 'preferences',
+      requires: [],
       resets: ['criteria-trade-offs']
     }, {
       id: 'ordinal-swing',
@@ -31,7 +31,7 @@ define(function() {
       title: 'Interval Swing Elicitation',
       controller: 'IntervalSwingController',
       templateUrl: 'intervalSwing.html',
-      isPreference: true,
+      activeTab: 'preferences',
       requires: ['complete-criteria-ranking'],
       resets: ['non-ordinal-preferences']
     }, {

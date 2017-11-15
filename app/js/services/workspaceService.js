@@ -112,8 +112,14 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function buildAggregateState(baseProblem, subProblem, scenario) {
-      var newState = _.merge({}, scenario.state, {
+      var newState = _.merge({}, {
         problem: mergeBaseAndSubProblem(baseProblem, subProblem.definition)
+      }, scenario.state);
+      _.forEach(newState.problem.criteria, function(criterion, key){
+        var baseProblemTitle = baseProblem.criteria[key].title;
+        if(criterion.title !== baseProblemTitle){
+          criterion.title = baseProblemTitle;
+        }
       });
       newState.problem.criteria = _.keyBy(sortCriteriaWithW(newState.problem.criteria), 'id');
       return newState;
