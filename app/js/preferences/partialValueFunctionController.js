@@ -122,7 +122,7 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
         }
       };
 
-      currentScenario.state = TaskDependencies.remove(taskDefinition, currentScenario.state);
+      // currentScenario.state = TaskDependencies.remove(taskDefinition, currentScenario.state);
       currentScenario.$save($stateParams, function(scenario) {
         $scope.$emit('elicit.resultsAccessible', scenario);
         $state.go('preferences');

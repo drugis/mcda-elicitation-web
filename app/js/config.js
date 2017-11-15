@@ -15,8 +15,8 @@ define(function() {
       title: 'Define Partial Value Functions',
       controller: 'PartialValueFunctionController',
       templateUrl: 'partialValueFunction.html',
-      requires: [],
       activeTab: 'preferences',
+      requires: [],
       resets: ['criteria-trade-offs']
     }, {
       id: 'ordinal-swing',
