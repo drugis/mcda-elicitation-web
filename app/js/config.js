@@ -31,7 +31,7 @@ define(function() {
       title: 'Interval Swing Elicitation',
       controller: 'IntervalSwingController',
       templateUrl: 'intervalSwing.html',
-      isPreference: true,
+      activeTab: 'preferences',
       requires: ['complete-criteria-ranking'],
       resets: ['non-ordinal-preferences']
     }, {
