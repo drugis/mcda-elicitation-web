@@ -41,6 +41,7 @@
       Interval Swing
     </button>
   </div>
+  <div class="cell alert" ng-if="!deterministicResults">Trade-offs cannot be specified if there are criteria with missings PVFs.</div>
   <div class="cell">
     <trade-offs problem="aggregateState.problem" preferences="scenario.state.prefs"></trade-offs>
   </div>
