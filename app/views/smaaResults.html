@@ -22,12 +22,12 @@
         <i class="fa fa-clipboard"></i> Copy to clipboard
       </button>
     </div>
-    <div class="cell large-6">
-      <div export file-name="'rank-acceptability-plot'">
-        <rank-acceptability-plot data="state.results.ranks.data" problem="state.problem"></rank-acceptability-plot>
-      </div>
+    <div class="cell">
+      <rank-acceptability-plot problem="state.problem">
+        <rank-plot value="state.results.ranks.data" stacked="true" problem="state.problem"></rank-plot>
+      </rank-acceptability-plot>
     </div>
-    <div class="cell large-6">
+    <div class="cell">
       <table id="ranktable">
         <thead>
           <tr>

@@ -27,13 +27,15 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
           problem: '='
         },
         link: function(scope, element, attrs) {
+          var rankGraphData = rankGraphData;
+
           var svg = d3.select(element[0]).append('svg')
             .attr('width', '100%')
             .attr('height', '100%');
 
           var dim = getParentDimension(element);
 
-          var rankGraphData = function(data) {
+          function rankGraphData(data) {
             var result = [];
             _.each(_.toPairs(data), function(el) {
               var key = scope.problem.alternatives[el[0]].title;
@@ -58,7 +60,7 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
               return;
             }
             nv.addGraph(function() {
-              var chart = nv.models.multiBarChart().height(dim.height).width(dim.width);
+              var chart = nv.models.multiBarChart().height(400).width(400);
               var data = rankGraphData(newVal);
 
               chart.yAxis.tickFormat(d3.format(',.3g'));
@@ -282,50 +284,6 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
       };
     });
 
-    directives.directive('modal', function(mcdaRootPath) {
-      return {
-        restrict: 'E',
-        transclude: true,
-        scope: {
-          model: '=',
-          buttonText: '@'
-        },
-        link: function(scope, element) {
-          if (!scope.model) {
-            scope.model = {};
-          }
-          scope.bgStyle = function(show) {
-            return show ? {
-              'display': 'block'
-            } : {
-              'display': 'none'
-            };
-          };
-          scope.fgStyle = function(show) {
-            return show ? {
-              'display': 'block',
-              'visibility': 'visible',
-              'width': Math.round(window.innerWidth * 0.8)
-            } : {
-              'display': 'none'
-            };
-          };
-
-          scope.model.open = function() {
-            scope.model.show = true;
-          };
-          scope.model.close = function() {
-            scope.model.show = false;
-          };
-          scope.model.closeCancel = function() {
-            scope.$emit('closeCancelModal', element);
-            scope.model.close();
-          };
-        },
-        templateUrl: mcdaRootPath + 'partials/modal.html'
-      };
-    });
-
     directives.directive('tradeOffs', function($filter, mcdaRootPath, PartialValueFunctionService, sortCriteriaWithW) {
       return {
         restrict: 'E',
@@ -385,75 +343,29 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
       };
     });
 
-    //treeview
-    directives.directive('valueTree', function() {
-      return {
-        restrict: 'E',
-        replace: true,
-        scope: {
-          children: '=',
-          remarks: '='
-        },
-        template: '<ul><value-tree-item ng-repeat="item in children" item="item" remarks="remarks"></value-tree-item></ul>'
-      };
-    });
-
-    directives.directive('valueTreeItem', function($compile) {
-      return {
-        restrict: 'E',
-        replace: true,
-        scope: {
-          item: '=',
-          remarks: '='
-        },
-        template: '<li>{{item.title}}<p ng-if="remarks"><span ng-if="!remarks[item.title]">None.</span>{{remarks[item.title]}}</p></li>',
-        link: function(scope, element) {
-          if (scope.item && angular.isArray(scope.item.children)) {
-            element.append('<value-tree children="item.children" remarks="remarks"></value-tree>');
-            $compile(element.contents())(scope);
-          }
-        }
-      };
-    });
-
-    directives.directive('criterion', function() {
-      return {
-        restrict: 'E',
-        replace: true,
-        scope: {
-          criterion: '=of'
-        },
-        link: function(scope) {
-          var c = scope.criterion;
-
-          var hasDescription = !!c.description;
-          var dimensionlessUnits = ['proportion'];
-          var isDimensionless = !c.unitOfMeasurement || dimensionlessUnits.indexOf(c.unitOfMeasurement.toLowerCase()) !== -1;
-
-          var text;
-          if (hasDescription) {
-            text = c.description.replace(/(\.$)/g, '') + ' (' + c.title + (!isDimensionless ? ', ' + c.unitOfMeasurement : '') + ')';
-          } else {
-            text = c.title + (!isDimensionless ? ' ' + c.unitOfMeasurement : '');
-
-          }
-          scope.text = text;
-        },
-        template: '<span>{{text}}</span>'
-      };
-    });
-
     directives.directive('rankAcceptabilityPlot', function() {
       return {
         restrict: 'E',
-        replace: true,
-        scope: {
-          data: '=',
-          parseFn: '=',
-          problem: '='
+        transclude: true,
+        scope: {problem : '='},
+        link: function(scope) {
+          scope.alternatives = scope.problem.alternatives;
         },
-        link: function() {},
-        template: '<div style="width: 400px; height: 400px"><rank-plot value="data" parse-fn="parseFn" stacked="true" problem="problem"></rank-plot></div>'
+        template: 
+        '<div class="grid-x">' +
+          '<div class="cell large-6">' +
+            '<div export file-name="\'rank-acceptability-plot\'" style="width: 400px; height: 400px">' +
+            '<ng-transclude></ng-transclude>' +
+            '</div>' +
+          '</div>' +
+          '<div class="cell large-6"><table><thead><tr><th>Alternative</th><th>Short</th></tr></thead>'+
+            '<tbody><tr ng-repeat="alternative in alternatives">'+
+              '<td>{{alternative.title}}</td>' +
+              '<td><input type="text" ng-model="alternative.short"></td>' +
+              '</tr>'+
+            '</tbody>' +
+          '</table></div>' +
+        '</div>'
       };
     });
 
