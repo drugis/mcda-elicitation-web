@@ -115,11 +115,11 @@ define(['lodash', 'angular'], function(_) {
       var newState = _.merge({}, {
         problem: mergeBaseAndSubProblem(baseProblem, subProblem.definition)
       }, scenario.state);
-      _.forEach(newState.problem.criteria, function(criterion, key){
-        var baseProblemTitle = baseProblem.criteria[key].title;
-        if(criterion.title !== baseProblemTitle){
-          criterion.title = baseProblemTitle;
-        }
+      _.forEach(newState.problem.criteria, function(criterion, key) {
+        newState.problem.criteria[key] = _.merge({},criterion,baseProblem.criteria[key]);
+      });
+      _.forEach(newState.problem.alternatives, function(alternative, key) {
+        newState.problem.alternatives[key] = _.merge({},alternative,baseProblem.alternatives[key]);
       });
       newState.problem.criteria = _.keyBy(sortCriteriaWithW(newState.problem.criteria), 'id');
       return newState;

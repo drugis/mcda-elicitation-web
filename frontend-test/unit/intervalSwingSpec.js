@@ -26,7 +26,7 @@ define(['angular',
           $save: function() {}
         };
         scope.scenario = scenario;
-
+        scope.aggregateState = scenario.state;
         var task = {
           requires: [],
           resets: []
