@@ -1,12 +1,12 @@
 'use strict';
 define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/helpers/wizard'],
   function(_, angular, Util, Wizard) {
-    var dependencies = ['$scope', '$state', '$stateParams', '$injector',
+    var dependencies = ['$scope', '$state', '$stateParams', '$injector', '$timeout',
       'currentScenario',
       'taskDefinition',
       'PartialValueFunctionService'
     ];
-    var ExactSwingController = function($scope, $state, $stateParams, $injector,
+    var ExactSwingController = function($scope, $state, $stateParams, $injector, $timeout,
       currentScenario,
       taskDefinition,
       PartialValueFunctionService
@@ -54,6 +54,9 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
 
         });
         state = _.extend(state, buildInitial(criteria, state.criteriaOrder[0], state.criteriaOrder[1], 1));
+        $timeout(function() {
+          $scope.$broadcast('rzSliderForceRender');
+        }, 100);
         return state;
       }
 
