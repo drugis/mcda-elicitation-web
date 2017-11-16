@@ -27,13 +27,11 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
           problem: '='
         },
         link: function(scope, element, attrs) {
-          var rankGraphData = rankGraphData;
-
           var svg = d3.select(element[0]).append('svg')
             .attr('width', '100%')
             .attr('height', '100%');
 
-          var dim = getParentDimension(element);
+          // var dim = getParentDimension(element);// using 400 400 atm
 
           function rankGraphData(data) {
             var result = [];
@@ -55,13 +53,10 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
             return result;
           }
 
-          scope.$watch('value', function(newVal) {
-            if (!newVal) {
-              return;
-            }
+          function drawPlot(value) {
             nv.addGraph(function() {
               var chart = nv.models.multiBarChart().height(400).width(400);
-              var data = rankGraphData(newVal);
+              var data = rankGraphData(value);
 
               chart.yAxis.tickFormat(d3.format(',.3g'));
               chart.stacked(attrs.stacked);
@@ -74,6 +69,18 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
 
               nv.utils.windowResize(chart.update);
             });
+          }
+
+          scope.$watch('problem', function(newProblem) {
+            scope.problem = newProblem;
+            drawPlot(scope.value);
+          }, true);
+
+          scope.$watch('value', function(newVal) {
+            if (!newVal) {
+              return;
+            }
+            drawPlot(newVal);
           });
         }
       };
@@ -378,25 +385,26 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
       return {
         restrict: 'E',
         transclude: true,
-        scope: {problem : '='},
-        link: function(scope) {
-          scope.alternatives = scope.problem.alternatives;
+        scope: {
+          problem: '='
         },
-        template: 
-        '<div class="grid-x">' +
+        link: function() {},
+        template: '<div class="grid-x">' +
           '<div class="cell large-6">' +
-            '<div export file-name="\'rank-acceptability-plot\'" style="width: 400px; height: 400px">' +
-            '<ng-transclude></ng-transclude>' +
-            '</div>' +
+          '<div export file-name="\'rank-acceptability-plot\'" style="width: 400px; height: 400px">' +
+          '<ng-transclude></ng-transclude>' +
           '</div>' +
-          '<div class="cell large-6"><table><thead><tr><th>Alternative</th><th>Short</th></tr></thead>'+
-            '<tbody><tr ng-repeat="alternative in alternatives">'+
-              '<td>{{alternative.title}}</td>' +
-              '<td><input type="text" ng-model="alternative.short"></td>' +
-              '</tr>'+
-            '</tbody>' +
+          '</div>' +
+          '<div class="cell large-6"><table><thead><tr><th>Alternative</th><th>' +
+          'In plot' +
+          '</th></tr></thead>' +
+          '<tbody><tr ng-repeat="alternative in problem.alternatives">' +
+          '<td>{{::alternative.title}}</td>' +
+          '<td><input type="text" ng-model="alternative.title"></td>' +
+          '</tr>' +
+          '</tbody>' +
           '</table></div>' +
-        '</div>'
+          '</div>'
       };
     });
 
