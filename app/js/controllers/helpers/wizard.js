@@ -1,7 +1,14 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
 
-  return function($scope, handler) {
+  return function($scope, $timeout, handler) {
+    // functions
+    $scope.canProceed = canProceed;
+    $scope.canReturn = canReturn;
+    $scope.nextStep = nextStep;
+    $scope.previousStep = previousStep;
+
+    // init
     var PERSISTENT_FIELDS = ['problem', 'type', 'prefs'];
     var previousStates = [];
     var nextStates = [];
@@ -14,15 +21,18 @@ define(['lodash', 'angular'], function(_, angular) {
       return state || {};
     })();
 
-    $scope.canProceed = function(state) {
+    $scope.isFinished = handler.isFinished;
+
+
+    function canProceed(state) {
       return (handler && handler.validChoice(state)) || false;
-    };
+    }
 
-    $scope.canReturn = function() {
+    function canReturn() {
       return previousStates.length > 0;
-    };
+    }
 
-    $scope.nextStep = function(state) {
+    function nextStep(state) {
       $scope.$broadcast('nextState');
       if (!$scope.canProceed(state)) {
         return false;
@@ -48,12 +58,9 @@ define(['lodash', 'angular'], function(_, angular) {
 
       $scope.state = nextState;
       return true;
-    };
+    }
 
-    $scope.isFinished = handler.isFinished;
-
-    $scope.previousStep = function() {
-      $scope.$broadcast('prevState');
+    function previousStep() {
       if (previousStates.length === 0) {
         return false;
       }
@@ -61,7 +68,10 @@ define(['lodash', 'angular'], function(_, angular) {
 
       var previousState = previousStates.pop();
       $scope.state = previousState;
+      $timeout(function() {
+        $scope.$broadcast('rzSliderForceRender');
+      }, 100);
       return true;
-    };
+    }
   };
 });
