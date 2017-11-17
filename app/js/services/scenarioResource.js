@@ -31,11 +31,6 @@ define(['angular'], function(angular) {
           method: 'GET',
           isArray: true
         },
-        queryAll: {
-          url: window.config.workspacesRepositoryUrl + ':workspaceId/scenarios',
-          method: 'GET',
-          isArray: true
-        },
         get: {
           cache: cache,
           method: 'GET'
