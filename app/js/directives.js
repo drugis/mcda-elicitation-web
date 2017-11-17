@@ -388,23 +388,38 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
         scope: {
           problem: '='
         },
-        link: function() {},
-        template: '<div class="grid-x">' +
+        link: function(scope) {
+          scope.alternatives = _.cloneDeep(scope.problem.alternatives);
+          var letterValue = 65;
+          _.forEach(scope.problem.alternatives, function(alternative){
+            alternative.title = String.fromCharCode(letterValue);
+            letterValue++;
+          });
+        },
+        template: 
+        '<div class="grid-x">' +
           '<div class="cell large-6">' +
-          '<div export file-name="\'rank-acceptability-plot\'" style="width: 400px; height: 400px">' +
-          '<ng-transclude></ng-transclude>' +
+            '<div export file-name="\'rank-acceptability-plot\'" style="width: 400px; height: 400px">' +
+              '<ng-transclude></ng-transclude>' +
+            '</div>' +
           '</div>' +
+          '<div class="cell large-6">' + 
+            '<table>' + 
+              '<thead>' + 
+                '<tr>' + 
+                  '<th>Alternative</th>' + 
+                  '<th>In plot</th>' +
+                '</tr>' + 
+              '</thead>' +
+              '<tbody>' + 
+                '<tr ng-repeat="(key,alternative) in alternatives">' +
+                  '<td>{{alternative.title}}</td>' +
+                  '<td><input type="text" ng-model="problem.alternatives[key].title"></td>' +
+                '</tr>' +
+              '</tbody>' +
+            '</table>' + 
           '</div>' +
-          '<div class="cell large-6"><table><thead><tr><th>Alternative</th><th>' +
-          'In plot' +
-          '</th></tr></thead>' +
-          '<tbody><tr ng-repeat="alternative in problem.alternatives">' +
-          '<td>{{::alternative.title}}</td>' +
-          '<td><input type="text" ng-model="alternative.title"></td>' +
-          '</tr>' +
-          '</tbody>' +
-          '</table></div>' +
-          '</div>'
+        '</div>'
       };
     });
 
