@@ -86,23 +86,28 @@
         <i class="fa fa-clipboard"></i> Copy to clipboard
       </button>
     </div>
-    <table id="centralweightstable">
-      <thead>
-        <tr>
-          <th>Alternative</th>
-          <th>Confidence</th>
-          <th ng-repeat="criterion in state.problem.criteria">{{criterion.title}}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="(a, cw) in state.results.cw.data">
-          <td>{{state.problem.alternatives[a].title}}</td>
-          <td class="heat">{{::cw.cf | number}}</td>
-          <td ng-repeat="(c, criterion) in state.problem.criteria">
-            {{::cw.w[c] | number}}
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="cell">
+      <table id="centralweightstable">
+        <thead>
+          <tr>
+            <th>Alternative</th>
+            <th>Confidence</th>
+            <th ng-repeat="criterion in state.problem.criteria">{{criterion.title}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="(a, cw) in state.results.cw.data">
+            <td>{{state.problem.alternatives[a].title}}</td>
+            <td class="heat">{{::cw.cf | number}}</td>
+            <td ng-repeat="(c, criterion) in state.problem.criteria">
+              {{::cw.w[c] | number}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cell">
+      <em>An empty row indicates an alternative which is being dominated by one or more others.</em>
+    </div>
   </div>
 </div>

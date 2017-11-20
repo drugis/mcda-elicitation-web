@@ -100,8 +100,8 @@ define(['lodash', 'angular'], function(_) {
         var from = problemRange ? problemRange[0] : criterionRange[0];
         var to = problemRange ? problemRange[1] : criterionRange[1];
         choices[criterion[0]] = {
-          from: from,
-          to: to
+          from: niceFrom(from),
+          to: niceTo(to)
         };
 
         // Set scales for slider
