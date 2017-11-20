@@ -19,7 +19,7 @@ define(['lodash', 'angular'], function(_) {
     // init
     $scope.subProblems = subProblems;
     $scope.originalScales = _.cloneDeep(scales);
-    $scope.scales = _.cloneDeep(scales); //FIXME // ??
+    $scope.scales = _.cloneDeep(scales); 
     initSubProblem(_.cloneDeep(subProblem), _.cloneDeep(problem));
     checkDuplicateTitle($scope.subProblemState.title);
     $scope.isExact = _.partial(SubProblemService.isExact, $scope.problem.performanceTable);
@@ -28,12 +28,12 @@ define(['lodash', 'angular'], function(_) {
     function isASliderInvalid() {
       $scope.invalidSlider = false;
       _.forEach(_.keys($scope.criteria), function(criterionKey) {
-        // check if there are two values at the same side of the red bar
-        if (
-          ($scope.choices[criterionKey].from <= $scope.scalesState[criterionKey].sliderOptions.restrictedRange.from &&
-            $scope.choices[criterionKey].to <= $scope.scalesState[criterionKey].sliderOptions.restrictedRange.from) ||
-          ($scope.choices[criterionKey].from >= $scope.scalesState[criterionKey].sliderOptions.restrictedRange.to &&
-            $scope.choices[criterionKey].to >= $scope.scalesState[criterionKey].sliderOptions.restrictedRange.to) ) {
+        var from = $scope.choices[criterionKey].from;
+        var to = $scope.choices[criterionKey].to;
+        var restrictedFrom = $scope.scalesState[criterionKey].sliderOptions.restrictedRange.from;
+        var restrictedTo = $scope.scalesState[criterionKey].sliderOptions.restrictedRange.to;
+        // check if there is a value inside or at the wrong side of the red area
+        if (from > restrictedFrom || to < restrictedTo) {
           $scope.invalidSlider = true;
         }
       });

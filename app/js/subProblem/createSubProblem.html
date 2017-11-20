@@ -6,13 +6,9 @@
     <div class="cell large-6">
       <h3>Save new problem</h3>
     </div>
-  </div>
-  <div class="grid-x">
     <div class=cell large-6>
       Enter new problem name
     </div>
-  </div>
-  <div class="grid-x">
     <div class="cell large-6">
       <input type="text" ng-change="checkDuplicateTitle(subProblemState.title)" ng-model="subProblemState.title">
     </div>
@@ -26,13 +22,9 @@
           <em>&nbsp;No name entered</em>
         </span>
     </div>
-  </div>
-  <div class="grid-x">
     <div class="cell large-6">
       <button class="button" type="button" ng-click="reset()">Reset to default</button>
     </div>
-  </div>
-  <div class="grid-x">
     <div class="cell">
       <h4>Criterion and alternative selection</h4>
       <table class="full-width effects-table">
@@ -86,8 +78,7 @@
         </tbody>
       </table>
     </div>
-  </div>
-  <div class="grid-x">
+    <!-- Scale ranges -->
     <div class="cell">
       <h4>Scale ranges
         <inline-help help-key="scale-ranges"></inline-help>
@@ -115,8 +106,6 @@
       </ul>
     </div>
     <div class="cell alert" ng-if="invalidSlider"><em>Invalid scale range</em></div>
-  </div>
-  <div class="grid-x">
     <div class="cell large-6">
       <button class="button success" type="submit" ng-disabled="isTitleDuplicate || !subProblemState.title || invalidSlider">Create</button>
     </div>
