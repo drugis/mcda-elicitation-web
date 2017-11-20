@@ -90,6 +90,14 @@ define(['lodash', 'angular'], function(_) {
       var stateAndChoices = ScaleRangeService.getScaleStateAndChoices($scope.observedScales, $scope.criteria);
       $scope.scalesState = stateAndChoices.scaleState;
       $scope.choices = stateAndChoices.choices;
+      _.forEach($scope.choices, function(key,choice){
+        if(choice.from > $scope.scaleState[key].restrictedRange.from){
+          choice.from = $scope.scaleState[key].restrictedRange.from;
+        }
+        if(choice.to < $scope.scaleState[key].restrictedRange.to){
+          choice.to = $scope.scaleState[key].restrictedRange.to;
+        }
+      });
       $scope.$watch('choices', isASliderInvalid, true);
     }
 
