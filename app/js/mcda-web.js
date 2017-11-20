@@ -86,7 +86,7 @@ define(['angular',
     app.constant('isMcdaStandalone', true);
 
 
-    app.config(function(mcdaRootPath, $stateProvider, $urlRouterProvider, $httpProvider, MCDARouteProvider) {
+    app.config(function(mcdaRootPath, $stateProvider, $urlRouterProvider, MCDARouteProvider) {
       var baseTemplatePath = mcdaRootPath + 'views/';
 
       //ui-router code starts here
@@ -113,7 +113,10 @@ define(['angular',
         .state('manualInput', {
           url: '/manual-input',
           templateUrl: mcdaRootPath + 'js/manualInput/manualInput.html',
-          controller: 'ManualInputController'
+          controller: 'ManualInputController',
+          params: {
+            workspace: null
+          }
         })
         .state('manualInputInProgress', {
           url: '/manual-input/:inProgressId',

@@ -43,7 +43,31 @@ define(['lodash', 'angular'], function(_, angular) {
     });
 
     function initState() {
-      if (!$stateParams.inProgressId) {
+      if ($stateParams.workspace) {
+        // copying existing workspace
+        var oldWorkspace = $stateParams.workspace;
+        $scope.state = {
+          step: 'step1',
+          isInputDataValid: false,
+          title: oldWorkspace.title,
+          description: oldWorkspace.problem.description,
+          criteria: _.map(oldWorkspace.problem.criteria, function(criterion, key) {
+            var newCrit = _.pick(criterion, ['title', 'description', 'source', 'sourceLink']);
+            if (oldWorkspace.problem.valueTree) {
+              newCrit.isFavorable = _.find(oldWorkspace.problem.valueTree.children[0].criteria, key) ? true : false;
+            }
+            var tableEntry = _.find(oldWorkspace.problem.performanceTable, ['criterion', key]);
+            newCrit.dataSource = tableEntry.performance.type === 'exact' ? 'exact' : 'study';
+            newCrit.dataType = 'continuous'; //get from perf table
+            return newCrit;
+          }),
+          treatments: _.map(oldWorkspace.problem.alternatives, function(alternative) {
+            return alternative;
+          })
+        };
+        setStateWatcher();
+      } else if (!$stateParams.inProgressId) {
+        // new workspace
         $scope.state = {
           step: 'step1',
           isInputDataValid: false,
@@ -52,6 +76,7 @@ define(['lodash', 'angular'], function(_, angular) {
         };
         setStateWatcher();
       } else {
+        // unfinished workspace
         InProgressResource.get($stateParams).$promise.then(function(response) {
           $scope.state = response.state;
           setStateWatcher();
@@ -69,15 +94,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function resetData() {
       $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.treatments);
-      $scope.state.studyType = resetStudyTypes();
       $scope.state.isInputDataValid = false;
-    }
-
-    function resetStudyTypes() {
-      return _.reduce($scope.state.criteria, function(accum, criterion) {
-        accum[criterion.hash] = 'dichotomous';
-        return accum;
-      }, {});
     }
 
     function resetRow(hash) {
@@ -147,7 +164,6 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.state.criteria = _.map($scope.state.criteria, function(criterion) {
         return addKeyHashToObject(criterion, criterion.title);
       });
-      $scope.state.studyType = $scope.state.studyType ? $scope.state.studyType : resetStudyTypes();
       $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.treatments, $scope.state.inputData);
     }
 
