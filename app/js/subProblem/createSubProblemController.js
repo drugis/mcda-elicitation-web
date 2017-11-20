@@ -19,7 +19,7 @@ define(['lodash', 'angular'], function(_) {
     // init
     $scope.subProblems = subProblems;
     $scope.originalScales = _.cloneDeep(scales);
-    $scope.scales = _.cloneDeep(scales); 
+    $scope.scales = _.cloneDeep(scales);
     initSubProblem(_.cloneDeep(subProblem), _.cloneDeep(problem));
     checkDuplicateTitle($scope.subProblemState.title);
     $scope.isExact = _.partial(SubProblemService.isExact, $scope.problem.performanceTable);
@@ -90,12 +90,12 @@ define(['lodash', 'angular'], function(_) {
       var stateAndChoices = ScaleRangeService.getScaleStateAndChoices($scope.observedScales, $scope.criteria);
       $scope.scalesState = stateAndChoices.scaleState;
       $scope.choices = stateAndChoices.choices;
-      _.forEach($scope.choices, function(key,choice){
-        if(choice.from > $scope.scaleState[key].restrictedRange.from){
-          choice.from = $scope.scaleState[key].restrictedRange.from;
+      _.forEach($scope.choices, function(choice, key) {
+        if (choice.from > $scope.scalesState[key].sliderOptions.restrictedRange.from) {
+          choice.from = $scope.scalesState[key].sliderOptions.restrictedRange.from;
         }
-        if(choice.to < $scope.scaleState[key].restrictedRange.to){
-          choice.to = $scope.scaleState[key].restrictedRange.to;
+        if (choice.to < $scope.scalesState[key].sliderOptions.restrictedRange.to) {
+          choice.to = $scope.scalesState[key].sliderOptions.restrictedRange.to;
         }
       });
       $scope.$watch('choices', isASliderInvalid, true);
