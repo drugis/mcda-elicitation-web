@@ -14,6 +14,8 @@
         <label>Favorability
           <inline-help help-key="favorability"></inline-help>
         </label>
+        <input type="radio" ng-model="criterion.isFavorable" ng-value="undefined" id="neither-favorable">
+        <label for="neither-favorable">No favorability</label>
         <input type="radio" ng-model="criterion.isFavorable" ng-value="true" id="favorable">
         <label for="favorable">Favorable</label>
         <input type="radio" ng-model="criterion.isFavorable" ng-value="false" id="not-favorable">

@@ -3,10 +3,10 @@
   <div class="grid-x">
     <div class="cell">
       <h3>Create workspace manually — step 1 of 2</h3>
-      <h4>Define criteria and treatments</h4>
+      <h4>Define criteria and alternatives</h4>
     </div>
     <div class="cell">
-      Here you can enter the data for an analysis manually. In this first step, create the criteria and treatments you wish to analyse. Treatments are simply a title, while criteria are more complex.
+      Here you can enter the data for an analysis manually. In this first step, create the criteria and alternatives you wish to analyse. Alternatives are simply a title, while criteria are more complex.
     </div>
   </div>
   <div class="grid-x">
@@ -57,7 +57,7 @@
               <a ng-click="openCriterionModal(criterion)"><i class="fa fa-edit icon-fixed-width"></i></a> {{criterion.title}}
             </td>
             <td>{{criterion.isFavorable}}</td>
-            <td>{{criterion.dataType}}</td>
+            <td style="color: {{criterion.dataType === 'Unknown'? 'red' :''}};">{{criterion.dataType}}</td>
             <td>{{criterion.unitOfMeasurement}}</td>
             <td>{{criterion.description}}</td>
             <td>{{criterion.source}}</td>
@@ -94,13 +94,13 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-if="!state.treatments.length">
+          <tr ng-if="!state.alternatives.length">
             <td>
               <em>No alternatives defined</em>
             </td>
           </tr>
-          <tr ng-repeat="treatment in state.treatments">
-            <td><a ng-click="removeTreatment(treatment)"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a> {{treatment.title}}
+          <tr ng-repeat="alternative in state.alternatives">
+            <td><a ng-click="removeTreatment(alternative)"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a> {{alternative.title}}
             </td>
           </tr>
         </tbody>
@@ -109,7 +109,8 @@
   </div>
   <div class="grid-x">
     <div class="cell">
-      <button class="button" ng-disabled="!state.title || state.criteria.length < 2|| state.treatments.length < 2" type="button" ng-click="goToStep2()">
+      <button class="button" ng-disabled="!state.title || state.criteria.length < 2|| state.alternatives.length < 2 ||
+      hasUnknownDataType" type="button" ng-click="goToStep2()">
         Enter data
       </button>
       <button class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty">Save</button>
@@ -120,8 +121,11 @@
     <div class="cell" ng-if="state.criteria.length < 2">
       <em>Two criteria required</em>
     </div>
-    <div class="cell" ng-if="state.treatments.length < 2">
+    <div class="cell" ng-if="state.alternatives.length < 2">
       <em>Two alternatives required</em>
+    </div>
+    <div class="cell" ng-if="hasUnknownDataType">
+      <em>Criteria with unknown data type</em>
     </div>
   </div>
 </div>
@@ -148,13 +152,13 @@
         <thead>
           <tr>
             <th></th>
-            <th ng-repeat="treatment in state.treatments" style="min-width:80px">{{treatment.title}}</th>
+            <th ng-repeat="treatment in state.alternatives" style="min-width:80px">{{treatment.title}}</th>
           </tr>
         </thead>
         <tbody>
           <tr ng-repeat="criterion in state.criteria">
             <td>{{criterion.title}}</td>
-            <td ng-repeat="treatment in state.treatments">
+            <td ng-repeat="treatment in state.alternatives">
               <effect-input-helper criterion="criterion" treatment="treatment" input-data="state.inputData[criterion.hash][treatment.hash]" change-callback="checkInputData"></effect-input-helper>
             </td>
           </tr>

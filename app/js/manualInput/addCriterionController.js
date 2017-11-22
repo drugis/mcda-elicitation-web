@@ -16,7 +16,6 @@ define(['lodash'], function(_) {
     // vars
     $scope.blockedReason = '';
     $scope.criterion = {
-      isFavorable: false,
       dataType: 'continuous',
       dataSource: 'study'
     };
