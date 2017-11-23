@@ -53,8 +53,8 @@
           </tr>
           <tr ng-repeat="criterion in state.criteria">
             <td>
-              <a ng-click="removeCriterion(criterion)"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a>
-              <a ng-click="openCriterionModal(criterion)"><i class="fa fa-edit icon-fixed-width"></i></a> {{criterion.title}}
+              <a ng-click="removeCriterion(criterion)" tooltip="Remove criterion"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a>
+              <a ng-click="openCriterionModal(criterion)" tooltip="Edit criterion"><i class="fa fa-edit icon-fixed-width"></i></a> {{criterion.title}}
             </td>
             <td>{{criterion.isFavorable}}</td>
             <td style="color: {{criterion.dataType === 'Unknown'? 'red' :''}};">{{criterion.dataType}}</td>
@@ -100,7 +100,7 @@
             </td>
           </tr>
           <tr ng-repeat="alternative in state.alternatives">
-            <td><a ng-click="removeTreatment(alternative)"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a> {{alternative.title}}
+            <td><a ng-click="removeTreatment(alternative)" tooltip="Remove alternative"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a> {{alternative.title}}
             </td>
           </tr>
         </tbody>
@@ -110,10 +110,10 @@
   <div class="grid-x">
     <div class="cell">
       <button class="button" ng-disabled="!state.title || state.criteria.length < 2|| state.alternatives.length < 2 ||
-      hasUnknownDataType" type="button" ng-click="goToStep2()">
+      hasUnknownDataType" type="button" ng-click="goToStep2()" tooltip="Enter effects table data">
         Enter data
       </button>
-      <button class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty">Save</button>
+      <button class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty" tooltip="Save current state">Save</button>
     </div>
     <div class="cell" ng-if="!state.title">
       <em>Missing title</em>
@@ -169,10 +169,10 @@
   <!-- buttons -->
   <div class="grid-x">
     <div class="cell">
-      <button ng-disabled="!state.isInputDataValid" class="button" type="button" ng-click="createProblem()">
+      <button ng-disabled="!state.isInputDataValid" class="button" type="button" ng-click="createProblem()" tooltip="Create problem and proceed to analysis">
         Done
       </button>
-      <button class="button" ng-click="saveInProgress()" ng-disabled="!dirty">Save</button>
+      <button class="button" ng-click="saveInProgress()" ng-disabled="!dirty" tooltip="Save current state">Save</button>
       <button type="button" ng-click="goToStep1()" type="button" class="button">Back</button>
       <div ng-if="!state.isInputDataValid">
         <em>Invalid input data</em>
