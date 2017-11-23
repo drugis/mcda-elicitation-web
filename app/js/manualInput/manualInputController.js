@@ -51,11 +51,12 @@ define(['lodash', 'angular'], function(_, angular) {
           isInputDataValid: false,
           title: oldWorkspace.title,
           description: oldWorkspace.problem.description,
-          criteria: copyCriteria(oldWorkspace),
+          criteria: ManualInputService.copyWorkspaceCriteria(oldWorkspace),
           alternatives: _.map(oldWorkspace.problem.alternatives, function(alternative) {
             return alternative;
           })
         };
+        findUnknownCriteria($scope.state.criteria);
         $scope.dirty = true;
         setStateWatcher();
       } else if (!$stateParams.inProgressId) {
@@ -74,37 +75,6 @@ define(['lodash', 'angular'], function(_, angular) {
           setStateWatcher();
         });
       }
-    }
-
-    function copyCriteria(workspace) {
-      // move to service
-      return _.map(workspace.problem.criteria, function(criterion, key) {
-        var newCrit = _.pick(criterion, ['title', 'description', 'source', 'sourceLink']);
-        if (workspace.problem.valueTree) {
-          newCrit.isFavorable = _.find(workspace.problem.valueTree.children[0].criteria, key) ? true : false;
-        }
-        var tableEntry = _.find(workspace.problem.performanceTable, ['criterion', key]);
-        newCrit.dataSource = tableEntry.performance.type === 'exact' ? 'exact' : 'study';
-        if (newCrit.dataSource === 'study') {
-          if (tableEntry.performance.type === 'dsurv') {
-            // survival
-            newCrit.dataType = 'survival';
-            newCrit.summaryMeasure = tableEntry.performance.parameters.summaryMeasure;
-            newCrit.timePointOfInterest = tableEntry.performance.parameters.time;
-            newCrit.timeScale = 'time scale not set';
-          } else if (tableEntry.performance.type === 'dt' || tableEntry.performance.type === 'dnorm') {
-            // continuous
-            newCrit.dataType = 'continuous';
-          } else if (tableEntry.performance.type === 'dbeta') {
-            // dichotomous
-            newCrit.dataType = 'dichotomous';
-          } else {
-            newCrit.dataType = 'Unknown';
-            $scope.hasUnknownDataType = true;
-          }
-        }
-        return newCrit;
-      });
     }
 
     function setStateWatcher() {
@@ -160,9 +130,7 @@ define(['lodash', 'angular'], function(_, angular) {
                 removeCriterion(criterion);
               }
               $scope.state.criteria.push(newCriterion);
-              $scope.hasUnknownDataType = _.find($scope.state.criteria, function(criterion) {
-                return criterion.dataType === 'Unknown';
-              });
+              findUnknownCriteria($scope.state.criteria);
             };
           },
           oldCriterion: function() {
@@ -190,58 +158,11 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.state.criteria = _.map($scope.state.criteria, function(criterion) {
         return addKeyHashToObject(criterion, criterion.title);
       });
+      $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives, $scope.state.inputData);
       if ($stateParams.workspace) {
-        $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives, $scope.state.inputData);
-        _.forEach($scope.state.criteria, function(criterion) {
-          _.forEach($scope.state.alternatives, function(alternative) {
-            var critKey;
-            _.forEach($stateParams.workspace.problem.criteria, function(problemCrit, key) {
-              if (problemCrit.title === criterion.title) {
-                critKey = key;
-              }
-            });
-            var altKey;
-            _.forEach($stateParams.workspace.problem.alternatives, function(problemAlt, key) {
-              if (problemAlt.title === alternative.title) {
-                altKey = key;
-              }
-            });
-            var tableEntry = _.find($stateParams.workspace.problem.performanceTable, function(tableEntry) {
-              return tableEntry.criterion === critKey && tableEntry.alternative === altKey;
-            });
-            if (tableEntry) {
-              var inputDataCell = _.cloneDeep($scope.state.inputData[criterion.hash][alternative.hash]);
-              if (tableEntry.performance.type === 'exact') {
-                inputDataCell.value = tableEntry.performance.value;
-              } else if (tableEntry.performance.type === 'dt') {
-                inputDataCell.sampleSize = tableEntry.performance.parameters.dof + 1;
-                inputDataCell.stdErr = tableEntry.performance.parameters.stdErr;
-                inputDataCell.mu = tableEntry.performance.parameters.mu;
-                inputDataCell.continuousType = 'SEt';
-              } else if (tableEntry.performance.type === 'dnorm') {
-                inputDataCell.stdErr = tableEntry.performance.parameters.sigma;
-                inputDataCell.mu = tableEntry.performance.parameters.mu;
-                inputDataCell.continuousType = 'SEnorm';
-              } else if (tableEntry.performance.type === 'dbeta') {
-                inputDataCell.count = tableEntry.performance.parameters.alpha - 1;
-                inputDataCell.sampleSize = tableEntry.performance.parameters.beta +
-                  inputDataCell.count - 1;
-              } else if (tableEntry.performance.type === 'dsurv') {
-                inputDataCell.events = tableEntry.performance.parameters.alpha - 0.001;
-                inputDataCell.exposure = tableEntry.performance.parameters.beta - 0.001;
-                inputDataCell.summaryMeasure = tableEntry.performance.parameters.summaryMeasure;
-                inputDataCell.timeScale = tableEntry.performance.parameters.time;
-              }
-              var distributionData = ManualInputService.createDistribution(inputDataCell, criterion);
-              inputDataCell.isInvalid = ManualInputService.isInvalidCell(distributionData);
-              inputDataCell.label = ManualInputService.inputToString(distributionData);
-              $scope.state.inputData[criterion.hash][alternative.hash] = inputDataCell;
-            }
-          });
-        });
+        $scope.state.inputData = ManualInputService.createInputFromOldWorkspace($scope.state.criteria,
+          $scope.state.alternatives, $stateParams.workspace, $scope.state.inputData);
         checkInputData();
-      } else {
-        $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives, $scope.state.inputData);
       }
     }
 
@@ -273,6 +194,12 @@ define(['lodash', 'angular'], function(_, angular) {
           });
         });
       }
+    }
+
+    function findUnknownCriteria(criteria) {
+      $scope.hasUnknownDataType = _.find(criteria, function(criterion) {
+        return criterion.dataType === 'Unknown';
+      });
     }
 
   };
