@@ -10,16 +10,14 @@
         </label>
         <input type="text" ng-model="criterion.title" ng-change="isCreationBlocked()">
       </div>
-      <div class="cell">
+      <div class="cell" ng-if="useFavorability">
         <label>Favorability
           <inline-help help-key="favorability"></inline-help>
         </label>
-        <input type="radio" ng-model="criterion.isFavorable" ng-value="undefined" id="neither-favorable">
-        <label for="neither-favorable">No favorability</label>
-        <input type="radio" ng-model="criterion.isFavorable" ng-value="true" id="favorable">
-        <label for="favorable">Favorable</label>
         <input type="radio" ng-model="criterion.isFavorable" ng-value="false" id="not-favorable">
         <label for="not-favorable">Not favorable</label>
+        <input type="radio" ng-model="criterion.isFavorable" ng-value="true" id="favorable">
+        <label for="favorable">Favorable</label>
       </div>
       <div class="cell">
         <label>Data source

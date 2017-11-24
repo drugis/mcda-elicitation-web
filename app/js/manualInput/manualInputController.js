@@ -47,9 +47,10 @@ define(['lodash', 'angular'], function(_, angular) {
         // copying existing workspace
         var oldWorkspace = $stateParams.workspace;
         $scope.state = {
+          oldWorkspace: oldWorkspace,
+          useFavorability: oldWorkspace.problem.valueTree ? true : false,
           step: 'step1',
           isInputDataValid: false,
-          title: oldWorkspace.title,
           description: oldWorkspace.problem.description,
           criteria: ManualInputService.copyWorkspaceCriteria(oldWorkspace),
           alternatives: _.map(oldWorkspace.problem.alternatives, function(alternative) {
@@ -57,6 +58,7 @@ define(['lodash', 'angular'], function(_, angular) {
           })
         };
         findUnknownCriteria($scope.state.criteria);
+        favorabilityChanged();
         $scope.dirty = true;
         setStateWatcher();
       } else if (!$stateParams.inProgressId) {
@@ -64,6 +66,7 @@ define(['lodash', 'angular'], function(_, angular) {
         $scope.state = {
           step: 'step1',
           isInputDataValid: false,
+          useFavorability: false,
           criteria: [],
           alternatives: []
         };
@@ -72,6 +75,8 @@ define(['lodash', 'angular'], function(_, angular) {
         // unfinished workspace
         InProgressResource.get($stateParams).$promise.then(function(response) {
           $scope.state = response.state;
+          findUnknownCriteria($scope.state.criteria);
+          favorabilityChanged();
           setStateWatcher();
         });
       }
@@ -114,6 +119,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function removeCriterion(criterion) {
       $scope.state.criteria = _.reject($scope.state.criteria, ['title', criterion.title]);
+      findUnknownCriteria($scope.state.criteria);
     }
 
     function openCriterionModal(criterion) {
@@ -135,6 +141,9 @@ define(['lodash', 'angular'], function(_, angular) {
           },
           oldCriterion: function() {
             return criterion;
+          },
+          useFavorability: function() {
+            return $scope.state.useFavorability;
           }
         }
       });
@@ -159,16 +168,16 @@ define(['lodash', 'angular'], function(_, angular) {
         return addKeyHashToObject(criterion, criterion.title);
       });
       $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives, $scope.state.inputData);
-      if ($stateParams.workspace) {
+      if ($scope.state.oldWorkspace) {
         $scope.state.inputData = ManualInputService.createInputFromOldWorkspace($scope.state.criteria,
-          $scope.state.alternatives, $stateParams.workspace, $scope.state.inputData);
+          $scope.state.alternatives, $scope.state.oldWorkspace, $scope.state.inputData);
         checkInputData();
       }
     }
 
     function createProblem() {
       var problem = ManualInputService.createProblem($scope.state.criteria, $scope.state.alternatives,
-        $scope.state.title, $scope.state.description, $scope.state.inputData);
+        $scope.state.title, $scope.state.description, $scope.state.inputData, $scope.state.useFavorability);
       WorkspaceResource.create(problem).$promise.then(function(workspace) {
         if ($stateParams.inProgressId) {
           InProgressResource.delete($stateParams);
@@ -202,6 +211,13 @@ define(['lodash', 'angular'], function(_, angular) {
       });
     }
 
+    $scope.favorabilityChanged = favorabilityChanged;
+
+    function favorabilityChanged() {
+      $scope.hasMissingFavorability = _.find($scope.state.criteria, function(criterion) {
+        return criterion.isFavorable === undefined;
+      });
+    }
   };
   return dependencies.concat(ManualInputController);
 });

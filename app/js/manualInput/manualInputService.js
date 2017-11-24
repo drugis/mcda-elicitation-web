@@ -98,11 +98,16 @@ define(['lodash', 'angular'], function(_) {
     };
 
     // Exposed functions
-    function createProblem(criteria, treatments, title, description, performanceTable) {
+    function createProblem(criteria, treatments, title, description, performanceTable, useFavorability) {
       var problem = {
         title: title,
         description: description,
-        valueTree: {
+        criteria: buildCriteria(criteria),
+        alternatives: buildAlternatives(treatments),
+        performanceTable: buildPerformanceTable(performanceTable, criteria, treatments)
+      };
+      if (useFavorability) {
+        problem.valueTree = {
           title: 'Benefit-risk balance',
           children: [{
             title: 'Favourable effects',
@@ -111,11 +116,8 @@ define(['lodash', 'angular'], function(_) {
             title: 'Unfavourable effects',
             criteria: _.map(_.reject(criteria, 'isFavorable'), 'title')
           }]
-        },
-        criteria: buildCriteria(criteria),
-        alternatives: buildAlternatives(treatments),
-        performanceTable: buildPerformanceTable(performanceTable, criteria, treatments)
-      };
+        };
+      }
       return problem;
     }
 
