@@ -1,0 +1,33 @@
+<div ng-show="state.step <= state.total">
+  <div class="grid-x" style="min-height: 450px">
+    <div class="cell">
+      <h3>{{state.title}} <!-- <inline-help help-key="swing-weighting"></inline-help> --></h3>
+
+    </div>
+  </div>
+  <div class="grid-x">
+    <div class="cell">
+      <button class="button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
+      <button class="button" ng-if="!canSave(state)" ng-click="nextStep(state)" ng-disabled="!canProceed(state)">Next</button>
+    </div>
+    <div class="cell alert" ng-if="!canProceed(state)">
+      Cannot proceed because the chosen value should not be equal to the worst possible value of {{state.problem.criteria[state.criterionA].title}}.
+    </div>
+  </div>
+</div>
+<div ng-show="state.step > state.total">
+  <div class="grid-x" style="min-height: 450px">
+    <div class="cell">
+      <h3>{{title(state.step, state.total)}}</h3>
+      <p>You have given the following trade-offs:</p>
+      <trade-offs problem="state.problem" preferences="state.intermediate.prefs"></trade-offs>
+      <br>
+    </div>
+  </div>
+  <div class="grid-x">
+    <div class="cell">
+      <button class="button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
+      <button class="success button" ng-if="canSave(state)" ng-click="save(state)" ng-disabled="!canProceed(state)">Save</button>
+    </div>
+  </div>
+</div>

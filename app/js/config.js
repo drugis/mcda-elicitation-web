@@ -23,9 +23,17 @@ define(function() {
       title: 'Ordinal Swing Elicitation',
       controller: 'OrdinalSwingController',
       templateUrl: 'ordinalSwing.html',
-      requires: ['partial-value-function'],
       activeTab: 'preferences',
+      requires: ['partial-value-function'],
       resets: ['non-ordinal-preferences']
+    }, {
+      id: 'swing-weighting',
+      title: 'Swing Weighting Elicitation',
+      controller: 'SwingWeightingController',
+      templateUrl: 'swingWeighting.html',
+      activeTab: 'preferences',
+      requires: ['partial-value-function'],
+      resets: ['criteria-trade-offs']
     }, {
       id: 'interval-swing',
       title: 'Interval Swing Elicitation',
@@ -42,14 +50,6 @@ define(function() {
       activeTab: 'preferences',
       requires: ['complete-criteria-ranking'],
       resets: ['non-ordinal-preferences']
-    }, {
-      id: 'swing-weighting',
-      title: 'Swing Weighting Elicitation',
-      controller: 'SwingWeightingController',
-      templateUrl: 'swingWeighting.html',
-      activeTab: 'preferences',
-      requires: ['partial-value-function'],
-      resets: ['criteria-trade-offs']
     }, {
       id: 'preferences',
       title: 'Preferences',
