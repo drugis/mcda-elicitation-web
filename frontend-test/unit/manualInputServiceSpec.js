@@ -159,7 +159,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
             }
           }
         };
-        var result = manualInputService.createProblem(criteria, treatments, title, description, performanceTable);
+        var result = manualInputService.createProblem(criteria, treatments, title, description, performanceTable, true);
         var expectedResult = {
           title: title,
           description: description,
@@ -286,7 +286,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           }
         };
         //
-        var result = manualInputService.createProblem(criteria, treatments, title, description, performanceTable);
+        var result = manualInputService.createProblem(criteria, treatments, title, description, performanceTable, true);
         //
         var expectedResult = {
           title: title,

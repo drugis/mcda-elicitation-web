@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modalInstance', 'criteria', 'callback', 'oldCriterion'];
-  var AddCriterionController = function($scope, $modalInstance, criteria, callback, oldCriterion) {
+  var dependencies = ['$scope', '$modalInstance', 'criteria', 'callback', 'oldCriterion', 'useFavorability'];
+  var AddCriterionController = function($scope, $modalInstance, criteria, callback, oldCriterion, useFavorability) {
     // functions
     $scope.isCreationBlocked = isCreationBlocked;
     $scope.addCriterion = addCriterion;
@@ -12,12 +12,14 @@ define(['lodash'], function(_) {
     $scope.timePointOfInterestChanged = timePointOfInterestChanged;
     $scope.generateDescription = generateDescription;
     $scope.dataSourceChanged = dataSourceChanged;
+    $scope.useFavorability = useFavorability;
 
     // vars
     $scope.blockedReason = '';
     $scope.criterion = {
       dataType: 'continuous',
-      dataSource: 'study'
+      dataSource: 'study',
+      isFavorable: false
     };
     $scope.isAddOperation = !oldCriterion;
     $scope.isAddingCriterion = false;

@@ -18,7 +18,8 @@
   </div>
   <div class="grid-x">
     <div class="cell large-6">
-      <label>Therapeutic context <inline-help help-key="therapeutic-context"></inline-help>
+      <label>Therapeutic context
+        <inline-help help-key="therapeutic-context"></inline-help>
         <textarea ng-model="state.description" width="100%" rows="5"></textarea>
       </label>
     </div>
@@ -28,6 +29,15 @@
       <h4>Criteria
         <inline-help help-key="criterion"></inline-help>
       </h4>
+    </div>
+    <div class="cell">
+      <label>
+        Use favorability
+        <inline-help help-key="favorability"></inline-help>: 
+        <input type="checkbox" ng-model="state.useFavorability" ng-change="favorabilityChanged()">
+      </label>
+    </div>
+    <div class="cell">
       <button class="button small" type="button" ng-click="openCriterionModal()"><i class="fa fa-plus"></i> Add Criterion</button>
     </div>
   </div>
@@ -37,16 +47,18 @@
         <thead>
           <tr>
             <th>Title</th>
-            <th>Is favorable?</th>
+            <th ng-if="state.useFavorability">Is favorable?</th>
             <th>Data type</th>
-            <th>Unit <inline-help help-key="criterion-unit"></inline-help></th>
+            <th>Unit
+              <inline-help help-key="criterion-unit"></inline-help>
+            </th>
             <th>description</th>
             <th>Source</th>
             <th>Source link</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-if ="!state.criteria.length">
+          <tr ng-if="!state.criteria.length">
             <td colspan="7">
               <em>No criteria defined</em>
             </td>
@@ -56,7 +68,7 @@
               <a ng-click="removeCriterion(criterion)" tooltip="Remove criterion"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a>
               <a ng-click="openCriterionModal(criterion)" tooltip="Edit criterion"><i class="fa fa-edit icon-fixed-width"></i></a> {{criterion.title}}
             </td>
-            <td>{{criterion.isFavorable}}</td>
+            <td ng-if="state.useFavorability">{{criterion.isFavorable}}</td>
             <td style="color: {{criterion.dataType === 'Unknown'? 'red' :''}};">{{criterion.dataType}}</td>
             <td>{{criterion.unitOfMeasurement}}</td>
             <td>{{criterion.description}}</td>
@@ -110,7 +122,7 @@
   <div class="grid-x">
     <div class="cell">
       <button class="button" ng-disabled="!state.title || state.criteria.length < 2|| state.alternatives.length < 2 ||
-      hasUnknownDataType" type="button" ng-click="goToStep2()" tooltip="Enter effects table data">
+      hasUnknownDataType || (state.useFavorability && hasMissingFavorability)" type="button" ng-click="goToStep2()" tooltip="Enter effects table data">
         Enter data
       </button>
       <button class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty" tooltip="Save current state">Save</button>
@@ -126,6 +138,9 @@
     </div>
     <div class="cell" ng-if="hasUnknownDataType">
       <em>Criteria with unknown data type</em>
+    </div>
+    <div class="cell" ng-if="state.useFavorability && hasMissingFavorability">
+      <em>Criteria must have favorability if favorability is turned on</em>
     </div>
   </div>
 </div>
