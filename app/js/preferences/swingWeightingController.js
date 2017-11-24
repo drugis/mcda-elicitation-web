@@ -26,28 +26,22 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
         return base + ' (' + step + '/' + total + ')';
       }
 
-      function buildInitial(criteria, step) {
-        // var bounds = PartialValueFunctionService.getBounds(criteria[criterionA]);
+      function buildInitial() {
         var state = {
-          step: step,
-          total: _.size(criteria) - 1,
-          // sliderOptions: {
-          //   floor: Math.ceil(bounds[0] * 1000) / 1000,
-          //   ceil: Math.floor(bounds[1] * 1000) / 1000,
-          //   step: Math.abs(bounds[0] - bounds[1]) / 100,
-          //   precision: 2
-          // }
+          step: 1,
+          total: 2
         };
         return state;
       }
 
       function initialize(state) {
-        $timeout(function() {
-          $scope.$broadcast('rzSliderForceRender');
-        }, 100);
+        var criteria = state.problem.criteria;
+        state = _.extend(state, {
+          title: title(1, 2),
+        });
+        state = _.extend(state, buildInitial(criteria, 1));
         return state;
       }
-
 
       function validChoice(state) {
         if (!state) {
@@ -56,41 +50,52 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
         if (state.type === 'done') {
           return true;
         }
-        return true; // fixme
+        return state.choice;
       }
 
       function nextState(state) {
-        var criteria = state.problem.criteria;
-
         if (!validChoice(state)) {
           return null;
         }
-        var order = state.criteriaOrder;
 
-        var idx = _.indexOf(order, state.criterionB);
         var next;
-        if (idx > order.length - 2) {
+        if (state.step === 1) {
+          // go to step 2
+          next = {
+            step: state.step + 1,
+            values: _.reduce(state.problem.criteria, function(accum, criterion, key) {
+              accum[key] = 100;
+              return accum;
+            }, {}),
+            sliderOptions: {
+              floor: 1,
+              ceil: 100,
+              step: 1,
+              precision: 0
+            },
+            sliderOptionsDisabled: {
+              disabled: true,
+              floor: 1,
+              ceil: 100,
+              step: 1,
+              precision: 0
+            }
+
+          };
+          $timeout(function() {
+            $scope.$broadcast('rzSliderForceRender');
+          }, 100);
+        } else if (state.step === 2) {
           next = {
             type: 'done',
-            step: idx + 1
+            step: state.step + 1
           };
+          // push stuff to prefs todo
         } else {
-          next = buildInitial(criteria, order[idx], order[idx + 1], idx + 1);
+          next = buildInitial();
         }
 
-        function getRatio(state) {
-          var u = PartialValueFunctionService.map(criteria[state.criterionA]);
-          return 1 / u(state.choice);
-        }
-
-        next.prefs = angular.copy(state.prefs);
-        next.prefs.push({
-          criteria: [order[idx - 1], order[idx]],
-          ratio: getRatio(state),
-          type: 'exact swing'
-        });
         next.title = title(next.step, next.total);
-
         return _.extend(angular.copy(state), next);
       }
 
@@ -110,7 +115,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
         $scope: $scope,
         handler: {
           validChoice: validChoice,
-          fields: ['prefs', 'total', 'choice', 'criteriaOrder', 'criterionA', 'criterionB'],
+          fields: ['total', 'choice', 'step'],
           nextState: nextState,
           standardize: _.identity,
           initialize: _.partial(initialize, taskDefinition.clean($scope.aggregateState))

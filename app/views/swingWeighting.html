@@ -1,8 +1,37 @@
-<div ng-show="state.step <= state.total">
+<!-- First step -->
+<div ng-show="state.step === 1">
   <div class="grid-x" style="min-height: 450px">
     <div class="cell">
       <h3>{{state.title}} <!-- <inline-help help-key="swing-weighting"></inline-help> --></h3>
-
+      <h5>Which improvement is most important?</h5>
+    </div>
+    <div class="cell">
+      <table>
+        <thead>
+          <th>Criterion</th>
+          <th>Description</th>
+          <th>Unit</th>
+          <th>Worst</th>
+          <th>Best</th>
+        </thead>
+        <tbody>
+          <tr ng-repeat="criterion in state.problem.criteria">
+            <td>{{criterion.title}}</td>
+            <td>{{criterion.description}}</td>
+            <td>{{criterion.unitOfMeasurement}}</td>
+            <td>{{pvf.worst(criterion)}}</td>
+            <td>{{pvf.best(criterion)}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cell">
+      Which of the following improvements is most important?
+    </div>
+    <div class="cell" ng-repeat="(key,criterion) in state.problem.criteria">
+      <label>
+        <input type="radio" ng-model="state.choice" value="{{key}}"> {{criterion.pvf.direction}} {{criterion.title}} from {{pvf.worst(criterion)}} {{criterion.unitOfMeasurement}} to {{pvf.best(criterion)}} {{criterion.unitOfMeasurement}}
+      </label>
     </div>
   </div>
   <div class="grid-x">
@@ -11,23 +40,64 @@
       <button class="button" ng-if="!canSave(state)" ng-click="nextStep(state)" ng-disabled="!canProceed(state)">Next</button>
     </div>
     <div class="cell alert" ng-if="!canProceed(state)">
-      Cannot proceed because the chosen value should not be equal to the worst possible value of {{state.problem.criteria[state.criterionA].title}}.
+      Cannot proceed because the most important improvement has not been chosen.
     </div>
   </div>
 </div>
-<div ng-show="state.step > state.total">
+<!-- Second step -->
+<div ng-show="state.step === 2">
   <div class="grid-x" style="min-height: 450px">
     <div class="cell">
       <h3>{{title(state.step, state.total)}}</h3>
+      <h5>How important is one improvement relative to another?</h5>
+    </div>
+    <div class="cell">
+      <table>
+        <thead>
+          <th>Criterion</th>
+          <th>Description</th>
+          <th>Unit</th>
+          <th>Worst</th>
+          <th>Best</th>
+          <th>Importance</th>
+        </thead>
+        <tbody>
+          <tr ng-repeat="(key, criterion) in state.problem.criteria">
+            <td>{{criterion.title}}</td>
+            <td>{{criterion.description}}</td>
+            <td>{{criterion.unitOfMeasurement}}</td>
+            <td>{{pvf.worst(criterion)}}</td>
+            <td>{{pvf.best(criterion)}}</td>
+            <td>{{state.values[key]}}%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cell">
+      You've indicated that improving [[depression]] from [[60]] to [[50]] is the most important (i.e. 100% importance). Now indicate the importance (in % relative to improving [[depression]] by the stated amount) of each other criterion's improvement using the sliders below.
+    </div>
+    <div class="cell" ng-repeat="(key,criterion) in state.problem.criteria">
+      <div class="grid-x">
+        <div class="cell large-2">
+          {{criterion.pvf.direction}} {{criterion.title}} from {{pvf.worst(criterion)}} {{criterion.unitOfMeasurement}} to {{pvf.best(criterion)}} {{criterion.unitOfMeasurement}}:
+        </div>
+        <div class="cell large-4" ng-if="state.choice===key">
+          <rzslider rz-slider-model="state.values[key]" rz-slider-options="state.sliderOptionsDisabled"></rzslider>
+        </div>
+        <div class="cell large-4" ng-if="state.choice!==key">
+          <rzslider rz-slider-model="state.values[key]" rz-slider-options="state.sliderOptions"></rzslider>
+        </div>
+      </div>
+      <!-- <div class="cell">
       <p>You have given the following trade-offs:</p>
       <trade-offs problem="state.problem" preferences="state.intermediate.prefs"></trade-offs>
       <br>
+    </div> -->
+    </div>
+    <div class="grid-x">
+      <div class="cell">
+        <button class="button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
+        <button class="success button" ng-if="canSave(state)" ng-click="save(state)" ng-disabled="!canProceed(state)">Save</button>
+      </div>
     </div>
   </div>
-  <div class="grid-x">
-    <div class="cell">
-      <button class="button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
-      <button class="success button" ng-if="canSave(state)" ng-click="save(state)" ng-disabled="!canProceed(state)">Save</button>
-    </div>
-  </div>
-</div>

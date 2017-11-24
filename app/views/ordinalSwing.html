@@ -11,7 +11,7 @@
 
       <h5 class="subheader">Which of these improvements is most desired:</h5>
       <label ng-repeat="(choice, alternative) in state.choices">
-        <input type="radio" ng-model="state.choice" value="{{choice}}" />
+        <input type="radio" ng-model="state.choice" value="{{choice}}">
         <criterion of="state.problem.criteria[choice]"></criterion> &rarr; {{alternative[choice] | number }}
       </label>
     </div>
