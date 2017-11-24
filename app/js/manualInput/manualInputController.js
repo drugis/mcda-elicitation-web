@@ -47,9 +47,9 @@ define(['lodash', 'angular'], function(_, angular) {
         // copying existing workspace
         var oldWorkspace = $stateParams.workspace;
         $scope.state = {
+          oldWorkspace : oldWorkspace,
           step: 'step1',
           isInputDataValid: false,
-          title: oldWorkspace.title,
           description: oldWorkspace.problem.description,
           criteria: ManualInputService.copyWorkspaceCriteria(oldWorkspace),
           alternatives: _.map(oldWorkspace.problem.alternatives, function(alternative) {
@@ -159,9 +159,9 @@ define(['lodash', 'angular'], function(_, angular) {
         return addKeyHashToObject(criterion, criterion.title);
       });
       $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives, $scope.state.inputData);
-      if ($stateParams.workspace) {
+      if ($scope.state.oldWorkspace) {
         $scope.state.inputData = ManualInputService.createInputFromOldWorkspace($scope.state.criteria,
-          $scope.state.alternatives, $stateParams.workspace, $scope.state.inputData);
+          $scope.state.alternatives, $scope.state.oldWorkspace, $scope.state.inputData);
         checkInputData();
       }
     }
