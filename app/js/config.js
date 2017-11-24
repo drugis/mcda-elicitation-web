@@ -43,6 +43,14 @@ define(function() {
       requires: ['complete-criteria-ranking'],
       resets: ['non-ordinal-preferences']
     }, {
+      id: 'swing-weighting',
+      title: 'Swing Weighting Elicitation',
+      controller: 'SwingWeightingController',
+      templateUrl: 'swingWeighting.html',
+      activeTab: 'preferences',
+      requires: ['partial-value-function'],
+      resets: ['criteria-trade-offs']
+    }, {
       id: 'preferences',
       title: 'Preferences',
       controller: 'PreferencesController',

@@ -40,6 +40,9 @@
     <button class="button" ui-sref="interval-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['interval-swing']).accessible" ng-class="{alert: !isSafe['interval-swing'].safe}" tooltip="{{isSafe['interval-swing'].tooltip}}">
       Interval Swing
     </button>
+    <button class="button" ui-sref="swing-weighting" tooltip-animation="false" ng-disabled="!isAccessible(tasks['swing-weighting']).accessible" ng-class="{alert: !isSafe['swing-weighting'].safe}" tooltip="{{isSafe['swing-weighting'].tooltip}}">
+      Swing Weighting
+    </button>
   </div>
   <div class="cell alert" ng-if="!deterministicResults">Trade-offs cannot be specified if there are criteria with missings PVFs.</div>
   <div class="cell">
