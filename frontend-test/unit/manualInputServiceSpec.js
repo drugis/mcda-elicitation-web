@@ -257,13 +257,13 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
 
         var performanceTable = {
           'survival mean': {
-            'treatment1': {
+            treatment1: {
               type: 'dsurv',
               events: 3,
               exposure: 5,
               hash: 'treatment1'
             },
-            'treatment2': {
+            treatment2: {
               type: 'dsurv',
               events: 3,
               exposure: 5,
@@ -277,7 +277,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
               exposure: 5,
               hash: 'treatment1'
             },
-            'treatment2': {
+            treatment2: {
               type: 'dsurv',
               events: 3,
               exposure: 5,
