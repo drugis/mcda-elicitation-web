@@ -35,10 +35,12 @@
       Elicitation
     </h5>
   </div>
-  <div class="cell large-4 button-group" ng-if="editMode.isUserOwner">
+  <div class="cell">
     <button class="button" ui-sref="swing-weighting" tooltip-animation="false" ng-disabled="!isAccessible(tasks['swing-weighting']).accessible" ng-class="{alert: !isSafe['swing-weighting'].safe}" tooltip="{{isSafe['swing-weighting'].tooltip}}">
       Swing Weighting
     </button>
+  </div>
+  <div class="cell large-4 button-group" ng-if="editMode.isUserOwner">
     <button class="button" ui-sref="ordinal-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['ordinal-swing']).accessible" ng-class="{alert: !isSafe['ordinal-swing'].safe}" tooltip="{{isSafe['ordinal-swing'].tooltip}}">
       Ranking
     </button>

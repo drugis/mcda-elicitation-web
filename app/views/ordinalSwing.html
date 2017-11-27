@@ -1,7 +1,7 @@
 <div ng-show="state.type == 'elicit'">
   <div class="grid-x" style="min-height: 450px">
     <div class="cell">
-      <h3>{{state.title}} <inline-help help-key="ordinal-swing"></inline-help></h3>
+      <h3>{{state.title}} <inline-help help-key="ranking"></inline-help></h3>
       <h5 class="subheader">Given the following situation:</h5>
       <ul class="inline-list">
         <li ng-repeat="(criterion, value) in state.reference track by $index">
