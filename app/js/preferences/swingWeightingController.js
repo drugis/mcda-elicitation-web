@@ -20,7 +20,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'],
       $scope.pvf = PartialValueFunctionService;
 
       function title(step, total) {
-        var base = 'SWING weighting';
+        var base = 'Swing weighting';
         return base + ' (' + step + '/' + total + ')';
       }
 

@@ -146,7 +146,7 @@
   },
   "scenario": {
     "title": "Scenario",
-    "text": "A scenario is a collection of preferences to feed into the MCDA models. This consists of a partial value function for each criterion, and an optional set of weight preferences ( SWING weighting, ranking, exact matching or imprecise matching).",
+    "text": "A scenario is a collection of preferences to feed into the MCDA models. This consists of a partial value function for each criterion, and an optional set of weight preferences (swing weighting, ranking, exact matching or imprecise matching).",
     "link": ""
   },
   "smaa-results": {
@@ -170,8 +170,8 @@
     "link": "/manual.html#mcda-preparing-dataset"
   },
   "swing-weighting": {
-    "title": "SWING Weighting",
-    "text": "Elicitation of the user's weight trade-offs between the different criteria using SWING weighting. This method sets weights by choosing one criterion as most important to be improved, and allows the user to scale the other criteria accordingly.",
+    "title": "Swing Weighting",
+    "text": "Elicitation of the user's weight trade-offs between the different criteria using swing weighting. This method sets weights by choosing one criterion as most important to be improved, and allows the user to scale the other criteria accordingly.",
     "link": "/manual.html#mcda-value-tradeoffs"
   },
   "theoretical-range": {
@@ -189,9 +189,9 @@
     "text": "How valuable (i.e. helpful for each criterion) each alternative is overall.",
     "link": "/manual.html#deterministic-results"
   },
-  "trade-offs": {
-    "title": "Trade-offs",
-    "text": "Trade-offs indicate what weight the user places on improving each criterion. First, criteria are ordered by weight of importance, and then the trade-offs can be elicited, i.e. \"How much improvement on criterion A would be an equivalent trade-off for some improvement on criterion B?\"",
+  "weights": {
+    "title": "Weights",
+    "text": "Weights indicate how much importance the user places on improving each criterion. Weights can be specified directly through swing weighting. Alternatively, they can be derived through a series of ranking and matching questions.", 
     "link": "/manual.html#mcda-value-tradeoffs"
   },
   "treatment": {
