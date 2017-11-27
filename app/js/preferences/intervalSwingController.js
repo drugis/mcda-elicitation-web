@@ -26,7 +26,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       $scope.save = save;
 
       function title(step, total) {
-        var base = 'Interval SWING weighting';
+        var base = 'Imprecise Matching';
         if (step > total) {
           return base + ' (DONE)';
         }

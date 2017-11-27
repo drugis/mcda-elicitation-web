@@ -16,7 +16,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
     };
 
     var title = function(step, total) {
-      var base = 'Ordinal SWING weighting';
+      var base = 'Ranking';
       if (step > total) {
         return base + ' (DONE)';
       }

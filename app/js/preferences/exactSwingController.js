@@ -20,7 +20,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       $scope.pvf = pvf;
 
       function title(step, total) {
-        var base = 'Exact SWING weighting';
+        var base = 'Exact Matching';
         if (step > total) {
           return base + ' (DONE)';
         }

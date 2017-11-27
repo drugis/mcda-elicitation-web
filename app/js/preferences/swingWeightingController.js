@@ -1,6 +1,6 @@
 'use strict';
-define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/helpers/wizard'],
-  function(_, angular, Util, Wizard) {
+define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'],
+  function(_, angular, Wizard) {
     var dependencies = ['$scope', '$state', '$stateParams', '$injector', '$timeout',
       'currentScenario',
       'taskDefinition',
@@ -11,35 +11,25 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       taskDefinition,
       PartialValueFunctionService
     ) {
-      $scope.title = title;
-      $scope.initialize = initialize;
+      // functions
       $scope.canSave = canSave;
       $scope.save = save;
+      $scope.cancel = cancel;
 
+      // init
       $scope.pvf = PartialValueFunctionService;
 
       function title(step, total) {
         var base = 'SWING weighting';
-        if (step > total) {
-          return base + ' (DONE)';
-        }
         return base + ' (' + step + '/' + total + ')';
       }
 
-      function buildInitial() {
-        var state = {
-          step: 1,
-          total: 2
-        };
-        return state;
-      }
-
       function initialize(state) {
-        var criteria = state.problem.criteria;
         state = _.extend(state, {
           title: title(1, 2),
+          step: 1,
+          total: 2
         });
-        state = _.extend(state, buildInitial(criteria, 1));
         return state;
       }
 
@@ -47,10 +37,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
         if (!state) {
           return false;
         }
-        if (state.type === 'done') {
-          return true;
-        }
-        return state.choice;
+        return state.mostImportantCriterion;
       }
 
       function nextState(state) {
@@ -59,63 +46,72 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
         }
 
         var next;
-        if (state.step === 1) {
-          // go to step 2
-          next = {
-            step: state.step + 1,
-            values: _.reduce(state.problem.criteria, function(accum, criterion, key) {
-              accum[key] = 100;
-              return accum;
-            }, {}),
-            sliderOptions: {
-              floor: 1,
-              ceil: 100,
-              step: 1,
-              precision: 0
-            },
-            sliderOptionsDisabled: {
-              disabled: true,
-              floor: 1,
-              ceil: 100,
-              step: 1,
-              precision: 0
+        next = {
+          step: state.step + 1,
+          values: _.reduce(state.problem.criteria, function(accum, criterion, key) {
+            accum[key] = 100;
+            return accum;
+          }, {}),
+          sliderOptions: {
+            floor: 1,
+            ceil: 100,
+            translate: function(value) {
+              return value + '%';
             }
+          },
+          sliderOptionsDisabled: {
+            disabled: true,
+            floor: 1,
+            ceil: 100,
+            translate: function(value) {
+              return value + '%';
+            }
+          }
+        };
+        $timeout(function() {
+          $scope.$broadcast('rzSliderForceRender');
+        }, 100);
 
-          };
-          $timeout(function() {
-            $scope.$broadcast('rzSliderForceRender');
-          }, 100);
-        } else if (state.step === 2) {
-          next = {
-            type: 'done',
-            step: state.step + 1
-          };
-          // push stuff to prefs todo
-        } else {
-          next = buildInitial();
-        }
 
-        next.title = title(next.step, next.total);
+        next.title = title(next.step, state.total);
         return _.extend(angular.copy(state), next);
       }
 
       function canSave(state) {
-        return state && state.step === state.total + 1;
+        return state && state.step === 2;
       }
 
       function save(state) {
-        currentScenario.state = _.pick(state, ['problem', 'prefs']);
+        var prefs = _(state.values)
+          .omit(state.mostImportantCriterion)
+          .map(function(value, key) {
+            return {
+              type: 'exact swing',
+              ratio: 1 / (value / 100),
+              criteria: [state.mostImportantCriterion, key]
+            };
+          })
+          .value();
+
+        currentScenario.state = {
+          problem: state.problem
+        };
+        currentScenario.state.prefs = prefs;
         currentScenario.$save($stateParams, function(scenario) {
           $scope.$emit('elicit.resultsAccessible', scenario);
           $state.go('preferences');
         });
       }
 
+      function cancel() {
+        $state.go('preferences');
+      }
+
       $injector.invoke(Wizard, this, {
         $scope: $scope,
         handler: {
           validChoice: validChoice,
-          fields: ['total', 'choice', 'step'],
+          fields: ['total', 'mostImportantCriterion', 'step'],
           nextState: nextState,
           standardize: _.identity,
           initialize: _.partial(initialize, taskDefinition.clean($scope.aggregateState))

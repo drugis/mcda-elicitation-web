@@ -24,34 +24,40 @@
     </div>
   </div>
 </div>
-<div class="grid-x underlined-div prefs-block" id="trade-off-block">
+<div class="grid-x prefs-block" id="trade-off-block">
   <div class="cell">
-    <h4>Trade-offs
-      <inline-help help-key="trade-offs"></inline-help>
+    <h4>
+      Weights <inline-help help-key="trade-offs"></inline-help>
     </h4>
   </div>
+  <div class="cell">
+    <h5>
+      Elicitation
+    </h5>
+  </div>
   <div class="cell large-4 button-group" ng-if="editMode.isUserOwner">
-    <button class="button" ui-sref="ordinal-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['ordinal-swing']).accessible" ng-class="{alert: !isSafe['ordinal-swing'].safe}" tooltip="{{isSafe['ordinal-swing'].tooltip}}">
-      Ordinal Swing
-    </button>
-    <button class="button" ui-sref="exact-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['exact-swing']).accessible" ng-class="{alert: !isSafe['exact-swing'].safe}" tooltip="{{isSafe['exact-swing'].tooltip}}">
-      Exact Swing
-    </button>
-    <button class="button" ui-sref="interval-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['interval-swing']).accessible" ng-class="{alert: !isSafe['interval-swing'].safe}" tooltip="{{isSafe['interval-swing'].tooltip}}">
-      Interval Swing
-    </button>
     <button class="button" ui-sref="swing-weighting" tooltip-animation="false" ng-disabled="!isAccessible(tasks['swing-weighting']).accessible" ng-class="{alert: !isSafe['swing-weighting'].safe}" tooltip="{{isSafe['swing-weighting'].tooltip}}">
       Swing Weighting
+    </button>
+    <button class="button" ui-sref="ordinal-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['ordinal-swing']).accessible" ng-class="{alert: !isSafe['ordinal-swing'].safe}" tooltip="{{isSafe['ordinal-swing'].tooltip}}">
+      Ranking
+    </button>
+    <button class="button" ui-sref="exact-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['exact-swing']).accessible" ng-class="{alert: !isSafe['exact-swing'].safe}" tooltip="{{isSafe['exact-swing'].tooltip}}">
+      Exact Matching
+    </button>
+    <button class="button" ui-sref="interval-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['interval-swing']).accessible" ng-class="{alert: !isSafe['interval-swing'].safe}" tooltip="{{isSafe['interval-swing'].tooltip}}">
+      Imprecise Matching
     </button>
   </div>
   <div class="cell alert" ng-if="!deterministicResults">Trade-offs cannot be specified if there are criteria with missings PVFs.</div>
   <div class="cell">
+    <h5>Constraints</h5>
+  </div>
+  <div class="cell">
     <trade-offs problem="aggregateState.problem" preferences="scenario.state.prefs"></trade-offs>
   </div>
-</div>
-<div class="grid-x underlined-div">
   <div class="cell large-9">
-    <h4>Representative weights <inline-help help-key="representative-weights"></inline-help></h4>
+    <h5>Representative weights <inline-help help-key="representative-weights"></inline-help></h5>
   </div>
   <div class="cell large-3" ng-if="deterministicResults">
     <button class="button small info clipboard-button" data-clipboard-target="#weighttable">
@@ -65,7 +71,7 @@
       </thead>
       <tbody>
         <tr>
-          <td ng-repeat="criterion in aggregateState.problem.criteria">{{deterministicResults.weights.data[criterion.id]}}</td>
+          <td ng-repeat="criterion in aggregateState.problem.criteria">{{deterministicResults.weights.data[criterion.id] | number}}</td>
         </tr>
       </tbody>
     </table>

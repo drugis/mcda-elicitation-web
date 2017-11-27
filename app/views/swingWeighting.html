@@ -1,9 +1,8 @@
 <!-- First step -->
-<div ng-show="state.step === 1">
+<div ng-if="state.step === 1">
   <div class="grid-x" style="min-height: 450px">
     <div class="cell">
       <h3>{{state.title}} <!-- <inline-help help-key="swing-weighting"></inline-help> --></h3>
-      <h5>Which improvement is most important?</h5>
     </div>
     <div class="cell">
       <table>
@@ -19,8 +18,8 @@
             <td>{{criterion.title}}</td>
             <td>{{criterion.description}}</td>
             <td>{{criterion.unitOfMeasurement}}</td>
-            <td>{{pvf.worst(criterion)}}</td>
-            <td>{{pvf.best(criterion)}}</td>
+            <td>{{pvf.worst(criterion) | number}}</td>
+            <td>{{pvf.best(criterion) | number}}</td>
           </tr>
         </tbody>
       </table>
@@ -28,16 +27,16 @@
     <div class="cell">
       Which of the following improvements is most important?
     </div>
-    <div class="cell" ng-repeat="(key,criterion) in state.problem.criteria">
+    <div class="cell" ng-repeat="(key, criterion) in state.problem.criteria">
       <label>
-        <input type="radio" ng-model="state.choice" value="{{key}}"> {{criterion.pvf.direction}} {{criterion.title}} from {{pvf.worst(criterion)}} {{criterion.unitOfMeasurement}} to {{pvf.best(criterion)}} {{criterion.unitOfMeasurement}}
+        <input type="radio" ng-model="state.mostImportantCriterion" value="{{key}}"> {{criterion.pvf.direction}} {{criterion.title}} from {{pvf.worst(criterion) | number}} {{criterion.unitOfMeasurement}} to {{pvf.best(criterion) | number}} {{criterion.unitOfMeasurement}}
       </label>
     </div>
   </div>
   <div class="grid-x">
     <div class="cell">
-      <button class="button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
-      <button class="button" ng-if="!canSave(state)" ng-click="nextStep(state)" ng-disabled="!canProceed(state)">Next</button>
+      <button class="button" ng-click="cancel()">Cancel</button>
+      <button class="button" ng-click="nextStep(state)" ng-disabled="!canProceed(state)">Next</button>
     </div>
     <div class="cell alert" ng-if="!canProceed(state)">
       Cannot proceed because the most important improvement has not been chosen.
@@ -45,11 +44,10 @@
   </div>
 </div>
 <!-- Second step -->
-<div ng-show="state.step === 2">
+<div ng-if="state.step === 2">
   <div class="grid-x" style="min-height: 450px">
     <div class="cell">
-      <h3>{{title(state.step, state.total)}}</h3>
-      <h5>How important is one improvement relative to another?</h5>
+      <h3>{{state.title}}</h3>
     </div>
     <div class="cell">
       <table>
@@ -66,33 +64,33 @@
             <td>{{criterion.title}}</td>
             <td>{{criterion.description}}</td>
             <td>{{criterion.unitOfMeasurement}}</td>
-            <td>{{pvf.worst(criterion)}}</td>
-            <td>{{pvf.best(criterion)}}</td>
+            <td>{{pvf.worst(criterion) | number}}</td>
+            <td>{{pvf.best(criterion) | number}}</td>
             <td>{{state.values[key]}}%</td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="cell">
-      You've indicated that improving [[depression]] from [[60]] to [[50]] is the most important (i.e. 100% importance). Now indicate the importance (in % relative to improving [[depression]] by the stated amount) of each other criterion's improvement using the sliders below.
+      You've indicated that improving {{state.problem.criteria[state.mostImportantCriterion].title}} from {{pvf.worst(state.problem.criteria[state.mostImportantCriterion])}} to {{pvf.best(state.problem.criteria[state.mostImportantCriterion])}} is the most important (i.e. it has 100% importance). Now indicate the relative importance (in %) to this improvement of each other criterion's improvement using the sliders below.
     </div>
-    <div class="cell" ng-repeat="(key,criterion) in state.problem.criteria">
-      <div class="grid-x">
-        <div class="cell large-2">
-          {{criterion.pvf.direction}} {{criterion.title}} from {{pvf.worst(criterion)}} {{criterion.unitOfMeasurement}} to {{pvf.best(criterion)}} {{criterion.unitOfMeasurement}}:
-        </div>
-        <div class="cell large-4" ng-if="state.choice===key">
-          <rzslider rz-slider-model="state.values[key]" rz-slider-options="state.sliderOptionsDisabled"></rzslider>
-        </div>
-        <div class="cell large-4" ng-if="state.choice!==key">
-          <rzslider rz-slider-model="state.values[key]" rz-slider-options="state.sliderOptions"></rzslider>
-        </div>
-      </div>
-      <!-- <div class="cell">
-      <p>You have given the following trade-offs:</p>
-      <trade-offs problem="state.problem" preferences="state.intermediate.prefs"></trade-offs>
+    <div class="cell">
       <br>
-    </div> -->
+      <table>
+        <tbody>
+          <tr ng-repeat="(key,criterion) in state.problem.criteria">
+            <td>
+              {{criterion.pvf.direction}} {{criterion.title}} from {{pvf.worst(criterion) | number}} {{criterion.unitOfMeasurement}} to {{pvf.best(criterion) | number}} {{criterion.unitOfMeasurement}}
+            </td>
+            <td ng-if="state.mostImportantCriterion === key" style="width:50%">
+              <rzslider rz-slider-model="state.values[key]" rz-slider-options="state.sliderOptionsDisabled"></rzslider>
+            </td>
+            <td ng-if="state.mostImportantCriterion !== key" style="width:50%">
+              <rzslider rz-slider-model="state.values[key]" rz-slider-options="state.sliderOptions"></rzslider>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div class="grid-x">
       <div class="cell">

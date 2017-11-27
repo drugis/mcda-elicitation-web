@@ -20,7 +20,7 @@ define(function() {
       resets: ['criteria-trade-offs']
     }, {
       id: 'ordinal-swing',
-      title: 'Ordinal Swing Elicitation',
+      title: 'Ranking',
       controller: 'OrdinalSwingController',
       templateUrl: 'ordinalSwing.html',
       activeTab: 'preferences',
@@ -36,7 +36,7 @@ define(function() {
       resets: ['criteria-trade-offs']
     }, {
       id: 'interval-swing',
-      title: 'Interval Swing Elicitation',
+      title: 'Imprecise Matching',
       controller: 'IntervalSwingController',
       templateUrl: 'intervalSwing.html',
       activeTab: 'preferences',
@@ -44,7 +44,7 @@ define(function() {
       resets: ['non-ordinal-preferences']
     }, {
       id: 'exact-swing',
-      title: 'Exact Swing Elicitation',
+      title: 'Exact Matching',
       controller: 'ExactSwingController',
       templateUrl: 'exactSwing.html',
       activeTab: 'preferences',
