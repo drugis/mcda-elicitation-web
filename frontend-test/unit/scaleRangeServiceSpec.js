@@ -27,6 +27,17 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
         expect(result.sliderOptions.restrictedRange.from).toEqual(-16.123);
         expect(result.sliderOptions.restrictedRange.to).toEqual(-12.123);
       }));
+      it('should work for fractional/small ranges', inject(function(ScaleRangeService) {
+        var criterionScale = [0, 1];
+        var from = 0.17791;
+        var to = 0.25323;
+        var criterionRange = [from, to];
+
+        var result = ScaleRangeService.calculateScales(criterionScale, from, to, criterionRange);
+        expect(result.sliderOptions.floor).toEqual(0.1);
+        expect(result.sliderOptions.ceil).toEqual(0.30000000000000004);
+        
+      }));
     });
 
     describe('niceFrom', function() {
@@ -146,7 +157,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
                 floor: 0,
                 ceil: 40,
                 step: 0.4,
-                precision: 2,
+                precision: 50,
                 noSwitching: true
               }
             },
@@ -159,7 +170,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
                 floor: 10,
                 ceil: 40,
                 step: 0.3,
-                precision: 2,
+                precision: 50,
                 noSwitching: true
               }
             }
@@ -167,10 +178,16 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
         };
         expect(typeof result.scaleState.headacheId.increaseFrom).toBe('function');
         expect(typeof result.scaleState.headacheId.increaseTo).toBe('function');
-        expect(result.scaleState.headacheId.sliderOptions).toEqual(expectedResult.scaleState.headacheId.sliderOptions);
+        expect(result.scaleState.headacheId.sliderOptions.restrictedRange).toEqual(expectedResult.scaleState.headacheId.sliderOptions.restrictedRange);
+        expect(result.scaleState.headacheId.sliderOptions.floor).toEqual(expectedResult.scaleState.headacheId.sliderOptions.floor);
+        expect(result.scaleState.headacheId.sliderOptions.ceil).toEqual(expectedResult.scaleState.headacheId.sliderOptions.ceil);
+        expect(result.scaleState.headacheId.sliderOptions.step).toEqual(expectedResult.scaleState.headacheId.sliderOptions.step);
         expect(typeof result.scaleState.nauseaId.increaseFrom).toBe('function');
         expect(typeof result.scaleState.nauseaId.increaseTo).toBe('function');
-        expect(result.scaleState.nauseaId.sliderOptions).toEqual(expectedResult.scaleState.nauseaId.sliderOptions);
+        expect(result.scaleState.nauseaId.sliderOptions.restrictedRange).toEqual(expectedResult.scaleState.nauseaId.sliderOptions.restrictedRange);
+        expect(result.scaleState.nauseaId.sliderOptions.floor).toEqual(expectedResult.scaleState.nauseaId.sliderOptions.floor);
+        expect(result.scaleState.nauseaId.sliderOptions.ceil).toEqual(expectedResult.scaleState.nauseaId.sliderOptions.ceil);
+        expect(result.scaleState.nauseaId.sliderOptions.step).toEqual(expectedResult.scaleState.nauseaId.sliderOptions.step);
         expect(result.choices).toEqual(expectedResult.choices);
       }));
     });
