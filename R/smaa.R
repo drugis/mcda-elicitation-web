@@ -177,27 +177,16 @@ run_sensitivityWeightPlot <- function(params) {
   meas <- genMedianMeasurements(params)
   weights <- genRepresentativeWeights(params)
   
-  weight.crit <- seq(0,1,length.out=11)
+  index <- which(names(weights)==crit)
   
+  weight.crit <- seq(0,1,length.out=11)
   total.value <- c()
+  
   for (value in weight.crit) {
-    
-    n <- length(weights)
-    lhs <- rep(0,n)
-    lhs[which(names(weights)==crit)] <- 1
-    constr <- list(constr=lhs,dir="=",rhs=value)
-    constr <- mergeConstraints(constr,simplexConstraints(n)) 
-    
-    for (i in names(params$criteria)) { # Keep the ratio between the other criteria weights fixed
-      for (j in names(params$criteria)) {
-        if (j>i & i!=crit & j!=crit) {
-          constr <- mergeConstraints(constr,exactRatioConstraint(n,which(names(weights)==i),which(names(weights)==j),weights[i]/weights[j]))
-        }
-      }
-    }
-    
-    cur.weights <- as.numeric(hitandrun(constr,n.samples=1))
-    names(cur.weights) <- names(params$criteria)
+ 
+    adjust <- (1-value)/sum(weights[-index])
+    cur.weights <- adjust*weights
+    cur.weights[index] <- value
     
     valueProfiles <- calculateTotalValue(params,meas,cur.weights)
     total.value <- cbind(total.value,rowSums(valueProfiles))
