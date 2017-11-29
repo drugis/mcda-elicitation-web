@@ -1,8 +1,8 @@
 'use strict';
 define(['lodash', 'angular'], function(_) {
-  var dependencies = ['intervalHull'];
+  var dependencies = ['intervalHull', 'numberFilter'];
 
-  var ScaleRangeService = function(intervalHull) {
+  var ScaleRangeService = function(intervalHull, numberFilter) {
 
     function log10(x) {
       return Math.log(x) / Math.log(10);
@@ -70,8 +70,11 @@ define(['lodash', 'angular'], function(_) {
           floor: niceFrom(from),
           ceil: niceTo(to),
           step: (niceFrom(to) - niceTo(from)) / 100,
-          precision: 2,
-          noSwitching: true
+          precision: 50,
+          noSwitching: true,
+          translate: function(value){
+            return numberFilter(value);
+          }
         }
       };
     }
