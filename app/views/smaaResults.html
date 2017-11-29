@@ -15,6 +15,10 @@
   <br>
   <div class="grid-x underlined-div">
     <div class="cell">
+      <rank-acceptability-plot problem="state.problem">
+      </rank-acceptability-plot>
+    </div>
+    <div class="cell">
       <h4>Rank acceptabilities <inline-help help-key="rank-acceptabilities"></inline-help></h4>
     </div>
     <div class="cell large-2 large-offset-9">
@@ -22,12 +26,12 @@
         <i class="fa fa-clipboard"></i> Copy to clipboard
       </button>
     </div>
-    <div class="cell">
-      <rank-acceptability-plot problem="state.problem">
+    <div class="cell large-6">
+      <div export file-name="rank-acceptability-plot" style="width: 400px; height: 400px">
         <rank-plot value="state.results.ranks.data" stacked="true" problem="state.problem"></rank-plot>
-      </rank-acceptability-plot>
+      </div>
     </div>
-    <div class="cell">
+    <div class="cell large-6">
       <table id="ranktable">
         <thead>
           <tr>
@@ -37,7 +41,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="(key, alternative) in state.problem.alternatives">
-            <td>{{::alternative.title}}</td>
+            <td>{{alternative.title}}</td>
             <td ng-repeat="rank in state.results.ranks.data[key] track by $index" class="heat">
               {{::rank | number}}
             </td>
@@ -56,7 +60,7 @@
           </option>
         </select>
         <div style="width: 400px; height: 350px">
-          <bar-chart value="state.alternativesByRank(state)"></bar-chart>
+          <bar-chart value="state.alternativesByRank(state)" problem="state.problem"></bar-chart>
         </div>
       </div>
     </div>

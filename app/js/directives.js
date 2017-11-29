@@ -31,8 +31,6 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
             .attr('width', '100%')
             .attr('height', '100%');
 
-          // var dim = getParentDimension(element);// using 400 400 atm
-
           function rankGraphData(data) {
             var result = [];
             _.each(_.toPairs(data), function(el) {
@@ -92,7 +90,8 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
         restrict: 'E',
         scope: {
           value: '=',
-          parseFn: '='
+          parseFn: '=',
+          problem: '='
         },
         link: function(scope, element) {
 
@@ -102,10 +101,7 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
             .attr('width', '100%')
             .attr('height', '100%');
 
-          scope.$watch('value', function(newVal) {
-            if (!newVal) {
-              return;
-            }
+          function drawPlot(value) {
             nv.addGraph(function() {
               var chart = nv.models.discreteBarChart()
                 .staggerLabels(false)
@@ -119,13 +115,38 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
                   return d.value;
                 });
               chart.tooltip.enabled(false);
-              var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
+              var data = (scope.parseFn && scope.parseFn(value)) || _.identity(value);
               svg.datum(data).transition().duration(100).call(chart);
               svg.style('background', 'white');
 
               nv.utils.windowResize(chart.update);
             });
+          }
+
+          scope.$watch('value', function(newVal) {
+            if (!newVal) {
+              return;
+            }
+            drawPlot(newVal);
           });
+
+          // scope.$watch('problem', function(newProblem, oldProblem) {
+          //   if (!newProblem) {
+          //     return;
+          //   }
+          //   var oldAlts = _.toPairs(oldProblem.alternatives);
+          //   var newVals = _.map(scope.value[0].values, function(value) {
+          //     var oldAlt = _.find(oldAlts, function(oldAlt) {
+          //       return oldAlt[1].title === value.label;
+          //     });
+          //     var newVal = _.cloneDeep(value);
+          //     newVal.label = newProblem.alternatives[oldAlt[0]].title;
+          //     return newVal;
+          //   });
+          //   scope.problem = newProblem;
+          //   scope.value[0].values = newVals;
+          //   drawPlot(scope.value);
+          // }, true);
         }
       };
     });
@@ -156,7 +177,7 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
 
             var chart = nv.models.lineChart().width(dim.width).height(dim.height);
 
-            chart.useVoronoi(true); //         ??
+            chart.useVoronoi(true);
 
             if (attrs.showLegend && attrs.showLegend === 'false') {
               chart.showLegend(false);
@@ -391,35 +412,29 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
         link: function(scope) {
           scope.alternatives = _.cloneDeep(scope.problem.alternatives);
           var letterValue = 65;
-          _.forEach(scope.problem.alternatives, function(alternative){
+          _.forEach(scope.problem.alternatives, function(alternative) {
             alternative.title = String.fromCharCode(letterValue);
             letterValue++;
           });
         },
-        template: 
-        '<div class="grid-x">' +
+        template: '<div class="grid-x">' +
           '<div class="cell large-6">' +
-            '<div export file-name="\'rank-acceptability-plot\'" style="width: 400px; height: 400px">' +
-              '<ng-transclude></ng-transclude>' +
-            '</div>' +
+          '<table>' +
+          '<thead>' +
+          '<tr>' +
+          '<th>Alternative</th>' +
+          '<th>In plot</th>' +
+          '</tr>' +
+          '</thead>' +
+          '<tbody>' +
+          '<tr ng-repeat="(key,alternative) in alternatives">' +
+          '<td>{{alternative.title}}</td>' +
+          '<td><input type="text" ng-model="problem.alternatives[key].title"></td>' +
+          '</tr>' +
+          '</tbody>' +
+          '</table>' +
           '</div>' +
-          '<div class="cell large-6">' + 
-            '<table>' + 
-              '<thead>' + 
-                '<tr>' + 
-                  '<th>Alternative</th>' + 
-                  '<th>In plot</th>' +
-                '</tr>' + 
-              '</thead>' +
-              '<tbody>' + 
-                '<tr ng-repeat="(key,alternative) in alternatives">' +
-                  '<td>{{alternative.title}}</td>' +
-                  '<td><input type="text" ng-model="problem.alternatives[key].title"></td>' +
-                '</tr>' +
-              '</tbody>' +
-            '</table>' + 
-          '</div>' +
-        '</div>'
+          '</div>'
       };
     });
 
