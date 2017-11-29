@@ -1,5 +1,5 @@
 <div class="grid-x">
-  <div class="cell" ng-if="hasTradeoffs">
+  <div class="cell" ng-if="hasTradeoffs && aggregateState.problem.criteria">
     <ul class="no-bullet">
       <li ng-repeat="criterion in aggregateState.problem.criteria">
         <span mathjax-bind="criterion.w"></span>: {{::criterion.title}} ({{::pvf.worst(criterion) | number}} &rarr; {{::pvf.best(criterion) | number}})
