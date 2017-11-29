@@ -247,14 +247,14 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
             criteria: {
               critId2: {
                 id: 'critId2',
-                w: 'w_1',
+                w: 'w_{1}',
                 pvf: {
                   range: [2, 3]
                 }
               },
               critId4: {
                 id: 'critId4',
-                w: 'w_2',
+                w: 'w_{2}',
                 pvf: {
                   range: [6, 7]
                 }

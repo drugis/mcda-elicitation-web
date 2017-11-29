@@ -69,7 +69,7 @@ define(['lodash', 'angular'], function(_) {
           },
           floor: niceFrom(from),
           ceil: niceTo(to),
-          step: (niceFrom(to) - niceTo(from)) / 100,
+          step: Math.abs(niceTo(to) - niceFrom(from)) / 100,
           precision: 50,
           noSwitching: true,
           translate: function(value){

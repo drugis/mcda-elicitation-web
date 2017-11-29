@@ -35,7 +35,7 @@ define(['lodash', 'angular'], function(_, angular) {
         return _.sortBy(_.map(_.toPairs(criteria), function(crit, idx) {
           return _.extend({}, crit[1], {
             id: crit[0],
-            w: 'w_' + (idx + 1)
+            w: 'w_{' + (idx + 1) + '}'
           });
         }), 'w');
       };
