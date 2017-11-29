@@ -54,14 +54,14 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
             upper: bounds[1]
           },
           sliderOptions: {
-            floor: bounds[0] ,
+            floor: bounds[0],
             ceil: bounds[1],
             step: Math.abs(bounds[0] - bounds[1]) / 100,
             precision: 50,
             noSwitching: true,
-          translate: function(value){
-            return numberFilter(value);
-          }
+            translate: function(value) {
+              return numberFilter(value);
+            }
           }
         };
       }
