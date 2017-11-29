@@ -59,8 +59,8 @@
     "text": "The effects table shows the size of the effects on each criterion for each alternative. In the case of a known distribution of an effect the values shown are the median value and the 95% credible interval. If the effect is an exact distribution value only that value is shown.",
     "link": "/manual.html#mcda-preparing-dataset"
   },
-  "exact-swing": {
-    "title": "Exact SWING weighting",
+  "exact-matching": {
+    "title": "Exact Matching",
     "text": "Elicitation of the user's exact trade-off weights between the different criteria. This results in exact weight ratios between all the criteria, e.g. increasing effectiveness by 5% is equally desirable to decreasing mortality by 10%.",
     "link": "/manual.html#mcda-value-tradeoffs"
   },
@@ -69,15 +69,15 @@
     "text": "Whether or not an increase in the criterion is seen as favorable.",
     "link": "/manual.html#mcda-preparing-dataset"
   },
+  "imprecise-matching": {
+    "title": "Imprecise Matching",
+    "text": "Elicitation of the user's weight trade-offs between the different criteria, via the interval method. This method allows specification of an interval (rather than an exact value) where changes to two criteria are equivalent. This results in weight ratios between all the criteria, e.g. increasing effectiveness by 5-10% is equally desirable to decreasing mortality by 10-20%.",
+    "link": "/manual.html#mcda-value-tradeoffs"
+  },
   "incomplete-workspaces": {
     "title": "Incomplete workspaces",
     "text": "The process of manually creating a workspace can be paused at any point. This list shows those unfinished workspaces.",
     "link": "/manual.html#mcda-preparing-dataset"
-  },
-  "interval-swing": {
-    "title": "Interval SWING weighting",
-    "text": "Elicitation of the user's  weigh trade-offs between the different criteria, via the interval method. This method allows specification of an interval (rather than an exact value) where changes to two criteria are equivalent. This results in weight ratios between all the criteria, e.g. increasing effectiveness by 5-10% is equally desirable to decreasing mortality by 10-20%.",
-    "link": "/manual.html#mcda-value-tradeoffs"
   },
   "mcda-input-method": {
     "title": "Input method",
@@ -104,8 +104,8 @@
     "text": "A section that allows exploring of the sensitivity of the results by allowing only one thing to change.",
     "link": "/manual.html#mcda-deterministic-results"
   },
-  "ordinal-swing": {
-    "title": "Ordinal SWING weighting",
+  "ranking": {
+    "title": "Ranking",
     "text": "Elicitation of the user's ordinal ranking of the weight of the included criteria.",
     "link": "/manual.html#mcda-value-tradeoffs"
   },
@@ -146,7 +146,7 @@
   },
   "scenario": {
     "title": "Scenario",
-    "text": "A scenario is a collection of preferences to feed into the MCDA models. This consists of a partial value function for each criterion, and an optional set of trade-offs (ordinal swing, exact swing or interval swing).",
+    "text": "A scenario is a collection of preferences to feed into the MCDA models. This consists of a partial value function for each criterion, and an optional set of weight preferences (swing weighting, ranking, exact matching or imprecise matching).",
     "link": ""
   },
   "smaa-results": {
@@ -169,6 +169,11 @@
     "text": "On which time scale the survival data are reported.",
     "link": "/manual.html#mcda-preparing-dataset"
   },
+  "swing-weighting": {
+    "title": "Swing Weighting",
+    "text": "Elicitation of the user's weight trade-offs between the different criteria using swing weighting. This method sets weights by choosing one criterion as most important to be improved, and allows the user to scale the other criteria accordingly.",
+    "link": "/manual.html#mcda-value-tradeoffs"
+  },
   "theoretical-range": {
     "title": "Theoretical range",
     "text": "The theoretically maximal range in which effect sizes can lie",
@@ -184,9 +189,9 @@
     "text": "How valuable (i.e. helpful for each criterion) each alternative is overall.",
     "link": "/manual.html#deterministic-results"
   },
-  "trade-offs": {
-    "title": "Trade-offs",
-    "text": "Trade-offs indicate what weight the user places on improving each criterion. First, criteria are ordered by weight of importance, and then the trade-offs can be elicited, i.e. \"How much improvement on criterion A would be an equivalent trade-off for some improvement on criterion B?\"",
+  "weights": {
+    "title": "Weights",
+    "text": "Weights indicate how much importance the user places on improving each criterion. Weights can be specified directly through swing weighting. Alternatively, they can be derived through a series of ranking and matching questions.", 
     "link": "/manual.html#mcda-value-tradeoffs"
   },
   "treatment": {

@@ -19,7 +19,7 @@ define(['lodash', 'angular'], function(_) {
     // init
     $scope.subProblems = subProblems;
     $scope.originalScales = _.cloneDeep(scales);
-    $scope.scales = _.cloneDeep(scales); //FIXME // ??
+    $scope.scales = _.cloneDeep(scales);
     initSubProblem(_.cloneDeep(subProblem), _.cloneDeep(problem));
     checkDuplicateTitle($scope.subProblemState.title);
     $scope.isExact = _.partial(SubProblemService.isExact, $scope.problem.performanceTable);
@@ -28,12 +28,12 @@ define(['lodash', 'angular'], function(_) {
     function isASliderInvalid() {
       $scope.invalidSlider = false;
       _.forEach(_.keys($scope.criteria), function(criterionKey) {
-        // check if there are two values at the same side of the red bar
-        if (
-          ($scope.choices[criterionKey].from <= $scope.scalesState[criterionKey].sliderOptions.restrictedRange.from &&
-            $scope.choices[criterionKey].to <= $scope.scalesState[criterionKey].sliderOptions.restrictedRange.from) ||
-          ($scope.choices[criterionKey].from >= $scope.scalesState[criterionKey].sliderOptions.restrictedRange.to &&
-            $scope.choices[criterionKey].to >= $scope.scalesState[criterionKey].sliderOptions.restrictedRange.to) ) {
+        var from = $scope.choices[criterionKey].from;
+        var to = $scope.choices[criterionKey].to;
+        var restrictedFrom = $scope.scalesState[criterionKey].sliderOptions.restrictedRange.from;
+        var restrictedTo = $scope.scalesState[criterionKey].sliderOptions.restrictedRange.to;
+        // check if there is a value inside or at the wrong side of the red area
+        if (from > restrictedFrom || to < restrictedTo) {
           $scope.invalidSlider = true;
         }
       });
@@ -90,6 +90,14 @@ define(['lodash', 'angular'], function(_) {
       var stateAndChoices = ScaleRangeService.getScaleStateAndChoices($scope.observedScales, $scope.criteria);
       $scope.scalesState = stateAndChoices.scaleState;
       $scope.choices = stateAndChoices.choices;
+      _.forEach($scope.choices, function(choice, key) {
+        if (choice.from > $scope.scalesState[key].sliderOptions.restrictedRange.from) {
+          choice.from = $scope.scalesState[key].sliderOptions.restrictedRange.from;
+        }
+        if (choice.to < $scope.scalesState[key].sliderOptions.restrictedRange.to) {
+          choice.to = $scope.scalesState[key].sliderOptions.restrictedRange.to;
+        }
+      });
       $scope.$watch('choices', isASliderInvalid, true);
     }
 

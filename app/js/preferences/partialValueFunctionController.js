@@ -9,7 +9,7 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
     'currentScenario',
     'taskDefinition',
     'PartialValueFunctionService',
-    'TaskDependencies'
+    'numberFilter'
   ];
 
   var PartialValueFunctionController = function(
@@ -21,7 +21,7 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
     currentScenario,
     taskDefinition,
     PartialValueFunctionService,
-    TaskDependencies) {
+    numberFilter) {
     // functions
     $scope.save = save;
     $scope.canSave = canSave;
@@ -101,9 +101,12 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
           sliderOptions: {
             floor: Math.min(from, to),
             ceil: Math.max(from, to),
-            precision: 2,
+            precision: 50,
             step: Math.abs(to - from) / 100,
-            rightToLeft: to < from
+            rightToLeft: to < from,
+            translate: function(value) {
+              return numberFilter(value);
+            }
           }
         });
       }
@@ -121,8 +124,6 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
           criteria: criteria
         }
       };
-
-      // currentScenario.state = TaskDependencies.remove(taskDefinition, currentScenario.state);
       currentScenario.$save($stateParams, function(scenario) {
         $scope.$emit('elicit.resultsAccessible', scenario);
         $state.go('preferences');

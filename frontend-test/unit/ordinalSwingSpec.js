@@ -49,7 +49,7 @@ define(['angular-mocks',
       describe('initialize', function() {
         it('should be described as ordinal', function() {
           expect($scope1.state).toBeDefined();
-          expect($scope1.state.title).toEqual('Ordinal SWING weighting (1/2)');
+          expect($scope1.state.title).toEqual('Ranking (1/2)');
         });
 
         it('should not be the final state', function() {
@@ -112,7 +112,7 @@ define(['angular-mocks',
             'Bleed': 0.1
           });
           expect($scope1.state.choice).toBeUndefined();
-          expect($scope1.state.title).toEqual('Ordinal SWING weighting (2/2)');
+          expect($scope1.state.title).toEqual('Ranking (2/2)');
 
           $scope2.state.choice = 'Dist DVT';
           $scope2.nextStep($scope2.state);

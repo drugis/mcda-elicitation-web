@@ -43,17 +43,40 @@ define(['lodash', 'angular'], function(_, angular) {
     });
 
     function initState() {
-      if (!$stateParams.inProgressId) {
+      if ($stateParams.workspace) {
+        // copying existing workspace
+        var oldWorkspace = $stateParams.workspace;
+        $scope.state = {
+          oldWorkspace: oldWorkspace,
+          useFavorability: oldWorkspace.problem.valueTree ? true : false,
+          step: 'step1',
+          isInputDataValid: false,
+          description: oldWorkspace.problem.description,
+          criteria: ManualInputService.copyWorkspaceCriteria(oldWorkspace),
+          alternatives: _.map(oldWorkspace.problem.alternatives, function(alternative) {
+            return alternative;
+          })
+        };
+        findUnknownCriteria($scope.state.criteria);
+        favorabilityChanged();
+        $scope.dirty = true;
+        setStateWatcher();
+      } else if (!$stateParams.inProgressId) {
+        // new workspace
         $scope.state = {
           step: 'step1',
           isInputDataValid: false,
+          useFavorability: false,
           criteria: [],
-          treatments: []
+          alternatives: []
         };
         setStateWatcher();
       } else {
+        // unfinished workspace
         InProgressResource.get($stateParams).$promise.then(function(response) {
           $scope.state = response.state;
+          findUnknownCriteria($scope.state.criteria);
+          favorabilityChanged();
           setStateWatcher();
         });
       }
@@ -68,16 +91,8 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function resetData() {
-      $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.treatments);
-      $scope.state.studyType = resetStudyTypes();
+      $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives);
       $scope.state.isInputDataValid = false;
-    }
-
-    function resetStudyTypes() {
-      return _.reduce($scope.state.criteria, function(accum, criterion) {
-        accum[criterion.hash] = 'dichotomous';
-        return accum;
-      }, {});
     }
 
     function resetRow(hash) {
@@ -88,22 +103,23 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function addTreatment(title) {
-      $scope.state.treatments.push({
+      $scope.state.alternatives.push({
         title: title
       });
       $scope.treatmentInputField.value = '';
     }
 
-    function removeTreatment(treatment) {
-      $scope.state.treatments = _.reject($scope.state.treatments, ['title', treatment.title]);
+    function removeTreatment(alternative) {
+      $scope.state.alternatives = _.reject($scope.state.alternatives, ['title', alternative.title]);
     }
 
     function isDuplicateTitle(title) {
-      return _.find($scope.state.treatments, ['title', title]);
+      return _.find($scope.state.alternatives, ['title', title]);
     }
 
     function removeCriterion(criterion) {
       $scope.state.criteria = _.reject($scope.state.criteria, ['title', criterion.title]);
+      findUnknownCriteria($scope.state.criteria);
     }
 
     function openCriterionModal(criterion) {
@@ -120,10 +136,14 @@ define(['lodash', 'angular'], function(_, angular) {
                 removeCriterion(criterion);
               }
               $scope.state.criteria.push(newCriterion);
+              findUnknownCriteria($scope.state.criteria);
             };
           },
           oldCriterion: function() {
             return criterion;
+          },
+          useFavorability: function() {
+            return $scope.state.useFavorability;
           }
         }
       });
@@ -141,21 +161,27 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function goToStep2() {
       $scope.state.step = 'step2';
-      $scope.state.treatments = _.map($scope.state.treatments, function(treatment) {
-        return addKeyHashToObject(treatment, treatment.title);
+      $scope.state.alternatives = _.map($scope.state.alternatives, function(alternative) {
+        return addKeyHashToObject(alternative, alternative.title);
       });
       $scope.state.criteria = _.map($scope.state.criteria, function(criterion) {
         return addKeyHashToObject(criterion, criterion.title);
       });
-      $scope.state.studyType = $scope.state.studyType ? $scope.state.studyType : resetStudyTypes();
-      $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.treatments, $scope.state.inputData);
+      $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives, $scope.state.inputData);
+      if ($scope.state.oldWorkspace) {
+        $scope.state.inputData = ManualInputService.createInputFromOldWorkspace($scope.state.criteria,
+          $scope.state.alternatives, $scope.state.oldWorkspace, $scope.state.inputData);
+        checkInputData();
+      }
     }
 
     function createProblem() {
-      var problem = ManualInputService.createProblem($scope.state.criteria, $scope.state.treatments,
-        $scope.state.title, $scope.state.description, $scope.state.inputData);
+      var problem = ManualInputService.createProblem($scope.state.criteria, $scope.state.alternatives,
+        $scope.state.title, $scope.state.description, $scope.state.inputData, $scope.state.useFavorability);
       WorkspaceResource.create(problem).$promise.then(function(workspace) {
-        InProgressResource.delete($stateParams);
+        if ($stateParams.inProgressId) {
+          InProgressResource.delete($stateParams);
+        }
         $scope.dirty = false;
         $state.go('evidence', {
           workspaceId: workspace.id,
@@ -179,6 +205,19 @@ define(['lodash', 'angular'], function(_, angular) {
       }
     }
 
+    function findUnknownCriteria(criteria) {
+      $scope.hasUnknownDataType = _.find(criteria, function(criterion) {
+        return criterion.dataType === 'Unknown';
+      });
+    }
+
+    $scope.favorabilityChanged = favorabilityChanged;
+
+    function favorabilityChanged() {
+      $scope.hasMissingFavorability = _.find($scope.state.criteria, function(criterion) {
+        return criterion.isFavorable === undefined;
+      });
+    }
   };
   return dependencies.concat(ManualInputController);
 });

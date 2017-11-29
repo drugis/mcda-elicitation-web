@@ -4,12 +4,14 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
     var dependencies = ['$scope', '$state', '$stateParams', '$injector', '$timeout',
       'currentScenario',
       'taskDefinition',
-      'PartialValueFunctionService'
+      'PartialValueFunctionService',
+      'numberFilter'
     ];
     var ExactSwingController = function($scope, $state, $stateParams, $injector, $timeout,
       currentScenario,
       taskDefinition,
-      PartialValueFunctionService
+      PartialValueFunctionService,
+      numberFilter
     ) {
       $scope.title = title;
       $scope.initialize = initialize;
@@ -20,7 +22,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       $scope.pvf = pvf;
 
       function title(step, total) {
-        var base = 'Exact SWING weighting';
+        var base = 'Exact Matching';
         if (step > total) {
           return base + ' (DONE)';
         }
@@ -36,10 +38,13 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
           criterionB: criterionB,
           choice: (bounds[0] + bounds[1]) / 2,
           sliderOptions: {
-            floor: Math.ceil(bounds[0] * 1000) / 1000,
-            ceil: Math.floor(bounds[1] * 1000) / 1000,
+            floor: bounds[0],
+            ceil: bounds[1],
             step: Math.abs(bounds[0] - bounds[1]) / 100,
-            precision: 2
+            precision: 50,
+            translate: function(value) {
+              return numberFilter(value);
+            }
           }
         };
         return state;

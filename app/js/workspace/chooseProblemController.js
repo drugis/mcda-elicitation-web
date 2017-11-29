@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'],function(_) {
+define(['lodash'], function(_) {
   var dependencies = ['$scope', '$state', '$modal', 'mcdaRootPath', 'WorkspaceResource', 'InProgressResource'];
 
   var ChooseProblemController = function($scope, $state, $modal, mcdaRootPath, WorkspaceResource, InProgressResource) {
@@ -7,6 +7,7 @@ define(['lodash'],function(_) {
     $scope.openChooseProblemModal = openChooseProblemModal;
     $scope.deleteWorkspace = deleteWorkspace;
     $scope.deleteInProgress = deleteInProgress;
+    $scope.copyWorkspace = copyWorkspace;
 
     // init
     $scope.model = {};
@@ -59,6 +60,12 @@ define(['lodash'],function(_) {
       });
     }
 
+    function copyWorkspace(workspace) {
+      $state.go('manualInput', {
+        workspace: workspace
+      });
+    }
+
     function deleteInProgress(id, title) {
       $modal.open({
         templateUrl: mcdaRootPath + 'js/workspace/deleteWorkspace.html',
@@ -72,7 +79,7 @@ define(['lodash'],function(_) {
           inProgressId: function() {
             return id;
           },
-          title: function(){
+          title: function() {
             return title;
           }
         }

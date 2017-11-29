@@ -9,7 +9,8 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       '$timeout',
       'currentScenario',
       'taskDefinition',
-      'PartialValueFunctionService'
+      'PartialValueFunctionService',
+      'numberFilter'
     ];
     var IntervalSwingController = function(
       $scope,
@@ -19,14 +20,15 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
       $timeout,
       currentScenario,
       taskDefinition,
-      PartialValueFunctionService
+      PartialValueFunctionService,
+      numberFilter
     ) {
       $scope.pvf = PartialValueFunctionService;
       $scope.canSave = canSave;
       $scope.save = save;
 
       function title(step, total) {
-        var base = 'Interval SWING weighting';
+        var base = 'Imprecise Matching';
         if (step > total) {
           return base + ' (DONE)';
         }
@@ -48,15 +50,18 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/util', 'mcda/controllers/
             return increasing ? this.choice.lower : this.choice.upper;
           },
           choice: {
-            lower: Math.ceil(bounds[0] * 100) / 100,
-            upper: Math.floor(bounds[1] * 100) / 100
+            lower: bounds[0],
+            upper: bounds[1]
           },
           sliderOptions: {
-            floor: Math.ceil(bounds[0] * 1000) / 1000,
-            ceil: Math.floor(bounds[1] * 1000) / 1000,
+            floor: bounds[0],
+            ceil: bounds[1],
             step: Math.abs(bounds[0] - bounds[1]) / 100,
-            precision: 3,
-            noSwitching: true
+            precision: 50,
+            noSwitching: true,
+            translate: function(value) {
+              return numberFilter(value);
+            }
           }
         };
       }

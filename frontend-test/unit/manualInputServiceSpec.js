@@ -159,7 +159,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
             }
           }
         };
-        var result = manualInputService.createProblem(criteria, treatments, title, description, performanceTable);
+        var result = manualInputService.createProblem(criteria, treatments, title, description, performanceTable, true);
         var expectedResult = {
           title: title,
           description: description,
@@ -257,13 +257,13 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
 
         var performanceTable = {
           'survival mean': {
-            'treatment1': {
+            treatment1: {
               type: 'dsurv',
               events: 3,
               exposure: 5,
               hash: 'treatment1'
             },
-            'treatment2': {
+            treatment2: {
               type: 'dsurv',
               events: 3,
               exposure: 5,
@@ -277,7 +277,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
               exposure: 5,
               hash: 'treatment1'
             },
-            'treatment2': {
+            treatment2: {
               type: 'dsurv',
               events: 3,
               exposure: 5,
@@ -286,7 +286,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           }
         };
         //
-        var result = manualInputService.createProblem(criteria, treatments, title, description, performanceTable);
+        var result = manualInputService.createProblem(criteria, treatments, title, description, performanceTable, true);
         //
         var expectedResult = {
           title: title,
@@ -750,5 +750,316 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
       });
     });
 
+    describe('createInputFromOldWorkspace', function() {
+      it('should calculate the effects table input parameters from the performanceTable of the old workspace', function() {
+        var criteria = [{
+          title: 'criterion 1',
+          hash: 'c1',
+          dataSource: 'exact'
+        }, {
+          title: 'criterion 2',
+          hash: 'c2',
+          dataSource: 'study',
+          dataType: 'dichotomous'
+        }, {
+          title: 'criterion 3',
+          hash: 'c3',
+          dataSource: 'study',
+          dataType: 'continuous'
+        }, {
+          title: 'criterion 4',
+          hash: 'c4',
+          dataSource: 'study',
+          dataType: 'continuous'
+        }, {
+          title: 'criterion 5',
+          hash: 'c5',
+          dataSource: 'study',
+          dataType: 'survival'
+        }];
+        var alternatives = [{
+          title: 'alternative 1',
+          hash: 'a1'
+        }];
+        var oldWorkspace = {
+          problem: {
+            criteria: {
+              crit1: {
+                title: 'criterion 1'
+              },
+              crit2: {
+                title: 'criterion 2'
+              },
+              crit3: {
+                title: 'criterion 3'
+              },
+              crit4: {
+                title: 'criterion 4'
+              },
+              crit5: {
+                title: 'criterion 5'
+              }
+            },
+            alternatives: {
+              alt1: {
+                title: 'alternative 1'
+              }
+            },
+            performanceTable: [{
+              criterion: 'crit1',
+              alternative: 'alt1',
+              performance: {
+                type: 'exact',
+                value: 1337
+              }
+            }, {
+              criterion: 'crit2',
+              alternative: 'alt1',
+              performance: {
+                type: 'dbeta',
+                parameters: {
+                  alpha: 12,
+                  beta: 23
+                }
+              }
+            }, {
+              criterion: 'crit3',
+              alternative: 'alt1',
+              performance: {
+                type: 'dt',
+                parameters: {
+                  dof: 123,
+                  stdErr: 2.3,
+                  mu: 30
+                }
+              }
+            }, {
+              criterion: 'crit4',
+              alternative: 'alt1',
+              performance: {
+                type: 'dnorm',
+                parameters: {
+                  sigma: 1.2,
+                  mu: 23
+                }
+              }
+            }, {
+              criterion: 'crit5',
+              alternative: 'alt1',
+              performance: {
+                type: 'dsurv',
+                parameters: {
+                  alpha: 12.001,
+                  beta: 23.001,
+                  summaryMeasure: 'mean'
+                }
+              }
+            }, ]
+          }
+        };
+        var inputData = {
+          c1: {
+            a1: {
+              type: 'exact',
+              value: undefined
+            }
+          },
+          c2: {
+            a1: {
+              type: 'dbeta',
+              count: undefined,
+              sampleSize: undefined
+            }
+          },
+          c3: {
+            a1: {
+              type: 'dt',
+              mu: undefined,
+              stdErr: undefined,
+              sampleSize: undefined
+            }
+          },
+          c4: {
+            a1: {
+              type: 'dnorm',
+              stdErr: undefined,
+              mu: undefined
+            }
+          },
+          c5: {
+            a1: {
+              type: 'dsurv',
+              events: undefined,
+              exposure: undefined,
+              summaryMeasure: undefined
+            }
+          }
+        };
+        var result = manualInputService.createInputFromOldWorkspace(criteria, alternatives, oldWorkspace, inputData);
+        var expectedResult = {
+          c1: {
+            a1: {
+              type: 'exact',
+              value: 1337,
+              isInvalid: false,
+              label: 'exact(1337)'
+            }
+          },
+          c2: {
+            a1: {
+              type: 'dbeta',
+              count: 11,
+              sampleSize: 33,
+              isInvalid: false,
+              label: 'Beta(12, 23)'
+            }
+          },
+          c3: {
+            a1: {
+              type: 'dt',
+              mu: 30,
+              stdErr: 2.3,
+              sampleSize: 124,
+              isInvalid: false,
+              continuousType: 'SEt',
+              label: 't(30, 2.3, 123)'
+            }
+          },
+          c4: {
+            a1: {
+              type: 'dnorm',
+              mu: 23,
+              stdErr: 1.2,
+              isInvalid: false,
+              continuousType: 'SEnorm',
+              label: 'N(23.000, 1.2)'
+            }
+          },
+          c5: {
+            a1: {
+              type: 'dsurv',
+              events: 12,
+              exposure: 23,
+              summaryMeasure: 'mean',
+              isInvalid: false,
+              label: 'Gamma(12.001, 23.001)',
+              timeScale: undefined
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('copyWorkspaceCriteria', function() {
+      it('should copy the criteria from the oldworkspace to the format used by the rest of the manual input', function() {
+        var workspace = {
+          problem: {
+            criteria: {
+              crit1: {
+                title: 'criterion 1',
+                description: 'bla',
+                source: 'single study',
+                sourceLink: 'http://www.drugis.org'
+              },
+              crit2: {
+                title: 'criterion 2',
+                description: 'bla 2',
+                source: 'single study',
+                sourceLink: 'http://www.drugis.org'
+              },
+              crit3: {
+                title: 'criterion 3',
+                description: 'bla3',
+                source: 'single study',
+                sourceLink: 'http://www.drugis.org'
+              },
+              crit4: {
+                title: 'criterion 4',
+                description: 'bla4',
+                source: 'single study',
+                sourceLink: 'http://www.drugis.org'
+              },
+              crit5: {
+                title: 'criterion 5',
+                description: 'bla5',
+                source: 'single study',
+                sourceLink: 'http://www.drugis.org'
+              }
+            },
+            performanceTable: [{
+              criterion: 'crit1',
+              performance: {
+                type: 'dsurv',
+                parameters: {
+                  summaryMeasure: 'mean',
+                  time: 200,
+                }
+              }
+            }, {
+              criterion: 'crit2',
+              performance: {
+                type: 'dbeta'
+              }
+            }, {
+              criterion: 'crit3',
+              performance: {
+                type: 'dt'
+              }
+            }, {
+              criterion: 'crit4',
+              performance: {
+                type: 'dnorm'
+              }
+            }, {
+              criterion: 'crit5',
+              performance: {
+                type: 'exact'
+              }
+            }]
+          }
+        };
+        var result = manualInputService.copyWorkspaceCriteria(workspace);
+        var expectedResult = [{
+          title: 'criterion 1',
+          description: 'bla',
+          source: 'single study',
+          sourceLink: 'http://www.drugis.org',
+          dataSource: 'study',
+          dataType: 'survival',
+          summaryMeasure: 'mean',
+          timePointOfInterest: 200,
+          timeScale: 'time scale not set'
+        }, {
+          title: 'criterion 2',
+          description: 'bla 2',
+          source: 'single study',
+          sourceLink: 'http://www.drugis.org',
+          dataSource: 'study',
+          dataType: 'dichotomous'
+        }, {
+          title: 'criterion 3',
+          description: 'bla3',
+          source: 'single study',
+          sourceLink: 'http://www.drugis.org',
+          dataSource: 'study',
+          dataType: 'continuous'
+        }, {
+          title: 'criterion 4',
+          description: 'bla4',
+          source: 'single study',
+          sourceLink: 'http://www.drugis.org',
+          dataSource: 'study',
+          dataType: 'continuous'
+        }, {
+          title: 'criterion 5',
+          description: 'bla5',
+          source: 'single study',
+          sourceLink: 'http://www.drugis.org',
+          dataSource: 'exact'
+        }];
+        expect(result).toEqual(expectedResult);
+      });
+    });
   });
 });

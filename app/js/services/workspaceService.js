@@ -116,7 +116,7 @@ define(['lodash', 'angular'], function(_) {
         problem: mergeBaseAndSubProblem(baseProblem, subProblem.definition)
       }, scenario.state);
       _.forEach(newState.problem.criteria, function(criterion, key) {
-        newState.problem.criteria[key] = _.merge({},criterion,baseProblem.criteria[key]);
+        newState.problem.criteria[key] = _.merge({},criterion,_.omit(baseProblem.criteria[key], ['pvf']));
       });
       _.forEach(newState.problem.alternatives, function(alternative, key) {
         newState.problem.alternatives[key] = _.merge({},alternative,baseProblem.alternatives[key]);

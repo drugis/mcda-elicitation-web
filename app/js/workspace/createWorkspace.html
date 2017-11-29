@@ -24,9 +24,8 @@
         </div>
         <div style="margin:25px 0 0 0;">
           <div class="button-group">
-            <button class="button small secondary" ng-click="close()">Cancel</button>
-            <button ng-show="model.choice != 'local'" class="button small success" ng-disabled="!model.choice || isCreating" ng-click="createWorkspace(model.choice)">Create workspace</button>
-            <button ng-show="model.choice == 'local'" class="button small success" ng-disabled="!local.contents || isCreating" ng-click="createWorkspace(model.choice)">Create workspace</button>
+            <button ng-show="model.choice != 'local'" class="button small success" ng-disabled="!model.choice || isCreating" ng-click="createWorkspace(model.choice)">Create</button>
+            <button ng-show="model.choice == 'local'" class="button small success" ng-disabled="!local.contents || isCreating" ng-click="createWorkspace(model.choice)">Create</button>
             </li>
           </div>
         </div>

@@ -10,14 +10,14 @@
         </label>
         <input type="text" ng-model="criterion.title" ng-change="isCreationBlocked()">
       </div>
-      <div class="cell">
+      <div class="cell" ng-if="useFavorability">
         <label>Favorability
           <inline-help help-key="favorability"></inline-help>
         </label>
-        <input type="radio" ng-model="criterion.isFavorable" ng-value="true" id="favorable">
-        <label for="favorable">Favorable</label>
         <input type="radio" ng-model="criterion.isFavorable" ng-value="false" id="not-favorable">
         <label for="not-favorable">Not favorable</label>
+        <input type="radio" ng-model="criterion.isFavorable" ng-value="true" id="favorable">
+        <label for="favorable">Favorable</label>
       </div>
       <div class="cell">
         <label>Data source
@@ -91,8 +91,7 @@
         <input ng-disabled="criterion.source === undefined" type="text" ng-model="criterion.sourceLink">
       </div>
       <div class="cell button-group">
-        <button class="button" ng-disabled="blockedReasons.length" type="submit">{{isAddOperation ? 'Add' : 'Edit'}}</button>
-        <button class="button" type="button" ng-click="cancel()">Cancel</button>
+        <button class="button" ng-disabled="blockedReasons.length" type="submit">{{isAddOperation ? 'Add' : 'Done'}}</button>
       </div>
       <div class="cell" ng-when="blockedReasons.length">
         <em ng-repeat="blockedReason in blockedReasons" class="alert">{{blockedReason}}<br /></em>

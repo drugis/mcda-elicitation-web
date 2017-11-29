@@ -98,11 +98,16 @@ define(['lodash', 'angular'], function(_) {
     };
 
     // Exposed functions
-    function createProblem(criteria, treatments, title, description, performanceTable) {
+    function createProblem(criteria, treatments, title, description, performanceTable, useFavorability) {
       var problem = {
         title: title,
         description: description,
-        valueTree: {
+        criteria: buildCriteria(criteria),
+        alternatives: buildAlternatives(treatments),
+        performanceTable: buildPerformanceTable(performanceTable, criteria, treatments)
+      };
+      if (useFavorability) {
+        problem.valueTree = {
           title: 'Benefit-risk balance',
           children: [{
             title: 'Favourable effects',
@@ -111,11 +116,8 @@ define(['lodash', 'angular'], function(_) {
             title: 'Unfavourable effects',
             criteria: _.map(_.reject(criteria, 'isFavorable'), 'title')
           }]
-        },
-        criteria: buildCriteria(criteria),
-        alternatives: buildAlternatives(treatments),
-        performanceTable: buildPerformanceTable(performanceTable, criteria, treatments)
-      };
+        };
+      }
       return problem;
     }
 
@@ -224,6 +226,86 @@ define(['lodash', 'angular'], function(_) {
       return scale;
     }
 
+    function createInputFromOldWorkspace(criteria, alternatives, oldWorkspace, inputData) {
+      var newInputData = _.cloneDeep(inputData);
+      _.forEach(criteria, function(criterion) {
+        _.forEach(alternatives, function(alternative) {
+          var critKey;
+          _.forEach(oldWorkspace.problem.criteria, function(problemCrit, key) {
+            if (problemCrit.title === criterion.title) {
+              critKey = key;
+            }
+          });
+          var altKey;
+          _.forEach(oldWorkspace.problem.alternatives, function(problemAlt, key) {
+            if (problemAlt.title === alternative.title) {
+              altKey = key;
+            }
+          });
+          var tableEntry = _.find(oldWorkspace.problem.performanceTable, function(tableEntry) {
+            return tableEntry.criterion === critKey && tableEntry.alternative === altKey;
+          });
+          if (tableEntry) {
+            var inputDataCell = _.cloneDeep(newInputData[criterion.hash][alternative.hash]);
+            if (tableEntry.performance.type === 'exact') {
+              inputDataCell.value = tableEntry.performance.value;
+            } else if (tableEntry.performance.type === 'dt') {
+              inputDataCell.sampleSize = tableEntry.performance.parameters.dof + 1;
+              inputDataCell.stdErr = tableEntry.performance.parameters.stdErr;
+              inputDataCell.mu = tableEntry.performance.parameters.mu;
+              inputDataCell.continuousType = 'SEt';
+            } else if (tableEntry.performance.type === 'dnorm') {
+              inputDataCell.stdErr = tableEntry.performance.parameters.sigma;
+              inputDataCell.mu = tableEntry.performance.parameters.mu;
+              inputDataCell.continuousType = 'SEnorm';
+            } else if (tableEntry.performance.type === 'dbeta') {
+              inputDataCell.count = tableEntry.performance.parameters.alpha - 1;
+              inputDataCell.sampleSize = tableEntry.performance.parameters.beta + inputDataCell.count - 1;
+            } else if (tableEntry.performance.type === 'dsurv') {
+              inputDataCell.events = tableEntry.performance.parameters.alpha - 0.001;
+              inputDataCell.exposure = tableEntry.performance.parameters.beta - 0.001;
+              inputDataCell.summaryMeasure = tableEntry.performance.parameters.summaryMeasure;
+              inputDataCell.timeScale = tableEntry.performance.parameters.time;
+            }
+            var distributionData = createDistribution(inputDataCell, criterion);
+            inputDataCell.isInvalid = isInvalidCell(distributionData);
+            inputDataCell.label = inputToString(distributionData);
+            newInputData[criterion.hash][alternative.hash] = inputDataCell;
+          }
+        });
+      });
+      return newInputData;
+    }
+
+    function copyWorkspaceCriteria(workspace) {
+      return _.map(workspace.problem.criteria, function(criterion, key) {
+        var newCrit = _.pick(criterion, ['title', 'description', 'source', 'sourceLink']);
+        if (workspace.problem.valueTree) {
+          newCrit.isFavorable = _.find(workspace.problem.valueTree.children[0].criteria, key) ? true : false;
+        }
+        var tableEntry = _.find(workspace.problem.performanceTable, ['criterion', key]);
+        newCrit.dataSource = tableEntry.performance.type === 'exact' ? 'exact' : 'study';
+        if (newCrit.dataSource === 'study') {
+          if (tableEntry.performance.type === 'dsurv') {
+            // survival
+            newCrit.dataType = 'survival';
+            newCrit.summaryMeasure = tableEntry.performance.parameters.summaryMeasure;
+            newCrit.timePointOfInterest = tableEntry.performance.parameters.time;
+            newCrit.timeScale = 'time scale not set';
+          } else if (tableEntry.performance.type === 'dt' || tableEntry.performance.type === 'dnorm') {
+            // continuous
+            newCrit.dataType = 'continuous';
+          } else if (tableEntry.performance.type === 'dbeta') {
+            // dichotomous
+            newCrit.dataType = 'dichotomous';
+          } else {
+            newCrit.dataType = 'Unknown';
+          }
+        }
+        return newCrit;
+      });
+    }
+
     // Private functions
     function buildCriteria(criteria) {
       var newCriteria = _.map(criteria, function(criterion) {
@@ -281,7 +363,9 @@ define(['lodash', 'angular'], function(_) {
       createDistribution: createDistribution,
       prepareInputData: prepareInputData,
       inputToString: inputToString,
-      isInvalidCell: isInvalidCell
+      isInvalidCell: isInvalidCell,
+      createInputFromOldWorkspace: createInputFromOldWorkspace,
+      copyWorkspaceCriteria: copyWorkspaceCriteria
     };
   };
 
