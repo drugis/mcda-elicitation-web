@@ -6,8 +6,7 @@ define(['angular'], function(angular) {
     $scope.editTitle = editTitle;
     $scope.saveTitle = saveTitle;
     $scope.cancelTitle = cancelTitle;
-    $scope.downloadWorkspace = downloadWorkspace;
-
+    
     // init
     var user = angular.fromJson($cookies.get('LOGGED-IN-USER'));
     $scope.editMode = {
@@ -31,14 +30,6 @@ define(['angular'], function(angular) {
 
     function cancelTitle() {
       $scope.isEditTitleVisible = false;
-    }
-
-    function downloadWorkspace() {
-      var link = document.createElement('a');
-      link.download = 'problem' + $scope.workspace.id + '.json';
-      var data = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify($scope.problem, null, 2));
-      link.href = 'data:' + data;
-      link.click();
     }
   };
 });

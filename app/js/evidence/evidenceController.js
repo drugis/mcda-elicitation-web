@@ -15,6 +15,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.editTherapeuticContext = editTherapeuticContext;
     $scope.editCriterion = editCriterion;
     $scope.editAlternative = editAlternative;
+    $scope.downloadWorkspace = downloadWorkspace;
 
     // init
     $scope.scales = $scope.workspace.scales.observed;
@@ -104,6 +105,14 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
           }
         }
       });
+    }
+
+    function downloadWorkspace() {
+      var link = document.createElement('a');
+      link.download = 'problem' + $scope.workspace.id + '.json';
+      var data = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify($scope.problem, null, 2));
+      link.href = 'data:' + data;
+      link.click();
     }
   };
   return dependencies.concat(EvidenceController);

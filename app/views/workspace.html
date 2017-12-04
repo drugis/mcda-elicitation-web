@@ -3,9 +3,6 @@
     <h3 ng-if="!isEditTitleVisible" class="subheader">
       <span ng-bind="workspace.problem.title"></span>
       <a tooltip="Edit title" tooltip-append-to-body="true" ng-click="editTitle()"><i class="fa fa-edit"></i></a>
-      <a tooltip="Download workspace" tooltip-append-to-body="true" ng-click="downloadWorkspace()">
-        <i class="fa fa-download"></i>
-      </a>
     </h3>
     <div class="grid-x" ng-show="isEditTitleVisible">
       <div class="cell large-8 small-12">
