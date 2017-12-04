@@ -25,7 +25,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.isStandAlone = isMcdaStandalone;
     $scope.references = {
       has: _.find($scope.problem.criteria, function(criterion) {
-          return criterion.source;
+        return criterion.source;
       })
     };
 
