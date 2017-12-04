@@ -114,6 +114,13 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       link.href = 'data:' + data;
       link.click();
     }
+
+    HTMLElement.prototype.click = function() {
+      var evt = this.ownerDocument.createEvent('MouseEvents');
+      evt.initMouseEvent('click', true, true, this.ownerDocument.defaultView, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+      this.dispatchEvent(evt);
+    };
+
   };
   return dependencies.concat(EvidenceController);
 });
