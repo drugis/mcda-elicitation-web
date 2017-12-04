@@ -4,6 +4,7 @@ var requires = [
   'mcda/results/deterministicResultsController',
   'mcda/results/sensitivityInputDirective',
   'mcda/results/valueProfilePlotDirective',
+  'mcda/results/legendDirective',
   'mcda/results/resultsService'
 ];
 define(['angular'].concat(requires), function(
@@ -12,6 +13,7 @@ define(['angular'].concat(requires), function(
   DeterministicResultsController,
   sensitivityInputDirective,
   valueProfilePlotDirective,
+  legendDirective,
   MCDAResultsService
 ) {
   return angular.module('elicit.results', ['patavi', 'rzModule'])
@@ -20,6 +22,8 @@ define(['angular'].concat(requires), function(
     .controller('DeterministicResultsController', DeterministicResultsController)
     .directive('sensitivityInput', sensitivityInputDirective)
     .directive('valueProfilePlot', valueProfilePlotDirective)
-    .factory('MCDAResultsService', MCDAResultsService);
+    .directive('legend', legendDirective)
+    .factory('MCDAResultsService', MCDAResultsService)
+    ;
 
 });

@@ -70,6 +70,9 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
           }
 
           scope.$watch('problem', function(newProblem) {
+            if (!newProblem) {
+              return;
+            }
             scope.problem = newProblem;
             drawPlot(scope.value);
           }, true);
@@ -79,7 +82,7 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
               return;
             }
             drawPlot(newVal);
-          });
+          }, true);
         }
       };
     });
@@ -128,25 +131,7 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
               return;
             }
             drawPlot(newVal);
-          });
-
-          // scope.$watch('problem', function(newProblem, oldProblem) {
-          //   if (!newProblem) {
-          //     return;
-          //   }
-          //   var oldAlts = _.toPairs(oldProblem.alternatives);
-          //   var newVals = _.map(scope.value[0].values, function(value) {
-          //     var oldAlt = _.find(oldAlts, function(oldAlt) {
-          //       return oldAlt[1].title === value.label;
-          //     });
-          //     var newVal = _.cloneDeep(value);
-          //     newVal.label = newProblem.alternatives[oldAlt[0]].title;
-          //     return newVal;
-          //   });
-          //   scope.problem = newProblem;
-          //   scope.value[0].values = newVals;
-          //   drawPlot(scope.value);
-          // }, true);
+          }, true);
         }
       };
     });
@@ -402,7 +387,7 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
       };
     });
 
-    directives.directive('rankAcceptabilityPlot', function() {
+    directives.directive('legendTable', function() {
       return {
         restrict: 'E',
         transclude: true,
@@ -411,11 +396,6 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
         },
         link: function(scope) {
           scope.alternatives = _.cloneDeep(scope.problem.alternatives);
-          var letterValue = 65;
-          _.forEach(scope.problem.alternatives, function(alternative) {
-            alternative.title = String.fromCharCode(letterValue);
-            letterValue++;
-          });
         },
         template: '<div class="grid-x">' +
           '<div class="cell large-6">' +

@@ -15,8 +15,8 @@
   <br>
   <div class="grid-x underlined-div">
     <div class="cell">
-      <rank-acceptability-plot problem="state.problem">
-      </rank-acceptability-plot>
+      <legend-table problem="state.problem">
+      </legend-table>
     </div>
     <div class="cell">
       <h4>Rank acceptabilities <inline-help help-key="rank-acceptabilities"></inline-help></h4>
@@ -28,7 +28,9 @@
     </div>
     <div class="cell large-6">
       <div export file-name="rank-acceptability-plot" style="width: 400px; height: 400px">
+        <div legend problem="state.problem">
         <rank-plot value="state.results.ranks.data" stacked="true" problem="state.problem"></rank-plot>
+        </div>
       </div>
     </div>
     <div class="cell large-6">
