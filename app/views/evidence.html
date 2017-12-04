@@ -1,5 +1,10 @@
 <div class="grid-x">
   <div class="cell">
+    <a class="button small" ng-click="downloadWorkspace()">
+      Download workspace
+    </a>
+  </div>
+  <div class="cell">
     <h4>
       Therapeutic context <inline-help help-key="therapeutic-context"></inline-help>
       <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editTherapeuticContext()">
@@ -11,7 +16,6 @@
     <span ng-if="problem.description">{{problem.description}}</span>
     <span ng-if="!problem.description">No description given.</span>
   </div>
-
   <div class="cell">
     <h4>Criteria <inline-help help-key="criterion"></inline-help></h4>
   </div>
@@ -43,7 +47,6 @@
       </tbody>
     </table>
   </div>
-
   <div class="cell">
     <h4>Alternatives <inline-help help-key="alternative"></inline-help></h4>
   </div>

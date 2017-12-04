@@ -2,7 +2,7 @@
   <div class="cell">
     <h3 ng-if="!isEditTitleVisible" class="subheader">
       <span ng-bind="workspace.problem.title"></span>
-      <a ng-click="editTitle()"><i class="fa fa-edit"></i></a>
+      <a tooltip="Edit title" tooltip-append-to-body="true" ng-click="editTitle()"><i class="fa fa-edit"></i></a>
     </h3>
     <div class="grid-x" ng-show="isEditTitleVisible">
       <div class="cell large-8 small-12">
