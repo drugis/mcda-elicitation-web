@@ -31,9 +31,7 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
             .attr('width', '100%')
             .attr('height', '100%');
 
-          var dim = getParentDimension(element);
-
-          var rankGraphData = function(data) {
+          function rankGraphData(data) {
             var result = [];
             _.each(_.toPairs(data), function(el) {
               var key = scope.problem.alternatives[el[0]].title;
@@ -51,15 +49,12 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
               }
             });
             return result;
-          };
+          }
 
-          scope.$watch('value', function(newVal) {
-            if (!newVal) {
-              return;
-            }
+          function drawPlot(value) {
             nv.addGraph(function() {
-              var chart = nv.models.multiBarChart().height(dim.height).width(dim.width);
-              var data = rankGraphData(newVal);
+              var chart = nv.models.multiBarChart().height(400).width(400);
+              var data = rankGraphData(value);
 
               chart.yAxis.tickFormat(d3.format(',.3g'));
               chart.stacked(attrs.stacked);
@@ -72,7 +67,22 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
 
               nv.utils.windowResize(chart.update);
             });
-          });
+          }
+
+          scope.$watch('problem', function(newProblem) {
+            if (!newProblem) {
+              return;
+            }
+            scope.problem = newProblem;
+            drawPlot(scope.value);
+          }, true);
+
+          scope.$watch('value', function(newVal) {
+            if (!newVal) {
+              return;
+            }
+            drawPlot(newVal);
+          }, true);
         }
       };
     });
@@ -83,7 +93,8 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
         restrict: 'E',
         scope: {
           value: '=',
-          parseFn: '='
+          parseFn: '=',
+          problem: '='
         },
         link: function(scope, element) {
 
@@ -93,10 +104,7 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
             .attr('width', '100%')
             .attr('height', '100%');
 
-          scope.$watch('value', function(newVal) {
-            if (!newVal) {
-              return;
-            }
+          function drawPlot(value) {
             nv.addGraph(function() {
               var chart = nv.models.discreteBarChart()
                 .staggerLabels(false)
@@ -110,13 +118,20 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
                   return d.value;
                 });
               chart.tooltip.enabled(false);
-              var data = (scope.parseFn && scope.parseFn(newVal)) || _.identity(newVal);
+              var data = (scope.parseFn && scope.parseFn(value)) || _.identity(value);
               svg.datum(data).transition().duration(100).call(chart);
               svg.style('background', 'white');
 
               nv.utils.windowResize(chart.update);
             });
-          });
+          }
+
+          scope.$watch('value', function(newVal) {
+            if (!newVal) {
+              return;
+            }
+            drawPlot(newVal);
+          }, true);
         }
       };
     });
@@ -147,7 +162,7 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
 
             var chart = nv.models.lineChart().width(dim.width).height(dim.height);
 
-            chart.useVoronoi(true); //         ??
+            chart.useVoronoi(true);
 
             if (attrs.showLegend && attrs.showLegend === 'false') {
               chart.showLegend(false);
@@ -282,50 +297,6 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
       };
     });
 
-    directives.directive('modal', function(mcdaRootPath) {
-      return {
-        restrict: 'E',
-        transclude: true,
-        scope: {
-          model: '=',
-          buttonText: '@'
-        },
-        link: function(scope, element) {
-          if (!scope.model) {
-            scope.model = {};
-          }
-          scope.bgStyle = function(show) {
-            return show ? {
-              'display': 'block'
-            } : {
-              'display': 'none'
-            };
-          };
-          scope.fgStyle = function(show) {
-            return show ? {
-              'display': 'block',
-              'visibility': 'visible',
-              'width': Math.round(window.innerWidth * 0.8)
-            } : {
-              'display': 'none'
-            };
-          };
-
-          scope.model.open = function() {
-            scope.model.show = true;
-          };
-          scope.model.close = function() {
-            scope.model.show = false;
-          };
-          scope.model.closeCancel = function() {
-            scope.$emit('closeCancelModal', element);
-            scope.model.close();
-          };
-        },
-        templateUrl: mcdaRootPath + 'partials/modal.html'
-      };
-    });
-
     directives.directive('tradeOffs', function($filter, mcdaRootPath, PartialValueFunctionService, sortCriteriaWithW) {
       return {
         restrict: 'E',
@@ -385,37 +356,6 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
       };
     });
 
-    //treeview
-    directives.directive('valueTree', function() {
-      return {
-        restrict: 'E',
-        replace: true,
-        scope: {
-          children: '=',
-          remarks: '='
-        },
-        template: '<ul><value-tree-item ng-repeat="item in children" item="item" remarks="remarks"></value-tree-item></ul>'
-      };
-    });
-
-    directives.directive('valueTreeItem', function($compile) {
-      return {
-        restrict: 'E',
-        replace: true,
-        scope: {
-          item: '=',
-          remarks: '='
-        },
-        template: '<li>{{item.title}}<p ng-if="remarks"><span ng-if="!remarks[item.title]">None.</span>{{remarks[item.title]}}</p></li>',
-        link: function(scope, element) {
-          if (scope.item && angular.isArray(scope.item.children)) {
-            element.append('<value-tree children="item.children" remarks="remarks"></value-tree>');
-            $compile(element.contents())(scope);
-          }
-        }
-      };
-    });
-
     directives.directive('criterion', function() {
       return {
         restrict: 'E',
@@ -447,17 +387,34 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
       };
     });
 
-    directives.directive('rankAcceptabilityPlot', function() {
+    directives.directive('legendTable', function() {
       return {
         restrict: 'E',
-        replace: true,
+        transclude: true,
         scope: {
-          data: '=',
-          parseFn: '=',
           problem: '='
         },
-        link: function() {},
-        template: '<div style="width: 400px; height: 400px"><rank-plot value="data" parse-fn="parseFn" stacked="true" problem="problem"></rank-plot></div>'
+        link: function(scope) {
+          scope.alternatives = _.cloneDeep(scope.problem.alternatives);
+        },
+        template: '<div class="grid-x">' +
+          '<div class="cell large-6">' +
+          '<table>' +
+          '<thead>' +
+          '<tr>' +
+          '<th>Alternative</th>' +
+          '<th>In plot</th>' +
+          '</tr>' +
+          '</thead>' +
+          '<tbody>' +
+          '<tr ng-repeat="(key,alternative) in alternatives">' +
+          '<td>{{alternative.title}}</td>' +
+          '<td><input type="text" ng-model="problem.alternatives[key].title"></td>' +
+          '</tr>' +
+          '</tbody>' +
+          '</table>' +
+          '</div>' +
+          '</div>'
       };
     });
 

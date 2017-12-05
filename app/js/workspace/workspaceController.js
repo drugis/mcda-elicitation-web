@@ -6,7 +6,7 @@ define(['angular'], function(angular) {
     $scope.editTitle = editTitle;
     $scope.saveTitle = saveTitle;
     $scope.cancelTitle = cancelTitle;
-
+    
     // init
     var user = angular.fromJson($cookies.get('LOGGED-IN-USER'));
     $scope.editMode = {

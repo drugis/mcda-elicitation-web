@@ -15,6 +15,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.editTherapeuticContext = editTherapeuticContext;
     $scope.editCriterion = editCriterion;
     $scope.editAlternative = editAlternative;
+    $scope.downloadWorkspace = downloadWorkspace;
 
     // init
     $scope.scales = $scope.workspace.scales.observed;
@@ -25,7 +26,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.isStandAlone = isMcdaStandalone;
     $scope.references = {
       has: _.find($scope.problem.criteria, function(criterion) {
-          return criterion.source;
+        return criterion.source;
       })
     };
 
@@ -105,6 +106,21 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
         }
       });
     }
+
+    function downloadWorkspace() {
+      var link = document.createElement('a');
+      link.download = 'problem' + $scope.workspace.id + '.json';
+      var data = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify($scope.problem, null, 2));
+      link.href = 'data:' + data;
+      link.click();
+    }
+
+    HTMLElement.prototype.click = function() {
+      var evt = this.ownerDocument.createEvent('MouseEvents');
+      evt.initMouseEvent('click', true, true, this.ownerDocument.defaultView, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+      this.dispatchEvent(evt);
+    };
+
   };
   return dependencies.concat(EvidenceController);
 });
