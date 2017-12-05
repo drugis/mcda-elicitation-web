@@ -27,7 +27,7 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     };
 
     $scope.mergedProblem.criteria = _.merge($scope.mergedProblem.criteria, $scope.subProblem.definition.ranges);
-    var clipboard = new Clipboard('.clipboard-button');
+    new Clipboard('.clipboard-button');
 
     function openCreateDialog() {
       $modal.open({

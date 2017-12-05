@@ -521,7 +521,6 @@ app.get('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', functio
       err.status = 500;
       return next(err);
     }
-
     res.json(result.rows[0]);
   });
 });
@@ -543,7 +542,8 @@ app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', functi
   logger.debug('updating scenario :id');
   db.query('UPDATE scenario SET state = $1, title = $2 WHERE id = $3', [{
       problem: req.body.state.problem,
-      prefs: req.body.state.prefs
+      prefs: req.body.state.prefs,
+      legend: req.body.state.legend
     },
     req.body.title, req.body.id
   ], function(err) {

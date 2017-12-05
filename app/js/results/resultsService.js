@@ -51,14 +51,7 @@ define(['lodash', 'angular'], function(_, angular) {
       return state;
     }
 
-    function alternativeTitle(id, problem) {
-      return problem.alternatives[id].title;
-    }
-
-    var getCentralWeights = _.memoize(function(state) {
-      if (!state.results) {
-        return [];
-      }
+    function getCentralWeights(state) {
       var problem = state.problem;
       var data = state.results.cw.data;
       var result = [];
@@ -74,69 +67,50 @@ define(['lodash', 'angular'], function(_, angular) {
           return problem.criteria[id].title;
         });
         result.push({
-          key: alternativeTitle(alternative[0], problem),
+          key: problem.alternatives[alternative[0]].title,
           labels: labels,
           values: values
         });
       });
       return result;
-    }, function(val) {
-      if (val.results) {
-        return 31 * val.selectedAlternative.hashCode() + angular.toJson(val.results).hashCode();
-      } else {
-        return 31 * val.selectedAlternative.hashCode();
-      }
-    });
+    }
 
-    var getAlterativesByRank = _.memoize(function(state) {
-      if (!state.results) {
-        return [];
-      }
+    function getAlternativesByRank(state) {
       var data = state.results.ranks.data;
-      var rank = parseInt(state.selectedRank);
-      var values = _.map(_.toPairs(data), function(alternative) {
-        return {
-          label: alternativeTitle(alternative[0], state.problem),
-          value: alternative[1][rank]
-        };
-      });
-      var name = 'Alternatives for rank ' + (rank + 1);
-      return [{
-        key: name,
-        values: values
-      }];
-    }, function(val) { // Hash function
-      if (val.results) {
-        return 31 * val.selectedRank.hashCode() + angular.toJson(val.results).hashCode();
-      } else {
-        return 31 * val.selectedAlternative.hashCode();
-      }
-    });
-
-    var getRanksByAlternative = _.memoize(function(state) {
-      if (!state.results) {
-        return [];
-      }
-      var data = state.results.ranks.data;
-      var alternative = state.selectedAlternative;
-      var values = [];
-      _.each(data[alternative], function(rank, index) {
-        values.push({
-          label: 'Rank ' + (index + 1),
-          value: [rank]
+      var ranks = _.range(_.size(state.problem.alternatives));
+      return _.map(ranks, function(rank) {
+        var values = _.map(_.toPairs(data), function(alternative) {
+          var id = alternative[0];
+          return {
+            label: state.problem.alternatives[id].title,
+            value: alternative[1][rank]
+          };
         });
+        var name = 'Alternatives for rank ' + (rank + 1);
+        return [{
+          key: name,
+          values: values
+        }];
       });
-      return [{
-        key: alternativeTitle(alternative, state.problem),
-        values: values
-      }];
-    }, function(val) {
-      if (val.results) {
-        return 31 * val.selectedAlternative.hashCode() + angular.toJson(val.results).hashCode();
-      } else {
-        return 31 * val.selectedAlternative.hashCode();
-      }
-    });
+    }
+
+    function getRanksByAlternatives(state) {
+      var data = state.results.ranks.data;
+      return _.reduce(state.problem.alternatives, function(accum, alternative, alternativeKey) {
+        var values = [];
+        _.each(data[alternativeKey], function(rank, index) {
+          values.push({
+            label: 'Rank ' + (index + 1),
+            value: [rank]
+          });
+        });
+        accum[alternativeKey] = [{
+          key: alternative.title,
+          values: values
+        }];
+        return accum;
+      }, {});
+    }
 
     function getResults(scope, state) {
       var nextState = {
@@ -145,11 +119,7 @@ define(['lodash', 'angular'], function(_, angular) {
           method: 'smaa'
         }),
         selectedAlternative: _.keys(state.problem.alternatives)[0],
-        selectedRank: '0',
-        ranksByAlternative: getRanksByAlternative,
-        alternativesByRank: getAlterativesByRank,
-        centralWeights: getCentralWeights,
-
+        selectedRank: '0'
       };
       return run(scope, nextState);
     }
@@ -244,11 +214,32 @@ define(['lodash', 'angular'], function(_, angular) {
           method: 'sensitivityWeightPlot',
           sensitivityAnalysis: {
             criterion: scope.sensitivityMeasurements.preferencesCriterion.id
-
           }
         })
       };
       return run(scope, nextState);
+    }
+
+    function addSmaaShit(state) {
+      var newState = _.cloneDeep(state);
+      newState.alternativesByRank = getAlternativesByRank(state);
+      newState.centralWeights = getCentralWeights(state);
+      newState.ranksByAlternatives = getRanksByAlternatives(state);
+      return newState;
+    }
+
+    function replaceAlternativeNames(legend, state) {
+      if (!legend) {
+        return state;
+      }
+      var newState = _.cloneDeep(state);
+      newState.problem.alternatives = _.reduce(state.problem.alternatives, function(accum, alternative, alternativeKey) {
+        var newAlternative = _.cloneDeep(alternative);
+        newAlternative.title = legend[alternativeKey].newTitle;
+        accum[alternativeKey] = newAlternative;
+        return accum;
+      }, {});
+      return newState;
     }
 
     return {
@@ -259,7 +250,9 @@ define(['lodash', 'angular'], function(_, angular) {
       getDeterministicResults: getDeterministicResults,
       getRecalculatedDeterministicResulsts: getRecalculatedDeterministicResulsts,
       getMeasurementsSensitivityResults: getMeasurementsSensitivityResults,
-      getPreferencesSensitivityResults: getPreferencesSensitivityResults
+      getPreferencesSensitivityResults: getPreferencesSensitivityResults,
+      addSmaaShit: addSmaaShit,
+      replaceAlternativeNames: replaceAlternativeNames
     };
   };
 
