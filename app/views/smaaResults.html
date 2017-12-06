@@ -37,7 +37,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="(key, alternative) in state.problem.alternatives">
-            <td>{{scenario.state.legend[key].baseTitle}}</td>
+            <td>{{scenario.state.legend[key].baseTitle || alternative.title}}</td>
             <td ng-repeat="rank in state.results.ranks.data[key] track by $index" class="heat">
               {{::rank | number}}
             </td>
@@ -65,7 +65,7 @@
         <h4>Ranks per alternative <inline-help help-key="ranks-per-alternative"></inline-help></h4>
         <select ng-model="state.selectedAlternative" class="large-3">
           <option ng-repeat="(key, alternative) in state.problem.alternatives" value="{{key}}" ng-selected="key == state.selectedAlternative">
-            {{scenario.state.legend[key].baseTitle}}
+            {{scenario.state.legend[key].baseTitle || alternative.title}}
           </option>
         </select>
         <div style="width: 400px; height: 350px">
@@ -97,7 +97,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="(key, centralWeight) in state.results.cw.data">
-            <td>{{scenario.state.legend[key].baseTitle}}</td>
+            <td>{{scenario.state.legend[key].baseTitle || state.problem.alternatives[key].title}}</td>
             <td class="heat">{{::centralWeight.cf | number}}</td>
             <td ng-repeat="(c, criterion) in state.problem.criteria">
               {{::centralWeight.w[c] | number}}

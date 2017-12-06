@@ -29,7 +29,7 @@
           <tr>
             <th>Criterion <inline-help help-key="criterion"></inline-help></th>
             <th class="text-center" ng-repeat="alternative in alternatives">
-              {{scenario.state.legend[alternative.id].baseTitle}}
+              {{scenario.state.legend[alternative.id].baseTitle || alternative.title}}
             </th>
           </tr>
         </thead>
@@ -80,7 +80,7 @@
         <div class="cell large-6">
           <table id="basecasetable">
             <thead>
-              <th ng-repeat="alternative in alternatives">{{scenario.state.legend[alternative.id].baseTitle}}</th>
+              <th ng-repeat="alternative in alternatives">{{scenario.state.legend[alternative.id].baseTitle || alternative.title}}</th>
             </thead>
             <tbody>
               <tr>
@@ -92,7 +92,7 @@
         <div class="cell large-6" ng-if="recalculatedDeterministicResults" ng-if="recalculatedDeterministicResults">
           <table id="recalculatedcasetable">
             <thead>
-              <th ng-repeat="alternative in alternatives">{{scenario.state.legend[alternative.id].baseTitle}}</th>
+              <th ng-repeat="alternative in alternatives">{{scenario.state.legend[alternative.id].baseTitle || alternative.title}}</th>
             </thead>
             <tbody>
               <tr>
@@ -134,7 +134,7 @@
       <div class="grid-x grid-margin-x">
         <div class="cell medium-6 large-6">
           <label>Alternative
-            <select ng-options="scenario.state.legend[alternative.id].baseTitle for alternative in alternatives" ng-model="sensitivityMeasurements.measurementsAlternative" ng-change="doMeasurementSensitivity(state)"></select>
+            <select ng-options="scenario.state.legend[alternative.id].baseTitle || alternative.title for alternative in alternatives" ng-model="sensitivityMeasurements.measurementsAlternative" ng-change="doMeasurementSensitivity(state)"></select>
           </label>
         </div>
         <div class="cell medium-6">
