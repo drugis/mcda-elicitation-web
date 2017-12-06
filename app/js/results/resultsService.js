@@ -220,7 +220,7 @@ define(['lodash', 'angular'], function(_, angular) {
       return run(scope, nextState);
     }
 
-    function addSmaaShit(state) {
+    function addSmaaResults(state) {
       var newState = _.cloneDeep(state);
       newState.alternativesByRank = getAlternativesByRank(state);
       newState.centralWeights = getCentralWeights(state);
@@ -251,7 +251,7 @@ define(['lodash', 'angular'], function(_, angular) {
       getRecalculatedDeterministicResulsts: getRecalculatedDeterministicResulsts,
       getMeasurementsSensitivityResults: getMeasurementsSensitivityResults,
       getPreferencesSensitivityResults: getPreferencesSensitivityResults,
-      addSmaaShit: addSmaaShit,
+      addSmaaResults: addSmaaResults,
       replaceAlternativeNames: replaceAlternativeNames
     };
   };

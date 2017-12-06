@@ -16,7 +16,7 @@ define(['clipboard', 'require'], function(Clipboard) {
       $scope.aggregateState = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.aggregateState);
       $scope.state = MCDAResultsService.getResults($scope, taskDefinition.clean($scope.aggregateState));
       $scope.state.resultsPromise.then(function() {
-        $scope.state = MCDAResultsService.addSmaaShit($scope.state);
+        $scope.state = MCDAResultsService.addSmaaResults($scope.state);
       });
     }
   };
