@@ -185,7 +185,7 @@ define(['angular-mocks', 'mcda/results/results', 'angular-patavi-client', 'angul
       });
     });
 
-    describe('addSmaaShit', function() {
+    describe('addSmaaResults', function() {
       it('should return a state with alternatives per rank, ranks per alternatives, and the central weights', function() {
         var state = {
           results: {
@@ -227,7 +227,7 @@ define(['angular-mocks', 'mcda/results/results', 'angular-patavi-client', 'angul
             }
           }
         };
-        var result = resultsService.addSmaaShit(state);
+        var result = resultsService.addSmaaResults(state);
         var expectedResult = {
           results: {
             ranks: {
