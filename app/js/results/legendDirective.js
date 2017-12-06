@@ -12,18 +12,24 @@ define(['lodash', 'jQuery'], function(_, $) {
         var tooltipHtml;
         if (scope.scenario.state.legend) {
           var tableCells = _.reduce(scope.scenario.state.legend, function(accum, alt) {
-            return accum + '<tr><td><b>' +alt.newTitle + '</b>:</td>' + '<td>' + alt.baseTitle + '</td></tr>';
+            return accum + '<tr><td><b>' + alt.newTitle + '</b>:</td>' + '<td>' + alt.baseTitle + '</td></tr>';
           }, '');
           tooltipHtml = '<table class=\'legend-table\'>' +
-          '<tbody>' +
-          tableCells +
-          '</tbody>' +
-          '</table>' +
-          'Click to change.';
+            '<tbody>' +
+            tableCells +
+            '</tbody>' +
+            '</table>' +
+            (scope.editMode.isUserOwner ? 'Click to change' : '');
         } else {
-          tooltipHtml = 'Please click the button to create aliases for the alternatives to use in plots';
+          tooltipHtml = scope.editMode.isUserOwner ? 
+            'Please click the button to create aliases for the alternatives to use in plots' :
+            'No legend set.';
         }
-        var btnElement = $compile('<br><button ng-click="editLegend()" class="button export-button info small" tooltip-append-to-body="true" tooltip-html-unsafe="' +
+        var btnElement = $compile('<br><button ' +
+          (scope.editMode.isUserOwner ? 'ng-click="editLegend()" ' : '') +
+          'class="button export-button info small" ' +
+          'tooltip-append-to-body="true" ' +
+          'tooltip-html-unsafe="' +
           tooltipHtml + '">' +
           'Labels</button>')(scope);
         $element.after(btnElement);
