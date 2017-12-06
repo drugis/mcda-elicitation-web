@@ -24,7 +24,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       alteredTableCells: [],
       isEditing: false
     };
-    $scope.state = initialize(taskDefinition.clean($scope.aggregateState));
+    loadState();
     $scope.$watch('scales.observed', function() {
       resetSensitivityAnalysis();
     });
@@ -89,12 +89,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
 
     function loadState() {
       $scope.aggregateState = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.aggregateState);
-      $scope.initialize(taskDefinition.clean($scope.aggregateState))
-      
-      // $scope.state = MCDAResultsService.getResults($scope, taskDefinition.clean($scope.aggregateState));
-      $scope.state.resultsPromise.then(function() {
-        $scope.state = MCDAResultsService.addDeterministic($scope.state);
-      });
+      $scope.state = initialize(taskDefinition.clean($scope.aggregateState));
     }
   };
   return dependencies.concat(DeterministicResultsController);

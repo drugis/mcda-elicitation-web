@@ -167,7 +167,7 @@ define(['angular-mocks', 'mcda/results/results', 'angular-patavi-client', 'angul
           }, {
             x: 0.11,
             y: 3
-          },{
+          }, {
             x: 1,
             y: 6
           }]
@@ -181,6 +181,191 @@ define(['angular-mocks', 'mcda/results/results', 'angular-patavi-client', 'angul
             y: 5
           }]
         }];
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('addSmaaShit', function() {
+      it('should return a state with alternatives per rank, ranks per alternatives, and the central weights', function() {
+        var state = {
+          results: {
+            ranks: {
+              data: {
+                altKey1: [0.2, 0.8],
+                altKey2: [0.8, 0.2]
+              }
+            },
+            cw: {
+              data: {
+                altKey1: {
+                  cf: 0.123,
+                  w: {
+                    critKey1: 0.5,
+                    critKey2: 0.5
+                  }
+
+                }
+              }
+            }
+          },
+          problem: {
+            alternatives: {
+              altKey1: {
+                title: 'alternative1'
+              },
+              altKey2: {
+                title: 'alternative2'
+              }
+            },
+            criteria: {
+              critKey1: {
+                title: 'criterion1'
+              },
+              critKey2: {
+                title: 'criterion2'
+              }
+            }
+          }
+        };
+        var result = resultsService.addSmaaShit(state);
+        var expectedResult = {
+          results: {
+            ranks: {
+              data: {
+                altKey1: [0.2, 0.8],
+                altKey2: [0.8, 0.2]
+              }
+            },
+            cw: {
+              data: {
+                altKey1: {
+                  cf: 0.123,
+                  w: {
+                    critKey1: 0.5,
+                    critKey2: 0.5
+                  }
+
+                }
+              }
+            }
+          },
+          problem: {
+            alternatives: {
+              altKey1: {
+                title: 'alternative1'
+              },
+              altKey2: {
+                title: 'alternative2'
+              }
+            },
+            criteria: {
+              critKey1: {
+                title: 'criterion1'
+              },
+              critKey2: {
+                title: 'criterion2'
+              }
+            }
+          },
+          alternativesByRank: [
+            [{
+              key: 'Alternatives for rank 1',
+              values: [{
+                label: 'alternative1',
+                value: 0.2
+              }, {
+                label: 'alternative2',
+                value: 0.8
+              }]
+            }],
+            [{
+              key: 'Alternatives for rank 2',
+              values: [{
+                label: 'alternative1',
+                value: 0.8
+              }, {
+                label: 'alternative2',
+                value: 0.2
+              }]
+            }]
+          ],
+          centralWeights: [{
+            key: 'alternative1',
+            labels: ['criterion1', 'criterion2'],
+            values: [{
+              x: 0,
+              label: 'critKey1',
+              y: 0.5
+            }, {
+              x: 1,
+              label: 'critKey2',
+              y: 0.5
+            }]
+          }],
+          ranksByAlternatives: {
+            altKey1: [{
+              key: 'alternative1',
+              values: [{
+                label: 'Rank 1',
+                value: [0.2]
+              }, {
+                label: 'Rank 2',
+                value: [0.8]
+              }, ]
+            }],
+            altKey2: [{
+              key: 'alternative2',
+              values: [{
+                label: 'Rank 1',
+                value: [0.8]
+              }, {
+                label: 'Rank 2',
+                value: [0.2]
+              }, ]
+            }]
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('replaceAlternativeNames', function() {
+      it('should replace the names of the of the alternatives with the new labels from the legend', function() {
+        var legend = {
+          altKey1: {
+            baseTitle: 'alternative1',
+            newTitle: 'alt1'
+          },
+          altKey2: {
+            baseTitle: 'alternative2',
+            newTitle: 'alt2'
+          }
+        };
+        var state = {
+          problem: {
+            alternatives: {
+              altKey1: {
+                title: 'alternative1'
+              },
+              altKey2: {
+                title: 'alternative2'
+              }
+            }
+          }
+        };
+        var result = resultsService.replaceAlternativeNames(legend, state);
+        var expectedResult = {
+          problem: {
+            alternatives: {
+              altKey1: {
+                title: 'alt1'
+              },
+              altKey2: {
+                title: 'alt2'
+              }
+            }
+          }
+        };
         expect(result).toEqual(expectedResult);
       });
     });
