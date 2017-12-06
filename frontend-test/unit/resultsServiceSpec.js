@@ -330,43 +330,49 @@ define(['angular-mocks', 'mcda/results/results', 'angular-patavi-client', 'angul
     });
 
     describe('replaceAlternativeNames', function() {
-      it('should replace the names of the of the alternatives with the new labels from the legend', function() {
-        var legend = {
-          altKey1: {
-            baseTitle: 'alternative1',
-            newTitle: 'alt1'
-          },
-          altKey2: {
-            baseTitle: 'alternative2',
-            newTitle: 'alt2'
-          }
-        };
+      it('should replace all titles with their legend/label', function() {
         var state = {
           problem: {
             alternatives: {
-              altKey1: {
-                title: 'alternative1'
+              alt1: {
+                title: 'alt1 old title'
               },
-              altKey2: {
-                title: 'alternative2'
+              alt2: {
+                title: 'alt2 old title'
+              }
+            }
+          }
+        };
+        var legend = {
+          alt1: {
+            newTitle: 'new alt1 title'
+          },
+          alt2: {
+            newTitle: 'new alt2 title'
+          }
+        };
+        var expectedResult = {
+          problem: {
+            alternatives: {
+              alt1: {
+                title: 'new alt1 title'
+              },
+              alt2: {
+                title: 'new alt2 title'
               }
             }
           }
         };
         var result = resultsService.replaceAlternativeNames(legend, state);
-        var expectedResult = {
-          problem: {
-            alternatives: {
-              altKey1: {
-                title: 'alt1'
-              },
-              altKey2: {
-                title: 'alt2'
-              }
-            }
-          }
-        };
+
         expect(result).toEqual(expectedResult);
+      });
+      it('should do nothing if there is no legend', function() {
+        var state = {
+          a: 'b'
+        };
+        var result = resultsService.replaceAlternativeNames(undefined, state);
+        expect(result).toEqual(state);
       });
     });
   });
