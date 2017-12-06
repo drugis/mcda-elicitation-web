@@ -7,7 +7,7 @@ define(['angular',
     'mcda/preferences/preferences'
   ],
   function() {
-    describe('PartialValueFunctionServiceHandler', function() {
+    describe('PartialValueFunctionService', function() {
       var scope, state;
 
       beforeEach(module('elicit.preferences'));
@@ -41,7 +41,9 @@ define(['angular',
         $controller('PartialValueFunctionController', {
           $scope: scope,
           $state: state,
-          $stateParams: {},
+          $stateParams: {
+            criterion: 'foo'
+          },
           currentScenario: scenario,
           taskDefinition: TaskDependencies.extendTaskDefinition(task)
         });

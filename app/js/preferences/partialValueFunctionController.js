@@ -35,7 +35,7 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
     var aggregateProblem = $scope.aggregateState.problem;
 
     function initialize(state) {
-      var criterionId = $stateParams.criterion;
+      var criterionId = $stateParams.criterion.replace('%3A', ':'); // workaround: see https://github.com/angular-ui/ui-router/issues/2598
       var criterion = _.cloneDeep(aggregateProblem.criteria[criterionId]);
       if (!criterion) {
         return {};
@@ -114,7 +114,7 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
     }
 
     function save(state) {
-      var criterionId = $stateParams.criterion;
+      var criterionId = $stateParams.criterion.replace('%3A', ':'); // workaround: see https://github.com/angular-ui/ui-router/issues/2598
       var standardizedCriterion = PartialValueFunctionService.standardizeCriterion(state.choice);
       var criteria = _.cloneDeep(aggregateProblem.criteria);
       criteria[criterionId] = standardizedCriterion;
