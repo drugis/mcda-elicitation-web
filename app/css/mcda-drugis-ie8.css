@@ -6600,9 +6600,19 @@ inline-help a:hover {
   overflow-y: auto;
 }
 
-/* line 465, ../../sass-shared/_drugis.scss */
+/* line 464, ../../sass-shared/_drugis.scss */
 .has-tip {
   border-bottom: none;
+}
+
+/* line 468, ../../sass-shared/_drugis.scss */
+.tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {
+  background: #fefefe;
+}
+
+/* line 472, ../../sass-shared/_drugis.scss */
+.tabs-title > a {
+  background: #e6e6e6;
 }
 
 /* line 3, ../../sass-shared/_drugis-ie8.scss */
