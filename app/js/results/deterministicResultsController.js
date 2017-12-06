@@ -15,6 +15,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.doMeasurementSensitivity = doMeasurementSensitivity;
     $scope.doPreferencesSensitivity = doPreferencesSensitivity;
     $scope.isEditing = isEditing;
+    $scope.loadState = loadState;
 
     // init
     $scope.scenario = currentScenario;
@@ -27,7 +28,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.$watch('scales.observed', function() {
       resetSensitivityAnalysis();
     });
-    var clipboard = new Clipboard('.clipboard-button');
+    new Clipboard('.clipboard-button');
 
     function isEditing(value) {
       $scope.sensitivityMeasurements.isEditing = value;
@@ -83,6 +84,16 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       delete $scope.preferencesValues;
       MCDAResultsService.getPreferencesSensitivityResults($scope, state).resultsPromise.then(function(result) {
         $scope.preferencesValues = MCDAResultsService.pataviResultToLineValues(result.results, $scope.alternatives);
+      });
+    }
+
+    function loadState() {
+      $scope.aggregateState = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.aggregateState);
+      $scope.initialize(taskDefinition.clean($scope.aggregateState))
+      
+      // $scope.state = MCDAResultsService.getResults($scope, taskDefinition.clean($scope.aggregateState));
+      $scope.state.resultsPromise.then(function() {
+        $scope.state = MCDAResultsService.addDeterministic($scope.state);
       });
     }
   };

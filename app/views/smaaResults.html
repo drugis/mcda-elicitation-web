@@ -15,10 +15,6 @@
   <br>
   <div class="grid-x underlined-div">
     <div class="cell">
-      <legend-table problem="state.problem">
-      </legend-table>
-    </div>
-    <div class="cell">
       <h4>Rank acceptabilities <inline-help help-key="rank-acceptabilities"></inline-help></h4>
     </div>
     <div class="cell large-2 large-offset-9">
@@ -27,10 +23,8 @@
       </button>
     </div>
     <div class="cell large-6">
-      <div export file-name="rank-acceptability-plot" style="width: 400px; height: 400px">
-        <div legend problem="state.problem">
+      <div export file-name="'rank-acceptability-plot'" legend style="width: 400px; height: 400px">
         <rank-plot value="state.results.ranks.data" stacked="true" problem="state.problem"></rank-plot>
-        </div>
       </div>
     </div>
     <div class="cell large-6">
@@ -43,7 +37,7 @@
         </thead>
         <tbody>
           <tr ng-repeat="(key, alternative) in state.problem.alternatives">
-            <td>{{alternative.title}}</td>
+            <td>{{scenario.state.legend[key].baseTitle}}</td>
             <td ng-repeat="rank in state.results.ranks.data[key] track by $index" class="heat">
               {{::rank | number}}
             </td>
@@ -54,7 +48,7 @@
   </div>
   <div class="grid-x underlined-div">
     <div class="cell large-6">
-      <div export file-name="'alternatives-per-rank'">
+      <div export legend file-name="'alternatives-per-rank'">
         <h4>Alternatives per rank <inline-help help-key="alternatives-per-rank"></inline-help></h4>
         <select ng-model="state.selectedRank" class="large-3">
           <option ng-repeat="(k,v) in state.problem.alternatives" value="{{$index}}" ng-selected="$index == state.selectedRank">
@@ -62,20 +56,20 @@
           </option>
         </select>
         <div style="width: 400px; height: 350px">
-          <bar-chart value="state.alternativesByRank(state)" problem="state.problem"></bar-chart>
+          <bar-chart value="state.alternativesByRank[state.selectedRank]" problem="state.problem"></bar-chart>
         </div>
       </div>
     </div>
     <div class="cell large-6">
-      <div export file-name="'ranks-per-alternative'">
+      <div export legend file-name="'ranks-per-alternative'">
         <h4>Ranks per alternative <inline-help help-key="ranks-per-alternative"></inline-help></h4>
         <select ng-model="state.selectedAlternative" class="large-3">
           <option ng-repeat="(key, alternative) in state.problem.alternatives" value="{{key}}" ng-selected="key == state.selectedAlternative">
-            {{alternative.title}}
+            {{scenario.state.legend[key].baseTitle}}
           </option>
         </select>
         <div style="width: 400px; height: 350px">
-          <bar-chart value="state.ranksByAlternative(state)"></bar-chart>
+          <bar-chart value="state.ranksByAlternatives[state.selectedAlternative]"></bar-chart>
         </div>
       </div>
     </div>
@@ -83,8 +77,8 @@
   <h4>Central Weights</h4>
   <div class="grid-x">
     <div class="cell">
-      <div style="width: 650px; height: 350px" export file-name="'central-weights'">
-        <line-chart value="state.centralWeights(state)"></line-chart>
+      <div style="width: 650px; height: 350px" export legend file-name="'central-weights'">
+        <line-chart value="state.centralWeights"></line-chart>
       </div>
     </div>
     <div class="cell large-2 large-offset-10">
@@ -102,11 +96,11 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="(a, cw) in state.results.cw.data">
-            <td>{{state.problem.alternatives[a].title}}</td>
-            <td class="heat">{{::cw.cf | number}}</td>
+          <tr ng-repeat="(key, centralWeight) in state.results.cw.data">
+            <td>{{scenario.state.legend[key].baseTitle}}</td>
+            <td class="heat">{{::centralWeight.cf | number}}</td>
             <td ng-repeat="(c, criterion) in state.problem.criteria">
-              {{::cw.w[c] | number}}
+              {{::centralWeight.w[c] | number}}
             </td>
           </tr>
         </tbody>

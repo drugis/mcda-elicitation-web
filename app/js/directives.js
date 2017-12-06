@@ -69,14 +69,6 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
             });
           }
 
-          scope.$watch('problem', function(newProblem) {
-            if (!newProblem) {
-              return;
-            }
-            scope.problem = newProblem;
-            drawPlot(scope.value);
-          }, true);
-
           scope.$watch('value', function(newVal) {
             if (!newVal) {
               return;
@@ -384,37 +376,6 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
           }
         },
         template: '<span>{{text}}</span>'
-      };
-    });
-
-    directives.directive('legendTable', function() {
-      return {
-        restrict: 'E',
-        transclude: true,
-        scope: {
-          problem: '='
-        },
-        link: function(scope) {
-          scope.alternatives = _.cloneDeep(scope.problem.alternatives);
-        },
-        template: '<div class="grid-x">' +
-          '<div class="cell large-6">' +
-          '<table>' +
-          '<thead>' +
-          '<tr>' +
-          '<th>Alternative</th>' +
-          '<th>In plot</th>' +
-          '</tr>' +
-          '</thead>' +
-          '<tbody>' +
-          '<tr ng-repeat="(key,alternative) in alternatives">' +
-          '<td>{{alternative.title}}</td>' +
-          '<td><input type="text" ng-model="problem.alternatives[key].title"></td>' +
-          '</tr>' +
-          '</tbody>' +
-          '</table>' +
-          '</div>' +
-          '</div>'
       };
     });
 

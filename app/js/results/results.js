@@ -2,6 +2,7 @@
 var requires = [
 'mcda/results/smaaResultsController',
   'mcda/results/deterministicResultsController',
+  'mcda/results/editLegendController',
   'mcda/results/sensitivityInputDirective',
   'mcda/results/valueProfilePlotDirective',
   'mcda/results/legendDirective',
@@ -11,6 +12,7 @@ define(['angular'].concat(requires), function(
   angular,
   SmaaResultsController,
   DeterministicResultsController,
+  EditLegendController,
   sensitivityInputDirective,
   valueProfilePlotDirective,
   legendDirective,
@@ -20,6 +22,7 @@ define(['angular'].concat(requires), function(
 
     .controller('SmaaResultsController', SmaaResultsController)
     .controller('DeterministicResultsController', DeterministicResultsController)
+    .controller('EditLegendController', EditLegendController)
     .directive('sensitivityInput', sensitivityInputDirective)
     .directive('valueProfilePlot', valueProfilePlotDirective)
     .directive('legend', legendDirective)
