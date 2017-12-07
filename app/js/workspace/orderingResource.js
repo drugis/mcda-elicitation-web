@@ -1,6 +1,6 @@
 'use strict';
-define([], function() {
-  var dependencies = ['$resource'];
+define(['angular'], function(angular) {
+  var dependencies = ['ngResource'];
   var OrderingResource = function($resource) {
     return $resource('/workspaces/:workspaceId/ordering', {
       workspaceId: '@workspaceId'
@@ -10,5 +10,5 @@ define([], function() {
       }
     });
   };
-  return dependencies.concat(OrderingResource);
+  return angular.module('elicit.orderingResource', dependencies).factory('OrderingResource', OrderingResource);
 });

@@ -82,6 +82,62 @@ define(['angular-mocks', 'mcda/workspace/workspace'], function() {
         });
         rootScope.$digest();
       });
+      it('should return a new order of the alternatives and criteria if no order is available for a given problem', function(done) {
+        orderDefer.resolve(undefined);
+        rootScope.$digest();
+        var problem = {
+          criteria: {
+            crit1: {
+              title: 'criterion1'
+            },
+            crit2: {
+              title: 'criterion2'
+            },
+            crit4: {
+              title: 'criterion4'
+            }
+          },
+          alternatives: {
+            alt1: {
+              title: 'alternative1'
+            },
+            alt2: {
+              title: 'alternative2'
+            },
+            alt3: {
+              title: 'alternative3'
+            },
+          }
+        };
+        var workspaceId = 1;
+        var expectedResult = {
+          alternatives: [{
+            id: 'alt1',
+            title: 'alternative1'
+          }, {
+            id: 'alt2',
+            title: 'alternative2'
+          }, {
+            id: 'alt3',
+            title: 'alternative3'
+          }],
+          criteria: [{
+            id: 'crit1',
+            title: 'criterion1'
+          }, {
+            id: 'crit2',
+            title: 'criterion2'
+          }, {
+            id: 'crit4',
+            title: 'criterion4'
+          }]
+        };
+        orderingService.getOrderedCriteriaAndAlternatives(problem, workspaceId).then(function(result) {
+          expect(result).toEqual(expectedResult);
+          done();
+        });
+        rootScope.$digest();
+      });
     });
   });
 });

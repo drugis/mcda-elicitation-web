@@ -5,6 +5,17 @@ define(['lodash'], function(_) {
 
     function getOrderedCriteriaAndAlternatives(problem, stateParams) {
       return OrderingResource.get(stateParams).$promise.then(function(ordering) {
+        if (!ordering) {
+          return {
+            alternatives: _.map(problem.alternatives, function(alternative, alternativeId) {
+              return _.extend({}, alternative, { id: alternativeId });
+            }),
+            criteria: _.map(problem.criteria, function(criterion, criterionId) {
+              return _.extend({}, criterion, { id: criterionId });
+            })
+          };
+        }
+
         var orderedAlternatives = _(ordering.alternatives)
           .filter(function(alternativeId) {
             return problem.alternatives[alternativeId];
@@ -25,10 +36,10 @@ define(['lodash'], function(_) {
             });
           })
           .value();
-          return {
-            alternatives: orderedAlternatives,
-            criteria: orderedCriteria
-          };
+        return {
+          alternatives: orderedAlternatives,
+          criteria: orderedCriteria
+        };
       });
     }
 

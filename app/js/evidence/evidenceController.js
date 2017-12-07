@@ -3,13 +3,16 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
   var dependencies = ['$scope', '$state', '$stateParams', '$modal',
     'EffectsTableService',
     'WorkspaceResource',
-    'isMcdaStandalone'
+    'isMcdaStandalone',
+    'OrderingService'
   ];
 
   var EvidenceController = function($scope, $state, $stateParams, $modal,
     EffectsTableService,
     WorkspaceResource,
-    isMcdaStandalone) {
+    isMcdaStandalone,
+    OrderingService
+  ) {
     // functions
     $scope.isExact = isExact;
     $scope.editTherapeuticContext = editTherapeuticContext;
@@ -29,6 +32,11 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
         return criterion.source;
       })
     };
+
+     OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).$promise.then(function(orderings){
+      $scope.alternatives = orderings.alternatives;
+      $scope.criteria = orderings.criteria;
+     });
 
     $scope.$watch('workspace.scales.observed', function(newValue) {
       $scope.scales = newValue;
@@ -110,7 +118,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     function downloadWorkspace() {
       var link = document.createElement('a');
       link.download = 'problem' + $scope.workspace.id + '.json';
-      var problemWithTitle = _.merge({}, $scope.problem, {title: $scope.workspace.title});
+      var problemWithTitle = _.merge({}, $scope.problem, { title: $scope.workspace.title });
       var data = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(problemWithTitle, null, 2));
       link.href = 'data:' + data;
       link.click();
