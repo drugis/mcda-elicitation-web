@@ -6,6 +6,16 @@
  * foundation.zurb.com
  * Licensed under MIT Open Source
  */
+
+a.nav-arrow, a.nav-arrow:visited {
+  color:black;
+}
+
+a.nav-arrow:hover {
+  color:grey;
+  background: #efefef;
+}
+
 @media print, screen and (min-width: 40em) {
   /* line 45, ../../bower_components/foundation-sites/scss/components/_reveal.scss */
   .reveal, .reveal.tiny, .reveal.small, .reveal.large {

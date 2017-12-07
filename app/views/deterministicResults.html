@@ -27,7 +27,9 @@
       <table class="full-width effects-table" id="effectstable">
         <thead>
           <tr>
-            <th>Criterion <inline-help help-key="criterion"></inline-help></th>
+            <th>Criterion
+              <inline-help help-key="criterion"></inline-help>
+            </th>
             <th class="text-center" ng-repeat="alternative in alternatives">
               {{scenario.state.legend[alternative.id].baseTitle || alternative.title}}
             </th>
@@ -75,8 +77,9 @@
             <i class="fa fa-clipboard"></i> Copy to clipboard
           </button>
         </div>
-        <div class="cell large-6" ng-if="!recalculatedDeterministicResults"></div>
-        <!-- make sure everything stays in its place  -->
+        <div class="cell large-6" ng-if="!recalculatedDeterministicResults">
+          <!-- Keep grid layout consistent  -->
+        </div>
         <div class="cell large-6">
           <table id="basecasetable">
             <thead>

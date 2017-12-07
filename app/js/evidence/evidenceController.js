@@ -33,7 +33,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.$watch('workspace.scales.observed', function(newValue) {
       $scope.scales = newValue;
     }, true);
-    var clipboard = new Clipboard('.clipboard-button');
+    new Clipboard('.clipboard-button');
 
     function isExact(criterion, alternative) {
       var perf = _.find($scope.problem.performanceTable, function(performance) {

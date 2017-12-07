@@ -35,9 +35,20 @@
       <tbody>
         <tr ng-repeat="(criterionKey, criterion) in problem.criteria">
           <td>
-            <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editCriterion(criterion, criterionKey)">
-              <i class="fa fa-edit"></i>
-            </a> {{criterion.title}}
+            <div class="grid-x">
+              <div class="cell small-2">
+                <div style="line-height: 10px; margin-bottom: 4px;">
+                  <a ng-click="foo" class="nav-arrow"><i style="line-height:0px;" class="fa fa-caret-up"></i></a>
+                </div>
+                <div style="line-height: 10px;">
+                  <a ng-click="foo" class="nav-arrow"><i style="line-height:0px;" class="fa fa-caret-down"></i></a>
+                </div>
+              </div>
+            <div class="cell small-10">
+            {{criterion.title}}
+            <a class="right" ng-if="editMode.isUserOwner && isStandAlone" ng-click="editCriterion(criterion, criterionKey)">
+              <i class="fa fa-edit"></i>            </a>
+            </div>
           </td>
           <td>{{criterion.unitOfMeasurement}}</td>
           <td>{{criterion.description}}</td>

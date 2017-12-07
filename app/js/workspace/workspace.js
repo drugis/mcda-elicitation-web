@@ -6,6 +6,7 @@ var requires = [
   'mcda/workspace/deleteInProgressController',
   'mcda/workspace/workspaceController',
   'mcda/services/workspaceService',
+  'mcda/workspace/orderingService',
   'mcda/workspace/exampleResource'
 ];
 define(['angular'].concat(requires), function(
@@ -16,6 +17,7 @@ define(['angular'].concat(requires), function(
   DeleteInProgressController,
   WorkspaceController,
   WorkspaceService,
+  OrderingService,
   ExampleResource
 ) {
   return angular.module('elicit.workspace', ['elicit.util'])
@@ -26,7 +28,8 @@ define(['angular'].concat(requires), function(
     .controller('WorkspaceController', WorkspaceController)
 
     .factory('WorkspaceService', WorkspaceService)
-    
+    .factory('OrderingService', OrderingService)
+
     .service('ExampleResource', ExampleResource)
     ;
 });
