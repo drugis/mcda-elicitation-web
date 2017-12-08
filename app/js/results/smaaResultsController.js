@@ -1,8 +1,8 @@
 'use strict';
 define(['clipboard', 'require'], function(Clipboard) {
-  var dependencies = ['$scope', 'currentScenario', 'taskDefinition', 'MCDAResultsService'];
+  var dependencies = ['$scope', '$stateParams', 'currentScenario', 'taskDefinition', 'MCDAResultsService', 'OrderingService'];
 
-  var SmaaResultsController = function($scope, currentScenario, taskDefinition, MCDAResultsService) {
+  var SmaaResultsController = function($scope, $stateParams, currentScenario, taskDefinition, MCDAResultsService, OrderingService) {
     // functions
     $scope.loadState = loadState;
 
@@ -10,7 +10,11 @@ define(['clipboard', 'require'], function(Clipboard) {
     $scope.scenario = currentScenario;
     new Clipboard('.clipboard-button');
 
-    loadState();
+    OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(ordering) {
+      $scope.criteria = ordering.criteria;
+      $scope.alternatives = ordering.alternatives;
+      loadState();
+    });
 
     function loadState() {
       $scope.aggregateState = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.aggregateState);

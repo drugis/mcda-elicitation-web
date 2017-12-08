@@ -32,13 +32,13 @@
         <thead>
           <tr>
             <th></th>
-            <th ng-repeat="alternative in state.problem.alternatives">Rank {{::$index + 1}}</th>
+            <th ng-repeat="alternative in alternatives">Rank {{::$index + 1}}</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="(key, alternative) in state.problem.alternatives">
-            <td>{{scenario.state.legend[key].baseTitle || alternative.title}}</td>
-            <td ng-repeat="rank in state.results.ranks.data[key] track by $index" class="heat">
+          <tr ng-repeat="alternative in alternatives">
+            <td>{{scenario.state.legend[alternative.id].baseTitle || alternative.title}}</td>
+            <td ng-repeat="rank in state.results.ranks.data[alternative.id] track by $index" class="heat">
               {{::rank | number}}
             </td>
           </tr>
@@ -51,7 +51,7 @@
       <div export legend file-name="'alternatives-per-rank'">
         <h4>Alternatives per rank <inline-help help-key="alternatives-per-rank"></inline-help></h4>
         <select ng-model="state.selectedRank" class="large-3">
-          <option ng-repeat="(k,v) in state.problem.alternatives" value="{{$index}}" ng-selected="$index == state.selectedRank">
+          <option ng-repeat="alternative in alternatives" value="{{$index}}" ng-selected="$index == state.selectedRank">
             Rank {{::$index + 1}}
           </option>
         </select>
@@ -64,8 +64,8 @@
       <div export legend file-name="'ranks-per-alternative'">
         <h4>Ranks per alternative <inline-help help-key="ranks-per-alternative"></inline-help></h4>
         <select ng-model="state.selectedAlternative" class="large-3">
-          <option ng-repeat="(key, alternative) in state.problem.alternatives" value="{{key}}" ng-selected="key == state.selectedAlternative">
-            {{scenario.state.legend[key].baseTitle || alternative.title}}
+          <option ng-repeat="alternative in alternatives" value="{{alternative.id}}" ng-selected="alternative.id == state.selectedAlternative">
+            {{scenario.state.legend[alternative.id].baseTitle || alternative.title}}
           </option>
         </select>
         <div style="width: 400px; height: 350px">
@@ -92,15 +92,15 @@
           <tr>
             <th>Alternative</th>
             <th>Confidence</th>
-            <th ng-repeat="criterion in state.problem.criteria">{{criterion.title}}</th>
+            <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="(key, centralWeight) in state.results.cw.data">
-            <td>{{scenario.state.legend[key].baseTitle || state.problem.alternatives[key].title}}</td>
-            <td class="heat">{{::centralWeight.cf | number}}</td>
-            <td ng-repeat="(c, criterion) in state.problem.criteria">
-              {{::centralWeight.w[c] | number}}
+          <tr ng-repeat="alternative in alternatives">
+            <td>{{alternative.title}}</td>
+            <td class="heat">{{state.results.cw.data[alternative.id].cf | number}}</td>
+            <td ng-repeat="criterion in criteria">
+              {{::state.results.cw.data[alternative.id].w[criterion.id] | number}}
             </td>
           </tr>
         </tbody>

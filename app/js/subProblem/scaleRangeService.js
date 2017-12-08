@@ -92,24 +92,24 @@ define(['lodash', 'angular'], function(_) {
     function getScaleStateAndChoices(observedScales, criteria) {
       var scaleState = {};
       var choices = {};
-      _.forEach(_.toPairs(observedScales), function(criterion) {
+      _.forEach(criteria, function(criterion) {
 
         // Calculate interval hulls
-        var criterionRange = intervalHull(criterion[1]);
+        var criterionRange = intervalHull(observedScales[criterion.id]);
 
         // Set inital model value
-        var pvf = criteria[criterion[0]].pvf;
+        var pvf = criterion.pvf;
         var problemRange = pvf ? pvf.range : null;
         var from = problemRange ? problemRange[0] : criterionRange[0];
         var to = problemRange ? problemRange[1] : criterionRange[1];
-        choices[criterion[0]] = {
+        choices[criterion.id] = {
           from: niceFrom(from),
           to: niceTo(to)
         };
 
         // Set scales for slider
-        var criterionScale = criteria[criterion[0]].scale;
-        scaleState[criterion[0]] = calculateScales(criterionScale, from, to, criterionRange);
+        var criterionScale = criterion.scale;
+        scaleState[criterion.id] = calculateScales(criterionScale, from, to, criterionRange);
 
       });
       return {

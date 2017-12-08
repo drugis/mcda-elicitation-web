@@ -139,6 +139,7 @@ router.post('/workspaces/:id*', requireUserIsWorkspaceOwner);
 router.delete('/workspaces/:id*', requireUserIsWorkspaceOwner);
 router.get('/workspaces/inProgress/:id', requireUserIsInProgressWorkspaceOwner);
 router.put('/workspaces/inProgress/:id', requireUserIsInProgressWorkspaceOwner);
+router.put('/workspaces/:id/ordering', requireUserIsWorkspaceOwner);
 router.delete('/workspaces/inProgress/:id', requireUserIsInProgressWorkspaceOwner);
 app.use(router);
 
@@ -162,8 +163,66 @@ app.get('/signin', function(req, res) {
   res.sendfile(__dirname + '/public/signin.html');
 });
 
+// Workspaces in progress
 
-// Workspaces
+app.post('/inProgress', function(req, res, next) {
+  logger.debug('creating in-progress workspace');
+
+  db.query('INSERT INTO inProgressWorkspace (owner, state) VALUES ($1, $2) RETURNING id', [req.user.id, req.body], function(err, result) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.json({ id: result.rows[0].id });
+  });
+});
+
+app.put('/inProgress/:id', function(req, res, next) {
+  logger.debug('updating in-progress workspace');
+  db.query('UPDATE inProgressWorkspace SET state = $1 WHERE id = $2 ', [req.body, req.params.id], function(err) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.end();
+  });
+});
+
+app.get('/inProgress/:id', function(req, res, next) {
+  logger.debug('GET /inProgress/:id');
+  db.query('SELECT id, owner, state FROM inProgressWorkspace WHERE id = $1', [req.params.id], function(err, result) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.json(result.rows[0]);
+  });
+});
+
+app.get('/inProgress', function(req, res, next) {
+  logger.debug('GET /inProgress/');
+  db.query('SELECT id, owner, state FROM inProgressWorkspace WHERE owner = $1', [req.user.id], function(err, result) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.json(result.rows);
+  });
+});
+
+app.delete('/inProgress/:id', function(req, res, next) {
+  db.query('DELETE FROM inProgressWorkspace WHERE id=$1', [req.params.id], function(err) {
+    if (err) {
+      logger.debug('error deleting workspace in progress');
+      err.status = 500;
+      return next(err);
+    }
+    res.end();
+  });
+});
+
+
+// Complete workspaces
 app.get('/workspaces', function(req, res, next) {
   logger.debug('GET /workspaces');
   db.query('SELECT id, owner, title, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1', [req.user.id], function(err, result) {
@@ -266,62 +325,6 @@ app.post('/workspaces', function(req, res, next) {
   });
 });
 
-app.post('/inProgress', function(req, res, next) {
-  logger.debug('creating in-progress workspace');
-
-  db.query('INSERT INTO inProgressWorkspace (owner, state) VALUES ($1, $2) RETURNING id', [req.user.id, req.body], function(err, result) {
-    if (err) {
-      err.status = 500;
-      return next(err);
-    }
-    res.json({ id: result.rows[0].id });
-  });
-});
-
-app.put('/inProgress/:id', function(req, res, next) {
-  logger.debug('updating in-progress workspace');
-  db.query('UPDATE inProgressWorkspace SET state = $1 WHERE id = $2 ', [req.body, req.params.id], function(err) {
-    if (err) {
-      err.status = 500;
-      return next(err);
-    }
-    res.end();
-  });
-});
-
-app.get('/inProgress/:id', function(req, res, next) {
-  logger.debug('GET /inProgress/:id');
-  db.query('SELECT id, owner, state FROM inProgressWorkspace WHERE id = $1', [req.params.id], function(err, result) {
-    if (err) {
-      err.status = 500;
-      return next(err);
-    }
-    res.json(result.rows[0]);
-  });
-});
-
-app.get('/inProgress', function(req, res, next) {
-  logger.debug('GET /inProgress/');
-  db.query('SELECT id, owner, state FROM inProgressWorkspace WHERE owner = $1', [req.user.id], function(err, result) {
-    if (err) {
-      err.status = 500;
-      return next(err);
-    }
-    res.json(result.rows);
-  });
-});
-
-app.delete('/inProgress/:id', function(req, res, next) {
-  db.query('DELETE FROM inProgressWorkspace WHERE id=$1', [req.params.id], function(err) {
-    if (err) {
-      logger.debug('error deleting workspace in progress');
-      err.status = 500;
-      return next(err);
-    }
-    res.end();
-  });
-});
-
 app.get('/workspaces/:id', function(req, res, next) {
   logger.debug('GET /workspaces/:id');
   db.query('SELECT id, owner, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
@@ -394,6 +397,34 @@ app.delete('/workspaces/:id', function(req, res, next) {
     res.json(result);
   });
 
+});
+
+// Orderings
+app.get('/workspaces/:workspaceId/ordering', function(req, res, next) {
+  logger.debug('GET /workspaces/' + req.params.workspaceId + '/ordering');
+  db.query('SELECT workspaceId AS "workspaceId", ordering FROM ordering WHERE workspaceId = $1', [req.params.workspaceId], function(err, result) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.json({
+      ordering: result.rows[0] ? result.rows[0].ordering : undefined
+    });
+  });
+});
+
+app.put('/workspaces/:workspaceId/ordering', function(req, res, next) {
+  logger.debug('SET /workspaces/'+req.params.workspaceId+'/ordering/');
+  db.query('insert into ordering(workspaceId, ordering) values($1, $2) ON CONFLICT(workspaceId) DO UPDATE SET ordering=$2', [
+    req.params.workspaceId,
+    req.body
+  ], function(err) {
+    if (err) {
+      err.status = 500;
+      next(err);
+    }
+    res.end();
+  });
 });
 
 //Subproblems

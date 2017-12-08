@@ -18,13 +18,16 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.editTherapeuticContext = editTherapeuticContext;
     $scope.editCriterion = editCriterion;
     $scope.editAlternative = editAlternative;
+    $scope.criterionUp = criterionUp;
+    $scope.criterionDown = criterionDown;
+    $scope.alternativeUp = alternativeUp;
+    $scope.alternativeDown = alternativeDown;
     $scope.downloadWorkspace = downloadWorkspace;
 
     // init
     $scope.scales = $scope.workspace.scales.observed;
     $scope.valueTree = $scope.workspace.$$valueTree;
     $scope.problem = $scope.workspace.problem;
-    $scope.effectsTableData = EffectsTableService.buildEffectsTableData($scope.problem, $scope.valueTree);
     $scope.nrAlternatives = _.keys($scope.problem.alternatives).length;
     $scope.isStandAlone = isMcdaStandalone;
     $scope.references = {
@@ -33,9 +36,10 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       })
     };
 
-     OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).$promise.then(function(orderings){
+     OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings){
       $scope.alternatives = orderings.alternatives;
       $scope.criteria = orderings.criteria;
+      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem, orderings.criteria);
      });
 
     $scope.$watch('workspace.scales.observed', function(newValue) {
@@ -68,6 +72,37 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       });
     }
 
+    function criterionUp(idx) {
+      var mem = $scope.criteria[idx];
+      $scope.criteria[idx] = $scope.criteria[idx - 1];
+      $scope.criteria[idx - 1] = mem;
+      OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
+      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem, $scope.criteria);
+    }
+
+    function criterionDown(idx) {
+      var mem = $scope.criteria[idx];
+      $scope.criteria[idx] = $scope.criteria[idx + 1];
+      $scope.criteria[idx + 1] = mem;
+      OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
+      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem, $scope.criteria);
+    }
+    function alternativeUp(idx) {
+      var mem = $scope.alternatives[idx];
+      $scope.alternatives[idx] = $scope.alternatives[idx - 1];
+      $scope.alternatives[idx - 1] = mem;
+      OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
+      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem, $scope.criteria);
+    }
+
+    function alternativeDown(idx) {
+      var mem = $scope.alternatives[idx];
+      $scope.alternatives[idx] = $scope.alternatives[idx + 1];
+      $scope.alternatives[idx + 1] = mem;
+      OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
+      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem, $scope.criteria);
+    }
+
     function editCriterion(criterion, criterionKey) {
       $modal.open({
         templateUrl: '/js/evidence/editCriterion.html',
@@ -81,7 +116,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
           },
           callback: function() {
             return function(newCriterion) {
-              $scope.workspace.problem.criteria[criterionKey] = newCriterion;
+              $scope.workspace.problem.criteria[criterionKey] = _.omit(newCriterion, 'id');
               WorkspaceResource.save($stateParams, $scope.workspace).$promise.then(function() {
                 $state.reload();
               });
@@ -89,7 +124,6 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
           }
         }
       });
-
     }
 
     function editAlternative(alternative) {
@@ -105,7 +139,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
           },
           callback: function() {
             return function(newAlternative) {
-              alternative.title = newAlternative.title;
+              $scope.workspace.problem.alternatives[alternative.id].title = newAlternative.title;
               WorkspaceResource.save($stateParams, $scope.workspace).$promise.then(function() {
                 $state.reload();
               });

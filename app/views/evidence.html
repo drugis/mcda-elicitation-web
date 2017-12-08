@@ -33,22 +33,24 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="(criterionKey, criterion) in problem.criteria">
+        <tr ng-repeat="criterion in criteria">
           <td>
             <div class="grid-x">
               <div class="cell small-2">
                 <div style="line-height: 10px; margin-bottom: 4px;">
-                  <a ng-click="foo" class="nav-arrow"><i style="line-height:0px;" class="fa fa-caret-up"></i></a>
+                  <a ng-click="criterionUp($index)" class="nav-arrow" ng-if="$index !== 0"><i style="line-height:0px;" class="fa fa-caret-up"></i></a>
+                  <i ng-if="$index === 0" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
                 </div>
                 <div style="line-height: 10px;">
-                  <a ng-click="foo" class="nav-arrow"><i style="line-height:0px;" class="fa fa-caret-down"></i></a>
+                  <a ng-click="criterionDown($index)" class="nav-arrow" ng-if="$index !== criteria.length-1"><i style="line-height:0px;" class="fa fa-caret-down"></i></a>
+                  <i ng-if="$index === criteria.length-1" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
                 </div>
               </div>
-            <div class="cell small-10">
-            {{criterion.title}}
-            <a class="right" ng-if="editMode.isUserOwner && isStandAlone" ng-click="editCriterion(criterion, criterionKey)">
-              <i class="fa fa-edit"></i>            </a>
-            </div>
+              <div class="cell small-10">
+                {{criterion.title}}
+                <a class="right" ng-if="editMode.isUserOwner && isStandAlone" ng-click="editCriterion(criterion, criterion.id)">
+              <i class="fa fa-edit"></i></a>
+              </div>
           </td>
           <td>{{criterion.unitOfMeasurement}}</td>
           <td>{{criterion.description}}</td>
@@ -57,90 +59,96 @@
         </tr>
       </tbody>
     </table>
-  </div>
-  <div class="cell">
-    <h4>Alternatives <inline-help help-key="alternative"></inline-help></h4>
-  </div>
-  <div class="cell large-6">
-    <table width="100%">
-      <thead>
-        <tr>
-          <th>Alternative title</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-repeat="alternative in problem.alternatives">
-          <td>
-            <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editAlternative(alternative)">
-              <i class="fa fa-edit"></i>
-            </a> {{alternative.title}}
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="cell underlined-div"></div>
-  <div class="cell large-10">
-    <h4>Effects Table
+    </div>
+    <div class="cell">
+      <h4>Alternatives <inline-help help-key="alternative"></inline-help></h4>
+    </div>
+    <div class="cell large-6">
+      <table width="100%">
+        <thead>
+          <tr>
+            <th>Alternative title</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="alternative in alternatives">
+            <td>
+              <div class="grid-x">
+                <div class="cell small-1">
+                  <div style="line-height: 10px; margin-bottom: 4px;">
+                    <a ng-click="alternativeUp($index)" class="nav-arrow" ng-if="$index !== 0"><i style="line-height:0px;" class="fa fa-caret-up"></i></a>
+                    <i ng-if="$index === 0" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
+                  </div>
+                  <div style="line-height: 10px;">
+                    <a ng-click="alternativeDown($index)" class="nav-arrow" ng-if="$index !== alternatives.length-1"><i style="line-height:0px;" class="fa fa-caret-down"></i></a>
+                    <i ng-if="$index === alternatives.length-1" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
+                  </div>
+                </div>
+                <div class="cell small-11">
+                  <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editAlternative(alternative)">
+                    <i class="fa fa-edit"></i>
+                  </a> {{alternative.title}}
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cell underlined-div"></div>
+    <div class="cell large-10">
+      <h4>Effects Table
       <inline-help help-key="effects-table"></inline-help>
     </h4>
-  </div>
-  <div class="cell large-2">
-    <button class="button small info clipboard-button" data-clipboard-target="#effectstable">
-      <i class="fa fa-clipboard"></i> Copy to clipboard
-    </button>
-  </div>
-  <div class="cell">
-    <table class="full-width effects-table" id="effectstable">
-      <thead>
-        <tr>
-          <th>Criterion
-            <inline-help help-key="criterion"></inline-help>
-          </th>
-          <th>Description</th>
-          <th>Units
-            <inline-help help-key="criterion-unit"></inline-help>
-          </th>
-          <th ng-if="references.has">References</th>
-          <th class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives">
-            {{alternative.title}}</th>
-        </tr>
-      </thead>
-      <tbody class="main">
-        <tr ng-repeat-start="effectsTableRow in effectsTableData" ng-show="effectsTableRow.path.length > 0">
-          <td class="group-header" colspan="{{(references.has ? 4 : 3) + nrAlternatives}}">
-            <div class="main-header">
-              {{effectsTableRow.path[0].title}}
-            </div>
-            <span ng-repeat="node in effectsTableRow.path.slice(1)">
-              <i style="font-size: 1.5rem" class="fa fa-angle-right"></i>
-              <div class="secondary-header">
-                {{node.title}}
+    </div>
+    <div class="cell large-2">
+      <button class="button small info clipboard-button" data-clipboard-target="#effectstable">
+        <i class="fa fa-clipboard"></i> Copy to clipboard
+      </button>
+    </div>
+    <div class="cell">
+      <table class="full-width effects-table" id="effectstable">
+        <thead>
+          <tr>
+            <th>Criterion
+              <inline-help help-key="criterion"></inline-help>
+            </th>
+            <th>Description</th>
+            <th>Units
+              <inline-help help-key="criterion-unit"></inline-help>
+            </th>
+            <th ng-if="references.has">References</th>
+            <th class="text-center" ng-repeat="alternative in alternatives">
+              {{alternative.title}}</th>
+          </tr>
+        </thead>
+        <tbody class="main">
+          <tr ng-repeat="row in rows">
+            <td ng-if="row.isHeaderRow" class="group-header" colspan="{{(references.has ? 4 : 3) + nrAlternatives}}">
+              <div class="main-header">
+                {{row.headerText}}
               </div>
-            </span>
-          </td>
-        </tr>
-        <tr ng-repeat-end ng-repeat="criterion in effectsTableRow.criteria track by $index">
-          <td>
-            {{criterion.value.title}}
-          </td>
-          <td>
-            <div class="td-container">
-              <div class="td-content">{{criterion.value.description}}</div>
-              <div class="td-spacer">{{criterion.value.description}}</div>
-              <span>&nbsp;</span>
-            </div>
-          </td>
-          <td>{{criterion.value.unitOfMeasurement}}</td>
-          <td ng-if="references.has"><a href="{{criterion.value.sourceLink}}">{{criterion.value.source}}</a></td>
-          <td class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives" name="col{{$index}}" id="col{{$index}}">
-            {{scales[criterion.key][alternativeKey]['50%'] | number}}
-            <br>
-            <div class="uncertain" ng-show="!isExact(criterion.key, alternativeKey)">
-              {{scales[criterion.key][alternativeKey]['2.5%'] | number}}, {{scales[criterion.key][alternativeKey]['97.5%'] | number}}</div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            </td>
+            <td ng-if="!row.isHeaderRow">
+              {{problem.criteria[row].title}}
+            </td>
+            <td ng-if="!row.isHeaderRow">
+              <div class="td-container">
+                <div class="td-content">{{problem.criteria[row].description}}</div>
+                <div class="td-spacer">{{problem.criteria[row].description}}</div>
+                <span>&nbsp;</span>
+              </div>
+            </td>
+            <td ng-if="!row.isHeaderRow">{{problem.criteria[row].unitOfMeasurement}}</td>
+            <td ng-if="references.has && !row.isHeaderRow"><a href="{{problem.criteria[row].sourceLink}}">{{problem.criteria[row].source}}</a></td>
+            <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
+              {{scales[row][alternative.id]['50%'] | number}}
+              <br>
+              <div class="uncertain" ng-show="!isExact(row, alternative.id)">
+                {{scales[row][alternative.id]['2.5%'] | number}}, {{scales[row][alternative.id]['97.5%'] | number}}</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>

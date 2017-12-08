@@ -3,7 +3,7 @@ define(['angular',
     'angular-mocks',
     'mcda/services/taskDependencies',
     'mcda/services/util',
-    'mcda/services/effectsTableService',
+    'mcda/evidence/evidence',
     'mcda/preferences/preferences'
   ],
   function() {
@@ -11,10 +11,9 @@ define(['angular',
       var scope, state;
 
       beforeEach(module('elicit.preferences'));
+      beforeEach(module('elicit.evidence'));
       beforeEach(module('elicit.taskDependencies'));
-      beforeEach(module('elicit.effectsTableService'));
-
-
+      
       beforeEach(inject(function($rootScope, $controller, TaskDependencies) {
         var task = {
             requires: [],

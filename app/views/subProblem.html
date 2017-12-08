@@ -23,7 +23,7 @@
           <th>Criterion <inline-help help-key="criterion"></inline-help></th>
           <th>Description</th>
           <th>Units <inline-help help-key="criterion-unit"></inline-help></th>
-          <th class="text-center" ng-repeat="(alternativeKey, alternative) in mergedProblem.alternatives">
+          <th class="text-center" ng-repeat="alternative in alternatives">
             <label>
               {{alternative.title}}
             </label>
@@ -31,7 +31,7 @@
         </tr>
       </thead>
       <tbody class="main">
-        <tr ng-repeat="(criterionKey, criterion) in mergedProblem.criteria">
+        <tr ng-repeat="criterion in criteria">
           <td>
             <label>
               {{criterion.title}}
@@ -45,11 +45,11 @@
             </div>
           </td>
           <td>{{criterion.unitOfMeasurement}}</td>
-          <td class="text-center" ng-repeat="(alternativeKey, alternative) in mergedProblem.alternatives" name="col{{$index}}" id="col{{$index}}">
-            {{scales.observed[criterionKey][alternativeKey]['50%'] | number}}
+          <td class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
+            {{scales.observed[criterion.id][alternative.id]['50%'] | number}}
             <br>
-            <div class="uncertain" ng-if="!isExact(criterionKey, alternativeKey)">
-              {{scales.observed[criterionKey][alternativeKey]['2.5%'] | number}}, {{scales.observed[criterionKey][alternativeKey]['97.5%'] | number}}</div>
+            <div class="uncertain" ng-if="!isExact(criterion.id, alternative.id)">
+              {{scales.observed[criterion.id][alternative.id]['2.5%'] | number}}, {{scales.observed[criterion.id][alternative.id]['97.5%'] | number}}</div>
           </td>
         </tr>
       </tbody>
@@ -89,12 +89,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="(id, criterion) in mergedProblem.criteria">
+        <tr ng-repeat="criterion in criteria">
           <td>{{criterion.title}}</td>
-          <td>{{scales.theoreticalScales[id][0] | number}}, {{scales.theoreticalScales[id][1] | number}}</td>
+          <td>{{scales.theoreticalScales[criterion.id][0] | number}}, {{scales.theoreticalScales[criterion.id][1] | number}}</td>
           <td>
-            <span ng-bind="intervalHull(scales.observed[id])[0] | number"></span> ,
-            <span ng-bind="intervalHull(scales.observed[id])[1] | number"></span>
+            <span ng-bind="intervalHull(scales.observed[criterion.id])[0] | number"></span> ,
+            <span ng-bind="intervalHull(scales.observed[criterion.id])[1] | number"></span>
           </td>
           <td>
             <span ng-if="criterion.pvf.range">{{criterion.pvf.range[0] | number}}, {{criterion.pvf.range[1] | number}}</span>

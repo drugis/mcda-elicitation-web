@@ -38,41 +38,41 @@
               <th>Units
                 <inline-help help-key="criterion-unit"></inline-help>
               </th>
-              <th ng-class="{'disabled-header' : !subProblemState.alternativeInclusions[alternativeKey]}" class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives">
-                <span ng-if="isBaseline[alternativeKey]" tooltip="Cannot deselect baseline">
-              <label>
-                <input type="checkbox" ng-model="subProblemState.alternativeInclusions[alternativeKey]" ng-disabled="true"> {{alternative.title}}
-              </label>
-            </span>
-                <span ng-if="!isBaseline[alternativeKey]">
-              <label>
-                <input type="checkbox" ng-model="subProblemState.alternativeInclusions[alternativeKey]" ng-change="updateInclusions()" ng-disabled="subProblemState.alternativeInclusions[alternativeKey] && subProblemState.numberOfAlternativesSelected < 3"> {{alternative.title}}
-              </label>
-           </span>
+              <th ng-class="{'disabled-header' : !subProblemState.alternativeInclusions[alternative.id]}" class="text-center" ng-repeat="alternative in alternatives">
+                <div class="grid-x">
+                  <div class="cell">
+                    <input style="margin:0;" ng-if="!isBaseline[alternative.id]" id="{{alternative.id}}" type="checkbox" ng-model="subProblemState.alternativeInclusions[alternative.id]" ng-change="updateInclusions()" ng-disabled="subProblemState.alternativeInclusions[alternative.id] && subProblemState.numberOfAlternativesSelected < 3">
+                    <i ng-if="isBaseline[alternative.id]" class="fa fa-ban" tooltip="Cannot deselect baseline"></i>
+                  </div>
+                <div class="cell">
+                  <label for="{{alternative.id}}">
+                    {{alternative.title}}
+                  </label>
+                </div>
               </th>
             </tr>
           </thead>
           <tbody class="main">
-            <tr ng-repeat="(criterionKey, criterion) in problem.criteria">
-              <td ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterionKey]}">
+            <tr ng-repeat="criterion in criteria">
+              <td ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}">
                 <label>
-                  <input type="checkbox" ng-model="subProblemState.criterionInclusions[criterionKey]" ng-change="updateInclusions()" ng-disabled="subProblemState.criterionInclusions[criterionKey] && subProblemState.numberOfCriteriaSelected < 3"> {{criterion.title}}
+                  <input type="checkbox" ng-model="subProblemState.criterionInclusions[criterion.id]" ng-change="updateInclusions()" ng-disabled="subProblemState.criterionInclusions[criterion.id] && subProblemState.numberOfCriteriaSelected < 3"> {{criterion.title}}
                 </label>
               </td>
-              <td ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterionKey]}">
+              <td ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}">
                 <div class="td-container">
                   <div class="td-content">{{criterion.description}}</div>
                   <div class="td-spacer">{{criterion.description}}</div>
                   <span>&nbsp;</span>
                 </div>
               </td>
-              <td ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterionKey]}">{{criterion.unitOfMeasurement}}</td>
-              <td ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternativeKey] || !subProblemState.criterionInclusions[criterionKey]}" class="text-center" ng-repeat="(alternativeKey, alternative) in problem.alternatives" name="col{{$index}}" id="col{{$index}}">
+              <td ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}">{{criterion.unitOfMeasurement}}</td>
+              <td ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternative.id] || !subProblemState.criterionInclusions[criterion.id]}" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
                 <div>
-                  {{scales.observed[criterionKey][alternativeKey]['50%'] | number}}
+                  {{scales.observed[criterion.id][alternative.id]['50%'] | number}}
                   <br>
-                  <div class="uncertain" ng-if="!isExact(criterionKey, alternativeKey)">
-                    {{scales.observed[criterionKey][alternativeKey]['2.5%'] | number}}, {{scales.observed[criterionKey][alternativeKey]['97.5%'] | number}}</div>
+                  <div class="uncertain" ng-if="!isExact(criterion.id, alternative.id)">
+                    {{scales.observed[criterion.id][alternative.id]['2.5%'] | number}}, {{scales.observed[criterion.id][alternative.id]['97.5%'] | number}}</div>
                 </div>
               </td>
             </tr>
@@ -88,18 +88,18 @@
       </div>
       <div class="cell">
         <ul class="no-bullet">
-          <li ng-repeat="(key, criterion) in criteria">
+          <li ng-repeat="criterion in scalesCriteria">
             <h5 class="subheader"><criterion of="criterion"></criterion></h5>
             <div class="grid-x">
               <div class="cell large-1 text-center">
-                <a ng-click="scalesState[key].increaseFrom()" class="tiny round button slider-buttons">&lt;</a>
+                <a ng-click="scalesState[criterion.id].increaseFrom()" class="tiny round button slider-buttons">&lt;</a>
               </div>
               <div class="cell large-10">
-                <rzslider rz-slider-model="choices[key].from" rz-slider-high="choices[key].to" rz-slider-options="scalesState[key].sliderOptions">
+                <rzslider rz-slider-model="choices[criterion.id].from" rz-slider-high="choices[criterion.id].to" rz-slider-options="scalesState[criterion.id].sliderOptions">
                 </rzslider>
               </div>
               <div class="cell large-1 pull-3 text-center">
-                <a ng-click="scalesState[key].increaseTo()" class="tiny round button slider-buttons">&gt;</a>
+                <a ng-click="scalesState[criterion.id].increaseTo()" class="tiny round button slider-buttons">&gt;</a>
               </div>
             </div>
             <br>

@@ -4,7 +4,8 @@ define(['lodash'], function(_) {
   var OrderingService = function(OrderingResource) {
 
     function getOrderedCriteriaAndAlternatives(problem, stateParams) {
-      return OrderingResource.get(stateParams).$promise.then(function(ordering) {
+      return OrderingResource.get(stateParams).$promise.then(function(response) {
+        var ordering = response.ordering;
         if (!ordering) {
           return {
             alternatives: _.map(problem.alternatives, function(alternative, alternativeId) {
@@ -43,8 +44,16 @@ define(['lodash'], function(_) {
       });
     }
 
+    function saveOrdering(stateParams, criteria, alternatives) {
+      return OrderingResource.put(stateParams, {
+        criteria: _.map(criteria, 'id'),
+        alternatives: _.map(alternatives, 'id')
+      }).$promise;
+    }
+
     return {
-      getOrderedCriteriaAndAlternatives: getOrderedCriteriaAndAlternatives
+      getOrderedCriteriaAndAlternatives: getOrderedCriteriaAndAlternatives,
+      saveOrdering: saveOrdering
     };
   };
   return dependencies.concat(OrderingService);

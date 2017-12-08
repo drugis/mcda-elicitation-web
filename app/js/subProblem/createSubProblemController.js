@@ -2,12 +2,28 @@
 define(['lodash', 'angular'], function(_) {
 
   var dependencies = ['$scope', '$stateParams', '$modalInstance', '$timeout',
-    'ScenarioResource', 'SubProblemResource',
-    'SubProblemService', 'ScaleRangeService', 'subProblems', 'subProblem', 'problem', 'scales', 'callback'
+    'ScenarioResource',
+    'SubProblemResource',
+    'SubProblemService',
+    'ScaleRangeService',
+    'OrderingService',
+    'subProblems',
+    'subProblem',
+    'problem',
+    'scales',
+    'callback'
   ];
   var CreateSubProblemController = function($scope, $stateParams, $modalInstance, $timeout,
-    ScenarioResource, SubProblemResource, SubProblemService, ScaleRangeService,
-    subProblems, subProblem, problem, scales, callback) {
+    ScenarioResource,
+    SubProblemResource,
+    SubProblemService,
+    ScaleRangeService,
+    OrderingService,
+    subProblems,
+    subProblem,
+    problem,
+    scales,
+    callback) {
     // functions
     $scope.checkDuplicateTitle = checkDuplicateTitle;
     $scope.updateInclusions = updateInclusions;
@@ -21,17 +37,16 @@ define(['lodash', 'angular'], function(_) {
     $scope.originalScales = _.cloneDeep(scales);
     $scope.scales = _.cloneDeep(scales);
     initSubProblem(_.cloneDeep(subProblem), _.cloneDeep(problem));
-    checkDuplicateTitle($scope.subProblemState.title);
     $scope.isExact = _.partial(SubProblemService.isExact, $scope.problem.performanceTable);
     $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
 
     function isASliderInvalid() {
       $scope.invalidSlider = false;
-      _.forEach(_.keys($scope.criteria), function(criterionKey) {
-        var from = $scope.choices[criterionKey].from;
-        var to = $scope.choices[criterionKey].to;
-        var restrictedFrom = $scope.scalesState[criterionKey].sliderOptions.restrictedRange.from;
-        var restrictedTo = $scope.scalesState[criterionKey].sliderOptions.restrictedRange.to;
+      _.forEach($scope.scalesCriteria, function(criterion) {
+        var from = $scope.choices[criterion.id].from;
+        var to = $scope.choices[criterion.id].to;
+        var restrictedFrom = $scope.scalesState[criterion.id].sliderOptions.restrictedRange.from;
+        var restrictedTo = $scope.scalesState[criterion.id].sliderOptions.restrictedRange.to;
         // check if there is a value inside or at the wrong side of the red area
         if (from > restrictedFrom || to < restrictedTo) {
           $scope.invalidSlider = true;
@@ -58,17 +73,24 @@ define(['lodash', 'angular'], function(_) {
 
     function initSubProblem(subProblem, problem) {
       $scope.problem = problem;
-      $scope.originalCriterionInclusions = SubProblemService.createCriterionInclusions($scope.problem, subProblem);
-      $scope.originalAlternativeInclusions = SubProblemService.createAlternativeInclusions($scope.problem, subProblem);
-      $scope.subProblemState = {
-        criterionInclusions: $scope.originalCriterionInclusions,
-        alternativeInclusions: $scope.originalAlternativeInclusions,
-        ranges: _.merge($scope.problem.criteria, subProblem.definition.ranges)
-      };
-      updateInclusions();
-      $timeout(function() {
-        $scope.$broadcast('rzSliderForceRender');
-      }, 100);
+      OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
+        $scope.alternatives = orderings.alternatives;
+        $scope.criteria = orderings.criteria;
+
+        $scope.originalCriterionInclusions = SubProblemService.createCriterionInclusions($scope.problem, subProblem);
+        $scope.originalAlternativeInclusions = SubProblemService.createAlternativeInclusions($scope.problem, subProblem);
+        $scope.subProblemState = {
+          criterionInclusions: $scope.originalCriterionInclusions,
+          alternativeInclusions: $scope.originalAlternativeInclusions,
+          ranges: _.merge({}, _.keyBy($scope.criteria, 'id'), subProblem.definition.ranges)
+        };
+        updateInclusions();
+        checkDuplicateTitle($scope.subProblemState.title);
+
+        $timeout(function() {
+          $scope.$broadcast('rzSliderForceRender');
+        }, 100);
+      });
     }
 
     function updateInclusions() {
@@ -77,7 +99,10 @@ define(['lodash', 'angular'], function(_) {
       var includedCriteria = _.keys(_.pickBy($scope.subProblemState.criterionInclusions));
       var includedAlternatives = _.keys(_.pickBy($scope.subProblemState.alternativeInclusions));
 
-      $scope.criteria = _.pick($scope.problem.criteria, includedCriteria);
+      // $scope.scalesCriteria = _.pick($scope.criteria, includedCriteria);
+      $scope.scalesCriteria = _.filter($scope.criteria, function(criterion) {
+        return $scope.subProblemState.criterionInclusions[criterion.id];
+      });
 
       var includedScales = _.pick($scope.originalScales.observed, includedCriteria);
       $scope.observedScales = _.mapValues(includedScales, function(value) {
@@ -87,7 +112,7 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function initializeScales() {
-      var stateAndChoices = ScaleRangeService.getScaleStateAndChoices($scope.observedScales, $scope.criteria);
+      var stateAndChoices = ScaleRangeService.getScaleStateAndChoices($scope.observedScales, $scope.scalesCriteria);
       $scope.scalesState = stateAndChoices.scaleState;
       $scope.choices = stateAndChoices.choices;
       _.forEach($scope.choices, function(choice, key) {

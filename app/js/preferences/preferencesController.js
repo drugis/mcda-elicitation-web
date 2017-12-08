@@ -8,6 +8,7 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     '$state',
     'ScenarioResource',
     'PartialValueFunctionService',
+    'OrderingService',
     'TaskDependencies',
     'currentScenario',
     'MCDAResultsService',
@@ -20,6 +21,7 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     $state,
     ScenarioResource,
     PartialValueFunctionService,
+    OrderingService,
     TaskDependencies,
     currentScenario,
     MCDAResultsService,
@@ -44,7 +46,11 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
         $scope.deterministicResults = result.results;
       });
     }
-    var clipboard = new Clipboard('.clipboard-button');
+    OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
+      $scope.alternatives = orderings.alternatives;
+      $scope.criteria = orderings.criteria;
+    });
+    new Clipboard('.clipboard-button');
 
     function doAllCriteriaHavePvf() {
       var havePvf = true;

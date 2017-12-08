@@ -6,7 +6,7 @@ define(['angular'].concat(requires), function(
   angular,
   MCDABenefitRiskController
 ) {
-  return angular.module('elicit.controllers', ['elicit.effectsTableService', 'elicit.util'])
+  return angular.module('elicit.controllers', ['elicit.util'])
     .controller('MCDABenefitRiskController', MCDABenefitRiskController)
     
     ;

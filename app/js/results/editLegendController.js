@@ -46,7 +46,7 @@ define(['lodash'], function(_) {
 
     function createBaseCase() {
       return _.reduce(alternatives, function(accum, alternative, alternativeKey) {
-        accum[alternativeKey] = {
+        accum[alternative.id] = {
           baseTitle: alternative.title,
           newTitle: alternative.title
         };

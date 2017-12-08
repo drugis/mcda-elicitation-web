@@ -1,13 +1,19 @@
 'use strict';
 define(['clipboard', 'lodash'], function(Clipboard, _) {
   var dependencies = ['$scope',
-    'currentScenario', 'taskDefinition',
-    'MCDAResultsService', 'addKeyHashToObject'
+    '$stateParams',
+    'currentScenario',
+    'taskDefinition',
+    'MCDAResultsService',
+    'OrderingService'
   ];
 
   var DeterministicResultsController = function($scope,
-    currentScenario, taskDefinition,
-    MCDAResultsService, addKeyHashToObject) {
+    $stateParams,
+    currentScenario,
+    taskDefinition,
+    MCDAResultsService,
+    OrderingService) {
     // functions
     $scope.sensitivityScalesChanged = sensitivityScalesChanged;
     $scope.recalculateResults = recalculateResults;
@@ -24,10 +30,15 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       alteredTableCells: [],
       isEditing: false
     };
-    loadState();
-    $scope.$watch('scales.observed', function() {
-      resetSensitivityAnalysis();
+    OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(ordering) {
+      $scope.criteria = ordering.criteria;
+      $scope.alternatives = ordering.alternatives;
+      $scope.$watch('scales.observed', function() {
+        resetSensitivityAnalysis();
+      });
+      loadState();
     });
+
     new Clipboard('.clipboard-button');
 
     function isEditing(value) {
@@ -36,7 +47,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
 
     function resetSensitivityAnalysis() {
       $scope.modifiableScales = MCDAResultsService.resetModifiableScales(
-        $scope.scales.observed, $scope.state.problem.alternatives);
+        $scope.scales.observed, _.keyBy($scope.alternatives, 'id'));
       delete $scope.recalculatedDeterministicResults;
       $scope.sensitivityMeasurements.alteredTableCells = [];
     }
@@ -56,13 +67,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     }
 
     function initialize(state) {
-      $scope.alternatives = _.map(state.problem.alternatives, function(alternative, key) {
-        return addKeyHashToObject(alternative, key);
-      });
       $scope.sensitivityMeasurements.measurementsAlternative = $scope.alternatives[0];
-      $scope.criteria = _.map(state.problem.criteria, function(criterion, key) {
-        return addKeyHashToObject(criterion, key);
-      });
       $scope.sensitivityMeasurements.measurementsCriterion = $scope.criteria[0];
       $scope.sensitivityMeasurements.preferencesCriterion = $scope.criteria[0];
 

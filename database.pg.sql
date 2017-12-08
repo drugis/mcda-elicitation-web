@@ -110,3 +110,11 @@ CREATE TABLE inProgressWorkspace(
   PRIMARY KEY (id),
   FOREIGN KEY(owner) REFERENCES Account(id)
 );
+
+--changeset reidd:13
+CREATE TABLE ordering(
+  workspaceId INT NOT NULL,
+  ordering JSONB NOT NULL,
+  PRIMARY KEY (workspaceId),
+  FOREIGN KEY(workspaceId) REFERENCES workspace(id) ON DELETE CASCADE
+);

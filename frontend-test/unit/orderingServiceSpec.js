@@ -23,8 +23,10 @@ define(['angular-mocks', 'mcda/workspace/workspace'], function() {
     describe('getOrderedCriteriaAndAlternatives', function() {
       it('should return the orders of the alternatives and criteria of a problem', function(done) {
         var order = {
-          criteria: ['crit2', 'crit3', 'crit1', 'crit4'],
-          alternatives: ['alt1', 'alt3', 'alt2']
+          ordering: {
+            criteria: ['crit2', 'crit3', 'crit1', 'crit4'],
+            alternatives: ['alt1', 'alt3', 'alt2']
+          }
         };
         orderDefer.resolve(order);
         rootScope.$digest();
@@ -83,7 +85,7 @@ define(['angular-mocks', 'mcda/workspace/workspace'], function() {
         rootScope.$digest();
       });
       it('should return a new order of the alternatives and criteria if no order is available for a given problem', function(done) {
-        orderDefer.resolve(undefined);
+        orderDefer.resolve({});
         rootScope.$digest();
         var problem = {
           criteria: {

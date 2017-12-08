@@ -43,7 +43,7 @@ define(['lodash', 'jQuery'], function(_, $) {
                 return scope.scenario.state.legend;
               },
               alternatives: function() {
-                return scope.aggregateState.problem.alternatives;
+                return scope.alternatives;
               },
               callback: function() {
                 return function(newLegend) {

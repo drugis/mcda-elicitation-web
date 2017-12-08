@@ -1,14 +1,23 @@
 'use strict';
 define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, angular, Wizard) {
-
-  return function($scope, $state, $stateParams, $injector, currentScenario, taskDefinition, PartialValueFunctionService) {
+  var dependencies = [
+    '$scope', '$state', '$stateParams', '$injector',
+    'PartialValueFunctionService',
+    'OrderingService',
+    'currentScenario', 'taskDefinition'
+  ];
+  var OrdinalSwingController = function($scope, $state, $stateParams, $injector,
+    PartialValueFunctionService,
+    OrderingService, 
+    currentScenario, taskDefinition
+  ) {
     $scope.problem = $scope.aggregateState.problem;
     var pvf = PartialValueFunctionService;
     $scope.pvf = pvf;
 
     var getReference = function(criteria) {
       return _.zipObject(
-        _.keys(criteria),
+        _.map(criteria,'id'),
         _.map(criteria, function(criterion) {
           return pvf.worst(criterion);
         })
@@ -24,25 +33,24 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
     };
 
     function makeChoices() {
-      var criteria = $scope.problem.criteria;
-      var choices = _.map(_.keys(criteria), function(criterion) {
+      var criteria = $scope.criteria;
+      var choices = _.map(criteria, function(criterion) {
         var reference = getReference(criteria);
-        reference[criterion] = pvf.best(criteria[criterion]);
+        reference[criterion.id] = pvf.best(criterion);
         return reference;
       });
-      return _.zipObject(_.keys(criteria), choices);
+      return _.zipObject(_.map(criteria, 'id'), choices);
     }
 
     var initialize = function(state) {
-      var criteria = $scope.problem.criteria;
       var fields = {
-        title: title(1, _.size(criteria) - 1),
+        title: title(1, _.size($scope.criteria) - 1),
         type: 'elicit',
         prefs: {
           ordinal: []
         },
-        reference: getReference(criteria),
-        choices: makeChoices(state)
+        reference: getReference($scope.criteria),
+        choices: makeChoices()
       };
       return _.extend(state, fields);
     };
@@ -126,15 +134,20 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
       return state && _.size(state.choices) === 0;
     };
 
-    $injector.invoke(Wizard, this, {
-      $scope: $scope,
-      handler: {
-        validChoice: validChoice,
-        fields: ['choice', 'reference', 'choices', 'type', 'standardized'],
-        nextState: nextState,
-        initialize: _.partial(initialize, taskDefinition.clean($scope.aggregateState)),
-        standardize: standardize
-      }
+    OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
+      $scope.alternatives = orderings.alternatives;
+      $scope.criteria = orderings.criteria;
+      $injector.invoke(Wizard, this, {
+        $scope: $scope,
+        handler: {
+          validChoice: validChoice,
+          fields: ['choice', 'reference', 'choices', 'type', 'standardized'],
+          nextState: nextState,
+          initialize: _.partial(initialize, taskDefinition.clean($scope.aggregateState)),
+          standardize: standardize
+        }
+      });
     });
   };
+  return dependencies.concat(OrdinalSwingController);
 });

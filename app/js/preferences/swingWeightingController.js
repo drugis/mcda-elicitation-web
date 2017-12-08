@@ -2,14 +2,16 @@
 define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'],
   function(_, angular, Wizard) {
     var dependencies = ['$scope', '$state', '$stateParams', '$injector', '$timeout',
+      'PartialValueFunctionService',
+      'OrderingService',
       'currentScenario',
-      'taskDefinition',
-      'PartialValueFunctionService'
+      'taskDefinition'
     ];
     var SwingWeightingController = function($scope, $state, $stateParams, $injector, $timeout,
+      PartialValueFunctionService,
+      OrderingService,
       currentScenario,
-      taskDefinition,
-      PartialValueFunctionService
+      taskDefinition
     ) {
       // functions
       $scope.canSave = canSave;
@@ -18,6 +20,10 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'],
 
       // init
       $scope.pvf = PartialValueFunctionService;
+      OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
+        $scope.alternatives = orderings.alternatives;
+        $scope.criteria = orderings.criteria;
+      });
 
       function title(step, total) {
         var base = 'Swing weighting';
