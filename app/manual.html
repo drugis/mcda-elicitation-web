@@ -93,7 +93,7 @@
         </p>
         <h3 id="mcda-preparing-dataset">Preparing your dataset</h3>
         <p>This section only applies to the stand-alone version of MCDA, hosted on <a href="https://mcda.drugis.org/">https://mcda.drugis.org/</a>. In ADDIS (<a href="https://addis.drugis.org/">https://addis.drugis.org/</a>), this step is not necessary.</p>
-        <p>After signing in to MCDA, you will be redirected to your personal home page. It contains a list of your previously created workspaces (which will be empty until you create one). Any unfinished workspaces in the process of manual entry will also be shown here. Clicking the 'Create workspace' button will open a dialog that lets you choose what to base your workspace on: an example dataset selected by us, a file uploaded by you, or manual entry by you.</p>
+        <p>After signing in to MCDA, you will be redirected to your personal home page. It contains a list of your previously created workspaces (which will be empty until you create one). A <i>workspace</i> is an abstract container for a set of evidence, plus any filterings, transformations and analyses you may have performed for that set of evidence. Any unfinished workspaces in the process of manual entry will also be shown here. Clicking the 'Create workspace' button will open a dialog that lets you choose what to base your workspace on: an example dataset selected by us, a file uploaded by you, or manual entry by you.</p>
         <h4>Data upload</h4>
         <p>
           Datasets can be uploaded in JSON format. The JSON should contain the following entries (note that JSON is case-sensitive):
@@ -195,12 +195,12 @@
         </pre>
         </p>
         <p>
-          The preferences property should generally consist of an empty object. This will be filled in by performincg preference elicitation within the MCDA app.
+          The preferences property should generally consist of an empty object. This will be filled in by performing preference elicitation within the MCDA app.
         </p>
         <p>
           A list of complete examples is available on the <a href="https://github.com/drugis/mcda-elicitation-web/tree/master/examples" target="_blank">MCDA repository</a>.
         </p>
-        <h4>Manual entry</h4>
+        <h4 id="mcda-manual-entry">Manual entry</h4>
         <p>
           Selecting the 'Manual entry' option in the workspace creation dialog takes you to the manual workspace creation screen. Here, you can input the title, therapeutic context, criteria, and alternatives as well as the measurement data.
         </p>

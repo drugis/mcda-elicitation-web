@@ -2,7 +2,7 @@
   "alternative": {
     "title": "Alternative",
     "text": "An alternative is one of the different options for treatment/intervention being explored in a benefit-risk analysis, e.g. \"aspirin 40 mg/day\" or \"meditation therapy\".",
-    "link": "/manual.html#mcda-preparing-dataset"
+    "link": "/manual.html#mcda-manual-entry"
   },
   "alternatives-per-rank": {
     "title" :"Alternatives per rank",
@@ -12,7 +12,7 @@
   "central-weights": {
     "title": "Central weights",
     "text": "The central weight for each alternative, per criterion.",
-    "link": "/manual.html#mcda-preparing-dataset"
+    "link": "/manual.html#mcda-smaa-analysis"
   },
   "configured-range": {
     "title": "Configured range",
@@ -22,42 +22,42 @@
   "criterion": {
     "title": "Criterion",
     "text": "A criterion is an outcome of interest to be used in a benefit-risk analysis, e.g. \"mood improvement\" or \"nausea\".",
-    "link": "/manual.html#mcda-preparing-dataset"
+    "link": "/manual.html#mcda-manual-entry"
   },
   "criterion-data-source": {
     "title": "Criterion data source",
     "text": "Criterion data can be entered as either study data, or an exact-value distribution.",
-    "link": "/manual.html#mcda-preparing-dataset"
+    "link": "/manual.html#mcda-manual-entry"
   },
   "criterion-datatype": {
     "title": "Criterion data type",
     "text": "Criterion data can be reported in several ways, either as a proportion (e.g. \"fifty out of a hundred\"), a continuous value (e.g. \"weight increase in grams\") or as survival data (e.g. \"median survival after 20 days)\"",
-    "link": "/manual.html#mcda-preparing-dataset"
+    "link": "/manual.html#mcda-manual-entry"
   },
   "criterion-source": {
     "title": "Criterion data source",
     "text": "An optional indication of where the data for this criterion comes from (single study or meta-analysis).",
-    "link": "/manual.html#mcda-preparing-dataset"
+    "link": "/manual.html#mcda-manual-entry"
   },
   "criterion-source-link": {
     "title": "Source link",
     "text": "An optional hyperlink that leads to the source of this criterion's data",
-    "link": "/manual.html#mcda-preparing-dataset"
+    "link": "/manual.html#mcda-manual-entry"
   },
   "criterion-unit": {
     "title": "Unit of measurement",
     "text": "In which unit of measurement the criterion's data are reported (e.g. \"proportion\", \"gram\")",
-    "link": "/manual.html#mcda-preparing-dataset"
+    "link": "/manual.html#mcda-manual-entry"
   },
   "deterministic-analysis-results" : {
     "title": "Deterministic analysis results",
     "text": "This section shows the results of deterministic analysis (representative weights, total value), allows for sensitivity analysis, and allows modification of the effects table to explore the problem space.",
-    "link": "/manual.html#mcda-preparing-dataset"
+    "link": "/manual.html#mcda-deterministic-analysis"
   },
   "effects-table": {
     "title": "Effects table",
     "text": "The effects table shows the size of the effects on each criterion for each alternative. In the case of a known distribution of an effect the values shown are the median value and the 95% credible interval. If the effect is an exact distribution value only that value is shown.",
-    "link": "/manual.html#mcda-preparing-dataset"
+    "link": "/manual.html#mcda-running-example"
   },
   "exact-matching": {
     "title": "Exact Matching",
@@ -67,7 +67,7 @@
   "favorability": {
     "title": "Favorability",
     "text": "Whether or not an increase in the criterion is seen as favorable.",
-    "link": "/manual.html#mcda-preparing-dataset"
+    "link": "/manual.html#mcda-manual-entry"
   },
   "imprecise-matching": {
     "title": "Imprecise Matching",
@@ -84,16 +84,6 @@
     "text": "In mcda, it is possible to input data directly as a distribution of the effects for the treatment for a criterion, or to input the data measured in a study, after which the application will calculate the corresponding distribution automatically.",
     "link": "/manual.html#mcda-preparing-dataset"
   },
-  "sensitivity-measurements" : {
-    "title": "Measurements sensitivity analysis",
-    "text": "How the value of a specific alternative changes as the weight of a specific criterion changes between 0 and 1. All other alternatives' values are kept constant at the current default for comparison.",
-    "link": "/manual.html#mcda-preparing-dataset"
-  },
-  "sensitivity-preferences" : {
-    "title": "Preferences sensitivity analysis",
-    "text": "How the value of all alternatives changes as the weight of a specific criterion changes between 0 and 1.",
-    "link": "/manual.html#mcda-preparing-dataset"
-  },
   "observed-range": {
     "title": "Observed range",
     "text": "The observed range within which all the effects of a given analysis lie. The lower bound is the lowest among the effects (or of their low end of the 95% CrI in the case of non-exact effect distributions). The upper bound is the maximum of these values.",
@@ -102,7 +92,7 @@
   "one-way-sensitivity-analysis": {
     "title": "One-way sensitivity analysis",
     "text": "A section that allows exploring of the sensitivity of the results by allowing only one thing to change.",
-    "link": "/manual.html#mcda-deterministic-results"
+    "link": "/manual.html#mcda-deterministic-analysis"
   },
   "ranking": {
     "title": "Ranking",
@@ -117,7 +107,7 @@
   "problem": {
     "title": "Problem definition",
     "text": "The problem definition is a lens through which to view the data for analysis. Criteria and alternatives can be omitted, and scale ranges can be changed.",
-    "link": "/manual.html"
+    "link": "/manual.html#mcda-problem-definition"
   },
   "pvf-type": {
     "title": "Type of partial value function",
@@ -137,7 +127,7 @@
   "representative-weights": {
     "title": "Representative weights",
     "text": "Weights representative of how important each criterion is. The total weights add up to one.",
-    "link": "/manual.html#mcda-deterministic-results"
+    "link": "/manual.html#mcda-deterministic-analysis"
   },
   "scale-ranges": {
     "title": "Scale ranges",
@@ -147,7 +137,17 @@
   "scenario": {
     "title": "Scenario",
     "text": "A scenario is a collection of preferences to feed into the MCDA models. This consists of a partial value function for each criterion, and an optional set of weight preferences (swing weighting, ranking, exact matching or imprecise matching).",
-    "link": ""
+    "link": "/manual.html#mcda-scenarios"
+  },
+  "sensitivity-measurements" : {
+    "title": "Measurements sensitivity analysis",
+    "text": "How the value of a specific alternative changes as the weight of a specific criterion changes between 0 and 1. All other alternatives' values are kept constant at the current default for comparison.",
+    "link": "/manual.html#mcda-deterministic-analysis"
+  },
+  "sensitivity-preferences" : {
+    "title": "Preferences sensitivity analysis",
+    "text": "How the value of all alternatives changes as the weight of a specific criterion changes between 0 and 1.",
+    "link": "/manual.html#mcda-deterministic-analysis"
   },
   "smaa-results": {
     "title": "SMAA results",
@@ -157,17 +157,17 @@
   "survival-summary-measure": {
     "title": "Survival summary measure",
     "text": "Which specific aspect of survival is reported, i.e. mean, median, or at a specific moment.",
-    "link": "/manual.html#mcda-preparing-dataset"
+    "link": "/manual.html#mcda-manual-entry"
   },
   "survival-time-point-of-interest": {
     "title": "Survival summary measure",
     "text": "At which specific moment in time the survival data is reported.",
-    "link": "/manual.html#mcda-preparing-dataset"
+    "link": "/manual.html#mcda-manual-entry"
   },
   "survival-time-scale": {
     "title": "Survival time scale",
     "text": "On which time scale the survival data are reported.",
-    "link": "/manual.html#mcda-preparing-dataset"
+    "link": "/manual.html#mcda-manual-entry"
   },
   "swing-weighting": {
     "title": "Swing Weighting",
@@ -182,7 +182,7 @@
   "therapeutic-context": {
     "title": "Therapeutic context",
     "text": "Background information about the context in which the data should be interpreted, e.g. information about studies or meta-analyses from which the data comes.",
-    "link": "/manual.html#mcda-preparing-dataset"
+    "link": "/manual.html#mcda-manual-entry"
   },
   "total-value": {
     "title": "Total value",
