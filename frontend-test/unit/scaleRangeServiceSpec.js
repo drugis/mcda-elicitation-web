@@ -36,7 +36,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
         var result = ScaleRangeService.calculateScales(criterionScale, from, to, criterionRange);
         expect(result.sliderOptions.floor).toEqual(0.1);
         expect(result.sliderOptions.ceil).toEqual(0.30000000000000004);
-        
+
       }));
     });
 
@@ -123,18 +123,19 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
             }
           }
         };
-        var criteria = {
-          headacheId: {
+        var criteria = [{
             pvf: {
               range: [0, 40]
-            }
+            },
+            id: 'headacheId'
           },
-          nauseaId: {
+          {
             pvf: {
               range: [10, 40]
-            }
+            },
+            id: 'nauseaId'
           }
-        };
+        ];
         var result = ScaleRangeService.getScaleStateAndChoices(observedScales, criteria);
         var expectedResult = {
           choices: {

@@ -1,13 +1,14 @@
 'use strict';
-define(['angular-mocks',
+define(['lodash', 'angular-mocks',
     'mcda/preferences/preferences'
   ],
-  function() {
+  function(_) {
     var state;
 
     describe('OrdinalSwingHandler', function() {
       var $scope1;
       var $scope2;
+      var orderingServiceMock = jasmine.createSpyObj('OrderingService', ['getOrderedCriteriaAndAlternatives']);
 
       beforeEach(module('elicit.preferences'));
       beforeEach(module('elicit.taskDependencies'));
@@ -23,6 +24,19 @@ define(['angular-mocks',
           resets: []
         };
 
+        orderingServiceMock.getOrderedCriteriaAndAlternatives.and.returnValue({
+          then: function(fn) {
+            fn({
+              alternatives: [],// alternavtives are not used inside the controller
+              criteria: _.map(problem.criteria, function(criterion, key) {
+                return _.merge({}, criterion, {
+                  id: key
+                }); // criteria are used inside the controller
+              })
+            });
+          }
+        });
+
         state = jasmine.createSpyObj('$state', ['go']);
         scope.aggregateState = {
           problem: problem
@@ -31,9 +45,9 @@ define(['angular-mocks',
           $scope: scope,
           $state: state,
           $stateParams: {},
+          OrderingService: orderingServiceMock,
           currentScenario: scope.scenario,
-          taskDefinition: TaskDependencies.extendTaskDefinition(task),
-          mcdaRootPath: 'some mcda rootPath'
+          taskDefinition: TaskDependencies.extendTaskDefinition(task)
         });
         return scope;
       }
@@ -48,6 +62,7 @@ define(['angular-mocks',
 
       describe('initialize', function() {
         it('should be described as ordinal', function() {
+          // stuff is set in the wizard
           expect($scope1.state).toBeDefined();
           expect($scope1.state.title).toEqual('Ranking (1/2)');
         });

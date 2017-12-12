@@ -1,15 +1,17 @@
 'use strict';
 define(['angular-mocks', 'mcda/preferences/preferences'], function() {
-  describe('Exact swing weighting controller', function() {
+  describe('Edit Legend controller', function() {
 
     var scope,
       legend,
       alternatives = {
         alt1: {
-          title: 'alternative 1'
+          title: 'alternative 1',
+          id: 'alt1'
         },
         alt2: {
-          title: 'alternative 2'
+          title: 'alternative 2',
+          id: 'alt2'
         }
       },
       callback;

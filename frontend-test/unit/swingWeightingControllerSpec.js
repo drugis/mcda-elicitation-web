@@ -5,9 +5,10 @@ define(['angular-mocks', 'mcda/preferences/preferences'], function() {
     var scope;
     var state;
     var saveDefer;
-    var saveSpy = function(_ignore, callback) { // jshint ignore:line
+    var saveSpy = function(_ignore, callback) {
       callback();
     };
+    var orderingServiceMock = jasmine.createSpyObj('OrderingService', ['getOrderedCriteriaAndAlternatives']);
 
     beforeEach(module('elicit.preferences'));
     beforeEach(module('elicit.taskDependencies'));
@@ -26,6 +27,11 @@ define(['angular-mocks', 'mcda/preferences/preferences'], function() {
       };
 
       state = jasmine.createSpyObj('$state', ['go']);
+      orderingServiceMock.getOrderedCriteriaAndAlternatives.and.returnValue({
+        then: function() {
+          return;
+        }
+      });
       scope.aggregateState = {
         problem: exampleProblem()
       };
@@ -33,6 +39,7 @@ define(['angular-mocks', 'mcda/preferences/preferences'], function() {
         $scope: scope,
         $state: state,
         $stateParams: {},
+        OrderingService: orderingServiceMock,
         currentScenario: scope.scenario,
         taskDefinition: TaskDependencies.extendTaskDefinition(task)
       });
@@ -91,8 +98,8 @@ define(['angular-mocks', 'mcda/preferences/preferences'], function() {
         var deregisterWatcher;
 
         beforeEach(function() {
-          deregisterWatcher =  scope.$watch('elicit.resultsAccessible', function() {
-          	resultsAccessible = true;
+          deregisterWatcher = scope.$watch('elicit.resultsAccessible', function() {
+            resultsAccessible = true;
           })
         });
         afterEach(function() {

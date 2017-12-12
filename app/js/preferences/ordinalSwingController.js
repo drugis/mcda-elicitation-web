@@ -4,33 +4,40 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
     '$scope', '$state', '$stateParams', '$injector',
     'PartialValueFunctionService',
     'OrderingService',
-    'currentScenario', 'taskDefinition'
+    'currentScenario', 
+    'taskDefinition'
   ];
   var OrdinalSwingController = function($scope, $state, $stateParams, $injector,
     PartialValueFunctionService,
-    OrderingService, 
-    currentScenario, taskDefinition
+    OrderingService,
+    currentScenario, 
+    taskDefinition
   ) {
+    //functions 
+    $scope.save = save;
+    $scope.canSave = canSave;
+
+    //init
     $scope.problem = $scope.aggregateState.problem;
     var pvf = PartialValueFunctionService;
     $scope.pvf = pvf;
 
-    var getReference = function(criteria) {
+    function getReference(criteria) {
       return _.zipObject(
-        _.map(criteria,'id'),
+        _.map(criteria, 'id'),
         _.map(criteria, function(criterion) {
           return pvf.worst(criterion);
         })
       );
-    };
+    }
 
-    var title = function(step, total) {
+    function title(step, total) {
       var base = 'Ranking';
       if (step > total) {
         return base + ' (DONE)';
       }
       return base + ' (' + step + '/' + total + ')';
-    };
+    }
 
     function makeChoices() {
       var criteria = $scope.criteria;
@@ -42,7 +49,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
       return _.zipObject(_.map(criteria, 'id'), choices);
     }
 
-    var initialize = function(state) {
+    function initialize(state) {
       var fields = {
         title: title(1, _.size($scope.criteria) - 1),
         type: 'elicit',
@@ -53,15 +60,14 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
         choices: makeChoices()
       };
       return _.extend(state, fields);
-    };
+    }
 
-
-    var validChoice = function(state) {
+    function validChoice(state) {
       var criteria = $scope.problem.criteria;
       return state && _.includes(_.keys(criteria), state.choice);
-    };
+    }
 
-    var nextState = function(state) {
+    function nextState(state) {
       if (!validChoice(state)) {
         return null;
       }
@@ -90,7 +96,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
       }
 
       return nextState;
-    };
+    }
 
     function standardize(state) {
       var standardized = angular.copy(state);
@@ -120,7 +126,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
       return standardized;
     }
 
-    $scope.save = function(state) {
+    function save(state) {
       var nextState = standardize(state);
 
       currentScenario.state = _.pick(nextState, ['problem', 'prefs']);
@@ -128,11 +134,11 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
         $scope.$emit('elicit.resultsAccessible', scenario);
         $state.go('preferences');
       });
-    };
+    }
 
-    $scope.canSave = function(state) {
+    function canSave(state) {
       return state && _.size(state.choices) === 0;
-    };
+    }
 
     OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
       $scope.alternatives = orderings.alternatives;
