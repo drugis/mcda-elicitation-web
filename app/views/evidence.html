@@ -20,7 +20,7 @@
     <h4>Criteria <inline-help help-key="criterion"></inline-help></h4>
   </div>
   <div class="cell large-10">
-    <table width="100%">
+    <table class="full-width">
       <thead>
         <tr>
           <th>Title</th>
@@ -34,7 +34,7 @@
       </thead>
       <tbody>
         <tr ng-repeat="row in rows">
-          <td ng-if="row.isHeaderRow" class="group-header" colspan="5">
+          <td ng-if="row.isHeaderRow" colspan="5">
             <div class="main-header">
               {{row.headerText}}
             </div>
