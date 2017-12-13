@@ -23,6 +23,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.alternativeUp = alternativeUp;
     $scope.alternativeDown = alternativeDown;
     $scope.downloadWorkspace = downloadWorkspace;
+    $scope.getIndex = getIndex;
 
     // init
     $scope.scales = $scope.workspace.scales.observed;
@@ -69,7 +70,16 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
             };
           }
         }
-      });
+      }); 
+    }
+
+    function getIndex(list, id){
+      for (var i=0;i<list.length;++i){
+        if(list[i].id === id){
+          return i;
+        }
+      }
+      return -1;
     }
 
     function criterionUp(idx) {

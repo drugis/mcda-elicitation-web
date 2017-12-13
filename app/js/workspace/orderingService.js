@@ -11,9 +11,7 @@ define(['lodash'], function(_) {
             alternatives: _.map(problem.alternatives, function(alternative, alternativeId) {
               return _.extend({}, alternative, { id: alternativeId });
             }),
-            criteria: _.map(problem.criteria, function(criterion, criterionId) {
-              return _.extend({}, criterion, { id: criterionId });
-            })
+            criteria: getOrderedCriteria(problem)
           };
         }
 
@@ -49,6 +47,25 @@ define(['lodash'], function(_) {
         criteria: _.map(criteria, 'id'),
         alternatives: _.map(alternatives, 'id')
       }).$promise;
+    }
+
+    function getOrderedCriteria(problem) {
+      if (!problem.valueTree) {
+        return _.map(problem.criteria, function(criterion, criterionId) {
+          return _.extend({}, criterion, { id: criterionId });
+        });
+      }
+      return getSpecificFavorabilityCriteria(problem.criteria, problem.valueTree.children[0].criteria)
+        .concat(getSpecificFavorabilityCriteria(problem.criteria, problem.valueTree.children[1].criteria));
+    }
+
+    function getSpecificFavorabilityCriteria(criteria, ids) {
+      return _.reduce(criteria, function(accum, criterion, criterionId) {
+        if (ids.indexOf(criterionId) >= 0) {
+          accum.push(_.merge({}, criterion, { id: criterionId }));
+        }
+        return accum;
+      }, []);
     }
 
     return {

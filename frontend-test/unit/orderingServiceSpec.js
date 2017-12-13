@@ -84,6 +84,7 @@ define(['angular-mocks', 'mcda/workspace/workspace'], function() {
         });
         rootScope.$digest();
       });
+
       it('should return a new order of the alternatives and criteria if no order is available for a given problem', function(done) {
         orderDefer.resolve({});
         rootScope.$digest();
@@ -129,6 +130,62 @@ define(['angular-mocks', 'mcda/workspace/workspace'], function() {
           }, {
             id: 'crit2',
             title: 'criterion2'
+          }, {
+            id: 'crit4',
+            title: 'criterion4'
+          }]
+        };
+        orderingService.getOrderedCriteriaAndAlternatives(problem, workspaceId).then(function(result) {
+          expect(result).toEqual(expectedResult);
+          done();
+        });
+        rootScope.$digest();
+      });
+
+      it('should return a new order based on favorability when criteria have favorability', function(done) {
+        orderDefer.resolve({});
+        rootScope.$digest();
+        var problem = {
+          criteria: {
+            crit1: {
+              title: 'criterion1'
+            },
+            crit2: {
+              title: 'criterion2'
+            },
+            crit4: {
+              title: 'criterion4'
+            }
+          },
+          alternatives: {
+            alt1: {
+              title: 'alternative1'
+            },
+            alt2: {
+              title: 'alternative2'
+            }
+          },
+          valueTree: {
+            children: [{ criteria: ['crit2'] }, {
+              criteria: ['crit1', 'crit4']
+            }]
+          }
+        };
+        var workspaceId = 1;
+        var expectedResult = {
+          alternatives: [{
+            id: 'alt1',
+            title: 'alternative1'
+          }, {
+            id: 'alt2',
+            title: 'alternative2'
+          }],
+          criteria: [{
+            id: 'crit2',
+            title: 'criterion2'
+          }, {
+            id: 'crit1',
+            title: 'criterion1'
           }, {
             id: 'crit4',
             title: 'criterion4'
