@@ -38,10 +38,12 @@ define(['lodash', 'angular'], function(_, angular) {
         return false;
       }
       var choice = state.choice;
-
       // History handling
       previousStates.push(state);
       var nextState = nextStates.pop();
+      if(nextState && state.mostImportantCriterion){
+        nextState.mostImportantCriterion = state.mostImportantCriterion;
+      }
       if (nextState && _.isEqual(nextState.previousChoice, choice)) {
         $scope.state = nextState;
         return true;
@@ -55,6 +57,7 @@ define(['lodash', 'angular'], function(_, angular) {
       nextState.previousChoice = choice;
 
       nextState.intermediate = handler.standardize(nextState);
+      
 
       $scope.state = nextState;
       return true;
