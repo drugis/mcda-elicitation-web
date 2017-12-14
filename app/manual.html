@@ -14,6 +14,7 @@
   <script src="/bower_components/KaTeX/dist/katex.min.js"></script>
   <script src="/bower_components/KaTeX/dist/contrib/auto-render.min.js"></script>
   <script src="/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="/bower_components/smooth-scroller/dist/smooth-scroller.bower.min.js"></script>
   <script src="/bower_components/toc/dist/toc.bower.min.js"></script>
   <script src="/bower_components/scrollup/dist/jquery.scrollUp.min.js"></script>
   <style type="text/css">
@@ -132,7 +133,7 @@
             <h3 id="mcda-preparing-dataset">Preparing your dataset</h3>
             <p>This section only applies to the stand-alone version of MCDA, hosted on <a href="https://mcda.drugis.org/">https://mcda.drugis.org/</a>. In ADDIS (<a href="https://addis.drugis.org/">https://addis.drugis.org/</a>), this step is not necessary.</p>
             <p>After signing in to MCDA, you will be redirected to your personal home page. It contains a list of your previously created workspaces (which will be empty until you create one). A <i>workspace</i> is an abstract container for a set of evidence, plus any filterings, transformations and analyses you may have performed for that set of evidence. Any unfinished workspaces in the process of manual entry will also be shown here. Clicking the 'Create workspace' button will open a dialog that lets you choose what to base your workspace on: an example dataset selected by us, a file uploaded by you, or manual entry by you.</p>
-            <h4>Data upload</h4>
+            <h4 id="data-upload">Data upload</h4>
             <p>
               Datasets can be uploaded in JSON format. The JSON should contain the following entries (note that JSON is case-sensitive):
               <ul>
@@ -243,21 +244,21 @@
               Selecting the 'Manual entry' option in the workspace creation dialog takes you to the manual workspace creation screen. Here, you can input the title, therapeutic context, criteria, and alternatives as well as the measurement data.
             </p>
             <div class="figure">
-              <img src="/manual/graphics/manualEntry1.jpg" />
+              <img src="img/manualEntry1.jpg" />
               <div class="caption">Manual entry, first step.</div>
             </div>
             <p>
               Alternatives are nothing more than a name, therefore creating one is as simple as typing and clicking the 'Add alternative' button (or hitting enter). Criteria are more complicated. They have several properties , e.g. whether or not they are favourable, what the source of your data for this criterion is and the unit they are measured in.
             </p>
             <div class="figure">
-              <img src="/manual/graphics/manualCriterion.jpg" />
+              <img src="img/manualCriterion.jpg" />
               <div class="caption">Manual entry, creating a criterion.</div>
             </div>
             <p>
               Creating a survival criterion also allows you to set the specific summary measure to use. This can be the mean or median survival, or survival at a specific time point. Note that the unit of measurement of a criterion may change automatically (e.g. it becomes 'proportion' when indicating the criterion is dichotomous) but can always be changed manually afterwards. The data source selection determines how data is entered in the next step. At any time during the manual entry process you can click the 'Save' button and the current state of your workspace in progress will be saved. You can click this in-progress workspace from your personal homepage later, and continue where you left off.
             </p>
             <div class="figure">
-              <img src="/manual/graphics/manualEntry2.jpg" />
+              <img src="img/manualEntry2.jpg" />
               <div class="caption">Manual entry, second step.</div>
             </div>
             <p>

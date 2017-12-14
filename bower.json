@@ -40,7 +40,7 @@
     "domready": "~1.0.7",
     "error-reporting": "https://github.com/drugis/error-reporting.git#1.2.1",
     "export-directive": "https://github.com/drugis/export-directive.git#master",
-    "font-awesome": "4.3.0",
+    "font-awesome": "~4.3.0",
     "foundation-sites": "~6",
     "help-popup": "https://github.com/drugis/help-popup.git#0.3.0",
     "jquery": "~3.2.1",
