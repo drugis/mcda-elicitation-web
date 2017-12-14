@@ -72,14 +72,14 @@
   When combined, the two scale ranges form a 2-dimensional consequence space \(X\) as is illustrated for the rimonabant case study in Figure 1. Some of the outcomes in \(X\) correspond to a real alternative (e.g., the outcome \(x^{\mathrm{plc}}=(0.33,3)\) in Figure 1 corresponds to placebo), while the other outcomes correspond to hypothetical alternatives that serve to construct a quantitative model of the decision maker's preferences. To be able to proceed in such a formal manner, we have to make two basic assumptions. First, we have to assume that any two outcomes \(x^{1}\) and \(x^{2}\) in \(X\) are comparable in the sense that the decision maker either prefers \(x^{1}\) to \(x^{2}\), or prefers \(x^{2}\) to \(x^{1}\), or is indifferent between \(x^{1}\) and \(x^{2}\). Second, we have to assume that the above preference relations are transitive, meaning that if \(x^{1}\) is preferred to \(x^{2}\) and \(x^{2}\) is preferred to \(x^{3}\) then it must also hold that \(x^{1}\) is preferred to \(x^{3}\), and similarly for the indifference relation. Together, these two assumptions imply that it is possible to represent the decision maker's preference structure by means of a value function.
 </p>
 <div class="figure">
-  <img src="/manual/graphics/consSpaceRimonabant.png" />
+  <img src="img/consSpaceRimonabant.png" />
   <div class="caption">Figure 1: 2-dimensional consequence space obtained by combining the scale range defined for fasting glucose with the scale range defined for hypoglyceamia.</div>
 </div>
 <p>
   To illustrate how this might work, consider again the 2-dimensional consequence space defined for the rimonabant case study, which we have repeated in Figure 2. We start the construction of the value function in the lower-right corner at \(x^{1}=(0.4,0)\), which can be seen as an extreme outcome in the sense that the change in fasting glucose is at its worst possible value while the incidence of hypoglyceamia is at its best possible value (note that for both criteria it holds that lower values are preferred to higher values). As the value of each outcome is expressed on an ordinal scale (i.e., a difference in value between any two outcomes does not have any meaning beyond the fact that the outcome with the higher value is preferred to the outcome with the lower value), we can arbitrarily scale the value function by setting \(v(x^{1})=10\). Next, we improve the performance on the benefit criterion by a small amount, say 0.2, and ask the decision maker to adjust the value of \(\delta\) so that he is indifferent between \((0.4,0)\) and \((0.2,\delta)\). Suppose that the decision maker states that at \((0.4,0)\) he is willing to accept a 3% increase in the incidence of hypoglyceamia for a 0.2 mmol/L improvement in the change in fasting glucose. We then know that the points \(x^{1}=(0.4,0)\) and \(x^{2}=(0.2,3)\) are equally desirable and should therefore be given the same value when evaluated with our value function. We thus proceed by setting \(v(x_{2})=v(x_{1})=10\). Continuing from \(x^{2}=(0.2,3)\), we again improve the performance on the benefit criterion by 0.2, and ask the decision maker to adjust the value of \(\delta\) so that he is indifferent between \((0.2,3)\) and \((0,\delta)\). Suppose that the decision maker replies by saying that \(\delta\) equals 2. We then have a third outcome \(x^{3}=(0,5)\) that according to the decision maker has the same value as either \(x^{1}=(0.4,0)\) or \(x^{2}=(0.2,3)\). In fact, we can obtain the <i>indifference curve</i> \(v(x)=10\) by connecting all outcomes in \(X\) that according to the decision maker are equally desirable to either \(x^{1}\), \(x^{2}\), or \(x^{3}\). For this, we continue the process of stepwise increasing the performance on the benefit criterion until we have reached the boundary of \(X\), at which stage we have collected enough information to fair in the indifference curve \(v(x)=10\) as is illustrated in Figure 2.
 </p>
 <div class="figure">
-  <img src="/manual/graphics/IndifferenceCurve10.png" />
+  <img src="img/IndifferenceCurve10.png" />
   <div class="caption">Figure 2: Indifference curve connecting all the outcomes in \(X\) that according to the decision maker are equally desirable as \(x^{1}\). These outcomes have arbitrarily been assigned a value of 10.</div>
 </div>
 <p>
@@ -89,7 +89,7 @@
   To proceed with formalizing the decision maker's preference structure, consider the outcome \(x^{4}=(0,0)\) to the west of \(x^{1}=(0.4,0)\). Compared to \(x^{1}\), the outcome \(x^{4}\) performs better with respect to the change in fasting glucose while scoring the same with respect to the incidence of hypoglyceamia. Similar to the discussion above, it must therefore hold that \(x^{4}\) lies on a higher indifference curve than \(x^{1}\). Because value is measured on an ordinal scale, we can arbitrarily set \(v(x^{4})\) to any number larger than 10, say \(v(x^{4})=15\), after which we repeat the previously conducted questioning procedure to obtain the indifference curve \(v(x)=15\). By subsequently repeating this process for several outcomes in between \(x^{1}\) and \(x^{4}\), we ultimately end up with enough indifference curves to rank order all three alternatives as is illustrated in Figure 2.
 </p>
 <div class="figure">
-  <img src="/manual/graphics/IndifferenceCurves.png" />
+  <img src="img/IndifferenceCurves.png" />
   <div class="caption">Figure 3: Using indifference curves to represent the decision maker's preference structure. From these curves, it follows that rimonabant 20 mg/day is considered to be the best alternative, rimonabant 5 mg/day the second best alternative, and placebo the worst alternative.</div>
 </div>
 <p>
@@ -113,7 +113,7 @@
   In total, we have now established the value of \(v_{1}\) for five different outcomes with respect to the change in fasting glucose. To further specify \(v_{1}\), we can either perform another round of bisection to determine the value associated with the midvalue points of the intervals \([-0.7,-0.55]\), \([-0.55,-0.3]\), \([-0.3,0]\), and \([0,0.4]\) or use a form of curve fitting to interpolate the value of all remaining outcomes from the value of the previously assessed outcomes. Here, we opt for the latter and complete the curve of \(v_{1}\) by drawing straight lines between the five data points for which the value of \(v_{1}\) was determined previously. The resulting piecewise linear partial value function for the change in fasting glucose is depicted in Figure 4.
 </p>
 <div class="figure">
-  <img src="/manual/graphics/partialValueFunctions.png" />
+  <img src="img/partialValueFunctions.png" />
   <div class="caption">Figure 4: Partial value functions for the change in fasting glucose and the incidence of hypoglyceamia.</div>
 </div>
 <p>
@@ -174,7 +174,7 @@
   The performance of regorafenib and placebo with respect to the criteria is summarized in the Effects Table provided in Figure 5. The effect size estimates displayed in this table were directly obtained from the EPAR of this product.
 </p>
 <div class="figure">
-  <img src="/manual/graphics/ADDIS-ET.png" />
+  <img src="img/ADDIS-ET.png" />
   <div class="caption">Figure 5: Effects Table for regorafenib for the indication of the treatment of adult patients with mCRC who have been previously treated with, or are not considered candidates for, available therapies.</div>
 </div>
 <h3 id="mcda-value-tradeoffs">Value trade-offs</h3>
@@ -182,14 +182,14 @@
   The first step in formalizing the decision maker's preferences is to define suitable scale ranges for each of the criteria. By default, ADDIS generates local scales based on the effect size estimates provided in the Effects Table. Each of these local scales can be transformed into a global scale by moving the sliders away from the red area reflecting the local scale range. This is illustrated in Figure 6, where we have created a global scale for each of the four criteria. Note that it is also possible here to create a new subproblem with fewer criteria and alternatives to investigate a less-complex situation.
 </p>
 <div class="figure">
-  <img src="/manual/graphics/ADDIS-scales.png" />
+  <img src="img/ADDIS-scales.png" />
   <div class="caption">Figure 6: Defining scale ranges for each of the criteria.</div>
 </div>
 <p>
   After having configured the scale ranges, the next step is to specify the decision maker's partial value functions. For the unfavourable effects, it holds that equal size ranges in percentages (e.g., 5-10% and 10-15%) reflect the same number of affected patients. The partial value functions for these criteria were therefore assumed to be linear. The partial value function for overall survival was obtained through application of the bisection method (Figure 7).
 </p>
 <div class="figure">
-  <img src="/manual/graphics/ADDIS-bisection.png" />
+  <img src="img/ADDIS-bisection.png" />
   <div class="caption">Figure 7: Using the bisection method to specify the partial value function for overall survival.</div>
 </div>
 <p>
@@ -199,7 +199,7 @@
   Figure 8 shows how the trade-off between overall survival and haemorrhage was assessed using the ADDIS software. Under the additive value model, the amount by which the median overall survival time needs to be increased in order to compensate for an increase in the incidence of haemorrhage from 0% to 5% may depend on the level of survival that is currently achieved (4 months in the situation provided), but it does not depend on the levels of achievement on the other three criteria. Because of this, the levels of achievement on the remaining criteria are not explicitly mentioned in the text provided in Figure 8. From the position of the slider, it follows that the decision maker is indifferent between an alternative with a median overall survival time of 4 months and an incidence of haemorrhage of 0% and an alternative with a median overall survival time of 5 months and an incidence of haemorrhage of 5%. For the underlying value function, it must therefore hold that \[ w_{1} v_{1}(4) + w_{4} v_{4}(0) = w_{1} v_{1}(5) + w_{4} v_{4}(5). \] From the previously defined partial value functions, it follows that \(v_{1}(4)=0\), \(v_{4}(0)=1\), \(v_{1}(5)=0.3125\), and \(v_{4}(5)=0\). After substituting these values, we obtain \[ w_{4} = 0.3125 \cdot w_{1}, \] which, when expressed as a ratio between \(w_{1}\) and \(w_{4}\), results in the constraint \(\frac{w_{1}}{w_{4}} = 3.2\).
 </p>
 <div class="figure">
-  <img src="/manual/graphics/ADDIS-exact1.png" />
+  <img src="img/ADDIS-exact1.png" />
   <div class="caption">Figure 8: Using exaxct swing weighting to specify the trade-off between overall survival and haemorrhage.</div>
 </div>
 <p>
@@ -217,26 +217,26 @@
   In figure 9 we see the first part of the deterministic analysis part of the benefit-risk interface. Here we can adjust the effect sizes to gain further insight in what ranges of effects would tip the scales in favour of specific criteria. In the example figure, we have increased the effectiveness of Regorafenib upwards, and the total value plot shows that this changes the total value to now be higher than placebo for the given preferences.
 </p>
 <div class="figure">
-  <img src="/manual/graphics/deterministic1.png" />
+  <img src="img/deterministic1.png" />
   <div class="caption">Figure 9: Adjusting effect sizes to determine their influence on the value of criteria.</div>
 </div>
 <p>
   In figure 10 we see the second, one-way sensitivity, part of the deterministic analysis benefit-risk interface. Here we can see how the total value of each criterion changes as either the effect size or effect weight changes.
 </p>
 <div class="figure">
-  <img src="/manual/graphics/sensitivity.png" />
+  <img src="img/sensitivity.png" />
   <div class="caption">Figure 10: Studying one-way sensitivity in deterministic analysis.</div>
 </div>
 
 <h3 id="mcda-smaa-analysis">SMAA benefit-risk analysis</h3>
 
 <div class="figure">
-  <img src="/manual/graphics/smaa1.png" />
+  <img src="img/smaa1.png" />
   <div class="caption">Figure 11: SMAA analysis, ranking part.</div>
 </div>
 
 <div class="figure">
-  <img src="/manual/graphics/smaa2.png" />
+  <img src="img/smaa2.png" />
   <div class="caption">Figure 12: SMAA analysis, central weights.</div>
 </div>
 
