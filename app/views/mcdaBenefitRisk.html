@@ -17,7 +17,7 @@
         <div ng-if="activeTab === 'smaa-results'" ui-view></div>
       </tab>
       <!-- disabled tabs -->
-      <li class="tabs-title" ng-if="!tasksAccessibility.results" tooltip="Tab unavailable because not all partial value functions are set" style="padding: 1.25rem 1.5rem; font-size: 0.75rem;line-height: 1;color: darkgray">Deterministic results</li>
-      <li class="tabs-title" ng-if="!tasksAccessibility.results" tooltip="Tab unavailable because not all partial value functions are set" style="padding: 1.25rem 1.5rem; font-size: 0.75rem;line-height: 1;color: darkgray">SMAA results</li>
+      <li class="tabs-title disabled" ng-if="!tasksAccessibility.results" tooltip="Tab unavailable because not all partial value functions are set">Deterministic results</li>
+      <li class="tabs-title disabled" ng-if="!tasksAccessibility.results" tooltip="Tab unavailable because not all partial value functions are set">SMAA results</li>
     </tabset>
   </div>
