@@ -51,7 +51,7 @@
       Imprecise Matching
     </button>
   </div>
-  <div class="cell alert" ng-if="!deterministicResults">Trade-offs cannot be specified if there are criteria with missings PVFs.</div>
+  <div class="cell alert" ng-if="!deterministicResults && !criteriaHavePvf">Trade-offs cannot be specified if there are criteria with missings PVFs.</div>
   <div class="cell">
     <h5>Constraints</h5>
   </div>
@@ -78,7 +78,7 @@
       </tbody>
     </table>
   </div>
-  <div class="cell alert" ng-if="!deterministicResults">
+  <div class="cell alert" ng-if="!deterministicResults && !criteriaHavePvf">
     Weights cannot be shown if there are criteria with missing PVFs.
   </div>
 </div>

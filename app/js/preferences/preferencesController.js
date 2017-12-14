@@ -35,13 +35,15 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     $scope.editScenarioTitle = editScenarioTitle;
 
     // init
+    $scope.criteriaHavePvf = true;
     $scope.scenario = currentScenario;
     $scope.scales = $scope.workspace.scales;
     $scope.getXY = _.memoize(PartialValueFunctionService.getXY, function(arg) {
       return angular.toJson(arg.pvf);
     });
     createIsSafeObject();
-    if (doAllCriteriaHavePvf()) {
+    $scope.criteriaHavePvf =doAllCriteriaHavePvf();
+    if ($scope.criteriaHavePvf) {
       MCDAResultsService.getDeterministicResults($scope, $scope.aggregateState).resultsPromise.then(function(result) {
         $scope.deterministicResults = result.results;
       });

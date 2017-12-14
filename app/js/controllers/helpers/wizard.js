@@ -58,7 +58,6 @@ define(['lodash', 'angular'], function(_, angular) {
 
       nextState.intermediate = handler.standardize(nextState);
       
-
       $scope.state = nextState;
       return true;
     }
