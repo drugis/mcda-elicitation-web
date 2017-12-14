@@ -6,16 +6,6 @@
  * foundation.zurb.com
  * Licensed under MIT Open Source
  */
-
-a.nav-arrow, a.nav-arrow:visited {
-  color:black;
-}
-
-a.nav-arrow:hover {
-  color:grey;
-  background: #efefef;
-}
-
 @media print, screen and (min-width: 40em) {
   /* line 45, ../../bower_components/foundation-sites/scss/components/_reveal.scss */
   .reveal, .reveal.tiny, .reveal.small, .reveal.large {
@@ -8313,6 +8303,36 @@ inline-help a:hover {
 /* line 472, ../../sass-shared/_drugis.scss */
 .tabs-title > a {
   background: #e6e6e6;
+  border: 1px solid;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-color: black;
+  border-bottom: none;
+}
+
+/* line 484, ../../sass-shared/_drugis.scss */
+.tabs-title {
+  margin-bottom: -2px;
+  border-bottom: 1px solid white;
+}
+
+/* line 489, ../../sass-shared/_drugis.scss */
+li.disabled {
+  background: #e6e6e6;
+  border: 1px solid;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding-top: 17px;
+  padding-bottom: 6px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-color: black;
+  border-bottom: none;
+  font-size: 0.75rem;
+  color: darkgray;
 }
 
 /* line 8, ../../sass/_mcda-drugis-base.scss */
