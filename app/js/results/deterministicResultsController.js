@@ -33,12 +33,11 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(ordering) {
       $scope.criteria = ordering.criteria;
       $scope.alternatives = ordering.alternatives;
-      $scope.$watch('scales.observed', function() {
-        resetSensitivityAnalysis();
-      });
       loadState();
     });
-
+    $scope.$watch('scales.observed', function() {
+      resetSensitivityAnalysis();
+    });
     new Clipboard('.clipboard-button');
 
     function isEditing(value) {

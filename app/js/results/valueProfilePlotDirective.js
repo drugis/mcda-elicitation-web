@@ -21,7 +21,8 @@ define(['d3', 'nvd3'], function(d3, nv) {
       scope: {
         values: '=',
         criteria: '=',
-        alternatives: '='
+        alternatives: '=',
+        alternativesLegend: '='
       },
       template: '<div style="width: 400px; height: 400px;"></div>',
       link: function(scope, element) {
@@ -36,7 +37,7 @@ define(['d3', 'nvd3'], function(d3, nv) {
           }
           nv.addGraph(function() {
             var chart = nv.models.multiBarChart().height(dim.height).width(dim.width);
-            var data = ResultsService.pataviResultToValueProfile(newVal, scope.criteria, scope.alternatives);
+            var data = ResultsService.pataviResultToValueProfile(newVal, scope.criteria, scope.alternatives, scope.alternativesLegend);
 
             chart.yAxis.tickFormat(d3.format(',.3g'));
             chart.stacked(true);

@@ -114,13 +114,13 @@
         <div class="cell large-6">
           <h5>Base case</h5>
           <div export legend file-name="'basecaseplot'">
-            <value-profile-plot values="deterministicResults.results" criteria="criteria" alternatives="alternatives"></value-profile-plot>
+            <value-profile-plot values="deterministicResults.results" criteria="criteria" alternatives="alternatives" alternatives-legend="scenario.state.legend"></value-profile-plot>
           </div>
         </div>
         <div ng-if="recalculatedDeterministicResults" class="cell large-6">
           <h5>Recalculated case</h5>
           <div export legend file-name="'recalculatedcaseplot'">
-            <value-profile-plot values="recalculatedDeterministicResults.results" criteria="criteria" alternatives="alternatives"></value-profile-plot>
+            <value-profile-plot values="recalculatedDeterministicResults.results" criteria="criteria" alternatives="alternatives" alternatives-legend="scenario.state.legend"></value-profile-plot>
           </div>
         </div>
       </div>

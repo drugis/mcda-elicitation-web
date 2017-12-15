@@ -446,3 +446,19 @@ $preferences-progress-inactive-color: #e2e2e2;
     margin-left: -50%;
     text-align:left;
 }
+
+
+li.disabled { 
+  background: #efefef;
+  border: 1px solid;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding-top: 17px;
+  padding-bottom: 6px;
+  padding-left: 20px;
+  padding-right: 20px;
+  border-color: #e6e6e6;
+  border-bottom: none;
+  font-size: 0.75rem;
+  color: darkgray;
+}

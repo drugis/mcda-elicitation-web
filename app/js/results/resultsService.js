@@ -140,13 +140,13 @@ define(['lodash', 'angular'], function(_, angular) {
       return modifiableScales;
     }
 
-    function pataviResultToValueProfile(result, criteria, alternatives) {
+    function pataviResultToValueProfile(result, criteria, alternatives, legend) {
       return _.map(criteria, function(criterion) {
         return {
           key: criterion.title,
           values: _.map(alternatives, function(alternative) {
             return {
-              x: alternative.title,
+              x: legend ? legend[alternative.id].newTitle : alternative.title,
               y: result.value.data[alternative.id][criterion.id]
             };
           })
