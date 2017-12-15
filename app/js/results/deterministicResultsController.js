@@ -34,9 +34,9 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       $scope.criteria = ordering.criteria;
       $scope.alternatives = ordering.alternatives;
       loadState();
-    });
-    $scope.$watch('scales.observed', function() {
-      resetSensitivityAnalysis();
+      $scope.$watch('scales.observed', function() {
+        resetSensitivityAnalysis();
+      });
     });
     new Clipboard('.clipboard-button');
 

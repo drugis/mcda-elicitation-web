@@ -3,6 +3,14 @@ define(['lodash'], function(_) {
   var dependencies = [];
 
   var EffectsTableService = function() {
+    function flattenValueTreeChildren(child) {
+      if (child.criteria) {
+        return  child.criteria;
+      } else {
+        return  _.flatten(_.map(child.children, 'criteria'));
+      }
+    }
+
     function pickOrderedIds(criteria, ids) {
       return _(criteria).
       filter(function(criterion) {
@@ -22,8 +30,8 @@ define(['lodash'], function(_) {
           isHeaderRow: true,
           headerText: 'Unfavorable effects'
         };
-        var orderedFavorableCriteria = pickOrderedIds(criteria, problem.valueTree.children[0].criteria);
-        var orderedUnfavorableCriteria = pickOrderedIds(criteria, problem.valueTree.children[1].criteria);
+        var orderedFavorableCriteria = pickOrderedIds(criteria, flattenValueTreeChildren(problem.valueTree.children[0]));
+        var orderedUnfavorableCriteria = pickOrderedIds(criteria, flattenValueTreeChildren(problem.valueTree.children[1]));
         return [].concat(
           favorabilityHeader,
           orderedFavorableCriteria,

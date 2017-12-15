@@ -55,7 +55,13 @@ define(['lodash'], function(_) {
           return _.extend({}, criterion, { id: criterionId });
         });
       }
-      return getSpecificFavorabilityCriteria(problem.criteria, problem.valueTree.children[0].criteria)
+      var criterionIds;
+      if (problem.valueTree.children[0].criteria) {
+        criterionIds = problem.valueTree.children[0].criteria;
+      } else {
+        criterionIds = _.flatten(_.map(problem.valueTree.children[0].children, 'criteria'));
+      }
+      return getSpecificFavorabilityCriteria(problem.criteria, criterionIds)
         .concat(getSpecificFavorabilityCriteria(problem.criteria, problem.valueTree.children[1].criteria));
     }
 
