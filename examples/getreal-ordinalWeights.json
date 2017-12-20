@@ -1,59 +1,69 @@
 {
   "title": "GetReal course LU 4, activity 4.4",
   "description": "Hypothetical new cancer treatment example.",
-  "criteria": {
-    "OS": {
+  "criteria":
+  {
+    "OS":
+    {
       "title": "2-year survival",
       "description": "Proportion of patients surviving for 2 years or longer",
       "unitOfMeasurement": "%",
-      "scale": [0,100],
-      "pvf": {
-        "range": [45,65],
+      "scale": [0, 100],
+      "pvf":
+      {
+        "range": [45, 65],
         "type": "linear",
         "direction": "increasing"
       }
     },
-    "severe": {
+    "severe":
+    {
       "title": "Severe toxicity",
       "description": "Proportion of patients experiencing severe side-effects",
       "unitOfMeasurement": "%",
-      "scale": [0,100],
-      "pvf": {
-        "range": [0,80],
+      "scale": [0, 100],
+      "pvf":
+      {
+        "range": [0, 80],
         "type": "linear",
         "direction": "decreasing"
       }
     },
-    "moderate": {
+    "moderate":
+    {
       "title": "Moderate toxicity",
       "description": "Proportion of patients experiencing long-lasting moderate side-effects",
       "unitOfMeasurement": "%",
       "scale": [0, 100],
-      "pvf": {
-        "range": [0,40],
+      "pvf":
+      {
+        "range": [0, 40],
         "type": "linear",
         "direction": "decreasing"
       }
     }
   },
-  "valueTree": {
-    "title": "Benefit-risk balance", 
+  "valueTree":
+  {
+    "title": "Benefit-risk balance",
     "children": [
-      {
-        "title": "Favourable effects",
-        "criteria": [ "OS" ]
-      },
-      {
-        "title": "Unfavourable effects",
-        "criteria": [ "severe", "moderate" ]
-      }
-    ]
+    {
+      "title": "Favourable effects",
+      "criteria": ["OS"]
+    },
+    {
+      "title": "Unfavourable effects",
+      "criteria": ["severe", "moderate"]
+    }]
   },
-  "alternatives": {
-    "alt1": {
+  "alternatives":
+  {
+    "alt1":
+    {
       "title": "New treatment"
     },
-    "alt2": {
+    "alt2":
+    {
       "title": "Control"
     }
   },
@@ -61,7 +71,8 @@
   {
     "alternative": "alt1",
     "criterion": "OS",
-    "performance": {
+    "performance":
+    {
       "type": "exact",
       "value": 60
     }
@@ -69,15 +80,17 @@
   {
     "alternative": "alt2",
     "criterion": "OS",
-    "performance": {
+    "performance":
+    {
       "type": "exact",
       "value": 50
     }
   },
-    {
+  {
     "alternative": "alt1",
     "criterion": "severe",
-    "performance": {
+    "performance":
+    {
       "type": "exact",
       "value": 60
     }
@@ -85,15 +98,17 @@
   {
     "alternative": "alt2",
     "criterion": "severe",
-    "performance": {
+    "performance":
+    {
       "type": "exact",
       "value": 20
     }
   },
-    {
+  {
     "alternative": "alt1",
     "criterion": "moderate",
-    "performance": {
+    "performance":
+    {
       "type": "exact",
       "value": 35
     }
@@ -101,12 +116,23 @@
   {
     "alternative": "alt2",
     "criterion": "moderate",
-    "performance": {
+    "performance":
+    {
       "type": "exact",
       "value": 5
     }
+  }],
+  "preferences": [
+  {
+    "type": "ordinal",
+    "criteria": ["OS", "severe"]
+  },
+  {
+    "type": "ordinal",
+    "criteria": ["severe", "moderate"]
+  }],
+  "sensitivityAnalysis":
+  {
+    "criterion": "OS"
   }
-  ], 
-  "preferences":[{"type":"ordinal","criteria":["OS","severe"]}, {"type":"ordinal","criteria":["severe","moderate"]}],
-  "sensitivityAnalysis": {"criterion": "OS"}
 }
