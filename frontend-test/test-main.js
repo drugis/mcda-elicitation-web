@@ -28,8 +28,7 @@ require.config({
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML',
     'mcda': 'app/js',
     'mmfoundation': 'bower_components/angular-foundation/mm-foundation',
-    'nvd3': 'bower_components/nvd3/build/nv.d3',
-    'templates': 'app/partials'
+    'nvd3': 'bower_components/nvd3/build/nv.d3'
   },
   baseUrl: '/base',
   shim: {

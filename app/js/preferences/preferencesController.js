@@ -42,12 +42,7 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
       return angular.toJson(arg.pvf);
     });
     createIsSafeObject();
-    $scope.criteriaHavePvf =doAllCriteriaHavePvf();
-    if ($scope.criteriaHavePvf) {
-      MCDAResultsService.getDeterministicResults($scope, $scope.aggregateState).resultsPromise.then(function(result) {
-        $scope.deterministicResults = result.results;
-      });
-    }
+    $scope.criteriaHavePvf = doAllCriteriaHavePvf();
     OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
       $scope.alternatives = orderings.alternatives;
       $scope.criteria = orderings.criteria;

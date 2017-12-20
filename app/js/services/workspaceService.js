@@ -206,6 +206,7 @@ define(['lodash', 'angular'], function(_) {
           return constraint(workspace);
         });
       } catch (exception) {
+        console.log(exception);
         return {
           isValid: false,
           errorMessage: 'Exception while reading problem. Please make sure the file follows the specifications as laid out in the manual'
@@ -381,7 +382,7 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function isAbsolutePerformance(tableEntry) {
-      return !tableEntry.performance.type.startsWith('relative');
+      return tableEntry.performance.type.indexOf('relative') !== 0;
     }
 
     function criterionLackingTitle(workspace) {

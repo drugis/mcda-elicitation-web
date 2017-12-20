@@ -100,7 +100,7 @@ define(['angular-mocks', 'mcda/preferences/preferences'], function() {
         beforeEach(function() {
           deregisterWatcher = scope.$watch('elicit.resultsAccessible', function() {
             resultsAccessible = true;
-          })
+          });
         });
         afterEach(function() {
           state.go.calls.reset();

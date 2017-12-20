@@ -3,8 +3,6 @@ var requires = [
   'mcda/preferences/preferencesController',
   'mcda/preferences/editScenarioTitleController',
   'mcda/preferences/ordinalSwingController',
-  'mcda/preferences/intervalSwingController',
-  'mcda/preferences/exactSwingController',
   'mcda/preferences/swingWeightingController',
   'mcda/preferences/partialValueFunctionController',
   'mcda/preferences/partialValueFunctionService'
@@ -14,8 +12,6 @@ define(['angular'].concat(requires), function(
   PreferencesController,
   EditScenarioTitleController,
   OrdinalSwingController,
-  IntervalSwingController,
-  ExactSwingController,
   SwingWeightingController,
   PartialValueFunctionController,
   PartialValueFunctionService
@@ -24,8 +20,6 @@ define(['angular'].concat(requires), function(
     .controller('PreferencesController', PreferencesController)
     .controller('EditScenarioTitleController', EditScenarioTitleController)
     .controller('OrdinalSwingController', OrdinalSwingController)
-    .controller('IntervalSwingController', IntervalSwingController)
-    .controller('ExactSwingController', ExactSwingController)
     .controller('SwingWeightingController', SwingWeightingController)
     .controller('PartialValueFunctionController', PartialValueFunctionController)
 

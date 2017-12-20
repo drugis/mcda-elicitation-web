@@ -35,22 +35,6 @@ define(function() {
       requires: ['partial-value-function'],
       resets: ['criteria-trade-offs']
     }, {
-      id: 'interval-swing',
-      title: 'Imprecise Matching',
-      controller: 'IntervalSwingController',
-      templateUrl: 'intervalSwing.html',
-      activeTab: 'preferences',
-      requires: ['complete-criteria-ranking'],
-      resets: ['non-ordinal-preferences']
-    }, {
-      id: 'exact-swing',
-      title: 'Exact Matching',
-      controller: 'ExactSwingController',
-      templateUrl: 'exactSwing.html',
-      activeTab: 'preferences',
-      requires: ['complete-criteria-ranking'],
-      resets: ['non-ordinal-preferences']
-    }, {
       id: 'preferences',
       title: 'Preferences',
       controller: 'PreferencesController',
