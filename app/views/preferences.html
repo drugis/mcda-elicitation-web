@@ -35,14 +35,15 @@
       Elicitation
     </h5>
   </div>
-  <div class="cell">
-    <button class="button" ui-sref="swing-weighting" tooltip-animation="false" ng-disabled="!isAccessible(tasks['swing-weighting']).accessible" ng-class="{alert: !isSafe['swing-weighting'].safe}" tooltip="{{isSafe['swing-weighting'].tooltip}}">
-      Precise Weighting
-    </button>
-  </div>
   <div class="cell large-4 button-group" ng-if="editMode.isUserOwner">
+    <button class="button" ui-sref="swing-weighting" tooltip-animation="false" ng-disabled="!isAccessible(tasks['swing-weighting']).accessible" ng-class="{alert: !isSafe['swing-weighting'].safe}" tooltip="{{isSafe['swing-weighting'].tooltip}}">
+      Precise Swing Weighting
+    </button>
     <button class="button" ui-sref="ordinal-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['ordinal-swing']).accessible" ng-class="{alert: !isSafe['ordinal-swing'].safe}" tooltip="{{isSafe['ordinal-swing'].tooltip}}">
       Ranking
+    </button>    
+    <button class="button" ui-sref="imprecise-swing-weighting" tooltip-animation="false" ng-disabled="!isAccessible(tasks['imprecise-swing-weighting']).accessible" ng-class="{alert: !isSafe['imprecise-swing-weighting'].safe}" tooltip="{{isSafe['imprecise-swing-weighting'].tooltip}}">
+      Imprecise Swing Weighting
     </button>
   </div>
 </div>

@@ -1,6 +1,6 @@
 'use strict';
 define(['angular-mocks', 'mcda/preferences/preferences'], function() {
-  describe('Exact swing weighting controller', function() {
+  xdescribe('Exact swing weighting controller', function() {
 
     var scope;
     var state;

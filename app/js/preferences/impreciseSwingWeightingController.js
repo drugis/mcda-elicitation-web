@@ -6,22 +6,26 @@ define(['lodash'],
       'currentScenario',
       'taskDefinition'
     ];
-    var SwingWeightingController = function($scope, $stateParams,
+    var ImpreciseSwingWeightingController = function($scope, $stateParams,
       SwingWeightingService,
       currentScenario,
       taskDefinition) {
-      $scope.isPrecise = true;
+      $scope.isImprecise = true;
       var sliderOptions = {
         floor: 1,
         ceil: 100,
         translate: function(value) {
           return value + '%';
-        }
+        },
+        noSwitching: true
       };
 
       function getValues(criteria) {
         return _.reduce(criteria, function(accum, criterion, key) {
-          accum[key] = 100;
+          accum[key] = {
+            low: 1,
+            high: 100
+          };
           return accum;
         }, {});
       }
@@ -29,20 +33,24 @@ define(['lodash'],
       function toBackEnd(mostImportantCriterion) {
         return function(value, key) {
           return {
-            type: 'exact swing',
-            ratio: 1 / (value / 100),
+            type: 'interval swing',
+            bounds: [
+              1 / (value.low / 100),
+              1 / (value.high / 100)
+            ],
             criteria: [mostImportantCriterion, key]
           };
         };
       }
+      
       SwingWeightingService.initWeightingScope($scope,
         $stateParams,
         currentScenario,
         taskDefinition,
         sliderOptions,
         getValues,
-        'Precise swing weighting',
+        'Imprecise swing weighting',
         toBackEnd);
     };
-    return dependencies.concat(SwingWeightingController);
+    return dependencies.concat(ImpreciseSwingWeightingController);
   });

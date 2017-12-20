@@ -35,6 +35,14 @@ define(function() {
       requires: ['partial-value-function'],
       resets: ['criteria-trade-offs']
     }, {
+      id: 'imprecise-swing-weighting',
+      title: 'Imprecise Swing Weighting Elicitation',
+      controller: 'ImpreciseSwingWeightingController',
+      templateUrl: 'swingWeighting.html',
+      activeTab: 'preferences',
+      requires: ['partial-value-function'],
+      resets: ['criteria-trade-offs']
+    }, {
       id: 'preferences',
       title: 'Preferences',
       controller: 'PreferencesController',

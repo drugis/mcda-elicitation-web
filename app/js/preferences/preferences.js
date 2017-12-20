@@ -4,6 +4,8 @@ var requires = [
   'mcda/preferences/editScenarioTitleController',
   'mcda/preferences/ordinalSwingController',
   'mcda/preferences/swingWeightingController',
+  'mcda/preferences/impreciseSwingWeightingController',
+  'mcda/preferences/swingWeightingService',
   'mcda/preferences/partialValueFunctionController',
   'mcda/preferences/partialValueFunctionService'
 ];
@@ -13,6 +15,8 @@ define(['angular'].concat(requires), function(
   EditScenarioTitleController,
   OrdinalSwingController,
   SwingWeightingController,
+  ImpreciseSwingWeightingController,
+  SwingWeightingService,
   PartialValueFunctionController,
   PartialValueFunctionService
 ) {
@@ -21,8 +25,10 @@ define(['angular'].concat(requires), function(
     .controller('EditScenarioTitleController', EditScenarioTitleController)
     .controller('OrdinalSwingController', OrdinalSwingController)
     .controller('SwingWeightingController', SwingWeightingController)
+    .controller('ImpreciseSwingWeightingController', ImpreciseSwingWeightingController)
     .controller('PartialValueFunctionController', PartialValueFunctionController)
 
     .factory('PartialValueFunctionService', PartialValueFunctionService)
+    .factory('SwingWeightingService', SwingWeightingService)
     ;
 });
