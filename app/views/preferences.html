@@ -41,4 +41,30 @@
       Imprecise Swing Weighting
     </button>
   </div>
+  <div class="cell">
+    <table>
+      <thead>
+        <th>Criterion
+          <inline-help help-key="criterion"></inline-help>
+        </th>
+        <th>Description</th>
+        <th>Unit
+          <inline-help help-key="criterion-unit"></inline-help>
+        </th>
+        <th>Worst</th>
+        <th>Best</th>
+        <th>Importance</th>
+      </thead>
+      <tbody>
+        <tr ng-repeat="criterion in criteria">
+          <td>{{criterion.title}}</td>
+          <td>{{criterion.description}}</td>
+          <td>{{criterion.unitOfMeasurement}}</td>
+          <td>{{pvf.worst(criterion) | number}}</td>
+          <td>{{pvf.best(criterion) | number}}</td>
+          <td>{{importance[criterion.id]}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
