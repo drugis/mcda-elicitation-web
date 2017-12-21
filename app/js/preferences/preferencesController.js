@@ -49,6 +49,9 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
       $scope.importance = PreferencesService.buildImportance($scope.criteria, $scope.scenario.state.prefs);
     });
     new Clipboard('.clipboard-button');
+    $scope.isOrdinal = _.find($scope.scenario.state.prefs, function(pref) {
+      return pref.type === 'ordinal';
+    });
 
     function doAllCriteriaHavePvf() {
       var havePvf = true;
