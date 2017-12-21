@@ -25,7 +25,7 @@ define(function() {
       templateUrl: 'ordinalSwing.html',
       activeTab: 'preferences',
       requires: ['partial-value-function'],
-      resets: ['non-ordinal-preferences']
+      resets: ['criteria-trade-offs']
     }, {
       id: 'swing-weighting',
       title: 'Swing Weighting Elicitation',

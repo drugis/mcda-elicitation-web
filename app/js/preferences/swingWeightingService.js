@@ -4,7 +4,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
     'PartialValueFunctionService',
     'OrderingService'
   ];
-  var PartialValueFunctionService = function($state, $injector, $timeout,
+  var SwingWeightingService = function($state, $injector, $timeout,
     PartialValueFunctionService,
     OrderingService) {
 
@@ -117,5 +117,5 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
       initWeightingScope: initWeightingScope
     };
   };
-  return dependencies.concat(PartialValueFunctionService);
+  return dependencies.concat(SwingWeightingService);
 });

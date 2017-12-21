@@ -20,7 +20,7 @@ define(['angular'].concat(requires), function(
   PartialValueFunctionController,
   PartialValueFunctionService
 ) {
-  return angular.module('elicit.preferences', [])
+  return angular.module('elicit.preferences', ['elicit.workspace'])
     .controller('PreferencesController', PreferencesController)
     .controller('EditScenarioTitleController', EditScenarioTitleController)
     .controller('OrdinalSwingController', OrdinalSwingController)
