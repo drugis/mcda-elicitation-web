@@ -21,7 +21,7 @@ define(['lodash', 'angular'], function(_, angular) {
       }
       $scope.uploadedContent = angular.fromJson($scope.local.contents);
       $scope.workspaceValidity = WorkspaceService.validateWorkspace($scope.uploadedContent);
-    });
+    }, true);
 
     function createWorkspace(choice) {
       $scope.isCreating = true;
