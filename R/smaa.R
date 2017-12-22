@@ -9,7 +9,7 @@ wrap.matrix <- function(m) {
 }
 
 smaa_v2 <- function(params) {
-  allowed <- c('scales','smaa','deterministic','sensitivityMeasurements','sensitivityMeasurementsPlot','sensitivityWeightPlot')
+  allowed <- c('scales','smaa','deterministic','sensitivityMeasurements','sensitivityMeasurementsPlot','sensitivityWeightPlot','weightBounds')
   if(params$method %in% allowed) {
     do.call(paste("run", params$method, sep="_"), list(params))
   } else {
@@ -32,6 +32,87 @@ ratioConstraint <- function(n, i1, i2, x) {
   a[i2] <- x
   list(constr = t(a), rhs = c(0), dir = c("="))
 }
+
+# Generate equality constraints for exact weights 
+ExactWeightConstraints <- function(params) {
+  
+  crit <- names(params$criteria)
+  n <- length(crit)
+  m <- length(params$deterministicWeights)
+  
+  A <- diag(n)
+  row.names(A) <- crit
+  
+  constr <- NULL
+  for (i in 1:m) {
+    cur.constr <- list(constr=A[params$deterministicWeights[[i]]$criterion,],rhs=params$deterministicWeights[[i]]$weight,dir="=")
+    constr <- mergeConstraints(constr,cur.constr)
+  }
+  
+  constr
+  
+}
+
+# Make H-representation of the convex polygedron
+generateHrep <- function(constr) {
+  n.contr <- dim(constr$constr)[1]
+  
+  a1 <- c()
+  b1 <- c()
+  a2 <- c()
+  b2 <- c()
+  for (i in 1:n.contr) {
+    if (constr$dir[i]=="<=") {
+      a1 <- rbind(a1,constr$constr[i,])
+      b1 <- c(b1,constr$rhs[i])
+    }
+    if (constr$dir[i]=="=") {
+      a2 <- rbind(a2,constr$constr[i,])
+      b2 <- c(b2,constr$rhs[i])
+    }
+  }
+  
+  rcdd::makeH(a1,b1,a2,b2)
+  
+}
+
+# Determine criterion-wise lower and upper bounds for the weights
+run_weightBounds <- function(params) {
+  
+  crit <- names(params$criteria)
+  n <- length(crit)
+  
+  constr <- mergeConstraints(lapply(params$preferences,genHARconstraint,crit=crit))
+  constr <- mergeConstraints(simplexConstraints(n),constr)
+  
+  A <- diag(n)
+  row.names(A) <- crit
+  
+  H <- generateHrep(constr)
+  
+  if (!is.null(params$deterministicWeights)) {
+    m <- length(params$deterministicWeights)
+    for (i in 1:m) {
+      a <- A[params$deterministicWeights[[i]]$criterion,]
+      b <- params$deterministicWeights[[i]]$weight
+      H <- rcdd::addHeq(a,b,H)
+    }
+  }
+  
+  lower <- c()
+  upper <- c()
+  for (i in 1:n) {
+    lower <- c(lower,rcdd::lpcdd(H,A[i,],minimize=T)$optimal.value)
+    upper <- c(upper,rcdd::lpcdd(H,A[i,],minimize=F)$optimal.value)
+  }
+  
+  names(lower) <- crit
+  names(upper) <- crit
+  
+  list(lower=lower,upper=upper)
+  
+}
+
 
 run_deterministic <- function(params) {
   meas <- genMedianMeasurements(params) 
@@ -60,6 +141,17 @@ genRepresentativeWeights <- function(params) {
   
   constr <- mergeConstraints(lapply(params$preferences,genHARconstraint,crit=crit))
   constr <- mergeConstraints(simplexConstraints(n),constr)
+  
+  if (!is.null(params$deterministicWeights)) {
+    
+    exact.constr <- ExactWeightConstraints(params)
+    constr <- mergeConstraints(constr,exact.constr)
+    
+    # Substract the fixed weights from the add up to 1 contraint
+    constr$constr[1,] <- constr$constr[1,] - colSums(exact.constr$constr)
+    constr$rhs[1] <- constr$rhs[1] - sum(exact.constr$rhs)
+    
+  }
   
   samples <- hitandrun(constr, n.samples=N)
   rep.weights <- colMeans(samples)
