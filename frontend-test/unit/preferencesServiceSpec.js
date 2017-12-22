@@ -70,12 +70,12 @@ define(['angular-mocks', 'mcda/preferences/preferences'], function() {
       });
       it('should work for imprecise preferences', function() {
         var prefs = [{
-            type: 'interval swing',
+            type: 'ratio bound',
             criteria: ['crit2', 'crit1'],
             bounds: [4, 2]
           },
           {
-            type: 'interval swing',
+            type: 'ratio bound',
             criteria: ['crit2', 'crit3'],
             bounds: [5, 4]
           }

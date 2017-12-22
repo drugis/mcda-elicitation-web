@@ -26,7 +26,7 @@ define(['lodash', 'angular'], function(_) {
             accum[criterion.id] = '100%';
           } else if (preference.type === 'exact swing') {
             accum[criterion.id] = Math.round((1 / preference.ratio) * 100) + '%';
-          } else if (preference.type === 'interval swing') {
+          } else if (preference.type === 'ratio bound') {
             accum[criterion.id] = Math.round((1 / preference.bounds[0]) * 100) + '-' + Math.round((1 / preference.bounds[1]) * 100) + '%';
           }
         }
