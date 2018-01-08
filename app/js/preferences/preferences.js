@@ -1,6 +1,7 @@
 'use strict';
 var requires = [
   'mcda/preferences/preferencesController',
+  'mcda/preferences/preferencesService',
   'mcda/preferences/editScenarioTitleController',
   'mcda/preferences/ordinalSwingController',
   'mcda/preferences/swingWeightingController',
@@ -12,6 +13,7 @@ var requires = [
 define(['angular'].concat(requires), function(
   angular,
   PreferencesController,
+  PreferencesService,
   EditScenarioTitleController,
   OrdinalSwingController,
   SwingWeightingController,
@@ -30,5 +32,6 @@ define(['angular'].concat(requires), function(
 
     .factory('PartialValueFunctionService', PartialValueFunctionService)
     .factory('SwingWeightingService', SwingWeightingService)
+    .factory('PreferencesService', PreferencesService)
     ;
 });

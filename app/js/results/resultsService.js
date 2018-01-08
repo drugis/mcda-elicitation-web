@@ -154,10 +154,10 @@ define(['lodash', 'angular'], function(_, angular) {
       });
     }
 
-    function pataviResultToLineValues(results, alternatives) {
+    function pataviResultToLineValues(results, alternatives, legend) {
       return _.map(alternatives, function(alternative) {
         return {
-          key: alternative.title,
+          key: legend ? legend[alternative.id].newTitle : alternative.title,
           values: _(results.total.data[alternative.id]).map(function(entryValue, entryKey) {
               return {
                 x: parseFloat(entryKey),

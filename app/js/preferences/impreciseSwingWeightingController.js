@@ -33,7 +33,7 @@ define(['lodash'],
       function toBackEnd(mostImportantCriterion) {
         return function(value, key) {
           return {
-            type: 'interval swing',
+            type: 'ratio bound',
             bounds: [
               1 / (value.low / 100),
               1 / (value.high / 100)

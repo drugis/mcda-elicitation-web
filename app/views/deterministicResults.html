@@ -59,6 +59,28 @@
     </div>
   </div>
   <div class="grid-x underlined-div">
+    <div class="cell large-10">
+      <h4>Representative weights <inline-help help-key="representative-weights"></inline-help></h4>
+    </div>
+    <div clas="cell large-2">
+      <button class="button small info clipboard-button" data-clipboard-target="#weighttable">
+        <i class="fa fa-clipboard"></i> Copy to clipboard
+      </button>
+    </div>
+    <div class="cell">
+       <table id="weighttable">
+         <thead>
+           <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
+         </thead>
+         <tbody>
+           <tr>
+             <td ng-repeat="criterion in criteria">{{deterministicResults.results.weights.data[criterion.id]}}</td>
+           </tr>
+         </tbody>
+       </table>
+    </div>
+  </div>
+  <div class="grid-x underlined-div">
     <div class="cell">
       <div class="grid-x grid-margin-x">
         <div class="cell large-4">

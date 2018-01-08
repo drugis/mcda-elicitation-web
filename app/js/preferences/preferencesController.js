@@ -9,9 +9,9 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     'ScenarioResource',
     'PartialValueFunctionService',
     'OrderingService',
+    'PreferencesService',
     'TaskDependencies',
     'currentScenario',
-    'MCDAResultsService',
     'mcdaRootPath'
   ];
   var PreferencesController = function(
@@ -22,9 +22,9 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     ScenarioResource,
     PartialValueFunctionService,
     OrderingService,
+    PreferencesService,
     TaskDependencies,
     currentScenario,
-    MCDAResultsService,
     mcdaRootPath
   ) {
 
@@ -46,8 +46,12 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
       $scope.alternatives = orderings.alternatives;
       $scope.criteria = orderings.criteria;
+      $scope.importance = PreferencesService.buildImportance($scope.criteria, $scope.scenario.state.prefs);
     });
     new Clipboard('.clipboard-button');
+    $scope.isOrdinal = _.find($scope.scenario.state.prefs, function(pref) {
+      return pref.type === 'ordinal';
+    });
 
     function doAllCriteriaHavePvf() {
       var havePvf = true;
