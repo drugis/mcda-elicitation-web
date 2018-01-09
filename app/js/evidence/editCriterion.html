@@ -22,21 +22,16 @@
       <input type="text" ng-model="criterion.unitOfMeasurement">
     </div>
     <div class="cell">
-      <label>Source <inline-help help-key="criterion-source"></inline-help></label>
+      <label>Reference <inline-help help-key="criterion-source"></inline-help></label>
     </div>
     <div class="cell">
-      <input type="radio" ng-model="criterion.source" ng-value="undefined" id="no-source">
-      <label for="no-source">None</label>
-      <input type="radio" ng-model="criterion.source" ng-value="'study'" id="study">
-      <label for="study">Single study</label>
-      <input type="radio" ng-model="criterion.source" ng-value="'meta analysis'" id="meta-analysis">
-      <label for="meta-analysis">Meta analysis</label>
+      <input type="text" ng-model="criterion.source">
     </div>
     <div class="cell">
-      <label>Source link <inline-help help-key="criterion-source-link"></inline-help></label>
+      <label>Reference URL <inline-help help-key="criterion-source-link"></inline-help></label>
     </div>
     <div class="cell">
-      <input type="text" ng-disabled="criterion.source === undefined" ng-model="criterion.sourceLink">
+      <input type="text" ng-model="criterion.sourceLink">
     </div>
     <button class="button success" type="submit" ng-disabled="!criterion.title || !isTitleUnique">Save</button>
   </div>

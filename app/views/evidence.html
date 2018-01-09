@@ -28,8 +28,8 @@
             <inline-help help-key="criterion-unit"></inline-help>
           </th>
           <th>description</th>
-          <th>Source</th>
-          <th>Source link</th>
+          <th>Reference</th>
+          <th>Reference URL</th>
         </tr>
       </thead>
       <tbody>
@@ -122,9 +122,9 @@
             <th>Units
               <inline-help help-key="criterion-unit"></inline-help>
             </th>
-            <th ng-if="references.has">References</th>
             <th class="text-center" ng-repeat="alternative in alternatives">
               {{alternative.title}}</th>
+            <th ng-if="references.has">References</th>
           </tr>
         </thead>
         <tbody class="main">
@@ -145,13 +145,14 @@
               </div>
             </td>
             <td ng-if="!row.isHeaderRow">{{problem.criteria[row].unitOfMeasurement}}</td>
-            <td ng-if="references.has && !row.isHeaderRow"><a href="{{problem.criteria[row].sourceLink}}">{{problem.criteria[row].source}}</a></td>
+            
             <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
               {{scales[row][alternative.id]['50%'] | number}}
               <br>
               <div class="uncertain" ng-show="!isExact(row, alternative.id)">
                 {{scales[row][alternative.id]['2.5%'] | number}}, {{scales[row][alternative.id]['97.5%'] | number}}</div>
             </td>
+            <td ng-if="references.has && !row.isHeaderRow"><a href="{{problem.criteria[row].sourceLink}}">{{problem.criteria[row].source}}</a></td>
           </tr>
         </tbody>
       </table>
