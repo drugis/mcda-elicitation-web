@@ -53,8 +53,8 @@
               <inline-help help-key="criterion-unit"></inline-help>
             </th>
             <th>description</th>
-            <th>Reference</th>
-            <th>Reference URL</th>
+            <th>Reference <inline-help help-key="criterion-source"></inline-help></th>
+            <th>Reference URL <inline-help help-key="criterion-source-link"></inline-help></th>
           </tr>
         </thead>
         <tbody>
@@ -73,7 +73,7 @@
             <td>{{criterion.unitOfMeasurement}}</td>
             <td>{{criterion.description}}</td>
             <td>{{criterion.source}}</td>
-            <td>{{criterion.sourceLink}}</td>
+            <td><a href="{{criterion.sourceLink}}">{{criterion.sourceLink}}</td>
           </tr>
         </tbody>
       </table>
