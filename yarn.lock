@@ -8,9 +8,9 @@
   dependencies:
     match-at "^0.1.0"
 
-"@bower_components/MathJax@git://github.com/mathjax/MathJax.git#2.4.0":
+"@bower_components/MathJax@mathjax/MathJax#2.4.0":
   version "0.0.0"
-  resolved "git://github.com/mathjax/MathJax.git#1c54436ae6166a91495aba8a98cc18816b4789df"
+  resolved "https://codeload.github.com/mathjax/MathJax/tar.gz/1c54436ae6166a91495aba8a98cc18816b4789df"
 
 "@bower_components/angular-animate@angular/bower-angular-animate#~1.6.0":
   version "1.6.8"
@@ -46,7 +46,7 @@
   dependencies:
     "@uirouter/core" "5.0.13"
 
-"@bower_components/angular@angular/bower-angular#~1.6.0":
+"@bower_components/angular@angular/bower-angular#>= 1.6.0":
   version "1.6.8"
   resolved "https://codeload.github.com/angular/bower-angular/tar.gz/f4be53fc72b2eb2c3c3d634aeacfc68673ea5e68"
 
@@ -66,9 +66,9 @@
     select "^1.1.2"
     tiny-emitter "^2.0.0"
 
-"@bower_components/d3@git://github.com/mbostock/d3.git#3.5.5":
-  version "3.5.5"
-  resolved "git://github.com/mbostock/d3.git#a40a611d6b9fc4ff3815ca830d86b6c00d130995"
+"@bower_components/d3@mbostock-bower/d3-bower#3.5.5":
+  version "0.0.0"
+  resolved "https://codeload.github.com/mbostock-bower/d3-bower/tar.gz/b048d3869f38607e24d3e6e919a248fb828ac3db"
 
 "@bower_components/domready@ded/domready#~1.0.7":
   version "1.0.8"

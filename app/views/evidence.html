@@ -29,7 +29,6 @@
           </th>
           <th>description</th>
           <th>Reference <inline-help help-key="criterion-source"></inline-help></th>
-          <th>Reference URL <inline-help help-key="criterion-source-link"></inline-help></th>
         </tr>
       </thead>
       <tbody>
@@ -59,8 +58,7 @@
           </td>
           <td ng-if="!row.isHeaderRow">{{problem.criteria[row].unitOfMeasurement}}</td>
           <td ng-if="!row.isHeaderRow">{{problem.criteria[row].description}}</td>
-          <td ng-if="!row.isHeaderRow">{{problem.criteria[row].source}}</td>
-          <td ng-if="!row.isHeaderRow"><a href="{{problem.criteria[row].sourceLink}}">{{problem.criteria[row].sourceLink}}</a></td>
+          <td ng-if="!row.isHeaderRow"><a href="{{problem.criteria[row].sourceLink}}">{{problem.criteria[row].source}}</a></td>
         </tr>
       </tbody>
     </table>

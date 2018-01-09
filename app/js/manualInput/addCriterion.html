@@ -83,7 +83,7 @@
         <label>Reference URL (optional)
           <inline-help help-key="criterion-source-link"></inline-help>
         </label>
-        <input type="text" ng-model="criterion.sourceLink">
+        <input type="text" ng-model="criterion.sourceLink" ng-change="isCreationBlocked()">
       </div>
       <div class="cell button-group">
         <button class="button" ng-disabled="blockedReasons.length" type="submit">{{isAddOperation ? 'Add' : 'Done'}}</button>
