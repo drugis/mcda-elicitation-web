@@ -4,18 +4,19 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
     '$scope', '$state', '$stateParams', '$injector',
     'PartialValueFunctionService',
     'OrderingService',
-    'currentScenario', 
+    'currentScenario',
     'taskDefinition'
   ];
   var OrdinalSwingController = function($scope, $state, $stateParams, $injector,
     PartialValueFunctionService,
     OrderingService,
-    currentScenario, 
+    currentScenario,
     taskDefinition
   ) {
     //functions 
     $scope.save = save;
     $scope.canSave = canSave;
+    $scope.cancel = cancel;
 
     //init
     $scope.problem = $scope.aggregateState.problem;
@@ -138,6 +139,10 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
 
     function canSave(state) {
       return state && _.size(state.choices) === 0;
+    }
+
+    function cancel() {
+      $state.go('preferences');
     }
 
     OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
