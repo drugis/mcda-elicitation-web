@@ -34,9 +34,6 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
 
     function title(step, total) {
       var base = 'Ranking';
-      if (step > total) {
-        return base + ' (DONE)';
-      }
       return base + ' (' + step + '/' + total + ')';
     }
 
@@ -138,7 +135,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
     }
 
     function canSave(state) {
-      return state && _.size(state.choices) === 0;
+      return state && _.size(state.choices) === 2;
     }
 
     function cancel() {
