@@ -414,7 +414,7 @@ app.get('/workspaces/:workspaceId/ordering', function(req, res, next) {
 });
 
 app.put('/workspaces/:workspaceId/ordering', function(req, res, next) {
-  logger.debug('SET /workspaces/'+req.params.workspaceId+'/ordering/');
+  logger.debug('SET /workspaces/' + req.params.workspaceId + '/ordering/');
   db.query('insert into ordering(workspaceId, ordering) values($1, $2) ON CONFLICT(workspaceId) DO UPDATE SET ordering=$2', [
     req.params.workspaceId,
     req.body
@@ -422,6 +422,31 @@ app.put('/workspaces/:workspaceId/ordering', function(req, res, next) {
     if (err) {
       err.status = 500;
       next(err);
+    }
+    res.end();
+  });
+});
+
+//Effects table non-alternative columns
+app.get('/workspaces/:workspaceId/toggledColumns', function(req, res, next) {
+  logger.debug('GET /workspaces/' + req.params.workspaceId + '/toggledColumns');
+  db.query('SELECT toggledColumns AS "toggledColumns", toggledColumns FROM toggledColumns WHERE workspaceId = $1', [req.params.workspaceId], function(err, result) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.json({
+      toggledColumns: result.rows[0] ? result.rows[0].toggledColumns : undefined
+    });
+  });
+});
+
+app.post('/workspaces/:workspaceId/toggledColumns', function(req, res, next) {
+  logger.debug('POST /workspaces/' + req.params.workspaceId + '/toggledColumns');
+  db.query('INSERT INTO toggledColumns (workspaceid, toggledColumns) VALUES ($1, $2) ON CONFLICT(workspaceId) DO UPDATE SET toggledColumns=$2', [req.params.workspaceId, req.body.toggledColumns], function(err) {
+    if (err) {
+      err.status = 500;
+      return next(err);
     }
     res.end();
   });

@@ -1,11 +1,11 @@
 'use strict';
-define([], function() {
+define(['lodash'], function(_) {
   var dependencies = ['$scope', '$modalInstance', 'toggledColumns', 'callback'];
   var ToggleColumnsController = function($scope, $modalInstance, toggledColumns, callback) {
     $scope.cancel = cancel;
     $scope.save = save;
 
-    $scope.toggledColumns = toggledColumns;
+    $scope.toggledColumns = _.cloneDeep(toggledColumns);
 
     function save() {
       callback($scope.toggledColumns);

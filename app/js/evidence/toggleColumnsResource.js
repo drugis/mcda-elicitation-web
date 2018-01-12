@@ -3,7 +3,7 @@ define(['angular'], function(angular) {
   var dependencies = ['ngResource'];
   var ToggleColumnsResource = function($resource) {
     return $resource(
-      window.config.workspacesRepositoryUrl + ':workspaceId', {
+      window.config.workspacesRepositoryUrl + ':workspaceId/toggledColumns', {
         workspaceId: '@workspaceId'
       }
     );
