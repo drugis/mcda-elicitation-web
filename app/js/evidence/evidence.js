@@ -4,6 +4,7 @@ var requires = [
   'mcda/evidence/editAlternativeController',
   'mcda/evidence/editCriterionController',
   'mcda/evidence/editTherapeuticContextController',
+  'mcda/evidence/toggleColumnsController',
   'mcda/evidence/effectsTableService'
 ];
 define(['angular'].concat(requires), function(
@@ -12,6 +13,7 @@ define(['angular'].concat(requires), function(
   EditAlternativeController,
   EditCriterionController,
   EditTherapeuticContextController,
+  ToggleColumnsController,
   EffectsTableService
 ) {
   return angular.module('elicit.evidence', [])
@@ -19,6 +21,7 @@ define(['angular'].concat(requires), function(
     .controller('EditAlternativeController', EditAlternativeController)
     .controller('EditCriterionController', EditCriterionController)
     .controller('EditTherapeuticContextController', EditTherapeuticContextController)
+    .controller('ToggleColumnsController', ToggleColumnsController)
     .factory('EffectsTableService', EffectsTableService)
     ;
 });
