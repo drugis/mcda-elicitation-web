@@ -17,8 +17,8 @@
   </div>
   <div class="grid-x">
     <div class="cell">
-      <button class="button" ng-click="cancel()" ng-if="!canReturn()">Cancel</button>
-      <button class="button" ng-click="previousStep()" ng-if="canReturn()">Previous</button>
+      <button class="button" ng-click="cancel()">Cancel</button>
+      <button class="button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
       <button class="button" ng-if="!canSave(state)" ng-click="nextStep(state)" ng-disabled="!canProceed(state)">Next</button>
       <button class="success button" ng-if="canSave(state)" ng-click="save(state)"
         ng-disabled="!state.choice">Save</button>
