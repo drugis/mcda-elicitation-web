@@ -30,7 +30,7 @@
       Weights <inline-help help-key="weights"></inline-help>
     </h4>
   </div>
-  <div class="cell">
+  <div class="cell" ng-if="criteriaHavePvf">
     <table>
       <thead>
         <th>Criterion
@@ -56,6 +56,9 @@
         </tr>
       </tbody>
     </table>
+  </div>
+  <div class="cell" ng-if="!criteriaHavePvf">
+    <em>Not all partial value functions are defined</em>
   </div>
   <div class="cell large-4 button-group" ng-if="editMode.isUserOwner">
     <button class="button" ui-sref="ordinal-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['ordinal-swing']).accessible" ng-class="{alert: !isSafe['ordinal-swing'].safe}" tooltip="{{isSafe['ordinal-swing'].tooltip}}">
