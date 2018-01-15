@@ -5,7 +5,8 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     'WorkspaceResource',
     'isMcdaStandalone',
     'OrderingService',
-    'ToggleColumnsResource'
+    'ToggleColumnsResource',
+    'mcdaRootPath'
   ];
 
   var EvidenceController = function($scope, $state, $stateParams, $modal,
@@ -13,7 +14,8 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     WorkspaceResource,
     isMcdaStandalone,
     OrderingService,
-    ToggleColumnsResource
+    ToggleColumnsResource,
+    mcdaRootPath
   ) {
     // functions
     $scope.isExact = isExact;
@@ -80,7 +82,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
 
     function editTherapeuticContext() {
       $modal.open({
-        templateUrl: '/js/evidence/editTherapeuticContext.html',
+        templateUrl: mcdaRootPath + 'js/evidence/editTherapeuticContext.html',
         controller: 'EditTherapeuticContextController',
         resolve: {
           therapeuticContext: function() {
@@ -139,7 +141,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
 
     function editCriterion(criterion, criterionKey) {
       $modal.open({
-        templateUrl: '/js/evidence/editCriterion.html',
+        templateUrl: mcdaRootPath + 'js/evidence/editCriterion.html',
         controller: 'EditCriterionController',
         resolve: {
           criterion: function() {
@@ -162,7 +164,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
 
     function editAlternative(alternative) {
       $modal.open({
-        templateUrl: '/js/evidence/editAlternative.html',
+        templateUrl: mcdaRootPath + 'js/evidence/editAlternative.html',
         controller: 'EditAlternativeController',
         resolve: {
           alternative: function() {
@@ -194,7 +196,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
 
     function toggleColumns() {
       $modal.open({
-        templateUrl: '/js/evidence/toggleColumns.html',
+        templateUrl: mcdaRootPath + 'js/evidence/toggleColumns.html',
         controller: 'ToggleColumnsController',
         resolve: {
           toggledColumns: function() {
