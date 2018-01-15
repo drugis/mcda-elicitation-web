@@ -58,7 +58,10 @@
           </td>
           <td ng-if="!row.isHeaderRow">{{problem.criteria[row].unitOfMeasurement}}</td>
           <td ng-if="!row.isHeaderRow">{{problem.criteria[row].description}}</td>
-          <td ng-if="!row.isHeaderRow"><a href="{{problem.criteria[row].sourceLink}}">{{problem.criteria[row].source}}</a></td>
+          <td ng-if="!row.isHeaderRow">
+            <a ng-if="problem.criteria[row].sourceLink" href="{{problem.criteria[row].sourceLink}}">{{problem.criteria[row].source}}</a>
+            <span ng-if="!problem.criteria[row].sourceLink">{{problem.criteria[row].source}}</span>
+        </td>
         </tr>
       </tbody>
     </table>
@@ -155,7 +158,10 @@
               <div class="uncertain" ng-show="!isExact(row, alternative.id)">
                 {{scales[row][alternative.id]['2.5%'] | number}}, {{scales[row][alternative.id]['97.5%'] | number}}</div>
             </td>
-            <td ng-if="references.has && !row.isHeaderRow" ng-show="toggledColumns['references']"><a href="{{problem.criteria[row].sourceLink}}">{{problem.criteria[row].source}}</a></td>
+            <td ng-if="references.has && !row.isHeaderRow" ng-show="toggledColumns['references']">
+              <a ng-if="problem.criteria[row].sourceLink" href="{{problem.criteria[row].sourceLink}}">{{problem.criteria[row].source}}</a>
+              <span ng-if="!problem.criteria[row].sourceLink">{{problem.criteria[row].source}}</span>
+            </td>
           </tr>
         </tbody>
       </table>
