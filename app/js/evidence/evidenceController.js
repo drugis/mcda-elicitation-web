@@ -57,10 +57,11 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       this.dispatchEvent(evt);
     };
 
-    ToggleColumnsResource.get($stateParams).$promise.then(function(toggledColumns){
-      if(toggledColumns){
-      $scope.toggledColumns = toggledColumns;
-      } else{
+    ToggleColumnsResource.get($stateParams).$promise.then(function(response) {
+      var toggledColumns = response.toggledColumns;
+      if (toggledColumns) {
+        $scope.toggledColumns = toggledColumns;
+      } else {
         $scope.toggledColumns = {
           criteria: true,
           description: true,
@@ -202,7 +203,9 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
           callback: function() {
             return function(newToggledColumns) {
               $scope.toggledColumns = newToggledColumns;
-              ToggleColumnsResource.save($stateParams, $scope.toggledColumns);
+              ToggleColumnsResource.put($stateParams, {
+                toggledColumns: $scope.toggledColumns
+              });
             };
           }
         }

@@ -5,6 +5,10 @@ define(['angular'], function(angular) {
     return $resource(
       window.config.workspacesRepositoryUrl + ':workspaceId/toggledColumns', {
         workspaceId: '@workspaceId'
+      }, {
+        put: {
+          method: 'PUT'
+        }
       }
     );
   };

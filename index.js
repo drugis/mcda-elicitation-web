@@ -441,7 +441,7 @@ app.get('/workspaces/:workspaceId/toggledColumns', function(req, res, next) {
   });
 });
 
-app.post('/workspaces/:workspaceId/toggledColumns', function(req, res, next) {
+app.put('/workspaces/:workspaceId/toggledColumns', function(req, res, next) {
   logger.debug('POST /workspaces/' + req.params.workspaceId + '/toggledColumns');
   db.query('INSERT INTO toggledColumns (workspaceid, toggledColumns) VALUES ($1, $2) ON CONFLICT(workspaceId) DO UPDATE SET toggledColumns=$2', [req.params.workspaceId, req.body.toggledColumns], function(err) {
     if (err) {
