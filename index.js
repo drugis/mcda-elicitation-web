@@ -535,8 +535,9 @@ app.post('/workspaces/:workspaceId/problems', function(req, res, next) {
 
 app.post('/workspaces/:workspaceId/problems/:subProblemId', function(req, res, next) {
   logger.debug('UPDATE /workspaces/:id/problems/:subProblemId');
-  db.query('UPDATE subProblem SET definition = $1WHERE id = $2', [
+  db.query('UPDATE subProblem SET definition = $1, title = $2 WHERE id = $3', [
     req.body.definition,
+    req.body.title,
     req.params.subProblemId
   ], function(err) {
     if (err) {
