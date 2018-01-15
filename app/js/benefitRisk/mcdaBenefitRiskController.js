@@ -8,7 +8,8 @@ define(['lodash'], function(_) {
     'subProblems',
     'currentSubProblem',
     'scenarios',
-    'currentScenario'
+    'currentScenario',
+    'mcdaRootPath'
   ];
 
   function MCDABenefitRiskController($scope, $transitions, $state, $stateParams, $modal,
@@ -19,7 +20,9 @@ define(['lodash'], function(_) {
     subProblems,
     currentSubProblem,
     scenarios,
-    currentScenario) {
+    currentScenario,
+    mcdaRootPath
+  ) {
     // functions
     $scope.forkScenario = forkScenario;
     $scope.newScenario = newScenario;
@@ -111,7 +114,7 @@ define(['lodash'], function(_) {
 
     function forkScenario() {
       $modal.open({
-        templateUrl: 'js/preferences/newScenario.html',
+        templateUrl: mcdaRootPath + 'js/preferences/newScenario.html',
         controller: 'NewScenarioController',
         resolve: {
           scenarios: function() {
@@ -140,7 +143,7 @@ define(['lodash'], function(_) {
 
     function newScenario() {
       $modal.open({
-        templateUrl: 'js/preferences/newScenario.html',
+        templateUrl: mcdaRootPath + 'js/preferences/newScenario.html',
         controller: 'NewScenarioController',
         resolve: {
           scenarios: function() {
