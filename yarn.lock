@@ -41,12 +41,12 @@
   resolved "https://codeload.github.com/angular/bower-angular-touch/tar.gz/9274159da3a46212a7dd2b22730e87560eed8f4b"
 
 "@bower_components/angular-ui-router@angular-ui/angular-ui-router-bower#~1.0.5":
-  version "1.0.12"
-  resolved "https://codeload.github.com/angular-ui/angular-ui-router-bower/tar.gz/15b68079fcad8260fdeb8c580478e6363f9d65d7"
+  version "1.0.13"
+  resolved "https://codeload.github.com/angular-ui/angular-ui-router-bower/tar.gz/a323de41773c89b5c5b0ea586ed635b934790fb2"
   dependencies:
-    "@uirouter/core" "5.0.13"
+    "@uirouter/core" "5.0.14"
 
-"@bower_components/angular@angular/bower-angular#>= 1.6.0":
+"@bower_components/angular@angular/bower-angular#>= 1.6.0", "@bower_components/angular@angular/bower-angular#~1.6.0":
   version "1.6.8"
   resolved "https://codeload.github.com/angular/bower-angular/tar.gz/f4be53fc72b2eb2c3c3d634aeacfc68673ea5e68"
 
@@ -70,6 +70,10 @@
   version "0.0.0"
   resolved "https://codeload.github.com/mbostock-bower/d3-bower/tar.gz/b048d3869f38607e24d3e6e919a248fb828ac3db"
 
+"@bower_components/d3@mbostock-bower/d3-bower#~3.5.5":
+  version "0.0.0"
+  resolved "https://codeload.github.com/mbostock-bower/d3-bower/tar.gz/7a826d211d5067867debf9ce24a9987e0cb02b6e"
+
 "@bower_components/domready@ded/domready#~1.0.7":
   version "1.0.8"
   resolved "https://codeload.github.com/ded/domready/tar.gz/bddb9f9374d699289953c813961b7121bd040ce7"
@@ -79,8 +83,14 @@
   resolved "https://codeload.github.com/drugis/error-reporting/tar.gz/dc08775e674de116d86fc995321b1df3b1c2bc54"
 
 "@bower_components/export-directive@drugis/export-directive#master":
-  version "0.0.0"
-  resolved "https://codeload.github.com/drugis/export-directive/tar.gz/864ef3a3ccab76316c25d9aa4a18343dc9253f26"
+  version "1.0.0"
+  resolved "https://codeload.github.com/drugis/export-directive/tar.gz/34951390699cd21e4b0e0f126490395c4f4d1081"
+  dependencies:
+    "@bower_components/angular" angular/bower-angular#~1.6.0
+    "@bower_components/clipboard" zenorocha/clipboard.js#^1.6.0
+    "@bower_components/d3" mbostock-bower/d3-bower#~3.5.5
+    "@bower_components/jquery" jquery/jquery-dist#~3.2.1
+    "@bower_components/nvd3" novus/nvd3#1.8.5
 
 "@bower_components/font-awesome@FortAwesome/Font-Awesome#~4.3.0":
   version "4.3.0"
@@ -137,9 +147,9 @@
   version "4.1.6"
   resolved "https://codeload.github.com/ten1seven/what-input/tar.gz/dab188a752f9b0b847b050d7cb4e837e0d1bdcea"
 
-"@uirouter/core@5.0.13":
-  version "5.0.13"
-  resolved "https://registry.yarnpkg.com/@uirouter/core/-/core-5.0.13.tgz#e1b31626c393cbdd82651755ff1ce3fc55163fd0"
+"@uirouter/core@5.0.14":
+  version "5.0.14"
+  resolved "https://registry.yarnpkg.com/@uirouter/core/-/core-5.0.14.tgz#621477f779886c9287fcc606a4082157fc0ffa65"
 
 accepts@~1.0.5:
   version "1.0.7"
@@ -514,8 +524,8 @@ depd@~1.0.1:
   resolved "https://registry.yarnpkg.com/depd/-/depd-1.0.1.tgz#80aec64c9d6d97e65cc2a9caa93c0aa6abf73aaa"
 
 depd@~1.1.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.1.tgz#5783b4e1c459f06fa5ca27f991f3d06e7a310359"
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/depd/-/depd-1.1.2.tgz#9bcd52e14c097763e749b274c4346ed2e560b5a9"
 
 destroy@1.0.3:
   version "1.0.3"

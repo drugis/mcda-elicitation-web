@@ -140,6 +140,7 @@ router.delete('/workspaces/:id*', requireUserIsWorkspaceOwner);
 router.get('/workspaces/inProgress/:id', requireUserIsInProgressWorkspaceOwner);
 router.put('/workspaces/inProgress/:id', requireUserIsInProgressWorkspaceOwner);
 router.put('/workspaces/:id/ordering', requireUserIsWorkspaceOwner);
+router.put('/workspaces/:id/toggledColumns', requireUserIsWorkspaceOwner);
 router.delete('/workspaces/inProgress/:id', requireUserIsInProgressWorkspaceOwner);
 app.use(router);
 
