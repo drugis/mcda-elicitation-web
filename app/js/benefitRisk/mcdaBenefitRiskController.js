@@ -56,6 +56,7 @@ define(['lodash'], function(_) {
         $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales($scope.aggregateState.problem, $scope.workspace.scales.observed);
       }
       updateTaskAccessibility();
+      hasNoStochasticResults();
       ScenarioResource.query(_.omit($stateParams, ['id'])).$promise.then(function(scenarios) {
         $scope.scenarios = scenarios;
         $scope.scenariosWithResults = WorkspaceService.filterScenariosWithResults(baseProblem, currentSubProblem, scenarios);
@@ -77,6 +78,16 @@ define(['lodash'], function(_) {
     deregisterTransitionListener = $transitions.onStart({}, function(transition) {
       setActiveTab(transition.to().name, transition.to().name);
     });
+
+    $scope.$watch('aggregateState', hasNoStochasticResults, true);
+
+    function hasNoStochasticResults() {
+      var isAllExact = _.reduce($scope.aggregateState.problem.performanceTable, function(accum, tableEntry) {
+        return accum && (tableEntry.performance.type === 'exact');
+      }, true);
+      var isExactSwing = _.find($scope.aggregateState.prefs, ['type', 'exact swing']);
+      $scope.noStochasticResults = isAllExact && isExactSwing;
+    }
 
     function getTask(taskId) {
       return _.find(Tasks.available, function(task) {
