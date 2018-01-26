@@ -8,6 +8,7 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     'OrderingService',
     'mcdaRootPath',
     'subProblems',
+    'SubProblemResource'
   ];
 
   var SubProblemController = function($scope, $stateParams, $modal, $state,
@@ -16,11 +17,13 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     ScenarioResource,
     OrderingService,
     mcdaRootPath,
-    subProblems) {
+    subProblems,
+    SubProblemResource) {
     // functions 
     $scope.intervalHull = intervalHull;
     $scope.openCreateDialog = openCreateDialog;
     $scope.subProblemChanged = subProblemChanged;
+    $scope.editSubProblemTitle = editSubProblemTitle;
 
     // init
     $scope.subProblems = subProblems;
@@ -86,6 +89,30 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
         });
       });
     }
+
+    function editSubProblemTitle() {
+      $modal.open({
+        templateUrl: mcdaRootPath + 'js/subProblem/editSubProblemTitle.html',
+        controller: 'EditSubProblemTitleController',
+        resolve: {
+          subProblems: function() {
+            return $scope.subProblems;
+          },
+          subProblem: function() {
+            return $scope.subProblem;
+          },
+          callback: function() {
+            return function(newTitle) {
+              $scope.subProblem.title = newTitle;
+              SubProblemResource.save($stateParams, $scope.subProblem).$promise.then(function() {
+                $state.reload();
+              });
+            };
+          }
+        }
+      });
+    }
+    
   };
 
   return dependencies.concat(SubProblemController);

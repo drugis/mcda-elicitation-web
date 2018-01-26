@@ -17,24 +17,12 @@
   </div>
   <div class="grid-x">
     <div class="cell">
+      <button class="button" ng-click="cancel()">Cancel</button>
       <button class="button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
       <button class="button" ng-if="!canSave(state)" ng-click="nextStep(state)" ng-disabled="!canProceed(state)">Next</button>
-    </div>
-  </div>
-</div>
-
-<div ng-if="state.type == 'review'">
-  <div class="grid-x" style="min-height: 450px">
-    <div class="cell">
-      <h3 ng-bind="state.title"></h3>
-    </div>
-  </div>
-
-  <div class="grid-x">
-    <div class="cell">
-      <button class="button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
       <button class="success button" ng-if="canSave(state)" ng-click="save(state)"
-        ng-disabled="!canSave(state)">Save</button>
+        ng-disabled="!state.choice">Save</button>
     </div>
   </div>
 </div>
+

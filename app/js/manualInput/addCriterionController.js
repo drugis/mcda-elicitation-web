@@ -45,15 +45,20 @@ define(['lodash'], function(_) {
       if (isTitleDuplicate(criterion.title) && !$scope.isAddingCriterion && !oldCriterion) {
         $scope.blockedReasons.push('Duplicate title');
       }
-      if(criterion.dataType === 'survival' && !criterion.timeScale) {
+      if (criterion.dataType === 'survival' && !criterion.timeScale) {
         $scope.blockedReasons.push('Missing time scale');
       }
-      if(criterion.dataType ==='survival' && criterion.summaryMeasure === 'survivalAtTime' &&
-          (criterion.timePointOfInterest === null || criterion.timePointOfInterest === undefined)) {
+      if (criterion.dataType === 'survival' && criterion.summaryMeasure === 'survivalAtTime' &&
+        (criterion.timePointOfInterest === null || criterion.timePointOfInterest === undefined)) {
         $scope.isInvalidTimePointOfInterest = true;
-        $scope.blockedReasons.push('Invalid time point of interest entered');
+        $scope.blockedReasons.push('Invalid time point of interest');
       } else {
         $scope.isInvalidTimePointOfInterest = false;
+      }
+
+      var regex = new RegExp(/[-a-zA-Z0-9@:%_\+.~#?&//=]{2,256}\.[a-z]{2,4}\b(\/[-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi);
+      if (criterion.sourceLink && !criterion.sourceLink.match(regex)) {
+        $scope.blockedReasons.push('Invalid URL');
       }
     }
 
@@ -131,8 +136,8 @@ define(['lodash'], function(_) {
       }
     }
 
-    function dataSourceChanged(){
-      if($scope.criterion.dataSource === 'exact'){
+    function dataSourceChanged() {
+      if ($scope.criterion.dataSource === 'exact') {
         $scope.criterion.dataType = 'exact';
       } else {
         $scope.criterion.dataType = 'continuous';

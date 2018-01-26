@@ -8,7 +8,8 @@ var requires = [
   'mcda/preferences/impreciseSwingWeightingController',
   'mcda/preferences/swingWeightingService',
   'mcda/preferences/partialValueFunctionController',
-  'mcda/preferences/partialValueFunctionService'
+  'mcda/preferences/partialValueFunctionService',
+  'mcda/preferences/newScenarioController'
 ];
 define(['angular'].concat(requires), function(
   angular,
@@ -20,7 +21,8 @@ define(['angular'].concat(requires), function(
   ImpreciseSwingWeightingController,
   SwingWeightingService,
   PartialValueFunctionController,
-  PartialValueFunctionService
+  PartialValueFunctionService,
+  NewScenarioController
 ) {
   return angular.module('elicit.preferences', ['elicit.workspace'])
     .controller('PreferencesController', PreferencesController)
@@ -29,6 +31,7 @@ define(['angular'].concat(requires), function(
     .controller('SwingWeightingController', SwingWeightingController)
     .controller('ImpreciseSwingWeightingController', ImpreciseSwingWeightingController)
     .controller('PartialValueFunctionController', PartialValueFunctionController)
+    .controller('NewScenarioController', NewScenarioController)
 
     .factory('PartialValueFunctionService', PartialValueFunctionService)
     .factory('SwingWeightingService', SwingWeightingService)

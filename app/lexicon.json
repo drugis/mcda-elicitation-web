@@ -41,7 +41,7 @@
   },
   "criterion-source-link": {
     "title": "Reference URL",
-    "text": "An optional hyperlink that leads to the source of this criterion's data",
+    "text": "An optional hyperlink that leads to the source of this criterion's data. This link should start with http:// or https://",
     "link": "/manual.html#mcda-manual-entry"
   },
   "criterion-unit": {
