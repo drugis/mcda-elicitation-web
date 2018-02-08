@@ -196,6 +196,35 @@ calculateTotalValue <- function(params,meas,weights) {
   meas
 }
 
+# Calculate the trade-offs between two criteria
+generateIndifferenceCurves <- function(params) {
+  
+  crit.x <- params$IndifferenceCurves$crit.x
+  crit.y <- params$IndifferenceCurves$crit.y
+  
+  range.x <- params$criteria[[crit.x]]$pvf$range
+  range.y <- params$criteria[[crit.y]]$pvf$range
+  
+  weights <- genRepresentativeWeights(params)
+  pvf <- lapply(params$criteria, create.pvf)
+  
+  value <- function(x,y) {
+    as.numeric(weights[crit.x]*pvf[[crit.x]](x) + weights[crit.y]*pvf[[crit.y]](y))
+  }
+  
+  grid.x <- seq(range.x[1],range.x[2],length.out=20)
+  grid.y <- seq(range.y[1],range.y[2],length.out=20)
+  z <- matrix(data=NA,nrow=length(grid.x),ncol=length(grid.y))
+  for (i in 1:length(grid.x)) {
+    for (j in 1:length(grid.y)) {
+      z[i,j] <- value(grid.x[i],grid.y[j])
+    }
+  }
+  
+  contourLines(x=grid.x,y=grid.y,z=z,nlevels=15)
+  
+}
+
 run_sensitivityMeasurements <- function(params) {
   
   meas <- genMedianMeasurements(params)
