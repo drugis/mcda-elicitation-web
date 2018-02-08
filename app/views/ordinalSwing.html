@@ -8,7 +8,6 @@
           {{state.problem.criteria[criterion].title}} = {{value | number }}
         </li>
       </ul>
-
       <h5 class="subheader">Which of these improvements is most desired:</h5>
       <label ng-repeat="(choice, alternative) in state.choices">
         <input type="radio" ng-model="state.choice" value="{{choice}}">
@@ -16,31 +15,14 @@
       </label>
     </div>
   </div>
-
   <div class="grid-x">
     <div class="cell">
+      <button class="button" ng-click="cancel()">Cancel</button>
       <button class="button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
       <button class="button" ng-if="!canSave(state)" ng-click="nextStep(state)" ng-disabled="!canProceed(state)">Next</button>
-    </div>
-  </div>
-</div>
-
-
-<div ng-if="state.type == 'review'">
-  <div class="grid-x" style="min-height: 450px">
-    <div class="cell">
-      <h3 ng-bind="state.title"></h3>
-      <p>You have given the following trade-offs:</p>
-      <trade-offs problem="problem" preferences="state.intermediate.prefs"></trade-offs>
-      <br>
-    </div>
-  </div>
-
-  <div class="grid-x">
-    <div class="cell">
-      <button class="button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
       <button class="success button" ng-if="canSave(state)" ng-click="save(state)"
-        ng-disabled="!canSave(state)">Save</button>
+        ng-disabled="!state.choice">Save</button>
     </div>
   </div>
 </div>
+

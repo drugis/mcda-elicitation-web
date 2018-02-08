@@ -35,13 +35,13 @@
     "link": "/manual.html#mcda-manual-entry"
   },
   "criterion-source": {
-    "title": "Criterion data source",
-    "text": "An optional indication of where the data for this criterion comes from (single study or meta-analysis).",
+    "title": "Reference",
+    "text": "An optional indication of where the data for this criterion comes from.",
     "link": "/manual.html#mcda-manual-entry"
   },
   "criterion-source-link": {
-    "title": "Source link",
-    "text": "An optional hyperlink that leads to the source of this criterion's data",
+    "title": "Reference URL",
+    "text": "An optional hyperlink that leads to the source of this criterion's data. This link should start with http:// or https://",
     "link": "/manual.html#mcda-manual-entry"
   },
   "criterion-unit": {

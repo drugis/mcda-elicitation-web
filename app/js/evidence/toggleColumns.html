@@ -1,0 +1,30 @@
+<form ng-submit="save()">
+  <div class="grid-container">
+    <div class="grid-x">
+      <div class="cell">
+        <h3>Columns to be shown</h3>
+      </div>
+      <div class="cell">
+        <button class="button small" type="button" ng-click="selectAll()">(De)select all</button>
+      </div>
+      <div class="cell">
+        <input type="checkbox" ng-model="toggledColumns['criteria']"> Criterion
+      </div>
+      <div class="cell">
+        <input type="checkbox" ng-model="toggledColumns['description']"> Description
+      </div>
+      <div class="cell">
+        <input type="checkbox" ng-model="toggledColumns['units']"> Units
+      </div>
+      <div class="cell">
+        <input type="checkbox" ng-model="toggledColumns['references']"> Reference (only shown if available)
+      </div>
+      <div class="cell">
+        <button class="button" type="submit">Save</button>
+      </div>
+    </div>
+    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</form>

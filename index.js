@@ -140,6 +140,7 @@ router.delete('/workspaces/:id*', requireUserIsWorkspaceOwner);
 router.get('/workspaces/inProgress/:id', requireUserIsInProgressWorkspaceOwner);
 router.put('/workspaces/inProgress/:id', requireUserIsInProgressWorkspaceOwner);
 router.put('/workspaces/:id/ordering', requireUserIsWorkspaceOwner);
+router.put('/workspaces/:id/toggledColumns', requireUserIsWorkspaceOwner);
 router.delete('/workspaces/inProgress/:id', requireUserIsInProgressWorkspaceOwner);
 app.use(router);
 
@@ -414,7 +415,7 @@ app.get('/workspaces/:workspaceId/ordering', function(req, res, next) {
 });
 
 app.put('/workspaces/:workspaceId/ordering', function(req, res, next) {
-  logger.debug('SET /workspaces/'+req.params.workspaceId+'/ordering/');
+  logger.debug('SET /workspaces/' + req.params.workspaceId + '/ordering/');
   db.query('insert into ordering(workspaceId, ordering) values($1, $2) ON CONFLICT(workspaceId) DO UPDATE SET ordering=$2', [
     req.params.workspaceId,
     req.body
@@ -422,6 +423,31 @@ app.put('/workspaces/:workspaceId/ordering', function(req, res, next) {
     if (err) {
       err.status = 500;
       next(err);
+    }
+    res.end();
+  });
+});
+
+//Effects table non-alternative columns
+app.get('/workspaces/:workspaceId/toggledColumns', function(req, res, next) {
+  logger.debug('GET /workspaces/' + req.params.workspaceId + '/toggledColumns');
+  db.query('SELECT toggledColumns AS "toggledColumns", toggledColumns FROM toggledColumns WHERE workspaceId = $1', [req.params.workspaceId], function(err, result) {
+    if (err) {
+      err.status = 500;
+      return next(err);
+    }
+    res.json({
+      toggledColumns: result.rows[0] ? result.rows[0].toggledColumns : undefined
+    });
+  });
+});
+
+app.put('/workspaces/:workspaceId/toggledColumns', function(req, res, next) {
+  logger.debug('POST /workspaces/' + req.params.workspaceId + '/toggledColumns');
+  db.query('INSERT INTO toggledColumns (workspaceid, toggledColumns) VALUES ($1, $2) ON CONFLICT(workspaceId) DO UPDATE SET toggledColumns=$2', [req.params.workspaceId, req.body.toggledColumns], function(err) {
+    if (err) {
+      err.status = 500;
+      return next(err);
     }
     res.end();
   });
@@ -510,8 +536,9 @@ app.post('/workspaces/:workspaceId/problems', function(req, res, next) {
 
 app.post('/workspaces/:workspaceId/problems/:subProblemId', function(req, res, next) {
   logger.debug('UPDATE /workspaces/:id/problems/:subProblemId');
-  db.query('UPDATE subProblem SET definition = $1WHERE id = $2', [
+  db.query('UPDATE subProblem SET definition = $1, title = $2 WHERE id = $3', [
     req.body.definition,
+    req.body.title,
     req.params.subProblemId
   ], function(err) {
     if (err) {

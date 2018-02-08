@@ -80,14 +80,14 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     function doMeasurementSensitivity(state) {
       delete $scope.measurementValues;
       MCDAResultsService.getMeasurementsSensitivityResults($scope, state).resultsPromise.then(function(result) {
-        $scope.measurementValues = MCDAResultsService.pataviResultToLineValues(result.results, $scope.alternatives);
+        $scope.measurementValues = MCDAResultsService.pataviResultToLineValues(result.results, $scope.alternatives, $scope.scenario.state.legend);
       });
     }
 
     function doPreferencesSensitivity(state) {
       delete $scope.preferencesValues;
       MCDAResultsService.getPreferencesSensitivityResults($scope, state).resultsPromise.then(function(result) {
-        $scope.preferencesValues = MCDAResultsService.pataviResultToLineValues(result.results, $scope.alternatives);
+        $scope.preferencesValues = MCDAResultsService.pataviResultToLineValues(result.results, $scope.alternatives, $scope.scenario.state.legend);
       });
     }
 

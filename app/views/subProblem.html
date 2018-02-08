@@ -3,6 +3,7 @@
     <span>Problem:</span>
     <select class="scenario-select" ng-model="subProblem" ng-options="subProblem.title for subProblem in subProblems track by subProblem.id" ng-change="subProblemChanged(subProblem)"></select>
     <inline-help help-key="problem"></inline-help>
+    <a ng-if="editMode.isUserOwner" ng-click="editSubProblemTitle()" tooltip="Edit current problem title"><i class="fa fa-edit"></i></a>
     <a ng-if="editMode.isUserOwner" ng-click="openCreateDialog()" tooltip="Create new problem"><i class="fa fa-plus"></i></a>
   </div>
 </div>
@@ -20,9 +21,13 @@
     <table class="full-width effects-table" id="effecttable">
       <thead>
         <tr>
-          <th>Criterion <inline-help help-key="criterion"></inline-help></th>
+          <th>Criterion
+            <inline-help help-key="criterion"></inline-help>
+          </th>
           <th>Description</th>
-          <th>Units <inline-help help-key="criterion-unit"></inline-help></th>
+          <th>Units
+            <inline-help help-key="criterion-unit"></inline-help>
+          </th>
           <th class="text-center" ng-repeat="alternative in alternatives">
             <label>
               {{alternative.title}}
@@ -98,6 +103,10 @@
           </td>
           <td>
             <span ng-if="criterion.pvf.range">{{criterion.pvf.range[0] | number}}, {{criterion.pvf.range[1] | number}}</span>
+            <span ng-if="!criterion.pvf.range">
+              <span ng-bind="intervalHull(scales.observed[criterion.id])[0] | number"></span> ,
+              <span ng-bind="intervalHull(scales.observed[criterion.id])[1] | number"></span>
+            </span>
           </td>
           <td>{{criterion.unitOfMeasurement}}</td>
         </tr>

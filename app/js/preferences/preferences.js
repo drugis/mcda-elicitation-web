@@ -1,34 +1,40 @@
 'use strict';
 var requires = [
   'mcda/preferences/preferencesController',
+  'mcda/preferences/preferencesService',
   'mcda/preferences/editScenarioTitleController',
   'mcda/preferences/ordinalSwingController',
-  'mcda/preferences/intervalSwingController',
-  'mcda/preferences/exactSwingController',
   'mcda/preferences/swingWeightingController',
+  'mcda/preferences/impreciseSwingWeightingController',
+  'mcda/preferences/swingWeightingService',
   'mcda/preferences/partialValueFunctionController',
-  'mcda/preferences/partialValueFunctionService'
+  'mcda/preferences/partialValueFunctionService',
+  'mcda/preferences/newScenarioController'
 ];
 define(['angular'].concat(requires), function(
   angular,
   PreferencesController,
+  PreferencesService,
   EditScenarioTitleController,
   OrdinalSwingController,
-  IntervalSwingController,
-  ExactSwingController,
   SwingWeightingController,
+  ImpreciseSwingWeightingController,
+  SwingWeightingService,
   PartialValueFunctionController,
-  PartialValueFunctionService
+  PartialValueFunctionService,
+  NewScenarioController
 ) {
-  return angular.module('elicit.preferences', [])
+  return angular.module('elicit.preferences', ['elicit.workspace'])
     .controller('PreferencesController', PreferencesController)
     .controller('EditScenarioTitleController', EditScenarioTitleController)
     .controller('OrdinalSwingController', OrdinalSwingController)
-    .controller('IntervalSwingController', IntervalSwingController)
-    .controller('ExactSwingController', ExactSwingController)
     .controller('SwingWeightingController', SwingWeightingController)
+    .controller('ImpreciseSwingWeightingController', ImpreciseSwingWeightingController)
     .controller('PartialValueFunctionController', PartialValueFunctionController)
+    .controller('NewScenarioController', NewScenarioController)
 
     .factory('PartialValueFunctionService', PartialValueFunctionService)
+    .factory('SwingWeightingService', SwingWeightingService)
+    .factory('PreferencesService', PreferencesService)
     ;
 });

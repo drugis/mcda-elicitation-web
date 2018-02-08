@@ -31,7 +31,8 @@ define(['angular',
     'mcda/controllers',
     'mcda/directives',
     'mcda/navbar/navbar',
-    'mcda/preferences/preferences'
+    'mcda/preferences/preferences',
+    'mcda/evidence/toggleColumnsResource'
   ],
   function(angular, require, Config) {
 
@@ -58,6 +59,7 @@ define(['angular',
       'elicit.workspace',
       'elicit.workspaceResource',
       'elicit.orderingResource',
+      'elicit.toggleColumnsResource',
       'ngCookies',
       'errorReporting',
       'export-directive'

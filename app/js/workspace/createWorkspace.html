@@ -15,6 +15,7 @@
             <input type="radio" ng-model="model.choice" value="local"> Local file:
             <file-reader model="local"></file-reader>
           </label>
+          <span ng-if="workspaceValidity &&!workspaceValidity.isValid" class="alert">Invalid workspace: {{workspaceValidity.errorMessage}}. <a href="/manual.html#data-upload">Supported upload format.</a></span>
         </div>
         <p>Or manually input data:</p>
         <div style="margin-left: 2rem;">
@@ -24,8 +25,8 @@
         </div>
         <div style="margin:25px 0 0 0;">
           <div class="button-group">
-            <button ng-show="model.choice != 'local'" class="button small success" ng-disabled="!model.choice || isCreating" ng-click="createWorkspace(model.choice)">Create</button>
-            <button ng-show="model.choice == 'local'" class="button small success" ng-disabled="!local.contents || isCreating" ng-click="createWorkspace(model.choice)">Create</button>
+            <button ng-show="model.choice !== 'local'" class="button small success" ng-disabled=" !model.choice || isCreating" ng-click="createWorkspace(model.choice)">Create</button>
+            <button ng-show="model.choice === 'local'" class="button small success" ng-disabled="!workspaceValidity.isValid || !local.contents || isCreating" ng-click="createWorkspace(model.choice)">Create</button>
             </li>
           </div>
         </div>

@@ -81,7 +81,7 @@ define(['angular-mocks', 'mcda/subProblem/subProblem'], function() {
           performance: {
             parameters: {
               baseline: {
-                name: 'Placebo'
+                name: 'placebo'
               }
             }
           }

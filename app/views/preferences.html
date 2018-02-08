@@ -30,55 +30,45 @@
       Weights <inline-help help-key="weights"></inline-help>
     </h4>
   </div>
-  <div class="cell">
-    <h5>
-      Elicitation
-    </h5>
+  <div class="cell" ng-if="criteriaHavePvf">
+    <table>
+      <thead>
+        <th>Criterion
+          <inline-help help-key="criterion"></inline-help>
+        </th>
+        <th>Description</th>
+        <th>Unit
+          <inline-help help-key="criterion-unit"></inline-help>
+        </th>
+        <th>Worst</th>
+        <th>Best</th>
+        <th ng-if="!isOrdinal">Importance</th>
+        <th ng-if="isOrdinal">Ranking</th>
+      </thead>
+      <tbody>
+        <tr ng-repeat="criterion in criteria">
+          <td>{{criterion.title}}</td>
+          <td>{{criterion.description}}</td>
+          <td>{{criterion.unitOfMeasurement}}</td>
+          <td>{{pvf.worst(criterion) | number}}</td>
+          <td>{{pvf.best(criterion) | number}}</td>
+          <td>{{importance[criterion.id]}}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-  <div class="cell">
-    <button class="button" ui-sref="swing-weighting" tooltip-animation="false" ng-disabled="!isAccessible(tasks['swing-weighting']).accessible" ng-class="{alert: !isSafe['swing-weighting'].safe}" tooltip="{{isSafe['swing-weighting'].tooltip}}">
-      Swing Weighting
-    </button>
+  <div class="cell" ng-if="!criteriaHavePvf">
+    <em>Not all partial value functions are defined</em>
   </div>
   <div class="cell large-4 button-group" ng-if="editMode.isUserOwner">
     <button class="button" ui-sref="ordinal-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['ordinal-swing']).accessible" ng-class="{alert: !isSafe['ordinal-swing'].safe}" tooltip="{{isSafe['ordinal-swing'].tooltip}}">
       Ranking
     </button>
-    <button class="button" ui-sref="exact-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['exact-swing']).accessible" ng-class="{alert: !isSafe['exact-swing'].safe}" tooltip="{{isSafe['exact-swing'].tooltip}}">
-      Exact Matching
+    <button class="button" ui-sref="swing-weighting" tooltip-animation="false" ng-disabled="!isAccessible(tasks['swing-weighting']).accessible" ng-class="{alert: !isSafe['swing-weighting'].safe}" tooltip="{{isSafe['swing-weighting'].tooltip}}">
+      Precise Swing Weighting
     </button>
-    <button class="button" ui-sref="interval-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['interval-swing']).accessible" ng-class="{alert: !isSafe['interval-swing'].safe}" tooltip="{{isSafe['interval-swing'].tooltip}}">
-      Imprecise Matching
+    <button class="button" ui-sref="imprecise-swing-weighting" tooltip-animation="false" ng-disabled="!isAccessible(tasks['imprecise-swing-weighting']).accessible" ng-class="{alert: !isSafe['imprecise-swing-weighting'].safe}" tooltip="{{isSafe['imprecise-swing-weighting'].tooltip}}">
+      Imprecise Swing Weighting
     </button>
-  </div>
-  <div class="cell alert" ng-if="!deterministicResults && !criteriaHavePvf">Trade-offs cannot be specified if there are criteria with missings PVFs.</div>
-  <div class="cell">
-    <h5>Constraints</h5>
-  </div>
-  <div class="cell">
-    <trade-offs problem="aggregateState.problem" preferences="scenario.state.prefs"></trade-offs>
-  </div>
-  <div class="cell large-9">
-    <h5>Representative weights <inline-help help-key="representative-weights"></inline-help></h5>
-  </div>
-  <div class="cell large-3" ng-if="deterministicResults">
-    <button class="button small info clipboard-button" data-clipboard-target="#weighttable">
-      <i class="fa fa-clipboard"></i> Copy to clipboard
-    </button>
-  </div>
-  <div class="cell" ng-if="deterministicResults">
-    <table id="weighttable">
-      <thead>
-        <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
-      </thead>
-      <tbody>
-        <tr>
-          <td ng-repeat="criterion in criteria">{{deterministicResults.weights.data[criterion.id] | number}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="cell alert" ng-if="!deterministicResults && !criteriaHavePvf">
-    Weights cannot be shown if there are criteria with missing PVFs.
   </div>
 </div>

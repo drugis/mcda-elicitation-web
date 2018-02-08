@@ -118,3 +118,11 @@ CREATE TABLE ordering(
   PRIMARY KEY (workspaceId),
   FOREIGN KEY(workspaceId) REFERENCES workspace(id) ON DELETE CASCADE
 );
+
+--changeset keijserj:14
+CREATE TABLE toggledColumns(
+  workspaceId INT NOT NULL,
+  toggledColumns JSONB NOT NULL,
+  PRIMARY KEY (workspaceId),
+  FOREIGN KEY(workspaceId) REFERENCES workspace(id) ON DELETE CASCADE
+);

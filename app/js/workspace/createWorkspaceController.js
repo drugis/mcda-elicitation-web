@@ -1,11 +1,11 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
   var dependencies = ['$scope', '$modalInstance',
-    'ExampleResource', 'WorkspaceResource', 'callback'
+    'ExampleResource', 'WorkspaceResource', 'WorkspaceService', 'callback'
   ];
 
   var CreateWorkspaceController = function($scope, $modalInstance,
-    ExampleResource, WorkspaceResource, callback) {
+    ExampleResource, WorkspaceResource, WorkspaceService, callback) {
     // functions
     $scope.createWorkspace = createWorkspace;
     $scope.close = $modalInstance.close;
@@ -15,11 +15,18 @@ define(['lodash'], function(_) {
     $scope.model = {};
     $scope.local = {};
     $scope.examplesList = ExampleResource.query();
+    $scope.$watch('local.contents', function(newValue, oldValue) {
+      if (oldValue === newValue || !newValue) {
+        return;
+      }
+      $scope.uploadedContent = angular.fromJson($scope.local.contents);
+      $scope.workspaceValidity = WorkspaceService.validateWorkspace($scope.uploadedContent);
+    }, true);
 
     function createWorkspace(choice) {
       $scope.isCreating = true;
-      if (choice === 'local' && !_.isEmpty($scope.local.contents)) {
-        WorkspaceResource.create(angular.fromJson($scope.local.contents)).$promise.then(function(workspace) {
+      if (choice === 'local') {
+        WorkspaceResource.create($scope.uploadedContent).$promise.then(function(workspace) {
           callback(choice, workspace);
           $modalInstance.close();
         });

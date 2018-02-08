@@ -70,11 +70,9 @@ export PATAVI_CLIENT_CRT=/path/to/crt
 export PATAVI_CA=/path/to/ca
 ```
 
+```yarn```
 
-npm install
-bower install
-
-node index.js
+```node index.js```
 
 Running the patavi worker
 -------------------------

@@ -18,10 +18,11 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function determineBaseline(performanceTable, alternatives) {
+      var keys = _.keys(alternatives);
       return _.reduce(performanceTable, function(accum, performanceEntry) {
         if (performanceEntry.performance.parameters && performanceEntry.performance.parameters.baseline) {
-          _.forEach(alternatives, function(alternative, key) {
-            if (alternative.title === performanceEntry.performance.parameters.baseline.name) {
+          _.forEach(keys, function(key) {
+            if (key === performanceEntry.performance.parameters.baseline.name) {
               accum[key] = true;
             }
           });

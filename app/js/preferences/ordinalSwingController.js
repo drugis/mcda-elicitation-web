@@ -1,21 +1,22 @@
 'use strict';
-define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, angular, Wizard) {
+define(['lodash', 'mcda/controllers/helpers/wizard'], function(_, Wizard) {
   var dependencies = [
     '$scope', '$state', '$stateParams', '$injector',
     'PartialValueFunctionService',
     'OrderingService',
-    'currentScenario', 
+    'currentScenario',
     'taskDefinition'
   ];
   var OrdinalSwingController = function($scope, $state, $stateParams, $injector,
     PartialValueFunctionService,
     OrderingService,
-    currentScenario, 
+    currentScenario,
     taskDefinition
   ) {
     //functions 
     $scope.save = save;
     $scope.canSave = canSave;
+    $scope.cancel = cancel;
 
     //init
     $scope.problem = $scope.aggregateState.problem;
@@ -33,9 +34,6 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
 
     function title(step, total) {
       var base = 'Ranking';
-      if (step > total) {
-        return base + ' (DONE)';
-      }
       return base + ' (' + step + '/' + total + ')';
     }
 
@@ -72,7 +70,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
         return null;
       }
 
-      var nextState = angular.copy(state);
+      var nextState = _.cloneDeep(state);
       var criteria = $scope.problem.criteria;
 
       var choice = state.choice;
@@ -99,7 +97,7 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
     }
 
     function standardize(state) {
-      var standardized = angular.copy(state);
+      var standardized = _.cloneDeep(state);
 
       var criteria = $scope.problem.criteria;
       var prefs = standardized.prefs;
@@ -111,6 +109,9 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
           criteria: [a, b]
         };
       }
+      if (order.length === _.size(criteria) - 2) {
+        order.push(state.choice);
+      }
       var result = [];
       for (var i = 0; i < order.length - 1; i++) {
         result.push(ordinal(order[i], order[i + 1]));
@@ -121,7 +122,6 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
           return ordinal(_.last(order), criterion);
         }));
       }
-
       standardized.prefs = result;
       return standardized;
     }
@@ -137,7 +137,11 @@ define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, ang
     }
 
     function canSave(state) {
-      return state && _.size(state.choices) === 0;
+      return state && _.size(state.choices) === 2;
+    }
+
+    function cancel() {
+      $state.go('preferences');
     }
 
     OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
