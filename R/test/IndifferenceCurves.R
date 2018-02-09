@@ -13,21 +13,19 @@ source('../SMAA.R')
 #params <- fromJSON('../../examples/getreal-pwPVF.json')
 params <- fromJSON('../../examples/getreal-ordinalWeights.json')
 
-params$IndifferenceCurves <- list(crit.x="OS",crit.y="severe")
+crit.x <- "OS"
+crit.y <- "severe"
 
-test <- generateIndifferenceCurves(params)
+params$IndifferenceCurves <- list(crit.x=crit.x,crit.y=crit.y)
 
-n <- length(test)
-data.plot <- c()
-for (i in 1:length(test)) {
-  data.plot <-rbind(data.plot,cbind(test[[i]]$x,test[[i]]$y,rep(test[[i]]$level,length(test[[i]]$x))))
-}
-data.plot <- as.data.frame(data.plot)
-names(data.plot) <- c("x","y","value")
+data.lines <- run_indifferenceCurves(params)
+effects.table <- genMedianMeasurements(params) 
+data.points <- data.frame(x=effects.table[,crit.x],y=effects.table[,crit.y],alternative=sapply(row.names(effects.table),function(x) params$alternatives[[x]]))
 
-p <- ggplot(data.plot, aes(x=x,y=y,group=value))
-p <- p + geom_line(aes(col=value))
-p <- p + xlab("2-year survival") + ylab("Severe toxicity")
-
-
+p <- ggplot(data.lines, aes(x=x,y=y,group=value))
+p <- p + geom_line(aes(col=value),size=1)
+p <- p + xlab(params$criteria[[crit.x]]$title) + ylab(params$criteria[[crit.y]]$title)
+p <- p + scale_colour_gradientn(colours = rainbow(5))
+p <- p + geom_point(mapping=aes(x=x,y=y,shape=alternative),data=data.points,size=3,inherit.aes=F)
+p
 

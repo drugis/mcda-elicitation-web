@@ -9,7 +9,7 @@ wrap.matrix <- function(m) {
 }
 
 smaa_v2 <- function(params) {
-  allowed <- c('scales','smaa','deterministic','sensitivityMeasurements','sensitivityMeasurementsPlot','sensitivityWeightPlot','weightBounds')
+  allowed <- c('scales','smaa','deterministic','sensitivityMeasurements','sensitivityMeasurementsPlot','sensitivityWeightPlot','weightBounds','indifferenceCurves')
   if(params$method %in% allowed) {
     do.call(paste("run", params$method, sep="_"), list(params))
   } else {
@@ -197,13 +197,18 @@ calculateTotalValue <- function(params,meas,weights) {
 }
 
 # Calculate the trade-offs between two criteria
-generateIndifferenceCurves <- function(params) {
+run_indifferenceCurves <- function(params) {
   
   crit.x <- params$IndifferenceCurves$crit.x
   crit.y <- params$IndifferenceCurves$crit.y
   
   range.x <- params$criteria[[crit.x]]$pvf$range
+  shape.x <- params$criteria[[crit.x]]$pvf$type
+    
   range.y <- params$criteria[[crit.y]]$pvf$range
+  shape.y <- params$criteria[[crit.y]]$pvf$type
+  
+  meas <- genMedianMeasurements(params) 
   
   weights <- genRepresentativeWeights(params)
   pvf <- lapply(params$criteria, create.pvf)
@@ -221,8 +226,35 @@ generateIndifferenceCurves <- function(params) {
     }
   }
   
-  contourLines(x=grid.x,y=grid.y,z=z,nlevels=15)
   
+  values.alt <- mapply(value,meas[,crit.x],meas[,crit.y]) # Contour levels of the alternatives
+  breaks <- sort(c(range(z),values.alt))
+  
+  levels <- c()
+  for (i in 1:(length(breaks)-1)) {
+    levels <- c(levels,seq(breaks[i],breaks[i+1],length.out=round((breaks[i+1]-breaks[i])/(sum(range(z))/15))))
+  }
+  levels <- unique(levels)
+  
+  #levels <- values.alt
+  #levels <- pretty(range(z, na.rm = TRUE), 10)
+  
+  curves <- contourLines(x=grid.x,y=grid.y,z=z,levels=levels)
+  
+  n <- length(curves)
+  data.plot <- c()
+  for (i in 1:length(curves)) {
+    if (shape.x=="linear" & shape.y=="linear") {
+      data.plot <-rbind(data.plot,cbind(curves[[i]]$x[c(1,length(curves[[i]]$x))],curves[[i]]$y[c(1,length(curves[[i]]$y))],rep(curves[[i]]$level,2)))
+    } else {
+      data.plot <-rbind(data.plot,cbind(curves[[i]]$x,curves[[i]]$y,rep(curves[[i]]$level,length(curves[[i]]$x))))
+    }
+  }
+  data.plot <- as.data.frame(data.plot)
+  names(data.plot) <- c("x","y","value")
+  
+  data.plot
+
 }
 
 run_sensitivityMeasurements <- function(params) {
