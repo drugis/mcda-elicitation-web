@@ -74,21 +74,16 @@
         <input type="text" ng-model="criterion.description">
       </div>
       <div class="cell">
-        <label>Source (optional)
+        <label>Reference (optional)
           <inline-help help-key="criterion-source"></inline-help>
         </label>
-        <input type="radio" ng-model="criterion.source" ng-value="undefined" id="no-source">
-        <label for="no-source">None</label>
-        <input type="radio" ng-model="criterion.source" ng-value="'study'" id="study">
-        <label for="study">Single study</label>
-        <input type="radio" ng-model="criterion.source" ng-value="'meta analysis'" id="meta-analysis">
-        <label for="meta-analysis">Meta-analysis</label>
+        <input type="text" ng-model="criterion.source" >
       </div>
       <div class="cell">
-        <label>Source link (optional)
+        <label>Reference URL (optional)
           <inline-help help-key="criterion-source-link"></inline-help>
         </label>
-        <input ng-disabled="criterion.source === undefined" type="text" ng-model="criterion.sourceLink">
+        <input type="text" ng-model="criterion.sourceLink" ng-change="isCreationBlocked()">
       </div>
       <div class="cell button-group">
         <button class="button" ng-disabled="blockedReasons.length" type="submit">{{isAddOperation ? 'Add' : 'Done'}}</button>

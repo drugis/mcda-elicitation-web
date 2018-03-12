@@ -1,16 +1,33 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$transitions', '$state', '$stateParams', 'Tasks', 'TaskDependencies',
-    'ScenarioResource', 'WorkspaceService', 'subProblems', 'currentSubProblem', 'scenarios', 'currentScenario'
+  var dependencies = ['$scope', '$transitions', '$state', '$stateParams', '$modal',
+    'Tasks',
+    'TaskDependencies',
+    'ScenarioResource',
+    'WorkspaceService',
+    'subProblems',
+    'currentSubProblem',
+    'scenarios',
+    'currentScenario',
+    'mcdaRootPath'
   ];
 
-  function MCDABenefitRiskController($scope, $transitions, $state, $stateParams, Tasks, TaskDependencies,
-    ScenarioResource, WorkspaceService, subProblems, currentSubProblem, scenarios, currentScenario) {
+  function MCDABenefitRiskController($scope, $transitions, $state, $stateParams, $modal,
+    Tasks,
+    TaskDependencies,
+    ScenarioResource,
+    WorkspaceService,
+    subProblems,
+    currentSubProblem,
+    scenarios,
+    currentScenario,
+    mcdaRootPath
+  ) {
     // functions
     $scope.forkScenario = forkScenario;
     $scope.newScenario = newScenario;
     $scope.scenarioChanged = scenarioChanged;
-    
+
     // init
     var baseProblem = $scope.workspace.problem;
     var deregisterTransitionListener;
@@ -39,7 +56,8 @@ define(['lodash'], function(_) {
         $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales($scope.aggregateState.problem, $scope.workspace.scales.observed);
       }
       updateTaskAccessibility();
-      ScenarioResource.query(_.omit($stateParams, ['id'])).$promise.then(function(scenarios){
+      hasNoStochasticResults();
+      ScenarioResource.query(_.omit($stateParams, ['id'])).$promise.then(function(scenarios) {
         $scope.scenarios = scenarios;
         $scope.scenariosWithResults = WorkspaceService.filterScenariosWithResults(baseProblem, currentSubProblem, scenarios);
       });
@@ -60,6 +78,16 @@ define(['lodash'], function(_) {
     deregisterTransitionListener = $transitions.onStart({}, function(transition) {
       setActiveTab(transition.to().name, transition.to().name);
     });
+
+    $scope.$watch('aggregateState', hasNoStochasticResults, true);
+
+    function hasNoStochasticResults() {
+      var isAllExact = _.reduce($scope.aggregateState.problem.performanceTable, function(accum, tableEntry) {
+        return accum && (tableEntry.performance.type === 'exact');
+      }, true);
+      var isExactSwing = _.find($scope.aggregateState.prefs, ['type', 'exact swing']);
+      $scope.noStochasticResults = isAllExact && isExactSwing;
+    }
 
     function getTask(taskId) {
       return _.find(Tasks.available, function(task) {
@@ -87,16 +115,6 @@ define(['lodash'], function(_) {
       };
     }
 
-    function randomId(size, prefix) {
-      var text = '';
-      var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-      for (var i = 0; i < size; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-      }
-      return prefix ? prefix + text : text;
-    }
-
     function redirect(scenarioId, stateName) {
       var newState = _.omit($stateParams, 'id');
       newState.id = scenarioId;
@@ -106,31 +124,63 @@ define(['lodash'], function(_) {
     }
 
     function forkScenario() {
-      ScenarioResource.get($stateParams, function(scenario) { // reload because child scopes may have changed scenario
-        var newScenario = {
-          title: randomId(3, 'Scenario '),
-          state: scenario.state,
-          subProblemId: $scope.subProblem.id
-        };
-        ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
-          redirect(savedScenario.id, $state.current.name);
-        });
+      $modal.open({
+        templateUrl: mcdaRootPath + 'js/preferences/newScenario.html',
+        controller: 'NewScenarioController',
+        resolve: {
+          scenarios: function() {
+            return $scope.scenarios;
+          },
+          type: function() {
+            return 'Fork';
+          },
+          callback: function() {
+            return function(newTitle) {
+              ScenarioResource.get($stateParams, function(scenario) { // reload because child scopes may have changed scenario
+                var newScenario = {
+                  title: newTitle,
+                  state: scenario.state,
+                  subProblemId: $scope.subProblem.id
+                };
+                ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
+                  redirect(savedScenario.id, $state.current.name);
+                });
+              });
+            };
+          }
+        }
       });
     }
 
     function newScenario() {
-      var mergedProblem = WorkspaceService.mergeBaseAndSubProblem($scope.workspace.problem, $scope.subProblem.definition);
-      var newScenario = {
-        title: randomId(3, 'Scenario '),
-        state: {
-          problem: WorkspaceService.reduceProblem(mergedProblem)
-        },
-        workspace: $scope.workspace.id,
-        subProblemId: $scope.subProblem.id
-      };
-      ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
-        var newStateName = $scope.tasksAccessibility.preferences ? 'preferences' : 'problem';
-        redirect(savedScenario.id, newStateName);
+      $modal.open({
+        templateUrl: mcdaRootPath + 'js/preferences/newScenario.html',
+        controller: 'NewScenarioController',
+        resolve: {
+          scenarios: function() {
+            return $scope.scenarios;
+          },
+          type: function() {
+            return 'New';
+          },
+          callback: function() {
+            return function(newTitle) {
+              var mergedProblem = WorkspaceService.mergeBaseAndSubProblem($scope.workspace.problem, $scope.subProblem.definition);
+              var newScenario = {
+                title: newTitle,
+                state: {
+                  problem: WorkspaceService.reduceProblem(mergedProblem)
+                },
+                workspace: $scope.workspace.id,
+                subProblemId: $scope.subProblem.id
+              };
+              ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
+                var newStateName = $scope.tasksAccessibility.preferences ? 'preferences' : 'problem';
+                redirect(savedScenario.id, newStateName);
+              });
+            };
+          }
+        }
       });
     }
 

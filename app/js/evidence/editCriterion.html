@@ -16,29 +16,33 @@
       <textarea rows="4" ng-model="criterion.description"></textarea>
     </div>
     <div class="cell">
-      <label>Unit of measurement <inline-help help-key="criterion-unit"></inline-help></label>
+      <label>Unit of measurement
+        <inline-help help-key="criterion-unit"></inline-help>
+      </label>
     </div>
     <div class="cell">
       <input type="text" ng-model="criterion.unitOfMeasurement">
     </div>
     <div class="cell">
-      <label>Source <inline-help help-key="criterion-source"></inline-help></label>
+      <label>Reference
+        <inline-help help-key="criterion-source"></inline-help>
+      </label>
     </div>
     <div class="cell">
-      <input type="radio" ng-model="criterion.source" ng-value="undefined" id="no-source">
-      <label for="no-source">None</label>
-      <input type="radio" ng-model="criterion.source" ng-value="'study'" id="study">
-      <label for="study">Single study</label>
-      <input type="radio" ng-model="criterion.source" ng-value="'meta analysis'" id="meta-analysis">
-      <label for="meta-analysis">Meta analysis</label>
+      <input type="text" ng-model="criterion.source">
     </div>
     <div class="cell">
-      <label>Source link <inline-help help-key="criterion-source-link"></inline-help></label>
+      <label>Reference URL
+        <inline-help help-key="criterion-source-link"></inline-help>
+      </label>
     </div>
     <div class="cell">
-      <input type="text" ng-disabled="criterion.source === undefined" ng-model="criterion.sourceLink">
+      <input type="text" ng-model="criterion.sourceLink" ng-change="checkUrl()">
     </div>
-    <button class="button success" type="submit" ng-disabled="!criterion.title || !isTitleUnique">Save</button>
+    <div class="cell">
+      <button class="button success" type="submit" ng-disabled="!criterion.title || !isTitleUnique || !isValidUrl">Save</button>
+    </div>
+    <div class="cell alert" ng-if="!isValidUrl">Invalid URL</div>
   </div>
   <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
     <span aria-hidden="true">&times;</span>

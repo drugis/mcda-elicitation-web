@@ -4,14 +4,18 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     'EffectsTableService',
     'WorkspaceResource',
     'isMcdaStandalone',
-    'OrderingService'
+    'OrderingService',
+    'ToggleColumnsResource',
+    'mcdaRootPath'
   ];
 
   var EvidenceController = function($scope, $state, $stateParams, $modal,
     EffectsTableService,
     WorkspaceResource,
     isMcdaStandalone,
-    OrderingService
+    OrderingService,
+    ToggleColumnsResource,
+    mcdaRootPath
   ) {
     // functions
     $scope.isExact = isExact;
@@ -24,6 +28,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.alternativeDown = alternativeDown;
     $scope.downloadWorkspace = downloadWorkspace;
     $scope.getIndex = getIndex;
+    $scope.toggleColumns = toggleColumns;
 
     // init
     $scope.scales = $scope.workspace.scales.observed;
@@ -37,16 +42,36 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       })
     };
 
-     OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings){
+    OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
       $scope.alternatives = orderings.alternatives;
       $scope.criteria = orderings.criteria;
       $scope.rows = EffectsTableService.buildEffectsTable($scope.problem, orderings.criteria);
-     });
+    });
 
     $scope.$watch('workspace.scales.observed', function(newValue) {
       $scope.scales = newValue;
     }, true);
     new Clipboard('.clipboard-button');
+
+    HTMLElement.prototype.click = function() {
+      var evt = this.ownerDocument.createEvent('MouseEvents');
+      evt.initMouseEvent('click', true, true, this.ownerDocument.defaultView, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+      this.dispatchEvent(evt);
+    };
+
+    ToggleColumnsResource.get($stateParams).$promise.then(function(response) {
+      var toggledColumns = response.toggledColumns;
+      if (toggledColumns) {
+        $scope.toggledColumns = toggledColumns;
+      } else {
+        $scope.toggledColumns = {
+          criteria: true,
+          description: true,
+          units: true,
+          references: true
+        };
+      }
+    });
 
     function isExact(criterion, alternative) {
       var perf = _.find($scope.problem.performanceTable, function(performance) {
@@ -57,7 +82,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
 
     function editTherapeuticContext() {
       $modal.open({
-        templateUrl: '/js/evidence/editTherapeuticContext.html',
+        templateUrl: mcdaRootPath + 'js/evidence/editTherapeuticContext.html',
         controller: 'EditTherapeuticContextController',
         resolve: {
           therapeuticContext: function() {
@@ -70,12 +95,12 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
             };
           }
         }
-      }); 
+      });
     }
 
-    function getIndex(list, id){
-      for (var i=0;i<list.length;++i){
-        if(list[i].id === id){
+    function getIndex(list, id) {
+      for (var i = 0; i < list.length; ++i) {
+        if (list[i].id === id) {
           return i;
         }
       }
@@ -97,6 +122,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
       $scope.rows = EffectsTableService.buildEffectsTable($scope.problem, $scope.criteria);
     }
+
     function alternativeUp(idx) {
       var mem = $scope.alternatives[idx];
       $scope.alternatives[idx] = $scope.alternatives[idx - 1];
@@ -115,7 +141,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
 
     function editCriterion(criterion, criterionKey) {
       $modal.open({
-        templateUrl: '/js/evidence/editCriterion.html',
+        templateUrl: mcdaRootPath + 'js/evidence/editCriterion.html',
         controller: 'EditCriterionController',
         resolve: {
           criterion: function() {
@@ -138,7 +164,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
 
     function editAlternative(alternative) {
       $modal.open({
-        templateUrl: '/js/evidence/editAlternative.html',
+        templateUrl: mcdaRootPath + 'js/evidence/editAlternative.html',
         controller: 'EditAlternativeController',
         resolve: {
           alternative: function() {
@@ -168,12 +194,25 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       link.click();
     }
 
-    HTMLElement.prototype.click = function() {
-      var evt = this.ownerDocument.createEvent('MouseEvents');
-      evt.initMouseEvent('click', true, true, this.ownerDocument.defaultView, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
-      this.dispatchEvent(evt);
-    };
-
+    function toggleColumns() {
+      $modal.open({
+        templateUrl: mcdaRootPath + 'js/evidence/toggleColumns.html',
+        controller: 'ToggleColumnsController',
+        resolve: {
+          toggledColumns: function() {
+            return $scope.toggledColumns;
+          },
+          callback: function() {
+            return function(newToggledColumns) {
+              $scope.toggledColumns = newToggledColumns;
+              ToggleColumnsResource.put($stateParams, {
+                toggledColumns: $scope.toggledColumns
+              });
+            };
+          }
+        }
+      });
+    }
   };
   return dependencies.concat(EvidenceController);
 });
