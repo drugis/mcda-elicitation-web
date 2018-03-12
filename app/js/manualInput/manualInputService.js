@@ -279,9 +279,9 @@ define(['lodash', 'angular'], function(_) {
 
     function copyWorkspaceCriteria(workspace) {
       return _.map(workspace.problem.criteria, function(criterion, key) {
-        var newCrit = _.pick(criterion, ['title', 'description', 'source', 'sourceLink']);
+        var newCrit = _.pick(criterion, ['title', 'description', 'source', 'sourceLink', 'unitOfMeasurement']);
         if (workspace.problem.valueTree) {
-          newCrit.isFavorable = _.find(workspace.problem.valueTree.children[0].criteria, key) ? true : false;
+          newCrit.isFavorable = _.includes(workspace.problem.valueTree.children[0].criteria, key) ? true : false;
         }
         var tableEntry = _.find(workspace.problem.performanceTable, ['criterion', key]);
         newCrit.dataSource = tableEntry.performance.type === 'exact' ? 'exact' : 'study';
