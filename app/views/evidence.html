@@ -28,7 +28,9 @@
             <inline-help help-key="criterion-unit"></inline-help>
           </th>
           <th>description</th>
-          <th>Reference <inline-help help-key="criterion-source"></inline-help></th>
+          <th>Reference
+            <inline-help help-key="criterion-source"></inline-help>
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -43,7 +45,7 @@
               <div ng-if="editMode.isUserOwner" class="cell small-2">
                 <div style="line-height: 10px; margin-bottom: 4px;">
                   <a ng-click="criterionUp(getIndex(criteria, row))" class="nav-arrow" ng-if="getIndex(criteria, row) !== 0 && getIndex(criteria, row) !== problem.valueTree.children[0].criteria.length"><i style="line-height:0px;" class="fa fa-caret-up"></i></a>
-                  <i ng-if="getIndex(criteria, row) === 0 || getIndex(criteria, row) === problem.valueTree.children[0].criteria.length"" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
+                  <i ng-if="getIndex(criteria, row) === 0 || getIndex(criteria, row) === problem.valueTree.children[0].criteria.length" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
                 </div>
                 <div style="line-height: 10px;">
                   <a ng-click="criterionDown(getIndex(criteria, row))" class="nav-arrow" ng-if="getIndex(criteria, row) !== criteria.length-1 && getIndex(criteria, row) !== problem.valueTree.children[0].criteria.length-1"><i style="line-height:0px;" class="fa fa-caret-down"></i></a>
@@ -53,117 +55,115 @@
               <div class="cell small-10">
                 {{problem.criteria[row].title}}
                 <a class="right" ng-if="editMode.isUserOwner && isStandAlone" ng-click="editCriterion(problem.criteria[row], row)">
-              <i class="fa fa-edit"></i></a>
+                <i class="fa fa-edit"></i></a>
               </div>
+            </div>
           </td>
           <td ng-if="!row.isHeaderRow">{{problem.criteria[row].unitOfMeasurement}}</td>
           <td ng-if="!row.isHeaderRow">{{problem.criteria[row].description}}</td>
           <td ng-if="!row.isHeaderRow">
             <a ng-if="problem.criteria[row].sourceLink" href="{{problem.criteria[row].sourceLink}}">{{problem.criteria[row].source}}</a>
             <span ng-if="!problem.criteria[row].sourceLink">{{problem.criteria[row].source}}</span>
-        </td>
+          </td>
         </tr>
       </tbody>
     </table>
-    </div>
-    <div class="cell">
-      <h4>Alternatives <inline-help help-key="alternative"></inline-help></h4>
-    </div>
-    <div class="cell large-6">
-      <table width="100%">
-        <thead>
-          <tr>
-            <th>Alternative title</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="alternative in alternatives">
-            <td>
-              <div class="grid-x">
-                <div ng-if="editMode.isUserOwner" class="cell small-1">
-                  <div style="line-height: 10px; margin-bottom: 4px;">
-                    <a ng-click="alternativeUp($index)" class="nav-arrow" ng-if="$index !== 0"><i style="line-height:0px;" class="fa fa-caret-up"></i></a>
-                    <i ng-if="$index === 0" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
-                  </div>
-                  <div style="line-height: 10px;">
-                    <a ng-click="alternativeDown($index)" class="nav-arrow" ng-if="$index !== alternatives.length-1"><i style="line-height:0px;" class="fa fa-caret-down"></i></a>
-                    <i ng-if="$index === alternatives.length-1" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
-                  </div>
+  </div>
+  <div class="cell">
+    <h4>Alternatives <inline-help help-key="alternative"></inline-help></h4>
+  </div>
+  <div class="cell large-6">
+    <table width="100%">
+      <thead>
+        <tr>
+          <th>Alternative title</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="alternative in alternatives">
+          <td>
+            <div class="grid-x">
+              <div ng-if="editMode.isUserOwner" class="cell small-1">
+                <div style="line-height: 10px; margin-bottom: 4px;">
+                  <a ng-click="alternativeUp($index)" class="nav-arrow" ng-if="$index !== 0"><i style="line-height:0px;" class="fa fa-caret-up"></i></a>
+                  <i ng-if="$index === 0" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
                 </div>
-                <div class="cell small-11">
-                  <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editAlternative(alternative)">
+                <div style="line-height: 10px;">
+                  <a ng-click="alternativeDown($index)" class="nav-arrow" ng-if="$index !== alternatives.length-1"><i style="line-height:0px;" class="fa fa-caret-down"></i></a>
+                  <i ng-if="$index === alternatives.length-1" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
+                </div>
+              </div>
+              <div class="cell small-11">
+                <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editAlternative(alternative)">
                     <i class="fa fa-edit"></i>
                   </a> {{alternative.title}}
-                </div>
               </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="cell underlined-div"></div>
-    <div class="cell large-10">
-      <h4>Effects Table
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cell underlined-div"></div>
+  <div class="cell large-10">
+    <h4>Effects Table
       <inline-help help-key="effects-table"></inline-help>
     </h4>
-    </div>
-    <div class="cell large-2">
-      <button class="button small info clipboard-button" data-clipboard-target="#effectstable">
-        <i class="fa fa-clipboard"></i> Copy to clipboard
-      </button>
-    </div>
-    <div class="cell">
-      <button class="button" ng-click="toggleColumns()" ng-if="editMode.isUserOwner">
-        Show/hide columns
-      </button>
-    </div>
-    <div class="cell">
-      <table class="full-width effects-table" id="effectstable">
-        <thead>
-          <tr>
-            <th ng-show="toggledColumns['criteria']">Criterion
-              <inline-help help-key="criterion"></inline-help>
-            </th>
-            <th ng-show="toggledColumns['description']">Description</th>
-            <th ng-show="toggledColumns['units']">Units
-              <inline-help help-key="criterion-unit"></inline-help>
-            </th>
-            <th class="text-center" ng-repeat="alternative in alternatives">
-              {{alternative.title}}</th>
-            <th  ng-show="toggledColumns['references']" ng-if="references.has">References</th>
-          </tr>
-        </thead>
-        <tbody class="main">
-          <tr ng-repeat="row in rows">
-            <td ng-if="row.isHeaderRow" class="group-header" colspan="{{(references.has ? 4 : 3) + nrAlternatives}}">
-              <div class="main-header">
-                {{row.headerText}}
-              </div>
-            </td>
-            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['criteria']">
-              {{problem.criteria[row].title}}
-            </td>
-            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['description']">
-              <div class="td-container">
-                <div class="td-content">{{problem.criteria[row].description}}</div>
-                <div class="td-spacer">{{problem.criteria[row].description}}</div>
-                <span>&nbsp;</span>
-              </div>
-            </td>
-            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['units']">{{problem.criteria[row].unitOfMeasurement}}</td>
-            
-            <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
-              {{scales[row][alternative.id]['50%'] | number}}
-              <br>
-              <div class="uncertain" ng-show="!isExact(row, alternative.id)">
-                {{scales[row][alternative.id]['2.5%'] | number}}, {{scales[row][alternative.id]['97.5%'] | number}}</div>
-            </td>
-            <td ng-if="references.has && !row.isHeaderRow" ng-show="toggledColumns['references']">
-              <a ng-if="problem.criteria[row].sourceLink" href="{{problem.criteria[row].sourceLink}}">{{problem.criteria[row].source}}</a>
-              <span ng-if="!problem.criteria[row].sourceLink">{{problem.criteria[row].source}}</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
+  <div class="cell large-2">
+    <button class="button small info clipboard-button" data-clipboard-target="#effectstable">
+      <i class="fa fa-clipboard"></i> Copy to clipboard
+    </button>
+  </div>
+  <div class="cell">
+    <button class="button" ng-click="toggleColumns()" ng-if="editMode.isUserOwner">
+      Show/hide columns
+    </button>
+  </div>
+  <div class="cell">
+    <table class="full-width effects-table" id="effectstable">
+      <thead>
+        <tr>
+          <th ng-show="toggledColumns['criteria']">Criterion
+            <inline-help help-key="criterion"></inline-help>
+          </th>
+          <th ng-show="toggledColumns['description']">Description</th>
+          <th ng-show="toggledColumns['units']">Units
+            <inline-help help-key="criterion-unit"></inline-help>
+          </th>
+          <th class="text-center" ng-repeat="alternative in alternatives">
+            {{alternative.title}}</th>
+          <th ng-show="toggledColumns['references']" ng-if="references.has">References</th>
+        </tr>
+      </thead>
+      <tbody class="main">
+        <tr ng-repeat="row in rows">
+          <td ng-if="row.isHeaderRow" class="group-header" colspan="{{(references.has ? 4 : 3) + nrAlternatives}}">
+            <div class="main-header">
+              {{row.headerText}}
+            </div>
+          </td>
+          <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['criteria']">
+            {{problem.criteria[row].title}}
+          </td>
+          <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['description']">
+            {{problem.criteria[row].description}}
+          </td>
+          <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['units']">
+            {{problem.criteria[row].unitOfMeasurement}}
+          </td>
+          <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
+            {{scales[row][alternative.id]['50%'] | number}}
+            <br>
+            <div class="uncertain" ng-show="!isExact(row, alternative.id)">
+              {{scales[row][alternative.id]['2.5%'] | number}}, {{scales[row][alternative.id]['97.5%'] | number}}</div>
+          </td>
+          <td ng-if="references.has && !row.isHeaderRow" ng-show="toggledColumns['references']">
+            <a ng-if="problem.criteria[row].sourceLink" href="{{problem.criteria[row].sourceLink}}">{{problem.criteria[row].source}}</a>
+            <span ng-if="!problem.criteria[row].sourceLink">{{problem.criteria[row].source}}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
