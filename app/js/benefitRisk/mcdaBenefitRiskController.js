@@ -27,6 +27,7 @@ define(['lodash'], function(_) {
     $scope.forkScenario = forkScenario;
     $scope.newScenario = newScenario;
     $scope.scenarioChanged = scenarioChanged;
+    $scope.switchStudyDataEffects = switchStudyDataEffects;
 
     // init
     var baseProblem = $scope.workspace.problem;
@@ -44,6 +45,7 @@ define(['lodash'], function(_) {
     $scope.workspace.$$valueTree = WorkspaceService.buildValueTree(baseProblem);
     $scope.workspace.scales = {};
     $scope.workspace.scales.theoreticalScales = WorkspaceService.buildTheoreticalScales(baseProblem);
+    $scope.showStudyData = false; // true : study data, false : exact values
     determineActiveTab();
 
     $scope.$on('$destroy', deregisterTransitionListener);
@@ -209,6 +211,41 @@ define(['lodash'], function(_) {
           });
         }
       }
+    }
+
+    function switchStudyDataEffects() {
+      $scope.showStudyData = !$scope.showStudyData;
+    }
+
+    $scope.getStudyData = getStudyData;
+
+    function getStudyData(criterionId, alternativeId) {
+      var currentEntry = _.find($scope.aggregateState.problem.performanceTable, function(tableEntry) {
+        return tableEntry.criterion === criterionId && tableEntry.alternative === alternativeId;
+      });
+      if (!currentEntry) {
+        return 'No study data available';
+      }
+      if (currentEntry.performance) {
+        var parameters = currentEntry.performance.parameters;
+        switch (currentEntry.performance.type) {
+          case 'dt':
+            return 'μ:' + parameters.mu + ' σ:' + parameters.stdErr + ' N:' + (parameters.dof + 1);
+          case 'dbeta':
+            return (parameters.alpha - 1) + ' / ' + (parameters.beta + parameters.alpha - 2);
+          case 'dsurv':
+            var bla = parameters.summaryMeasure;
+            if (parameters.summaryMeasure === 'survivalAtTime') {
+              bla = 'at time: ' + parameters.time;
+            }
+            return (parameters.alpha - 0.001) + ' / ' + (parameters.beta - 0.001) + ' (' + bla + ') ';
+          case 'dnorm':
+            return parameters.mu + ' ' + parameters.sigma;
+        }
+      }
+
+      return 'Error';
+
     }
   }
   return dependencies.concat(MCDABenefitRiskController);

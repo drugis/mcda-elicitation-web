@@ -115,10 +115,14 @@
       <i class="fa fa-clipboard"></i> Copy to clipboard
     </button>
   </div>
-  <div class="cell">
+  <div class="cell large-2">
     <button class="button" ng-click="toggleColumns()" ng-if="editMode.isUserOwner">
       Show/hide columns
     </button>
+  </div>
+  <div class="cell large-10 small button-group" ng-if="!noStochasticResults">
+    <button class="button" ng-click="switchStudyDataEffects()" ng-disabled="!showStudyData">Effects</button>
+    <button class="button" ng-click="switchStudyDataEffects()" ng-disabled="showStudyData">Study data</button>
   </div>
   <div class="cell">
     <table class="full-width effects-table" id="effectstable">
@@ -153,10 +157,11 @@
             {{problem.criteria[row].unitOfMeasurement}}
           </td>
           <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
-            {{scales[row][alternative.id]['50%'] | number}}
+            <span ng-show="isExact(row, alternative.id) || !showStudyData">{{scales[row][alternative.id]['50%'] | number}}</span>
             <br>
-            <div class="uncertain" ng-show="!isExact(row, alternative.id)">
+            <div class="uncertain" ng-show="!isExact(row, alternative.id) && !showStudyData">
               {{scales[row][alternative.id]['2.5%'] | number}}, {{scales[row][alternative.id]['97.5%'] | number}}</div>
+            <div ng-if="!isExact(row, alternative.id) && showStudyData">{{getStudyData(row, alternative.id)}}</div>
           </td>
           <td ng-if="references.has && !row.isHeaderRow" ng-show="toggledColumns['references']">
             <a ng-if="problem.criteria[row].sourceLink" href="{{problem.criteria[row].sourceLink}}">{{problem.criteria[row].source}}</a>
