@@ -18,6 +18,15 @@
     </button>
   </div>
   <div class="cell">
+    <span class="toggle-text">Effects</span>
+    <span class="switch">
+        <input class="switch-input" id="showStudyDataToggle" type="checkbox" ng-model="showStudyData.value">
+        <label class="switch-paddle" ng-if="studyDataAvailable" for="showStudyDataToggle"></label>
+        <label class="switch-paddle" ng-if="!studyDataAvailable" tooltip-append-to-body="true" tooltip="Cannot show study data if all data is relative or exact"></label>
+    </span>
+    <span class="toggle-text">Study data</span>
+  </div>
+  <div class="cell">
     <table class="full-width effects-table" id="effecttable">
       <thead>
         <tr>
@@ -47,10 +56,15 @@
           </td>
           <td>{{criterion.unitOfMeasurement}}</td>
           <td class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
-            {{scales.observed[criterion.id][alternative.id]['50%'] | number}}
-            <br>
-            <div class="uncertain" ng-if="!isExact(criterion.id, alternative.id)">
-              {{scales.observed[criterion.id][alternative.id]['2.5%'] | number}}, {{scales.observed[criterion.id][alternative.id]['97.5%'] | number}}</div>
+            <div ng-show="!effectsTableInfo[criterion.id].hasStudyData || !showStudyData.value">
+              {{scales.observed[criterion.id][alternative.id]['50%'] | number}}
+            </div>
+            <div class="uncertain" ng-show="effectsTableInfo[criterion.id].distributionType !== 'exact' && (effectsTableInfo[criterion.id].distributionType === 'relative' || !showStudyData.value)">
+              {{scales.observed[criterion.id][alternative.id]['2.5%'] | number}}, {{scales.observed[criterion.id][alternative.id]['97.5%'] | number}}
+            </div>
+            <div ng-if="effectsTableInfo[criterion.id].hasStudyData && showStudyData.value">
+              {{effectsTableInfo[criterion.id].studyDataLabels[alternative.id]}}
+          </div>
           </td>
         </tr>
       </tbody>

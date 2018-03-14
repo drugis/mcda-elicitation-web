@@ -28,7 +28,6 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     // init
     $scope.subProblems = subProblems;
     $scope.problem = _.cloneDeep($scope.workspace.problem);
-    $scope.isExact = _.partial(SubProblemService.isExact, $scope.problem.performanceTable);
     $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
     $scope.scalesPromise.then(function(scales) {
       $scope.scales = scales;
