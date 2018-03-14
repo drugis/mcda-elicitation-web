@@ -5,6 +5,7 @@ define(['lodash'], function(_) {
     'TaskDependencies',
     'ScenarioResource',
     'WorkspaceService',
+    'EffectsTableService',
     'subProblems',
     'currentSubProblem',
     'scenarios',
@@ -17,6 +18,7 @@ define(['lodash'], function(_) {
     TaskDependencies,
     ScenarioResource,
     WorkspaceService,
+    EffectsTableService,
     subProblems,
     currentSubProblem,
     scenarios,
@@ -44,10 +46,10 @@ define(['lodash'], function(_) {
     $scope.workspace.$$valueTree = WorkspaceService.buildValueTree(baseProblem);
     $scope.workspace.scales = {};
     $scope.workspace.scales.theoreticalScales = WorkspaceService.buildTheoreticalScales(baseProblem);
-    $scope.showStudyData = {value:false}; // true : study data, false : exact/relative values
+    $scope.showStudyData = { value: false }; // true : study data, false : exact/relative values
     determineActiveTab();
-    createPerformanceTableInfo();
-
+    $scope.effectsTableInfo = EffectsTableService.createEffectsTableInfo($scope.aggregateState.problem.performanceTable);
+    $scope.studyDataAvailable = EffectsTableService.isStudyDataAvailable($scope.effectsTableInfo);
     $scope.$on('$destroy', deregisterTransitionListener);
 
     $scope.$watch('scenario.state', updateTaskAccessibility);
@@ -211,57 +213,6 @@ define(['lodash'], function(_) {
           });
         }
       }
-    }
-
-    function createPerformanceTableInfo() {
-      $scope.effectsTableInfo = _.reduce($scope.aggregateState.problem.performanceTable, function(accum, tableEntry) {
-        if (accum[criterionId]) { return accum; }
-        var criterionId = tableEntry.criterion;
-        if (tableEntry.performance.type === 'exact') {
-          accum[criterionId] = {
-            distributionType: 'exact',
-            hasStudyData: false
-          };
-        } else if (tableEntry.alternative) {
-          accum[criterionId] = {
-            distributionType: tableEntry.performance.type,
-            hasStudyData: true,
-            studyDataLabels: _($scope.aggregateState.problem.performanceTable)
-              .filter(function(tableEntry) {
-                return criterionId === tableEntry.criterion;
-              })
-              .reduce(function(accum, entryForCriterion) {
-                var label;
-                var parameters = entryForCriterion.performance.parameters;
-                switch (entryForCriterion.performance.type) {
-                  case 'dt':
-                    label = parameters.mu + ' ± ' + parameters.stdErr + ' (' + (parameters.dof + 1) + ')';
-                    break;
-                  case 'dnorm':
-                    label = parameters.mu + ' ± ' + parameters.sigma;
-                    break;
-                  case 'dbeta':
-                    label = (parameters.alpha - 1) + ' / ' + (parameters.beta + parameters.alpha - 2);
-                    break;
-                  case 'dsurv':
-                    label = (parameters.alpha - 0.001) + ' / ' + (parameters.beta - 0.001);
-                    break;
-                }
-                accum[entryForCriterion.alternative] = label;
-                return accum;
-              }, {})
-          };
-        } else {
-          accum[tableEntry.criterion] = {
-            distributionType: 'relative',
-            hasStudyData: false
-          };
-        }
-        return accum;
-      }, {});
-      $scope.studyDataAvailable = _.find($scope.effectsTableInfo, function(infoEntry) {
-        return infoEntry.distributionType !== 'exact' && infoEntry.distributionType !== 'relative';
-      });
     }
   }
   return dependencies.concat(MCDABenefitRiskController);

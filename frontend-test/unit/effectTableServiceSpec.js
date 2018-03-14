@@ -17,7 +17,7 @@ define(['angular-mocks',
           var problem = {
             valueTree: {
               children: [{
-                criteria: ['crit3','crit2']
+                criteria: ['crit3', 'crit2']
               }, {
                 criteria: ['crit1']
               }]
@@ -37,13 +37,140 @@ define(['angular-mocks',
             },
             'crit2',
             'crit3',
-             {
+            {
               isHeaderRow: true,
               headerText: 'Unfavorable effects'
             },
             'crit1'
           ];
           expect(result).toEqual(expectedResult);
+        });
+      });
+
+      describe('createEffectsTableInfo', function() {
+        it('should build labels for each non-exact, non-relative entry', function() {
+          var performanceTable = [{
+            criterion: 'criterionId1',
+            performance: {
+              type: 'relative'
+            }
+          }, {
+            criterion: 'criterionId2',
+            alternative: 'alternativeId2',
+            performance: {
+              type: 'exact'
+            }
+          }, {
+            criterion: 'criterionId3',
+            alternative: 'alternativeId3',
+            performance: {
+              type: 'dt',
+              parameters: {
+                mu: 5,
+                stdErr: 1,
+                dof: 10
+              }
+
+            }
+          }, {
+            criterion: 'criterionId4',
+            alternative: 'alternativeId4',
+            performance: {
+              type: 'dnorm',
+              parameters: {
+                mu: 6,
+                sigma: 2
+              }
+            }
+          }, {
+            criterion: 'criterionId5',
+            alternative: 'alternativeId5',
+            performance: {
+              type: 'dbeta',
+              parameters: {
+                alpha: 5,
+                beta: 11
+              }
+
+            }
+          }, {
+            criterion: 'criterionId6',
+            alternative: 'alternativeId6',
+            performance: {
+              type: 'dsurv',
+              parameters: {
+                alpha: 10.001,
+                beta: 12344321.001
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            criterionId1: {
+              distributionType: 'relative',
+              hasStudyData: false
+            },
+            criterionId2: {
+              distributionType: 'exact',
+              hasStudyData: false
+            },
+            criterionId3: {
+              distributionType: 'dt',
+              hasStudyData: true,
+              studyDataLabels:{
+                alternativeId3: '5 ± 1 (11)'
+              }
+            },
+            criterionId4: {
+              distributionType: 'dnorm',
+              hasStudyData: true,
+              studyDataLabels:{
+                alternativeId4: '6 ± 2'
+              }
+            },
+            criterionId5: {
+              distributionType: 'dbeta',
+              hasStudyData: true,
+              studyDataLabels:{
+                alternativeId5: '4 / 14'
+              }
+            },
+            criterionId6: {
+              distributionType: 'dsurv',
+              hasStudyData: true,
+              studyDataLabels:{
+                alternativeId6: '10 / 12344321'
+              }
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+      });
+      describe('isStudyDataAvailable', function() {
+        it('should return true if there is any entry in the effects table info which is not exact or relative', function() {
+          var effectsTableInfo = {
+            criterionId1: {
+              distributionType: 'exact'
+            },
+            criterionId2: {
+              distributionType: 'something else'
+            }
+          };
+          var result = effectTableService.isStudyDataAvailable(effectsTableInfo);
+          expect(result).toBeTruthy();
+        });
+        it('should return false if all entries are either exact or relative', function() {
+          var effectsTableInfo = {
+            criterionId1: {
+              distributionType: 'exact'
+            },
+            criterionId2: {
+              distributionType: 'relative'
+            }
+          };
+          var result = effectTableService.isStudyDataAvailable(effectsTableInfo);
+          expect(result).toBeFalsy();
+
         });
       });
     });
