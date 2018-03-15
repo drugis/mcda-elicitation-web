@@ -5,17 +5,50 @@ define(['lodash', 'angular'], function(_) {
     var distributionKnowledge = {
       exact: {
         toString: function(input) {
-          if (distributionKnowledge.exact.isInvalidInput(input)) {
-            return 'Missing or invalid input';
-          } else {
-            return 'exact(' + input.value + ')';
+          switch (input.exactType) {
+            case 'exact':
+              if (isNullNaNOrUndefined(input.value)) {
+                return 'Missing or invalid input';
+              } else {
+                return 'point estimate(' + input.value + ')';
+              }
+              break;
+            case 'exactSE':
+              if (isNullNaNOrUndefined(input.value) || isNullNaNOrUndefinedOrNegative(input.stdErr)) {
+                return 'Missing or invalid input';
+              } else {
+                return 'point estimate(' + input.value + ' ± ' + input.stdErr + ')';
+              }
+              break;
+            case 'exactConv':
+              if (isNullNaNOrUndefined(input.value) ||
+                isNullNaNOrUndefined(input.lowerbound) ||
+                isNullNaNOrUndefined(input.upperbound)) {
+                return 'Missing or invalid input';
+              } else {
+                return 'point estimate(' + input.value + ' (' + input.lowerbound + ',' + input.upperbound + '))';
+              }
+              break;
           }
         },
         isInvalidInput: function(input) {
-          return isNullNaNOrUndefined(input.value);
+          var invalidStdErrOrBounds = false;
+          if(input.stdErr){
+            invalidStdErrOrBounds = isNullNaNOrUndefinedOrNegative(input.stdErr);
+          } else if(input.lowerbound){
+            invalidStdErrOrBounds = isNullNaNOrUndefinedOrNegative(input.lowerbound) || isNullNaNOrUndefinedOrNegative(input.upperbound);
+          }
+          return isNullNaNOrUndefined(input.value) || invalidStdErrOrBounds;
         },
         buildPerformance: function(data) {
-          return _.pick(data, ['type', 'value']);
+          switch (data.exactType) {
+            case 'exact':
+              return _.pick(data, ['type', 'value']);
+            case 'exactSE':
+              return _.pick(data, ['type', 'value', 'stdErr']);
+            case 'exactConv':
+              return _.pick(data, ['type', 'value', 'lowerbound', 'upperbound']);
+          }
         }
       },
       dnorm: {
@@ -27,7 +60,7 @@ define(['lodash', 'angular'], function(_) {
           }
         },
         isInvalidInput: function(input) {
-          return isNullNaNOrUndefined(input.mu) || isNullNaNOrUndefined(input.sigma);
+          return isNullNaNOrUndefined(input.mu) || isNullNaNOrUndefinedOrNegative(input.sigma);
         },
         buildPerformance: function(data) {
           return {
@@ -63,7 +96,7 @@ define(['lodash', 'angular'], function(_) {
           }
         },
         isInvalidInput: function(input) {
-          return isNullNaNOrUndefined(input.mu) || isNullNaNOrUndefined(input.stdErr) || isNullNaNOrUndefined(input.dof);
+          return isNullNaNOrUndefined(input.mu) || isNullNaNOrUndefinedOrNegative(input.stdErr) || isNullNaNOrUndefined(input.dof);
         },
         buildPerformance: function(data) {
           return {
@@ -165,33 +198,53 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function createDistribution(inputCell, criterion) {
-      // Distribution input
+      var newData = {};
+      // Exact input
       if (criterion.dataSource !== 'study') {
-        return inputCell;
+        switch (inputCell.exactType) {
+          case 'exact':
+            return inputCell;
+          case 'exactSE':
+            return inputCell.normalised ? {
+              mu: inputCell.value,
+              sigma: inputCell.stdErr,
+              type: 'dnorm'
+            } : inputCell;
+          case 'exactConv':
+            return inputCell.normalised ? {
+              mu: inputCell.value,
+              sigma: inputCell.lowerbound + inputCell.upperbound, //FIXME
+              type: 'dnorm'
+            } : inputCell;
+        }
       }
 
       // Study data input
-      var newData = {};
       if (criterion.dataType === 'dichotomous') {
         newData.alpha = inputCell.count + 1;
         newData.beta = inputCell.sampleSize - inputCell.count + 1;
         newData.type = 'dbeta';
       } else if (criterion.dataType === 'continuous') {
         newData.mu = inputCell.mu; // All these possibilities have a mu
-        if (inputCell.continuousType === 'SEnorm') {
-          newData.sigma = inputCell.stdErr;
-          newData.type = 'dnorm';
-        } else if (inputCell.continuousType === 'SDnorm') {
-          newData.sigma = inputCell.sigma / Math.sqrt(inputCell.sampleSize);
-          newData.type = 'dnorm';
-        } else if (inputCell.continuousType === 'SEt') {
-          newData.stdErr = inputCell.stdErr;
-          newData.dof = inputCell.sampleSize - 1;
-          newData.type = 'dt';
-        } else if (inputCell.continuousType === 'SDt') {
-          newData.stdErr = inputCell.sigma / Math.sqrt(inputCell.sampleSize);
-          newData.dof = inputCell.sampleSize - 1;
-          newData.type = 'dt';
+        switch (inputCell.continuousType) {
+          case 'SEnorm':
+            newData.sigma = inputCell.stdErr;
+            newData.type = 'dnorm';
+            break;
+          case 'SDnorm':
+            newData.sigma = inputCell.sigma / Math.sqrt(inputCell.sampleSize);
+            newData.type = 'dnorm';
+            break;
+          case 'SEt':
+            newData.stdErr = inputCell.stdErr;
+            newData.dof = inputCell.sampleSize - 1;
+            newData.type = 'dt';
+            break;
+          case 'SDt':
+            newData.stdErr = inputCell.sigma / Math.sqrt(inputCell.sampleSize);
+            newData.dof = inputCell.sampleSize - 1;
+            newData.type = 'dt';
+            break;
         }
       } else if (criterion.dataType === 'survival') {
         // survival
@@ -247,25 +300,34 @@ define(['lodash', 'angular'], function(_) {
           });
           if (tableEntry) {
             var inputDataCell = _.cloneDeep(newInputData[criterion.hash][alternative.hash]);
-            if (tableEntry.performance.type === 'exact') {
-              inputDataCell.value = tableEntry.performance.value;
-            } else if (tableEntry.performance.type === 'dt') {
-              inputDataCell.sampleSize = tableEntry.performance.parameters.dof + 1;
-              inputDataCell.stdErr = tableEntry.performance.parameters.stdErr;
-              inputDataCell.mu = tableEntry.performance.parameters.mu;
-              inputDataCell.continuousType = 'SEt';
-            } else if (tableEntry.performance.type === 'dnorm') {
-              inputDataCell.stdErr = tableEntry.performance.parameters.sigma;
-              inputDataCell.mu = tableEntry.performance.parameters.mu;
-              inputDataCell.continuousType = 'SEnorm';
-            } else if (tableEntry.performance.type === 'dbeta') {
-              inputDataCell.count = tableEntry.performance.parameters.alpha - 1;
-              inputDataCell.sampleSize = tableEntry.performance.parameters.beta + inputDataCell.count - 1;
-            } else if (tableEntry.performance.type === 'dsurv') {
-              inputDataCell.events = tableEntry.performance.parameters.alpha - 0.001;
-              inputDataCell.exposure = tableEntry.performance.parameters.beta - 0.001;
-              inputDataCell.summaryMeasure = tableEntry.performance.parameters.summaryMeasure;
-              inputDataCell.timeScale = tableEntry.performance.parameters.time;
+            switch (tableEntry.performance.type) {
+              case 'exact':
+                inputDataCell.value = tableEntry.performance.value;
+                if (tableEntry.performance.stdErr) { inputDataCell.stdErr = tableEntry.performance.stdErr; }
+                if (tableEntry.performance.lowerbound) { inputDataCell.lowerbound = tableEntry.performance.lowerbound; }
+                if (tableEntry.performance.upperbound) { inputDataCell.upperbound = tableEntry.performance.upperbound; }
+                break;
+              case 'dt':
+                inputDataCell.sampleSize = tableEntry.performance.parameters.dof + 1;
+                inputDataCell.stdErr = tableEntry.performance.parameters.stdErr;
+                inputDataCell.mu = tableEntry.performance.parameters.mu;
+                inputDataCell.continuousType = 'SEt';
+                break;
+              case 'dnorm':
+                inputDataCell.stdErr = tableEntry.performance.parameters.sigma;
+                inputDataCell.mu = tableEntry.performance.parameters.mu;
+                inputDataCell.continuousType = 'SEnorm';
+                break;
+              case 'dbeta':
+                inputDataCell.count = tableEntry.performance.parameters.alpha - 1;
+                inputDataCell.sampleSize = tableEntry.performance.parameters.beta + inputDataCell.count - 1;
+                break;
+              case 'dsurv':
+                inputDataCell.events = tableEntry.performance.parameters.alpha - 0.001;
+                inputDataCell.exposure = tableEntry.performance.parameters.beta - 0.001;
+                inputDataCell.summaryMeasure = tableEntry.performance.parameters.summaryMeasure;
+                inputDataCell.timeScale = tableEntry.performance.parameters.time;
+                break;
             }
             var distributionData = createDistribution(inputDataCell, criterion);
             inputDataCell.isInvalid = isInvalidCell(distributionData);
@@ -286,20 +348,24 @@ define(['lodash', 'angular'], function(_) {
         var tableEntry = _.find(workspace.problem.performanceTable, ['criterion', key]);
         newCrit.dataSource = tableEntry.performance.type === 'exact' ? 'exact' : 'study';
         if (newCrit.dataSource === 'study') {
-          if (tableEntry.performance.type === 'dsurv') {
-            // survival
-            newCrit.dataType = 'survival';
-            newCrit.summaryMeasure = tableEntry.performance.parameters.summaryMeasure;
-            newCrit.timePointOfInterest = tableEntry.performance.parameters.time;
-            newCrit.timeScale = 'time scale not set';
-          } else if (tableEntry.performance.type === 'dt' || tableEntry.performance.type === 'dnorm') {
-            // continuous
-            newCrit.dataType = 'continuous';
-          } else if (tableEntry.performance.type === 'dbeta') {
-            // dichotomous
-            newCrit.dataType = 'dichotomous';
-          } else {
-            newCrit.dataType = 'Unknown';
+          switch (tableEntry.performance.type) {
+            case 'dsurv':
+              newCrit.dataType = 'survival';
+              newCrit.summaryMeasure = tableEntry.performance.parameters.summaryMeasure;
+              newCrit.timePointOfInterest = tableEntry.performance.parameters.time;
+              newCrit.timeScale = 'time scale not set';
+              break;
+            case 'dt':
+              newCrit.dataType = 'continuous';
+              break;
+            case 'dnorm':
+              newCrit.dataType = 'continuous';
+              break;
+            case 'dbeta':
+              newCrit.dataType = 'dichotomous';
+              break;
+            default:
+              newCrit.dataType = 'Unknown';
           }
         }
         return newCrit;
@@ -346,6 +412,10 @@ define(['lodash', 'angular'], function(_) {
       return newPerformanceTable;
     }
 
+    function isNullNaNOrUndefinedOrNegative(value){
+      return isNullNaNOrUndefined(value) || value < 0;
+    }
+
     function isNullNaNOrUndefined(value) {
       return isNullOrUndefined(value) || isNaN(value);
     }
@@ -353,7 +423,7 @@ define(['lodash', 'angular'], function(_) {
     function isNullOrUndefined(value) {
       return value === null || value === undefined;
     }
-
+    
     function inputToString(inputData) {
       return distributionKnowledge[inputData.type].toString(inputData);
     }

@@ -25,23 +25,30 @@ define(['lodash'], function(_) {
         };
         scope.inputCell = _.cloneDeep(scope.inputData);
         scope.inputCell.continuousType = scope.inputCell.continuousType ? scope.inputCell.continuousType : 'SEt';
+        scope.inputCell.exactType = scope.inputCell.exactType ? scope.inputCell.exactType : 'exact';
         scope.continuousOptions = [{
-            label: 'Mean, SE (normal distribution)',
-            short: 'SEnorm'
-          },
-          {
-            label: 'Mean, std. dev., N (normal distribution)',
-            short: 'SDnorm'
-          },
-          {
-            label: 'Mean, SE, N (t distribution)',
-            short: 'SEt'
-          },
-          {
-            label: 'Mean, std. dev., N (t distribution)',
-            short: 'SDt'
-          }
-        ];
+          label: 'Mean, SE (normal distribution)',
+          short: 'SEnorm'
+        }, {
+          label: 'Mean, std. dev., N (normal distribution)',
+          short: 'SDnorm'
+        }, {
+          label: 'Mean, SE, N (t distribution)',
+          short: 'SEt'
+        }, {
+          label: 'Mean, std. dev., N (t distribution)',
+          short: 'SDt'
+        }];
+        scope.exactOptions = [{
+          label: 'μ',
+          short: 'exact'
+        }, {
+          label: 'μ, SE',
+          short: 'exactSE'
+        }, {
+          label: 'μ, 95% C.I.',
+          short: 'exactConv'
+        }];
         scope.inputData.label = ManualInputService.inputToString(
           ManualInputService.createDistribution(scope.inputCell, scope.criterion));
 

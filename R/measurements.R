@@ -28,18 +28,18 @@ survival.at.time <- function(t,x) { # survival at time t expressed in %
   pexp(t,x,lower.tail=F)
 }
 
-survival.transform <- function(perf, samples) {
+survival.transform <- function(performance, samples) {
 
-  if (perf$parameters$summaryMeasure=='mean') {
+  if (performance$parameters$summaryMeasure=='mean') {
     samples <- survival.mean(samples)
   }
 
-  if (perf$parameters$summaryMeasure=='median') {
+  if (performance$parameters$summaryMeasure=='median') {
     samples <- survival.median(samples)
   }
 
-  if (perf$parameters$summaryMeasure=='survivalAtTime') {
-    samples <- survival.at.time(perf$parameters[['time']],samples)
+  if (performance$parameters$summaryMeasure=='survivalAtTime') {
+    samples <- survival.at.time(performance$parameters[['time']],samples)
   }
 
   samples

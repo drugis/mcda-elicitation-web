@@ -4,10 +4,53 @@
     <div class="grid-container">
       <div class="grid-x">
         <!-- exact -->
-        <div class="cell large-8" ng-if="inputCell.type === 'exact'">
-          <label> Value
+        <div class="cell large-4" ng-if="inputCell.type === 'exact'">
+          <label>
+            Input parameters
+            <select ng-model="inputCell.exactType" ng-options="option.short as option.label for option in exactOptions"></select>
+          </label>
+        </div>
+        <div class="cell large-2" ng-if="inputCell.type === 'exact'">
+          <label>
+            μ
             <input type="number" ng-model="inputCell.value">
           </label>
+        </div>
+        <!-- exact with standard error -->
+        <div class="cell large-2" ng-if="inputCell.type === 'exact' && inputCell.exactType ==='exactSE'">
+          <label>
+            Standard error
+            <input type="number" ng-model="inputCell.stdErr">
+          </label>
+        </div>
+        <div class="cell large-2" ng-if="inputCell.type==='exact' && inputCell.exactType === 'exactSE'">
+          <label>
+            Data is normally distributed
+            <input type="checkbox" ng-model="inputCell.normalised">
+          </label>
+        </div>
+        <div class="cell large-8 alert" ng-if="inputCell.type === 'exact' && inputCell.exactType ==='exactSE'">
+          Standard error will not be used in any calculations
+        </div>
+        <!-- exact with convidence interval -->
+        <div class="cell large-2" ng-if="inputCell.type === 'exact' && inputCell.exactType ==='exactConv'">
+          <label>
+            Lowerbound
+            <input type="number" ng-model="inputCell.lowerbound">
+          </label>
+        </div>
+        <div class="cell large-2" ng-if="inputCell.type === 'exact' && inputCell.exactType ==='exactConv'">
+          <label>
+            Upperbound
+            <input type="number" ng-model="inputCell.upperbound">
+          </label>
+        </div>
+        <div class="cell large-2" ng-if="inputCell.type==='exact' && inputCell.exactType === 'exactConv'">
+          Data is normally distributed
+          <input type="checkbox" ng-model="inputCell.normalised">
+        </div>
+        <div class="cell large-10 alert" ng-if="inputCell.type === 'exact' && inputCell.exactType ==='exactConv'">
+          Convidence interval will not be used in any calculations
         </div>
         <!-- dichotomous -->
         <div class="cell large-6" ng-if="criterion.dataType === 'dichotomous'">
@@ -33,8 +76,7 @@
           </label>
         </div>
         <!--  continuous with standard error -->
-        <div class="cell large-3 end" ng-if="criterion.dataType === 'continuous' && (inputCell.continuousType === 'SEnorm'
-      || inputCell.continuousType === 'SEt')">
+        <div class="cell large-3 end" ng-if="criterion.dataType === 'continuous' && (inputCell.continuousType === 'SEnorm' || inputCell.continuousType === 'SEt')">
           <label> Standard error
             <input type="number" ng-model="inputCell.stdErr">
           </label>
