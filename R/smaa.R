@@ -228,15 +228,15 @@ run_indifferenceCurves <- function(params) {
   
   
   values.alt <- mapply(value,meas[,crit.x],meas[,crit.y]) # Contour levels of the alternatives
-  breaks <- sort(c(range(z),values.alt))
   
-  levels <- c()
-  for (i in 1:(length(breaks)-1)) {
-    levels <- c(levels,seq(breaks[i],breaks[i+1],length.out=round((breaks[i+1]-breaks[i])/(sum(range(z))/15))))
-  }
-  levels <- unique(levels)
+  #breaks <- sort(c(range(z),values.alt))
+  # levels <- c()
+  # for (i in 1:(length(breaks)-1)) {
+  #   levels <- c(levels,seq(breaks[i],breaks[i+1],length.out=round((breaks[i+1]-breaks[i])/(sum(range(z))/15))))
+  # }
+  # levels <- unique(levels)
   
-  #levels <- values.alt
+  levels <- values.alt
   #levels <- pretty(range(z, na.rm = TRUE), 10)
   
   curves <- contourLines(x=grid.x,y=grid.y,z=z,levels=levels)
