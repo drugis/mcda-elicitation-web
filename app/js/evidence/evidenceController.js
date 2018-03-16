@@ -18,7 +18,6 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     mcdaRootPath
   ) {
     // functions
-    $scope.isExact = isExact;
     $scope.editTherapeuticContext = editTherapeuticContext;
     $scope.editCriterion = editCriterion;
     $scope.editAlternative = editAlternative;
@@ -72,13 +71,6 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
         };
       }
     });
-
-    function isExact(criterion, alternative) {
-      var perf = _.find($scope.problem.performanceTable, function(performance) {
-        return performance.alternative === alternative && performance.criterion === criterion;
-      });
-      return !!perf && perf.performance.type === 'exact';
-    }
 
     function editTherapeuticContext() {
       $modal.open({

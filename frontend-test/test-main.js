@@ -77,10 +77,10 @@ require.config({
   callback: window.__karma__.start
 });
 
-window.name = "NG_DEFER_BOOTSTRAP!";
+window.name = 'NG_DEFER_BOOTSTRAP!';
 window.config = {
-  examplesRepository: "/examples/",
+  examplesRepository: '/examples/',
   workspacesRepository: {
-    service: "LocalWorkspaces"
+    service: 'LocalWorkspaces'
   }
 };

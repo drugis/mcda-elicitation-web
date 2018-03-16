@@ -952,7 +952,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
     });
 
     describe('copyWorkspaceCriteria', function() {
-      it('should copy the criteria from the oldworkspace to the format used by the rest of the manual input', function() {
+      it('should copy the criteria from the oldworkspace to the format used by the rest of the manual input, preserving units and value tree', function() {
         var workspace = {
           problem: {
             criteria: {
@@ -960,31 +960,26 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
                 title: 'criterion 1',
                 description: 'bla',
                 source: 'single study',
-                sourceLink: 'http://www.drugis.org'
+                sourceLink: 'http://www.drugis.org',
+                unitOfMeasurement: 'Proportion'
               },
               crit2: {
                 title: 'criterion 2',
-                description: 'bla 2',
                 source: 'single study',
-                sourceLink: 'http://www.drugis.org'
+                sourceLink: 'http://www.drugis.org',
+                unitOfMeasurement: 'Response size'
               },
               crit3: {
                 title: 'criterion 3',
-                description: 'bla3',
                 source: 'single study',
-                sourceLink: 'http://www.drugis.org'
               },
               crit4: {
                 title: 'criterion 4',
-                description: 'bla4',
                 source: 'single study',
-                sourceLink: 'http://www.drugis.org'
               },
               crit5: {
                 title: 'criterion 5',
-                description: 'bla5',
                 source: 'single study',
-                sourceLink: 'http://www.drugis.org'
               }
             },
             performanceTable: [{
@@ -1016,7 +1011,17 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
               performance: {
                 type: 'exact'
               }
-            }]
+            }],
+            valueTree: {
+              title: "Benefit-risk balance",
+              children: [{
+                title: 'Favourable effects',
+                criteria: ['crit1', 'crit2']
+              }, {
+                title: 'Unfavourable effects',
+                criteria: ['crit3', 'crit4', 'crit5']
+              }]
+            }
           }
         };
         var result = manualInputService.copyWorkspaceCriteria(workspace);
@@ -1027,35 +1032,35 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           sourceLink: 'http://www.drugis.org',
           dataSource: 'study',
           dataType: 'survival',
+          isFavorable: true,
           summaryMeasure: 'mean',
           timePointOfInterest: 200,
-          timeScale: 'time scale not set'
+          timeScale: 'time scale not set',
+          unitOfMeasurement: 'Proportion'
         }, {
           title: 'criterion 2',
-          description: 'bla 2',
           source: 'single study',
           sourceLink: 'http://www.drugis.org',
+          isFavorable: true,
           dataSource: 'study',
-          dataType: 'dichotomous'
+          dataType: 'dichotomous',
+          unitOfMeasurement: 'Response size'
         }, {
           title: 'criterion 3',
-          description: 'bla3',
           source: 'single study',
-          sourceLink: 'http://www.drugis.org',
+          isFavorable: false,
           dataSource: 'study',
           dataType: 'continuous'
         }, {
           title: 'criterion 4',
-          description: 'bla4',
           source: 'single study',
-          sourceLink: 'http://www.drugis.org',
+          isFavorable: false,
           dataSource: 'study',
           dataType: 'continuous'
         }, {
           title: 'criterion 5',
-          description: 'bla5',
+          isFavorable: false,
           source: 'single study',
-          sourceLink: 'http://www.drugis.org',
           dataSource: 'exact'
         }];
         expect(result).toEqual(expectedResult);
