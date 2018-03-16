@@ -1,0 +1,110 @@
+{
+  "title": "Multiple myeloma",
+  "description": "Decision analysis example from the stated preference study with patients with multiple myeloma (Postmus et al., 2017)",
+  "criteria": {
+    "PFS": {
+      "title": "Progression-free survival",
+      "description": "Probability of being progression-free for 1 year or longer",
+      "unitOfMeasurement": "%",
+      "scale": [
+        null,
+        null
+      ]
+    },
+    "Mod tox": {
+      "title": "Moderate toxicity",
+      "description": "Probability of experiencing long-lasting mild to moderate side effects",
+      "unitOfMeasurement": "%",
+      "scale": [
+        null,
+        null
+      ]
+    },
+    "Sev tox": {
+      "title": "Severe toxicity",
+      "description": "Probability of experiencing severe to life-threatening side effects",
+      "unitOfMeasurement": "%",
+      "scale": [
+        null,
+        null
+      ]
+    }
+  },
+  "alternatives": {
+    "Ixazomib": {
+      "title": "Ixazomib"
+    },
+    "Placebo": {
+      "title": "Placebo"
+    }
+  },
+  "performanceTable": [
+    {
+      "alternative": "Ixazomib",
+      "criterion": "PFS",
+      "performance": {
+        "type": "exact",
+        "value": 66
+      }
+    },
+    {
+      "alternative": "Placebo",
+      "criterion": "PFS",
+      "performance": {
+        "type": "exact",
+        "value": 59
+      }
+    },
+    {
+      "alternative": "Ixazomib",
+      "criterion": "Mod tox",
+      "performance": {
+        "type": "exact",
+        "value": 71
+      }
+    },
+    {
+      "alternative": "Placebo",
+      "criterion": "Mod tox",
+      "performance": {
+        "type": "exact",
+        "value": 69
+      }
+    },
+    {
+      "alternative": "Ixazomib",
+      "criterion": "Sev tox",
+      "performance": {
+        "type": "exact",
+        "value": 60
+      }
+    },
+    {
+      "alternative": "Placebo",
+      "criterion": "Sev tox",
+      "performance": {
+        "type": "exact",
+        "value": 53
+      }
+    }
+  ],
+  "valueTree": {
+    "title": "Benefit-risk balance",
+    "children": [
+      {
+        "title": "Favourable effects",
+        "criteria": [
+          "PFS"
+        ]
+      },
+      {
+        "title": "Unfavourable effects",
+        "criteria": [
+          "Mod tox",
+          "Sev tox"
+        ]
+      }
+    ]
+  },
+  "method": "scales"
+}

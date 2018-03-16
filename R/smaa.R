@@ -9,7 +9,7 @@ wrap.matrix <- function(m) {
 }
 
 smaa_v2 <- function(params) {
-  allowed <- c('scales','smaa','deterministic','sensitivityMeasurements','sensitivityMeasurementsPlot','sensitivityWeightPlot')
+  allowed <- c('scales','smaa','deterministic','sensitivityMeasurements','sensitivityMeasurementsPlot','sensitivityWeightPlot','weightBounds','indifferenceCurves')
   if(params$method %in% allowed) {
     do.call(paste("run", params$method, sep="_"), list(params))
   } else {
@@ -32,6 +32,87 @@ ratioConstraint <- function(n, i1, i2, x) {
   a[i2] <- x
   list(constr = t(a), rhs = c(0), dir = c("="))
 }
+
+# Generate equality constraints for exact weights 
+ExactWeightConstraints <- function(params) {
+  
+  crit <- names(params$criteria)
+  n <- length(crit)
+  m <- length(params$deterministicWeights)
+  
+  A <- diag(n)
+  row.names(A) <- crit
+  
+  constr <- NULL
+  for (i in 1:m) {
+    cur.constr <- list(constr=A[params$deterministicWeights[[i]]$criterion,],rhs=params$deterministicWeights[[i]]$weight,dir="=")
+    constr <- mergeConstraints(constr,cur.constr)
+  }
+  
+  constr
+  
+}
+
+# Make H-representation of the convex polygedron
+generateHrep <- function(constr) {
+  n.contr <- dim(constr$constr)[1]
+  
+  a1 <- c()
+  b1 <- c()
+  a2 <- c()
+  b2 <- c()
+  for (i in 1:n.contr) {
+    if (constr$dir[i]=="<=") {
+      a1 <- rbind(a1,constr$constr[i,])
+      b1 <- c(b1,constr$rhs[i])
+    }
+    if (constr$dir[i]=="=") {
+      a2 <- rbind(a2,constr$constr[i,])
+      b2 <- c(b2,constr$rhs[i])
+    }
+  }
+  
+  rcdd::makeH(a1,b1,a2,b2)
+  
+}
+
+# Determine criterion-wise lower and upper bounds for the weights
+run_weightBounds <- function(params) {
+  
+  crit <- names(params$criteria)
+  n <- length(crit)
+  
+  constr <- mergeConstraints(lapply(params$preferences,genHARconstraint,crit=crit))
+  constr <- mergeConstraints(simplexConstraints(n),constr)
+  
+  A <- diag(n)
+  row.names(A) <- crit
+  
+  H <- generateHrep(constr)
+  
+  if (!is.null(params$deterministicWeights)) {
+    m <- length(params$deterministicWeights)
+    for (i in 1:m) {
+      a <- A[params$deterministicWeights[[i]]$criterion,]
+      b <- params$deterministicWeights[[i]]$weight
+      H <- rcdd::addHeq(a,b,H)
+    }
+  }
+  
+  lower <- c()
+  upper <- c()
+  for (i in 1:n) {
+    lower <- c(lower,rcdd::lpcdd(H,A[i,],minimize=T)$optimal.value)
+    upper <- c(upper,rcdd::lpcdd(H,A[i,],minimize=F)$optimal.value)
+  }
+  
+  names(lower) <- crit
+  names(upper) <- crit
+  
+  list(lower=lower,upper=upper)
+  
+}
+
 
 run_deterministic <- function(params) {
   meas <- genMedianMeasurements(params) 
@@ -60,6 +141,17 @@ genRepresentativeWeights <- function(params) {
   
   constr <- mergeConstraints(lapply(params$preferences,genHARconstraint,crit=crit))
   constr <- mergeConstraints(simplexConstraints(n),constr)
+  
+  if (!is.null(params$deterministicWeights)) {
+    
+    exact.constr <- ExactWeightConstraints(params)
+    constr <- mergeConstraints(constr,exact.constr)
+    
+    # Substract the fixed weights from the add up to 1 contraint
+    constr$constr[1,] <- constr$constr[1,] - colSums(exact.constr$constr)
+    constr$rhs[1] <- constr$rhs[1] - sum(exact.constr$rhs)
+    
+  }
   
   samples <- hitandrun(constr, n.samples=N)
   rep.weights <- colMeans(samples)
@@ -102,6 +194,67 @@ calculateTotalValue <- function(params,meas,weights) {
     meas[,criterion] <- pvf[[criterion]](meas[,criterion]) * weights[criterion]
   }
   meas
+}
+
+# Calculate the trade-offs between two criteria
+run_indifferenceCurves <- function(params) {
+  
+  crit.x <- params$IndifferenceCurves$crit.x
+  crit.y <- params$IndifferenceCurves$crit.y
+  
+  range.x <- params$criteria[[crit.x]]$pvf$range
+  shape.x <- params$criteria[[crit.x]]$pvf$type
+    
+  range.y <- params$criteria[[crit.y]]$pvf$range
+  shape.y <- params$criteria[[crit.y]]$pvf$type
+  
+  meas <- genMedianMeasurements(params) 
+  
+  weights <- genRepresentativeWeights(params)
+  pvf <- lapply(params$criteria, create.pvf)
+  
+  value <- function(x,y) {
+    as.numeric(weights[crit.x]*pvf[[crit.x]](x) + weights[crit.y]*pvf[[crit.y]](y))
+  }
+  
+  grid.x <- seq(range.x[1],range.x[2],length.out=20)
+  grid.y <- seq(range.y[1],range.y[2],length.out=20)
+  z <- matrix(data=NA,nrow=length(grid.x),ncol=length(grid.y))
+  for (i in 1:length(grid.x)) {
+    for (j in 1:length(grid.y)) {
+      z[i,j] <- value(grid.x[i],grid.y[j])
+    }
+  }
+  
+  
+  values.alt <- mapply(value,meas[,crit.x],meas[,crit.y]) # Contour levels of the alternatives
+  
+  #breaks <- sort(c(range(z),values.alt))
+  # levels <- c()
+  # for (i in 1:(length(breaks)-1)) {
+  #   levels <- c(levels,seq(breaks[i],breaks[i+1],length.out=round((breaks[i+1]-breaks[i])/(sum(range(z))/15))))
+  # }
+  # levels <- unique(levels)
+  
+  levels <- values.alt
+  #levels <- pretty(range(z, na.rm = TRUE), 10)
+  
+  curves <- contourLines(x=grid.x,y=grid.y,z=z,levels=levels)
+  
+  n <- length(curves)
+  data.plot <- c()
+  for (i in 1:length(curves)) {
+    if (shape.x=="linear" & shape.y=="linear") {
+      data.plot <-rbind(data.plot,cbind(curves[[i]]$x[c(1,length(curves[[i]]$x))],curves[[i]]$y[c(1,length(curves[[i]]$y))],rep(curves[[i]]$level,2)))
+    } else {
+      data.plot <-rbind(data.plot,cbind(curves[[i]]$x,curves[[i]]$y,rep(curves[[i]]$level,length(curves[[i]]$x))))
+    }
+  }
+  data.plot <- as.data.frame(data.plot)
+  names(data.plot) <- c("x","y","value")
+  
+  data.plot
+
 }
 
 run_sensitivityMeasurements <- function(params) {
