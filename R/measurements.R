@@ -92,7 +92,22 @@ sampler.dnorm <- function(perf, N) {
 }
 
 sampler.exact <- function(perf, N) {
-  rep(perf$value, lenght.out=N)
+  
+  output <- rep(perf$value, length.out=N)
+  
+  if (!is.null(perf$isNormal)) {
+    if(perf$isNormal) {
+      if(!is.null(perf$stdErr)) {
+        sigma <- perf$stdErr
+      } else {
+        sigma <- (perf$upperBound - perf$lowerBound)/(2*1.96)
+      }
+      output <- rnorm(N, perf$value, sigma)
+    } 
+  }
+  
+  output
+  
 }
 
 sampler.dt <- function(perf, N) {
