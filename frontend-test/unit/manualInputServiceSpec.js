@@ -135,13 +135,15 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
               type: 'exact',
               value: 10,
               hash: 'treatment1',
-              source: 'exact'
+              source: 'exact',
+              exactType: 'exact'
             },
             treatment2: {
               type: 'exact',
               value: 5,
               hash: 'treatment2',
-              source: 'exact'
+              source: 'exact',
+              exactType: 'exact'
             }
           },
           'unfavorable criterion': {
@@ -149,13 +151,15 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
               type: 'exact',
               value: 20,
               hash: 'treatment1',
-              source: 'exact'
+              source: 'exact',
+              exactType: 'exact'
             },
             treatment2: {
               type: 'exact',
               value: 30,
               hash: 'treatment2',
-              source: 'exact'
+              source: 'exact',
+              exactType: 'exact'
             }
           }
         };
@@ -623,16 +627,58 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
       describe('for exact effects', function() {
         it('should give missing or invalid data for an incomplete effect', function() {
           var exact = {
-            type: 'exact'
+            type: 'exact',
+            exactType: 'exact'
+          };
+          var exactSE = {
+            type: 'exact',
+            exactType: 'exactSE',
+            value: 5
+          };
+          var exactConf = {
+            type: 'exact',
+            exactType: 'exactConf',
+            value: 5,
+            lowerBound: 3
+          };
+          var exactConfWrongBounds = {
+            type: 'exact',
+            exactType: 'exactConf',
+            value: 5,
+            lowerBound: 3,
+            upperBound: 4
           };
           expect(manualInputService.inputToString(exact)).toEqual('Missing or invalid input');
+          expect(manualInputService.inputToString(exactSE)).toEqual('Missing or invalid input');
+          expect(manualInputService.inputToString(exactConf)).toEqual('Missing or invalid input');
+          expect(manualInputService.inputToString(exactConfWrongBounds)).toEqual('Lower bound too high, or upper bound too low');
         });
         it('should render a complete effect', function() {
           var exact = {
             type: 'exact',
-            value: 3.14
+            value: 3.14,
+            exactType: 'exact'
           };
-          expect(manualInputService.inputToString(exact)).toEqual('exact(3.14)');
+          expect(manualInputService.inputToString(exact)).toEqual('3.14\nDistribution: none');
+        });
+        it('should reder an exact input with standard error', function() {
+          var exact = {
+            type: 'exact',
+            value: 3.14,
+            stdErr: 4.13,
+            exactType: 'exactSE'
+          };
+          expect(manualInputService.inputToString(exact)).toEqual('3.14 (4.13)\nDistribution: none');
+        });
+        it('should reder an exact input with a confidence interval', function() {
+          var exact = {
+            type: 'exact',
+            value: 3.14,
+            lowerBound: 2.13,
+            upperBound: 5,
+            exactType: 'exactConf'
+          };
+          expect(manualInputService.inputToString(exact)).toEqual('3.14 (2.13,5)\nDistribution: none');
         });
       });
       describe('for beta effects', function() {
@@ -658,7 +704,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
             alpha: 10,
             beta: 20
           };
-          expect(manualInputService.inputToString(beta)).toEqual('Beta(10, 20)');
+          expect(manualInputService.inputToString(beta)).toEqual('9 / 28\nDistribution: beta');
         });
       });
       describe('for normal effects', function() {
@@ -684,7 +730,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
             mu: 2,
             sigma: 3
           };
-          expect(manualInputService.inputToString(normal)).toEqual('N(2.000, 3)');
+          expect(manualInputService.inputToString(normal)).toEqual('2.000 (3.000)\nDistribution: normal');
         });
       });
       describe('for t effects', function() {
@@ -717,9 +763,9 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
             type: 'dt',
             mu: 3.14,
             stdErr: 1.23,
-            dof: 37
+            dof: 36
           };
-          expect(manualInputService.inputToString(t)).toEqual('t(3.14, 1.23, 37)');
+          expect(manualInputService.inputToString(t)).toEqual('3.14 (1.23), 37\nDistribution: Student\'s t');
         });
       });
       describe('for surv effects', function() {
@@ -742,10 +788,10 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
         it('should render a complete effect', function() {
           var beta = {
             type: 'dsurv',
-            alpha: 10,
-            beta: 20
+            alpha: 10.001,
+            beta: 20.001
           };
-          expect(manualInputService.inputToString(beta)).toEqual('Gamma(10, 20)');
+          expect(manualInputService.inputToString(beta)).toEqual('10 / 20\nDistribution: gamma');
         });
       });
     });
@@ -902,7 +948,8 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
               type: 'exact',
               value: 1337,
               isInvalid: false,
-              label: 'exact(1337)'
+              label: '1337\nDistribution: none',
+              exactType: 'exact'
             }
           },
           c2: {
@@ -911,7 +958,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
               count: 11,
               sampleSize: 33,
               isInvalid: false,
-              label: 'Beta(12, 23)'
+              label: '11 / 33\nDistribution: beta'
             }
           },
           c3: {
@@ -922,7 +969,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
               sampleSize: 124,
               isInvalid: false,
               continuousType: 'SEt',
-              label: 't(30, 2.3, 123)'
+              label: '30 (2.3), 124\nDistribution: Student\'s t'
             }
           },
           c4: {
@@ -932,7 +979,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
               stdErr: 1.2,
               isInvalid: false,
               continuousType: 'SEnorm',
-              label: 'N(23.000, 1.2)'
+              label: '23.000 (1.200)\nDistribution: normal'
             }
           },
           c5: {
@@ -942,7 +989,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
               exposure: 23,
               summaryMeasure: 'mean',
               isInvalid: false,
-              label: 'Gamma(12.001, 23.001)',
+              label: '12 / 23\nDistribution: gamma',
               timeScale: undefined
             }
           }
@@ -1013,7 +1060,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
               }
             }],
             valueTree: {
-              title: "Benefit-risk balance",
+              title: 'Benefit-risk balance',
               children: [{
                 title: 'Favourable effects',
                 criteria: ['crit1', 'crit2']

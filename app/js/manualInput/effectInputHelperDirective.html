@@ -1,5 +1,5 @@
 <dropdown-toggle close-on-click="true">
-  <toggle><a ng-style="inputData.isInvalid ? {color:'red'} : {}">{{inputData.label}}</a></toggle>
+  <toggle><a ng-style="inputData.isInvalid ? {color:'red'} : {}" style="white-space: pre-wrap">{{inputData.label}}</a></toggle>
   <pane ng-keydown="keyCheck($event, $close)" ng-keypress="keyCheck($event, $close)">
     <div class="grid-container">
       <div class="grid-x">
@@ -12,7 +12,7 @@
         </div>
         <div class="cell large-2" ng-if="inputCell.type === 'exact'">
           <label>
-            μ
+            Estimate
             <input type="number" ng-model="inputCell.value">
           </label>
         </div>
@@ -25,31 +25,37 @@
         </div>
         <div class="cell large-2" ng-if="inputCell.type==='exact' && inputCell.exactType === 'exactSE'">
           <label>
-            Data is normally distributed
-            <input type="checkbox" ng-model="inputCell.normalised">
+            Estimator is normally distributed
+            <input type="checkbox" ng-model="inputCell.isNormal">
           </label>
         </div>
-        <div class="cell large-8 alert" ng-if="inputCell.type === 'exact' && inputCell.exactType ==='exactSE'">
+        <div class="cell large-8 alert" ng-if="inputCell.type === 'exact' && inputCell.exactType ==='exactSE' && !inputCell.isNormal">
           Standard error will not be used in any calculations
         </div>
         <!-- exact with convidence interval -->
-        <div class="cell large-2" ng-if="inputCell.type === 'exact' && inputCell.exactType ==='exactConv'">
+        <div class="cell large-2" ng-if="inputCell.type === 'exact' && inputCell.exactType ==='exactConf'">
           <label>
-            Lowerbound
-            <input type="number" ng-model="inputCell.lowerbound">
+            Lower bound
+            <input type="number" ng-model="inputCell.lowerBound" ng-change="updateUpperBound()">
           </label>
         </div>
-        <div class="cell large-2" ng-if="inputCell.type === 'exact' && inputCell.exactType ==='exactConv'">
+        <div class="cell large-2" ng-if="inputCell.type === 'exact' && inputCell.exactType ==='exactConf' && !inputCell.isNormal">
           <label>
-            Upperbound
-            <input type="number" ng-model="inputCell.upperbound">
+            Upper bound
+            <input type="number" ng-model="inputCell.upperBound">
           </label>
         </div>
-        <div class="cell large-2" ng-if="inputCell.type==='exact' && inputCell.exactType === 'exactConv'">
-          Data is normally distributed
-          <input type="checkbox" ng-model="inputCell.normalised">
+        <div class="cell large-2" ng-if="inputCell.type === 'exact' && inputCell.exactType ==='exactConf' && inputCell.isNormal">
+          <label>
+            Upper bound
+            <input type="number" ng-model="inputCell.upperBound" ng-disabled="true">
+          </label>
         </div>
-        <div class="cell large-10 alert" ng-if="inputCell.type === 'exact' && inputCell.exactType ==='exactConv'">
+        <div class="cell large-2" ng-if="inputCell.type==='exact' && inputCell.exactType === 'exactConf'">
+          Estimator is normally distributed
+          <input type="checkbox" ng-model="inputCell.isNormal" ng-change="updateUpperBound()">
+        </div>
+        <div class="cell large-10 alert" ng-if="inputCell.type === 'exact' && inputCell.exactType ==='exactConf' && !inputCell.isNormal">
           Convidence interval will not be used in any calculations
         </div>
         <!-- dichotomous -->

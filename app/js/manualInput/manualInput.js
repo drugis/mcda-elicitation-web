@@ -8,7 +8,7 @@ var requires = [
 ];
 define(['angular', 'angular-resource'].concat(requires), function(
   angular,
-  ngResource,
+  ngResource, // needed for .directive
   ManualInputController,
   AddCriterionController,
   ManualInputService,

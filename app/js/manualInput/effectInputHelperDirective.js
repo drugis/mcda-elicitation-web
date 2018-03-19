@@ -40,14 +40,14 @@ define(['lodash'], function(_) {
           short: 'SDt'
         }];
         scope.exactOptions = [{
-          label: 'μ',
+          label: 'Estimate',
           short: 'exact'
         }, {
-          label: 'μ, SE',
+          label: 'Estimate, SE',
           short: 'exactSE'
         }, {
-          label: 'μ, 95% C.I.',
-          short: 'exactConv'
+          label: 'Estimate, 95% C.I.',
+          short: 'exactConf'
         }];
         scope.inputData.label = ManualInputService.inputToString(
           ManualInputService.createDistribution(scope.inputCell, scope.criterion));
@@ -62,8 +62,19 @@ define(['lodash'], function(_) {
           }
         });
 
+        scope.updateUpperBound = updateUpperBound;
+
+        function updateUpperBound() {
+          if (scope.inputCell.isNormal) {
+            scope.inputCell.upperBound = (2 * scope.inputCell.value) - scope.inputCell.lowerBound;
+          }
+        }
+
         function saveState() {
           $timeout(function() {
+            if (scope.inputCell.isNormal && scope.inputCell.exactType === 'exactConf') {
+              scope.inputCell.upperBound = (2 * scope.inputCell.value) - scope.inputCell.lowerBound;
+            }
             var distributionData = ManualInputService.createDistribution(
               scope.inputCell, scope.criterion);
             scope.inputData = scope.inputCell;
