@@ -56,14 +56,9 @@
           </td>
           <td>{{criterion.unitOfMeasurement}}</td>
           <td class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
-            <div ng-show="!effectsTableInfo[criterion.id].hasStudyData || !showStudyData.value">
-              {{scales.observed[criterion.id][alternative.id]['50%'] | number}}
-            </div>
-            <div class="uncertain" ng-show="effectsTableInfo[criterion.id].distributionType !== 'exact' && (effectsTableInfo[criterion.id].distributionType === 'relative' || !showStudyData.value)">
-              {{scales.observed[criterion.id][alternative.id]['2.5%'] | number}}, {{scales.observed[criterion.id][alternative.id]['97.5%'] | number}}
-            </div>
+            <effects-table-scales-cell ng-show="!effectsTableInfo[criterion.id].hasStudyData || !showStudyData.value" scales="scales.observed[criterion.id][alternative.id]" uncertainty="effectsTableInfo[criterion.id].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || effectsTableInfo[criterion.id].distributionType === 'relative'"></effects-table-scales-cell>
             <div ng-if="effectsTableInfo[criterion.id].hasStudyData && showStudyData.value">
-              {{effectsTableInfo[criterion.id].studyDataLabels[alternative.id]}}
+              {{effectsTableInfo[criterion.id].studyDataLabelsAndUncertainty[alternative.id].label}}
           </div>
           </td>
         </tr>

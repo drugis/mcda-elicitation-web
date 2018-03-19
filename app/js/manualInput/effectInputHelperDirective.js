@@ -27,17 +27,14 @@ define(['lodash'], function(_) {
         scope.inputCell.continuousType = scope.inputCell.continuousType ? scope.inputCell.continuousType : 'SEt';
         scope.inputCell.exactType = scope.inputCell.exactType ? scope.inputCell.exactType : 'exact';
         scope.continuousOptions = [{
-          label: 'Mean, SE (normal distribution)',
+          label: 'Mean, SE',
           short: 'SEnorm'
         }, {
-          label: 'Mean, std. dev., N (normal distribution)',
-          short: 'SDnorm'
-        }, {
-          label: 'Mean, SE, N (t distribution)',
+          label: 'Mean, SE, N',
           short: 'SEt'
         }, {
-          label: 'Mean, std. dev., N (t distribution)',
-          short: 'SDt'
+          label: 'Mean, std. dev., N',
+          short: 'SD'
         }];
         scope.exactOptions = [{
           label: 'Estimate',
