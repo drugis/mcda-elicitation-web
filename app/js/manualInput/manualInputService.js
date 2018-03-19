@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash', 'angular'], function(_) {
-  var dependencies = ['numberFilter'];
-  var ManualInputService = function(numberFilter) {
+  var dependencies = [];
+  var ManualInputService = function() {
     var distributionKnowledge = {
       exact: {
         toString: function(input) {
@@ -61,7 +61,7 @@ define(['lodash', 'angular'], function(_) {
           if (distributionKnowledge.dnorm.isInvalidInput(input)) {
             return 'Missing or invalid input';
           } else {
-            return numberFilter(input.mu, 3) + ' (' + numberFilter(input.sigma, 3) + ')\nDistribution: normal';
+            return Math.round(input.mu*1000)/1000 + ' (' + Math.round(input.sigma*1000)/1000 + ')\nDistribution: normal';
           }
         },
         isInvalidInput: function(input) {
@@ -79,7 +79,7 @@ define(['lodash', 'angular'], function(_) {
           if (distributionKnowledge.dbeta.isInvalidInput(input)) {
             return 'Missing or invalid input';
           } else {
-            return (input.alpha-1) + ' / ' + (input.beta+input.alpha-2) + '\nDistribution: beta';
+            return (input.alpha - 1) + ' / ' + (input.beta + input.alpha - 2) + '\nDistribution: beta';
           }
         },
         isInvalidInput: function(input) {
@@ -100,7 +100,7 @@ define(['lodash', 'angular'], function(_) {
           if (distributionKnowledge.dt.isInvalidInput(input)) {
             return 'Missing or invalid input';
           } else {
-            return input.mu + ' (' + input.stdErr + '), ' + (input.dof + 1) + '\nDistribution: Student\'s t';
+            return input.mu + ' (' + Math.round(input.stdErr*1000)/1000 + '), ' + (input.dof + 1) + '\nDistribution: Student\'s t';
           }
         },
         isInvalidInput: function(input) {
@@ -228,19 +228,20 @@ define(['lodash', 'angular'], function(_) {
             newData.sigma = inputCell.stdErr;
             newData.type = 'dnorm';
             break;
-          case 'SDnorm':
-            newData.sigma = inputCell.sigma / Math.sqrt(inputCell.sampleSize);
-            newData.type = 'dnorm';
-            break;
           case 'SEt':
             newData.stdErr = inputCell.stdErr;
             newData.dof = inputCell.sampleSize - 1;
             newData.type = 'dt';
             break;
-          case 'SDt':
-            newData.stdErr = inputCell.sigma / Math.sqrt(inputCell.sampleSize);
-            newData.dof = inputCell.sampleSize - 1;
-            newData.type = 'dt';
+          case 'SD':
+            if (inputCell.isNormal) {
+              newData.sigma = inputCell.sigma / Math.sqrt(inputCell.sampleSize);
+              newData.type = 'dnorm';
+            } else {
+              newData.stdErr = inputCell.sigma / Math.sqrt(inputCell.sampleSize);
+              newData.dof = inputCell.sampleSize - 1;
+              newData.type = 'dt';
+            }
             break;
         }
       } else if (criterion.dataType === 'survival') {

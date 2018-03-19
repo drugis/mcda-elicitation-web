@@ -443,7 +443,8 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           mu: 5,
           sigma: 6,
           sampleSize: 9,
-          continuousType: 'SDnorm'
+          continuousType: 'SD',
+          isNormal: true
         };
         var expectedContinuousStandardDeviationNormalResult = {
           mu: 5,
@@ -476,7 +477,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
           mu: 5,
           sigma: 6,
           sampleSize: 9,
-          continuousType: 'SDt'
+          continuousType: 'SD'
         };
         var expectedContinuousStandardDeviationStudentTResult = {
           mu: 5,
@@ -730,7 +731,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
             mu: 2,
             sigma: 3
           };
-          expect(manualInputService.inputToString(normal)).toEqual('2.000 (3.000)\nDistribution: normal');
+          expect(manualInputService.inputToString(normal)).toEqual('2 (3)\nDistribution: normal');
         });
       });
       describe('for t effects', function() {
@@ -979,7 +980,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
               stdErr: 1.2,
               isInvalid: false,
               continuousType: 'SEnorm',
-              label: '23.000 (1.200)\nDistribution: normal'
+              label: '23 (1.2)\nDistribution: normal'
             }
           },
           c5: {
