@@ -58,7 +58,9 @@ define(['angular-mocks',
             criterion: 'criterionId2',
             alternative: 'alternativeId2',
             performance: {
-              type: 'exact'
+              type: 'exact',
+              exactType: 'exact',
+              value: 1
             }
           }, {
             criterion: 'criterionId3',
@@ -112,34 +114,52 @@ define(['angular-mocks',
             },
             criterionId2: {
               distributionType: 'exact',
-              hasStudyData: false
+              hasStudyData: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId2: {
+                  label: 1,
+                  hasUncertainty: false
+                }
+              }
             },
             criterionId3: {
               distributionType: 'dt',
               hasStudyData: true,
-              studyDataLabels:{
-                alternativeId3: '5 ± 1 (11)'
+              studyDataLabelsAndUncertainty: {
+                alternativeId3: {
+                  label: '5 (1), 11',
+                  hasUncertainty: true
+                }
               }
             },
             criterionId4: {
               distributionType: 'dnorm',
               hasStudyData: true,
-              studyDataLabels:{
-                alternativeId4: '6 ± 2'
+              studyDataLabelsAndUncertainty: {
+                alternativeId4: {
+                  label: '6 (2)',
+                  hasUncertainty: true
+                }
               }
             },
             criterionId5: {
               distributionType: 'dbeta',
               hasStudyData: true,
-              studyDataLabels:{
-                alternativeId5: '4 / 14'
+              studyDataLabelsAndUncertainty: {
+                alternativeId5: {
+                  label: '4 / 14',
+                  hasUncertainty: true
+                }
               }
             },
             criterionId6: {
               distributionType: 'dsurv',
               hasStudyData: true,
-              studyDataLabels:{
-                alternativeId6: '10 / 12344321'
+              studyDataLabelsAndUncertainty: {
+                alternativeId6: {
+                  label: '10 / 12344321',
+                  hasUncertainty: true
+                }
               }
             }
           };
@@ -153,7 +173,10 @@ define(['angular-mocks',
               distributionType: 'exact'
             },
             criterionId2: {
-              distributionType: 'something else'
+              distributionType: 'something else',
+              studyDataLabelsAndUncertainty: {
+                alternativeId6: { hasUncertainty: true }
+              }
             }
           };
           var result = effectTableService.isStudyDataAvailable(effectsTableInfo);

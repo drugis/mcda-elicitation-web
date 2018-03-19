@@ -5,15 +5,18 @@ var requires = [
   'mcda/evidence/editCriterionController',
   'mcda/evidence/editTherapeuticContextController',
   'mcda/evidence/toggleColumnsController',
+  'mcda/evidence/effectsTableScalesCellDirective',
   'mcda/evidence/effectsTableService'
 ];
-define(['angular'].concat(requires), function(
+define(['angular', 'angular-resource'].concat(requires), function(
   angular,
+  ngResource, // needed for .directive
   EvidenceController,
   EditAlternativeController,
   EditCriterionController,
   EditTherapeuticContextController,
   ToggleColumnsController,
+  effectsTableScalesCell,
   EffectsTableService
 ) {
   return angular.module('elicit.evidence', [])
@@ -22,6 +25,6 @@ define(['angular'].concat(requires), function(
     .controller('EditCriterionController', EditCriterionController)
     .controller('EditTherapeuticContextController', EditTherapeuticContextController)
     .controller('ToggleColumnsController', ToggleColumnsController)
-    .factory('EffectsTableService', EffectsTableService)
-    ;
+    .directive('effectsTableScalesCell', effectsTableScalesCell)
+    .factory('EffectsTableService', EffectsTableService);
 });

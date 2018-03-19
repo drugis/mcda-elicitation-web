@@ -1,8 +1,8 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = [];
+  var dependencies = ['numberFilter'];
 
-  var EffectsTableService = function() {
+  var EffectsTableService = function(numberFilter) {
     function flattenValueTreeChildren(child) {
       if (child.criteria) {
         return child.criteria;
@@ -44,30 +44,41 @@ define(['lodash'], function(_) {
 
     function createEffectsTableInfo(performanceTable) {
       return _.reduce(performanceTable, function(accum, tableEntry) {
-        if (accum[criterionId]) { return accum; }
         var criterionId = tableEntry.criterion;
-        if (tableEntry.performance.type === 'exact') {
-          accum[criterionId] = {
-            distributionType: 'exact',
-            hasStudyData: false
-          };
-        } else if (tableEntry.alternative) {
+        if (accum[criterionId]) { return accum; }
+        if (tableEntry.alternative) {
           accum[criterionId] = {
             distributionType: tableEntry.performance.type,
             hasStudyData: true,
-            studyDataLabels: _(performanceTable)
+            studyDataLabelsAndUncertainty: _(performanceTable)
               .filter(function(tableEntry) {
                 return criterionId === tableEntry.criterion;
               })
               .reduce(function(accum, entryForCriterion) {
                 var label;
                 var parameters = entryForCriterion.performance.parameters;
+                var hasUncertainty = true;
                 switch (entryForCriterion.performance.type) {
+                  case 'exact':
+                    var performance = entryForCriterion.performance;
+                    if (performance.stdErr !== undefined) {
+                      label = performance.value + ' (' + Math.round(performance.stdErr*1000)/1000 + ')';
+                    } else if (performance.lowerBound !== undefined && performance.upperBound !== undefined) {
+                      label = performance.value + ' (' + performance.lowerBound +
+                        ',' + performance.upperBound + ')';
+                    } else {
+                      label = performance.value;
+                      hasUncertainty = false;
+                    }
+                    if (!performance.isNormal) {
+                      hasUncertainty = false;
+                    }
+                    break;
                   case 'dt':
-                    label = parameters.mu + ' ± ' + parameters.stdErr + ' (' + (parameters.dof + 1) + ')';
+                    label = parameters.mu + ' (' + Math.round(parameters.stdErr*1000)/1000 + '), ' + (parameters.dof + 1);
                     break;
                   case 'dnorm':
-                    label = parameters.mu + ' ± ' + parameters.sigma;
+                    label = parameters.mu + ' (' + Math.round(parameters.sigma*1000)/1000 + ')';
                     break;
                   case 'dbeta':
                     label = (parameters.alpha - 1) + ' / ' + (parameters.beta + parameters.alpha - 2);
@@ -76,7 +87,10 @@ define(['lodash'], function(_) {
                     label = (parameters.alpha - 0.001) + ' / ' + (parameters.beta - 0.001);
                     break;
                 }
-                accum[entryForCriterion.alternative] = label;
+                accum[entryForCriterion.alternative] = {
+                  label: label,
+                  hasUncertainty: hasUncertainty
+                };
                 return accum;
               }, {})
           };
@@ -90,16 +104,19 @@ define(['lodash'], function(_) {
       }, {});
     }
 
-    function isStudyDataAvailable(effectsTableInfo){
-      return _.find(effectsTableInfo, function(infoEntry) {
-        return !!(infoEntry.distributionType !== 'exact' && infoEntry.distributionType !== 'relative');
-      });
+    function isStudyDataAvailable(effectsTableInfo) {
+      return !!(_.find(effectsTableInfo, function(infoEntry) {
+        return infoEntry.distributionType !== 'relative' &&
+          _.find(infoEntry.studyDataLabelsAndUncertainty, function(labelAndUncertainty) {
+            return labelAndUncertainty.hasUncertainty;
+          });
+      }));
     }
 
     return {
       buildEffectsTable: buildEffectsTable,
       createEffectsTableInfo: createEffectsTableInfo,
-      isStudyDataAvailable:isStudyDataAvailable
+      isStudyDataAvailable: isStudyDataAvailable
     };
   };
 

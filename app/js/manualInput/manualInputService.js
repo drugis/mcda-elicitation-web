@@ -10,33 +10,38 @@ define(['lodash', 'angular'], function(_) {
               if (isNullNaNOrUndefined(input.value)) {
                 return 'Missing or invalid input';
               } else {
-                return 'point estimate(' + input.value + ')';
+                return input.value + '\nDistribution: none';
               }
               break;
             case 'exactSE':
               if (isNullNaNOrUndefined(input.value) || isNullNaNOrUndefinedOrNegative(input.stdErr)) {
                 return 'Missing or invalid input';
               } else {
-                return 'point estimate(' + input.value + ' ± ' + input.stdErr + ')';
+                return input.value + ' (' + input.stdErr + ')\nDistribution: ' + (input.isNormal ? 'normal' : 'none');
               }
               break;
-            case 'exactConv':
+            case 'exactConf':
               if (isNullNaNOrUndefined(input.value) ||
-                isNullNaNOrUndefined(input.lowerbound) ||
-                isNullNaNOrUndefined(input.upperbound)) {
+                isNullNaNOrUndefined(input.lowerBound) ||
+                isNullNaNOrUndefined(input.upperBound)) {
                 return 'Missing or invalid input';
+              } else if (input.lowerBound > input.value || input.value > input.upperBound) {
+                return 'Lower bound too high, or upper bound too low';
               } else {
-                return 'point estimate(' + input.value + ' (' + input.lowerbound + ',' + input.upperbound + '))';
+                return input.value + ' (' + input.lowerBound + ',' + input.upperBound + ')\nDistribution: ' + (input.isNormal ? 'normal' : 'none');
               }
               break;
           }
         },
         isInvalidInput: function(input) {
           var invalidStdErrOrBounds = false;
-          if(input.stdErr){
+          if (input.stdErr) {
             invalidStdErrOrBounds = isNullNaNOrUndefinedOrNegative(input.stdErr);
-          } else if(input.lowerbound){
-            invalidStdErrOrBounds = isNullNaNOrUndefinedOrNegative(input.lowerbound) || isNullNaNOrUndefinedOrNegative(input.upperbound);
+          } else if (input.lowerBound) {
+            invalidStdErrOrBounds = isNullNaNOrUndefined(input.lowerBound) ||
+              isNullNaNOrUndefined(input.upperBound) ||
+              input.lowerBound > input.value ||
+              input.value > input.upperBound;
           }
           return isNullNaNOrUndefined(input.value) || invalidStdErrOrBounds;
         },
@@ -45,9 +50,9 @@ define(['lodash', 'angular'], function(_) {
             case 'exact':
               return _.pick(data, ['type', 'value']);
             case 'exactSE':
-              return _.pick(data, ['type', 'value', 'stdErr']);
-            case 'exactConv':
-              return _.pick(data, ['type', 'value', 'lowerbound', 'upperbound']);
+              return _.pick(data, ['type', 'value', 'stdErr', 'isNormal']);
+            case 'exactConf':
+              return _.pick(data, ['type', 'value', 'lowerBound', 'upperBound', 'isNormal']);
           }
         }
       },
@@ -56,7 +61,7 @@ define(['lodash', 'angular'], function(_) {
           if (distributionKnowledge.dnorm.isInvalidInput(input)) {
             return 'Missing or invalid input';
           } else {
-            return 'N(' + numberFilter(input.mu, 3) + ', ' + input.sigma + ')';
+            return numberFilter(input.mu, 3) + ' (' + numberFilter(input.sigma, 3) + ')\nDistribution: normal';
           }
         },
         isInvalidInput: function(input) {
@@ -74,11 +79,14 @@ define(['lodash', 'angular'], function(_) {
           if (distributionKnowledge.dbeta.isInvalidInput(input)) {
             return 'Missing or invalid input';
           } else {
-            return 'Beta(' + input.alpha + ', ' + input.beta + ')';
+            return (input.alpha-1) + ' / ' + (input.beta+input.alpha-2) + '\nDistribution: beta';
           }
         },
         isInvalidInput: function(input) {
-          return isNullNaNOrUndefined(input.alpha) || input.alpha <= 0 || isNullNaNOrUndefined(input.beta) || input.beta <= 0;
+          return isNullNaNOrUndefinedOrNegative(input.alpha) ||
+            input.alpha <= 0 ||
+            isNullNaNOrUndefined(input.beta) ||
+            input.beta <= 0;
         },
         buildPerformance: function(data) {
           return {
@@ -92,11 +100,13 @@ define(['lodash', 'angular'], function(_) {
           if (distributionKnowledge.dt.isInvalidInput(input)) {
             return 'Missing or invalid input';
           } else {
-            return 't(' + input.mu + ', ' + input.stdErr + ', ' + input.dof + ')';
+            return input.mu + ' (' + input.stdErr + '), ' + (input.dof + 1) + '\nDistribution: Student\'s t';
           }
         },
         isInvalidInput: function(input) {
-          return isNullNaNOrUndefined(input.mu) || isNullNaNOrUndefinedOrNegative(input.stdErr) || isNullNaNOrUndefined(input.dof);
+          return isNullNaNOrUndefined(input.mu) ||
+            isNullNaNOrUndefinedOrNegative(input.stdErr) ||
+            isNullNaNOrUndefined(input.dof);
         },
         buildPerformance: function(data) {
           return {
@@ -110,11 +120,14 @@ define(['lodash', 'angular'], function(_) {
           if (distributionKnowledge.dsurv.isInvalidInput(input)) {
             return 'Missing or invalid input';
           } else {
-            return 'Gamma(' + input.alpha + ', ' + input.beta + ')';
+            return (input.alpha - 0.001) + ' / ' + (input.beta - 0.001) + '\nDistribution: gamma';
           }
         },
         isInvalidInput: function(input) {
-          return isNullNaNOrUndefined(input.alpha) || input.alpha <= 0 || isNullNaNOrUndefined(input.beta) || input.beta <= 0;
+          return isNullNaNOrUndefined(input.alpha) ||
+            input.alpha <= 0 ||
+            isNullNaNOrUndefined(input.beta) ||
+            input.beta <= 0;
         },
         buildPerformance: function(data, criterion) {
           var parameters = _.pick(data, ['alpha', 'beta']);
@@ -160,14 +173,13 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function determineInitialDistributionType(criterion) {
+      var dataTypes = {
+        survival: 'dsurv',
+        dichotomous: 'dbeta',
+        continuous: 'dt'
+      };
       if (criterion.dataSource === 'study') {
-        if (criterion.dataType === 'survival') {
-          return 'dsurv';
-        } else if (criterion.dataType === 'dichotomous') {
-          return 'dbeta';
-        } else if (criterion.dataType === 'continuous') {
-          return 'dt';
-        }
+        return dataTypes[criterion.dataType];
       } else { // direct distribution input
         return criterion.dataType === 'survival' ? 'dsurv' : 'exact';
       }
@@ -201,22 +213,7 @@ define(['lodash', 'angular'], function(_) {
       var newData = {};
       // Exact input
       if (criterion.dataSource !== 'study') {
-        switch (inputCell.exactType) {
-          case 'exact':
-            return inputCell;
-          case 'exactSE':
-            return inputCell.normalised ? {
-              mu: inputCell.value,
-              sigma: inputCell.stdErr,
-              type: 'dnorm'
-            } : inputCell;
-          case 'exactConv':
-            return inputCell.normalised ? {
-              mu: inputCell.value,
-              sigma: inputCell.lowerbound + inputCell.upperbound, //FIXME
-              type: 'dnorm'
-            } : inputCell;
-        }
+        return inputCell;
       }
 
       // Study data input
@@ -262,21 +259,21 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function buildScale(criterion) {
-      var scale;
-      if (criterion.dataType === 'dichotomous') {
-        scale = [0, 1];
-      } else if (criterion.dataType === 'continuous') {
-        scale = [-Infinity, Infinity];
-      } else if (criterion.dataType === 'survival') {
-        if (criterion.summaryMeasure === 'mean' || criterion.summaryMeasure === 'median') {
-          scale = [0, Infinity];
-        } else if (criterion.summaryMeasure === 'survivalAtTime') {
-          scale = [0, 1];
-        }
-      } else {
-        scale = [-Infinity, Infinity];
+      switch (criterion.dataType) {
+        case 'dichotomous':
+          return [0, 1];
+        case 'continuous':
+          return [-Infinity, Infinity];
+        case 'survival':
+          if (criterion.summaryMeasure === 'mean' || criterion.summaryMeasure === 'median') {
+            return [0, Infinity];
+          } else if (criterion.summaryMeasure === 'survivalAtTime') {
+            return [0, 1];
+          }
+          break;
+        default:
+          return [-Infinity, Infinity];
       }
-      return scale;
     }
 
     function createInputFromOldWorkspace(criteria, alternatives, oldWorkspace, inputData) {
@@ -303,9 +300,16 @@ define(['lodash', 'angular'], function(_) {
             switch (tableEntry.performance.type) {
               case 'exact':
                 inputDataCell.value = tableEntry.performance.value;
-                if (tableEntry.performance.stdErr) { inputDataCell.stdErr = tableEntry.performance.stdErr; }
-                if (tableEntry.performance.lowerbound) { inputDataCell.lowerbound = tableEntry.performance.lowerbound; }
-                if (tableEntry.performance.upperbound) { inputDataCell.upperbound = tableEntry.performance.upperbound; }
+                inputDataCell.exactType = 'exact';
+                if (tableEntry.performance.stdErr) {
+                  inputDataCell.stdErr = tableEntry.performance.stdErr;
+                  inputDataCell.exactType = 'exactSE';
+                }
+                if (tableEntry.performance.lowerBound) {
+                  inputDataCell.lowerBound = tableEntry.performance.lowerBound;
+                  inputDataCell.upperBound = tableEntry.performance.upperBound;
+                  inputDataCell.exactType = 'exactConf';
+                }
                 break;
               case 'dt':
                 inputDataCell.sampleSize = tableEntry.performance.parameters.dof + 1;
@@ -372,6 +376,10 @@ define(['lodash', 'angular'], function(_) {
       });
     }
 
+    function inputToString(inputData) {
+      return distributionKnowledge[inputData.type].toString(inputData);
+    }
+
     // Private functions
     function buildCriteria(criteria) {
       var newCriteria = _.map(criteria, function(criterion) {
@@ -412,7 +420,7 @@ define(['lodash', 'angular'], function(_) {
       return newPerformanceTable;
     }
 
-    function isNullNaNOrUndefinedOrNegative(value){
+    function isNullNaNOrUndefinedOrNegative(value) {
       return isNullNaNOrUndefined(value) || value < 0;
     }
 
@@ -422,10 +430,6 @@ define(['lodash', 'angular'], function(_) {
 
     function isNullOrUndefined(value) {
       return value === null || value === undefined;
-    }
-    
-    function inputToString(inputData) {
-      return distributionKnowledge[inputData.type].toString(inputData);
     }
 
     return {
