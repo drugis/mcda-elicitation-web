@@ -1,8 +1,8 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['numberFilter'];
+  var dependencies = [];
 
-  var EffectsTableService = function(numberFilter) {
+  var EffectsTableService = function() {
     function flattenValueTreeChildren(child) {
       if (child.criteria) {
         return child.criteria;
