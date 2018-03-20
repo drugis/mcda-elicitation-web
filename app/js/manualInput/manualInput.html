@@ -168,6 +168,7 @@
           <tr>
             <th></th>
             <th>Description</th>
+            <th>Unit of measurement</th>
             <th ng-repeat="treatment in state.alternatives" style="min-width:80px">{{treatment.title}}</th>
           </tr>
         </thead>
@@ -175,6 +176,7 @@
           <tr ng-repeat="criterion in state.criteria">
             <td>{{criterion.title}}</td>
             <td>{{criterion.description}}</td>
+            <td>{{criterion.unitOfMeasurement}}</td>
             <td ng-repeat="treatment in state.alternatives">
               <effect-input-helper criterion="criterion" treatment="treatment" input-data="state.inputData[criterion.hash][treatment.hash]" change-callback="checkInputData"></effect-input-helper>
             </td>
