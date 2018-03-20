@@ -27,15 +27,16 @@
           <th>Unit
             <inline-help help-key="criterion-unit"></inline-help>
           </th>
-          <th>description</th>
+          <th>Description</th>
           <th>Reference
             <inline-help help-key="criterion-source"></inline-help>
           </th>
+          <th>Uncertainties / Strength of evidence</th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="row in rows">
-          <td ng-if="row.isHeaderRow" colspan="5">
+          <td ng-if="row.isHeaderRow" colspan="6">
             <div class="main-header">
               {{row.headerText}}
             </div>
@@ -65,6 +66,7 @@
             <a ng-if="problem.criteria[row].sourceLink" href="{{problem.criteria[row].sourceLink}}">{{problem.criteria[row].source}}</a>
             <span ng-if="!problem.criteria[row].sourceLink">{{problem.criteria[row].source}}</span>
           </td>
+          <td ng-if="!row.isHeaderRow">{{problem.criteria[row].strengthOfEvidence}}</td>
         </tr>
       </tbody>
     </table>
@@ -96,7 +98,7 @@
               <div class="cell small-11">
                 <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editAlternative(alternative)">
                     <i class="fa fa-edit"></i>
-                  </a> {{alternative.title}}
+                  </a>{{alternative.title}}
               </div>
             </div>
           </td>
@@ -143,11 +145,14 @@
           <th class="text-center" ng-repeat="alternative in alternatives">
             {{alternative.title}}</th>
           <th ng-show="toggledColumns['references']" ng-if="references.has">References</th>
+          <th ng-show="toggledColumns['strength']">Uncertainties / Strength of evidence
+            <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
+          </th>
         </tr>
       </thead>
       <tbody class="main">
         <tr ng-repeat="criterionId in rows">
-          <td ng-if="criterionId.isHeaderRow" class="group-header" colspan="{{(references.has ? 4 : 3) + nrAlternatives}}">
+          <td ng-if="criterionId.isHeaderRow" class="group-header" colspan="{{(references.has ? 5 : 4) + nrAlternatives}}">
             <div class="main-header">
               {{criterionId.headerText}}
             </div>
@@ -163,7 +168,7 @@
           </td>
           <td ng-if="!criterionId.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
             <effects-table-scales-cell ng-show="!effectsTableInfo[criterionId].hasStudyData || !showStudyData.value" scales="scales[criterionId][alternative.id]" uncertainty="effectsTableInfo[criterionId].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || effectsTableInfo[criterionId].distributionType === 'relative'"></effects-table-scales-cell>
-             <div ng-if="effectsTableInfo[criterionId].hasStudyData && showStudyData.value">
+            <div ng-if="effectsTableInfo[criterionId].hasStudyData && showStudyData.value">
               {{effectsTableInfo[criterionId].studyDataLabelsAndUncertainty[alternative.id].label}}
             </div>
           </td>
@@ -173,6 +178,7 @@
             </a>
             <span ng-if="!problem.criteria[criterionId].sourceLink">{{problem.criteria[criterionId].source}}</span>
           </td>
+          <td ng-if="!criterionId.isHeaderRow" ng-show="toggledColumns['strength']">{{problem.criteria[criterionId].strengthOfEvidence}}</td>
         </tr>
       </tbody>
     </table>

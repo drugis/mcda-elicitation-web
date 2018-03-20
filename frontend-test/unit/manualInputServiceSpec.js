@@ -184,7 +184,8 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
               unitOfMeasurement: 'particles',
               scale: [-Infinity, Infinity],
               source: undefined,
-              sourceLink: undefined
+              sourceLink: undefined,
+              strengthOfEvidence: undefined
             },
             'unfavorable criterion': {
               title: 'unfavorable criterion',
@@ -192,7 +193,8 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
               unitOfMeasurement: 'particles',
               scale: [-Infinity, Infinity],
               source: undefined,
-              sourceLink: undefined
+              sourceLink: undefined,
+              strengthOfEvidence: undefined
             }
           },
           alternatives: {
@@ -312,7 +314,8 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
               unitOfMeasurement: 'hour',
               scale: [0, Infinity],
               source: undefined,
-              sourceLink: undefined
+              sourceLink: undefined,
+              strengthOfEvidence: undefined
             },
             'survival at time': {
               title: 'survival at time',
@@ -320,7 +323,8 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() 
               unitOfMeasurement: 'Proportion',
               scale: [0, 1],
               source: undefined,
-              sourceLink: undefined
+              sourceLink: undefined,
+              strengthOfEvidence: undefined
             }
           },
           alternatives: {

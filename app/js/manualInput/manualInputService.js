@@ -346,7 +346,7 @@ define(['lodash', 'angular'], function(_) {
 
     function copyWorkspaceCriteria(workspace) {
       return _.map(workspace.problem.criteria, function(criterion, key) {
-        var newCrit = _.pick(criterion, ['title', 'description', 'source', 'sourceLink', 'unitOfMeasurement']);
+        var newCrit = _.pick(criterion, ['title', 'description', 'source', 'sourceLink', 'unitOfMeasurement', 'strengthOfEvidence']);
         if (workspace.problem.valueTree) {
           newCrit.isFavorable = _.includes(workspace.problem.valueTree.children[0].criteria, key) ? true : false;
         }
@@ -390,7 +390,8 @@ define(['lodash', 'angular'], function(_) {
           unitOfMeasurement: criterion.unitOfMeasurement,
           scale: buildScale(criterion),
           source: criterion.source,
-          sourceLink: criterion.sourceLink
+          sourceLink: criterion.sourceLink,
+          strengthOfEvidence: criterion.strengthOfEvidence
         };
       });
       return _.keyBy(newCriteria, 'title');
