@@ -31,7 +31,7 @@
           <th>Reference
             <inline-help help-key="criterion-source"></inline-help>
           </th>
-          <th>Uncertainties / Strength of evidence</th>
+          <th ng-if="isStandAlone">Uncertainties / Strength of evidence</th>
         </tr>
       </thead>
       <tbody>
@@ -66,7 +66,7 @@
             <a ng-if="problem.criteria[row].sourceLink" href="{{problem.criteria[row].sourceLink}}">{{problem.criteria[row].source}}</a>
             <span ng-if="!problem.criteria[row].sourceLink">{{problem.criteria[row].source}}</span>
           </td>
-          <td ng-if="!row.isHeaderRow">{{problem.criteria[row].strengthOfEvidence}}</td>
+          <td ng-if="!row.isHeaderRow && isStandAlone">{{problem.criteria[row].strengthOfEvidence}}</td>
         </tr>
       </tbody>
     </table>
@@ -145,7 +145,7 @@
           <th class="text-center" ng-repeat="alternative in alternatives">
             {{alternative.title}}</th>
           <th ng-show="toggledColumns['references']" ng-if="references.has">References</th>
-          <th ng-show="toggledColumns['strength']">Uncertainties / Strength of evidence
+          <th ng-if="isStandAlone" ng-show="toggledColumns['strength']">Uncertainties / Strength of evidence
             <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
           </th>
         </tr>
@@ -178,7 +178,7 @@
             </a>
             <span ng-if="!problem.criteria[criterionId].sourceLink">{{problem.criteria[criterionId].source}}</span>
           </td>
-          <td ng-if="!criterionId.isHeaderRow" ng-show="toggledColumns['strength']">{{problem.criteria[criterionId].strengthOfEvidence}}</td>
+          <td ng-if="!criterionId.isHeaderRow && isStandAlone" ng-show="toggledColumns['strength']">{{problem.criteria[criterionId].strengthOfEvidence}}</td>
         </tr>
       </tbody>
     </table>
