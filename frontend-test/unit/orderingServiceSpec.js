@@ -198,5 +198,20 @@ define(['angular-mocks', 'mcda/workspace/workspace'], function() {
         rootScope.$digest();
       });
     });
+
+    describe('getNewOrdering', function() {
+      it('should return a new ordering', function() {
+        var problem = {
+          alternatives: { alt1: {}, alt2: {} },
+          criteria: { crit1: {}, crit2: {} }
+        };
+        var result = orderingService.getNewOrdering(problem);
+        var expectedResult = {
+          alternatives: [{ id: 'alt1' }, { id: 'alt2' }],
+          criteria: [{ id: 'crit1' }, { id: 'crit2' }]
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
   });
 });

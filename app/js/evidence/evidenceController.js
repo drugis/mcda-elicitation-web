@@ -139,12 +139,31 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
           criterion: function() {
             return criterion;
           },
+          criterionId: function() {
+            return criterionKey;
+          },
           criteria: function() {
             return _.pick($scope.problem.criteria, 'title');
           },
+          valueTree: function() {
+            return $scope.valueTree;
+          },
           callback: function() {
-            return function(newCriterion) {
+            return function(newCriterion, favorabilityChanged) {
               $scope.workspace.problem.criteria[criterionKey] = _.omit(newCriterion, 'id');
+              if (favorabilityChanged) {
+                var toRemove = !!_.find($scope.valueTree.children[0].criteria, function(crit) {
+                  return crit === criterionKey;
+                }) ? 0 : 1;
+                var toAdd = toRemove === 1 ? 0 : 1;
+                _.remove($scope.valueTree.children[toRemove].criteria, function(crit){
+                  return crit === criterionKey;
+                });
+                $scope.valueTree.children[toAdd].criteria.push(criterionKey);
+              }
+              // update criterionOrder
+              var ordering = OrderingService.getNewOrdering($scope.workspace.problem);
+              OrderingService.saveOrdering($stateParams, ordering.criteria, ordering.alternatives);
               WorkspaceResource.save($stateParams, $scope.workspace).$promise.then(function() {
                 $state.reload();
               });
