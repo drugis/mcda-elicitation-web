@@ -7,12 +7,7 @@ define(['lodash'], function(_) {
       return OrderingResource.get(stateParams).$promise.then(function(response) {
         var ordering = response.ordering;
         if (!ordering) {
-          return {
-            alternatives: _.map(problem.alternatives, function(alternative, alternativeId) {
-              return _.extend({}, alternative, { id: alternativeId });
-            }),
-            criteria: getOrderedCriteria(problem)
-          };
+          return getNewOrdering(problem);
         }
 
         var orderedAlternatives = _(ordering.alternatives)
@@ -40,6 +35,15 @@ define(['lodash'], function(_) {
           criteria: orderedCriteria
         };
       });
+    }
+
+    function getNewOrdering(problem) {
+      return {
+        alternatives: _.map(problem.alternatives, function(alternative, alternativeId) {
+          return _.extend({}, alternative, { id: alternativeId });
+        }),
+        criteria: getOrderedCriteria(problem)
+      };
     }
 
     function saveOrdering(stateParams, criteria, alternatives) {
@@ -76,7 +80,8 @@ define(['lodash'], function(_) {
 
     return {
       getOrderedCriteriaAndAlternatives: getOrderedCriteriaAndAlternatives,
-      saveOrdering: saveOrdering
+      saveOrdering: saveOrdering,
+      getNewOrdering: getNewOrdering
     };
   };
   return dependencies.concat(OrderingService);

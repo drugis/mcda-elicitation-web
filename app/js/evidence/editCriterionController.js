@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modalInstance', 'criterion', 'criteria', 'callback'];
-  var EditCriterionController = function($scope, $modalInstance, criterion, criteria, callback) {
+  var dependencies = ['$scope', '$modalInstance', 'criterion', 'criterionId', 'criteria', 'valueTree', 'callback'];
+  var EditCriterionController = function($scope, $modalInstance, criterion, criterionId, criteria, valueTree, callback) {
     // functions
     $scope.cancel = cancel;
     $scope.save = save;
@@ -14,15 +14,25 @@ define(['lodash'], function(_) {
     $scope.isTitleUnique = true;
     $scope.isValidUrl = true;
     $scope.criteria = criteria;
+    $scope.valueTree = valueTree;
+    if ($scope.valueTree.children) {
+      $scope.favorabilityStatus = {};
+      $scope.favorabilityStatus.originalFavorability = !!_.find($scope.valueTree.children[0].criteria, function(crit) {
+        return crit === criterionId;
+      });
+      $scope.favorabilityStatus.isFavorable = _.cloneDeep($scope.favorabilityStatus.originalFavorability);
+    }
 
     function save() {
-      callback($scope.criterion);
+      var favorabilityChanged = $scope.favorabilityStatus.originalFavorability !== $scope.favorabilityStatus.isFavorable;
+      callback($scope.criterion, favorabilityChanged);
       $modalInstance.close();
     }
 
     function cancel() {
       $modalInstance.close();
     }
+
 
     function checkForDuplicateNames() {
       if (_.find($scope.criteria, function(criterion) {
