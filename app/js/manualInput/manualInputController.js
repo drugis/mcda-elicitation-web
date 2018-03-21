@@ -1,14 +1,24 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
-  var dependencies = ['$scope', '$modal', '$state', '$stateParams', '$transitions',
+  var dependencies = ['$scope',
+    '$modal',
+    '$state',
+    '$stateParams',
+    '$transitions',
     'InProgressResource',
     'ManualInputService',
+    'OrderingService',
     'WorkspaceResource',
     'addKeyHashToObject'
   ];
-  var ManualInputController = function($scope, $modal, $state, $stateParams, $transitions,
+  var ManualInputController = function($scope,
+    $modal,
+    $state,
+    $stateParams,
+    $transitions,
     InProgressResource,
     ManualInputService,
+    OrderingService,
     WorkspaceResource,
     addKeyHashToObject
   ) {
@@ -26,6 +36,11 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.resetData = resetData;
     $scope.resetRow = resetRow;
     $scope.saveInProgress = saveInProgress;
+    $scope.favorabilityChanged = favorabilityChanged;
+    $scope.alternativeUp = alternativeUp;
+    $scope.alternativeDown = alternativeDown;
+    $scope.criterionUp = criterionUp;
+    $scope.criterionDown = criterionDown;
 
     // init
     $scope.treatmentInputField = {}; //scoping
@@ -137,6 +152,7 @@ define(['lodash', 'angular'], function(_, angular) {
               }
               $scope.state.criteria.push(newCriterion);
               findUnknownCriteria($scope.state.criteria);
+              favorabilityChanged();
             };
           },
           oldCriterion: function() {
@@ -182,11 +198,21 @@ define(['lodash', 'angular'], function(_, angular) {
         if ($stateParams.inProgressId) {
           InProgressResource.delete($stateParams);
         }
-        $scope.dirty = false;
-        $state.go('evidence', {
-          workspaceId: workspace.id,
-          problemId: workspace.defaultSubProblemId,
-          id: workspace.defaultScenarioId
+        var criteria = _.map($scope.state.criteria, function(criterion) {
+          return { id: criterion.title };
+        });
+        var alternatives = _.map($scope.state.alternatives, function(alternative) {
+          return { id: alternative.title };
+        });
+        OrderingService.saveOrdering(_.merge({}, {
+          workspaceId: workspace.id
+        }, $stateParams), criteria, alternatives).then(function() {
+          $scope.dirty = false;
+          $state.go('evidence', {
+            workspaceId: workspace.id,
+            problemId: workspace.defaultSubProblemId,
+            id: workspace.defaultScenarioId
+          });
         });
       });
       return problem;
@@ -211,12 +237,34 @@ define(['lodash', 'angular'], function(_, angular) {
       });
     }
 
-    $scope.favorabilityChanged = favorabilityChanged;
-
     function favorabilityChanged() {
       $scope.hasMissingFavorability = _.find($scope.state.criteria, function(criterion) {
         return criterion.isFavorable === undefined;
       });
+    }
+
+    function alternativeUp(idx) {
+      var mem = $scope.state.alternatives[idx];
+      $scope.state.alternatives[idx] = $scope.state.alternatives[idx - 1];
+      $scope.state.alternatives[idx - 1] = mem;
+    }
+
+    function alternativeDown(idx) {
+      var mem = $scope.state.alternatives[idx];
+      $scope.state.alternatives[idx] = $scope.state.alternatives[idx + 1];
+      $scope.state.alternatives[idx + 1] = mem;
+    }
+
+    function criterionUp(idx) {
+      var mem = $scope.state.criteria[idx];
+      $scope.state.criteria[idx] = $scope.state.criteria[idx - 1];
+      $scope.state.criteria[idx - 1] = mem;
+    }
+
+    function criterionDown(idx) {
+      var mem = $scope.state.criteria[idx];
+      $scope.state.criteria[idx] = $scope.state.criteria[idx + 1];
+      $scope.state.criteria[idx + 1] = mem;
     }
   };
   return dependencies.concat(ManualInputController);

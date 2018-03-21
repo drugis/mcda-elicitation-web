@@ -33,7 +33,7 @@
     <div class="cell">
       <label>
         Use favorability
-        <inline-help help-key="favorability"></inline-help>: 
+        <inline-help help-key="favorability"></inline-help>:
         <input type="checkbox" ng-model="state.useFavorability" ng-change="favorabilityChanged()">
       </label>
     </div>
@@ -53,8 +53,12 @@
               <inline-help help-key="criterion-unit"></inline-help>
             </th>
             <th>description</th>
-            <th>Reference <inline-help help-key="criterion-source"></inline-help></th>
-            <th>Uncertainties / Strength of evidence <!-- <inline-help help-key="strength-of-evidence"></inline-help> --></th>
+            <th>Reference
+              <inline-help help-key="criterion-source"></inline-help>
+            </th>
+            <th>Uncertainties / Strength of evidence
+              <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -65,8 +69,31 @@
           </tr>
           <tr ng-repeat="criterion in state.criteria">
             <td>
-              <a ng-click="removeCriterion(criterion)" tooltip="Remove criterion"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a>
-              <a ng-click="openCriterionModal(criterion)" tooltip="Edit criterion"><i class="fa fa-edit icon-fixed-width"></i></a> {{criterion.title}}
+              <div class="grid-x">
+                <div class="cell small-1">
+                  <a ng-click="removeCriterion(criterion)" tooltip="Remove criterion"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a>
+                </div>
+                <div class="cell small-1">
+                  <a ng-click="openCriterionModal(criterion)" tooltip="Edit criterion"><i class="fa fa-edit icon-fixed-width"></i></a>
+                </div>
+                <div class="cell small-1">
+                  <div style="line-height: 10px; margin-bottom: 4px;">
+                    <a ng-click="criterionUp($index)" class="nav-arrow" ng-if="$index !== 0">
+                      <i style="line-height:0px;" class="fa fa-caret-up"></i>
+                    </a>
+                    <i ng-if="$index === 0" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
+                  </div>
+                  <div style="line-height: 10px;">
+                    <a ng-click="criterionDown($index)" class="nav-arrow" ng-if="$index !== state.criteria.length-1">
+                      <i style="line-height:0px;" class="fa fa-caret-down"></i>
+                    </a>
+                    <i ng-if="$index === state.criteria.length-1" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
+                  </div>
+                </div>
+                <div class="cell small-9">
+                  {{criterion.title}}
+                </div>
+              </div>
             </td>
             <td ng-if="state.useFavorability">{{criterion.isFavorable}}</td>
             <td style="color: {{criterion.dataType === 'Unknown'? 'red' :''}};">{{criterion.dataType}}</td>
@@ -112,7 +139,31 @@
             </td>
           </tr>
           <tr ng-repeat="alternative in state.alternatives">
-            <td><a ng-click="removeTreatment(alternative)" tooltip="Remove alternative"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a> {{alternative.title}}
+            <td>
+              <div class="grid-x">
+                <div class="cell small-1">
+                  <a ng-click="removeTreatment(alternative)" tooltip="Remove alternative">
+                    <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
+                  </a>
+                </div>
+                <div class="cell small-1">
+                  <div style="line-height: 10px; margin-bottom: 4px;">
+                    <a ng-click="alternativeUp($index)" class="nav-arrow" ng-if="$index !== 0">
+                      <i style="line-height:0px;" class="fa fa-caret-up"></i>
+                    </a>
+                    <i ng-if="$index === 0" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
+                  </div>
+                  <div style="line-height: 10px;">
+                    <a ng-click="alternativeDown($index)" class="nav-arrow" ng-if="$index !== state.alternatives.length-1">
+                      <i style="line-height:0px;" class="fa fa-caret-down"></i>
+                    </a>
+                    <i ng-if="$index === state.alternatives.length-1" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
+                  </div>
+                </div>
+                <div class="cell small-10">
+                  {{alternative.title}}
+                </div>
+              </div>
             </td>
           </tr>
         </tbody>

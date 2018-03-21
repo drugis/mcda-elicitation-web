@@ -45,11 +45,15 @@
             <div class="grid-x">
               <div ng-if="editMode.isUserOwner" class="cell small-2">
                 <div style="line-height: 10px; margin-bottom: 4px;">
-                  <a ng-click="criterionUp(getIndex(criteria, row))" class="nav-arrow" ng-if="getIndex(criteria, row) !== 0 && getIndex(criteria, row) !== problem.valueTree.children[0].criteria.length"><i style="line-height:0px;" class="fa fa-caret-up"></i></a>
+                  <a ng-click="criterionUp(getIndex(criteria, row))" class="nav-arrow" ng-if="getIndex(criteria, row) !== 0 && getIndex(criteria, row) !== problem.valueTree.children[0].criteria.length">
+                    <i style="line-height:0px;" class="fa fa-caret-up"></i>
+                </a>
                   <i ng-if="getIndex(criteria, row) === 0 || getIndex(criteria, row) === problem.valueTree.children[0].criteria.length" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
                 </div>
                 <div style="line-height: 10px;">
-                  <a ng-click="criterionDown(getIndex(criteria, row))" class="nav-arrow" ng-if="getIndex(criteria, row) !== criteria.length-1 && getIndex(criteria, row) !== problem.valueTree.children[0].criteria.length-1"><i style="line-height:0px;" class="fa fa-caret-down"></i></a>
+                  <a ng-click="criterionDown(getIndex(criteria, row))" class="nav-arrow" ng-if="getIndex(criteria, row) !== criteria.length-1 && getIndex(criteria, row) !== problem.valueTree.children[0].criteria.length-1">
+                    <i style="line-height:0px;" class="fa fa-caret-down"></i>
+                </a>
                   <i ng-if="getIndex(criteria, row) === criteria.length-1 || getIndex(criteria, row) === problem.valueTree.children[0].criteria.length-1" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
                 </div>
               </div>
