@@ -24,7 +24,7 @@ define(['lodash'], function(_) {
     }
 
     function save() {
-      var favorabilityChanged = $scope.favorabilityStatus.originalFavorability !== $scope.favorabilityStatus.isFavorable;
+      var favorabilityChanged = $scope.valueTree.children ? $scope.favorabilityStatus.originalFavorability !== $scope.favorabilityStatus.isFavorable : false;
       callback($scope.criterion, favorabilityChanged);
       $modalInstance.close();
     }
