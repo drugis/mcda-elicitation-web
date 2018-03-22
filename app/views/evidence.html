@@ -43,7 +43,7 @@
           </td>
           <td ng-if="!row.isHeaderRow">
             <div class="grid-x">
-              <div ng-if="editMode.isUserOwner" class="cell small-2">
+              <div class="cell small-2" ng-if="editMode.isUserOwner">
                 <div style="line-height: 10px; margin-bottom: 4px;">
                   <a ng-click="criterionUp(getIndex(criteria, row))" class="nav-arrow" ng-if="getIndex(criteria, row) !== 0 && getIndex(criteria, row) !== problem.valueTree.children[0].criteria.length">
                     <i style="line-height:0px;" class="fa fa-caret-up"></i>
@@ -58,9 +58,10 @@
                 </div>
               </div>
               <div class="cell small-10">
+                <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editCriterion(problem.criteria[row], row)">
+                  <i class="fa fa-edit"></i>
+                </a>
                 {{problem.criteria[row].title}}
-                <a class="right" ng-if="editMode.isUserOwner && isStandAlone" ng-click="editCriterion(problem.criteria[row], row)">
-                <i class="fa fa-edit"></i></a>
               </div>
             </div>
           </td>
