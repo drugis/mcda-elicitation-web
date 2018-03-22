@@ -72,16 +72,16 @@
               <div class="grid-x">
                 <div class="cell small-2">
                   <div style="line-height: 10px; margin-bottom: 4px;">
-                    <a ng-if="$index !== 0 && !(!criterion.isFavorable && state.criteria[$index-1].isFavorable)" ng-click="criterionUp($index)" class="nav-arrow">
+                    <a ng-if="$index !== 0 && (!(!criterion.isFavorable && state.criteria[$index-1].isFavorable) || !state.useFavorability)" ng-click="criterionUp($index)" class="nav-arrow">
                       <i style="line-height:0px;" class="fa fa-caret-up"></i>
                     </a>
-                    <i ng-if="$index === 0 || (!criterion.isFavorable && state.criteria[$index-1].isFavorable)" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
+                    <i ng-if="$index === 0 || (!criterion.isFavorable && state.criteria[$index-1].isFavorable && state.useFavorability)" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
                   </div>
                   <div style="line-height: 10px;">
-                    <a ng-if="$index !== state.criteria.length-1 && !(criterion.isFavorable && !state.criteria[$index+1].isFavorable)" ng-click="criterionDown($index)" class="nav-arrow">
+                    <a ng-if="$index !== state.criteria.length-1 && (!(criterion.isFavorable && !state.criteria[$index+1].isFavorable) || !state.useFavorability)" ng-click="criterionDown($index)" class="nav-arrow">
                       <i style="line-height:0px;" class="fa fa-caret-down"></i>
                     </a>
-                    <i ng-if="$index === state.criteria.length-1 || (criterion.isFavorable && !state.criteria[$index+1].isFavorable)" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
+                    <i ng-if="$index === state.criteria.length-1 || (criterion.isFavorable && !state.criteria[$index+1].isFavorable && state.useFavorability)" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
                   </div>
                 </div>
                 <div class="cell small-10">
