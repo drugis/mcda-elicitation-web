@@ -78,6 +78,10 @@
     select "^1.1.2"
     tiny-emitter "^1.0.0"
 
+"@bower_components/core-js@zloirock/core-js#^2.5.3":
+  version "2.5.3"
+  resolved "https://codeload.github.com/zloirock/core-js/tar.gz/f96b8d8afaebda5f49ac213627218f841c8692b4"
+
 "@bower_components/d3@mbostock-bower/d3-bower#~3.5.5", "@bower_components/d3@mbostock-bower/d3-bower#~3.5.6":
   version "0.0.0"
   resolved "https://codeload.github.com/mbostock-bower/d3-bower/tar.gz/7a826d211d5067867debf9ce24a9987e0cb02b6e"
@@ -89,10 +93,6 @@
 "@bower_components/error-reporting@drugis/error-reporting#~1.2.1":
   version "0.0.0"
   resolved "https://codeload.github.com/drugis/error-reporting/tar.gz/dc08775e674de116d86fc995321b1df3b1c2bc54"
-
-"@bower_components/es6-shim@https://github.com/paulmillr/es6-shim#master":
-  version "0.35.3"
-  resolved "https://github.com/paulmillr/es6-shim#8d7aec1403751686dbbd3c4fa13a7bb584a75bf3"
 
 "@bower_components/export-directive@drugis/export-directive#master":
   version "1.0.0"

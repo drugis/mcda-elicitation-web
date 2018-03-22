@@ -20,7 +20,8 @@ require.config({
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_SVG',
     'mmfoundation': 'bower_components/angular-foundation-6/dist/angular-foundation',
     'nvd3': 'bower_components/nvd3/build/nv.d3',
-    'mcda': '/js'
+    'mcda': '/js',
+    'core-js': 'bower_components/core-js/client/shim.min'
   },
   baseUrl: '.',
   shim: {
