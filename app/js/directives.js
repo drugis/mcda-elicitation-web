@@ -137,14 +137,14 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
           labelXAxis: '=',
           labelYAxis: '=',
           value: '=',
-          parseFn: '='
+          parseFn: '=',
+          yMargin: '='
         },
         link: function(scope, element, attrs) {
           var dim = getParentDimension(element);
           var svg = d3.select(element[0]).append('svg')
             .attr('width', '100%')
             .attr('height', '100%');
-
           scope.$watch('value', function(newVal) {
             if (!newVal) {
               svg.selectAll('g').remove();
@@ -166,7 +166,6 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
             var hasLabels = _.every(data, function(x) {
               return !_.isUndefined(x.labels);
             });
-
             if (hasLabels) {
               chart.xAxis.tickFormat(function(i) {
                 if (i % 1 === 0) {
@@ -183,21 +182,49 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
                 chart.xAxis.axisLabel(scope.labelXAxis);
               }
 
-              var y = d3.scale.linear().domain(chart.yAxis.scale().domain());
+              var yDomain = chart.yAxis.scale().domain();
+              var y;
+              if (scope.yMargin) {
+                var scaledDomain = [yDomain[0] - 0.01 * yDomain[0], yDomain[1] + 0.01 * yDomain[1]];
+                chart.forceY(scaledDomain);
+                y = d3.scale.linear().domain(scaledDomain);
+              } else {
+                y = d3.scale.linear().domain(yDomain);
+              }
               chart.yAxis.tickValues(y.ticks(6));
               chart.yAxis.tickFormat(d3.format(',.3g'));
               if (scope.labelYAxis) {
                 chart.yAxis.axisLabel(scope.labelYAxis);
               }
+              chart.dispatch.on('stateChange', function(event) {
+                if (scope.yMargin) { // fugly code :(
+                  var currentData = _.filter(data, function(dat, index) {
+                    return !event.disabled[index];
+                  });
+                  var minY = _.min(_.reduce(currentData,function(accum, dat) {
+                      return accum.concat(_.map(dat.values, function(value) {
+                        return value.y;
+                      }));
+                    },[]));
+                  var maxY = _.max(_.reduce(currentData,function(accum, dat) {
+                      return accum.concat(_.map(dat.values, function(value) {
+                        return value.y;
+                      }));
+                    },[]));
+                  var scaledDomain = [minY - 0.01 * minY, maxY + 0.01 * maxY];
+                  chart.forceY(scaledDomain);
+                  var y = d3.scale.linear().domain(scaledDomain);
+                  chart.yAxis.tickValues(y.ticks(6));
+                  chart.update();
+                }
+              });
             }
 
             chart.update();
-
           });
         }
       };
     });
-
 
     directives.directive('heat', function() {
       return {
