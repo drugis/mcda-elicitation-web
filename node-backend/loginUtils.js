@@ -3,13 +3,6 @@ var crypto = require('crypto'),
   httpStatus = require('http-status-codes'),
   logger = require('./logger');
 
-// check if startsWith is not a language feature
-if (typeof String.prototype.startsWith !== 'function') {
-  String.prototype.startsWith = function(str) {
-    return this.indexOf(str) === 0;
-  };
-}
-
 module.exports = {
 
   emailHashMiddleware: function(request, response) {
@@ -23,6 +16,6 @@ module.exports = {
         md5Hash: md5Hash
       });
     }
-   //  next(); //FIXME: mcda node does not call next, it should
+    //  next(); //FIXME: mcda node does not call next, it should
   }
 };
