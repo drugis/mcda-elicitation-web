@@ -34,7 +34,7 @@ define(['angular',
     'mcda/directives',
     'mcda/navbar/navbar',
     'mcda/preferences/preferences',
-    'mcda/evidence/toggleColumnsResource'
+    'mcda/effectsTable/toggleColumnsResource'
   ],
   function(angular, require, Config) {
 

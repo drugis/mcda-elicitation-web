@@ -3,8 +3,7 @@ var requires = [
   'mcda/evidence/evidenceController',
   'mcda/evidence/editAlternativeController',
   'mcda/evidence/editCriterionController',
-  'mcda/evidence/editTherapeuticContextController',
-  'mcda/evidence/toggleColumnsController'
+  'mcda/evidence/editTherapeuticContextController'
 ];
 define(['angular', 'angular-resource'].concat(requires), function(
   angular,
@@ -12,14 +11,12 @@ define(['angular', 'angular-resource'].concat(requires), function(
   EvidenceController,
   EditAlternativeController,
   EditCriterionController,
-  EditTherapeuticContextController,
-  ToggleColumnsController
+  EditTherapeuticContextController
 ) {
   return angular.module('elicit.evidence', [])
     .controller('EvidenceController', EvidenceController)
     .controller('EditAlternativeController', EditAlternativeController)
     .controller('EditCriterionController', EditCriterionController)
     .controller('EditTherapeuticContextController', EditTherapeuticContextController)
-    .controller('ToggleColumnsController', ToggleColumnsController)
     ;
 });

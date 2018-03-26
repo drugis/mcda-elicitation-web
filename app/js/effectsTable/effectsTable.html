@@ -5,9 +5,7 @@
     </h4>
   </div>
   <div class="cell large-4">
-    <button class="button" ng-click="toggleColumns()" ng-if="editMode.isUserOwner">
-      Show/hide columns
-    </button>
+    <toggle-columns toggled-columns="toggledColumns" edit-mode="editMode"></toggle-columns>
     <span class="toggle-text">Effects</span>
     <span class="switch">
         <input class="switch-input" id="showStudyDataToggle" type="checkbox" ng-model="showStudyData.value">

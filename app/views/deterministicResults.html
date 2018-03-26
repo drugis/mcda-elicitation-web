@@ -17,9 +17,7 @@
     <div class="cell">
       <h4>Effects table (exact or median values only) <inline-help help-key="effects-table"></inline-help></h4>
       <p><em>Values can be changed by clicking them.</em></p>
-      <button class="button" ng-click="toggleColumns()" ng-if="editMode.isUserOwner">
-        Show/hide columns
-      </button>
+      <toggle-columns toggled-columns="toggledColumns" edit-mode="editMode"></toggle-columns>
       <button class="button right small info clipboard-button" data-clipboard-target="#effectstable">
         <i class="fa fa-clipboard"></i> Copy to clipboard
       </button>

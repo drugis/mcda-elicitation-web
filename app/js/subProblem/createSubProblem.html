@@ -27,13 +27,11 @@
       <div class="cell">
         <button class="button" type="button" ng-click="reset()">Reset to default</button>
       </div>
-      <div class="cell large-6">
+      <div class="cell large-10">
         <h4>Criterion and alternative selection</h4>
       </div>
-      <div class="cell large-6">
-        <button class="button right" type="button" ng-click="toggleColumns()">
-          Show/hide columns
-        </button>
+      <div class="cell large-2">
+        <toggle-columns toggled-columns="toggledColumns" edit-mode="editMode"></toggle-columns>
       </div>
       <div class="cell">
         <table class="full-width effects-table">
