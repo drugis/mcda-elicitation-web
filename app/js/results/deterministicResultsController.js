@@ -2,18 +2,24 @@
 define(['clipboard', 'lodash'], function(Clipboard, _) {
   var dependencies = ['$scope',
     '$stateParams',
+    '$modal',
+    'ToggleColumnsResource',
     'currentScenario',
     'taskDefinition',
     'MCDAResultsService',
-    'OrderingService'
+    'OrderingService',
+    'mcdaRootPath'
   ];
 
   var DeterministicResultsController = function($scope,
     $stateParams,
+    $modal,
+    ToggleColumnsResource,
     currentScenario,
     taskDefinition,
     MCDAResultsService,
-    OrderingService) {
+    OrderingService,
+    mcdaRootPath) {
     // functions
     $scope.sensitivityScalesChanged = sensitivityScalesChanged;
     $scope.recalculateResults = recalculateResults;
@@ -22,6 +28,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.doPreferencesSensitivity = doPreferencesSensitivity;
     $scope.isEditing = isEditing;
     $scope.loadState = loadState;
+    $scope.toggleColumns = toggleColumns;
 
     // init
     $scope.scenario = currentScenario;
@@ -39,6 +46,21 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       });
     });
     new Clipboard('.clipboard-button');
+
+    ToggleColumnsResource.get($stateParams).$promise.then(function(response) {
+      var toggledColumns = response.toggledColumns;
+      if (toggledColumns) {
+        $scope.toggledColumns = toggledColumns;
+      } else {
+        $scope.toggledColumns = {
+          criteria: true,
+          description: true,
+          units: true,
+          references: true,
+          strength: true
+        };
+      }
+    });
 
     function isEditing(value) {
       $scope.sensitivityMeasurements.isEditing = value;
@@ -94,6 +116,26 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     function loadState() {
       $scope.aggregateState = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.aggregateState);
       $scope.state = initialize(taskDefinition.clean($scope.aggregateState));
+    }
+
+    function toggleColumns() {
+      $modal.open({
+        templateUrl: mcdaRootPath + 'js/evidence/toggleColumns.html',
+        controller: 'ToggleColumnsController',
+        resolve: {
+          toggledColumns: function() {
+            return $scope.toggledColumns;
+          },
+          callback: function() {
+            return function(newToggledColumns) {
+              $scope.toggledColumns = newToggledColumns;
+              ToggleColumnsResource.put($stateParams, {
+                toggledColumns: $scope.toggledColumns
+              });
+            };
+          }
+        }
+      });
     }
   };
   return dependencies.concat(DeterministicResultsController);

@@ -32,7 +32,8 @@ define(['lodash'], function(_) {
         criteria: value,
         description: value,
         units: value,
-        references: value
+        references: value,
+        strength: value
       };
     }
 

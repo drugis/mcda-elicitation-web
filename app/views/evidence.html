@@ -45,33 +45,32 @@
             <div class="grid-x">
               <div class="cell small-2" ng-if="editMode.isUserOwner">
                 <div style="line-height: 10px; margin-bottom: 4px;">
-                  <a ng-click="criterionUp(getIndex(criteria, row))" class="nav-arrow" ng-if="getIndex(criteria, row) !== 0 && getIndex(criteria, row) !== problem.valueTree.children[0].criteria.length">
+                  <a ng-click="criterionUp(getIndex(criteria, row.id))" class="nav-arrow" ng-if="getIndex(criteria, row.id) !== 0 && getIndex(criteria, row.id) !== problem.valueTree.children[0].criteria.length">
                     <i style="line-height:0px;" class="fa fa-caret-up"></i>
                 </a>
-                  <i ng-if="getIndex(criteria, row) === 0 || getIndex(criteria, row) === problem.valueTree.children[0].criteria.length" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
+                  <i ng-if="getIndex(criteria, row.id) === 0 || getIndex(criteria, row.id) === problem.valueTree.children[0].criteria.length" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
                 </div>
                 <div style="line-height: 10px;">
-                  <a ng-click="criterionDown(getIndex(criteria, row))" class="nav-arrow" ng-if="getIndex(criteria, row) !== criteria.length-1 && getIndex(criteria, row) !== problem.valueTree.children[0].criteria.length-1">
+                  <a ng-click="criterionDown(getIndex(criteria, row.id))" class="nav-arrow" ng-if="getIndex(criteria, row.id) !== criteria.length-1 && getIndex(criteria, row.id) !== problem.valueTree.children[0].criteria.length-1">
                     <i style="line-height:0px;" class="fa fa-caret-down"></i>
                 </a>
-                  <i ng-if="getIndex(criteria, row) === criteria.length-1 || getIndex(criteria, row) === problem.valueTree.children[0].criteria.length-1" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
+                  <i ng-if="getIndex(criteria, row.id) === criteria.length-1 || getIndex(criteria, row.id) === problem.valueTree.children[0].criteria.length-1" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
                 </div>
               </div>
               <div class="cell small-10">
-                <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editCriterion(problem.criteria[row], row)">
+                <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editCriterion(problem.criteria[row.id], row.id)">
                   <i class="fa fa-edit"></i>
-                </a>
-                {{problem.criteria[row].title}}
+                </a> {{problem.criteria[row.id].title}}
               </div>
             </div>
           </td>
-          <td ng-if="!row.isHeaderRow">{{problem.criteria[row].unitOfMeasurement}}</td>
-          <td ng-if="!row.isHeaderRow">{{problem.criteria[row].description}}</td>
+          <td ng-if="!row.isHeaderRow">{{problem.criteria[row.id].unitOfMeasurement}}</td>
+          <td ng-if="!row.isHeaderRow">{{problem.criteria[row.id].description}}</td>
           <td ng-if="!row.isHeaderRow">
-            <a ng-if="problem.criteria[row].sourceLink" href="{{problem.criteria[row].sourceLink}}">{{problem.criteria[row].source}}</a>
-            <span ng-if="!problem.criteria[row].sourceLink">{{problem.criteria[row].source}}</span>
+            <a ng-if="problem.criteria[row.id].sourceLink" href="{{problem.criteria[row.id].sourceLink}}">{{problem.criteria[row].source}}</a>
+            <span ng-if="!problem.criteria[row.id].sourceLink">{{problem.criteria[row.id].source}}</span>
           </td>
-          <td ng-if="!row.isHeaderRow && isStandAlone">{{problem.criteria[row].strengthOfEvidence}}</td>
+          <td ng-if="!row.isHeaderRow && isStandAlone">{{problem.criteria[row.id].strengthOfEvidence}}</td>
         </tr>
       </tbody>
     </table>
@@ -112,80 +111,7 @@
     </table>
   </div>
   <div class="cell underlined-div"></div>
-  <div class="cell large-10">
-    <h4>Effects Table
-      <inline-help help-key="effects-table"></inline-help>
-    </h4>
-  </div>
-  <div class="cell large-2">
-    <button class="button small info clipboard-button" data-clipboard-target="#effectstable">
-      <i class="fa fa-clipboard"></i> Copy to clipboard
-    </button>
-  </div>
-  <div class="cell large-2">
-    <button class="button" ng-click="toggleColumns()" ng-if="editMode.isUserOwner">
-      Show/hide columns
-    </button>
-  </div>
-  <div class="cell large-10">
-    <span class="toggle-text">Effects</span>
-    <span class="switch">
-        <input class="switch-input" id="showStudyDataToggle" type="checkbox" ng-model="showStudyData.value">
-        <label class="switch-paddle" ng-if="studyDataAvailable" for="showStudyDataToggle"></label>
-        <label class="switch-paddle" ng-if="!studyDataAvailable" tooltip-append-to-body="true" tooltip="Cannot show source data if all data is not distributed or relative"></label>
-    </span>
-    <span class="toggle-text">Source data</span>
-  </div>
   <div class="cell">
-    <table class="full-width effects-table" id="effectstable">
-      <thead>
-        <tr>
-          <th ng-show="toggledColumns['criteria']">Criterion
-            <inline-help help-key="criterion"></inline-help>
-          </th>
-          <th ng-show="toggledColumns['description']">Description</th>
-          <th ng-show="toggledColumns['units']">Units
-            <inline-help help-key="criterion-unit"></inline-help>
-          </th>
-          <th class="text-center" ng-repeat="alternative in alternatives">
-            {{alternative.title}}</th>
-          <th ng-show="toggledColumns['references']" ng-if="references.has">References</th>
-          <th ng-if="isStandAlone" ng-show="toggledColumns['strength']">Uncertainties / Strength of evidence
-            <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
-          </th>
-        </tr>
-      </thead>
-      <tbody class="main">
-        <tr ng-repeat="criterionId in rows">
-          <td ng-if="criterionId.isHeaderRow" class="group-header" colspan="{{(references.has ? 5 : 4) + nrAlternatives}}">
-            <div class="main-header">
-              {{criterionId.headerText}}
-            </div>
-          </td>
-          <td ng-if="!criterionId.isHeaderRow" ng-show="toggledColumns['criteria']">
-            {{problem.criteria[criterionId].title}}
-          </td>
-          <td ng-if="!criterionId.isHeaderRow" ng-show="toggledColumns['description']">
-            {{problem.criteria[criterionId].description}}
-          </td>
-          <td ng-if="!criterionId.isHeaderRow" ng-show="toggledColumns['units']">
-            {{problem.criteria[criterionId].unitOfMeasurement}}
-          </td>
-          <td ng-if="!criterionId.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
-            <effects-table-scales-cell ng-show="!effectsTableInfo[criterionId].hasStudyData || !showStudyData.value" scales="scales[criterionId][alternative.id]" uncertainty="effectsTableInfo[criterionId].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || effectsTableInfo[criterionId].distributionType === 'relative'"></effects-table-scales-cell>
-            <div ng-if="effectsTableInfo[criterionId].hasStudyData && showStudyData.value">
-              {{effectsTableInfo[criterionId].studyDataLabelsAndUncertainty[alternative.id].label}}
-            </div>
-          </td>
-          <td ng-if="references.has && !criterionId.isHeaderRow" ng-show="toggledColumns['references']">
-            <a ng-if="problem.criteria[criterionId].sourceLink" href="{{problem.criteria[criterionId].sourceLink}}">
-              {{problem.criteria[criterionId].source}}
-            </a>
-            <span ng-if="!problem.criteria[criterionId].sourceLink">{{problem.criteria[criterionId].source}}</span>
-          </td>
-          <td ng-if="!criterionId.isHeaderRow && isStandAlone" ng-show="toggledColumns['strength']">{{problem.criteria[criterionId].strengthOfEvidence}}</td>
-        </tr>
-      </tbody>
-    </table>
+    <effects-table criteria="criteria" alternatives="alternatives" value-tree="problem.valueTree" edit-mode="editMode" effects-table-info="effectsTableInfo" scales="scales"></effects-table>
   </div>
 </div>
