@@ -16,12 +16,11 @@ define(['lodash'], function(_) {
       filter(function(criterion) {
           return ids.indexOf(criterion.id) >= 0;
         })
-        .map('id')
         .value();
     }
 
-    function buildEffectsTable(problem, criteria) {
-      if (problem.valueTree) {
+    function buildEffectsTable(valueTree, criteria) {
+      if (valueTree) {
         var favorabilityHeader = {
           isHeaderRow: true,
           headerText: 'Favorable effects'
@@ -30,15 +29,15 @@ define(['lodash'], function(_) {
           isHeaderRow: true,
           headerText: 'Unfavorable effects'
         };
-        var orderedFavorableCriteria = pickOrderedIds(criteria, flattenValueTreeChildren(problem.valueTree.children[0]));
-        var orderedUnfavorableCriteria = pickOrderedIds(criteria, flattenValueTreeChildren(problem.valueTree.children[1]));
+        var orderedFavorableCriteria = pickOrderedIds(criteria, flattenValueTreeChildren(valueTree.children[0]));
+        var orderedUnfavorableCriteria = pickOrderedIds(criteria, flattenValueTreeChildren(valueTree.children[1]));
         return [].concat(
           favorabilityHeader,
           orderedFavorableCriteria,
           unFavorabilityHeader,
           orderedUnfavorableCriteria);
       } else {
-        return _.map(criteria, 'id');
+        return criteria;
       }
     }
 

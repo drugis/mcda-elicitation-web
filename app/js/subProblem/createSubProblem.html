@@ -4,38 +4,46 @@
       <div class="cell">
         <em>Here you can define a new problem as a subset of all evidence (by excluding criteria and alternatives), and with different scale ranges.</em>
       </div>
-      <div class="cell large-6">
+      <div class="cell">
         <h3>Create new problem</h3>
       </div>
-      <div class=cell large-6>
+      <div class="cell">
         Enter new problem name
       </div>
       <div class="cell large-6">
         <input type="text" ng-change="checkDuplicateTitle(subProblemState.title)" ng-model="subProblemState.title">
       </div>
-      <div class="cell large 6">
+      <div class="cell large-6"></div>
+      <div class="cell">
         <span style="display:block" class="alert" ng-if="isTitleDuplicate">
           <em>&nbsp;Duplicate name</em>
         </span>
       </div>
-      <div class="cell large 6">
+      <div class="cell">
         <span style="display:block" class="alert" ng-if="!subProblemState.title">
           <em>&nbsp;No name entered</em>
         </span>
       </div>
-      <div class="cell large-6">
+      <div class="cell">
         <button class="button" type="button" ng-click="reset()">Reset to default</button>
       </div>
-      <div class="cell">
+      <div class="cell large-6">
         <h4>Criterion and alternative selection</h4>
+      </div>
+      <div class="cell large-6">
+        <button class="button right" type="button" ng-click="toggleColumns()">
+          Show/hide columns
+        </button>
+      </div>
+      <div class="cell">
         <table class="full-width effects-table">
           <thead>
             <tr>
-              <th>Criterion
+              <th ng-show="toggledColumns['criteria']">Criterion
                 <inline-help help-key="criterion"></inline-help>
               </th>
-              <th>Description</th>
-              <th>Units
+              <th ng-show="toggledColumns['description']">Description</th>
+              <th ng-show="toggledColumns['units']">Units
                 <inline-help help-key="criterion-unit"></inline-help>
               </th>
               <th ng-class="{'disabled-header' : !subProblemState.alternativeInclusions[alternative.id]}" class="text-center" ng-repeat="alternative in alternatives">
@@ -44,11 +52,15 @@
                     <input style="margin:0;" ng-if="!isBaseline[alternative.id]" id="{{alternative.id}}" type="checkbox" ng-model="subProblemState.alternativeInclusions[alternative.id]" ng-change="updateInclusions()" ng-disabled="subProblemState.alternativeInclusions[alternative.id] && subProblemState.numberOfAlternativesSelected < 3">
                     <i ng-if="isBaseline[alternative.id]" class="fa fa-ban" tooltip="Cannot deselect baseline"></i>
                   </div>
-                <div class="cell">
-                  <label for="{{alternative.id}}">
-                    {{alternative.title}}
-                  </label>
-                </div>
+                  <div class="cell">
+                    <label for="{{alternative.id}}">
+                      {{alternative.title}}
+                    </label>
+                  </div>
+              </th>
+              <th ng-show="toggledColumns['references']">References</th>
+              <th ng-show="toggledColumns['strength']">Uncertainties / Strength of evidence
+                <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
               </th>
             </tr>
           </thead>
@@ -66,53 +78,55 @@
                   <span>&nbsp;</span>
                 </div>
               </td>
-              <td ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}">{{criterion.unitOfMeasurement}}</td>
+              <td ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}""  ng-show="toggledColumns['units']">{{criterion.unitOfMeasurement}}</td>
               <td ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternative.id] || !subProblemState.criterionInclusions[criterion.id]}" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
-                <div>
-                  {{scales.observed[criterion.id][alternative.id]['50%'] | number}}
-                  <br>
-                  <div class="uncertain" ng-if="!isExact(criterion.id, alternative.id)">
-                    {{scales.observed[criterion.id][alternative.id]['2.5%'] | number}}, {{scales.observed[criterion.id][alternative.id]['97.5%'] | number}}</div>
-                </div>
+                <effects-table-scales-cell scales="scales.observed[criterion.id][alternative.id]" uncertainty="effectsTableInfo[criterion.id].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || effectsTableInfo[criterion.id].distributionType === 'relative'"></effects-table-scales-cell>
               </td>
+              <td ng-show="toggledColumns['references']">
+                <a ng-if="criterion.sourceLink" href="{{criterion.sourceLink}}">
+                  {{criterion.source}}
+                </a>
+                <span ng-if="!criterion.sourceLink">{{criterion.source}}</span>
+              </td>
+              <td ng-show="toggledColumns['strength']">{{criterion.strengthOfEvidence}}</td>
             </tr>
           </tbody>
         </table>
-      </div>
-      <!-- Scale ranges -->
-      <div class="cell">
-        <h4>Scale ranges
+        </div>
+        <!-- Scale ranges -->
+        <div class="cell">
+          <h4>Scale ranges
         <inline-help help-key="scale-ranges"></inline-help>
       </h4>
-        <p>The area in red indicates the estimated 95% Credible Interval (CrI) of the measurements and should not be moved into or over.</p>
-      </div>
-      <div class="cell">
-        <ul class="no-bullet">
-          <li ng-repeat="criterion in scalesCriteria">
-            <h5 class="subheader"><criterion of="criterion"></criterion></h5>
-            <div class="grid-x">
-              <div class="cell large-1 text-center">
-                <a ng-click="scalesState[criterion.id].increaseFrom()" class="tiny round button slider-buttons">&lt;</a>
+          <p>The area in red indicates the estimated 95% Credible Interval (CrI) of the measurements and should not be moved into or over.</p>
+        </div>
+        <div class="cell">
+          <ul class="no-bullet">
+            <li ng-repeat="criterion in scalesCriteria">
+              <h5 class="subheader"><criterion of="criterion"></criterion></h5>
+              <div class="grid-x">
+                <div class="cell large-1 text-center">
+                  <a ng-click="scalesState[criterion.id].increaseFrom()" class="tiny round button slider-buttons">&lt;</a>
+                </div>
+                <div class="cell large-10">
+                  <rzslider rz-slider-model="choices[criterion.id].from" rz-slider-high="choices[criterion.id].to" rz-slider-options="scalesState[criterion.id].sliderOptions">
+                  </rzslider>
+                </div>
+                <div class="cell large-1 pull-3 text-center">
+                  <a ng-click="scalesState[criterion.id].increaseTo()" class="tiny round button slider-buttons">&gt;</a>
+                </div>
               </div>
-              <div class="cell large-10">
-                <rzslider rz-slider-model="choices[criterion.id].from" rz-slider-high="choices[criterion.id].to" rz-slider-options="scalesState[criterion.id].sliderOptions">
-                </rzslider>
-              </div>
-              <div class="cell large-1 pull-3 text-center">
-                <a ng-click="scalesState[criterion.id].increaseTo()" class="tiny round button slider-buttons">&gt;</a>
-              </div>
-            </div>
-            <br>
-          </li>
-        </ul>
+              <br>
+            </li>
+          </ul>
+        </div>
+        <div class="cell alert" ng-if="invalidSlider"><em>Invalid scale range</em></div>
+        <div class="cell large-6">
+          <button class="button success" type="submit" ng-disabled="isTitleDuplicate || !subProblemState.title || invalidSlider">Create</button>
+        </div>
       </div>
-      <div class="cell alert" ng-if="invalidSlider"><em>Invalid scale range</em></div>
-      <div class="cell large-6">
-        <button class="button success" type="submit" ng-disabled="isTitleDuplicate || !subProblemState.title || invalidSlider">Create</button>
-      </div>
+      <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
 </form>

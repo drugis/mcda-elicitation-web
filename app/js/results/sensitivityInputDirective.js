@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define([], function() {
   var ESC = 27;
   var ENTER = 13;
 
