@@ -65,7 +65,10 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
           scales: function() {
             return $scope.scales;
           },
-          effectsTableInfo: function(){
+          editMode: function() {
+            return $scope.editMode;
+          },
+          effectsTableInfo: function() {
             return $scope.effectsTableInfo;
           },
           callback: function() {
@@ -114,7 +117,7 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
         }
       });
     }
-    
+
   };
 
   return dependencies.concat(SubProblemController);

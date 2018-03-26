@@ -1,33 +1,31 @@
 'use strict';
 define(['lodash', 'angular'], function(_) {
 
-  var dependencies = ['$scope', '$stateParams', '$modalInstance', '$timeout', '$modal',
+  var dependencies = ['$scope', '$stateParams', '$modalInstance', '$timeout', 
     'ScenarioResource',
-    'ToggleColumnsResource',
     'SubProblemResource',
     'SubProblemService',
     'ScaleRangeService',
     'OrderingService',
-    'mcdaRootPath',
     'subProblems',
     'subProblem',
     'problem',
     'scales',
+    'editMode',
     'effectsTableInfo',
     'callback'
   ];
-  var CreateSubProblemController = function($scope, $stateParams, $modalInstance, $timeout, $modal,
+  var CreateSubProblemController = function($scope, $stateParams, $modalInstance, $timeout, 
     ScenarioResource,
-    ToggleColumnsResource,
     SubProblemResource,
     SubProblemService,
     ScaleRangeService,
     OrderingService,
-    mcdaRootPath,
     subProblems,
     subProblem,
     problem,
     scales,
+    editMode,
     effectsTableInfo,
     callback) {
     // functions
@@ -37,7 +35,6 @@ define(['lodash', 'angular'], function(_) {
     $scope.isCreationBlocked = isCreationBlocked;
     $scope.cancel = $modalInstance.close;
     $scope.reset = reset;
-    $scope.toggleColumns = toggleColumns;
 
     // init
     $scope.subProblems = subProblems;
@@ -47,21 +44,8 @@ define(['lodash', 'angular'], function(_) {
     $scope.isExact = _.partial(SubProblemService.isExact, $scope.problem.performanceTable);
     $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
     $scope.effectsTableInfo = effectsTableInfo;
-    ToggleColumnsResource.get($stateParams).$promise.then(function(response) {
-      var toggledColumns = response.toggledColumns;
-      if (toggledColumns) {
-        $scope.toggledColumns = toggledColumns;
-      } else {
-        $scope.toggledColumns = {
-          criteria: true,
-          description: true,
-          units: true,
-          references: true,
-          strength: true
-        };
-      }
-    });
-
+    $scope.editMode = editMode;
+    
     function isASliderInvalid() {
       $scope.invalidSlider = false;
       _.forEach($scope.scalesCriteria, function(criterion) {
@@ -159,25 +143,6 @@ define(['lodash', 'angular'], function(_) {
       $scope.subProblemState.title = titleCache;
     }
 
-    function toggleColumns() {
-      $modal.open({
-        templateUrl: mcdaRootPath + 'js/evidence/toggleColumns.html',
-        controller: 'ToggleColumnsController',
-        resolve: {
-          toggledColumns: function() {
-            return $scope.toggledColumns;
-          },
-          callback: function() {
-            return function(newToggledColumns) {
-              $scope.toggledColumns = newToggledColumns;
-              ToggleColumnsResource.put($stateParams, {
-                toggledColumns: $scope.toggledColumns
-              });
-            };
-          }
-        }
-      });
-    }
     // private functions
     function checkDuplicateTitle(title) {
       $scope.isTitleDuplicate = _.find($scope.subProblems, ['title', title]);
