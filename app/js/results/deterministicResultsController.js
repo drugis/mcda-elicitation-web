@@ -5,6 +5,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     'currentScenario',
     'taskDefinition',
     'MCDAResultsService',
+    'EffectsTableService',
     'OrderingService'
   ];
 
@@ -13,6 +14,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     currentScenario,
     taskDefinition,
     MCDAResultsService,
+    EffectsTableService,
     OrderingService) {
     // functions
     $scope.sensitivityScalesChanged = sensitivityScalesChanged;
@@ -32,6 +34,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     };
     OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(ordering) {
       $scope.criteria = ordering.criteria;
+      $scope.tableCriteria = EffectsTableService.buildEffectsTable($scope.aggregateState.problem.valueTree, ordering.criteria);
       $scope.alternatives = ordering.alternatives;
       loadState();
       $scope.$watch('scales.observed', function() {
@@ -67,8 +70,8 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
 
     function initialize(state) {
       $scope.sensitivityMeasurements.measurementsAlternative = $scope.alternatives[0];
-      $scope.sensitivityMeasurements.measurementsCriterion = $scope.criteria[0];
-      $scope.sensitivityMeasurements.preferencesCriterion = $scope.criteria[0];
+      $scope.sensitivityMeasurements.measurementsCriterion = $scope.criteria[0].isHeaderRow ? $scope.criteria[1] : $scope.criteria[0];
+      $scope.sensitivityMeasurements.preferencesCriterion = $scope.criteria[0].isHeaderRow ? $scope.criteria[1] : $scope.criteria[0];
 
       $scope.deterministicResults = MCDAResultsService.getDeterministicResults($scope, state);
       var overallResults = MCDAResultsService.getResults($scope, state);

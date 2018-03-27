@@ -43,7 +43,12 @@
           </tr>
         </thead>
         <tbody class="main">
-          <tr ng-repeat="criterion in criteria">
+          <tr ng-repeat="criterion in tableCriteria">
+            <td ng-if="criterion.isHeaderRow" class="group-header" colspan="{{5 + nrAlternatives}}">
+              <div class="main-header">
+                {{criterion.headerText}}
+              </div>
+            </td>
             <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['criteria']">
               {{criterion.title}}
             </td>
@@ -53,7 +58,7 @@
             <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['units']">
               {{criterion.unitOfMeasurement}}
             </td>
-            <td class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}">
+            <td ng-if="!criterion.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}">
               <sensitivity-input criterion="criterion" alternative="alternative" original-value="scales.observed[criterion.id][alternative.id]['50%']" current-value="modifiableScales[criterion.id][alternative.id]['50%']" change-callback="sensitivityScalesChanged" is-editing="isEditing"></sensitivity-input>
             </td>
             <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['references']">
