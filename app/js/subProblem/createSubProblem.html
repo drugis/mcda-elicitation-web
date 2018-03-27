@@ -63,30 +63,35 @@
             </tr>
           </thead>
           <tbody class="main">
-            <tr ng-repeat="criterion in criteria">
-              <td ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}" ng-show="toggledColumns['criteria']">
+            <tr ng-repeat="criterion in tableCriteria">
+              <td ng-if="criterion.isHeaderRow" class="group-header" colspan="{{5 + nrAlternatives}}">
+                <div class="main-header">
+                  {{criterion.headerText}}
+                </div>
+              </td>
+              <td ng-if="!criterion.isHeaderRow" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}" ng-show="toggledColumns['criteria']">
                 <label>
                   <input type="checkbox" ng-model="subProblemState.criterionInclusions[criterion.id]" ng-change="updateInclusions()" ng-disabled="subProblemState.criterionInclusions[criterion.id] && subProblemState.numberOfCriteriaSelected < 3"> {{criterion.title}}
                 </label>
               </td>
-              <td ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}" ng-show="toggledColumns['description']">
+              <td ng-if="!criterion.isHeaderRow" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}" ng-show="toggledColumns['description']">
                 <div class="td-container">
                   <div class="td-content">{{criterion.description}}</div>
                   <div class="td-spacer">{{criterion.description}}</div>
                   <span>&nbsp;</span>
                 </div>
               </td>
-              <td ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}""  ng-show="toggledColumns['units']">{{criterion.unitOfMeasurement}}</td>
-              <td ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternative.id] || !subProblemState.criterionInclusions[criterion.id]}" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
-                <effects-table-scales-cell scales="scales.observed[criterion.id][alternative.id]" uncertainty="effectsTableInfo[criterion.id].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || effectsTableInfo[criterion.id].distributionType === 'relative'"></effects-table-scales-cell>
+              <td ng-if="!criterion.isHeaderRow" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}" ng-show="toggledColumns['units']">{{criterion.unitOfMeasurement}}</td>
+              <td ng-if="!criterion.isHeaderRow" ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternative.id] || !subProblemState.criterionInclusions[criterion.id]}" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
+                <effects-table-scales-cell scales="scales.observed[criterion.id][alternative.id]" uncertainty="effectsTableInfo[criterion.id].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || effectsTableInfo[criterion.id].distributionType==='relative'"></effects-table-scales-cell>
               </td>
-              <td ng-show="toggledColumns['references']">
+              <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['references']">
                 <a ng-if="criterion.sourceLink" href="{{criterion.sourceLink}}">
                   {{criterion.source}}
                 </a>
                 <span ng-if="!criterion.sourceLink">{{criterion.source}}</span>
               </td>
-              <td ng-show="toggledColumns['strength']">{{criterion.strengthOfEvidence}}</td>
+              <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['strength']">{{criterion.strengthOfEvidence}}</td>
             </tr>
           </tbody>
         </table>

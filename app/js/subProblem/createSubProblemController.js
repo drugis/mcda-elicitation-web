@@ -1,12 +1,13 @@
 'use strict';
 define(['lodash', 'angular'], function(_) {
 
-  var dependencies = ['$scope', '$stateParams', '$modalInstance', '$timeout', 
+  var dependencies = ['$scope', '$stateParams', '$modalInstance', '$timeout',
     'ScenarioResource',
     'SubProblemResource',
     'SubProblemService',
     'ScaleRangeService',
     'OrderingService',
+    'EffectsTableService',
     'subProblems',
     'subProblem',
     'problem',
@@ -15,12 +16,13 @@ define(['lodash', 'angular'], function(_) {
     'effectsTableInfo',
     'callback'
   ];
-  var CreateSubProblemController = function($scope, $stateParams, $modalInstance, $timeout, 
+  var CreateSubProblemController = function($scope, $stateParams, $modalInstance, $timeout,
     ScenarioResource,
     SubProblemResource,
     SubProblemService,
     ScaleRangeService,
     OrderingService,
+    EffectsTableService,
     subProblems,
     subProblem,
     problem,
@@ -45,7 +47,7 @@ define(['lodash', 'angular'], function(_) {
     $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
     $scope.effectsTableInfo = effectsTableInfo;
     $scope.editMode = editMode;
-    
+
     function isASliderInvalid() {
       $scope.invalidSlider = false;
       _.forEach($scope.scalesCriteria, function(criterion) {
@@ -82,6 +84,7 @@ define(['lodash', 'angular'], function(_) {
       OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
         $scope.alternatives = orderings.alternatives;
         $scope.criteria = orderings.criteria;
+        $scope.tableCriteria = EffectsTableService.buildEffectsTable($scope.problem.valueTree, orderings.criteria);
 
         $scope.originalCriterionInclusions = SubProblemService.createCriterionInclusions($scope.problem, subProblem);
         $scope.originalAlternativeInclusions = SubProblemService.createAlternativeInclusions($scope.problem, subProblem);
