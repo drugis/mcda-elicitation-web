@@ -12,6 +12,7 @@ var SubProblemService = require('./node-backend/subProblemService')(db);
 var ScenarioService = require('./node-backend/scenarioService')(db);
 var http = require('http');
 var https = require('https');
+var fs = require('fs');
 var server;
 
 var express = require('express'),
@@ -24,7 +25,11 @@ var express = require('express'),
 var app = express();
 
 if (process.env.MCDA_USE_SSL_AUTH) {
-  var options = {};
+  app.set('trust proxy', 1);
+  var options = {
+    key: fs.readFileSync(process.env.PATAVI_CLIENT_KEY),
+    cert: fs.readFileSync(process.env.PATAVI_CLIENT_CRT),
+  };
   server = https.createServer(options, app);
 } else {
   server = http.createServer(app);
@@ -45,14 +50,25 @@ if (process.env.MCDA_USE_SSL_AUTH) {
 var bower_path = '/bower_components';
 app
   .use(helmet())
+  .use(session({
+    store: new(require('connect-pg-simple')(session))({
+      conString: dbUri,
+    }),
+    secret: process.env.MCDAWEB_COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: true,
+      maxAge: new Date(Date.now() + 3600000)
+    }
+  }))
   .use(express.static('manual'))
   .use('/bower_components', express.static(__dirname + '/bower_components'))
   .use(express.static('app'))
   .use('/template', express.static(__dirname + bower_path + '/angular-foundation-assets/template'))
   .use('/examples', express.static(__dirname + '/examples'))
-  .use(bodyParser())
-  .use(cookieParser('very secret secret'))
-  .use(session())
+  .use(bodyParser.json())
+  .use(cookieParser(process.env.MCDAWEB_COOKIE_SECRET))
   .use(everyauth.middleware(app))
   .use(function(req, res, next) {
     console.log('cert: ' + req.header('X-SSL-CERT'));
@@ -87,14 +103,14 @@ app.use(function(req, res, next) {
 
 app.get('/', function(req, res) {
   if (req.user) {
-    res.sendfile(__dirname + '/public/index.html');
+    res.sendFile(__dirname + '/public/index.html');
   } else {
     res.redirect('/signin');
   }
 });
 
 app.get('/signin', function(req, res) {
-  res.sendfile(__dirname + '/public/signin.html');
+  res.sendFile(__dirname + '/public/signin.html');
 });
 
 // Workspaces in progress
@@ -154,12 +170,12 @@ app.get('/user', loginUtils.emailHashMiddleware);
 
 //FIXME: should not be needed?
 app.get('/main.js', function(req, res) {
-  res.sendfile(__dirname + '/app/js/main.js');
+  res.sendFile(__dirname + '/app/js/main.js');
 });
 
 //The 404 Route (ALWAYS Keep this as the last route)
 app.get('*', function(req, res) {
-  res.status(404).sendfile(__dirname + '/public/error.html');
+  res.status(404).sendFile(__dirname + '/public/error.html');
 });
 
 var port = 8080;
