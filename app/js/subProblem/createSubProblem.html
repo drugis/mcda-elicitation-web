@@ -64,12 +64,12 @@
           </thead>
           <tbody class="main">
             <tr ng-repeat="criterion in criteria">
-              <td ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}">
+              <td ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}" ng-show="toggledColumns['criteria']">
                 <label>
                   <input type="checkbox" ng-model="subProblemState.criterionInclusions[criterion.id]" ng-change="updateInclusions()" ng-disabled="subProblemState.criterionInclusions[criterion.id] && subProblemState.numberOfCriteriaSelected < 3"> {{criterion.title}}
                 </label>
               </td>
-              <td ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}">
+              <td ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}" ng-show="toggledColumns['description']">
                 <div class="td-container">
                   <div class="td-content">{{criterion.description}}</div>
                   <div class="td-spacer">{{criterion.description}}</div>
