@@ -32,7 +32,7 @@
         <div class="cell large-8 alert" ng-if="inputCell.exactType === 'exactSE' && !inputCell.isNormal">
           Standard error will not be used in any calculations
         </div>
-        <!-- exact with convidence interval -->
+        <!-- exact with confidence interval -->
         <div class="cell large-2" ng-if="inputCell.exactType === 'exactConf'">
           <label>
             Lower bound
@@ -52,7 +52,7 @@
           </label>
         </div>
         <div class="cell large-10 alert" ng-if="inputCell.exactType === 'exactConf' && !inputCell.isNormal">
-          Convidence interval will not be used in any calculations
+          Confidence interval will not be used in any calculations
         </div>
       </div>
       <div class="grid-x" ng-if="criterion.dataType === 'dichotomous'">
