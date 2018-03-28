@@ -57,7 +57,7 @@ module.exports = function(db) {
 
   // private
   function findUserByProperty(property, value, callback) {
-    db.query('SELECT id, username, firstName, lastName FROM Account WHERE ' + property + ' = $1', [value], function(error, result) {
+    db.query('SELECT id, username, firstName, lastName, email FROM Account WHERE ' + property + ' = $1', [value], function(error, result) {
       if (error) {
         callback(error);
       } else if (result.rows.length === 0) {
