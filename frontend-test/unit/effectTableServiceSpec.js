@@ -1,11 +1,11 @@
 'use strict';
 define(['angular-mocks',
-  'mcda/evidence/evidence'
+  'mcda/effectsTable/effectsTable'
 ], function() {
   describe('EffectsTableService', function() {
     var effectTableService;
 
-    beforeEach(module('elicit.evidence'));
+    beforeEach(module('elicit.effectsTable'));
 
     beforeEach(inject(function(EffectsTableService) {
       effectTableService = EffectsTableService;
@@ -30,18 +30,18 @@ define(['angular-mocks',
           }, {
             id: 'crit3'
           }];
-          var result = effectTableService.buildEffectsTable(problem, criteria);
+          var result = effectTableService.buildEffectsTable(problem.valueTree, criteria);
           var expectedResult = [{
               isHeaderRow: true,
               headerText: 'Favorable effects'
             },
-            'crit2',
-            'crit3',
+            { id: 'crit2' },
+            { id: 'crit3' },
             {
               isHeaderRow: true,
               headerText: 'Unfavorable effects'
             },
-            'crit1'
+            { id: 'crit1' }
           ];
           expect(result).toEqual(expectedResult);
         });
