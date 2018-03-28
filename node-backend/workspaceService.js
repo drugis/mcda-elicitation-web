@@ -11,7 +11,7 @@ module.exports = function(db) {
         err.status = 500;
         next(err);
       }
-      if (!req.user || result.rows[0].owner !== req.user.id) {
+      if (!getUser(req) || result.rows[0].owner !== getUser(req).id) {
         res.status(403).send({
           'code': 403,
           'message': 'Access to resource not authorised'
@@ -29,7 +29,7 @@ module.exports = function(db) {
         err.status = 500;
         next(err);
       }
-      if (!req.user || result.rows[0].owner !== req.user.id) {
+      if (!getUser(req) || result.rows[0].owner !== getUser(req).id) {
         res.status(403).send({
           'code': 403,
           'message': 'Access to resource not authorised'
@@ -43,7 +43,7 @@ module.exports = function(db) {
   function createInProgress(req, res, next) {
     logger.debug('creating in-progress workspace');
 
-    db.query('INSERT INTO inProgressWorkspace (owner, state) VALUES ($1, $2) RETURNING id', [req.user.id, req.body], function(err, result) {
+    db.query('INSERT INTO inProgressWorkspace (owner, state) VALUES ($1, $2) RETURNING id', [getUser(req).id, req.body], function(err, result) {
       if (err) {
         err.status = 500;
         return next(err);
@@ -76,7 +76,7 @@ module.exports = function(db) {
 
   function queryInProgress(req, res, next) {
     logger.debug('GET /inProgress/');
-    db.query('SELECT id, owner, state FROM inProgressWorkspace WHERE owner = $1', [req.user.id], function(err, result) {
+    db.query('SELECT id, owner, state FROM inProgressWorkspace WHERE owner = $1', [getUser(req).id], function(err, result) {
       if (err) {
         err.status = 500;
         return next(err);
@@ -99,7 +99,7 @@ module.exports = function(db) {
   // Complete workspaces
   function queryWorkspaces(req, res, next) {
     logger.debug('GET /workspaces');
-    db.query('SELECT id, owner, title, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1', [req.user.id], function(err, result) {
+    db.query('SELECT id, owner, title, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1', [getUser(req).id], function(err, result) {
       if (err) {
         logger.error('error running query', err);
         next({
@@ -119,7 +119,7 @@ module.exports = function(db) {
         logger.debug('creating workspace');
 
         // create a new workspace
-        client.query('INSERT INTO workspace (owner, title, problem) VALUES ($1, $2, $3) RETURNING id', [req.user.id, req.body.title, req.body.problem], function(err, result) {
+        client.query('INSERT INTO workspace (owner, title, problem) VALUES ($1, $2, $3) RETURNING id', [getUser(req).id, req.body.title, req.body.problem], function(err, result) {
           if (err) {
             return callback(err);
           }
@@ -271,6 +271,15 @@ module.exports = function(db) {
       res.json(result);
     });
 
+  }
+
+  function getUser(req) {
+    if(req.user) {
+      return req.user;
+    }
+    if(req.session.user) {
+      return req.session.user;
+    }
   }
 
   return {

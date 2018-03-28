@@ -4,6 +4,7 @@ var dbUri = 'postgres://' + process.env.MCDAWEB_DB_USER + ':' + process.env.MCDA
 console.log(dbUri);
 var db = require('./node-backend/db')(dbUri);
 var patavi = require('./node-backend/patavi');
+var logger = require('./node-backend/logger');
 var UserManagement = require('./node-backend/userManagement')(db);
 var WorkspaceService = require('./node-backend/workspaceService')(db);
 var OrderingService = require('./node-backend/orderingService')(db);
@@ -17,20 +18,45 @@ var server;
 
 var express = require('express'),
   bodyParser = require('body-parser'),
-  cookieParser = require('cookie-parser'),
   session = require('express-session'),
   helmet = require('helmet'),
   csurf = require('csurf');
 
 var app = express();
+app
+  .use(helmet())
+  .use(session({
+    store: new (require('connect-pg-simple')(session))({
+      conString: dbUri,
+    }),
+    secret: process.env.MCDAWEB_COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: true,
+      maxAge: new Date(Date.now() + 3600000)
+    }
+  }));
 
-if (process.env.MCDA_USE_SSL_AUTH) {
+if (process.env.MCDAWEB_USE_SSL_AUTH) {
   app.set('trust proxy', 1);
-  var options = {
-    key: fs.readFileSync(process.env.PATAVI_CLIENT_KEY),
-    cert: fs.readFileSync(process.env.PATAVI_CLIENT_CRT),
-  };
-  server = https.createServer(options, app);
+  server = http.createServer(app);
+  app.get('/signin', function (req, res) {
+    var clientString = req.header('X-SSL-CLIENT-DN');
+    var emailRegex = /emailAddress=([^,]*)/;
+    var email = clientString.match(emailRegex)[1];
+    if (email) {
+      UserManagement.findUserByEmail(email, function (err, result) {
+        if (err) {
+          logger.error(err);
+        } else {
+          req.session.user = result;
+          req.session.save();
+          res.redirect('/');
+        }
+      });
+    }
+  });
 } else {
   server = http.createServer(app);
   var everyauth = require('everyauth');
@@ -45,41 +71,30 @@ if (process.env.MCDA_USE_SSL_AUTH) {
     .scope('https://www.googleapis.com/auth/userinfo.profile email')
     .findOrCreateUser(UserManagement.findOrCreateUser)
     .redirectPath('/');
+  app.get('/signin', function (req, res) {
+    res.sendFile(__dirname + '/public/signin.html');
+  });
 }
 
 var bower_path = '/bower_components';
 app
-  .use(helmet())
-  .use(session({
-    store: new(require('connect-pg-simple')(session))({
-      conString: dbUri,
-    }),
-    secret: process.env.MCDAWEB_COOKIE_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      secure: true,
-      maxAge: new Date(Date.now() + 3600000)
-    }
-  }))
   .use(express.static('manual'))
   .use('/bower_components', express.static(__dirname + '/bower_components'))
   .use(express.static('app'))
   .use('/template', express.static(__dirname + bower_path + '/angular-foundation-assets/template'))
   .use('/examples', express.static(__dirname + '/examples'))
   .use(bodyParser.json())
-  .use(cookieParser(process.env.MCDAWEB_COOKIE_SECRET))
-  .use(everyauth.middleware(app))
-  .use(function(req, res, next) {
-    console.log('cert: ' + req.header('X-SSL-CERT'));
-    console.log('client: ' + req.header('X-SSL-CLIENT-DN'));
-    console.log('issuer: ' + req.header('X-SSL-ISSUER'));
-    console.log('subject: ' + req.header('X-SSL-SUBJECT'));
-    next();
-  })
-  .use(csurf({
-    cookie: true
-  }));
+if (!process.env.MCDAWEB_USE_SSL_AUTH) {
+  app.use(everyauth.middleware(app));
+}
+app.use(function (req, res, next) {
+  console.log('cert: ' + req.header('X-SSL-CERT'));
+  console.log('client: ' + req.header('X-SSL-CLIENT-DN'));
+  console.log('issuer: ' + req.header('X-SSL-ISSUER'));
+  console.log('subject: ' + req.header('X-SSL-SUBJECT'));
+  next();
+})
+  .use(csurf());
 
 
 var router = express.Router();
@@ -93,7 +108,7 @@ router.put('/workspaces/:id/toggledColumns', WorkspaceService.requireUserIsWorks
 router.delete('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
 app.use(router);
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.cookie('XSRF-TOKEN', req.csrfToken());
   if (req.user) {
     res.cookie('LOGGED-IN-USER', JSON.stringify(req.user));
@@ -101,17 +116,15 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.get('/', function(req, res) {
-  if (req.user) {
+app.get('/', function (req, res) {
+  if (req.user || req.session.user) {
     res.sendFile(__dirname + '/public/index.html');
   } else {
     res.redirect('/signin');
   }
 });
 
-app.get('/signin', function(req, res) {
-  res.sendFile(__dirname + '/public/signin.html');
-});
+
 
 // Workspaces in progress
 app.post('/inProgress', WorkspaceService.createInProgress);
@@ -150,10 +163,11 @@ app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios', ScenarioSe
 app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', ScenarioService.updateScenario);
 
 // patavi
-app.post('/patavi', function(req, res, next) { // FIXME: separate routes for scales and results
-  patavi.create(req.body, function(err, taskUri) {
+app.post('/patavi', function (req, res, next) { // FIXME: separate routes for scales and results
+  patavi.create(req.body, function (err, taskUri) {
     if (err) {
-      next({
+      logger.error(err);
+      return next({
         err: err,
         status: 500
       });
@@ -169,12 +183,12 @@ app.post('/patavi', function(req, res, next) { // FIXME: separate routes for sca
 app.get('/user', loginUtils.emailHashMiddleware);
 
 //FIXME: should not be needed?
-app.get('/main.js', function(req, res) {
+app.get('/main.js', function (req, res) {
   res.sendFile(__dirname + '/app/js/main.js');
 });
 
 //The 404 Route (ALWAYS Keep this as the last route)
-app.get('*', function(req, res) {
+app.get('*', function (req, res) {
   res.status(404).sendFile(__dirname + '/public/error.html');
 });
 
@@ -183,6 +197,6 @@ if (process.argv[2] === 'port' && process.argv[3]) {
   port = process.argv[3];
 }
 
-server.listen(port, function() {
+server.listen(port, function () {
   console.log('Listening on http://localhost:' + port);
 });
