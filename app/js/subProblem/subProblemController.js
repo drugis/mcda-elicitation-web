@@ -65,6 +65,12 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
           scales: function() {
             return $scope.scales;
           },
+          editMode: function() {
+            return $scope.editMode;
+          },
+          effectsTableInfo: function() {
+            return $scope.effectsTableInfo;
+          },
           callback: function() {
             return function(newProblemId, newScenarioId) {
               $state.go('problem', _.extend({}, $stateParams, {
@@ -111,7 +117,7 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
         }
       });
     }
-    
+
   };
 
   return dependencies.concat(SubProblemController);

@@ -5,7 +5,6 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     'WorkspaceResource',
     'isMcdaStandalone',
     'OrderingService',
-    'ToggleColumnsResource',
     'mcdaRootPath'
   ];
 
@@ -14,7 +13,6 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     WorkspaceResource,
     isMcdaStandalone,
     OrderingService,
-    ToggleColumnsResource,
     mcdaRootPath
   ) {
     // functions
@@ -27,24 +25,17 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.alternativeDown = alternativeDown;
     $scope.downloadWorkspace = downloadWorkspace;
     $scope.getIndex = getIndex;
-    $scope.toggleColumns = toggleColumns;
 
     // init
     $scope.scales = $scope.workspace.scales.observed;
     $scope.valueTree = $scope.workspace.$$valueTree;
     $scope.problem = $scope.workspace.problem;
-    $scope.nrAlternatives = _.keys($scope.problem.alternatives).length;
     $scope.isStandAlone = isMcdaStandalone;
-    $scope.references = {
-      has: _.find($scope.problem.criteria, function(criterion) {
-        return criterion.source;
-      })
-    };
 
     OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
       $scope.alternatives = orderings.alternatives;
       $scope.criteria = orderings.criteria;
-      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem, orderings.criteria);
+      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem.valueTree, orderings.criteria);
     });
 
     $scope.$watch('workspace.scales.observed', function(newValue) {
@@ -57,20 +48,6 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       evt.initMouseEvent('click', true, true, this.ownerDocument.defaultView, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
       this.dispatchEvent(evt);
     };
-
-    ToggleColumnsResource.get($stateParams).$promise.then(function(response) {
-      var toggledColumns = response.toggledColumns;
-      if (toggledColumns) {
-        $scope.toggledColumns = toggledColumns;
-      } else {
-        $scope.toggledColumns = {
-          criteria: true,
-          description: true,
-          units: true,
-          references: true
-        };
-      }
-    });
 
     function editTherapeuticContext() {
       $modal.open({
@@ -104,7 +81,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       $scope.criteria[idx] = $scope.criteria[idx - 1];
       $scope.criteria[idx - 1] = mem;
       OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
-      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem, $scope.criteria);
+      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem.valueTree, $scope.criteria);
     }
 
     function criterionDown(idx) {
@@ -112,7 +89,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       $scope.criteria[idx] = $scope.criteria[idx + 1];
       $scope.criteria[idx + 1] = mem;
       OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
-      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem, $scope.criteria);
+      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem.valueTree, $scope.criteria);
     }
 
     function alternativeUp(idx) {
@@ -120,7 +97,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       $scope.alternatives[idx] = $scope.alternatives[idx - 1];
       $scope.alternatives[idx - 1] = mem;
       OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
-      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem, $scope.criteria);
+      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem.valueTree, $scope.criteria);
     }
 
     function alternativeDown(idx) {
@@ -128,7 +105,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       $scope.alternatives[idx] = $scope.alternatives[idx + 1];
       $scope.alternatives[idx + 1] = mem;
       OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
-      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem, $scope.criteria);
+      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem.valueTree, $scope.criteria);
     }
 
     function editCriterion(criterion, criterionKey) {
@@ -156,7 +133,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
                   return crit === criterionKey;
                 }) ? 0 : 1;
                 var toAdd = toRemove === 1 ? 0 : 1;
-                _.remove($scope.valueTree.children[toRemove].criteria, function(crit){
+                _.remove($scope.valueTree.children[toRemove].criteria, function(crit) {
                   return crit === criterionKey;
                 });
                 $scope.valueTree.children[toAdd].criteria.push(criterionKey);
@@ -203,26 +180,6 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       var data = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(problemWithTitle, null, 2));
       link.href = 'data:' + data;
       link.click();
-    }
-
-    function toggleColumns() {
-      $modal.open({
-        templateUrl: mcdaRootPath + 'js/evidence/toggleColumns.html',
-        controller: 'ToggleColumnsController',
-        resolve: {
-          toggledColumns: function() {
-            return $scope.toggledColumns;
-          },
-          callback: function() {
-            return function(newToggledColumns) {
-              $scope.toggledColumns = newToggledColumns;
-              ToggleColumnsResource.put($stateParams, {
-                toggledColumns: $scope.toggledColumns
-              });
-            };
-          }
-        }
-      });
     }
   };
   return dependencies.concat(EvidenceController);

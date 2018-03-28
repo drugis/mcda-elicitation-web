@@ -7,10 +7,13 @@ define(['lodash', 'angular'], function(_) {
     'SubProblemService',
     'ScaleRangeService',
     'OrderingService',
+    'EffectsTableService',
     'subProblems',
     'subProblem',
     'problem',
     'scales',
+    'editMode',
+    'effectsTableInfo',
     'callback'
   ];
   var CreateSubProblemController = function($scope, $stateParams, $modalInstance, $timeout,
@@ -19,10 +22,13 @@ define(['lodash', 'angular'], function(_) {
     SubProblemService,
     ScaleRangeService,
     OrderingService,
+    EffectsTableService,
     subProblems,
     subProblem,
     problem,
     scales,
+    editMode,
+    effectsTableInfo,
     callback) {
     // functions
     $scope.checkDuplicateTitle = checkDuplicateTitle;
@@ -39,6 +45,8 @@ define(['lodash', 'angular'], function(_) {
     initSubProblem(_.cloneDeep(subProblem), _.cloneDeep(problem));
     $scope.isExact = _.partial(SubProblemService.isExact, $scope.problem.performanceTable);
     $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
+    $scope.effectsTableInfo = effectsTableInfo;
+    $scope.editMode = editMode;
 
     function isASliderInvalid() {
       $scope.invalidSlider = false;
@@ -76,6 +84,7 @@ define(['lodash', 'angular'], function(_) {
       OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
         $scope.alternatives = orderings.alternatives;
         $scope.criteria = orderings.criteria;
+        $scope.tableCriteria = EffectsTableService.buildEffectsTable($scope.problem.valueTree, orderings.criteria);
 
         $scope.originalCriterionInclusions = SubProblemService.createCriterionInclusions($scope.problem, subProblem);
         $scope.originalAlternativeInclusions = SubProblemService.createAlternativeInclusions($scope.problem, subProblem);

@@ -1,9 +1,9 @@
 'use strict';
 define([], function() {
 
-  var dependencies = ['$timeout'];
+  var dependencies = [];
 
-  var EffectsTableScalesCellDirective = function($timeout) {
+  var EffectsTableScalesCellDirective = function() {
     return {
       restrict: 'E',
       scope: {
