@@ -48,11 +48,20 @@ module.exports = function(db) {
   }
 
   function findUserById(id, callback) {
-    db.query('SELECT id, username, firstName, lastName FROM Account WHERE id = $1', [id], function(error, result) {
+    findUserByProperty('id', id, callback);
+  }
+
+  function findUserByEmail(email, callback) {
+    findUserByProperty('email', email, callback);
+  }
+
+  // private
+  function findUserByProperty(property, value, callback) {
+    db.query('SELECT id, username, firstName, lastName FROM Account WHERE ' + property + ' = $1', [value], function(error, result) {
       if (error) {
         callback(error);
       } else if (result.rows.length === 0) {
-        callback('ID ' + id + ' not found');
+        callback(property + ' ' + value + ' not found');
       } else {
         callback(null, result.rows[0]);
       }
@@ -61,6 +70,7 @@ module.exports = function(db) {
 
   return {
     findOrCreateUser: findOrCreateUser,
-    findUserById: findUserById
+    findUserById: findUserById,
+    findUserByEmail: findUserByEmail
   };
 };
