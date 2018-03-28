@@ -84,17 +84,10 @@ app
   .use('/template', express.static(__dirname + bower_path + '/angular-foundation-assets/template'))
   .use('/examples', express.static(__dirname + '/examples'))
   .use(bodyParser.json())
-if (!process.env.MCDAWEB_USE_SSL_AUTH) {
+  .use(csurf());
+  if (!process.env.MCDAWEB_USE_SSL_AUTH) {
   app.use(everyauth.middleware(app));
 }
-app.use(function (req, res, next) {
-  console.log('cert: ' + req.header('X-SSL-CERT'));
-  console.log('client: ' + req.header('X-SSL-CLIENT-DN'));
-  console.log('issuer: ' + req.header('X-SSL-ISSUER'));
-  console.log('subject: ' + req.header('X-SSL-SUBJECT'));
-  next();
-})
-  .use(csurf());
 
 
 var router = express.Router();
@@ -123,8 +116,6 @@ app.get('/', function (req, res) {
     res.redirect('/signin');
   }
 });
-
-
 
 // Workspaces in progress
 app.post('/inProgress', WorkspaceService.createInProgress);

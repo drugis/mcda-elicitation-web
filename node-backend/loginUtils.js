@@ -5,10 +5,18 @@ var crypto = require('crypto'),
 
 module.exports = {
 
-  emailHashMiddleware: function(request, response) {
+  emailHashMiddleware: function (request, response) {
     logger.debug('loginUtils.emailHashMiddleware; request.headers.host = ' + (request.headers ? request.headers.host : 'unknown host'));
     if (!request.session.auth) {
-      response.status = httpStatus.FORBIDDEN;
+      if (!request.session.user) {
+        response.status = httpStatus.FORBIDDEN;
+      } else {
+        var md5Hash = crypto.createHash('md5').update(request.session.user.email).digest('hex');
+        response.json({
+          name: request.session.user.firstname + ' ' + request.session.user.lastname,
+          md5Hash: md5Hash
+        });
+      }
     } else {
       var md5Hash = crypto.createHash('md5').update(request.session.auth.google.user.email).digest('hex');
       response.json({
