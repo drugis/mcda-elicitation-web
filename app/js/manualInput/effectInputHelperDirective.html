@@ -1,7 +1,7 @@
 <dropdown-toggle close-on-click="true">
   <toggle><a ng-style="inputData.isInvalid ? {color:'red'} : {}" style="white-space: pre-wrap">{{inputData.label}}</a></toggle>
   <pane ng-keydown="keyCheck($event, $close)" ng-keypress="keyCheck($event, $close)">
-    <div class="grid-container">
+    <div class="grid-container" style="width: 35rem">
       <!-- exact -->
       <div class="grid-x" ng-if="inputCell.type === 'exact'">
         <div class="cell large-4">
@@ -17,7 +17,7 @@
           </label>
         </div>
         <!-- exact with standard error -->
-        <div class="cell large-2" ng-if="inputCell.exactType === 'exactSE'">
+        <div class="cell large-4" ng-if="inputCell.exactType === 'exactSE'">
           <label>
             Standard error
             <input type="number" ng-model="inputCell.stdErr" min="0">
