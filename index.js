@@ -33,7 +33,7 @@ app
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: true,
+      secure: process.env.MCDAWEB_USE_SSL_AUTH,
       maxAge: new Date(Date.now() + 3600000)
     }
   }));
