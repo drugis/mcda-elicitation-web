@@ -70,7 +70,10 @@
             <a ng-if="problem.criteria[row.id].sourceLink" href="{{problem.criteria[row.id].sourceLink}}">{{problem.criteria[row].source}}</a>
             <span ng-if="!problem.criteria[row.id].sourceLink">{{problem.criteria[row.id].source}}</span>
           </td>
-          <td ng-if="!row.isHeaderRow && isStandAlone">{{problem.criteria[row.id].strengthOfEvidence}}</td>
+          <td ng-if="!row.isHeaderRow && isStandAlone">
+            <div ng-if="problem.criteria[row.id].uncertainties"><b>Unc: </b> {{problem.criteria[row.id].uncertainties}}</div>
+            <div ng-if="problem.criteria[row.id].strengthOfEvidence"><b>SoE: </b>{{problem.criteria[row.id].strengthOfEvidence}}</div>
+          </td>
         </tr>
       </tbody>
     </table>
