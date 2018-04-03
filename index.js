@@ -30,8 +30,9 @@ app
       conString: dbUri,
     }),
     secret: process.env.MCDAWEB_COOKIE_SECRET,
-    resave: false,
-    saveUninitialized: true,
+    resave: true,
+    proxy:true,
+    saveUninitialized: false,
     cookie: {
       secure: !!process.env.MCDAWEB_USE_SSL_AUTH,
       maxAge: new Date(Date.now() + 3600000)
