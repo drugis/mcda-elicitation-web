@@ -32,7 +32,8 @@ app
     secret: process.env.MCDAWEB_COOKIE_SECRET,
     resave: false,
     proxy:true,
-    saveUninitialized: true,
+    rolling: true,
+    saveUninitialized: false,
     cookie: {
       secure: true,
       maxAge: new Date(Date.now() + 3600000)
