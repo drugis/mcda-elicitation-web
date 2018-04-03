@@ -33,14 +33,14 @@ app
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: process.env.MCDAWEB_USE_SSL_AUTH,
+      secure: !!process.env.MCDAWEB_USE_SSL_AUTH,
       maxAge: new Date(Date.now() + 3600000)
     }
   }));
+  app.set('trust proxy', true);
+  server = http.createServer(app);
 
 if (process.env.MCDAWEB_USE_SSL_AUTH) {
-  app.set('trust proxy', 1);
-  server = http.createServer(app);
   app.get('/signin', function (req, res) {
     var clientString = req.header('X-SSL-CLIENT-DN');
     var emailRegex = /emailAddress=([^,]*)/;
@@ -58,7 +58,6 @@ if (process.env.MCDAWEB_USE_SSL_AUTH) {
     }
   });
 } else {
-  server = http.createServer(app);
   var everyauth = require('everyauth');
   everyauth.everymodule.findUserById(UserManagement.findUserById);
   everyauth.google
