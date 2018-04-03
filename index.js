@@ -38,7 +38,7 @@ app
       maxAge: new Date(Date.now() + 3600000)
     }
   }));
-  app.set('trust proxy', true);
+  app.set('trust proxy', 1);
   server = http.createServer(app);
 
 if (process.env.MCDAWEB_USE_SSL_AUTH) {
