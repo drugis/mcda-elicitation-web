@@ -86,7 +86,11 @@
         <input type="text" ng-model="criterion.sourceLink" ng-change="isCreationBlocked()">
       </div>
       <div class="cell">
-        <label>Uncertainties / Strength of evidence (optional)
+        <label>Uncertainties</label>
+        <input type="text" ng-model="criterion.uncertainties">
+      </div>
+      <div class="cell">
+        <label>Strength of evidence (optional)
           <!-- <inline-help help-key="strength-of-evidence"> -->
         </label>
         <input type="text" ng-model="criterion.strengthOfEvidence">
