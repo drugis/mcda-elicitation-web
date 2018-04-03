@@ -34,7 +34,7 @@ app
     proxy:true,
     saveUninitialized: true,
     cookie: {
-      secure: !!process.env.MCDAWEB_USE_SSL_AUTH,
+      secure: true,
       maxAge: new Date(Date.now() + 3600000)
     }
   }));
