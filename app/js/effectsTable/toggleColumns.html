@@ -8,19 +8,19 @@
         <button class="button small" type="button" ng-click="selectAll()">(De)select all</button>
       </div>
       <div class="cell">
-        <input type="checkbox" ng-model="toggledColumns['criteria']">Criterion
+        <input type="checkbox" ng-model="toggledColumns['criteria']" id="checkCriteriaColumn"><label for="checkCriteriaColumn">Criterion</label>
       </div>
       <div class="cell">
-        <input type="checkbox" ng-model="toggledColumns['description']">Description
+        <input type="checkbox" ng-model="toggledColumns['description']" id="checkDescriptionColumn"><label for="checkDescriptionColumn">Description
       </div>
       <div class="cell">
-        <input type="checkbox" ng-model="toggledColumns['units']">Units
+        <input type="checkbox" ng-model="toggledColumns['units']" id="checkUnitsColumn"><label for="checkUnitsColumn">Units
       </div>
       <div class="cell">
-        <input type="checkbox" ng-model="toggledColumns['references']">Reference
+        <input type="checkbox" ng-model="toggledColumns['references']" id="checkReferencesColumn"><label for="checkReferencesColumn">Reference
       </div>
       <div class="cell">
-        <input type="checkbox" ng-model="toggledColumns['strength']">Uncertainties / Strength of evidence
+        <input type="checkbox" ng-model="toggledColumns['strength']" id="checkStrengthColumn"><label for="checkStrengthColumn">Uncertainties / Strength of evidence
       </div>
       <div class="cell">
         <button class="button" type="submit">Save</button>
