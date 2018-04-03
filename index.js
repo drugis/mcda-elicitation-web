@@ -31,13 +31,14 @@ app
     }),
     secret: process.env.MCDAWEB_COOKIE_SECRET,
     resave: false,
+    proxy:true,
     saveUninitialized: true,
     cookie: {
-      secure: !!process.env.MCDAWEB_USE_SSL_AUTH,
+      secure: true,
       maxAge: new Date(Date.now() + 3600000)
     }
   }));
-  app.set('trust proxy', true);
+  app.set('trust proxy', 1);
   server = http.createServer(app);
 
 if (process.env.MCDAWEB_USE_SSL_AUTH) {
