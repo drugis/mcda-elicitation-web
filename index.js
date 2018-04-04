@@ -40,10 +40,15 @@ app
     rolling: true,
     saveUninitialized: true,
     cookie: {
-      maxAge: new Date(Date.now() + 3000),
-      secure: false
+      maxAge: 60 * 60 * 1000,
+      secure: true
     }
-  }));
+  }))
+  .use(function (req, res, next) {
+    console.log('debug breakpoint');
+    next();
+  })
+;
 app.set('trust proxy', 1);
 server = http.createServer(app);
 
