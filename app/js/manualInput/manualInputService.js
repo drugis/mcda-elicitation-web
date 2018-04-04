@@ -87,7 +87,7 @@ define(['lodash', 'angular'], function(_) {
             input.alpha <= 0 ||
             isNullNaNOrUndefined(input.beta) ||
             input.beta <= 0 ||
-            (input.alpha - 1) > (input.beta + input + alpha - 2);
+            (input.alpha - 1) > (input.beta + input.alpha - 2);
         },
         buildPerformance: function(data) {
           return {
