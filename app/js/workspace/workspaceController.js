@@ -1,12 +1,23 @@
 'use strict';
 define(['angular'], function(angular) {
-
-  return function($scope, $cookies, currentWorkspace) {
+  var dependencies = [
+    '$scope',
+    '$cookies',
+    '$stateParams',
+    'WorkspaceResource',
+    'currentWorkspace'
+  ];
+  var WorkspaceController = function(
+    $scope,
+    $cookies,
+    $stateParams,
+    WorkspaceResource,
+    currentWorkspace) {
     // functions
     $scope.editTitle = editTitle;
     $scope.saveTitle = saveTitle;
     $scope.cancelTitle = cancelTitle;
-    
+
     // init
     var user = angular.fromJson($cookies.get('LOGGED-IN-USER'));
     $scope.editMode = {
@@ -24,7 +35,7 @@ define(['angular'], function(angular) {
 
     function saveTitle() {
       $scope.workspace.problem.title = $scope.workspace.title;
-      $scope.workspace.$save();
+      WorkspaceResource.save($stateParams, $scope.workspace);
       $scope.isEditTitleVisible = false;
     }
 
@@ -32,4 +43,5 @@ define(['angular'], function(angular) {
       $scope.isEditTitleVisible = false;
     }
   };
+  return dependencies.concat(WorkspaceController);
 });
