@@ -214,6 +214,7 @@ define(['lodash', 'angular'], function(_) {
       var newData = {};
       // Exact input
       if (criterion.dataSource !== 'study') {
+        inputCell.type = 'exact';
         return inputCell;
       }
 
@@ -243,6 +244,9 @@ define(['lodash', 'angular'], function(_) {
               newData.dof = inputCell.sampleSize - 1;
               newData.type = 'dt';
             }
+            break;
+          default: // happens when user went back to step 1 and changed a criterion's type
+            newData.type = 'dt';
             break;
         }
       } else if (criterion.dataType === 'survival') {
@@ -305,11 +309,13 @@ define(['lodash', 'angular'], function(_) {
                 inputDataCell.exactType = 'exact';
                 if (tableEntry.performance.stdErr) {
                   inputDataCell.stdErr = tableEntry.performance.stdErr;
+                  inputDataCell.isNormal = tableEntry.performance.isNormal;
                   inputDataCell.exactType = 'exactSE';
                 }
                 if (tableEntry.performance.lowerBound) {
                   inputDataCell.lowerBound = tableEntry.performance.lowerBound;
                   inputDataCell.upperBound = tableEntry.performance.upperBound;
+                  inputDataCell.isNormal = tableEntry.performance.isNormal;
                   inputDataCell.exactType = 'exactConf';
                 }
                 break;
