@@ -10,6 +10,7 @@
       <input type="text" ng-model="alternative.title" ng-change="checkForDuplicateNames()">
     </div>
     <button class="button success" type="submit" ng-disabled="!alternative.title || !isTitleUnique">Save</button>
+    <div class="cell alert" ng-if="!isTitleUnique">Duplicate title</div>
   </div>
   <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
     <span aria-hidden="true">&times;</span>
