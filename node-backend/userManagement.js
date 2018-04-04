@@ -1,23 +1,21 @@
 'use strict';
-module.exports = function(db) {
+module.exports = function (db) {
 
-  function findOrCreateUser(sess, accessToken, extra, googleUser) {
-    var user = this.Promise();
-
+  function findOrCreateUser(accessToken, refreshToken, googleUser, callback) {
     function userTransaction(client, callback) {
-      client.query("SELECT id, username, firstName, lastName FROM UserConnection LEFT JOIN Account ON UserConnection.userid = Account.username WHERE providerUserId = $1 AND providerId = 'google'", [googleUser.id], function(error, result) {
+      client.query("SELECT id, username, firstName, lastName FROM UserConnection LEFT JOIN Account ON UserConnection.userid = Account.username WHERE providerUserId = $1 AND providerId = 'google'", [googleUser.id], function (error, result) {
         if (error) {
           return callback(error);
         }
         if (result.rows.length === 0) {
           client.query("INSERT INTO UserConnection (userId, providerId, providerUserId, rank, displayName, profileUrl, accessToken, refreshToken, expireTime)" +
             " VALUES ($1, 'google', $2, 1, $3, $4, $5, $6, $7)", [googleUser.id, googleUser.id, googleUser.name, googleUser.link, accessToken, extra.refresh_token, extra.expires_in],
-            function(error) {
+            function (error) {
               if (error) {
                 return callback(error);
               }
               client.query("INSERT INTO Account (username, firstName, lastName) VALUES ($1, $2, $3) RETURNING id", [googleUser.id, googleUser.given_name, googleUser.family_name],
-                function(error, result) {
+                function (error, result) {
                   if (error) {
                     return callback(error);
 
@@ -37,14 +35,12 @@ module.exports = function(db) {
       });
     }
 
-    db.runInTransaction(userTransaction, function(error, result) {
+    db.runInTransaction(userTransaction, function (error, result) {
       if (error) {
-        return user.fail(error);
+        callback(error);
       }
-      user.fulfill(result);
+      callback(null, result);
     });
-
-    return user;
   }
 
   function findUserById(id, callback) {
@@ -57,7 +53,7 @@ module.exports = function(db) {
 
   // private
   function findUserByProperty(property, value, callback) {
-    db.query('SELECT id, username, firstName, lastName, email FROM Account WHERE ' + property + ' = $1', [value], function(error, result) {
+    db.query('SELECT id, username, firstName, lastName, email FROM Account WHERE ' + property + ' = $1', [value], function (error, result) {
       if (error) {
         callback(error);
       } else if (result.rows.length === 0) {
