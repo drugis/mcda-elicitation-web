@@ -34,8 +34,9 @@ app
     proxy:true,
     saveUninitialized: true,
     cookie: {
-      maxAge: new Date(Date.now() + 3600000),
-      secure: true
+      maxAge: new Date(Date.now() + 3600000)
+      // ,
+      // secure: true
     }
   }));
   app.set('trust proxy', 1);
