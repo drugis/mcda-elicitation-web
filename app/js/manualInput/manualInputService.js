@@ -61,7 +61,7 @@ define(['lodash', 'angular'], function(_) {
           if (distributionKnowledge.dnorm.isInvalidInput(input)) {
             return 'Missing or invalid input';
           } else {
-            return Math.round(input.mu*1000)/1000 + ' (' + Math.round(input.sigma*1000)/1000 + ')\nDistribution: normal';
+            return Math.round(input.mu * 1000) / 1000 + ' (' + Math.round(input.sigma * 1000) / 1000 + ')\nDistribution: normal';
           }
         },
         isInvalidInput: function(input) {
@@ -86,7 +86,8 @@ define(['lodash', 'angular'], function(_) {
           return isNullNaNOrUndefinedOrNegative(input.alpha) ||
             input.alpha <= 0 ||
             isNullNaNOrUndefined(input.beta) ||
-            input.beta <= 0;
+            input.beta <= 0 ||
+            (input.alpha - 1) > (input.beta + input + alpha - 2);
         },
         buildPerformance: function(data) {
           return {
@@ -100,7 +101,7 @@ define(['lodash', 'angular'], function(_) {
           if (distributionKnowledge.dt.isInvalidInput(input)) {
             return 'Missing or invalid input';
           } else {
-            return input.mu + ' (' + Math.round(input.stdErr*1000)/1000 + '), ' + (input.dof + 1) + '\nDistribution: Student\'s t';
+            return input.mu + ' (' + Math.round(input.stdErr * 1000) / 1000 + '), ' + (input.dof + 1) + '\nDistribution: Student\'s t';
           }
         },
         isInvalidInput: function(input) {

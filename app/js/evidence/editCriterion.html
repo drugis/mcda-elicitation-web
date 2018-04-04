@@ -66,6 +66,7 @@
       <button class="button success" type="submit" ng-disabled="!criterion.title || !isTitleUnique || !isValidUrl">Save</button>
     </div>
     <div class="cell alert" ng-if="!isValidUrl">Invalid URL</div>
+    <div class="cell alert" ng-if="!isTitleUnique">Duplicate title</div>
   </div>
   <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
     <span aria-hidden="true">&times;</span>
