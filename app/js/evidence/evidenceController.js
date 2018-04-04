@@ -120,7 +120,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
             return criterionKey;
           },
           criteria: function() {
-            return _.pick($scope.problem.criteria, 'title');
+            return _.map($scope.problem.criteria, 'title');
           },
           valueTree: function() {
             return $scope.valueTree;

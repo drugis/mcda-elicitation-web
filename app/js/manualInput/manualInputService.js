@@ -61,7 +61,7 @@ define(['lodash', 'angular'], function(_) {
           if (distributionKnowledge.dnorm.isInvalidInput(input)) {
             return 'Missing or invalid input';
           } else {
-            return Math.round(input.mu*1000)/1000 + ' (' + Math.round(input.sigma*1000)/1000 + ')\nDistribution: normal';
+            return Math.round(input.mu * 1000) / 1000 + ' (' + Math.round(input.sigma * 1000) / 1000 + ')\nDistribution: normal';
           }
         },
         isInvalidInput: function(input) {
@@ -86,7 +86,8 @@ define(['lodash', 'angular'], function(_) {
           return isNullNaNOrUndefinedOrNegative(input.alpha) ||
             input.alpha <= 0 ||
             isNullNaNOrUndefined(input.beta) ||
-            input.beta <= 0;
+            input.beta <= 0 ||
+            (input.alpha - 1) > (input.beta + input.alpha - 2);
         },
         buildPerformance: function(data) {
           return {
@@ -100,7 +101,7 @@ define(['lodash', 'angular'], function(_) {
           if (distributionKnowledge.dt.isInvalidInput(input)) {
             return 'Missing or invalid input';
           } else {
-            return input.mu + ' (' + Math.round(input.stdErr*1000)/1000 + '), ' + (input.dof + 1) + '\nDistribution: Student\'s t';
+            return input.mu + ' (' + Math.round(input.stdErr * 1000) / 1000 + '), ' + (input.dof + 1) + '\nDistribution: Student\'s t';
           }
         },
         isInvalidInput: function(input) {
@@ -213,6 +214,7 @@ define(['lodash', 'angular'], function(_) {
       var newData = {};
       // Exact input
       if (criterion.dataSource !== 'study') {
+        inputCell.type = 'exact';
         return inputCell;
       }
 
@@ -242,6 +244,9 @@ define(['lodash', 'angular'], function(_) {
               newData.dof = inputCell.sampleSize - 1;
               newData.type = 'dt';
             }
+            break;
+          default: // happens when user went back to step 1 and changed a criterion's type
+            newData.type = 'dt';
             break;
         }
       } else if (criterion.dataType === 'survival') {
@@ -304,11 +309,13 @@ define(['lodash', 'angular'], function(_) {
                 inputDataCell.exactType = 'exact';
                 if (tableEntry.performance.stdErr) {
                   inputDataCell.stdErr = tableEntry.performance.stdErr;
+                  inputDataCell.isNormal = tableEntry.performance.isNormal;
                   inputDataCell.exactType = 'exactSE';
                 }
                 if (tableEntry.performance.lowerBound) {
                   inputDataCell.lowerBound = tableEntry.performance.lowerBound;
                   inputDataCell.upperBound = tableEntry.performance.upperBound;
+                  inputDataCell.isNormal = tableEntry.performance.isNormal;
                   inputDataCell.exactType = 'exactConf';
                 }
                 break;
