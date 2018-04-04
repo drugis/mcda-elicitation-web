@@ -19,12 +19,12 @@ var server;
 var express = require('express'),
   bodyParser = require('body-parser'),
   session = require('express-session'),
-  helmet = require('helmet'),
+  // helmet = require('helmet'),
   csurf = require('csurf');
 
 var app = express();
 app
-  .use(helmet())
+  // .use(helmet())
   .use(session({
     store: new (require('connect-pg-simple')(session))({
       conString: dbUri,
@@ -35,8 +35,9 @@ app
     rolling: true,
     saveUninitialized: false,
     cookie: {
-      secure: true,
       maxAge: new Date(Date.now() + 3600000)
+      // ,
+      // secure: true
     }
   }));
   app.set('trust proxy', 1);

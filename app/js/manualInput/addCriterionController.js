@@ -42,7 +42,7 @@ define(['lodash'], function(_) {
       if (!criterion.title && !$scope.isAddingCriterion) {
         $scope.blockedReasons.push('No title entered');
       }
-      if (isTitleDuplicate(criterion.title) && !$scope.isAddingCriterion && !oldCriterion) {
+      if (isTitleDuplicate(criterion.title) && !$scope.isAddingCriterion && (!oldCriterion || oldCriterion.title !== criterion.title)) {
         $scope.blockedReasons.push('Duplicate title');
       }
       if (criterion.dataType === 'survival' && !criterion.timeScale) {
