@@ -3,6 +3,7 @@ var loginUtils = require('./node-backend/loginUtils');
 var dbUri = 'postgres://' + process.env.MCDAWEB_DB_USER + ':' + process.env.MCDAWEB_DB_PASSWORD + '@' + process.env.MCDAWEB_DB_HOST + '/' + process.env.MCDAWEB_DB_NAME; // FIXME
 console.log(dbUri);
 var db = require('./node-backend/db')(dbUri);
+var _ = require('lodash');
 var patavi = require('./node-backend/patavi');
 var logger = require('./node-backend/logger');
 var UserManagement = require('./node-backend/userManagement')(db);
@@ -12,36 +13,33 @@ var ToggledColumnService = require('./node-backend/toggledColumnService')(db);
 var SubProblemService = require('./node-backend/subProblemService')(db);
 var ScenarioService = require('./node-backend/scenarioService')(db);
 var http = require('http');
-var https = require('https');
-var fs = require('fs');
 var server;
 
 var express = require('express'),
   bodyParser = require('body-parser'),
   session = require('express-session'),
-  // helmet = require('helmet'),
+  helmet = require('helmet'),
   csurf = require('csurf');
 
 var app = express();
 app
-  // .use(helmet())
+  .use(helmet())
   .use(session({
     store: new (require('connect-pg-simple')(session))({
       conString: dbUri,
     }),
     secret: process.env.MCDAWEB_COOKIE_SECRET,
-    resave: false,
-    proxy:true,
+    resave: true,
+    proxy: true,
     rolling: true,
-    saveUninitialized: false,
+    saveUninitialized: true,
     cookie: {
-      maxAge: new Date(Date.now() + 3600000)
-      // ,
-      // secure: true
+      maxAge: 60 * 60 * 1000,
+      secure: true
     }
   }));
-  app.set('trust proxy', 1);
-  server = http.createServer(app);
+app.set('trust proxy', 1);
+server = http.createServer(app);
 
 if (process.env.MCDAWEB_USE_SSL_AUTH) {
   app.get('/signin', function (req, res) {
@@ -61,21 +59,32 @@ if (process.env.MCDAWEB_USE_SSL_AUTH) {
     }
   });
 } else {
-  var everyauth = require('everyauth');
-  everyauth.everymodule.findUserById(UserManagement.findUserById);
-  everyauth.google
-    .myHostname(process.env.MCDA_HOST)
-    .authQueryParam({
-      approval_prompt: 'auto'
-    })
-    .appId(process.env.MCDAWEB_GOOGLE_KEY)
-    .appSecret(process.env.MCDAWEB_GOOGLE_SECRET)
-    .scope('https://www.googleapis.com/auth/userinfo.profile email')
-    .findOrCreateUser(UserManagement.findOrCreateUser)
-    .redirectPath('/');
+  var passport = require('passport');
+  var GoogleStrategy = require('passport-google-oauth20').Strategy;
+  passport.use(
+    new GoogleStrategy({
+      clientID: process.env.MCDAWEB_GOOGLE_KEY,
+      clientSecret: process.env.MCDAWEB_GOOGLE_SECRET,
+      callbackURL: process.env.MCDA_HOST + "/auth/google/callback"
+    },
+      UserManagement.findOrCreateUser
+    ));
+  passport.serializeUser(function (user, cb) {
+    cb(null, user);
+  });
+  passport.deserializeUser(function (obj, cb) {
+    cb(null, obj);
+  });
   app.get('/signin', function (req, res) {
     res.sendFile(__dirname + '/public/signin.html');
   });
+  app.use(passport.initialize());
+  app.use(passport.session());
+  app.get('/auth/google/', passport.authenticate('google', { scope: ['profile'] }));
+  app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/signin' }),
+    function (req, res) {
+      res.redirect('/');
+    });
 }
 
 var bower_path = '/bower_components';
@@ -87,9 +96,6 @@ app
   .use('/examples', express.static(__dirname + '/examples'))
   .use(bodyParser.json())
   .use(csurf());
-  if (!process.env.MCDAWEB_USE_SSL_AUTH) {
-  app.use(everyauth.middleware(app));
-}
 
 
 var router = express.Router();
@@ -106,7 +112,7 @@ app.use(router);
 app.use(function (req, res, next) {
   res.cookie('XSRF-TOKEN', req.csrfToken());
   if (req.user) {
-    res.cookie('LOGGED-IN-USER', JSON.stringify(req.user));
+    res.cookie('LOGGED-IN-USER', JSON.stringify(_.omit(req.user, 'email')));
   }
   next();
 });
