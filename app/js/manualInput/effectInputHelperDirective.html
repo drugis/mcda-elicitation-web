@@ -3,7 +3,7 @@
   <pane ng-keydown="keyCheck($event, $close)" ng-keypress="keyCheck($event, $close)">
     <div class="grid-container" style="width: 35rem">
       <!-- exact -->
-      <div class="grid-x" ng-if="inputCell.type === 'exact'">
+      <div class="grid-x" ng-if="criterion.dataSource === 'exact'">
         <div class="cell large-4">
           <label>
             Input parameters
