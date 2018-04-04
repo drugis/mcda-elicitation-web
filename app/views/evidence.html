@@ -31,7 +31,7 @@
           <th>Reference
             <inline-help help-key="criterion-source"></inline-help>
           </th>
-          <th ng-if="isStandAlone">Uncertainties / Strength of evidence</th>
+          <th ng-if="isStandAlone">Strength of evidence / Uncertainties</th>
         </tr>
       </thead>
       <tbody>
@@ -71,8 +71,8 @@
             <span ng-if="!problem.criteria[row.id].sourceLink">{{problem.criteria[row.id].source}}</span>
           </td>
           <td ng-if="!row.isHeaderRow && isStandAlone">
-            <div ng-if="problem.criteria[row.id].uncertainties"><b>Unc: </b> {{problem.criteria[row.id].uncertainties}}</div>
             <div ng-if="problem.criteria[row.id].strengthOfEvidence"><b>SoE: </b>{{problem.criteria[row.id].strengthOfEvidence}}</div>
+            <div ng-if="problem.criteria[row.id].uncertainties"><b>Unc: </b> {{problem.criteria[row.id].uncertainties}}</div>
           </td>
         </tr>
       </tbody>

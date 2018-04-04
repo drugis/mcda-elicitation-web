@@ -37,7 +37,7 @@
               {{scenario.state.legend[alternative.id].baseTitle || alternative.title}}
             </th>
             <th ng-show="toggledColumns['references']">References</th>
-            <th ng-show="toggledColumns['strength']">Uncertainties / Strength of evidence
+            <th ng-show="toggledColumns['strength']">Strength of evidence / Uncertainties
               <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
             </th>
           </tr>
@@ -68,8 +68,8 @@
               <span ng-if="!criterion.sourceLink">{{criterion.source}}</span>
             </td>
             <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['strength']">
-              <div ng-if="criterion.uncertainties"><b>Unc: </b> {{criterion.uncertainties}}</div>
               <div ng-if="criterion.strengthOfEvidence"><b>SoE: </b>{{criterion.strengthOfEvidence}}</div>
+              <div ng-if="criterion.uncertainties"><b>Unc: </b> {{criterion.uncertainties}}</div>
             </td>
           </tr>
         </tbody>
