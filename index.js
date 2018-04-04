@@ -13,8 +13,6 @@ var ToggledColumnService = require('./node-backend/toggledColumnService')(db);
 var SubProblemService = require('./node-backend/subProblemService')(db);
 var ScenarioService = require('./node-backend/scenarioService')(db);
 var http = require('http');
-var https = require('https');
-var fs = require('fs');
 var server;
 
 var express = require('express'),
@@ -25,11 +23,7 @@ var express = require('express'),
 
 var app = express();
 app
-  .use(function (req, res, next) {
-    console.log('debug breakpoint');
-    next();
-  })
-  // .use(helmet())
+  .use(helmet())
   .use(session({
     store: new (require('connect-pg-simple')(session))({
       conString: dbUri,
@@ -43,12 +37,7 @@ app
       maxAge: 60 * 60 * 1000,
       secure: true
     }
-  }))
-  .use(function (req, res, next) {
-    console.log('debug breakpoint');
-    next();
-  })
-;
+  }));
 app.set('trust proxy', 1);
 server = http.createServer(app);
 
