@@ -1,5 +1,4 @@
 'use strict';
-var loginUtils = require('./node-backend/loginUtils');
 var dbUri = 'postgres://' + process.env.MCDAWEB_DB_USER + ':' + process.env.MCDAWEB_DB_PASSWORD + '@' + process.env.MCDAWEB_DB_HOST + '/' + process.env.MCDAWEB_DB_NAME; // FIXME
 console.log(dbUri);
 var db = require('./node-backend/db')(dbUri);
@@ -86,6 +85,11 @@ if (process.env.MCDAWEB_USE_SSL_AUTH) {
       res.redirect('/');
     });
 }
+
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
 
 var bower_path = '/bower_components';
 app
@@ -178,8 +182,6 @@ app.post('/patavi', function (req, res, next) { // FIXME: separate routes for sc
     });
   });
 });
-
-app.get('/user', loginUtils.emailHashMiddleware);
 
 //FIXME: should not be needed?
 app.get('/main.js', function (req, res) {
