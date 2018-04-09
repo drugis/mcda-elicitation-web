@@ -108,7 +108,6 @@ define(['lodash', 'angular'], function(_) {
       var includedCriteria = _.keys(_.pickBy($scope.subProblemState.criterionInclusions));
       var includedAlternatives = _.keys(_.pickBy($scope.subProblemState.alternativeInclusions));
 
-      // $scope.scalesCriteria = _.pick($scope.criteria, includedCriteria);
       $scope.scalesCriteria = _.filter($scope.criteria, function(criterion) {
         return $scope.subProblemState.criterionInclusions[criterion.id];
       });

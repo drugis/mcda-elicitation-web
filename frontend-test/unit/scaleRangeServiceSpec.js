@@ -158,7 +158,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
                 floor: 0,
                 ceil: 40,
                 step: 0.4,
-                precision: 50,
+                precision: 2,
                 noSwitching: true
               }
             },
@@ -171,7 +171,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
                 floor: 10,
                 ceil: 40,
                 step: 0.3,
-                precision: 50,
+                precision: 2,
                 noSwitching: true
               }
             }
@@ -183,12 +183,16 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
         expect(result.scaleState.headacheId.sliderOptions.floor).toEqual(expectedResult.scaleState.headacheId.sliderOptions.floor);
         expect(result.scaleState.headacheId.sliderOptions.ceil).toEqual(expectedResult.scaleState.headacheId.sliderOptions.ceil);
         expect(result.scaleState.headacheId.sliderOptions.step).toEqual(expectedResult.scaleState.headacheId.sliderOptions.step);
+        expect(result.scaleState.headacheId.sliderOptions.precision).toEqual(expectedResult.scaleState.headacheId.sliderOptions.precision);
+        expect(result.scaleState.headacheId.sliderOptions.noSwitching).toEqual(expectedResult.scaleState.headacheId.sliderOptions.noSwitching);
         expect(typeof result.scaleState.nauseaId.increaseFrom).toBe('function');
         expect(typeof result.scaleState.nauseaId.increaseTo).toBe('function');
         expect(result.scaleState.nauseaId.sliderOptions.restrictedRange).toEqual(expectedResult.scaleState.nauseaId.sliderOptions.restrictedRange);
         expect(result.scaleState.nauseaId.sliderOptions.floor).toEqual(expectedResult.scaleState.nauseaId.sliderOptions.floor);
         expect(result.scaleState.nauseaId.sliderOptions.ceil).toEqual(expectedResult.scaleState.nauseaId.sliderOptions.ceil);
         expect(result.scaleState.nauseaId.sliderOptions.step).toEqual(expectedResult.scaleState.nauseaId.sliderOptions.step);
+        expect(result.scaleState.nauseaId.sliderOptions.precision).toEqual(expectedResult.scaleState.nauseaId.sliderOptions.precision);
+        expect(result.scaleState.nauseaId.sliderOptions.noSwitching).toEqual(expectedResult.scaleState.nauseaId.sliderOptions.noSwitching);
         expect(result.choices).toEqual(expectedResult.choices);
       }));
     });
