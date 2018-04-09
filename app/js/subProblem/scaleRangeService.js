@@ -70,7 +70,7 @@ define(['lodash', 'angular'], function(_) {
           floor: niceFrom(from),
           ceil: niceTo(to),
           step: Math.abs(niceTo(to) - niceFrom(from)) / 100,
-          precision: 50,
+          precision: 2,
           noSwitching: true,
           translate: function(value){
             return numberFilter(value);
