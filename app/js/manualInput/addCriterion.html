@@ -20,13 +20,13 @@
         <label for="favorable">Favorable</label>
       </div>
       <div class="cell">
-        <label>Data source
-          <inline-help help-key="criterion-data-source"></inline-help>
+        <label>Input type
+          <inline-help help-key="criterion-input-type"></inline-help>
         </label>
-        <input type="radio" ng-model="criterion.dataSource" ng-value="'study'" id="study-data" ng-change="dataSourceChanged()">
-        <label for="study-data">Study data</label>
-        <input type="radio" ng-model="criterion.dataSource" ng-value="'exact'" id="exact-values" ng-change="dataSourceChanged()">
-        <label for="exact-values">Exact values</label>
+        <input type="radio" ng-model="criterion.inputType" ng-value="'distribution'" id="distribution" ng-change="inputTypeChanged()">
+        <label for="study-data">Distribution</label>
+        <input type="radio" ng-model="criterion.inputType" ng-value="'effects'" id="effects" ng-change="inputTypeChanged()">
+        <label for="exact-values">Effects</label>
       </div>
       <div class="cell" ng-hide="criterion.dataSource==='exact'">
         <label>Data type
