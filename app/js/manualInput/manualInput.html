@@ -48,7 +48,10 @@
           <tr>
             <th>Title</th>
             <th ng-if="state.useFavorability">Is favorable?</th>
+            <th>Input type</th>
+            <th>Input method</th>
             <th>Data type</th>
+            <th>Parameter of interest</th>
             <th>Unit
               <inline-help help-key="criterion-unit"></inline-help>
             </th>
@@ -91,7 +94,10 @@
               </div>
             </td>
             <td ng-if="state.useFavorability">{{criterion.isFavorable}}</td>
-            <td style="color: {{criterion.dataType === 'Unknown'? 'red' :''}};">{{criterion.dataType}}</td>
+            <td>{{criterion.inputType}}</td>
+            <td>{{criterion.inputType === 'distribution' ? inputMethods[criterion.inputMethod] : 'NA'}}</td>
+            <td style="color: {{criterion.dataType === 'Unknown'? 'red' :''}};">{{criterion.inputType === 'effect' ? criterion.dataType : 'NA'}}</td>
+            <td>{{parameterOfInterest[criterion.parameterOfInterest]}}</td>
             <td>{{criterion.unitOfMeasurement}}</td>
             <td>{{criterion.description}}</td>
             <td><a href="{{criterion.sourceLink}}">{{criterion.source}}</a></td>
@@ -223,7 +229,7 @@
             <td>{{criterion.unitOfMeasurement}}</td>
             <td ng-if="state.useFavorability">{{criterion.isFavorable}}</td>
             <td ng-repeat="treatment in state.alternatives">
-              <effect-input-helper criterion="criterion" treatment="treatment" input-data="state.inputData[criterion.hash][treatment.hash]" change-callback="checkInputData"></effect-input-helper>
+              <effect-input-helper criterion="criterion" alternative="treatment" input-data="state.inputData[criterion.hash][treatment.hash]" change-callback="checkInputData"></effect-input-helper>
             </td>
           </tr>
         </tbody>
