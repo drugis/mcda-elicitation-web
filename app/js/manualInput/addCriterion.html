@@ -37,6 +37,10 @@
         <input type="radio" ng-model="criterion.inputMethod" ng-value="'manualDistribution'" id="manualDistribution">
         <label for="manualDistribution">Manual distribution</label>
       </div>
+      <div class="cell" ng-hide="criterion.inputType !== 'distribution' || criterion.inputMethod !== 'assistedDistribution'">
+        <label>Data Type</label>
+        <!-- implement -->
+      </div>
       <div class="cell" ng-hide="criterion.inputType !== 'effect'">
         <label>Data type
           <inline-help help-key="criterion-datatype"></inline-help>
@@ -61,7 +65,7 @@
         <input ng-hide="criterion.dataType !== 'continuous'" type="radio" ng-model="criterion.parameterOfInterest" ng-value="'median'"
           id="median">
         <label ng-hide="criterion.dataType !== 'continuous'" for="median">Median</label>
-        <input ng-hide="criterion.dataType !== 'continuous'" type="radio" ng-model="criterion.parameterOfInterest" ng-value="'cumulative probability'"
+        <input ng-hide="criterion.dataType !== 'continuous'" type="radio" ng-model="criterion.parameterOfInterest" ng-value="'cumulativeProbability'"
           id="cumulative-probability">
         <label ng-hide="criterion.dataType !== 'continuous'" for="cumulative-probability">Cumulative probability</label>
         <input ng-hide="criterion.dataType !== 'other'" type="radio" ng-model="criterion.parameterOfInterest" ng-value="'value'" id="value" ng-disabled="true">

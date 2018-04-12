@@ -9,7 +9,7 @@ define(['lodash'], function (_) {
     $scope.dataTypeChanged = dataTypeChanged;
     $scope.useFavorability = useFavorability;
 
-    // vars
+    // init
     $scope.blockedReason = '';
     $scope.criterion = {
       inputType: 'distribution',
@@ -21,7 +21,6 @@ define(['lodash'], function (_) {
     $scope.isAddOperation = !oldCriterion;
     $scope.isAddingCriterion = false;
 
-    // init
     if (oldCriterion) {
       $scope.criterion = _.cloneDeep(oldCriterion);
     }
