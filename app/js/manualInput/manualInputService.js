@@ -9,6 +9,9 @@ define(['lodash', 'angular'], function (_) {
         },
         toString: function (cell) {
           return distributionKnowledge[cell.inputMethod].toString(cell);
+        },
+        buildPerformance: function (cell) {
+          return distributionKnowledge[cell.inputMethod].buildPerformance(cell);
         }
       },
       effect: {
@@ -17,6 +20,9 @@ define(['lodash', 'angular'], function (_) {
         },
         toString: function (cell) {
           return effectKnowledge[cell.dataType].toString(cell);
+        },
+        buildPerformance: function (cell) {
+          return effectKnowledge[cell.dataType].buildPerformance(cell);
         }
       }
     };
@@ -27,6 +33,9 @@ define(['lodash', 'angular'], function (_) {
         },
         toString: function (cell) {
           return assistedDistributionKnowlegde[cell.dataType].toString(cell);
+        },
+        buildPerformance: function (cell) {
+          return assistedDistributionKnowlegde[cell.dataType].buildPerformance(cell);
         }
       },
       manualDistribution: {
@@ -84,10 +93,37 @@ define(['lodash', 'angular'], function (_) {
             default:
               return 'Missing or invalid input';
           }
+        },
+        buildPerformance: function (cell) {
+          switch (cell.inputParameters.label) {
+            case 'Beta':
+              return {
+                type: 'dbeta',
+                parameters: {
+                  alpha: cell.firstParameter,
+                  beta: cell.secondParameter
+                }
+              };
+            case 'Normal':
+              return {
+                type: 'dnorm',
+                parameters: {
+                  mu: cell.firstParameter,
+                  sigma: cell.secondParameter
+                }
+              };
+            case 'Gamma':
+              return {
+                type: 'dgamma',
+                parameters: {
+                  alpha: cell.firstParameter,
+                  beta: cell.secondParameter
+                }
+              };
+          }
         }
       }
     };
-
     var effectKnowledge = {
       dichotomous: {
         checkInputValues: function (cell) {
@@ -327,6 +363,15 @@ define(['lodash', 'angular'], function (_) {
             return cell.firstParameter + ' / ' + cell.secondParameter + '\nDistribution: Beta(' + (events + 1) + ', ' + (sampleSize - events + 2) + ')';
           }
           return 'Missing or invalid input';
+        },
+        buildPerformance: function (cell) {
+          return {
+            type: 'dbeta',
+            parameters: {
+              alpha: cell.firstParameter + 1,
+              beta: cell.secondParameter - cell.firstParameter + 2
+            }
+          };
         }
       },
       continuous: {
@@ -346,16 +391,37 @@ define(['lodash', 'angular'], function (_) {
           switch (cell.inputParameters.label) {
             case 'Student\'s t, SE':
               if (!checkInputValues(cell)) {
-                return mu + ' (' + sigma + '), ' + sampleSize + '\nDistribution: t(' + sampleSize + ', ' + mu + ', ' + sigma + ')';
+                return mu + ' (' + sigma + '), ' + sampleSize + '\nDistribution: t(' + (sampleSize - 1) + ', ' + mu + ', ' + sigma + ')';
               }
             case 'Student\'s t, SD':
               if (!checkInputValues(cell)) {
-                return mu + ' (' + sigma + '), ' + sampleSize + '\nDistribution: t(' + sampleSize + ', ' + mu + ', ' + (sigma / Math.sqrt(sampleSize)) + ')';
+                return mu + ' (' + sigma + '), ' + sampleSize + '\nDistribution: t(' + (sampleSize - 1) + ', ' + mu + ', ' + (Math.round(1000*sigma / Math.sqrt(sampleSize))/1000) + ')';
               }
             default:
               return 'Missing or invalid input';
           }
-
+        },
+        buildPerformance: function (cell) {
+          switch (cell.inputParameters.label) {
+            case 'Student\'s t, SE':
+              return {
+                type: 'dt',
+                parameters: {
+                  mu: cell.firstParameter,
+                  stdErr: cell.secondParameter,
+                  dof: cell.thirdParameter - 1
+                }
+              };
+            case 'Student\'s t, SD':
+              return {
+                type: 'dt',
+                parameters: {
+                  mu: cell.firstParameter,
+                  stdErr: Math.round(cell.secondParameter / Math.sqrt(cell.secondParameter)*1000)/1000,
+                  dof: cell.thirdParameter - 1
+                }
+              };
+          }
         }
       }
     };
@@ -460,15 +526,6 @@ define(['lodash', 'angular'], function (_) {
       switch (criterion.dataType) {
         case 'dichotomous':
           return [0, 1];
-        case 'continuous':
-          return [-Infinity, Infinity];
-        case 'survival':
-          if (criterion.summaryMeasure === 'mean' || criterion.summaryMeasure === 'median') {
-            return [0, Infinity];
-          } else if (criterion.summaryMeasure === 'survivalAtTime') {
-            return [0, 1];
-          }
-          break;
         default:
           return [-Infinity, Infinity];
       }
@@ -606,11 +663,11 @@ define(['lodash', 'angular'], function (_) {
       var newPerformanceTable = [];
       _.forEach(criteria, function (criterion) {
         _.forEach(treatments, function (treatment) {
-          var data = createDistribution(inputData[criterion.hash][treatment.hash], criterion);
+          var cell = inputData[criterion.hash][treatment.hash];
           newPerformanceTable.push({
             alternative: treatment.title,
             criterion: criterion.title,
-            performance: distributionKnowledge[data.type].buildPerformance(data, criterion)
+            performance: inputTypeKnowledge[cell.inputType].buildPerformance(cell)
           });
         });
       });
@@ -675,12 +732,12 @@ define(['lodash', 'angular'], function (_) {
 
     return {
       createProblem: createProblem,
+      inputToString: inputToString,
+      checkInputValues: checkInputValues,
       createDistribution: createDistribution,
       prepareInputData: prepareInputData,
-      inputToString: inputToString,
       createInputFromOldWorkspace: createInputFromOldWorkspace,
-      copyWorkspaceCriteria: copyWorkspaceCriteria,
-      checkInputValues: checkInputValues
+      copyWorkspaceCriteria: copyWorkspaceCriteria
     };
   };
 
