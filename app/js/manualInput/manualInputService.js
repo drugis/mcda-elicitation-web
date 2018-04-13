@@ -2,148 +2,6 @@
 define(['lodash', 'angular'], function (_) {
   var dependencies = [];
   var ManualInputService = function () {
-    // var distributionKnowledge = {
-    //   exact: {
-    //     toString: function (input) {
-    //       switch (input.exactType) {
-    //         case 'exact':
-    //           if (isNullNaNOrUndefined(input.value)) {
-    //             return 'Missing or invalid input';
-    //           } else {
-    //             return input.value + '\nDistribution: none';
-    //           }
-    //           break;
-    //         case 'exactSE':
-    //           if (isNullNaNOrUndefined(input.value) || isNullNaNOrUndefinedOrNegative(input.stdErr)) {
-    //             return 'Missing or invalid input';
-    //           } else {
-    //             return input.value + ' (' + input.stdErr + ')\nDistribution: ' + (input.isNormal ? 'normal' : 'none');
-    //           }
-    //           break;
-    //         case 'exactConf':
-    //           if (isNullNaNOrUndefined(input.value) ||
-    //             isNullNaNOrUndefined(input.lowerBound) ||
-    //             isNullNaNOrUndefined(input.upperBound)) {
-    //             return 'Missing or invalid input';
-    //           } else if (input.lowerBound > input.value || input.value > input.upperBound) {
-    //             return 'Lower bound too high, or upper bound too low';
-    //           } else {
-    //             return input.value + ' (' + input.lowerBound + ',' + input.upperBound + ')\nDistribution: ' + (input.isNormal ? 'normal' : 'none');
-    //           }
-    //           break;
-    //       }
-    //     },
-    //     isInvalidInput: function (input) {
-    //       var invalidStdErrOrBounds = false;
-    //       if (input.stdErr) {
-    //         invalidStdErrOrBounds = isNullNaNOrUndefinedOrNegative(input.stdErr);
-    //       } else if (input.lowerBound) {
-    //         invalidStdErrOrBounds = isNullNaNOrUndefined(input.lowerBound) ||
-    //           isNullNaNOrUndefined(input.upperBound) ||
-    //           input.lowerBound > input.value ||
-    //           input.value > input.upperBound;
-    //       }
-    //       return isNullNaNOrUndefined(input.value) || invalidStdErrOrBounds;
-    //     },
-    //     buildPerformance: function (data) {
-    //       switch (data.exactType) {
-    //         case 'exact':
-    //           return _.pick(data, ['type', 'value']);
-    //         case 'exactSE':
-    //           return _.pick(data, ['type', 'value', 'stdErr', 'isNormal']);
-    //         case 'exactConf':
-    //           return _.pick(data, ['type', 'value', 'lowerBound', 'upperBound', 'isNormal']);
-    //       }
-    //     }
-    //   },
-    //   dnorm: {
-    //     toString: function (input) {
-    //       if (distributionKnowledge.dnorm.isInvalidInput(input)) {
-    //         return 'Missing or invalid input';
-    //       } else {
-    //         return Math.round(input.mu * 1000) / 1000 + ' (' + Math.round(input.sigma * 1000) / 1000 + ')\nDistribution: normal';
-    //       }
-    //     },
-    //     isInvalidInput: function (input) {
-    //       return isNullNaNOrUndefined(input.mu) || isNullNaNOrUndefinedOrNegative(input.sigma);
-    //     },
-    //     buildPerformance: function (data) {
-    //       return {
-    //         type: data.type,
-    //         parameters: _.pick(data, ['mu', 'sigma'])
-    //       };
-    //     }
-    //   },
-    //   dbeta: {
-    //     toString: function (input) {
-    //       if (distributionKnowledge.dbeta.isInvalidInput(input)) {
-    //         return 'Missing or invalid input';
-    //       } else {
-    //         return (input.alpha - 1) + ' / ' + (input.beta + input.alpha - 2) + '\nDistribution: beta';
-    //       }
-    //     },
-    //     isInvalidInput: function (input) {
-    //       return isNullNaNOrUndefinedOrNegative(input.alpha) ||
-    //         input.alpha <= 0 ||
-    //         isNullNaNOrUndefined(input.beta) ||
-    //         input.beta <= 0 ||
-    //         (input.alpha - 1) > (input.beta + input.alpha - 2);
-    //     },
-    //     buildPerformance: function (data) {
-    //       return {
-    //         type: data.type,
-    //         parameters: _.pick(data, ['alpha', 'beta'])
-    //       };
-    //     }
-    //   },
-    //   dt: {
-    //     toString: function (input) {
-    //       if (distributionKnowledge.dt.isInvalidInput(input)) {
-    //         return 'Missing or invalid input';
-    //       } else {
-    //         return input.mu + ' (' + Math.round(input.stdErr * 1000) / 1000 + '), ' + (input.dof + 1) + '\nDistribution: Student\'s t';
-    //       }
-    //     },
-    //     isInvalidInput: function (input) {
-    //       return isNullNaNOrUndefined(input.mu) ||
-    //         isNullNaNOrUndefinedOrNegative(input.stdErr) ||
-    //         isNullNaNOrUndefined(input.dof);
-    //     },
-    //     buildPerformance: function (data) {
-    //       return {
-    //         type: data.type,
-    //         parameters: _.pick(data, ['mu', 'stdErr', 'dof'])
-    //       };
-    //     }
-    //   },
-    //   dsurv: {
-    //     toString: function (input) {
-    //       if (distributionKnowledge.dsurv.isInvalidInput(input)) {
-    //         return 'Missing or invalid input';
-    //       } else {
-    //         return (input.alpha - 0.001) + ' / ' + (input.beta - 0.001) + '\nDistribution: gamma';
-    //       }
-    //     },
-    //     isInvalidInput: function (input) {
-    //       return isNullNaNOrUndefined(input.alpha) ||
-    //         input.alpha <= 0 ||
-    //         isNullNaNOrUndefined(input.beta) ||
-    //         input.beta <= 0;
-    //     },
-    //     buildPerformance: function (data, criterion) {
-    //       var parameters = _.pick(data, ['alpha', 'beta']);
-    //       parameters.summaryMeasure = criterion.summaryMeasure;
-    //       if (criterion.summaryMeasure === 'survivalAtTime') {
-    //         parameters.time = criterion.timePointOfInterest;
-    //       }
-    //       return {
-    //         type: data.type,
-    //         parameters: parameters
-    //       };
-    //     }
-    //   }
-    // };
-
     var inputTypeKnowledge = {
       distribution: {
         checkInputValues: function (cell) {
@@ -164,7 +22,12 @@ define(['lodash', 'angular'], function (_) {
     };
     var distributionKnowledge = {
       assistedDistribution: {
-
+        checkInputValues: function (cell) {
+          return assistedDistributionKnowlegde[cell.dataType].checkInputValues(cell);
+        },
+        toString: function (cell) {
+          return assistedDistributionKnowlegde[cell.dataType].toString(cell);
+        }
       },
       manualDistribution: {
         checkInputValues: function (cell) {
@@ -207,15 +70,15 @@ define(['lodash', 'angular'], function (_) {
         toString: function (cell) {
           switch (cell.inputParameters.label) {
             case 'Beta':
-              if (!checkInputValues(cell)) { // there is no error in the input
+              if (!checkInputValues(cell)) {
                 return 'Beta(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
               }
             case 'Normal':
-              if (!checkInputValues(cell)) { // there is no error in the input
+              if (!checkInputValues(cell)) {
                 return 'Normal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
               }
             case 'Gamma':
-              if (!checkInputValues(cell)) { // there is no error in the input
+              if (!checkInputValues(cell)) {
                 return 'Gamma(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
               }
             default:
@@ -224,6 +87,7 @@ define(['lodash', 'angular'], function (_) {
         }
       }
     };
+
     var effectKnowledge = {
       dichotomous: {
         checkInputValues: function (cell) {
@@ -231,21 +95,21 @@ define(['lodash', 'angular'], function (_) {
             case 'Decimal':
               if (isNullNaNOrUndefinedOrNegative(cell.firstParameter) || cell.firstParameter > 1) {
                 return 'Value should be between or equal to 0 and 1';
-              } else if (cell.secondParameter && cell.secondParameter % 1 !== 0) {
+              } else if (cell.secondParameter && !isInteger(cell.secondParameter) % 1 !== 0) {
                 return 'Sample size should be integer';
               }
               break;
             case 'Percentage':
               if (isNullNaNOrUndefinedOrNegative(cell.firstParameter) || cell.firstParameter > 100) {
                 return 'Value should be between or equal to 0 and 100';
-              } else if (cell.secondParameter && cell.secondParameter % 1 !== 0) {
+              } else if (cell.secondParameter && !isInteger(cell.secondParameter)) {
                 return 'Sample size should be integer';
               }
               break;
             case 'Fraction':
               if (isNullNaNOrUndefinedOrNegative(cell.firstParameter) || isNullNaNOrUndefinedOrNegative(cell.secondParameter)) {
                 return 'Both values must be defined and non-negative';
-              } else if (cell.firstParameter > cell.secondParameter){
+              } else if (cell.firstParameter > cell.secondParameter) {
                 return 'Number of events may not exceed sample size';
               }
               break;
@@ -265,7 +129,7 @@ define(['lodash', 'angular'], function (_) {
               }
             case 'Percentage':
               if (!checkInputValues(cell)) {
-                var returnString = cell.firstParameter;
+                var returnString = cell.firstParameter + '%';
                 if (cell.secondParameter) {
                   returnString = returnString + ' (' + cell.secondParameter + ')';
                 }
@@ -281,10 +145,218 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       continuous: {
-
+        checkInputValues: function (cell) {
+          return continuousKnowledge[cell.parameterOfInterest].checkInputValues(cell);
+        },
+        toString: function (cell) {
+          return continuousKnowledge[cell.parameterOfInterest].toString(cell);
+        }
       },
       other: {
+        checkInputValues: function (cell) {
+          var value = cell.firstParameter;
+          if (isNullNaNOrUndefined(value)) {
+            return 'Missing or invalid value';
+          }
+          switch (cell.inputParameters.label) {
+            case 'Value':
+              break;
+            case 'Value, SE':
+              if (isNullNaNOrUndefinedOrNegative(cell.secondParameter)) {
+                return 'Standard error must be positive';
+              }
+              break;
+            case 'Value, 95% C.I.':
+              var intervalError = checkInterval(cell.firstParameter, cell.secondParameter, cell.thirdParameter);
+              if (intervalError) {
+                return intervalError;
+              }
+              break;
+            default:
+              return 'Invalid parameters';
+          }
+        },
+        toString: function (cell) {
+          switch (cell.inputParameters.label) {
+            case 'Value':
+              return valueToString(cell);
+            case 'Value, SE':
+              return valueSEToString(cell);
+            case 'Value, 95% C.I.':
+              return valueCIToString(cell);
+            default:
+              return 'Missing or invalid input';
+          }
+        }
+      }
+    };
+    var continuousKnowledge = {
+      mean: {
+        checkInputValues: function (cell) {
+          if (isNullNaNOrUndefined(cell.firstParameter)) {
+            return 'Missing or invalid mean';
+          }
+          switch (cell.inputParameters.label) {
+            case 'Mean':
+              break;
+            case 'Mean, SE':
+              if (isNullNaNOrUndefinedOrNegative(cell.secondParameter)) {
+                return 'Standard error must be positive';
+              }
+              break;
+            case 'Mean, 95% C.I.':
+              var intervalError = checkInterval(cell.firstParameter, cell.secondParameter, cell.thirdParameter);
+              if (intervalError) {
+                return intervalError;
+              }
+              break;
+            default:
+              return 'Invalid parameters';
+          }
 
+        },
+        toString: function (cell) {
+          switch (cell.inputParameters.label) {
+            case 'Mean':
+              return valueToString(cell);
+            case 'Mean, SE':
+              return valueSEToString(cell);
+            case 'Mean, 95% C.I.':
+              return valueCIToString(cell);
+            default:
+              return 'Missing or invalid input';
+          }
+        }
+      },
+      median: {
+        checkInputValues: function (cell) {
+          if (isNullNaNOrUndefined(cell.firstParameter)) {
+            return 'Missing or invalid median';
+          }
+          switch (cell.inputParameters.label) {
+            case 'Median':
+              break;
+            case 'Median, 95% C.I.':
+              var intervalError = checkInterval(cell.firstParameter, cell.secondParameter, cell.thirdParameter);
+              if (intervalError) {
+                return intervalError;
+              }
+              break;
+            default:
+              return 'Invalid parameters';
+          }
+        },
+        toString: function (cell) {
+          switch (cell.inputParameters.label) {
+            case 'Median':
+              return valueToString(cell);
+            case 'Median, 95% C.I.':
+              return valueCIToString(cell);
+            default:
+              return 'Missing or invalid input';
+          }
+        }
+      },
+      cumulativeProbability: {
+        checkInputValues: function (cell) {
+          var value = cell.firstParameter;
+          if (isNullNaNOrUndefinedOrNegative(value)) {
+            return 'Missing, invalid, or negative value';
+          } else if (cell.display === 'decimal' && value > 1) {
+            return 'Value must be 1 or less';
+          } else if (cell.display === 'percentage' && value > 100) {
+            return 'Percentage must be 100 or less';
+          }
+          switch (cell.inputParameters.label) {
+            case 'Value':
+              break;
+            case 'Value, 95% C.I.':
+              var intervalError = checkInterval(cell.firstParameter, cell.secondParameter, cell.thirdParameter);
+              if (intervalError) {
+                return intervalError;
+              } else if (cell.display === 'decimal' && cell.thirdParameter > 1) {
+                return 'Upperbound can at most be 1';
+              } else if (cell.display === 'percentage' && cell.thirdParameter > 100) {
+                return 'Upperbound can at most be 100';
+              }
+              break;
+            default:
+              return 'Invalid parameters';
+          }
+        },
+        toString: function (cell) {
+          switch (cell.inputParameters.label) {
+            case 'Value':
+              if (cell.display === 'decimal') {
+                return valueToString(cell);
+              } else if (cell.display === 'percentage' && !checkInputValues(cell)) {
+                return cell.firstParameter + '%\nDistribution: none';
+              }
+
+            case 'Value, 95% C.I.':
+              if (cell.display === 'decimal') {
+                return valueCIToString(cell);
+              } else if (cell.display === 'percentage' && !checkInputValues(cell)) {
+                return valueCIPercentToString(cell);
+              }
+            default:
+              return 'Missing or invalid input';
+          }
+        }
+      }
+    };
+    var assistedDistributionKnowlegde = {
+      dichotomous: {
+        checkInputValues: function (cell) {
+          var events = cell.firstParameter;
+          var sampleSize = cell.secondParameter;
+          if (isNullNaNOrUndefinedOrNegative(events)) {
+            return 'Missing, invalid, or negative events';
+          } else if (isNullNaNOrUndefined(sampleSize) || sampleSize < 1) {
+            return 'Missing, invalid, or lower than 1 sample size';
+          } else if (!isInteger(events) || !isInteger(sampleSize)) {
+            return 'Events and sample size must be integer';
+          } else if (events > sampleSize) {
+            return 'Events must be lower or equal to sample size';
+          }
+        },
+        toString: function (cell) {
+          var events = cell.firstParameter;
+          var sampleSize = cell.secondParameter;
+          if (!checkInputValues(cell)) {
+            return cell.firstParameter + ' / ' + cell.secondParameter + '\nDistribution: Beta(' + (events + 1) + ', ' + (sampleSize - events + 2) + ')';
+          }
+          return 'Missing or invalid input';
+        }
+      },
+      continuous: {
+        checkInputValues: function (cell) {
+          if (isNullNaNOrUndefined(cell.firstParameter)) {
+            return 'Missing or invalid mean';
+          } else if (isNullNaNOrUndefinedOrNegative(cell.secondParameter)) {
+            return 'Missing, invalid, or negative standard error/deviation';
+          } else if (isNullNaNOrUndefinedOrNegative(cell.thirdParameter) || !isInteger(cell.thirdParameter)) {
+            return 'Missing, invalid, negative, or non-integer sample size';
+          }
+        },
+        toString: function (cell) {
+          var mu = cell.firstParameter;
+          var sigma = cell.secondParameter;
+          var sampleSize = cell.thirdParameter;
+          switch (cell.inputParameters.label) {
+            case 'Student\'s t, SE':
+              if (!checkInputValues(cell)) {
+                return mu + ' (' + sigma + '), ' + sampleSize + '\nDistribution: t(' + sampleSize + ', ' + mu + ', ' + sigma + ')';
+              }
+            case 'Student\'s t, SD':
+              if (!checkInputValues(cell)) {
+                return mu + ' (' + sigma + '), ' + sampleSize + '\nDistribution: t(' + sampleSize + ', ' + mu + ', ' + (sigma / Math.sqrt(sampleSize)) + ')';
+              }
+            default:
+              return 'Missing or invalid input';
+          }
+
+        }
       }
     };
 
@@ -462,7 +534,7 @@ define(['lodash', 'angular'], function (_) {
                 break;
             }
             var distributionData = createDistribution(inputDataCell, criterion);
-            inputDataCell.isInvalid = isInvalidCell(distributionData);
+            inputDataCell.isInvalid = checkInputValues(distributionData);
             inputDataCell.label = inputToString(distributionData);
             newInputData[criterion.hash][alternative.hash] = inputDataCell;
           }
@@ -555,6 +627,50 @@ define(['lodash', 'angular'], function (_) {
 
     function isNullOrUndefined(value) {
       return value === null || value === undefined;
+    }
+
+    function checkInterval(value, lowerBound, upperBound) {
+      if (isNullNaNOrUndefined(lowerBound) || isNullNaNOrUndefined(upperBound)) {
+        return 'Missing or invalid convidence interval';
+      } else if (lowerBound > value || value > upperBound) {
+        return 'Lower bound too high, or upper bound too low';
+      }
+    }
+
+    function valueToString(cell) {
+      if (!checkInputValues(cell)) {
+        return cell.firstParameter + '\nDistribution: none';
+      } else {
+        return 'Missing or invalid input';
+      }
+    }
+
+    function valueSEToString(cell) {
+      if (!checkInputValues(cell)) {
+        return cell.firstParameter + ' (' + cell.secondParameter + ')' + '\nDistribution: none';
+      } else {
+        return 'Missing or invalid input';
+      }
+    }
+
+    function valueCIToString(cell) {
+      if (!checkInputValues(cell)) {
+        return cell.firstParameter + ' (' + cell.secondParameter + ', ' + cell.thirdParameter + ')' + '\nDistribution: none';
+      } else {
+        return 'Missing or invalid input';
+      }
+    }
+
+    function valueCIPercentToString(cell) {
+      if (!checkInputValues(cell)) {
+        return cell.firstParameter + '% (' + cell.secondParameter + '%, ' + cell.thirdParameter + '%)' + '\nDistribution: none';
+      } else {
+        return 'Missing or invalid input';
+      }
+    }
+
+    function isInteger(value) {
+      return value % 1 === 0;
     }
 
     return {

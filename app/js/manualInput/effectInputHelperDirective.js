@@ -23,7 +23,25 @@ define(['lodash'], function (_) {
 
         // init
         scope.assistedDistributionOptions = {
-          //vague
+          dichotomous: {
+            label: 'dichotomous',
+            firstParameter: 'Events',
+            secondParameter: 'Sample size'
+          },
+          continuous: {
+            stdErr: {
+              label: 'Student\'s t, SE',
+              firstParameter: 'Mean',
+              secondParameter: 'Standard error',
+              thirdParameter: 'Sample size'
+            },
+            stdDev: {
+              label: 'Student\'s t, SD',
+              firstParameter: 'Mean',
+              secondParameter: 'Standard deviation',
+              thirdParameter: 'Sample size'
+            }
+          }
         };
         scope.manualDistributionOptions = {
           beta: {
@@ -177,12 +195,24 @@ define(['lodash'], function (_) {
         function setDistributionOptions() {
           switch (scope.inputCell.inputMethod) {
             case 'assistedDistribution':
-              scope.options = scope.assistedDistributionOptions;
-              scope.inputCell.inputParameters = scope.options.dichotomous;
+              setAssistedDistributionOptions();
               break;
             case 'manualDistribution':
               scope.options = scope.manualDistributionOptions;
               scope.inputCell.inputParameters = scope.options.beta;
+              break;
+          }
+        }
+
+        function setAssistedDistributionOptions() {
+          switch (scope.inputCell.dataType) {
+            case 'dichotomous':
+              scope.options = undefined;
+              scope.inputCell.inputParameters = scope.assistedDistributionOptions.dichotomous;
+              break;
+            case 'continuous':
+              scope.options = scope.assistedDistributionOptions.continuous;
+              scope.inputCell.inputParameters = scope.options.stdErr;
               break;
           }
         }
@@ -198,6 +228,7 @@ define(['lodash'], function (_) {
               scope.options = scope.continuousOptions[parameterOfInterest];
               if (parameterOfInterest === 'cumulativeProbability') {
                 scope.inputCell.inputParameters = scope.options.value;
+                scope.inputCell.display = 'percentage';
               } else {
                 scope.inputCell.inputParameters = scope.options[parameterOfInterest];
               }

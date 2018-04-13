@@ -8,6 +8,7 @@ define(['lodash'], function (_) {
     $scope.cancel = $modalInstance.close;
     $scope.dataTypeChanged = dataTypeChanged;
     $scope.useFavorability = useFavorability;
+    $scope.inputTypeChanged = inputTypeChanged;
 
     // init
     $scope.blockedReason = '';
@@ -63,6 +64,11 @@ define(['lodash'], function (_) {
           $scope.criterion.parameterOfInterest = 'value';
       }
       isCreationBlocked();
+    }
+    function inputTypeChanged(){
+      if($scope.criterion.inputType === 'distribution' && $scope.criterion.dataType === 'other'){
+        $scope.criterion.dataType = 'dichotomous';
+      }
     }
   };
   return dependencies.concat(AddCriterionController);
