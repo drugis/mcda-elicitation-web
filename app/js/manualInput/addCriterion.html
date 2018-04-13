@@ -28,7 +28,7 @@
         <input type="radio" ng-model="criterion.inputType" ng-value="'effect'" id="effect" ng-change="inputTypeChanged()">
         <label for="effect">Effect</label>
       </div>
-      <div class="cell" ng-hide="criterion.inputType !== 'distribution'">
+      <div class="cell" ng-show="criterion.inputType === 'distribution'">
         <label>Input method
           <inline-help help-key="criterion-input-method"></inline-help>
         </label>
@@ -37,11 +37,7 @@
         <input type="radio" ng-model="criterion.inputMethod" ng-value="'manualDistribution'" id="manualDistribution">
         <label for="manualDistribution">Manual distribution</label>
       </div>
-      <div class="cell" ng-hide="criterion.inputType !== 'distribution' || criterion.inputMethod !== 'assistedDistribution'">
-        <label>Data Type</label>
-        <!-- implement -->
-      </div>
-      <div class="cell" ng-hide="criterion.inputType !== 'effect'">
+      <div class="cell" ng-show="criterion.inputType === 'effect' || criterion.inputMethod === 'assistedDistribution'">
         <label>Data type
           <inline-help help-key="criterion-datatype"></inline-help>
         </label>
@@ -49,27 +45,27 @@
         <label for="dichotomous">Dichotomous</label>
         <input type="radio" ng-model="criterion.dataType" ng-change="dataTypeChanged()" ng-value="'continuous'" id="continuous">
         <label for="continuous">Continuous</label>
-        <input type="radio" ng-model="criterion.dataType" ng-change="dataTypeChanged()" ng-value="'other'" id="other">
-        <label for="other">Other</label>
+        <input type="radio" ng-model="criterion.dataType" ng-change="dataTypeChanged()" ng-value="'other'" id="other" ng-show="criterion.inputType === 'effect'">
+        <label for="other" ng-show="criterion.inputType === 'effect'">Other</label>
       </div>
-      <div class="cell" ng-hide="criterion.inputType !== 'effect'">
+      <div class="cell" ng-show="criterion.inputType === 'effect'">
         <label>Parameter of interest
           <inline-help help-key="criterion-parameter-of-interest"></inline-help>
         </label>
-        <input ng-hide="criterion.dataType !== 'dichotomous'" type="radio" ng-model="criterion.parameterOfInterest" ng-value="'eventProbability'"
+        <input ng-show="criterion.dataType === 'dichotomous'" type="radio" ng-model="criterion.parameterOfInterest" ng-value="'eventProbability'"
           id="event-probability" ng-disabled="true">
-        <label ng-hide="criterion.dataType !== 'dichotomous'" for="event-probability">Event probability</label>
-        <input ng-hide="criterion.dataType !== 'continuous'" type="radio" ng-model="criterion.parameterOfInterest" ng-value="'mean'"
+        <label ng-show="criterion.dataType === 'dichotomous'" for="event-probability">Event probability</label>
+        <input ng-show="criterion.dataType === 'continuous'" type="radio" ng-model="criterion.parameterOfInterest" ng-value="'mean'"
           id="mean">
-        <label ng-hide="criterion.dataType !== 'continuous'" for="mean">Mean</label>
-        <input ng-hide="criterion.dataType !== 'continuous'" type="radio" ng-model="criterion.parameterOfInterest" ng-value="'median'"
+        <label ng-show="criterion.dataType === 'continuous'" for="mean">Mean</label>
+        <input ng-show="criterion.dataType === 'continuous'" type="radio" ng-model="criterion.parameterOfInterest" ng-value="'median'"
           id="median">
-        <label ng-hide="criterion.dataType !== 'continuous'" for="median">Median</label>
-        <input ng-hide="criterion.dataType !== 'continuous'" type="radio" ng-model="criterion.parameterOfInterest" ng-value="'cumulativeProbability'"
+        <label ng-show="criterion.dataType === 'continuous'" for="median">Median</label>
+        <input ng-show="criterion.dataType === 'continuous'" type="radio" ng-model="criterion.parameterOfInterest" ng-value="'cumulativeProbability'"
           id="cumulative-probability">
-        <label ng-hide="criterion.dataType !== 'continuous'" for="cumulative-probability">Cumulative probability</label>
-        <input ng-hide="criterion.dataType !== 'other'" type="radio" ng-model="criterion.parameterOfInterest" ng-value="'value'" id="value" ng-disabled="true">
-        <label ng-hide="criterion.dataType !== 'other'" for="value">Value</label>
+        <label ng-show="criterion.dataType === 'continuous'" for="cumulative-probability">Cumulative probability</label>
+        <input ng-show="criterion.dataType === 'other'" type="radio" ng-model="criterion.parameterOfInterest" ng-value="'value'" id="value" ng-disabled="true">
+        <label ng-show="criterion.dataType === 'other'" for="value">Value</label>
       </div>
       <div class="cell">
         <label>Unit of measurement (optional)

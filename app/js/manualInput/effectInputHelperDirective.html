@@ -5,7 +5,7 @@
   <pane ng-keydown="keyCheck($event, $close)" ng-keypress="keyCheck($event, $close)">
     <div class="grid-container" style="width: 35rem">
       <div call="grid-x">
-        <div class="cell large-6">
+        <div class="cell large-6" ng-show="options">
           <label>
             Input parameters
             <select ng-model="inputCell.inputParameters" ng-options="option as option.label for option in options" ng-change="checkInput()"></select>
@@ -14,7 +14,7 @@
         <div class="cell large-6">
           <label ng-if="inputCell.parameterOfInterest === 'cumulativeProbability'">
             Display
-            <select ng-model="inputCell.display" ng-options="displayKey as displayValue for (displayKey, displayValue) in inputCell.inputParameters.display"></select>
+            <select ng-model="inputCell.display" ng-options="displayKey as displayValue for (displayKey, displayValue) in inputCell.inputParameters.display" ng-change="checkInput()"></select>
           </label>
         </div>
         <div class="cell large-4">
