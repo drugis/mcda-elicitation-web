@@ -63,8 +63,8 @@ define(['lodash'], function (_) {
         default:
           $scope.criterion.parameterOfInterest = 'value';
       }
-      isCreationBlocked();
     }
+
     function inputTypeChanged(){
       if($scope.criterion.inputType === 'distribution' && $scope.criterion.dataType === 'other'){
         $scope.criterion.dataType = 'dichotomous';

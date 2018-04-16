@@ -148,7 +148,7 @@ define(['lodash'], function (_) {
         var isEscPressed = false;
         scope.inputCell = _.cloneDeep(scope.inputData);
         initInputParameters();
-        scope.inputData.label = ManualInputService.inputToString(ManualInputService.createDistribution(scope.inputCell, scope.criterion)); //FIXME
+        scope.inputData.label = ManualInputService.inputToString(scope.inputData);
 
         scope.$on('open.af.dropdownToggle', function () {
           isEscPressed = false;
@@ -199,7 +199,11 @@ define(['lodash'], function (_) {
               break;
             case 'manualDistribution':
               scope.options = scope.manualDistributionOptions;
-              scope.inputCell.inputParameters = scope.options.beta;
+              if (!_.find(scope.manualDistributionOptions, function (value) {
+                return value.label === scope.inputCell.inputParameters.label;
+              })) {
+                scope.inputCell.inputParameters = scope.options.beta;
+              }
               break;
           }
         }
@@ -212,7 +216,10 @@ define(['lodash'], function (_) {
               break;
             case 'continuous':
               scope.options = scope.assistedDistributionOptions.continuous;
-              scope.inputCell.inputParameters = scope.options.stdErr;
+              if (scope.inputCell.inputParameters.label !== 'Student\'s t, SE' &&
+                scope.inputCell.inputParameters.label !== 'Student\'s t, SD') {
+                scope.inputCell.inputParameters = scope.options.stdErr;
+              }
               break;
           }
         }
@@ -221,21 +228,30 @@ define(['lodash'], function (_) {
           switch (scope.inputCell.dataType) {
             case 'dichotomous':
               scope.options = scope.dichotomousOptions;
-              scope.inputCell.inputParameters = scope.options.decimal;
+              if (scope.inputCell.inputParameters.label !== scope.options.decimal.label) {
+                scope.inputCell.inputParameters = scope.options.decimal;
+              }
               break;
             case 'continuous':
               var parameterOfInterest = scope.inputCell.parameterOfInterest;
               scope.options = scope.continuousOptions[parameterOfInterest];
               if (parameterOfInterest === 'cumulativeProbability') {
-                scope.inputCell.inputParameters = scope.options.value;
-                scope.inputCell.display = 'percentage';
+                if (scope.inputCell.inputParameters.label !== 'Value, 95% C.I.') {
+                  scope.inputCell.inputParameters = scope.options.value;
+                }
+                if (!scope.inputCell.display) {
+                  scope.inputCell.display = 'percentage';
+                }
               } else {
                 scope.inputCell.inputParameters = scope.options[parameterOfInterest];
               }
               break;
             case 'other':
               scope.options = scope.otherOptions;
-              scope.inputCell.inputParameters = scope.options.value;
+              if (scope.inputCell.inputParameters.label !== 'Value, SE' ||
+                scope.inputCell.inputParameters.label !== 'Value, 95% C.I.') {
+                scope.inputCell.inputParameters = scope.options.value;
+              }
               break;
           }
         }

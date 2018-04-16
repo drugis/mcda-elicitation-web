@@ -178,6 +178,28 @@ define(['lodash', 'angular'], function (_) {
             default:
               return 'Missing or invalid input';
           }
+        },
+        buildPerformance: function (cell) {
+          switch (cell.inputParameters.label) {
+            case 'Decimal':
+              return {
+                type: 'exact',
+                value: cell.firstParameter,
+              };
+            case 'Percentage':
+              return {
+                type: 'exact',
+                value: cell.firstParameter / 100,
+                percentage: true
+              };
+            case 'Fraction':
+              return {
+                type: 'exact',
+                value: (cell.firstParameter / cell.secondParameter),
+                events: cell.firstParameter,
+                sampleSize: cell.secondParameter
+              };
+          }
         }
       },
       continuous: {
@@ -186,6 +208,9 @@ define(['lodash', 'angular'], function (_) {
         },
         toString: function (cell) {
           return continuousKnowledge[cell.parameterOfInterest].toString(cell);
+        },
+        buildPerformance: function (cell) {
+          return continuousKnowledge[cell.parameterOfInterest].buildPerformance(cell);
         }
       },
       other: {
@@ -223,6 +248,28 @@ define(['lodash', 'angular'], function (_) {
             default:
               return 'Missing or invalid input';
           }
+        },
+        buildPerformance: function (cell) {
+          switch (cell.inputParameters.label) {
+            case 'Value':
+              return {
+                type: 'exact',
+                value: cell.firstParameter
+              };
+            case 'Value, SE':
+              return {
+                type: 'exact',
+                value: cell.firstParameter,
+                stdErr: cell.secondParameter
+              };
+            case 'Value, 95% C.I.':
+              return {
+                type: 'exact',
+                value: cell.firstParameter,
+                lowerBound: cell.secondParameter,
+                upperBound: cell.thirdParameter
+              };
+          }
         }
       }
     };
@@ -249,7 +296,6 @@ define(['lodash', 'angular'], function (_) {
             default:
               return 'Invalid parameters';
           }
-
         },
         toString: function (cell) {
           switch (cell.inputParameters.label) {
@@ -261,6 +307,27 @@ define(['lodash', 'angular'], function (_) {
               return valueCIToString(cell);
             default:
               return 'Missing or invalid input';
+          }
+        }, buildPerformance: function (cell) {
+          switch (cell.inputParameters.label) {
+            case 'Mean':
+              return {
+                type: 'exact',
+                value: cell.firstParameter
+              };
+            case 'Mean, SE':
+              return {
+                type: 'exact',
+                value: cell.firstParameter,
+                stdErr: cell.secondParameter
+              };
+            case 'Mean, 95% C.I.':
+              return {
+                type: 'exact',
+                value: cell.firstParameter,
+                lowerBound: cell.secondParameter,
+                upperBound: cell.thirdParameter
+              };
           }
         }
       },
@@ -290,6 +357,21 @@ define(['lodash', 'angular'], function (_) {
               return valueCIToString(cell);
             default:
               return 'Missing or invalid input';
+          }
+        }, buildPerformance: function (cell) {
+          switch (cell.inputParameters.label) {
+            case 'Median':
+              return {
+                type: 'exact',
+                value: cell.firstParameter
+              };
+            case 'Median, 95% C.I.':
+              return {
+                type: 'exact',
+                value: cell.firstParameter,
+                lowerBound: cell.secondParameter,
+                upperBound: cell.thirdParameter
+              };
           }
         }
       },
@@ -337,6 +419,33 @@ define(['lodash', 'angular'], function (_) {
               }
             default:
               return 'Missing or invalid input';
+          }
+        }, buildPerformance: function (cell) {
+          switch (cell.inputParameters.label) {
+            case 'Value':
+              return {
+                type: 'exact',
+                value: cell.firstParameter
+              };
+            case 'Value, 95% C.I.':
+              var isDecimal = cell.display === 'Decimal';
+              if(isDecimal){
+
+                return {
+                  type: 'exact',
+                  value: cell.firstParameter ,
+                  lowerBound: cell.secondParameter ,
+                  upperBound: cell.thirdParameter 
+                };
+              } else {
+                return {
+                  type: 'exact',
+                  value:  cell.firstParameter/100,
+                  lowerBound:  cell.secondParameter/100,
+                  upperBound:  cell.thirdParameter/100, 
+                  percentage: true
+                };
+              }
           }
         }
       }
@@ -395,7 +504,7 @@ define(['lodash', 'angular'], function (_) {
               }
             case 'Student\'s t, SD':
               if (!checkInputValues(cell)) {
-                return mu + ' (' + sigma + '), ' + sampleSize + '\nDistribution: t(' + (sampleSize - 1) + ', ' + mu + ', ' + (Math.round(1000*sigma / Math.sqrt(sampleSize))/1000) + ')';
+                return mu + ' (' + sigma + '), ' + sampleSize + '\nDistribution: t(' + (sampleSize - 1) + ', ' + mu + ', ' + (Math.round(1000 * sigma / Math.sqrt(sampleSize)) / 1000) + ')';
               }
             default:
               return 'Missing or invalid input';
@@ -417,7 +526,7 @@ define(['lodash', 'angular'], function (_) {
                 type: 'dt',
                 parameters: {
                   mu: cell.firstParameter,
-                  stdErr: Math.round(cell.secondParameter / Math.sqrt(cell.secondParameter)*1000)/1000,
+                  stdErr: Math.round(cell.secondParameter / Math.sqrt(cell.secondParameter) * 1000) / 1000,
                   dof: cell.thirdParameter - 1
                 }
               };
@@ -523,13 +632,13 @@ define(['lodash', 'angular'], function (_) {
     }
 
     function buildScale(criterion) {
-      switch (criterion.dataType) {
-        case 'dichotomous':
-          return [0, 1];
-        default:
-          return [-Infinity, Infinity];
+      if (criterion.dataType === 'dichotomous' ||
+        (criterion.dataType === 'continuous' && criterion.parameterOfInterest === 'cumulativeProbability')) {
+        return [0, 1];
       }
+      return [-Infinity, Infinity];
     }
+
 
     function createInputFromOldWorkspace(criteria, alternatives, oldWorkspace, inputData) {
       var newInputData = _.cloneDeep(inputData);
