@@ -146,9 +146,9 @@ define(['lodash'], function (_) {
           }
         };
         var isEscPressed = false;
-        scope.inputCell = _.cloneDeep(scope.inputData);
+
         initInputParameters();
-        scope.inputData.label = ManualInputService.inputToString(scope.inputData);
+        scope.inputData.label = ManualInputService.inputToString(scope.inputCell);
 
         scope.$on('open.af.dropdownToggle', function () {
           isEscPressed = false;
@@ -182,6 +182,11 @@ define(['lodash'], function (_) {
 
 
         function initInputParameters() {
+          if (didCriterionChange(scope.criterion, scope.inputData)) {
+            scope.inputCell = _.cloneDeep(scope.criterion);
+          } else {
+            scope.inputCell = _.cloneDeep(scope.inputData);
+          }
           switch (scope.inputCell.inputType) {
             case 'distribution':
               setDistributionOptions();
@@ -199,7 +204,7 @@ define(['lodash'], function (_) {
               break;
             case 'manualDistribution':
               scope.options = scope.manualDistributionOptions;
-              if (!_.find(scope.manualDistributionOptions, function (value) {
+              if (!scope.inputCell.inputParameters || !_.find(scope.manualDistributionOptions, function (value) {
                 return value.label === scope.inputCell.inputParameters.label;
               })) {
                 scope.inputCell.inputParameters = scope.options.beta;
@@ -228,7 +233,7 @@ define(['lodash'], function (_) {
           switch (scope.inputCell.dataType) {
             case 'dichotomous':
               scope.options = scope.dichotomousOptions;
-              if (scope.inputCell.inputParameters.label !== scope.options.decimal.label) {
+              if (!scope.inputCell.inputParameters || scope.inputCell.inputParameters.label !== scope.options.decimal.label) {
                 scope.inputCell.inputParameters = scope.options.decimal;
               }
               break;
@@ -248,7 +253,7 @@ define(['lodash'], function (_) {
               break;
             case 'other':
               scope.options = scope.otherOptions;
-              if (scope.inputCell.inputParameters.label !== 'Value, SE' ||
+              if (!scope.inputCell.inputParameters || scope.inputCell.inputParameters.label !== 'Value, SE' ||
                 scope.inputCell.inputParameters.label !== 'Value, 95% C.I.') {
                 scope.inputCell.inputParameters = scope.options.value;
               }
@@ -267,6 +272,14 @@ define(['lodash'], function (_) {
           } else if (event.keyCode === ENTER) {
             scope.$broadcast('doClose.af.dropdownToggle');
           }
+        }
+
+        function didCriterionChange(criterion, cell) {
+          return criterion.inputType !== cell.inputType ||
+            (criterion.inputType === 'distribution' && criterion.inputMethod !== cell.inputMethod) ||
+            (criterion.inputType === 'distribution' && criterion.inputMethod === 'assistedDistribution' && criterion.dataType !== cell.dataType) ||
+            (criterion.inputType === 'effect' && criterion.dataType !== cell.dataType) ||
+            (criterion.inputType === 'effect' && criterion.dataType === 'continuous' && criterion.parameterOfInterest !== cell.parameterOfInterest);
         }
       }
     };

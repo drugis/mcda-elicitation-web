@@ -178,7 +178,7 @@ define(['lodash', 'angular'], function (_, angular) {
             return function (newCriterion) {
               if (criterion) { // editing not adding
                 removeCriterion(criterion);
-              }
+               }
               $scope.state.criteria.push(newCriterion);
               findUnknownCriteria($scope.state.criteria);
               favorabilityChanged();
@@ -196,6 +196,7 @@ define(['lodash', 'angular'], function (_, angular) {
 
     function removeCriterion(criterion) {
       $scope.state.criteria = _.reject($scope.state.criteria, ['title', criterion.title]);
+      delete $scope.state.inputData[criterion.hash];
       findUnknownCriteria($scope.state.criteria);
       favorabilityChanged();
     }
