@@ -35,6 +35,10 @@
             <input type="number" ng-model="inputCell.thirdParameter" ng-change="checkInput()">
           </label>
         </div>
+        <div class="cell" ng-if="inputCell.inputParameters.canBeNormal">
+          Sampling distribution is approximately normally distributed <input type="checkbox" 
+          ng-model="inputCell.isNormal" ng-change="updateUpperBound()">
+        </div>
         <div class="cell alert" ng-show="error">
           {{error}}
         </div>

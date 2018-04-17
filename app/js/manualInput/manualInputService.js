@@ -185,19 +185,22 @@ define(['lodash', 'angular'], function (_) {
               return {
                 type: 'exact',
                 value: cell.firstParameter,
+                isNormal: cell.isNormal
               };
             case 'Percentage':
               return {
                 type: 'exact',
                 value: cell.firstParameter / 100,
-                percentage: true
+                percentage: true,
+                isNormal: cell.isNormal
               };
             case 'Fraction':
               return {
                 type: 'exact',
                 value: (cell.firstParameter / cell.secondParameter),
                 events: cell.firstParameter,
-                sampleSize: cell.secondParameter
+                sampleSize: cell.secondParameter,
+                isNormal: cell.isNormal
               };
           }
         }
@@ -319,14 +322,16 @@ define(['lodash', 'angular'], function (_) {
               return {
                 type: 'exact',
                 value: cell.firstParameter,
-                stdErr: cell.secondParameter
+                stdErr: cell.secondParameter,
+                isNormal: cell.isNormal
               };
             case 'Mean, 95% C.I.':
               return {
                 type: 'exact',
                 value: cell.firstParameter,
                 lowerBound: cell.secondParameter,
-                upperBound: cell.thirdParameter
+                upperBound: cell.thirdParameter,
+                isNormal: cell.isNormal
               };
           }
         }
@@ -532,6 +537,25 @@ define(['lodash', 'angular'], function (_) {
               };
           }
         }
+      },
+      other:{
+        checkInputValues: function (cell){
+          if(isNullNaNOrUndefined(cell.firstParameter)){
+            return 'Missing or invalid value';
+          }
+        },
+        toString: function (cell){
+          if(!checkInputValues(cell)){
+            return valueToString(cell);
+          }
+          return 'Missing or invalid input';
+        },
+        buildPerformance: function (cell){
+          return {
+            type: 'exact',
+            value: cell.firstParameter
+          };
+        }
       }
     };
 
@@ -581,56 +605,6 @@ define(['lodash', 'angular'], function (_) {
       }, {});
     }
 
-    function createDistribution(inputCell, criterion) {
-      var newData = {};
-      // Exact input
-      if (criterion.dataSource !== 'study') {
-        inputCell.type = 'exact';
-        return inputCell;
-      }
-
-      // Study data input
-      if (criterion.dataType === 'dichotomous') {
-        newData.alpha = inputCell.count + 1;
-        newData.beta = inputCell.sampleSize - inputCell.count + 1;
-        newData.type = 'dbeta';
-      } else if (criterion.dataType === 'continuous') {
-        newData.mu = inputCell.mu; // All these possibilities have a mu
-        switch (inputCell.continuousType) {
-          case 'SEnorm':
-            newData.sigma = inputCell.stdErr;
-            newData.type = 'dnorm';
-            break;
-          case 'SEt':
-            newData.stdErr = inputCell.stdErr;
-            newData.dof = inputCell.sampleSize - 1;
-            newData.type = 'dt';
-            break;
-          case 'SD':
-            if (inputCell.isNormal) {
-              newData.sigma = inputCell.sigma / Math.sqrt(inputCell.sampleSize);
-              newData.type = 'dnorm';
-            } else {
-              newData.stdErr = inputCell.sigma / Math.sqrt(inputCell.sampleSize);
-              newData.dof = inputCell.sampleSize - 1;
-              newData.type = 'dt';
-            }
-            break;
-          default: // happens when user went back to step 1 and changed a criterion's type
-            newData.type = 'dt';
-            break;
-        }
-      } else if (criterion.dataType === 'survival') {
-        // survival
-        if (_.isNumber(inputCell.events) && _.isNumber(inputCell.exposure)) {
-          newData.alpha = inputCell.events + 0.001;
-          newData.beta = inputCell.exposure + 0.001;
-        }
-        newData.type = 'dsurv';
-      }
-      return newData;
-    }
-
     function buildScale(criterion) {
       if (criterion.dataType === 'dichotomous' ||
         (criterion.dataType === 'continuous' && criterion.parameterOfInterest === 'cumulativeProbability')) {
@@ -638,7 +612,6 @@ define(['lodash', 'angular'], function (_) {
       }
       return [-Infinity, Infinity];
     }
-
 
     function createInputFromOldWorkspace(criteria, alternatives, oldWorkspace, inputData) {
       var newInputData = _.cloneDeep(inputData);
@@ -699,9 +672,8 @@ define(['lodash', 'angular'], function (_) {
                 inputDataCell.timeScale = tableEntry.performance.parameters.time;
                 break;
             }
-            var distributionData = createDistribution(inputDataCell, criterion);
-            inputDataCell.isInvalid = checkInputValues(distributionData);
-            inputDataCell.label = inputToString(distributionData);
+            inputDataCell.isInvalid = checkInputValues(inputDataCell);
+            inputDataCell.label = inputToString(inputDataCell);
             newInputData[criterion.hash][alternative.hash] = inputDataCell;
           }
         });
@@ -843,7 +815,6 @@ define(['lodash', 'angular'], function (_) {
       createProblem: createProblem,
       inputToString: inputToString,
       checkInputValues: checkInputValues,
-      createDistribution: createDistribution,
       prepareInputData: prepareInputData,
       createInputFromOldWorkspace: createInputFromOldWorkspace,
       copyWorkspaceCriteria: copyWorkspaceCriteria
