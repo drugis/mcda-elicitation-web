@@ -52,11 +52,11 @@
         <label>Parameter of interest
           <!-- <inline-help help-key="criterion-datatype"></inline-help> -->
         </label>
-        <input type="radio" ng-model="criterion.dataType" ng-value="'dichotomous'" id="dichotomous">
+        <input type="radio" ng-model="criterion.dataType" ng-value="'dichotomous'" id="dichotomous" ng-change="dataTypeChanged()">
         <label for="dichotomous">Event probability (dichotomous)</label>
-        <input type="radio" ng-model="criterion.dataType" ng-value="'continuous'" id="continuous">
+        <input type="radio" ng-model="criterion.dataType" ng-value="'continuous'" id="continuous" ng-change="dataTypeChanged()">
         <label for="continuous">Mean (continuous)</label>
-        <input type="radio" ng-model="criterion.dataType" ng-value="'other'" id="other">
+        <input type="radio" ng-model="criterion.dataType" ng-value="'other'" id="other" ng-change="dataTypeChanged()">
         <label for="other">Other</label>
       </div>
       <div class="cell" ng-show="criterion.inputType === 'effect'">

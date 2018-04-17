@@ -41,6 +41,10 @@ define(['lodash'], function (_) {
               secondParameter: 'Standard deviation',
               thirdParameter: 'Sample size'
             }
+          },
+          other: {
+            label: 'other',
+            firstParameter: 'Value'
           }
         };
         scope.manualDistributionOptions = {
@@ -64,17 +68,20 @@ define(['lodash'], function (_) {
           decimal: {
             label: 'Decimal',
             firstParameter: 'Value',
-            secondParameter: 'Sample size (optional)'
+            secondParameter: 'Sample size (optional)',
+            canBeNormal: true
           },
           percentage: {
             label: 'Percentage',
             firstParameter: 'Value',
-            secondParameter: 'Sample size (optional)'
+            secondParameter: 'Sample size (optional)',
+            canBeNormal: true
           },
           fraction: {
             label: 'Fraction',
             firstParameter: 'Events',
-            secondParameter: 'Sample size'
+            secondParameter: 'Sample size',
+            canBeNormal: true
           }
         };
         scope.continuousOptions = {
@@ -86,13 +93,15 @@ define(['lodash'], function (_) {
             meanSE: {
               label: 'Mean, SE',
               firstParameter: 'Mean',
-              secondParameter: 'Standard error'
+              secondParameter: 'Standard error',
+              canBeNormal: true
             },
             meanCI: {
               label: 'Mean, 95% C.I.',
               firstParameter: 'Mean',
               secondParameter: 'Lower bound',
-              thirdParameter: 'Upper bound'
+              thirdParameter: 'Upper bound',
+              canBeNormal: true
             }
           },
           median: {
@@ -161,8 +170,12 @@ define(['lodash'], function (_) {
         });
 
         function updateUpperBound() {
-          if (scope.inputCell.isNormal) {
-            scope.inputCell.upperBound = (2 * scope.inputCell.value) - scope.inputCell.lowerBound;
+          if (scope.inputCell.isNormal &&
+            (scope.inputCell.inputParameters.label === 'Mean, 95% C.I.' ||
+              scope.inputCell.inputParameters.label === 'Decimal' ||
+              scope.inputCell.inputParameters.label === 'Percentage' ||
+              scope.inputCell.inputParameters.label === 'Fraction')) {
+            scope.inputCell.thirdParameter = (2 * scope.inputCell.firstParameter) - scope.inputCell.secondParameter;
           }
         }
 
@@ -179,7 +192,6 @@ define(['lodash'], function (_) {
             });
           });
         }
-
 
         function initInputParameters() {
           if (didCriterionChange(scope.criterion, scope.inputData)) {
@@ -225,6 +237,10 @@ define(['lodash'], function (_) {
                 scope.inputCell.inputParameters.label !== 'Student\'s t, SD') {
                 scope.inputCell.inputParameters = scope.options.stdErr;
               }
+              break;
+            case 'other':
+              scope.options = undefined;
+              scope.inputCell.inputParameters = scope.assistedDistributionOptions.other;
               break;
           }
         }
