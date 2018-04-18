@@ -48,11 +48,9 @@ define(['lodash', 'angular'], function (_) {
                 return 'Invalid alpha';
               } else if (isNullNaNOrUndefined(beta) || beta <= 0) {
                 return 'Invalid beta';
-              } else if (alpha - 1 > (beta + alpha - 2)) {
-                return 'Alpha-1 should be greater then Alpha+Beta-2';
               } else if (alpha % 1 !== 0 || beta % 1 !== 0) {
                 return 'Values should be integer';
-              }
+              } 
               break;
             case 'Normal':
               var mu = cell.firstParameter;
@@ -131,7 +129,7 @@ define(['lodash', 'angular'], function (_) {
             case 'Decimal':
               if (isNullNaNOrUndefinedOrNegative(cell.firstParameter) || cell.firstParameter > 1) {
                 return 'Value should be between or equal to 0 and 1';
-              } else if (cell.secondParameter && !isInteger(cell.secondParameter) % 1 !== 0) {
+              } else if (cell.secondParameter && !isInteger(cell.secondParameter)) {
                 return 'Sample size should be integer';
               }
               break;
@@ -227,7 +225,7 @@ define(['lodash', 'angular'], function (_) {
               break;
             case 'Value, SE':
               if (isNullNaNOrUndefinedOrNegative(cell.secondParameter)) {
-                return 'Standard error must be positive';
+                return 'Standard error invalid, missing, or negative';
               }
               break;
             case 'Value, 95% C.I.':
@@ -287,7 +285,7 @@ define(['lodash', 'angular'], function (_) {
               break;
             case 'Mean, SE':
               if (isNullNaNOrUndefinedOrNegative(cell.secondParameter)) {
-                return 'Standard error must be positive';
+                return 'Standard error missing, invalid, or negative';
               }
               break;
             case 'Mean, 95% C.I.':
@@ -793,7 +791,7 @@ define(['lodash', 'angular'], function (_) {
 
     function valueCIToString(cell) {
       if (!checkInputValues(cell)) {
-        return cell.firstParameter + ' (' + cell.secondParameter + ', ' + cell.thirdParameter + ')' + '\nDistribution: none';
+        return cell.firstParameter + ' (' + cell.secondParameter + '; ' + cell.thirdParameter + ')' + '\nDistribution: none';
       } else {
         return 'Missing or invalid input';
       }
@@ -801,7 +799,7 @@ define(['lodash', 'angular'], function (_) {
 
     function valueCIPercentToString(cell) {
       if (!checkInputValues(cell)) {
-        return cell.firstParameter + '% (' + cell.secondParameter + '%, ' + cell.thirdParameter + '%)' + '\nDistribution: none';
+        return cell.firstParameter + '% (' + cell.secondParameter + '%; ' + cell.thirdParameter + '%)' + '\nDistribution: none';
       } else {
         return 'Missing or invalid input';
       }
