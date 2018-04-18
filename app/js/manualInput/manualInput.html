@@ -6,7 +6,8 @@
       <h4>Define criteria and alternatives</h4>
     </div>
     <div class="cell">
-      Here you can enter the data for an analysis manually. In this first step, create the criteria and alternatives you wish to analyse. Alternatives are simply a title, while criteria are more complex.
+      Here you can enter the data for an analysis manually. In this first step, create the criteria and alternatives you wish to
+      analyse. Alternatives are simply a title, while criteria are more complex.
     </div>
   </div>
   <div class="grid-x">
@@ -38,7 +39,8 @@
       </label>
     </div>
     <div class="cell">
-      <button class="button small" type="button" ng-click="openCriterionModal()"><i class="fa fa-plus"></i> Add Criterion</button>
+      <button class="button small" type="button" ng-click="openCriterionModal()">
+        <i class="fa fa-plus"></i> Add Criterion</button>
     </div>
   </div>
   <div class="grid-x">
@@ -75,33 +77,48 @@
               <div class="grid-x">
                 <div class="cell small-2">
                   <div style="line-height: 10px; margin-bottom: 4px;">
-                    <a ng-if="$index !== 0 && (!(!criterion.isFavorable && state.criteria[$index-1].isFavorable) || !state.useFavorability)" ng-click="criterionUp($index)" class="nav-arrow">
+                    <a ng-if="$index !== 0 && (!(!criterion.isFavorable && state.criteria[$index-1].isFavorable) || !state.useFavorability)"
+                      ng-click="criterionUp($index)" class="nav-arrow">
                       <i style="line-height:0px;" class="fa fa-caret-up"></i>
                     </a>
-                    <i ng-if="$index === 0 || (!criterion.isFavorable && state.criteria[$index-1].isFavorable && state.useFavorability)" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
+                    <i ng-if="$index === 0 || (!criterion.isFavorable && state.criteria[$index-1].isFavorable && state.useFavorability)" style="line-height:0px; color:#bbb"
+                      class="fa fa-caret-up"></i>
                   </div>
                   <div style="line-height: 10px;">
-                    <a ng-if="$index !== state.criteria.length-1 && (!(criterion.isFavorable && !state.criteria[$index+1].isFavorable) || !state.useFavorability)" ng-click="criterionDown($index)" class="nav-arrow">
+                    <a ng-if="$index !== state.criteria.length-1 && (!(criterion.isFavorable && !state.criteria[$index+1].isFavorable) || !state.useFavorability)"
+                      ng-click="criterionDown($index)" class="nav-arrow">
                       <i style="line-height:0px;" class="fa fa-caret-down"></i>
                     </a>
-                    <i ng-if="$index === state.criteria.length-1 || (criterion.isFavorable && !state.criteria[$index+1].isFavorable && state.useFavorability)" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
+                    <i ng-if="$index === state.criteria.length-1 || (criterion.isFavorable && !state.criteria[$index+1].isFavorable && state.useFavorability)"
+                      style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
                   </div>
                 </div>
                 <div class="cell small-10">
-                  <a ng-click="removeCriterion(criterion)" tooltip="Remove criterion"><i class="fa fa-trash icon-fixed-width" style="color:red"></i></a>
-                  <a ng-click="openCriterionModal(criterion)" tooltip="Edit criterion"><i class="fa fa-edit icon-fixed-width"></i></a> {{criterion.title}}
+                  <a ng-click="removeCriterion(criterion)" tooltip="Remove criterion">
+                    <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
+                  </a>
+                  <a ng-click="openCriterionModal(criterion)" tooltip="Edit criterion">
+                    <i class="fa fa-edit icon-fixed-width"></i>
+                  </a> {{criterion.title}}
                 </div>
               </div>
             </td>
             <td ng-if="state.useFavorability">{{criterion.isFavorable}}</td>
             <td>{{criterion.inputType}}</td>
             <td>{{criterion.inputType === 'distribution' ? inputMethods[criterion.inputMethod] : 'NA'}}</td>
-            <td style="color: {{criterion.dataType === 'Unknown'? 'red' :''}};">{{criterion.inputType === 'effect' ? criterion.dataType : 'NA'}}</td>
-            <td>{{parameterOfInterest[criterion.parameterOfInterest]}}</td>
+            <td style="color: {{criterion.dataType === 'Unknown'? 'red' :''}};">{{criterion.inputType === 'effect' || criterion.inputMethod === 'assistedDistribution' ? criterion.dataType :
+              'NA'}}</td>
+            <td>{{criterion.inputType !== 'distribution' || criterion.inputMethod === 'assistedDistribution' ? parameterOfInterest[criterion.parameterOfInterest]
+              : 'NA'}}</td>
             <td>{{criterion.unitOfMeasurement}}</td>
             <td>{{criterion.description}}</td>
-            <td><a href="{{criterion.sourceLink}}">{{criterion.source}}</a></td>
-            <td><b>Unc: </b> {{criterion.uncertainties}}<br><b>SoE: </b>{{criterion.strengthOfEvidence}}</td>
+            <td>
+              <a href="{{criterion.sourceLink}}">{{criterion.source}}</a>
+            </td>
+            <td>
+              <b>Unc: </b> {{criterion.uncertainties}}
+              <br>
+              <b>SoE: </b>{{criterion.strengthOfEvidence}}</td>
           </tr>
         </tbody>
       </table>
@@ -121,7 +138,9 @@
       </span>
       <input class="text input-group-field" ng-model="treatmentInputField.value" onkeyup="if(event.keyCode===13) document.getElementById('treatmentButton').click()">
       <div class="input-group-button">
-        <button ng-disabled="!treatmentInputField.value || isDuplicateTitle(treatmentInputField.value)" type="button" class="button tiny" ng-click="addTreatment(treatmentInputField.value)" id="treatmentButton"><i class="fa fa-plus"></i> Add Alternative</button>
+        <button ng-disabled="!treatmentInputField.value || isDuplicateTitle(treatmentInputField.value)" type="button" class="button tiny"
+          ng-click="addTreatment(treatmentInputField.value)" id="treatmentButton">
+          <i class="fa fa-plus"></i> Add Alternative</button>
       </div>
     </div>
   </div>
@@ -189,7 +208,9 @@
       <em>Criteria with unknown data type</em>
     </div>
     <div class="cell" ng-if="state.useFavorability && hasMissingFavorability">
-      <em>Criteria must have favorability if favorability is turned on, once all favorabilities are set, the criteria will be sorted.</em>
+      <em>Criteria must have favorability if favorability is turned on, once all favorabilities are set, the criteria will be
+        sorted.
+      </em>
     </div>
   </div>
 </div>
@@ -200,10 +221,13 @@
       <h3>Create workspace manually — step 2 of 2</h3>
     </div>
     <div class="cell">
-      <h4>Enter data in effects table <inline-help help-key="effects-table"></inline-help></h4>
+      <h4>Enter data in effects table
+        <inline-help help-key="effects-table"></inline-help>
+      </h4>
     </div>
     <div class="cell">
-      Here you enter the data for each combination of criterion and alternative, in the form of results from studies. The corresponding distribution is calculated and displayed in the table. Begin entering data by clicking any of the cells' text.
+      Here you enter the data for each combination of criterion and alternative, in the form of results from studies. The corresponding
+      distribution is calculated and displayed in the table. Begin entering data by clicking any of the cells' text.
     </div>
   </div>
   <!-- input -->
@@ -229,7 +253,8 @@
             <td>{{criterion.unitOfMeasurement}}</td>
             <td ng-if="state.useFavorability">{{criterion.isFavorable}}</td>
             <td ng-repeat="treatment in state.alternatives">
-              <effect-input-helper criterion="criterion" alternative="treatment" input-data="state.inputData[criterion.hash][treatment.hash]" change-callback="checkInputData"></effect-input-helper>
+              <effect-input-helper criterion="criterion" alternative="treatment" input-data="state.inputData[criterion.hash][treatment.hash]"
+                change-callback="checkInputData"></effect-input-helper>
             </td>
           </tr>
         </tbody>

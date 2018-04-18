@@ -170,20 +170,15 @@ define(['lodash'], function (_) {
         });
 
         function updateUpperBound() {
+          var label = scope.inputCell.inputParameters.label;
           if (scope.inputCell.isNormal &&
-            (scope.inputCell.inputParameters.label === 'Mean, 95% C.I.' ||
-              scope.inputCell.inputParameters.label === 'Decimal' ||
-              scope.inputCell.inputParameters.label === 'Percentage' ||
-              scope.inputCell.inputParameters.label === 'Fraction')) {
+            (label === 'Mean, 95% C.I.' || label === 'Decimal' || label === 'Percentage' || label === 'Fraction')) {
             scope.inputCell.thirdParameter = (2 * scope.inputCell.firstParameter) - scope.inputCell.secondParameter;
           }
         }
 
         function saveState() {
           $timeout(function () {
-            if (scope.inputCell.isNormal && scope.inputCell.exactType === 'exactConf') {
-              scope.inputCell.upperBound = (2 * scope.inputCell.value) - scope.inputCell.lowerBound;
-            }
             scope.inputData = scope.inputCell;
             scope.inputData.isInvalid = ManualInputService.checkInputValues(scope.inputCell);
             scope.inputData.label = ManualInputService.inputToString(scope.inputCell);
@@ -210,68 +205,80 @@ define(['lodash'], function (_) {
         }
 
         function setDistributionOptions() {
-          switch (scope.inputCell.inputMethod) {
+          var cell = scope.inputCell;
+          switch (cell.inputMethod) {
             case 'assistedDistribution':
               setAssistedDistributionOptions();
               break;
             case 'manualDistribution':
               scope.options = scope.manualDistributionOptions;
-              if (!scope.inputCell.inputParameters || !_.find(scope.manualDistributionOptions, function (value) {
-                return value.label === scope.inputCell.inputParameters.label;
+              if (!cell.inputParameters || !_.find(scope.manualDistributionOptions, function (value) {
+                return value.label === cell.inputParameters.label;
               })) {
-                scope.inputCell.inputParameters = scope.options.beta;
+                cell.inputParameters = scope.options.beta;
               }
               break;
           }
         }
 
         function setAssistedDistributionOptions() {
-          switch (scope.inputCell.dataType) {
+          var cell = scope.inputCell;
+          switch (cell.dataType) {
             case 'dichotomous':
               scope.options = undefined;
-              scope.inputCell.inputParameters = scope.assistedDistributionOptions.dichotomous;
+              cell.inputParameters = scope.assistedDistributionOptions.dichotomous;
               break;
             case 'continuous':
               scope.options = scope.assistedDistributionOptions.continuous;
-              if (scope.inputCell.inputParameters.label !== 'Student\'s t, SE' &&
-                scope.inputCell.inputParameters.label !== 'Student\'s t, SD') {
-                scope.inputCell.inputParameters = scope.options.stdErr;
+              if (!cell.inputParameters || cell.inputParameters.label !== 'Student\'s t, SD') {
+                cell.inputParameters = scope.options.stdErr;
               }
               break;
             case 'other':
               scope.options = undefined;
-              scope.inputCell.inputParameters = scope.assistedDistributionOptions.other;
+              cell.inputParameters = scope.assistedDistributionOptions.other;
               break;
           }
         }
 
         function setEffectOptions() {
-          switch (scope.inputCell.dataType) {
+          var cell = scope.inputCell;
+          switch (cell.dataType) {
             case 'dichotomous':
               scope.options = scope.dichotomousOptions;
-              if (!scope.inputCell.inputParameters || scope.inputCell.inputParameters.label !== scope.options.decimal.label) {
-                scope.inputCell.inputParameters = scope.options.decimal;
+              if (!cell.inputParameters ||
+                (cell.inputParameters.label !== scope.options.percentage.label &&
+                  cell.inputParameters.label !== scope.options.fraction.label)) {
+                cell.inputParameters = scope.options.decimal;
               }
               break;
             case 'continuous':
-              var parameterOfInterest = scope.inputCell.parameterOfInterest;
+              var parameterOfInterest = cell.parameterOfInterest;
               scope.options = scope.continuousOptions[parameterOfInterest];
               if (parameterOfInterest === 'cumulativeProbability') {
-                if (scope.inputCell.inputParameters.label !== 'Value, 95% C.I.') {
-                  scope.inputCell.inputParameters = scope.options.value;
+                if (!cell.inputParameters || cell.inputParameters.label === 'Value, 95% C.I.') {
+                  cell.inputParameters = scope.options.valueCI;
+                } else {
+                  cell.inputParameters = scope.options.value;
                 }
-                if (!scope.inputCell.display) {
-                  scope.inputCell.display = 'percentage';
+                if (!cell.display) {
+                  cell.display = 'percentage';
                 }
-              } else {
-                scope.inputCell.inputParameters = scope.options[parameterOfInterest];
+              } else if (parameterOfInterest === 'mean') {
+                if (!cell.inputParameters || cell.inputParameters.label !== 'Mean, SE' && cell.inputParameters.label !== 'Mean, 95% C.I.') {
+                  cell.inputParameters = scope.options[parameterOfInterest];
+                }
+              } else if (parameterOfInterest === 'median') {
+                if (!cell.inputParameters || cell.inputParameters.label !== 'Median, 95% C.I.') {
+                  cell.inputParameters = scope.options[parameterOfInterest];
+                }
               }
               break;
             case 'other':
               scope.options = scope.otherOptions;
-              if (!scope.inputCell.inputParameters || scope.inputCell.inputParameters.label !== 'Value, SE' ||
-                scope.inputCell.inputParameters.label !== 'Value, 95% C.I.') {
-                scope.inputCell.inputParameters = scope.options.value;
+              if (!cell.inputParameters ||
+                (cell.inputParameters.label !== 'Value, SE' && cell.inputParameters.label !== 'Value, 95% C.I.')) {
+                cell.inputParameters = scope.options.value;
               }
               break;
           }
@@ -291,11 +298,14 @@ define(['lodash'], function (_) {
         }
 
         function didCriterionChange(criterion, cell) {
-          return criterion.inputType !== cell.inputType ||
-            (criterion.inputType === 'distribution' && criterion.inputMethod !== cell.inputMethod) ||
-            (criterion.inputType === 'distribution' && criterion.inputMethod === 'assistedDistribution' && criterion.dataType !== cell.dataType) ||
-            (criterion.inputType === 'effect' && criterion.dataType !== cell.dataType) ||
-            (criterion.inputType === 'effect' && criterion.dataType === 'continuous' && criterion.parameterOfInterest !== cell.parameterOfInterest);
+          var inputType = criterion.inputType;
+          var inputMethod = criterion.inputMethod;
+          var dataType = criterion.dataType;
+          return inputType !== cell.inputType ||
+            (inputType === 'distribution' && inputMethod !== cell.inputMethod) ||
+            (inputType === 'distribution' && inputMethod === 'assistedDistribution' && dataType !== cell.dataType) ||
+            (inputType === 'effect' && dataType !== cell.dataType) ||
+            (inputType === 'effect' && dataType === 'continuous' && criterion.parameterOfInterest !== cell.parameterOfInterest);
         }
       }
     };

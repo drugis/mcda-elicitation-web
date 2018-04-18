@@ -48,7 +48,7 @@
         <input type="radio" ng-model="criterion.dataType" ng-change="dataTypeChanged()" ng-value="'other'" id="other">
         <label for="other">Other</label>
       </div>
-      <div class="cell" ng-show="criterion.inputMethod === 'assistedDistribution'">
+      <div class="cell" ng-show="criterion.inputType === 'distribution' && criterion.inputMethod === 'assistedDistribution'">
         <label>Parameter of interest
           <!-- <inline-help help-key="criterion-datatype"></inline-help> -->
         </label>
