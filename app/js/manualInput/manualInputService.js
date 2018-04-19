@@ -2,6 +2,9 @@
 define(['lodash', 'angular'], function (_) {
   var dependencies = [];
   var ManualInputService = function () {
+    var NO_DISTRIBUTION = '\nDistribution: none';
+    var INVALID_PARAMETERS = 'Invalid parameters';
+
     var inputTypeKnowledge = {
       distribution: {
         checkInputValues: function (cell) {
@@ -12,6 +15,9 @@ define(['lodash', 'angular'], function (_) {
         },
         buildPerformance: function (cell) {
           return distributionKnowledge[cell.inputMethod].buildPerformance(cell);
+        },
+        getOptions: function (cell) {
+          return distributionKnowledge[cell.inputMethod].getOptions(cell);
         }
       },
       effect: {
@@ -23,25 +29,31 @@ define(['lodash', 'angular'], function (_) {
         },
         buildPerformance: function (cell) {
           return effectKnowledge[cell.dataType].buildPerformance(cell);
+        },
+        getOptions: function (cell) {
+          return effectKnowledge[cell.dataType].getOptions(cell);
         }
       }
     };
     var distributionKnowledge = {
       assistedDistribution: {
         checkInputValues: function (cell) {
-          return assistedDistributionKnowlegde[cell.dataType].checkInputValues(cell);
+          return assistedDistributionKnowledge[cell.dataType].checkInputValues(cell);
         },
         toString: function (cell) {
-          return assistedDistributionKnowlegde[cell.dataType].toString(cell);
+          return assistedDistributionKnowledge[cell.dataType].toString(cell);
         },
         buildPerformance: function (cell) {
-          return assistedDistributionKnowlegde[cell.dataType].buildPerformance(cell);
+          return assistedDistributionKnowledge[cell.dataType].buildPerformance(cell);
+        },
+        getOptions: function (cell) {
+          return assistedDistributionKnowledge[cell.dataType].options;
         }
       },
       manualDistribution: {
         checkInputValues: function (cell) {
-          switch (cell.inputParameters.label) {
-            case 'Beta':
+          switch (cell.inputParameters.id) {
+            case 'manualBeta':
               var alpha = cell.firstParameter;
               var beta = cell.secondParameter;
               if (isNullNaNOrUndefined(alpha) || alpha <= 0) {
@@ -50,9 +62,9 @@ define(['lodash', 'angular'], function (_) {
                 return 'Invalid beta';
               } else if (alpha % 1 !== 0 || beta % 1 !== 0) {
                 return 'Values should be integer';
-              } 
+              }
               break;
-            case 'Normal':
+            case 'manualNormal':
               var mu = cell.firstParameter;
               var sigma = cell.secondParameter;
               if (isNullNaNOrUndefined(mu)) {
@@ -61,7 +73,7 @@ define(['lodash', 'angular'], function (_) {
                 return 'Invalid standard error';
               }
               break;
-            case 'Gamma':
+            case 'manualGamma':
               var alpha = cell.firstParameter;
               var beta = cell.secondParameter;
               if (isNullNaNOrUndefined(alpha) || alpha <= 0) {
@@ -71,20 +83,20 @@ define(['lodash', 'angular'], function (_) {
               }
               break;
             default:
-              return 'Invalid parameters';
+              return INVALID_PARAMETERS;
           }
         },
         toString: function (cell) {
-          switch (cell.inputParameters.label) {
-            case 'Beta':
+          switch (cell.inputParameters.id) {
+            case 'manualBeta':
               if (!checkInputValues(cell)) {
                 return 'Beta(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
               }
-            case 'Normal':
+            case 'manualNormal':
               if (!checkInputValues(cell)) {
                 return 'Normal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
               }
-            case 'Gamma':
+            case 'manualGamma':
               if (!checkInputValues(cell)) {
                 return 'Gamma(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
               }
@@ -93,8 +105,8 @@ define(['lodash', 'angular'], function (_) {
           }
         },
         buildPerformance: function (cell) {
-          switch (cell.inputParameters.label) {
-            case 'Beta':
+          switch (cell.inputParameters.id) {
+            case 'manualBeta':
               return {
                 type: 'dbeta',
                 parameters: {
@@ -102,7 +114,7 @@ define(['lodash', 'angular'], function (_) {
                   beta: cell.secondParameter
                 }
               };
-            case 'Normal':
+            case 'manualNormal':
               return {
                 type: 'dnorm',
                 parameters: {
@@ -110,7 +122,7 @@ define(['lodash', 'angular'], function (_) {
                   sigma: cell.secondParameter
                 }
               };
-            case 'Gamma':
+            case 'manualGamma':
               return {
                 type: 'dgamma',
                 parameters: {
@@ -119,28 +131,52 @@ define(['lodash', 'angular'], function (_) {
                 }
               };
           }
+        },
+        getOptions: function () {
+          return {
+            beta: {
+              id: 'manualBeta',
+              label: 'Beta',
+              firstParameter: 'alpha',
+              secondParameter: 'beta'
+            },
+            normal: {
+              id: 'manualNormal',
+              label: 'Normal',
+              firstParameter: 'mean',
+              secondParameter: 'SE'
+            },
+            gamma: {
+              id: 'manualGamma',
+              label: 'Gamma',
+              firstParameter: 'alpha',
+              secondParameter: 'beta'
+            }
+          };
         }
       }
     };
     var effectKnowledge = {
       dichotomous: {
         checkInputValues: function (cell) {
-          switch (cell.inputParameters.label) {
-            case 'Decimal':
-              if (isNullNaNOrUndefinedOrNegative(cell.firstParameter) || cell.firstParameter > 1) {
+          switch (cell.inputParameters.id) {
+            case 'dichotomousDecimal':
+              if (isNullNaNOrUndefinedOrNegative(cell.firstParameter) || cell.firstParameter > 1 ||
+                (cell.isNormal && isNullNaNOrUndefinedOrNegative(cell.secondParameter))) {
                 return 'Value should be between or equal to 0 and 1';
               } else if (cell.secondParameter && !isInteger(cell.secondParameter)) {
                 return 'Sample size should be integer';
               }
               break;
-            case 'Percentage':
-              if (isNullNaNOrUndefinedOrNegative(cell.firstParameter) || cell.firstParameter > 100) {
+            case 'dichotomousPercentage':
+              if (isNullNaNOrUndefinedOrNegative(cell.firstParameter) || cell.firstParameter > 100 ||
+                (cell.isNormal && isNullNaNOrUndefinedOrNegative(cell.secondParameter))) {
                 return 'Value should be between or equal to 0 and 100';
               } else if (cell.secondParameter && !isInteger(cell.secondParameter)) {
                 return 'Sample size should be integer';
               }
               break;
-            case 'Fraction':
+            case 'dichotomousFraction':
               if (isNullNaNOrUndefinedOrNegative(cell.firstParameter) || isNullNaNOrUndefinedOrNegative(cell.secondParameter)) {
                 return 'Both values must be defined and non-negative';
               } else if (cell.firstParameter > cell.secondParameter) {
@@ -148,51 +184,61 @@ define(['lodash', 'angular'], function (_) {
               }
               break;
             default:
-              return 'Invalid parameters';
+              return INVALID_PARAMETERS;
           }
         },
         toString: function (cell) {
-          switch (cell.inputParameters.label) {
-            case 'Decimal':
+          switch (cell.inputParameters.id) {
+            case 'dichotomousDecimal':
               if (!checkInputValues(cell)) {
                 var returnString = cell.firstParameter;
                 if (cell.secondParameter) {
                   returnString = returnString + ' (' + cell.secondParameter + ')';
+                  if (cell.isNormal) {
+                    return returnString + '\nNormal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+                  }
                 }
-                return returnString + '\nDistribution: none';
+                return returnString + NO_DISTRIBUTION;
               }
-            case 'Percentage':
+            case 'dichotomousPercentage':
               if (!checkInputValues(cell)) {
                 var returnString = cell.firstParameter + '%';
                 if (cell.secondParameter) {
                   returnString = returnString + ' (' + cell.secondParameter + ')';
+                  if (cell.isNormal) {
+                    return returnString + '\nNormal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+                  }
                 }
-                return returnString + '\nDistribution: none';
+                return returnString + NO_DISTRIBUTION;
               }
-            case 'Fraction':
+            case 'dichotomousFraction':
               if (!checkInputValues(cell)) {
-                return cell.firstParameter + ' / ' + cell.secondParameter + '\nDistribution: none';
+                var returnString = cell.firstParameter + ' / ' + cell.secondParameter;
+                if (cell.isNormal) {
+                  return returnString + '\nNormal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+                }
+                return returnString + NO_DISTRIBUTION;
               }
             default:
               return 'Missing or invalid input';
           }
         },
         buildPerformance: function (cell) {
-          switch (cell.inputParameters.label) {
-            case 'Decimal':
+          switch (cell.inputParameters.id) {
+            case 'dichotomousDecimal':
               return {
                 type: 'exact',
                 value: cell.firstParameter,
                 isNormal: cell.isNormal
               };
-            case 'Percentage':
+            case 'dichotomousPercentage':
               return {
                 type: 'exact',
                 value: cell.firstParameter / 100,
                 percentage: true,
                 isNormal: cell.isNormal
               };
-            case 'Fraction':
+            case 'dichotomousFraction':
               return {
                 type: 'exact',
                 value: (cell.firstParameter / cell.secondParameter),
@@ -201,6 +247,31 @@ define(['lodash', 'angular'], function (_) {
                 isNormal: cell.isNormal
               };
           }
+        },
+        getOptions: function () {
+          return {
+            decimal: {
+              id: 'dichotomousDecimal',
+              label: 'Decimal',
+              firstParameter: 'Value',
+              secondParameter: 'Sample size (optional)',
+              canBeNormal: true
+            },
+            percentage: {
+              id: 'dichotomousPercentage',
+              label: 'Percentage',
+              firstParameter: 'Value',
+              secondParameter: 'Sample size (optional)',
+              canBeNormal: true
+            },
+            fraction: {
+              id: 'dichotomousFraction',
+              label: 'Fraction',
+              firstParameter: 'Events',
+              secondParameter: 'Sample size',
+              canBeNormal: true
+            }
+          };
         }
       },
       continuous: {
@@ -212,6 +283,9 @@ define(['lodash', 'angular'], function (_) {
         },
         buildPerformance: function (cell) {
           return continuousKnowledge[cell.parameterOfInterest].buildPerformance(cell);
+        },
+        getOptions: function (cell) {
+          return continuousKnowledge[cell.parameterOfInterest].options;
         }
       },
       other: {
@@ -220,50 +294,50 @@ define(['lodash', 'angular'], function (_) {
           if (isNullNaNOrUndefined(value)) {
             return 'Missing or invalid value';
           }
-          switch (cell.inputParameters.label) {
-            case 'Value':
+          switch (cell.inputParameters.id) {
+            case 'value':
               break;
-            case 'Value, SE':
+            case 'valueSE':
               if (isNullNaNOrUndefinedOrNegative(cell.secondParameter)) {
                 return 'Standard error invalid, missing, or negative';
               }
               break;
-            case 'Value, 95% C.I.':
+            case 'valueCI':
               var intervalError = checkInterval(cell.firstParameter, cell.secondParameter, cell.thirdParameter);
               if (intervalError) {
                 return intervalError;
               }
               break;
             default:
-              return 'Invalid parameters';
+              return INVALID_PARAMETERS;
           }
         },
         toString: function (cell) {
-          switch (cell.inputParameters.label) {
-            case 'Value':
+          switch (cell.inputParameters.id) {
+            case 'value':
               return valueToString(cell);
-            case 'Value, SE':
+            case 'valueSE':
               return valueSEToString(cell);
-            case 'Value, 95% C.I.':
+            case 'valueCI':
               return valueCIToString(cell);
             default:
               return 'Missing or invalid input';
           }
         },
         buildPerformance: function (cell) {
-          switch (cell.inputParameters.label) {
-            case 'Value':
+          switch (cell.inputParameters.id) {
+            case 'value':
               return {
                 type: 'exact',
                 value: cell.firstParameter
               };
-            case 'Value, SE':
+            case 'valueSE':
               return {
                 type: 'exact',
                 value: cell.firstParameter,
                 stdErr: cell.secondParameter
               };
-            case 'Value, 95% C.I.':
+            case 'valueCI':
               return {
                 type: 'exact',
                 value: cell.firstParameter,
@@ -271,6 +345,28 @@ define(['lodash', 'angular'], function (_) {
                 upperBound: cell.thirdParameter
               };
           }
+        },
+        getOptions: function () {
+          return {
+            value: {
+              id: 'value',
+              label: 'Value',
+              firstParameter: 'Value'
+            },
+            valueSE: {
+              id: 'valueSE',
+              label: 'Value, SE',
+              firstParameter: 'Value',
+              secondParameter: 'Standard error'
+            },
+            valueCI: {
+              id: 'valueCI',
+              label: 'Value, 95% C.I.',
+              firstParameter: 'Value',
+              secondParameter: 'Lower bound',
+              thirdParameter: 'Upper bound'
+            }
+          };
         }
       }
     };
@@ -280,50 +376,50 @@ define(['lodash', 'angular'], function (_) {
           if (isNullNaNOrUndefined(cell.firstParameter)) {
             return 'Missing or invalid mean';
           }
-          switch (cell.inputParameters.label) {
-            case 'Mean':
+          switch (cell.inputParameters.id) {
+            case 'continuousMeanNoDispersion':
               break;
-            case 'Mean, SE':
+            case 'continuousMeanStdErr':
               if (isNullNaNOrUndefinedOrNegative(cell.secondParameter)) {
                 return 'Standard error missing, invalid, or negative';
               }
               break;
-            case 'Mean, 95% C.I.':
+            case 'continuousMeanConfidenceInterval':
               var intervalError = checkInterval(cell.firstParameter, cell.secondParameter, cell.thirdParameter);
               if (intervalError) {
                 return intervalError;
               }
               break;
             default:
-              return 'Invalid parameters';
+              return INVALID_PARAMETERS;
           }
         },
         toString: function (cell) {
-          switch (cell.inputParameters.label) {
-            case 'Mean':
+          switch (cell.inputParameters.id) {
+            case 'continuousMeanNoDispersion':
               return valueToString(cell);
-            case 'Mean, SE':
-              return valueSEToString(cell);
-            case 'Mean, 95% C.I.':
-              return valueCIToString(cell);
+            case 'continuousMeanStdErr':
+              return valueSEToString(cell, cell.isNormal);
+            case 'continuousMeanConfidenceInterval':
+              return valueCIToString(cell, cell.isNormal);
             default:
               return 'Missing or invalid input';
           }
         }, buildPerformance: function (cell) {
-          switch (cell.inputParameters.label) {
-            case 'Mean':
+          switch (cell.inputParameters.id) {
+            case 'continuousMeanNoDispersion':
               return {
                 type: 'exact',
                 value: cell.firstParameter
               };
-            case 'Mean, SE':
+            case 'continuousMeanStdErr':
               return {
                 type: 'exact',
                 value: cell.firstParameter,
                 stdErr: cell.secondParameter,
                 isNormal: cell.isNormal
               };
-            case 'Mean, 95% C.I.':
+            case 'continuousMeanConfidenceInterval':
               return {
                 type: 'exact',
                 value: cell.firstParameter,
@@ -332,6 +428,28 @@ define(['lodash', 'angular'], function (_) {
                 isNormal: cell.isNormal
               };
           }
+        },
+        options: {
+          mean: {
+            id: 'continuousMeanNoDispersion',
+            label: 'Mean',
+            firstParameter: 'Mean'
+          },
+          meanSE: {
+            id: 'continuousMeanStdErr',
+            label: 'Mean, SE',
+            firstParameter: 'Mean',
+            secondParameter: 'Standard error',
+            canBeNormal: true
+          },
+          meanCI: {
+            id: 'continuousMeanConfidenceInterval',
+            label: 'Mean, 95% C.I.',
+            firstParameter: 'Mean',
+            secondParameter: 'Lower bound',
+            thirdParameter: 'Upper bound',
+            canBeNormal: true
+          }
         }
       },
       median: {
@@ -339,42 +457,56 @@ define(['lodash', 'angular'], function (_) {
           if (isNullNaNOrUndefined(cell.firstParameter)) {
             return 'Missing or invalid median';
           }
-          switch (cell.inputParameters.label) {
-            case 'Median':
+          switch (cell.inputParameters.id) {
+            case 'medianNoDispersion':
               break;
-            case 'Median, 95% C.I.':
+            case 'medianConfidenceInterval':
               var intervalError = checkInterval(cell.firstParameter, cell.secondParameter, cell.thirdParameter);
               if (intervalError) {
                 return intervalError;
               }
               break;
             default:
-              return 'Invalid parameters';
+              return INVALID_PARAMETERS;
           }
         },
         toString: function (cell) {
-          switch (cell.inputParameters.label) {
-            case 'Median':
+          switch (cell.inputParameters.id) {
+            case 'medianNoDispersion':
               return valueToString(cell);
-            case 'Median, 95% C.I.':
+            case 'medianConfidenceInterval':
               return valueCIToString(cell);
             default:
               return 'Missing or invalid input';
           }
         }, buildPerformance: function (cell) {
-          switch (cell.inputParameters.label) {
-            case 'Median':
+          switch (cell.inputParameters.id) {
+            case 'medianNoDispersion':
               return {
                 type: 'exact',
                 value: cell.firstParameter
               };
-            case 'Median, 95% C.I.':
+            case 'medianConfidenceInterval':
               return {
                 type: 'exact',
                 value: cell.firstParameter,
                 lowerBound: cell.secondParameter,
                 upperBound: cell.thirdParameter
               };
+          }
+        },
+        options: {
+          median: {
+            id: 'medianNoDispersion',
+            label: 'Median',
+            firstParameter: 'Median'
+          },
+          medianCI: {
+            id: 'medianConfidenceInterval',
+            label: 'Median, 95% C.I.',
+            firstParameter: 'Median',
+            secondParameter: 'Lower bound',
+            thirdParameter: 'Upper bound'
           }
         }
       },
@@ -388,10 +520,10 @@ define(['lodash', 'angular'], function (_) {
           } else if (cell.display === 'percentage' && value > 100) {
             return 'Percentage must be 100 or less';
           }
-          switch (cell.inputParameters.label) {
-            case 'Value':
+          switch (cell.inputParameters.id) {
+            case 'cumulatitiveProbabilityValue':
               break;
-            case 'Value, 95% C.I.':
+            case 'cumulatitiveProbabilityValueCI':
               var intervalError = checkInterval(cell.firstParameter, cell.secondParameter, cell.thirdParameter);
               if (intervalError) {
                 return intervalError;
@@ -402,19 +534,18 @@ define(['lodash', 'angular'], function (_) {
               }
               break;
             default:
-              return 'Invalid parameters';
+              return INVALID_PARAMETERS;
           }
         },
         toString: function (cell) {
-          switch (cell.inputParameters.label) {
-            case 'Value':
+          switch (cell.inputParameters.id) {
+            case 'cumulatitiveProbabilityValue':
               if (cell.display === 'decimal') {
                 return valueToString(cell);
               } else if (cell.display === 'percentage' && !checkInputValues(cell)) {
                 return cell.firstParameter + '%\nDistribution: none';
               }
-
-            case 'Value, 95% C.I.':
+            case 'cumulatitiveProbabilityValueCI':
               if (cell.display === 'decimal') {
                 return valueCIToString(cell);
               } else if (cell.display === 'percentage' && !checkInputValues(cell)) {
@@ -424,36 +555,56 @@ define(['lodash', 'angular'], function (_) {
               return 'Missing or invalid input';
           }
         }, buildPerformance: function (cell) {
-          switch (cell.inputParameters.label) {
-            case 'Value':
+          switch (cell.inputParameters.id) {
+            case 'cumulatitiveProbabilityValue':
               return {
                 type: 'exact',
                 value: cell.firstParameter
               };
-            case 'Value, 95% C.I.':
-              var isDecimal = cell.display === 'Decimal';
-              if(isDecimal){
-
+            case 'cumulatitiveProbabilityValueCI':
+              if (cell.display === 'Decimal') {
                 return {
                   type: 'exact',
-                  value: cell.firstParameter ,
-                  lowerBound: cell.secondParameter ,
-                  upperBound: cell.thirdParameter 
+                  value: cell.firstParameter,
+                  lowerBound: cell.secondParameter,
+                  upperBound: cell.thirdParameter
                 };
               } else {
                 return {
                   type: 'exact',
-                  value:  cell.firstParameter/100,
-                  lowerBound:  cell.secondParameter/100,
-                  upperBound:  cell.thirdParameter/100, 
+                  value: cell.firstParameter / 100,
+                  lowerBound: cell.secondParameter / 100,
+                  upperBound: cell.thirdParameter / 100,
                   percentage: true
                 };
               }
           }
+        },
+        options: {
+          value: {
+            id: 'cumulatitiveProbabilityValue',
+            display: {
+              percentage: 'Percentage',
+              decimal: 'Decimal'
+            },
+            label: 'Value',
+            firstParameter: 'Value'
+          },
+          valueCI: {
+            id: 'cumulatitiveProbabilityValueCI',
+            display: {
+              percentage: 'Percentage',
+              decimal: 'Decimal'
+            },
+            label: 'Value, 95% C.I.',
+            firstParameter: 'Value',
+            secondParameter: 'Lower bound',
+            thirdParameter: 'Upper bound'
+          }
         }
       }
     };
-    var assistedDistributionKnowlegde = {
+    var assistedDistributionKnowledge = {
       dichotomous: {
         checkInputValues: function (cell) {
           var events = cell.firstParameter;
@@ -472,7 +623,7 @@ define(['lodash', 'angular'], function (_) {
           var events = cell.firstParameter;
           var sampleSize = cell.secondParameter;
           if (!checkInputValues(cell)) {
-            return cell.firstParameter + ' / ' + cell.secondParameter + '\nDistribution: Beta(' + (events + 1) + ', ' + (sampleSize - events + 2) + ')';
+            return events + ' / ' + sampleSize + '\nDistribution: Beta(' + (events + 1) + ', ' + (sampleSize - events + 2) + ')';
           }
           return 'Missing or invalid input';
         },
@@ -484,6 +635,14 @@ define(['lodash', 'angular'], function (_) {
               beta: cell.secondParameter - cell.firstParameter + 2
             }
           };
+        },
+        options: {
+          dichotomous: {
+            id: 'assistedDichotomous',
+            label: 'dichotomous',
+            firstParameter: 'Events',
+            secondParameter: 'Sample size'
+          }
         }
       },
       continuous: {
@@ -500,12 +659,12 @@ define(['lodash', 'angular'], function (_) {
           var mu = cell.firstParameter;
           var sigma = cell.secondParameter;
           var sampleSize = cell.thirdParameter;
-          switch (cell.inputParameters.label) {
-            case 'Student\'s t, SE':
+          switch (cell.inputParameters.id) {
+            case 'assistedContinuousStdErr':
               if (!checkInputValues(cell)) {
                 return mu + ' (' + sigma + '), ' + sampleSize + '\nDistribution: t(' + (sampleSize - 1) + ', ' + mu + ', ' + sigma + ')';
               }
-            case 'Student\'s t, SD':
+            case 'assistedContinuousStdDev':
               if (!checkInputValues(cell)) {
                 return mu + ' (' + sigma + '), ' + sampleSize + '\nDistribution: t(' + (sampleSize - 1) + ', ' + mu + ', ' + (Math.round(1000 * sigma / Math.sqrt(sampleSize)) / 1000) + ')';
               }
@@ -514,8 +673,8 @@ define(['lodash', 'angular'], function (_) {
           }
         },
         buildPerformance: function (cell) {
-          switch (cell.inputParameters.label) {
-            case 'Student\'s t, SE':
+          switch (cell.inputParameters.id) {
+            case 'assistedContinuousStdErr':
               return {
                 type: 'dt',
                 parameters: {
@@ -524,7 +683,7 @@ define(['lodash', 'angular'], function (_) {
                   dof: cell.thirdParameter - 1
                 }
               };
-            case 'Student\'s t, SD':
+            case 'assistedContinuousStdDev':
               return {
                 type: 'dt',
                 parameters: {
@@ -534,25 +693,48 @@ define(['lodash', 'angular'], function (_) {
                 }
               };
           }
+        },
+        options: {
+          stdErr: {
+            id: 'assistedContinuousStdErr',
+            label: 'Student\'s t, SE',
+            firstParameter: 'Mean',
+            secondParameter: 'Standard error',
+            thirdParameter: 'Sample size'
+          },
+          stdDev: {
+            id: 'assistedContinuousStdDev',
+            label: 'Student\'s t, SD',
+            firstParameter: 'Mean',
+            secondParameter: 'Standard deviation',
+            thirdParameter: 'Sample size'
+          }
         }
       },
-      other:{
-        checkInputValues: function (cell){
-          if(isNullNaNOrUndefined(cell.firstParameter)){
+      other: {
+        checkInputValues: function (cell) {
+          if (isNullNaNOrUndefined(cell.firstParameter)) {
             return 'Missing or invalid value';
           }
         },
-        toString: function (cell){
-          if(!checkInputValues(cell)){
+        toString: function (cell) {
+          if (!checkInputValues(cell)) {
             return valueToString(cell);
           }
           return 'Missing or invalid input';
         },
-        buildPerformance: function (cell){
+        buildPerformance: function (cell) {
           return {
             type: 'exact',
             value: cell.firstParameter
           };
+        },
+        options: {
+          assistedOther: {
+            id: 'assistedOther',
+            label: 'other',
+            firstParameter: 'Value'
+          }
         }
       }
     };
@@ -564,6 +746,10 @@ define(['lodash', 'angular'], function (_) {
 
     function inputToString(cell) {
       return inputTypeKnowledge[cell.inputType].toString(cell);
+    }
+
+    function getOptions(cell) {
+      return inputTypeKnowledge[cell.inputType].getOptions(cell);
     }
 
     function createProblem(criteria, treatments, title, description, performanceTable, useFavorability) {
@@ -758,11 +944,7 @@ define(['lodash', 'angular'], function (_) {
     }
 
     function isNullNaNOrUndefined(value) {
-      return isNullOrUndefined(value) || isNaN(value);
-    }
-
-    function isNullOrUndefined(value) {
-      return value === null || value === undefined;
+      return value === null || value === undefined || isNaN(value);
     }
 
     function checkInterval(value, lowerBound, upperBound) {
@@ -775,23 +957,31 @@ define(['lodash', 'angular'], function (_) {
 
     function valueToString(cell) {
       if (!checkInputValues(cell)) {
-        return cell.firstParameter + '\nDistribution: none';
+        return cell.firstParameter + NO_DISTRIBUTION;
       } else {
         return 'Missing or invalid input';
       }
     }
 
-    function valueSEToString(cell) {
+    function valueSEToString(cell, isNormal) {
       if (!checkInputValues(cell)) {
-        return cell.firstParameter + ' (' + cell.secondParameter + ')' + '\nDistribution: none';
+        var returnString = cell.firstParameter + ' (' + cell.secondParameter + ')';
+        if (isNormal) {
+          return returnString + '\nNormal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+        }
+        return returnString + NO_DISTRIBUTION;
       } else {
         return 'Missing or invalid input';
       }
     }
 
-    function valueCIToString(cell) {
+    function valueCIToString(cell, isNormal) {
       if (!checkInputValues(cell)) {
-        return cell.firstParameter + ' (' + cell.secondParameter + '; ' + cell.thirdParameter + ')' + '\nDistribution: none';
+        var returnString = cell.firstParameter + ' (' + cell.secondParameter + '; ' + cell.thirdParameter + ')';
+        if (isNormal) {
+          return returnString + '\nNormal(' + cell.firstParameter + ', ' + ((cell.thirdParameter - cell.secondParameter) / (2 * 1.96)) + ')';
+        }
+        return returnString + NO_DISTRIBUTION;
       } else {
         return 'Missing or invalid input';
       }
@@ -799,7 +989,7 @@ define(['lodash', 'angular'], function (_) {
 
     function valueCIPercentToString(cell) {
       if (!checkInputValues(cell)) {
-        return cell.firstParameter + '% (' + cell.secondParameter + '%; ' + cell.thirdParameter + '%)' + '\nDistribution: none';
+        return cell.firstParameter + '% (' + cell.secondParameter + '%; ' + cell.thirdParameter + '%)' + NO_DISTRIBUTION;
       } else {
         return 'Missing or invalid input';
       }
@@ -815,7 +1005,8 @@ define(['lodash', 'angular'], function (_) {
       checkInputValues: checkInputValues,
       prepareInputData: prepareInputData,
       createInputFromOldWorkspace: createInputFromOldWorkspace,
-      copyWorkspaceCriteria: copyWorkspaceCriteria
+      copyWorkspaceCriteria: copyWorkspaceCriteria,
+      getOptions: getOptions
     };
   };
 
