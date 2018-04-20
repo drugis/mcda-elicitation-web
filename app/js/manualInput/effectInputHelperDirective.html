@@ -14,8 +14,8 @@
         </div>
         <div class="cell large-6">
           <label ng-if="inputCell.parameterOfInterest === 'cumulativeProbability'">
-            Display
-            <select ng-model="inputCell.display" ng-options="displayKey as displayValue for (displayKey, displayValue) in inputCell.inputParameters.display"
+            Scale
+            <select ng-model="inputCell.scale" ng-options="scaleKey as scaleValue for (scaleKey, scaleValue) in inputCell.inputParameters.scale"
               ng-change="checkInput()"></select>
           </label>
         </div>

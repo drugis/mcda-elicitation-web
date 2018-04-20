@@ -7,15 +7,15 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
       manualInputService = ManualInputService;
     }));
 
-    describe('checkInputValues', function () {
+    fdescribe('getInputError', function () {
       var cell;
       function checkMissingInvalid(cell, error, parameter) {
         delete cell[parameter];
-        var missingResult = manualInputService.checkInputValues(cell);
+        var missingResult = manualInputService.getInputError(cell);
         cell[parameter] = null;
-        var nullResult = manualInputService.checkInputValues(cell);
+        var nullResult = manualInputService.getInputError(cell);
         cell[parameter] = NaN;
-        var nanResult = manualInputService.checkInputValues(cell);
+        var nanResult = manualInputService.getInputError(cell);
         expect(missingResult).toEqual(error);
         expect(nullResult).toEqual(error);
         expect(nanResult).toEqual(error);
@@ -23,7 +23,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
       function checkMissingInvalidNegative(cell, error, parameter) {
         checkMissingInvalid(cell, error, parameter);
         cell[parameter] = -1;
-        var negativeResult = manualInputService.checkInputValues(cell);
+        var negativeResult = manualInputService.getInputError(cell);
         expect(negativeResult).toEqual(error);
       }
       function checkConfidenceInterval(cell, tooHighLower, tooHighValue) {
@@ -36,11 +36,11 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
         cell.thirdParameter = thirdParameter;
         error = 'Lower bound too high, or upper bound too low';
         cell.secondParameter = tooHighLower;
-        var result = manualInputService.checkInputValues(cell);
+        var result = manualInputService.getInputError(cell);
         expect(result).toEqual(error);
         error = 'Lower bound too high, or upper bound too low';
         cell.firstParameter = tooHighValue;
-        result = manualInputService.checkInputValues(cell);
+        result = manualInputService.getInputError(cell);
         expect(result).toEqual(error);
       }
 
@@ -49,7 +49,8 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
           cell = {
             inputType: 'distribution',
             inputMethod: 'assistedDistribution',
-            firstParameter: 50
+            firstParameter: 50,
+            inputParameters: {}
           };
         });
         describe('for dichotomous distributions', function () {
@@ -58,7 +59,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
             cell.secondParameter = 150;
           });
           it('should return no error for correct inputs', function () {
-            var result = manualInputService.checkInputValues(cell);
+            var result = manualInputService.getInputError(cell);
             expect(result).toBeFalsy();
           });
           it('should return an error for missing, invalid, or negative event counts', function () {
@@ -69,50 +70,79 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
             var error = 'Missing, invalid, or lower than 1 sample size';
             checkMissingInvalid(cell, error, 'secondParameter');
             cell.secondParameter = 0;
-            var belowOneResult = manualInputService.checkInputValues(cell);
+            var belowOneResult = manualInputService.getInputError(cell);
             expect(belowOneResult).toEqual(error);
           });
           it('should return an error for non integer parameters', function () {
             var error = 'Events and sample size must be integer';
             cell.firstParameter = 5.5;
-            var decimalEventsResult = manualInputService.checkInputValues(cell);
+            var decimalEventsResult = manualInputService.getInputError(cell);
             cell.firstParameter = 50;
             cell.secondParameter = 100.5;
-            var decimalSampleSizeResult = manualInputService.checkInputValues(cell);
+            var decimalSampleSizeResult = manualInputService.getInputError(cell);
             expect(decimalEventsResult).toEqual(error);
             expect(decimalSampleSizeResult).toEqual(error);
           });
           it('should return an error events > sample size ', function () {
             var error = 'Events must be lower or equal to sample size';
             cell.secondParameter = 49;
-            var result = manualInputService.checkInputValues(cell);
+            var result = manualInputService.getInputError(cell);
             expect(result).toEqual(error);
           });
         });
-        describe('for continuous distributions', function () {
+        describe('for continuous distributions,', function () {
           beforeEach(function () {
             cell.dataType = 'continuous';
             cell.secondParameter = 1.5;
             cell.thirdParameter = 150;
           });
-          it('should return no error for correct inputs', function () {
-            var result = manualInputService.checkInputValues(cell);
-            expect(result).toBeFalsy();
+          describe('for standard error inputs', function () {
+            beforeEach(function () {
+              cell.inputParameters.id = 'assistedContinuousStdErr';
+            });
+            it('should return no error for correct inputs', function () {
+              var result = manualInputService.getInputError(cell);
+              expect(result).toBeFalsy();
+            });
+            it('should return an error for an missing or invalid mean', function () {
+              var error = 'Missing or invalid mean';
+              checkMissingInvalid(cell, error, 'firstParameter');
+            });
+            it('should return an error for an missing, invalid, or negative standard error', function () {
+              var error = 'Missing, invalid, or negative standard error/deviation';
+              checkMissingInvalidNegative(cell, error, 'secondParameter');
+            });
+            it('should return an error for missing, invalid, negative or non integer sample size', function () {
+              var error = 'Missing, invalid, negative, or non-integer sample size';
+              checkMissingInvalidNegative(cell, error, 'thirdParameter');
+              cell.thirdParameter = 150.5;
+              var decimalSampleSizeResult = manualInputService.getInputError(cell);
+              expect(decimalSampleSizeResult).toEqual(error);
+            });
           });
-          it('should return an error for an missing or invalid mean', function () {
-            var error = 'Missing or invalid mean';
-            checkMissingInvalid(cell, error, 'firstParameter');
-          });
-          it('should return an error for an missing, invalid, or negative standard error', function () {
-            var error = 'Missing, invalid, or negative standard error/deviation';
-            checkMissingInvalidNegative(cell, error, 'secondParameter');
-          });
-          it('should return an error for missing, invalid, negative or non integer sample size', function () {
-            var error = 'Missing, invalid, negative, or non-integer sample size';
-            checkMissingInvalidNegative(cell, error, 'thirdParameter');
-            cell.thirdParameter = 150.5;
-            var decimalSampleSizeResult = manualInputService.checkInputValues(cell);
-            expect(decimalSampleSizeResult).toEqual(error);
+          describe('for standard error inputs', function () {
+            beforeEach(function () {
+              cell.inputParameters.id = 'assistedContinuousStdErr';
+            });
+            it('should return no error for correct inputs', function () {
+              var result = manualInputService.getInputError(cell);
+              expect(result).toBeFalsy();
+            });
+            it('should return an error for an missing or invalid mean', function () {
+              var error = 'Missing or invalid mean';
+              checkMissingInvalid(cell, error, 'firstParameter');
+            });
+            it('should return an error for an missing, invalid, or negative standard error', function () {
+              var error = 'Missing, invalid, or negative standard error/deviation';
+              checkMissingInvalidNegative(cell, error, 'secondParameter');
+            });
+            it('should return an error for missing, invalid, negative or non integer sample size', function () {
+              var error = 'Missing, invalid, negative, or non-integer sample size';
+              checkMissingInvalidNegative(cell, error, 'thirdParameter');
+              cell.thirdParameter = 150.5;
+              var decimalSampleSizeResult = manualInputService.getInputError(cell);
+              expect(decimalSampleSizeResult).toEqual(error);
+            });
           });
         });
         describe('for other distributions', function () {
@@ -120,7 +150,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
             cell.dataType = 'other';
           });
           it('should return no error for correct other distributions', function () {
-            var result = manualInputService.checkInputValues(cell);
+            var result = manualInputService.getInputError(cell);
             expect(result).toBeFalsy();
           });
           it('should return an error for missing or invalid values', function () {
@@ -144,59 +174,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
             cell.secondParameter = 100;
           });
           it('should return no error for correct inputs', function () {
-            var result = manualInputService.checkInputValues(cell);
-            expect(result).toBeFalsy();
-          });
-          it('should return an error if alpha is invalid or <= 0 ', function () {
-            var error = 'Invalid alpha';
-            checkMissingInvalid(cell, error, 'firstParameter');
-            cell.firstParameter = 0;
-            var tooLowAlphaResult = manualInputService.checkInputValues(cell);
-            expect(tooLowAlphaResult).toEqual(error);
-          });
-          it('should return an error if beta is invalid or <= 0 ', function () {
-            var error = 'Invalid beta';
-            checkMissingInvalid(cell, error, 'secondParameter');
-            cell.secondParameter = 0;
-            var tooLowBetaResult = manualInputService.checkInputValues(cell);
-            expect(tooLowBetaResult).toEqual(error);
-          });
-          it('should return an error if alpha or beta is non integer', function () {
-            var error = 'Values should be integer';
-            cell.firstParameter = 50.5;
-            var alphaNonIntegerResult = manualInputService.checkInputValues(cell);
-            expect(alphaNonIntegerResult).toEqual(error);
-            cell.firstParameter = 50;
-            cell.secondParameter = 100.2;
-            var betaNonIntegerResult = manualInputService.checkInputValues(cell);
-            expect(betaNonIntegerResult).toEqual(error);
-          });
-        });
-        describe(', Normal distributions', function () {
-          beforeEach(function () {
-            cell.inputParameters.id = 'manualNormal';
-            cell.secondParameter = 2.5;
-          });
-          it('should return no error for correct inputs', function () {
-            var result = manualInputService.checkInputValues(cell);
-            expect(result).toBeFalsy();
-          });
-          it('should return an error if the mean is missing or invalid', function () {
-            var error = 'Invalid mean';
-            checkMissingInvalid(cell, error, 'firstParameter');
-          });
-          it('should return an error if the standard error is missing, invalid, or negative', function () {
-            var error = 'Invalid standard error';
-            checkMissingInvalidNegative(cell, error, 'secondParameter');
-          });
-        });
-        describe(', Gamma distributions', function () {
-          beforeEach(function () {
-            cell.inputParameters.id = 'manualGamma';
-            cell.secondParameter = 10000;
-          });
-          it('should return no error for correct inputs', function () {
-            var result = manualInputService.checkInputValues(cell);
+            var result = manualInputService.getInputError(cell);
             expect(result).toBeFalsy();
           });
           it('should return an error if alpha is missing, invalid or <= 0', function () {
@@ -226,24 +204,24 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
           });
           it('should return no error for correct inputs', function () {
             delete cell.secondParameter;
-            var result = manualInputService.checkInputValues(cell);
+            var result = manualInputService.getInputError(cell);
             expect(result).toBeFalsy();
           });
           it('should return no error for correct inputs with sample size', function () {
-            var result = manualInputService.checkInputValues(cell);
+            var result = manualInputService.getInputError(cell);
             expect(result).toBeFalsy();
           });
           it('should return an error if the value is missing, invalid or not 0<=value<=1', function () {
             var error = 'Value should be between or equal to 0 and 1';
             checkMissingInvalidNegative(cell, error, 'firstParameter');
             cell.firstParameter = 2;
-            var tooLargeResult = manualInputService.checkInputValues(cell);
+            var tooLargeResult = manualInputService.getInputError(cell);
             expect(tooLargeResult).toEqual(error);
           });
           it('should return an error if the sample size is not integer', function () {
             var error = 'Sample size should be integer';
             cell.secondParameter = 100.5;
-            var result = manualInputService.checkInputValues(cell);
+            var result = manualInputService.getInputError(cell);
             expect(result).toEqual(error);
           });
         });
@@ -253,25 +231,25 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
           });
           it('should return no error for correct inputs', function () {
             delete cell.secondParameter;
-            var result = manualInputService.checkInputValues(cell);
+            var result = manualInputService.getInputError(cell);
             expect(result).toBeFalsy();
           });
           it('should return no error for correct inputs with sample size', function () {
             cell.secondParameter = 100;
-            var result = manualInputService.checkInputValues(cell);
+            var result = manualInputService.getInputError(cell);
             expect(result).toBeFalsy();
           });
           it('should return an error if the value is missing, invalid or not 0<=value<=100', function () {
             var error = 'Value should be between or equal to 0 and 100';
             checkMissingInvalidNegative(cell, error, 'firstParameter');
             cell.firstParameter = 102;
-            var tooLargeResult = manualInputService.checkInputValues(cell);
+            var tooLargeResult = manualInputService.getInputError(cell);
             expect(tooLargeResult).toEqual(error);
           });
           it('should return an error if the sample size is not integer', function () {
             var error = 'Sample size should be integer';
             cell.secondParameter = 100.5;
-            var result = manualInputService.checkInputValues(cell);
+            var result = manualInputService.getInputError(cell);
             expect(result).toEqual(error);
           });
         });
@@ -280,7 +258,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
             cell.inputParameters.id = 'dichotomousFraction';
           });
           it('should return no error for correct inputs', function () {
-            var result = manualInputService.checkInputValues(cell);
+            var result = manualInputService.getInputError(cell);
             expect(result).toBeFalsy();
           });
           it('should return an error if a value is missing, invalid or negative', function () {
@@ -291,7 +269,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
           it('should return an error is the number of events is greateer than the sample size', function () {
             var error = 'Number of events may not exceed sample size';
             cell.firstParameter = 101;
-            var result = manualInputService.checkInputValues(cell);
+            var result = manualInputService.getInputError(cell);
             expect(result).toEqual(error);
           });
         });
@@ -310,14 +288,16 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
         describe(', for parameter of interest mean', function () {
           beforeEach(function () {
             cell.parameterOfInterest = 'mean';
+            cell.inputParameters.id = 'continuousMeanNoDispersion';
           });
-          it('should return an error if the mean is missing or invalid, disregarding  inputParameters.label', function () {
-            var error = 'Missing or invalid mean';
-            checkMissingInvalid(cell, error, 'firstParameter');
+          describe('for input mean', function () {
+            it('should return an error for incorrect input', function () {
+              var error = 'Missing or invalid mean';
+              checkMissingInvalid(cell, error, 'firstParameter');
+            });
           });
           it('should return no error for correct mean', function () {
-            cell.inputParameters.id = 'continuousMeanNoDispersion';
-            var result = manualInputService.checkInputValues(cell);
+            var result = manualInputService.getInputError(cell);
             expect(result).toBeFalsy();
           });
           describe(', for input with SE', function () {
@@ -325,7 +305,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
               cell.inputParameters.id = 'continuousMeanStdErr';
             });
             it('should return no error for correct mean + SE', function () {
-              var result = manualInputService.checkInputValues(cell);
+              var result = manualInputService.getInputError(cell);
               expect(result).toBeFalsy();
             });
             it('should return an error if the SE is invalid, missing or negative', function () {
@@ -338,7 +318,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
               cell.inputParameters.id = 'continuousMeanConfidenceInterval';
             });
             it('should return no error for correct mean + CI', function () {
-              var result = manualInputService.checkInputValues(cell);
+              var result = manualInputService.getInputError(cell);
               expect(result).toBeFalsy();
             });
             it('should throw an error if the confidence interval is incorrect', function () {
@@ -346,21 +326,31 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
             });
           });
         });
-        describe(', for parameter of interest median', function () {
+        describe(', for parameter of interest median,', function () {
           beforeEach(function () {
             cell.parameterOfInterest = 'median';
           });
-          it('should return no error for correct median', function () {
-            cell.inputParameters.id = 'medianNoDispersion';
-            var result = manualInputService.checkInputValues(cell);
-            expect(result).toBeFalsy();
+          describe('for input median', function () {
+            beforeEach(function () {
+              cell.inputParameters.id = 'continuousMedianNoDispersion';
+            });
+            it('should return no error for correct input', function () {
+              var result = manualInputService.getInputError(cell);
+              expect(result).toBeFalsy();
+            });
+            it('should return an error for incorrect input', function () {
+              var error = 'Missing or invalid median';
+              delete cell.firstParameter;
+              var result = manualInputService.getInputError(cell);
+              expect(result).toEqual(error);
+            });
           });
           describe(', for input with CI', function () {
             beforeEach(function () {
-              cell.inputParameters.id = 'medianConfidenceInterval';
+              cell.inputParameters.id = 'continuousMedianConfidenceInterval';
             });
             it('should return no error for correct median + CI', function () {
-              var result = manualInputService.checkInputValues(cell);
+              var result = manualInputService.getInputError(cell);
               expect(result).toBeFalsy();
             });
             it('should throw an error if the confidence interval is incorrect', function () {
@@ -375,13 +365,13 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
           describe(', with display decimal', function () {
             beforeEach(function () {
               cell.inputParameters.id = 'cumulatitiveProbabilityValue';
-              cell.display = 'decimal';
+              cell.scale = 'decimal';
               cell.firstParameter = 0.5;
               cell.secondParameter = 0.025;
               cell.thirdParameter = 0.525;
             });
             it('should return no error for correct value', function () {
-              var result = manualInputService.checkInputValues(cell);
+              var result = manualInputService.getInputError(cell);
               expect(result).toBeFalsy();
             });
             it('should return an error for missing, invalid and negative values', function () {
@@ -391,7 +381,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
             it('should return an error if the value is more than 1', function () {
               var error = 'Value must be 1 or less';
               cell.firstParameter = 2;
-              var result = manualInputService.checkInputValues(cell);
+              var result = manualInputService.getInputError(cell);
               expect(result).toEqual(error);
             });
             describe('with confidence interval', function () {
@@ -399,7 +389,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
                 cell.inputParameters.id = 'cumulatitiveProbabilityValueCI';
               });
               it('should return no error for correct value + CI', function () {
-                var result = manualInputService.checkInputValues(cell);
+                var result = manualInputService.getInputError(cell);
                 expect(result).toBeFalsy();
               });
               it('should throw an error if the confidence interval is incorrect', function () {
@@ -410,16 +400,16 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
           describe(', with display percentage', function () {
             beforeEach(function () {
               cell.inputParameters.id = 'cumulatitiveProbabilityValue';
-              cell.display = 'percentage';
+              cell.scale = 'percentage';
             });
             it('should return no error for correct value', function () {
-              var result = manualInputService.checkInputValues(cell);
+              var result = manualInputService.getInputError(cell);
               expect(result).toBeFalsy();
             });
             it('should return an error if the value is more than 100', function () {
               var error = 'Percentage must be 100 or less';
               cell.firstParameter = 102;
-              var result = manualInputService.checkInputValues(cell);
+              var result = manualInputService.getInputError(cell);
               expect(result).toEqual(error);
             });
             describe('with confidence interval', function () {
@@ -427,7 +417,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
                 cell.inputParameters.id = 'cumulatitiveProbabilityValueCI';
               });
               it('should return no error for correct value + CI', function () {
-                var result = manualInputService.checkInputValues(cell);
+                var result = manualInputService.getInputError(cell);
                 expect(result).toBeFalsy();
               });
               it('should throw an error if the confidence interval is incorrect', function () {
@@ -450,7 +440,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
         });
         it('should return no error for correct Value', function () {
           cell.inputParameters.id = 'value';
-          var result = manualInputService.checkInputValues(cell);
+          var result = manualInputService.getInputError(cell);
           expect(result).toBeFalsy();
         });
         describe(', for value + SE', function () {
@@ -458,7 +448,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
             cell.inputParameters.id = 'valueSE';
           });
           it('should return no error for correct Value SE', function () {
-            var result = manualInputService.checkInputValues(cell);
+            var result = manualInputService.getInputError(cell);
             expect(result).toBeFalsy();
           });
           it('should return an error for incorrect SE', function () {
@@ -471,7 +461,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
             cell.inputParameters.id = 'valueCI';
           });
           it('should return no error for correct Value', function () {
-            var result = manualInputService.checkInputValues(cell);
+            var result = manualInputService.getInputError(cell);
             expect(result).toBeFalsy();
           });
           it('should throw an error if the confidence interval is incorrect', function () {
@@ -573,7 +563,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
             cell.inputParameters = {};
           });
           describe('for beta distributions', function () {
-            beforeEach(function(){
+            beforeEach(function () {
               cell.inputParameters.id = 'manualBeta';
             });
             it('should render correct inputs', function () {
@@ -587,7 +577,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
             });
           });
           describe('for normal distributions', function () {
-            beforeEach(function(){
+            beforeEach(function () {
               cell.inputParameters.id = 'manualNormal';
             });
             it('should render correct inputs', function () {
@@ -601,7 +591,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
             });
           });
           describe('for gamma distributions', function () {
-            beforeEach(function(){
+            beforeEach(function () {
               cell.inputParameters.id = 'manualGamma';
             });
             it('should render correct inputs', function () {
@@ -612,6 +602,102 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function ()
             it('should render incorrect inputs', function () {
               delete cell.firstParameter;
               checkInvalidInput();
+            });
+          });
+        });
+      });
+      describe('for effects,', function () {
+        beforeEach(function () {
+          cell = {
+            inputType: 'effect',
+            inputParameters: {}
+          };
+        });
+        describe('for dichotomous', function () {
+          beforeEach(function () {
+            cell.dataType = 'dichotomous';
+            cell.secondParameter = 100;
+          });
+          describe('for decimal input', function () {
+            beforeEach(function () {
+              cell.inputParameters.id = 'dichotomousDecimal';
+              cell.firstParameter = 0.5;
+            });
+            it('should render correct inputs', function () {
+              delete cell.secondParameter;
+              var expectedResult = '0.5\nDistribution: none';
+              var result = manualInputService.inputToString(cell);
+              expect(result).toEqual(expectedResult);
+            });
+            it('should render correct inputs with sample size', function () {
+              var expectedResult = '0.5 (100)\nDistribution: none';
+              var result = manualInputService.inputToString(cell);
+              expect(result).toEqual(expectedResult);
+            });
+            it('should render correct normalised inputs', function () {
+              cell.isNormal = true;
+              var expectedResult = '0.5 (100)\nNormal(0.5, ' + Math.sqrt(0.5 * (1 - 0.5) / 100) + ')';
+              var result = manualInputService.inputToString(cell);
+              expect(result).toEqual(expectedResult);
+            });
+            it('should render incorrect inputs', function () {
+              delete cell.firstParameter;
+              var expectedResult = 'Missing or invalid input';
+              var result = manualInputService.inputToString(cell);
+              expect(result).toEqual(expectedResult);
+            });
+          });
+          describe('for percentage input', function () {
+            beforeEach(function () {
+              cell.inputParameters.id = 'dichotomousPercentage';
+              cell.firstParameter = 50;
+            });
+            it('should render correct inputs', function () {
+              delete cell.secondParameter;
+              var expectedResult = '50%\nDistribution: none';
+              var result = manualInputService.inputToString(cell);
+              expect(result).toEqual(expectedResult);
+            });
+            it('should render correct inputs with sample size', function () {
+              var expectedResult = '50% (100)\nDistribution: none';
+              var result = manualInputService.inputToString(cell);
+              expect(result).toEqual(expectedResult);
+            });
+            it('should render correct normalised inputs', function () {
+              cell.isNormal = true;
+              var expectedResult = '50% (100)\nNormal(0.5, ' + Math.sqrt(0.5 * (1 - 0.5) / 100) + ')';
+              var result = manualInputService.inputToString(cell);
+              expect(result).toEqual(expectedResult);
+            });
+            it('should render incorrect inputs', function () {
+              delete cell.firstParameter;
+              var expectedResult = 'Missing or invalid input';
+              var result = manualInputService.inputToString(cell);
+              expect(result).toEqual(expectedResult);
+            });
+          });
+          describe('for fraction input', function () {
+            beforeEach(function () {
+              cell.inputParameters.id = 'dichotomousFraction';
+              cell.firstParameter = 50;
+              cell.secondParameter = 100;
+            });
+            it('should render correct inputs', function () {
+              var expectedResult = '50 / 100\nDistribution: none';
+              var result = manualInputService.inputToString(cell);
+              expect(result).toEqual(expectedResult);
+            });
+            it('should render correct normalised inputs', function () {
+              cell.isNormal = true;
+              var expectedResult = '50 / 100\nNormal(0.5, ' + Math.sqrt(0.5 * (1 - 0.5) / 100) + ')';
+              var result = manualInputService.inputToString(cell);
+              expect(result).toEqual(expectedResult);
+            });
+            it('should render incorrect inputs', function () {
+              delete cell.firstParameter;
+              var expectedResult = 'Missing or invalid input';
+              var result = manualInputService.inputToString(cell);
+              expect(result).toEqual(expectedResult);
             });
           });
         });
