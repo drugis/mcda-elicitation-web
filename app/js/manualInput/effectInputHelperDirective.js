@@ -19,7 +19,7 @@ define(['lodash'], function (_) {
         // functions
         scope.keyCheck = keyCheck;
         scope.updateUpperBound = updateUpperBound;
-        scope.checkInput = checkInput;
+        scope.inputChanged = inputChanged;
 
         //init
         var isEscPressed = false;
@@ -39,16 +39,15 @@ define(['lodash'], function (_) {
 
         function updateUpperBound() {
           var id = scope.inputCell.inputParameters.id;
-          if (scope.inputCell.isNormal &&
-            (id === 'continuousMeanConfidenceInterval' || id === 'dichotomousDecimal' || id === 'dichotomousPercentage' || id === 'dichotomousFraction')) {
-            scope.inputCell.thirdParameter = (2 * scope.inputCell.firstParameter) - scope.inputCell.secondParameter;
+          if (scope.inputCell.isNormal && id === 'continuousMeanConfidenceInterval') {
+            scope.inputCell.thirdParameter = 2 * scope.inputCell.firstParameter - scope.inputCell.secondParameter;
           }
         }
 
         function saveState() {
           $timeout(function () {
             scope.inputData = scope.inputCell;
-            scope.inputData.isInvalid = ManualInputService.checkInputValues(scope.inputCell);
+            scope.inputData.isInvalid = ManualInputService.getInputError(scope.inputCell);
             scope.inputData.label = ManualInputService.inputToString(scope.inputCell);
             $timeout(function () {
               scope.changeCallback();
@@ -65,14 +64,15 @@ define(['lodash'], function (_) {
           scope.inputParameterOptions = ManualInputService.getOptions(scope.inputCell);
           if (!scope.inputCell.inputParameters) {
             scope.inputCell.inputParameters = _.values(scope.inputParameterOptions)[0];
-            if(scope.inputCell.parameterOfInterest === 'cumulativeProbability'){
-              scope.inputCell.display = 'percentage';
+            if (scope.inputCell.parameterOfInterest === 'cumulativeProbability') {
+              scope.inputCell.scale = 'percentage';
             }
           }
         }
 
-        function checkInput() {
-          scope.error = ManualInputService.checkInputValues(scope.inputCell);
+        function inputChanged() {
+          scope.error = ManualInputService.getInputError(scope.inputCell);
+          updateUpperBound();
         }
 
         function keyCheck(event) {

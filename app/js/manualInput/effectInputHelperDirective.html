@@ -9,32 +9,36 @@
             inputCell.inputMethod === 'assistedDistribution' && inputCell.dataType!=='continuous'">
           <label>
             Input parameters
-            <select ng-model="inputCell.inputParameters" ng-options="option as option.label for option in inputParameterOptions track by option.id" ng-change="checkInput()"></select>
+            <select ng-model="inputCell.inputParameters" 
+              ng-options="option as option.label for option in inputParameterOptions track by option.id" 
+              ng-change="inputChanged()"></select>
           </label>
         </div>
         <div class="cell large-6">
           <label ng-if="inputCell.parameterOfInterest === 'cumulativeProbability'">
             Scale
-            <select ng-model="inputCell.scale" ng-options="scaleKey as scaleValue for (scaleKey, scaleValue) in inputCell.inputParameters.scale"
-              ng-change="checkInput()"></select>
+            <select ng-model="inputCell.scale" 
+              ng-options="scaleKey as scaleValue for (scaleKey, scaleValue) in inputCell.inputParameters.scale"
+              ng-change="inputChanged()"></select>
           </label>
         </div>
         <div class="cell large-4">
           <label>
             {{inputCell.inputParameters.firstParameter}}
-            <input type="number" ng-model="inputCell.firstParameter" ng-change="checkInput()">
+            <input type="number" ng-model="inputCell.firstParameter" ng-change="inputChanged()">
           </label>
         </div>
         <div class="cell large-4" ng-if="inputCell.inputParameters.secondParameter">
           <label>
             {{inputCell.inputParameters.secondParameter}}
-            <input type="number" ng-model="inputCell.secondParameter" ng-change="checkInput()">
+            <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()">
           </label>
         </div>
         <div class="cell large-4" ng-if="inputCell.inputParameters.thirdParameter">
           <label>
             {{inputCell.inputParameters.thirdParameter}}
-            <input type="number" ng-model="inputCell.thirdParameter" ng-change="checkInput()">
+            <input type="number" ng-model="inputCell.thirdParameter" ng-change="inputChanged()" 
+              ng-disabled="inputCell.inputParameters.id === 'continuousMeanConfidenceInterval' && inputCell.isNormal">
           </label>
         </div>
         <div class="cell" ng-if="inputCell.inputParameters.canBeNormal">
