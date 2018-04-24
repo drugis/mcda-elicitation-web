@@ -7,9 +7,6 @@ define(['lodash', 'angular'], function (_) {
 
     var INPUT_TYPE_KNOWLEDGE = {
       distribution: {
-        getInputError: function (cell) {
-          return DISTRIBUTION_KNOWLEDGE[cell.inputMethod].getInputError(cell);
-        },
         toString: function (cell) {
           return DISTRIBUTION_KNOWLEDGE[cell.inputMethod].toString(cell);
         },
@@ -21,9 +18,6 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       effect: {
-        getInputError: function (cell) {
-          return EFFECT_KNOWLEDGE[cell.dataType].getInputError(cell);
-        },
         toString: function (cell) {
           return EFFECT_KNOWLEDGE[cell.dataType].toString(cell);
         },
@@ -37,9 +31,6 @@ define(['lodash', 'angular'], function (_) {
     };
     var DISTRIBUTION_KNOWLEDGE = {
       assistedDistribution: {
-        getInputError: function (cell) {
-          return ASSISTED_DISTRIBUTION_KNOWLEDGE[cell.dataType].getInputError(cell);
-        },
         toString: function (cell) {
           return ASSISTED_DISTRIBUTION_KNOWLEDGE[cell.dataType].toString(cell);
         },
@@ -51,9 +42,6 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       manualDistribution: {
-        getInputError: function (cell) {
-          return MANUAL_DISTRIBUTION_KNOWLEDGE[cell.inputParameters.id].getInputError(cell);
-        },
         toString: function (cell) {
           return MANUAL_DISTRIBUTION_KNOWLEDGE[cell.inputParameters.id].toString(cell);
         },
@@ -68,17 +56,17 @@ define(['lodash', 'angular'], function (_) {
               firstParameter: {
                 label: 'alpha',
                 constraints: [
-                  ConstraintService.isDefined(),
-                  ConstraintService.isAbove(0),
-                  ConstraintService.isInteger()
+                  ConstraintService.defined(),
+                  ConstraintService.above(0),
+                  ConstraintService.integer()
                 ]
               },
               secondParameter: {
                 label: 'beta',
                 constraints: [
-                  ConstraintService.isDefined(),
-                  ConstraintService.isAbove(0),
-                  ConstraintService.isInteger()
+                  ConstraintService.defined(),
+                  ConstraintService.above(0),
+                  ConstraintService.integer()
                 ]
               }
             },
@@ -88,14 +76,14 @@ define(['lodash', 'angular'], function (_) {
               firstParameter: {
                 label: 'mean',
                 constraints: [
-                  ConstraintService.isDefined(),
+                  ConstraintService.defined(),
                 ]
               },
               secondParameter: {
                 label: 'SE',
                 constraints: [
-                  ConstraintService.isDefined(),
-                  ConstraintService.isAbove(0)
+                  ConstraintService.defined(),
+                  ConstraintService.above(0)
                 ]
               }
             },
@@ -105,15 +93,15 @@ define(['lodash', 'angular'], function (_) {
               firstParameter: {
                 label: 'alpha',
                 constraints: [
-                  ConstraintService.isDefined(),
-                  ConstraintService.isAbove(0)
+                  ConstraintService.defined(),
+                  ConstraintService.above(0)
                 ]
               },
               secondParameter: {
                 label: 'beta',
                 constraints: [
-                  ConstraintService.isDefined(),
-                  ConstraintService.isAbove(0)
+                  ConstraintService.defined(),
+                  ConstraintService.above(0)
                 ]
               }
             }
@@ -123,19 +111,8 @@ define(['lodash', 'angular'], function (_) {
     };
     var MANUAL_DISTRIBUTION_KNOWLEDGE = {
       manualBeta: {
-        getInputError: function (cell) {
-          var alpha = cell.firstParameter;
-          var beta = cell.secondParameter;
-          if (isNullNaNOrUndefined(alpha) || alpha <= 0) {
-            return 'Invalid alpha';
-          } else if (isNullNaNOrUndefined(beta) || beta <= 0) {
-            return 'Invalid beta';
-          } else if (!isInteger(alpha) || !isInteger(beta)) {
-            return 'Values should be integer';
-          }
-        },
         toString: function (cell) {
-          return getInputError(cell) ? INVALID_INPUT_MESSAGE : 'Beta(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+          return 'Beta(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
         },
         buildPerformance: function (cell) {
           return {
@@ -148,17 +125,8 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       manualNormal: {
-        getInputError: function (cell) {
-          var mu = cell.firstParameter;
-          var sigma = cell.secondParameter;
-          if (isNullNaNOrUndefined(mu)) {
-            return 'Invalid mean';
-          } else if (isNullNaNOrUndefinedOrNegative(sigma)) {
-            return 'Invalid standard error';
-          }
-        },
         toString: function (cell) {
-          return getInputError(cell) ? INVALID_INPUT_MESSAGE : 'Normal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+          return 'Normal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
         },
         buildPerformance: function (cell) {
           return {
@@ -171,17 +139,8 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       manualGamma: {
-        getInputError: function (cell) {
-          var alpha = cell.firstParameter;
-          var beta = cell.secondParameter;
-          if (isNullNaNOrUndefined(alpha) || alpha <= 0) {
-            return 'Invalid alpha';
-          } else if (isNullNaNOrUndefined(beta) || beta <= 0) {
-            return 'Invalid beta';
-          }
-        },
         toString: function (cell) {
-          return getInputError(cell) ? INVALID_INPUT_MESSAGE : 'Gamma(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+          return 'Gamma(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
         },
         buildPerformance: function (cell) {
           return {
@@ -196,9 +155,6 @@ define(['lodash', 'angular'], function (_) {
     };
     var EFFECT_KNOWLEDGE = {
       dichotomous: {
-        getInputError: function (cell) {
-          return DICHOTOMOUS_EFFECT_KNOWLEDGE[cell.inputParameters.id].getInputError(cell);
-        },
         toString: function (cell) {
           return DICHOTOMOUS_EFFECT_KNOWLEDGE[cell.inputParameters.id].toString(cell);
         },
@@ -213,17 +169,17 @@ define(['lodash', 'angular'], function (_) {
               firstParameter: {
                 label: 'Value',
                 constraints: [
-                  ConstraintService.isDefined(),
-                  ConstraintService.isPositive(),
-                  ConstraintService.isBelowOrEqualTo(1.0)
+                  ConstraintService.defined(),
+                  ConstraintService.positive(),
+                  ConstraintService.belowOrEqualTo(1.0)
                 ]
               },
               secondParameter: {
                 label: 'Sample size (optional)',
                 constraints: [
-                  ConstraintService.isNotNaNOrNull(),
-                  ConstraintService.isPositive(),
-                  ConstraintService.isInteger()
+                  ConstraintService.notNaNOrNull(),
+                  ConstraintService.positive(),
+                  ConstraintService.integer()
                 ]
               },
               canBeNormal: true
@@ -234,17 +190,17 @@ define(['lodash', 'angular'], function (_) {
               firstParameter: {
                 label: 'Value',
                 constraints: [
-                  ConstraintService.isDefined(),
-                  ConstraintService.isPositive(),
-                  ConstraintService.isBelowOrEqualTo(100)
+                  ConstraintService.defined(),
+                  ConstraintService.positive(),
+                  ConstraintService.belowOrEqualTo(100)
                 ]
               },
               secondParameter: {
                 label: 'Sample size (optional)',
                 constraints: [
-                  ConstraintService.isNotNaNOrNull(),
-                  ConstraintService.isPositive(),
-                  ConstraintService.isInteger()
+                  ConstraintService.notNaNOrNull(),
+                  ConstraintService.positive(),
+                  ConstraintService.integer()
                 ]
               },
               canBeNormal: true
@@ -255,18 +211,18 @@ define(['lodash', 'angular'], function (_) {
               firstParameter: {
                 label: 'Events',
                 constraints: [
-                  ConstraintService.isDefined(),
-                  ConstraintService.isPositive(),
-                  ConstraintService.isInteger(),
-                  ConstraintService.isBelowOrEqualTo('secondParameter')
+                  ConstraintService.defined(),
+                  ConstraintService.positive(),
+                  ConstraintService.integer(),
+                  ConstraintService.belowOrEqualTo('secondParameter')
                 ]
               },
               secondParameter: {
                 label: 'Sample size',
                 constraints: [
-                  ConstraintService.isDefined(),
-                  ConstraintService.isAboveOrEqualTo(1),
-                  ConstraintService.isInteger()
+                  ConstraintService.defined(),
+                  ConstraintService.aboveOrEqualTo(1),
+                  ConstraintService.integer()
                 ]
               },
               canBeNormal: true
@@ -275,9 +231,6 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       continuous: {
-        getInputError: function (cell) {
-          return CONTINUOUS_KNOWLEDGE[cell.parameterOfInterest].getInputError(cell);
-        },
         toString: function (cell) {
           return CONTINUOUS_KNOWLEDGE[cell.parameterOfInterest].toString(cell);
         },
@@ -289,9 +242,6 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       other: {
-        getInputError: function (cell) {
-          return OTHER_EFFECT_KNOWLEDGE[cell.inputParameters.id].getInputError(cell);
-        },
         toString: function (cell) {
           return OTHER_EFFECT_KNOWLEDGE[cell.inputParameters.id].toString(cell);
         },
@@ -306,7 +256,7 @@ define(['lodash', 'angular'], function (_) {
               firstParameter: {
                 label: 'Value',
                 constraints: [
-                  ConstraintService.isDefined()
+                  ConstraintService.defined()
                 ]
               }
             },
@@ -316,14 +266,14 @@ define(['lodash', 'angular'], function (_) {
               firstParameter: {
                 label: 'Value',
                 constraints: [
-                  ConstraintService.isDefined()
+                  ConstraintService.defined()
                 ]
               },
               secondParameter: {
                 label: 'Standard error',
                 constraints: [
-                  ConstraintService.isDefined(),
-                  ConstraintService.isPositive()
+                  ConstraintService.defined(),
+                  ConstraintService.positive()
                 ]
               }
             },
@@ -334,18 +284,7 @@ define(['lodash', 'angular'], function (_) {
     };
     var DICHOTOMOUS_EFFECT_KNOWLEDGE = {
       dichotomousDecimal: {
-        getInputError: function (cell) {
-          if (isNullNaNOrUndefinedOrNegative(cell.firstParameter) || cell.firstParameter > 1 ||
-            (cell.isNormal && isNullNaNOrUndefinedOrNegative(cell.secondParameter))) {
-            return 'Value should be between or equal to 0 and 1';
-          } else if (cell.secondParameter && !isInteger(cell.secondParameter)) {
-            return 'Sample size should be integer';
-          }
-        },
         toString: function (cell) {
-          if (getInputError(cell)) {
-            return INVALID_INPUT_MESSAGE;
-          }
           var proportion = cell.firstParameter;
           var sampleSize = cell.secondParameter;
           var returnString = proportion;
@@ -369,18 +308,7 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       dichotomousPercentage: {
-        getInputError: function (cell) {
-          if (isNullNaNOrUndefinedOrNegative(cell.firstParameter) || cell.firstParameter > 100 ||
-            (cell.isNormal && isNullNaNOrUndefinedOrNegative(cell.secondParameter))) {
-            return 'Value should be between or equal to 0 and 100';
-          } else if (cell.secondParameter && !isInteger(cell.secondParameter)) {
-            return 'Sample size should be integer';
-          }
-        },
         toString: function (cell) {
-          if (getInputError(cell)) {
-            return INVALID_INPUT_MESSAGE;
-          }
           var percentage = cell.firstParameter;
           var sampleSize = cell.secondParameter;
           var returnString = percentage + '%';
@@ -406,17 +334,7 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       dichotomousFraction: {
-        getInputError: function (cell) {
-          if (isNullNaNOrUndefinedOrNegative(cell.firstParameter) || isNullNaNOrUndefinedOrNegative(cell.secondParameter)) {
-            return 'Both values must be defined and non-negative';
-          } else if (cell.firstParameter > cell.secondParameter) {
-            return 'Number of events may not exceed sample size';
-          }
-        },
         toString: function (cell) {
-          if (getInputError(cell)) {
-            return INVALID_INPUT_MESSAGE;
-          }
           var sampleSize = cell.secondParameter;
           var returnString = cell.firstParameter + ' / ' + sampleSize;
           if (cell.isNormal) {
@@ -442,9 +360,6 @@ define(['lodash', 'angular'], function (_) {
     };
     var CONTINUOUS_KNOWLEDGE = {
       mean: {
-        getInputError: function (cell) {
-          return CONTINUOUS_MEAN_KNOWLEDGE[cell.inputParameters.id].getInputError(cell);
-        },
         toString: function (cell) {
           return CONTINUOUS_MEAN_KNOWLEDGE[cell.inputParameters.id].toString(cell);
         }, buildPerformance: function (cell) {
@@ -457,7 +372,7 @@ define(['lodash', 'angular'], function (_) {
             firstParameter: {
               label: 'Mean',
               constraints: [
-                ConstraintService.isDefined()
+                ConstraintService.defined()
               ]
             }
           },
@@ -467,14 +382,14 @@ define(['lodash', 'angular'], function (_) {
             firstParameter: {
               label: 'Mean',
               constraints: [
-                ConstraintService.isDefined()
+                ConstraintService.defined()
               ]
             },
             secondParameter: {
               label: 'Standard error',
               constraints: [
-                ConstraintService.isDefined(),
-                ConstraintService.isPositive()
+                ConstraintService.defined(),
+                ConstraintService.positive()
               ]
             },
             canBeNormal: true
@@ -485,9 +400,6 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       median: {
-        getInputError: function (cell) {
-          return CONTINUOUS_MEDIAN_KNOWLEDGE[cell.inputParameters.id].getInputError(cell);
-        },
         toString: function (cell) {
           return CONTINUOUS_MEDIAN_KNOWLEDGE[cell.inputParameters.id].toString(cell);
         },
@@ -501,7 +413,7 @@ define(['lodash', 'angular'], function (_) {
             firstParameter: {
               label: 'Median',
               constraints: [
-                ConstraintService.isDefined()
+                ConstraintService.defined()
               ]
             }
           },
@@ -509,9 +421,6 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       cumulativeProbability: {
-        getInputError: function (cell) {
-          return CONTINUOUS_CUMULATIVE_PROBABILITY_KNOWLEDGE[cell.inputParameters.id].getInputError(cell);
-        },
         toString: function (cell) {
           return CONTINUOUS_CUMULATIVE_PROBABILITY_KNOWLEDGE[cell.inputParameters.id].toString(cell);
         }, buildPerformance: function (cell) {
@@ -528,9 +437,9 @@ define(['lodash', 'angular'], function (_) {
             firstParameter: {
               label: 'Value',
               constraints: [
-                ConstraintService.isDefined(),
-                ConstraintService.isPositive(),
-                ConstraintService.isBelowOrEqualTo(100)
+                ConstraintService.defined(),
+                ConstraintService.positive(),
+                ConstraintService.belowOrEqualTo(100)
               ]
             }
           },
@@ -545,11 +454,6 @@ define(['lodash', 'angular'], function (_) {
     };
     var CONTINUOUS_MEAN_KNOWLEDGE = {
       continuousMeanNoDispersion: {
-        getInputError: function (cell) {
-          if (isNullNaNOrUndefined(cell.firstParameter)) {
-            return 'Missing or invalid mean';
-          }
-        },
         toString: valueToString,
         buildPerformance: function (cell) {
           return {
@@ -559,14 +463,6 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       continuousMeanStdErr: {
-        getInputError: function (cell) {
-          if (isNullNaNOrUndefined(cell.firstParameter)) {
-            return 'Missing or invalid mean';
-          }
-          if (isNullNaNOrUndefinedOrNegative(cell.secondParameter)) {
-            return 'Standard error missing, invalid, or negative';
-          }
-        },
         toString: valueSEToString,
         buildPerformance: function (cell) {
           return {
@@ -578,12 +474,6 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       continuousMeanConfidenceInterval: {
-        getInputError: function (cell) {
-          if (isNullNaNOrUndefined(cell.firstParameter)) {
-            return 'Missing or invalid mean';
-          }
-          return getIntervalError(cell.firstParameter, cell.secondParameter, cell.thirdParameter);
-        },
         toString: valueCIToString,
         buildPerformance: function (cell) {
           return {
@@ -598,11 +488,6 @@ define(['lodash', 'angular'], function (_) {
     };
     var CONTINUOUS_MEDIAN_KNOWLEDGE = {
       continuousMedianNoDispersion: {
-        getInputError: function (cell) {
-          if (isNullNaNOrUndefined(cell.firstParameter)) {
-            return 'Missing or invalid median';
-          }
-        },
         toString: valueToString,
         buildPerformance: function (cell) {
           return {
@@ -612,12 +497,6 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       continuousMedianConfidenceInterval: {
-        getInputError: function (cell) {
-          if (isNullNaNOrUndefined(cell.firstParameter)) {
-            return 'Missing or invalid median';
-          }
-          return getIntervalError(cell.firstParameter, cell.secondParameter, cell.thirdParameter);
-        },
         toString: valueCIToString,
         buildPerformance: function (cell) {
           return {
@@ -631,7 +510,6 @@ define(['lodash', 'angular'], function (_) {
     };
     var CONTINUOUS_CUMULATIVE_PROBABILITY_KNOWLEDGE = {
       cumulativeProbabilityValue: {
-        getInputError: getCumulativeProbabilityValueError,
         toString: valueToString,
         buildPerformance: function (cell) {
           return {
@@ -641,17 +519,6 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       cumulativeProbabilityValueCI: {
-        getInputError: function (cell) {
-          var error = getCumulativeProbabilityValueError(cell) ||
-            getIntervalError(cell.firstParameter, cell.secondParameter, cell.thirdParameter);
-          if (error) {
-            return error;
-          } else if (cell.scale === 'decimal' && cell.thirdParameter > 1) {
-            return 'Upperbound can at most be 1';
-          } else if (cell.scale === 'percentage' && cell.thirdParameter > 100) {
-            return 'Upperbound can at most be 100';
-          }
-        },
         toString: function (cell) {
           return cell.scale === 'decimal' ? valueCIToString(cell) : valueCIPercentToString(cell);
         },
@@ -677,11 +544,6 @@ define(['lodash', 'angular'], function (_) {
     };
     var OTHER_EFFECT_KNOWLEDGE = {
       value: {
-        getInputError: function (cell) {
-          if (isNullNaNOrUndefined(cell.firstParameter)) {
-            return 'Missing or invalid value';
-          }
-        },
         toString: valueToString,
         buildPerformance: function (cell) {
           return {
@@ -691,14 +553,6 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       valueSE: {
-        getInputError: function (cell) {
-          if (isNullNaNOrUndefined(cell.firstParameter)) {
-            return 'Missing or invalid value';
-          }
-          if (isNullNaNOrUndefinedOrNegative(cell.secondParameter)) {
-            return 'Standard error invalid, missing, or negative';
-          }
-        },
         toString: valueSEToString,
         buildPerformance: function (cell) {
           return {
@@ -709,12 +563,6 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       valueCI: {
-        getInputError: function (cell) {
-          if (isNullNaNOrUndefined(cell.firstParameter)) {
-            return 'Missing or invalid value';
-          }
-          return getIntervalError(cell.firstParameter, cell.secondParameter, cell.thirdParameter);
-        },
         toString: valueCIToString,
         buildPerformance: function (cell) {
           return {
@@ -728,26 +576,10 @@ define(['lodash', 'angular'], function (_) {
     };
     var ASSISTED_DISTRIBUTION_KNOWLEDGE = {
       dichotomous: {
-        getInputError: function (cell) {
-          var events = cell.firstParameter;
-          var sampleSize = cell.secondParameter;
-          if (isNullNaNOrUndefinedOrNegative(events)) {
-            return 'Missing, invalid, or negative events';
-          } else if (isNullNaNOrUndefined(sampleSize) || sampleSize < 1) {
-            return 'Missing, invalid, or lower than 1 sample size';
-          } else if (!isInteger(events) || !isInteger(sampleSize)) {
-            return 'Events and sample size must be integer';
-          } else if (events > sampleSize) {
-            return 'Events must be lower or equal to sample size';
-          }
-        },
         toString: function (cell) {
           var events = cell.firstParameter;
           var sampleSize = cell.secondParameter;
-          if (!getInputError(cell)) {
-            return events + ' / ' + sampleSize + '\nDistribution: Beta(' + (events + 1) + ', ' + (sampleSize - events + 2) + ')';
-          }
-          return INVALID_INPUT_MESSAGE;
+          return events + ' / ' + sampleSize + '\nDistribution: Beta(' + (events + 1) + ', ' + (sampleSize - events + 2) + ')';
         },
         buildPerformance: function (cell) {
           return {
@@ -765,27 +597,24 @@ define(['lodash', 'angular'], function (_) {
             firstParameter: {
               label: 'Events',
               constraints: [
-                ConstraintService.isDefined(),
-                ConstraintService.isPositive(),
-                ConstraintService.isInteger(),
-                ConstraintService.isBelowOrEqualTo('secondParameter')
+                ConstraintService.defined(),
+                ConstraintService.positive(),
+                ConstraintService.integer(),
+                ConstraintService.belowOrEqualTo('secondParameter')
               ]
             },
             secondParameter: {
               label: 'Sample size',
               constraints: [
-                ConstraintService.isDefined(),
-                ConstraintService.isAbove(0),
-                ConstraintService.isInteger()
+                ConstraintService.defined(),
+                ConstraintService.above(0),
+                ConstraintService.integer()
               ]
             }
           }
         }
       },
       continuous: {
-        getInputError: function (cell) {
-          return ASSISTED_DISTRIBUTION_CONTINUOUS_KNOWLEDGE[cell.inputParameters.id].getInputError(cell);
-        },
         toString: function (cell) {
           return ASSISTED_DISTRIBUTION_CONTINUOUS_KNOWLEDGE[cell.inputParameters.id].toString(cell);
         },
@@ -799,22 +628,22 @@ define(['lodash', 'angular'], function (_) {
             firstParameter: {
               label: 'Mean',
               constraints: [
-                ConstraintService.isDefined()
+                ConstraintService.defined()
               ]
             },
             secondParameter: {
               label: 'Standard error',
               constraints: [
-                ConstraintService.isDefined(),
-                ConstraintService.isPositive()
+                ConstraintService.defined(),
+                ConstraintService.positive()
               ]
             },
             thirdParameter: {
               label: 'Sample size',
               constraints: [
-                ConstraintService.isDefined(),
-                ConstraintService.isAbove(0),
-                ConstraintService.isInteger()
+                ConstraintService.defined(),
+                ConstraintService.above(0),
+                ConstraintService.integer()
               ]
             }
           },
@@ -824,48 +653,43 @@ define(['lodash', 'angular'], function (_) {
             firstParameter: {
               label: 'Mean',
               constraints: [
-                ConstraintService.isDefined()
+                ConstraintService.defined()
               ]
             },
             secondParameter: {
               label: 'Standard deviation',
               constraints: [
-                ConstraintService.isDefined(),
-                ConstraintService.isPositive()]
+                ConstraintService.defined(),
+                ConstraintService.positive()]
             },
             thirdParameter: {
               label: 'Sample size',
               constraints: [
-                ConstraintService.isDefined(),
-                ConstraintService.isAbove(0)(),
-                ConstraintService.isInteger()()
+                ConstraintService.defined(),
+                ConstraintService.above(0)(),
+                ConstraintService.integer()()
               ]
             }
           }
+        }
+      },
+      other: {
+        toString: valueToString,
+        buildPerformance: function (cell) {
+          return {
+            type: 'exact',
+            value: cell.firstParameter
+          };
         },
-        other: {
-          getInputError: function (cell) {
-            if (isNullNaNOrUndefined(cell.firstParameter)) {
-              return 'Missing or invalid value';
-            }
-          },
-          toString: valueToString,
-          buildPerformance: function (cell) {
-            return {
-              type: 'exact',
-              value: cell.firstParameter
-            };
-          },
-          options: {
-            assistedOther: {
-              id: 'assistedOther',
-              label: 'other',
-              firstParameter: {
-                label: 'Value',
-                constraints: [
-                  ConstraintService.isDefined()
-                ]
-              }
+        options: {
+          assistedOther: {
+            id: 'assistedOther',
+            label: 'other',
+            firstParameter: {
+              label: 'Value',
+              constraints: [
+                ConstraintService.defined()
+              ]
             }
           }
         }
@@ -873,11 +697,7 @@ define(['lodash', 'angular'], function (_) {
     };
     var ASSISTED_DISTRIBUTION_CONTINUOUS_KNOWLEDGE = {
       assistedContinuousStdErr: {
-        getInputError: getTDistributionError,
         toString: function (cell) {
-          if (getInputError(cell)) {
-            return INVALID_INPUT_MESSAGE;
-          }
           var mu = cell.firstParameter;
           var sigma = cell.secondParameter;
           var sampleSize = cell.thirdParameter;
@@ -895,11 +715,7 @@ define(['lodash', 'angular'], function (_) {
         }
       },
       assistedContinuousStdDev: {
-        getInputError: getTDistributionError,
         toString: function (cell) {
-          if (getInputError(cell)) {
-            return INVALID_INPUT_MESSAGE;
-          }
           var mu = cell.firstParameter;
           var sigma = standardDeviationToStandardError(cell.secondParameter, cell.thirdParameter);
           var sampleSize = cell.thirdParameter;
@@ -934,6 +750,9 @@ define(['lodash', 'angular'], function (_) {
     }
 
     function inputToString(cell) {
+      if (getInputError(cell)) {
+        return INVALID_INPUT_MESSAGE;
+      }
       return INPUT_TYPE_KNOWLEDGE[cell.inputType].toString(cell);
     }
 
@@ -1135,77 +954,34 @@ define(['lodash', 'angular'], function (_) {
         firstParameter: {
           label: label,
           constraints: [
-            ConstraintService.isDefined()
+            ConstraintService.defined()
           ]
         },
         secondParameter: {
           label: 'Lower bound',
           constraints: [
-            ConstraintService.isDefined(),
-            ConstraintService.isBelowOrEqualTo('firstParameter')
+            ConstraintService.defined(),
+            ConstraintService.belowOrEqualTo('firstParameter')
           ]
         },
         thirdParameter: {
           label: 'Upper bound',
           constraints: [
-            ConstraintService.isDefined(),
-            ConstraintService.isAboveOrEqualTo('firstParameter')
+            ConstraintService.defined(),
+            ConstraintService.aboveOrEqualTo('firstParameter')
           ]
         }
       };
-    }
-
-    function isNullNaNOrUndefinedOrNegative(value) {
-      return isNullNaNOrUndefined(value) || value < 0;
-    }
-
-    function isNullNaNOrUndefined(value) {
-      return value === null || value === undefined || isNaN(value);
-    }
-
-    function getIntervalError(value, lowerBound, upperBound) {
-      if (isNullNaNOrUndefined(lowerBound) || isNullNaNOrUndefined(upperBound)) {
-        return 'Missing or invalid convidence interval';
-      } else if (lowerBound > value || value > upperBound) {
-        return 'Lower bound too high, or upper bound too low';
-      }
-    }
-
-    function getCumulativeProbabilityValueError(cell) {
-      var value = cell.firstParameter;
-      if (isNullNaNOrUndefinedOrNegative(value)) {
-        return 'Missing, invalid, or negative value';
-      } else if (cell.scale === 'decimal' && value > 1) {
-        return 'Value must be 1 or less';
-      } else if (cell.scale === 'percentage' && value > 100) {
-        return 'Percentage must be 100 or less';
-      }
-    }
-
-    function getTDistributionError(cell) {
-      if (isNullNaNOrUndefined(cell.firstParameter)) {
-        return 'Missing or invalid mean';
-      } else if (isNullNaNOrUndefinedOrNegative(cell.secondParameter)) {
-        return 'Missing, invalid, or negative standard error/deviation';
-      } else if (isNullNaNOrUndefinedOrNegative(cell.thirdParameter) || !isInteger(cell.thirdParameter)) {
-        return 'Missing, invalid, negative, or non-integer sample size';
-      }
     }
 
     function standardDeviationToStandardError(standardDeviation, sampleSize) {
       return Math.round(1000 * standardDeviation / Math.sqrt(sampleSize)) / 1000;
     }
     function valueToString(cell) {
-      if (!getInputError(cell)) {
-        return INVALID_INPUT_MESSAGE;
-      }
       return cell.firstParameter + (cell.scale === 'percentage' ? '%' : '') + NO_DISTRIBUTION;
     }
 
     function valueSEToString(cell) {
-      if (!getInputError(cell)) {
-        return INVALID_INPUT_MESSAGE;
-      }
       var returnString = cell.firstParameter + ' (' + cell.secondParameter + ')';
       if (cell.isNormal) {
         return returnString + '\nNormal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
@@ -1214,9 +990,6 @@ define(['lodash', 'angular'], function (_) {
     }
 
     function valueCIToString(cell) {
-      if (!getInputError(cell)) {
-        return INVALID_INPUT_MESSAGE;
-      }
       var returnString = cell.firstParameter + ' (' + cell.secondParameter + '; ' + cell.thirdParameter + ')';
       if (cell.isNormal) {
         return returnString + '\nNormal(' + cell.firstParameter + ', ' + ((cell.thirdParameter - cell.secondParameter) / (2 * 1.96)) + ')';
@@ -1225,14 +998,7 @@ define(['lodash', 'angular'], function (_) {
     }
 
     function valueCIPercentToString(cell) {
-      if (getInputError(cell)) {
-        return INVALID_INPUT_MESSAGE;
-      }
       return cell.firstParameter + '% (' + cell.secondParameter + '%; ' + cell.thirdParameter + '%)' + NO_DISTRIBUTION;
-    }
-
-    function isInteger(value) {
-      return value % 1 === 0;
     }
 
     return {
@@ -1240,8 +1006,8 @@ define(['lodash', 'angular'], function (_) {
       inputToString: inputToString,
       getInputError: getInputError,
       prepareInputData: prepareInputData,
-      createInputFromOldWorkspace: createInputFromOldWorkspace,
-      copyWorkspaceCriteria: copyWorkspaceCriteria,
+      createInputFromOldWorkspace: undefined,//createInputFromOldWorkspace,
+      copyWorkspaceCriteria: undefined,//copyWorkspaceCriteria,
       getOptions: getOptions
     };
   };
