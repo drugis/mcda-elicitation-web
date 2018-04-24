@@ -1,11 +1,11 @@
 'use strict';
 define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (angular) {
-  var constraintService;
-  beforeEach(module('elicit.manualInput'));
-  beforeEach(inject(function (ConstraintService) {
-    constraintService = ConstraintService;
-  }));
   fdescribe('the ConstraintService', function () {
+    var constraintService;
+    beforeEach(module('elicit.manualInput'));
+    beforeEach(inject(function (ConstraintService) {
+      constraintService = ConstraintService;
+    }));
     describe('defined', function () {
       it('should return a function that behaves as expected', function () {
         var defined = constraintService.defined();
@@ -70,7 +70,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
       it('should return a function that checks whether the value is above the given value', function () {
         var aboveNumber = constraintService.above(30);
         expect(aboveNumber(31)).toBeFalsy();
-        expect(aboveNumber(30,'blalue')).toBe('blalue must be above 30');
+        expect(aboveNumber(30, 'blalue')).toBe('blalue must be above 30');
         expect(aboveNumber(1, 'jolue')).toBe('jolue must be above 30');
       });
     });
