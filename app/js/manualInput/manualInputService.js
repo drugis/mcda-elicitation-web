@@ -50,60 +50,23 @@ define(['lodash', 'angular'], function (_) {
         },
         getOptions: function () {
           return {
-            beta: {
+            manualBeta: {
               id: 'manualBeta',
               label: 'Beta',
-              firstParameter: {
-                label: 'alpha',
-                constraints: [
-                  ConstraintService.defined(),
-                  ConstraintService.above(0),
-                  ConstraintService.integer()
-                ]
-              },
-              secondParameter: {
-                label: 'beta',
-                constraints: [
-                  ConstraintService.defined(),
-                  ConstraintService.above(0),
-                  ConstraintService.integer()
-                ]
-              }
+              firstParameter: buildIntegerAboveZero('alpha'),
+              secondParameter: buildIntegerAboveZero('beta'),
             },
-            normal: {
+            manualNormal: {
               id: 'manualNormal',
               label: 'Normal',
-              firstParameter: {
-                label: 'mean',
-                constraints: [
-                  ConstraintService.defined(),
-                ]
-              },
-              secondParameter: {
-                label: 'SE',
-                constraints: [
-                  ConstraintService.defined(),
-                  ConstraintService.above(0)
-                ]
-              }
+              firstParameter: buildDefined('mean'),
+              secondParameter: buildPositiveFloat('Standard error')
             },
-            gamma: {
+            manualGamma: {
               id: 'manualGamma',
               label: 'Gamma',
-              firstParameter: {
-                label: 'alpha',
-                constraints: [
-                  ConstraintService.defined(),
-                  ConstraintService.above(0)
-                ]
-              },
-              secondParameter: {
-                label: 'beta',
-                constraints: [
-                  ConstraintService.defined(),
-                  ConstraintService.above(0)
-                ]
-              }
+              firstParameter: buildFloatAboveZero('alpha'),
+              secondParameter: buildFloatAboveZero('beta')
             }
           };
         }
@@ -115,27 +78,15 @@ define(['lodash', 'angular'], function (_) {
           return 'Beta(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
         },
         buildPerformance: function (cell) {
-          return {
-            type: 'dbeta',
-            parameters: {
-              alpha: cell.firstParameter,
-              beta: cell.secondParameter
-            }
-          };
-        }
+          return buildBetaPerformance(cell.firstParameter, cell.secondParameter);
+        },
       },
       manualNormal: {
         toString: function (cell) {
           return 'Normal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
         },
         buildPerformance: function (cell) {
-          return {
-            type: 'dnorm',
-            parameters: {
-              mu: cell.firstParameter,
-              sigma: cell.secondParameter
-            }
-          };
+          return buildNormalPerformance(cell.firstParameter, cell.secondParameter);
         }
       },
       manualGamma: {
@@ -143,13 +94,7 @@ define(['lodash', 'angular'], function (_) {
           return 'Gamma(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
         },
         buildPerformance: function (cell) {
-          return {
-            type: 'dgamma',
-            parameters: {
-              alpha: cell.firstParameter,
-              beta: cell.secondParameter
-            }
-          };
+          return buildGammaPerformance(cell.firstParameter, cell.secondParameter);
         }
       }
     };
@@ -163,49 +108,31 @@ define(['lodash', 'angular'], function (_) {
         },
         getOptions: function () {
           return {
-            decimal: {
+            dichotomousDecimal: {
               id: 'dichotomousDecimal',
               label: 'Decimal',
-              firstParameter: {
-                label: 'Value',
-                constraints: [
-                  ConstraintService.defined(),
-                  ConstraintService.positive(),
-                  ConstraintService.belowOrEqualTo(1.0)
-                ]
-              },
-              secondParameter: {
-                label: 'Sample size (optional)',
-                constraints: [
-                  ConstraintService.notNaNOrNull(),
-                  ConstraintService.positive(),
-                  ConstraintService.integer()
-                ]
-              },
+              firstParameter: buildPositiveWithMax('Value', 1.0)
+            },
+            dichotomousDecimalSampleSize: {
+              id: 'dichotomousDecimalSampleSize',
+              label: 'Decimal, sample size',
+              firstParameter: buildPositiveWithMax('Value', 1.0),
+              secondParameter: buildIntegerAboveZero('Sample size'),
               canBeNormal: true
             },
-            percentage: {
+            dichotomousPercentage: {
               id: 'dichotomousPercentage',
               label: 'Percentage',
-              firstParameter: {
-                label: 'Value',
-                constraints: [
-                  ConstraintService.defined(),
-                  ConstraintService.positive(),
-                  ConstraintService.belowOrEqualTo(100)
-                ]
-              },
-              secondParameter: {
-                label: 'Sample size (optional)',
-                constraints: [
-                  ConstraintService.notNaNOrNull(),
-                  ConstraintService.positive(),
-                  ConstraintService.integer()
-                ]
-              },
+              firstParameter: buildPositiveWithMax('Value', 100)
+            },
+            dichotomousPercentageSampleSize: {
+              id: 'dichotomousPercentageSampleSize',
+              label: 'Percentage, sample size',
+              firstParameter: buildPositiveWithMax('Value', 100),
+              secondParameter: buildIntegerAboveZero('Sample size'),
               canBeNormal: true
             },
-            fraction: {
+            dichotomousFraction: {
               id: 'dichotomousFraction',
               label: 'Fraction',
               firstParameter: {
@@ -217,14 +144,7 @@ define(['lodash', 'angular'], function (_) {
                   ConstraintService.belowOrEqualTo('secondParameter')
                 ]
               },
-              secondParameter: {
-                label: 'Sample size',
-                constraints: [
-                  ConstraintService.defined(),
-                  ConstraintService.aboveOrEqualTo(1),
-                  ConstraintService.integer()
-                ]
-              },
+              secondParameter: buildIntegerAboveZero('Sample size'),
               canBeNormal: true
             }
           };
@@ -253,44 +173,31 @@ define(['lodash', 'angular'], function (_) {
             value: {
               id: 'value',
               label: 'Value',
-              firstParameter: {
-                label: 'Value',
-                constraints: [
-                  ConstraintService.defined()
-                ]
-              }
+              firstParameter: buildDefined('Value')
             },
             valueSE: {
               id: 'valueSE',
               label: 'Value, SE',
-              firstParameter: {
-                label: 'Value',
-                constraints: [
-                  ConstraintService.defined()
-                ]
-              },
-              secondParameter: {
-                label: 'Standard error',
-                constraints: [
-                  ConstraintService.defined(),
-                  ConstraintService.positive()
-                ]
-              }
+              firstParameter: buildDefined('Value'),
+              secondParameter: buildPositiveFloat('Standard error')
             },
-            valueCI: createConfidenceInterval('valueCI', 'Value')
+            valueCI: buildConfidenceInterval('valueCI', 'Value')
           };
         }
       }
     };
     var DICHOTOMOUS_EFFECT_KNOWLEDGE = {
       dichotomousDecimal: {
+        toString: valueToString,
+        buildPerformance: function (cell) {
+          return buildExactPerformance(cell.firstParameter);
+        },
+      },
+      dichotomousDecimalSampleSize: {
         toString: function (cell) {
           var proportion = cell.firstParameter;
           var sampleSize = cell.secondParameter;
-          var returnString = proportion;
-          if (sampleSize) {
-            returnString = returnString + ' (' + sampleSize + ')';
-          }
+          var returnString = proportion + ' (' + sampleSize + ')';
           if (cell.isNormal) {
             var sigma = Math.sqrt(proportion * (1 - proportion) / sampleSize);
             returnString += '\nNormal(' + proportion + ', ' + sigma + ')';
@@ -300,24 +207,42 @@ define(['lodash', 'angular'], function (_) {
           return returnString;
         },
         buildPerformance: function (cell) {
-          return {
-            type: 'exact',
-            value: cell.firstParameter,
-            isNormal: cell.isNormal
-          };
+          if (cell.isNormal) {
+            var proportion = cell.firstParameter;
+            var sampleSize = cell.secondParameter;
+            var sigma = stdErr(proportion, sampleSize);
+            var input = {
+              mu: proportion,
+              sampleSize: sampleSize
+            };
+            return buildNormalPerformance(proportion, sigma, input);
+          } else {
+            return buildExactPerformance(cell.firstParameter, {
+              value: cell.firstParameter,
+              sampleSize: cell.secondParameter
+            });
+          }
         }
       },
       dichotomousPercentage: {
         toString: function (cell) {
+          return cell.firstParameter + '%' + NO_DISTRIBUTION;
+        },
+        buildPerformance: function (cell) {
+          return buildExactPerformance(cell.firstParameter / 100, {
+            value: cell.firstParameter,
+            scale: 'percentage'
+          });
+        }
+      },
+      dichotomousPercentageSampleSize: {
+        toString: function (cell) {
           var percentage = cell.firstParameter;
           var sampleSize = cell.secondParameter;
-          var returnString = percentage + '%';
-          if (sampleSize) {
-            returnString = returnString + ' (' + sampleSize + ')';
-          }
+          var returnString = percentage + '% (' + sampleSize + ')';
           if (cell.isNormal) {
             var proportion = percentage / 100;
-            var sigma = Math.round(Math.sqrt(proportion * (1 - proportion) / sampleSize) * 1000) / 1000;
+            var sigma = roundedStdErr(proportion, sampleSize);
             returnString += '\nNormal(' + proportion + ', ' + sigma + ')';
           } else {
             returnString += NO_DISTRIBUTION;
@@ -325,12 +250,24 @@ define(['lodash', 'angular'], function (_) {
           return returnString;
         },
         buildPerformance: function (cell) {
-          return {
-            type: 'exact',
-            value: cell.firstParameter / 100,
-            percentage: true,
-            isNormal: cell.isNormal
-          };
+          if (cell.isNormal) {
+            var proportion = cell.firstParameter / 100;
+            var sampleSize = cell.secondParameter;
+            var sigma = stdErr(proportion, sampleSize);
+            var input = {
+              mu: cell.firstParameter,
+              sampleSize: cell.secondParameter,
+              scale: 'percentage'
+            };
+            return buildNormalPerformance(cell.firstParameter / 100, sigma, input);
+          } else {
+            return buildExactPerformance(cell.firstParameter / 100, {
+              value: cell.firstParameter,
+              sampleSize: cell.secondParameter,
+              scale: 'percentage'
+            });
+          }
+
         }
       },
       dichotomousFraction: {
@@ -339,7 +276,7 @@ define(['lodash', 'angular'], function (_) {
           var returnString = cell.firstParameter + ' / ' + sampleSize;
           if (cell.isNormal) {
             var proportion = cell.firstParameter / sampleSize;
-            var sigma = Math.round(Math.sqrt(proportion * (1 - proportion) / sampleSize) * 1000) / 1000;
+            var sigma = roundedStdErr(proportion, sampleSize);
             returnString += '\nNormal(' + proportion + ', ' + sigma + ')';
           } else {
             returnString += NO_DISTRIBUTION;
@@ -348,13 +285,17 @@ define(['lodash', 'angular'], function (_) {
 
         },
         buildPerformance: function (cell) {
-          return {
-            type: 'exact',
-            value: (cell.firstParameter / cell.secondParameter),
+          var input = {
             events: cell.firstParameter,
-            sampleSize: cell.secondParameter,
-            isNormal: cell.isNormal
+            sampleSize: cell.secondParameter
           };
+          if (cell.isNormal) {
+            var mu = cell.firstParameter / cell.secondParameter;
+            var sigma = stdErr(mu, cell.secondParameter);
+            return buildNormalPerformance(mu, sigma, input);
+          } else {
+            return buildExactPerformance(cell.firstParameter / cell.secondParameter, input);
+          }
         }
       },
     };
@@ -366,35 +307,19 @@ define(['lodash', 'angular'], function (_) {
           return CONTINUOUS_MEAN_KNOWLEDGE[cell.inputParameters.id].buildPerformance(cell);
         },
         options: {
-          mean: {
+          continuousMeanNoDispersion: {
             id: 'continuousMeanNoDispersion',
             label: 'Mean',
-            firstParameter: {
-              label: 'Mean',
-              constraints: [
-                ConstraintService.defined()
-              ]
-            }
+            firstParameter: buildDefined('Mean'),
           },
-          meanSE: {
+          continuousMeanStdErr: {
             id: 'continuousMeanStdErr',
             label: 'Mean, SE',
-            firstParameter: {
-              label: 'Mean',
-              constraints: [
-                ConstraintService.defined()
-              ]
-            },
-            secondParameter: {
-              label: 'Standard error',
-              constraints: [
-                ConstraintService.defined(),
-                ConstraintService.positive()
-              ]
-            },
+            firstParameter: buildDefined('Mean'),
+            secondParameter: buildPositiveFloat('Standard error'),
             canBeNormal: true
           },
-          meanCI: _.extend(createConfidenceInterval('continuousMeanConfidenceInterval', 'Mean'), {
+          continuousMeanConfidenceInterval: _.extend(buildConfidenceInterval('continuousMeanConfidenceInterval', 'Mean'), {
             canBeNormal: true
           })
         }
@@ -407,17 +332,12 @@ define(['lodash', 'angular'], function (_) {
           return CONTINUOUS_MEDIAN_KNOWLEDGE[cell.inputParameters.id].buildPerformance(cell);
         },
         options: {
-          median: {
+          continuousMedianNoDispersion: {
             id: 'continuousMedianNoDispersion',
             label: 'Median',
-            firstParameter: {
-              label: 'Median',
-              constraints: [
-                ConstraintService.defined()
-              ]
-            }
+            firstParameter: buildDefined('Median'),
           },
-          medianCI: createConfidenceInterval('continuousMedianConfidenceInterval', 'Median')
+          continuousMedianConfidenceInterval: buildConfidenceInterval('continuousMedianConfidenceInterval', 'Median')
         }
       },
       cumulativeProbability: {
@@ -427,7 +347,7 @@ define(['lodash', 'angular'], function (_) {
           return CONTINUOUS_CUMULATIVE_PROBABILITY_KNOWLEDGE[cell.inputParameters.id].buildPerformance(cell);
         },
         options: {
-          value: {
+          cumulativeProbabilityValue: {
             id: 'cumulativeProbabilityValue',
             scale: {
               percentage: 'Percentage',
@@ -443,7 +363,7 @@ define(['lodash', 'angular'], function (_) {
               ]
             }
           },
-          valueCI: _.extend(createConfidenceInterval('cumulativeProbabilityValueCI', 'Value'), {
+          cumulativeProbabilityValueCI: _.extend(buildConfidenceInterval('cumulativeProbabilityValueCI', 'Value'), {
             scale: {
               percentage: 'Percentage',
               decimal: 'Decimal'
@@ -456,33 +376,33 @@ define(['lodash', 'angular'], function (_) {
       continuousMeanNoDispersion: {
         toString: valueToString,
         buildPerformance: function (cell) {
-          return {
-            type: 'exact',
-            value: cell.firstParameter
-          };
+          return buildExactPerformance(cell.firstParameter);
         }
       },
       continuousMeanStdErr: {
         toString: valueSEToString,
         buildPerformance: function (cell) {
-          return {
-            type: 'exact',
-            value: cell.firstParameter,
-            stdErr: cell.secondParameter,
-            isNormal: cell.isNormal
-          };
+          if (cell.isNormal) {
+            return buildNormalPerformance(cell.firstParameter, cell.secondParameter);
+          } else {
+            return buildExactPerformance(cell.firstParameter, {
+              value: cell.firstParameter,
+              stdErr: cell.secondParameter
+            });
+          }
         }
       },
       continuousMeanConfidenceInterval: {
         toString: valueCIToString,
         buildPerformance: function (cell) {
-          return {
-            type: 'exact',
-            value: cell.firstParameter,
-            lowerBound: cell.secondParameter,
-            upperBound: cell.thirdParameter,
-            isNormal: cell.isNormal
-          };
+          if (cell.isNormal) {
+            var sigma = boundsToStandardError(cell.secondParameter, cell.thirdParameter)
+            return buildNormalPerformance(cell.firstParameter, sigma, {
+              mu: cell.firstParameter,
+              lowerBound: cell.secondParameter,
+              upperBound: cell.thirdParameter
+            });
+          }
         }
       }
     };
@@ -490,21 +410,13 @@ define(['lodash', 'angular'], function (_) {
       continuousMedianNoDispersion: {
         toString: valueToString,
         buildPerformance: function (cell) {
-          return {
-            type: 'exact',
-            value: cell.firstParameter
-          };
+          return buildExactPerformance(cell.firstParameter);
         }
       },
       continuousMedianConfidenceInterval: {
         toString: valueCIToString,
         buildPerformance: function (cell) {
-          return {
-            type: 'exact',
-            value: cell.firstParameter,
-            lowerBound: cell.secondParameter,
-            upperBound: cell.thirdParameter
-          };
+          return buildExactConfidencePerformance(cell);
         }
       }
     };
@@ -512,11 +424,8 @@ define(['lodash', 'angular'], function (_) {
       cumulativeProbabilityValue: {
         toString: valueToString,
         buildPerformance: function (cell) {
-          return {
-            type: 'exact',
-            value: cell.firstParameter
-          };
-        }
+          return buildExactPerformance(cell.firstParameter);
+        },
       },
       cumulativeProbabilityValueCI: {
         toString: function (cell) {
@@ -524,20 +433,14 @@ define(['lodash', 'angular'], function (_) {
         },
         buildPerformance: function (cell) {
           if (cell.scale === 'Decimal') {
-            return {
-              type: 'exact',
+            return buildExactConfidencePerformance(cell);
+          } else {
+            return buildExactPerformance(cell.firstParameter / 100, {
               value: cell.firstParameter,
               lowerBound: cell.secondParameter,
-              upperBound: cell.thirdParameter
-            };
-          } else {
-            return {
-              type: 'exact',
-              value: cell.firstParameter / 100,
-              lowerBound: cell.secondParameter / 100,
-              upperBound: cell.thirdParameter / 100,
-              percentage: true
-            };
+              upperBound: cell.thirdParameter,
+              scale: 'percentage'
+            });
           }
         }
       }
@@ -546,31 +449,23 @@ define(['lodash', 'angular'], function (_) {
       value: {
         toString: valueToString,
         buildPerformance: function (cell) {
-          return {
-            type: 'exact',
-            value: cell.firstParameter
-          };
+          return buildExactPerformance(cell.firstParameter);
         }
       },
       valueSE: {
         toString: valueSEToString,
         buildPerformance: function (cell) {
-          return {
-            type: 'exact',
+          return buildExactPerformance(cell.firstParameter, {
             value: cell.firstParameter,
             stdErr: cell.secondParameter
-          };
+          });
+
         }
       },
       valueCI: {
         toString: valueCIToString,
         buildPerformance: function (cell) {
-          return {
-            type: 'exact',
-            value: cell.firstParameter,
-            lowerBound: cell.secondParameter,
-            upperBound: cell.thirdParameter
-          };
+          return buildExactConfidencePerformance(cell);
         }
       }
     };
@@ -582,16 +477,10 @@ define(['lodash', 'angular'], function (_) {
           return events + ' / ' + sampleSize + '\nDistribution: Beta(' + (events + 1) + ', ' + (sampleSize - events + 2) + ')';
         },
         buildPerformance: function (cell) {
-          return {
-            type: 'dbeta',
-            parameters: {
-              alpha: cell.firstParameter + 1,
-              beta: cell.secondParameter - cell.firstParameter + 2
-            }
-          };
+          return buildBetaPerformance(cell.firstParameter + 1, cell.secondParameter - cell.firstParameter + 2);
         },
         options: {
-          dichotomous: {
+          assistedDichotomous: {
             id: 'assistedDichotomous',
             label: 'dichotomous',
             firstParameter: {
@@ -603,14 +492,6 @@ define(['lodash', 'angular'], function (_) {
                 ConstraintService.belowOrEqualTo('secondParameter')
               ]
             },
-            secondParameter: {
-              label: 'Sample size',
-              constraints: [
-                ConstraintService.defined(),
-                ConstraintService.above(0),
-                ConstraintService.integer()
-              ]
-            }
           }
         }
       },
@@ -622,75 +503,30 @@ define(['lodash', 'angular'], function (_) {
           return ASSISTED_DISTRIBUTION_CONTINUOUS_KNOWLEDGE[cell.inputParameters.id].buildPerformance(cell);
         },
         options: {
-          stdErr: {
+          assistedContinuousStdErr: {
             id: 'assistedContinuousStdErr',
             label: 'Student\'s t, SE',
-            firstParameter: {
-              label: 'Mean',
-              constraints: [
-                ConstraintService.defined()
-              ]
-            },
-            secondParameter: {
-              label: 'Standard error',
-              constraints: [
-                ConstraintService.defined(),
-                ConstraintService.positive()
-              ]
-            },
-            thirdParameter: {
-              label: 'Sample size',
-              constraints: [
-                ConstraintService.defined(),
-                ConstraintService.above(0),
-                ConstraintService.integer()
-              ]
-            }
+            firstParameter: buildDefined('Mean'),
+            secondParameter: buildPositiveFloat('Standard error'),
           },
-          stdDev: {
+          assistedContinuousStdDev: {
             id: 'assistedContinuousStdDev',
             label: 'Student\'s t, SD',
-            firstParameter: {
-              label: 'Mean',
-              constraints: [
-                ConstraintService.defined()
-              ]
-            },
-            secondParameter: {
-              label: 'Standard deviation',
-              constraints: [
-                ConstraintService.defined(),
-                ConstraintService.positive()]
-            },
-            thirdParameter: {
-              label: 'Sample size',
-              constraints: [
-                ConstraintService.defined(),
-                ConstraintService.above(0)(),
-                ConstraintService.integer()()
-              ]
-            }
+            firstParameter: buildDefined('Mean'),
+            secondParameter: buildPositiveFloat('Standard deviation'),
           }
         }
       },
       other: {
         toString: valueToString,
         buildPerformance: function (cell) {
-          return {
-            type: 'exact',
-            value: cell.firstParameter
-          };
+          return buildExactPerformance(cell.firstParameter);
         },
         options: {
           assistedOther: {
             id: 'assistedOther',
-            label: 'other',
-            firstParameter: {
-              label: 'Value',
-              constraints: [
-                ConstraintService.defined()
-              ]
-            }
+            label: 'Other',
+            firstParameter: buildDefined('Value'),
           }
         }
       }
@@ -704,14 +540,7 @@ define(['lodash', 'angular'], function (_) {
           return mu + ' (' + sigma + '), ' + sampleSize + '\nDistribution: t(' + (sampleSize - 1) + ', ' + mu + ', ' + sigma + ')';
 
         }, buildPerformance: function (cell) {
-          return {
-            type: 'dt',
-            parameters: {
-              mu: cell.firstParameter,
-              stdErr: cell.secondParameter,
-              dof: cell.thirdParameter - 1
-            }
-          };
+          return buildStudentTPerformance(cell.first, cell.secondParameter, cell.thirdParameter - 1);
         }
       },
       assistedContinuousStdDev: {
@@ -722,14 +551,7 @@ define(['lodash', 'angular'], function (_) {
           return mu + ' (' + cell.secondParameter + '), ' + sampleSize + '\nDistribution: t(' + (sampleSize - 1) + ', ' + mu + ', ' + sigma + ')';
 
         }, buildPerformance: function (cell) {
-          return {
-            type: 'dt',
-            parameters: {
-              mu: cell.firstParameter,
-              stdErr: standardDeviationToStandardError(cell.secondParameter, cell.thirdParameter),
-              dof: cell.thirdParameter - 1
-            }
-          };
+          return buildStudentTPerformance(cell.first, standardDeviationToStandardError(cell.secondParameter, cell.thirdParameter), cell.thirdParameter - 1);
         }
       }
     };
@@ -737,12 +559,11 @@ define(['lodash', 'angular'], function (_) {
     // Exposed functions
     function getInputError(cell) {
       var error;
-      var inputValues = _.pick(cell, ['firstParameter', 'secondParameter', 'thirdParameter']);
-      _.find(_.toPairs(inputValues), function (inputPair) {
-        var inputParameter = cell.inputParameters[inputPair[0]];
-        var inputValue = inputPair[1];
+      var inputParameters = _.pick(cell.inputParameters, ['firstParameter', 'secondParameter', 'thirdParameter']);
+      _.find(inputParameters, function (inputParameter, key) {
+        var inputValue = cell[key];
         return _.find(inputParameter.constraints, function (constraint) {
-          error = constraint(inputValue, inputParameter.label, inputValues);
+          error = constraint(inputValue, inputParameter.label, cell);
           return error;
         });
       });
@@ -760,13 +581,13 @@ define(['lodash', 'angular'], function (_) {
       return INPUT_TYPE_KNOWLEDGE[cell.inputType].getOptions(cell);
     }
 
-    function createProblem(criteria, treatments, title, description, performanceTable, useFavorability) {
+    function createProblem(criteria, treatments, title, description, inputData, useFavorability) {
       var problem = {
         title: title,
         description: description,
         criteria: buildCriteria(criteria),
         alternatives: buildAlternatives(treatments),
-        performanceTable: buildPerformanceTable(performanceTable, criteria, treatments)
+        performanceTable: buildPerformanceTable(inputData, criteria, treatments)
       };
       if (useFavorability) {
         problem.valueTree = {
@@ -873,38 +694,49 @@ define(['lodash', 'angular'], function (_) {
     //   return newInputData;
     // }
 
-    // function copyWorkspaceCriteria(workspace) {
-    //   return _.map(workspace.problem.criteria, function (criterion, key) {
-    //     var newCrit = _.pick(criterion, ['title', 'description', 'source', 'sourceLink', 'unitOfMeasurement', 'strengthOfEvidence', 'uncertainties']);
-    //     if (workspace.problem.valueTree) {
-    //       newCrit.isFavorable = _.includes(workspace.problem.valueTree.children[0].criteria, key) ? true : false;
-    //     }
-    //     var tableEntry = _.find(workspace.problem.performanceTable, ['criterion', key]);
-    //     newCrit.dataSource = tableEntry.performance.type === 'exact' ? 'exact' : 'study';
-    //     if (newCrit.dataSource === 'study') {
-    //       switch (tableEntry.performance.type) {
-    //         case 'dsurv':
-    //           newCrit.dataType = 'survival';
-    //           newCrit.summaryMeasure = tableEntry.performance.parameters.summaryMeasure;
-    //           newCrit.timePointOfInterest = tableEntry.performance.parameters.time;
-    //           newCrit.timeScale = 'time scale not set';
-    //           break;
-    //         case 'dt':
-    //           newCrit.dataType = 'continuous';
-    //           break;
-    //         case 'dnorm':
-    //           newCrit.dataType = 'continuous';
-    //           break;
-    //         case 'dbeta':
-    //           newCrit.dataType = 'dichotomous';
-    //           break;
-    //         default:
-    //           newCrit.dataType = 'Unknown';
-    //       }
-    //     }
-    //     return newCrit;
-    //   });
-    // }
+    function copyWorkspaceCriteria(workspace) {
+      return _.map(workspace.problem.criteria, function (criterion, key) {
+        var newCrit = _.pick(criterion, ['title', 'description', 'source', 'sourceLink', 'unitOfMeasurement', 'strengthOfEvidence', 'uncertainties']);
+        if (workspace.problem.valueTree) {
+          newCrit.isFavorable = _.includes(workspace.problem.valueTree.children[0].criteria, key) ? true : false;
+        }
+        var tableEntry = _.find(workspace.problem.performanceTable, ['criterion', key]); 
+        switch (tableEntry.performance.type) {
+          case 'exact':
+            if (tableEntry.input) {
+              //
+            } else {
+              newCrit.inputType = 'distribution';
+              newCrit.inputMethod = 'manualDistribution';
+            }
+            break;
+          case 'dnorm':
+            if (tableEntry.input) {
+              //
+            } else {
+              newCrit.inputType = 'distribution';
+              newCrit.inputMethod = 'manualDistribution';
+            }
+            break;
+          case 'dbeta':
+            newCrit.inputType = 'distribution';
+            newCrit.inputMethod = 'manualDistribution';
+            break;
+          case 'dgamma':
+            newCrit.inputType = 'distribution';
+            newCrit.inputMethod = 'manualDistribution';
+            break;
+          case 'dt':
+            newCrit.inputType = 'distribution';
+            newCrit.inputMethod = 'assistedDistribution';
+            newCrit.dataType = 'continuous';
+            break;
+          default:
+            newCrit.inputType = 'Unknown';
+        }
+        return newCrit;
+      });
+    }
 
     // Private functions
     function buildCriteria(criteria) {
@@ -922,14 +754,13 @@ define(['lodash', 'angular'], function (_) {
       return _.keyBy(newCriteria, 'title');
     }
 
-    function buildAlternatives(treatments) {
-      var alternatives = {};
-      _.forEach(treatments, function (treatment) {
-        alternatives[treatment.title] = {
-          title: treatment.title
+    function buildAlternatives(alternatives) {
+      return _.reduce(alternatives, function (accum, alternative) {
+        accum[alternative.title] = {
+          title: alternative.title
         };
-      });
-      return alternatives;
+        return accum;
+      }, {});
     }
 
     function buildPerformanceTable(inputData, criteria, treatments) {
@@ -947,16 +778,70 @@ define(['lodash', 'angular'], function (_) {
       return newPerformanceTable;
     }
 
-    function createConfidenceInterval(id, label) {
+    // toString utils
+    function valueToString(cell) {
+      return cell.firstParameter + (cell.scale === 'percentage' ? '%' : '') + NO_DISTRIBUTION;
+    }
+
+    function valueSEToString(cell) {
+      var returnString = cell.firstParameter + ' (' + cell.secondParameter + ')';
+      if (cell.isNormal) {
+        return returnString + '\nNormal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+      }
+      return returnString + NO_DISTRIBUTION;
+    }
+
+    function valueCIToString(cell) {
+      var returnString = cell.firstParameter + ' (' + cell.secondParameter + '; ' + cell.thirdParameter + ')';
+      if (cell.isNormal) {
+        return returnString + '\nNormal(' + cell.firstParameter + ', ' + boundsToStandardError(cell.secondParameter, cell.thirdParameter) + ')';
+      }
+      return returnString + NO_DISTRIBUTION;
+    }
+
+    function valueCIPercentToString(cell) {
+      return cell.firstParameter + '% (' + cell.secondParameter + '%; ' + cell.thirdParameter + '%)' + NO_DISTRIBUTION;
+    }
+
+    // build constraints
+    function buildIntegerAboveZero(label) {
+      var param = buildFloatAboveZero(label);
+      param.constraints.push(ConstraintService.integer());
+      return param;
+    }
+
+    function buildPositiveFloat(label) {
+      var param = buildDefined(label);
+      param.constraints.push(ConstraintService.positive());
+      return param;
+    }
+
+    function buildFloatAboveZero(label) {
+      var param = buildDefined(label);
+      param.constraints.push(ConstraintService.above(0));
+      return param;
+    }
+
+    function buildDefined(label) {
+      return {
+        label: label,
+        constraints: [
+          ConstraintService.defined(),
+        ]
+      };
+    }
+
+    function buildPositiveWithMax(label, max) {
+      var param = buildFloatAboveZero(label);
+      param.constraints.push(ConstraintService.belowOrEqualTo(max));
+      return param;
+    }
+
+    function buildConfidenceInterval(id, label) {
       return {
         id: id,
         label: label + ', 95% C.I.',
-        firstParameter: {
-          label: label,
-          constraints: [
-            ConstraintService.defined()
-          ]
-        },
+        firstParameter: buildDefined(label),
         secondParameter: {
           label: 'Lower bound',
           constraints: [
@@ -974,31 +859,83 @@ define(['lodash', 'angular'], function (_) {
       };
     }
 
+    // build performances
+    function buildExactPerformance(value, input) {
+      return {
+        type: 'exact',
+        value: value,
+        input: input
+      };
+    }
+
+    function buildExactConfidencePerformance(cell) {
+      return buildExactPerformance(cell.firstParameter, {
+        value: cell.firstParameter,
+        lowerBound: cell.secondParameter,
+        upperBound: cell.thirdParameter
+      });
+    }
+
+    function buildNormalPerformance(mu, sigma, input) {
+      return {
+        type: 'dnorm',
+        parameters: {
+          mu: mu,
+          sigma: sigma
+        },
+        input: input
+      };
+    }
+
+    function buildBetaPerformance(alpha, beta, input) {
+      return {
+        type: 'dbeta',
+        parameters: {
+          alpha: alpha,
+          beta: beta
+        },
+        input: input
+      };
+    }
+
+    function buildGammaPerformance(alpha, beta, input) {
+      return {
+        type: 'dgamma',
+        parameters: {
+          alpha: alpha,
+          beta: beta
+        },
+        input: input
+      };
+    }
+
+    function buildStudentTPerformance(mu, sigma, dof, input) {
+      return {
+        type: 'dt',
+        parameters: {
+          mu: mu,
+          stdErr: sigma,
+          dof: dof
+        },
+        input: input
+      };
+    }
+
+    // math util
+    function stdErr(mu, sampleSize) {
+      return Math.sqrt(mu * (1 - mu) / sampleSize);
+    }
+
+    function roundedStdErr(mu, sampleSize) {
+      return Math.round(Math.sqrt(mu * (1 - mu) / sampleSize) * 1000) / 1000;
+    }
+
+    function boundsToStandardError(lowerBound, upperBound) {
+      return (upperBound - lowerBound) / (2 * 1.96);
+    }
+
     function standardDeviationToStandardError(standardDeviation, sampleSize) {
       return Math.round(1000 * standardDeviation / Math.sqrt(sampleSize)) / 1000;
-    }
-    function valueToString(cell) {
-      return cell.firstParameter + (cell.scale === 'percentage' ? '%' : '') + NO_DISTRIBUTION;
-    }
-
-    function valueSEToString(cell) {
-      var returnString = cell.firstParameter + ' (' + cell.secondParameter + ')';
-      if (cell.isNormal) {
-        return returnString + '\nNormal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
-      }
-      return returnString + NO_DISTRIBUTION;
-    }
-
-    function valueCIToString(cell) {
-      var returnString = cell.firstParameter + ' (' + cell.secondParameter + '; ' + cell.thirdParameter + ')';
-      if (cell.isNormal) {
-        return returnString + '\nNormal(' + cell.firstParameter + ', ' + ((cell.thirdParameter - cell.secondParameter) / (2 * 1.96)) + ')';
-      }
-      return returnString + NO_DISTRIBUTION;
-    }
-
-    function valueCIPercentToString(cell) {
-      return cell.firstParameter + '% (' + cell.secondParameter + '%; ' + cell.thirdParameter + '%)' + NO_DISTRIBUTION;
     }
 
     return {
@@ -1007,7 +944,7 @@ define(['lodash', 'angular'], function (_) {
       getInputError: getInputError,
       prepareInputData: prepareInputData,
       createInputFromOldWorkspace: undefined,//createInputFromOldWorkspace,
-      copyWorkspaceCriteria: undefined,//copyWorkspaceCriteria,
+      copyWorkspaceCriteria: copyWorkspaceCriteria,
       getOptions: getOptions
     };
   };

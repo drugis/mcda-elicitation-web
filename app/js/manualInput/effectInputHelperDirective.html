@@ -24,19 +24,19 @@
         </div>
         <div class="cell large-4">
           <label>
-            {{inputCell.inputParameters.firstParameter}}
+            {{inputCell.inputParameters.firstParameter.label}}
             <input type="number" ng-model="inputCell.firstParameter" ng-change="inputChanged()">
           </label>
         </div>
         <div class="cell large-4" ng-if="inputCell.inputParameters.secondParameter">
           <label>
-            {{inputCell.inputParameters.secondParameter}}
+            {{inputCell.inputParameters.secondParameter.label}}
             <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()">
           </label>
         </div>
         <div class="cell large-4" ng-if="inputCell.inputParameters.thirdParameter">
           <label>
-            {{inputCell.inputParameters.thirdParameter}}
+            {{inputCell.inputParameters.thirdParameter.label}}
             <input type="number" ng-model="inputCell.thirdParameter" ng-change="inputChanged()" 
               ng-disabled="inputCell.inputParameters.id === 'continuousMeanConfidenceInterval' && inputCell.isNormal">
           </label>

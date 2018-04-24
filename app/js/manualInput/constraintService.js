@@ -2,26 +2,37 @@
 define(['lodash', 'angular'], function (_) {
   var dependencies = [];
   var ConstraintService = function () {
+    var INTEGER = function (value, label) {
+      if (value % 1 !== 0) {
+        return label + ' must be integer';
+      }
+    };
+    var DEFINED =function (value, label) {
+      if (value === undefined || isNaN(value) || value === null) {
+        return 'Invalid ' + label;
+      }
+    };
+    var POSITIVE = function (value, label) {
+      if (value < 0) {
+        return label + ' must be positive';
+      }
+    };
+    var NOT_NAN_OR_NULL = function (value, label) {
+      if (isNaN(value) || value === null) {
+        return 'Invalid ' + label;
+      }
+    };
     function defined() {
-      return function (value, label) {
-        if (value === undefined || isNaN(value) || value === null) {
-          return 'Invalid ' + label;
-        }
-      };
+      return DEFINED;
     }
     function integer() {
-      return function (value, label) {
-        if (value % 1 !== 0) {
-          return label + ' must be integer';
-        }
-      };
+      return INTEGER;
     }
     function positive() {
-      return function (value, label) {
-        if (value < 0) {
-          return label + ' must be positive';
-        }
-      };
+      return POSITIVE;
+    }
+    function notNaNOrNull() {
+      return NOT_NAN_OR_NULL;
     }
     function belowOrEqualTo(belowWhat) {
       return function (value, label, parameters) {
@@ -50,13 +61,7 @@ define(['lodash', 'angular'], function (_) {
         }
       };
     }
-    function notNaNOrNull() {
-      return function (value, label) {
-        if (isNaN(value) || value === null) {
-          return 'Invalid ' + label;
-        }
-      };
-    }
+
 
     return {
       defined: defined,
