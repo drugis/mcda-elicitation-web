@@ -104,9 +104,9 @@
               </div>
             </td>
             <td ng-if="state.useFavorability">{{criterion.isFavorable}}</td>
-            <td>{{criterion.inputType}}</td>
+            <td style="color: {{criterion.inputType === 'Unknown'? 'red' :''}};">{{criterion.inputType}}</td>
             <td>{{criterion.inputType === 'distribution' ? inputMethods[criterion.inputMethod] : 'NA'}}</td>
-            <td style="color: {{criterion.dataType === 'Unknown'? 'red' :''}};">{{criterion.inputType === 'effect' || criterion.inputMethod === 'assistedDistribution' ? criterion.dataType :
+            <td>{{criterion.inputType === 'effect' || criterion.inputMethod === 'assistedDistribution' ? criterion.dataType :
               'NA'}}</td>
             <td>{{criterion.inputType !== 'distribution' || criterion.inputMethod === 'assistedDistribution' ? parameterOfInterest[criterion.parameterOfInterest]
               : 'NA'}}</td>

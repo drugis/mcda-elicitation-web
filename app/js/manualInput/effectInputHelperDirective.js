@@ -67,6 +67,8 @@ define(['lodash'], function (_) {
             if (scope.inputCell.parameterOfInterest === 'cumulativeProbability') {
               scope.inputCell.scale = 'percentage';
             }
+          } else {
+            scope.inputCell.inputParameters = scope.inputParameterOptions[scope.inputCell.inputParameters.id];
           }
         }
 
