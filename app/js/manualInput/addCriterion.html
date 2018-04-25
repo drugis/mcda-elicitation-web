@@ -56,8 +56,6 @@
         <label for="dichotomous">Event probability (dichotomous)</label>
         <input type="radio" ng-model="criterion.dataType" ng-value="'continuous'" id="continuous" ng-change="dataTypeChanged()">
         <label for="continuous">Mean (continuous)</label>
-        <input type="radio" ng-model="criterion.dataType" ng-value="'other'" id="other" ng-change="dataTypeChanged()">
-        <label for="other">Other</label>
       </div>
       <div class="cell" ng-show="criterion.inputType === 'effect'">
         <label>Parameter of interest

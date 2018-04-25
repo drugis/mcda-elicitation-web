@@ -1,6 +1,6 @@
 'use strict';
 define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function () {
-  fdescribe('the ConstraintService', function () {
+  describe('the ConstraintService', function () {
     var constraintService;
     beforeEach(module('elicit.manualInput'));
     beforeEach(inject(function (ConstraintService) {

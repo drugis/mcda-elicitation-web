@@ -30,6 +30,18 @@ define(['lodash', 'angular'], function(_, angular) {
       };
     })
 
+    .factory('generateUuid', function() {
+      return function() {
+        var pattern = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
+        return pattern.replace(/[xy]/g, function(c) {
+          /*jslint bitwise: true */
+          var r = Math.random() * 16 | 0;
+          var v = c === 'x' ? r : (r & 0x3 | 0x8);
+          return v.toString(16);
+        });
+      };
+    })
+
     .factory('sortCriteriaWithW', function() {
       return function(criteria) {
         return _.sortBy(_.map(_.toPairs(criteria), function(crit, idx) {

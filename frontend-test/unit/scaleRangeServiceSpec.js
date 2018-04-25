@@ -158,7 +158,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
                 floor: 0,
                 ceil: 40,
                 step: 0.4,
-                precision: 2,
+                precision: 4,
                 noSwitching: true
               }
             },
@@ -171,7 +171,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
                 floor: 10,
                 ceil: 40,
                 step: 0.3,
-                precision: 2,
+                precision: 4,
                 noSwitching: true
               }
             }

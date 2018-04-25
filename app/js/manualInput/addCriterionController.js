@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash'], function (_) {
-  var dependencies = ['$scope', '$modalInstance', 'criteria', 'callback', 'oldCriterion', 'useFavorability'];
-  var AddCriterionController = function ($scope, $modalInstance, criteria, callback, oldCriterion, useFavorability) {
+  var dependencies = ['$scope', '$modalInstance', 'criteria', 'callback', 'oldCriterion', 'useFavorability', 'generateUuid'];
+  var AddCriterionController = function ($scope, $modalInstance, criteria, callback, oldCriterion, useFavorability, generateUuid) {
     // functions
     $scope.isCreationBlocked = isCreationBlocked;
     $scope.addCriterion = addCriterion;
@@ -12,6 +12,7 @@ define(['lodash'], function (_) {
     // init
     $scope.blockedReason = '';
     $scope.criterion = {
+      id: generateUuid(),
       inputType: 'distribution',
       inputMethod: 'assistedDistribution',
       dataType: 'dichotomous',

@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (angular) {
+define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(angular) {
   var MISSING_OR_INVALID = 'Missing or invalid input';
   var NULL_PARAMETERS = {
     firstParameter: {
@@ -13,26 +13,26 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
     }
   };
   var manualInputService;
-  fdescribe('The manualInputService', function () {
+  describe('The manualInputService', function() {
     beforeEach(module('elicit.manualInput'));
-    beforeEach(inject(function (ManualInputService) {
+    beforeEach(inject(function(ManualInputService) {
       manualInputService = ManualInputService;
     }));
-    describe('getInputError', function () {
-      it('should run all the constraints of a cell\'s parameters, returning the first error found', function () {
+    describe('getInputError', function() {
+      it('should run all the constraints of a cell\'s parameters, returning the first error found', function() {
         var cell = {
           firstParameter: 10,
           secondParameter: 20,
           inputParameters: {
             firstParameter: {
               constraints: [
-                function () { }
+                function() { }
               ]
             },
             secondParameter: {
               constraints: [
-                function () { },
-                function () { return 'error message' }
+                function() { },
+                function() { return 'error message' }
               ]
             }
           }
@@ -42,15 +42,15 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
       });
     });
 
-    describe('inputToString,', function () {
+    describe('inputToString,', function() {
       var cell;
-      describe('for incorrect input', function () {
-        it('should return the invalid input message', function () {
+      describe('for incorrect input', function() {
+        it('should return the invalid input message', function() {
           var cell = {
             firstParameter: 10,
             inputParameters: {
               firstParameter: {
-                constraints: [function () { return 'error'; }]
+                constraints: [function() { return 'error'; }]
               }
             }
           };
@@ -58,49 +58,49 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
           expect(result).toEqual(MISSING_OR_INVALID);
         });
       });
-      describe('for distributions,', function () {
-        beforeEach(function () {
+      describe('for distributions,', function() {
+        beforeEach(function() {
           cell = {
             inputType: 'distribution'
           };
         });
-        describe('for assisted inputs,', function () {
-          beforeEach(function () {
+        describe('for assisted inputs,', function() {
+          beforeEach(function() {
             cell.inputMethod = 'assistedDistribution';
             cell.firstParameter = 30;
             cell.secondParameter = 40;
             cell.thirdParameter = 150;
             cell.inputParameters = angular.copy(NULL_PARAMETERS);
           });
-          describe('for dichotomous inputs,', function () {
-            beforeEach(function () {
+          describe('for dichotomous inputs,', function() {
+            beforeEach(function() {
               cell.dataType = 'dichotomous';
             });
-            it('should render correct inputs', function () {
+            it('should render correct inputs', function() {
               var expectedResult = '30 / 40\nDistribution: Beta(31, 12)';
               var result = manualInputService.inputToString(cell);
               expect(result).toEqual(expectedResult);
             });
           });
-          describe('for continuous inputs,', function () {
-            beforeEach(function () {
+          describe('for continuous inputs,', function() {
+            beforeEach(function() {
               cell.dataType = 'continuous';
             });
-            describe('for inputs with standard error', function () {
-              beforeEach(function () {
+            describe('for inputs with standard error', function() {
+              beforeEach(function() {
                 cell.inputParameters.id = 'assistedContinuousStdErr';
               });
-              it('should render correct inputs', function () {
+              it('should render correct inputs', function() {
                 var expectedResult = '30 (40), 150\nDistribution: t(149, 30, 40)';
                 var result = manualInputService.inputToString(cell);
                 expect(result).toEqual(expectedResult);
               });
             });
-            describe('for inputs with standard deviation', function () {
-              beforeEach(function () {
+            describe('for inputs with standard deviation', function() {
+              beforeEach(function() {
                 cell.inputParameters.id = 'assistedContinuousStdDev';
               });
-              it('should render correct inputs', function () {
+              it('should render correct inputs', function() {
                 var expectedResult = '30 (40), 150\nDistribution: t(149, 30, 3.266)';
                 var result = manualInputService.inputToString(cell);
                 expect(result).toEqual(expectedResult);
@@ -108,134 +108,134 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
             });
           });
         });
-        describe('for manual inputs,', function () {
-          beforeEach(function () {
+        describe('for manual inputs,', function() {
+          beforeEach(function() {
             cell.inputMethod = 'manualDistribution';
             cell.firstParameter = 30;
             cell.secondParameter = 40;
             cell.inputParameters = angular.copy(NULL_PARAMETERS);
           });
-          describe('for beta distributions', function () {
-            beforeEach(function () {
+          describe('for beta distributions', function() {
+            beforeEach(function() {
               cell.inputParameters.id = 'manualBeta';
             });
-            it('should render correct inputs', function () {
+            it('should render correct inputs', function() {
               var expectedResult = 'Beta(30, 40)';
               var result = manualInputService.inputToString(cell);
               expect(result).toEqual(expectedResult);
             });
           });
-          describe('for normal distributions', function () {
-            beforeEach(function () {
+          describe('for normal distributions', function() {
+            beforeEach(function() {
               cell.inputParameters.id = 'manualNormal';
             });
-            it('should render correct inputs', function () {
+            it('should render correct inputs', function() {
               var expectedResult = 'Normal(30, 40)';
               var result = manualInputService.inputToString(cell);
               expect(result).toEqual(expectedResult);
             });
           });
-          describe('for gamma distributions', function () {
-            beforeEach(function () {
+          describe('for gamma distributions', function() {
+            beforeEach(function() {
               cell.inputParameters.id = 'manualGamma';
             });
-            it('should render correct inputs', function () {
+            it('should render correct inputs', function() {
               var expectedResult = 'Gamma(30, 40)';
               var result = manualInputService.inputToString(cell);
               expect(result).toEqual(expectedResult);
             });
           });
-          describe('for exact inputs,', function () {
-            beforeEach(function () {
+          describe('for exact inputs,', function() {
+            beforeEach(function() {
               cell.inputParameters.id = 'manualExact';
             });
-            it('should render correct inputs', function () {
-              var expectedResult = '30\nDistribution: none';
+            it('should render correct inputs', function() {
+              var expectedResult = 'exact(30)';
               var result = manualInputService.inputToString(cell);
               expect(result).toEqual(expectedResult);
             });
           });
         });
       });
-      describe('for effects,', function () {
-        beforeEach(function () {
+      describe('for effects,', function() {
+        beforeEach(function() {
           cell = {
             inputType: 'effect',
             inputParameters: angular.copy(NULL_PARAMETERS)
           };
         });
-        describe('for dichotomous,', function () {
-          beforeEach(function () {
+        describe('for dichotomous,', function() {
+          beforeEach(function() {
             cell.dataType = 'dichotomous';
             cell.firstParameter = 0.5;
           });
-          describe('for decimal input', function () {
-            beforeEach(function () {
+          describe('for decimal input', function() {
+            beforeEach(function() {
               cell.inputParameters.id = 'dichotomousDecimal';
             });
-            it('should render correct inputs', function () {
+            it('should render correct inputs', function() {
               var expectedResult = '0.5\nDistribution: none';
               var result = manualInputService.inputToString(cell);
               expect(result).toEqual(expectedResult);
             });
           });
-          describe('for decimal inputs with sample size', function () {
-            beforeEach(function () {
+          describe('for decimal inputs with sample size', function() {
+            beforeEach(function() {
               cell.inputParameters.id = 'dichotomousDecimalSampleSize';
               cell.secondParameter = 100;
             });
-            it('should render correct inputs with sample size', function () {
+            it('should render correct inputs with sample size', function() {
               var expectedResult = '0.5 (100)\nDistribution: none';
               var result = manualInputService.inputToString(cell);
               expect(result).toEqual(expectedResult);
             });
-            it('should render correct normalised inputs', function () {
+            it('should render correct normalised inputs', function() {
               cell.isNormal = true;
               var expectedResult = '0.5 (100)\nNormal(0.5, ' + Math.sqrt(0.5 * (1 - 0.5) / 100) + ')';
               var result = manualInputService.inputToString(cell);
               expect(result).toEqual(expectedResult);
             });
           });
-          describe('for percentage input', function () {
-            beforeEach(function () {
+          describe('for percentage input', function() {
+            beforeEach(function() {
               cell.inputParameters.id = 'dichotomousPercentage';
             });
-            it('should render correct inputs', function () {
+            it('should render correct inputs', function() {
               delete cell.secondParameter;
               var expectedResult = '0.5%\nDistribution: none';
               var result = manualInputService.inputToString(cell);
               expect(result).toEqual(expectedResult);
             });
           });
-          describe('for percentage inputs with sample size', function () {
-            beforeEach(function () {
+          describe('for percentage inputs with sample size', function() {
+            beforeEach(function() {
               cell.inputParameters.id = 'dichotomousPercentageSampleSize';
               cell.firstParameter = 50;
               cell.secondParameter = 100;
-            }); it('should render correct inputs with sample size', function () {
+            }); it('should render correct inputs with sample size', function() {
               var expectedResult = '50% (100)\nDistribution: none';
               var result = manualInputService.inputToString(cell);
               expect(result).toEqual(expectedResult);
             });
-            it('should render correct normalised inputs', function () {
+            it('should render correct normalised inputs', function() {
               cell.isNormal = true;
               var expectedResult = '50% (100)\nNormal(0.5, ' + Math.sqrt(0.5 * (1 - 0.5) / 100) + ')';
               var result = manualInputService.inputToString(cell);
               expect(result).toEqual(expectedResult);
             });
           });
-          describe('for fraction input', function () {
-            beforeEach(function () {
+          describe('for fraction input', function() {
+            beforeEach(function() {
               cell.inputParameters.id = 'dichotomousFraction';
               cell.firstParameter = 50;
               cell.secondParameter = 100;
             });
-            it('should render correct inputs', function () {
+            it('should render correct inputs', function() {
               var expectedResult = '50 / 100\nDistribution: none';
               var result = manualInputService.inputToString(cell);
               expect(result).toEqual(expectedResult);
             });
-            it('should render correct normalised inputs', function () {
+            it('should render correct normalised inputs', function() {
               cell.isNormal = true;
               var expectedResult = '50 / 100\nNormal(0.5, ' + Math.sqrt(0.5 * (1 - 0.5) / 100) + ')';
               var result = manualInputService.inputToString(cell);
@@ -243,37 +243,37 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
             });
           });
         });
-        describe('for continuous,', function () {
-          beforeEach(function () {
+        describe('for continuous,', function() {
+          beforeEach(function() {
             cell.dataType = 'continuous';
             cell.firstParameter = 50;
             cell.secondParameter = 5;
             cell.thirdParameter = 100;
           });
-          describe('for parameter of interest mean,', function () {
-            beforeEach(function () {
+          describe('for parameter of interest mean,', function() {
+            beforeEach(function() {
               cell.parameterOfInterest = 'mean';
             });
-            describe('without dispersion', function () {
-              beforeEach(function () {
+            describe('without dispersion', function() {
+              beforeEach(function() {
                 cell.inputParameters.id = 'continuousMeanNoDispersion';
               });
-              it('should render correct inputs', function () {
+              it('should render correct inputs', function() {
                 var expectedResult = '50\nDistribution: none';
                 var result = manualInputService.inputToString(cell);
                 expect(result).toEqual(expectedResult);
               });
             });
-            describe('with standard error', function () {
-              beforeEach(function () {
+            describe('with standard error', function() {
+              beforeEach(function() {
                 cell.inputParameters.id = 'continuousMeanStdErr';
               });
-              it('should render correct inputs', function () {
+              it('should render correct inputs', function() {
                 var expectedResult = '50 (5)\nDistribution: none';
                 var result = manualInputService.inputToString(cell);
                 expect(result).toEqual(expectedResult);
               });
-              it('should render correct inputs with normal distribution', function () {
+              it('should render correct inputs with normal distribution', function() {
                 var normalCell = angular.copy(cell);
                 normalCell.isNormal = true;
                 var expectedResult = '50 (5)\nNormal(50, 5)';
@@ -281,16 +281,16 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
                 expect(result).toEqual(expectedResult);
               });
             });
-            describe('with a confidence interval', function () {
-              beforeEach(function () {
+            describe('with a confidence interval', function() {
+              beforeEach(function() {
                 cell.inputParameters.id = 'continuousMeanConfidenceInterval';
               });
-              it('should render correct inputs', function () {
+              it('should render correct inputs', function() {
                 var expectedResult = '50 (5; 100)\nDistribution: none';
                 var result = manualInputService.inputToString(cell);
                 expect(result).toEqual(expectedResult);
               });
-              it('should render correct inputs with normal distribution', function () {
+              it('should render correct inputs with normal distribution', function() {
                 var normalCell = angular.copy(cell);
                 normalCell.isNormal = true;
                 var expectedResult = '50 (5; 100)\nNormal(50, ' + (100 - 5) / (2 * 1.96) + ')';
@@ -299,51 +299,51 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
               });
             });
           });
-          describe('for parameter of interest median', function () {
-            beforeEach(function () {
+          describe('for parameter of interest median', function() {
+            beforeEach(function() {
               cell.parameterOfInterest = 'median';
             });
-            describe('without dispersion', function () {
-              beforeEach(function () {
+            describe('without dispersion', function() {
+              beforeEach(function() {
                 cell.inputParameters.id = 'continuousMedianNoDispersion';
               });
-              it('should render correct inputs', function () {
+              it('should render correct inputs', function() {
                 var expectedResult = '50\nDistribution: none';
                 var result = manualInputService.inputToString(cell);
                 expect(result).toEqual(expectedResult);
               });
             });
-            describe('with a confidence interval', function () {
-              beforeEach(function () {
+            describe('with a confidence interval', function() {
+              beforeEach(function() {
                 cell.inputParameters.id = 'continuousMedianConfidenceInterval';
               });
-              it('should render correct inputs', function () {
+              it('should render correct inputs', function() {
                 var expectedResult = '50 (5; 100)\nDistribution: none';
                 var result = manualInputService.inputToString(cell);
                 expect(result).toEqual(expectedResult);
               });
             });
           });
-          describe('for parameter of interest cumulative probability', function () {
-            beforeEach(function () {
+          describe('for parameter of interest cumulative probability', function() {
+            beforeEach(function() {
               cell.parameterOfInterest = 'cumulativeProbability';
               cell.scale = 'percentage';
             });
-            describe('without dispersion', function () {
-              beforeEach(function () {
+            describe('without dispersion', function() {
+              beforeEach(function() {
                 cell.inputParameters.id = 'cumulativeProbabilityValue';
               });
-              it('should render correct inputs', function () {
+              it('should render correct inputs', function() {
                 var expectedResult = '50%\nDistribution: none';
                 var result = manualInputService.inputToString(cell);
                 expect(result).toEqual(expectedResult);
               });
             });
-            describe('with a confidence interval', function () {
-              beforeEach(function () {
+            describe('with a confidence interval', function() {
+              beforeEach(function() {
                 cell.inputParameters.id = 'cumulativeProbabilityValueCI';
               });
-              it('should render correct inputs', function () {
+              it('should render correct inputs', function() {
                 var expectedResult = '50% (5%; 100%)\nDistribution: none';
                 var result = manualInputService.inputToString(cell);
                 expect(result).toEqual(expectedResult);
@@ -354,37 +354,37 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
       });
     });
 
-    describe('prepareInputData', function () {
-      it('should prepare the cells of the table for input', function () {
+    describe('prepareInputData', function() {
+      it('should prepare the cells of the table for input', function() {
         var treatments = {
           alternative1: {
             title: 'alternative1',
-            hash: 'alternative1'
+            id: 'alternative1'
           },
           alternative2: {
             title: 'alternative2',
-            hash: 'alternative2'
+            id: 'alternative2'
           }
         };
         var criteria = [{
+          id: 'crit1id',
           title: 'criterion 1 title',
-          hash: 'criterion 1 title',
           inputType: 'distribution',
           inputMethod: 'assistedDistribution',
           dataType: 'other'
         }, {
+          id: 'crit2id',
           title: 'criterion 2 title',
-          hash: 'criterion 2 title',
           inputType: 'effect',
           dataType: 'other'
         }];
         var result = manualInputService.prepareInputData(criteria, treatments);
         var expectedResult = {
-          'criterion 1 title': {
+          'crit1id': {
             alternative1: criteria[0],
             alternative2: criteria[0]
           },
-          'criterion 2 title': {
+          'crit2id': {
             alternative1: criteria[1],
             alternative2: criteria[1]
           }
@@ -392,35 +392,34 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
         expect(result).toEqual(expectedResult);
       });
 
-      it('should preserve data if there is old data supplied and the criterion type has not changed', function () {
+      it('should preserve data if there is old data supplied and the criterion type has not changed', function() {
         var treatments = {
           alternative1: {
             title: 'alternative1',
-            hash: 'alternative1'
+            id: 'alternative1'
           },
           alternative2: {
             title: 'alternative2',
-            hash: 'alternative2'
+            id: 'alternative2'
           }
         };
         var criteria = [{
           title: 'criterion 1 title',
-          hash: 'criterion 1 title',
+          id: 'criterion1',
           inputType: 'distribution',
           inputMethod: 'assistedDistribution',
           dataType: 'other'
         }, {
           title: 'criterion 2 title',
-          hash: 'criterion 2 title',
+          id: 'criterion2',
           inputType: 'effect',
           dataType: 'other'
         }];
 
         var oldInputData = {
-          'criterion 2 title': {
+          'criterion2': {
             alternative1: {
               title: 'criterion 2 oldtitle',
-              hash: 'criterion 2 title',
               inputType: 'distribution',
               inputMethod: 'manualDistribution'
             },
@@ -430,12 +429,12 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
         var result = manualInputService.prepareInputData(criteria, treatments, oldInputData);
 
         var expectedResult = {
-          'criterion 1 title': {
+          'criterion1': {
             alternative1: criteria[0],
             alternative2: criteria[0]
           },
-          'criterion 2 title': {
-            alternative1: oldInputData['criterion 2 title']['alternative1'],
+          'criterion2': {
+            alternative1: oldInputData['criterion2']['alternative1'],
             alternative2: criteria[1]
           }
         };
@@ -443,26 +442,24 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
       });
     });
 
-    describe('createProblem', function () {
+    describe('createProblem', function() {
       var title = 'title';
       var description = 'A random description of a random problem';
-      var treatments = {
-        alternative1: {
-          title: 'alternative1',
-          hash: 'alternative1'
-        },
-        alternative2: {
-          title: 'alternative2',
-          hash: 'alternative2'
-        }
-      };
-      it('should create a problem, ready to go to the workspace', function () {
+      var treatments = [{
+        title: 'alternative1',
+        id: 'alternative1'
+      },
+      {
+        title: 'alternative2',
+        id: 'alternative2'
+      }];
+      it('should create a problem, ready to go to the workspace', function() {
         var criteria = [{
           title: 'favorable criterion',
           description: 'some crit description',
           unitOfMeasurement: 'particles',
           isFavorable: true,
-          hash: 'favorable criterion',
+          id: 'criterion1id',
           inputType: 'effect',
           dataType: 'other'
         }, {
@@ -470,14 +467,18 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
           description: 'some crit description',
           unitOfMeasurement: 'particles',
           isFavorable: false,
-          hash: 'unfavorable criterion',
+          id: 'criterion2id',
           inputType: 'distribution',
           inputMethod: 'manualDistribution'
+        }, {
+          title: 'dichotomousDecimalSampleSize',
+          id: 'criterion3id',
+          inputType: 'effect',
+          dataType: 'dichotomous',
         }];
         var inputData = {
-          'favorable criterion': {
+          criterion1id: {
             alternative1: {
-              title: 'favorable criterion',
               inputType: 'effect',
               dataType: 'other',
               firstParameter: 10,
@@ -486,7 +487,6 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
               }
             },
             alternative2: {
-              title: 'favorable criterion',
               inputType: 'effect',
               dataType: 'other',
               firstParameter: 5,
@@ -497,9 +497,8 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
               }
             }
           },
-          'unfavorable criterion': {
+          criterion2id: {
             alternative1: {
-              title: 'unfavorable criterion',
               inputType: 'distribution',
               inputMethod: 'manualDistribution',
               firstParameter: 20,
@@ -508,7 +507,6 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
               }
             },
             alternative2: {
-              title: 'unfavorable criterion',
               inputType: 'distribution',
               inputMethod: 'manualDistribution',
               firstParameter: 30,
@@ -516,40 +514,74 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
                 id: 'manualExact'
               }
             }
+          },
+          criterion3id: {
+            alternative1: {
+              inputType: 'effect',
+              dataType: 'dichotomous',
+              isNormal: true,
+              firstParameter: 0.5,
+              secondParameter: 20,
+              inputParameters: {
+                id: 'dichotomousDecimalSampleSize'
+              }
+            },
+            alternative2: {
+              inputType: 'effect',
+              dataType: 'dichotomous',
+              isNormal: false,
+              firstParameter: 0.5,
+              secondParameter: 20,
+              inputParameters: {
+                id: 'dichotomousDecimalSampleSize'
+              }
+            }
+
           }
         };
         var result = manualInputService.createProblem(criteria, treatments, title, description, inputData, true);
         var expectedResult = {
           title: title,
+          schemaVersion: '1.0.0',
           description: description,
           valueTree: {
             title: 'Benefit-risk balance',
             children: [{
               title: 'Favourable effects',
-              criteria: ['favorable criterion']
+              criteria: ['criterion1id']
             }, {
               title: 'Unfavourable effects',
-              criteria: ['unfavorable criterion']
+              criteria: ['criterion2id', 'criterion3id']
             }]
           },
           criteria: {
-            'favorable criterion': {
+            criterion1id: {
               title: 'favorable criterion',
               description: 'some crit description',
               unitOfMeasurement: 'particles',
               scale: [-Infinity, Infinity],
-              source: undefined,
-              sourceLink: undefined,
-              strengthOfEvidence: undefined
+              inputMetaData: {
+                inputType: 'effect',
+                dataType: 'other'
+              }
             },
-            'unfavorable criterion': {
+            criterion2id: {
               title: 'unfavorable criterion',
               description: 'some crit description',
               unitOfMeasurement: 'particles',
               scale: [-Infinity, Infinity],
-              source: undefined,
-              sourceLink: undefined,
-              strengthOfEvidence: undefined
+              inputMetaData: {
+                inputType: 'distribution',
+                inputMethod: 'manualDistribution'
+              }
+            },
+            criterion3id: {
+              title: 'dichotomousDecimalSampleSize',
+              scale: [0, 1],
+              inputMetaData: {
+                inputType: 'effect',
+                dataType: 'dichotomous'
+              }
             }
           },
           alternatives: {
@@ -562,7 +594,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
           },
           performanceTable: [{
             alternative: 'alternative1',
-            criterion: 'favorable criterion',
+            criterion: 'criterion1id',
             performance: {
               type: 'exact',
               value: 10,
@@ -570,7 +602,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
             }
           }, {
             alternative: 'alternative2',
-            criterion: 'favorable criterion',
+            criterion: 'criterion1id',
             performance: {
               type: 'exact',
               value: 5,
@@ -582,7 +614,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
             }
           }, {
             alternative: 'alternative1',
-            criterion: 'unfavorable criterion',
+            criterion: 'criterion2id',
             performance: {
               type: 'exact',
               value: 20,
@@ -590,11 +622,36 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
             }
           }, {
             alternative: 'alternative2',
-            criterion: 'unfavorable criterion',
+            criterion: 'criterion2id',
             performance: {
               type: 'exact',
               value: 30,
               input: undefined
+            }
+          }, {
+            alternative: 'alternative1',
+            criterion: 'criterion3id',
+            performance: {
+              type: 'dnorm',
+              parameters: {
+                mu: 0.5,
+                sigma: 0.11180339887498948
+              },
+              input: {
+                mu: 0.5,
+                sampleSize: 20
+              }
+            }
+          }, {
+            alternative: 'alternative2',
+            criterion: 'criterion3id',
+            performance: {
+              type: 'exact',
+              value: 0.5,
+              input: {
+                value: 0.5,
+                sampleSize: 20
+              }
             }
           }]
         };
@@ -602,35 +659,11 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
       });
     });
 
-    xdescribe('createInputFromOldWorkspace', function () {
-      it('should calculate the effects table input parameters from the performanceTable of the old workspace', function () {
+    xdescribe('createInputFromOldWorkspace', function() {
+      it('should calculate the effects table input parameters from the performanceTable of the old workspace', function() {
         var criteria = [{
           title: 'criterion 1',
-          hash: 'c1'
-        }, {
-          title: 'criterion 2',
-          hash: 'c2',
-          dataSource: 'study',
-          dataType: 'dichotomous'
-        }, {
-          title: 'criterion 3',
-          hash: 'c3',
-          dataSource: 'study',
-          dataType: 'continuous'
-        }, {
-          title: 'criterion 4',
-          hash: 'c4',
-          dataSource: 'study',
-          dataType: 'continuous'
-        }, {
-          title: 'criterion 5',
-          hash: 'c5',
-          dataSource: 'study',
-          dataType: 'survival'
-        }];
-        var alternatives = [{
-          title: 'alternative 1',
-          hash: 'a1'
+          id: 'a1'
         }];
         var oldWorkspace = {
           problem: {
@@ -803,8 +836,8 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
       });
     });
 
-    xdescribe('copyWorkspaceCriteria', function () {
-      it('should copy the criteria from the oldworkspace to the format used by the rest of the manual input, preserving units and value tree', function () {
+    xdescribe('copyWorkspaceCriteria', function() {
+      it('should copy the criteria from the oldworkspace to the format used by the rest of the manual input, preserving units and value tree', function() {
         var workspace = {
           problem: {
             criteria: {
@@ -915,6 +948,11 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
           source: 'single study'
         }];
         expect(result).toEqual(expectedResult);
+      });
+    });
+    describe('getOptions', function() {
+      it('should be tested', function() {
+        fail();
       });
     });
   });

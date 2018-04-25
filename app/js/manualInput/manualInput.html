@@ -253,7 +253,7 @@
             <td>{{criterion.unitOfMeasurement}}</td>
             <td ng-if="state.useFavorability">{{criterion.isFavorable}}</td>
             <td ng-repeat="treatment in state.alternatives">
-              <effect-input-helper criterion="criterion" alternative="treatment" input-data="state.inputData[criterion.hash][treatment.hash]"
+              <effect-input-helper criterion="criterion" alternative="treatment" input-data="state.inputData[criterion.id][treatment.id]"
                 change-callback="checkInputData"></effect-input-helper>
             </td>
           </tr>
