@@ -107,17 +107,6 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
               });
             });
           });
-          describe('for other inputs,', function () {
-            beforeEach(function () {
-              cell.dataType = 'other';
-              cell.inputParameters.id = 'assistedOther';
-            });
-            it('should render correct inputs', function () {
-              var expectedResult = '30\nDistribution: none';
-              var result = manualInputService.inputToString(cell);
-              expect(result).toEqual(expectedResult);
-            });
-          });
         });
         describe('for manual inputs,', function () {
           beforeEach(function () {
@@ -152,6 +141,16 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
             });
             it('should render correct inputs', function () {
               var expectedResult = 'Gamma(30, 40)';
+              var result = manualInputService.inputToString(cell);
+              expect(result).toEqual(expectedResult);
+            });
+          });
+          describe('for exact inputs,', function () {
+            beforeEach(function () {
+              cell.inputParameters.id = 'manualExact';
+            });
+            it('should render correct inputs', function () {
+              var expectedResult = '30\nDistribution: none';
               var result = manualInputService.inputToString(cell);
               expect(result).toEqual(expectedResult);
             });
@@ -473,8 +472,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
           isFavorable: false,
           hash: 'unfavorable criterion',
           inputType: 'distribution',
-          inputMethod: 'assistedDistribution',
-          dataType: 'other'
+          inputMethod: 'manualDistribution'
         }];
         var inputData = {
           'favorable criterion': {
@@ -503,21 +501,19 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
             alternative1: {
               title: 'unfavorable criterion',
               inputType: 'distribution',
-              inputMethod: 'assistedDistribution',
-              dataType: 'other',
+              inputMethod: 'manualDistribution',
               firstParameter: 20,
               inputParameters: {
-                id: 'assistedOther'
+                id: 'manualExact'
               }
             },
             alternative2: {
               title: 'unfavorable criterion',
               inputType: 'distribution',
-              inputMethod: 'assistedDistribution',
-              dataType: 'other',
+              inputMethod: 'manualDistribution',
               firstParameter: 30,
               inputParameters: {
-                id: 'assistedOther'
+                id: 'manualExact'
               }
             }
           }

@@ -67,6 +67,11 @@ define(['lodash', 'angular'], function (_) {
               label: 'Gamma',
               firstParameter: buildFloatAboveZero('alpha'),
               secondParameter: buildFloatAboveZero('beta')
+            },
+            manualExact: {
+              id: 'manualExact',
+              label: 'Exact',
+              firstParameter: buildDefined('Value'),
             }
           };
         }
@@ -95,6 +100,12 @@ define(['lodash', 'angular'], function (_) {
         },
         buildPerformance: function (cell) {
           return buildGammaPerformance(cell.firstParameter, cell.secondParameter);
+        }
+      },
+      manualExact: {
+        toString: valueToString,
+        buildPerformance: function (cell) {
+          return buildExactPerformance(cell.firstParameter);
         }
       }
     };
@@ -516,19 +527,6 @@ define(['lodash', 'angular'], function (_) {
             secondParameter: buildPositiveFloat('Standard deviation'),
           }
         }
-      },
-      other: {
-        toString: valueToString,
-        buildPerformance: function (cell) {
-          return buildExactPerformance(cell.firstParameter);
-        },
-        options: {
-          assistedOther: {
-            id: 'assistedOther',
-            label: 'Other',
-            firstParameter: buildDefined('Value'),
-          }
-        }
       }
     };
     var ASSISTED_DISTRIBUTION_CONTINUOUS_KNOWLEDGE = {
@@ -700,7 +698,7 @@ define(['lodash', 'angular'], function (_) {
         if (workspace.problem.valueTree) {
           newCrit.isFavorable = _.includes(workspace.problem.valueTree.children[0].criteria, key) ? true : false;
         }
-        var tableEntry = _.find(workspace.problem.performanceTable, ['criterion', key]); 
+        var tableEntry = _.find(workspace.problem.performanceTable, ['criterion', key]);
         switch (tableEntry.performance.type) {
           case 'exact':
             if (tableEntry.input) {
