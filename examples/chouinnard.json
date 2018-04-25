@@ -94,7 +94,6 @@
     }
   }],
   "method": "smaa",
-  "method": "smaa",
   "preferences": [
   {
     "type": "ordinal",
