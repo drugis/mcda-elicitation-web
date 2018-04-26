@@ -104,7 +104,7 @@
               </div>
             </td>
             <td ng-if="state.useFavorability">{{criterion.isFavorable}}</td>
-            <td style="color: {{criterion.inputType === 'Unknown'? 'red' :''}};">{{criterion.inputType}}</td>
+            <td ng-style="criterion.inputType === 'Unknown'? {'color': 'red'} : {}">{{criterion.inputType}}</td>
             <td>{{criterion.inputType === 'distribution' ? inputMethods[criterion.inputMethod] : 'NA'}}</td>
             <td>{{criterion.inputType === 'effect' || criterion.inputMethod === 'assistedDistribution' ? criterion.dataType :
               'NA'}}</td>
@@ -190,7 +190,7 @@
   <div class="grid-x">
     <div class="cell">
       <button class="button" ng-disabled="!state.title || state.criteria.length < 2|| state.alternatives.length < 2 ||
-      hasUnknownDataType || (state.useFavorability && hasMissingFavorability)" type="button" ng-click="goToStep2()" tooltip="Enter effects table data">
+      hasUnknownInputType || (state.useFavorability && hasMissingFavorability)" type="button" ng-click="goToStep2()" tooltip="Enter effects table data">
         Enter data
       </button>
       <button class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty" tooltip="Save current state">Save</button>
@@ -204,8 +204,8 @@
     <div class="cell" ng-if="state.alternatives.length < 2">
       <em>Two alternatives required</em>
     </div>
-    <div class="cell" ng-if="hasUnknownDataType">
-      <em>Criteria with unknown data type</em>
+    <div class="cell" ng-if="hasUnknownInputType">
+      <em>Criteria with unknown input type</em>
     </div>
     <div class="cell" ng-if="state.useFavorability && hasMissingFavorability">
       <em>Criteria must have favorability if favorability is turned on, once all favorabilities are set, the criteria will be

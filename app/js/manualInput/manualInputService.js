@@ -1,53 +1,39 @@
 'use strict';
 define(['lodash', 'angular'], function(_) {
-  var dependencies = ['ConstraintService', 'PerformanceService'];
-  var ManualInputService = function(ConstraintService, PerformanceService) {
+  var dependencies = ['ConstraintService', 'PerformanceService', 'generateUuid'];
+  var ManualInputService = function(ConstraintService, PerformanceService, generateUuid) {
     var NO_DISTRIBUTION = '\nDistribution: none';
     var INVALID_INPUT_MESSAGE = 'Missing or invalid input';
     var SCHEMA_VERSION = '1.0.0';
 
     var INPUT_TYPE_KNOWLEDGE = {
+      getKnowledge: function(cell) {
+        return this[cell.inputType].getKnowledge(cell);
+      },
       distribution: {
-        toString: function(cell) {
-          return DISTRIBUTION_KNOWLEDGE[cell.inputMethod].toString(cell);
-        },
-        buildPerformance: function(cell) {
-          return DISTRIBUTION_KNOWLEDGE[cell.inputMethod].buildPerformance(cell);
-        },
-        getOptions: function(cell) {
-          return DISTRIBUTION_KNOWLEDGE[cell.inputMethod].getOptions(cell);
+        getKnowledge: function(cell) {
+          return DISTRIBUTION_KNOWLEDGE.getKnowledge(cell);
         }
       },
       effect: {
-        toString: function(cell) {
-          return EFFECT_KNOWLEDGE[cell.dataType].toString(cell);
-        },
-        buildPerformance: function(cell) {
-          return EFFECT_KNOWLEDGE[cell.dataType].buildPerformance(cell);
-        },
-        getOptions: function(cell) {
-          return EFFECT_KNOWLEDGE[cell.dataType].getOptions(cell);
+        getKnowledge: function(cell) {
+          return EFFECT_KNOWLEDGE.getKnowledge(cell);
         }
       }
     };
     var DISTRIBUTION_KNOWLEDGE = {
+      getKnowledge: function(cell) {
+        return this[cell.inputMethod].getKnowledge(cell);
+      },
       assistedDistribution: {
-        toString: function(cell) {
-          return ASSISTED_DISTRIBUTION_KNOWLEDGE[cell.dataType].toString(cell);
-        },
-        buildPerformance: function(cell) {
-          return ASSISTED_DISTRIBUTION_KNOWLEDGE[cell.dataType].buildPerformance(cell);
-        },
-        getOptions: function(cell) {
-          return ASSISTED_DISTRIBUTION_KNOWLEDGE[cell.dataType].options;
+        getKnowledge: function(cell) {
+          return ASSISTED_DISTRIBUTION_KNOWLEDGE.getKnowledge(cell);
         }
       },
       manualDistribution: {
-        toString: function(cell) {
-          return MANUAL_DISTRIBUTION_KNOWLEDGE[cell.inputParameters.id].toString(cell);
-        },
-        buildPerformance: function(cell) {
-          return MANUAL_DISTRIBUTION_KNOWLEDGE[cell.inputParameters.id].buildPerformance(cell);
+        getKnowledge: function(cell) {
+          var knowledge = MANUAL_DISTRIBUTION_KNOWLEDGE.getKnowledge(cell);
+          return _.extend({}, knowledge, this.getOptions);
         },
         getOptions: function() {
           return {
@@ -79,6 +65,9 @@ define(['lodash', 'angular'], function(_) {
       }
     };
     var MANUAL_DISTRIBUTION_KNOWLEDGE = {
+      getKnowledge: function(cell) {
+        return this[cell.inputParameters.id];
+      },
       manualBeta: {
         toString: function(cell) {
           return 'Beta(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
@@ -113,12 +102,13 @@ define(['lodash', 'angular'], function(_) {
       }
     };
     var EFFECT_KNOWLEDGE = {
+      getKnowledge: function(cell) {
+        return this[cell.dataType].getKnowledge(cell);
+      },
       dichotomous: {
-        toString: function(cell) {
-          return DICHOTOMOUS_EFFECT_KNOWLEDGE[cell.inputParameters.id].toString(cell);
-        },
-        buildPerformance: function(cell) {
-          return DICHOTOMOUS_EFFECT_KNOWLEDGE[cell.inputParameters.id].buildPerformance(cell);
+        getKnowledge: function(cell) {
+          var knowledge = DICHOTOMOUS_EFFECT_KNOWLEDGE.getKnowledge(cell);
+          return _.extend(knowledge, this.getOptions);
         },
         getOptions: function() {
           return {
@@ -165,22 +155,14 @@ define(['lodash', 'angular'], function(_) {
         }
       },
       continuous: {
-        toString: function(cell) {
-          return CONTINUOUS_KNOWLEDGE[cell.parameterOfInterest].toString(cell);
-        },
-        buildPerformance: function(cell) {
-          return CONTINUOUS_KNOWLEDGE[cell.parameterOfInterest].buildPerformance(cell);
-        },
-        getOptions: function(cell) {
-          return CONTINUOUS_KNOWLEDGE[cell.parameterOfInterest].options;
+        getKnowledge: function(cell) {
+          return CONTINUOUS_KNOWLEDGE.getKnowledge(cell);
         }
       },
       other: {
-        toString: function(cell) {
-          return OTHER_EFFECT_KNOWLEDGE[cell.inputParameters.id].toString(cell);
-        },
-        buildPerformance: function(cell) {
-          return OTHER_EFFECT_KNOWLEDGE[cell.inputParameters.id].buildPerformance(cell);
+        getKnowledge: function(cell) {
+          var knowledge = OTHER_EFFECT_KNOWLEDGE.getKnowledge(cell);
+          return _.extend(knowledge, this.getOptions);
         },
         getOptions: function() {
           return {
@@ -201,6 +183,9 @@ define(['lodash', 'angular'], function(_) {
       }
     };
     var DICHOTOMOUS_EFFECT_KNOWLEDGE = {
+      getKnowledge: function(cell) {
+        return this[cell.inputParameters.id];
+      },
       dichotomousDecimal: {
         toString: valueToString,
         buildPerformance: function(cell) {
@@ -314,79 +299,87 @@ define(['lodash', 'angular'], function(_) {
       },
     };
     var CONTINUOUS_KNOWLEDGE = {
+      getKnowledge: function(cell) {
+        return this[cell.parameterOfInterest].getKnowledge(cell);
+      },
       mean: {
-        toString: function(cell) {
-          return CONTINUOUS_MEAN_KNOWLEDGE[cell.inputParameters.id].toString(cell);
-        }, buildPerformance: function(cell) {
-          return CONTINUOUS_MEAN_KNOWLEDGE[cell.inputParameters.id].buildPerformance(cell);
+        getKnowledge: function(cell) {
+          var knowledge = CONTINUOUS_MEAN_KNOWLEDGE.getKnowledge(cell);
+          return _.extend(knowledge, this.getOptions);
         },
-        options: {
-          continuousMeanNoDispersion: {
-            id: 'continuousMeanNoDispersion',
-            label: 'Mean',
-            firstParameter: buildDefined('Mean'),
-          },
-          continuousMeanStdErr: {
-            id: 'continuousMeanStdErr',
-            label: 'Mean, SE',
-            firstParameter: buildDefined('Mean'),
-            secondParameter: buildPositiveFloat('Standard error'),
-            canBeNormal: true
-          },
-          continuousMeanConfidenceInterval: _.extend(buildConfidenceInterval('continuousMeanConfidenceInterval', 'Mean'), {
-            canBeNormal: true
-          })
+        getOptions: function() {
+          return {
+            continuousMeanNoDispersion: {
+              id: 'continuousMeanNoDispersion',
+              label: 'Mean',
+              firstParameter: buildDefined('Mean'),
+            },
+            continuousMeanStdErr: {
+              id: 'continuousMeanStdErr',
+              label: 'Mean, SE',
+              firstParameter: buildDefined('Mean'),
+              secondParameter: buildPositiveFloat('Standard error'),
+              canBeNormal: true
+            },
+            continuousMeanConfidenceInterval: _.extend(buildConfidenceInterval('continuousMeanConfidenceInterval', 'Mean'), {
+              canBeNormal: true
+            })
+          }
         }
       },
       median: {
-        toString: function(cell) {
-          return CONTINUOUS_MEDIAN_KNOWLEDGE[cell.inputParameters.id].toString(cell);
+        getKnowledge: function(cell) {
+          var knowledge = CONTINUOUS_MEDIAN_KNOWLEDGE.getKnowledge(cell);
+          return _.extend(knowledge, this.getOptions);
         },
-        buildPerformance: function(cell) {
-          return CONTINUOUS_MEDIAN_KNOWLEDGE[cell.inputParameters.id].buildPerformance(cell);
-        },
-        options: {
-          continuousMedianNoDispersion: {
-            id: 'continuousMedianNoDispersion',
-            label: 'Median',
-            firstParameter: buildDefined('Median'),
-          },
-          continuousMedianConfidenceInterval: buildConfidenceInterval('continuousMedianConfidenceInterval', 'Median')
+        getOptions: function() {
+          return {
+            continuousMedianNoDispersion: {
+              id: 'continuousMedianNoDispersion',
+              label: 'Median',
+              firstParameter: buildDefined('Median'),
+            },
+            continuousMedianConfidenceInterval: buildConfidenceInterval('continuousMedianConfidenceInterval', 'Median')
+          };
         }
       },
       cumulativeProbability: {
-        toString: function(cell) {
-          return CONTINUOUS_CUMULATIVE_PROBABILITY_KNOWLEDGE[cell.inputParameters.id].toString(cell);
-        }, buildPerformance: function(cell) {
-          return CONTINUOUS_CUMULATIVE_PROBABILITY_KNOWLEDGE[cell.inputParameters.id].buildPerformance(cell);
+        getKnowledge: function(cell) {
+          var knowledge = CONTINUOUS_CUMULATIVE_PROBABILITY_KNOWLEDGE.getKnowledge(cell);
+          return _.extend(knowledge, this.getOptions);
         },
-        options: {
-          cumulativeProbabilityValue: {
-            id: 'cumulativeProbabilityValue',
-            scale: {
-              percentage: 'Percentage',
-              decimal: 'Decimal'
-            },
-            label: 'Value',
-            firstParameter: {
+        getOptions: function() {
+          return {
+            cumulativeProbabilityValue: {
+              id: 'cumulativeProbabilityValue',
+              scale: {
+                percentage: 'Percentage',
+                decimal: 'Decimal'
+              },
               label: 'Value',
-              constraints: [
-                ConstraintService.defined(),
-                ConstraintService.positive(),
-                ConstraintService.belowOrEqualTo(100)
-              ]
-            }
-          },
-          cumulativeProbabilityValueCI: _.extend(buildConfidenceInterval('cumulativeProbabilityValueCI', 'Value'), {
-            scale: {
-              percentage: 'Percentage',
-              decimal: 'Decimal'
-            }
-          })
+              firstParameter: {
+                label: 'Value',
+                constraints: [
+                  ConstraintService.defined(),
+                  ConstraintService.positive(),
+                  ConstraintService.belowOrEqualTo(100)
+                ]
+              }
+            },
+            cumulativeProbabilityValueCI: _.extend(buildConfidenceInterval('cumulativeProbabilityValueCI', 'Value'), {
+              scale: {
+                percentage: 'Percentage',
+                decimal: 'Decimal'
+              }
+            })
+          };
         }
       }
     };
     var CONTINUOUS_MEAN_KNOWLEDGE = {
+      getKnowledge: function(cell) {
+        return this[cell.inputParameters.id];
+      },
       continuousMeanNoDispersion: {
         toString: valueToString,
         buildPerformance: function(cell) {
@@ -407,6 +400,9 @@ define(['lodash', 'angular'], function(_) {
         }
       },
       continuousMeanConfidenceInterval: {
+        getKnowledge: function(cell) {
+          return this[cell.inputParameters.id];
+        },
         toString: valueCIToString,
         buildPerformance: function(cell) {
           var input = {
@@ -427,6 +423,9 @@ define(['lodash', 'angular'], function(_) {
       }
     };
     var CONTINUOUS_MEDIAN_KNOWLEDGE = {
+      getKnowledge: function(cell) {
+        return this[cell.inputParameters.id];
+      },
       continuousMedianNoDispersion: {
         toString: valueToString,
         buildPerformance: function(cell) {
@@ -441,6 +440,9 @@ define(['lodash', 'angular'], function(_) {
       }
     };
     var CONTINUOUS_CUMULATIVE_PROBABILITY_KNOWLEDGE = {
+      getKnowledge: function(cell) {
+        return this[cell.inputParameters.id];
+      },
       cumulativeProbabilityValue: {
         toString: valueToString,
         buildPerformance: function(cell) {
@@ -466,6 +468,9 @@ define(['lodash', 'angular'], function(_) {
       }
     };
     var OTHER_EFFECT_KNOWLEDGE = {
+      getKnowledge: function(cell) {
+        return this[cell.inputParameters.id];
+      },
       value: {
         toString: valueToString,
         buildPerformance: function(cell) {
@@ -490,7 +495,13 @@ define(['lodash', 'angular'], function(_) {
       }
     };
     var ASSISTED_DISTRIBUTION_KNOWLEDGE = {
+      getKnowledge: function(cell) {
+        return this[cell.dataType].getKnowledge(cell);
+      },
       dichotomous: {
+        getKnowledge: function() {
+          return this;
+        },
         toString: function(cell) {
           var events = cell.firstParameter;
           var sampleSize = cell.secondParameter;
@@ -499,49 +510,54 @@ define(['lodash', 'angular'], function(_) {
         buildPerformance: function(cell) {
           return PerformanceService.buildBetaPerformance(cell.firstParameter + 1, cell.secondParameter - cell.firstParameter + 2);
         },
-        options: {
-          assistedDichotomous: {
-            id: 'assistedDichotomous',
-            label: 'dichotomous',
-            firstParameter: {
-              label: 'Events',
-              constraints: [
-                ConstraintService.defined(),
-                ConstraintService.positive(),
-                ConstraintService.integer(),
-                ConstraintService.belowOrEqualTo('secondParameter')
-              ]
+        getOptions: function() {
+          return {
+            assistedDichotomous: {
+              id: 'assistedDichotomous',
+              label: 'dichotomous',
+              firstParameter: {
+                label: 'Events',
+                constraints: [
+                  ConstraintService.defined(),
+                  ConstraintService.positive(),
+                  ConstraintService.integer(),
+                  ConstraintService.belowOrEqualTo('secondParameter')
+                ]
+              },
+              secondParameter: buildIntegerAboveZero('Sample size')
             },
-            secondParameter: buildIntegerAboveZero('Sample size')
-          },
+          };
         }
       },
       continuous: {
-        toString: function(cell) {
-          return ASSISTED_DISTRIBUTION_CONTINUOUS_KNOWLEDGE[cell.inputParameters.id].toString(cell);
+        getKnowledge: function(cell) {
+          var knowledge = ASSISTED_DISTRIBUTION_CONTINUOUS_KNOWLEDGE.getKnowledge(cell);
+          return _.extend({}, knowledge, this.getOptions);
         },
-        buildPerformance: function(cell) {
-          return ASSISTED_DISTRIBUTION_CONTINUOUS_KNOWLEDGE[cell.inputParameters.id].buildPerformance(cell);
-        },
-        options: {
-          assistedContinuousStdErr: {
-            id: 'assistedContinuousStdErr',
-            label: 'Mean, SE, sample size',
-            firstParameter: buildDefined('Mean'),
-            secondParameter: buildPositiveFloat('Standard error'),
-            thirdParameter: buildIntegerAboveZero('Sample size')
-          },
-          assistedContinuousStdDev: {
-            id: 'assistedContinuousStdDev',
-            label: 'Mean, SD, sample size',
-            firstParameter: buildDefined('Mean'),
-            secondParameter: buildPositiveFloat('Standard deviation'),
-            thirdParameter: buildIntegerAboveZero('Sample size')
-          }
+        getOptions: function() {
+          return {
+            assistedContinuousStdErr: {
+              id: 'assistedContinuousStdErr',
+              label: 'Mean, SE, sample size',
+              firstParameter: buildDefined('Mean'),
+              secondParameter: buildPositiveFloat('Standard error'),
+              thirdParameter: buildIntegerAboveZero('Sample size')
+            },
+            assistedContinuousStdDev: {
+              id: 'assistedContinuousStdDev',
+              label: 'Mean, SD, sample size',
+              firstParameter: buildDefined('Mean'),
+              secondParameter: buildPositiveFloat('Standard deviation'),
+              thirdParameter: buildIntegerAboveZero('Sample size')
+            }
+          };
         }
       }
     };
     var ASSISTED_DISTRIBUTION_CONTINUOUS_KNOWLEDGE = {
+      getKnowledge: function(cell) {
+        return this[cell.inputParameters.id];
+      },
       assistedContinuousStdErr: {
         toString: function(cell) {
           var mu = cell.firstParameter;
@@ -584,11 +600,11 @@ define(['lodash', 'angular'], function(_) {
       if (getInputError(cell)) {
         return INVALID_INPUT_MESSAGE;
       }
-      return INPUT_TYPE_KNOWLEDGE[cell.inputType].toString(cell);
+      return INPUT_TYPE_KNOWLEDGE.getKnowledge(cell).toString(cell);
     }
 
     function getOptions(cell) {
-      return INPUT_TYPE_KNOWLEDGE[cell.inputType].getOptions(cell);
+      return INPUT_TYPE_KNOWLEDGE[cell.inputType].getKnowledge(cell).getOptions();
     }
 
     function createProblem(criteria, treatments, title, description, inputData, useFavorability) {
@@ -645,120 +661,144 @@ define(['lodash', 'angular'], function(_) {
       return [-Infinity, Infinity];
     }
 
-    // function createInputFromOldWorkspace(criteria, alternatives, oldWorkspace, inputData) {
-    //   var newInputData = _.cloneDeep(inputData);
-    //   _.forEach(criteria, function (criterion) {
-    //     _.forEach(alternatives, function (alternative) {
-    //       var critKey;
-    //       _.forEach(oldWorkspace.problem.criteria, function (problemCrit, key) {
-    //         if (problemCrit.title === criterion.title) {
-    //           critKey = key;
-    //         }
-    //       });
-    //       var altKey;
-    //       _.forEach(oldWorkspace.problem.alternatives, function (problemAlt, key) {
-    //         if (problemAlt.title === alternative.title) {
-    //           altKey = key;
-    //         }
-    //       });
-    //       var tableEntry = _.find(oldWorkspace.problem.performanceTable, function (tableEntry) {
-    //         return tableEntry.criterion === critKey && tableEntry.alternative === altKey;
-    //       });
-    //       if (tableEntry) {
-    //         var inputDataCell = _.cloneDeep(newInputData[criterion.id][alternative.id]);
-    //         switch (tableEntry.performance.type) {
-    //           case 'exact':
-    //             inputDataCell.value = tableEntry.performance.value;
-    //             inputDataCell.exactType = 'exact';
-    //             if (tableEntry.performance.stdErr) {
-    //               inputDataCell.stdErr = tableEntry.performance.stdErr;
-    //               inputDataCell.isNormal = tableEntry.performance.isNormal;
-    //               inputDataCell.exactType = 'exactSE';
-    //             }
-    //             if (tableEntry.performance.lowerBound) {
-    //               inputDataCell.lowerBound = tableEntry.performance.lowerBound;
-    //               inputDataCell.upperBound = tableEntry.performance.upperBound;
-    //               inputDataCell.isNormal = tableEntry.performance.isNormal;
-    //               inputDataCell.exactType = 'exactConf';
-    //             }
-    //             break;
-    //           case 'dt':
-    //             inputDataCell.sampleSize = tableEntry.performance.parameters.dof + 1;
-    //             inputDataCell.stdErr = tableEntry.performance.parameters.stdErr;
-    //             inputDataCell.mu = tableEntry.performance.parameters.mu;
-    //             inputDataCell.continuousType = 'SEt';
-    //             break;
-    //           case 'dnorm':
-    //             inputDataCell.stdErr = tableEntry.performance.parameters.sigma;
-    //             inputDataCell.mu = tableEntry.performance.parameters.mu;
-    //             inputDataCell.continuousType = 'SEnorm';
-    //             break;
-    //           case 'dbeta':
-    //             inputDataCell.count = tableEntry.performance.parameters.alpha - 1;
-    //             inputDataCell.sampleSize = tableEntry.performance.parameters.beta + inputDataCell.count - 1;
-    //             break;
-    //           case 'dsurv':
-    //             inputDataCell.events = tableEntry.performance.parameters.alpha - 0.001;
-    //             inputDataCell.exposure = tableEntry.performance.parameters.beta - 0.001;
-    //             inputDataCell.summaryMeasure = tableEntry.performance.parameters.summaryMeasure;
-    //             inputDataCell.timeScale = tableEntry.performance.parameters.time;
-    //             break;
-    //         }
-    //         inputDataCell.isInvalid = getInputError(inputDataCell);
-    //         inputDataCell.label = inputToString(inputDataCell);
-    //         newInputData[criterion.id][alternative.id] = inputDataCell;
-    //       }
-    //     });
-    //   });
-    //   return newInputData;
-    // }
+    function createInputFromOldWorkspace(criteria, alternatives, oldWorkspace) {
+
+      _.reduce(oldWorkspace.problem.performanceTable, function(accum, tableEntry) {
+        var criterion = _.find(criteria, ['oldId', tableEntry.criterion]);
+        var alternative = _.find(alternatives, ['oldId', tableEntry.alternative]);
+        if (criterion && alternative && criterion.inputType !== 'Unknown') {
+          if (!accum[criterion.id]) {
+            accum[criterion.id] = {};
+          }
+          accum[criterion.id][alternative.id] = copyData(criterion, tableEntry);
+        }
+        return accum;
+      });
+
+      // var newInputData = _.cloneDeep(inputData);
+      // _.forEach(criteria, function (criterion) {
+      //   _.forEach(alternatives, function (alternative) {
+      //     var critKey;
+      //     _.forEach(oldWorkspace.problem.criteria, function (problemCrit, key) {
+      //       if (problemCrit.title === criterion.title) {
+      //         critKey = key;
+      //       }
+      //     });
+      //     var altKey;
+      //     _.forEach(oldWorkspace.problem.alternatives, function (problemAlt, key) {
+      //       if (problemAlt.title === alternative.title) {
+      //         altKey = key;
+      //       }
+      //     });
+      //     var tableEntry = _.find(oldWorkspace.problem.performanceTable, function (tableEntry) {
+      //       return tableEntry.criterion === critKey && tableEntry.alternative === altKey;
+      //     });
+      //     if (tableEntry) {
+      //       var inputDataCell = _.cloneDeep(newInputData[criterion.id][alternative.id]);
+      //       switch (tableEntry.performance.type) {
+      //         case 'exact':
+      //           inputDataCell.value = tableEntry.performance.value;
+      //           inputDataCell.exactType = 'exact';
+      //           if (tableEntry.performance.stdErr) {
+      //             inputDataCell.stdErr = tableEntry.performance.stdErr;
+      //             inputDataCell.isNormal = tableEntry.performance.isNormal;
+      //             inputDataCell.exactType = 'exactSE';
+      //           }
+      //           if (tableEntry.performance.lowerBound) {
+      //             inputDataCell.lowerBound = tableEntry.performance.lowerBound;
+      //             inputDataCell.upperBound = tableEntry.performance.upperBound;
+      //             inputDataCell.isNormal = tableEntry.performance.isNormal;
+      //             inputDataCell.exactType = 'exactConf';
+      //           }
+      //           break;
+      //         case 'dt':
+      //           inputDataCell.sampleSize = tableEntry.performance.parameters.dof + 1;
+      //           inputDataCell.stdErr = tableEntry.performance.parameters.stdErr;
+      //           inputDataCell.mu = tableEntry.performance.parameters.mu;
+      //           inputDataCell.continuousType = 'SEt';
+      //           break;
+      //         case 'dnorm':
+      //           inputDataCell.stdErr = tableEntry.performance.parameters.sigma;
+      //           inputDataCell.mu = tableEntry.performance.parameters.mu;
+      //           inputDataCell.continuousType = 'SEnorm';
+      //           break;
+      //         case 'dbeta':
+      //           inputDataCell.count = tableEntry.performance.parameters.alpha - 1;
+      //           inputDataCell.sampleSize = tableEntry.performance.parameters.beta + inputDataCell.count - 1;
+      //           break;
+      //         case 'dsurv':
+      //           inputDataCell.events = tableEntry.performance.parameters.alpha - 0.001;
+      //           inputDataCell.exposure = tableEntry.performance.parameters.beta - 0.001;
+      //           inputDataCell.summaryMeasure = tableEntry.performance.parameters.summaryMeasure;
+      //           inputDataCell.timeScale = tableEntry.performance.parameters.time;
+      //           break;
+      //       }
+      //       inputDataCell.isInvalid = getInputError(inputDataCell);
+      //       inputDataCell.label = inputToString(inputDataCell);
+      //       newInputData[criterion.id][alternative.id] = inputDataCell;
+      //     }
+      //   });
+      // });
+      return newInputData;
+    }
+
+    function copyData(criterion, tableEntry) {
+      var inputCell = _.pick(criterion, ['inputType', 'inputMethod', 'dataType', 'parameterOfInterest']);
+      return INPUT_TYPE_KNOWLEDGE[criterion.inputType].createInputData(inputCell, tableEntry);
+    }
 
     function copyWorkspaceCriteria(workspace) {
-      return _.map(workspace.problem.criteria, function(criterion, key) {
+      var copyFunctions = {
+        '1.0.0': copySchemaOneCriteria
+      };
+      if (!workspace.problem.schemaVersion) {
+        return copySchemaZeroCriteria(workspace)
+      } else {
+        return copyFunctions[workspace.problem.schemaVersion](workspace);
+      }
+    }
+
+    // Private functions
+
+    function copySchemaZeroCriteria(workspace) {
+      return _.map(workspace.problem.criteria, function(criterion, criterionId) {
         var newCrit = _.pick(criterion, ['title', 'description', 'source', 'sourceLink', 'unitOfMeasurement',
-          'strengthOfEvidence', 'uncertainties']);
+          'strengthOfEvidence', 'uncertainties']); // omit scales, preferences
+        newCrit.id = generateUuid()
+        newCrit.oldId = criterionId;
         if (workspace.problem.valueTree) {
-          newCrit.isFavorable = _.includes(workspace.problem.valueTree.children[0].criteria, key) ? true : false;
+          newCrit.isFavorable = _.includes(workspace.problem.valueTree.children[0].criteria, criterionId) ? true : false;
         }
-        var tableEntry = _.find(workspace.problem.performanceTable, ['criterion', key]);
-        switch (tableEntry.performance.type) {
-          case 'exact':
-            if (tableEntry.input) {
-              //
-            } else {
-              newCrit.inputType = 'distribution';
-              newCrit.inputMethod = 'manualDistribution';
-            }
-            break;
-          case 'dnorm':
-            if (tableEntry.input) {
-              //
-            } else {
-              newCrit.inputType = 'distribution';
-              newCrit.inputMethod = 'manualDistribution';
-            }
-            break;
-          case 'dbeta':
-            newCrit.inputType = 'distribution';
-            newCrit.inputMethod = 'manualDistribution';
-            break;
-          case 'dgamma':
-            newCrit.inputType = 'distribution';
-            newCrit.inputMethod = 'manualDistribution';
-            break;
-          case 'dt':
-            newCrit.inputType = 'distribution';
-            newCrit.inputMethod = 'assistedDistribution';
-            newCrit.dataType = 'continuous';
-            break;
-          default:
-            newCrit.inputType = 'Unknown';
+        var tableEntry = _.find(workspace.problem.performanceTable, ['criterion', criterionId]);
+        var MANUAL_DISTRIBUTIONS = ['exact', 'dnorm', 'dbeta', 'dgamma'];
+        var performanceType = tableEntry.performance.type;
+        if (_.includes(MANUAL_DISTRIBUTIONS, performanceType)) {
+          newCrit.inputType = 'distribution';
+          newCrit.inputMethod = 'manualDistribution';
+        } else if (performanceType === 'dt') {
+          newCrit.inputType = 'distribution';
+          newCrit.inputMethod = 'assistedDistribution';
+          newCrit.dataType = 'continuous';
+        } else {
+          newCrit.inputType = 'Unknown';
         }
         return newCrit;
       });
     }
 
-    // Private functions
+    function copySchemaOneCriteria(workspace) {
+      return _.map(workspace.problem.criteria, function(criterion, criterionId) {
+        var newCrit = _.pick(criterion, ['title', 'description', 'source', 'sourceLink', 'unitOfMeasurement',
+          'strengthOfEvidence', 'uncertainties', 'inputType', 'inputMethod', 'dataType', 'parameterOfInterest']); // omit scales, preferences
+        newCrit.id = generateUuid();
+        newCrit.oldId = criterionId;
+        if (workspace.problem.valueTree) {
+          newCrit.isFavorable = _.includes(workspace.problem.valueTree.children[0].criteria, criterionId) ? true : false;
+        }
+        return newCrit;
+      });
+    }
+
     function buildCriteria(criteria) {
       var newCriteria = _.map(criteria, function(criterion) {
         var newCriterion = _.pick(criterion, ['title',
@@ -786,13 +826,13 @@ define(['lodash', 'angular'], function(_) {
 
     function buildPerformanceTable(inputData, criteria, treatments) {
       var newPerformanceTable = [];
-      _.forEach(criteria, function(criterion, criteriond) {
+      _.forEach(criteria, function(criterion, criterionId) {
         _.forEach(treatments, function(treatment) {
-          var cell = inputData[criteriond][treatment.id];
+          var cell = inputData[criterionId][treatment.id];
           newPerformanceTable.push({
             alternative: treatment.id,
-            criterion: criteriond,
-            performance: INPUT_TYPE_KNOWLEDGE[cell.inputType].buildPerformance(cell)
+            criterion: criterionId,
+            performance: INPUT_TYPE_KNOWLEDGE[cell.inputType].getKnowledge(cell).buildPerformance(cell)
           });
         });
       });
@@ -846,9 +886,7 @@ define(['lodash', 'angular'], function(_) {
     function buildDefined(label) {
       return {
         label: label,
-        constraints: [
-          ConstraintService.defined(),
-        ]
+        constraints: [ConstraintService.defined()]
       };
     }
 
@@ -902,7 +940,7 @@ define(['lodash', 'angular'], function(_) {
       inputToString: inputToString,
       getInputError: getInputError,
       prepareInputData: prepareInputData,
-      createInputFromOldWorkspace: undefined,//createInputFromOldWorkspace,
+      createInputFromOldWorkspace: createInputFromOldWorkspace,
       copyWorkspaceCriteria: copyWorkspaceCriteria,
       getOptions: getOptions
     };

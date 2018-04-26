@@ -12,9 +12,12 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       constraints: []
     }
   };
+  var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
   describe('The manualInputService', function() {
-    beforeEach(module('elicit.manualInput'));
+    beforeEach(module('elicit.manualInput', function($provide){
+      $provide.value('generateUuid', generateUuidMock);
+    }));
     beforeEach(inject(function(ManualInputService) {
       manualInputService = ManualInputService;
     }));
@@ -371,7 +374,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
           title: 'criterion 1 title',
           inputType: 'distribution',
           inputMethod: 'assistedDistribution',
-          dataType: 'other'
+          dataType: 'other',
         }, {
           id: 'crit2id',
           title: 'criterion 2 title',
@@ -381,12 +384,20 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         var result = manualInputService.prepareInputData(criteria, treatments);
         var expectedResult = {
           'crit1id': {
-            alternative1: criteria[0],
-            alternative2: criteria[0]
+            alternative1: _.extend({}, criteria[0], {
+              isInvalid: true
+            }),
+            alternative2: _.extend({}, criteria[0], {
+              isInvalid: true
+            })
           },
           'crit2id': {
-            alternative1: criteria[1],
-            alternative2: criteria[1]
+            alternative1: _.extend({}, criteria[1], {
+              isInvalid: true
+            }),
+            alternative2: _.extend({}, criteria[1], {
+              isInvalid: true
+            })
           }
         };
         expect(result).toEqual(expectedResult);
@@ -430,8 +441,12 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
 
         var expectedResult = {
           'criterion1': {
-            alternative1: criteria[0],
-            alternative2: criteria[0]
+            alternative1: _.extend({}, criteria[0], {
+              isInvalid: true
+            }),
+            alternative2: _.extend({}, criteria[0], {
+              isInvalid: true
+            })
           },
           'criterion2': {
             alternative1: oldInputData['criterion2']['alternative1'],
@@ -460,6 +475,8 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
           unitOfMeasurement: 'particles',
           isFavorable: true,
           id: 'criterion1id',
+          scale: [0,1],
+          omitThis: 'yech',
           inputType: 'effect',
           dataType: 'other'
         }, {
@@ -836,8 +853,11 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       });
     });
 
-    xdescribe('copyWorkspaceCriteria', function() {
-      it('should copy the criteria from the oldworkspace to the format used by the rest of the manual input, preserving units and value tree', function() {
+    describe('copyWorkspaceCriteria', function() {
+      beforeEach(function() {
+        generateUuidMock.and.returnValues('uuid1', 'uuid2', 'uuid3', 'uuid4', 'uuid5', 'uuid6');
+      });
+      it('for schema zero should copy and update the criteria from the old workspace, preserving units and value tree', function() {
         var workspace = {
           problem: {
             criteria: {
@@ -865,16 +885,15 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
               crit5: {
                 title: 'criterion 5',
                 source: 'single study',
+              },
+              crit6: {
+                title: 'durrrvival',
               }
             },
             performanceTable: [{
               criterion: 'crit1',
               performance: {
-                type: 'dsurv',
-                parameters: {
-                  summaryMeasure: 'mean',
-                  time: 200,
-                }
+                type: 'dt'
               }
             }, {
               criterion: 'crit2',
@@ -884,7 +903,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
             }, {
               criterion: 'crit3',
               performance: {
-                type: 'dt'
+                type: 'dgamma'
               }
             }, {
               criterion: 'crit4',
@@ -895,6 +914,11 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
               criterion: 'crit5',
               performance: {
                 type: 'exact'
+              }
+            }, {
+              criterion: 'crit6',
+              performance: {
+                type: 'dsurv'
               }
             }],
             valueTree: {
@@ -911,41 +935,129 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         };
         var result = manualInputService.copyWorkspaceCriteria(workspace);
         var expectedResult = [{
+          id: 'uuid1',
+          oldId: 'crit1',
           title: 'criterion 1',
           description: 'bla',
           source: 'single study',
           sourceLink: 'http://www.drugis.org',
-          dataSource: 'study',
-          dataType: 'survival',
           isFavorable: true,
-          summaryMeasure: 'mean',
-          timePointOfInterest: 200,
-          timeScale: 'time scale not set',
-          unitOfMeasurement: 'Proportion'
+          unitOfMeasurement: 'Proportion',
+          inputType: 'distribution',
+          inputMethod: 'assistedDistribution',
+          dataType: 'continuous'
         }, {
+          id: 'uuid2',
+          oldId: 'crit2',
           title: 'criterion 2',
           source: 'single study',
           sourceLink: 'http://www.drugis.org',
           isFavorable: true,
-          dataSource: 'study',
-          dataType: 'dichotomous',
-          unitOfMeasurement: 'Response size'
+          unitOfMeasurement: 'Response size',
+          inputType: 'distribution',
+          inputMethod: 'manualDistribution'
         }, {
+          id: 'uuid3',
+          oldId: 'crit3',
           title: 'criterion 3',
           source: 'single study',
           isFavorable: false,
-          dataSource: 'study',
-          dataType: 'continuous'
+          inputType: 'distribution',
+          inputMethod: 'manualDistribution'
         }, {
+          id: 'uuid4',
+          oldId: 'crit4',
           title: 'criterion 4',
           source: 'single study',
-          isFavorable: false,
-          dataSource: 'study',
-          dataType: 'continuous'
+          inputType: 'distribution',
+          inputMethod: 'manualDistribution',
+          isFavorable: false
         }, {
+          id: 'uuid5',
+          oldId: 'crit5',
           title: 'criterion 5',
           isFavorable: false,
-          source: 'single study'
+          source: 'single study',
+          inputType: 'distribution',
+          inputMethod: 'manualDistribution'
+        }, {
+          id: 'uuid6',
+          oldId: 'crit6',
+          title: 'durrrvival',
+          isFavorable: false,
+          inputType: 'Unknown'
+        }];
+        expect(result).toEqual(expectedResult);
+      });
+      it('for schema one should copy and update the criteria from the old workspace, preserving units and value tree', function() {
+        var workspace = {
+          problem: {
+            schemaVersion: '1.0.0',
+            criteria: {
+              crit1: {
+                id: 'crit1',
+                title: 'criterion 1', 
+                description: 'desc',
+                source: 'well',
+                sourceLink: 'zelda', 
+                unitOfMeasurement: 'absolute',
+                strengthOfEvidence: '9001',
+                uncertainties: 'dunno',
+                omitThis: 'yech',
+                scales: [0,1],
+                pvf: {
+                  direction: 'decreasing',
+                  type: 'linear',
+                  range: [0.0, 1.0]
+                },
+                inputType: 'distribution',
+                inputMethod: 'assistedDistribution',
+                dataType: 'dichotomous'
+              }, 
+              crit2: {
+                id: 'crit2',
+                title: 'criterion 2', 
+                inputType: 'effect',
+                dataType: 'continuous',
+                parameterOfInterest: 'mean'
+              }
+            },
+            performanceTable: [],
+            valueTree: {
+              title: 'Benefit-risk balance',
+              children: [{
+                title: 'Favourable effects',
+                criteria: ['crit1']
+              }, {
+                title: 'Unfavourable effects',
+                criteria: ['crit2']
+              }]
+            }
+          }
+        };
+        var result = manualInputService.copyWorkspaceCriteria(workspace);
+        var expectedResult = [{
+          id: 'uuid1',
+          oldId: 'crit1',
+          title: 'criterion 1', 
+          description: 'desc',
+          source: 'well',
+          isFavorable: true,
+          sourceLink: 'zelda', 
+          unitOfMeasurement: 'absolute',
+          strengthOfEvidence: '9001',
+          uncertainties: 'dunno',
+          inputType: 'distribution',
+          inputMethod: 'assistedDistribution',
+          dataType: 'dichotomous'
+        }, {
+          id: 'uuid2',
+          oldId: 'crit2',
+          title: 'criterion 2', 
+          inputType: 'effect',
+          dataType: 'continuous',
+          isFavorable: false,
+          parameterOfInterest: 'mean'
         }];
         expect(result).toEqual(expectedResult);
       });

@@ -223,7 +223,9 @@ define(['lodash', 'angular'], function(_, angular) {
           description: oldWorkspace.problem.description,
           criteria: ManualInputService.copyWorkspaceCriteria(oldWorkspace),
           alternatives: _.map(oldWorkspace.problem.alternatives, function(alternative) {
-            return alternative;
+            return _.extend({}, alternative, {
+              id: generateUuid()
+            });
           })
         };
         findUnknownCriteria($scope.state.criteria);
@@ -266,8 +268,8 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function findUnknownCriteria(criteria) {
-      $scope.hasUnknownDataType = _.find(criteria, function(criterion) {
-        return criterion.dataType === 'Unknown';
+      $scope.hasUnknownInputType = _.find(criteria, function(criterion) {
+        return criterion.inputType === 'Unknown';
       });
     }
   };
