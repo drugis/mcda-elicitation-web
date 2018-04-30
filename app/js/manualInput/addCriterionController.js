@@ -13,10 +13,12 @@ define(['lodash'], function (_) {
     $scope.blockedReason = '';
     $scope.criterion = {
       id: generateUuid(),
-      inputType: 'distribution',
-      inputMethod: 'assistedDistribution',
-      dataType: 'dichotomous',
-      parameterOfInterest: 'eventProbability',
+      inputMetaData: {
+        inputType: 'distribution',
+        inputMethod: 'assistedDistribution',
+        dataType: 'dichotomous',
+        parameterOfInterest: 'eventProbability',
+      },
       isFavorable: false
     };
     $scope.isAddOperation = !oldCriterion;
@@ -53,7 +55,7 @@ define(['lodash'], function (_) {
     }
 
     function dataTypeChanged() {
-      switch ($scope.criterion.dataType) {
+      switch ($scope.criterion.inputMetaData.dataType) {
         case 'dichotomous':
           $scope.criterion.parameterOfInterest = 'eventProbability';
           break;

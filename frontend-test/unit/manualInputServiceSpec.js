@@ -15,7 +15,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
   describe('The manualInputService', function() {
-    beforeEach(module('elicit.manualInput', function($provide){
+    beforeEach(module('elicit.manualInput', function($provide) {
       $provide.value('generateUuid', generateUuidMock);
     }));
     beforeEach(inject(function(ManualInputService) {
@@ -475,7 +475,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
           unitOfMeasurement: 'particles',
           isFavorable: true,
           id: 'criterion1id',
-          scale: [0,1],
+          scale: [0, 1],
           omitThis: 'yech',
           inputType: 'effect',
           dataType: 'other'
@@ -676,11 +676,53 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       });
     });
 
-    xdescribe('createInputFromOldWorkspace', function() {
+    describe('createInputFromOldWorkspace', function() {
       it('should calculate the effects table input parameters from the performanceTable of the old workspace', function() {
         var criteria = [{
           title: 'criterion 1',
-          id: 'a1'
+          id: 'c1',
+          oldId: 'crit1',
+          inputMetaData: {
+            inputType: 'distribution',
+            inputMethod: 'manualDistribution'
+          }
+        }, {
+          title: 'criterion 2',
+          id: 'c2',
+          oldId: 'crit2',
+          inputMetaData: {
+            inputType: 'effect',
+            dataType: 'dichotomous',
+            parameterOfInterest: 'eventProbability'
+          }
+        }, {
+          title: 'criterion 3',
+          id: 'c3',
+          oldId: 'crit3',
+          inputMetaData: {
+            inputType: 'distribution',
+            inputMethod: 'manualDistribution'
+          }
+        }, {
+          title: 'criterion 4',
+          id: 'c4',
+          oldId: 'crit4',
+          inputMetaData: {
+            inputType: 'distribution',
+            inputMethod: 'manualDistribution'
+          }
+        }, {
+          title: 'criterion 5',
+          id: 'c5',
+          oldId: 'crit5',
+          inputMetaData: {
+            inputType: 'Unknown'
+          }
+        }];
+        var alternatives = [{
+          title: 'alternative 1',
+          id: 'a1',
+          oldId: 'alt1'
         }];
         var oldWorkspace = {
           problem: {
@@ -706,150 +748,88 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
                 title: 'alternative 1'
               }
             },
-            performanceTable: [{
+            performanceTable: [
+              {
               criterion: 'crit1',
               alternative: 'alt1',
               performance: {
                 type: 'exact',
                 value: 1337
               }
-            }, {
+            }, 
+            {
               criterion: 'crit2',
               alternative: 'alt1',
               performance: {
-                type: 'dbeta',
-                parameters: {
-                  alpha: 12,
-                  beta: 23
+                type: 'exact',
+                value: 0.5,
+                input: {
+                  events: 10,
+                  sampleSize: 20
                 }
               }
-            }, {
+            }
+            , {
               criterion: 'crit3',
               alternative: 'alt1',
               performance: {
-                type: 'dt',
+                type: 'dgamma',
                 parameters: {
-                  dof: 123,
-                  stdErr: 2.3,
-                  mu: 30
+                  alpha: 123,
+                  beta: 23
                 }
               }
-            }, {
-              criterion: 'crit4',
-              alternative: 'alt1',
-              performance: {
-                type: 'dnorm',
-                parameters: {
-                  sigma: 1.2,
-                  mu: 23
-                }
-              }
-            }, {
-              criterion: 'crit5',
-              alternative: 'alt1',
-              performance: {
-                type: 'dsurv',
-                parameters: {
-                  alpha: 12.001,
-                  beta: 23.001,
-                  summaryMeasure: 'mean'
-                }
-              }
-            },]
+            }
+            // , {
+            //   criterion: 'crit3',
+            //   alternative: 'alt1',
+            //   performance: {
+            //     type: 'dt',
+            //     parameters: {
+            //       dof: 123,
+            //       stdErr: 2.3,
+            //       mu: 30
+            //     }
+            //   }
+            // }, {
+            //   criterion: 'crit4',
+            //   alternative: 'alt1',
+            //   performance: {
+            //     type: 'dnorm',
+            //     parameters: {
+            //       sigma: 1.2,
+            //       mu: 23
+            //     }
+            //   }
+            // }, {
+            //   criterion: 'crit5',
+            //   alternative: 'alt1',
+            //   performance: {
+            //     type: 'dsurv',
+            //     parameters: {
+            //       alpha: 12.001,
+            //       beta: 23.001,
+            //       summaryMeasure: 'mean'
+            //     }
+            //   }
+            // }
+          ]
           }
         };
-        var inputData = {
-          c1: {
-            a1: {
-              type: 'exact',
-              value: undefined
-            }
-          },
-          c2: {
-            a1: {
-              type: 'dbeta',
-              count: undefined,
-              sampleSize: undefined
-            }
-          },
-          c3: {
-            a1: {
-              type: 'dt',
-              mu: undefined,
-              stdErr: undefined,
-              sampleSize: undefined
-            }
-          },
-          c4: {
-            a1: {
-              type: 'dnorm',
-              stdErr: undefined,
-              mu: undefined
-            }
-          },
-          c5: {
-            a1: {
-              type: 'dsurv',
-              events: undefined,
-              exposure: undefined,
-              summaryMeasure: undefined
-            }
-          }
-        };
-        var result = manualInputService.createInputFromOldWorkspace(criteria, alternatives, oldWorkspace, inputData);
-        var expectedResult = {
-          c1: {
-            a1: {
-              type: 'exact',
-              value: 1337,
-              isInvalid: false,
-              label: '1337\nDistribution: none',
-              exactType: 'exact'
-            }
-          },
-          c2: {
-            a1: {
-              type: 'dbeta',
-              count: 11,
-              sampleSize: 33,
-              isInvalid: false,
-              label: '11 / 33\nDistribution: beta'
-            }
-          },
-          c3: {
-            a1: {
-              type: 'dt',
-              mu: 30,
-              stdErr: 2.3,
-              sampleSize: 124,
-              isInvalid: false,
-              continuousType: 'SEt',
-              label: '30 (2.3), 124\nDistribution: Student\'s t'
-            }
-          },
-          c4: {
-            a1: {
-              type: 'dnorm',
-              mu: 23,
-              stdErr: 1.2,
-              isInvalid: false,
-              continuousType: 'SEnorm',
-              label: '23 (1.2)\nDistribution: normal'
-            }
-          },
-          c5: {
-            a1: {
-              type: 'dsurv',
-              events: 12,
-              exposure: 23,
-              summaryMeasure: 'mean',
-              isInvalid: false,
-              label: '12 / 23\nDistribution: gamma',
-              timeScale: undefined
-            }
-          }
-        };
-        expect(result).toEqual(expectedResult);
+        var result = manualInputService.createInputFromOldWorkspace(criteria, alternatives, oldWorkspace);
+        expect(result.c1.a1.inputParameters.id).toEqual('manualExact');
+        expect(result.c1.a1.firstParameter).toEqual(1337);
+        expect(result.c2.a1.inputParameters.id).toEqual('dichotomousFraction');
+        expect(result.c2.a1.firstParameter).toEqual(10);
+        expect(result.c2.a1.secondParameter).toEqual(20);
+        expect(result.c3.a1.inputParameters.id).toEqual('manualGamma');
+        expect(result.c3.a1.firstParameter).toEqual(123);
+        expect(result.c3.a1.secondParameter).toEqual(23);
+        expect(result.c4.a1.inputParameters.id).toEqual('manualNormal');
+        expect(result.c4.a1.firstParameter).toEqual(23);
+        expect(result.c4.a1.firstParameter).toEqual(1.2);
+        expect(result.c5.a1.inputType).toEqual('Unknown');
+
       });
     });
 
@@ -996,15 +976,15 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
             criteria: {
               crit1: {
                 id: 'crit1',
-                title: 'criterion 1', 
+                title: 'criterion 1',
                 description: 'desc',
                 source: 'well',
-                sourceLink: 'zelda', 
+                sourceLink: 'zelda',
                 unitOfMeasurement: 'absolute',
                 strengthOfEvidence: '9001',
                 uncertainties: 'dunno',
                 omitThis: 'yech',
-                scales: [0,1],
+                scales: [0, 1],
                 pvf: {
                   direction: 'decreasing',
                   type: 'linear',
@@ -1013,10 +993,10 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
                 inputType: 'distribution',
                 inputMethod: 'assistedDistribution',
                 dataType: 'dichotomous'
-              }, 
+              },
               crit2: {
                 id: 'crit2',
-                title: 'criterion 2', 
+                title: 'criterion 2',
                 inputType: 'effect',
                 dataType: 'continuous',
                 parameterOfInterest: 'mean'
@@ -1039,11 +1019,11 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         var expectedResult = [{
           id: 'uuid1',
           oldId: 'crit1',
-          title: 'criterion 1', 
+          title: 'criterion 1',
           description: 'desc',
           source: 'well',
           isFavorable: true,
-          sourceLink: 'zelda', 
+          sourceLink: 'zelda',
           unitOfMeasurement: 'absolute',
           strengthOfEvidence: '9001',
           uncertainties: 'dunno',
@@ -1053,7 +1033,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         }, {
           id: 'uuid2',
           oldId: 'crit2',
-          title: 'criterion 2', 
+          title: 'criterion 2',
           inputType: 'effect',
           dataType: 'continuous',
           isFavorable: false,
@@ -1063,8 +1043,115 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       });
     });
     describe('getOptions', function() {
-      it('should be tested', function() {
-        fail();
+      var cell = {};
+      describe('for distributions', function() {
+        beforeEach(function() {
+          cell.inputType = 'distribution';
+        });
+        describe('for assisted distributions', function() {
+          beforeEach(function() {
+            cell.inputMethod = 'assistedDistribution';
+          });
+          describe('for dichotomous distributions', function() {
+            beforeEach(function() {
+              cell.dataType = 'dichotomous';
+            });
+            it('should return the correct options', function() {
+              expect(_.keys(manualInputService.getOptions(cell))).toEqual(['assistedDichotomous']);
+            });
+          });
+          describe('for continuous distributions', function() {
+            beforeEach(function() {
+              cell.dataType = 'continuous';
+            });
+            it('should return the correct options', function() {
+              expect(_.keys(manualInputService.getOptions(cell))).toEqual(['assistedContinuousStdErr', 'assistedContinuousStdDev']);
+            });
+          });
+        });
+        describe('for manual distributions', function() {
+          beforeEach(function() {
+            cell.inputMethod = 'manualDistribution';
+          });
+          it('should return the manual distribution options', function() {
+            expect(_.keys(manualInputService.getOptions(cell))).toEqual([
+              'manualBeta',
+              'manualNormal',
+              'manualGamma',
+              'manualExact'
+            ]);
+          });
+        });
+      });
+      describe('for effects', function() {
+        beforeEach(function() {
+          cell.inputType = 'effect';
+        });
+        describe('that are dichotomous', function() {
+          beforeEach(function() {
+            cell.dataType = 'dichotomous';
+          });
+          it('should return the correct options', function() {
+            expect(_.keys(manualInputService.getOptions(cell))).toEqual([
+              'dichotomousDecimal',
+              'dichotomousDecimalSampleSize',
+              'dichotomousPercentage',
+              'dichotomousPercentageSampleSize',
+              'dichotomousFraction'
+            ]);
+          });
+        });
+        describe('that are continuous', function() {
+          beforeEach(function() {
+            cell.dataType = 'continuous';
+          });
+          describe('and have parameter of interest mean', function() {
+            beforeEach(function() {
+              cell.parameterOfInterest = 'mean';
+            });
+            it('should return the correct options', function() {
+              expect(_.keys(manualInputService.getOptions(cell))).toEqual([
+                'continuousMeanNoDispersion',
+                'continuousMeanStdErr',
+                'continuousMeanConfidenceInterval'
+              ]);
+            });
+          });
+          describe('and have parameter of interest median', function() {
+            beforeEach(function() {
+              cell.parameterOfInterest = 'median';
+            });
+            it('should return the correct options', function() {
+              expect(_.keys(manualInputService.getOptions(cell))).toEqual([
+                'continuousMedianNoDispersion',
+                'continuousMedianConfidenceInterval'
+              ]);
+            });
+          });
+          describe('and have parameter of interest cumulativeProbability', function() {
+            beforeEach(function() {
+              cell.parameterOfInterest = 'cumulativeProbability';
+            });
+            it('should return the correct options', function() {
+              expect(_.keys(manualInputService.getOptions(cell))).toEqual([
+                'cumulativeProbabilityValue',
+                'cumulativeProbabilityValueCI'
+              ]);
+            });
+          });
+        });
+        describe('in other cases', function() {
+          beforeEach(function() {
+            cell.dataType = 'other';
+          });
+          it('should return the correct options', function() {
+            expect(_.keys(manualInputService.getOptions(cell))).toEqual([
+              'value',
+              'valueSE',
+              'valueCI'
+            ]);
+          });
+        });
       });
     });
   });
