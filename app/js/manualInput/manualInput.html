@@ -104,11 +104,11 @@
               </div>
             </td>
             <td ng-if="state.useFavorability">{{criterion.isFavorable}}</td>
-            <td ng-style="criterion.inputType === 'Unknown'? {'color': 'red'} : {}">{{criterion.inputType}}</td>
-            <td>{{criterion.inputType === 'distribution' ? inputMethods[criterion.inputMethod] : 'NA'}}</td>
-            <td>{{criterion.inputType === 'effect' || criterion.inputMethod === 'assistedDistribution' ? criterion.dataType :
+            <td ng-style="criterion.inputMetaData.inputType === 'Unknown'? {'color': 'red'} : {}">{{criterion.inputMetaData.inputType}}</td>
+            <td>{{criterion.inputMetaData.inputType === 'distribution' ? inputMethods[criterion.inputMetaData.inputMethod] : 'NA'}}</td>
+            <td>{{criterion.inputMetaData.inputType === 'effect' || criterion.inputMetaData.inputMethod === 'assistedDistribution' ? criterion.inputMetaData.dataType :
               'NA'}}</td>
-            <td>{{criterion.inputType !== 'distribution' || criterion.inputMethod === 'assistedDistribution' ? parameterOfInterest[criterion.parameterOfInterest]
+            <td>{{criterion.inputMetaData.inputType !== 'distribution' || criterion.inputMetaData.inputMethod === 'assistedDistribution' ? parameterOfInterest[criterion.inputMetaData.parameterOfInterest]
               : 'NA'}}</td>
             <td>{{criterion.unitOfMeasurement}}</td>
             <td>{{criterion.description}}</td>

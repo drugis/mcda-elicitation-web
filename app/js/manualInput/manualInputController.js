@@ -104,7 +104,7 @@ define(['lodash', 'angular'], function(_, angular) {
         }
         var criteria = _.map($scope.state.criteria, _.partialRight(_.pick, ['id']));
         var alternatives = _.map($scope.state.alternatives, _.partialRight(_.pick, ['id']));
-        
+
         OrderingService.saveOrdering(_.merge({}, {
           workspaceId: workspace.id
         }, $stateParams), criteria, alternatives).then(function() {
@@ -146,11 +146,8 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function goToStep2() {
       $scope.state.step = 'step2';
-      $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives, $scope.state.inputData);
-      if ($scope.state.oldWorkspace) {
-        $scope.state.inputData = ManualInputService.createInputFromOldWorkspace($scope.state.criteria,
-          $scope.state.alternatives, $scope.state.oldWorkspace, $scope.state.inputData);
-      }
+      $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives,
+        $scope.state.inputData);
       checkInputData();
     }
 
@@ -172,7 +169,7 @@ define(['lodash', 'angular'], function(_, angular) {
                 removeCriterion(criterion);
               }
               $scope.state.criteria.push(newCriterion);
-              findUnknownCriteria($scope.state.criteria);
+              checkForUnknownCriteria($scope.state.criteria);
               favorabilityChanged();
             };
           },
@@ -189,7 +186,7 @@ define(['lodash', 'angular'], function(_, angular) {
     function removeCriterion(criterion) {
       $scope.state.criteria = _.reject($scope.state.criteria, ['id', criterion.id]);
       delete $scope.state.inputData[criterion.id];
-      findUnknownCriteria($scope.state.criteria);
+      checkForUnknownCriteria($scope.state.criteria);
       favorabilityChanged();
     }
 
@@ -222,13 +219,16 @@ define(['lodash', 'angular'], function(_, angular) {
           isInputDataValid: false,
           description: oldWorkspace.problem.description,
           criteria: ManualInputService.copyWorkspaceCriteria(oldWorkspace),
-          alternatives: _.map(oldWorkspace.problem.alternatives, function(alternative) {
+          alternatives: _.map(oldWorkspace.problem.alternatives, function(alternative, alternativeId) {
             return _.extend({}, alternative, {
-              id: generateUuid()
+              id: generateUuid(), 
+              oldId: alternativeId
             });
           })
         };
-        findUnknownCriteria($scope.state.criteria);
+        $scope.state.inputData = ManualInputService.createInputFromOldWorkspace($scope.state.criteria,
+          $scope.state.alternatives, $scope.state.oldWorkspace);
+        checkForUnknownCriteria($scope.state.criteria);
         favorabilityChanged();
         $scope.dirty = true;
         setStateWatcher();
@@ -246,7 +246,7 @@ define(['lodash', 'angular'], function(_, angular) {
         // unfinished workspace
         InProgressResource.get($stateParams).$promise.then(function(response) {
           $scope.state = response.state;
-          findUnknownCriteria($scope.state.criteria);
+          checkForUnknownCriteria($scope.state.criteria);
           favorabilityChanged();
           setStateWatcher();
         });
@@ -267,7 +267,7 @@ define(['lodash', 'angular'], function(_, angular) {
       });
     }
 
-    function findUnknownCriteria(criteria) {
+    function checkForUnknownCriteria(criteria) {
       $scope.hasUnknownInputType = _.find(criteria, function(criterion) {
         return criterion.inputType === 'Unknown';
       });

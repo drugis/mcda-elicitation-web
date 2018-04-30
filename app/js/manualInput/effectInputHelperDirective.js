@@ -57,7 +57,7 @@ define(['lodash'], function (_) {
 
         function initInputParameters() {
           if (doInputParametersNeedUpdating(scope.criterion, scope.inputData)) {
-            scope.inputCell = _.pick(scope.criterion, ['inputType', 'inputMethod', 'dataType', 'parameterOfInterest']);
+            scope.inputCell = _.cloneDeep(scope.criterion.inputMetaData);
           } else {
             scope.inputCell = _.cloneDeep(scope.inputData);
           }
