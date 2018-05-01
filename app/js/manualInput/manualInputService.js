@@ -738,6 +738,7 @@ define(['lodash', 'angular'], function(_) {
         accum[criterion.id] = _.reduce(alternatives, function(accum, alternative) {
           if (oldInputData && oldInputData[criterion.id] && oldInputData[criterion.id][alternative.id]) {
             accum[alternative.id] = oldInputData[criterion.id][alternative.id];
+            accum[alternative.id].isInvalid = true;
           } else {
             accum[alternative.id] = _.cloneDeep(criterion.inputMetaData);
             accum[alternative.id].isInvalid = true;
@@ -821,7 +822,7 @@ define(['lodash', 'angular'], function(_) {
     function copySchemaOneCriteria(workspace) {
       return _.map(workspace.problem.criteria, function(criterion, criterionId) {
         var newCrit = _.pick(criterion, ['title', 'description', 'source', 'sourceLink', 'unitOfMeasurement',
-          'strengthOfEvidence', 'uncertainties', 'inputType', 'inputMethod', 'dataType', 'parameterOfInterest']); // omit scales, preferences
+          'strengthOfEvidence', 'uncertainties', 'inputMetaData']); // omit scales, preferences
         newCrit.id = generateUuid();
         newCrit.oldId = criterionId;
         if (workspace.problem.valueTree) {
