@@ -358,99 +358,83 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
     });
 
     describe('prepareInputData', function() {
-      it('should prepare the cells of the table for input', function() {
-        var treatments = {
-          alternative1: {
-            title: 'alternative1',
-            id: 'alternative1'
-          },
-          alternative2: {
-            title: 'alternative2',
-            id: 'alternative2'
-          }
-        };
-        var criteria = [{
-          id: 'crit1id',
-          title: 'criterion 1 title',
+      var treatments = {
+        alternative1: {
+          title: 'alternative1',
+          id: 'alternative1'
+        },
+        alternative2: {
+          title: 'alternative2',
+          id: 'alternative2'
+        }
+      };
+      var criteria = [{
+        id: 'crit1id',
+        title: 'criterion 1 title',
+        inputMetaData: {
           inputType: 'distribution',
           inputMethod: 'assistedDistribution',
-          dataType: 'other',
-        }, {
-          id: 'crit2id',
+          dataType: 'other'
+        }
+      }, {
+        id: 'crit2id',
+        inputMetaData: {
           title: 'criterion 2 title',
           inputType: 'effect',
           dataType: 'other'
-        }];
+        }
+      }];
+      it('should prepare the cells of the table for input', function() {
         var result = manualInputService.prepareInputData(criteria, treatments);
         var expectedResult = {
           'crit1id': {
-            alternative1: _.extend({}, criteria[0], {
+            alternative1: _.extend({}, criteria[0].inputMetaData, {
               isInvalid: true
             }),
-            alternative2: _.extend({}, criteria[0], {
+            alternative2: _.extend({}, criteria[0].inputMetaData, {
               isInvalid: true
             })
           },
           'crit2id': {
-            alternative1: _.extend({}, criteria[1], {
+            alternative1: _.extend({}, criteria[1].inputMetaData, {
               isInvalid: true
             }),
-            alternative2: _.extend({}, criteria[1], {
+            alternative2: _.extend({}, criteria[1].inputMetaData, {
               isInvalid: true
             })
           }
         };
         expect(result).toEqual(expectedResult);
       });
-
       it('should preserve data if there is old data supplied and the criterion type has not changed', function() {
-        var treatments = {
-          alternative1: {
-            title: 'alternative1',
-            id: 'alternative1'
-          },
-          alternative2: {
-            title: 'alternative2',
-            id: 'alternative2'
-          }
-        };
-        var criteria = [{
-          title: 'criterion 1 title',
-          id: 'criterion1',
-          inputType: 'distribution',
-          inputMethod: 'assistedDistribution',
-          dataType: 'other'
-        }, {
-          title: 'criterion 2 title',
-          id: 'criterion2',
-          inputType: 'effect',
-          dataType: 'other'
-        }];
-
         var oldInputData = {
-          'criterion2': {
+          'crit2id': {
             alternative1: {
               title: 'criterion 2 oldtitle',
               inputType: 'distribution',
               inputMethod: 'manualDistribution'
             },
-            alternative2: criteria[1]
+            alternative2: criteria[1].inputMetaData
           }
         };
         var result = manualInputService.prepareInputData(criteria, treatments, oldInputData);
 
         var expectedResult = {
-          'criterion1': {
-            alternative1: _.extend({}, criteria[0], {
+          'crit1id': {
+            alternative1: _.extend({}, criteria[0].inputMetaData, {
               isInvalid: true
             }),
-            alternative2: _.extend({}, criteria[0], {
+            alternative2: _.extend({}, criteria[0].inputMetaData, {
               isInvalid: true
             })
           },
-          'criterion2': {
-            alternative1: oldInputData['criterion2']['alternative1'],
-            alternative2: criteria[1]
+          'crit2id': {
+            alternative1: _.extend({}, oldInputData['crit2id']['alternative1'], {
+              isInvalid: true
+            }),
+            alternative2: _.extend({}, criteria[1].inputMetaData, {
+              isInvalid: true
+            })
           }
         };
         expect(result).toEqual(expectedResult);
@@ -750,70 +734,70 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
             },
             performanceTable: [
               {
-              criterion: 'crit1',
-              alternative: 'alt1',
-              performance: {
-                type: 'exact',
-                value: 1337
-              }
-            }, 
-            {
-              criterion: 'crit2',
-              alternative: 'alt1',
-              performance: {
-                type: 'exact',
-                value: 0.5,
-                input: {
-                  events: 10,
-                  sampleSize: 20
+                criterion: 'crit1',
+                alternative: 'alt1',
+                performance: {
+                  type: 'exact',
+                  value: 1337
+                }
+              },
+              {
+                criterion: 'crit2',
+                alternative: 'alt1',
+                performance: {
+                  type: 'exact',
+                  value: 0.5,
+                  input: {
+                    events: 10,
+                    sampleSize: 20
+                  }
                 }
               }
-            }
-            , {
-              criterion: 'crit3',
-              alternative: 'alt1',
-              performance: {
-                type: 'dgamma',
-                parameters: {
-                  alpha: 123,
-                  beta: 23
+              , {
+                criterion: 'crit3',
+                alternative: 'alt1',
+                performance: {
+                  type: 'dgamma',
+                  parameters: {
+                    alpha: 123,
+                    beta: 23
+                  }
                 }
               }
-            }
-            // , {
-            //   criterion: 'crit3',
-            //   alternative: 'alt1',
-            //   performance: {
-            //     type: 'dt',
-            //     parameters: {
-            //       dof: 123,
-            //       stdErr: 2.3,
-            //       mu: 30
-            //     }
-            //   }
-            // }, {
-            //   criterion: 'crit4',
-            //   alternative: 'alt1',
-            //   performance: {
-            //     type: 'dnorm',
-            //     parameters: {
-            //       sigma: 1.2,
-            //       mu: 23
-            //     }
-            //   }
-            // }, {
-            //   criterion: 'crit5',
-            //   alternative: 'alt1',
-            //   performance: {
-            //     type: 'dsurv',
-            //     parameters: {
-            //       alpha: 12.001,
-            //       beta: 23.001,
-            //       summaryMeasure: 'mean'
-            //     }
-            //   }
-            // }
-          ]
+              // , {
+              //   criterion: 'crit3',
+              //   alternative: 'alt1',
+              //   performance: {
+              //     type: 'dt',
+              //     parameters: {
+              //       dof: 123,
+              //       stdErr: 2.3,
+              //       mu: 30
+              //     }
+              //   }
+              // }, {
+              //   criterion: 'crit4',
+              //   alternative: 'alt1',
+              //   performance: {
+              //     type: 'dnorm',
+              //     parameters: {
+              //       sigma: 1.2,
+              //       mu: 23
+              //     }
+              //   }
+              // }, {
+              //   criterion: 'crit5',
+              //   alternative: 'alt1',
+              //   performance: {
+              //     type: 'dsurv',
+              //     parameters: {
+              //       alpha: 12.001,
+              //       beta: 23.001,
+              //       summaryMeasure: 'mean'
+              //     }
+              //   }
+              // }
+            ]
           }
         };
         var result = manualInputService.createInputFromOldWorkspace(criteria, alternatives, oldWorkspace);
@@ -923,9 +907,11 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
           sourceLink: 'http://www.drugis.org',
           isFavorable: true,
           unitOfMeasurement: 'Proportion',
-          inputType: 'distribution',
-          inputMethod: 'assistedDistribution',
-          dataType: 'continuous'
+          inputMetaData: {
+            inputType: 'distribution',
+            inputMethod: 'assistedDistribution',
+            dataType: 'continuous'
+          }
         }, {
           id: 'uuid2',
           oldId: 'crit2',
@@ -934,23 +920,29 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
           sourceLink: 'http://www.drugis.org',
           isFavorable: true,
           unitOfMeasurement: 'Response size',
-          inputType: 'distribution',
-          inputMethod: 'manualDistribution'
+          inputMetaData: {
+            inputType: 'distribution',
+            inputMethod: 'manualDistribution'
+          }
         }, {
           id: 'uuid3',
           oldId: 'crit3',
           title: 'criterion 3',
           source: 'single study',
           isFavorable: false,
-          inputType: 'distribution',
-          inputMethod: 'manualDistribution'
+          inputMetaData: {
+            inputType: 'distribution',
+            inputMethod: 'manualDistribution'
+          }
         }, {
           id: 'uuid4',
           oldId: 'crit4',
           title: 'criterion 4',
           source: 'single study',
-          inputType: 'distribution',
-          inputMethod: 'manualDistribution',
+          inputMetaData: {
+            inputType: 'distribution',
+            inputMethod: 'manualDistribution',
+          },
           isFavorable: false
         }, {
           id: 'uuid5',
@@ -958,14 +950,18 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
           title: 'criterion 5',
           isFavorable: false,
           source: 'single study',
-          inputType: 'distribution',
-          inputMethod: 'manualDistribution'
+          inputMetaData: {
+            inputType: 'distribution',
+            inputMethod: 'manualDistribution'
+          }
         }, {
           id: 'uuid6',
           oldId: 'crit6',
           title: 'durrrvival',
           isFavorable: false,
-          inputType: 'Unknown'
+          inputMetaData: {
+            inputType: 'Unknown'
+          }
         }];
         expect(result).toEqual(expectedResult);
       });
@@ -990,16 +986,20 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
                   type: 'linear',
                   range: [0.0, 1.0]
                 },
-                inputType: 'distribution',
-                inputMethod: 'assistedDistribution',
-                dataType: 'dichotomous'
+                inputMetaData: {
+                  inputType: 'distribution',
+                  inputMethod: 'assistedDistribution',
+                  dataType: 'dichotomous'
+                }
               },
               crit2: {
                 id: 'crit2',
                 title: 'criterion 2',
-                inputType: 'effect',
-                dataType: 'continuous',
-                parameterOfInterest: 'mean'
+                inputMetaData: {
+                  inputType: 'effect',
+                  dataType: 'continuous',
+                  parameterOfInterest: 'mean'
+                }
               }
             },
             performanceTable: [],
@@ -1027,17 +1027,21 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
           unitOfMeasurement: 'absolute',
           strengthOfEvidence: '9001',
           uncertainties: 'dunno',
-          inputType: 'distribution',
-          inputMethod: 'assistedDistribution',
-          dataType: 'dichotomous'
+          inputMetaData: {
+            inputType: 'distribution',
+            inputMethod: 'assistedDistribution',
+            dataType: 'dichotomous'
+          }
         }, {
           id: 'uuid2',
           oldId: 'crit2',
           title: 'criterion 2',
-          inputType: 'effect',
-          dataType: 'continuous',
-          isFavorable: false,
-          parameterOfInterest: 'mean'
+          inputMetaData: {
+            inputType: 'effect',
+            dataType: 'continuous',
+            parameterOfInterest: 'mean'
+          },
+          isFavorable: false
         }];
         expect(result).toEqual(expectedResult);
       });
