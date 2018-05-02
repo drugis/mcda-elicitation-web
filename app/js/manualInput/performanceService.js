@@ -18,6 +18,14 @@ define(['lodash', 'angular'], function(_) {
       });
     }
 
+    function buildExactPercentConfidencePerformance(cell) {
+      return buildExactPerformance((cell.firstParameter / 100), {
+        value: cell.firstParameter,
+        lowerBound: cell.secondParameter,
+        upperBound: cell.thirdParameter, 
+        scale: 'percentage'
+      });
+    }
     function buildNormalPerformance(mu, sigma, input) {
       return {
         type: 'dnorm',
@@ -65,6 +73,7 @@ define(['lodash', 'angular'], function(_) {
     return {
       buildExactPerformance: buildExactPerformance,
       buildExactConfidencePerformance: buildExactConfidencePerformance,
+      buildExactPercentConfidencePerformance: buildExactPercentConfidencePerformance,
       buildNormalPerformance: buildNormalPerformance,
       buildBetaPerformance: buildBetaPerformance,
       buildGammaPerformance: buildGammaPerformance,

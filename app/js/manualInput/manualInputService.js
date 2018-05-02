@@ -27,7 +27,7 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function getOptions(cell) {
-      return InputKnowledgeService.getKnowledge(cell).getOptions();
+      return InputKnowledgeService.getOptions(cell);
     }
 
     function createProblem(criteria, treatments, title, description, inputData, useFavorability) {

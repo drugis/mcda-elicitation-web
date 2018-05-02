@@ -3,7 +3,7 @@ define(['lodash','angular', 'angular-mocks', 'mcda/manualInput/manualInput'], fu
 
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
-  var inputKnowledgeServiceMock = jasmine.createSpyObj('InputKnowledgeService', ['getKnowledge', 'inputToString',
+  var inputKnowledgeServiceMock = jasmine.createSpyObj('InputKnowledgeService', ['getOptions', 'inputToString',
     'finishInputCell', 'buildPerformance']);
   describe('The manualInputService', function() {
     beforeEach(module('elicit.manualInput', function($provide) {
@@ -976,11 +976,7 @@ define(['lodash','angular', 'angular-mocks', 'mcda/manualInput/manualInput'], fu
     });
     describe('getOptions', function() {
       it('should call the inputknowledgeservice', function() {
-        inputKnowledgeServiceMock.getKnowledge.and.returnValue({
-          getOptions: function() {
-            return 'here are some options';
-          }
-        });
+        inputKnowledgeServiceMock.getOptions.and.returnValue('here are some options');
         expect(manualInputService.getOptions()).toEqual('here are some options');
       });
     });
