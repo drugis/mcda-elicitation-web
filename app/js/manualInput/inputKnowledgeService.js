@@ -734,6 +734,7 @@ define(['lodash', 'angular'], function(_, angular) {
       return inputCell;
     }
 
+    // to string 
     function valueToString(cell) {
       return cell.firstParameter + (cell.scale === 'percentage' ? '%' : '') + NO_DISTRIBUTION;
     }

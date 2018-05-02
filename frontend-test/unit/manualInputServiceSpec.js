@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(angular) {
+define(['lodash','angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(_) {
 
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
@@ -28,7 +28,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
             secondParameter: {
               constraints: [
                 function() { },
-                function() { return 'error message' }
+                function() { return 'error message'; }
               ]
             }
           }
@@ -131,7 +131,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
             })
           },
           'crit2id': {
-            alternative1: _.extend({}, oldInputData['crit2id']['alternative1'], {
+            alternative1: _.extend({}, oldInputData.crit2id.alternative1, {
               isInvalid: true
             }),
             alternative2: _.extend({}, criteria[1].inputMetaData, {
@@ -299,7 +299,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         tableEntry = {
           criterion: 'oldCrit',
           alternative: 'oldAlt'
-        }
+        };
         oldWorkspace.problem.performanceTable = [tableEntry];
       });
       // describe('for effect performance data', function() {
@@ -481,7 +481,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
             id: 'c' + number,
             oldId: 'crit' + number,
             inputMetaData: metaData
-          }
+          };
         }
         var criteria = [
           buildCriterion(1, {
@@ -619,7 +619,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
                     sigma: 23
                   }
                 }
-              }, , {
+              },  {
                 criterion: 'crit9',
                 alternative: 'alt1',
                 performance: {
