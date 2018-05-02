@@ -185,7 +185,9 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function removeCriterion(criterion) {
       $scope.state.criteria = _.reject($scope.state.criteria, ['id', criterion.id]);
-      delete $scope.state.inputData[criterion.id];
+      if ($scope.state.inputData) {
+        delete $scope.state.inputData[criterion.id];
+      }
       checkForUnknownCriteria($scope.state.criteria);
       favorabilityChanged();
     }
@@ -221,7 +223,7 @@ define(['lodash', 'angular'], function(_, angular) {
           criteria: ManualInputService.copyWorkspaceCriteria(oldWorkspace),
           alternatives: _.map(oldWorkspace.problem.alternatives, function(alternative, alternativeId) {
             return _.extend({}, alternative, {
-              id: generateUuid(), 
+              id: generateUuid(),
               oldId: alternativeId
             });
           })

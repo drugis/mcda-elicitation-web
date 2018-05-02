@@ -30,19 +30,10 @@ define(['lodash', 'angular'], function(_, angular) {
       },
       manualDistribution: {
         getKnowledge: function(cell) {
-          var knowledge = MANUAL_DISTRIBUTION_KNOWLEDGE.getKnowledge(cell);
-          return _.extend({
-            finishInputCell: this.finishInputCell,
-            getOptions: this.getOptions
-          }, knowledge);
-        },
-        finishInputCell: function(cell, tableEntry) {
-          var correctOption = _.find(this.getOptions(), function(option) {
-            return option.fits(tableEntry);
-          });
-          var inputCell = angular.copy(cell);
-          inputCell.inputParameters = correctOption;
-          return MANUAL_DISTRIBUTION_KNOWLEDGE.getKnowledge(inputCell).finishInputCell(inputCell, tableEntry);
+          return cell.inputParameters ? this.getOptions()[cell.inputParameters.id] : {
+            getOptions: this.getOptions,
+            finishInputCell: this.finishInputCell
+          };
         },
         getOptions: function() {
           return {
@@ -53,6 +44,18 @@ define(['lodash', 'angular'], function(_, angular) {
               secondParameter: buildIntegerAboveZero('beta'),
               fits: function(tableEntry) {
                 return tableEntry.performance.type === 'dbeta';
+              },
+              toString: function(cell) {
+                return 'Beta(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+              },
+              buildPerformance: function(cell) {
+                return PerformanceService.buildBetaPerformance(cell.firstParameter, cell.secondParameter);
+              },
+              finishInputCell: function(cell, tableEntry) {
+                var inputCell = angular.copy(cell);
+                inputCell.firstParameter = tableEntry.performance.parameters.alpha;
+                inputCell.secondParameter = tableEntry.performance.parameters.beta;
+                return inputCell;
               }
             },
             manualNormal: {
@@ -62,6 +65,18 @@ define(['lodash', 'angular'], function(_, angular) {
               secondParameter: buildPositiveFloat('Standard error'),
               fits: function(tableEntry) {
                 return tableEntry.performance.type === 'dnorm';
+              },
+              toString: function(cell) {
+                return 'Normal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+              },
+              buildPerformance: function(cell) {
+                return PerformanceService.buildNormalPerformance(cell.firstParameter, cell.secondParameter);
+              },
+              finishInputCell: function(cell, tableEntry) {
+                var inputCell = angular.copy(cell);
+                inputCell.firstParameter = tableEntry.performance.parameters.mu;
+                inputCell.secondParameter = tableEntry.performance.parameters.sigma;
+                return inputCell;
               }
             },
             manualGamma: {
@@ -71,6 +86,18 @@ define(['lodash', 'angular'], function(_, angular) {
               secondParameter: buildFloatAboveZero('beta'),
               fits: function(tableEntry) {
                 return tableEntry.performance.type === 'dgamma';
+              },
+              toString: function(cell) {
+                return 'Gamma(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+              },
+              buildPerformance: function(cell) {
+                return PerformanceService.buildGammaPerformance(cell.firstParameter, cell.secondParameter);
+              },
+              finishInputCell: function(cell, tableEntry) {
+                var inputCell = angular.copy(cell);
+                inputCell.firstParameter = tableEntry.performance.parameters.alpha;
+                inputCell.secondParameter = tableEntry.performance.parameters.beta;
+                return inputCell;
               }
             },
             manualExact: {
@@ -79,66 +106,17 @@ define(['lodash', 'angular'], function(_, angular) {
               firstParameter: buildDefined('Value'),
               fits: function(tableEntry) {
                 return tableEntry.performance.type === 'exact';
-              }
+              },
+              toString: function(cell) {
+                return 'exact(' + cell.firstParameter + ')';
+              },
+              buildPerformance: function(cell) {
+                return PerformanceService.buildExactPerformance(cell.firstParameter);
+              },
+              finishInputCell: finishValueCell
             }
           };
         }
-      }
-    };
-    var MANUAL_DISTRIBUTION_KNOWLEDGE = {
-      getKnowledge: function(cell) {
-        return cell.inputParameters ? this[cell.inputParameters.id] : {};
-      },
-      manualBeta: {
-        toString: function(cell) {
-          return 'Beta(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
-        },
-        buildPerformance: function(cell) {
-          return PerformanceService.buildBetaPerformance(cell.firstParameter, cell.secondParameter);
-        },
-        finishInputCell: function(cell, tableEntry) {
-          var inputCell = angular.copy(cell);
-          inputCell.firstParameter = tableEntry.performance.parameters.alpha;
-          inputCell.secondParameter = tableEntry.performance.parameters.beta;
-          return inputCell;
-        }
-      },
-      manualNormal: {
-        toString: function(cell) {
-          return 'Normal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
-        },
-        buildPerformance: function(cell) {
-          return PerformanceService.buildNormalPerformance(cell.firstParameter, cell.secondParameter);
-        },
-        finishInputCell: function(cell, tableEntry) {
-          var inputCell = angular.copy(cell);
-          inputCell.firstParameter = tableEntry.performance.parameters.mu;
-          inputCell.secondParameter = tableEntry.performance.parameters.sigma;
-          return inputCell;
-        }
-      },
-      manualGamma: {
-        toString: function(cell) {
-          return 'Gamma(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
-        },
-        buildPerformance: function(cell) {
-          return PerformanceService.buildGammaPerformance(cell.firstParameter, cell.secondParameter);
-        },
-        finishInputCell: function(cell, tableEntry) {
-          var inputCell = angular.copy(cell);
-          inputCell.firstParameter = tableEntry.performance.parameters.alpha;
-          inputCell.secondParameter = tableEntry.performance.parameters.beta;
-          return inputCell;
-        }
-      },
-      manualExact: {
-        toString: function(cell) {
-          return 'exact(' + cell.firstParameter + ')';
-        },
-        buildPerformance: function(cell) {
-          return PerformanceService.buildExactPerformance(cell.firstParameter);
-        },
-        finishInputCell: finishValueCell
       }
     };
     var EFFECT_KNOWLEDGE = {
@@ -252,8 +230,8 @@ define(['lodash', 'angular'], function(_, angular) {
         getOptions: function() {
           return {
             exactValue: buildExactValueKnowledge('Value'),
-            exactValueSE: buildExactValueSE('Value, SE'),
-            exactValueCI: buildConfidenceInterval('Value')
+            exactValueSE: buildExactValueSEKnowledge('Value, SE'),
+            exactValueCI: buildExactValueConfidenceIntervalKnowledge('Value')
           };
         }
       }
@@ -406,27 +384,18 @@ define(['lodash', 'angular'], function(_, angular) {
       },
       mean: {
         getKnowledge: function(cell) {
-          var knowledge = CONTINUOUS_MEAN_KNOWLEDGE.getKnowledge(cell);
-          return _.extend({
+          return cell.inputParameters ? this.getOptions()[cell.inputParameters.id] : {
             getOptions: this.getOptions,
             finishInputCell: this.finishInputCell
-          }, knowledge);
+          };
         },
         getOptions: function() {
           return {
-            continuousMeanNoDispersion: {
-              id: 'continuousMeanNoDispersion',
-              label: 'Mean',
-              firstParameter: buildDefined('Mean'),
-            },
-            continuousMeanStdErr: {
-              id: 'continuousMeanStdErr',
-              label: 'Mean, SE',
-              firstParameter: buildDefined('Mean'),
-              secondParameter: buildPositiveFloat('Standard error'),
+            exactValue: buildExactValueKnowledge('Mean'),
+            exactValueSE: _.extend(buildExactValueSEKnowledge('Mean'), {
               canBeNormal: true
-            },
-            continuousMeanConfidenceInterval: _.extend(buildConfidenceInterval('Mean'), {
+            }),
+            exactValueCI: _.extend(buildExactValueConfidenceIntervalKnowledge('Mean'), {
               canBeNormal: true
             })
           };
@@ -442,120 +411,34 @@ define(['lodash', 'angular'], function(_, angular) {
         getOptions: function() {
           return {
             exactValue: buildExactValueKnowledge('Median'),
-            exactValueCI: buildConfidenceInterval('Median')
+            exactValueCI: buildExactValueConfidenceIntervalKnowledge('Median')
           };
         }
       },
       cumulativeProbability: {
         getKnowledge: function(cell) {
-          var knowledge = CONTINUOUS_CUMULATIVE_PROBABILITY_KNOWLEDGE.getKnowledge(cell);
-          return _.extend({}, knowledge, {
-            getOptions: this.getOptions
-          });
+          return cell.inputParameters ? this.getOptions()[cell.inputParameters.id] : {
+            getOptions: this.getOptions,
+            finishInputCell: this.finishInputCell
+          };
         },
         getOptions: function() {
-          return {
-            cumulativeProbabilityValue: {
-              id: 'cumulativeProbabilityValue',
-              scale: {
-                percentage: 'Percentage',
-                decimal: 'Decimal'
-              },
-              label: 'Value',
-              firstParameter: {
-                label: 'Value',
-                constraints: [
-                  ConstraintService.defined(),
-                  ConstraintService.positive(),
-                  ConstraintService.belowOrEqualTo(100)
-                ]
-              }
-            },
-            cumulativeProbabilityValueCI: _.extend(buildConfidenceInterval('Value'), {
-              scale: {
-                percentage: 'Percentage',
-                decimal: 'Decimal'
-              }
-            })
+          var decimal = buildExactValueKnowledge('Decimal', 'decimal');
+          decimal.firstParameter.constraints = decimal.firstParameter.constraints.concat(ConstraintService.positive(), [ConstraintService.belowOrEqualTo(1)]);
+          var percentage = buildPercentKnowledge();
+          var decimalCI = addCeilConstraints(buildExactValueConfidenceIntervalKnowledge('Decimal', 'decimalCI'), 1);
+          var percentageCI = addCeilConstraints(buildPercentageConfidenceIntervalKnowledge('Percentage', 'percentageCI'), 100);
+          var retval = {
+            decimal: decimal,
+            decimalCI: decimalCI,
+            percentage: percentage,
+            percentageCI: percentageCI
           };
+          return retval;
         }
       }
     };
-    var CONTINUOUS_MEAN_KNOWLEDGE = {
-      getKnowledge: function(cell) {
-        return cell.inputParameters ? this[cell.inputParameters.id] : {};
-      },
-      continuousMeanNoDispersion: {
-        toString: valueToString,
-        finishInputCell: finishValueCell,
-        buildPerformance: function(cell) {
-          return PerformanceService.buildExactPerformance(cell.firstParameter);
-        }
-      },
-      continuousMeanStdErr: {
-        toString: valueSEToString,
-        buildPerformance: function(cell) {
-          if (cell.isNormal) {
-            return PerformanceService.buildNormalPerformance(cell.firstParameter, cell.secondParameter);
-          } else {
-            return PerformanceService.buildExactPerformance(cell.firstParameter, {
-              value: cell.firstParameter,
-              stdErr: cell.secondParameter
-            });
-          }
-        }
-      },
-      continuousMeanConfidenceInterval: {
-        getKnowledge: function(cell) {
-          return cell.inputParameters ? this[cell.inputParameters.id] : {};
-        },
-        toString: valueCIToString,
-        buildPerformance: function(cell) {
-          var input = {
-            lowerBound: cell.secondParameter,
-            upperBound: cell.thirdParameter
-          };
-          if (cell.isNormal) {
-            var sigma = boundsToStandardError(cell.secondParameter, cell.thirdParameter);
-            return PerformanceService.buildNormalPerformance(cell.firstParameter, sigma, _.extend(input, {
-              mu: cell.firstParameter,
-            }));
-          } else {
-            return PerformanceService.buildExactPerformance(cell.firstParameter, _.extend(input, {
-              value: cell.firstParameter,
-            }));
-          }
-        }
-      }
-    };
-    var CONTINUOUS_CUMULATIVE_PROBABILITY_KNOWLEDGE = {
-      getKnowledge: function(cell) {
-        return cell.inputParameters ? this[cell.inputParameters.id] : {};
-      },
-      cumulativeProbabilityValue: {
-        toString: valueToString,
-        buildPerformance: function(cell) {
-          return PerformanceService.buildExactPerformance(cell.firstParameter);
-        },
-      },
-      cumulativeProbabilityValueCI: {
-        toString: function(cell) {
-          return cell.scale === 'decimal' ? valueCIToString(cell) : valueCIPercentToString(cell);
-        },
-        buildPerformance: function(cell) {
-          if (cell.scale === 'Decimal') {
-            return PerformanceService.buildExactConfidencePerformance(cell);
-          } else {
-            return PerformanceService.buildExactPerformance(cell.firstParameter / 100, {
-              value: cell.firstParameter,
-              lowerBound: cell.secondParameter,
-              upperBound: cell.thirdParameter,
-              scale: 'percentage'
-            });
-          }
-        }
-      }
-    };
+
     var ASSISTED_DISTRIBUTION_KNOWLEDGE = {
       getKnowledge: function(cell) {
         return this[cell.dataType].getKnowledge(cell);
@@ -600,11 +483,10 @@ define(['lodash', 'angular'], function(_, angular) {
       },
       continuous: {
         getKnowledge: function(cell) {
-          var knowledge = ASSISTED_DISTRIBUTION_CONTINUOUS_KNOWLEDGE.getKnowledge(cell);
-          return _.extend({
-            finishInputCell: this.finishInputCell,
-            getOptions: this.getOptions
-          }, knowledge);
+          return cell.inputParameters ? this.getOptions()[cell.inputParameters.id] : {
+            getOptions: this.getOptions,
+            finishInputCell: this.finishInputCell
+          };
         },
         finishInputCell: function(cell, tableEntry) {
           var inputCell = angular.copy(cell);
@@ -621,52 +503,39 @@ define(['lodash', 'angular'], function(_, angular) {
               label: 'Mean, SE, sample size',
               firstParameter: buildDefined('Mean'),
               secondParameter: buildPositiveFloat('Standard error'),
-              thirdParameter: buildIntegerAboveZero('Sample size')
+              thirdParameter: buildIntegerAboveZero('Sample size'),
+              toString: function(cell) {
+                var mu = cell.firstParameter;
+                var sigma = cell.secondParameter;
+                var sampleSize = cell.thirdParameter;
+                return mu + ' (' + sigma + '), ' + sampleSize + '\nDistribution: t(' + (sampleSize - 1) + ', ' + mu + ', ' + sigma + ')';
+              }, 
+              buildPerformance: function(cell) {
+                return PerformanceService.buildStudentTPerformance(cell.first, cell.secondParameter, cell.thirdParameter - 1);
+              }
             },
             assistedContinuousStdDev: {
               id: 'assistedContinuousStdDev',
               label: 'Mean, SD, sample size',
               firstParameter: buildDefined('Mean'),
               secondParameter: buildPositiveFloat('Standard deviation'),
-              thirdParameter: buildIntegerAboveZero('Sample size')
+              thirdParameter: buildIntegerAboveZero('Sample size'),
+              toString: function(cell) {
+                var mu = cell.firstParameter;
+                var sigma = roundedStandardDeviationToStandardError(cell.secondParameter, cell.thirdParameter);
+                var sampleSize = cell.thirdParameter;
+                return mu + ' (' + cell.secondParameter + '), ' + sampleSize + '\nDistribution: t(' + (sampleSize - 1) + ', ' + mu + ', ' + sigma + ')';
+              }, 
+              buildPerformance: function(cell) {
+                return PerformanceService.buildStudentTPerformance(cell.first, roundedStandardDeviationToStandardError(cell.secondParameter, cell.thirdParameter), cell.thirdParameter - 1);
+              }
             }
           };
         }
       }
     };
-    var ASSISTED_DISTRIBUTION_CONTINUOUS_KNOWLEDGE = {
-      getKnowledge: function(cell) {
-        return cell.inputParameters ? this[cell.inputParameters.id] : {};
-      },
-      assistedContinuousStdErr: {
-        toString: function(cell) {
-          var mu = cell.firstParameter;
-          var sigma = cell.secondParameter;
-          var sampleSize = cell.thirdParameter;
-          return mu + ' (' + sigma + '), ' + sampleSize + '\nDistribution: t(' + (sampleSize - 1) + ', ' + mu + ', ' + sigma + ')';
-
-        }, buildPerformance: function(cell) {
-          return PerformanceService.buildStudentTPerformance(cell.first, cell.secondParameter, cell.thirdParameter - 1);
-        }
-      },
-      assistedContinuousStdDev: {
-        toString: function(cell) {
-          var mu = cell.firstParameter;
-          var sigma = roundedStandardDeviationToStandardError(cell.secondParameter, cell.thirdParameter);
-          var sampleSize = cell.thirdParameter;
-          return mu + ' (' + cell.secondParameter + '), ' + sampleSize + '\nDistribution: t(' + (sampleSize - 1) + ', ' + mu + ', ' + sigma + ')';
-
-        }, buildPerformance: function(cell) {
-          return PerformanceService.buildStudentTPerformance(cell.first, roundedStandardDeviationToStandardError(cell.secondParameter, cell.thirdParameter), cell.thirdParameter - 1);
-        }
-      }
-    };
 
     // public
-
-    function getKnowledge(cell) {
-      return INPUT_TYPE_KNOWLEDGE.getKnowledge(cell);
-    }
 
     function buildPerformance(cell) {
       return getKnowledge(cell).buildPerformance(cell);
@@ -685,6 +554,10 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     // private
+    function getKnowledge(cell) {
+      return INPUT_TYPE_KNOWLEDGE.getKnowledge(cell);
+    }
+
     function buildExactKnowledge(id, label) {
       return {
         id: id,
@@ -698,16 +571,18 @@ define(['lodash', 'angular'], function(_, angular) {
       };
     }
 
-    function buildExactValueKnowledge(label) {
-      var knowledge = buildExactKnowledge('exactValue', label);
+    function buildExactValueKnowledge(label, id) {
+      id = id ? id : 'exactValueSE';
+      var knowledge = buildExactKnowledge(id, label);
       knowledge.fits = function(tableEntry) {
         return !tableEntry.performance.input;
       };
       return knowledge;
     }
 
-    function buildExactValueSE(label) {
-      var knowledge = buildExactKnowledge('exactValueSE', label);
+    function buildExactValueSEKnowledge(label, id) {
+      id = id ? id : 'exactValueSE';
+      var knowledge = buildExactKnowledge(id, label);
       knowledge.fits = function(tableEntry) {
         return tableEntry.performance.input && tableEntry.performance.input.stdErr;
       };
@@ -728,15 +603,88 @@ define(['lodash', 'angular'], function(_, angular) {
       return knowledge;
     }
 
+    function buildExactValueConfidenceIntervalKnowledge(label, id) {
+      id = id ? id : 'exactValueCI';
+      var knowledge = buildExactKnowledge(id, (label + ', 95% C.I.'));
+      knowledge.secondParameter = {
+        label: 'Lower bound',
+        constraints: [
+          ConstraintService.defined(),
+          ConstraintService.belowOrEqualTo('firstParameter')
+        ]
+      };
+      knowledge.thirdParameter = {
+        label: 'Upper bound',
+        constraints: [
+          ConstraintService.defined(),
+          ConstraintService.aboveOrEqualTo('firstParameter')
+        ]
+      };
+      knowledge.fits = function(tableEntry) {
+        return tableEntry.performance.input && tableEntry.performance.input.lowerBound && tableEntry.performance.input.upperBound;
+      };
+      knowledge.toString = valueCIToString;
+      knowledge.finishInputCell = finishValueConfidenceIntervalCell;
+      knowledge.buildPerformance = function(cell) {
+        return PerformanceService.buildExactConfidencePerformance(cell);
+      };
+      return knowledge;
+    }
+
+    function buildPercentageConfidenceIntervalKnowledge(label, id) {
+      var knowledge = buildExactValueConfidenceIntervalKnowledge(label, id);
+      knowledge.toString = valueCIPercentToString;
+      knowledge.buildPerformance = function(cell) {
+        return PerformanceService.buildExactPerformance((cell.firstParameter / 100), {
+          value: cell.firstParameter,
+          lowerBound: cell.secondParameter,
+          upperBound: cell.thirdParameter
+        });
+      };
+      return knowledge;
+    }
+
     function finishValueCell(cell, tableEntry) {
       var inputCell = angular.copy(cell);
       inputCell.firstParameter = tableEntry.performance.value;
       return inputCell;
     }
 
+    function finishValueConfidenceIntervalCell(cell, tableEntry) {
+      var inputCell = angular.copy(cell);
+      inputCell.firstParameter = tableEntry.performance.input.value;
+      inputCell.secondParameter = tableEntry.performance.input.lowerBound;
+      inputCell.thirdParameter = tableEntry.performance.input.upperBound;
+      return inputCell;
+    }
+
+    function addCeilConstraints(knowledge, ceil) {
+      knowledge.firstParameter.constraints = knowledge.firstParameter.constraints.concat([ConstraintService.positive(), ConstraintService.belowOrEqualTo(ceil)]);
+      knowledge.secondParameter.constraints = knowledge.secondParameter.constraints.concat([ConstraintService.positive(), ConstraintService.belowOrEqualTo(ceil)]);
+      knowledge.thirdParameter.constraints = knowledge.thirdParameter.constraints.concat([ConstraintService.positive(), ConstraintService.belowOrEqualTo(ceil)]);
+      return knowledge;
+    }
+
+    function buildPercentKnowledge() {
+      var knowledge = buildExactValueKnowledge('Percentage', 'percentage');
+      knowledge.firstParameter.constraints = knowledge.firstParameter.constraints.concat(ConstraintService.positive(), [ConstraintService.belowOrEqualTo(100)]);
+      knowledge.toString = valuePercentToString;
+      knowledge.buildPerformance = buildPercentPerformance;
+      return knowledge;
+    }
+
+    function buildPercentPerformance(cell) {
+      return PerformanceService.buildExactPerformance(cell.firstParameter / 100, {
+        scale: 'percentage', value: cell.firstParameter
+      });
+    }
     // to string 
     function valueToString(cell) {
-      return cell.firstParameter + (cell.scale === 'percentage' ? '%' : '') + NO_DISTRIBUTION;
+      return cell.firstParameter + NO_DISTRIBUTION;
+    }
+
+    function valuePercentToString(cell) {
+      return cell.firstParameter + '%' + NO_DISTRIBUTION;
     }
 
     function valueSEToString(cell) {
@@ -789,42 +737,6 @@ define(['lodash', 'angular'], function(_, angular) {
       var param = buildFloatAboveZero(label);
       param.constraints.push(ConstraintService.belowOrEqualTo(max));
       return param;
-    }
-
-    function buildConfidenceInterval(label) {
-      return {
-        id: 'exactValueCI',
-        label: label + ', 95% C.I.',
-        firstParameter: buildDefined(label),
-        secondParameter: {
-          label: 'Lower bound',
-          constraints: [
-            ConstraintService.defined(),
-            ConstraintService.belowOrEqualTo('firstParameter')
-          ]
-        },
-        thirdParameter: {
-          label: 'Upper bound',
-          constraints: [
-            ConstraintService.defined(),
-            ConstraintService.aboveOrEqualTo('firstParameter')
-          ]
-        },
-        fits: function(tableEntry) {
-          return tableEntry.performance.input && tableEntry.performance.input.lowerBound && tableEntry.performance.input.upperBound;
-        },
-        toString: valueCIToString,
-        finishInputCell: function(cell, tableEntry) {
-          var inputCell = angular.copy(cell);
-          inputCell.firstParameter = tableEntry.performance.input.value;
-          inputCell.secondParameter = tableEntry.performance.input.lowerBound;
-          inputCell.thirdParameter = tableEntry.performance.input.upperBound;
-          return inputCell;
-        },
-        buildPerformance: function(cell) {
-          return PerformanceService.buildExactConfidencePerformance(cell);
-        }
-      };
     }
 
     // math util

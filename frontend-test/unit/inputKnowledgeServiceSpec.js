@@ -218,7 +218,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             });
             describe('without dispersion', function() {
               beforeEach(function() {
-                cell.inputParameters.id = 'continuousMeanNoDispersion';
+                cell.inputParameters.id = 'exactValue';
               });
               it('should render correct inputs', function() {
                 var expectedResult = '50\nDistribution: none';
@@ -228,7 +228,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             });
             describe('with standard error', function() {
               beforeEach(function() {
-                cell.inputParameters.id = 'continuousMeanStdErr';
+                cell.inputParameters.id = 'exactValueSE';
               });
               it('should render correct inputs', function() {
                 var expectedResult = '50 (5)\nDistribution: none';
@@ -245,7 +245,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             });
             describe('with a confidence interval', function() {
               beforeEach(function() {
-                cell.inputParameters.id = 'continuousMeanConfidenceInterval';
+                cell.inputParameters.id = 'exactValueCI';
               });
               it('should render correct inputs', function() {
                 var expectedResult = '50 (5; 100)\nDistribution: none';
@@ -293,7 +293,27 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             });
             describe('without dispersion', function() {
               beforeEach(function() {
-                cell.inputParameters.id = 'cumulativeProbabilityValue';
+                cell.inputParameters.id = 'decimal';
+              });
+              it('should render correct inputs', function() {
+                var expectedResult = '50\nDistribution: none';
+                var result = inputKnowledgeService.inputToString(cell);
+                expect(result).toEqual(expectedResult);
+              });
+            });
+            describe('with a confidence interval', function() {
+              beforeEach(function() {
+                cell.inputParameters.id = 'decimalCI';
+              });
+              it('should render correct inputs', function() {
+                var expectedResult = '50 (5; 100)\nDistribution: none';
+                var result = inputKnowledgeService.inputToString(cell);
+                expect(result).toEqual(expectedResult);
+              });
+            });
+            describe('without dispersion, percentage', function() {
+              beforeEach(function() {
+                cell.inputParameters.id = 'percentage';
               });
               it('should render correct inputs', function() {
                 var expectedResult = '50%\nDistribution: none';
@@ -301,9 +321,9 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 expect(result).toEqual(expectedResult);
               });
             });
-            describe('with a confidence interval', function() {
+            describe('with a percentage confidence interval', function() {
               beforeEach(function() {
-                cell.inputParameters.id = 'cumulativeProbabilityValueCI';
+                cell.inputParameters.id = 'percentageCI';
               });
               it('should render correct inputs', function() {
                 var expectedResult = '50% (5%; 100%)\nDistribution: none';
@@ -384,9 +404,9 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             });
             it('should return the correct options', function() {
               expect(_.keys(inputKnowledgeService.getOptions(cell))).toEqual([
-                'continuousMeanNoDispersion',
-                'continuousMeanStdErr',
-                'continuousMeanConfidenceInterval'
+                'exactValue',
+                'exactValueSE',
+                'exactValueCI'
               ]);
             });
           });
@@ -407,8 +427,10 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             });
             it('should return the correct options', function() {
               expect(_.keys(inputKnowledgeService.getOptions(cell))).toEqual([
-                'cumulativeProbabilityValue',
-                'cumulativeProbabilityValueCI'
+                'decimal',
+                'decimalCI',
+                'percentage',
+                'percentageCI'
               ]);
             });
           });
