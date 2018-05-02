@@ -185,7 +185,7 @@ define(['lodash', 'angular'], function(_) {
 
     function buildPerformanceTable(inputData, criteria, treatments) {
       var newPerformanceTable = [];
-      _.forEach(criteria, function(criterion, criterionId) {
+      _.forEach(_.keys(criteria), function(criterionId) {
         _.forEach(treatments, function(treatment) {
           var cell = inputData[criterionId][treatment.id];
           newPerformanceTable.push({
