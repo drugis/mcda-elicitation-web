@@ -5,6 +5,7 @@ define(['lodash', 'angular'], function(_, angular) {
     '$state',
     '$stateParams',
     '$transitions',
+    '$timeout',
     'InProgressResource',
     'ManualInputService',
     'OrderingService',
@@ -16,6 +17,7 @@ define(['lodash', 'angular'], function(_, angular) {
     $state,
     $stateParams,
     $transitions,
+    $timeout,
     InProgressResource,
     ManualInputService,
     OrderingService,
@@ -148,7 +150,7 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.state.step = 'step2';
       $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives,
         $scope.state.inputData);
-      checkInputData();
+      $timeout(checkInputData);
     }
 
     function isDuplicateTitle(title) {
@@ -249,6 +251,7 @@ define(['lodash', 'angular'], function(_, angular) {
         InProgressResource.get($stateParams).$promise.then(function(response) {
           $scope.state = response.state;
           checkForUnknownCriteria($scope.state.criteria);
+          checkInputData();
           favorabilityChanged();
           setStateWatcher();
         });
@@ -271,7 +274,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function checkForUnknownCriteria(criteria) {
       $scope.hasUnknownInputType = _.find(criteria, function(criterion) {
-        return criterion.inputType === 'Unknown';
+        return criterion.inputMetaData.inputType === 'Unknown';
       });
     }
   };

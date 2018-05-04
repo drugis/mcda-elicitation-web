@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash','angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(_) {
+define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(_) {
 
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
@@ -160,21 +160,27 @@ define(['lodash','angular', 'angular-mocks', 'mcda/manualInput/manualInput'], fu
           id: 'criterion1id',
           scale: [0, 1],
           omitThis: 'yech',
-          inputType: 'effect',
-          dataType: 'other'
+          inputMetaData: {
+            inputType: 'effect',
+            dataType: 'other'
+          }
         }, {
           title: 'unfavorable criterion',
           description: 'some crit description',
           unitOfMeasurement: 'particles',
           isFavorable: false,
           id: 'criterion2id',
-          inputType: 'distribution',
-          inputMethod: 'manualDistribution'
+          inputMetaData: {
+            inputType: 'distribution',
+            inputMethod: 'manualDistribution'
+          }
         }, {
           title: 'dichotomousDecimalSampleSize',
           id: 'criterion3id',
-          inputType: 'effect',
-          dataType: 'dichotomous',
+          inputMetaData: {
+            inputType: 'effect',
+            dataType: 'dichotomous'
+          }
         }];
         var inputData = {
           criterion1id: {
@@ -183,7 +189,7 @@ define(['lodash','angular', 'angular-mocks', 'mcda/manualInput/manualInput'], fu
               dataType: 'other',
               firstParameter: 10,
               inputParameters: {
-                id: 'value'
+                id: 'valueExact'
               }
             }
           },
@@ -193,7 +199,7 @@ define(['lodash','angular', 'angular-mocks', 'mcda/manualInput/manualInput'], fu
               inputMethod: 'manualDistribution',
               firstParameter: 20,
               inputParameters: {
-                id: 'manualExact'
+                id: 'valueExact'
               }
             }
           },
@@ -619,7 +625,7 @@ define(['lodash','angular', 'angular-mocks', 'mcda/manualInput/manualInput'], fu
                     sigma: 23
                   }
                 }
-              },  {
+              }, {
                 criterion: 'crit9',
                 alternative: 'alt1',
                 performance: {

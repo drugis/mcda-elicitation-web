@@ -23,9 +23,9 @@
         <label>Input type
           <!-- <inline-help help-key="criterion-input-type"></inline-help> -->
         </label>
-        <input type="radio" ng-model="criterion.inputMetaData.inputType" ng-value="'distribution'" id="distribution">
+        <input type="radio" ng-model="criterion.inputMetaData.inputType" ng-value="'distribution'" id="distribution" ng-change="inputTypeChanged()">
         <label for="distribution">Distribution</label>
-        <input type="radio" ng-model="criterion.inputMetaData.inputType" ng-value="'effect'" id="effect">
+        <input type="radio" ng-model="criterion.inputMetaData.inputType" ng-value="'effect'" id="effect" ng-change="inputTypeChanged()">
         <label for="effect">Effect</label>
       </div>
       <div class="cell" ng-show="criterion.inputMetaData.inputType === 'distribution'">
