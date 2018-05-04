@@ -439,7 +439,7 @@ define(['lodash', 'angular'], function(_, angular) {
             return mu + ' (' + cell.secondParameter + '), ' + sampleSize + '\nDistribution: t(' + (sampleSize - 1) + ', ' + mu + ', ' + sigma + ')';
           },
           buildPerformance: function(cell) {
-            return PerformanceService.buildStudentTPerformance(cell.firstParameter, standardDeviationToStandardError(cell.secondParameter, cell.thirdParameter), cell.thirdParameter - 1,{
+            return PerformanceService.buildStudentTPerformance(cell.firstParameter, standardDeviationToStandardError(cell.secondParameter, cell.thirdParameter), cell.thirdParameter - 1, {
               mu: cell.firstParameter,
               sigma: cell.secondParameter,
               sampleSize: cell.thirdParameter
@@ -538,11 +538,19 @@ define(['lodash', 'angular'], function(_, angular) {
         inputCell.secondParameter = tableEntry.performance.input.stdErr;
         return inputCell;
       };
+
       knowledge.buildPerformance = function(cell) {
-        return PerformanceService.buildExactPerformance(cell.firstParameter, {
-          value: cell.firstParameter,
-          stdErr: cell.secondParameter
-        });
+        if (cell.isNormal) {
+          return PerformanceService.buildNormalPerformance(cell.firstParameter, cell.secondParameter, {
+            value: cell.firstParameter,
+            stdErr: cell.secondParameter
+          });
+        } else {
+          return PerformanceService.buildExactPerformance(cell.firstParameter, {
+            value: cell.firstParameter,
+            stdErr: cell.secondParameter
+          });
+        }
       };
       return knowledge;
     }
@@ -570,7 +578,16 @@ define(['lodash', 'angular'], function(_, angular) {
       knowledge.toString = valueCIToString;
       knowledge.finishInputCell = finishValueConfidenceIntervalCell;
       knowledge.buildPerformance = function(cell) {
-        return PerformanceService.buildExactConfidencePerformance(cell);
+        if (cell.isNormal) {
+          return PerformanceService.buildNormalPerformance(cell.firstParameter, boundsToStandardError(cell.secondParameter, cell.thirdParameter), {
+            value: cell.firstParameter,
+            lowerBound: cell.secondParameter,
+            upperBound: cell.thirdParameter
+          });
+        } else {
+          return PerformanceService.buildExactConfidencePerformance(cell);
+
+        }
       };
       return knowledge;
     }
