@@ -17,7 +17,8 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     'buildExactPerformance',
     'buildNormalPerformance',
     'buildBetaPerformance',
-    'buildGammaPerformance']);
+    'buildGammaPerformance',
+    'buildExactConfidencePerformance']);
   describe('the input knowledge service', function() {
     beforeEach(module('elicit.manualInput', function($provide) {
       $provide.value('PerformanceService', performanceServiceMock);
@@ -387,6 +388,8 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           describe('with a confidence interval', function() {
             beforeEach(function() {
               cell.inputParameters.id = 'exactValueCI';
+              performanceServiceMock.buildExactPerformance.calls.reset();
+              performanceServiceMock.buildNormalPerformance.calls.reset();
             });
             it('should render correct inputs', function() {
               var expectedResult = '50 (5; 100)\nDistribution: none';
@@ -399,6 +402,20 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               var expectedResult = '50 (5; 100)\nNormal(50, 24.235)';
               var result = inputKnowledgeService.inputToString(normalCell);
               expect(result).toEqual(expectedResult);
+            });
+            it('should create correct performance', function() {
+              inputKnowledgeService.buildPerformance(cell);
+              expect(performanceServiceMock.buildExactConfidencePerformance).toHaveBeenCalled();
+            });
+            it('should create correct normalized performance', function() {
+              var normalCell = angular.copy(cell);
+              normalCell.isNormal = true;
+              inputKnowledgeService.buildPerformance(normalCell);
+              expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(50, 24.235, {
+                value: 50,
+                lowerBound: 5,
+                upperBound: 100
+              });
             });
           });
         });
@@ -415,6 +432,10 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               var result = inputKnowledgeService.inputToString(cell);
               expect(result).toEqual(expectedResult);
             });
+            it('should create correct performance', function() {
+              inputKnowledgeService.buildPerformance(cell);
+              expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(50);
+            });
           });
           describe('with a confidence interval', function() {
             beforeEach(function() {
@@ -424,6 +445,10 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               var expectedResult = '50 (5; 100)\nDistribution: none';
               var result = inputKnowledgeService.inputToString(cell);
               expect(result).toEqual(expectedResult);
+            });
+            it('should create correct performance', function() {
+              inputKnowledgeService.buildPerformance(cell);
+              expect(performanceServiceMock.buildExactConfidencePerformance).toHaveBeenCalled();
             });
           });
         });
@@ -441,6 +466,10 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               var result = inputKnowledgeService.inputToString(cell);
               expect(result).toEqual(expectedResult);
             });
+            it('should create correct performance', function() {
+              inputKnowledgeService.buildPerformance(cell);
+              expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(50);
+            });
           });
           describe('with a confidence interval', function() {
             beforeEach(function() {
@@ -450,6 +479,10 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               var expectedResult = '50 (5; 100)\nDistribution: none';
               var result = inputKnowledgeService.inputToString(cell);
               expect(result).toEqual(expectedResult);
+            });
+            it('should create correct performance', function() {
+              inputKnowledgeService.buildPerformance(cell);
+              expect(performanceServiceMock.buildExactConfidencePerformance).toHaveBeenCalled();
             });
           });
           describe('without dispersion, percentage', function() {
@@ -461,6 +494,10 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               var result = inputKnowledgeService.inputToString(cell);
               expect(result).toEqual(expectedResult);
             });
+            it('should create correct performance', function() {
+              inputKnowledgeService.buildPerformance(cell);
+              expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(50);
+            });
           });
           describe('with a percentage confidence interval', function() {
             beforeEach(function() {
@@ -470,6 +507,10 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               var expectedResult = '50% (5%; 100%)\nDistribution: none';
               var result = inputKnowledgeService.inputToString(cell);
               expect(result).toEqual(expectedResult);
+            });
+            it('should create correct performance', function() {
+              inputKnowledgeService.buildPerformance(cell);
+              expect(performanceServiceMock.buildExactConfidencePerformance).toHaveBeenCalled();
             });
           });
         });
@@ -588,9 +629,6 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           });
         });
       });
-    });
-    describe('buildPerformance', function() {
-
     });
   });
 });
