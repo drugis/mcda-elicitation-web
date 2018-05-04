@@ -33,7 +33,7 @@ app
     rolling: true,
     saveUninitialized: true,
     cookie: {
-      maxAge: 60 * 60 * 1000, // 1 hour
+      maxAge: 3* 60 * 60 * 1000, // 3 hours
       secure: true
     }
   }));
