@@ -7,6 +7,7 @@ define(['lodash'], function (_) {
     $scope.addCriterion = addCriterion;
     $scope.cancel = $modalInstance.close;
     $scope.dataTypeChanged = dataTypeChanged;
+    $scope.inputTypeChanged = inputTypeChanged;
     $scope.useFavorability = useFavorability;
 
     // init
@@ -57,15 +58,22 @@ define(['lodash'], function (_) {
     function dataTypeChanged() {
       switch ($scope.criterion.inputMetaData.dataType) {
         case 'dichotomous':
-          $scope.criterion.parameterOfInterest = 'eventProbability';
+          $scope.criterion.inputMetaData.parameterOfInterest = 'eventProbability';
           break;
         case 'continuous':
-          $scope.criterion.parameterOfInterest = 'mean';
+          $scope.criterion.inputMetaData.parameterOfInterest = 'mean';
           break;
         default:
-          $scope.criterion.parameterOfInterest = 'value';
+          $scope.criterion.inputMetaData.parameterOfInterest = 'value';
       }
     }
+
+    function inputTypeChanged(){
+      if($scope.criterion.inputMetaData.inputType === 'distribution' && $scope.criterion.inputMetaData.dataType === 'other'){
+        $scope.criterion.inputMetaData.dataType = 'dichotomous';
+      }  
+    }
+
   };
   return dependencies.concat(AddCriterionController);
 });

@@ -13,7 +13,7 @@ define(['lodash'], function(_) {
 
     function pickOrderedIds(criteria, ids) {
       return _(criteria).
-      filter(function(criterion) {
+        filter(function(criterion) {
           return ids.indexOf(criterion.id) >= 0;
         })
         .value();
@@ -61,10 +61,10 @@ define(['lodash'], function(_) {
                   case 'exact':
                     var performance = entryForCriterion.performance;
                     if (performance.stdErr !== undefined) {
-                      label = performance.value + ' (' + Math.round(performance.stdErr*1000)/1000 + ')';
+                      label = performance.value + ' (' + Math.round(performance.stdErr * 1000) / 1000 + ')';
                     } else if (performance.lowerBound !== undefined && performance.upperBound !== undefined) {
                       label = performance.value + ' (' + performance.lowerBound +
-                        ',' + performance.upperBound + ')';
+                        '; ' + performance.upperBound + ')';
                     } else {
                       label = performance.value;
                       hasUncertainty = false;
@@ -74,13 +74,16 @@ define(['lodash'], function(_) {
                     }
                     break;
                   case 'dt':
-                    label = parameters.mu + ' (' + Math.round(parameters.stdErr*1000)/1000 + '), ' + (parameters.dof + 1);
+                    label = parameters.mu + ' (' + Math.round(parameters.stdErr * 1000) / 1000 + '), ' + (parameters.dof + 1);
                     break;
                   case 'dnorm':
-                    label = parameters.mu + ' (' + Math.round(parameters.sigma*1000)/1000 + ')';
+                    label = parameters.mu + ' (' + Math.round(parameters.sigma * 1000) / 1000 + ')';
                     break;
                   case 'dbeta':
                     label = (parameters.alpha - 1) + ' / ' + (parameters.beta + parameters.alpha - 2);
+                    break;
+                  case 'dgamma':
+                    label = (parameters.alpha) + ' / ' + (parameters.beta);
                     break;
                   case 'dsurv':
                     label = (parameters.alpha - 0.001) + ' / ' + (parameters.beta - 0.001);

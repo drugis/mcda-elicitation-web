@@ -78,8 +78,8 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function buildScale(criterion) {
-      if (criterion.dataType === 'dichotomous' ||
-        (criterion.dataType === 'continuous' && criterion.parameterOfInterest === 'cumulativeProbability')) {
+      if (criterion.inputMetaData.dataType === 'dichotomous' ||
+        (criterion.inputMetaData.dataType === 'continuous' && criterion.inputMetaData.parameterOfInterest === 'cumulativeProbability')) {
         return [0, 1];
       }
       return [-Infinity, Infinity];
@@ -166,9 +166,9 @@ define(['lodash', 'angular'], function(_) {
           'source',
           'sourceLink',
           'strengthOfEvidence',
-          'uncertainties']);
+          'uncertainties',
+          'inputMetaData']);
         newCriterion.scale = buildScale(criterion);
-        newCriterion.inputMetaData = _.pick(criterion, ['inputType', 'inputMethod', 'dataType', 'parameterOfInterest']);
         return [criterion.id, newCriterion];
       });
       return _.fromPairs(newCriteria);

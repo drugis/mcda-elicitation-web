@@ -1,11 +1,11 @@
 'use strict';
-define(['lodash'], function (_) {
+define(['lodash'], function(_) {
   var ESC = 27;
   var ENTER = 13;
 
   var dependencies = ['ManualInputService', '$timeout'];
 
-  var EffectInputHelperDirective = function (ManualInputService, $timeout) {
+  var EffectInputHelperDirective = function(ManualInputService, $timeout) {
     return {
       restrict: 'E',
       scope: {
@@ -15,7 +15,7 @@ define(['lodash'], function (_) {
         'changeCallback': '='
       },
       templateUrl: 'js/manualInput/effectInputHelperDirective.html',
-      link: function (scope) {
+      link: function(scope) {
         // functions
         scope.keyCheck = keyCheck;
         scope.updateUpperBound = updateUpperBound;
@@ -26,12 +26,14 @@ define(['lodash'], function (_) {
 
         initInputParameters();
         scope.inputData.label = ManualInputService.inputToString(scope.inputCell);
+        scope.inputData.isInvalid = ManualInputService.getInputError(scope.inputCell);
+        scope.changeCallback();
 
-        scope.$on('open.af.dropdownToggle', function () {
+        scope.$on('open.af.dropdownToggle', function() {
           isEscPressed = false;
         });
 
-        scope.$on('close.af.dropdownToggle', function () {
+        scope.$on('close.af.dropdownToggle', function() {
           if (!isEscPressed) {
             saveState();
           }
@@ -39,19 +41,17 @@ define(['lodash'], function (_) {
 
         function updateUpperBound() {
           var id = scope.inputCell.inputParameters.id;
-          if (scope.inputCell.isNormal && id === 'continuousMeanConfidenceInterval') {
+          if (scope.inputCell.isNormal && id === 'exactValueCI' && scope.inputCell.dataType === 'continuous' && scope.inputCell.parameterOfInterest === 'mean') {
             scope.inputCell.thirdParameter = 2 * scope.inputCell.firstParameter - scope.inputCell.secondParameter;
           }
         }
 
         function saveState() {
-          $timeout(function () {
+          $timeout(function() {
             scope.inputData = scope.inputCell;
             scope.inputData.isInvalid = ManualInputService.getInputError(scope.inputCell);
             scope.inputData.label = ManualInputService.inputToString(scope.inputCell);
-            $timeout(function () {
-              scope.changeCallback();
-            });
+            $timeout(scope.changeCallback);
           });
         }
 
@@ -70,8 +70,8 @@ define(['lodash'], function (_) {
         }
 
         function inputChanged() {
-          scope.error = ManualInputService.getInputError(scope.inputCell);
           updateUpperBound();
+          scope.error = ManualInputService.getInputError(scope.inputCell);
         }
 
         function keyCheck(event) {
@@ -87,14 +87,15 @@ define(['lodash'], function (_) {
           if (!cell.inputParameters) {
             return true;
           }
-          var inputType = criterion.inputType;
-          var inputMethod = criterion.inputMethod;
-          var dataType = criterion.dataType;
+          var inputType = criterion.inputMetaData.inputType;
+          var inputMethod = criterion.inputMetaData.inputMethod;
+          var dataType = criterion.inputMetaData.dataType;
           return inputType !== cell.inputType ||
             (inputType === 'distribution' && inputMethod !== cell.inputMethod) ||
             (inputType === 'distribution' && inputMethod === 'assistedDistribution' && dataType !== cell.dataType) ||
             (inputType === 'effect' && dataType !== cell.dataType) ||
-            (inputType === 'effect' && dataType === 'continuous' && criterion.parameterOfInterest !== cell.parameterOfInterest);
+            (inputType === 'effect' && dataType === 'continuous' &&
+              criterion.inputMetaData.parameterOfInterest !== cell.parameterOfInterest);
         }
       }
     };
