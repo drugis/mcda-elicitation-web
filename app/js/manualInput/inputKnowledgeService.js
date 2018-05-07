@@ -62,6 +62,7 @@ define(['lodash', 'angular'], function(_, angular) {
         var inputCell = angular.copy(cell);
         inputCell.firstParameter = tableEntry.performance.input.value;
         inputCell.secondParameter = tableEntry.performance.input.sampleSize;
+        inputCell.isNormal = tableEntry.performance.type === 'dnorm';
         return inputCell;
       },
       buildPerformance: function(cell) {
@@ -133,6 +134,7 @@ define(['lodash', 'angular'], function(_, angular) {
         var inputCell = angular.copy(cell);
         inputCell.firstParameter = tableEntry.performance.input.value;
         inputCell.secondParameter = tableEntry.performance.input.sampleSize;
+        inputCell.isNormal = tableEntry.performance.type === 'dnorm';
         return inputCell;
       },
       buildPerformance: function(cell) {
@@ -187,6 +189,7 @@ define(['lodash', 'angular'], function(_, angular) {
         var inputCell = angular.copy(cell);
         inputCell.firstParameter = tableEntry.performance.input.events;
         inputCell.secondParameter = tableEntry.performance.input.sampleSize;
+        inputCell.isNormal = tableEntry.performance.type === 'dnorm';
         return inputCell;
       },
       buildPerformance: function(cell) {
@@ -497,7 +500,6 @@ define(['lodash', 'angular'], function(_, angular) {
         });
         var inputCell = angular.copy(cell);
         inputCell.inputParameters = correctOption;
-        inputCell.isNormal = tableEntry.performance.type === 'dnorm';
         return knowledge.getKnowledge(inputCell).finishInputCell(inputCell, tableEntry);
       };
     }
@@ -540,6 +542,7 @@ define(['lodash', 'angular'], function(_, angular) {
         var inputCell = angular.copy(cell);
         inputCell.firstParameter = tableEntry.performance.input.value;
         inputCell.secondParameter = tableEntry.performance.input.stdErr;
+        inputCell.isNormal = tableEntry.performance.type === 'dnorm';
         return inputCell;
       };
 
@@ -630,6 +633,7 @@ define(['lodash', 'angular'], function(_, angular) {
       inputCell.firstParameter = tableEntry.performance.input.value;
       inputCell.secondParameter = tableEntry.performance.input.lowerBound;
       inputCell.thirdParameter = tableEntry.performance.input.upperBound;
+      inputCell.isNormal = tableEntry.performance.type === 'dnorm';
       return inputCell;
     }
 
