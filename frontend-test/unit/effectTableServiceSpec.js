@@ -32,16 +32,16 @@ define(['angular-mocks',
           }];
           var result = effectTableService.buildEffectsTable(problem.valueTree, criteria);
           var expectedResult = [{
-              isHeaderRow: true,
-              headerText: 'Favorable effects'
-            },
-            { id: 'crit2' },
-            { id: 'crit3' },
-            {
-              isHeaderRow: true,
-              headerText: 'Unfavorable effects'
-            },
-            { id: 'crit1' }
+            isHeaderRow: true,
+            headerText: 'Favorable effects'
+          },
+          { id: 'crit2' },
+          { id: 'crit3' },
+          {
+            isHeaderRow: true,
+            headerText: 'Unfavorable effects'
+          },
+          { id: 'crit1' }
           ];
           expect(result).toEqual(expectedResult);
         });
@@ -60,7 +60,11 @@ define(['angular-mocks',
             performance: {
               type: 'exact',
               exactType: 'exact',
-              value: 1
+              value: 1,
+              input: {
+                value: 1,
+                stdErr: 0.5
+              }
             }
           }, {
             criterion: 'criterionId3',
@@ -105,6 +109,17 @@ define(['angular-mocks',
                 beta: 12344321.001
               }
             }
+          }, {
+            criterion: 'criterionId7',
+            alternative: 'alternativeId7',
+            performance: {
+              type: 'dnorm',
+              input: {
+                value: 42,
+                lowerBound: 37,
+                upperBound: 69
+              }
+            }
           }];
           var result = effectTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
@@ -117,7 +132,7 @@ define(['angular-mocks',
               hasStudyData: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId2: {
-                  label: 1,
+                  label: 1 + ' (' + 0.5 + ')',
                   hasUncertainty: false
                 }
               }
@@ -158,6 +173,16 @@ define(['angular-mocks',
               studyDataLabelsAndUncertainty: {
                 alternativeId6: {
                   label: '10 / 12344321',
+                  hasUncertainty: true
+                }
+              }
+            },
+            criterionId7: {
+              distributionType: 'dnorm',
+              hasStudyData: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId7: {
+                  label: '42 (37; 69)',
                   hasUncertainty: true
                 }
               }
