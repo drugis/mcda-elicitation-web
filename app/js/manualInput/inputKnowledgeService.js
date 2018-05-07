@@ -41,7 +41,8 @@ define(['lodash', 'angular'], function(_, angular) {
       secondParameter: buildIntegerAboveZero('Sample size'),
       canBeNormal: true,
       fits: function(tableEntry) {
-        return tableEntry.performance.input && tableEntry.performance.input.sampleSize &&
+        return tableEntry.performance.input &&
+          tableEntry.performance.input.sampleSize &&
           !isFinite(tableEntry.performance.input.events) &&
           tableEntry.performance.input.scale !== 'percentage';
       },
@@ -59,27 +60,22 @@ define(['lodash', 'angular'], function(_, angular) {
       },
       finishInputCell: function(cell, tableEntry) {
         var inputCell = angular.copy(cell);
-        inputCell.firstParameter = cell.isNormal ?
-          tableEntry.performance.input.mu :
-          tableEntry.performance.input.value;
+        inputCell.firstParameter = tableEntry.performance.input.value;
         inputCell.secondParameter = tableEntry.performance.input.sampleSize;
         return inputCell;
       },
       buildPerformance: function(cell) {
+        var proportion = cell.firstParameter;
+        var sampleSize = cell.secondParameter;
+        var input = {
+          value: proportion,
+          sampleSize: sampleSize
+        };
         if (cell.isNormal) {
-          var proportion = cell.firstParameter;
-          var sampleSize = cell.secondParameter;
           var sigma = stdErr(proportion, sampleSize);
-          var input = {
-            mu: proportion,
-            sampleSize: sampleSize
-          };
           return PerformanceService.buildNormalPerformance(proportion, sigma, input);
         } else {
-          return PerformanceService.buildExactPerformance(cell.firstParameter, {
-            value: cell.firstParameter,
-            sampleSize: cell.secondParameter
-          });
+          return PerformanceService.buildExactPerformance(proportion, input);
         }
       }
     };
@@ -135,29 +131,23 @@ define(['lodash', 'angular'], function(_, angular) {
       },
       finishInputCell: function(cell, tableEntry) {
         var inputCell = angular.copy(cell);
-        inputCell.firstParameter = inputCell.isNormal ?
-          tableEntry.performance.input.mu :
-          tableEntry.performance.input.value;
+        inputCell.firstParameter = tableEntry.performance.input.value;
         inputCell.secondParameter = tableEntry.performance.input.sampleSize;
         return inputCell;
       },
       buildPerformance: function(cell) {
+        var proportion = cell.firstParameter / 100;
+        var sampleSize = cell.secondParameter;
+        var input = {
+          value: cell.firstParameter,
+          sampleSize: cell.secondParameter,
+          scale: 'percentage'
+        };
         if (cell.isNormal) {
-          var proportion = cell.firstParameter / 100;
-          var sampleSize = cell.secondParameter;
           var sigma = stdErr(proportion, sampleSize);
-          var input = {
-            mu: cell.firstParameter,
-            sampleSize: cell.secondParameter,
-            scale: 'percentage'
-          };
-          return PerformanceService.buildNormalPerformance(cell.firstParameter / 100, sigma, input);
+          return PerformanceService.buildNormalPerformance(proportion, sigma, input);
         } else {
-          return PerformanceService.buildExactPerformance(cell.firstParameter / 100, {
-            value: cell.firstParameter,
-            sampleSize: cell.secondParameter,
-            scale: 'percentage'
-          });
+          return PerformanceService.buildExactPerformance(proportion, input);
         }
       }
     };
@@ -376,6 +366,9 @@ define(['lodash', 'angular'], function(_, angular) {
             ]
           },
           secondParameter: buildIntegerAboveZero('Sample size'),
+          fits: function() {
+            return true;
+          },
           toString: function(cell) {
             var events = cell.firstParameter;
             var sampleSize = cell.secondParameter;
@@ -383,9 +376,8 @@ define(['lodash', 'angular'], function(_, angular) {
           },
           finishInputCell: function(cell, tableEntry) {
             var inputCell = angular.copy(cell);
-            inputCell.inputParameters = this.getOptions().assistedDichotomous;
-            inputCell.firstParameter = tableEntry.performance.parameters.alpha - 1;
-            inputCell.secondParameter = tableEntry.performance.parameters.beta + inputCell.firstParameter - 2;
+            inputCell.firstParameter = tableEntry.performance.input.events;
+            inputCell.secondParameter = tableEntry.performance.input.sampleSize;
             return inputCell;
           },
           buildPerformance: function(cell) {
@@ -403,6 +395,9 @@ define(['lodash', 'angular'], function(_, angular) {
           firstParameter: buildDefined('Mean'),
           secondParameter: buildPositiveFloat('Standard error'),
           thirdParameter: buildIntegerAboveZero('Sample size'),
+          fits: function(tableEntry) {
+            return tableEntry.performance.input.sigma === tableEntry.performance.stdErr;
+          },
           toString: function(cell) {
             var mu = cell.firstParameter;
             var sigma = cell.secondParameter;
@@ -419,10 +414,9 @@ define(['lodash', 'angular'], function(_, angular) {
           },
           finishInputCell: function(cell, tableEntry) {
             var inputCell = angular.copy(cell);
-            inputCell.inputParameters = this.getOptions().assistedContinuousStdErr;
-            inputCell.firstParameter = tableEntry.performance.parameters.mu;
-            inputCell.secondParameter = tableEntry.performance.parameters.stdErr;
-            inputCell.thirdParameter = tableEntry.performance.parameters.dof;
+            inputCell.firstParameter = tableEntry.performance.input.mu;
+            inputCell.secondParameter = tableEntry.performance.input.sigma;
+            inputCell.thirdParameter = tableEntry.performance.input.sampleSize;
             return inputCell;
           }
         },
@@ -432,6 +426,9 @@ define(['lodash', 'angular'], function(_, angular) {
           firstParameter: buildDefined('Mean'),
           secondParameter: buildPositiveFloat('Standard deviation'),
           thirdParameter: buildIntegerAboveZero('Sample size'),
+          fits: function(tableEntry) {
+            return tableEntry.performance.input.sigma !== tableEntry.performance.stdErr;
+          },
           toString: function(cell) {
             var mu = cell.firstParameter;
             var sigma = roundToThreeDigits(standardDeviationToStandardError(cell.secondParameter, cell.thirdParameter));
@@ -444,7 +441,14 @@ define(['lodash', 'angular'], function(_, angular) {
               sigma: cell.secondParameter,
               sampleSize: cell.thirdParameter
             });
-          } // NB no finishInputCell because this option gets normalised to stdErr on saving
+          },
+          finishInputCell: function(cell, tableEntry) {
+            var inputCell = angular.copy(cell);
+            inputCell.firstParameter = tableEntry.performance.input.mu;
+            inputCell.secondParameter = tableEntry.performance.input.sigma;
+            inputCell.thirdParameter = tableEntry.performance.input.sampleSize;
+            return inputCell;
+          }
         }
       })
     };
@@ -573,7 +577,10 @@ define(['lodash', 'angular'], function(_, angular) {
         ]
       };
       knowledge.fits = function(tableEntry) {
-        return tableEntry.performance.input && tableEntry.performance.input.lowerBound && tableEntry.performance.input.upperBound;
+        return tableEntry.performance.input &&
+          tableEntry.performance.input.lowerBound &&
+          tableEntry.performance.input.upperBound &&
+          tableEntry.performance.input.scale !== 'percentage';
       };
       knowledge.toString = valueCIToString;
       knowledge.finishInputCell = finishValueConfidenceIntervalCell;
@@ -599,8 +606,15 @@ define(['lodash', 'angular'], function(_, angular) {
         return PerformanceService.buildExactPerformance((cell.firstParameter / 100), {
           value: cell.firstParameter,
           lowerBound: cell.secondParameter,
-          upperBound: cell.thirdParameter
+          upperBound: cell.thirdParameter,
+          scale: 'percentage'
         });
+      };
+      knowledge.fits = function(tableEntry) {
+        return tableEntry.performance.input &&
+          tableEntry.performance.input.lowerBound &&
+          tableEntry.performance.input.upperBound &&
+          tableEntry.performance.input.scale === 'percentage';
       };
       return knowledge;
     }
@@ -631,6 +645,12 @@ define(['lodash', 'angular'], function(_, angular) {
       knowledge.firstParameter.constraints = knowledge.firstParameter.constraints.concat(ConstraintService.positive(), [ConstraintService.belowOrEqualTo(100)]);
       knowledge.toString = valuePercentToString;
       knowledge.buildPerformance = buildPercentPerformance;
+      knowledge.fits = function(tableEntry) {
+        return tableEntry.performance.input &&
+          tableEntry.performance.input.value &&
+          !tableEntry.performance.input.lowerBound &&
+          tableEntry.performance.input.scale === 'percentage';
+      };
       return knowledge;
     }
 
