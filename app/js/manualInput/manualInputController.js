@@ -107,9 +107,9 @@ define(['lodash', 'angular'], function(_, angular) {
         var criteria = _.map($scope.state.criteria, _.partialRight(_.pick, ['id']));
         var alternatives = _.map($scope.state.alternatives, _.partialRight(_.pick, ['id']));
 
-        OrderingService.saveOrdering(_.merge({}, {
+        OrderingService.saveOrdering({
           workspaceId: workspace.id
-        }, $stateParams), criteria, alternatives).then(function() {
+        }, criteria, alternatives).then(function() {
           $scope.dirty = false;
           $state.go('evidence', {
             workspaceId: workspace.id,
