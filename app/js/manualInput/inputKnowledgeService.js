@@ -377,7 +377,7 @@ define(['lodash', 'angular'], function(_, angular) {
           secondParameter: buildPositiveFloat('Standard error'),
           thirdParameter: buildIntegerAboveZero('Sample size'),
           fits: function(tableEntry) {
-            return tableEntry.performance.input.sigma === tableEntry.performance.stdErr;
+            return tableEntry.performance.input && tableEntry.performance.input.sigma === tableEntry.performance.stdErr;
           },
           toString: function(cell) {
             var mu = cell.firstParameter;
@@ -401,7 +401,7 @@ define(['lodash', 'angular'], function(_, angular) {
           secondParameter: buildPositiveFloat('Standard deviation'),
           thirdParameter: buildIntegerAboveZero('Sample size'),
           fits: function(tableEntry) {
-            return tableEntry.performance.input.sigma !== tableEntry.performance.stdErr;
+            return !tableEntry.performance.input || tableEntry.performance.input.sigma !== tableEntry.performance.stdErr;
           },
           toString: function(cell) {
             var mu = cell.firstParameter;
