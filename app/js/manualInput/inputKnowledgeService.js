@@ -297,7 +297,7 @@ define(['lodash', 'angular'], function(_, angular) {
         decimal.firstParameter.constraints = decimal.firstParameter.constraints.concat(
           [ConstraintService.positive(),
           ConstraintService.belowOrEqualTo(1)]);
-        var percentage = buildPercentKnowledge();
+        var percentage = buildPercentageKnowledge();
         var decimalCI = addCeilConstraints(buildExactValueConfidenceIntervalKnowledge('Decimal', 'decimalCI'), 1);
         var percentageCI = addCeilConstraints(buildPercentageConfidenceIntervalKnowledge('Percentage', 'percentageCI'), 100);
         var retval = {
@@ -392,7 +392,7 @@ define(['lodash', 'angular'], function(_, angular) {
               sampleSize: cell.thirdParameter
             });
           },
-          finishInputCell: finishAssistedContinuousCell
+          finishInputCell: finishStudentsTCell
         },
         assistedContinuousStdDev: {
           id: 'assistedContinuousStdDev',
@@ -416,12 +416,14 @@ define(['lodash', 'angular'], function(_, angular) {
               sampleSize: cell.thirdParameter
             });
           },
-          finishInputCell: finishAssistedContinuousCell
+          finishInputCell: finishStudentsTCell
         }
       })
     };
 
-    // public
+    /**********
+     * public *
+     **********/
 
     function buildPerformance(cell) {
       return getKnowledge(cell).buildPerformance(cell);
@@ -440,7 +442,32 @@ define(['lodash', 'angular'], function(_, angular) {
       return getKnowledge(leafCell).getOptions();
     }
 
-    // private
+    /***********
+     * private *
+     ***********/
+
+    function buildCellFinisher(options, knowledge) {
+      return function(cell, tableEntry) {
+        var correctOption = _.find(options, function(option) {
+          return option.fits(tableEntry);
+        });
+        var inputCell = angular.copy(cell);
+        inputCell.inputParameters = correctOption;
+        return knowledge.getKnowledge(inputCell).finishInputCell(inputCell, tableEntry);
+      };
+    }
+
+    function buildPercentPerformance(cell) {
+      return PerformanceService.buildExactPerformance(cell.firstParameter / 100, {
+        scale: 'percentage', value: cell.firstParameter
+      });
+    }
+
+    // knowledge
+
+    function getKnowledge(cell) {
+      return INPUT_TYPE_KNOWLEDGE.getKnowledge(cell);
+    }
 
     function buildKnowledge(options) {
       var knowledge = {
@@ -456,21 +483,6 @@ define(['lodash', 'angular'], function(_, angular) {
       };
       knowledge.finishInputCell = buildCellFinisher(options, knowledge);
       return knowledge;
-    }
-
-    function buildCellFinisher(options, knowledge) {
-      return function(cell, tableEntry) {
-        var correctOption = _.find(options, function(option) {
-          return option.fits(tableEntry);
-        });
-        var inputCell = angular.copy(cell);
-        inputCell.inputParameters = correctOption;
-        return knowledge.getKnowledge(inputCell).finishInputCell(inputCell, tableEntry);
-      };
-    }
-
-    function getKnowledge(cell) {
-      return INPUT_TYPE_KNOWLEDGE.getKnowledge(cell);
     }
 
     function buildExactKnowledge(id, label) {
@@ -586,14 +598,7 @@ define(['lodash', 'angular'], function(_, angular) {
       return knowledge;
     }
 
-    function addCeilConstraints(knowledge, ceil) {
-      knowledge.firstParameter.constraints = knowledge.firstParameter.constraints.concat([ConstraintService.positive(), ConstraintService.belowOrEqualTo(ceil)]);
-      knowledge.secondParameter.constraints = knowledge.secondParameter.constraints.concat([ConstraintService.positive(), ConstraintService.belowOrEqualTo(ceil)]);
-      knowledge.thirdParameter.constraints = knowledge.thirdParameter.constraints.concat([ConstraintService.positive(), ConstraintService.belowOrEqualTo(ceil)]);
-      return knowledge;
-    }
-
-    function buildPercentKnowledge() {
+    function buildPercentageKnowledge() {
       var knowledge = buildExactValueKnowledge('Percentage', 'percentage');
       knowledge.firstParameter.constraints = knowledge.firstParameter.constraints.concat(ConstraintService.positive(), [ConstraintService.belowOrEqualTo(100)]);
       knowledge.toString = valuePercentToString;
@@ -607,12 +612,6 @@ define(['lodash', 'angular'], function(_, angular) {
       return knowledge;
     }
 
-    function buildPercentPerformance(cell) {
-      return PerformanceService.buildExactPerformance(cell.firstParameter / 100, {
-        scale: 'percentage', value: cell.firstParameter
-      });
-    }
-    
     // finish cell functions
 
     function finishValueCell(cell, tableEntry) {
@@ -630,16 +629,16 @@ define(['lodash', 'angular'], function(_, angular) {
       return inputCell;
     }
 
-    function finishAssistedContinuousCell(cell, tableEntry) {
+    function finishStudentsTCell(cell, tableEntry) {
       var inputCell = angular.copy(cell);
-      if(tableEntry.performance.input){
+      if (tableEntry.performance.input) {
         inputCell.firstParameter = tableEntry.performance.input.mu;
         inputCell.secondParameter = tableEntry.performance.input.sigma;
         inputCell.thirdParameter = tableEntry.performance.input.sampleSize;
       } else {
         inputCell.firstParameter = tableEntry.performance.parameters.mu;
         inputCell.secondParameter = tableEntry.performance.parameters.stdErr;
-        inputCell.thirdParameter = tableEntry.performance.parameters.dof+1;
+        inputCell.thirdParameter = tableEntry.performance.parameters.dof + 1;
       }
       return inputCell;
     }
@@ -688,7 +687,7 @@ define(['lodash', 'angular'], function(_, angular) {
       return cell.firstParameter + '% (' + cell.secondParameter + '%; ' + cell.thirdParameter + '%)' + NO_DISTRIBUTION;
     }
 
-    // build constraints
+    // constraints
     function buildIntegerAboveZero(label) {
       var param = buildFloatAboveZero(label);
       param.constraints.push(ConstraintService.integer());
@@ -718,6 +717,13 @@ define(['lodash', 'angular'], function(_, angular) {
       var param = buildFloatAboveZero(label);
       param.constraints.push(ConstraintService.belowOrEqualTo(max));
       return param;
+    }
+
+    function addCeilConstraints(knowledge, ceil) {
+      knowledge.firstParameter.constraints = knowledge.firstParameter.constraints.concat([ConstraintService.positive(), ConstraintService.belowOrEqualTo(ceil)]);
+      knowledge.secondParameter.constraints = knowledge.secondParameter.constraints.concat([ConstraintService.positive(), ConstraintService.belowOrEqualTo(ceil)]);
+      knowledge.thirdParameter.constraints = knowledge.thirdParameter.constraints.concat([ConstraintService.positive(), ConstraintService.belowOrEqualTo(ceil)]);
+      return knowledge;
     }
 
     // math util
