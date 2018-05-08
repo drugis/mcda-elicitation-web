@@ -101,7 +101,7 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
           sliderOptions: {
             floor: Math.min(from, to),
             ceil: Math.max(from, to),
-            precision: 50,
+            precision: 10,
             step: Math.abs(to - from) / 100,
             rightToLeft: to < from,
             translate: function(value) {
