@@ -12,7 +12,7 @@
       </div>
       <div class="cell" ng-if="useFavorability">
         <label>Favorability
-          <!-- <inline-help help-key="favorability"></inline-help> -->
+          <inline-help help-key="favorability"></inline-help>
         </label>
         <input type="radio" ng-model="criterion.isFavorable" ng-value="false" id="not-favorable">
         <label for="not-favorable">Not favorable</label>
@@ -78,7 +78,7 @@
       </div>
       <div class="cell">
         <label>Unit of measurement (optional)
-          <!-- <inline-help help-key="criterion-unit"></inline-help> -->
+          <inline-help help-key="criterion-unit"></inline-help>
         </label>
         <input type="text" ng-model="criterion.unitOfMeasurement">
       </div>
@@ -88,18 +88,20 @@
       </div>
       <div class="cell">
         <label>Reference (optional)
-          <!-- <inline-help help-key="criterion-source"></inline-help> -->
+          <inline-help help-key="criterion-source"></inline-help>
         </label>
         <input type="text" ng-model="criterion.source">
       </div>
       <div class="cell">
         <label>Reference URL (optional)
-          <!-- <inline-help help-key="criterion-source-link"></inline-help> -->
+          <inline-help help-key="criterion-source-link"></inline-help>
         </label>
         <input type="text" ng-model="criterion.sourceLink" ng-change="isCreationBlocked()">
       </div>
       <div class="cell">
-        <label>Uncertainties (optional)</label>
+        <label>Uncertainties (optional)
+          <!-- <inline-help help-key="uncertainties"> -->
+        </label>
         <input type="text" ng-model="criterion.uncertainties">
       </div>
       <div class="cell">

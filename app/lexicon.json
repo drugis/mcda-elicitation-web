@@ -154,6 +154,11 @@
     "text":"The results of stochastic multicriteria acceptability analysis (SMAA) for the given preferences.",
     "link": "/manual.html#mcda-value-tradeoffs"
   },
+  "strength-of-evidence":{
+    "title": "Strength of evidence",
+    "text": "",
+    "link": ""
+  },
   "survival-summary-measure": {
     "title": "Survival summary measure",
     "text": "Which specific aspect of survival is reported, i.e. mean, median, or at a specific moment.",
@@ -198,6 +203,11 @@
     "title": "Treatment",
     "text": "A treatment is an intervention of interest to be used in a benefit-risk analysis, e.g. \"Aspirin 20 mg/day\" or \"Meditation\".",
     "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "uncertainties":{
+    "title": "Strength of evidence",
+    "text": "",
+    "link": ""
   },
   "value-profiles": {
     "title": "Value profiles",
