@@ -377,7 +377,7 @@ define(['lodash', 'angular'], function(_, angular) {
           secondParameter: buildPositiveFloat('Standard error'),
           thirdParameter: buildIntegerAboveZero('Sample size'),
           fits: function(tableEntry) {
-            return tableEntry.performance.input && tableEntry.performance.input.sigma === tableEntry.performance.stdErr;
+            return !tableEntry.performance.input || tableEntry.performance.input.sigma === tableEntry.performance.stdErr;
           },
           toString: function(cell) {
             var mu = cell.firstParameter;
@@ -401,7 +401,7 @@ define(['lodash', 'angular'], function(_, angular) {
           secondParameter: buildPositiveFloat('Standard deviation'),
           thirdParameter: buildIntegerAboveZero('Sample size'),
           fits: function(tableEntry) {
-            return !tableEntry.performance.input || tableEntry.performance.input.sigma !== tableEntry.performance.stdErr;
+            return tableEntry.performance.input && tableEntry.performance.input.sigma !== tableEntry.performance.stdErr;
           },
           toString: function(cell) {
             var mu = cell.firstParameter;
@@ -632,9 +632,15 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function finishAssistedContinuousCell(cell, tableEntry) {
       var inputCell = angular.copy(cell);
-      inputCell.firstParameter = tableEntry.performance.input.mu;
-      inputCell.secondParameter = tableEntry.performance.input.sigma;
-      inputCell.thirdParameter = tableEntry.performance.input.sampleSize;
+      if(tableEntry.performance.input){
+        inputCell.firstParameter = tableEntry.performance.input.mu;
+        inputCell.secondParameter = tableEntry.performance.input.sigma;
+        inputCell.thirdParameter = tableEntry.performance.input.sampleSize;
+      } else {
+        inputCell.firstParameter = tableEntry.performance.parameters.mu;
+        inputCell.secondParameter = tableEntry.performance.parameters.stdErr;
+        inputCell.thirdParameter = tableEntry.performance.parameters.dof+1;
+      }
       return inputCell;
     }
 
