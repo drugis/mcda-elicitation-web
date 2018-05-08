@@ -58,13 +58,7 @@ define(['lodash', 'angular'], function(_, angular) {
         }
         return returnString;
       },
-      finishInputCell: function(cell, tableEntry) {
-        var inputCell = angular.copy(cell);
-        inputCell.firstParameter = tableEntry.performance.input.value;
-        inputCell.secondParameter = tableEntry.performance.input.sampleSize;
-        inputCell.isNormal = tableEntry.performance.type === 'dnorm';
-        return inputCell;
-      },
+      finishInputCell: finishProportionSampleSizeCell,
       buildPerformance: function(cell) {
         var proportion = cell.firstParameter;
         var sampleSize = cell.secondParameter;
@@ -130,13 +124,7 @@ define(['lodash', 'angular'], function(_, angular) {
         }
         return returnString;
       },
-      finishInputCell: function(cell, tableEntry) {
-        var inputCell = angular.copy(cell);
-        inputCell.firstParameter = tableEntry.performance.input.value;
-        inputCell.secondParameter = tableEntry.performance.input.sampleSize;
-        inputCell.isNormal = tableEntry.performance.type === 'dnorm';
-        return inputCell;
-      },
+      finishInputCell: finishProportionSampleSizeCell,
       buildPerformance: function(cell) {
         var proportion = cell.firstParameter / 100;
         var sampleSize = cell.secondParameter;
@@ -231,12 +219,7 @@ define(['lodash', 'angular'], function(_, angular) {
           buildPerformance: function(cell) {
             return PerformanceService.buildBetaPerformance(cell.firstParameter, cell.secondParameter);
           },
-          finishInputCell: function(cell, tableEntry) {
-            var inputCell = angular.copy(cell);
-            inputCell.firstParameter = tableEntry.performance.parameters.alpha;
-            inputCell.secondParameter = tableEntry.performance.parameters.beta;
-            return inputCell;
-          }
+          finishInputCell: finishAlphaBetaCell
         },
         manualNormal: {
           id: 'manualNormal',
@@ -273,12 +256,7 @@ define(['lodash', 'angular'], function(_, angular) {
           buildPerformance: function(cell) {
             return PerformanceService.buildGammaPerformance(cell.firstParameter, cell.secondParameter);
           },
-          finishInputCell: function(cell, tableEntry) {
-            var inputCell = angular.copy(cell);
-            inputCell.firstParameter = tableEntry.performance.parameters.alpha;
-            inputCell.secondParameter = tableEntry.performance.parameters.beta;
-            return inputCell;
-          }
+          finishInputCell: finishAlphaBetaCell
         },
         manualExact: {
           id: 'manualExact',
@@ -408,20 +386,13 @@ define(['lodash', 'angular'], function(_, angular) {
             return mu + ' (' + sigma + '), ' + sampleSize + '\nDistribution: t(' + (sampleSize - 1) + ', ' + mu + ', ' + sigma + ')';
           },
           buildPerformance: function(cell) {
-            return PerformanceService.buildStudentTPerformance(cell.firstParameter, cell.secondParameter, cell.thirdParameter - 1,
-              {
-                mu: cell.firstParameter,
-                sigma: cell.secondParameter,
-                sampleSize: cell.thirdParameter
-              });
+            return PerformanceService.buildStudentTPerformance(cell.firstParameter, cell.secondParameter, cell.thirdParameter - 1, {
+              mu: cell.firstParameter,
+              sigma: cell.secondParameter,
+              sampleSize: cell.thirdParameter
+            });
           },
-          finishInputCell: function(cell, tableEntry) {
-            var inputCell = angular.copy(cell);
-            inputCell.firstParameter = tableEntry.performance.input.mu;
-            inputCell.secondParameter = tableEntry.performance.input.sigma;
-            inputCell.thirdParameter = tableEntry.performance.input.sampleSize;
-            return inputCell;
-          }
+          finishInputCell: finishAssistedContinuousCell
         },
         assistedContinuousStdDev: {
           id: 'assistedContinuousStdDev',
@@ -445,13 +416,7 @@ define(['lodash', 'angular'], function(_, angular) {
               sampleSize: cell.thirdParameter
             });
           },
-          finishInputCell: function(cell, tableEntry) {
-            var inputCell = angular.copy(cell);
-            inputCell.firstParameter = tableEntry.performance.input.mu;
-            inputCell.secondParameter = tableEntry.performance.input.sigma;
-            inputCell.thirdParameter = tableEntry.performance.input.sampleSize;
-            return inputCell;
-          }
+          finishInputCell: finishAssistedContinuousCell
         }
       })
     };
@@ -545,7 +510,6 @@ define(['lodash', 'angular'], function(_, angular) {
         inputCell.isNormal = tableEntry.performance.type === 'dnorm';
         return inputCell;
       };
-
       knowledge.buildPerformance = function(cell) {
         if (cell.isNormal) {
           return PerformanceService.buildNormalPerformance(cell.firstParameter, cell.secondParameter, {
@@ -622,21 +586,6 @@ define(['lodash', 'angular'], function(_, angular) {
       return knowledge;
     }
 
-    function finishValueCell(cell, tableEntry) {
-      var inputCell = angular.copy(cell);
-      inputCell.firstParameter = tableEntry.performance.value;
-      return inputCell;
-    }
-
-    function finishValueConfidenceIntervalCell(cell, tableEntry) {
-      var inputCell = angular.copy(cell);
-      inputCell.firstParameter = tableEntry.performance.input.value;
-      inputCell.secondParameter = tableEntry.performance.input.lowerBound;
-      inputCell.thirdParameter = tableEntry.performance.input.upperBound;
-      inputCell.isNormal = tableEntry.performance.type === 'dnorm';
-      return inputCell;
-    }
-
     function addCeilConstraints(knowledge, ceil) {
       knowledge.firstParameter.constraints = knowledge.firstParameter.constraints.concat([ConstraintService.positive(), ConstraintService.belowOrEqualTo(ceil)]);
       knowledge.secondParameter.constraints = knowledge.secondParameter.constraints.concat([ConstraintService.positive(), ConstraintService.belowOrEqualTo(ceil)]);
@@ -663,6 +612,47 @@ define(['lodash', 'angular'], function(_, angular) {
         scale: 'percentage', value: cell.firstParameter
       });
     }
+    
+    // finish cell functions
+
+    function finishValueCell(cell, tableEntry) {
+      var inputCell = angular.copy(cell);
+      inputCell.firstParameter = tableEntry.performance.value;
+      return inputCell;
+    }
+
+    function finishValueConfidenceIntervalCell(cell, tableEntry) {
+      var inputCell = angular.copy(cell);
+      inputCell.firstParameter = tableEntry.performance.input.value;
+      inputCell.secondParameter = tableEntry.performance.input.lowerBound;
+      inputCell.thirdParameter = tableEntry.performance.input.upperBound;
+      inputCell.isNormal = tableEntry.performance.type === 'dnorm';
+      return inputCell;
+    }
+
+    function finishAssistedContinuousCell(cell, tableEntry) {
+      var inputCell = angular.copy(cell);
+      inputCell.firstParameter = tableEntry.performance.input.mu;
+      inputCell.secondParameter = tableEntry.performance.input.sigma;
+      inputCell.thirdParameter = tableEntry.performance.input.sampleSize;
+      return inputCell;
+    }
+
+    function finishAlphaBetaCell(cell, tableEntry) {
+      var inputCell = angular.copy(cell);
+      inputCell.firstParameter = tableEntry.performance.parameters.alpha;
+      inputCell.secondParameter = tableEntry.performance.parameters.beta;
+      return inputCell;
+    }
+
+    function finishProportionSampleSizeCell(cell, tableEntry) {
+      var inputCell = angular.copy(cell);
+      inputCell.firstParameter = tableEntry.performance.input.value;
+      inputCell.secondParameter = tableEntry.performance.input.sampleSize;
+      inputCell.isNormal = tableEntry.performance.type === 'dnorm';
+      return inputCell;
+    }
+
     // to string 
     function valueToString(cell) {
       return cell.firstParameter + NO_DISTRIBUTION;
