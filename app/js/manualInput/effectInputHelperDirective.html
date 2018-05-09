@@ -1,41 +1,43 @@
-<dropdown-toggle close-on-click="true">
+<dropdown-toggle close-on-click="true" pane-align="right">
   <toggle>
     <a ng-style="inputData.isInvalid ? {color:'red'} : {}" style="white-space: pre-wrap">{{inputData.label}}</a>
   </toggle>
   <pane ng-keydown="keyCheck($event, $close)" ng-keypress="keyCheck($event, $close)">
-    <div class="grid-container" style="width: 35rem">
+    <div class="grid-container" style="min-width: 20rem;">
       <div call="grid-x">
-        <div class="cell large-6" ng-hide="inputCell.inputType==='distribution' && 
+        <div class="cell" ng-hide="inputCell.inputType==='distribution' && 
             inputCell.inputMethod === 'assistedDistribution' && inputCell.dataType!=='continuous'">
           <label>
             Input parameters
-            <select ng-model="inputCell.inputParameters" 
-              ng-options="option as option.label for option in inputParameterOptions track by option.id" 
+            <select ng-model="inputCell.inputParameters" ng-options="option as option.label for option in inputParameterOptions track by option.id"
               ng-change="inputChanged()"></select>
           </label>
         </div>
-        <div class="cell large-4">
+        <div class="cell">
           <label>
             {{inputCell.inputParameters.firstParameter.label}}
             <input type="number" ng-model="inputCell.firstParameter" ng-change="inputChanged()">
           </label>
         </div>
-        <div class="cell large-4" ng-if="inputCell.inputParameters.secondParameter">
+        <div class="cell" ng-if="inputCell.inputParameters.secondParameter">
           <label>
-            {{inputCell.inputParameters.secondParameter.label}}
-            <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()">
+            {{inputCell.inputParameters.secondParameter.label}} (
+            <input ng-show="inputCell.inputParameters.secondParameter.label === 'Lower bound'" type="checkbox" ng-model="inputCell.lowerBoundNE" ng-change="confidenceIntervalNEChanged()">Not estimable)
+            <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()" ng-if="!inputCell.lowerBoundNE">
           </label>
         </div>
-        <div class="cell large-4" ng-if="inputCell.inputParameters.thirdParameter">
+        <div class="cell" ng-if="inputCell.inputParameters.thirdParameter">
           <label>
-            {{inputCell.inputParameters.thirdParameter.label}}
-            <input type="number" ng-model="inputCell.thirdParameter" ng-change="inputChanged()" 
-              ng-disabled="inputCell.dataType === 'continuous' && inputCell.parameterOfInterest === 'mean' && inputCell.isNormal">
+            {{inputCell.inputParameters.thirdParameter.label}} (
+            <input ng-show="inputCell.inputParameters.thirdParameter.label === 'Upper bound'" type="checkbox" ng-model="inputCell.upperBoundNE" ng-change="confidenceIntervalNEChanged()">Not estimable)
+            <input type="number" ng-model="inputCell.thirdParameter" ng-change="inputChanged()" ng-disabled="inputCell.dataType === 'continuous' && inputCell.parameterOfInterest === 'mean' && inputCell.isNormal" ng-if="!inputCell.upperBoundNE">
+          </label>
           </label>
         </div>
         <div class="cell" ng-if="inputCell.inputParameters.canBeNormal">
-          <label for="is-normally-distributed">Sampling distribution is approximately normally distributed</label>
-          <input id="is-normally-distributed" type="checkbox" ng-model="inputCell.isNormal" ng-change="updateUpperBound()">
+          <label for="is-normally-distributed">
+            <input id="is-normally-distributed" type="checkbox" ng-model="inputCell.isNormal" ng-change="updateUpperBound()" ng-disabled="inputCell.lowerBoundNE || inputCell.upperBoundNE"> Sampling distribution is approximately normally distributed
+          </label>
         </div>
         <div class="cell alert" ng-show="error">
           {{error}}
