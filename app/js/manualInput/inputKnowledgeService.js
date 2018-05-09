@@ -424,7 +424,6 @@ define(['lodash', 'angular'], function(_, angular) {
     /**********
      * public *
      **********/
-
     function buildPerformance(cell) {
       return getKnowledge(cell).buildPerformance(cell);
     }
@@ -462,7 +461,7 @@ define(['lodash', 'angular'], function(_, angular) {
         scale: 'percentage', value: cell.firstParameter
       });
     }
-
+    
     // knowledge
 
     function getKnowledge(cell) {
@@ -631,14 +630,14 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function finishStudentsTCell(cell, tableEntry) {
       var inputCell = angular.copy(cell);
-      if (tableEntry.performance.input) {
+      if(tableEntry.performance.input){
         inputCell.firstParameter = tableEntry.performance.input.mu;
         inputCell.secondParameter = tableEntry.performance.input.sigma;
         inputCell.thirdParameter = tableEntry.performance.input.sampleSize;
       } else {
         inputCell.firstParameter = tableEntry.performance.parameters.mu;
         inputCell.secondParameter = tableEntry.performance.parameters.stdErr;
-        inputCell.thirdParameter = tableEntry.performance.parameters.dof + 1;
+        inputCell.thirdParameter = tableEntry.performance.parameters.dof+1;
       }
       return inputCell;
     }
