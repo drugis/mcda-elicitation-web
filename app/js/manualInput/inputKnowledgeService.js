@@ -353,7 +353,7 @@ define(['lodash', 'angular'], function(_, angular) {
           toString: function(cell) {
             var events = cell.firstParameter;
             var sampleSize = cell.secondParameter;
-            return events + ' / ' + sampleSize + '\nDistribution: Beta(' + (events + 1) + ', ' + (sampleSize - events + 2) + ')';
+            return events + ' / ' + sampleSize + '\nDistribution: Beta(' + (events + 1) + ', ' + (sampleSize - events + 1) + ')';
           },
           finishInputCell: function(cell, tableEntry) {
             var inputCell = angular.copy(cell);
@@ -362,7 +362,7 @@ define(['lodash', 'angular'], function(_, angular) {
             return inputCell;
           },
           buildPerformance: function(cell) {
-            return PerformanceService.buildBetaPerformance(cell.firstParameter + 1, cell.secondParameter - cell.firstParameter + 2, {
+            return PerformanceService.buildBetaPerformance(cell.firstParameter + 1, cell.secondParameter - cell.firstParameter + 1, {
               events: cell.firstParameter,
               sampleSize: cell.secondParameter
             });
@@ -510,7 +510,7 @@ define(['lodash', 'angular'], function(_, angular) {
       id = id ? id : 'exactValueSE';
       var knowledge = buildExactKnowledge(id, label + ', SE');
       knowledge.fits = function(tableEntry) {
-        return tableEntry.performance.input && tableEntry.performance.input.stdErr;
+        return tableEntry.performance.input && isFinite(tableEntry.performance.input.stdErr);
       };
       knowledge.secondParameter = buildPositiveFloat('Standard error');
       knowledge.toString = valueSEToString;
@@ -556,8 +556,8 @@ define(['lodash', 'angular'], function(_, angular) {
       };
       knowledge.fits = function(tableEntry) {
         return tableEntry.performance.input &&
-          tableEntry.performance.input.lowerBound &&
-          tableEntry.performance.input.upperBound &&
+          isFinite(tableEntry.performance.input.lowerBound) &&
+          isFinite(tableEntry.performance.input.upperBound) &&
           tableEntry.performance.input.scale !== 'percentage';
       };
       knowledge.toString = valueCIToString;
@@ -590,8 +590,8 @@ define(['lodash', 'angular'], function(_, angular) {
       };
       knowledge.fits = function(tableEntry) {
         return tableEntry.performance.input &&
-          tableEntry.performance.input.lowerBound &&
-          tableEntry.performance.input.upperBound &&
+          isFinite(tableEntry.performance.input.lowerBound) &&
+          isFinite(tableEntry.performance.input.upperBound) &&
           tableEntry.performance.input.scale === 'percentage';
       };
       return knowledge;
@@ -727,11 +727,11 @@ define(['lodash', 'angular'], function(_, angular) {
 
     // math util
     function stdErr(mu, sampleSize) {
-      return Math.sqrt(mu * (1 - mu) / sampleSize);
+      return mu * (1 - mu) / Math.sqrt(sampleSize);
     }
 
     function roundedStdErr(mu, sampleSize) {
-      return roundToThreeDigits(Math.sqrt(mu * (1 - mu) / sampleSize));
+      return roundToThreeDigits(stdErr(mu, sampleSize));
     }
 
     function boundsToStandardError(lowerBound, upperBound) {
