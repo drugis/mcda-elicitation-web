@@ -23,14 +23,14 @@
           <label>
             {{inputCell.inputParameters.secondParameter.label}} (
             <input ng-show="inputCell.inputParameters.secondParameter.label === 'Lower bound'" type="checkbox" ng-model="inputCell.lowerBoundNE" ng-change="confidenceIntervalNEChanged()">Not estimable)
-            <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()" ng-if="!inputCell.lowerBoundNE">
+            <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()" ng-disabled="inputCell.lowerBoundNE">
           </label>
         </div>
         <div class="cell" ng-if="inputCell.inputParameters.thirdParameter">
           <label>
             {{inputCell.inputParameters.thirdParameter.label}} (
             <input ng-show="inputCell.inputParameters.thirdParameter.label === 'Upper bound'" type="checkbox" ng-model="inputCell.upperBoundNE" ng-change="confidenceIntervalNEChanged()">Not estimable)
-            <input type="number" ng-model="inputCell.thirdParameter" ng-change="inputChanged()" ng-disabled="inputCell.dataType === 'continuous' && inputCell.parameterOfInterest === 'mean' && inputCell.isNormal" ng-if="!inputCell.upperBoundNE">
+            <input type="number" ng-model="inputCell.thirdParameter" ng-change="inputChanged()" ng-disabled="inputCell.dataType === 'continuous' && inputCell.parameterOfInterest === 'mean' && inputCell.isNormal || inputCell.upperBoundNE">
           </label>
           </label>
         </div>

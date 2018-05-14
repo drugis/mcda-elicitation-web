@@ -33,6 +33,21 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
           }
         });
       });
+      it('should build an exact performance with NE value', function() {
+        expect(performanceService.buildExactConfidencePerformance({
+          firstParameter: 1,
+          thirdParameter: 3,
+          lowerBoundNE: true
+        })).toEqual({
+          type: 'exact',
+          value: 1,
+          input: {
+            value: 1,
+            lowerBound: 'NE',
+            upperBound: 3
+          }
+        });
+      });
     });
     describe('buildNormalPerformance', function() {
       it('should build an exact performance', function() {

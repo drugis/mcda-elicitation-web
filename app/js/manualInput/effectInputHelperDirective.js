@@ -52,10 +52,6 @@ define(['lodash'], function(_) {
             scope.inputData = scope.inputCell;
             scope.inputData.isInvalid = ManualInputService.getInputError(scope.inputCell);
             scope.inputData.label = ManualInputService.inputToString(scope.inputCell);
-            if(scope.inputCell.inputParameters.secondParameter.label === 'Lower bound'){
-              scope.inputData.secondParameter = scope.inputCell.lowerBoundNE ? 'NE' : scope.inputData.secondParameter;
-              scope.inputData.thirdParameter = scope.inputCell.upperBoundNE ? 'NE' : scope.inputData.thirdParameter;
-            }
             $timeout(scope.changeCallback);
           });
         }
@@ -106,10 +102,7 @@ define(['lodash'], function(_) {
         function confidenceIntervalNEChanged() {
           if (scope.inputCell.lowerBoundNE || scope.inputCell.upperBoundNE) {
             scope.inputCell.isNormal = false;
-          } else {
-            scope.inputCell.secondParameter = scope.inputCell.secondParameter === 'NE' ? 0 : scope.inputCell.secondParameter;
-            scope.inputCell.thirdParameter = scope.inputCell.thirdParameter === 'NE' ? 0 : scope.inputCell.thirdParameter;
-          }
+          } 
         }
       }
     };

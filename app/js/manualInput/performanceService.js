@@ -13,16 +13,16 @@ define(['lodash', 'angular'], function(_) {
     function buildExactConfidencePerformance(cell) {
       return buildExactPerformance(cell.firstParameter, {
         value: cell.firstParameter,
-        lowerBound: cell.secondParameter,
-        upperBound: cell.thirdParameter
+        lowerBound: cell.lowerBoundNE ? 'NE' : cell.secondParameter,
+        upperBound: cell.upperBoundNE ? 'NE' : cell.thirdParameter
       });
     }
 
     function buildExactPercentConfidencePerformance(cell) {
       return buildExactPerformance((cell.firstParameter / 100), {
         value: cell.firstParameter,
-        lowerBound: cell.secondParameter,
-        upperBound: cell.thirdParameter, 
+        lowerBound: cell.lowerBoundNE ? 'NE' : cell.secondParameter,
+        upperBound: cell.upperBoundNE ? 'NE' : cell.thirdParameter,
         scale: 'percentage'
       });
     }

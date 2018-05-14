@@ -1,23 +1,23 @@
 'use strict';
-define(['lodash', 'angular'], function (_) {
+define(['lodash', 'angular'], function(_) {
   var dependencies = [];
-  var ConstraintService = function () {
-    var INTEGER = function (value, label) {
+  var ConstraintService = function() {
+    var INTEGER = function(value, label) {
       if (value % 1 !== 0) {
         return label + ' must be integer';
       }
     };
-    var DEFINED =function (value, label) {
+    var DEFINED = function(value, label) {
       if (value === undefined || isNaN(value) || value === null) {
         return 'Invalid ' + label;
       }
     };
-    var POSITIVE = function (value, label) {
+    var POSITIVE = function(value, label) {
       if (value < 0) {
         return label + ' must be positive';
       }
     };
-    var NOT_NAN_OR_NULL = function (value, label) {
+    var NOT_NAN_OR_NULL = function(value, label) {
       if (isNaN(value) || value === null) {
         return 'Invalid ' + label;
       }
@@ -35,7 +35,7 @@ define(['lodash', 'angular'], function (_) {
       return NOT_NAN_OR_NULL;
     }
     function belowOrEqualTo(belowWhat) {
-      return function (value, label, parameters) {
+      return function(value, label, parameters) {
         if (isFinite(belowWhat) && value > belowWhat) {
           return label + ' must be below or equal to ' + belowWhat;
         }
@@ -45,14 +45,14 @@ define(['lodash', 'angular'], function (_) {
       };
     }
     function above(aboveWhat) {
-      return function (value, label) {
+      return function(value, label) {
         if (value <= aboveWhat) {
           return label + ' must be above ' + aboveWhat;
         }
       };
     }
     function aboveOrEqualTo(aboveWhat) {
-      return function (value, label, parameters) {
+      return function(value, label, parameters) {
         if (isFinite(aboveWhat) && value < aboveWhat) {
           return label + ' must be above or equal to ' + aboveWhat;
         }
@@ -61,7 +61,6 @@ define(['lodash', 'angular'], function (_) {
         }
       };
     }
-
 
     return {
       defined: defined,

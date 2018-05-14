@@ -49,13 +49,13 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             performanceServiceMock.buildBetaPerformance.calls.reset();
           });
           it('should render correct inputs', function() {
-            var expectedResult = '30 / 40\nDistribution: Beta(31, 12)';
+            var expectedResult = '30 / 40\nDistribution: Beta(31, 11)';
             var result = inputKnowledgeService.inputToString(cell);
             expect(result).toEqual(expectedResult);
           });
           it('should create correct performance', function() {
             inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildBetaPerformance).toHaveBeenCalledWith(31, 12, {
+            expect(performanceServiceMock.buildBetaPerformance).toHaveBeenCalledWith(31, 11, {
               events: 30,
               sampleSize: 40
             });
@@ -323,7 +323,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           });
           it('should render correct normalised inputs', function() {
             cell.isNormal = true;
-            var expectedResult = '0.5 (100)\nNormal(0.5, 0.05)';
+            var expectedResult = '0.5 (100)\nNormal(0.5, 0.025)';
             var result = inputKnowledgeService.inputToString(cell);
             expect(result).toEqual(expectedResult);
           });
@@ -337,7 +337,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           it('should create correct normalized performance', function() {
             cell.isNormal = true;
             inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(0.5, 0.05, {
+            expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(0.5, 0.025, {
               value: 0.5,
               sampleSize: 100
             });
@@ -426,7 +426,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           });
           it('should render correct normalised inputs', function() {
             cell.isNormal = true;
-            var expectedResult = '50% (100)\nNormal(0.5, 0.05)';
+            var expectedResult = '50% (100)\nNormal(0.5, 0.025)';
             var result = inputKnowledgeService.inputToString(cell);
             expect(result).toEqual(expectedResult);
           });
@@ -441,7 +441,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           it('should create correct normalized performance', function() {
             cell.isNormal = true;
             inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(0.5, 0.05, {
+            expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(0.5, 0.025, {
               value: 50,
               sampleSize: 100,
               scale: 'percentage'
@@ -498,7 +498,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           });
           it('should render correct normalised inputs', function() {
             cell.isNormal = true;
-            var expectedResult = '50 / 100\nNormal(0.5, 0.05)';
+            var expectedResult = '50 / 100\nNormal(0.5, 0.025)';
             var result = inputKnowledgeService.inputToString(cell);
             expect(result).toEqual(expectedResult);
           });
@@ -512,7 +512,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           it('should create correct normalized performance', function() {
             cell.isNormal = true;
             inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(0.5, 0.05, {
+            expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(0.5, 0.025, {
               events: 50,
               sampleSize: 100
             });
@@ -673,6 +673,13 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               var result = inputKnowledgeService.inputToString(normalCell);
               expect(result).toEqual(expectedResult);
             });
+            it('should render inputs with NE values', function(){
+              var NEcell = angular.copy(cell);
+              NEcell.lowerBoundNE = true;
+              var expectedResult = '50 (NE; 100)\nDistribution: none';
+              var result = inputKnowledgeService.inputToString(NEcell);
+              expect(result).toEqual(expectedResult);
+            });
             it('should create correct performance', function() {
               inputKnowledgeService.buildPerformance(cell);
               expect(performanceServiceMock.buildExactConfidencePerformance).toHaveBeenCalled();
@@ -702,7 +709,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
               expect(result.firstParameter).toEqual(50);
               expect(result.secondParameter).toEqual(10);
-              expect(result.thirdParameter).toEqual(650)
+              expect(result.thirdParameter).toEqual(650);
               expect(result.isNormal).toBeFalsy();
             });
             it('should create a finished input cell for a normal distribution', function() {
@@ -719,8 +726,26 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
               expect(result.firstParameter).toEqual(50);
               expect(result.secondParameter).toEqual(10);
-              expect(result.thirdParameter).toEqual(650)
+              expect(result.thirdParameter).toEqual(650);
               expect(result.isNormal).toBeTruthy();
+            });
+            it('should create a finished input with NE bound cell', function() {
+              var tableEntry = {
+                performance: {
+                  type: 'exact',
+                  value: 50,
+                  input: {
+                    value: 50,
+                    lowerBound: 'NE',
+                    upperBound: 650
+                  }
+                }
+              };
+              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
+              expect(result.firstParameter).toEqual(50);
+              expect(result.lowerBoundNE).toBeTruthy();
+              expect(result.thirdParameter).toEqual(650);
+              expect(result.isNormal).toBeFalsy();
             });
           });
         });
