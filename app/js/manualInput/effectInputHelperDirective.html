@@ -21,15 +21,15 @@
         </div>
         <div class="cell" ng-if="inputCell.inputParameters.secondParameter">
           <label>
-            {{inputCell.inputParameters.secondParameter.label}} (
-            <input ng-show="inputCell.inputParameters.secondParameter.label === 'Lower bound'" type="checkbox" ng-model="inputCell.lowerBoundNE" ng-change="confidenceIntervalNEChanged()">Not estimable)
+            {{inputCell.inputParameters.secondParameter.label}} <span ng-show="inputCell.inputParameters.secondParameter.label === 'Lower bound'">(
+            <input type="checkbox" ng-model="inputCell.lowerBoundNE" ng-change="confidenceIntervalNEChanged()">Not estimable)</span>
             <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()" ng-disabled="inputCell.lowerBoundNE">
           </label>
         </div>
         <div class="cell" ng-if="inputCell.inputParameters.thirdParameter">
           <label>
-            {{inputCell.inputParameters.thirdParameter.label}} (
-            <input ng-show="inputCell.inputParameters.thirdParameter.label === 'Upper bound'" type="checkbox" ng-model="inputCell.upperBoundNE" ng-change="confidenceIntervalNEChanged()">Not estimable)
+            {{inputCell.inputParameters.thirdParameter.label}} <span ng-show="inputCell.inputParameters.thirdParameter.label === 'Upper bound'">(
+            <input type="checkbox" ng-model="inputCell.upperBoundNE" ng-change="confidenceIntervalNEChanged()">Not estimable)</span>
             <input type="number" ng-model="inputCell.thirdParameter" ng-change="inputChanged()" ng-disabled="inputCell.dataType === 'continuous' && inputCell.parameterOfInterest === 'mean' && inputCell.isNormal || inputCell.upperBoundNE">
           </label>
           </label>
