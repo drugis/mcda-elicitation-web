@@ -4,39 +4,46 @@
   </toggle>
   <pane ng-keydown="keyCheck($event, $close)" ng-keypress="keyCheck($event, $close)">
     <div class="grid-container" style="min-width: 20rem;">
-      <div call="grid-x">
+      <div cell="grid-x">
+        <div class="cell">
+          <label>No values
+            <input type="checkbox" ng-model="inputCell.empty">
+          </label>
+        </div>
         <div class="cell" ng-hide="inputCell.inputType==='distribution' && 
             inputCell.inputMethod === 'assistedDistribution' && inputCell.dataType!=='continuous'">
           <label>
             Input parameters
             <select ng-model="inputCell.inputParameters" ng-options="option as option.label for option in inputParameterOptions track by option.id"
-              ng-change="inputChanged()"></select>
+              ng-change="inputChanged()" ng-disabled="inputCell.empty"></select>
           </label>
         </div>
         <div class="cell">
           <label>
             {{inputCell.inputParameters.firstParameter.label}}
-            <input type="number" ng-model="inputCell.firstParameter" ng-change="inputChanged()">
+            <input type="number" ng-model="inputCell.firstParameter" ng-change="inputChanged()" ng-disabled="inputCell.empty">
           </label>
         </div>
         <div class="cell" ng-if="inputCell.inputParameters.secondParameter">
           <label>
             {{inputCell.inputParameters.secondParameter.label}} (
-            <input ng-show="inputCell.inputParameters.secondParameter.label === 'Lower bound'" type="checkbox" ng-model="inputCell.lowerBoundNE" ng-change="confidenceIntervalNEChanged()">Not estimable)
-            <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()" ng-disabled="inputCell.lowerBoundNE">
+            <input ng-show="inputCell.inputParameters.secondParameter.label === 'Lower bound'" type="checkbox" ng-model="inputCell.lowerBoundNE"
+              ng-change="confidenceIntervalNEChanged()" ng-disabled="inputCell.empty">Not estimable)
+            <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()" ng-disabled="inputCell.empty || inputCell.lowerBoundNE">
           </label>
         </div>
         <div class="cell" ng-if="inputCell.inputParameters.thirdParameter">
           <label>
             {{inputCell.inputParameters.thirdParameter.label}} (
-            <input ng-show="inputCell.inputParameters.thirdParameter.label === 'Upper bound'" type="checkbox" ng-model="inputCell.upperBoundNE" ng-change="confidenceIntervalNEChanged()">Not estimable)
-            <input type="number" ng-model="inputCell.thirdParameter" ng-change="inputChanged()" ng-disabled="inputCell.dataType === 'continuous' && inputCell.parameterOfInterest === 'mean' && inputCell.isNormal || inputCell.upperBoundNE">
+            <input ng-show="inputCell.inputParameters.thirdParameter.label === 'Upper bound'" type="checkbox" ng-model="inputCell.upperBoundNE"
+              ng-change="confidenceIntervalNEChanged()" ng-disabled="inputCell.empty">Not estimable)
+            <input type="number" ng-model="inputCell.thirdParameter" ng-change="inputChanged()" ng-disabled="(inputCell.dataType === 'continuous' && inputCell.parameterOfInterest === 'mean' && inputCell.isNormal) || inputcell.empty || inputCell.upperBoundNE">
           </label>
           </label>
         </div>
         <div class="cell" ng-if="inputCell.inputParameters.canBeNormal">
           <label for="is-normally-distributed">
-            <input id="is-normally-distributed" type="checkbox" ng-model="inputCell.isNormal" ng-change="updateUpperBound()" ng-disabled="inputCell.lowerBoundNE || inputCell.upperBoundNE"> Sampling distribution is approximately normally distributed
+            <input id="is-normally-distributed" type="checkbox" ng-model="inputCell.isNormal" ng-change="updateUpperBound()" ng-disabled="inputCell.empty || inputCell.lowerBoundNE || inputCell.upperBoundNE"> Sampling distribution is approximately normally distributed
           </label>
         </div>
         <div class="cell alert" ng-show="error">
