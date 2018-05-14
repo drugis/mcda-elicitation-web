@@ -8,6 +8,9 @@ define(['lodash', 'angular'], function(_) {
     // Exposed functions
     function getInputError(cell) {
       var error;
+      if (cell.empty){
+        return;
+      }
       var inputParameters = _.pick(cell.inputParameters, ['firstParameter', 'secondParameter', 'thirdParameter']);
       _.find(inputParameters, function(inputParameter, key) {
         var inputValue = cell[key];

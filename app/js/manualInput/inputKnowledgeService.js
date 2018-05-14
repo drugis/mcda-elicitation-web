@@ -433,6 +433,9 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function inputToString(cell) {
+      if(cell.empty){
+        return 'empty cell';
+      }
       return getKnowledge(cell).toString(cell);
     }
 
