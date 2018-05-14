@@ -26,19 +26,18 @@
         </div>
         <div class="cell" ng-if="inputCell.inputParameters.secondParameter">
           <label>
-            {{inputCell.inputParameters.secondParameter.label}} (
-            <input ng-show="inputCell.inputParameters.secondParameter.label === 'Lower bound'" type="checkbox" ng-model="inputCell.lowerBoundNE"
-              ng-change="confidenceIntervalNEChanged()" ng-disabled="inputCell.empty">Not estimable)
-            <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()" ng-disabled="inputCell.empty || inputCell.lowerBoundNE">
+            {{inputCell.inputParameters.secondParameter.label}}
+            <span ng-show="inputCell.inputParameters.secondParameter.label === 'Lower bound'">(
+              <input type="checkbox" ng-model="inputCell.lowerBoundNE" ng-change="confidenceIntervalNEChanged()">Not estimable)</span>
+            <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()" ng-disabled="inputCell.empty|| inputCell.lowerBoundNE">
           </label>
         </div>
         <div class="cell" ng-if="inputCell.inputParameters.thirdParameter">
           <label>
-            {{inputCell.inputParameters.thirdParameter.label}} (
-            <input ng-show="inputCell.inputParameters.thirdParameter.label === 'Upper bound'" type="checkbox" ng-model="inputCell.upperBoundNE"
-              ng-change="confidenceIntervalNEChanged()" ng-disabled="inputCell.empty">Not estimable)
-            <input type="number" ng-model="inputCell.thirdParameter" ng-change="inputChanged()" ng-disabled="(inputCell.dataType === 'continuous' && inputCell.parameterOfInterest === 'mean' && inputCell.isNormal) || inputcell.empty || inputCell.upperBoundNE">
-          </label>
+            {{inputCell.inputParameters.thirdParameter.label}}
+            <span ng-show="inputCell.inputParameters.thirdParameter.label === 'Upper bound'">(
+              <input type="checkbox" ng-model="inputCell.upperBoundNE" ng-change="confidenceIntervalNEChanged()" ng-disabled="inputCell.empty">Not estimable)</span>
+            <input type="number" ng-model="inputCell.thirdParameter" ng-change="inputChanged()" ng-disabled="(inputCell.dataType === 'continuous' && inputCell.parameterOfInterest === 'mean' && inputCell.isNormal) || inputCell.empty || inputCell.upperBoundNE">
           </label>
         </div>
         <div class="cell" ng-if="inputCell.inputParameters.canBeNormal">
