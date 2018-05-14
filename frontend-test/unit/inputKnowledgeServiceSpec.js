@@ -74,6 +74,16 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             expect(result.firstParameter).toEqual(10);
             expect(result.secondParameter).toEqual(20);
           });
+          it('should create a finished empty input cell', function(){
+            var tableEntry = {
+              performance: {
+                type: 'empty'
+              }
+            };
+            cell.empty = true;  
+            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
+            expect(result.empty).toBeTruthy();
+          });
         });
         describe('for continuous inputs,', function() {
           beforeEach(function() {
@@ -112,6 +122,16 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               expect(result.firstParameter).toEqual(10);
               expect(result.secondParameter).toEqual(20);
               expect(result.thirdParameter).toEqual(30);
+            });
+            it('should create a finished empty input cell', function(){
+              var tableEntry = {
+                performance: {
+                  type: 'empty'
+                }
+              };
+              cell.empty = true;  
+              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
+              expect(result.empty).toBeTruthy();
             });
           });
           describe('for inputs with standard deviation', function() {
@@ -185,6 +205,16 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
             expect(result.firstParameter).toEqual(10);
             expect(result.secondParameter).toEqual(15);
+          });
+          it('should create a finished empty input cell', function(){
+            var tableEntry = {
+              performance: {
+                type: 'empty'
+              }
+            };
+            cell.empty = true;  
+            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
+            expect(result.empty).toBeTruthy();
           });
         });
         describe('for normal distributions', function() {
@@ -307,6 +337,16 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             };
             var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
             expect(result.firstParameter).toEqual(0.5);
+          });
+          it('should create a finished empty input cell', function(){
+            var tableEntry = {
+              performance: {
+                type: 'empty'
+              }
+            };
+            cell.empty = true;  
+            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
+            expect(result.empty).toBeTruthy();
           });
         });
         describe('for decimal inputs with sample size', function() {
@@ -588,6 +628,16 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               };
               var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
               expect(result.firstParameter).toEqual(50);
+            });
+            it('should create a finished empty input cell', function(){
+              var tableEntry = {
+                performance: {
+                  type: 'empty'
+                }
+              };
+              cell.empty = true;  
+              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
+              expect(result.empty).toBeTruthy();
             });
           });
           describe('with standard error', function() {

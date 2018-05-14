@@ -57,6 +57,11 @@ define(['lodash', 'angular'], function(_) {
       };
     }
 
+    function buildEmptyPerformance(){
+      return {
+        type: 'empty'
+      };
+    }
     // privates
 
     function buildAlphaBetaPerformance(type, alpha, beta, input) {
@@ -77,7 +82,8 @@ define(['lodash', 'angular'], function(_) {
       buildNormalPerformance: buildNormalPerformance,
       buildBetaPerformance: buildBetaPerformance,
       buildGammaPerformance: buildGammaPerformance,
-      buildStudentTPerformance: buildStudentTPerformance
+      buildStudentTPerformance: buildStudentTPerformance,
+      buildEmptyPerformance: buildEmptyPerformance
     };
   };
   return dependencies.concat(PerformanceService);

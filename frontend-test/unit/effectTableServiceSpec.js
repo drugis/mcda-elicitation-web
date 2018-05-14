@@ -120,6 +120,12 @@ define(['angular-mocks',
                 upperBound: 69
               }
             }
+          }, {
+            criterion: 'criterionId8',
+            alternative: 'alternativeId8',
+            performance: {
+              type: 'empty'
+            }
           }];
           var result = effectTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
@@ -184,6 +190,16 @@ define(['angular-mocks',
                 alternativeId7: {
                   label: '42 (37; 69)',
                   hasUncertainty: true
+                }
+              }
+            },
+            criterionId8: {
+              distributionType: 'empty',
+              hasStudyData: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId8: {
+                  label: '',
+                  hasUncertainty: false
                 }
               }
             }

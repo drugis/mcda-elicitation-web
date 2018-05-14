@@ -25,7 +25,7 @@ define(['lodash', 'angular'], function(_, angular) {
       label: 'Decimal',
       firstParameter: buildPositiveWithMax('Value', 1.0),
       fits: function(tableEntry) {
-        return !tableEntry.performance.input;
+        return !tableEntry.performance.input || tableEntry.performance.type === 'empty';
       },
       toString: valueToString,
       finishInputCell: finishValueCell,
@@ -211,7 +211,7 @@ define(['lodash', 'angular'], function(_, angular) {
           firstParameter: buildIntegerAboveZero('alpha'),
           secondParameter: buildIntegerAboveZero('beta'),
           fits: function(tableEntry) {
-            return tableEntry.performance.type === 'dbeta';
+            return tableEntry.performance.type === 'dbeta' || tableEntry.performance.type === 'empty';
           },
           toString: function(cell) {
             return 'Beta(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
@@ -357,8 +357,12 @@ define(['lodash', 'angular'], function(_, angular) {
           },
           finishInputCell: function(cell, tableEntry) {
             var inputCell = angular.copy(cell);
-            inputCell.firstParameter = tableEntry.performance.input.events;
-            inputCell.secondParameter = tableEntry.performance.input.sampleSize;
+            if(tableEntry.performance.type === 'empty'){
+              inputCell.empty = true;
+            } else{
+              inputCell.firstParameter = tableEntry.performance.input.events;
+              inputCell.secondParameter = tableEntry.performance.input.sampleSize;
+            }
             return inputCell;
           },
           buildPerformance: function(cell) {
@@ -377,7 +381,7 @@ define(['lodash', 'angular'], function(_, angular) {
           secondParameter: buildPositiveFloat('Standard error'),
           thirdParameter: buildIntegerAboveZero('Sample size'),
           fits: function(tableEntry) {
-            return !tableEntry.performance.input || tableEntry.performance.input.sigma === tableEntry.performance.stdErr;
+            return !tableEntry.performance.input || tableEntry.performance.input.sigma === tableEntry.performance.stdErr || tableEntry.performance.type === 'empty';
           },
           toString: function(cell) {
             var mu = cell.firstParameter;
@@ -425,6 +429,9 @@ define(['lodash', 'angular'], function(_, angular) {
      * public *
      **********/
     function buildPerformance(cell) {
+      if(cell.empty){
+        return PerformanceService.buildEmptyPerformance();
+      }
       return getKnowledge(cell).buildPerformance(cell);
     }
 
@@ -455,6 +462,9 @@ define(['lodash', 'angular'], function(_, angular) {
         });
         var inputCell = angular.copy(cell);
         inputCell.inputParameters = correctOption;
+        if(tableEntry.performance.type === 'empty'){
+          inputCell.empty = true;
+        }
         return knowledge.getKnowledge(inputCell).finishInputCell(inputCell, tableEntry);
       };
     }
@@ -504,7 +514,7 @@ define(['lodash', 'angular'], function(_, angular) {
       id = id ? id : 'exactValue';
       var knowledge = buildExactKnowledge(id, label);
       knowledge.fits = function(tableEntry) {
-        return !tableEntry.performance.input;
+        return !tableEntry.performance.input || tableEntry.performance.type === 'empty';
       };
       return knowledge;
     }
@@ -616,12 +626,18 @@ define(['lodash', 'angular'], function(_, angular) {
     // finish cell functions
 
     function finishValueCell(cell, tableEntry) {
+      if(cell.empty){
+        return cell;
+      }
       var inputCell = angular.copy(cell);
       inputCell.firstParameter = tableEntry.performance.value;
       return inputCell;
     }
 
     function finishValueConfidenceIntervalCell(cell, tableEntry) {
+      if(cell.empty){
+        return cell;
+      }
       var inputCell = angular.copy(cell);
       inputCell.firstParameter = tableEntry.performance.input.value;
       if (tableEntry.performance.input.lowerBound === 'NE') {
@@ -639,6 +655,9 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function finishStudentsTCell(cell, tableEntry) {
+      if(cell.empty){
+        return cell;
+      }
       var inputCell = angular.copy(cell);
       if (tableEntry.performance.input) {
         inputCell.firstParameter = tableEntry.performance.input.mu;
@@ -653,6 +672,9 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function finishAlphaBetaCell(cell, tableEntry) {
+      if(cell.empty){
+        return cell;
+      }
       var inputCell = angular.copy(cell);
       inputCell.firstParameter = tableEntry.performance.parameters.alpha;
       inputCell.secondParameter = tableEntry.performance.parameters.beta;
@@ -660,6 +682,9 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function finishProportionSampleSizeCell(cell, tableEntry) {
+      if(cell.empty){
+        return cell;
+      }
       var inputCell = angular.copy(cell);
       inputCell.firstParameter = tableEntry.performance.input.value;
       inputCell.secondParameter = tableEntry.performance.input.sampleSize;

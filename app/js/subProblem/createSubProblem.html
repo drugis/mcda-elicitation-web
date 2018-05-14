@@ -99,6 +99,7 @@
           </tbody>
         </table>
         </div>
+        <div class="cell alert" ng-if="hasMissingValues"><em>Effects table may not contain missing values</em></div>
         <!-- Scale ranges -->
         <div class="cell">
           <h4>Scale ranges
@@ -128,7 +129,7 @@
         </div>
         <div class="cell alert" ng-if="invalidSlider"><em>Invalid scale range</em></div>
         <div class="cell large-6">
-          <button class="button success" type="submit" ng-disabled="isTitleDuplicate || !subProblemState.title || invalidSlider">Create</button>
+          <button class="button success" type="submit" ng-disabled="isTitleDuplicate || !subProblemState.title || invalidSlider || hasMissingValues">Create</button>
         </div>
       </div>
       <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">

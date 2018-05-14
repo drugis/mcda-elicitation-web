@@ -34,7 +34,6 @@ define(['lodash', 'angular'], function(_) {
     $scope.checkDuplicateTitle = checkDuplicateTitle;
     $scope.updateInclusions = updateInclusions;
     $scope.createProblemConfiguration = createProblemConfiguration;
-    $scope.isCreationBlocked = isCreationBlocked;
     $scope.cancel = $modalInstance.close;
     $scope.reset = reset;
 
@@ -116,6 +115,11 @@ define(['lodash', 'angular'], function(_) {
       $scope.observedScales = _.mapValues(includedScales, function(value) {
         return _.pick(value, includedAlternatives);
       });
+      $scope.hasMissingValues = _.find($scope.observedScales, function(scaleRow) {
+        return _.find(scaleRow, function(scaleCell) {
+          return !scaleCell['50%'];
+        });
+      });
       initializeScales();
     }
 
@@ -148,10 +152,6 @@ define(['lodash', 'angular'], function(_) {
     // private functions
     function checkDuplicateTitle(title) {
       $scope.isTitleDuplicate = _.find($scope.subProblems, ['title', title]);
-    }
-
-    function isCreationBlocked() {
-      return !$scope.subProblemState || !$scope.subProblemState.hasScaleRange || (!$scope.subProblemState.isChanged && !$scope.subProblemState.scaleRangeChanged);
     }
   };
   return dependencies.concat(CreateSubProblemController);

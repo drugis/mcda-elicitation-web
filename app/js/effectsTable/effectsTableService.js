@@ -79,8 +79,8 @@ define(['lodash'], function(_) {
 
     function buildLabel(entryForCriterion) {
       var label = '';
-      var hasUncertainty = true;
       var performance = entryForCriterion.performance;
+      var hasUncertainty = performance.type !== 'empty';
       var parameters = performance.parameters;
       if (performance.input) {
         var input = performance.input;
@@ -106,17 +106,17 @@ define(['lodash'], function(_) {
             label = input.mu + ' (' + input.sigma + '), ' + (input.sampleSize);
             break;
           case 'dnorm':
-            if(input.events && input.sampleSize){
+            if (input.events && input.sampleSize) {
               label = input.events + ' / ' + input.sampleSize;
-            } else if(input.value && input.sampleSize && input.scale === 'percentage'){ //dichotomous
-              label = input.value + '% ('+input.sampleSize+')';
-            } else if(input.value && input.sampleSize){ //dichotomous
-              label = input.value + ' ('+input.sampleSize+')';
-            } else if(input.stdErr){//with stdErr
+            } else if (input.value && input.sampleSize && input.scale === 'percentage') { //dichotomous
+              label = input.value + '% (' + input.sampleSize + ')';
+            } else if (input.value && input.sampleSize) { //dichotomous
+              label = input.value + ' (' + input.sampleSize + ')';
+            } else if (input.stdErr) {//with stdErr
               label = input.value ? input.value : input.mu; //exact to dist  vs manual normal dist
               label += ' (' + input.stdErr + ')';
-            } else if(input.lowerBound){//with confidence interval
-              label =input.value + ' ('+input.lowerBound +'; '+input.upperBound+')';
+            } else if (input.lowerBound) {//with confidence interval
+              label = input.value + ' (' + input.lowerBound + '; ' + input.upperBound + ')';
             }
             break;
           case 'dbeta':
