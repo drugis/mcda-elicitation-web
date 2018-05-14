@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(angular) {
+define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function() {
   describe('the performance service', function() {
     var performanceService;
     beforeEach(module('elicit.manualInput'));
@@ -104,6 +104,11 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
             foo: 'bar'
           }
         });
+      });
+    });
+    describe('buildEmptyPerformance', function() {
+      it('should build an empty performance', function() {
+        expect(performanceService.buildEmptyPerformance()).toEqual({ type: 'empty' });
       });
     });
   });

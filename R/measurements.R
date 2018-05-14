@@ -29,19 +29,15 @@ survival.at.time <- function(t,x) { # survival at time t expressed in %
 }
 
 survival.transform <- function(performance, samples) {
-
   if (performance$parameters$summaryMeasure=='mean') {
     samples <- survival.mean(samples)
   }
-
   if (performance$parameters$summaryMeasure=='median') {
     samples <- survival.median(samples)
   }
-
   if (performance$parameters$summaryMeasure=='survivalAtTime') {
     samples <- survival.at.time(performance$parameters[['time']],samples)
   }
-
   samples
 }
 
@@ -66,7 +62,6 @@ sampler.dgamma <- function(perf, N) {
 }
 
 sampler.dsurv <- function(perf, N) {
-
   # Sample from the posterior distribution of the rate parameter lambda of the exponential survival function
   samples <- sampler.dgamma(perf, N)
 
@@ -91,19 +86,12 @@ sampler.dnorm <- function(perf, N) {
   rnorm(N, perf$parameters['mu'], perf$parameters['sigma'])
 }
 
+sampler.empty <-function(perf, N){
+  rep(NA, N)
+}
+
 sampler.exact <- function(perf, N) {
   output <- rep(perf$value, length.out=N)
-  if (!is.null(perf$isNormal)) {
-    if(perf$isNormal) {
-      if(!is.null(perf$stdErr)) {
-        sigma <- perf$stdErr
-      } else {
-        sigma <- (perf$upperBound - perf$lowerBound)/(2*1.96)
-      }
-      output <- rnorm(N, perf$value, sigma)
-    } 
-  }
-  output
 }
 
 sampler.dt <- function(perf, N) {

@@ -49,6 +49,9 @@ define(['lodash'], function(_) {
     $scope.showStudyData = { value: false }; // true : study data, false : exact/relative values
     determineActiveTab();
     $scope.effectsTableInfo = EffectsTableService.createEffectsTableInfo($scope.aggregateState.problem.performanceTable);
+    $scope.hasMissingValues = _.find($scope.aggregateState.problem.performanceTable, function(tableEntry){
+      return tableEntry.performance.type === 'empty';
+    });
     $scope.$on('$destroy', deregisterTransitionListener);
 
     $scope.$watch('scenario.state', updateTaskAccessibility);

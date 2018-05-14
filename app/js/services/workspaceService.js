@@ -42,9 +42,9 @@ define(['lodash', 'angular'], function(_) {
       var newProblem = _.cloneDeep(baseProblem);
       if (subProblemDefinition.excludedCriteria) {
         newProblem.criteria = _.omit(newProblem.criteria, subProblemDefinition.excludedCriteria);
-        newProblem.performanceTable = _.reject(newProblem.performanceTable, function(performanceEntry) {
-          return _.includes(subProblemDefinition.excludedCriteria, performanceEntry.criterionUri) ||
-            _.includes(subProblemDefinition.excludedCriteria, performanceEntry.criterion); // addis/mcda standalone difference
+        newProblem.performanceTable = _.reject(newProblem.performanceTable, function(tableEntry) {
+          return _.includes(subProblemDefinition.excludedCriteria, tableEntry.criterionUri) ||
+            _.includes(subProblemDefinition.excludedCriteria, tableEntry.criterion); // addis/mcda standalone difference
         });
       }
 
@@ -57,22 +57,18 @@ define(['lodash', 'angular'], function(_) {
         }, {});
 
         var excludedAlternativeNames = subProblemDefinition.excludedAlternatives;
-        // remove all exact entries that are excluded
-        newProblem.performanceTable = _.reject(newProblem.performanceTable, function(performanceEntry) {
-          return performanceEntry.performance.type === 'exact' && _.includes(excludedAlternativeNames, performanceEntry.alternative);
-        });
-        // remove all survival entries that are excluded
-        newProblem.performanceTable = _.reject(newProblem.performanceTable, function(performanceEntry) {
-          return performanceEntry.performance.type === 'dsurv' && _.includes(excludedAlternativeNames, performanceEntry.alternative);
+        // remove all entries that are excluded
+        newProblem.performanceTable = _.reject(newProblem.performanceTable, function(tableEntry) {
+          return _.includes(excludedAlternativeNames, tableEntry.alternative);
         });
 
-        // remove all relative entries that are excluded
-        _.forEach(newProblem.performanceTable, function(performanceEntry) {
-          if (performanceEntry.performance.type !== 'exact' && performanceEntry.performance.type !== 'dsurv' &&
-            performanceEntry.performance.parameters.relative) {
-            performanceEntry.performance.parameters.relative.cov =
-              reduceCov(performanceEntry.performance.parameters.relative.cov, excludedAlternativeNames);
-            performanceEntry.performance.parameters.relative.mu = reduceMu(performanceEntry.performance.parameters.relative.mu,
+        // update all relative entries which are included
+        _.forEach(newProblem.performanceTable, function(tableEntry) {
+          if (tableEntry.performance.type !== 'exact' && tableEntry.performance.type !== 'dsurv' && tableEntry.performance.parameters &&
+            tableEntry.performance.parameters.relative) {
+            tableEntry.performance.parameters.relative.cov =
+              reduceCov(tableEntry.performance.parameters.relative.cov, excludedAlternativeNames);
+            tableEntry.performance.parameters.relative.mu = reduceMu(tableEntry.performance.parameters.relative.mu,
               subProblemDefinition.excludedAlternatives);
           }
         });

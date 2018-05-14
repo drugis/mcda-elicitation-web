@@ -28,8 +28,8 @@
           <label>
             {{inputCell.inputParameters.secondParameter.label}}
             <span ng-show="inputCell.inputParameters.secondParameter.label === 'Lower bound'">(
-              <input type="checkbox" ng-model="inputCell.lowerBoundNE" ng-change="confidenceIntervalNEChanged()">Not estimable)</span>
-            <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()" ng-disabled="inputCell.empty|| inputCell.lowerBoundNE">
+              <input type="checkbox" ng-model="inputCell.lowerBoundNE" ng-change="confidenceIntervalNEChanged()" ng-disabled="inputCell.empty">Not estimable)</span>
+            <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()" ng-disabled="inputCell.empty || inputCell.lowerBoundNE">
           </label>
         </div>
         <div class="cell" ng-if="inputCell.inputParameters.thirdParameter">

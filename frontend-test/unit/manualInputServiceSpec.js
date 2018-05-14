@@ -36,6 +36,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         var result = manualInputService.getInputError(cell);
         expect(result).toBe('error message');
       });
+      it('should return no error for an empty typed cell', function(){
+        var cell = {
+          empty: true
+        };
+        expect(manualInputService.getInputError(cell)).toBeFalsy();
+      });
     });
     describe('inputToString', function() {
       it('should use the inputknowledgeservice for valid inputs', function() {

@@ -22,7 +22,7 @@ run_scales <- function(params) {
   crit <- names(params$criteria)
   alts <- names(params$alternatives)
   meas <- sample(alts, crit, params$performanceTable, N)
-  scales <- apply(meas, c(2, 3), function(e) { quantile(e, c(0.025, 0.5, 0.975)) })
+  scales <- apply(meas, c(2, 3), function(e) { quantile(e, c(0.025, 0.5, 0.975),na.rm=T) })
   apply(aperm(scales, c(3,2,1)), 1, wrap.matrix)
 }
 
