@@ -11,6 +11,9 @@ define(['lodash', 'angular'], function(_) {
       var inputParameters = _.pick(cell.inputParameters, ['firstParameter', 'secondParameter', 'thirdParameter']);
       _.find(inputParameters, function(inputParameter, key) {
         var inputValue = cell[key];
+        if ((inputParameter.label === 'Lower bound' && cell.lowerBoundNE)||(inputParameter.label === 'Upper bound' && cell.upperBoundNE)) {
+          return;
+        }
         return _.find(inputParameter.constraints, function(constraint) {
           error = constraint(inputValue, inputParameter.label, cell);
           return error;

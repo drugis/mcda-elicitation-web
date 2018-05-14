@@ -461,7 +461,7 @@ define(['lodash', 'angular'], function(_, angular) {
         scale: 'percentage', value: cell.firstParameter
       });
     }
-    
+
     // knowledge
 
     function getKnowledge(cell) {
@@ -556,8 +556,8 @@ define(['lodash', 'angular'], function(_, angular) {
       };
       knowledge.fits = function(tableEntry) {
         return tableEntry.performance.input &&
-          isFinite(tableEntry.performance.input.lowerBound) &&
-          isFinite(tableEntry.performance.input.upperBound) &&
+          (isFinite(tableEntry.performance.input.lowerBound) || tableEntry.performance.input.lowerBound === 'NE') &&
+          (isFinite(tableEntry.performance.input.upperBound) || tableEntry.performance.input.upperBound === 'NE') &&
           tableEntry.performance.input.scale !== 'percentage';
       };
       knowledge.toString = valueCIToString;
@@ -571,7 +571,6 @@ define(['lodash', 'angular'], function(_, angular) {
           });
         } else {
           return PerformanceService.buildExactConfidencePerformance(cell);
-
         }
       };
       return knowledge;
@@ -590,8 +589,8 @@ define(['lodash', 'angular'], function(_, angular) {
       };
       knowledge.fits = function(tableEntry) {
         return tableEntry.performance.input &&
-          isFinite(tableEntry.performance.input.lowerBound) &&
-          isFinite(tableEntry.performance.input.upperBound) &&
+          (isFinite(tableEntry.performance.input.lowerBound) || tableEntry.performance.input.lowerBound === 'NE') &&
+          (isFinite(tableEntry.performance.input.upperBound) || tableEntry.performance.input.upperBound === 'NE') &&
           tableEntry.performance.input.scale === 'percentage';
       };
       return knowledge;
@@ -622,22 +621,30 @@ define(['lodash', 'angular'], function(_, angular) {
     function finishValueConfidenceIntervalCell(cell, tableEntry) {
       var inputCell = angular.copy(cell);
       inputCell.firstParameter = tableEntry.performance.input.value;
-      inputCell.secondParameter = tableEntry.performance.input.lowerBound;
-      inputCell.thirdParameter = tableEntry.performance.input.upperBound;
+      if (tableEntry.performance.input.lowerBound === 'NE') {
+        inputCell.lowerBoundNE = true;
+      } else {
+        inputCell.secondParameter = tableEntry.performance.input.lowerBound;
+      }
+      if (tableEntry.performance.input.upperBound === 'NE') {
+        inputCell.upperBoundNE = true;
+      } else {
+        inputCell.thirdParameter = tableEntry.performance.input.upperBound;
+      }
       inputCell.isNormal = tableEntry.performance.type === 'dnorm';
       return inputCell;
     }
 
     function finishStudentsTCell(cell, tableEntry) {
       var inputCell = angular.copy(cell);
-      if(tableEntry.performance.input){
+      if (tableEntry.performance.input) {
         inputCell.firstParameter = tableEntry.performance.input.mu;
         inputCell.secondParameter = tableEntry.performance.input.sigma;
         inputCell.thirdParameter = tableEntry.performance.input.sampleSize;
       } else {
         inputCell.firstParameter = tableEntry.performance.parameters.mu;
         inputCell.secondParameter = tableEntry.performance.parameters.stdErr;
-        inputCell.thirdParameter = tableEntry.performance.parameters.dof+1;
+        inputCell.thirdParameter = tableEntry.performance.parameters.dof + 1;
       }
       return inputCell;
     }
@@ -675,7 +682,17 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function valueCIToString(cell) {
-      var returnString = cell.firstParameter + ' (' + cell.secondParameter + '; ' + cell.thirdParameter + ')';
+      var returnString = cell.firstParameter + ' (';
+      if (cell.lowerBoundNE) {
+        returnString += 'NE; ';
+      } else {
+        returnString += cell.secondParameter + '; ';
+      }
+      if (cell.upperBoundNE) {
+        returnString += 'NE)';
+      } else {
+        returnString += cell.thirdParameter + ')';
+      }
       if (cell.isNormal) {
         return returnString + '\nNormal(' + cell.firstParameter + ', ' + boundsToStandardError(cell.secondParameter, cell.thirdParameter) + ')';
       }
@@ -683,7 +700,18 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function valueCIPercentToString(cell) {
-      return cell.firstParameter + '% (' + cell.secondParameter + '%; ' + cell.thirdParameter + '%)' + NO_DISTRIBUTION;
+      var returnString = cell.firstParameter + '% (';
+      if (cell.lowerBoundNE) {
+        returnString += 'NE; ';
+      } else {
+        returnString += cell.secondParameter + '%; ';
+      }
+      if (cell.upperBoundNE) {
+        returnString += 'NE)';
+      } else {
+        returnString += cell.thirdParameter + '%)';
+      }
+      return returnString + NO_DISTRIBUTION;
     }
 
     // constraints
