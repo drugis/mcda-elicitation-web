@@ -1,0 +1,20 @@
+<div class="grid-container">
+  <form ng-submit="addCriterion(criterion)">
+    <div class="grid-x">
+      <div class="cell">
+        <h2>Add data source for {{criterion.title}}</h2>
+      </div>
+      <div class="cell">
+        <data-source-input data-source="dataSource" errors="errors"></data-source-input>
+      </div>
+      <div class="cell" ng-when="blockedReasons.length">
+        <em ng-repeat="blockedReason in blockedReasons" class="alert">{{blockedReason}}
+          <br />
+        </em>
+      </div>
+    </div>
+    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </form>
+</div>

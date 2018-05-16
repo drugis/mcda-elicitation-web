@@ -26,7 +26,8 @@ define(['lodash', 'angular'], function(_, angular) {
   ) {
 
     // functions
-    $scope.addTreatment = addTreatment;
+    $scope.addAlternative = addAlternative;
+    $scope.addDataSource = addDataSource;
     $scope.alternativeDown = alternativeDown;
     $scope.alternativeUp = alternativeUp;
     $scope.checkInputData = checkInputData;
@@ -38,7 +39,7 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.goToStep2 = goToStep2;
     $scope.isDuplicateTitle = isDuplicateTitle;
     $scope.openCriterionModal = openCriterionModal;
-    $scope.removeTreatment = removeTreatment;
+    $scope.removeAlternative = removeAlternative;
     $scope.removeCriterion = removeCriterion;
     $scope.saveInProgress = saveInProgress;
 
@@ -71,12 +72,29 @@ define(['lodash', 'angular'], function(_, angular) {
     };
 
     // public functions
-    function addTreatment(title) {
+    function addAlternative(title) {
       $scope.state.alternatives.push({
         title: title,
         id: generateUuid()
       });
       $scope.treatmentInputField.value = '';
+    }
+
+    function addDataSource(criterion) {
+      $modal.open({
+        templateUrl: '/js/manualInput/addDataSource.html',
+        controller: 'AddDataSourceController',
+        resolve: {
+          callback: function() {
+            return function(newDataSource) {
+              criterion.dataSources[generateUuid()] = newDataSource;
+            };
+          },
+          criterion: function() {
+            return criterion;
+          }
+        }
+      });
     }
 
     function checkInputData() {
@@ -194,7 +212,7 @@ define(['lodash', 'angular'], function(_, angular) {
       favorabilityChanged();
     }
 
-    function removeTreatment(alternative) {
+    function removeAlternative(alternative) {
       $scope.state.alternatives = _.reject($scope.state.alternatives, ['id', alternative.id]);
     }
 
