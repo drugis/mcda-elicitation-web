@@ -10,72 +10,6 @@
         </label>
         <input type="text" ng-model="criterion.title" ng-change="isCreationBlocked()">
       </div>
-      <div class="cell" ng-if="useFavorability">
-        <label>Favorability
-          <inline-help help-key="favorability"></inline-help>
-        </label>
-        <input type="radio" ng-model="criterion.isFavorable" ng-value="false" id="not-favorable">
-        <label for="not-favorable">Not favorable</label>
-        <input type="radio" ng-model="criterion.isFavorable" ng-value="true" id="favorable">
-        <label for="favorable">Favorable</label>
-      </div>
-      <div class="cell">
-        <label>Input type
-          <!-- <inline-help help-key="criterion-input-type"></inline-help> -->
-        </label>
-        <input type="radio" ng-model="criterion.inputMetaData.inputType" ng-value="'distribution'" id="distribution" ng-change="inputTypeChanged()">
-        <label for="distribution">Distribution</label>
-        <input type="radio" ng-model="criterion.inputMetaData.inputType" ng-value="'effect'" id="effect" ng-change="inputTypeChanged()">
-        <label for="effect">Effect</label>
-      </div>
-      <div class="cell" ng-show="criterion.inputMetaData.inputType === 'distribution'">
-        <label>Input method
-          <!-- <inline-help help-key="criterion-input-method"></inline-help> -->
-        </label>
-        <input type="radio" ng-model="criterion.inputMetaData.inputMethod" ng-value="'assistedDistribution'" id="assistedDistribution">
-        <label for="assistedDistribution">Assisted distribution</label>
-        <input type="radio" ng-model="criterion.inputMetaData.inputMethod" ng-value="'manualDistribution'" id="manualDistribution">
-        <label for="manualDistribution">Manual distribution</label>
-      </div>
-      <div class="cell" ng-show="criterion.inputMetaData.inputType === 'effect'">
-        <label>Data type
-          <!-- <inline-help help-key="criterion-datatype"></inline-help> -->
-        </label>
-        <input type="radio" ng-model="criterion.inputMetaData.dataType" ng-change="dataTypeChanged()" ng-value="'dichotomous'" id="dichotomous">
-        <label for="dichotomous">Dichotomous</label>
-        <input type="radio" ng-model="criterion.inputMetaData.dataType" ng-change="dataTypeChanged()" ng-value="'continuous'" id="continuous">
-        <label for="continuous">Continuous</label>
-        <input type="radio" ng-model="criterion.inputMetaData.dataType" ng-change="dataTypeChanged()" ng-value="'other'" id="other">
-        <label for="other">Other</label>
-      </div>
-      <div class="cell" ng-show="criterion.inputMetaData.inputType === 'distribution' && criterion.inputMetaData.inputMethod === 'assistedDistribution'">
-        <label>Parameter of interest
-          <!-- <inline-help help-key="criterion-datatype"></inline-help> -->
-        </label>
-        <input type="radio" ng-model="criterion.inputMetaData.dataType" ng-value="'dichotomous'" id="dichotomous" ng-change="dataTypeChanged()">
-        <label for="dichotomous">Event probability (dichotomous)</label>
-        <input type="radio" ng-model="criterion.inputMetaData.dataType" ng-value="'continuous'" id="continuous" ng-change="dataTypeChanged()">
-        <label for="continuous">Mean (continuous)</label>
-      </div>
-      <div class="cell" ng-show="criterion.inputMetaData.inputType === 'effect'">
-        <label>Parameter of interest
-          <!-- <inline-help help-key="criterion-parameter-of-interest"></inline-help> -->
-        </label>
-        <input ng-show="criterion.inputMetaData.dataType === 'dichotomous'" type="radio" ng-model="criterion.inputMetaData.parameterOfInterest" ng-value="'eventProbability'"
-          id="event-probability" ng-disabled="true">
-        <label ng-show="criterion.inputMetaData.dataType === 'dichotomous'" for="event-probability">Event probability</label>
-        <input ng-show="criterion.inputMetaData.dataType === 'continuous'" type="radio" ng-model="criterion.inputMetaData.parameterOfInterest" ng-value="'mean'"
-          id="mean">
-        <label ng-show="criterion.inputMetaData.dataType === 'continuous'" for="mean">Mean</label>
-        <input ng-show="criterion.inputMetaData.dataType === 'continuous'" type="radio" ng-model="criterion.inputMetaData.parameterOfInterest" ng-value="'median'"
-          id="median">
-        <label ng-show="criterion.inputMetaData.dataType === 'continuous'" for="median">Median</label>
-        <input ng-show="criterion.inputMetaData.dataType === 'continuous'" type="radio" ng-model="criterion.inputMetaData.parameterOfInterest" ng-value="'cumulativeProbability'"
-          id="cumulative-probability">
-        <label ng-show="criterion.inputMetaData.dataType === 'continuous'" for="cumulative-probability">Cumulative probability</label>
-        <input ng-show="criterion.inputMetaData.dataType === 'other'" type="radio" ng-model="criterion.inputMetaData.parameterOfInterest" ng-value="'value'" id="value" ng-disabled="true">
-        <label ng-show="criterion.inputMetaData.dataType === 'other'" for="value">Value</label>
-      </div>
       <div class="cell">
         <label>Unit of measurement (optional)
           <inline-help help-key="criterion-unit"></inline-help>
@@ -86,29 +20,17 @@
         <label>Description (optional)</label>
         <input type="text" ng-model="criterion.description">
       </div>
-      <div class="cell">
-        <label>Reference (optional)
-          <inline-help help-key="criterion-source"></inline-help>
+      <div class="cell" ng-if="useFavorability">
+        <label>Favorability
+          <inline-help help-key="favorability"></inline-help>
         </label>
-        <input type="text" ng-model="criterion.source">
+        <input type="radio" ng-model="criterion.isFavorable" ng-value="false" id="not-favorable">
+        <label for="not-favorable">Not favorable</label>
+        <input type="radio" ng-model="criterion.isFavorable" ng-value="true" id="favorable">
+        <label for="favorable">Favorable</label>
       </div>
-      <div class="cell">
-        <label>Reference URL (optional)
-          <inline-help help-key="criterion-source-link"></inline-help>
-        </label>
-        <input type="text" ng-model="criterion.sourceLink" ng-change="isCreationBlocked()">
-      </div>
-      <div class="cell">
-        <label>Uncertainties (optional)
-          <!-- <inline-help help-key="uncertainties"> -->
-        </label>
-        <input type="text" ng-model="criterion.uncertainties">
-      </div>
-      <div class="cell">
-        <label>Strength of evidence (optional)
-          <!-- <inline-help help-key="strength-of-evidence"> -->
-        </label>
-        <input type="text" ng-model="criterion.strengthOfEvidence">
+      <div class="cell" ng-if="criterion.dataSources.length === 1">
+        <data-source-input data-source="criterion.dataSources[0]" errors="blockedReasons"></data-source-input>
       </div>
       <div class="cell button-group">
         <button class="button" ng-disabled="blockedReasons.length" type="submit">{{isAddOperation ? 'Add' : 'Done'}}</button>

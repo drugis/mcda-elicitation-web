@@ -1,0 +1,83 @@
+    <div class="grid-x">
+      <div class="cell">
+        <label>Input type
+          <!-- <inline-help help-key="criterion-input-type"></inline-help> -->
+        </label>
+        <input type="radio" ng-model="dataSource.inputType" ng-value="'distribution'" id="distribution" ng-change="inputTypeChanged()">
+        <label for="distribution">Distribution</label>
+        <input type="radio" ng-model="dataSource.inputType" ng-value="'effect'" id="effect" ng-change="inputTypeChanged()">
+        <label for="effect">Effect</label>
+      </div>
+      <div class="cell" ng-show="dataSource.inputType === 'distribution'">
+        <label>Input method
+          <!-- <inline-help help-key="criterion-input-method"></inline-help> -->
+        </label>
+        <input type="radio" ng-model="dataSource.inputMethod" ng-value="'assistedDistribution'" id="assistedDistribution">
+        <label for="assistedDistribution">Assisted distribution</label>
+        <input type="radio" ng-model="dataSource.inputMethod" ng-value="'manualDistribution'" id="manualDistribution">
+        <label for="manualDistribution">Manual distribution</label>
+      </div>
+      <div class="cell" ng-show="dataSource.inputType === 'effect'">
+        <label>Data type
+          <!-- <inline-help help-key="criterion-datatype"></inline-help> -->
+        </label>
+        <input type="radio" ng-model="dataSource.dataType" ng-change="dataTypeChanged()" ng-value="'dichotomous'" id="dichotomous">
+        <label for="dichotomous">Dichotomous</label>
+        <input type="radio" ng-model="dataSource.dataType" ng-change="dataTypeChanged()" ng-value="'continuous'" id="continuous">
+        <label for="continuous">Continuous</label>
+        <input type="radio" ng-model="dataSource.dataType" ng-change="dataTypeChanged()" ng-value="'other'" id="other">
+        <label for="other">Other</label>
+      </div>
+      <div class="cell" ng-show="dataSource.inputType === 'distribution' && dataSource.inputMethod === 'assistedDistribution'">
+        <label>Parameter of interest
+          <!-- <inline-help help-key="criterion-datatype"></inline-help> -->
+        </label>
+        <input type="radio" ng-model="dataSource.dataType" ng-value="'dichotomous'" id="dichotomous" ng-change="dataTypeChanged()">
+        <label for="dichotomous">Event probability (dichotomous)</label>
+        <input type="radio" ng-model="dataSource.dataType" ng-value="'continuous'" id="continuous" ng-change="dataTypeChanged()">
+        <label for="continuous">Mean (continuous)</label>
+      </div>
+      <div class="cell" ng-show="dataSource.inputType === 'effect'">
+        <label>Parameter of interest
+          <!-- <inline-help help-key="criterion-parameter-of-interest"></inline-help> -->
+        </label>
+        <input ng-show="dataSource.dataType === 'dichotomous'" type="radio" ng-model="dataSource.parameterOfInterest" ng-value="'eventProbability'"
+          id="event-probability" ng-disabled="true">
+        <label ng-show="dataSource.dataType === 'dichotomous'" for="event-probability">Event probability</label>
+        <input ng-show="dataSource.dataType === 'continuous'" type="radio" ng-model="dataSource.parameterOfInterest" ng-value="'mean'"
+          id="mean">
+        <label ng-show="dataSource.dataType === 'continuous'" for="mean">Mean</label>
+        <input ng-show="dataSource.dataType === 'continuous'" type="radio" ng-model="dataSource.parameterOfInterest" ng-value="'median'"
+          id="median">
+        <label ng-show="dataSource.dataType === 'continuous'" for="median">Median</label>
+        <input ng-show="dataSource.dataType === 'continuous'" type="radio" ng-model="dataSource.parameterOfInterest" ng-value="'cumulativeProbability'"
+          id="cumulative-probability">
+        <label ng-show="dataSource.dataType === 'continuous'" for="cumulative-probability">Cumulative probability</label>
+        <input ng-show="dataSource.dataType === 'other'" type="radio" ng-model="dataSource.parameterOfInterest" ng-value="'value'" id="value" ng-disabled="true">
+        <label ng-show="dataSource.dataType === 'other'" for="value">Value</label>
+      </div>
+      <div class="cell">
+        <label>Reference (optional)
+          <inline-help help-key="criterion-source"></inline-help>
+        </label>
+        <input type="text" ng-model="dataSource.source">
+      </div>
+      <div class="cell">
+        <label>Reference URL (optional)
+          <inline-help help-key="criterion-source-link"></inline-help>
+        </label>
+        <input type="text" ng-model="dataSource.sourceLink" ng-change="checkSourceLink()">
+      </div>
+      <div class="cell">
+        <label>Uncertainties (optional)
+          <!-- <inline-help help-key="uncertainties"> -->
+        </label>
+        <input type="text" ng-model="dataSource.uncertainties">
+      </div>
+      <div class="cell">
+        <label>Strength of evidence (optional)
+          <!-- <inline-help help-key="strength-of-evidence"> -->
+        </label>
+        <input type="text" ng-model="dataSource.strengthOfEvidence">
+      </div>
+    </div>

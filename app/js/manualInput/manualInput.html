@@ -100,6 +100,7 @@
                   <a ng-click="openCriterionModal(criterion)" tooltip="Edit criterion">
                     <i class="fa fa-edit icon-fixed-width"></i>
                   </a> {{criterion.title}}
+                  <button class="button" ng-click="addDataSource(criterion)">Add data source</button>
                 </div>
               </div>
             </td>
@@ -139,7 +140,7 @@
       <input class="text input-group-field" ng-model="treatmentInputField.value" onkeyup="if(event.keyCode===13) document.getElementById('treatmentButton').click()">
       <div class="input-group-button">
         <button ng-disabled="!treatmentInputField.value || isDuplicateTitle(treatmentInputField.value)" type="button" class="button tiny"
-          ng-click="addTreatment(treatmentInputField.value)" id="treatmentButton">
+          ng-click="addAlternative(treatmentInputField.value)" id="treatmentButton">
           <i class="fa fa-plus"></i> Add Alternative</button>
       </div>
     </div>
@@ -176,7 +177,7 @@
                   </div>
                 </div>
                 <div class="cell small-11">
-                  <a ng-click="removeTreatment(alternative)" tooltip="Remove alternative">
+                  <a ng-click="removeAlternative(alternative)" tooltip="Remove alternative">
                     <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
                   </a> {{alternative.title}}
                 </div>
@@ -243,7 +244,7 @@
             <th>Description</th>
             <th>Unit of measurement</th>
             <th ng-if="state.useFavorability">Is favorable?</th>
-            <th ng-repeat="treatment in state.alternatives" style="min-width:80px">{{treatment.title}}</th>
+            <th ng-repeat="alternative in state.alternatives" style="min-width:80px">{{alternative.title}}</th>
           </tr>
         </thead>
         <tbody>
@@ -252,8 +253,8 @@
             <td>{{criterion.description}}</td>
             <td>{{criterion.unitOfMeasurement}}</td>
             <td ng-if="state.useFavorability">{{criterion.isFavorable}}</td>
-            <td ng-repeat="treatment in state.alternatives">
-              <effect-input-helper criterion="criterion" alternative="treatment" input-data="state.inputData[criterion.id][treatment.id]"
+            <td ng-repeat="alternative in state.alternatives">
+              <effect-input-helper criterion="criterion" alternative="alternative" input-data="state.inputData[criterion.id][alternative.id]"
                 change-callback="checkInputData"></effect-input-helper>
             </td>
           </tr>
