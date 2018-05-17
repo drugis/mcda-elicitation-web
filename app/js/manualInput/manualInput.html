@@ -49,15 +49,15 @@
         <thead>
           <tr>
             <th style="min-width: 15rem;">Title</th>
+            <th>Unit
+              <inline-help help-key="criterion-unit"></inline-help>
+            </th>
+            <th>description</th>
             <th ng-if="state.useFavorability">Is favorable?</th>
             <th>Input type</th>
             <th>Input method</th>
             <th>Data type</th>
             <th>Parameter of interest</th>
-            <th>Unit
-              <inline-help help-key="criterion-unit"></inline-help>
-            </th>
-            <th>description</th>
             <th>Reference
               <inline-help help-key="criterion-source"></inline-help>
             </th>
@@ -72,54 +72,56 @@
               <em>No criteria defined</em>
             </td>
           </tr>
-          <tr ng-repeat="criterion in state.criteria">
-            <td>
+          <tr ng-repeat="row in criteriaRows">
+            <td ng-if="row.criterion.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">
               <div class="grid-x">
                 <div class="cell small-2">
                   <div style="line-height: 10px; margin-bottom: 4px;">
-                    <a ng-if="$index !== 0 && (!(!criterion.isFavorable && state.criteria[$index-1].isFavorable) || !state.useFavorability)"
+                    <a ng-if="$index !== 0 && (!(!row.criterion.isFavorable && criteriaRows[$index-1].isFavorable) || !state.useFavorability)"
                       ng-click="criterionUp($index)" class="nav-arrow">
                       <i style="line-height:0px;" class="fa fa-caret-up"></i>
                     </a>
-                    <i ng-if="$index === 0 || (!criterion.isFavorable && state.criteria[$index-1].isFavorable && state.useFavorability)" style="line-height:0px; color:#bbb"
+                    <i ng-if="$index === 0 || (!row.criterion.isFavorable && criteriaRows[$index-1].isFavorable && state.useFavorability)" style="line-height:0px; color:#bbb"
                       class="fa fa-caret-up"></i>
                   </div>
                   <div style="line-height: 10px;">
-                    <a ng-if="$index !== state.criteria.length-1 && (!(criterion.isFavorable && !state.criteria[$index+1].isFavorable) || !state.useFavorability)"
+                    <a ng-if="$index !== criteriaRows.length-1 && (!(row.criterion.isFavorable && !criteriaRows[$index+1].isFavorable) || !state.useFavorability)"
                       ng-click="criterionDown($index)" class="nav-arrow">
                       <i style="line-height:0px;" class="fa fa-caret-down"></i>
                     </a>
-                    <i ng-if="$index === state.criteria.length-1 || (criterion.isFavorable && !state.criteria[$index+1].isFavorable && state.useFavorability)"
+                    <i ng-if="$index === criteriaRows.length-1 || (row.criterion.isFavorable && !criteriaRows[$index+1].isFavorable && state.useFavorability)"
                       style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
                   </div>
                 </div>
                 <div class="cell small-10">
-                  <a ng-click="removeCriterion(criterion)" tooltip="Remove criterion">
+                  <a ng-click="removeCriterion(row.criterion)" tooltip="Remove criterion">
                     <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
                   </a>
-                  <a ng-click="openCriterionModal(criterion)" tooltip="Edit criterion">
+                  <a ng-click="openCriterionModal(row.criterion)" tooltip="Edit criterion">
                     <i class="fa fa-edit icon-fixed-width"></i>
-                  </a> {{criterion.title}}
-                  <button class="button" ng-click="addDataSource(criterion)">Add data source</button>
+                  </a> {{row.criterion.title}}
+                  <br>
+                  <button class="button tiny" ng-click="addDataSource(row.criterion, state.criteria)">Add data source</button>
                 </div>
               </div>
             </td>
-            <td ng-if="state.useFavorability">{{criterion.isFavorable}}</td>
-            <td ng-style="criterion.inputMetaData.inputType === 'Unknown'? {'color': 'red'} : {}">{{criterion.inputMetaData.inputType}}</td>
-            <td>{{criterion.inputMetaData.inputType === 'distribution' ? inputMethods[criterion.inputMetaData.inputMethod] : 'NA'}}</td>
-            <td>{{criterion.inputMetaData.inputType === 'effect' || criterion.inputMetaData.inputMethod === 'assistedDistribution' ? criterion.inputMetaData.dataType :
-              'NA'}}</td>
-            <td>{{criterion.inputMetaData.inputType !== 'distribution' || criterion.inputMetaData.inputMethod === 'assistedDistribution' ? parameterOfInterest[criterion.inputMetaData.parameterOfInterest]
+            <td ng-if="row.criterion.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.description}}</td>
+            <td ng-if="row.criterion.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.unitOfMeasurement}}</td>
+            <td ng-if="state.useFavorability && row.criterion.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.isFavorable}}</td>
+            <td ng-style="row.criterion.inputMetaData.inputType === 'Unknown'? {'color': 'red'} : {}">{{row.dataSource.inputType}}</td>
+            <td>{{row.dataSource.inputType === 'distribution' ? inputMethods[row.dataSource.inputMethod] : 'NA'}}</td>
+            <td>{{row.dataSource.inputType === 'effect' || row.dataSource.inputMethod === 'assistedDistribution' ? row.dataSource.dataType
+              : 'NA'}}
+            </td>
+            <td>{{row.dataSource.inputType !== 'distribution' || row.dataSource.inputMethod === 'assistedDistribution' ? parameterOfInterest[row.dataSource.parameterOfInterest]
               : 'NA'}}</td>
-            <td>{{criterion.unitOfMeasurement}}</td>
-            <td>{{criterion.description}}</td>
             <td>
-              <a href="{{criterion.sourceLink}}">{{criterion.source}}</a>
+              <a href="{{row.dataSource.sourceLink}}">{{row.dataSource.source}}</a>
             </td>
             <td>
-              <b>Unc: </b> {{criterion.uncertainties}}
+              <b>Unc: </b> {{row.dataSource.uncertainties}}
               <br>
-              <b>SoE: </b>{{criterion.strengthOfEvidence}}</td>
+              <b>SoE: </b>{{row.dataSource.strengthOfEvidence}}</td>
           </tr>
         </tbody>
       </table>

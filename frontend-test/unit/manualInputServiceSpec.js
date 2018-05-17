@@ -36,7 +36,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         var result = manualInputService.getInputError(cell);
         expect(result).toBe('error message');
       });
-      it('should return no error for an empty typed cell', function(){
+      it('should return no error for an empty typed cell', function() {
         var cell = {
           empty: true
         };
@@ -562,11 +562,68 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(result).toEqual(expectedResult);
       });
     });
+
     describe('getOptions', function() {
       it('should call the inputknowledgeservice', function() {
         inputKnowledgeServiceMock.getOptions.and.returnValue('here are some options');
         expect(manualInputService.getOptions()).toEqual('here are some options');
       });
     });
+
+    describe('buildCriteriaRows', function() {
+      it('should create one row for each dataSource of each criterion ', function() {
+        var criteria = [{
+          id: 'crit1',
+          isFavorable: true,
+          dataSources: [{
+            foo: 'bar'
+          }]
+        }, {
+          id: 'crit2',
+          isFavorable: false,
+          dataSources: [{
+            foo: 'qux'
+          }, {
+            zoq: 'fot'
+          }]
+        }];
+
+        var expectedResult = [{
+          criterion: {
+            id: 'crit1',
+            isFavorable: true,
+            isFirstRow: true,
+            numberOfDataSources: 1
+          },
+          dataSource: {
+            foo: 'bar'
+          }
+        }, {
+          criterion: {
+            id: 'crit2',
+            isFavorable: false,
+            isFirstRow: true,
+            numberOfDataSources: 2
+          },
+          dataSource: {
+            foo: 'qux'
+          }
+        }, {
+          criterion: {
+            id: 'crit2',
+            isFavorable: false,
+            isFirstRow: false,
+            numberOfDataSources: 2
+          },
+          dataSource: {
+            zoq: 'fot'
+          }
+        }];
+
+        var result = manualInputService.buildCriteriaRows(criteria);
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
   });
 });

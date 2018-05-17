@@ -80,21 +80,28 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.treatmentInputField.value = '';
     }
 
-    function addDataSource(criterion) {
+    function addDataSource(criterionRow) {
       $modal.open({
         templateUrl: '/js/manualInput/addDataSource.html',
         controller: 'AddDataSourceController',
         resolve: {
           callback: function() {
             return function(newDataSource) {
-              criterion.dataSources[generateUuid()] = newDataSource;
+              
+              var criterion = _.find($scope.state.criteria, ['id', criterionRow.id]);
+              criterion.dataSources.push(newDataSource);
+              updateCriteriaRows();
             };
           },
           criterion: function() {
-            return criterion;
+            return _.find($scope.state.criteria, ['id', criterionRow.id]);
           }
         }
       });
+    }
+
+    function updateCriteriaRows() {
+      $scope.criteriaRows = ManualInputService.buildCriteriaRows($scope.state.criteria);
     }
 
     function checkInputData() {
@@ -143,12 +150,14 @@ define(['lodash', 'angular'], function(_, angular) {
       var mem = $scope.state.criteria[idx];
       $scope.state.criteria[idx] = $scope.state.criteria[idx + 1];
       $scope.state.criteria[idx + 1] = mem;
+      updateCriteriaRows();
     }
 
     function criterionUp(idx) {
       var mem = $scope.state.criteria[idx];
       $scope.state.criteria[idx] = $scope.state.criteria[idx - 1];
       $scope.state.criteria[idx - 1] = mem;
+      updateCriteriaRows();
     }
 
     function favorabilityChanged() {
@@ -191,6 +200,7 @@ define(['lodash', 'angular'], function(_, angular) {
               $scope.state.criteria.push(newCriterion);
               checkForUnknownCriteria($scope.state.criteria);
               favorabilityChanged();
+              updateCriteriaRows();
             };
           },
           oldCriterion: function() {
@@ -210,6 +220,7 @@ define(['lodash', 'angular'], function(_, angular) {
       }
       checkForUnknownCriteria($scope.state.criteria);
       favorabilityChanged();
+      updateCriteriaRows();
     }
 
     function removeAlternative(alternative) {
@@ -254,6 +265,7 @@ define(['lodash', 'angular'], function(_, angular) {
         favorabilityChanged();
         $scope.dirty = true;
         setStateWatcher();
+        updateCriteriaRows();
       } else if (!$stateParams.inProgressId) {
         // new workspace
         $scope.state = {
@@ -264,6 +276,7 @@ define(['lodash', 'angular'], function(_, angular) {
           alternatives: []
         };
         setStateWatcher();
+        updateCriteriaRows();
       } else {
         // unfinished workspace
         InProgressResource.get($stateParams).$promise.then(function(response) {
@@ -272,6 +285,7 @@ define(['lodash', 'angular'], function(_, angular) {
           checkInputData();
           favorabilityChanged();
           setStateWatcher();
+          updateCriteriaRows();
         });
       }
     }
@@ -292,7 +306,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function checkForUnknownCriteria(criteria) {
       $scope.hasUnknownInputType = _.find(criteria, function(criterion) {
-        return criterion.inputMetaData.inputType === 'Unknown';
+        return _.find(criterion.dataSources, ['inputType', 'Unknown']);
       });
     }
   };

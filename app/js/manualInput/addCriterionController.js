@@ -12,8 +12,11 @@ define(['lodash'], function(_) {
     $scope.blockedReason = '';
     $scope.isAddOperation = !oldCriterion;
     $scope.isAddingCriterion = false;
+    $scope.sourceLinkValidity = {
+      isInvalid: false
+    };
     if (oldCriterion) {
-      $scope.criterion = _.cloneDeep(oldCriterion);
+      $scope.criterion = _.cloneDeep(_.find(criteria, ['id', oldCriterion.id]));
     } else {
       $scope.criterion = {
         id: generateUuid(),
@@ -43,6 +46,9 @@ define(['lodash'], function(_) {
       }
       if (isTitleDuplicate(criterion.title) && !$scope.isAddingCriterion && (!oldCriterion || oldCriterion.title !== criterion.title)) {
         $scope.blockedReasons.push('Duplicate title');
+      }
+      if($scope.sourceLinkValidity.isInvalid){
+        $scope.blockedReasons.push('Invalid reference URL');
       }
     }
 
