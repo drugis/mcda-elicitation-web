@@ -1,17 +1,21 @@
 <div class="grid-container">
-  <form ng-submit="addCriterion(criterion)">
+  <form ng-submit="addDataSource(dataSource)">
     <div class="grid-x">
       <div class="cell">
         <h2>Add data source for {{criterion.title}}</h2>
       </div>
       <div class="cell">
-        <data-source-input data-source="dataSource" errors="errors"></data-source-input>
+        <input-data-source source="dataSource" is-invalid-source-link="sourceLinkValidity" change-callback="checkError"></input-data-source>
       </div>
-      <div class="cell" ng-when="blockedReasons.length">
-        <em ng-repeat="blockedReason in blockedReasons" class="alert">{{blockedReason}}
-          <br />
+      <div class="cell" ng-show="errors.length">
+        <em ng-repeat="error in errors" class="alert">
+          {{error}}
+          <br>
         </em>
       </div>
+    </div>
+    <div class="cell">
+      <button class="button" type="submit" ng-disabled="errors.length">Add</button>
     </div>
     <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
       <span aria-hidden="true">&times;</span>

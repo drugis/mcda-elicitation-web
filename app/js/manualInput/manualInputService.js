@@ -8,13 +8,13 @@ define(['lodash', 'angular'], function(_) {
     // Exposed functions
     function getInputError(cell) {
       var error;
-      if (cell.empty){
+      if (cell.empty) {
         return;
       }
       var inputParameters = _.pick(cell.inputParameters, ['firstParameter', 'secondParameter', 'thirdParameter']);
       _.find(inputParameters, function(inputParameter, key) {
         var inputValue = cell[key];
-        if ((inputParameter.label === 'Lower bound' && cell.lowerBoundNE)||(inputParameter.label === 'Upper bound' && cell.upperBoundNE)) {
+        if ((inputParameter.label === 'Lower bound' && cell.lowerBoundNE) || (inputParameter.label === 'Upper bound' && cell.upperBoundNE)) {
           return;
         }
         return _.find(inputParameter.constraints, function(constraint) {
@@ -118,6 +118,21 @@ define(['lodash', 'angular'], function(_) {
       return copyFunctions[schemaVersion](workspace);
     }
 
+    function buildCriteriaRows(criteria) {
+      return _.reduce(criteria, function(accum, criterion) {
+        accum = accum.concat(_.map(criterion.dataSources, function(dataSource, index) {
+          return {
+            criterion: _.merge({}, _.omit(criterion, ['dataSources']), {
+              isFirstRow: index === 0,
+              numberOfDataSources: criterion.dataSources.length
+            }),
+            dataSource: dataSource
+          };
+        }));
+        return accum;
+      }, []);
+    }
+
     // Private functions
     function copySchemaZeroCriteria(workspace) {
       return _.map(workspace.problem.criteria, function(criterion, criterionId) {
@@ -212,7 +227,8 @@ define(['lodash', 'angular'], function(_) {
       prepareInputData: prepareInputData,
       createInputFromOldWorkspace: createInputFromOldWorkspace,
       copyWorkspaceCriteria: copyWorkspaceCriteria,
-      getOptions: getOptions
+      getOptions: getOptions,
+      buildCriteriaRows: buildCriteriaRows
     };
   };
 

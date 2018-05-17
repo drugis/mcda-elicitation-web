@@ -140,7 +140,6 @@ define(['angular',
           this.$apply(fn);
         }
       };
-
     });
 
     return app;
