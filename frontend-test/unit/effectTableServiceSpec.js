@@ -24,24 +24,57 @@ define(['angular-mocks',
             }
           };
           var criteria = [{
-            id: 'crit1'
+            id: 'crit1',
+            dataSources: [{
+              id: 'ds1id'
+            }]
           }, {
-            id: 'crit2'
+            id: 'crit2',
+            dataSources: [{
+              id: 'ds2id'
+            }]
           }, {
-            id: 'crit3'
+            id: 'crit3',
+            dataSources: [{
+              id: 'ds3id'
+            }]
           }];
           var result = effectTableService.buildEffectsTable(problem.valueTree, criteria);
           var expectedResult = [{
             isHeaderRow: true,
             headerText: 'Favorable effects'
+          }, {
+            criterion: {
+              id: 'crit2',
+              numberOfDataSources: 1
+            },
+            dataSource: {
+              id: 'ds2id'
+            },
+            isFirstRow: true
+          }, {
+            criterion: {
+              id: 'crit3',
+              numberOfDataSources: 1
+            },
+            dataSource: {
+              id: 'ds3id'
+            },
+            isFirstRow: true
           },
-          { id: 'crit2' },
-          { id: 'crit3' },
           {
             isHeaderRow: true,
             headerText: 'Unfavorable effects'
-          },
-          { id: 'crit1' }
+          }, {
+            criterion: {
+              id: 'crit1',
+              numberOfDataSources: 1
+            },
+            dataSource: {
+              id: 'ds1id'
+            },
+            isFirstRow: true
+          }
           ];
           expect(result).toEqual(expectedResult);
         });
@@ -207,6 +240,7 @@ define(['angular-mocks',
           expect(result).toEqual(expectedResult);
         });
       });
+
       describe('isStudyDataAvailable', function() {
         it('should return true if there is any entry in the effects table info which is not exact or relative', function() {
           var effectsTableInfo = {
@@ -237,7 +271,61 @@ define(['angular-mocks',
 
         });
       });
-    });
 
+      describe('buildTableRows', function() {
+        it('should create one row for each dataSource of each criterion ', function() {
+          var criteria = [{
+            id: 'crit1',
+            isFavorable: true,
+            dataSources: [{
+              foo: 'bar'
+            }]
+          }, {
+            id: 'crit2',
+            isFavorable: false,
+            dataSources: [{
+              foo: 'qux'
+            }, {
+              zoq: 'fot'
+            }]
+          }];
+
+          var expectedResult = [{
+            isFirstRow: true,
+            criterion: {
+              id: 'crit1',
+              isFavorable: true,
+              numberOfDataSources: 1
+            },
+            dataSource: {
+              foo: 'bar'
+            }
+          }, {
+            isFirstRow: true,
+            criterion: {
+              id: 'crit2',
+              isFavorable: false,
+              numberOfDataSources: 2
+            },
+            dataSource: {
+              foo: 'qux'
+            }
+          }, {
+            isFirstRow: false,
+            criterion: {
+              id: 'crit2',
+              isFavorable: false,
+              numberOfDataSources: 2
+            },
+            dataSource: {
+              zoq: 'fot'
+            }
+          }];
+
+          var result = effectTableService.buildTableRows(criteria);
+          expect(result).toEqual(expectedResult);
+        });
+      });
+    });
   });
 });

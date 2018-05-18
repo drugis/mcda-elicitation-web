@@ -25,7 +25,7 @@ define(['angular'].concat(requires), function(
   inputDataSource,
   InProgressResource
 ) {
-  return angular.module('elicit.manualInput', ['ngResource', 'elicit.util'])
+  return angular.module('elicit.manualInput', ['ngResource', 'elicit.util', 'elicit.effectsTable'])
 
     .controller('ManualInputController', ManualInputController)
     .controller('AddCriterionController', AddCriterionController)
