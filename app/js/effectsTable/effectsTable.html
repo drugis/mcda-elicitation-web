@@ -8,9 +8,9 @@
     <toggle-columns toggled-columns="toggledColumns" edit-mode="editMode"></toggle-columns>
     <span class="toggle-text">Effects</span>
     <span class="switch">
-        <input class="switch-input" id="showStudyDataToggle" type="checkbox" ng-model="showStudyData.value">
-        <label class="switch-paddle" ng-if="studyDataAvailable" for="showStudyDataToggle"></label>
-        <label class="switch-paddle" ng-if="!studyDataAvailable" tooltip-append-to-body="true" tooltip="Cannot show source data if all data is not distributed or relative"></label>
+      <input class="switch-input" id="showStudyDataToggle" type="checkbox" ng-model="showStudyData.value">
+      <label class="switch-paddle" ng-if="studyDataAvailable" for="showStudyDataToggle"></label>
+      <label class="switch-paddle" ng-if="!studyDataAvailable" tooltip-append-to-body="true" tooltip="Cannot show source data if all data is not distributed or relative"></label>
     </span>
     <span class="toggle-text">Source data</span>
     <button class="button small info clipboard-button right" data-clipboard-target="#effectstable">
@@ -39,36 +39,39 @@
         </tr>
       </thead>
       <tbody class="main">
-        <tr ng-repeat="criterion in rows">
-          <td ng-if="criterion.isHeaderRow" class="group-header" colspan="{{5 + nrAlternatives}}">
+        <tr ng-repeat="row in rows">
+          <td ng-if="row.isHeaderRow" class="group-header" colspan="{{5 + nrAlternatives}}">
             <div class="main-header">
-              {{criterion.headerText}}
+              {{row.headerText}}
             </div>
           </td>
-          <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['criteria']">
-            {{criterion.title}}
+          <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}" ng-show="toggledColumns['criteria']">
+            {{row.criterion.title}}
           </td>
-          <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['description']">
-            {{criterion.description}}
+          <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}" ng-show="toggledColumns['description']">
+            {{row.criterion.description}}
           </td>
-          <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['units']">
-            {{criterion.unitOfMeasurement}}
+          <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}" ng-show="toggledColumns['units']">
+            {{row.criterion.unitOfMeasurement}}
           </td>
-          <td ng-if="!criterion.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
-            <effects-table-scales-cell ng-show="!effectsTableInfo[criterion.id].hasStudyData || !showStudyData.value" scales="scales[criterion.id][alternative.id]" uncertainty="effectsTableInfo[criterion.id].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || effectsTableInfo[criterion.id].distributionType === 'relative'"></effects-table-scales-cell>
-            <div ng-if="effectsTableInfo[criterion.id].hasStudyData && showStudyData.value">
-              {{effectsTableInfo[criterion.id].studyDataLabelsAndUncertainty[alternative.id].label}}
+          <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
+            <effects-table-scales-cell ng-show="!effectsTableInfo[row.dataSource.id].hasStudyData || !showStudyData.value" scales="scales[row.dataSource.id][alternative.id]"
+              uncertainty="effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || effectsTableInfo[criterion.id].distributionType === 'relative'"></effects-table-scales-cell>
+            <div ng-if="effectsTableInfo[row.dataSource.id].hasStudyData && showStudyData.value">
+              {{effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].label}}
             </div>
           </td>
-          <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['references']">
-            <a ng-if="criterion.sourceLink" href="{{criterion.sourceLink}}">
-              {{criterion.source}}
+          <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['references']">
+            <a ng-if="row.dataSource.sourceLink" href="{{row.dataSource.sourceLink}}">
+              {{row.dataSource.source}}
             </a>
-            <span ng-if="!criterion.sourceLink">{{criterion.source}}</span>
+            <span ng-if="!row.dataSource.sourceLink">{{row.dataSource.source}}</span>
           </td>
-          <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['strength']">
-            <div ng-if="criterion.strengthOfEvidence"><b>SoE: </b>{{criterion.strengthOfEvidence}}</div>
-            <div ng-if="criterion.uncertainties"><b>Unc: </b> {{criterion.uncertainties}}</div>
+          <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['strength']">
+            <div ng-if="row.dataSource.strengthOfEvidence">
+              <b>SoE: </b>{{row.dataSource.strengthOfEvidence}}</div>
+            <div ng-if="row.dataSource.uncertainties">
+              <b>Unc: </b> {{row.dataSource.uncertainties}}</div>
           </td>
         </tr>
       </tbody>

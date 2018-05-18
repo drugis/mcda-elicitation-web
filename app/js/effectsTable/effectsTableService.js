@@ -20,6 +20,7 @@ define(['lodash'], function(_) {
     }
 
     function buildEffectsTable(valueTree, criteria) {
+      var tableRows = criteria;
       if (valueTree) {
         var favorabilityHeader = {
           isHeaderRow: true,
@@ -31,27 +32,45 @@ define(['lodash'], function(_) {
         };
         var orderedFavorableCriteria = pickOrderedIds(criteria, flattenValueTreeChildren(valueTree.children[0]));
         var orderedUnfavorableCriteria = pickOrderedIds(criteria, flattenValueTreeChildren(valueTree.children[1]));
-        return [].concat(
-          favorabilityHeader,
+        tableRows = [].concat(
+          [favorabilityHeader],
           orderedFavorableCriteria,
-          unFavorabilityHeader,
+          [unFavorabilityHeader],
           orderedUnfavorableCriteria);
-      } else {
-        return criteria;
-      }
+      } 
+      tableRows = buildTableRows(tableRows);
+      return tableRows;
+    }
+
+    function buildTableRows(rows) {
+      return _.reduce(rows, function(accum, row) {
+        if(row.isHeaderRow){
+          return accum.concat(row);
+        }
+        var rowCriterion = _.omit(row, ['dataSources']);
+        rowCriterion.numberOfDataSources = row.dataSources.length;
+        accum = accum.concat(_.map(row.dataSources, function(dataSource, index) {
+          return {
+            criterion: rowCriterion,
+            isFirstRow: index === 0,
+            dataSource: dataSource
+          };
+        }));
+        return accum;
+      }, []);
     }
 
     function createEffectsTableInfo(performanceTable) {
       return _.reduce(performanceTable, function(accum, tableEntry) {
-        var criterionId = tableEntry.criterion;
-        if (accum[criterionId]) { return accum; }
+        var dataSourceId = tableEntry.dataSource;
+        if (accum[dataSourceId]) { return accum; }
         if (tableEntry.alternative) {
-          accum[criterionId] = {
+          accum[dataSourceId] = {
             distributionType: tableEntry.performance.type,
             hasStudyData: true,
             studyDataLabelsAndUncertainty: _(performanceTable)
               .filter(function(tableEntry) {
-                return criterionId === tableEntry.criterion;
+                return dataSourceId === tableEntry.dataSource;
               })
               .reduce(function(accum, entryForCriterion) {
                 accum[entryForCriterion.alternative] = buildLabel(entryForCriterion);
@@ -154,7 +173,8 @@ define(['lodash'], function(_) {
     return {
       buildEffectsTable: buildEffectsTable,
       createEffectsTableInfo: createEffectsTableInfo,
-      isStudyDataAvailable: isStudyDataAvailable
+      isStudyDataAvailable: isStudyDataAvailable,
+      buildTableRows: buildTableRows
     };
   };
 

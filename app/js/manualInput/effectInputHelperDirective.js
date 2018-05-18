@@ -9,7 +9,7 @@ define(['lodash'], function(_) {
     return {
       restrict: 'E',
       scope: {
-        'criterion': '=',
+        'inputDataSource': '=',
         'alternative': '=',
         'inputData': '=',
         'changeCallback': '='
@@ -57,8 +57,8 @@ define(['lodash'], function(_) {
         }
 
         function initInputParameters() {
-          if (doInputParametersNeedUpdating(scope.criterion, scope.inputData)) {
-            scope.inputCell = _.cloneDeep(scope.criterion.inputMetaData);
+          if (doInputParametersNeedUpdating(scope.inputDataSource, scope.inputData)) {
+            scope.inputCell = _.cloneDeep(scope.inputDataSource);
           } else {
             scope.inputCell = _.cloneDeep(scope.inputData);
           }
@@ -84,19 +84,19 @@ define(['lodash'], function(_) {
           }
         }
 
-        function doInputParametersNeedUpdating(criterion, cell) {
+        function doInputParametersNeedUpdating(inputDataSource, cell) {
           if (!cell.inputParameters) {
             return true;
           }
-          var inputType = criterion.inputMetaData.inputType;
-          var inputMethod = criterion.inputMetaData.inputMethod;
-          var dataType = criterion.inputMetaData.dataType;
+          var inputType = inputDataSource.inputType;
+          var inputMethod = inputDataSource.inputMethod;
+          var dataType = inputDataSource.dataType;
           return inputType !== cell.inputType ||
             (inputType === 'distribution' && inputMethod !== cell.inputMethod) ||
             (inputType === 'distribution' && inputMethod === 'assistedDistribution' && dataType !== cell.dataType) ||
             (inputType === 'effect' && dataType !== cell.dataType) ||
             (inputType === 'effect' && dataType === 'continuous' &&
-              criterion.inputMetaData.parameterOfInterest !== cell.parameterOfInterest);
+              inputDataSource.parameterOfInterest !== cell.parameterOfInterest);
         }
 
         function confidenceIntervalNEChanged() {

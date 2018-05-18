@@ -25,7 +25,16 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function getObservedScales(scope, problem) {
-      return ScalesService.getObservedScales(scope, problem);
+      var scalesProblem = angular.copy(problem);
+      var dataSources = _.reduce(scalesProblem.criteria, function(accum, criterion) {
+        return accum.concat(criterion.dataSources);
+      }, []);
+      scalesProblem.criteria = _.keyBy(dataSources, 'id');
+      scalesProblem.performanceTable = _.map(scalesProblem.performanceTable, function(entry) {
+        entry.criterion = entry.dataSource;
+        return entry;
+      });
+      return ScalesService.getObservedScales(scope, scalesProblem);
     }
 
     function reduceProblem(problem) {
@@ -313,16 +322,16 @@ define(['lodash', 'angular'], function(_) {
       }
       var firstType = workspace.preferences[0].type;
       if (_.find(workspace.preferences, function(preference) {
-          return preference.type !== firstType;
-        })) {
+        return preference.type !== firstType;
+      })) {
         return 'Preferences should all be the same type';
       }
     }
 
     function inconsistentOrdinalPreferences(workspace) {
       if (!workspace.preferences || _.isEmpty(workspace.preferences) || _.find(workspace.preferences, function(preference) {
-          return preference.type !== 'ordinal';
-        })) {
+        return preference.type !== 'ordinal';
+      })) {
         return;
       }
       if (workspace.preferences.length !== _.size(workspace.criteria) - 1) {
@@ -364,11 +373,11 @@ define(['lodash', 'angular'], function(_) {
 
       var first = workspace.preferences[0].criteria[0];
       if (_.find(workspace.preferences, function(preference) {
-          return preference.criteria[0] !== first ||
-            preference.criteria[0] === preference.criteria[1] ||
-            preference.ratio > 1 ||
-            preference.ratio <= 0;
-        })) {
+        return preference.criteria[0] !== first ||
+          preference.criteria[0] === preference.criteria[1] ||
+          preference.ratio > 1 ||
+          preference.ratio <= 0;
+      })) {
         return 'Inconsistent exact weighting preferences';
       }
     }

@@ -68,13 +68,16 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function prepareInputData(criteria, alternatives, oldInputData) {
-      return _.reduce(criteria, function(accum, criterion) {
-        accum[criterion.id] = _.reduce(alternatives, function(accum, alternative) {
-          if (oldInputData && oldInputData[criterion.id] && oldInputData[criterion.id][alternative.id]) {
-            accum[alternative.id] = oldInputData[criterion.id][alternative.id];
+      var dataSources = _.reduce(criteria, function(accum, criterion) {
+        return accum.concat(criterion.dataSources);
+      }, []);
+      return _.reduce(dataSources, function(accum, dataSource) {
+        accum[dataSource.id] = _.reduce(alternatives, function(accum, alternative) {
+          if (oldInputData && oldInputData[dataSource.id] && oldInputData[dataSource.id][alternative.id]) {
+            accum[alternative.id] = oldInputData[dataSource.id][alternative.id];
             accum[alternative.id].isInvalid = true;
           } else {
-            accum[alternative.id] = _.cloneDeep(criterion.inputMetaData);
+            accum[alternative.id] = _.pick(dataSource, ['inputType', 'inputMethod', 'dataType', 'parameterOfInterest']);
             accum[alternative.id].isInvalid = true;
           }
           return accum;
@@ -83,12 +86,15 @@ define(['lodash', 'angular'], function(_) {
       }, {});
     }
 
-    function buildScale(criterion) {
-      if (criterion.inputMetaData.dataType === 'dichotomous' ||
-        (criterion.inputMetaData.dataType === 'continuous' && criterion.inputMetaData.parameterOfInterest === 'cumulativeProbability')) {
-        return [0, 1];
+    function addScale(dataSource) {
+      var scale = [-Infinity, Infinity];
+      if (dataSource.dataType === 'dichotomous' ||
+        (dataSource.dataType === 'continuous' && dataSource.parameterOfInterest === 'cumulativeProbability')) {
+        scale = [0, 1];
       }
-      return [-Infinity, Infinity];
+      return _.extend({}, dataSource, {
+        scale: scale
+      });
     }
 
     function createInputFromOldWorkspace(criteria, alternatives, oldWorkspace) {
@@ -116,21 +122,6 @@ define(['lodash', 'angular'], function(_) {
       };
       var schemaVersion = workspace.problem.schemaVersion ? workspace.problem.schemaVersion : 'unknown';
       return copyFunctions[schemaVersion](workspace);
-    }
-
-    function buildCriteriaRows(criteria) {
-      return _.reduce(criteria, function(accum, criterion) {
-        accum = accum.concat(_.map(criterion.dataSources, function(dataSource, index) {
-          return {
-            criterion: _.merge({}, _.omit(criterion, ['dataSources']), {
-              isFirstRow: index === 0,
-              numberOfDataSources: criterion.dataSources.length
-            }),
-            dataSource: dataSource
-          };
-        }));
-        return accum;
-      }, []);
     }
 
     // Private functions
@@ -188,8 +179,8 @@ define(['lodash', 'angular'], function(_) {
           'sourceLink',
           'strengthOfEvidence',
           'uncertainties',
-          'inputMetaData']);
-        newCriterion.scale = buildScale(criterion);
+          'dataSources']);
+        newCriterion.dataSources = _.map(newCriterion.dataSources, addScale);
         return [criterion.id, newCriterion];
       });
       return _.fromPairs(newCriteria);
@@ -206,19 +197,21 @@ define(['lodash', 'angular'], function(_) {
 
     function buildPerformanceTable(inputData, criteria, treatments) {
       var newPerformanceTable = [];
-      _.forEach(_.keys(criteria), function(criterionId) {
-        _.forEach(treatments, function(treatment) {
-          var cell = inputData[criterionId][treatment.id];
-          newPerformanceTable.push({
-            alternative: treatment.id,
-            criterion: criterionId,
-            performance: InputKnowledgeService.buildPerformance(cell)
+      _.forEach(criteria, function(criterion, criterionId) {
+        _.forEach(criterion.dataSources, function(dataSource) {
+          _.forEach(treatments, function(treatment) {
+            var cell = inputData[dataSource.id][treatment.id];
+            newPerformanceTable.push({
+              alternative: treatment.id,
+              criterion: criterionId,
+              dataSource: dataSource.id,
+              performance: InputKnowledgeService.buildPerformance(cell)
+            });
           });
         });
       });
       return newPerformanceTable;
     }
-
 
     return {
       createProblem: createProblem,
@@ -227,8 +220,7 @@ define(['lodash', 'angular'], function(_) {
       prepareInputData: prepareInputData,
       createInputFromOldWorkspace: createInputFromOldWorkspace,
       copyWorkspaceCriteria: copyWorkspaceCriteria,
-      getOptions: getOptions,
-      buildCriteriaRows: buildCriteriaRows
+      getOptions: getOptions
     };
   };
 

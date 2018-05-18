@@ -66,48 +66,47 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     });
 
     describe('prepareInputData', function() {
-      var treatments = {
-        alternative1: {
-          title: 'alternative1',
-          id: 'alternative1'
-        },
-        alternative2: {
-          title: 'alternative2',
-          id: 'alternative2'
-        }
-      };
+      var alternatives = [{
+        title: 'alternative1',
+        id: 'alternative1'
+      }, {
+        title: 'alternative2',
+        id: 'alternative2'
+      }];
       var criteria = [{
         id: 'crit1id',
         title: 'criterion 1 title',
-        inputMetaData: {
+        dataSources: [{
+          id: 'ds1id',
           inputType: 'distribution',
           inputMethod: 'assistedDistribution',
           dataType: 'other'
-        }
+        }]
       }, {
         id: 'crit2id',
-        inputMetaData: {
-          title: 'criterion 2 title',
+        title: 'criterion 2 title',
+        dataSources: [{
+          id: 'ds2id',
           inputType: 'effect',
           dataType: 'other'
-        }
+        }]
       }];
       it('should prepare the cells of the table for input', function() {
-        var result = manualInputService.prepareInputData(criteria, treatments);
+        var result = manualInputService.prepareInputData(criteria, alternatives);
         var expectedResult = {
-          'crit1id': {
-            alternative1: _.extend({}, criteria[0].inputMetaData, {
+          'ds1id': {
+            alternative1: _.extend({}, _.omit(criteria[0].dataSources[0], ['id']), {
               isInvalid: true
             }),
-            alternative2: _.extend({}, criteria[0].inputMetaData, {
+            alternative2: _.extend({}, _.omit(criteria[0].dataSources[0], ['id']), {
               isInvalid: true
             })
           },
-          'crit2id': {
-            alternative1: _.extend({}, criteria[1].inputMetaData, {
+          'ds2id': {
+            alternative1: _.extend({}, _.omit(criteria[1].dataSources[0], ['id']), {
               isInvalid: true
             }),
-            alternative2: _.extend({}, criteria[1].inputMetaData, {
+            alternative2: _.extend({}, _.omit(criteria[1].dataSources[0], ['id']), {
               isInvalid: true
             })
           }
@@ -116,31 +115,30 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
       it('should preserve data if there is old data supplied and the criterion type has not changed', function() {
         var oldInputData = {
-          'crit2id': {
+          'ds2id': {
             alternative1: {
-              title: 'criterion 2 oldtitle',
               inputType: 'distribution',
               inputMethod: 'manualDistribution'
             },
             alternative2: criteria[1].inputMetaData
           }
         };
-        var result = manualInputService.prepareInputData(criteria, treatments, oldInputData);
+        var result = manualInputService.prepareInputData(criteria, alternatives, oldInputData);
 
         var expectedResult = {
-          'crit1id': {
-            alternative1: _.extend({}, criteria[0].inputMetaData, {
+          'ds1id': {
+            alternative1: _.extend({}, _.omit(criteria[0].dataSources[0], ['id']), {
               isInvalid: true
             }),
-            alternative2: _.extend({}, criteria[0].inputMetaData, {
+            alternative2: _.extend({}, _.omit(criteria[0].dataSources[0], ['id']), {
               isInvalid: true
             })
           },
-          'crit2id': {
-            alternative1: _.extend({}, oldInputData.crit2id.alternative1, {
+          'ds2id': {  
+            alternative1: _.extend({}, oldInputData.ds2id.alternative1, {
               isInvalid: true
             }),
-            alternative2: _.extend({}, criteria[1].inputMetaData, {
+            alternative2: _.extend({}, _.omit(criteria[1].dataSources[0], ['id']), {
               isInvalid: true
             })
           }
@@ -166,30 +164,33 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           id: 'criterion1id',
           scale: [0, 1],
           omitThis: 'yech',
-          inputMetaData: {
+          dataSources: [{
+            id: 'ds1id',
             inputType: 'effect',
             dataType: 'other'
-          }
+          }]
         }, {
           title: 'unfavorable criterion',
           description: 'some crit description',
           unitOfMeasurement: 'particles',
           isFavorable: false,
           id: 'criterion2id',
-          inputMetaData: {
+          dataSources: [{
+            id: 'ds2id',
             inputType: 'distribution',
             inputMethod: 'manualDistribution'
-          }
+          }]
         }, {
           title: 'dichotomousDecimalSampleSize',
           id: 'criterion3id',
-          inputMetaData: {
+          dataSources: [{
+            id:'ds3id',
             inputType: 'effect',
             dataType: 'dichotomous'
-          }
+          }]
         }];
         var inputData = {
-          criterion1id: {
+          ds1id: {
             alternative1: {
               inputType: 'effect',
               dataType: 'other',
@@ -199,7 +200,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               }
             }
           },
-          criterion2id: {
+          ds2id: {
             alternative1: {
               inputType: 'distribution',
               inputMethod: 'manualDistribution',
@@ -209,7 +210,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               }
             }
           },
-          criterion3id: {
+          ds3id: {
             alternative1: {
               inputType: 'effect',
               dataType: 'dichotomous',
@@ -222,7 +223,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             }
           }
         };
-        var result = manualInputService.createProblem(criteria, treatments, title, description, inputData, true);
+        var useFavorability = true;
+        var result = manualInputService.createProblem(criteria, treatments, title, description, inputData, useFavorability);
         var expectedResult = {
           title: title,
           schemaVersion: '1.0.0',
@@ -242,29 +244,32 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               title: 'favorable criterion',
               description: 'some crit description',
               unitOfMeasurement: 'particles',
-              scale: [-Infinity, Infinity],
-              inputMetaData: {
+              dataSources: [{
+                id: 'ds1id',
+                scale: [-Infinity, Infinity],
                 inputType: 'effect',
                 dataType: 'other'
-              }
+              }]
             },
             criterion2id: {
               title: 'unfavorable criterion',
               description: 'some crit description',
               unitOfMeasurement: 'particles',
-              scale: [-Infinity, Infinity],
-              inputMetaData: {
+              dataSources: [{
+                id: 'ds2id',
+                scale: [-Infinity, Infinity],
                 inputType: 'distribution',
                 inputMethod: 'manualDistribution'
-              }
+              }]
             },
             criterion3id: {
               title: 'dichotomousDecimalSampleSize',
-              scale: [0, 1],
-              inputMetaData: {
+              dataSources: [{
+                id: 'ds3id',
+                scale: [0, 1],
                 inputType: 'effect',
                 dataType: 'dichotomous'
-              }
+              }]
             }
           },
           alternatives: {
@@ -275,14 +280,17 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           performanceTable: [{
             alternative: 'alternative1',
             criterion: 'criterion1id',
+            dataSource: 'ds1id',
             performance: {}
           }, {
             alternative: 'alternative1',
             criterion: 'criterion2id',
+            dataSource: 'ds2id',
             performance: {}
           }, {
             alternative: 'alternative1',
             criterion: 'criterion3id',
+            dataSource: 'ds3id',
             performance: {}
           }]
         };
@@ -569,61 +577,5 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(manualInputService.getOptions()).toEqual('here are some options');
       });
     });
-
-    describe('buildCriteriaRows', function() {
-      it('should create one row for each dataSource of each criterion ', function() {
-        var criteria = [{
-          id: 'crit1',
-          isFavorable: true,
-          dataSources: [{
-            foo: 'bar'
-          }]
-        }, {
-          id: 'crit2',
-          isFavorable: false,
-          dataSources: [{
-            foo: 'qux'
-          }, {
-            zoq: 'fot'
-          }]
-        }];
-
-        var expectedResult = [{
-          criterion: {
-            id: 'crit1',
-            isFavorable: true,
-            isFirstRow: true,
-            numberOfDataSources: 1
-          },
-          dataSource: {
-            foo: 'bar'
-          }
-        }, {
-          criterion: {
-            id: 'crit2',
-            isFavorable: false,
-            isFirstRow: true,
-            numberOfDataSources: 2
-          },
-          dataSource: {
-            foo: 'qux'
-          }
-        }, {
-          criterion: {
-            id: 'crit2',
-            isFavorable: false,
-            isFirstRow: false,
-            numberOfDataSources: 2
-          },
-          dataSource: {
-            zoq: 'fot'
-          }
-        }];
-
-        var result = manualInputService.buildCriteriaRows(criteria);
-        expect(result).toEqual(expectedResult);
-      });
-    });
-
   });
 });

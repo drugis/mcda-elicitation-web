@@ -33,39 +33,8 @@
       <input type="text" ng-model="criterion.unitOfMeasurement">
     </div>
     <div class="cell">
-      <label>Reference
-        <inline-help help-key="criterion-source"></inline-help>
-      </label>
+      <button class="button success" type="submit" ng-disabled="!criterion.title || !isTitleUnique">Save</button>
     </div>
-    <div class="cell">
-      <input type="text" ng-model="criterion.source">
-    </div>
-    <div class="cell">
-      <label>Reference URL
-        <inline-help help-key="criterion-source-link"></inline-help>
-      </label>
-    </div>
-    <div class="cell">
-      <input type="text" ng-model="criterion.sourceLink" ng-change="checkUrl()">
-    </div>
-    <div class="cell">
-      <label>Uncertainties</label>
-    </div>
-    <div class="cell">
-      <input type="text" ng-model="criterion.uncertainties">
-    </div>
-    <div class="cell">
-      <label>Strength of evidence
-        <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
-      </label>
-    </div>
-    <div class="cell">
-      <input type="text" ng-model="criterion.strengthOfEvidence">
-    </div>
-    <div class="cell">
-      <button class="button success" type="submit" ng-disabled="!criterion.title || !isTitleUnique || !isValidUrl">Save</button>
-    </div>
-    <div class="cell alert" ng-if="!isValidUrl">Invalid URL</div>
     <div class="cell alert" ng-if="!isTitleUnique">Duplicate title</div>
   </div>
   <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">

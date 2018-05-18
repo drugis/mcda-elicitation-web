@@ -195,7 +195,6 @@ define(['lodash'], function(_) {
         return; // just a title edit
       } else {
         if ($state.current.name === 'smaa-results') {
-
           $state.go('smaa-results', {
             workspaceId: $scope.workspace.id,
             problemId: $scope.subProblem.id,

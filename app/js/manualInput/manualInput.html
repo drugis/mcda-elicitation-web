@@ -49,10 +49,10 @@
         <thead>
           <tr>
             <th style="min-width: 15rem;">Title</th>
+            <th>description</th>
             <th>Unit
               <inline-help help-key="criterion-unit"></inline-help>
             </th>
-            <th>description</th>
             <th ng-if="state.useFavorability">Is favorable?</th>
             <th>Input type</th>
             <th>Input method</th>
@@ -73,24 +73,20 @@
             </td>
           </tr>
           <tr ng-repeat="row in criteriaRows">
-            <td ng-if="row.criterion.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">
+            <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">
               <div class="grid-x">
                 <div class="cell small-2">
                   <div style="line-height: 10px; margin-bottom: 4px;">
-                    <a ng-if="$index !== 0 && (!(!row.criterion.isFavorable && criteriaRows[$index-1].isFavorable) || !state.useFavorability)"
-                      ng-click="criterionUp($index)" class="nav-arrow">
+                    <a class="nav-arrow">
                       <i style="line-height:0px;" class="fa fa-caret-up"></i>
                     </a>
-                    <i ng-if="$index === 0 || (!row.criterion.isFavorable && criteriaRows[$index-1].isFavorable && state.useFavorability)" style="line-height:0px; color:#bbb"
-                      class="fa fa-caret-up"></i>
+                    <i style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
                   </div>
                   <div style="line-height: 10px;">
-                    <a ng-if="$index !== criteriaRows.length-1 && (!(row.criterion.isFavorable && !criteriaRows[$index+1].isFavorable) || !state.useFavorability)"
-                      ng-click="criterionDown($index)" class="nav-arrow">
+                    <a class="nav-arrow">
                       <i style="line-height:0px;" class="fa fa-caret-down"></i>
                     </a>
-                    <i ng-if="$index === criteriaRows.length-1 || (row.criterion.isFavorable && !criteriaRows[$index+1].isFavorable && state.useFavorability)"
-                      style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
+                    <i style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
                   </div>
                 </div>
                 <div class="cell small-10">
@@ -105,9 +101,9 @@
                 </div>
               </div>
             </td>
-            <td ng-if="row.criterion.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.description}}</td>
-            <td ng-if="row.criterion.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.unitOfMeasurement}}</td>
-            <td ng-if="state.useFavorability && row.criterion.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.isFavorable}}</td>
+            <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.description}}</td>
+            <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.unitOfMeasurement}}</td>
+            <td ng-if="state.useFavorability && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.isFavorable}}</td>
             <td ng-style="row.criterion.inputMetaData.inputType === 'Unknown'? {'color': 'red'} : {}">{{row.dataSource.inputType}}</td>
             <td>{{row.dataSource.inputType === 'distribution' ? inputMethods[row.dataSource.inputMethod] : 'NA'}}</td>
             <td>{{row.dataSource.inputType === 'effect' || row.dataSource.inputMethod === 'assistedDistribution' ? row.dataSource.dataType
@@ -232,9 +228,7 @@
       Here you enter the data for each combination of criterion and alternative, in the form of results from studies. The corresponding
       distribution is calculated and displayed in the table. Begin entering data by clicking any of the cells' text.
     </div>
-  </div>
-  <!-- input -->
-  <div class="grid-x">
+    <!-- input -->
     <div class="cell">
       <h4>{{state.title}}</h4>
     </div>
@@ -250,22 +244,20 @@
           </tr>
         </thead>
         <tbody>
-          <tr ng-repeat="criterion in state.criteria">
-            <td>{{criterion.title}}</td>
-            <td>{{criterion.description}}</td>
-            <td>{{criterion.unitOfMeasurement}}</td>
-            <td ng-if="state.useFavorability">{{criterion.isFavorable}}</td>
+          <tr ng-repeat="row in criteriaRows">
+            <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.title}}</td>
+            <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.description}}</td>
+            <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.unitOfMeasurement}}</td>
+            <td ng-if="state.useFavorability && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.isFavorable}}</td>
             <td ng-repeat="alternative in state.alternatives">
-              <effect-input-helper criterion="criterion" alternative="alternative" input-data="state.inputData[criterion.id][alternative.id]"
+              <effect-input-helper input-data-source="row.dataSource" alternative="alternative" input-data="state.inputData[row.dataSource.id][alternative.id]"
                 change-callback="checkInputData"></effect-input-helper>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
-  </div>
-  <!-- buttons -->
-  <div class="grid-x">
+    <!-- buttons -->
     <div class="cell">
       <button ng-disabled="!state.isInputDataValid" class="button" type="button" ng-click="createProblem()" tooltip="Create problem and proceed to analysis">
         Done

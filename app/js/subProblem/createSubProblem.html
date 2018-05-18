@@ -2,7 +2,8 @@
   <div class="grid-container">
     <div class="grid-x">
       <div class="cell">
-        <em>Here you can define a new problem as a subset of all evidence (by excluding criteria and alternatives), and with different scale ranges.</em>
+        <em>Here you can define a new problem as a subset of all evidence (by excluding criteria and alternatives), and with
+          different scale ranges.</em>
       </div>
       <div class="cell">
         <h3>Create new problem</h3>
@@ -47,7 +48,8 @@
               <th ng-class="{'disabled-header' : !subProblemState.alternativeInclusions[alternative.id]}" class="text-center" ng-repeat="alternative in alternatives">
                 <div class="grid-x">
                   <div class="cell">
-                    <input style="margin:0;" ng-if="!isBaseline[alternative.id]" id="{{alternative.id}}" type="checkbox" ng-model="subProblemState.alternativeInclusions[alternative.id]" ng-change="updateInclusions()" ng-disabled="subProblemState.alternativeInclusions[alternative.id] && subProblemState.numberOfAlternativesSelected < 3">
+                    <input style="margin:0;" ng-if="!isBaseline[alternative.id]" id="{{alternative.id}}" type="checkbox" ng-model="subProblemState.alternativeInclusions[alternative.id]"
+                      ng-change="updateInclusions()" ng-disabled="subProblemState.alternativeInclusions[alternative.id] && subProblemState.numberOfAlternativesSelected < 3">
                     <i ng-if="isBaseline[alternative.id]" class="fa fa-ban" tooltip="Cannot deselect baseline"></i>
                   </div>
                   <div class="cell">
@@ -63,71 +65,87 @@
             </tr>
           </thead>
           <tbody class="main">
-            <tr ng-repeat="criterion in tableCriteria">
-              <td ng-if="criterion.isHeaderRow" class="group-header" colspan="{{5 + nrAlternatives}}">
+            <tr ng-repeat="row in tableRows">
+              <td ng-if="row.isHeaderRow" class="group-header" colspan="{{5 + nrAlternatives}}">
                 <div class="main-header">
-                  {{criterion.headerText}}
+                  {{row.headerText}}
                 </div>
               </td>
-              <td ng-if="!criterion.isHeaderRow" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}" ng-show="toggledColumns['criteria']">
+              <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id]}"
+                ng-show="toggledColumns['criteria']">
                 <label>
-                  <input type="checkbox" ng-model="subProblemState.criterionInclusions[criterion.id]" ng-change="updateInclusions()" ng-disabled="subProblemState.criterionInclusions[criterion.id] && subProblemState.numberOfCriteriaSelected < 3"> {{criterion.title}}
+                  <input type="checkbox" ng-model="subProblemState.criterionInclusions[row.criterion.id]" ng-change="updateInclusions()" ng-disabled="subProblemState.criterionInclusions[row.criterion.id] && subProblemState.numberOfCriteriaSelected < 3"> {{row.criterion.title}}
                 </label>
               </td>
-              <td ng-if="!criterion.isHeaderRow" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}" ng-show="toggledColumns['description']">
+              <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id]}"
+                ng-show="toggledColumns['description']">
                 <div class="td-container">
-                  <div class="td-content">{{criterion.description}}</div>
-                  <div class="td-spacer">{{criterion.description}}</div>
+                  <div class="td-content">{{row.criterion.description}}</div>
+                  <div class="td-spacer">{{row.criterion.description}}</div>
                   <span>&nbsp;</span>
                 </div>
               </td>
-              <td ng-if="!criterion.isHeaderRow" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[criterion.id]}" ng-show="toggledColumns['units']">{{criterion.unitOfMeasurement}}</td>
-              <td ng-if="!criterion.isHeaderRow" ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternative.id] || !subProblemState.criterionInclusions[criterion.id]}" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
-                <effects-table-scales-cell scales="scales.observed[criterion.id][alternative.id]" uncertainty="effectsTableInfo[criterion.id].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || effectsTableInfo[criterion.id].distributionType==='relative'"></effects-table-scales-cell>
+              <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id]}"
+                ng-show="toggledColumns['units']">
+                {{row.criterion.unitOfMeasurement}}
               </td>
-              <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['references']">
-                <a ng-if="criterion.sourceLink" href="{{criterion.sourceLink}}">
-                  {{criterion.source}}
+              <td ng-if="!row.isHeaderRow" ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternative.id] || !subProblemState.criterionInclusions[row.criterion.id]}"
+                class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
+                <input type="checkbox" ng-if="$first" ng-model="subProblemState.dataSourceInclusions[row.dataSource.id]">
+                <effects-table-scales-cell scales="scales.observed[row.dataSource.id][alternative.id]" uncertainty="effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || effectsTableInfo[row.dataSource.id].distributionType==='relative'"></effects-table-scales-cell>
+              </td>
+              <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['references']">
+                <a ng-if="row.sourceLink" href="{{row.sourceLink}}">
+                  {{row.source}}
                 </a>
-                <span ng-if="!criterion.sourceLink">{{criterion.source}}</span>
+                <span ng-if="!row.sourceLink">{{row.source}}</span>
               </td>
-              <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['strength']">
-                <div ng-if="criterion.strengthOfEvidence"><b>SoE: </b>{{criterion.strengthOfEvidence}}</div>
-                <div ng-if="criterion.uncertainties"><b>Unc: </b> {{criterion.uncertainties}}</div>
+              <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['strength']">
+                <div ng-if="row.strengthOfEvidence">
+                  <b>SoE: </b>{{row.strengthOfEvidence}}</div>
+                <div ng-if="row.uncertainties">
+                  <b>Unc: </b> {{row.uncertainties}}</div>
               </td>
             </tr>
           </tbody>
         </table>
         </div>
-        <div class="cell alert" ng-if="hasMissingValues"><em>Effects table may not contain missing values</em></div>
+        <div class="cell alert" ng-if="hasMissingValues">
+          <em>Effects table may not contain missing values</em>
+        </div>
         <!-- Scale ranges -->
         <div class="cell">
           <h4>Scale ranges
-        <inline-help help-key="scale-ranges"></inline-help>
-      </h4>
-          <p>The area in red indicates the estimated 95% Credible Interval (CrI) of the measurements and should not be moved into or over.</p>
+            <inline-help help-key="scale-ranges"></inline-help>
+          </h4>
+          <p>The area in red indicates the estimated 95% Credible Interval (CrI) of the measurements and should not be moved
+            into or over.</p>
         </div>
         <div class="cell">
           <ul class="no-bullet">
             <li ng-repeat="criterion in scalesCriteria">
-              <h5 class="subheader"><criterion of="criterion"></criterion></h5>
+              <h5 class="subheader">
+                <criterion of="criterion"></criterion>
+              </h5>
               <div class="grid-x">
                 <div class="cell large-1 text-center">
-                  <a ng-click="scalesState[criterion.id].increaseFrom()" class="tiny round button slider-buttons">&lt;</a>
+                  <a ng-click="scalesState[row.dataSource.id].increaseFrom()" class="tiny round button slider-buttons">&lt;</a>
                 </div>
                 <div class="cell large-10">
-                  <rzslider rz-slider-model="choices[criterion.id].from" rz-slider-high="choices[criterion.id].to" rz-slider-options="scalesState[criterion.id].sliderOptions">
+                  <rzslider rz-slider-model="choices[row.dataSource.id].from" rz-slider-high="choices[row.dataSource.id].to" rz-slider-options="scalesState[row.dataSource.id].sliderOptions">
                   </rzslider>
                 </div>
                 <div class="cell large-1 pull-3 text-center">
-                  <a ng-click="scalesState[criterion.id].increaseTo()" class="tiny round button slider-buttons">&gt;</a>
+                  <a ng-click="scalesState[row.dataSource.id].increaseTo()" class="tiny round button slider-buttons">&gt;</a>
                 </div>
               </div>
               <br>
             </li>
           </ul>
         </div>
-        <div class="cell alert" ng-if="invalidSlider"><em>Invalid scale range</em></div>
+        <div class="cell alert" ng-if="invalidSlider">
+          <em>Invalid scale range</em>
+        </div>
         <div class="cell large-6">
           <button class="button success" type="submit" ng-disabled="isTitleDuplicate || !subProblemState.title || invalidSlider || hasMissingValues">Create</button>
         </div>

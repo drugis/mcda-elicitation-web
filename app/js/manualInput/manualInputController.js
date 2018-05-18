@@ -6,6 +6,7 @@ define(['lodash', 'angular'], function(_, angular) {
     '$stateParams',
     '$transitions',
     '$timeout',
+    'EffectsTableService',
     'InProgressResource',
     'ManualInputService',
     'OrderingService',
@@ -18,6 +19,7 @@ define(['lodash', 'angular'], function(_, angular) {
     $stateParams,
     $transitions,
     $timeout,
+    EffectsTableService,
     InProgressResource,
     ManualInputService,
     OrderingService,
@@ -87,7 +89,7 @@ define(['lodash', 'angular'], function(_, angular) {
         resolve: {
           callback: function() {
             return function(newDataSource) {
-              
+
               var criterion = _.find($scope.state.criteria, ['id', criterionRow.id]);
               criterion.dataSources.push(newDataSource);
               updateCriteriaRows();
@@ -101,7 +103,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function updateCriteriaRows() {
-      $scope.criteriaRows = ManualInputService.buildCriteriaRows($scope.state.criteria);
+      $scope.criteriaRows = EffectsTableService.buildTableRows($scope.state.criteria);
     }
 
     function checkInputData() {

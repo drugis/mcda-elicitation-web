@@ -83,7 +83,7 @@ define(['lodash', 'angular'], function(_) {
       OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
         $scope.alternatives = orderings.alternatives;
         $scope.criteria = orderings.criteria;
-        $scope.tableCriteria = EffectsTableService.buildEffectsTable($scope.problem.valueTree, orderings.criteria);
+        $scope.tableRows = EffectsTableService.buildEffectsTable($scope.problem.valueTree, orderings.criteria);
 
         $scope.originalCriterionInclusions = SubProblemService.createCriterionInclusions($scope.problem, subProblem);
         $scope.originalAlternativeInclusions = SubProblemService.createAlternativeInclusions($scope.problem, subProblem);

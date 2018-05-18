@@ -19,10 +19,13 @@ define([], function() {
       dataType: 'dichotomous',
       parameterOfInterest: 'eventProbability'
     };
-    $scope.errors = [];
+    $scope.errors = ['No reference entered'];
 
     function checkError() {
       $scope.errors = $scope.sourceLinkValidity.isInvalid ? ['Invalid reference URL'] : [];
+      if(!$scope.dataSource.source){
+        $scope.errors.push('No reference entered');
+      }
     }
 
     function addDataSource(dataSource) {
