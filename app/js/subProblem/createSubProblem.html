@@ -89,10 +89,16 @@
                 ng-show="toggledColumns['units']">
                 {{row.criterion.unitOfMeasurement}}
               </td>
-              <td ng-if="!row.isHeaderRow" ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternative.id] || !subProblemState.criterionInclusions[row.criterion.id]}"
+              <td ng-if="!row.isHeaderRow" ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternative.id] || !subProblemState.criterionInclusions[row.criterion.id] || !subProblemState.dataSourceInclusions[row.dataSource.id]}"
                 class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
-                <input type="checkbox" ng-if="$first" ng-model="subProblemState.dataSourceInclusions[row.dataSource.id]">
-                <effects-table-scales-cell scales="scales.observed[row.dataSource.id][alternative.id]" uncertainty="effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || effectsTableInfo[row.dataSource.id].distributionType==='relative'"></effects-table-scales-cell>
+                <div class="grid-x">
+                  <div class="cell large-1">
+                    <input type="checkbox" ng-if="$first" ng-model="subProblemState.dataSourceInclusions[row.dataSource.id]">
+                  </div>
+                  <div class="cell large-11">
+                    <effects-table-scales-cell scales="scales.observed[row.dataSource.id][alternative.id]" uncertainty="effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || effectsTableInfo[row.dataSource.id].distributionType==='relative'"></effects-table-scales-cell>
+                  </div>
+                </div>
               </td>
               <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['references']">
                 <a ng-if="row.sourceLink" href="{{row.sourceLink}}">

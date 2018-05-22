@@ -37,14 +37,14 @@ define(['lodash'], function(_) {
           orderedFavorableCriteria,
           [unFavorabilityHeader],
           orderedUnfavorableCriteria);
-      } 
+      }
       tableRows = buildTableRows(tableRows);
       return tableRows;
     }
 
     function buildTableRows(rows) {
       return _.reduce(rows, function(accum, row) {
-        if(row.isHeaderRow){
+        if (row.isHeaderRow) {
           return accum.concat(row);
         }
         var rowCriterion = _.omit(row, ['dataSources']);
@@ -78,7 +78,7 @@ define(['lodash'], function(_) {
               }, {})
           };
         } else {
-          accum[tableEntry.criterion] = {
+          accum[tableEntry.dataSource] = {
             distributionType: 'relative',
             hasStudyData: false
           };
