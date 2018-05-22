@@ -42,15 +42,17 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function createCriterionInclusions(problem, subProblem) {
-      return _.mapValues(problem.criteria, function(criterion, key) {
-        return subProblem.definition && !_.includes(subProblem.definition.excludedCriteria, key);
-      });
+      return createInclusions(problem.criteria, subProblem.definition, 'excludedCriteria');
     }
 
     function createAlternativeInclusions(problem, subProblem) {
-      return _.mapValues(problem.alternatives, function(alternative, key) {
-        return subProblem.definition && !_.includes(subProblem.definition.excludedAlternatives, key);
-      });
+      return createInclusions(problem.alternatives, subProblem.definition, 'excludedAlternatives');
+    }
+
+    function createDataSourceInclusions(problem, subProblem) {
+      return _.reduce(problem.criteria, function(accum, criterion) {
+        return _.extend({}, accum, createInclusions(_.keyBy(criterion.dataSources, 'id'), subProblem.definition, 'excludedDataSources'));
+      }, {});
     }
 
     function checkScaleRanges(criteria) {
@@ -60,14 +62,25 @@ define(['lodash', 'angular'], function(_) {
       return !isMissingScaleRange;
     }
 
-    function isExact(performanceTable, criterion, alternative) {
-      var perf = _.find(performanceTable, function(performance) {
-        return performance.alternative === alternative && performance.criterion === criterion;
+    function excludeCriteriaWithoutDataSources(criteria, subProblemState) {
+      return _.mapValues(criteria, function(criterion, criterionId) {
+        if(!subProblemState.criterionInclusions[criterionId]) {
+          return false;
+        }
+        var dataSourcesForCriterion = _.pick(subProblemState.dataSourceInclusions, _.map(criterion.dataSources, 'id'));
+        return _.filter(dataSourcesForCriterion).length > 0;
       });
-      return !!perf && perf.performance.type === 'exact';
     }
 
     // private functions
+    function createInclusions(whatToInclude, definition, exclusionKey) {
+      return _.reduce(_.keys(whatToInclude), function(accum,id) {
+        var isIncluded = definition && !_.includes(definition[exclusionKey], id);
+        accum[id] = isIncluded;
+        return accum;
+      },{});
+    }
+
     function createRanges(scales) {
       return _.fromPairs(_.map(scales, function(scale, criterionId) {
         return [criterionId, {
@@ -84,8 +97,9 @@ define(['lodash', 'angular'], function(_) {
       determineBaseline: determineBaseline,
       createCriterionInclusions: createCriterionInclusions,
       createAlternativeInclusions: createAlternativeInclusions,
+      createDataSourceInclusions: createDataSourceInclusions,
       checkScaleRanges: checkScaleRanges,
-      isExact: isExact
+      excludeCriteriaWithoutDataSources: excludeCriteriaWithoutDataSources
     };
   };
 

@@ -84,12 +84,14 @@ define(['angular-mocks',
         it('should build labels for each non-exact, non-relative entry', function() {
           var performanceTable = [{
             criterion: 'criterionId1',
+            dataSource: 'dsId1',
             performance: {
               type: 'relative'
             }
           }, {
             criterion: 'criterionId2',
             alternative: 'alternativeId2',
+            dataSource: 'dsId2',
             performance: {
               type: 'exact',
               exactType: 'exact',
@@ -102,6 +104,7 @@ define(['angular-mocks',
           }, {
             criterion: 'criterionId3',
             alternative: 'alternativeId3',
+            dataSource: 'dsId3',
             performance: {
               type: 'dt',
               parameters: {
@@ -114,6 +117,7 @@ define(['angular-mocks',
           }, {
             criterion: 'criterionId4',
             alternative: 'alternativeId4',
+            dataSource: 'dsId4',
             performance: {
               type: 'dnorm',
               parameters: {
@@ -124,6 +128,7 @@ define(['angular-mocks',
           }, {
             criterion: 'criterionId5',
             alternative: 'alternativeId5',
+            dataSource: 'dsId5',
             performance: {
               type: 'dbeta',
               parameters: {
@@ -135,6 +140,7 @@ define(['angular-mocks',
           }, {
             criterion: 'criterionId6',
             alternative: 'alternativeId6',
+            dataSource: 'dsId6',
             performance: {
               type: 'dsurv',
               parameters: {
@@ -145,6 +151,7 @@ define(['angular-mocks',
           }, {
             criterion: 'criterionId7',
             alternative: 'alternativeId7',
+            dataSource: 'dsId7',
             performance: {
               type: 'dnorm',
               input: {
@@ -156,17 +163,18 @@ define(['angular-mocks',
           }, {
             criterion: 'criterionId8',
             alternative: 'alternativeId8',
+            dataSource: 'dsId8',
             performance: {
               type: 'empty'
             }
           }];
           var result = effectTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
-            criterionId1: {
+            dsId1: {
               distributionType: 'relative',
               hasStudyData: false
             },
-            criterionId2: {
+            dsId2: {
               distributionType: 'exact',
               hasStudyData: true,
               studyDataLabelsAndUncertainty: {
@@ -176,7 +184,7 @@ define(['angular-mocks',
                 }
               }
             },
-            criterionId3: {
+            dsId3: {
               distributionType: 'dt',
               hasStudyData: true,
               studyDataLabelsAndUncertainty: {
@@ -186,7 +194,7 @@ define(['angular-mocks',
                 }
               }
             },
-            criterionId4: {
+            dsId4: {
               distributionType: 'dnorm',
               hasStudyData: true,
               studyDataLabelsAndUncertainty: {
@@ -196,7 +204,7 @@ define(['angular-mocks',
                 }
               }
             },
-            criterionId5: {
+            dsId5: {
               distributionType: 'dbeta',
               hasStudyData: true,
               studyDataLabelsAndUncertainty: {
@@ -206,7 +214,7 @@ define(['angular-mocks',
                 }
               }
             },
-            criterionId6: {
+            dsId6: {
               distributionType: 'dsurv',
               hasStudyData: true,
               studyDataLabelsAndUncertainty: {
@@ -216,7 +224,7 @@ define(['angular-mocks',
                 }
               }
             },
-            criterionId7: {
+            dsId7: {
               distributionType: 'dnorm',
               hasStudyData: true,
               studyDataLabelsAndUncertainty: {
@@ -226,7 +234,7 @@ define(['angular-mocks',
                 }
               }
             },
-            criterionId8: {
+            dsId8: {
               distributionType: 'empty',
               hasStudyData: true,
               studyDataLabelsAndUncertainty: {

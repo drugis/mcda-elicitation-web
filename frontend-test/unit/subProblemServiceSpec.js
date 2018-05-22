@@ -34,6 +34,7 @@ define(['angular-mocks', 'mcda/subProblem/subProblem'], function() {
         expect(result).toEqual(expectedResult);
       });
     });
+
     describe('createDefinition', function() {
       it('should create the definition for the subproblem', function() {
         var subProblemState = {
@@ -95,6 +96,171 @@ define(['angular-mocks', 'mcda/subProblem/subProblem'], function() {
           placebo: true
         };
         var result = subProblemService.determineBaseline(performanceTable, alternatives);
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('createCriterionInclusions', function() {
+      it('should return the criterion inclusions based on the current subproblem', function() {
+        var problem = {
+          criteria: {
+            crit1: {},
+            crit2: {},
+            crit3: {}
+          }
+        };
+        var subProblem = {
+          definition: {
+            excludedCriteria: ['crit2']
+          }
+        };
+        var expectedResult = {
+          crit1: true,
+          crit2: false,
+          crit3: true
+        };
+        var result = subProblemService.createCriterionInclusions(problem, subProblem);
+        expect(result).toEqual(expectedResult);
+      });
+    });
+    describe('createAlternativeInclusions', function() {
+      it('should return the alternative inclusions based on the current subproblem', function() {
+        var problem = {
+          alternatives: {
+            alt1: {},
+            alt2: {},
+            alt3: {}
+          }
+        };
+        var subProblem = {
+          definition: {
+            excludedAlternatives: ['alt2']
+          }
+        };
+        var expectedResult = {
+          alt1: true,
+          alt2: false,
+          alt3: true
+        };
+        var result = subProblemService.createAlternativeInclusions(problem, subProblem);
+        expect(result).toEqual(expectedResult);
+      });
+    });
+    describe('createDataSourceInclusions', function() {
+      it('should return the data source inclusions based on the current subproblem', function() {
+        var problem = {
+          criteria: {
+            crit1: {
+              dataSources: [
+                { id: 'ds1' }
+              ]
+            },
+            crit2: {
+              dataSources: [
+                { id: 'ds2' },
+                { id: 'ds3' }
+              ]
+            },
+            crit3: {
+              dataSources: [
+                { id: 'ds4' }
+              ]
+            }
+          }
+        };
+        var subProblem = {
+          definition: {
+            excludedDataSources: ['ds2']
+          }
+        };
+        var expectedResult = {
+          ds1: true,
+          ds2: false,
+          ds3: true,
+          ds4: true
+        };
+        var result = subProblemService.createDataSourceInclusions(problem, subProblem);
+        expect(result).toEqual(expectedResult);
+      });
+    });
+    describe('checkScaleRanges', function() {
+      it('should check wether there are no missing scale ranges', function() {
+        var criteria1 = {
+          crit1: {}
+        };
+        var criteria2 = {
+          crit2: {
+            pvf: {}
+          }
+        };
+        var criteria3 = {
+          crit3: {
+            pvf: {
+              range: []
+            }
+          }
+        };
+        var criteria4 = {
+          crit4: {
+            pvf: {
+              range: [1]
+            }
+          }
+        };
+        var criteria5 = {
+          crit5: {
+            pvf: {
+              range: [1, 0]
+            }
+          }
+        };
+        expect(subProblemService.checkScaleRanges(criteria1)).toBeFalsy();
+        expect(subProblemService.checkScaleRanges(criteria2)).toBeFalsy();
+        expect(subProblemService.checkScaleRanges(criteria3)).toBeFalsy();
+        expect(subProblemService.checkScaleRanges(criteria4)).toBeFalsy();
+        expect(subProblemService.checkScaleRanges(criteria5)).toBeTruthy();
+      });
+    });
+
+    describe('excludeCriteriaWithoutDataSources', function() {
+      it('should exclude criteria without included data sources', function() {
+        var criteria = {
+          crit1: {
+            dataSources: [
+              { id: 'ds1' },
+              { id: 'ds2' }
+            ]
+          },
+          crit2: {
+            dataSources: [
+              { id: 'ds3' }
+            ]
+          },
+          crit3: {
+            dataSources: [
+              { id: 'ds4' }
+            ]
+          }
+        };
+        var subProblemState = {
+          criterionInclusions: {
+            crit1: true,
+            crit2: true,
+            crit3: false
+          },
+          dataSourceInclusions: {
+            ds1: false,
+            ds2: true,
+            ds3: false,
+            ds4: true
+          }
+        };
+        var result = subProblemService.excludeCriteriaWithoutDataSources(criteria, subProblemState);
+        var expectedResult = {
+          crit1: true,
+          crit2: false,
+          crit3: false
+        };
         expect(result).toEqual(expectedResult);
       });
     });
