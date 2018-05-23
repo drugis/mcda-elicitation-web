@@ -72,7 +72,7 @@ define(['lodash', 'angular'], function(_) {
           step: Math.abs(niceTo(to) - niceFrom(from)) / 100,
           precision: 4,
           noSwitching: true,
-          translate: function(value){
+          translate: function(value) {
             return numberFilter(value);
           }
         }
@@ -93,24 +93,24 @@ define(['lodash', 'angular'], function(_) {
       var scaleState = {};
       var choices = {};
       _.forEach(criteria, function(criterion) {
+        _.forEach(criterion.dataSources, function(dataSource) {
+          // Calculate interval hulls
+          var dataSourceRange = intervalHull(observedScales[dataSource.id]);
+          var pvf = criterion.pvf;
+          var problemRange = pvf ? pvf.range : null;
+          var from = problemRange ? problemRange[0] : dataSourceRange[0];
+          var to = problemRange ? problemRange[1] : dataSourceRange[1];
 
-        // Calculate interval hulls
-        var criterionRange = intervalHull(observedScales[criterion.id]);
+          // Set inital model value
+          choices[dataSource.id] = {
+            from: niceFrom(from),
+            to: niceTo(to)
+          };
 
-        // Set inital model value
-        var pvf = criterion.pvf;
-        var problemRange = pvf ? pvf.range : null;
-        var from = problemRange ? problemRange[0] : criterionRange[0];
-        var to = problemRange ? problemRange[1] : criterionRange[1];
-        choices[criterion.id] = {
-          from: niceFrom(from),
-          to: niceTo(to)
-        };
-
-        // Set scales for slider
-        var criterionScale = criterion.scale;
-        scaleState[criterion.id] = calculateScales(criterionScale, from, to, criterionRange);
-
+          // Set scales for slider
+          var criterionScale = criterion.scale;
+          scaleState[dataSource.id] = calculateScales(criterionScale, from, to, dataSourceRange);
+        });
       });
       return {
         scaleState: scaleState,
