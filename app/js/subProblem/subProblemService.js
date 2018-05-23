@@ -62,23 +62,32 @@ define(['lodash', 'angular'], function(_) {
       return !isMissingScaleRange;
     }
 
-    function excludeCriteriaWithoutDataSources(criteria, subProblemState) {
-      return _.mapValues(criteria, function(criterion, criterionId) {
-        if(!subProblemState.criterionInclusions[criterionId]) {
-          return false;
+    function excludeDataSourcesForExcludedCriteria(criteria, subProblemState) {
+      return _.reduce(criteria, function(accum, criterion, criterionId) {
+        if (!subProblemState.criterionInclusions[criterionId]) {
+          _.forEach(criterion.dataSources, function(dataSource) {
+            accum[dataSource.id] = false;
+          });
+        } else if (!_.find(criterion.dataSources, function(dataSource) {
+          return subProblemState.dataSourceInclusions[dataSource.id];
+        })) {
+          _.forEach(criterion.dataSources, function(dataSource) {
+            accum[dataSource.id] = true;
+          });
+        } else {
+          accum = _.merge({}, accum, _.pick(subProblemState.dataSourceInclusions, _.map(criterion.dataSources, 'id')));
         }
-        var dataSourcesForCriterion = _.pick(subProblemState.dataSourceInclusions, _.map(criterion.dataSources, 'id'));
-        return _.filter(dataSourcesForCriterion).length > 0;
-      });
+        return accum;
+      }, {});
     }
 
     // private functions
     function createInclusions(whatToInclude, definition, exclusionKey) {
-      return _.reduce(_.keys(whatToInclude), function(accum,id) {
+      return _.reduce(_.keys(whatToInclude), function(accum, id) {
         var isIncluded = definition && !_.includes(definition[exclusionKey], id);
         accum[id] = isIncluded;
         return accum;
-      },{});
+      }, {});
     }
 
     function createRanges(scales) {
@@ -99,7 +108,7 @@ define(['lodash', 'angular'], function(_) {
       createAlternativeInclusions: createAlternativeInclusions,
       createDataSourceInclusions: createDataSourceInclusions,
       checkScaleRanges: checkScaleRanges,
-      excludeCriteriaWithoutDataSources: excludeCriteriaWithoutDataSources
+      excludeDataSourcesForExcludedCriteria: excludeDataSourcesForExcludedCriteria
     };
   };
 

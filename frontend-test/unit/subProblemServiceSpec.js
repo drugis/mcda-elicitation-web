@@ -222,44 +222,45 @@ define(['angular-mocks', 'mcda/subProblem/subProblem'], function() {
       });
     });
 
-    describe('excludeCriteriaWithoutDataSources', function() {
-      it('should exclude criteria without included data sources', function() {
+    describe('excludeDataSourcesForExcludedCriteria', function() {
+      it('should exclude data sources when their criterion is excluded', function() {
         var criteria = {
           crit1: {
             dataSources: [
               { id: 'ds1' },
-              { id: 'ds2' }
             ]
           },
           crit2: {
             dataSources: [
-              { id: 'ds3' }
+              { id: 'ds2' }
             ]
           },
           crit3: {
             dataSources: [
-              { id: 'ds4' }
+              { id: 'ds3'},
+              { id: 'ds4'}
             ]
           }
         };
         var subProblemState = {
           criterionInclusions: {
             crit1: true,
-            crit2: true,
-            crit3: false
+            crit2: false,
+            crit3: true
           },
           dataSourceInclusions: {
-            ds1: false,
+            ds1: true,
             ds2: true,
             ds3: false,
-            ds4: true
+            ds4: false
           }
         };
-        var result = subProblemService.excludeCriteriaWithoutDataSources(criteria, subProblemState);
+        var result = subProblemService.excludeDataSourcesForExcludedCriteria(criteria, subProblemState);
         var expectedResult = {
-          crit1: true,
-          crit2: false,
-          crit3: false
+          ds1: true,
+          ds2: false,
+          ds3: true,
+          ds4: true
         };
         expect(result).toEqual(expectedResult);
       });

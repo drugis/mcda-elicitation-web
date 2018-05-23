@@ -39,7 +39,15 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     };
 
     mergedProblem.criteria = _.merge(mergedProblem.criteria, $scope.subProblem.definition.ranges);
-
+    mergedProblem.criteria = _.mapValues(mergedProblem.criteria, function(criterion) {
+      criterion.dataSources = _.filter(criterion.dataSources, function(dataSource){
+        return !_.includes($scope.subProblem.definition.excludedDataSources, dataSource.id);
+      });
+      return criterion;
+    });
+    $scope.areTooManyDataSourcesIncluded = _.find(mergedProblem.criteria, function(criterion) {
+      return criterion.dataSources.length > 1;
+    });
     OrderingService.getOrderedCriteriaAndAlternatives(mergedProblem, $stateParams).then(function(orderings) {
       $scope.criteria = orderings.criteria;
       $scope.alternatives = orderings.alternatives;
