@@ -46,8 +46,12 @@ define(['angular-mocks', 'mcda/subProblem/subProblem'], function() {
             aspirine: true,
             paracetamol: false
           },
+          dataSourceInclusions: {
+            ds1: true,
+            ds2: false
+          },
           ranges: {
-            headacheId: {
+            ds1: {
               pvf: {
                 range: [1, 2]
               }
@@ -55,7 +59,7 @@ define(['angular-mocks', 'mcda/subProblem/subProblem'], function() {
           }
         };
         var scales = {
-          headacheId: {
+          ds1: {
             from: 1,
             to: 2
           }
@@ -63,14 +67,15 @@ define(['angular-mocks', 'mcda/subProblem/subProblem'], function() {
         var result = subProblemService.createDefinition(subProblemState, scales);
         var expectedResult = {
           ranges: {
-            headacheId: {
+            ds1: {
               pvf: {
                 range: [1, 2]
               }
             }
           },
           excludedCriteria: ['nauseaId'],
-          excludedAlternatives: ['paracetamol']
+          excludedAlternatives: ['paracetamol'],
+          excludedDataSources: ['ds2']
         };
         expect(result).toEqual(expectedResult);
       });

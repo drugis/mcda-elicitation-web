@@ -11,9 +11,10 @@ define(['lodash', 'angular'], function(_) {
 
     function createDefinition(subProblemState, scales) {
       return {
-        ranges: createRanges(scales),
+        ranges: createRanges(scales, subProblemState.dataSourceInclusions),
         excludedCriteria: _.keys(_.omitBy(subProblemState.criterionInclusions)), // values are boolean
-        excludedAlternatives: _.keys(_.omitBy(subProblemState.alternativeInclusions))
+        excludedAlternatives: _.keys(_.omitBy(subProblemState.alternativeInclusions)),
+        excludedDataSources: _.keys(_.omitBy(subProblemState.dataSourceInclusions))
       };
     }
 
@@ -90,14 +91,20 @@ define(['lodash', 'angular'], function(_) {
       }, {});
     }
 
-    function createRanges(scales) {
-      return _.fromPairs(_.map(scales, function(scale, criterionId) {
-        return [criterionId, {
-          pvf: {
-            range: [scale.from, scale.to]
-          }
-        }];
-      }));
+    function createRanges(scales, includedDataSources) {
+      return _(scales)
+        .map(function(scale, dataSourceId) {
+          return [dataSourceId, {
+            pvf: {
+              range: [scale.from, scale.to]
+            }
+          }];
+        })
+        .filter(function(scale) {
+          return _.includes(_.keys(_.pickBy(includedDataSources)), scale[0]);
+        })
+        .fromPairs()
+        .value();
     }
 
     return {

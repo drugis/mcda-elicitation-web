@@ -62,32 +62,32 @@ define(['lodash', 'angular'], function(_, angular) {
       };
     }
 
-    function isIncreasing(criterion) {
-      return criterion.pvf.direction === 'increasing';
+    function isIncreasing(dataSource) {
+      return dataSource.pvf.direction === 'increasing';
     }
 
-    function best(criterion) {
-      return isIncreasing(criterion) ? criterion.pvf.range[1] : criterion.pvf.range[0];
+    function best(dataSource) {
+      return isIncreasing(dataSource) ? dataSource.pvf.range[1] : dataSource.pvf.range[0];
     }
 
-    function worst(criterion) {
-      return isIncreasing(criterion) ? criterion.pvf.range[0] : criterion.pvf.range[1];
+    function worst(dataSource) {
+      return isIncreasing(dataSource) ? dataSource.pvf.range[0] : dataSource.pvf.range[1];
     }
 
-    function getBounds(criterion) {
-      return [worst(criterion), best(criterion)].sort(function(a, b) {
+    function getBounds(dataSource) {
+      return [worst(dataSource), best(dataSource)].sort(function(a, b) {
         return a - b;
       });
     }
 
-    function _sortByValues(criterion) {
+    function sortByValues(dataSource) {
       /* sorts the values and cutoffs according to the values (y-axis)
        returns an object containing the values and cuttoffs */
-      if(!criterion.pvf.cutoffs || !criterion.pvf.values) {
-        return criterion;
+      if(!dataSource.pvf.cutoffs || !dataSource.pvf.values) {
+        return dataSource;
       }
-      var newCutoffs = criterion.pvf.cutoffs;
-      var newValues = criterion.pvf.values;
+      var newCutoffs = _.cloneDeep(dataSource.pvf.cutoffs);
+      var newValues = _.cloneDeep(dataSource.pvf.values);
 
       var list = [];
       for (var j = 0; j < newCutoffs.length; j++) {
@@ -101,16 +101,16 @@ define(['lodash', 'angular'], function(_, angular) {
         newCutoffs[k] = list[k].cutoff;
         newValues[k] = list[k].value;
       }
-      criterion.pvf.values = newValues;
-      criterion.pvf.cutoffs = newCutoffs;
-      return criterion;
+      dataSource.pvf.values = newValues;
+      dataSource.pvf.cutoffs = newCutoffs;
+      return dataSource;
     }
 
-    function getXY(criterion) {
-      var newCriterion = _sortByValues(angular.copy(criterion));
+    function getXY(dataSource) {
+      var newDataSource = sortByValues(angular.copy(dataSource));
 
-      var y = [1].concat(newCriterion.pvf.values || []).concat([0]);
-      var x = [best(newCriterion)].concat(newCriterion.pvf.cutoffs || []).concat([worst(newCriterion)]);
+      var y = [1].concat(newDataSource.pvf.values || []).concat([0]);
+      var x = [best(newDataSource)].concat(newDataSource.pvf.cutoffs || []).concat([worst(newDataSource)]);
 
       var values = _.map(_.zip(x, y), function(p) {
         return {
@@ -124,19 +124,19 @@ define(['lodash', 'angular'], function(_, angular) {
       }];
     }
 
-    function standardizeCriterion(criterion) {
-      var newCriterion = _.cloneDeep(criterion);
-      if (newCriterion.pvf.type === 'linear') {
-        delete newCriterion.pvf.values;
-        delete newCriterion.pvf.cutoffs;
-      } else if (newCriterion.pvf.type === 'piecewise-linear') {
-        newCriterion.pvf.cutoffs = _.sortBy(newCriterion.pvf.cutoffs);
-        newCriterion.pvf.values = _.sortBy(newCriterion.pvf.values);
-        if (newCriterion.pvf.direction === 'decreasing') {
-          newCriterion.pvf.values.reverse();
+    function standardizeDataSource(dataSource) {
+      var newDataSource = _.cloneDeep(dataSource);
+      if (newDataSource.pvf.type === 'linear') {
+        delete newDataSource.pvf.values;
+        delete newDataSource.pvf.cutoffs;
+      } else if (newDataSource.pvf.type === 'piecewise-linear') {
+        newDataSource.pvf.cutoffs = _.sortBy(newDataSource.pvf.cutoffs);
+        newDataSource.pvf.values = _.sortBy(newDataSource.pvf.values);
+        if (newDataSource.pvf.direction === 'decreasing') {
+          newDataSource.pvf.values.reverse();
         }
       }
-      return newCriterion;
+      return newDataSource;
     }
 
     return {
@@ -147,7 +147,7 @@ define(['lodash', 'angular'], function(_, angular) {
       worst: worst,
       getXY: getXY,
       getBounds: getBounds,
-      standardizeCriterion:standardizeCriterion
+      standardizeDataSource:standardizeDataSource
     };
   };
   return dependencies.concat(PartialValueFunctionService);

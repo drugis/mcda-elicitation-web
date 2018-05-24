@@ -5,7 +5,7 @@ define(['lodash', 'angular'], function(_, angular) {
   var scaleRanges = {
     'isPresent': function(state) {
       var hasScale = function(criterion) {
-        return criterion.pvf && criterion.pvf.range;
+        return criterion.dataSources[0].pvf && criterion.dataSources[0].pvf.range;
       };
       return _.every(state.problem.criteria, hasScale);
     },
@@ -13,8 +13,8 @@ define(['lodash', 'angular'], function(_, angular) {
       var newState = angular.copy(state);
       var criteria = newState.problem.criteria;
       _.each(criteria, function(criterion) {
-        if (criterion.pvf) {
-          delete criterion.pvf.range;
+        if (criterion.dataSources[0].pvf) {
+          delete criterion.dataSources[0].pvf.range;
         }
       });
       return newState;
@@ -26,7 +26,7 @@ define(['lodash', 'angular'], function(_, angular) {
     'isPresent': function(state) {
       var criteria = state.problem.criteria;
       return _.every(criteria, function(criterion) {
-        var pvf = criterion.pvf;
+        var pvf = criterion.dataSources[0].pvf;
         return pvf && pvf.direction && pvf.type;
       });
     },
@@ -35,8 +35,8 @@ define(['lodash', 'angular'], function(_, angular) {
       var criteria = newState.problem.criteria;
       _.each(criteria, function(criterion) {
         var remove = ['type', 'direction', 'cutoffs', 'values'];
-        if (criterion.pvf) {
-          criterion.pvf = _.omit(criterion.pvf, remove);
+        if (criterion.dataSources[0].pvf) {
+          criterion.dataSources[0].pvf = _.omit(criterion.dataSources[0].pvf, remove);
         }
       });
       return newState;
@@ -66,7 +66,6 @@ define(['lodash', 'angular'], function(_, angular) {
     };
 
     this.title = title;
-
     return this;
   }
 

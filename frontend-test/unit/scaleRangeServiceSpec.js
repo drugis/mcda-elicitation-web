@@ -108,14 +108,14 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
     describe('getScaleStateAndChoices', function() {
       it('should return the scale state and the choices', inject(function(ScaleRangeService) {
         var observedScales = {
-          headacheId: {
+          ds1: {
             alt1: {
               '2.5%': 10,
               '50%': 20,
               '97.5%': 30
             }
           },
-          nauseaId: {
+          ds2: {
             alt1: {
               '2.5%': 15,
               '50%': 25,
@@ -124,32 +124,36 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
           }
         };
         var criteria = [{
+          id: 'headacheId',
+          dataSources: [{
             pvf: {
               range: [0, 40]
             },
-            id: 'headacheId'
-          },
-          {
+            id: 'ds1'
+          }]
+        }, {
+          id: 'nauseaId',
+          dataSources: [{
             pvf: {
               range: [10, 40]
             },
-            id: 'nauseaId'
-          }
-        ];
+            id: 'ds2'
+          }]
+        }];
         var result = ScaleRangeService.getScaleStateAndChoices(observedScales, criteria);
         var expectedResult = {
           choices: {
-            headacheId: {
+            ds1: {
               from: 0,
               to: 40
             },
-            nauseaId: {
+            ds2: {
               from: 10,
               to: 40
             }
           },
           scaleState: {
-            headacheId: {
+            ds1: {
               sliderOptions: {
                 restrictedRange: {
                   from: 10,
@@ -162,7 +166,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
                 noSwitching: true
               }
             },
-            nauseaId: {
+            ds2: {
               sliderOptions: {
                 restrictedRange: {
                   from: 15,
@@ -177,22 +181,15 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
             }
           }
         };
-        expect(typeof result.scaleState.headacheId.increaseFrom).toBe('function');
-        expect(typeof result.scaleState.headacheId.increaseTo).toBe('function');
-        expect(result.scaleState.headacheId.sliderOptions.restrictedRange).toEqual(expectedResult.scaleState.headacheId.sliderOptions.restrictedRange);
-        expect(result.scaleState.headacheId.sliderOptions.floor).toEqual(expectedResult.scaleState.headacheId.sliderOptions.floor);
-        expect(result.scaleState.headacheId.sliderOptions.ceil).toEqual(expectedResult.scaleState.headacheId.sliderOptions.ceil);
-        expect(result.scaleState.headacheId.sliderOptions.step).toEqual(expectedResult.scaleState.headacheId.sliderOptions.step);
-        expect(result.scaleState.headacheId.sliderOptions.precision).toEqual(expectedResult.scaleState.headacheId.sliderOptions.precision);
-        expect(result.scaleState.headacheId.sliderOptions.noSwitching).toEqual(expectedResult.scaleState.headacheId.sliderOptions.noSwitching);
-        expect(typeof result.scaleState.nauseaId.increaseFrom).toBe('function');
-        expect(typeof result.scaleState.nauseaId.increaseTo).toBe('function');
-        expect(result.scaleState.nauseaId.sliderOptions.restrictedRange).toEqual(expectedResult.scaleState.nauseaId.sliderOptions.restrictedRange);
-        expect(result.scaleState.nauseaId.sliderOptions.floor).toEqual(expectedResult.scaleState.nauseaId.sliderOptions.floor);
-        expect(result.scaleState.nauseaId.sliderOptions.ceil).toEqual(expectedResult.scaleState.nauseaId.sliderOptions.ceil);
-        expect(result.scaleState.nauseaId.sliderOptions.step).toEqual(expectedResult.scaleState.nauseaId.sliderOptions.step);
-        expect(result.scaleState.nauseaId.sliderOptions.precision).toEqual(expectedResult.scaleState.nauseaId.sliderOptions.precision);
-        expect(result.scaleState.nauseaId.sliderOptions.noSwitching).toEqual(expectedResult.scaleState.nauseaId.sliderOptions.noSwitching);
+        expect(typeof result.scaleState.ds1.increaseFrom).toBe('function');
+        expect(typeof result.scaleState.ds1.increaseTo).toBe('function');
+        expect(typeof result.scaleState.ds2.increaseFrom).toBe('function');
+        expect(typeof result.scaleState.ds2.increaseTo).toBe('function');
+        var relevantProperties = ['restrictedRange', 'floor', 'ceil', 'step', 'precision', 'noSwitching'];
+        var subResultDs1 = _.pick(result.scaleState.ds1.sliderOptions, relevantProperties);
+        expect(subResultDs1).toEqual(expectedResult.scaleState.ds1.sliderOptions);
+        var subResultDs2 = _.pick(result.scaleState.ds2.sliderOptions, relevantProperties);
+        expect(subResultDs2).toEqual(expectedResult.scaleState.ds2.sliderOptions);
         expect(result.choices).toEqual(expectedResult.choices);
       }));
     });

@@ -29,12 +29,12 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
   ) {
 
     // functions
-    $scope.pvf = PartialValueFunctionService;
     $scope.isPVFDefined = isPVFDefined;
     $scope.isAccessible = isAccessible;
     $scope.editScenarioTitle = editScenarioTitle;
-
+    
     // init
+    $scope.pvf = PartialValueFunctionService;
     $scope.criteriaHavePvf = true;
     $scope.scenario = currentScenario;
     $scope.scales = $scope.workspace.scales;
@@ -53,39 +53,9 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
       return pref.type === 'ordinal';
     });
 
-    function doAllCriteriaHavePvf() {
-      var havePvf = true;
-      _.forEach($scope.aggregateState.problem.criteria, function(criterion) {
-        if (!isPVFDefined(criterion)) {
-          havePvf = false;
-        }
-      });
-      return havePvf;
-    }
-
-    function willReset(safe) {
-      var resets = safe.resets.map(function(reset) {
-        return TaskDependencies.definitions[reset].title;
-      }).join(', ').replace(/,([^,]*)$/, ' & $1');
-
-      return resets ? 'Saving this preference will reset: ' + resets : null;
-    }
-
-    function isTaskSafe(taskId) {
-      var safe = TaskDependencies.isSafe($scope.tasks[taskId], $scope.aggregateState);
-      safe.tooltip = willReset(safe);
-      return safe;
-    }
-
-    function createIsSafeObject() {
-      $scope.isSafe = _.reduce($scope.tasks, function(accum, task) {
-        accum[task.id] = isTaskSafe(task.id);
-        return accum;
-      }, {});
-    }
-
-    function isPVFDefined(criterion) {
-      return criterion.pvf && criterion.pvf.type;
+    // public
+    function isPVFDefined(dataSource) {
+      return dataSource.pvf && dataSource.pvf.type;
     }
 
     function isAccessible(task) {
@@ -114,6 +84,39 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
         }
       });
     }
+
+    // private
+    function doAllCriteriaHavePvf() {
+      var havePvf = true;
+      _.forEach($scope.aggregateState.problem.criteria, function(criterion) {
+        if (!isPVFDefined(criterion.dataSources[0])) {
+          havePvf = false;
+        }
+      });
+      return havePvf;
+    }
+
+    function willReset(safe) {
+      var resets = safe.resets.map(function(reset) {
+        return TaskDependencies.definitions[reset].title;
+      }).join(', ').replace(/,([^,]*)$/, ' & $1');
+
+      return resets ? 'Saving this preference will reset: ' + resets : null;
+    }
+
+    function isTaskSafe(taskId) {
+      var safe = TaskDependencies.isSafe($scope.tasks[taskId], $scope.aggregateState);
+      safe.tooltip = willReset(safe);
+      return safe;
+    }
+
+    function createIsSafeObject() {
+      $scope.isSafe = _.reduce($scope.tasks, function(accum, task) {
+        accum[task.id] = isTaskSafe(task.id);
+        return accum;
+      }, {});
+    }
+
   };
   return dependencies.concat(PreferencesController);
 });

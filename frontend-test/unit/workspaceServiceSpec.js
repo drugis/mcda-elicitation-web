@@ -69,13 +69,31 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
         workspaceService.getObservedScales({
           scopething: 'bla'
         }, {
-          problemthing: 'alb'
-        });
+            criteria: {
+              crit1: {
+                dataSources: [{ id: 'ds1' }]
+              }
+            }, performanceTable: [
+              {
+                criterion: 'crit1',
+                dataSource: 'ds1'
+              }
+            ]
+          });
         expect(scalesServiceMock.getObservedScales).toHaveBeenCalledWith({
           scopething: 'bla'
         }, {
-          problemthing: 'alb'
-        });
+            criteria: {
+              ds1: {
+                id: 'ds1'
+              }
+            }, performanceTable: [
+              {
+                criterion: 'ds1',
+                dataSource: 'ds1'
+              }
+            ]
+          });
       });
 
     });
@@ -85,25 +103,45 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
         var problem = {
           criteria: {
             critId1: {
-              pvf: {
-                range: [4, 5]
-              }
+              dataSources: [{
+                id: 'ds1',
+                pvf: {
+                  range: [4, 5]
+                }
+              }]
             },
-            critId2: {},
-            critId4: {}
+            critId2: {
+              dataSources: [{
+                id: 'ds2'
+              }]
+            },
+            critId4: {
+              dataSources: [{
+                id: 'ds4'
+              }]
+            }
           },
           performanceTable: [{
             criterion: 'critId1',
+            dataSource: 'ds1',
             performance: {
               type: 'exact'
             }
           }, {
             criterion: 'critId2',
+            dataSource: 'ds2',
+            performance: {
+              type: 'exact'
+            }
+          }, {
+            criterion: 'critId2',
+            dataSource: 'ds3',
             performance: {
               type: 'exact'
             }
           }, {
             criterion: 'critId4',
+            dataSource: 'ds4',
             performance: {
               type: 'dbeta',
               parameters: {
@@ -134,32 +172,39 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
         };
         var subProblemDefinition = {
           ranges: {
-            critId2: {
+            ds2: {
               pvf: {
                 range: [2, 3]
               }
             },
-            critId4: {
+            ds4: {
               pvf: {
                 range: [6, 7]
               }
             }
           },
           excludedCriteria: ['critId1'],
-          excludedAlternatives: ['alt1']
+          excludedAlternatives: ['alt1'],
+          excludedDataSources: ['ds1', 'ds3']
         };
         var result = workspaceService.mergeBaseAndSubProblem(problem, subProblemDefinition);
         var expectedResult = {
           criteria: {
             critId2: {
-              pvf: {
-                range: [2, 3]
-              }
+              dataSources: [{
+                id: 'ds2',
+                pvf: {
+                  range: [2, 3]
+                }
+              }]
             },
             critId4: {
-              pvf: {
-                range: [6, 7]
-              }
+              dataSources: [{
+                id: 'ds4',
+                pvf: {
+                  range: [6, 7]
+                }
+              }]
             }
           },
           alternatives: {
@@ -168,11 +213,13 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           },
           performanceTable: [{
             criterion: 'critId2',
+            dataSource: 'ds2',
             performance: {
               type: 'exact'
             }
           }, {
             criterion: 'critId4',
+            dataSource: 'ds4',
             performance: {
               type: 'dbeta',
               parameters: {
@@ -203,36 +250,54 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
         var problem = {
           criteria: {
             critId1: {
-              pvf: {
-                range: [4, 5]
-              }
+              dataSources: [{
+                id: 'ds1',
+                pvf: {
+                  range: [4, 5]
+                }
+              }]
             },
-            critId2: {},
-            critId4: {}
+            critId2: {
+              dataSources: [{
+                id: 'ds2'
+              }]
+            },
+            critId4: {
+              dataSources: [{
+                id: 'ds4'
+              }]
+            }
           },
           performanceTable: [{
-            criterion: 'critId1'
+            criterion: 'critId1',
+            dataSource: 'ds1'
           }, {
-            criterion: 'critId2'
+            criterion: 'critId2',
+            dataSource: 'ds2'
           }, {
-            criterion: 'critId4'
+            criterion: 'critId2',
+            dataSource: 'ds3'
+          }, {
+            criterion: 'critId4',
+            dataSource: 'ds4'
           }]
         };
         var subProblem = {
           definition: {
             ranges: {
-              critId2: {
+              ds2: {
                 pvf: {
                   range: [2, 3]
                 }
               },
-              critId4: {
+              ds4: {
                 pvf: {
                   range: [6, 7]
                 }
               }
             },
-            excludedCriteria: ['critId1']
+            excludedCriteria: ['critId1'],
+            excludedDataSources: ['ds1', 'ds3']
           }
         };
         var scenario = {
@@ -248,22 +313,30 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
               critId2: {
                 id: 'critId2',
                 w: 'w_{1}',
-                pvf: {
-                  range: [2, 3]
-                }
+                dataSources: [{
+                  id: 'ds2',
+                  pvf: {
+                    range: [2, 3]
+                  }
+                }]
               },
               critId4: {
                 id: 'critId4',
                 w: 'w_{2}',
-                pvf: {
-                  range: [6, 7]
-                }
+                dataSources: [{
+                  id: 'ds4',
+                  pvf: {
+                    range: [6, 7]
+                  }
+                }]
               }
             },
             performanceTable: [{
-              criterion: 'critId2'
+              criterion: 'critId2',
+              dataSource: 'ds2'
             }, {
-              criterion: 'critId4'
+              criterion: 'critId4',
+              dataSource: 'ds4'
             }]
           }
         };
@@ -424,32 +497,51 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
       var problem = {
         criteria: {
           crit1: {
-            pvf: {
-              range: [1, 2],
-              direction: 'decreasing'
-            }
+            dataSources: [{
+              id: 'ds1',
+              pvf: {
+                range: [1, 2],
+                direction: 'decreasing'
+              }
+            }]
           },
-          crit2: {},
-          crit3: {}
+          crit2: {
+            dataSources: [{
+              id: 'ds2'
+            }]
+          },
+          crit3: {
+            dataSources: [{
+              id: 'ds3'
+            }]
+          }
         },
         performanceTable: [{
-          criterion: 'crit1'
+          criterion: 'crit1',
+          dataSource: 'ds1'
         }, {
-          criterion: 'crit2'
+          criterion: 'crit2',
+          dataSource: 'ds2'
         }]
       };
       var subProblem = {
         definition: {
           ranges: {
             crit1: {
-              pvf: {
-                range: [1, 2]
-              }
+              dataSources:[{
+                id: 'ds1',
+                pvf: {
+                  range: [1, 2]
+                }
+              }]
             },
             crit2: {
-              pvf: {
-                range: [4, 5]
-              }
+              dataSources:[{
+                id: 'ds2',
+                pvf: {
+                  range: [4, 5]
+                }
+              }]
             }
           }
         }
@@ -521,7 +613,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
         expect(validity.isValid).toBeFalsy();
         expect(validity.errorMessage).toBe('Missing workspace properties: title, criteria, alternatives, performanceTable');
       });
-      it('should fail gracefully when exceptions occur', function () {
+      it('should fail gracefully when exceptions occur', function() {
         var garbage = {
           title: 'foo',
           criteria: {

@@ -96,7 +96,7 @@ define(['lodash', 'angular'], function(_) {
         _.forEach(criterion.dataSources, function(dataSource) {
           // Calculate interval hulls
           var dataSourceRange = intervalHull(observedScales[dataSource.id]);
-          var pvf = criterion.pvf;
+          var pvf = dataSource.pvf;
           var problemRange = pvf ? pvf.range : null;
           var from = problemRange ? problemRange[0] : dataSourceRange[0];
           var to = problemRange ? problemRange[1] : dataSourceRange[1];
