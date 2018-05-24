@@ -101,17 +101,17 @@
                   </div>
                 </div>
               </td>
-              <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['references']">
-                <a ng-if="row.sourceLink" href="{{row.sourceLink}}">
-                  {{row.source}}
+              <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['references']" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id] || !subProblemState.dataSourceInclusions[row.dataSource.id]}">
+                <a ng-if="row.dataSource.sourceLink" href="{{row.dataSource.sourceLink}}">
+                  {{row.dataSource.source}}
                 </a>
-                <span ng-if="!row.sourceLink">{{row.source}}</span>
+                <span ng-if="!row.dataSource.sourceLink">{{row.dataSource.source}}</span>
               </td>
-              <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['strength']">
-                <div ng-if="row.strengthOfEvidence">
-                  <b>SoE: </b>{{row.strengthOfEvidence}}</div>
-                <div ng-if="row.uncertainties">
-                  <b>Unc: </b> {{row.uncertainties}}</div>
+              <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['strength']" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id] || !subProblemState.dataSourceInclusions[row.dataSource.id]}">
+                <div ng-if="row.dataSource.strengthOfEvidence">
+                  <b>SoE: </b>{{row.dataSource.strengthOfEvidence}}</div>
+                <div ng-if="row.dataSource.uncertainties">
+                  <b>Unc: </b> {{row.dataSource.uncertainties}}</div>
               </td>
             </tr>
           </tbody>

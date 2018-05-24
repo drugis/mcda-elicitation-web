@@ -8,7 +8,8 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     'OrderingService',
     'mcdaRootPath',
     'subProblems',
-    'SubProblemResource'
+    'SubProblemResource',
+    'EffectsTableService'
   ];
 
   var SubProblemController = function($scope, $stateParams, $modal, $state,
@@ -18,7 +19,8 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     OrderingService,
     mcdaRootPath,
     subProblems,
-    SubProblemResource) {
+    SubProblemResource,
+    EffectsTableService) {
     // functions 
     $scope.intervalHull = intervalHull;
     $scope.openCreateDialog = openCreateDialog;
@@ -37,10 +39,9 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
       alternatives: _.cloneDeep(_.omit($scope.problem.alternatives, $scope.subProblem.definition.excludedAlternatives)),
       criteria: _.cloneDeep(_.omit($scope.problem.criteria, $scope.subProblem.definition.excludedCriteria))
     };
-
     mergedProblem.criteria = _.merge(mergedProblem.criteria, $scope.subProblem.definition.ranges);
     mergedProblem.criteria = _.mapValues(mergedProblem.criteria, function(criterion) {
-      criterion.dataSources = _.filter(criterion.dataSources, function(dataSource){
+      criterion.dataSources = _.filter(criterion.dataSources, function(dataSource) {
         return !_.includes($scope.subProblem.definition.excludedDataSources, dataSource.id);
       });
       return criterion;
@@ -51,6 +52,8 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     OrderingService.getOrderedCriteriaAndAlternatives(mergedProblem, $stateParams).then(function(orderings) {
       $scope.criteria = orderings.criteria;
       $scope.alternatives = orderings.alternatives;
+
+      $scope.scaleTable = EffectsTableService.buildEffectsTable(undefined, orderings.criteria);
     });
 
     new Clipboard('.clipboard-button');

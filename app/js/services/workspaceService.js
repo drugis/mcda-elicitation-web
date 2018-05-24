@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
   var dependencies = ['ScalesService', 'sortCriteriaWithW'];
 
   var WorkspaceService = function(ScalesService, sortCriteriaWithW) {
@@ -83,7 +83,23 @@ define(['lodash', 'angular'], function(_) {
         });
       }
 
-      newProblem.criteria = _.merge(newProblem.criteria, subProblemDefinition.ranges);
+      if (subProblemDefinition.excludedDataSources) {
+        _.forEach(newProblem.criteria, function(criterion) {
+          criterion.dataSources = _.filter(criterion.dataSources, function(dataSource) {
+            return !_.includes(subProblemDefinition.excludedDataSources, dataSource.id);
+          });
+        });
+        newProblem.performanceTable = _.reject(newProblem.performanceTable, function(tableEntry) {
+          return _.includes(subProblemDefinition.excludedDataSources, tableEntry.dataSource);
+        });
+      }
+
+      newProblem.criteria = _.reduce(newProblem.criteria, function(accum, criterion, criterionId) {
+        var newCriterion = _.cloneDeep(criterion);
+        newCriterion.dataSources = [_.merge({}, criterion.dataSources[0], subProblemDefinition.ranges[criterion.dataSources[0].id])];
+        accum[criterionId] = newCriterion;
+        return accum;
+      }, {});
       return newProblem;
     }
 
@@ -121,7 +137,7 @@ define(['lodash', 'angular'], function(_) {
         problem: mergeBaseAndSubProblem(baseProblem, subProblem.definition)
       }, scenario.state);
       _.forEach(newState.problem.criteria, function(criterion, key) {
-        newState.problem.criteria[key] = _.merge({}, criterion, _.omit(baseProblem.criteria[key], ['pvf']));
+        newState.problem.criteria[key] = _.merge({}, criterion, _.omit(baseProblem.criteria[key], ['pvf', 'dataSources']));
         // omit because we don't want the base problem pvf to overwrite the current one
       });
       _.forEach(newState.problem.alternatives, function(alternative, key) {

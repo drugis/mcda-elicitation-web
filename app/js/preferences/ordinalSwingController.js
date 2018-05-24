@@ -20,14 +20,13 @@ define(['lodash', 'mcda/controllers/helpers/wizard'], function(_, Wizard) {
 
     //init
     $scope.problem = $scope.aggregateState.problem;
-    var pvf = PartialValueFunctionService;
-    $scope.pvf = pvf;
+    $scope.pvf = PartialValueFunctionService;
 
     function getReference(criteria) {
       return _.zipObject(
         _.map(criteria, 'id'),
         _.map(criteria, function(criterion) {
-          return pvf.worst(criterion);
+          return PartialValueFunctionService.worst(criterion);
         })
       );
     }
@@ -41,7 +40,7 @@ define(['lodash', 'mcda/controllers/helpers/wizard'], function(_, Wizard) {
       var criteria = $scope.criteria;
       var choices = _.map(criteria, function(criterion) {
         var reference = getReference(criteria);
-        reference[criterion.id] = pvf.best(criterion);
+        reference[criterion.id] = PartialValueFunctionService.best(criterion);
         return reference;
       });
       return _.zipObject(_.map(criteria, 'id'), choices);
@@ -77,12 +76,12 @@ define(['lodash', 'mcda/controllers/helpers/wizard'], function(_, Wizard) {
       nextState.choice = undefined;
 
       _.each(nextState.choices, function(alternative) {
-        alternative[choice] = pvf.best(criteria[choice]);
+        alternative[choice] = PartialValueFunctionService.best(criteria[choice]);
       });
 
       function next(choice) {
         delete nextState.choices[choice];
-        nextState.reference[choice] = pvf.best($scope.problem.criteria[choice]);
+        nextState.reference[choice] = PartialValueFunctionService.best($scope.problem.criteria[choice]);
         nextState.prefs.ordinal.push(choice);
         nextState.title = title(nextState.prefs.ordinal.length + 1, _.size(criteria) - 1);
       }

@@ -20,12 +20,12 @@
     </h4>
   </div>
   <div class="cell large-2">
-    <button data-ng-if="!areTooManyDataSourcesIncluded" class="button small info clipboard-button" data-clipboard-target="#scalestable">
+    <button data-ng-if="!areTooManyDataSourcesIncluded" class="button small info clipboard-button right" data-clipboard-target="#scalestable">
       <i class="fa fa-clipboard"></i> Copy to clipboard
     </button>
   </div>
-  <div class="cell error">
-    Multiple data sources selected for at least one criterion, therefore no scales can be set.
+  <div class="cell error" ng-if="areTooManyDataSourcesIncluded">
+    <em>Multiple data sources selected for at least one criterion, therefore no scales can be set.</em>
   </div>
   <div class="cell" ng-if="!areTooManyDataSourcesIncluded">
     <table class="full-width" id="scalestable">
@@ -49,21 +49,21 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="criterion in criteria">
-          <td>{{criterion.title}}</td>
-          <td>{{scales.theoreticalScales[criterion.id][0] | number}}, {{scales.theoreticalScales[criterion.id][1] | number}}</td>
+        <tr ng-repeat="row in scaleTable">
+          <td>{{row.criterion.title}}</td>
+          <td>{{scales.theoreticalScales[row.criterion.id][0] | number}}, {{scales.theoreticalScales[row.criterion.id][1] | number}}</td>
           <td>
-            <span ng-bind="intervalHull(scales.observed[criterion.id])[0] | number"></span> ,
-            <span ng-bind="intervalHull(scales.observed[criterion.id])[1] | number"></span>
+            <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[0] | number"></span> ,
+            <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[1] | number"></span>
           </td>
           <td>
-            <span ng-if="criterion.pvf.range">{{criterion.pvf.range[0] | number}}, {{criterion.pvf.range[1] | number}}</span>
-            <span ng-if="!criterion.pvf.range">
-              <span ng-bind="intervalHull(scales.observed[criterion.id])[0] | number"></span> ,
-            <span ng-bind="intervalHull(scales.observed[criterion.id])[1] | number"></span>
+            <span ng-if="row.dataSource.pvf.range">{{row.dataSource.pvf.range[0] | number}}, {{row.dataSource.pvf.range[1] | number}}</span>
+            <span ng-if="!row.dataSource.pvf.range">
+              <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[0] | number"></span> ,
+            <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[1] | number"></span>
             </span>
           </td>
-          <td>{{criterion.unitOfMeasurement}}</td>
+          <td>{{row.criterion.unitOfMeasurement}}</td>
         </tr>
       </tbody>
     </table>

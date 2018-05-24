@@ -41,11 +41,11 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
         return {};
       }
       // set defaults
-      criterion.pvf = !criterion.pvf ? {} : criterion.pvf;
-      criterion.pvf.direction = 'decreasing';
-      criterion.pvf.type = 'linear';
-      criterion.pvf.cutoffs = undefined;
-      criterion.pvf.values = undefined;
+      criterion.dataSources[0].pvf = !criterion.dataSources[0].pvf ? {} : criterion.dataSources[0].pvf;
+      criterion.dataSources[0].pvf.direction = 'decreasing';
+      criterion.dataSources[0].pvf.type = 'linear';
+      criterion.dataSources[0].pvf.cutoffs = undefined;
+      criterion.dataSources[0].pvf.values = undefined;
 
       var initial = {
         ref: 0,
@@ -55,7 +55,7 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
           [0.5, 1]
         ],
         type: 'elicit type',
-        choice: criterion
+        choice: criterion.dataSources[0]
       };
       $timeout(function() {
         $scope.$broadcast('rzSliderForceRender');
@@ -115,9 +115,9 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
 
     function save(state) {
       var criterionId = $stateParams.criterion.replace('%3A', ':'); // workaround: see https://github.com/angular-ui/ui-router/issues/2598
-      var standardizedCriterion = PartialValueFunctionService.standardizeCriterion(state.choice);
+      var standardizedDataSource = PartialValueFunctionService.standardizeDataSource(state.choice);
       var criteria = _.cloneDeep(aggregateProblem.criteria);
-      criteria[criterionId] = standardizedCriterion;
+      criteria[criterionId].dataSources[0] = standardizedDataSource;
       currentScenario.state = {
         prefs: {},
         problem: {
