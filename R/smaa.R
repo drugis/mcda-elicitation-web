@@ -1,3 +1,6 @@
+# Required packages: hitandrun
+library(hitandrun)
+
 wrap.result <- function(result, description) {
     list(data=result, description=description, type=class(result))
 }
