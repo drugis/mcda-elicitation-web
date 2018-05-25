@@ -3,13 +3,13 @@ define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [];
 
   var scaleRanges = {
-    'isPresent': function(state) {
+    isPresent: function(state) {
       var hasScale = function(criterion) {
         return criterion.dataSources[0].pvf && criterion.dataSources[0].pvf.range;
       };
       return _.every(state.problem.criteria, hasScale);
     },
-    'remove': function(state) {
+    remove: function(state) {
       var newState = angular.copy(state);
       var criteria = newState.problem.criteria;
       _.each(criteria, function(criterion) {
@@ -23,14 +23,14 @@ define(['lodash', 'angular'], function(_, angular) {
   };
 
   var partialValueFunctions = {
-    'isPresent': function(state) {
+    isPresent: function(state) {
       var criteria = state.problem.criteria;
       return _.every(criteria, function(criterion) {
         var pvf = criterion.dataSources[0].pvf;
         return pvf && pvf.direction && pvf.type;
       });
     },
-    'remove': function(state) {
+    remove: function(state) {
       var newState = angular.copy(state);
       var criteria = newState.problem.criteria;
       _.each(criteria, function(criterion) {
@@ -45,10 +45,10 @@ define(['lodash', 'angular'], function(_, angular) {
   };
 
   var criteriaTradeOffs = {
-    'isPresent': function(state) {
+    isPresent: function(state) {
       return !_.isEmpty(state.prefs);
     },
-    'remove': function(state) {
+    remove: function(state) {
       return _.omit(angular.copy(state), 'prefs');
     },
     title: 'all criteria trade-off preferences'

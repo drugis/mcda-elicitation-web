@@ -528,7 +528,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
         definition: {
           ranges: {
             crit1: {
-              dataSources:[{
+              dataSources: [{
                 id: 'ds1',
                 pvf: {
                   range: [1, 2]
@@ -536,7 +536,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
               }]
             },
             crit2: {
-              dataSources:[{
+              dataSources: [{
                 id: 'ds2',
                 pvf: {
                   range: [4, 5]
@@ -565,16 +565,20 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
             problem: {
               criteria: {
                 crit2: {
-                  pvf: {
-                    range: [4, 5],
-                    direction: 'increasing'
-                  }
+                  dataSources: [{
+                    pvf: {
+                      range: [4, 5],
+                      direction: 'increasing'
+                    }
+                  }]
                 },
                 crit3: {
-                  pvf: {
-                    range: [5, 6],
-                    direction: 'increasing'
-                  }
+                  dataSources: [{
+                    pvf: {
+                      range: [5, 6],
+                      direction: 'increasing'
+                    }
+                  }]
                 }
               }
             }
@@ -587,16 +591,20 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
             problem: {
               criteria: {
                 crit2: {
-                  pvf: {
-                    range: [4, 5],
-                    direction: 'increasing'
-                  }
+                  dataSources: [{
+                    pvf: {
+                      range: [4, 5],
+                      direction: 'increasing'
+                    }
+                  }]
                 },
                 crit3: {
-                  pvf: {
-                    range: [5, 6],
-                    direction: 'increasing'
-                  }
+                  dataSources: [{
+                    pvf: {
+                      range: [5, 6],
+                      direction: 'increasing'
+                    }
+                  }]
                 }
               }
             }

@@ -4,7 +4,7 @@
       <span>
         {{currentValue | number}}
       </span>
-      <span ng-show="currentValue!==originalValue" style="color: grey">
+      <span ng-show="currentValue !== originalValue" style="color: grey">
         ({{originalValue | number}})
       </span>
     </a>

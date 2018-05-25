@@ -8,7 +8,12 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function run($scope, inState) {
       var state = angular.copy(inState);
-
+      state.problem.criteria = _.mapValues(state.problem.criteria, function(criterion) {
+        if(criterion.dataSources) {
+          return _.merge({},  criterion.dataSources[0], _.omit(criterion, ['dataSources']));
+        }
+        return criterion;
+      });
       function successHandler(results) {
         state.results = results;
         return state;

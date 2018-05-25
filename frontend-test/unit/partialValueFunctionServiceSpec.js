@@ -1,11 +1,11 @@
 'use strict';
 define(['angular',
-    'angular-mocks',
-    'mcda/services/taskDependencies',
-    'mcda/services/util',
-    'mcda/evidence/evidence',
-    'mcda/preferences/preferences'
-  ],
+  'angular-mocks',
+  'mcda/services/taskDependencies',
+  'mcda/services/util',
+  'mcda/evidence/evidence',
+  'mcda/preferences/preferences'
+],
   function() {
     describe('PartialValueFunctionService', function() {
       var scope, state;
@@ -13,18 +13,18 @@ define(['angular',
       beforeEach(module('elicit.preferences'));
       beforeEach(module('elicit.evidence'));
       beforeEach(module('elicit.taskDependencies'));
-      
+
       beforeEach(inject(function($rootScope, $controller, TaskDependencies) {
         var task = {
-            requires: [],
-            resets: []
-          },
+          requires: [],
+          resets: []
+        },
           scenario = {
             state: {
               problem: exampleProblem()
             },
-            update: function() {},
-            redirectToDefaultView: function() {}
+            update: function() { },
+            redirectToDefaultView: function() { }
           };
 
         scope = $rootScope.$new();
@@ -176,9 +176,9 @@ define(['angular',
         }));
       });
 
-      describe('standardizeCriterion', function() {
+      describe('standardizeDataSource', function() {
         it('should sort the cutoffs and values of an piecewise-linear pvf', inject(function(PartialValueFunctionService) {
-          var crit = {
+          var dataSource = {
             pvf: {
               'type': 'piecewise-linear',
               'direction': 'increasing',
@@ -186,7 +186,7 @@ define(['angular',
               'values': [0.25, 0.5, 0.75]
             }
           };
-          var result = PartialValueFunctionService.standardizeCriterion(crit);
+          var result = PartialValueFunctionService.standardizeDataSource(dataSource);
           var expectedResult = {
             pvf: {
               'type': 'piecewise-linear',
@@ -198,7 +198,7 @@ define(['angular',
           expect(result).toEqual(expectedResult);
         }));
         it('should sort the cutoffs and reverse-sort the values of an  decreasing piecewise-linear pvf', inject(function(PartialValueFunctionService) {
-          var crit = {
+          var dataSource = {
             pvf: {
               'type': 'piecewise-linear',
               'direction': 'decreasing',
@@ -206,7 +206,7 @@ define(['angular',
               'values': [0.25, 0.5, 0.75]
             }
           };
-          var result = PartialValueFunctionService.standardizeCriterion(crit);
+          var result = PartialValueFunctionService.standardizeDataSource(dataSource);
           var expectedResult = {
             pvf: {
               'type': 'piecewise-linear',
@@ -218,14 +218,14 @@ define(['angular',
           expect(result).toEqual(expectedResult);
         }));
         it('should delete the cutoffs and values, if any, from a linear pvf', inject(function(PartialValueFunctionService) {
-          var crit = {
+          var dataSource = {
             pvf: {
               'type': 'linear',
               'cutoffs': [75, 7.5, 50],
               'values': [0.25, 0.5, 0.75]
             }
           };
-          var result = PartialValueFunctionService.standardizeCriterion(crit);
+          var result = PartialValueFunctionService.standardizeDataSource(dataSource);
           var expectedResult = {
             pvf: {
               'type': 'linear',

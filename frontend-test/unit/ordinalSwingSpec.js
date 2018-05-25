@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash', 'angular-mocks',
-    'mcda/preferences/preferences'
-  ],
+  'mcda/preferences/preferences'
+],
   function(_) {
     var state;
 
@@ -27,11 +27,11 @@ define(['lodash', 'angular-mocks',
         orderingServiceMock.getOrderedCriteriaAndAlternatives.and.returnValue({
           then: function(fn) {
             fn({
-              alternatives: [],// alternavtives are not used inside the controller
+              alternatives: [],// alternavtives are not used by the controller
               criteria: _.map(problem.criteria, function(criterion, key) {
                 return _.merge({}, criterion, {
                   id: key
-                }); // criteria are used inside the controller
+                }); // criteria are used by the controller
               })
             });
           }
@@ -55,9 +55,9 @@ define(['lodash', 'angular-mocks',
       beforeEach(inject(function($controller, $rootScope, TaskDependencies) {
         $scope1 = initializeScope($controller, $rootScope, TaskDependencies, exampleProblem());
 
-        var problem2 = exampleProblem();
-        problem2.criteria.Bleed.pvf.direction = 'increasing';
-        $scope2 = initializeScope($controller, $rootScope, TaskDependencies, problem2);
+        var problem = exampleProblem();
+        problem.criteria.Bleed.dataSources[0].pvf.direction = 'increasing';
+        $scope2 = initializeScope($controller, $rootScope, TaskDependencies, problem);
       }));
 
       describe('initialize', function() {
@@ -76,12 +76,12 @@ define(['lodash', 'angular-mocks',
           expect($scope1.state.reference).toEqual({
             'Prox DVT': 0.25,
             'Dist DVT': 0.4,
-            'Bleed': 0.1
+            Bleed: 0.1
           });
           expect($scope2.state.reference).toEqual({
             'Prox DVT': 0.25,
             'Dist DVT': 0.4,
-            'Bleed': 0.0
+            Bleed: 0.0
           });
         });
 
@@ -90,17 +90,17 @@ define(['lodash', 'angular-mocks',
             'Prox DVT': {
               'Prox DVT': 0.0,
               'Dist DVT': 0.4,
-              'Bleed': 0.1
+              Bleed: 0.1
             },
             'Dist DVT': {
               'Prox DVT': 0.25,
               'Dist DVT': 0.15,
-              'Bleed': 0.1
+              Bleed: 0.1
             },
-            'Bleed': {
+            Bleed: {
               'Prox DVT': 0.25,
               'Dist DVT': 0.4,
-              'Bleed': 0.0
+              Bleed: 0.0
             }
           });
         });
@@ -124,7 +124,7 @@ define(['lodash', 'angular-mocks',
           expect($scope1.state.reference).toEqual({
             'Prox DVT': 0.0,
             'Dist DVT': 0.4,
-            'Bleed': 0.1
+            Bleed: 0.1
           });
           expect($scope1.state.choice).toBeUndefined();
           expect($scope1.state.title).toEqual('Ranking (2/2)');
@@ -134,7 +134,7 @@ define(['lodash', 'angular-mocks',
           expect($scope2.state.reference).toEqual({
             'Prox DVT': 0.25,
             'Dist DVT': 0.15,
-            'Bleed': 0.0
+            Bleed: 0.0
           });
         });
 
@@ -151,12 +151,12 @@ define(['lodash', 'angular-mocks',
             'Dist DVT': {
               'Prox DVT': 0.0,
               'Dist DVT': 0.15,
-              'Bleed': 0.1
+              Bleed: 0.1
             },
-            'Bleed': {
+            Bleed: {
               'Prox DVT': 0.0,
               'Dist DVT': 0.4,
-              'Bleed': 0.0
+              Bleed: 0.0
             }
           });
         });

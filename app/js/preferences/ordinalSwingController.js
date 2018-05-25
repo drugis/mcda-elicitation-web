@@ -26,7 +26,7 @@ define(['lodash', 'mcda/controllers/helpers/wizard'], function(_, Wizard) {
       return _.zipObject(
         _.map(criteria, 'id'),
         _.map(criteria, function(criterion) {
-          return PartialValueFunctionService.worst(criterion);
+          return PartialValueFunctionService.worst(criterion.dataSources[0]);
         })
       );
     }
@@ -40,7 +40,7 @@ define(['lodash', 'mcda/controllers/helpers/wizard'], function(_, Wizard) {
       var criteria = $scope.criteria;
       var choices = _.map(criteria, function(criterion) {
         var reference = getReference(criteria);
-        reference[criterion.id] = PartialValueFunctionService.best(criterion);
+        reference[criterion.id] = PartialValueFunctionService.best(criterion.dataSources[0]);
         return reference;
       });
       return _.zipObject(_.map(criteria, 'id'), choices);
@@ -76,12 +76,12 @@ define(['lodash', 'mcda/controllers/helpers/wizard'], function(_, Wizard) {
       nextState.choice = undefined;
 
       _.each(nextState.choices, function(alternative) {
-        alternative[choice] = PartialValueFunctionService.best(criteria[choice]);
+        alternative[choice] = PartialValueFunctionService.best(criteria[choice].dataSources[0]);
       });
 
       function next(choice) {
         delete nextState.choices[choice];
-        nextState.reference[choice] = PartialValueFunctionService.best($scope.problem.criteria[choice]);
+        nextState.reference[choice] = PartialValueFunctionService.best($scope.problem.criteria[choice].dataSources[0]);
         nextState.prefs.ordinal.push(choice);
         nextState.title = title(nextState.prefs.ordinal.length + 1, _.size(criteria) - 1);
       }

@@ -178,18 +178,10 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function filterScenariosWithResults(baseProblem, currentSubProblem, scenarios) {
       return _.filter(scenarios, function(scenario) {
-        var hasPvf = true;
         var state = buildAggregateState(baseProblem, currentSubProblem, scenario);
-        if (state.problem) {
-          _.forEach(state.problem.criteria, function(criterion) {
-            if (!criterion.pvf || !criterion.pvf.direction) {
-              hasPvf = false;
-            }
-          });
-          return hasPvf;
-        } else {
-          return false;
-        }
+        return !_.find(state.problem.criteria, function(criterion) {
+          return !criterion.dataSources[0].pvf || !criterion.dataSources[0].pvf.direction;
+        });
       });
     }
 
@@ -204,7 +196,8 @@ define(['lodash', 'angular'], function(_, angular) {
      * - preferences
      */
     function validateWorkspace(workspace) {
-      var constraints = [missingProperties,
+      var constraints = [
+        missingProperties,
         tooFewCriteria,
         tooFewAlternatives,
         criterionLackingTitle,
@@ -219,7 +212,6 @@ define(['lodash', 'angular'], function(_, angular) {
         relativePerformanceLackingBaseline,
         relativePerformanceWithBadMu,
         relativePerformanceWithBadCov
-
       ];
       var triggeredConstraint;
       try {
@@ -240,8 +232,9 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     // privates
-    function missingProperties(workspace) { // required properties
-      var requiredProperties = ['title',
+    function missingProperties(workspace) {
+      var requiredProperties = [
+        'title',
         'criteria',
         'alternatives',
         'performanceTable'

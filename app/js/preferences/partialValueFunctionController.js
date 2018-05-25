@@ -55,6 +55,7 @@ define(['angular', 'lodash', 'mcda/controllers/helpers/wizard'], function(angula
           [0.5, 1]
         ],
         type: 'elicit type',
+        criterion: criterion,
         choice: criterion.dataSources[0]
       };
       $timeout(function() {

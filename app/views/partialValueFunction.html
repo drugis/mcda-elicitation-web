@@ -1,11 +1,11 @@
 <div ng-if="state.type == 'elicit type'">
   <div class="grid-x">
     <div class="cell">
-      <h3>Define Partial Value Function for: {{state.choice.title}}</h3>
+      <h3>Define Partial Value Function for: {{state.criterion.title}}</h3>
     </div>
     <div class="cell large-7">
       <p>The partial value functions <inline-help help-key="partial-value-function"></inline-help> define the mapping between the measurement values and the utility of that value.</p>
-      <criterion of="state.choice"></criterion>
+      {{state.criterion.title}}
       <label>
         <input type="radio" ng-model="state.choice.pvf.direction" value="decreasing" ng-selected="state.choice.pvf.direction ==='decreasing'"> {{state.choice.pvf.range[0] | number}} is best
       </label>
@@ -35,12 +35,12 @@
 <div ng-if="state.type == 'bisection'">
   <div class="grid-x">
     <div class="cell">
-      <h3>Define Partial Value Function for: {{state.choice.title}}</h3>
+      <h3>Define Partial Value Function for: {{state.criterion.title}}</h3>
     </div>
     <div class="cell large-7">
       <p>
         What is the value of x such that an improvement in
-        <criterion of="state.choice"></criterion> from {{state.range.from | number}} to x is equivalent to an improvement from x to {{state.range.to | number}}?
+        {{state.criterion.title}} from {{state.range.from | number}} to x is equivalent to an improvement from x to {{state.range.to | number}}?
       </p>
       <p><strong>Adjust the slider:</strong></p>
       <p>
