@@ -9,7 +9,7 @@ define([], function() {
     return {
       restrict: 'E',
       scope: {
-        'criterion': '=',
+        'row': '=',
         'alternative': '=',
         'originalValue': '=',
         'currentValue': '=',
@@ -56,8 +56,8 @@ define([], function() {
           return {
             value: scope.currentValue,
             options: {
-              floor: scope.criterion.pvf.range[0],
-              ceil: scope.criterion.pvf.range[1],
+              floor: scope.row.dataSource.pvf.range[0],
+              ceil: scope.row.dataSource.pvf.range[1],
               step: 0.0001,
               precision: 10
             }
@@ -76,7 +76,7 @@ define([], function() {
           $timeout(function() {
             if (!isNaN(scope.slider.value)) {
               scope.newValue = scope.slider.value;
-              scope.changeCallback(scope.newValue, scope.criterion, scope.alternative);
+              scope.changeCallback(scope.newValue, scope.row, scope.alternative);
             }
           });
         }

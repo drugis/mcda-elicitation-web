@@ -111,7 +111,8 @@ run_sensitivityMeasurements <- function(params) {
   
   meas <- genMedianMeasurements(params)
   for (entry in params$sensitivityAnalysis$meas) {
-    meas[entry$alternative,entry$criterion] <- entry$value # Replace median value by the desired value for the sensitivity analysis
+    # Replace median value by the desired value for the sensitivity analysis
+    meas[entry$alternative,entry$criterion] <- entry$value 
   }
   
   weights <- genRepresentativeWeights(params)
@@ -130,7 +131,6 @@ run_sensitivityMeasurements <- function(params) {
          results$results,
          results$descriptions,
          SIMPLIFY=F)
-  
 }
 
 run_sensitivityMeasurementsPlot <- function(params) {

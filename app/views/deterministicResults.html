@@ -43,33 +43,33 @@
           </tr>
         </thead>
         <tbody class="main">
-          <tr ng-repeat="criterion in tableCriteria">
-            <td ng-if="criterion.isHeaderRow" class="group-header" colspan="{{5 + nrAlternatives}}">
+          <tr ng-repeat="row in tableRows">
+            <td ng-if="row.isHeaderRow" class="group-header" colspan="{{5 + nrAlternatives}}">
               <div class="main-header">
-                {{criterion.headerText}}
+                {{row.headerText}}
               </div>
             </td>
-            <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['criteria']">
-              {{criterion.title}}
+            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['criteria']">
+              {{row.criterion.title}}
             </td>
-            <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['description']">
-              {{criterion.description}}
+            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['description']">
+              {{row.criterion.description}}
             </td>
-            <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['units']">
-              {{criterion.unitOfMeasurement}}
+            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['units']">
+              {{row.criterion.unitOfMeasurement}}
             </td>
-            <td ng-if="!criterion.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}">
-              <sensitivity-input criterion="criterion" alternative="alternative" original-value="scales.observed[criterion.id][alternative.id]['50%']" current-value="modifiableScales[criterion.id][alternative.id]['50%']" change-callback="sensitivityScalesChanged" is-editing="isEditing"></sensitivity-input>
+            <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}">
+              <sensitivity-input row="row" alternative="alternative" original-value="scales.observed[row.dataSource.id][alternative.id]['50%']" current-value="modifiableScales[row.dataSource.id][alternative.id]['50%']" change-callback="sensitivityScalesChanged" is-editing="isEditing"></sensitivity-input>
             </td>
-            <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['references']">
-              <a ng-if="criterion.sourceLink" href="{{criterion.sourceLink}}">
-              {{criterion.source}}
+            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['references']">
+              <a ng-if="row.dataSource.sourceLink" href="{{row.dataSource.sourceLink}}">
+              {{row.dataSource.source}}
             </a>
-              <span ng-if="!criterion.sourceLink">{{criterion.source}}</span>
+              <span ng-if="!row.dataSource.sourceLink">{{row.dataSource.source}}</span>
             </td>
-            <td ng-if="!criterion.isHeaderRow" ng-show="toggledColumns['strength']">
-              <div ng-if="criterion.strengthOfEvidence"><b>SoE: </b>{{criterion.strengthOfEvidence}}</div>
-              <div ng-if="criterion.uncertainties"><b>Unc: </b> {{criterion.uncertainties}}</div>
+            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['strength']">
+              <div ng-if="row.dataSource.strengthOfEvidence"><b>SoE: </b>{{row.dataSource.strengthOfEvidence}}</div>
+              <div ng-if="row.dataSource.uncertainties"><b>Unc: </b> {{row.dataSource.uncertainties}}</div>
             </td>
           </tr>
         </tbody>
@@ -91,7 +91,7 @@
       <h4>Representative weights <inline-help help-key="representative-weights"></inline-help></h4>
     </div>
     <div clas="cell large-2">
-      <button class="button small info clipboard-button" data-clipboard-target="#weighttable">
+      <button class="button small info clipboard-button right" data-clipboard-target="#weighttable">
         <i class="fa fa-clipboard"></i> Copy to clipboard
       </button>
     </div>
@@ -115,7 +115,7 @@
           <h4>Total value (base case) <inline-help help-key="total-value"></inline-help></h4>
         </div>
         <div class="cell large-2">
-          <button class="button small info clipboard-button" data-clipboard-target="#basecasetable">
+          <button class="button small info clipboard-button right" data-clipboard-target="#basecasetable">
             <i class="fa fa-clipboard"></i> Copy to clipboard
           </button>
         </div>
@@ -123,7 +123,7 @@
           <h4>Total value (recalculated case) <inline-help help-key="total-value"></inline-help></h4>
         </div>
         <div class="cell large-2" ng-if="recalculatedDeterministicResults">
-          <button class="button small info clipboard-button" data-clipboard-target="#recalculatedcasetable">
+          <button class="button small info clipboard-button right" data-clipboard-target="#recalculatedcasetable">
             <i class="fa fa-clipboard"></i> Copy to clipboard
           </button>
         </div>

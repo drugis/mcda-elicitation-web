@@ -58,7 +58,7 @@ define(['lodash', 'angular'], function(_) {
 
     function checkScaleRanges(criteria) {
       var isMissingScaleRange = _.find(criteria, function(criterion) {
-        return !(criterion.pvf && criterion.pvf.range && criterion.pvf.range[0] !== undefined && criterion.pvf.range[1] !== undefined);
+        return !(criterion.dataSources[0].pvf && criterion.dataSources[0].pvf.range && criterion.dataSources[0].pvf.range[0] !== undefined && criterion.dataSources[0].pvf.range[1] !== undefined);
       });
       return !isMissingScaleRange;
     }

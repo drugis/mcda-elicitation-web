@@ -10,6 +10,7 @@ define(['lodash', 'angular'], function(_, angular) {
     'InProgressResource',
     'ManualInputService',
     'OrderingService',
+    'SchemaService',
     'WorkspaceResource',
     'generateUuid'
   ];
@@ -23,6 +24,7 @@ define(['lodash', 'angular'], function(_, angular) {
     InProgressResource,
     ManualInputService,
     OrderingService,
+    SchemaService,
     WorkspaceResource,
     generateUuid
   ) {
@@ -246,7 +248,7 @@ define(['lodash', 'angular'], function(_, angular) {
     function initState() {
       if ($stateParams.workspace) {
         // copying existing workspace
-        var oldWorkspace = $stateParams.workspace;
+        var oldWorkspace = SchemaService.updateProblemToCurrentSchema($stateParams.workspace);
         $scope.state = {
           oldWorkspace: oldWorkspace,
           useFavorability: oldWorkspace.problem.valueTree ? true : false,
