@@ -1,8 +1,14 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
-  var dependencies = ['ScalesService', 'sortCriteriaWithW'];
+  var dependencies = [
+    'ScalesService',
+    'sortCriteriaWithW'
+  ];
 
-  var WorkspaceService = function(ScalesService, sortCriteriaWithW) {
+  var WorkspaceService = function(
+    ScalesService,
+    sortCriteriaWithW
+  ) {
 
     function buildValueTree(problem) {
       if (problem.valueTree) {
@@ -151,8 +157,8 @@ define(['lodash', 'angular'], function(_, angular) {
       var newProblem = _.cloneDeep(problem);
       _.forEach(newProblem.criteria, function(criterion, key) {
         var scale = observedScales[key];
-        if (!criterion.pvf || _.isEmpty(criterion.pvf.range)) {
-          criterion.pvf = {
+        if (!criterion.dataSources[0].pvf || _.isEmpty(criterion.dataSources[0].pvf.range)) {
+          criterion.dataSources[0].pvf = {
             range: getMinMax(scale)
           };
         }

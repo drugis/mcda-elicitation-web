@@ -2,57 +2,7 @@
 define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [];
   var PartialValueFunctionService = function() {
-    function findIndexOfFirstLargerElement(arr, val) {
-      return _.indexOf(arr, _.find(arr, function(elm) {
-        return elm >= val;
-      })) || 1;
-    }
-
-    function findIndexOfFirstSmallerElement(arr, val) {
-      return _.indexOf(arr, _.find(arr, function(elm) {
-        return elm <= val;
-      })) || 1;
-    }
-
-    function pvf(criterion) {
-      var pvf = criterion.pvf;
-      var increasing = isIncreasing(criterion);
-
-      var cutoffs = pvf.cutoffs || [];
-
-      cutoffs = [pvf.range[0]].concat(cutoffs);
-
-      cutoffs.push(pvf.range[1]);
-
-      var values = [increasing ? 0.0 : 1.0].concat(pvf.values || []);
-      values.push(increasing ? 1.0 : 0.0);
-
-      function atIndex(idx) {
-        return {
-          'x0': cutoffs[idx - 1],
-          'x1': cutoffs[idx],
-          'v0': values[idx - 1],
-          'v1': values[idx]
-        };
-      }
-
-      return {
-        'isIncreasing': increasing,
-        'values': values,
-        'cutoffs': cutoffs,
-        'atIndex': atIndex
-      };
-    }
-
-    function map(criterion) {
-      var f = pvf(criterion);
-      return function(x) {
-        var idx = findIndexOfFirstLargerElement(f.cutoffs, x);
-        var i = f.atIndex(idx);
-        return i.v0 + (x - i.x0) * ((i.v1 - i.v0) / (i.x1 - i.x0));
-      };
-    }
-
+    // public
     function inv(criterion) {
       var f = pvf(criterion);
       return function(v) {
@@ -78,32 +28,6 @@ define(['lodash', 'angular'], function(_, angular) {
       return [worst(dataSource), best(dataSource)].sort(function(a, b) {
         return a - b;
       });
-    }
-
-    function sortByValues(dataSource) {
-      /* sorts the values and cutoffs according to the values (y-axis)
-       returns an object containing the values and cuttoffs */
-      if(!dataSource.pvf.cutoffs || !dataSource.pvf.values) {
-        return dataSource;
-      }
-      var newCutoffs = _.cloneDeep(dataSource.pvf.cutoffs);
-      var newValues = _.cloneDeep(dataSource.pvf.values);
-
-      var list = [];
-      for (var j = 0; j < newCutoffs.length; j++) {
-        list.push({'cutoff': newCutoffs[j], 'value': newValues[j]});
-      }
-      list.sort(function(a,b) {
-        return ((b.value < a.value) ? - 1 : ((b.value === a.value) ? 0 : 1));
-      });
-
-      for (var k = 0; k < list.length; k++) {
-        newCutoffs[k] = list[k].cutoff;
-        newValues[k] = list[k].value;
-      }
-      dataSource.pvf.values = newValues;
-      dataSource.pvf.cutoffs = newCutoffs;
-      return dataSource;
     }
 
     function getXY(dataSource) {
@@ -139,15 +63,81 @@ define(['lodash', 'angular'], function(_, angular) {
       return newDataSource;
     }
 
+    // private
+    function findIndexOfFirstLargerElement(arr, val) {
+      return _.indexOf(arr, _.find(arr, function(elm) {
+        return elm >= val;
+      })) || 1;
+    }
+
+    function findIndexOfFirstSmallerElement(arr, val) {
+      return _.indexOf(arr, _.find(arr, function(elm) {
+        return elm <= val;
+      })) || 1;
+    }
+
+    function pvf(criterion) {
+      var pvf = criterion.pvf;
+      var increasing = isIncreasing(criterion);
+
+      var cutoffs = pvf.cutoffs || [];
+      cutoffs = [pvf.range[0]].concat(cutoffs);
+      cutoffs.push(pvf.range[1]);
+
+      var values = [increasing ? 0.0 : 1.0].concat(pvf.values || []);
+      values.push(increasing ? 1.0 : 0.0);
+
+      function atIndex(idx) {
+        return {
+          'x0': cutoffs[idx - 1],
+          'x1': cutoffs[idx],
+          'v0': values[idx - 1],
+          'v1': values[idx]
+        };
+      }
+
+      return {
+        'isIncreasing': increasing,
+        'values': values,
+        'cutoffs': cutoffs,
+        'atIndex': atIndex
+      };
+    }
+
+    function sortByValues(dataSource) {
+      /* sorts the values and cutoffs according to the values (y-axis)
+       returns an object containing the values and cuttoffs */
+      if (!dataSource.pvf.cutoffs || !dataSource.pvf.values) {
+        return dataSource;
+      }
+      var newCutoffs = _.cloneDeep(dataSource.pvf.cutoffs);
+      var newValues = _.cloneDeep(dataSource.pvf.values);
+
+      var list = [];
+      for (var j = 0; j < newCutoffs.length; j++) {
+        list.push({ 'cutoff': newCutoffs[j], 'value': newValues[j] });
+      }
+      list.sort(function(a, b) {
+        return ((b.value < a.value) ? - 1 : ((b.value === a.value) ? 0 : 1));
+      });
+
+      for (var k = 0; k < list.length; k++) {
+        newCutoffs[k] = list[k].cutoff;
+        newValues[k] = list[k].value;
+      }
+      dataSource.pvf.values = newValues;
+      dataSource.pvf.cutoffs = newCutoffs;
+      return dataSource;
+    }
+
     return {
       isIncreasing: isIncreasing,
-      map: map,
       inv: inv,
       best: best,
       worst: worst,
-      getXY: getXY,
       getBounds: getBounds,
-      standardizeDataSource:standardizeDataSource
+      getXY: getXY,
+      standardizeDataSource: standardizeDataSource
     };
   };
   return dependencies.concat(PartialValueFunctionService);

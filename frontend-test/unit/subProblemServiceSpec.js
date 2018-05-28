@@ -191,32 +191,44 @@ define(['angular-mocks', 'mcda/subProblem/subProblem'], function() {
     describe('checkScaleRanges', function() {
       it('should check wether there are no missing scale ranges', function() {
         var criteria1 = {
-          crit1: {}
+          crit1: {
+            dataSources: [{
+
+            }]
+          }
         };
         var criteria2 = {
           crit2: {
-            pvf: {}
+            dataSources: [{
+              pvf: {}
+            }]
           }
         };
         var criteria3 = {
           crit3: {
-            pvf: {
-              range: []
-            }
+            dataSources: [{
+              pvf: {
+                range: []
+              }
+            }]
           }
         };
         var criteria4 = {
           crit4: {
-            pvf: {
-              range: [1]
-            }
+            dataSources: [{
+              pvf: {
+                range: [1]
+              }
+            }]
           }
         };
         var criteria5 = {
           crit5: {
-            pvf: {
-              range: [1, 0]
-            }
+            dataSources: [{
+              pvf: {
+                range: [1, 0]
+              }
+            }]
           }
         };
         expect(subProblemService.checkScaleRanges(criteria1)).toBeFalsy();

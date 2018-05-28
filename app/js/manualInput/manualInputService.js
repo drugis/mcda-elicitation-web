@@ -1,9 +1,17 @@
 'use strict';
 define(['lodash', 'angular'], function(_) {
-  var dependencies = ['InputKnowledgeService', 'generateUuid'];
-  var ManualInputService = function(InputKnowledgeService, generateUuid) {
+  var dependencies = [
+    'InputKnowledgeService',
+    'generateUuid',
+    'currentSchemaVersion'
+  ];
+  var ManualInputService = function(
+    InputKnowledgeService,
+    generateUuid,
+    currentSchemaVersion
+  ) {
     var INVALID_INPUT_MESSAGE = 'Missing or invalid input';
-    var SCHEMA_VERSION = '1.0.0';
+    var SCHEMA_VERSION = currentSchemaVersion;
 
     // Exposed functions
     function getInputError(cell) {
@@ -99,86 +107,62 @@ define(['lodash', 'angular'], function(_) {
 
     function createInputFromOldWorkspace(criteria, alternatives, oldWorkspace) {
       return _.reduce(oldWorkspace.problem.performanceTable, function(accum, tableEntry) {
-        var criterion = _.find(criteria, ['oldId', tableEntry.criterion]);
+        var dataSourceForEntry;
+         _.forEach(criteria, function(criterion) {
+          _.forEach(criterion.dataSources, function(dataSource) {
+            if(dataSource.oldId === tableEntry.dataSource){
+              dataSourceForEntry = dataSource;
+            }
+          });
+        });
         var alternative = _.find(alternatives, ['oldId', tableEntry.alternative]);
-        if (criterion && alternative && criterion.inputMetaData.inputType !== 'Unknown') {
-          if (!accum[criterion.id]) {
-            accum[criterion.id] = {};
+        if (dataSourceForEntry && alternative) {
+          if (!accum[dataSourceForEntry.id]) {
+            accum[dataSourceForEntry.id] = {};
           }
-          accum[criterion.id][alternative.id] = createInputCell(criterion, tableEntry);
+          accum[dataSourceForEntry.id][alternative.id] = createInputCell(dataSourceForEntry, tableEntry);
         }
         return accum;
       }, {});
     }
 
-    function createInputCell(criterion, tableEntry) {
-      return InputKnowledgeService.finishInputCell(criterion.inputMetaData, tableEntry);
+    function createInputCell(dataSource, tableEntry) {
+      return InputKnowledgeService.finishInputCell(dataSource, tableEntry);
     }
 
     function copyWorkspaceCriteria(workspace) {
-      var copyFunctions = {
-        'unknown': copySchemaZeroCriteria,
-        '1.0.0': copySchemaOneCriteria
-      };
-      var schemaVersion = workspace.problem.schemaVersion ? workspace.problem.schemaVersion : 'unknown';
-      return copyFunctions[schemaVersion](workspace);
+      return _.map(workspace.problem.criteria, function(criterion, criterionId) {
+        var newCrit = _.pick(criterion, ['title', 'description', 'unitOfMeasurement']); // omit scales, preferences
+        newCrit.dataSources = _.map(criterion.dataSources, function(dataSource) {
+          var newDataSource = _.pick(dataSource, [
+            'source',
+            'sourceLink',
+            'strengthOfEvidence',
+            'uncertainties',
+            'inputType',
+            'inputMethod',
+            'dataType',
+            'parameterOfInterest'
+          ]);
+          newDataSource.id = generateUuid();
+          newDataSource.oldId = dataSource.id;
+          return newDataSource;
+        });
+        newCrit.id = generateUuid();
+        if (workspace.problem.valueTree) {
+          newCrit.isFavorable = _.includes(workspace.problem.valueTree.children[0].criteria, criterionId) ? true : false;
+        }
+        return newCrit;
+      });
     }
 
     // Private functions
-    function copySchemaZeroCriteria(workspace) {
-      return _.map(workspace.problem.criteria, function(criterion, criterionId) {
-        var newCrit = _.pick(criterion, ['title', 'description', 'source', 'sourceLink', 'unitOfMeasurement',
-          'strengthOfEvidence', 'uncertainties']); // omit scales, preferences
-        newCrit.id = generateUuid();
-        newCrit.oldId = criterionId;
-        if (workspace.problem.valueTree) {
-          newCrit.isFavorable = _.includes(workspace.problem.valueTree.children[0].criteria, criterionId) ? true : false;
-        }
-        var tableEntry = _.find(workspace.problem.performanceTable, ['criterion', criterionId]);
-        var MANUAL_DISTRIBUTIONS = ['exact', 'dnorm', 'dbeta', 'dgamma'];
-        var performanceType = tableEntry.performance.type;
-        if (_.includes(MANUAL_DISTRIBUTIONS, performanceType)) {
-          newCrit.inputMetaData = {
-            inputType: 'distribution',
-            inputMethod: 'manualDistribution'
-          };
-        } else if (performanceType === 'dt') {
-          newCrit.inputMetaData = {
-            inputType: 'distribution',
-            inputMethod: 'assistedDistribution',
-            dataType: 'continuous'
-          };
-        } else {
-          newCrit.inputMetaData = {
-            inputType: 'Unknown'
-          };
-        }
-        return newCrit;
-      });
-    }
-
-    function copySchemaOneCriteria(workspace) {
-      return _.map(workspace.problem.criteria, function(criterion, criterionId) {
-        var newCrit = _.pick(criterion, ['title', 'description', 'source', 'sourceLink', 'unitOfMeasurement',
-          'strengthOfEvidence', 'uncertainties', 'inputMetaData']); // omit scales, preferences
-        newCrit.id = generateUuid();
-        newCrit.oldId = criterionId;
-        if (workspace.problem.valueTree) {
-          newCrit.isFavorable = _.includes(workspace.problem.valueTree.children[0].criteria, criterionId) ? true : false;
-        }
-        return newCrit;
-      });
-    }
-
     function buildCriteria(criteria) {
       var newCriteria = _.map(criteria, function(criterion) {
-        var newCriterion = _.pick(criterion, ['title',
+        var newCriterion = _.pick(criterion, [
+          'title',
           'description',
           'unitOfMeasurement',
-          'source',
-          'sourceLink',
-          'strengthOfEvidence',
-          'uncertainties',
           'dataSources']);
         newCriterion.dataSources = _.map(newCriterion.dataSources, addScale);
         return [criterion.id, newCriterion];

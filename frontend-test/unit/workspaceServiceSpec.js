@@ -376,8 +376,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
         };
         var problem = {
           criteria: {
-            crit1: {},
-            crit2: {}
+            crit1: { dataSources: [{}] },
+            crit2: { dataSources: [{}] }
           }
         };
 
@@ -386,14 +386,18 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
         var expectedProblem = {
           criteria: {
             crit1: {
-              pvf: {
-                range: [1, 6]
-              }
+              dataSources: [{
+                pvf: {
+                  range: [1, 6]
+                }
+              }]
             },
             crit2: {
-              pvf: {
-                range: [7, 12]
-              }
+              dataSources: [{
+                pvf: {
+                  range: [7, 12]
+                }
+              }]
             }
           }
         };
@@ -434,11 +438,15 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
         var problem = {
           criteria: {
             crit1: {
-              pvf: {
-                range: [3, 5]
-              }
+              dataSources: [{
+                pvf: {
+                  range: [3, 5]
+                }
+              }]
             },
-            crit2: {}
+            crit2: {
+              dataSources: [{}]
+            }
           }
         };
 
@@ -447,16 +455,18 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
         var expectedProblem = {
           criteria: {
             crit1: {
-              pvf: {
-                range: [3,
-                  5
-                ]
-              }
+              dataSources: [{
+                pvf: {
+                  range: [3, 5]
+                }
+              }]
             },
             crit2: {
-              pvf: {
-                range: [7, 12]
-              }
+              dataSources: [{
+                pvf: {
+                  range: [7, 12]
+                }
+              }]
             }
           }
         };
@@ -935,7 +945,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Inconsistent exact weighting preferences');
         });
-      });
+      });      
     });
   });
 });

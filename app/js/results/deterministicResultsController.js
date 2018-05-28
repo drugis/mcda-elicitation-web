@@ -34,7 +34,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     };
     OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(ordering) {
       $scope.criteria = ordering.criteria;
-      $scope.tableCriteria = EffectsTableService.buildEffectsTable($scope.aggregateState.problem.valueTree, ordering.criteria);
+      $scope.tableRows = EffectsTableService.buildEffectsTable($scope.aggregateState.problem.valueTree, ordering.criteria);
       $scope.alternatives = ordering.alternatives;
       loadState();
       $scope.$watch('scales.observed', function() {
@@ -54,10 +54,10 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       $scope.sensitivityMeasurements.alteredTableCells = [];
     }
 
-    function sensitivityScalesChanged(newValue, criterion, alternative) {
-      $scope.modifiableScales[criterion.id][alternative.id]['50%'] = newValue;
+    function sensitivityScalesChanged(newValue, row, alternative) {
+      $scope.modifiableScales[row.dataSource.id][alternative.id]['50%'] = newValue;
       $scope.sensitivityMeasurements.alteredTableCells.push({
-        criterion: criterion.id,
+        criterion: row.criterion.id,
         alternative: alternative.id,
         value: newValue
       });
@@ -70,8 +70,8 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
 
     function initialize(state) {
       $scope.sensitivityMeasurements.measurementsAlternative = $scope.alternatives[0];
-      $scope.sensitivityMeasurements.measurementsCriterion = $scope.criteria[0].isHeaderRow ? $scope.criteria[1] : $scope.criteria[0];
-      $scope.sensitivityMeasurements.preferencesCriterion = $scope.criteria[0].isHeaderRow ? $scope.criteria[1] : $scope.criteria[0];
+      $scope.sensitivityMeasurements.measurementsCriterion = $scope.criteria[0];
+      $scope.sensitivityMeasurements.preferencesCriterion = $scope.criteria[0];
 
       $scope.deterministicResults = MCDAResultsService.getDeterministicResults($scope, state);
       var overallResults = MCDAResultsService.getResults($scope, state);

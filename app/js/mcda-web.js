@@ -15,6 +15,7 @@ define(['angular',
     'error-reporting',
     'export-directive',
     'help-popup',
+    'mcda/benefitRisk/benefitRisk',
     'mcda/effectsTable/effectsTable',
     'mcda/evidence/evidence',
     'mcda/services/routeFactory',
@@ -30,7 +31,6 @@ define(['angular',
     'mcda/subProblem/subProblem',
     'mcda/workspace/workspace',
     'mcda/workspace/orderingResource',
-    'mcda/controllers',
     'mcda/directives',
     'mcda/navbar/navbar',
     'mcda/preferences/preferences',
@@ -44,7 +44,7 @@ define(['angular',
       'mm.foundation',
       'patavi',
       'help-directive',
-      'elicit.controllers',
+      'elicit.benefitRisk',
       'elicit.directives',
       'elicit.effectsTable',
       'elicit.evidence',
@@ -89,9 +89,9 @@ define(['angular',
     })());
 
     app.constant('isMcdaStandalone', true);
+    app.constant('currentSchemaVersion', '1.0.0');
 
-
-    app.config(function(mcdaRootPath, $stateProvider, $urlRouterProvider, MCDARouteProvider) {
+     app.config(function(mcdaRootPath, $stateProvider, $urlRouterProvider, MCDARouteProvider) {
       var baseTemplatePath = mcdaRootPath + 'views/';
 
       //ui-router code starts here

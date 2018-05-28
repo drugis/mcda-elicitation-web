@@ -10,7 +10,7 @@ define(['lodash', 'angular'], function(_, angular) {
       var state = angular.copy(inState);
       state.problem.criteria = _.mapValues(state.problem.criteria, function(criterion) {
         if(criterion.dataSources) {
-          return _.merge({},  criterion.dataSources[0], _.omit(criterion, ['dataSources']));
+          return _.merge({}, _.omit(criterion, ['dataSources']),_.omit(criterion.dataSources[0]),[]);
         }
         return criterion;
       });
