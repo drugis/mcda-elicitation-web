@@ -52,13 +52,15 @@ define(['lodash', 'angular'], function(_) {
 
     function createDataSourceInclusions(problem, subProblem) {
       return _.reduce(problem.criteria, function(accum, criterion) {
-        return _.extend({}, accum, createInclusions(_.keyBy(criterion.dataSources, 'id'), subProblem.definition, 'excludedDataSources'));
+        return _.extend({}, accum, createInclusions(_.keyBy(criterion.dataSources, 'id'),
+          subProblem.definition, 'excludedDataSources'));
       }, {});
     }
 
     function checkScaleRanges(criteria) {
       var isMissingScaleRange = _.find(criteria, function(criterion) {
-        return !(criterion.dataSources[0].pvf && criterion.dataSources[0].pvf.range && criterion.dataSources[0].pvf.range[0] !== undefined && criterion.dataSources[0].pvf.range[1] !== undefined);
+        return !(criterion.dataSources[0].pvf && criterion.dataSources[0].pvf.range &&
+          criterion.dataSources[0].pvf.range[0] !== undefined && criterion.dataSources[0].pvf.range[1] !== undefined);
       });
       return !isMissingScaleRange;
     }
@@ -76,7 +78,8 @@ define(['lodash', 'angular'], function(_) {
             accum[dataSource.id] = true;
           });
         } else {
-          accum = _.merge({}, accum, _.pick(subProblemState.dataSourceInclusions, _.map(criterion.dataSources, 'id')));
+          accum = _.merge({}, accum, _.pick(subProblemState.dataSourceInclusions,
+            _.map(criterion.dataSources, 'id')));
         }
         return accum;
       }, {});
