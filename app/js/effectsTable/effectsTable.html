@@ -10,7 +10,7 @@
     <span class="switch">
       <input class="switch-input" id="showStudyDataToggle" type="checkbox" ng-model="showStudyData.value">
       <label class="switch-paddle" ng-if="studyDataAvailable" for="showStudyDataToggle"></label>
-      <label class="switch-paddle" ng-if="!studyDataAvailable" tooltip-append-to-body="true" tooltip="Cannot show source data if all data is not distributed or relative"></label>
+      <label class="switch-paddle" ng-if="!studyDataAvailable" tooltip-append-to-body="true" tooltip="Cannot show source data if all data is relative"></label>
     </span>
     <span class="toggle-text">Source data</span>
     <button class="button small info clipboard-button right" data-clipboard-target="#effectstable">
