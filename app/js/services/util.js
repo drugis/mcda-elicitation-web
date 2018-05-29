@@ -3,7 +3,6 @@ define(['lodash', 'angular'], function(_, angular) {
 
   return angular.module('elicit.util', [])
     .factory('intervalHull', function() {
-
       return function(scaleRanges) {
         if (!scaleRanges) {
           return [-Infinity, +Infinity];
