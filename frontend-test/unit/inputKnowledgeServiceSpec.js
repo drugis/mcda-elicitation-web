@@ -363,7 +363,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           });
           it('should render correct normalised inputs', function() {
             cell.isNormal = true;
-            var expectedResult = '0.5 (100)\nNormal(0.5, 0.025)';
+            var expectedResult = '0.5 (100)\nNormal(0.5, 0.05)';
             var result = inputKnowledgeService.inputToString(cell);
             expect(result).toEqual(expectedResult);
           });
@@ -377,7 +377,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           it('should create correct normalized performance', function() {
             cell.isNormal = true;
             inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(0.5, 0.025, {
+            expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(0.5, 0.05, {
               value: 0.5,
               sampleSize: 100
             });
@@ -466,7 +466,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           });
           it('should render correct normalised inputs', function() {
             cell.isNormal = true;
-            var expectedResult = '50% (100)\nNormal(0.5, 0.025)';
+            var expectedResult = '50% (100)\nNormal(0.5, 0.05)';
             var result = inputKnowledgeService.inputToString(cell);
             expect(result).toEqual(expectedResult);
           });
@@ -481,7 +481,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           it('should create correct normalized performance', function() {
             cell.isNormal = true;
             inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(0.5, 0.025, {
+            expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(0.5, 0.05, {
               value: 50,
               sampleSize: 100,
               scale: 'percentage'
@@ -538,7 +538,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           });
           it('should render correct normalised inputs', function() {
             cell.isNormal = true;
-            var expectedResult = '50 / 100\nNormal(0.5, 0.025)';
+            var expectedResult = '50 / 100\nNormal(0.5, 0.05)';
             var result = inputKnowledgeService.inputToString(cell);
             expect(result).toEqual(expectedResult);
           });
@@ -552,7 +552,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           it('should create correct normalized performance', function() {
             cell.isNormal = true;
             inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(0.5, 0.025, {
+            expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(0.5, 0.05, {
               events: 50,
               sampleSize: 100
             });

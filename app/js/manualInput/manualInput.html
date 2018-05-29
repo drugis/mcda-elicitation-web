@@ -75,7 +75,7 @@
           <tr ng-repeat="row in criteriaRows">
             <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">
               <div class="grid-x">
-                <div class="cell small-2">
+                <!-- <div class="cell small-2">
                   <div style="line-height: 10px; margin-bottom: 4px;">
                     <a class="nav-arrow">
                       <i style="line-height:0px;" class="fa fa-caret-up"></i>
@@ -88,7 +88,7 @@
                     </a>
                     <i style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
                   </div>
-                </div>
+                </div> -->
                 <div class="cell small-10">
                   <a ng-click="removeCriterion(row.criterion)" tooltip="Remove criterion">
                     <i class="fa fa-trash icon-fixed-width" style="color:red"></i>

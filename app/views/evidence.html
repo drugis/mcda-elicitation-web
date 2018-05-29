@@ -46,7 +46,7 @@
           </td>
           <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">
             <div class="grid-x">
-              <div class="cell small-2" ng-if="editMode.isUserOwner">
+              <!-- <div class="cell small-2" ng-if="editMode.isUserOwner">
                 <div style="line-height: 10px; margin-bottom: 4px;">
                   <a ng-click="criterionUp(getIndex(criteria, row.id))" class="nav-arrow" ng-if="getIndex(criteria, row.id) !== 0 && getIndex(criteria, row.id) !== problem.valueTree.children[0].criteria.length">
                     <i style="line-height:0px;" class="fa fa-caret-up"></i>
@@ -61,7 +61,7 @@
                   <i ng-if="getIndex(criteria, row.id) === criteria.length-1 || getIndex(criteria, row.id) === problem.valueTree.children[0].criteria.length-1"
                     style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
                 </div>
-              </div>
+              </div> -->
               <div class="cell small-10">
                 <a ng-if="editMode.isUserOwner && isStandAlone" ng-click="editCriterion(problem.criteria[row.criterion.id], row.criterion.id)">
                   <i class="fa fa-edit"></i>

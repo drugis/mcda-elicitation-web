@@ -122,7 +122,7 @@ define(['lodash'], function(_) {
             }
             break;
           case 'dt':
-            label = input.mu + ' (' + input.sigma + '), ' + (input.sampleSize);
+            label = input.mu + ' (' + roundToThreeDigits(parameters.stdErr) + '), ' + (input.sampleSize);
             break;
           case 'dnorm':
             if (input.events && input.sampleSize) {
@@ -149,10 +149,10 @@ define(['lodash'], function(_) {
             label = performance.value;
             break;
           case 'dt':
-            label = parameters.mu + ' (' + Math.round(parameters.stdErr * 1000) / 1000 + '), ' + (parameters.dof + 1);
+            label = parameters.mu + ' (' + roundToThreeDigits(parameters.stdErr) + '), ' + (parameters.dof + 1);
             break;
           case 'dnorm':
-            label = parameters.mu + ' (' + Math.round(parameters.sigma * 1000) / 1000 + ')';
+            label = parameters.mu + ' (' + roundToThreeDigits(parameters.sigma) + ')';
             break;
           case 'dbeta':
             label = (parameters.alpha - 1) + ' / ' + (parameters.beta + parameters.alpha - 2);
@@ -169,7 +169,13 @@ define(['lodash'], function(_) {
         label: label,
         hasUncertainty: hasUncertainty
       };
+    } 
+
+    //private
+    function roundToThreeDigits(value) {
+      return Math.round(value * 1000) / 1000;
     }
+
     return {
       buildEffectsTable: buildEffectsTable,
       createEffectsTableInfo: createEffectsTableInfo,
