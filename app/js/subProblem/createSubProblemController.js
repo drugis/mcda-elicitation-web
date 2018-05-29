@@ -92,7 +92,8 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function updateInclusions() {
-      $scope.subProblemState.dataSourceInclusions = SubProblemService.excludeDataSourcesForExcludedCriteria($scope.problem.criteria, $scope.subProblemState);
+      $scope.subProblemState.dataSourceInclusions = SubProblemService.excludeDataSourcesForExcludedCriteria(
+        $scope.problem.criteria, $scope.subProblemState);
       $scope.subProblemState.numberOfCriteriaSelected = _.filter($scope.subProblemState.criterionInclusions).length;
       $scope.subProblemState.numberOfAlternativesSelected = _.filter($scope.subProblemState.alternativeInclusions).length;
       $scope.subProblemState.numberOfDataSourcesPerCriterion = _.mapValues($scope.problem.criteria, function(criterion) {
@@ -104,7 +105,8 @@ define(['lodash', 'angular'], function(_) {
       $scope.areTooManyDataSourcesSelected = _.find($scope.subProblemState.numberOfDataSourcesPerCriterion, function(n) {
         return n > 1;
       });
-      $scope.scalesDataSources = $scope.hasMissingValues || $scope.areTooManyDataSourcesSelected ? [] : _.keys(_.pickBy($scope.subProblemState.dataSourceInclusions));
+      $scope.scalesDataSources = $scope.hasMissingValues ||
+        $scope.areTooManyDataSourcesSelected ? [] : _.keys(_.pickBy($scope.subProblemState.dataSourceInclusions));
       $timeout(function() {
         $scope.$broadcast('rzSliderForceRender');
       }, 100);
@@ -144,10 +146,10 @@ define(['lodash', 'angular'], function(_) {
 
     function areThereMissingValues() {
       var includedDataSourcesIds = _.keys(_.pickBy($scope.subProblemState.dataSourceInclusions));
-      var includedScales = _.pick($scope.scales.observed, includedDataSourcesIds);
-      return _.find(includedScales, function(scaleRow) {
-        return _.find(scaleRow, function(scaleCell) {
-          return null === scaleCell['50%'];
+      var includedAlternatives = _.keys(_.pickBy($scope.subProblemState.alternativeInclusions));
+      return _.find(includedDataSourcesIds, function(dataSourceId){
+        return _.find(includedAlternatives, function(alternativeId){
+          return $scope.scales.observed[dataSourceId][alternativeId]['50%'] === null;
         });
       });
     }
