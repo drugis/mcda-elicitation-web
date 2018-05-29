@@ -11,7 +11,6 @@ define(['lodash', 'angular'], function(_) {
     currentSchemaVersion
   ) {
     var INVALID_INPUT_MESSAGE = 'Missing or invalid input';
-    var SCHEMA_VERSION = currentSchemaVersion;
 
     // Exposed functions
     function getInputError(cell) {
@@ -47,7 +46,7 @@ define(['lodash', 'angular'], function(_) {
     function createProblem(criteria, treatments, title, description, inputData, useFavorability) {
       var newCriteria = buildCriteria(criteria);
       var problem = {
-        schemaVersion: SCHEMA_VERSION,
+        schemaVersion: currentSchemaVersion,
         title: title,
         description: description,
         criteria: newCriteria,

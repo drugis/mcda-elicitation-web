@@ -11,10 +11,10 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function updateProblemToCurrentSchema(workspace) {
       var newWorkspace = angular.copy(workspace);
-      if (!workspace.schemaVersion) {
+      if (!workspace.problem.schemaVersion) {
         newWorkspace = updateToVersionOnePointZeroPointzero(workspace);
       }
-      if (newWorkspace.schemaVersion === currentSchemaVersion) {
+      if (newWorkspace.problem.schemaVersion === currentSchemaVersion) {
         return newWorkspace;
       }
     }
