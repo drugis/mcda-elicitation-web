@@ -435,8 +435,8 @@ define(['lodash', 'angular'], function(_, angular) {
       return getKnowledge(cell).buildPerformance(cell);
     }
 
-    function finishInputCell(inputMetaData, tableEntry) {
-      return getKnowledge(inputMetaData).finishInputCell(inputMetaData, tableEntry);
+    function finishInputCell(dataSource, tableEntry) {
+      return getKnowledge(dataSource).finishInputCell(dataSource, tableEntry);
     }
 
     function inputToString(cell) {
@@ -783,7 +783,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     // math util
     function stdErr(mu, sampleSize) {
-      return mu * (1 - mu) / Math.sqrt(sampleSize);
+      return Math.sqrt(mu * (1 - mu) / sampleSize);
     }
 
     function roundedStdErr(mu, sampleSize) {
