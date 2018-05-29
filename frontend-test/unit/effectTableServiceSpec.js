@@ -265,10 +265,10 @@ define(['angular-mocks',
           var result = effectTableService.isStudyDataAvailable(effectsTableInfo);
           expect(result).toBeTruthy();
         });
-        it('should return false if all entries are either exact or relative', function() {
+        it('should return false if all entries arerelative', function() {
           var effectsTableInfo = {
             criterionId1: {
-              distributionType: 'exact'
+              distributionType: 'relative'
             },
             criterionId2: {
               distributionType: 'relative'
