@@ -46,7 +46,7 @@ define(['lodash', 'angular'], function(_, angular) {
         newEntry.dataSource = newWorkspace.problem.criteria[tableEntry.criterion].dataSources[0].id;
         return newEntry;
       });
-      newWorkspace.schemaVersion = '1.0.0';
+      newWorkspace.problem.schemaVersion = '1.0.0';
       return newWorkspace;
     }
     return {
