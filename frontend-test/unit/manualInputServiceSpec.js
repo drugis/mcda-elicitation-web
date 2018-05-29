@@ -136,7 +136,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               isInvalid: true
             })
           },
-          'ds2id': {  
+          'ds2id': {
             alternative1: _.extend({}, oldInputData.ds2id.alternative1, {
               isInvalid: true
             }),
@@ -186,7 +186,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           title: 'dichotomousDecimalSampleSize',
           id: 'criterion3id',
           dataSources: [{
-            id:'ds3id',
+            id: 'ds3id',
             inputType: 'effect',
             dataType: 'dichotomous'
           }]
@@ -313,10 +313,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         criteria = [{
           id: 'crit',
           oldId: 'oldCrit',
-          inputMetaData: {
+          dataSources: [{
+            id: 'ds1',
             inputType: 'effect',
             dataType: 'other'
-          }
+          }]
         }];
         oldWorkspace.problem.performanceTable = [{
           criterion: 'oldCrit',
@@ -333,7 +334,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         });
         var result = manualInputService.createInputFromOldWorkspace(criteria, alternatives, oldWorkspace);
         var expectedResult = {
-          crit: {
+          ds1: {
             alt: {
               firstParameter: 10
             }
@@ -354,59 +355,83 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               crit1: {
                 title: 'criterion 1',
                 description: 'bla',
-                source: 'single study',
-                sourceLink: 'http://www.drugis.org',
-                unitOfMeasurement: 'Proportion'
+                unitOfMeasurement: 'Proportion',
+                dataSources: [{
+                  id: 'ds1',
+                  source: 'single study',
+                  sourceLink: 'http://www.drugis.org'
+                }]
               },
               crit2: {
                 title: 'criterion 2',
-                source: 'single study',
-                sourceLink: 'http://www.drugis.org',
-                unitOfMeasurement: 'Response size'
+                unitOfMeasurement: 'Response size',
+                dataSources: [{
+                  id: 'ds2',
+                  source: 'single study',
+                  sourceLink: 'http://www.drugis.org'
+                }]
               },
               crit3: {
                 title: 'criterion 3',
-                source: 'single study',
+                dataSources: [{
+                  id: 'ds3',
+                  source: 'single study'
+                }]
               },
               crit4: {
                 title: 'criterion 4',
-                source: 'single study',
+                dataSources: [{
+                  id: 'ds4',
+                  source: 'single study'
+                }]
               },
               crit5: {
                 title: 'criterion 5',
-                source: 'single study',
+                dataSources: [{
+                  id: 'ds5',
+                  source: 'single study'
+                }]
               },
               crit6: {
                 title: 'durrrvival',
+                dataSources: [{
+                  id: 'ds6'
+                }]
               }
             },
             performanceTable: [{
               criterion: 'crit1',
+              dataSource: 'ds1',
               performance: {
                 type: 'dt'
               }
             }, {
               criterion: 'crit2',
+              dataSource: 'ds2',
               performance: {
                 type: 'dbeta'
               }
             }, {
               criterion: 'crit3',
+              dataSource: 'ds3',
               performance: {
                 type: 'dgamma'
               }
             }, {
               criterion: 'crit4',
+              dataSource: 'ds4',
               performance: {
                 type: 'dnorm'
               }
             }, {
               criterion: 'crit5',
+              dataSource: 'ds5',
               performance: {
                 type: 'exact'
               }
             }, {
               criterion: 'crit6',
+              dataSource: 'ds6',
               performance: {
                 type: 'dsurv'
               }
@@ -426,68 +451,71 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         var result = manualInputService.copyWorkspaceCriteria(workspace);
         var expectedResult = [{
           id: 'uuid1',
-          oldId: 'crit1',
           title: 'criterion 1',
           description: 'bla',
-          source: 'single study',
-          sourceLink: 'http://www.drugis.org',
-          isFavorable: true,
-          unitOfMeasurement: 'Proportion',
-          inputMetaData: {
+          dataSources: [{
+            id: 'ds1',
+            source: 'single study',
+            sourceLink: 'http://www.drugis.org',
             inputType: 'distribution',
             inputMethod: 'assistedDistribution',
             dataType: 'continuous'
-          }
+          }],
+          isFavorable: true,
+          unitOfMeasurement: 'Proportion'
+
         }, {
           id: 'uuid2',
-          oldId: 'crit2',
           title: 'criterion 2',
-          source: 'single study',
-          sourceLink: 'http://www.drugis.org',
-          isFavorable: true,
-          unitOfMeasurement: 'Response size',
-          inputMetaData: {
+          dataSources: [{
+            id: 'ds1',
+            source: 'single study',
+            sourceLink: 'http://www.drugis.org',
             inputType: 'distribution',
             inputMethod: 'manualDistribution'
-          }
+          }],
+          isFavorable: true,
+          unitOfMeasurement: 'Response size'
+
         }, {
           id: 'uuid3',
-          oldId: 'crit3',
           title: 'criterion 3',
-          source: 'single study',
-          isFavorable: false,
-          inputMetaData: {
+          dataSources: [{
+            id: 'ds1',
+            source: 'single study',
             inputType: 'distribution',
             inputMethod: 'manualDistribution'
-          }
+          }],
+          isFavorable: false
+
         }, {
           id: 'uuid4',
-          oldId: 'crit4',
           title: 'criterion 4',
-          source: 'single study',
-          inputMetaData: {
+          dataSources: [{
+            id: 'ds1',
+            source: 'single study',
             inputType: 'distribution',
             inputMethod: 'manualDistribution',
-          },
+          }],
           isFavorable: false
         }, {
           id: 'uuid5',
-          oldId: 'crit5',
           title: 'criterion 5',
-          isFavorable: false,
-          source: 'single study',
-          inputMetaData: {
+          dataSources: [{
+            id: 'ds1',
+            source: 'single study',
             inputType: 'distribution',
             inputMethod: 'manualDistribution'
-          }
+          }],
+          isFavorable: false,
         }, {
           id: 'uuid6',
-          oldId: 'crit6',
           title: 'durrrvival',
-          isFavorable: false,
-          inputMetaData: {
+          dataSources: [{
+            id: 'ds1',
             inputType: 'Unknown'
-          }
+          }],
+          isFavorable: false,
         }];
         expect(result).toEqual(expectedResult);
       });
@@ -500,23 +528,23 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 id: 'crit1',
                 title: 'criterion 1',
                 description: 'desc',
-                source: 'well',
-                sourceLink: 'zelda',
-                unitOfMeasurement: 'absolute',
-                strengthOfEvidence: '9001',
-                uncertainties: 'dunno',
-                omitThis: 'yech',
-                scales: [0, 1],
-                pvf: {
-                  direction: 'decreasing',
-                  type: 'linear',
-                  range: [0.0, 1.0]
-                },
-                inputMetaData: {
+                dataSources: [{
+                  source: 'well',
+                  sourceLink: 'zelda',
+                  strengthOfEvidence: '9001',
+                  uncertainties: 'dunno',
+                  scales: [0, 1],
+                  pvf: {
+                    direction: 'decreasing',
+                    type: 'linear',
+                    range: [0.0, 1.0]
+                  },
                   inputType: 'distribution',
                   inputMethod: 'assistedDistribution',
                   dataType: 'dichotomous'
-                }
+                }],
+                unitOfMeasurement: 'absolute',
+                omitThis: 'yech'
               },
               crit2: {
                 id: 'crit2',

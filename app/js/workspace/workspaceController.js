@@ -28,12 +28,8 @@ define(['angular'], function(angular) {
     $scope.editMode = {
       isUserOwner: user ? currentWorkspace.owner === user.id : false
     };
-    if (currentWorkspace.problem.schemaVersion === currentSchemaVersion) {
-      $scope.workspace = currentWorkspace;
-    } else {
-      $scope.workspace = SchemaService.updateProblemToCurrentSchema(currentWorkspace);
-    }
-
+    $scope.workspace = SchemaService.updateWorkspaceToCurrentSchema(currentWorkspace);
+    
     $scope.isEditTitleVisible = false;
     $scope.workspaceTitle = $scope.workspace.title;
 

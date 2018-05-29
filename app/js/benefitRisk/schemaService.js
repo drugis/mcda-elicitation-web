@@ -9,24 +9,30 @@ define(['lodash', 'angular'], function(_, angular) {
     currentSchemaVersion
   ) {
 
-    function updateProblemToCurrentSchema(workspace) {
-      var newWorkspace = angular.copy(workspace);
-      if (!workspace.problem.schemaVersion) {
-        newWorkspace = updateToVersionOnePointZeroPointzero(workspace);
+    function updateProblemToCurrentSchema(problem) {
+      var newProblem = angular.copy(problem);
+      if (!problem.schemaVersion) {
+        newProblem = updateToVersionOnePointZeroPointzero(newProblem);
       }
-      if (newWorkspace.problem.schemaVersion === currentSchemaVersion) {
-        return newWorkspace;
+      if (newProblem.schemaVersion === currentSchemaVersion) {
+        return newProblem;
       }
     }
 
+    function updateWorkspaceToCurrentSchema(workspace) {
+      var newWorkspace = angular.copy(workspace);
+      newWorkspace.problem = updateProblemToCurrentSchema(newWorkspace.problem);
+      return newWorkspace;
+    }
+
     //private 
-    function updateToVersionOnePointZeroPointzero(newWorkspace) {
-      newWorkspace.problem.criteria = _.mapValues(newWorkspace.problem.criteria, function(criterion, criterionId) {
+    function updateToVersionOnePointZeroPointzero(problem) {
+      problem.criteria = _.mapValues(problem.criteria, function(criterion, criterionId) {
         var newCriterion = _.pick(criterion, ['title', 'description', 'unitOfMeasurement', 'scale']);
         var dataSource = _.pick(criterion, ['pvf', 'source', 'sourceLink', 'strengthOfEvidence', 'uncertainties']);
         dataSource.id = generateUuid();
 
-        var tableEntry = _.find(newWorkspace.problem.performanceTable, ['criterion', criterionId]);
+        var tableEntry = _.find(problem.performanceTable, ['criterion', criterionId]);
         var MANUAL_DISTRIBUTIONS = ['exact', 'dnorm', 'dbeta', 'dgamma'];
         var performanceType = tableEntry.performance.type;
         if (_.includes(MANUAL_DISTRIBUTIONS, performanceType)) {
@@ -41,16 +47,17 @@ define(['lodash', 'angular'], function(_, angular) {
         newCriterion.dataSources = [dataSource];
         return newCriterion;
       });
-      newWorkspace.problem.performanceTable = _.map(newWorkspace.problem.performanceTable, function(tableEntry) {
+      problem.performanceTable = _.map(problem.performanceTable, function(tableEntry) {
         var newEntry = angular.copy(tableEntry);
-        newEntry.dataSource = newWorkspace.problem.criteria[tableEntry.criterion].dataSources[0].id;
+        newEntry.dataSource = problem.criteria[tableEntry.criterion].dataSources[0].id;
         return newEntry;
       });
-      newWorkspace.problem.schemaVersion = '1.0.0';
-      return newWorkspace;
+      problem.schemaVersion = '1.0.0';
+      return problem;
     }
     return {
-      updateProblemToCurrentSchema: updateProblemToCurrentSchema
+      updateProblemToCurrentSchema: updateProblemToCurrentSchema,
+      updateWorkspaceToCurrentSchema:updateWorkspaceToCurrentSchema
     };
   };
 

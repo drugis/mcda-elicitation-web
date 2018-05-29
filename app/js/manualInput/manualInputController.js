@@ -248,7 +248,7 @@ define(['lodash', 'angular'], function(_, angular) {
     function initState() {
       if ($stateParams.workspace) {
         // copying existing workspace
-        var oldWorkspace = SchemaService.updateProblemToCurrentSchema($stateParams.workspace);
+        var oldWorkspace = SchemaService.updateWorkspaceToCurrentSchema($stateParams.workspace);
         $scope.state = {
           oldWorkspace: oldWorkspace,
           useFavorability: oldWorkspace.problem.valueTree ? true : false,
