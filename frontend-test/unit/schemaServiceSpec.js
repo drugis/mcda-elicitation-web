@@ -18,6 +18,13 @@ define(['angular-mocks', 'mcda/benefitRisk/benefitRisk'], function() {
     describe('updateWorkspaceToCurrentSchema (includes updateProblemToCurrentSchema)', function() {
       it('it should do nothing to a workspace of the current version', function() {
         var workspace = {
+          problem: exampleProblem()
+        };
+        var result = schemaService.updateWorkspaceToCurrentSchema(workspace);
+        expect(result).toEqual(workspace);
+      });
+      it('it should update a workspace without schemaversion to the current version', function() {
+        var workspace = {
           problem: {
             criteria: {
               crit1: {
@@ -57,19 +64,11 @@ define(['angular-mocks', 'mcda/benefitRisk/benefitRisk'], function() {
               alternative: 'alt1',
               dataSource: undefined,
               performance: { type: 'dnorm' }
-            }]
+            }],
+            schemaVersion: '1.0.0'
           },
-          schemaVersion: '1.0.0'
         };
         expect(result).toEqual(expectedResult);
-      });
-      it('it should update a workspace without schemaversion to the current version', function() {
-        var workspace = {
-          version: '1.0.0',
-          problem: exampleProblem()
-        };
-        var result = schemaService.updateWorkspaceToCurrentSchema(workspace);
-        expect(result).toEqual(workspace);
       });
     });
   });

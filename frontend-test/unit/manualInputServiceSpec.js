@@ -346,7 +346,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
 
     describe('copyWorkspaceCriteria', function() {
       beforeEach(function() {
-        generateUuidMock.and.returnValues('uuid1', 'uuid2', 'uuid3', 'uuid4', 'uuid5', 'uuid6');
+        generateUuidMock.and.returnValues('uuid1', 'uuid2', 'uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid8', 'uuid9', 'uuid10', 'uuid11', 'uuid12');
       });
       it('for schema zero should copy and update the criteria from the old workspace, preserving units and value tree', function() {
         var workspace = {
@@ -359,7 +359,10 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 dataSources: [{
                   id: 'ds1',
                   source: 'single study',
-                  sourceLink: 'http://www.drugis.org'
+                  sourceLink: 'http://www.drugis.org',
+                  inputType: 'distribution',
+                  inputMethod: 'assistedDistribution',
+                  dataType: 'continuous'
                 }]
               },
               crit2: {
@@ -367,6 +370,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 unitOfMeasurement: 'Response size',
                 dataSources: [{
                   id: 'ds2',
+                  inputType: 'distribution',
+                  inputMethod: 'manualDistribution',
                   source: 'single study',
                   sourceLink: 'http://www.drugis.org'
                 }]
@@ -375,6 +380,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 title: 'criterion 3',
                 dataSources: [{
                   id: 'ds3',
+                  inputType: 'distribution',
+                  inputMethod: 'manualDistribution',
                   source: 'single study'
                 }]
               },
@@ -382,6 +389,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 title: 'criterion 4',
                 dataSources: [{
                   id: 'ds4',
+                  inputType: 'distribution',
+                  inputMethod: 'manualDistribution',
                   source: 'single study'
                 }]
               },
@@ -389,13 +398,17 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 title: 'criterion 5',
                 dataSources: [{
                   id: 'ds5',
+                  inputType: 'distribution',
+                  inputMethod: 'manualDistribution',
                   source: 'single study'
                 }]
               },
               crit6: {
                 title: 'durrrvival',
                 dataSources: [{
-                  id: 'ds6'
+                  id: 'ds6',
+                  inputType: 'Unknown'
+
                 }]
               }
             },
@@ -450,11 +463,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         };
         var result = manualInputService.copyWorkspaceCriteria(workspace);
         var expectedResult = [{
-          id: 'uuid1',
+          id: 'uuid2',
           title: 'criterion 1',
           description: 'bla',
           dataSources: [{
-            id: 'ds1',
+            id: 'uuid1',
+            oldId: 'ds1',
             source: 'single study',
             sourceLink: 'http://www.drugis.org',
             inputType: 'distribution',
@@ -465,10 +479,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           unitOfMeasurement: 'Proportion'
 
         }, {
-          id: 'uuid2',
+          id: 'uuid4',
           title: 'criterion 2',
           dataSources: [{
-            id: 'ds1',
+            id: 'uuid3',
+            oldId: 'ds2',
             source: 'single study',
             sourceLink: 'http://www.drugis.org',
             inputType: 'distribution',
@@ -478,10 +493,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           unitOfMeasurement: 'Response size'
 
         }, {
-          id: 'uuid3',
+          id: 'uuid6',
           title: 'criterion 3',
           dataSources: [{
-            id: 'ds1',
+            id: 'uuid5',
+            oldId: 'ds3',
             source: 'single study',
             inputType: 'distribution',
             inputMethod: 'manualDistribution'
@@ -489,30 +505,33 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           isFavorable: false
 
         }, {
-          id: 'uuid4',
+          id: 'uuid8',
           title: 'criterion 4',
           dataSources: [{
-            id: 'ds1',
+            id: 'uuid7',
+            oldId: 'ds4',
             source: 'single study',
             inputType: 'distribution',
             inputMethod: 'manualDistribution',
           }],
           isFavorable: false
         }, {
-          id: 'uuid5',
+          id: 'uuid10',
           title: 'criterion 5',
           dataSources: [{
-            id: 'ds1',
+            id: 'uuid9',
+            oldId: 'ds5',
             source: 'single study',
             inputType: 'distribution',
             inputMethod: 'manualDistribution'
           }],
           isFavorable: false,
         }, {
-          id: 'uuid6',
+          id: 'uuid12',
           title: 'durrrvival',
           dataSources: [{
-            id: 'ds1',
+            id: 'uuid11',
+            oldId: 'ds6',
             inputType: 'Unknown'
           }],
           isFavorable: false,
@@ -529,6 +548,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 title: 'criterion 1',
                 description: 'desc',
                 dataSources: [{
+                  id: 'ds1',
                   source: 'well',
                   sourceLink: 'zelda',
                   strengthOfEvidence: '9001',
@@ -549,11 +569,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               crit2: {
                 id: 'crit2',
                 title: 'criterion 2',
-                inputMetaData: {
+                dataSources: [{
+                  id: 'ds2',
                   inputType: 'effect',
                   dataType: 'continuous',
                   parameterOfInterest: 'mean'
-                }
+                }]
               }
             },
             performanceTable: [],
@@ -571,30 +592,32 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         };
         var result = manualInputService.copyWorkspaceCriteria(workspace);
         var expectedResult = [{
-          id: 'uuid1',
-          oldId: 'crit1',
+          id: 'uuid2',
           title: 'criterion 1',
           description: 'desc',
-          source: 'well',
-          isFavorable: true,
-          sourceLink: 'zelda',
-          unitOfMeasurement: 'absolute',
-          strengthOfEvidence: '9001',
-          uncertainties: 'dunno',
-          inputMetaData: {
+          dataSources: [{
+            id: 'uuid1',
+            oldId: 'ds1',
+            source: 'well',
+            sourceLink: 'zelda',
+            strengthOfEvidence: '9001',
+            uncertainties: 'dunno',
             inputType: 'distribution',
             inputMethod: 'assistedDistribution',
             dataType: 'dichotomous'
-          }
+          }],
+          unitOfMeasurement: 'absolute',
+          isFavorable: true
         }, {
-          id: 'uuid2',
-          oldId: 'crit2',
+          id: 'uuid4',
           title: 'criterion 2',
-          inputMetaData: {
+          dataSources: [{
+            oldId: 'ds2',
+            id: 'uuid3',
             inputType: 'effect',
             dataType: 'continuous',
             parameterOfInterest: 'mean'
-          },
+          }],
           isFavorable: false
         }];
         expect(result).toEqual(expectedResult);

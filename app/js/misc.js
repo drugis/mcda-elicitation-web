@@ -110,7 +110,8 @@ function exampleProblem() {
         parameters: { alpha: 5, beta: 124 }
       }
     }],
-    preferences: {}
+    preferences: {},
+    schemaVersion: '1.0.0'
   };
 }
 
