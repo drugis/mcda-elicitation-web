@@ -15,7 +15,7 @@ define(['angular-mocks', 'mcda/benefitRisk/benefitRisk'], function() {
       schemaService = SchemaService;
     }));
 
-    describe('updateProblemToCurrentSchema', function() {
+    describe('updateWorkspaceToCurrentSchema (includes updateProblemToCurrentSchema)', function() {
       it('it should do nothing to a workspace of the current version', function() {
         var workspace = {
           problem: {
@@ -35,7 +35,7 @@ define(['angular-mocks', 'mcda/benefitRisk/benefitRisk'], function() {
             }]
           }
         };
-        var result = schemaService.updateProblemToCurrentSchema(workspace);
+        var result = schemaService.updateWorkspaceToCurrentSchema(workspace);
         var expectedResult = {
           problem: {
             criteria: {
@@ -68,7 +68,7 @@ define(['angular-mocks', 'mcda/benefitRisk/benefitRisk'], function() {
           version: '1.0.0',
           problem: exampleProblem()
         };
-        var result = schemaService.updateProblemToCurrentSchema(workspace);
+        var result = schemaService.updateWorkspaceToCurrentSchema(workspace);
         expect(result).toEqual(workspace);
       });
     });
