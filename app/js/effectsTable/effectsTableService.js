@@ -89,10 +89,7 @@ define(['lodash'], function(_) {
 
     function isStudyDataAvailable(effectsTableInfo) {
       return !!(_.find(effectsTableInfo, function(infoEntry) {
-        return infoEntry.distributionType !== 'relative' &&
-          _.find(infoEntry.studyDataLabelsAndUncertainty, function(labelAndUncertainty) {
-            return labelAndUncertainty.hasUncertainty;
-          });
+        return infoEntry.distributionType !== 'relative';
       }));
     }
 
