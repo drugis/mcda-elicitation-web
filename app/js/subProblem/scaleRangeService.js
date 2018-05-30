@@ -34,7 +34,6 @@ define(['lodash', 'angular'], function(_) {
         ceiled = dirFun(normalised);
         deNormalised = ceiled * Math.pow(10, -factor);
       }
-
       return deNormalised;
     }
 
@@ -47,7 +46,7 @@ define(['lodash', 'angular'], function(_) {
     }
 
 
-    function calculateScales(criterionScale, from, to, criterionRange) {
+    function calculateScales(dataSourceScale, from, to, criterionRange) {
       var boundFrom = function(val) {
         return val < scale[0] ? scale[0] : val;
       };
@@ -55,7 +54,7 @@ define(['lodash', 'angular'], function(_) {
         return val > scale[1] ? scale[1] : val;
       };
       var margin = 0.5 * (to - from);
-      var scale = criterionScale || [null, null];
+      var scale = dataSourceScale || [null, null];
 
       scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
       scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
@@ -113,8 +112,8 @@ define(['lodash', 'angular'], function(_) {
           };
 
           // Set scales for slider
-          var criterionScale = criterion.scale;
-          scaleState[dataSource.id] = calculateScales(criterionScale, from, to, dataSourceRange);
+          var dataSourceScale = dataSource.scale;
+          scaleState[dataSource.id] = calculateScales(dataSourceScale, from, to, dataSourceRange);
         });
       });
       return {
