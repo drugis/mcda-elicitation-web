@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'mcda/controllers/helpers/wizard'], function(_, Wizard) {
+define(['lodash', 'mcda/controllers/wizard'], function(_, Wizard) {
   var dependencies = [
     '$scope', '$state', '$stateParams', '$injector',
     'PartialValueFunctionService',

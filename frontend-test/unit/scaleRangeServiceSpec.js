@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], function() {
+define(['lodash','angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], function(_) {
 
   // - the lower bound must be lower than the lower end of the observed range
   // - the upper bound should be higher than the upper end of the observed range
@@ -8,7 +8,6 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
   // - the lower bound must be greater than or equal to the theoretical lower bound
   // - the upper bound must be smaller than or equal to the theoretical upper bound
 
-
   describe('The scaleRange service', function() {
 
     beforeEach(module('elicit.util'));
@@ -16,24 +15,24 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], functi
 
     describe('calculateScales', function() {
       it('on unbounded scales, bounds should lie outside the observed range', inject(function(ScaleRangeService) {
-        var criterionScale = [null, null];
+        var dataSourceScale = [null, null];
         var from = -16.123;
         var to = -12.123;
         var criterionRange = [from, to];
 
-        var result = ScaleRangeService.calculateScales(criterionScale, from, to, criterionRange);
+        var result = ScaleRangeService.calculateScales(dataSourceScale, from, to, criterionRange);
         expect(result.sliderOptions.floor).toEqual(-20);
         expect(result.sliderOptions.ceil).toEqual(-10);
         expect(result.sliderOptions.restrictedRange.from).toEqual(-16.123);
         expect(result.sliderOptions.restrictedRange.to).toEqual(-12.123);
       }));
       it('should work for fractional/small ranges', inject(function(ScaleRangeService) {
-        var criterionScale = [0, 1];
+        var dataSourceScale = [0, 1];
         var from = 0.17791;
         var to = 0.25323;
         var criterionRange = [from, to];
 
-        var result = ScaleRangeService.calculateScales(criterionScale, from, to, criterionRange);
+        var result = ScaleRangeService.calculateScales(dataSourceScale, from, to, criterionRange);
         expect(result.sliderOptions.floor).toEqual(0.1);
         expect(result.sliderOptions.ceil).toEqual(0.30000000000000004);
 

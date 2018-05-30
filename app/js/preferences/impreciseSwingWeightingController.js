@@ -21,8 +21,8 @@ define(['lodash'],
       };
 
       function getValues(criteria) {
-        return _.reduce(criteria, function(accum, criterion, key) {
-          accum[key] = {
+        return _.reduce(_.keys(criteria), function(accum, criterionId) {
+          accum[criterionId] = {
             low: 1,
             high: 100
           };

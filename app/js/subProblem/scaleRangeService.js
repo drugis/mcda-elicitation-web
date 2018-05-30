@@ -45,8 +45,8 @@ define(['lodash', 'angular'], function(_) {
       return nice(x, Math.floor);
     }
 
-
     function calculateScales(dataSourceScale, from, to, criterionRange) {
+      var scale = dataSourceScale || [null, null];
       var boundFrom = function(val) {
         return val < scale[0] ? scale[0] : val;
       };
@@ -54,7 +54,6 @@ define(['lodash', 'angular'], function(_) {
         return val > scale[1] ? scale[1] : val;
       };
       var margin = 0.5 * (to - from);
-      var scale = dataSourceScale || [null, null];
 
       scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
       scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
