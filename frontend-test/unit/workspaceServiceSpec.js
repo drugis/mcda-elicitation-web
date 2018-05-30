@@ -47,20 +47,27 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
       it('should build theoretical scales', inject(function(WorkspaceService) {
         var problem = {
           criteria: {
-            'crit1': {},
+            'crit1': {
+              dataSources: [{
+                id: 'ds1'
+              }]
+            },
             'crit2': {
-              scale: [
-                10,
-                20
-              ]
+              dataSources:[{
+                id: 'ds2',
+                scale: [
+                  10,
+                  20
+                ]
+              }]
             }
           }
         };
         var result = WorkspaceService.buildTheoreticalScales(problem);
-        expect(result.crit1[0]).toBe(-Infinity);
-        expect(result.crit1[1]).toBe(Infinity);
-        expect(result.crit2[0]).toBe(problem.criteria.crit2.scale[0]);
-        expect(result.crit2[1]).toBe(problem.criteria.crit2.scale[1]);
+        expect(result.ds1[0]).toBe(-Infinity);
+        expect(result.ds1[1]).toBe(Infinity);
+        expect(result.ds2[0]).toBe(problem.criteria.crit2.dataSources[0].scale[0]);
+        expect(result.ds2[1]).toBe(problem.criteria.crit2.dataSources[0].scale[1]);
       }));
     });
 
