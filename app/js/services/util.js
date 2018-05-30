@@ -1,6 +1,5 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
-
   return angular.module('elicit.util', [])
     .factory('intervalHull', function() {
       return function(scaleRanges) {
@@ -8,13 +7,13 @@ define(['lodash', 'angular'], function(_, angular) {
           return [-Infinity, +Infinity];
         }
         return [
-          Math.min.apply(null, _.filter(_.map(_.values(scaleRanges), function(alt) {
-            return alt['2.5%'];
+          Math.min.apply(null, _.filter(_.map(_.values(scaleRanges), function(alternative) {
+            return alternative['2.5%'];
           })), function(value){
             return value !== null;
           }),
-          Math.max.apply(null, _.filter(_.map(_.values(scaleRanges), function(alt) {
-            return alt['97.5%'];
+          Math.max.apply(null, _.filter(_.map(_.values(scaleRanges), function(alternative) {
+            return alternative['97.5%'];
           })), function(value){
             return value !== null;
           })
