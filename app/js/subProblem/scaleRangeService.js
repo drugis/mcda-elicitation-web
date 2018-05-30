@@ -1,9 +1,14 @@
 'use strict';
 define(['lodash', 'angular'], function(_) {
-  var dependencies = ['intervalHull', 'numberFilter'];
+  var dependencies = [
+    'intervalHull',
+    'numberFilter'
+  ];
 
-  var ScaleRangeService = function(intervalHull, numberFilter) {
-
+  var ScaleRangeService = function(
+    intervalHull,
+    numberFilter
+  ) {
     function log10(x) {
       return Math.log(x) / Math.log(10);
     }
