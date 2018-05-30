@@ -1,12 +1,17 @@
 'use strict';
 define(['lodash', 'angular', 'mcda/controllers/helpers/wizard'], function(_, angular, Wizard) {
-  var dependencies = ['$state', '$injector', '$timeout',
+  var dependencies = ['$state',
+    '$injector',
+    '$timeout',
     'PartialValueFunctionService',
     'OrderingService'
   ];
-  var SwingWeightingService = function($state, $injector, $timeout,
+  var SwingWeightingService = function($state,
+    $injector,
+    $timeout,
     PartialValueFunctionService,
-    OrderingService) {
+    OrderingService
+  ) {
 
     function initWeightingScope(scope,
       $stateParams,
