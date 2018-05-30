@@ -20,18 +20,18 @@ define(['lodash'],
       };
 
       function getValues(criteria) {
-        return _.reduce(criteria, function(accum, criterion, key) {
-          accum[key] = 100;
+        return _.reduce(_.keys(criteria), function(accum, criterionId) {
+          accum[criterionId] = 100;
           return accum;
         }, {});
       }
 
       function toBackEnd(mostImportantCriterion) {
-        return function(value, key) {
+        return function(value, criterionId) {
           return {
             type: 'exact swing',
             ratio: 1 / (value / 100),
-            criteria: [mostImportantCriterion, key]
+            criteria: [mostImportantCriterion, criterionId]
           };
         };
       }
