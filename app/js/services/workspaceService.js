@@ -100,12 +100,13 @@ define(['lodash', 'angular'], function(_, angular) {
         });
       }
 
-      newProblem.criteria = _.reduce(newProblem.criteria, function(accum, criterion, criterionId) {
+      newProblem.criteria = _.mapValues(newProblem.criteria, function(criterion) {
         var newCriterion = _.cloneDeep(criterion);
-        newCriterion.dataSources = [_.merge({}, criterion.dataSources[0], subProblemDefinition.ranges[criterion.dataSources[0].id])];
-        accum[criterionId] = newCriterion;
-        return accum;
-      }, {});
+        newCriterion.dataSources = _.map(newCriterion.dataSources, function(dataSource){
+          return _.merge({}, dataSource, subProblemDefinition.ranges[dataSource.id]);
+        });
+        return newCriterion;
+      });
       return newProblem;
     }
 
