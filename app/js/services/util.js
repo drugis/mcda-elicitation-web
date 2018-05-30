@@ -8,12 +8,16 @@ define(['lodash', 'angular'], function(_, angular) {
           return [-Infinity, +Infinity];
         }
         return [
-          Math.min.apply(null, _.map(_.values(scaleRanges), function(alt) {
+          Math.min.apply(null, _.filter(_.map(_.values(scaleRanges), function(alt) {
             return alt['2.5%'];
-          })),
-          Math.max.apply(null, _.map(_.values(scaleRanges), function(alt) {
+          })), function(value){
+            return value !== null;
+          }),
+          Math.max.apply(null, _.filter(_.map(_.values(scaleRanges), function(alt) {
             return alt['97.5%'];
-          }))
+          })), function(value){
+            return value !== null;
+          })
         ];
       };
     })
