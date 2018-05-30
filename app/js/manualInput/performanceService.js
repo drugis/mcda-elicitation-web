@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_) {
+define(['angular'], function() {
   var dependencies = [];
   var PerformanceService = function() {
     function buildExactPerformance(value, input) {

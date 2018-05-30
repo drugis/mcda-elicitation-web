@@ -15,7 +15,7 @@
             <input type="radio" ng-model="model.choice" value="local"> Local file:
             <file-reader model="local"></file-reader>
           </label>
-          <span ng-if="workspaceValidity &&!workspaceValidity.isValid" class="alert">Invalid workspace: {{workspaceValidity.errorMessage}}. <a href="/manual.html#data-upload">Supported upload format.</a></span>
+          <span ng-if="workspaceValidity && !workspaceValidity.isValid" class="alert">Invalid workspace: {{workspaceValidity.errorMessage}}. <a href="/manual.html#data-upload">Supported upload format.</a></span>
         </div>
         <p>Or manually input data:</p>
         <div style="margin-left: 2rem;">

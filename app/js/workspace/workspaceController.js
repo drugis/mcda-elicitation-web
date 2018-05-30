@@ -6,8 +6,7 @@ define(['angular'], function(angular) {
     '$stateParams',
     'WorkspaceResource',
     'SchemaService',
-    'currentWorkspace',
-    'currentSchemaVersion'
+    'currentWorkspace'
   ];
   var WorkspaceController = function(
     $scope,
@@ -15,8 +14,7 @@ define(['angular'], function(angular) {
     $stateParams,
     WorkspaceResource,
     SchemaService,
-    currentWorkspace,
-    currentSchemaVersion
+    currentWorkspace
   ) {
     // functions
     $scope.editTitle = editTitle;
