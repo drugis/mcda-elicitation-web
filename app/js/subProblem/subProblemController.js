@@ -9,7 +9,8 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     'mcdaRootPath',
     'subProblems',
     'SubProblemResource',
-    'EffectsTableService'
+    'EffectsTableService',
+    'WorkspaceService'
   ];
 
   var SubProblemController = function($scope, $stateParams, $modal, $state,
@@ -20,7 +21,9 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     mcdaRootPath,
     subProblems,
     SubProblemResource,
-    EffectsTableService) {
+    EffectsTableService,
+    WorkspaceService
+  ) {
     // functions 
     $scope.intervalHull = intervalHull;
     $scope.openCreateDialog = openCreateDialog;
@@ -35,17 +38,7 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
       $scope.scales = scales;
     });
 
-    var mergedProblem = {
-      alternatives: _.cloneDeep(_.omit($scope.problem.alternatives, $scope.subProblem.definition.excludedAlternatives)),
-      criteria: _.cloneDeep(_.omit($scope.problem.criteria, $scope.subProblem.definition.excludedCriteria))
-    };
-    mergedProblem.criteria = _.merge(mergedProblem.criteria, $scope.subProblem.definition.ranges);
-    mergedProblem.criteria = _.mapValues(mergedProblem.criteria, function(criterion) {
-      criterion.dataSources = _.filter(criterion.dataSources, function(dataSource) {
-        return !_.includes($scope.subProblem.definition.excludedDataSources, dataSource.id);
-      });
-      return criterion;
-    });
+    var mergedProblem = WorkspaceService.mergeBaseAndSubProblem($scope.problem, $scope.subProblem.definition);
     $scope.areTooManyDataSourcesIncluded = _.find(mergedProblem.criteria, function(criterion) {
       return criterion.dataSources.length > 1;
     });
