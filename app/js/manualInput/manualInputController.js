@@ -306,6 +306,7 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.state.criteria = _.sortBy($scope.state.criteria, function(criterion) {
         return !criterion.isFavorable;
       });
+      updateCriteriaRows();
     }
 
     function checkForUnknownCriteria(criteria) {
