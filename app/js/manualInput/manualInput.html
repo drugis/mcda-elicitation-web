@@ -116,7 +116,7 @@
             <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.description}}</td>
             <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.unitOfMeasurement}}</td>
             <td ng-if="state.useFavorability && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.isFavorable}}</td>
-            <td ng-style="row.criterion.inputMetaData.inputType === 'Unknown'? {'color': 'red'} : {}">{{row.dataSource.inputType}}</td>
+            <td ng-style="row.dataSource.inputType === 'Unknown'? {'color': 'red'} : {}">{{row.dataSource.inputType}}</td>
             <td>{{row.dataSource.inputType === 'distribution' ? inputMethods[row.dataSource.inputMethod] : 'NA'}}</td>
             <td>{{row.dataSource.inputType === 'effect' || row.dataSource.inputMethod === 'assistedDistribution' ? row.dataSource.dataType
               : 'NA'}}
@@ -252,6 +252,7 @@
             <th>Description</th>
             <th>Unit of measurement</th>
             <th ng-if="state.useFavorability">Is favorable?</th>
+            <th>Reference</th>
             <th ng-repeat="alternative in state.alternatives" style="min-width:80px">{{alternative.title}}</th>
           </tr>
         </thead>
@@ -261,6 +262,7 @@
             <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.description}}</td>
             <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.unitOfMeasurement}}</td>
             <td ng-if="state.useFavorability && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.isFavorable}}</td>
+            <td>{{row.dataSource.source}}</td>
             <td ng-repeat="alternative in state.alternatives">
               <effect-input-helper input-data-source="row.dataSource" alternative="alternative" input-data="state.inputData[row.dataSource.id][alternative.id]"
                 change-callback="checkInputData"></effect-input-helper>
