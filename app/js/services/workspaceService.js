@@ -22,12 +22,19 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function buildTheoreticalScales(problem) {
-      return _.fromPairs(_.map(problem.criteria, function(val, key) {
-        var scale = val.scale || [null, null];
-        scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
-        scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
-        return [key, scale];
-      }));
+      var theoreticalScales = {};
+      _.forEach(problem.criteria, function(criterion) {
+        _.forEach(criterion.dataSources, function(dataSource) {
+          if (dataSource.scale) {
+            theoreticalScales[dataSource.id] = dataSource.scale;
+            theoreticalScales[dataSource.id][0] = theoreticalScales[dataSource.id][0] !== null ? theoreticalScales[dataSource.id][0] : -Infinity;
+            theoreticalScales[dataSource.id][1] = theoreticalScales[dataSource.id][1] !== null ? theoreticalScales[dataSource.id][1] : Infinity;
+          } else {
+            theoreticalScales[dataSource.id] = [-Infinity, Infinity];
+          }
+        });
+      });
+      return theoreticalScales;
     }
 
     function getObservedScales(scope, problem) {
@@ -102,7 +109,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
       newProblem.criteria = _.mapValues(newProblem.criteria, function(criterion) {
         var newCriterion = _.cloneDeep(criterion);
-        newCriterion.dataSources = _.map(newCriterion.dataSources, function(dataSource){
+        newCriterion.dataSources = _.map(newCriterion.dataSources, function(dataSource) {
           return _.merge({}, dataSource, subProblemDefinition.ranges[dataSource.id]);
         });
         return newCriterion;

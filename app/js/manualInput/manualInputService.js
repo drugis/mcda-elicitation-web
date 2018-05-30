@@ -93,17 +93,6 @@ define(['lodash', 'angular'], function(_) {
       }, {});
     }
 
-    function addScale(dataSource) {
-      var scale = [-Infinity, Infinity];
-      if (dataSource.dataType === 'dichotomous' ||
-        (dataSource.dataType === 'continuous' && dataSource.parameterOfInterest === 'cumulativeProbability')) {
-        scale = [0, 1];
-      }
-      return _.extend({}, dataSource, {
-        scale: scale
-      });
-    }
-
     function createInputFromOldWorkspace(criteria, alternatives, oldWorkspace) {
       return _.reduce(oldWorkspace.problem.performanceTable, function(accum, tableEntry) {
         var dataSourceForEntry;
@@ -161,12 +150,21 @@ define(['lodash', 'angular'], function(_) {
         var newCriterion = _.pick(criterion, [
           'title',
           'description',
-          'unitOfMeasurement',
-          'dataSources']);
-        newCriterion.dataSources = _.map(newCriterion.dataSources, addScale);
+          'unitOfMeasurement']);
+        newCriterion.dataSources = _.map(criterion.dataSources, addScale);
         return [criterion.id, newCriterion];
       });
       return _.fromPairs(newCriteria);
+    }
+
+    function addScale(dataSource) {
+      var newDataSource = _.cloneDeep(dataSource);
+      newDataSource.scale = [-Infinity, Infinity];
+      if (dataSource.dataType === 'dichotomous' ||
+        (dataSource.dataType === 'continuous' && dataSource.parameterOfInterest === 'cumulativeProbability')) {
+        newDataSource.scale = [0, 1];
+      }
+      return newDataSource;
     }
 
     function buildAlternatives(alternatives) {

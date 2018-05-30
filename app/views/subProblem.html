@@ -51,7 +51,7 @@
       <tbody>
         <tr ng-repeat="row in scaleTable">
           <td>{{row.criterion.title}}</td>
-          <td>{{scales.theoreticalScales[row.criterion.id][0] | number}}, {{scales.theoreticalScales[row.criterion.id][1] | number}}</td>
+          <td>{{scales.theoreticalScales[row.dataSource.id][0] | number}}, {{scales.theoreticalScales[row.dataSource.id][1] | number}}</td>
           <td>
             <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[0] | number"></span> ,
             <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[1] | number"></span>
