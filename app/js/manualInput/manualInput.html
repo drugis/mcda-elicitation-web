@@ -121,6 +121,18 @@
               <a ng-click="removeDataSource(row)" tooltip="Remove dataSource" ng-if="row.criterion.numberOfDataSources > 1">
                 <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
               </a>
+                <div style="line-height: 10px; margin-bottom: 4px;">
+                  <a ng-if="$index !==0 && !row.isFirstRow" ng-click="dataSourceUp(row)" class="nav-arrow">
+                    <i style="line-height:0px;" class="fa fa-caret-up"></i>
+                  </a>
+                  <i ng-if="$index === 0 || row.isFirstRow" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
+                </div>
+                <div style="line-height: 10px;">
+                  <a ng-if="$index-1 !== criteriaRows.length && criteriaRows[$index+1].criterion.id === row.criterion.id" ng-click="dataSourceDown(row)" class="nav-arrow">
+                    <i style="line-height:0px;" class="fa fa-caret-down"></i>
+                  </a>
+                  <i ng-if="$index-1 === criteriaRows.length || criteriaRows[$index+1].criterion.id !== row.criterion.id"  style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
+                </div>
             </td>
             <td ng-style="row.dataSource.inputType === 'Unknown'? {'color': 'red'} : {}">{{row.dataSource.inputType}}</td>
             <td>{{row.dataSource.inputType === 'distribution' ? inputMethods[row.dataSource.inputMethod] : 'NA'}}</td>
