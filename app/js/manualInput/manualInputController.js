@@ -45,6 +45,7 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.openCriterionModal = openCriterionModal;
     $scope.removeAlternative = removeAlternative;
     $scope.removeCriterion = removeCriterion;
+    $scope.removeDataSource = removeDataSource;
     $scope.saveInProgress = saveInProgress;
 
     // init
@@ -229,6 +230,16 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function removeAlternative(alternative) {
       $scope.state.alternatives = _.reject($scope.state.alternatives, ['id', alternative.id]);
+    }
+
+    function removeDataSource(row){
+      var criterion = _.find($scope.state.criteria, function(criterion){
+        return criterion.id === row.criterion.id;
+      });
+      criterion.dataSources = _.reject(criterion.dataSources, ['id', row.dataSource.id]);
+      checkForUnknownCriteria($scope.state.criteria);
+      favorabilityChanged();
+      updateCriteriaRows();
     }
 
     function saveInProgress() {

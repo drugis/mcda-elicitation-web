@@ -118,7 +118,7 @@
             <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.unitOfMeasurement}}</td>
             <td ng-if="state.useFavorability && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.isFavorable}}</td>
             <td>
-              <a ng-click="removeDataSource(row.dataSource)" tooltip="Remove dataSource" ng-if="row.criterion.numberOfDataSources > 1">
+              <a ng-click="removeDataSource(row)" tooltip="Remove dataSource" ng-if="row.criterion.numberOfDataSources > 1">
                 <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
               </a>
             </td>
