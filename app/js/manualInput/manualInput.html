@@ -54,6 +54,7 @@
               <inline-help help-key="criterion-unit"></inline-help>
             </th>
             <th ng-if="state.useFavorability">Is favorable?</th>
+            <th></th>
             <th>Input type</th>
             <th>Input method</th>
             <th>Data type</th>
@@ -116,6 +117,11 @@
             <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.description}}</td>
             <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.unitOfMeasurement}}</td>
             <td ng-if="state.useFavorability && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.isFavorable}}</td>
+            <td>
+              <a ng-click="removeDataSource(row.dataSource)" tooltip="Remove dataSource" ng-if="row.criterion.numberOfDataSources > 1">
+                <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
+              </a>
+            </td>
             <td ng-style="row.dataSource.inputType === 'Unknown'? {'color': 'red'} : {}">{{row.dataSource.inputType}}</td>
             <td>{{row.dataSource.inputType === 'distribution' ? inputMethods[row.dataSource.inputMethod] : 'NA'}}</td>
             <td>{{row.dataSource.inputType === 'effect' || row.dataSource.inputMethod === 'assistedDistribution' ? row.dataSource.dataType
