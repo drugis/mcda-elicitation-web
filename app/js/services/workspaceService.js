@@ -163,8 +163,8 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function setDefaultObservedScales(problem, observedScales) {
       var newProblem = _.cloneDeep(problem);
-      _.forEach(newProblem.criteria, function(criterion, key) {
-        var scale = observedScales[key];
+      _.forEach(newProblem.criteria, function(criterion) {
+        var scale = observedScales[criterion.dataSources[0].id];
         if (!criterion.dataSources[0].pvf || _.isEmpty(criterion.dataSources[0].pvf.range)) {
           criterion.dataSources[0].pvf = {
             range: getMinMax(scale)

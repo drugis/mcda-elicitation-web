@@ -355,7 +355,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
       it('should set observed scale ranges if none are on the problem & subproblem', function() {
         var scales = {
           observed: {
-            crit1: {
+            ds1: {
               alt1: {
                 '50%': 1,
                 '2.5%': 2,
@@ -367,7 +367,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
                 '97.5%': 6
               }
             },
-            crit2: {
+            ds2: {
               alt1: {
                 '50%': 7,
                 '2.5%': 8,
@@ -383,8 +383,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
         };
         var problem = {
           criteria: {
-            crit1: { dataSources: [{}] },
-            crit2: { dataSources: [{}] }
+            crit1: { dataSources: [{id: 'ds1'}] },
+            crit2: { dataSources: [{id: 'ds2'}] }
           }
         };
 
@@ -394,6 +394,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           criteria: {
             crit1: {
               dataSources: [{
+                id:'ds1',
                 pvf: {
                   range: [1, 6]
                 }
@@ -401,6 +402,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
             },
             crit2: {
               dataSources: [{
+                id:'ds2',
                 pvf: {
                   range: [7, 12]
                 }
@@ -413,7 +415,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
       it('should not override already-configured scale ranges on the problem or subproblem', function() {
         var scales = {
           observed: {
-            crit1: {
+            ds1: {
               alt1: {
                 '50%': 1,
                 '2.5%': 2,
@@ -425,7 +427,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
                 '97.5%': 6
               }
             },
-            crit2: {
+            ds2: {
               alt1: {
                 '50%': 7,
                 '2.5%': 8,
@@ -446,13 +448,16 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           criteria: {
             crit1: {
               dataSources: [{
+                id:'ds1',
                 pvf: {
                   range: [3, 5]
                 }
               }]
             },
             crit2: {
-              dataSources: [{}]
+              dataSources: [{
+                id:'ds2',
+              }]
             }
           }
         };
@@ -463,6 +468,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           criteria: {
             crit1: {
               dataSources: [{
+                id:'ds1',
                 pvf: {
                   range: [3, 5]
                 }
@@ -470,6 +476,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
             },
             crit2: {
               dataSources: [{
+                id:'ds2',
                 pvf: {
                   range: [7, 12]
                 }
