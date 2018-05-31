@@ -34,6 +34,8 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.addDataSource = addDataSource;
     $scope.alternativeDown = alternativeDown;
     $scope.alternativeUp = alternativeUp;
+    $scope.dataSourceDown = dataSourceDown;
+    $scope.dataSourceUp = dataSourceUp;
     $scope.checkInputData = checkInputData;
     $scope.criterionDown = criterionDown;
     $scope.criterionUp = criterionUp;
@@ -127,6 +129,42 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.state.alternatives[idx - 1] = mem;
     }
 
+    function criterionDown(idx) {
+      var mem = $scope.state.criteria[idx];
+      $scope.state.criteria[idx] = $scope.state.criteria[idx + 1];
+      $scope.state.criteria[idx + 1] = mem;
+      updateCriteriaRows();
+    }
+
+    function criterionUp(idx) {
+      var mem = $scope.state.criteria[idx];
+      $scope.state.criteria[idx] = $scope.state.criteria[idx - 1];
+      $scope.state.criteria[idx - 1] = mem;
+      updateCriteriaRows();
+    }
+
+    function dataSourceDown(row) {
+      moveDataSource(row, 'down');
+    }
+
+    function dataSourceUp(row) {
+      moveDataSource(row, 'up');
+    }
+
+    function moveDataSource(row, direction) {
+      var criterion = _.find($scope.state.criteria, function(criterion) {
+        return criterion.id === row.criterion.id;
+      });
+      var idx = _.findIndex(criterion.dataSources, function(dataSource) {
+        return dataSource.id === row.dataSource.id;
+      });
+      var newIdx = direction === 'up' ? idx - 1 : idx + 1;
+      var mem = criterion.dataSources[idx];
+      criterion.dataSources[idx] = criterion.dataSources[newIdx];
+      criterion.dataSources[newIdx] = mem;
+      updateCriteriaRows();
+    }
+
     function createProblem() {
       var problem = ManualInputService.createProblem($scope.state.criteria, $scope.state.alternatives,
         $scope.state.title, $scope.state.description, $scope.state.inputData, $scope.state.useFavorability);
@@ -149,20 +187,6 @@ define(['lodash', 'angular'], function(_, angular) {
         });
       });
       return problem;
-    }
-
-    function criterionDown(idx) {
-      var mem = $scope.state.criteria[idx];
-      $scope.state.criteria[idx] = $scope.state.criteria[idx + 1];
-      $scope.state.criteria[idx + 1] = mem;
-      updateCriteriaRows();
-    }
-
-    function criterionUp(idx) {
-      var mem = $scope.state.criteria[idx];
-      $scope.state.criteria[idx] = $scope.state.criteria[idx - 1];
-      $scope.state.criteria[idx - 1] = mem;
-      updateCriteriaRows();
     }
 
     function favorabilityChanged() {
@@ -232,8 +256,8 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.state.alternatives = _.reject($scope.state.alternatives, ['id', alternative.id]);
     }
 
-    function removeDataSource(row){
-      var criterion = _.find($scope.state.criteria, function(criterion){
+    function removeDataSource(row) {
+      var criterion = _.find($scope.state.criteria, function(criterion) {
         return criterion.id === row.criterion.id;
       });
       criterion.dataSources = _.reject(criterion.dataSources, ['id', row.dataSource.id]);
