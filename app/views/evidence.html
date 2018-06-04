@@ -72,8 +72,28 @@
           <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.unitOfMeasurement}}</td>
           <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.description}}</td>
           <td ng-if="!row.isHeaderRow">
-            <a ng-if="row.dataSource.sourceLink" href="{{row.dataSource.sourceLink}}">{{row.dataSource.source}}</a>
-            <span ng-if="!row.dataSource.sourceLink">{{row.dataSource.source}}</span>
+            <div class="grid-x">
+              <div class="cell small-2">
+                <div style="line-height: 10px; margin-bottom: 4px;">
+                  <a ng-if="$index !==0 && !row.isFirstRow" ng-click="dataSourceUp(row)" class="nav-arrow">
+                    <i style="line-height:0px;" class="fa fa-caret-up"></i>
+                  </a>
+                  <i ng-if="$index === 0 || row.isFirstRow" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
+                </div>
+                <div style="line-height: 10px;">
+                  <a ng-if="$index-1 !== rows.length && rows[$index+1].criterion.id === row.criterion.id" ng-click="dataSourceDown(row)"
+                    class="nav-arrow">
+                    <i style="line-height:0px;" class="fa fa-caret-down"></i>
+                  </a>
+                  <i ng-if="$index-1 === rows.length || rows[$index+1].criterion.id !== row.criterion.id" style="line-height:0px; color:#bbb"
+                    class="fa fa-caret-down"></i>
+                </div>
+              </div>
+              <div class="small-10">
+                <a ng-if="row.dataSource.sourceLink" href="{{row.dataSource.sourceLink}}">{{row.dataSource.source}}</a>
+                <span ng-if="!row.dataSource.sourceLink">{{row.dataSource.source}}</span>
+              </div>
+            </div>
           </td>
           <td ng-if="!row.isHeaderRow && isStandAlone">
             <div ng-if="row.dataSource.strengthOfEvidence">

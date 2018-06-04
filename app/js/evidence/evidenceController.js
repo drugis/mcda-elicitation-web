@@ -23,6 +23,8 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.criterionDown = criterionDown;
     $scope.alternativeUp = alternativeUp;
     $scope.alternativeDown = alternativeDown;
+    $scope.dataSourceDown = dataSourceDown;
+    $scope.dataSourceUp = dataSourceUp;
     $scope.downloadWorkspace = downloadWorkspace;
     $scope.getIndex = getIndex;
 
@@ -108,6 +110,27 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       $scope.rows = EffectsTableService.buildEffectsTable($scope.problem.valueTree, $scope.criteria);
     }
 
+    function dataSourceDown(row) {
+      moveDataSource(row, 'down');
+    }
+
+    function dataSourceUp(row) {
+      moveDataSource(row, 'up');
+    }
+
+    function moveDataSource(row, direction) {
+      var criterion = _.find($scope.criteria, function(criterion) {
+        return criterion.id === row.criterion.id;
+      });
+      var idx = _.findIndex(criterion.dataSources, function(dataSource) {
+        return dataSource.id === row.dataSource.id;
+      });
+      var newIdx = direction === 'up' ? idx - 1 : idx + 1;
+      var mem = criterion.dataSources[idx];
+      criterion.dataSources[idx] = criterion.dataSources[newIdx];
+      criterion.dataSources[newIdx] = mem;
+      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem.valueTree, $scope.criteria);
+    }
     function editCriterion(criterion, criterionKey) {
       $modal.open({
         templateUrl: mcdaRootPath + 'js/evidence/editCriterion.html',
