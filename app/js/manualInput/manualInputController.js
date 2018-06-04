@@ -31,7 +31,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     // functions
     $scope.addAlternative = addAlternative;
-    $scope.addDataSource = addDataSource;
+    $scope.editDataSource = editDataSource;
     $scope.alternativeDown = alternativeDown;
     $scope.alternativeUp = alternativeUp;
     $scope.dataSourceDown = dataSourceDown;
@@ -89,20 +89,29 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.treatmentInputField.value = '';
     }
 
-    function addDataSource(criterionRow) {
+    function editDataSource(criterion, oldDataSource) {
       $modal.open({
         templateUrl: '/js/manualInput/addDataSource.html',
         controller: 'AddDataSourceController',
         resolve: {
           callback: function() {
             return function(newDataSource) {
-              var criterion = _.find($scope.state.criteria, ['id', criterionRow.id]);
-              criterion.dataSources.push(newDataSource);
+              var crit = _.find($scope.state.criteria, ['id', criterion.id]);
+              if (oldDataSource) {
+                crit.dataSources[_.findIndex(crit.dataSources, function(dataSource) {
+                  return dataSource.id === newDataSource.id;
+                })] = newDataSource;
+              } else {
+                crit.dataSources.push(newDataSource);
+              }
               updateCriteriaRows();
             };
           },
           criterion: function() {
-            return _.find($scope.state.criteria, ['id', criterionRow.id]);
+            return _.find($scope.state.criteria, ['id', criterion.id]);
+          },
+          oldDataSource: function() {
+            return oldDataSource;
           }
         }
       });
@@ -122,7 +131,7 @@ define(['lodash', 'angular'], function(_, angular) {
     function canCriterionGoDown(criterion) {
       var index = _.findIndex($scope.state.criteria, ['id', criterion.id]);
       return index !== $scope.state.criteria.length - 1 &&
-        (!$scope.state.useFavorability || 
+        (!$scope.state.useFavorability ||
           (criterion.isFavorable === $scope.state.criteria[index + 1].isFavorable));
     }
 
