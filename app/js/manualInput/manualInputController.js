@@ -89,14 +89,14 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.treatmentInputField.value = '';
     }
 
-    function editDataSource(criterion, oldDataSource) {
+    function editDataSource(row, oldDataSource) {
       $modal.open({
         templateUrl: '/js/manualInput/addDataSource.html',
         controller: 'AddDataSourceController',
         resolve: {
           callback: function() {
             return function(newDataSource) {
-              var crit = _.find($scope.state.criteria, ['id', criterion.id]);
+              var crit = _.find($scope.state.criteria, ['id', row.criterion.id]);
               if (oldDataSource) {
                 crit.dataSources[_.findIndex(crit.dataSources, function(dataSource) {
                   return dataSource.id === newDataSource.id;
@@ -108,7 +108,7 @@ define(['lodash', 'angular'], function(_, angular) {
             };
           },
           criterion: function() {
-            return _.find($scope.state.criteria, ['id', criterion.id]);
+            return _.find($scope.state.criteria, ['id', row.criterion.id]);
           },
           oldDataSource: function() {
             return oldDataSource;

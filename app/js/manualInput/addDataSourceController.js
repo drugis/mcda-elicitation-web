@@ -13,21 +13,26 @@ define(['lodash'], function(_) {
       isInvalid: false
     };
     $scope.oldDataSource = oldDataSource;
-    $scope.dataSource = oldDataSource ? _.cloneDeep(oldDataSource) : {
-      id: generateUuid(),
-      inputType: 'distribution',
-      inputMethod: 'assistedDistribution',
-      dataType: 'dichotomous',
-      parameterOfInterest: 'eventProbability'
-    };
-    $scope.errors = ['No reference entered'];
+    if (oldDataSource) {
+      $scope.dataSource = _.cloneDeep(oldDataSource);
+    } else {
+      $scope.dataSource = _.cloneDeep($scope.criterion.dataSources[0]);
+      delete $scope.dataSource.source;
+      $scope.dataSource.id = generateUuid();
+    }
     checkError();
 
-
+    // public
     function checkError() {
       $scope.errors = $scope.sourceLinkValidity.isInvalid ? ['Invalid reference URL'] : [];
       if (!$scope.dataSource.source) {
         $scope.errors.push('No reference entered');
+      }
+      var duplicateRef = _.find($scope.criterion.dataSources, function(dataSource) {
+        return dataSource.id !== $scope.dataSource.id && dataSource.source === $scope.dataSource.source;
+      });
+      if (duplicateRef) {
+        $scope.errors.push('Duplicate referenence');
       }
     }
 
