@@ -98,7 +98,7 @@
                     <i class="fa fa-edit icon-fixed-width"></i>
                   </a> {{row.criterion.title}}
                   <br>
-                  <button class="button tiny" ng-click="editDataSource(row.criterion)">Add data source</button>
+                  <button class="button tiny" ng-click="editDataSource(row)">Add data source</button>
                 </div>
               </div>
             </td>
@@ -132,7 +132,7 @@
                   </div>
                 </div>
                 <div class="cell small-4">
-                  <a ng-click="editDataSource(row.criterion, row.dataSource)" tooltip="Edit data source">
+                  <a ng-click="editDataSource(row, row.dataSource)" tooltip="Edit data source">
                     <i class="fa fa-edit icon-fixed-width"></i>
                   </a>
                 </div>
