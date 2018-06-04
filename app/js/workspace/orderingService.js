@@ -10,26 +10,11 @@ define(['lodash'], function(_) {
           return getNewOrdering(problem);
         }
 
-        var orderedAlternatives = _(ordering.alternatives)
-          .filter(function(alternativeId) {
-            return problem.alternatives[alternativeId];
-          })
-          .map(function(alternativeId) {
-            return _.extend({}, problem.alternatives[alternativeId], {
-              id: alternativeId
-            });
-          })
-          .value();
-        var orderedCriteria = _(ordering.criteria)
-          .filter(function(criterionId) {
-            return problem.criteria[criterionId];
-          })
-          .map(function(criterionId) {
-            return _.extend({}, problem.criteria[criterionId], {
-              id: criterionId
-            });
-          })
-          .value();
+        var orderedAlternatives = order(ordering.alternatives, problem.alternatives);
+        var orderedCriteria = order(ordering.criteria, problem.criteria);
+        if (ordering.dataSources) {
+          orderedCriteria = orderDataSources(ordering.dataSources, orderedCriteria);
+        }
         return {
           alternatives: orderedAlternatives,
           criteria: orderedCriteria
@@ -37,22 +22,27 @@ define(['lodash'], function(_) {
       });
     }
 
+    function saveOrdering(stateParams, criteria, alternatives) {
+      return OrderingResource.put(stateParams, {
+        criteria: _.map(criteria, 'id'),
+        alternatives: _.map(alternatives, 'id'),
+        dataSources: _.reduce(criteria, function(accum, criterion) {
+          return accum.concat(_.map(criterion.dataSources, 'id'));
+        }, [])
+      }).$promise;
+    }
+
     function getNewOrdering(problem) {
-      return {
+      var ordering = {
         alternatives: _.map(problem.alternatives, function(alternative, alternativeId) {
           return _.extend({}, alternative, { id: alternativeId });
         }),
         criteria: getOrderedCriteria(problem)
       };
+      return ordering;
     }
 
-    function saveOrdering(stateParams, criteria, alternatives) {
-      return OrderingResource.put(stateParams, {
-        criteria: _.map(criteria, 'id'),
-        alternatives: _.map(alternatives, 'id')
-      }).$promise;
-    }
-
+    // private
     function getOrderedCriteria(problem) {
       if (!problem.valueTree) {
         return _.map(problem.criteria, function(criterion, criterionId) {
@@ -78,6 +68,33 @@ define(['lodash'], function(_) {
       }, []);
     }
 
+    function order(ordering, objectsToOrder) {
+      return _(ordering)
+        .filter(function(id) {
+          return objectsToOrder[id];
+        })
+        .map(function(id) {
+          return _.extend({}, objectsToOrder[id], {
+            id: id
+          });
+        })
+        .value();
+    }
+
+    function orderDataSources(ordering, criteria) {
+      return _.map(criteria, function(criterion) {
+        var newCriterion = _.cloneDeep(criterion);
+        newCriterion.dataSources = _(ordering)
+          .filter(function(dataSourceId) {
+            return _.find(criterion.dataSources, ['id', dataSourceId]);
+          })
+          .map(function(dataSourceId) {
+            return _.find(criterion.dataSources, ['id', dataSourceId]);
+          })
+          .value();
+        return newCriterion;
+      });
+    }
     return {
       getOrderedCriteriaAndAlternatives: getOrderedCriteriaAndAlternatives,
       saveOrdering: saveOrdering,

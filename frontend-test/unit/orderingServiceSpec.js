@@ -25,7 +25,8 @@ define(['angular-mocks', 'mcda/workspace/workspace'], function() {
         var order = {
           ordering: {
             criteria: ['crit2', 'crit3', 'crit1', 'crit4'],
-            alternatives: ['alt1', 'alt3', 'alt2']
+            alternatives: ['alt1', 'alt3', 'alt2'],
+            dataSources: ['ds1', 'ds2', 'ds3', 'ds4', 'ds5', 'ds6',]
           }
         };
         orderDefer.resolve(order);
@@ -34,13 +35,25 @@ define(['angular-mocks', 'mcda/workspace/workspace'], function() {
         var problem = {
           criteria: {
             crit1: {
-              title: 'criterion1'
+              title: 'criterion1',
+              dataSources: [
+                { id: 'ds1' },
+                { id: 'ds2' }
+              ]
             },
             crit2: {
-              title: 'criterion2'
+              title: 'criterion2',
+              dataSources: [
+                { id: 'ds3' },
+                { id: 'ds4' }
+              ]
             },
             crit4: {
-              title: 'criterion4'
+              title: 'criterion4',
+              dataSources: [
+                { id: 'ds5' },
+                { id: 'ds6' }
+              ]
             }
           },
           alternatives: {
@@ -69,13 +82,25 @@ define(['angular-mocks', 'mcda/workspace/workspace'], function() {
           }],
           criteria: [{
             id: 'crit2',
-            title: 'criterion2'
+            title: 'criterion2',
+            dataSources: [
+              { id: 'ds3' },
+              { id: 'ds4' }
+            ]
           }, {
             id: 'crit1',
-            title: 'criterion1'
+            title: 'criterion1',
+            dataSources: [
+              { id: 'ds1' },
+              { id: 'ds2' }
+            ]
           }, {
             id: 'crit4',
-            title: 'criterion4'
+            title: 'criterion4',
+            dataSources: [
+              { id: 'ds5' },
+              { id: 'ds6' }
+            ]
           }]
         };
         orderingService.getOrderedCriteriaAndAlternatives(problem, workspaceId).then(function(result) {
@@ -91,13 +116,16 @@ define(['angular-mocks', 'mcda/workspace/workspace'], function() {
         var problem = {
           criteria: {
             crit1: {
-              title: 'criterion1'
+              title: 'criterion1',
+              dataSources: [{ id: 'ds1' }]
             },
             crit2: {
-              title: 'criterion2'
+              title: 'criterion2',
+              dataSources: [{ id: 'ds2' }]
             },
             crit4: {
-              title: 'criterion4'
+              title: 'criterion4',
+              dataSources: [{ id: 'ds3' }, { id: 'ds4' }]
             }
           },
           alternatives: {
@@ -126,13 +154,19 @@ define(['angular-mocks', 'mcda/workspace/workspace'], function() {
           }],
           criteria: [{
             id: 'crit1',
-            title: 'criterion1'
+            title: 'criterion1',
+            dataSources: [{ id: 'ds1' }]
           }, {
             id: 'crit2',
-            title: 'criterion2'
+            title: 'criterion2',
+            dataSources: [{ id: 'ds2' }]
           }, {
             id: 'crit4',
-            title: 'criterion4'
+            title: 'criterion4',
+            dataSources: [
+              { id: 'ds3' },
+              { id: 'ds4' }
+            ]
           }]
         };
         orderingService.getOrderedCriteriaAndAlternatives(problem, workspaceId).then(function(result) {

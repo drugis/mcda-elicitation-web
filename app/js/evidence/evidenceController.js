@@ -129,6 +129,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       var mem = criterion.dataSources[idx];
       criterion.dataSources[idx] = criterion.dataSources[newIdx];
       criterion.dataSources[newIdx] = mem;
+      OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
       $scope.rows = EffectsTableService.buildEffectsTable($scope.problem.valueTree, $scope.criteria);
     }
     function editCriterion(criterion, criterionKey) {
