@@ -31,5 +31,5 @@ module.exports = function(db) {
   return {
     getOrdering: getOrdering,
     updateOrdering: updateOrdering
-  }
-}
+  };
+};
