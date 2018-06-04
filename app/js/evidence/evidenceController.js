@@ -27,6 +27,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.dataSourceUp = dataSourceUp;
     $scope.downloadWorkspace = downloadWorkspace;
     $scope.getIndex = getIndex;
+    $scope.editDataSource = editDataSource;
 
     // init
     $scope.scales = $scope.workspace.scales.observed;
@@ -204,6 +205,27 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       var data = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(problemWithTitle, null, 2));
       link.href = 'data:' + data;
       link.click();
+    }
+
+    function editDataSource(row) {
+      $modal.open({
+        templateUrl: mcdaRootPath + 'js/evidence/editDataSource.html',
+        controller: 'EditDataSourceController',
+        resolve: {
+          row: function() {
+            return row;
+          },
+          callback: function() {
+            return function(newDataSource){
+              var criterion = $scope.workspace.problem.criteria[row.criterion.id];
+              criterion.dataSources[_.findIndex(criterion.dataSources, ['id', row.dataSource.id])] = newDataSource;
+              WorkspaceResource.save($stateParams, $scope.workspace).$promise.then(function() {
+                $state.reload();
+              });
+            };
+          }
+        }
+      });
     }
   };
   return dependencies.concat(EvidenceController);

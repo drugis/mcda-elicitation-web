@@ -1,0 +1,41 @@
+<form ng-submit="save()">
+  <div class="grid-x">
+    <div class="cell">
+      <h3>Edit data source</h3>
+    </div>
+    <div class="cell">
+      <label>Reference</label>
+    </div>
+    <div class="cell">
+      <input type="text" ng-model="dataSource.source" ng-change="checkDuplicateReference()">
+    </div>
+    <div class="cell">
+      <label>Reference link</label>
+    </div>
+    <div class="cell">
+      <input type="text" ng-model="dataSource.sourceLink" ng-change="checkUrl()">
+    </div>
+    <div class="cell">
+      <label>Strength of evidence</label>
+    </div>
+    <div class="cell">
+      <input type="text" ng-model="dataSource.strengthOfEvidence">
+    </div>
+    <div class="cell">
+      <label>Uncertainties</label>
+    </div>
+    <div class="cell">
+      <input type="text" ng-model="dataSource.uncertainties">
+    </div>
+    <div class="cell alert" ng-repeat="error in errors">
+      <em>{{error}}</em>
+    </div>
+    <div class="cell">
+      <button class="button success" type="submit" ng-disabled="errors.length">Save</button>
+    </div>
+  </div>
+  <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+    <span aria-hidden="true">&times;</span>
+  </button>
+  </div>
+</form>
