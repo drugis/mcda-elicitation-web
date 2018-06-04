@@ -98,7 +98,7 @@
                     <i class="fa fa-edit icon-fixed-width"></i>
                   </a> {{row.criterion.title}}
                   <br>
-                  <button class="button tiny" ng-click="addDataSource(row.criterion, state.criteria)">Add data source</button>
+                  <button class="button tiny" ng-click="editDataSource(row.criterion)">Add data source</button>
                 </div>
               </div>
             </td>
@@ -115,7 +115,7 @@
                     <i class="fa fa-trash icon-fixed-width" style="color:#bbb"></i>
                   </a>
                 </div>
-                <div class="cell small-8">
+                <div class="cell small-4">
                   <div style="line-height: 10px; margin-bottom: 4px;">
                     <a ng-if="$index !==0 && !row.isFirstRow" ng-click="dataSourceUp(row)" class="nav-arrow">
                       <i style="line-height:0px;" class="fa fa-caret-up"></i>
@@ -130,6 +130,11 @@
                     <i ng-if="$index-1 === criteriaRows.length || criteriaRows[$index+1].criterion.id !== row.criterion.id" style="line-height:0px; color:#bbb"
                       class="fa fa-caret-down"></i>
                   </div>
+                </div>
+                <div class="cell small-4">
+                  <a ng-click="editDataSource(row.criterion, row.dataSource)" tooltip="Edit data source">
+                    <i class="fa fa-edit icon-fixed-width"></i>
+                  </a>
                 </div>
               </div>
             </td>
