@@ -39,6 +39,8 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.checkInputData = checkInputData;
     $scope.criterionDown = criterionDown;
     $scope.criterionUp = criterionUp;
+    $scope.canCriterionGoUp = canCriterionGoUp;
+    $scope.canCriterionGoDown = canCriterionGoDown;
     $scope.createProblem = createProblem;
     $scope.favorabilityChanged = favorabilityChanged;
     $scope.goToStep1 = goToStep1;
@@ -94,7 +96,6 @@ define(['lodash', 'angular'], function(_, angular) {
         resolve: {
           callback: function() {
             return function(newDataSource) {
-
               var criterion = _.find($scope.state.criteria, ['id', criterionRow.id]);
               criterion.dataSources.push(newDataSource);
               updateCriteriaRows();
@@ -109,6 +110,20 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function updateCriteriaRows() {
       $scope.criteriaRows = EffectsTableService.buildTableRows($scope.state.criteria);
+    }
+
+    function canCriterionGoUp(criterion) {
+      var index = _.findIndex($scope.state.criteria, ['id', criterion.id]);
+      return index !== 0 &&
+        (!$scope.state.useFavorability ||
+          (criterion.isFavorable === $scope.state.criteria[index - 1].isFavorable));
+    }
+
+    function canCriterionGoDown(criterion) {
+      var index = _.findIndex($scope.state.criteria, ['id', criterion.id]);
+      return index !== $scope.state.criteria.length - 1 &&
+        (!$scope.state.useFavorability || 
+          (criterion.isFavorable === $scope.state.criteria[index + 1].isFavorable));
     }
 
     function checkInputData() {
@@ -129,14 +144,16 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.state.alternatives[idx - 1] = mem;
     }
 
-    function criterionDown(idx) {
+    function criterionDown(criterionId) {
+      var idx = _.findIndex($scope.state.criteria, ['id', criterionId]);
       var mem = $scope.state.criteria[idx];
       $scope.state.criteria[idx] = $scope.state.criteria[idx + 1];
       $scope.state.criteria[idx + 1] = mem;
       updateCriteriaRows();
     }
 
-    function criterionUp(idx) {
+    function criterionUp(criterionId) {
+      var idx = _.findIndex($scope.state.criteria, ['id', criterionId]);
       var mem = $scope.state.criteria[idx];
       $scope.state.criteria[idx] = $scope.state.criteria[idx - 1];
       $scope.state.criteria[idx - 1] = mem;
@@ -149,20 +166,6 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function dataSourceUp(row) {
       moveDataSource(row, 'up');
-    }
-
-    function moveDataSource(row, direction) {
-      var criterion = _.find($scope.state.criteria, function(criterion) {
-        return criterion.id === row.criterion.id;
-      });
-      var idx = _.findIndex(criterion.dataSources, function(dataSource) {
-        return dataSource.id === row.dataSource.id;
-      });
-      var newIdx = direction === 'up' ? idx - 1 : idx + 1;
-      var mem = criterion.dataSources[idx];
-      criterion.dataSources[idx] = criterion.dataSources[newIdx];
-      criterion.dataSources[newIdx] = mem;
-      updateCriteriaRows();
     }
 
     function createProblem() {
@@ -348,6 +351,20 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.hasUnknownInputType = _.find(criteria, function(criterion) {
         return _.find(criterion.dataSources, ['inputType', 'Unknown']);
       });
+    }
+
+    function moveDataSource(row, direction) {
+      var criterion = _.find($scope.state.criteria, function(criterion) {
+        return criterion.id === row.criterion.id;
+      });
+      var idx = _.findIndex(criterion.dataSources, function(dataSource) {
+        return dataSource.id === row.dataSource.id;
+      });
+      var newIdx = direction === 'up' ? idx - 1 : idx + 1;
+      var mem = criterion.dataSources[idx];
+      criterion.dataSources[idx] = criterion.dataSources[newIdx];
+      criterion.dataSources[newIdx] = mem;
+      updateCriteriaRows();
     }
   };
   return dependencies.concat(ManualInputController);
