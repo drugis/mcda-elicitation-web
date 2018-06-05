@@ -11,14 +11,14 @@
         <input type="text" ng-model="criterion.title" ng-change="isCreationBlocked()">
       </div>
       <div class="cell">
+        <label>Description (optional)</label>
+        <input type="text" ng-model="criterion.description">
+      </div>
+      <div class="cell">
         <label>Unit of measurement (optional)
           <inline-help help-key="criterion-unit"></inline-help>
         </label>
         <input type="text" ng-model="criterion.unitOfMeasurement">
-      </div>
-      <div class="cell">
-        <label>Description (optional)</label>
-        <input type="text" ng-model="criterion.description">
       </div>
       <div class="cell" ng-if="useFavorability">
         <label>Favorability
@@ -29,7 +29,7 @@
         <input type="radio" ng-model="criterion.isFavorable" ng-value="true" id="favorable">
         <label for="favorable">Favorable</label>
       </div>
-      <div class="cell" ng-if="criterion.dataSources.length === 1">
+      <div class="cell" ng-if="isAddOperation">
         <input-data-source source="criterion.dataSources[0]" is-invalid-source-link="sourceLinkValidity" 
         change-callback="isCreationBlocked"></input-data-source>
       </div>

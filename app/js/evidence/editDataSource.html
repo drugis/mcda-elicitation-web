@@ -4,25 +4,29 @@
       <h3>Edit data source</h3>
     </div>
     <div class="cell">
-      <label>Reference</label>
+      <label>Reference <inline-help help-key="criterion-source"></inline-help></label>
     </div>
     <div class="cell">
       <input type="text" ng-model="dataSource.source" ng-change="checkDuplicateReference()">
     </div>
     <div class="cell">
-      <label>Reference link</label>
+      <label>Reference link <inline-help help-key="criterion-source-link"></inline-help></label>
     </div>
     <div class="cell">
       <input type="text" ng-model="dataSource.sourceLink" ng-change="checkUrl()">
     </div>
     <div class="cell">
-      <label>Strength of evidence</label>
+      <label>Strength of evidence
+        <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
+    </label>
     </div>
     <div class="cell">
       <input type="text" ng-model="dataSource.strengthOfEvidence">
     </div>
     <div class="cell">
-      <label>Uncertainties</label>
+      <label>Uncertainties
+        <!-- <inline-help help-key="uncertainties"></inline-help> -->
+      </label>
     </div>
     <div class="cell">
       <input type="text" ng-model="dataSource.uncertainties">

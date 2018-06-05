@@ -55,11 +55,11 @@
             </th>
             <th ng-if="state.useFavorability">Is favorable?</th>
             <th>Buttons</th>
+            <th>Reference
             <th>Input type</th>
             <th>Input method</th>
             <th>Data type</th>
             <th>Parameter of interest</th>
-            <th>Reference
               <inline-help help-key="criterion-source"></inline-help>
             </th>
             <th>Uncertainties / Strength of evidence
@@ -104,7 +104,7 @@
             </td>
             <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.description}}</td>
             <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.unitOfMeasurement}}</td>
-            <td ng-if="state.useFavorability && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.isFavorable}}</td>
+            <td ng-if="state.useFavorability && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.isFavorable ? 'yes': 'no'}}</td>
             <td>
               <div class="grid-x">
                 <div class="cell small-4">
@@ -138,6 +138,9 @@
                 </div>
               </div>
             </td>
+            <td>
+              <a href="{{row.dataSource.sourceLink}}">{{row.dataSource.source}}</a>
+            </td>
             <td ng-style="row.dataSource.inputType === 'Unknown'? {'color': 'red'} : {}">{{row.dataSource.inputType}}</td>
             <td>{{row.dataSource.inputType === 'distribution' ? inputMethods[row.dataSource.inputMethod] : 'NA'}}</td>
             <td>{{row.dataSource.inputType === 'effect' || row.dataSource.inputMethod === 'assistedDistribution' ? row.dataSource.dataType
@@ -145,9 +148,6 @@
             </td>
             <td>{{row.dataSource.inputType !== 'distribution' || row.dataSource.inputMethod === 'assistedDistribution' ? parameterOfInterest[row.dataSource.parameterOfInterest]
               : 'NA'}}</td>
-            <td>
-              <a href="{{row.dataSource.sourceLink}}">{{row.dataSource.source}}</a>
-            </td>
             <td>
               <b>Unc: </b> {{row.dataSource.uncertainties}}
               <br>
