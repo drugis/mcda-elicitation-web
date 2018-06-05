@@ -6,7 +6,7 @@ define(['lodash'], function(_) {
     $scope.cancel = $modalInstance.close();
     $scope.save = save;
     $scope.checkErrors = checkErrors;
-    
+
     // init
     $scope.dataSource = _.cloneDeep(row.dataSource);
     checkErrors();
@@ -16,15 +16,15 @@ define(['lodash'], function(_) {
       callback($scope.dataSource);
       $modalInstance.close();
     }
-    function checkErrors(){
-      $scope.errors=[];
+    function checkErrors() {
+      $scope.errors = [];
       checkMissingReference();
       checkDuplicateReference();
       checkUrl();
     }
 
-    function checkMissingReference(){
-      if(!$scope.dataSource.source){
+    function checkMissingReference() {
+      if (row.criterion.numberOfDataSources > 1 && !$scope.dataSource.source) {
         $scope.errors.push('Missing reference');
       }
     }
@@ -36,7 +36,7 @@ define(['lodash'], function(_) {
       }
     }
 
-    function checkDuplicateReference(){
+    function checkDuplicateReference() {
       return;
     }
   };
