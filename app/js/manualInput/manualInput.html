@@ -24,8 +24,6 @@
         <textarea ng-model="state.description" width="100%" rows="5"></textarea>
       </label>
     </div>
-  </div>
-  <div class="grid-x">
     <div class="cell">
       <h4>Criteria
         <inline-help help-key="criterion"></inline-help>
@@ -42,8 +40,50 @@
       <button class="button small" type="button" ng-click="openCriterionModal()">
         <i class="fa fa-plus"></i> Add Criterion</button>
     </div>
-  </div>
-  <div class="grid-x">
+    <div class="cell callout" ng-repeat="criterion in state.criteria">
+      <div class="grid-x">
+        <div class="cell">
+          <h5>{{criterion.title}}</h5>
+        </div>
+        <div class="cell">
+          Description: {{criterion.description}}
+        </div>
+        <div class="cell">
+          Unit of measurement: {{criterion.unitOfMeasurement}}
+        </div>
+        <div class="cell">
+          Favorable: {{criterion.isFavorable ? 'yes' : 'no'}}
+        </div>
+        <div class="cell">
+          <table>
+            <thead>
+              <tr>
+                <th>Reference
+                  <inline-help help-key="criterion-source"></inline-help>
+                </th>
+                <th>Input type</th>
+                <th>Input method</th>
+                <th>Data type</th>
+                <th>Parameter of interest</th>
+                <th>Uncertainties / Strength of evidence
+                  <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="dataSource in criterion.dataSources">
+                <td>{{dataSource.source}}</td>
+                <td>{{dataSource.inputType}}</td>
+                <td>{{dataSource.inputMethod}}</td>
+                <td>{{dataSource.dataType}}</td>
+                <td>{{dataSource.parameterOfInterest}}</td>
+                <td>{{dataSource.uncertainties}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
     <div class="cell large-10">
       <table width="100%">
         <thead>
@@ -156,8 +196,6 @@
         </tbody>
       </table>
     </div>
-  </div>
-  <div class="grid-x">
     <div class="cell">
       <h4>Alternatives
         <inline-help help-key="alternative"></inline-help>
@@ -219,8 +257,6 @@
         </tbody>
       </table>
     </div>
-  </div>
-  <div class="grid-x">
     <div class="cell">
       <button class="button" ng-disabled="!state.title || state.criteria.length < 2|| state.alternatives.length < 2 ||
       hasUnknownInputType || (state.useFavorability && hasMissingFavorability)" type="button" ng-click="goToStep2()" tooltip="Enter effects table data">
