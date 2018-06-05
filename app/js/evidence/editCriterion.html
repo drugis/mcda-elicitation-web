@@ -15,6 +15,14 @@
     <div class="cell">
       <textarea rows="4" ng-model="criterion.description"></textarea>
     </div>
+    <div class="cell">
+      <label>Unit of measurement
+        <inline-help help-key="criterion-unit"></inline-help>
+      </label>
+    </div>
+    <div class="cell">
+      <input type="text" ng-model="criterion.unitOfMeasurement">
+    </div>
     <div class="cell" ng-if="valueTree.children">
         <label>Favorability
           <inline-help help-key="favorability"></inline-help>
@@ -24,14 +32,6 @@
         <input type="radio" ng-model="favorabilityStatus.isFavorable" ng-value="true" id="favorable">
         <label for="favorable">Favorable</label>
       </div>
-    <div class="cell">
-      <label>Unit of measurement
-        <inline-help help-key="criterion-unit"></inline-help>
-      </label>
-    </div>
-    <div class="cell">
-      <input type="text" ng-model="criterion.unitOfMeasurement">
-    </div>
     <div class="cell">
       <button class="button success" type="submit" ng-disabled="!criterion.title || !isTitleUnique">Save</button>
     </div>
