@@ -42,159 +42,118 @@
     </div>
     <div class="cell callout" ng-repeat="criterion in state.criteria">
       <div class="grid-x">
-        <div class="cell">
-          <h5>{{criterion.title}}</h5>
+        <div class="cell shrink" style="display:flex; align-items:center;">
+          <div style="margin-right: 16px">
+            <div style="line-height: 10px; margin-bottom: 10px;">
+              <a ng-if="canCriterionGoUp(criterion, $index)" ng-click="criterionUp($index)" class="nav-arrow">
+                <i style="line-height:0px;" class="fa fa-caret-up fa-2x"></i>
+              </a>
+              <i ng-if="!canCriterionGoUp(criterion, $index)" style="line-height:0px; color:#bbb" class="fa fa-caret-up fa-2x"></i>
+            </div>
+            <div style="line-height: 10px;">
+              <a ng-if="canCriterionGoDown(criterion, $index)" ng-click="criterionDown($index)" class="nav-arrow">
+                <i style="line-height:0px;" class="fa fa-caret-down fa-2x"></i>
+              </a>
+              <i ng-if="!canCriterionGoDown(criterion, $index)" style="line-height:0px; color:#bbb" class="fa fa-caret-down fa-2x"></i>
+            </div>
+          </div>
         </div>
-        <div class="cell">
-          Description: {{criterion.description}}
-        </div>
-        <div class="cell">
-          Unit of measurement: {{criterion.unitOfMeasurement}}
-        </div>
-        <div class="cell">
-          Favorable: {{criterion.isFavorable ? 'yes' : 'no'}}
-        </div>
-        <div class="cell">
-          <table>
-            <thead>
-              <tr>
-                <th>Reference
-                  <inline-help help-key="criterion-source"></inline-help>
-                </th>
-                <th>Input type</th>
-                <th>Input method</th>
-                <th>Data type</th>
-                <th>Parameter of interest</th>
-                <th>Uncertainties / Strength of evidence
-                  <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr ng-repeat="dataSource in criterion.dataSources">
-                <td>{{dataSource.source}}</td>
-                <td>{{dataSource.inputType}}</td>
-                <td>{{dataSource.inputMethod}}</td>
-                <td>{{dataSource.dataType}}</td>
-                <td>{{dataSource.parameterOfInterest}}</td>
-                <td>{{dataSource.uncertainties}}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="cell auto">
+          <div class="grid-x">
+            <div class="cell large-10">
+              <h4>{{criterion.title}}</h4>
+            </div>
+            <div class="cell large-2">
+              <div class="right">
+                <a ng-click="openCriterionModal(criterion)" tooltip="Edit criterion">
+                  <i class="fa fa-edit fa-2x icon-fixed-width"></i>
+                </a>
+                <a ng-click="removeCriterion(criterion)" tooltip="Remove criterion">
+                  <i class="fa fa-trash fa-2x icon-fixed-width" style="color:red"></i>
+                </a>
+              </div>
+            </div>
+            <div class="cell" ng-if="criterion.description">
+              <b>Description:</b> {{criterion.description}}
+            </div>
+            <div class="cell" ng-if="criterion.unitOfMeasurement">
+              <b>Unit of measurement:</b> {{criterion.unitOfMeasurement}}
+            </div>
+            <div class="cell" ng-if="state.useFavorability">
+              <b>Favorable:</b> {{criterion.isFavorable ? 'yes' : 'no'}}
+            </div>
+            <div class="cell">
+              <button class="button small" ng-click="editDataSource(criterion)">Add data source</button>
+            </div>
+            <div class="cell">
+              <table>
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th style="min-width: 15rem;">Reference
+                      <inline-help help-key="criterion-source"></inline-help>
+                    </th>
+                    <th>Input type</th>
+                    <th>Input method</th>
+                    <th>Data type</th>
+                    <th>Parameter of interest</th>
+                    <th>Uncertainties / Strength of evidence
+                      <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
+                    </th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="dataSource in criterion.dataSources track by dataSource.id">
+                    <td>
+                      <div style="line-height: 10px; margin-bottom: 4px;">
+                        <a ng-if="$index !==0" ng-click="dataSourceUp(criterion, $index)" class="nav-arrow">
+                          <i style="line-height:0px;" class="fa fa-caret-up"></i>
+                        </a>
+                        <i ng-if="$index === 0" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
+                      </div>
+                      <div style="line-height: 10px;">
+                        <a ng-if="$index !== criterion.dataSources.length-1" ng-click="dataSourceDown(criterion, $index)" class="nav-arrow">
+                          <i style="line-height:0px;" class="fa fa-caret-down"></i>
+                        </a>
+                        <i ng-if="$index === criterion.dataSources.length-1" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
+                      </div>
+                    </td>
+                    <td>
+                      <a href="{{dataSource.sourceLink}}">{{dataSource.source}}</a>
+                    </td>
+                    <td ng-style="dataSource.inputType === 'Unknown'? {'color': 'red'} : {}">{{dataSource.inputType}}</td>
+                    <td>{{dataSource.inputType === 'distribution' ? dataSource.inputMethod :'NA'}}</td>
+                    <td>{{dataSource.inputType === 'effect' || dataSource.inputMethod === 'assistedDistribution' ? dataSource.dataType
+                      : 'NA'}}</td>
+                    <td>{{dataSource.inputType !== 'distribution' || dataSource.inputMethod === 'assistedDistribution' ? dataSource.parameterOfInterest
+                      : 'NA'}}</td>
+                    <td>
+                      <b>Unc: </b> {{dataSource.uncertainties}}
+                      <br>
+                      <b>SoE: </b>{{dataSource.strengthOfEvidence}}
+                    </td>
+                    <td>
+                      <a ng-click="editDataSource(criterion, $index)" tooltip="Edit data source">
+                        <i class="fa fa-edit icon-fixed-width"></i>
+                      </a>
+                    </td>
+                    <td>
+                      <a ng-click="removeDataSource(criterion, dataSource)" tooltip="Remove data source" ng-if="criterion.dataSources.length > 1">
+                        <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
+                      </a>
+                      <a tooltip="Cannot remove the only data source" ng-if="criterion.dataSources.length < 2">
+                        <i class="fa fa-trash icon-fixed-width" style="color:#bbb"></i>
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="cell large-10">
-      <table width="100%">
-        <thead>
-          <tr>
-            <th style="min-width: 15rem;">Title</th>
-            <th>Description</th>
-            <th>Unit
-              <inline-help help-key="criterion-unit"></inline-help>
-            </th>
-            <th ng-if="state.useFavorability">Is favorable?</th>
-            <th>Buttons</th>
-            <th>Reference
-              <inline-help help-key="criterion-source"></inline-help>
-            </th>
-            <th>Input type</th>
-            <th>Input method</th>
-            <th>Data type</th>
-            <th>Parameter of interest</th>
-            <th>Uncertainties / Strength of evidence
-              <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-if="!state.criteria.length">
-            <td colspan="9">
-              <em>No criteria defined</em>
-            </td>
-          </tr>
-          <tr ng-repeat="row in criteriaRows">
-            <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">
-              <div class="grid-x">
-                <div class="cell small-2">
-                  <div style="line-height: 10px; margin-bottom: 4px;">
-                    <a ng-if="canCriterionGoUp(row.criterion)" ng-click="criterionUp(row.criterion.id)" class="nav-arrow">
-                      <i style="line-height:0px;" class="fa fa-caret-up"></i>
-                    </a>
-                    <i ng-if="!canCriterionGoUp(row.criterion)" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
-                  </div>
-                  <div style="line-height: 10px;">
-                    <a ng-if="canCriterionGoDown(row.criterion)" ng-click="criterionDown(row.criterion.id)" class="nav-arrow">
-                      <i style="line-height:0px;" class="fa fa-caret-down"></i>
-                    </a>
-                    <i ng-if="!canCriterionGoDown(row.criterion)" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
-                  </div>
-                </div>
-                <div class="cell small-10">
-                  <a ng-click="removeCriterion(row.criterion)" tooltip="Remove criterion">
-                    <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
-                  </a>
-                  <a ng-click="openCriterionModal(row.criterion)" tooltip="Edit criterion">
-                    <i class="fa fa-edit icon-fixed-width"></i>
-                  </a> {{row.criterion.title}}
-                  <br>
-                  <button class="button tiny" ng-click="editDataSource(row)">Add data source</button>
-                </div>
-              </div>
-            </td>
-            <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.description}}</td>
-            <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.unitOfMeasurement}}</td>
-            <td ng-if="state.useFavorability && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.isFavorable ? 'yes': 'no'}}</td>
-            <td>
-              <div class="grid-x">
-                <div class="cell small-4">
-                  <a ng-click="removeDataSource(row)" tooltip="Remove dataSource" ng-if="row.criterion.numberOfDataSources > 1">
-                    <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
-                  </a>
-                  <a tooltip="Remove dataSource" ng-if="row.criterion.numberOfDataSources <= 1">
-                    <i class="fa fa-trash icon-fixed-width" style="color:#bbb"></i>
-                  </a>
-                </div>
-                <div class="cell small-4">
-                  <div style="line-height: 10px; margin-bottom: 4px;">
-                    <a ng-if="$index !==0 && !row.isFirstRow" ng-click="dataSourceUp(row)" class="nav-arrow">
-                      <i style="line-height:0px;" class="fa fa-caret-up"></i>
-                    </a>
-                    <i ng-if="$index === 0 || row.isFirstRow" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
-                  </div>
-                  <div style="line-height: 10px;">
-                    <a ng-if="$index-1 !== criteriaRows.length && criteriaRows[$index+1].criterion.id === row.criterion.id" ng-click="dataSourceDown(row)"
-                      class="nav-arrow">
-                      <i style="line-height:0px;" class="fa fa-caret-down"></i>
-                    </a>
-                    <i ng-if="$index-1 === criteriaRows.length || criteriaRows[$index+1].criterion.id !== row.criterion.id" style="line-height:0px; color:#bbb"
-                      class="fa fa-caret-down"></i>
-                  </div>
-                </div>
-                <div class="cell small-4">
-                  <a ng-click="editDataSource(row, row.dataSource)" tooltip="Edit data source">
-                    <i class="fa fa-edit icon-fixed-width"></i>
-                  </a>
-                </div>
-              </div>
-            </td>
-            <td>
-              <a href="{{row.dataSource.sourceLink}}">{{row.dataSource.source}}</a>
-            </td>
-            <td ng-style="row.dataSource.inputType === 'Unknown'? {'color': 'red'} : {}">{{row.dataSource.inputType}}</td>
-            <td>{{row.dataSource.inputType === 'distribution' ? inputMethods[row.dataSource.inputMethod] : 'NA'}}</td>
-            <td>{{row.dataSource.inputType === 'effect' || row.dataSource.inputMethod === 'assistedDistribution' ? row.dataSource.dataType
-              : 'NA'}}
-            </td>
-            <td>{{row.dataSource.inputType !== 'distribution' || row.dataSource.inputMethod === 'assistedDistribution' ? parameterOfInterest[row.dataSource.parameterOfInterest]
-              : 'NA'}}</td>
-            <td>
-              <b>Unc: </b> {{row.dataSource.uncertainties}}
-              <br>
-              <b>SoE: </b>{{row.dataSource.strengthOfEvidence}}</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
     <div class="cell">
       <h4>Alternatives
@@ -319,7 +278,7 @@
             <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.title}}</td>
             <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.description}}</td>
             <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.unitOfMeasurement}}</td>
-            <td ng-if="state.useFavorability && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.isFavorable}}</td>
+            <td ng-if="state.useFavorability && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.isFavorable? 'yes' : 'no'}}</td>
             <td>{{row.dataSource.source}}</td>
             <td ng-repeat="alternative in state.alternatives">
               <effect-input-helper input-data-source="row.dataSource" alternative="alternative" input-data="state.inputData[row.dataSource.id][alternative.id]"
