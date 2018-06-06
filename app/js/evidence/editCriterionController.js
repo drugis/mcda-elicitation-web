@@ -3,7 +3,7 @@ define(['lodash'], function(_) {
   var dependencies = ['$scope', '$modalInstance', 'criterion', 'criterionId', 'criteria', 'valueTree', 'callback'];
   var EditCriterionController = function($scope, $modalInstance, criterion, criterionId, criteria, valueTree, callback) {
     // functions
-    $scope.cancel = cancel;
+    $scope.cancel = $modalInstance.close;
     $scope.save = save;
     $scope.checkForDuplicateNames = checkForDuplicateNames;
 
@@ -24,10 +24,6 @@ define(['lodash'], function(_) {
     function save() {
       var favorabilityChanged = $scope.valueTree.children ? $scope.favorabilityStatus.originalFavorability !== $scope.favorabilityStatus.isFavorable : false;
       callback($scope.criterion, favorabilityChanged);
-      $modalInstance.close();
-    }
-
-    function cancel() {
       $modalInstance.close();
     }
 

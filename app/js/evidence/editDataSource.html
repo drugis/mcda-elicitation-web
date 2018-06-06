@@ -4,13 +4,17 @@
       <h3>Edit data source</h3>
     </div>
     <div class="cell">
-      <label>Reference <inline-help help-key="criterion-source"></inline-help></label>
+      <label>Reference
+        <inline-help help-key="criterion-source"></inline-help>
+      </label>
     </div>
     <div class="cell">
       <input type="text" ng-model="dataSource.source" ng-change="checkErrors()">
     </div>
     <div class="cell">
-      <label>Reference link <inline-help help-key="criterion-source-link"></inline-help></label>
+      <label>Reference link
+        <inline-help help-key="criterion-source-link"></inline-help>
+      </label>
     </div>
     <div class="cell">
       <input type="text" ng-model="dataSource.sourceLink" ng-change="checkErrors()">
@@ -18,7 +22,7 @@
     <div class="cell">
       <label>Strength of evidence
         <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
-    </label>
+      </label>
     </div>
     <div class="cell">
       <input type="text" ng-model="dataSource.strengthOfEvidence">
@@ -41,5 +45,4 @@
   <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
     <span aria-hidden="true">&times;</span>
   </button>
-  </div>
 </form>
