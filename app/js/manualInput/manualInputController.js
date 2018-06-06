@@ -96,7 +96,7 @@ define(['lodash', 'angular'], function(_, angular) {
         resolve: {
           callback: function() {
             return function(newDataSource) {
-              if (oldDataSourceIdx) {
+              if (oldDataSourceIdx >= 0) {
                 criterion.dataSources[oldDataSourceIdx] = newDataSource;
               } else {
                 criterion.dataSources.push(newDataSource);
