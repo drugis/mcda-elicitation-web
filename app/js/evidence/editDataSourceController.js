@@ -3,7 +3,7 @@ define(['lodash'], function(_) {
   var dependencies = ['$scope', '$modalInstance', 'row', 'callback'];
   var EditCriterionController = function($scope, $modalInstance, row, callback) {
     // functions
-    $scope.cancel = $modalInstance.close();
+    $scope.cancel = $modalInstance.close;
     $scope.save = save;
     $scope.checkErrors = checkErrors;
 

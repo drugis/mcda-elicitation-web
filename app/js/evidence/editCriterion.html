@@ -24,21 +24,20 @@
       <input type="text" ng-model="criterion.unitOfMeasurement">
     </div>
     <div class="cell" ng-if="valueTree.children">
-        <label>Favorability
-          <inline-help help-key="favorability"></inline-help>
-        </label>
-        <input type="radio" ng-model="favorabilityStatus.isFavorable" ng-value="false" id="not-favorable">
-        <label for="not-favorable">Not favorable</label>
-        <input type="radio" ng-model="favorabilityStatus.isFavorable" ng-value="true" id="favorable">
-        <label for="favorable">Favorable</label>
-      </div>
+      <label>Favorability
+        <inline-help help-key="favorability"></inline-help>
+      </label>
+      <input type="radio" ng-model="favorabilityStatus.isFavorable" ng-value="false" id="not-favorable">
+      <label for="not-favorable">Not favorable</label>
+      <input type="radio" ng-model="favorabilityStatus.isFavorable" ng-value="true" id="favorable">
+      <label for="favorable">Favorable</label>
+    </div>
     <div class="cell">
       <button class="button success" type="submit" ng-disabled="!criterion.title || !isTitleUnique">Save</button>
     </div>
     <div class="cell alert" ng-if="!isTitleUnique">Duplicate title</div>
-  </div>
-  <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
-    <span aria-hidden="true">&times;</span>
-  </button>
+    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
 </form>
