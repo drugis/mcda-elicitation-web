@@ -121,7 +121,8 @@
                       </div>
                     </td>
                     <td>
-                      <a href="{{dataSource.sourceLink}}">{{dataSource.source}}</a>
+                      <div ng-if="dataSource.sourceLink"><a href="{{dataSource.sourceLink}}">{{dataSource.source}}</a></div>
+                      <div ng-if="!dataSource.sourceLink">{{dataSource.source}}<div>
                     </td>
                     <td ng-style="dataSource.inputType === 'Unknown'? {'color': 'red'} : {}">{{dataSource.inputType}}</td>
                     <td>{{dataSource.inputType === 'distribution' ? dataSource.inputMethod :'NA'}}</td>
