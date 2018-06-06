@@ -1,7 +1,21 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modalInstance', 'generateUuid', 'callback', 'criterion', 'oldDataSource'];
-  var AddDataSourceController = function($scope, $modalInstance, generateUuid, callback, criterion, oldDataSource) {
+  var dependencies = [
+    '$scope',
+    '$modalInstance',
+    'generateUuid',
+    'callback',
+    'criterion',
+    'oldDataSourceIdx'
+  ];
+  var AddDataSourceController = function(
+    $scope,
+    $modalInstance,
+    generateUuid,
+    callback,
+    criterion,
+    oldDataSourceIdx
+  ) {
     // functions
     $scope.addDataSource = addDataSource;
     $scope.cancel = $modalInstance.close;
@@ -12,9 +26,9 @@ define(['lodash'], function(_) {
     $scope.sourceLinkValidity = {
       isInvalid: false
     };
-    $scope.oldDataSource = oldDataSource;
-    if (oldDataSource) {
-      $scope.dataSource = _.cloneDeep(oldDataSource);
+    $scope.oldDataSourceIdx = oldDataSourceIdx;
+    if (oldDataSourceIdx >= 0) {
+      $scope.dataSource = _.cloneDeep(criterion.dataSources[oldDataSourceIdx]);
     } else {
       $scope.dataSource = _.cloneDeep($scope.criterion.dataSources[0]);
       delete $scope.dataSource.source;

@@ -12,7 +12,7 @@ define(['lodash', 'angular'], function(_, angular) {
     function updateProblemToCurrentSchema(problem) {
       var newProblem = angular.copy(problem);
       if (!problem.schemaVersion) {
-        newProblem = updateToVersionOnePointZeroPointzero(newProblem);
+        newProblem = updateToVersionOnePointZeroPointZero(newProblem);
       }
       if (newProblem.schemaVersion === currentSchemaVersion) {
         return newProblem;
@@ -26,7 +26,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     //private 
-    function updateToVersionOnePointZeroPointzero(problem) {
+    function updateToVersionOnePointZeroPointZero(problem) {
       problem.criteria = _.mapValues(problem.criteria, function(criterion, criterionId) {
         var newCriterion = _.pick(criterion, ['title', 'description', 'unitOfMeasurement', 'scale']);
         var dataSource = _.pick(criterion, ['pvf', 'source', 'sourceLink', 'strengthOfEvidence', 'uncertainties']);
