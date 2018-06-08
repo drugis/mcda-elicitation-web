@@ -1,0 +1,18 @@
+<div class="grid-x">
+  <div class="callout secondary">
+    <div class="cell" ng-if="useFavorability">
+      <h5>Favorable criteria</h5>
+    </div>
+    <div class="cell" ng-repeat="criterion in favorableCriteria">
+      <criterion-card criterion="criterion" can-go-up="!$first" can-go-down="!$last" go-up="goUp" go-down="goDown" idx="$index">
+    </div>
+  </div>
+  <div class="callout secondary" ng-if="useFavorability">
+    <div class="cell" ng-if="useFavorability">
+      <h5>Unfavorable criteria</h5>
+    </div>
+    <div class="cell" ng-repeat="criterion in unfavorableCriteria">
+      <criterion-card criterion="criterion" can-go-up="!$first" can-go-down="!$last" go-up="goUp" go-down="goDown" idx="$index">
+    </div>
+  </div>
+</div>
