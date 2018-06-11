@@ -41,133 +41,7 @@
         <i class="fa fa-plus"></i> Add Criterion</button>
     </div>
     <div class="cell">
-      <criterion-list criteria="state.criteria" use-favorability="state.useFavorability"></criterion-list>
-    </div>
-
-  </div>
-
-  <div class="cell" ng-repeat="criterion in state.criteria">
-    <div class="grid-x" ng-if="state.useFavorability">
-      <div class="cell callout secondary" ng-if="!criterion.isFavorable && ($index===0 || state.criteria[$index-1].isFavorable)">
-        <h5>Unfavorable criteria</h5>
-      </div>
-    </div>
-    <div class="grid-x callout">
-      <div class="cell shrink" style="display:flex; align-items:center;">
-        <div style="margin-right: 16px">
-          <div style="line-height: 10px; margin-bottom: 10px;">
-            <a ng-if="canCriterionGoUp(criterion, $index)" ng-click="criterionUp($index)" class="nav-arrow">
-              <i style="line-height:0px;" class="fa fa-caret-up fa-2x"></i>
-            </a>
-            <i ng-if="!canCriterionGoUp(criterion, $index)" style="line-height:0px; color:#bbb" class="fa fa-caret-up fa-2x"></i>
-          </div>
-          <div style="line-height: 10px;">
-            <a ng-if="canCriterionGoDown(criterion, $index)" ng-click="criterionDown($index)" class="nav-arrow">
-              <i style="line-height:0px;" class="fa fa-caret-down fa-2x"></i>
-            </a>
-            <i ng-if="!canCriterionGoDown(criterion, $index)" style="line-height:0px; color:#bbb" class="fa fa-caret-down fa-2x"></i>
-          </div>
-        </div>
-      </div>
-      <div class="cell auto">
-        <div class="grid-x">
-          <div class="cell large-10">
-            <h4>{{criterion.title}}</h4>
-          </div>
-          <div class="cell large-2">
-            <div class="right">
-              <a ng-click="openCriterionModal(criterion)" tooltip="Edit criterion">
-                <i class="fa fa-edit fa-2x icon-fixed-width"></i>
-              </a>
-              <a ng-click="removeCriterion(criterion)" tooltip="Remove criterion">
-                <i class="fa fa-trash fa-2x icon-fixed-width" style="color:red"></i>
-              </a>
-            </div>
-          </div>
-          <div class="cell" ng-if="criterion.description">
-            <b>Description:</b> {{criterion.description}}
-          </div>
-          <div class="cell" ng-if="criterion.unitOfMeasurement">
-            <b>Unit of measurement:</b> {{criterion.unitOfMeasurement}}
-          </div>
-          <div class="cell" ng-if="state.useFavorability">
-            <b>Favorable:</b> {{criterion.isFavorable ? 'yes' : 'no'}}
-          </div>
-          <div class="cell">
-            <button class="button small" ng-click="editDataSource(criterion)">Add data source</button>
-          </div>
-          <div class="cell">
-            <table>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th style="min-width: 15rem;">Reference
-                    <inline-help help-key="criterion-source"></inline-help>
-                  </th>
-                  <th>Input type</th>
-                  <th>Input method</th>
-                  <th>Data type</th>
-                  <th>Parameter of interest</th>
-                  <th>Uncertainties / Strength of evidence
-                    <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
-                  </th>
-                  <th></th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr ng-repeat="dataSource in criterion.dataSources track by dataSource.id">
-                  <td>
-                    <div style="line-height: 10px; margin-bottom: 4px;">
-                      <a ng-if="$index !==0" ng-click="dataSourceUp(criterion, $index)" class="nav-arrow">
-                        <i style="line-height:0px;" class="fa fa-caret-up"></i>
-                      </a>
-                      <i ng-if="$index === 0" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
-                    </div>
-                    <div style="line-height: 10px;">
-                      <a ng-if="$index !== criterion.dataSources.length-1" ng-click="dataSourceDown(criterion, $index)" class="nav-arrow">
-                        <i style="line-height:0px;" class="fa fa-caret-down"></i>
-                      </a>
-                      <i ng-if="$index === criterion.dataSources.length-1" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
-                    </div>
-                  </td>
-                  <td>
-                    <div ng-if="dataSource.sourceLink">
-                      <a href="{{dataSource.sourceLink}}">{{dataSource.source}}</a>
-                    </div>
-                    <div ng-if="!dataSource.sourceLink">{{dataSource.source}}
-                    </div>
-                  </td>
-                  <td ng-style="dataSource.inputType === 'Unknown'? {'color': 'red'} : {}">{{dataSource.inputType}}</td>
-                  <td>{{dataSource.inputType === 'distribution' ? dataSource.inputMethod :'NA'}}</td>
-                  <td>{{dataSource.inputType === 'effect' || dataSource.inputMethod === 'assistedDistribution' ? dataSource.dataType
-                    : 'NA'}}</td>
-                  <td>{{dataSource.inputType !== 'distribution' || dataSource.inputMethod === 'assistedDistribution' ? dataSource.parameterOfInterest
-                    : 'NA'}}</td>
-                  <td>
-                    <b>Unc: </b> {{dataSource.uncertainties}}
-                    <br>
-                    <b>SoE: </b>{{dataSource.strengthOfEvidence}}
-                  </td>
-                  <td>
-                    <a ng-click="editDataSource(criterion, $index)" tooltip="Edit data source">
-                      <i class="fa fa-edit icon-fixed-width"></i>
-                    </a>
-                  </td>
-                  <td>
-                    <a ng-click="removeDataSource(criterion, dataSource)" tooltip="Remove data source" ng-if="criterion.dataSources.length > 1">
-                      <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
-                    </a>
-                    <a tooltip="Cannot remove the only data source" ng-if="criterion.dataSources.length < 2">
-                      <i class="fa fa-trash icon-fixed-width" style="color:#bbb"></i>
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      <criterion-list criteria="state.criteria" use-favorability="state.useFavorability" input-data="state.inputData" errors="criteriaErrors"></criterion-list>
     </div>
   </div>
   <div class="cell">
@@ -175,8 +49,6 @@
       <inline-help help-key="alternative"></inline-help>
     </h4>
   </div>
-</div>
-<div class="grid-x">
   <div class="cell input-group large-6">
     <span class="input-group-label">
       Alternative title
@@ -188,8 +60,6 @@
         <i class="fa fa-plus"></i> Add Alternative</button>
     </div>
   </div>
-</div>
-<div class="grid-x">
   <div class="cell large-6">
     <table width="100%">
       <thead>
@@ -233,7 +103,7 @@
   </div>
   <div class="cell">
     <button class="button" ng-disabled="!state.title || state.criteria.length < 2|| state.alternatives.length < 2 ||
-      hasUnknownInputType || (state.useFavorability && hasMissingFavorability)" type="button" ng-click="goToStep2()" tooltip="Enter effects table data">
+      criteriaErrors.length" type="button" ng-click="goToStep2()" tooltip="Enter effects table data">
       Enter data
     </button>
     <button class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty" tooltip="Save current state">Save</button>
@@ -247,14 +117,9 @@
   <div class="cell" ng-if="state.alternatives.length < 2">
     <em>Two alternatives required</em>
   </div>
-  <div class="cell" ng-if="hasUnknownInputType">
-    <em>Criteria with unknown input type</em>
+  <div class="cell" ng-repeat="error in criteriaErrors">
+    <em>{{error}}</em>
   </div>
-  <div class="cell" ng-if="state.useFavorability && hasMissingFavorability">
-    <em>Criteria must have favorability if favorability is turned on, once all favorabilities are set, the criteria will be sorted.
-    </em>
-  </div>
-</div>
 </div>
 <!-- step 2 -->
 <div ng-if="state.step==='step2'">

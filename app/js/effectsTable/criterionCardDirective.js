@@ -1,10 +1,13 @@
 'use strict';
 define(['lodash'], function(_) {
   var dependencies = [
+    '$modal',
     'mcdaRootPath'
   ];
   var CriterionCardDirective = function(
-    mcdaRootPath) {
+    $modal,
+    mcdaRootPath
+  ) {
     return {
       restrict: 'E',
       scope: {
@@ -13,7 +16,9 @@ define(['lodash'], function(_) {
         'canGoDown': '=',
         'goUp': '=',
         'goDown': '=',
-        'idx': '='
+        'removeCriterion':'=',
+        'idx': '=',
+        'editCriterion':'='
       },
       templateUrl: mcdaRootPath + 'js/effectsTable/criterionCardDirective.html',
       link: function(scope) {
@@ -21,14 +26,16 @@ define(['lodash'], function(_) {
         scope.criterionDown = criterionDown;
         scope.dataSourceDown = dataSourceDown;
         scope.dataSourceUp = dataSourceUp;
-        
+        scope.removeDataSource = removeDataSource;
+        scope.editDataSource = editDataSource;
+
         // init
         function criterionUp() {
           scope.goUp(scope.idx);
         }
 
         function criterionDown() {
-          scope.goUp(scope.idx);
+          scope.goDown(scope.idx);
         }
 
         function dataSourceDown(criterion, idx) {
@@ -43,6 +50,34 @@ define(['lodash'], function(_) {
           var mem = array[idx];
           array[idx] = array[newIdx];
           array[newIdx] = mem;
+        }
+
+        function removeDataSource(dataSource) {
+          scope.criterion.dataSources = _.reject(scope.criterion.dataSources, ['id', dataSource.id]);
+        }
+
+        function editDataSource(oldDataSourceIdx) {
+          $modal.open({
+            templateUrl: '/js/manualInput/addDataSource.html',
+            controller: 'AddDataSourceController',
+            resolve: {
+              callback: function() {
+                return function(newDataSource) {
+                  if (oldDataSourceIdx>=0) {
+                    scope.criterion.dataSources[oldDataSourceIdx] = newDataSource;
+                  } else {
+                    scope.criterion.dataSources.push(newDataSource);
+                  }
+                };
+              },
+              criterion: function() {
+                return scope.criterion;
+              },
+              oldDataSourceIdx: function() {
+                return oldDataSourceIdx;
+              }
+            }
+          });
         }
       }
     };
