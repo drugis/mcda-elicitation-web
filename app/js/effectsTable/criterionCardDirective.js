@@ -16,9 +16,11 @@ define(['lodash'], function(_) {
         'canGoDown': '=',
         'goUp': '=',
         'goDown': '=',
-        'removeCriterion':'=',
+        'removeCriterion': '=',
         'idx': '=',
-        'editCriterion':'='
+        'editCriterion': '=',
+        'isInput': '=',
+        'saveOrdering': '='
       },
       templateUrl: mcdaRootPath + 'js/effectsTable/criterionCardDirective.html',
       link: function(scope) {
@@ -32,24 +34,24 @@ define(['lodash'], function(_) {
         // init
         function criterionUp() {
           scope.goUp(scope.idx);
+          if (!scope.isInput) {
+            scope.saveOrdering();
+          }
         }
 
         function criterionDown() {
           scope.goDown(scope.idx);
+          if (!scope.isInput) {
+            scope.saveOrdering();
+          }
         }
 
         function dataSourceDown(criterion, idx) {
-          swap(criterion.dataSources, idx, idx + 1);
+          swapAndSave(criterion.dataSources, idx, idx + 1);
         }
 
         function dataSourceUp(criterion, idx) {
-          swap(criterion.dataSources, idx, idx - 1);
-        }
-
-        function swap(array, idx, newIdx) {
-          var mem = array[idx];
-          array[idx] = array[newIdx];
-          array[newIdx] = mem;
+          swapAndSave(criterion.dataSources, idx, idx - 1);
         }
 
         function removeDataSource(dataSource) {
@@ -58,12 +60,12 @@ define(['lodash'], function(_) {
 
         function editDataSource(oldDataSourceIdx) {
           $modal.open({
-            templateUrl: '/js/manualInput/addDataSource.html',
-            controller: 'AddDataSourceController',
+            templateUrl: scope.isInput ? '/js/manualInput/addDataSource.html' : '/js/evidence/editDataSource.html',
+            controller: scope.isInput ? 'AddDataSourceController' : 'EditDataSourceController',
             resolve: {
               callback: function() {
                 return function(newDataSource) {
-                  if (oldDataSourceIdx>=0) {
+                  if (oldDataSourceIdx >= 0) {
                     scope.criterion.dataSources[oldDataSourceIdx] = newDataSource;
                   } else {
                     scope.criterion.dataSources.push(newDataSource);
@@ -78,6 +80,15 @@ define(['lodash'], function(_) {
               }
             }
           });
+        }
+        // private
+        function swapAndSave(array, idx, newIdx) {
+          var mem = array[idx];
+          array[idx] = array[newIdx];
+          array[newIdx] = mem;
+          if (!scope.isInput) {
+            scope.saveOrdering();
+          }
         }
       }
     };

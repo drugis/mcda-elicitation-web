@@ -39,7 +39,7 @@ define(['lodash'], function(_) {
     // public
     function checkError() {
       $scope.errors = $scope.sourceLinkValidity.isInvalid ? ['Invalid reference URL'] : [];
-      if (!$scope.dataSource.source) {
+      if (criterion.dataSources.length > 1 && !$scope.dataSource.source) {
         $scope.errors.push('No reference entered');
       }
       var duplicateRef = _.find($scope.criterion.dataSources, function(dataSource) {

@@ -1,14 +1,14 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modalInstance', 'row', 'callback'];
-  var EditCriterionController = function($scope, $modalInstance, row, callback) {
+  var dependencies = ['$scope', '$modalInstance', 'criterion', 'oldDataSourceIdx', 'callback'];
+  var EditCriterionController = function($scope, $modalInstance, criterion, oldDataSourceIdx, callback) {
     // functions
     $scope.cancel = $modalInstance.close;
     $scope.save = save;
     $scope.checkErrors = checkErrors;
 
     // init
-    $scope.dataSource = _.cloneDeep(row.dataSource);
+    $scope.dataSource = _.cloneDeep(criterion.dataSources[oldDataSourceIdx]);
     checkErrors();
 
     // public
@@ -24,7 +24,7 @@ define(['lodash'], function(_) {
     }
 
     function checkMissingReference() {
-      if (row.criterion.numberOfDataSources > 1 && !$scope.dataSource.source) {
+      if (criterion.dataSources.length > 1 && !$scope.dataSource.source) {
         $scope.errors.push('Missing reference');
       }
     }
@@ -37,7 +37,11 @@ define(['lodash'], function(_) {
     }
 
     function checkDuplicateReference() {
-      return;
+      if (_.find(criterion.dataSources, function(dataSource) {
+        return dataSource.id !== $scope.dataSource.id && dataSource.source === $scope.dataSource.source;
+      })) {
+        $scope.errors.push('Duplicate reference');
+      }
     }
   };
   return dependencies.concat(EditCriterionController);
