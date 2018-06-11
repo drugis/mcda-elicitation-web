@@ -36,14 +36,14 @@ define(['lodash', 'angular'], function(_, angular) {
         var MANUAL_DISTRIBUTIONS = ['exact', 'dnorm', 'dbeta', 'dgamma'];
         var performanceType = tableEntry.performance.type;
         if (_.includes(MANUAL_DISTRIBUTIONS, performanceType)) {
-          dataSource.inputType= 'distribution';
-          dataSource.inputMethod= 'manualDistribution';
+          dataSource.inputType = 'distribution';
+          dataSource.inputMethod = 'manualDistribution';
         } else if (performanceType === 'dt') {
-          dataSource.inputType= 'distribution';
-          dataSource.inputMethod= 'assistedDistribution';
-          dataSource.dataType= 'continuous';
-        }
-
+          dataSource.inputType = 'distribution';
+          dataSource.inputMethod = 'assistedDistribution';
+          dataSource.dataType = 'continuous';
+        } 
+        
         newCriterion.dataSources = [dataSource];
         return newCriterion;
       });
@@ -57,7 +57,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
     return {
       updateProblemToCurrentSchema: updateProblemToCurrentSchema,
-      updateWorkspaceToCurrentSchema:updateWorkspaceToCurrentSchema
+      updateWorkspaceToCurrentSchema: updateWorkspaceToCurrentSchema
     };
   };
 
