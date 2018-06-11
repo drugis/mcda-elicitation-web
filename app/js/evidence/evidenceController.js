@@ -1,7 +1,6 @@
 'use strict';
 define(['clipboard', 'lodash'], function(Clipboard, _) {
   var dependencies = ['$scope', '$state', '$stateParams', '$modal',
-    'EffectsTableService',
     'WorkspaceResource',
     'isMcdaStandalone',
     'OrderingService',
@@ -9,7 +8,6 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
   ];
 
   var EvidenceController = function($scope, $state, $stateParams, $modal,
-    EffectsTableService,
     WorkspaceResource,
     isMcdaStandalone,
     OrderingService,
@@ -17,18 +15,12 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
   ) {
     // functions
     $scope.editTherapeuticContext = editTherapeuticContext;
-    $scope.editCriterion = editCriterion;
     $scope.editAlternative = editAlternative;
-    $scope.criterionUp = criterionUp;
-    $scope.criterionDown = criterionDown;
     $scope.alternativeUp = alternativeUp;
     $scope.alternativeDown = alternativeDown;
-    $scope.dataSourceDown = dataSourceDown;
-    $scope.dataSourceUp = dataSourceUp;
     $scope.downloadWorkspace = downloadWorkspace;
     $scope.getIndex = getIndex;
-    $scope.editDataSource = editDataSource;
-
+    
     // init
     $scope.scales = $scope.workspace.scales.observed;
     $scope.valueTree = $scope.workspace.$$valueTree;
@@ -38,7 +30,6 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
       $scope.alternatives = orderings.alternatives;
       $scope.criteria = orderings.criteria;
-      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem.valueTree, orderings.criteria);
     });
 
     $scope.$watch('workspace.scales.observed', function(newValue) {
@@ -71,108 +62,15 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     }
 
     function getIndex(list, id) {
-      for (var i = 0; i < list.length; ++i) {
-        if (list[i].id === id) {
-          return i;
-        }
-      }
-      return -1;
-    }
-
-    function criterionUp(idx) {
-      var mem = $scope.criteria[idx];
-      $scope.criteria[idx] = $scope.criteria[idx - 1];
-      $scope.criteria[idx - 1] = mem;
-      OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
-      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem.valueTree, $scope.criteria);
-    }
-
-    function criterionDown(idx) {
-      var mem = $scope.criteria[idx];
-      $scope.criteria[idx] = $scope.criteria[idx + 1];
-      $scope.criteria[idx + 1] = mem;
-      OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
-      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem.valueTree, $scope.criteria);
+      return _.findIndex(list, ['id', id]);
     }
 
     function alternativeUp(idx) {
-      var mem = $scope.alternatives[idx];
-      $scope.alternatives[idx] = $scope.alternatives[idx - 1];
-      $scope.alternatives[idx - 1] = mem;
-      OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
-      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem.valueTree, $scope.criteria);
+      swapAndSave($scope.alternatives, idx, idx - 1);
     }
 
     function alternativeDown(idx) {
-      var mem = $scope.alternatives[idx];
-      $scope.alternatives[idx] = $scope.alternatives[idx + 1];
-      $scope.alternatives[idx + 1] = mem;
-      OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
-      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem.valueTree, $scope.criteria);
-    }
-
-    function dataSourceDown(row) {
-      moveDataSource(row, 'down');
-    }
-
-    function dataSourceUp(row) {
-      moveDataSource(row, 'up');
-    }
-
-    function moveDataSource(row, direction) {
-      var criterion = _.find($scope.criteria, function(criterion) {
-        return criterion.id === row.criterion.id;
-      });
-      var idx = _.findIndex(criterion.dataSources, function(dataSource) {
-        return dataSource.id === row.dataSource.id;
-      });
-      var newIdx = direction === 'up' ? idx - 1 : idx + 1;
-      var mem = criterion.dataSources[idx];
-      criterion.dataSources[idx] = criterion.dataSources[newIdx];
-      criterion.dataSources[newIdx] = mem;
-      OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
-      $scope.rows = EffectsTableService.buildEffectsTable($scope.problem.valueTree, $scope.criteria);
-    }
-    function editCriterion(criterion, criterionKey) {
-      $modal.open({
-        templateUrl: mcdaRootPath + 'js/evidence/editCriterion.html',
-        controller: 'EditCriterionController',
-        resolve: {
-          criterion: function() {
-            return criterion;
-          },
-          criterionId: function() {
-            return criterionKey;
-          },
-          criteria: function() {
-            return _.map($scope.problem.criteria, 'title');
-          },
-          valueTree: function() {
-            return $scope.valueTree;
-          },
-          callback: function() {
-            return function(newCriterion, favorabilityChanged) {
-              $scope.workspace.problem.criteria[criterionKey] = _.omit(newCriterion, 'id');
-              if (favorabilityChanged) {
-                var toRemove = !!_.find($scope.valueTree.children[0].criteria, function(crit) {
-                  return crit === criterionKey;
-                }) ? 0 : 1;
-                var toAdd = toRemove === 1 ? 0 : 1;
-                _.remove($scope.valueTree.children[toRemove].criteria, function(crit) {
-                  return crit === criterionKey;
-                });
-                $scope.valueTree.children[toAdd].criteria.push(criterionKey);
-              }
-              // update criterionOrder
-              var ordering = OrderingService.getNewOrdering($scope.workspace.problem);
-              OrderingService.saveOrdering($stateParams, ordering.criteria, ordering.alternatives);
-              WorkspaceResource.save($stateParams, $scope.workspace).$promise.then(function() {
-                $state.reload();
-              });
-            };
-          }
-        }
-      });
+      swapAndSave($scope.alternatives, idx, idx + 1);
     }
 
     function editAlternative(alternative) {
@@ -207,25 +105,12 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       link.click();
     }
 
-    function editDataSource(row) {
-      $modal.open({
-        templateUrl: mcdaRootPath + 'js/evidence/editDataSource.html',
-        controller: 'EditDataSourceController',
-        resolve: {
-          row: function() {
-            return row;
-          },
-          callback: function() {
-            return function(newDataSource){
-              var criterion = $scope.workspace.problem.criteria[row.criterion.id];
-              criterion.dataSources[_.findIndex(criterion.dataSources, ['id', row.dataSource.id])] = newDataSource;
-              WorkspaceResource.save($stateParams, $scope.workspace).$promise.then(function() {
-                $state.reload();
-              });
-            };
-          }
-        }
-      });
+    // private
+    function swapAndSave(array, idx, newIdx) {
+      var mem = array[idx];
+      array[idx] = array[newIdx];
+      array[newIdx] = mem;
+      OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
     }
   };
   return dependencies.concat(EvidenceController);
