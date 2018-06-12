@@ -11,7 +11,8 @@ define(['lodash', 'angular'], function(_, angular) {
     'OrderingService',
     'SchemaService',
     'WorkspaceResource',
-    'generateUuid'
+    'generateUuid',
+    'swap'
   ];
   var ManualInputController = function($scope,
     $state,
@@ -24,7 +25,8 @@ define(['lodash', 'angular'], function(_, angular) {
     OrderingService,
     SchemaService,
     WorkspaceResource,
-    generateUuid
+    generateUuid,
+    swap
   ) {
 
     // functions
@@ -55,26 +57,13 @@ define(['lodash', 'angular'], function(_, angular) {
       }
     });
 
-    $scope.inputMethods = {
-      manualDistribution: 'Manual distribution',
-      assistedDistribution: 'Assisted distribution'
-    };
-
-    $scope.parameterOfInterest = {
-      mean: 'Mean',
-      median: 'Median',
-      cumulativeProbability: 'Cumulative probability',
-      eventProbability: 'Event probability',
-      value: 'value'
-    };
-
     // public functions
     function addAlternative(title) {
       $scope.state.alternatives.push({
         title: title,
         id: generateUuid()
       });
-      $scope.treatmentInputField.value = '';
+      $scope.alternativeInput.value = '';
     }
 
     function alternativeDown(idx) {
@@ -197,12 +186,6 @@ define(['lodash', 'angular'], function(_, angular) {
           $scope.dirty = true;
         }
       }, true);
-    }
-
-    function swap(array, idx, newIdx) {
-      var mem = array[idx];
-      array[idx] = array[newIdx];
-      array[newIdx] = mem;
     }
   };
   return dependencies.concat(ManualInputController);

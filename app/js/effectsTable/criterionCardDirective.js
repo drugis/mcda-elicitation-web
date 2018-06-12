@@ -2,11 +2,13 @@
 define(['lodash'], function(_) {
   var dependencies = [
     '$modal',
-    'mcdaRootPath'
+    'mcdaRootPath',
+    'swap'
   ];
   var CriterionCardDirective = function(
     $modal,
-    mcdaRootPath
+    mcdaRootPath,
+    swap
   ) {
     return {
       restrict: 'E',
@@ -32,6 +34,20 @@ define(['lodash'], function(_) {
         scope.editDataSource = editDataSource;
 
         // init
+        scope.INPUT_METHODS = {
+          manualDistribution: 'Manual distribution',
+          assistedDistribution: 'Assisted distribution'
+        };
+    
+        scope.PARAMETERS_OF_INTEREST = {
+          mean: 'Mean',
+          median: 'Median',
+          cumulativeProbability: 'Cumulative probability',
+          eventProbability: 'Event probability',
+          value: 'value'
+        };
+
+        // public 
         function criterionUp() {
           scope.goUp(scope.idx);
           if (!scope.isInput) {
@@ -83,9 +99,7 @@ define(['lodash'], function(_) {
         }
         // private
         function swapAndSave(array, idx, newIdx) {
-          var mem = array[idx];
-          array[idx] = array[newIdx];
-          array[newIdx] = mem;
+          swap(array, idx, newIdx);
           if (!scope.isInput) {
             scope.saveOrdering();
           }
