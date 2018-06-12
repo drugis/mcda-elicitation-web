@@ -40,7 +40,7 @@
         <b>Data sources:</b>
       </div>
       <div class="cell" ng-if="isInput">
-        <button class="button small" ng-click="editDataSource(criterion)">Add data source</button>
+        <button class="button small" ng-click="editDataSource()">Add data source</button>
       </div>
       <div class="cell">
         <table>
@@ -97,7 +97,7 @@
                 <b>SoE: </b>{{dataSource.strengthOfEvidence}}
               </td>
               <td>
-                <a ng-click="editDataSource($index)" tooltip="Edit data source">
+                <a ng-click="editDataSource(dataSource, $index)" tooltip="Edit data source">
                   <i class="fa fa-edit icon-fixed-width"></i>
                 </a>
               </td>

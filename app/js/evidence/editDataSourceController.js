@@ -1,14 +1,35 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modalInstance', 'criterion', 'oldDataSourceIdx', 'callback'];
-  var EditCriterionController = function($scope, $modalInstance, criterion, oldDataSourceIdx, callback) {
+  var dependencies = [
+    '$scope',
+    '$modalInstance',
+    'dataSources',
+    'dataSource',
+    'callback',
+    'generateUuid'
+  ];
+  var EditDataSourceController = function(
+    $scope,
+    $modalInstance,
+    dataSources,
+    dataSource,
+    callback,
+    generateUuid
+  ) {
     // functions
     $scope.cancel = $modalInstance.close;
     $scope.save = save;
     $scope.checkErrors = checkErrors;
 
     // init
-    $scope.dataSource = _.cloneDeep(criterion.dataSources[oldDataSourceIdx]);
+    if(dataSource){
+      $scope.dataSource = _.cloneDeep(dataSource);
+    } else {
+      $scope.dataSource = _.cloneDeep(dataSources[0]); 
+      delete $scope.dataSource.source;
+      $scope.dataSource.id = generateUuid();
+      $scope.isAdding = true;
+    }
     checkErrors();
 
     // public
@@ -23,8 +44,9 @@ define(['lodash'], function(_) {
       checkUrl();
     }
 
+    //private
     function checkMissingReference() {
-      if (criterion.dataSources.length > 1 && !$scope.dataSource.source) {
+      if (dataSources.length > 1 && !$scope.dataSource.source) {
         $scope.errors.push('Missing reference');
       }
     }
@@ -37,12 +59,12 @@ define(['lodash'], function(_) {
     }
 
     function checkDuplicateReference() {
-      if (_.find(criterion.dataSources, function(dataSource) {
+      if (_.find(dataSources, function(dataSource) {
         return dataSource.id !== $scope.dataSource.id && dataSource.source === $scope.dataSource.source;
       })) {
         $scope.errors.push('Duplicate reference');
       }
     }
   };
-  return dependencies.concat(EditCriterionController);
+  return dependencies.concat(EditDataSourceController);
 });
