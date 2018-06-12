@@ -2,7 +2,7 @@
 var requires = [
   'mcda/manualInput/manualInputController',
   'mcda/manualInput/addCriterionController',
-  'mcda/manualInput/addDataSourceController',
+  'mcda/evidence/editDataSourceController',
   'mcda/manualInput/manualInputService',
   'mcda/manualInput/inputKnowledgeService',
   'mcda/manualInput/constraintService',
@@ -16,7 +16,7 @@ define(['angular'].concat(requires), function(
   angular,
   ManualInputController,
   AddCriterionController,
-  AddDataSourceController,
+  EditDataSourceController,
   ManualInputService,
   InputKnowledgeService,
   ConstraintService,
@@ -29,7 +29,7 @@ define(['angular'].concat(requires), function(
 
     .controller('ManualInputController', ManualInputController)
     .controller('AddCriterionController', AddCriterionController)
-    .controller('AddDataSourceController', AddDataSourceController)
+    .controller('EditDataSourceController', EditDataSourceController)
 
     .factory('ManualInputService', ManualInputService)
     .factory('InputKnowledgeService', InputKnowledgeService)

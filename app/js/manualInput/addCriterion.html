@@ -30,8 +30,7 @@
         <label for="favorable">Favorable</label>
       </div>
       <div class="cell" ng-if="isAddOperation">
-        <input-data-source source="criterion.dataSources[0]" is-invalid-source-link="sourceLinkValidity" 
-        change-callback="isCreationBlocked"></input-data-source>
+        <input-data-source source="criterion.dataSources[0]" is-invalid-source-link="sourceLinkValidity" change-callback="isCreationBlocked"></input-data-source>
       </div>
       <div class="cell button-group">
         <button class="button" ng-disabled="blockedReasons.length" type="submit">{{isAddOperation ? 'Add' : 'Done'}}</button>

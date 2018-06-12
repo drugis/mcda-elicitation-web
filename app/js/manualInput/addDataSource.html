@@ -1,8 +1,8 @@
 <div class="grid-container">
-  <form ng-submit="addDataSource(dataSource)">
+  <form ng-submit="save(dataSource)">
     <div class="grid-x">
       <div class="cell">
-        <h2>{{oldDataSourceIdx >= 0 ? 'Edit' : 'Add'}} data source for {{criterion.title}}</h2>
+        <h2>{{isAdding ? 'Add' : 'Edit'}} data source for {{criterion.title}}</h2>
       </div>
       <div class="cell">
         <input-data-source source="dataSource" is-invalid-source-link="sourceLinkValidity" change-callback="checkError"></input-data-source>
@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="cell">
-      <button class="button" type="submit" ng-disabled="errors.length">{{oldDataSourceIdx >= 0 ? 'Edit' : 'Add'}}</button>
+      <button class="button" type="submit" ng-disabled="errors.length">{{isAdding ? 'Add' : 'Edit'}}</button>
     </div>
     <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
       <span aria-hidden="true">&times;</span>

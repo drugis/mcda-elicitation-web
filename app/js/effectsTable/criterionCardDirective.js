@@ -74,25 +74,25 @@ define(['lodash'], function(_) {
           scope.criterion.dataSources = _.reject(scope.criterion.dataSources, ['id', dataSource.id]);
         }
 
-        function editDataSource(oldDataSourceIdx) {
+        function editDataSource(dataSource, dataSourceIndex) {
           $modal.open({
             templateUrl: scope.isInput ? '/js/manualInput/addDataSource.html' : '/js/evidence/editDataSource.html',
-            controller: scope.isInput ? 'AddDataSourceController' : 'EditDataSourceController',
+            controller: 'EditDataSourceController',
             resolve: {
               callback: function() {
                 return function(newDataSource) {
-                  if (oldDataSourceIdx >= 0) {
-                    scope.criterion.dataSources[oldDataSourceIdx] = newDataSource;
+                  if (dataSource) {
+                    scope.criterion.dataSources[dataSourceIndex] = newDataSource;
                   } else {
                     scope.criterion.dataSources.push(newDataSource);
                   }
                 };
               },
-              criterion: function() {
-                return scope.criterion;
+              dataSources: function() {
+                return scope.criterion.dataSources;
               },
-              oldDataSourceIdx: function() {
-                return oldDataSourceIdx;
+              dataSource: function() {
+                return dataSource;
               }
             }
           });
