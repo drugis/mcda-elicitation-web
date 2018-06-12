@@ -5,6 +5,7 @@ define(['lodash', 'angular'], function(_, angular) {
     '$stateParams',
     '$transitions',
     '$timeout',
+    '$modal',
     'EffectsTableService',
     'InProgressResource',
     'ManualInputService',
@@ -19,6 +20,7 @@ define(['lodash', 'angular'], function(_, angular) {
     $stateParams,
     $transitions,
     $timeout,
+    $modal,
     EffectsTableService,
     InProgressResource,
     ManualInputService,
@@ -40,6 +42,7 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.isDuplicateTitle = isDuplicateTitle;
     $scope.removeAlternative = removeAlternative;
     $scope.saveInProgress = saveInProgress;
+    $scope.openCriterionModal = openCriterionModal;
 
     // init
     $scope.treatmentInputField = {}; //scoping
@@ -135,6 +138,29 @@ define(['lodash', 'angular'], function(_, angular) {
           });
         });
       }
+    }
+
+    function openCriterionModal() {
+      $modal.open({
+        templateUrl: '/js/manualInput/addCriterion.html',
+        controller: 'AddCriterionController',
+        resolve: {
+          criteria: function() {
+            return $scope.state.criteria;
+          },
+          callback: function() {
+            return function(newCriterion) {
+              $scope.state.criteria.push(newCriterion);
+            };
+          },
+          oldCriterion: function(){
+            return undefined;
+          },
+          useFavorability: function() {
+            return $scope.state.useFavorability;
+          }
+        }
+      });
     }
 
     // private functions

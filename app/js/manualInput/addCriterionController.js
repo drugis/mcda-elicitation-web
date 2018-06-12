@@ -1,7 +1,23 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modalInstance', 'criteria', 'callback', 'oldCriterion', 'useFavorability', 'generateUuid'];
-  var AddCriterionController = function($scope, $modalInstance, criteria, callback, oldCriterion, useFavorability, generateUuid) {
+  var dependencies = [
+    '$scope',
+    '$modalInstance',
+    'criteria',
+    'callback',
+    'oldCriterion',
+    'useFavorability',
+    'generateUuid'
+  ];
+  var AddCriterionController = function(
+    $scope,
+    $modalInstance,
+    criteria,
+    callback,
+    oldCriterion,
+    useFavorability,
+    generateUuid
+  ) {
     // functions
     $scope.isCreationBlocked = isCreationBlocked;
     $scope.addCriterion = addCriterion;
@@ -47,7 +63,7 @@ define(['lodash'], function(_) {
       if (isTitleDuplicate(criterion.title) && !$scope.isAddingCriterion && (!oldCriterion || oldCriterion.title !== criterion.title)) {
         $scope.blockedReasons.push('Duplicate title');
       }
-      if($scope.sourceLinkValidity.isInvalid){
+      if ($scope.sourceLinkValidity.isInvalid) {
         $scope.blockedReasons.push('Invalid reference URL');
       }
     }
