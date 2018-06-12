@@ -66,9 +66,7 @@ define(['lodash'], function(_) {
               },
               callback: function() {
                 return function(newCriterion, favorabilityChanged) {
-                  if (criterion) { // editing not adding
-                    removeCriterion(_.findIndex(scope.criteria, ['id', criterion.id]));
-                  }
+                  removeCriterion(_.findIndex(scope.criteria, ['id', criterion.id]));
                   scope.criteria.push(newCriterion);
                   if (scope.isInput) {
                     initializeCriteriaLists();
