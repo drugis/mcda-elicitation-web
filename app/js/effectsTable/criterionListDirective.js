@@ -80,7 +80,7 @@ define(['lodash'], function(_) {
                     }
                     initializeCriteriaLists();
                     saveOrdering();
-                    WorkspaceResource.save($stateParams, scope.workspace).$promise.then(function(){
+                    WorkspaceResource.save($stateParams, scope.workspace).$promise.then(function() {
                       $state.reload(); //must reload to update effectsTable
                     });
                   }
@@ -95,11 +95,16 @@ define(['lodash'], function(_) {
             }
           });
         }
+
         function saveOrdering() {
-          OrderingService.saveOrdering($stateParams, scope.favorableCriteria.concat(scope.unfavorableCriteria), _.map(scope.workspace.problem.alternatives,
-            function(alternative, alternativeId) {
-              return _.merge({}, { id: alternativeId }, alternative);
-            }));
+          OrderingService.saveOrdering($stateParams,
+            scope.favorableCriteria.concat(scope.unfavorableCriteria),
+            _.map(scope.workspace.problem.alternatives,
+              function(alternative, alternativeId) {
+                return _.merge({}, { id: alternativeId }, alternative);
+              }
+            )
+          );
         }
 
         //private
