@@ -21,17 +21,6 @@ define(['lodash', 'angular'], function(_, angular) {
       };
     })
 
-    .factory('addKeyHashToObject', function() {
-      return function(object, key) {
-        var newObject = _.cloneDeep(object);
-        newObject.hash = _.map(key, function(f) {
-          return f.charCodeAt(0);
-        }).join('');
-        newObject.id = key;
-        return newObject;
-      };
-    })
-
     .factory('generateUuid', function() {
       return function() {
         var pattern = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx';
@@ -41,6 +30,14 @@ define(['lodash', 'angular'], function(_, angular) {
           var v = c === 'x' ? r : (r & 0x3 | 0x8);
           return v.toString(16);
         });
+      };
+    })
+
+    .factory('swap', function() {
+      return function(array, fromIdx, toIdx) {
+        var mem = array[fromIdx];
+        array[fromIdx] = array[toIdx];
+        array[toIdx] = mem;
       };
     })
 

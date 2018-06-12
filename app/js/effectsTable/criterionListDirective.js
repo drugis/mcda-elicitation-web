@@ -6,7 +6,8 @@ define(['lodash'], function(_) {
     '$stateParams',
     'mcdaRootPath',
     'OrderingService',
-    'WorkspaceResource'
+    'WorkspaceResource',
+    'swap'
   ];
   var CriterionListDirective = function(
     $modal,
@@ -14,14 +15,14 @@ define(['lodash'], function(_) {
     $stateParams,
     mcdaRootPath,
     OrderingService,
-    WorkspaceResource
+    WorkspaceResource,
+    swap
   ) {
     return {
       restrict: 'E',
       scope: {
         'criteria': '=',
         'useFavorability': '=',
-        'removeCriterionCallback': '=',
         'inputData': '=',
         'errors': '=',
         'isInput': '=',
@@ -34,7 +35,6 @@ define(['lodash'], function(_) {
         scope.removeCriterion = removeCriterion;
         scope.openCriterionModal = openCriterionModal;
         scope.saveOrdering = saveOrdering;
-
         // init
         initializeCriteriaLists();
         scope.$watch('useFavorability', initializeCriteriaLists);
@@ -97,13 +97,13 @@ define(['lodash'], function(_) {
         }
 
         function saveOrdering() {
+          function decorateWithId(alternative, alternativeId) {
+            return _.merge({}, { id: alternativeId }, alternative);
+          }
+
           OrderingService.saveOrdering($stateParams,
             scope.favorableCriteria.concat(scope.unfavorableCriteria),
-            _.map(scope.workspace.problem.alternatives,
-              function(alternative, alternativeId) {
-                return _.merge({}, { id: alternativeId }, alternative);
-              }
-            )
+            _.map(scope.workspace.problem.alternatives, decorateWithId)
           );
         }
 
@@ -135,16 +135,14 @@ define(['lodash'], function(_) {
             }
             scope.favorableCriteria = partition[0];
             scope.unfavorableCriteria = partition[1];
-            scope.criteria = partition[0].concat(partition[1]);
+            scope.criteria = partition[0].concat(partition[1]); // TODO: fix ordering service bug that makes this line necessary then delete
           } else {
             scope.favorableCriteria = scope.criteria;
           }
         }
 
         function swapAndInitialize(array, idx, newIdx) {
-          var mem = array[idx];
-          array[idx] = array[newIdx];
-          array[newIdx] = mem;
+          swap(array, idx, newIdx);
           initializeCriteriaLists();
         }
 

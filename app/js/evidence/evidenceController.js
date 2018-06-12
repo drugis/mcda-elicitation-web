@@ -4,14 +4,16 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     'WorkspaceResource',
     'isMcdaStandalone',
     'OrderingService',
-    'mcdaRootPath'
+    'mcdaRootPath',
+    'swap'
   ];
 
   var EvidenceController = function($scope, $state, $stateParams, $modal,
     WorkspaceResource,
     isMcdaStandalone,
     OrderingService,
-    mcdaRootPath
+    mcdaRootPath,
+    swap
   ) {
     // functions
     $scope.editTherapeuticContext = editTherapeuticContext;
@@ -19,7 +21,6 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.alternativeUp = alternativeUp;
     $scope.alternativeDown = alternativeDown;
     $scope.downloadWorkspace = downloadWorkspace;
-    $scope.getIndex = getIndex;
     
     // init
     $scope.scales = $scope.workspace.scales.observed;
@@ -37,6 +38,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     }, true);
     new Clipboard('.clipboard-button');
 
+    // let js simulate mouse click FIXME: only apply to relevant button / link (download link)? IE fix/check?
     HTMLElement.prototype.click = function() {
       var evt = this.ownerDocument.createEvent('MouseEvents');
       evt.initMouseEvent('click', true, true, this.ownerDocument.defaultView, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
@@ -59,10 +61,6 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
           }
         }
       });
-    }
-
-    function getIndex(list, id) {
-      return _.findIndex(list, ['id', id]);
     }
 
     function alternativeUp(idx) {
@@ -107,9 +105,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
 
     // private
     function swapAndSave(array, idx, newIdx) {
-      var mem = array[idx];
-      array[idx] = array[newIdx];
-      array[newIdx] = mem;
+      swap(array, idx, newIdx);
       OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
     }
   };
