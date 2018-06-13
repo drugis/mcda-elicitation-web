@@ -106,14 +106,9 @@ define(['lodash'], function(_) {
             checkForUnknownCriteria();
             checkForMissingFavorability();
           }
-          if (scope.useFavorability) {
-            var partition = _.partition(scope.criteria, ['isFavorable', true]);
-            scope.favorableCriteria = partition[0];
-            scope.unfavorableCriteria = partition[1];
-            scope.criteria = partition[0].concat(partition[1]); // TODO: fix ordering service bug that makes this line necessary then delete
-          } else {
-            scope.favorableCriteria = scope.criteria;
-          }
+          var partition = _.partition(scope.criteria, ['isFavorable', true]);
+          scope.favorableCriteria = scope.useFavorability ? partition[0] : scope.criteria;
+          scope.unfavorableCriteria = partition[1];
         }
 
         function swapAndInitialize(array, idx, newIdx) {
