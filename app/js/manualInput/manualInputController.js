@@ -168,24 +168,7 @@ define(['lodash', 'angular'], function(_, angular) {
       if ($stateParams.workspace) {
         // copying existing workspace
         var oldWorkspace = SchemaService.updateWorkspaceToCurrentSchema($stateParams.workspace);
-        $scope.state = {
-          oldWorkspace: oldWorkspace,
-          useFavorability: _.find(oldWorkspace.problem.criteria, function(criterion){
-            return criterion.hasOwnProperty('isFavorable');
-          }) ? true : false,
-          step: 'step1',
-          isInputDataValid: false,
-          description: oldWorkspace.problem.description,
-          criteria: ManualInputService.copyWorkspaceCriteria(oldWorkspace),
-          alternatives: _.map(oldWorkspace.problem.alternatives, function(alternative, alternativeId) {
-            return _.extend({}, alternative, {
-              id: generateUuid(),
-              oldId: alternativeId
-            });
-          })
-        };
-        $scope.state.inputData = ManualInputService.createInputFromOldWorkspace($scope.state.criteria,
-          $scope.state.alternatives, $scope.state.oldWorkspace);
+        $scope.state = ManualInputService.createStateFromOldWorkspace(oldWorkspace);
         $scope.dirty = true;
         setStateWatcher();
       } else if (!$stateParams.inProgressId) {

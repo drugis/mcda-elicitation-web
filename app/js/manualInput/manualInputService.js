@@ -74,54 +74,27 @@ define(['lodash', 'angular'], function(_) {
       }, {});
     }
 
-    function createInputFromOldWorkspace(criteria, alternatives, oldWorkspace) {
-      return _.reduce(oldWorkspace.problem.performanceTable, function(accum, tableEntry) {
-        var dataSourceForEntry;
-         _.forEach(criteria, function(criterion) {
-          _.forEach(criterion.dataSources, function(dataSource) {
-            if(dataSource.oldId === tableEntry.dataSource){
-              dataSourceForEntry = dataSource;
-            }
+    function createStateFromOldWorkspace(oldWorkspace) {
+      var state = {
+        oldWorkspace: oldWorkspace,
+        useFavorability: !!_.find(oldWorkspace.problem.criteria, function(criterion) {
+          return criterion.hasOwnProperty('isFavorable');
+        }),
+        step: 'step1',
+        isInputDataValid: false,
+        description: oldWorkspace.problem.description,
+        criteria: copyOldWorkspaceCriteria(oldWorkspace),
+        alternatives: _.map(oldWorkspace.problem.alternatives, function(alternative, alternativeId) {
+          return _.extend({}, alternative, {
+            id: generateUuid(),
+            oldId: alternativeId
           });
-        });
-        var alternative = _.find(alternatives, ['oldId', tableEntry.alternative]);
-        if (dataSourceForEntry && alternative) {
-          if (!accum[dataSourceForEntry.id]) {
-            accum[dataSourceForEntry.id] = {};
-          }
-          accum[dataSourceForEntry.id][alternative.id] = createInputCell(dataSourceForEntry, tableEntry);
-        }
-        return accum;
-      }, {});
+        })
+      };
+      state.inputData = createInputFromOldWorkspace(state.criteria,
+        state.alternatives, oldWorkspace);
+      return state;
     }
-
-    function createInputCell(dataSource, tableEntry) {
-      return InputKnowledgeService.finishInputCell(dataSource, tableEntry);
-    }
-
-    function copyWorkspaceCriteria(workspace) {
-      return _.map(workspace.problem.criteria, function(criterion) {
-        var newCrit = _.pick(criterion, ['title', 'description', 'unitOfMeasurement', 'isFavorable']); // omit scales, preferences
-        newCrit.dataSources = _.map(criterion.dataSources, function(dataSource) {
-          var newDataSource = _.pick(dataSource, [
-            'source',
-            'sourceLink',
-            'strengthOfEvidence',
-            'uncertainties',
-            'inputType',
-            'inputMethod',
-            'dataType',
-            'parameterOfInterest'
-          ]);
-          newDataSource.id = generateUuid();
-          newDataSource.oldId = dataSource.id;
-          return newDataSource;
-        });
-        newCrit.id = generateUuid();
-        return newCrit;
-      });
-    }
-
     // Private functions
     function buildCriteria(criteria) {
       var newCriteria = _.map(criteria, function(criterion) {
@@ -174,14 +147,61 @@ define(['lodash', 'angular'], function(_) {
       return newPerformanceTable;
     }
 
+    function copyOldWorkspaceCriteria(workspace) {
+      return _.map(workspace.problem.criteria, function(criterion) {
+        var newCrit = _.pick(criterion, ['title', 'description', 'unitOfMeasurement', 'isFavorable']); // omit scales, preferences
+        newCrit.dataSources = _.map(criterion.dataSources, function(dataSource) {
+          var newDataSource = _.pick(dataSource, [
+            'source',
+            'sourceLink',
+            'strengthOfEvidence',
+            'uncertainties',
+            'inputType',
+            'inputMethod',
+            'dataType',
+            'parameterOfInterest'
+          ]);
+          newDataSource.id = generateUuid();
+          newDataSource.oldId = dataSource.id;
+          return newDataSource;
+        });
+        newCrit.id = generateUuid();
+        return newCrit;
+      });
+    }
+
+    function createInputFromOldWorkspace(criteria, alternatives, oldWorkspace) {
+      return _.reduce(oldWorkspace.problem.performanceTable, function(accum, tableEntry) {
+        var dataSourceForEntry;
+        _.forEach(criteria, function(criterion) {
+          _.forEach(criterion.dataSources, function(dataSource) {
+            if (dataSource.oldId === tableEntry.dataSource) {
+              dataSourceForEntry = dataSource;
+            }
+          });
+        });
+        var alternative = _.find(alternatives, ['oldId', tableEntry.alternative]);
+        if (dataSourceForEntry && alternative) {
+          if (!accum[dataSourceForEntry.id]) {
+            accum[dataSourceForEntry.id] = {};
+          }
+          accum[dataSourceForEntry.id][alternative.id] = createInputCell(dataSourceForEntry, tableEntry);
+        }
+        return accum;
+      }, {});
+    }
+
+    function createInputCell(dataSource, tableEntry) {
+      return InputKnowledgeService.finishInputCell(dataSource, tableEntry);
+    }
+
     return {
       createProblem: createProblem,
       inputToString: inputToString,
       getInputError: getInputError,
       prepareInputData: prepareInputData,
-      createInputFromOldWorkspace: createInputFromOldWorkspace,
-      copyWorkspaceCriteria: copyWorkspaceCriteria,
-      getOptions: getOptions
+      getOptions: getOptions,
+      createStateFromOldWorkspace: createStateFromOldWorkspace
     };
   };
 
