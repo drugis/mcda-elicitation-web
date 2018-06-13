@@ -287,8 +287,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           problem: {
             criteria: {
               critId2: {
-                id: 'critId2',
-                w: 'w_{1}',
                 dataSources: [{
                   id: 'ds2',
                   pvf: {
@@ -297,8 +295,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
                 }]
               },
               critId4: {
-                id: 'critId4',
-                w: 'w_{2}',
                 dataSources: [{
                   id: 'ds4',
                   pvf: {

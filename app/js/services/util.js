@@ -9,12 +9,12 @@ define(['lodash', 'angular'], function(_, angular) {
         return [
           Math.min.apply(null, _.filter(_.map(_.values(scaleRanges), function(alternative) {
             return alternative['2.5%'];
-          })), function(value){
+          })), function(value) {
             return value !== null;
           }),
           Math.max.apply(null, _.filter(_.map(_.values(scaleRanges), function(alternative) {
             return alternative['97.5%'];
-          })), function(value){
+          })), function(value) {
             return value !== null;
           })
         ];
@@ -40,15 +40,5 @@ define(['lodash', 'angular'], function(_, angular) {
         array[toIdx] = mem;
       };
     })
-
-    .factory('sortCriteriaWithW', function() {
-      return function(criteria) {
-        return _.sortBy(_.map(_.toPairs(criteria), function(crit, idx) {
-          return _.extend({}, crit[1], {
-            id: crit[0],
-            w: 'w_{' + (idx + 1) + '}'
-          });
-        }), 'w');
-      };
-    });
+    ;
 });

@@ -46,7 +46,7 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
       $scope.criteria = orderings.criteria;
       $scope.alternatives = orderings.alternatives;
 
-      $scope.scaleTable = EffectsTableService.buildEffectsTable(undefined, orderings.criteria);
+      $scope.scaleTable = _.reject(EffectsTableService.buildEffectsTable(orderings.criteria), ['isHeaderRow', true]);
     });
 
     new Clipboard('.clipboard-button');
