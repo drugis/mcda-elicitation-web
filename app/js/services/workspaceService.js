@@ -1,13 +1,11 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
-    'ScalesService',
-    'sortCriteriaWithW'
+    'ScalesService'
   ];
 
   var WorkspaceService = function(
-    ScalesService,
-    sortCriteriaWithW
+    ScalesService
   ) {
     function buildTheoreticalScales(problem) {
       var theoreticalScales = {};
@@ -145,7 +143,6 @@ define(['lodash', 'angular'], function(_, angular) {
       _.forEach(newState.problem.alternatives, function(alternative, key) {
         newState.problem.alternatives[key] = _.merge({}, alternative, baseProblem.alternatives[key]);
       });
-      newState.problem.criteria = _.keyBy(sortCriteriaWithW(newState.problem.criteria), 'id');
       return newState;
     }
 
