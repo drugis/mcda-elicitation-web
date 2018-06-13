@@ -45,7 +45,7 @@ define(['lodash', 'angular'], function(_) {
 
     function createProblem(criteria, treatments, title, description, inputData, useFavorability) {
       var newCriteria = buildCriteria(criteria);
-      var problem = {
+      return {
         schemaVersion: currentSchemaVersion,
         title: title,
         description: description,
@@ -53,25 +53,6 @@ define(['lodash', 'angular'], function(_) {
         alternatives: buildAlternatives(treatments),
         performanceTable: buildPerformanceTable(inputData, newCriteria, treatments)
       };
-      if (useFavorability) {
-        problem.valueTree = {
-          title: 'Benefit-risk balance',
-          children: [{
-            title: 'Favourable effects',
-            criteria: _.keys(_.pickBy(newCriteria, function(newCrit) {
-              var matched = _.find(criteria, ['title', newCrit.title]);
-              return matched.isFavorable;
-            }))
-          }, {
-            title: 'Unfavourable effects',
-            criteria: _.keys(_.omitBy(newCriteria, function(newCrit) {
-              var matched = _.find(criteria, ['title', newCrit.title]);
-              return matched.isFavorable;
-            }))
-          }]
-        };
-      }
-      return problem;
     }
 
     function prepareInputData(criteria, alternatives, oldInputData) {
@@ -119,8 +100,8 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function copyWorkspaceCriteria(workspace) {
-      return _.map(workspace.problem.criteria, function(criterion, criterionId) {
-        var newCrit = _.pick(criterion, ['title', 'description', 'unitOfMeasurement']); // omit scales, preferences
+      return _.map(workspace.problem.criteria, function(criterion) {
+        var newCrit = _.pick(criterion, ['title', 'description', 'unitOfMeasurement', 'isFavorable']); // omit scales, preferences
         newCrit.dataSources = _.map(criterion.dataSources, function(dataSource) {
           var newDataSource = _.pick(dataSource, [
             'source',
@@ -137,9 +118,6 @@ define(['lodash', 'angular'], function(_) {
           return newDataSource;
         });
         newCrit.id = generateUuid();
-        if (workspace.problem.valueTree) {
-          newCrit.isFavorable = _.includes(workspace.problem.valueTree.children[0].criteria, criterionId) ? true : false;
-        }
         return newCrit;
       });
     }
@@ -150,7 +128,9 @@ define(['lodash', 'angular'], function(_) {
         var newCriterion = _.pick(criterion, [
           'title',
           'description',
-          'unitOfMeasurement']);
+          'unitOfMeasurement',
+          'isFavorable'
+        ]);
         newCriterion.dataSources = _.map(criterion.dataSources, addScale);
         return [criterion.id, newCriterion];
       });

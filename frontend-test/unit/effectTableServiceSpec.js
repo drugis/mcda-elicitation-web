@@ -14,39 +14,34 @@ define(['angular-mocks',
     describe('EffectsTableService', function() {
       describe('buildEffectsTable', function() {
         it('should return the order of the criterion in the effectstable including the favorability headers if needed', function() {
-          var problem = {
-            valueTree: {
-              children: [{
-                criteria: ['crit3', 'crit2']
-              }, {
-                criteria: ['crit1']
-              }]
-            }
-          };
           var criteria = [{
             id: 'crit1',
+            isFavorable: false,
             dataSources: [{
               id: 'ds1id'
             }]
           }, {
             id: 'crit2',
+            isFavorable: true,
             dataSources: [{
               id: 'ds2id'
             }]
           }, {
             id: 'crit3',
+            isFavorable: true,
             dataSources: [{
               id: 'ds3id'
             }]
           }];
-          var result = effectTableService.buildEffectsTable(problem.valueTree, criteria);
+          var result = effectTableService.buildEffectsTable(criteria);
           var expectedResult = [{
             isHeaderRow: true,
             headerText: 'Favorable effects'
           }, {
             criterion: {
               id: 'crit2',
-              numberOfDataSources: 1
+              numberOfDataSources: 1,
+              isFavorable: true
             },
             dataSource: {
               id: 'ds2id'
@@ -55,7 +50,8 @@ define(['angular-mocks',
           }, {
             criterion: {
               id: 'crit3',
-              numberOfDataSources: 1
+              numberOfDataSources: 1,
+              isFavorable: true
             },
             dataSource: {
               id: 'ds3id'
@@ -68,7 +64,8 @@ define(['angular-mocks',
           }, {
             criterion: {
               id: 'crit1',
-              numberOfDataSources: 1
+              numberOfDataSources: 1,
+              isFavorable: false
             },
             dataSource: {
               id: 'ds1id'

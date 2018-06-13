@@ -34,7 +34,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     };
     OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(ordering) {
       $scope.criteria = ordering.criteria;
-      $scope.tableRows = EffectsTableService.buildEffectsTable($scope.aggregateState.problem.valueTree, ordering.criteria);
+      $scope.tableRows = EffectsTableService.buildEffectsTable(ordering.criteria);
       $scope.alternatives = ordering.alternatives;
       loadState();
       $scope.$watch('scales.observed', function() {

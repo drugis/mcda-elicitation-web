@@ -44,28 +44,11 @@ define(['lodash'], function(_) {
 
     // private
     function getOrderedCriteria(problem) {
-      if (!problem.valueTree) {
-        return _.map(problem.criteria, function(criterion, criterionId) {
-          return _.extend({}, criterion, { id: criterionId });
-        });
-      }
-      var criterionIds;
-      if (problem.valueTree.children[0].criteria) {
-        criterionIds = problem.valueTree.children[0].criteria;
-      } else {
-        criterionIds = _.flatten(_.map(problem.valueTree.children[0].children, 'criteria'));
-      }
-      return getSpecificFavorabilityCriteria(problem.criteria, criterionIds)
-        .concat(getSpecificFavorabilityCriteria(problem.criteria, problem.valueTree.children[1].criteria));
-    }
-
-    function getSpecificFavorabilityCriteria(criteria, ids) {
-      return _.reduce(criteria, function(accum, criterion, criterionId) {
-        if (ids.indexOf(criterionId) >= 0) {
-          accum.push(_.merge({}, criterion, { id: criterionId }));
-        }
-        return accum;
-      }, []);
+      var criteriaWithId = _.map(problem.criteria, function(criterion, criterionId) {
+        return _.extend({}, criterion, { id: criterionId });
+      });
+      var partition = _.partition(criteriaWithId, ['isFavorable', true]);
+      return partition[0].concat(partition[1]);
     }
 
     function order(ordering, objectsToOrder) {

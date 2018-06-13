@@ -43,7 +43,6 @@ define(['lodash'], function(_) {
     $scope.aggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, currentScenario);
     $scope.subProblems = subProblems;
     $scope.subProblem = currentSubProblem;
-    $scope.workspace.$$valueTree = WorkspaceService.buildValueTree(baseProblem);
     $scope.workspace.scales = {};
     $scope.workspace.scales.theoreticalScales = WorkspaceService.buildTheoreticalScales(baseProblem);
     $scope.showStudyData = { value: false }; // true : study data, false : exact/relative values

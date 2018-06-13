@@ -67,7 +67,7 @@ define(['lodash', 'angular'], function(_) {
       OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
         $scope.alternatives = orderings.alternatives;
         $scope.criteria = orderings.criteria;
-        $scope.tableRows = EffectsTableService.buildEffectsTable($scope.problem.valueTree, orderings.criteria);
+        $scope.tableRows = EffectsTableService.buildEffectsTable(orderings.criteria);
 
         $scope.criteriaByDataSource = _($scope.criteria)
           .map(function(criterion) {

@@ -170,7 +170,9 @@ define(['lodash', 'angular'], function(_, angular) {
         var oldWorkspace = SchemaService.updateWorkspaceToCurrentSchema($stateParams.workspace);
         $scope.state = {
           oldWorkspace: oldWorkspace,
-          useFavorability: oldWorkspace.problem.valueTree ? true : false,
+          useFavorability: _.find(oldWorkspace.problem.criteria, function(criterion){
+            return criterion.hasOwnProperty('isFavorable');
+          }) ? true : false,
           step: 'step1',
           isInputDataValid: false,
           description: oldWorkspace.problem.description,

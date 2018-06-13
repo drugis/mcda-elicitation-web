@@ -9,18 +9,6 @@ define(['lodash', 'angular'], function(_, angular) {
     ScalesService,
     sortCriteriaWithW
   ) {
-
-    function buildValueTree(problem) {
-      if (problem.valueTree) {
-        return problem.valueTree;
-      } else {
-        return {
-          'title': 'Overall value',
-          'criteria': _.keys(problem.criteria)
-        };
-      }
-    }
-
     function buildTheoreticalScales(problem) {
       var theoreticalScales = {};
       _.forEach(problem.criteria, function(criterion) {
@@ -476,7 +464,6 @@ define(['lodash', 'angular'], function(_, angular) {
     return {
       getObservedScales: getObservedScales,
       buildTheoreticalScales: buildTheoreticalScales,
-      buildValueTree: buildValueTree,
       reduceProblem: reduceProblem,
       buildAggregateState: buildAggregateState,
       mergeBaseAndSubProblem: mergeBaseAndSubProblem,

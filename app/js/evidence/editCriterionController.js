@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modalInstance', 'oldCriterion', 'criteria', 'useFavorability', 'callback'];
-  var EditCriterionController = function($scope, $modalInstance, oldCriterion, criteria, useFavorability, callback) {
+  var dependencies = ['$scope', '$modalInstance', 'oldCriterion', 'criteria', 'callback'];
+  var EditCriterionController = function($scope, $modalInstance, oldCriterion, criteria, callback) {
     // functions
     $scope.cancel = $modalInstance.close;
     $scope.save = save;
@@ -11,18 +11,10 @@ define(['lodash'], function(_) {
     $scope.criterion = _.cloneDeep(oldCriterion);
     $scope.isTitleUnique = true;
     $scope.criteria = criteria;
-    $scope.valueTree = useFavorability;
-    if ($scope.valueTree && $scope.valueTree.children) {
-      $scope.favorabilityStatus = {};
-      $scope.favorabilityStatus.originalFavorability = !!_.find($scope.valueTree.children[0].criteria, function(crit) {
-        return crit === oldCriterion.id;
-      });
-      $scope.favorabilityStatus.isFavorable = _.cloneDeep($scope.favorabilityStatus.originalFavorability);
-    }
+    $scope.useFavorability = $scope.criterion.hasOwnProperty('isFavorable');
 
     function save() {
-      var favorabilityChanged = $scope.valueTree && $scope.valueTree.children ? $scope.favorabilityStatus.originalFavorability !== $scope.favorabilityStatus.isFavorable : false;
-      callback($scope.criterion, favorabilityChanged);
+      callback($scope.criterion);
       $modalInstance.close();
     }
 
