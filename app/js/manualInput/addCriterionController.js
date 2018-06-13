@@ -20,12 +20,11 @@ define(['lodash'], function(_) {
   ) {
     // functions
     $scope.isCreationBlocked = isCreationBlocked;
-    $scope.addCriterion = addCriterion;
+    $scope.save = save;
     $scope.cancel = $modalInstance.close;
     $scope.useFavorability = useFavorability;
 
     // init
-    $scope.blockedReason = '';
     $scope.isAddOperation = !oldCriterion;
     $scope.isAddingCriterion = false;
     $scope.sourceLinkValidity = {
@@ -48,9 +47,9 @@ define(['lodash'], function(_) {
     }
     isCreationBlocked();
 
-    function addCriterion(criterion) {
+    function save() {
       $scope.isAddingCriterion = true;
-      callback(criterion);
+      callback($scope.criterion);
       $modalInstance.close();
     }
 
