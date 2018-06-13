@@ -294,55 +294,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
     });
 
-    describe('createInputFromOldWorkspace', function() {
-      var criteria;
-      var alternatives = [{
-        id: 'alt',
-        oldId: 'oldAlt'
-      }];
-      var oldWorkspace = {
-        problem: {}
-      };
+    describe('createStateFromOldWorkspace', function() {
       beforeEach(function() {
-        criteria = [{
-          id: 'crit',
-          oldId: 'oldCrit',
-          dataSources: [{
-            id: 'ds1',
-            inputType: 'effect',
-            dataType: 'other'
-          }]
-        }];
-        oldWorkspace.problem.performanceTable = [{
-          criterion: 'oldCrit',
-          alternative: 'oldAlt',
-          performance: {
-            value: 10,
-            type: 'exact'
-          }
-        }];
+        generateUuidMock.and.returnValues('uuid1', 'uuid2', 'uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid8', 'uuid9', 'uuid10', 'uuid11', 'uuid12', 'uuid13');
       });
-      it('should create input data', function() {
-        inputKnowledgeServiceMock.finishInputCell.and.returnValue({
-          firstParameter: 10
-        });
-        var result = manualInputService.createInputFromOldWorkspace(criteria, alternatives, oldWorkspace);
-        var expectedResult = {
-          ds1: {
-            alt: {
-              firstParameter: 10
-            }
-          }
-        };
-        expect(result).toEqual(expectedResult);
-      });
-    });
-
-    describe('copyWorkspaceCriteria', function() {
-      beforeEach(function() {
-        generateUuidMock.and.returnValues('uuid1', 'uuid2', 'uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid8', 'uuid9', 'uuid10', 'uuid11', 'uuid12');
-      });
-      it('should copy and update the criteria from the old workspace, preserving units', function() {
+      it('should create a new state from an existing workspace', function() {
         var workspace = {
           problem: {
             criteria: {
@@ -412,6 +368,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 }]
               }
             },
+            alternatives: {
+              alt1: {
+                title: 'alternative 1'
+              }
+            },
             performanceTable: [{
               criterion: 'crit1',
               dataSource: 'ds1',
@@ -439,6 +400,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             }, {
               criterion: 'crit5',
               dataSource: 'ds5',
+              alternative: 'alt1',
               performance: {
                 type: 'exact'
               }
@@ -451,81 +413,96 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             }]
           }
         };
-        var result = manualInputService.copyWorkspaceCriteria(workspace);
-        var expectedResult = [{
-          id: 'uuid2',
-          title: 'criterion 1',
-          description: 'bla',
-          dataSources: [{
-            id: 'uuid1',
-            oldId: 'ds1',
-            source: 'single study',
-            sourceLink: 'http://www.drugis.org',
-            inputType: 'distribution',
-            inputMethod: 'assistedDistribution',
-            dataType: 'continuous'
-          }],
-          isFavorable: true,
-          unitOfMeasurement: 'Proportion'
+        var result = manualInputService.createStateFromOldWorkspace(workspace);
+        var expectedResult = {
+          oldWorkspace: workspace,
+          useFavorability: true,
+          step: 'step1',
+          isInputDataValid: false,
+          description: undefined,
+          criteria: [{
+            id: 'uuid2',
+            title: 'criterion 1',
+            description: 'bla',
+            dataSources: [{
+              id: 'uuid1',
+              oldId: 'ds1',
+              source: 'single study',
+              sourceLink: 'http://www.drugis.org',
+              inputType: 'distribution',
+              inputMethod: 'assistedDistribution',
+              dataType: 'continuous'
+            }],
+            isFavorable: true,
+            unitOfMeasurement: 'Proportion'
+          }, {
+            id: 'uuid4',
+            title: 'criterion 2',
+            dataSources: [{
+              id: 'uuid3',
+              oldId: 'ds2',
+              source: 'single study',
+              sourceLink: 'http://www.drugis.org',
+              inputType: 'distribution',
+              inputMethod: 'manualDistribution'
+            }],
+            isFavorable: true,
+            unitOfMeasurement: 'Response size'
+          }, {
+            id: 'uuid6',
+            title: 'criterion 3',
+            dataSources: [{
+              id: 'uuid5',
+              oldId: 'ds3',
+              source: 'single study',
+              inputType: 'distribution',
+              inputMethod: 'manualDistribution'
+            }],
+            isFavorable: false
 
-        }, {
-          id: 'uuid4',
-          title: 'criterion 2',
-          dataSources: [{
-            id: 'uuid3',
-            oldId: 'ds2',
-            source: 'single study',
-            sourceLink: 'http://www.drugis.org',
-            inputType: 'distribution',
-            inputMethod: 'manualDistribution'
+          }, {
+            id: 'uuid8',
+            title: 'criterion 4',
+            dataSources: [{
+              id: 'uuid7',
+              oldId: 'ds4',
+              source: 'single study',
+              inputType: 'distribution',
+              inputMethod: 'manualDistribution',
+            }],
+            isFavorable: false
+          }, {
+            id: 'uuid10',
+            title: 'criterion 5',
+            dataSources: [{
+              id: 'uuid9',
+              oldId: 'ds5',
+              source: 'single study',
+              inputType: 'distribution',
+              inputMethod: 'manualDistribution'
+            }],
+            isFavorable: false,
+          }, {
+            id: 'uuid12',
+            title: 'durrrvival',
+            dataSources: [{
+              id: 'uuid11',
+              oldId: 'ds6',
+              inputType: 'Unknown'
+            }],
+            isFavorable: false,
           }],
-          isFavorable: true,
-          unitOfMeasurement: 'Response size'
-
-        }, {
-          id: 'uuid6',
-          title: 'criterion 3',
-          dataSources: [{
-            id: 'uuid5',
-            oldId: 'ds3',
-            source: 'single study',
-            inputType: 'distribution',
-            inputMethod: 'manualDistribution'
+          alternatives: [{
+            oldId: 'alt1',
+            id: 'uuid13',
+            title: 'alternative 1'
           }],
-          isFavorable: false
-
-        }, {
-          id: 'uuid8',
-          title: 'criterion 4',
-          dataSources: [{
-            id: 'uuid7',
-            oldId: 'ds4',
-            source: 'single study',
-            inputType: 'distribution',
-            inputMethod: 'manualDistribution',
-          }],
-          isFavorable: false
-        }, {
-          id: 'uuid10',
-          title: 'criterion 5',
-          dataSources: [{
-            id: 'uuid9',
-            oldId: 'ds5',
-            source: 'single study',
-            inputType: 'distribution',
-            inputMethod: 'manualDistribution'
-          }],
-          isFavorable: false,
-        }, {
-          id: 'uuid12',
-          title: 'durrrvival',
-          dataSources: [{
-            id: 'uuid11',
-            oldId: 'ds6',
-            inputType: 'Unknown'
-          }],
-          isFavorable: false,
-        }];
+          inputData:{
+            uuid9: {
+              uuid13: undefined // see input knowledge service spec for tests 
+            }
+          }
+        };
         expect(result).toEqual(expectedResult);
       });
     });
