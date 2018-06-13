@@ -22,9 +22,7 @@
         "range": [0.2, 0.5],
         "type": "linear",
         "direction": "decreasing"
-      },
-      "id": "nausea",
-      "w": "w_1"
+      }
     },
     "hamd":
     {
@@ -35,9 +33,7 @@
         "range": [0.5, 0.75],
         "type": "linear",
         "direction": "increasing"
-      },
-      "id": "hamd",
-      "w": "w_2"
+      }
     }
   },
   "performanceTable": [
