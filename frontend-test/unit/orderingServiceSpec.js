@@ -182,13 +182,16 @@ define(['angular-mocks', 'mcda/workspace/workspace'], function() {
         var problem = {
           criteria: {
             crit1: {
-              title: 'criterion1'
+              title: 'criterion1',
+              isFavorable: false
             },
             crit2: {
-              title: 'criterion2'
+              title: 'criterion2',
+              isFavorable: true
             },
             crit4: {
-              title: 'criterion4'
+              title: 'criterion4',
+              isFavorable: false
             }
           },
           alternatives: {
@@ -198,11 +201,6 @@ define(['angular-mocks', 'mcda/workspace/workspace'], function() {
             alt2: {
               title: 'alternative2'
             }
-          },
-          valueTree: {
-            children: [{ criteria: ['crit2'] }, {
-              criteria: ['crit1', 'crit4']
-            }]
           }
         };
         var workspaceId = 1;
@@ -216,13 +214,16 @@ define(['angular-mocks', 'mcda/workspace/workspace'], function() {
           }],
           criteria: [{
             id: 'crit2',
-            title: 'criterion2'
+            title: 'criterion2',
+            isFavorable: true
           }, {
             id: 'crit1',
-            title: 'criterion1'
+            title: 'criterion1',
+            isFavorable: false
           }, {
             id: 'crit4',
-            title: 'criterion4'
+            title: 'criterion4',
+            isFavorable: false
           }]
         };
         orderingService.getOrderedCriteriaAndAlternatives(problem, workspaceId).then(function(result) {

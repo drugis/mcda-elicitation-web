@@ -65,7 +65,7 @@ define(['lodash'], function(_) {
                 return scope.criteria;
               },
               callback: function() {
-                return function(newCriterion, favorabilityChanged) {
+                return function(newCriterion) {
                   removeCriterion(_.findIndex(scope.criteria, ['id', criterion.id]));
                   scope.criteria.push(newCriterion);
                   if (scope.isInput) {
@@ -73,9 +73,6 @@ define(['lodash'], function(_) {
                   } else {
                     var criterionId = newCriterion.id;
                     scope.workspace.problem.criteria[criterionId] = _.omit(newCriterion, 'id');
-                    if (favorabilityChanged) {
-                      changeFavorability(criterionId);
-                    }
                     initializeCriteriaLists();
                     saveOrdering();
                     WorkspaceResource.save($stateParams, scope.workspace).$promise.then(function() {
@@ -106,31 +103,13 @@ define(['lodash'], function(_) {
         }
 
         //private
-        function changeFavorability(criterionId) {
-          var toRemove = !!_.find(scope.useFavorability.children[0].criteria, function(crit) {
-            return crit === criterionId;
-          }) ? 0 : 1;
-          var toAdd = toRemove === 1 ? 0 : 1;
-          _.remove(scope.useFavorability.children[toRemove].criteria, function(crit) {
-            return crit === criterionId;
-          });
-          scope.useFavorability.children[toAdd].criteria.push(criterionId);
-        }
-
         function initializeCriteriaLists() {
           if (scope.isInput) {
             checkForUnknownCriteria();
             checkForMissingFavorability();
           }
           if (scope.useFavorability) {
-            var partition;
-            if (scope.isInput) {
-              partition = _.partition(scope.criteria, ['isFavorable', true]);
-            } else {
-              partition = _.partition(scope.criteria, function(criterion) {
-                return _.includes(scope.useFavorability.children[0].criteria, criterion.id);
-              });
-            }
+            var partition = _.partition(scope.criteria, ['isFavorable', true]);
             scope.favorableCriteria = partition[0];
             scope.unfavorableCriteria = partition[1];
             scope.criteria = partition[0].concat(partition[1]); // TODO: fix ordering service bug that makes this line necessary then delete

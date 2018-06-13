@@ -8,12 +8,21 @@ define(['lodash', 'angular'], function(_, angular) {
     generateUuid,
     currentSchemaVersion
   ) {
+    /***** Changes 
+     * 1.0.0 introduction of data sources
+     * 1.1.0 removal of the value tree
+     * *****/
 
     function updateProblemToCurrentSchema(problem) {
       var newProblem = angular.copy(problem);
       if (!problem.schemaVersion) {
         newProblem = updateToVersionOnePointZeroPointZero(newProblem);
       }
+
+      if (newProblem.schemaVersion === '1.0.0') {
+        newProblem = updateToVersionOnePointOnePointZero(newProblem);
+      }
+
       if (newProblem.schemaVersion === currentSchemaVersion) {
         return newProblem;
       }
@@ -42,8 +51,8 @@ define(['lodash', 'angular'], function(_, angular) {
           dataSource.inputType = 'distribution';
           dataSource.inputMethod = 'assistedDistribution';
           dataSource.dataType = 'continuous';
-        } 
-        
+        }
+
         newCriterion.dataSources = [dataSource];
         return newCriterion;
       });
@@ -55,6 +64,26 @@ define(['lodash', 'angular'], function(_, angular) {
       problem.schemaVersion = '1.0.0';
       return problem;
     }
+
+    function updateToVersionOnePointOnePointZero(problem) {
+      var newProblem = _.cloneDeep(problem);
+      if (newProblem.valueTree) {
+        newProblem.criteria = _.mapValues(newProblem.criteria, function(criterion, criterionId) {
+          var newCriterion = _.cloneDeep(criterion);
+          if (problem.valueTree.children[0].criteria) {
+            newCriterion.isFavorable = _.includes(newProblem.valueTree.children[0].criteria, criterionId);
+          } else {
+            newCriterion.isFavorable = _.includes(_.flatten(_.map(problem.valueTree.children[0].children, 'criteria')));
+          }
+          return newCriterion;
+        });
+        delete newProblem.valueTree;
+      }
+      newProblem.schemaVersion = '1.1.0';
+      return newProblem;
+    }
+
+
     return {
       updateProblemToCurrentSchema: updateProblemToCurrentSchema,
       updateWorkspaceToCurrentSchema: updateWorkspaceToCurrentSchema

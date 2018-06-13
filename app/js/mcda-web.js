@@ -88,7 +88,7 @@ define(['angular',
     })());
 
     app.constant('isMcdaStandalone', true);
-    app.constant('currentSchemaVersion', '1.0.0');
+    app.constant('currentSchemaVersion', '1.1.0');
 
      app.config(function(mcdaRootPath, $stateProvider, $urlRouterProvider, MCDARouteProvider) {
       var baseTemplatePath = mcdaRootPath + 'views/';

@@ -3,7 +3,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
 
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
-  var currentSchemaVersion = '1.0.0';
+  var currentSchemaVersion = '1.1.0';
   var inputKnowledgeServiceMock = jasmine.createSpyObj('InputKnowledgeService', ['getOptions', 'inputToString',
     'finishInputCell', 'buildPerformance']);
   describe('The manualInputService', function() {
@@ -185,6 +185,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         }, {
           title: 'dichotomousDecimalSampleSize',
           id: 'criterion3id',
+          isFavorable: false,
           dataSources: [{
             id: 'ds3id',
             inputType: 'effect',
@@ -229,23 +230,14 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         var result = manualInputService.createProblem(criteria, treatments, title, description, inputData, useFavorability);
         var expectedResult = {
           title: title,
-          schemaVersion: '1.0.0',
+          schemaVersion: '1.1.0',
           description: description,
-          valueTree: {
-            title: 'Benefit-risk balance',
-            children: [{
-              title: 'Favourable effects',
-              criteria: ['criterion1id']
-            }, {
-              title: 'Unfavourable effects',
-              criteria: ['criterion2id', 'criterion3id']
-            }]
-          },
           criteria: {
             criterion1id: {
               title: 'favorable criterion',
               description: 'some crit description',
               unitOfMeasurement: 'particles',
+              isFavorable: true,
               dataSources: [{
                 id: 'ds1id',
                 scale: [-Infinity, Infinity],
@@ -257,6 +249,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               title: 'unfavorable criterion',
               description: 'some crit description',
               unitOfMeasurement: 'particles',
+              isFavorable: false,
               dataSources: [{
                 id: 'ds2id',
                 scale: [-Infinity, Infinity],
@@ -266,6 +259,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             },
             criterion3id: {
               title: 'dichotomousDecimalSampleSize',
+              isFavorable: false,
               dataSources: [{
                 id: 'ds3id',
                 scale: [0, 1],
@@ -348,7 +342,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       beforeEach(function() {
         generateUuidMock.and.returnValues('uuid1', 'uuid2', 'uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid8', 'uuid9', 'uuid10', 'uuid11', 'uuid12');
       });
-      it('for schema zero should copy and update the criteria from the old workspace, preserving units and value tree', function() {
+      it('should copy and update the criteria from the old workspace, preserving units', function() {
         var workspace = {
           problem: {
             criteria: {
@@ -356,6 +350,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 title: 'criterion 1',
                 description: 'bla',
                 unitOfMeasurement: 'Proportion',
+                isFavorable: true,
                 dataSources: [{
                   id: 'ds1',
                   source: 'single study',
@@ -368,6 +363,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               crit2: {
                 title: 'criterion 2',
                 unitOfMeasurement: 'Response size',
+                isFavorable: true,
                 dataSources: [{
                   id: 'ds2',
                   inputType: 'distribution',
@@ -378,6 +374,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               },
               crit3: {
                 title: 'criterion 3',
+                isFavorable: false,
                 dataSources: [{
                   id: 'ds3',
                   inputType: 'distribution',
@@ -387,6 +384,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               },
               crit4: {
                 title: 'criterion 4',
+                isFavorable: false,
                 dataSources: [{
                   id: 'ds4',
                   inputType: 'distribution',
@@ -396,6 +394,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               },
               crit5: {
                 title: 'criterion 5',
+                isFavorable: false,
                 dataSources: [{
                   id: 'ds5',
                   inputType: 'distribution',
@@ -405,6 +404,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               },
               crit6: {
                 title: 'durrrvival',
+                isFavorable: false,
                 dataSources: [{
                   id: 'ds6',
                   inputType: 'Unknown'
@@ -448,17 +448,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               performance: {
                 type: 'dsurv'
               }
-            }],
-            valueTree: {
-              title: 'Benefit-risk balance',
-              children: [{
-                title: 'Favourable effects',
-                criteria: ['crit1', 'crit2']
-              }, {
-                title: 'Unfavourable effects',
-                criteria: ['crit3', 'crit4', 'crit5']
-              }]
-            }
+            }]
           }
         };
         var result = manualInputService.copyWorkspaceCriteria(workspace);
@@ -535,90 +525,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             inputType: 'Unknown'
           }],
           isFavorable: false,
-        }];
-        expect(result).toEqual(expectedResult);
-      });
-      it('for schema one should copy and update the criteria from the old workspace, preserving units and value tree', function() {
-        var workspace = {
-          problem: {
-            schemaVersion: '1.0.0',
-            criteria: {
-              crit1: {
-                id: 'crit1',
-                title: 'criterion 1',
-                description: 'desc',
-                dataSources: [{
-                  id: 'ds1',
-                  source: 'well',
-                  sourceLink: 'zelda',
-                  strengthOfEvidence: '9001',
-                  uncertainties: 'dunno',
-                  scales: [0, 1],
-                  pvf: {
-                    direction: 'decreasing',
-                    type: 'linear',
-                    range: [0.0, 1.0]
-                  },
-                  inputType: 'distribution',
-                  inputMethod: 'assistedDistribution',
-                  dataType: 'dichotomous'
-                }],
-                unitOfMeasurement: 'absolute',
-                omitThis: 'yech'
-              },
-              crit2: {
-                id: 'crit2',
-                title: 'criterion 2',
-                dataSources: [{
-                  id: 'ds2',
-                  inputType: 'effect',
-                  dataType: 'continuous',
-                  parameterOfInterest: 'mean'
-                }]
-              }
-            },
-            performanceTable: [],
-            valueTree: {
-              title: 'Benefit-risk balance',
-              children: [{
-                title: 'Favourable effects',
-                criteria: ['crit1']
-              }, {
-                title: 'Unfavourable effects',
-                criteria: ['crit2']
-              }]
-            }
-          }
-        };
-        var result = manualInputService.copyWorkspaceCriteria(workspace);
-        var expectedResult = [{
-          id: 'uuid2',
-          title: 'criterion 1',
-          description: 'desc',
-          dataSources: [{
-            id: 'uuid1',
-            oldId: 'ds1',
-            source: 'well',
-            sourceLink: 'zelda',
-            strengthOfEvidence: '9001',
-            uncertainties: 'dunno',
-            inputType: 'distribution',
-            inputMethod: 'assistedDistribution',
-            dataType: 'dichotomous'
-          }],
-          unitOfMeasurement: 'absolute',
-          isFavorable: true
-        }, {
-          id: 'uuid4',
-          title: 'criterion 2',
-          dataSources: [{
-            oldId: 'ds2',
-            id: 'uuid3',
-            inputType: 'effect',
-            dataType: 'continuous',
-            parameterOfInterest: 'mean'
-          }],
-          isFavorable: false
         }];
         expect(result).toEqual(expectedResult);
       });

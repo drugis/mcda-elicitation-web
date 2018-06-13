@@ -7,7 +7,6 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     'mcdaRootPath',
     'swap'
   ];
-
   var EvidenceController = function($scope, $state, $stateParams, $modal,
     WorkspaceResource,
     isMcdaStandalone,
@@ -21,12 +20,14 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.alternativeUp = alternativeUp;
     $scope.alternativeDown = alternativeDown;
     $scope.downloadWorkspace = downloadWorkspace;
-    
+
     // init
     $scope.scales = $scope.workspace.scales.observed;
-    $scope.valueTree = $scope.workspace.$$valueTree;
     $scope.problem = $scope.workspace.problem;
     $scope.isStandAlone = isMcdaStandalone;
+    $scope.useFavorability = _.find($scope.problem.criteria, function(criterion) {
+      return criterion.hasOwnProperty('isFavorable');
+    });
 
     OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
       $scope.alternatives = orderings.alternatives;
@@ -37,13 +38,6 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       $scope.scales = newValue;
     }, true);
     new Clipboard('.clipboard-button');
-
-    // let js simulate mouse click FIXME: only apply to relevant button / link (download link)? IE fix/check?
-    HTMLElement.prototype.click = function() {
-      var evt = this.ownerDocument.createEvent('MouseEvents');
-      evt.initMouseEvent('click', true, true, this.ownerDocument.defaultView, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
-      this.dispatchEvent(evt);
-    };
 
     function editTherapeuticContext() {
       $modal.open({
@@ -100,6 +94,13 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       var problemWithTitle = _.merge({}, $scope.problem, { title: $scope.workspace.title });
       var data = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(problemWithTitle, null, 2));
       link.href = 'data:' + data;
+
+      // let js simulate mouse click 
+      link.click = function() {
+        var evt = this.ownerDocument.createEvent('MouseEvents');
+        evt.initMouseEvent('click', true, true, this.ownerDocument.defaultView, 1, 0, 0, 0, 0, false, false, false, false, 0, null);
+        this.dispatchEvent(evt);
+      };
       link.click();
     }
 

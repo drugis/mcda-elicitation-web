@@ -12,7 +12,6 @@ define(['lodash'], function(_) {
       scope: {
         'criteria': '=',
         'alternatives': '=',
-        'valueTree': '=',
         'editMode': '=',
         'effectsTableInfo': '=',
         'scales': '=',
@@ -27,7 +26,7 @@ define(['lodash'], function(_) {
 
         scope.$watch('criteria', function(newCriteria) {
           scope.keyedCriteria = _.keyBy(_.cloneDeep(newCriteria), 'id');
-          scope.rows = EffectsTableService.buildEffectsTable(scope.valueTree, scope.keyedCriteria);
+          scope.rows = EffectsTableService.buildEffectsTable(scope.keyedCriteria);
         }, true);
         scope.$watch('alternatives', function(newAlternatives) {
           scope.nrAlternatives = _.keys(scope.alternatives).length;

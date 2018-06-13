@@ -3,25 +3,12 @@ define(['lodash'], function(_) {
   var dependencies = [];
 
   var EffectsTableService = function() {
-    function flattenValueTreeChildren(child) {
-      if (child.criteria) {
-        return child.criteria;
-      } else {
-        return _.flatten(_.map(child.children, 'criteria'));
-      }
-    }
-
-    function pickOrderedIds(criteria, ids) {
-      return _(criteria).
-        filter(function(criterion) {
-          return ids.indexOf(criterion.id) >= 0;
-        })
-        .value();
-    }
-
-    function buildEffectsTable(valueTree, criteria) {
+    function buildEffectsTable(criteria) {
       var tableRows = criteria;
-      if (valueTree) {
+      var useFavorability = _.find(criteria, function(criterion) {
+        return criterion.hasOwnProperty('isFavorable');
+      });
+      if (useFavorability) {
         var favorabilityHeader = {
           isHeaderRow: true,
           headerText: 'Favorable effects'
@@ -30,8 +17,9 @@ define(['lodash'], function(_) {
           isHeaderRow: true,
           headerText: 'Unfavorable effects'
         };
-        var orderedFavorableCriteria = pickOrderedIds(criteria, flattenValueTreeChildren(valueTree.children[0]));
-        var orderedUnfavorableCriteria = pickOrderedIds(criteria, flattenValueTreeChildren(valueTree.children[1]));
+        var partition = _.partition(criteria, ['isFavorable', true]);
+        var orderedFavorableCriteria = partition[0];
+        var orderedUnfavorableCriteria = partition[1];
         tableRows = [].concat(
           [favorabilityHeader],
           orderedFavorableCriteria,
@@ -166,7 +154,7 @@ define(['lodash'], function(_) {
         label: label,
         hasUncertainty: hasUncertainty
       };
-    } 
+    }
 
     //private
     function roundToThreeDigits(value) {
