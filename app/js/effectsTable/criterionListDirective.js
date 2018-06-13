@@ -58,16 +58,15 @@ define(['lodash'], function(_) {
 
         function openCriterionModal(criterion) {
           $modal.open({
-            templateUrl: scope.isInput ? '/js/manualInput/addCriterion.html' : '/js/evidence/editCriterion.html',
-            controller: scope.isInput ? 'AddCriterionController' : 'EditCriterionController',
+            templateUrl: '/js/evidence/editCriterion.html',
+            controller: 'EditCriterionController',
             resolve: {
               criteria: function() {
                 return scope.criteria;
               },
               callback: function() {
                 return function(newCriterion) {
-                  removeCriterion(_.findIndex(scope.criteria, ['id', criterion.id]));
-                  scope.criteria.push(newCriterion);
+                  scope.criteria[_.findIndex(scope.criteria, ['id', criterion.id])] = newCriterion;
                   if (scope.isInput) {
                     initializeCriteriaLists();
                   } else {
@@ -95,9 +94,8 @@ define(['lodash'], function(_) {
           function decorateWithId(alternative, alternativeId) {
             return _.merge({}, { id: alternativeId }, alternative);
           }
-
-          OrderingService.saveOrdering($stateParams,
-            scope.favorableCriteria.concat(scope.unfavorableCriteria),
+          var criteria = scope.unfavorableCriteria ? scope.favorableCriteria.concat(scope.unfavorableCriteria) : scope.favorableCriteria;
+          OrderingService.saveOrdering($stateParams, criteria,
             _.map(scope.workspace.problem.alternatives, decorateWithId)
           );
         }

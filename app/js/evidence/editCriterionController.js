@@ -5,7 +5,7 @@ define(['lodash'], function(_) {
     // functions
     $scope.cancel = $modalInstance.close;
     $scope.save = save;
-    $scope.checkForDuplicateNames = checkForDuplicateNames;
+    $scope.isCreationBlocked = isCreationBlocked;
 
     // init
     $scope.criterion = _.cloneDeep(oldCriterion);
@@ -18,14 +18,18 @@ define(['lodash'], function(_) {
       $modalInstance.close();
     }
 
-    function checkForDuplicateNames() {
-      if (_.find($scope.criteria, function(criterion) {
-        return criterion.title === $scope.criterion.title && criterion.id !== $scope.criterion.id;
-      }) ) {
-        $scope.isTitleUnique = false;
-      } else {
-        $scope.isTitleUnique = true;
+    function isCreationBlocked() {
+      $scope.blockedReasons = [];
+      if ($scope.criterion.title !== oldCriterion.title && isTitleDuplicate($scope.criterion.title)) {
+        $scope.blockedReasons.push('Duplicate title');
       }
+      if (!$scope.criterion.title) {
+        $scope.blockedReasons.push('No title entered');
+      }
+    }
+
+    function isTitleDuplicate(title) {
+      return _.find(criteria, ['title', title]);
     }
   };
   return dependencies.concat(EditCriterionController);

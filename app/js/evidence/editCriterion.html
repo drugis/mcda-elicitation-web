@@ -1,44 +1,49 @@
 <form ng-submit="save()">
-  <div class="grid-x">
-    <div class="cell">
-      <h3>Edit criterion</h3>
+  <div class="grid-container">
+    <div class="grid-x">
+      <div class="cell">
+        <h3>Edit criterion</h3>
+      </div>
+      <div class="cell">
+        <label>Name</label>
+      </div>
+      <div class="cell">
+        <input type="text" ng-model="criterion.title" ng-change="isCreationBlocked()">
+      </div>
+      <div class="cell">
+        <label>Description</label>
+      </div>
+      <div class="cell">
+        <textarea rows="4" ng-model="criterion.description"></textarea>
+      </div>
+      <div class="cell">
+        <label>Unit of measurement
+          <inline-help help-key="criterion-unit"></inline-help>
+        </label>
+      </div>
+      <div class="cell">
+        <input type="text" ng-model="criterion.unitOfMeasurement">
+      </div>
+      <div class="cell" ng-if="useFavorability">
+        <label>Favorability
+          <inline-help help-key="favorability"></inline-help>
+        </label>
+        <input type="radio" ng-model="criterion.isFavorable" ng-value="false" id="not-favorable">
+        <label for="not-favorable">Not favorable</label>
+        <input type="radio" ng-model="criterion.isFavorable" ng-value="true" id="favorable">
+        <label for="favorable">Favorable</label>
+      </div>
+      <div class="cell">
+        <button class="button success" type="submit" ng-disabled="blockedReasons.length">Save</button>
+      </div>
+      <div class="cell" ng-when="blockedReasons.length">
+        <em ng-repeat="blockedReason in blockedReasons" class="alert">{{blockedReason}}
+          <br>
+        </em>
+      </div>
+      <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
     </div>
-    <div class="cell">
-      <label>Name</label>
-    </div>
-    <div class="cell">
-      <input type="text" ng-model="criterion.title" ng-change="checkForDuplicateNames()">
-    </div>
-    <div class="cell">
-      <label>Description</label>
-    </div>
-    <div class="cell">
-      <textarea rows="4" ng-model="criterion.description"></textarea>
-    </div>
-    <div class="cell">
-      <label>Unit of measurement
-        <inline-help help-key="criterion-unit"></inline-help>
-      </label>
-    </div>
-    <div class="cell">
-      <input type="text" ng-model="criterion.unitOfMeasurement">
-    </div>
-    <div class="cell" ng-if="useFavorability">
-      <label>Favorability
-        <inline-help help-key="favorability"></inline-help>
-      </label>
-      <input type="radio" ng-model="criterion.isFavorable" ng-value="false" id="not-favorable">
-      <label for="not-favorable">Not favorable</label>
-      <input type="radio" ng-model="criterion.isFavorable" ng-value="true" id="favorable">
-      <label for="favorable">Favorable</label>
-    </div>
-    <div class="cell">
-      <button class="button success" type="submit" ng-disabled="!criterion.title || !isTitleUnique">Save</button>
-    </div>
-    <div class="cell alert" ng-if="!isTitleUnique">Duplicate title</div>
-    <div class="cell alert" ng-if="!criterion.title">Missing title</div>
-    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
-      <span aria-hidden="true">&times;</span>
-    </button>
   </div>
 </form>
