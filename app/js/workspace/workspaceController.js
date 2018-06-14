@@ -6,7 +6,8 @@ define(['angular'], function(angular) {
     '$stateParams',
     'WorkspaceResource',
     'SchemaService',
-    'currentWorkspace'
+    'currentWorkspace',
+    'currentSchemaVersion'
   ];
   var WorkspaceController = function(
     $scope,
@@ -14,7 +15,8 @@ define(['angular'], function(angular) {
     $stateParams,
     WorkspaceResource,
     SchemaService,
-    currentWorkspace
+    currentWorkspace,
+    currentSchemaVersion
   ) {
     // functions
     $scope.editTitle = editTitle;
@@ -26,10 +28,14 @@ define(['angular'], function(angular) {
     $scope.editMode = {
       isUserOwner: user ? currentWorkspace.owner === user.id : false
     };
-    $scope.workspace = SchemaService.updateWorkspaceToCurrentSchema(currentWorkspace);
+    if(currentWorkspace.problem.schemaVersion !== currentSchemaVersion){
+      $scope.workspace = SchemaService.updateWorkspaceToCurrentSchema(currentWorkspace);
+      WorkspaceResource.save($stateParams, $scope.workspace);
+    } else { 
+      $scope.workspace = currentWorkspace;
+    }
     
     $scope.isEditTitleVisible = false;
-    $scope.workspaceTitle = $scope.workspace.title;
 
     function editTitle() {
       $scope.isEditTitleVisible = true;

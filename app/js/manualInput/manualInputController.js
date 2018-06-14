@@ -167,8 +167,7 @@ define(['lodash', 'angular'], function(_, angular) {
     function initState() {
       if ($stateParams.workspace) {
         // copying existing workspace
-        var oldWorkspace = SchemaService.updateWorkspaceToCurrentSchema($stateParams.workspace);
-        $scope.state = ManualInputService.createStateFromOldWorkspace(oldWorkspace);
+        $scope.state = ManualInputService.createStateFromOldWorkspace($stateParams.workspace);
         $scope.dirty = true;
         setStateWatcher();
       } else if (!$stateParams.inProgressId) {
