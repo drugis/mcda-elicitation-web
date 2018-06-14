@@ -1,5 +1,5 @@
-<div class="grid-x callout secondary">
-  <div class="cell" ng-if="useFavorability">
+<div class="grid-x callout secondary" ng-if="useFavorability">
+  <div class="cell">
     <h5>Favorable criteria</h5>
   </div>
   <div class="cell" ng-repeat="criterion in favorableCriteria">
@@ -7,8 +7,8 @@
       idx="$index" edit-criterion="openCriterionModal" is-input="isInput" save-ordering="saveOrdering" save-workspace="saveWorkspace">
   </div>
 </div>
-<div class="grid-x callout secondary" ng-if="useFavorability">
-  <div class="cell">
+<div class="grid-x callout secondary">
+  <div class="cell" ng-if="useFavorability">
     <h5>Unfavorable criteria</h5>
   </div>
   <div class="cell" ng-repeat="criterion in unfavorableCriteria">

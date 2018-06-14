@@ -47,7 +47,8 @@ define(['lodash', 'angular'], function(_, angular) {
           url: choice
         };
         ExampleResource.get(example, function(problem) {
-          WorkspaceResource.create(problem).$promise.then(function(workspace) {
+          var updatedProblem = SchemaService.updateProblemToCurrentSchema(problem);
+          WorkspaceResource.create(updatedProblem).$promise.then(function(workspace) {
             callback(choice, workspace);
             $modalInstance.close();
           });

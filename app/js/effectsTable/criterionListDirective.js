@@ -112,8 +112,8 @@ define(['lodash'], function(_) {
             checkForMissingFavorability();
           }
           var partition = _.partition(scope.criteria, ['isFavorable', true]);
-          scope.favorableCriteria = scope.useFavorability ? partition[0] : scope.criteria;
-          scope.unfavorableCriteria = scope.useFavorability ? partition[1] : [];
+          scope.favorableCriteria = partition[0];
+          scope.unfavorableCriteria =  partition[1];
         }
 
         function swapAndInitialize(array, idx, newIdx) {
