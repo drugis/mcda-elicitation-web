@@ -22,7 +22,8 @@ define(['lodash'], function(_) {
         'idx': '=',
         'editCriterion': '=',
         'isInput': '=',
-        'saveOrdering': '='
+        'saveOrdering': '=',
+        'saveWorkspace':'='
       },
       templateUrl: mcdaRootPath + 'js/effectsTable/criterionCardDirective.html',
       link: function(scope) {
@@ -83,6 +84,9 @@ define(['lodash'], function(_) {
                 return function(newDataSource) {
                   if (dataSource) {
                     scope.criterion.dataSources[dataSourceIndex] = newDataSource;
+                    if(!scope.isInput){
+                      scope.saveWorkspace(scope.criterion);
+                    }
                   } else {
                     scope.criterion.dataSources.push(newDataSource);
                   }
