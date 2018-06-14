@@ -45,6 +45,7 @@
               <th ng-show="toggledColumns['units']">Units
                 <inline-help help-key="criterion-unit"></inline-help>
               </th>
+              <th ng-show="toggledColumns['references']">References</th>
               <th ng-class="{'disabled-header' : !subProblemState.alternativeInclusions[alternative.id]}" class="text-center" ng-repeat="alternative in alternatives">
                 <div class="grid-x">
                   <div class="cell">
@@ -58,7 +59,6 @@
                     </label>
                   </div>
               </th>
-              <th ng-show="toggledColumns['references']">References</th>
               <th ng-show="toggledColumns['strength']">Strength of evidence / Uncertainties
                 <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
               </th>
@@ -89,23 +89,23 @@
                 ng-show="toggledColumns['units']">
                 {{row.criterion.unitOfMeasurement}}
               </td>
-              <td ng-if="!row.isHeaderRow" ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternative.id] || !subProblemState.criterionInclusions[row.criterion.id] || !subProblemState.dataSourceInclusions[row.dataSource.id]}"
-                class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
+              <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['references']" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id] || !subProblemState.dataSourceInclusions[row.dataSource.id]}">
                 <div class="grid-x">
                   <div class="cell large-1">
-                    <input type="checkbox" ng-if="$first" ng-model="subProblemState.dataSourceInclusions[row.dataSource.id]" ng-change="updateInclusions()"
+                    <input type="checkbox" ng-model="subProblemState.dataSourceInclusions[row.dataSource.id]" ng-change="updateInclusions()"
                       ng-disabled="!subProblemState.criterionInclusions[row.criterion.id] || subProblemState.numberOfDataSourcesPerCriterion[row.criterion.id] === 1 && subProblemState.dataSourceInclusions[row.dataSource.id]">
                   </div>
                   <div class="cell large-11">
-                    <effects-table-scales-cell scales="scales.observed[row.dataSource.id][alternative.id]" uncertainty="effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || effectsTableInfo[row.dataSource.id].distributionType==='relative'"></effects-table-scales-cell>
+                    <a ng-if="row.dataSource.sourceLink" href="{{row.dataSource.sourceLink}}">
+                      {{row.dataSource.source}}
+                    </a>
+                    <span ng-if="!row.dataSource.sourceLink">{{row.dataSource.source}}</span>
                   </div>
                 </div>
               </td>
-              <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['references']" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id] || !subProblemState.dataSourceInclusions[row.dataSource.id]}">
-                <a ng-if="row.dataSource.sourceLink" href="{{row.dataSource.sourceLink}}">
-                  {{row.dataSource.source}}
-                </a>
-                <span ng-if="!row.dataSource.sourceLink">{{row.dataSource.source}}</span>
+              <td ng-if="!row.isHeaderRow" ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternative.id] || !subProblemState.criterionInclusions[row.criterion.id] || !subProblemState.dataSourceInclusions[row.dataSource.id]}"
+                class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
+                <effects-table-scales-cell scales="scales.observed[row.dataSource.id][alternative.id]" uncertainty="effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || effectsTableInfo[row.dataSource.id].distributionType==='relative'"></effects-table-scales-cell>
               </td>
               <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['strength']" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id] || !subProblemState.dataSourceInclusions[row.dataSource.id]}">
                 <div ng-if="row.dataSource.strengthOfEvidence">
