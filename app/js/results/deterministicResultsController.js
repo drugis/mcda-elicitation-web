@@ -36,6 +36,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       $scope.criteria = ordering.criteria;
       $scope.tableRows = EffectsTableService.buildEffectsTable(ordering.criteria);
       $scope.alternatives = ordering.alternatives;
+      $scope.nrAlternatives = _.keys($scope.alternatives).length;
       loadState();
       $scope.$watch('scales.observed', function() {
         resetSensitivityAnalysis();
