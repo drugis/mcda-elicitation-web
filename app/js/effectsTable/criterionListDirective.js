@@ -35,6 +35,8 @@ define(['lodash'], function(_) {
         scope.removeCriterion = removeCriterion;
         scope.openCriterionModal = openCriterionModal;
         scope.saveOrdering = saveOrdering;
+        scope.saveWorkspace = saveWorkspace;
+
         // init
         initializeCriteriaLists();
         scope.$watch('useFavorability', initializeCriteriaLists);
@@ -70,13 +72,8 @@ define(['lodash'], function(_) {
                   if (scope.isInput) {
                     initializeCriteriaLists();
                   } else {
-                    var criterionId = newCriterion.id;
-                    scope.workspace.problem.criteria[criterionId] = _.omit(newCriterion, 'id');
                     initializeCriteriaLists();
-                    saveOrdering();
-                    WorkspaceResource.save($stateParams, scope.workspace).$promise.then(function() {
-                      $state.reload(); //must reload to update effectsTable
-                    });
+                    saveWorkspace(newCriterion);
                   }
                 };
               },
@@ -94,10 +91,18 @@ define(['lodash'], function(_) {
           function decorateWithId(alternative, alternativeId) {
             return _.merge({}, { id: alternativeId }, alternative);
           }
-          var criteria = scope.unfavorableCriteria ? scope.favorableCriteria.concat(scope.unfavorableCriteria) : scope.favorableCriteria;
+          var criteria = scope.favorableCriteria.concat(scope.unfavorableCriteria);
           OrderingService.saveOrdering($stateParams, criteria,
             _.map(scope.workspace.problem.alternatives, decorateWithId)
           );
+        }
+
+        function saveWorkspace(criterion) {
+          scope.workspace.problem.criteria[criterion.id] = _.omit(criterion, 'id');
+          saveOrdering();
+          WorkspaceResource.save($stateParams, scope.workspace).$promise.then(function() {
+            $state.reload(); //must reload to update effectsTable
+          });
         }
 
         //private
@@ -108,7 +113,7 @@ define(['lodash'], function(_) {
           }
           var partition = _.partition(scope.criteria, ['isFavorable', true]);
           scope.favorableCriteria = scope.useFavorability ? partition[0] : scope.criteria;
-          scope.unfavorableCriteria = partition[1];
+          scope.unfavorableCriteria = scope.useFavorability ? partition[1] : [];
         }
 
         function swapAndInitialize(array, idx, newIdx) {
