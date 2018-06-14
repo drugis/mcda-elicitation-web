@@ -12,7 +12,7 @@ define(['lodash'], function(_) {
 
         var orderedAlternatives = order(ordering.alternatives, problem.alternatives);
         var orderedCriteria = order(ordering.criteria, problem.criteria);
-        if (ordering.dataSources) {
+        if (ordering.dataSources && ordering.dataSources.length) {
           orderedCriteria = orderDataSources(ordering.dataSources, orderedCriteria);
         }
         return {
