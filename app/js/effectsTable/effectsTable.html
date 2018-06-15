@@ -28,13 +28,13 @@
           <th ng-show="toggledColumns['units']">Units
             <inline-help help-key="criterion-unit"></inline-help>
           </th>
-          <th ng-show="toggledColumns['references']">References
-            <inline-help help-key="criterion-source"></inline-help>
-          </th>
           <th class="text-center" ng-repeat="alternative in alternatives">
             {{alternative.title}}</th>
           <th ng-show="toggledColumns['strength']">Strength of evidence / Uncertainties
             <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
+          </th>
+          <th ng-show="toggledColumns['references']">References
+            <inline-help help-key="criterion-source"></inline-help>
           </th>
         </tr>
       </thead>
@@ -54,12 +54,6 @@
           <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}" ng-show="toggledColumns['units']">
             {{row.criterion.unitOfMeasurement}}
           </td>
-          <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['references']">
-            <a ng-if="row.dataSource.sourceLink" href="{{row.dataSource.sourceLink}}">
-              {{row.dataSource.source}}
-            </a>
-            <span ng-if="!row.dataSource.sourceLink">{{row.dataSource.source}}</span>
-          </td>
           <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
             <effects-table-scales-cell ng-show="!effectsTableInfo[row.dataSource.id].hasStudyData || !showStudyData.value" scales="scales[row.dataSource.id][alternative.id]"
               uncertainty="effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || effectsTableInfo[row.dataSource.id].distributionType === 'relative'"></effects-table-scales-cell>
@@ -72,6 +66,12 @@
               <b>SoE: </b>{{row.dataSource.strengthOfEvidence}}</div>
             <div ng-if="row.dataSource.uncertainties">
               <b>Unc: </b> {{row.dataSource.uncertainties}}</div>
+          </td>
+          <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['references']">
+            <a ng-if="row.dataSource.sourceLink" href="{{row.dataSource.sourceLink}}">
+              {{row.dataSource.source}}
+            </a>
+            <span ng-if="!row.dataSource.sourceLink">{{row.dataSource.source}}</span>
           </td>
         </tr>
       </tbody>
