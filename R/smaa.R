@@ -11,6 +11,20 @@ wrap.matrix <- function(m) {
   l
 }
 
+# Add indifferenceCurve property to preoblem JSON
+
+gen_indifferenceCurve <- function(params) {
+  
+  crit1 <- params$indifferenceCurve$crit1
+  crit2 <- params$indifferenceCurve$crit2
+  ref.point <- c(params$indifferenceCurve$x1,params$indifferenceCurve$x2)
+  
+  weights <- genRepresentativeWeights(params)
+  
+  total.value <- 
+  
+}
+
 smaa_v2 <- function(params) {
   allowed <- c('scales','smaa','deterministic','sensitivityMeasurements','sensitivityMeasurementsPlot','sensitivityWeightPlot')
   if(params$method %in% allowed) {
