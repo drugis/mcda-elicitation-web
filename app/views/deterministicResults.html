@@ -9,14 +9,19 @@
   <div class="grid-x">
     <div class="cell">
       <span>Scenario:</span>
-      <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id" ng-change="scenarioChanged(scenario)"></select>
+      <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
+        ng-change="scenarioChanged(scenario)"></select>
     </div>
   </div>
   <br>
   <div class="grid-x">
     <div class="cell">
-      <h4>Effects table (exact or median values only) <inline-help help-key="effects-table"></inline-help></h4>
-      <p><em>Values can be changed by clicking them.</em></p>
+      <h4>Effects table (exact or median values only)
+        <inline-help help-key="effects-table"></inline-help>
+      </h4>
+      <p>
+        <em>Values can be changed by clicking them.</em>
+      </p>
       <toggle-columns toggled-columns="toggledColumns" edit-mode="editMode"></toggle-columns>
       <button class="button right small info clipboard-button" data-clipboard-target="#effectstable">
         <i class="fa fa-clipboard"></i> Copy to clipboard
@@ -36,10 +41,10 @@
             <th class="text-center" ng-repeat="alternative in alternatives">
               {{scenario.state.legend[alternative.id].baseTitle || alternative.title}}
             </th>
-            <th ng-show="toggledColumns['references']">References</th>
             <th ng-show="toggledColumns['strength']">Strength of evidence / Uncertainties
               <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
             </th>
+            <th ng-show="toggledColumns['references']">References</th>
           </tr>
         </thead>
         <tbody class="main">
@@ -59,17 +64,21 @@
               {{row.criterion.unitOfMeasurement}}
             </td>
             <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}">
-              <sensitivity-input row="row" alternative="alternative" original-value="scales.observed[row.dataSource.id][alternative.id]['50%']" current-value="modifiableScales[row.dataSource.id][alternative.id]['50%']" change-callback="sensitivityScalesChanged" is-editing="isEditing"></sensitivity-input>
+              <sensitivity-input row="row" alternative="alternative" original-value="scales.observed[row.dataSource.id][alternative.id]['50%']"
+                current-value="modifiableScales[row.dataSource.id][alternative.id]['50%']" change-callback="sensitivityScalesChanged"
+                is-editing="isEditing"></sensitivity-input>
+            </td>
+            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['strength']">
+              <div ng-if="row.dataSource.strengthOfEvidence">
+                <b>SoE: </b>{{row.dataSource.strengthOfEvidence}}</div>
+              <div ng-if="row.dataSource.uncertainties">
+                <b>Unc: </b> {{row.dataSource.uncertainties}}</div>
             </td>
             <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['references']">
               <a ng-if="row.dataSource.sourceLink" href="{{row.dataSource.sourceLink}}">
-              {{row.dataSource.source}}
-            </a>
+                {{row.dataSource.source}}
+              </a>
               <span ng-if="!row.dataSource.sourceLink">{{row.dataSource.source}}</span>
-            </td>
-            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['strength']">
-              <div ng-if="row.dataSource.strengthOfEvidence"><b>SoE: </b>{{row.dataSource.strengthOfEvidence}}</div>
-              <div ng-if="row.dataSource.uncertainties"><b>Unc: </b> {{row.dataSource.uncertainties}}</div>
             </td>
           </tr>
         </tbody>
@@ -88,7 +97,9 @@
   </div>
   <div class="grid-x underlined-div">
     <div class="cell large-10">
-      <h4>Representative weights <inline-help help-key="representative-weights"></inline-help></h4>
+      <h4>Representative weights
+        <inline-help help-key="representative-weights"></inline-help>
+      </h4>
     </div>
     <div clas="cell large-2">
       <button class="button small info clipboard-button right" data-clipboard-target="#weighttable">
@@ -112,7 +123,9 @@
     <div class="cell">
       <div class="grid-x grid-margin-x">
         <div class="cell large-4">
-          <h4>Total value (base case) <inline-help help-key="total-value"></inline-help></h4>
+          <h4>Total value (base case)
+            <inline-help help-key="total-value"></inline-help>
+          </h4>
         </div>
         <div class="cell large-2">
           <button class="button small info clipboard-button right" data-clipboard-target="#basecasetable">
@@ -120,7 +133,9 @@
           </button>
         </div>
         <div ng-if="recalculatedDeterministicResults" class="cell large-4">
-          <h4>Total value (recalculated case) <inline-help help-key="total-value"></inline-help></h4>
+          <h4>Total value (recalculated case)
+            <inline-help help-key="total-value"></inline-help>
+          </h4>
         </div>
         <div class="cell large-2" ng-if="recalculatedDeterministicResults">
           <button class="button small info clipboard-button right" data-clipboard-target="#recalculatedcasetable">
@@ -157,7 +172,9 @@
       </div>
       <div class="grid-x grid-margin-x">
         <div class="cell">
-          <h4>Value profiles <inline-help help-key="value-profiles"></inline-help></h4>
+          <h4>Value profiles
+            <inline-help help-key="value-profiles"></inline-help>
+          </h4>
         </div>
       </div>
       <div class="grid-x">
@@ -178,16 +195,21 @@
   </div>
   <div class="grid-x">
     <div class="cell">
-      <h4>One-way sensitivity analysis <inline-help help-key="one-way-sensitivity-analysis"></inline-help></h4>
+      <h4>One-way sensitivity analysis
+        <inline-help help-key="one-way-sensitivity-analysis"></inline-help>
+      </h4>
     </div>
   </div>
   <div class="grid-x grid-margin-x">
     <div class="cell medium-6 large-6">
-      <h5>Measurements <inline-help help-key="sensitivity-measurements"></inline-help></h5>
+      <h5>Measurements
+        <inline-help help-key="sensitivity-measurements"></inline-help>
+      </h5>
       <div class="grid-x grid-margin-x">
         <div class="cell medium-6 large-6">
           <label>Alternative
-            <select ng-options="scenario.state.legend[alternative.id].baseTitle || alternative.title for alternative in alternatives" ng-model="sensitivityMeasurements.measurementsAlternative" ng-change="doMeasurementSensitivity(state)"></select>
+            <select ng-options="scenario.state.legend[alternative.id].baseTitle || alternative.title for alternative in alternatives"
+              ng-model="sensitivityMeasurements.measurementsAlternative" ng-change="doMeasurementSensitivity(state)"></select>
           </label>
         </div>
         <div class="cell medium-6">
@@ -198,12 +220,15 @@
       </div>
       <div class="grid-x" export legend file-name="'onewaymeasurementsplot'">
         <div class="cell" style="height: 450px; width: 450px">
-          <line-chart label-x-axis="sensitivityMeasurements.measurementsCriterion.title" label-y-axis="'total value'" value="measurementValues" y-margin="true"></line-chart>
+          <line-chart label-x-axis="sensitivityMeasurements.measurementsCriterion.title" label-y-axis="'total value'" value="measurementValues"
+            y-margin="true"></line-chart>
         </div>
       </div>
     </div>
     <div class="cell medium-6 large-6">
-      <h5>Preferences <inline-help help-key="sensitivity-preferences"></inline-help></h5>
+      <h5>Preferences
+        <inline-help help-key="sensitivity-preferences"></inline-help>
+      </h5>
       <div class="grid-x">
         <div class="cell medium-6 large-6 ">
           <label>Weight given to
@@ -213,7 +238,8 @@
       </div>
       <div class="grid-x" export legend file-name="'onewaypreferencesplot'">
         <div class="cell" style="height: 450px; width: 450px">
-          <line-chart label-x-axis="'Weight given to ' + sensitivityMeasurements.preferencesCriterion.title" label-y-axis="'total value'" value="preferencesValues"></line-chart>
+          <line-chart label-x-axis="'Weight given to ' + sensitivityMeasurements.preferencesCriterion.title" label-y-axis="'total value'"
+            value="preferencesValues"></line-chart>
         </div>
       </div>
     </div>
