@@ -9,7 +9,7 @@ source('../SMAA.R')
 
 # Load test problem
 params <- fromJSON('../../examples/getreal-pwPVF.json')
-params <- fromJSON('../../examples/getreal-ordinalWeights.json')
+#params <- fromJSON('../../examples/getreal-ordinalWeights.json')
 
 # Conduct deterministic MCDA
 run_deterministic(params)
@@ -22,4 +22,7 @@ run_sensitivityMeasurementsPlot(params)
 
 # Obtain coordinates for the weightPlot
 run_sensitivityWeightPlot(params)
+
+# Obtain coordinates for indifference curve
+gen_indifferenceCurve(params)
 
