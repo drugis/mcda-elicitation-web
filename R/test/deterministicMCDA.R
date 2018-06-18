@@ -24,5 +24,5 @@ run_sensitivityMeasurementsPlot(params)
 run_sensitivityWeightPlot(params)
 
 # Obtain coordinates for indifference curve
-gen_indifferenceCurve(params)
+run_indifferenceCurve(params)
 
