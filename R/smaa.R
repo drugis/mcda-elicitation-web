@@ -12,7 +12,7 @@ wrap.matrix <- function(m) {
 }
 
 smaa_v2 <- function(params) {
-  allowed <- c('scales','smaa','deterministic','sensitivityMeasurements','sensitivityMeasurementsPlot','sensitivityWeightPlot')
+  allowed <- c('scales','smaa','deterministic','sensitivityMeasurements','sensitivityMeasurementsPlot','sensitivityWeightPlot','indifferenceCurve')
   if(params$method %in% allowed) {
     do.call(paste("run", params$method, sep="_"), list(params))
   } else {
@@ -212,45 +212,47 @@ run_sensitivityWeightPlot <- function(params) {
   
 } 
 
-gen_indifferenceCurve <- function(params) {
+getCutoffs <- function(params,crit) {
+  
+  cutoffs <- params$criteria[[crit]]$pvf$range
+  
+  if (params$criteria[[crit]]$pvf$type!="linear") {
+    cutoffs <- c(cutoffs,params$criteria[[crit]]$pvf$cutoffs)
+  }
+    
+}
+
+run_indifferenceCurve <- function(params) {
   
   crit1 <- params$indifferenceCurve$crit1
   crit2 <- params$indifferenceCurve$crit2
   ref.point <- c(params$indifferenceCurve$x1,params$indifferenceCurve$x2)
   
-  range1 <- params$criteria[[crit1]]$pvf$range
-  shape1 <- params$criteria[[crit1]]$pvf$type
-  
-  range2 <- params$criteria[[crit2]]$pvf$range
-  shape2 <- params$criteria[[crit2]]$pvf$type
-  
+  # Value function
   weights <- genRepresentativeWeights(params)
-  
   pvf <- lapply(params$criteria, create.pvf)
   
+  # Value associated with the reference point
   Indifference.value <- as.numeric(weights[crit1]*pvf[[crit1]](ref.point[1]) + weights[crit2]*pvf[[crit2]](ref.point[2]))
   
-  if (shape1=="linear") {
-    cutoffs1 <- range1
-  } else {
-    cutoffs1 <- c(params$criteria[[crit1]]$pvf$cutoffs,range1)
-  }
-  
-  if (shape2=="linear") {
-    cutoffs2 <- range2
-  } else {
-    cutoffs2 <- c(params$criteria[[crit2]]$pvf$cutoffs,range2)
-  }
-  
+  # Difference in value between the reference point and the point (x1,x2)
   value.difference <- function(x1,x2) {
     as.numeric(weights[crit1]*pvf[[crit1]](x1) + weights[crit2]*pvf[[crit2]](x2) - Indifference.value)
   }
   
+  cutoffs1 <- getCutoffs(params,crit1)
+  cutoffs2 <- getCutoffs(params,crit2)
+  
+  range1 <- params$criteria[[crit1]]$pvf$range
+  range2 <- params$criteria[[crit2]]$pvf$range
+  
+  # Determine x2 coordinates of the indifference curve at the x1 coordinates in cutoffs1
   cutoffs1.x2 <- c()
   for (x1 in cutoffs1) {
     cutoffs1.x2 <- c(cutoffs1.x2,uniroot(f=value.difference,interval=range2,x1=x1,extendInt="yes")$root)
   }
   
+  # Determine x1 coordinates of the indifference curve at the x2 coordinates in cutoffs2
   cutoffs2.x1 <- c()
   for (x2 in cutoffs2) {
     cutoffs2.x1 <- c(cutoffs2.x1,uniroot(f=value.difference,interval=range2,x2=x2,extendInt="yes")$root)
@@ -259,10 +261,10 @@ gen_indifferenceCurve <- function(params) {
   coordinates <- data.frame(x1=c(cutoffs1,cutoffs2.x1),x2=c(cutoffs1.x2,cutoffs2))
   coordinates <- coordinates[order(coordinates$x1),]
   
-  coordinates <- coordinates[coordinates$x1>=range1[1] & coordinates$x1<=range1[2],] # remove coordinates outside the scale range of crit1
-  coordinates <- coordinates[coordinates$x2>=range2[1] & coordinates$x2<=range2[2],] # remove coordinates outside the scale range of crit2
+  coordinates <- coordinates[coordinates$x1>=range1[1] & coordinates$x1<=range1[2],] # Remove coordinates outside the scale range of crit1
+  coordinates <- coordinates[coordinates$x2>=range2[1] & coordinates$x2<=range2[2],] # Remove coordinates outside the scale range of crit2
   
-  coordinates
+  unname(wrap.matrix(coordinates))
   
 }
 
