@@ -4,11 +4,7 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
 
     var directives = angular.module('elicit.directives', []);
 
-    var parsePx = function(str) {
-      return parseInt(str.replace(/px/gi, ''));
-    };
-
-    var getParentDimension = function(element) {
+    function getParentDimension(element) {
       var width = parsePx($(element[0].parentNode).css('width'));
       var height = parsePx($(element[0].parentNode).css('height'));
 
@@ -16,7 +12,10 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
         width: width,
         height: height
       };
-    };
+    }
+    function parsePx(str) {
+      return parseInt(str.replace(/px/gi, ''));
+    }
 
     directives.directive('rankPlot', function() {
       return {
@@ -201,16 +200,16 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
                   var currentData = _.filter(data, function(dat, index) {
                     return !event.disabled[index];
                   });
-                  var minY = _.min(_.reduce(currentData,function(accum, dat) {
-                      return accum.concat(_.map(dat.values, function(value) {
-                        return value.y;
-                      }));
-                    },[]));
-                  var maxY = _.max(_.reduce(currentData,function(accum, dat) {
-                      return accum.concat(_.map(dat.values, function(value) {
-                        return value.y;
-                      }));
-                    },[]));
+                  var minY = _.min(_.reduce(currentData, function(accum, dat) {
+                    return accum.concat(_.map(dat.values, function(value) {
+                      return value.y;
+                    }));
+                  }, []));
+                  var maxY = _.max(_.reduce(currentData, function(accum, dat) {
+                    return accum.concat(_.map(dat.values, function(value) {
+                      return value.y;
+                    }));
+                  }, []));
                   var scaledDomain = [minY - 0.01 * minY, maxY + 0.01 * maxY];
                   chart.forceY(scaledDomain);
                   var y = d3.scale.linear().domain(scaledDomain);
