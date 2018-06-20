@@ -12,6 +12,7 @@ define(['lodash', 'd3', 'nvd3', 'jQuery'],
         scope: {
           settings: '='
         },
+        template: '<div id="willingnesschart"></div>',
         link: function(scope, element) {
           var dim = getParentDimension(element);
           var svg = d3.select(element[0]).append('svg')
@@ -45,7 +46,7 @@ define(['lodash', 'd3', 'nvd3', 'jQuery'],
             svg.datum(data).call(chart);
             nv.utils.windowResize(chart.update);
           });
-          d3.selectAll('#willingness-to-trade-off-chart .nv-lineChart .nv-point').style('stroke-width',
+          svg.selectAll('svg .nv-lineChart .nv-point').style('stroke-width',
           '7px').style('fill-opacity', '.95').style('stroke-opacity', '.95');
 
 
