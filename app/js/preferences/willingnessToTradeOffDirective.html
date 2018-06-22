@@ -6,19 +6,19 @@
   </div>
   <div class="cell large-3">
     <label>First criterion
-      <select ng-options="criterion.id as criterion.title for criterion in criteria" ng-model="settings.firstCriterion" ng-change="firstCriterionChanged()"></select>
+      <select ng-options="criterion as criterion.title for criterion in criteria" ng-model="settings.firstCriterion" ng-change="firstCriterionChanged()"></select>
     </label>
   </div>
   <div class="cell large-1"></div>
   <div class="cell large-3">
     <label>Second criterion
-      <select ng-options="criterion.id as criterion.title for criterion  in filteredCriteria " ng-model="settings.secondCriterion"
+      <select ng-options="criterion as criterion.title for criterion  in filteredCriteria " ng-model="settings.secondCriterion"
         ng-change="secondCriterionChanged()"></select>
     </label>
   </div>
   <div class="cell">
     <div style="width: 600px; height: 600px">
-      <willingness-to-trade-off-chart></willingness-to-trade-off-chart>
+      <willingness-to-trade-off-chart settings="settings"></willingness-to-trade-off-chart>
     </div>
   </div>
 </div>
