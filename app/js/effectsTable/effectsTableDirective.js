@@ -23,7 +23,7 @@ define(['lodash'], function(_) {
 
         // init
         scope.studyDataAvailable = EffectsTableService.isStudyDataAvailable(scope.effectsTableInfo);
-
+        scope.showDecimal = false;
         scope.$watch('criteria', function(newCriteria) {
           scope.keyedCriteria = _.keyBy(_.cloneDeep(newCriteria), 'id');
           scope.rows = EffectsTableService.buildEffectsTable(scope.keyedCriteria);
@@ -32,6 +32,7 @@ define(['lodash'], function(_) {
           scope.nrAlternatives = _.keys(scope.alternatives).length;
           scope.alternatives = newAlternatives;
         });
+        
       }
     };
   };

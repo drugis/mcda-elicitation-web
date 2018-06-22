@@ -28,6 +28,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.useFavorability = _.find($scope.problem.criteria, function(criterion) {
       return criterion.hasOwnProperty('isFavorable');
     });
+    $scope.showDecimal = false;
 
     OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
       $scope.alternatives = orderings.alternatives;
