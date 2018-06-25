@@ -23,7 +23,7 @@ define(['lodash'],
 
         scope.firstCriterionChanged = firstCriterionChanged;
         function firstCriterionChanged() {
-          scope.filteredCriteria = _.reject(scope.criteria, ['id', scope.settings.firstCriterion]);
+          scope.filteredCriteria = _.reject(scope.criteria, ['id', scope.settings.firstCriterion.id]);
           scope.settings.secondCriterion = scope.filteredCriteria[0];
         }
         function decorateWithId(list) {
