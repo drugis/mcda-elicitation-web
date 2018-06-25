@@ -26,6 +26,7 @@ define(['lodash'],
           scope.filteredCriteria = _.reject(scope.criteria, ['id', scope.settings.firstCriterion.id]);
           scope.settings.secondCriterion = scope.filteredCriteria[0];
         }
+        
         function decorateWithId(list) {
           return _.map(list, function(item, id) {
             item.id = id;
