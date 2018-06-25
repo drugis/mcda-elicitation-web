@@ -10,6 +10,7 @@ require.config({
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
     'angularjs-slider': 'bower_components/angularjs-slider/dist/rzslider',
     'clipboard': 'bower_components/clipboard/dist/clipboard.min',
+    'c3': 'bower_components/c3/c3',
     'core-js': 'bower_components/core-js/client/shim.min',
     'd3': 'bower_components/d3/d3.min',
     'domReady': 'bower_components/requirejs-domready/domReady',
@@ -21,7 +22,6 @@ require.config({
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_SVG',
     'mmfoundation': 'bower_components/angular-foundation-6/dist/angular-foundation',
     'nvd3': 'bower_components/nvd3/build/nv.d3',
-    'chartjs': 'bower_components/chart.js/dist/Chart',
     'mcda': '/js'
   },
   baseUrl: '.',
