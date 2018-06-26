@@ -4,7 +4,7 @@ define(['lodash', 'angular'], function(_, angular) {
   var dependencies = ['PataviResultsService'];
 
   var ScalesService = function(PataviResultsService) {
-    function getObservedScales(scope, problem) {
+    function getObservedScales(problem) {
       var scalesProblem = _.extend(problem, {
         method: 'scales'
       });
