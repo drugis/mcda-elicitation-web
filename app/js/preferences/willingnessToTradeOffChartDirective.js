@@ -2,10 +2,12 @@
 define(['c3', 'd3'],
   function(c3, d3) {
     var dependencies = [
+      'TradeoffService',
       'mcdaRootPath',
       '$timeout'
     ];
     var WillingnessToTradeOffChartDirective = function(
+      TradeoffService,
       mcdaRootPath,
       $timeout
     ) {
@@ -19,6 +21,8 @@ define(['c3', 'd3'],
           scope.updateFirstPoint = updateFirstPoint;
 
           scope.coordinates = {};
+          var criteria;
+
           var chart;
           var data = {
             xs: { firstPoint: 'firstPoint_x' },
@@ -30,9 +34,12 @@ define(['c3', 'd3'],
           scope.$watch('settings', function(newSettings) {
             if (newSettings) {
               initChart(newSettings);
+              criteria = {
+                firstCriterion: newSettings.firstCriterion,
+                secondCriterion: newSettings.secondCriterion
+              };
             }
           }, true);
-
 
           function initChart(newSettings) {
             root.append('rect')
@@ -49,7 +56,7 @@ define(['c3', 'd3'],
             var minY = newSettings.secondCriterion.dataSources[0].pvf.range[0];
             var maxY = newSettings.secondCriterion.dataSources[0].pvf.range[1];
 
-            var chart = c3.generate({
+            chart = c3.generate({
               bindto: root,
               data: {
                 xs: { firstPoint: 'firstPoint_x' },
@@ -80,30 +87,35 @@ define(['c3', 'd3'],
               }
             });
 
-
-            // var background = root.select('.nv-focus .nv-background rect');
             chart.internal.main.on('click', clickHandler); // https://github.com/c3js/c3/issues/705
 
             function clickHandler() {
               var coords = d3.mouse(this);
-
               scope.coordinates.x = chart.internal.x.invert(coords[0]);
               scope.coordinates.y = chart.internal.y.invert(coords[1]);
-
-              data.columns[0] = ['firstPoint', scope.coordinates.y];
-              data.columns[1] = ['firstPoint_x', scope.coordinates.x];
-              chart.load(data);
+              updateCoordinates();
+              TradeoffService.getIndifferenceCurve(criteria, scope.coordinates).then(function(results) {
+                plotIndifference(results);
+              });
               $timeout(); // force coordinate update outside chart
             }
 
           }
 
+          function plotIndifference(results){
+            //FIXME
+          }
+
           function updateFirstPoint() {
             if (scope.coordinates.x > -Infinity && scope.coordinates.y > -Infinity) {
-              data.columns[0] = ['firstPoint', scope.coordinates.y];
-              data.columns[1] = ['firstPoint_x', scope.coordinates.x];
-              chart.load(data);
+              updateCoordinates();
             }
+          }
+
+          function updateCoordinates() {
+            data.columns[0] = ['firstPoint', scope.coordinates.y];
+            data.columns[1] = ['firstPoint_x', scope.coordinates.x];
+            chart.load(data);
           }
 
         }

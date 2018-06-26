@@ -1,12 +1,9 @@
 'use strict';
-define(['lodash'], 
-  function(_) {
+define(['lodash'], function(_) {
   var dependencies = [
     'mcdaRootPath'
   ];
-  var WillingnessToTradeOffDirective = function(
-    mcdaRootPath
-  ) {
+  var WillingnessToTradeOffDirective = function(mcdaRootPath) {
     return {
       restrict: 'E',
       scope: {
@@ -14,27 +11,42 @@ define(['lodash'],
       },
       templateUrl: mcdaRootPath + 'js/preferences/willingnessToTradeOffDirective.html',
       link: function(scope) {
-        scope.criteria = decorateWithId(scope.problem.criteria);
+        var criteriaWithId = decorateWithId(scope.problem.criteria);
+        scope.firstCriterionOptions = criteriaWithId;
         scope.settings = {
-          firstCriterion: scope.criteria[0],
-          secondCriterion: scope.criteria[1]
+          firstCriterion: criteriaWithId[0]
         };
-        firstCriterionChanged();
-
         scope.firstCriterionChanged = firstCriterionChanged;
+        scope.secondCriterionChanged = secondCriterionChanged;
+
+        firstCriterionChanged();
+        secondCriterionChanged();
+
         function firstCriterionChanged() {
-          scope.filteredCriteria = _.reject(scope.criteria, ['id', scope.settings.firstCriterion.id]);
-          scope.settings.secondCriterion = scope.filteredCriteria[0];
+          // FIXME: refactor repetition
+          scope.secondCriterionOptions = _.reject(criteriaWithId, ['id', scope.settings.firstCriterion.id]);
+          if (!scope.settings.secondCriterion || scope.settings.secondCriterion.id === scope.settings.firstCriterion.id) {
+            scope.settings.secondCriterion = scope.secondCriterionOptions[0];
+          }
         }
-        
+
+        function secondCriterionChanged() {
+          scope.firstCriterionOptions = _.reject(criteriaWithId, ['id', scope.settings.secondCriterion.id]);
+          if (!scope.settings.firstCriterion || scope.settings.firstCriterion.id === scope.settings.secondCriterion.id) {
+            scope.settings.firstCriterion = scope.firstCriterionOptions[0];
+          }
+        }
+
         function decorateWithId(list) {
           return _.map(list, function(item, id) {
-            item.id = id;
-            return item;
+            return _.extend({}, item, {
+              id: id
+            });
           });
         }
       }
     };
   };
+  
   return dependencies.concat(WillingnessToTradeOffDirective);
 });

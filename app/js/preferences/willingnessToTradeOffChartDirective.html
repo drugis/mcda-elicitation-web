@@ -4,10 +4,10 @@
   </div>
   <div class="cell large-6">
     <label>X: </label>
-    <input type="number" ng-model="coordinates.x" ng-change="updateFirstPoint()">
+    <input type="number" ng-model="coordinates.x" ng-change="updateFirstPoint()" ng-model-options="{ debounce: 500 }">
   </div>
   <div class="cell large-6">
     <label>Y: </label>
-    <input type="number" ng-model="coordinates.y" ng-change="updateFirstPoint()">
+    <input type="number" ng-model="coordinates.y" ng-change="updateFirstPoint()" ng-model-options="{ debounce: 500 }">
   </div>
 </div>

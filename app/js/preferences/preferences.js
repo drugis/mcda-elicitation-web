@@ -10,6 +10,7 @@ var requires = [
   'mcda/preferences/partialValueFunctionController',
   'mcda/preferences/partialValueFunctionService',
   'mcda/preferences/newScenarioController',
+  'mcda/preferences/tradeOffService',
   'mcda/preferences/willingnessToTradeOffDirective',
   'mcda/preferences/willingnessToTradeOffChartDirective'
 ];
@@ -25,6 +26,7 @@ define(['angular'].concat(requires), function(
   PartialValueFunctionController,
   PartialValueFunctionService,
   NewScenarioController,
+  TradeOffService,
   willingnessToTradeOff,
   willingnessToTradeOffChart
 ) {
@@ -40,6 +42,7 @@ define(['angular'].concat(requires), function(
     .factory('PartialValueFunctionService', PartialValueFunctionService)
     .factory('SwingWeightingService', SwingWeightingService)
     .factory('PreferencesService', PreferencesService)
+    .factory('TradeOffService', TradeOffService)
 
     .directive('willingnessToTradeOff', willingnessToTradeOff)
     .directive('willingnessToTradeOffChart', willingnessToTradeOffChart)
