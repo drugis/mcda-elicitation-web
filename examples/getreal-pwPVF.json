@@ -22,7 +22,9 @@
       "scale": [0,100],
       "pvf": {
         "range": [0,80],
-        "type": "linear",
+        "type": "piecewise-linear",
+        "cutoffs": [30,70,75],
+        "values": [0.75,0.5,0.25],
         "direction": "decreasing"
       }
     },
@@ -113,5 +115,12 @@
   "sensitivityAnalysis": {
     "alternative": "alt1",
     "criterion": "OS"
+  },
+  "indifferenceCurve":
+  {
+    "crit1": "OS",
+    "crit2": "severe",
+    "x1": 50,
+    "x2": 20
   }
 }
