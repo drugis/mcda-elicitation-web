@@ -23,7 +23,7 @@ define(['lodash', 'angular'], function(_, angular) {
       return theoreticalScales;
     }
 
-    function getObservedScales(scope, problem) {
+    function getObservedScales(problem) {
       var scalesProblem = angular.copy(problem);
       var dataSources = _.reduce(scalesProblem.criteria, function(accum, criterion) {
         return accum.concat(criterion.dataSources);
@@ -33,7 +33,7 @@ define(['lodash', 'angular'], function(_, angular) {
         entry.criterion = entry.dataSource;
         return entry;
       });
-      return ScalesService.getObservedScales(scope, scalesProblem);
+      return ScalesService.getObservedScales(scalesProblem);
     }
 
     function reduceProblem(problem) {

@@ -68,7 +68,7 @@ define(['lodash'], function(_) {
       });
     });
 
-    $scope.scalesPromise = WorkspaceService.getObservedScales($scope, baseProblem).then(function(observedScales) {
+    $scope.scalesPromise = WorkspaceService.getObservedScales(baseProblem).then(function(observedScales) {
       $scope.workspace.scales.observed = observedScales;
       $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales($scope.aggregateState.problem, observedScales);
       updateTaskAccessibility();
