@@ -2,12 +2,12 @@
 define(['c3', 'd3'],
   function(c3, d3) {
     var dependencies = [
-      'TradeoffService',
+      'TradeOffService',
       'mcdaRootPath',
       '$timeout'
     ];
     var WillingnessToTradeOffChartDirective = function(
-      TradeoffService,
+      TradeOffService,
       mcdaRootPath,
       $timeout
     ) {
@@ -95,7 +95,7 @@ define(['c3', 'd3'],
               scope.coordinates.x = chart.internal.x.invert(coords[0]);
               scope.coordinates.y = chart.internal.y.invert(coords[1]);
               updateCoordinates();
-              TradeoffService.getIndifferenceCurve(scope.problem, scope.criteria, scope.coordinates).then(function(results) {
+              TradeOffService.getIndifferenceCurve(scope.problem, criteria, scope.coordinates).then(function(results) {
                 plotIndifference(results);
               });
               $timeout(); // force coordinate update outside chart

@@ -1,13 +1,13 @@
 'use strict';
 var requires = [
-'mcda/results/smaaResultsController',
+  'mcda/results/smaaResultsController',
   'mcda/results/deterministicResultsController',
   'mcda/results/editLegendController',
   'mcda/results/sensitivityInputDirective',
   'mcda/results/valueProfilePlotDirective',
   'mcda/results/legendDirective',
   'mcda/results/resultsService',
-  'mcda/results/pataviResultsService',
+  'mcda/results/pataviResultsService'
 ];
 define(['angular'].concat(requires), function(
   angular,
@@ -25,11 +25,11 @@ define(['angular'].concat(requires), function(
     .controller('SmaaResultsController', SmaaResultsController)
     .controller('DeterministicResultsController', DeterministicResultsController)
     .controller('EditLegendController', EditLegendController)
-    
+
     .directive('sensitivityInput', sensitivityInputDirective)
     .directive('valueProfilePlot', valueProfilePlotDirective)
     .directive('legend', legendDirective)
-    
+
     .factory('MCDAResultsService', MCDAResultsService)
     .factory('PataviResultsService', PataviResultsService)
     ;
