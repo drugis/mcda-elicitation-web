@@ -2,28 +2,22 @@
 define(['lodash', 'angular'], function(_, angular) {
 
 
-  var dependencies = ['$http', 'PataviService'];
+  var dependencies = ['PataviResultsService'];
 
-  var MCDAResultsService = function($http, PataviService) {
+  var MCDAResultsService = function(PataviResultsService) {
 
     function run($scope, inState) {
       var state = angular.copy(inState);
       state.problem.criteria = _.mapValues(state.problem.criteria, function(criterion) {
-        if(criterion.dataSources) {
-          return _.merge({}, _.omit(criterion, ['dataSources']),_.omit(criterion.dataSources[0]),[]);
+        if (criterion.dataSources) {
+          return _.merge({}, _.omit(criterion, ['dataSources']), _.omit(criterion.dataSources[0]), []);
         }
         return criterion;
       });
+
       function successHandler(results) {
         state.results = results;
         return state;
-      }
-
-      function pataviErrorHandler(pataviError) {
-        $scope.$root.$broadcast('error', {
-          type: 'PATAVI',
-          message: pataviError.desc
-        });
       }
 
       var updateHandler = _.throttle(function(update) {
@@ -37,21 +31,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
       $scope.progress = 0;
 
-      state.resultsPromise = $http.post('/patavi', state.problem).then(function(result) {
-          var uri = result.headers('Location');
-          if (result.status === 201 && uri) {
-            return uri;
-          }
-        }, function(error) {
-          console.error(error);
-          $scope.$root.$broadcast('error', {
-            type: 'BACK_END_ERROR',
-            code: error.code || undefined,
-            message: 'unable to submit the problem to the server'
-          });
-        })
-        .then(PataviService.listen)
-        .then(successHandler, pataviErrorHandler, updateHandler);
+      state.resultsPromise = PataviResultsService.postAndHandleResults(state.problem, successHandler, updateHandler);
 
       return state;
     }
@@ -164,11 +144,11 @@ define(['lodash', 'angular'], function(_, angular) {
         return {
           key: legend ? legend[alternative.id].newTitle : alternative.title,
           values: _(results.total.data[alternative.id]).map(function(entryValue, entryKey) {
-              return {
-                x: parseFloat(entryKey),
-                y: entryValue
-              };
-            })
+            return {
+              x: parseFloat(entryKey),
+              y: entryValue
+            };
+          })
             .sortBy('x')
             .value()
         };

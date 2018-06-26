@@ -1,37 +1,17 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
 
-  var dependencies = ['$http', 'PataviService'];
+  var dependencies = ['PataviResultsService'];
 
-  var ScalesService = function($http, PataviService) {
+  var ScalesService = function(PataviResultsService) {
     function getObservedScales(scope, problem) {
-      return $http.post('/patavi', _.extend(problem, {
-          method: 'scales'
-        })).then(function(result) {
-          var uri = result.headers('Location');
-          if (result.status === 201 && uri) {
-            return uri;
-          }
-        }, function(error) {
-          scope.$root.$broadcast('error', {
-            type: 'BACK_END_ERROR',
-            code: error.code || undefined,
-            message: 'unable to submit the problem to the server'
-          });
-        })
-        .then(PataviService.listen)
-        .then(
-          function(result) {
-            return result;
-          },
-          function(pataviError) {
-            scope.$root.$broadcast('error', {
-              type: 'PATAVI',
-              message: pataviError.desc
-            });
-          });
+      var scalesProblem = _.extend(problem, {
+        method: 'scales'
+      });
+      return PataviResultsService.postAndHandleResults(scalesProblem);
     }
 
+    
     return {
       getObservedScales: getObservedScales
     };
