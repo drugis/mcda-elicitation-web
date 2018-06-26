@@ -28,11 +28,9 @@ define(['lodash', 'angular'], function(_, angular) {
           }
         }
       }, 30);
-
       $scope.progress = 0;
 
       state.resultsPromise = PataviResultsService.postAndHandleResults(state.problem, successHandler, updateHandler);
-
       return state;
     }
 

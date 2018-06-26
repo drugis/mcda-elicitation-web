@@ -30,7 +30,7 @@ define(['angular'].concat(requires), function(
   willingnessToTradeOff,
   willingnessToTradeOffChart
 ) {
-  return angular.module('elicit.preferences', ['elicit.workspace'])
+  return angular.module('elicit.preferences', ['elicit.workspace', 'elicit.results'])
     .controller('PreferencesController', PreferencesController)
     .controller('EditScenarioTitleController', EditScenarioTitleController)
     .controller('OrdinalSwingController', OrdinalSwingController)

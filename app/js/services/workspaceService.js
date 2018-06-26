@@ -1,11 +1,11 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
-    'ScalesService'
+    'PataviResultsService'
   ];
 
   var WorkspaceService = function(
-    ScalesService
+    PataviResultsService
   ) {
     function buildTheoreticalScales(problem) {
       var theoreticalScales = {};
@@ -33,7 +33,8 @@ define(['lodash', 'angular'], function(_, angular) {
         entry.criterion = entry.dataSource;
         return entry;
       });
-      return ScalesService.getObservedScales(scalesProblem);
+      scalesProblem.method = 'scales';
+      return PataviResultsService.postAndHandleResults(scalesProblem);
     }
 
     function reduceProblem(problem) {
