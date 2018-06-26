@@ -186,8 +186,6 @@ create.pvf <- function(criterion) {
 }
 
 partialValue <- function(best, worst, cutoffs=numeric(), values=numeric()) {
-  print(best)
-  print(worst)
   if (best > worst) {
     # Increasing
     v <- c(0, values, 1)
