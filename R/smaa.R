@@ -224,45 +224,45 @@ getCutoffs <- function(params,crit) {
 
 run_indifferenceCurve <- function(params) {
   
-  crit1 <- params$indifferenceCurve$crit1
-  crit2 <- params$indifferenceCurve$crit2
-  ref.point <- c(params$indifferenceCurve$x1,params$indifferenceCurve$x2)
+  criterionX <- params$indifferenceCurve$criterionX
+  criterionY <- params$indifferenceCurve$criterionY
+  ref.point <- c(params$indifferenceCurve$x,params$indifferenceCurve$y)
   
   # Value function
   weights <- genRepresentativeWeights(params)
   pvf <- lapply(params$criteria, create.pvf)
   
   # Value associated with the reference point
-  Indifference.value <- as.numeric(weights[crit1]*pvf[[crit1]](ref.point[1]) + weights[crit2]*pvf[[crit2]](ref.point[2]))
+  Indifference.value <- as.numeric(weights[criterionX]*pvf[[criterionX]](ref.point[1]) + weights[criterionY]*pvf[[criterionY]](ref.point[2]))
   
-  # Difference in value between the reference point and the point (x1,x2)
-  value.difference <- function(x1,x2) {
-    as.numeric(weights[crit1]*pvf[[crit1]](x1) + weights[crit2]*pvf[[crit2]](x2) - Indifference.value)
+  # Difference in value between the reference point and the point (x,y)
+  value.difference <- function(x,y) {
+    as.numeric(weights[criterionX]*pvf[[criterionX]](x) + weights[criterionY]*pvf[[criterionY]](y) - Indifference.value)
   }
   
-  cutoffs1 <- getCutoffs(params,crit1)
-  cutoffs2 <- getCutoffs(params,crit2)
+  cutoffs1 <- getCutoffs(params,criterionX)
+  cutoffs2 <- getCutoffs(params,criterionY)
   
-  range1 <- params$criteria[[crit1]]$pvf$range
-  range2 <- params$criteria[[crit2]]$pvf$range
+  range1 <- params$criteria[[criterionX]]$pvf$range
+  range2 <- params$criteria[[criterionY]]$pvf$range
   
-  # Determine x2 coordinates of the indifference curve at the x1 coordinates in cutoffs1
-  cutoffs1.x2 <- c()
-  for (x1 in cutoffs1) {
-    cutoffs1.x2 <- c(cutoffs1.x2,uniroot(f=value.difference,interval=range2,x1=x1,extendInt="yes")$root)
+  # Determine y coordinates of the indifference curve at the x coordinates in cutoffs1
+  cutoffs1.y <- c()
+  for (x in cutoffs1) {
+    cutoffs1.y <- c(cutoffs1.y,uniroot(f=value.difference,interval=range2,x=x,extendInt="yes")$root)
   }
   
-  # Determine x1 coordinates of the indifference curve at the x2 coordinates in cutoffs2
-  cutoffs2.x1 <- c()
-  for (x2 in cutoffs2) {
-    cutoffs2.x1 <- c(cutoffs2.x1,uniroot(f=value.difference,interval=range2,x2=x2,extendInt="yes")$root)
+  # Determine x coordinates of the indifference curve at the y coordinates in cutoffs2
+  cutoffs2.x <- c()
+  for (y in cutoffs2) {
+    cutoffs2.x <- c(cutoffs2.x,uniroot(f=value.difference,interval=range2,y=y,extendInt="yes")$root)
   }
   
-  coordinates <- data.frame(x1=c(cutoffs1,cutoffs2.x1),x2=c(cutoffs1.x2,cutoffs2))
-  coordinates <- coordinates[order(coordinates$x1),]
+  coordinates <- data.frame(x=c(cutoffs1,cutoffs2.x),y=c(cutoffs1.y,cutoffs2))
+  coordinates <- coordinates[order(coordinates$x),]
   
-  coordinates <- coordinates[coordinates$x1>=range1[1] & coordinates$x1<=range1[2],] # Remove coordinates outside the scale range of crit1
-  coordinates <- coordinates[coordinates$x2>=range2[1] & coordinates$x2<=range2[2],] # Remove coordinates outside the scale range of crit2
+  coordinates <- coordinates[coordinates$x>=range1[1] & coordinates$x<=range1[2],] # Remove coordinates outside the scale range of criterionX
+  coordinates <- coordinates[coordinates$y>=range2[1] & coordinates$y<=range2[2],] # Remove coordinates outside the scale range of criterionY
   
   unname(wrap.matrix(coordinates))
   
