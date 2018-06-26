@@ -95,7 +95,7 @@ define(['c3', 'd3'],
               scope.coordinates.x = chart.internal.x.invert(coords[0]);
               scope.coordinates.y = chart.internal.y.invert(coords[1]);
               updateCoordinates();
-              TradeoffService.getIndifferenceCurve(scope.problem, scope.settings, scope.coordinates).then(function(results) {
+              TradeoffService.getIndifferenceCurve(scope.problem, scope.criteria, scope.coordinates).then(function(results) {
                 plotIndifference(results);
               });
               $timeout(); // force coordinate update outside chart
