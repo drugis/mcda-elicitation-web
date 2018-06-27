@@ -5,7 +5,7 @@ library(MASS)
 library(smaa)
 library(hitandrun)
 source('../measurements.R')
-source('../SMAA.R')
+source('../smaa.R')
 
 # Load test problem
 params <- fromJSON('../../examples/getreal-pwPVF.json')
@@ -15,7 +15,7 @@ params <- fromJSON('../../examples/getreal-pwPVF.json')
 run_deterministic(params)
 
 # Perform multi-way sensitivity analysis on the measurements of OS for alt1 and alt2
-run_sensitivityMeasurements(params)
+# run_sensitivityMeasurements(params)
 
 # Obtain coordinates for the measurementsPlot
 run_sensitivityMeasurementsPlot(params)
@@ -25,4 +25,3 @@ run_sensitivityWeightPlot(params)
 
 # Obtain coordinates for indifference curve
 run_indifferenceCurve(params)
-

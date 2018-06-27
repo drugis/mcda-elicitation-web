@@ -118,9 +118,9 @@
   },
   "indifferenceCurve":
   {
-    "crit1": "OS",
-    "crit2": "severe",
-    "x1": 50,
-    "x2": 20
+    "criterionX": "OS",
+    "criterionY": "severe",
+    "x": 50,
+    "y": 20
   }
 }
