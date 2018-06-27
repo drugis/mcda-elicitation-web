@@ -3,11 +3,15 @@
     <svg></svg>
   </div>
   <div class="cell large-6">
-    <label>X: </label>
+    <label>X1: </label>
     <input type="number" ng-model="coordinates.x" ng-change="updateFirstPoint()" ng-model-options="{ debounce: 500 }">
   </div>
   <div class="cell large-6">
-    <label>Y: </label>
+    <label>Y1: </label>
     <input type="number" ng-model="coordinates.y" ng-change="updateFirstPoint()" ng-model-options="{ debounce: 500 }">
+  </div>
+  <div class="cell large-6">
+    <label>X2: </label>
+    <input type="number" ng-model="coordinates.x2" ng-change="updateSecondPoint()" ng-model-options="{ debounce: 500 }">
   </div>
 </div>
