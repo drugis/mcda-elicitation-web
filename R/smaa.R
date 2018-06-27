@@ -16,7 +16,7 @@ smaa_v2 <- function(params) {
   if(params$method %in% allowed) {
     do.call(paste("run", params$method, sep="_"), list(params))
   } else {
-    stop("method not allowed")
+    stop(paste("method ", params$method, " not really allowed")
   }
 }
 
@@ -247,24 +247,26 @@ run_indifferenceCurve <- function(params) {
   range2 <- params$criteria[[criterionY]]$pvf$range
   
   # Determine y coordinates of the indifference curve at the x coordinates in cutoffs1
-  cutoffs1.y <- c()
+  cutoffs1_y <- c()
   for (x in cutoffs1) {
-    cutoffs1.y <- c(cutoffs1.y,uniroot(f=value.difference,interval=range2,x=x,extendInt="yes")$root)
+    cutoffs1_y <- c(cutoffs1_y, uniroot(f=value.difference, interval=range2, x=x, extendInt="yes")$root)
   }
   
   # Determine x coordinates of the indifference curve at the y coordinates in cutoffs2
-  cutoffs2.x <- c()
+  cutoffs2_x <- c()
   for (y in cutoffs2) {
-    cutoffs2.x <- c(cutoffs2.x,uniroot(f=value.difference,interval=range2,y=y,extendInt="yes")$root)
+    cutoffs2_x <- c(cutoffs2_x, uniroot(f=value.difference, interval=range2,y=y,extendInt="yes")$root)
   }
   
-  coordinates <- data.frame(x=c(cutoffs1,cutoffs2.x),y=c(cutoffs1.y,cutoffs2))
-  coordinates <- coordinates[order(coordinates$x),]
+  coordinates <- data.frame(x = c(cutoffs1, cutoffs2_x), y = c(cutoffs1_y, cutoffs2))
+  coordinates <- coordinates[order(coordinates$x), ]
   
-  coordinates <- coordinates[coordinates$x>=range1[1] & coordinates$x<=range1[2],] # Remove coordinates outside the scale range of criterionX
-  coordinates <- coordinates[coordinates$y>=range2[1] & coordinates$y<=range2[2],] # Remove coordinates outside the scale range of criterionY
+  coordinates <- coordinates[coordinates$x >= range1[1] & coordinates$x<=range1[2], ] # Remove coordinates outside the scale range of criterionX
+  coordinates <- coordinates[coordinates$y >= range2[1] & coordinates$y<=range2[2], ] # Remove coordinates outside the scale range of criterionY
   
-  unname(wrap.matrix(coordinates))
+  rownames(coordinates) <- NULL
+  wrap.result(coordinates,
+    'IndifferenceCoordinates')
   
 }
 
