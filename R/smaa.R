@@ -16,7 +16,7 @@ smaa_v2 <- function(params) {
   if(params$method %in% allowed) {
     do.call(paste("run", params$method, sep="_"), list(params))
   } else {
-    stop(paste("method ", params$method, " not really allowed")
+    stop(paste("method ", params$method, " not really allowed"))
   }
 }
 
@@ -216,10 +216,10 @@ getCutoffs <- function(params,crit) {
   
   cutoffs <- params$criteria[[crit]]$pvf$range
   
-  if (params$criteria[[crit]]$pvf$type!="linear") {
-    cutoffs <- c(cutoffs,params$criteria[[crit]]$pvf$cutoffs)
+  if (params$criteria[[crit]]$pvf$type != "linear") {
+    cutoffs <- c(cutoffs, params$criteria[[crit]]$pvf$cutoffs)
   }
-    
+  cutoffs 
 }
 
 run_indifferenceCurve <- function(params) {
@@ -261,9 +261,8 @@ run_indifferenceCurve <- function(params) {
   coordinates <- data.frame(x = c(cutoffs1, cutoffs2_x), y = c(cutoffs1_y, cutoffs2))
   coordinates <- coordinates[order(coordinates$x), ]
   
-  coordinates <- coordinates[coordinates$x >= range1[1] & coordinates$x<=range1[2], ] # Remove coordinates outside the scale range of criterionX
-  coordinates <- coordinates[coordinates$y >= range2[1] & coordinates$y<=range2[2], ] # Remove coordinates outside the scale range of criterionY
-  
+  coordinates <- coordinates[coordinates$x >= range1[1] & coordinates$ x<= range1[2], ] # Remove coordinates outside the scale range of criterionX
+  coordinates <- coordinates[coordinates$y >= range2[1] & coordinates$ y<= range2[2], ] # Remove coordinates outside the scale range of criterionY
   rownames(coordinates) <- NULL
   wrap.result(coordinates,
     'IndifferenceCoordinates')
