@@ -6,6 +6,7 @@ require.config({
     'angular-resource': 'bower_components/angular-resource/angular-resource.min',
     'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router.min',
     'angularjs-slider': 'bower_components/angularjs-slider/dist/rzslider',
+    'c3': 'bower_components/c3/c3',
     'd3': 'bower_components/d3/d3.min',
     'nvd3': 'bower_components/nvd3/nv.d3.min',
     'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-MML-AM_HTMLorMML',
@@ -16,12 +17,12 @@ require.config({
   },
   baseUrl: '/app/js',
   shim: {
-    'angular': { exports : 'angular'},
-    'angular-resource': { deps:['angular'], exports: 'angular-resource'},
+    'angular': { exports: 'angular' },
+    'angular-resource': { deps: ['angular'], exports: 'angular-resource' },
     'angular-mocks': { deps: ['angular'], exports: 'angular.mock' },
-    'd3': { exports : 'd3'},
-    'nvd3': { deps: ['d3'], exports : 'nv'},
-    'jQuery': { exports : 'jQuery'},
+    'd3': { exports: 'd3' },
+    'nvd3': { deps: ['d3'], exports: 'nv' },
+    'jQuery': { exports: 'jQuery' },
     'jasmine': { exports: 'jasmine' },
     'jasmine-html': { deps: ['jasmine'], exports: 'jasmine' }
   }
@@ -30,7 +31,7 @@ require.config({
 require([
   'jasmine-html',
   'angular'
-], function (jasmine) {
+], function(jasmine) {
   var jasmineEnv = jasmine.getEnv();
   jasmineEnv.updateInterval = 1000;
 
@@ -38,15 +39,15 @@ require([
 
   jasmineEnv.addReporter(htmlReporter);
 
-  jasmineEnv.specFilter = function (spec) {
+  jasmineEnv.specFilter = function(spec) {
     return htmlReporter.specFilter(spec);
   };
 
   var specs = [
-         '/test/unit/taskDependenciesSpec.js',
-         '/test/unit/partialValueFunctionSpec.js',
-         '/test/unit/ordinalSwingSpec.js'
-         ];
+    '/test/unit/taskDependenciesSpec.js',
+    '/test/unit/partialValueFunctionSpec.js',
+    '/test/unit/ordinalSwingSpec.js'
+  ];
 
   require(specs, function() {
     jasmineEnv.execute();
