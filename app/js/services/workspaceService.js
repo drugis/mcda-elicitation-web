@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['lodash'], function(_) {
   var dependencies = [
     'PataviResultsService'
   ];
@@ -24,7 +24,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function getObservedScales(problem) {
-      var scalesProblem = angular.copy(problem);
+      var scalesProblem = _.cloneDeep(problem);
       var dataSources = _.reduce(scalesProblem.criteria, function(accum, criterion) {
         return accum.concat(criterion.dataSources);
       }, []);

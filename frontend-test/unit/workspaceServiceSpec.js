@@ -3,15 +3,14 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
   describe('The WorkspaceService, ', function() {
     var workspaceService;
     beforeEach(module('elicit.workspace', function($provide) {
-      $provide.value('ScalesService', scalesServiceMock);
+      $provide.value('PataviResultsService', pataviResultsServiceMock);
     }));
 
     beforeEach(inject(function(WorkspaceService) {
       workspaceService = WorkspaceService;
     }));
 
-    var scalesServiceMock = jasmine.createSpyObj('ScalesService', ['getObservedScales']);
-
+    var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsService', ['postAndHandleResults']);
     describe('buildTheoreticalScales', function() {
       it('should build theoretical scales', inject(function(WorkspaceService) {
         var problem = {
@@ -22,7 +21,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
               }]
             },
             'crit2': {
-              dataSources:[{
+              dataSources: [{
                 id: 'ds2',
                 scale: [
                   10,
@@ -41,37 +40,35 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
     });
 
     describe('getObservedScales', function() {
-      it('should call the pataviService', function() {
+      it('should call the pataviResultService', function() {
         workspaceService.getObservedScales({
-          scopething: 'bla'
-        }, {
-            criteria: {
-              crit1: {
-                dataSources: [{ id: 'ds1' }]
-              }
-            }, performanceTable: [
-              {
-                criterion: 'crit1',
-                dataSource: 'ds1'
-              }
-            ]
-          });
-        expect(scalesServiceMock.getObservedScales).toHaveBeenCalledWith({
-          scopething: 'bla'
-        }, {
-            criteria: {
-              ds1: {
-                id: 'ds1'
-              }
-            }, performanceTable: [
-              {
-                criterion: 'ds1',
-                dataSource: 'ds1'
-              }
-            ]
-          });
+          criteria: {
+            crit1: {
+              dataSources: [{ id: 'ds1' }]
+            }
+          },
+          performanceTable: [
+            {
+              criterion: 'crit1',
+              dataSource: 'ds1'
+            }
+          ]
+        });
+        expect(pataviResultsServiceMock.postAndHandleResults).toHaveBeenCalledWith({
+          criteria: {
+            ds1: {
+              id: 'ds1'
+            }
+          },
+          performanceTable: [
+            {
+              criterion: 'ds1',
+              dataSource: 'ds1'
+            }
+          ],
+          method: 'scales'
+        });
       });
-
     });
 
     describe('mergeBaseAndSubProblem', function() {
@@ -348,8 +345,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
         };
         var problem = {
           criteria: {
-            crit1: { dataSources: [{id: 'ds1'}] },
-            crit2: { dataSources: [{id: 'ds2'}] }
+            crit1: { dataSources: [{ id: 'ds1' }] },
+            crit2: { dataSources: [{ id: 'ds2' }] }
           }
         };
 
@@ -359,7 +356,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           criteria: {
             crit1: {
               dataSources: [{
-                id:'ds1',
+                id: 'ds1',
                 pvf: {
                   range: [1, 6]
                 }
@@ -367,7 +364,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
             },
             crit2: {
               dataSources: [{
-                id:'ds2',
+                id: 'ds2',
                 pvf: {
                   range: [7, 12]
                 }
@@ -413,7 +410,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           criteria: {
             crit1: {
               dataSources: [{
-                id:'ds1',
+                id: 'ds1',
                 pvf: {
                   range: [3, 5]
                 }
@@ -421,7 +418,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
             },
             crit2: {
               dataSources: [{
-                id:'ds2',
+                id: 'ds2',
               }]
             }
           }
@@ -433,7 +430,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           criteria: {
             crit1: {
               dataSources: [{
-                id:'ds1',
+                id: 'ds1',
                 pvf: {
                   range: [3, 5]
                 }
@@ -441,7 +438,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
             },
             crit2: {
               dataSources: [{
-                id:'ds2',
+                id: 'ds2',
                 pvf: {
                   range: [7, 12]
                 }
@@ -924,7 +921,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Inconsistent exact weighting preferences');
         });
-      });      
+      });
     });
   });
 });
