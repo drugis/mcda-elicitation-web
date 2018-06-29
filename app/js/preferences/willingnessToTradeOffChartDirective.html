@@ -2,7 +2,7 @@
   <div class="cell">
     <svg></svg>
   </div>
-  <div class="cell" ng-if="coordinates.x > -Infinity && coordinates.y > -Infinity">
+  <div class="cell" style="width: 454px;margin-left: 46px" ng-if="coordinates.x + coordinates.y !== NaN">
     <rzslider rz-slider-model="coordinates.x2" rz-slider-options="sliderOptions"></rzslider>
   </div>
   <div class="cell large-6">
@@ -13,15 +13,15 @@
     <label>{{settings.secondCriterion.title}}: </label>
     <input type="number" ng-model="coordinates.y" ng-change="updateFirstPoint()" ng-model-options="{ debounce: 500 }">
   </div>
-  <div class="cell large-6" ng-show="coordinates.x > -Infinity && coordinates.y > -Infinity">
+  <div class="cell large-6" ng-show="coordinates.x + coordinates.y !== NaN">
     <label>{{settings.firstCriterion.title}} 2: </label>
     <input type="number" ng-model="coordinates.x2" ng-change="updateSecondPoint()" ng-model-options="{ debounce: 500 }">
   </div>
-  <div class="cell large-6" ng-show="coordinates.x > -Infinity && coordinates.y > -Infinity">
+  <div class="cell large-6" ng-show="coordinates.x + coordinates.y !== NaN">
     <label>{{settings.secondCriterion.title}} 2: </label>
     <input type="number" ng-disabled="true" ng-model="coordinates.y2">
   </div>
-  <div class="cell callout secondary" ng-show="coordinates.x > -Infinity && coordinates.y > -Infinity">
+  <div class="cell callout secondary" ng-show="coordinates.x + coordinates.y !== NaN">
     <div class="grid-x">
       <div class="cell">
         You have indicated that having:
