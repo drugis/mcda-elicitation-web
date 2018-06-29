@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_) {
+define(['lodash', 'd3', 'angular'], function(_, d3) {
   var dependencies = ['PataviResultsService'];
   var TradeOffService = function(PataviResultsService) {
     function getIndifferenceCurve(problem, criteria, coordinates) {
@@ -27,11 +27,12 @@ define(['lodash', 'angular'], function(_) {
           }
         },
         data: data,
+        legend:{ item:{ onclick: function() {} } },
         axis: {
           x: {
-            ticks: 10,
             tick: {
-              values: generateXvalues(sliderOptions.floor, sliderOptions.ceil)
+              fit: false,
+              format: d3.format('.2f')
             },
             min: sliderOptions.floor,
             max: sliderOptions.ceil,
@@ -42,10 +43,12 @@ define(['lodash', 'angular'], function(_) {
             }
           },
           y: {
-            ticks: 10,
             min: minY,
             max: maxY,
             default: [minY, maxY],
+            tick: {
+              format: d3.format('.2f')
+            },
             label: settings.secondCriterion.title,
             padding: {
               top: 0,
@@ -77,11 +80,11 @@ define(['lodash', 'angular'], function(_) {
           value = yValues[idx - 1];
         } else {
           // on the line, calculate y value
-          var xdiff = xValues[idx - 1] - xValues[idx];
-          var ydiff = Math.abs(yValues[idx - 1] - yValues[idx]);
+          var xdiff = xValues[idx] - xValues[idx - 1];
+          var ydiff = yValues[idx] - yValues[idx - 1];
           var slope = ydiff / xdiff;
-          var constant = -slope * xValues[idx] + yValues[idx];
-          value = slope * x + constant;
+          var c = -slope * xValues[idx] + yValues[idx];
+          value = slope * x + c;
         }
       }
       return {
@@ -94,19 +97,9 @@ define(['lodash', 'angular'], function(_) {
       if (value === 0) {
         return value;
       }
-      var multiplier = Math.pow(10, 4 - Math.floor(Math.log(value) / Math.LN10) - 1);
+      var posOrNeg = value < 0 ? -1 : 1;
+      var multiplier = Math.pow(10, 4 - Math.floor(Math.log(posOrNeg * value) / Math.LN10) - 1);
       return Math.round(value * multiplier) / multiplier;
-    }
-
-    // private
-    function generateXvalues(floor, ceil) {
-      var step = ceil - floor / 10;
-      var ticks = [floor];
-      for (var i = 1; i < 9; i++) {
-        ticks.push(ticks[i - 1] + step);
-      }
-      ticks.push(ceil);
-      return ticks;
     }
 
     return {

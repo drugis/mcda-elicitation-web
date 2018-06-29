@@ -22,9 +22,11 @@ define(['c3', 'd3', 'lodash'],
           scope.updateFirstPoint = updateFirstPoint;
           scope.updateSecondPoint = updateSecondPoint;
 
+          // init
+
           scope.coordinates = {};
           scope.sliderOptions = {
-            precision: 10,
+            precision: 4,
             onChange: updateSecondPoint
           };
 
@@ -40,6 +42,11 @@ define(['c3', 'd3', 'lodash'],
             type: 'scatter',
             types: {
               line: 'line'
+            },
+            names: {
+              firstPoint: 'Initial point',
+              line: 'Indifference curve',
+              secondPoint: 'Comparison point'
             }
           };
           var root = d3.select($(element).get(0));
@@ -55,6 +62,33 @@ define(['c3', 'd3', 'lodash'],
             }
           }, true);
 
+          // puublic functions
+
+          function updateFirstPoint() {
+            if (scope.coordinates.x > -Infinity && scope.coordinates.y > -Infinity) {
+              scope.coordinates.x = scope.coordinates.x < scope.sliderOptions.floor ? scope.sliderOptions.floor : scope.coordinates.x;
+              scope.coordinates.x = scope.coordinates.x > scope.sliderOptions.ceil ? scope.sliderOptions.ceil : scope.coordinates.x;
+              scope.coordinates.y = scope.coordinates.y < scope.minY ? scope.minY : scope.coordinates.y;
+              scope.coordinates.y = scope.coordinates.y > scope.maxY ? scope.maxY : scope.coordinates.y;
+              updateCoordinates();
+            }
+          }
+
+          function updateSecondPoint() {
+            var secondPointCoordinates = TradeOffService.getYValue(scope.coordinates.x2, data.columns[2], data.columns[3]);
+            data.columns[4] = ['secondPoint_x', secondPointCoordinates.x];
+            data.columns[5] = ['secondPoint', secondPointCoordinates.y];
+            scope.coordinates.x2 = secondPointCoordinates.x;
+            scope.coordinates.y2 = secondPointCoordinates.y;
+
+            $timeout(function() {
+              scope.$broadcast('rzSliderForceRender');
+            }, 100);
+            chart.load(data);
+          }
+
+          // private
+
           function initChart(newSettings) {
             root.append('rect')
               .attr('width', '100%')
@@ -65,9 +99,9 @@ define(['c3', 'd3', 'lodash'],
               .style('height', '500px')
               .style('background', 'white');
             scope.coordinates = {};
-            scope.sliderOptions.floor = newSettings.firstCriterion.dataSources[0].pvf.range[0];
-            scope.sliderOptions.ceil = newSettings.firstCriterion.dataSources[0].pvf.range[1];
-            scope.sliderOptions.step = (scope.sliderOptions.ceil - scope.sliderOptions.floor) / 100;
+            scope.sliderOptions.floor = TradeOffService.significantDigits(newSettings.firstCriterion.dataSources[0].pvf.range[0]);
+            scope.sliderOptions.ceil = TradeOffService.significantDigits(newSettings.firstCriterion.dataSources[0].pvf.range[1]);
+            scope.sliderOptions.step = TradeOffService.significantDigits((scope.sliderOptions.ceil - scope.sliderOptions.floor) / 100);
             scope.coordinates.x2 = scope.sliderOptions.floor;
             scope.minY = newSettings.secondCriterion.dataSources[0].pvf.range[0];
             scope.maxY = newSettings.secondCriterion.dataSources[0].pvf.range[1];
@@ -92,28 +126,6 @@ define(['c3', 'd3', 'lodash'],
             data.columns[3] = (['line'].concat(results.data.y));
           }
 
-          function updateFirstPoint() {
-            if (scope.coordinates.x > -Infinity && scope.coordinates.y > -Infinity) {
-              scope.coordinates.x = scope.coordinates.x < scope.sliderOptions.floor ? scope.sliderOptions.floor : scope.coordinates.x;
-              scope.coordinates.x = scope.coordinates.x > scope.sliderOptions.ceil ? scope.sliderOptions.ceil : scope.coordinates.x;
-              scope.coordinates.y = scope.coordinates.y < scope.minY ? scope.minY : scope.coordinates.y;
-              scope.coordinates.y = scope.coordinates.y > scope.maxY ? scope.maxY : scope.coordinates.y;
-              updateCoordinates();
-            }
-          }
-          function updateSecondPoint() {
-            var secondPointCoordinates = TradeOffService.getYValue(scope.coordinates.x2, data.columns[2], data.columns[3]);
-            data.columns[4] = ['secondPoint_x', secondPointCoordinates.x];
-            data.columns[5] = ['secondPoint', secondPointCoordinates.y];
-            scope.coordinates.x2 = secondPointCoordinates.x;
-            scope.coordinates.y2 = secondPointCoordinates.y;
-
-            $timeout(function() {
-              scope.$broadcast('rzSliderForceRender');
-            }, 100);
-            chart.load(data);
-          }
-
           function updateCoordinates() {
             data.columns[0] = ['firstPoint', scope.coordinates.y];
             data.columns[1] = ['firstPoint_x', scope.coordinates.x];
@@ -124,12 +136,7 @@ define(['c3', 'd3', 'lodash'],
               updateSecondPoint();
             });
           }
-
-
-
         }
-
-
       };
     };
     return dependencies.concat(WillingnessToTradeOffChartDirective);
