@@ -97,7 +97,8 @@ define(['lodash'], function(_) {
       newProblem.criteria = _.mapValues(newProblem.criteria, function(criterion) {
         var newCriterion = _.cloneDeep(criterion);
         newCriterion.dataSources = _.map(newCriterion.dataSources, function(dataSource) {
-          return _.merge({}, dataSource, subProblemDefinition.ranges[dataSource.id]);
+          var ranges = subProblemDefinition.ranges ? subProblemDefinition.ranges[dataSource.id] : {};
+          return _.merge({}, dataSource, ranges);
         });
         return newCriterion;
       });
