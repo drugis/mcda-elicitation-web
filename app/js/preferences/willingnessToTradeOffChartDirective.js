@@ -44,9 +44,9 @@ define(['c3', 'd3', 'lodash'],
               line: 'line'
             },
             names: {
-              firstPoint: 'Initial point',
+              firstPoint: 'Outcome A',
               line: 'Indifference curve',
-              secondPoint: 'Comparison point'
+              secondPoint: 'Ouctome B'
             }
           };
           var root = d3.select($(element).get(0));
