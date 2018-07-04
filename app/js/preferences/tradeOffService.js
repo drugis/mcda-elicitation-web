@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'd3', 'angular'], function(_, d3) {
+define(['lodash', 'd3'], function(_, d3) {
   var dependencies = ['PataviResultsService'];
   var TradeOffService = function(PataviResultsService) {
     function getIndifferenceCurve(problem, criteria, coordinates) {
@@ -36,7 +36,7 @@ define(['lodash', 'd3', 'angular'], function(_, d3) {
             },
             min: sliderOptions.floor,
             max: sliderOptions.ceil,
-            label: settings.firstCriterion.title,
+            label: settings.firstCriterion.title + ' (' + settings.firstCriterion.unitOfMeasurement + ')',
             padding: {
               left: 0,
               right: 0
@@ -49,7 +49,7 @@ define(['lodash', 'd3', 'angular'], function(_, d3) {
             tick: {
               format: d3.format('.2f')
             },
-            label: settings.secondCriterion.title,
+            label: settings.secondCriterion.title + ' (' + settings.secondCriterion.unitOfMeasurement + ')',
             padding: {
               top: 0,
               bottom: 0
