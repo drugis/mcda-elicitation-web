@@ -36,7 +36,7 @@ define(['lodash', 'd3'], function(_, d3) {
             },
             min: sliderOptions.floor,
             max: sliderOptions.ceil,
-            label: settings.firstCriterion.title + ' (' + settings.firstCriterion.unitOfMeasurement + ')',
+            label: getTitle(settings.firstCriterion),
             padding: {
               left: 0,
               right: 0
@@ -49,7 +49,7 @@ define(['lodash', 'd3'], function(_, d3) {
             tick: {
               format: d3.format('.2f')
             },
-            label: settings.secondCriterion.title + ' (' + settings.secondCriterion.unitOfMeasurement + ')',
+            label: getTitle(settings.secondCriterion),
             padding: {
               top: 0,
               bottom: 0
@@ -100,6 +100,10 @@ define(['lodash', 'd3'], function(_, d3) {
       var posOrNeg = value < 0 ? -1 : 1;
       var multiplier = Math.pow(10, 4 - Math.floor(Math.log(posOrNeg * value) / Math.LN10) - 1);
       return Math.round(value * multiplier) / multiplier;
+    }
+
+    function getTitle(criterion){
+      return criterion.unitOfMeasurement ? criterion.title + ' (' + criterion.unitOfMeasurement + ')' : criterion.title;
     }
 
     return {
