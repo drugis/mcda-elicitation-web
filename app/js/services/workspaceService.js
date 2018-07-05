@@ -138,6 +138,7 @@ define(['lodash'], function(_) {
       var newState = _.merge({}, {
         problem: mergeBaseAndSubProblem(baseProblem, subProblem.definition)
       }, scenario.state);
+      newState.problem.preferences =  scenario.state.prefs;
       _.forEach(newState.problem.criteria, function(criterion, key) {
         newState.problem.criteria[key] = _.merge({}, criterion, _.omit(baseProblem.criteria[key], ['pvf', 'dataSources']));
         // omit because we don't want the base problem pvf to overwrite the current one
