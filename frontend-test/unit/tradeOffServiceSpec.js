@@ -58,7 +58,8 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function() 
             title: 'firstTitle',
           },
           secondCriterion: {
-            title: 'secondTitle'
+            title: 'secondTitle',
+            unitOfMeasurement: 'uom'
           }
         };
         var minY = 0;
@@ -73,7 +74,7 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function() 
         expect(result.axis.y.min).toEqual(0);
         expect(result.axis.y.max).toEqual(10);
         expect(result.axis.y.default).toEqual([0, 10]);
-        expect(result.axis.y.label).toEqual('secondTitle');
+        expect(result.axis.y.label).toEqual('secondTitle (uom)');
       });
     });
 
