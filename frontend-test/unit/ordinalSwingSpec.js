@@ -16,9 +16,7 @@ define(['lodash', 'angular-mocks',
       function initializeScope($controller, $rootScope, TaskDependencies, problem) {
         var scope;
         scope = $rootScope.$new();
-
         scope.scenario = jasmine.createSpyObj('scenario', ['$save']);
-
         var task = {
           requires: [],
           resets: []
@@ -73,36 +71,149 @@ define(['lodash', 'angular-mocks',
         });
 
         it('should have the worst alternative as reference', function() {
-          expect($scope1.state.reference).toEqual({
-            'Prox DVT': 0.25,
-            'Dist DVT': 0.4,
-            Bleed: 0.1
-          });
-          expect($scope2.state.reference).toEqual({
-            'Prox DVT': 0.25,
-            'Dist DVT': 0.4,
-            Bleed: 0.0
-          });
+          expect($scope1.state.reference).toEqual([{
+            title: 'Proximal DVT',
+            dataSources: [{
+              id: 'proxDvtDS',
+              inputType: 'distribution',
+              inputMethod: 'manualDistribution',
+              pvf: {
+                range: [0, 0.25],
+                type: 'linear',
+                direction: 'decreasing'
+              }
+            }],
+            id: 'Prox DVT',
+            best: 0,
+            worst: 0.25
+          }, {
+            title: 'Distal DVT',
+            dataSources: [
+              {
+                id: 'distDvtDS',
+                inputType: 'distribution',
+                inputMethod: 'manualDistribution',
+                pvf: {
+                  range: [0.15, 0.4],
+                  type: 'linear',
+                  direction: 'decreasing'
+                }
+              }], id: 'Dist DVT',
+            best: 0.15,
+            worst: 0.4
+          }, {
+            title: 'Major bleeding',
+            dataSources: [{
+              id: 'bleedDS',
+              inputType: 'distribution',
+              inputMethod: 'manualDistribution',
+              pvf: {
+                range: [0, 0.1],
+                type: 'linear',
+                direction: 'decreasing'
+              }
+            }],
+            id: 'Bleed',
+            best: 0,
+            worst: 0.1
+          }]);
+          expect($scope2.state.reference).toEqual([
+            {
+              title: 'Proximal DVT',
+              dataSources: [{
+                id: 'proxDvtDS',
+                inputType: 'distribution',
+                inputMethod: 'manualDistribution',
+                pvf: {
+                  range: [0, 0.25],
+                  type: 'linear',
+                  direction: 'decreasing'
+                }
+              }],
+              id: 'Prox DVT',
+              best: 0,
+              worst: 0.25
+            }, {
+              title: 'Distal DVT',
+              dataSources: [
+                {
+                  id: 'distDvtDS',
+                  inputType: 'distribution',
+                  inputMethod: 'manualDistribution',
+                  pvf: {
+                    range: [0.15, 0.4],
+                    type: 'linear',
+                    direction: 'decreasing'
+                  }
+                }], id: 'Dist DVT',
+              best: 0.15,
+              worst: 0.4
+            }, {
+              title: 'Major bleeding',
+              dataSources: [{
+                id: 'bleedDS',
+                inputType: 'distribution',
+                inputMethod: 'manualDistribution',
+                pvf: {
+                  range: [0, 0.1],
+                  type: 'linear',
+                  direction: 'increasing'
+                }
+              }],
+              id: 'Bleed',
+              best: 0.1,
+              worst: 0
+            }
+          ]);
         });
 
         it('should have a single criterion improved from worst to best in each choice', function() {
-          expect($scope1.state.choices).toEqual({
-            'Prox DVT': {
-              'Prox DVT': 0.0,
-              'Dist DVT': 0.4,
-              Bleed: 0.1
-            },
-            'Dist DVT': {
-              'Prox DVT': 0.25,
-              'Dist DVT': 0.15,
-              Bleed: 0.1
-            },
-            Bleed: {
-              'Prox DVT': 0.25,
-              'Dist DVT': 0.4,
-              Bleed: 0.0
-            }
-          });
+          expect($scope1.state.choices).toEqual([{
+            title: 'Proximal DVT',
+            dataSources: [{
+              id: 'proxDvtDS',
+              inputType: 'distribution',
+              inputMethod: 'manualDistribution',
+              pvf: {
+                range: [0, 0.25],
+                type: 'linear',
+                direction: 'decreasing'
+              }
+            }],
+            id: 'Prox DVT',
+            best: 0,
+            worst: 0.25
+          }, {
+            title: 'Distal DVT',
+            dataSources: [{
+              id: 'distDvtDS',
+              inputType: 'distribution',
+              inputMethod: 'manualDistribution',
+              pvf: {
+                range: [0.15, 0.4],
+                type: 'linear',
+                direction: 'decreasing'
+              }
+            }],
+            id: 'Dist DVT',
+            best: 0.15,
+            worst: 0.4
+          }, {
+            title: 'Major bleeding',
+            dataSources: [{
+              id: 'bleedDS',
+              inputType: 'distribution',
+              inputMethod: 'manualDistribution',
+              pvf: {
+                range: [0, 0.1],
+                type: 'linear',
+                direction: 'decreasing'
+              }
+            }],
+            id: 'Bleed',
+            best: 0,
+            worst: 0.1
+          }]);
         });
 
         it('should have an empty order', function() {
@@ -121,44 +232,145 @@ define(['lodash', 'angular-mocks',
           $scope1.state.choice = 'Prox DVT';
           expect($scope1.canProceed($scope1.state)).toEqual(true);
           $scope1.nextStep($scope1.state);
-          expect($scope1.state.reference).toEqual({
-            'Prox DVT': 0.0,
-            'Dist DVT': 0.4,
-            Bleed: 0.1
-          });
+          expect($scope1.state.reference).toEqual([{
+            title: 'Proximal DVT',
+            dataSources: [{
+              id: 'proxDvtDS',
+              inputType: 'distribution',
+              inputMethod: 'manualDistribution',
+              pvf: {
+                range: [0, 0.25],
+                type: 'linear',
+                direction: 'decreasing'
+              }
+            }],
+            id: 'Prox DVT',
+            best: 0,
+            worst: 0.25
+          }, {
+            title: 'Distal DVT',
+            dataSources: [{
+              id: 'distDvtDS',
+              inputType: 'distribution',
+              inputMethod: 'manualDistribution',
+              pvf: {
+                range: [0.15, 0.4],
+                type: 'linear',
+                direction: 'decreasing'
+              }
+            }],
+            id: 'Dist DVT',
+            best: 0.15,
+            worst: 0.4
+          }, {
+            title: 'Major bleeding',
+            dataSources: [{
+              id: 'bleedDS',
+              inputType: 'distribution',
+              inputMethod: 'manualDistribution',
+              pvf: {
+                range: [0, 0.1],
+                type: 'linear',
+                direction: 'decreasing'
+              }
+            }],
+            id: 'Bleed',
+            best: 0,
+            worst: 0.1
+          }]);
           expect($scope1.state.choice).toBeUndefined();
           expect($scope1.state.title).toEqual('Ranking (2/2)');
 
           $scope2.state.choice = 'Dist DVT';
           $scope2.nextStep($scope2.state);
-          expect($scope2.state.reference).toEqual({
-            'Prox DVT': 0.25,
-            'Dist DVT': 0.15,
-            Bleed: 0.0
-          });
+          expect($scope2.state.reference).toEqual([{
+            title: 'Proximal DVT',
+            dataSources: [{
+              id: 'proxDvtDS',
+              inputType: 'distribution',
+              inputMethod: 'manualDistribution',
+              pvf: {
+                range: [0, 0.25],
+                type: 'linear',
+                direction: 'decreasing'
+              }
+            }],
+            id: 'Prox DVT',
+            best: 0,
+            worst: 0.25
+          }, {
+            title: 'Distal DVT',
+            dataSources: [{
+              id: 'distDvtDS',
+              inputType: 'distribution',
+              inputMethod: 'manualDistribution',
+              pvf: {
+                range: [0.15, 0.4],
+                type: 'linear',
+                direction: 'decreasing'
+              }
+            }],
+            id: 'Dist DVT',
+            best: 0.15,
+            worst: 0.4
+          }, {
+            title: 'Major bleeding',
+            dataSources: [{
+              id: 'bleedDS',
+              inputType: 'distribution',
+              inputMethod: 'manualDistribution',
+              pvf: {
+                range: [0, 0.1],
+                type: 'linear',
+                direction: 'increasing'
+              }
+            }],
+            id: 'Bleed',
+            best: 0.1,
+            worst: 0
+          }]);
         });
 
         it('should not contain previous choice', function() {
           $scope1.state.choice = 'Prox DVT';
           $scope1.nextStep($scope1.state);
-          expect(_.keys($scope1.state.choices)).toEqual(['Dist DVT', 'Bleed']);
+          expect(_.map($scope1.state.choices, 'id')).toEqual(['Dist DVT', 'Bleed']);
         });
 
         it('should improve previous choice on all choices', function() {
           $scope1.state.choice = 'Prox DVT';
           $scope1.nextStep($scope1.state);
-          expect($scope1.state.choices).toEqual({
-            'Dist DVT': {
-              'Prox DVT': 0.0,
-              'Dist DVT': 0.15,
-              Bleed: 0.1
-            },
-            Bleed: {
-              'Prox DVT': 0.0,
-              'Dist DVT': 0.4,
-              Bleed: 0.0
-            }
-          });
+          expect($scope1.state.choices).toEqual([{
+            title: 'Distal DVT',
+            dataSources: [{
+              id: 'distDvtDS',
+              inputType: 'distribution',
+              inputMethod: 'manualDistribution',
+              pvf: {
+                range: [0.15, 0.4],
+                type: 'linear',
+                direction: 'decreasing'
+              }
+            }],
+            id: 'Dist DVT',
+            best: 0.15,
+            worst: 0.4
+          }, {
+            title: 'Major bleeding',
+            dataSources: [{
+              id: 'bleedDS',
+              inputType: 'distribution',
+              inputMethod: 'manualDistribution',
+              pvf: {
+                range: [0, 0.1],
+                type: 'linear',
+                direction: 'decreasing'
+              }
+            }],
+            id: 'Bleed',
+            best: 0,
+            worst: 0.1
+          }]);
         });
 
         it('should push the choice onto the order', function() {

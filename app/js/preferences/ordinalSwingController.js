@@ -22,112 +22,27 @@ define(['lodash', 'mcda/controllers/wizard'], function(_, Wizard) {
     $scope.problem = $scope.aggregateState.problem;
     $scope.pvf = PartialValueFunctionService;
 
-    function getReference(criteria) {
-      return _.zipObject(
-        _.map(criteria, 'id'),
-        _.map(criteria, function(criterion) {
-          return PartialValueFunctionService.worst(criterion.dataSources[0]);
-        })
-      );
-    }
-
-    function title(step, total) {
-      var base = 'Ranking';
-      return base + ' (' + step + '/' + total + ')';
-    }
-
-    function makeChoices() {
-      var criteria = $scope.criteria;
-      var choices = _.map(criteria, function(criterion) {
-        var reference = getReference(criteria);
-        reference[criterion.id] = PartialValueFunctionService.best(criterion.dataSources[0]);
-        return reference;
+    OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
+      $scope.criteria = _.map(orderings.criteria, function(criterion) {
+        criterion.best = PartialValueFunctionService.best(criterion.dataSources[0]);
+        criterion.worst = PartialValueFunctionService.worst(criterion.dataSources[0]);
+        return criterion;
       });
-      return _.zipObject(_.map(criteria, 'id'), choices);
-    }
-
-    function initialize(state) {
-      var fields = {
-        title: title(1, _.size($scope.criteria) - 1),
-        type: 'elicit',
-        prefs: {
-          ordinal: []
-        },
-        reference: getReference($scope.criteria),
-        choices: makeChoices()
-      };
-      return _.extend(state, fields);
-    }
-
-    function validChoice(state) {
-      var criteria = $scope.problem.criteria;
-      return state && _.includes(_.keys(criteria), state.choice);
-    }
-
-    function nextState(state) {
-      if (!validChoice(state)) {
-        return null;
-      }
-
-      var nextState = _.cloneDeep(state);
-      var criteria = $scope.problem.criteria;
-
-      var choice = state.choice;
-      nextState.choice = undefined;
-
-      _.each(nextState.choices, function(alternative) {
-        alternative[choice] = PartialValueFunctionService.best(criteria[choice].dataSources[0]);
+      $injector.invoke(Wizard, this, {
+        $scope: $scope,
+        handler: {
+          validChoice: validChoice,
+          fields: ['choice', 'reference', 'choices', 'type', 'standardized'],
+          nextState: nextState,
+          initialize: _.partial(initialize, taskDefinition.clean($scope.aggregateState)),
+          standardize: standardize
+        }
       });
+    });
 
-      function next(choice) {
-        delete nextState.choices[choice];
-        nextState.reference[choice] = PartialValueFunctionService.best($scope.problem.criteria[choice].dataSources[0]);
-        nextState.prefs.ordinal.push(choice);
-        nextState.title = title(nextState.prefs.ordinal.length + 1, _.size(criteria) - 1);
-      }
-      next(choice);
-
-      if (_.size(nextState.choices) === 1) {
-        next(_.keys(nextState.choices)[0]);
-        nextState.type = 'review';
-      }
-
-      return nextState;
-    }
-
-    function standardize(state) {
-      var standardized = _.cloneDeep(state);
-
-      var criteria = $scope.problem.criteria;
-      var prefs = standardized.prefs;
-      var order = prefs.ordinal;
-
-      function ordinal(a, b) {
-        return {
-          type: 'ordinal',
-          criteria: [a, b]
-        };
-      }
-      if (order.length === _.size(criteria) - 2) {
-        order.push(state.choice);
-      }
-      var result = [];
-      for (var i = 0; i < order.length - 1; i++) {
-        result.push(ordinal(order[i], order[i + 1]));
-      }
-      if (order.length > 0) {
-        var remaining = _.difference(_.keys(criteria), order).sort();
-        result = result.concat(_.map(remaining, function(criterion) {
-          return ordinal(_.last(order), criterion);
-        }));
-      }
-      standardized.prefs = result;
-      return standardized;
-    }
-
+    //public
     function save(state) {
       var nextState = standardize(state);
-
       currentScenario.state = _.pick(nextState, ['problem', 'prefs']);
       currentScenario.$save($stateParams, function(scenario) {
         $scope.$emit('elicit.resultsAccessible', scenario);
@@ -143,20 +58,71 @@ define(['lodash', 'mcda/controllers/wizard'], function(_, Wizard) {
       $state.go('preferences');
     }
 
-    OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
-      $scope.alternatives = orderings.alternatives;
-      $scope.criteria = orderings.criteria;
-      $injector.invoke(Wizard, this, {
-        $scope: $scope,
-        handler: {
-          validChoice: validChoice,
-          fields: ['choice', 'reference', 'choices', 'type', 'standardized'],
-          nextState: nextState,
-          initialize: _.partial(initialize, taskDefinition.clean($scope.aggregateState)),
-          standardize: standardize
-        }
-      });
-    });
+    //private
+    function title(step, total) {
+      var base = 'Ranking';
+      return base + ' (' + step + '/' + total + ')';
+    }
+
+    function initialize(state) {
+      var fields = {
+        title: title(1, _.size($scope.criteria) - 1),
+        type: 'elicit',
+        prefs: {
+          ordinal: []
+        },
+        reference: _.cloneDeep($scope.criteria),
+        choices: _.cloneDeep($scope.criteria)
+      };
+      return _.extend(state, fields);
+    }
+
+    function validChoice(state) {
+      return state && _.includes(_.map($scope.criteria, 'id'), state.choice);
+    }
+
+    function nextState(state) {
+      if (!validChoice(state)) {
+        return null;
+      }
+      var nextState = _.cloneDeep(state);
+
+      nextState.choice = undefined;
+      nextState.choices = _.reject(nextState.choices, function(criterion) { return criterion.id === state.choice; });
+      nextState.prefs.ordinal.push(state.choice);
+      nextState.title = title(nextState.prefs.ordinal.length + 1, $scope.criteria.length - 1);
+
+      return nextState;
+    }
+
+    function standardize(state) {
+      var standardized = _.cloneDeep(state);
+      var prefs = standardized.prefs;
+      var order = prefs.ordinal;
+
+      function ordinal(a, b) {
+        return {
+          type: 'ordinal',
+          criteria: [a, b]
+        };
+      }
+
+      if (order.length === $scope.criteria.length - 2) {
+        order.push(state.choice);
+      }
+      var result = [];
+      for (var i = 0; i < order.length - 1; i++) {
+        result.push(ordinal(order[i], order[i + 1]));
+      }
+      if (order.length > 0) {
+        var remaining = _.difference(_.map($scope.criteria, 'id'), order).sort();
+        result = result.concat(_.map(remaining, function(criterion) {
+          return ordinal(_.last(order), criterion);
+        }));
+      }
+      standardized.prefs = result;
+      return standardized;
+    }
   };
   return dependencies.concat(OrdinalSwingController);
 });
