@@ -300,6 +300,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
                 }]
               }
             },
+            preferences: undefined,
             performanceTable: [{
               criterion: 'critId2',
               dataSource: 'ds2'
