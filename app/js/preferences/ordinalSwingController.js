@@ -26,7 +26,6 @@ define(['lodash', 'mcda/controllers/wizard'], function(_, Wizard) {
       $scope.criteria = _.map(orderings.criteria, function(criterion) {
         criterion.best = PartialValueFunctionService.best(criterion.dataSources[0]);
         criterion.worst = PartialValueFunctionService.worst(criterion.dataSources[0]);
-        criterion.value = criterion.worst;
         return criterion;
       });
       $injector.invoke(Wizard, this, {
