@@ -26,6 +26,7 @@ define(['lodash', 'mcda/controllers/wizard'], function(_, Wizard) {
       $scope.criteria = _.map(orderings.criteria, function(criterion) {
         criterion.best = PartialValueFunctionService.best(criterion.dataSources[0]);
         criterion.worst = PartialValueFunctionService.worst(criterion.dataSources[0]);
+        criterion.value = criterion.worst;
         return criterion;
       });
       $injector.invoke(Wizard, this, {
@@ -85,8 +86,10 @@ define(['lodash', 'mcda/controllers/wizard'], function(_, Wizard) {
       if (!validChoice(state)) {
         return null;
       }
-      var nextState = _.cloneDeep(state);
+      var choiceCriterion = _.find($scope.criteria, function(criterion) { return criterion.id === state.choice; });
+      choiceCriterion.alreadyChosen = true;
 
+      var nextState = _.cloneDeep(state);
       nextState.choice = undefined;
       nextState.choices = _.reject(nextState.choices, function(criterion) { return criterion.id === state.choice; });
       nextState.prefs.ordinal.push(state.choice);
