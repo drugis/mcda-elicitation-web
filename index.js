@@ -98,7 +98,7 @@ app
   .use(express.static('app'))
   .use('/template', express.static(__dirname + bower_path + '/angular-foundation-assets/template'))
   .use('/examples', express.static(__dirname + '/examples'))
-  .use(bodyParser.json())
+  .use(bodyParser.json({limit: '5mb'}))
   .use(csurf());
 
 
