@@ -32,7 +32,7 @@ define(['lodash', 'mcda/controllers/wizard'], function(_, Wizard) {
         $scope: $scope,
         handler: {
           validChoice: validChoice,
-          fields: ['choice', 'reference', 'choices', 'type', 'standardized'],
+          fields: ['choice', 'reference', 'choices', 'type', 'standardized', 'previousChoice'],
           nextState: nextState,
           initialize: _.partial(initialize, taskDefinition.clean($scope.aggregateState)),
           standardize: standardize

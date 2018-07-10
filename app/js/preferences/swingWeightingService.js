@@ -13,14 +13,16 @@ define(['lodash', 'angular', 'mcda/controllers/wizard'], function(_, angular, Wi
     OrderingService
   ) {
 
-    function initWeightingScope(scope,
+    function initWeightingScope(
+      scope,
       $stateParams,
       currentScenario,
       taskDefinition,
       sliderOptions,
       getValues,
       baseTitle,
-      toBackEnd) {
+      toBackEnd
+    ) {
       // functions
       scope.canSave = canSave;
       scope.save = save;
@@ -58,8 +60,7 @@ define(['lodash', 'angular', 'mcda/controllers/wizard'], function(_, angular, Wi
           return null;
         }
 
-        var next;
-        next = {
+        var next = {
           step: state.step + 1,
           values: getValues(state.problem.criteria),
           oneHundred: 100,
