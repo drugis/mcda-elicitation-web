@@ -75,6 +75,8 @@ define(['c3', 'd3', 'lodash'],
           }
 
           function updateSecondPoint() {
+            scope.sliderOptions.minLimit = data.columns[2][1];
+            scope.sliderOptions.maxLimit = data.columns[2][data.columns[2].length-1];
             var secondPointCoordinates = TradeOffService.getYValue(scope.coordinates.x2, data.columns[2], data.columns[3]);
             data.columns[4] = ['secondPoint_x', secondPointCoordinates.x];
             data.columns[5] = ['secondPoint', secondPointCoordinates.y];
