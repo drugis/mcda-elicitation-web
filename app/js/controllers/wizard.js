@@ -23,7 +23,6 @@ define(['lodash', 'angular'], function(_, angular) {
 
     $scope.isFinished = handler.isFinished;
 
-
     function canProceed(state) {
       return (handler && handler.validChoice(state)) || false;
     }
@@ -33,32 +32,25 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function nextStep(state) {
-      $scope.$broadcast('nextState');
       if (!$scope.canProceed(state)) {
         return false;
       }
-      var choice = state.choice;
+      var currentChoice = state.choice || state.mostImportantCriterion;
       // History handling
-      previousStates.push(state);
-      var nextState = nextStates.pop();
-      if(nextState && state.mostImportantCriterion){
-        nextState.mostImportantCriterion = state.mostImportantCriterion;
+      previousStates.push(angular.copy(state));
+
+      if (nextStates.length) {
+        var nextState = nextStates.pop();
+        if (currentChoice === nextState.previousChoice || currentChoice === nextState.mostImportantCriterion) {
+          $scope.state = nextState;
+          return true;
+        }
       }
-      if (nextState && _.isEqual(nextState.previousChoice, choice)) {
-        $scope.state = nextState;
-        return true;
-      } else {
-        nextStates = [];
-      }
-
-      state = _.pick(state, PERSISTENT_FIELDS.concat(handler.fields));
-      nextState = handler.nextState(state);
-
-      nextState.previousChoice = choice;
-
-      nextState.intermediate = handler.standardize(nextState);
-      
-      $scope.state = nextState;
+      $scope.nextStates = [];
+      var newState = _.pick(_.cloneDeep(state), PERSISTENT_FIELDS.concat(handler.fields));
+      newState.previousChoice = currentChoice;
+      newState.intermediate = handler.standardize(newState);
+      $scope.state = handler.nextState(newState);
       return true;
     }
 
@@ -67,12 +59,16 @@ define(['lodash', 'angular'], function(_, angular) {
         return false;
       }
       nextStates.push(angular.copy($scope.state));
+      $scope.state = previousStates.pop();
 
-      var previousState = previousStates.pop();
-      $scope.state = previousState;
-      $timeout(function() {
-        $scope.$broadcast('rzSliderForceRender');
-      }, 100);
+      if ($scope.state.choice) { // ranking
+        var choiceCriterion = _.find($scope.criteria, function(criterion) { return criterion.id === $scope.state.choice; });
+        choiceCriterion.alreadyChosen = false;
+      } else { // swing
+        $timeout(function() {
+          $scope.$broadcast('rzSliderForceRender');
+        }, 100);
+      }
       return true;
     }
   };
