@@ -21,13 +21,21 @@ smaa_v2 <- function(params) {
 }
 
 run_scales <- function(params) {
-  N <- 1000
+  N <- 1e4
   crit <- names(params$criteria)
   alts <- names(params$alternatives)
   meas <- sample(alts, crit, params$performanceTable, N)
-  scales <- apply(meas, c(2, 3), function(e) { quantile(e, c(0.025, 0.5, 0.975),na.rm=T) })
+  scales <- apply(meas, c(2, 3), computeSummaryStatistics)
   apply(aperm(scales, c(3,2,1)), 1, wrap.matrix)
 }
+
+
+computeSummaryStatistics <- function(samples) {
+  quantiles <- quantile(samples, c(0.025, 0.5, 0.975),na.rm=T)
+  density <- density(samples)
+  mode <- density$x[which.max(density$y)]
+  c(quantiles,mode=mode)
+} 
 
 ratioConstraint <- function(n, i1, i2, x) {
   a <- rep(0, n)
