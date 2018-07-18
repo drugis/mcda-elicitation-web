@@ -20,8 +20,7 @@ define([], function() {
         scope.$watch('showPercentage', initScales);
         scope.$watch('showMode', initScales);
 
-        function initScales(oldValue, newValue) {
-          if(oldValue === newValue) { return; }
+        function initScales() {
           if (scope.scales) {
             scope.lowerBound = getRoundedValue(scope.scales['2.5%']);
             scope.median = getRoundedValue(scope.showMode ? scope.scales.mode : scope.scales['50%']);
