@@ -4,17 +4,31 @@
       <inline-help help-key="effects-table"></inline-help>
     </h4>
   </div>
-  <div class="cell large-4">
+  <div class="cell">
     <toggle-columns toggled-columns="toggledColumns" edit-mode="editMode"></toggle-columns>
-    <span class="toggle-text">Effects</span>
-    <span class="switch">
-      <input class="switch-input" id="showStudyDataToggle" type="checkbox" ng-model="showStudyData.value">
-      <label class="switch-paddle" ng-if="studyDataAvailable" for="showStudyDataToggle"></label>
-      <label class="switch-paddle" ng-if="!studyDataAvailable" tooltip-append-to-body="true" tooltip="Cannot show source data if all data is relative"></label>
-    </span>
-    <span class="toggle-text">Source data</span>
   </div>
-  <div class="cell large-4">
+  <div class="cell large-3">
+    <div class="right">
+      <span class="toggle-text">Effects</span>
+      <span class="switch">
+        <input class="switch-input" id="showStudyDataToggle" type="checkbox" ng-model="showStudyData.value">
+        <label class="switch-paddle" ng-if="studyDataAvailable" for="showStudyDataToggle"></label>
+        <label class="switch-paddle" ng-if="!studyDataAvailable" tooltip-append-to-body="true" tooltip="Cannot show source data if all data is relative"></label>
+      </span>
+      <span class="toggle-text">Source data</span>
+    </div>
+  </div>
+  <div class="cell large-3">
+    <div class="right">
+      <span class="toggle-text">Median</span>
+      <span class="switch">
+        <input class="switch-input" id="showModeToggle" type="checkbox" ng-model="showMode">
+        <label class="switch-paddle" for="showModeToggle"></label>
+      </span>
+      <span class="toggle-text">Mode</span>
+    </div>
+  </div>
+  <div class="cell large-3">
     <div class="right">
       <span class="toggle-text">Percentage</span>
       <span class="switch">
@@ -24,7 +38,7 @@
       <span class="toggle-text">Decimal</span>
     </div>
   </div>
-  <div class="cell large-4">
+  <div class="cell large-3">
     <div class="right">
       <button class="button small info clipboard-button" data-clipboard-target="#effectstable">
         <i class="fa fa-clipboard"></i> Copy to clipboard
@@ -69,9 +83,13 @@
             {{row.criterion.unitOfMeasurement}}
           </td>
           <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
-            <effects-table-scales-cell ng-show="!effectsTableInfo[row.dataSource.id].hasStudyData || !showStudyData.value" scales="scales[row.dataSource.id][alternative.id]"
+            <effects-table-scales-cell ng-show="!effectsTableInfo[row.dataSource.id].hasStudyData || !showStudyData.value" 
+              scales="scales[row.dataSource.id][alternative.id]"
               uncertainty="effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || 
-                effectsTableInfo[row.dataSource.id].distributionType === 'relative'" show-percentage="!showDecimal" can-be-percentage="row.dataSource.dataType === 'dichotomous' || row.dataSource.parameterOfInterest === 'cumulativeProbability'">
+                effectsTableInfo[row.dataSource.id].distributionType === 'relative'" 
+                show-percentage="!showDecimal" 
+                show-mode="showMode"
+                can-be-percentage="row.dataSource.dataType === 'dichotomous' || row.dataSource.parameterOfInterest === 'cumulativeProbability'">
             </effects-table-scales-cell>
             <div ng-if="effectsTableInfo[row.dataSource.id].hasStudyData && showStudyData.value">
               {{effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].label}}
