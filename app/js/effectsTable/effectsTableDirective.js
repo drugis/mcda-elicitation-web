@@ -24,6 +24,7 @@ define(['lodash'], function(_) {
         // init
         scope.studyDataAvailable = EffectsTableService.isStudyDataAvailable(scope.effectsTableInfo);
         scope.showDecimal = false;
+        scope.showMode = false;
         scope.$watch('criteria', function(newCriteria) {
           scope.keyedCriteria = _.keyBy(_.cloneDeep(newCriteria), 'id');
           scope.rows = EffectsTableService.buildEffectsTable(scope.keyedCriteria);
