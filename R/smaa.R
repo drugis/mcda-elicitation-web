@@ -29,13 +29,16 @@ run_scales <- function(params) {
   apply(aperm(scales, c(3,2,1)), 1, wrap.matrix)
 }
 
-
 computeSummaryStatistics <- function(samples) {
-  quantiles <- quantile(samples, c(0.025, 0.5, 0.975),na.rm=T)
-  density <- density(samples)
-  mode <- density$x[which.max(density$y)]
-  c(quantiles,mode=mode)
-} 
+  quantiles <- quantile(samples, c(0.025, 0.5, 0.975), na.rm=T)
+  if (min(samples, na.rm=T) != max(samples, na.rm=T)) {
+    density <- density(samples)
+    mode <- density$x[which.max(density$y)]
+  } else {
+    mode <- min(samples, na.rm=T)
+  }
+  c(quantiles, mode=mode)
+}
 
 ratioConstraint <- function(n, i1, i2, x) {
   a <- rep(0, n)
