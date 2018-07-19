@@ -37,6 +37,9 @@ computeSummaryStatistics <- function(samples) {
   } else {
     mode <- min(samples, na.rm=T)
   }
+  if(is.inf(mode)) {
+    mode <- NULL
+  }
   c(quantiles, mode=mode)
 }
 
