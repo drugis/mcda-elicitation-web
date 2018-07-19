@@ -31,11 +31,14 @@ run_scales <- function(params) {
 
 computeSummaryStatistics <- function(samples) {
   quantiles <- quantile(samples, c(0.025, 0.5, 0.975), na.rm=T)
-  if (min(samples, na.rm=T) != max(samples, na.rm=T)) {
+  if (min(samples, na.rm=T) != max(samples, na.rm=T) && !is.na(quantiles[['2.5%']])) {
     density <- density(samples)
     mode <- density$x[which.max(density$y)]
   } else {
     mode <- min(samples, na.rm=T)
+  }
+  if(is.infinite(mode)) {
+    mode <- NA
   }
   c(quantiles, mode=mode)
 }
