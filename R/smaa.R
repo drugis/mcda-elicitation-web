@@ -31,7 +31,7 @@ run_scales <- function(params) {
 
 computeSummaryStatistics <- function(samples) {
   quantiles <- quantile(samples, c(0.025, 0.5, 0.975), na.rm=T)
-  if (!anyNA(samples)) {
+  if (any(!is.na(samples))) {
     mode <- computeMode(samples)
   } else {
     mode <- NA
