@@ -1,39 +1,40 @@
 'use strict';
 define(['angular',
-    'require',
-    'mcda/config',
-    'jQuery',
-    'lodash',
-    'angular-touch',
-    'mmfoundation',
-    'angular-ui-router',
-    'angular-resource',
-    'angular-cookies',
-    'angularjs-slider',
-    'angular-patavi-client',
-    'core-js',
-    'error-reporting',
-    'export-directive',
-    'help-popup',
-    'mcda/benefitRisk/benefitRisk',
-    'mcda/effectsTable/effectsTable',
-    'mcda/evidence/evidence',
-    'mcda/services/routeFactory',
-    'mcda/services/workspaceResource',
-    'mcda/services/scenarioResource',
-    'mcda/services/taskDependencies',
-    'mcda/services/util',
-    'mcda/results/results',
-    'mcda/manualInput/manualInput',
-    'mcda/subProblem/subProblemResource',
-    'mcda/subProblem/subProblem',
-    'mcda/workspace/workspace',
-    'mcda/workspace/orderingResource',
-    'mcda/directives',
-    'mcda/navbar/navbar',
-    'mcda/preferences/preferences',
-    'mcda/effectsTable/toggleColumnsResource'
-  ],
+  'require',
+  'mcda/config',
+  'jQuery',
+  'lodash',
+  'angular-touch',
+  'mmfoundation',
+  'angular-ui-router',
+  'angular-resource',
+  'angular-cookies',
+  'angularjs-slider',
+  'angular-patavi-client',
+  'core-js',
+  'error-reporting',
+  'export-directive',
+  'help-popup',
+  'mcda/benefitRisk/benefitRisk',
+  'mcda/effectsTable/effectsTable',
+  'mcda/evidence/evidence',
+  'mcda/services/routeFactory',
+  'mcda/services/workspaceResource',
+  'mcda/services/scenarioResource',
+  'mcda/services/taskDependencies',
+  'mcda/services/util',
+  'mcda/results/results',
+  'mcda/manualInput/manualInput',
+  'mcda/subProblem/subProblemResource',
+  'mcda/subProblem/subProblem',
+  'mcda/workspace/workspace',
+  'mcda/workspace/orderingResource',
+  'mcda/directives',
+  'mcda/navbar/navbar',
+  'mcda/preferences/preferences',
+  'mcda/effectsTable/toggleColumnsResource',
+  'page-title-service'
+],
   function(angular, require, Config) {
 
     var dependencies = [
@@ -62,21 +63,24 @@ define(['angular',
       'elicit.toggleColumnsResource',
       'ngCookies',
       'errorReporting',
-      'export-directive'
+      'export-directive',
+      'page-title-service'
     ];
 
     var app = angular.module('elicit', dependencies);
-    app.run(['$rootScope', '$http', 'HelpPopupService', function($rootScope, $http, HelpPopupService) {
-      $rootScope.$safeApply = function($scope, fn) {
-        var phase = $scope.$root.$$phase;
-        if (phase === '$apply' || phase === '$digest') {
-          this.$eval(fn);
-        } else {
-          this.$apply(fn);
-        }
-      };
-      HelpPopupService.loadLexicon($http.get('lexicon.json'));
-    }]);
+    app.run(['$rootScope', '$http', 'HelpPopupService', 'PageTitleService',
+      function($rootScope, $http, HelpPopupService, PageTitleService) {
+        $rootScope.$safeApply = function($scope, fn) {
+          var phase = $scope.$root.$$phase;
+          if (phase === '$apply' || phase === '$digest') {
+            this.$eval(fn);
+          } else {
+            this.$apply(fn);
+          }
+        };
+        HelpPopupService.loadLexicon($http.get('lexicon.json'));
+        PageTitleService.loadLexicon($http.get('mcda-page-titles.json'));
+      }]);
 
     app.constant('Tasks', Config.tasks);
 
@@ -88,7 +92,7 @@ define(['angular',
     app.constant('isMcdaStandalone', true);
     app.constant('currentSchemaVersion', '1.1.0');
 
-     app.config(function(mcdaRootPath, $stateProvider, $urlRouterProvider, MCDARouteProvider) {
+    app.config(function(mcdaRootPath, $stateProvider, $urlRouterProvider, MCDARouteProvider) {
       var baseTemplatePath = mcdaRootPath + 'views/';
 
       //ui-router code starts here

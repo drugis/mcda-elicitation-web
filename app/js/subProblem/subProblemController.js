@@ -1,7 +1,8 @@
 'use strict';
 define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
 
-  var dependencies = ['$scope', '$stateParams', '$modal', '$state',
+  var dependencies = [
+    '$scope', '$stateParams', '$modal', '$state',
     'intervalHull',
     'SubProblemService',
     'ScenarioResource',
@@ -10,10 +11,12 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     'subProblems',
     'SubProblemResource',
     'EffectsTableService',
+    'PageTitleService',
     'WorkspaceService'
   ];
 
-  var SubProblemController = function($scope, $stateParams, $modal, $state,
+  var SubProblemController = function(
+    $scope, $stateParams, $modal, $state,
     intervalHull,
     SubProblemService,
     ScenarioResource,
@@ -22,6 +25,7 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     subProblems,
     SubProblemResource,
     EffectsTableService,
+    PageTitleService,
     WorkspaceService
   ) {
     // functions 
@@ -37,6 +41,7 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     $scope.scalesPromise.then(function(scales) {
       $scope.scales = scales;
     });
+    PageTitleService.setPageTitle('SubProblemController', $scope.problem.title +'\'s problem definition');
 
     var mergedProblem = WorkspaceService.mergeBaseAndSubProblem($scope.problem, $scope.subProblem.definition);
     $scope.areTooManyDataSourcesIncluded = _.find(mergedProblem.criteria, function(criterion) {

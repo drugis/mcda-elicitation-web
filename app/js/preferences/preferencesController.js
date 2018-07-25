@@ -9,6 +9,7 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     'ScenarioResource',
     'PartialValueFunctionService',
     'OrderingService',
+    'PageTitleService',
     'PreferencesService',
     'TaskDependencies',
     'currentScenario',
@@ -22,6 +23,7 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     ScenarioResource,
     PartialValueFunctionService,
     OrderingService,
+    PageTitleService,
     PreferencesService,
     TaskDependencies,
     currentScenario,
@@ -52,6 +54,8 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     $scope.isOrdinal = _.find($scope.scenario.state.prefs, function(pref) {
       return pref.type === 'ordinal';
     });
+
+    PageTitleService.setPageTitle('PreferencesController', $scope.aggregateState.problem.title +'\'s preferences');
 
     // public
     function isPVFDefined(dataSource) {
