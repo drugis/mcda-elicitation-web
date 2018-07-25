@@ -1,0 +1,115 @@
+{
+  "criteria": {
+    "http://trials.drugis.org/concepts/4b0ae085-c78d-4476-be98-4ec39f012c01": {
+      "title": "HAM-D Responders",
+      "unitOfMeasurement": "proportion",
+      "scale": [
+        0,
+        1
+      ],
+      "dataSources": [
+        {
+          "pvf": null,
+          "id": "9194f182-7155-4ff3-9e52-0e1b512162fc"
+        }
+      ]
+    },
+    "http://trials.drugis.org/concepts/4823a767-b5d2-4bb4-a4dc-c2698712e1cd": {
+      "title": "CGI Severity Change",
+      "unitOfMeasurement": null,
+      "scale": [
+        null,
+        null
+      ],
+      "dataSources": [
+        {
+          "pvf": null,
+          "id": "215c4b7b-61c8-4e41-9e3b-99b450704c75",
+          "inputType": "distribution",
+          "inputMethod": "manualDistribution"
+        }
+      ]
+    }
+  },
+  "alternatives": {
+    "737": {
+      "alternative": 737,
+      "title": "Fluoxetine"
+    },
+    "738": {
+      "alternative": 738,
+      "title": "Paroxetine"
+    }
+  },
+  "performanceTable": [
+    {
+      "criterion": "http://trials.drugis.org/concepts/4b0ae085-c78d-4476-be98-4ec39f012c01",
+      "performance": {
+        "type": "relative-logit-normal",
+        "parameters": {
+          "baseline": {
+            "scale": "log odds",
+            "name": "Paroxetine",
+            "alpha": 65,
+            "beta": 33,
+            "type": "dbeta-logit"
+          },
+          "relative": {
+            "type": "dmnorm",
+            "mu": {
+              "737": -0.25049,
+              "738": 0
+            },
+            "cov": {
+              "rownames": [
+                "738",
+                "737"
+              ],
+              "colnames": [
+                "738",
+                "737"
+              ],
+              "data": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0.017123
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "dataSource": "9194f182-7155-4ff3-9e52-0e1b512162fc"
+    },
+    {
+      "criterion": "http://trials.drugis.org/concepts/4823a767-b5d2-4bb4-a4dc-c2698712e1cd",
+      "performance": {
+        "parameters": {
+          "mu": -1.8,
+          "sigma": 0.015920595043359825
+        },
+        "type": "dnorm"
+      },
+      "alternative": "737",
+      "dataSource": "215c4b7b-61c8-4e41-9e3b-99b450704c75"
+    },
+    {
+      "criterion": "http://trials.drugis.org/concepts/4823a767-b5d2-4bb4-a4dc-c2698712e1cd",
+      "performance": {
+        "parameters": {
+          "mu": -0.69,
+          "sigma": 0.01584236068762679
+        },
+        "type": "dnorm"
+      },
+      "alternative": "738",
+      "dataSource": "215c4b7b-61c8-4e41-9e3b-99b450704c75"
+    }
+  ],
+  "schemaVersion": "1.1.0",
+  "title": "Singe study + NMA B/R"
+}
