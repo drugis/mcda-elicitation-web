@@ -55,7 +55,7 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
       return pref.type === 'ordinal';
     });
 
-    PageTitleService.setPageTitle('PreferencesController', $scope.aggregateState.problem.title +'\'s preferences');
+    PageTitleService.setPageTitle('PreferencesController', $scope.aggregateState.problem.title || $scope.workspace.title +'\'s preferences');
 
     // public
     function isPVFDefined(dataSource) {
