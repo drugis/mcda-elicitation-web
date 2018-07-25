@@ -71,14 +71,6 @@ genMedianMeasurements <- function(params) {
   t(generateSummaryStatistics(params)[,,"50%"])
 }
 
-# genMedianMeasurements <- function(params) {
-#    N <- 1E4
-#    crit <- names(params$criteria)
-#    alts <- names(params$alternatives)
-#    meas <- sample(alts, crit, params$performanceTable, N)
-#    apply(meas, c(2, 3), median)
-# }
-
 genHARconstraint <- function(statement,crit) {
   n <- length(crit)
   i1 <- which(crit == statement$criteria[1])

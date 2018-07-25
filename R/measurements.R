@@ -173,7 +173,7 @@ generateSummaryStatistics <- function(params) {
     if (!is.null(distribution$alternative)) {
       summaryStatistics[distribution$criterion,distribution$alternative,] <- summaryStatistics.absolute(distribution)
     } else {
-      EffectsTableRow <- summaryStatistics.relative(distribution)
+      EffectsTableRow <- summaryStatistics.relative.sample(distribution)
       summaryStatistics[distribution$criterion,colnames(EffectsTableRow),] <- t(EffectsTableRow)
     }
   }
@@ -190,13 +190,20 @@ summaryStatistics.absolute <- function(distribution) {
 }
 
 summaryStatistics.absolute.analytical <- function(distribution) {
-  fn.quantiles <- paste("quantiles",distribution$performance[["type"]],sep=".")
-  quantiles <- do.call(fn.quantiles,list(perf=distribution$performance,probs=c(0.025,0.5,0.975)))
-  fn.mode <- paste("mode",distribution$performance[["type"]],sep=".")
-  mode <- do.call(fn.mode,list(perf=distribution$performance))
-  summaryStatistics <- c(quantiles,mode)
-  names(summaryStatistics) <- c("2.5%","50%","97.5%","mode")
-  summaryStatistics
+  fn <- paste("summaryStatistics",distribution$performance[["type"]],sep=".")
+  do.call(fn,list(distribution$performance))
+}
+
+summaryStatistics.dbeta <- function(performance) {
+  quantiles <- qbeta(c(0.025,0.5,0.975),performance$parameters['alpha'],performance$parameters['beta'])
+  mode <- mode.dbeta(performance) 
+  setNamesSummaryStatistics(c(quantiles,mode))
+}
+
+summaryStatistics.dnorm <- function(performance) {
+  quantiles <- qnorm(c(0.025,0.5,0.975),performance$parameters['mu'],performance$parameters['sigma'])
+  mode <- performance$parameters['mu']
+  setNamesSummaryStatistics(c(quantiles,mode))
 }
 
 summaryStatistics.absolute.sample <- function(distribution) {
@@ -205,7 +212,7 @@ summaryStatistics.absolute.sample <- function(distribution) {
   computeSummaryStatisticsFromSample(samples)
 }
 
-summaryStatistics.relative <- function(distribution) {
+summaryStatistics.relative.sample <- function(distribution) {
   N <- 1e4
   samples <- sampler(distribution$performance, N)
   apply(samples,2,computeSummaryStatisticsFromSample)
@@ -218,7 +225,7 @@ computeSummaryStatisticsFromSample <- function(samples) {
   } else {
     mode <- NA
   }
-  c(quantiles, mode=mode)
+  setNamesSummaryStatistics(c(quantiles,mode))
 }
 
 computeModeFromSample <- function(samples) {
@@ -231,8 +238,9 @@ computeModeFromSample <- function(samples) {
   mode
 }
 
-mode.dnorm <- function(perf) {
-  perf$parameters['mu']
+setNamesSummaryStatistics <- function(summaryStatistics) {
+  names(summaryStatistics) <- c("2.5%","50%","97.5%","mode")
+  summaryStatistics
 }
 
 mode.dbeta <- function(perf) {
@@ -240,7 +248,7 @@ mode.dbeta <- function(perf) {
   beta <- as.numeric(perf$parameters['beta'])
   mode <- (alpha - 1)/(alpha + beta - 2)
   if (alpha<1 && beta<1) {
-    mode <- c(0,1)
+    mode <- NA
   }
   if ( (alpha<1 && beta>=1) || (alpha==1 && beta>1) ) {
     mode <- 0
@@ -251,15 +259,7 @@ mode.dbeta <- function(perf) {
   if (alpha==1 && beta==1) {
     mode <- NA
   }
-  mode[1]
-}
-
-quantiles.dbeta <- function(perf,probs) {
-  qbeta(probs,perf$parameters['alpha'],perf$parameters['beta'])
-}
-
-quantiles.dnorm <- function(perf,probs) {
-  qnorm(probs,perf$parameters['mu'],perf$parameters['sigma'])
+  mode
 }
 
 create.pvf <- function(criterion) {
