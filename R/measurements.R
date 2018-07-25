@@ -44,10 +44,10 @@ survival.transform <- function(performance, samples) {
 
 assign.sample <- function(defn, samples) {
   N <- dim(samples)[1]
-  if (!is.null(defn$alternative)) { # performance table based on relative effect estimates + baseline effect distribution
+  if (!is.null(defn$alternative)) { # performance table based on absolute effect estimates
     samples[, defn$alternative, defn$criterion] <- sampler(defn$performance, N)
   } else {
-    x <- sampler(defn$performance, N) # performance table based on absolute effect estimates
+    x <- sampler(defn$performance, N) # performance table based on relative effect estimates + baseline effect distribution
     samples[, colnames(x), defn$criterion] <- x
   }
   samples
@@ -162,6 +162,104 @@ sample <- function(alts, crit, performanceTable, N) {
     meas <- assign.sample(measurement, meas)
   }
   meas
+}
+
+generateSummaryStatistics <- function(params) {
+  crit <- names(params$criteria)
+  alts <- names(params$alternatives)
+  performanceTable <- params$performanceTable
+  summaryStatistics <- array(dim=c(length(crit),length(alts), 4), dimnames=list(crit, alts, c("2.5%","50%","97.5%","mode")))
+  for (distribution in performanceTable) {
+    if (!is.null(distribution$alternative)) {
+      summaryStatistics[distribution$criterion,distribution$alternative,] <- summaryStatistics.absolute(distribution)
+    } else {
+      EffectsTableRow <- summaryStatistics.relative(distribution)
+      summaryStatistics[distribution$criterion,colnames(EffectsTableRow),] <- t(EffectsTableRow)
+    }
+  }
+  summaryStatistics
+}
+
+summaryStatistics.absolute <- function(distribution) {
+  analytical <- c("dbeta","dnorm")
+  if (distribution$performance[["type"]] %in% analytical) { 
+    summaryStatistics.absolute.analytical(distribution)
+  } else {
+    summaryStatistics.absolute.sample(distribution)
+  }
+}
+
+summaryStatistics.absolute.analytical <- function(distribution) {
+  fn.quantiles <- paste("quantiles",distribution$performance[["type"]],sep=".")
+  quantiles <- do.call(fn.quantiles,list(perf=distribution$performance,probs=c(0.025,0.5,0.975)))
+  fn.mode <- paste("mode",distribution$performance[["type"]],sep=".")
+  mode <- do.call(fn.mode,list(perf=distribution$performance))
+  summaryStatistics <- c(quantiles,mode)
+  names(summaryStatistics) <- c("2.5%","50%","97.5%","mode")
+  summaryStatistics
+}
+
+summaryStatistics.absolute.sample <- function(distribution) {
+  N <- 1e4
+  samples <- sampler(distribution$performance, N)
+  computeSummaryStatisticsFromSample(samples)
+}
+
+summaryStatistics.relative <- function(distribution) {
+  N <- 1e4
+  samples <- sampler(distribution$performance, N)
+  apply(samples,2,computeSummaryStatisticsFromSample)
+}
+
+computeSummaryStatisticsFromSample <- function(samples) {
+  quantiles <- quantile(samples, c(0.025, 0.5, 0.975), na.rm=T)
+  if (any(!is.na(samples))) {
+    mode <- computeModeFromSample(samples)
+  } else {
+    mode <- NA
+  }
+  c(quantiles, mode=mode)
+}
+
+computeModeFromSample <- function(samples) {
+  if (min(samples,na.rm=T) != max(samples,na.rm=T)) {
+    density <- density(samples)
+    mode <- density$x[which.max(density$y)]
+  } else {
+    mode <- min(samples, na.rm=T)
+  }
+  mode
+}
+
+mode.dnorm <- function(perf) {
+  perf$parameters['mu']
+}
+
+mode.dbeta <- function(perf) {
+  alpha <- as.numeric(perf$parameters['alpha'])
+  beta <- as.numeric(perf$parameters['beta'])
+  mode <- (alpha - 1)/(alpha + beta - 2)
+  if (alpha<1 && beta<1) {
+    mode <- c(0,1)
+  }
+  if ( (alpha<1 && beta>=1) || (alpha==1 && beta>1) ) {
+    mode <- 0
+  }
+  if ( (alpha>=1 && beta<1) || (alpha>1 && beta==1) ) {
+    mode <- 1
+  }
+  if (alpha==1 && beta==1) {
+    mode <- NA
+  }
+  mode[1]
+}
+
+quantiles.dbeta <- function(perf,probs) {
+  qbeta(probs,perf$parameters['alpha'],perf$parameters['beta'])
+}
+
+quantiles.dnorm <- function(perf,probs) {
+  qnorm(probs,perf$parameters['mu'],perf$parameters['sigma'])
 }
 
 create.pvf <- function(criterion) {
