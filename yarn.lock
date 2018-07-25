@@ -46,10 +46,6 @@
   dependencies:
     "@uirouter/core" "5.0.14"
 
-"@bower_components/angular@angular/bower-angular#~1.6.5":
-  version "1.6.10"
-  resolved "https://codeload.github.com/angular/bower-angular/tar.gz/309e7f82ecc9098e1f93870eb33083b84dead289"
-
 "@bower_components/angular@angular/bower-angular#~1.6.6":
   version "1.6.8"
   resolved "https://codeload.github.com/angular/bower-angular/tar.gz/f4be53fc72b2eb2c3c3d634aeacfc68673ea5e68"
@@ -88,7 +84,7 @@
   version "2.5.3"
   resolved "https://codeload.github.com/zloirock/core-js/tar.gz/f96b8d8afaebda5f49ac213627218f841c8692b4"
 
-"@bower_components/d3@mbostock-bower/d3-bower#~3.5.5", "@bower_components/d3@mbostock-bower/d3-bower#~3.5.6":
+"@bower_components/d3@mbostock-bower/d3-bower#~3.5.6":
   version "0.0.0"
   resolved "https://codeload.github.com/mbostock-bower/d3-bower/tar.gz/7a826d211d5067867debf9ce24a9987e0cb02b6e"
 
@@ -104,11 +100,10 @@
   version "1.0.0"
   resolved "https://codeload.github.com/drugis/export-directive/tar.gz/26751b0ae7e943aa2fd389ec81ef04a25158b39a"
   dependencies:
-    "@bower_components/angular" angular/bower-angular#~1.6.5
+    "@bower_components/angular" angular/bower-angular#~1.6.6
     "@bower_components/clipboard" zenorocha/clipboard.js#^1.6.0
-    "@bower_components/d3" mbostock-bower/d3-bower#~3.5.5
+    "@bower_components/d3" mbostock-bower/d3-bower#~3.5.6
     "@bower_components/jquery" jquery/jquery-dist#~3.2.1
-    "@bower_components/nvd3" novus/nvd3#1.8.5
 
 "@bower_components/font-awesome@FortAwesome/Font-Awesome#~4.3.0":
   version "4.3.0"
@@ -137,13 +132,15 @@
   version "0.2.0"
   resolved "https://codeload.github.com/rstacruz/nprogress/tar.gz/254266ea50c220f6507fa3f2978fc530147c7f06"
 
-"@bower_components/nvd3@novus/nvd3#1.8.5":
-  version "1.8.5"
-  resolved "https://codeload.github.com/novus/nvd3/tar.gz/3fee7f9eec75b9e9234706cca01bf128607a41a6"
-
 "@bower_components/nvd3@novus/nvd3#~1.8.6":
   version "1.8.6"
   resolved "https://codeload.github.com/novus/nvd3/tar.gz/d273ea52d91b482d044f8cef1e921256f2bfddcd"
+
+"@bower_components/page-title-service@chinook25/page-title-service#master":
+  version "1.0.0"
+  resolved "https://codeload.github.com/chinook25/page-title-service/tar.gz/adf3c76aa5bcb9418072ca0244325462ddd0243f"
+  dependencies:
+    angular "~1.7.2"
 
 "@bower_components/requirejs-domready@requirejs/domReady#~2.0.1":
   version "2.0.1"
@@ -179,6 +176,10 @@ accepts@~1.3.5:
   dependencies:
     mime-types "~2.1.18"
     negotiator "0.6.1"
+
+angular@~1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/angular/-/angular-1.7.2.tgz#687b955dbe5c533f8d73460461707af00360251f"
 
 array-flatten@1.1.1:
   version "1.1.1"
