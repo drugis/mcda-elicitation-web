@@ -1,0 +1,10 @@
+{
+  "choose-problem": "ChooseProblemController",
+  "deterministic-results":"DeterministicResultsController",
+  "evidence": "EvidenceController",
+  "manualInput":"ManualInputController",
+  "manualInputInProgress":"ManualInputController",
+  "preferences": "PreferencesController",
+  "problem":"SubProblemController",
+  "smaa-results": "SmaaResultsController"
+}

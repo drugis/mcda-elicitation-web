@@ -10,6 +10,7 @@ define(['lodash', 'angular'], function(_, angular) {
     'InProgressResource',
     'ManualInputService',
     'OrderingService',
+    'PageTitleService',
     'SchemaService',
     'WorkspaceResource',
     'generateUuid',
@@ -25,6 +26,7 @@ define(['lodash', 'angular'], function(_, angular) {
     InProgressResource,
     ManualInputService,
     OrderingService,
+    PageTitleService,
     SchemaService,
     WorkspaceResource,
     generateUuid,
@@ -47,6 +49,7 @@ define(['lodash', 'angular'], function(_, angular) {
     // init
     $scope.treatmentInputField = {}; //scoping
     $scope.criteriaErrors = [];
+    PageTitleService.setPageTitle('ManualInputController', 'Manual input');
     initState();
 
     $transitions.onStart({}, function(transition) {
