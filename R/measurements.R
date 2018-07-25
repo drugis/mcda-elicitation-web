@@ -181,7 +181,7 @@ generateSummaryStatistics <- function(params) {
 }
 
 summaryStatistics.absolute <- function(distribution) {
-  analytical <- c("dbeta","dnorm")
+  analytical <- c("dbeta","dnorm","exact","empty")
   if (distribution$performance[["type"]] %in% analytical) { 
     summaryStatistics.absolute.analytical(distribution)
   } else {
@@ -204,6 +204,14 @@ summaryStatistics.dnorm <- function(performance) {
   quantiles <- qnorm(c(0.025,0.5,0.975),performance$parameters['mu'],performance$parameters['sigma'])
   mode <- performance$parameters['mu']
   setNamesSummaryStatistics(c(quantiles,mode))
+}
+
+summaryStatistics.exact <- function(performance) {
+  setNamesSummaryStatistics(rep(as.numeric(performance["value"]),4))
+}
+
+summaryStatistics.empty <- function(performance) {
+  setNamesSummaryStatistics(rep(NA,4))
 }
 
 summaryStatistics.absolute.sample <- function(distribution) {
