@@ -49,7 +49,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     });
 
     new Clipboard('.clipboard-button');
-    PageTitleService.setPageTitle('DeterministicResultsController', $scope.aggregateState.problem.title || $scope.workspace.title +'\'s deterministic results');
+    PageTitleService.setPageTitle('DeterministicResultsController', ($scope.aggregateState.problem.title || $scope.workspace.title) +'\'s deterministic results');
 
     function isEditing(value) {
       $scope.sensitivityMeasurements.isEditing = value;

@@ -1,16 +1,22 @@
 'use strict';
 define(['lodash'],
   function(_) {
-    var dependencies = ['$scope', '$stateParams',
+    var dependencies = [
+      '$scope', '$stateParams',
       'SwingWeightingService',
+      'PageTitleService',
       'currentScenario',
       'taskDefinition'
     ];
     var SwingWeightingController = function($scope, $stateParams,
       SwingWeightingService,
+      PageTitleService,
       currentScenario,
-      taskDefinition) {
+      taskDefinition
+    ) {
       $scope.isPrecise = true;
+      PageTitleService.setPageTitle('SwingWeightingController', 'Precise swing weighting');
+
       var sliderOptions = {
         floor: 1,
         ceil: 100,

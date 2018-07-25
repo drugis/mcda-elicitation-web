@@ -2,9 +2,14 @@
   "choose-problem": "ChooseProblemController",
   "deterministic-results":"DeterministicResultsController",
   "evidence": "EvidenceController",
+  "imprecise-swing-weighting": "ImpreciseSwingWeightingController",
   "manualInput":"ManualInputController",
   "manualInputInProgress":"ManualInputController",
+  "ordinal-swing": "OrdinalSwingController",
+  "precise-swing-weighting": "SwingWeightingController",
   "preferences": "PreferencesController",
   "problem":"SubProblemController",
-  "smaa-results": "SmaaResultsController"
+  "smaa-results": "SmaaResultsController",
+  "swing-weighting": "SwingWeightingController",
+  "partial-value-function":"PartialValueFunctionController"
 }
