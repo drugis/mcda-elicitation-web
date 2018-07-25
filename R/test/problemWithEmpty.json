@@ -1,0 +1,2145 @@
+{
+  "schemaVersion": "1.1.0",
+  "title": "Semaglutide v8",
+  "description": "Type 2 diabetes (T2D) is a progressive chronic metabolic disease primarily characterised by abnormal glucose metabolism. Close to 9% (415 million) of adults worldwide have diabetes with T2D accounting for ~90% of the diabetes cases. Glycaemic control is fundamental for the management of T2D to reduce the risk of T2D-related microvascular and macrovascular complications. CV disease is the leading cause of death in patients with diabetes, and CV morbidity is more prevalent in patients with diabetes than in those without.\nThere are several classes of medicinal products for the treatment of T2D. All products have been shown to reduce blood glucose level and to improve HbA1c. Based on the extensive therapeutic experience (including possible CV benefits), metformin is currently recommended as first-line treatment for all patients with T2D, unless contraindications apply (most notably, GFR <30 ml/min). Recently, empagliflozin (SGLT2-inhibitor) and liraglutide (GLP-1 receptor agonist) have shown to be superior compared to placebo in reducing 3-point MACE in patients with established CV disease in a CV outcome trial.\nSemaglutide is a GLP-1 RA that is structurally similar to liraglutide but modified to have a longer half-life. The extended half-life is primarily obtained by increased albumin binding, which slows the degradation of semaglutide in plasma and results in decreased renal clearance prolonging the half-life of semaglutide to approximately 1 week making it suitable for once weekly s.c. administration.",
+  "criteria": {
+    "163db685-4fb6-40cc-a474-b0dcfec9580e": {
+      "title": "HbA1c",
+      "description": "Mean change in HbA1c from baseline",
+      "unitOfMeasurement": "%",
+      "isFavorable": true,
+      "dataSources": [
+        {
+          "id": "afa1b3e5-5c16-408b-b56a-2f36053daa3d",
+          "oldId": "bcd48f83-8623-479a-a9f5-f7a74c5138d0",
+          "source": "SUSTAIN 2 (3626)",
+          "dataType": "continuous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "uncertainties": "For several subgroups and only slightly better with sema 1.0 mg vs. 0.5 mg",
+          "strengthOfEvidence": "Sema 0.5 mg - Sitagliptin -2.35 [-3.06 ; -1.63] <.0001 Sema 1.0 mg - Sitagliptin -4.20 [-4.91 ; -3.49] <.0001",
+          "parameterOfInterest": "mean",
+          "scale": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "383604ae-7230-4039-8ad3-9b6048591bd3",
+          "oldId": "a064f601-f862-4bc0-83e5-d0384444e4a4",
+          "source": "SUSTAIN 3 (3624)",
+          "dataType": "continuous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "strengthOfEvidence": "Sema 1.0 mg - Exenatide ER -0.62 [-0.80;-0.44] <.0001",
+          "parameterOfInterest": "mean",
+          "scale": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "a8a41675-2824-4175-99f7-33a4c3de0470",
+          "oldId": "4f775ec4-a6ef-4276-84c1-5e2cb1c2a620",
+          "source": "SUSTAIN 4 (3625)",
+          "dataType": "continuous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "strengthOfEvidence": "Sema 0.5 mg - IGlar -0.38 [-0.52 ; -0.24] <.0001 Sema 1.0 mg - IGlar -0.81 [-0.96 ; -0.67] <.0001",
+          "parameterOfInterest": "mean",
+          "scale": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "4664eb5a-aad3-4655-8640-4ec3a55b8b6e",
+          "oldId": "7dcb5128-fa75-4895-841f-461545797c30",
+          "source": "SUSTAIN 5 (3627)",
+          "dataType": "continuous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "strengthOfEvidence": "Sema 0.5 mg - Placebo -1.35 [-1.61 ; -1.10] <.0001 Sema 1.0 mg - Placebo -1.75 [-2.01 ; -1.50] <.0001",
+          "parameterOfInterest": "mean",
+          "scale": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "0651023a-303f-4ae5-a27d-9e869492e579",
+          "oldId": "c000e81c-ed03-4ba0-b8c1-7659198019ef",
+          "source": "SUSTAIN 6A (3744)",
+          "dataType": "continuous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "strengthOfEvidence": "Sema 0.5 mg - Placebo 0.5 mg -0.66 [-0.80 ; -0.52] <.0001",
+          "parameterOfInterest": "mean",
+          "scale": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "f91b8480-4809-4509-8944-553e889872af",
+          "oldId": "11c1cf60-517e-4000-be9a-89711d5d712f",
+          "source": "SUSTAIN 6B (3744)",
+          "dataType": "continuous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "uncertainties": "",
+          "strengthOfEvidence": "Sema 1.0 mg - Placebo 1.0 mg -1.05 [-1.19 ; -0.91] <.0001",
+          "parameterOfInterest": "mean",
+          "scale": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "a6f7ac23-027f-4eb9-bcb4-818d0d31ebcc",
+          "oldId": "6d3ddfaa-c198-4ddb-98b5-a325f9836156",
+          "source": "SUSTAIN  6 pooled (3744)",
+          "dataType": "continuous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "uncertainties": "For several subgroups and only slightly better with sema 1.0 mg vs. 0.5 mg",
+          "strengthOfEvidence": "Sema 0.5 mg - Sitagliptin -2.35 [-3.06 ; -1.63] <.0001 Sema 1.0 mg - Sitagliptin -4.20 [-4.91 ; -3.49] <.0001",
+          "parameterOfInterest": "mean",
+          "scale": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "03b09922-ceda-42c7-a22e-261813a3d49b",
+          "oldId": "0eaeb839-0273-4033-8ddb-443865a97552",
+          "source": "ADDIS-NMA",
+          "dataType": "continuous",
+          "inputType": "effect",
+          "sourceLink": "https://addis.drugis.org/#/users/6/projects/838/nma/1843/models/2191",
+          "inputMethod": "assistedDistribution",
+          "parameterOfInterest": "mean",
+          "scale": [
+            null,
+            null
+          ]
+        }
+      ]
+    },
+    "85941143-b78c-4766-9de0-00e12778e75f": {
+      "title": "Body weight",
+      "description": "Mean change in body weight from baseline",
+      "unitOfMeasurement": "kg",
+      "isFavorable": true,
+      "dataSources": [
+        {
+          "id": "cb13d3f2-7071-4e6e-af64-cdf34cc8ee44",
+          "oldId": "5191c62f-a83e-4b68-8570-879acac2510f",
+          "source": "SUSTAIN 2 (3626)",
+          "dataType": "continuous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "strengthOfEvidence": "Sema 0.5 mg - Sitagliptin -2.35 [-3.06 ; -1.63] <.0001 Sema 1.0 mg - Sitagliptin -4.20 [-4.91 ; -3.49] <.0001",
+          "parameterOfInterest": "mean",
+          "scale": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "5dd78436-26c9-4507-a028-246a177b17df",
+          "oldId": "79987c50-2940-41e0-8edf-033d7e938d89",
+          "source": "SUSTAIN 3 (3624)",
+          "dataType": "continuous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "strengthOfEvidence": "Sema 1.0 mg - Exenatide ER -3.78 [-4.58;-2.98] <.0001",
+          "parameterOfInterest": "mean",
+          "scale": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "2fce1637-5d0a-49fb-b5ae-7dc88ad71e1c",
+          "oldId": "34a4938c-c455-49a7-990b-134e2c16a912",
+          "source": "SUSTAIN 4 (3625)",
+          "dataType": "continuous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "strengthOfEvidence": "Sema 0.5 mg - IGlar -4.62 [-5.27 ; -3.96] <.0001 Sema 1.0 mg - IGlar -6.33 [-6.99 ; -5.67] <.0001",
+          "parameterOfInterest": "mean",
+          "scale": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "358a7f79-8732-46df-90ad-f6ff0729b0e8",
+          "oldId": "44117f0d-c7b9-49aa-b707-61c5ba093c8b",
+          "source": "SUSTAIN 5 (3627)",
+          "dataType": "continuous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "strengthOfEvidence": "Sema 0.5 mg - Placebo -2.31 [-3.33 ; -1.29] <.0001 Sema 1.0 mg - Placebo -5.06 [-6.08 ; -4.04] <.0001",
+          "parameterOfInterest": "mean",
+          "scale": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "e6faa171-8f6e-49ca-8fac-9b9ebe1fe547",
+          "oldId": "a04c84fe-61b3-420b-beec-b2a848325e46",
+          "source": "SUSTAIN 6 (3744)",
+          "dataType": "continuous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "strengthOfEvidence": "Sema 0.5 mg - Placebo -2.95 [-3.47 ; -2.44] <.0001 Sema 1.0 mg - Placebo -4.27 [-4.78 ; -3.75] <.0001",
+          "parameterOfInterest": "mean",
+          "scale": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "64c9b48c-d5ff-497a-a6bc-51cef7b78f51",
+          "oldId": "49a41146-0635-4a34-94a8-57129b64ef82",
+          "source": "ADDIS-NMA",
+          "dataType": "continuous",
+          "inputType": "effect",
+          "sourceLink": "https://addis.drugis.org/#/users/6/projects/838/nma/1844/models/2194",
+          "inputMethod": "assistedDistribution",
+          "parameterOfInterest": "mean",
+          "scale": [
+            null,
+            null
+          ]
+        }
+      ]
+    },
+    "ef126af1-093c-47a3-b9e8-e5d096591ab2": {
+      "title": "MACE",
+      "description": "Proportion of subjects with a first occurrence of death from cardiovascular causes, nonfatal myocardial infarction, or nonfatal stroke",
+      "unitOfMeasurement": "",
+      "isFavorable": true,
+      "dataSources": [
+        {
+          "id": "faca1e4e-dd25-46fe-9a8f-bd157bc204aa",
+          "oldId": "3f7755a5-0bcd-484c-9ed3-ef13268f31ff",
+          "source": "SUSTAIN 6 (3744)",
+          "dataType": "dichotomous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "uncertainties": "Obtained in population at high CV risk. For a drug that is intended for long term diabetes treatment, the duration of the CVOT (2 years) is relatively short (also in comparison to several other cardiovascular outcome trials). The difference in MACE is primarily driven by a difference in the rate of strokes.",
+          "strengthOfEvidence": "Sema 0.5 mg vs placebo 0.5 mg and Sema 1.0 mg versus placebo 1.0 mg risk reductions to placebo, Sema 1.0 mg (HR: 0.71 [0.49; 1.02]) compared with Sema 0.5 mg (HR: 0.77 mg (HR: 0.77 [0.55; 1.08]); Sema groups combined Hazard ratio (95% CI): 0.74 (0.58–0.95). Non-inferiority of semaglutide versus placebo was confirmed.",
+          "parameterOfInterest": "eventProbability",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "135565d3-2df2-42af-a5a9-b8d4515df484": {
+      "title": "MACE -CV death (all events)",
+      "description": "Cardiovascular death",
+      "isFavorable": true,
+      "dataSources": [
+        {
+          "id": "f4cabc49-6c09-457a-9c7c-4a063def0e5c",
+          "oldId": "8260c775-8bb3-4893-a9ab-48c033c3899c",
+          "source": "SUSTAIN 6 (3744)",
+          "dataType": "dichotomous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "uncertainties": "The occurrence of CV death was similar with semaglutide and placebo.",
+          "parameterOfInterest": "eventProbability",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "43a73d49-8477-44b4-9c71-a0d131865347": {
+      "title": "MACE-MI (all events)",
+      "description": "Myocardial infarction (non-fatal)",
+      "isFavorable": true,
+      "dataSources": [
+        {
+          "id": "06103c8d-3810-4183-a414-e26e5e71e148",
+          "oldId": "a9d87a77-bdf2-47b8-b30b-235949434fc3",
+          "source": "SUSTAIN 6 (3744)",
+          "dataType": "dichotomous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "strengthOfEvidence": "Semaglutide had a favourable effect on events of non-fatal MI and non-fatal stroke.",
+          "parameterOfInterest": "eventProbability",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "8f8bf991-9dc4-4b12-8eef-7409ca18ebf0": {
+      "title": "MACE - stroke (all events)",
+      "description": "Stroke (non-fatal)",
+      "isFavorable": true,
+      "dataSources": [
+        {
+          "id": "978a16cb-d579-491d-8d36-6dbbce630a8b",
+          "oldId": "29807d4b-ddf1-4235-9783-b7a92184468d",
+          "source": "SUSTAIN 6 (3744)",
+          "dataType": "dichotomous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "strengthOfEvidence": "Semaglutide had a favourable effect on events of non-fatal MI and non-fatal stroke.",
+          "parameterOfInterest": "eventProbability",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "5b4e9dc8-8c20-45c4-b54a-87760ccc71c3": {
+      "title": "Hypoglycaemia",
+      "description": "Incidence of severe or symptomatic hypoglycemic events",
+      "unitOfMeasurement": "",
+      "isFavorable": false,
+      "dataSources": [
+        {
+          "id": "bfa285ef-e3fd-47f2-9739-52dea2da8d0e",
+          "oldId": "413d4ae9-79d5-409e-9c32-3961f2ee59eb",
+          "source": "SUSTAIN 6 (3744)",
+          "dataType": "dichotomous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "uncertainties": "",
+          "strengthOfEvidence": "Across all treatment groups, approximately 20% of the subjects reported one or more ‘severe or BG confirmed symptomatic’ episodes",
+          "parameterOfInterest": "eventProbability",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "3aeb959a-acb5-4371-b510-e3e4ec2be189": {
+      "title": "Retinopathy",
+      "description": "Incidence of retinopathy complications",
+      "unitOfMeasurement": "",
+      "isFavorable": false,
+      "dataSources": [
+        {
+          "id": "9a3da2d9-665f-40cd-9550-37611f8bac87",
+          "oldId": "4278a466-f1a4-41cc-8914-e67247028a8c",
+          "source": "SUSTAIN 6 (3744)",
+          "dataType": "dichotomous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "uncertainties": "Negative effect of semaglutide was absent in individuals without retinopathy at baseline",
+          "strengthOfEvidence": "Although not observed in the preclinical studies, a significantly increased risk of EAC-confirmed events of diabetic retinopathy complications was observed with semaglutide (50 [3.0%] patients) as compared with placebo (29 [1.8%] patients) (HR: 1.76 [1.11; 2.78]95%CI) in the CVOT.",
+          "parameterOfInterest": "eventProbability",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "ba2afd62-2bbe-406a-b4b2-62772d8abe16": {
+      "title": "Nausea",
+      "description": "Incidence of nausea",
+      "unitOfMeasurement": "",
+      "isFavorable": false,
+      "dataSources": [
+        {
+          "id": "88b616f6-1f95-4ddc-9528-95040f4d7bdb",
+          "oldId": "3d433f51-cb04-43f1-8c07-0fc00f5c9b17",
+          "source": "SUSTAIN 6 (3744)",
+          "dataType": "dichotomous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "uncertainties": "",
+          "strengthOfEvidence": "More GI side effects with sema 1.0 mg vs. 0.5 mg",
+          "parameterOfInterest": "eventProbability",
+          "scale": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "936b913c-0693-4e42-b32a-1a5697d6c0bc",
+          "oldId": "4ef1234a-7e27-4554-86fd-ac49bffd5dfd",
+          "source": "ADDIS-NMA",
+          "dataType": "dichotomous",
+          "inputType": "effect",
+          "sourceLink": "https://addis.drugis.org/#/users/6/projects/838/nma/1845/models/2192",
+          "inputMethod": "assistedDistribution",
+          "parameterOfInterest": "eventProbability",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "10d3c83d-7957-40f3-bff6-884817db452d": {
+      "title": "Death",
+      "description": "All cause death",
+      "isFavorable": false,
+      "dataSources": [
+        {
+          "id": "d0045951-4f76-4470-a9f9-65019ae18f2d",
+          "oldId": "496ee00e-4312-4c57-9190-658d9ae75b01",
+          "source": "SUSTAIN 6 (3744)",
+          "dataType": "dichotomous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "uncertainties": "For a drug that is intended for long term diabetes treatment, the duration of the CVOT (2 years) is relatively short ). Longer term safety is uncertain",
+          "strengthOfEvidence": "No obvious differences",
+          "parameterOfInterest": "eventProbability",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "40da2b25-9116-4714-aaab-43a5fe7bca3d": {
+      "title": "GI-AE",
+      "description": "Gastrointestinal disorders",
+      "isFavorable": false,
+      "dataSources": [
+        {
+          "id": "7661bd0b-7669-4780-8efc-fb83b1c160bd",
+          "oldId": "745aba31-d229-4333-9860-390827c2d0ad",
+          "source": "SUSTAIN 6 (3744)",
+          "dataType": "dichotomous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "strengthOfEvidence": "GI disorders were the most frequently reported AEs (GIAEs) in this trial. A higher proportion of subjects treated with semaglutide (0.5 mg and 1.0 mg) reported GIAEs during the trial compared with placebo treated subjects, including the only other GLP-1 RA studied.",
+          "parameterOfInterest": "eventProbability",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    }
+  },
+  "alternatives": {
+    "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0": {
+      "title": "Semaglutide 0.5 mg"
+    },
+    "16ecb386-c3f5-4e21-906c-7235c4844e81": {
+      "title": "Semaglutide 1.0 mg"
+    },
+    "f87f6527-a35c-4fa5-adb3-1b28df97ccf5": {
+      "title": "Placebo"
+    },
+    "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b": {
+      "title": "Sitagliptin"
+    },
+    "e218d0f2-2af2-4fbc-80bc-1996d23b4613": {
+      "title": "Exenatide"
+    },
+    "39664c93-06b4-47f4-b566-23aeb27109b3": {
+      "title": "Insulin glargine"
+    }
+  },
+  "performanceTable": [
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "afa1b3e5-5c16-408b-b56a-2f36053daa3d",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -1.32,
+          "sigma": 0.05
+        },
+        "input": {
+          "value": -1.32,
+          "stdErr": 0.05
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "afa1b3e5-5c16-408b-b56a-2f36053daa3d",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -1.61,
+          "sigma": 0.05
+        },
+        "input": {
+          "value": -1.61,
+          "stdErr": 0.05
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "afa1b3e5-5c16-408b-b56a-2f36053daa3d",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "afa1b3e5-5c16-408b-b56a-2f36053daa3d",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -0.55,
+          "sigma": 0.05
+        },
+        "input": {
+          "value": -0.55,
+          "stdErr": 0.05
+        }
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "afa1b3e5-5c16-408b-b56a-2f36053daa3d",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "afa1b3e5-5c16-408b-b56a-2f36053daa3d",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "383604ae-7230-4039-8ad3-9b6048591bd3",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "383604ae-7230-4039-8ad3-9b6048591bd3",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -1.54,
+          "sigma": 0.06
+        },
+        "input": {
+          "value": -1.54,
+          "stdErr": 0.06
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "383604ae-7230-4039-8ad3-9b6048591bd3",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "383604ae-7230-4039-8ad3-9b6048591bd3",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "383604ae-7230-4039-8ad3-9b6048591bd3",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -0.92,
+          "sigma": 0.06
+        },
+        "input": {
+          "value": -0.92,
+          "stdErr": 0.06
+        }
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "383604ae-7230-4039-8ad3-9b6048591bd3",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "a8a41675-2824-4175-99f7-33a4c3de0470",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -1.21,
+          "sigma": 0.05
+        },
+        "input": {
+          "value": -1.21,
+          "stdErr": 0.05
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "a8a41675-2824-4175-99f7-33a4c3de0470",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -1.64,
+          "sigma": 0.05
+        },
+        "input": {
+          "value": -1.64,
+          "stdErr": 0.05
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "a8a41675-2824-4175-99f7-33a4c3de0470",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "a8a41675-2824-4175-99f7-33a4c3de0470",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "a8a41675-2824-4175-99f7-33a4c3de0470",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "a8a41675-2824-4175-99f7-33a4c3de0470",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -0.83,
+          "sigma": 0.05
+        },
+        "input": {
+          "value": -0.83,
+          "stdErr": 0.05
+        }
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "4664eb5a-aad3-4655-8640-4ec3a55b8b6e",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -1.45,
+          "sigma": 0.09
+        },
+        "input": {
+          "value": -1.45,
+          "stdErr": 0.09
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "4664eb5a-aad3-4655-8640-4ec3a55b8b6e",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -1.85,
+          "sigma": 0.09
+        },
+        "input": {
+          "value": -1.85,
+          "stdErr": 0.09
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "4664eb5a-aad3-4655-8640-4ec3a55b8b6e",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -0.09,
+          "sigma": 0.09
+        },
+        "input": {
+          "value": -0.09,
+          "stdErr": 0.09
+        }
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "4664eb5a-aad3-4655-8640-4ec3a55b8b6e",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "4664eb5a-aad3-4655-8640-4ec3a55b8b6e",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "4664eb5a-aad3-4655-8640-4ec3a55b8b6e",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "0651023a-303f-4ae5-a27d-9e869492e579",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -1.09,
+          "sigma": 0.05
+        },
+        "input": {
+          "value": -1.09,
+          "stdErr": 0.05
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "0651023a-303f-4ae5-a27d-9e869492e579",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "0651023a-303f-4ae5-a27d-9e869492e579",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -0.44,
+          "sigma": 0.05
+        },
+        "input": {
+          "value": -0.44,
+          "stdErr": 0.05
+        }
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "0651023a-303f-4ae5-a27d-9e869492e579",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "0651023a-303f-4ae5-a27d-9e869492e579",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "0651023a-303f-4ae5-a27d-9e869492e579",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "f91b8480-4809-4509-8944-553e889872af",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "f91b8480-4809-4509-8944-553e889872af",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -1.41,
+          "sigma": 0.05
+        },
+        "input": {
+          "value": -1.41,
+          "stdErr": 0.05
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "f91b8480-4809-4509-8944-553e889872af",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -0.36,
+          "sigma": 0.05
+        },
+        "input": {
+          "value": -0.36,
+          "stdErr": 0.05
+        }
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "f91b8480-4809-4509-8944-553e889872af",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "f91b8480-4809-4509-8944-553e889872af",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "f91b8480-4809-4509-8944-553e889872af",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "a6f7ac23-027f-4eb9-bcb4-818d0d31ebcc",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -1.09,
+          "sigma": 0.05
+        },
+        "input": {
+          "value": -1.09,
+          "stdErr": 0.05
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "a6f7ac23-027f-4eb9-bcb4-818d0d31ebcc",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -1.41,
+          "sigma": 0.05
+        },
+        "input": {
+          "value": -1.41,
+          "stdErr": 0.05
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "a6f7ac23-027f-4eb9-bcb4-818d0d31ebcc",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -0.4,
+          "sigma": 0.035
+        },
+        "input": {
+          "value": -0.4,
+          "stdErr": 0.035
+        }
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "a6f7ac23-027f-4eb9-bcb4-818d0d31ebcc",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "a6f7ac23-027f-4eb9-bcb4-818d0d31ebcc",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "a6f7ac23-027f-4eb9-bcb4-818d0d31ebcc",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "03b09922-ceda-42c7-a22e-261813a3d49b",
+      "performance": {
+        "type": "exact",
+        "value": -1.462,
+        "input": {
+          "value": -1.462,
+          "lowerBound": -1.883,
+          "upperBound": -1.037
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "03b09922-ceda-42c7-a22e-261813a3d49b",
+      "performance": {
+        "type": "exact",
+        "value": -1.846,
+        "input": {
+          "value": -1.846,
+          "lowerBound": -2.3,
+          "upperBound": -1.428
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "03b09922-ceda-42c7-a22e-261813a3d49b",
+      "performance": {
+        "type": "exact",
+        "value": -0.086,
+        "input": {
+          "value": -0.086,
+          "lowerBound": -0.261,
+          "upperBound": 0.086
+        }
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "03b09922-ceda-42c7-a22e-261813a3d49b",
+      "performance": {
+        "type": "exact",
+        "value": -0.68,
+        "input": {
+          "value": -0.68,
+          "lowerBound": -1.203,
+          "upperBound": -0.145
+        }
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "03b09922-ceda-42c7-a22e-261813a3d49b",
+      "performance": {
+        "type": "exact",
+        "value": -1.259,
+        "input": {
+          "value": -1.259,
+          "lowerBound": -1.794,
+          "upperBound": -0.716
+        }
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "163db685-4fb6-40cc-a474-b0dcfec9580e",
+      "dataSource": "03b09922-ceda-42c7-a22e-261813a3d49b",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "cb13d3f2-7071-4e6e-af64-cdf34cc8ee44",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -4.28,
+          "sigma": 0.25
+        },
+        "input": {
+          "value": -4.28,
+          "stdErr": 0.25
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "cb13d3f2-7071-4e6e-af64-cdf34cc8ee44",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -6.13,
+          "sigma": 0.25
+        },
+        "input": {
+          "value": -6.13,
+          "stdErr": 0.25
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "cb13d3f2-7071-4e6e-af64-cdf34cc8ee44",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "cb13d3f2-7071-4e6e-af64-cdf34cc8ee44",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -1.93,
+          "sigma": 0.26
+        },
+        "input": {
+          "value": -1.93,
+          "stdErr": 0.26
+        }
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "cb13d3f2-7071-4e6e-af64-cdf34cc8ee44",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "cb13d3f2-7071-4e6e-af64-cdf34cc8ee44",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "5dd78436-26c9-4507-a028-246a177b17df",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "5dd78436-26c9-4507-a028-246a177b17df",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -5.63,
+          "sigma": 0.29
+        },
+        "input": {
+          "value": -5.63,
+          "stdErr": 0.29
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "5dd78436-26c9-4507-a028-246a177b17df",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "5dd78436-26c9-4507-a028-246a177b17df",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "5dd78436-26c9-4507-a028-246a177b17df",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -1.85,
+          "sigma": 0.29
+        },
+        "input": {
+          "value": -1.85,
+          "stdErr": 0.29
+        }
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "5dd78436-26c9-4507-a028-246a177b17df",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "2fce1637-5d0a-49fb-b5ae-7dc88ad71e1c",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -3.47,
+          "sigma": 0.24
+        },
+        "input": {
+          "value": -3.47,
+          "stdErr": 0.24
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "2fce1637-5d0a-49fb-b5ae-7dc88ad71e1c",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -5.17,
+          "sigma": 0.24
+        },
+        "input": {
+          "value": -5.17,
+          "stdErr": 0.24
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "2fce1637-5d0a-49fb-b5ae-7dc88ad71e1c",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "2fce1637-5d0a-49fb-b5ae-7dc88ad71e1c",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "2fce1637-5d0a-49fb-b5ae-7dc88ad71e1c",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "2fce1637-5d0a-49fb-b5ae-7dc88ad71e1c",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 1.15,
+          "sigma": 0.23
+        },
+        "input": {
+          "value": 1.15,
+          "stdErr": 0.23
+        }
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "358a7f79-8732-46df-90ad-f6ff0729b0e8",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -3.67,
+          "sigma": 0.36
+        },
+        "input": {
+          "value": -3.67,
+          "stdErr": 0.36
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "358a7f79-8732-46df-90ad-f6ff0729b0e8",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -6.42,
+          "sigma": 0.36
+        },
+        "input": {
+          "value": -6.42,
+          "stdErr": 0.36
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "358a7f79-8732-46df-90ad-f6ff0729b0e8",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -1.36,
+          "sigma": 0.37
+        },
+        "input": {
+          "value": -1.36,
+          "stdErr": 0.37
+        }
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "358a7f79-8732-46df-90ad-f6ff0729b0e8",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "358a7f79-8732-46df-90ad-f6ff0729b0e8",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "358a7f79-8732-46df-90ad-f6ff0729b0e8",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "e6faa171-8f6e-49ca-8fac-9b9ebe1fe547",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -3.57,
+          "sigma": 0.21
+        },
+        "input": {
+          "value": -3.57,
+          "stdErr": 0.21
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "e6faa171-8f6e-49ca-8fac-9b9ebe1fe547",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -4.88,
+          "sigma": 0.22
+        },
+        "input": {
+          "value": -4.88,
+          "stdErr": 0.22
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "e6faa171-8f6e-49ca-8fac-9b9ebe1fe547",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": -0.62,
+          "sigma": 0.15
+        },
+        "input": {
+          "value": -0.62,
+          "stdErr": 0.15
+        }
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "e6faa171-8f6e-49ca-8fac-9b9ebe1fe547",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "e6faa171-8f6e-49ca-8fac-9b9ebe1fe547",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "e6faa171-8f6e-49ca-8fac-9b9ebe1fe547",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "64c9b48c-d5ff-497a-a6bc-51cef7b78f51",
+      "performance": {
+        "type": "exact",
+        "value": -4.009,
+        "input": {
+          "value": -4.009,
+          "lowerBound": -6.272,
+          "upperBound": -1.647
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "64c9b48c-d5ff-497a-a6bc-51cef7b78f51",
+      "performance": {
+        "type": "exact",
+        "value": -5.997,
+        "input": {
+          "value": -5.997,
+          "lowerBound": -8.24,
+          "upperBound": -3.796
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "64c9b48c-d5ff-497a-a6bc-51cef7b78f51",
+      "performance": {
+        "type": "exact",
+        "value": -1.361,
+        "input": {
+          "value": -1.361,
+          "lowerBound": -2.111,
+          "upperBound": -0.608
+        }
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "64c9b48c-d5ff-497a-a6bc-51cef7b78f51",
+      "performance": {
+        "type": "exact",
+        "value": -1.485,
+        "input": {
+          "value": -1.485,
+          "lowerBound": -4.118,
+          "upperBound": 1.227
+        }
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "64c9b48c-d5ff-497a-a6bc-51cef7b78f51",
+      "performance": {
+        "type": "exact",
+        "value": -2.638,
+        "input": {
+          "value": -2.638,
+          "lowerBound": -5.308,
+          "upperBound": 0.267
+        }
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "85941143-b78c-4766-9de0-00e12778e75f",
+      "dataSource": "64c9b48c-d5ff-497a-a6bc-51cef7b78f51",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "ef126af1-093c-47a3-b9e8-e5d096591ab2",
+      "dataSource": "faca1e4e-dd25-46fe-9a8f-bd157bc204aa",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.07142857142857142,
+          "sigma": 0.008960940977986087
+        },
+        "input": {
+          "events": 59,
+          "sampleSize": 826
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "ef126af1-093c-47a3-b9e8-e5d096591ab2",
+      "dataSource": "faca1e4e-dd25-46fe-9a8f-bd157bc204aa",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.05961070559610705,
+          "sigma": 0.008258098537380843
+        },
+        "input": {
+          "events": 49,
+          "sampleSize": 822
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "ef126af1-093c-47a3-b9e8-e5d096591ab2",
+      "dataSource": "faca1e4e-dd25-46fe-9a8f-bd157bc204aa",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.08853850818677987,
+          "sigma": 0.006995599446511613
+        },
+        "input": {
+          "events": 146,
+          "sampleSize": 1649
+        }
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "ef126af1-093c-47a3-b9e8-e5d096591ab2",
+      "dataSource": "faca1e4e-dd25-46fe-9a8f-bd157bc204aa",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "ef126af1-093c-47a3-b9e8-e5d096591ab2",
+      "dataSource": "faca1e4e-dd25-46fe-9a8f-bd157bc204aa",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "ef126af1-093c-47a3-b9e8-e5d096591ab2",
+      "dataSource": "faca1e4e-dd25-46fe-9a8f-bd157bc204aa",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "135565d3-2df2-42af-a5a9-b8d4515df484",
+      "dataSource": "f4cabc49-6c09-457a-9c7c-4a063def0e5c",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.025423728813559324,
+          "sigma": 0.005476934114660908
+        },
+        "input": {
+          "events": 21,
+          "sampleSize": 826
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "135565d3-2df2-42af-a5a9-b8d4515df484",
+      "dataSource": "f4cabc49-6c09-457a-9c7c-4a063def0e5c",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.027980535279805353,
+          "sigma": 0.005752141770295035
+        },
+        "input": {
+          "events": 23,
+          "sampleSize": 822
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "135565d3-2df2-42af-a5a9-b8d4515df484",
+      "dataSource": "f4cabc49-6c09-457a-9c7c-4a063def0e5c",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.027895694360218316,
+          "sigma": 0.004055222553122642
+        },
+        "input": {
+          "events": 46,
+          "sampleSize": 1649
+        }
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "135565d3-2df2-42af-a5a9-b8d4515df484",
+      "dataSource": "f4cabc49-6c09-457a-9c7c-4a063def0e5c",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "135565d3-2df2-42af-a5a9-b8d4515df484",
+      "dataSource": "f4cabc49-6c09-457a-9c7c-4a063def0e5c",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "135565d3-2df2-42af-a5a9-b8d4515df484",
+      "dataSource": "f4cabc49-6c09-457a-9c7c-4a063def0e5c",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "43a73d49-8477-44b4-9c71-a0d131865347",
+      "dataSource": "06103c8d-3810-4183-a414-e26e5e71e148",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.031476997578692496,
+          "sigma": 0.006075214222363449
+        },
+        "input": {
+          "events": 26,
+          "sampleSize": 826
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "43a73d49-8477-44b4-9c71-a0d131865347",
+      "dataSource": "06103c8d-3810-4183-a414-e26e5e71e148",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.025547445255474453,
+          "sigma": 0.005503236527963934
+        },
+        "input": {
+          "events": 21,
+          "sampleSize": 822
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "43a73d49-8477-44b4-9c71-a0d131865347",
+      "dataSource": "06103c8d-3810-4183-a414-e26e5e71e148",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.038811400848999394,
+          "sigma": 0.00475634815741072
+        },
+        "input": {
+          "events": 64,
+          "sampleSize": 1649
+        }
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "43a73d49-8477-44b4-9c71-a0d131865347",
+      "dataSource": "06103c8d-3810-4183-a414-e26e5e71e148",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "43a73d49-8477-44b4-9c71-a0d131865347",
+      "dataSource": "06103c8d-3810-4183-a414-e26e5e71e148",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "43a73d49-8477-44b4-9c71-a0d131865347",
+      "dataSource": "06103c8d-3810-4183-a414-e26e5e71e148",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "8f8bf991-9dc4-4b12-8eef-7409ca18ebf0",
+      "dataSource": "978a16cb-d579-491d-8d36-6dbbce630a8b",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.01937046004842615,
+          "sigma": 0.004795483817458782
+        },
+        "input": {
+          "events": 16,
+          "sampleSize": 826
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "8f8bf991-9dc4-4b12-8eef-7409ca18ebf0",
+      "dataSource": "978a16cb-d579-491d-8d36-6dbbce630a8b",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.01338199513381995,
+          "sigma": 0.004007735424910275
+        },
+        "input": {
+          "events": 11,
+          "sampleSize": 822
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "8f8bf991-9dc4-4b12-8eef-7409ca18ebf0",
+      "dataSource": "978a16cb-d579-491d-8d36-6dbbce630a8b",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.026682838083687082,
+          "sigma": 0.003968559291162894
+        },
+        "input": {
+          "events": 44,
+          "sampleSize": 1649
+        }
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "8f8bf991-9dc4-4b12-8eef-7409ca18ebf0",
+      "dataSource": "978a16cb-d579-491d-8d36-6dbbce630a8b",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "8f8bf991-9dc4-4b12-8eef-7409ca18ebf0",
+      "dataSource": "978a16cb-d579-491d-8d36-6dbbce630a8b",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "8f8bf991-9dc4-4b12-8eef-7409ca18ebf0",
+      "dataSource": "978a16cb-d579-491d-8d36-6dbbce630a8b",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "5b4e9dc8-8c20-45c4-b54a-87760ccc71c3",
+      "dataSource": "bfa285ef-e3fd-47f2-9739-52dea2da8d0e",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.23123486682808717,
+          "sigma": 0.014670113546465935
+        },
+        "input": {
+          "events": 191,
+          "sampleSize": 826
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "5b4e9dc8-8c20-45c4-b54a-87760ccc71c3",
+      "dataSource": "bfa285ef-e3fd-47f2-9739-52dea2da8d0e",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.21654501216545013,
+          "sigma": 0.014366309173200822
+        },
+        "input": {
+          "events": 178,
+          "sampleSize": 822
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "5b4e9dc8-8c20-45c4-b54a-87760ccc71c3",
+      "dataSource": "bfa285ef-e3fd-47f2-9739-52dea2da8d0e",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.21224984839296543,
+          "sigma": 0.01006949322982419
+        },
+        "input": {
+          "events": 350,
+          "sampleSize": 1649
+        }
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "5b4e9dc8-8c20-45c4-b54a-87760ccc71c3",
+      "dataSource": "bfa285ef-e3fd-47f2-9739-52dea2da8d0e",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "5b4e9dc8-8c20-45c4-b54a-87760ccc71c3",
+      "dataSource": "bfa285ef-e3fd-47f2-9739-52dea2da8d0e",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "5b4e9dc8-8c20-45c4-b54a-87760ccc71c3",
+      "dataSource": "bfa285ef-e3fd-47f2-9739-52dea2da8d0e",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "3aeb959a-acb5-4371-b510-e3e4ec2be189",
+      "dataSource": "9a3da2d9-665f-40cd-9550-37611f8bac87",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.03026634382566586,
+          "sigma": 0.005960959777877848
+        },
+        "input": {
+          "events": 25,
+          "sampleSize": 826
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "3aeb959a-acb5-4371-b510-e3e4ec2be189",
+      "dataSource": "9a3da2d9-665f-40cd-9550-37611f8bac87",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.030413625304136254,
+          "sigma": 0.005989511991217565
+        },
+        "input": {
+          "events": 25,
+          "sampleSize": 822
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "3aeb959a-acb5-4371-b510-e3e4ec2be189",
+      "dataSource": "9a3da2d9-665f-40cd-9550-37611f8bac87",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.01758641600970285,
+          "sigma": 0.0032368719769322717
+        },
+        "input": {
+          "events": 29,
+          "sampleSize": 1649
+        }
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "3aeb959a-acb5-4371-b510-e3e4ec2be189",
+      "dataSource": "9a3da2d9-665f-40cd-9550-37611f8bac87",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "3aeb959a-acb5-4371-b510-e3e4ec2be189",
+      "dataSource": "9a3da2d9-665f-40cd-9550-37611f8bac87",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "3aeb959a-acb5-4371-b510-e3e4ec2be189",
+      "dataSource": "9a3da2d9-665f-40cd-9550-37611f8bac87",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "ba2afd62-2bbe-406a-b4b2-62772d8abe16",
+      "dataSource": "88b616f6-1f95-4ddc-9528-95040f4d7bdb",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.17312348668280872,
+          "sigma": 0.013164619150849757
+        },
+        "input": {
+          "events": 143,
+          "sampleSize": 826
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "ba2afd62-2bbe-406a-b4b2-62772d8abe16",
+      "dataSource": "88b616f6-1f95-4ddc-9528-95040f4d7bdb",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.21897810218978103,
+          "sigma": 0.014424342974876353
+        },
+        "input": {
+          "events": 180,
+          "sampleSize": 822
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "ba2afd62-2bbe-406a-b4b2-62772d8abe16",
+      "dataSource": "88b616f6-1f95-4ddc-9528-95040f4d7bdb",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.0782292298362644,
+          "sigma": 0.00661280422867802
+        },
+        "input": {
+          "events": 129,
+          "sampleSize": 1649
+        }
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "ba2afd62-2bbe-406a-b4b2-62772d8abe16",
+      "dataSource": "88b616f6-1f95-4ddc-9528-95040f4d7bdb",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "ba2afd62-2bbe-406a-b4b2-62772d8abe16",
+      "dataSource": "88b616f6-1f95-4ddc-9528-95040f4d7bdb",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "ba2afd62-2bbe-406a-b4b2-62772d8abe16",
+      "dataSource": "88b616f6-1f95-4ddc-9528-95040f4d7bdb",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "ba2afd62-2bbe-406a-b4b2-62772d8abe16",
+      "dataSource": "936b913c-0693-4e42-b32a-1a5697d6c0bc",
+      "performance": {
+        "type": "exact",
+        "value": 0.149
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "ba2afd62-2bbe-406a-b4b2-62772d8abe16",
+      "dataSource": "936b913c-0693-4e42-b32a-1a5697d6c0bc",
+      "performance": {
+        "type": "exact",
+        "value": 0.17
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "ba2afd62-2bbe-406a-b4b2-62772d8abe16",
+      "dataSource": "936b913c-0693-4e42-b32a-1a5697d6c0bc",
+      "performance": {
+        "type": "exact",
+        "value": 0.05
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "ba2afd62-2bbe-406a-b4b2-62772d8abe16",
+      "dataSource": "936b913c-0693-4e42-b32a-1a5697d6c0bc",
+      "performance": {
+        "type": "exact",
+        "value": 0.055
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "ba2afd62-2bbe-406a-b4b2-62772d8abe16",
+      "dataSource": "936b913c-0693-4e42-b32a-1a5697d6c0bc",
+      "performance": {
+        "type": "exact",
+        "value": 0.112
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "ba2afd62-2bbe-406a-b4b2-62772d8abe16",
+      "dataSource": "936b913c-0693-4e42-b32a-1a5697d6c0bc",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "10d3c83d-7957-40f3-bff6-884817db452d",
+      "dataSource": "d0045951-4f76-4470-a9f9-65019ae18f2d",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.03026634382566586,
+          "sigma": 0.005960959777877848
+        },
+        "input": {
+          "events": 25,
+          "sampleSize": 826
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "10d3c83d-7957-40f3-bff6-884817db452d",
+      "dataSource": "d0045951-4f76-4470-a9f9-65019ae18f2d",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.031630170316301706,
+          "sigma": 0.006104294551650764
+        },
+        "input": {
+          "events": 26,
+          "sampleSize": 822
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "10d3c83d-7957-40f3-bff6-884817db452d",
+      "dataSource": "d0045951-4f76-4470-a9f9-65019ae18f2d",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.031534263189812006,
+          "sigma": 0.0043035132695768115
+        },
+        "input": {
+          "events": 52,
+          "sampleSize": 1649
+        }
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "10d3c83d-7957-40f3-bff6-884817db452d",
+      "dataSource": "d0045951-4f76-4470-a9f9-65019ae18f2d",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "10d3c83d-7957-40f3-bff6-884817db452d",
+      "dataSource": "d0045951-4f76-4470-a9f9-65019ae18f2d",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "10d3c83d-7957-40f3-bff6-884817db452d",
+      "dataSource": "d0045951-4f76-4470-a9f9-65019ae18f2d",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "1e5ef9ad-7ef1-4abf-b2cb-9e809d84b1c0",
+      "criterion": "40da2b25-9116-4714-aaab-43a5fe7bca3d",
+      "dataSource": "7661bd0b-7669-4780-8efc-fb83b1c160bd",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.5042527339003645,
+          "sigma": 0.017428273918529934
+        },
+        "input": {
+          "events": 415,
+          "sampleSize": 823
+        }
+      }
+    },
+    {
+      "alternative": "16ecb386-c3f5-4e21-906c-7235c4844e81",
+      "criterion": "40da2b25-9116-4714-aaab-43a5fe7bca3d",
+      "dataSource": "7661bd0b-7669-4780-8efc-fb83b1c160bd",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.5201465201465202,
+          "sigma": 0.01745722550974671
+        },
+        "input": {
+          "events": 426,
+          "sampleSize": 819
+        }
+      }
+    },
+    {
+      "alternative": "f87f6527-a35c-4fa5-adb3-1b28df97ccf5",
+      "criterion": "40da2b25-9116-4714-aaab-43a5fe7bca3d",
+      "dataSource": "7661bd0b-7669-4780-8efc-fb83b1c160bd",
+      "performance": {
+        "type": "dnorm",
+        "parameters": {
+          "mu": 0.34306569343065696,
+          "sigma": 0.011708431243278857
+        },
+        "input": {
+          "events": 564,
+          "sampleSize": 1644
+        }
+      }
+    },
+    {
+      "alternative": "8be8c2a3-1a3c-42fd-b3d6-a812238fe65b",
+      "criterion": "40da2b25-9116-4714-aaab-43a5fe7bca3d",
+      "dataSource": "7661bd0b-7669-4780-8efc-fb83b1c160bd",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "e218d0f2-2af2-4fbc-80bc-1996d23b4613",
+      "criterion": "40da2b25-9116-4714-aaab-43a5fe7bca3d",
+      "dataSource": "7661bd0b-7669-4780-8efc-fb83b1c160bd",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "39664c93-06b4-47f4-b566-23aeb27109b3",
+      "criterion": "40da2b25-9116-4714-aaab-43a5fe7bca3d",
+      "dataSource": "7661bd0b-7669-4780-8efc-fb83b1c160bd",
+      "performance": {
+        "type": "empty"
+      }
+    }
+  ]
+}

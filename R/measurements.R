@@ -44,10 +44,10 @@ survival.transform <- function(performance, samples) {
 
 assign.sample <- function(defn, samples) {
   N <- dim(samples)[1]
-  if (!is.null(defn$alternative)) { # performance table based on relative effect estimates + baseline effect distribution
+  if (!is.null(defn$alternative)) { # performance table based on absolute effect estimates
     samples[, defn$alternative, defn$criterion] <- sampler(defn$performance, N)
   } else {
-    x <- sampler(defn$performance, N) # performance table based on absolute effect estimates
+    x <- sampler(defn$performance, N) # performance table based on relative effect estimates + baseline effect distribution
     samples[, colnames(x), defn$criterion] <- x
   }
   samples
@@ -162,6 +162,114 @@ sample <- function(alts, crit, performanceTable, N) {
     meas <- assign.sample(measurement, meas)
   }
   meas
+}
+
+generateSummaryStatistics <- function(params) {
+  crit <- names(params$criteria)
+  alts <- names(params$alternatives)
+  performanceTable <- params$performanceTable
+  reportedProperties <- c("2.5%","50%","97.5%","mode")
+  summaryStatistics <- array(dim=c(length(crit),length(alts), length(reportedProperties)), dimnames=list(crit, alts, reportedProperties))
+  for (distribution in performanceTable) {
+    isAbsolutePerformance <- !is.null(distribution$alternative)
+    if (isAbsolutePerformance) {
+      summaryStatistics[distribution$criterion, distribution$alternative, ] <- summaryStatistics.absolute(distribution)
+    } else {
+      summaryStatistics[distribution$criterion, alts, ] <- summaryStatistics.relative(distribution)
+    }
+  }
+  summaryStatistics
+}
+
+summaryStatistics.absolute <- function(distribution) {
+  analyticalPerformanceTypes <- c("dbeta","dnorm","exact","empty")
+  canCalculateSummaryStastisticsAnalytically <- distribution$performance[["type"]] %in% analyticalPerformanceTypes
+  if (canCalculateSummaryStastisticsAnalytically) { 
+    summaryStatistics.absolute.analytical(distribution)
+  } else {
+    summaryStatistics.absolute.sample(distribution)
+  }
+}
+
+summaryStatistics.absolute.analytical <- function(distribution) {
+  fn <- paste("summaryStatistics", distribution$performance[["type"]], sep=".")
+  do.call(fn, list(distribution$performance))
+}
+
+summaryStatistics.dbeta <- function(performance) {
+  quantiles <- qbeta(c(0.025,0.5,0.975),performance$parameters['alpha'],performance$parameters['beta'])
+  mode <- mode.dbeta(performance) 
+  setNamesSummaryStatistics(c(quantiles,mode))
+}
+
+summaryStatistics.dnorm <- function(performance) {
+  quantiles <- qnorm(c(0.025,0.5,0.975),performance$parameters['mu'],performance$parameters['sigma'])
+  mode <- performance$parameters['mu']
+  setNamesSummaryStatistics(c(quantiles,mode))
+}
+
+summaryStatistics.exact <- function(performance) {
+  setNamesSummaryStatistics(rep(as.numeric(performance["value"]),4))
+}
+
+summaryStatistics.empty <- function(performance) {
+  setNamesSummaryStatistics(rep(NA,4))
+}
+
+summaryStatistics.absolute.sample <- function(distribution) {
+  N <- 1e4
+  samples <- sampler(distribution$performance, N)
+  computeSummaryStatisticsFromSample(samples)
+}
+
+summaryStatistics.relative <- function(distribution) {
+  N <- 1e4
+  samples <- sampler(distribution$performance, N)
+  t(apply(samples,2,computeSummaryStatisticsFromSample))
+}
+
+computeSummaryStatisticsFromSample <- function(samples) {
+  quantiles <- quantile(samples, c(0.025, 0.5, 0.975), na.rm=T)
+  if (any(!is.na(samples))) {
+    mode <- computeModeFromSample(samples)
+  } else {
+    mode <- NA
+  }
+  setNamesSummaryStatistics(c(quantiles,mode))
+}
+
+computeModeFromSample <- function(samples) {
+  if (min(samples,na.rm=T) != max(samples,na.rm=T)) {
+    density <- density(samples)
+    mode <- density$x[which.max(density$y)]
+  } else {
+    mode <- min(samples, na.rm=T)
+  }
+  mode
+}
+
+setNamesSummaryStatistics <- function(summaryStatistics) {
+  names(summaryStatistics) <- c("2.5%","50%","97.5%","mode")
+  summaryStatistics
+}
+
+mode.dbeta <- function(perf) {
+  alpha <- as.numeric(perf$parameters['alpha'])
+  beta <- as.numeric(perf$parameters['beta'])
+  mode <- (alpha - 1)/(alpha + beta - 2)
+  if (alpha<1 && beta<1) {
+    mode <- NA
+  }
+  if ( (alpha<1 && beta>=1) || (alpha==1 && beta>1) ) {
+    mode <- 0
+  }
+  if ( (alpha>=1 && beta<1) || (alpha>1 && beta==1) ) {
+    mode <- 1
+  }
+  if (alpha==1 && beta==1) {
+    mode <- NA
+  }
+  mode
 }
 
 create.pvf <- function(criterion) {
