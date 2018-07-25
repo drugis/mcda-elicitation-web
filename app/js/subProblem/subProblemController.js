@@ -41,7 +41,7 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     $scope.scalesPromise.then(function(scales) {
       $scope.scales = scales;
     });
-    PageTitleService.setPageTitle('SubProblemController', $scope.problem.title || $scope.workspace.title +'\'s problem definition');
+    PageTitleService.setPageTitle('SubProblemController', ($scope.problem.title || $scope.workspace.title) +'\'s problem definition');
 
     var mergedProblem = WorkspaceService.mergeBaseAndSubProblem($scope.problem, $scope.subProblem.definition);
     $scope.areTooManyDataSourcesIncluded = _.find(mergedProblem.criteria, function(criterion) {

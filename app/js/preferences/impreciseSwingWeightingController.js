@@ -1,16 +1,23 @@
 'use strict';
 define(['lodash'],
   function(_) {
-    var dependencies = ['$scope', '$stateParams',
+    var dependencies = [
+      '$scope', '$stateParams',
       'SwingWeightingService',
+      'PageTitleService',
       'currentScenario',
       'taskDefinition'
     ];
-    var ImpreciseSwingWeightingController = function($scope, $stateParams,
+    var ImpreciseSwingWeightingController = function(
+      $scope, $stateParams,
       SwingWeightingService,
+      PageTitleService,
       currentScenario,
-      taskDefinition) {
+      taskDefinition
+    ) {
       $scope.isImprecise = true;
+      PageTitleService.setPageTitle('ImpreciseSwingWeightingController', 'Imprecise swing weighting');
+
       var sliderOptions = {
         floor: 1,
         ceil: 100,
@@ -42,7 +49,7 @@ define(['lodash'],
           };
         };
       }
-      
+
       SwingWeightingService.initWeightingScope($scope,
         $stateParams,
         currentScenario,

@@ -3,12 +3,14 @@ define(['lodash', 'mcda/controllers/wizard'], function(_, Wizard) {
   var dependencies = [
     '$scope', '$state', '$stateParams', '$injector',
     'PartialValueFunctionService',
+    'PageTitleService',
     'OrderingService',
     'currentScenario',
     'taskDefinition'
   ];
   var OrdinalSwingController = function($scope, $state, $stateParams, $injector,
     PartialValueFunctionService,
+    PageTitleService,
     OrderingService,
     currentScenario,
     taskDefinition
@@ -21,6 +23,8 @@ define(['lodash', 'mcda/controllers/wizard'], function(_, Wizard) {
     //init
     $scope.problem = $scope.aggregateState.problem;
     $scope.pvf = PartialValueFunctionService;
+
+    PageTitleService.setPageTitle('OrdinalSwingController','Ranking');
 
     OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
       $scope.criteria = _.map(orderings.criteria, function(criterion) {

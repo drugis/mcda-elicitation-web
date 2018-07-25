@@ -25,7 +25,7 @@ define(['clipboard', 'require'], function(Clipboard) {
     // init
     $scope.scenario = currentScenario;
     new Clipboard('.clipboard-button');
-    PageTitleService.setPageTitle('SmaaResultsController', $scope.aggregateState.problem.title || $scope.workspace.title +'\'s SMAA results');
+    PageTitleService.setPageTitle('SmaaResultsController', ($scope.aggregateState.problem.title || $scope.workspace.title) +'\'s SMAA results');
 
     OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(ordering) {
       $scope.criteria = ordering.criteria;

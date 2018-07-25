@@ -9,6 +9,7 @@ define(['angular', 'lodash', 'mcda/controllers/wizard'], function(angular, _, Wi
     'currentScenario',
     'taskDefinition',
     'PartialValueFunctionService',
+    'PageTitleService',
     'numberFilter'
   ];
 
@@ -21,7 +22,9 @@ define(['angular', 'lodash', 'mcda/controllers/wizard'], function(angular, _, Wi
     currentScenario,
     taskDefinition,
     PartialValueFunctionService,
-    numberFilter) {
+    PageTitleService,
+    numberFilter
+  ) {
     // functions
     $scope.save = save;
     $scope.canSave = canSave;
@@ -40,6 +43,7 @@ define(['angular', 'lodash', 'mcda/controllers/wizard'], function(angular, _, Wi
       if (!criterion) {
         return {};
       }
+      PageTitleService.setPageTitle('PartialValueFunctionController', criterion.title + '\'s partial value function');
       // set defaults
       criterion.dataSources[0].pvf = !criterion.dataSources[0].pvf ? {} : criterion.dataSources[0].pvf;
       criterion.dataSources[0].pvf.direction = 'decreasing';
