@@ -168,21 +168,23 @@ generateSummaryStatistics <- function(params) {
   crit <- names(params$criteria)
   alts <- names(params$alternatives)
   performanceTable <- params$performanceTable
-  summaryStatistics <- array(dim=c(length(crit),length(alts), 4), dimnames=list(crit, alts, c("2.5%","50%","97.5%","mode")))
+  reportedProperties <- c("2.5%","50%","97.5%","mode")
+  summaryStatistics <- array(dim=c(length(crit),length(alts), length(reportedProperties)), dimnames=list(crit, alts, reportedProperties))
   for (distribution in performanceTable) {
-    if (!is.null(distribution$alternative)) {
-      summaryStatistics[distribution$criterion,distribution$alternative,] <- summaryStatistics.absolute(distribution)
+    isAbsolutePerformance <- !is.null(distribution$alternative)
+    if (isAbsolutePerformance) {
+      summaryStatistics[distribution$criterion, distribution$alternative, ] <- summaryStatistics.absolute(distribution)
     } else {
-      EffectsTableRow <- summaryStatistics.relative.sample(distribution)
-      summaryStatistics[distribution$criterion,colnames(EffectsTableRow),] <- t(EffectsTableRow)
+      summaryStatistics[distribution$criterion, alts, ] <- summaryStatistics.relative(distribution)
     }
   }
   summaryStatistics
 }
 
 summaryStatistics.absolute <- function(distribution) {
-  analytical <- c("dbeta","dnorm","exact","empty")
-  if (distribution$performance[["type"]] %in% analytical) { 
+  analyticalPerformanceTypes <- c("dbeta","dnorm","exact","empty")
+  canCalculateSummaryStastisticsAnalytically <- distribution$performance[["type"]] %in% analyticalPerformanceTypes
+  if (canCalculateSummaryStastisticsAnalytically) { 
     summaryStatistics.absolute.analytical(distribution)
   } else {
     summaryStatistics.absolute.sample(distribution)
@@ -190,8 +192,8 @@ summaryStatistics.absolute <- function(distribution) {
 }
 
 summaryStatistics.absolute.analytical <- function(distribution) {
-  fn <- paste("summaryStatistics",distribution$performance[["type"]],sep=".")
-  do.call(fn,list(distribution$performance))
+  fn <- paste("summaryStatistics", distribution$performance[["type"]], sep=".")
+  do.call(fn, list(distribution$performance))
 }
 
 summaryStatistics.dbeta <- function(performance) {
@@ -220,10 +222,10 @@ summaryStatistics.absolute.sample <- function(distribution) {
   computeSummaryStatisticsFromSample(samples)
 }
 
-summaryStatistics.relative.sample <- function(distribution) {
+summaryStatistics.relative <- function(distribution) {
   N <- 1e4
   samples <- sampler(distribution$performance, N)
-  apply(samples,2,computeSummaryStatisticsFromSample)
+  t(apply(samples,2,computeSummaryStatisticsFromSample))
 }
 
 computeSummaryStatisticsFromSample <- function(samples) {
