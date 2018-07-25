@@ -8,8 +8,17 @@ source('../measurements.R')
 source('../smaa.R')
 
 # Load test problem
-params <- fromJSON('../../examples/getreal-pwPVF.json')
-#params <- fromJSON('../../examples/getreal-ordinalWeights.json')
+params <- fromJSON('../../examples/fava.json')
+params <- fromJSON('../../examples/hansen.json')
+
+params <- fromJSON('getreal-ordinalWeights.json')
+params <- fromJSON('getreal-pwPVF.json')
+params <- fromJSON('absoluteRelative.json')
+params <- fromJSON('problemWithEmpty.json')
+
+# Test scale function
+run_scales(params)
+run_scales_new(params)
 
 # Conduct deterministic MCDA
 run_deterministic(params)

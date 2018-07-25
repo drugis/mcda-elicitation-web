@@ -21,32 +21,7 @@ smaa_v2 <- function(params) {
 }
 
 run_scales <- function(params) {
-  N <- 1e4
-  crit <- names(params$criteria)
-  alts <- names(params$alternatives)
-  meas <- sample(alts, crit, params$performanceTable, N)
-  scales <- apply(meas, c(2, 3), computeSummaryStatistics)
-  apply(aperm(scales, c(3,2,1)), 1, wrap.matrix)
-}
-
-computeSummaryStatistics <- function(samples) {
-  quantiles <- quantile(samples, c(0.025, 0.5, 0.975), na.rm=T)
-  if (any(!is.na(samples))) {
-    mode <- computeMode(samples)
-  } else {
-    mode <- NA
-  }
-  c(quantiles, mode=mode)
-}
-
-computeMode <- function(samples) {
-  if (min(samples,na.rm=T) != max(samples,na.rm=T)) {
-    density <- density(samples)
-    mode <- density$x[which.max(density$y)]
-  } else {
-    mode <- min(samples, na.rm=T)
-  }
-  mode
+  apply(generateSummaryStatistics(params),1,wrap.matrix)
 }
 
 ratioConstraint <- function(n, i1, i2, x) {
@@ -93,12 +68,16 @@ genRepresentativeWeights <- function(params) {
 }
 
 genMedianMeasurements <- function(params) {
-  N <- 1E4
-  crit <- names(params$criteria)
-  alts <- names(params$alternatives)
-  meas <- sample(alts, crit, params$performanceTable, N)
-  apply(meas, c(2, 3), median)
+  t(generateSummaryStatistics(params)[,,"50%"])
 }
+
+# genMedianMeasurements <- function(params) {
+#    N <- 1E4
+#    crit <- names(params$criteria)
+#    alts <- names(params$alternatives)
+#    meas <- sample(alts, crit, params$performanceTable, N)
+#    apply(meas, c(2, 3), median)
+# }
 
 genHARconstraint <- function(statement,crit) {
   n <- length(crit)
