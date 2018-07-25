@@ -18,7 +18,6 @@ params <- fromJSON('problemWithEmpty.json')
 
 # Test scale function
 run_scales(params)
-run_scales_new(params)
 
 # Conduct deterministic MCDA
 run_deterministic(params)
