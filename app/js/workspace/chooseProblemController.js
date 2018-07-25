@@ -1,8 +1,24 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$state', '$modal', 'mcdaRootPath', 'WorkspaceResource', 'InProgressResource'];
+  var dependencies = [
+    '$scope', 
+  '$state', 
+  '$modal', 
+  'mcdaRootPath', 
+  'WorkspaceResource', 
+  'InProgressResource', 
+  'PageTitleService'
+];
 
-  var ChooseProblemController = function($scope, $state, $modal, mcdaRootPath, WorkspaceResource, InProgressResource) {
+  var ChooseProblemController = function(
+    $scope, 
+    $state, 
+    $modal, 
+    mcdaRootPath, 
+    WorkspaceResource, 
+    InProgressResource, 
+    PageTitleService
+  ) {
     // functions
     $scope.openChooseProblemModal = openChooseProblemModal;
     $scope.deleteWorkspace = deleteWorkspace;
@@ -21,6 +37,8 @@ define(['lodash'], function(_) {
       }
     });
 
+    PageTitleService.setPageTitle('ChooseProblemController', 'Workspaces');
+    
     function openChooseProblemModal() {
       $modal.open({
         templateUrl: mcdaRootPath + 'js/workspace/createWorkspace.html',

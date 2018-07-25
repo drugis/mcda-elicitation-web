@@ -4,6 +4,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     'WorkspaceResource',
     'isMcdaStandalone',
     'OrderingService',
+    'PageTitleService',
     'mcdaRootPath',
     'swap'
   ];
@@ -11,6 +12,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     WorkspaceResource,
     isMcdaStandalone,
     OrderingService,
+    PageTitleService,
     mcdaRootPath,
     swap
   ) {
@@ -29,6 +31,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       return criterion.hasOwnProperty('isFavorable');
     });
     $scope.showDecimal = false;
+    PageTitleService.setPageTitle('EvidenceController', $scope.problem.title +'\'s overview');
 
     OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
       $scope.alternatives = orderings.alternatives;

@@ -1,21 +1,26 @@
 'use strict';
 define(['clipboard', 'lodash'], function(Clipboard, _) {
-  var dependencies = ['$scope',
+  var dependencies = [
+    '$scope',
     '$stateParams',
     'currentScenario',
     'taskDefinition',
     'MCDAResultsService',
     'EffectsTableService',
-    'OrderingService'
+    'OrderingService',
+    'PageTitleService'
   ];
 
-  var DeterministicResultsController = function($scope,
+  var DeterministicResultsController = function(
+    $scope,
     $stateParams,
     currentScenario,
     taskDefinition,
     MCDAResultsService,
     EffectsTableService,
-    OrderingService) {
+    OrderingService,
+    PageTitleService
+  ) {
     // functions
     $scope.sensitivityScalesChanged = sensitivityScalesChanged;
     $scope.recalculateResults = recalculateResults;
@@ -42,7 +47,9 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
         resetSensitivityAnalysis();
       });
     });
+
     new Clipboard('.clipboard-button');
+    PageTitleService.setPageTitle('DeterministicResultsController', $scope.aggregateState.problem.title +'\'s deterministic results');
 
     function isEditing(value) {
       $scope.sensitivityMeasurements.isEditing = value;
