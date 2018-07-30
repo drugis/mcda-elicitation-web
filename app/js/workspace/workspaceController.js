@@ -4,24 +4,29 @@ define(['angular'], function(angular) {
     '$scope',
     '$cookies',
     '$stateParams',
+    '$modal',
     'WorkspaceResource',
     'SchemaService',
     'currentWorkspace',
-    'currentSchemaVersion'
+    'currentSchemaVersion',
+    'mcdaRootPath'
   ];
   var WorkspaceController = function(
     $scope,
     $cookies,
     $stateParams,
+    $modal,
     WorkspaceResource,
     SchemaService,
     currentWorkspace,
-    currentSchemaVersion
+    currentSchemaVersion,
+    mcdaRootPath
   ) {
     // functions
     $scope.editTitle = editTitle;
     $scope.saveTitle = saveTitle;
     $scope.cancelTitle = cancelTitle;
+    $scope.openSettingsModal = openSettingsModal;
 
     // init
     var user = angular.fromJson($cookies.get('LOGGED-IN-USER'));
@@ -50,6 +55,17 @@ define(['angular'], function(angular) {
 
     function cancelTitle() {
       $scope.isEditTitleVisible = false;
+    }
+
+    function openSettingsModal(){
+      $modal.open({
+        templateUrl: mcdaRootPath + 'js/workspace/workspaceSettings.html', 
+        controller: 'WorkspaceSettingsController',
+        resolve:{
+
+        }
+      });
+      
     }
   };
   return dependencies.concat(WorkspaceController);

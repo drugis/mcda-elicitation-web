@@ -29,6 +29,6 @@ module.exports = function(db) {
   return {
     getToggledColumns: getToggledColumns,
     updateToggledColumns: updateToggledColumns
-  }
+  };
 
-}
+};
