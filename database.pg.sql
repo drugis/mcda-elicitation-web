@@ -136,3 +136,10 @@ CREATE TABLE "session" (
 WITH (OIDS=FALSE);
 ALTER TABLE "session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid") NOT DEFERRABLE INITIALLY IMMEDIATE;
 
+--chanset keijserj:16
+CREATE TABLE workspaceSettings(
+  workspaceId INT NOT NULL,
+  settings JSONB NOT NULL,
+  PRIMARY KEY (workspaceId),
+  FOREIGN KEY (workspaceId) REFERENCES workspace(id) ON DELETE CASCADE
+);

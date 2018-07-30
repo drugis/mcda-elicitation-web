@@ -5,6 +5,7 @@ var requires = [
   'mcda/workspace/deleteWorkspaceController',
   'mcda/workspace/deleteInProgressController',
   'mcda/workspace/workspaceController',
+  'mcda/workspace/workspaceSettingsController',
   'mcda/services/workspaceService',
   'mcda/workspace/orderingService',
   'mcda/workspace/exampleResource'
@@ -16,6 +17,7 @@ define(['angular'].concat(requires), function(
   DeleteWorkspaceController,
   DeleteInProgressController,
   WorkspaceController,
+  WorkspaceSettingsController,
   WorkspaceService,
   OrderingService,
   ExampleResource
@@ -26,6 +28,7 @@ define(['angular'].concat(requires), function(
     .controller('DeleteWorkspaceController', DeleteWorkspaceController)
     .controller('DeleteInProgressController', DeleteInProgressController)
     .controller('WorkspaceController', WorkspaceController)
+    .controller('WorkspaceSettingsController', WorkspaceSettingsController)
 
     .factory('WorkspaceService', WorkspaceService)
     .factory('OrderingService', OrderingService)

@@ -11,6 +11,7 @@ var OrderingService = require('./node-backend/orderingService')(db);
 var ToggledColumnService = require('./node-backend/toggledColumnService')(db);
 var SubProblemService = require('./node-backend/subProblemService')(db);
 var ScenarioService = require('./node-backend/scenarioService')(db);
+var WorkspaceSettingsService = require('./node-backend/workspaceSettingsService')(db);
 var http = require('http');
 var server;
 
@@ -164,6 +165,10 @@ app.get('/workspaces/:workspaceId/problems/:subProblemId/scenarios', ScenarioSer
 app.get('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', ScenarioService.getScenario);
 app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios', ScenarioService.createScenario);
 app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', ScenarioService.updateScenario);
+
+//Workspace settings
+app.get('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsService.getWorkspaceSettings);
+app.post('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsService.postWorkspaceSettings);
 
 // patavi
 app.post('/patavi', function (req, res, next) { // FIXME: separate routes for scales and results
