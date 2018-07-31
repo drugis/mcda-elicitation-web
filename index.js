@@ -8,7 +8,6 @@ var logger = require('./node-backend/logger');
 var UserManagement = require('./node-backend/userManagement')(db);
 var WorkspaceService = require('./node-backend/workspaceService')(db);
 var OrderingService = require('./node-backend/orderingService')(db);
-var ToggledColumnService = require('./node-backend/toggledColumnService')(db);
 var SubProblemService = require('./node-backend/subProblemService')(db);
 var ScenarioService = require('./node-backend/scenarioService')(db);
 var WorkspaceSettingsService = require('./node-backend/workspaceSettingsService')(db);
@@ -110,7 +109,7 @@ router.delete('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
 router.get('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
 router.put('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
 router.put('/workspaces/:id/ordering', WorkspaceService.requireUserIsWorkspaceOwner);
-router.put('/workspaces/:id/toggledColumns', WorkspaceService.requireUserIsWorkspaceOwner);
+router.put('/workspaces/:id/workspaceSettings', WorkspaceService.requireUserIsWorkspaceOwner);
 router.delete('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
 app.use(router);
 
@@ -147,11 +146,6 @@ app.delete('/workspaces/:id', WorkspaceService.deleteWorkspace);
 // Orderings
 app.get('/workspaces/:workspaceId/ordering', OrderingService.getOrdering);
 app.put('/workspaces/:workspaceId/ordering', OrderingService.updateOrdering);
-
-//Effects table non-alternative columns
-app.get('/workspaces/:workspaceId/toggledColumns', ToggledColumnService.getToggledColumns);
-
-app.put('/workspaces/:workspaceId/toggledColumns', ToggledColumnService.updateToggledColumns);
 
 //Subproblems
 app.get('/workspaces/:workspaceId/problems', SubProblemService.querySubProblems);

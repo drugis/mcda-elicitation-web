@@ -4,9 +4,6 @@
       <inline-help help-key="effects-table"></inline-help>
     </h4>
   </div>
-  <div class="cell">
-    <toggle-columns toggled-columns="toggledColumns" edit-mode="editMode"></toggle-columns>
-  </div>
   <div class="cell large-3">
     <div class="right">
       <span class="toggle-text">Effects</span>
@@ -83,13 +80,10 @@
             {{row.criterion.unitOfMeasurement}}
           </td>
           <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
-            <effects-table-scales-cell ng-show="!effectsTableInfo[row.dataSource.id].hasStudyData || !showStudyData.value" 
-              scales="scales[row.dataSource.id][alternative.id]"
+            <effects-table-scales-cell ng-show="!effectsTableInfo[row.dataSource.id].hasStudyData || !showStudyData.value" scales="scales[row.dataSource.id][alternative.id]"
               uncertainty="effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || 
-                effectsTableInfo[row.dataSource.id].distributionType === 'relative'" 
-                show-percentage="!showDecimal" 
-                show-mode="showMode"
-                can-be-percentage="row.dataSource.dataType === 'dichotomous' || row.dataSource.parameterOfInterest === 'cumulativeProbability'">
+                effectsTableInfo[row.dataSource.id].distributionType === 'relative'" show-percentage="!showDecimal" show-mode="showMode"
+              can-be-percentage="row.dataSource.dataType === 'dichotomous' || row.dataSource.parameterOfInterest === 'cumulativeProbability'">
             </effects-table-scales-cell>
             <div ng-if="effectsTableInfo[row.dataSource.id].hasStudyData && showStudyData.value">
               {{effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].label}}
