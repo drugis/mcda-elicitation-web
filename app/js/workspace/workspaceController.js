@@ -6,6 +6,7 @@ define(['angular'], function(angular) {
     '$stateParams',
     '$modal',
     'WorkspaceResource',
+    'WorkspaceSettingsResource',
     'SchemaService',
     'currentWorkspace',
     'currentSchemaVersion',
@@ -17,6 +18,7 @@ define(['angular'], function(angular) {
     $stateParams,
     $modal,
     WorkspaceResource,
+    WorkspaceSettingsResource,
     SchemaService,
     currentWorkspace,
     currentSchemaVersion,
@@ -33,13 +35,32 @@ define(['angular'], function(angular) {
     $scope.editMode = {
       isUserOwner: user ? currentWorkspace.owner === user.id : false
     };
-    if(currentWorkspace.problem.schemaVersion !== currentSchemaVersion){
+    if (currentWorkspace.problem.schemaVersion !== currentSchemaVersion) {
       $scope.workspace = SchemaService.updateWorkspaceToCurrentSchema(currentWorkspace);
       WorkspaceResource.save($stateParams, $scope.workspace);
-    } else { 
+    } else {
       $scope.workspace = currentWorkspace;
     }
-    
+
+    var newSettings = {
+      calculationMethod: 'median',
+      showPercentages: true,
+      effectsDisplay: 'effect'
+    };
+
+    var newToggledColumns = {
+      criteria: true,
+      description: true,
+      units: true,
+      references: true,
+      strength: true
+    };
+
+    WorkspaceSettingsResource.get($stateParams).$promise.then(function(result) {
+      $scope.workspaceSettings = result.settings ? result.settings : newSettings;
+      $scope.toggledColumns = result.toggledColumns ? result.toggledColumns : newToggledColumns;
+    });
+
     $scope.isEditTitleVisible = false;
 
     function editTitle() {
@@ -57,15 +78,40 @@ define(['angular'], function(angular) {
       $scope.isEditTitleVisible = false;
     }
 
-    function openSettingsModal(){
+    function openSettingsModal() {
       $modal.open({
-        templateUrl: mcdaRootPath + 'js/workspace/workspaceSettings.html', 
+        templateUrl: mcdaRootPath + 'js/workspace/workspaceSettings.html',
         controller: 'WorkspaceSettingsController',
-        resolve:{
-
+        resolve: {
+          callback: function() {
+            return function(settings, toggledColumns) {
+              WorkspaceSettingsResource.save($stateParams, {
+                settings: settings,
+                toggledColumns: toggledColumns
+              });
+              $scope.workspaceSettings = settings;
+              $scope.toggledColumns = toggledColumns;
+            };
+          },
+          settings: function() {
+            return $scope.workspaceSettings;
+          },
+          toggledColumns: function() {
+            return $scope.toggledColumns;
+          },
+          reset: function() {
+            return function(){
+              WorkspaceSettingsResource.save($stateParams, {
+                settings: newSettings,
+                toggledColumns: newToggledColumns
+              });
+              $scope.workspaceSettings = newSettings;
+              $scope.toggledColumns = newToggledColumns;
+            };
+          }
         }
       });
-      
+
     }
   };
   return dependencies.concat(WorkspaceController);

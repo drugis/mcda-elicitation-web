@@ -15,7 +15,9 @@ define(['lodash'], function(_) {
         'editMode': '=',
         'effectsTableInfo': '=',
         'scales': '=',
-        'isStandAlone': '='
+        'isStandAlone': '=', 
+        'toggledColumns': '=',
+        'workspaceSettings':'='
       },
       templateUrl: mcdaRootPath + 'js/effectsTable/effectsTable.html',
       link: function(scope) {
@@ -23,8 +25,8 @@ define(['lodash'], function(_) {
 
         // init
         scope.studyDataAvailable = EffectsTableService.isStudyDataAvailable(scope.effectsTableInfo);
-        scope.showDecimal = false;
-        scope.showMode = false;
+        scope.showDecimal = !scope.workspaceSettings.percentages;
+        scope.showMode = scope.workspaceSettings.calculationMethod === 'mode';
         scope.$watch('criteria', function(newCriteria) {
           scope.keyedCriteria = _.keyBy(_.cloneDeep(newCriteria), 'id');
           scope.rows = EffectsTableService.buildEffectsTable(scope.keyedCriteria);
