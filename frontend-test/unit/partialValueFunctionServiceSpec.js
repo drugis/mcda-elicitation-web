@@ -27,6 +27,7 @@ define(['angular',
             update: function() { },
             redirectToDefaultView: function() { }
           };
+        var pageTitleServiceMock = jasmine.createSpyObj('PageTitleService', ['getPageTitle']);
 
         scope = $rootScope.$new();
         state = jasmine.createSpyObj('$state', ['go']);
@@ -45,12 +46,13 @@ define(['angular',
             criterion: 'foo'
           },
           currentScenario: scenario,
-          taskDefinition: TaskDependencies.extendTaskDefinition(task)
+          taskDefinition: TaskDependencies.extendTaskDefinition(task),
+          PageTitleService: pageTitleServiceMock
         });
       }));
 
       describe('Create Linear Partial Value function', function() {
-        var crit1 = { 
+        var crit1 = {
           dataSources: [{
             pvf: {
               'type': 'linear',
