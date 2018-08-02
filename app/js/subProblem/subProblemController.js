@@ -80,6 +80,12 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
           effectsTableInfo: function() {
             return $scope.effectsTableInfo;
           },
+          toggledColumns: function(){
+            return $scope.toggledColumns;
+          },
+          workspaceSettings: function(){
+            return $scope.workspaceSettings;
+          },
           callback: function() {
             return function(newProblemId, newScenarioId) {
               $state.go('problem', _.extend({}, $stateParams, {

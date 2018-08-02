@@ -1,0 +1,88 @@
+<form ng-submit="saveSettings()">
+  <div class="grid-container">
+    <div class="grid-x">
+      <div class="cell">
+        <h3>Settings</h3>
+      </div>
+
+      <div class="cell">
+        Use median or mode in effects table and deterministic analysis
+      </div>
+      <div class="cell">
+        <label>
+          <input type="radio" ng-model="settings.calculationMethod" ng-value="'median'">Median
+        </label>
+      </div>
+      <div class="cell">
+        <label>
+          <input type="radio" ng-model="settings.calculationMethod" ng-value="'mode'">Mode
+        </label>
+      </div>
+
+      <div class="cell">
+        Show effects or source data in effects table
+      </div>
+      <div class="cell">
+        <label>
+          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'effects'">Effects
+        </label>
+      </div>
+      <div class="cell">
+        <label>
+          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'sourceData'">Source data
+        </label>
+      </div>
+
+      <div class="cell">
+        Show percentages or decimals (eligable criteria only)
+      </div>
+      <div class="cell">
+        <label>
+          <input type="radio" ng-model="settings.showPercentages" ng-value="true">Percentages
+        </label>
+      </div>
+      <div class="cell">
+        <label>
+          <input type="radio" ng-model="settings.showPercentages" ng-value="false">Decimals
+        </label>
+      </div>
+
+      <div class="cell">
+        Effects table columns to show
+      </div>
+      <div class="cell">
+        <button class="button tiny" type="button" ng-click="selectAll()">(De)select all</button>
+      </div>
+      <div class="cell">
+        <input type="checkbox" ng-model="toggledColumns['criteria']" id="checkCriteriaColumn">
+        <label for="checkCriteriaColumn">Criterion</label>
+      </div>
+      <div class="cell">
+        <input type="checkbox" ng-model="toggledColumns['description']" id="checkDescriptionColumn">
+        <label for="checkDescriptionColumn">Description
+      </div>
+      <div class="cell">
+        <input type="checkbox" ng-model="toggledColumns['units']" id="checkUnitsColumn">
+        <label for="checkUnitsColumn">Units
+      </div>
+      <div class="cell">
+        <input type="checkbox" ng-model="toggledColumns['references']" id="checkReferencesColumn">
+        <label for="checkReferencesColumn">Reference
+      </div>
+      <div class="cell">
+        <input type="checkbox" ng-model="toggledColumns['strength']" id="checkStrengthColumn">
+        <label for="checkStrengthColumn">Uncertainties / Strength of evidence
+      </div>
+
+      <div class="cell">
+        <button class="button" type="button" ng-click="resetToDefault()">Default</button>
+      </div>
+      <div class="cell">
+        <button class="button success" type="submit">Save</button>
+      </div>
+      <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+</form>

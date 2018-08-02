@@ -10,7 +10,7 @@ define([], function() {
         'scales': '=',
         'uncertainty': '=',
         'showPercentage': '=',
-        'showMode': '=',
+        'effectsDisplay': '=',
         'canBePercentage': '='
       },
       template: '<div>{{median}}</div>' +
@@ -18,12 +18,12 @@ define([], function() {
       link: function(scope) {
         scope.$watch('scales', initScales);
         scope.$watch('showPercentage', initScales);
-        scope.$watch('showMode', initScales);
+        scope.$watch('effectsDisplay', initScales);
 
         function initScales() {
           if (scope.scales) {
             scope.lowerBound = getRoundedValue(scope.scales['2.5%']);
-            scope.median = getRoundedValue(scope.showMode ? scope.scales.mode : scope.scales['50%']);
+            scope.median = getRoundedValue(scope.effectsDisplay === 'mode' ? scope.scales.mode : scope.scales['50%']);
             scope.upperBound = getRoundedValue(scope.scales['97.5%']);
           }
         }

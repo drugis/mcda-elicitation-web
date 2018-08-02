@@ -14,6 +14,8 @@ define(['lodash', 'angular'], function(_) {
     'scales',
     'editMode',
     'effectsTableInfo',
+    'toggledColumns',
+    'workspaceSettings',
     'callback'
   ];
   var CreateSubProblemController = function($scope, $stateParams, $modalInstance, $timeout,
@@ -29,7 +31,10 @@ define(['lodash', 'angular'], function(_) {
     scales,
     editMode,
     effectsTableInfo,
-    callback) {
+    toggledColumns,
+    workspaceSettings,
+    callback
+  ) {
     // functions
     $scope.checkDuplicateTitle = checkDuplicateTitle;
     $scope.updateInclusions = updateInclusions;
@@ -44,7 +49,9 @@ define(['lodash', 'angular'], function(_) {
     $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
     $scope.effectsTableInfo = effectsTableInfo;
     $scope.editMode = editMode;
-
+    $scope.toggledColumns =toggledColumns;
+    $scope.workspaceSettings = workspaceSettings;
+    
     function createProblemConfiguration() {
       var subProblemCommand = {
         definition: SubProblemService.createDefinition($scope.subProblemState, $scope.choices),

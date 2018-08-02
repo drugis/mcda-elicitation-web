@@ -25,8 +25,6 @@ define(['lodash'], function(_) {
 
         // init
         scope.studyDataAvailable = EffectsTableService.isStudyDataAvailable(scope.effectsTableInfo);
-        scope.showDecimal = !scope.workspaceSettings.percentages;
-        scope.showMode = scope.workspaceSettings.calculationMethod === 'mode';
         scope.$watch('criteria', function(newCriteria) {
           scope.keyedCriteria = _.keyBy(_.cloneDeep(newCriteria), 'id');
           scope.rows = EffectsTableService.buildEffectsTable(scope.keyedCriteria);
