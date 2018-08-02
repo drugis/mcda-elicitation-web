@@ -9,6 +9,7 @@ define(['lodash', 'angular-mocks',
       var $scope1;
       var $scope2;
       var orderingServiceMock = jasmine.createSpyObj('OrderingService', ['getOrderedCriteriaAndAlternatives']);
+      var pageTitleServiceMock = jasmine.createSpyObj('PageTitleService', ['setPageTitle']);
 
       beforeEach(module('elicit.preferences'));
       beforeEach(module('elicit.taskDependencies'));
@@ -45,7 +46,8 @@ define(['lodash', 'angular-mocks',
           $stateParams: {},
           OrderingService: orderingServiceMock,
           currentScenario: scope.scenario,
-          taskDefinition: TaskDependencies.extendTaskDefinition(task)
+          taskDefinition: TaskDependencies.extendTaskDefinition(task),
+          PageTitleService: pageTitleServiceMock
         });
         return scope;
       }
