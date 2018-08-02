@@ -1,5 +1,5 @@
 'use strict';
-define(['angular'], function(angular) {
+define(['angular', 'lodash'], function(angular, _) {
   var dependencies = [
     '$scope',
     '$cookies',
@@ -45,7 +45,7 @@ define(['angular'], function(angular) {
     var newSettings = {
       calculationMethod: 'median',
       showPercentages: true,
-      effectsDisplay: 'effect'
+      effectsDisplay: 'effects'
     };
 
     var newToggledColumns = {
@@ -56,9 +56,11 @@ define(['angular'], function(angular) {
       strength: true
     };
 
+    $scope.workspaceSettings = _.cloneDeep(newSettings);
+    $scope.toggledColumns = _.cloneDeep(newToggledColumns);
     WorkspaceSettingsResource.get($stateParams).$promise.then(function(result) {
-      $scope.workspaceSettings = result.settings ? result.settings : newSettings;
-      $scope.toggledColumns = result.toggledColumns ? result.toggledColumns : newToggledColumns;
+      $scope.workspaceSettings = result.settings ? result.settings : $scope.workspaceSettings;
+      $scope.toggledColumns = result.toggledColumns ? result.toggledColumns : $scope.toggledColumns;
     });
 
     $scope.isEditTitleVisible = false;
@@ -94,19 +96,19 @@ define(['angular'], function(angular) {
             };
           },
           settings: function() {
-            return $scope.workspaceSettings;
+            return _.cloneDeep($scope.workspaceSettings);
           },
           toggledColumns: function() {
-            return $scope.toggledColumns;
+            return _.cloneDeep($scope.toggledColumns);
           },
           reset: function() {
-            return function(){
+            return function() {
               WorkspaceSettingsResource.save($stateParams, {
                 settings: newSettings,
                 toggledColumns: newToggledColumns
               });
-              $scope.workspaceSettings = newSettings;
-              $scope.toggledColumns = newToggledColumns;
+              $scope.workspaceSettings = _.cloneDeep(newSettings);
+              $scope.toggledColumns = _.cloneDeep(newToggledColumns);
             };
           }
         }

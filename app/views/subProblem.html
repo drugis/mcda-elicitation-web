@@ -1,16 +1,22 @@
 <div class="grid-x">
   <div class="cell">
     <span>Problem:</span>
-    <select class="scenario-select" ng-model="subProblem" ng-options="subProblem.title for subProblem in subProblems track by subProblem.id" ng-change="subProblemChanged(subProblem)"></select>
+    <select class="scenario-select" ng-model="subProblem" ng-options="subProblem.title for subProblem in subProblems track by subProblem.id"
+      ng-change="subProblemChanged(subProblem)"></select>
     <inline-help help-key="problem"></inline-help>
-    <a ng-if="editMode.isUserOwner" ng-click="editSubProblemTitle()" tooltip="Edit current problem title"><i class="fa fa-edit"></i></a>
-    <a ng-if="editMode.isUserOwner" ng-click="openCreateDialog()" tooltip="Create new problem"><i class="fa fa-plus"></i></a>
+    <a ng-if="editMode.isUserOwner" ng-click="editSubProblemTitle()" tooltip="Edit current problem title">
+      <i class="fa fa-edit"></i>
+    </a>
+    <a ng-if="editMode.isUserOwner" ng-click="openCreateDialog()" tooltip="Create new problem">
+      <i class="fa fa-plus"></i>
+    </a>
   </div>
 </div>
 <br>
 <div class="grid-x underlined-div">
   <div class="cell">
-    <effects-table criteria="criteria" alternatives="alternatives" edit-mode="editMode" effects-table-info="effectsTableInfo" scales="scales.observed" is-stand-alone="isStandAlone"></effects-table>
+    <effects-table criteria="criteria" alternatives="alternatives" edit-mode="editMode" effects-table-info="effectsTableInfo"
+      scales="scales.observed" is-stand-alone="isStandAlone" toggled-columns="toggledColumns" workspace-settings="workspaceSettings"></effects-table>
   </div>
 </div>
 <div class="grid-x">
@@ -51,7 +57,8 @@
       <tbody>
         <tr ng-repeat="row in scaleTable">
           <td>{{row.criterion.title}}</td>
-          <td>{{scales.theoreticalScales[row.dataSource.id][0] | number}}, {{scales.theoreticalScales[row.dataSource.id][1] | number}}</td>
+          <td>{{scales.theoreticalScales[row.dataSource.id][0] | number}}, {{scales.theoreticalScales[row.dataSource.id][1] |
+            number}}</td>
           <td>
             <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[0] | number"></span> ,
             <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[1] | number"></span>
@@ -60,7 +67,7 @@
             <span ng-if="row.dataSource.pvf.range">{{row.dataSource.pvf.range[0] | number}}, {{row.dataSource.pvf.range[1] | number}}</span>
             <span ng-if="!row.dataSource.pvf.range">
               <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[0] | number"></span> ,
-            <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[1] | number"></span>
+              <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[1] | number"></span>
             </span>
           </td>
           <td>{{row.criterion.unitOfMeasurement}}</td>
