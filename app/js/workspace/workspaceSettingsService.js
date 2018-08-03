@@ -26,7 +26,7 @@ define(['lodash', 'angular'], function(_) {
     var toggledColumns = _.cloneDeep(defaultToggledColumns);
 
     function loadWorkspaceSettings() {
-      return WorkspaceSettingsResource.get($stateParams).$promise.then(function(result) {
+      WorkspaceSettingsResource.get($stateParams).$promise.then(function(result) {
         workspaceSettings = result.settings ? result.settings : workspaceSettings;
         toggledColumns = result.toggledColumns ? result.toggledColumns : toggledColumns;
       });
@@ -40,22 +40,21 @@ define(['lodash', 'angular'], function(_) {
       return workspaceSettings;
     }
 
-    function saveSettings(newWorkspaceSettings, newToggledColumns) {
-      return WorkspaceSettingsResource.save($stateParams, {
+    function saveSettings(newWorkspaceSettings, newToggledColumns, callback) {
+      WorkspaceSettingsResource.save($stateParams, {
         settings: newWorkspaceSettings,
         toggledColumns: newToggledColumns
       }).$promise.then(function() {
         workspaceSettings = newWorkspaceSettings;
         toggledColumns = newToggledColumns;
+        callback();
       });
     }
 
-    function resetSettings() {
-      workspaceSettings = _.cloneDeep(defaultSettings);
-      toggledColumns = _.cloneDeep(defaultToggledColumns);
+    function getDefaultSettings() {
       return {
-        settings: workspaceSettings,
-        toggledColumns: toggledColumns
+        settings: _.cloneDeep(defaultSettings),
+        toggledColumns: _.cloneDeep(defaultToggledColumns)
       };
     }
     return {
@@ -63,7 +62,7 @@ define(['lodash', 'angular'], function(_) {
       getToggledColumns: getToggledColumns,
       getWorkspaceSettings: getWorkspaceSettings,
       saveSettings: saveSettings,
-      resetSettings: resetSettings
+      getDefaultSettings: getDefaultSettings
     };
   };
 

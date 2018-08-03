@@ -8,14 +8,13 @@ define(['lodash', 'angular'], function(_) {
     'ScaleRangeService',
     'OrderingService',
     'EffectsTableService',
+    'WorkspaceSettingsService',
     'subProblems',
     'subProblem',
     'problem',
     'scales',
     'editMode',
     'effectsTableInfo',
-    'toggledColumns',
-    'workspaceSettings',
     'callback'
   ];
   var CreateSubProblemController = function($scope, $stateParams, $modalInstance, $timeout,
@@ -25,14 +24,13 @@ define(['lodash', 'angular'], function(_) {
     ScaleRangeService,
     OrderingService,
     EffectsTableService,
+    WorkspaceSettingsService,
     subProblems,
     subProblem,
     problem,
     scales,
     editMode,
     effectsTableInfo,
-    toggledColumns,
-    workspaceSettings,
     callback
   ) {
     // functions
@@ -41,6 +39,7 @@ define(['lodash', 'angular'], function(_) {
     $scope.createProblemConfiguration = createProblemConfiguration;
     $scope.cancel = $modalInstance.close;
     $scope.reset = reset;
+    $scope.getWorkspaceSettings = getWorkspaceSettings;
 
     // init
     $scope.subProblems = subProblems;
@@ -49,9 +48,9 @@ define(['lodash', 'angular'], function(_) {
     $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
     $scope.effectsTableInfo = effectsTableInfo;
     $scope.editMode = editMode;
-    $scope.toggledColumns =toggledColumns;
-    $scope.workspaceSettings = workspaceSettings;
+    getWorkspaceSettings();
     
+    //public
     function createProblemConfiguration() {
       var subProblemCommand = {
         definition: SubProblemService.createDefinition($scope.subProblemState, $scope.choices),
@@ -147,6 +146,11 @@ define(['lodash', 'angular'], function(_) {
       $scope.subProblemState.title = titleCache;
     }
 
+    function getWorkspaceSettings() {
+      $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
+      $scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
+    }
+
     // private functions
     function checkDuplicateTitle(title) {
       $scope.isTitleDuplicate = _.find($scope.subProblems, ['title', title]);
@@ -155,8 +159,8 @@ define(['lodash', 'angular'], function(_) {
     function areThereMissingValues() {
       var includedDataSourcesIds = _.keys(_.pickBy($scope.subProblemState.dataSourceInclusions));
       var includedAlternatives = _.keys(_.pickBy($scope.subProblemState.alternativeInclusions));
-      return _.find(includedDataSourcesIds, function(dataSourceId){
-        return _.find(includedAlternatives, function(alternativeId){
+      return _.find(includedDataSourcesIds, function(dataSourceId) {
+        return _.find(includedAlternatives, function(alternativeId) {
           return $scope.scales.observed[dataSourceId][alternativeId]['50%'] === null;
         });
       });

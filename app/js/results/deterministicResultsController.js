@@ -8,7 +8,8 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     'MCDAResultsService',
     'EffectsTableService',
     'OrderingService',
-    'PageTitleService'
+    'PageTitleService',
+    'WorkspaceSettingsService'
   ];
 
   var DeterministicResultsController = function(
@@ -19,7 +20,8 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     MCDAResultsService,
     EffectsTableService,
     OrderingService,
-    PageTitleService
+    PageTitleService,
+    WorkspaceSettingsService
   ) {
     // functions
     $scope.sensitivityScalesChanged = sensitivityScalesChanged;
@@ -29,6 +31,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.doPreferencesSensitivity = doPreferencesSensitivity;
     $scope.isEditing = isEditing;
     $scope.loadState = loadState;
+    $scope.getWorkspaceSettings = getWorkspaceSettings;
 
     // init
     $scope.scenario = currentScenario;
@@ -47,10 +50,13 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
         resetSensitivityAnalysis();
       });
     });
+    
+    getWorkspaceSettings();
 
     new Clipboard('.clipboard-button');
     PageTitleService.setPageTitle('DeterministicResultsController', ($scope.aggregateState.problem.title || $scope.workspace.title) +'\'s deterministic results');
 
+    //public 
     function isEditing(value) {
       $scope.sensitivityMeasurements.isEditing = value;
     }
@@ -105,6 +111,10 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     function loadState() {
       $scope.aggregateState = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.aggregateState);
       $scope.state = initialize(taskDefinition.clean($scope.aggregateState));
+    }        
+    function getWorkspaceSettings() {
+      $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
+      $scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
     }
   };
   return dependencies.concat(DeterministicResultsController);
