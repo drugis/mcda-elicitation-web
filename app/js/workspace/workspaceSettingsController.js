@@ -4,17 +4,13 @@ define(['lodash'], function(_) {
     '$scope',
     '$modalInstance',
     'WorkspaceSettingsService',
-    'callback',
-    'settings',
-    'toggledColumns'
+    'callback'
   ];
   var WorkspaceSettingsController = function(
     $scope,
     $modalInstance,
     WorkspaceSettingsService,
-    callback,
-    settings,
-    toggledColumns
+    callback
   ) {
     // functions
     $scope.cancel = $modalInstance.close;
@@ -23,17 +19,17 @@ define(['lodash'], function(_) {
     $scope.selectAll = selectAll;
 
     //init
-    $scope.settings = settings;
-    $scope.toggledColumns = toggledColumns;
+    $scope.settings = _.cloneDeep(WorkspaceSettingsService.getWorkspaceSettings());
+    $scope.toggledColumns = _.cloneDeep(WorkspaceSettingsService.getToggledColumns());
 
     //public
     function saveSettings() {
-      callback($scope.settings, $scope.toggledColumns);
+      WorkspaceSettingsService.saveSettings($scope.settings, $scope.toggledColumns, callback);
       $modalInstance.close();
     }
 
     function resetToDefault() {
-      var defaultSettingsAndColumns = WorkspaceSettingsService.resetSettings();
+      var defaultSettingsAndColumns = WorkspaceSettingsService.getDefaultSettings();
       $scope.toggledColumns = defaultSettingsAndColumns.toggledColumns;
       $scope.settings = defaultSettingsAndColumns.settings;
     }
