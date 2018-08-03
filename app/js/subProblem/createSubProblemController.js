@@ -80,7 +80,7 @@ define(['lodash', 'angular'], function(_) {
         $scope.criteriaByDataSource = _($scope.criteria)
           .map(function(criterion) {
             return _.map(criterion.dataSources, function(dataSource) {
-              return [dataSource.id, criterion.id]
+              return [dataSource.id, criterion.id];
             });
           })
           .flatten()
