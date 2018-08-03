@@ -1,34 +1,29 @@
 'use strict';
-define(['angular', 'lodash'], function(angular, _) {
+define(['angular'], function(angular) {
   var dependencies = [
     '$scope',
     '$cookies',
     '$stateParams',
-    '$modal',
     'WorkspaceResource',
-    'WorkspaceSettingsResource',
+    'WorkspaceSettingsService',
     'SchemaService',
     'currentWorkspace',
-    'currentSchemaVersion',
-    'mcdaRootPath'
+    'currentSchemaVersion'
   ];
   var WorkspaceController = function(
     $scope,
     $cookies,
     $stateParams,
-    $modal,
     WorkspaceResource,
-    WorkspaceSettingsResource,
+    WorkspaceSettingsService,
     SchemaService,
     currentWorkspace,
-    currentSchemaVersion,
-    mcdaRootPath
+    currentSchemaVersion
   ) {
     // functions
     $scope.editTitle = editTitle;
     $scope.saveTitle = saveTitle;
     $scope.cancelTitle = cancelTitle;
-    $scope.openSettingsModal = openSettingsModal;
 
     // init
     var user = angular.fromJson($cookies.get('LOGGED-IN-USER'));
@@ -42,25 +37,9 @@ define(['angular', 'lodash'], function(angular, _) {
       $scope.workspace = currentWorkspace;
     }
 
-    var newSettings = {
-      calculationMethod: 'median',
-      showPercentages: true,
-      effectsDisplay: 'effects'
-    };
-
-    var newToggledColumns = {
-      criteria: true,
-      description: true,
-      units: true,
-      references: true,
-      strength: true
-    };
-
-    $scope.workspaceSettings = _.cloneDeep(newSettings);
-    $scope.toggledColumns = _.cloneDeep(newToggledColumns);
-    WorkspaceSettingsResource.get($stateParams).$promise.then(function(result) {
-      $scope.workspaceSettings = result.settings ? result.settings : $scope.workspaceSettings;
-      $scope.toggledColumns = result.toggledColumns ? result.toggledColumns : $scope.toggledColumns;
+    WorkspaceSettingsService.loadWorkspaceSettings().then(function(){
+      $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
+      $scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
     });
 
     $scope.isEditTitleVisible = false;
@@ -78,42 +57,6 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function cancelTitle() {
       $scope.isEditTitleVisible = false;
-    }
-
-    function openSettingsModal() {
-      $modal.open({
-        templateUrl: mcdaRootPath + 'js/workspace/workspaceSettings.html',
-        controller: 'WorkspaceSettingsController',
-        resolve: {
-          callback: function() {
-            return function(settings, toggledColumns) {
-              WorkspaceSettingsResource.save($stateParams, {
-                settings: settings,
-                toggledColumns: toggledColumns
-              });
-              $scope.workspaceSettings = settings;
-              $scope.toggledColumns = toggledColumns;
-            };
-          },
-          settings: function() {
-            return _.cloneDeep($scope.workspaceSettings);
-          },
-          toggledColumns: function() {
-            return _.cloneDeep($scope.toggledColumns);
-          },
-          reset: function() {
-            return function() {
-              WorkspaceSettingsResource.save($stateParams, {
-                settings: newSettings,
-                toggledColumns: newToggledColumns
-              });
-              $scope.workspaceSettings = _.cloneDeep(newSettings);
-              $scope.toggledColumns = _.cloneDeep(newToggledColumns);
-            };
-          }
-        }
-      });
-
     }
   };
   return dependencies.concat(WorkspaceController);

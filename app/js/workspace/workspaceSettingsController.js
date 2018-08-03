@@ -3,6 +3,7 @@ define(['lodash'], function(_) {
   var dependencies = [
     '$scope',
     '$modalInstance',
+    'WorkspaceSettingsService',
     'callback',
     'settings',
     'toggledColumns'
@@ -10,10 +11,10 @@ define(['lodash'], function(_) {
   var WorkspaceSettingsController = function(
     $scope,
     $modalInstance,
+    WorkspaceSettingsService,
     callback,
     settings,
-    toggledColumns,
-    reset
+    toggledColumns
   ) {
     // functions
     $scope.cancel = $modalInstance.close;
@@ -32,12 +33,13 @@ define(['lodash'], function(_) {
     }
 
     function resetToDefault() {
-      reset();
-      $modalInstance.close();
+      var defaultSettingsAndColumns = WorkspaceSettingsService.resetSettings();
+      $scope.toggledColumns = defaultSettingsAndColumns.toggledColumns;
+      $scope.settings = defaultSettingsAndColumns.settings;
     }
 
     function selectAll() {
-      var truthToSetTo = _.reduce($scope.toggledColumns, function(accum, column) {
+      var truthToSetTo = !_.reduce($scope.toggledColumns, function(accum, column) {
         return accum && column;
       }, true);
       setAllTo(truthToSetTo);

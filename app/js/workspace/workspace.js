@@ -8,7 +8,9 @@ var requires = [
   'mcda/workspace/workspaceSettingsController',
   'mcda/services/workspaceService',
   'mcda/workspace/orderingService',
-  'mcda/workspace/exampleResource'
+  'mcda/workspace/workspaceSettingsService',
+  'mcda/workspace/exampleResource',
+  'mcda/workspace/workspaceSettingsDirective'
 ];
 define(['angular'].concat(requires), function(
   angular,
@@ -20,7 +22,9 @@ define(['angular'].concat(requires), function(
   WorkspaceSettingsController,
   WorkspaceService,
   OrderingService,
-  ExampleResource
+  WorkspaceSettingService,
+  ExampleResource,
+  WorkspaceSettings
 ) {
   return angular.module('elicit.workspace', ['elicit.util'])
     .controller('ChooseProblemController', ChooseProblemController)
@@ -32,7 +36,10 @@ define(['angular'].concat(requires), function(
 
     .factory('WorkspaceService', WorkspaceService)
     .factory('OrderingService', OrderingService)
+    .factory('WorkspaceSettingsService', WorkspaceSettingService)
 
     .service('ExampleResource', ExampleResource)
+
+    .directive('workspaceSettings', WorkspaceSettings)
     ;
 });
