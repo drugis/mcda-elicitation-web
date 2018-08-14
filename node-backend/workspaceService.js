@@ -5,30 +5,19 @@ var async = require('async');
 
 module.exports = function(db) {
 
+
   function requireUserIsWorkspaceOwner(req, res, next) {
-    db.query('SELECT owner FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
-      if (err) {
-        err.status = 500;
-        next(err);
-      }
-      if (!getUser(req) || result.rows[0].owner !== getUser(req).id) {
-        res.status(403).send({
-          'code': 403,
-          'message': 'Access to resource not authorised'
-        });
-      } else {
-        next();
-      }
-    });
+    db.query('SELECT owner FROM workspace WHERE id = $1', [req.params.id], createOwnershipChecker(req, res, next));
   }
 
   // Workspaces in progress
   function requireUserIsInProgressWorkspaceOwner(req, res, next) {
-    db.query('SELECT owner FROM inProgressWorkspace WHERE id = $1', [req.params.id], function(err, result) {
-      if (err) {
-        err.status = 500;
-        next(err);
-      }
+    db.query('SELECT owner FROM inProgressWorkspace WHERE id = $1', [req.params.id], createOwnershipChecker(req, res, next));
+  }
+
+  function createOwnershipChecker(req, res, next) {
+    return function(err, result) {
+      checkErr(err, next);
       if (!getUser(req) || result.rows[0].owner !== getUser(req).id) {
         res.status(403).send({
           'code': 403,
@@ -37,17 +26,25 @@ module.exports = function(db) {
       } else {
         next();
       }
-    });
+    };
+  }
+
+  function checkErr(err, next) {
+    if (err) {
+      logger.error(JSON.stringify(err, null, 2));
+      err.status = 500;
+      next({
+        statusCode: 500,
+        message: err
+      });
+    }
   }
 
   function createInProgress(req, res, next) {
     logger.debug('creating in-progress workspace');
 
     db.query('INSERT INTO inProgressWorkspace (owner, state) VALUES ($1, $2) RETURNING id', [getUser(req).id, req.body], function(err, result) {
-      if (err) {
-        err.status = 500;
-        return next(err);
-      }
+      checkErr(err, next);
       res.json({ id: result.rows[0].id });
     });
   }
@@ -55,10 +52,7 @@ module.exports = function(db) {
   function updateInProgress(req, res, next) {
     logger.debug('updating in-progress workspace');
     db.query('UPDATE inProgressWorkspace SET state = $1 WHERE id = $2 ', [req.body, req.params.id], function(err) {
-      if (err) {
-        err.status = 500;
-        return next(err);
-      }
+      checkErr(err, next);
       res.end();
     });
   }
@@ -66,10 +60,7 @@ module.exports = function(db) {
   function getInProgress(req, res, next) {
     logger.debug('GET /inProgress/:id');
     db.query('SELECT id, owner, state FROM inProgressWorkspace WHERE id = $1', [req.params.id], function(err, result) {
-      if (err) {
-        err.status = 500;
-        return next(err);
-      }
+      checkErr(err, next);
       res.json(result.rows[0]);
     });
   }
@@ -77,10 +68,7 @@ module.exports = function(db) {
   function queryInProgress(req, res, next) {
     logger.debug('GET /inProgress/');
     db.query('SELECT id, owner, state FROM inProgressWorkspace WHERE owner = $1', [getUser(req).id], function(err, result) {
-      if (err) {
-        err.status = 500;
-        return next(err);
-      }
+      checkErr(err, next);
       res.json(result.rows);
     });
   }
@@ -88,7 +76,6 @@ module.exports = function(db) {
   function deleteInProgress(req, res, next) {
     db.query('DELETE FROM inProgressWorkspace WHERE id=$1', [req.params.id], function(err) {
       if (err) {
-        logger.debug('error deleting workspace in progress');
         err.status = 500;
         return next(err);
       }
@@ -100,13 +87,7 @@ module.exports = function(db) {
   function queryWorkspaces(req, res, next) {
     logger.debug('GET /workspaces');
     db.query('SELECT id, owner, title, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1', [getUser(req).id], function(err, result) {
-      if (err) {
-        logger.error('error running query', err);
-        next({
-          statusCode: 500,
-          message: err
-        });
-      }
+      checkErr(err, next);
       res.json(result.rows);
     });
   }
@@ -135,7 +116,7 @@ module.exports = function(db) {
         logger.debug('created definition ' + JSON.stringify(definition));
         client.query('INSERT INTO subProblem (workspaceid, title, definition) VALUES ($1, $2, $3) RETURNING id', [workspaceId, 'Default', definition], function(err, result) {
           if (err) {
-            logger.debug('error creating subproblem');
+            logger.error('error creating subproblem');
             return callback(err);
           }
           logger.debug('done creating subproblem');
@@ -191,10 +172,7 @@ module.exports = function(db) {
     }
 
     db.runInTransaction(workspaceTransaction, function(err, result) {
-      if (err) {
-        err.status = 500;
-        return next(err);
-      }
+      checkErr(err, next);
       res.json(result);
     });
   }
@@ -202,20 +180,14 @@ module.exports = function(db) {
   function getWorkspace(req, res, next) {
     logger.debug('GET /workspaces/:id');
     db.query('SELECT id, owner, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
-      if (err) {
-        err.status = 500;
-        return next(err);
-      }
+      checkErr(err, next);
       res.json(result.rows[0]);
     });
   }
 
   function updateWorkspace(req, res, next) {
     db.query('UPDATE workspace SET title = $1, problem = $2 WHERE id = $3 ', [req.body.problem.title, req.body.problem, req.params.id], function(err) {
-      if (err) {
-        err.status = 500;
-        return next(err);
-      }
+      checkErr(err, next);
       res.end();
     });
   }
@@ -227,7 +199,7 @@ module.exports = function(db) {
       function deleteSubproblems(callback) {
         client.query('DELETE FROM subproblem WHERE workspaceid=$1', [req.params.id], function(err) {
           if (err) {
-            logger.debug('error deleting subproblem');
+            logger.error('error deleting subproblem');
             return callback(err);
           }
           logger.debug('done deleting subproblem');
@@ -238,7 +210,7 @@ module.exports = function(db) {
       function deleteScenarios() {
         client.query('DELETE FROM scenario WHERE workspace=$1', [req.params.id], function(err) {
           if (err) {
-            logger.debug('error deleting scenario');
+            logger.error('error deleting scenario');
             return callback(err);
           }
           logger.debug('done deleting scenario');
@@ -249,7 +221,7 @@ module.exports = function(db) {
       function deleteWorkspaceRemnants() {
         client.query('DELETE FROM scenario WHERE workspace=$1;DELETE FROM workspace WHERE id=$1', [req.params.id], function(err) {
           if (err) {
-            logger.debug('error deleting workspace');
+            logger.error('error deleting workspace');
             return callback(err);
           }
           logger.debug('done deleting workspace');
@@ -264,20 +236,17 @@ module.exports = function(db) {
     }
 
     db.runInTransaction(deleteEverything, function(err, result) {
-      if (err) {
-        err.status = 500;
-        return next(err);
-      }
+      checkErr(err, next);
       res.json(result);
     });
 
   }
 
   function getUser(req) {
-    if(req.user) {
+    if (req.user) {
       return req.user;
     }
-    if(req.session.user) {
+    if (req.session.user) {
       return req.session.user;
     }
   }
