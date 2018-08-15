@@ -74,13 +74,13 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             expect(result.firstParameter).toEqual(10);
             expect(result.secondParameter).toEqual(20);
           });
-          it('should create a finished empty input cell', function(){
+          it('should create a finished empty input cell', function() {
             var tableEntry = {
               performance: {
                 type: 'empty'
               }
             };
-            cell.empty = true;  
+            cell.empty = true;
             var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
             expect(result.empty).toBeTruthy();
           });
@@ -123,13 +123,13 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               expect(result.secondParameter).toEqual(20);
               expect(result.thirdParameter).toEqual(30);
             });
-            it('should create a finished empty input cell', function(){
+            it('should create a finished empty input cell', function() {
               var tableEntry = {
                 performance: {
                   type: 'empty'
                 }
               };
-              cell.empty = true;  
+              cell.empty = true;
               var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
               expect(result.empty).toBeTruthy();
             });
@@ -206,13 +206,13 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             expect(result.firstParameter).toEqual(10);
             expect(result.secondParameter).toEqual(15);
           });
-          it('should create a finished empty input cell', function(){
+          it('should create a finished empty input cell', function() {
             var tableEntry = {
               performance: {
                 type: 'empty'
               }
             };
-            cell.empty = true;  
+            cell.empty = true;
             var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
             expect(result.empty).toBeTruthy();
           });
@@ -338,13 +338,13 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
             expect(result.firstParameter).toEqual(0.5);
           });
-          it('should create a finished empty input cell', function(){
+          it('should create a finished empty input cell', function() {
             var tableEntry = {
               performance: {
                 type: 'empty'
               }
             };
-            cell.empty = true;  
+            cell.empty = true;
             var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
             expect(result.empty).toBeTruthy();
           });
@@ -629,17 +629,18 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
               expect(result.firstParameter).toEqual(50);
             });
-            it('should create a finished empty input cell', function(){
+            it('should create a finished empty input cell', function() {
               var tableEntry = {
                 performance: {
                   type: 'empty'
                 }
               };
-              cell.empty = true;  
+              cell.empty = true;
               var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
               expect(result.empty).toBeTruthy();
             });
           });
+
           describe('with standard error', function() {
             beforeEach(function() {
               cell.inputParameters.id = 'exactValueSE';
@@ -672,39 +673,40 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 value: 50,
                 stdErr: 5
               });
-              it('should create a finished input cell', function() {
-                var tableEntry = {
-                  performance: {
-                    type: 'exact',
+            });
+            it('should create a finished input cell', function() {
+              var tableEntry = {
+                performance: {
+                  type: 'exact',
+                  value: 50,
+                  input: {
                     value: 50,
-                    input: {
-                      value: 50,
-                      stdErr: 5
-                    }
+                    stdErr: 5
                   }
-                };
-                var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-                expect(result.firstParameter).toEqual(50);
-                expect(result.secondParameter).toEqual(5);
-                expect(result.isNormal).toBeFalsy();
-              });
-              it('should create a finished input cell for a normal distribution', function() {
-                var tableEntry = {
-                  performance: {
-                    type: 'dnorm',
-                    input: {
-                      value: 50,
-                      stdErr: 5
-                    }
+                }
+              };
+              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
+              expect(result.firstParameter).toEqual(50);
+              expect(result.secondParameter).toEqual(5);
+              expect(result.isNormal).toBeFalsy();
+            });
+            it('should create a finished input cell for a normal distribution', function() {
+              var tableEntry = {
+                performance: {
+                  type: 'dnorm',
+                  input: {
+                    value: 50,
+                    stdErr: 5
                   }
-                };
-                var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-                expect(result.firstParameter).toEqual(50);
-                expect(result.secondParameter).toEqual(5);
-                expect(result.isNormal).toBeTruthy();
-              });
+                }
+              };
+              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
+              expect(result.firstParameter).toEqual(50);
+              expect(result.secondParameter).toEqual(5);
+              expect(result.isNormal).toBeTruthy();
             });
           });
+
           describe('with a confidence interval', function() {
             beforeEach(function() {
               cell.inputParameters.id = 'exactValueCI';
@@ -723,7 +725,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               var result = inputKnowledgeService.inputToString(normalCell);
               expect(result).toEqual(expectedResult);
             });
-            it('should render inputs with NE values', function(){
+            it('should render inputs with NE values', function() {
               var NEcell = angular.copy(cell);
               NEcell.lowerBoundNE = true;
               var expectedResult = '50 (NE; 100)\nDistribution: none';

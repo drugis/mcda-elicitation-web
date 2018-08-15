@@ -1,20 +1,22 @@
 'use strict';
-define(['lodash', 'angular'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
+    '$rootScope',
     '$stateParams',
     'WorkspaceSettingsResource'
   ];
   var WorkspaceSettingsService = function(
+    $rootScope,
     $stateParams,
     WorkspaceSettingsResource
   ) {
-    var defaultSettings = {
+    var DEFAULT_SETTINGS = {
       calculationMethod: 'median',
       showPercentages: true,
       effectsDisplay: 'effects'
     };
 
-    var defaultToggledColumns = {
+    var DEFAULT_TOGGLED_COLUMNS = {
       criteria: true,
       description: true,
       units: true,
@@ -22,39 +24,39 @@ define(['lodash', 'angular'], function(_) {
       strength: true
     };
 
-    var workspaceSettings = _.cloneDeep(defaultSettings);
-    var toggledColumns = _.cloneDeep(defaultToggledColumns);
+    var workspaceSettings = angular.copy(DEFAULT_SETTINGS);
+    var toggledColumns = angular.copy(DEFAULT_TOGGLED_COLUMNS);
 
     function loadWorkspaceSettings() {
-      WorkspaceSettingsResource.get($stateParams).$promise.then(function(result) {
-        workspaceSettings = result.settings ? result.settings : workspaceSettings;
-        toggledColumns = result.toggledColumns ? result.toggledColumns : toggledColumns;
+      return WorkspaceSettingsResource.get($stateParams).$promise.then(function(result) {
+        workspaceSettings = result.settings ? result.settings : DEFAULT_SETTINGS;
+        toggledColumns = result.toggledColumns ? result.toggledColumns : DEFAULT_TOGGLED_COLUMNS;
       });
     }
 
     function getToggledColumns() {
-      return toggledColumns;
+      return angular.copy(toggledColumns);
     }
 
     function getWorkspaceSettings() {
-      return workspaceSettings;
+      return angular.copy(workspaceSettings);
     }
 
-    function saveSettings(newWorkspaceSettings, newToggledColumns, callback) {
-      WorkspaceSettingsResource.save($stateParams, {
+    function saveSettings(newWorkspaceSettings, newToggledColumns) {
+      return WorkspaceSettingsResource.save($stateParams, {
         settings: newWorkspaceSettings,
         toggledColumns: newToggledColumns
       }).$promise.then(function() {
         workspaceSettings = newWorkspaceSettings;
         toggledColumns = newToggledColumns;
-        callback();
+        $rootScope.$broadcast('elicit.settingsChanged');
       });
     }
 
-    function getDefaultSettings() {
+    function getDefaults() {
       return {
-        settings: _.cloneDeep(defaultSettings),
-        toggledColumns: _.cloneDeep(defaultToggledColumns)
+        settings: angular.copy(DEFAULT_SETTINGS),
+        toggledColumns: angular.copy(DEFAULT_TOGGLED_COLUMNS)
       };
     }
     return {
@@ -62,7 +64,7 @@ define(['lodash', 'angular'], function(_) {
       getToggledColumns: getToggledColumns,
       getWorkspaceSettings: getWorkspaceSettings,
       saveSettings: saveSettings,
-      getDefaultSettings: getDefaultSettings
+      getDefaults: getDefaults
     };
   };
 
