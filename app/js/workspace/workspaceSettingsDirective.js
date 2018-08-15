@@ -23,7 +23,7 @@ define(['lodash'], function(_) {
             templateUrl: mcdaRootPath + 'js/workspace/workspaceSettings.html',
             controller: 'WorkspaceSettingsController',
             resolve: {
-              callback: function(){
+              callback: function() {
                 return scope.callback;
               }
             }

@@ -16,35 +16,47 @@ define(['lodash'], function(_) {
     $scope.cancel = $modalInstance.close;
     $scope.saveSettings = saveSettings;
     $scope.resetToDefault = resetToDefault;
-    $scope.selectAll = selectAll;
+    $scope.toggleSelection = toggleSelection;
 
     //init
-    $scope.settings = _.cloneDeep(WorkspaceSettingsService.getWorkspaceSettings());
-    $scope.toggledColumns = _.cloneDeep(WorkspaceSettingsService.getToggledColumns());
+    $scope.settings = WorkspaceSettingsService.getWorkspaceSettings();
+    $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
 
     //public
     function saveSettings() {
-      WorkspaceSettingsService.saveSettings($scope.settings, $scope.toggledColumns, callback);
+      WorkspaceSettingsService.saveSettings($scope.settings, $scope.toggledColumns)
+        .then(callback);
       $modalInstance.close();
     }
 
     function resetToDefault() {
-      var defaultSettingsAndColumns = WorkspaceSettingsService.getDefaultSettings();
+      var defaultSettingsAndColumns = WorkspaceSettingsService.getDefaults();
       $scope.toggledColumns = defaultSettingsAndColumns.toggledColumns;
       $scope.settings = defaultSettingsAndColumns.settings;
     }
 
-    function selectAll() {
-      var truthToSetTo = !_.reduce($scope.toggledColumns, function(accum, column) {
-        return accum && column;
-      }, true);
-      setAllTo(truthToSetTo);
+    function toggleSelection() {
+      // false comparison needed because 
+      var isAnyUnselected = false === _.find($scope.toggledColumns, function(isSelected) {
+        return !isSelected;
+      });
+      if(isAnyUnselected) {
+        selectAll();
+      } else {
+        deselectAll();
+      }
     }
 
     //private
-    function setAllTo(showOrNot) {
-      $scope.toggledColumns = _.mapValues($scope.toggledColumns, function(){
-        return showOrNot;
+    function selectAll() {
+      setAllTo(true);
+    }
+    function deselectAll() {
+      setAllTo(false);
+    }
+    function setAllTo(newValue) {
+      $scope.toggledColumns = _.mapValues($scope.toggledColumns, function() {
+        return newValue;
       });
     }
   };
