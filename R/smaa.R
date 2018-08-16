@@ -32,7 +32,7 @@ ratioConstraint <- function(n, i1, i2, x) {
 }
 
 run_deterministic <- function(params) {
-  meas <- genMedianMeasurements(params) 
+  meas <- generateDeterministicMeasurements(params) 
   weights <- genRepresentativeWeights(params)
   valueProfiles <- calculateTotalValue(params,meas,weights)
   totalValue <- rowSums(valueProfiles)
@@ -51,6 +51,17 @@ run_deterministic <- function(params) {
          SIMPLIFY=F)
 }
 
+generateDeterministicMeasurements <- function(params) {
+  summaryStats <- generateSummaryStatistics(params) 
+  estimator <- "50%"
+  if (!is.null(params$modeOrMean)) {
+    if (params$modeOrMean=="mode") {
+      estimator <- "mode"
+    }
+  }
+  t(summaryStats[,,estimator])
+}
+
 genRepresentativeWeights <- function(params) {
   N <- 1E4
   crit <- names(params$criteria)
@@ -65,10 +76,6 @@ genRepresentativeWeights <- function(params) {
   
   rep.weights
   
-}
-
-genMedianMeasurements <- function(params) {
-  t(generateSummaryStatistics(params)[,,"50%"])
 }
 
 genHARconstraint <- function(statement,crit) {
@@ -100,7 +107,7 @@ calculateTotalValue <- function(params,meas,weights) {
 
 run_sensitivityMeasurements <- function(params) {
   
-  meas <- genMedianMeasurements(params)
+  meas <- generateDeterministicMeasurements(params)
   for (entry in params$sensitivityAnalysis$meas) {
     # Replace median value by the desired value for the sensitivity analysis
     meas[entry$alternative,entry$criterion] <- entry$value 
@@ -128,7 +135,7 @@ run_sensitivityMeasurementsPlot <- function(params) {
   
   weights <- genRepresentativeWeights(params)
   
-  meas <- genMedianMeasurements(params)
+  meas <- generateDeterministicMeasurements(params)
   alt <- params$sensitivityAnalysis["alternative"]
   crit <- params$sensitivityAnalysis["criterion"]
   
@@ -168,7 +175,7 @@ run_sensitivityWeightPlot <- function(params) {
   
   crit <- params$sensitivityAnalysis["criterion"]
   
-  meas <- genMedianMeasurements(params)
+  meas <- generateDeterministicMeasurements(params)
   weights <- genRepresentativeWeights(params)
   
   index <- which(names(weights)==crit)
