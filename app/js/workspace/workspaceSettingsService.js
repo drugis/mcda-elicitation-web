@@ -43,7 +43,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function saveSettings(newWorkspaceSettings, newToggledColumns) {
-      return WorkspaceSettingsResource.save($stateParams, {
+      return WorkspaceSettingsResource.put($stateParams, {
         settings: newWorkspaceSettings,
         toggledColumns: newToggledColumns
       }).$promise.then(function() {

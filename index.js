@@ -162,7 +162,7 @@ app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', Scenar
 
 //Workspace settings
 app.get('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsService.getWorkspaceSettings);
-app.post('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsService.postWorkspaceSettings);
+app.put('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsService.postWorkspaceSettings);
 
 // patavi
 app.post('/patavi', function (req, res, next) { // FIXME: separate routes for scales and results
