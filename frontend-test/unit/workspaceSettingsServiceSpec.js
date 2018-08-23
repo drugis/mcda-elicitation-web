@@ -17,7 +17,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
       showPercentages: true,
       effectsDisplay: 'effects'
     };
-    var workspaceSettingsResourceMock = jasmine.createSpyObj('WorkspaceSettingsResource', ['get', 'save']);
+    var workspaceSettingsResourceMock = jasmine.createSpyObj('WorkspaceSettingsResource', ['get', 'put']);
 
     beforeEach(module('elicit.workspace', function($provide) {
       $provide.value('$stateParams', stateParams);
@@ -102,7 +102,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
       var settingsChanged = false;
       beforeEach(function() {
         saveDefer = q.defer();
-        workspaceSettingsResourceMock.save.and.returnValue({
+        workspaceSettingsResourceMock.put.and.returnValue({
           $promise: saveDefer.promise
         });
 
@@ -119,7 +119,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
       });
 
       it('should call the save function of the settings resource and return a promise', function() {
-        expect(workspaceSettingsResourceMock.save).toHaveBeenCalledWith(stateParams, {
+        expect(workspaceSettingsResourceMock.put).toHaveBeenCalledWith(stateParams, {
           settings: newSettings, toggledColumns: newToggledColumns
         });
         expect(saveResolved).toBe(false);
