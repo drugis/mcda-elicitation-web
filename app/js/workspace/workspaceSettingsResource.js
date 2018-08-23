@@ -5,10 +5,10 @@ define(['angular'], function(angular) {
     return $resource('/workspaces/:workspaceId/workspaceSettings', {
       workspaceId: '@workspaceId'
     }, {
-      put: {
-        method: 'PUT'
-      }
-    });
+        put: {
+          method: 'PUT'
+        }
+      });
   };
   return angular.module('elicit.workspaceSettingsResource', dependencies).factory('WorkspaceSettingsResource', WorkspaceSettingsResource);
 });
