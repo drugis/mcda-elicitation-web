@@ -11,9 +11,10 @@ define(['lodash'], function(_) {
     return {
       restrict: 'E',
       scope: {
-        callback: '='
+        callback: '=',
+        editMode: '='
       },
-      template: '<button class="button right" type="button" ng-click="openSettingsModal()"><i class="fa fa-cog"></i> Settings</button>',
+      template: '<button class="button right" type="button" ng-if="editMode.isUserOwner" ng-click="openSettingsModal()"><i class="fa fa-cog"></i> Settings</button>',
       link: function(scope) {
         // functions
         scope.openSettingsModal = openSettingsModal;

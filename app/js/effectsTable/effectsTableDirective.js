@@ -27,24 +27,24 @@ define(['lodash'], function(_) {
         // init
         scope.studyDataAvailable = EffectsTableService.isStudyDataAvailable(scope.effectsTableInfo);
         getWorkspaceSettings();
-        
+
         scope.$watch('criteria', function(newCriteria) {
           scope.keyedCriteria = _.keyBy(_.cloneDeep(newCriteria), 'id');
           scope.rows = EffectsTableService.buildEffectsTable(scope.keyedCriteria);
         }, true);
-        
+
         scope.$watch('alternatives', function(newAlternatives) {
           scope.nrAlternatives = _.keys(scope.alternatives).length;
           scope.alternatives = newAlternatives;
-        }); 
-        
+        });
+
         scope.$on('elicit.settingsChanged', getWorkspaceSettings);
 
         function getWorkspaceSettings() {
           scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
           scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
         }
-    
+
       }
     };
   };
