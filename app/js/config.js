@@ -5,7 +5,7 @@ define(function() {
       id: 'evidence',
       title: 'Evidence',
       controller: 'EvidenceController',
-      templateUrl: 'evidence.html',
+      templateUrl: '../views/evidence.html',
       activeTab: 'evidence',
       requires: [],
       resets: []
@@ -14,7 +14,7 @@ define(function() {
       url: '/partial-value-function/:criterion',
       title: 'Define Partial Value Functions',
       controller: 'PartialValueFunctionController',
-      templateUrl: 'partialValueFunction.html',
+      templateUrl: '../views/partialValueFunction.html',
       activeTab: 'preferences',
       requires: [],
       resets: ['criteria-trade-offs']
@@ -22,7 +22,7 @@ define(function() {
       id: 'ordinal-swing',
       title: 'Ranking',
       controller: 'OrdinalSwingController',
-      templateUrl: 'ordinalSwing.html',
+      templateUrl: '../views/ordinalSwing.html',
       activeTab: 'preferences',
       requires: ['partial-value-function'],
       resets: ['criteria-trade-offs']
@@ -30,7 +30,7 @@ define(function() {
       id: 'swing-weighting',
       title: 'Swing Weighting Elicitation',
       controller: 'SwingWeightingController',
-      templateUrl: 'swingWeighting.html',
+      templateUrl: '../views/swingWeighting.html',
       activeTab: 'preferences',
       requires: ['partial-value-function'],
       resets: ['criteria-trade-offs']
@@ -38,7 +38,7 @@ define(function() {
       id: 'imprecise-swing-weighting',
       title: 'Imprecise Swing Weighting Elicitation',
       controller: 'ImpreciseSwingWeightingController',
-      templateUrl: 'swingWeighting.html',
+      templateUrl: '../views/swingWeighting.html',
       activeTab: 'preferences',
       requires: ['partial-value-function'],
       resets: ['criteria-trade-offs']
@@ -46,7 +46,7 @@ define(function() {
       id: 'preferences',
       title: 'Preferences',
       controller: 'PreferencesController',
-      templateUrl: 'preferences.html',
+      templateUrl: '../views/preferences.html',
       activeTab: 'preferences',
       requires: ['scale-range'],
       resets: []
@@ -60,7 +60,7 @@ define(function() {
       id: 'smaa-results',
       title: 'Smaa results',
       controller: 'SmaaResultsController',
-      templateUrl: 'smaaResults.html',
+      templateUrl: '../views/smaaResults.html',
       activeTab: 'smaa-results',
       requires: ['partial-value-function'],
       resets: []
@@ -68,7 +68,7 @@ define(function() {
       id: 'deterministic-results',
       title: 'Deterministic results',
       controller: 'DeterministicResultsController',
-      templateUrl: 'deterministicResults.html',
+      templateUrl: '../views/deterministicResults.html',
       activeTab: 'deterministic-results',
       requires: ['partial-value-function'],
       resets: []
@@ -76,7 +76,7 @@ define(function() {
       id: 'problem',
       title: 'Problem',
       controller: 'SubProblemController',
-      templateUrl: 'subProblem.html',
+      templateUrl: '../views/subProblem.html',
       activeTab: 'problem',
       requires: [],
       resets: []

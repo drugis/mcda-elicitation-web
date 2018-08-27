@@ -1,88 +1,19 @@
 'use strict';
+define(['angular', 'mcdaweb'], function () {
+  require('css/mcda-drugis.css');
+  require('font-awesome/css/font-awesome.min.css'); 
+  window.patavi = { 'WS_URI': 'wss://patavi.drugis.org/ws' };
 
-require.config({
-  paths: {
-    'angular': 'bower_components/angular/angular',
-    'angular-cookies': 'bower_components/angular-cookies/angular-cookies',
-    'angular-patavi-client': 'bower_components/angular-patavi-client/patavi',
-    'angular-resource': 'bower_components/angular-resource/angular-resource.min',
-    'angular-touch': 'bower_components/angular-touch/angular-touch',
-    'angular-ui-router': 'bower_components/angular-ui-router/release/angular-ui-router',
-    'angularjs-slider': 'bower_components/angularjs-slider/dist/rzslider',
-    'clipboard': 'bower_components/clipboard/dist/clipboard.min',
-    'c3': 'bower_components/c3/c3',
-    'core-js': 'bower_components/core-js/client/shim.min',
-    'd3': 'bower_components/d3/d3.min',
-    'domReady': 'bower_components/requirejs-domready/domReady',
-    'error-reporting': 'bower_components/error-reporting/errorReportingDirective',
-    'export-directive': 'bower_components/export-directive/export-directive',
-    'help-popup': 'bower_components/help-popup/help-directive',
-    'jQuery': 'bower_components/jquery/dist/jquery.min',
-    'lodash': 'bower_components/lodash/lodash',
-    'MathJax': 'bower_components/MathJax/MathJax.js?config=TeX-AMS-MML_SVG',
-    'mmfoundation': 'bower_components/angular-foundation-6/dist/angular-foundation',
-    'nvd3': 'bower_components/nvd3/build/nv.d3',
-    'mcda': '/js',
-    'page-title-service': 'bower_components/page-title-service/pageTitleService'
-  },
-  baseUrl: '.',
-  shim: {
-    'angular': {
-      exports: 'angular'
-    },
-    'angular-resource': {
-      deps: ['angular'],
-      exports: 'angular-resource'
-    },
-    'angular-cookies': {
-      deps: ['angular'],
-      exports: 'angular-cookies'
-    },
-    'angular-touch': {
-      deps: ['angular'],
-      exports: 'ngTouch'
-    },
-    'angular-ui-router': {
-      deps: ['angular']
-    },
-    'help-popup': {
-      deps: ['angular']
-    },
-    'lodash': {
-      exports: '_'
-    },
-    'MathJax': {
-      exports: 'MathJax'
-    },
-    'd3': {
-      exports: 'd3'
-    },
-    'nvd3': {
-      deps: ['d3'],
-      exports: 'nv'
-    },
-    'jQuery': {
-      exports: 'jQuery'
-    },
-    'foundation': {
-      deps: ['jQuery']
-    },
-    'mmfoundation': {
-      deps: ['angular']
-    },
-    'error-reporting': {
-      deps: ['angular']
-    },
-    'export-directive': {
-      deps: ['angular', 'd3', 'lodash', 'jQuery']
+  window.config = {
+    WS_URI: 'wss://patavi.drugis.org/ws',
+    examplesRepository: 'examples/',
+    workspacesRepositoryUrl: '/workspaces/',
+  };
+
+  function signout() {
+    var signoutForm = document.getElementById('signout_form');
+    if (signoutForm) {
+      signoutForm.submit();
     }
-  },
-  priority: ['angular']
-});
-
-window.name = 'NG_DEFER_BOOTSTRAP!';
-require(['require', 'angular', 'mcda/mcda-web'], function(require, angular) {
-  require(['domReady!'], function(document) {
-    angular.bootstrap(document, ['elicit']);
-  });
+  }
 });

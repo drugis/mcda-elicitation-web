@@ -1,16 +1,15 @@
 'use strict';
-var requires = [
-  'mcda/benefitRisk/mcdaBenefitRiskController',
-  'mcda/benefitRisk/schemaService'
-];
-define(['angular'].concat(requires), function(
-  angular,
+define([
+  './mcdaBenefitRiskController',
+  './schemaService',
+  'angular'
+], function(
   MCDABenefitRiskController,
-  SchemaService
+  SchemaService,
+  angular
 ) {
-  return angular.module('elicit.benefitRisk', ['elicit.util'])
-    .controller('MCDABenefitRiskController', MCDABenefitRiskController)
-    .factory('SchemaService', SchemaService)
-        
-    ;
-});
+    return angular.module('elicit.benefitRisk', ['elicit.util'])
+      .controller('MCDABenefitRiskController', MCDABenefitRiskController)
+      .factory('SchemaService', SchemaService)
+      ;
+  });
