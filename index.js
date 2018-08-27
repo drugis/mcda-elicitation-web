@@ -79,7 +79,7 @@ if (process.env.MCDAWEB_USE_SSL_AUTH) {
   });
   app.use(passport.initialize());
   app.use(passport.session());
-  app.get('/auth/google/', passport.authenticate('google', { scope: ['profile'] }));
+  app.get('/auth/google/', passport.authenticate('google', { scope: ['profile', 'email'] }));
   app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/signin' }),
     function (req, res) {
       res.redirect('/');

@@ -146,3 +146,6 @@ CREATE TABLE workspaceSettings(
 
 --changeset reidd:17
 DROP TABLE toggledColumns;
+
+--changeset reidd:18
+DROP TABLE UserConnection;
