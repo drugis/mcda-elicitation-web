@@ -1,6 +1,6 @@
 'use strict';
-define(['lodash', 'jquery', 'angular', 'd3', 'nvd3', 'mathjax'],
-  function(_, $, angular, d3, nv, MathJax) {
+define(['lodash', 'jquery', 'angular', 'd3', 'nvd3'],
+  function(_, $, angular, d3, nv) {
 
     var directives = angular.module('elicit.directives', []);
 
@@ -268,28 +268,6 @@ define(['lodash', 'jquery', 'angular', 'd3', 'nvd3', 'mathjax'],
               reader.onload = onLoadContents;
               reader.readAsText(scope.model.file);
             });
-          });
-        }
-      };
-    });
-
-    directives.directive('mathjaxBind', function() {
-      return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-          scope.$watch(attrs.mathjaxBind, function(value) {
-            var $script = angular.element('<script type="math/tex">').html(value === undefined ? '' : value);
-            element.html('');
-            element.append($script);
-            MathJax.Hub.Config({
-              skipStartupTypeset: true,
-              messageStyle: 'none',
-              showMathMenu: false,
-              'SVG': {
-                font: 'Latin-Modern'
-              }
-            });
-            MathJax.Hub.Queue(['Reprocess', MathJax.Hub, element[0]]);
           });
         }
       };

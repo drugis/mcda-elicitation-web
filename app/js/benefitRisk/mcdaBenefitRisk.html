@@ -1,0 +1,28 @@
+<div class="grid-x">
+  <div class="cell">
+    <tabset>
+      <tab heading="Overview" active="activeTab === 'evidence'" ui-sref="evidence">
+        <div ng-if="activeTab === 'evidence'" ui-view></div>
+      </tab>
+      <tab heading="Problem definition" active="activeTab === 'problem'" ui-sref="problem">
+        <div ng-if="activeTab === 'problem'" ui-view></div>
+      </tab>
+      <tab heading="Preferences" active="activeTab === 'preferences'" ui-sref="preferences" ng-if="!hasMissingValues">
+        <div ng-if="activeTab === 'preferences'" ui-view></div>
+      </tab>
+      <tab heading="Deterministic results" active="activeTab === 'deterministic-results'" ui-sref="deterministic-results" ng-if="tasksAccessibility.results && !hasMissingValues">
+        <div ng-if="activeTab === 'deterministic-results'" ui-view></div>
+      </tab>
+      <tab heading="SMAA results" active="activeTab === 'smaa-results'" ui-sref="smaa-results" ng-if="tasksAccessibility.results && !noStochasticResults && !hasMissingValues">
+        <div ng-if="activeTab === 'smaa-results'" ui-view></div>
+      </tab>
+      <!-- disabled tabs -->
+      <li class="tabs-title disabled" ng-if="!tasksAccessibility.results && !hasMissingValues" tooltip="Tab unavailable because not all partial value functions are set">Deterministic results</li>
+      <li class="tabs-title disabled" ng-if="hasMissingValues" tooltip="Tab unavailable because effects table contains missing values">Deterministic results</li>
+      <li class="tabs-title disabled" ng-if="hasMissingValues" tooltip="Tab unavailable because effects table contains missing values">Preferences</li>
+      <li class="tabs-title disabled" ng-if="!tasksAccessibility.results && !hasMissingValues" tooltip="Tab unavailable because not all partial value functions are set">SMAA results</li>
+      <li class="tabs-title disabled" ng-if="tasksAccessibility.results && noStochasticResults" tooltip="Tab unavailable because neither the criteria measurements nor the weights are stochastic">SMAA results</li>
+      <li class="tabs-title disabled" ng-if="hasMissingValues" tooltip="Tab unavailable because effects table contains missing values">SMAA results</li>
+    </tabset>
+  </div>
+</div>

@@ -1,0 +1,251 @@
+<div ng-if="!state.results">
+  <div class="grid-x" style="margin-top: 15em">
+    <div class="cell">
+      <progressbar value="progress"></progressbar>
+    </div>
+  </div>
+</div>
+<div ng-if="state.results">
+  <div class="grid-x">
+    <div class="cell">
+      <span>Scenario:</span>
+      <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
+        ng-change="scenarioChanged(scenario)"></select>
+    </div>
+  </div>
+  <br>
+  <div class="grid-x">
+    <div class="cell large-8">
+      <h4>Effects table (exact or median values only)
+        <inline-help help-key="effects-table"></inline-help>
+      </h4>
+      <p>
+        <em>Values can be changed by clicking them.</em>
+      </p>
+    </div>
+    <div class="cell large-4">
+      <div class="right button-group">
+        <workspace-settings callback="getWorkspaceSettings" edit-mode="editMode"></workspace-settings>
+        <button class="button small info clipboard-button" data-clipboard-target="#effectstable">
+          <i class="fa fa-clipboard"></i> Copy to clipboard
+        </button>
+      </div>
+    </div>
+    <div class="cell">
+      <table class="full-width effects-table" id="effectstable">
+        <thead>
+          <tr>
+            <th ng-show="toggledColumns['criteria']">Criterion
+              <inline-help help-key="criterion"></inline-help>
+            </th>
+            <th ng-show="toggledColumns['description']">Description</th>
+            <th ng-show="toggledColumns['units']">Units
+              <inline-help help-key="criterion-unit"></inline-help>
+            </th>
+            <th class="text-center" ng-repeat="alternative in alternatives">
+              {{scenario.state.legend[alternative.id].baseTitle || alternative.title}}
+            </th>
+            <th ng-show="toggledColumns['strength']">Strength of evidence / Uncertainties
+              <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
+            </th>
+            <th ng-show="toggledColumns['references']">References</th>
+          </tr>
+        </thead>
+        <tbody class="main">
+          <tr ng-repeat="row in tableRows">
+            <td ng-if="row.isHeaderRow" class="group-header" colspan="{{5 + nrAlternatives}}">
+              <div class="main-header">
+                {{row.headerText}}
+              </div>
+            </td>
+            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['criteria']">
+              {{row.criterion.title}}
+            </td>
+            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['description']">
+              {{row.criterion.description}}
+            </td>
+            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['units']">
+              {{row.criterion.unitOfMeasurement}}
+            </td>
+            <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}">
+              <sensitivity-input row="row" alternative="alternative" original-value="scales.observed[row.dataSource.id][alternative.id]['50%']"
+                current-value="modifiableScales[row.dataSource.id][alternative.id]['50%']" change-callback="sensitivityScalesChanged"
+                is-editing="isEditing"></sensitivity-input>
+            </td>
+            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['strength']">
+              <div ng-if="row.dataSource.strengthOfEvidence">
+                <b>SoE: </b>{{row.dataSource.strengthOfEvidence}}</div>
+              <div ng-if="row.dataSource.uncertainties">
+                <b>Unc: </b> {{row.dataSource.uncertainties}}</div>
+            </td>
+            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['references']">
+              <a ng-if="row.dataSource.sourceLink" href="{{row.dataSource.sourceLink}}">
+                {{row.dataSource.source}}
+              </a>
+              <span ng-if="!row.dataSource.sourceLink">{{row.dataSource.source}}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="grid-x underlined-div">
+    <div class="cell large-4 button-group small expanded">
+      <button class="button" ng-click="recalculateResults()" ng-disabled="sensitivityMeasurements.isEditing">
+        Recalculate value profiles
+      </button>
+      <button class="button" ng-click="resetSensitivityAnalysis()">
+        Reset
+      </button>
+    </div>
+  </div>
+  <div class="grid-x underlined-div">
+    <div class="cell large-10">
+      <h4>Representative weights
+        <inline-help help-key="representative-weights"></inline-help>
+      </h4>
+    </div>
+    <div clas="cell large-2">
+      <button class="button small info clipboard-button" data-clipboard-target="#weighttable">
+        <i class="fa fa-clipboard"></i> Copy to clipboard
+      </button>
+    </div>
+    <div class="cell">
+      <table id="weighttable">
+        <thead>
+          <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
+        </thead>
+        <tbody>
+          <tr>
+            <td ng-repeat="criterion in criteria">{{deterministicResults.results.weights.data[criterion.id]}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="grid-x underlined-div">
+    <div class="cell">
+      <div class="grid-x grid-margin-x">
+        <div class="cell large-4">
+          <h4>Total value (base case)
+            <inline-help help-key="total-value"></inline-help>
+          </h4>
+        </div>
+        <div class="cell large-2">
+          <button class="button small info clipboard-button right" data-clipboard-target="#basecasetable">
+            <i class="fa fa-clipboard"></i> Copy to clipboard
+          </button>
+        </div>
+        <div ng-if="recalculatedDeterministicResults" class="cell large-4">
+          <h4>Total value (recalculated case)
+            <inline-help help-key="total-value"></inline-help>
+          </h4>
+        </div>
+        <div class="cell large-2" ng-if="recalculatedDeterministicResults">
+          <button class="button small info clipboard-button right" data-clipboard-target="#recalculatedcasetable">
+            <i class="fa fa-clipboard"></i> Copy to clipboard
+          </button>
+        </div>
+        <div class="cell large-6" ng-if="!recalculatedDeterministicResults">
+          <!-- Keep grid layout consistent  -->
+        </div>
+        <div class="cell large-6">
+          <table id="basecasetable">
+            <thead>
+              <th ng-repeat="alternative in alternatives">{{scenario.state.legend[alternative.id].baseTitle || alternative.title}}</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td ng-repeat="alternative in alternatives">{{deterministicResults.results.total.data[alternative.id]}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="cell large-6" ng-if="recalculatedDeterministicResults" ng-if="recalculatedDeterministicResults">
+          <table id="recalculatedcasetable">
+            <thead>
+              <th ng-repeat="alternative in alternatives">{{scenario.state.legend[alternative.id].baseTitle || alternative.title}}</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td ng-repeat="alternative in alternatives">{{recalculatedDeterministicResults.results.total.data[alternative.id]}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="grid-x grid-margin-x">
+        <div class="cell">
+          <h4>Value profiles
+            <inline-help help-key="value-profiles"></inline-help>
+          </h4>
+        </div>
+      </div>
+      <div class="grid-x">
+        <div class="cell large-6">
+          <h5>Base case</h5>
+          <div export legend file-name="'basecaseplot'">
+            <value-profile-plot values="deterministicResults.results" criteria="criteria" alternatives="alternatives" alternatives-legend="scenario.state.legend"></value-profile-plot>
+          </div>
+        </div>
+        <div ng-if="recalculatedDeterministicResults" class="cell large-6">
+          <h5>Recalculated case</h5>
+          <div export legend file-name="'recalculatedcaseplot'">
+            <value-profile-plot values="recalculatedDeterministicResults.results" criteria="criteria" alternatives="alternatives" alternatives-legend="scenario.state.legend"></value-profile-plot>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="grid-x">
+    <div class="cell">
+      <h4>One-way sensitivity analysis
+        <inline-help help-key="one-way-sensitivity-analysis"></inline-help>
+      </h4>
+    </div>
+  </div>
+  <div class="grid-x grid-margin-x">
+    <div class="cell medium-6 large-6">
+      <h5>Measurements
+        <inline-help help-key="sensitivity-measurements"></inline-help>
+      </h5>
+      <div class="grid-x grid-margin-x">
+        <div class="cell medium-6 large-6">
+          <label>Alternative
+            <select ng-options="scenario.state.legend[alternative.id].baseTitle || alternative.title for alternative in alternatives"
+              ng-model="sensitivityMeasurements.measurementsAlternative" ng-change="doMeasurementSensitivity(state)"></select>
+          </label>
+        </div>
+        <div class="cell medium-6">
+          <label>Criterion
+            <select ng-options="criterion.title for criterion in criteria" ng-model="sensitivityMeasurements.measurementsCriterion" ng-change="doMeasurementSensitivity(state)"></select>
+          </label>
+        </div>
+      </div>
+      <div class="grid-x" export legend file-name="'onewaymeasurementsplot'">
+        <div class="cell" style="height: 450px; width: 450px">
+          <line-chart label-x-axis="sensitivityMeasurements.measurementsCriterion.title" label-y-axis="'total value'" value="measurementValues"
+            y-margin="true"></line-chart>
+        </div>
+      </div>
+    </div>
+    <div class="cell medium-6 large-6">
+      <h5>Preferences
+        <inline-help help-key="sensitivity-preferences"></inline-help>
+      </h5>
+      <div class="grid-x">
+        <div class="cell medium-6 large-6 ">
+          <label>Weight given to
+            <select ng-options="criterion.title for criterion in criteria" ng-model="sensitivityMeasurements.preferencesCriterion" ng-change="doPreferencesSensitivity(state)"></select>
+          </label>
+        </div>
+      </div>
+      <div class="grid-x" export legend file-name="'onewaypreferencesplot'">
+        <div class="cell" style="height: 450px; width: 450px">
+          <line-chart label-x-axis="'Weight given to ' + sensitivityMeasurements.preferencesCriterion.title" label-y-axis="'total value'"
+            value="preferencesValues"></line-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

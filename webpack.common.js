@@ -58,6 +58,7 @@ let config = {
     alias: {
       'mcda': basePath + '/app/js',
       'mcdaweb': basePath + '/app/js/mcda-web',
+      'jQuery': 'jquery',
       'angular-patavi-client': 'angular-patavi-client/patavi',
       'error-reporting': 'error-reporting/errorReportingDirective',
       'export-directive': 'export-directive/export-directive',

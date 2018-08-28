@@ -96,13 +96,14 @@ app.get('/logout', function(req, res) {
       res.sendFile(__dirname + '/dist/signin.html');
     }
   })
-  .get('/lexicon.json', function(req, res){
+  .get('/lexicon.json', function(req, res) {
     res.sendFile(__dirname + '/app/lexicon.json');
   })
-  .get('/mcda-page-titles.json', function(req, res){
+  .get('/mcda-page-titles.json', function(req, res) {
     res.sendFile(__dirname + '/app/mcda-page-titles.json');
   })
   .use(express.static('dist'))
+  .use(express.static('public'))
   .use('/examples', express.static(__dirname + '/examples'))
   ;
 
@@ -179,7 +180,7 @@ app.post('/patavi', function(req, res, next) { // FIXME: separate routes for sca
 });
 
 app.use('/css/fonts', express.static('./dist/fonts'));
-  
+
 //The 404 Route (ALWAYS Keep this as the last route)
 app.get('*', function(req, res) {
   res.status(404).sendFile(__dirname + '/dist/error.html');

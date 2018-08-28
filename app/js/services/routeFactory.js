@@ -37,7 +37,7 @@ define(['lodash', 'angular', '../config'], function(_, angular, Config) {
             state.redirectTo = task.redirectTo;
           } else {
             state.controller = task.controller;
-            state.templateUrl = task.templateUrl;
+            state.template = task.template;
             state.resolve = {
               currentScenario: function($stateParams, ScenarioResource) {
                 return ScenarioResource.get($stateParams).$promise;

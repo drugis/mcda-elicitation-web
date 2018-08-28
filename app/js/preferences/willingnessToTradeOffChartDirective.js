@@ -1,6 +1,6 @@
 'use strict';
-define(['c3', 'd3', 'lodash'],
-  function(c3, d3, _) {
+define(['c3', 'd3', 'jquery'],
+  function(c3, d3, $) {
     var dependencies = [
       'TradeOffService',
       '$timeout'

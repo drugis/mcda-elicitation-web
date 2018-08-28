@@ -87,8 +87,6 @@ define([
     app.constant('currentSchemaVersion', '1.1.0');
 
     app.config(function($stateProvider, $urlRouterProvider, MCDARouteProvider) {
-      var baseTemplatePath = './../views/';
-
       //ui-router code starts here
       $stateProvider.state('workspace', {
         url: '/workspaces/:workspaceId',
@@ -101,7 +99,7 @@ define([
         }
       });
 
-      MCDARouteProvider.buildRoutes($stateProvider, 'workspace', baseTemplatePath);
+      MCDARouteProvider.buildRoutes($stateProvider, 'workspace');
 
       // Default route
       $stateProvider
@@ -120,7 +118,7 @@ define([
         })
         .state('manualInputInProgress', {
           url: '/manual-input/:inProgressId',
-          templateUrl:  + './manualInput/manualInput.html',
+          templateUrl: './manualInput/manualInput.html',
           controller: 'ManualInputController'
         });
       $urlRouterProvider.otherwise('/choose-problem');
