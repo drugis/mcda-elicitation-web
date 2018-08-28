@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'jQuery'], function(_, $) {
+define(['lodash', 'jquery'], function(_, $) {
   var dependencies = ['$stateParams', '$modal', '$compile', 'ScenarioResource'];
   var LegendDirective = function($stateParams, $modal, $compile, ScenarioResource) {
     return {

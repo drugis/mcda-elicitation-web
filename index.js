@@ -97,10 +97,10 @@ app.get('/logout', function(req, res) {
     }
   })
   .get('/lexicon.json', function(req, res){
-    res.sendFile(__dirname + 'lexicon.json');
+    res.sendFile(__dirname + '/app/lexicon.json');
   })
   .get('/mcda-page-titles.json', function(req, res){
-    res.sendFile(__dirname + 'mcda-page-titles.json');
+    res.sendFile(__dirname + '/app/mcda-page-titles.json');
   })
   .use(express.static('dist'))
   .use('/examples', express.static(__dirname + '/examples'))

@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
 
 
   var dependencies = ['PataviResultsService'];

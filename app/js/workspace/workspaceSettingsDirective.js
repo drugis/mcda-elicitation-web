@@ -19,7 +19,7 @@ define(['lodash'], function(_) {
         // init
         function openSettingsModal() {
           $modal.open({
-            templateUrl:  + './workspaceSettings.html',
+            templateUrl:  './workspaceSettings.html',
             controller: 'WorkspaceSettingsController',
             resolve: {
               callback: function() {

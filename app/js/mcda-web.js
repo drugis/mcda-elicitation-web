@@ -12,7 +12,7 @@ define([
   'error-reporting',
   'export-directive',
   'help-popup',
-  'jQuery',
+  'jquery',
   'lodash',
   'angular-foundation-6',
   './benefitRisk/benefitRisk',
@@ -87,12 +87,12 @@ define([
     app.constant('currentSchemaVersion', '1.1.0');
 
     app.config(function($stateProvider, $urlRouterProvider, MCDARouteProvider) {
-      var baseTemplatePath = './views/';
+      var baseTemplatePath = './../views/';
 
       //ui-router code starts here
       $stateProvider.state('workspace', {
         url: '/workspaces/:workspaceId',
-        templateUrl: baseTemplatePath + 'workspace.html',
+        templateUrl: './workspace/workspace.html',
         controller: 'WorkspaceController',
         resolve: {
           currentWorkspace: function($stateParams, WorkspaceResource) {
@@ -107,7 +107,7 @@ define([
       $stateProvider
         .state('choose-problem', {
           url: '/choose-problem',
-          templateUrl: baseTemplatePath + 'chooseProblem.html',
+          templateUrl: './workspace/chooseProblem.html',
           controller: 'ChooseProblemController'
         })
         .state('manualInput', {

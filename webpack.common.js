@@ -8,7 +8,7 @@ let config = {
   entry: {
     'main': basePath + '/app/js/main.js',
     'signin': basePath + '/app/js/signin.js',
-    // 'manual': basePath + '/app/js/manual.js',
+    'manual': basePath + '/app/js/manual.js',
     'error': basePath + 'app/js/error.js'
   },
 
@@ -58,7 +58,6 @@ let config = {
     alias: {
       'mcda': basePath + '/app/js',
       'mcdaweb': basePath + '/app/js/mcda-web',
-      'jQuery': 'jquery',
       'angular-patavi-client': 'angular-patavi-client/patavi',
       'error-reporting': 'error-reporting/errorReportingDirective',
       'export-directive': 'export-directive/export-directive',
@@ -86,12 +85,12 @@ let config = {
       inject: 'head',
       chunks: ['signin']
     }),
-    // new HtmlWebpackPlugin({
-    //   filename: 'manual.html',
-    //   template: 'app/manual.html',
-    //   inject: 'head',
-    //   chunks: ['manual']
-    // }),  
+    new HtmlWebpackPlugin({
+      filename: 'manual.html',
+      template: 'app/manual.html',
+      inject: 'head',
+      chunks: ['manual']
+    }),  
       new HtmlWebpackPlugin({
       filename: 'error.html',
       template: 'app/error.html',

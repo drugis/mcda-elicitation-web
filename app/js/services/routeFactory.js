@@ -4,12 +4,12 @@ define(['lodash', 'angular', 'mcda/config'], function(_, angular, Config) {
 
   var MCDARouteProvider = function() {
     return {
-      buildRoutes: function($stateProvider, parentState, baseTemplatePath) {
+      buildRoutes: function($stateProvider, parentState) {
 
         var scenarioState = {
           name: parentState + '.scenario',
           url: '/problems/:problemId/scenarios/:id',
-          templateUrl: baseTemplatePath + 'mcdaBenefitRisk.html',
+          templateUrl: '../benefitRisk/mcdaBenefitRisk.html',
           controller: 'MCDABenefitRiskController',
           resolve: {
             subProblems: function($stateParams, SubProblemResource) {
@@ -28,7 +28,6 @@ define(['lodash', 'angular', 'mcda/config'], function(_, angular, Config) {
         };
 
         var children = Config.tasks.available.map(function(task) {
-          var templateUrl = baseTemplatePath + task.templateUrl;
           var state = {
             name: task.id,
             parent: scenarioState,
@@ -38,7 +37,7 @@ define(['lodash', 'angular', 'mcda/config'], function(_, angular, Config) {
             state.redirectTo = task.redirectTo;
           } else {
             state.controller = task.controller;
-            state.templateUrl = templateUrl;
+            state.templateUrl = task.templateUrl;
             state.resolve = {
               currentScenario: function($stateParams, ScenarioResource) {
                 return ScenarioResource.get($stateParams).$promise;
