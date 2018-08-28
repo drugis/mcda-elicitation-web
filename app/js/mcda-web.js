@@ -2,19 +2,20 @@
 define([
   'angular',
   './config',
+  'angular-cookies',
+  'angular-foundation-6',
+  'angular-patavi-client',
+  'angular-resource',
   'angular-touch',
   'angular-ui-router',
-  'angular-resource',
-  'angular-cookies',
   'angularjs-slider',
-  'angular-patavi-client',
   'core-js',
   'error-reporting',
   'export-directive',
   'help-popup',
   'jquery',
   'lodash',
-  'angular-foundation-6',
+  'page-title-service',
   './benefitRisk/benefitRisk',
   './effectsTable/effectsTable',
   './evidence/evidence',
@@ -32,17 +33,11 @@ define([
   './workspace/workspaceSettingsResource',
   './directives',
   './navbar/navbar',
-  './preferences/preferences',
-  'page-title-service'
+  './preferences/preferences'
 ],
   function(angular, Config) {
 
     var dependencies = [
-      'ngResource',
-      'ui.router',
-      'mm.foundation',
-      'patavi',
-      'help-directive',
       'elicit.benefitRisk',
       'elicit.directives',
       'elicit.effectsTable',
@@ -61,10 +56,15 @@ define([
       'elicit.workspaceResource',
       'elicit.orderingResource',
       'elicit.workspaceSettingsResource',
-      'ngCookies',
       'errorReporting',
       'export-directive',
-      'page-title-service'
+      'help-directive',
+      'mm.foundation',
+      'ngCookies',
+      'ngResource',
+      'page-title-service',
+      'patavi',
+      'ui.router'
     ];
 
     var app = angular.module('elicit', dependencies);

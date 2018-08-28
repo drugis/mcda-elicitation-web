@@ -103,7 +103,8 @@ let config = {
 
   optimization: {
     splitChunks: {
-      chunks: 'all'
+      chunks: 'all',
+      name: false
     }
   }
 };

@@ -1,11 +1,12 @@
 'use strict';
-define(['angular', 'mcdaweb'], function () {
-  require('css/mcda-drugis.css');
-  require('font-awesome/css/font-awesome.min.css'); 
-  require('nvd3/build/nv.d3.css');
-  require('angularjs-slider/dist/rzslider.css');
-  require('c3/c3.css');
-
+define(['angular',
+  'mcdaweb',
+  'css/mcda-drugis.css',
+  'font-awesome/css/font-awesome.min.css',
+  'nvd3/build/nv.d3.css',
+  'angularjs-slider/dist/rzslider.css',
+  'c3/c3.css'
+], function() {
   window.patavi = { 'WS_URI': 'wss://patavi.drugis.org/ws' };
 
   window.config = {
@@ -13,11 +14,4 @@ define(['angular', 'mcdaweb'], function () {
     examplesRepository: 'examples/',
     workspacesRepositoryUrl: '/workspaces/',
   };
-
-  function signout() {
-    var signoutForm = document.getElementById('signout_form');
-    if (signoutForm) {
-      signoutForm.submit();
-    }
-  }
 });

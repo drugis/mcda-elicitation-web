@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define([], function() {
   var dependencies = [
     '$modal'
   ];
@@ -19,7 +19,7 @@ define(['lodash'], function(_) {
         // init
         function openSettingsModal() {
           $modal.open({
-            templateUrl:  './workspaceSettings.html',
+            templateUrl: './workspaceSettings.html',
             controller: 'WorkspaceSettingsController',
             resolve: {
               callback: function() {

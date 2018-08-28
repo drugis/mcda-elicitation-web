@@ -36,8 +36,9 @@ app
       maxAge: 60 * 60 * 1000, // 1 hour
       secure: process.env.MCDAWEB_USE_SSL_AUTH
     }
-  }));
-app.set('trust proxy', 1);
+  }))
+  .set('trust proxy', 1);
+
 server = http.createServer(app);
 
 if (process.env.MCDAWEB_USE_SSL_AUTH) {
@@ -74,13 +75,13 @@ if (process.env.MCDAWEB_USE_SSL_AUTH) {
   passport.deserializeUser(function(obj, cb) {
     cb(null, obj);
   });
-  app.use(passport.initialize());
-  app.use(passport.session());
-  app.get('/auth/google/', passport.authenticate('google', { scope: ['profile', 'email'] }));
-  app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/signin' }),
-    function(req, res) {
-      res.redirect('/');
-    });
+  app.use(passport.initialize())
+    .use(passport.session())
+    .get('/auth/google/', passport.authenticate('google', { scope: ['profile', 'email'] }))
+    .get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/signin' }),
+      function(req, res) {
+        res.redirect('/');
+      });
 }
 
 app.get('/logout', function(req, res) {

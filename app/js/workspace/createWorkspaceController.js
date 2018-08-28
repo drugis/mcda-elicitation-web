@@ -1,6 +1,8 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
-  var dependencies = ['$scope', '$modalInstance',
+define(['angular'], function(angular) {
+  var dependencies = [
+    '$scope',
+    '$modalInstance',
     'ExampleResource',
     'WorkspaceResource',
     'WorkspaceService',
