@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular', 'mcda/config'], function(_, angular, Config) {
+define(['lodash', 'angular', '../config'], function(_, angular, Config) {
   var dependencies = [];
 
   var MCDARouteProvider = function() {

@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular', 'mcda/controllers/wizard'], function(_, angular, Wizard) {
+define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wizard) {
   var dependencies = ['$state',
     '$injector',
     '$timeout',
