@@ -1,12 +1,10 @@
 'use strict';
 define(['lodash'], function(_) {
   var dependencies = [
-    '$modal',
-    'mcdaRootPath'
+    '$modal'
   ];
   var WorkspaceSettingsDirective = function(
-    $modal,
-    mcdaRootPath
+    $modal
   ) {
     return {
       restrict: 'E',
@@ -21,7 +19,7 @@ define(['lodash'], function(_) {
         // init
         function openSettingsModal() {
           $modal.open({
-            templateUrl: mcdaRootPath + 'js/workspace/workspaceSettings.html',
+            templateUrl:  + './workspaceSettings.html',
             controller: 'WorkspaceSettingsController',
             resolve: {
               callback: function() {

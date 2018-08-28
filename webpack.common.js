@@ -20,8 +20,6 @@ let config = {
   },
 
   module: {
-    noParse: /node_modules\/json-schema\/lib\/validate\.js/, // <-- This
-
     rules: [{
       test: /\.js$/,
       use: [{
@@ -66,10 +64,6 @@ let config = {
       'export-directive': 'export-directive/export-directive',
       'help-popup': 'help-popup/help-directive',
       'page-title-service': 'page-title-service/pageTitleService',
-      'd3': 'd3/d3.min',
-      'MathJax': 'MathJax/MathJax',
-      'mmfoundation': 'angular-foundation-6/dist/angular-foundation',
-      'clipboard':'clipboard/dist/clipboard.min'
     },
     modules: [
       // Files path which will be referenced while bundling

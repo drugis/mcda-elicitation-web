@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash', 'jQuery'], function(_, $) {
-  var dependencies = ['$stateParams', '$modal', '$compile', 'ScenarioResource', 'mcdaRootPath'];
-  var LegendDirective = function($stateParams, $modal, $compile, ScenarioResource, mcdaRootPath) {
+  var dependencies = ['$stateParams', '$modal', '$compile', 'ScenarioResource'];
+  var LegendDirective = function($stateParams, $modal, $compile, ScenarioResource) {
     return {
       restrict: 'A',
       link: function(scope, element) {
@@ -36,7 +36,7 @@ define(['lodash', 'jQuery'], function(_, $) {
 
         function editLegend() {
           $modal.open({
-            templateUrl: mcdaRootPath + 'js/results/editLegend.html',
+            templateUrl: './editLegend.html',
             controller: 'EditLegendController',
             resolve: {
               legend: function() {

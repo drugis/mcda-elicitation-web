@@ -12,8 +12,7 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     'PageTitleService',
     'PreferencesService',
     'TaskDependencies',
-    'currentScenario',
-    'mcdaRootPath'
+    'currentScenario'
   ];
   var PreferencesController = function(
     $scope,
@@ -26,8 +25,7 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     PageTitleService,
     PreferencesService,
     TaskDependencies,
-    currentScenario,
-    mcdaRootPath
+    currentScenario
   ) {
 
     // functions
@@ -68,7 +66,7 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
 
     function editScenarioTitle() {
       $modal.open({
-        templateUrl: mcdaRootPath + 'js/preferences/editScenarioTitle.html',
+        templateUrl: '../preferences/editScenarioTitle.html',
         controller: 'EditScenarioTitleController',
         resolve: {
           scenario: function() {

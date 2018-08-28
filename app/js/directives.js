@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
+define(['lodash', 'jquery', 'angular', 'd3', 'nvd3', 'mathjax'],
   function(_, $, angular, d3, nv, MathJax) {
 
     var directives = angular.module('elicit.directives', []);

@@ -7,7 +7,6 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     'SubProblemService',
     'ScenarioResource',
     'OrderingService',
-    'mcdaRootPath',
     'subProblems',
     'SubProblemResource',
     'EffectsTableService',
@@ -21,7 +20,6 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     SubProblemService,
     ScenarioResource,
     OrderingService,
-    mcdaRootPath,
     subProblems,
     SubProblemResource,
     EffectsTableService,
@@ -58,7 +56,7 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
 
     function openCreateDialog() {
       $modal.open({
-        templateUrl: mcdaRootPath + 'js/subProblem/createSubProblem.html',
+        templateUrl: './createSubProblem.html',
         controller: 'CreateSubProblemController',
         size: 'large',
         resolve: {
@@ -106,7 +104,7 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
 
     function editSubProblemTitle() {
       $modal.open({
-        templateUrl: mcdaRootPath + 'js/subProblem/editSubProblemTitle.html',
+        templateUrl: './editSubProblemTitle.html',
         controller: 'EditSubProblemTitleController',
         resolve: {
           subProblems: function() {

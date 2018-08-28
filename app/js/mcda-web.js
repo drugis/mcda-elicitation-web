@@ -1,6 +1,7 @@
 'use strict';
 define([
   'angular',
+  './config',
   'angular-touch',
   'angular-ui-router',
   'angular-resource',
@@ -10,13 +11,11 @@ define([
   'core-js',
   'error-reporting',
   'export-directive',
-  'require',
   'help-popup',
   'jQuery',
   'lodash',
-  'mmfoundation',
+  'angular-foundation-6',
   './benefitRisk/benefitRisk',
-  './config',
   './effectsTable/effectsTable',
   './evidence/evidence',
   './services/routeFactory',
@@ -36,7 +35,7 @@ define([
   './preferences/preferences',
   'page-title-service'
 ],
-  function(angular, require, Config) {
+  function(angular, Config) {
 
     var dependencies = [
       'ngResource',
@@ -84,17 +83,11 @@ define([
       }]);
 
     app.constant('Tasks', Config.tasks);
-
-    // Detect our location so we can get the templates from the correct place
-    app.constant('mcdaRootPath', (function() {
-      return require.toUrl('.').replace('js', '');
-    })());
-
     app.constant('isMcdaStandalone', true);
     app.constant('currentSchemaVersion', '1.1.0');
 
-    app.config(function(mcdaRootPath, $stateProvider, $urlRouterProvider, MCDARouteProvider) {
-      var baseTemplatePath = mcdaRootPath + 'views/';
+    app.config(function($stateProvider, $urlRouterProvider, MCDARouteProvider) {
+      var baseTemplatePath = './views/';
 
       //ui-router code starts here
       $stateProvider.state('workspace', {
@@ -119,7 +112,7 @@ define([
         })
         .state('manualInput', {
           url: '/manual-input',
-          templateUrl: mcdaRootPath + 'js/manualInput/manualInput.html',
+          templateUrl: './manualInput/manualInput.html',
           controller: 'ManualInputController',
           params: {
             workspace: null
@@ -127,7 +120,7 @@ define([
         })
         .state('manualInputInProgress', {
           url: '/manual-input/:inProgressId',
-          templateUrl: mcdaRootPath + 'js/manualInput/manualInput.html',
+          templateUrl:  + './manualInput/manualInput.html',
           controller: 'ManualInputController'
         });
       $urlRouterProvider.otherwise('/choose-problem');

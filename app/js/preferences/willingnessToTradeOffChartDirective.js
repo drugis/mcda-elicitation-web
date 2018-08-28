@@ -3,12 +3,10 @@ define(['c3', 'd3', 'lodash'],
   function(c3, d3, _) {
     var dependencies = [
       'TradeOffService',
-      'mcdaRootPath',
       '$timeout'
     ];
     var WillingnessToTradeOffChartDirective = function(
       TradeOffService,
-      mcdaRootPath,
       $timeout
     ) {
       return {
@@ -17,7 +15,7 @@ define(['c3', 'd3', 'lodash'],
           problem: '=',
           settings: '='
         },
-        templateUrl: mcdaRootPath + 'js/preferences/willingnessToTradeOffChartDirective.html',
+        templateUrl: './willingnessToTradeOffChartDirective.html',
         link: function(scope, element) {
           scope.updateFirstPoint = updateFirstPoint;
           scope.updateSecondPoint = updateSecondPoint;

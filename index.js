@@ -81,9 +81,6 @@ if (process.env.MCDAWEB_USE_SSL_AUTH) {
     function(req, res) {
       res.redirect('/');
     });
-  app.get('/signin', function(req, res) {
-    res.sendFile(__dirname + '/dist/signin.html');
-  });
 }
 
 app.get('/logout', function(req, res) {
@@ -92,6 +89,19 @@ app.get('/logout', function(req, res) {
 })
   .use(csurf())
   .use(bodyParser.json({ limit: '5mb' }))
+  .get('/', function(req, res) {
+    if (req.user || req.session.user) {
+      res.sendFile(__dirname + '/dist/index.html');
+    } else {
+      res.sendFile(__dirname + '/dist/signin.html');
+    }
+  })
+  .get('/lexicon.json', function(req, res){
+    res.sendFile(__dirname + 'lexicon.json');
+  })
+  .get('/mcda-page-titles.json', function(req, res){
+    res.sendFile(__dirname + 'mcda-page-titles.json');
+  })
   .use(express.static('dist'))
   .use('/examples', express.static(__dirname + '/examples'))
   ;
@@ -115,14 +125,6 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.get('/', function(req, res) {
-  if (req.user || req.session.user) {
-    res.sendFile(__dirname + '/dist/index');
-  } else {
-    res.redirect('/signin');
-  }
-});
-  
 // Workspaces in progress
 app.post('/inProgress', WorkspaceService.createInProgress);
 app.put('/inProgress/:id', WorkspaceService.updateInProgress);

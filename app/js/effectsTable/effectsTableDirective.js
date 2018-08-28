@@ -2,13 +2,12 @@
 define(['lodash'], function(_) {
   var dependencies = [
     'EffectsTableService',
-    'WorkspaceSettingsService',
-    'mcdaRootPath'
+    'WorkspaceSettingsService'
   ];
   var EffectsTableDirective = function(
     EffectsTableService,
-    WorkspaceSettingsService,
-    mcdaRootPath) {
+    WorkspaceSettingsService
+  ) {
     return {
       restrict: 'E',
       scope: {
@@ -19,7 +18,7 @@ define(['lodash'], function(_) {
         'scales': '=',
         'isStandAlone': '='
       },
-      templateUrl: mcdaRootPath + 'js/effectsTable/effectsTable.html',
+      templateUrl: '../effectsTable/effectsTable.html',
       link: function(scope) {
         // functions
         scope.getWorkspaceSettings = getWorkspaceSettings;

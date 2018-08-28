@@ -4,7 +4,6 @@ define(['lodash'], function(_) {
     '$modal',
     '$state',
     '$stateParams',
-    'mcdaRootPath',
     'OrderingService',
     'WorkspaceResource',
     'swap'
@@ -13,7 +12,6 @@ define(['lodash'], function(_) {
     $modal,
     $state,
     $stateParams,
-    mcdaRootPath,
     OrderingService,
     WorkspaceResource,
     swap
@@ -28,7 +26,7 @@ define(['lodash'], function(_) {
         'isInput': '=',
         'workspace': '='
       },
-      templateUrl: mcdaRootPath + 'js/effectsTable/criterionListDirective.html',
+      templateUrl: '../effectsTable/criterionListDirective.html',
       link: function(scope) {
         scope.goUp = goUp;
         scope.goDown = goDown;
@@ -60,7 +58,7 @@ define(['lodash'], function(_) {
 
         function openCriterionModal(criterion) {
           $modal.open({
-            templateUrl: '/js/evidence/editCriterion.html',
+            templateUrl: '../evidence/editCriterion.html',
             controller: 'EditCriterionController',
             resolve: {
               criteria: function() {

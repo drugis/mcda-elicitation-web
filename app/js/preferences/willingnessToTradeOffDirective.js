@@ -1,15 +1,14 @@
 'use strict';
 define(['lodash'], function(_) {
   var dependencies = [
-    'mcdaRootPath'
   ];
-  var WillingnessToTradeOffDirective = function(mcdaRootPath) {
+  var WillingnessToTradeOffDirective = function() {
     return {
       restrict: 'E',
       scope: {
         problem: '='
       },
-      templateUrl: mcdaRootPath + 'js/preferences/willingnessToTradeOffDirective.html',
+      templateUrl:  './willingnessToTradeOffDirective.html',
       link: function(scope) {
         var criteriaWithId = decorateWithId(scope.problem.criteria);
         scope.firstCriterionOptions = criteriaWithId;

@@ -1,19 +1,18 @@
 'use strict';
-var requires = [
-  'mcda/manualInput/manualInputController',
-  'mcda/manualInput/addCriterionController',
-  'mcda/evidence/editDataSourceController',
-  'mcda/manualInput/manualInputService',
-  'mcda/manualInput/inputKnowledgeService',
-  'mcda/manualInput/constraintService',
-  'mcda/manualInput/performanceService',
-  'mcda/manualInput/effectInputHelperDirective',
-  'mcda/manualInput/inputDataSourceDirective',
-  'mcda/manualInput/inProgressResource', 
+define([
+  './manualInputController',
+  './addCriterionController',
+  '../evidence/editDataSourceController',
+  './manualInputService',
+  './inputKnowledgeService',
+  './constraintService',
+  './performanceService',
+  './effectInputHelperDirective',
+  './inputDataSourceDirective',
+  './inProgressResource',
+  'angular',
   'angular-resource'
-];
-define(['angular'].concat(requires), function(
-  angular,
+], function(
   ManualInputController,
   AddCriterionController,
   EditDataSourceController,
@@ -23,22 +22,23 @@ define(['angular'].concat(requires), function(
   PerformanceService,
   effectInputHelper,
   inputDataSource,
-  InProgressResource
+  InProgressResource,
+  angular
 ) {
-  return angular.module('elicit.manualInput', ['ngResource', 'elicit.util', 'elicit.effectsTable'])
+    return angular.module('elicit.manualInput', ['ngResource', 'elicit.util', 'elicit.effectsTable'])
 
-    .controller('ManualInputController', ManualInputController)
-    .controller('AddCriterionController', AddCriterionController)
-    .controller('EditDataSourceController', EditDataSourceController)
+      .controller('ManualInputController', ManualInputController)
+      .controller('AddCriterionController', AddCriterionController)
+      .controller('EditDataSourceController', EditDataSourceController)
 
-    .factory('ManualInputService', ManualInputService)
-    .factory('InputKnowledgeService', InputKnowledgeService)
-    .factory('ConstraintService', ConstraintService)
-    .factory('PerformanceService', PerformanceService)
+      .factory('ManualInputService', ManualInputService)
+      .factory('InputKnowledgeService', InputKnowledgeService)
+      .factory('ConstraintService', ConstraintService)
+      .factory('PerformanceService', PerformanceService)
 
-    .directive('effectInputHelper', effectInputHelper)
-    .directive('inputDataSource', inputDataSource)
+      .directive('effectInputHelper', effectInputHelper)
+      .directive('inputDataSource', inputDataSource)
 
-    .service('InProgressResource', InProgressResource);
+      .service('InProgressResource', InProgressResource);
 
-});
+  });
