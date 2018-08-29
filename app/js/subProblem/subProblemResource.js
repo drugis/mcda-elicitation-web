@@ -42,5 +42,6 @@ define(['angular'], function(angular) {
     return resource;
   };
 
-  return angular.module('elicit.subProblemResource', dependencies).factory('SubProblemResource', SubProblemResource);
+  return angular.module('elicit.subProblemResource', dependencies)
+    .factory('SubProblemResource', ['$resource', '$cacheFactory', SubProblemResource]);
 });

@@ -12,18 +12,22 @@ define(['lodash', 'angular', '../config'], function(_, angular, Config) {
           templateUrl: '../benefitRisk/mcdaBenefitRisk.html',
           controller: 'MCDABenefitRiskController',
           resolve: {
-            subProblems: function($stateParams, SubProblemResource) {
-              return SubProblemResource.query(_.omit($stateParams, 'problemId')).$promise;
-            },
-            scenarios: function($stateParams, ScenarioResource) {
-              return ScenarioResource.query(_.omit($stateParams, 'id')).$promise;
-            },
-            currentScenario: function($stateParams, ScenarioResource) {
-              return ScenarioResource.get($stateParams).$promise;
-            },
-            currentSubProblem: function($stateParams, SubProblemResource) {
-              return SubProblemResource.get(($stateParams)).$promise;
-            }
+            subProblems: ['$stateParams', 'SubProblemResource',
+              function($stateParams, SubProblemResource) {
+                return SubProblemResource.query(_.omit($stateParams, 'problemId')).$promise;
+              }],
+            scenarios: ['$stateParams', 'ScenarioResource',
+              function($stateParams, ScenarioResource) {
+                return ScenarioResource.query(_.omit($stateParams, 'id')).$promise;
+              }],
+            currentScenario: ['$stateParams', 'ScenarioResource',
+              function($stateParams, ScenarioResource) {
+                return ScenarioResource.get($stateParams).$promise;
+              }],
+            currentSubProblem: ['$stateParams', 'SubProblemResource',
+              function($stateParams, SubProblemResource) {
+                return SubProblemResource.get(($stateParams)).$promise;
+              }]
           }
         };
 
@@ -39,12 +43,14 @@ define(['lodash', 'angular', '../config'], function(_, angular, Config) {
             state.controller = task.controller;
             state.template = task.template;
             state.resolve = {
-              currentScenario: function($stateParams, ScenarioResource) {
-                return ScenarioResource.get($stateParams).$promise;
-              },
-              taskDefinition: function(TaskDependencies) {
-                return TaskDependencies.extendTaskDefinition(task);
-              }
+              currentScenario: ['$stateParams', 'ScenarioResource',
+                function($stateParams, ScenarioResource) {
+                  return ScenarioResource.get($stateParams).$promise;
+                }],
+              taskDefinition: ['TaskDependencies',
+                function(TaskDependencies) {
+                  return TaskDependencies.extendTaskDefinition(task);
+                }]
             };
           }
           return state;
@@ -56,7 +62,7 @@ define(['lodash', 'angular', '../config'], function(_, angular, Config) {
         });
 
       },
-      $get: function() {}
+      $get: function() { }
     };
   };
 

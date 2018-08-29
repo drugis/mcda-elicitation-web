@@ -5,7 +5,6 @@ define([
   'angular-cookies',
   'angular-foundation-6',
   'angular-patavi-client',
-  'angular-resource',
   'angular-touch',
   'angular-ui-router',
   'angularjs-slider',
@@ -38,6 +37,7 @@ define([
   function(angular, Config) {
 
     var dependencies = [
+      'ui.router',
       'elicit.benefitRisk',
       'elicit.directives',
       'elicit.effectsTable',
@@ -63,21 +63,12 @@ define([
       'ngCookies',
       'ngResource',
       'page-title-service',
-      'patavi',
-      'ui.router'
+      'patavi'
     ];
 
     var app = angular.module('elicit', dependencies);
-    app.run(['$rootScope', '$http', 'HelpPopupService', 'PageTitleService',
-      function($rootScope, $http, HelpPopupService, PageTitleService) {
-        $rootScope.$safeApply = function($scope, fn) {
-          var phase = $scope.$root.$$phase;
-          if (phase === '$apply' || phase === '$digest') {
-            this.$eval(fn);
-          } else {
-            this.$apply(fn);
-          }
-        };
+    app.run(['$http', 'HelpPopupService', 'PageTitleService',
+      function($http, HelpPopupService, PageTitleService) {
         HelpPopupService.loadLexicon($http.get('lexicon.json'));
         PageTitleService.loadLexicon($http.get('mcda-page-titles.json'));
       }]);
@@ -86,54 +77,45 @@ define([
     app.constant('isMcdaStandalone', true);
     app.constant('currentSchemaVersion', '1.1.0');
 
-    app.config(function($stateProvider, $urlRouterProvider, MCDARouteProvider) {
-      //ui-router code starts here
-      $stateProvider.state('workspace', {
-        url: '/workspaces/:workspaceId',
-        templateUrl: './workspace/workspace.html',
-        controller: 'WorkspaceController',
-        resolve: {
-          currentWorkspace: function($stateParams, WorkspaceResource) {
-            return WorkspaceResource.get($stateParams).$promise;
+    app.config(['$stateProvider', '$urlRouterProvider', 'MCDARouteProvider',
+      function($stateProvider, $urlRouterProvider, MCDARouteProvider) {
+        //ui-router code starts here
+        $stateProvider.state('workspace', {
+          url: '/workspaces/:workspaceId',
+          templateUrl: './workspace/workspace.html',
+          controller: 'WorkspaceController',
+          resolve: {
+            currentWorkspace: ['$stateParams', 'WorkspaceResource',
+              function($stateParams, WorkspaceResource) {
+                return WorkspaceResource.get($stateParams).$promise;
+              }]
           }
-        }
-      });
-
-      MCDARouteProvider.buildRoutes($stateProvider, 'workspace');
-
-      // Default route
-      $stateProvider
-        .state('choose-problem', {
-          url: '/choose-problem',
-          templateUrl: './workspace/chooseProblem.html',
-          controller: 'ChooseProblemController'
-        })
-        .state('manualInput', {
-          url: '/manual-input',
-          templateUrl: './manualInput/manualInput.html',
-          controller: 'ManualInputController',
-          params: {
-            workspace: null
-          }
-        })
-        .state('manualInputInProgress', {
-          url: '/manual-input/:inProgressId',
-          templateUrl: './manualInput/manualInput.html',
-          controller: 'ManualInputController'
         });
-      $urlRouterProvider.otherwise('/choose-problem');
-    });
 
-    app.run(function($rootScope) {
-      $rootScope.$safeApply = function($scope, fn) {
-        var phase = $scope.$root.$$phase;
-        if (phase === '$apply' || phase === '$digest') {
-          this.$eval(fn);
-        } else {
-          this.$apply(fn);
-        }
-      };
-    });
+        MCDARouteProvider.buildRoutes($stateProvider, 'workspace');
+
+        // Default route
+        $stateProvider
+          .state('choose-problem', {
+            url: '/choose-problem',
+            templateUrl: './workspace/chooseProblem.html',
+            controller: 'ChooseProblemController'
+          })
+          .state('manualInput', {
+            url: '/manual-input',
+            templateUrl: './manualInput/manualInput.html',
+            controller: 'ManualInputController',
+            params: {
+              workspace: null
+            }
+          })
+          .state('manualInputInProgress', {
+            url: '/manual-input/:inProgressId',
+            templateUrl: './manualInput/manualInput.html',
+            controller: 'ManualInputController'
+          });
+        $urlRouterProvider.otherwise('/choose-problem');
+      }]);
 
     return app;
   });

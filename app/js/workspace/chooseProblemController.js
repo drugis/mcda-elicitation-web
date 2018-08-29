@@ -1,20 +1,20 @@
 'use strict';
 define(['lodash'], function(_) {
   var dependencies = [
-    '$scope', 
-  '$state', 
-  '$modal', 
-  'WorkspaceResource', 
-  'InProgressResource', 
-  'PageTitleService'
-];
+    '$scope',
+    '$state',
+    '$modal',
+    'WorkspaceResource',
+    'InProgressResource',
+    'PageTitleService'
+  ];
 
   var ChooseProblemController = function(
-    $scope, 
-    $state, 
-    $modal, 
-    WorkspaceResource, 
-    InProgressResource, 
+    $scope,
+    $state,
+    $modal,
+    WorkspaceResource,
+    InProgressResource,
     PageTitleService
   ) {
     // functions
@@ -36,7 +36,7 @@ define(['lodash'], function(_) {
     });
 
     PageTitleService.setPageTitle('ChooseProblemController', 'Workspaces');
-    
+
     function openChooseProblemModal() {
       $modal.open({
         templateUrl: './createWorkspace.html',

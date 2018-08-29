@@ -10,5 +10,6 @@ define(['angular'], function(angular) {
         }
       });
   };
-  return angular.module('elicit.workspaceSettingsResource', dependencies).factory('WorkspaceSettingsResource', WorkspaceSettingsResource);
+  return angular.module('elicit.workspaceSettingsResource', dependencies)
+    .factory('WorkspaceSettingsResource', ['$resource', WorkspaceSettingsResource]);
 });

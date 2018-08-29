@@ -1,6 +1,6 @@
 'use strict';
 
-const webpackConfig = require("../webpack.dev");
+const webpackConfig = require('../webpack.dev');
 delete webpackConfig.entry;
 webpackConfig.plugins = [];
 webpackConfig.optimization = {
