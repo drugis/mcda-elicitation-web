@@ -8,7 +8,7 @@ module.exports = {
 
 function buildMCDADBUrl() {
   var env = process.env;
-  var url = buildUrl(env.DB_HOST,
+  var url = buildUrl(env.MCDAWEB_DB_HOST,
     env.MCDAWEB_DB_NAME,
     env.MCDAWEB_DB_USER,
     env.MCDAWEB_DB_PASSWORD);
@@ -19,7 +19,7 @@ function buildMCDADBUrl() {
 function buildMcdaDBConnectionConfig() {
   var env = process.env;
   return {
-    host: env.DB_HOST,
+    host: env.MCDAWEB_DB_HOST,
     user: env.MCDAWEB_DB_USER,
     database: env.MCDAWEB_DB_NAME,
     password: env.MCDAWEB_DB_PASSWORD
