@@ -1,8 +1,11 @@
 'use strict';
-define(['lodash', 'angular-mocks',
+define([
+  'lodash',
+  'angular',
+  'angular-mocks',
   'mcda/preferences/preferences'
 ],
-  function(_) {
+  function(_, angular) {
     var state;
 
     describe('OrdinalSwingHandler', function() {
@@ -11,8 +14,8 @@ define(['lodash', 'angular-mocks',
       var orderingServiceMock = jasmine.createSpyObj('OrderingService', ['getOrderedCriteriaAndAlternatives']);
       var pageTitleServiceMock = jasmine.createSpyObj('PageTitleService', ['setPageTitle']);
 
-      beforeEach(module('elicit.preferences'));
-      beforeEach(module('elicit.taskDependencies'));
+      beforeEach(angular.mock.module('elicit.preferences'));
+      beforeEach(angular.mock.module('elicit.taskDependencies'));
 
       function initializeScope($controller, $rootScope, TaskDependencies, problem) {
         var scope;

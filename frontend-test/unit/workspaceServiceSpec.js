@@ -1,8 +1,8 @@
 'use strict';
-define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/misc'], function(_) {
+define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/misc'], function(_, angular) {
   describe('The WorkspaceService, ', function() {
     var workspaceService;
-    beforeEach(module('elicit.workspace', function($provide) {
+    beforeEach(angular.mock.module('elicit.workspace', function($provide) {
       $provide.value('PataviResultsService', pataviResultsServiceMock);
     }));
 

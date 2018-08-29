@@ -1,3 +1,3 @@
 'use strict';
-const testsContext = require.context(".", true, /Spec$/);
+const testsContext = require.context('./unit', true, /Spec$/);
 testsContext.keys().forEach(testsContext);

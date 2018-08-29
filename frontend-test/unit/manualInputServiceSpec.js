@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(_) {
+define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(_, angular) {
 
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
@@ -7,7 +7,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
   var inputKnowledgeServiceMock = jasmine.createSpyObj('InputKnowledgeService', ['getOptions', 'inputToString',
     'finishInputCell', 'buildPerformance']);
   describe('The manualInputService', function() {
-    beforeEach(module('elicit.manualInput', function($provide) {
+    beforeEach(angular.mock.module('elicit.manualInput', function($provide) {
 
       $provide.value('generateUuid', generateUuidMock);
       $provide.value('currentSchemaVersion', currentSchemaVersion);

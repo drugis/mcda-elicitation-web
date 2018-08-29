@@ -12,15 +12,17 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     }
   };
   var inputKnowledgeService;
-  var performanceServiceMock = jasmine.createSpyObj('PerformanceService', [
-    'buildStudentTPerformance',
-    'buildExactPerformance',
-    'buildNormalPerformance',
-    'buildBetaPerformance',
-    'buildGammaPerformance',
-    'buildExactConfidencePerformance']);
+  var performanceServiceMock = jasmine.createSpyObj(
+    'PerformanceService', [
+      'buildStudentTPerformance',
+      'buildExactPerformance',
+      'buildNormalPerformance',
+      'buildBetaPerformance',
+      'buildGammaPerformance',
+      'buildExactConfidencePerformance'
+    ]);
   describe('the input knowledge service', function() {
-    beforeEach(module('elicit.manualInput', function($provide) {
+    beforeEach(angular.mock.module('elicit.manualInput', function($provide) {
       $provide.value('PerformanceService', performanceServiceMock);
     }));
     beforeEach(inject(function(InputKnowledgeService) {
@@ -934,7 +936,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             });
             it('should create correct performance', function() {
               inputKnowledgeService.buildPerformance(cell);
-              expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(50);
+              expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(0.5, {scale: 'percentage', value: 50});
             });
             it('should create a finished input cell', function() {
               var tableEntry = {

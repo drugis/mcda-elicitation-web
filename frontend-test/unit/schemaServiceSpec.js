@@ -1,12 +1,12 @@
 'use strict';
-define(['angular-mocks', 'mcda/benefitRisk/benefitRisk'], function() {
+define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(angular) {
 
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var currentSchemaVersion = '1.1.0';
   var schemaService;
 
   describe('The SchemaService', function() {
-    beforeEach(module('elicit.benefitRisk', function($provide) {
+    beforeEach(angular.mock.module('elicit.benefitRisk', function($provide) {
       $provide.value('generateUuid', generateUuidMock);
       $provide.value('currentSchemaVersion', currentSchemaVersion);
     }));

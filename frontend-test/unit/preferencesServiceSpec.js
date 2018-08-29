@@ -1,8 +1,8 @@
 'use strict';
-define(['angular-mocks', 'mcda/preferences/preferences'], function() {
+define(['angular','angular-mocks', 'mcda/preferences/preferences'], function(angular) {
   describe('Preferences service', function() {
     var preferencesService;
-    beforeEach(module('elicit.preferences'));
+    beforeEach(angular.mock.module('elicit.preferences'));
     beforeEach(inject(function(PreferencesService) {
       preferencesService = PreferencesService;
     }));
