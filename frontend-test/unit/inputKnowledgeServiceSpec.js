@@ -19,7 +19,8 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       'buildNormalPerformance',
       'buildBetaPerformance',
       'buildGammaPerformance',
-      'buildExactConfidencePerformance'
+      'buildExactConfidencePerformance',
+      'buildExactPercentConfidencePerformance'
     ]);
   describe('the input knowledge service', function() {
     beforeEach(angular.mock.module('elicit.manualInput', function($provide) {
@@ -964,7 +965,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             });
             it('should create correct performance', function() {
               inputKnowledgeService.buildPerformance(cell);
-              expect(performanceServiceMock.buildExactConfidencePerformance).toHaveBeenCalled();
+              expect(performanceServiceMock.buildExactPercentConfidencePerformance).toHaveBeenCalled();
             });
             it('should create a finished input cell', function() {
               var tableEntry = {

@@ -593,12 +593,7 @@ define(['lodash', 'angular'], function(_, angular) {
       var knowledge = buildExactValueConfidenceIntervalKnowledge(label, id);
       knowledge.toString = valueCIPercentToString;
       knowledge.buildPerformance = function(cell) {
-        return PerformanceService.buildExactPerformance((cell.firstParameter / 100), {
-          value: cell.firstParameter,
-          lowerBound: cell.secondParameter,
-          upperBound: cell.thirdParameter,
-          scale: 'percentage'
-        });
+        return PerformanceService.buildExactPercentConfidencePerformance(cell);
       };
       knowledge.fits = function(tableEntry) {
         return tableEntry.performance.input &&
