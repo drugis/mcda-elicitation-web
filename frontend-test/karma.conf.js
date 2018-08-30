@@ -40,14 +40,12 @@ module.exports = function(config) {
       'frontend-test/test-main.js',
       'app/js/misc.js',
       { pattern: 'app/js/**/*.js', included: false},
-      { pattern: 'frontend-test/node_modules/**/*.js', included: false},
       { pattern: 'node_modules/**/*.js', included: false},
       { pattern: 'frontend-test/**/*.js', included: false}
     ],
 
     exclude: [
       'app/js/main.js',
-      
     ],
     // test results reporter to use
     // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
