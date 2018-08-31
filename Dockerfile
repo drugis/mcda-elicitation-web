@@ -27,8 +27,6 @@ ENV HOME /var/lib/mcda
 RUN yarn
 RUN npm run build-prod
 
-RUN rm bower_components && ln -rs node_modules/@bower_components bower_components
-
 EXPOSE 3001
 
 CMD ["forever", "index.js"]

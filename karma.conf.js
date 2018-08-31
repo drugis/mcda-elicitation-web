@@ -1,6 +1,6 @@
 'use strict';
 
-const webpackConfig = require('../webpack.dev');
+const webpackConfig = require('./webpack.dev');
 delete webpackConfig.entry;
 webpackConfig.plugins = [];
 webpackConfig.optimization = {
@@ -12,7 +12,7 @@ module.exports = function(config) {
   config.set({
     
     // base path, that will be used to resolve files and exclude
-    basePath: '..',
+    basePath: '.',
 
     // plugins to load
     plugins: [
@@ -24,7 +24,7 @@ module.exports = function(config) {
     ],
     preprocessors: {
       // add webpack as preprocessor
-      'frontend-test/test-main.js': ['webpack']
+      './frontend-test/test-main.js': ['webpack']
     },
 
     webpack: webpackConfig,
@@ -37,11 +37,8 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       // 'frontend-test/unit/*Spec.js',
-      'frontend-test/test-main.js',
-      'app/js/misc.js',
-      { pattern: 'app/js/**/*.js', included: false},
-      { pattern: 'node_modules/**/*.js', included: false},
-      { pattern: 'frontend-test/**/*.js', included: false}
+      './app/js/misc.js',
+      './frontend-test/test-main.js',
     ],
 
     exclude: [
