@@ -8,7 +8,7 @@ images_dir = "app/img"
 javascripts_dir = "app/js"
 
 add_import_path "sass-shared"
-add_import_path "bower_components/foundation-sites/scss/"
+add_import_path "node_modules/foundation-sites/scss"
 # You can select your preferred output style here (can be overridden via the command line):
 # output_style = :expanded or :nested or :compact or :compressed
 

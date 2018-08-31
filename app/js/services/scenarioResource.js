@@ -45,5 +45,6 @@ define(['angular'], function(angular) {
     return resource;
   };
 
-  return angular.module('elicit.scenarioResource', dependencies).factory('ScenarioResource', ScenarioResource);
+  return angular.module('elicit.scenarioResource', dependencies)
+    .factory('ScenarioResource', ['$resource', '$cacheFactory', ScenarioResource]);
 });

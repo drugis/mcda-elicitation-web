@@ -1,8 +1,8 @@
 'use strict';
-define(['angular-mocks', 'mcda/subProblem/subProblem'], function() {
+define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angular) {
   describe('The SubProblemService', function() {
     var subProblemService;
-    beforeEach(module('elicit.subProblem'));
+    beforeEach(angular.mock.module('elicit.subProblem'));
     beforeEach(inject(function(SubProblemService) {
       subProblemService = SubProblemService;
     }));
@@ -254,8 +254,8 @@ define(['angular-mocks', 'mcda/subProblem/subProblem'], function() {
           },
           crit3: {
             dataSources: [
-              { id: 'ds3'},
-              { id: 'ds4'}
+              { id: 'ds3' },
+              { id: 'ds4' }
             ]
           }
         };

@@ -1,19 +1,19 @@
 'use strict';
-var requires = [
-  'mcda/workspace/chooseProblemController',
-  'mcda/workspace/createWorkspaceController',
-  'mcda/workspace/deleteWorkspaceController',
-  'mcda/workspace/deleteInProgressController',
-  'mcda/workspace/workspaceController',
-  'mcda/workspace/workspaceSettingsController',
-  'mcda/services/workspaceService',
-  'mcda/workspace/orderingService',
-  'mcda/workspace/workspaceSettingsService',
-  'mcda/workspace/exampleResource',
-  'mcda/workspace/workspaceSettingsDirective'
-];
-define(['angular'].concat(requires), function(
-  angular,
+
+define([
+  './chooseProblemController',
+  './createWorkspaceController',
+  './deleteWorkspaceController',
+  './deleteInProgressController',
+  './workspaceController',
+  './workspaceSettingsController',
+  '../services/workspaceService',
+  './orderingService',
+  './workspaceSettingsService',
+  './exampleResource',
+  './workspaceSettingsDirective',
+  'angular'
+], function(
   ChooseProblemController,
   CreateWorkspaceController,
   DeleteWorkspaceController,
@@ -24,22 +24,23 @@ define(['angular'].concat(requires), function(
   OrderingService,
   WorkspaceSettingService,
   ExampleResource,
-  WorkspaceSettings
+  WorkspaceSettings,
+  angular
 ) {
-  return angular.module('elicit.workspace', ['elicit.util'])
-    .controller('ChooseProblemController', ChooseProblemController)
-    .controller('CreateWorkspaceController', CreateWorkspaceController)
-    .controller('DeleteWorkspaceController', DeleteWorkspaceController)
-    .controller('DeleteInProgressController', DeleteInProgressController)
-    .controller('WorkspaceController', WorkspaceController)
-    .controller('WorkspaceSettingsController', WorkspaceSettingsController)
+    return angular.module('elicit.workspace', ['elicit.util'])
+      .controller('ChooseProblemController', ChooseProblemController)
+      .controller('CreateWorkspaceController', CreateWorkspaceController)
+      .controller('DeleteWorkspaceController', DeleteWorkspaceController)
+      .controller('DeleteInProgressController', DeleteInProgressController)
+      .controller('WorkspaceController', WorkspaceController)
+      .controller('WorkspaceSettingsController', WorkspaceSettingsController)
 
-    .factory('WorkspaceService', WorkspaceService)
-    .factory('OrderingService', OrderingService)
-    .factory('WorkspaceSettingsService', WorkspaceSettingService)
+      .factory('WorkspaceService', WorkspaceService)
+      .factory('OrderingService', OrderingService)
+      .factory('WorkspaceSettingsService', WorkspaceSettingService)
 
-    .service('ExampleResource', ExampleResource)
+      .service('ExampleResource', ExampleResource)
 
-    .directive('workspaceSettings', WorkspaceSettings)
-    ;
-});
+      .directive('workspaceSettings', WorkspaceSettings)
+      ;
+  });

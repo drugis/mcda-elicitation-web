@@ -6,14 +6,14 @@ define(['angular',
   'mcda/evidence/evidence',
   'mcda/preferences/preferences'
 ],
-  function() {
+  function(angular) {
     //FIXME: make a decent spec out of this stuff
     describe('PartialValueFunctionService', function() {
       var scope, state;
 
-      beforeEach(module('elicit.preferences'));
-      beforeEach(module('elicit.evidence'));
-      beforeEach(module('elicit.taskDependencies'));
+      beforeEach(angular.mock.module('elicit.preferences'));
+      beforeEach(angular.mock.module('elicit.evidence'));
+      beforeEach(angular.mock.module('elicit.taskDependencies'));
 
       beforeEach(inject(function($rootScope, $controller, TaskDependencies) {
         var task = {

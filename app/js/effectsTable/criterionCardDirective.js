@@ -2,12 +2,10 @@
 define(['lodash'], function(_) {
   var dependencies = [
     '$modal',
-    'mcdaRootPath',
     'swap'
   ];
   var CriterionCardDirective = function(
     $modal,
-    mcdaRootPath,
     swap
   ) {
     return {
@@ -25,7 +23,7 @@ define(['lodash'], function(_) {
         'saveOrdering': '=',
         'saveWorkspace':'='
       },
-      templateUrl: mcdaRootPath + 'js/effectsTable/criterionCardDirective.html',
+      templateUrl: '../effectsTable/criterionCardDirective.html',
       link: function(scope) {
         scope.criterionUp = criterionUp;
         scope.criterionDown = criterionDown;

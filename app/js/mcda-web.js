@@ -1,48 +1,43 @@
 'use strict';
-define(['angular',
-  'require',
-  'mcda/config',
-  'jQuery',
-  'lodash',
-  'angular-touch',
-  'mmfoundation',
-  'angular-ui-router',
-  'angular-resource',
+define([
+  'angular',
+  './config',
   'angular-cookies',
-  'angularjs-slider',
+  'angular-foundation-6',
   'angular-patavi-client',
+  'angular-touch',
+  'angular-ui-router',
+  'angularjs-slider',
   'core-js',
   'error-reporting',
   'export-directive',
   'help-popup',
-  'mcda/benefitRisk/benefitRisk',
-  'mcda/effectsTable/effectsTable',
-  'mcda/evidence/evidence',
-  'mcda/services/routeFactory',
-  'mcda/services/workspaceResource',
-  'mcda/services/scenarioResource',
-  'mcda/services/taskDependencies',
-  'mcda/services/util',
-  'mcda/results/results',
-  'mcda/manualInput/manualInput',
-  'mcda/subProblem/subProblemResource',
-  'mcda/subProblem/subProblem',
-  'mcda/workspace/orderingResource',
-  'mcda/workspace/workspace',
-  'mcda/workspace/workspaceSettingsResource',
-  'mcda/directives',
-  'mcda/navbar/navbar',
-  'mcda/preferences/preferences',
-  'page-title-service'
+  'jquery',
+  'lodash',
+  'page-title-service',
+  './benefitRisk/benefitRisk',
+  './effectsTable/effectsTable',
+  './evidence/evidence',
+  './services/routeFactory',
+  './services/workspaceResource',
+  './services/scenarioResource',
+  './services/taskDependencies',
+  './services/util',
+  './results/results',
+  './manualInput/manualInput',
+  './subProblem/subProblemResource',
+  './subProblem/subProblem',
+  './workspace/orderingResource',
+  './workspace/workspace',
+  './workspace/workspaceSettingsResource',
+  './directives',
+  './navbar/navbar',
+  './preferences/preferences'
 ],
-  function(angular, require, Config) {
+  function(angular, Config) {
 
     var dependencies = [
-      'ngResource',
       'ui.router',
-      'mm.foundation',
-      'patavi',
-      'help-directive',
       'elicit.benefitRisk',
       'elicit.directives',
       'elicit.effectsTable',
@@ -61,87 +56,66 @@ define(['angular',
       'elicit.workspaceResource',
       'elicit.orderingResource',
       'elicit.workspaceSettingsResource',
-      'ngCookies',
       'errorReporting',
       'export-directive',
-      'page-title-service'
+      'help-directive',
+      'mm.foundation',
+      'ngCookies',
+      'ngResource',
+      'page-title-service',
+      'patavi'
     ];
 
     var app = angular.module('elicit', dependencies);
-    app.run(['$rootScope', '$http', 'HelpPopupService', 'PageTitleService',
-      function($rootScope, $http, HelpPopupService, PageTitleService) {
-        $rootScope.$safeApply = function($scope, fn) {
-          var phase = $scope.$root.$$phase;
-          if (phase === '$apply' || phase === '$digest') {
-            this.$eval(fn);
-          } else {
-            this.$apply(fn);
-          }
-        };
+    app.run(['$http', 'HelpPopupService', 'PageTitleService',
+      function($http, HelpPopupService, PageTitleService) {
         HelpPopupService.loadLexicon($http.get('lexicon.json'));
         PageTitleService.loadLexicon($http.get('mcda-page-titles.json'));
       }]);
 
     app.constant('Tasks', Config.tasks);
-
-    // Detect our location so we can get the templates from the correct place
-    app.constant('mcdaRootPath', (function() {
-      return require.toUrl('.').replace('js', '');
-    })());
-
     app.constant('isMcdaStandalone', true);
     app.constant('currentSchemaVersion', '1.1.0');
 
-    app.config(function(mcdaRootPath, $stateProvider, $urlRouterProvider, MCDARouteProvider) {
-      var baseTemplatePath = mcdaRootPath + 'views/';
-
-      //ui-router code starts here
-      $stateProvider.state('workspace', {
-        url: '/workspaces/:workspaceId',
-        templateUrl: baseTemplatePath + 'workspace.html',
-        controller: 'WorkspaceController',
-        resolve: {
-          currentWorkspace: function($stateParams, WorkspaceResource) {
-            return WorkspaceResource.get($stateParams).$promise;
+    app.config(['$stateProvider', '$urlRouterProvider', 'MCDARouteProvider',
+      function($stateProvider, $urlRouterProvider, MCDARouteProvider) {
+        //ui-router code starts here
+        $stateProvider.state('workspace', {
+          url: '/workspaces/:workspaceId',
+          templateUrl: './workspace/workspace.html',
+          controller: 'WorkspaceController',
+          resolve: {
+            currentWorkspace: ['$stateParams', 'WorkspaceResource',
+              function($stateParams, WorkspaceResource) {
+                return WorkspaceResource.get($stateParams).$promise;
+              }]
           }
-        }
-      });
-
-      MCDARouteProvider.buildRoutes($stateProvider, 'workspace', baseTemplatePath);
-
-      // Default route
-      $stateProvider
-        .state('choose-problem', {
-          url: '/choose-problem',
-          templateUrl: baseTemplatePath + 'chooseProblem.html',
-          controller: 'ChooseProblemController'
-        })
-        .state('manualInput', {
-          url: '/manual-input',
-          templateUrl: mcdaRootPath + 'js/manualInput/manualInput.html',
-          controller: 'ManualInputController',
-          params: {
-            workspace: null
-          }
-        })
-        .state('manualInputInProgress', {
-          url: '/manual-input/:inProgressId',
-          templateUrl: mcdaRootPath + 'js/manualInput/manualInput.html',
-          controller: 'ManualInputController'
         });
-      $urlRouterProvider.otherwise('/choose-problem');
-    });
 
-    app.run(function($rootScope) {
-      $rootScope.$safeApply = function($scope, fn) {
-        var phase = $scope.$root.$$phase;
-        if (phase === '$apply' || phase === '$digest') {
-          this.$eval(fn);
-        } else {
-          this.$apply(fn);
-        }
-      };
-    });
+        MCDARouteProvider.buildRoutes($stateProvider, 'workspace');
+
+        // Default route
+        $stateProvider
+          .state('choose-problem', {
+            url: '/choose-problem',
+            templateUrl: './workspace/chooseProblem.html',
+            controller: 'ChooseProblemController'
+          })
+          .state('manualInput', {
+            url: '/manual-input',
+            templateUrl: './manualInput/manualInput.html',
+            controller: 'ManualInputController',
+            params: {
+              workspace: null
+            }
+          })
+          .state('manualInputInProgress', {
+            url: '/manual-input/:inProgressId',
+            templateUrl: './manualInput/manualInput.html',
+            controller: 'ManualInputController'
+          });
+        $urlRouterProvider.otherwise('/choose-problem');
+      }]);
 
     return app;
   });

@@ -15,8 +15,6 @@ RUN apt-get install -y nodejs
 RUN npm install -g yarn
 RUN npm install -g forever
 
-RUN apt-get install -y git # needed by angular-foundation
-
 RUN useradd --create-home --home /var/lib/mcda mcda
 
 COPY . /var/lib/mcda
@@ -27,6 +25,7 @@ WORKDIR /var/lib/mcda
 ENV HOME /var/lib/mcda
 
 RUN yarn
+RUN npm run build-prod
 
 RUN rm bower_components && ln -rs node_modules/@bower_components bower_components
 

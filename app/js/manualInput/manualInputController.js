@@ -145,7 +145,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function openCriterionModal() {
       $modal.open({
-        templateUrl: '/js/evidence/editCriterion.html',
+        templateUrl: '../evidence/editCriterion.html',
         controller: 'AddCriterionController',
         resolve: {
           criteria: function() {

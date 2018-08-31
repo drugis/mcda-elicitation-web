@@ -2,13 +2,12 @@
 define(['lodash'], function(_) {
   var dependencies = [
     'EffectsTableService',
-    'WorkspaceSettingsService',
-    'mcdaRootPath'
+    'WorkspaceSettingsService'
   ];
   var EffectsTableDirective = function(
     EffectsTableService,
-    WorkspaceSettingsService,
-    mcdaRootPath) {
+    WorkspaceSettingsService
+  ) {
     return {
       restrict: 'E',
       scope: {
@@ -19,7 +18,7 @@ define(['lodash'], function(_) {
         'scales': '=',
         'isStandAlone': '='
       },
-      templateUrl: mcdaRootPath + 'js/effectsTable/effectsTable.html',
+      templateUrl: '../effectsTable/effectsTable.html',
       link: function(scope) {
         // functions
         scope.getWorkspaceSettings = getWorkspaceSettings;
@@ -27,24 +26,24 @@ define(['lodash'], function(_) {
         // init
         scope.studyDataAvailable = EffectsTableService.isStudyDataAvailable(scope.effectsTableInfo);
         getWorkspaceSettings();
-        
+
         scope.$watch('criteria', function(newCriteria) {
           scope.keyedCriteria = _.keyBy(_.cloneDeep(newCriteria), 'id');
           scope.rows = EffectsTableService.buildEffectsTable(scope.keyedCriteria);
         }, true);
-        
+
         scope.$watch('alternatives', function(newAlternatives) {
           scope.nrAlternatives = _.keys(scope.alternatives).length;
           scope.alternatives = newAlternatives;
-        }); 
-        
+        });
+
         scope.$on('elicit.settingsChanged', getWorkspaceSettings);
 
         function getWorkspaceSettings() {
           scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
           scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
         }
-    
+
       }
     };
   };

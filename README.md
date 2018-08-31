@@ -7,7 +7,7 @@ following types of preference information:
 
  - Linear partial value functions
  - Piece-wise linear partial value functions using MACBETH
- - Ordinal criteria trade-offs (ordinal SWING)
+ - Ranking criteria trade-offs (ordinal SWING)
  - Exact criteria trade-off ratios (exact SWING)
  - Imprecise criteria trade-off ratios (interval SWING)
 
@@ -40,7 +40,6 @@ Using node-sass:
 ```
 node-sass --include-path sass-shared sass/mcda-plain.scss app/css/mcda-plain.css
 node-sass --include-path sass-shared sass/mcda-drugis.scss app/css/mcda-drugis.css
-node-sass --include-path sass-shared sass/mcda-drugis-ie8.scss app/css/mcda-drugis-ie8.css
 ```
 
 Setting up the database
@@ -70,9 +69,17 @@ export PATAVI_CLIENT_CRT=/path/to/crt
 export PATAVI_CA=/path/to/ca
 ```
 
+Getting the dependencies:
+
 ```yarn```
 
-```node index.js```
+Building the application:
+
+```npm run build-prod```
+
+Running the application:
+
+```node index.js``` or ```npm start```
 
 Running the patavi worker
 -------------------------

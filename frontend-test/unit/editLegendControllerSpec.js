@@ -1,5 +1,5 @@
 'use strict';
-define(['angular-mocks', 'mcda/preferences/preferences'], function() {
+define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(angular) {
   describe('Edit Legend controller', function() {
 
     var scope,
@@ -16,7 +16,7 @@ define(['angular-mocks', 'mcda/preferences/preferences'], function() {
       },
       callback;
 
-    beforeEach(module('elicit.results'));
+    beforeEach(angular.mock.module('elicit.results'));
 
     beforeEach(inject(function($controller, $rootScope) {
       scope = $rootScope.$new();
@@ -90,5 +90,6 @@ define(['angular-mocks', 'mcda/preferences/preferences'], function() {
           }
         });
       });
-    });  });
+    });
+  });
 });

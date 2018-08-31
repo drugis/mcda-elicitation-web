@@ -1,22 +1,20 @@
 'use strict';
 define(['lodash'], function(_) {
   var dependencies = [
-    '$scope', 
-  '$state', 
-  '$modal', 
-  'mcdaRootPath', 
-  'WorkspaceResource', 
-  'InProgressResource', 
-  'PageTitleService'
-];
+    '$scope',
+    '$state',
+    '$modal',
+    'WorkspaceResource',
+    'InProgressResource',
+    'PageTitleService'
+  ];
 
   var ChooseProblemController = function(
-    $scope, 
-    $state, 
-    $modal, 
-    mcdaRootPath, 
-    WorkspaceResource, 
-    InProgressResource, 
+    $scope,
+    $state,
+    $modal,
+    WorkspaceResource,
+    InProgressResource,
     PageTitleService
   ) {
     // functions
@@ -38,10 +36,10 @@ define(['lodash'], function(_) {
     });
 
     PageTitleService.setPageTitle('ChooseProblemController', 'Workspaces');
-    
+
     function openChooseProblemModal() {
       $modal.open({
-        templateUrl: mcdaRootPath + 'js/workspace/createWorkspace.html',
+        templateUrl: './createWorkspace.html',
         controller: 'CreateWorkspaceController',
         resolve: {
           callback: function() {
@@ -63,7 +61,7 @@ define(['lodash'], function(_) {
 
     function deleteWorkspace(workspace) {
       $modal.open({
-        templateUrl: mcdaRootPath + 'js/workspace/deleteWorkspace.html',
+        templateUrl: './deleteWorkspace.html',
         controller: 'DeleteWorkspaceController',
         resolve: {
           callback: function() {
@@ -86,7 +84,7 @@ define(['lodash'], function(_) {
 
     function deleteInProgress(id, title) {
       $modal.open({
-        templateUrl: mcdaRootPath + 'js/workspace/deleteWorkspace.html',
+        templateUrl: './deleteWorkspace.html',
         controller: 'DeleteInProgressController',
         resolve: {
           callback: function() {

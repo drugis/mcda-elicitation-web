@@ -1,11 +1,13 @@
 'use strict';
-define(['angular-mocks',
+define([
+  'angular',
+  'angular-mocks',
   'mcda/effectsTable/effectsTable'
-], function() {
+], function(angular) {
   describe('EffectsTableService', function() {
     var effectTableService;
 
-    beforeEach(module('elicit.effectsTable'));
+    beforeEach(angular.mock.module('elicit.effectsTable'));
 
     beforeEach(inject(function(EffectsTableService) {
       effectTableService = EffectsTableService;

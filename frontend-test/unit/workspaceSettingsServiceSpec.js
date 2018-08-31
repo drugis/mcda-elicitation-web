@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
+define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angular) {
   describe('the WorkspaceSettingsService', function() {
     var workspaceSettingsService, q, scope;
     var stateParams = {
@@ -17,9 +17,9 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
       showPercentages: true,
       effectsDisplay: 'effects'
     };
-    var workspaceSettingsResourceMock = jasmine.createSpyObj('WorkspaceSettingsResource', ['get', 'save']);
+    var workspaceSettingsResourceMock = jasmine.createSpyObj('WorkspaceSettingsResource', ['get', 'put']);
 
-    beforeEach(module('elicit.workspace', function($provide) {
+    beforeEach(angular.mock.module('elicit.workspace', function($provide) {
       $provide.value('$stateParams', stateParams);
       $provide.value('WorkspaceSettingsResource', workspaceSettingsResourceMock);
     }));
@@ -52,6 +52,9 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
         loadedPromise.then(function() {
           loadResolved = true;
         });
+      });
+      afterEach(function(){
+        loadResolved = false;
       });
       it('should return a promise and not change settings until the new ones are loaded', function() {
         expect(workspaceSettingsResourceMock.get).toHaveBeenCalledWith(stateParams);
@@ -102,7 +105,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
       var settingsChanged = false;
       beforeEach(function() {
         saveDefer = q.defer();
-        workspaceSettingsResourceMock.save.and.returnValue({
+        workspaceSettingsResourceMock.put.and.returnValue({
           $promise: saveDefer.promise
         });
 
@@ -116,10 +119,14 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function() {
       });
       afterEach(function() {
         deregisterChangeListener();
+        saveResolved = false;
+        newSettings = 'newSettings';
+        newToggledColumns = 'newToggledColumns';
+        settingsChanged = false;
       });
 
       it('should call the save function of the settings resource and return a promise', function() {
-        expect(workspaceSettingsResourceMock.save).toHaveBeenCalledWith(stateParams, {
+        expect(workspaceSettingsResourceMock.put).toHaveBeenCalledWith(stateParams, {
           settings: newSettings, toggledColumns: newToggledColumns
         });
         expect(saveResolved).toBe(false);

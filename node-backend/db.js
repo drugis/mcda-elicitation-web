@@ -3,9 +3,12 @@ var pg = require('pg');
 var async = require('async');
 var logger = require('./logger');
 
-module.exports = function(url) {
-  var dbUrl = url;
-  logger.debug('db connection: ' + url);
+var pool;
+
+module.exports = function(connectionInfo) {
+  pool = !pool ? new pg.Pool(connectionInfo) : pool;
+
+  logger.debug('db pool: ' + JSON.stringify(connectionInfo, null, 2));
 
   function startTransaction(client, done, callback) {
     logger.debug('START TRANSACTION');
@@ -43,7 +46,7 @@ module.exports = function(url) {
         });
       }
 
-      pg.connect(dbUrl, function(err, client, done) {
+      pool.connect(function(err, client, done) {
         if (err) {
           logger.error(err);
           return callback(err);
@@ -65,7 +68,7 @@ module.exports = function(url) {
     },
     query: function(text, values, callback) {
       logger.debug('db.query; text: ' + text + ' values: ' + values);
-      pg.connect(dbUrl, function(err, client, done) {
+      pool.connect(function(err, client, done) {
         if (err) {
           logger.error(err);
           callback(err);

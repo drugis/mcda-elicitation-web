@@ -1,10 +1,17 @@
 'use strict';
-define(['lodash', 'angular-mocks', 'mcda/preferences/preferences', 'mcda/misc'], function(_) {
+define([
+  'lodash',
+  'angular',
+  'angular-mocks',
+  'mcda/preferences/preferences',
+  'mcda/misc'
+], function(_, angular) {
   describe('Exact swing weighting service', function() {
 
     var scope;
     var currentScenario;
-    var state = jasmine.createSpyObj('$state', ['go']);
+    var $stateParams;
+    var stateMock = jasmine.createSpyObj('$state', ['go']);
     var orderingServiceMock = jasmine.createSpyObj('OrderingService', ['getOrderedCriteriaAndAlternatives']);
     var taskDefinition = jasmine.createSpyObj('taskDefinition', ['clean']);
     taskDefinition.clean.and.callFake(_.identity);
@@ -17,50 +24,54 @@ define(['lodash', 'angular-mocks', 'mcda/preferences/preferences', 'mcda/misc'],
         f(orderings);
       }
     });
-    var sliderOptions = {};
+    var sliderOptions;
+    var getValues = function(criteria) {
+      return _.reduce(criteria, function(accum, criterion, key) {
+        accum[key] = 100;
+        return accum;
+      }, {});
+    };
+    var baseTitle = 'Precise swing';
+    var toBackEnd = function(mostImportantCriterion) {
+      return function(value, key) {
+        return {
+          type: 'exact swing',
+          ratio: 1 / (value / 100),
+          criteria: [mostImportantCriterion, key]
+        };
+      };
+    };
 
-    beforeEach(module('elicit.preferences', function($provide) {
-      $provide.value('$state', state);
+    beforeEach(angular.mock.module('elicit.preferences', function($provide) {
+      $provide.value('$state', stateMock);
       $provide.value('OrderingService', orderingServiceMock);
     }));
 
+    beforeEach(inject(function($rootScope, SwingWeightingService) {
+      orderings = {
+        criteria: [],
+        alternatives: []
+      };
+      sliderOptions = {};
+      scope = $rootScope.$new();
+      scope.aggregateState = {
+        problem: exampleProblem()
+      };
+      currentScenario = jasmine.createSpyObj('currentScenario', ['$save']);
+      currentScenario.$save.and.callFake(function(_ignore, callback) {
+        callback();
+      });
+      SwingWeightingService.initWeightingScope(scope,
+        $stateParams,
+        currentScenario,
+        taskDefinition,
+        sliderOptions,
+        getValues,
+        baseTitle,
+        toBackEnd);
+    }));
 
     describe('initially', function() {
-      var $stateParams = {};
-      var getValues = function(criteria) {
-        return _.reduce(criteria, function(accum, criterion, key) {
-          accum[key] = 100;
-          return accum;
-        }, {});
-      };
-      var baseTitle = 'Precise swing';
-      var toBackEnd = function(mostImportantCriterion) {
-        return function(value, key) {
-          return {
-            type: 'exact swing',
-            ratio: 1 / (value / 100),
-            criteria: [mostImportantCriterion, key]
-          };
-        };
-      };
-      beforeEach(inject(function($rootScope, SwingWeightingService) {
-        scope = $rootScope.$new();
-        scope.aggregateState = {
-          problem: exampleProblem()
-        };
-        currentScenario = jasmine.createSpyObj('currentScenario', ['$save']);
-        currentScenario.$save.and.callFake(function(_ignore, callback) {
-          callback();
-        });
-        SwingWeightingService.initWeightingScope(scope,
-          $stateParams,
-          currentScenario,
-          taskDefinition,
-          sliderOptions,
-          getValues,
-          baseTitle,
-          toBackEnd);
-      }));
       it('scope should be initialised', function() {
         expect(scope.canSave).toBeDefined();
         expect(scope.canSave()).toBeFalsy();
@@ -90,7 +101,7 @@ define(['lodash', 'angular-mocks', 'mcda/preferences/preferences', 'mcda/misc'],
           'Dist DVT': 100,
           'Bleed': 100
         });
-        expect(scopeState.sliderOptions).toBe(sliderOptions);
+        expect(scopeState.sliderOptions).toEqual(sliderOptions);
         expect(scopeState.sliderOptionsDisabled.disabled).toBe(true);
         expect(scope.canSave(scopeState)).toBeTruthy();
       });
@@ -101,11 +112,11 @@ define(['lodash', 'angular-mocks', 'mcda/preferences/preferences', 'mcda/misc'],
           scope.$digest();
         });
         afterEach(function() {
-          state.go.calls.reset();
+          stateMock.go.calls.reset();
         });
         it('should set the preferences properly and go back to the preferences screen', function() {
           expect(currentScenario.$save).toHaveBeenCalled();
-          expect(state.go).toHaveBeenCalledWith('preferences');
+          expect(stateMock.go).toHaveBeenCalledWith('preferences');
           expect(scope.$emit).toHaveBeenCalled();
         });
       });

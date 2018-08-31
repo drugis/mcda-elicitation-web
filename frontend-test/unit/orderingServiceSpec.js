@@ -1,12 +1,12 @@
 'use strict';
-define(['angular-mocks', 'mcda/workspace/workspace'], function() {
+define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angular) {
   describe('OrderingService', function() {
     var orderingService;
     var rootScope;
     var orderDefer;
     var orderingResourceMock = jasmine.createSpyObj('OrderingResource', ['get']);
 
-    beforeEach(module('elicit.workspace', function($provide) {
+    beforeEach(angular.mock.module('elicit.workspace', function($provide) {
       $provide.value('OrderingResource', orderingResourceMock);
     }));
 

@@ -1,12 +1,18 @@
 'use strict';
-define(['angular-mocks', 'mcda/results/results', 'angular-patavi-client', 'angularjs-slider'], function() {
+define([
+  'angular',
+  'angular-mocks', 
+  'mcda/results/results', 
+  'angular-patavi-client', 
+  'angularjs-slider'
+], function(angular) {
   describe('The MCDAResultsService', function() {
     var resultsService;
     var pataviServiceMock = jasmine.createSpyObj('PataviServiceMock', ['somefunction']);
 
     beforeEach(function() {
-      module('patavi', function() {});
-      module('elicit.results', function($provide) {
+      angular.mock.module('patavi', function() {});
+      angular.mock.module('elicit.results', function($provide) {
         $provide.value('PataviService', pataviServiceMock);
       });
     });

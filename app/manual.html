@@ -7,96 +7,80 @@
   <meta name="viewport" content="width=device-width">
   <link rel="shortcut icon" href="/img/favicon.png" type="image/x-icon">
   <title>mcda.drugis.org manual</title>
-  <link rel="stylesheet" type="text/css" href="/bower_components/font-awesome/css/font-awesome.min.css">
-  <link rel="stylesheet" type="text/css" href="/css/mcda-drugis.css">
-  <script src="/bower_components/bowser/bowser.min.js"></script>
-  <link rel="stylesheet" href="/bower_components/KaTeX/dist/katex.min.css">
-  <script src="/bower_components/KaTeX/dist/katex.min.js"></script>
-  <script src="/bower_components/KaTeX/dist/contrib/auto-render.min.js"></script>
-  <script src="/bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="/bower_components/smooth-scroller/dist/smooth-scroller.bower.min.js"></script>
-  <script src="/bower_components/toc/dist/toc.bower.min.js"></script>
-  <script src="/bower_components/scrollup/dist/jquery.scrollUp.min.js"></script>
+
   <style type="text/css">
-  #scrollUp {
-    bottom: 20px;
-    right: 20px;
-    padding: 10px 20px;
-    background-color: #555;
-    color: #fff;
-  }
+    #scrollUp {
+      bottom: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background-color: #555;
+      color: #fff;
+    }
 
-  .figure {
-    text-align: center;
-    margin-bottom: 1em;
-  }
+    .figure {
+      text-align: center;
+      margin-bottom: 1em;
+    }
 
-  .figure img {
-    padding: 5px;
-    border: 1px solid gray;
-  }
+    .figure img {
+      padding: 5px;
+      border: 1px solid gray;
+    }
 
-  .figure .caption {
-    font-style: italic;
-  }
+    .figure .caption {
+      font-style: italic;
+    }
 
-  #toc ul {
-    list-style-type: none;
-    margin-top: -20px;
-    padding: 2rem 1rem;
-    background-color: #f4f4f4;
-  }
+    #mcda-shared-toc ol {
+      list-style-type: none;
+      background-color: #f4f4f4;
+      margin-left: 0;
+      padding-left: 1em;
+    }
 
-  #toc li {
-    font-size: 0.875rem;
-  }
+    #mcda-shared-toc li {
+      font-size: 0.875rem;
+    }
 
-  #toc li a {
-    display: block;
-    margin: 0;
-    padding: 0.4375rem 0.875rem;
-  }
+    #mcda-shared-toc li a {
+      display: block;
+      margin: 0;
+      padding: 0.4375rem 0.875rem;
+    }
 
-  #toc li a:hover,
-  #toc li a:focus {
-    background: rgba(0, 0, 0, 0.025);
-    color: #7056c6;
-  }
+    #mcda-shared-toc li a:hover,
+    #mcda-shared-toc li a:focus {
+      background: rgba(0, 0, 0, 0.025);
+      color: #7056c6;
+    }
 
-  #toc .toc-h2 {
-    text-transform: uppercase;
-    color: #008CBA;
-    font-weight: bold;
-  }
-
-  #toc .toc-h3 a {
-    padding-left: 1.225rem;
-  }
-
-  #toc .toc-h4 a {
-    padding-left: 1.675rem;
-  }
+    #mcda-shared-toc .node-name--H2 {
+      text-transform: uppercase;
+      font-weight: bold;
+    }
   </style>
 </head>
 <!-- added inline style to override drugis general styling to clean fixed breadcrumbbar -->
 
 <body>
   <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserCheck">
-    Your browser, <span id="browserVersion1"></span>, is <b>out of date</b>. It has known <b>security flaws</b> and will <b>not run this web application correctly</b>.
+    Your browser, <span id="browserVersion1"></span>, is <b>out of date</b>. It has known <b>security flaws</b> and will
+    <b>not run this web application correctly</b>.
     <br>
     <a href="http://browser-update.org/update-browser.html#drugis.org">Please update your browser</a> before continuing.
   </div>
   <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserUnknown">
-    Your browser is unknown to us. This web application may or may not work correctly using it. Proceed at your own risk, or <a href="http://browser-update.org/update-browser.html#drugis.org">download a well-known browser</a> before continuing.
+    Your browser is unknown to us. This web application may or may not work correctly using it. Proceed at your own risk, or
+    <a href="http://browser-update.org/update-browser.html#drugis.org">download a well-known browser</a> before continuing.
   </div>
   <script type="text/javascript">
-  if (bowser.c || (bowser.msie && bowser.version <= 8)) {
-    document.getElementById("browserVersion1").innerHTML = bowser.name + " " + bowser.version;
-    document.getElementById("browserCheck").style.display = "block";
-  }
-  if (bowser.x) {
-    document.getElementById("browserUnknown").style.display = "block";
-  }
+    if (bowser.c || (bowser.msie && bowser.version <= 8)) {
+      document.getElementById("browserVersion1").innerHTML = bowser.name + " " + bowser.version;
+      document.getElementById("browserCheck").style.display = "block";
+    }
+    if (bowser.x) {
+      document.getElementById("browserUnknown").style.display = "block";
+    }
   </script>
   <div class="fixed">
     <div class="top-bar">
@@ -122,17 +106,23 @@
       <div class="grid-x">
         <div class="grid-x grid-margin-x">
           <div class="cell large-3">
-            <ul class="side-nav">
-              <div id="toc"></div>
-            </ul>
+            <div id="mcda-shared-toc" class="toc" data-toc="h2, h3, h4"></div>
           </div>
-          <div class="cell large-9 medium-12 end">
+          <div class="js-toc-content cell large-9 medium-12 end">
             <h2 id="mcda-introduction">Introduction</h2>
-            <p>This is the manual for the MCDA user interface for benefit-risk analysis. It starts with instructions about creating a workspace (based on a dataset), followed by a brief introduction to benefit-risk analysis, and a guide to the MCDA user interface itself.
+            <p>This is the manual for the MCDA user interface for benefit-risk analysis. It starts with instructions about
+              creating a workspace (based on a dataset), followed by a brief introduction to benefit-risk analysis, and a
+              guide to the MCDA user interface itself.
             </p>
             <h3 id="mcda-preparing-dataset">Preparing your dataset</h3>
-            <p>This section only applies to the stand-alone version of MCDA, hosted on <a href="https://mcda.drugis.org/">https://mcda.drugis.org/</a>. In ADDIS (<a href="https://addis.drugis.org/">https://addis.drugis.org/</a>), this step is not necessary.</p>
-            <p>After signing in to MCDA, you will be redirected to your personal home page. It contains a list of your previously created workspaces (which will be empty until you create one). A <i>workspace</i> is an abstract container for a set of evidence, plus any filterings, transformations and analyses you may have performed for that set of evidence. Any unfinished workspaces in the process of manual entry will also be shown here. Clicking the 'Create workspace' button will open a dialog that lets you choose what to base your workspace on: an example dataset selected by us, a file uploaded by you, or manual entry by you.</p>
+            <p>This section only applies to the stand-alone version of MCDA, hosted on <a href="https://mcda.drugis.org/">https://mcda.drugis.org/</a>.
+              In ADDIS (<a href="https://addis.drugis.org/">https://addis.drugis.org/</a>), this step is not necessary.</p>
+            <p>After signing in to MCDA, you will be redirected to your personal home page. It contains a list of your previously
+              created workspaces (which will be empty until you create one). A <i>workspace</i> is an abstract container
+              for a set of evidence, plus any filterings, transformations and analyses you may have performed for that set
+              of evidence. Any unfinished workspaces in the process of manual entry will also be shown here. Clicking the
+              'Create workspace' button will open a dialog that lets you choose what to base your workspace on: an example
+              dataset selected by us, a file uploaded by you, or manual entry by you.</p>
             <h4 id="data-upload">Data upload</h4>
             <p>
               Datasets can be uploaded in JSON format. The JSON should contain the following entries (note that JSON is case-sensitive):
@@ -149,7 +139,8 @@
               The title and description properties should contain text.
             </p>
             <p>
-              The criteria property should contain a series of properties with the names and details of the different criteria in your analysis. The following is an example of JSON describing a single criterion (HAM-D):
+              The criteria property should contain a series of properties with the names and details of the different criteria in your
+              analysis. The following is an example of JSON describing a single criterion (HAM-D):
               <pre>
               "criteria": {
                 "HAM-D": {
@@ -183,7 +174,9 @@
             </pre>
             </p>
             <p>
-              The performanceTable property should contain the actual data of the measurements for each criterion for each alternative. Performance can be measured either in relative or exact terms. If relative, the performance should contain a baseline plus a matrix of relative deviations. If exact, simply the value suffices.
+              The performanceTable property should contain the actual data of the measurements for each criterion for each alternative.
+              Performance can be measured either in relative or exact terms. If relative, the performance should contain
+              a baseline plus a matrix of relative deviations. If exact, simply the value suffices.
             </p>
             <p>
               An example of exact performance:
@@ -234,35 +227,49 @@
             </pre>
             </p>
             <p>
-              The preferences property should generally consist of an empty object. This will be filled in by performing preference elicitation within the MCDA app.
+              The preferences property should generally consist of an empty object. This will be filled in by performing preference elicitation
+              within the MCDA app.
             </p>
             <p>
-              A list of complete examples is available on the <a href="https://github.com/drugis/mcda-elicitation-web/tree/master/examples" target="_blank">MCDA repository</a>.
+              A list of complete examples is available on the <a href="https://github.com/drugis/mcda-elicitation-web/tree/master/examples"
+                target="_blank">MCDA repository</a>.
             </p>
             <h4 id="mcda-manual-entry">Manual entry</h4>
             <p>
-              Selecting the 'Manual entry' option in the workspace creation dialog takes you to the manual workspace creation screen. Here, you can input the title, therapeutic context, criteria, and alternatives as well as the measurement data.
+              Selecting the 'Manual entry' option in the workspace creation dialog takes you to the manual workspace creation screen. Here,
+              you can input the title, therapeutic context, criteria, and alternatives as well as the measurement data.
             </p>
             <div class="figure">
               <img src="img/manualEntry1.jpg" />
               <div class="caption">Manual entry, first step.</div>
             </div>
             <p>
-              Alternatives are nothing more than a name, therefore creating one is as simple as typing and clicking the 'Add alternative' button (or hitting enter). Criteria are more complicated. They have several properties , e.g. whether or not they are favourable, what the source of your data for this criterion is and the unit they are measured in.
+              Alternatives are nothing more than a name, therefore creating one is as simple as typing and clicking the 'Add alternative'
+              button (or hitting enter). Criteria are more complicated. They have several properties , e.g. whether or not
+              they are favourable, what the source of your data for this criterion is and the unit they are measured in.
             </p>
             <div class="figure">
               <img src="img/manualCriterion.jpg" />
               <div class="caption">Manual entry, creating a criterion.</div>
             </div>
             <p>
-              Creating a survival criterion also allows you to set the specific summary measure to use. This can be the mean or median survival, or survival at a specific time point. Note that the unit of measurement of a criterion may change automatically (e.g. it becomes 'proportion' when indicating the criterion is dichotomous) but can always be changed manually afterwards. The data source selection determines how data is entered in the next step. At any time during the manual entry process you can click the 'Save' button and the current state of your workspace in progress will be saved. You can click this in-progress workspace from your personal homepage later, and continue where you left off.
+              Creating a survival criterion also allows you to set the specific summary measure to use. This can be the mean or median
+              survival, or survival at a specific time point. Note that the unit of measurement of a criterion may change
+              automatically (e.g. it becomes 'proportion' when indicating the criterion is dichotomous) but can always be
+              changed manually afterwards. The data source selection determines how data is entered in the next step. At
+              any time during the manual entry process you can click the 'Save' button and the current state of your workspace
+              in progress will be saved. You can click this in-progress workspace from your personal homepage later, and
+              continue where you left off.
             </p>
             <div class="figure">
               <img src="img/manualEntry2.jpg" />
               <div class="caption">Manual entry, second step.</div>
             </div>
             <p>
-              The second step of the manual entry process is where you input the data for each combination of criterion and alternative. Data is entered for each cell by clicking on it and filling out the cells in the dialog that appears. Depending on the type of the criterion and the data source selected, this dialog will have different fields, (e.g. mean, standard deviation and N for continuous variables, or simply a value for exact value distributions).
+              The second step of the manual entry process is where you input the data for each combination of criterion and alternative.
+              Data is entered for each cell by clicking on it and filling out the cells in the dialog that appears. Depending
+              on the type of the criterion and the data source selected, this dialog will have different fields, (e.g. mean,
+              standard deviation and N for continuous variables, or simply a value for exact value distributions).
             </p>
             <div id="mcda-shared-content"></div>
           </div>
@@ -270,26 +277,6 @@
       </div>
     </div>
   </section>
-  <script>
-  'use strict';
-  $("#mcda-shared-content").load("/manual/shared.html", function() {
-    renderMathInElement(document.body);
-    $(function() {
-      $.scrollUp();
-    });
-    $("#toc").toc({
-      'selectors': 'h2,h3,h4'
-    });
-    if (window.location.hash) {
-      setTimeout(function() { // wait for reflows to finish
-        $('html, body').animate({
-          scrollTop: $(window.location.hash).offset().top
-        }, 1000);
-      }, 1);
-    }
-
-  });
-  </script>
 </body>
 
 </html>

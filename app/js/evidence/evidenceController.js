@@ -5,7 +5,6 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     'isMcdaStandalone',
     'OrderingService',
     'PageTitleService',
-    'mcdaRootPath',
     'swap'
   ];
   var EvidenceController = function($scope, $state, $stateParams, $modal,
@@ -13,7 +12,6 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     isMcdaStandalone,
     OrderingService,
     PageTitleService,
-    mcdaRootPath,
     swap
   ) {
     // functions
@@ -45,7 +43,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
 
     function editTherapeuticContext() {
       $modal.open({
-        templateUrl: mcdaRootPath + 'js/evidence/editTherapeuticContext.html',
+        templateUrl: '../evidence/editTherapeuticContext.html',
         controller: 'EditTherapeuticContextController',
         resolve: {
           therapeuticContext: function() {
@@ -71,7 +69,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
 
     function editAlternative(alternative) {
       $modal.open({
-        templateUrl: mcdaRootPath + 'js/evidence/editAlternative.html',
+        templateUrl: '../evidence/editAlternative.html',
         controller: 'EditAlternativeController',
         resolve: {
           alternative: function() {

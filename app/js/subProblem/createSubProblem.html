@@ -32,7 +32,7 @@
         <h4>Criterion and alternative selection</h4>
       </div>
       <div class="cell large-2">
-        <workspace-settings callback="getWorkspaceSettings"></workspace-settings>
+        <workspace-settings callback="getWorkspaceSettings" edit-mode="editMode"></workspace-settings>
       </div>
       <div class="cell">
         <table class="full-width effects-table">
@@ -74,7 +74,7 @@
               <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id]}"
                 ng-show="toggledColumns['criteria']">
                 <label>
-                  <input type="checkbox" ng-model="subProblemState.criterionInclusions[row.criterion.id]" ng-change="updateInclusions()" ng-disabled="subProblemState.criterionInclusions[row.criterion.id] && subProblemState.numberOfCriteriaSelected < 3"> {{row.criterion.title}}
+                  <input type="checkbox" ng-model="subProblemState.criterionInclusions[row.criterion.id]" ng-change="updateInclusions()" ng-disabled="subProblemState.criterionInclusions[row.criterion.id] && subProblemState.numberOfCriteriaSelected < 3">                  {{row.criterion.title}}
                 </label>
               </td>
               <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id]}"

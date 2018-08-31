@@ -1,7 +1,7 @@
 'use strict';
-var dbUri = 'postgres://' + process.env.MCDAWEB_DB_USER + ':' + process.env.MCDAWEB_DB_PASSWORD + '@' + process.env.MCDAWEB_DB_HOST + '/' + process.env.MCDAWEB_DB_NAME; // FIXME
-console.log(dbUri);
-var db = require('./node-backend/db')(dbUri);
+var dbUtil = require('./node-backend/dbUtil');
+console.log(dbUtil.mcdaDBUrl);
+var db = require('./node-backend/db')(dbUtil.connectionConfig);
 var _ = require('lodash');
 var patavi = require('./node-backend/patavi');
 var logger = require('./node-backend/logger');
@@ -25,7 +25,7 @@ app
   .use(helmet())
   .use(session({
     store: new (require('connect-pg-simple')(session))({
-      conString: dbUri,
+      conString: dbUtil.mcdaDBUrl,
     }),
     secret: process.env.MCDAWEB_COOKIE_SECRET,
     resave: true,
@@ -36,17 +36,18 @@ app
       maxAge: 60 * 60 * 1000, // 1 hour
       secure: process.env.MCDAWEB_USE_SSL_AUTH
     }
-  }));
-app.set('trust proxy', 1);
+  }))
+  .set('trust proxy', 1);
+
 server = http.createServer(app);
 
 if (process.env.MCDAWEB_USE_SSL_AUTH) {
-  app.get('/signin', function (req, res) {
+  app.get('/signin', function(req, res) {
     var clientString = req.header('X-SSL-CLIENT-DN');
     var emailRegex = /emailAddress=([^,]*)/;
     var email = clientString.match(emailRegex)[1];
     if (email) {
-      UserManagement.findUserByEmail(email, function (err, result) {
+      UserManagement.findUserByEmail(email, function(err, result) {
         if (err) {
           logger.error(err);
         } else {
@@ -64,43 +65,48 @@ if (process.env.MCDAWEB_USE_SSL_AUTH) {
     new GoogleStrategy({
       clientID: process.env.MCDAWEB_GOOGLE_KEY,
       clientSecret: process.env.MCDAWEB_GOOGLE_SECRET,
-      callbackURL: process.env.MCDA_HOST + "/auth/google/callback"
+      callbackURL: process.env.MCDA_HOST + '/auth/google/callback'
     },
       UserManagement.findOrCreateUser
     ));
-  passport.serializeUser(function (user, cb) {
+  passport.serializeUser(function(user, cb) {
     cb(null, user);
   });
-  passport.deserializeUser(function (obj, cb) {
+  passport.deserializeUser(function(obj, cb) {
     cb(null, obj);
   });
-  app.get('/signin', function (req, res) {
-    res.sendFile(__dirname + '/public/signin.html');
-  });
-  app.use(passport.initialize());
-  app.use(passport.session());
-  app.get('/auth/google/', passport.authenticate('google', { scope: ['profile'] }));
-  app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/signin' }),
-    function (req, res) {
-      res.redirect('/');
-    });
+  app.use(passport.initialize())
+    .use(passport.session())
+    .get('/auth/google/', passport.authenticate('google', { scope: ['profile', 'email'] }))
+    .get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/signin' }),
+      function(req, res) {
+        res.redirect('/');
+      });
 }
 
-app.get('/logout', function(req, res){
+app.get('/logout', function(req, res) {
   req.logout();
   res.redirect('/');
-});
-
-var bower_path = '/bower_components';
-app
-  .use(express.static('manual'))
-  .use('/bower_components', express.static(__dirname + '/bower_components'))
-  .use(express.static('app'))
-  .use('/template', express.static(__dirname + bower_path + '/angular-foundation-assets/template'))
+})
+  .use(csurf())
+  .use(bodyParser.json({ limit: '5mb' }))
+  .get('/', function(req, res) {
+    if (req.user || req.session.user) {
+      res.sendFile(__dirname + '/dist/index.html');
+    } else {
+      res.sendFile(__dirname + '/dist/signin.html');
+    }
+  })
+  .get('/lexicon.json', function(req, res) {
+    res.sendFile(__dirname + '/app/lexicon.json');
+  })
+  .get('/mcda-page-titles.json', function(req, res) {
+    res.sendFile(__dirname + '/app/mcda-page-titles.json');
+  })
+  .use(express.static('dist'))
+  .use(express.static('public'))
   .use('/examples', express.static(__dirname + '/examples'))
-  .use(bodyParser.json({limit: '5mb'}))
-  .use(csurf());
-
+  ;
 
 var router = express.Router();
 router.get('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
@@ -119,14 +125,6 @@ app.use(function (req, res, next) {
     res.cookie('LOGGED-IN-USER', JSON.stringify(_.omit(req.user, 'email')));
   }
   next();
-});
-
-app.get('/', function (req, res) {
-  if (req.user || req.session.user) {
-    res.sendFile(__dirname + '/public/index.html');
-  } else {
-    res.redirect('/signin');
-  }
 });
 
 // Workspaces in progress
@@ -162,11 +160,11 @@ app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', Scenar
 
 //Workspace settings
 app.get('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsService.getWorkspaceSettings);
-app.post('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsService.postWorkspaceSettings);
+app.put('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsService.putWorkspaceSettings);
 
 // patavi
-app.post('/patavi', function (req, res, next) { // FIXME: separate routes for scales and results
-  patavi.create(req.body, function (err, taskUri) {
+app.post('/patavi', function(req, res, next) { // FIXME: separate routes for scales and results
+  patavi.create(req.body, function(err, taskUri) {
     if (err) {
       logger.error(err);
       return next({
@@ -182,14 +180,11 @@ app.post('/patavi', function (req, res, next) { // FIXME: separate routes for sc
   });
 });
 
-//FIXME: should not be needed?
-app.get('/main.js', function (req, res) {
-  res.sendFile(__dirname + '/app/js/main.js');
-});
+app.use('/css/fonts', express.static('./dist/fonts'));
 
 //The 404 Route (ALWAYS Keep this as the last route)
-app.get('*', function (req, res) {
-  res.status(404).sendFile(__dirname + '/public/error.html');
+app.get('*', function(req, res) {
+  res.status(404).sendFile(__dirname + '/dist/error.html');
 });
 
 var port = 8080;
@@ -197,6 +192,6 @@ if (process.argv[2] === 'port' && process.argv[3]) {
   port = process.argv[3];
 }
 
-server.listen(port, function () {
+server.listen(port, function() {
   console.log('Listening on http://localhost:' + port);
 });

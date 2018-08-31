@@ -3,9 +3,9 @@ define([], function() {
   var ESC = 27;
   var ENTER = 13;
 
-  var dependencies = ['$timeout', 'mcdaRootPath'];
+  var dependencies = ['$timeout'];
 
-  var SensitivityInputDirective = function($timeout, mcdaRootPath) {
+  var SensitivityInputDirective = function($timeout) {
     return {
       restrict: 'E',
       scope: {
@@ -16,7 +16,7 @@ define([], function() {
         'changeCallback': '=',
         'isEditing': '='
       },
-      templateUrl: mcdaRootPath + 'js/results/sensitivityInputDirective.html',
+      templateUrl: './sensitivityInputDirective.html',
       link: function(scope) {
         // functions
         scope.keyCheck = keyCheck;

@@ -1,6 +1,6 @@
 'use strict';
-define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
-  function(_, $, angular, d3, nv, MathJax) {
+define(['lodash', 'jquery', 'angular', 'd3', 'nvd3'],
+  function(_, $, angular, d3, nv) {
 
     var directives = angular.module('elicit.directives', []);
 
@@ -78,7 +78,6 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
       };
     });
 
-
     directives.directive('barChart', function() {
       return {
         restrict: 'E',
@@ -126,7 +125,6 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
         }
       };
     });
-
 
     directives.directive('lineChart', function() {
       return {
@@ -270,59 +268,6 @@ define(['lodash', 'jQuery', 'angular', 'd3', 'nvd3', 'MathJax'],
             });
           });
         }
-      };
-    });
-
-    directives.directive('mathjaxBind', function() {
-      return {
-        restrict: 'A',
-        link: function(scope, element, attrs) {
-          scope.$watch(attrs.mathjaxBind, function(value) {
-            var $script = angular.element('<script type="math/tex">').html(value === undefined ? '' : value);
-            element.html('');
-            element.append($script);
-            MathJax.Hub.Config({
-              skipStartupTypeset: true,
-              messageStyle: 'none',
-              showMathMenu: false,
-              'SVG': {
-                font: 'Latin-Modern'
-              }
-            });
-            MathJax.Hub.Queue(['Reprocess', MathJax.Hub, element[0]]);
-          });
-        }
-      };
-    });
-
-    directives.directive('criterion', function() {
-      return {
-        restrict: 'E',
-        replace: true,
-        scope: {
-          criterion: '=of'
-        },
-        link: function(scope) {
-          updateCriterionView(scope.criterion);
-          scope.$watch('criterion', function(newValue) {
-            updateCriterionView(newValue);
-          });
-
-          function updateCriterionView(criterion) {
-            var hasDescription = !!criterion.description;
-            var dimensionlessUnits = ['proportion'];
-            var isDimensionless = !criterion.unitOfMeasurement ||
-              dimensionlessUnits.indexOf(criterion.unitOfMeasurement.toLowerCase()) !== -1;
-            var text;
-            if (hasDescription) {
-              text = criterion.description.replace(/(\.$)/g, '') + ' (' + criterion.title + (!isDimensionless ? ', ' + criterion.unitOfMeasurement : '') + ')';
-            } else {
-              text = criterion.title + (!isDimensionless ? ' ' + criterion.unitOfMeasurement : '');
-            }
-            scope.text = text;
-          }
-        },
-        template: '<span>{{text}}</span>'
       };
     });
 

@@ -1,26 +1,25 @@
 'use strict';
-define(['lodash'], function(_) {
+define([], function() {
   var dependencies = [
-    '$modal',
-    'mcdaRootPath'
+    '$modal'
   ];
   var WorkspaceSettingsDirective = function(
-    $modal,
-    mcdaRootPath
+    $modal
   ) {
     return {
       restrict: 'E',
       scope: {
-        callback: '='
+        callback: '=',
+        editMode: '='
       },
-      template: '<button class="button right" type="button" ng-click="openSettingsModal()"><i class="fa fa-cog"></i> Settings</button>',
+      template: '<button class="button right" type="button" ng-if="editMode.isUserOwner" ng-click="openSettingsModal()"><i class="fa fa-cog"></i> Settings</button>',
       link: function(scope) {
         // functions
         scope.openSettingsModal = openSettingsModal;
         // init
         function openSettingsModal() {
           $modal.open({
-            templateUrl: mcdaRootPath + 'js/workspace/workspaceSettings.html',
+            templateUrl: './workspaceSettings.html',
             controller: 'WorkspaceSettingsController',
             resolve: {
               callback: function() {

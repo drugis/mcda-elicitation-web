@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash','angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], function(_) {
+define(['lodash','angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], function(_,angular) {
 
   // - the lower bound must be lower than the lower end of the observed range
   // - the upper bound should be higher than the upper end of the observed range
@@ -10,8 +10,8 @@ define(['lodash','angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'
 
   describe('The scaleRange service', function() {
 
-    beforeEach(module('elicit.util'));
-    beforeEach(module('elicit.subProblem'));
+    beforeEach(angular.mock.module('elicit.util'));
+    beforeEach(angular.mock.module('elicit.subProblem'));
 
     describe('calculateScales', function() {
       it('on unbounded scales, bounds should lie outside the observed range', inject(function(ScaleRangeService) {

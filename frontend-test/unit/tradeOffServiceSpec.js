@@ -1,11 +1,11 @@
 'use strict';
-define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function() {
+define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(angular) {
   describe('the TradeOffService', function() {
     var tradeOffService;
     var taskResultsDefer;
     var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsService', ['postAndHandleResults']);
     
-    beforeEach(module('elicit.preferences', function($provide) {
+    beforeEach(angular.mock.module('elicit.preferences', function($provide) {
       $provide.value('PataviResultsService', pataviResultsServiceMock);
     }));
 

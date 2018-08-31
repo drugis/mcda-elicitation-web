@@ -1,6 +1,5 @@
 'use strict';
 define(['angular'], function(angular) {
-  var dependencies = ['ngResource'];
   var WorkspaceResource = function($resource) {
     return $resource(
       window.config.workspacesRepositoryUrl + ':workspaceId', {
@@ -18,6 +17,6 @@ define(['angular'], function(angular) {
       }
     );
   };
-
-  return angular.module('elicit.workspaceResource', dependencies).factory('WorkspaceResource', WorkspaceResource);
+  return angular.module('elicit.workspaceResource', ['ngResource'])
+    .factory('WorkspaceResource', ['$resource', WorkspaceResource]);
 });

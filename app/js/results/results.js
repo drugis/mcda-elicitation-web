@@ -1,16 +1,15 @@
 'use strict';
-var requires = [
-  'mcda/results/smaaResultsController',
-  'mcda/results/deterministicResultsController',
-  'mcda/results/editLegendController',
-  'mcda/results/sensitivityInputDirective',
-  'mcda/results/valueProfilePlotDirective',
-  'mcda/results/legendDirective',
-  'mcda/results/resultsService',
-  'mcda/results/pataviResultsService'
-];
-define(['angular'].concat(requires), function(
-  angular,
+define([
+  './smaaResultsController',
+  './deterministicResultsController',
+  './editLegendController',
+  './sensitivityInputDirective',
+  './valueProfilePlotDirective',
+  './legendDirective',
+  './resultsService',
+  './pataviResultsService',
+  'angular'
+], function(
   SmaaResultsController,
   DeterministicResultsController,
   EditLegendController,
@@ -18,20 +17,19 @@ define(['angular'].concat(requires), function(
   valueProfilePlotDirective,
   legendDirective,
   MCDAResultsService,
-  PataviResultsService
+  PataviResultsService,
+  angular
 ) {
-  return angular.module('elicit.results', ['patavi', 'rzModule'])
+    return angular.module('elicit.results', ['patavi', 'rzModule'])
+      .controller('SmaaResultsController', SmaaResultsController)
+      .controller('DeterministicResultsController', DeterministicResultsController)
+      .controller('EditLegendController', EditLegendController)
 
-    .controller('SmaaResultsController', SmaaResultsController)
-    .controller('DeterministicResultsController', DeterministicResultsController)
-    .controller('EditLegendController', EditLegendController)
+      .directive('sensitivityInput', sensitivityInputDirective)
+      .directive('valueProfilePlot', valueProfilePlotDirective)
+      .directive('legend', legendDirective)
 
-    .directive('sensitivityInput', sensitivityInputDirective)
-    .directive('valueProfilePlot', valueProfilePlotDirective)
-    .directive('legend', legendDirective)
-
-    .factory('MCDAResultsService', MCDAResultsService)
-    .factory('PataviResultsService', PataviResultsService)
-    ;
-
-});
+      .factory('MCDAResultsService', MCDAResultsService)
+      .factory('PataviResultsService', PataviResultsService)
+      ;
+  });
