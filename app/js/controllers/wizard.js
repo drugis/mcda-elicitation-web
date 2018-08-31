@@ -1,7 +1,9 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
 
-  return function($scope, $timeout, handler) {
+  var dependencies = ['$scope', '$timeout', 'handler'];
+
+  function wizard($scope, $timeout, handler) {
     // functions
     $scope.canProceed = canProceed;
     $scope.canReturn = canReturn;
@@ -71,5 +73,7 @@ define(['lodash', 'angular'], function(_, angular) {
       }
       return true;
     }
-  };
+  }
+
+  return dependencies.concat(wizard);
 });
