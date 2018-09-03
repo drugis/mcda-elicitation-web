@@ -42,8 +42,8 @@ define(['lodash'],
           return {
             type: 'ratio bound',
             bounds: [
-              1 / (value.low / 100),
-              1 / (value.high / 100)
+              1 / (value.high / 100),
+              1 / (value.low / 100)
             ],
             criteria: [mostImportantCriterion, key]
           };
