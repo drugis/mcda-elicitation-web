@@ -12,7 +12,8 @@ define([
   './workspaceSettingsService',
   './exampleResource',
   './workspaceSettingsDirective',
-  'angular'
+  'angular',
+  '../util'
 ], function(
   ChooseProblemController,
   CreateWorkspaceController,
