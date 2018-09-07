@@ -8841,3 +8841,8 @@ span.toggle-text {
   position: relative;
   bottom: 9px;
 }
+
+/* line 471, ../../sass/_mcda-drugis-base.scss */
+.dropdown.menu a {
+  background: #333;
+}
