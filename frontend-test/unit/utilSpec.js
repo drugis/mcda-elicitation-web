@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'angular-mocks', 'mcda/services/util'], function(angular) {
+define(['angular', 'angular-mocks', 'mcda/util'], function(angular) {
   describe('util', function() {
     beforeEach(angular.mock.module('elicit.util'));
     describe('intervalHull', function() {

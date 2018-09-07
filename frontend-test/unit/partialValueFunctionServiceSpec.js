@@ -2,7 +2,7 @@
 define(['angular',
   'angular-mocks',
   'mcda/services/taskDependencies',
-  'mcda/services/util',
+  'mcda/util',
   'mcda/evidence/evidence',
   'mcda/preferences/preferences'
 ],

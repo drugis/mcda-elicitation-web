@@ -72,12 +72,12 @@ define(['angular','angular-mocks', 'mcda/preferences/preferences'], function(ang
         var prefs = [{
             type: 'ratio bound',
             criteria: ['crit2', 'crit1'],
-            bounds: [4, 2]
+            bounds: [2, 4]
           },
           {
             type: 'ratio bound',
             criteria: ['crit2', 'crit3'],
-            bounds: [5, 4]
+            bounds: [4, 5]
           }
         ];
         var result = preferencesService.buildImportance(criteria, prefs);
