@@ -22,7 +22,7 @@ define([
   './services/workspaceResource',
   './services/scenarioResource',
   './services/taskDependencies',
-  './services/util',
+  './util',
   './results/results',
   './manualInput/manualInput',
   './subProblem/subProblemResource',

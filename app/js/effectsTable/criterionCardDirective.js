@@ -75,7 +75,7 @@ define(['lodash'], function(_) {
 
         function editDataSource(dataSource, dataSourceIndex) {
           $modal.open({
-            templateUrl: scope.isInput ? '/js/manualInput/addDataSource.html' : '/js/evidence/editDataSource.html',
+            template: scope.isInput ? require('../manualInput/addDataSource.html') : require('../evidence/editDataSource.html'),
             controller: 'EditDataSourceController',
             resolve: {
               callback: function() {

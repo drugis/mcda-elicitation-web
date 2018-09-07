@@ -10,7 +10,7 @@ define([], function() {
         isInvalidSourceLink: '=',
         changeCallback: '='
       },
-      templateUrl: 'js/manualInput/inputDataSourceDirective.html',
+      templateUrl: './inputDataSourceDirective.html',
       link: function(scope) {
         // functions
         scope.dataTypeChanged = dataTypeChanged;
