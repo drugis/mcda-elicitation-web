@@ -9,7 +9,8 @@ define(['lodash'], function(_) {
     'subProblems',
     'currentSubProblem',
     'scenarios',
-    'currentScenario'
+    'currentScenario',
+    'isMcdaStandalone'
   ];
 
   function MCDABenefitRiskController($scope, $transitions, $state, $stateParams, $modal,
@@ -21,7 +22,8 @@ define(['lodash'], function(_) {
     subProblems,
     currentSubProblem,
     scenarios,
-    currentScenario
+    currentScenario,
+    isMcdaStandalone
   ) {
     // functions
     $scope.forkScenario = forkScenario;
@@ -50,6 +52,7 @@ define(['lodash'], function(_) {
       return tableEntry.performance.type === 'empty';
     });
     $scope.$on('$destroy', deregisterTransitionListener);
+    $scope.isStandalone = isMcdaStandalone;
 
     $scope.$watch('scenario.state', updateTaskAccessibility);
     $scope.$on('elicit.resultsAccessible', function(event, scenario) {
