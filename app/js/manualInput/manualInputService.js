@@ -43,7 +43,7 @@ define(['lodash', 'angular'], function(_) {
       return InputKnowledgeService.getOptions(cell);
     }
 
-    function createProblem(criteria, treatments, title, description, inputData, useFavorability) {
+    function createProblem(criteria, treatments, title, description, inputData) {
       var newCriteria = buildCriteria(criteria);
       return {
         schemaVersion: currentSchemaVersion,
