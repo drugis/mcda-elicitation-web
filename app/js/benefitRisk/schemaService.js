@@ -37,12 +37,32 @@ define(['lodash', 'angular'], function(_, angular) {
     //private 
     function updateToVersionOnePointZeroPointZero(problem) {
       var newProblem = angular.copy(problem);
-      newProblem.criteria = _.mapValues(problem.criteria, function(criterion, criterionId) {
-        return createNewCriterion(problem, criterion, criterionId);
-      });
+      newProblem.criteria = _.mapValues(problem.criteria, _.partial(createNewCriterion, problem));
       newProblem.performanceTable = createNewPerformanceTable(newProblem);
       newProblem.schemaVersion = '1.0.0';
       return newProblem;
+    }
+
+    function updateToVersionOnePointOnePointZero(problem) {
+      var newProblem = angular.copy(problem);
+      if (newProblem.valueTree) {
+        newProblem.criteria = putFavorabilityOnCriteria(problem);
+        delete newProblem.valueTree;
+      }
+      newProblem.schemaVersion = '1.1.0';
+      return newProblem;
+    }
+
+    function putFavorabilityOnCriteria(problem){
+      return _.mapValues(problem.criteria, function(criterion, criterionId) {
+        var newCriterion = angular.copy(criterion);
+        if (problem.valueTree.children[0].criteria) {
+          newCriterion.isFavorable = _.includes(problem.valueTree.children[0].criteria, criterionId);
+        } else {
+          newCriterion.isFavorable = _.includes(_.flatten(_.map(problem.valueTree.children[0].children, 'criteria')));
+        }
+        return newCriterion;
+      });
     }
 
     function createNewPerformanceTable(problem) {
@@ -67,51 +87,37 @@ define(['lodash', 'angular'], function(_, angular) {
     function createDataSource(problem, criterion, criterionId) {
       var dataSource = _.pick(criterion, ['pvf', 'source', 'sourceLink', 'strengthOfEvidence', 'uncertainties']);
       dataSource.id = generateUuid();
-
-      var tableEntry = findEntryForCriterion(problem.performanceTable, criterionId);
-
-      if (isManualDistribution(tableEntry.performance.type)) {
-        dataSource.inputType = 'distribution';
-        dataSource.inputMethod = 'manualDistribution';
-      } else if (tableEntry.performance.type === 'dt') {
-        dataSource.inputType = 'distribution';
-        dataSource.inputMethod = 'assistedDistribution';
-        dataSource.dataType = 'continuous';
-      }
-      return dataSource;
+      var inputParameters = getInputParameters(problem.performanceTable, criterionId);
+      return _.merge(dataSource, inputParameters);
     }
 
-    function findEntryForCriterion(performanceTable, criterionId) {
-      var tableEntry = _.find(performanceTable, ['criterion', criterionId]);
-      if (!tableEntry) {
-        tableEntry = _.find(performanceTable, ['criterionUri', criterionId]);
+    function getInputParameters(performanceTable, criterionId) {
+      var type = findEntryTypeForCriterion(performanceTable, criterionId);
+      if (isManualDistribution(type)) {
+        return {
+          inputType: 'distribution',
+          inputMethod: 'manualDistribution'
+        };
+      } else if (type === 'dt') {
+        return {
+          inputType: 'distribution',
+          inputMethod: 'assistedDistribution',
+          dataType: 'continuous'
+        };
       }
-      return tableEntry;
+    }
+
+    function findEntryTypeForCriterion(performanceTable, criterionId) {
+      var tableEntry =  _.find(performanceTable, function(entry) {
+        return entry.criterion === criterionId || entry.criterionUri === criterionId;
+      });
+      return tableEntry.performance.type;
     }
 
     function isManualDistribution(type) {
       var MANUAL_DISTRIBUTIONS = ['exact', 'dnorm', 'dbeta', 'dgamma'];
       return _.includes(MANUAL_DISTRIBUTIONS, type);
     }
-
-    function updateToVersionOnePointOnePointZero(problem) {
-      var newProblem = _.cloneDeep(problem);
-      if (newProblem.valueTree) {
-        newProblem.criteria = _.mapValues(newProblem.criteria, function(criterion, criterionId) {
-          var newCriterion = _.cloneDeep(criterion);
-          if (problem.valueTree.children[0].criteria) {
-            newCriterion.isFavorable = _.includes(newProblem.valueTree.children[0].criteria, criterionId);
-          } else {
-            newCriterion.isFavorable = _.includes(_.flatten(_.map(problem.valueTree.children[0].children, 'criteria')));
-          }
-          return newCriterion;
-        });
-        delete newProblem.valueTree;
-      }
-      newProblem.schemaVersion = '1.1.0';
-      return newProblem;
-    }
-
 
     return {
       updateProblemToCurrentSchema: updateProblemToCurrentSchema,
