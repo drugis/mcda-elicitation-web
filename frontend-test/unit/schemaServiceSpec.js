@@ -32,11 +32,22 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
                 description: 'desc',
                 unitOfMeasurement: 'ms',
                 uncertainties: 'unc',
-                source: 'source'
+                source: 'source1'
+              },
+              crit2: {
+                title: 'criterion 2',
+                description: 'desc',
+                unitOfMeasurement: 'ms',
+                uncertainties: 'unc',
+                source: 'source2'
               }
             },
             performanceTable: [{
               criterion: 'crit1',
+              alternative: 'alt1',
+              performance: { type: 'dnorm' }
+            }, {
+              criterionUri: 'crit2',
               alternative: 'alt1',
               performance: { type: 'dnorm' }
             }]
@@ -55,12 +66,29 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
                   inputType: 'distribution',
                   inputMethod: 'manualDistribution',
                   uncertainties: 'unc',
-                  source: 'source'
+                  source: 'source1'
+                }]
+              },
+              crit2: {
+                title: 'criterion 2',
+                description: 'desc',
+                unitOfMeasurement: 'ms',
+                dataSources: [{
+                  id: undefined,
+                  inputType: 'distribution',
+                  inputMethod: 'manualDistribution',
+                  uncertainties: 'unc',
+                  source: 'source2'
                 }]
               }
             },
             performanceTable: [{
               criterion: 'crit1',
+              alternative: 'alt1',
+              dataSource: undefined,
+              performance: { type: 'dnorm' }
+            }, {
+              criterion: 'crit2',
               alternative: 'alt1',
               dataSource: undefined,
               performance: { type: 'dnorm' }

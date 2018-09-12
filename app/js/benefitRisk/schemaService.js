@@ -36,33 +36,62 @@ define(['lodash', 'angular'], function(_, angular) {
 
     //private 
     function updateToVersionOnePointZeroPointZero(problem) {
-      problem.criteria = _.mapValues(problem.criteria, function(criterion, criterionId) {
-        var newCriterion = _.pick(criterion, ['title', 'description', 'unitOfMeasurement', 'scale']);
-        var dataSource = _.pick(criterion, ['pvf', 'source', 'sourceLink', 'strengthOfEvidence', 'uncertainties']);
-        dataSource.id = generateUuid();
-
-        var tableEntry = _.find(problem.performanceTable, ['criterion', criterionId]);
-        var MANUAL_DISTRIBUTIONS = ['exact', 'dnorm', 'dbeta', 'dgamma'];
-        var performanceType = tableEntry.performance.type;
-        if (_.includes(MANUAL_DISTRIBUTIONS, performanceType)) {
-          dataSource.inputType = 'distribution';
-          dataSource.inputMethod = 'manualDistribution';
-        } else if (performanceType === 'dt') {
-          dataSource.inputType = 'distribution';
-          dataSource.inputMethod = 'assistedDistribution';
-          dataSource.dataType = 'continuous';
-        }
-
-        newCriterion.dataSources = [dataSource];
-        return newCriterion;
+      var newProblem = angular.copy(problem);
+      newProblem.criteria = _.mapValues(problem.criteria, function(criterion, criterionId) {
+        return createNewCriterion(problem, criterion, criterionId);
       });
-      problem.performanceTable = _.map(problem.performanceTable, function(tableEntry) {
+      newProblem.performanceTable = createNewPerformanceTable(newProblem);
+      newProblem.schemaVersion = '1.0.0';
+      return newProblem;
+    }
+
+    function createNewPerformanceTable(problem) {
+      return _.map(problem.performanceTable, function(tableEntry) {
         var newEntry = angular.copy(tableEntry);
-        newEntry.dataSource = problem.criteria[tableEntry.criterion].dataSources[0].id;
+        if (tableEntry.criterionUri) {
+          newEntry.criterion = tableEntry.criterionUri;
+          delete newEntry.criterionUri;
+        }
+        newEntry.dataSource = problem.criteria[newEntry.criterion].dataSources[0].id;
         return newEntry;
       });
-      problem.schemaVersion = '1.0.0';
-      return problem;
+    }
+
+    function createNewCriterion(problem, criterion, criterionId) {
+      var newCriterion = _.pick(criterion, ['title', 'description', 'unitOfMeasurement', 'scale']);
+      var dataSource = createDataSource(problem, criterion, criterionId);
+      newCriterion.dataSources = [dataSource];
+      return newCriterion;
+    }
+
+    function createDataSource(problem, criterion, criterionId) {
+      var dataSource = _.pick(criterion, ['pvf', 'source', 'sourceLink', 'strengthOfEvidence', 'uncertainties']);
+      dataSource.id = generateUuid();
+
+      var tableEntry = findEntryForCriterion(problem.performanceTable, criterionId);
+
+      if (isManualDistribution(tableEntry.performance.type)) {
+        dataSource.inputType = 'distribution';
+        dataSource.inputMethod = 'manualDistribution';
+      } else if (tableEntry.performance.type === 'dt') {
+        dataSource.inputType = 'distribution';
+        dataSource.inputMethod = 'assistedDistribution';
+        dataSource.dataType = 'continuous';
+      }
+      return dataSource;
+    }
+
+    function findEntryForCriterion(performanceTable, criterionId) {
+      var tableEntry = _.find(performanceTable, ['criterion', criterionId]);
+      if (!tableEntry) {
+        tableEntry = _.find(performanceTable, ['criterionUri', criterionId]);
+      }
+      return tableEntry;
+    }
+
+    function isManualDistribution(type) {
+      var MANUAL_DISTRIBUTIONS = ['exact', 'dnorm', 'dbeta', 'dgamma'];
+      return _.includes(MANUAL_DISTRIBUTIONS, type);
     }
 
     function updateToVersionOnePointOnePointZero(problem) {
