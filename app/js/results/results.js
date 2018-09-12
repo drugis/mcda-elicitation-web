@@ -8,7 +8,8 @@ define([
   './legendDirective',
   './resultsService',
   './pataviResultsService',
-  'angular'
+  'angular',
+  'angular-patavi-client'
 ], function(
   SmaaResultsController,
   DeterministicResultsController,
@@ -20,7 +21,7 @@ define([
   PataviResultsService,
   angular
 ) {
-    return angular.module('elicit.results', ['patavi', 'rzModule'])
+    return angular.module('elicit.results', ['patavi'])
       .controller('SmaaResultsController', SmaaResultsController)
       .controller('DeterministicResultsController', DeterministicResultsController)
       .controller('EditLegendController', EditLegendController)

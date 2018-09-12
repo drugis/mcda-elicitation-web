@@ -20,11 +20,12 @@ module.exports = function(config) {
       'karma-firefox-launcher',
       'karma-junit-reporter',
       'karma-jasmine',
-      'karma-webpack'
+      'karma-webpack',
+      'karma-sourcemap-loader'
     ],
     preprocessors: {
       // add webpack as preprocessor
-      './frontend-test/test-main.js': ['webpack']
+      './frontend-test/test-main.js': ['webpack', 'sourcemap']
     },
 
     webpack: webpackConfig,

@@ -13,7 +13,8 @@ define([
   './exampleResource',
   './workspaceSettingsDirective',
   'angular',
-  '../util'
+  '../util',
+  '../results/results'
 ], function(
   ChooseProblemController,
   CreateWorkspaceController,
@@ -28,7 +29,7 @@ define([
   WorkspaceSettings,
   angular
 ) {
-    return angular.module('elicit.workspace', ['elicit.util'])
+    return angular.module('elicit.workspace', ['elicit.util', 'elicit.results'])
       .controller('ChooseProblemController', ChooseProblemController)
       .controller('CreateWorkspaceController', CreateWorkspaceController)
       .controller('DeleteWorkspaceController', DeleteWorkspaceController)
