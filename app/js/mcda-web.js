@@ -63,7 +63,8 @@ define([
       'ngCookies',
       'ngResource',
       'page-title-service',
-      'patavi'
+      'patavi',
+      'rzModule'
     ];
 
     var app = angular.module('elicit', dependencies);

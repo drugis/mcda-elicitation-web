@@ -1,7 +1,7 @@
 'use strict';
 define(['angular',
   'mcdaweb',
-  'css/mcda-drugis.css',
+  '../../public/css/mcda-drugis.css',
   'font-awesome/css/font-awesome.min.css',
   'nvd3/build/nv.d3.css',
   'angularjs-slider/dist/rzslider.css',

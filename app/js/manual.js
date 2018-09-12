@@ -3,7 +3,7 @@ define([
   'bowser',
   'jquery',
   'vanilla-back-to-top',
-  'css/mcda-drugis.css',
+  '../../public/css/mcda-drugis.css',
   'font-awesome/css/font-awesome.min.css'
 ], function(bowser, $, scrollToTop) {
   window.bowser = bowser;
