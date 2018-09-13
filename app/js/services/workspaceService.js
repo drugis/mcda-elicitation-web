@@ -1,26 +1,33 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
-    'PataviResultsService'
+    'PataviResultsService',
+    'WorkspaceSettingsService'
   ];
 
   var WorkspaceService = function(
-    PataviResultsService
+    PataviResultsService,
+    WorkspaceSettingsService
   ) {
     function buildTheoreticalScales(problem) {
       var theoreticalScales = {};
       _.forEach(problem.criteria, function(criterion) {
         _.forEach(criterion.dataSources, function(dataSource) {
-          if (dataSource.scale) {
-            theoreticalScales[dataSource.id] = dataSource.scale;
-            theoreticalScales[dataSource.id][0] = theoreticalScales[dataSource.id][0] !== null ? theoreticalScales[dataSource.id][0] : -Infinity;
-            theoreticalScales[dataSource.id][1] = theoreticalScales[dataSource.id][1] !== null ? theoreticalScales[dataSource.id][1] : Infinity;
-          } else {
-            theoreticalScales[dataSource.id] = [-Infinity, Infinity];
-          }
+          theoreticalScales[dataSource.id] = getScales(dataSource);
         });
       });
       return theoreticalScales;
+    }
+
+    function getScales(dataSource) {
+      if (dataSource.scale) {
+        var scale = angular.copy(dataSource.scale);
+        scale[0] = scale[0] !== null ? scale[0] : -Infinity;
+        scale[1] = scale[1] !== null ? scale[1] : Infinity;
+        return scale;
+      } else {
+        return [-Infinity, Infinity];
+      }
     }
 
     function getObservedScales(problem) {
@@ -138,15 +145,62 @@ define(['lodash'], function(_) {
       var newState = _.merge({}, {
         problem: mergeBaseAndSubProblem(baseProblem, subProblem.definition)
       }, scenario.state);
-      newState.problem.preferences =  scenario.state.prefs;
-      _.forEach(newState.problem.criteria, function(criterion, key) {
-        newState.problem.criteria[key] = _.merge({}, criterion, _.omit(baseProblem.criteria[key], ['pvf', 'dataSources']));
+      newState.problem.preferences = scenario.state.prefs;
+      newState.problem.criteria = _.mapValues(newState.problem.criteria, function(criterion, key) {
+        return _.merge({}, criterion, _.omit(baseProblem.criteria[key], ['pvf', 'dataSources']));
         // omit because we don't want the base problem pvf to overwrite the current one
       });
-      _.forEach(newState.problem.alternatives, function(alternative, key) {
-        newState.problem.alternatives[key] = _.merge({}, alternative, baseProblem.alternatives[key]);
+      newState.problem.alternatives = _.mapValues(newState.problem.alternatives, function(alternative, key) {
+        return _.merge({}, alternative, baseProblem.alternatives[key]);
       });
+
+      newState.Problem = rebuildPerformanceTableIfNecessary(newState.problem);
+
       return newState;
+    }
+
+    function rebuildPerformanceTableIfNecessary(problem) {
+      var usePercentage = WorkspaceSettingsService.getWorkspaceSettings().showPercentages;
+      return usePercentage ? getPercentagePerformanceTable(problem) : problem;
+    }
+
+    function getPercentagePerformanceTable(problem) {
+      var newProblem = angular.copy(problem);
+      newProblem.performanceTable = _.map(problem.performanceTable, function(entry) {
+        var newEntry = angular.copy(entry);
+        newEntry.value = canBePercentage(newEntry, problem.criteria[newEntry.criterion]) ? newEntry.value : newEntry.validateWorkspace * 100;
+        return newEntry;
+      });
+      return newProblem;
+    }
+
+    function canBePercentage(entry, criterion) {
+      return isRelative(entry, criterion) ||
+        isDichotomousEffect(entry, criterion) ||
+        isDichotomousDistribution(entry, criterion) ||
+        isContinuousCumulativeProbabilityEffect(entry, criterion);
+    }
+
+    function isRelative(entry, criterion) {
+      return (entry.type === 'relative-logit-normal' ||
+        entry.type === 'relative-cloglog-normal' ||
+        entry.type === 'relative-survival') &&
+        criterion.unitOfMeasurement === 'proportion';
+    }
+
+    function isDichotomousEffect(entry, criterion) {
+      var dataSource = _.find(criterion.dataSources, ['id', entry.dataSource]);
+      return entry.type === 'exact' && dataSource.dataType === 'dichotomous';
+    }
+
+    function isDichotomousDistribution(entry, criterion) {
+      var dataSource = _.find(criterion.dataSources, ['id', entry.dataSource]);
+      return entry.type === 'dbeta' && dataSource.inputMethod === 'assistedDistribution';
+    }
+
+    function isContinuousCumulativeProbabilityEffect(entry, criterion) {
+      var dataSource = _.find(criterion.dataSources, ['id', entry.dataSource]);
+      return entry.type === 'exact' && dataSource.parameterOfInterest === 'cumlativeProbability';
     }
 
     function setDefaultObservedScales(problem, observedScales) {
@@ -233,7 +287,6 @@ define(['lodash'], function(_) {
       };
     }
 
-    // privates
     function missingProperties(workspace) {
       var requiredProperties = [
         'title',

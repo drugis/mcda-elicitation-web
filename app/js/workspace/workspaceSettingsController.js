@@ -36,7 +36,6 @@ define(['lodash'], function(_) {
     }
 
     function toggleSelection() {
-      // false comparison needed because 
       var isAnyUnselected = false === _.find($scope.toggledColumns, function(isSelected) {
         return !isSelected;
       });
@@ -51,9 +50,11 @@ define(['lodash'], function(_) {
     function selectAll() {
       setAllTo(true);
     }
+    
     function deselectAll() {
       setAllTo(false);
     }
+
     function setAllTo(newValue) {
       $scope.toggledColumns = _.mapValues($scope.toggledColumns, function() {
         return newValue;

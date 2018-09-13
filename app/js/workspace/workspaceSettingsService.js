@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['angular'], function(angular) {
   var dependencies = [
     '$rootScope',
     '$stateParams',

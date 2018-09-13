@@ -300,6 +300,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
                 }]
               }
             },
+            alternatives: {},
             preferences: undefined,
             performanceTable: [{
               criterion: 'critId2',
@@ -645,11 +646,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           var withoutTitle = _.omit(example, 'title');
           var validityWithoutTitle = workspaceService.validateWorkspace(withoutTitle);
           expect(validityWithoutTitle.isValid).toBeFalsy();
-          expect(validityWithoutTitle.errorMessage).toBe("Missing workspace property: title");
+          expect(validityWithoutTitle.errorMessage).toBe('Missing workspace property: title');
           var withoutCriteriaAndAlternatives = _.omit(example, ['criteria', 'alternatives']);
           var validitywithoutCriteriaAndAlternatives = workspaceService.validateWorkspace(withoutCriteriaAndAlternatives);
           expect(validitywithoutCriteriaAndAlternatives.isValid).toBeFalsy();
-          expect(validitywithoutCriteriaAndAlternatives.errorMessage).toBe("Missing workspace properties: criteria, alternatives");
+          expect(validitywithoutCriteriaAndAlternatives.errorMessage).toBe('Missing workspace properties: criteria, alternatives');
         });
         it('should fail if there are fewer than 2 criteria', function() {
           var example = exampleProblem();
