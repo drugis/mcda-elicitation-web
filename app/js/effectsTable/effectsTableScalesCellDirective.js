@@ -1,5 +1,5 @@
 'use strict';
-define([], function() {
+define(['lodash'], function(_) {
 
   var dependencies = ['$filter'];
 
@@ -11,7 +11,7 @@ define([], function() {
         'uncertainty': '=',
         'showPercentage': '=',
         'effectsDisplay': '=',
-        'canBePercentage': '='
+        'theoreticalScale': '='
       },
       template: '<div>{{median}}</div>' +
         '<div class="uncertain" ng-show="uncertainty">{{lowerBound}}, {{upperBound}}</div>',
@@ -29,7 +29,16 @@ define([], function() {
         }
         function getRoundedValue(value) {
           if (value === null) { return; }
-          if(!scope.canBePercentage) {return $filter('number')(value);}
+          if (!canBePercentage()) { return $filter('number')(value); }
+          var numberOfDecimals = getNumberOfDecimals(value);
+          return $filter('number')(scope.showPercentage ? value * 100 : value, numberOfDecimals);
+        }
+
+        function canBePercentage() {
+          return _.isEqual(scope.theoreticalScale, [0, 1]);
+        }
+
+        function getNumberOfDecimals(value) {
           var numberOfDecimals = 1;
           if (Math.abs(value) < 0.01) {
             ++numberOfDecimals;
@@ -37,7 +46,7 @@ define([], function() {
           if (!scope.showPercentage && Math.abs(value) < 1) {
             numberOfDecimals += 2;
           }
-          return $filter('number')(scope.showPercentage ? value * 100 : value, numberOfDecimals);
+          return numberOfDecimals;
         }
       }
     };

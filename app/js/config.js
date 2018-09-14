@@ -1,7 +1,7 @@
 'use strict';
 define(function() {
   var tasks = {
-    'available': [{
+    available: [{
       id: 'evidence',
       title: 'Evidence',
       controller: 'EvidenceController',

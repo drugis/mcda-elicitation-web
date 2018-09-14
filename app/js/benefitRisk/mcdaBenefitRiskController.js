@@ -5,6 +5,7 @@ define(['lodash'], function(_) {
     'TaskDependencies',
     'ScenarioResource',
     'WorkspaceService',
+    'WorkspaceSettingsService',
     'EffectsTableService',
     'subProblems',
     'currentSubProblem',
@@ -18,6 +19,7 @@ define(['lodash'], function(_) {
     TaskDependencies,
     ScenarioResource,
     WorkspaceService,
+    WorkspaceSettingsService,
     EffectsTableService,
     subProblems,
     currentSubProblem,
@@ -48,7 +50,7 @@ define(['lodash'], function(_) {
     $scope.showStudyData = { value: false }; // true : study data, false : exact/relative values
     determineActiveTab();
     $scope.effectsTableInfo = EffectsTableService.createEffectsTableInfo($scope.aggregateState.problem.performanceTable);
-    $scope.hasMissingValues = _.find($scope.aggregateState.problem.performanceTable, function(tableEntry){
+    $scope.hasMissingValues = _.find($scope.aggregateState.problem.performanceTable, function(tableEntry) {
       return tableEntry.performance.type === 'empty';
     });
     $scope.$on('$destroy', deregisterTransitionListener);
@@ -71,7 +73,13 @@ define(['lodash'], function(_) {
 
     $scope.scalesPromise = WorkspaceService.getObservedScales(baseProblem).then(function(observedScales) {
       $scope.workspace.scales.observed = observedScales;
-      $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales($scope.aggregateState.problem, observedScales);
+      if (WorkspaceSettingsService.usePercentage()) {
+        $scope.workspace.scales.base = observedScales;
+        $scope.workspace.scales.observed = WorkspaceService.toPercentage($scope.aggregateState.problem.criteria, observedScales);
+      }
+      $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales(
+        $scope.aggregateState.problem,
+        $scope.workspace.scales.observed);
       updateTaskAccessibility();
       return $scope.workspace.scales;
     });

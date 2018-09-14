@@ -59,12 +59,18 @@ define(['angular'], function(angular) {
         toggledColumns: angular.copy(DEFAULT_TOGGLED_COLUMNS)
       };
     }
+
+    function usePercentage(){
+      return workspaceSettings.showPercentages;
+    }
+
     return {
       loadWorkspaceSettings: loadWorkspaceSettings,
       getToggledColumns: getToggledColumns,
       getWorkspaceSettings: getWorkspaceSettings,
       saveSettings: saveSettings,
-      getDefaults: getDefaults
+      getDefaults: getDefaults,
+      usePercentage: usePercentage
     };
   };
 

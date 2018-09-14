@@ -1,13 +1,11 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
-    'PataviResultsService',
-    'WorkspaceSettingsService'
+    'PataviResultsService'
   ];
 
   var WorkspaceService = function(
-    PataviResultsService,
-    WorkspaceSettingsService
+    PataviResultsService
   ) {
     function buildTheoreticalScales(problem) {
       var theoreticalScales = {};
@@ -42,6 +40,25 @@ define(['lodash', 'angular'], function(_, angular) {
       });
       scalesProblem.method = 'scales';
       return PataviResultsService.postAndHandleResults(scalesProblem);
+    }
+
+    function toPercentage(criteria, observedScales) {
+      var dataSources = _.keyBy(_.reduce(criteria, function(accum, criterion) {
+        return accum.concat(criterion.dataSources);
+      }, []), 'id');
+
+      return _.reduce(observedScales, function(accum, scaleRow, datasourceId) {
+        accum[datasourceId] = _.reduce(scaleRow, function(accum, scaleCell, alternativeId) {
+          var usePercentage = _.isEqual(dataSources[datasourceId].scale, [0, 1]);
+          accum[alternativeId] = usePercentage ? _.mapValues(scaleCell, times100) : scaleCell;
+          return accum;
+        }, {}); 
+        return accum;
+      }, {});
+    }
+
+    function times100(value) {
+      return value * 100;
     }
 
     function reduceProblem(problem) {
@@ -154,54 +171,52 @@ define(['lodash', 'angular'], function(_, angular) {
         return _.merge({}, alternative, baseProblem.alternatives[key]);
       });
 
-      newState.Problem = rebuildPerformanceTableIfNecessary(newState.problem);
-
       return newState;
     }
 
-    function rebuildPerformanceTableIfNecessary(problem) {
-      var usePercentage = WorkspaceSettingsService.getWorkspaceSettings().showPercentages;
-      return usePercentage ? getPercentagePerformanceTable(problem) : problem;
-    }
+    // function rebuildPerformanceTableIfNecessary(problem) {
+    //   // var usePercentage = WorkspaceSettingsService.getWorkspaceSettings().showPercentages;
+    //   return usePercentage ? getPercentagePerformanceTable(problem) : problem;
+    // }
 
-    function getPercentagePerformanceTable(problem) {
-      var newProblem = angular.copy(problem);
-      newProblem.performanceTable = _.map(problem.performanceTable, function(entry) {
-        var newEntry = angular.copy(entry);
-        newEntry.value = canBePercentage(newEntry, problem.criteria[newEntry.criterion]) ? newEntry.value : newEntry.validateWorkspace * 100;
-        return newEntry;
-      });
-      return newProblem;
-    }
+    // function getPercentagePerformanceTable(problem) {
+    //   var newProblem = angular.copy(problem);
+    //   newProblem.performanceTable = _.map(problem.performanceTable, function(entry) {
+    //     var newEntry = angular.copy(entry);
+    //     newEntry.performance.value = canBePercentage(newEntry, problem.criteria[newEntry.criterion]) ? newEntry.performance.value * 100 : newEntry.performance.value;
+    //     return newEntry;
+    //   });
+    //   return newProblem;
+    // }
 
-    function canBePercentage(entry, criterion) {
-      return isRelative(entry, criterion) ||
-        isDichotomousEffect(entry, criterion) ||
-        isDichotomousDistribution(entry, criterion) ||
-        isContinuousCumulativeProbabilityEffect(entry, criterion);
-    }
+    // function canBePercentage(entry, criterion) {
+    //   return isRelative(entry, criterion) ||
+    //     isDichotomousEffect(entry, criterion) ||
+    //     isDichotomousDistribution(entry, criterion) ||
+    //     isContinuousCumulativeProbabilityEffect(entry, criterion);
+    // }
 
-    function isRelative(entry, criterion) {
-      return (entry.type === 'relative-logit-normal' ||
-        entry.type === 'relative-cloglog-normal' ||
-        entry.type === 'relative-survival') &&
-        criterion.unitOfMeasurement === 'proportion';
-    }
+    // function isRelative(entry, criterion) {
+    //   return (entry.performance.type === 'relative-logit-normal' ||
+    //     entry.performance.type === 'relative-cloglog-normal' ||
+    //     entry.performance.type === 'relative-survival') &&
+    //     criterion.unitOfMeasurement === 'proportion';
+    // }
 
-    function isDichotomousEffect(entry, criterion) {
-      var dataSource = _.find(criterion.dataSources, ['id', entry.dataSource]);
-      return entry.type === 'exact' && dataSource.dataType === 'dichotomous';
-    }
+    // function isDichotomousEffect(entry, criterion) {
+    //   var dataSource = _.find(criterion.dataSources, ['id', entry.dataSource]);
+    //   return entry.performance.type === 'exact' && dataSource.dataType === 'dichotomous';
+    // }
 
-    function isDichotomousDistribution(entry, criterion) {
-      var dataSource = _.find(criterion.dataSources, ['id', entry.dataSource]);
-      return entry.type === 'dbeta' && dataSource.inputMethod === 'assistedDistribution';
-    }
+    // function isDichotomousDistribution(entry, criterion) {
+    //   var dataSource = _.find(criterion.dataSources, ['id', entry.dataSource]);
+    //   return entry.performance.type === 'dbeta' && dataSource.inputMethod === 'assistedDistribution';
+    // }
 
-    function isContinuousCumulativeProbabilityEffect(entry, criterion) {
-      var dataSource = _.find(criterion.dataSources, ['id', entry.dataSource]);
-      return entry.type === 'exact' && dataSource.parameterOfInterest === 'cumlativeProbability';
-    }
+    // function isContinuousCumulativeProbabilityEffect(entry, criterion) {
+    //   var dataSource = _.find(criterion.dataSources, ['id', entry.dataSource]);
+    //   return entry.performance.type === 'exact' && dataSource.parameterOfInterest === 'cumlativeProbability';
+    // }
 
     function setDefaultObservedScales(problem, observedScales) {
       var newProblem = _.cloneDeep(problem);
@@ -517,6 +532,7 @@ define(['lodash', 'angular'], function(_, angular) {
     return {
       getObservedScales: getObservedScales,
       buildTheoreticalScales: buildTheoreticalScales,
+      toPercentage: toPercentage,
       reduceProblem: reduceProblem,
       buildAggregateState: buildAggregateState,
       mergeBaseAndSubProblem: mergeBaseAndSubProblem,

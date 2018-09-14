@@ -2,6 +2,8 @@
 define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/misc'], function(_, angular) {
   describe('The WorkspaceService, ', function() {
     var workspaceService;
+    var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsService', ['postAndHandleResults']);
+
     beforeEach(angular.mock.module('elicit.workspace', function($provide) {
       $provide.value('PataviResultsService', pataviResultsServiceMock);
     }));
@@ -10,7 +12,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
       workspaceService = WorkspaceService;
     }));
 
-    var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsService', ['postAndHandleResults']);
     describe('buildTheoreticalScales', function() {
       it('should build theoretical scales', inject(function(WorkspaceService) {
         var problem = {
@@ -923,6 +924,63 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Inconsistent exact weighting preferences');
         });
+      });
+    });
+
+    describe('toPercentage', function() {
+      it('should return scales with cell that can be percentage changed to percentage values', function() {
+        var criteria = {
+          crit1: {
+            dataSources: [{
+              id: 'ds1',
+              scale: [0, 1]
+            }]
+          },
+          crit2: {
+            dataSources: [{
+              id: 'ds2',
+              scale: [-Infinity, Infinity]
+            }]
+          }
+        };
+        var observedScales = {
+          ds1: {
+            alt1: {
+              lowerBound: 0.2,
+              median: 0.5,
+              upperBound: 0.99,
+              mode: 0.51
+            }
+          },
+          ds2: {
+            alt1: {
+              lowerBound: 0.2,
+              median: 0.5,
+              upperBound: 0.99,
+              mode: 0.51
+            }
+          }
+        };
+        var result = workspaceService.toPercentage(criteria, observedScales);
+        var expectedResult = {
+          ds1: {
+            alt1: {
+              lowerBound: 20,
+              median: 50,
+              upperBound: 99,
+              mode: 51
+            }
+          },
+          ds2: {
+            alt1: {
+              lowerBound: 0.2,
+              median: 0.5,
+              upperBound: 0.99,
+              mode: 0.51
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
       });
     });
   });

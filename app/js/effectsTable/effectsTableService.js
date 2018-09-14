@@ -57,9 +57,7 @@ define(['lodash'], function(_) {
             distributionType: tableEntry.performance.type,
             hasStudyData: true,
             studyDataLabelsAndUncertainty: _(performanceTable)
-              .filter(function(tableEntry) {
-                return dataSourceId === tableEntry.dataSource;
-              })
+              .filter(['dataSource', dataSourceId])
               .reduce(function(accum, entryForCriterion) {
                 accum[entryForCriterion.alternative] = buildLabel(entryForCriterion);
                 return accum;
