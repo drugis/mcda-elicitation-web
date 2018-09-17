@@ -31,7 +31,7 @@ define(['lodash'], function(_) {
           if (value === null) { return; }
           if (!canBePercentage()) { return $filter('number')(value); }
           var numberOfDecimals = getNumberOfDecimals(value);
-          return $filter('number')(scope.showPercentage ? value * 100 : value, numberOfDecimals);
+          return $filter('number')(value, numberOfDecimals);
         }
 
         function canBePercentage() {

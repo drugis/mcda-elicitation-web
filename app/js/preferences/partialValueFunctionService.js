@@ -60,6 +60,7 @@ define(['lodash', 'angular'], function(_, angular) {
           newDataSource.pvf.values.reverse();
         }
       }
+      delete newDataSource.scales;
       return newDataSource;
     }
 

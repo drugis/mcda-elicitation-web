@@ -928,7 +928,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
     });
 
     describe('toPercentage', function() {
-      it('should return scales with cell that can be percentage changed to percentage values', function() {
+      it('should convert proportions to percentages where possible, ignoring scales for excluded datasources', function() {
         var criteria = {
           crit1: {
             dataSources: [{
@@ -959,6 +959,9 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
               upperBound: 0.99,
               mode: 0.51
             }
+          },
+          dsExcluded: {
+            alt1: {}
           }
         };
         var result = workspaceService.toPercentage(criteria, observedScales);
@@ -980,6 +983,63 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
             }
           }
         };
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('percentifyDataSources', function() {
+      it('should convert datasource scales and pvf ranges to percentages where appropriate', function() {
+
+        var criteria = {
+          crit1: {
+            dataSources: [{
+              scale: [10, 20],
+              pvf: {
+                range: [15, 16]
+              }
+            }, {
+              scale: [0, 1]
+            }]
+          },
+          crit2: {
+            dataSources: [{
+              scale: [0, 1],
+              pvf: {}
+            }, {
+              scale: [0, 1],
+              pvf: {
+                range: [0.3, 0.4]
+              }
+            }]
+          }
+        };
+
+        var result = workspaceService.percentifyDataSources(criteria);
+
+        var expectedResult = {
+          crit1: {
+            dataSources: [{
+              scale: [10, 20],
+              pvf: {
+                range: [15, 16]
+              }
+            }, {
+              scale: [0, 100]
+            }]
+          },
+          crit2: {
+            dataSources: [{
+              scale: [0, 100],
+              pvf: {}
+            }, {
+              scale: [0, 100],
+              pvf: {
+                range: [30, 40]
+              }
+            }]
+          }
+        };
+
         expect(result).toEqual(expectedResult);
       });
     });

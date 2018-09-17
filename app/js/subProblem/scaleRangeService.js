@@ -45,7 +45,7 @@ define(['lodash', 'angular'], function(_) {
       return nice(x, Math.floor);
     }
 
-    function calculateScales(dataSourceScale, from, to, criterionRange) {
+    function calculateScales(dataSourceScale, from, to, criterionRange, shouldCalcPercentage) {
       var scale = dataSourceScale || [null, null];
       var boundFrom = function(val) {
         return val < scale[0] ? scale[0] : val;
@@ -76,7 +76,7 @@ define(['lodash', 'angular'], function(_) {
           precision: 4,
           noSwitching: true,
           translate: function(value) {
-            return numberFilter(value);
+            return numberFilter(shouldCalcPercentage ? value * 100 : value );
           }
         }
       };
@@ -92,7 +92,7 @@ define(['lodash', 'angular'], function(_) {
       }));
     }
 
-    function getScaleStateAndChoices(observedScales, criteria) {
+    function getScaleStateAndChoices(observedScales, criteria, showPercentage) {
       var scaleState = {};
       var choices = {};
       _.forEach(criteria, function(criterion) {
@@ -112,7 +112,8 @@ define(['lodash', 'angular'], function(_) {
 
           // Set scales for slider
           var dataSourceScale = dataSource.scale;
-          scaleState[dataSource.id] = calculateScales(dataSourceScale, from, to, dataSourceRange);
+          var shouldCalcPercentage = _.isEqual([0, 1], dataSourceScale) && showPercentage;
+          scaleState[dataSource.id] = calculateScales(dataSourceScale, from, to, dataSourceRange, shouldCalcPercentage);
         });
       });
       return {

@@ -23,7 +23,7 @@
       <li class="tabs-title disabled" ng-if="!tasksAccessibility.results && !hasMissingValues" tooltip="Tab unavailable because not all partial value functions are set">SMAA results</li>
       <li class="tabs-title disabled" ng-if="tasksAccessibility.results && noStochasticResults" tooltip="Tab unavailable because neither the criteria measurements nor the weights are stochastic">SMAA results</li>
       <li class="tabs-title disabled" ng-if="hasMissingValues" tooltip="Tab unavailable because effects table contains missing values">SMAA results</li>
-      <li class="tabs-title right" ng-if="!isStandalone"><workspace-settings callback="workspaceSettingsCallback" edit-mode="editMode"></workspace-settings></li>
+      <li class="tabs-title right" ng-if="!isStandalone"><workspace-settings edit-mode="editMode"></workspace-settings></li>
     </tabset>
   </div>
 </div>

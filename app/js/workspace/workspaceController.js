@@ -24,7 +24,6 @@ define(['angular'], function(angular) {
     $scope.editTitle = editTitle;
     $scope.saveTitle = saveTitle;
     $scope.cancelTitle = cancelTitle;
-    $scope.workspaceSettingsCallback = function(){};
 
     // init
     var user = angular.fromJson($cookies.get('LOGGED-IN-USER'));
@@ -38,8 +37,11 @@ define(['angular'], function(angular) {
       $scope.workspace = currentWorkspace;
     }
 
-    WorkspaceSettingsService.loadWorkspaceSettings();
-
+    $scope.$on('elicit.settingsChanged', getWorkspaceSettings);
+    function getWorkspaceSettings() {
+      $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
+      $scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
+    }
     $scope.isEditTitleVisible = false;
 
     function editTitle() {

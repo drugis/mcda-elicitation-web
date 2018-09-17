@@ -13,7 +13,7 @@ module.exports = function(db) {
           err.status = 500;
           return next(err);
         }
-        res.json(result);
+        res.json(result.rows.length ? result.rows[0].settings : {});
       }
     );
   }

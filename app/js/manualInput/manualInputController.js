@@ -47,7 +47,7 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.openCriterionModal = openCriterionModal;
 
     // init
-    $scope.treatmentInputField = {}; //scoping
+    $scope.alternativeInput = {}; //scoping
     $scope.criteriaErrors = [];
     PageTitleService.setPageTitle('ManualInputController', 'Manual input');
     initState();

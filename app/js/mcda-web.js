@@ -89,7 +89,10 @@ define([
             currentWorkspace: ['$stateParams', 'WorkspaceResource',
               function($stateParams, WorkspaceResource) {
                 return WorkspaceResource.get($stateParams).$promise;
-              }]
+              }],
+            workspaceSettings: ['WorkspaceSettingsService','$stateParams', function(WorkspaceSettingsService, $stateParams) {
+              return WorkspaceSettingsService.loadWorkspaceSettings($stateParams);
+            }]
           }
         });
 

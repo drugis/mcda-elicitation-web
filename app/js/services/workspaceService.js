@@ -7,27 +7,6 @@ define(['lodash', 'angular'], function(_, angular) {
   var WorkspaceService = function(
     PataviResultsService
   ) {
-    function buildTheoreticalScales(problem) {
-      var theoreticalScales = {};
-      _.forEach(problem.criteria, function(criterion) {
-        _.forEach(criterion.dataSources, function(dataSource) {
-          theoreticalScales[dataSource.id] = getScales(dataSource);
-        });
-      });
-      return theoreticalScales;
-    }
-
-    function getScales(dataSource) {
-      if (dataSource.scale) {
-        var scale = angular.copy(dataSource.scale);
-        scale[0] = scale[0] !== null ? scale[0] : -Infinity;
-        scale[1] = scale[1] !== null ? scale[1] : Infinity;
-        return scale;
-      } else {
-        return [-Infinity, Infinity];
-      }
-    }
-
     function getObservedScales(problem) {
       var scalesProblem = _.cloneDeep(problem);
       var dataSources = _.reduce(scalesProblem.criteria, function(accum, criterion) {
@@ -48,13 +27,59 @@ define(['lodash', 'angular'], function(_, angular) {
       }, []), 'id');
 
       return _.reduce(observedScales, function(accum, scaleRow, datasourceId) {
+        if (!dataSources[datasourceId]) { return accum; }
         accum[datasourceId] = _.reduce(scaleRow, function(accum, scaleCell, alternativeId) {
           var usePercentage = _.isEqual(dataSources[datasourceId].scale, [0, 1]);
           accum[alternativeId] = usePercentage ? _.mapValues(scaleCell, times100) : scaleCell;
           return accum;
-        }, {}); 
+        }, {});
         return accum;
       }, {});
+    }
+
+    function addTheoreticalScales(criteria) {
+      return updateDataSources(criteria, addTheoreticalScale);
+    }
+
+    function percentifyDataSources(criteria) {
+      return updateDataSources(criteria, percentifyDataSource);
+    }
+
+    function updateDataSources(criteria, fn) {
+      return _.mapValues(criteria, function(criterion) {
+        return _.merge({}, criterion, {
+          dataSources: _.map(criterion.dataSources, fn)
+        });
+      });
+    }
+
+    function addTheoreticalScale(dataSource) {
+      return _.extend({}, dataSource, {
+        scale: getScales(dataSource)
+      });
+    }
+
+    function getScales(dataSource) {
+      if (dataSource.scale) {
+        var scale = angular.copy(dataSource.scale);
+        scale[0] = scale[0] !== null ? scale[0] : -Infinity;
+        scale[1] = scale[1] !== null ? scale[1] : Infinity;
+        return scale;
+      } else {
+        return [-Infinity, Infinity];
+      }
+    }
+
+
+    function percentifyDataSource(dataSource) {
+      var newDataSource = angular.copy(dataSource);
+      if (_.isEqual([0, 1], newDataSource.scale)) {
+        newDataSource.scale = [0, 100];
+        if (newDataSource.pvf && newDataSource.pvf.range) {
+          newDataSource.pvf.range = _.map(newDataSource.pvf.range, times100);
+        }
+      }
+      return newDataSource;
     }
 
     function times100(value) {
@@ -69,6 +94,35 @@ define(['lodash', 'angular'], function(_, angular) {
       return {
         criteria: criteria
       };
+    }
+
+    function buildAggregateState(baseProblem, subProblem, scenario) {
+      var newState = _.merge({}, {
+        problem: mergeBaseAndSubProblem(baseProblem, subProblem.definition)
+      }, scenario.state);
+      newState.problem.preferences = scenario.state.prefs;
+      newState.problem.criteria = _.mapValues(newState.problem.criteria, function(criterion, key) {
+        return _.merge({}, criterion, _.omit(baseProblem.criteria[key], ['pvf', 'dataSources']));
+        // omit because we don't want the base problem pvf to overwrite the current one
+      });
+      newState.problem.alternatives = _.mapValues(newState.problem.alternatives, function(alternative, key) {
+        return _.merge({}, alternative, baseProblem.alternatives[key]);
+      });
+      newState.problem.criteria = addTheoreticalScales(newState.problem.criteria);
+      return newState;
+    }
+
+    function setDefaultObservedScales(problem, observedScales) {
+      var newProblem = _.cloneDeep(problem);
+      _.forEach(newProblem.criteria, function(criterion) {
+        var scale = observedScales[criterion.dataSources[0].id];
+        if (!criterion.dataSources[0].pvf || _.isEmpty(criterion.dataSources[0].pvf.range)) {
+          criterion.dataSources[0].pvf = {
+            range: getMinMax(scale)
+          };
+        }
+      });
+      return newProblem;
     }
 
     function mergeBaseAndSubProblem(baseProblem, subProblemDefinition) {
@@ -158,78 +212,7 @@ define(['lodash', 'angular'], function(_, angular) {
       }, {});
     }
 
-    function buildAggregateState(baseProblem, subProblem, scenario) {
-      var newState = _.merge({}, {
-        problem: mergeBaseAndSubProblem(baseProblem, subProblem.definition)
-      }, scenario.state);
-      newState.problem.preferences = scenario.state.prefs;
-      newState.problem.criteria = _.mapValues(newState.problem.criteria, function(criterion, key) {
-        return _.merge({}, criterion, _.omit(baseProblem.criteria[key], ['pvf', 'dataSources']));
-        // omit because we don't want the base problem pvf to overwrite the current one
-      });
-      newState.problem.alternatives = _.mapValues(newState.problem.alternatives, function(alternative, key) {
-        return _.merge({}, alternative, baseProblem.alternatives[key]);
-      });
 
-      return newState;
-    }
-
-    // function rebuildPerformanceTableIfNecessary(problem) {
-    //   // var usePercentage = WorkspaceSettingsService.getWorkspaceSettings().showPercentages;
-    //   return usePercentage ? getPercentagePerformanceTable(problem) : problem;
-    // }
-
-    // function getPercentagePerformanceTable(problem) {
-    //   var newProblem = angular.copy(problem);
-    //   newProblem.performanceTable = _.map(problem.performanceTable, function(entry) {
-    //     var newEntry = angular.copy(entry);
-    //     newEntry.performance.value = canBePercentage(newEntry, problem.criteria[newEntry.criterion]) ? newEntry.performance.value * 100 : newEntry.performance.value;
-    //     return newEntry;
-    //   });
-    //   return newProblem;
-    // }
-
-    // function canBePercentage(entry, criterion) {
-    //   return isRelative(entry, criterion) ||
-    //     isDichotomousEffect(entry, criterion) ||
-    //     isDichotomousDistribution(entry, criterion) ||
-    //     isContinuousCumulativeProbabilityEffect(entry, criterion);
-    // }
-
-    // function isRelative(entry, criterion) {
-    //   return (entry.performance.type === 'relative-logit-normal' ||
-    //     entry.performance.type === 'relative-cloglog-normal' ||
-    //     entry.performance.type === 'relative-survival') &&
-    //     criterion.unitOfMeasurement === 'proportion';
-    // }
-
-    // function isDichotomousEffect(entry, criterion) {
-    //   var dataSource = _.find(criterion.dataSources, ['id', entry.dataSource]);
-    //   return entry.performance.type === 'exact' && dataSource.dataType === 'dichotomous';
-    // }
-
-    // function isDichotomousDistribution(entry, criterion) {
-    //   var dataSource = _.find(criterion.dataSources, ['id', entry.dataSource]);
-    //   return entry.performance.type === 'dbeta' && dataSource.inputMethod === 'assistedDistribution';
-    // }
-
-    // function isContinuousCumulativeProbabilityEffect(entry, criterion) {
-    //   var dataSource = _.find(criterion.dataSources, ['id', entry.dataSource]);
-    //   return entry.performance.type === 'exact' && dataSource.parameterOfInterest === 'cumlativeProbability';
-    // }
-
-    function setDefaultObservedScales(problem, observedScales) {
-      var newProblem = _.cloneDeep(problem);
-      _.forEach(newProblem.criteria, function(criterion) {
-        var scale = observedScales[criterion.dataSources[0].id];
-        if (!criterion.dataSources[0].pvf || _.isEmpty(criterion.dataSources[0].pvf.range)) {
-          criterion.dataSources[0].pvf = {
-            range: getMinMax(scale)
-          };
-        }
-      });
-      return newProblem;
-    }
 
     function getMinMax(scales) {
       var minimum = Infinity;
@@ -501,15 +484,15 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function relativePerformanceWithBadMu(workspace) {
-      var alternativeKey;
+      var missingAlternativeId;
       var entryWithBadMu = _.find(workspace.performanceTable, function(tableEntry) {
-        return !isAbsolutePerformance(tableEntry) && _.find(tableEntry.performance.parameters.relative.mu, function(muValue, muKey) {
-          alternativeKey = muKey;
-          return !workspace.alternatives[muKey];
+        return !isAbsolutePerformance(tableEntry) && _.find(_.keys(tableEntry.performance.parameters.relative.mu), function(alternativeId) {
+          missingAlternativeId = alternativeId;
+          return !workspace.alternatives[alternativeId];
         });
       });
       if (entryWithBadMu) {
-        return 'The mu of the performance of criterion: "' + entryWithBadMu.criterion + '" refers to nonexistent alternative: "' + alternativeKey + '"';
+        return 'The mu of the performance of criterion: "' + entryWithBadMu.criterion + '" refers to nonexistent alternative: "' + missingAlternativeId + '"';
       }
     }
 
@@ -529,16 +512,26 @@ define(['lodash', 'angular'], function(_, angular) {
       }
     }
 
+    function hasNoStochasticResults(aggregateState) {
+      var isAllExact = !_.find(aggregateState.problem.performanceTable, function(tableEntry) {
+        return tableEntry.performance.type !== 'exact';
+      });
+      var isExactSwing = _.find(aggregateState.prefs, ['type', 'exact swing']);
+      return isAllExact && isExactSwing;
+    }
+
     return {
       getObservedScales: getObservedScales,
-      buildTheoreticalScales: buildTheoreticalScales,
       toPercentage: toPercentage,
       reduceProblem: reduceProblem,
       buildAggregateState: buildAggregateState,
       mergeBaseAndSubProblem: mergeBaseAndSubProblem,
       setDefaultObservedScales: setDefaultObservedScales,
       filterScenariosWithResults: filterScenariosWithResults,
-      validateWorkspace: validateWorkspace
+      validateWorkspace: validateWorkspace,
+      addTheoreticalScales: addTheoreticalScales,
+      percentifyDataSources: percentifyDataSources,
+      hasNoStochasticResults: hasNoStochasticResults
     };
   };
 

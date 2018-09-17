@@ -27,8 +27,8 @@ define(['angular'], function(angular) {
     var workspaceSettings = angular.copy(DEFAULT_SETTINGS);
     var toggledColumns = angular.copy(DEFAULT_TOGGLED_COLUMNS);
 
-    function loadWorkspaceSettings() {
-      return WorkspaceSettingsResource.get($stateParams).$promise.then(function(result) {
+    function loadWorkspaceSettings(params) {
+      return WorkspaceSettingsResource.get(params).$promise.then(function(result) {
         workspaceSettings = result.settings ? result.settings : DEFAULT_SETTINGS;
         toggledColumns = result.toggledColumns ? result.toggledColumns : DEFAULT_TOGGLED_COLUMNS;
       });

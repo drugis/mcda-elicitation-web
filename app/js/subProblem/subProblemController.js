@@ -4,27 +4,25 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
   var dependencies = [
     '$scope', '$stateParams', '$modal', '$state',
     'intervalHull',
+    'subProblems',
     'SubProblemService',
     'ScenarioResource',
     'OrderingService',
-    'subProblems',
     'SubProblemResource',
     'EffectsTableService',
-    'PageTitleService',
-    'WorkspaceService'
+    'PageTitleService'
   ];
 
   var SubProblemController = function(
     $scope, $stateParams, $modal, $state,
     intervalHull,
+    subProblems,
     SubProblemService,
     ScenarioResource,
     OrderingService,
-    subProblems,
     SubProblemResource,
     EffectsTableService,
-    PageTitleService,
-    WorkspaceService
+    PageTitleService
   ) {
     // functions 
     $scope.intervalHull = intervalHull;
@@ -34,22 +32,33 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
 
     // init
     $scope.subProblems = subProblems;
+    $scope.scales = $scope.workspace.scales;
     $scope.problem = _.cloneDeep($scope.workspace.problem);
     $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
-    $scope.scalesPromise.then(function(scales) {
-      $scope.scales = scales;
-    });
-    PageTitleService.setPageTitle('SubProblemController', ($scope.problem.title || $scope.workspace.title) +'\'s problem definition');
+    PageTitleService.setPageTitle('SubProblemController', ($scope.problem.title || $scope.workspace.title) + '\'s problem definition');
 
-    var mergedProblem = WorkspaceService.mergeBaseAndSubProblem($scope.problem, $scope.subProblem.definition);
-    $scope.areTooManyDataSourcesIncluded = _.find(mergedProblem.criteria, function(criterion) {
+    $scope.areTooManyDataSourcesIncluded = _.find($scope.aggregateState.problem.criteria, function(criterion) {
       return criterion.dataSources.length > 1;
     });
-    OrderingService.getOrderedCriteriaAndAlternatives(mergedProblem, $stateParams).then(function(orderings) {
-      $scope.criteria = orderings.criteria;
-      $scope.alternatives = orderings.alternatives;
 
-      $scope.scaleTable = _.reject(EffectsTableService.buildEffectsTable(orderings.criteria), ['isHeaderRow', true]);
+    setScaleTable();
+
+    function setScaleTable() {
+      OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
+        $scope.criteria = orderings.criteria;
+        $scope.alternatives = orderings.alternatives;
+        $scope.scaleTable = _.reject(EffectsTableService.buildEffectsTable(orderings.criteria), 'isHeaderRow');
+      });
+    }
+
+    $scope.$watch('workspace.scales', function(newScales, oldScales) {
+      if (newScales && oldScales && newScales.observed === oldScales.observed) { return; }
+      $scope.scales = newScales;
+    }, true);
+
+    $scope.$watch('aggregateState', function(newState, oldState) {
+      if (_.isEqual(newState, oldState)) { return; }
+      setScaleTable();
     });
 
     new Clipboard('.clipboard-button');

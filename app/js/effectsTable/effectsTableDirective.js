@@ -21,8 +21,6 @@ define(['lodash'], function(_) {
       templateUrl: '../effectsTable/effectsTable.html',
       link: function(scope) {
         // functions
-        scope.getWorkspaceSettings = getWorkspaceSettings;
-
         // init
         scope.studyDataAvailable = EffectsTableService.isStudyDataAvailable(scope.effectsTableInfo);
         getWorkspaceSettings();

@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
 
   var dependencies = ['$scope', '$stateParams', '$modalInstance', '$timeout',
     'ScenarioResource',
@@ -39,18 +39,28 @@ define(['lodash', 'angular'], function(_) {
     $scope.createProblemConfiguration = createProblemConfiguration;
     $scope.cancel = $modalInstance.close;
     $scope.reset = reset;
-    $scope.getWorkspaceSettings = getWorkspaceSettings;
 
     // init
     $scope.subProblems = subProblems;
-    $scope.scales = _.cloneDeep(scales);
-    initSubProblem(_.cloneDeep(subProblem), _.cloneDeep(problem));
+    $scope.scales = angular.copy(scales);
+    $scope.originalScales = scales;
+    initSubProblem(angular.copy(subProblem), angular.copy(problem));
     $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
     $scope.effectsTableInfo = effectsTableInfo;
     $scope.editMode = editMode;
+    $scope.$watch('originalScales', function(newScales, oldScales) {
+      if (newScales && oldScales && newScales.observed === oldScales.observed) { return; }
+      $scope.scales = angular.copy(newScales);
+      initializeScales();
+    }, true);
+    $scope.$on('elicit.settingsChanged', getWorkspaceSettings);
     getWorkspaceSettings();
-    
-    //public
+
+    function getWorkspaceSettings() {
+      $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
+      $scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
+    }
+
     function createProblemConfiguration() {
       var subProblemCommand = {
         definition: SubProblemService.createDefinition($scope.subProblemState, $scope.choices),
@@ -120,7 +130,7 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function initializeScales() {
-      var stateAndChoices = ScaleRangeService.getScaleStateAndChoices($scope.scales.observed, $scope.criteria);
+      var stateAndChoices = ScaleRangeService.getScaleStateAndChoices($scope.scales.base, $scope.criteria, $scope.workspaceSettings.showPercentages);
       $scope.scalesState = stateAndChoices.scaleState;
       $scope.choices = stateAndChoices.choices;
       _.forEach($scope.choices, function(choice, dataSourceId) {
@@ -142,13 +152,8 @@ define(['lodash', 'angular'], function(_) {
           excludedAlternatives: [],
           excludedDataSources: []
         }
-      }, _.cloneDeep(problem));
+      }, angular.copy(problem));
       $scope.subProblemState.title = titleCache;
-    }
-
-    function getWorkspaceSettings() {
-      $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
-      $scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
     }
 
     // private functions

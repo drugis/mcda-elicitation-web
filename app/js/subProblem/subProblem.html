@@ -26,7 +26,8 @@
     </h4>
   </div>
   <div class="cell large-2">
-    <button data-ng-if="!areTooManyDataSourcesIncluded" class="button small info clipboard-button right" data-clipboard-target="#scalestable">
+    <button data-ng-if="!areTooManyDataSourcesIncluded" class="button small info clipboard-button right"
+      data-clipboard-target="#scalestable">
       <i class="fa fa-clipboard"></i> Copy to clipboard
     </button>
   </div>
@@ -57,14 +58,18 @@
       <tbody>
         <tr ng-repeat="row in scaleTable">
           <td>{{row.criterion.title}}</td>
-          <td>{{scales.theoreticalScales[row.dataSource.id][0] | number}}, {{scales.theoreticalScales[row.dataSource.id][1] |
-            number}}</td>
+          <td>
+            {{row.dataSource.scale[0] | number}},
+            {{row.dataSource.scale[1] | number}}</td>
           <td>
             <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[0] | number"></span> ,
             <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[1] | number"></span>
           </td>
           <td>
-            <span ng-if="row.dataSource.pvf.range">{{row.dataSource.pvf.range[0] | number}}, {{row.dataSource.pvf.range[1] | number}}</span>
+            <span ng-if="row.dataSource.pvf.range">
+              {{row.dataSource.pvf.range[0] | number}},
+              {{row.dataSource.pvf.range[1] | number}}.
+            </span>
             <span ng-if="!row.dataSource.pvf.range">
               <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[0] | number"></span> ,
               <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[1] | number"></span>
