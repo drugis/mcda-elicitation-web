@@ -29,27 +29,35 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
     $scope.save = save;
     $scope.canSave = canSave;
     $scope.cancel = cancel;
-    $scope.getXY = _.memoize(PartialValueFunctionService.getXY, function(arg) {
-      return angular.toJson(arg.pvf);
-    });
-
+    $scope.updatePlot = updatePlot;
     // init
     $scope.pvf = PartialValueFunctionService;
     var aggregateProblem = $scope.aggregateState.problem;
+    $scope.$on('elicit.settingsChanged', function() {
+      aggregateProblem = $scope.aggregateState.problem;
+      resetWizard();
+    });
+
+    resetWizard();
+
+    function updatePlot(criterion) {
+      $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinatesForCriterion(criterion);
+    }
 
     function initialize(state) {
       var criterionId = $stateParams.criterion.replace('%3A', ':'); // workaround: see https://github.com/angular-ui/ui-router/issues/2598
-      var criterion = _.cloneDeep(aggregateProblem.criteria[criterionId]);
+      var criterion = angular.copy(aggregateProblem.criteria[criterionId]);
       if (!criterion) {
         return {};
       }
       PageTitleService.setPageTitle('PartialValueFunctionController', criterion.title + '\'s partial value function');
       // set defaults
-      criterion.dataSources[0].pvf = !criterion.dataSources[0].pvf ? {} : criterion.dataSources[0].pvf;
+      criterion.dataSources[0].pvf = criterion.dataSources[0].pvf ? criterion.dataSources[0].pvf : {};
       criterion.dataSources[0].pvf.direction = 'decreasing';
       criterion.dataSources[0].pvf.type = 'linear';
       criterion.dataSources[0].pvf.cutoffs = undefined;
       criterion.dataSources[0].pvf.values = undefined;
+      updatePlot(criterion);
 
       var initial = {
         ref: 0,
@@ -69,7 +77,7 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
     }
 
     function nextState(state) {
-      var nextState = _.cloneDeep(state);
+      var nextState = angular.copy(state);
       var ref = nextState.ref;
 
       if (state.type === 'elicit type') {
@@ -111,6 +119,9 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
             rightToLeft: to < from,
             translate: function(value) {
               return numberFilter(value);
+            },
+            onChange: function() {
+              updatePlot($scope.state.criterion);
             }
           }
         });
@@ -121,8 +132,10 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
     function save(state) {
       var criterionId = $stateParams.criterion.replace('%3A', ':'); // workaround: see https://github.com/angular-ui/ui-router/issues/2598
       var standardizedDataSource = PartialValueFunctionService.standardizeDataSource(state.choice);
-      var criteria = _.cloneDeep(aggregateProblem.criteria);
-      criteria[criterionId].dataSources[0] = standardizedDataSource;
+      var criteria = angular.copy(currentScenario.state.problem.criteria);
+      criteria[criterionId] = {
+        dataSources: [standardizedDataSource]
+      };
       currentScenario.state = {
         prefs: {},
         problem: {
@@ -161,16 +174,18 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
       $state.go('preferences');
     }
 
-    $injector.invoke(Wizard, this, {
-      $scope: $scope,
-      handler: {
-        fields: ['type', 'choice', 'bisections', 'ref'],
-        validChoice: isValid,
-        nextState: nextState,
-        initialize: _.partial(initialize, taskDefinition.clean(currentScenario.state)),
-        standardize: _.identity
-      }
-    });
+    function resetWizard() {
+      $injector.invoke(Wizard, {}, {
+        $scope: $scope,
+        handler: {
+          fields: ['type', 'choice', 'bisections', 'ref', 'criterion'],
+          validChoice: isValid,
+          nextState: nextState,
+          initialize: _.partial(initialize, taskDefinition.clean(currentScenario.state)),
+          standardize: _.identity
+        }
+      });
+    }
   };
   return dependencies.concat(PartialValueFunctionController);
 });

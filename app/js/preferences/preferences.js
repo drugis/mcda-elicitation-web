@@ -14,7 +14,9 @@ define([
   './newScenarioController',
   './tradeOffService',
   './willingnessToTradeOffDirective',
-  './willingnessToTradeOffChartDirective'
+  './willingnessToTradeOffChartDirective',
+  '../workspace/workspace',
+  '../results/results'
 ], function(
   angular,
   PreferencesController,

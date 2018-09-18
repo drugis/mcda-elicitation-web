@@ -38,8 +38,9 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     $scope.criteriaHavePvf = true;
     $scope.scenario = currentScenario;
     $scope.scales = $scope.workspace.scales;
-    $scope.getXY = _.memoize(PartialValueFunctionService.getXY, function(arg) {
-      return angular.toJson(arg.pvf);
+    $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinates($scope.aggregateState.problem.criteria);
+    $scope.$on('elicit.settingsChanged', function() {
+      $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinates($scope.aggregateState.problem.criteria);
     });
     createIsSafeObject();
     $scope.criteriaHavePvf = doAllCriteriaHavePvf();

@@ -1,4 +1,5 @@
 'use strict';
+/* globals exampleProblem, exampleRelativeProblem */
 define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/misc'], function(_, angular) {
   describe('The WorkspaceService, ', function() {
     var workspaceService;
@@ -11,34 +12,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
     beforeEach(inject(function(WorkspaceService) {
       workspaceService = WorkspaceService;
     }));
-
-    describe('buildTheoreticalScales', function() {
-      it('should build theoretical scales', inject(function(WorkspaceService) {
-        var problem = {
-          criteria: {
-            'crit1': {
-              dataSources: [{
-                id: 'ds1'
-              }]
-            },
-            'crit2': {
-              dataSources: [{
-                id: 'ds2',
-                scale: [
-                  10,
-                  20
-                ]
-              }]
-            }
-          }
-        };
-        var result = WorkspaceService.buildTheoreticalScales(problem);
-        expect(result.ds1[0]).toBe(-Infinity);
-        expect(result.ds1[1]).toBe(Infinity);
-        expect(result.ds2[0]).toBe(problem.criteria.crit2.dataSources[0].scale[0]);
-        expect(result.ds2[1]).toBe(problem.criteria.crit2.dataSources[0].scale[1]);
-      }));
-    });
 
     describe('getObservedScales', function() {
       it('should call the pataviResultService', function() {
@@ -220,7 +193,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
     });
 
     describe('buildAggregateState', function() {
-      it('should aggregate the problem with the subproblem and the scenario', function() {
+      it('should aggregate the problem with the subproblem and the scenario, and set the theoretical scales', function() {
         var problem = {
           criteria: {
             critId1: {
@@ -233,7 +206,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
             },
             critId2: {
               dataSources: [{
-                id: 'ds2'
+                id: 'ds2',
+                scale: [0, 1]
               }]
             },
             critId4: {
@@ -289,7 +263,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
                   id: 'ds2',
                   pvf: {
                     range: [2, 3]
-                  }
+                  },
+                  scale: [0, 1]
                 }]
               },
               critId4: {
@@ -297,7 +272,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
                   id: 'ds4',
                   pvf: {
                     range: [6, 7]
-                  }
+                  },
+                  scale: [-Infinity, Infinity]
                 }]
               }
             },

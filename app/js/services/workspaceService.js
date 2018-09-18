@@ -75,9 +75,15 @@ define(['lodash', 'angular'], function(_, angular) {
       var newDataSource = angular.copy(dataSource);
       if (_.isEqual([0, 1], newDataSource.scale)) {
         newDataSource.scale = [0, 100];
-        if (newDataSource.pvf && newDataSource.pvf.range) {
-          newDataSource.pvf.range = _.map(newDataSource.pvf.range, times100);
-        }
+        if (newDataSource.pvf) {
+          if(newDataSource.pvf.range) {
+            newDataSource.pvf.range = _.map(newDataSource.pvf.range, times100);
+          }
+          if(newDataSource.pvf.cutoffs) {
+            newDataSource.pvf.cutoffs = _.map(newDataSource.pvf.cutoffs, times100);
+            // newDataSource.pvf.values = _.map(newDataSource.pvf.values, times100);
+          }
+        } 
       }
       return newDataSource;
     }

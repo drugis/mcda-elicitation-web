@@ -43,13 +43,14 @@ define(['angular'], function(angular) {
     }
 
     function saveSettings(newWorkspaceSettings, newToggledColumns) {
-      return WorkspaceSettingsResource.put($stateParams, {
+      var newSettings ={
         settings: newWorkspaceSettings,
         toggledColumns: newToggledColumns
-      }).$promise.then(function() {
+      };
+      return WorkspaceSettingsResource.put($stateParams, newSettings).$promise.then(function() {
         workspaceSettings = newWorkspaceSettings;
         toggledColumns = newToggledColumns;
-        $rootScope.$broadcast('elicit.settingsChanged');
+        $rootScope.$broadcast('elicit.settingsChanged', newSettings);
       });
     }
 

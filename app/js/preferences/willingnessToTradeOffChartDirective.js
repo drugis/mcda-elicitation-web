@@ -44,7 +44,7 @@ define(['c3', 'd3', 'jquery'],
             names: {
               firstPoint: 'Outcome A',
               line: 'Indifference curve',
-              secondPoint: 'Ouctome B'
+              secondPoint: 'Outcome B'
             }
           };
           var root = d3.select($(element).get(0));

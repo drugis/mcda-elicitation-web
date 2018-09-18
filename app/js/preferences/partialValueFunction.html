@@ -7,10 +7,14 @@
       <p>The partial value functions <inline-help help-key="partial-value-function"></inline-help> define the mapping between the measurement values and the utility of that value.</p>
       {{state.criterion.title}}
       <label>
-        <input type="radio" ng-model="state.choice.pvf.direction" value="decreasing" ng-selected="state.choice.pvf.direction ==='decreasing'"> {{state.choice.pvf.range[0] | number}} is best
+        <input type="radio" ng-model="state.choice.pvf.direction" value="decreasing" 
+        ng-change="updatePlot(state.criterion)"
+        ng-selected="state.choice.pvf.direction ==='decreasing'"> {{state.choice.pvf.range[0] | number}} is best
       </label>
       <label>
-        <input type="radio" ng-model="state.choice.pvf.direction" value="increasing" ng-selected="state.choice.pvf.direction === 'increasing'"> {{state.choice.pvf.range[1] | number}} is best
+        <input type="radio" ng-model="state.choice.pvf.direction" value="increasing" 
+        ng-change="updatePlot(state.criterion)"
+        ng-selected="state.choice.pvf.direction === 'increasing'"> {{state.choice.pvf.range[1] | number}} is best
       </label>
       Type of function <inline-help help-key="pvf-type"></inline-help>
       <label>
@@ -20,7 +24,7 @@
     </div>
     <div class="cell large-5">
       <div style="width: 400px; height: 400px">
-        <line-chart value="getXY(state.choice)" show-legend="false"></line-chart>
+        <line-chart value="pvfCoordinates" show-legend="false"></line-chart>
       </div>
     </div>
   </div>
@@ -44,7 +48,9 @@
       </p>
       <p><strong>Adjust the slider:</strong></p>
       <p>
-        <rzslider style="width: 400px; margin-top: 20px;" rz-slider-model="state.choice.pvf.cutoffs[state.choice.pvf.values.length - 1]" rz-slider-options="state.sliderOptions"></rzslider>
+        <rzslider style="width: 400px; margin-top: 20px;" 
+        rz-slider-model="state.choice.pvf.cutoffs[state.choice.pvf.values.length - 1]" 
+        rz-slider-options="state.sliderOptions"></rzslider>
       </p>
       <strong>So that the following statement is true:</strong>
       <p>
@@ -54,7 +60,7 @@
     </div>
     <div class="cell large-5">
       <div style="width: 400px; height: 400px">
-        <line-chart value="getXY(state.choice)" show-legend="false"></line-chart>
+        <line-chart value="pvfCoordinates" show-legend="false"></line-chart>
       </div>
     </div>
   </div>

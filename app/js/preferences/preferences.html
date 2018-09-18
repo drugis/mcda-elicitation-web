@@ -15,7 +15,7 @@
     <div class="cell" ng-repeat="criterion in criteria">
       <h5>{{::criterion.title}}</h5>
       <div style="width: 250px; height: 180px">
-        <line-chart ng-if="isPVFDefined(criterion.dataSources[0])" value="getXY(criterion.dataSources[0])" show-legend="false"></line-chart>
+        <line-chart ng-if="isPVFDefined(criterion.dataSources[0])" value="pvfCoordinates[criterion.id]" show-legend="false"></line-chart>
         <div ng-if="!isPVFDefined(criterion.dataSources[0])" style="padding-top: 40px; text-align: center; margin: 0">
           <i style="font-size: 100px" class="fa fa-question"></i>
         </div>
@@ -75,5 +75,5 @@
   </div>
 </div>
 <div class="cell" ng-if="criteriaHavePvf">
-  <willingness-to-trade-off problem="aggregateState.problem"></willingness-to-trade-off>
+  <willingness-to-trade-off problem="baseAggregateState.problem"></willingness-to-trade-off>
 </div>

@@ -1,4 +1,5 @@
 'use strict';
+/* global exampleProblem */
 define([
   'lodash',
   'angular',
@@ -41,9 +42,11 @@ define([
         };
       };
     };
+    var workspaceSettingsServiceMock = jasmine.createSpyObj('WorkspaceSettingsService', ['usePercentage']);
 
     beforeEach(angular.mock.module('elicit.preferences', function($provide) {
       $provide.value('$state', stateMock);
+      $provide.value('WorkspaceSettingsService', workspaceSettingsServiceMock);
       $provide.value('OrderingService', orderingServiceMock);
     }));
 

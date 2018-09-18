@@ -1,4 +1,5 @@
 'use strict';
+/* global exampleProblem */
 define([
   'lodash',
   'angular',
@@ -14,7 +15,11 @@ define([
       var orderingServiceMock = jasmine.createSpyObj('OrderingService', ['getOrderedCriteriaAndAlternatives']);
       var pageTitleServiceMock = jasmine.createSpyObj('PageTitleService', ['setPageTitle']);
 
-      beforeEach(angular.mock.module('elicit.preferences'));
+      var workspaceSettingsServiceMock = jasmine.createSpyObj('WorkspaceSettingsService', ['usePercentage']);
+
+      beforeEach(angular.mock.module('elicit.preferences', function($provide) {
+        $provide.value('WorkspaceSettingsService', workspaceSettingsServiceMock);
+      }));
       beforeEach(angular.mock.module('elicit.taskDependencies'));
 
       function initializeScope($controller, $rootScope, TaskDependencies, problem) {

@@ -48,7 +48,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
         workspaceSettingsResourceMock.get.and.returnValue({
           $promise: resultsDefer.promise
         });
-        loadedPromise = workspaceSettingsService.loadWorkspaceSettings();
+        loadedPromise = workspaceSettingsService.loadWorkspaceSettings(stateParams);
         loadedPromise.then(function() {
           loadResolved = true;
         });

@@ -68,7 +68,7 @@
           <td>
             <span ng-if="row.dataSource.pvf.range">
               {{row.dataSource.pvf.range[0] | number}},
-              {{row.dataSource.pvf.range[1] | number}}.
+              {{row.dataSource.pvf.range[1] | number}}
             </span>
             <span ng-if="!row.dataSource.pvf.range">
               <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[0] | number"></span> ,

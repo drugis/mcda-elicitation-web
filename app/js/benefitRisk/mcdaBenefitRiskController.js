@@ -43,8 +43,8 @@ define(['lodash'], function(_) {
     $scope.scenario = currentScenario;
     $scope.isDuplicateScenarioTitle = false;
 
-    var baseAggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, currentScenario);
-    var baseCriteria = baseAggregateState.problem.criteria;
+    $scope.baseAggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, currentScenario);
+    var baseCriteria = $scope.baseAggregateState.problem.criteria;
     updateAggregateState();
     $scope.effectsTableInfo = EffectsTableService.createEffectsTableInfo($scope.aggregateState.problem.performanceTable);
     $scope.hasMissingValues = _.find($scope.aggregateState.problem.performanceTable, function(tableEntry) {
@@ -65,8 +65,8 @@ define(['lodash'], function(_) {
       updateScales($scope.workspace.scales.base);
     });
     $scope.$on('elicit.resultsAccessible', function(event, scenario) {
-      baseAggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
-      baseCriteria = baseAggregateState.problem.criteria;
+      $scope.baseAggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
+      baseCriteria = $scope.baseAggregateState.problem.criteria;
 
       updateAggregateState();
       $scope.scenario = scenario;
@@ -100,10 +100,10 @@ define(['lodash'], function(_) {
     }
 
     function updateAggregateState() {
-      var aggregateState = _.merge({}, baseAggregateState, {
+      var aggregateState = _.merge({}, $scope.baseAggregateState, {
         problem: {
           criteria: WorkspaceSettingsService.usePercentage() ?
-            WorkspaceService.percentifyDataSources(baseAggregateState.problem.criteria) : baseAggregateState.problem.criteria
+            WorkspaceService.percentifyDataSources($scope.baseAggregateState.problem.criteria) : $scope.baseAggregateState.problem.criteria
         }
       });
       $scope.aggregateState = aggregateState;
