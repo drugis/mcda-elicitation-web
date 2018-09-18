@@ -1,12 +1,14 @@
 'use strict';
-define(['c3', 'd3', 'jquery'],
-  function(c3, d3, $) {
+define(['c3', 'd3', 'jquery', 'lodash'],
+  function(c3, d3, $, _) {
     var dependencies = [
       'TradeOffService',
+      'WorkspaceSettingsService',
       '$timeout'
     ];
     var WillingnessToTradeOffChartDirective = function(
       TradeOffService,
+      WorkspaceSettingsService,
       $timeout
     ) {
       return {
@@ -21,11 +23,17 @@ define(['c3', 'd3', 'jquery'],
           scope.updateSecondPoint = updateSecondPoint;
 
           // init
-
           scope.coordinates = {};
           scope.sliderOptions = {
             precision: 4,
-            onChange: updateSecondPoint
+            onChange: updateSecondPoint,
+            translate: function(value) {
+              var multiplier = 1;
+              if (checkUsePercentage(scope.settings.firstCriterion.dataSources[0].scale)) {
+                multiplier = 100;
+              }
+              return value * multiplier;
+            }
           };
 
           var criteria;
@@ -60,7 +68,21 @@ define(['c3', 'd3', 'jquery'],
             }
           }, true);
 
-          // puublic functions
+          scope.$on('elicit.settingsChanged', function() {
+            updateCoordinates();
+            updatePercentageModifier();
+          });
+
+          function updatePercentageModifier() {
+            scope.percentageModifiers = {
+              firstCriterion: checkUsePercentage(scope.settings.firstCriterion.dataSources[0].scale) ? 100 : 1,
+              secondCriterion: checkUsePercentage(scope.settings.secondCriterion.dataSources[0].scale) ? 100 : 1
+            };
+          }
+
+          function checkUsePercentage(scale) {
+            return _.isEqual([0, 1], scale) && WorkspaceSettingsService.usePercentage();
+          }
 
           function updateFirstPoint() {
             if (scope.coordinates.x > -Infinity && scope.coordinates.y > -Infinity) {
@@ -74,7 +96,7 @@ define(['c3', 'd3', 'jquery'],
 
           function updateSecondPoint() {
             scope.sliderOptions.minLimit = data.columns[2][1];
-            scope.sliderOptions.maxLimit = data.columns[2][data.columns[2].length-1];
+            scope.sliderOptions.maxLimit = data.columns[2][data.columns[2].length - 1];
             var secondPointCoordinates = TradeOffService.getYValue(scope.coordinates.x2, data.columns[2], data.columns[3]);
             data.columns[4] = ['secondPoint_x', secondPointCoordinates.x];
             data.columns[5] = ['secondPoint', secondPointCoordinates.y];
@@ -86,8 +108,6 @@ define(['c3', 'd3', 'jquery'],
             }, 100);
             chart.load(data);
           }
-
-          // private
 
           function initChart(newSettings) {
             root.append('rect')
@@ -134,6 +154,7 @@ define(['c3', 'd3', 'jquery'],
               plotIndifference(results);
               chart.load(data);
               updateSecondPoint();
+              updatePercentageModifier();
             });
           }
         }

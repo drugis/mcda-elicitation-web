@@ -4,9 +4,11 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
     var tradeOffService;
     var taskResultsDefer;
     var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsService', ['postAndHandleResults']);
-    
+    var workspaceSettingsService = jasmine.createSpyObj('WorkspaceSettingsService', ['usePercentage']);
+
     beforeEach(angular.mock.module('elicit.preferences', function($provide) {
       $provide.value('PataviResultsService', pataviResultsServiceMock);
+      $provide.value('WorkspaceSettingsService', workspaceSettingsService);
     }));
 
     beforeEach(inject(function($q, TradeOffService) {
@@ -56,10 +58,12 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
         var settings = {
           firstCriterion: {
             title: 'firstTitle',
+            dataSources: [{ scale: [-Infinity, Infinity] }]
           },
           secondCriterion: {
             title: 'secondTitle',
-            unitOfMeasurement: 'uom'
+            unitOfMeasurement: 'uom',
+            dataSources: [{ scale: [-Infinity, Infinity] }]
           }
         };
         var minY = 0;
@@ -89,27 +93,27 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
       it('should given an x and the x and y values of line cutoffs, calculate the y value for the x', function() {
         var x = 50;
         var result = tradeOffService.getYValue(x, xValues, yValues);
-        expect(result).toEqual({x:50, y: 50});
+        expect(result).toEqual({ x: 50, y: 50 });
       });
 
-      it('should return the nearest cutoff if the x does not fall on the line', function(){
+      it('should return the nearest cutoff if the x does not fall on the line', function() {
         var xTooSmall = 10;
         var smallResult = tradeOffService.getYValue(xTooSmall, xValues, yValues);
-        expect(smallResult).toEqual({x:25, y: 0});
+        expect(smallResult).toEqual({ x: 25, y: 0 });
         var xTooLarge = 90;
         var largeResult = tradeOffService.getYValue(xTooLarge, xValues, yValues);
-        expect(largeResult).toEqual({x:80, y: 100});
+        expect(largeResult).toEqual({ x: 80, y: 100 });
       });
 
-      it('should work for an x that is on a cutoff point', function(){
+      it('should work for an x that is on a cutoff point', function() {
         var x = 40;
         var result = tradeOffService.getYValue(x, xValues, yValues);
-        expect(result).toEqual({x:40, y: 40});
+        expect(result).toEqual({ x: 40, y: 40 });
       });
     });
 
-    describe('significantDigits', function(){
-      it('should round the input to have 4 significant digits', function(){
+    describe('significantDigits', function() {
+      it('should round the input to have 4 significant digits', function() {
         expect(tradeOffService.significantDigits(0)).toBe(0);
         expect(tradeOffService.significantDigits(100)).toBe(100);
         expect(tradeOffService.significantDigits(0.00001)).toBe(0.00001);

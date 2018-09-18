@@ -37,22 +37,22 @@
       </div>
       <div class="cell">
         &nbsp;
-        {{settings.firstCriterion.title}}: {{coordinates.x}} {{settings.firstCriterion.unitOfMeasurement}}
+        {{settings.firstCriterion.title}}: {{coordinates.x * percentageModifiers.firstCriterion}} {{settings.firstCriterion.unitOfMeasurement}}
       </div>
       <div class="cell">
         &nbsp;
-        {{settings.secondCriterion.title}}: {{coordinates.y}} {{settings.secondCriterion.unitOfMeasurement}}
+        {{settings.secondCriterion.title}}: {{coordinates.y * percentageModifiers.secondCriterion}} {{settings.secondCriterion.unitOfMeasurement}}
       </div>
       <div class="cell">
         <br>Outcome B
       </div>
       <div class="cell">
         &nbsp;
-        {{settings.firstCriterion.title}}: {{coordinates.x2}} {{settings.firstCriterion.unitOfMeasurement}}
+        {{settings.firstCriterion.title}}: {{coordinates.x2 * percentageModifiers.firstCriterion}} {{settings.firstCriterion.unitOfMeasurement}}
       </div>
       <div class="cell">
         &nbsp;
-        {{settings.secondCriterion.title}}: {{coordinates.y2}} {{settings.secondCriterion.unitOfMeasurement}}
+        {{settings.secondCriterion.title}}: {{coordinates.y2 * percentageModifiers.secondCriterion}} {{settings.secondCriterion.unitOfMeasurement}}
       </div>
       <div class="cell">
         <br>If this is incorrect, you should adjust the weights or partial value functions.

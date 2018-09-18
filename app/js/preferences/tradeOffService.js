@@ -1,7 +1,14 @@
 'use strict';
 define(['lodash', 'd3'], function(_, d3) {
-  var dependencies = ['PataviResultsService'];
-  var TradeOffService = function(PataviResultsService) {
+  var dependencies = [
+    'PataviResultsService',
+    'WorkspaceSettingsService'
+  ];
+  var TradeOffService = function(
+    PataviResultsService,
+    WorkspaceSettingsService
+  ) {
+
     function getIndifferenceCurve(problem, criteria, coordinates) {
       var newProblem = _.merge({}, problem, {
         method: 'indifferenceCurve',
@@ -12,27 +19,27 @@ define(['lodash', 'd3'], function(_, d3) {
           y: coordinates.y
         }
       });
-      newProblem.criteria = _.mapValues(newProblem.criteria, function(criterion) {
-        return _.merge({}, _.omit(criterion, ['dataSources']), _.omit(criterion.dataSources[0]), []);
-      });
+      newProblem.criteria = _.mapValues(newProblem.criteria, mergeCriterionAndDataSource);
       return PataviResultsService.postAndHandleResults(newProblem);
+    }
+
+    function mergeCriterionAndDataSource(criterion) {
+      return _.merge({}, _.omit(criterion, ['dataSources']), criterion.dataSources[0]);
     }
 
     function getInitialSettings(root, data, sliderOptions, settings, minY, maxY) {
       return {
         bindto: root,
         point: {
-          r: function(point) {
-            return point.id === 'line' ? 0 : 8;
-          }
+          r: getRadius
         },
         data: data,
-        legend:{ item:{ onclick: function() {} } },
+        legend: { item: { onclick: function() { } } },
         axis: {
           x: {
             tick: {
               fit: false,
-              format: d3.format('.2f')
+              format: _.partial(formatAxis, settings.firstCriterion.dataSources[0].scale)
             },
             min: sliderOptions.floor,
             max: sliderOptions.ceil,
@@ -47,7 +54,7 @@ define(['lodash', 'd3'], function(_, d3) {
             max: maxY,
             default: [minY, maxY],
             tick: {
-              format: d3.format('.2f')
+              format: _.partial(formatAxis, settings.secondCriterion.dataSources[0].scale)
             },
             label: getTitle(settings.secondCriterion),
             padding: {
@@ -59,10 +66,26 @@ define(['lodash', 'd3'], function(_, d3) {
       };
     }
 
+    function getRadius(point) {
+      return point.id === 'line' ? 0 : 8;
+    }
+
+    function formatAxis(scale, value) {
+      var numberFormatter = d3.format('.2f');
+      if (checkUsePercentage(scale)) {
+        return numberFormatter(value) * 100;
+      }
+      return numberFormatter(value);
+    }
+
+    function checkUsePercentage(scale) {
+      return _.isEqual([0, 1], scale) && WorkspaceSettingsService.usePercentage();
+    }
+
     function getYValue(x, xValues, yValues) {
       var value;
       var idx = _.indexOf(xValues, x);
-      if (idx >= 0) {
+      if (isEqualToBreakpoint()) {
         // value s same as one of the breakpoints, no need to calculate it
         value = yValues[idx];
       } else {
@@ -80,17 +103,24 @@ define(['lodash', 'd3'], function(_, d3) {
           value = yValues[idx - 1];
         } else {
           // on the line, calculate y value
-          var xdiff = xValues[idx] - xValues[idx - 1];
-          var ydiff = yValues[idx] - yValues[idx - 1];
-          var slope = ydiff / xdiff;
-          var c = -slope * xValues[idx] + yValues[idx];
-          value = slope * x + c;
+          value = calculateYValue(xValues, yValues, idx, x);
         }
       }
       return {
         y: significantDigits(value),
         x: x
       };
+    }
+    function isEqualToBreakpoint(idx) {
+      return idx >= 0;
+    }
+
+    function calculateYValue(xValues, yValues, idx, x) {
+      var xdiff = xValues[idx] - xValues[idx - 1];
+      var ydiff = yValues[idx] - yValues[idx - 1];
+      var slope = ydiff / xdiff;
+      var c = -slope * xValues[idx] + yValues[idx];
+      return slope * x + c;
     }
 
     function significantDigits(value) {
@@ -102,7 +132,7 @@ define(['lodash', 'd3'], function(_, d3) {
       return Math.round(value * multiplier) / multiplier;
     }
 
-    function getTitle(criterion){
+    function getTitle(criterion) {
       return criterion.unitOfMeasurement ? criterion.title + ' (' + criterion.unitOfMeasurement + ')' : criterion.title;
     }
 
