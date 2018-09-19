@@ -78,14 +78,14 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function createNewCriterion(problem, criterion, criterionId) {
-      var newCriterion = _.pick(criterion, ['title', 'description', 'unitOfMeasurement', 'scale']);
+      var newCriterion = _.pick(criterion, ['title', 'description', 'unitOfMeasurement']);
       var dataSource = createDataSource(problem, criterion, criterionId);
       newCriterion.dataSources = [dataSource];
       return newCriterion;
     }
 
     function createDataSource(problem, criterion, criterionId) {
-      var dataSource = _.pick(criterion, ['pvf', 'source', 'sourceLink', 'strengthOfEvidence', 'uncertainties']);
+      var dataSource = _.pick(criterion, ['pvf', 'source', 'sourceLink', 'strengthOfEvidence', 'uncertainties', 'scale']);
       dataSource.id = generateUuid();
       var inputParameters = getInputParameters(problem.performanceTable, criterionId);
       return _.merge(dataSource, inputParameters);
