@@ -30,11 +30,28 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
 
       // init
       scope.pvf = PartialValueFunctionService;
-      OrderingService.getOrderedCriteriaAndAlternatives(scope.aggregateState.problem, $stateParams).then(function(orderings) {
-        scope.alternatives = orderings.alternatives;
-        scope.criteria = orderings.criteria;
+      scope.$on('elicit.settingsChanged', function() {
+        resetWizard();
       });
+      resetWizard();
 
+      function resetWizard() {
+        OrderingService.getOrderedCriteriaAndAlternatives(scope.aggregateState.problem, $stateParams).then(function(orderings) {
+          scope.alternatives = orderings.alternatives;
+          scope.criteria = orderings.criteria;
+          $injector.invoke(Wizard, undefined, {
+            $scope: scope,
+            handler: {
+              validChoice: validChoice,
+              fields: ['total', 'mostImportantCriterion', 'step'],
+              nextState: nextState,
+              standardize: _.identity,
+              initialize: _.partial(initialize, taskDefinition.clean(scope.aggregateState))
+            }
+          });
+        });
+      }
+        
       function title(step, total) {
         return baseTitle + ' (' + step + '/' + total + ')';
       }
@@ -94,7 +111,7 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
           .value();
 
         currentScenario.state = {
-          problem: state.problem
+          problem: currentScenario.state.problem
         };
         currentScenario.state.prefs = prefs;
         currentScenario.$save($stateParams, function(scenario) {
@@ -107,16 +124,6 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
         $state.go('preferences');
       }
 
-      $injector.invoke(Wizard, undefined, {
-        $scope: scope,
-        handler: {
-          validChoice: validChoice,
-          fields: ['total', 'mostImportantCriterion', 'step'],
-          nextState: nextState,
-          standardize: _.identity,
-          initialize: _.partial(initialize, taskDefinition.clean(scope.aggregateState))
-        }
-      });
     }
 
     return {

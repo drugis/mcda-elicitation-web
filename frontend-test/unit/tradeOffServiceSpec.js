@@ -123,5 +123,33 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
         expect(tradeOffService.significantDigits(12344)).toBe(12340);
       });
     });
+
+    describe('areCoordinatesSet', function() {
+      function xy(x, y) { return { x: x, y: y }; }
+
+      it('should return true if given coordinates are defined', function() {
+        var coordinates = xy(1, -2);
+        var result = tradeOffService.areCoordinatesSet(coordinates);
+        expect(result).toBeTruthy();
+      });
+      
+      it('should return false if one of the coordinates has an invalid value', function() {
+        var coordinatesUndefined = xy(1, undefined);
+        var resultUndefined = tradeOffService.areCoordinatesSet(coordinatesUndefined);
+        expect(resultUndefined).toBeFalsy();
+
+        var coordinatesMissing = { x: 1 };
+        var resultMissing = tradeOffService.areCoordinatesSet(coordinatesMissing);
+        expect(resultMissing).toBeFalsy();
+
+        var coordinatesNaN = xy(1, NaN);
+        var resultNaN = tradeOffService.areCoordinatesSet(coordinatesNaN);
+        expect(resultNaN).toBeFalsy();
+
+        var coordinatesNull = xy(1, null);
+        var resultNull = tradeOffService.areCoordinatesSet(coordinatesNull);
+        expect(resultNull).toBeFalsy();
+      });
+    });
   });
 });

@@ -1,10 +1,10 @@
 'use strict';
-define(['clipboard', 'lodash'], function(Clipboard, _) {
+define(['clipboard', 'lodash', 'angular'], function(Clipboard, _, angular) {
   var dependencies = [
     '$scope',
     '$stateParams',
+    '$state',
     'currentScenario',
-    'taskDefinition',
     'MCDAResultsService',
     'EffectsTableService',
     'OrderingService',
@@ -14,8 +14,8 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
   var DeterministicResultsController = function(
     $scope,
     $stateParams,
+    $state,
     currentScenario,
-    taskDefinition,
     MCDAResultsService,
     EffectsTableService,
     OrderingService,
@@ -37,30 +37,52 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       alteredTableCells: [],
       isEditing: false
     };
-    OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(ordering) {
+    new Clipboard('.clipboard-button');
+    PageTitleService.setPageTitle('DeterministicResultsController', ($scope.aggregateState.problem.title || $scope.workspace.title) + '\'s deterministic results');
+
+    $scope.$on('elicit.settingsChanged', function() {
+      $state.reload();
+    });
+
+    $scope.$watch('scales.observed', function() {
+      resetSensitivityAnalysis();
+    });
+
+    var orderingsPromise = OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(ordering) {
       $scope.criteria = ordering.criteria;
       $scope.tableRows = EffectsTableService.buildEffectsTable(ordering.criteria);
       $scope.alternatives = ordering.alternatives;
       $scope.nrAlternatives = _.keys($scope.alternatives).length;
       loadState();
-      $scope.$watch('scales.observed', function() {
-        resetSensitivityAnalysis();
-      });
     });
-    
-    new Clipboard('.clipboard-button');
-    PageTitleService.setPageTitle('DeterministicResultsController', ($scope.aggregateState.problem.title || $scope.workspace.title) +'\'s deterministic results');
 
-    //public 
+    function loadState() {
+      var stateWithAlternativesRenamed = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.aggregateState);
+      initSensitivityDropdowns();
+      doMeasurementSensitivity();
+      doPreferencesSensitivity();
+
+      $scope.deterministicResults = MCDAResultsService.getDeterministicResults($scope, stateWithAlternativesRenamed);
+      $scope.state = MCDAResultsService.getResults($scope, stateWithAlternativesRenamed);
+    }
+
+    function initSensitivityDropdowns() {
+      $scope.sensitivityMeasurements.measurementsAlternative = $scope.alternatives[0];
+      $scope.sensitivityMeasurements.measurementsCriterion = $scope.criteria[0];
+      $scope.sensitivityMeasurements.preferencesCriterion = $scope.criteria[0];
+
+    }
     function isEditing(value) {
       $scope.sensitivityMeasurements.isEditing = value;
     }
 
     function resetSensitivityAnalysis() {
-      $scope.modifiableScales = MCDAResultsService.resetModifiableScales(
-        $scope.scales.observed, _.keyBy($scope.alternatives, 'id'));
-      delete $scope.recalculatedDeterministicResults;
-      $scope.sensitivityMeasurements.alteredTableCells = [];
+      orderingsPromise.then(function() {
+        $scope.modifiableScales = MCDAResultsService.resetModifiableScales(
+          $scope.scales.observed, _.keyBy($scope.alternatives, 'id'));
+        delete $scope.recalculatedDeterministicResults;
+        $scope.sensitivityMeasurements.alteredTableCells = [];
+      });
     }
 
     function sensitivityScalesChanged(newValue, row, alternative) {
@@ -77,37 +99,32 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       $scope.recalculatedDeterministicResults = MCDAResultsService.getRecalculatedDeterministicResulsts($scope, $scope.state);
     }
 
-    function initialize(state) {
-      $scope.sensitivityMeasurements.measurementsAlternative = $scope.alternatives[0];
-      $scope.sensitivityMeasurements.measurementsCriterion = $scope.criteria[0];
-      $scope.sensitivityMeasurements.preferencesCriterion = $scope.criteria[0];
-
-      $scope.deterministicResults = MCDAResultsService.getDeterministicResults($scope, state);
-      var overallResults = MCDAResultsService.getResults($scope, state);
-      doMeasurementSensitivity(state);
-      doPreferencesSensitivity(state);
-      return overallResults;
-    }
-
-    function doMeasurementSensitivity(state) {
+    function doMeasurementSensitivity() {
       delete $scope.measurementValues;
-      MCDAResultsService.getMeasurementsSensitivityResults($scope, state).resultsPromise.then(function(result) {
+      MCDAResultsService.getMeasurementsSensitivityResults($scope, $scope.baseAggregateState).resultsPromise.then(function(result) {
         $scope.measurementValues = MCDAResultsService.pataviResultToLineValues(result.results, $scope.alternatives, $scope.scenario.state.legend);
+
+        if (usePercentage($scope.sensitivityMeasurements.measurementsCriterion)) {
+          $scope.measurementValues = MCDAResultsService.percentifySensitivityResult($scope.measurementValues, 'x');
+
+        }
       });
     }
 
-    function doPreferencesSensitivity(state) {
+    function doPreferencesSensitivity() {
       delete $scope.preferencesValues;
-      MCDAResultsService.getPreferencesSensitivityResults($scope, state).resultsPromise.then(function(result) {
+      MCDAResultsService.getPreferencesSensitivityResults($scope, $scope.baseAggregateState).resultsPromise.then(function(result) {
         $scope.preferencesValues = MCDAResultsService.pataviResultToLineValues(result.results, $scope.alternatives, $scope.scenario.state.legend);
+
+        if (usePercentage($scope.sensitivityMeasurements.preferencesCriterion)) {
+          $scope.preferencesValues = MCDAResultsService.percentifySensitivityResult($scope.preferencesValues, 'y');
+        }
       });
     }
 
-    function loadState() {
-      $scope.aggregateState = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.aggregateState);
-      $scope.state = initialize(taskDefinition.clean($scope.aggregateState));
-    }        
-
+    function usePercentage(criterion) {
+      return _.isEqual(criterion.dataSources[0].scale, [0, 100]);
+    }
   };
   return dependencies.concat(DeterministicResultsController);
 });

@@ -224,6 +224,17 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       }, {});
       return newState;
     }
+    
+    function percentifySensitivityResult(values, coordinate) {
+      return _.map(values, function(line) {
+        var newLine = angular.copy(line);
+        newLine.values = _.map(newLine.values, function(coordinates) {
+          coordinates[coordinate] *= 100;
+          return coordinates;
+        });
+        return newLine;
+      });
+    }
 
     return {
       getResults: getResults,
@@ -235,7 +246,8 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       getMeasurementsSensitivityResults: getMeasurementsSensitivityResults,
       getPreferencesSensitivityResults: getPreferencesSensitivityResults,
       addSmaaResults: addSmaaResults,
-      replaceAlternativeNames: replaceAlternativeNames
+      replaceAlternativeNames: replaceAlternativeNames,
+      percentifySensitivityResult: percentifySensitivityResult
     };
   };
 

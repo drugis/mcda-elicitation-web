@@ -4,7 +4,6 @@ define(['clipboard', 'require'], function(Clipboard) {
     '$scope',
     '$stateParams',
     'currentScenario',
-    'taskDefinition',
     'MCDAResultsService',
     'OrderingService',
     'PageTitleService'
@@ -14,7 +13,6 @@ define(['clipboard', 'require'], function(Clipboard) {
     $scope,
     $stateParams,
     currentScenario,
-    taskDefinition,
     MCDAResultsService,
     OrderingService,
     PageTitleService
@@ -34,8 +32,8 @@ define(['clipboard', 'require'], function(Clipboard) {
     });
 
     function loadState() {
-      $scope.aggregateState = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.aggregateState);
-      $scope.state = MCDAResultsService.getResults($scope, taskDefinition.clean($scope.aggregateState));
+      $scope.state = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.baseAggregateState);
+      $scope.state = MCDAResultsService.getResults($scope, $scope.state);
       $scope.state.resultsPromise.then(function() {
         $scope.state = MCDAResultsService.addSmaaResults($scope.state);
       });

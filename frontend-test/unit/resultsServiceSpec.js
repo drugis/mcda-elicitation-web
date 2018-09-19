@@ -1,9 +1,9 @@
 'use strict';
 define([
   'angular',
-  'angular-mocks', 
-  'mcda/results/results', 
-  'angular-patavi-client', 
+  'angular-mocks',
+  'mcda/results/results',
+  'angular-patavi-client',
   'angularjs-slider'
 ], function(angular) {
   describe('The MCDAResultsService', function() {
@@ -11,7 +11,7 @@ define([
     var pataviServiceMock = jasmine.createSpyObj('PataviServiceMock', ['somefunction']);
 
     beforeEach(function() {
-      angular.mock.module('patavi', function() {});
+      angular.mock.module('patavi', function() { });
       angular.mock.module('elicit.results', function($provide) {
         $provide.value('PataviService', pataviServiceMock);
       });
@@ -317,7 +317,7 @@ define([
               }, {
                 label: 'Rank 2',
                 value: [0.8]
-              }, ]
+              },]
             }],
             altKey2: [{
               key: 'alternative2',
@@ -327,7 +327,7 @@ define([
               }, {
                 label: 'Rank 2',
                 value: [0.2]
-              }, ]
+              },]
             }]
           }
         };
@@ -379,6 +379,31 @@ define([
         };
         var result = resultsService.replaceAlternativeNames(undefined, state);
         expect(result).toEqual(state);
+      });
+    });
+
+    describe('percentifySensitivityResult', function() {
+      it('should return the values of given coordinate multiplied by 100', function() {
+        function xy(x, y) {
+          return { x: x, y: y };
+        }
+        var values = [{
+          values: [
+            xy(1, 0),
+            xy(2, 1),
+            xy(3, 2)
+          ]
+        }];
+        var coordinate = 'x';
+        var result = resultsService.percentifySensitivityResult(values, coordinate);
+        var expectedResult = [{
+          values: [
+            xy(100, 0),
+            xy(200, 1),
+            xy(300, 2)
+          ]
+        }];
+        expect(result).toEqual(expectedResult);
       });
     });
   });

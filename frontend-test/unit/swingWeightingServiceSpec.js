@@ -27,10 +27,10 @@ define([
     });
     var sliderOptions;
     var getValues = function(criteria) {
-      return _.reduce(criteria, function(accum, criterion, key) {
-        accum[key] = 100;
-        return accum;
-      }, {});
+      return _.mapValues(criteria, function() {
+        return 100;
+      });
+
     };
     var baseTitle = 'Precise swing';
     var toBackEnd = function(mostImportantCriterion) {
@@ -61,6 +61,9 @@ define([
         problem: exampleProblem()
       };
       currentScenario = jasmine.createSpyObj('currentScenario', ['$save']);
+      currentScenario.state = {
+        problem: exampleProblem()
+      };
       currentScenario.$save.and.callFake(function(_ignore, callback) {
         callback();
       });

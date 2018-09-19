@@ -23,31 +23,40 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
     //init
     $scope.problem = $scope.aggregateState.problem;
     $scope.pvf = PartialValueFunctionService;
-
-    PageTitleService.setPageTitle('OrdinalSwingController','Ranking');
-
-    OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
-      $scope.criteria = _.map(orderings.criteria, function(criterion) {
-        criterion.best = PartialValueFunctionService.best(criterion.dataSources[0]);
-        criterion.worst = PartialValueFunctionService.worst(criterion.dataSources[0]);
-        return criterion;
-      });
-      $injector.invoke(Wizard, this, {
-        $scope: $scope,
-        handler: {
-          validChoice: validChoice,
-          fields: ['choice', 'reference', 'choices', 'type', 'standardized', 'previousChoice'],
-          nextState: nextState,
-          initialize: _.partial(initialize, taskDefinition.clean($scope.aggregateState)),
-          standardize: standardize
-        }
-      });
+    $scope.$on('elicit.settingsChanged', function() {
+      $scope.problem = $scope.aggregateState.problem;
+      resetWizard();
     });
 
-    //public
+    PageTitleService.setPageTitle('OrdinalSwingController', 'Ranking');
+    resetWizard();
+
+    function resetWizard() {
+      OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
+        $scope.criteria = _.map(orderings.criteria, function(criterion) {
+          criterion.best = PartialValueFunctionService.best(criterion.dataSources[0]);
+          criterion.worst = PartialValueFunctionService.worst(criterion.dataSources[0]);
+          return criterion;
+        });
+        $injector.invoke(Wizard, {}, {
+          $scope: $scope,
+          handler: {
+            validChoice: validChoice,
+            fields: ['choice', 'reference', 'choices', 'type', 'standardized', 'previousChoice'],
+            nextState: nextState,
+            initialize: initialize,
+            standardize: standardize
+          }
+        });
+      });
+    }
+
     function save(state) {
       var nextState = standardize(state);
-      currentScenario.state = _.pick(nextState, ['problem', 'prefs']);
+      currentScenario.state = _.extend({}, currentScenario.state,
+        {
+          prefs: nextState.prefs
+        });
       currentScenario.$save($stateParams, function(scenario) {
         $scope.$emit('elicit.resultsAccessible', scenario);
         $state.go('preferences');
@@ -62,13 +71,13 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
       $state.go('preferences');
     }
 
-    //private
     function title(step, total) {
       var base = 'Ranking';
       return base + ' (' + step + '/' + total + ')';
     }
 
-    function initialize(state) {
+    function initialize() {
+      var state = taskDefinition.clean($scope.aggregateState);
       var fields = {
         title: title(1, _.size($scope.criteria) - 1),
         type: 'elicit',
@@ -102,8 +111,8 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
     }
 
     function standardize(state) {
-      var standardized = _.cloneDeep(state);
-      var prefs = standardized.prefs;
+      var standardizedState = _.cloneDeep(state);
+      var prefs = standardizedState.prefs;
       var order = prefs.ordinal;
 
       function ordinal(a, b) {
@@ -126,8 +135,8 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
           return ordinal(_.last(order), criterion);
         }));
       }
-      standardized.prefs = result;
-      return standardized;
+      standardizedState.prefs = result;
+      return standardizedState;
     }
   };
   return dependencies.concat(OrdinalSwingController);

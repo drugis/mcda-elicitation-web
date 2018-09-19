@@ -72,13 +72,13 @@ define(['lodash', 'd3'], function(_, d3) {
 
     function formatAxis(scale, value) {
       var numberFormatter = d3.format('.2f');
-      if (checkUsePercentage(scale)) {
+      if (usePercentage(scale)) {
         return numberFormatter(value) * 100;
       }
       return numberFormatter(value);
     }
 
-    function checkUsePercentage(scale) {
+    function usePercentage(scale) {
       return _.isEqual([0, 1], scale) && WorkspaceSettingsService.usePercentage();
     }
 
@@ -86,23 +86,19 @@ define(['lodash', 'd3'], function(_, d3) {
       var value;
       var idx = _.indexOf(xValues, x);
       if (isEqualToBreakpoint()) {
-        // value s same as one of the breakpoints, no need to calculate it
         value = yValues[idx];
       } else {
         var xCoordinates = _.cloneDeep(xValues);
         xCoordinates.push(x);
         xCoordinates = _.sortBy(xCoordinates);
         idx = _.indexOf(xCoordinates, x);
-        if (idx === 1) {
-          // not on the line, pick first point of the line
+        if (isPointInFrontOfLine(idx)) {
           x = xValues[1];
           value = yValues[1];
-        } else if (idx === xCoordinates.length - 1) {
-          // not on the line, pick last point of the line
+        } else if (isPointAfterEndOfLine(idx,xCoordinates.length)) {
           x = xValues[idx - 1];
           value = yValues[idx - 1];
         } else {
-          // on the line, calculate y value
           value = calculateYValue(xValues, yValues, idx, x);
         }
       }
@@ -111,6 +107,15 @@ define(['lodash', 'd3'], function(_, d3) {
         x: x
       };
     }
+    
+    function isPointInFrontOfLine(idx) {
+      return idx === 1;
+    }
+
+    function isPointAfterEndOfLine(idx, arrayLength){
+      return idx === arrayLength -1;
+    }
+
     function isEqualToBreakpoint(idx) {
       return idx >= 0;
     }
@@ -136,11 +141,16 @@ define(['lodash', 'd3'], function(_, d3) {
       return criterion.unitOfMeasurement ? criterion.title + ' (' + criterion.unitOfMeasurement + ')' : criterion.title;
     }
 
+    function areCoordinatesSet(coordinates) {
+      return coordinates.x > -Infinity && coordinates.y > -Infinity && coordinates.x !== null && coordinates.y !== null;
+    }
+
     return {
       getIndifferenceCurve: getIndifferenceCurve,
       getInitialSettings: getInitialSettings,
       getYValue: getYValue,
-      significantDigits: significantDigits
+      significantDigits: significantDigits,
+      areCoordinatesSet: areCoordinatesSet
     };
   };
   return dependencies.concat(TradeOffService);

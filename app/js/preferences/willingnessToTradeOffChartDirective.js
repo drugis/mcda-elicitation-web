@@ -21,6 +21,8 @@ define(['c3', 'd3', 'jquery', 'lodash'],
         link: function(scope, element) {
           scope.updateFirstPoint = updateFirstPoint;
           scope.updateSecondPoint = updateSecondPoint;
+          scope.updateInputFirstPoint = updateInputFirstPoint;
+          scope.updateInputSecondPoint = updateInputSecondPoint;
 
           // init
           scope.coordinates = {};
@@ -29,7 +31,7 @@ define(['c3', 'd3', 'jquery', 'lodash'],
             onChange: updateSecondPoint,
             translate: function(value) {
               var multiplier = 1;
-              if (checkUsePercentage(scope.settings.firstCriterion.dataSources[0].scale)) {
+              if (usePercentage(scope.settings.firstCriterion.dataSources[0].scale)) {
                 multiplier = 100;
               }
               return value * multiplier;
@@ -60,6 +62,7 @@ define(['c3', 'd3', 'jquery', 'lodash'],
 
           scope.$watch('settings', function(newSettings) {
             if (newSettings) {
+              updatePercentageModifier();
               initChart(newSettings);
               criteria = {
                 firstCriterion: newSettings.firstCriterion,
@@ -69,29 +72,55 @@ define(['c3', 'd3', 'jquery', 'lodash'],
           }, true);
 
           scope.$on('elicit.settingsChanged', function() {
-            updateCoordinates();
             updatePercentageModifier();
+            updateFirstPoint();
           });
 
           function updatePercentageModifier() {
             scope.percentageModifiers = {
-              firstCriterion: checkUsePercentage(scope.settings.firstCriterion.dataSources[0].scale) ? 100 : 1,
-              secondCriterion: checkUsePercentage(scope.settings.secondCriterion.dataSources[0].scale) ? 100 : 1
+              firstCriterion: usePercentage(scope.settings.firstCriterion.dataSources[0].scale) ? 100 : 1,
+              secondCriterion: usePercentage(scope.settings.secondCriterion.dataSources[0].scale) ? 100 : 1
             };
           }
 
-          function checkUsePercentage(scale) {
+          function usePercentage(scale) {
             return _.isEqual([0, 1], scale) && WorkspaceSettingsService.usePercentage();
           }
 
+          function updateInputFirstPoint() {
+            scope.coordinates.x = scope.inputCoordinates.x / scope.percentageModifiers.firstCriterion;
+            scope.coordinates.y = scope.inputCoordinates.y / scope.percentageModifiers.secondCriterion;
+            updateFirstPoint();
+          }
+
           function updateFirstPoint() {
-            if (scope.coordinates.x > -Infinity && scope.coordinates.y > -Infinity) {
-              scope.coordinates.x = scope.coordinates.x < scope.sliderOptions.floor ? scope.sliderOptions.floor : scope.coordinates.x;
-              scope.coordinates.x = scope.coordinates.x > scope.sliderOptions.ceil ? scope.sliderOptions.ceil : scope.coordinates.x;
-              scope.coordinates.y = scope.coordinates.y < scope.minY ? scope.minY : scope.coordinates.y;
-              scope.coordinates.y = scope.coordinates.y > scope.maxY ? scope.maxY : scope.coordinates.y;
-              updateCoordinates();
+            scope.areCoordinatesSet = TradeOffService.areCoordinatesSet(scope.coordinates);
+            if (scope.areCoordinatesSet) {
+              scope.coordinates.x = _.clamp(scope.coordinates.x, scope.sliderOptions.floor, scope.sliderOptions.ceil);
+              scope.coordinates.y = _.clamp(scope.coordinates.y, scope.minY, scope.maxY);
+              scope.inputCoordinates = {
+                x: scope.coordinates.x * scope.percentageModifiers.firstCriterion,
+                y: scope.coordinates.y * scope.percentageModifiers.secondCriterion
+              };
+              redrawPlot();
             }
+          }
+
+          function redrawPlot() {
+            data.columns[0] = ['firstPoint', scope.coordinates.y];
+            data.columns[1] = ['firstPoint_x', scope.coordinates.x];
+            chart.load(data);
+            TradeOffService.getIndifferenceCurve(scope.problem, criteria, scope.coordinates).then(function(results) {
+              plotIndifference(results);
+              chart.load(data);
+              updateSecondPoint();
+            });
+          }
+
+          function updateInputSecondPoint() {
+            scope.coordinates.x2 = scope.inputCoordinates.x2 / scope.percentageModifiers.firstCriterion;
+            scope.coordinates.y2 = scope.inputCoordinates.y2 / scope.percentageModifiers.secondCriterion;
+            updateSecondPoint();
           }
 
           function updateSecondPoint() {
@@ -102,6 +131,8 @@ define(['c3', 'd3', 'jquery', 'lodash'],
             data.columns[5] = ['secondPoint', secondPointCoordinates.y];
             scope.coordinates.x2 = secondPointCoordinates.x;
             scope.coordinates.y2 = secondPointCoordinates.y;
+            scope.inputCoordinates.x2 = scope.coordinates.x2 * scope.percentageModifiers.firstCriterion;
+            scope.inputCoordinates.y2 = scope.coordinates.y2 * scope.percentageModifiers.secondCriterion;
 
             $timeout(function() {
               scope.$broadcast('rzSliderForceRender');
@@ -136,7 +167,7 @@ define(['c3', 'd3', 'jquery', 'lodash'],
               var coords = d3.mouse(this);
               scope.coordinates.x = TradeOffService.significantDigits(chart.internal.x.invert(coords[0]));
               scope.coordinates.y = TradeOffService.significantDigits(chart.internal.y.invert(coords[1]));
-              updateCoordinates();
+              updateFirstPoint();
               $timeout(); // force coordinate update outside chart
             }
           }
@@ -144,18 +175,6 @@ define(['c3', 'd3', 'jquery', 'lodash'],
           function plotIndifference(results) {
             data.columns[2] = (['line_x'].concat(results.data.x));
             data.columns[3] = (['line'].concat(results.data.y));
-          }
-
-          function updateCoordinates() {
-            data.columns[0] = ['firstPoint', scope.coordinates.y];
-            data.columns[1] = ['firstPoint_x', scope.coordinates.x];
-            chart.load(data);
-            TradeOffService.getIndifferenceCurve(scope.problem, criteria, scope.coordinates).then(function(results) {
-              plotIndifference(results);
-              chart.load(data);
-              updateSecondPoint();
-              updatePercentageModifier();
-            });
           }
         }
       };

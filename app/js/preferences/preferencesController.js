@@ -32,7 +32,7 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     $scope.isPVFDefined = isPVFDefined;
     $scope.isAccessible = isAccessible;
     $scope.editScenarioTitle = editScenarioTitle;
-    
+
     // init
     $scope.pvf = PartialValueFunctionService;
     $scope.criteriaHavePvf = true;
@@ -40,23 +40,29 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     $scope.scales = $scope.workspace.scales;
     $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinates($scope.aggregateState.problem.criteria);
     $scope.$on('elicit.settingsChanged', function() {
+      reloadOrderings();
       $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinates($scope.aggregateState.problem.criteria);
     });
     createIsSafeObject();
     $scope.criteriaHavePvf = doAllCriteriaHavePvf();
-    OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
-      $scope.alternatives = orderings.alternatives;
-      $scope.criteria = orderings.criteria;
-      $scope.importance = PreferencesService.buildImportance($scope.criteria, $scope.scenario.state.prefs);
-    });
+    reloadOrderings();
+
     new Clipboard('.clipboard-button');
     $scope.isOrdinal = _.find($scope.scenario.state.prefs, function(pref) {
       return pref.type === 'ordinal';
     });
 
-    PageTitleService.setPageTitle('PreferencesController', ($scope.aggregateState.problem.title || $scope.workspace.title) +'\'s preferences');
+    PageTitleService.setPageTitle('PreferencesController', ($scope.aggregateState.problem.title || $scope.workspace.title) + '\'s preferences');
 
     // public
+    function reloadOrderings() { 
+      OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
+        $scope.alternatives = orderings.alternatives;
+        $scope.criteria = orderings.criteria;
+        $scope.importance = PreferencesService.buildImportance($scope.criteria, $scope.scenario.state.prefs);
+      });
+    }
+
     function isPVFDefined(dataSource) {
       return dataSource.pvf && dataSource.pvf.type;
     }

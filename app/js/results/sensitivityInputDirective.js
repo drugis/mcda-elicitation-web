@@ -26,7 +26,7 @@ define([], function() {
         // init
         var isEscPressed = false;
         scope.newValue = scope.currentValue;
-        scope.slider = initSlider();
+        initSlider();
 
         scope.$on('open.af.dropdownToggle', function() {
           scope.isEditing(true);
@@ -45,7 +45,7 @@ define([], function() {
         });
 
         function showSlider() {
-          scope.slider = initSlider();
+          initSlider();
           $timeout(function() {
             scope.$broadcast('rzSliderForceRender');
             scope.$broadcast('reCalcViewDimensions');
@@ -53,7 +53,7 @@ define([], function() {
         }
 
         function initSlider() {
-          return {
+          scope.slider = {
             value: scope.currentValue,
             options: {
               floor: scope.row.dataSource.pvf.range[0],
