@@ -17,7 +17,7 @@ define(['lodash', 'angular'], function(_, angular) {
           isHeaderRow: true,
           headerText: 'Unfavorable effects'
         };
-        var partition = _.partition(criteria, ['isFavorable', true]);
+        var partition = _.partition(tableRows, ['isFavorable', true]);
         var orderedFavorableCriteria = partition[0];
         var orderedUnfavorableCriteria = partition[1];
         tableRows = [].concat(
