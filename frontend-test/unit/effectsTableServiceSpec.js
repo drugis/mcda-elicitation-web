@@ -43,7 +43,8 @@ define([
             criterion: {
               id: 'crit2',
               numberOfDataSources: 1,
-              isFavorable: true
+              isFavorable: true,
+              canBePercentage: false
             },
             dataSource: {
               id: 'ds2id'
@@ -53,7 +54,8 @@ define([
             criterion: {
               id: 'crit3',
               numberOfDataSources: 1,
-              isFavorable: true
+              isFavorable: true,
+              canBePercentage: false
             },
             dataSource: {
               id: 'ds3id'
@@ -67,7 +69,8 @@ define([
             criterion: {
               id: 'crit1',
               numberOfDataSources: 1,
-              isFavorable: false
+              isFavorable: false,
+              canBePercentage: false,
             },
             dataSource: {
               id: 'ds1id'
