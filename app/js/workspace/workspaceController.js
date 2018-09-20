@@ -39,11 +39,11 @@ define(['angular'], function(angular) {
     getWorkspaceSettings();
     $scope.$on('elicit.settingsChanged', getWorkspaceSettings);
     $scope.isEditTitleVisible = false;
-    
-      function getWorkspaceSettings() {
-        $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
-        $scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
-      }
+
+    function getWorkspaceSettings() {
+      $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
+      $scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
+    }
 
     function editTitle() {
       $scope.isEditTitleVisible = true;
