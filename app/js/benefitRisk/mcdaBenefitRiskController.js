@@ -103,7 +103,8 @@ define(['lodash'], function(_) {
       var aggregateState = _.merge({}, $scope.baseAggregateState, {
         problem: {
           criteria: WorkspaceSettingsService.usePercentage() ?
-            WorkspaceService.percentifyDataSources($scope.baseAggregateState.problem.criteria) : $scope.baseAggregateState.problem.criteria
+            WorkspaceService.percentifyDataSources($scope.baseAggregateState.problem.criteria) :
+            $scope.baseAggregateState.problem.criteria
         }
       });
       $scope.aggregateState = aggregateState;
@@ -115,7 +116,6 @@ define(['lodash'], function(_) {
         $scope.workspace.scales.observed = WorkspaceService.toPercentage(baseCriteria, baseObservedScales);
       } else {
         $scope.workspace.scales.observed = baseObservedScales;
-        $scope.aggregateState.problem.criteria = baseCriteria;
       }
       $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales(
         $scope.aggregateState.problem, $scope.workspace.scales.observed);

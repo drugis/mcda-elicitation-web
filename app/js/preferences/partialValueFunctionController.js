@@ -132,7 +132,7 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
     function save(state) {
       var criterionId = $stateParams.criterion.replace('%3A', ':'); // workaround: see https://github.com/angular-ui/ui-router/issues/2598
       var standardizedDataSource = PartialValueFunctionService.standardizeDataSource(state.choice);
-      var criteria = angular.copy(currentScenario.state.problem.criteria);
+      var criteria = currentScenario.state.problem ? angular.copy(currentScenario.state.problem.criteria) : {};
       criteria[criterionId] = {
         dataSources: [standardizedDataSource]
       };

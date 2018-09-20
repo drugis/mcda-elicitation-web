@@ -20,7 +20,6 @@ define(['lodash'], function(_) {
       },
       templateUrl: '../effectsTable/effectsTable.html',
       link: function(scope) {
-        // functions
         // init
         scope.studyDataAvailable = EffectsTableService.isStudyDataAvailable(scope.effectsTableInfo);
         getWorkspaceSettings();
