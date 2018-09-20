@@ -2,7 +2,8 @@
   <div class="grid-container">
     <div class="grid-x">
       <div class="cell">
-        <em>Here you can define a new problem as a subset of all evidence (by excluding criteria and alternatives), and with
+        <em>Here you can define a new problem as a subset of all evidence (by excluding criteria and alternatives), and
+          with
           different scale ranges.</em>
       </div>
       <div class="cell">
@@ -45,11 +46,13 @@
               <th ng-show="toggledColumns['units']">Units
                 <inline-help help-key="criterion-unit"></inline-help>
               </th>
-              <th ng-class="{'disabled-header' : !subProblemState.alternativeInclusions[alternative.id]}" class="text-center" ng-repeat="alternative in alternatives">
+              <th ng-class="{'disabled-header' : !subProblemState.alternativeInclusions[alternative.id]}" class="text-center"
+                ng-repeat="alternative in alternatives">
                 <div class="grid-x">
                   <div class="cell">
-                    <input style="margin:0;" ng-if="!isBaseline[alternative.id]" id="{{alternative.id}}" type="checkbox" ng-model="subProblemState.alternativeInclusions[alternative.id]"
-                      ng-change="updateInclusions()" ng-disabled="subProblemState.alternativeInclusions[alternative.id] && subProblemState.numberOfAlternativesSelected < 3">
+                    <input style="margin:0;" ng-if="!isBaseline[alternative.id]" id="{{alternative.id}}" type="checkbox"
+                      ng-model="subProblemState.alternativeInclusions[alternative.id]" ng-change="updateInclusions()"
+                      ng-disabled="subProblemState.alternativeInclusions[alternative.id] && subProblemState.numberOfAlternativesSelected < 3">
                     <i ng-if="isBaseline[alternative.id]" class="fa fa-ban" tooltip="Cannot deselect baseline"></i>
                   </div>
                   <div class="cell">
@@ -74,7 +77,9 @@
               <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id]}"
                 ng-show="toggledColumns['criteria']">
                 <label>
-                  <input type="checkbox" ng-model="subProblemState.criterionInclusions[row.criterion.id]" ng-change="updateInclusions()" ng-disabled="subProblemState.criterionInclusions[row.criterion.id] && subProblemState.numberOfCriteriaSelected < 3">                  {{row.criterion.title}}
+                  <input type="checkbox" ng-model="subProblemState.criterionInclusions[row.criterion.id]" ng-change="updateInclusions()"
+                    ng-disabled="subProblemState.criterionInclusions[row.criterion.id] && subProblemState.numberOfCriteriaSelected < 3">
+                  {{row.criterion.title}}
                 </label>
               </td>
               <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id]}"
@@ -85,16 +90,20 @@
                   <span>&nbsp;</span>
                 </div>
               </td>
-              <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}" ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id]}"
-                ng-show="toggledColumns['units']">
+              <td ng-if="!row.isHeaderRow && row.isFirstRow && !row.criterion.canBePercentage" rowspan="{{row.criterion.numberOfDataSources}}"
+                ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id]}" ng-show="toggledColumns['units']">
                 {{row.criterion.unitOfMeasurement}}
+              </td>
+              <td ng-if="!row.isHeaderRow && row.isFirstRow && row.criterion.canBePercentage" rowspan="{{row.criterion.numberOfDataSources}}"
+                ng-show="toggledColumns['units']">
+                {{workspaceSettings.showPercentages ? '%' : ''}}
               </td>
               <td ng-if="!row.isHeaderRow" ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternative.id] || !subProblemState.criterionInclusions[row.criterion.id] || !subProblemState.dataSourceInclusions[row.dataSource.id]}"
                 class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
                 <div class="grid-x">
                   <div class="cell large-1">
-                    <input type="checkbox" ng-if="$first" ng-model="subProblemState.dataSourceInclusions[row.dataSource.id]" ng-change="updateInclusions()"
-                      ng-disabled="!subProblemState.criterionInclusions[row.criterion.id] || subProblemState.numberOfDataSourcesPerCriterion[row.criterion.id] === 1 && subProblemState.dataSourceInclusions[row.dataSource.id]">
+                    <input type="checkbox" ng-if="$first" ng-model="subProblemState.dataSourceInclusions[row.dataSource.id]"
+                      ng-change="updateInclusions()" ng-disabled="!subProblemState.criterionInclusions[row.criterion.id] || subProblemState.numberOfDataSourcesPerCriterion[row.criterion.id] === 1 && subProblemState.dataSourceInclusions[row.dataSource.id]">
                   </div>
                   <div class="cell large-11">
                     <effects-table-scales-cell scales="scales.observed[row.dataSource.id][alternative.id]" uncertainty="effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || effectsTableInfo[row.dataSource.id].distributionType==='relative'"
@@ -119,52 +128,54 @@
             </tr>
           </tbody>
         </table>
-        </div>
-        <div class="cell alert" ng-if="hasMissingValues">
-          <em>Effects table may not contain missing values</em>
-        </div>
-        <div class="cell alert" ng-if="areTooManyDataSourcesSelected">
-          <em>Effects table may not contain multiple data sources per criterion</em>
-        </div>
-        <!-- Scale ranges -->
-        <div class="cell">
-          <h4>Scale ranges
-            <inline-help help-key="scale-ranges"></inline-help>
-          </h4>
-          <p>The area in red indicates the estimated 95% Credible Interval (CrI) of the measurements and should not be moved
-            into or over.</p>
-        </div>
-        <div class="cell">
-          <ul class="no-bullet">
-            <li ng-repeat="dataSource in scalesDataSources">
-              <h5 class="subheader">
-                {{problem.criteria[criteriaByDataSource[dataSource]].title}}
-              </h5>
-              <div class="grid-x">
-                <div class="cell large-1 text-center">
-                  <a ng-click="scalesState[dataSource].increaseFrom()" class="tiny round button slider-buttons">&lt;</a>
-                </div>
-                <div class="cell large-10">
-                  <rzslider rz-slider-model="choices[dataSource].from" rz-slider-high="choices[dataSource].to" rz-slider-options="scalesState[dataSource].sliderOptions">
-                  </rzslider>
-                </div>
-                <div class="cell large-1 pull-3 text-center">
-                  <a ng-click="scalesState[dataSource].increaseTo()" class="tiny round button slider-buttons">&gt;</a>
-                </div>
-              </div>
-              <br>
-            </li>
-          </ul>
-        </div>
-        <div class="cell alert" ng-if="invalidSlider">
-          <em>Invalid scale range</em>
-        </div>
-        <div class="cell large-6">
-          <button class="button success" type="submit" ng-disabled="isTitleDuplicate || !subProblemState.title || invalidSlider || hasMissingValues || areTooManyDataSourcesSelected">Create</button>
-        </div>
       </div>
-      <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
-        <span aria-hidden="true">&times;</span>
-      </button>
+      <div class="cell alert" ng-if="hasMissingValues">
+        <em>Effects table may not contain missing values</em>
+      </div>
+      <div class="cell alert" ng-if="areTooManyDataSourcesSelected">
+        <em>Effects table may not contain multiple data sources per criterion</em>
+      </div>
+      <!-- Scale ranges -->
+      <div class="cell">
+        <h4>Scale ranges
+          <inline-help help-key="scale-ranges"></inline-help>
+        </h4>
+        <p>The area in red indicates the estimated 95% Credible Interval (CrI) of the measurements and should not be
+          moved
+          into or over.</p>
+      </div>
+      <div class="cell">
+        <ul class="no-bullet">
+          <li ng-repeat="dataSource in scalesDataSources">
+            <h5 class="subheader">
+              {{problem.criteria[criteriaByDataSource[dataSource]].title}}
+            </h5>
+            <div class="grid-x">
+              <div class="cell large-1 text-center">
+                <a ng-click="scalesState[dataSource].increaseFrom()" class="tiny round button slider-buttons">&lt;</a>
+              </div>
+              <div class="cell large-10">
+                <rzslider rz-slider-model="choices[dataSource].from" rz-slider-high="choices[dataSource].to"
+                  rz-slider-options="scalesState[dataSource].sliderOptions">
+                </rzslider>
+              </div>
+              <div class="cell large-1 pull-3 text-center">
+                <a ng-click="scalesState[dataSource].increaseTo()" class="tiny round button slider-buttons">&gt;</a>
+              </div>
+            </div>
+            <br>
+          </li>
+        </ul>
+      </div>
+      <div class="cell alert" ng-if="invalidSlider">
+        <em>Invalid scale range</em>
+      </div>
+      <div class="cell large-6">
+        <button class="button success" type="submit" ng-disabled="isTitleDuplicate || !subProblemState.title || invalidSlider || hasMissingValues || areTooManyDataSourcesSelected">Create</button>
+      </div>
     </div>
+    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
 </form>

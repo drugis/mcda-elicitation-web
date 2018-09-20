@@ -54,13 +54,21 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
 
     PageTitleService.setPageTitle('PreferencesController', ($scope.aggregateState.problem.title || $scope.workspace.title) + '\'s preferences');
 
-    // public
-    function reloadOrderings() { 
+    function reloadOrderings() {
       OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
         $scope.alternatives = orderings.alternatives;
-        $scope.criteria = orderings.criteria;
+        $scope.criteria = _.map(orderings.criteria, setUnitOfMeasurement);
         $scope.importance = PreferencesService.buildImportance($scope.criteria, $scope.scenario.state.prefs);
       });
+    }
+
+    function setUnitOfMeasurement(criterion) {
+      if (_.isEqual(criterion.dataSources[0].scale, [0, 1])) {
+        criterion.unitOfMeasurement = '';
+      } else if (_.isEqual(criterion.dataSources[0].scale, [0, 100])) {
+        criterion.unitOfMeasurement = '%';
+      }
+      return criterion;
     }
 
     function isPVFDefined(dataSource) {

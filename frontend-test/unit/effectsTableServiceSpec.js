@@ -77,6 +77,46 @@ define([
           ];
           expect(result).toEqual(expectedResult);
         });
+        it('should add wether the criterion can be percentage ', function() {
+          var criteria = [{
+            id: 'crit2',
+            dataSources: [{
+              id: 'ds2id',
+              scale: [0,1]
+            }]
+          }, {
+            id: 'crit3',
+            dataSources: [{
+              id: 'ds3id',
+              scale: [-Infinity, Infinity]
+            }]
+          }];
+          var result = effectTableService.buildEffectsTable(criteria);
+          var expectedResult = [{
+            criterion: {
+              id: 'crit2',
+              numberOfDataSources: 1,
+              canBePercentage: true
+            },
+            dataSource: {
+              id: 'ds2id',
+              scale: [0,1]
+            },
+            isFirstRow: true
+          }, {
+            criterion: {
+              id: 'crit3',
+              numberOfDataSources: 1,
+              canBePercentage: false
+            },
+            dataSource: {
+              id: 'ds3id',
+              scale: [-Infinity, Infinity]
+            },
+            isFirstRow: true
+          }];
+          expect(result).toEqual(expectedResult);
+        });
       });
 
       describe('createEffectsTableInfo', function() {

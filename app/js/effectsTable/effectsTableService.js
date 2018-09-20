@@ -1,10 +1,10 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [];
 
   var EffectsTableService = function() {
     function buildEffectsTable(criteria) {
-      var tableRows = criteria;
+      var tableRows = addCanBePercentageToCriteria(angular.copy(criteria));
       var useFavorability = _.find(criteria, function(criterion) {
         return criterion.hasOwnProperty('isFavorable');
       });
@@ -28,6 +28,19 @@ define(['lodash'], function(_) {
       }
       tableRows = buildTableRows(tableRows);
       return tableRows;
+    }
+    
+    function addCanBePercentageToCriteria(criteria) {
+      return _.mapValues(criteria, function(criterion) {
+        criterion.canBePercentage = canBePercentage(criterion);
+        return criterion;
+      });
+    }
+
+    function canBePercentage(criterion) {
+      return !!_.find(criterion.dataSources, function(dataSource) {
+        return _.isEqual(dataSource.scale, [0, 1]) || _.isEqual(dataSource.scale, [0, 100]);
+      });
     }
 
     function buildTableRows(rows) {

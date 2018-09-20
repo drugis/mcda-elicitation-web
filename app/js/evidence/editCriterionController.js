@@ -1,7 +1,21 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modalInstance', 'oldCriterion', 'criteria', 'callback'];
-  var EditCriterionController = function($scope, $modalInstance, oldCriterion, criteria, callback) {
+  var dependencies = [
+    '$scope',
+    '$modalInstance',
+    'WorkspaceSettingsService',
+    'oldCriterion',
+    'criteria',
+    'callback'
+  ];
+  var EditCriterionController = function(
+    $scope,
+    $modalInstance,
+    WorkspaceSettingsService,
+    oldCriterion,
+    criteria,
+    callback
+  ) {
     // functions
     $scope.cancel = $modalInstance.close;
     $scope.save = save;
@@ -12,6 +26,10 @@ define(['lodash'], function(_) {
     $scope.isTitleUnique = true;
     $scope.criteria = criteria;
     $scope.useFavorability = $scope.criterion.hasOwnProperty('isFavorable');
+    $scope.usePercentage = WorkspaceSettingsService.usePercentage();
+    $scope.canBePercentage = _.find($scope.criterion.dataSources, function(dataSource) {
+      return _.isEqual(dataSource.scale, [0, 1]);
+    });
 
     function save() {
       callback($scope.criterion);

@@ -38,7 +38,8 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
       function resetWizard() {
         OrderingService.getOrderedCriteriaAndAlternatives(scope.aggregateState.problem, $stateParams).then(function(orderings) {
           scope.alternatives = orderings.alternatives;
-          scope.criteria = orderings.criteria;
+          scope.criteria = _.map(orderings.criteria, setUnitOfMeasurement);
+
           $injector.invoke(Wizard, undefined, {
             $scope: scope,
             handler: {
@@ -51,7 +52,16 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
           });
         });
       }
-        
+
+      function setUnitOfMeasurement(criterion) {
+        if (_.isEqual(criterion.dataSources[0].scale, [0, 1])) {
+          criterion.unitOfMeasurement = '';
+        } else if (_.isEqual(criterion.dataSources[0].scale, [0, 100])) {
+          criterion.unitOfMeasurement = '%';
+        }
+        return criterion;
+      }
+
       function title(step, total) {
         return baseTitle + ' (' + step + '/' + total + ')';
       }

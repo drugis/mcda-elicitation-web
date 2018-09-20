@@ -64,8 +64,12 @@
             <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['description']">
               {{row.criterion.description}}
             </td>
-            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['units']">
+            <td ng-if="!row.isHeaderRow && !row.criterion.canBePercentage" ng-show="toggledColumns['units']">
               {{row.criterion.unitOfMeasurement}}
+            </td>
+            <td ng-if="!row.isHeaderRow && row.isFirstRow && row.criterion.canBePercentage" rowspan="{{row.criterion.numberOfDataSources}}"
+              ng-show="toggledColumns['units']">
+              {{workspaceSettings.showPercentages ? '%' : ''}}
             </td>
             <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}">
               <sensitivity-input row="row" alternative="alternative" original-value="scales.observed[row.dataSource.id][alternative.id]['50%']"
@@ -152,7 +156,8 @@
         <div class="cell large-6">
           <table id="basecasetable">
             <thead>
-              <th ng-repeat="alternative in alternatives">{{scenario.state.legend[alternative.id].baseTitle || alternative.title}}</th>
+              <th ng-repeat="alternative in alternatives">{{scenario.state.legend[alternative.id].baseTitle ||
+                alternative.title}}</th>
             </thead>
             <tbody>
               <tr>
@@ -164,7 +169,8 @@
         <div class="cell large-6" ng-if="recalculatedDeterministicResults" ng-if="recalculatedDeterministicResults">
           <table id="recalculatedcasetable">
             <thead>
-              <th ng-repeat="alternative in alternatives">{{scenario.state.legend[alternative.id].baseTitle || alternative.title}}</th>
+              <th ng-repeat="alternative in alternatives">{{scenario.state.legend[alternative.id].baseTitle ||
+                alternative.title}}</th>
             </thead>
             <tbody>
               <tr>
@@ -185,13 +191,15 @@
         <div class="cell large-6">
           <h5>Base case</h5>
           <div export legend file-name="'basecaseplot'">
-            <value-profile-plot values="deterministicResults.results" criteria="criteria" alternatives="alternatives" alternatives-legend="scenario.state.legend"></value-profile-plot>
+            <value-profile-plot values="deterministicResults.results" criteria="criteria" alternatives="alternatives"
+              alternatives-legend="scenario.state.legend"></value-profile-plot>
           </div>
         </div>
         <div ng-if="recalculatedDeterministicResults" class="cell large-6">
           <h5>Recalculated case</h5>
           <div export legend file-name="'recalculatedcaseplot'">
-            <value-profile-plot values="recalculatedDeterministicResults.results" criteria="criteria" alternatives="alternatives" alternatives-legend="scenario.state.legend"></value-profile-plot>
+            <value-profile-plot values="recalculatedDeterministicResults.results" criteria="criteria" alternatives="alternatives"
+              alternatives-legend="scenario.state.legend"></value-profile-plot>
           </div>
         </div>
       </div>
@@ -218,14 +226,15 @@
         </div>
         <div class="cell medium-6">
           <label>Criterion
-            <select ng-options="criterion.title for criterion in criteria" ng-model="sensitivityMeasurements.measurementsCriterion" ng-change="doMeasurementSensitivity(state)"></select>
+            <select ng-options="criterion.title for criterion in criteria" ng-model="sensitivityMeasurements.measurementsCriterion"
+              ng-change="doMeasurementSensitivity(state)"></select>
           </label>
         </div>
       </div>
       <div class="grid-x" export legend file-name="'onewaymeasurementsplot'">
         <div class="cell" style="height: 450px; width: 450px">
-          <line-chart label-x-axis="sensitivityMeasurements.measurementsCriterion.title" label-y-axis="'total value'" value="measurementValues"
-            y-margin="true"></line-chart>
+          <line-chart label-x-axis="sensitivityMeasurements.measurementsCriterion.title" label-y-axis="'total value'"
+            value="measurementValues" y-margin="true"></line-chart>
         </div>
       </div>
     </div>
@@ -236,14 +245,15 @@
       <div class="grid-x">
         <div class="cell medium-6 large-6 ">
           <label>Weight given to
-            <select ng-options="criterion.title for criterion in criteria" ng-model="sensitivityMeasurements.preferencesCriterion" ng-change="doPreferencesSensitivity(state)"></select>
+            <select ng-options="criterion.title for criterion in criteria" ng-model="sensitivityMeasurements.preferencesCriterion"
+              ng-change="doPreferencesSensitivity(state)"></select>
           </label>
         </div>
       </div>
       <div class="grid-x" export legend file-name="'onewaypreferencesplot'">
         <div class="cell" style="height: 450px; width: 450px">
-          <line-chart label-x-axis="'Weight given to ' + sensitivityMeasurements.preferencesCriterion.title" label-y-axis="'total value'"
-            value="preferencesValues"></line-chart>
+          <line-chart label-x-axis="'Weight given to ' + sensitivityMeasurements.preferencesCriterion.title"
+            label-y-axis="'total value'" value="preferencesValues"></line-chart>
         </div>
       </div>
     </div>
