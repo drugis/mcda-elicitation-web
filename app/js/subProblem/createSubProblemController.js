@@ -166,7 +166,9 @@ define(['lodash', 'angular'], function(_, angular) {
       var includedAlternatives = _.keys(_.pickBy($scope.subProblemState.alternativeInclusions));
       return _.find(includedDataSourcesIds, function(dataSourceId) {
         return _.find(includedAlternatives, function(alternativeId) {
-          return $scope.scales.observed[dataSourceId][alternativeId]['50%'] === null;
+          return $scope.scales.observed[dataSourceId][alternativeId]['50%'] === null ||
+            $scope.scales.observed[dataSourceId][alternativeId]['50%'] === undefined ||
+            $scope.scales.observed[dataSourceId][alternativeId]['50%'] === NaN;
         });
       });
     }
