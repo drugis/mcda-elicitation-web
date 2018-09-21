@@ -53,7 +53,7 @@ define(function() {
     }, {
       id: 'results',
       title: 'Results',
-      requires: ['partial-value-function'],
+      requires: ['scale-range', 'partial-value-function'],
       redirectTo: 'smaa-results',
       resets: []
     }, {
@@ -62,7 +62,7 @@ define(function() {
       controller: 'SmaaResultsController',
       templateUrl: './results/smaaResults.html',
       activeTab: 'smaa-results',
-      requires: ['partial-value-function'],
+      requires: ['scale-range', 'partial-value-function'],
       resets: []
     }, {
       id: 'deterministic-results',
@@ -70,7 +70,7 @@ define(function() {
       controller: 'DeterministicResultsController',
       templateUrl: './results/deterministicResults.html',
       activeTab: 'deterministic-results',
-      requires: ['partial-value-function'],
+      requires: ['scale-range', 'partial-value-function'],
       resets: []
     }, {
       id: 'problem',

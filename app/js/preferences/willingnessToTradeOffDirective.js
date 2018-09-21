@@ -10,27 +10,34 @@ define(['lodash'], function(_) {
       },
       templateUrl:  './willingnessToTradeOffDirective.html',
       link: function(scope) {
-        var criteriaWithId = decorateWithId(scope.problem.criteria);
-        scope.firstCriterionOptions = criteriaWithId;
-        scope.settings = {
-          firstCriterion: criteriaWithId[0]
-        };
+        init();
         scope.firstCriterionChanged = firstCriterionChanged;
         scope.secondCriterionChanged = secondCriterionChanged;
 
+        scope.$watch('problem', init, true);
+
+        function init() {
+          scope.criteria = decorateWithId(scope.problem.criteria);
+          if(!scope.criteria) { return ;}
+          scope.firstCriterionOptions = scope.criteria;
+          scope.settings = {
+            firstCriterion: scope.criteria[0]
+          };
         firstCriterionChanged();
         secondCriterionChanged();
 
+        }
+        
         function firstCriterionChanged() {
           // FIXME: refactor repetition
-          scope.secondCriterionOptions = _.reject(criteriaWithId, ['id', scope.settings.firstCriterion.id]);
+          scope.secondCriterionOptions = _.reject(scope.criteria, ['id', scope.settings.firstCriterion.id]);
           if (!scope.settings.secondCriterion || scope.settings.secondCriterion.id === scope.settings.firstCriterion.id) {
             scope.settings.secondCriterion = scope.secondCriterionOptions[0];
           }
         }
 
         function secondCriterionChanged() {
-          scope.firstCriterionOptions = _.reject(criteriaWithId, ['id', scope.settings.secondCriterion.id]);
+          scope.firstCriterionOptions = _.reject(scope.criteria, ['id', scope.settings.secondCriterion.id]);
           if (!scope.settings.firstCriterion || scope.settings.firstCriterion.id === scope.settings.secondCriterion.id) {
             scope.settings.firstCriterion = scope.firstCriterionOptions[0];
           }

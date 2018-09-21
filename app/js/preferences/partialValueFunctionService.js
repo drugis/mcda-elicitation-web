@@ -80,7 +80,7 @@ define(['lodash', 'angular'], function(_) {
         if (newPvf.direction === 'decreasing') {
           newPvf.values.reverse();
         }
-        if (WorkspaceSettingsService.usePercentage() && _.isEqual([0, 1], dataSource.scale)) {
+        if (WorkspaceSettingsService.usePercentage() && _.isEqual([0, 100], dataSource.scale)) {
           newPvf.cutoffs = _.map(newPvf.cutoffs, div100);
         }
       }

@@ -57,6 +57,19 @@ define(['lodash'], function(_) {
     $scope.workspace.scales = {};
     $scope.isStandalone = isMcdaStandalone;
     determineActiveTab();
+    $scope.scalesPromise = WorkspaceService.getObservedScales(baseProblem).then(function(observedScales) {
+      $scope.workspace.scales.base = observedScales;
+      updateScales(observedScales);
+    });
+
+    $scope.tasks = _.reduce(Tasks.available, function(tasks, task) {
+      tasks[task.id] = task;
+      return tasks;
+    }, {});
+
+    deregisterTransitionListener = $transitions.onStart({}, function(transition) {
+      setActiveTab(transition.to().name, transition.to().name);
+    });
 
     $scope.$watch('scenario.state', updateTaskAccessibility);
     $scope.$watch('aggregateState', checkHasNoStochasticResults, true);
@@ -81,19 +94,6 @@ define(['lodash'], function(_) {
       });
     });
 
-    WorkspaceService.getObservedScales(baseProblem).then(function(observedScales) {
-      $scope.workspace.scales.base = observedScales;
-      updateScales(observedScales);
-    });
-
-    $scope.tasks = _.reduce(Tasks.available, function(tasks, task) {
-      tasks[task.id] = task;
-      return tasks;
-    }, {});
-
-    deregisterTransitionListener = $transitions.onStart({}, function(transition) {
-      setActiveTab(transition.to().name, transition.to().name);
-    });
 
     function checkHasNoStochasticResults() {
       $scope.hasNoStochasticResults = WorkspaceService.hasNoStochasticResults($scope.aggregateState);
@@ -117,6 +117,8 @@ define(['lodash'], function(_) {
       } else {
         $scope.workspace.scales.observed = baseObservedScales;
       }
+      $scope.baseAggregateState.problem = WorkspaceService.setDefaultObservedScales(
+        $scope.baseAggregateState.problem, $scope.workspace.scales.base);
       $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales(
         $scope.aggregateState.problem, $scope.workspace.scales.observed);
       updateTaskAccessibility();

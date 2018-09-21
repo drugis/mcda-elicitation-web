@@ -76,14 +76,14 @@ define(['lodash', 'angular'], function(_, angular) {
       if (_.isEqual([0, 1], newDataSource.scale)) {
         newDataSource.scale = [0, 100];
         if (newDataSource.pvf) {
-          if(newDataSource.pvf.range) {
+          if (newDataSource.pvf.range) {
             newDataSource.pvf.range = _.map(newDataSource.pvf.range, times100);
           }
-          if(newDataSource.pvf.cutoffs) {
+          if (newDataSource.pvf.cutoffs) {
             newDataSource.pvf.cutoffs = _.map(newDataSource.pvf.cutoffs, times100);
             // newDataSource.pvf.values = _.map(newDataSource.pvf.values, times100);
           }
-        } 
+        }
       }
       return newDataSource;
     }
@@ -122,11 +122,9 @@ define(['lodash', 'angular'], function(_, angular) {
       var newProblem = _.cloneDeep(problem);
       _.forEach(newProblem.criteria, function(criterion) {
         var scale = observedScales[criterion.dataSources[0].id];
-        if (!criterion.dataSources[0].pvf || _.isEmpty(criterion.dataSources[0].pvf.range)) {
-          criterion.dataSources[0].pvf = {
-            range: getMinMax(scale)
-          };
-        }
+        criterion.dataSources[0].pvf = _.merge({
+          range: getMinMax(scale)
+        }, criterion.dataSources[0].pvf);
       });
       return newProblem;
     }

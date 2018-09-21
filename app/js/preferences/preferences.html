@@ -52,8 +52,8 @@
           <td>{{criterion.title}}</td>
           <td>{{criterion.description}}</td>
           <td>{{criterion.unitOfMeasurement}}</td>
-          <td>{{pvf.worst(criterion.dataSources[0]) | number}}</td>
-          <td>{{pvf.best(criterion.dataSources[0]) | number}}</td>
+          <td>{{criterion.dataSources[0].pvf.range && pvf.worst(criterion.dataSources[0]) | number}}</td>
+          <td>{{criterion.dataSources[0].pvf.range && pvf.best(criterion.dataSources[0]) | number}}</td>
           <td>{{importance[criterion.id]}}</td>
         </tr>
       </tbody>
@@ -75,5 +75,5 @@
   </div>
 </div>
 <div class="cell" ng-if="criteriaHavePvf">
-  <willingness-to-trade-off problem="baseAggregateState.problem"></willingness-to-trade-off>
+  <willingness-to-trade-off ordered-criteria="criteria", problem="baseAggregateState.problem"></willingness-to-trade-off>
 </div>

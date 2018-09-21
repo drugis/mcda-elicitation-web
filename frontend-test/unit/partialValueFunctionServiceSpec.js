@@ -20,8 +20,8 @@ define(['angular',
         var crit1 = {
           dataSources: [{
             pvf: {
-              'type': 'linear',
-              'direction': 'increasing',
+              type: 'linear',
+              direction: 'increasing',
               'range': [-0.15, 0.35]
             }
           }]
@@ -29,8 +29,8 @@ define(['angular',
         var crit2 = {
           dataSources: [{
             pvf: {
-              'type': 'linear',
-              'direction': 'decreasing',
+              type: 'linear',
+              direction: 'decreasing',
               'range': [50, 100]
             }
           }]
@@ -54,22 +54,22 @@ define(['angular',
         crit1 = {
           dataSources: [{
             pvf: {
-              'type': 'piecewise-linear',
-              'direction': 'increasing',
+              type: 'piecewise-linear',
+              direction: 'increasing',
               'range': [-0.15, 0.35],
-              'cutoffs': [0.0, 0.25],
-              'values': [0.1, 0.9]
+              cutoffs: [0.0, 0.25],
+              values: [0.1, 0.9]
             }
           }]
         };
         crit2 = {
           dataSources: [{
             pvf: {
-              'type': 'piecewise-linear',
-              'direction': 'decreasing',
+              type: 'piecewise-linear',
+              direction: 'decreasing',
               'range': [50, 100],
-              'cutoffs': [75, 90],
-              'values': [0.8, 0.5]
+              cutoffs: [75, 90],
+              values: [0.8, 0.5]
             }
           }]
         };
@@ -89,19 +89,19 @@ define(['angular',
         it('should sort the cutoffs and values of an piecewise-linear pvf', function() {
           var dataSource = {
             pvf: {
-              'type': 'piecewise-linear',
-              'direction': 'increasing',
-              'cutoffs': [75, 7.5, 50],
-              'values': [0.25, 0.5, 0.75]
+              type: 'piecewise-linear',
+              direction: 'increasing',
+              cutoffs: [75, 7.5, 50],
+              values: [0.25, 0.5, 0.75]
             }
           };
           var result = partialValueFunctionService.standardizeDataSource(dataSource);
           var expectedResult = {
             pvf: {
-              'type': 'piecewise-linear',
-              'direction': 'increasing',
-              'cutoffs': [7.5, 50, 75],
-              'values': [0.25, 0.5, 0.75]
+              type: 'piecewise-linear',
+              direction: 'increasing',
+              cutoffs: [7.5, 50, 75],
+              values: [0.25, 0.5, 0.75]
             }
           };
           expect(result).toEqual(expectedResult);
@@ -109,19 +109,19 @@ define(['angular',
         it('should sort the cutoffs and reverse-sort the values of an  decreasing piecewise-linear pvf', function() {
           var dataSource = {
             pvf: {
-              'type': 'piecewise-linear',
-              'direction': 'decreasing',
-              'cutoffs': [75, 7.5, 50],
-              'values': [0.25, 0.5, 0.75]
+              type: 'piecewise-linear',
+              direction: 'decreasing',
+              cutoffs: [75, 7.5, 50],
+              values: [0.25, 0.5, 0.75]
             }
           };
           var result = partialValueFunctionService.standardizeDataSource(dataSource);
           var expectedResult = {
             pvf: {
-              'type': 'piecewise-linear',
-              'direction': 'decreasing',
-              'cutoffs': [7.5, 50, 75],
-              'values': [0.75, 0.5, 0.25]
+              type: 'piecewise-linear',
+              direction: 'decreasing',
+              cutoffs: [7.5, 50, 75],
+              values: [0.75, 0.5, 0.25]
             }
           };
           expect(result).toEqual(expectedResult);
@@ -129,15 +129,37 @@ define(['angular',
         it('should delete the cutoffs and values, if any, from a linear pvf', function() {
           var dataSource = {
             pvf: {
-              'type': 'linear',
-              'cutoffs': [75, 7.5, 50],
-              'values': [0.25, 0.5, 0.75]
+              type: 'linear',
+              cutoffs: [75, 7.5, 50],
+              values: [0.25, 0.5, 0.75]
             }
           };
           var result = partialValueFunctionService.standardizeDataSource(dataSource);
           var expectedResult = {
             pvf: {
-              'type': 'linear',
+              type: 'linear',
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+        it('should normalise percentage values if appropriate', function() {
+          workspaceSettingsServiceMock.usePercentage.and.returnValue(true);
+          var dataSource = {
+            pvf: {
+              type: 'piecewise-linear',
+              direction: 'decreasing',
+              cutoffs: [75, 7.5, 50],
+              values: [0.25, 0.5, 0.75]
+            },
+            scale: [0, 100]
+          };
+          var result = partialValueFunctionService.standardizeDataSource(dataSource);
+          var expectedResult = {
+            pvf: {
+              type: 'piecewise-linear',
+              direction: 'decreasing',
+              cutoffs: [0.075, 0.50, 0.75],
+              values: [0.75, 0.5, 0.25]
             }
           };
           expect(result).toEqual(expectedResult);

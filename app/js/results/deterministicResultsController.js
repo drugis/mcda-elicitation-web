@@ -8,7 +8,8 @@ define(['clipboard', 'lodash', 'angular'], function(Clipboard, _, angular) {
     'MCDAResultsService',
     'EffectsTableService',
     'OrderingService',
-    'PageTitleService'
+    'PageTitleService',
+    'WorkspaceSettingsService'
   ];
 
   var DeterministicResultsController = function(
@@ -19,7 +20,8 @@ define(['clipboard', 'lodash', 'angular'], function(Clipboard, _, angular) {
     MCDAResultsService,
     EffectsTableService,
     OrderingService,
-    PageTitleService
+    PageTitleService,
+    WorkspaceSettingsService
   ) {
     // functions
     $scope.sensitivityScalesChanged = sensitivityScalesChanged;
@@ -48,16 +50,18 @@ define(['clipboard', 'lodash', 'angular'], function(Clipboard, _, angular) {
       resetSensitivityAnalysis();
     });
 
-    var orderingsPromise = OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(ordering) {
-      $scope.criteria = ordering.criteria;
-      $scope.tableRows = EffectsTableService.buildEffectsTable(ordering.criteria);
-      $scope.alternatives = ordering.alternatives;
-      $scope.nrAlternatives = _.keys($scope.alternatives).length;
-      loadState();
+    var orderingsPromise = $scope.scalesPromise.then(function() {
+      return OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(ordering) {
+        $scope.criteria = ordering.criteria;
+        $scope.tableRows = EffectsTableService.buildEffectsTable(ordering.criteria);
+        $scope.alternatives = ordering.alternatives;
+        $scope.nrAlternatives = _.keys($scope.alternatives).length;
+        loadState();
+      });
     });
 
     function loadState() {
-      var stateWithAlternativesRenamed = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.aggregateState);
+      var stateWithAlternativesRenamed = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.baseAggregateState);
       initSensitivityDropdowns();
       doMeasurementSensitivity();
       doPreferencesSensitivity();
@@ -90,7 +94,7 @@ define(['clipboard', 'lodash', 'angular'], function(Clipboard, _, angular) {
       $scope.sensitivityMeasurements.alteredTableCells.push({
         criterion: row.criterion.id,
         alternative: alternative.id,
-        value: newValue
+        value: row.criterion.canBePercentage && WorkspaceSettingsService.usePercentage() ? newValue / 100 : newValue
       });
     }
 
@@ -106,7 +110,6 @@ define(['clipboard', 'lodash', 'angular'], function(Clipboard, _, angular) {
 
         if (usePercentage($scope.sensitivityMeasurements.measurementsCriterion)) {
           $scope.measurementValues = MCDAResultsService.percentifySensitivityResult($scope.measurementValues, 'x');
-
         }
       });
     }

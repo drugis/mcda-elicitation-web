@@ -6,7 +6,6 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     '$modal',
     '$stateParams',
     '$state',
-    '$timeout',
     'ScenarioResource',
     'PartialValueFunctionService',
     'OrderingService',
@@ -20,7 +19,6 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     $modal,
     $stateParams,
     $state,
-    $timeout,
     ScenarioResource,
     PartialValueFunctionService,
     OrderingService,
@@ -40,7 +38,9 @@ define(['lodash', 'angular', 'clipboard'], function(_, angular, Clipboard) {
     $scope.criteriaHavePvf = true;
     $scope.scenario = currentScenario;
     $scope.scales = $scope.workspace.scales;
-    $timeout(function() {
+    $scope.pvfCoordinates = {};
+    $scope.scalesPromise.then(function() {
+      reloadOrderings();
       $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinates($scope.aggregateState.problem.criteria);
     });
     $scope.$on('elicit.settingsChanged', function() {

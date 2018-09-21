@@ -61,7 +61,7 @@ define(['c3', 'd3', 'jquery', 'lodash'],
           root = root.select('svg');
 
           scope.$watch('settings', function(newSettings) {
-            if (newSettings) {
+            if (newSettings && newSettings.firstCriterion.dataSources[0].pvf.range) {
               updatePercentageModifier();
               initChart(newSettings);
               criteria = {
