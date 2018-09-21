@@ -9,12 +9,12 @@
       <label>
         <input type="radio" ng-model="state.choice.pvf.direction" value="decreasing" 
         ng-change="updatePlot(state.criterion)"
-        ng-selected="state.choice.pvf.direction ==='decreasing'"> {{state.choice.pvf.range[0] | number}} is best
+        ng-selected="state.choice.pvf.direction ==='decreasing'"> {{state.choice.pvf.range[0] | number}}{{unitOfMeasurement}} is best
       </label>
       <label>
         <input type="radio" ng-model="state.choice.pvf.direction" value="increasing" 
         ng-change="updatePlot(state.criterion)"
-        ng-selected="state.choice.pvf.direction === 'increasing'"> {{state.choice.pvf.range[1] | number}} is best
+        ng-selected="state.choice.pvf.direction === 'increasing'"> {{state.choice.pvf.range[1] | number}}{{unitOfMeasurement}} is best
       </label>
       Type of function <inline-help help-key="pvf-type"></inline-help>
       <label>
@@ -44,7 +44,7 @@
     <div class="cell large-7">
       <p>
         What is the value of x such that an improvement in
-        {{state.criterion.title}} from {{state.range.from | number}} to x is equivalent to an improvement from x to {{state.range.to | number}}?
+        {{state.criterion.title}} from {{state.range.from | number}}{{unitOfMeasurement}} to x is equivalent to an improvement from x to {{state.range.to | number}}{{unitOfMeasurement}}?
       </p>
       <p><strong>Adjust the slider:</strong></p>
       <p>
@@ -54,8 +54,8 @@
       </p>
       <strong>So that the following statement is true:</strong>
       <p>
-        The improvement from {{state.range.from | number}} to {{state.choice.pvf.cutoffs[state.choice.pvf.values.length - 1] | number}}
-        <br> is equivalent to the improvement from {{state.choice.pvf.cutoffs[state.choice.pvf.values.length - 1] | number}} to {{state.range.to | number}}.
+        The improvement from {{state.range.from | number}}{{unitOfMeasurement}} to {{state.choice.pvf.cutoffs[state.choice.pvf.values.length - 1] | number}}{{unitOfMeasurement}}
+        <br> is equivalent to the improvement from {{state.choice.pvf.cutoffs[state.choice.pvf.values.length - 1] | number}}{{unitOfMeasurement}} to {{state.range.to | number}}{{unitOfMeasurement}}.
       </p>
     </div>
     <div class="cell large-5">

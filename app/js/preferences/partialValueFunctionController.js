@@ -50,6 +50,7 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
       if (!criterion) {
         return {};
       }
+      $scope.unitOfMeasurement = getUnitOfMeasurement(criterion);
       PageTitleService.setPageTitle('PartialValueFunctionController', criterion.title + '\'s partial value function');
       // set defaults
       criterion.dataSources[0].pvf = criterion.dataSources[0].pvf ? criterion.dataSources[0].pvf : {};
@@ -74,6 +75,19 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
         $scope.$broadcast('rzSliderForceRender');
       }, 100);
       return _.extend(state, initial);
+    }
+
+    function getUnitOfMeasurement(criterion) {
+      if (_.isEqual(criterion.dataSources[0].scale, [0, 1])) {
+        return '';
+      }
+      if (_.isEqual(criterion.dataSources[0].scale, [0, 100])) {
+        return ' %';
+      }
+      if (criterion.unitOfMeasurement) {
+        return ' ' + criterion.unitOfMeasurement;
+      }
+      return '';
     }
 
     function nextState(state) {
