@@ -43,7 +43,7 @@ define(['lodash', 'd3'], function(_, d3) {
             },
             min: sliderOptions.floor,
             max: sliderOptions.ceil,
-            label: getTitle(settings.firstCriterion),
+            label: getLabel(settings.firstCriterion),
             padding: {
               left: 0,
               right: 0
@@ -56,7 +56,7 @@ define(['lodash', 'd3'], function(_, d3) {
             tick: {
               format: _.partial(formatAxis, settings.secondCriterion.dataSources[0].scale)
             },
-            label: getTitle(settings.secondCriterion),
+            label: getLabel(settings.secondCriterion),
             padding: {
               top: 0,
               bottom: 0
@@ -95,7 +95,7 @@ define(['lodash', 'd3'], function(_, d3) {
         if (isPointInFrontOfLine(idx)) {
           x = xValues[1];
           value = yValues[1];
-        } else if (isPointAfterEndOfLine(idx,xCoordinates.length)) {
+        } else if (isPointAfterEndOfLine(idx, xCoordinates.length)) {
           x = xValues[idx - 1];
           value = yValues[idx - 1];
         } else {
@@ -107,13 +107,13 @@ define(['lodash', 'd3'], function(_, d3) {
         x: x
       };
     }
-    
+
     function isPointInFrontOfLine(idx) {
       return idx === 1;
     }
 
-    function isPointAfterEndOfLine(idx, arrayLength){
-      return idx === arrayLength -1;
+    function isPointAfterEndOfLine(idx, arrayLength) {
+      return idx === arrayLength - 1;
     }
 
     function isEqualToBreakpoint(idx) {
@@ -137,8 +137,17 @@ define(['lodash', 'd3'], function(_, d3) {
       return Math.round(value * multiplier) / multiplier;
     }
 
-    function getTitle(criterion) {
-      return criterion.unitOfMeasurement ? criterion.title + ' (' + criterion.unitOfMeasurement + ')' : criterion.title;
+    function getLabel(criterion) {
+      var unit = getUnitText(criterion);
+      return criterion.title + unit;
+    }
+
+    function getUnitText(criterion) {
+      if (_.isEqual(criterion.dataSources[0].scale, [0, 1])) {
+        return WorkspaceSettingsService.usePercentage() ? ' (%)' : '';
+      } else {
+        return criterion.unitOfMeasurement ? ' (' + criterion.unitOfMeasurement + ')' : '';
+      }
     }
 
     function areCoordinatesSet(coordinates) {
@@ -150,7 +159,8 @@ define(['lodash', 'd3'], function(_, d3) {
       getInitialSettings: getInitialSettings,
       getYValue: getYValue,
       significantDigits: significantDigits,
-      areCoordinatesSet: areCoordinatesSet
+      areCoordinatesSet: areCoordinatesSet,
+      getLabel: getLabel
     };
   };
   return dependencies.concat(TradeOffService);

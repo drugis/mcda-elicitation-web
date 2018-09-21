@@ -4,11 +4,11 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
     var tradeOffService;
     var taskResultsDefer;
     var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsService', ['postAndHandleResults']);
-    var workspaceSettingsService = jasmine.createSpyObj('WorkspaceSettingsService', ['usePercentage']);
+    var workspaceSettingsServiceMock = jasmine.createSpyObj('WorkspaceSettingsService', ['usePercentage']);
 
     beforeEach(angular.mock.module('elicit.preferences', function($provide) {
       $provide.value('PataviResultsService', pataviResultsServiceMock);
-      $provide.value('WorkspaceSettingsService', workspaceSettingsService);
+      $provide.value('WorkspaceSettingsService', workspaceSettingsServiceMock);
     }));
 
     beforeEach(inject(function($q, TradeOffService) {
@@ -132,7 +132,7 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
         var result = tradeOffService.areCoordinatesSet(coordinates);
         expect(result).toBeTruthy();
       });
-      
+
       it('should return false if one of the coordinates has an invalid value', function() {
         var coordinatesUndefined = xy(1, undefined);
         var resultUndefined = tradeOffService.areCoordinatesSet(coordinatesUndefined);
@@ -149,6 +149,40 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
         var coordinatesNull = xy(1, null);
         var resultNull = tradeOffService.areCoordinatesSet(coordinatesNull);
         expect(resultNull).toBeFalsy();
+      });
+    });
+    describe('getLabel', function() {
+      it('should return the label for the axis of a non-percentifiable criterion', function() {
+        var continuousCriterion = {
+          title: 'contCrit',
+          unitOfMeasurement: 'kg',
+          dataSources: [{}]
+        };
+        var result = tradeOffService.getLabel(continuousCriterion);
+        var expectedResult = 'contCrit (kg)';
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return the label for a percentifiable criterion with percentage on', function() {
+        workspaceSettingsServiceMock.usePercentage.and.returnValue(true);
+        var percentCriterion = {
+          title: 'percCrit',
+          dataSources: [{ scale: [0, 1] }]
+        };
+        var result = tradeOffService.getLabel(percentCriterion);
+        var expectedResult = 'percCrit (%)';
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return the label for a percentifiable criterion without percentages on', function() {
+        workspaceSettingsServiceMock.usePercentage.and.returnValue(false);
+        var noPercentCriterion = {
+          title: 'percCrit',
+          dataSources: [{ scale: [0, 1] }]
+        };
+        var result = tradeOffService.getLabel(noPercentCriterion);
+        var expectedResult = 'percCrit';
+        expect(result).toEqual(expectedResult);
       });
     });
   });

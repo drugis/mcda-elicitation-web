@@ -74,6 +74,7 @@ define(['c3', 'd3', 'jquery', 'lodash'],
           scope.$on('elicit.settingsChanged', function() {
             updatePercentageModifier();
             updateFirstPoint();
+            updateAxisLabels();
           });
 
           function updatePercentageModifier() {
@@ -175,6 +176,13 @@ define(['c3', 'd3', 'jquery', 'lodash'],
           function plotIndifference(results) {
             data.columns[2] = (['line_x'].concat(results.data.x));
             data.columns[3] = (['line'].concat(results.data.y));
+          }
+
+          function updateAxisLabels(){
+            chart.axis.labels({
+              x:TradeOffService.getLabel(scope.settings.firstCriterion),
+              y:TradeOffService.getLabel(scope.settings.secondCriterion)
+            });
           }
         }
       };

@@ -70,7 +70,6 @@ define(['lodash', 'angular'], function(_, angular) {
       }
     }
 
-
     function percentifyDataSource(dataSource) {
       var newDataSource = angular.copy(dataSource);
       if (_.isEqual([0, 1], newDataSource.scale)) {
@@ -215,8 +214,6 @@ define(['lodash', 'angular'], function(_, angular) {
         return accum;
       }, {});
     }
-
-
 
     function getMinMax(scales) {
       var minimum = Infinity;
