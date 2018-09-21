@@ -81,7 +81,6 @@ define(['lodash', 'angular'], function(_, angular) {
           }
           if (newDataSource.pvf.cutoffs) {
             newDataSource.pvf.cutoffs = _.map(newDataSource.pvf.cutoffs, times100);
-            // newDataSource.pvf.values = _.map(newDataSource.pvf.values, times100);
           }
         }
       }
@@ -89,6 +88,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function times100(value) {
+      if (value === null) { return; } //prevent empty cells from becoming 0
       return value * 100;
     }
 

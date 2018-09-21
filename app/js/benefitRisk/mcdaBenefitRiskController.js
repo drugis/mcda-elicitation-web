@@ -84,7 +84,10 @@ define(['lodash'], function(_) {
       updateAggregateState();
       $scope.scenario = scenario;
       if ($scope.workspace.scales.observed) {
-        $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales($scope.aggregateState.problem, $scope.workspace.scales.observed);
+        $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales(
+          $scope.aggregateState.problem, $scope.workspace.scales.observed);
+        $scope.baseAggregateState.problem = WorkspaceService.setDefaultObservedScales(
+          $scope.baseAggregateState.problem, $scope.workspace.scales.base);
       }
       updateTaskAccessibility();
       checkHasNoStochasticResults();
