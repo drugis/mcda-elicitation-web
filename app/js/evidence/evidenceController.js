@@ -29,13 +29,19 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       return criterion.hasOwnProperty('isFavorable');
     });
     $scope.showDecimal = false;
-    PageTitleService.setPageTitle('EvidenceController', ($scope.problem.title || $scope.workspace.title) +'\'s overview');
-
-    OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
-      $scope.alternatives = orderings.alternatives;
-      $scope.criteria = orderings.criteria;
+    PageTitleService.setPageTitle('EvidenceController', ($scope.problem.title || $scope.workspace.title) + '\'s overview');
+    reloadOrderings();
+    
+    $scope.$on('elicit.settingsChanged', function() {
+      reloadOrderings();
     });
 
+    function reloadOrderings() {
+      OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
+        $scope.alternatives = orderings.alternatives;
+        $scope.criteria = orderings.criteria;
+      });
+    }
     $scope.$watch('workspace.scales.observed', function(newValue) {
       $scope.scales = newValue;
     }, true);

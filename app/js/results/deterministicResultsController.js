@@ -1,5 +1,5 @@
 'use strict';
-define(['clipboard', 'lodash', 'angular'], function(Clipboard, _, angular) {
+define(['clipboard', 'lodash',], function(Clipboard, _) {
   var dependencies = [
     '$scope',
     '$stateParams',

@@ -95,6 +95,7 @@ define(['lodash', 'angular'], function(_) {
         state.alternatives, oldWorkspace);
       return state;
     }
+    
     // Private functions
     function buildCriteria(criteria) {
       var newCriteria = _.map(criteria, function(criterion) {

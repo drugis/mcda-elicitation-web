@@ -2,10 +2,12 @@
 define(['lodash'], function(_) {
   var dependencies = [
     '$modal',
+    'WorkspaceSettingsService',
     'swap'
   ];
   var CriterionCardDirective = function(
     $modal,
+    WorkspaceSettingsService,
     swap
   ) {
     return {
@@ -21,7 +23,7 @@ define(['lodash'], function(_) {
         'editCriterion': '=',
         'isInput': '=',
         'saveOrdering': '=',
-        'saveWorkspace':'='
+        'saveWorkspace': '='
       },
       templateUrl: '../effectsTable/criterionCardDirective.html',
       link: function(scope) {
@@ -37,7 +39,7 @@ define(['lodash'], function(_) {
           manualDistribution: 'Manual distribution',
           assistedDistribution: 'Assisted distribution'
         };
-    
+
         scope.PARAMETERS_OF_INTEREST = {
           mean: 'Mean',
           median: 'Median',
@@ -45,6 +47,14 @@ define(['lodash'], function(_) {
           eventProbability: 'Event probability',
           value: 'value'
         };
+
+        if (_.isEqual(scope.criterion.dataSources[0].scale, [0, 1])) {
+          if (WorkspaceSettingsService.usePercentage()) {
+            scope.criterion.unitOfMeasurement = '%';
+          } else {
+            delete scope.criterion.unitOfMeasurement;
+          }
+        }
 
         // public 
         function criterionUp() {
@@ -82,7 +92,7 @@ define(['lodash'], function(_) {
                 return function(newDataSource) {
                   if (dataSource) {
                     scope.criterion.dataSources[dataSourceIndex] = newDataSource;
-                    if(!scope.isInput){
+                    if (!scope.isInput) {
                       scope.saveWorkspace(scope.criterion);
                     }
                   } else {
