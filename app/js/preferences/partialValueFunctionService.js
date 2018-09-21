@@ -42,18 +42,15 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function getXY(dataSource) {
-      var sortedPiecewiseCoords = sortByValues(dataSource.pvf);
-      var coords = [{
+      return [].concat({
         x: best(dataSource),
         y: 1
-      }];
-      if (sortedPiecewiseCoords.length) {
-        coords = coords.concat(sortedPiecewiseCoords);
-      }
-      return coords.concat([{
+      },
+      sortByValues(dataSource.pvf),
+      {
         x: worst(dataSource),
         y: 0
-      }]);
+      });
     }
 
     function sortByValues(pvf) {
