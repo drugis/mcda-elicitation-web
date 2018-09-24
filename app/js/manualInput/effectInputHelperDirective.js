@@ -3,9 +3,17 @@ define(['lodash'], function(_) {
   var ESC = 27;
   var ENTER = 13;
 
-  var dependencies = ['ManualInputService', '$timeout'];
+  var dependencies = [
+    'ManualInputService',
+    '$timeout',
+    'significantDigits'
+  ];
 
-  var EffectInputHelperDirective = function(ManualInputService, $timeout) {
+  var EffectInputHelperDirective = function(
+    ManualInputService,
+    $timeout,
+    significantDigits
+  ) {
     return {
       restrict: 'E',
       scope: {
@@ -43,7 +51,8 @@ define(['lodash'], function(_) {
         function updateUpperBound() {
           var id = scope.inputCell.inputParameters.id;
           if (scope.inputCell.isNormal && id === 'exactValueCI' && scope.inputCell.dataType === 'continuous' && scope.inputCell.parameterOfInterest === 'mean') {
-            scope.inputCell.thirdParameter = 2 * scope.inputCell.firstParameter - scope.inputCell.secondParameter;
+            var uppperBound = 2 * scope.inputCell.firstParameter - scope.inputCell.secondParameter;
+            scope.inputCell.thirdParameter = significantDigits(uppperBound);
           }
         }
 
@@ -102,7 +111,7 @@ define(['lodash'], function(_) {
         function confidenceIntervalNEChanged() {
           if (scope.inputCell.lowerBoundNE || scope.inputCell.upperBoundNE) {
             scope.inputCell.isNormal = false;
-          } 
+          }
         }
       }
     };

@@ -40,5 +40,20 @@ define(['lodash', 'angular'], function(_, angular) {
         array[toIdx] = mem;
       };
     })
+
+    .factory('significantDigits', function() {
+      return function(x, precision) {
+        if (precision !== 0 && !precision) {
+          precision = 3;
+        }
+        if (x === 0) {
+          return x;
+        }
+        if (x > 1 || x < -1) {
+          return Number.parseFloat(x.toFixed(precision));
+        }
+        return Number.parseFloat(x.toPrecision(precision));
+      };
+    })
     ;
 });

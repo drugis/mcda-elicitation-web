@@ -2,11 +2,13 @@
 define(['lodash', 'd3'], function(_, d3) {
   var dependencies = [
     'PataviResultsService',
-    'WorkspaceSettingsService'
+    'WorkspaceSettingsService',
+    'significantDigits'
   ];
   var TradeOffService = function(
     PataviResultsService,
-    WorkspaceSettingsService
+    WorkspaceSettingsService,
+    significantDigits
   ) {
 
     function getIndifferenceCurve(problem, criteria, coordinates) {
@@ -126,15 +128,6 @@ define(['lodash', 'd3'], function(_, d3) {
       var slope = ydiff / xdiff;
       var c = -slope * xValues[idx] + yValues[idx];
       return slope * x + c;
-    }
-
-    function significantDigits(value) {
-      if (value === 0) {
-        return value;
-      }
-      var posOrNeg = value < 0 ? -1 : 1;
-      var multiplier = Math.pow(10, 4 - Math.floor(Math.log(posOrNeg * value) / Math.LN10) - 1);
-      return Math.round(value * multiplier) / multiplier;
     }
 
     function getLabel(criterion) {

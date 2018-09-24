@@ -1,7 +1,15 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
-  var dependencies = ['ConstraintService', 'PerformanceService'];
-  var InputKnowledgeService = function(ConstraintService, PerformanceService) {
+  var dependencies = [
+    'ConstraintService',
+    'PerformanceService',
+    'significantDigits'
+  ];
+  var InputKnowledgeService = function(
+    ConstraintService,
+    PerformanceService,
+    significantDigits
+  ) {
     var NO_DISTRIBUTION = '\nDistribution: none';
 
     var INPUT_TYPE_KNOWLEDGE = {
@@ -357,9 +365,9 @@ define(['lodash', 'angular'], function(_, angular) {
           },
           finishInputCell: function(cell, tableEntry) {
             var inputCell = angular.copy(cell);
-            if(tableEntry.performance.type === 'empty'){
+            if (tableEntry.performance.type === 'empty') {
               inputCell.empty = true;
-            } else{
+            } else {
               inputCell.firstParameter = tableEntry.performance.input.events;
               inputCell.secondParameter = tableEntry.performance.input.sampleSize;
             }
@@ -409,7 +417,7 @@ define(['lodash', 'angular'], function(_, angular) {
           },
           toString: function(cell) {
             var mu = cell.firstParameter;
-            var sigma = roundToThreeDigits(standardDeviationToStandardError(cell.secondParameter, cell.thirdParameter));
+            var sigma = significantDigits(standardDeviationToStandardError(cell.secondParameter, cell.thirdParameter));
             var sampleSize = cell.thirdParameter;
             return mu + ' (' + cell.secondParameter + '), ' + sampleSize + '\nDistribution: t(' + (sampleSize - 1) + ', ' + mu + ', ' + sigma + ')';
           },
@@ -429,7 +437,7 @@ define(['lodash', 'angular'], function(_, angular) {
      * public *
      **********/
     function buildPerformance(cell) {
-      if(cell.empty){
+      if (cell.empty) {
         return PerformanceService.buildEmptyPerformance();
       }
       return getKnowledge(cell).buildPerformance(cell);
@@ -440,7 +448,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function inputToString(cell) {
-      if(cell.empty){
+      if (cell.empty) {
         return 'empty cell';
       }
       return getKnowledge(cell).toString(cell);
@@ -462,7 +470,7 @@ define(['lodash', 'angular'], function(_, angular) {
         });
         var inputCell = angular.copy(cell);
         inputCell.inputParameters = correctOption;
-        if(tableEntry.performance.type === 'empty'){
+        if (tableEntry.performance.type === 'empty') {
           inputCell.empty = true;
         }
         return knowledge.getKnowledge(inputCell).finishInputCell(inputCell, tableEntry);
@@ -621,7 +629,7 @@ define(['lodash', 'angular'], function(_, angular) {
     // finish cell functions
 
     function finishValueCell(cell, tableEntry) {
-      if(cell.empty){
+      if (cell.empty) {
         return cell;
       }
       var inputCell = angular.copy(cell);
@@ -630,7 +638,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function finishValueConfidenceIntervalCell(cell, tableEntry) {
-      if(cell.empty){
+      if (cell.empty) {
         return cell;
       }
       var inputCell = angular.copy(cell);
@@ -643,14 +651,14 @@ define(['lodash', 'angular'], function(_, angular) {
       if (tableEntry.performance.input.upperBound === 'NE') {
         inputCell.upperBoundNE = true;
       } else {
-        inputCell.thirdParameter = tableEntry.performance.input.upperBound;
+        inputCell.thirdParameter = significantDigits(tableEntry.performance.input.upperBound);
       }
       inputCell.isNormal = tableEntry.performance.type === 'dnorm';
       return inputCell;
     }
 
     function finishStudentsTCell(cell, tableEntry) {
-      if(cell.empty){
+      if (cell.empty) {
         return cell;
       }
       var inputCell = angular.copy(cell);
@@ -667,7 +675,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function finishAlphaBetaCell(cell, tableEntry) {
-      if(cell.empty){
+      if (cell.empty) {
         return cell;
       }
       var inputCell = angular.copy(cell);
@@ -677,7 +685,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function finishProportionSampleSizeCell(cell, tableEntry) {
-      if(cell.empty){
+      if (cell.empty) {
         return cell;
       }
       var inputCell = angular.copy(cell);
@@ -782,15 +790,11 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function roundedStdErr(mu, sampleSize) {
-      return roundToThreeDigits(stdErr(mu, sampleSize));
+      return significantDigits(stdErr(mu, sampleSize));
     }
 
     function boundsToStandardError(lowerBound, upperBound) {
-      return roundToThreeDigits((upperBound - lowerBound) / (2 * 1.96));
-    }
-
-    function roundToThreeDigits(value) {
-      return Math.round(value * 1000) / 1000;
+      return significantDigits((upperBound - lowerBound) / (2 * 1.96));
     }
 
     function standardDeviationToStandardError(standardDeviation, sampleSize) {

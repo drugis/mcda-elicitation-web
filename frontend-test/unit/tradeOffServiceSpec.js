@@ -5,7 +5,7 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
     var taskResultsDefer;
     var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsService', ['postAndHandleResults']);
     var workspaceSettingsServiceMock = jasmine.createSpyObj('WorkspaceSettingsService', ['usePercentage']);
-
+    
     beforeEach(angular.mock.module('elicit.preferences', function($provide) {
       $provide.value('PataviResultsService', pataviResultsServiceMock);
       $provide.value('WorkspaceSettingsService', workspaceSettingsServiceMock);
@@ -109,18 +109,6 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
         var x = 40;
         var result = tradeOffService.getYValue(x, xValues, yValues);
         expect(result).toEqual({ x: 40, y: 40 });
-      });
-    });
-
-    describe('significantDigits', function() {
-      it('should round the input to have 4 significant digits', function() {
-        expect(tradeOffService.significantDigits(0)).toBe(0);
-        expect(tradeOffService.significantDigits(100)).toBe(100);
-        expect(tradeOffService.significantDigits(0.00001)).toBe(0.00001);
-        expect(tradeOffService.significantDigits(0.100001)).toBe(0.1);
-        expect(tradeOffService.significantDigits(1234.1)).toBe(1234);
-        expect(tradeOffService.significantDigits(12345)).toBe(12350);
-        expect(tradeOffService.significantDigits(12344)).toBe(12340);
       });
     });
 
