@@ -60,15 +60,38 @@ if (process.env.MCDAWEB_USE_SSL_AUTH) {
   });
 } else {
   var passport = require('passport');
-  var GoogleStrategy = require('passport-google-oauth20').Strategy;
-  passport.use(
-    new GoogleStrategy({
-      clientID: process.env.MCDAWEB_GOOGLE_KEY,
-      clientSecret: process.env.MCDAWEB_GOOGLE_SECRET,
-      callbackURL: process.env.MCDA_HOST + '/auth/google/callback'
-    },
-      UserManagement.findOrCreateUser
-    ));
+  var Strategy = require('passport-local').Strategy;
+  passport.use(new Strategy(
+    function(username, password, cb) {
+      db.users.findByUsername(username, function(err, user) {
+        if (err) {
+          return cb(err);
+        }
+        if (!user) {
+          return cb(null, false);
+        }
+        if (user.password !== password) {
+          return cb(null, false);
+        }
+        return cb(null, user);
+      });
+    }));
+
+  // passport.deserializeUser(function(id, cb) {
+  //   db.users.findById(id, function(err, user) {
+  //     if (err) { return cb(err); }
+  //     cb(null, user);
+  //   });
+  // });
+  // var GoogleStrategy = require('passport-google-oauth20').Strategy;
+  // passport.use(
+  //   new GoogleStrategy({
+  //     clientID: process.env.MCDAWEB_GOOGLE_KEY,
+  //     clientSecret: process.env.MCDAWEB_GOOGLE_SECRET,
+  //     callbackURL: process.env.MCDA_HOST + '/auth/google/callback'
+  //   },
+  //     UserManagement.findOrCreateUser
+  //   ));
   passport.serializeUser(function(user, cb) {
     cb(null, user);
   });
@@ -77,11 +100,12 @@ if (process.env.MCDAWEB_USE_SSL_AUTH) {
   });
   app.use(passport.initialize())
     .use(passport.session())
-    .get('/auth/google/', passport.authenticate('google', { scope: ['profile', 'email'] }))
-    .get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/signin' }),
-      function(req, res) {
-        res.redirect('/');
-      });
+    ;
+  //   .get('/auth/google/', passport.authenticate('google', { scope: ['profile', 'email'] }))
+  //   .get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/signin' }),
+  //     function(req, res) {
+  //       res.redirect('/');
+  //     });
 }
 
 app.get('/logout', function(req, res) {
@@ -119,7 +143,7 @@ router.put('/workspaces/:id/workspaceSettings', WorkspaceService.requireUserIsWo
 router.delete('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
 app.use(router);
 
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   res.cookie('XSRF-TOKEN', req.csrfToken());
   if (req.user) {
     res.cookie('LOGGED-IN-USER', JSON.stringify(_.omit(req.user, 'email')));
