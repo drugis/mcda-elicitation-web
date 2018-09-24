@@ -1,11 +1,13 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
-    'PataviResultsService'
+    'PataviResultsService',
+    'significantDigits'
   ];
 
   var WorkspaceService = function(
-    PataviResultsService
+    PataviResultsService,
+    significantDigits
   ) {
     function getObservedScales(problem) {
       var scalesProblem = _.cloneDeep(problem);
@@ -88,7 +90,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function times100(value) {
       if (value === null) { return; } //prevent empty cells from becoming 0
-      return value * 100;
+      return significantDigits(value * 100, 1);
     }
 
     function reduceProblem(problem) {
