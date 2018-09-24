@@ -144,6 +144,8 @@ define(['c3', 'd3', 'jquery', 'lodash'],
           }
 
           function initChart(newSettings) {
+            scope.areCoordinatesSet = false;
+            scope.inputCoordinates = {};
             root.append('rect')
               .attr('width', '100%')
               .attr('height', '100%')
@@ -164,8 +166,8 @@ define(['c3', 'd3', 'jquery', 'lodash'],
             initialSettings.data.columns = [];
 
             scope.units = {
-              x: initialSettings.axis.x.label,
-              y: initialSettings.axis.y.label
+              x: TradeOffService.getUnit(scope.settings.firstCriterion),
+              y: TradeOffService.getUnit(scope.settings.secondCriterion)
             };
 
             chart = c3.generate(initialSettings);
@@ -188,8 +190,8 @@ define(['c3', 'd3', 'jquery', 'lodash'],
 
           function updateAxisLabels() {
             scope.units = {
-              x: TradeOffService.getLabel(scope.settings.firstCriterion),
-              y: TradeOffService.getLabel(scope.settings.secondCriterion)
+              x: TradeOffService.getUnit(scope.settings.firstCriterion),
+              y: TradeOffService.getUnit(scope.settings.secondCriterion)
             };
             chart.axis.labels(scope.units);
           }

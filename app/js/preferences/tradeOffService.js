@@ -136,15 +136,20 @@ define(['lodash', 'd3'], function(_, d3) {
     }
 
     function getUnitText(criterion) {
-      if (_.isEqual(criterion.dataSources[0].scale, [0, 1])) {
-        return WorkspaceSettingsService.usePercentage() ? ' (%)' : '';
-      } else {
-        return criterion.unitOfMeasurement ? ' (' + criterion.unitOfMeasurement + ')' : '';
-      }
+      var unit = getUnit(criterion);
+      return _.isEqual(unit, '') ? unit : ' (' + unit + ')';
     }
 
     function areCoordinatesSet(coordinates) {
       return coordinates.x > -Infinity && coordinates.y > -Infinity && coordinates.x !== null && coordinates.y !== null;
+    }
+
+    function getUnit(criterion) {
+      if (_.isEqual(criterion.dataSources[0].scale, [0, 1])) {
+        return WorkspaceSettingsService.usePercentage() ? '%' : '';
+      } else {
+        return criterion.unitOfMeasurement ? criterion.unitOfMeasurement : '';
+      }
     }
 
     return {
@@ -153,7 +158,8 @@ define(['lodash', 'd3'], function(_, d3) {
       getYValue: getYValue,
       significantDigits: significantDigits,
       areCoordinatesSet: areCoordinatesSet,
-      getLabel: getLabel
+      getLabel: getLabel,
+      getUnit: getUnit
     };
   };
   return dependencies.concat(TradeOffService);
