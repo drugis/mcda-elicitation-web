@@ -28,7 +28,9 @@
           <label>
             {{inputCell.inputParameters.secondParameter.label}}
             <span ng-if="inputCell.inputParameters.secondParameter.label === 'Lower bound'">(
-              <input type="checkbox" ng-model="inputCell.lowerBoundNE" ng-change="confidenceIntervalNEChanged()" ng-disabled="inputCell.empty">Not estimable)</span>
+              <input type="checkbox" ng-model="inputCell.lowerBoundNE" ng-change="confidenceIntervalNEChanged()" ng-disabled="inputCell.empty">
+              Not estimable)
+            </span>
             <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()" ng-disabled="inputCell.empty || inputCell.lowerBoundNE">
           </label>
         </div>
@@ -41,8 +43,9 @@
           </label>
         </div>
         <div class="cell" ng-if="inputCell.inputParameters.canBeNormal">
-          <label for="is-normally-distributed">
-            <input id="is-normally-distributed" type="checkbox" ng-model="inputCell.isNormal" ng-change="updateUpperBound()" ng-disabled="inputCell.empty || inputCell.lowerBoundNE || inputCell.upperBoundNE"> Sampling distribution is approximately normally distributed
+          <label>
+            <input type="checkbox" ng-model="inputCell.isNormal" ng-change="updateUpperBound()" ng-disabled="inputCell.empty || inputCell.lowerBoundNE || inputCell.upperBoundNE">
+            Sampling distribution is approximately normally distributed
           </label>
         </div>
         <div class="cell alert" ng-show="error">
