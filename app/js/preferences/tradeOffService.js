@@ -75,7 +75,7 @@ define(['lodash', 'd3'], function(_, d3) {
     function formatAxis(scale, value) {
       var numberFormatter = d3.format('.2f');
       if (usePercentage(scale)) {
-        return numberFormatter(value) * 100;
+        return numberFormatter(value * 100);
       }
       return numberFormatter(value);
     }
