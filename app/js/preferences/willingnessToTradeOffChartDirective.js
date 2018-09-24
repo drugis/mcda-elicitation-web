@@ -2,14 +2,16 @@
 define(['c3', 'd3', 'jquery', 'lodash'],
   function(c3, d3, $, _) {
     var dependencies = [
+      '$timeout',
       'TradeOffService',
       'WorkspaceSettingsService',
-      '$timeout'
+      'significantDigits'
     ];
     var WillingnessToTradeOffChartDirective = function(
+      $timeout,
       TradeOffService,
       WorkspaceSettingsService,
-      $timeout
+      significantDigits
     ) {
       return {
         restrict: 'E',
@@ -34,7 +36,7 @@ define(['c3', 'd3', 'jquery', 'lodash'],
               if (usePercentage(scope.settings.firstCriterion.dataSources[0].scale)) {
                 multiplier = 100;
               }
-              return value * multiplier;
+              return significantDigits(value * multiplier);
             }
           };
 
@@ -89,8 +91,8 @@ define(['c3', 'd3', 'jquery', 'lodash'],
           }
 
           function updateInputFirstPoint() {
-            scope.coordinates.x = scope.inputCoordinates.x / scope.percentageModifiers.firstCriterion;
-            scope.coordinates.y = scope.inputCoordinates.y / scope.percentageModifiers.secondCriterion;
+            scope.coordinates.x = significantDigits(scope.inputCoordinates.x / scope.percentageModifiers.firstCriterion);
+            scope.coordinates.y = significantDigits(scope.inputCoordinates.y / scope.percentageModifiers.secondCriterion);
             updateFirstPoint();
           }
 
@@ -100,8 +102,8 @@ define(['c3', 'd3', 'jquery', 'lodash'],
               scope.coordinates.x = _.clamp(scope.coordinates.x, scope.sliderOptions.floor, scope.sliderOptions.ceil);
               scope.coordinates.y = _.clamp(scope.coordinates.y, scope.minY, scope.maxY);
               scope.inputCoordinates = {
-                x: scope.coordinates.x * scope.percentageModifiers.firstCriterion,
-                y: scope.coordinates.y * scope.percentageModifiers.secondCriterion
+                x: significantDigits(scope.coordinates.x * scope.percentageModifiers.firstCriterion),
+                y: significantDigits(scope.coordinates.y * scope.percentageModifiers.secondCriterion)
               };
               redrawPlot();
             }
@@ -119,8 +121,8 @@ define(['c3', 'd3', 'jquery', 'lodash'],
           }
 
           function updateInputSecondPoint() {
-            scope.coordinates.x2 = scope.inputCoordinates.x2 / scope.percentageModifiers.firstCriterion;
-            scope.coordinates.y2 = scope.inputCoordinates.y2 / scope.percentageModifiers.secondCriterion;
+            scope.coordinates.x2 = significantDigits(scope.inputCoordinates.x2 / scope.percentageModifiers.firstCriterion);
+            scope.coordinates.y2 = significantDigits(scope.inputCoordinates.y2 / scope.percentageModifiers.secondCriterion);
             updateSecondPoint();
           }
 
@@ -132,8 +134,8 @@ define(['c3', 'd3', 'jquery', 'lodash'],
             data.columns[5] = ['secondPoint', secondPointCoordinates.y];
             scope.coordinates.x2 = secondPointCoordinates.x;
             scope.coordinates.y2 = secondPointCoordinates.y;
-            scope.inputCoordinates.x2 = scope.coordinates.x2 * scope.percentageModifiers.firstCriterion;
-            scope.inputCoordinates.y2 = scope.coordinates.y2 * scope.percentageModifiers.secondCriterion;
+            scope.inputCoordinates.x2 = significantDigits(scope.coordinates.x2 * scope.percentageModifiers.firstCriterion);
+            scope.inputCoordinates.y2 = significantDigits(scope.coordinates.y2 * scope.percentageModifiers.secondCriterion);
 
             $timeout(function() {
               scope.$broadcast('rzSliderForceRender');
@@ -151,23 +153,29 @@ define(['c3', 'd3', 'jquery', 'lodash'],
               .style('height', '500px')
               .style('background', 'white');
             scope.coordinates = {};
-            scope.sliderOptions.floor = TradeOffService.significantDigits(newSettings.firstCriterion.dataSources[0].pvf.range[0]);
-            scope.sliderOptions.ceil = TradeOffService.significantDigits(newSettings.firstCriterion.dataSources[0].pvf.range[1]);
-            scope.sliderOptions.step = TradeOffService.significantDigits((scope.sliderOptions.ceil - scope.sliderOptions.floor) / 100);
+            scope.sliderOptions.floor = significantDigits(newSettings.firstCriterion.dataSources[0].pvf.range[0]);
+            scope.sliderOptions.ceil = significantDigits(newSettings.firstCriterion.dataSources[0].pvf.range[1]);
+            scope.sliderOptions.step = significantDigits((scope.sliderOptions.ceil - scope.sliderOptions.floor) / 100);
             scope.coordinates.x2 = scope.sliderOptions.floor;
             scope.minY = newSettings.secondCriterion.dataSources[0].pvf.range[0];
             scope.maxY = newSettings.secondCriterion.dataSources[0].pvf.range[1];
 
             var initialSettings = TradeOffService.getInitialSettings(root, data, scope.sliderOptions, newSettings, scope.minY, scope.maxY);
             initialSettings.data.columns = [];
+
+            scope.units = {
+              x: initialSettings.axis.x.label,
+              y: initialSettings.axis.y.label
+            };
+
             chart = c3.generate(initialSettings);
 
             chart.internal.main.on('click', clickHandler); // https://github.com/c3js/c3/issues/705
 
             function clickHandler() {
               var coords = d3.mouse(this);
-              scope.coordinates.x = TradeOffService.significantDigits(chart.internal.x.invert(coords[0]));
-              scope.coordinates.y = TradeOffService.significantDigits(chart.internal.y.invert(coords[1]));
+              scope.coordinates.x = significantDigits(chart.internal.x.invert(coords[0]));
+              scope.coordinates.y = significantDigits(chart.internal.y.invert(coords[1]));
               updateFirstPoint();
               $timeout(); // force coordinate update outside chart
             }
@@ -178,11 +186,12 @@ define(['c3', 'd3', 'jquery', 'lodash'],
             data.columns[3] = (['line'].concat(results.data.y));
           }
 
-          function updateAxisLabels(){
-            chart.axis.labels({
-              x:TradeOffService.getLabel(scope.settings.firstCriterion),
-              y:TradeOffService.getLabel(scope.settings.secondCriterion)
-            });
+          function updateAxisLabels() {
+            scope.units = {
+              x: TradeOffService.getLabel(scope.settings.firstCriterion),
+              y: TradeOffService.getLabel(scope.settings.secondCriterion)
+            };
+            chart.axis.labels(scope.units);
           }
         }
       };
