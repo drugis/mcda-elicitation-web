@@ -121,7 +121,7 @@
         </thead>
         <tbody>
           <tr>
-            <td ng-repeat="criterion in criteria">{{deterministicResults.results.weights.data[criterion.id]}}</td>
+            <td ng-repeat="criterion in criteria">{{deterministicResults.results.weights.data[criterion.id] | number}}</td>
           </tr>
         </tbody>
       </table>
@@ -161,7 +161,7 @@
             </thead>
             <tbody>
               <tr>
-                <td ng-repeat="alternative in alternatives">{{deterministicResults.results.total.data[alternative.id]}}</td>
+                <td ng-repeat="alternative in alternatives">{{deterministicResults.results.total.data[alternative.id] | number}}</td>
               </tr>
             </tbody>
           </table>
@@ -174,7 +174,7 @@
             </thead>
             <tbody>
               <tr>
-                <td ng-repeat="alternative in alternatives">{{recalculatedDeterministicResults.results.total.data[alternative.id]}}</td>
+                <td ng-repeat="alternative in alternatives">{{recalculatedDeterministicResults.results.total.data[alternative.id] | number}}</td>
               </tr>
             </tbody>
           </table>
