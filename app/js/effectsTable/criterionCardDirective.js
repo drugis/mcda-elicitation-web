@@ -3,12 +3,14 @@ define(['lodash'], function(_) {
   var dependencies = [
     '$modal',
     'WorkspaceSettingsService',
-    'swap'
+    'swap',
+    'isMcdaStandalone'
   ];
   var CriterionCardDirective = function(
     $modal,
     WorkspaceSettingsService,
-    swap
+    swap,
+    isMcdaStandalone
   ) {
     return {
       restrict: 'E',
@@ -23,10 +25,12 @@ define(['lodash'], function(_) {
         'editCriterion': '=',
         'isInput': '=',
         'saveOrdering': '=',
-        'saveWorkspace': '='
+        'saveWorkspace': '=',
+        'editMode': '='
       },
       templateUrl: '../effectsTable/criterionCardDirective.html',
       link: function(scope) {
+        scope.isStandalone = isMcdaStandalone;
         scope.criterionUp = criterionUp;
         scope.criterionDown = criterionDown;
         scope.dataSourceDown = dataSourceDown;
