@@ -259,6 +259,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           problem: {
             criteria: {
               critId2: {
+                unitOfMeasurement: '',
                 dataSources: [{
                   id: 'ds2',
                   pvf: {
@@ -268,6 +269,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
                 }]
               },
               critId4: {
+                unitOfMeasurement: undefined,
                 dataSources: [{
                   id: 'ds4',
                   pvf: {
@@ -903,7 +905,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
       });
     });
 
-    describe('toPercentage', function() {
+    describe('percentifyScales', function() {
       it('should convert proportions to percentages where possible, ignoring scales for excluded datasources', function() {
         var criteria = {
           crit1: {
@@ -940,7 +942,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
             alt1: {}
           }
         };
-        var result = workspaceService.toPercentage(criteria, observedScales);
+        var result = workspaceService.percentifyScales(criteria, observedScales);
         var expectedResult = {
           ds1: {
             alt1: {
@@ -963,11 +965,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
       });
     });
 
-    describe('percentifyDataSources', function() {
+    describe('percentifyCriteria', function() {
       it('should convert datasource scales and pvf ranges to percentages where appropriate', function() {
-
         var criteria = {
           crit1: {
+            unitOfMeasurement: 'proportion',
             dataSources: [{
               scale: [10, 20],
               pvf: {
@@ -987,13 +989,23 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
                 range: [0.3, 0.4]
               }
             }]
+          },
+          crit3: {
+            unitOfMeasurement: 'keepUnit',
+            dataSources: [{
+              scale: [-Infinity, Infinity],
+              pvf: {
+                range: [10, 20]
+              }
+            }]
           }
         };
 
-        var result = workspaceService.percentifyDataSources(criteria);
+        var result = workspaceService.percentifyCriteria(criteria);
 
         var expectedResult = {
           crit1: {
+            unitOfMeasurement: '%',
             dataSources: [{
               scale: [10, 20],
               pvf: {
@@ -1004,6 +1016,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
             }]
           },
           crit2: {
+            unitOfMeasurement: '%',
             dataSources: [{
               scale: [0, 100],
               pvf: {}
@@ -1011,6 +1024,15 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
               scale: [0, 100],
               pvf: {
                 range: [30, 40]
+              }
+            }]
+          },
+          crit3: {
+            unitOfMeasurement: 'keepUnit',
+            dataSources: [{
+              scale: [-Infinity, Infinity],
+              pvf: {
+                range: [10, 20]
               }
             }]
           }
