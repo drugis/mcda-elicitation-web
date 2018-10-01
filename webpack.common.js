@@ -25,7 +25,7 @@ let config = {
       use: [{
         loader: 'angular1-templateurl-loader'
       }],
-      exclude: [/(.*)\/angular-foundation-6\/(.*)/] // uses $templatecache so dont replace 
+      exclude: [/.*angular-foundation-6.*/] // uses $templatecache so dont replace 
     }, {
       test: /\.json$/,
       loader: 'json-loader'
@@ -57,13 +57,7 @@ let config = {
   resolve: {
     alias: {
       'mcda': basePath + '/app/js',
-      'mcdaweb': basePath + '/app/js/mcda-web',
-      'jQuery': 'jquery',
-      'angular-patavi-client': 'angular-patavi-client/patavi',
-      'error-reporting': 'error-reporting/errorReportingDirective',
-      'export-directive': 'export-directive/export-directive',
-      'help-popup': 'help-popup/help-directive',
-      'page-title-service': 'page-title-service/pageTitleService',
+      'mcdaweb': basePath + '/app/js/mcda-web'
     },
     modules: [
       // Files path which will be referenced while bundling

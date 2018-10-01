@@ -108,13 +108,9 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
 
     // private
     function doAllCriteriaHavePvf() {
-      var havePvf = true;
-      _.forEach($scope.aggregateState.problem.criteria, function(criterion) {
-        if (!isPVFDefined(criterion.dataSources[0])) {
-          havePvf = false;
-        }
+      return _.find($scope.aggregateState.problem.criteria, function(criterion) {
+        return !isPVFDefined(criterion.dataSources[0]);
       });
-      return havePvf;
     }
 
     function willReset(safe) {

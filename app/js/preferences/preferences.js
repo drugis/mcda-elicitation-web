@@ -15,6 +15,7 @@ define([
   './tradeOffService',
   './willingnessToTradeOffDirective',
   './willingnessToTradeOffChartDirective',
+  './preferenceElicitationTableDirective',
   '../workspace/workspace',
   '../results/results'
 ], function(
@@ -31,7 +32,8 @@ define([
   NewScenarioController,
   TradeOffService,
   willingnessToTradeOff,
-  willingnessToTradeOffChart
+  willingnessToTradeOffChart,
+  preferenceElicitationTable
 ) {
     return angular.module('elicit.preferences', ['elicit.workspace', 'elicit.results'])
       .controller('PreferencesController', PreferencesController)
@@ -49,6 +51,6 @@ define([
 
       .directive('willingnessToTradeOff', willingnessToTradeOff)
       .directive('willingnessToTradeOffChart', willingnessToTradeOffChart)
-
+      .directive('preferenceElicitationTable', preferenceElicitationTable)
       ;
   });

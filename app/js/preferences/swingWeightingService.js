@@ -44,7 +44,7 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
             $scope: scope,
             handler: {
               validChoice: validChoice,
-              fields: ['total', 'mostImportantCriterion', 'step'],
+              fields: ['total', 'mostImportantCriterionId', 'step'],
               nextState: nextState,
               standardize: _.identity,
               initialize: _.partial(initialize, taskDefinition.clean(scope.aggregateState))
@@ -79,7 +79,7 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
         if (!state) {
           return false;
         }
-        return state.mostImportantCriterion;
+        return state.mostImportantCriterionId;
       }
 
       function nextState(state) {
@@ -90,7 +90,7 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
         var next = {
           step: state.step + 1,
           values: getValues(state.problem.criteria),
-          oneHundred: 100,
+          mostImportantWeight: 100,
           sliderOptions: sliderOptions,
           sliderOptionsDisabled: {
             disabled: true,
@@ -116,8 +116,8 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
 
       function save(state) {
         var prefs = _(state.values)
-          .omit(state.mostImportantCriterion)
-          .map(toBackEnd(state.mostImportantCriterion))
+          .omit(state.mostImportantCriterionId)
+          .map(toBackEnd(state.mostImportantCriterionId))
           .value();
 
         currentScenario.state = {

@@ -32,12 +32,12 @@ define(['lodash'],
         }, {});
       }
 
-      function toBackEnd(mostImportantCriterion) {
+      function toBackEnd(mostImportantCriterionId) {
         return function(value, criterionId) {
           return {
             type: 'exact swing',
             ratio: 1 / (value / 100),
-            criteria: [mostImportantCriterion, criterionId]
+            criteria: [mostImportantCriterionId, criterionId]
           };
         };
       }

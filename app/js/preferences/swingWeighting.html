@@ -35,7 +35,7 @@
     </div>
     <div class="cell" ng-repeat="criterion in criteria">
       <label>
-        <input type="radio" ng-model="state.mostImportantCriterion" value="{{criterion.id}}"> {{criterion.dataSources[0].pvf.direction}} {{criterion.title}} from {{pvf.worst(criterion.dataSources[0]) | number}}
+        <input type="radio" ng-model="state.mostImportantCriterionId" value="{{criterion.id}}"> {{criterion.dataSources[0].pvf.direction}} {{criterion.title}} from {{pvf.worst(criterion.dataSources[0]) | number}}
         {{criterion.unitOfMeasurement}} to {{pvf.best(criterion.dataSources[0]) | number}} {{criterion.unitOfMeasurement}}
       </label>
     </div>
@@ -47,7 +47,7 @@
       <button class="button" ng-click="nextStep(state)" ng-disabled="!canProceed(state)">Next</button>
     </div>
     <div class="cell alert" ng-if="!canProceed(state)">
-      Cannot proceed because the most important improvement has not been chosen.
+      Choose the most important improvement to proceed.
     </div>
   </div>
 </div>
@@ -60,61 +60,7 @@
       </h3>
     </div>
     <div class="cell">
-      <table>
-        <thead>
-          <th>Criterion
-            <inline-help help-key="criterion"></inline-help>
-          </th>
-          <th>Description</th>
-          <th>Unit
-            <inline-help help-key="criterion-unit"></inline-help>
-          </th>
-          <th>Worst</th>
-          <th>Best</th>
-          <th>Importance</th>
-        </thead>
-        <tbody>
-          <tr ng-repeat="criterion in criteria">
-            <td>{{criterion.title}}</td>
-            <td>{{criterion.description}}</td>
-            <td>{{criterion.unitOfMeasurement}}</td>
-            <td>{{pvf.worst(criterion.dataSources[0]) | number}}</td>
-            <td>{{pvf.best(criterion.dataSources[0]) | number}}</td>
-            <td ng-if="criterion.id !== state.mostImportantCriterion">{{isPrecise ? state.values[criterion.id] : (isImprecise ? state.values[criterion.id].low + '-' + state.values[criterion.id].high
-              : 'error')}}%</td>
-            <td ng-if="criterion.id === state.mostImportantCriterion">100%</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="cell">
-      You've indicated that improving {{state.problem.criteria[state.mostImportantCriterion].title}} from {{pvf.worst(state.problem.criteria[state.mostImportantCriterion].dataSources[0])}}
-      {{state.problem.criteria[state.mostImportantCriterion].unitOfMeasurement}} to {{pvf.best(state.problem.criteria[state.mostImportantCriterion].dataSources[0])}}
-      {{state.problem.criteria[state.mostImportantCriterion].unitOfMeasurement}} is the most important (i.e. it has 100%
-      importance). Now indicate the relative importance (in %) to this improvement of each other criterion's improvement
-      using the sliders below.
-    </div>
-    <div class="cell">
-      <br>
-      <table>
-        <tbody>
-          <tr ng-repeat="criterion in criteria">
-            <td>
-              {{criterion.dataSources[0].pvf.direction}} {{criterion.title}} from {{pvf.worst(criterion.dataSources[0]) | number}} {{criterion.unitOfMeasurement}}
-              to {{pvf.best(criterion.dataSources[0]) | number}} {{criterion.unitOfMeasurement}}
-            </td>
-            <td ng-if="state.mostImportantCriterion === criterion.id" style="width:50%">
-              <rzslider rz-slider-model="state.oneHundred" rz-slider-options="state.sliderOptionsDisabled"></rzslider>
-            </td>
-            <td ng-if="state.mostImportantCriterion !== criterion.id && isPrecise" style="width:50%">
-              <rzslider rz-slider-model="state.values[criterion.id]" rz-slider-options="state.sliderOptions"></rzslider>
-            </td>
-            <td ng-if="state.mostImportantCriterion !== criterion.id && isImprecise" style="width:50%">
-              <rzslider rz-slider-model="state.values[criterion.id].low" rz-slider-high="state.values[criterion.id].high" rz-slider-options="state.sliderOptions"></rzslider>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <preference-elicitation-table criteria="criteria" most-important="mostImportant"></preference-elicitation-table>
     </div>
     <div class="grid-x">
       <div class="cell">

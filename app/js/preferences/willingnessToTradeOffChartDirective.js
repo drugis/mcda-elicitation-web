@@ -1,6 +1,6 @@
 'use strict';
-define(['c3', 'd3', 'jquery', 'lodash'],
-  function(c3, d3, $, _) {
+define(['c3', 'd3', 'lodash'],
+  function(c3, d3, _) {
     var dependencies = [
       '$timeout',
       'TradeOffService',
@@ -59,7 +59,7 @@ define(['c3', 'd3', 'jquery', 'lodash'],
               secondPoint: 'Outcome B'
             }
           };
-          var root = d3.select($(element).get(0));
+          var root = d3.select(element[0]);
           root = root.select('svg');
 
           scope.$watch('settings', function(newSettings) {
