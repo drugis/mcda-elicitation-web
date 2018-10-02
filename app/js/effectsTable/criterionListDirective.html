@@ -3,8 +3,19 @@
     <h5>Favorable criteria</h5>
   </div>
   <div class="cell" ng-repeat="criterion in favorableCriteria">
-    <criterion-card criterion="criterion" can-go-up="!$first" can-go-down="!$last" go-up="goUp" go-down="goDown" remove-criterion="removeCriterion"
-      idx="$index" edit-criterion="openCriterionModal" is-input="isInput" save-ordering="saveOrdering" save-workspace="saveWorkspace">
+    <criterion-card
+            criterion="criterion"
+            can-go-up="!$first"
+            can-go-down="!$last"
+            go-up="goUp"
+            go-down="goDown"
+            remove-criterion="removeCriterion"
+            idx="$index"
+            edit-criterion="openCriterionModal"
+            is-input="isInput"
+            save-ordering="saveOrdering"
+            save-workspace="saveWorkspace"
+            edit-mode="editMode">
   </div>
 </div>
 <div class="grid-x callout secondary">
@@ -12,8 +23,18 @@
     <h5>Unfavorable criteria</h5>
   </div>
   <div class="cell" ng-repeat="criterion in unfavorableCriteria">
-    <criterion-card criterion="criterion" can-go-up="!$first" can-go-down="!$last" go-up="goUp" go-down="goDown" remove-criterion="removeCriterion"
-      idx="($index+favorableCriteria.length)" edit-criterion="openCriterionModal" is-input="isInput" save-ordering="saveOrdering"
-      save-workspace="saveWorkspace">
+    <criterion-card
+            criterion="criterion"
+            can-go-up="!$first"
+            can-go-down="!$last"
+            go-up="goUp"
+            go-down="goDown"
+            remove-criterion="removeCriterion"
+            idx="($index+favorableCriteria.length)"
+            edit-criterion="openCriterionModal"
+            is-input="isInput"
+            save-ordering="saveOrdering"
+            save-workspace="saveWorkspace"
+            edit-mode="editMode">
   </div>
 </div>

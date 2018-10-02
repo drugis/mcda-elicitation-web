@@ -1,5 +1,5 @@
 <div class="grid-x callout">
-  <div class="cell shrink" style="display:flex; align-items:center;">
+  <div ng-if="editMode.isUserOwner" class="cell shrink" style="display:flex; align-items:center;">
     <div style="margin-right: 16px">
       <div style="line-height: 10px; margin-bottom: 10px;">
         <a ng-if="canGoUp" ng-click="criterionUp()" class="nav-arrow">
@@ -20,7 +20,7 @@
       <div class="cell large-10">
         <h5>{{criterion.title}}</h5>
       </div>
-      <div class="cell large-2">
+      <div ng-if="isStandalone" class="cell large-2">
         <div class="right">
           <a ng-click="editCriterion(criterion)" tooltip="Edit criterion">
             <i class="fa fa-edit fa-2x icon-fixed-width"></i>
@@ -46,8 +46,8 @@
         <table>
           <thead>
             <tr>
-              <th></th>
-              <th style="min-width: 15rem;">Reference
+              <th ng-if="isStandalone"> <!-- up and down arrows--></th>
+              <th style="min-width: 15rem;">Reference2
                 <inline-help help-key="criterion-source"></inline-help>
               </th>
               <th>Input type</th>
@@ -57,13 +57,13 @@
               <th>Uncertainties / Strength of evidence
                 <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
               </th>
-              <th></th>
-              <th ng-if="isInput"></th>
+              <th ng-if="isStandalone"><!-- edit datasource button --></th>
+              <th ng-if="isInput"><!--delete datasource button --></th>
             </tr>
           </thead>
           <tbody>
             <tr ng-repeat="dataSource in criterion.dataSources track by dataSource.id">
-              <td>
+              <td ng-if="isStandalone">
                 <div style="line-height: 10px; margin-bottom: 4px;">
                   <a ng-if="!$first" ng-click="dataSourceUp(criterion, $index)" class="nav-arrow">
                     <i style="line-height:0px;" class="fa fa-caret-up"></i>
@@ -96,7 +96,7 @@
                 <br>
                 <b>SoE: </b>{{dataSource.strengthOfEvidence}}
               </td>
-              <td>
+              <td ng-if="isStandalone">
                 <a ng-click="editDataSource(dataSource, $index)" tooltip="Edit data source">
                   <i class="fa fa-edit icon-fixed-width"></i>
                 </a>

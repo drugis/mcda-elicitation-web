@@ -24,7 +24,8 @@ define(['lodash'], function(_) {
         'inputData': '=',
         'errors': '=',
         'isInput': '=',
-        'workspace': '='
+        'workspace': '=',
+        'editMode': '='
       },
       templateUrl: '../effectsTable/criterionListDirective.html',
       link: function(scope) {

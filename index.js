@@ -113,7 +113,16 @@ app.get('/logout', function(req, res) {
   res.redirect('/');
 })
   .use(csurf())
-  .use(bodyParser.json({ limit: '5mb' }))
+  .use(bodyParser.json({ limit: '5mb' }));
+
+app
+  .use(function(req, res, next) {
+    res.cookie('XSRF-TOKEN', req.csrfToken());
+    if (req.user) {
+      res.cookie('LOGGED-IN-USER', JSON.stringify(_.omit(req.user, 'email')));
+    }
+    next();
+  })
   .get('/', function(req, res) {
     if (req.user || req.session.user) {
       res.sendFile(__dirname + '/dist/index.html');
@@ -142,14 +151,6 @@ router.put('/workspaces/:id/ordering', WorkspaceService.requireUserIsWorkspaceOw
 router.put('/workspaces/:id/workspaceSettings', WorkspaceService.requireUserIsWorkspaceOwner);
 router.delete('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
 app.use(router);
-
-app.use(function(req, res, next) {
-  res.cookie('XSRF-TOKEN', req.csrfToken());
-  if (req.user) {
-    res.cookie('LOGGED-IN-USER', JSON.stringify(_.omit(req.user, 'email')));
-  }
-  next();
-});
 
 // Workspaces in progress
 app.post('/inProgress', WorkspaceService.createInProgress);
