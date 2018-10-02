@@ -60,62 +60,76 @@ if (process.env.MCDAWEB_USE_SSL_AUTH) {
   });
 } else {
   var passport = require('passport');
-  var Strategy = require('passport-local').Strategy;
-  passport.use(new Strategy(
-    function(username, password, cb) {
-      db.users.findByUsername(username, function(err, user) {
-        if (err) {
-          return cb(err);
-        }
-        if (!user) {
-          return cb(null, false);
-        }
-        if (user.password !== password) {
-          return cb(null, false);
-        }
-        return cb(null, user);
-      });
-    }));
+  var LocalStrategy = require('passport-local').Strategy;
+  var GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-  // passport.deserializeUser(function(id, cb) {
-  //   db.users.findById(id, function(err, user) {
-  //     if (err) { return cb(err); }
-  //     cb(null, user);
-  //   });
-  // });
-  // var GoogleStrategy = require('passport-google-oauth20').Strategy;
-  // passport.use(
-  //   new GoogleStrategy({
-  //     clientID: process.env.MCDAWEB_GOOGLE_KEY,
-  //     clientSecret: process.env.MCDAWEB_GOOGLE_SECRET,
-  //     callbackURL: process.env.MCDA_HOST + '/auth/google/callback'
-  //   },
-  //     UserManagement.findOrCreateUser
-  //   ));
+  passport.use(new LocalStrategy(
+    //   {
+    //   usernameField: 'username',
+    //   passwordField: 'password'
+    // },
+    loginWithUsername
+  ));
+  passport.use(new GoogleStrategy({
+    clientID: process.env.MCDAWEB_GOOGLE_KEY,
+    clientSecret: process.env.MCDAWEB_GOOGLE_SECRET,
+    callbackURL: process.env.MCDA_HOST + '/auth/google/callback'
+  },
+    UserManagement.findOrCreateUser
+  ));
+
   passport.serializeUser(function(user, cb) {
     cb(null, user);
   });
   passport.deserializeUser(function(obj, cb) {
     cb(null, obj);
   });
-  app.use(passport.initialize())
+
+  app
+    .use(passport.initialize())
     .use(passport.session())
+
+    .get('/auth/google/', passport.authenticate('google', { scope: ['profile', 'email'] }))
+    .get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/' }),
+      function(req, res) {
+        res.redirect('/');
+      })
+
+    .post('/login', function(req, res, next) {
+      passport.authenticate('local', 
+      // {
+      //   failureRedirect: '/', failureFlash: true
+      // },
+       function(err, user, info) {
+        console.log(user);
+        res.redirect('/');
+      });
+    })
     ;
-  //   .get('/auth/google/', passport.authenticate('google', { scope: ['profile', 'email'] }))
-  //   .get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/signin' }),
-  //     function(req, res) {
-  //       res.redirect('/');
-  //     });
+}
+function loginWithUsername(username, password, callback) {
+  console.log('asd');
+  UserManagement.findUserByUsername(username, function(err, user) {
+    if (err) { return callback(err); }
+    if (!user) {
+      console.log('asdf');
+      return callback(null, false);
+    }
+    if (user.password !== password) {
+      console.log('asdfg');
+      return callback(null, false);
+    }
+    return callback(null, user);
+  });
 }
 
-app.get('/logout', function(req, res) {
-  req.logout();
-  res.redirect('/');
-})
-  .use(csurf())
-  .use(bodyParser.json({ limit: '5mb' }));
-
 app
+  .get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+  })
+  .use(csurf())
+  .use(bodyParser.json({ limit: '5mb' }))
   .use(function(req, res, next) {
     res.cookie('XSRF-TOKEN', req.csrfToken());
     if (req.user) {
@@ -142,6 +156,10 @@ app
   ;
 
 var router = express.Router();
+router.post('/login', passport.authenticate('local', function(req, res, sth) {
+  console.log(res);
+}));
+
 router.get('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
 router.post('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
 router.delete('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);

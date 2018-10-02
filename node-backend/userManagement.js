@@ -2,14 +2,22 @@
 module.exports = function(db) {
 
   function findOrCreateUser(accessToken, refreshToken, googleUser, callback) {
+    db.runInTransaction(userTransaction, function(error, result) {
+      if (error) {
+        return callback(error);
+      }
+      callback(null, result);
+    });
+
     function userTransaction(client, callback) {
       client.query(
         'SELECT id, username, firstName, lastName FROM Account WHERE account.username = $1 OR account.email = $2',
-        [googleUser.id, googleUser.emails[0].value], 
+        [googleUser.id, googleUser.emails[0].value],
         function(error, result) {
           if (error) {
             return callback(error);
           }
+          var defaultPicture = process.env.MCDA_HOST + '/public/images/defaultUser.png';
           if (result.rows.length === 0) {
             client.query(
               'INSERT INTO Account (username, firstName, lastName) VALUES ($1, $2, $3) RETURNING id',
@@ -24,24 +32,21 @@ module.exports = function(db) {
                   username: googleUser.id,
                   firstname: googleUser.name.givenName,
                   lastname: googleUser.name.familyName,
-                  userPicture: googleUser.photos[0] ? googleUser.photos[0].value : process.env.MCDA_HOST + '/public/images/defaultUser.png'
+                  userPicture: googleUser.photos[0] ? googleUser.photos[0].value : defaultPicture
                 });
               });
           } else {
             var user = result.rows[0];
-            user.userPicture = googleUser.photos[0] ? googleUser.photos[0].value : process.env.MCDA_HOST + '/public/images/defaultUser.png';
+            user.userPicture = googleUser.photos[0] ? googleUser.photos[0].value : defaultPicture;
             callback(null, user);
           }
-        });
+        }
+      );
     }
-
-    db.runInTransaction(userTransaction, function(error, result) {
-      if (error) {
-        return callback(error);
-      }
-      callback(null, result);
-    });
   }
+
+
+
 
   function findUserById(id, callback) {
     findUserByProperty('id', id, callback);
@@ -49,6 +54,10 @@ module.exports = function(db) {
 
   function findUserByEmail(email, callback) {
     findUserByProperty('email', email, callback);
+  }
+
+  function findUserByUsername(username, callback) {
+    findUserByProperty('username', username, callback);
   }
 
   // private
@@ -67,6 +76,7 @@ module.exports = function(db) {
   return {
     findOrCreateUser: findOrCreateUser,
     findUserById: findUserById,
-    findUserByEmail: findUserByEmail
+    findUserByEmail: findUserByEmail, 
+    findUserByUsername: findUserByUsername
   };
 };
