@@ -37,7 +37,10 @@ app
       secure: process.env.MCDAWEB_USE_SSL_AUTH
     }
   }))
-  .set('trust proxy', 1);
+  .set('trust proxy', 1)
+  .use(bodyParser.json({ limit: '5mb' }))
+  .use(bodyParser.urlencoded({ extended: true }))
+  ;
 
 server = http.createServer(app);
 
@@ -64,12 +67,15 @@ if (process.env.MCDAWEB_USE_SSL_AUTH) {
   var GoogleStrategy = require('passport-google-oauth20').Strategy;
 
   passport.use(new LocalStrategy(
-    //   {
-    //   usernameField: 'username',
-    //   passwordField: 'password'
-    // },
-    loginWithUsername
-  ));
+    function(username, password, cb) {
+      UserManagement.findUserByUsername(username, function(err, user) {
+        if (err) { return cb(err); }
+        if (!user) { return cb(null, false); }
+        if (user.password !== password) { return cb(null, false); }
+        return cb(null, user);
+      });
+    }));
+
   passport.use(new GoogleStrategy({
     clientID: process.env.MCDAWEB_GOOGLE_KEY,
     clientSecret: process.env.MCDAWEB_GOOGLE_SECRET,
@@ -95,32 +101,12 @@ if (process.env.MCDAWEB_USE_SSL_AUTH) {
         res.redirect('/');
       })
 
-    .post('/login', function(req, res, next) {
-      passport.authenticate('local', 
-      // {
-      //   failureRedirect: '/', failureFlash: true
-      // },
-       function(err, user, info) {
-        console.log(user);
+    .post('/login',
+      passport.authenticate('local', { failureRedirect: '/' }),
+      function(req, res) {
         res.redirect('/');
       });
-    })
-    ;
-}
-function loginWithUsername(username, password, callback) {
-  console.log('asd');
-  UserManagement.findUserByUsername(username, function(err, user) {
-    if (err) { return callback(err); }
-    if (!user) {
-      console.log('asdf');
-      return callback(null, false);
-    }
-    if (user.password !== password) {
-      console.log('asdfg');
-      return callback(null, false);
-    }
-    return callback(null, user);
-  });
+
 }
 
 app
@@ -129,7 +115,6 @@ app
     res.redirect('/');
   })
   .use(csurf())
-  .use(bodyParser.json({ limit: '5mb' }))
   .use(function(req, res, next) {
     res.cookie('XSRF-TOKEN', req.csrfToken());
     if (req.user) {
@@ -156,10 +141,6 @@ app
   ;
 
 var router = express.Router();
-router.post('/login', passport.authenticate('local', function(req, res, sth) {
-  console.log(res);
-}));
-
 router.get('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
 router.post('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
 router.delete('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);

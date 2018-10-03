@@ -45,9 +45,6 @@ module.exports = function(db) {
     }
   }
 
-
-
-
   function findUserById(id, callback) {
     findUserByProperty('id', id, callback);
   }
@@ -71,6 +68,11 @@ module.exports = function(db) {
         callback(null, result.rows[0]);
       }
     });
+  }
+
+  function createAccount(username, password, password2){
+    if(password !== password2) {return;}
+
   }
 
   return {
