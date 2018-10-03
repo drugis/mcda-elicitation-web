@@ -22,7 +22,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.downloadWorkspace = downloadWorkspace;
 
     // init
-    $scope.scales = $scope.workspace.scales.observed;
+    $scope.scales = $scope.workspace.scales.base;
     $scope.problem = $scope.workspace.problem;
     $scope.isStandAlone = isMcdaStandalone;
     $scope.useFavorability = _.find($scope.problem.criteria, function(criterion) {
@@ -31,10 +31,15 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.showDecimal = false;
     PageTitleService.setPageTitle('EvidenceController', ($scope.problem.title || $scope.workspace.title) + '\'s overview');
     reloadOrderings();
-    
+
     $scope.$on('elicit.settingsChanged', function() {
       reloadOrderings();
     });
+
+    $scope.$watch('workspace.scales.observed', function() {
+      $scope.scales = $scope.workspace.scales.base;
+    }, true);
+    new Clipboard('.clipboard-button');
 
     function reloadOrderings() {
       OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
@@ -42,10 +47,6 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
         $scope.criteria = orderings.criteria;
       });
     }
-    $scope.$watch('workspace.scales.observed', function(newValue) {
-      $scope.scales = newValue;
-    }, true);
-    new Clipboard('.clipboard-button');
 
     function editTherapeuticContext() {
       $modal.open({

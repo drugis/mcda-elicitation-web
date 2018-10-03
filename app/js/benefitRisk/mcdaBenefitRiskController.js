@@ -46,7 +46,7 @@ define(['lodash'], function(_) {
     $scope.baseAggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, currentScenario);
     var baseCriteria = $scope.baseAggregateState.problem.criteria;
     updateAggregateState();
-    $scope.effectsTableInfo = EffectsTableService.createEffectsTableInfo($scope.aggregateState.problem.performanceTable);
+    $scope.effectsTableInfo = EffectsTableService.createEffectsTableInfo(baseProblem.performanceTable);
     $scope.hasMissingValues = _.find($scope.aggregateState.problem.performanceTable, function(tableEntry) {
       return tableEntry.performance.type === 'empty';
     });
