@@ -54,31 +54,51 @@ module.exports = function(db) {
   }
 
   function findUserByUsername(username, callback) {
-    findUserByProperty('username', username, callback);
+    db.query('SELECT id, username, firstName, lastName, password FROM Account WHERE username = $1',
+      [username], function(error, result) {
+        if (error) {
+          callback(error);
+        } else if (result.rows.length === 0) {
+          callback('username ' + username + ' not found');
+        } else {
+          callback(null, result.rows[0]);
+        }
+      });
   }
 
   // private
   function findUserByProperty(property, value, callback) {
-    db.query('SELECT id, username, firstName, lastName, email FROM Account WHERE ' + property + ' = $1', [value], function(error, result) {
-      if (error) {
-        callback(error);
-      } else if (result.rows.length === 0) {
-        callback(property + ' ' + value + ' not found');
-      } else {
-        callback(null, result.rows[0]);
-      }
-    });
+    db.query('SELECT id, username, firstName, lastName, email FROM Account WHERE ' + property + ' = $1',
+      [value], function(error, result) {
+        if (error) {
+          callback(error);
+        } else if (result.rows.length === 0) {
+          callback(property + ' ' + value + ' not found');
+        } else {
+          callback(null, result.rows[0]);
+        }
+      });
   }
 
-  function createAccount(username, password, password2){
-    if(password !== password2) {return;}
-
+  function createAccount(username, firstName, LastName, password, password2, callback) {
+    if (password !== password2) { return; }
+    db.query('INSERT INTO account (username, firstName, lastName, password) VALUES ($1, $2, $3, $4) RETURNING id',
+      [username, firstName, lastname, password], function(error, result) {
+        if (error) { return callback(error); }
+        var row = result.rows[0];
+        return callback(null, {
+          id: row.id,
+          username: username,
+          firstname: firstName,
+          lastname: LastName
+        });
+      });
   }
 
   return {
     findOrCreateUser: findOrCreateUser,
     findUserById: findUserById,
-    findUserByEmail: findUserByEmail, 
+    findUserByEmail: findUserByEmail,
     findUserByUsername: findUserByUsername
   };
 };
