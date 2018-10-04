@@ -8,6 +8,7 @@ define(['lodash', 'angular'], function(_, angular) {
     'ScaleRangeService',
     'OrderingService',
     'EffectsTableService',
+    'WorkspaceService',
     'WorkspaceSettingsService',
     'subProblems',
     'subProblem',
@@ -24,6 +25,7 @@ define(['lodash', 'angular'], function(_, angular) {
     ScaleRangeService,
     OrderingService,
     EffectsTableService,
+    WorkspaceService,
     WorkspaceSettingsService,
     subProblems,
     subProblem,
@@ -42,7 +44,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     // init
     $scope.subProblems = subProblems;
-    $scope.scales = angular.copy(scales);
+    $scope.scales = angular.copy(scales.base);
     $scope.originalScales = scales;
     initSubProblem(angular.copy(subProblem), angular.copy(problem));
     $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
@@ -50,10 +52,13 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.editMode = editMode;
     $scope.$watch('originalScales', function(newScales, oldScales) {
       if (newScales && oldScales && newScales.observed === oldScales.observed) { return; }
-      $scope.scales = angular.copy(newScales);
+      $scope.scales = angular.copy(newScales.base);
       initializeScales();
     }, true);
-    $scope.$on('elicit.settingsChanged', getWorkspaceSettings);
+    $scope.$on('elicit.settingsChanged', function() {
+      getWorkspaceSettings();
+      initializeScales();
+    });
     getWorkspaceSettings();
 
     function getWorkspaceSettings() {
@@ -130,7 +135,8 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function initializeScales() {
-      var stateAndChoices = ScaleRangeService.getScaleStateAndChoices($scope.scales.base, $scope.criteria, $scope.workspaceSettings.showPercentages);
+      $scope.scales = WorkspaceSettingsService.usePercentage() ? WorkspaceService.toPercentage($scope.problem.criteria, $scope.scales) : $scope.scales;
+      var stateAndChoices = ScaleRangeService.getScaleStateAndChoices($scope.scales, $scope.criteria, $scope.workspaceSettings.showPercentages);
       $scope.scalesState = stateAndChoices.scaleState;
       $scope.choices = stateAndChoices.choices;
       _.forEach($scope.choices, function(choice, dataSourceId) {
@@ -166,24 +172,21 @@ define(['lodash', 'angular'], function(_, angular) {
       var includedAlternatives = _.keys(_.pickBy($scope.subProblemState.alternativeInclusions));
       return _.find(includedDataSourcesIds, function(dataSourceId) {
         return _.find(includedAlternatives, function(alternativeId) {
-          return $scope.scales.observed[dataSourceId][alternativeId]['50%'] === null ||
-            $scope.scales.observed[dataSourceId][alternativeId]['50%'] === undefined ||
-            $scope.scales.observed[dataSourceId][alternativeId]['50%'] === NaN;
+          return $scope.scales[dataSourceId][alternativeId]['50%'] === null ||
+            $scope.scales[dataSourceId][alternativeId]['50%'] === undefined ||
+            isNaN($scope.scales[dataSourceId][alternativeId]['50%']);
         });
       });
     }
 
     function isASliderInvalid() {
-      $scope.invalidSlider = false;
-      _.forEach($scope.scalesDataSources, function(dataSource) {
+      $scope.invalidSlider = _.find($scope.scalesDataSources, function(dataSource) {
         var from = $scope.choices[dataSource].from;
         var to = $scope.choices[dataSource].to;
         var restrictedFrom = $scope.scalesState[dataSource].sliderOptions.restrictedRange.from;
         var restrictedTo = $scope.scalesState[dataSource].sliderOptions.restrictedRange.to;
         // check if there is a value inside or at the wrong side of the red area
-        if (from > restrictedFrom || to < restrictedTo) {
-          $scope.invalidSlider = true;
-        }
+        return (from > restrictedFrom || to < restrictedTo);
       });
     }
   };
