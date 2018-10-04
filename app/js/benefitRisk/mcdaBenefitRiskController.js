@@ -31,6 +31,7 @@ define(['lodash'], function(_) {
     $scope.forkScenario = forkScenario;
     $scope.newScenario = newScenario;
     $scope.scenarioChanged = scenarioChanged;
+    $scope.updateScales = updateScales;
 
     // init
     var baseProblem = $scope.workspace.problem;
@@ -59,6 +60,7 @@ define(['lodash'], function(_) {
     determineActiveTab();
     $scope.scalesPromise = WorkspaceService.getObservedScales(baseProblem).then(function(observedScales) {
       $scope.workspace.scales.base = observedScales;
+      $scope.workspace.scales.basePercentified = WorkspaceService.toPercentage(baseProblem.criteria, observedScales);
       updateScales(observedScales);
     });
 
