@@ -15,7 +15,7 @@
     "url": "https://github.com/drugis/mcda-elicitation-web.git"
   },
   "author": "",
-  "license": "GPL-3",
+  "license": "GPL-3.0-or-later",
   "readmeFilename": "README.md",
   "dependencies": {
     "async": "~2.6.1",
