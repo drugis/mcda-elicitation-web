@@ -71,7 +71,7 @@ if (process.env.MCDAWEB_USE_SSL_AUTH) {
       UserManagement.findUserByUsername(username, function(err, user) {
         if (err) { return cb(err); }
         if (!user) { return cb(null, false); }
-        if (user.password !== password) { return cb(null, false); }
+        if (user.password !== UserManagement.sha512(password, user.salt)) { return cb(null, false); }
         return cb(null, user);
       });
     }));
