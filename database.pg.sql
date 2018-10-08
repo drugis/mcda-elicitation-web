@@ -149,6 +149,3 @@ DROP TABLE toggledColumns;
 
 --changeset reidd:18
 DROP TABLE UserConnection;
-
---changeset keijserj:19
-ALTER TABLE account ADD COLUMN salt VARCHAR default '';

@@ -427,6 +427,13 @@ base@^0.11.1:
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
 
+bcrypt@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/bcrypt/-/bcrypt-3.0.1.tgz#2ea12883330bf5f81926f70475cf21bdd0c2f8ff"
+  dependencies:
+    nan "2.11.0"
+    node-pre-gyp "0.11.0"
+
 better-assert@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/better-assert/-/better-assert-1.0.2.tgz#40866b9e1b9e0b55b481894311e68faffaebc522"
@@ -3241,7 +3248,7 @@ mute-stream@0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
 
-nan@^2.9.2:
+nan@2.11.0, nan@^2.9.2:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.11.0.tgz#574e360e4d954ab16966ec102c0c049fd961a099"
 
@@ -3318,6 +3325,21 @@ node-libs-browser@^2.0.0:
     url "^0.11.0"
     util "^0.10.3"
     vm-browserify "0.0.4"
+
+node-pre-gyp@0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.11.0.tgz#db1f33215272f692cd38f03238e3e9b47c5dd054"
+  dependencies:
+    detect-libc "^1.0.2"
+    mkdirp "^0.5.1"
+    needle "^2.2.1"
+    nopt "^4.0.1"
+    npm-packlist "^1.1.6"
+    npmlog "^4.0.2"
+    rc "^1.2.7"
+    rimraf "^2.6.1"
+    semver "^5.3.0"
+    tar "^4"
 
 node-pre-gyp@^0.10.0:
   version "0.10.3"

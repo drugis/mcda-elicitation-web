@@ -8,6 +8,7 @@
     "test": "mocha && karma start --singleRun",
     "build-dev": "webpack --config webpack.dev.js",
     "build-prod": "webpack --config webpack.prod.js",
+    "build-local-login": "webpack --config webpack.local.js",
     "dev": "webpack --config webpack.dev.js --watch"
   },
   "repository": {
@@ -19,6 +20,7 @@
   "readmeFilename": "README.md",
   "dependencies": {
     "async": "~2.6.1",
+    "bcrypt": "^3.0.1",
     "body-parser": "~1.18.3",
     "connect-pg-simple": "^5.0.0",
     "csurf": "~1.9.0",
