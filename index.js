@@ -19,6 +19,7 @@ var session = require('express-session');
 var helmet = require('helmet');
 var csurf = require('csurf');
 var passport = require('passport');
+var flash = require('connect-flash');
 var server;
 
 var authenticationMethod = process.env.MCDAWEB_AUTHENTICATION_METHOD;
@@ -44,6 +45,7 @@ app
   .set('trust proxy', 1)
   .use(bodyParser.json({ limit: '5mb' }))
   .use(bodyParser.urlencoded({ extended: true }))
+  .use(flash())
   ;
 
 server = http.createServer(app);
@@ -168,9 +170,9 @@ function useSSLLogin() {
     var emailRegex = /emailAddress=([^,]*)/;
     var email = clientString.match(emailRegex)[1];
     if (email) {
-      UserManagement.findUserByEmail(email, function(err, result) {
-        if (err) {
-          logger.error(err);
+      UserManagement.findUserByEmail(email, function(error, result) {
+        if (error) {
+          logger.error(error);
         } else {
           req.session.user = result;
           req.session.save();
@@ -184,24 +186,38 @@ function useSSLLogin() {
 function useLocalLogin() {
   var LocalStrategy = require('passport-local').Strategy;
   passport.use(new LocalStrategy(
-    function(username, password, cb) {
-      UserManagement.findUserByUsername(username, function(err, user) {
-        if (err) { return cb(err); }
+    function(username, password, callback) {
+      UserManagement.findUserByUsername(username, function(error, user) {
+        if (error) { return callback(error); }
         if (!UserManagement.isValidPassword(password, user.password)) {
-          return cb('Invalid password');
+          return callback('Invalid password');
         }
-        return cb(null, user);
+        return callback(null, user);
       });
     })
   );
   initializePassport();
+  // app
+  //   .post('/login',
+  //     passport.authenticate('local', {
+  //       successRedirect: '/',
+  //       failureRedirect: '/'
+  //     })
+  //   );
   app
-    .post('/login',
-      passport.authenticate('local', { failureRedirect: '/' }),
-      function(req, res) {
-        res.redirect('/');
-      }
-    );
+    .post('/login', function(req, res, next) {
+      passport.authenticate('local', function(err, user) {
+        if (err) {
+          return next(null, false);
+        }
+        req.logIn(user, function(err) {
+          if (err) {
+            return next(null, false);
+          }
+          return res.redirect('/');
+        });
+      })(req, res, next);
+    });
 }
 
 function useGoogleLogin() {
@@ -216,10 +232,10 @@ function useGoogleLogin() {
   initializePassport();
   app
     .get('/auth/google/', passport.authenticate('google', { scope: ['profile', 'email'] }))
-    .get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/' }),
-      function(req, res) {
-        res.redirect('/');
-      });
+    .get('/auth/google/callback', passport.authenticate('google', {
+      failureRedirect: '/',
+      successRedirect: '/',
+    }));
 }
 
 function initializePassport() {
