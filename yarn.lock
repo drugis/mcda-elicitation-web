@@ -292,7 +292,7 @@ angular1-templateurl-loader@^1.0.0:
 angular@~1.6.6:
   version "1.6.10"
   resolved "https://codeload.github.com/angular/bower-angular/tar.gz/309e7f82ecc9098e1f93870eb33083b84dead289"
-  integrity sha512-PCZ5/hVdvPQiYyH0VwsPjrErPHRcITnaXxhksceOXgtJeesKHLA7KDu4X/yvcAi+1zdGgGF+9pDxkJvghXI9Wg==
+  integrity sha512-qGxTpLa3ppb2R7IlLPUeHqNvAEbd8hH0AD2qTrTnxxz8HlWJwRxeIDzQtO5V/lpaohHYEPAhS4Pg9/kuoJH7/Q==
 
 angularjs-slider@~6.6.1:
   version "6.6.1"
@@ -2312,7 +2312,7 @@ follow-redirects@^1.0.0:
 font-awesome@~4.3.0:
   version "4.3.0"
   resolved "https://codeload.github.com/FortAwesome/Font-Awesome/tar.gz/41b9ed01103e6820c3cb043ba7ddab30ecd3f4c0"
-  integrity sha1-RO63kM35hmQnhvM/znhHZPGEHEA=
+  integrity sha1-I/KnTcwQMwkisg6EqYVRz8TuLK8=
 
 font-awesome@~4.7.0:
   version "4.7.0"
