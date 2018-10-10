@@ -8,7 +8,7 @@ let fs = require('fs');
 let config = {
   entry: {
     'main': basePath + '/app/js/main.js',
-    'signin': basePath + '/app/js/signin.js',
+    'signin': require.resolve('signin/signin.js'),
     'manual': basePath + '/app/js/manual.js',
     'error': basePath + 'app/js/error.js'
   },
@@ -86,7 +86,7 @@ let config = {
       template: 'app/signin.ejs',
       inject: 'head',
       chunks: ['signin'],
-      signin: fs.readFileSync(basePath + 'app/googleSignin.html')
+      signin: fs.readFileSync(require.resolve('signin/googleSignin.html'))
     }),
     new HtmlWebpackPlugin({
       filename: 'manual.html',

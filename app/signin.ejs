@@ -50,12 +50,6 @@
         </div>
         <%= htmlWebpackPlugin.options.signin %>
       </div>
-      <form id="hiddenSignInForm" action="<c:url value='/signin/authenticate'/>" method="POST" style="display: none;">
-        <input type="hidden" name="_csrf" value="<c:out value=" ${_csrf.token} " />" />
-        <input type='text' name='username' />
-        <input type='password' name='password'>
-        <input name="submit" type="submit">
-      </form>
     </div>
   </section>
 </body>

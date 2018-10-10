@@ -5,7 +5,7 @@ var db = require('./node-backend/db')(dbUtil.connectionConfig);
 var _ = require('lodash');
 var patavi = require('./node-backend/patavi');
 var logger = require('./node-backend/logger');
-var UserManagement = require('./node-backend/userManagement')(db);
+var signin = require('signin')(db);
 var WorkspaceService = require('./node-backend/workspaceService')(db);
 var OrderingService = require('./node-backend/orderingService')(db);
 var SubProblemService = require('./node-backend/subProblemService')(db);
@@ -18,8 +18,6 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var helmet = require('helmet');
 var csurf = require('csurf');
-var passport = require('passport');
-var flash = require('connect-flash');
 var server;
 
 var authenticationMethod = process.env.MCDAWEB_AUTHENTICATION_METHOD;
@@ -45,7 +43,6 @@ app
   .set('trust proxy', 1)
   .use(bodyParser.json({ limit: '5mb' }))
   .use(bodyParser.urlencoded({ extended: true }))
-  .use(flash())
   ;
 
 server = http.createServer(app);
@@ -55,11 +52,11 @@ switch (authenticationMethod) {
     useSSLLogin();
     break;
   case 'LOCAL':
-    useLocalLogin();
+    signin.useLocalLogin(app);
     break;
   default:
     authenticationMethod = 'GOOGLE';
-    useGoogleLogin();
+    signin.useGoogleLogin(app);
 }
 
 app
@@ -71,7 +68,7 @@ app
   .use(function(req, res, next) {
     res.cookie('XSRF-TOKEN', req.csrfToken());
     if (req.user) {
-      res.cookie('LOGGED-IN-USER', JSON.stringify(_.omit(req.user, 'email')));
+      res.cookie('LOGGED-IN-USER', JSON.stringify(_.omit(req.user, 'email', 'password')));
     }
     next();
   })
@@ -150,6 +147,12 @@ app.post('/patavi', function(req, res, next) { // FIXME: separate routes for sca
 
 app.use('/css/fonts', express.static('./dist/fonts'));
 
+app.use(function(error, req, res, next) {
+  if (error && error.type === signin.SIGNIN_ERROR) {
+    res.send(401, 'login failed');
+  }
+});
+
 //The 404 Route (ALWAYS Keep this as the last route)
 app.get('*', function(req, res) {
   res.status(404).sendFile(__dirname + '/dist/error.html');
@@ -170,7 +173,7 @@ function useSSLLogin() {
     var emailRegex = /emailAddress=([^,]*)/;
     var email = clientString.match(emailRegex)[1];
     if (email) {
-      UserManagement.findUserByEmail(email, function(error, result) {
+      signin.findUserByEmail(email, function(error, result) {
         if (error) {
           logger.error(error);
         } else {
@@ -183,72 +186,7 @@ function useSSLLogin() {
   });
 }
 
-function useLocalLogin() {
-  var LocalStrategy = require('passport-local').Strategy;
-  passport.use(new LocalStrategy(
-    function(username, password, callback) {
-      UserManagement.findUserByUsername(username, function(error, user) {
-        if (error) { return callback(error); }
-        if (!UserManagement.isValidPassword(password, user.password)) {
-          return callback('Invalid password');
-        }
-        return callback(null, user);
-      });
-    })
-  );
-  initializePassport();
-  // app
-  //   .post('/login',
-  //     passport.authenticate('local', {
-  //       successRedirect: '/',
-  //       failureRedirect: '/'
-  //     })
-  //   );
-  app
-    .post('/login', function(req, res, next) {
-      passport.authenticate('local', function(err, user) {
-        if (err) {
-          return next(null, false);
-        }
-        req.logIn(user, function(err) {
-          if (err) {
-            return next(null, false);
-          }
-          return res.redirect('/');
-        });
-      })(req, res, next);
-    });
-}
 
-function useGoogleLogin() {
-  var GoogleStrategy = require('passport-google-oauth20').Strategy;
-  passport.use(new GoogleStrategy({
-    clientID: process.env.MCDAWEB_GOOGLE_KEY,
-    clientSecret: process.env.MCDAWEB_GOOGLE_SECRET,
-    callbackURL: process.env.MCDA_HOST + '/auth/google/callback'
-  },
-    UserManagement.findOrCreateUser
-  ));
-  initializePassport();
-  app
-    .get('/auth/google/', passport.authenticate('google', { scope: ['profile', 'email'] }))
-    .get('/auth/google/callback', passport.authenticate('google', {
-      failureRedirect: '/',
-      successRedirect: '/',
-    }));
-}
-
-function initializePassport() {
-  passport.serializeUser(function(user, cb) {
-    cb(null, user);
-  });
-  passport.deserializeUser(function(obj, cb) {
-    cb(null, obj);
-  });
-  app
-    .use(passport.initialize())
-    .use(passport.session());
-}
 
 function initializeRouter() {
   var router = express.Router();

@@ -1,20 +1,18 @@
 'use strict';
 const merge = require('webpack-merge');
-const dev = require('./webpack.dev');
+const prod = require('./webpack.prod');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const path = require('path');
-let basePath = path.join(__dirname, '/');
 let fs = require('fs');
 
-module.exports = merge.smart(dev, {
+module.exports = merge.smart(prod, {
   plugins: [
     new HtmlWebpackPlugin({
       filename: 'signin.html',
       template: 'app/signin.ejs',
       inject: 'head',
       chunks: ['signin'],
-      signin: fs.readFileSync(basePath + 'app/localSignin.html')
+      signin: fs.readFileSync(require.resolve('signin/localSignin.html'))
     }),
   ]
 });
