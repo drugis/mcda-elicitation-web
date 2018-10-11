@@ -42,7 +42,6 @@ app
   }))
   .set('trust proxy', 1)
   .use(bodyParser.json({ limit: '5mb' }))
-  .use(bodyParser.urlencoded({ extended: true }))
   ;
 
 server = http.createServer(app);

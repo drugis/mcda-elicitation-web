@@ -8,7 +8,7 @@ let fs = require('fs');
 let config = {
   entry: {
     'main': basePath + '/app/js/main.js',
-    'signin': require.resolve('signin/signin.js'),
+    'signin': basePath + 'app/js/signin.js',
     'manual': basePath + '/app/js/manual.js',
     'error': basePath + 'app/js/error.js'
   },
