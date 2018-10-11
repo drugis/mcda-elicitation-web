@@ -5443,7 +5443,7 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
 
 "signin@https://github.com/drugis/signin":
   version "0.1.0"
-  resolved "https://github.com/drugis/signin#42b99bda8c01abdce9f7add923ac981a7ba1fd96"
+  resolved "https://github.com/drugis/signin#28af1e596374a335cc2cede64dc8bb2f5b9d7c80"
   dependencies:
     bcrypt "^3.0.1"
     passport "^0.4.0"
