@@ -15,6 +15,8 @@ define(['lodash'],
           scope.pvf = pvf;
           var criteriaById = _.keyBy(scope.criteria, 'id');
 
+          scope.mostImportantCriterion = _.find(scope.criteria, ['id', scope.mostImportantCriterionId]);
+
           function updateShownElicitations(criterionId) {
             scope.showElicitation = _.mapValues(criteriaById, function(criterion) {
               return criterion.id === criterionId;

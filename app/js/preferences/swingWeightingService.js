@@ -38,7 +38,10 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
       function resetWizard() {
         OrderingService.getOrderedCriteriaAndAlternatives(scope.aggregateState.problem, $stateParams).then(function(orderings) {
           scope.alternatives = orderings.alternatives;
-          scope.criteria = _.map(orderings.criteria, setUnitOfMeasurement);
+          scope.criteria = _(orderings.criteria)
+            .map(setUnitOfMeasurement)
+            .map(setBestAndWorst)
+            .value();
 
           $injector.invoke(Wizard, undefined, {
             $scope: scope,
@@ -60,6 +63,13 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
           criterion.unitOfMeasurement = '%';
         }
         return criterion;
+      }
+
+      function setBestAndWorst(criterion) {
+        return _.extend({}, criterion, {
+          best: PartialValueFunctionService.best(criterion.dataSources[0]),
+          worst: PartialValueFunctionService.worst(criterion.dataSources[0]),
+        });
       }
 
       function title(step, total) {

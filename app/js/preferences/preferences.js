@@ -7,6 +7,7 @@ define([
   './editScenarioTitleController',
   './ordinalSwingController',
   './swingWeightingController',
+  './matchingElicitationController',
   './impreciseSwingWeightingController',
   './swingWeightingService',
   './partialValueFunctionController',
@@ -16,6 +17,7 @@ define([
   './willingnessToTradeOffDirective',
   './willingnessToTradeOffChartDirective',
   './preferenceElicitationTableDirective',
+  './elicitationTradeOffDirective',
   '../workspace/workspace',
   '../results/results'
 ], function(
@@ -25,6 +27,7 @@ define([
   EditScenarioTitleController,
   OrdinalSwingController,
   SwingWeightingController,
+  MatchingElicitationController,
   ImpreciseSwingWeightingController,
   SwingWeightingService,
   PartialValueFunctionController,
@@ -33,13 +36,15 @@ define([
   TradeOffService,
   willingnessToTradeOff,
   willingnessToTradeOffChart,
-  preferenceElicitationTable
+  preferenceElicitationTable,
+  elicitationTradeOff
 ) {
     return angular.module('elicit.preferences', ['elicit.workspace', 'elicit.results'])
       .controller('PreferencesController', PreferencesController)
       .controller('EditScenarioTitleController', EditScenarioTitleController)
       .controller('OrdinalSwingController', OrdinalSwingController)
       .controller('SwingWeightingController', SwingWeightingController)
+      .controller('MatchingElicitationController', MatchingElicitationController)
       .controller('ImpreciseSwingWeightingController', ImpreciseSwingWeightingController)
       .controller('PartialValueFunctionController', PartialValueFunctionController)
       .controller('NewScenarioController', NewScenarioController)
@@ -52,5 +57,6 @@ define([
       .directive('willingnessToTradeOff', willingnessToTradeOff)
       .directive('willingnessToTradeOffChart', willingnessToTradeOffChart)
       .directive('preferenceElicitationTable', preferenceElicitationTable)
+      .directive('elicitationTradeOff', elicitationTradeOff)
       ;
   });

@@ -18,14 +18,15 @@
       <td>{{criterion.unitOfMeasurement}}</td>
       <td>{{pvf.worst(criterion.dataSources[0]) | number}}</td>
       <td>{{pvf.best(criterion.dataSources[0]) | number}}</td>
-      <td ng-if="criterion.id !== state.mostImportantCriterionId">
+      <td ng-if="criterion.id !== mostImportantCriterionId">
         <a ng-click="openElicitation(criterion.id)">{{importance[criterion.id] || '?'}}</a>
       </td>
-      <td ng-if="criterion.id === state.mostImportantCriterionId">100%</td>
+      <td ng-if="criterion.id === mostImportantCriterionId">100%</td>
     </tr>
-    <tr ng-repeat-end ng-if="showElicitation[criterion.id]">
+    <tr ng-repeat-end ng-show="showElicitation[criterion.id]">
       <td colspan="999">
-        <elicitation-trade-off criterion="criterion" most-important="most-important"></elicitation-trade-off>
+        <elicitation-trade-off secondary-criterion="criterion" 
+          most-important-criterion="mostImportantCriterion"></elicitation-trade-off>
       </td>
     </tr>
   </tbody>
