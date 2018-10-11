@@ -5,7 +5,12 @@ var db = require('./node-backend/db')(dbUtil.connectionConfig);
 var _ = require('lodash');
 var patavi = require('./node-backend/patavi');
 var logger = require('./node-backend/logger');
-var signin = require('signin')(db);
+var appEnvironmentSettings = {
+  googleKey : process.env.MCDAWEB_GOOGLE_KEY,
+  googleSecret : process.env.MCDAWEB_GOOGLE_SECRET,
+  host: process.env.MCDA_HOST
+};
+var signin = require('signin')(db, appEnvironmentSettings);
 var WorkspaceService = require('./node-backend/workspaceService')(db);
 var OrderingService = require('./node-backend/orderingService')(db);
 var SubProblemService = require('./node-backend/subProblemService')(db);
@@ -23,26 +28,27 @@ var server;
 var authenticationMethod = process.env.MCDAWEB_AUTHENTICATION_METHOD;
 console.log('Authentication method: ' + authenticationMethod);
 
+var sessionOptions = {
+  store: new (require('connect-pg-simple')(session))({
+    conString: dbUtil.mcdaDBUrl,
+  }),
+  secret: process.env.MCDAWEB_COOKIE_SECRET,
+  resave: true,
+  proxy: true,
+  rolling: true,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 60 * 60 * 1000, // 1 hour
+    secure: authenticationMethod === 'SSL'
+  }
+};
+
 var app = express();
-app
-  .use(helmet())
-  .use(session({
-    store: new (require('connect-pg-simple')(session))({
-      conString: dbUtil.mcdaDBUrl,
-    }),
-    secret: process.env.MCDAWEB_COOKIE_SECRET,
-    resave: true,
-    proxy: true,
-    rolling: true,
-    saveUninitialized: true,
-    cookie: {
-      maxAge: 60 * 60 * 1000, // 1 hour
-      secure: authenticationMethod === 'SSL'
-    }
-  }))
-  .set('trust proxy', 1)
-  .use(bodyParser.json({ limit: '5mb' }))
-  ;
+
+app.use(helmet());
+app.use(session(sessionOptions));
+app.set('trust proxy', 1);
+app.use(bodyParser.json({ limit: '5mb' }));
 
 server = http.createServer(app);
 
