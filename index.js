@@ -191,8 +191,6 @@ function useSSLLogin() {
   });
 }
 
-
-
 function initializeRouter() {
   var router = express.Router();
   router.get('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
