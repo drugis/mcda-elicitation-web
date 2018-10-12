@@ -12,7 +12,11 @@ wrap.matrix <- function(m) {
 }
 
 smaa_v2 <- function(params) {
-  allowed <- c('scales','smaa','deterministic','sensitivityMeasurements','sensitivityMeasurementsPlot','sensitivityWeightPlot','indifferenceCurve')
+  allowed <- c('scales','smaa','deterministic',
+   'sensitivityMeasurements','sensitivityMeasurementsPlot',
+   'sensitivityWeightPlot','indifferenceCurve',
+   'matchingElicitationCurve')
+
   if(params$method %in% allowed) {
     do.call(paste("run", params$method, sep="_"), list(params))
   } else {
@@ -56,7 +60,7 @@ genRepresentativeWeights <- function(params) {
   crit <- names(params$criteria)
   n <- length(crit)
   
-  constr <- mergeConstraints(lapply(params$preferences,genHARconstraint,crit=crit))
+  constr <- mergeConstraints(lapply(params$preferences, genHARconstraint,crit=crit))
   constr <- mergeConstraints(simplexConstraints(n),constr)
   
   samples <- hitandrun(constr, n.samples=N)
@@ -108,7 +112,7 @@ run_sensitivityMeasurements <- function(params) {
   
   weights <- genRepresentativeWeights(params)
   
-  valueProfiles <- calculateTotalValue(params,meas,weights)
+  valueProfiles <- calculateTotalValue(params, meas, weights)
   totalValue <- rowSums(valueProfiles)
   
   results <- list(
@@ -213,26 +217,47 @@ getCutoffs <- function(params,crit) {
   cutoffs 
 }
 
+run_matchingElicitationCurve <- function(params) {
+  criterionX <- params$indifferenceCurve$criterionX
+  criterionY <- params$indifferenceCurve$criterionY
+  chosenY <- params$indifferenceCurve$chosenY
+
+  pvf <- create.pvf(params[['criteria']][[criterionY]])
+  weight <- pvf(chosenY)
+
+  params$preferences <- list(list(
+    type='exact swing',
+    ratio=weight,
+    criteria=c(criterionX, criterionY))
+  )
+  
+  result <- run_indifferenceCurve(params)
+  result$weight <- weight
+  result
+}
+
 run_indifferenceCurve <- function(params) {
   
   criterionX <- params$indifferenceCurve$criterionX
   criterionY <- params$indifferenceCurve$criterionY
-  ref.point <- c(params$indifferenceCurve$x,params$indifferenceCurve$y)
+  ref.point  <- c(params$indifferenceCurve$x, params$indifferenceCurve$y)
   
   # Value function
   weights <- genRepresentativeWeights(params)
   pvf <- lapply(params$criteria, create.pvf)
   
   # Value associated with the reference point
-  Indifference.value <- as.numeric(weights[criterionX]*pvf[[criterionX]](ref.point[1]) + weights[criterionY]*pvf[[criterionY]](ref.point[2]))
+  xWeight <- weights[criterionX] * pvf[[criterionX]](ref.point[1])
+  yWeight <- weights[criterionY] * pvf[[criterionY]](ref.point[2])
+  Indifference.value <- as.numeric(xWeight + yWeight)
   
   # Difference in value between the reference point and the point (x,y)
   value.difference <- function(x,y) {
-    as.numeric(weights[criterionX]*pvf[[criterionX]](x) + weights[criterionY]*pvf[[criterionY]](y) - Indifference.value)
+    as.numeric(weights[criterionX] * pvf[[criterionX]](x) + weights[criterionY] * pvf[[criterionY]](y) - Indifference.value)
   }
   
-  cutoffs1 <- getCutoffs(params,criterionX)
-  cutoffs2 <- getCutoffs(params,criterionY)
+  cutoffs1 <- getCutoffs(params, criterionX)
+  cutoffs2 <- getCutoffs(params, criterionY)
   
   range1 <- params$criteria[[criterionX]]$pvf$range
   range2 <- params$criteria[[criterionY]]$pvf$range
@@ -246,18 +271,16 @@ run_indifferenceCurve <- function(params) {
   # Determine x coordinates of the indifference curve at the y coordinates in cutoffs2
   cutoffs2_x <- c()
   for (y in cutoffs2) {
-    cutoffs2_x <- c(cutoffs2_x, uniroot(f=value.difference, interval=range2,y=y,extendInt="yes")$root)
+    cutoffs2_x <- c(cutoffs2_x, uniroot(f=value.difference, interval=range2, y=y, extendInt="yes")$root)
   }
   
   coordinates <- data.frame(x = c(cutoffs1, cutoffs2_x), y = c(cutoffs1_y, cutoffs2))
   coordinates <- coordinates[order(coordinates$x), ]
   
-  coordinates <- coordinates[coordinates$x >= range1[1] & coordinates$ x<= range1[2], ] # Remove coordinates outside the scale range of criterionX
-  coordinates <- coordinates[coordinates$y >= range2[1] & coordinates$ y<= range2[2], ] # Remove coordinates outside the scale range of criterionY
+  coordinates <- coordinates[coordinates$x >= range1[1] & coordinates$x <= range1[2], ] # Remove coordinates outside the scale range of criterionX
+  coordinates <- coordinates[coordinates$y >= range2[1] & coordinates$y <= range2[2], ] # Remove coordinates outside the scale range of criterionY
   rownames(coordinates) <- NULL
-  wrap.result(coordinates,
-    'IndifferenceCoordinates')
-  
+  wrap.result(coordinates, 'IndifferenceCoordinates')  
 }
 
 run_smaa <- function(params) {
