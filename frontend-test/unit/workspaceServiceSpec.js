@@ -205,6 +205,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
               }]
             },
             critId2: {
+              unitOfMeasurement: 'replaceme',
               dataSources: [{
                 id: 'ds2',
                 scale: [0, 1]

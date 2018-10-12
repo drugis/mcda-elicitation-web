@@ -23,7 +23,7 @@
       </td>
       <td ng-if="criterion.id === mostImportantCriterionId">100%</td>
     </tr>
-    <tr ng-repeat-end ng-show="showElicitation[criterion.id]">
+    <tr ng-repeat-end ng-if="showElicitation[criterion.id]">
       <td colspan="999">
         <elicitation-trade-off secondary-criterion="criterion" 
           most-important-criterion="mostImportantCriterion"></elicitation-trade-off>

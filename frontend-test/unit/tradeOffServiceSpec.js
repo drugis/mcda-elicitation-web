@@ -5,7 +5,7 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
     var taskResultsDefer;
     var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsService', ['postAndHandleResults']);
     var workspaceSettingsServiceMock = jasmine.createSpyObj('WorkspaceSettingsService', ['usePercentage']);
-    
+
     beforeEach(angular.mock.module('elicit.preferences', function($provide) {
       $provide.value('PataviResultsService', pataviResultsServiceMock);
       $provide.value('WorkspaceSettingsService', workspaceSettingsServiceMock);
@@ -66,9 +66,13 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
             dataSources: [{ scale: [-Infinity, Infinity] }]
           }
         };
-        var minY = 0;
-        var maxY = 10;
-        var result = tradeOffService.getInitialSettings(root, data, sliderOptions, settings, minY, maxY);
+        var coordRanges = {
+          minX: sliderOptions.floor,
+          maxX: sliderOptions.ceil,
+          minY: 0,
+          maxY: 10
+        };
+        var result = tradeOffService.getInitialSettings(root, data, coordRanges, settings);
 
         expect(result.bindto).toEqual('root');
         expect(result.data).toEqual([]);
@@ -90,7 +94,7 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
         yValues = ['values', 0, 40, 60, 100];
       });
 
-      it('should given an x and the x and y values of line cutoffs, calculate the y value for the x', function() {
+      it('should calculate the y value for the given x coordinate and x and y cutoffs, ', function() {
         var x = 50;
         var result = tradeOffService.getYValue(x, xValues, yValues);
         expect(result).toEqual({ x: 50, y: 50 });
@@ -106,9 +110,9 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
       });
 
       it('should work for an x that is on a cutoff point', function() {
-        var x = 40;
+        var x = 60;
         var result = tradeOffService.getYValue(x, xValues, yValues);
-        expect(result).toEqual({ x: 40, y: 40 });
+        expect(result).toEqual({ x: 60, y: 60 });
       });
     });
 

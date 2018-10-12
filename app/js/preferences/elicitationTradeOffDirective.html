@@ -1,18 +1,32 @@
 <div class="grid-x">
   <div class="cell large-6 medium-6">
-    plot here
+    <svg id="tradeOffPlot"></svg>
   </div>
   <div class="cell large-6 medium-6">
-    Please adjust the improvement in {{mostImportantCriterion.title}} until you feel the two following situations are equivalent:
+    Please adjust the improvement in {{mostImportantCriterion.title}} until you feel the two following treatments are
+    equivalent:
     <table>
-      <tr>
-        <td>{{mostImportantCriterion.title}}: {{mostImportantCriterion.worst}}</td>
-        <td>{{mostImportantCriterion.title}}: {{mostImportantCriterionValue}}</td>
-      </tr>
-      <tr>
-        <td>{{secondaryCriterion.title}}: {{secondaryCriterion.best}}</td>
-        <td>{{secondaryCriterion.title}}: {{secondaryCriterionValue}}</td>
-      </tr>
-    </table>
+      <thead>
+        <tr>
+          <th>Criterion</th>
+          <th>Treatment A</th>
+          <th>Treatment B</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{mostImportantCriterion.title}}</td>
+          <td>{{mostImportantCriterion.worst}}</td>
+          <td>{{critVal.value}} <a ng-click="showSlider = true"><i class="fa fa-edit"></i></a>
+            <rzslider ng-if="showSlider" rz-slider-model="critVal.value" rz-slider-options="sliderOptions"></rzslider>
+          </td>
+        </tr>
+        <tr>
+          <td>{{secondaryCriterion.title}}</td>
+          <td>{{secondaryCriterion.best}}</td>
+          <td>{{secondaryCriterion.worst}}</td>
+        </tr>
+
+      </tbody>
   </div>
 </div>

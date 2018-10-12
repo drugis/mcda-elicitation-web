@@ -11,6 +11,29 @@ define(['lodash', 'd3'], function(_, d3) {
     significantDigits
   ) {
 
+    function getElicitationTradeOffCurve(mostImportantCriterion, secondaryCriterion, chosenValue) {
+      var valueRange = Math.abs(mostImportantCriterion.best - mostImportantCriterion.worst);
+      var valueOffset = Math.abs(mostImportantCriterion.best - chosenValue);
+      var valueProportion = 1 - (valueOffset / valueRange);
+      var newProblem = {
+        criteria: _.keyBy([mostImportantCriterion, secondaryCriterion], 'id'),
+        method: 'indifferenceCurve',
+        indifferenceCurve: {
+          criterionX: secondaryCriterion.id,
+          criterionY: mostImportantCriterion.id,
+          x: secondaryCriterion.best,
+          y: mostImportantCriterion.worst
+        },
+        preferences: [{
+          type: "exact swing",
+          ratio: valueProportion,
+          criteria: [secondaryCriterion.id, mostImportantCriterion.id]
+        }]
+      };
+      newProblem.criteria = _.mapValues(newProblem.criteria, mergeCriterionAndDataSource);
+      return PataviResultsService.postAndHandleResults(newProblem);
+    }
+
     function getIndifferenceCurve(problem, criteria, coordinates) {
       var newProblem = _.merge({}, problem, {
         method: 'indifferenceCurve',
@@ -29,7 +52,7 @@ define(['lodash', 'd3'], function(_, d3) {
       return _.merge({}, _.omit(criterion, ['dataSources']), criterion.dataSources[0]);
     }
 
-    function getInitialSettings(root, data, sliderOptions, settings, minY, maxY) {
+    function getInitialSettings(root, data, coordRanges, settings) {
       return {
         bindto: root,
         point: {
@@ -43,8 +66,8 @@ define(['lodash', 'd3'], function(_, d3) {
               fit: false,
               format: _.partial(formatAxis, settings.firstCriterion.dataSources[0].scale)
             },
-            min: sliderOptions.floor,
-            max: sliderOptions.ceil,
+            min: coordRanges.minX,
+            max: coordRanges.maxX,
             label: getLabel(settings.firstCriterion),
             padding: {
               left: 0,
@@ -52,9 +75,9 @@ define(['lodash', 'd3'], function(_, d3) {
             }
           },
           y: {
-            min: minY,
-            max: maxY,
-            default: [minY, maxY],
+            min: coordRanges.minY,
+            max: coordRanges.maxY,
+            default: [coordRanges.minY, coordRanges.maxY],
             tick: {
               format: _.partial(formatAxis, settings.secondCriterion.dataSources[0].scale)
             },
@@ -87,11 +110,10 @@ define(['lodash', 'd3'], function(_, d3) {
     function getYValue(x, xValues, yValues) {
       var value;
       var idx = _.indexOf(xValues, x);
-      if (isEqualToBreakpoint()) {
+      if (isEqualToBreakpoint(idx)) {
         value = yValues[idx];
       } else {
-        var xCoordinates = _.cloneDeep(xValues);
-        xCoordinates.push(x);
+        var xCoordinates = xValues.concat([x]);
         xCoordinates = _.sortBy(xCoordinates);
         idx = _.indexOf(xCoordinates, x);
         if (isPointInFrontOfLine(idx)) {
@@ -154,6 +176,7 @@ define(['lodash', 'd3'], function(_, d3) {
 
     return {
       getIndifferenceCurve: getIndifferenceCurve,
+      getElicitationTradeOffCurve: getElicitationTradeOffCurve,
       getInitialSettings: getInitialSettings,
       getYValue: getYValue,
       significantDigits: significantDigits,

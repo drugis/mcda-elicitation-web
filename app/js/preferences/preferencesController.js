@@ -108,7 +108,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
 
     // private
     function doAllCriteriaHavePvf() {
-      return _.find($scope.aggregateState.problem.criteria, function(criterion) {
+      return !_.find($scope.aggregateState.problem.criteria, function(criterion) {
         return !isPVFDefined(criterion.dataSources[0]);
       });
     }

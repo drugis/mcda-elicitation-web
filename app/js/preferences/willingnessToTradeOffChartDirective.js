@@ -162,7 +162,14 @@ define(['c3', 'd3', 'lodash'],
             scope.minY = newSettings.secondCriterion.dataSources[0].pvf.range[0];
             scope.maxY = newSettings.secondCriterion.dataSources[0].pvf.range[1];
 
-            var initialSettings = TradeOffService.getInitialSettings(root, data, scope.sliderOptions, newSettings, scope.minY, scope.maxY);
+            var coordRanges = {
+              minX: scope.sliderOptions.floor,
+              maxX: scope.sliderOptions.ceil,
+              minY: scope.minY,
+              maxY: scope.maxY
+            };
+
+            var initialSettings = TradeOffService.getInitialSettings(root, data, coordRanges, newSettings);
             initialSettings.data.columns = [];
 
             scope.units = {
@@ -184,8 +191,8 @@ define(['c3', 'd3', 'lodash'],
           }
 
           function plotIndifference(results) {
-            data.columns[2] = (['line_x'].concat(results.data.x));
-            data.columns[3] = (['line'].concat(results.data.y));
+            data.columns[2] = ['line_x'].concat(results.data.x);
+            data.columns[3] = ['line'].concat(results.data.y);
           }
 
           function updateAxisLabels() {
