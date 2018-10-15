@@ -7,36 +7,24 @@
       </h3>
     </div>
     <div class="cell">
-      <table>
-        <thead>
-          <th>Criterion
-            <inline-help help-key="criterion"></inline-help>
-          </th>
-          <th>Description</th>
-          <th>Unit
-            <inline-help help-key="criterion-unit"></inline-help>
-          </th>
-          <th>Worst</th>
-          <th>Best</th>
-        </thead>
-        <tbody>
-          <tr ng-repeat="criterion in criteria">
-            <td>{{criterion.title}}</td>
-            <td>{{criterion.description}}</td>
-            <td>{{criterion.unitOfMeasurement}}</td>
-            <td>{{pvf.worst(criterion.dataSources[0]) | number}}</td>
-            <td>{{pvf.best(criterion.dataSources[0]) | number}}</td>
-          </tr>
-        </tbody>
-      </table>
+      <h5 class="subheader">Given the following situation:</h5>
     </div>
     <div class="cell">
-      Which of the following improvements is most important?
+      <ul class="inline-list">
+        <li ng-repeat="criterion in criteria">
+          {{criterion.title}}: {{criterion.alreadyChosen ? (criterion.best | number) : (criterion.worst | number) }}
+          {{criterion.unitOfMeasurement}}
+        </li>
+      </ul>
     </div>
+    <div class="cell">Which of the following improvements is most important?</div>
     <div class="cell" ng-repeat="criterion in criteria">
       <label>
-        <input type="radio" ng-model="state.mostImportantCriterion" value="{{criterion.id}}"> {{criterion.dataSources[0].pvf.direction}} {{criterion.title}} from {{pvf.worst(criterion.dataSources[0]) | number}}
-        {{criterion.unitOfMeasurement}} to {{pvf.best(criterion.dataSources[0]) | number}} {{criterion.unitOfMeasurement}}
+        <input type="radio" ng-model="state.mostImportantCriterionId" value="{{criterion.id}}">
+        {{criterion.dataSources[0].pvf.direction}} {{criterion.title}} from {{criterion.worst |
+        number}}
+        {{criterion.unitOfMeasurement}} to {{criterion.best | number}}
+        {{criterion.unitOfMeasurement}}
       </label>
     </div>
   </div>
@@ -80,17 +68,17 @@
             <td>{{criterion.unitOfMeasurement}}</td>
             <td>{{pvf.worst(criterion.dataSources[0]) | number}}</td>
             <td>{{pvf.best(criterion.dataSources[0]) | number}}</td>
-            <td ng-if="criterion.id !== state.mostImportantCriterion">{{isPrecise ? state.values[criterion.id] : (isImprecise ? state.values[criterion.id].low + '-' + state.values[criterion.id].high
+            <td ng-if="criterion.id !== state.mostImportantCriterionId">{{isPrecise ? state.values[criterion.id] : (isImprecise ? state.values[criterion.id].low + '-' + state.values[criterion.id].high
               : 'error')}}%</td>
-            <td ng-if="criterion.id === state.mostImportantCriterion">100%</td>
+            <td ng-if="criterion.id === state.mostImportantCriterionId">100%</td>
           </tr>
         </tbody>
       </table>
     </div>
     <div class="cell">
-      You've indicated that improving {{state.problem.criteria[state.mostImportantCriterion].title}} from {{pvf.worst(state.problem.criteria[state.mostImportantCriterion].dataSources[0])}}
-      {{state.problem.criteria[state.mostImportantCriterion].unitOfMeasurement}} to {{pvf.best(state.problem.criteria[state.mostImportantCriterion].dataSources[0])}}
-      {{state.problem.criteria[state.mostImportantCriterion].unitOfMeasurement}} is the most important (i.e. it has 100%
+      You've indicated that improving {{state.problem.criteria[state.mostImportantCriterionId].title}} from {{pvf.worst(state.problem.criteria[state.mostImportantCriterionId].dataSources[0])}}
+      {{state.problem.criteria[state.mostImportantCriterionId].unitOfMeasurement}} to {{pvf.best(state.problem.criteria[state.mostImportantCriterionId].dataSources[0])}}
+      {{state.problem.criteria[state.mostImportantCriterionId].unitOfMeasurement}} is the most important (i.e. it has 100%
       importance). Now indicate the relative importance (in %) to this improvement of each other criterion's improvement
       using the sliders below.
     </div>
@@ -103,13 +91,13 @@
               {{criterion.dataSources[0].pvf.direction}} {{criterion.title}} from {{pvf.worst(criterion.dataSources[0]) | number}} {{criterion.unitOfMeasurement}}
               to {{pvf.best(criterion.dataSources[0]) | number}} {{criterion.unitOfMeasurement}}
             </td>
-            <td ng-if="state.mostImportantCriterion === criterion.id" style="width:50%">
-              <rzslider rz-slider-model="state.oneHundred" rz-slider-options="state.sliderOptionsDisabled"></rzslider>
+            <td ng-if="state.mostImportantCriterionId === criterion.id" style="width:50%">
+              <rzslider rz-slider-model="state.mostImportantWeight" rz-slider-options="state.sliderOptionsDisabled"></rzslider>
             </td>
-            <td ng-if="state.mostImportantCriterion !== criterion.id && isPrecise" style="width:50%">
+            <td ng-if="state.mostImportantCriterionId !== criterion.id && isPrecise" style="width:50%">
               <rzslider rz-slider-model="state.values[criterion.id]" rz-slider-options="state.sliderOptions"></rzslider>
             </td>
-            <td ng-if="state.mostImportantCriterion !== criterion.id && isImprecise" style="width:50%">
+            <td ng-if="state.mostImportantCriterionId !== criterion.id && isImprecise" style="width:50%">
               <rzslider rz-slider-model="state.values[criterion.id].low" rz-slider-high="state.values[criterion.id].high" rz-slider-options="state.sliderOptions"></rzslider>
             </td>
           </tr>

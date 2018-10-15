@@ -1,0 +1,27 @@
+<table>
+  <thead>
+    <th>Criterion
+      <inline-help help-key="criterion"></inline-help>
+    </th>
+    <th>Description</th>
+    <th>Unit
+      <inline-help help-key="criterion-unit"></inline-help>
+    </th>
+    <th>Worst</th>
+    <th>Best</th>
+    <th>Importance</th>
+  </thead>
+  <tbody>
+    <tr ng-repeat="criterion in criteria">
+      <td>{{criterion.title}}</td>
+      <td>{{criterion.description}}</td>
+      <td>{{criterion.unitOfMeasurement}}</td>
+      <td>{{pvf.worst(criterion.dataSources[0]) | number}}</td>
+      <td>{{pvf.best(criterion.dataSources[0]) | number}}</td>
+      <td ng-if="criterion.id !== mostImportantCriterionId">
+        <a ng-click="openElicitation(criterion.id)">{{isValueSet[criterion.id] ? significantDigits(values[criterion.id] * 100) + '%': '?'}}</a>
+      </td>
+      <td ng-if="criterion.id === mostImportantCriterionId">100%</td>
+    </tr>
+  </tbody>
+</table>

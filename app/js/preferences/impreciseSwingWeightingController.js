@@ -37,7 +37,7 @@ define(['lodash'],
         }, {});
       }
 
-      function toBackEnd(mostImportantCriterion) {
+      function toBackEnd(mostImportantCriterionId) {
         return function(value, key) {
           return {
             type: 'ratio bound',
@@ -45,7 +45,7 @@ define(['lodash'],
               1 / (value.high / 100), // invert makes the .high become the lower value
               1 / (value.low / 100)
             ],
-            criteria: [mostImportantCriterion, key]
+            criteria: [mostImportantCriterionId, key]
           };
         };
       }

@@ -21,10 +21,11 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
       sliderOptions,
       getValues,
       baseTitle,
-      toBackEnd
+      toBackEnd,
+      canSaveArg
     ) {
       // functions
-      scope.canSave = canSave;
+      scope.canSave = canSaveArg || canSave;
       scope.save = save;
       scope.cancel = cancel;
 
@@ -38,13 +39,16 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
       function resetWizard() {
         OrderingService.getOrderedCriteriaAndAlternatives(scope.aggregateState.problem, $stateParams).then(function(orderings) {
           scope.alternatives = orderings.alternatives;
-          scope.criteria = _.map(orderings.criteria, setUnitOfMeasurement);
+          scope.criteria = _(orderings.criteria)
+            .map(setUnitOfMeasurement)
+            .map(setBestAndWorst)
+            .value();
 
           $injector.invoke(Wizard, undefined, {
             $scope: scope,
             handler: {
               validChoice: validChoice,
-              fields: ['total', 'mostImportantCriterion', 'step'],
+              fields: ['total', 'mostImportantCriterionId', 'step'],
               nextState: nextState,
               standardize: _.identity,
               initialize: _.partial(initialize, taskDefinition.clean(scope.aggregateState))
@@ -60,6 +64,13 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
           criterion.unitOfMeasurement = '%';
         }
         return criterion;
+      }
+
+      function setBestAndWorst(criterion) {
+        return _.extend({}, criterion, {
+          best: PartialValueFunctionService.best(criterion.dataSources[0]),
+          worst: PartialValueFunctionService.worst(criterion.dataSources[0]),
+        });
       }
 
       function title(step, total) {
@@ -79,7 +90,7 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
         if (!state) {
           return false;
         }
-        return state.mostImportantCriterion;
+        return state.mostImportantCriterionId;
       }
 
       function nextState(state) {
@@ -90,7 +101,7 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
         var next = {
           step: state.step + 1,
           values: getValues(state.problem.criteria),
-          oneHundred: 100,
+          mostImportantWeight: 100,
           sliderOptions: sliderOptions,
           sliderOptionsDisabled: {
             disabled: true,
@@ -116,8 +127,8 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
 
       function save(state) {
         var prefs = _(state.values)
-          .omit(state.mostImportantCriterion)
-          .map(toBackEnd(state.mostImportantCriterion))
+          .omit(state.mostImportantCriterionId)
+          .map(toBackEnd(state.mostImportantCriterionId))
           .value();
 
         currentScenario.state = {

@@ -66,6 +66,12 @@
     <button class="button" ui-sref="ordinal-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['ordinal-swing']).accessible" ng-class="{alert: !isSafe['ordinal-swing'].safe}" tooltip="{{isSafe['ordinal-swing'].tooltip}}">
       Ranking
     </button>
+    <button class="button" ui-sref="matching-elicitation" tooltip-animation="false" 
+      ng-disabled="!isAccessible(tasks['matching-elicitation']).accessible" 
+      ng-class="{alert: !isSafe['matching-elicitation'].safe}" 
+      tooltip="{{isSafe['matching-elicitation'].tooltip}}">
+      Matching elicitation
+    </button>
     <button class="button" ui-sref="swing-weighting" tooltip-animation="false" ng-disabled="!isAccessible(tasks['swing-weighting']).accessible" ng-class="{alert: !isSafe['swing-weighting'].safe}" tooltip="{{isSafe['swing-weighting'].tooltip}}">
       Precise Swing Weighting
     </button>

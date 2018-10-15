@@ -1,0 +1,61 @@
+<!-- First step -->
+<div ng-if="state.step === 1">
+  <div class="grid-x" style="min-height: 450px">
+    <div class="cell">
+      <h3>{{state.title}}
+        <inline-help help-key="swing-weighting"></inline-help>
+      </h3>
+    </div>
+    <div class="cell">
+      <h5 class="subheader">Given the following situation:</h5>
+    </div>
+    <div class="cell">
+      <ul class="inline-list">
+        <li ng-repeat="criterion in criteria">
+          {{criterion.title}}: {{criterion.alreadyChosen ? (criterion.best | number) : (criterion.worst | number) }}
+          {{criterion.unitOfMeasurement}}
+        </li>
+      </ul>
+    </div>
+    <div class="cell">Which of the following improvements is most important?</div>
+    <div class="cell" ng-repeat="criterion in criteria">
+      <label>
+        <input type="radio" ng-model="state.mostImportantCriterionId" value="{{criterion.id}}">
+        {{criterion.dataSources[0].pvf.direction}} {{criterion.title}} from {{criterion.worst |
+        number}}
+        {{criterion.unitOfMeasurement}} to {{criterion.best | number}}
+        {{criterion.unitOfMeasurement}}
+      </label>
+    </div>
+  </div>
+  <div class="grid-x">
+    <div class="cell">
+      <button class="button" ng-click="cancel()">Cancel</button>
+      <button class="button" ng-disabled="true">Previous</button>
+      <button class="button" ng-click="nextStep(state)" ng-disabled="!canProceed(state)">Next</button>
+    </div>
+    <div class="cell alert" ng-if="!canProceed(state)">
+      Cannot proceed because the most important improvement has not been chosen.
+    </div>
+  </div>
+</div>
+<!-- Second step -->
+<div ng-if="state.step === 2">
+  <div class="grid-x" style="min-height: 450px">
+    <div class="cell">
+      <h3>{{state.title}}
+        <inline-help help-key="swing-weighting"></inline-help>
+      </h3>
+    </div>
+    <div class="cell">
+      <preference-elicitation-table criteria="criteria" most-important-criterion-id="state.mostImportantCriterionId" values="state.values"></preference-elicitation-table>
+    </div>
+
+    <div class="grid-x">
+      <div class="cell">
+        <button class="button" ng-click="cancel()">Cancel</button>
+        <button class="button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
+        <button class="success button" ng-if="canSave(state)" ng-click="save(state)" ng-disabled="!canProceed(state)">Save</button>
+      </div>
+    </div>
+  </div>

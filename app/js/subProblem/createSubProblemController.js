@@ -138,14 +138,11 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.scales = WorkspaceSettingsService.usePercentage() ? WorkspaceService.toPercentage($scope.problem.criteria, $scope.scales) : $scope.scales;
       var stateAndChoices = ScaleRangeService.getScaleStateAndChoices($scope.scales, $scope.criteria, $scope.workspaceSettings.showPercentages);
       $scope.scalesState = stateAndChoices.scaleState;
-      $scope.choices = stateAndChoices.choices;
-      _.forEach($scope.choices, function(choice, dataSourceId) {
-        if (choice.from > $scope.scalesState[dataSourceId].sliderOptions.restrictedRange.from) {
-          choice.from = $scope.scalesState[dataSourceId].sliderOptions.restrictedRange.from;
-        }
-        if (choice.to < $scope.scalesState[dataSourceId].sliderOptions.restrictedRange.to) {
-          choice.to = $scope.scalesState[dataSourceId].sliderOptions.restrictedRange.to;
-        }
+      $scope.choices = _.mapValues(stateAndChoices.choices, function(choice, dataSourceId) {
+        return _.extend({}, choice, {
+          from: Math.min(choice.from, $scope.scalesState[dataSourceId].sliderOptions.restrictedRange.from),
+          to: Math.min(choice.to, $scope.scalesState[dataSourceId].sliderOptions.restrictedRange.to)
+        });
       });
       $scope.$watch('choices', isASliderInvalid, true);
     }

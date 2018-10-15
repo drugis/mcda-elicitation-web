@@ -33,12 +33,12 @@ define([
 
     };
     var baseTitle = 'Precise swing';
-    var toBackEnd = function(mostImportantCriterion) {
+    var toBackEnd = function(mostImportantCriterionId) {
       return function(value, key) {
         return {
           type: 'exact swing',
           ratio: 1 / (value / 100),
-          criteria: [mostImportantCriterion, key]
+          criteria: [mostImportantCriterionId, key]
         };
       };
     };
@@ -95,7 +95,7 @@ define([
     });
     describe('after proceeding', function() {
       beforeEach(function() {
-        scope.state.mostImportantCriterion = 'Prox DVT';
+        scope.state.mostImportantCriterionId = 'Prox DVT';
         scope.nextStep(scope.state);
         scope.$digest();
       });
