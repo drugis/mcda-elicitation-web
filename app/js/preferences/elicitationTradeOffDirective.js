@@ -2,12 +2,14 @@
 define(['lodash', 'd3', 'c3'],
   function(_, d3, c3) {
     var dependencies = [
+      '$timeout',
       'PartialValueFunctionService',
       'WorkspaceSettingsService',
       'TradeOffService',
       'significantDigits'
     ];
     var PreferenceElicitationRow = function(
+      $timeout,
       PartialValueFunctionService,
       WorkspaceSettingsService,
       TradeOffService,
@@ -16,7 +18,8 @@ define(['lodash', 'd3', 'c3'],
         restrict: 'E',
         scope: {
           mostImportantCriterion: '=',
-          secondaryCriterion: '='
+          secondaryCriterion: '=',
+          weight: '='
         },
         templateUrl: './elicitationTradeOffDirective.html',
         link: function(scope, element) {
@@ -29,7 +32,7 @@ define(['lodash', 'd3', 'c3'],
 
           scope.plotIndifference = plotIndifference;
 
-          init();
+          $timeout(init);
 
           function init() {
             root = d3.select(element[0]);
@@ -43,7 +46,7 @@ define(['lodash', 'd3', 'c3'],
             };
 
             scope.critVal = {
-              value: _.sum([minY, maxY]) / 2
+              value: maxY
             };
             scope.secondaryCriterionValue = maxX;
             scope.sliderOptions = {
@@ -91,6 +94,9 @@ define(['lodash', 'd3', 'c3'],
 
             var initialSettings = TradeOffService.getInitialSettings(root, data, coordRanges, criteria);
             initialSettings.data.columns = [];
+            initialSettings.legend.show = false;
+            initialSettings.axis.x.tick.count = 5;
+            initialSettings.axis.y.tick.count = 5;
 
             scope.units = {
               x: TradeOffService.getUnit(scope.secondaryCriterion),
@@ -114,6 +120,7 @@ define(['lodash', 'd3', 'c3'],
               data.columns[0] = ['line_x'].concat(results.data.x);
               data.columns[1] = ['line'].concat(results.data.y);
               chart.load(data);
+              scope.weight.value = results.weight;
             });
           }
 

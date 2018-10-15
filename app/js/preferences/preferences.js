@@ -8,6 +8,7 @@ define([
   './ordinalSwingController',
   './swingWeightingController',
   './matchingElicitationController',
+  './setMatchingWeightController',
   './impreciseSwingWeightingController',
   './swingWeightingService',
   './partialValueFunctionController',
@@ -28,6 +29,7 @@ define([
   OrdinalSwingController,
   SwingWeightingController,
   MatchingElicitationController,
+  SetMatchingWeightController,
   ImpreciseSwingWeightingController,
   SwingWeightingService,
   PartialValueFunctionController,
@@ -44,6 +46,7 @@ define([
       .controller('EditScenarioTitleController', EditScenarioTitleController)
       .controller('OrdinalSwingController', OrdinalSwingController)
       .controller('SwingWeightingController', SwingWeightingController)
+      .controller('SetMatchingWeightController', SetMatchingWeightController)
       .controller('MatchingElicitationController', MatchingElicitationController)
       .controller('ImpreciseSwingWeightingController', ImpreciseSwingWeightingController)
       .controller('PartialValueFunctionController', PartialValueFunctionController)

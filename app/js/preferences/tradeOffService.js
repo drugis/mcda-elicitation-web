@@ -12,23 +12,16 @@ define(['lodash', 'd3'], function(_, d3) {
   ) {
 
     function getElicitationTradeOffCurve(mostImportantCriterion, secondaryCriterion, chosenValue) {
-      var valueRange = Math.abs(mostImportantCriterion.best - mostImportantCriterion.worst);
-      var valueOffset = Math.abs(mostImportantCriterion.best - chosenValue);
-      var valueProportion = 1 - (valueOffset / valueRange);
       var newProblem = {
         criteria: _.keyBy([mostImportantCriterion, secondaryCriterion], 'id'),
-        method: 'indifferenceCurve',
+        method: 'matchingElicitationCurve',
         indifferenceCurve: {
           criterionX: secondaryCriterion.id,
           criterionY: mostImportantCriterion.id,
           x: secondaryCriterion.best,
-          y: mostImportantCriterion.worst
-        },
-        preferences: [{
-          type: "exact swing",
-          ratio: valueProportion,
-          criteria: [secondaryCriterion.id, mostImportantCriterion.id]
-        }]
+          y: mostImportantCriterion.worst,
+          chosenY: chosenValue
+        }
       };
       newProblem.criteria = _.mapValues(newProblem.criteria, mergeCriterionAndDataSource);
       return PataviResultsService.postAndHandleResults(newProblem);

@@ -26,10 +26,9 @@ define(['lodash'],
       };
 
       function getValues(criteria) {
-        return _.reduce(_.keys(criteria), function(accum, criterionId) {
-          accum[criterionId] = 100;
-          return accum;
-        }, {});
+        return _.mapValues(criteria, function() {
+          return 100;
+        });
       }
 
       function toBackEnd(mostImportantCriterionId) {
@@ -41,6 +40,7 @@ define(['lodash'],
           };
         };
       }
+      
       SwingWeightingService.initWeightingScope($scope,
         $stateParams,
         currentScenario,

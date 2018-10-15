@@ -8,7 +8,9 @@ define(['lodash'],
       'currentScenario',
       'taskDefinition'
     ];
-    var MatchingElicitationController = function($scope, $stateParams,
+    var MatchingElicitationController = function(
+      $scope, 
+      $stateParams,
       SwingWeightingService,
       PageTitleService,
       currentScenario,
@@ -25,30 +27,40 @@ define(['lodash'],
         }
       };
 
-      function getValues(criteria) {
-        return _.reduce(_.keys(criteria), function(accum, criterionId) {
-          accum[criterionId] = 100;
-          return accum;
-        }, {});
+      var values = _.mapValues($scope.aggregateState.problem.criteria, function() {
+        return -100;
+      });
+
+      function getValues() {
+        return values;
+      }
+
+      function canSave() {
+        return !_.find(values, function(value) {
+          return value < 0;
+        });
       }
 
       function toBackEnd(mostImportantCriterionId) {
         return function(value, criterionId) {
           return {
             type: 'exact swing',
-            ratio: 1 / (value / 100),
+            ratio: 1 / value,
             criteria: [mostImportantCriterionId, criterionId]
           };
         };
       }
-      SwingWeightingService.initWeightingScope($scope,
+
+      SwingWeightingService.initWeightingScope(
+        $scope,
         $stateParams,
         currentScenario,
         taskDefinition,
         sliderOptions,
         getValues,
         'Matching elicitation',
-        toBackEnd);
+        toBackEnd,
+        canSave);
     };
     return dependencies.concat(MatchingElicitationController);
   });

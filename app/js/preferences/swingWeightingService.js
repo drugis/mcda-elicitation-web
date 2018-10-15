@@ -21,10 +21,11 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
       sliderOptions,
       getValues,
       baseTitle,
-      toBackEnd
+      toBackEnd,
+      canSaveArg
     ) {
       // functions
-      scope.canSave = canSave;
+      scope.canSave = canSaveArg || canSave;
       scope.save = save;
       scope.cancel = cancel;
 
