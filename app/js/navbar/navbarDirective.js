@@ -8,6 +8,9 @@ define([], function() {
       link: function(scope) {
         scope.user = JSON.parse($cookies.get('LOGGED-IN-USER'));
         scope.user.name = scope.user.firstname + ' ' + scope.user.lastname;
+        scope.logout = function() {
+          $cookies.remove('LOGGED-IN-USER');
+        };
       }
     };
   };

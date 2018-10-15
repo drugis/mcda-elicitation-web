@@ -5,97 +5,75 @@ var db = require('./node-backend/db')(dbUtil.connectionConfig);
 var _ = require('lodash');
 var patavi = require('./node-backend/patavi');
 var logger = require('./node-backend/logger');
-var UserManagement = require('./node-backend/userManagement')(db);
+var appEnvironmentSettings = {
+  googleKey : process.env.MCDAWEB_GOOGLE_KEY,
+  googleSecret : process.env.MCDAWEB_GOOGLE_SECRET,
+  host: process.env.MCDA_HOST
+};
+var signin = require('signin')(db, appEnvironmentSettings);
 var WorkspaceService = require('./node-backend/workspaceService')(db);
 var OrderingService = require('./node-backend/orderingService')(db);
 var SubProblemService = require('./node-backend/subProblemService')(db);
 var ScenarioService = require('./node-backend/scenarioService')(db);
 var WorkspaceSettingsService = require('./node-backend/workspaceSettingsService')(db);
+
+var express = require('express');
 var http = require('http');
+var bodyParser = require('body-parser');
+var session = require('express-session');
+var helmet = require('helmet');
+var csurf = require('csurf');
 var server;
 
-var express = require('express'),
-  bodyParser = require('body-parser'),
-  session = require('express-session'),
-  helmet = require('helmet'),
-  csurf = require('csurf');
+var authenticationMethod = process.env.MCDAWEB_AUTHENTICATION_METHOD;
+console.log('Authentication method: ' + authenticationMethod);
+
+var sessionOptions = {
+  store: new (require('connect-pg-simple')(session))({
+    conString: dbUtil.mcdaDBUrl,
+  }),
+  secret: process.env.MCDAWEB_COOKIE_SECRET,
+  resave: true,
+  proxy: true,
+  rolling: true,
+  saveUninitialized: true,
+  cookie: {
+    maxAge: 60 * 60 * 1000, // 1 hour
+    secure: authenticationMethod === 'SSL'
+  }
+};
 
 var app = express();
-app
-  .use(helmet())
-  .use(session({
-    store: new (require('connect-pg-simple')(session))({
-      conString: dbUtil.mcdaDBUrl,
-    }),
-    secret: process.env.MCDAWEB_COOKIE_SECRET,
-    resave: true,
-    proxy: true,
-    rolling: true,
-    saveUninitialized: true,
-    cookie: {
-      maxAge: 60 * 60 * 1000, // 1 hour
-      secure: process.env.MCDAWEB_USE_SSL_AUTH
-    }
-  }))
-  .set('trust proxy', 1);
+
+app.use(helmet());
+app.use(session(sessionOptions));
+app.set('trust proxy', 1);
+app.use(bodyParser.json({ limit: '5mb' }));
 
 server = http.createServer(app);
 
-if (process.env.MCDAWEB_USE_SSL_AUTH) {
-  app.get('/signin', function(req, res) {
-    var clientString = req.header('X-SSL-CLIENT-DN');
-    var emailRegex = /emailAddress=([^,]*)/;
-    var email = clientString.match(emailRegex)[1];
-    if (email) {
-      UserManagement.findUserByEmail(email, function(err, result) {
-        if (err) {
-          logger.error(err);
-        } else {
-          req.session.user = result;
-          req.session.save();
-          res.redirect('/');
-        }
-      });
-    }
-  });
-} else {
-  var passport = require('passport');
-  var GoogleStrategy = require('passport-google-oauth20').Strategy;
-  passport.use(
-    new GoogleStrategy({
-      clientID: process.env.MCDAWEB_GOOGLE_KEY,
-      clientSecret: process.env.MCDAWEB_GOOGLE_SECRET,
-      callbackURL: process.env.MCDA_HOST + '/auth/google/callback'
-    },
-      UserManagement.findOrCreateUser
-    ));
-  passport.serializeUser(function(user, cb) {
-    cb(null, user);
-  });
-  passport.deserializeUser(function(obj, cb) {
-    cb(null, obj);
-  });
-  app.use(passport.initialize())
-    .use(passport.session())
-    .get('/auth/google/', passport.authenticate('google', { scope: ['profile', 'email'] }))
-    .get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/signin' }),
-      function(req, res) {
-        res.redirect('/');
-      });
+switch (authenticationMethod) {
+  case 'SSL':
+    useSSLLogin();
+    break;
+  case 'LOCAL':
+    signin.useLocalLogin(app);
+    break;
+  default:
+    authenticationMethod = 'GOOGLE';
+    signin.useGoogleLogin(app);
 }
 
-app.get('/logout', function(req, res) {
-  req.logout();
-  res.redirect('/');
-})
-  .use(csurf())
-  .use(bodyParser.json({ limit: '5mb' }));
-
 app
+  .get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+  })
+  .use(csurf())
   .use(function(req, res, next) {
     res.cookie('XSRF-TOKEN', req.csrfToken());
     if (req.user) {
-      res.cookie('LOGGED-IN-USER', JSON.stringify(_.omit(req.user, 'email')));
+      res.cookie('LOGGED-IN-USER', JSON.stringify(_.omit(req.user, 'email', 'password')));
     }
     next();
   })
@@ -117,16 +95,7 @@ app
   .use('/examples', express.static(__dirname + '/examples'))
   ;
 
-var router = express.Router();
-router.get('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
-router.post('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
-router.delete('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
-router.get('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
-router.put('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
-router.put('/workspaces/:id/ordering', WorkspaceService.requireUserIsWorkspaceOwner);
-router.put('/workspaces/:id/workspaceSettings', WorkspaceService.requireUserIsWorkspaceOwner);
-router.delete('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
-app.use(router);
+initializeRouter();
 
 // Workspaces in progress
 app.post('/inProgress', WorkspaceService.createInProgress);
@@ -183,6 +152,12 @@ app.post('/patavi', function(req, res, next) { // FIXME: separate routes for sca
 
 app.use('/css/fonts', express.static('./dist/fonts'));
 
+app.use(function(error, req, res, next) {
+  if (error && error.type === signin.SIGNIN_ERROR) {
+    res.send(401, 'login failed');
+  }
+});
+
 //The 404 Route (ALWAYS Keep this as the last route)
 app.get('*', function(req, res) {
   res.status(404).sendFile(__dirname + '/dist/error.html');
@@ -196,3 +171,35 @@ if (process.argv[2] === 'port' && process.argv[3]) {
 server.listen(port, function() {
   console.log('Listening on http://localhost:' + port);
 });
+
+function useSSLLogin() {
+  app.get('/signin', function(req, res) {
+    var clientString = req.header('X-SSL-CLIENT-DN');
+    var emailRegex = /emailAddress=([^,]*)/;
+    var email = clientString.match(emailRegex)[1];
+    if (email) {
+      signin.findUserByEmail(email, function(error, result) {
+        if (error) {
+          logger.error(error);
+        } else {
+          req.session.user = result;
+          req.session.save();
+          res.redirect('/');
+        }
+      });
+    }
+  });
+}
+
+function initializeRouter() {
+  var router = express.Router();
+  router.get('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
+  router.post('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
+  router.delete('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
+  router.get('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
+  router.put('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
+  router.put('/workspaces/:id/ordering', WorkspaceService.requireUserIsWorkspaceOwner);
+  router.put('/workspaces/:id/workspaceSettings', WorkspaceService.requireUserIsWorkspaceOwner);
+  router.delete('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
+  app.use(router);
+} 

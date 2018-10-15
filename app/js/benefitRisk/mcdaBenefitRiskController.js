@@ -99,7 +99,6 @@ define(['lodash'], function(_) {
       });
     });
 
-
     function checkHasNoStochasticResults() {
       $scope.hasNoStochasticResults = WorkspaceService.hasNoStochasticResults($scope.aggregateState);
     }

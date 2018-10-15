@@ -8,6 +8,7 @@
     "test": "mocha && karma start --singleRun",
     "build-dev": "webpack --config webpack.dev.js",
     "build-prod": "webpack --config webpack.prod.js",
+    "build-local-login": "webpack --config webpack.local.js",
     "dev": "webpack --config webpack.dev.js --watch"
   },
   "repository": {
@@ -26,9 +27,8 @@
     "express-session": "~1.15.6",
     "helmet": "^3.13.0",
     "lodash": "~4.17.10",
-    "passport": "^0.4.0",
-    "passport-google-oauth20": "^1.0.0",
     "pg": "~7.4.3",
+    "signin": "https://github.com/drugis/signin",
     "winston": "~3.0.0"
   },
   "devDependencies": {
@@ -56,6 +56,7 @@
     "font-awesome": "~4.7.0",
     "foundation-sites": "~6.5.0-rc.2",
     "help-popup": "drugis/help-popup#0.5.0",
+    "html-loader": "^0.5.5",
     "html-webpack-plugin": "^4.0.0-alpha",
     "jasmine-core": "^3.2.1",
     "jquery": "~3.3.1",
