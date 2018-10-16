@@ -60,7 +60,7 @@ define(['lodash'], function(_) {
     determineActiveTab();
     $scope.scalesPromise = WorkspaceService.getObservedScales(baseProblem).then(function(observedScales) {
       $scope.workspace.scales.base = observedScales;
-      $scope.workspace.scales.basePercentified = WorkspaceService.toPercentage(baseProblem.criteria, observedScales);
+      $scope.workspace.scales.basePercentified = WorkspaceService.percentifyScales(baseProblem.criteria, observedScales);
       updateScales(observedScales);
     });
 

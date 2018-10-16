@@ -135,7 +135,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function initializeScales() {
-      $scope.scales = WorkspaceSettingsService.usePercentage() ? WorkspaceService.toPercentage($scope.problem.criteria, $scope.scales) : $scope.scales;
+      $scope.scales = WorkspaceSettingsService.usePercentage() ? WorkspaceService.percentifyScales($scope.problem.criteria, $scope.scales) : $scope.scales;
       var stateAndChoices = ScaleRangeService.getScaleStateAndChoices($scope.scales, $scope.criteria, $scope.workspaceSettings.showPercentages);
       $scope.scalesState = stateAndChoices.scaleState;
       $scope.choices = _.mapValues(stateAndChoices.choices, function(choice, dataSourceId) {
