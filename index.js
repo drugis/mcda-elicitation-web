@@ -26,7 +26,6 @@ var csurf = require('csurf');
 var server;
 
 var authenticationMethod = process.env.MCDAWEB_AUTHENTICATION_METHOD;
-console.log('Authentication method: ' + authenticationMethod);
 
 var sessionOptions = {
   store: new (require('connect-pg-simple')(session))({
@@ -63,6 +62,7 @@ switch (authenticationMethod) {
     authenticationMethod = 'GOOGLE';
     signin.useGoogleLogin(app);
 }
+console.log('Authentication method: ' + authenticationMethod);
 
 app
   .get('/logout', function(req, res) {
@@ -163,7 +163,7 @@ app.get('*', function(req, res) {
   res.status(404).sendFile(__dirname + '/dist/error.html');
 });
 
-var port = 8080;
+var port = 3002;
 if (process.argv[2] === 'port' && process.argv[3]) {
   port = process.argv[3];
 }
