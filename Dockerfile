@@ -25,8 +25,9 @@ WORKDIR /var/lib/mcda
 ENV HOME /var/lib/mcda
 
 RUN yarn
-RUN npm run build-prod
+ARG WEBPACK_COMMAND
+RUN npm run $WEBPACK_COMMAND
 
-EXPOSE 3001
+EXPOSE 3002
 
 CMD ["forever", "index.js"]
