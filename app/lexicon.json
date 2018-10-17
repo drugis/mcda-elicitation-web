@@ -5,7 +5,7 @@
     "link": "/manual.html#mcda-manual-entry"
   },
   "alternatives-per-rank": {
-    "title" :"Alternatives per rank",
+    "title": "Alternatives per rank",
     "text": "How likely each alterntive is to have a specific rank (with 1 being best) overall.",
     "link": "/manual.html#mcda-smaa-results"
   },
@@ -49,7 +49,7 @@
     "text": "In which unit of measurement the criterion's data are reported (e.g. \"proportion\", \"gram\")",
     "link": "/manual.html#mcda-manual-entry"
   },
-  "deterministic-analysis-results" : {
+  "deterministic-analysis-results": {
     "title": "Deterministic analysis results",
     "text": "This section shows the results of deterministic analysis (representative weights, total value), allows for sensitivity analysis, and allows modification of the effects table to explore the problem space.",
     "link": "/manual.html#mcda-deterministic-analysis"
@@ -78,6 +78,11 @@
     "title": "Incomplete workspaces",
     "text": "The process of manually creating a workspace can be paused at any point. This list shows those unfinished workspaces.",
     "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "matching": {
+    "title": "Matching",
+    "text": "Elicitation of the criteria weights through a series of matching questions. This method sets weights by asking users to specify how much the performance with respect to one criterion needs to improve to compensate for a worsening in the performance with respect to another criterion.",
+    "link": "/manual.html#mcda-value-tradeofffs"
   },
   "mcda-input-method": {
     "title": "Input method",
@@ -120,7 +125,7 @@
     "link": "/manual.html#mcda-benefit-risk-analysis"
   },
   "ranks-per-alternative": {
-    "title" :"Ranks per alternative",
+    "title": "Ranks per alternative",
     "text": "How likely a specific alterntive is to have each rank (with 1 being best) overall.",
     "link": "/manual.html#mcda-smaa-results"
   },
@@ -139,22 +144,22 @@
     "text": "A scenario is a collection of preferences to feed into the MCDA models. This consists of a partial value function for each criterion, and an optional set of weight preferences (swing weighting, ranking, exact matching or imprecise matching).",
     "link": "/manual.html#mcda-scenarios"
   },
-  "sensitivity-measurements" : {
+  "sensitivity-measurements": {
     "title": "Measurements sensitivity analysis",
     "text": "How the value of a specific alternative changes as the weight of a specific criterion changes between 0 and 1. All other alternatives' values are kept constant at the current default for comparison.",
     "link": "/manual.html#mcda-deterministic-analysis"
   },
-  "sensitivity-preferences" : {
+  "sensitivity-preferences": {
     "title": "Preferences sensitivity analysis",
     "text": "How the value of all alternatives changes as the weight of a specific criterion changes between 0 and 1.",
     "link": "/manual.html#mcda-deterministic-analysis"
   },
   "smaa-results": {
     "title": "SMAA results",
-    "text":"The results of stochastic multicriteria acceptability analysis (SMAA) for the given preferences.",
+    "text": "The results of stochastic multicriteria acceptability analysis (SMAA) for the given preferences.",
     "link": "/manual.html#mcda-value-tradeoffs"
   },
-  "strength-of-evidence":{
+  "strength-of-evidence": {
     "title": "Strength of evidence",
     "text": "",
     "link": ""
@@ -179,32 +184,27 @@
     "text": "Elicitation of the user's weight trade-offs between the different criteria using swing weighting. This method sets weights by choosing one criterion as most important to be improved, and allows the user to scale the other criteria accordingly.",
     "link": "/manual.html#mcda-value-tradeoffs"
   },
-  "theoretical-range": {
-    "title": "Theoretical range",
-    "text": "The theoretically maximal range in which effect sizes can lie",
-    "link": "/manual.html#mcda-value-tradeoffs."
-  },
   "therapeutic-context": {
     "title": "Therapeutic context",
     "text": "Background information about the context in which the data should be interpreted, e.g. information about studies or meta-analyses from which the data comes.",
     "link": "/manual.html#mcda-manual-entry"
+  },
+  "theoretical-range": {
+    "title": "Theoretical range",
+    "text": "The theoretically maximal range in which effect sizes can lie",
+    "link": "/manual.html#mcda-value-tradeoffs."
   },
   "total-value": {
     "title": "Total value",
     "text": "How valuable (i.e. helpful for each criterion) each alternative is overall.",
     "link": "/manual.html#deterministic-results"
   },
-  "weights": {
-    "title": "Weights",
-    "text": "Weights indicate how much importance the user places on improving each criterion. Weights can be specified directly through swing weighting. Alternatively, they can be derived through a series of ranking and matching questions.", 
-    "link": "/manual.html#mcda-value-tradeoffs"
-  },
   "treatment": {
     "title": "Treatment",
     "text": "A treatment is an intervention of interest to be used in a benefit-risk analysis, e.g. \"Aspirin 20 mg/day\" or \"Meditation\".",
     "link": "/manual.html#mcda-preparing-dataset"
   },
-  "uncertainties":{
+  "uncertainties": {
     "title": "Strength of evidence",
     "text": "",
     "link": ""
@@ -214,7 +214,12 @@
     "text": "How the total value of each alternative is composed out of its value for each criterion.",
     "link": "/manual.html#deterministic-results"
   },
-  "workspace":  {
+  "weights": {
+    "title": "Weights",
+    "text": "Weights indicate how much importance the user places on improving each criterion. Weights can be specified directly through swing weighting. Alternatively, they can be derived through a series of ranking and matching questions.",
+    "link": "/manual.html#mcda-value-tradeoffs"
+  },
+  "workspace": {
     "title": "Workspace",
     "text": "A workspace contains your base data, and any definitions you have based thereon, i.e. subselections of criteria and interventions (subproblems) and sets of preferences (scenarios).",
     "link": "/manual.html#mcda-preparing-dataset"

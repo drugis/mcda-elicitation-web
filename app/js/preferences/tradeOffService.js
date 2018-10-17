@@ -168,11 +168,10 @@ define(['lodash', 'd3'], function(_, d3) {
     }
 
     return {
-      getIndifferenceCurve: getIndifferenceCurve,
       getElicitationTradeOffCurve: getElicitationTradeOffCurve,
+      getIndifferenceCurve: getIndifferenceCurve,
       getInitialSettings: getInitialSettings,
       getYValue: getYValue,
-      significantDigits: significantDigits,
       areCoordinatesSet: areCoordinatesSet,
       getLabel: getLabel,
       getUnit: getUnit

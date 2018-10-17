@@ -16,10 +16,64 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
       taskResultsDefer = $q.defer();
     }));
 
+    describe('getElicitationTradeOffCurve', function() {
+      beforeEach(function() {
+        var taskResultsPromise = taskResultsDefer.promise;
+        pataviResultsServiceMock.postAndHandleResults.and.returnValue(taskResultsPromise);
+      });
+
+      afterEach(function() {
+        pataviResultsServiceMock.postAndHandleResults.calls.reset();
+      });
+
+      it('should attach the x, and y criteria, their x and y and chosen y value', function() {
+        var mostImportantId = 'mostImportantId';
+        var secondaryId = 'secondaryId';
+        var mostImportantCriterion = {
+          id: mostImportantId,
+          worst: 0.5,
+          dataSources: [{ merge: 'this' }]
+        };
+        var secondaryCriterion = {
+          id: secondaryId,
+          best: 10,
+          dataSources: [{ merge: 'this' }]
+        };
+        var chosenValue = 37;
+        tradeOffService.getElicitationTradeOffCurve(mostImportantCriterion, secondaryCriterion, chosenValue);
+        expect(pataviResultsServiceMock.postAndHandleResults).toHaveBeenCalledWith({
+          criteria: {
+            mostImportantId: {
+              id: mostImportantId,
+              worst: 0.5,
+              merge: 'this'
+            },
+            secondaryId: {
+              id: secondaryId,
+              best: 10,
+              merge: 'this'
+            }
+          },
+          method: 'matchingElicitationCurve',
+          indifferenceCurve: {
+            criterionX: secondaryCriterion.id,
+            criterionY: mostImportantCriterion.id,
+            x: secondaryCriterion.best,
+            y: mostImportantCriterion.worst,
+            chosenY: chosenValue
+          }
+        });
+      });
+    });
+
     describe('getIndifferenceCurve', function() {
       beforeEach(function() {
         var taskResultsPromise = taskResultsDefer.promise;
         pataviResultsServiceMock.postAndHandleResults.and.returnValue(taskResultsPromise);
+      });
+
+      afterEach(function() {
+        pataviResultsServiceMock.postAndHandleResults.calls.reset();
       });
 
       it('should attach the selected coordinates and criteria, query R and return a promise for the results', function() {
@@ -143,6 +197,7 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
         expect(resultNull).toBeFalsy();
       });
     });
+
     describe('getLabel', function() {
       it('should return the label for the axis of a non-percentifiable criterion', function() {
         var continuousCriterion = {
@@ -175,6 +230,45 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
         var result = tradeOffService.getLabel(noPercentCriterion);
         var expectedResult = 'percCrit';
         expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('getUnit', function() {
+      it('should return % if percentages are used and the criterion can be percentage', function() {
+        workspaceSettingsServiceMock.usePercentage.and.returnValue(true);
+        var criterion = {
+          dataSources: [{ scale: [0, 1] }]
+        };
+        var result = tradeOffService.getUnit(criterion);
+        expect(result).toEqual('%');
+      });
+
+      it('should return an empty string if the criterion can be percentage and but percentages are not being used', function() {
+        workspaceSettingsServiceMock.usePercentage.and.returnValue(false);
+        var criterion = {
+          dataSources: [{ scale: [0, 1] }]
+        };
+        var result = tradeOffService.getUnit(criterion);
+        expect(result).toEqual('');
+      });
+
+      it('should return the unit of measurement if it is set and the criterion can not be a percentage', function() {
+        workspaceSettingsServiceMock.usePercentage.and.returnValue(false);
+        var criterion = {
+          unitOfMeasurement: 'kg',
+          dataSources: [{ scale: [-Infinity, Infinity] }]
+        };
+        var result = tradeOffService.getUnit(criterion);
+        expect(result).toEqual('kg');
+      });
+
+      it('should return an empty string if there is no unit of measurement set and the criterion can not be a percentage', function() {
+        workspaceSettingsServiceMock.usePercentage.and.returnValue(false);
+        var criterion = {
+          dataSources: [{ scale: [-Infinity, Infinity] }]
+        };
+        var result = tradeOffService.getUnit(criterion);
+        expect(result).toEqual('');
       });
     });
   });

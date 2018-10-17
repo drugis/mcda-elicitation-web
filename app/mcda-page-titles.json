@@ -11,6 +11,6 @@
   "problem":"SubProblemController",
   "smaa-results": "SmaaResultsController",
   "swing-weighting": "SwingWeightingController",
-  "matching-elicitation": "MatchingElicitationController",
+  "matching": "MatchingElicitationController",
   "partial-value-function":"PartialValueFunctionController"
 }

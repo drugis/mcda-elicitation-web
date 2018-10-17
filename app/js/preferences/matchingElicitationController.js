@@ -9,7 +9,7 @@ define(['lodash'],
       'taskDefinition'
     ];
     var MatchingElicitationController = function(
-      $scope, 
+      $scope,
       $stateParams,
       SwingWeightingService,
       PageTitleService,
@@ -17,7 +17,7 @@ define(['lodash'],
       taskDefinition
     ) {
       $scope.isPrecise = true;
-      PageTitleService.setPageTitle('MatchingElicitationController', 'Matching elicitation');
+      PageTitleService.setPageTitle('MatchingElicitationController', 'Matching');
 
       var sliderOptions = {
         floor: 1,
@@ -58,7 +58,7 @@ define(['lodash'],
         taskDefinition,
         sliderOptions,
         getValues,
-        'Matching elicitation',
+        'Matching',
         toBackEnd,
         canSave);
     };

@@ -46,7 +46,7 @@ define(['lodash', 'd3', 'c3'],
             };
 
             scope.critVal = {
-              value: maxY
+              value: scope.mostImportantCriterion.worst
             };
             scope.secondaryCriterionValue = maxX;
             scope.sliderOptions = {

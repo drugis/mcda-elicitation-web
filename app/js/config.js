@@ -27,8 +27,8 @@ define(function() {
       requires: ['partial-value-function'],
       resets: ['criteria-trade-offs']
     }, {
-      id: 'matching-elicitation',
-      title: 'Matching Elicitation',
+      id: 'matching',
+      title: 'Matching',
       controller: 'MatchingElicitationController',
       templateUrl: './preferences/matchingElicitation.html',
       activeTab: 'preferences',
