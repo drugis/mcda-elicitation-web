@@ -7,29 +7,27 @@ webpackConfig.optimization = {
   splitChunks: false,
   runtimeChunk: false
 };
+webpackConfig.module.rules.push({
+  enforce: 'post',
+  test: /\.js$/,
+  loader: 'istanbul-instrumenter-loader',
+  include: __dirname + '/app',
+  exclude: ['(node_modules', /Spec.js$/],
+});
 
 module.exports = function(config) {
   config.set({
-    
+
     // base path, that will be used to resolve files and exclude
     basePath: '.',
 
-    // plugins to load
-    plugins: [
-      'karma-chrome-launcher',
-      'karma-firefox-launcher',
-      'karma-junit-reporter',
-      'karma-jasmine',
-      'karma-webpack',
-      'karma-sourcemap-loader'
-    ],
     preprocessors: {
       // add webpack as preprocessor
       './frontend-test/test-main.js': ['webpack', 'sourcemap']
     },
 
     webpack: webpackConfig,
-
+    
     beforeMiddleware: ['webpackBlocker'],
 
     // frameworks to use
@@ -37,7 +35,6 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      // 'frontend-test/unit/*Spec.js',
       './app/js/misc.js',
       './frontend-test/test-main.js',
     ],
@@ -45,9 +42,11 @@ module.exports = function(config) {
     exclude: [
       'app/js/main.js',
     ],
-    // test results reporter to use
-    // possible values: 'dots', 'progress', 'junit', 'growl', 'coverage'
-    reporters: ['progress', 'junit'],
+    reporters: ['progress', 'junit', 'coverage'],
+    coverageReporter: {
+      type : 'html',
+      dir : 'coverage/'
+    },
     junitReporter: {
       outputFile: 'frontend-test/test-results.xml'
     },
@@ -65,14 +64,6 @@ module.exports = function(config) {
     // enable / disable watching file and executing tests whenever any file changes
     autoWatch: true,
 
-    // Start these browsers, currently available:
-    // - Chrome
-    // - ChromeCanary
-    // - Firefox
-    // - Opera (has to be installed with `npm install karma-opera-launcher`)
-    // - Safari (only Mac; has to be installed with `npm install karma-safari-launcher`)
-    // - PhantomJS
-    // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
     browsers: ['ChromeHeadless'],
 
     // If browser does not capture in given timeout [ms], kill it
