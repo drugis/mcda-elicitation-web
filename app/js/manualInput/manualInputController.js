@@ -156,7 +156,7 @@ define(['lodash', 'angular'], function(_, angular) {
               $scope.state.criteria.push(newCriterion);
             };
           },
-          oldCriterion: function(){
+          oldCriterion: function() {
             return undefined;
           },
           useFavorability: function() {
@@ -170,8 +170,8 @@ define(['lodash', 'angular'], function(_, angular) {
     function initState() {
       if ($stateParams.workspace) {
         // copying existing workspace
-                $scope.state = ManualInputService.createStateFromOldWorkspace(
-                  SchemaService.updateWorkspaceToCurrentSchema($stateParams.workspace));
+        $scope.state = ManualInputService.createStateFromOldWorkspace(
+          SchemaService.updateWorkspaceToCurrentSchema($stateParams.workspace));
         $scope.dirty = true;
         setStateWatcher();
       } else if (!$stateParams.inProgressId) {
