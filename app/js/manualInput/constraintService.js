@@ -7,33 +7,41 @@ define(['lodash', 'angular'], function(_) {
         return label + ' must be integer';
       }
     };
+
     var DEFINED = function(value, label) {
       if (value === undefined || isNaN(value) || value === null) {
         return 'Invalid ' + label;
       }
     };
+
     var POSITIVE = function(value, label) {
       if (value < 0) {
         return label + ' must be positive';
       }
     };
+
     var NOT_NAN_OR_NULL = function(value, label) {
       if (isNaN(value) || value === null) {
         return 'Invalid ' + label;
       }
     };
+
     function defined() {
       return DEFINED;
     }
+
     function integer() {
       return INTEGER;
     }
+
     function positive() {
       return POSITIVE;
     }
+
     function notNaNOrNull() {
       return NOT_NAN_OR_NULL;
     }
+
     function belowOrEqualTo(belowWhat) {
       return function(value, label, parameters) {
         if (isFinite(belowWhat) && value > belowWhat) {
@@ -44,6 +52,7 @@ define(['lodash', 'angular'], function(_) {
         }
       };
     }
+
     function above(aboveWhat) {
       return function(value, label) {
         if (value <= aboveWhat) {
@@ -51,6 +60,7 @@ define(['lodash', 'angular'], function(_) {
         }
       };
     }
+
     function aboveOrEqualTo(aboveWhat) {
       return function(value, label, parameters) {
         if (isFinite(aboveWhat) && value < aboveWhat) {
