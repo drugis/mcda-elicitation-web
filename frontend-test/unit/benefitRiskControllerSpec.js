@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (_, angular) => {
   describe('MCDA benefit-risk controller', () => {
- 
+
     var scope,
       transitions = jasmine.createSpyObj('$transitions', ['onStart']),
       stateMock = jasmine.createSpyObj('$state', ['go']),
@@ -25,7 +25,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         'percentifyCriteria',
         'mergeBaseAndSubProblem',
         'setDefaultObservedScales',
-        'hasNoStochasticResults']),
+        'hasNoStochasticResults'
+      ]),
       WorkspaceSettingsService = jasmine.createSpyObj('WorkspaceSetttingsService', ['usePercentage']),
       EffectsTableService = jasmine.createSpyObj('EffectsTableService', ['createEffectsTableInfo']),
       subProblems,
@@ -169,6 +170,16 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         expect(scope.scenariosWithResults).toBe(scenariosWithResults);
         expect(scope.isDuplicateScenarioTitle).toBe(false);
       });
+      it('should place the tasks on the scope', () => {
+        expect(scope.tasks).toEqual({
+          'smaa-results': {
+            id: 'smaa-results'
+          },
+          evidence: {
+            id: 'evidence'
+          }
+        });
+      });
       it('should retrieve the observed scales', () => {
         expect(WorkspaceService.getObservedScales).toHaveBeenCalledWith(workspace.problem);
       });
@@ -202,21 +213,21 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         observedScalesDefer.resolve(observedScales);
       });
       describe('if percentages should be used', () => {
+        var stateWithPercentifiedCriteria = _.merge({}, baseAggregateState, {
+          problem: {
+            criteria: percentifiedCriteria
+          }
+        });
 
         beforeEach(() => {
           TaskDependencies.isAccessible.calls.reset();
           WorkspaceSettingsService.usePercentage.and.returnValue(true);
           WorkspaceService.percentifyScales.and.returnValue(percentifiedScales);
-          WorkspaceService.percentifyCriteria.and.returnValue(percentifiedCriteria);
+          WorkspaceService.percentifyCriteria.and.returnValue(stateWithPercentifiedCriteria);
           WorkspaceService.setDefaultObservedScales.and.returnValue(baseProblemWithScales);
           scope.$apply();
         });
         it('should percentify the scales and properly initalise base- and regular aggregate state', (done) => {
-          var stateWithPercentifiedCriteria = _.merge({}, baseAggregateState, {
-            problem: {
-              criteria: percentifiedCriteria
-            }
-          });
           observedScalesDefer.promise.then(() => {
             expect(scope.workspace.scales.base).toBe(observedScales);
             expect(scope.workspace.scales.observed).toBe(percentifiedScales);
@@ -252,7 +263,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
             expect(scope.aggregateState).toEqual(problemWithBaseCriteria);
             expect(scope.baseAggregateState).toEqual(problemWithBaseCriteria);
             done();
-          }); 
+          });
           scope.$apply();
         });
         it('should update the task accessibility', () => {
@@ -277,7 +288,22 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
       });
     });
     describe('when a settings change event triggers', () => {
-
+      it('should update the scales', () => {
+        spyOn(scope, 'updateScales');
+        expect(scope.updateScales).not.toHaveBeenCalled();
+        scope.$broadcast('elicit.settingsChanged');
+        scope.$apply();
+        expect(scope.updateScales).toHaveBeenCalled();
+      });
+    });
+    describe('when a resultsAccessible event triggers', () => {
+      it('should update the state', () => {
+        spyOn(scope, 'updateState');
+        expect(scope.updateState).not.toHaveBeenCalled();
+        scope.$broadcast('elicit.resultsAccessible');
+        scope.$apply();
+        expect(scope.updateState).toHaveBeenCalled();
+      });
     });
   });
 });

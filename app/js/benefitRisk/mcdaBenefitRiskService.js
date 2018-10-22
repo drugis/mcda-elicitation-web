@@ -1,5 +1,5 @@
 'use strict';
-define([], () => {
+define(['lodash'], (_) => {
   var dependencies = [
     '$state',
     '$stateParams',
@@ -14,16 +14,18 @@ define([], () => {
   ) => {
 
     function forkScenarioAndGo(newTitle, subProblem) {
-      ScenarioResource.get($stateParams, function(scenario) { // reload because child scopes may have changed scenario
-        var newScenario = {
-          title: newTitle,
-          state: scenario.state,
-          subProblemId: subProblem.id
-        };
-        ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
+      return ScenarioResource.get($stateParams).$promise // reload because child scopes may have changed scenario
+        .then((scenario) => {
+          return {
+            title: newTitle,
+            state: scenario.state,
+            subProblemId: subProblem.id
+          };
+        }).then((newScenario) => {
+          return ScenarioResource.save(_.omit($stateParams, 'id'), newScenario).$promise;
+        }).then((savedScenario) => {
           redirect(savedScenario.id, $state.current.name);
         });
-      });
     }
 
     function newScenarioAndGo(newTitle, workspace, subProblem) {
@@ -36,15 +38,16 @@ define([], () => {
         workspace: workspace.id,
         subProblemId: subProblem.id
       };
-      ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
-        var newStateName = 'preferences';
-        redirect(savedScenario.id, newStateName);
-      });
+      return ScenarioResource.save(_.omit($stateParams, 'id'), newScenario).$promise
+        .then((savedScenario) => {
+          redirect(savedScenario.id, 'preferences');
+        });
     }
 
     function redirect(scenarioId, stateName) {
-      var newState = _.omit($stateParams, 'id');
-      newState.id = scenarioId;
+      var newState = _.merge({}, $stateParams, {
+        id: scenarioId
+      });
       $state.go(stateName, newState, {
         reload: true
       });

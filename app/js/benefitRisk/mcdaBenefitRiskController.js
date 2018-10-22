@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash'], function(_) {
   var dependencies = ['$scope', '$transitions', '$state', '$stateParams', '$modal',
-    'BenefitRiskService',
+    'McdaBenefitRiskService',
     'Tasks',
     'TaskDependencies',
     'ScenarioResource',
@@ -15,7 +15,7 @@ define(['lodash'], function(_) {
   ];
 
   function MCDABenefitRiskController($scope, $transitions, $state, $stateParams, $modal,
-    BenefitRiskService,
+    McdaBenefitRiskService,
     Tasks,
     TaskDependencies,
     ScenarioResource,
@@ -38,34 +38,22 @@ define(['lodash'], function(_) {
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
     $scope.selections = {};
-    $scope.scenario = currentScenario;
     $scope.isDuplicateScenarioTitle = false;
-    updateScenarios();
+    $scope.scalesPromise = WorkspaceService.getObservedScales(baseProblem);
+    $scope.tasks = _.keyBy(Tasks.available, 'id');
 
-    $scope.baseAggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, currentScenario);
-    var baseCriteria = $scope.baseAggregateState.problem.criteria;
-    updateAggregateState();
+    // set on scope for testing purposes
+    $scope.updateScales = updateScales;
+    $scope.updateState = updateState;
+
+    $scope.updateState(currentScenario);
     $scope.effectsTableInfo = EffectsTableService.createEffectsTableInfo(baseProblem.performanceTable);
-    $scope.hasMissingValues = _.find($scope.aggregateState.problem.performanceTable, function(tableEntry) {
-      return tableEntry.performance.type === 'empty';
-    });
-    checkHasNoStochasticResults();
 
     $scope.subProblems = subProblems;
     $scope.subProblem = currentSubProblem;
     $scope.workspace.scales = {};
     $scope.isStandalone = isMcdaStandalone;
     determineActiveTab();
-    $scope.scalesPromise = WorkspaceService.getObservedScales(baseProblem).then(function(observedScales) {
-      $scope.workspace.scales.base = observedScales;
-      $scope.workspace.scales.basePercentified = WorkspaceService.percentifyScales(baseProblem.criteria, observedScales);
-      updateScales(observedScales);
-    });
-
-    $scope.tasks = _.reduce(Tasks.available, function(tasks, task) {
-      tasks[task.id] = task;
-      return tasks;
-    }, {});
 
     deregisterTransitionListener = $transitions.onStart({}, function(transition) {
       setActiveTab(transition.to().name, transition.to().name);
@@ -75,43 +63,42 @@ define(['lodash'], function(_) {
     $scope.$watch('aggregateState', checkHasNoStochasticResults, true);
     $scope.$on('$destroy', deregisterTransitionListener);
     $scope.$on('elicit.settingsChanged', function() {
-      updateScales($scope.workspace.scales.base);
+      console.log('triggered');
+      $scope.updateScales($scope.workspace.scales.base);
     });
     $scope.$on('elicit.resultsAccessible', function(event, scenario) {
-      $scope.baseAggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
-      baseCriteria = $scope.baseAggregateState.problem.criteria;
-
-      updateAggregateState();
-      $scope.scenario = scenario;
-      if ($scope.workspace.scales.observed) {
-        $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales(
-          $scope.aggregateState.problem, $scope.workspace.scales.observed);
-        $scope.baseAggregateState.problem = WorkspaceService.setDefaultObservedScales(
-          $scope.baseAggregateState.problem, $scope.workspace.scales.base);
-      }
-      updateTaskAccessibility();
-      checkHasNoStochasticResults();
-      updateScenarios();
+      $scope.updateState(scenario);
     });
+
+    function updateState(scenario) {
+      $scope.scenario = scenario;
+      $scope.baseAggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
+      $scope.aggregateState = WorkspaceSettingsService.usePercentage() ?
+        WorkspaceService.percentifyCriteria($scope.baseAggregateState) : $scope.baseAggregateState;
+      $scope.hasMissingValues = _.find($scope.aggregateState.problem.performanceTable, function(tableEntry) {
+        return tableEntry.performance.type === 'empty';
+      });
+      checkHasNoStochasticResults();
+
+      $scope.scalesPromise.then(function(observedScales) {
+        $scope.workspace.scales.base = observedScales;
+        $scope.workspace.scales.basePercentified = WorkspaceService.percentifyScales(baseProblem.criteria, observedScales);
+        $scope.updateScales(observedScales);
+      });
+
+      updateTaskAccessibility();
+      updateScenarios();
+    }
 
 
     function checkHasNoStochasticResults() {
       $scope.hasNoStochasticResults = WorkspaceService.hasNoStochasticResults($scope.aggregateState);
     }
 
-    function updateAggregateState() {
-      var aggregateState = _.merge({}, $scope.baseAggregateState, {
-        problem: {
-          criteria: WorkspaceSettingsService.usePercentage() ?
-            WorkspaceService.percentifyCriteria($scope.baseAggregateState.problem.criteria) :
-            $scope.baseAggregateState.problem.criteria
-        }
-      });
-      $scope.aggregateState = aggregateState;
-    }
-
     function updateScales(baseObservedScales) {
-      updateAggregateState();
+      $scope.aggregateState = WorkspaceSettingsService.usePercentage() ?
+        WorkspaceService.percentifyCriteria($scope.baseAggregateState) : $scope.baseAggregateState;
+      var baseCriteria = $scope.baseAggregateState.problem.criteria;
       $scope.workspace.scales.observed = WorkspaceSettingsService.usePercentage() ?
         WorkspaceService.percentifyScales(baseCriteria, baseObservedScales) : baseObservedScales;
 
@@ -169,7 +156,7 @@ define(['lodash'], function(_) {
           },
           callback: function() {
             return (newTitle) => {
-              BenefitRiskService.scenarioForked(newTitle, $scope.subProblem);
+              McdaBenefitRiskService.forkScenarioAndGo(newTitle, $scope.subProblem);
             };
           }
         }
@@ -189,7 +176,7 @@ define(['lodash'], function(_) {
           },
           callback: function() {
             return (newTitle) => {
-              BenefitRiskService.newScenarioAndGo(newTitle, $scope.workspace, $scope.subProblem);
+              McdaBenefitRiskService.newScenarioAndGo(newTitle, $scope.workspace, $scope.subProblem);
             };
           }
         }
