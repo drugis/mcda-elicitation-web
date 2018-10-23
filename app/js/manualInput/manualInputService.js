@@ -105,10 +105,16 @@ define(['lodash', 'angular'], function(_) {
           'unitOfMeasurement',
           'isFavorable'
         ]);
-        newCriterion.dataSources = _.map(criterion.dataSources, addScale);
+        newCriterion.dataSources = _.map(criterion.dataSources, buildDataSource);
         return [criterion.id, newCriterion];
       });
       return _.fromPairs(newCriteria);
+    }
+
+    function buildDataSource(dataSource){
+      var newDataSource = addScale(dataSource);
+      delete newDataSource.oldId;
+      return newDataSource;
     }
 
     function addScale(dataSource) {

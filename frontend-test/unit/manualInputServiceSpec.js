@@ -152,11 +152,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     describe('createProblem', function() {
       var title = 'title';
       var description = 'A random description of a random problem';
-      var treatments = [{
+      var alternatives = [{
         title: 'alternative1',
-        id: 'alternative1'
+        id: 'alternative1',
+        oldId: 'alternative1Oldid'
       }];
-      it('should create a problem, ready to go to the workspace', function() {
+      it('should create a problem, ready to go to the workspace, removing old ids', function() {
         inputKnowledgeServiceMock.buildPerformance.and.returnValue({});
         var criteria = [{
           title: 'favorable criterion',
@@ -164,10 +165,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           unitOfMeasurement: 'particles',
           isFavorable: true,
           id: 'criterion1id',
+          oldid: 'criterion1oldId',
           scale: [0, 1],
           omitThis: 'yech',
           dataSources: [{
             id: 'ds1id',
+            oldId: 'ds1oldId',
             inputType: 'effect',
             dataType: 'other'
           }]
@@ -227,7 +230,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           }
         };
         var useFavorability = true;
-        var result = manualInputService.createProblem(criteria, treatments, title, description, inputData, useFavorability);
+        var result = manualInputService.createProblem(criteria, alternatives, title, description, inputData, useFavorability);
         var expectedResult = {
           title: title,
           schemaVersion: '1.1.0',
@@ -497,7 +500,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             id: 'uuid13',
             title: 'alternative 1'
           }],
-          inputData:{
+          inputData: {
             uuid9: {
               uuid13: undefined // see input knowledge service spec for tests 
             }
