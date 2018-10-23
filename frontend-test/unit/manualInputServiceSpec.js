@@ -44,6 +44,26 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         };
         expect(manualInputService.getInputError(cell)).toBeFalsy();
       });
+      it('should return no error for bounds that are not estimable', () => {
+        var cell = {
+          lowerBoundNE: true,
+          upperBoundNE: true,
+          firstParameter: 10,
+          secondParameter: 20,
+          inputParameters: {
+            firstParameter: {
+              label: 'Lower bound',
+              constraints: [
+                () => { }
+              ]
+            },
+            secondParameter: {
+              label: 'Upper bound'
+            }
+          }
+        };
+        expect(manualInputService.getInputError(cell)).toBeFalsy();
+      });
     });
     describe('inputToString', function() {
       it('should use the inputknowledgeservice for valid inputs', function() {
