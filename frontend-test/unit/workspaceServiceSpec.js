@@ -968,74 +968,82 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
 
     describe('percentifyCriteria', function() {
       it('should convert datasource scales and pvf ranges to percentages where appropriate', function() {
-        var criteria = {
-          crit1: {
-            unitOfMeasurement: 'proportion',
-            dataSources: [{
-              scale: [10, 20],
-              pvf: {
-                range: [15, 16]
+        var state = {
+          problem: {
+            criteria: {
+              crit1: {
+                unitOfMeasurement: 'proportion',
+                dataSources: [{
+                  scale: [10, 20],
+                  pvf: {
+                    range: [15, 16]
+                  }
+                }, {
+                  scale: [0, 1]
+                }]
+              },
+              crit2: {
+                dataSources: [{
+                  scale: [0, 1],
+                  pvf: {}
+                }, {
+                  scale: [0, 1],
+                  pvf: {
+                    range: [0.3, 0.4]
+                  }
+                }]
+              },
+              crit3: {
+                unitOfMeasurement: 'keepUnit',
+                dataSources: [{
+                  scale: [-Infinity, Infinity],
+                  pvf: {
+                    range: [10, 20]
+                  }
+                }]
               }
-            }, {
-              scale: [0, 1]
-            }]
-          },
-          crit2: {
-            dataSources: [{
-              scale: [0, 1],
-              pvf: {}
-            }, {
-              scale: [0, 1],
-              pvf: {
-                range: [0.3, 0.4]
-              }
-            }]
-          },
-          crit3: {
-            unitOfMeasurement: 'keepUnit',
-            dataSources: [{
-              scale: [-Infinity, Infinity],
-              pvf: {
-                range: [10, 20]
-              }
-            }]
+            }
           }
         };
 
-        var result = workspaceService.percentifyCriteria(criteria);
+        var result = workspaceService.percentifyCriteria(state);
 
         var expectedResult = {
-          crit1: {
-            unitOfMeasurement: '%',
-            dataSources: [{
-              scale: [10, 20],
-              pvf: {
-                range: [15, 16]
+          problem: {
+            criteria: {
+              crit1: {
+                unitOfMeasurement: '%',
+                dataSources: [{
+                  scale: [10, 20],
+                  pvf: {
+                    range: [15, 16]
+                  }
+                }, {
+                  scale: [0, 100]
+                }]
+              },
+              crit2: {
+                unitOfMeasurement: '%',
+                dataSources: [{
+                  scale: [0, 100],
+                  pvf: {}
+                }, {
+                  scale: [0, 100],
+                  pvf: {
+                    range: [30, 40]
+                  }
+                }]
+              },
+              crit3: {
+                unitOfMeasurement: 'keepUnit',
+                dataSources: [{
+                  scale: [-Infinity, Infinity],
+                  pvf: {
+                    range: [10, 20]
+                  }
+                }]
               }
-            }, {
-              scale: [0, 100]
-            }]
-          },
-          crit2: {
-            unitOfMeasurement: '%',
-            dataSources: [{
-              scale: [0, 100],
-              pvf: {}
-            }, {
-              scale: [0, 100],
-              pvf: {
-                range: [30, 40]
-              }
-            }]
-          },
-          crit3: {
-            unitOfMeasurement: 'keepUnit',
-            dataSources: [{
-              scale: [-Infinity, Infinity],
-              pvf: {
-                range: [10, 20]
-              }
-            }]
+            }
           }
         };
 

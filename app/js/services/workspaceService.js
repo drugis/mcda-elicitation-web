@@ -43,9 +43,13 @@ define(['lodash', 'angular'], function(_, angular) {
       return updateDataSources(criteria, addTheoreticalScale);
     }
 
-    function percentifyCriteria(criteria) {
-      var criteriaWithUpdatedDataSources = updateDataSources(criteria, percentifyDataSource);
-      return percentifyCriteriaUnits(criteriaWithUpdatedDataSources);
+    function percentifyCriteria(baseState) {
+      var criteriaWithUpdatedDataSources = updateDataSources(baseState.problem.criteria, percentifyDataSource);
+      return _.merge({}, baseState, {
+        problem: {
+          criteria: percentifyCriteriaUnits(criteriaWithUpdatedDataSources)
+        }
+      });
     }
 
     function percentifyCriteriaUnits(criteria) {
