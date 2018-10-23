@@ -74,9 +74,7 @@ define(['lodash'], function(_) {
       $scope.baseAggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
       $scope.aggregateState = WorkspaceSettingsService.usePercentage() ?
         WorkspaceService.percentifyCriteria($scope.baseAggregateState) : $scope.baseAggregateState;
-      $scope.hasMissingValues = _.find($scope.aggregateState.problem.performanceTable, function(tableEntry) {
-        return tableEntry.performance.type === 'empty';
-      });
+      checkForMissingValuesInPerformanceTable();
       checkHasNoStochasticResults();
 
       $scope.scalesPromise.then(function(observedScales) {
@@ -86,6 +84,12 @@ define(['lodash'], function(_) {
       });
 
       updateScenarios();
+    }
+
+    function checkForMissingValuesInPerformanceTable() {
+      $scope.hasMissingValues = _.find($scope.aggregateState.problem.performanceTable, function(tableEntry) {
+        return tableEntry.performance.type === 'empty';
+      });
     }
 
     function checkHasNoStochasticResults() {

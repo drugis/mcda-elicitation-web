@@ -124,7 +124,7 @@ define(['lodash', 'angular'], function(_) {
       var to = choices[dataSource].to;
       var restrictedFrom = scalesState[dataSource].sliderOptions.restrictedRange.from;
       var restrictedTo = scalesState[dataSource].sliderOptions.restrictedRange.to;
-      return (from > restrictedFrom || to < restrictedTo);
+      return (from === to || from > restrictedFrom || to < restrictedTo);
     }
 
     function getNumberOfDataSourcesPerCriterion(criteria, dataSourceInclusions) {

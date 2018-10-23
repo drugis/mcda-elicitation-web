@@ -1,14 +1,14 @@
 'use strict';
 define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angular) {
-  describe('The SubProblemService', function() {
+  describe('The SubProblemService', () => {
     var subProblemService;
     beforeEach(angular.mock.module('elicit.subProblem'));
     beforeEach(inject(function(SubProblemService) {
       subProblemService = SubProblemService;
     }));
 
-    describe('createSubProblemCommand', function() {
-      it('should create a command ready for the backend to store', function() {
+    describe('createSubProblemCommand', () => {
+      it('should create a command ready for the backend to store', () => {
         var problem = {
           criteria: {
             headacheId: {},
@@ -72,8 +72,8 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
     });
 
 
-    describe('determineBaseline', function() {
-      it('should determine the baseline alternative', function() {
+    describe('determineBaseline', () => {
+      it('should determine the baseline alternative', () => {
         var performanceTable = [{
           performance: {
             parameters: {
@@ -96,8 +96,8 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       });
     });
 
-    describe('checkScaleRanges', function() {
-      it('should check wether there are no missing scale ranges', function() {
+    describe('checkScaleRanges', () => {
+      it('should check wether there are no missing scale ranges', () => {
         var criteria1 = {
           crit1: {
             dataSources: [{
@@ -147,8 +147,8 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       });
     });
 
-    describe('excludeDataSourcesForExcludedCriteria', function() {
-      it('should exclude data sources when their criterion is excluded', function() {
+    describe('excludeDataSourcesForExcludedCriteria', () => {
+      it('should exclude data sources when their criterion is excluded', () => {
         var criteria = {
           crit1: {
             dataSources: [
@@ -191,13 +191,13 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       });
     });
 
-    describe('areValuesMissingInEffectsTable', function() {
+    describe('areValuesMissingInEffectsTable', () => {
       var subProblemState = {
         dataSourceInclusions: { 'ds1': true },
         alternativeInclusions: { 'alt1': true }
       };
 
-      it('should return truthy if there is a missing scale for the included datasources+alternatives', function() {
+      it('should return truthy if there is a missing scale for the included datasources+alternatives', () => {
         var scales = {
           ds1: {
             alt1: {}
@@ -207,7 +207,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         expect(result).toBeTruthy();
       });
 
-      it('should return truthy if there is a NaN scale for the included datasources+alternatives', function() {
+      it('should return truthy if there is a NaN scale for the included datasources+alternatives', () => {
         var scales = {
           ds1: {
             alt1: { '50%': NaN }
@@ -217,7 +217,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         expect(result).toBeTruthy();
       });
 
-      it('should return truthy if there is a null scale for the included datasources+alternatives', function() {
+      it('should return truthy if there is a null scale for the included datasources+alternatives', () => {
         var scales = {
           ds1: {
             alt1: { '50%': null }
@@ -226,7 +226,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales);
         expect(result).toBeTruthy();
       });
-      it('should return falsy if there no missing or invalid values', function() {
+      it('should return falsy if there no missing or invalid values', () => {
         var scales = {
           ds1: {
             alt1: { '50%': 5 }
@@ -237,8 +237,8 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       });
     });
 
-    describe('hasInvalidSlider', function() {
-      it('should return truthy if any value at an invalid location', function() {
+    describe('hasInvalidSlider', () => {
+      it('should return truthy if any value at an invalid location', () => {
         var scalesDataSources = ['ds1'];
         var choices = {
           ds1: {
@@ -259,8 +259,28 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         var result = subProblemService.hasInvalidSlider(scalesDataSources, choices, scalesState);
         expect(result).toBeTruthy();
       });
-
-      it('should return falsy if all values are within their correct ranges', function() {
+      it('should return truthy if if both choices are the same', () => {
+        var scalesDataSources = ['ds1'];
+        var choices = {
+          ds1: {
+            from: 2,
+            to: 2
+          }
+        };
+        var scalesState = {
+          ds1: {
+            sliderOptions: {
+              restrictedRange: {
+                from: 2,
+                to: 2
+              }
+            }
+          }
+        };
+        var result = subProblemService.hasInvalidSlider(scalesDataSources, choices, scalesState);
+        expect(result).toBeTruthy();
+      });
+      it('should return falsy if all values are within their correct ranges', () => {
         var scalesDataSources = ['ds1'];
         var choices = {
           ds1: {
@@ -283,8 +303,8 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       });
     });
 
-    describe('getNumberOfDataSourcesPerCriterion', function() {
-      it('should return the number of included datasources per criteria', function() {
+    describe('getNumberOfDataSourcesPerCriterion', () => {
+      it('should return the number of included datasources per criteria', () => {
         var criteria = {
           crit1: {
             dataSources: [
@@ -311,8 +331,8 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       });
     });
 
-    describe('areTooManyDataSourcesSelected', function() {
-      it('return truthy if there is atleast one criterion with multiple selected datasources', function() {
+    describe('areTooManyDataSourcesSelected', () => {
+      it('return truthy if there is atleast one criterion with multiple selected datasources', () => {
         var numberOfDataSourcesPerCriterion = {
           crit1: 0,
           crit2: 1,
@@ -321,7 +341,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         var result = subProblemService.areTooManyDataSourcesSelected(numberOfDataSourcesPerCriterion);
         expect(result).toBeTruthy();
       });
-      it('should return falsy if there is no criterion with multiple datasources selected', function() {
+      it('should return falsy if there is no criterion with multiple datasources selected', () => {
         var numberOfDataSourcesPerCriterion = {
           crit1: 0,
           crit2: 1,
@@ -332,8 +352,8 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       });
     });
 
-    describe('getCriteriaByDataSource', function() {
-      it('should return the criterion ids keyed by their datasource ids', function() {
+    describe('getCriteriaByDataSource', () => {
+      it('should return the criterion ids keyed by their datasource ids', () => {
         var criteria = [{
           id: 'crit1',
           dataSources: [{ id: 'ds1.1' }, { id: 'ds1.2' }]
@@ -351,8 +371,8 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       });
     });
 
-    describe('createSubProblemState', function() {
-      it('should return a sub problem state', function() {
+    describe('createSubProblemState', () => {
+      it('should return a sub problem state', () => {
         var problem = {
           criteria: {
             crit1: {

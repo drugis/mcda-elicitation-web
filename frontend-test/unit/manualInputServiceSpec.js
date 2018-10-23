@@ -536,5 +536,157 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(manualInputService.getOptions()).toEqual('here are some options');
       });
     });
+
+    describe('findInvalidCell', () => {
+      it('should return truthy if there is atleast one cell that is marked invalid', () => {
+        var inputData = {
+          row1: {
+            col1: {
+              isInvalid: true
+            },
+            col2: {
+              isInvalid: false
+            }
+          }
+        };
+        var result = manualInputService.findInvalidCell(inputData);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return falsy if there is not celel marked invalid', () => {
+        var inputData = {
+          row1: {
+            col1: {
+            },
+            col2: {
+            }
+          },
+          row2: {
+            col1: {
+              isInvalid: false
+            }
+          }
+        };
+        var result = manualInputService.findInvalidCell(inputData);
+        expect(result).toBeFalsy();
+
+      });
+    });
+
+    describe('findInvalidRow', () => {
+      it('should return truthy if there is an invalid row i.e. all inputs are not distributed and have the same effect value', () => {
+        var inputData = {
+          row1: {
+            col1: {
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            },
+            col2: {
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            },
+            col3: {
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            }
+          }
+        };
+        var result = manualInputService.findInvalidRow(inputData);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return falsy if the values of a row are the same, but atleast one is marked as normally distributed', () => {
+        var inputData = {
+          row1: {
+            col1: {
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            },
+            col2: {
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            },
+            col3: {
+              inputType: 'effect',
+              isNormal: true,
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            }
+          }
+        };
+        var result = manualInputService.findInvalidRow(inputData);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return falsy if atleast one cell is a distribution', () => {
+        var inputData = {
+          row1: {
+            col1: {
+              inputType: 'distribution',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            },
+            col2: {
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            }
+          }
+        };
+        var result = manualInputService.findInvalidRow(inputData);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return falsy if atleast one cell has a different value', () => {
+        var inputData = {
+          row1: {
+            col1: {
+              inputType: 'distribution',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            },
+            col2: {
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            },
+            col3: {
+              inputType: 'effect',
+              firstParameter: 51,
+              inputParameters: {
+                id: 'value'
+              }
+            }
+          }
+        };
+        var result = manualInputService.findInvalidRow(inputData);
+        expect(result).toBeFalsy();
+      });
+    });
   });
 });

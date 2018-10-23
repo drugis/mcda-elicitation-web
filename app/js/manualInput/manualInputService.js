@@ -230,13 +230,57 @@ define(['lodash', 'angular'], function(_) {
       return InputKnowledgeService.finishInputCell(dataSource, tableEntry);
     }
 
+    function findInvalidRow(inputData) {
+      return _.find(inputData, function(row) {
+        if (findDistributionCell(row) || findNormalDistributedCell(row) || findCellThatIsDifferent(row)) {
+          return;
+        }
+        return row;
+      });
+    }
+
+    function findCellThatIsDifferent(row) {
+      return _.find(row, function(cell) {
+        return _.find(row, function(otherCell) {
+          return compareCells(cell, otherCell);
+        });
+      });
+    }
+
+    function compareCells(cell, otherCell) {
+      if (cell.inputParameters.id === 'dichotomousFraction') {
+        return cell.firstParameter !== otherCell.firstParameter || cell.secondParameter !== otherCell.secondParameter;
+      }
+      return cell.firstParameter !== otherCell.firstParameter;
+    }
+
+    function findDistributionCell(row) {
+      return _.find(row, function(cell) {
+        return cell.inputType !== 'effect';
+      });
+    }
+
+    function findNormalDistributedCell(row) {
+      return _.find(row, function(cell) {
+        return cell.isNormal;
+      });
+    }
+
+    function findInvalidCell(inputData) {
+      return _.find(inputData, function(row) {
+        return _.find(row, 'isInvalid');
+      });
+    }
+
     return {
       createProblem: createProblem,
       inputToString: inputToString,
       getInputError: getInputError,
       prepareInputData: prepareInputData,
       getOptions: getOptions,
-      createStateFromOldWorkspace: createStateFromOldWorkspace
+      createStateFromOldWorkspace: createStateFromOldWorkspace,
+      findInvalidRow: findInvalidRow,
+      findInvalidCell: findInvalidCell
     };
   };
 

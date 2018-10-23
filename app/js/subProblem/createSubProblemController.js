@@ -105,13 +105,13 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.subProblemState.numberOfDataSourcesPerCriterion = SubProblemService.getNumberOfDataSourcesPerCriterion($scope.problem.criteria, $scope.subProblemState.dataSourceInclusions);
       $scope.hasMissingValues = SubProblemService.areValuesMissingInEffectsTable($scope.subProblemState, $scope.scales);
       $scope.areTooManyDataSourcesSelected = SubProblemService.areTooManyDataSourcesSelected($scope.subProblemState.numberOfDataSourcesPerCriterion);
-      $scope.scalesDataSources = getScalesDataSources();
+      $scope.scalesDataSources = getDataSourcesForScaleSliders();
       $timeout(function() {
         $scope.$broadcast('rzSliderForceRender');
       }, 100);
     }
 
-    function getScalesDataSources() {
+    function getDataSourcesForScaleSliders() {
       return ($scope.hasMissingValues || $scope.areTooManyDataSourcesSelected) ? [] : _.keys(_.pickBy($scope.subProblemState.dataSourceInclusions));
     }
 

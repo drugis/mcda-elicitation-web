@@ -81,9 +81,8 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function checkInputData() {
-      $scope.state.isInputDataValid = !_.find($scope.state.inputData, function(row) {
-        return _.find(row, 'isInvalid');
-      });
+      $scope.state.isInputDataValid = !ManualInputService.findInvalidCell($scope.state.inputData);
+      $scope.state.areInputDataRowsValid = !ManualInputService.findInvalidRow($scope.state.inputData);
     }
 
     function createProblem() {

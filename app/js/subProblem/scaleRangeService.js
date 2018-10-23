@@ -55,7 +55,11 @@ define(['lodash', 'angular'], function(_) {
       var boundTo = function(val) {
         return val > scale[1] ? scale[1] : val;
       };
-      var margin = 0.5 * (to - from);
+      if (from === to) {
+        from *= 0.95;
+        to *= 1.1;
+      }
+      var margin = getMargin(from, to);
 
       scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
       scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
@@ -82,6 +86,10 @@ define(['lodash', 'angular'], function(_) {
           }
         }
       };
+    }
+
+    function getMargin(from, to) {
+      return 0.5 * (to - from);
     }
 
     function createRanges(choices) {

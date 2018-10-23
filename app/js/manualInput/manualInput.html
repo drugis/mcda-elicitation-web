@@ -178,6 +178,9 @@
       <div ng-if="!state.isInputDataValid">
         <em>Invalid input data</em>
       </div>
+      <div ng-if="!state.areInputDataRowsValid">
+        <em>Invalid input, rows must contain atleast one distribution or different effect value</em>
+      </div>
     </div>
   </div>
 </div>
