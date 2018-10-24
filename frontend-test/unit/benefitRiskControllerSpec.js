@@ -3,11 +3,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
   describe('MCDA benefit-risk controller', () => {
 
     var scope,
-      transitions = {
-        onStart: (_arg, callback) => {
-          return callback;
-        }
-      },
+      transitions = jasmine.createSpyObj('$transitions', ['onStart']),
       stateMock = jasmine.createSpyObj('$state', ['go']),
       stateParams,
       modalMock = jasmine.createSpyObj('$modal', ['open']),
@@ -80,6 +76,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         $promise: $q.resolve(scenarios)
       });
       EffectsTableService.createEffectsTableInfo.and.returnValue(effectsTableInfo);
+      transitions.onStart.and.returnValue(() => { });
     }));
 
     beforeEach(inject(($controller, $rootScope) => {
@@ -118,10 +115,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         expect(modalMock.open).not.toHaveBeenCalled();
         scope.forkScenario();
         expect(modalMock.open).toHaveBeenCalled();
-      });
-      it('should place a transition listener on the scope which sets the active tab', () => {
-        spyOn
-        expect()
       });
       it('should place a newScenario function which opens a modal on the scope.', () => {
         expect(modalMock.open).not.toHaveBeenCalled();
@@ -311,6 +304,15 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         scope.$broadcast('elicit.resultsAccessible');
         scope.$apply();
         expect(scope.updateState).toHaveBeenCalled();
+      });
+    });
+    describe('when a $destroy event triggers', () => {
+      it('should call deregisterTransitionListener', () => {
+        spyOn(scope, 'deregisterTransitionListener');
+        expect(scope.deregisterTransitionListener).not.toHaveBeenCalled();
+        scope.$broadcast('$destroy');
+        scope.$apply();
+        expect(scope.deregisterTransitionListener).toHaveBeenCalled();
       });
     });
   });
