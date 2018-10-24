@@ -170,7 +170,7 @@
     </div>
     <!-- buttons -->
     <div class="cell">
-      <button ng-disabled="!state.isInputDataValid" class="button" type="button" ng-click="createProblem()" tooltip="Create problem and proceed to analysis">
+      <button ng-disabled="!state.isInputDataValid || !state.areInputDataRowsValid" class="button" type="button" ng-click="createProblem()" tooltip="Create problem and proceed to analysis">
         Done
       </button>
       <button class="button" ng-click="saveInProgress()" ng-disabled="!dirty" tooltip="Save current state">Save</button>

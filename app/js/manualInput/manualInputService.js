@@ -162,7 +162,7 @@ define(['lodash', 'angular'], function(_) {
     function buildPerformanceTable(inputData, criteria, alternatives) {
       return _(criteria).map((criterion, criterionId) => {
         return _.map(criterion.dataSources, (dataSource) => {
-          return buildPerformanceEntries(inputData, criterionId, dataSource.id, alternatives)
+          return buildPerformanceEntries(inputData, criterionId, dataSource.id, alternatives);
         });
       })
         .flatten()
@@ -185,36 +185,34 @@ define(['lodash', 'angular'], function(_) {
     function copyOldWorkspaceCriteria(workspace) {
       return _.map(workspace.problem.criteria, function(criterion) {
         var newCrit = _.pick(criterion, ['title', 'description', 'unitOfMeasurement', 'isFavorable']); // omit scales, preferences
-        newCrit.dataSources = _.map(criterion.dataSources, function(dataSource) {
-          var newDataSource = _.pick(dataSource, [
-            'source',
-            'sourceLink',
-            'strengthOfEvidence',
-            'uncertainties',
-            'inputType',
-            'inputMethod',
-            'dataType',
-            'parameterOfInterest'
-          ]);
-          newDataSource.id = generateUuid();
-          newDataSource.oldId = dataSource.id;
-          return newDataSource;
-        });
+        newCrit.dataSources = copyOldWorkspaceDataSource(criterion);
         newCrit.id = generateUuid();
         return newCrit;
       });
     }
 
+    function copyOldWorkspaceDataSource(criterion){
+      return _.map(criterion.dataSources, function(dataSource) {
+        var newDataSource = _.pick(dataSource, [
+          'source',
+          'sourceLink',
+          'strengthOfEvidence',
+          'uncertainties',
+          'inputType',
+          'inputMethod',
+          'dataType',
+          'parameterOfInterest'
+        ]);
+        newDataSource.id = generateUuid();
+        newDataSource.oldId = dataSource.id;
+        return newDataSource;
+      });
+    }
+
     function createInputFromOldWorkspace(criteria, alternatives, oldWorkspace) {
       return _.reduce(oldWorkspace.problem.performanceTable, function(accum, tableEntry) {
-        var dataSourceForEntry;
-        _.forEach(criteria, function(criterion) {
-          _.forEach(criterion.dataSources, function(dataSource) {
-            if (dataSource.oldId === tableEntry.dataSource) {
-              dataSourceForEntry = dataSource;
-            }
-          });
-        });
+        var dataSources = getDataSources(criteria);
+        var dataSourceForEntry = _.find(dataSources, ['oldId', tableEntry.dataSource]);
         var alternative = _.find(alternatives, ['oldId', tableEntry.alternative]);
         if (dataSourceForEntry && alternative) {
           if (!accum[dataSourceForEntry.id]) {
@@ -249,7 +247,11 @@ define(['lodash', 'angular'], function(_) {
 
     function compareCells(cell, otherCell) {
       if (cell.inputParameters.id === 'dichotomousFraction') {
-        return cell.firstParameter !== otherCell.firstParameter || cell.secondParameter !== otherCell.secondParameter;
+        if (otherCell.inputParameters.id === 'dichotomousFraction') {
+          return cell.firstParameter !== otherCell.firstParameter || cell.secondParameter !== otherCell.secondParameter;
+        } else {
+          return cell.firstParameter / cell.secondParameter !== otherCell.firstParameter;
+        }
       }
       return cell.firstParameter !== otherCell.firstParameter;
     }
