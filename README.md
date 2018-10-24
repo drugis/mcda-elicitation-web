@@ -51,22 +51,28 @@ You can build a new local image by executing the `build-docker.sh` script. This 
 
 The `build-docker.sh` script also lets you specify the signin method via command line arugment. The current options are Google OAuth 2.0 (`GOOGLE`) and username/password (`LOCAL`). The default signin method is Google OAuth 2.0.
 
-You can add users for the `LOCAL` signin method by using the `add-user.sh` script. Note: this script relies on external utilities which must be installed by running `yarn` first, one time.
+For local signin, there are several further dependencies (assuming a version of NodeJS of 10.x) to generate the users and passwords:
+
+    sudo npm -g install yarn
+    sudo npm -g install npx
+    yarn
+
+After installing these dependencies, you can add users for the `LOCAL` signin method by using the `add-user.sh` script.
 
 Running the container
 ---------------------
 
-Execute the `run-gemtc-docker.sh` script.
+Execute the `run-mcda-docker.sh` script.
 
 If you built the container with a specific login method arugment, you should run the `run-mcda-docker.sh` script with the same one.
 
 e.g.:
 ```
 ./build-docker.sh LOCAL
-./run-gemtc-docker.sh LOCAL
+./run-mcda-docker.sh LOCAL
 ```
 
-**Note** that you should probably change the default settings in the script (e.g. check whether the link arguments match the names of your containers, and the names of the certificate files match those in your `ssl` directory if you built your own image). The script also assumes that the sql database and patavi server and worker are already set up and running. The run script runs the `addis/gemtc` image, which will be pulled from docker hub by default. The default image comes with SSL keys which assume `localhost` or `localdocker` CNs, and which are signed by our [self-signed certificate authority](https://drugis.org/files/ca-crt.pem).
+**Note** that you should probably change the default settings in the script (e.g. check whether the link arguments match the names of your containers, and the names of the certificate files match those in your `ssl` directory if you built your own image). The script also assumes that the sql database and patavi server and worker are already set up and running. The run script runs the `addis/mcda` image, which will be pulled from docker hub by default. The default image comes with SSL keys which assume `localhost` or `localdocker` CNs, and which are signed by our [self-signed certificate authority](https://drugis.org/files/ca-crt.pem).
 
 Because the default patavi-server image users a certificate signed by our [certificate authority](https://drugis.org/files/ca-crt.pem) you need to add this certificate to the browser's trusted authorities for R results to be displayed.
 
