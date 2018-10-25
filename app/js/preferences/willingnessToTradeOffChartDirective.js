@@ -1,6 +1,6 @@
 'use strict';
-define(['c3', 'd3', 'jquery', 'lodash'],
-  function(c3, d3, $, _) {
+define(['c3', 'd3', 'lodash'],
+  function(c3, d3, _) {
     var dependencies = [
       '$timeout',
       'TradeOffService',
@@ -59,7 +59,7 @@ define(['c3', 'd3', 'jquery', 'lodash'],
               secondPoint: 'Outcome B'
             }
           };
-          var root = d3.select($(element).get(0));
+          var root = d3.select(element[0]);
           root = root.select('svg');
 
           scope.$watch('settings', function(newSettings) {
@@ -162,7 +162,14 @@ define(['c3', 'd3', 'jquery', 'lodash'],
             scope.minY = newSettings.secondCriterion.dataSources[0].pvf.range[0];
             scope.maxY = newSettings.secondCriterion.dataSources[0].pvf.range[1];
 
-            var initialSettings = TradeOffService.getInitialSettings(root, data, scope.sliderOptions, newSettings, scope.minY, scope.maxY);
+            var coordRanges = {
+              minX: scope.sliderOptions.floor,
+              maxX: scope.sliderOptions.ceil,
+              minY: scope.minY,
+              maxY: scope.maxY
+            };
+
+            var initialSettings = TradeOffService.getInitialSettings(root, data, coordRanges, newSettings);
             initialSettings.data.columns = [];
 
             scope.units = {
@@ -184,8 +191,8 @@ define(['c3', 'd3', 'jquery', 'lodash'],
           }
 
           function plotIndifference(results) {
-            data.columns[2] = (['line_x'].concat(results.data.x));
-            data.columns[3] = (['line'].concat(results.data.y));
+            data.columns[2] = ['line_x'].concat(results.data.x);
+            data.columns[3] = ['line'].concat(results.data.y);
           }
 
           function updateAxisLabels() {

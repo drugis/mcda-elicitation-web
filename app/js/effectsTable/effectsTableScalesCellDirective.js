@@ -27,6 +27,7 @@ define(['lodash'], function(_) {
             scope.upperBound = getRoundedValue(scope.scales['97.5%']);
           }
         }
+
         function getRoundedValue(value) {
           if (value === null) { return; }
           if (!canBePercentage()) { return $filter('number')(value); }

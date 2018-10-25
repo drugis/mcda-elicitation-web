@@ -136,12 +136,14 @@ module.exports = function(db) {
         var state = {
           problem: util.reduceProblem(req.body.problem)
         };
-        client.query('INSERT INTO scenario (workspace, subproblemId, title, state) VALUES ($1, $2, $3, $4) RETURNING id', [workspaceId, subProblemId, 'Default', state], function(err, result) {
-          if (err) {
-            return callback(err);
-          }
-          callback(null, workspaceId, result.rows[0].id);
-        });
+        client.query('INSERT INTO scenario (workspace, subproblemId, title, state) VALUES ($1, $2, $3, $4) RETURNING id',
+          [workspaceId, subProblemId, 'Default', state],
+          function(err, result) {
+            if (err) {
+              return callback(err);
+            }
+            callback(null, workspaceId, result.rows[0].id);
+          });
       }
 
       function setDefaultScenario(workspaceId, scenarioId, callback) {

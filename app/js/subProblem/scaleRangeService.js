@@ -2,12 +2,14 @@
 define(['lodash', 'angular'], function(_) {
   var dependencies = [
     'intervalHull',
-    'numberFilter'
+    'numberFilter',
+    'WorkspaceSettingsService'
   ];
 
   var ScaleRangeService = function(
     intervalHull,
-    numberFilter
+    numberFilter,
+    WorkspaceSettingsService
   ) {
     function log10(x) {
       return Math.log(x) / Math.log(10);
@@ -53,7 +55,11 @@ define(['lodash', 'angular'], function(_) {
       var boundTo = function(val) {
         return val > scale[1] ? scale[1] : val;
       };
-      var margin = 0.5 * (to - from);
+      if (from === to) {
+        from *= 0.95;
+        to *= 1.1;
+      }
+      var margin = getMargin(from, to);
 
       scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
       scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
@@ -76,10 +82,14 @@ define(['lodash', 'angular'], function(_) {
           precision: 4,
           noSwitching: true,
           translate: function(value) {
-            return numberFilter(shouldCalcPercentage ? value * 100 : value );
+            return numberFilter(shouldCalcPercentage ? value * 100 : value);
           }
         }
       };
+    }
+
+    function getMargin(from, to) {
+      return 0.5 * (to - from);
     }
 
     function createRanges(choices) {
@@ -92,43 +102,46 @@ define(['lodash', 'angular'], function(_) {
       }));
     }
 
-    function getScaleStateAndChoices(observedScales, criteria, showPercentage) {
-      var scaleState = {};
-      var choices = {};
-      _.forEach(criteria, function(criterion) {
-        _.forEach(criterion.dataSources, function(dataSource) {
-          // Calculate interval hulls
-          var dataSourceRange = intervalHull(observedScales[dataSource.id]);
-          var pvf = dataSource.pvf;
-          var problemRange = pvf ? pvf.range : null;
-          var from = problemRange ? problemRange[0] : dataSourceRange[0];
-          var to = problemRange ? problemRange[1] : dataSourceRange[1];
-
-          // Set inital model value
-          choices[dataSource.id] = {
-            from: niceFrom(from),
-            to: niceTo(to)
-          };
-
-          // Set scales for slider
-          var dataSourceScale = dataSource.scale;
-          var shouldCalcPercentage = _.isEqual([0, 1], dataSourceScale) && showPercentage;
-          scaleState[dataSource.id] = calculateScales(dataSourceScale, from, to, dataSourceRange, shouldCalcPercentage);
-        });
-      });
-      return {
-        scaleState: scaleState,
-        choices: choices
-      };
+    function getScalesStateAndChoices(observedScales, criteria) {
+      return _.reduce(criteria, function(accum, criterion) {
+        return _.merge({}, accum, initializeScaleStateAndChoicesForCriterion(observedScales, criterion));
+      }, {});
     }
 
+    function initializeScaleStateAndChoicesForCriterion(observedScales, criterion) {
+      var showPercentage = WorkspaceSettingsService.usePercentage();
+      return _.reduce(criterion.dataSources, function(accum, dataSource) {
+        // Calculate interval hulls
+        var dataSourceRange = intervalHull(observedScales[dataSource.id]);
+        var pvf = dataSource.pvf;
+        var problemRange = pvf ? pvf.range : null;
+        var from = problemRange ? problemRange[0] : dataSourceRange[0];
+        var to = problemRange ? problemRange[1] : dataSourceRange[1];
+
+        // Set scales for slider
+        var dataSourceScale = dataSource.scale;
+        var shouldCalcPercentage = _.isEqual([0, 1], dataSourceScale) && showPercentage;
+        accum.scalesState[dataSource.id] = calculateScales(dataSourceScale, from, to, dataSourceRange, shouldCalcPercentage);
+
+        // Set inital model value
+        accum.choices[dataSource.id] = {
+          from: Math.min(niceFrom(from), accum.scalesState[dataSource.id].sliderOptions.restrictedRange.from),
+          to: Math.max(niceTo(to), accum.scalesState[dataSource.id].sliderOptions.restrictedRange.to)
+        };
+        return accum;
+      }, {
+          scalesState: {},
+          choices: {}
+        }
+      );
+    }
     return {
       nice: nice,
       niceTo: niceTo,
       niceFrom: niceFrom,
       calculateScales: calculateScales,
       createRanges: createRanges,
-      getScaleStateAndChoices: getScaleStateAndChoices
+      getScalesStateAndChoices: getScalesStateAndChoices
     };
   };
 

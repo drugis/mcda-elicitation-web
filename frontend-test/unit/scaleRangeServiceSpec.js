@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash','angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], function(_,angular) {
+define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'], function(_, angular) {
 
   // - the lower bound must be lower than the lower end of the observed range
   // - the upper bound should be higher than the upper end of the observed range
@@ -10,8 +10,12 @@ define(['lodash','angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'
 
   describe('The scaleRange service', function() {
 
+    var workspaceSettingsMock = jasmine.createSpyObj('WorkspaceSettingsService', ['usePercentage']);
+
     beforeEach(angular.mock.module('elicit.util'));
-    beforeEach(angular.mock.module('elicit.subProblem'));
+    beforeEach(angular.mock.module('elicit.subProblem', function($provide) {
+      $provide.value('WorkspaceSettingsService', workspaceSettingsMock);
+    }));
 
     describe('calculateScales', function() {
       it('on unbounded scales, bounds should lie outside the observed range', inject(function(ScaleRangeService) {
@@ -26,6 +30,7 @@ define(['lodash','angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'
         expect(result.sliderOptions.restrictedRange.from).toEqual(-16.123);
         expect(result.sliderOptions.restrictedRange.to).toEqual(-12.123);
       }));
+
       it('should work for fractional/small ranges', inject(function(ScaleRangeService) {
         var dataSourceScale = [0, 1];
         var from = 0.17791;
@@ -35,7 +40,6 @@ define(['lodash','angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'
         var result = ScaleRangeService.calculateScales(dataSourceScale, from, to, criterionRange);
         expect(result.sliderOptions.floor).toEqual(0.1);
         expect(result.sliderOptions.ceil).toEqual(0.30000000000000004);
-
       }));
     });
 
@@ -104,7 +108,7 @@ define(['lodash','angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'
         expect(ranges).toEqual(expectedRanges);
       }));
     });
-    describe('getScaleStateAndChoices', function() {
+    describe('getScalesStateAndChoices', function() {
       it('should return the scale state and the choices', inject(function(ScaleRangeService) {
         var observedScales = {
           ds1: {
@@ -139,7 +143,7 @@ define(['lodash','angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'
             id: 'ds2'
           }]
         }];
-        var result = ScaleRangeService.getScaleStateAndChoices(observedScales, criteria);
+        var result = ScaleRangeService.getScalesStateAndChoices(observedScales, criteria);
         var expectedResult = {
           choices: {
             ds1: {
@@ -151,7 +155,7 @@ define(['lodash','angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'
               to: 40
             }
           },
-          scaleState: {
+          scalesState: {
             ds1: {
               sliderOptions: {
                 restrictedRange: {
@@ -180,15 +184,15 @@ define(['lodash','angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService'
             }
           }
         };
-        expect(typeof result.scaleState.ds1.increaseFrom).toBe('function');
-        expect(typeof result.scaleState.ds1.increaseTo).toBe('function');
-        expect(typeof result.scaleState.ds2.increaseFrom).toBe('function');
-        expect(typeof result.scaleState.ds2.increaseTo).toBe('function');
+        expect(typeof result.scalesState.ds1.increaseFrom).toBe('function');
+        expect(typeof result.scalesState.ds1.increaseTo).toBe('function');
+        expect(typeof result.scalesState.ds2.increaseFrom).toBe('function');
+        expect(typeof result.scalesState.ds2.increaseTo).toBe('function');
         var relevantProperties = ['restrictedRange', 'floor', 'ceil', 'step', 'precision', 'noSwitching'];
-        var subResultDs1 = _.pick(result.scaleState.ds1.sliderOptions, relevantProperties);
-        expect(subResultDs1).toEqual(expectedResult.scaleState.ds1.sliderOptions);
-        var subResultDs2 = _.pick(result.scaleState.ds2.sliderOptions, relevantProperties);
-        expect(subResultDs2).toEqual(expectedResult.scaleState.ds2.sliderOptions);
+        var subResultDs1 = _.pick(result.scalesState.ds1.sliderOptions, relevantProperties);
+        expect(subResultDs1).toEqual(expectedResult.scalesState.ds1.sliderOptions);
+        var subResultDs2 = _.pick(result.scalesState.ds2.sliderOptions, relevantProperties);
+        expect(subResultDs2).toEqual(expectedResult.scalesState.ds2.sliderOptions);
         expect(result.choices).toEqual(expectedResult.choices);
       }));
     });

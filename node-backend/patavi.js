@@ -4,7 +4,6 @@ var https = require('https');
 var logger = require('./logger');
 var _ = require('lodash');
 
-
 var httpsOptions = {
   hostname: process.env.PATAVI_HOST,
   port: process.env.PATAVI_PORT,
@@ -17,7 +16,6 @@ try {
 } catch (e) {
   logger.warn('could not read patavi certivicate authority at: ' + process.env.PATAVI_CA);
 }
-
 
 function createPataviTask(problem, callback) {
   logger.debug('pataviTaskRepository.createPataviTask');

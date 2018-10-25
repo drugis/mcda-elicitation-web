@@ -3,11 +3,12 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 let basePath = path.join(__dirname, '/');
+let fs = require('fs');
 
 let config = {
   entry: {
     'main': basePath + '/app/js/main.js',
-    'signin': basePath + '/app/js/signin.js',
+    'signin': basePath + 'app/js/signin.js',
     'manual': basePath + '/app/js/manual.js',
     'error': basePath + 'app/js/error.js'
   },
@@ -25,7 +26,7 @@ let config = {
       use: [{
         loader: 'angular1-templateurl-loader'
       }],
-      exclude: [/(.*)\/angular-foundation-6\/(.*)/] // uses $templatecache so dont replace 
+      exclude: [/.*angular-foundation-6.*/] // uses $templatecache so dont replace 
     }, {
       test: /\.json$/,
       loader: 'json-loader'
@@ -57,13 +58,7 @@ let config = {
   resolve: {
     alias: {
       'mcda': basePath + '/app/js',
-      'mcdaweb': basePath + '/app/js/mcda-web',
-      'jQuery': 'jquery',
-      'angular-patavi-client': 'angular-patavi-client/patavi',
-      'error-reporting': 'error-reporting/errorReportingDirective',
-      'export-directive': 'export-directive/export-directive',
-      'help-popup': 'help-popup/help-directive',
-      'page-title-service': 'page-title-service/pageTitleService',
+      'mcdaweb': basePath + '/app/js/mcda-web'
     },
     modules: [
       // Files path which will be referenced while bundling
@@ -82,17 +77,18 @@ let config = {
     }),
     new HtmlWebpackPlugin({
       filename: 'signin.html',
-      template: 'app/signin.html',
+      template: 'app/signin.ejs',
       inject: 'head',
-      chunks: ['signin']
+      chunks: ['signin'],
+      signin: fs.readFileSync(require.resolve('signin/googleSignin.html'))
     }),
     new HtmlWebpackPlugin({
       filename: 'manual.html',
       template: 'app/manual.html',
       inject: 'head',
       chunks: ['manual']
-    }),  
-      new HtmlWebpackPlugin({
+    }),
+    new HtmlWebpackPlugin({
       filename: 'error.html',
       template: 'app/error.html',
       inject: 'head',

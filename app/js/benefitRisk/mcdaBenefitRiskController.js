@@ -1,6 +1,7 @@
 'use strict';
 define(['lodash'], function(_) {
   var dependencies = ['$scope', '$transitions', '$state', '$stateParams', '$modal',
+    'McdaBenefitRiskService',
     'Tasks',
     'TaskDependencies',
     'ScenarioResource',
@@ -9,12 +10,12 @@ define(['lodash'], function(_) {
     'EffectsTableService',
     'subProblems',
     'currentSubProblem',
-    'scenarios',
     'currentScenario',
     'isMcdaStandalone'
   ];
 
   function MCDABenefitRiskController($scope, $transitions, $state, $stateParams, $modal,
+    McdaBenefitRiskService,
     Tasks,
     TaskDependencies,
     ScenarioResource,
@@ -23,7 +24,6 @@ define(['lodash'], function(_) {
     EffectsTableService,
     subProblems,
     currentSubProblem,
-    scenarios,
     currentScenario,
     isMcdaStandalone
   ) {
@@ -31,107 +31,93 @@ define(['lodash'], function(_) {
     $scope.forkScenario = forkScenario;
     $scope.newScenario = newScenario;
     $scope.scenarioChanged = scenarioChanged;
+
+    // set on scope for testing purposes
     $scope.updateScales = updateScales;
+    $scope.updateState = updateState;
+    $scope.deregisterTransitionListener = $transitions.onStart({}, function(transition) {
+      setActiveTab(transition.to().name, transition.to().name);
+    });
 
     // init
     var baseProblem = $scope.workspace.problem;
-    var deregisterTransitionListener;
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
     $scope.selections = {};
-    $scope.scenarios = scenarios;
-    $scope.scenariosWithResults = WorkspaceService.filterScenariosWithResults(baseProblem, currentSubProblem, scenarios);
-    $scope.scenario = currentScenario;
     $scope.isDuplicateScenarioTitle = false;
+    $scope.scalesPromise = WorkspaceService.getObservedScales(baseProblem);
+    $scope.tasks = _.keyBy(Tasks.available, 'id');
 
-    $scope.baseAggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, currentScenario);
-    var baseCriteria = $scope.baseAggregateState.problem.criteria;
-    updateAggregateState();
+    $scope.updateState(currentScenario);
     $scope.effectsTableInfo = EffectsTableService.createEffectsTableInfo(baseProblem.performanceTable);
-    $scope.hasMissingValues = _.find($scope.aggregateState.problem.performanceTable, function(tableEntry) {
-      return tableEntry.performance.type === 'empty';
-    });
-    checkHasNoStochasticResults();
 
     $scope.subProblems = subProblems;
     $scope.subProblem = currentSubProblem;
     $scope.workspace.scales = {};
     $scope.isStandalone = isMcdaStandalone;
     determineActiveTab();
-    $scope.scalesPromise = WorkspaceService.getObservedScales(baseProblem).then(function(observedScales) {
-      $scope.workspace.scales.base = observedScales;
-      $scope.workspace.scales.basePercentified = WorkspaceService.toPercentage(baseProblem.criteria, observedScales);
-      updateScales(observedScales);
-    });
-
-    $scope.tasks = _.reduce(Tasks.available, function(tasks, task) {
-      tasks[task.id] = task;
-      return tasks;
-    }, {});
-
-    deregisterTransitionListener = $transitions.onStart({}, function(transition) {
-      setActiveTab(transition.to().name, transition.to().name);
-    });
 
     $scope.$watch('scenario.state', updateTaskAccessibility);
     $scope.$watch('aggregateState', checkHasNoStochasticResults, true);
-    $scope.$on('$destroy', deregisterTransitionListener);
+    $scope.$on('$destroy', function() {
+      $scope.deregisterTransitionListener();
+    });
     $scope.$on('elicit.settingsChanged', function() {
-      updateScales($scope.workspace.scales.base);
+      $scope.updateScales($scope.workspace.scales.base);
     });
     $scope.$on('elicit.resultsAccessible', function(event, scenario) {
-      $scope.baseAggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
-      baseCriteria = $scope.baseAggregateState.problem.criteria;
-
-      updateAggregateState();
-      $scope.scenario = scenario;
-      if ($scope.workspace.scales.observed) {
-        $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales(
-          $scope.aggregateState.problem, $scope.workspace.scales.observed);
-        $scope.baseAggregateState.problem = WorkspaceService.setDefaultObservedScales(
-          $scope.baseAggregateState.problem, $scope.workspace.scales.base);
-      }
-      updateTaskAccessibility();
-      checkHasNoStochasticResults();
-      ScenarioResource.query(_.omit($stateParams, ['id'])).$promise.then(function(scenarios) {
-        $scope.scenarios = scenarios;
-        $scope.scenariosWithResults = WorkspaceService.filterScenariosWithResults(baseProblem, currentSubProblem, scenarios);
-      });
+      $scope.updateState(scenario);
     });
 
+    function updateState(scenario) {
+      $scope.scenario = scenario;
+      $scope.baseAggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
+      $scope.aggregateState = WorkspaceSettingsService.usePercentage() ?
+        WorkspaceService.percentifyCriteria($scope.baseAggregateState) : $scope.baseAggregateState;
+      checkForMissingValuesInPerformanceTable();
+      checkHasNoStochasticResults();
+
+      $scope.scalesPromise.then(function(observedScales) {
+        $scope.workspace.scales.base = observedScales;
+        $scope.workspace.scales.basePercentified = WorkspaceService.percentifyScales(baseProblem.criteria, observedScales);
+        $scope.updateScales(observedScales);
+      });
+
+      updateScenarios();
+    }
+
+    function checkForMissingValuesInPerformanceTable() {
+      $scope.hasMissingValues = _.find($scope.aggregateState.problem.performanceTable, function(tableEntry) {
+        return tableEntry.performance.type === 'empty';
+      });
+    }
 
     function checkHasNoStochasticResults() {
       $scope.hasNoStochasticResults = WorkspaceService.hasNoStochasticResults($scope.aggregateState);
     }
 
-    function updateAggregateState() {
-      var aggregateState = _.merge({}, $scope.baseAggregateState, {
-        problem: {
-          criteria: WorkspaceSettingsService.usePercentage() ?
-            WorkspaceService.percentifyDataSources($scope.baseAggregateState.problem.criteria) :
-            $scope.baseAggregateState.problem.criteria
-        }
-      });
-      $scope.aggregateState = aggregateState;
-    }
-
     function updateScales(baseObservedScales) {
-      updateAggregateState();
-      if (WorkspaceSettingsService.usePercentage()) {
-        $scope.workspace.scales.observed = WorkspaceService.toPercentage(baseCriteria, baseObservedScales);
-      } else {
-        $scope.workspace.scales.observed = baseObservedScales;
-      }
-      $scope.baseAggregateState.problem = WorkspaceService.setDefaultObservedScales(
-        $scope.baseAggregateState.problem, $scope.workspace.scales.base);
-      $scope.aggregateState.problem = WorkspaceService.setDefaultObservedScales(
-        $scope.aggregateState.problem, $scope.workspace.scales.observed);
+      $scope.aggregateState = WorkspaceSettingsService.usePercentage() ?
+        WorkspaceService.percentifyCriteria($scope.baseAggregateState) : $scope.baseAggregateState;
+      var baseCriteria = $scope.baseAggregateState.problem.criteria;
+      $scope.workspace.scales.observed = WorkspaceSettingsService.usePercentage() ?
+        WorkspaceService.percentifyScales(baseCriteria, baseObservedScales) : baseObservedScales;
+
+      $scope.baseAggregateState = addScales($scope.baseAggregateState, $scope.workspace.scales.base);
+      $scope.aggregateState = addScales($scope.aggregateState, $scope.workspace.scales.observed);
       updateTaskAccessibility();
     }
 
-    function getTask(taskId) {
-      return _.find(Tasks.available, function(task) {
-        return task.id === taskId;
+    function addScales(state, scales) {
+      return _.merge({}, state, {
+        problem: WorkspaceService.setDefaultObservedScales(state.problem, scales)
+      });
+    }
+
+    function updateScenarios() {
+      ScenarioResource.query(_.omit($stateParams, ['id'])).$promise.then(function(scenarios) {
+        $scope.scenarios = scenarios;
+        $scope.scenariosWithResults = WorkspaceService.filterScenariosWithResults(baseProblem, currentSubProblem, scenarios);
       });
     }
 
@@ -140,12 +126,14 @@ define(['lodash'], function(_) {
     }
 
     function setActiveTab(activeStateName, defaultStateName) {
-      var activeTask = getTask(activeStateName);
-      if (activeTask) {
-        $scope.activeTab = activeTask.activeTab;
-      } else {
-        $scope.activeTab = defaultStateName;
-      }
+      var task = findAvailableTask(activeStateName);
+      $scope.activeTab = task ? task.activeTab : defaultStateName;
+    }
+
+    function findAvailableTask(taskId) {
+      return _.find(Tasks.available, function(task) {
+        return task.id === taskId;
+      });
     }
 
     function updateTaskAccessibility() {
@@ -153,14 +141,6 @@ define(['lodash'], function(_) {
         preferences: TaskDependencies.isAccessible($scope.tasks.preferences, $scope.aggregateState).accessible,
         results: TaskDependencies.isAccessible($scope.tasks.results, $scope.aggregateState).accessible
       };
-    }
-
-    function redirect(scenarioId, stateName) {
-      var newState = _.omit($stateParams, 'id');
-      newState.id = scenarioId;
-      $state.go(stateName, newState, {
-        reload: true
-      });
     }
 
     function forkScenario() {
@@ -175,17 +155,8 @@ define(['lodash'], function(_) {
             return 'Fork';
           },
           callback: function() {
-            return function(newTitle) {
-              ScenarioResource.get($stateParams, function(scenario) { // reload because child scopes may have changed scenario
-                var newScenario = {
-                  title: newTitle,
-                  state: scenario.state,
-                  subProblemId: $scope.subProblem.id
-                };
-                ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
-                  redirect(savedScenario.id, $state.current.name);
-                });
-              });
+            return (newTitle) => {
+              McdaBenefitRiskService.forkScenarioAndGo(newTitle, $scope.subProblem);
             };
           }
         }
@@ -204,20 +175,8 @@ define(['lodash'], function(_) {
             return 'New';
           },
           callback: function() {
-            return function(newTitle) {
-              var mergedProblem = WorkspaceService.mergeBaseAndSubProblem($scope.workspace.problem, $scope.subProblem.definition);
-              var newScenario = {
-                title: newTitle,
-                state: {
-                  problem: WorkspaceService.reduceProblem(mergedProblem)
-                },
-                workspace: $scope.workspace.id,
-                subProblemId: $scope.subProblem.id
-              };
-              ScenarioResource.save(_.omit($stateParams, 'id'), newScenario, function(savedScenario) {
-                var newStateName = $scope.tasksAccessibility.preferences ? 'preferences' : 'problem';
-                redirect(savedScenario.id, newStateName);
-              });
+            return (newTitle) => {
+              McdaBenefitRiskService.newScenarioAndGo(newTitle, $scope.workspace, $scope.subProblem);
             };
           }
         }
@@ -228,25 +187,15 @@ define(['lodash'], function(_) {
       if (!newScenario) {
         return; // just a title edit
       } else {
-        if ($state.current.name === 'smaa-results') {
-          $state.go('smaa-results', {
-            workspaceId: $scope.workspace.id,
-            problemId: $scope.subProblem.id,
-            id: newScenario.id
-          });
-        } else if ($state.current.name === 'deterministic-results') {
-          $state.go('deterministic-results', {
-            workspaceId: $scope.workspace.id,
-            problemId: $scope.subProblem.id,
-            id: newScenario.id
-          });
-        } else {
-          $state.go('preferences', {
-            workspaceId: $scope.workspace.id,
-            problemId: $scope.subProblem.id,
-            id: newScenario.id
-          });
-        }
+        var stateToGo =
+          ($state.current.name === 'smaa-results' ||
+            $state.current.name === 'deterministic-results') ? $state.current.name : 'preferences';
+        $state.go(stateToGo, {
+          workspaceId: $scope.workspace.id,
+          problemId: $scope.subProblem.id,
+          id: newScenario.id
+        });
+
       }
     }
   }

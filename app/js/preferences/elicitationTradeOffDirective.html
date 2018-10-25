@@ -1,0 +1,31 @@
+<div class="grid-x">
+  <div class="cell large-6 medium-6">
+    <svg id="tradeOffPlot"></svg>
+  </div>
+  <div class="cell large-6 medium-6">
+    Please adjust the {{mostImportantCriterion.title}} for alternative B until you are indifferent between the two
+    alternatives:
+    <table>
+      <thead>
+        <tr>
+          <th>Criterion</th>
+          <th>Alternative A</th>
+          <th>Alternative B</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{mostImportantCriterion.title}}</td>
+          <td>{{mostImportantCriterion.worst}}</td>
+          <td>{{critVal.value}} <a ng-click="showSlider = true"><i class="fa fa-edit"></i></a>
+            <rzslider ng-if="showSlider" rz-slider-model="critVal.value" rz-slider-options="sliderOptions"></rzslider>
+          </td>
+        </tr>
+        <tr>
+          <td>{{secondaryCriterion.title}}</td>
+          <td>{{secondaryCriterion.best}}</td>
+          <td>{{secondaryCriterion.worst}}</td>
+        </tr>
+      </tbody>
+  </div>
+</div>

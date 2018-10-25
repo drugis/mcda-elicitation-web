@@ -27,6 +27,14 @@ define(function() {
       requires: ['partial-value-function'],
       resets: ['criteria-trade-offs']
     }, {
+      id: 'matching',
+      title: 'Matching',
+      controller: 'MatchingElicitationController',
+      templateUrl: './preferences/matchingElicitation.html',
+      activeTab: 'preferences',
+      requires: ['partial-value-function'],
+      resets: ['criteria-trade-offs']
+    }, {
       id: 'swing-weighting',
       title: 'Swing Weighting Elicitation',
       controller: 'SwingWeightingController',

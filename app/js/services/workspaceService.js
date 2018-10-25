@@ -23,7 +23,7 @@ define(['lodash', 'angular'], function(_, angular) {
       return PataviResultsService.postAndHandleResults(scalesProblem);
     }
 
-    function toPercentage(criteria, observedScales) {
+    function percentifyScales(criteria, observedScales) {
       var dataSources = _.keyBy(_.reduce(criteria, function(accum, criterion) {
         return accum.concat(criterion.dataSources);
       }, []), 'id');
@@ -43,13 +43,39 @@ define(['lodash', 'angular'], function(_, angular) {
       return updateDataSources(criteria, addTheoreticalScale);
     }
 
-    function percentifyDataSources(criteria) {
-      return updateDataSources(criteria, percentifyDataSource);
+    function percentifyCriteria(baseState) {
+      var criteriaWithUpdatedDataSources = updateDataSources(baseState.problem.criteria, percentifyDataSource);
+      return _.merge({}, baseState, {
+        problem: {
+          criteria: percentifyCriteriaUnits(criteriaWithUpdatedDataSources)
+        }
+      });
+    }
+
+    function percentifyCriteriaUnits(criteria) {
+      return _.mapValues(criteria, _.partial(setUnitForScale, [0, 100], '%'));
+    }
+
+    function fixProportionUnits(criteria) {
+      return _.mapValues(criteria, _.partial(setUnitForScale, [0, 1], ''));
+    }
+
+    function setUnitForScale(scale, unit, criterion) {
+      return _.extend({}, criterion, {
+        unitOfMeasurement: getUnitOfMeasurement(criterion, scale, unit)
+      });
+    }
+
+    function getUnitOfMeasurement(criterion, scale, unit) {
+      var hasPercentScale = _.find(criterion.dataSources, function(dataSource) {
+        return _.isEqual(dataSource.scale, scale);
+      });
+      return hasPercentScale ? unit : criterion.unitOfMeasurement;
     }
 
     function updateDataSources(criteria, fn) {
       return _.mapValues(criteria, function(criterion) {
-        return _.merge({}, criterion, {
+        return _.extend({}, criterion, {
           dataSources: _.map(criterion.dataSources, fn)
         });
       });
@@ -116,6 +142,7 @@ define(['lodash', 'angular'], function(_, angular) {
         return _.merge({}, alternative, baseProblem.alternatives[key]);
       });
       newState.problem.criteria = addTheoreticalScales(newState.problem.criteria);
+      newState.problem.criteria = fixProportionUnits(newState.problem.criteria);
       return newState;
     }
 
@@ -525,7 +552,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     return {
       getObservedScales: getObservedScales,
-      toPercentage: toPercentage,
+      percentifyScales: percentifyScales,
       reduceProblem: reduceProblem,
       buildAggregateState: buildAggregateState,
       mergeBaseAndSubProblem: mergeBaseAndSubProblem,
@@ -533,7 +560,7 @@ define(['lodash', 'angular'], function(_, angular) {
       filterScenariosWithResults: filterScenariosWithResults,
       validateWorkspace: validateWorkspace,
       addTheoreticalScales: addTheoreticalScales,
-      percentifyDataSources: percentifyDataSources,
+      percentifyCriteria: percentifyCriteria,
       hasNoStochasticResults: hasNoStochasticResults
     };
   };
