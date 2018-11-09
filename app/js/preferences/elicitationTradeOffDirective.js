@@ -36,7 +36,7 @@ define(['lodash', 'd3', 'c3'],
 
           function init() {
             root = d3.select(element[0]);
-            root = root.select('svg');
+            root = root.select('#tradeOffPlot');
             data = {
               xs: {
                 line: 'line_x'
