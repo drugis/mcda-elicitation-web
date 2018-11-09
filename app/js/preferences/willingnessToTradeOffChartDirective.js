@@ -60,7 +60,7 @@ define(['c3', 'd3', 'lodash'],
             }
           };
           var root = d3.select(element[0]);
-          root = root.select('svg');
+          root = root.select('.graph-root');
 
           scope.$watch('settings', function(newSettings) {
             if (newSettings && newSettings.firstCriterion.dataSources[0].pvf.range) {
