@@ -246,7 +246,7 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function compareCells(cell, otherCell) {
-      if (cell.inputParameters.id === 'dichotomousFraction') {
+      if (cell.inputParameters && cell.inputParameters.id === 'dichotomousFraction') {
         if (otherCell.inputParameters.id === 'dichotomousFraction') {
           return cell.firstParameter !== otherCell.firstParameter || cell.secondParameter !== otherCell.secondParameter;
         } else {
