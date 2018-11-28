@@ -18,7 +18,7 @@ module.exports = function(db) {
   function createOwnershipChecker(req, res, next) {
     return function(err, result) {
       checkErr(err, next);
-      if (!getUser(req) || result.rows[0].owner !== getUser(req).id) {
+      if (!getUser(req) || !result.rows[0] || result.rows[0].owner !== getUser(req).id) {
         res.status(403).send({
           'code': 403,
           'message': 'Access to resource not authorised'
