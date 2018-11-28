@@ -18,7 +18,12 @@ module.exports = function(db) {
   function createOwnershipChecker(req, res, next) {
     return function(err, result) {
       checkErr(err, next);
-      if (!getUser(req) || !result.rows[0] || result.rows[0].owner !== getUser(req).id) {
+      if (!result.rows[0]) {
+        res.status(404).send({
+          'code': 404,
+          'message': 'Workspace does not exist'
+        });
+      } else if (!getUser(req) || result.rows[0].owner !== getUser(req).id) {
         res.status(403).send({
           'code': 403,
           'message': 'Access to resource not authorised'
