@@ -187,6 +187,9 @@ define(['lodash', 'angular'], function(_, angular) {
         // unfinished workspace
         InProgressResource.get($stateParams).$promise.then(function(response) {
           $scope.state = response.state;
+          if($scope.state.step === 'step2') {
+            $scope.criteriaRows = EffectsTableService.buildTableRows($scope.state.criteria);
+          }
           checkInputData();
           setStateWatcher();
         });
