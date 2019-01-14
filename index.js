@@ -6,8 +6,8 @@ var _ = require('lodash');
 var patavi = require('./node-backend/patavi');
 var logger = require('./node-backend/logger');
 var appEnvironmentSettings = {
-  googleKey : process.env.MCDAWEB_GOOGLE_KEY,
-  googleSecret : process.env.MCDAWEB_GOOGLE_SECRET,
+  googleKey: process.env.MCDAWEB_GOOGLE_KEY,
+  googleSecret: process.env.MCDAWEB_GOOGLE_SECRET,
   host: process.env.MCDA_HOST
 };
 var signin = require('signin')(db, appEnvironmentSettings);
@@ -28,7 +28,7 @@ var server;
 var authenticationMethod = process.env.MCDAWEB_AUTHENTICATION_METHOD;
 
 var sessionOptions = {
-  store: new (require('connect-pg-simple')(session))({
+  store: new(require('connect-pg-simple')(session))({
     conString: dbUtil.mcdaDBUrl,
   }),
   secret: process.env.MCDAWEB_COOKIE_SECRET,
@@ -47,7 +47,9 @@ var app = express();
 app.use(helmet());
 app.use(session(sessionOptions));
 app.set('trust proxy', 1);
-app.use(bodyParser.json({ limit: '5mb' }));
+app.use(bodyParser.json({
+  limit: '5mb'
+}));
 
 server = http.createServer(app);
 
@@ -92,8 +94,7 @@ app
   })
   .use(express.static('dist'))
   .use(express.static('public'))
-  .use('/examples', express.static(__dirname + '/examples'))
-  ;
+  .use('/examples', express.static(__dirname + '/examples'));
 
 initializeRouter();
 
@@ -152,11 +153,17 @@ app.post('/patavi', function(req, res, next) { // FIXME: separate routes for sca
 
 app.use('/css/fonts', express.static('./dist/fonts'));
 
-app.use(function(error, req, res, next) {
+app.use((error, request, response, next) => {
+  logger.error(JSON.stringify(error.message, null, 2));
   if (error && error.type === signin.SIGNIN_ERROR) {
-    res.send(401, 'login failed');
+    response.send(401, 'login failed');
+  } else {
+    response
+      .status(error.status || error.statusCode || 500)
+      .send(error.err ? error.err.message : error.message);
   }
 });
+
 
 //The 404 Route (ALWAYS Keep this as the last route)
 app.get('*', function(req, res) {
@@ -202,4 +209,4 @@ function initializeRouter() {
   router.put('/workspaces/:id/workspaceSettings', WorkspaceService.requireUserIsWorkspaceOwner);
   router.delete('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
   app.use(router);
-} 
+}
