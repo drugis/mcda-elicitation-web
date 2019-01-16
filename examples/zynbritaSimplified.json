@@ -1,0 +1,206 @@
+{
+  "schemaVersion": "1.1.0",
+  "title": "Zinbryta initial assessment simplified",
+  "description": "The novel IL-2 signalling modulation of daclizumab (the active substance in Zinbryta) represents a targeted and reversible therapeutic approach to multiple sclerosis (MS) treatment that can selectively impact both grey and white matter MS pathology without causing nonspecific immunodepletion. Daclizumab's mechanism of action is distinct and differentiated from other therapies available to treat RMS. Daclizumab was systematically evaluated in clinical studies to define its risks and benefits in relapsing MS.\n\nThis is a reduced version of the entire effects table used in the product's initial assessment (see https://www.ema.europa.eu/documents/assessment-report/zinbryta-epar-public-assessment-report_en.pdf, page 127 onwards)",
+  "criteria": {
+    "1fba159c-8361-4eab-bb04-56931a9cea3e": {
+      "title": "ARR",
+      "description": "Unadjusted annualised relapse rate",
+      "isFavorable": true,
+      "dataSources": [
+        {
+          "id": "57951383-f578-481b-864c-314960bd4b71",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "dataType": "continuous",
+          "parameterOfInterest": "mean",
+          "source": "Study 205MS301",
+          "sourceLink": "https://clinicaltrials.gov/ct2/show/NCT01064401",
+          "scale": [
+            null,
+            null
+          ]
+        }
+      ]
+    },
+    "d5241625-8ddb-4b9b-b7c6-08b4fd7764ba": {
+      "title": "Hep. AE",
+      "description": "Incidence of hepatobiliary events",
+      "unitOfMeasurement": "%",
+      "isFavorable": false,
+      "dataSources": [
+        {
+          "id": "80ee675f-e946-4b89-90bd-45d16864ce27",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "dataType": "dichotomous",
+          "parameterOfInterest": "eventProbability",
+          "sourceLink": "https://clinicaltrials.gov/ct2/show/NCT01064401",
+          "source": "Study 205MS301",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "d57b091e-ac7d-471c-9853-e826e2ce5a9e": {
+      "title": "Cut. AE",
+      "description": "Incidence of cutaneous reactions",
+      "unitOfMeasurement": "%",
+      "isFavorable": false,
+      "dataSources": [
+        {
+          "id": "58a6f5aa-58c8-4b7f-8021-70fcd7485f31",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "dataType": "dichotomous",
+          "parameterOfInterest": "eventProbability",
+          "source": "Study 205MS301",
+          "sourceLink": "https://clinicaltrials.gov/ct2/show/NCT01064401",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "832dbfdf-dd13-4d99-97e9-59054647cd6b": {
+      "title": "Inf. AE",
+      "description": "Incidence of infections",
+      "unitOfMeasurement": "%",
+      "isFavorable": false,
+      "dataSources": [
+        {
+          "id": "a837d09a-1abb-47e0-bbf6-fffff76384d5",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "dataType": "dichotomous",
+          "parameterOfInterest": "eventProbability",
+          "sourceLink": "https://clinicaltrials.gov/ct2/show/NCT01064401",
+          "source": "Study 206MS301",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    }
+  },
+  "alternatives": {
+    "a8a03fbd-d6f7-4c02-9b5d-5d161fdb72c9": {
+      "title": "Daclizumab 150mg"
+    },
+    "e7b96e2e-1bd2-41a7-b2aa-1f440825aaf9": {
+      "title": "IFN β-1a 30µg"
+    }
+  },
+  "performanceTable": [
+    {
+      "alternative": "a8a03fbd-d6f7-4c02-9b5d-5d161fdb72c9",
+      "criterion": "1fba159c-8361-4eab-bb04-56931a9cea3e",
+      "dataSource": "57951383-f578-481b-864c-314960bd4b71",
+      "performance": {
+        "type": "exact",
+        "value": 0.212,
+        "input": {
+          "value": 0.212,
+          "lowerBound": 0.191,
+          "upperBound": 0.244
+        }
+      }
+    },
+    {
+      "alternative": "e7b96e2e-1bd2-41a7-b2aa-1f440825aaf9",
+      "criterion": "1fba159c-8361-4eab-bb04-56931a9cea3e",
+      "dataSource": "57951383-f578-481b-864c-314960bd4b71",
+      "performance": {
+        "type": "exact",
+        "value": 0.393,
+        "input": {
+          "value": 0.393,
+          "lowerBound": 0.353,
+          "upperBound": 0.438
+        }
+      }
+    },
+    {
+      "alternative": "a8a03fbd-d6f7-4c02-9b5d-5d161fdb72c9",
+      "criterion": "d5241625-8ddb-4b9b-b7c6-08b4fd7764ba",
+      "dataSource": "80ee675f-e946-4b89-90bd-45d16864ce27",
+      "performance": {
+        "type": "exact",
+        "value": 0.16,
+        "input": {
+          "value": 16,
+          "scale": "percentage"
+        }
+      }
+    },
+    {
+      "alternative": "e7b96e2e-1bd2-41a7-b2aa-1f440825aaf9",
+      "criterion": "d5241625-8ddb-4b9b-b7c6-08b4fd7764ba",
+      "dataSource": "80ee675f-e946-4b89-90bd-45d16864ce27",
+      "performance": {
+        "type": "exact",
+        "value": 0.14,
+        "input": {
+          "value": 14,
+          "scale": "percentage"
+        }
+      }
+    },
+    {
+      "alternative": "a8a03fbd-d6f7-4c02-9b5d-5d161fdb72c9",
+      "criterion": "d57b091e-ac7d-471c-9853-e826e2ce5a9e",
+      "dataSource": "58a6f5aa-58c8-4b7f-8021-70fcd7485f31",
+      "performance": {
+        "type": "exact",
+        "value": 0.37,
+        "input": {
+          "value": 37,
+          "scale": "percentage"
+        }
+      }
+    },
+    {
+      "alternative": "e7b96e2e-1bd2-41a7-b2aa-1f440825aaf9",
+      "criterion": "d57b091e-ac7d-471c-9853-e826e2ce5a9e",
+      "dataSource": "58a6f5aa-58c8-4b7f-8021-70fcd7485f31",
+      "performance": {
+        "type": "exact",
+        "value": 0.19,
+        "input": {
+          "value": 19,
+          "scale": "percentage"
+        }
+      }
+    },
+    {
+      "alternative": "a8a03fbd-d6f7-4c02-9b5d-5d161fdb72c9",
+      "criterion": "832dbfdf-dd13-4d99-97e9-59054647cd6b",
+      "dataSource": "a837d09a-1abb-47e0-bbf6-fffff76384d5",
+      "performance": {
+        "type": "exact",
+        "value": 0.65,
+        "input": {
+          "value": 65,
+          "scale": "percentage"
+        }
+      }
+    },
+    {
+      "alternative": "e7b96e2e-1bd2-41a7-b2aa-1f440825aaf9",
+      "criterion": "832dbfdf-dd13-4d99-97e9-59054647cd6b",
+      "dataSource": "a837d09a-1abb-47e0-bbf6-fffff76384d5",
+      "performance": {
+        "type": "exact",
+        "value": 0.57,
+        "input": {
+          "value": 57,
+          "scale": "percentage"
+        }
+      }
+    }
+  ]
+}
