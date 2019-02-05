@@ -12,7 +12,7 @@ define(
     var SetMatchingWeightController = function(
       $scope,
       $modalInstance,
-    mostImportantCriterion,
+      mostImportantCriterion,
       secondaryCriterion,
       callback
     ) {

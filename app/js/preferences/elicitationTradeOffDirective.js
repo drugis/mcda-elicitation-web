@@ -13,7 +13,8 @@ define(['lodash', 'd3', 'c3'],
       PartialValueFunctionService,
       WorkspaceSettingsService,
       TradeOffService,
-      significantDigits) {
+      significantDigits
+    ) {
       return {
         restrict: 'E',
         scope: {
@@ -24,10 +25,10 @@ define(['lodash', 'd3', 'c3'],
         templateUrl: './elicitationTradeOffDirective.html',
         link: function(scope, element) {
           var root, data, chart;
-          var minX = scope.secondaryCriterion.dataSources[0].pvf.range[0],
-            maxX = scope.secondaryCriterion.dataSources[0].pvf.range[1],
-            minY = scope.mostImportantCriterion.dataSources[0].pvf.range[0],
-            maxY = scope.mostImportantCriterion.dataSources[0].pvf.range[1];
+          var minX = scope.secondaryCriterion.dataSources[0].pvf.range[0];
+          var maxX = scope.secondaryCriterion.dataSources[0].pvf.range[1];
+          var minY = scope.mostImportantCriterion.dataSources[0].pvf.range[0];
+          var maxY = scope.mostImportantCriterion.dataSources[0].pvf.range[1];
           scope.pvf = PartialValueFunctionService;
 
           scope.plotIndifference = plotIndifference;
@@ -45,10 +46,18 @@ define(['lodash', 'd3', 'c3'],
               type: 'line',
             };
 
-            scope.critVal = {
-              value: scope.mostImportantCriterion.worst
-            };
-            scope.secondaryCriterionValue = maxX;
+            if (scope.mostImportantCriterion.hasOwnProperty('favorability') &&
+              !scope.mostImportantCriterion.favorability
+            ) {
+              scope.mostImportantCriterionValue = { value: scope.mostImportantCriterion.best };
+              scope.secondaryCriterionValue = minX;
+              scope.question = 'How much worse is this maximally allowed to get to justify the improvement of the second criterion?';
+            } else {
+              scope.mostImportantCriterionValue = { value: scope.mostImportantCriterion.worst };
+              scope.secondaryCriterionValue = maxX;
+              scope.question = 'How much improvement should there minimally be to justify the worsening of the second criterion?';
+            }
+
             scope.sliderOptions = {
               precision: 4,
               onEnd: plotIndifference,
@@ -115,7 +124,7 @@ define(['lodash', 'd3', 'c3'],
             TradeOffService.getElicitationTradeOffCurve(
               scope.mostImportantCriterion,
               scope.secondaryCriterion,
-              scope.critVal.value
+              scope.mostImportantCriterionValue.value
             ).then(function(results) {
               data.columns[0] = ['line_x'].concat(results.data.x);
               data.columns[1] = ['line'].concat(results.data.y);

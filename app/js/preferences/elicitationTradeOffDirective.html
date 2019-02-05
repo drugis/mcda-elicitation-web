@@ -3,8 +3,7 @@
     <div id="tradeOffPlot"></div>
   </div>
   <div class="cell large-6 medium-6">
-    Please adjust the {{mostImportantCriterion.title}} for alternative B until you are indifferent between the two
-    alternatives:
+    {{question}}
     <table>
       <thead>
         <tr>
@@ -17,8 +16,8 @@
         <tr>
           <td>{{mostImportantCriterion.title}}</td>
           <td>{{mostImportantCriterion.worst}}</td>
-          <td>{{critVal.value}} <a ng-click="showSlider = true"><i class="fa fa-edit"></i></a>
-            <rzslider ng-if="showSlider" rz-slider-model="critVal.value" rz-slider-options="sliderOptions"></rzslider>
+          <td>{{mostImportantCriterionValue.value}} <a ng-click="showSlider = true"><i class="fa fa-edit"></i></a>
+            <rzslider ng-if="showSlider" rz-slider-model="mostImportantCriterionValue.value" rz-slider-options="sliderOptions"></rzslider>
           </td>
         </tr>
         <tr>
