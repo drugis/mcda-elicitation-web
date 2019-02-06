@@ -9,21 +9,19 @@ define(['lodash'], function(_) {
       scope: {
         'scales': '=',
         'uncertainty': '=',
-        'showPercentage': '=',
-        'effectsDisplay': '=',
-        'theoreticalScale': '='
+        'theoreticalScale': '=',
+        'workspaceSettings': '='
       },
       template: '<div>{{median}}</div>' +
         '<div class="uncertain" ng-show="uncertainty">{{lowerBound}}, {{upperBound}}</div>',
       link: function(scope) {
         scope.$watch('scales', initScales);
-        scope.$watch('showPercentage', initScales);
-        scope.$watch('effectsDisplay', initScales);
+        scope.$watch('workspaceSettings', initScales, true);
 
         function initScales() {
           if (scope.scales) {
             scope.lowerBound = getRoundedValue(scope.scales['2.5%']);
-            scope.median = getRoundedValue(scope.effectsDisplay === 'mode' ? scope.scales.mode : scope.scales['50%']);
+            scope.median = getRoundedValue(scope.workspaceSettings.effectsDisplay === 'mode' ? scope.scales.mode : scope.scales['50%']);
             scope.upperBound = getRoundedValue(scope.scales['97.5%']);
           }
         }
@@ -44,7 +42,7 @@ define(['lodash'], function(_) {
           if (Math.abs(value) < 0.01) {
             ++numberOfDecimals;
           }
-          if (!scope.showPercentage && Math.abs(value) < 1) {
+          if (!scope.workspaceSettings.showPercentage && Math.abs(value) < 1) {
             numberOfDecimals += 2;
           }
           return numberOfDecimals;
