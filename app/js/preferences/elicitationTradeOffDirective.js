@@ -46,7 +46,7 @@ define(['lodash', 'd3', 'c3'],
               type: 'line',
             };
 
-            if (scope.mostImportantCriterion.hasOwnProperty('favorability') &&
+            if (scope.mostImportantCriterion.hasOwnProperty('isFavorable') &&
               !scope.mostImportantCriterion.favorability
             ) {
               scope.mostImportantCriterionValue = { value: scope.mostImportantCriterion.best };
