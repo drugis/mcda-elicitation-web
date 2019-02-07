@@ -27,6 +27,7 @@ define(['lodash'], function(_) {
     $scope.criteria = criteria;
     $scope.useFavorability = $scope.criterion.hasOwnProperty('isFavorable');
     $scope.usePercentage = WorkspaceSettingsService.usePercentage();
+    $scope.addOrEdit = 'Edit';
     $scope.canBePercentage = _.find($scope.criterion.dataSources, function(dataSource) {
       return _.isEqual(dataSource.scale, [0, 1]);
     });
