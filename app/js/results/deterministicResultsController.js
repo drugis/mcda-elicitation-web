@@ -118,10 +118,6 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
       delete $scope.preferencesValues;
       MCDAResultsService.getPreferencesSensitivityResults($scope, $scope.baseAggregateState).resultsPromise.then(function(result) {
         $scope.preferencesValues = MCDAResultsService.pataviResultToLineValues(result.results, $scope.alternatives, $scope.scenario.state.legend);
-
-        if (usePercentage($scope.sensitivityMeasurements.preferencesCriterion)) {
-          $scope.preferencesValues = MCDAResultsService.percentifySensitivityResult($scope.preferencesValues, 'y');
-        }
       });
     }
 
