@@ -47,15 +47,11 @@ define(['lodash', 'd3', 'c3'],
             };
 
             if (scope.mostImportantCriterion.hasOwnProperty('isFavorable') &&
-              !scope.mostImportantCriterion.favorability
+              !scope.mostImportantCriterion.isFavorable
             ) {
-              scope.mostImportantCriterionValue = { value: scope.mostImportantCriterion.best };
-              scope.secondaryCriterionValue = minX;
-              scope.question = 'How much worse is this maximally allowed to get to justify the improvement of the second criterion?';
+              setUnfavorableValues();
             } else {
-              scope.mostImportantCriterionValue = { value: scope.mostImportantCriterion.worst };
-              scope.secondaryCriterionValue = maxX;
-              scope.question = 'How much improvement should there minimally be to justify the worsening of the second criterion?';
+              setDefaultValues();
             }
 
             scope.sliderOptions = {
@@ -75,6 +71,33 @@ define(['lodash', 'd3', 'c3'],
 
             initChart();
             plotIndifference();
+          }
+
+          function setUnfavorableValues() {
+            scope.mostImportantCriterionValue = {
+              firstValue: scope.mostImportantCriterion.best,
+              secondValue: scope.mostImportantCriterion.worst
+            };
+            scope.secondaryCriterionValue = {
+              firstValue: scope.secondaryCriterion.worst,
+              secondValue: scope.secondaryCriterion.best
+            };
+            scope.question = 'How much worse is ' + scope.mostImportantCriterion.title +
+              ' maximally allowed to get to justify the improvement of ' + scope.secondaryCriterion.title + '?';
+
+          }
+
+          function setDefaultValues() {
+            scope.mostImportantCriterionValue = {
+              firstValue: scope.mostImportantCriterion.worst,
+              secondValue: scope.mostImportantCriterion.best
+            };
+            scope.secondaryCriterionValue = {
+              firstValue: scope.secondaryCriterion.best,
+              secondValue: scope.secondaryCriterion.worst
+            };
+            scope.question = 'How much better should ' + scope.mostImportantCriterion.title +
+              ' minimally become to justify the worsening of ' + scope.secondaryCriterion.title + '?';
           }
 
           function initChart() {

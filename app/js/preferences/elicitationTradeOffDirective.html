@@ -15,15 +15,15 @@
       <tbody>
         <tr>
           <td>{{mostImportantCriterion.title}}</td>
-          <td>{{mostImportantCriterion.worst}}</td>
-          <td>{{mostImportantCriterionValue.value}} <a ng-click="showSlider = true"><i class="fa fa-edit"></i></a>
+          <td>{{mostImportantCriterionValue.firstValue}}</td>
+          <td>{{mostImportantCriterionValue.secondValue}} <a ng-click="showSlider = true"><i class="fa fa-edit"></i></a>
             <rzslider ng-if="showSlider" rz-slider-model="mostImportantCriterionValue.value" rz-slider-options="sliderOptions"></rzslider>
           </td>
         </tr>
         <tr>
           <td>{{secondaryCriterion.title}}</td>
-          <td>{{secondaryCriterion.best}}</td>
-          <td>{{secondaryCriterion.worst}}</td>
+          <td>{{secondaryCriterionValue.firstValue}}</td>
+          <td>{{secondaryCriterionValue.secondValue}}</td>
         </tr>
       </tbody>
   </div>
