@@ -1,8 +1,8 @@
 <div ng-if="effectsDisplay === 'effects'">
-  <div ng-if="distributionType === 'exact'">
+  <div ng-if="isEffect">
     {{effectDataSourceLabel}}
   </div>
-  <div ng-if="distributionType !== 'exact'">
+  <div ng-if="!isEffect">
     <effects-table-scales-cell scales="scales" workspace-settings="workspaceSettings" theoretical-scale="theoreticalScale"
       uncertainty="uncertainty">
     </effects-table-scales-cell>
