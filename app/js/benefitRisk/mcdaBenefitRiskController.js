@@ -1,6 +1,11 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$transitions', '$state', '$stateParams', '$modal',
+  var dependencies = [
+    '$scope',
+    '$transitions',
+    '$state',
+    '$stateParams',
+    '$modal',
     'McdaBenefitRiskService',
     'Tasks',
     'TaskDependencies',
@@ -14,7 +19,12 @@ define(['lodash'], function(_) {
     'isMcdaStandalone'
   ];
 
-  function MCDABenefitRiskController($scope, $transitions, $state, $stateParams, $modal,
+  function MCDABenefitRiskController(
+    $scope,
+    $transitions,
+    $state,
+    $stateParams,
+    $modal,
     McdaBenefitRiskService,
     Tasks,
     TaskDependencies,

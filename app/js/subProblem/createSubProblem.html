@@ -115,10 +115,11 @@
                       ng-disabled="!subProblemState.criterionInclusions[row.criterion.id] || subProblemState.numberOfDataSourcesPerCriterion[row.criterion.id] === 1 && subProblemState.dataSourceInclusions[row.dataSource.id]">
                   </div>
                   <div class="cell large-11">
-                    <effects-table-scales-cell scales="scales[row.dataSource.id][alternative.id]"
-                      uncertainty="effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].hasUncertainty || effectsTableInfo[row.dataSource.id].distributionType==='relative'"
-                      workspace-settings="workspaceSettings" theoretical-scale="row.dataSource.scale">
-                    </effects-table-scales-cell>
+                    <effects-table-cell effects-table-info="effectsTableInfo[row.dataSource.id]"
+                      workspace-settings="workspaceSettings" scales="scales[row.dataSource.id][alternative.id]"
+                      theoretical-scale="row.dataSource.scale" alternative-id="alternative.id"
+                      input-type="row.dataSource.inputType">
+                    </effects-table-cell>
                   </div>
                 </div>
               </td>

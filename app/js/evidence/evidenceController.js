@@ -1,6 +1,10 @@
 'use strict';
 define(['clipboard', 'lodash'], function(Clipboard, _) {
-  var dependencies = ['$scope', '$state', '$stateParams', '$modal',
+  var dependencies = [
+    '$scope', 
+    '$state', 
+    '$stateParams', 
+    '$modal',
     'WorkspaceResource',
     'isMcdaStandalone',
     'OrderingService',
@@ -8,7 +12,11 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     'WorkspaceSettingsService',
     'swap'
   ];
-  var EvidenceController = function($scope, $state, $stateParams, $modal,
+  var EvidenceController = function(
+    $scope, 
+    $state,
+    $stateParams, 
+    $modal,
     WorkspaceResource,
     isMcdaStandalone,
     OrderingService,

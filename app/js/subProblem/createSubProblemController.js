@@ -1,7 +1,11 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
 
-  var dependencies = ['$scope', '$stateParams', '$modalInstance', '$timeout',
+  var dependencies = [
+    '$scope',
+    '$stateParams',
+    '$modalInstance',
+    '$timeout',
     'ScenarioResource',
     'SubProblemResource',
     'SubProblemService',
@@ -18,7 +22,11 @@ define(['lodash', 'angular'], function(_, angular) {
     'effectsTableInfo',
     'callback'
   ];
-  var CreateSubProblemController = function($scope, $stateParams, $modalInstance, $timeout,
+  var CreateSubProblemController = function(
+    $scope,
+    $stateParams,
+    $modalInstance,
+    $timeout,
     ScenarioResource,
     SubProblemResource,
     SubProblemService,
@@ -116,7 +124,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function initializeScales() {
-      var stateAndChoices = ScaleRangeService.getScalesStateAndChoices($scope.scales, $scope.criteria);
+      var stateAndChoices = ScaleRangeService.getScalesStateAndChoices($scope.originalScales.base, $scope.criteria);
       $scope.scalesState = stateAndChoices.scalesState;
       $scope.choices = stateAndChoices.choices;
 
