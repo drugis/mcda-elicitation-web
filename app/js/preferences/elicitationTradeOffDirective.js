@@ -75,8 +75,8 @@ define(['lodash', 'd3', 'c3'],
 
           function setUnfavorableValues() {
             scope.mostImportantCriterionValue = {
-              firstValue: scope.mostImportantCriterion.best,
-              secondValue: scope.mostImportantCriterion.worst
+              firstValue: scope.mostImportantCriterion.best, 
+              secondValue: scope.mostImportantCriterion.worst 
             };
             scope.secondaryCriterionValue = {
               firstValue: scope.secondaryCriterion.worst,
@@ -89,7 +89,7 @@ define(['lodash', 'd3', 'c3'],
 
           function setDefaultValues() {
             scope.mostImportantCriterionValue = {
-              firstValue: scope.mostImportantCriterion.worst,
+              firstValue: scope.mostImportantCriterion.worst, 
               secondValue: scope.mostImportantCriterion.best
             };
             scope.secondaryCriterionValue = {
@@ -147,7 +147,7 @@ define(['lodash', 'd3', 'c3'],
             TradeOffService.getElicitationTradeOffCurve(
               scope.mostImportantCriterion,
               scope.secondaryCriterion,
-              scope.mostImportantCriterionValue.value
+              scope.mostImportantCriterionValue.secondValue
             ).then(function(results) {
               data.columns[0] = ['line_x'].concat(results.data.x);
               data.columns[1] = ['line'].concat(results.data.y);
