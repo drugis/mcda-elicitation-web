@@ -850,9 +850,9 @@ angular-mocks@~1.6.6:
   resolved "https://registry.yarnpkg.com/angular-mocks/-/angular-mocks-1.6.10.tgz#6a139e43c461d0c9a5a1acebc91e63db16031176"
   integrity sha512-1865/NmqHNogibNoglY1MGBjx882iu2hI46BBhYDWyz0C4TDM5ER8H8SnYwQKUUG4RXMDsJizszEQ2BEoYKV9w==
 
-angular-patavi-client@drugis/angular-patavi-client#2.1.0:
-  version "2.1.0"
-  resolved "https://codeload.github.com/drugis/angular-patavi-client/tar.gz/662a9ad6af87a25a82eb5598100eadd1d714d367"
+angular-patavi-client@drugis/angular-patavi-client#2.1.1:
+  version "2.1.1"
+  resolved "https://codeload.github.com/drugis/angular-patavi-client/tar.gz/7a234c36a63cdd74f2e54d6d15b16e71b841348b"
   dependencies:
     angular "~1.6.6"
 

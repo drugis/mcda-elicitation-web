@@ -1,23 +1,24 @@
 'use strict';
 define(['angular'], function() {
-  var dependencies = ['$http', '$rootScope', 'PataviService'];
-  var PataviResultsService = function($http, $rootScope, PataviService) {
+  var dependencies = ['$http', '$q', '$rootScope', 'PataviService'];
+  var PataviResultsService = function($http, $q, $rootScope, PataviService) {
 
     function postAndHandleResults(problem, successHandler, updateHandler) {
-      return $http.post('/patavi', problem).then(function(result) {
-        var uri = result.headers('Location');
-        if (result.status === 201 && uri) {
-          return uri;
-        }
-      }, function(error) {
-        $rootScope.$broadcast('error', {
-          type: 'BACK_END_ERROR',
-          code: error.code || undefined,
-          message: 'unable to submit the problem to the server'
-        });
-      })
+      return $http.post('/patavi', problem)
+        .then(function(result) {
+          var uri = result.headers('Location');
+          if (result.status === 201 && uri) {
+            return uri;
+          } else {
+            throw {
+              message: 'unknown response from patavi server',
+              code: 500
+            };
+          }
+        })
         .then(PataviService.listen)
-        .then(successHandler || defaultSuccessHandler, errorHandler, updateHandler);
+        .then(successHandler || defaultSuccessHandler, errorHandler, updateHandler)
+        .catch(errorHandler);
     }
 
     function errorHandler(pataviError) {
@@ -25,6 +26,7 @@ define(['angular'], function() {
         type: 'PATAVI',
         message: pataviError.cause
       });
+      return($q.reject(pataviError));
     }
 
     function defaultSuccessHandler(result) {
