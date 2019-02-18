@@ -12,14 +12,15 @@ define(['lodash', 'd3'], function(_, d3) {
   ) {
 
     function getElicitationTradeOffCurve(mostImportantCriterion, secondaryCriterion, chosenValue) {
+      var isUnFavorable = mostImportantCriterion.hasOwnProperty('isFavorable') && !mostImportantCriterion.isFavorable;
       var newProblem = {
         criteria: _.keyBy([mostImportantCriterion, secondaryCriterion], 'id'),
         method: 'matchingElicitationCurve',
         indifferenceCurve: {
           criterionX: secondaryCriterion.id,
           criterionY: mostImportantCriterion.id,
-          x: secondaryCriterion.best,
-          y: mostImportantCriterion.worst,
+          x: isUnFavorable ? secondaryCriterion.worst : secondaryCriterion.best,
+          y: isUnFavorable ? mostImportantCriterion.best : mostImportantCriterion.worst,
           chosenY: chosenValue
         }
       };

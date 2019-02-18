@@ -223,7 +223,12 @@ run_matchingElicitationCurve <- function(params) {
   chosenY <- params$indifferenceCurve$chosenY
 
   pvf <- create.pvf(params[['criteria']][[criterionY]])
-  weight <- pvf(chosenY)
+  
+  if (!is.null(params[['criteria']][[criterionY]]$isFavorable) && !params[['criteria']][[criterionY]]$isFavorable) {
+    weight <- 1 - pvf(chosenY)
+  } else {
+    weight <- pvf(chosenY)
+  }
 
   params$preferences <- list(list(
     type='exact swing',
@@ -276,6 +281,7 @@ run_indifferenceCurve <- function(params) {
   
   coordinates <- data.frame(x = c(cutoffs1, cutoffs2_x), y = c(cutoffs1_y, cutoffs2))
   coordinates <- coordinates[order(coordinates$x), ]
+  coordinates <- signif(coordinates,3)
   
   coordinates <- coordinates[coordinates$x >= range1[1] & coordinates$x <= range1[2], ] # Remove coordinates outside the scale range of criterionX
   coordinates <- coordinates[coordinates$y >= range2[1] & coordinates$y <= range2[2], ] # Remove coordinates outside the scale range of criterionY
