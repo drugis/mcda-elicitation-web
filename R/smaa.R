@@ -281,10 +281,11 @@ run_indifferenceCurve <- function(params) {
   
   coordinates <- data.frame(x = c(cutoffs1, cutoffs2_x), y = c(cutoffs1_y, cutoffs2))
   coordinates <- coordinates[order(coordinates$x), ]
-  coordinates <- signif(coordinates,3)
-  
-  coordinates <- coordinates[coordinates$x >= range1[1] & coordinates$x <= range1[2], ] # Remove coordinates outside the scale range of criterionX
-  coordinates <- coordinates[coordinates$y >= range2[1] & coordinates$y <= range2[2], ] # Remove coordinates outside the scale range of criterionY
+
+  epsilonX <- 0.001 * (range1[2] - range1[1]);
+  epsilonY <- 0.001 * (range2[2] - range2[1]);
+  coordinates <- coordinates[coordinates$x + epsilonX >= range1[1] & coordinates$x - epsilonX <= range1[2], ] # Remove coordinates outside the scale range of criterionX
+  coordinates <- coordinates[coordinates$y + epsilonY >= range2[1] & coordinates$y - epsilonY <= range2[2], ] # Remove coordinates outside the scale range of criterionY
   rownames(coordinates) <- NULL
   wrap.result(coordinates, 'IndifferenceCoordinates')  
 }
