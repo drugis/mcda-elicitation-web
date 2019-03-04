@@ -46,8 +46,12 @@
         </th>
         <th>Worst</th>
         <th>Best</th>
-        <th ng-if="!isOrdinal">Importance</th>
-        <th ng-if="isOrdinal">Ranking</th>
+        <th ng-if="!isOrdinal">
+          Importance <inline-help help-key="importance"></inline-help>
+        </th>
+        <th ng-if="isOrdinal">
+          Ranking <inline-help help-key="ranking"></inline-help>
+        </th>
       </thead>
       <tbody>
         <tr ng-repeat="criterion in criteria">

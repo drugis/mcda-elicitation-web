@@ -25,7 +25,7 @@
           <a ng-click="editCriterion(criterion)" tooltip="Edit criterion">
             <i class="fa fa-edit fa-2x icon-fixed-width"></i>
           </a>
-          <a  ng-if="isInput" ng-click="removeCriterion(idx)" tooltip="Remove criterion">
+          <a ng-if="isInput" ng-click="removeCriterion(idx)" tooltip="Remove criterion">
             <i class="fa fa-trash fa-2x icon-fixed-width" style="color:red"></i>
           </a>
         </div>
@@ -46,19 +46,38 @@
         <table>
           <thead>
             <tr>
-              <th ng-if="isStandalone"> <!-- up and down arrows--></th>
+              <th ng-if="isStandalone">
+                <!-- up and down arrows-->
+              </th>
               <th style="min-width: 15rem;">Reference
                 <inline-help help-key="criterion-source"></inline-help>
               </th>
-              <th>Input type</th>
-              <th>Input method</th>
-              <th>Data type</th>
-              <th>Parameter of interest</th>
-              <th>Uncertainties / Strength of evidence
-                <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
+              <th>
+                Input type
+                <inline-help help-key="input-type"></inline-help>
               </th>
-              <th ng-if="isStandalone"><!-- edit datasource button --></th>
-              <th ng-if="isInput"><!--delete datasource button --></th>
+              <th>
+                Input method
+                <inline-help help-key="input-method"></inline-help>
+              </th>
+              <th>
+                Data type
+                <inline-help help-key="criterion-data-type"></inline-help>
+              </th>
+              <th>
+                Parameter of interest
+                <inline-help help-key="parameter-of-interest"></inline-help>
+              </th>
+              <th>Uncertainties / Strength of evidence
+                <inline-help help-key="uncertainties"></inline-help>
+                <inline-help help-key="strength-of-evidence"></inline-help>
+              </th>
+              <th ng-if="isStandalone">
+                <!-- edit datasource button -->
+              </th>
+              <th ng-if="isInput">
+                <!--delete datasource button -->
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -85,7 +104,8 @@
                   {{dataSource.source}}
                 </div>
               </td>
-              <td ng-style="!dataSource.inputType ? {'color': 'red'} : {}">{{dataSource.inputType ? dataSource.inputType : 'Unknown'}}</td>
+              <td ng-style="!dataSource.inputType ? {'color': 'red'} : {}">
+                {{dataSource.inputType ? dataSource.inputType : 'Unknown'}}</td>
               <td>{{dataSource.inputType === 'distribution' ? INPUT_METHODS[dataSource.inputMethod] :'NA'}}</td>
               <td>{{dataSource.inputType === 'effect' || dataSource.inputMethod === 'assistedDistribution' ? dataSource.dataType
                 : 'NA'}}</td>
@@ -102,7 +122,8 @@
                 </a>
               </td>
               <td ng-if="isInput">
-                <a ng-click="removeDataSource(dataSource)" tooltip="Remove data source" ng-if="criterion.dataSources.length > 1">
+                <a ng-click="removeDataSource(dataSource)" tooltip="Remove data source"
+                  ng-if="criterion.dataSources.length > 1">
                   <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
                 </a>
                 <a tooltip="Cannot remove the only data source" ng-if="criterion.dataSources.length < 2">
