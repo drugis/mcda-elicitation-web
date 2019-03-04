@@ -54,7 +54,7 @@
               <th>Input method</th>
               <th>Data type</th>
               <th>Parameter of interest</th>
-              <th>Uncertainties / Strength of evidence
+              <th>Strength of evidence / Uncertainties
                 <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
               </th>
               <th ng-if="isStandalone"><!-- edit datasource button --></th>
@@ -92,9 +92,9 @@
               <td>{{(dataSource.inputType && dataSource.inputType !== 'distribution') || dataSource.inputMethod === 'assistedDistribution'
                 ? PARAMETERS_OF_INTEREST[dataSource.parameterOfInterest] : 'NA'}}</td>
               <td>
-                <b>Unc: </b> {{dataSource.uncertainties}}
-                <br>
                 <b>SoE: </b>{{dataSource.strengthOfEvidence}}
+                <br>
+                <b>Unc: </b> {{dataSource.uncertainties}}
               </td>
               <td ng-if="isStandalone">
                 <a ng-click="editDataSource(dataSource, $index)" tooltip="Edit data source">
