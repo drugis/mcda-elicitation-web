@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html ng-app="elicit">
-
-<head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width">
-  <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
-  <title>mcda.drugis.org</title>
-  
-  <!-- Matomo -->
+<div>
   <script type="text/javascript">
     var _paq = window._paq || [];
     /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
@@ -27,28 +17,4 @@
   <noscript>
     <p><img src="//analytics.drugis.org/matomo.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p>
   </noscript>
-  <!-- End Matomo Code -->
-
-</head>
-
-<!-- added inline style to override drugis general styling to clean fixed breadcrumbbar -->
-
-<body class="f-topbar-fixed">
-  <navbar-directive>
-  </navbar-directive>
-
-  <error-reporting></error-reporting>
-
-  <div ui-view class="grid-container"></div>
-  <div class="push"></div>
-
-  <script>
-    if (window.location.host.indexOf('test') > -1) {
-      document.body.className += ' test';
-      document.title = 'test-' + document.title;
-    }
-  </script>
-
-</body>
-
-</html>
+</div>
