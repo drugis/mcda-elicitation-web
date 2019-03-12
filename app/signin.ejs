@@ -7,24 +7,28 @@
   <meta name="viewport" content="width=device-width">
   <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
   <title>mcda.drugis.org</title>
+
   <!-- Matomo -->
   <script type="text/javascript">
     var _paq = window._paq || [];
     /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
     _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
-    _paq.push(["setCookieDomain", "*.localhost"]);
+    _paq.push(["setCookieDomain", "*.mcda-test.drugis.org"]);
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function() {
-      var u="//localhost/";
-      _paq.push(['setTrackerUrl', u+'matomo.php']);
+      var u = "//analytics.drugis.org/";
+      _paq.push(['setTrackerUrl', u + 'matomo.php']);
       _paq.push(['setSiteId', '1']);
-      var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-      g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+      var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+      g.type = 'text/javascript'; g.async = true; g.defer = true; g.src = u + 'matomo.js'; s.parentNode.insertBefore(g, s);
     })();
   </script>
-  <noscript><p><img src="//localhost/matomo.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p></noscript>
+  <noscript>
+    <p><img src="//analytics.drugis.org/matomo.php?idsite=1&amp;rec=1" style="border:0;" alt="" /></p>
+  </noscript>
   <!-- End Matomo Code -->
+
 </head>
 
 <body>
@@ -61,7 +65,8 @@
       <div class="grid-x">
         <div class="cell large-offset-2 large-8 medium-12">
           <p><a href="#">mcda.drugis.org</a> is designed to help policy makers and researchers judge the balance of
-            favorable and unfavorable effects of medicines. This tool is intended to be part of the <a href="http://drugis.org/software/addis2">ADDIS
+            favorable and unfavorable effects of medicines. This tool is intended to be part of the <a
+              href="http://drugis.org/software/addis2">ADDIS
               2</a> decision support system for health care policy. Until then, it serves as a demonstration of our
             multiple criteria decision analysis (MCDA) methods and our future direction in the development of ADDIS.
           </p>
