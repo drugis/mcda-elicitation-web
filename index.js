@@ -156,6 +156,7 @@ app.use(function(error, req, res, next) {
   if (error && error.type === signin.SIGNIN_ERROR) {
     res.send(401, 'login failed');
   }
+  next();
 });
 
 //The 404 Route (ALWAYS Keep this as the last route)

@@ -59,6 +59,7 @@
       font-weight: bold;
     }
   </style>
+  <%= htmlWebpackPlugin.options.matomo %>
 </head>
 <!-- added inline style to override drugis general styling to clean fixed breadcrumbbar -->
 
@@ -70,8 +71,10 @@
     <a href="http://browser-update.org/update-browser.html#drugis.org">Please update your browser</a> before continuing.
   </div>
   <div class="alert-box warning" style="display:none; margin-bottom: 0px;" id="browserUnknown">
-    Your browser is unknown to us. This web application may or may not work correctly using it. Proceed at your own risk, or
-    <a href="http://browser-update.org/update-browser.html#drugis.org">download a well-known browser</a> before continuing.
+    Your browser is unknown to us. This web application may or may not work correctly using it. Proceed at your own
+    risk, or
+    <a href="http://browser-update.org/update-browser.html#drugis.org">download a well-known browser</a> before
+    continuing.
   </div>
   <script type="text/javascript">
     if (bowser.c || (bowser.msie && bowser.version <= 8)) {
@@ -96,7 +99,7 @@
   <section id="hero">
     <div class="grid-x">
       <div class="cell large-offset-2 large-8 medium-12 end">
-        <h1>mcda.drugis.org<br/><small>User manual</small></h1>
+        <h1>mcda.drugis.org<br /><small>User manual</small></h1>
         <p style="margin-top: 30px; color: white;">Douwe Postmus, Daan Reid and Gert van Valkenhoef</p>
       </div>
     </div>
@@ -110,22 +113,31 @@
           </div>
           <div class="js-toc-content cell large-9 medium-12 end">
             <h2 id="mcda-introduction">Introduction</h2>
-            <p>This is the manual for the MCDA user interface for benefit-risk analysis. It starts with instructions about
-              creating a workspace (based on a dataset), followed by a brief introduction to benefit-risk analysis, and a
+            <p>This is the manual for the MCDA user interface for benefit-risk analysis. It starts with instructions
+              about
+              creating a workspace (based on a dataset), followed by a brief introduction to benefit-risk analysis, and
+              a
               guide to the MCDA user interface itself.
             </p>
             <h3 id="mcda-preparing-dataset">Preparing your dataset</h3>
-            <p>This section only applies to the stand-alone version of MCDA, hosted on <a href="https://mcda.drugis.org/">https://mcda.drugis.org/</a>.
-              In ADDIS (<a href="https://addis.drugis.org/">https://addis.drugis.org/</a>), this step is not necessary.</p>
-            <p>After signing in to MCDA, you will be redirected to your personal home page. It contains a list of your previously
+            <p>This section only applies to the stand-alone version of MCDA, hosted on <a
+                href="https://mcda.drugis.org/">https://mcda.drugis.org/</a>.
+              In ADDIS (<a href="https://addis.drugis.org/">https://addis.drugis.org/</a>), this step is not necessary.
+            </p>
+            <p>After signing in to MCDA, you will be redirected to your personal home page. It contains a list of your
+              previously
               created workspaces (which will be empty until you create one). A <i>workspace</i> is an abstract container
-              for a set of evidence, plus any filterings, transformations and analyses you may have performed for that set
-              of evidence. Any unfinished workspaces in the process of manual entry will also be shown here. Clicking the
-              'Create workspace' button will open a dialog that lets you choose what to base your workspace on: an example
+              for a set of evidence, plus any filterings, transformations and analyses you may have performed for that
+              set
+              of evidence. Any unfinished workspaces in the process of manual entry will also be shown here. Clicking
+              the
+              'Create workspace' button will open a dialog that lets you choose what to base your workspace on: an
+              example
               dataset selected by us, a file uploaded by you, or manual entry by you.</p>
             <h4 id="data-upload">Data upload</h4>
             <p>
-              Datasets can be uploaded in JSON format. The JSON should contain the following entries (note that JSON is case-sensitive):
+              Datasets can be uploaded in JSON format. The JSON should contain the following entries (note that JSON is
+              case-sensitive):
               <ul>
                 <li>title</li>
                 <li>description</li>
@@ -139,7 +151,8 @@
               The title and description properties should contain text.
             </p>
             <p>
-              The criteria property should contain a series of properties with the names and details of the different criteria in your
+              The criteria property should contain a series of properties with the names and details of the different
+              criteria in your
               analysis. The following is an example of JSON describing a single criterion (HAM-D):
               <pre>
               "criteria": {
@@ -174,7 +187,8 @@
             </pre>
             </p>
             <p>
-              The performanceTable property should contain the actual data of the measurements for each criterion for each alternative.
+              The performanceTable property should contain the actual data of the measurements for each criterion for
+              each alternative.
               Performance can be measured either in relative or exact terms. If relative, the performance should contain
               a baseline plus a matrix of relative deviations. If exact, simply the value suffices.
             </p>
@@ -227,16 +241,19 @@
             </pre>
             </p>
             <p>
-              The preferences property should generally consist of an empty object. This will be filled in by performing preference elicitation
+              The preferences property should generally consist of an empty object. This will be filled in by performing
+              preference elicitation
               within the MCDA app.
             </p>
             <p>
-              A list of complete examples is available on the <a href="https://github.com/drugis/mcda-elicitation-web/tree/master/examples"
-                target="_blank">MCDA repository</a>.
+              A list of complete examples is available on the <a
+                href="https://github.com/drugis/mcda-elicitation-web/tree/master/examples" target="_blank">MCDA
+                repository</a>.
             </p>
             <h4 id="mcda-manual-entry">Manual entry</h4>
             <p>
-              Selecting the 'Manual entry' option in the workspace creation dialog takes you to the manual workspace creation screen. Here,
+              Selecting the 'Manual entry' option in the workspace creation dialog takes you to the manual workspace
+              creation screen. Here,
               you can input the title, therapeutic context, criteria, and alternatives as well as the measurement data.
             </p>
             <div class="figure">
@@ -244,8 +261,10 @@
               <div class="caption">Manual entry, first step.</div>
             </div>
             <p>
-              Alternatives are nothing more than a name, therefore creating one is as simple as typing and clicking the 'Add alternative'
-              button (or hitting enter). Criteria are more complicated. They have several properties , e.g. whether or not
+              Alternatives are nothing more than a name, therefore creating one is as simple as typing and clicking the
+              'Add alternative'
+              button (or hitting enter). Criteria are more complicated. They have several properties , e.g. whether or
+              not
               they are favourable, what the source of your data for this criterion is and the unit they are measured in.
             </p>
             <div class="figure">
@@ -253,11 +272,15 @@
               <div class="caption">Manual entry, creating a criterion.</div>
             </div>
             <p>
-              Creating a survival criterion also allows you to set the specific summary measure to use. This can be the mean or median
-              survival, or survival at a specific time point. Note that the unit of measurement of a criterion may change
-              automatically (e.g. it becomes 'proportion' when indicating the criterion is dichotomous) but can always be
+              Creating a survival criterion also allows you to set the specific summary measure to use. This can be the
+              mean or median
+              survival, or survival at a specific time point. Note that the unit of measurement of a criterion may
+              change
+              automatically (e.g. it becomes 'proportion' when indicating the criterion is dichotomous) but can always
+              be
               changed manually afterwards. The data source selection determines how data is entered in the next step. At
-              any time during the manual entry process you can click the 'Save' button and the current state of your workspace
+              any time during the manual entry process you can click the 'Save' button and the current state of your
+              workspace
               in progress will be saved. You can click this in-progress workspace from your personal homepage later, and
               continue where you left off.
             </p>
@@ -266,9 +289,12 @@
               <div class="caption">Manual entry, second step.</div>
             </div>
             <p>
-              The second step of the manual entry process is where you input the data for each combination of criterion and alternative.
-              Data is entered for each cell by clicking on it and filling out the cells in the dialog that appears. Depending
-              on the type of the criterion and the data source selected, this dialog will have different fields, (e.g. mean,
+              The second step of the manual entry process is where you input the data for each combination of criterion
+              and alternative.
+              Data is entered for each cell by clicking on it and filling out the cells in the dialog that appears.
+              Depending
+              on the type of the criterion and the data source selected, this dialog will have different fields, (e.g.
+              mean,
               standard deviation and N for continuous variables, or simply a value for exact value distributions).
             </p>
             <div id="mcda-shared-content"></div>
