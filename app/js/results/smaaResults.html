@@ -83,7 +83,7 @@
     </div>
   </div>
   <h4>
-    Central Weights <inline-help help-key="uncertainties"></inline-help>
+    Central Weights <inline-help help-key="central-weights"></inline-help>
   </h4>
   <div class="grid-x">
     <div class="cell">
@@ -97,11 +97,14 @@
       </button>
     </div>
     <div class="cell">
+      <h4>
+        Central Weights <inline-help help-key="central-weights-table"></inline-help>
+      </h4>
       <table id="centralweightstable">
         <thead>
           <tr>
             <th>Alternative</th>
-            <th>Confidence</th>
+            <th>Confidence <inline-help help-key="confidence-factor"></inline-help></th>
             <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
           </tr>
         </thead>
