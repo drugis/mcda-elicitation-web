@@ -13,19 +13,19 @@
   </div>
   <div class="cell">
     <label>Strength of evidence (optional)
-      <!-- <inline-help help-key="strength-of-evidence"> -->
+      <inline-help help-key="strength-of-evidence">
     </label>
     <input type="text" ng-model="source.strengthOfEvidence">
   </div>
   <div class="cell">
     <label>Uncertainties (optional)
-      <!-- <inline-help help-key="uncertainties"> -->
+      <inline-help help-key="uncertainties">
     </label>
     <input type="text" ng-model="source.uncertainties">
   </div>
   <div class="cell">
     <label>Input type
-      <!-- <inline-help help-key="criterion-input-type"></inline-help> -->
+      <inline-help help-key="input-type"></inline-help>
     </label>
     <input type="radio" ng-model="source.inputType" ng-value="'distribution'" id="distribution"
       ng-change="inputTypeChanged()">
@@ -35,7 +35,7 @@
   </div>
   <div class="cell" ng-show="source.inputType === 'distribution'">
     <label>Input method
-      <!-- <inline-help help-key="criterion-input-method"></inline-help> -->
+      <inline-help help-key="input-method"></inline-help>
     </label>
     <input type="radio" ng-model="source.inputMethod" ng-value="'assistedDistribution'" id="assistedDistribution">
     <label for="assistedDistribution">Assisted distribution</label>
@@ -44,7 +44,7 @@
   </div>
   <div class="cell" ng-show="source.inputType === 'effect'">
     <label>Data type
-      <!-- <inline-help help-key="criterion-datatype"></inline-help> -->
+      <inline-help help-key="criterion-data-type"></inline-help>
     </label>
     <input type="radio" ng-model="source.dataType" ng-change="dataTypeChanged()" ng-value="'dichotomous'"
       id="dichotomous">
@@ -57,7 +57,7 @@
   </div>
   <div class="cell" ng-show="source.inputType === 'distribution' && source.inputMethod === 'assistedDistribution'">
     <label>Parameter of interest
-      <!-- <inline-help help-key="criterion-datatype"></inline-help> -->
+      <inline-help help-key="parameter-of-interest"></inline-help>
     </label>
     <input type="radio" ng-model="source.dataType" ng-value="'dichotomous'" id="dichotomous"
       ng-change="dataTypeChanged()">
@@ -68,7 +68,7 @@
   </div>
   <div class="cell" ng-show="source.inputType === 'effect'">
     <label>Parameter of interest
-      <!-- <inline-help help-key="criterion-parameter-of-interest"></inline-help> -->
+      <inline-help help-key="parameter-of-interest"></inline-help>
     </label>
     <input ng-show="source.dataType === 'dichotomous'" type="radio" ng-model="source.parameterOfInterest"
       ng-value="'eventProbability'" id="event-probability" ng-disabled="true">

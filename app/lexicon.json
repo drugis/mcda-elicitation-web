@@ -39,7 +39,7 @@
     "text": "Criterion data can be entered as either study data, or an exact-value distribution.",
     "link": "/manual.html#mcda-manual-entry"
   },
-  "criterion-datatype": {
+  "criterion-data-type": {
     "title": "Criterion data type",
     "text": "Criterion data can be reported in several ways, either as a proportion (e.g. \"fifty out of a hundred\"), a continuous value (e.g. \"weight increase in grams\") or as survival data (e.g. \"median survival after 20 days)\"",
     "link": "/manual.html#mcda-manual-entry"
@@ -124,7 +124,7 @@
     "text": "A section that allows exploring of the sensitivity of the results by allowing only one thing to change.",
     "link": "/manual.html#mcda-deterministic-analysis"
   },
-  "parameter-of-interesest": {
+  "parameter-of-interest": {
     "title": "Parameter of interest",
     "text": "The parameter of interest determines what the measured effect depicts.",
     "link": "/manual.html#mcda-manual-entry"
