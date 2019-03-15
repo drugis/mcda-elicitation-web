@@ -11,7 +11,17 @@
   },
   "central-weights": {
     "title": "Central weights",
-    "text": "The central weight for each alternative, per criterion.",
+    "text": "The typical weights that would make an alternative the highest ranked treatment.",
+    "link": "/manual.html#mcda-smaa-analysis"
+  },
+  "central-weights-table": {
+    "title": "Central weights table",
+    "text": "Table with the central weights and confidence factors for each alternative. For alternatives with empty rows, there was not a single combination of sampled weights and criteria measurements that made this alternative the preferered treatment. These alternatives therefore do not have a central weight vector.",
+    "link": "/manual.html#mcda-smaa-analysis"
+  },
+  "confidence-factor": {
+    "title": "Confidence factor",
+    "text": "The probability that an alternative is the highest ranked treatment if that alternative's central weight vector is used to rank the alternatives.",
     "link": "/manual.html#mcda-smaa-analysis"
   },
   "configured-range": {
@@ -69,6 +79,11 @@
     "text": "Whether or not an increase in the criterion is seen as favorable.",
     "link": "/manual.html#mcda-manual-entry"
   },
+  "importance": {
+    "title": "Importance",
+    "text": "The importance of the criterion. A higher percentage means the criterion is more important.",
+    "link": "/manual.html#mcda-value-tradeoffs"
+  },
   "imprecise-matching": {
     "title": "Imprecise Matching",
     "text": "Elicitation of the user's weight trade-offs between the different criteria, via the interval method. This method allows specification of an interval (rather than an exact value) where changes to two criteria are equivalent. This results in weight ratios between all the criteria, e.g. increasing effectiveness by 5-10% is equally desirable to decreasing mortality by 10-20%.",
@@ -78,6 +93,16 @@
     "title": "Incomplete workspaces",
     "text": "The process of manually creating a workspace can be paused at any point. This list shows those unfinished workspaces.",
     "link": "/manual.html#mcda-preparing-dataset"
+  },
+  "input-type": {
+    "title": "Input type",
+    "text": "The way the measurements for a data source were entered. Input type is either distribution or effect.",
+    "link": "/manual.html#mcda-manual-entry"
+  },
+  "input-method": {
+    "title": "Input method",
+    "text": "The input method shows whether the distributional parameters were specified directly (manual distribution) or derived from user supplied aggregate study data (assisted distribution).",
+    "link": "/manual.html#mcda-manual-entry"
   },
   "matching": {
     "title": "Matching",
@@ -99,10 +124,10 @@
     "text": "A section that allows exploring of the sensitivity of the results by allowing only one thing to change.",
     "link": "/manual.html#mcda-deterministic-analysis"
   },
-  "ranking": {
-    "title": "Ranking",
-    "text": "Elicitation of the user's ordinal ranking of the weight of the included criteria.",
-    "link": "/manual.html#mcda-value-tradeoffs"
+  "parameter-of-interesest": {
+    "title": "Parameter of interest",
+    "text": "The parameter of interest determines what the measured effect depicts.",
+    "link": "/manual.html#mcda-manual-entry"
   },
   "partial-value-function": {
     "title": "Partial Value Function",
@@ -128,6 +153,11 @@
     "title": "Ranks per alternative",
     "text": "How likely a specific alterntive is to have each rank (with 1 being best) overall.",
     "link": "/manual.html#mcda-smaa-results"
+  },
+  "ranking": {
+    "title": "Ranking",
+    "text": "The ranking of the criteria according to their relative importance. The lower the number, the more important the criterion.",
+    "link": "/manual.html#mcda-value-tradeoffs"
   },
   "representative-weights": {
     "title": "Representative weights",
@@ -161,8 +191,8 @@
   },
   "strength-of-evidence": {
     "title": "Strength of evidence",
-    "text": "",
-    "link": ""
+    "text": "Statements regarding the strength of evidence of the treatment effect estimates displayed in a row of the effects table.",
+    "link": "/manual.html#mcda-running-example"
   },
   "survival-summary-measure": {
     "title": "Survival summary measure",
@@ -205,9 +235,9 @@
     "link": "/manual.html#mcda-preparing-dataset"
   },
   "uncertainties": {
-    "title": "Strength of evidence",
-    "text": "",
-    "link": ""
+    "title": "Uncertainties",
+    "text": "Any uncertainties regarding the treatment effect estimates displayed in a row of the effects table.",
+    "link": "/manual.html#mcda-running-example"
   },
   "value-profiles": {
     "title": "Value profiles",
@@ -217,6 +247,11 @@
   "weights": {
     "title": "Weights",
     "text": "Weights indicate how much importance the user places on improving each criterion. Weights can be specified directly through swing weighting. Alternatively, they can be derived through a series of ranking and matching questions.",
+    "link": "/manual.html#mcda-value-tradeoffs"
+  },
+  "willingness-to-trade-off": {
+    "title": "Willingness to trade off chart",
+    "text": "This chart allows exploration of how the chosen weights and partial value functions shape the indifference curve that goes through a user selected point on the graph representing different levels of achievement with respect to the chosen criteria.",
     "link": "/manual.html#mcda-value-tradeoffs"
   },
   "workspace": {

@@ -9,13 +9,16 @@
   <div class="grid-x">
     <div class="cell">
       <span>Scenario:</span>
-      <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id" ng-change="scenarioChanged(scenario)"></select>
+      <select class="scenario-select" ng-model="scenario"
+        ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
+        ng-change="scenarioChanged(scenario)"></select>
     </div>
   </div>
   <br>
   <div class="grid-x underlined-div">
     <div class="cell">
-      <h4>Rank acceptabilities <inline-help help-key="rank-acceptabilities"></inline-help></h4>
+      <h4>Rank acceptabilities <inline-help help-key="rank-acceptabilities"></inline-help>
+      </h4>
     </div>
     <div class="cell large-2 large-offset-9">
       <button class="button small info clipboard-button" data-clipboard-target="#ranktable">
@@ -49,7 +52,9 @@
   <div class="grid-x underlined-div">
     <div class="cell large-6">
       <div export legend file-name="'alternatives-per-rank'">
-        <h4>Alternatives per rank <inline-help help-key="alternatives-per-rank"></inline-help></h4>
+        <h4>
+          Alternatives per rank <inline-help help-key="alternatives-per-rank"></inline-help>
+        </h4>
         <select ng-model="state.selectedRank" class="large-3">
           <option ng-repeat="alternative in alternatives" value="{{$index}}" ng-selected="$index == state.selectedRank">
             Rank {{::$index + 1}}
@@ -62,9 +67,12 @@
     </div>
     <div class="cell large-6">
       <div export legend file-name="'ranks-per-alternative'">
-        <h4>Ranks per alternative <inline-help help-key="ranks-per-alternative"></inline-help></h4>
+        <h4>
+          Ranks per alternative <inline-help help-key="ranks-per-alternative"></inline-help>
+        </h4>
         <select ng-model="state.selectedAlternative" class="large-3">
-          <option ng-repeat="alternative in alternatives" value="{{alternative.id}}" ng-selected="alternative.id == state.selectedAlternative">
+          <option ng-repeat="alternative in alternatives" value="{{alternative.id}}"
+            ng-selected="alternative.id == state.selectedAlternative">
             {{scenario.state.legend[alternative.id].baseTitle || alternative.title}}
           </option>
         </select>
@@ -74,7 +82,9 @@
       </div>
     </div>
   </div>
-  <h4>Central Weights</h4>
+  <h4>
+    Central Weights <inline-help help-key="central-weights"></inline-help>
+  </h4>
   <div class="grid-x">
     <div class="cell">
       <div style="width: 650px; height: 350px" export legend file-name="'central-weights'">
@@ -87,11 +97,14 @@
       </button>
     </div>
     <div class="cell">
+      <h4>
+        Central Weights <inline-help help-key="central-weights-table"></inline-help>
+      </h4>
       <table id="centralweightstable">
         <thead>
           <tr>
             <th>Alternative</th>
-            <th>Confidence</th>
+            <th>Confidence <inline-help help-key="confidence-factor"></inline-help></th>
             <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
           </tr>
         </thead>
