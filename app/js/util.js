@@ -1,5 +1,21 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
+  function getHull(scaleRanges, percentage) {
+    return _(scaleRanges)
+      .values()
+      .map(_.partial(getValues, percentage))
+      .filter(isNotNull)
+      .value();
+  }
+
+  function getValues(percentage, alternative) {
+    return alternative[percentage];
+  }
+
+  function isNotNull(value) {
+    return value !== null;
+  }
+
   return angular.module('elicit.util', [])
     .factory('intervalHull', function() {
       return function(scaleRanges) {
@@ -7,16 +23,8 @@ define(['lodash', 'angular'], function(_, angular) {
           return [-Infinity, +Infinity];
         }
         return [
-          Math.min.apply(null, _.filter(_.map(_.values(scaleRanges), function(alternative) {
-            return alternative['2.5%'];
-          })), function(value) {
-            return value !== null;
-          }),
-          Math.max.apply(null, _.filter(_.map(_.values(scaleRanges), function(alternative) {
-            return alternative['97.5%'];
-          })), function(value) {
-            return value !== null;
-          })
+          Math.min.apply(null, getHull(scaleRanges, '2.5%')),
+          Math.max.apply(null, getHull(scaleRanges, '97.5%'))
         ];
       };
     })

@@ -29,6 +29,22 @@ define(['angular', 'angular-mocks', 'mcda/util'], function(angular) {
         var expectedResult = [1, 10];
         expect(result).toEqual(expectedResult);
       });
+
+      it('should work for ranges with no spread', function() {
+        var ranges = {
+          1: {
+            '2.5%': 1,
+            '97.5%': 1
+          },
+          2: {
+            '2.5%': 0,
+            '97.5%': 0
+          }
+        };
+        var result = ih(ranges);
+        var expectedResult = [0, 1];
+        expect(result).toEqual(expectedResult);
+      });
     });
 
     describe('generateUuid', function() {
