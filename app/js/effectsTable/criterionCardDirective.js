@@ -52,13 +52,8 @@ define(['lodash'], function(_) {
           value: 'value'
         };
 
-        if (_.isEqual(scope.criterion.dataSources[0].scale, [0, 1])) {
-          if (WorkspaceSettingsService.usePercentage()) {
-            scope.criterion.unitOfMeasurement = '%';
-          } else {
-            delete scope.criterion.unitOfMeasurement;
-          }
-        }
+        setUnit();
+        scope.$on('elicit.settingsChanged', setUnit);
 
         // public 
         function criterionUp() {
@@ -113,11 +108,22 @@ define(['lodash'], function(_) {
             }
           });
         }
+
         // private
         function swapAndSave(array, idx, newIdx) {
           swap(array, idx, newIdx);
           if (!scope.isInput) {
             scope.saveOrdering();
+          }
+        }
+
+        function setUnit() {
+          if (_.isEqual(scope.criterion.dataSources[0].scale, [0, 1])) {
+            if (WorkspaceSettingsService.usePercentage()) {
+              scope.criterion.unitOfMeasurement = '%';
+            } else {
+              delete scope.criterion.unitOfMeasurement;
+            }
           }
         }
       }

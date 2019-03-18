@@ -328,10 +328,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               crit1: {
                 title: 'criterion 1',
                 description: 'bla',
-                unitOfMeasurement: 'Proportion',
+                unitOfMeasurement: '%',
                 isFavorable: true,
                 dataSources: [{
                   id: 'ds1',
+                  scale: [0, 1],
                   source: 'single study',
                   sourceLink: 'http://www.drugis.org',
                   inputType: 'distribution',
@@ -456,8 +457,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               inputMethod: 'assistedDistribution',
               dataType: 'continuous'
             }],
-            isFavorable: true,
-            unitOfMeasurement: 'Proportion'
+            isFavorable: true
           }, {
             id: 'uuid4',
             title: 'criterion 2',
