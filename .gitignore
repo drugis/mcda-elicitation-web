@@ -42,5 +42,4 @@ Chromium_*
 .RData
 R/.Rhistory
 R/*.json
-*.sh
 

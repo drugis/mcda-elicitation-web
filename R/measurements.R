@@ -175,7 +175,8 @@ generateSummaryStatistics <- function(params) {
     if (isAbsolutePerformance) {
       summaryStatistics[distribution$criterion, distribution$alternative, ] <- summaryStatistics.absolute(distribution)
     } else {
-      summaryStatistics[distribution$criterion, alts, ] <- summaryStatistics.relative(distribution)
+      sortedAlts <- distribution$performance$parameters$relative$cov$rownames
+      summaryStatistics[distribution$criterion, sortedAlts, ] <- summaryStatistics.relative(distribution)
     }
   }
   summaryStatistics
