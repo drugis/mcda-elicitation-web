@@ -772,7 +772,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function buildPositiveWithMax(label, max) {
-      var param = buildFloatAboveZero(label);
+      var param = buildPositiveFloat(label);
       param.constraints.push(ConstraintService.belowOrEqualTo(max));
       return param;
     }

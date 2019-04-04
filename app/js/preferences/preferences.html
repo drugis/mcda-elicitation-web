@@ -1,7 +1,8 @@
 <div class="grid-x">
   <div class="cell">
     <span>Scenario:</span>
-    <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenarios track by scenario.id" ng-change="scenarioChanged(scenario)"></select>
+    <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenarios track by scenario.id"
+      ng-change="scenarioChanged(scenario)"></select>
     <inline-help help-key="scenario"></inline-help>
     <a ng-if="editMode.isUserOwner" ng-click="editScenarioTitle()" tooltip="Edit current scenario title"><i class="fa fa-edit"></i></a>
     <a ng-if="editMode.isUserOwner" ng-click="newScenario()" tooltip="Create clean scenario"><i class="fa fa-plus"></i></a>
@@ -10,7 +11,8 @@
 </div>
 <br>
 <div id="partial-value-functions-block" class="prefs-block">
-  <h4>Partial Value Functions <inline-help help-key="partial-value-function"></inline-help></h4>
+  <h4>Partial Value Functions <inline-help help-key="partial-value-function"></inline-help>
+  </h4>
   <div id="partial-value-functions" class="grid-x grid-padding-x small-up-1 medium-up-2 large-up-3">
     <div class="cell" ng-repeat="criterion in criteria">
       <h5>{{::criterion.title}}</h5>
@@ -20,9 +22,9 @@
           <i style="font-size: 100px" class="fa fa-question"></i>
         </div>
       </div>
-      <button class="button" ng-if="editMode.isUserOwner" ng-class="{alert: !isSafe['partial-value-function'].safe}" tooltip="{{isSafe['partial-value-function'].tooltip}}" tooltip-animation="false" 
-      ng-disabled="!isAccessible(tasks['partial-value-function']).accessible" 
-      ui-sref="partial-value-function({criterion: criterion.id})">Define partial value function</button>
+      <button class="button" ng-if="editMode.isUserOwner" ng-class="{alert: !isSafe['partial-value-function'].safe}"
+        tooltip="{{isSafe['partial-value-function'].tooltip}}" tooltip-animation="false" ng-disabled="!isAccessible(tasks['partial-value-function']).accessible"
+        ui-sref="partial-value-function({criterion: criterion.id})">Define partial value function</button>
     </div>
   </div>
 </div>
@@ -63,13 +65,20 @@
     <em>Not all partial value functions are defined</em>
   </div>
   <div class="cell large-4 button-group" ng-if="editMode.isUserOwner">
-    <button class="button" ui-sref="ordinal-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['ordinal-swing']).accessible" ng-class="{alert: !isSafe['ordinal-swing'].safe}" tooltip="{{isSafe['ordinal-swing'].tooltip}}">
+    <button class="button" ui-sref="ordinal-swing" tooltip-animation="false" ng-disabled="!isAccessible(tasks['ordinal-swing']).accessible"
+      ng-class="{alert: !isSafe['ordinal-swing'].safe}" tooltip="{{isSafe['ordinal-swing'].tooltip}}">
       Ranking
     </button>
-    <button class="button" ui-sref="swing-weighting" tooltip-animation="false" ng-disabled="!isAccessible(tasks['swing-weighting']).accessible" ng-class="{alert: !isSafe['swing-weighting'].safe}" tooltip="{{isSafe['swing-weighting'].tooltip}}">
+    <button class="button" ui-sref="matching" tooltip-animation="false" ng-disabled="!isAccessible(tasks['matching']).accessible"
+      ng-class="{alert: !isSafe['matching'].safe}" tooltip="{{isSafe['matching'].tooltip}}">
+      Matching
+    </button>
+    <button class="button" ui-sref="swing-weighting" tooltip-animation="false" ng-disabled="!isAccessible(tasks['swing-weighting']).accessible"
+      ng-class="{alert: !isSafe['swing-weighting'].safe}" tooltip="{{isSafe['swing-weighting'].tooltip}}">
       Precise Swing Weighting
     </button>
-    <button class="button" ui-sref="imprecise-swing-weighting" tooltip-animation="false" ng-disabled="!isAccessible(tasks['imprecise-swing-weighting']).accessible" ng-class="{alert: !isSafe['imprecise-swing-weighting'].safe}" tooltip="{{isSafe['imprecise-swing-weighting'].tooltip}}">
+    <button class="button" ui-sref="imprecise-swing-weighting" tooltip-animation="false" ng-disabled="!isAccessible(tasks['imprecise-swing-weighting']).accessible"
+      ng-class="{alert: !isSafe['imprecise-swing-weighting'].safe}" tooltip="{{isSafe['imprecise-swing-weighting'].tooltip}}">
       Imprecise Swing Weighting
     </button>
   </div>

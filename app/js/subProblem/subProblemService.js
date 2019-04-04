@@ -2,7 +2,14 @@
 define(['lodash', 'angular'], function(_) {
   var dependencies = [];
   var SubProblemService = function() {
-    // Exposed functions
+    function createSubProblemCommand(subProblemState, choices, problem) {
+      return {
+        definition: createDefinition(subProblemState, choices),
+        title: subProblemState.title,
+        scenarioState: createDefaultScenarioState(problem, subProblemState)
+      };
+    }
+
     function createDefaultScenarioState(problem, subProblemState) {
       return {
         prefs: filterToObject(problem.preferences, subProblemState.criterionInclusions)
@@ -42,21 +49,6 @@ define(['lodash', 'angular'], function(_) {
       return returnObject;
     }
 
-    function createCriterionInclusions(problem, subProblem) {
-      return createInclusions(problem.criteria, subProblem.definition, 'excludedCriteria');
-    }
-
-    function createAlternativeInclusions(problem, subProblem) {
-      return createInclusions(problem.alternatives, subProblem.definition, 'excludedAlternatives');
-    }
-
-    function createDataSourceInclusions(problem, subProblem) {
-      return _.reduce(problem.criteria, function(accum, criterion) {
-        return _.extend({}, accum, createInclusions(_.keyBy(criterion.dataSources, 'id'),
-          subProblem.definition, 'excludedDataSources'));
-      }, {});
-    }
-
     function checkScaleRanges(criteria) {
       var isMissingScaleRange = _.find(criteria, function(criterion) {
         return !(criterion.dataSources[0].pvf && criterion.dataSources[0].pvf.range &&
@@ -85,7 +77,6 @@ define(['lodash', 'angular'], function(_) {
       }, {});
     }
 
-    // private functions
     function createInclusions(whatToInclude, definition, exclusionKey) {
       return _.reduce(_.keys(whatToInclude), function(accum, id) {
         var isIncluded = definition && !_.includes(definition[exclusionKey], id);
@@ -110,15 +101,93 @@ define(['lodash', 'angular'], function(_) {
         .value();
     }
 
+    function areValuesMissingInEffectsTable(subProblemState, scales) {
+      var includedDataSourcesIds = _.keys(_.pickBy(subProblemState.dataSourceInclusions));
+      var includedAlternatives = _.keys(_.pickBy(subProblemState.alternativeInclusions));
+      return _.find(includedDataSourcesIds, function(dataSourceId) {
+        return _.find(includedAlternatives, function(alternativeId) {
+          return isNullNaNorUndefined(scales[dataSourceId][alternativeId]['50%']);
+        });
+      });
+    }
+
+    function isNullNaNorUndefined(value) {
+      return value === null || value === undefined || isNaN(value);
+    }
+
+    function hasInvalidSlider(scalesDataSources, choices, scalesState) {
+      return _.find(scalesDataSources, _.partial(hasValueAtWrongLocationOnSlider, choices, scalesState));
+    }
+
+    function hasValueAtWrongLocationOnSlider(choices, scalesState, dataSource) {
+      var from = choices[dataSource].from;
+      var to = choices[dataSource].to;
+      var restrictedFrom = scalesState[dataSource].sliderOptions.restrictedRange.from;
+      var restrictedTo = scalesState[dataSource].sliderOptions.restrictedRange.to;
+      return (from === to || from > restrictedFrom || to < restrictedTo);
+    }
+
+    function getNumberOfDataSourcesPerCriterion(criteria, dataSourceInclusions) {
+      return _.mapValues(criteria, function(criterion) {
+        return _.filter(criterion.dataSources, function(dataSource) {
+          return dataSourceInclusions[dataSource.id];
+        }).length;
+      });
+    }
+
+    function areTooManyDataSourcesSelected(numberOfDataSourcesPerCriterion) {
+      return _.find(numberOfDataSourcesPerCriterion, function(n) {
+        return n > 1;
+      });
+    }
+
+    function getCriteriaByDataSource(criteria) {
+      return _(criteria)
+        .map(function(criterion) {
+          return _.map(criterion.dataSources, function(dataSource) {
+            return [dataSource.id, criterion.id];
+          });
+        })
+        .flatten()
+        .fromPairs()
+        .value();
+    }
+
+    function createSubProblemState(problem, subProblem, criteria){
+      return  {
+        criterionInclusions: createCriterionInclusions(problem, subProblem),
+        alternativeInclusions: createAlternativeInclusions(problem, subProblem),
+        dataSourceInclusions: createDataSourceInclusions(problem, subProblem),
+        ranges: _.merge({}, _.keyBy(criteria, 'id'), subProblem.definition.ranges)
+      };
+    }
+
+    function createCriterionInclusions(problem, subProblem) {
+      return createInclusions(problem.criteria, subProblem.definition, 'excludedCriteria');
+    }
+
+    function createAlternativeInclusions(problem, subProblem) {
+      return createInclusions(problem.alternatives, subProblem.definition, 'excludedAlternatives');
+    }
+
+    function createDataSourceInclusions(problem, subProblem) {
+      return _.reduce(problem.criteria, function(accum, criterion) {
+        return _.extend({}, accum, createInclusions(_.keyBy(criterion.dataSources, 'id'),
+          subProblem.definition, 'excludedDataSources'));
+      }, {});
+    }
+
     return {
-      createDefaultScenarioState: createDefaultScenarioState,
-      createDefinition: createDefinition,
+      createSubProblemCommand: createSubProblemCommand,
       determineBaseline: determineBaseline,
-      createCriterionInclusions: createCriterionInclusions,
-      createAlternativeInclusions: createAlternativeInclusions,
-      createDataSourceInclusions: createDataSourceInclusions,
       checkScaleRanges: checkScaleRanges,
-      excludeDataSourcesForExcludedCriteria: excludeDataSourcesForExcludedCriteria
+      excludeDataSourcesForExcludedCriteria: excludeDataSourcesForExcludedCriteria,
+      areValuesMissingInEffectsTable: areValuesMissingInEffectsTable,
+      hasInvalidSlider: hasInvalidSlider,
+      getNumberOfDataSourcesPerCriterion: getNumberOfDataSourcesPerCriterion,
+      areTooManyDataSourcesSelected: areTooManyDataSourcesSelected,
+      getCriteriaByDataSource: getCriteriaByDataSource,
+      createSubProblemState: createSubProblemState
     };
   };
 

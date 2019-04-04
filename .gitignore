@@ -12,6 +12,7 @@ database.trace.db
 database.lock.db
 frontend-test/test-results.xml
 node_modules
+dist
 
 # Numerous always-ignore extensions
 *.diff

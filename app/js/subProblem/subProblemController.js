@@ -1,8 +1,10 @@
 'use strict';
 define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
-
   var dependencies = [
-    '$scope', '$stateParams', '$modal', '$state',
+    '$scope', 
+    '$stateParams', 
+    '$modal', 
+    '$state',
     'intervalHull',
     'subProblems',
     'SubProblemService',
@@ -14,7 +16,10 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
   ];
 
   var SubProblemController = function(
-    $scope, $stateParams, $modal, $state,
+    $scope, 
+    $stateParams, 
+    $modal, 
+    $state,
     intervalHull,
     subProblems,
     SubProblemService,

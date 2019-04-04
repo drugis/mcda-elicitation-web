@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html ng-app="temp">
-<head>
-<meta charset="utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="viewport" content="width=device-width">
-<link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
 
-<title>mcda.drugis.org is cool</title>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width">
+  <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
+
+  <title>mcda.drugis.org</title>
+  <%= htmlWebpackPlugin.options.matomo %>
 </head>
 
 <body>
@@ -35,7 +37,8 @@
             <li>
               <a href="#" onClick="signout()">Sign out</a>
             </li>
-          </ul></li>
+          </ul>
+        </li>
       </ul>
     </section>
   </nav>
@@ -52,4 +55,5 @@
   </div>
 
 </body>
+
 </html>

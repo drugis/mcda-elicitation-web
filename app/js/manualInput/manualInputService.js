@@ -14,22 +14,26 @@ define(['lodash', 'angular'], function(_) {
 
     // Exposed functions
     function getInputError(cell) {
-      var error;
       if (cell.empty) {
         return;
       }
+      var error;
       var inputParameters = _.pick(cell.inputParameters, ['firstParameter', 'secondParameter', 'thirdParameter']);
       _.find(inputParameters, function(inputParameter, key) {
-        var inputValue = cell[key];
-        if ((inputParameter.label === 'Lower bound' && cell.lowerBoundNE) || (inputParameter.label === 'Upper bound' && cell.upperBoundNE)) {
+        if (hasNotEstimableBound(cell, inputParameter)) {
           return;
         }
+        var inputValue = cell[key];
         return _.find(inputParameter.constraints, function(constraint) {
           error = constraint(inputValue, inputParameter.label, cell);
           return error;
         });
       });
       return error;
+    }
+
+    function hasNotEstimableBound(cell, parameter) {
+      return (parameter.label === 'Lower bound' && cell.lowerBoundNE) || (parameter.label === 'Upper bound' && cell.upperBoundNE)
     }
 
     function inputToString(cell) {
@@ -43,60 +47,82 @@ define(['lodash', 'angular'], function(_) {
       return InputKnowledgeService.getOptions(cell);
     }
 
-    function createProblem(criteria, treatments, title, description, inputData) {
+    function createProblem(criteria, alternatives, title, description, inputData) {
       var newCriteria = buildCriteria(criteria);
       return {
         schemaVersion: currentSchemaVersion,
         title: title,
         description: description,
         criteria: newCriteria,
-        alternatives: buildAlternatives(treatments),
-        performanceTable: buildPerformanceTable(inputData, newCriteria, treatments)
+        alternatives: buildAlternatives(alternatives),
+        performanceTable: buildPerformanceTable(inputData, newCriteria, alternatives)
       };
     }
 
     function prepareInputData(criteria, alternatives, oldInputData) {
-      var dataSources = _.reduce(criteria, function(accum, criterion) {
-        return accum.concat(criterion.dataSources);
-      }, []);
+      var dataSources = getDataSources(criteria);
+      return createInputTableRows(dataSources, alternatives, oldInputData);
+    }
+
+    function createInputTableRows(dataSources, alternatives, oldInputData) {
       return _.reduce(dataSources, function(accum, dataSource) {
-        accum[dataSource.id] = _.reduce(alternatives, function(accum, alternative) {
-          if (oldInputData && oldInputData[dataSource.id] && oldInputData[dataSource.id][alternative.id]) {
-            accum[alternative.id] = oldInputData[dataSource.id][alternative.id];
-            accum[alternative.id].isInvalid = true;
-          } else {
-            accum[alternative.id] = _.pick(dataSource, ['inputType', 'inputMethod', 'dataType', 'parameterOfInterest']);
-            accum[alternative.id].isInvalid = true;
-          }
-          return accum;
-        }, {});
+        accum[dataSource.id] = createInputTableCells(dataSource, alternatives, oldInputData);
         return accum;
       }, {});
+    }
+
+    function createInputTableCells(dataSource, alternatives, oldInputData) {
+      return _.reduce(alternatives, function(accum, alternative) {
+        if (hasOldInputDataAvailable(oldInputData, dataSource.id, alternative.id)) {
+          accum[alternative.id] = oldInputData[dataSource.id][alternative.id];
+        } else {
+          accum[alternative.id] = _.pick(dataSource, ['inputType', 'inputMethod', 'dataType', 'parameterOfInterest']);
+        }
+        accum[alternative.id].isInvalid = true;
+        return accum;
+      }, {});
+    }
+
+    function hasOldInputDataAvailable(oldData, dataSourceId, alternativeId) {
+      return oldData && oldData[dataSourceId] && oldData[dataSourceId][alternativeId]
+    }
+
+    function getDataSources(criteria) {
+      return _.reduce(criteria, function(accum, criterion) {
+        return accum.concat(criterion.dataSources);
+      }, []);
     }
 
     function createStateFromOldWorkspace(oldWorkspace) {
       var state = {
         oldWorkspace: oldWorkspace,
-        useFavorability: !!_.find(oldWorkspace.problem.criteria, function(criterion) {
-          return criterion.hasOwnProperty('isFavorable');
-        }),
+        useFavorability: hasFavorableCriterion(oldWorkspace),
         step: 'step1',
         isInputDataValid: false,
         description: oldWorkspace.problem.description,
         criteria: copyOldWorkspaceCriteria(oldWorkspace),
-        alternatives: _.map(oldWorkspace.problem.alternatives, function(alternative, alternativeId) {
-          return _.extend({}, alternative, {
-            id: generateUuid(),
-            oldId: alternativeId
-          });
-        })
+        alternatives: copyOldWorkspaceAlternatives(oldWorkspace)
       };
       state.inputData = createInputFromOldWorkspace(state.criteria,
         state.alternatives, oldWorkspace);
       return state;
     }
-    
-    // Private functions
+
+    function hasFavorableCriterion(workspace) {
+      return !!_.find(workspace.problem.criteria, function(criterion) {
+        return criterion.hasOwnProperty('isFavorable');
+      });
+    }
+
+    function copyOldWorkspaceAlternatives(oldWorkspace) {
+      return _.map(oldWorkspace.problem.alternatives, function(alternative, alternativeId) {
+        return _.extend({}, alternative, {
+          id: generateUuid(),
+          oldId: alternativeId
+        });
+      });
+    }
+
     function buildCriteria(criteria) {
       var newCriteria = _.map(criteria, function(criterion) {
         var newCriterion = _.pick(criterion, [
@@ -105,10 +131,16 @@ define(['lodash', 'angular'], function(_) {
           'unitOfMeasurement',
           'isFavorable'
         ]);
-        newCriterion.dataSources = _.map(criterion.dataSources, addScale);
+        newCriterion.dataSources = _.map(criterion.dataSources, buildDataSource);
         return [criterion.id, newCriterion];
       });
       return _.fromPairs(newCriteria);
+    }
+
+    function buildDataSource(dataSource) {
+      var newDataSource = addScale(dataSource);
+      delete newDataSource.oldId;
+      return newDataSource;
     }
 
     function addScale(dataSource) {
@@ -122,65 +154,74 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function buildAlternatives(alternatives) {
-      return _.reduce(alternatives, function(accum, alternative) {
-        accum[alternative.id] = {
-          title: alternative.title
-        };
-        return accum;
-      }, {});
+      return _(alternatives).keyBy('id').mapValues((alternative) => {
+        return _.pick(alternative, ['title']);
+      }).value();
     }
 
-    function buildPerformanceTable(inputData, criteria, treatments) {
-      var newPerformanceTable = [];
-      _.forEach(criteria, function(criterion, criterionId) {
-        _.forEach(criterion.dataSources, function(dataSource) {
-          _.forEach(treatments, function(treatment) {
-            var cell = inputData[dataSource.id][treatment.id];
-            newPerformanceTable.push({
-              alternative: treatment.id,
-              criterion: criterionId,
-              dataSource: dataSource.id,
-              performance: InputKnowledgeService.buildPerformance(cell)
-            });
-          });
+    function buildPerformanceTable(inputData, criteria, alternatives) {
+      return _(criteria).map((criterion, criterionId) => {
+        return _.map(criterion.dataSources, (dataSource) => {
+          return buildPerformanceEntries(inputData, criterionId, dataSource.id, alternatives);
         });
+      })
+        .flatten()
+        .flatten()
+        .value();
+    }
+
+    function buildPerformanceEntries(inputData, criterionId, dataSourceId, alternatives) {
+      return _.map(alternatives, (alternative) => {
+        var cell = inputData[dataSourceId][alternative.id];
+        return {
+          alternative: alternative.id,
+          criterion: criterionId,
+          dataSource: dataSourceId,
+          performance: InputKnowledgeService.buildPerformance(cell)
+        };
       });
-      return newPerformanceTable;
     }
 
     function copyOldWorkspaceCriteria(workspace) {
       return _.map(workspace.problem.criteria, function(criterion) {
-        var newCrit = _.pick(criterion, ['title', 'description', 'unitOfMeasurement', 'isFavorable']); // omit scales, preferences
-        newCrit.dataSources = _.map(criterion.dataSources, function(dataSource) {
-          var newDataSource = _.pick(dataSource, [
-            'source',
-            'sourceLink',
-            'strengthOfEvidence',
-            'uncertainties',
-            'inputType',
-            'inputMethod',
-            'dataType',
-            'parameterOfInterest'
-          ]);
-          newDataSource.id = generateUuid();
-          newDataSource.oldId = dataSource.id;
-          return newDataSource;
-        });
+        var newCrit = _.pick(criterion, ['title', 'description', 'isFavorable']); // omit scales, preferences
+        if (canBePercentage(criterion) && criterion.unitOfMeasurement) {
+          newCrit.unitOfMeasurement = criterion.unitOfMeasurement;
+        }
+        newCrit.dataSources = copyOldWorkspaceDataSource(criterion);
         newCrit.id = generateUuid();
         return newCrit;
       });
     }
 
+    function canBePercentage(criterion) {
+      return !_.some(criterion.dataSources, function(dataSource) {
+        return _.isEqual([0, 1], dataSource.scale);
+      });
+    }
+
+    function copyOldWorkspaceDataSource(criterion) {
+      return _.map(criterion.dataSources, function(dataSource) {
+        var newDataSource = _.pick(dataSource, [
+          'source',
+          'sourceLink',
+          'strengthOfEvidence',
+          'uncertainties',
+          'inputType',
+          'inputMethod',
+          'dataType',
+          'parameterOfInterest'
+        ]);
+        newDataSource.id = generateUuid();
+        newDataSource.oldId = dataSource.id;
+        return newDataSource;
+      });
+    }
+
     function createInputFromOldWorkspace(criteria, alternatives, oldWorkspace) {
       return _.reduce(oldWorkspace.problem.performanceTable, function(accum, tableEntry) {
-        var dataSourceForEntry;
-        _.forEach(criteria, function(criterion) {
-          _.forEach(criterion.dataSources, function(dataSource) {
-            if (dataSource.oldId === tableEntry.dataSource) {
-              dataSourceForEntry = dataSource;
-            }
-          });
-        });
+        var dataSources = getDataSources(criteria);
+        var dataSourceForEntry = _.find(dataSources, ['oldId', tableEntry.dataSource]);
         var alternative = _.find(alternatives, ['oldId', tableEntry.alternative]);
         if (dataSourceForEntry && alternative) {
           if (!accum[dataSourceForEntry.id]) {
@@ -196,13 +237,61 @@ define(['lodash', 'angular'], function(_) {
       return InputKnowledgeService.finishInputCell(dataSource, tableEntry);
     }
 
+    function findInvalidRow(inputData) {
+      return _.find(inputData, function(row) {
+        if (findDistributionCell(row) || findNormalDistributedCell(row) || findCellThatIsDifferent(row)) {
+          return;
+        }
+        return row;
+      });
+    }
+
+    function findCellThatIsDifferent(row) {
+      return _.find(row, function(cell) {
+        return _.find(row, function(otherCell) {
+          return compareCells(cell, otherCell);
+        });
+      });
+    }
+
+    function compareCells(cell, otherCell) {
+      if (cell.inputParameters && cell.inputParameters.id === 'dichotomousFraction') {
+        if (otherCell.inputParameters.id === 'dichotomousFraction') {
+          return cell.firstParameter !== otherCell.firstParameter || cell.secondParameter !== otherCell.secondParameter;
+        } else {
+          return cell.firstParameter / cell.secondParameter !== otherCell.firstParameter;
+        }
+      }
+      return cell.firstParameter !== otherCell.firstParameter;
+    }
+
+    function findDistributionCell(row) {
+      return _.find(row, function(cell) {
+        return cell.inputType !== 'effect';
+      });
+    }
+
+    function findNormalDistributedCell(row) {
+      return _.find(row, function(cell) {
+        return cell.isNormal;
+      });
+    }
+
+    function findInvalidCell(inputData) {
+      return _.find(inputData, function(row) {
+        return _.find(row, 'isInvalid');
+      });
+    }
+
     return {
       createProblem: createProblem,
       inputToString: inputToString,
       getInputError: getInputError,
       prepareInputData: prepareInputData,
       getOptions: getOptions,
-      createStateFromOldWorkspace: createStateFromOldWorkspace
+      createStateFromOldWorkspace: createStateFromOldWorkspace,
+      findInvalidRow: findInvalidRow,
+      findInvalidCell: findInvalidCell
     };
   };
 

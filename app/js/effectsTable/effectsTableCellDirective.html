@@ -1,0 +1,31 @@
+<div ng-if="effectsDisplay === 'effects'">
+  <div ng-if="isEffect">
+    {{effectDataSourceLabel}}
+  </div>
+  <div ng-if="!isEffect">
+    <effects-table-scales-cell scales="scales" workspace-settings="workspaceSettings" theoretical-scale="theoreticalScale"
+      uncertainty="uncertainty">
+    </effects-table-scales-cell>
+  </div>
+</div>
+
+<div ng-if="effectsDisplay === 'sourceData'">
+  <div ng-if="hasStudyData">
+    {{effectDataSourceLabel}}
+  </div>
+  <div ng-if="!hasStudyData">
+    NA
+  </div>
+</div>
+
+<div ng-if="effectsDisplay === 'smaa'">
+  <effects-table-scales-cell scales="scales" uncertainty="uncertainty" workspace-settings="workspaceSettings"
+    theoretical-scale="theoreticalScale">
+  </effects-table-scales-cell>
+</div>
+
+<div ng-if="effectsDisplay==='deterministic'">
+  <effects-table-scales-cell scales="scales" uncertainty="false" workspace-settings="workspaceSettings"
+    theoretical-scale="theoreticalScale">
+  </effects-table-scales-cell>
+</div>

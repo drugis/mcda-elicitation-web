@@ -35,7 +35,6 @@ define([
   './preferences/preferences'
 ],
   function(angular, Config) {
-
     var dependencies = [
       'ui.router',
       'elicit.benefitRisk',
@@ -78,9 +77,15 @@ define([
     app.constant('isMcdaStandalone', true);
     app.constant('currentSchemaVersion', '1.1.0');
 
-    app.config(['$stateProvider', '$urlRouterProvider', 'MCDARouteProvider',
-      function($stateProvider, $urlRouterProvider, MCDARouteProvider) {
-        //ui-router code starts here
+    app.config([
+      '$stateProvider',
+      '$urlRouterProvider',
+      'MCDARouteProvider',
+      function(
+        $stateProvider,
+        $urlRouterProvider,
+        MCDARouteProvider
+      ) {
         $stateProvider.state('workspace', {
           url: '/workspaces/:workspaceId',
           templateUrl: './workspace/workspace.html',
@@ -90,9 +95,10 @@ define([
               function($stateParams, WorkspaceResource) {
                 return WorkspaceResource.get($stateParams).$promise;
               }],
-            workspaceSettings: ['WorkspaceSettingsService','$stateParams', function(WorkspaceSettingsService, $stateParams) {
-              return WorkspaceSettingsService.loadWorkspaceSettings($stateParams);
-            }]
+            workspaceSettings: ['WorkspaceSettingsService', '$stateParams',
+              function(WorkspaceSettingsService, $stateParams) {
+                return WorkspaceSettingsService.loadWorkspaceSettings($stateParams);
+              }]
           }
         });
 

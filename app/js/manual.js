@@ -2,14 +2,20 @@
 define([
   'bowser',
   'jquery',
+  'katex/dist/katex.min',
+  'katex/dist/contrib/auto-render.min.js',
   'vanilla-back-to-top',
   '../../public/css/mcda-drugis.css',
-  'font-awesome/css/font-awesome.min.css'
-], function(bowser, $, scrollToTop) {
+  'font-awesome/css/font-awesome.min.css',
+  'katex/dist/katex.min.css'
+], function($, bowser, katex, renderMathInElement, scrollToTop) {
   window.bowser = bowser;
   window.sharedHtml = require('../manual/shared.html');
   document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('mcda-shared-content').innerHTML = window.sharedHtml;
+
+    window.katex = katex;
+    renderMathInElement(document.body);
 
     var tocbot = require('tocbot');
     tocbot.init({

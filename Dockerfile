@@ -9,8 +9,8 @@ RUN apt-get upgrade -y
 
 # Install nodejs
 RUN apt-get install -y curl
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
-RUN apt-get install -y nodejs
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get install -y nodejs git
 
 RUN npm install -g yarn
 RUN npm install -g forever
@@ -25,8 +25,9 @@ WORKDIR /var/lib/mcda
 ENV HOME /var/lib/mcda
 
 RUN yarn
-RUN npm run build-prod
+ARG WEBPACK_COMMAND
+RUN if [ "$WEBPACK_COMMAND" != ""  ] ; then npm run $WEBPACK_COMMAND ; else npm run build-prod ; fi
 
-EXPOSE 3001
+EXPOSE 3002
 
 CMD ["forever", "index.js"]

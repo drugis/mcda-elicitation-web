@@ -37,13 +37,13 @@ define(['lodash', 'angular'], function(_, angular) {
       if (!$scope.canProceed(state)) {
         return false;
       }
-      var currentChoice = state.choice || state.mostImportantCriterion;
+      var currentChoice = state.choice || state.mostImportantCriterionId;
       // History handling
       previousStates.push(angular.copy(state));
 
       if (nextStates.length) {
         var nextState = nextStates.pop();
-        if (currentChoice === nextState.previousChoice || currentChoice === nextState.mostImportantCriterion) {
+        if (currentChoice === nextState.previousChoice || currentChoice === nextState.mostImportantCriterionId) {
           $scope.state = nextState;
           return true;
         }

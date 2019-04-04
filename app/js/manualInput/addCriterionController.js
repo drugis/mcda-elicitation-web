@@ -31,6 +31,7 @@ define(['lodash'], function(_) {
       isInvalid: false
     };
     if (oldCriterion) {
+      $scope.addOrEdit = 'Edit';
       $scope.criterion = _.cloneDeep(_.find(criteria, ['id', oldCriterion.id]));
     } else {
       $scope.criterion = {
@@ -44,6 +45,7 @@ define(['lodash'], function(_) {
         }],
         isFavorable: false
       };
+      $scope.addOrEdit = 'Add';
     }
     isCreationBlocked();
 

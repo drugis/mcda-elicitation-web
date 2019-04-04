@@ -1,12 +1,14 @@
 'use strict';
 define([
   'angular',
+  './effectsTableCellDirective',
   './effectsTableScalesCellDirective',
   './effectsTableDirective',
   './criterionListDirective',
   './criterionCardDirective',
   './effectsTableService'], function(
     angular,
+    effectsTableCell,
     effectsTableScalesCell,
     effectsTable,
     criterionList,
@@ -14,6 +16,7 @@ define([
     EffectsTableService
   ) {
     return angular.module('elicit.effectsTable', [])
+      .directive('effectsTableCell', effectsTableCell)
       .directive('effectsTableScalesCell', effectsTableScalesCell)
       .directive('effectsTable', effectsTable)
       .directive('criterionList', criterionList)

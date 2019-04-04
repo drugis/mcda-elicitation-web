@@ -1,0 +1,30 @@
+<div class="grid-x">
+  <div class="cell large-6 medium-6">
+    <div id="tradeOffPlot"></div>
+  </div>
+  <div class="cell large-6 medium-6">
+    {{question}}
+    <table>
+      <thead>
+        <tr>
+          <th>Criterion</th>
+          <th>Alternative A</th>
+          <th>Alternative B</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{mostImportantCriterion.title}}</td>
+          <td>{{mostImportantCriterionValue.firstValue}}</td>
+          <td>{{mostImportantCriterionValue.secondValue}} <a ng-click="showSlider = true"><i class="fa fa-edit"></i></a>
+            <rzslider ng-if="showSlider" rz-slider-model="mostImportantCriterionValue.secondValue" rz-slider-options="sliderOptions"></rzslider>
+          </td>
+        </tr>
+        <tr>
+          <td>{{secondaryCriterion.title}}</td>
+          <td>{{secondaryCriterionValue.firstValue}}</td>
+          <td>{{secondaryCriterionValue.secondValue}}</td>
+        </tr>
+      </tbody>
+  </div>
+</div>

@@ -20,7 +20,7 @@
       </div>
 
       <div class="cell">
-        Show effects or source data in effects table
+        Effects table display mode
       </div>
       <div class="cell">
         <label>
@@ -30,6 +30,16 @@
       <div class="cell">
         <label>
           <input type="radio" ng-model="settings.effectsDisplay" ng-value="'sourceData'">Source data
+        </label>
+      </div>
+      <div class="cell">
+        <label>
+          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'deterministic'">Deterministic MCDA
+        </label>
+      </div>
+      <div class="cell">
+        <label>
+          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'smaa'">SMAA
         </label>
       </div>
 

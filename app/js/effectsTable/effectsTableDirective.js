@@ -15,8 +15,7 @@ define(['lodash'], function(_) {
         'alternatives': '=',
         'editMode': '=',
         'effectsTableInfo': '=',
-        'scales': '=',
-        'isStandAlone': '='
+        'scales': '='
       },
       templateUrl: '../effectsTable/effectsTable.html',
       link: function(scope) {

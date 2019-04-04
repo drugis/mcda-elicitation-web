@@ -44,6 +44,26 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         };
         expect(manualInputService.getInputError(cell)).toBeFalsy();
       });
+      it('should return no error for bounds that are not estimable', () => {
+        var cell = {
+          lowerBoundNE: true,
+          upperBoundNE: true,
+          firstParameter: 10,
+          secondParameter: 20,
+          inputParameters: {
+            firstParameter: {
+              label: 'Lower bound',
+              constraints: [
+                () => { }
+              ]
+            },
+            secondParameter: {
+              label: 'Upper bound'
+            }
+          }
+        };
+        expect(manualInputService.getInputError(cell)).toBeFalsy();
+      });
     });
     describe('inputToString', function() {
       it('should use the inputknowledgeservice for valid inputs', function() {
@@ -152,11 +172,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     describe('createProblem', function() {
       var title = 'title';
       var description = 'A random description of a random problem';
-      var treatments = [{
+      var alternatives = [{
         title: 'alternative1',
-        id: 'alternative1'
+        id: 'alternative1',
+        oldId: 'alternative1Oldid'
       }];
-      it('should create a problem, ready to go to the workspace', function() {
+      it('should create a problem, ready to go to the workspace, removing old ids', function() {
         inputKnowledgeServiceMock.buildPerformance.and.returnValue({});
         var criteria = [{
           title: 'favorable criterion',
@@ -164,10 +185,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           unitOfMeasurement: 'particles',
           isFavorable: true,
           id: 'criterion1id',
+          oldid: 'criterion1oldId',
           scale: [0, 1],
           omitThis: 'yech',
           dataSources: [{
             id: 'ds1id',
+            oldId: 'ds1oldId',
             inputType: 'effect',
             dataType: 'other'
           }]
@@ -227,7 +250,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           }
         };
         var useFavorability = true;
-        var result = manualInputService.createProblem(criteria, treatments, title, description, inputData, useFavorability);
+        var result = manualInputService.createProblem(criteria, alternatives, title, description, inputData, useFavorability);
         var expectedResult = {
           title: title,
           schemaVersion: '1.1.0',
@@ -305,10 +328,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               crit1: {
                 title: 'criterion 1',
                 description: 'bla',
-                unitOfMeasurement: 'Proportion',
+                unitOfMeasurement: '%',
                 isFavorable: true,
                 dataSources: [{
                   id: 'ds1',
+                  scale: [0, 1],
                   source: 'single study',
                   sourceLink: 'http://www.drugis.org',
                   inputType: 'distribution',
@@ -433,8 +457,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               inputMethod: 'assistedDistribution',
               dataType: 'continuous'
             }],
-            isFavorable: true,
-            unitOfMeasurement: 'Proportion'
+            isFavorable: true
           }, {
             id: 'uuid4',
             title: 'criterion 2',
@@ -497,7 +520,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             id: 'uuid13',
             title: 'alternative 1'
           }],
-          inputData:{
+          inputData: {
             uuid9: {
               uuid13: undefined // see input knowledge service spec for tests 
             }
@@ -511,6 +534,158 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       it('should call the inputknowledgeservice', function() {
         inputKnowledgeServiceMock.getOptions.and.returnValue('here are some options');
         expect(manualInputService.getOptions()).toEqual('here are some options');
+      });
+    });
+
+    describe('findInvalidCell', () => {
+      it('should return truthy if there is atleast one cell that is marked invalid', () => {
+        var inputData = {
+          row1: {
+            col1: {
+              isInvalid: true
+            },
+            col2: {
+              isInvalid: false
+            }
+          }
+        };
+        var result = manualInputService.findInvalidCell(inputData);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return falsy if there is not celel marked invalid', () => {
+        var inputData = {
+          row1: {
+            col1: {
+            },
+            col2: {
+            }
+          },
+          row2: {
+            col1: {
+              isInvalid: false
+            }
+          }
+        };
+        var result = manualInputService.findInvalidCell(inputData);
+        expect(result).toBeFalsy();
+
+      });
+    });
+
+    describe('findInvalidRow', () => {
+      it('should return truthy if there is an invalid row i.e. all inputs are not distributed and have the same effect value', () => {
+        var inputData = {
+          row1: {
+            col1: {
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            },
+            col2: {
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            },
+            col3: {
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            }
+          }
+        };
+        var result = manualInputService.findInvalidRow(inputData);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return falsy if the values of a row are the same, but atleast one is marked as normally distributed', () => {
+        var inputData = {
+          row1: {
+            col1: {
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            },
+            col2: {
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            },
+            col3: {
+              inputType: 'effect',
+              isNormal: true,
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            }
+          }
+        };
+        var result = manualInputService.findInvalidRow(inputData);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return falsy if atleast one cell is a distribution', () => {
+        var inputData = {
+          row1: {
+            col1: {
+              inputType: 'distribution',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            },
+            col2: {
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            }
+          }
+        };
+        var result = manualInputService.findInvalidRow(inputData);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return falsy if atleast one cell has a different value', () => {
+        var inputData = {
+          row1: {
+            col1: {
+              inputType: 'distribution',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            },
+            col2: {
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
+              }
+            },
+            col3: {
+              inputType: 'effect',
+              firstParameter: 51,
+              inputParameters: {
+                id: 'value'
+              }
+            }
+          }
+        };
+        var result = manualInputService.findInvalidRow(inputData);
+        expect(result).toBeFalsy();
       });
     });
   });

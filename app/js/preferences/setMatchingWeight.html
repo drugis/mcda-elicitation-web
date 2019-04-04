@@ -1,0 +1,20 @@
+<div class="grid-container">
+  <div class="grid-x">
+    <div class="cell">
+      <h3>Trade-off between {{mostImportantCriterion.title}} and {{secondaryCriterion.title}}</h3>
+    </div>
+    <div class="cell">
+      <elicitation-trade-off secondary-criterion="secondaryCriterion" most-important-criterion="mostImportantCriterion"
+        weight="weight"></elicitation-trade-off>
+    </div>
+    <div class="cell">
+      <button class="button success" type="submit" ng-disabled="weight.value === 0" ng-click="saveWeight()">Save</button>
+    </div>
+    <div class="cell alert" ng-show="weight.value === 0">
+      Value unchanged
+    </div>
+  </div>
+</div>
+<button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+  <span aria-hidden="true">&times;</span>
+</button>

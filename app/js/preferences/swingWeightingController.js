@@ -26,21 +26,21 @@ define(['lodash'],
       };
 
       function getValues(criteria) {
-        return _.reduce(_.keys(criteria), function(accum, criterionId) {
-          accum[criterionId] = 100;
-          return accum;
-        }, {});
+        return _.mapValues(criteria, function() {
+          return 100;
+        });
       }
 
-      function toBackEnd(mostImportantCriterion) {
+      function toBackEnd(mostImportantCriterionId) {
         return function(value, criterionId) {
           return {
             type: 'exact swing',
             ratio: 1 / (value / 100),
-            criteria: [mostImportantCriterion, criterionId]
+            criteria: [mostImportantCriterionId, criterionId]
           };
         };
       }
+      
       SwingWeightingService.initWeightingScope($scope,
         $stateParams,
         currentScenario,

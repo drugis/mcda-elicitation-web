@@ -7,6 +7,8 @@ define([
   './editScenarioTitleController',
   './ordinalSwingController',
   './swingWeightingController',
+  './matchingElicitationController',
+  './setMatchingWeightController',
   './impreciseSwingWeightingController',
   './swingWeightingService',
   './partialValueFunctionController',
@@ -15,6 +17,8 @@ define([
   './tradeOffService',
   './willingnessToTradeOffDirective',
   './willingnessToTradeOffChartDirective',
+  './preferenceElicitationTableDirective',
+  './elicitationTradeOffDirective',
   '../workspace/workspace',
   '../results/results'
 ], function(
@@ -24,6 +28,8 @@ define([
   EditScenarioTitleController,
   OrdinalSwingController,
   SwingWeightingController,
+  MatchingElicitationController,
+  SetMatchingWeightController,
   ImpreciseSwingWeightingController,
   SwingWeightingService,
   PartialValueFunctionController,
@@ -31,13 +37,17 @@ define([
   NewScenarioController,
   TradeOffService,
   willingnessToTradeOff,
-  willingnessToTradeOffChart
+  willingnessToTradeOffChart,
+  preferenceElicitationTable,
+  elicitationTradeOff
 ) {
     return angular.module('elicit.preferences', ['elicit.workspace', 'elicit.results'])
       .controller('PreferencesController', PreferencesController)
       .controller('EditScenarioTitleController', EditScenarioTitleController)
       .controller('OrdinalSwingController', OrdinalSwingController)
       .controller('SwingWeightingController', SwingWeightingController)
+      .controller('SetMatchingWeightController', SetMatchingWeightController)
+      .controller('MatchingElicitationController', MatchingElicitationController)
       .controller('ImpreciseSwingWeightingController', ImpreciseSwingWeightingController)
       .controller('PartialValueFunctionController', PartialValueFunctionController)
       .controller('NewScenarioController', NewScenarioController)
@@ -49,6 +59,7 @@ define([
 
       .directive('willingnessToTradeOff', willingnessToTradeOff)
       .directive('willingnessToTradeOffChart', willingnessToTradeOffChart)
-
+      .directive('preferenceElicitationTable', preferenceElicitationTable)
+      .directive('elicitationTradeOff', elicitationTradeOff)
       ;
   });

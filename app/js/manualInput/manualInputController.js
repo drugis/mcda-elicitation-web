@@ -81,9 +81,8 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function checkInputData() {
-      $scope.state.isInputDataValid = !_.find($scope.state.inputData, function(row) {
-        return _.find(row, 'isInvalid');
-      });
+      $scope.state.isInputDataValid = !ManualInputService.findInvalidCell($scope.state.inputData);
+      $scope.state.areInputDataRowsValid = !ManualInputService.findInvalidRow($scope.state.inputData);
     }
 
     function createProblem() {
@@ -156,7 +155,7 @@ define(['lodash', 'angular'], function(_, angular) {
               $scope.state.criteria.push(newCriterion);
             };
           },
-          oldCriterion: function(){
+          oldCriterion: function() {
             return undefined;
           },
           useFavorability: function() {
@@ -170,8 +169,8 @@ define(['lodash', 'angular'], function(_, angular) {
     function initState() {
       if ($stateParams.workspace) {
         // copying existing workspace
-                $scope.state = ManualInputService.createStateFromOldWorkspace(
-                  SchemaService.updateWorkspaceToCurrentSchema($stateParams.workspace));
+        $scope.state = ManualInputService.createStateFromOldWorkspace(
+          SchemaService.updateWorkspaceToCurrentSchema($stateParams.workspace));
         $scope.dirty = true;
         setStateWatcher();
       } else if (!$stateParams.inProgressId) {
@@ -188,6 +187,9 @@ define(['lodash', 'angular'], function(_, angular) {
         // unfinished workspace
         InProgressResource.get($stateParams).$promise.then(function(response) {
           $scope.state = response.state;
+          if($scope.state.step === 'step2') {
+            $scope.criteriaRows = EffectsTableService.buildTableRows($scope.state.criteria);
+          }
           checkInputData();
           setStateWatcher();
         });

@@ -13,6 +13,17 @@ module.exports = merge.smart(common, {
       {
         test: /\.css$/,
         loaders: [MiniCssExtractPlugin.loader, 'css-loader']
+      },
+      {
+        test: /\.m?js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader?cacheDirectory',
+          options: {
+            presets: ['@babel/preset-env'],
+            plugins: ['@babel/plugin-proposal-object-rest-spread']
+          }
+        }
       }
     ]
   },
@@ -21,7 +32,7 @@ module.exports = merge.smart(common, {
       new UglifyJsPlugin({
         cache: true,
         parallel: true,
-        sourceMap: true // set to true if you want JS source maps
+        sourceMap: true
       }),
       new OptimizeCSSAssetsPlugin({})
     ]
