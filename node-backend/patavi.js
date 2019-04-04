@@ -27,10 +27,14 @@ function createPataviTask(problem, callback) {
     }
   };
   var postReq = https.request(_.extend(httpsOptions, reqOptions), function(res) {
+    logger.debug('patavi service task created');
     if (res.statusCode === 201 && res.headers.location) {
       callback(null, res.headers.location);
     } else {
-      callback('Error queueing task: server returned code ' + res.statusCode);
+      callback({
+        status: res.statusCode,
+        message: 'Error queueing task: server returned code ' + res.statusCode
+      });
     }
   });
   postReq.write(JSON.stringify(problem));
