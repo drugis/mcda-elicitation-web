@@ -1,0 +1,134 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mcda.drugis.org/dataSource.json#",
+  "title": "MCDA problem schema",
+  "description": "MCDA dataSource schema for uploaded JSON, version 1.1.0",
+  "type": "object",
+  "required": [
+    "id"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "description": "identifier of the data source",
+      "type": "string"
+    },
+    "inputType": {
+      "description": "The way the measurements for a data source were entered",
+      "type": "string",
+      "enum": [
+        "distribution",
+        "effect"
+      ]
+    },
+    "inputMethod": {
+      "description": "Whether the input for a distribution is calculated or entered directly",
+      "type": "string",
+      "enum": [
+        "assistedDistribution",
+        "manualDistribution"
+      ]
+    },
+    "dataType": {
+      "description": "The type of data entered for the criterion",
+      "type": "string",
+      "enum": [
+        "continuous",
+        "dichotomous",
+        "other"
+      ]
+    },
+    "parameterOfInterest": {
+      "description": "Determines what the measured effect depicts ",
+      "type": "string",
+      "enum": [
+        "eventProbability",
+        "mean",
+        "median",
+        "value"
+      ]
+    },
+    "source": {
+      "description": "Where the data comes from",
+      "type": "string"
+    },
+    "sourceLink": {
+      "description": "Link to the source",
+      "type": "string"
+    },
+    "strengthOfEvidence": {
+      "description": "Strengths of the data",
+      "type": "string"
+    },
+    "uncertainties": {
+      "description": "Uncertainties about the data",
+      "type": "string"
+    },
+    "scale": {
+      "description": "The minimum and maximum values the data can have",
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "pvf": {
+      "description": "The partial value function",
+      "type": "object",
+      "required": [
+        "direction",
+        "type",
+        "range"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "direction": {
+          "type": "string",
+          "enum": [
+            "increasing",
+            "decreasing"
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "linear",
+            "piecewise-linear"
+          ]
+        },
+        "range": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": {
+            "type": "number"
+          }
+        },
+        "values": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        },
+        "cutoffs": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}

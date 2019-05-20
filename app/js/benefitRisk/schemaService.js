@@ -1,12 +1,13 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
+
   var dependencies = [
-    'generateUuid',
-    'currentSchemaVersion'
+    'currentSchemaVersion',
+    'generateUuid'
   ];
-  var SchemaService = function(
-    generateUuid,
-    currentSchemaVersion
+  var SchemaService = function (
+    currentSchemaVersion,
+    generateUuid
   ) {
     /***** Changes 
      * 1.0.0 introduction of data sources
@@ -24,17 +25,49 @@ define(['lodash', 'angular'], function(_, angular) {
       }
 
       if (newProblem.schemaVersion === currentSchemaVersion) {
-        return newProblem;
+        var error = isInvalidSchema(newProblem);
+        if (error) {
+          return {
+            isValid: false,
+            errorMessage: error[0].dataPath + ' ' + error[0].message
+          };
+        } else {
+          return {
+            isValid: true,
+            content: newProblem
+          };
+        }
       }
     }
 
     function updateWorkspaceToCurrentSchema(workspace) {
       var newWorkspace = angular.copy(workspace);
-      newWorkspace.problem = updateProblemToCurrentSchema(newWorkspace.problem);
+      newWorkspace.problem = updateProblemToCurrentSchema(newWorkspace.problem).content;
       return newWorkspace;
     }
 
-    //private 
+    function isInvalidSchema(uploadedJSON) {
+      var ajv = loadSchemas();
+      var isValid = ajv.validate('problem.json', uploadedJSON);
+      if (!isValid) {
+        return ajv.errors;
+      }
+    }
+
+    function loadSchemas() {
+      var ajv = new Ajv();
+      loadSchema(ajv, 'problem.json');
+      loadSchema(ajv, 'dataSource.json');
+      loadSchema(ajv, 'relativeEffect.json');
+      loadSchema(ajv, 'absoluteEffect.json');
+      return ajv;
+    }
+
+    function loadSchema(ajv, schemaName) {
+      var schema = require('schema-basePath/' + schemaName);
+      ajv.addSchema(schema, schemaName);
+    }
+
     function updateToVersionOnePointZeroPointZero(problem) {
       var newProblem = angular.copy(problem);
       newProblem.criteria = _.mapValues(problem.criteria, _.partial(createNewCriterion, problem));
@@ -53,8 +86,8 @@ define(['lodash', 'angular'], function(_, angular) {
       return newProblem;
     }
 
-    function putFavorabilityOnCriteria(problem){
-      return _.mapValues(problem.criteria, function(criterion, criterionId) {
+    function putFavorabilityOnCriteria(problem) {
+      return _.mapValues(problem.criteria, function (criterion, criterionId) {
         var newCriterion = angular.copy(criterion);
         if (problem.valueTree.children[0].criteria) {
           newCriterion.isFavorable = _.includes(problem.valueTree.children[0].criteria, criterionId);
@@ -66,7 +99,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function createNewPerformanceTable(problem) {
-      return _.map(problem.performanceTable, function(tableEntry) {
+      return _.map(problem.performanceTable, function (tableEntry) {
         var newEntry = angular.copy(tableEntry);
         if (tableEntry.criterionUri) {
           newEntry.criterion = tableEntry.criterionUri;
@@ -108,7 +141,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function findEntryTypeForCriterion(performanceTable, criterionId) {
-      var tableEntry =  _.find(performanceTable, function(entry) {
+      var tableEntry = _.find(performanceTable, function (entry) {
         return entry.criterion === criterionId || entry.criterionUri === criterionId;
       });
       return tableEntry.performance.type;

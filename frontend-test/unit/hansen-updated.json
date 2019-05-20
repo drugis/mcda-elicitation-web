@@ -1,0 +1,622 @@
+{
+  "title": "Hansen et al. 2005 with Placebo as baseline",
+  "description": "Based on Hansen et al. (2005), \"Efficacy and Safety of Second-Generation Antidepressants in the Treatment of Major Depressive Disorder\"",
+  "criteria": {
+    "HAM-D": {
+      "title": "HAM-D",
+      "description": "Responders on the HAM-D rating scale",
+      "unitOfMeasurement": "Proportion",
+      "dataSources": [
+        {
+          "pvf": {
+            "direction": "increasing",
+            "type": "linear",
+            "range": [
+              0,
+              1
+            ]
+          },
+          "scale": [
+            0,
+            1
+          ],
+          "id": "9d50ee92-e665-4327-913d-a7b36be48852"
+        }
+      ]
+    },
+    "Diarrhea": {
+      "title": "Diarrhea",
+      "unitOfMeasurement": "Proportion",
+      "dataSources": [
+        {
+          "pvf": {
+            "direction": "decreasing",
+            "type": "linear",
+            "range": [
+              0,
+              1
+            ]
+          },
+          "scale": [
+            0,
+            1
+          ],
+          "id": "cf0273fb-0e8b-4f5f-b949-262a696eb5f1"
+        }
+      ]
+    },
+    "Dizziness": {
+      "title": "Dizziness",
+      "unitOfMeasurement": "Proportion",
+      "dataSources": [
+        {
+          "pvf": {
+            "direction": "decreasing",
+            "type": "linear",
+            "range": [
+              0,
+              1
+            ]
+          },
+          "scale": [
+            0,
+            1
+          ],
+          "id": "5980f25b-f0f1-48e9-ba1c-13ab24702073"
+        }
+      ]
+    },
+    "Headache": {
+      "title": "Headache",
+      "unitOfMeasurement": "Proportion",
+      "dataSources": [
+        {
+          "pvf": {
+            "direction": "decreasing",
+            "type": "linear",
+            "range": [
+              0,
+              1
+            ]
+          },
+          "scale": [
+            0,
+            1
+          ],
+          "id": "ce3641c7-fe5c-41ae-8c0f-e3d44910e5e8"
+        }
+      ]
+    },
+    "Insomnia": {
+      "title": "Insomnia",
+      "unitOfMeasurement": "Proportion",
+      "dataSources": [
+        {
+          "pvf": {
+            "direction": "decreasing",
+            "type": "linear",
+            "range": [
+              0,
+              1
+            ]
+          },
+          "scale": [
+            0,
+            1
+          ],
+          "id": "45222b46-9fcd-4805-b70d-b14b0f3d0b4d"
+        }
+      ]
+    },
+    "Nausea": {
+      "title": "Nausea",
+      "unitOfMeasurement": "Proportion",
+      "dataSources": [
+        {
+          "pvf": {
+            "direction": "decreasing",
+            "type": "linear",
+            "range": [
+              0,
+              1
+            ]
+          },
+          "scale": [
+            0,
+            1
+          ],
+          "id": "d8f3a6e3-3a47-4993-9fa0-005b58cf0df8"
+        }
+      ]
+    }
+  },
+  "alternatives": {
+    "Placebo": {
+      "title": "Placebo"
+    },
+    "Fluox": {
+      "title": "Fluoxetine"
+    },
+    "Parox": {
+      "title": "Paroxetine"
+    },
+    "Sertra": {
+      "title": "Sertraline"
+    },
+    "Venla": {
+      "title": "Venlafaxine"
+    }
+  },
+  "performanceTable": [
+    {
+      "criterion": "HAM-D",
+      "performance": {
+        "type": "relative-logit-normal",
+        "parameters": {
+          "baseline": {
+            "type": "dnorm",
+            "name": "Placebo",
+            "mu": -0.17143575198943867,
+            "sigma": 0.11299261988783152
+          },
+          "relative": {
+            "type": "dmnorm",
+            "mu": {
+              "Placebo": 0,
+              "Fluox": 0.4718129,
+              "Parox": 0.7258847,
+              "Sertra": 0.6715258,
+              "Venla": 0.8211993
+            },
+            "cov": {
+              "rownames": [
+                "Placebo",
+                "Fluox",
+                "Parox",
+                "Sertra",
+                "Venla"
+              ],
+              "colnames": [
+                "Placebo",
+                "Fluox",
+                "Parox",
+                "Sertra",
+                "Venla"
+              ],
+              "data": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0.013445532,
+                  0.01039469,
+                  0.009881156,
+                  0.010499559
+                ],
+                [
+                  0,
+                  0.01039469,
+                  0.023006616,
+                  0.008196856,
+                  0.010732709
+                ],
+                [
+                  0,
+                  0.009881156,
+                  0.008196856,
+                  0.019023866,
+                  0.009210099
+                ],
+                [
+                  0,
+                  0.010499559,
+                  0.010732709,
+                  0.009210099,
+                  0.019107243
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "dataSource": "9d50ee92-e665-4327-913d-a7b36be48852"
+    },
+    {
+      "criterion": "Diarrhea",
+      "performance": {
+        "type": "relative-logit-normal",
+        "parameters": {
+          "baseline": {
+            "type": "dnorm",
+            "name": "Placebo",
+            "mu": -2.18973652268887,
+            "sigma": 0.20745091277030614
+          },
+          "relative": {
+            "type": "dmnorm",
+            "mu": {
+              "Placebo": 0,
+              "Fluox": 0.60820293,
+              "Parox": 0.14088424,
+              "Sertra": 0.93203685,
+              "Venla": 0.09601785
+            },
+            "cov": {
+              "rownames": [
+                "Placebo",
+                "Fluox",
+                "Parox",
+                "Sertra",
+                "Venla"
+              ],
+              "colnames": [
+                "Placebo",
+                "Fluox",
+                "Parox",
+                "Sertra",
+                "Venla"
+              ],
+              "data": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0.05366822,
+                  0.04117003,
+                  0.034076,
+                  0.03788519
+                ],
+                [
+                  0,
+                  0.04117003,
+                  0.08108542,
+                  0.0377813,
+                  0.04324302
+                ],
+                [
+                  0,
+                  0.034076,
+                  0.0377813,
+                  0.05394404,
+                  0.03338272
+                ],
+                [
+                  0,
+                  0.03788519,
+                  0.04324302,
+                  0.03338272,
+                  0.09859621
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "dataSource": "cf0273fb-0e8b-4f5f-b949-262a696eb5f1"
+    },
+    {
+      "criterion": "Dizziness",
+      "performance": {
+        "type": "relative-logit-normal",
+        "parameters": {
+          "baseline": {
+            "type": "dnorm",
+            "name": "Placebo",
+            "mu": -2.229952239997334,
+            "sigma": 0.6103081418234848
+          },
+          "relative": {
+            "type": "dmnorm",
+            "mu": {
+              "Placebo": 0,
+              "Fluox": 0.1203208,
+              "Parox": 0.6538699,
+              "Sertra": -0.2203627,
+              "Venla": 1.1915229
+            },
+            "cov": {
+              "rownames": [
+                "Placebo",
+                "Fluox",
+                "Parox",
+                "Sertra",
+                "Venla"
+              ],
+              "colnames": [
+                "Placebo",
+                "Fluox",
+                "Parox",
+                "Sertra",
+                "Venla"
+              ],
+              "data": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0.09124249,
+                  0.07387436,
+                  0.08086186,
+                  0.06457527
+                ],
+                [
+                  0,
+                  0.07387436,
+                  0.14080128,
+                  0.10328788,
+                  0.0703052
+                ],
+                [
+                  0,
+                  0.08086186,
+                  0.10328788,
+                  0.14662864,
+                  0.06920427
+                ],
+                [
+                  0,
+                  0.06457527,
+                  0.0703052,
+                  0.06920427,
+                  0.08590214
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "dataSource": "5980f25b-f0f1-48e9-ba1c-13ab24702073"
+    },
+    {
+      "criterion": "Headache",
+      "performance": {
+        "type": "relative-logit-normal",
+        "parameters": {
+          "baseline": {
+            "name": "Placebo",
+            "type": "dnorm",
+            "mu": -1.195990710044872,
+            "sigma": 0.2926643940049414
+          },
+          "relative": {
+            "type": "dmnorm",
+            "mu": {
+              "Placebo": 0,
+              "Fluox": 0.1964591,
+              "Parox": 0.1263129,
+              "Sertra": 0.2029933,
+              "Venla": -0.2254059
+            },
+            "cov": {
+              "rownames": [
+                "Placebo",
+                "Fluox",
+                "Parox",
+                "Sertra",
+                "Venla"
+              ],
+              "colnames": [
+                "Placebo",
+                "Fluox",
+                "Parox",
+                "Sertra",
+                "Venla"
+              ],
+              "data": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0.0351938,
+                  0.02755068,
+                  0.02189916,
+                  0.02919822
+                ],
+                [
+                  0,
+                  0.02755068,
+                  0.04847513,
+                  0.02374509,
+                  0.03277411
+                ],
+                [
+                  0,
+                  0.02189916,
+                  0.02374509,
+                  0.03259199,
+                  0.02356638
+                ],
+                [
+                  0,
+                  0.02919822,
+                  0.03277411,
+                  0.02356638,
+                  0.05920276
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "dataSource": "ce3641c7-fe5c-41ae-8c0f-e3d44910e5e8"
+    },
+    {
+      "criterion": "Insomnia",
+      "performance": {
+        "type": "relative-logit-normal",
+        "parameters": {
+          "baseline": {
+            "name": "Placebo",
+            "type": "dnorm",
+            "mu": -2.6072766936458627,
+            "sigma": 0.19058521932687542
+          },
+          "relative": {
+            "type": "dmnorm",
+            "mu": {
+              "Placebo": 0,
+              "Fluox": 0.7978386,
+              "Parox": 0.7486351,
+              "Sertra": 1.0663029,
+              "Venla": 0.9744811
+            },
+            "cov": {
+              "rownames": [
+                "Placebo",
+                "Fluox",
+                "Parox",
+                "Sertra",
+                "Venla"
+              ],
+              "colnames": [
+                "Placebo",
+                "Fluox",
+                "Parox",
+                "Sertra",
+                "Venla"
+              ],
+              "data": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0.04388258,
+                  0.03516051,
+                  0.02560003,
+                  0.03283164
+                ],
+                [
+                  0,
+                  0.03516051,
+                  0.06255486,
+                  0.0280728,
+                  0.03474863
+                ],
+                [
+                  0,
+                  0.02560003,
+                  0.0280728,
+                  0.05402063,
+                  0.02592013
+                ],
+                [
+                  0,
+                  0.03283164,
+                  0.03474863,
+                  0.02592013,
+                  0.0673885
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "dataSource": "45222b46-9fcd-4805-b70d-b14b0f3d0b4d"
+    },
+    {
+      "criterion": "Nausea",
+      "performance": {
+        "type": "relative-logit-normal",
+        "parameters": {
+          "baseline": {
+            "type": "dnorm",
+            "name": "Placebo",
+            "mu": -2.0171705884956532,
+            "sigma": 0.191705300034155
+          },
+          "relative": {
+            "type": "dmnorm",
+            "mu": {
+              "Placebo": 0,
+              "Fluox": 0.3951561,
+              "Parox": 0.6442827,
+              "Sertra": 0.6469638,
+              "Venla": 0.9771107
+            },
+            "cov": {
+              "rownames": [
+                "Placebo",
+                "Fluox",
+                "Parox",
+                "Sertra",
+                "Venla"
+              ],
+              "colnames": [
+                "Placebo",
+                "Fluox",
+                "Parox",
+                "Sertra",
+                "Venla"
+              ],
+              "data": [
+                [
+                  0,
+                  0,
+                  0,
+                  0,
+                  0
+                ],
+                [
+                  0,
+                  0.04167875,
+                  0.03492591,
+                  0.02952693,
+                  0.03559971
+                ],
+                [
+                  0,
+                  0.03492591,
+                  0.05629741,
+                  0.03102295,
+                  0.03658295
+                ],
+                [
+                  0,
+                  0.02952693,
+                  0.03102295,
+                  0.04396177,
+                  0.02899487
+                ],
+                [
+                  0,
+                  0.03559971,
+                  0.03658295,
+                  0.02899487,
+                  0.0536996
+                ]
+              ]
+            }
+          }
+        }
+      },
+      "dataSource": "d8f3a6e3-3a47-4993-9fa0-005b58cf0df8"
+    }
+  ],
+  "preferences": {},
+  "schemaVersion": "1.1.0"
+}

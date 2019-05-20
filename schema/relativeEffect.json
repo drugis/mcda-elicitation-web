@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mcda.drugis.org/relativeEffect.json#",
+  "title": "MCDA performance table for distribution data",
+  "type": "object",
+  "required": [
+    "criterion",
+    "dataSource",
+    "alternative",
+    "performance"
+  ],
+  "properties": {
+    "alternative": {
+      "type": "string"
+    },
+    "criterion": {
+      "type": "string"
+    },
+    "dataSource": {
+      "type": "string"
+    },
+    "performance": {
+      "type": "object",
+      "required": [
+        "type"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "dnorm",
+            "exact",
+            "dt",
+            "dbeta",
+            "dgamma"
+          ]
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "alpha": {
+              "type": "number"
+            },
+            "beta": {
+              "type": "number"
+            },
+            "mu": {
+              "type": "number"
+            },
+            "stdErr": {
+              "type": "number"
+            },
+            "dof": {
+              "type": "number"
+            },
+            "sigma": {
+              "type": "number"
+            }
+          }
+        },
+        "value": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

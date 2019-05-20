@@ -29,9 +29,6 @@ let config = {
       }],
       exclude: [/.*angular-foundation-6.*/] // uses $templatecache so dont replace 
     }, {
-      test: /\.json$/,
-      loader: 'json-loader'
-    }, {
       test: /\.html$/,
       loader: 'raw-loader'
     }, {
@@ -58,6 +55,7 @@ let config = {
 
   resolve: {
     alias: {
+      'schema-basePath' : basePath + '/schema/',
       'mcda': basePath + '/app/js',
       'mcdaweb': basePath + '/app/js/mcda-web'
     },

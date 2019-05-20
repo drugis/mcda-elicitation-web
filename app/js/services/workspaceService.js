@@ -413,7 +413,7 @@ define(['lodash', 'angular'], function(_, angular) {
         return;
       }
       var firstType = workspace.preferences[0].type;
-      if (_.find(workspace.preferences, function(preference) {
+      if (_.some(workspace.preferences, function(preference) {
         return preference.type !== firstType;
       })) {
         return 'Preferences should all be the same type';

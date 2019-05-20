@@ -11,6 +11,7 @@ cp -Rf ../gemtc-web/ssl docker
 cp -Rf public docker
 cp -Rf app docker
 cp -Rf examples docker
+cp -Rf schema docker
 cp -f webpack* docker
 cp -f package.json docker
 cp -f Dockerfile docker
