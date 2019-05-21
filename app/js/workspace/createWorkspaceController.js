@@ -60,7 +60,7 @@ define(['angular'], function (angular) {
         };
         ExampleResource.get(example, function (problem) {
           var updatedProblem = SchemaService.updateProblemToCurrentSchema(problem);
-          WorkspaceResource.create(updatedProblem).$promise.then(function (workspace) {
+          WorkspaceResource.create(updatedProblem.content).$promise.then(function (workspace) {
             callback(choice, workspace);
             $modalInstance.close();
           });
