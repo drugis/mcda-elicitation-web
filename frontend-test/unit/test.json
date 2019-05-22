@@ -8,10 +8,6 @@
       "dataSources": [
         {
           "id": "691d5517-75ec-4ce6-ba85-b87c4203c68d",
-          "inputType": "distribution",
-          "inputMethod": "assistedDistribution",
-          "dataType": "dichotomous",
-          "parameterOfInterest": "eventProbability",
           "scale": [
             0,
             1
@@ -25,10 +21,6 @@
       "dataSources": [
         {
           "id": "a4a850a3-6a9c-4126-9e64-f1581b7f6d56",
-          "inputType": "distribution",
-          "inputMethod": "assistedDistribution",
-          "dataType": "continuous",
-          "parameterOfInterest": "mean",
           "scale": [
             null,
             null
@@ -42,10 +34,6 @@
       "dataSources": [
         {
           "id": "b272b7f4-4ada-4be5-958e-aab281399183",
-          "inputType": "distribution",
-          "inputMethod": "manualDistribution",
-          "dataType": "dichotomous",
-          "parameterOfInterest": "eventProbability",
           "scale": [
             0,
             1
@@ -59,10 +47,6 @@
       "dataSources": [
         {
           "id": "5451502e-dfad-4ef7-b539-4df9ec15f886",
-          "inputType": "effect",
-          "inputMethod": "assistedDistribution",
-          "dataType": "dichotomous",
-          "parameterOfInterest": "eventProbability",
           "scale": [
             0,
             1
@@ -76,10 +60,6 @@
       "dataSources": [
         {
           "id": "cf89ea43-e361-4569-a524-2be8a87de9fc",
-          "inputType": "effect",
-          "inputMethod": "assistedDistribution",
-          "dataType": "continuous",
-          "parameterOfInterest": "mean",
           "scale": [
             null,
             null
@@ -93,10 +73,6 @@
       "dataSources": [
         {
           "id": "43c25068-385b-475d-9fd6-a2f7c2505e2a",
-          "inputType": "effect",
-          "inputMethod": "assistedDistribution",
-          "dataType": "other",
-          "parameterOfInterest": "value",
           "scale": [
             null,
             null

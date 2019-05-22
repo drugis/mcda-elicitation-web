@@ -22,135 +22,54 @@ define(['lodash', 'angular'], function(_, angular) {
         }
       },
       effect: {
-        getKnowledge: function(cell) {
-          return EFFECT_KNOWLEDGE.getKnowledge(cell);
+        getKnowledge: function() {
+          return EFFECT_KNOWLEDGE.getKnowledge();
         }
       }
     };
 
-    var DICHOTOMOUS_EFFECT_DECIMAL = {
-      id: 'dichotomousDecimal',
-      label: 'Decimal',
-      firstParameter: buildPositiveWithMax('Value', 1.0),
-      fits: function(tableEntry) {
-        return !tableEntry.performance.input || tableEntry.performance.type === 'empty';
-      },
-      toString: valueToString,
-      finishInputCell: finishValueCell,
-      buildPerformance: function(cell) {
-        return PerformanceService.buildExactPerformance(cell.firstParameter);
+    var EFFECT_KNOWLEDGE = {
+      getKnowledge: function() {
+        var options = {
+          value: buildExactValueKnowledge('Value'),
+          valueSE: buildExactValueSEKnowledge('Value'),
+          valueCI: buildExactValueConfidenceIntervalKnowledge('Value'),
+          valueSampleSize: VALUE_SAMPLE_SIZE,
+          fraction: FRACTION
+        };
+        return buildKnowledge(options);
       }
     };
 
-    var DICHOTOMOUS_EFFECT_DECIMAL_SAMPLE_SIZE = {
-      id: 'dichotomousDecimalSampleSize',
-      label: 'Decimal, sample size',
-      firstParameter: buildPositiveWithMax('Value', 1.0),
+    var VALUE_SAMPLE_SIZE = {
+      id: 'valueSampleSize',
+      label: 'value, sample size',
+      firstParameter: buildDefined('Value'),
       secondParameter: buildIntegerAboveZero('Sample size'),
-      canBeNormal: true,
       fits: function(tableEntry) {
         return tableEntry.performance.input &&
           tableEntry.performance.input.sampleSize &&
-          !isFinite(tableEntry.performance.input.events) &&
-          tableEntry.performance.input.scale !== 'percentage';
+          !isFinite(tableEntry.performance.input.value) ;
       },
       toString: function(cell) {
-        var proportion = cell.firstParameter;
+        var value = cell.firstParameter;
         var sampleSize = cell.secondParameter;
-        var returnString = proportion + ' (' + sampleSize + ')';
-        if (cell.isNormal) {
-          var sigma = roundedStdErr(proportion, sampleSize);
-          returnString += '\nNormal(' + proportion + ', ' + sigma + ')';
-        } else {
-          returnString += NO_DISTRIBUTION;
-        }
+        var returnString = value + ' (' + sampleSize + ')';
         return returnString;
       },
-      finishInputCell: finishProportionSampleSizeCell,
+      finishInputCell: finishValueSampleSizeCell,
       buildPerformance: function(cell) {
-        var proportion = cell.firstParameter;
+        var value = cell.firstParameter;
         var sampleSize = cell.secondParameter;
         var input = {
-          value: proportion,
+          value: value,
           sampleSize: sampleSize
         };
-        if (cell.isNormal) {
-          var sigma = stdErr(proportion, sampleSize);
-          return PerformanceService.buildNormalPerformance(proportion, sigma, input);
-        } else {
-          return PerformanceService.buildExactPerformance(proportion, input);
-        }
+        return PerformanceService.buildExactPerformance(value, input);
       }
     };
 
-    var DICHOTOMOUS_EFFECT_PERCENTAGE = {
-      id: 'dichotomousPercentage',
-      label: 'Percentage',
-      firstParameter: buildPositiveWithMax('Value', 100),
-      fits: function(tableEntry) {
-        return tableEntry.performance.input &&
-          !tableEntry.performance.input.sampleSize &&
-          tableEntry.performance.input.scale === 'percentage';
-      },
-      toString: function(cell) {
-        return cell.firstParameter + '%' + NO_DISTRIBUTION;
-      },
-      finishInputCell: function(cell, tableEntry) {
-        var inputCell = angular.copy(cell);
-        inputCell.firstParameter = tableEntry.performance.input.value;
-        return inputCell;
-      },
-      buildPerformance: function(cell) {
-        return PerformanceService.buildExactPerformance(cell.firstParameter / 100, {
-          value: cell.firstParameter,
-          scale: 'percentage'
-        });
-      }
-    };
-
-    var DICHOTOMOUS_EFFECT_PERCENTAGE_SAMPLE_SIZE = {
-      id: 'dichotomousPercentageSampleSize',
-      label: 'Percentage, sample size',
-      firstParameter: buildPositiveWithMax('Value', 100),
-      secondParameter: buildIntegerAboveZero('Sample size'),
-      canBeNormal: true,
-      fits: function(tableEntry) {
-        return tableEntry.performance.input &&
-          tableEntry.performance.input.sampleSize &&
-          tableEntry.performance.input.scale === 'percentage';
-      },
-      toString: function(cell) {
-        var percentage = cell.firstParameter;
-        var sampleSize = cell.secondParameter;
-        var returnString = percentage + '% (' + sampleSize + ')';
-        if (cell.isNormal) {
-          var proportion = percentage / 100;
-          var sigma = roundedStdErr(proportion, sampleSize);
-          returnString += '\nNormal(' + proportion + ', ' + sigma + ')';
-        } else {
-          returnString += NO_DISTRIBUTION;
-        }
-        return returnString;
-      },
-      finishInputCell: finishProportionSampleSizeCell,
-      buildPerformance: function(cell) {
-        var proportion = cell.firstParameter / 100;
-        var sampleSize = cell.secondParameter;
-        var input = {
-          value: cell.firstParameter,
-          sampleSize: cell.secondParameter,
-          scale: 'percentage'
-        };
-        if (cell.isNormal) {
-          var sigma = stdErr(proportion, sampleSize);
-          return PerformanceService.buildNormalPerformance(proportion, sigma, input);
-        } else {
-          return PerformanceService.buildExactPerformance(proportion, input);
-        }
-      }
-    };
-
-    var DICHOTOMOUS_EFFECT_FRACTION = {
+    var FRACTION = {
       id: 'dichotomousFraction',
       label: 'Fraction',
       firstParameter: {
@@ -163,7 +82,6 @@ define(['lodash', 'angular'], function(_, angular) {
         ]
       },
       secondParameter: buildIntegerAboveZero('Sample size'),
-      canBeNormal: true,
       fits: function(tableEntry) {
         return tableEntry.performance.input &&
           isFinite(tableEntry.performance.input.events) &&
@@ -171,21 +89,12 @@ define(['lodash', 'angular'], function(_, angular) {
       },
       toString: function(cell) {
         var sampleSize = cell.secondParameter;
-        var returnString = cell.firstParameter + ' / ' + sampleSize;
-        if (cell.isNormal) {
-          var proportion = cell.firstParameter / sampleSize;
-          var sigma = roundedStdErr(proportion, sampleSize);
-          returnString += '\nNormal(' + proportion + ', ' + sigma + ')';
-        } else {
-          returnString += NO_DISTRIBUTION;
-        }
-        return returnString;
+        return cell.firstParameter + ' / ' + sampleSize;
       },
       finishInputCell: function(cell, tableEntry) {
         var inputCell = angular.copy(cell);
         inputCell.firstParameter = tableEntry.performance.input.events;
         inputCell.secondParameter = tableEntry.performance.input.sampleSize;
-        inputCell.isNormal = tableEntry.performance.type === 'dnorm';
         return inputCell;
       },
       buildPerformance: function(cell) {
@@ -193,13 +102,7 @@ define(['lodash', 'angular'], function(_, angular) {
           events: cell.firstParameter,
           sampleSize: cell.secondParameter
         };
-        if (cell.isNormal) {
-          var mu = cell.firstParameter / cell.secondParameter;
-          var sigma = stdErr(mu, cell.secondParameter);
-          return PerformanceService.buildNormalPerformance(mu, sigma, input);
-        } else {
-          return PerformanceService.buildExactPerformance(cell.firstParameter / cell.secondParameter, input);
-        }
+        return PerformanceService.buildExactPerformance(cell.firstParameter / cell.secondParameter, input);
       }
     };
 
@@ -283,60 +186,6 @@ define(['lodash', 'angular'], function(_, angular) {
         }
       })
     };
-    var CONTINUOUS_EFFECT_KNOWLEDGE = {
-      getKnowledge: function(cell) {
-        return this[cell.parameterOfInterest].getKnowledge(cell);
-      },
-      mean: buildKnowledge({
-        exactValue: buildExactValueKnowledge('Mean'),
-        exactValueSE: _.extend(buildExactValueSEKnowledge('Mean'), {
-          canBeNormal: true
-        }),
-        exactValueCI: _.extend(buildExactValueConfidenceIntervalKnowledge('Mean'), {
-          canBeNormal: true
-        })
-      }),
-      median: buildKnowledge({
-        exactValue: buildExactValueKnowledge('Median'),
-        exactValueCI: buildExactValueConfidenceIntervalKnowledge('Median')
-      }),
-      cumulativeProbability: buildKnowledge(function() {
-        var decimal = buildExactValueKnowledge('Decimal', 'decimal');
-        decimal.firstParameter.constraints = decimal.firstParameter.constraints.concat(
-          [ConstraintService.positive(),
-          ConstraintService.belowOrEqualTo(1)]);
-        var percentage = buildPercentageKnowledge();
-        var decimalCI = addCeilConstraints(buildExactValueConfidenceIntervalKnowledge('Decimal', 'decimalCI'), 1);
-        var percentageCI = addCeilConstraints(buildPercentageConfidenceIntervalKnowledge('Percentage', 'percentageCI'), 100);
-        var retval = {
-          decimal: decimal,
-          decimalCI: decimalCI,
-          percentage: percentage,
-          percentageCI: percentageCI
-        };
-        return retval;
-      }()) //!!
-    };
-
-    var EFFECT_KNOWLEDGE = {
-      getKnowledge: function(cell) {
-        return this[cell.dataType].getKnowledge(cell);
-      },
-      dichotomous: buildKnowledge({
-        dichotomousDecimal: DICHOTOMOUS_EFFECT_DECIMAL,
-        dichotomousDecimalSampleSize: DICHOTOMOUS_EFFECT_DECIMAL_SAMPLE_SIZE,
-        dichotomousPercentage: DICHOTOMOUS_EFFECT_PERCENTAGE,
-        dichotomousPercentageSampleSize: DICHOTOMOUS_EFFECT_PERCENTAGE_SAMPLE_SIZE,
-        dichotomousFraction: DICHOTOMOUS_EFFECT_FRACTION
-      }),
-      continuous: CONTINUOUS_EFFECT_KNOWLEDGE,
-      other: buildKnowledge({
-        exactValue: buildExactValueKnowledge('Value'),
-        exactValueSE: buildExactValueSEKnowledge('Value'),
-        exactValueCI: buildExactValueConfidenceIntervalKnowledge('Value')
-      })
-    };
-
     var ASSISTED_DISTRIBUTION_KNOWLEDGE = {
       getKnowledge: function(cell) {
         return this[cell.dataType].getKnowledge(cell);
@@ -505,6 +354,16 @@ define(['lodash', 'angular'], function(_, angular) {
       return knowledge;
     }
 
+
+    function buildExactValueKnowledge(label, id) {
+      id = id ? id : 'value';
+      var knowledge = buildExactKnowledge(id, label);
+      knowledge.fits = function(tableEntry) {
+        return !tableEntry.performance.input || tableEntry.performance.type === 'empty';
+      };
+      return knowledge;
+    }
+
     function buildExactKnowledge(id, label) {
       return {
         id: id,
@@ -516,15 +375,6 @@ define(['lodash', 'angular'], function(_, angular) {
           return PerformanceService.buildExactPerformance(cell.firstParameter);
         }
       };
-    }
-
-    function buildExactValueKnowledge(label, id) {
-      id = id ? id : 'exactValue';
-      var knowledge = buildExactKnowledge(id, label);
-      knowledge.fits = function(tableEntry) {
-        return !tableEntry.performance.input || tableEntry.performance.type === 'empty';
-      };
-      return knowledge;
     }
 
     function buildExactValueSEKnowledge(label, id) {
@@ -597,35 +447,6 @@ define(['lodash', 'angular'], function(_, angular) {
       return knowledge;
     }
 
-    function buildPercentageConfidenceIntervalKnowledge(label, id) {
-      var knowledge = buildExactValueConfidenceIntervalKnowledge(label, id);
-      knowledge.toString = valueCIPercentToString;
-      knowledge.buildPerformance = function(cell) {
-        return PerformanceService.buildExactPercentConfidencePerformance(cell);
-      };
-      knowledge.fits = function(tableEntry) {
-        return tableEntry.performance.input &&
-          (isFinite(tableEntry.performance.input.lowerBound) || tableEntry.performance.input.lowerBound === 'NE') &&
-          (isFinite(tableEntry.performance.input.upperBound) || tableEntry.performance.input.upperBound === 'NE') &&
-          tableEntry.performance.input.scale === 'percentage';
-      };
-      return knowledge;
-    }
-
-    function buildPercentageKnowledge() {
-      var knowledge = buildExactValueKnowledge('Percentage', 'percentage');
-      knowledge.firstParameter.constraints = knowledge.firstParameter.constraints.concat(ConstraintService.positive(), [ConstraintService.belowOrEqualTo(100)]);
-      knowledge.toString = valuePercentToString;
-      knowledge.buildPerformance = buildPercentPerformance;
-      knowledge.fits = function(tableEntry) {
-        return tableEntry.performance.input &&
-          tableEntry.performance.input.value &&
-          !tableEntry.performance.input.lowerBound &&
-          tableEntry.performance.input.scale === 'percentage';
-      };
-      return knowledge;
-    }
-
     // finish cell functions
 
     function finishValueCell(cell, tableEntry) {
@@ -684,14 +505,13 @@ define(['lodash', 'angular'], function(_, angular) {
       return inputCell;
     }
 
-    function finishProportionSampleSizeCell(cell, tableEntry) {
+    function finishValueSampleSizeCell(cell, tableEntry) {
       if (cell.empty) {
         return cell;
       }
       var inputCell = angular.copy(cell);
       inputCell.firstParameter = tableEntry.performance.input.value;
       inputCell.secondParameter = tableEntry.performance.input.sampleSize;
-      inputCell.isNormal = tableEntry.performance.type === 'dnorm';
       return inputCell;
     }
 

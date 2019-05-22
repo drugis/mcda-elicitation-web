@@ -85,8 +85,6 @@ define([
             title: 'Proximal DVT',
             dataSources: [{
               id: 'proxDvtDS',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution',
               pvf: {
                 range: [0, 0.25],
                 type: 'linear',
@@ -101,8 +99,6 @@ define([
             dataSources: [
               {
                 id: 'distDvtDS',
-                inputType: 'distribution',
-                inputMethod: 'manualDistribution',
                 pvf: {
                   range: [0.15, 0.4],
                   type: 'linear',
@@ -115,8 +111,6 @@ define([
             title: 'Major bleeding',
             dataSources: [{
               id: 'bleedDS',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution',
               pvf: {
                 range: [0, 0.1],
                 type: 'linear',
@@ -132,8 +126,6 @@ define([
               title: 'Proximal DVT',
               dataSources: [{
                 id: 'proxDvtDS',
-                inputType: 'distribution',
-                inputMethod: 'manualDistribution',
                 pvf: {
                   range: [0, 0.25],
                   type: 'linear',
@@ -148,8 +140,6 @@ define([
               dataSources: [
                 {
                   id: 'distDvtDS',
-                  inputType: 'distribution',
-                  inputMethod: 'manualDistribution',
                   pvf: {
                     range: [0.15, 0.4],
                     type: 'linear',
@@ -162,8 +152,6 @@ define([
               title: 'Major bleeding',
               dataSources: [{
                 id: 'bleedDS',
-                inputType: 'distribution',
-                inputMethod: 'manualDistribution',
                 pvf: {
                   range: [0, 0.1],
                   type: 'linear',
@@ -182,8 +170,6 @@ define([
             title: 'Proximal DVT',
             dataSources: [{
               id: 'proxDvtDS',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution',
               pvf: {
                 range: [0, 0.25],
                 type: 'linear',
@@ -197,8 +183,6 @@ define([
             title: 'Distal DVT',
             dataSources: [{
               id: 'distDvtDS',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution',
               pvf: {
                 range: [0.15, 0.4],
                 type: 'linear',
@@ -212,8 +196,6 @@ define([
             title: 'Major bleeding',
             dataSources: [{
               id: 'bleedDS',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution',
               pvf: {
                 range: [0, 0.1],
                 type: 'linear',
@@ -246,8 +228,6 @@ define([
             title: 'Proximal DVT',
             dataSources: [{
               id: 'proxDvtDS',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution',
               pvf: {
                 range: [0, 0.25],
                 type: 'linear',
@@ -261,8 +241,6 @@ define([
             title: 'Distal DVT',
             dataSources: [{
               id: 'distDvtDS',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution',
               pvf: {
                 range: [0.15, 0.4],
                 type: 'linear',
@@ -276,8 +254,6 @@ define([
             title: 'Major bleeding',
             dataSources: [{
               id: 'bleedDS',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution',
               pvf: {
                 range: [0, 0.1],
                 type: 'linear',
@@ -297,8 +273,6 @@ define([
             title: 'Proximal DVT',
             dataSources: [{
               id: 'proxDvtDS',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution',
               pvf: {
                 range: [0, 0.25],
                 type: 'linear',
@@ -312,8 +286,6 @@ define([
             title: 'Distal DVT',
             dataSources: [{
               id: 'distDvtDS',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution',
               pvf: {
                 range: [0.15, 0.4],
                 type: 'linear',
@@ -327,8 +299,6 @@ define([
             title: 'Major bleeding',
             dataSources: [{
               id: 'bleedDS',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution',
               pvf: {
                 range: [0, 0.1],
                 type: 'linear',
@@ -354,8 +324,6 @@ define([
             title: 'Distal DVT',
             dataSources: [{
               id: 'distDvtDS',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution',
               pvf: {
                 range: [0.15, 0.4],
                 type: 'linear',
@@ -369,8 +337,6 @@ define([
             title: 'Major bleeding',
             dataSources: [{
               id: 'bleedDS',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution',
               pvf: {
                 range: [0, 0.1],
                 type: 'linear',

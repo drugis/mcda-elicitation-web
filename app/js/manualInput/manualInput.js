@@ -10,6 +10,7 @@ define([
   './effectInputHelperDirective',
   './inputDataSourceDirective',
   './inProgressResource',
+  './manualInputTableDirective',
   'angular',
   'angular-resource'
 ], function(
@@ -23,6 +24,7 @@ define([
   effectInputHelper,
   inputDataSource,
   InProgressResource,
+  manualInputTable,
   angular
 ) {
     return angular.module('elicit.manualInput', ['ngResource', 'elicit.util', 'elicit.effectsTable'])
@@ -38,6 +40,7 @@ define([
 
       .directive('effectInputHelper', effectInputHelper)
       .directive('inputDataSource', inputDataSource)
+      .directive('manualInputTable', manualInputTable)
 
       .service('InProgressResource', InProgressResource);
 

@@ -85,8 +85,6 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function (a
                 unitOfMeasurement: 'ms',
                 dataSources: [{
                   id: 'uuid',
-                  inputType: 'distribution',
-                  inputMethod: 'manualDistribution',
                   uncertainties: 'unc',
                   source: 'source1'
                 }]
@@ -97,8 +95,6 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function (a
                 unitOfMeasurement: 'ms',
                 dataSources: [{
                   id: 'uuid',
-                  inputType: 'distribution',
-                  inputMethod: 'manualDistribution',
                   uncertainties: 'unc',
                   source: 'source2'
                 }]
@@ -207,8 +203,6 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function (a
                 isFavorable: true,
                 dataSources: [{
                   id: 'uuid',
-                  inputType: 'distribution',
-                  inputMethod: 'manualDistribution',
                   uncertainties: 'unc',
                   source: 'source'
                 }]
@@ -220,8 +214,6 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function (a
                 isFavorable: true,
                 dataSources: [{
                   id: 'uuid',
-                  inputType: 'distribution',
-                  inputMethod: 'manualDistribution',
                   uncertainties: 'unc',
                   source: 'source'
                 }]

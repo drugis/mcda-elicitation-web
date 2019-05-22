@@ -7,8 +7,6 @@ function exampleProblem() {
         title: 'Proximal DVT',
         dataSources: [{
           id: 'proxDvtDS',
-          inputType: 'distribution',
-          inputMethod: 'manualDistribution',
           pvf: {
             range: [
               0.0,
@@ -23,8 +21,6 @@ function exampleProblem() {
         title: 'Distal DVT',
         dataSources: [{
           id: 'distDvtDS',
-          inputType: 'distribution',
-          inputMethod: 'manualDistribution',
           pvf: {
             range: [
               0.15,
@@ -39,8 +35,6 @@ function exampleProblem() {
         title: 'Major bleeding',
         dataSources: [{
           id: 'bleedDS',
-          inputType: 'distribution',
-          inputMethod: 'manualDistribution',
           pvf: {
             range: [
               0.0,

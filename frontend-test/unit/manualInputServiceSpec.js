@@ -1,36 +1,39 @@
 'use strict';
-define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(_, angular) {
+define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (_, angular) {
 
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
   var currentSchemaVersion = '1.1.0';
   var inputKnowledgeServiceMock = jasmine.createSpyObj('InputKnowledgeService', ['getOptions', 'inputToString',
     'finishInputCell', 'buildPerformance']);
-  describe('The manualInputService', function() {
-    beforeEach(angular.mock.module('elicit.manualInput', function($provide) {
+
+  describe('The manualInputService', function () {
+    beforeEach(angular.mock.module('elicit.manualInput', function ($provide) {
 
       $provide.value('generateUuid', generateUuidMock);
       $provide.value('currentSchemaVersion', currentSchemaVersion);
       $provide.value('InputKnowledgeService', inputKnowledgeServiceMock);
     }));
-    beforeEach(inject(function(ManualInputService) {
+
+    beforeEach(inject(function (ManualInputService) {
       manualInputService = ManualInputService;
     }));
-    describe('getInputError', function() {
-      it('should run all the constraints of a cell\'s parameters, returning the first error found', function() {
+
+    describe('getInputError', function () {
+      it('should run all the constraints of a cell\'s parameters, returning the first error found', function () {
         var cell = {
           firstParameter: 10,
           secondParameter: 20,
           inputParameters: {
             firstParameter: {
               constraints: [
-                function() { }
+                function () { }
               ]
             },
             secondParameter: {
               constraints: [
-                function() { },
-                function() { return 'error message'; }
+                function () { },
+                function () { return 'error message'; }
               ]
             }
           }
@@ -38,12 +41,14 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         var result = manualInputService.getInputError(cell);
         expect(result).toBe('error message');
       });
-      it('should return no error for an empty typed cell', function() {
+
+      it('should return no error for an empty typed cell', function () {
         var cell = {
           empty: true
         };
         expect(manualInputService.getInputError(cell)).toBeFalsy();
       });
+
       it('should return no error for bounds that are not estimable', () => {
         var cell = {
           lowerBoundNE: true,
@@ -65,18 +70,20 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(manualInputService.getInputError(cell)).toBeFalsy();
       });
     });
-    describe('inputToString', function() {
-      it('should use the inputknowledgeservice for valid inputs', function() {
+
+    describe('inputToString', function () {
+      it('should use the inputknowledgeservice for valid inputs', function () {
         inputKnowledgeServiceMock.inputToString.and.returnValue('great success');
         expect(manualInputService.inputToString({})).toEqual('great success');
       });
-      it('should return an invalid input message if the input is invalid', function() {
+
+      it('should return an invalid input message if the input is invalid', function () {
         var invalidInput = {
           firstParameter: 10,
           inputParameters: {
             firstParameter: {
               constraints: [
-                function() {
+                function () {
                   return 'error in input';
                 }
               ]
@@ -87,7 +94,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
     });
 
-    describe('prepareInputData', function() {
+    describe('prepareInputData', function () {
       var alternatives = [{
         title: 'alternative1',
         id: 'alternative1'
@@ -99,60 +106,65 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         id: 'crit1id',
         title: 'criterion 1 title',
         dataSources: [{
-          id: 'ds1id',
-          inputType: 'distribution',
-          inputMethod: 'assistedDistribution',
-          dataType: 'other'
+          id: 'ds1id'
         }]
       }, {
         id: 'crit2id',
         title: 'criterion 2 title',
         dataSources: [{
-          id: 'ds2id',
-          inputType: 'effect',
-          dataType: 'other'
+          id: 'ds2id'
         }]
       }];
-      it('should prepare the cells of the table for input', function() {
+      var emptyCell = {
+        effect: {},
+        distribution: {}
+      };
+
+      it('should prepare the cells of the table for input', function () {
         var result = manualInputService.prepareInputData(criteria, alternatives);
         var expectedResult = {
           'ds1id': {
-            alternative1: _.extend({}, _.omit(criteria[0].dataSources[0], ['id']), {
+            alternative1: _.extend({}, emptyCell, {
               isInvalid: true
             }),
-            alternative2: _.extend({}, _.omit(criteria[0].dataSources[0], ['id']), {
+            alternative2: _.extend({}, emptyCell, {
               isInvalid: true
             })
           },
           'ds2id': {
-            alternative1: _.extend({}, _.omit(criteria[1].dataSources[0], ['id']), {
+            alternative1: _.extend({}, emptyCell, {
               isInvalid: true
             }),
-            alternative2: _.extend({}, _.omit(criteria[1].dataSources[0], ['id']), {
+            alternative2: _.extend({}, emptyCell, {
               isInvalid: true
             })
           }
         };
         expect(result).toEqual(expectedResult);
       });
-      it('should preserve data if there is old data supplied and the criterion type has not changed', function() {
+
+      it('should preserve data if there is old data supplied and the criterion type has not changed', function () {
         var oldInputData = {
           'ds2id': {
             alternative1: {
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution'
+              effect: {
+                foo: 'foo'
+              },
+              distribution: {
+                bar: 'bar'
+              }
             },
-            alternative2: criteria[1].inputMetaData
+            alternative2: undefined
           }
         };
         var result = manualInputService.prepareInputData(criteria, alternatives, oldInputData);
 
         var expectedResult = {
           'ds1id': {
-            alternative1: _.extend({}, _.omit(criteria[0].dataSources[0], ['id']), {
+            alternative1: _.extend({}, emptyCell, {
               isInvalid: true
             }),
-            alternative2: _.extend({}, _.omit(criteria[0].dataSources[0], ['id']), {
+            alternative2: _.extend({}, emptyCell, {
               isInvalid: true
             })
           },
@@ -160,7 +172,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             alternative1: _.extend({}, oldInputData.ds2id.alternative1, {
               isInvalid: true
             }),
-            alternative2: _.extend({}, _.omit(criteria[1].dataSources[0], ['id']), {
+            alternative2: _.extend({}, emptyCell, {
               isInvalid: true
             })
           }
@@ -169,7 +181,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
     });
 
-    describe('createProblem', function() {
+    describe('createProblem', function () {
       var title = 'title';
       var description = 'A random description of a random problem';
       var alternatives = [{
@@ -177,7 +189,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         id: 'alternative1',
         oldId: 'alternative1Oldid'
       }];
-      it('should create a problem, ready to go to the workspace, removing old ids', function() {
+      it('should create a problem, ready to go to the workspace, removing old ids', function () {
         inputKnowledgeServiceMock.buildPerformance.and.returnValue({});
         var criteria = [{
           title: 'favorable criterion',
@@ -317,11 +329,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
     });
 
-    describe('createStateFromOldWorkspace', function() {
-      beforeEach(function() {
+    describe('createStateFromOldWorkspace', function () {
+      beforeEach(function () {
         generateUuidMock.and.returnValues('uuid1', 'uuid2', 'uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid8', 'uuid9', 'uuid10', 'uuid11', 'uuid12', 'uuid13');
       });
-      it('should create a new state from an existing workspace', function() {
+      it('should create a new state from an existing workspace', function () {
         var workspace = {
           problem: {
             criteria: {
@@ -530,8 +542,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
     });
 
-    describe('getOptions', function() {
-      it('should call the inputknowledgeservice', function() {
+    describe('getOptions', function () {
+      it('should call the inputknowledgeservice', function () {
         inputKnowledgeServiceMock.getOptions.and.returnValue('here are some options');
         expect(manualInputService.getOptions()).toEqual('here are some options');
       });
@@ -578,24 +590,27 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         var inputData = {
           row1: {
             col1: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
+              effect: {
+                firstParameter: 50,
+                inputParameters: {
+                  id: 'value'
+                }
               }
             },
             col2: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
+              effect: {
+                firstParameter: 50,
+                inputParameters: {
+                  id: 'value'
+                }
               }
             },
             col3: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
+              effect: {
+                firstParameter: 50,
+                inputParameters: {
+                  id: 'value'
+                }
               }
             }
           }
@@ -604,82 +619,31 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(result).toBeTruthy();
       });
 
-      it('should return falsy if the values of a row are the same, but atleast one is marked as normally distributed', () => {
-        var inputData = {
-          row1: {
-            col1: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            },
-            col2: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            },
-            col3: {
-              inputType: 'effect',
-              isNormal: true,
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            }
-          }
-        };
-        var result = manualInputService.findInvalidRow(inputData);
-        expect(result).toBeFalsy();
-      });
-
-      it('should return falsy if atleast one cell is a distribution', () => {
-        var inputData = {
-          row1: {
-            col1: {
-              inputType: 'distribution',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            },
-            col2: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            }
-          }
-        };
-        var result = manualInputService.findInvalidRow(inputData);
-        expect(result).toBeFalsy();
-      });
-
       it('should return falsy if atleast one cell has a different value', () => {
         var inputData = {
           row1: {
             col1: {
-              inputType: 'distribution',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
+              effect: {
+                firstParameter: 50,
+                inputParameters: {
+                  id: 'value'
+                }
               }
             },
             col2: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
+              effect: {
+                firstParameter: 50,
+                inputParameters: {
+                  id: 'value'
+                }
               }
             },
             col3: {
-              inputType: 'effect',
-              firstParameter: 51,
-              inputParameters: {
-                id: 'value'
+              effect: {
+                firstParameter: 51,
+                inputParameters: {
+                  id: 'value'
+                }
               }
             }
           }

@@ -36,7 +36,9 @@
               "exact",
               "dt",
               "dbeta",
-              "dgamma"
+              "dgamma",
+              "dsurv",
+              "empty"
             ]
           }
         },

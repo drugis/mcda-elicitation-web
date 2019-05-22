@@ -107,7 +107,6 @@ define(['lodash'], function(_) {
         //private
         function initializeCriteriaLists() {
           if (scope.isInput) {
-            checkForUnknownCriteria();
             checkForMissingFavorability();
           }
           var partition = _.partition(scope.criteria, ['isFavorable', true]);
@@ -128,18 +127,6 @@ define(['lodash'], function(_) {
             return criterion.isFavorable === undefined;
           })) {
             scope.errors.push('Missing favorability');
-          }
-        }
-
-        function checkForUnknownCriteria() {
-          var error = 'Unknown input type';
-          _.pull(scope.errors, error);
-          if (_.find(scope.criteria, function(criterion) {
-            return _.find(criterion.dataSources, function(dataSource) {
-              return !dataSource.inputType;
-            });
-          })) {
-            scope.errors.push(error);
           }
         }
       }

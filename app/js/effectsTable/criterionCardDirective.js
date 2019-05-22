@@ -39,19 +39,6 @@ define(['lodash'], function(_) {
         scope.editDataSource = editDataSource;
 
         // init
-        scope.INPUT_METHODS = {
-          manualDistribution: 'Manual distribution',
-          assistedDistribution: 'Assisted distribution'
-        };
-
-        scope.PARAMETERS_OF_INTEREST = {
-          mean: 'Mean',
-          median: 'Median',
-          cumulativeProbability: 'Cumulative probability',
-          eventProbability: 'Event probability',
-          value: 'value'
-        };
-
         setUnit();
         scope.$on('elicit.settingsChanged', setUnit);
 

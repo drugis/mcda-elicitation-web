@@ -13,41 +13,6 @@
       "description": "identifier of the data source",
       "type": "string"
     },
-    "inputType": {
-      "description": "The way the measurements for a data source were entered",
-      "type": "string",
-      "enum": [
-        "distribution",
-        "effect"
-      ]
-    },
-    "inputMethod": {
-      "description": "Whether the input for a distribution is calculated or entered directly",
-      "type": "string",
-      "enum": [
-        "assistedDistribution",
-        "manualDistribution"
-      ]
-    },
-    "dataType": {
-      "description": "The type of data entered for the criterion",
-      "type": "string",
-      "enum": [
-        "continuous",
-        "dichotomous",
-        "other"
-      ]
-    },
-    "parameterOfInterest": {
-      "description": "Determines what the measured effect depicts ",
-      "type": "string",
-      "enum": [
-        "eventProbability",
-        "mean",
-        "median",
-        "value"
-      ]
-    },
     "source": {
       "description": "Where the data comes from",
       "type": "string"

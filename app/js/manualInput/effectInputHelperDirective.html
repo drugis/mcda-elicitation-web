@@ -10,42 +10,39 @@
             <input type="checkbox" ng-model="inputCell.empty">
           </label>
         </div>
-        <div class="cell" ng-hide="inputCell.inputType==='distribution' && 
-            inputCell.inputMethod === 'assistedDistribution' && inputCell.dataType!=='continuous'">
+        <div class="cell">
           <label>
             Input parameters
-            <select ng-model="inputCell.inputParameters" ng-options="option as option.label for option in inputParameterOptions track by option.id"
+            <select ng-model="inputCell.inputParameters"
+              ng-options="option as option.label for option in inputParameterOptions track by option.id"
               ng-change="inputChanged()" ng-disabled="inputCell.empty"></select>
           </label>
         </div>
         <div class="cell">
           <label>
             {{inputCell.inputParameters.firstParameter.label}}
-            <input type="number" ng-model="inputCell.firstParameter" ng-change="inputChanged()" ng-disabled="inputCell.empty">
+            <input type="number" ng-model="inputCell.firstParameter" ng-change="inputChanged()"
+              ng-disabled="inputCell.empty">
           </label>
         </div>
         <div class="cell" ng-if="inputCell.inputParameters.secondParameter">
           <label>
             {{inputCell.inputParameters.secondParameter.label}}
             <span ng-if="inputCell.inputParameters.secondParameter.label === 'Lower bound'">(
-              <input type="checkbox" ng-model="inputCell.lowerBoundNE" ng-change="confidenceIntervalNEChanged()" ng-disabled="inputCell.empty">
+              <input type="checkbox" ng-model="inputCell.lowerBoundNE" ng-disabled="inputCell.empty">
               Not estimable)
             </span>
-            <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()" ng-disabled="inputCell.empty || inputCell.lowerBoundNE">
+            <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()"
+              ng-disabled="inputCell.empty || inputCell.lowerBoundNE">
           </label>
         </div>
         <div class="cell" ng-if="inputCell.inputParameters.thirdParameter">
           <label>
             {{inputCell.inputParameters.thirdParameter.label}}
             <span ng-if="inputCell.inputParameters.thirdParameter.label === 'Upper bound'">(
-              <input type="checkbox" ng-model="inputCell.upperBoundNE" ng-change="confidenceIntervalNEChanged()" ng-disabled="inputCell.empty">Not estimable)</span>
-            <input type="number" ng-model="inputCell.thirdParameter" ng-change="inputChanged()" ng-disabled="(inputCell.dataType === 'continuous' && inputCell.parameterOfInterest === 'mean' && inputCell.isNormal) || inputCell.empty || inputCell.upperBoundNE">
-          </label>
-        </div>
-        <div class="cell" ng-if="inputCell.inputParameters.canBeNormal">
-          <label>
-            <input type="checkbox" ng-model="inputCell.isNormal" ng-change="updateUpperBound()" ng-disabled="inputCell.empty || inputCell.lowerBoundNE || inputCell.upperBoundNE">
-            Sampling distribution is approximately normally distributed
+              <input type="checkbox" ng-model="inputCell.upperBoundNE" ng-disabled="inputCell.empty">Not estimable)</span>
+            <input type="number" ng-model="inputCell.thirdParameter" ng-change="inputChanged()"
+              ng-disabled="inputCell.empty || inputCell.upperBoundNE">
           </label>
         </div>
         <div class="cell alert" ng-show="error">

@@ -26,9 +26,7 @@ define(['lodash'], function(_) {
       link: function(scope) {
         // functions
         scope.keyCheck = keyCheck;
-        scope.updateUpperBound = updateUpperBound;
         scope.inputChanged = inputChanged;
-        scope.confidenceIntervalNEChanged = confidenceIntervalNEChanged;
 
         //init
         var isEscPressed = false;
@@ -48,14 +46,6 @@ define(['lodash'], function(_) {
           }
         });
 
-        function updateUpperBound() {
-          var id = scope.inputCell.inputParameters.id;
-          if (scope.inputCell.isNormal && id === 'exactValueCI' && scope.inputCell.dataType === 'continuous' && scope.inputCell.parameterOfInterest === 'mean') {
-            var uppperBound = 2 * scope.inputCell.firstParameter - scope.inputCell.secondParameter;
-            scope.inputCell.thirdParameter = significantDigits(uppperBound);
-          }
-        }
-
         function saveState() {
           $timeout(function() {
             scope.inputData = scope.inputCell;
@@ -66,11 +56,7 @@ define(['lodash'], function(_) {
         }
 
         function initInputParameters() {
-          if (doInputParametersNeedUpdating(scope.inputDataSource, scope.inputData)) {
-            scope.inputCell = _.cloneDeep(scope.inputDataSource);
-          } else {
-            scope.inputCell = _.cloneDeep(scope.inputData);
-          }
+          scope.inputCell = _.cloneDeep(scope.inputData);
           scope.inputParameterOptions = ManualInputService.getOptions(scope.inputCell);
           if (!scope.inputCell.inputParameters) {
             scope.inputCell.inputParameters = _.values(scope.inputParameterOptions)[0];
@@ -80,7 +66,6 @@ define(['lodash'], function(_) {
         }
 
         function inputChanged() {
-          updateUpperBound();
           scope.error = ManualInputService.getInputError(scope.inputCell);
         }
 
@@ -90,27 +75,6 @@ define(['lodash'], function(_) {
             scope.$broadcast('doClose.af.dropdownToggle');
           } else if (event.keyCode === ENTER) {
             scope.$broadcast('doClose.af.dropdownToggle');
-          }
-        }
-
-        function doInputParametersNeedUpdating(inputDataSource, cell) {
-          if (!cell.inputParameters) {
-            return true;
-          }
-          var inputType = inputDataSource.inputType;
-          var inputMethod = inputDataSource.inputMethod;
-          var dataType = inputDataSource.dataType;
-          return inputType !== cell.inputType ||
-            (inputType === 'distribution' && inputMethod !== cell.inputMethod) ||
-            (inputType === 'distribution' && inputMethod === 'assistedDistribution' && dataType !== cell.dataType) ||
-            (inputType === 'effect' && dataType !== cell.dataType) ||
-            (inputType === 'effect' && dataType === 'continuous' &&
-              inputDataSource.parameterOfInterest !== cell.parameterOfInterest);
-        }
-
-        function confidenceIntervalNEChanged() {
-          if (scope.inputCell.lowerBoundNE || scope.inputCell.upperBoundNE) {
-            scope.inputCell.isNormal = false;
           }
         }
       }

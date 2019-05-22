@@ -1,11 +1,11 @@
 'use strict';
-define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
+define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
   var dependencies = [
     'currentSchemaVersion',
     'generateUuid'
   ];
-  var SchemaService = function (
+  var SchemaService = function(
     currentSchemaVersion,
     generateUuid
   ) {
@@ -28,10 +28,10 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
       if (newProblem.schemaVersion === '1.1.0') {
         newProblem = updateToVersionOnePointTwoPointZero(newProblem);
       }
-      
+
       if (newProblem.schemaVersion === currentSchemaVersion) {
         var error = isInvalidSchema(newProblem);
-        
+
         if (error) {
           return {
             isValid: false,
@@ -76,7 +76,7 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
 
     function updateToVersionOnePointZeroPointZero(problem) {
       var newProblem = angular.copy(problem);
-      newProblem.criteria = _.mapValues(problem.criteria, _.partial(createNewCriterion, problem));
+      newProblem.criteria = _.mapValues(problem.criteria, createNewCriterion);
       newProblem.performanceTable = createNewPerformanceTable(newProblem);
       newProblem.schemaVersion = '1.0.0';
       return newProblem;
@@ -94,7 +94,27 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
 
     function updateToVersionOnePointTwoPointZero(problem) {
       var newProblem = angular.copy(problem);
-      newProblem.performanceTable = _.map(newProblem.performanceTable, function (entry) {
+      newProblem.performanceTable = changePerformanceTypeToArray(newProblem);
+      newProblem.criteria = removeObsoletePropertiesFromDataSource(newProblem);
+      newProblem.schemaVersion = '1.2.0';
+      return newProblem;
+    }
+
+    function removeObsoletePropertiesFromDataSource(problem) {
+      return _.mapValues(problem.criteria, function(criterion) {
+        criterion.dataSources = _.map(criterion.dataSources, function(dataSource) {
+          delete dataSource.inputType;
+          delete dataSource.inputMethod;
+          delete dataSource.dataType;
+          delete dataSource.parameterOfInterest;
+          return dataSource;
+        });
+        return criterion;
+      });
+    }
+
+    function changePerformanceTypeToArray(problem) {
+      return _.map(problem.performanceTable, function(entry) {
         if (entry.alternative) {
           entry.performance.type = [entry.performance.type];
           return entry;
@@ -102,12 +122,10 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
           return entry;
         }
       });
-      newProblem.schemaVersion = '1.2.0';
-      return newProblem;
     }
 
     function putFavorabilityOnCriteria(problem) {
-      return _.mapValues(problem.criteria, function (criterion, criterionId) {
+      return _.mapValues(problem.criteria, function(criterion, criterionId) {
         var newCriterion = angular.copy(criterion);
         if (problem.valueTree.children[0].criteria) {
           newCriterion.isFavorable = _.includes(problem.valueTree.children[0].criteria, criterionId);
@@ -119,7 +137,7 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
     }
 
     function createNewPerformanceTable(problem) {
-      return _.map(problem.performanceTable, function (tableEntry) {
+      return _.map(problem.performanceTable, function(tableEntry) {
         var newEntry = angular.copy(tableEntry);
         if (tableEntry.criterionUri) {
           newEntry.criterion = tableEntry.criterionUri;
@@ -130,46 +148,28 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
       });
     }
 
-    function createNewCriterion(problem, criterion, criterionId) {
-      var newCriterion = _.pick(criterion, ['title', 'description', 'unitOfMeasurement']);
-      var dataSource = createDataSource(problem, criterion, criterionId);
+    function createNewCriterion(criterion) {
+      var newCriterion = _.pick(criterion, [
+        'title',
+        'description',
+        'unitOfMeasurement'
+      ]);
+      var dataSource = createDataSource(criterion);
       newCriterion.dataSources = [dataSource];
       return newCriterion;
     }
 
-    function createDataSource(problem, criterion, criterionId) {
-      var dataSource = _.pick(criterion, ['pvf', 'source', 'sourceLink', 'strengthOfEvidence', 'uncertainties', 'scale']);
+    function createDataSource(criterion) {
+      var dataSource = _.pick(criterion, [
+        'pvf',
+        'source',
+        'sourceLink',
+        'strengthOfEvidence',
+        'uncertainties',
+        'scale'
+      ]);
       dataSource.id = generateUuid();
-      var inputParameters = getInputParameters(problem.performanceTable, criterionId);
-      return _.merge(dataSource, inputParameters);
-    }
-
-    function getInputParameters(performanceTable, criterionId) {
-      var type = findEntryTypeForCriterion(performanceTable, criterionId);
-      if (isManualDistribution(type)) {
-        return {
-          inputType: 'distribution',
-          inputMethod: 'manualDistribution'
-        };
-      } else if (type === 'dt') {
-        return {
-          inputType: 'distribution',
-          inputMethod: 'assistedDistribution',
-          dataType: 'continuous'
-        };
-      }
-    }
-
-    function findEntryTypeForCriterion(performanceTable, criterionId) {
-      var tableEntry = _.find(performanceTable, function (entry) {
-        return entry.criterion === criterionId || entry.criterionUri === criterionId;
-      });
-      return tableEntry.performance.type;
-    }
-
-    function isManualDistribution(type) {
-      var MANUAL_DISTRIBUTIONS = ['exact', 'dnorm', 'dbeta', 'dgamma'];
-      return _.includes(MANUAL_DISTRIBUTIONS, type);
+      return dataSource;
     }
 
     return {
