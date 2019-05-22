@@ -26,14 +26,19 @@
       ],
       "properties": {
         "type": {
-          "type": "string",
-          "enum": [
-            "dnorm",
-            "exact",
-            "dt",
-            "dbeta",
-            "dgamma"
-          ]
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {
+            "type":"string",
+            "enum": [
+              "dnorm",
+              "exact",
+              "dt",
+              "dbeta",
+              "dgamma"
+            ]
+          }
         },
         "parameters": {
           "type": "object",
@@ -89,8 +94,10 @@
               "type": "number"
             },
             "scale": {
-              "type":"string",
-              "enum":["percentage"]
+              "type": "string",
+              "enum": [
+                "percentage"
+              ]
             }
           }
         }

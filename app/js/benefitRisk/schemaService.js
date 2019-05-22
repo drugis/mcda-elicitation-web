@@ -12,6 +12,7 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
     /***** Changes 
      * 1.0.0 introduction of data sources
      * 1.1.0 removal of the value tree
+     * 1.2.0 allow effect cells to contain distribution and effect
      * *****/
 
     function updateProblemToCurrentSchema(problem) {
@@ -24,8 +25,13 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
         newProblem = updateToVersionOnePointOnePointZero(newProblem);
       }
 
+      if (newProblem.schemaVersion === '1.1.0') {
+        newProblem = updateToVersionOnePointTwoPointZero(newProblem);
+      }
+      
       if (newProblem.schemaVersion === currentSchemaVersion) {
         var error = isInvalidSchema(newProblem);
+        
         if (error) {
           return {
             isValid: false,
@@ -83,6 +89,20 @@ define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
         delete newProblem.valueTree;
       }
       newProblem.schemaVersion = '1.1.0';
+      return newProblem;
+    }
+
+    function updateToVersionOnePointTwoPointZero(problem) {
+      var newProblem = angular.copy(problem);
+      newProblem.performanceTable = _.map(newProblem.performanceTable, function (entry) {
+        if (entry.alternative) {
+          entry.performance.type = [entry.performance.type];
+          return entry;
+        } else {
+          return entry;
+        }
+      });
+      newProblem.schemaVersion = '1.2.0';
       return newProblem;
     }
 

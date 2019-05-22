@@ -4,7 +4,7 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function (a
   var generateUuidMock = function () {
     return 'uuid';
   };
-  var currentSchemaVersion = '1.1.0';
+  var currentSchemaVersion = '1.2.0';
   var schemaService;
 
   describe('The SchemaService', function () {
@@ -116,24 +116,24 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function (a
               criterion: 'crit1',
               alternative: 'alt1',
               dataSource: 'uuid',
-              performance: { type: 'dnorm' }
+              performance: { type: ['dnorm'] }
             }, {
               criterion: 'crit2',
               alternative: 'alt1',
               dataSource: 'uuid',
-              performance: { type: 'dnorm' }
+              performance: { type: ['dnorm'] }
             }, {
               criterion: 'crit1',
               alternative: 'alt2',
               dataSource: 'uuid',
-              performance: { type: 'dnorm' }
+              performance: { type: ['dnorm'] }
             }, {
               criterion: 'crit2',
               alternative: 'alt2',
               dataSource: 'uuid',
-              performance: { type: 'dnorm' }
+              performance: { type: ['dnorm'] }
             }],
-            schemaVersion: '1.1.0'
+            schemaVersion: '1.2.0'
           },
         };
         expect(result).toEqual(expectedResult);
@@ -239,28 +239,40 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function (a
               criterion: 'crit1',
               alternative: 'alt1',
               dataSource: 'uuid',
-              performance: { type: 'dnorm' }
+              performance: { type: ['dnorm'] }
             }, {
               criterion: 'crit2',
               alternative: 'alt1',
               dataSource: 'uuid',
-              performance: { type: 'dnorm' }
+              performance: { type: ['dnorm'] }
             }, {
               criterion: 'crit1',
               alternative: 'alt2',
               dataSource: 'uuid',
-              performance: { type: 'dnorm' }
+              performance: { type: ['dnorm'] }
             }, {
               criterion: 'crit2',
               alternative: 'alt2',
               dataSource: 'uuid',
-              performance: { type: 'dnorm' }
+              performance: { type: ['dnorm'] }
             }],
-            schemaVersion: '1.1.0'
+            schemaVersion: '1.2.0'
           },
         };
         expect(result).toEqual(expectedResult);
       });
+
+      it('should update a problem of schema version 1.1.0 to the current version', function () {
+        var workspace = {
+          problem: exampleProblem110()
+        };
+        var result = schemaService.updateWorkspaceToCurrentSchema(workspace);
+        var expectedResult = {
+          problem: exampleProblem()
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
     });
 
     describe('isInvalidSchema', function () {

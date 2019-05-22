@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.1.0",
+  "schemaVersion": "1.2.0",
   "title": "Harmonisation (test all inputs)",
   "criteria": {
     "0b4613f7-61a9-4be8-85e6-1a6283cfbffd": {
@@ -128,7 +128,7 @@
       "criterion": "0b4613f7-61a9-4be8-85e6-1a6283cfbffd",
       "dataSource": "691d5517-75ec-4ce6-ba85-b87c4203c68d",
       "performance": {
-        "type": "dbeta",
+        "type": ["dbeta"],
         "parameters": {
           "alpha": 51,
           "beta": 101
@@ -144,7 +144,7 @@
       "criterion": "0b4613f7-61a9-4be8-85e6-1a6283cfbffd",
       "dataSource": "691d5517-75ec-4ce6-ba85-b87c4203c68d",
       "performance": {
-        "type": "dbeta",
+        "type": ["dbeta"],
         "parameters": {
           "alpha": 11,
           "beta": 101
@@ -160,7 +160,7 @@
       "criterion": "0b4613f7-61a9-4be8-85e6-1a6283cfbffd",
       "dataSource": "691d5517-75ec-4ce6-ba85-b87c4203c68d",
       "performance": {
-        "type": "dbeta",
+        "type": ["dbeta"],
         "parameters": {
           "alpha": 4,
           "beta": 78
@@ -176,7 +176,7 @@
       "criterion": "0b4613f7-61a9-4be8-85e6-1a6283cfbffd",
       "dataSource": "691d5517-75ec-4ce6-ba85-b87c4203c68d",
       "performance": {
-        "type": "dbeta",
+        "type": ["dbeta"],
         "parameters": {
           "alpha": 76,
           "beta": 76
@@ -192,7 +192,7 @@
       "criterion": "0b4613f7-61a9-4be8-85e6-1a6283cfbffd",
       "dataSource": "691d5517-75ec-4ce6-ba85-b87c4203c68d",
       "performance": {
-        "type": "dbeta",
+        "type": ["dbeta"],
         "parameters": {
           "alpha": 99,
           "beta": 9780
@@ -208,7 +208,7 @@
       "criterion": "cf8e6f52-ed8f-478d-8f6f-929ba600b27d",
       "dataSource": "a4a850a3-6a9c-4126-9e64-f1581b7f6d56",
       "performance": {
-        "type": "dt",
+        "type": ["dt"],
         "parameters": {
           "mu": 0.5,
           "stdErr": 0.1,
@@ -226,7 +226,7 @@
       "criterion": "cf8e6f52-ed8f-478d-8f6f-929ba600b27d",
       "dataSource": "a4a850a3-6a9c-4126-9e64-f1581b7f6d56",
       "performance": {
-        "type": "dt",
+        "type": ["dt"],
         "parameters": {
           "mu": 1.1,
           "stdErr": 0.029851115706299673,
@@ -244,7 +244,7 @@
       "criterion": "cf8e6f52-ed8f-478d-8f6f-929ba600b27d",
       "dataSource": "a4a850a3-6a9c-4126-9e64-f1581b7f6d56",
       "performance": {
-        "type": "dt",
+        "type": ["dt"],
         "parameters": {
           "mu": 2,
           "stdErr": 0.4,
@@ -262,7 +262,7 @@
       "criterion": "cf8e6f52-ed8f-478d-8f6f-929ba600b27d",
       "dataSource": "a4a850a3-6a9c-4126-9e64-f1581b7f6d56",
       "performance": {
-        "type": "dt",
+        "type": ["dt"],
         "parameters": {
           "mu": 0.5,
           "stdErr": 0.01,
@@ -280,7 +280,7 @@
       "criterion": "cf8e6f52-ed8f-478d-8f6f-929ba600b27d",
       "dataSource": "a4a850a3-6a9c-4126-9e64-f1581b7f6d56",
       "performance": {
-        "type": "dt",
+        "type": ["dt"],
         "parameters": {
           "mu": 65,
           "stdErr": 13.010625257188552,
@@ -298,7 +298,7 @@
       "criterion": "4e61c7a8-1969-428b-a00c-e9fb0caca3d9",
       "dataSource": "b272b7f4-4ada-4be5-958e-aab281399183",
       "performance": {
-        "type": "dbeta",
+        "type": ["dbeta"],
         "parameters": {
           "alpha": 50,
           "beta": 654
@@ -310,7 +310,7 @@
       "criterion": "4e61c7a8-1969-428b-a00c-e9fb0caca3d9",
       "dataSource": "b272b7f4-4ada-4be5-958e-aab281399183",
       "performance": {
-        "type": "dnorm",
+        "type": ["dnorm"],
         "parameters": {
           "mu": 55,
           "sigma": 5
@@ -322,7 +322,7 @@
       "criterion": "4e61c7a8-1969-428b-a00c-e9fb0caca3d9",
       "dataSource": "b272b7f4-4ada-4be5-958e-aab281399183",
       "performance": {
-        "type": "dgamma",
+        "type": ["dgamma"],
         "parameters": {
           "alpha": 50,
           "beta": 541
@@ -334,7 +334,7 @@
       "criterion": "4e61c7a8-1969-428b-a00c-e9fb0caca3d9",
       "dataSource": "b272b7f4-4ada-4be5-958e-aab281399183",
       "performance": {
-        "type": "exact",
+        "type": ["exact"],
         "value": 504
       }
     },
@@ -343,7 +343,7 @@
       "criterion": "4e61c7a8-1969-428b-a00c-e9fb0caca3d9",
       "dataSource": "b272b7f4-4ada-4be5-958e-aab281399183",
       "performance": {
-        "type": "dbeta",
+        "type": ["dbeta"],
         "parameters": {
           "alpha": 65,
           "beta": 455
@@ -355,7 +355,7 @@
       "criterion": "65ac9511-c97c-47d8-9321-7d83db6ad760",
       "dataSource": "5451502e-dfad-4ef7-b539-4df9ec15f886",
       "performance": {
-        "type": "exact",
+        "type": ["exact"],
         "value": 0.7
       }
     },
@@ -364,7 +364,7 @@
       "criterion": "65ac9511-c97c-47d8-9321-7d83db6ad760",
       "dataSource": "5451502e-dfad-4ef7-b539-4df9ec15f886",
       "performance": {
-        "type": "exact",
+        "type": ["exact"],
         "value": 0.9,
         "input": {
           "value": 0.9,
@@ -377,7 +377,7 @@
       "criterion": "65ac9511-c97c-47d8-9321-7d83db6ad760",
       "dataSource": "5451502e-dfad-4ef7-b539-4df9ec15f886",
       "performance": {
-        "type": "dnorm",
+        "type": ["dnorm"],
         "parameters": {
           "mu": 0.23,
           "sigma": 0.011994447672973163
@@ -393,7 +393,7 @@
       "criterion": "65ac9511-c97c-47d8-9321-7d83db6ad760",
       "dataSource": "5451502e-dfad-4ef7-b539-4df9ec15f886",
       "performance": {
-        "type": "dnorm",
+        "type": ["dnorm"],
         "parameters": {
           "mu": 0.008251833740831296,
           "sigma": 0.0011182896162272825
@@ -409,7 +409,7 @@
       "criterion": "65ac9511-c97c-47d8-9321-7d83db6ad760",
       "dataSource": "5451502e-dfad-4ef7-b539-4df9ec15f886",
       "performance": {
-        "type": "exact",
+        "type": ["exact"],
         "value": 0.008251833740831296,
         "input": {
           "events": 54,
@@ -422,7 +422,7 @@
       "criterion": "d4476dfa-bddf-45f4-9ec0-7b5d0aee12b6",
       "dataSource": "cf89ea43-e361-4569-a524-2be8a87de9fc",
       "performance": {
-        "type": "exact",
+        "type": ["exact"],
         "value": 65
       }
     },
@@ -431,7 +431,7 @@
       "criterion": "d4476dfa-bddf-45f4-9ec0-7b5d0aee12b6",
       "dataSource": "cf89ea43-e361-4569-a524-2be8a87de9fc",
       "performance": {
-        "type": "exact",
+        "type": ["exact"],
         "value": 654,
         "input": {
           "value": 654,
@@ -444,7 +444,7 @@
       "criterion": "d4476dfa-bddf-45f4-9ec0-7b5d0aee12b6",
       "dataSource": "cf89ea43-e361-4569-a524-2be8a87de9fc",
       "performance": {
-        "type": "dnorm",
+        "type": ["dnorm"],
         "parameters": {
           "mu": 354,
           "sigma": 5
@@ -460,7 +460,7 @@
       "criterion": "d4476dfa-bddf-45f4-9ec0-7b5d0aee12b6",
       "dataSource": "cf89ea43-e361-4569-a524-2be8a87de9fc",
       "performance": {
-        "type": "dnorm",
+        "type": ["dnorm"],
         "parameters": {
           "mu": 5,
           "sigma": 1.02
@@ -477,7 +477,7 @@
       "criterion": "d4476dfa-bddf-45f4-9ec0-7b5d0aee12b6",
       "dataSource": "cf89ea43-e361-4569-a524-2be8a87de9fc",
       "performance": {
-        "type": "exact",
+        "type": ["exact"],
         "value": 3,
         "input": {
           "value": 3,
@@ -491,7 +491,7 @@
       "criterion": "b7346861-483a-44ef-b44d-d9c7aefbf6c6",
       "dataSource": "43c25068-385b-475d-9fd6-a2f7c2505e2a",
       "performance": {
-        "type": "exact",
+        "type": ["exact"],
         "value": 5,
         "input": {
           "value": 5,
@@ -504,7 +504,7 @@
       "criterion": "b7346861-483a-44ef-b44d-d9c7aefbf6c6",
       "dataSource": "43c25068-385b-475d-9fd6-a2f7c2505e2a",
       "performance": {
-        "type": "exact",
+        "type": ["exact"],
         "value": 547
       }
     },
@@ -513,7 +513,7 @@
       "criterion": "b7346861-483a-44ef-b44d-d9c7aefbf6c6",
       "dataSource": "43c25068-385b-475d-9fd6-a2f7c2505e2a",
       "performance": {
-        "type": "exact",
+        "type": ["exact"],
         "value": 13.37,
         "input": {
           "value": 13.37,
@@ -527,7 +527,7 @@
       "criterion": "b7346861-483a-44ef-b44d-d9c7aefbf6c6",
       "dataSource": "43c25068-385b-475d-9fd6-a2f7c2505e2a",
       "performance": {
-        "type": "exact",
+        "type": ["exact"],
         "value": 5
       }
     },
@@ -536,7 +536,7 @@
       "criterion": "b7346861-483a-44ef-b44d-d9c7aefbf6c6",
       "dataSource": "43c25068-385b-475d-9fd6-a2f7c2505e2a",
       "performance": {
-        "type": "exact",
+        "type": ["exact"],
         "value": 5
       }
     }
