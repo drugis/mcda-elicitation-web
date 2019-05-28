@@ -98,6 +98,7 @@ export MCDAWEB_DB_HOST=localhost
 export MCDAWEB_DB_NAME=mcdaweb
 export MCDAWEB_GOOGLE_KEY=<something>
 export MCDAWEB_GOOGLE_SECRET=<something-else>
+export MCDA_COOKIE_SECRET=<some-random-string>
 export MCDA_HOST=localhost
 export PATAVI_HOST=localhost
 export PATAVI_PORT=3000
