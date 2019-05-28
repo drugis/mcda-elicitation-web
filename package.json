@@ -26,7 +26,7 @@
     "express": "~4.16.3",
     "express-session": "~1.15.6",
     "helmet": "^3.13.0",
-    "lodash": "~4.17.10",
+    "lodash": "~4.17.11",
     "pg": "~7.4.3",
     "signin": "https://github.com/drugis/signin",
     "winston": "~3.0.0"
@@ -55,7 +55,7 @@
     "css-loader": "^1.0.0",
     "d3": "~3.5.6",
     "error-reporting": "drugis/error-reporting#1.3.1",
-    "export-directive": "drugis/export-directive#1.2.2",
+    "export-directive": "drugis/export-directive#1.2.3",
     "file-loader": "^2.0.0",
     "font-awesome": "~4.7.0",
     "foundation-sites": "~6.5.0-rc.2",
@@ -64,19 +64,19 @@
     "html-webpack-plugin": "^4.0.0-alpha",
     "istanbul-instrumenter-loader": "^3.0.1",
     "jasmine-core": "^3.2.1",
-    "jquery": "~3.3.1",
-    "karma": "3.0.0",
+    "jquery": "~3.4.1",
+    "karma": "4.1.0",
     "karma-chrome-launcher": "~2.2.0",
     "karma-coverage": "^1.1.2",
     "karma-firefox-launcher": "~1.1.0",
     "karma-jasmine": "~1.1.2",
     "karma-junit-reporter": "~1.2.0",
     "karma-sourcemap-loader": "^0.3.7",
-    "karma-webpack": "^3.0.0",
+    "karma-webpack": "^3.0.5",
     "katex": "^0.10.0-rc.1",
     "mini-css-extract-plugin": "^0.4.2",
     "nvd3": "~1.8.6",
-    "optimize-css-assets-webpack-plugin": "^5.0.0",
+    "optimize-css-assets-webpack-plugin": "^5.0.1",
     "page-title-service": "drugis/page-title-service#1.0.3",
     "raw-loader": "^0.5.1",
     "style-loader": "^0.22.1",
@@ -85,7 +85,12 @@
     "vanilla-back-to-top": "^7.1.14",
     "webpack": "^4.17.1",
     "webpack-cli": "^3.1.0",
-    "webpack-merge": "^4.1.4"
+    "webpack-merge": "^4.2.1"
+  },
+  "resolutions": {
+    "handlebars": "^4.1.2",
+    "js-yaml": "3.13.1",
+    "lodash": "^4.17.11"
   },
   "engines": {
     "yarn": ">= 1.0.0"
