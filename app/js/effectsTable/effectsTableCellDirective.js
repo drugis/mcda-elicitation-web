@@ -16,15 +16,18 @@ define(['lodash'], function(_) {
       templateUrl: './effectsTableCellDirective.html',
       link: function(scope) {
         init();
-        
+
         scope.$watch('workspaceSettings', init, true);
 
         function init() {
-          scope.uncertainty = _.includes(scope.effectsTableInfo.distributionType , 'relative') || scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId].hasUncertainty;
+          scope.uncertainty = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId].hasUncertainty;
           scope.effectsDisplay = scope.workspaceSettings.effectsDisplay;
-          scope.hasStudyData = scope.effectsTableInfo.hasStudyData;
-          scope.effectDataSourceLabel = scope.effectsTableInfo.studyDataLabelsAndUncertainty ? scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId].label : undefined;
-          scope.isEffect = _.includes(scope.effectsTableInfo.distributionType , 'exact');
+          scope.isAbsolute = scope.effectsTableInfo.isAbsolute;
+          if (scope.effectsTableInfo.studyDataLabelsAndUncertainty) {
+            scope.effectLabel = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId].effectLabel;
+            scope.distributionLabel = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId].distributionLabel;
+            scope.effectValue = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId].effectValue;
+          }
         }
       }
 

@@ -1,0 +1,196 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://mcda.drugis.org/absoluteEntry.json#",
+  "title": "MCDA performance table entry for absolute data",
+  "type": "object",
+  "required": [
+    "criterion",
+    "dataSource",
+    "alternative",
+    "performance"
+  ],
+  "properties": {
+    "alternative": {
+      "type": "string"
+    },
+    "criterion": {
+      "type": "string"
+    },
+    "dataSource": {
+      "type": "string"
+    },
+    "performance": {
+      "type": "object",
+      "properties": {
+        "effect": {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "exact",
+                "empty"
+              ]
+            },
+            "value": {
+              "type": "number"
+            },
+            "input": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "number"
+                },
+                "sampleSize": {
+                  "type": "number"
+                },
+                "events": {
+                  "type": "number"
+                },
+                "lowerBound": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "NE"
+                      ]
+                    }
+                  ]
+                },
+                "upperBound": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "NE"
+                      ]
+                    }
+                  ]
+                },
+                "stdErr": {
+                  "type": "number"
+                },
+                "scale": {
+                  "type": "string",
+                  "enum": [
+                    "percentage"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "distribution": {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "dnorm",
+                "exact",
+                "dt",
+                "dbeta",
+                "dgamma",
+                "dsurv",
+                "empty"
+              ]
+            },
+            "value": {
+              "type": "number"
+            },
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "alpha": {
+                  "type": "number"
+                },
+                "beta": {
+                  "type": "number"
+                },
+                "mu": {
+                  "type": "number"
+                },
+                "stdErr": {
+                  "type": "number"
+                },
+                "dof": {
+                  "type": "number"
+                },
+                "sigma": {
+                  "type": "number"
+                }
+              }
+            },
+            "input": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "number"
+                },
+                "sampleSize": {
+                  "type": "number"
+                },
+                "mu": {
+                  "type": "number"
+                },
+                "sigma": {
+                  "type": "number"
+                },
+                "events": {
+                  "type": "number"
+                },
+                "lowerBound": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "NE"
+                      ]
+                    }
+                  ]
+                },
+                "upperBound": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "string",
+                      "enum": [
+                        "NE"
+                      ]
+                    }
+                  ]
+                },
+                "stdErr": {
+                  "type": "number"
+                },
+                "scale": {
+                  "type": "string",
+                  "enum": [
+                    "percentage"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

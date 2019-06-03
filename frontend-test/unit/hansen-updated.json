@@ -151,7 +151,7 @@
     {
       "criterion": "HAM-D",
       "performance": {
-        "relative": {
+        "distribution": {
           "type": "relative-logit-normal",
           "parameters": {
             "baseline": {
@@ -231,7 +231,7 @@
     {
       "criterion": "Diarrhea",
       "performance": {
-        "relative": {
+        "distribution": {
           "type": "relative-logit-normal",
           "parameters": {
             "baseline": {
@@ -311,7 +311,7 @@
     {
       "criterion": "Dizziness",
       "performance": {
-        "relative": {
+        "distribution": {
           "type": "relative-logit-normal",
           "parameters": {
             "baseline": {
@@ -391,7 +391,7 @@
     {
       "criterion": "Headache",
       "performance": {
-        "relative": {
+        "distribution": {
           "type": "relative-logit-normal",
           "parameters": {
             "baseline": {
@@ -471,7 +471,7 @@
     {
       "criterion": "Insomnia",
       "performance": {
-        "relative": {
+        "distribution": {
           "type": "relative-logit-normal",
           "parameters": {
             "baseline": {
@@ -551,7 +551,7 @@
     {
       "criterion": "Nausea",
       "performance": {
-        "relative": {
+        "distribution": {
           "type": "relative-logit-normal",
           "parameters": {
             "baseline": {

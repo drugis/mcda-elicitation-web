@@ -154,17 +154,6 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
       });
     }
 
-    function changePerformanceTypeToArray(problem) {
-      return _.map(problem.performanceTable, function(entry) {
-        if (entry.alternative) {
-          entry.performance.type = [entry.performance.type];
-          return entry;
-        } else {
-          return entry;
-        }
-      });
-    }
-
     function putFavorabilityOnCriteria(problem) {
       return _.mapValues(problem.criteria, function(criterion, criterionId) {
         var newCriterion = angular.copy(criterion);

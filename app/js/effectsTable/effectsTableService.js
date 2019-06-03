@@ -1,11 +1,11 @@
 'use strict';
-define(['lodash', 'angular'], function (_, angular) {
+define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [];
 
-  var EffectsTableService = function () {
+  var EffectsTableService = function() {
     function buildEffectsTable(criteria) {
       var tableRows = addCanBePercentageToCriteria(angular.copy(criteria));
-      var useFavorability = _.find(criteria, function (criterion) {
+      var useFavorability = _.find(criteria, function(criterion) {
         return criterion.hasOwnProperty('isFavorable');
       });
       if (useFavorability) {
@@ -31,26 +31,26 @@ define(['lodash', 'angular'], function (_, angular) {
     }
 
     function addCanBePercentageToCriteria(criteria) {
-      return _.mapValues(criteria, function (criterion) {
+      return _.mapValues(criteria, function(criterion) {
         criterion.canBePercentage = canBePercentage(criterion);
         return criterion;
       });
     }
 
     function canBePercentage(criterion) {
-      return !!_.find(criterion.dataSources, function (dataSource) {
+      return !!_.find(criterion.dataSources, function(dataSource) {
         return _.isEqual(dataSource.scale, [0, 1]) || _.isEqual(dataSource.scale, [0, 100]);
       });
     }
 
     function buildTableRows(rows) {
-      return _.reduce(rows, function (accum, row) {
+      return _.reduce(rows, function(accum, row) {
         if (row.isHeaderRow) {
           return accum.concat(row);
         }
         var rowCriterion = _.omit(row, ['dataSources']);
         rowCriterion.numberOfDataSources = row.dataSources.length;
-        accum = accum.concat(_.map(row.dataSources, function (dataSource, index) {
+        accum = accum.concat(_.map(row.dataSources, function(dataSource, index) {
           return {
             criterion: rowCriterion,
             isFirstRow: index === 0,
@@ -62,24 +62,23 @@ define(['lodash', 'angular'], function (_, angular) {
     }
 
     function createEffectsTableInfo(performanceTable) {
-      return _.reduce(performanceTable, function (accum, tableEntry) {
+      return _.reduce(performanceTable, function(accum, tableEntry) {
         var dataSourceId = tableEntry.dataSource;
         if (accum[dataSourceId]) { return accum; }
         if (tableEntry.alternative) {
           accum[dataSourceId] = {
-            distributionType: tableEntry.performance.type,
-            hasStudyData: true,
+            isAbsolute: true,
             studyDataLabelsAndUncertainty: _(performanceTable)
               .filter(['dataSource', dataSourceId])
-              .reduce(function (accum, entryForCriterion) {
+              .reduce(function(accum, entryForCriterion) {
                 accum[entryForCriterion.alternative] = buildLabel(entryForCriterion);
                 return accum;
               }, {})
           };
         } else {
           accum[tableEntry.dataSource] = {
-            distributionType: 'relative',
-            hasStudyData: false
+            isAbsolute: false,
+            hasUncertainty: true
           };
         }
         return accum;
@@ -87,115 +86,107 @@ define(['lodash', 'angular'], function (_, angular) {
     }
 
     function isStudyDataAvailable(effectsTableInfo) {
-      return !!(_.find(effectsTableInfo, function (infoEntry) {
+      return !!(_.find(effectsTableInfo, function(infoEntry) {
         return infoEntry.distributionType !== 'relative';
       }));
     }
 
-
-
     function buildLabel(entryForCriterion) {
-      var label;
       var performance = entryForCriterion.performance;
-      var hasUncertainty = determineUncertainty(performance.type);
-      if (performance.input) {
-        label = buildLabelBasedOnInput(performance);
-      } else {
-        label = buildLabelBasedOnParameters(performance);
-      }
+      var hasUncertainty = determineUncertainty(performance.distribution);
+      var effectLabel = buildEffectLabel(performance);
+      var effectValue = buildEffectValueLabel(performance);
+      var distributionLabel = buildDistributionLabel(performance.distribution);
+
       return {
-        label: label,
+        effectLabel: effectLabel,
+        effectValue: effectValue,
+        distributionLabel: distributionLabel,
         hasUncertainty: hasUncertainty
       };
     }
 
-    function determineUncertainty(type) {
-      return !_.includes(type, 'empty') && !_.includes(type, 'exact');
+    function determineUncertainty(distribution) {
+      return !!distribution &&
+        distribution.type !== 'empty' &&
+        distribution.type !== 'exact';
     }
 
-    function buildLabelBasedOnParameters(performance) {
-      var label = '';
-      var parameters = performance.parameters;
-      if (_.includes(performance.type, 'exact')) {
-        label = performance.value;
-      } else if (_.includes(performance.type, 'dt')) {
-        label = parameters.mu + ' (' + roundToThreeDigits(parameters.stdErr) + '), ' + (parameters.dof + 1);
-      } else if (_.includes(performance.type, 'dnorm')) {
-        label = parameters.mu + ' (' + roundToThreeDigits(parameters.sigma) + ')';
-      } else if (_.includes(performance.type, 'dbeta')) {
-        label = (parameters.alpha - 1) + ' / ' + (parameters.beta + parameters.alpha - 2);
-      } else if (_.includes(performance.type, 'dgamma')) {
-        label = (parameters.alpha) + ' / ' + (parameters.beta);
-      } else if (_.includes(performance.type, 'dsurv')) {
-        label = (parameters.alpha - 0.001) + ' / ' + (parameters.beta - 0.001);
-      }
-      return label;
-    }
-
-    function buildLabelBasedOnInput(performance) {
-      var label = '';
-      var type = performance.type;
-      var input = performance.input;
-      if (_.includes(type, 'exact')) {
-        label = buildExactLabel(input);
-      } else if (_.includes(type, 'dt')) {
-        label = buildStudentsTLabel(performance);
-      } else if (_.includes(type, 'dnorm')) {
-        label = buildNormalLabel(input);
-      } else if (_.includes(type, 'dbeta')) {
-        label = buildBetaLabel(input);
-      }
-      return label;
-    }
-
-    function buildBetaLabel(input){
-      return input.events + ' / ' + input.sampleSize;
-    }
-
-    function buildNormalLabel(input) {
-      var label = '';
-      if (input.events && input.sampleSize) {
-        label = input.events + ' / ' + input.sampleSize;
-      } else if (input.value && input.sampleSize && input.scale === 'percentage') { //dichotomous
-        label = input.value + '% (' + input.sampleSize + ')';
-      } else if (input.value && input.sampleSize) { //dichotomous
-        label = input.value + ' (' + input.sampleSize + ')';
-      } else if (input.stdErr) {//with stdErr
-        label = input.value ? input.value : input.mu; //exact to dist  vs manual normal dist
-        label += ' (' + input.stdErr + ')';
-      } else if (input.lowerBound) {//with confidence interval
-        label = input.value + ' (' + input.lowerBound + '; ' + input.upperBound + ')';
-      }
-      return label;
-    }
-
-    function buildStudentsTLabel(performance) {
-      return performance.input.mu + ' (' +
-        roundToThreeDigits(performance.parameters.stdErr) +
-        '), ' + (performance.input.sampleSize);
-    }
-
-    function buildExactLabel(input) {
-      var label = '';
-      if (input.events) {
-        label = input.events + ' / ' + input.sampleSize;
-      } else if (input.scale === 'percentage') {
-        label = input.value + '%';
-        label = input.lowerBound ? label + ' (' + input.lowerBound + '%; ' +
-          input.upperBound + '%)' : label;
-        label = input.sampleSize ? label + ' (' + input.sampleSize + ')' : label;
+    function buildEffectValueLabel(performance) {
+      if (performance.effect && performance.effect.type === 'empty') {
+        return '';
+      } else if (performance.effect) {
+        return performance.effect.value;
       } else {
-        label = input.value;
-        label = input.stdErr ? label + ' (' + input.stdErr + ')' : label;
-        label = input.lowerBound ? label + ' (' + input.lowerBound + '; ' +
-          input.upperBound + ')' : label;
-        label = input.sampleSize ? label + ' (' + input.sampleSize + ')' : label;
+        return 'NA';
       }
-      return label;
     }
 
-    function roundToThreeDigits(value) {
-      return Math.round(value * 1000) / 1000;
+    function buildDistributionLabel(distribution) {
+      if (!distribution) {
+        return 'NA';
+      } else if (distribution.type === 'dt') {
+        return buildStudentsTLabel(distribution.parameters);
+      } else if (distribution.type === 'dnorm') {
+        return buildNormalLabel(distribution.parameters);
+      } else if (distribution.type === 'dbeta') {
+        return buildBetaLabel(distribution.parameters);
+      } else if (distribution.type === 'dsurv') {
+        return buildGammaLabel(distribution.parameters);
+      } else if (distribution.type === 'exact') {
+        return distribution.value + '';
+      } else if (distribution.type === 'empty') {
+        return '';
+      }
+    }
+
+    function buildStudentsTLabel(parameters) {
+      return 'Student\'s t(' +
+        parameters.mu + ', ' +
+        parameters.stdErr + ', ' +
+        parameters.dof + ')';
+    }
+
+    function buildNormalLabel(parameters) {
+      return 'Normal(' +
+        parameters.mu + ', ' +
+        parameters.sigma + ')';
+    }
+
+    function buildBetaLabel(parameters) {
+      return 'Beta(' +
+        parameters.alpha + ', ' +
+        parameters.beta + ')';
+    }
+
+    function buildGammaLabel(parameters) {
+      return 'Gamma(' +
+        parameters.alpha + ', ' +
+        parameters.beta + ')';
+    }
+
+    function buildEffectLabel(performance) {
+      if (!performance.effect) {
+        return 'NA';
+      } else if (performance.effect.input) {
+        return buildEffectInputLabel(performance.effect.input);
+      } else if (performance.effect.type === 'empty') {
+        return '';
+      } else {
+        return performance.effect.value;
+      }
+    }
+
+    function buildEffectInputLabel(input) {
+      if (input.stdErr) {
+        return input.value + ' (' + input.stdErr + ')';
+      } else if (input.lowerBound && input.upperBound) {
+        return input.value + ' (' + input.lowerBound + '; ' + input.upperBound + ')';
+      } else if (input.value && input.sampleSize) {
+        return input.value + ' / ' + input.sampleSize;
+      } else if (input.events && input.sampleSize) {
+        return input.events + ' / ' + input.sampleSize;
+      }
     }
 
     return {

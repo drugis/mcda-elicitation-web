@@ -85,7 +85,7 @@ define([
             id: 'crit2',
             dataSources: [{
               id: 'ds2id',
-              scale: [0,1]
+              scale: [0, 1]
             }]
           }, {
             id: 'crit3',
@@ -103,7 +103,7 @@ define([
             },
             dataSource: {
               id: 'ds2id',
-              scale: [0,1]
+              scale: [0, 1]
             },
             isFirstRow: true
           }, {
@@ -123,165 +123,395 @@ define([
       });
 
       describe('createEffectsTableInfo', function() {
-        it('should build labels for each non-exact, non-relative entry', function() {
+        it('should build NA labels for relative entries', function() {
           var performanceTable = [{
             criterion: 'criterionId1',
             dataSource: 'dsId1',
             performance: {
-              type: 'relative'
-            }
-          }, {
-            criterion: 'criterionId2',
-            alternative: 'alternativeId2',
-            dataSource: 'dsId2',
-            performance: {
-              type: 'exact',
-              exactType: 'exact',
-              value: 1,
-              input: {
-                value: 1,
-                stdErr: 0.5
+              distribution: {
+                type: 'relative'
               }
-            }
-          }, {
-            criterion: 'criterionId3',
-            alternative: 'alternativeId3',
-            dataSource: 'dsId3',
-            performance: {
-              type: 'dt',
-              parameters: {
-                mu: 5,
-                stdErr: 1,
-                dof: 10
-              }
-
-            }
-          }, {
-            criterion: 'criterionId4',
-            alternative: 'alternativeId4',
-            dataSource: 'dsId4',
-            performance: {
-              type: 'dnorm',
-              parameters: {
-                mu: 6,
-                sigma: 2
-              }
-            }
-          }, {
-            criterion: 'criterionId5',
-            alternative: 'alternativeId5',
-            dataSource: 'dsId5',
-            performance: {
-              type: 'dbeta',
-              parameters: {
-                alpha: 5,
-                beta: 11
-              }
-
-            }
-          }, {
-            criterion: 'criterionId6',
-            alternative: 'alternativeId6',
-            dataSource: 'dsId6',
-            performance: {
-              type: 'dsurv',
-              parameters: {
-                alpha: 10.001,
-                beta: 12344321.001
-              }
-            }
-          }, {
-            criterion: 'criterionId7',
-            alternative: 'alternativeId7',
-            dataSource: 'dsId7',
-            performance: {
-              type: 'dnorm',
-              input: {
-                value: 42,
-                lowerBound: 37,
-                upperBound: 69
-              }
-            }
-          }, {
-            criterion: 'criterionId8',
-            alternative: 'alternativeId8',
-            dataSource: 'dsId8',
-            performance: {
-              type: 'empty'
             }
           }];
           var result = effectTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId1: {
-              distributionType: 'relative',
-              hasStudyData: false
-            },
+              isAbsolute: false,
+              hasUncertainty: true
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should make a label for an effect without input data', function() {
+          var performanceTable = [{
+            criterion: 'criterionId2',
+            alternative: 'alternativeId2',
+            dataSource: 'dsId2',
+            performance: {
+              effect: {
+                type: 'exact',
+                value: 1
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
             dsId2: {
-              distributionType: 'exact',
-              hasStudyData: true,
+              isAbsolute: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId2: {
-                  label: 1 + ' (' + 0.5 + ')',
+                  effectLabel: 1,
+                  effectValue: 1,
+                  distributionLabel: 'NA',
                   hasUncertainty: false
                 }
               }
-            },
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should make a label for an effect with standard error input data', function() {
+          var performanceTable = [{
+            criterion: 'criterionId2',
+            alternative: 'alternativeId2',
+            dataSource: 'dsId2',
+            performance: {
+              effect: {
+                type: 'exact',
+                value: 1,
+                input: {
+                  value: 1,
+                  stdErr: 0.5
+                }
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            dsId2: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId2: {
+                  effectLabel: '1 (0.5)',
+                  effectValue: 1,
+                  distributionLabel: 'NA',
+                  hasUncertainty: false
+                }
+              }
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should make a label for an effect with lower and upper bounds input data', function() {
+          var performanceTable = [{
+            criterion: 'criterionId2',
+            alternative: 'alternativeId2',
+            dataSource: 'dsId2',
+            performance: {
+              effect: {
+                type: 'exact',
+                value: 1,
+                input: {
+                  value: 1,
+                  lowerBound: 0.5,
+                  upperBound: 2
+                }
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            dsId2: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId2: {
+                  effectLabel: '1 (0.5; 2)',
+                  effectValue: 1,
+                  distributionLabel: 'NA',
+                  hasUncertainty: false
+                }
+              }
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should make a label for an effect with value and sample size input data', function() {
+          var performanceTable = [{
+            criterion: 'criterionId2',
+            alternative: 'alternativeId2',
+            dataSource: 'dsId2',
+            performance: {
+              effect: {
+                type: 'exact',
+                value: 2,
+                input: {
+                  value: 1,
+                  sampleSize: 10
+                }
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            dsId2: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId2: {
+                  effectLabel: '1 / 10',
+                  effectValue: 2,
+                  distributionLabel: 'NA',
+                  hasUncertainty: false
+                }
+              }
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should make a label for an effect with events and sample size input data', function() {
+          var performanceTable = [{
+            criterion: 'criterionId2',
+            alternative: 'alternativeId2',
+            dataSource: 'dsId2',
+            performance: {
+              effect: {
+                type: 'exact',
+                value: 1,
+                input: {
+                  events: 10,
+                  sampleSize: 100
+                }
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            dsId2: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId2: {
+                  effectLabel: '10 / 100',
+                  effectValue: 1,
+                  distributionLabel: 'NA',
+                  hasUncertainty: false
+                }
+              }
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should make a label for a students t distribution', function() {
+          var performanceTable = [{
+            criterion: 'criterionId3',
+            alternative: 'alternativeId3',
+            dataSource: 'dsId3',
+            performance: {
+              distribution: {
+                type: 'dt',
+                parameters: {
+                  mu: 5,
+                  stdErr: 1,
+                  dof: 10
+                }
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
             dsId3: {
-              distributionType: 'dt',
-              hasStudyData: true,
+              isAbsolute: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId3: {
-                  label: '5 (1), 11',
+                  effectLabel: 'NA',
+                  effectValue: 'NA',
+                  distributionLabel: 'Student\'s t(5, 1, 10)',
                   hasUncertainty: true
                 }
               }
-            },
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should make a label for a normal distribution', function() {
+          var performanceTable = [{
+            criterion: 'criterionId4',
+            alternative: 'alternativeId4',
+            dataSource: 'dsId4',
+            performance: {
+              distribution: {
+                type: 'dnorm',
+                parameters: {
+                  mu: 6,
+                  sigma: 2
+                }
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
             dsId4: {
-              distributionType: 'dnorm',
-              hasStudyData: true,
+              isAbsolute: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId4: {
-                  label: '6 (2)',
+                  effectLabel: 'NA',
+                  effectValue: 'NA',
+                  distributionLabel: 'Normal(6, 2)',
                   hasUncertainty: true
                 }
               }
-            },
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should make a label for a beta distribution', function() {
+          var performanceTable = [{
+            criterion: 'criterionId5',
+            alternative: 'alternativeId5',
+            dataSource: 'dsId5',
+            performance: {
+              distribution: {
+                type: 'dbeta',
+                parameters: {
+                  alpha: 5,
+                  beta: 11
+                }
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
             dsId5: {
-              distributionType: 'dbeta',
-              hasStudyData: true,
+              isAbsolute: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId5: {
-                  label: '4 / 14',
+                  effectLabel: 'NA',
+                  effectValue: 'NA',
+                  distributionLabel: 'Beta(5, 11)',
                   hasUncertainty: true
                 }
               }
-            },
-            dsId6: {
-              distributionType: 'dsurv',
-              hasStudyData: true,
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should make a label for a survival distribution', function() {
+          var performanceTable = [{
+            criterion: 'criterionId5',
+            alternative: 'alternativeId5',
+            dataSource: 'dsId5',
+            performance: {
+              distribution: {
+                type: 'dsurv',
+                parameters: {
+                  alpha: 10,
+                  beta: 12344321
+                }
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            dsId5: {
+              isAbsolute: true,
               studyDataLabelsAndUncertainty: {
-                alternativeId6: {
-                  label: '10 / 12344321',
+                alternativeId5: {
+                  effectLabel: 'NA',
+                  effectValue: 'NA',
+                  distributionLabel: 'Gamma(10, 12344321)',
                   hasUncertainty: true
                 }
               }
-            },
-            dsId7: {
-              distributionType: 'dnorm',
-              hasStudyData: true,
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should make a label for an exact distribution', function() {
+          var performanceTable = [{
+            criterion: 'criterionId5',
+            alternative: 'alternativeId5',
+            dataSource: 'dsId5',
+            performance: {
+              distribution: {
+                type: 'exact',
+                value: 42
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            dsId5: {
+              isAbsolute: true,
               studyDataLabelsAndUncertainty: {
-                alternativeId7: {
-                  label: '42 (37; 69)',
-                  hasUncertainty: true
+                alternativeId5: {
+                  effectLabel: 'NA',
+                  effectValue: 'NA',
+                  distributionLabel: '42',
+                  hasUncertainty: false
                 }
               }
-            },
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+
+        it('should make a label for an empty distribution', function() {
+          var performanceTable = [{
+            criterion: 'criterionId8',
+            alternative: 'alternativeId8',
+            dataSource: 'dsId8',
+            performance: {
+              distribution: {
+                type: 'empty'
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
             dsId8: {
-              distributionType: 'empty',
-              hasStudyData: true,
+              isAbsolute: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId8: {
-                  label: '',
+                  effectLabel: 'NA',
+                  effectValue: 'NA',
+                  distributionLabel: '',
+                  hasUncertainty: false
+                }
+              }
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should make a label for an empty effect', function() {
+          var performanceTable = [{
+            criterion: 'criterionId8',
+            alternative: 'alternativeId8',
+            dataSource: 'dsId8',
+            performance: {
+              effect: {
+                type: 'empty'
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            dsId8: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId8: {
+                  effectLabel: '',
+                  effectValue: '',
+                  distributionLabel: 'NA',
                   hasUncertainty: false
                 }
               }

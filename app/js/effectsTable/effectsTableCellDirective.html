@@ -1,19 +1,17 @@
-<div ng-if="effectsDisplay === 'effects'">
-  <div ng-if="isEffect">
-    {{effectDataSourceLabel}}
+<div ng-if="effectsDisplay === 'deterministic'">
+  <div ng-if="isAbsolute">
+    {{effectLabel}}
   </div>
-  <div ng-if="!isEffect">
-    <effects-table-scales-cell scales="scales" workspace-settings="workspaceSettings"
-      theoretical-scale="theoreticalScale" uncertainty="uncertainty">
-    </effects-table-scales-cell>
+  <div ng-if="!isAbsolute">
+    NA
   </div>
 </div>
 
-<div ng-if="effectsDisplay === 'sourceData'">
-  <div ng-if="hasStudyData">
-    {{effectDataSourceLabel}}
+<div ng-if="effectsDisplay === 'deterministicMCDA'">
+  <div ng-if="isAbsolute">
+    {{effectValue}}
   </div>
-  <div ng-if="!hasStudyData">
+  <div ng-if="!isAbsolute">
     NA
   </div>
 </div>
@@ -24,8 +22,11 @@
   </effects-table-scales-cell>
 </div>
 
-<div ng-if="effectsDisplay === 'deterministic'">
-  <effects-table-scales-cell scales="scales" uncertainty="false" workspace-settings="workspaceSettings"
-    theoretical-scale="theoreticalScale">
-  </effects-table-scales-cell>
+<div ng-if="effectsDisplay === 'smaaDistributions'">
+  <div ng-if="isAbsolute">
+    {{distributionLabel}}
+  </div>
+  <div ng-if="!isAbsolute">
+    NA
+  </div>
 </div>
