@@ -1,40 +1,40 @@
 'use strict';
-define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (_, angular) {
+define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(_, angular) {
 
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
-  var currentSchemaVersion = '1.1.0';
+  var currentSchemaVersion = '1.2.0';
   var inputKnowledgeServiceMock = jasmine.createSpyObj('InputKnowledgeService', ['getOptions', 'inputToString',
     'finishInputCell', 'buildPerformance']);
-
-  describe('The manualInputService', function () {
-    beforeEach(angular.mock.module('elicit.manualInput', function ($provide) {
+  describe('The manualInputService', function() {
+    beforeEach(angular.mock.module('elicit.manualInput', function($provide) {
 
       $provide.value('generateUuid', generateUuidMock);
       $provide.value('currentSchemaVersion', currentSchemaVersion);
       $provide.value('InputKnowledgeService', inputKnowledgeServiceMock);
     }));
 
-    beforeEach(inject(function (ManualInputService) {
+    beforeEach(inject(function(ManualInputService) {
       manualInputService = ManualInputService;
     }));
 
-    describe('getInputError', function () {
-      it('should run all the constraints of a cell\'s parameters, returning the first error found', function () {
+    describe('getInputError', function() {
+      it('should run all the constraints of a cell\'s parameters, returning the first error found', function() {
         var cell = {
           firstParameter: 10,
           secondParameter: 20,
           inputParameters: {
             firstParameter: {
-              constraints: [
-                function () { }
-              ]
+              constraints: [{
+                validator: function() { }
+              }]
             },
             secondParameter: {
-              constraints: [
-                function () { },
-                function () { return 'error message'; }
-              ]
+              constraints: [{
+                validator: function() { }
+              }, {
+                validator: function() { return 'error message'; }
+              }]
             }
           }
         };
@@ -42,7 +42,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(result).toBe('error message');
       });
 
-      it('should return no error for an empty typed cell', function () {
+      it('should return no error for an empty typed cell', function() {
         var cell = {
           empty: true
         };
@@ -70,23 +70,28 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(manualInputService.getInputError(cell)).toBeFalsy();
       });
     });
-
-    describe('inputToString', function () {
-      it('should use the inputknowledgeservice for valid inputs', function () {
-        inputKnowledgeServiceMock.inputToString.and.returnValue('great success');
-        expect(manualInputService.inputToString({})).toEqual('great success');
+    describe('inputToString', function() {
+      it('should call the toString function on the cell', function() {
+        var cell = {
+          inputParameters: {
+            toString: function() {
+              return 'great success';
+            }
+          }
+        };
+        expect(manualInputService.inputToString(cell)).toEqual('great success');
       });
 
-      it('should return an invalid input message if the input is invalid', function () {
+      it('should return an invalid input message if the input is invalid', function() {
         var invalidInput = {
           firstParameter: 10,
           inputParameters: {
             firstParameter: {
-              constraints: [
-                function () {
+              constraints: [{
+                validator: function() {
                   return 'error in input';
                 }
-              ]
+              }]
             }
           }
         };
@@ -94,7 +99,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
     });
 
-    describe('prepareInputData', function () {
+    describe('prepareInputData', function() {
       var alternatives = [{
         title: 'alternative1',
         id: 'alternative1'
@@ -115,73 +120,114 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           id: 'ds2id'
         }]
       }];
-      var emptyCell = {
-        effect: {},
-        distribution: {}
-      };
 
-      it('should prepare the cells of the table for input', function () {
+      it('should prepare the cells of the table for input', function() {
         var result = manualInputService.prepareInputData(criteria, alternatives);
         var expectedResult = {
-          'ds1id': {
-            alternative1: _.extend({}, emptyCell, {
-              isInvalid: true
-            }),
-            alternative2: _.extend({}, emptyCell, {
-              isInvalid: true
-            })
+          'effect': {
+            'ds1id': {
+              alternative1: {
+                isInvalid: true
+              },
+              alternative2: {
+                isInvalid: true
+              }
+            },
+            'ds2id': {
+              alternative1: {
+                isInvalid: true
+              },
+              alternative2: {
+                isInvalid: true
+              }
+            }
           },
-          'ds2id': {
-            alternative1: _.extend({}, emptyCell, {
-              isInvalid: true
-            }),
-            alternative2: _.extend({}, emptyCell, {
-              isInvalid: true
-            })
+          'distribution': {
+            'ds1id': {
+              alternative1: {
+                isInvalid: true
+              },
+              alternative2: {
+                isInvalid: true
+              }
+            },
+            'ds2id': {
+              alternative1: {
+                isInvalid: true
+              },
+              alternative2: {
+                isInvalid: true
+              }
+            }
           }
         };
         expect(result).toEqual(expectedResult);
       });
 
-      it('should preserve data if there is old data supplied and the criterion type has not changed', function () {
+      it('should preserve data if there is old data supplied and the criterion type has not changed', function() {
         var oldInputData = {
-          'ds2id': {
-            alternative1: {
-              effect: {
-                foo: 'foo'
+          'effect': {
+            'ds2id': {
+              alternative1: {
+                firstParameter: 1
               },
-              distribution: {
-                bar: 'bar'
-              }
-            },
-            alternative2: undefined
+              alternative2: {}
+            }
+          },
+          'distribution': {
+            'ds2id': {
+              alternative1: {
+                firstParameter: 2
+              },
+              alternative2: {}
+            }
           }
         };
         var result = manualInputService.prepareInputData(criteria, alternatives, oldInputData);
 
         var expectedResult = {
-          'ds1id': {
-            alternative1: _.extend({}, emptyCell, {
-              isInvalid: true
-            }),
-            alternative2: _.extend({}, emptyCell, {
-              isInvalid: true
-            })
+          'effect': {
+            'ds1id': {
+              alternative1: {
+                isInvalid: true
+              },
+              alternative2: {
+                isInvalid: true
+              }
+            },
+            'ds2id': {
+              alternative1: _.extend({}, oldInputData.effect.ds2id.alternative1, {
+                isInvalid: true
+              }),
+              alternative2: {
+                isInvalid: true
+              }
+            }
           },
-          'ds2id': {
-            alternative1: _.extend({}, oldInputData.ds2id.alternative1, {
-              isInvalid: true
-            }),
-            alternative2: _.extend({}, emptyCell, {
-              isInvalid: true
-            })
+          'distribution': {
+            'ds1id': {
+              alternative1: {
+                isInvalid: true
+              },
+              alternative2: {
+                isInvalid: true
+              }
+            },
+            'ds2id': {
+              alternative1: _.extend({}, oldInputData.distribution.ds2id.alternative1, {
+                isInvalid: true
+              }),
+              alternative2: {
+                isInvalid: true
+              }
+            }
           }
         };
         expect(result).toEqual(expectedResult);
       });
     });
 
-    describe('createProblem', function () {
+    describe('createProblem', function() {
       var title = 'title';
       var description = 'A random description of a random problem';
       var alternatives = [{
@@ -189,8 +235,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         id: 'alternative1',
         oldId: 'alternative1Oldid'
       }];
-      it('should create a problem, ready to go to the workspace, removing old ids', function () {
-        inputKnowledgeServiceMock.buildPerformance.and.returnValue({});
+
+      it('should create a problem, ready to go to the workspace, removing old ids', function() {
         var criteria = [{
           title: 'favorable criterion',
           description: 'some crit description',
@@ -203,8 +249,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           dataSources: [{
             id: 'ds1id',
             oldId: 'ds1oldId',
-            inputType: 'effect',
-            dataType: 'other'
           }]
         }, {
           title: 'unfavorable criterion',
@@ -214,8 +258,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           id: 'criterion2id',
           dataSources: [{
             id: 'ds2id',
-            inputType: 'distribution',
-            inputMethod: 'manualDistribution'
           }]
         }, {
           title: 'dichotomousDecimalSampleSize',
@@ -223,40 +265,80 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           isFavorable: false,
           dataSources: [{
             id: 'ds3id',
-            inputType: 'effect',
-            dataType: 'dichotomous'
           }]
         }];
         var inputData = {
-          ds1id: {
-            alternative1: {
-              inputType: 'effect',
-              dataType: 'other',
-              firstParameter: 10,
-              inputParameters: {
-                id: 'valueExact'
+          effect: {
+            ds1id: {
+              alternative1: {
+                firstParameter: 10,
+                inputParameters: {
+                  id: 'value',
+                  buildPerformance: function() {
+                    return {};
+                  }
+                }
+              }
+            },
+            ds2id: {
+              alternative1: {
+                firstParameter: 20,
+                inputParameters: {
+                  id: 'value',
+                  buildPerformance: function() {
+                    return {};
+                  }
+                }
+              }
+            },
+            ds3id: {
+              alternative1: {
+                firstParameter: 0.5,
+                secondParameter: 20,
+                inputParameters: {
+                  id: 'valueSampleSize',
+                  buildPerformance: function() {
+                    return {};
+                  }
+                }
               }
             }
           },
-          ds2id: {
-            alternative1: {
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution',
-              firstParameter: 20,
-              inputParameters: {
-                id: 'valueExact'
+          distribution: {
+            ds1id: {
+              alternative1: {
+                firstParameter: 10,
+                secondParameter: 20,
+                inputParameters: {
+                  id: 'normal',
+                  buildPerformance: function() {
+                    return {};
+                  }
+                }
               }
-            }
-          },
-          ds3id: {
-            alternative1: {
-              inputType: 'effect',
-              dataType: 'dichotomous',
-              isNormal: true,
-              firstParameter: 0.5,
-              secondParameter: 20,
-              inputParameters: {
-                id: 'dichotomousDecimalSampleSize'
+            },
+            ds2id: {
+              alternative1: {
+                firstParameter: 20,
+                secondParameter: 20,
+                inputParameters: {
+                  id: 'beta',
+                  buildPerformance: function() {
+                    return {};
+                  }
+                }
+              }
+            },
+            ds3id: {
+              alternative1: {
+                firstParameter: 0.5,
+                secondParameter: 20,
+                inputParameters: {
+                  id: 'gamma',
+                  buildPerformance: function() {
+                    return {};
+                  }
+                }
               }
             }
           }
@@ -265,7 +347,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         var result = manualInputService.createProblem(criteria, alternatives, title, description, inputData, useFavorability);
         var expectedResult = {
           title: title,
-          schemaVersion: '1.1.0',
+          schemaVersion: '1.2.0',
           description: description,
           criteria: {
             criterion1id: {
@@ -276,8 +358,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               dataSources: [{
                 id: 'ds1id',
                 scale: [-Infinity, Infinity],
-                inputType: 'effect',
-                dataType: 'other'
               }]
             },
             criterion2id: {
@@ -288,8 +368,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               dataSources: [{
                 id: 'ds2id',
                 scale: [-Infinity, Infinity],
-                inputType: 'distribution',
-                inputMethod: 'manualDistribution'
               }]
             },
             criterion3id: {
@@ -297,9 +375,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               isFavorable: false,
               dataSources: [{
                 id: 'ds3id',
-                scale: [0, 1],
-                inputType: 'effect',
-                dataType: 'dichotomous'
+                scale: [-Infinity, Infinity],
               }]
             }
           },
@@ -312,28 +388,38 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             alternative: 'alternative1',
             criterion: 'criterion1id',
             dataSource: 'ds1id',
-            performance: {}
+            performance: {
+              effect: {}, 
+              distribution: {}
+            }
           }, {
             alternative: 'alternative1',
             criterion: 'criterion2id',
             dataSource: 'ds2id',
-            performance: {}
+            performance: {
+              effect: {}, 
+              distribution: {}
+            }
           }, {
             alternative: 'alternative1',
             criterion: 'criterion3id',
             dataSource: 'ds3id',
-            performance: {}
+            performance: {
+              effect: {}, 
+              distribution: {}
+            }
           }]
         };
         expect(result).toEqual(expectedResult);
       });
     });
 
-    describe('createStateFromOldWorkspace', function () {
-      beforeEach(function () {
+    describe('createStateFromOldWorkspace', function() {
+      beforeEach(function() {
         generateUuidMock.and.returnValues('uuid1', 'uuid2', 'uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid8', 'uuid9', 'uuid10', 'uuid11', 'uuid12', 'uuid13');
       });
-      it('should create a new state from an existing workspace', function () {
+
+      it('should create a new state from an existing workspace', function() {
         var workspace = {
           problem: {
             criteria: {
@@ -346,10 +432,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                   id: 'ds1',
                   scale: [0, 1],
                   source: 'single study',
-                  sourceLink: 'http://www.drugis.org',
-                  inputType: 'distribution',
-                  inputMethod: 'assistedDistribution',
-                  dataType: 'continuous'
+                  sourceLink: 'http://www.drugis.org'
                 }]
               },
               crit2: {
@@ -358,8 +441,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 isFavorable: true,
                 dataSources: [{
                   id: 'ds2',
-                  inputType: 'distribution',
-                  inputMethod: 'manualDistribution',
                   source: 'single study',
                   sourceLink: 'http://www.drugis.org'
                 }]
@@ -369,8 +450,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 isFavorable: false,
                 dataSources: [{
                   id: 'ds3',
-                  inputType: 'distribution',
-                  inputMethod: 'manualDistribution',
                   source: 'single study'
                 }]
               },
@@ -379,8 +458,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 isFavorable: false,
                 dataSources: [{
                   id: 'ds4',
-                  inputType: 'distribution',
-                  inputMethod: 'manualDistribution',
                   source: 'single study'
                 }]
               },
@@ -389,8 +466,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 isFavorable: false,
                 dataSources: [{
                   id: 'ds5',
-                  inputType: 'distribution',
-                  inputMethod: 'manualDistribution',
                   source: 'single study'
                 }]
               },
@@ -398,9 +473,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 title: 'durrrvival',
                 isFavorable: false,
                 dataSources: [{
-                  id: 'ds6',
-                  inputType: 'Unknown'
-
+                  id: 'ds6'
                 }]
               }
             },
@@ -464,10 +537,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               id: 'uuid1',
               oldId: 'ds1',
               source: 'single study',
-              sourceLink: 'http://www.drugis.org',
-              inputType: 'distribution',
-              inputMethod: 'assistedDistribution',
-              dataType: 'continuous'
+              sourceLink: 'http://www.drugis.org'
             }],
             isFavorable: true
           }, {
@@ -477,9 +547,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               id: 'uuid3',
               oldId: 'ds2',
               source: 'single study',
-              sourceLink: 'http://www.drugis.org',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution'
+              sourceLink: 'http://www.drugis.org'
             }],
             isFavorable: true,
             unitOfMeasurement: 'Response size'
@@ -489,9 +557,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             dataSources: [{
               id: 'uuid5',
               oldId: 'ds3',
-              source: 'single study',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution'
+              source: 'single study'
             }],
             isFavorable: false
 
@@ -501,9 +567,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             dataSources: [{
               id: 'uuid7',
               oldId: 'ds4',
-              source: 'single study',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution',
+              source: 'single study'
             }],
             isFavorable: false
           }, {
@@ -512,9 +576,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             dataSources: [{
               id: 'uuid9',
               oldId: 'ds5',
-              source: 'single study',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution'
+              source: 'single study'
             }],
             isFavorable: false,
           }, {
@@ -522,8 +584,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             title: 'durrrvival',
             dataSources: [{
               id: 'uuid11',
-              oldId: 'ds6',
-              inputType: 'Unknown'
+              oldId: 'ds6'
             }],
             isFavorable: false,
           }],
@@ -542,8 +603,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
     });
 
-    describe('getOptions', function () {
-      it('should call the inputknowledgeservice', function () {
+    describe('getOptions', function() {
+      it('should call the inputknowledgeservice', function() {
         inputKnowledgeServiceMock.getOptions.and.returnValue('here are some options');
         expect(manualInputService.getOptions()).toEqual('here are some options');
       });
@@ -586,31 +647,28 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     });
 
     describe('findInvalidRow', () => {
-      it('should return truthy if there is an invalid row i.e. all inputs are not distributed and have the same effect value', () => {
+      it('should return truthy if there is an invalid row i.e. all inputs have the same effect value', () => {
         var inputData = {
           row1: {
             col1: {
-              effect: {
-                firstParameter: 50,
-                inputParameters: {
-                  id: 'value'
-                }
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
               }
             },
             col2: {
-              effect: {
-                firstParameter: 50,
-                inputParameters: {
-                  id: 'value'
-                }
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
               }
             },
             col3: {
-              effect: {
-                firstParameter: 50,
-                inputParameters: {
-                  id: 'value'
-                }
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
               }
             }
           }
@@ -623,27 +681,24 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         var inputData = {
           row1: {
             col1: {
-              effect: {
-                firstParameter: 50,
-                inputParameters: {
-                  id: 'value'
-                }
+              inputType: 'distribution',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
               }
             },
             col2: {
-              effect: {
-                firstParameter: 50,
-                inputParameters: {
-                  id: 'value'
-                }
+              inputType: 'effect',
+              firstParameter: 50,
+              inputParameters: {
+                id: 'value'
               }
             },
             col3: {
-              effect: {
-                firstParameter: 51,
-                inputParameters: {
-                  id: 'value'
-                }
+              inputType: 'effect',
+              firstParameter: 51,
+              inputParameters: {
+                id: 'value'
               }
             }
           }

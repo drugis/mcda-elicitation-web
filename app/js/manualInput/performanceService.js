@@ -10,6 +10,21 @@ define(['angular'], function() {
       };
     }
 
+    function buildExactSEPerformance(firstParameter, secondParameter) {
+      return buildExactPerformance(firstParameter, {
+        value: firstParameter,
+        stdErr: secondParameter
+      });
+    }
+
+    function buildExactPercentSEPerformance(firstParameter, secondParameter) {
+      return buildExactPerformance(firstParameter / 100, {
+        value: firstParameter,
+        stdErr: secondParameter,
+        scale: 'percentage'
+      });
+    }
+
     function buildExactConfidencePerformance(cell) {
       return buildExactPerformance(cell.firstParameter, {
         value: cell.firstParameter,
@@ -26,6 +41,7 @@ define(['angular'], function() {
         scale: 'percentage'
       });
     }
+
     function buildNormalPerformance(mu, sigma, input) {
       return {
         type: 'dnorm',
@@ -45,24 +61,11 @@ define(['angular'], function() {
       return buildAlphaBetaPerformance('dgamma', alpha, beta, input);
     }
 
-    function buildStudentTPerformance(mu, sigma, dof, input) {
-      return {
-        type: 'dt',
-        parameters: {
-          mu: mu,
-          stdErr: sigma,
-          dof: dof
-        },
-        input: input
-      };
-    }
-
-    function buildEmptyPerformance(){
+    function buildEmptyPerformance() {
       return {
         type: 'empty'
       };
     }
-    // privates
 
     function buildAlphaBetaPerformance(type, alpha, beta, input) {
       return {
@@ -82,8 +85,9 @@ define(['angular'], function() {
       buildNormalPerformance: buildNormalPerformance,
       buildBetaPerformance: buildBetaPerformance,
       buildGammaPerformance: buildGammaPerformance,
-      buildStudentTPerformance: buildStudentTPerformance,
-      buildEmptyPerformance: buildEmptyPerformance
+      buildEmptyPerformance: buildEmptyPerformance,
+      buildExactSEPerformance: buildExactSEPerformance,
+      buildExactPercentSEPerformance: buildExactPercentSEPerformance
     };
   };
   return dependencies.concat(PerformanceService);

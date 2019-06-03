@@ -4,9 +4,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
   describe('The WorkspaceService, ', function() {
     var workspaceService;
     var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsService', ['postAndHandleResults']);
+    var qMock = jasmine.createSpyObj('$q', ['resolve']);
 
     beforeEach(angular.mock.module('elicit.workspace', function($provide) {
       $provide.value('PataviResultsService', pataviResultsServiceMock);
+      $provide.value('$q', qMock);
     }));
 
     beforeEach(inject(function(WorkspaceService) {
@@ -14,35 +16,66 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
     }));
 
     describe('getObservedScales', function() {
-      it('should call the pataviResultService', function() {
-        workspaceService.getObservedScales({
+      beforeEach(function() {
+        pataviResultsServiceMock.postAndHandleResults.calls.reset();
+      });
+
+      it('should call the pataviResultService with distribution data', function() {
+        var problem = {
           criteria: {
             crit1: {
               dataSources: [{ id: 'ds1' }]
             }
           },
-          performanceTable: [
-            {
-              criterion: 'crit1',
-              dataSource: 'ds1'
+          performanceTable: [{
+            criterion: 'crit1',
+            dataSource: 'ds1',
+            performance: {
+              distribution: {}
             }
-          ]
-        });
-        expect(pataviResultsServiceMock.postAndHandleResults).toHaveBeenCalledWith({
+          }]
+        };
+        var expectedProblem = {
           criteria: {
             ds1: {
               id: 'ds1'
             }
           },
-          performanceTable: [
-            {
-              criterion: 'ds1',
-              dataSource: 'ds1'
-            }
-          ],
+          performanceTable: [{
+            criterion: 'ds1',
+            dataSource: 'ds1',
+            performance: {}
+          }],
           method: 'scales'
-        });
+        };
+
+        workspaceService.getObservedScales(problem);
+
+        expect(pataviResultsServiceMock.postAndHandleResults).toHaveBeenCalledWith(expectedProblem);
       });
+
+      it('should return undefined if only effect data is present', function() {
+        var problem = {
+          criteria: {
+            crit1: {
+              dataSources: [{ id: 'ds1' }]
+            }
+          },
+          performanceTable: [{
+            criterion: 'crit1',
+            dataSource: 'ds1',
+            performance: {
+              effect: {}
+            }
+          }]
+        };
+        
+        workspaceService.getObservedScales(problem);
+
+        expect(pataviResultsServiceMock.postAndHandleResults).not.toHaveBeenCalled();
+        expect(qMock.resolve).toHaveBeenCalledWith(undefined);
+      });
+
     });
 
     describe('mergeBaseAndSubProblem', function() {
@@ -621,6 +654,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeTruthy();
           expect(validity.errorMessage).toBe(undefined);
         });
+
         it('should fail if a required property is missing', function() {
           var example = exampleProblem();
           var withoutTitle = _.omit(example, 'title');
@@ -632,6 +666,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validitywithoutCriteriaAndAlternatives.isValid).toBeFalsy();
           expect(validitywithoutCriteriaAndAlternatives.errorMessage).toBe('Missing workspace properties: criteria, alternatives');
         });
+
         it('should fail if there are fewer than 2 criteria', function() {
           var example = exampleProblem();
           var exampleWithOneCriterion = _.cloneDeep(example);
@@ -641,6 +676,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Two or more criteria required');
         });
+
         it('should fail if there are fewer than 2 alternatives', function() {
           var example = exampleProblem();
           var exampleWithOneAlternative = _.cloneDeep(example);
@@ -649,6 +685,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Two or more alternatives required');
         });
+
         it('should fail if there is data in the performanceTable for nonexistent criteria', function() {
           var exampleWithExtraPerformanceData = _.cloneDeep(exampleProblem());
           exampleWithExtraPerformanceData.performanceTable.push({
@@ -663,6 +700,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Performance table contains data for nonexistent criterion: "nonsense"');
         });
+
         it('should fail if there is data in the performanceTable for nonexistent alternatives', function() {
           var exampleWithExtraPerformanceData = _.cloneDeep(exampleProblem());
           exampleWithExtraPerformanceData.performanceTable.push({
@@ -677,6 +715,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Performance table contains data for nonexistent alternative: "nonsense"');
         });
+
         it('should fail if a cell of the performance table is left empty', function() {
           var exampleWithMissingPerformanceData = _.cloneDeep(exampleProblem());
           exampleWithMissingPerformanceData.performanceTable.pop();
@@ -684,6 +723,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Performance table is missing data for criterion "Bleed" and alternative "Enox"');
         });
+
         it('should fail if a criterion lacks a title', function() {
           var missingCriterionTitle = _.cloneDeep(exampleProblem());
           delete missingCriterionTitle.criteria.Bleed.title;
@@ -691,6 +731,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Missing title for criterion: "Bleed"');
         });
+
         it('should fail if a alternative lacks a title', function() {
           var missingAlternativeTitle = _.cloneDeep(exampleProblem());
           delete missingAlternativeTitle.alternatives.Hep.title;

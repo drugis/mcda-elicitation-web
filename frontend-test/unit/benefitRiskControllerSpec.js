@@ -276,6 +276,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         });
       });
     });
+
     describe('when the aggregate state changes', () => {
       beforeEach(() => {
         WorkspaceService.hasNoStochasticResults.calls.reset();
@@ -283,11 +284,13 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         scope.aggregateState = { id: 'changed' };
         scope.$apply();
       });
+
       it('should check whether there are stochastic results', () => {
         expect(WorkspaceService.hasNoStochasticResults).toHaveBeenCalled();
         expect(scope.hasNoStochasticResults).toBe(true);
       });
     });
+
     describe('when a settings change event triggers', () => {
       it('should update the scales', () => {
         spyOn(scope, 'updateScales');
@@ -297,6 +300,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         expect(scope.updateScales).toHaveBeenCalled();
       });
     });
+
     describe('when a resultsAccessible event triggers', () => {
       it('should update the state', () => {
         spyOn(scope, 'updateState');
@@ -306,6 +310,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         expect(scope.updateState).toHaveBeenCalled();
       });
     });
+    
     describe('when a $destroy event triggers', () => {
       it('should call deregisterTransitionListener', () => {
         spyOn(scope, 'deregisterTransitionListener');

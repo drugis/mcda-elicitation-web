@@ -55,9 +55,9 @@ define(['lodash'], function(_) {
     $scope.scenarioTitle = {};
     $scope.selections = {};
     $scope.isDuplicateScenarioTitle = false;
-    $scope.scalesPromise = WorkspaceService.getObservedScales(baseProblem);
     $scope.tasks = _.keyBy(Tasks.available, 'id');
 
+    $scope.scalesPromise = WorkspaceService.getObservedScales(baseProblem);
     $scope.updateState(currentScenario);
     $scope.effectsTableInfo = EffectsTableService.createEffectsTableInfo(baseProblem.performanceTable);
 

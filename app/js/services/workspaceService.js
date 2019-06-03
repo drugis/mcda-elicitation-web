@@ -1,26 +1,52 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
+    '$q',
     'PataviResultsService',
     'significantDigits'
   ];
 
   var WorkspaceService = function(
+    $q,
     PataviResultsService,
     significantDigits
   ) {
     function getObservedScales(problem) {
-      var scalesProblem = _.cloneDeep(problem);
-      var dataSources = _.reduce(scalesProblem.criteria, function(accum, criterion) {
-        return accum.concat(criterion.dataSources);
-      }, []);
-      scalesProblem.criteria = _.keyBy(dataSources, 'id');
-      scalesProblem.performanceTable = _.map(scalesProblem.performanceTable, function(entry) {
+      var newProblem = createProblem(problem);
+      return newProblem ? PataviResultsService.postAndHandleResults(newProblem) : $q.resolve(undefined);
+    }
+
+    function createProblem(problem) {
+      if (hasNoDistributionData(problem)) {
+        return;
+      }
+      var newProblem = _.cloneDeep(problem);
+      var dataSources = getDataSources(problem.criteria);
+      newProblem.criteria = _.keyBy(dataSources, 'id');
+
+      newProblem.performanceTable = createPerformanceTable(problem.performanceTable);
+      newProblem.method = 'scales';
+      return newProblem;
+    }
+
+    function hasNoDistributionData(problem){
+      return !_.some(problem.performanceTable, function(entry) {
+        return entry.performance.distribution;
+      });
+    }
+
+    function createPerformanceTable(performanceTable) {
+      return _.map(performanceTable, function(entry) {
         entry.criterion = entry.dataSource;
+        entry.performance = entry.performance.distribution;
         return entry;
       });
-      scalesProblem.method = 'scales';
-      return PataviResultsService.postAndHandleResults(scalesProblem);
+    }
+
+    function getDataSources(criteria) {
+      return _.reduce(criteria, function(accum, criterion) {
+        return accum.concat(criterion.dataSources);
+      }, []);
     }
 
     function percentifyScales(criteria, observedScales) {
@@ -29,12 +55,13 @@ define(['lodash', 'angular'], function(_, angular) {
       }, []), 'id');
 
       return _.reduce(observedScales, function(accum, scaleRow, datasourceId) {
-        if (!dataSources[datasourceId]) { return accum; }
-        accum[datasourceId] = _.reduce(scaleRow, function(accum, scaleCell, alternativeId) {
-          var usePercentage = _.isEqual(dataSources[datasourceId].scale, [0, 1]);
-          accum[alternativeId] = usePercentage ? _.mapValues(scaleCell, times100) : scaleCell;
-          return accum;
-        }, {});
+        if (dataSources[datasourceId]) {
+          accum[datasourceId] = _.reduce(scaleRow, function(accum, scaleCell, alternativeId) {
+            var usePercentage = _.isEqual(dataSources[datasourceId].scale, [0, 1]);
+            accum[alternativeId] = usePercentage ? _.mapValues(scaleCell, times100) : scaleCell;
+            return accum;
+          }, {});
+        }
         return accum;
       }, {});
     }
@@ -479,7 +506,9 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function isAbsolutePerformance(tableEntry) {
-      return tableEntry.performance.type.indexOf('relative') !== 0;
+      return tableEntry.performance.effect ||
+        tableEntry.performance.distribution ||
+        tableEntry.performance.type.indexOf('relative') !== 0;
     }
 
     function criterionLackingTitle(workspace) {

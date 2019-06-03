@@ -1,15 +1,10 @@
 <dropdown-toggle close-on-click="true" pane-align="right">
   <toggle>
-    <a ng-style="inputData.isInvalid ? {color:'red'} : {}" style="white-space: pre-wrap">{{inputData.label}}</a>
+    <a ng-style="cell.isInvalid ? {color:'red'} : {}" style="white-space: pre-wrap">{{cell.label}}</a>
   </toggle>
   <pane ng-keydown="keyCheck($event, $close)" ng-keypress="keyCheck($event, $close)">
     <div class="grid-container" style="min-width: 20rem;">
       <div cell="grid-x">
-        <div class="cell">
-          <label>No values
-            <input type="checkbox" ng-model="inputCell.empty">
-          </label>
-        </div>
         <div class="cell">
           <label>
             Input parameters
@@ -18,7 +13,15 @@
               ng-change="inputChanged()" ng-disabled="inputCell.empty"></select>
           </label>
         </div>
-        <div class="cell">
+        <div class="cell" ng-if="inputCell.inputParameters.constraints">
+          <label>
+            Constraint
+            <select ng-model="inputCell.constraint"
+              ng-options="constraint.label as constraint.label for constraint in constraints"
+              ng-change="constraintChanged()" ng-disabled="inputCell.empty"></select>
+          </label>
+        </div>
+        <div class="cell" ng-if="inputCell.inputParameters.firstParameter">
           <label>
             {{inputCell.inputParameters.firstParameter.label}}
             <input type="number" ng-model="inputCell.firstParameter" ng-change="inputChanged()"
@@ -40,7 +43,8 @@
           <label>
             {{inputCell.inputParameters.thirdParameter.label}}
             <span ng-if="inputCell.inputParameters.thirdParameter.label === 'Upper bound'">(
-              <input type="checkbox" ng-model="inputCell.upperBoundNE" ng-disabled="inputCell.empty">Not estimable)</span>
+              <input type="checkbox" ng-model="inputCell.upperBoundNE" ng-disabled="inputCell.empty">Not
+              estimable)</span>
             <input type="number" ng-model="inputCell.thirdParameter" ng-change="inputChanged()"
               ng-disabled="inputCell.empty || inputCell.upperBoundNE">
           </label>

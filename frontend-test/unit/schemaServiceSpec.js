@@ -112,24 +112,24 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function (a
               criterion: 'crit1',
               alternative: 'alt1',
               dataSource: 'uuid',
-              performance: { type: ['dnorm'] }
+              performance: { distribution: { type: 'dnorm' } }
             }, {
               criterion: 'crit2',
               alternative: 'alt1',
               dataSource: 'uuid',
-              performance: { type: ['dnorm'] }
+              performance: { distribution: { type: 'dnorm' } }
             }, {
               criterion: 'crit1',
               alternative: 'alt2',
               dataSource: 'uuid',
-              performance: { type: ['dnorm'] }
+              performance: { distribution: { type: 'dnorm' } }
             }, {
               criterion: 'crit2',
               alternative: 'alt2',
               dataSource: 'uuid',
-              performance: { type: ['dnorm'] }
+              performance: { distribution: { type: 'dnorm' } }
             }],
-            schemaVersion: '1.2.0'
+            schemaVersion: currentSchemaVersion
           },
         };
         expect(result).toEqual(expectedResult);
@@ -231,24 +231,24 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function (a
               criterion: 'crit1',
               alternative: 'alt1',
               dataSource: 'uuid',
-              performance: { type: ['dnorm'] }
+              performance: { distribution: { type: 'dnorm' } }
             }, {
               criterion: 'crit2',
               alternative: 'alt1',
               dataSource: 'uuid',
-              performance: { type: ['dnorm'] }
+              performance: { distribution: { type: 'dnorm' } }
             }, {
               criterion: 'crit1',
               alternative: 'alt2',
               dataSource: 'uuid',
-              performance: { type: ['dnorm'] }
+              performance: { distribution: { type: 'dnorm' } }
             }, {
               criterion: 'crit2',
               alternative: 'alt2',
               dataSource: 'uuid',
-              performance: { type: ['dnorm'] }
+              performance: { distribution: { type: 'dnorm' } }
             }],
-            schemaVersion: '1.2.0'
+            schemaVersion: currentSchemaVersion
           },
         };
         expect(result).toEqual(expectedResult);
@@ -264,6 +264,8 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function (a
         };
         expect(result).toEqual(expectedResult);
       });
+
+      
 
     });
 

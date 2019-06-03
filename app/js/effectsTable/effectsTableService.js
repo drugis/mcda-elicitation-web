@@ -139,7 +139,7 @@ define(['lodash', 'angular'], function (_, angular) {
       if (_.includes(type, 'exact')) {
         label = buildExactLabel(input);
       } else if (_.includes(type, 'dt')) {
-        label = buildStudentsTLabel(input);
+        label = buildStudentsTLabel(performance);
       } else if (_.includes(type, 'dnorm')) {
         label = buildNormalLabel(input);
       } else if (_.includes(type, 'dbeta')) {

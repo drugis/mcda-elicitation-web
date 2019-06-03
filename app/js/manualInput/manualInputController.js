@@ -81,8 +81,33 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function checkInputData() {
-      $scope.state.isInputDataValid = !ManualInputService.findInvalidCell($scope.state.inputData);
-      $scope.state.areInputDataRowsValid = !ManualInputService.findInvalidRow($scope.state.inputData);
+      if ($scope.state.inputData) {
+        $scope.state.errors = [];
+        $scope.state.warnings = [];
+
+        var isEffectDataValid = !ManualInputService.findInvalidCell($scope.state.inputData.effect);
+        var isDistributionDataValid = !ManualInputService.findInvalidCell($scope.state.inputData.distribution);
+
+        if (isEffectDataValid && !isDistributionDataValid) {
+          $scope.state.warnings.push('SMAA tab contains invalid values and can not be used');
+        }
+
+        if (!isEffectDataValid && isDistributionDataValid) {
+          $scope.state.warnings.push('Classical tab contains invalid values and can not be used');
+        }
+
+        if (!isEffectDataValid && !isDistributionDataValid) {
+          $scope.state.errors.push('Both tabs contain missing or invalid values');
+        }
+
+        if (ManualInputService.findInvalidRow($scope.state.inputData.effect) && !isDistributionDataValid) {
+          $scope.state.errors.push('Classical tab contains a row with duplicate values');
+        }
+
+        if (ManualInputService.findInvalidRow($scope.state.inputData.effect) && isDistributionDataValid) {
+          $scope.state.warnings.push('Classical tab contains a row with duplicate values and can not be used');
+        }
+      }
     }
 
     function createProblem() {
@@ -114,7 +139,10 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function goToStep2() {
-      $scope.state.step = 'step2';
+      $scope.state.step = 'step2';       
+       if(!$scope.state.currentTab){
+        $scope.state.currentTab = 'effect';
+      }
       $scope.criteriaRows = EffectsTableService.buildTableRows($scope.state.criteria);
       $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives,
         $scope.state.inputData);
@@ -187,7 +215,7 @@ define(['lodash', 'angular'], function(_, angular) {
         // unfinished workspace
         InProgressResource.get($stateParams).$promise.then(function(response) {
           $scope.state = response.state;
-          if($scope.state.step === 'step2') {
+          if ($scope.state.step === 'step2') {
             $scope.criteriaRows = EffectsTableService.buildTableRows($scope.state.criteria);
           }
           checkInputData();

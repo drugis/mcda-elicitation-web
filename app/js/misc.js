@@ -14,7 +14,8 @@ function exampleProblem() {
             ],
             type: 'linear',
             direction: 'decreasing'
-          }
+          },
+          scale: [0, 1]
         }]
       },
       'Dist DVT': {
@@ -59,51 +60,62 @@ function exampleProblem() {
       criterion: 'Prox DVT',
       dataSource: 'proxDvtDS',
       performance: {
-        type: ['dbeta'],
-        parameters: { alpha: 20, beta: 116 }
+        distribution: {
+          type: 'dbeta',
+          parameters: { alpha: 20, beta: 116 }
+        }
       }
     }, {
       alternative: 'Hep',
       criterion: 'Dist DVT',
       dataSource: 'distDvtDS',
       performance: {
-        type: ['dbeta'],
-        parameters: { alpha: 40, beta: 96 }
+        distribution: {
+          type: 'dbeta',
+          parameters: { alpha: 40, beta: 96 }
+        }
       }
     }, {
       alternative: 'Hep',
       criterion: 'Bleed',
       dataSource: 'bleedDS',
       performance: {
-        type: ['dbeta'],
-        parameters: { alpha: 1, beta: 135 }
+        distribution: {
+          type: 'dbeta',
+          parameters: { alpha: 1, beta: 135 }
+        }
       }
     }, {
       alternative: 'Enox',
       criterion: 'Prox DVT',
       dataSource: 'proxDvtDS',
       performance: {
-        type: ['dbeta'],
-        parameters: { alpha: 8, beta: 121 }
+        distribution: {
+          type: 'dbeta',
+          parameters: { alpha: 8, beta: 121 }
+        }
       }
     }, {
       alternative: 'Enox',
       criterion: 'Dist DVT',
       dataSource: 'distDvtDS',
       performance: {
-        type: ['dbeta'],
-        parameters: { alpha: 32, beta: 97 }
+        distribution: {
+          type: 'dbeta',
+          parameters: { alpha: 32, beta: 97 }
+        }
       }
     }, {
       alternative: 'Enox',
       criterion: 'Bleed',
       dataSource: 'bleedDS',
       performance: {
-        type: ['dbeta'],
-        parameters: { alpha: 5, beta: 124 }
+        distribution: {
+          type: 'dbeta',
+          parameters: { alpha: 5, beta: 124 }
+        }
       }
     }],
-    preferences: {},
     schemaVersion: '1.2.0'
   };
 }
@@ -116,6 +128,7 @@ function exampleProblem110() {
         title: 'Proximal DVT',
         dataSources: [{
           id: 'proxDvtDS',
+          oldId: 'proxDvtDSOld',
           inputType: 'distribution',
           inputMethod: 'manualDistribution',
           pvf: {
@@ -126,7 +139,8 @@ function exampleProblem110() {
             type: 'linear',
             direction: 'decreasing'
           }
-        }]
+        }],
+        scale: [0, 1]
       },
       'Dist DVT': {
         title: 'Distal DVT',
@@ -218,7 +232,6 @@ function exampleProblem110() {
         parameters: { alpha: 5, beta: 124 }
       }
     }],
-    preferences: {},
     schemaVersion: '1.1.0'
   };
 }

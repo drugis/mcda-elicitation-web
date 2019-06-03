@@ -2,10 +2,13 @@
 define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(angular) {
   describe('the performance service', function() {
     var performanceService;
+
     beforeEach(angular.mock.module('elicit.manualInput'));
+
     beforeEach(inject(function(PerformanceService) {
       performanceService = PerformanceService;
     }));
+
     describe('buildExactPerformance', function() {
       it('should build an exact performance', function() {
         expect(performanceService.buildExactPerformance(1, { foo: 'bar' })).toEqual({
@@ -17,6 +20,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         });
       });
     });
+
     describe('buildExactConfidencePerformance', function() {
       it('should build an exact performance', function() {
         expect(performanceService.buildExactConfidencePerformance({
@@ -33,6 +37,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
           }
         });
       });
+
       it('should build an exact performance with NE value', function() {
         expect(performanceService.buildExactConfidencePerformance({
           firstParameter: 1,
@@ -49,6 +54,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         });
       });
     });
+
     describe('buildNormalPerformance', function() {
       it('should build an exact performance', function() {
         expect(performanceService.buildNormalPerformance(1, 2, { foo: 'bar' })).toEqual({
@@ -63,6 +69,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         });
       });
     });
+
     describe('buildBetaPerformance', function() {
       it('should build an exact performance', function() {
         expect(performanceService.buildBetaPerformance(1, 2, { foo: 'bar' })).toEqual({
@@ -77,6 +84,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         });
       });
     });
+    
     describe('buildGammaPerformance', function() {
       it('should build an exact performance', function() {
         expect(performanceService.buildGammaPerformance(1, 2, { foo: 'bar' })).toEqual({
@@ -91,24 +99,45 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         });
       });
     });
-    describe('buildStudentTPerformance', function() {
-      it('should build an exact performance', function() {
-        expect(performanceService.buildStudentTPerformance(1, 2, 3, { foo: 'bar' })).toEqual({
-          type: 'dt',
-          parameters: {
-            mu: 1,
-            stdErr: 2,
-            dof: 3
-          },
-          input: {
-            foo: 'bar'
-          }
-        });
-      });
-    });
+
     describe('buildEmptyPerformance', function() {
       it('should build an empty performance', function() {
         expect(performanceService.buildEmptyPerformance()).toEqual({ type: 'empty' });
+      });
+    });
+
+    describe('buildExactSEPerformance', function(){
+      it('should build an exact performance with standard error', function(){
+        var value = 10;
+        var standardError = 0.5;
+        var result = performanceService.buildExactSEPerformance(value, standardError);
+        var expectedResult = {
+          type: 'exact',
+          value: value,
+          input: {
+            value: value,
+            stdErr: standardError
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('buildExactPercentSEPerformance', function(){
+      it('should build an exact percentage performance with standard error', function(){
+        var value = 10;
+        var standardError = 0.5;
+        var result = performanceService.buildExactPercentSEPerformance(value, standardError);
+        var expectedResult = {
+          type: 'exact',
+          value: value / 100,
+          input: {
+            value: value,
+            stdErr: standardError,
+            scale: 'percentage'
+          }
+        };
+        expect(result).toEqual(expectedResult);
       });
     });
   });

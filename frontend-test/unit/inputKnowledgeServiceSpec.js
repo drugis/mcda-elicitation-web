@@ -14,13 +14,14 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
   var inputKnowledgeService;
   var performanceServiceMock = jasmine.createSpyObj(
     'PerformanceService', [
-      'buildStudentTPerformance',
       'buildExactPerformance',
       'buildNormalPerformance',
       'buildBetaPerformance',
       'buildGammaPerformance',
       'buildExactConfidencePerformance',
-      'buildExactPercentConfidencePerformance'
+      'buildExactPercentConfidencePerformance',
+      'buildExactSEPerformance',
+      'buildExactPercentSEPerformance',
     ]);
   describe('the input knowledge service', function() {
     beforeEach(angular.mock.module('elicit.manualInput', function($provide) {
@@ -31,1076 +32,566 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     }));
 
     var cell;
+
     describe('for distributions,', function() {
+      var inputType = 'distribution';
       beforeEach(function() {
         cell = {
-          inputType: 'distribution'
-        };
-      });
-      describe('with assisted inputs,', function() {
-        beforeEach(function() {
-          cell.inputMethod = 'assistedDistribution';
-          cell.firstParameter = 30;
-          cell.secondParameter = 40;
-          cell.thirdParameter = 150;
-          cell.inputParameters = angular.copy(NULL_PARAMETERS);
-        });
-        describe('that are dichotomous,', function() {
-          beforeEach(function() {
-            cell.dataType = 'dichotomous';
-            cell.inputParameters.id = 'assistedDichotomous';
-            performanceServiceMock.buildBetaPerformance.calls.reset();
-          });
-          it('should render correct inputs', function() {
-            var expectedResult = '30 / 40\nDistribution: Beta(31, 11)';
-            var result = inputKnowledgeService.inputToString(cell);
-            expect(result).toEqual(expectedResult);
-          });
-          it('should create correct performance', function() {
-            inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildBetaPerformance).toHaveBeenCalledWith(31, 11, {
-              events: 30,
-              sampleSize: 40
-            });
-          });
-          it('should create a finished input cell', function() {
-            var tableEntry = {
-              performance: {
-                type: 'dbeta',
-                input: {
-                  events: 10,
-                  sampleSize: 20
-                }
-              }
-            };
-            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-            expect(result.firstParameter).toEqual(10);
-            expect(result.secondParameter).toEqual(20);
-          });
-          it('should create a finished empty input cell', function() {
-            var tableEntry = {
-              performance: {
-                type: 'empty'
-              }
-            };
-            cell.empty = true;
-            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-            expect(result.empty).toBeTruthy();
-          });
-        });
-        describe('for continuous inputs,', function() {
-          beforeEach(function() {
-            cell.dataType = 'continuous';
-          });
-          describe('for inputs with standard error', function() {
-            beforeEach(function() {
-              cell.inputParameters.id = 'assistedContinuousStdErr';
-              performanceServiceMock.buildStudentTPerformance.calls.reset();
-            });
-            it('should render correct inputs', function() {
-              var expectedResult = '30 (40), 150\nDistribution: t(149, 30, 40)';
-              var result = inputKnowledgeService.inputToString(cell);
-              expect(result).toEqual(expectedResult);
-            });
-            it('should create correct performance', function() {
-              inputKnowledgeService.buildPerformance(cell);
-              expect(performanceServiceMock.buildStudentTPerformance).toHaveBeenCalledWith(30, 40, 149, {
-                mu: 30,
-                sigma: 40,
-                sampleSize: 150
-              });
-            });
-            it('should create a finished input cell', function() {
-              var tableEntry = {
-                performance: {
-                  type: 'dt',
-                  input: {
-                    mu: 10,
-                    sigma: 20,
-                    sampleSize: 30
-                  }
-                }
-              };
-              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-              expect(result.firstParameter).toEqual(10);
-              expect(result.secondParameter).toEqual(20);
-              expect(result.thirdParameter).toEqual(30);
-            });
-            it('should create a finished empty input cell', function() {
-              var tableEntry = {
-                performance: {
-                  type: 'empty'
-                }
-              };
-              cell.empty = true;
-              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-              expect(result.empty).toBeTruthy();
-            });
-          });
-          describe('for inputs with standard deviation', function() {
-            beforeEach(function() {
-              cell.inputParameters.id = 'assistedContinuousStdDev';
-              performanceServiceMock.buildStudentTPerformance.calls.reset();
-            });
-            it('should render correct inputs', function() {
-              var expectedResult = '30 (40), 150\nDistribution: t(149, 30, 3.266)';
-              var result = inputKnowledgeService.inputToString(cell);
-              expect(result).toEqual(expectedResult);
-            });
-            it('should create correct performance', function() {
-              inputKnowledgeService.buildPerformance(cell);
-              expect(performanceServiceMock.buildStudentTPerformance).toHaveBeenCalledWith(30, 3.265986323710904, 149, {
-                mu: 30,
-                sigma: 40,
-                sampleSize: 150
-              });
-            });
-            it('should create a finished input cell', function() {
-              var tableEntry = {
-                performance: {
-                  type: 'dt',
-                  input: {
-                    mu: 10,
-                    sigma: 15,
-                    sampleSize: 20
-                  }
-                }
-              };
-              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-              expect(result.firstParameter).toEqual(10);
-              expect(result.secondParameter).toEqual(15);
-              expect(result.thirdParameter).toEqual(20);
-            });
-          });
-        });
-      });
-      describe('for manual inputs,', function() {
-        beforeEach(function() {
-          cell.inputMethod = 'manualDistribution';
-          cell.firstParameter = 30;
-          cell.secondParameter = 40;
-          cell.inputParameters = angular.copy(NULL_PARAMETERS);
-        });
-        describe('for beta distributions', function() {
-          beforeEach(function() {
-            cell.inputParameters.id = 'manualBeta';
-            performanceServiceMock.buildBetaPerformance.calls.reset();
-          });
-          it('should render correct inputs', function() {
-            var expectedResult = 'Beta(30, 40)';
-            var result = inputKnowledgeService.inputToString(cell);
-            expect(result).toEqual(expectedResult);
-          });
-          it('should create correct performance', function() {
-            inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildBetaPerformance).toHaveBeenCalledWith(30, 40);
-          });
-          it('should create a finished input cell', function() {
-            var tableEntry = {
-              performance: {
-                type: 'dbeta',
-                parameters: {
-                  alpha: 10,
-                  beta: 15
-                }
-              }
-            };
-            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-            expect(result.firstParameter).toEqual(10);
-            expect(result.secondParameter).toEqual(15);
-          });
-          it('should create a finished empty input cell', function() {
-            var tableEntry = {
-              performance: {
-                type: 'empty'
-              }
-            };
-            cell.empty = true;
-            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-            expect(result.empty).toBeTruthy();
-          });
-        });
-        describe('for normal distributions', function() {
-          beforeEach(function() {
-            cell.inputParameters.id = 'manualNormal';
-            performanceServiceMock.buildNormalPerformance.calls.reset();
-          });
-          it('should render correct inputs', function() {
-            var expectedResult = 'Normal(30, 40)';
-            var result = inputKnowledgeService.inputToString(cell);
-            expect(result).toEqual(expectedResult);
-          });
-          it('should create correct performance', function() {
-            inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(30, 40);
-          });
-          it('should create a finished input cell', function() {
-            var tableEntry = {
-              performance: {
-                type: 'dnorm',
-                parameters: {
-                  mu: 10,
-                  sigma: 15
-                }
-              }
-            };
-            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-            expect(result.firstParameter).toEqual(10);
-            expect(result.secondParameter).toEqual(15);
-          });
-        });
-        describe('for gamma distributions', function() {
-          beforeEach(function() {
-            cell.inputParameters.id = 'manualGamma';
-            performanceServiceMock.buildGammaPerformance.calls.reset();
-          });
-          it('should render correct inputs', function() {
-            var expectedResult = 'Gamma(30, 40)';
-            var result = inputKnowledgeService.inputToString(cell);
-            expect(result).toEqual(expectedResult);
-          });
-          it('should create correct performance', function() {
-            inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildGammaPerformance).toHaveBeenCalledWith(30, 40);
-          });
-          it('should create a finished input cell', function() {
-            var tableEntry = {
-              performance: {
-                type: 'dgamma',
-                parameters: {
-                  alpha: 10,
-                  beta: 15
-                }
-              }
-            };
-            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-            expect(result.firstParameter).toEqual(10);
-            expect(result.secondParameter).toEqual(15);
-          });
-        });
-        describe('for exact inputs,', function() {
-          beforeEach(function() {
-            cell.inputParameters.id = 'manualExact';
-            performanceServiceMock.buildExactPerformance.calls.reset();
-          });
-          it('should render correct inputs', function() {
-            var expectedResult = 'exact(30)';
-            var result = inputKnowledgeService.inputToString(cell);
-            expect(result).toEqual(expectedResult);
-          });
-          it('should create correct performance', function() {
-            inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(30);
-          });
-          it('should create a finished input cell', function() {
-            var tableEntry = {
-              performance: {
-                type: 'exact',
-                value: 10
-              }
-            };
-            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-            expect(result.firstParameter).toEqual(10);
-          });
-        });
-      });
-    });
-    describe('for effects,', function() {
-      beforeEach(function() {
-        cell = {
-          inputType: 'effect',
+          inputType: 'distribution',
+          firstParameter: 30,
+          secondParameter: 40,
           inputParameters: angular.copy(NULL_PARAMETERS)
         };
       });
-      describe('for dichotomous,', function() {
+
+      describe('for beta distributions', function() {
         beforeEach(function() {
-          cell.dataType = 'dichotomous';
-          cell.firstParameter = 0.5;
+          cell.inputParameters.id = 'beta';
+          performanceServiceMock.buildBetaPerformance.calls.reset();
         });
-        describe('for decimal input', function() {
-          beforeEach(function() {
-            cell.inputParameters.id = 'dichotomousDecimal';
-            performanceServiceMock.buildExactPerformance.calls.reset();
-          });
-          it('should render correct inputs', function() {
-            var expectedResult = '0.5\nDistribution: none';
-            var result = inputKnowledgeService.inputToString(cell);
-            expect(result).toEqual(expectedResult);
-          });
-          it('should create correct performance', function() {
-            inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(0.5);
-          });
-          it('should create a finished input cell', function() {
-            var tableEntry = {
-              performance: {
-                type: 'exact',
-                value: 0.5
-              }
-            };
-            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-            expect(result.firstParameter).toEqual(0.5);
-          });
-          it('should create a finished empty input cell', function() {
-            var tableEntry = {
-              performance: {
-                type: 'empty'
-              }
-            };
-            cell.empty = true;
-            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-            expect(result.empty).toBeTruthy();
-          });
+
+        it('should render correct inputs', function() {
+          var expectedResult = 'Beta(30, 40)';
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString(cell);
+          expect(result).toEqual(expectedResult);
         });
-        describe('for decimal inputs with sample size', function() {
-          beforeEach(function() {
-            cell.inputParameters.id = 'dichotomousDecimalSampleSize';
-            cell.secondParameter = 100;
-            performanceServiceMock.buildExactPerformance.calls.reset();
-            performanceServiceMock.buildNormalPerformance.calls.reset();
-          });
-          it('should render correct inputs with sample size', function() {
-            var expectedResult = '0.5 (100)\nDistribution: none';
-            var result = inputKnowledgeService.inputToString(cell);
-            expect(result).toEqual(expectedResult);
-          });
-          it('should render correct normalised inputs', function() {
-            cell.isNormal = true;
-            var expectedResult = '0.5 (100)\nNormal(0.5, 0.05)';
-            var result = inputKnowledgeService.inputToString(cell);
-            expect(result).toEqual(expectedResult);
-          });
-          it('should create correct performance', function() {
-            inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(0.5, {
-              value: 0.5,
-              sampleSize: 100
-            });
-          });
-          it('should create correct normalized performance', function() {
-            cell.isNormal = true;
-            inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(0.5, 0.05, {
-              value: 0.5,
-              sampleSize: 100
-            });
-          });
-          it('should create a finished input cell', function() {
-            var tableEntry = {
-              performance: {
-                type: 'exact',
-                value: 0.5,
-                input: {
-                  value: 0.5,
-                  sampleSize: 100
-                }
-              }
-            };
-            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-            expect(result.firstParameter).toEqual(0.5);
-            expect(result.secondParameter).toEqual(100);
-            expect(result.isNormal).toBeFalsy();
-          });
-          it('should create a finished input cell for a normal distribution', function() {
-            var tableEntry = {
-              performance: {
-                type: 'dnorm',
-                parameters: {
-                  mu: 1,
-                  sigma: 2
-                },
-                input: {
-                  value: 0.5,
-                  sampleSize: 100
-                }
-              }
-            };
-            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-            expect(result.firstParameter).toEqual(0.5);
-            expect(result.secondParameter).toEqual(100);
-            expect(result.isNormal).toBeTruthy();
-          });
+
+        it('should create correct performance', function() {
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildBetaPerformance).toHaveBeenCalledWith(30, 40);
         });
-        describe('for percentage input', function() {
-          beforeEach(function() {
-            cell.inputParameters.id = 'dichotomousPercentage';
-            performanceServiceMock.buildExactPerformance.calls.reset();
-          });
-          it('should render correct inputs', function() {
-            delete cell.secondParameter;
-            var expectedResult = '0.5%\nDistribution: none';
-            var result = inputKnowledgeService.inputToString(cell);
-            expect(result).toEqual(expectedResult);
-          });
-          it('should create correct performance', function() {
-            inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(0.005, {
-              value: 0.5,
-              scale: 'percentage'
-            });
-          });
-          it('should create a finished input cell', function() {
-            var tableEntry = {
-              performance: {
-                type: 'exact',
-                value: 25,
-                input: {
-                  value: 25,
-                  scale: 'percentage'
-                }
-              }
-            };
-            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-            expect(result.firstParameter).toEqual(25);
-          });
+
+        it('should not create performance for an invalid cell', function() {
+          cell.isInvalid = true;
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildBetaPerformance).not.toHaveBeenCalled();
+          expect(result).toBeUndefined();
         });
-        describe('for percentage inputs with sample size', function() {
-          beforeEach(function() {
-            cell.inputParameters.id = 'dichotomousPercentageSampleSize';
-            cell.firstParameter = 50;
-            cell.secondParameter = 100;
-            performanceServiceMock.buildExactPerformance.calls.reset();
-            performanceServiceMock.buildNormalPerformance.calls.reset();
-          });
-          it('should render correct inputs with sample size', function() {
-            var expectedResult = '50% (100)\nDistribution: none';
-            var result = inputKnowledgeService.inputToString(cell);
-            expect(result).toEqual(expectedResult);
-          });
-          it('should render correct normalised inputs', function() {
-            cell.isNormal = true;
-            var expectedResult = '50% (100)\nNormal(0.5, 0.05)';
-            var result = inputKnowledgeService.inputToString(cell);
-            expect(result).toEqual(expectedResult);
-          });
-          it('should create correct performance', function() {
-            inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(0.5, {
-              value: 50,
-              sampleSize: 100,
-              scale: 'percentage'
-            });
-          });
-          it('should create correct normalized performance', function() {
-            cell.isNormal = true;
-            inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(0.5, 0.05, {
-              value: 50,
-              sampleSize: 100,
-              scale: 'percentage'
-            });
-          });
-          it('should create a finished input cell', function() {
-            var tableEntry = {
-              performance: {
-                type: 'exact',
-                value: 0.5,
-                input: {
-                  value: 50,
-                  sampleSize: 100,
-                  scale: 'percentage'
-                }
+
+        it('should create a finished input cell', function() {
+          var tableEntry = {
+            performance: {
+              type: 'dbeta',
+              parameters: {
+                alpha: 10,
+                beta: 15
               }
-            };
-            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-            expect(result.firstParameter).toEqual(50);
-            expect(result.secondParameter).toEqual(100);
-            expect(result.isNormal).toBeFalsy();
-          });
-          it('should create a finished input cell for a normal distribution', function() {
-            var tableEntry = {
-              performance: {
-                type: 'dnorm',
-                parameters: {
-                  mu: 1,
-                  sigma: 2
-                },
-                input: {
-                  value: 50,
-                  sampleSize: 100,
-                  scale: 'percentage'
-                }
-              }
-            };
-            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-            expect(result.firstParameter).toEqual(50);
-            expect(result.secondParameter).toEqual(100);
-            expect(result.isNormal).toBeTruthy();
-          });
-        });
-        describe('for fraction input', function() {
-          beforeEach(function() {
-            cell.inputParameters.id = 'dichotomousFraction';
-            cell.firstParameter = 50;
-            cell.secondParameter = 100;
-          });
-          it('should render correct inputs', function() {
-            var expectedResult = '50 / 100\nDistribution: none';
-            var result = inputKnowledgeService.inputToString(cell);
-            expect(result).toEqual(expectedResult);
-          });
-          it('should render correct normalised inputs', function() {
-            cell.isNormal = true;
-            var expectedResult = '50 / 100\nNormal(0.5, 0.05)';
-            var result = inputKnowledgeService.inputToString(cell);
-            expect(result).toEqual(expectedResult);
-          });
-          it('should create correct performance', function() {
-            inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(0.5, {
-              events: 50,
-              sampleSize: 100
-            });
-          });
-          it('should create correct normalized performance', function() {
-            cell.isNormal = true;
-            inputKnowledgeService.buildPerformance(cell);
-            expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(0.5, 0.05, {
-              events: 50,
-              sampleSize: 100
-            });
-          });
-          it('should create a finished input cell', function() {
-            var tableEntry = {
-              performance: {
-                type: 'exact',
-                value: 0.5,
-                input: {
-                  events: 50,
-                  sampleSize: 100
-                }
-              }
-            };
-            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-            expect(result.firstParameter).toEqual(50);
-            expect(result.secondParameter).toEqual(100);
-            expect(result.isNormal).toBeFalsy();
-          });
-          it('should create a finished input cell for a normal distribution', function() {
-            var tableEntry = {
-              performance: {
-                type: 'dnorm',
-                parameters: {
-                  mu: 1,
-                  sigma: 2
-                },
-                input: {
-                  events: 50,
-                  sampleSize: 100
-                }
-              }
-            };
-            var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-            expect(result.firstParameter).toEqual(50);
-            expect(result.secondParameter).toEqual(100);
-            expect(result.isNormal).toBeTruthy();
-          });
+            }
+          };
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(cell, tableEntry);
+          expect(result.firstParameter).toEqual(10);
+          expect(result.secondParameter).toEqual(15);
         });
       });
-      describe('for continuous,', function() {
+
+      describe('for normal distributions', function() {
         beforeEach(function() {
-          cell.dataType = 'continuous';
-          cell.firstParameter = 50;
-          cell.secondParameter = 5;
-          cell.thirdParameter = 100;
+          cell.inputParameters.id = 'normal';
+          performanceServiceMock.buildNormalPerformance.calls.reset();
         });
-        describe('for parameter of interest mean,', function() {
-          beforeEach(function() {
-            cell.parameterOfInterest = 'mean';
-          });
-          describe('without dispersion', function() {
-            beforeEach(function() {
-              cell.inputParameters.id = 'exactValue';
-              performanceServiceMock.buildExactPerformance.calls.reset();
-            });
-            it('should render correct inputs', function() {
-              var expectedResult = '50\nDistribution: none';
-              var result = inputKnowledgeService.inputToString(cell);
-              expect(result).toEqual(expectedResult);
-            });
-            it('should create correct performance', function() {
-              inputKnowledgeService.buildPerformance(cell);
-              expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(50);
-            });
-            it('should create a finished input cell', function() {
-              var tableEntry = {
-                performance: {
-                  type: 'exact',
-                  value: 50
-                }
-              };
-              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-              expect(result.firstParameter).toEqual(50);
-            });
-            it('should create a finished empty input cell', function() {
-              var tableEntry = {
-                performance: {
-                  type: 'empty'
-                }
-              };
-              cell.empty = true;
-              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-              expect(result.empty).toBeTruthy();
-            });
-          });
 
-          describe('with standard error', function() {
-            beforeEach(function() {
-              cell.inputParameters.id = 'exactValueSE';
-              performanceServiceMock.buildExactPerformance.calls.reset();
-              performanceServiceMock.buildNormalPerformance.calls.reset();
-            });
-            it('should render correct inputs', function() {
-              var expectedResult = '50 (5)\nDistribution: none';
-              var result = inputKnowledgeService.inputToString(cell);
-              expect(result).toEqual(expectedResult);
-            });
-            it('should render correct inputs with normal distribution', function() {
-              var normalCell = angular.copy(cell);
-              normalCell.isNormal = true;
-              var expectedResult = '50 (5)\nNormal(50, 5)';
-              var result = inputKnowledgeService.inputToString(normalCell);
-              expect(result).toEqual(expectedResult);
-            });
-            it('should create correct performance', function() {
-              inputKnowledgeService.buildPerformance(cell);
-              expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(50, {
-                value: 50,
-                stdErr: 5
-              });
-            });
-            it('should create correct normalized performance', function() {
-              cell.isNormal = true;
-              inputKnowledgeService.buildPerformance(cell);
-              expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(50, 5, {
-                value: 50,
-                stdErr: 5
-              });
-            });
-            it('should create a finished input cell', function() {
-              var tableEntry = {
-                performance: {
-                  type: 'exact',
-                  value: 50,
-                  input: {
-                    value: 50,
-                    stdErr: 5
-                  }
-                }
-              };
-              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-              expect(result.firstParameter).toEqual(50);
-              expect(result.secondParameter).toEqual(5);
-              expect(result.isNormal).toBeFalsy();
-            });
-            it('should create a finished input cell for a normal distribution', function() {
-              var tableEntry = {
-                performance: {
-                  type: 'dnorm',
-                  input: {
-                    value: 50,
-                    stdErr: 5
-                  }
-                }
-              };
-              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-              expect(result.firstParameter).toEqual(50);
-              expect(result.secondParameter).toEqual(5);
-              expect(result.isNormal).toBeTruthy();
-            });
-          });
+        it('should render correct inputs', function() {
+          var expectedResult = 'Normal(30, 40)';
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString(cell);
+          expect(result).toEqual(expectedResult);
+        });
 
-          describe('with a confidence interval', function() {
-            beforeEach(function() {
-              cell.inputParameters.id = 'exactValueCI';
-              performanceServiceMock.buildExactPerformance.calls.reset();
-              performanceServiceMock.buildNormalPerformance.calls.reset();
-            });
-            it('should render correct inputs', function() {
-              var expectedResult = '50 (5; 100)\nDistribution: none';
-              var result = inputKnowledgeService.inputToString(cell);
-              expect(result).toEqual(expectedResult);
-            });
-            it('should render correct inputs with normal distribution', function() {
-              var normalCell = angular.copy(cell);
-              normalCell.isNormal = true;
-              var expectedResult = '50 (5; 100)\nNormal(50, 24.235)';
-              var result = inputKnowledgeService.inputToString(normalCell);
-              expect(result).toEqual(expectedResult);
-            });
-            it('should render inputs with NE values', function() {
-              var NEcell = angular.copy(cell);
-              NEcell.lowerBoundNE = true;
-              var expectedResult = '50 (NE; 100)\nDistribution: none';
-              var result = inputKnowledgeService.inputToString(NEcell);
-              expect(result).toEqual(expectedResult);
-            });
-            it('should create correct performance', function() {
-              inputKnowledgeService.buildPerformance(cell);
-              expect(performanceServiceMock.buildExactConfidencePerformance).toHaveBeenCalled();
-            });
-            it('should create correct normalized performance', function() {
-              var normalCell = angular.copy(cell);
-              normalCell.isNormal = true;
-              inputKnowledgeService.buildPerformance(normalCell);
-              expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(50, 24.235, {
-                value: 50,
-                lowerBound: 5,
-                upperBound: 100
-              });
-            });
-            it('should create a finished input cell', function() {
-              var tableEntry = {
-                performance: {
-                  type: 'exact',
-                  value: 50,
-                  input: {
-                    value: 50,
-                    lowerBound: 10,
-                    upperBound: 650
-                  }
-                }
-              };
-              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-              expect(result.firstParameter).toEqual(50);
-              expect(result.secondParameter).toEqual(10);
-              expect(result.thirdParameter).toEqual(650);
-              expect(result.isNormal).toBeFalsy();
-            });
-            it('should create a finished input cell for a normal distribution', function() {
-              var tableEntry = {
-                performance: {
-                  type: 'dnorm',
-                  input: {
-                    value: 50,
-                    lowerBound: 10,
-                    upperBound: 650
-                  }
-                }
-              };
-              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-              expect(result.firstParameter).toEqual(50);
-              expect(result.secondParameter).toEqual(10);
-              expect(result.thirdParameter).toEqual(650);
-              expect(result.isNormal).toBeTruthy();
-            });
-            it('should create a finished input with NE bound cell', function() {
-              var tableEntry = {
-                performance: {
-                  type: 'exact',
-                  value: 50,
-                  input: {
-                    value: 50,
-                    lowerBound: 'NE',
-                    upperBound: 650
-                  }
-                }
-              };
-              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-              expect(result.firstParameter).toEqual(50);
-              expect(result.lowerBoundNE).toBeTruthy();
-              expect(result.thirdParameter).toEqual(650);
-              expect(result.isNormal).toBeFalsy();
-            });
-          });
+        it('should create correct performance', function() {
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(30, 40);
         });
-        describe('for parameter of interest median', function() {
-          beforeEach(function() {
-            cell.parameterOfInterest = 'median';
-          });
-          describe('without dispersion', function() {
-            beforeEach(function() {
-              cell.inputParameters.id = 'exactValue';
-            });
-            it('should render correct inputs', function() {
-              var expectedResult = '50\nDistribution: none';
-              var result = inputKnowledgeService.inputToString(cell);
-              expect(result).toEqual(expectedResult);
-            });
-            it('should create correct performance', function() {
-              inputKnowledgeService.buildPerformance(cell);
-              expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(50);
-            });
-            it('should create a finished input cell', function() {
-              var tableEntry = {
-                performance: {
-                  type: 'exact',
-                  value: 50,
-                }
-              };
-              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-              expect(result.firstParameter).toEqual(50);
-            });
-          });
-          describe('with a confidence interval', function() {
-            beforeEach(function() {
-              cell.inputParameters.id = 'exactValueCI';
-            });
-            it('should render correct inputs', function() {
-              var expectedResult = '50 (5; 100)\nDistribution: none';
-              var result = inputKnowledgeService.inputToString(cell);
-              expect(result).toEqual(expectedResult);
-            });
-            it('should create correct performance', function() {
-              inputKnowledgeService.buildPerformance(cell);
-              expect(performanceServiceMock.buildExactConfidencePerformance).toHaveBeenCalled();
-            });
-            it('should create a finished input cell', function() {
-              var tableEntry = {
-                performance: {
-                  type: 'exact',
-                  value: 50,
-                  input: {
-                    value: 50,
-                    lowerBound: 5,
-                    upperBound: 65
-                  }
-                }
-              };
-              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-              expect(result.firstParameter).toEqual(50);
-              expect(result.secondParameter).toEqual(5);
-              expect(result.thirdParameter).toEqual(65);
-              expect(result.isNormal).toBeFalsy();
-            });
-          });
+
+        it('should not create performance for an invalid cell', function() {
+          cell.isInvalid = true;
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildNormalPerformance).not.toHaveBeenCalled();
+          expect(result).toBeUndefined();
         });
-        describe('for parameter of interest cumulative probability', function() {
-          beforeEach(function() {
-            cell.parameterOfInterest = 'cumulativeProbability';
-            cell.scale = 'percentage';
-          });
-          describe('without dispersion', function() {
-            beforeEach(function() {
-              cell.inputParameters.id = 'decimal';
-            });
-            it('should render correct inputs', function() {
-              var expectedResult = '50\nDistribution: none';
-              var result = inputKnowledgeService.inputToString(cell);
-              expect(result).toEqual(expectedResult);
-            });
-            it('should create correct performance', function() {
-              inputKnowledgeService.buildPerformance(cell);
-              expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(50);
-            });
-            it('should create a finished input cell', function() {
-              var tableEntry = {
-                performance: {
-                  type: 'exact',
-                  value: 0.35,
-                }
-              };
-              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-              expect(result.firstParameter).toEqual(0.35);
-            });
-          });
-          describe('with a confidence interval', function() {
-            beforeEach(function() {
-              cell.inputParameters.id = 'decimalCI';
-            });
-            it('should render correct inputs', function() {
-              var expectedResult = '50 (5; 100)\nDistribution: none';
-              var result = inputKnowledgeService.inputToString(cell);
-              expect(result).toEqual(expectedResult);
-            });
-            it('should create correct performance', function() {
-              inputKnowledgeService.buildPerformance(cell);
-              expect(performanceServiceMock.buildExactConfidencePerformance).toHaveBeenCalled();
-            });
-            it('should create a finished input cell', function() {
-              var tableEntry = {
-                performance: {
-                  type: 'exact',
-                  value: 0.5,
-                  input: {
-                    value: 0.5,
-                    lowerBound: 0.5,
-                    upperBound: 0.65
-                  }
-                }
-              };
-              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-              expect(result.firstParameter).toEqual(0.5);
-              expect(result.secondParameter).toEqual(0.5);
-              expect(result.thirdParameter).toEqual(0.65);
-              expect(result.isNormal).toBeFalsy();
-            });
-          });
-          describe('without dispersion, percentage', function() {
-            beforeEach(function() {
-              cell.inputParameters.id = 'percentage';
-            });
-            it('should render correct inputs', function() {
-              var expectedResult = '50%\nDistribution: none';
-              var result = inputKnowledgeService.inputToString(cell);
-              expect(result).toEqual(expectedResult);
-            });
-            it('should create correct performance', function() {
-              inputKnowledgeService.buildPerformance(cell);
-              expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(0.5, {scale: 'percentage', value: 50});
-            });
-            it('should create a finished input cell', function() {
-              var tableEntry = {
-                performance: {
-                  type: 'exact',
-                  value: 50,
-                  input: {
-                    value: 50,
-                    scale: 'percentage'
-                  }
-                }
-              };
-              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-              expect(result.firstParameter).toEqual(50);
-            });
-          });
-          describe('with a percentage confidence interval', function() {
-            beforeEach(function() {
-              cell.inputParameters.id = 'percentageCI';
-            });
-            it('should render correct inputs', function() {
-              var expectedResult = '50% (5%; 100%)\nDistribution: none';
-              var result = inputKnowledgeService.inputToString(cell);
-              expect(result).toEqual(expectedResult);
-            });
-            it('should create correct performance', function() {
-              inputKnowledgeService.buildPerformance(cell);
-              expect(performanceServiceMock.buildExactPercentConfidencePerformance).toHaveBeenCalled();
-            });
-            it('should create a finished input cell', function() {
-              var tableEntry = {
-                performance: {
-                  type: 'exact',
-                  value: 50,
-                  input: {
-                    value: 50,
-                    lowerBound: 5,
-                    upperBound: 65,
-                    scale: 'percentage'
-                  }
-                }
-              };
-              var result = inputKnowledgeService.finishInputCell(cell, tableEntry);
-              expect(result.firstParameter).toEqual(50);
-              expect(result.secondParameter).toEqual(5);
-              expect(result.thirdParameter).toEqual(65);
-              expect(result.isNormal).toBeFalsy();
-            });
-          });
+
+        it('should create a finished input cell', function() {
+          var tableEntry = {
+            performance: {
+              type: 'dnorm',
+              parameters: {
+                mu: 10,
+                sigma: 15
+              }
+            }
+          };
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(cell, tableEntry);
+          expect(result.firstParameter).toEqual(10);
+          expect(result.secondParameter).toEqual(15);
+        });
+      });
+
+      describe('for gamma distributions', function() {
+        beforeEach(function() {
+          cell.inputParameters.id = 'gamma';
+          performanceServiceMock.buildGammaPerformance.calls.reset();
+        });
+
+        it('should render correct inputs', function() {
+          var expectedResult = 'Gamma(30, 40)';
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString(cell);
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should create correct performance', function() {
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildGammaPerformance).toHaveBeenCalledWith(30, 40);
+        });
+
+        it('should not create performance for an invalid cell', function() {
+          cell.isInvalid = true;
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildGammaPerformance).not.toHaveBeenCalled();
+          expect(result).toBeUndefined();
+        });
+
+        it('should create a finished input cell', function() {
+          var tableEntry = {
+            performance: {
+              type: 'dgamma',
+              parameters: {
+                alpha: 10,
+                beta: 15
+              }
+            }
+          };
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(cell, tableEntry);
+          expect(result.firstParameter).toEqual(10);
+          expect(result.secondParameter).toEqual(15);
+        });
+      });
+
+      describe('for an exact value,', function() {
+        beforeEach(function() {
+          cell.inputParameters.id = 'value';
+          performanceServiceMock.buildExactPerformance.calls.reset();
+        });
+
+        it('should render correct non-percentage inputs', function() {
+          var expectedResult = '30';
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString(cell);
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should render correct percentage inputs', function() {
+          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (percentage)' });
+          var expectedResult = '30%';
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString(cell);
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should create correct performance', function() {
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(30);
+        });
+
+        it('should not create performance for an invalid cell', function() {
+          cell.isInvalid = true;
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactPerformance).not.toHaveBeenCalled();
+          expect(result).toBeUndefined();
+        });
+
+        it('should create a finished input cell', function() {
+          var tableEntry = {
+            performance: {
+              type: 'exact',
+              value: 10
+            }
+          };
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(cell, tableEntry);
+          expect(result.firstParameter).toEqual(10);
+        });
+      });
+
+      describe('for an empty cell', function() {
+        beforeEach(function() {
+          cell.inputParameters.id = 'empty';
+          performanceServiceMock.buildExactPerformance.calls.reset();
+        });
+
+        it('should render correct inputs', function() {
+          var expectedResult = 'empty cell';
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString();
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should create correct performance', function() {
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance();
+          var exepectedResult = {
+            type: 'empty'
+          };
+          expect(result).toEqual(exepectedResult);
+        });
+
+        it('should create a finished input cell', function() {
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell();
+          var expectedResult = {
+            empty: true
+          };
+          expect(result).toEqual(expectedResult);
         });
       });
     });
-    describe('getOptions', function() {
-      var cell = {};
-      describe('for distributions', function() {
+
+    describe('for effects,', function() {
+      var inputType = 'effect';
+      beforeEach(function() {
+        cell = {
+          firstParameter: 50,
+          inputParameters: angular.copy(NULL_PARAMETERS)
+        };
+      });
+
+      describe('for a value without dispersion', function() {
         beforeEach(function() {
-          cell.inputType = 'distribution';
+          cell.inputParameters.id = 'value';
+          performanceServiceMock.buildExactPerformance.calls.reset();
         });
-        describe('that are assisted', function() {
-          beforeEach(function() {
-            cell.inputMethod = 'assistedDistribution';
-          });
-          describe('and dichotomous', function() {
-            beforeEach(function() {
-              cell.dataType = 'dichotomous';
-            });
-            it('should return the correct options', function() {
-              expect(_.keys(inputKnowledgeService.getOptions(cell))).toEqual(['assistedDichotomous']);
-            });
-          });
-          describe('for continuous distributions', function() {
-            beforeEach(function() {
-              cell.dataType = 'continuous';
-            });
-            it('should return the correct options', function() {
-              expect(_.keys(inputKnowledgeService.getOptions(cell))).toEqual(['assistedContinuousStdErr', 'assistedContinuousStdDev']);
-            });
-          });
+
+        it('should render correct non-percentage inputs', function() {
+          var expectedResult = '50';
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString(cell);
+          expect(result).toEqual(expectedResult);
         });
-        describe('for manual distributions', function() {
-          beforeEach(function() {
-            cell.inputMethod = 'manualDistribution';
-          });
-          it('should return the manual distribution options', function() {
-            expect(_.keys(inputKnowledgeService.getOptions(cell))).toEqual([
-              'manualBeta',
-              'manualNormal',
-              'manualGamma',
-              'manualExact'
-            ]);
-          });
+
+        it('should render correct percentage inputs', function() {
+          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (percentage)' });
+          var expectedResult = '50%';
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString(cell);
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should create correct non-percentage performance', function() {
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(50);
+        });
+
+        it('should create correct percentage performance', function() {
+          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (percentage)' });
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          var input = {
+            scale: 'percentage',
+            value: 50
+          };
+          expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(50 / 100, input);
+        });
+
+        it('should not create performance for an invalid cell', function() {
+          cell.isInvalid = true;
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactPerformance).not.toHaveBeenCalled();
+          expect(result).toBeUndefined();
+        });
+
+        it('should create a finished input cell', function() {
+          var tableEntry = {
+            performance: {
+              type: 'exact',
+              value: 50
+            }
+          };
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(cell, tableEntry);
+          expect(result.firstParameter).toEqual(50);
         });
       });
-      describe('for effects', function() {
+
+      describe('for a value with standard error', function() {
         beforeEach(function() {
-          cell.inputType = 'effect';
+          cell.inputParameters.id = 'valueSE';
+          cell.secondParameter = 0.5;
+          performanceServiceMock.buildExactPerformance.calls.reset();
         });
-        describe('that are dichotomous', function() {
-          beforeEach(function() {
-            cell.dataType = 'dichotomous';
-          });
-          it('should return the correct options', function() {
-            expect(_.keys(inputKnowledgeService.getOptions(cell))).toEqual([
-              'dichotomousDecimal',
-              'dichotomousDecimalSampleSize',
-              'dichotomousPercentage',
-              'dichotomousPercentageSampleSize',
-              'dichotomousFraction'
-            ]);
-          });
+
+        it('should render correct non-percentage inputs', function() {
+          var expectedResult = '50 (0.5)';
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString(cell);
+          expect(result).toEqual(expectedResult);
         });
-        describe('that are continuous', function() {
-          beforeEach(function() {
-            cell.dataType = 'continuous';
-          });
-          describe('and have parameter of interest mean', function() {
-            beforeEach(function() {
-              cell.parameterOfInterest = 'mean';
-            });
-            it('should return the correct options', function() {
-              expect(_.keys(inputKnowledgeService.getOptions(cell))).toEqual([
-                'exactValue',
-                'exactValueSE',
-                'exactValueCI'
-              ]);
-            });
-          });
-          describe('and have parameter of interest median', function() {
-            beforeEach(function() {
-              cell.parameterOfInterest = 'median';
-            });
-            it('should return the correct options', function() {
-              expect(_.keys(inputKnowledgeService.getOptions(cell))).toEqual([
-                'exactValue',
-                'exactValueCI'
-              ]);
-            });
-          });
-          describe('and have parameter of interest cumulativeProbability', function() {
-            beforeEach(function() {
-              cell.parameterOfInterest = 'cumulativeProbability';
-            });
-            it('should return the correct options', function() {
-              expect(_.keys(inputKnowledgeService.getOptions(cell))).toEqual([
-                'decimal',
-                'decimalCI',
-                'percentage',
-                'percentageCI'
-              ]);
-            });
-          });
+
+        it('should render correct percentage inputs', function() {
+          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (percentage)' });
+          var expectedResult = '50% (0.5%)';
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString(cell);
+          expect(result).toEqual(expectedResult);
         });
-        describe('in other cases', function() {
-          beforeEach(function() {
-            cell.dataType = 'other';
-          });
-          it('should return the correct options', function() {
-            expect(_.keys(inputKnowledgeService.getOptions(cell))).toEqual([
-              'exactValue',
-              'exactValueSE',
-              'exactValueCI'
-            ]);
-          });
+
+        it('should create correct non-percentage performance', function() {
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactSEPerformance).toHaveBeenCalledWith(50, 0.5);
+        });
+
+        it('should create correct percentage performance', function() {
+          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (percentage)' });
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactPercentSEPerformance).toHaveBeenCalledWith(50, 0.5);
+        });
+
+        it('should not create performance for an invalid cell', function() {
+          cell.isInvalid = true;
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactPerformance).not.toHaveBeenCalled();
+          expect(result).toBeUndefined();
+        });
+
+        it('should create a finished input cell', function() {
+          var tableEntry = {
+            performance: {
+              input: {
+                value: 50,
+                stdErr: 0.5
+              }
+            }
+          };
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(tableEntry);
+          expect(result.firstParameter).toEqual(tableEntry.performance.input.value);
+          expect(result.secondParameter).toEqual(tableEntry.performance.input.stdErr);
+        });
+      });
+
+      describe('for a value with confidence interval', function() {
+        beforeEach(function() {
+          cell.inputParameters.id = 'valueCI';
+          cell.secondParameter = 40;
+          cell.thirdParameter = 60;
+          performanceServiceMock.buildExactPerformance.calls.reset();
+          performanceServiceMock.buildExactConfidencePerformance.calls.reset();
+        });
+
+        it('should render correct non-percentage inputs', function() {
+          var expectedResult = '50 (40; 60)';
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString(cell);
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should render correct percentage inputs', function() {
+          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (percentage)' });
+          var expectedResult = '50% (40%; 60%)';
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString(cell);
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should create correct non-percentage performance', function() {
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactConfidencePerformance).toHaveBeenCalledWith(cell);
+        });
+
+        it('should create correct percentage performance', function() {
+          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (percentage)' });
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactPercentConfidencePerformance).toHaveBeenCalledWith(cell);
+        });
+
+        it('should not create performance for an invalid cell', function() {
+          cell.isInvalid = true;
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactConfidencePerformance).not.toHaveBeenCalled();
+          expect(result).toBeUndefined();
+        });
+
+        it('should create a finished input cell given estimable bounds', function() {
+          var tableEntry = {
+            performance: {
+              input: {
+                value: 50,
+                lowerBound: 40,
+                upperBound: 60
+              }
+            }
+          };
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(tableEntry);
+          expect(result.firstParameter).toEqual(tableEntry.performance.input.value);
+          expect(result.secondParameter).toEqual(tableEntry.performance.input.lowerBound);
+          expect(result.thirdParameter).toEqual(tableEntry.performance.input.upperBound);
+        });
+
+        it('should create a finished input cell given non-estimable bounds', function() {
+          var tableEntry = {
+            performance: {
+              input: {
+                value: 50,
+                lowerBound: 'NE',
+                upperBound: 'NE'
+              }
+            }
+          };
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(tableEntry);
+          expect(result.firstParameter).toEqual(tableEntry.performance.input.value);
+          expect(result.secondParameter).toBeUndefined();
+          expect(result.thirdParameter).toBeUndefined();
+          expect(result.lowerBoundNE).toBeTruthy();
+          expect(result.upperBoundNE).toBeTruthy();
+        });
+      });
+
+      describe('for a value with sample size', function() {
+        beforeEach(function() {
+          cell.inputParameters.id = 'valueSampleSize';
+          cell.secondParameter = 100;
+          performanceServiceMock.buildExactPerformance.calls.reset();
+        });
+
+        it('should render correct non-percentage inputs', function() {
+          var expectedResult = '50 (100)';
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString(cell);
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should render correct percentage inputs', function() {
+          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (percentage)' });
+          var expectedResult = '50% (100)';
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString(cell);
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should create correct non-percentage performance', function() {
+          var value = cell.firstParameter;
+          var input = {
+            value: value,
+            sampleSize: cell.secondParameter
+          };
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(value, input);
+        });
+
+        it('should create correct percentage performance', function() {
+          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (percentage)' });
+          var value = cell.firstParameter;
+          var input = {
+            value: value,
+            sampleSize: cell.secondParameter,
+            scale: 'percentage'
+          };
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(value / 100, input);
+        });
+
+        it('should not create performance for an invalid cell', function() {
+          cell.isInvalid = true;
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactPerformance).not.toHaveBeenCalled();
+          expect(result).toBeUndefined();
+        });
+
+        it('should create a finished input cell', function() {
+          var tableEntry = {
+            performance: {
+              input: {
+                value: 50,
+                sampleSize: 100
+              }
+            }
+          };
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(cell, tableEntry);
+          expect(result.firstParameter).toEqual(tableEntry.performance.input.value);
+          expect(result.secondParameter).toEqual(tableEntry.performance.input.sampleSize);
+        });
+
+      });
+
+      describe('for events with sample size', function() {
+        beforeEach(function() {
+          cell.inputParameters.id = 'fraction';
+          cell.secondParameter = 100;
+          performanceServiceMock.buildExactPerformance.calls.reset();
+        });
+
+        it('should render correct inputs', function() {
+          var expectedResult = '50 / 100';
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString(cell);
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should create correct performance', function() {
+          var input = {
+            events: cell.firstParameter,
+            sampleSize: cell.secondParameter
+          };
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(cell.firstParameter / cell.secondParameter, input);
+        });
+
+        it('should not create performance for an invalid cell', function() {
+          cell.isInvalid = true;
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactPerformance).not.toHaveBeenCalled();
+          expect(result).toBeUndefined();
+        });
+
+        it('should create a finished input cell', function() {
+          var tableEntry = {
+            performance: {
+              input: {
+                events: 50,
+                sampleSize: 100
+              }
+            }
+          };
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(cell, tableEntry);
+          expect(result.firstParameter).toEqual(tableEntry.performance.input.events);
+          expect(result.secondParameter).toEqual(tableEntry.performance.input.sampleSize);
+        });
+
+      });
+
+      describe('for an empty cell', function() {
+        beforeEach(function() {
+          cell.inputParameters.id = 'empty';
+          performanceServiceMock.buildExactPerformance.calls.reset();
+        });
+
+        it('should render correct inputs', function() {
+          var expectedResult = 'empty cell';
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString();
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should create correct performance', function() {
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance();
+          var exepectedResult = {
+            type: 'empty'
+          };
+          expect(result).toEqual(exepectedResult);
+        });
+
+        it('should create a finished input cell', function() {
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell();
+          var expectedResult = {
+            empty: true
+          };
+          expect(result).toEqual(expectedResult);
+        });
+      });
+    });
+
+    describe('getOptions', function() {
+      describe('for distributions', function() {
+        it('should return the manual distribution options', function() {
+          var inputType = 'distribution';
+          expect(_.keys(inputKnowledgeService.getOptions(inputType))).toEqual([
+            'normal',
+            'beta',
+            'gamma',
+            'value',
+            'empty'
+          ]);
+        });
+      });
+
+      describe('for effects', function() {
+        it('should return the options for the effects', function() {
+          var inputType = 'effect';
+          expect(_.keys(inputKnowledgeService.getOptions(inputType))).toEqual([
+            'value',
+            'valueSE',
+            'valueCI',
+            'valueSampleSize',
+            'fraction',
+            'empty'
+          ]);
         });
       });
     });

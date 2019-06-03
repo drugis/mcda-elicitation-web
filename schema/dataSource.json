@@ -46,54 +46,61 @@
       }
     },
     "pvf": {
-      "description": "The partial value function",
-      "type": "object",
-      "required": [
-        "direction",
-        "type",
-        "range"
-      ],
-      "additionalProperties": false,
-      "properties": {
-        "direction": {
-          "type": "string",
-          "enum": [
-            "increasing",
-            "decreasing"
-          ]
-        },
-        "type": {
-          "type": "string",
-          "enum": [
-            "linear",
-            "piecewise-linear"
-          ]
-        },
-        "range": {
-          "type": "array",
-          "minItems": 2,
-          "maxItems": 2,
-          "items": {
-            "type": "number"
+      "anyOf": [
+        {
+          "description": "The partial value function",
+          "type": "object",
+          "required": [
+            "direction",
+            "type",
+            "range"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "direction": {
+              "type": "string",
+              "enum": [
+                "increasing",
+                "decreasing"
+              ]
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "linear",
+                "piecewise-linear"
+              ]
+            },
+            "range": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "number"
+              }
+            },
+            "values": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "number"
+              }
+            },
+            "cutoffs": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "number"
+              }
+            }
           }
         },
-        "values": {
-          "type": "array",
-          "minItems": 3,
-          "maxItems": 3,
-          "items": {
-            "type": "number"
-          }
-        },
-        "cutoffs": {
-          "type": "array",
-          "minItems": 3,
-          "maxItems": 3,
-          "items": {
-            "type": "number"
-          }
+        {
+          "type": "null"
         }
-      }
+      ]
     }
   }
 }

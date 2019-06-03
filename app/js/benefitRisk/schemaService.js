@@ -9,24 +9,35 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
     currentSchemaVersion,
     generateUuid
   ) {
+    var ABSOLUTE_ENTRY_TYPES = [
+      'dnorm',
+      'exact',
+      'dt',
+      'dbeta',
+      'dgamma',
+      'dsurv',
+      'empty'
+    ];
     /***** Changes 
-     * 1.0.0 introduction of data sources
-     * 1.1.0 removal of the value tree
-     * 1.2.0 allow effect cells to contain distribution and effect
+     * 1.0.0 Introduction of data sources
+     * 1.1.0 Removal of the value tree
+     * 1.2.0 Allow effect cells to contain distribution and effect
+     *       Remove properties from data sources
+     *       Fix legacy problem: remove scales from criteria and put them on data source(s)
      * *****/
 
     function updateProblemToCurrentSchema(problem) {
       var newProblem = angular.copy(problem);
       if (!problem.schemaVersion) {
-        newProblem = updateToVersionOnePointZeroPointZero(newProblem);
+        newProblem = updateToVersion100(newProblem);
       }
 
       if (newProblem.schemaVersion === '1.0.0') {
-        newProblem = updateToVersionOnePointOnePointZero(newProblem);
+        newProblem = updateToVersion110(newProblem);
       }
 
       if (newProblem.schemaVersion === '1.1.0') {
-        newProblem = updateToVersionOnePointTwoPointZero(newProblem);
+        newProblem = updateToVersion120(newProblem);
       }
 
       if (newProblem.schemaVersion === currentSchemaVersion) {
@@ -48,8 +59,13 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
     function updateWorkspaceToCurrentSchema(workspace) {
       var newWorkspace = angular.copy(workspace);
-      newWorkspace.problem = updateProblemToCurrentSchema(newWorkspace.problem).content;
-      return newWorkspace;
+      var updatedProblem = updateProblemToCurrentSchema(newWorkspace.problem);
+      if (updatedProblem.errorMessage) {
+        throw (updatedProblem.errorMessage);
+      } else {
+        newWorkspace.problem = updatedProblem.content;
+        return newWorkspace;
+      }
     }
 
     function isInvalidSchema(uploadedJSON) {
@@ -64,8 +80,8 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
       var ajv = new Ajv();
       loadSchema(ajv, 'problem.json');
       loadSchema(ajv, 'dataSource.json');
-      loadSchema(ajv, 'relativeEffect.json');
-      loadSchema(ajv, 'absoluteEffect.json');
+      loadSchema(ajv, 'relativeEntry.json');
+      loadSchema(ajv, 'absoluteEntry.json');
       return ajv;
     }
 
@@ -74,7 +90,7 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
       ajv.addSchema(schema, schemaName);
     }
 
-    function updateToVersionOnePointZeroPointZero(problem) {
+    function updateToVersion100(problem) {
       var newProblem = angular.copy(problem);
       newProblem.criteria = _.mapValues(problem.criteria, createNewCriterion);
       newProblem.performanceTable = createNewPerformanceTable(newProblem);
@@ -82,7 +98,7 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
       return newProblem;
     }
 
-    function updateToVersionOnePointOnePointZero(problem) {
+    function updateToVersion110(problem) {
       var newProblem = angular.copy(problem);
       if (newProblem.valueTree) {
         newProblem.criteria = putFavorabilityOnCriteria(problem);
@@ -92,12 +108,36 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
       return newProblem;
     }
 
-    function updateToVersionOnePointTwoPointZero(problem) {
+    function updateToVersion120(problem) {
       var newProblem = angular.copy(problem);
-      newProblem.performanceTable = changePerformanceTypeToArray(newProblem);
+      newProblem.criteria = moveCriterionScaleToDataSource(newProblem);
       newProblem.criteria = removeObsoletePropertiesFromDataSource(newProblem);
+      newProblem.performanceTable = movePerfomancesToDistribution(newProblem);
       newProblem.schemaVersion = '1.2.0';
       return newProblem;
+    }
+
+    function movePerfomancesToDistribution(problem) {
+      return _.map(problem.performanceTable, function(entry) {
+        var newEntry = angular.copy(entry);
+        newEntry.performance = {
+          distribution: newEntry.performance
+        };
+        return newEntry;
+      });
+    }
+
+    function moveCriterionScaleToDataSource(problem) {
+      return _.mapValues(problem.criteria, function(criterion) {
+        criterion.dataSources = _.map(criterion.dataSources, function(dataSource) {
+          if (!dataSource.scale && criterion.scale) {
+            dataSource.scale = criterion.scale;
+          }
+          return dataSource;
+        });
+        delete criterion.scale;
+        return criterion;
+      });
     }
 
     function removeObsoletePropertiesFromDataSource(problem) {
@@ -107,6 +147,7 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
           delete dataSource.inputMethod;
           delete dataSource.dataType;
           delete dataSource.parameterOfInterest;
+          delete dataSource.oldId;
           return dataSource;
         });
         return criterion;

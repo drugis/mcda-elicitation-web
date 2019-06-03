@@ -45,8 +45,15 @@
             "type": "boolean"
           },
           "unitOfMeasurement": {
-            "description": "In which unit is the criterion measured",
-            "type": "string"
+            "anyOf": [
+              {
+                "description": "In which unit is the criterion measured",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "description": {
             "description": "Description of the criterion",
@@ -87,10 +94,10 @@
       "items": {
         "anyOf": [
           {
-            "$ref": "relativeEffect.json#"
+            "$ref": "relativeEntry.json#"
           },
           {
-            "$ref": "absoluteEffect.json#"
+            "$ref": "absoluteEntry.json#"
           }
         ]
       }
