@@ -1,14 +1,16 @@
 'use strict';
-define(['lodash', 'angular'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
     'InputKnowledgeService',
     'generateUuid',
-    'currentSchemaVersion'
+    'currentSchemaVersion',
+    'significantDigits'
   ];
   var ManualInputService = function(
     InputKnowledgeService,
     generateUuid,
-    currentSchemaVersion
+    currentSchemaVersion,
+    significantDigits
   ) {
     var INVALID_INPUT_MESSAGE = 'Missing or invalid input';
 
@@ -284,6 +286,58 @@ define(['lodash', 'angular'], function(_) {
       });
     }
 
+    function generateDistributions(inputData) {
+      var distribution = angular.copy(inputData.distribution);
+      distribution = _.mapValues(inputData.effect, _.partial(generateDistributionsForCriterion, inputData));
+      return distribution;
+    }
+
+    function generateDistributionsForCriterion(inputData, row, dataSource) {
+      return _.mapValues(row, _.partial(generateDistributionForCell, inputData, dataSource));
+    }
+
+    function generateDistributionForCell(inputData, dataSource, cell, alternative) {
+      if (cell.isInvalid) {
+        return inputData.distribution[dataSource][alternative];
+      }
+      var newCell = angular.copy(cell);
+      var options = getOptions('distribution');
+      switch (newCell.inputParameters.id) {
+        case 'valueSE':
+          newCell.inputParameters = options.normal;
+          break;
+        case 'valueCI':
+          if (areBoundsSymmetric(newCell)) {
+            newCell.inputParameters = options.normal;
+            newCell.secondParameter = boundsToStandardError(cell.secondParameter, cell.thirdParameter);
+          } else {
+            newCell.inputParameters = options.value;
+            delete newCell.secondParameter;
+          }
+          delete newCell.thirdParameter;
+          break;
+        case 'valueSampleSize':
+          newCell.inputParameters = options.value;
+          delete newCell.secondParameter;
+          break;
+        case 'eventsSampleSize':
+          newCell.inputParameters = options.beta;
+          newCell.firstParameter = cell.firstParameter + 1;
+          newCell.secondParameter = cell.secondParameter - cell.firstParameter + 1;
+          break;
+      }
+      newCell.label = inputToString(newCell);
+      return newCell;
+    }
+
+    function areBoundsSymmetric(cell) {
+      return (cell.thirdParameter + cell.secondParameter) / 2 === cell.firstParameter;
+    }
+
+    function boundsToStandardError(lowerBound, upperBound) {
+      return significantDigits((upperBound - lowerBound) / (2 * 1.96));
+    }
+
     return {
       createProblem: createProblem,
       inputToString: inputToString,
@@ -292,7 +346,8 @@ define(['lodash', 'angular'], function(_) {
       getOptions: getOptions,
       createStateFromOldWorkspace: createStateFromOldWorkspace,
       findInvalidRow: findInvalidRow,
-      findInvalidCell: findInvalidCell
+      findInvalidCell: findInvalidCell,
+      generateDistributions: generateDistributions
     };
   };
 

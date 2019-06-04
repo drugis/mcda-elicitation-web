@@ -131,7 +131,7 @@ define(['lodash', 'angular'], function(_, angular) {
         return buildNormalLabel(distribution.parameters);
       } else if (distribution.type === 'dbeta') {
         return buildBetaLabel(distribution.parameters);
-      } else if (distribution.type === 'dsurv') {
+      } else if (distribution.type === 'dsurv' || distribution.type === 'dgamma') {
         return buildGammaLabel(distribution.parameters);
       } else if (distribution.type === 'exact') {
         return distribution.value + '';

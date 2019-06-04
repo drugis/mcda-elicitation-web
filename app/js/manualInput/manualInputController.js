@@ -45,6 +45,7 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.removeAlternative = removeAlternative;
     $scope.saveInProgress = saveInProgress;
     $scope.openCriterionModal = openCriterionModal;
+    $scope.generateDistributions = generateDistributions;
 
     // init
     $scope.alternativeInput = {}; //scoping
@@ -139,8 +140,8 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function goToStep2() {
-      $scope.state.step = 'step2';       
-       if(!$scope.state.currentTab){
+      $scope.state.step = 'step2';
+      if (!$scope.state.currentTab) {
         $scope.state.currentTab = 'effect';
       }
       $scope.criteriaRows = EffectsTableService.buildTableRows($scope.state.criteria);
@@ -191,6 +192,10 @@ define(['lodash', 'angular'], function(_, angular) {
           }
         }
       });
+    }
+
+    function generateDistributions() {
+      $scope.state.inputData.distribution = ManualInputService.generateDistributions($scope.state.inputData);
     }
 
     // private functions

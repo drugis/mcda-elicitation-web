@@ -20,11 +20,11 @@ define(['lodash', 'angular'], function(_, angular) {
       if (hasNoDistributionData(problem)) {
         return;
       }
-      var newProblem = _.cloneDeep(problem);
-      var dataSources = getDataSources(problem.criteria);
+      var newProblem = angular.copy(problem);
+      var dataSources = getDataSources(newProblem.criteria);
       newProblem.criteria = _.keyBy(dataSources, 'id');
 
-      newProblem.performanceTable = createPerformanceTable(problem.performanceTable);
+      newProblem.performanceTable = createPerformanceTable(newProblem.performanceTable);
       newProblem.method = 'scales';
       return newProblem;
     }

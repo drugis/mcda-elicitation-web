@@ -462,24 +462,6 @@ define(['lodash', 'angular'], function(_, angular) {
       };
     }
 
-    // math util
-    function roundedStdErr(mu, sampleSize) {
-      return significantDigits(stdErr(mu, sampleSize));
-    }
-
-    function stdErr(mu, sampleSize) {
-      return Math.sqrt(mu * (1 - mu) / sampleSize);
-    }
-
-    function boundsToStandardError(lowerBound, upperBound) {
-      return significantDigits((upperBound - lowerBound) / (2 * 1.96));
-    }
-
-    function standardDeviationToStandardError(standardDeviation, sampleSize) {
-      return standardDeviation / Math.sqrt(sampleSize);
-    }
-
-    // interface
     return {
       getOptions: getOptions
     };

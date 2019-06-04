@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function (_, angular) {
+define(['lodash', 'angular'], function(_, angular) {
   var ESC = 27;
   var ENTER = 13;
 
@@ -9,7 +9,7 @@ define(['lodash', 'angular'], function (_, angular) {
     '$timeout'
   ];
 
-  var EffectInputHelperDirective = function (
+  var EffectInputHelperDirective = function(
     ManualInputService,
     ConstraintService,
     $timeout
@@ -23,7 +23,7 @@ define(['lodash', 'angular'], function (_, angular) {
         'inputType': '='
       },
       templateUrl: 'js/manualInput/effectInputHelperDirective.html',
-      link: function (scope) {
+      link: function(scope) {
         // functions
         scope.keyCheck = keyCheck;
         scope.inputChanged = inputChanged;
@@ -42,18 +42,18 @@ define(['lodash', 'angular'], function (_, angular) {
 
         scope.changeCallback();
 
-        scope.$on('open.af.dropdownToggle', function () {
+        scope.$on('open.af.dropdownToggle', function() {
           isEscPressed = false;
         });
 
-        scope.$on('close.af.dropdownToggle', function () {
+        scope.$on('close.af.dropdownToggle', function() {
           if (!isEscPressed) {
             saveState();
           }
         });
 
         function saveState() {
-          $timeout(function () {
+          $timeout(function() {
             scope.cell = scope.inputCell;
             scope.cell.isInvalid = ManualInputService.getInputError(scope.inputCell);
             scope.cell.label = ManualInputService.inputToString(scope.inputCell);
@@ -74,7 +74,7 @@ define(['lodash', 'angular'], function (_, angular) {
           scope.inputCell = _.cloneDeep(scope.cell);
           constraintChanged();
           scope.cell.label = ManualInputService.inputToString(scope.inputCell);
-          scope.cell.isInvalid = ManualInputService.getInputError(scope.inputCell); 
+          scope.cell.isInvalid = ManualInputService.getInputError(scope.inputCell);
           scope.inputParameterOptions = ManualInputService.getOptions(scope.inputType);
         }
 
@@ -84,8 +84,10 @@ define(['lodash', 'angular'], function (_, angular) {
 
         function constraintChanged() {
           var inputParameters = scope.inputCell.inputParameters;
-          inputParameters.firstParameter.constraints =
-            updateConstraints(inputParameters.firstParameter.constraints);
+          if (inputParameters.firstParameter) {
+            inputParameters.firstParameter.constraints =
+              updateConstraints(inputParameters.firstParameter.constraints);
+          }
           if (inputParameters.secondParameter) {
             inputParameters.secondParameter.constraints =
               updateConstraints(inputParameters.secondParameter.constraints);
@@ -112,7 +114,7 @@ define(['lodash', 'angular'], function (_, angular) {
         }
 
         function removeProportionConstraints(cellConstraints) {
-          return _.reject(cellConstraints, function (constraint) {
+          return _.reject(cellConstraints, function(constraint) {
             return constraint.label === scope.constraints[1].label || constraint.label === scope.constraints[2].label;
           });
         }
