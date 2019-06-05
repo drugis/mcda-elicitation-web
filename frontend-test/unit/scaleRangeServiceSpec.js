@@ -61,6 +61,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
 
       }));
     });
+    
     describe('niceTo', function() {
       it('should', inject(function(ScaleRangeService) {
         expect(ScaleRangeService.niceTo(150)).toEqual(200);
@@ -78,6 +79,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
         expect(ScaleRangeService.niceTo(0)).toEqual(0);
       }));
     });
+
     describe('createRanges', function() {
       it('should create ranges for each scales choices', inject(function(ScaleRangeService) {
         var choices = {
@@ -108,6 +110,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
         expect(ranges).toEqual(expectedRanges);
       }));
     });
+
     describe('getScalesStateAndChoices', function() {
       it('should return the scale state and the choices', inject(function(ScaleRangeService) {
         var observedScales = {

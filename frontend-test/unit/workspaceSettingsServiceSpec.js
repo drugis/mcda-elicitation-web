@@ -15,7 +15,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
     var DEFAULT_SETTINGS = {
       calculationMethod: 'median',
       showPercentages: true,
-      effectsDisplay: 'effects'
+      effectsDisplay: 'deterministic'
     };
     var workspaceSettingsResourceMock = jasmine.createSpyObj('WorkspaceSettingsResource', ['get', 'put']);
 

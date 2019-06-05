@@ -195,7 +195,12 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function generateDistributions() {
-      $scope.state.inputData.distribution = ManualInputService.generateDistributions($scope.state.inputData);
+      var answer = confirm('Generating distribution parameters for SMAA will overwrite any existing values in the SMAA tab.');
+      if (answer) {
+        $scope.state.inputData.distribution = ManualInputService.generateDistributions($scope.state.inputData);
+        checkInputData();
+        $scope.state.currentTab = 'distribution';
+      }
     }
 
     // private functions

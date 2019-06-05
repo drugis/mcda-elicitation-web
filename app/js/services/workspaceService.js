@@ -17,9 +17,6 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function createProblem(problem) {
-      if (hasNoDistributionData(problem)) {
-        return;
-      }
       var newProblem = angular.copy(problem);
       var dataSources = getDataSources(newProblem.criteria);
       newProblem.criteria = _.keyBy(dataSources, 'id');
@@ -29,16 +26,10 @@ define(['lodash', 'angular'], function(_, angular) {
       return newProblem;
     }
 
-    function hasNoDistributionData(problem){
-      return !_.some(problem.performanceTable, function(entry) {
-        return entry.performance.distribution;
-      });
-    }
-
     function createPerformanceTable(performanceTable) {
       return _.map(performanceTable, function(entry) {
         entry.criterion = entry.dataSource;
-        entry.performance = entry.performance.distribution;
+        entry.performance = entry.performance.distribution ? entry.performance.distribution : entry.performance.effect;
         return entry;
       });
     }

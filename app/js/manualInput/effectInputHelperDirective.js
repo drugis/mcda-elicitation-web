@@ -52,6 +52,8 @@ define(['lodash', 'angular'], function(_, angular) {
           }
         });
 
+        scope.$watch('cell', initInputParameters);
+        
         function saveState() {
           $timeout(function() {
             scope.cell = scope.inputCell;

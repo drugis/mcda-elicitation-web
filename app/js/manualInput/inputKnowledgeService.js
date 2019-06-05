@@ -62,6 +62,9 @@ define(['lodash', 'angular'], function(_, angular) {
         return {
           type: 'empty'
         };
+      },
+      generateDistribution: function(cell) {
+        return angular.copy(cell);
       }
     };
 
@@ -71,15 +74,19 @@ define(['lodash', 'angular'], function(_, angular) {
       firstParameter: buildIntegerAboveZero('Alpha'),
       secondParameter: buildIntegerAboveZero('Beta'),
       constraints: false,
-      fits: function(tableEntry) {
-        return tableEntry.performance.type === 'dbeta' || tableEntry.performance.type === 'empty';
-      },
-      toString: function(cell) {
-        return 'Beta(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
-      },
+      fits: fitBeta,
+      toString: betaToString,
       buildPerformance: buildBetaPerformance,
       finishInputCell: finishAlphaBetaCell
     };
+
+    function betaToString(cell) {
+      return 'Beta(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+    }
+
+    function fitBeta(tableEntry) {
+      return tableEntry.performance.type === 'dbeta' || tableEntry.performance.type === 'empty';
+    }
 
     var GAMMA = {
       id: 'gamma',
@@ -87,15 +94,19 @@ define(['lodash', 'angular'], function(_, angular) {
       firstParameter: buildFloatAboveZero('Alpha'),
       secondParameter: buildFloatAboveZero('Beta'),
       constraints: false,
-      fits: function(tableEntry) {
-        return tableEntry.performance.type === 'dgamma';
-      },
-      toString: function(cell) {
-        return 'Gamma(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
-      },
+      fits: fitGamma,
+      toString: gammaToString,
       buildPerformance: buildGammaPerformance,
       finishInputCell: finishAlphaBetaCell
     };
+
+    function fitGamma(tableEntry) {
+      return tableEntry.performance.type === 'dgamma';
+    }
+
+    function gammaToString(cell) {
+      return 'Gamma(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+    }
 
     var NORMAL = {
       id: 'normal',
@@ -103,15 +114,19 @@ define(['lodash', 'angular'], function(_, angular) {
       firstParameter: buildDefined('Mean'),
       secondParameter: buildPositiveFloat('Standard error'),
       constraints: false,
-      fits: function(tableEntry) {
-        return tableEntry.performance.type === 'dnorm';
-      },
-      toString: function(cell) {
-        return 'Normal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
-      },
+      fits: fitNormal,
+      toString: normalToString,
       buildPerformance: buildNormalPerformance,
       finishInputCell: finishNormalInputCell
     };
+
+    function fitNormal(tableEntry) {
+      return tableEntry.performance.type === 'dnorm';
+    }
+
+    function normalToString(cell) {
+      return 'Normal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+    }
 
     var VALUE_SAMPLE_SIZE = {
       id: 'valueSampleSize',
@@ -119,15 +134,18 @@ define(['lodash', 'angular'], function(_, angular) {
       firstParameter: buildDefined('Value'),
       secondParameter: buildIntegerAboveZero('Sample size'),
       constraints: true,
-      fits: function(tableEntry) {
-        return tableEntry.performance.input &&
-          tableEntry.performance.input.sampleSize &&
-          !isFinite(tableEntry.performance.input.value);
-      },
+      fits: fitValueSampleSize,
       toString: valueSampleSizeToString,
       finishInputCell: finishValueSampleSizeCell,
-      buildPerformance: buildValueSampleSizePerformance
+      buildPerformance: buildValueSampleSizePerformance,
+      generateDistribution: generateValueSampleSizeDistribution
     };
+
+    function fitValueSampleSize(tableEntry) {
+      return tableEntry.performance.input &&
+        tableEntry.performance.input.sampleSize &&
+        !isFinite(tableEntry.performance.input.value);
+    }
 
     var EVENTS_SAMPLE_SIZE = {
       id: 'eventsSampleSize',
@@ -143,18 +161,22 @@ define(['lodash', 'angular'], function(_, angular) {
       },
       secondParameter: buildIntegerAboveZero('Sample size'),
       constraints: false,
-      fits: function(tableEntry) {
-        return tableEntry.performance.input &&
-          isFinite(tableEntry.performance.input.events) &&
-          tableEntry.performance.input.sampleSize;
-      },
-      toString: function(cell) {
-        return cell.firstParameter + ' / ' + cell.secondParameter;
-      },
+      fits: fitEventsSampleSize,
+      toString: eventsSampleSizeToString,
       finishInputCell: finishEventSampleSizeInputCell,
-      buildPerformance: buildEventSampleSizePerformance
+      buildPerformance: buildEventSampleSizePerformance,
+      generateDistribution: generateEventsSampleSizeDistribution
     };
 
+    function eventsSampleSizeToString(cell) {
+      return cell.firstParameter + ' / ' + cell.secondParameter;
+    }
+
+    function fitEventsSampleSize(tableEntry) {
+      return tableEntry.performance.input &&
+        isFinite(tableEntry.performance.input.events) &&
+        tableEntry.performance.input.sampleSize;
+    }
     /**********
      * public *
      **********/
@@ -167,25 +189,16 @@ define(['lodash', 'angular'], function(_, angular) {
      * private *
      ***********/
 
-    function buildCellFinisher(options, knowledge) {
-      return function(cell, tableEntry) {
-        var correctOption = _.find(options, function(option) {
-          return option.fits(tableEntry);
-        });
-        var inputCell = angular.copy(cell);
-        inputCell.inputParameters = correctOption;
-        return knowledge.getKnowledge(inputCell).finishInputCell(inputCell, tableEntry);
-      };
-    }
-
     // knowledge
     function buildValueKnowledge() {
       var id = 'value';
       var knowledge = buildExactKnowledge(id, 'Value');
-      knowledge.fits = function(tableEntry) {
-        return !tableEntry.performance.input || tableEntry.performance.type === 'empty';
-      };
+      knowledge.fits = fitValue;
       return knowledge;
+    }
+
+    function fitValue(tableEntry) {
+      return !tableEntry.performance.input || tableEntry.performance.type === 'empty';
     }
 
     function buildExactKnowledge(id, label) {
@@ -196,36 +209,25 @@ define(['lodash', 'angular'], function(_, angular) {
         constraints: true,
         toString: valueToString,
         finishInputCell: finishValueCell,
-        buildPerformance: buildValuePermance
+        buildPerformance: buildValuePermance,
+        generateDistribution: generateValueDistribution
       };
     }
 
     function buildValueSEKnowledge() {
       var id = 'valueSE';
       var knowledge = buildExactKnowledge(id, 'Value, SE');
-      knowledge.fits = function(tableEntry) {
-        return tableEntry.performance.input && isFinite(tableEntry.performance.input.stdErr);
-      };
+      knowledge.fits = fitValueSE;
       knowledge.secondParameter = buildPositiveFloat('Standard error');
       knowledge.toString = valueSEToString;
-      knowledge.finishInputCell = function(tableEntry) {
-        return {
-          firstParameter: tableEntry.performance.input.value,
-          secondParameter: tableEntry.performance.input.stdErr
-        };
-      };
-      knowledge.buildPerformance = function(cell) {
-        if (cell.isInvalid) {
-          return undefined;
-        } else {
-          if (isPercentage(cell)) {
-            return PerformanceService.buildExactPercentSEPerformance(cell.firstParameter, cell.secondParameter);
-          } else {
-            return PerformanceService.buildExactSEPerformance(cell.firstParameter, cell.secondParameter);
-          }
-        }
-      };
+      knowledge.finishInputCell = finishValueSE;
+      knowledge.buildPerformance = buildValueSEPerformance;
+      knowledge.generateDistribution = generateValueSEDistribution;
       return knowledge;
+    }
+
+    function fitValueSE(tableEntry) {
+      return tableEntry.performance.input && isFinite(tableEntry.performance.input.stdErr);
     }
 
     function buildValueConfidenceIntervalKnowledge() {
@@ -245,26 +247,106 @@ define(['lodash', 'angular'], function(_, angular) {
           ConstraintService.aboveOrEqualTo('firstParameter')
         ]
       };
-      knowledge.fits = function(tableEntry) {
-        return tableEntry.performance.input &&
-          (isFinite(tableEntry.performance.input.lowerBound) || tableEntry.performance.input.lowerBound === 'NE') &&
-          (isFinite(tableEntry.performance.input.upperBound) || tableEntry.performance.input.upperBound === 'NE') &&
-          tableEntry.performance.input.scale !== 'percentage';
-      };
+      knowledge.fits = fitValueCI;
       knowledge.toString = valueCIToString;
       knowledge.finishInputCell = finishValueConfidenceIntervalCell;
-      knowledge.buildPerformance = function(cell) {
-        if (cell.isInvalid) {
-          return undefined;
-        } else {
-          if (isPercentage(cell)) {
-            return PerformanceService.buildExactPercentConfidencePerformance(cell);
-          } else {
-            return PerformanceService.buildExactConfidencePerformance(cell);
-          }
-        }
-      };
+      knowledge.buildPerformance = buildValueCIPerformance;
+      knowledge.generateDistribution = generateValueCIDistribution;
       return knowledge;
+    }
+
+    function fitValueCI(tableEntry) {
+      return tableEntry.performance.input &&
+        (isFinite(tableEntry.performance.input.lowerBound) || tableEntry.performance.input.lowerBound === 'NE') &&
+        (isFinite(tableEntry.performance.input.upperBound) || tableEntry.performance.input.upperBound === 'NE') &&
+        tableEntry.performance.input.scale !== 'percentage';
+    }
+
+    // generate distributions
+    function generateValueDistribution(cell) {
+      var distributionCell = angular.copy(cell);
+      if (isPercentage(distributionCell)) {
+        distributionCell.firstParameter = cell.firstParameter / 100;
+      }
+      distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
+      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
+      return distributionCell;
+    }
+
+    function generateValueSEDistribution(cell) {
+      var distributionCell = angular.copy(cell);
+
+      if (isPercentage(distributionCell)) {
+        distributionCell.firstParameter = cell.firstParameter / 100;
+        distributionCell.secondParameter = cell.secondParameter / 100;
+      }
+
+      distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
+      distributionCell.inputParameters.secondParameter.constraints = removeConstraints(distributionCell.inputParameters.secondParameter.constraints);
+      distributionCell.inputParameters = INPUT_TYPE_KNOWLEDGE.distribution.getOptions().normal;
+      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
+      return distributionCell;
+    }
+
+    function generateValueCIDistribution(cell) {
+      var distributionCell = angular.copy(cell);
+
+      if (areBoundsSymmetric(distributionCell)) {
+        distributionCell.inputParameters = INPUT_TYPE_KNOWLEDGE.distribution.getOptions().normal;
+        distributionCell.secondParameter = boundsToStandardError(cell.secondParameter, cell.thirdParameter);
+      } else {
+        distributionCell.inputParameters = INPUT_TYPE_KNOWLEDGE.distribution.getOptions().value;
+        delete distributionCell.secondParameter;
+      }
+      delete distributionCell.thirdParameter;
+
+      if (isPercentage(cell)) {
+        distributionCell.firstParameter = distributionCell.firstParameter / 100;
+        if (distributionCell.secondParameter) {
+          distributionCell.secondParameter = distributionCell.secondParameter / 100;
+        }
+      }
+      distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
+      if (distributionCell.secondParameter) {
+        distributionCell.inputParameters.secondParameter.constraints = removeConstraints(distributionCell.inputParameters.secondParameter.constraints);
+      }
+      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
+      return distributionCell;
+    }
+
+    function generateValueSampleSizeDistribution(cell) {
+      var distributionCell = angular.copy(cell);
+      if (isPercentage(cell)) {
+        distributionCell.firstParameter = distributionCell.firstParameter / 100;
+      }
+      distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
+      distributionCell.inputParameters = INPUT_TYPE_KNOWLEDGE.distribution.getOptions().value;
+      delete distributionCell.secondParameter;
+      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
+      return distributionCell;
+    }
+
+    function generateEventsSampleSizeDistribution(cell) {
+      var distributionCell = angular.copy(cell);
+      distributionCell.inputParameters = INPUT_TYPE_KNOWLEDGE.distribution.getOptions().beta;
+      distributionCell.firstParameter = cell.firstParameter + 1;
+      distributionCell.secondParameter = cell.secondParameter - cell.firstParameter + 1;
+      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
+      return distributionCell;
+    }
+
+    function removeConstraints(constraints) {
+      return _.reject(constraints, function(constraint) {
+        return constraint.label === 'Proportion (percentage)' || constraint.label === 'Proportion (decimal)';
+      });
+    }
+
+    function areBoundsSymmetric(cell) {
+      return (cell.thirdParameter + cell.secondParameter) / 2 === cell.firstParameter;
+    }
+
+    function boundsToStandardError(lowerBound, upperBound) {
+      return significantDigits((upperBound - lowerBound) / (2 * 1.96));
     }
 
     // build performances
@@ -276,6 +358,30 @@ define(['lodash', 'angular'], function(_, angular) {
           return buildPercentPerformance(cell);
         } else {
           return PerformanceService.buildExactPerformance(cell.firstParameter);
+        }
+      }
+    }
+
+    function buildValueSEPerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        if (isPercentage(cell)) {
+          return PerformanceService.buildExactPercentSEPerformance(cell.firstParameter, cell.secondParameter);
+        } else {
+          return PerformanceService.buildExactSEPerformance(cell.firstParameter, cell.secondParameter);
+        }
+      }
+    }
+
+    function buildValueCIPerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        if (isPercentage(cell)) {
+          return PerformanceService.buildExactPercentConfidencePerformance(cell);
+        } else {
+          return PerformanceService.buildExactConfidencePerformance(cell);
         }
       }
     }
@@ -347,6 +453,13 @@ define(['lodash', 'angular'], function(_, angular) {
       var inputCell = angular.copy(cell);
       inputCell.firstParameter = tableEntry.performance.value;
       return inputCell;
+    }
+
+    function finishValueSE(tableEntry) {
+      return {
+        firstParameter: tableEntry.performance.input.value,
+        secondParameter: tableEntry.performance.input.stdErr
+      };
     }
 
     function finishValueConfidenceIntervalCell(tableEntry) {

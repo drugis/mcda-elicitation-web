@@ -712,263 +712,69 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     });
 
     describe('generateDistributions', function() {
-      var label = 'label';
-      var inputData;
-      var toString = function() {
-        return label;
-      };
-
-      beforeEach(function() {
-        inputKnowledgeServiceMock.getOptions.and.returnValue({
-          value: {
-            toString: toString,
-            id: 'value'
-          },
-          normal: {
-            toString: toString,
-            id: 'normal'
-          },
-          beta: {
-            toString: toString,
-            id: 'beta'
-          }
-        });
-        inputData = {
+      it('should generate a distribution from effect data', function() {
+        var inputData = {
           effect: {
-            ds1id: {
-              alternative1: {}
-            }
-          }
-        };
-      });
-
-      it('should generate exact distribution from a value', function() {
-        inputData.effect.ds1id.alternative1.firstParameter = 10;
-        inputData.effect.ds1id.alternative1.inputParameters = {
-          id: 'value',
-          toString: toString
-        };
-
-        var result = manualInputService.generateDistributions(inputData);
-        expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalled();
-
-        delete result.ds1id.alternative1.inputParameters.toString;
-        var expectedResult = {
-          ds1id: {
-            alternative1: {
-              firstParameter: 10,
-              inputParameters: {
-                id: 'value',
-              },
-              label: label
-            }
-          }
-        };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should generate normal distribution from a value with standard error', function() {
-        inputData.effect.ds1id.alternative1.firstParameter = 10;
-        inputData.effect.ds1id.alternative1.secondParameter = 1;
-        inputData.effect.ds1id.alternative1.inputParameters = {
-          id: 'valueSE',
-          toString: toString
-        };
-
-        var result = manualInputService.generateDistributions(inputData);
-
-        delete result.ds1id.alternative1.inputParameters.toString;
-        var expectedResult = {
-          ds1id: {
-            alternative1: {
-              firstParameter: 10,
-              secondParameter: 1,
-              inputParameters: {
-                id: 'normal'
-              },
-              label: label
-            }
-          }
-        };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should generate normal distribution from a value with a symmetric confidence interval', function() {
-        inputData.effect.ds1id.alternative1.firstParameter = 10;
-        inputData.effect.ds1id.alternative1.secondParameter = 9;
-        inputData.effect.ds1id.alternative1.thirdParameter = 11;
-        inputData.effect.ds1id.alternative1.inputParameters = {
-          id: 'valueCI',
-          toString: toString
-        };
-
-        var result = manualInputService.generateDistributions(inputData);
-        delete result.ds1id.alternative1.inputParameters.toString;
-        var expectedResult = {
-          ds1id: {
-            alternative1: {
-              firstParameter: 10,
-              secondParameter: 0.510,
-              inputParameters: {
-                id: 'normal'
-              },
-              label: label
-            }
-          }
-        };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should generate exact distribution from a value with non-symmetric confidence interval', function() {
-        inputData.effect.ds1id.alternative1.firstParameter = 10;
-        inputData.effect.ds1id.alternative1.secondParameter = 8;
-        inputData.effect.ds1id.alternative1.thirdParameter = 11;
-        inputData.effect.ds1id.alternative1.inputParameters = {
-          id: 'valueCI',
-          toString: toString
-        };
-
-        var result = manualInputService.generateDistributions(inputData);
-
-        delete result.ds1id.alternative1.inputParameters.toString;
-        var expectedResult = {
-          ds1id: {
-            alternative1: {
-              firstParameter: 10,
-              inputParameters: {
-                id: 'value'
-              },
-              label: label
-            }
-          }
-        };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should generate exact distribution from a value with sample size', function() {
-        inputData.effect.ds1id.alternative1.firstParameter = 10;
-        inputData.effect.ds1id.alternative1.secondParameter = 5;
-        inputData.effect.ds1id.alternative1.inputParameters = {
-          id: 'valueSampleSize',
-          toString: toString
-        };
-
-        var result = manualInputService.generateDistributions(inputData);
-
-        delete result.ds1id.alternative1.inputParameters.toString;
-        var expectedResult = {
-          ds1id: {
-            alternative1: {
-              firstParameter: 10,
-              inputParameters: {
-                id: 'value'
-              },
-              label: label
-            }
-          }
-        };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should generate Beta distribution from an event with sample size', function() {
-        inputData.effect.ds1id.alternative1.firstParameter = 10;
-        inputData.effect.ds1id.alternative1.secondParameter = 15;
-        inputData.effect.ds1id.alternative1.inputParameters = {
-          id: 'eventsSampleSize',
-          toString: toString
-        };
-
-        var result = manualInputService.generateDistributions(inputData);
-
-        delete result.ds1id.alternative1.inputParameters.toString;
-        var expectedResult = {
-          ds1id: {
-            alternative1: {
-              firstParameter: 11,
-              secondParameter: 6,
-              inputParameters: {
-                id: 'beta'
-              },
-              label: label
-            }
-          }
-        };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should generate an empty distribution from an empty value', function() {
-        inputData.effect.ds1id.alternative1.inputParameters = {
-          id: 'empty',
-          toString: toString
-        };
-
-        var result = manualInputService.generateDistributions(inputData);
-
-        delete result.ds1id.alternative1.inputParameters.toString;
-        var expectedResult = {
-          ds1id: {
-            alternative1: {
-              inputParameters: {
-                id: 'empty'
-              },
-              label: label
-            }
-          }
-        };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should leave distribution data intact if the effect data is invalid or missing', function() {
-        inputData.effect.ds1id.alternative1.isInvalid = true;
-        inputData.distribution = {
-          ds1id: {
-            alternative1: {
-              firstParameter: 1,
-              inputParameters: {
-                id: 'value'
+            d1: {
+              a1: {
+                inputParameters: {
+                  generateDistribution: jasmine.createSpy()
+                }
               }
             }
           }
         };
+        manualInputService.generateDistributions(inputData);
 
+        expect(inputData.effect.d1.a1.inputParameters.generateDistribution).toHaveBeenCalledWith(inputData.effect.d1.a1);
+      });
+
+      it('should leave distribution data intact if the effect data is invalid or missing', function() {
+        var inputData = {
+          effect: {
+            d1: {
+              a1: {
+                isInvalid: true
+              }
+            }
+          },
+          distribution: {
+            d1: {
+              a1: {
+                label: 'test'
+              }
+            }
+          }
+        };
         var result = manualInputService.generateDistributions(inputData);
 
         expect(result).toEqual(inputData.distribution);
       });
+    });
 
-      it('should overwrite existing distribution data', function() {
-        inputData.effect.ds1id.alternative1.firstParameter = 10;
-        inputData.effect.ds1id.alternative1.inputParameters = {
-          id: 'value',
-          toString: toString
-        };
-        inputData.distribution = {
-          ds1id: {
-            alternative1: {
-              firstParameter: 11,
+    it('should overwrite existing distribution data', function() {
+      var inputData = {
+        effect: {
+          d1: {
+            a1: {
               inputParameters: {
-                id: 'value'
+                generateDistribution: jasmine.createSpy()
               }
             }
           }
-        };
-
-        var result = manualInputService.generateDistributions(inputData);
-
-        delete result.ds1id.alternative1.inputParameters.toString;
-        var expectedResult = {
-          ds1id: {
-            alternative1: {
-              firstParameter: 10,
-              inputParameters: {
-                id: 'value'
-              },
-              label: label
+        },
+        distribution: {
+          d1: {
+            a1: {
+              label: 'test'
             }
           }
-        };
-        expect(result).toEqual(expectedResult);
-      });
+        }
+      };
+      inputData.effect.d1.a1.inputParameters.generateDistribution.and.returnValue(inputData.effect.d1.a1);
+      var result = manualInputService.generateDistributions(inputData);
+
+      expect(result).toEqual(inputData.effect);
     });
   });
 });

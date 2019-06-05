@@ -102,17 +102,23 @@ define(['lodash', 'angular'], function(_) {
       }));
     }
 
-    function getScalesStateAndChoices(observedScales, criteria) {
+    function getScalesStateAndChoices(observedScales, criteria, performanceTable) {
       return _.reduce(criteria, function(accum, criterion) {
-        return _.merge({}, accum, initializeScaleStateAndChoicesForCriterion(observedScales, criterion));
+        return _.merge({}, accum, initializeScaleStateAndChoicesForCriterion(observedScales, criterion, performanceTable));
       }, {});
     }
 
-    function initializeScaleStateAndChoicesForCriterion(observedScales, criterion) {
+    function initializeScaleStateAndChoicesForCriterion(observedScales, criterion, performanceTable) {
       var showPercentage = WorkspaceSettingsService.usePercentage();
       return _.reduce(criterion.dataSources, function(accum, dataSource) {
         // Calculate interval hulls
-        var dataSourceRange = intervalHull(observedScales[dataSource.id]);
+        var effectValues = _.reduce(performanceTable, function(accum, entry) {
+          if (entry.dataSource === dataSource.id && entry.performance.effect) {
+            accum.push(entry.performance.effect.value);
+          }
+          return accum;
+        }, []);
+        var dataSourceRange = intervalHull(observedScales[dataSource.id], effectValues);
         var pvf = dataSource.pvf;
         var problemRange = pvf ? pvf.range : null;
         var from = problemRange ? problemRange[0] : dataSourceRange[0];

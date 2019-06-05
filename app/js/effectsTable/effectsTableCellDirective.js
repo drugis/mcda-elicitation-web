@@ -20,7 +20,7 @@ define(['lodash'], function(_) {
         scope.$watch('workspaceSettings', init, true);
 
         function init() {
-          scope.uncertainty = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId].hasUncertainty;
+          scope.uncertainty = hasUncertainty(scope.effectsTableInfo);
           scope.effectsDisplay = scope.workspaceSettings.effectsDisplay;
           scope.isAbsolute = scope.effectsTableInfo.isAbsolute;
           if (scope.effectsTableInfo.studyDataLabelsAndUncertainty) {
@@ -28,6 +28,10 @@ define(['lodash'], function(_) {
             scope.distributionLabel = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId].distributionLabel;
             scope.effectValue = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId].effectValue;
           }
+        }
+
+        function hasUncertainty(info) {
+          return info.hasUncertainty || info.studyDataLabelsAndUncertainty[scope.alternativeId].hasUncertainty;
         }
       }
 

@@ -1,5 +1,9 @@
 'use strict';
 define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], function(angular, _) {
+  var label = 'label';
+  function toString() {
+    return label;
+  }
   var NULL_PARAMETERS = {
     firstParameter: {
       constraints: []
@@ -9,7 +13,8 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     },
     thirdParameter: {
       constraints: []
-    }
+    },
+    toString: toString
   };
   var inputKnowledgeService;
   var performanceServiceMock = jasmine.createSpyObj(
@@ -221,10 +226,10 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
 
         it('should create correct performance', function() {
           var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance();
-          var exepectedResult = {
+          var expectedResult = {
             type: 'empty'
           };
-          expect(result).toEqual(exepectedResult);
+          expect(result).toEqual(expectedResult);
         });
 
         it('should create a finished input cell', function() {
@@ -239,6 +244,18 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
 
     describe('for effects,', function() {
       var inputType = 'effect';
+      var label = 'label';
+      var validator = function() {
+        return;
+      };
+      var percentageConstraint = {
+        label: 'Proportion (percentage)',
+        validator: validator
+      };
+      var definedConstraint = {
+        label: 'defined',
+        validator: validator
+      };
       beforeEach(function() {
         cell = {
           firstParameter: 50,
@@ -297,6 +314,63 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(cell, tableEntry);
           expect(result.firstParameter).toEqual(50);
         });
+
+        it('should generate an exact distribution', function() {
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].generateDistribution(cell);
+          var expectedResult = _.merge({}, cell, {
+            label: label
+          });
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should generate an exact distribution from a percentage value', function() {
+          cell.inputParameters.firstParameter.constraints.push(percentageConstraint);
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].generateDistribution(cell);
+          var expectedResult = {
+            firstParameter: 0.5,
+            label: label,
+            inputParameters: {
+              id: 'value',
+              firstParameter: {
+                constraints: []
+              },
+              secondParameter: {
+                constraints: []
+              },
+              thirdParameter: {
+                constraints: []
+              },
+              toString: toString
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should generate an exact distribution, removing decimal proportion constraints', function() {
+          cell.inputParameters.firstParameter.constraints.push({
+            label: 'Proportion (decimal)',
+            validator: validator
+          });
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].generateDistribution(cell);
+          var expectedResult = {
+            firstParameter: 50,
+            label: label,
+            inputParameters: {
+              id: 'value',
+              firstParameter: {
+                constraints: []
+              },
+              secondParameter: {
+                constraints: []
+              },
+              thirdParameter: {
+                constraints: []
+              },
+              toString: toString
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
       });
 
       describe('for a value with standard error', function() {
@@ -349,6 +423,29 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(tableEntry);
           expect(result.firstParameter).toEqual(tableEntry.performance.input.value);
           expect(result.secondParameter).toEqual(tableEntry.performance.input.stdErr);
+        });
+
+        it('should generate a normal distribution', function() {
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].generateDistribution(cell);
+          var expectedResult = {
+            label: 'Normal(50, 0.5)',
+            firstParameter: 50,
+            secondParameter: 0.5,
+            inputParameters: inputKnowledgeService.getOptions('distribution').normal
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should generate a normal distribution from a percentage', function() {
+          cell.inputParameters.firstParameter.constraints.push(percentageConstraint);
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].generateDistribution(cell);
+          var expectedResult = {
+            label: 'Normal(0.5, 0.005)',
+            firstParameter: 0.5,
+            secondParameter: 0.005,
+            inputParameters: inputKnowledgeService.getOptions('distribution').normal
+          };
+          expect(result).toEqual(expectedResult);
         });
       });
 
@@ -425,6 +522,40 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result.lowerBoundNE).toBeTruthy();
           expect(result.upperBoundNE).toBeTruthy();
         });
+
+        it('should generate a normal distribution given a symmetric interval', function() {
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].generateDistribution(cell);
+          var expectedResult = {
+            label: 'Normal(50, 5.102)',
+            firstParameter: 50,
+            secondParameter: 5.102,
+            inputParameters: inputKnowledgeService.getOptions('distribution').normal
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should generate an exact distribution given a asymmetric interval', function() {
+          cell.secondParameter = 30;
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].generateDistribution(cell);
+          var expectedResult = {
+            label: '50',
+            firstParameter: 50,
+            inputParameters: inputKnowledgeService.getOptions('distribution').value
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should generate a non-percentage normal distribution given a symmetric interval and a percentage constraint', function() {
+          cell.inputParameters.firstParameter.constraints.push(percentageConstraint);
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].generateDistribution(cell);
+          var expectedResult = {
+            label: 'Normal(0.5, 0.05102)',
+            firstParameter: 0.5,
+            secondParameter: 0.05102,
+            inputParameters: inputKnowledgeService.getOptions('distribution').normal
+          };
+          expect(result).toEqual(expectedResult);
+        });
       });
 
       describe('for a value with sample size', function() {
@@ -490,6 +621,27 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result.secondParameter).toEqual(tableEntry.performance.input.sampleSize);
         });
 
+        it('should generate an exact distribution', function(){
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].generateDistribution(cell);
+          var expectedResult = {
+            label: '50',
+            firstParameter: 50,
+            inputParameters: inputKnowledgeService.getOptions('distribution').value
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should generate an exact distribution given a percentage constraint', function(){
+          cell.inputParameters.firstParameter.constraints.push(percentageConstraint);
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].generateDistribution(cell);
+          var expectedResult = {
+            label: '0.5',
+            firstParameter: 0.5,
+            inputParameters: inputKnowledgeService.getOptions('distribution').value
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
       });
 
       describe('for events with sample size', function() {
@@ -535,6 +687,17 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result.secondParameter).toEqual(tableEntry.performance.input.sampleSize);
         });
 
+        it('should generate a beta distribution', function(){
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].generateDistribution(cell);
+          var expectedResult = {
+            label: 'Beta(51, 51)',
+            firstParameter: 51,
+            secondParameter: 51,
+            inputParameters: inputKnowledgeService.getOptions('distribution').beta
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
       });
 
       describe('for an empty cell', function() {
@@ -551,10 +714,10 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
 
         it('should create correct performance', function() {
           var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance();
-          var exepectedResult = {
+          var expectedResult = {
             type: 'empty'
           };
-          expect(result).toEqual(exepectedResult);
+          expect(result).toEqual(expectedResult);
         });
 
         it('should create a finished input cell', function() {
@@ -562,6 +725,12 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           var expectedResult = {
             empty: true
           };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should create an empty distribution', function() {
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].generateDistribution(cell);
+          var expectedResult = cell;
           expect(result).toEqual(expectedResult);
         });
       });

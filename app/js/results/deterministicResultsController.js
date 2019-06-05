@@ -100,7 +100,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
 
     function recalculateResults() {
       delete $scope.recalculatedDeterministicResults;
-      $scope.recalculatedDeterministicResults = MCDAResultsService.getRecalculatedDeterministicResulsts($scope, $scope.state);
+      $scope.recalculatedDeterministicResults = MCDAResultsService.getRecalculatedDeterministicResults($scope, $scope.state);
     }
 
     function doMeasurementSensitivity() {

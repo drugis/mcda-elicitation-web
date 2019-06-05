@@ -124,7 +124,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function initializeScales() {
-      var stateAndChoices = ScaleRangeService.getScalesStateAndChoices($scope.originalScales.base, $scope.criteria);
+      var stateAndChoices = ScaleRangeService.getScalesStateAndChoices($scope.originalScales.base, $scope.criteria, $scope.problem.performanceTable);
       $scope.scalesState = stateAndChoices.scalesState;
       $scope.choices = stateAndChoices.choices;
 

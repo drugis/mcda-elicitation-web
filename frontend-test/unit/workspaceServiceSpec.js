@@ -54,7 +54,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
         expect(pataviResultsServiceMock.postAndHandleResults).toHaveBeenCalledWith(expectedProblem);
       });
 
-      it('should return undefined if only effect data is present', function() {
+      it('should call the pataviResultService with effect data if distribution data is missing', function() {
         var problem = {
           criteria: {
             crit1: {
@@ -69,11 +69,24 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
             }
           }]
         };
+
+        var expectedProblem = {
+          criteria: {
+            ds1: {
+              id: 'ds1'
+            }
+          },
+          performanceTable: [{
+            criterion: 'ds1',
+            dataSource: 'ds1',
+            performance: {}
+          }],
+          method: 'scales'
+        };
         
         workspaceService.getObservedScales(problem);
 
-        expect(pataviResultsServiceMock.postAndHandleResults).not.toHaveBeenCalled();
-        expect(qMock.resolve).toHaveBeenCalledWith(undefined);
+        expect(pataviResultsServiceMock.postAndHandleResults).toHaveBeenCalledWith(expectedProblem);
       });
 
     });

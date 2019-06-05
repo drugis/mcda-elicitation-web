@@ -1,5 +1,38 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
+  function intervalHull() {
+    return function(scaleRanges, effects) {
+      var minHull = [];
+      var maxHull = [];
+      if (scaleRanges) {
+        minHull = getHull(scaleRanges, '2.5%');
+        maxHull = getHull(scaleRanges, '97.5%');
+      }
+      if (effects && effects.length) {
+        minHull = minHull.concat(getMinEffect(effects));
+        maxHull = maxHull.concat(getMaxEffect(effects));
+      }
+      return [
+        Math.min.apply(null, minHull),
+        Math.max.apply(null, maxHull)
+      ];
+    };
+  }
+
+  function getMinEffect(effectValues) {
+    return _.reduce(effectValues, function(minimum, effect) {
+      return minimum < effect ? minimum : effect;
+    }, effectValues[0]);
+
+  }
+
+  function getMaxEffect(effectValues) {
+    return _.reduce(effectValues, function(maximum, effect) {
+      return maximum > effect ? maximum : effect;
+    }, effectValues[0]);
+  }
+
+
   function getHull(scaleRanges, percentage) {
     return _(scaleRanges)
       .values()
@@ -16,18 +49,9 @@ define(['lodash', 'angular'], function(_, angular) {
     return value !== null;
   }
 
+
   return angular.module('elicit.util', [])
-    .factory('intervalHull', function() {
-      return function(scaleRanges) {
-        if (!scaleRanges) {
-          return [-Infinity, +Infinity];
-        }
-        return [
-          Math.min.apply(null, getHull(scaleRanges, '2.5%')),
-          Math.max.apply(null, getHull(scaleRanges, '97.5%'))
-        ];
-      };
-    })
+    .factory('intervalHull', intervalHull)
 
     .factory('generateUuid', function() {
       return function() {

@@ -1,5 +1,5 @@
 'use strict';
-define(['angular'], function(angular) {
+define(['angular', 'lodash'], function(angular, _) {
   var dependencies = [
     '$rootScope',
     '$stateParams',
@@ -13,7 +13,7 @@ define(['angular'], function(angular) {
     var DEFAULT_SETTINGS = {
       calculationMethod: 'median',
       showPercentages: true,
-      effectsDisplay: 'effects'
+      effectsDisplay: 'deterministic'
     };
 
     var DEFAULT_TOGGLED_COLUMNS = {
@@ -29,6 +29,12 @@ define(['angular'], function(angular) {
 
     function loadWorkspaceSettings(params) {
       return WorkspaceSettingsResource.get(params).$promise.then(function(result) {
+        if (!_.includes(result.effectsDisplay, [
+          'deterministic',
+          'deterministicMCDA',
+          'smaaDistributions',
+          'smaa'
+        ]));
         workspaceSettings = result.settings ? result.settings : DEFAULT_SETTINGS;
         toggledColumns = result.toggledColumns ? result.toggledColumns : DEFAULT_TOGGLED_COLUMNS;
       });
@@ -43,7 +49,7 @@ define(['angular'], function(angular) {
     }
 
     function saveSettings(newWorkspaceSettings, newToggledColumns) {
-      var newSettings ={
+      var newSettings = {
         settings: newWorkspaceSettings,
         toggledColumns: newToggledColumns
       };
@@ -61,7 +67,7 @@ define(['angular'], function(angular) {
       };
     }
 
-    function usePercentage(){
+    function usePercentage() {
       return workspaceSettings.showPercentages;
     }
 
