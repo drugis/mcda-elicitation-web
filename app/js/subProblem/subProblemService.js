@@ -101,13 +101,49 @@ define(['lodash', 'angular'], function(_) {
         .value();
     }
 
-    function areValuesMissingInEffectsTable(subProblemState, scales) {
+    function areValuesMissingInEffectsTable(subProblemState, scales, performanceTable) {
       var includedDataSourcesIds = _.keys(_.pickBy(subProblemState.dataSourceInclusions));
       var includedAlternatives = _.keys(_.pickBy(subProblemState.alternativeInclusions));
-      return _.find(includedDataSourcesIds, function(dataSourceId) {
-        return _.find(includedAlternatives, function(alternativeId) {
-          return isNullNaNorUndefined(scales[dataSourceId][alternativeId]['50%']);
+      return _.some(includedDataSourcesIds, function(dataSourceId) {
+        return _.some(includedAlternatives, function(alternativeId) {
+          return isNullNaNorUndefined(scales[dataSourceId][alternativeId]['50%']) &&
+            missesEffectValue(performanceTable, dataSourceId, alternativeId);
         });
+      });
+    }
+
+    function getMissingValueWarnings(subProblemState, scales, performanceTable) {
+      var warnings = [];
+      var includedDataSourcesIds = _.keys(_.pickBy(subProblemState.dataSourceInclusions));
+      var includedAlternatives = _.keys(_.pickBy(subProblemState.alternativeInclusions));
+
+      if( _.some(includedDataSourcesIds, function(dataSourceId) {
+        return _.some(includedAlternatives, function(alternativeId) {
+          return !isNullNaNorUndefined(scales[dataSourceId][alternativeId]['50%']) &&
+            missesEffectValue(performanceTable, dataSourceId, alternativeId);
+        });
+      })){
+        warnings.push('Some cell(s) are missing deterministic values. SMAA values will be used for these cell(s).');
+      }
+
+      if( _.some(includedDataSourcesIds, function(dataSourceId) {
+        return _.some(includedAlternatives, function(alternativeId) {
+          return isNullNaNorUndefined(scales[dataSourceId][alternativeId]['50%']) &&
+            !missesEffectValue(performanceTable, dataSourceId, alternativeId);
+        });
+      })){
+        warnings.push('Some cell(s) are missing SMAA values. Deterministic values will be used for these cell(s).');
+      }
+
+      return warnings;
+    }
+
+    function missesEffectValue(performanceTable, dataSourceId, alternativeId) {
+      return !_.some(performanceTable, function(entry) {
+        return entry.dataSource === dataSourceId &&
+          entry.alternative === alternativeId &&
+          entry.performance.effect &&
+          entry.performance.effect.type !== 'empty';
       });
     }
 
@@ -153,8 +189,8 @@ define(['lodash', 'angular'], function(_) {
         .value();
     }
 
-    function createSubProblemState(problem, subProblem, criteria){
-      return  {
+    function createSubProblemState(problem, subProblem, criteria) {
+      return {
         criterionInclusions: createCriterionInclusions(problem, subProblem),
         alternativeInclusions: createAlternativeInclusions(problem, subProblem),
         dataSourceInclusions: createDataSourceInclusions(problem, subProblem),
@@ -183,6 +219,7 @@ define(['lodash', 'angular'], function(_) {
       checkScaleRanges: checkScaleRanges,
       excludeDataSourcesForExcludedCriteria: excludeDataSourcesForExcludedCriteria,
       areValuesMissingInEffectsTable: areValuesMissingInEffectsTable,
+      getMissingValueWarnings: getMissingValueWarnings,
       hasInvalidSlider: hasInvalidSlider,
       getNumberOfDataSourcesPerCriterion: getNumberOfDataSourcesPerCriterion,
       areTooManyDataSourcesSelected: areTooManyDataSourcesSelected,

@@ -226,6 +226,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales);
         expect(result).toBeTruthy();
       });
+
       it('should return falsy if there no missing or invalid values', () => {
         var scales = {
           ds1: {
@@ -235,7 +236,179 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales);
         expect(result).toBeFalsy();
       });
+
+      it('should return falsy if the distribution is missing, but there is an effect value', function() {
+        var performanceTable = [{
+          alternative: 'alt1',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'value',
+              value: 10
+            }
+          }
+        }];
+        var scales = {
+          ds1: {
+            alt1: { '50%': null }
+          }
+        };
+        var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales, performanceTable);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return falsy if the effect is missing, but there is an distribution value', function() {
+        var performanceTable = [{
+          alternative: 'alt1',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'empty'
+            }
+          }
+        }];
+        var scales = {
+          ds1: {
+            alt1: { '50%': 5 }
+          }
+        };
+        var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales, performanceTable);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return truthy if both the distribution and effect value are missing', function() {
+        var performanceTable = [{
+          alternative: 'alt1',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'empty'
+            }
+          }
+        }];
+        var scales = {
+          ds1: {
+            alt1: { '50%': null }
+          }
+        };
+        var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales, performanceTable);
+        expect(result).toBeTruthy();
+      });
     });
+
+    describe('getMissingValueWarnings', function() {
+      var subProblemState = {
+        dataSourceInclusions: { 'ds1': true },
+        alternativeInclusions: { 'alt1': true }
+      };
+      var noSMAAWarning = 'Some cell(s) are missing SMAA values. Deterministic values will be used for these cell(s).';
+      var noDeterministicWarning = 'Some cell(s) are missing deterministic values. SMAA values will be used for these cell(s).';
+
+      it('should return no warnings if all values are present', function() {
+        var scales = {
+          ds1: {
+            alt1: { '50%': 10 }
+          }
+        };
+        var performanceTable = [{
+          alternative: 'alt1',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'value',
+              value: 10
+            }
+          }
+        }];
+        var warnings = subProblemService.getMissingValueWarnings(subProblemState, scales, performanceTable);
+
+        var expectedWarnings = [];
+        expect(warnings).toEqual(expectedWarnings);
+      });
+
+      it('should warn about missing SMAA values when Deterministic values are present', function() {
+        var scales = {
+          ds1: {
+            alt1: { '50%': null }
+          }
+        };
+        var performanceTable = [{
+          alternative: 'alt1',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'value',
+              value: 10
+            }
+          }
+        }];
+        var warnings = subProblemService.getMissingValueWarnings(subProblemState, scales, performanceTable);
+
+        var expectedWarnings = [noSMAAWarning];
+        expect(warnings).toEqual(expectedWarnings);
+      });
+
+      it('should warn about missing deterministic values when SMAA values are present', function() {
+        var scales = {
+          ds1: {
+            alt1: { '50%': 10 }
+          }
+        };
+        var performanceTable = [{
+          alternative: 'alt1',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'empty'
+            }
+          }
+        }];
+        var warnings = subProblemService.getMissingValueWarnings(subProblemState, scales, performanceTable);
+
+        var expectedWarnings = [noDeterministicWarning];
+        expect(warnings).toEqual(expectedWarnings);
+      });
+
+      it('should warn about missing deterministic and SMAA values', function() {
+        var subProblemStateExtended = {
+          dataSourceInclusions: {
+            ds1: true
+          },
+          alternativeInclusions: {
+            alt1: true,
+            alt2: true
+          }
+        };
+        var scales = {
+          ds1: {
+            alt1: { '50%': 10 },
+            alt2: { '50%': null }
+          }
+        };
+        var performanceTable = [{
+          alternative: 'alt1',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'empty'
+            }
+          }
+        }, {
+          alternative: 'alt2',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'value',
+              value: 10
+            }
+          }
+        }];
+        var warnings = subProblemService.getMissingValueWarnings(subProblemStateExtended, scales, performanceTable);
+
+        var expectedWarnings = [noDeterministicWarning, noSMAAWarning];
+        expect(warnings).toEqual(expectedWarnings);
+      });
+});
 
     describe('hasInvalidSlider', () => {
       it('should return truthy if any value at an invalid location', () => {
