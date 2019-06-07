@@ -408,7 +408,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         var expectedWarnings = [noDeterministicWarning, noSMAAWarning];
         expect(warnings).toEqual(expectedWarnings);
       });
-});
+    });
 
     describe('hasInvalidSlider', () => {
       it('should return truthy if any value at an invalid location', () => {
@@ -614,6 +614,27 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
             crit3: [0, 1]
           }
         };
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('excludeDeselectedAlternatives', function() {
+      it('should return a performance table without the deselected alternatives', function() {
+        var alternativeInclusions = {
+          a1: true,
+          a2: false
+        };
+        var performanceTable = [{
+          alternative: 'a1'
+        }, {
+          alternative: 'a2'
+        }];
+
+        var result = subProblemService.excludeDeselectedAlternatives(performanceTable, alternativeInclusions);
+        
+        var expectedResult = [{
+          alternative: 'a1'
+        }];
         expect(result).toEqual(expectedResult);
       });
     });

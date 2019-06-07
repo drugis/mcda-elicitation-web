@@ -115,17 +115,20 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.areTooManyDataSourcesSelected = SubProblemService.areTooManyDataSourcesSelected($scope.subProblemState.numberOfDataSourcesPerCriterion);
       $scope.scalesDataSources = getDataSourcesForScaleSliders();
       $scope.warnings = SubProblemService.getMissingValueWarnings($scope.subProblemState, $scope.scales, $scope.problem.performanceTable);
+      initializeScales();
       $timeout(function() {
         $scope.$broadcast('rzSliderForceRender');
       }, 100);
     }
 
     function getDataSourcesForScaleSliders() {
-      return ($scope.hasMissingValues || $scope.areTooManyDataSourcesSelected) ? [] : _.keys(_.pickBy($scope.subProblemState.dataSourceInclusions));
+      return ($scope.hasMissingValues || $scope.areTooManyDataSourcesSelected) ?
+        [] : _.keys(_.pickBy($scope.subProblemState.dataSourceInclusions));
     }
 
     function initializeScales() {
-      var stateAndChoices = ScaleRangeService.getScalesStateAndChoices($scope.originalScales.base, $scope.criteria, $scope.problem.performanceTable);
+      var filteredPerformanceTable =SubProblemService.excludeDeselectedAlternatives($scope.problem.performanceTable, $scope.subProblemState.alternativeInclusions);
+      var stateAndChoices = ScaleRangeService.getScalesStateAndChoices($scope.originalScales.base, $scope.criteria, filteredPerformanceTable);
       $scope.scalesState = stateAndChoices.scalesState;
       $scope.choices = stateAndChoices.choices;
 

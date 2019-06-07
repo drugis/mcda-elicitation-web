@@ -19,19 +19,23 @@ define(['lodash', 'angular'], function(_, angular) {
     };
   }
 
-  function getMinEffect(effectValues) {
+  function getMinEffect(effects) {
+    var effectValues = removeUndefinedValues(effects);
     return _.reduce(effectValues, function(minimum, effect) {
       return minimum < effect ? minimum : effect;
     }, effectValues[0]);
-
   }
 
-  function getMaxEffect(effectValues) {
+  function getMaxEffect(effects) {
+    var effectValues = removeUndefinedValues(effects);
     return _.reduce(effectValues, function(maximum, effect) {
       return maximum > effect ? maximum : effect;
     }, effectValues[0]);
   }
 
+  function removeUndefinedValues(effects) {
+    return _.filter(effects, _.identity);
+  }
 
   function getHull(scaleRanges, percentage) {
     return _(scaleRanges)
@@ -48,7 +52,6 @@ define(['lodash', 'angular'], function(_, angular) {
   function isNotNull(value) {
     return value !== null;
   }
-
 
   return angular.module('elicit.util', [])
     .factory('intervalHull', intervalHull)
