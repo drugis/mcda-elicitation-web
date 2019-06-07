@@ -227,6 +227,10 @@ define(['lodash', 'angular'], function(_, angular) {
           $scope.state = response.state;
           if ($scope.state.step === 'step2') {
             $scope.criteriaRows = EffectsTableService.buildTableRows($scope.state.criteria);
+            if (!$scope.state.inputData.effect && !$scope.state.inputData.distribution) {
+              $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives,
+                $scope.state.inputData);
+            }
           }
           checkInputData();
           setStateWatcher();
