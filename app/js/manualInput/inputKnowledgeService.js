@@ -24,21 +24,61 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function getEffectOptions() {
       return {
-        value: buildValueKnowledge(),
-        valueSE: buildValueSEKnowledge(),
-        valueCI: buildValueConfidenceIntervalKnowledge(),
+        value: VALUE,
+        valueSE: VALUE_STANDARD_ERROR,
+        valueCI: VALUE_CONFIDENCE_INTERVAL,
         valueSampleSize: VALUE_SAMPLE_SIZE,
-        fraction: EVENTS_SAMPLE_SIZE,
+        eventsSampleSize: EVENTS_SAMPLE_SIZE,
         empty: EMPTY
       };
     }
+
+    var VALUE = {
+      id: 'value',
+      label: 'Value',
+      firstParameter: buildDefined('Value'),
+      constraints: true,
+      toString: valueToString,
+      finishInputCell: finishValueCell,
+      buildPerformance: buildValuePerformance,
+      generateDistribution: generateValueDistribution,
+      fits: fitValue
+    };
+
+
+    var VALUE_STANDARD_ERROR = {
+      id: 'valueSE',
+      label: 'Value, SE',
+      firstParameter: buildDefined('Value'),
+      secondParameter: buildPositiveFloat('Standard error'),
+      constraints: true,
+      toString: valueSEToString,
+      finishInputCell: finishValueSE,
+      buildPerformance: buildValueSEPerformance,
+      generateDistribution: generateValueSEDistribution,
+      fits: fitValueSE
+    };
+
+    var VALUE_CONFIDENCE_INTERVAL = {
+      id: 'valueCI',
+      label: 'Value, 95% C.I.',
+      firstParameter: buildDefined('Value'),
+      secondParameter: buildLowerBound(),
+      thirdParameter: buildUpperBound(),
+      constraints: true,
+      toString: valueCIToString,
+      finishInputCell: finishValueCI,
+      buildPerformance: buildValueCIPerformance,
+      generateDistribution: generateValueCIDistribution,
+      fits: fitValueCI
+    };
 
     function getDistributionOptions() {
       return {
         normal: NORMAL,
         beta: BETA,
         gamma: GAMMA,
-        value: buildValueKnowledge(),
+        value: VALUE,
         empty: EMPTY
       };
     }
@@ -55,7 +95,7 @@ define(['lodash', 'angular'], function(_, angular) {
       },
       finishInputCell: function() {
         return {
-          empty: true
+          inputParameters: EMPTY
         };
       },
       buildPerformance: function() {
@@ -77,7 +117,7 @@ define(['lodash', 'angular'], function(_, angular) {
       fits: fitBeta,
       toString: betaToString,
       buildPerformance: buildBetaPerformance,
-      finishInputCell: finishAlphaBetaCell
+      finishInputCell: finishBetaCell
     };
 
     function betaToString(cell) {
@@ -97,7 +137,7 @@ define(['lodash', 'angular'], function(_, angular) {
       fits: fitGamma,
       toString: gammaToString,
       buildPerformance: buildGammaPerformance,
-      finishInputCell: finishAlphaBetaCell
+      finishInputCell: finishGammaCell
     };
 
     function fitGamma(tableEntry) {
@@ -189,70 +229,32 @@ define(['lodash', 'angular'], function(_, angular) {
      * private *
      ***********/
 
-    // knowledge
-    function buildValueKnowledge() {
-      var id = 'value';
-      var knowledge = buildExactKnowledge(id, 'Value');
-      knowledge.fits = fitValue;
-      return knowledge;
-    }
-
     function fitValue(tableEntry) {
       return !tableEntry.performance.input || tableEntry.performance.type === 'empty';
-    }
-
-    function buildExactKnowledge(id, label) {
-      return {
-        id: id,
-        label: label,
-        firstParameter: buildDefined('Value'),
-        constraints: true,
-        toString: valueToString,
-        finishInputCell: finishValueCell,
-        buildPerformance: buildValuePermance,
-        generateDistribution: generateValueDistribution
-      };
-    }
-
-    function buildValueSEKnowledge() {
-      var id = 'valueSE';
-      var knowledge = buildExactKnowledge(id, 'Value, SE');
-      knowledge.fits = fitValueSE;
-      knowledge.secondParameter = buildPositiveFloat('Standard error');
-      knowledge.toString = valueSEToString;
-      knowledge.finishInputCell = finishValueSE;
-      knowledge.buildPerformance = buildValueSEPerformance;
-      knowledge.generateDistribution = generateValueSEDistribution;
-      return knowledge;
     }
 
     function fitValueSE(tableEntry) {
       return tableEntry.performance.input && isFinite(tableEntry.performance.input.stdErr);
     }
 
-    function buildValueConfidenceIntervalKnowledge() {
-      var id = 'valueCI';
-      var knowledge = buildExactKnowledge(id, 'Value, 95% C.I.');
-      knowledge.secondParameter = {
-        label: 'Lower bound',
-        constraints: [
-          ConstraintService.defined(),
-          ConstraintService.belowOrEqualTo('firstParameter')
-        ]
-      };
-      knowledge.thirdParameter = {
+    function buildUpperBound() {
+      return {
         label: 'Upper bound',
         constraints: [
           ConstraintService.defined(),
           ConstraintService.aboveOrEqualTo('firstParameter')
         ]
       };
-      knowledge.fits = fitValueCI;
-      knowledge.toString = valueCIToString;
-      knowledge.finishInputCell = finishValueConfidenceIntervalCell;
-      knowledge.buildPerformance = buildValueCIPerformance;
-      knowledge.generateDistribution = generateValueCIDistribution;
-      return knowledge;
+    }
+
+    function buildLowerBound() {
+      return {
+        label: 'Lower bound',
+        constraints: [
+          ConstraintService.defined(),
+          ConstraintService.belowOrEqualTo('firstParameter')
+        ]
+      };
     }
 
     function fitValueCI(tableEntry) {
@@ -350,7 +352,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     // build performances
-    function buildValuePermance(cell) {
+    function buildValuePerformance(cell) {
       if (cell.isInvalid) {
         return undefined;
       } else {
@@ -449,66 +451,88 @@ define(['lodash', 'angular'], function(_, angular) {
 
     // finish cell functions
 
-    function finishValueCell(cell, tableEntry) {
-      var inputCell = angular.copy(cell);
-      inputCell.firstParameter = tableEntry.performance.value;
+    function finishValueCell(performance) {
+      var inputCell = {
+        inputParameters: VALUE
+      };
+      inputCell.firstParameter = performance.value;
       return inputCell;
     }
 
-    function finishValueSE(tableEntry) {
-      return {
-        firstParameter: tableEntry.performance.input.value,
-        secondParameter: tableEntry.performance.input.stdErr
+    function finishValueSE(performance) {
+      var inputCell = {
+        inputParameters: VALUE_STANDARD_ERROR
       };
+      inputCell.firstParameter = performance.input.value;
+      inputCell.secondParameter = performance.input.stdErr;
+      return inputCell;
     }
 
-    function finishValueConfidenceIntervalCell(tableEntry) {
-      var cell = {};
-      cell.firstParameter = tableEntry.performance.input.value;
+    function finishValueCI(performance) {
+      var cell = {
+        inputParameters: VALUE_CONFIDENCE_INTERVAL
+      };
+      cell.firstParameter = performance.input.value;
 
-      if (tableEntry.performance.input.lowerBound === 'NE') {
+      if (performance.input.lowerBound === 'NE') {
         cell.lowerBoundNE = true;
       } else {
-        cell.secondParameter = tableEntry.performance.input.lowerBound;
+        cell.secondParameter = performance.input.lowerBound;
       }
 
-      if (tableEntry.performance.input.upperBound === 'NE') {
+      if (performance.input.upperBound === 'NE') {
         cell.upperBoundNE = true;
       } else {
-        cell.thirdParameter = tableEntry.performance.input.upperBound;
+        cell.thirdParameter = performance.input.upperBound;
       }
 
       return cell;
     }
 
-    function finishAlphaBetaCell(cell, tableEntry) {
-      var inputCell = angular.copy(cell);
-      inputCell.firstParameter = tableEntry.performance.parameters.alpha;
-      inputCell.secondParameter = tableEntry.performance.parameters.beta;
+    function finishValueSampleSizeCell(performance) {
+      var inputCell = {
+        inputParameters: VALUE_SAMPLE_SIZE
+      };
+      inputCell.firstParameter = performance.input.value;
+      inputCell.secondParameter = performance.input.sampleSize;
       return inputCell;
     }
 
-    function finishValueSampleSizeCell(cell, tableEntry) {
-      var inputCell = angular.copy(cell);
-      inputCell.firstParameter = tableEntry.performance.input.value;
-      inputCell.secondParameter = tableEntry.performance.input.sampleSize;
+    function finishEventSampleSizeInputCell(performance) {
+      var inputCell = {
+        inputParameters: EVENTS_SAMPLE_SIZE
+      };
+      inputCell.firstParameter = performance.input.events;
+      inputCell.secondParameter = performance.input.sampleSize;
       return inputCell;
     }
 
-    function finishNormalInputCell(cell, tableEntry) {
-      var inputCell = angular.copy(cell);
-      inputCell.firstParameter = tableEntry.performance.parameters.mu;
-      inputCell.secondParameter = tableEntry.performance.parameters.sigma;
+    function finishBetaCell(performance) {
+      var inputCell = {
+        inputParameters: BETA
+      };
+      inputCell.firstParameter = performance.parameters.alpha;
+      inputCell.secondParameter = performance.parameters.beta;
       return inputCell;
     }
 
-    function finishEventSampleSizeInputCell(cell, tableEntry) {
-      var inputCell = angular.copy(cell);
-      inputCell.firstParameter = tableEntry.performance.input.events;
-      inputCell.secondParameter = tableEntry.performance.input.sampleSize;
+    function finishGammaCell(performance) {
+      var inputCell = {
+        inputParameters: GAMMA
+      };
+      inputCell.firstParameter = performance.parameters.alpha;
+      inputCell.secondParameter = performance.parameters.beta;
       return inputCell;
     }
 
+    function finishNormalInputCell(performance) {
+      var inputCell = {
+        inputParameters: NORMAL
+      };
+      inputCell.firstParameter = performance.parameters.mu;
+      inputCell.secondParameter = performance.parameters.sigma;
+      return inputCell;
+    }
 
     // to string 
     function valueToString(cell) {

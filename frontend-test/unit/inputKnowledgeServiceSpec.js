@@ -491,32 +491,28 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
 
         it('should create a finished input cell given estimable bounds', function() {
           var tableEntry = {
-            performance: {
               input: {
                 value: 50,
                 lowerBound: 40,
                 upperBound: 60
               }
-            }
           };
           var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(tableEntry);
-          expect(result.firstParameter).toEqual(tableEntry.performance.input.value);
-          expect(result.secondParameter).toEqual(tableEntry.performance.input.lowerBound);
-          expect(result.thirdParameter).toEqual(tableEntry.performance.input.upperBound);
+          expect(result.firstParameter).toEqual(tableEntry.input.value);
+          expect(result.secondParameter).toEqual(tableEntry.input.lowerBound);
+          expect(result.thirdParameter).toEqual(tableEntry.input.upperBound);
         });
 
         it('should create a finished input cell given non-estimable bounds', function() {
-          var tableEntry = {
-            performance: {
+          var performance = {
               input: {
                 value: 50,
                 lowerBound: 'NE',
                 upperBound: 'NE'
-              }
             }
           };
-          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(tableEntry);
-          expect(result.firstParameter).toEqual(tableEntry.performance.input.value);
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(performance);
+          expect(result.firstParameter).toEqual(performance.input.value);
           expect(result.secondParameter).toBeUndefined();
           expect(result.thirdParameter).toBeUndefined();
           expect(result.lowerBoundNE).toBeTruthy();
@@ -609,16 +605,14 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
 
         it('should create a finished input cell', function() {
           var tableEntry = {
-            performance: {
               input: {
                 value: 50,
                 sampleSize: 100
               }
-            }
           };
-          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(cell, tableEntry);
-          expect(result.firstParameter).toEqual(tableEntry.performance.input.value);
-          expect(result.secondParameter).toEqual(tableEntry.performance.input.sampleSize);
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(tableEntry);
+          expect(result.firstParameter).toEqual(tableEntry.input.value);
+          expect(result.secondParameter).toEqual(tableEntry.input.sampleSize);
         });
 
         it('should generate an exact distribution', function(){
@@ -646,7 +640,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
 
       describe('for events with sample size', function() {
         beforeEach(function() {
-          cell.inputParameters.id = 'fraction';
+          cell.inputParameters.id = 'eventsSampleSize';
           cell.secondParameter = 100;
           performanceServiceMock.buildExactPerformance.calls.reset();
         });
@@ -674,17 +668,15 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         });
 
         it('should create a finished input cell', function() {
-          var tableEntry = {
-            performance: {
+          var performance = {
               input: {
                 events: 50,
                 sampleSize: 100
-              }
             }
           };
-          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(cell, tableEntry);
-          expect(result.firstParameter).toEqual(tableEntry.performance.input.events);
-          expect(result.secondParameter).toEqual(tableEntry.performance.input.sampleSize);
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(performance);
+          expect(result.firstParameter).toEqual(performance.input.events);
+          expect(result.secondParameter).toEqual(performance.input.sampleSize);
         });
 
         it('should generate a beta distribution', function(){
@@ -722,10 +714,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
 
         it('should create a finished input cell', function() {
           var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell();
-          var expectedResult = {
-            empty: true
-          };
-          expect(result).toEqual(expectedResult);
+          expect(result.inputParameters.id).toEqual('empty');
         });
 
         it('should create an empty distribution', function() {
@@ -758,7 +747,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             'valueSE',
             'valueCI',
             'valueSampleSize',
-            'fraction',
+            'eventsSampleSize',
             'empty'
           ]);
         });

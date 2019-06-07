@@ -237,17 +237,68 @@ define(['lodash'], function(_) {
         var dataSourceForEntry = _.find(dataSources, ['oldId', tableEntry.dataSource]);
         var alternative = _.find(alternatives, ['oldId', tableEntry.alternative]);
         if (dataSourceForEntry && alternative) {
-          if (!accum[dataSourceForEntry.id]) {
-            accum[dataSourceForEntry.id] = {};
+          if (!accum.effect[dataSourceForEntry.id]) {
+            accum.effect[dataSourceForEntry.id] = {};
+            accum.distribution[dataSourceForEntry.id] = {};
           }
-          accum[dataSourceForEntry.id][alternative.id] = createInputCell(dataSourceForEntry, tableEntry);
+          accum.effect[dataSourceForEntry.id][alternative.id] = createCell('effect', tableEntry);
+          accum.distribution[dataSourceForEntry.id][alternative.id] = createCell('distribution', tableEntry);
         }
         return accum;
-      }, {});
+      }, {
+          effect: {},
+          distribution: {}
+        });
     }
 
-    function createInputCell(dataSource, tableEntry) {
-      return InputKnowledgeService.finishInputCell(dataSource, tableEntry);
+    function createCell(inputType, tableEntry) {
+      var type = getType(inputType, tableEntry.performance);
+      var performance = tableEntry.performance[inputType];
+      return InputKnowledgeService.getOptions(inputType)[type].finishInputCell(performance);
+    }
+
+    function getType(inputType, performance) {
+      if (inputType === 'effect') {
+        return getEffectType(performance);
+      } else {
+        return getDistributionType(performance);
+      }
+    }
+
+    function getEffectType(performance) {
+      if (performance.effect.input) {
+        return determineInputType(performance.effect.input);
+      } else {
+        return performance.effect.type === 'empty' ? 'empty' : 'value';
+      }
+    }
+
+    function determineInputType(input) {
+      if (input.stdErr) {
+        return 'valueSE';
+      } else if (input.lowerBound) {
+        return 'valueCI';
+      } else if (input.events) {
+        return 'eventsSampleSize';
+      } else if (input.sampleSize) {
+        return 'valueSampleSize';
+      } else {
+        return 'value';
+      }
+    }
+
+    function getDistributionType(performance) {
+      if (performance.distribution.type === 'exact') {
+        return 'value';
+      } else if (performance.distribution.type === 'empty') {
+        return 'empty';
+      } else if (performance.distribution.type === 'dnorm') {
+        return 'normal';
+      } else if (performance.distribution.type === 'dgamma') {
+        return 'gamma';
+      } else if (performance.distribution.type === 'dbeta') {
+        return 'beta';
+      }
     }
 
     function findInvalidRow(inputData) {
