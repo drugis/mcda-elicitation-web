@@ -1,16 +1,14 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['lodash'], function(_) {
   var dependencies = [
     'InputKnowledgeService',
     'generateUuid',
-    'currentSchemaVersion',
-    'significantDigits'
+    'currentSchemaVersion'
   ];
   var ManualInputService = function(
     InputKnowledgeService,
     generateUuid,
-    currentSchemaVersion,
-    significantDigits
+    currentSchemaVersion
   ) {
     var INVALID_INPUT_MESSAGE = 'Missing or invalid input';
 
