@@ -13,7 +13,7 @@
               ng-change="inputChanged()" ng-disabled="inputCell.empty"></select>
           </label>
         </div>
-        <div class="cell" ng-if="inputCell.inputParameters.constraints">
+        <div class="cell" ng-if="inputType === 'effect' && inputCell.inputParameters.constraints">
           <label>
             Constraint
             <select ng-model="inputCell.constraint"

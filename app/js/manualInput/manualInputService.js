@@ -1,12 +1,14 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
     'InputKnowledgeService',
+    'ConstraintService',
     'generateUuid',
     'currentSchemaVersion'
   ];
   var ManualInputService = function(
     InputKnowledgeService,
+    ConstraintService,
     generateUuid,
     currentSchemaVersion
   ) {
@@ -44,7 +46,7 @@ define(['lodash'], function(_) {
     }
 
     function getOptions(inputType) {
-      return InputKnowledgeService.getOptions(inputType);
+      return angular.copy(InputKnowledgeService.getOptions(inputType));
     }
 
     function createProblem(criteria, alternatives, title, description, inputData) {
@@ -266,10 +268,10 @@ define(['lodash'], function(_) {
     }
 
     function getEffectType(performance) {
-      if (performance.effect.input) {
+      if (performance.effect && performance.effect.input) {
         return determineInputType(performance.effect.input);
       } else {
-        return performance.effect.type === 'empty' ? 'empty' : 'value';
+        return performance.effect && performance.effect.type === 'empty' ? 'empty' : 'value';
       }
     }
 
@@ -288,16 +290,16 @@ define(['lodash'], function(_) {
     }
 
     function getDistributionType(performance) {
-      if (performance.distribution.type === 'exact') {
-        return 'value';
-      } else if (performance.distribution.type === 'empty') {
+      if (performance.distribution && performance.distribution.type === 'empty') {
         return 'empty';
-      } else if (performance.distribution.type === 'dnorm') {
+      } else if (performance.distribution && performance.distribution.type === 'dnorm') {
         return 'normal';
-      } else if (performance.distribution.type === 'dgamma') {
+      } else if (performance.distribution && performance.distribution.type === 'dgamma') {
         return 'gamma';
-      } else if (performance.distribution.type === 'dbeta') {
+      } else if (performance.distribution && performance.distribution.type === 'dbeta') {
         return 'beta';
+      } else {
+        return 'value';
       }
     }
 
@@ -350,6 +352,28 @@ define(['lodash'], function(_) {
       return cell.inputParameters.generateDistribution(cell);
     }
 
+    function updateConstraints(cellConstraint, constraints) {
+      var newConstraints = angular.copy(constraints);
+      var percentageConstraint = ConstraintService.percentage();
+      var decimalConstraint = ConstraintService.decimal();
+      newConstraints = removeProportionConstraints(constraints, percentageConstraint.label, decimalConstraint.label);
+      switch (cellConstraint) {
+        case percentageConstraint.label:
+          newConstraints.push(percentageConstraint);
+          break;
+        case decimalConstraint.label:
+          newConstraints.push(decimalConstraint);
+          break;
+      }
+      return newConstraints;
+    }
+
+    function removeProportionConstraints(constraints, percentageLabel, decimalLabel) {
+      return _.reject(constraints, function(constraint) {
+        return constraint.label === percentageLabel || constraint.label === decimalLabel;
+      });
+    }
+
     return {
       createProblem: createProblem,
       inputToString: inputToString,
@@ -359,7 +383,8 @@ define(['lodash'], function(_) {
       createStateFromOldWorkspace: createStateFromOldWorkspace,
       findInvalidRow: findInvalidRow,
       findInvalidCell: findInvalidCell,
-      generateDistributions: generateDistributions
+      generateDistributions: generateDistributions,
+      updateConstraints: updateConstraints
     };
   };
 

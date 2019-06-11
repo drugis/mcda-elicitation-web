@@ -41,8 +41,7 @@ define(['lodash', 'angular'], function(_, angular) {
       toString: valueToString,
       finishInputCell: finishValueCell,
       buildPerformance: buildValuePerformance,
-      generateDistribution: generateValueDistribution,
-      fits: fitValue
+      generateDistribution: generateValueDistribution
     };
 
 
@@ -55,8 +54,7 @@ define(['lodash', 'angular'], function(_, angular) {
       toString: valueSEToString,
       finishInputCell: finishValueSE,
       buildPerformance: buildValueSEPerformance,
-      generateDistribution: generateValueSEDistribution,
-      fits: fitValueSE
+      generateDistribution: generateValueSEDistribution
     };
 
     var VALUE_CONFIDENCE_INTERVAL = {
@@ -69,8 +67,7 @@ define(['lodash', 'angular'], function(_, angular) {
       toString: valueCIToString,
       finishInputCell: finishValueCI,
       buildPerformance: buildValueCIPerformance,
-      generateDistribution: generateValueCIDistribution,
-      fits: fitValueCI
+      generateDistribution: generateValueCIDistribution
     };
 
     function getDistributionOptions() {
@@ -87,9 +84,6 @@ define(['lodash', 'angular'], function(_, angular) {
       id: 'empty',
       label: 'Empty cell',
       constraints: false,
-      fits: function(tableEntry) {
-        return tableEntry.performance.type === 'empty';
-      },
       toString: function() {
         return 'empty cell';
       },
@@ -114,7 +108,6 @@ define(['lodash', 'angular'], function(_, angular) {
       firstParameter: buildIntegerAboveZero('Alpha'),
       secondParameter: buildIntegerAboveZero('Beta'),
       constraints: false,
-      fits: fitBeta,
       toString: betaToString,
       buildPerformance: buildBetaPerformance,
       finishInputCell: finishBetaCell
@@ -124,25 +117,16 @@ define(['lodash', 'angular'], function(_, angular) {
       return 'Beta(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
     }
 
-    function fitBeta(tableEntry) {
-      return tableEntry.performance.type === 'dbeta' || tableEntry.performance.type === 'empty';
-    }
-
     var GAMMA = {
       id: 'gamma',
       label: 'Gamma',
       firstParameter: buildFloatAboveZero('Alpha'),
       secondParameter: buildFloatAboveZero('Beta'),
       constraints: false,
-      fits: fitGamma,
       toString: gammaToString,
       buildPerformance: buildGammaPerformance,
       finishInputCell: finishGammaCell
     };
-
-    function fitGamma(tableEntry) {
-      return tableEntry.performance.type === 'dgamma';
-    }
 
     function gammaToString(cell) {
       return 'Gamma(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
@@ -154,15 +138,10 @@ define(['lodash', 'angular'], function(_, angular) {
       firstParameter: buildDefined('Mean'),
       secondParameter: buildPositiveFloat('Standard error'),
       constraints: false,
-      fits: fitNormal,
       toString: normalToString,
       buildPerformance: buildNormalPerformance,
       finishInputCell: finishNormalInputCell
     };
-
-    function fitNormal(tableEntry) {
-      return tableEntry.performance.type === 'dnorm';
-    }
 
     function normalToString(cell) {
       return 'Normal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
@@ -174,18 +153,11 @@ define(['lodash', 'angular'], function(_, angular) {
       firstParameter: buildDefined('Value'),
       secondParameter: buildIntegerAboveZero('Sample size'),
       constraints: true,
-      fits: fitValueSampleSize,
       toString: valueSampleSizeToString,
       finishInputCell: finishValueSampleSizeCell,
       buildPerformance: buildValueSampleSizePerformance,
       generateDistribution: generateValueSampleSizeDistribution
     };
-
-    function fitValueSampleSize(tableEntry) {
-      return tableEntry.performance.input &&
-        tableEntry.performance.input.sampleSize &&
-        !isFinite(tableEntry.performance.input.value);
-    }
 
     var EVENTS_SAMPLE_SIZE = {
       id: 'eventsSampleSize',
@@ -201,7 +173,6 @@ define(['lodash', 'angular'], function(_, angular) {
       },
       secondParameter: buildIntegerAboveZero('Sample size'),
       constraints: false,
-      fits: fitEventsSampleSize,
       toString: eventsSampleSizeToString,
       finishInputCell: finishEventSampleSizeInputCell,
       buildPerformance: buildEventSampleSizePerformance,
@@ -212,11 +183,6 @@ define(['lodash', 'angular'], function(_, angular) {
       return cell.firstParameter + ' / ' + cell.secondParameter;
     }
 
-    function fitEventsSampleSize(tableEntry) {
-      return tableEntry.performance.input &&
-        isFinite(tableEntry.performance.input.events) &&
-        tableEntry.performance.input.sampleSize;
-    }
     /**********
      * public *
      **********/
@@ -228,14 +194,6 @@ define(['lodash', 'angular'], function(_, angular) {
     /***********
      * private *
      ***********/
-
-    function fitValue(tableEntry) {
-      return !tableEntry.performance.input || tableEntry.performance.type === 'empty';
-    }
-
-    function fitValueSE(tableEntry) {
-      return tableEntry.performance.input && isFinite(tableEntry.performance.input.stdErr);
-    }
 
     function buildUpperBound() {
       return {
@@ -255,13 +213,6 @@ define(['lodash', 'angular'], function(_, angular) {
           ConstraintService.belowOrEqualTo('firstParameter')
         ]
       };
-    }
-
-    function fitValueCI(tableEntry) {
-      return tableEntry.performance.input &&
-        (isFinite(tableEntry.performance.input.lowerBound) || tableEntry.performance.input.lowerBound === 'NE') &&
-        (isFinite(tableEntry.performance.input.upperBound) || tableEntry.performance.input.upperBound === 'NE') &&
-        tableEntry.performance.input.scale !== 'percentage';
     }
 
     // generate distributions
@@ -452,26 +403,37 @@ define(['lodash', 'angular'], function(_, angular) {
     // finish cell functions
 
     function finishValueCell(performance) {
-      var inputCell = {
+      var cell = {
         inputParameters: VALUE
       };
-      inputCell.firstParameter = performance.value;
-      return inputCell;
+      if (performance.input && performance.input.scale === 'percentage') {
+        cell.firstParameter = performance.value * 100;
+        cell.inputParameters.firstParameter.constraints.push(ConstraintService.percentage());
+      } else {
+        cell.firstParameter = performance.value;
+      }
+      return cell;
     }
 
     function finishValueSE(performance) {
-      var inputCell = {
+      var cell = {
         inputParameters: VALUE_STANDARD_ERROR
       };
-      inputCell.firstParameter = performance.input.value;
-      inputCell.secondParameter = performance.input.stdErr;
-      return inputCell;
+      if (performance.input.scale === 'percentage') {
+        cell.inputParameters.firstParameter.constraints.push(ConstraintService.percentage());
+      }
+      cell.firstParameter = performance.input.value;
+      cell.secondParameter = performance.input.stdErr;
+      return cell;
     }
 
     function finishValueCI(performance) {
       var cell = {
         inputParameters: VALUE_CONFIDENCE_INTERVAL
       };
+      if (performance.input.scale === 'percentage') {
+        cell.inputParameters.firstParameter.constraints.push(ConstraintService.percentage());
+      }
       cell.firstParameter = performance.input.value;
 
       if (performance.input.lowerBound === 'NE') {
@@ -490,18 +452,24 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function finishValueSampleSizeCell(performance) {
-      var inputCell = {
+      var cell = {
         inputParameters: VALUE_SAMPLE_SIZE
       };
-      inputCell.firstParameter = performance.input.value;
-      inputCell.secondParameter = performance.input.sampleSize;
-      return inputCell;
+      if (performance.input.scale === 'percentage') {
+        cell.inputParameters.firstParameter.constraints.push(ConstraintService.percentage());
+      }
+      cell.firstParameter = performance.input.value;
+      cell.secondParameter = performance.input.sampleSize;
+      return cell;
     }
 
     function finishEventSampleSizeInputCell(performance) {
       var inputCell = {
         inputParameters: EVENTS_SAMPLE_SIZE
       };
+      if (performance.input.scale === 'percentage') {
+        inputCell.inputParameters.firstParameter.constraints.push(ConstraintService.percentage());
+      }
       inputCell.firstParameter = performance.input.events;
       inputCell.secondParameter = performance.input.sampleSize;
       return inputCell;

@@ -39,9 +39,7 @@ define(['lodash', 'angular'], function(_, angular) {
         ];
 
         initInputParameters();
-
-        scope.changeCallback();
-
+   
         scope.$on('open.af.dropdownToggle', function() {
           isEscPressed = false;
         });
@@ -53,7 +51,7 @@ define(['lodash', 'angular'], function(_, angular) {
         });
 
         scope.$watch('cell', initInputParameters);
-        
+
         function saveState() {
           $timeout(function() {
             scope.cell = scope.inputCell;
@@ -77,7 +75,7 @@ define(['lodash', 'angular'], function(_, angular) {
           constraintChanged();
           scope.cell.label = ManualInputService.inputToString(scope.inputCell);
           scope.cell.isInvalid = ManualInputService.getInputError(scope.inputCell);
-          scope.inputParameterOptions = ManualInputService.getOptions(scope.inputType);
+          scope.changeCallback();
         }
 
         function inputChanged() {
@@ -86,39 +84,16 @@ define(['lodash', 'angular'], function(_, angular) {
 
         function constraintChanged() {
           var inputParameters = scope.inputCell.inputParameters;
-          if (inputParameters.firstParameter) {
-            inputParameters.firstParameter.constraints =
-              updateConstraints(inputParameters.firstParameter.constraints);
-          }
-          if (inputParameters.secondParameter) {
-            inputParameters.secondParameter.constraints =
-              updateConstraints(inputParameters.secondParameter.constraints);
-          }
-          if (inputParameters.thirdParameter) {
-            inputParameters.thirdParameter.constraints =
-              updateConstraints(inputParameters.thirdParameter.constraints);
-          }
+          updateParameter(inputParameters.firstParameter);
+          updateParameter(inputParameters.secondParameter);
+          updateParameter(inputParameters.thirdParameter);
           inputChanged();
         }
 
-        function updateConstraints(constraints) {
-          var newConstraints = angular.copy(constraints);
-          newConstraints = removeProportionConstraints(constraints);
-          switch (scope.inputCell.constraint) {
-            case scope.constraints[1].label:
-              newConstraints.push(scope.constraints[1]);
-              break;
-            case scope.constraints[2].label:
-              newConstraints.push(scope.constraints[2]);
-              break;
+        function updateParameter(parameter) {
+          if (parameter) {
+            parameter.constraints = ManualInputService.updateConstraints(scope.inputCell.constraint, parameter.constraints);
           }
-          return newConstraints;
-        }
-
-        function removeProportionConstraints(cellConstraints) {
-          return _.reject(cellConstraints, function(constraint) {
-            return constraint.label === scope.constraints[1].label || constraint.label === scope.constraints[2].label;
-          });
         }
 
         function keyCheck(event) {

@@ -3,18 +3,18 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
 
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
+  var constraintServiceMock = jasmine.createSpyObj('ConstraintService', ['percentage', 'decimal']);
   var currentSchemaVersion = '1.2.0';
   var inputKnowledgeServiceMock = jasmine.createSpyObj('InputKnowledgeService', [
-    'getOptions',
-    'finishInputCell'
+    'getOptions'
   ]);
 
   describe('The manualInputService', function() {
     beforeEach(angular.mock.module('elicit.manualInput', function($provide) {
-
       $provide.value('generateUuid', generateUuidMock);
       $provide.value('currentSchemaVersion', currentSchemaVersion);
       $provide.value('InputKnowledgeService', inputKnowledgeServiceMock);
+      $provide.value('ConstraintService', constraintServiceMock);
     }));
 
     beforeEach(inject(function(ManualInputService) {
@@ -418,7 +418,22 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     });
 
     describe('createStateFromOldWorkspace', function() {
+      var option = {
+        finishInputCell: function() { }
+      };
+
       beforeEach(function() {
+        inputKnowledgeServiceMock.getOptions.and.returnValue({
+          value: option,
+          valueSE: option,
+          valueCI: option,
+          eventsSampleSize: option,
+          valueSampleSize: option,
+          empty: option,
+          normal: option,
+          gamma: option,
+          beta: option
+        });
         generateUuidMock.and.returnValues('uuid1', 'uuid2', 'uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid8', 'uuid9', 'uuid10', 'uuid11', 'uuid12', 'uuid13');
       });
 
@@ -489,38 +504,56 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               criterion: 'crit1',
               dataSource: 'ds1',
               performance: {
-                type: 'dt'
+                effect: {
+                  type: 'exact'
+                },
+                distribution: {
+                  type: 'empty'
+                }
               }
             }, {
               criterion: 'crit2',
               dataSource: 'ds2',
               performance: {
-                type: 'dbeta'
+                effect: {
+                  type: 'empty'
+                },
+                distribution: {
+                  type: 'dbeta'
+                }
               }
             }, {
               criterion: 'crit3',
               dataSource: 'ds3',
               performance: {
-                type: 'dgamma'
+                distribution: {
+                  type: 'dgamma'
+                }
               }
             }, {
               criterion: 'crit4',
               dataSource: 'ds4',
               performance: {
-                type: 'dnorm'
+                distribution: {
+                  type: 'dnorm'
+                }
               }
             }, {
               criterion: 'crit5',
               dataSource: 'ds5',
               alternative: 'alt1',
               performance: {
-                type: 'exact'
+                distribution: {
+                  type: 'exact'
+                }
               }
             }, {
               criterion: 'crit6',
               dataSource: 'ds6',
               performance: {
-                type: 'dsurv'
+                distribution: {
+                  type: 'dsurv'
+                }
               }
             }]
           }
@@ -597,8 +630,14 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             title: 'alternative 1'
           }],
           inputData: {
-            uuid9: {
-              uuid13: undefined // see input knowledge service spec for tests 
+            distribution: {
+              uuid9: {
+                uuid13: undefined // see input knowledge service spec for tests 
+              }
+            }, effect: {
+              uuid9: {
+                uuid13: undefined
+              }
             }
           }
         };
@@ -750,31 +789,71 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
 
         expect(result).toEqual(inputData.distribution);
       });
-    });
 
-    it('should overwrite existing distribution data', function() {
-      var inputData = {
-        effect: {
-          d1: {
-            a1: {
-              inputParameters: {
-                generateDistribution: jasmine.createSpy()
+      it('should overwrite existing distribution data', function() {
+        var inputData = {
+          effect: {
+            d1: {
+              a1: {
+                inputParameters: {
+                  generateDistribution: jasmine.createSpy()
+                }
+              }
+            }
+          },
+          distribution: {
+            d1: {
+              a1: {
+                label: 'test'
               }
             }
           }
-        },
-        distribution: {
-          d1: {
-            a1: {
-              label: 'test'
-            }
-          }
-        }
-      };
-      inputData.effect.d1.a1.inputParameters.generateDistribution.and.returnValue(inputData.effect.d1.a1);
-      var result = manualInputService.generateDistributions(inputData);
+        };
+        inputData.effect.d1.a1.inputParameters.generateDistribution.and.returnValue(inputData.effect.d1.a1);
+        var result = manualInputService.generateDistributions(inputData);
 
-      expect(result).toEqual(inputData.effect);
+        expect(result).toEqual(inputData.effect);
+      });
+    });
+
+    describe('updateConstraints', function() {
+      var percentageConstraint = {
+        label: 'Proportion (percentage)'
+      };
+      var decimalConstraint = {
+        label: 'Proportion (decimal)'
+      };
+      beforeEach(function() {
+        constraintServiceMock.percentage.and.returnValue(percentageConstraint);
+        constraintServiceMock.decimal.and.returnValue(decimalConstraint);
+      });
+
+      it('should remove the percentage and/or decimal constraints', function() {
+        var cellConstraint = 'None';
+        var constraints = [decimalConstraint, percentageConstraint];
+        var result = manualInputService.updateConstraints(cellConstraint, constraints);
+        expect(result).toEqual([]);
+      });
+
+      it('should add the percentage constraint if percentage is chosen', function() {
+        var cellConstraint = percentageConstraint.label;
+        var constraints = [];
+        var result = manualInputService.updateConstraints(cellConstraint, constraints);
+        var expectedResult = [{
+          label: 'Proportion (percentage)'
+        }];
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should add the decimal constraint if decimal is chosen', function() {
+        var cellConstraint = decimalConstraint.label;
+        var constraints = [];
+        var result = manualInputService.updateConstraints(cellConstraint, constraints);
+        var expectedResult = [{
+          label: 'Proportion (decimal)'
+        }];
+        expect(result).toEqual(expectedResult);
+      });
     });
   });
 });
