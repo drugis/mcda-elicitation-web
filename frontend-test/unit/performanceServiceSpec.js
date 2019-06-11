@@ -84,7 +84,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         });
       });
     });
-    
+
     describe('buildGammaPerformance', function() {
       it('should build an exact performance', function() {
         expect(performanceService.buildGammaPerformance(1, 2, { foo: 'bar' })).toEqual({
@@ -106,8 +106,8 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       });
     });
 
-    describe('buildExactSEPerformance', function(){
-      it('should build an exact performance with standard error', function(){
+    describe('buildExactSEPerformance', function() {
+      it('should build an exact performance with standard error', function() {
         var value = 10;
         var standardError = 0.5;
         var result = performanceService.buildExactSEPerformance(value, standardError);
@@ -123,8 +123,8 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       });
     });
 
-    describe('buildExactPercentSEPerformance', function(){
-      it('should build an exact percentage performance with standard error', function(){
+    describe('buildExactPercentSEPerformance', function() {
+      it('should build an exact percentage performance with standard error', function() {
         var value = 10;
         var standardError = 0.5;
         var result = performanceService.buildExactPercentSEPerformance(value, standardError);
@@ -135,6 +135,45 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
             value: value,
             stdErr: standardError,
             scale: 'percentage'
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('buildExactDecimalSEPerformance', function() {
+      it('should build an exact decimal performance with standard error', function() {
+        var value = 0.1;
+        var standardError = 0.05;
+        var result = performanceService.buildExactDecimalSEPerformance(value, standardError);
+        var expectedResult = {
+          type: 'exact',
+          value: value,
+          input: {
+            value: value,
+            stdErr: standardError,
+            scale: 'decimal'
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('buildExactDecimalConfidencePerformance', function() {
+      it('it should build a decimal performance with confidence interval', function() {
+        var result = performanceService.buildExactDecimalConfidencePerformance({
+          firstParameter: 1,
+          secondParameter: 2,
+          thirdParameter: 3
+        });
+        var expectedResult = {
+          type: 'exact',
+          value: 1,
+          input: {
+            value: 1,
+            lowerBound: 2,
+            upperBound: 3,
+            scale: 'decimal'
           }
         };
         expect(result).toEqual(expectedResult);

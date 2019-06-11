@@ -309,6 +309,8 @@ define(['lodash', 'angular'], function(_, angular) {
       } else {
         if (isPercentage(cell)) {
           return buildPercentPerformance(cell);
+        } else if (isDecimal(cell)) {
+          return buildDecimalPerformance(cell);
         } else {
           return PerformanceService.buildExactPerformance(cell.firstParameter);
         }
@@ -321,6 +323,8 @@ define(['lodash', 'angular'], function(_, angular) {
       } else {
         if (isPercentage(cell)) {
           return PerformanceService.buildExactPercentSEPerformance(cell.firstParameter, cell.secondParameter);
+        } else if (isDecimal(cell)) {
+          return PerformanceService.buildExactDecimalSEPerformance(cell.firstParameter, cell.secondParameter);
         } else {
           return PerformanceService.buildExactSEPerformance(cell.firstParameter, cell.secondParameter);
         }
@@ -333,6 +337,8 @@ define(['lodash', 'angular'], function(_, angular) {
       } else {
         if (isPercentage(cell)) {
           return PerformanceService.buildExactPercentConfidencePerformance(cell);
+        } else if (isDecimal(cell)) {
+          return PerformanceService.buildExactDecimalConfidencePerformance(cell);
         } else {
           return PerformanceService.buildExactConfidencePerformance(cell);
         }
@@ -361,6 +367,9 @@ define(['lodash', 'angular'], function(_, angular) {
           value: value,
           sampleSize: sampleSize
         };
+        if (isDecimal(cell)) {
+          input.scale = 'decimal';
+        }
         if (isPercentage(cell)) {
           input.scale = 'percentage';
           value = value / 100;
@@ -400,16 +409,27 @@ define(['lodash', 'angular'], function(_, angular) {
       });
     }
 
+    function buildDecimalPerformance(cell) {
+      return PerformanceService.buildExactPerformance(cell.firstParameter, {
+        scale: 'decimal',
+        value: cell.firstParameter
+      });
+    }
+
     // finish cell functions
 
     function finishValueCell(performance) {
       var cell = {
         inputParameters: VALUE
       };
-      if (performance.input && performance.input.scale === 'percentage') {
+      var input = performance.input;
+      if (input && input.scale === 'percentage') {
         cell.firstParameter = performance.value * 100;
         cell.inputParameters.firstParameter.constraints.push(ConstraintService.percentage());
       } else {
+        if (input && input.scale === 'decimal') {
+          cell.inputParameters.firstParameter.constraints.push(ConstraintService.decimal());
+        }
         cell.firstParameter = performance.value;
       }
       return cell;
@@ -422,6 +442,9 @@ define(['lodash', 'angular'], function(_, angular) {
       if (performance.input.scale === 'percentage') {
         cell.inputParameters.firstParameter.constraints.push(ConstraintService.percentage());
       }
+      if (performance.input.scale === 'decimal') {
+        cell.inputParameters.firstParameter.constraints.push(ConstraintService.decimal());
+      }
       cell.firstParameter = performance.input.value;
       cell.secondParameter = performance.input.stdErr;
       return cell;
@@ -433,6 +456,9 @@ define(['lodash', 'angular'], function(_, angular) {
       };
       if (performance.input.scale === 'percentage') {
         cell.inputParameters.firstParameter.constraints.push(ConstraintService.percentage());
+      }
+      if (performance.input.scale === 'decimal') {
+        cell.inputParameters.firstParameter.constraints.push(ConstraintService.decimal());
       }
       cell.firstParameter = performance.input.value;
 
@@ -458,6 +484,9 @@ define(['lodash', 'angular'], function(_, angular) {
       if (performance.input.scale === 'percentage') {
         cell.inputParameters.firstParameter.constraints.push(ConstraintService.percentage());
       }
+      if (performance.input.scale === 'decimal') {
+        cell.inputParameters.firstParameter.constraints.push(ConstraintService.decimal());
+      }
       cell.firstParameter = performance.input.value;
       cell.secondParameter = performance.input.sampleSize;
       return cell;
@@ -467,9 +496,6 @@ define(['lodash', 'angular'], function(_, angular) {
       var inputCell = {
         inputParameters: EVENTS_SAMPLE_SIZE
       };
-      if (performance.input.scale === 'percentage') {
-        inputCell.inputParameters.firstParameter.constraints.push(ConstraintService.percentage());
-      }
       inputCell.firstParameter = performance.input.events;
       inputCell.secondParameter = performance.input.sampleSize;
       return inputCell;
@@ -539,6 +565,10 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function isPercentage(cell) {
       return _.some(cell.inputParameters.firstParameter.constraints, ['label', 'Proportion (percentage)']);
+    }
+
+    function isDecimal(cell) {
+      return _.some(cell.inputParameters.firstParameter.constraints, ['label', 'Proportion (decimal)']);
     }
 
     // constraints

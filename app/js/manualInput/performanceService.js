@@ -25,6 +25,14 @@ define(['angular'], function() {
       });
     }
 
+    function buildExactDecimalSEPerformance(firstParameter, secondParameter) {
+      return buildExactPerformance(firstParameter, {
+        value: firstParameter,
+        stdErr: secondParameter,
+        scale: 'decimal'
+      });
+    }
+
     function buildExactConfidencePerformance(cell) {
       return buildExactPerformance(cell.firstParameter, {
         value: cell.firstParameter,
@@ -39,6 +47,15 @@ define(['angular'], function() {
         lowerBound: cell.lowerBoundNE ? 'NE' : cell.secondParameter,
         upperBound: cell.upperBoundNE ? 'NE' : cell.thirdParameter,
         scale: 'percentage'
+      });
+    }
+
+    function buildExactDecimalConfidencePerformance(cell) {
+      return buildExactPerformance((cell.firstParameter), {
+        value: cell.firstParameter,
+        lowerBound: cell.lowerBoundNE ? 'NE' : cell.secondParameter,
+        upperBound: cell.upperBoundNE ? 'NE' : cell.thirdParameter,
+        scale: 'decimal'
       });
     }
 
@@ -80,14 +97,16 @@ define(['angular'], function() {
 
     return {
       buildExactPerformance: buildExactPerformance,
+      buildExactSEPerformance: buildExactSEPerformance,
+      buildExactPercentSEPerformance: buildExactPercentSEPerformance,
+      buildExactDecimalSEPerformance: buildExactDecimalSEPerformance,
       buildExactConfidencePerformance: buildExactConfidencePerformance,
       buildExactPercentConfidencePerformance: buildExactPercentConfidencePerformance,
+      buildExactDecimalConfidencePerformance: buildExactDecimalConfidencePerformance,
       buildNormalPerformance: buildNormalPerformance,
       buildBetaPerformance: buildBetaPerformance,
       buildGammaPerformance: buildGammaPerformance,
-      buildEmptyPerformance: buildEmptyPerformance,
-      buildExactSEPerformance: buildExactSEPerformance,
-      buildExactPercentSEPerformance: buildExactPercentSEPerformance
+      buildEmptyPerformance: buildEmptyPerformance
     };
   };
   return dependencies.concat(PerformanceService);

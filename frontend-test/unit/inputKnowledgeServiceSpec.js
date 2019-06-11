@@ -25,8 +25,10 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       'buildGammaPerformance',
       'buildExactConfidencePerformance',
       'buildExactPercentConfidencePerformance',
+      'buildExactDecimalConfidencePerformance',
       'buildExactSEPerformance',
       'buildExactPercentSEPerformance',
+      'buildExactDecimalSEPerformance'
     ]);
   describe('the input knowledge service', function() {
     beforeEach(angular.mock.module('elicit.manualInput', function($provide) {
@@ -284,6 +286,17 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(50 / 100, input);
         });
 
+
+        it('should create correct decimal performance', function() {
+          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (decimal)' });
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          var input = {
+            scale: 'decimal',
+            value: 50
+          };
+          expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(50, input);
+        });
+
         it('should not create performance for an invalid cell', function() {
           cell.isInvalid = true;
           var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
@@ -311,6 +324,19 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(performance);
           expect(result.firstParameter).toEqual(50);
           expect(result.inputParameters.firstParameter.constraints[1].label).toEqual('Proportion (percentage)');
+        });
+
+        it('should create a finished input cell for a cell with decimal scale', function() {
+          var performance = {
+            type: 'exact',
+            value: 0.5,
+            input: {
+              scale: 'decimal'
+            }
+          };
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(performance);
+          expect(result.firstParameter).toEqual(0.5);
+          expect(result.inputParameters.firstParameter.constraints[1].label).toEqual('Proportion (decimal)');
         });
 
         it('should generate an exact distribution', function() {
@@ -402,6 +428,12 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(performanceServiceMock.buildExactPercentSEPerformance).toHaveBeenCalledWith(50, 0.5);
         });
 
+        it('should create correct decimal performance', function() {
+          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (decimal)' });
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactDecimalSEPerformance).toHaveBeenCalledWith(50, 0.5);
+        });
+
         it('should not create performance for an invalid cell', function() {
           cell.isInvalid = true;
           var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
@@ -433,6 +465,20 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result.firstParameter).toEqual(performance.input.value);
           expect(result.secondParameter).toEqual(performance.input.stdErr);
           expect(result.inputParameters.firstParameter.constraints[1].label).toEqual('Proportion (percentage)');
+        });
+
+        it('should create a finished input cell with scale decimal', function() {
+          var performance = {
+              input: {
+                value: 0.5,
+                stdErr: 0.5,
+                scale: 'decimal'
+            }
+          };
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(performance);
+          expect(result.firstParameter).toEqual(performance.input.value);
+          expect(result.secondParameter).toEqual(performance.input.stdErr);
+          expect(result.inputParameters.firstParameter.constraints[1].label).toEqual('Proportion (decimal)');
         });
 
         it('should generate a normal distribution', function() {
@@ -492,6 +538,12 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(performanceServiceMock.buildExactPercentConfidencePerformance).toHaveBeenCalledWith(cell);
         });
 
+        it('should create correct decimal performance', function() {
+          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (decimal)' });
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactDecimalConfidencePerformance).toHaveBeenCalledWith(cell);
+        });
+
         it('should not create performance for an invalid cell', function() {
           cell.isInvalid = true;
           var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
@@ -527,6 +579,22 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result.secondParameter).toEqual(performance.input.lowerBound);
           expect(result.thirdParameter).toEqual(performance.input.upperBound);
           expect(result.inputParameters.firstParameter.constraints[1].label).toEqual('Proportion (percentage)');
+        });
+  
+        it('should create a finished input cell given estimable bounds with decimal scale', function() {
+          var performance = {
+            input: {
+              value: 0.5,
+              lowerBound: 0.4,
+              upperBound: 0.6,
+              scale: 'decimal'
+            }
+          };
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(performance);
+          expect(result.firstParameter).toEqual(performance.input.value);
+          expect(result.secondParameter).toEqual(performance.input.lowerBound);
+          expect(result.thirdParameter).toEqual(performance.input.upperBound);
+          expect(result.inputParameters.firstParameter.constraints[1].label).toEqual('Proportion (decimal)');
         });
 
         it('should create a finished input cell given non-estimable bounds', function() {
@@ -622,6 +690,18 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(value / 100, input);
         });
 
+        it('should create correct decimal performance', function() {
+          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (decimal)' });
+          var value = cell.firstParameter;
+          var input = {
+            value: value,
+            sampleSize: cell.secondParameter,
+            scale: 'decimal'
+          };
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(value, input);
+        });
+
         it('should not create performance for an invalid cell', function() {
           cell.isInvalid = true;
           var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
@@ -641,7 +721,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result.secondParameter).toEqual(performance.input.sampleSize);
         });
 
-        it('should create a finished input cell', function() {
+        it('should create a finished input percentage cell', function() {
           var performance = {
             input: {
               value: 50,
@@ -653,6 +733,20 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result.firstParameter).toEqual(performance.input.value);
           expect(result.secondParameter).toEqual(performance.input.sampleSize);
           expect(result.inputParameters.firstParameter.constraints[1].label).toEqual('Proportion (percentage)');
+        });
+
+        it('should create a finished input decimal cell', function() {
+          var performance = {
+            input: {
+              value: 0.5,
+              sampleSize: 100,
+              scale: 'decimal'
+            }
+          };
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(performance);
+          expect(result.firstParameter).toEqual(performance.input.value);
+          expect(result.secondParameter).toEqual(performance.input.sampleSize);
+          expect(result.inputParameters.firstParameter.constraints[1].label).toEqual('Proportion (decimal)');
         });
 
         it('should generate an exact distribution', function() {
@@ -691,7 +785,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result).toEqual(expectedResult);
         });
 
-        it('should create correct performance', function() {
+        it('should create the correct performance', function() {
           var input = {
             events: cell.firstParameter,
             sampleSize: cell.secondParameter
@@ -729,7 +823,6 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           };
           expect(result).toEqual(expectedResult);
         });
-
       });
 
       describe('for an empty cell', function() {
