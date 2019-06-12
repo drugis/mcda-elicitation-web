@@ -171,7 +171,7 @@ define(['lodash', 'angular'], function(_, angular) {
       if (!performance.effect) {
         if (performance.distribution.input) {
           return buildEffectInputLabel(performance.distribution.input);
-        } else if (performance.distribution === 'exact') {
+        } else if (performance.distribution.type === 'exact') {
           return performance.distribution.value;
         } else {
           return NOT_ENTERED;
