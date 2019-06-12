@@ -1,18 +1,15 @@
 <div ng-if="effectsDisplay === 'deterministic'">
-  <div ng-if="effectLabel">
-    {{effectLabel}}
-  </div>
-  <div ng-if="!isAbsolute">
-    Not entered
-  </div>
+  {{effectLabel}}
 </div>
 
 <div ng-if="effectsDisplay === 'deterministicMCDA'">
-  <div ng-if="isAbsolute">
+  <div ng-if="effectValue !== 'Not entered'">
     {{effectValue}}
   </div>
-  <div ng-if="!isAbsolute">
-    Not entered
+  <div ng-if="effectValue === 'Not entered'">
+    <effects-table-scales-cell scales="scales" uncertainty="false" workspace-settings="workspaceSettings"
+      theoretical-scale="theoreticalScale">
+    </effects-table-scales-cell>
   </div>
 </div>
 
@@ -23,10 +20,5 @@
 </div>
 
 <div ng-if="effectsDisplay === 'smaaDistributions'">
-  <div ng-if="isAbsolute">
-    {{distributionLabel}}
-  </div>
-  <div ng-if="!isAbsolute">
-    Not entered
-  </div>
+  {{distributionLabel}}
 </div>
