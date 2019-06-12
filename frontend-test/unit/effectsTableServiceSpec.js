@@ -163,7 +163,7 @@ define([
                 alternativeId2: {
                   effectLabel: 1,
                   effectValue: 1,
-                  distributionLabel: 'NA',
+                  distributionLabel: 'Not entered',
                   hasUncertainty: false
                 }
               }
@@ -196,7 +196,7 @@ define([
                 alternativeId2: {
                   effectLabel: '1 (0.5)',
                   effectValue: 1,
-                  distributionLabel: 'NA',
+                  distributionLabel: 'Not entered',
                   hasUncertainty: false
                 }
               }
@@ -230,7 +230,7 @@ define([
                 alternativeId2: {
                   effectLabel: '1 (0.5; 2)',
                   effectValue: 1,
-                  distributionLabel: 'NA',
+                  distributionLabel: 'Not entered',
                   hasUncertainty: false
                 }
               }
@@ -263,7 +263,7 @@ define([
                 alternativeId2: {
                   effectLabel: '1 / 10',
                   effectValue: 2,
-                  distributionLabel: 'NA',
+                  distributionLabel: 'Not entered',
                   hasUncertainty: false
                 }
               }
@@ -296,7 +296,7 @@ define([
                 alternativeId2: {
                   effectLabel: '10 / 100',
                   effectValue: 1,
-                  distributionLabel: 'NA',
+                  distributionLabel: 'Not entered',
                   hasUncertainty: false
                 }
               }
@@ -327,8 +327,8 @@ define([
               isAbsolute: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId3: {
-                  effectLabel: 'NA',
-                  effectValue: 'NA',
+                  effectLabel: 'Not entered',
+                  effectValue: 'Not entered',
                   distributionLabel: 'Student\'s t(5, 1, 10)',
                   hasUncertainty: true
                 }
@@ -359,8 +359,8 @@ define([
               isAbsolute: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId4: {
-                  effectLabel: 'NA',
-                  effectValue: 'NA',
+                  effectLabel: 'Not entered',
+                  effectValue: 'Not entered',
                   distributionLabel: 'Normal(6, 2)',
                   hasUncertainty: true
                 }
@@ -391,8 +391,8 @@ define([
               isAbsolute: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId5: {
-                  effectLabel: 'NA',
-                  effectValue: 'NA',
+                  effectLabel: 'Not entered',
+                  effectValue: 'Not entered',
                   distributionLabel: 'Beta(5, 11)',
                   hasUncertainty: true
                 }
@@ -423,8 +423,8 @@ define([
               isAbsolute: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId5: {
-                  effectLabel: 'NA',
-                  effectValue: 'NA',
+                  effectLabel: 'Not entered',
+                  effectValue: 'Not entered',
                   distributionLabel: 'Gamma(10, 12344321)',
                   hasUncertainty: true
                 }
@@ -452,8 +452,8 @@ define([
               isAbsolute: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId5: {
-                  effectLabel: 'NA',
-                  effectValue: 'NA',
+                  effectLabel: 42,
+                  effectValue: 'Not entered',
                   distributionLabel: '42',
                   hasUncertainty: false
                 }
@@ -481,8 +481,8 @@ define([
               isAbsolute: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId8: {
-                  effectLabel: 'NA',
-                  effectValue: 'NA',
+                  effectLabel: 'Not entered',
+                  effectValue: 'Not entered',
                   distributionLabel: '',
                   hasUncertainty: false
                 }
@@ -511,7 +511,7 @@ define([
                 alternativeId8: {
                   effectLabel: '',
                   effectValue: '',
-                  distributionLabel: 'NA',
+                  distributionLabel: 'Not entered',
                   hasUncertainty: false
                 }
               }

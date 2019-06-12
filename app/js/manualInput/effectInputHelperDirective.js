@@ -91,7 +91,7 @@ define(['lodash', 'angular'], function(_, angular) {
         }
 
         function updateParameter(parameter) {
-          if (parameter) {
+          if (parameter && parameter.label !== 'Sample size') {
             parameter.constraints = ManualInputService.updateConstraints(scope.inputCell.constraint, parameter.constraints);
           }
         }

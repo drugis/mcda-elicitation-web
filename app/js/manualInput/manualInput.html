@@ -151,14 +151,18 @@
     <div>
       <tabset>
         <tab heading="Classical" active="state.currentTab === 'effect'" ng-click="state.currentTab = 'effect'">
-          <manual-input-table input-type="'effect'" state="state" criteria-rows="criteriaRows" check-input-data="checkInputData">
+          <manual-input-table input-type="'effect'" state="state" criteria-rows="criteriaRows"
+            check-input-data="checkInputData">
           </manual-input-table>
           <div>
-            <button class="button" type="button" ng-click="generateDistributions()" tooltip="Generate distribution parameters for SMAA using values in the Classical view. Any existing values in the SMAA tab will be overwritten.">Generate distributions</button>
+            <button class="button" type="button" ng-click="generateDistributions()"
+              tooltip="Generate distribution parameters for SMAA using values in the Classical view. Any existing values in the SMAA tab will be overwritten.">Generate
+              distributions</button>
           </div>
         </tab>
         <tab heading="SMAA" active="state.currentTab === 'distribution'" ng-click="state.currentTab = 'distribution'">
-          <manual-input-table input-type="'distribution'" state="state" criteria-rows="criteriaRows" check-input-data="checkInputData">
+          <manual-input-table input-type="'distribution'" state="state" criteria-rows="criteriaRows"
+            check-input-data="checkInputData">
           </manual-input-table>
         </tab>
       </tabset>
@@ -176,7 +180,7 @@
         {{error}}
       </div>
       <div ng-if="state.warnings.length" ng-repeat="warning in state.warnings">
-        <em>{{warning}}</em>
+        <i class="fa fa-exclamation-triangle"></i> {{warning}}
       </div>
     </div>
   </div>

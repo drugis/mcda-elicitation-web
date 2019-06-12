@@ -118,13 +118,13 @@ define(['lodash', 'angular'], function(_, angular) {
       } else if (performance.effect) {
         return performance.effect.value;
       } else {
-        return 'NA';
+        return 'Not entered';
       }
     }
 
     function buildDistributionLabel(distribution) {
       if (!distribution) {
-        return 'NA';
+        return 'Not entered';
       } else if (distribution.type === 'dt') {
         return buildStudentsTLabel(distribution.parameters);
       } else if (distribution.type === 'dnorm') {
@@ -167,7 +167,15 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function buildEffectLabel(performance) {
       if (!performance.effect) {
-        return 'NA';
+        if (performance.distribution.type === 'exact') {
+          if (performance.distribution.input) {
+            return buildEffectInputLabel(performance.distribution.input);
+          } else {
+            return performance.distribution.value;
+          }
+        } else {
+          return 'Not entered';
+        }
       } else if (performance.effect.input) {
         return buildEffectInputLabel(performance.effect.input);
       } else if (performance.effect.type === 'empty') {
@@ -178,14 +186,17 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function buildEffectInputLabel(input) {
+      var percentage = input.scale === 'percentage' ? '%' : '';
       if (input.stdErr) {
-        return input.value + ' (' + input.stdErr + ')';
+        return input.value + percentage + ' (' + input.stdErr + percentage + ')';
       } else if (input.lowerBound && input.upperBound) {
-        return input.value + ' (' + input.lowerBound + '; ' + input.upperBound + ')';
+        return input.value + percentage + ' (' + input.lowerBound + percentage + '; ' + input.upperBound + percentage + ')';
       } else if (input.value && input.sampleSize) {
-        return input.value + ' / ' + input.sampleSize;
+        return input.value + percentage + ' / ' + input.sampleSize;
       } else if (input.events && input.sampleSize) {
         return input.events + ' / ' + input.sampleSize;
+      } else {
+        return input.value + percentage;
       }
     }
 
