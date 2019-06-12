@@ -3,6 +3,8 @@ define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [];
 
   var EffectsTableService = function() {
+    var NOT_ENTERED = 'Not entered';
+
     function buildEffectsTable(criteria) {
       var tableRows = addCanBePercentageToCriteria(angular.copy(criteria));
       var useFavorability = _.find(criteria, function(criterion) {
@@ -118,13 +120,13 @@ define(['lodash', 'angular'], function(_, angular) {
       } else if (performance.effect) {
         return performance.effect.value;
       } else {
-        return 'Not entered';
+        return NOT_ENTERED;
       }
     }
 
     function buildDistributionLabel(distribution) {
       if (!distribution) {
-        return 'Not entered';
+        return NOT_ENTERED;
       } else if (distribution.type === 'dt') {
         return buildStudentsTLabel(distribution.parameters);
       } else if (distribution.type === 'dnorm') {
@@ -167,14 +169,12 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function buildEffectLabel(performance) {
       if (!performance.effect) {
-        if (performance.distribution.type === 'exact') {
-          if (performance.distribution.input) {
-            return buildEffectInputLabel(performance.distribution.input);
-          } else {
-            return performance.distribution.value;
-          }
+        if (performance.distribution.input) {
+          return buildEffectInputLabel(performance.distribution.input);
+        } else if (performance.distribution === 'exact') {
+          return performance.distribution.value;
         } else {
-          return 'Not entered';
+          return NOT_ENTERED;
         }
       } else if (performance.effect.input) {
         return buildEffectInputLabel(performance.effect.input);
