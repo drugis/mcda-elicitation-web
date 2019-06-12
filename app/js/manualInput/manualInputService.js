@@ -256,7 +256,7 @@ define(['lodash', 'angular'], function(_, angular) {
     function createCell(inputType, tableEntry) {
       var type = getType(inputType, tableEntry.performance);
       var performance = tableEntry.performance[inputType];
-      return InputKnowledgeService.getOptions(inputType)[type].finishInputCell(performance);
+      return performance ? InputKnowledgeService.getOptions(inputType)[type].finishInputCell(performance) : undefined;
     }
 
     function getType(inputType, performance) {
@@ -303,12 +303,17 @@ define(['lodash', 'angular'], function(_, angular) {
       }
     }
 
-    function findInvalidRow(inputData) {
+    function findDuplicateValues(inputData) {
+      return !findInvalidCell(inputData) && findRowWithSameValues(inputData);
+    }
+
+    function findRowWithSameValues(inputData) {
       return _.some(inputData, function(row) {
         if (findCellThatIsDifferent(row)) {
           return;
+        } else {
+          return row;
         }
-        return row;
       });
     }
 
@@ -381,7 +386,7 @@ define(['lodash', 'angular'], function(_, angular) {
       prepareInputData: prepareInputData,
       getOptions: getOptions,
       createStateFromOldWorkspace: createStateFromOldWorkspace,
-      findInvalidRow: findInvalidRow,
+      findDuplicateValues: findDuplicateValues,
       findInvalidCell: findInvalidCell,
       generateDistributions: generateDistributions,
       updateConstraints: updateConstraints

@@ -101,11 +101,11 @@ define(['lodash', 'angular'], function(_, angular) {
           $scope.state.errors.push('Both tabs contain missing or invalid values');
         }
 
-        if (ManualInputService.findInvalidRow($scope.state.inputData.effect) && !isDistributionDataValid) {
+        if (ManualInputService.findDuplicateValues($scope.state.inputData.effect) && !isDistributionDataValid) {
           $scope.state.errors.push('Classical tab contains a row with duplicate values');
         }
 
-        if (ManualInputService.findInvalidRow($scope.state.inputData.effect) && isDistributionDataValid) {
+        if (ManualInputService.findDuplicateValues($scope.state.inputData.effect) && isDistributionDataValid) {
           $scope.state.warnings.push('Classical tab contains a row with duplicate values and can not be used');
         }
       }

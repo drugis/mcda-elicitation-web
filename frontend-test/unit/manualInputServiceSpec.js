@@ -688,7 +688,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
     });
 
-    describe('findInvalidRow', () => {
+    describe('findDuplicateValues', () => {
       it('should return truthy if there is an invalid row i.e. all inputs have the same effect value', () => {
         var inputData = {
           row1: {
@@ -715,7 +715,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             }
           }
         };
-        var result = manualInputService.findInvalidRow(inputData);
+        var result = manualInputService.findDuplicateValues(inputData);
         expect(result).toBeTruthy();
       });
 
@@ -745,7 +745,22 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             }
           }
         };
-        var result = manualInputService.findInvalidRow(inputData);
+        var result = manualInputService.findDuplicateValues(inputData);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return falsy if there are not values in the row', function() {
+        var inputData = {
+          row1: {
+            col1: {
+              isInvalid: true
+            },
+            col2: {
+              isInvalid: true
+            }
+          }
+        };
+        var result = manualInputService.findDuplicateValues(inputData);
         expect(result).toBeFalsy();
       });
     });
