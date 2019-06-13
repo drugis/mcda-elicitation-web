@@ -329,7 +329,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId3: {
                   effectLabel: 'Not entered',
-                  effectValue: 'Not entered',
+                  effectValue: '',
                   distributionLabel: 'Student\'s t(5, 1, 10)',
                   hasUncertainty: true
                 }
@@ -361,7 +361,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId4: {
                   effectLabel: 'Not entered',
-                  effectValue: 'Not entered',
+                  effectValue: '',
                   distributionLabel: 'Normal(6, 2)',
                   hasUncertainty: true
                 }
@@ -393,7 +393,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId5: {
                   effectLabel: 'Not entered',
-                  effectValue: 'Not entered',
+                  effectValue: '',
                   distributionLabel: 'Beta(5, 11)',
                   hasUncertainty: true
                 }
@@ -425,7 +425,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId5: {
                   effectLabel: 'Not entered',
-                  effectValue: 'Not entered',
+                  effectValue: '',
                   distributionLabel: 'Gamma(10, 12344321)',
                   hasUncertainty: true
                 }
@@ -454,7 +454,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId5: {
                   effectLabel: 42,
-                  effectValue: 'Not entered',
+                  effectValue: '',
                   distributionLabel: '42',
                   hasUncertainty: false
                 }
@@ -483,7 +483,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId8: {
                   effectLabel: 'Not entered',
-                  effectValue: 'Not entered',
+                  effectValue: '',
                   distributionLabel: '',
                   hasUncertainty: false
                 }
@@ -512,7 +512,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId8: {
                   effectLabel: 'Not entered',
-                  effectValue: 'Not entered',
+                  effectValue: '',
                   distributionLabel: 'text',
                   hasUncertainty: false
                 }
@@ -569,7 +569,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId8: {
                   effectLabel: 'text',
-                  effectValue: 'text',
+                  effectValue: '',
                   distributionLabel: 'Not entered',
                   hasUncertainty: false
                 }

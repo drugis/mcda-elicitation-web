@@ -55,7 +55,7 @@
             ng-show="toggledColumns['units']">
             {{workspaceSettings.showPercentages ? '%' : ''}}
           </td>
-          <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}"
+          <td ng-if="!row.isHeaderRow" ng-style="{'background-color': rgba(255,0,0,0.5)}" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}"
             id="col{{$index}}">
 
             <effects-table-cell 

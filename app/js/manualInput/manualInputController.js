@@ -64,7 +64,6 @@ define(['lodash', 'angular'], function(_, angular) {
       }
     });
 
-    // public functions
     function addAlternative(title) {
       $scope.state.alternatives.push({
         title: title,
@@ -203,7 +202,6 @@ define(['lodash', 'angular'], function(_, angular) {
       }
     }
 
-    // private functions
     function initState() {
       if ($stateParams.workspace) {
         // copying existing workspace

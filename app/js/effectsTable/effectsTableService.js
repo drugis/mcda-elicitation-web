@@ -115,14 +115,10 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function buildEffectValueLabel(performance) {
-      if (performance.effect) {
-        if (performance.effect.type === 'empty') {
-          return performance.effect.value ? performance.effect.value : '';
-        } else {
-          return '' + performance.effect.value;
-        }
+      if (performance.effect && performance.effect.type !== 'empty') {
+        return '' + performance.effect.value;
       } else {
-        return NOT_ENTERED;
+        return '';
       }
     }
 
