@@ -35,7 +35,7 @@
       "minItems": 2,
       "maxItems": 2,
       "items": {
-        "anyOf": [
+        "oneOf": [
           {
             "type": "number"
           },
@@ -46,7 +46,7 @@
       }
     },
     "pvf": {
-      "anyOf": [
+      "oneOf": [
         {
           "description": "The partial value function",
           "type": "object",

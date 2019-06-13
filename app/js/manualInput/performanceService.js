@@ -95,6 +95,13 @@ define(['angular'], function() {
       };
     }
 
+    function buildTextPerformance(text){
+      return {
+        type: 'empty',
+        value: text
+      };
+    }
+
     return {
       buildExactPerformance: buildExactPerformance,
       buildExactSEPerformance: buildExactSEPerformance,
@@ -106,7 +113,8 @@ define(['angular'], function() {
       buildNormalPerformance: buildNormalPerformance,
       buildBetaPerformance: buildBetaPerformance,
       buildGammaPerformance: buildGammaPerformance,
-      buildEmptyPerformance: buildEmptyPerformance
+      buildEmptyPerformance: buildEmptyPerformance,
+      buildTextPerformance:buildTextPerformance
     };
   };
   return dependencies.concat(PerformanceService);

@@ -15,7 +15,7 @@ define(['lodash', 'angular'], function(_, angular) {
     var INVALID_INPUT_MESSAGE = 'Missing or invalid input';
 
     function getInputError(cell) {
-      if (cell.empty) {
+      if (cell.inputParameters.id === 'empty') {
         return;
       }
       var error;
@@ -254,9 +254,13 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function createCell(inputType, tableEntry) {
-      var type = getType(inputType, tableEntry.performance);
       var performance = tableEntry.performance[inputType];
-      return performance ? InputKnowledgeService.getOptions(inputType)[type].finishInputCell(performance) : undefined;
+      if (performance) {
+        var type = getType(inputType, tableEntry.performance);
+        return InputKnowledgeService.getOptions(inputType)[type].finishInputCell(performance);
+      } else {
+        return undefined;
+      }
     }
 
     function getType(inputType, performance) {
@@ -268,21 +272,23 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function getEffectType(performance) {
-      if (performance.effect && performance.effect.input) {
+      if (performance.effect.input) {
         return determineInputType(performance.effect.input);
+      } else if (performance.effect.type === 'empty') {
+        return performance.effect.hasOwnProperty('value') ? 'text' : 'empty';
       } else {
-        return performance.effect && performance.effect.type === 'empty' ? 'empty' : 'value';
+        return 'value';
       }
     }
 
     function determineInputType(input) {
-      if (input.stdErr) {
+      if (input.hasOwnProperty('stdErr')) {
         return 'valueSE';
-      } else if (input.lowerBound) {
+      } else if (input.hasOwnProperty('lowerBound')) {
         return 'valueCI';
-      } else if (input.events) {
+      } else if (input.hasOwnProperty('events')) {
         return 'eventsSampleSize';
-      } else if (input.sampleSize) {
+      } else if (input.hasOwnProperty('sampleSize')) {
         return 'valueSampleSize';
       } else {
         return 'value';
@@ -290,21 +296,30 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function getDistributionType(performance) {
-      if (performance.distribution && performance.distribution.type === 'empty') {
-        return 'empty';
-      } else if (performance.distribution && performance.distribution.type === 'dnorm') {
-        return 'normal';
-      } else if (performance.distribution && performance.distribution.type === 'dgamma') {
-        return 'gamma';
-      } else if (performance.distribution && performance.distribution.type === 'dbeta') {
-        return 'beta';
+      var types = {
+        dnorm: 'normal',
+        dgamma: 'gamma',
+        dbeta: 'beta',
+        exact: 'value',
+        dsurv: 'gamma'
+      };
+      if (performance.distribution.type === 'empty') {
+        return performance.distribution.value ? 'text' : 'empty';
       } else {
-        return 'value';
+        return types[performance.distribution.type];
       }
     }
 
     function findDuplicateValues(inputData) {
-      return !findInvalidCell(inputData) && findRowWithSameValues(inputData);
+      return !findInvalidCell(inputData) && !isTextCellRow(inputData) && findRowWithSameValues(inputData);
+    }
+
+    function isTextCellRow(inputData) {
+      return _.some(inputData, function(row) {
+        return _.some(row, function(cell) {
+          return cell.inputParameters.id === 'text';
+        });
+      });
     }
 
     function findRowWithSameValues(inputData) {

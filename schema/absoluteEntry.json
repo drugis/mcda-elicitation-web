@@ -36,7 +36,14 @@
               ]
             },
             "value": {
-              "type": "number"
+              "oneOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string"
+                }
+              ]
             },
             "input": {
               "type": "object",
@@ -51,7 +58,7 @@
                   "type": "number"
                 },
                 "lowerBound": {
-                  "anyOf": [
+                  "oneOf": [
                     {
                       "type": "number"
                     },
@@ -64,7 +71,7 @@
                   ]
                 },
                 "upperBound": {
-                  "anyOf": [
+                  "oneOf": [
                     {
                       "type": "number"
                     },
@@ -108,7 +115,14 @@
               ]
             },
             "value": {
-              "type": "number"
+              "oneOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "string"
+                }
+              ]
             },
             "parameters": {
               "type": "object",
@@ -152,7 +166,7 @@
                   "type": "number"
                 },
                 "lowerBound": {
-                  "anyOf": [
+                  "oneOf": [
                     {
                       "type": "number"
                     },
@@ -165,7 +179,7 @@
                   ]
                 },
                 "upperBound": {
-                  "anyOf": [
+                  "oneOf": [
                     {
                       "type": "number"
                     },
@@ -183,7 +197,7 @@
                 "scale": {
                   "type": "string",
                   "enum": [
-                    "percentage", 
+                    "percentage",
                     "decimal"
                   ]
                 }

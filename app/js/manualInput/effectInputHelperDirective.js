@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['lodash'], function(_) {
   var ESC = 27;
   var ENTER = 13;
 
@@ -39,7 +39,7 @@ define(['lodash', 'angular'], function(_, angular) {
         ];
 
         initInputParameters();
-   
+
         scope.$on('open.af.dropdownToggle', function() {
           isEscPressed = false;
         });
@@ -79,7 +79,14 @@ define(['lodash', 'angular'], function(_, angular) {
         }
 
         function inputChanged() {
+          if (scope.inputCell.inputParameters.id !== 'text' && isNotNumeric(scope.inputCell.firstParameter)) {
+            delete scope.inputCell.firstParameter;
+          }
           scope.error = ManualInputService.getInputError(scope.inputCell);
+        }
+
+        function isNotNumeric(value) {
+          return isNaN(parseFloat(value)) || !isFinite(value);
         }
 
         function constraintChanged() {

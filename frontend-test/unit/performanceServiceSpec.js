@@ -9,6 +9,15 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       performanceService = PerformanceService;
     }));
 
+    describe('buildTextPerformance', function() {
+      it('should build a text performance', function() {
+        expect(performanceService.buildTextPerformance('text')).toEqual({
+          type: 'empty',
+          value: 'text'
+        });
+      });
+    });
+
     describe('buildExactPerformance', function() {
       it('should build an exact performance', function() {
         expect(performanceService.buildExactPerformance(1, { foo: 'bar' })).toEqual({

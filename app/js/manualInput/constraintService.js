@@ -14,6 +14,12 @@ define(['lodash', 'angular'], function (_) {
       }
     };
 
+    var NOT_EMPTY = function (value, label) {
+      if (value === undefined || value === null || value === '') {
+        return 'Invalid ' + label;
+      }
+    };
+
     var POSITIVE = function (value, label) {
       if (value < 0) {
         return label + ' must be positive';
@@ -30,6 +36,13 @@ define(['lodash', 'angular'], function (_) {
       return {
         label: 'defined',
         validator: DEFINED
+      };
+    }
+
+    function notEmpty() {
+      return {
+        label: 'notEmpty',
+        validator: NOT_EMPTY
       };
     }
 
@@ -117,6 +130,7 @@ define(['lodash', 'angular'], function (_) {
 
     return {
       defined: defined,
+      notEmpty: notEmpty,
       integer: integer,
       positive: positive,
       belowOrEqualTo: belowOrEqualTo,

@@ -28,7 +28,8 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       'buildExactDecimalConfidencePerformance',
       'buildExactSEPerformance',
       'buildExactPercentSEPerformance',
-      'buildExactDecimalSEPerformance'
+      'buildExactDecimalSEPerformance',
+      'buildTextPerformance'
     ]);
   describe('the input knowledge service', function() {
     beforeEach(angular.mock.module('elicit.manualInput', function($provide) {
@@ -230,6 +231,33 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell();
           expect(result.inputParameters.id).toEqual('empty');
           expect(result.inputParameters.label).toEqual('Empty cell');
+        });
+      });
+
+      describe('for a text cell', function(){
+        beforeEach(function() {
+          cell.inputParameters.id = 'text';
+          cell.firstParameter = 'foo';
+          performanceServiceMock.buildTextPerformance.calls.reset();
+        });
+  
+        it('should render correct inputs', function() {
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString(cell);
+          var expectedResult = 'foo';
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should create correct performance', function() {
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildTextPerformance).toHaveBeenCalledWith(cell.firstParameter);
+        });
+
+        it('should create a finished input cell', function(){
+          var performance = {
+            value: 'foo'
+          };
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(performance);
+          expect(result.firstParameter).toEqual(performance.value);
         });
       });
     });
@@ -856,7 +884,42 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result).toEqual(expectedResult);
         });
       });
+
+      describe('for a text cell', function(){
+        beforeEach(function() {
+          cell.inputParameters.id = 'text';
+          cell.firstParameter = 'foo';
+          performanceServiceMock.buildTextPerformance.calls.reset();
+        });
+  
+        it('should render correct inputs', function() {
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].toString(cell);
+          var expectedResult = 'foo';
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should create correct performance', function() {
+          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
+          expect(performanceServiceMock.buildTextPerformance).toHaveBeenCalledWith(cell.firstParameter);
+        });
+
+        it('should create a finished input cell', function(){
+          var performance = {
+            value: 'foo'
+          };
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(performance);
+          expect(result.firstParameter).toEqual(performance.value);
+        });
+
+        it('should copy the existing cell', function() {
+          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].generateDistribution(cell);
+          var expectedResult = cell;
+          expect(result).toEqual(expectedResult);
+        });
+      });
     });
+
+    
 
     describe('getOptions', function() {
       describe('for distributions', function() {
@@ -867,7 +930,8 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             'beta',
             'gamma',
             'value',
-            'empty'
+            'empty',
+            'text'
           ]);
         });
       });
@@ -881,7 +945,8 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             'valueCI',
             'valueSampleSize',
             'eventsSampleSize',
-            'empty'
+            'empty',
+            'text'
           ]);
         });
       });

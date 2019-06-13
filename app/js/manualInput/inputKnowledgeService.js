@@ -29,7 +29,8 @@ define(['lodash', 'angular'], function(_, angular) {
         valueCI: VALUE_CONFIDENCE_INTERVAL,
         valueSampleSize: VALUE_SAMPLE_SIZE,
         eventsSampleSize: EVENTS_SAMPLE_SIZE,
-        empty: EMPTY
+        empty: EMPTY,
+        text: TEXT
       };
     }
 
@@ -76,7 +77,8 @@ define(['lodash', 'angular'], function(_, angular) {
         beta: BETA,
         gamma: GAMMA,
         value: VALUE,
-        empty: EMPTY
+        empty: EMPTY,
+        text: TEXT
       };
     }
 
@@ -96,6 +98,29 @@ define(['lodash', 'angular'], function(_, angular) {
         return {
           type: 'empty'
         };
+      },
+      generateDistribution: function(cell) {
+        return angular.copy(cell);
+      }
+    };
+
+    var TEXT = {
+      id: 'text',
+      label: 'Text',
+      firstParameter: buildNotEmpty(),
+      constraints: false,
+      toString: function(cell) {
+        return cell.firstParameter;
+      },
+      finishInputCell: function(performance) {
+        var inputCell = {
+          inputParameters: TEXT,
+          firstParameter: performance.value
+        };
+        return inputCell;
+      },
+      buildPerformance: function(cell) {
+        return PerformanceService.buildTextPerformance(cell.firstParameter);
       },
       generateDistribution: function(cell) {
         return angular.copy(cell);
@@ -494,37 +519,37 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function finishEventSampleSizeInputCell(performance) {
       var inputCell = {
-        inputParameters: EVENTS_SAMPLE_SIZE
+        inputParameters: EVENTS_SAMPLE_SIZE,
+        firstParameter: performance.input.events,
+        secondParameter: performance.input.sampleSize
       };
-      inputCell.firstParameter = performance.input.events;
-      inputCell.secondParameter = performance.input.sampleSize;
       return inputCell;
     }
 
     function finishBetaCell(performance) {
       var inputCell = {
-        inputParameters: BETA
+        inputParameters: BETA,
+        firstParameter : performance.parameters.alpha,
+        secondParameter : performance.parameters.beta
       };
-      inputCell.firstParameter = performance.parameters.alpha;
-      inputCell.secondParameter = performance.parameters.beta;
       return inputCell;
     }
 
     function finishGammaCell(performance) {
       var inputCell = {
-        inputParameters: GAMMA
+        inputParameters: GAMMA,
+        firstParameter: performance.parameters.alpha,
+        secondParameter: performance.parameters.beta
       };
-      inputCell.firstParameter = performance.parameters.alpha;
-      inputCell.secondParameter = performance.parameters.beta;
       return inputCell;
     }
 
     function finishNormalInputCell(performance) {
       var inputCell = {
-        inputParameters: NORMAL
+        inputParameters: NORMAL,
+        firstParameter: performance.parameters.mu,
+        secondParameter: performance.parameters.sigma
       };
-      inputCell.firstParameter = performance.parameters.mu;
-      inputCell.secondParameter = performance.parameters.sigma;
       return inputCell;
     }
 
@@ -594,6 +619,13 @@ define(['lodash', 'angular'], function(_, angular) {
       return {
         label: label,
         constraints: [ConstraintService.defined()]
+      };
+    }
+
+    function buildNotEmpty() {
+      return {
+        label: 'Text',
+        constraints: [ConstraintService.notEmpty()]
       };
     }
 

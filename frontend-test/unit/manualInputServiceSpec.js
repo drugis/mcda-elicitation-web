@@ -4,7 +4,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
   var constraintServiceMock = jasmine.createSpyObj('ConstraintService', ['percentage', 'decimal']);
-  var currentSchemaVersion = '1.2.0';
+  var currentSchemaVersion = '1.2.1';
   var inputKnowledgeServiceMock = jasmine.createSpyObj('InputKnowledgeService', [
     'getOptions'
   ]);
@@ -47,7 +47,18 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
 
       it('should return no error for an empty typed cell', function() {
         var cell = {
-          empty: true
+          inputParameters: {
+            id: 'empty'
+          }
+        };
+        expect(manualInputService.getInputError(cell)).toBeFalsy();
+      });
+
+      it('should return no error for an text typed cell', function() {
+        var cell = {
+          inputParameters: {
+            id: 'text'
+          }
         };
         expect(manualInputService.getInputError(cell)).toBeFalsy();
       });
@@ -350,7 +361,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         var result = manualInputService.createProblem(criteria, alternatives, title, description, inputData, useFavorability);
         var expectedResult = {
           title: title,
-          schemaVersion: '1.2.0',
+          schemaVersion: '1.2.1',
           description: description,
           criteria: {
             criterion1id: {
@@ -418,11 +429,16 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     });
 
     describe('createStateFromOldWorkspace', function() {
+      var baseWorkspace;
+      var baseExpectedResult;
+
       var option = {
-        finishInputCell: function() { }
+        finishInputCell: jasmine.createSpy()
       };
 
       beforeEach(function() {
+        option.finishInputCell.calls.reset();
+
         inputKnowledgeServiceMock.getOptions.and.returnValue({
           value: option,
           valueSE: option,
@@ -432,13 +448,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           empty: option,
           normal: option,
           gamma: option,
-          beta: option
+          beta: option,
+          text: option
         });
-        generateUuidMock.and.returnValues('uuid1', 'uuid2', 'uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid8', 'uuid9', 'uuid10', 'uuid11', 'uuid12', 'uuid13');
-      });
-
-      it('should create a new state from an existing workspace', function() {
-        var workspace = {
+        generateUuidMock.and.returnValues('uuid1', 'uuid2', 'uuid3', 'uuid4', 'uuid5', 'uuid6',
+          'uuid7', 'uuid8', 'uuid9', 'uuid10', 'uuid11', 'uuid12', 'uuid13', 'uuid14', 'uuid15');
+        baseWorkspace = {
           problem: {
             criteria: {
               crit1: {
@@ -452,196 +467,424 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                   source: 'single study',
                   sourceLink: 'http://www.drugis.org'
                 }]
-              },
-              crit2: {
-                title: 'criterion 2',
-                unitOfMeasurement: 'Response size',
-                isFavorable: true,
-                dataSources: [{
-                  id: 'ds2',
-                  source: 'single study',
-                  sourceLink: 'http://www.drugis.org'
-                }]
-              },
-              crit3: {
-                title: 'criterion 3',
-                isFavorable: false,
-                dataSources: [{
-                  id: 'ds3',
-                  source: 'single study'
-                }]
-              },
-              crit4: {
-                title: 'criterion 4',
-                isFavorable: false,
-                dataSources: [{
-                  id: 'ds4',
-                  source: 'single study'
-                }]
-              },
-              crit5: {
-                title: 'criterion 5',
-                isFavorable: false,
-                dataSources: [{
-                  id: 'ds5',
-                  source: 'single study'
-                }]
-              },
-              crit6: {
-                title: 'durrrvival',
-                isFavorable: false,
-                dataSources: [{
-                  id: 'ds6'
-                }]
               }
             },
             alternatives: {
               alt1: {
                 title: 'alternative 1'
               }
-            },
-            performanceTable: [{
-              criterion: 'crit1',
-              dataSource: 'ds1',
-              performance: {
-                effect: {
-                  type: 'exact'
-                },
-                distribution: {
-                  type: 'empty'
-                }
-              }
-            }, {
-              criterion: 'crit2',
-              dataSource: 'ds2',
-              performance: {
-                effect: {
-                  type: 'empty'
-                },
-                distribution: {
-                  type: 'dbeta'
-                }
-              }
-            }, {
-              criterion: 'crit3',
-              dataSource: 'ds3',
-              performance: {
-                distribution: {
-                  type: 'dgamma'
-                }
-              }
-            }, {
-              criterion: 'crit4',
-              dataSource: 'ds4',
-              performance: {
-                distribution: {
-                  type: 'dnorm'
-                }
-              }
-            }, {
-              criterion: 'crit5',
-              dataSource: 'ds5',
-              alternative: 'alt1',
-              performance: {
-                distribution: {
-                  type: 'exact'
-                }
-              }
-            }, {
-              criterion: 'crit6',
-              dataSource: 'ds6',
-              performance: {
-                distribution: {
-                  type: 'dsurv'
-                }
-              }
-            }]
+            }
           }
         };
-        var result = manualInputService.createStateFromOldWorkspace(workspace);
-        var expectedResult = {
-          oldWorkspace: workspace,
+        baseExpectedResult = {
           useFavorability: true,
           step: 'step1',
           isInputDataValid: false,
           description: undefined,
           criteria: [{
-            id: 'uuid2',
             title: 'criterion 1',
             description: 'bla',
+            isFavorable: true,
             dataSources: [{
               id: 'uuid1',
               oldId: 'ds1',
               source: 'single study',
               sourceLink: 'http://www.drugis.org'
             }],
-            isFavorable: true
-          }, {
-            id: 'uuid4',
-            title: 'criterion 2',
-            dataSources: [{
-              id: 'uuid3',
-              oldId: 'ds2',
-              source: 'single study',
-              sourceLink: 'http://www.drugis.org'
-            }],
-            isFavorable: true,
-            unitOfMeasurement: 'Response size'
-          }, {
-            id: 'uuid6',
-            title: 'criterion 3',
-            dataSources: [{
-              id: 'uuid5',
-              oldId: 'ds3',
-              source: 'single study'
-            }],
-            isFavorable: false
-
-          }, {
-            id: 'uuid8',
-            title: 'criterion 4',
-            dataSources: [{
-              id: 'uuid7',
-              oldId: 'ds4',
-              source: 'single study'
-            }],
-            isFavorable: false
-          }, {
-            id: 'uuid10',
-            title: 'criterion 5',
-            dataSources: [{
-              id: 'uuid9',
-              oldId: 'ds5',
-              source: 'single study'
-            }],
-            isFavorable: false,
-          }, {
-            id: 'uuid12',
-            title: 'durrrvival',
-            dataSources: [{
-              id: 'uuid11',
-              oldId: 'ds6'
-            }],
-            isFavorable: false,
+            id: 'uuid2'
           }],
           alternatives: [{
-            oldId: 'alt1',
-            id: 'uuid13',
-            title: 'alternative 1'
+            title: 'alternative 1',
+            id: 'uuid3',
+            oldId: 'alt1'
           }],
           inputData: {
-            distribution: {
-              uuid9: {
-                uuid13: undefined // see input knowledge service spec for tests 
+            effect: {
+              uuid1: {
+                uuid3: undefined
               }
-            }, effect: {
-              uuid9: {
-                uuid13: undefined
+            },
+            distribution: {
+              uuid1: {
+                uuid3: undefined
               }
             }
           }
         };
-        expect(result).toEqual(expectedResult);
+      });
+
+      describe('for an old workspace with a distribution', function() {
+        it('should create a state with an empty distribution cell', function() {
+          var workspace = _.merge({}, baseWorkspace, {
+            problem: {
+              performanceTable: [{
+                criterion: 'crit1',
+                dataSource: 'ds1',
+                alternative: 'alt1',
+                performance: {
+                  distribution: {
+                    type: 'empty'
+                  }
+                }
+              }]
+            }
+          });
+
+          var result = manualInputService.createStateFromOldWorkspace(workspace);
+          var expectedResult = _.merge({}, baseExpectedResult, {
+            oldWorkspace: workspace
+          });
+          expect(result).toEqual(expectedResult);
+          expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('distribution');
+          expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.distribution);
+        });
+
+        it('should create a state with a beta distribution cell', function() {
+          var workspace = _.merge({}, baseWorkspace, {
+            problem: {
+              performanceTable: [{
+                criterion: 'crit1',
+                dataSource: 'ds1',
+                alternative: 'alt1',
+                performance: {
+                  distribution: {
+                    type: 'dbeta'
+                  }
+                }
+              }]
+            }
+          });
+
+          var result = manualInputService.createStateFromOldWorkspace(workspace);
+          var expectedResult = _.merge({}, baseExpectedResult, {
+            oldWorkspace: workspace
+          });
+          expect(result).toEqual(expectedResult);
+          expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('distribution');
+          expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.distribution);
+        });
+
+        it('should create a state with a gamma distribution cell', function() {
+          var workspace = _.merge({}, baseWorkspace, {
+            problem: {
+              performanceTable: [{
+                criterion: 'crit1',
+                dataSource: 'ds1',
+                alternative: 'alt1',
+                performance: {
+                  distribution: {
+                    type: 'dgamma'
+                  }
+                }
+              }]
+            }
+          });
+
+          var result = manualInputService.createStateFromOldWorkspace(workspace);
+          var expectedResult = _.merge({}, baseExpectedResult, {
+            oldWorkspace: workspace
+          });
+          expect(result).toEqual(expectedResult);
+          expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('distribution');
+          expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.distribution);
+        });
+
+        it('should create a state with a normal distribution cell', function() {
+          var workspace = _.merge({}, baseWorkspace, {
+            problem: {
+              performanceTable: [{
+                criterion: 'crit1',
+                dataSource: 'ds1',
+                alternative: 'alt1',
+                performance: {
+                  distribution: {
+                    type: 'dnorm'
+                  }
+                }
+              }]
+            }
+          });
+
+          var result = manualInputService.createStateFromOldWorkspace(workspace);
+          var expectedResult = _.merge({}, baseExpectedResult, {
+            oldWorkspace: workspace
+          });
+          expect(result).toEqual(expectedResult);
+          expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('distribution');
+          expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.distribution);
+        });
+
+        it('should create a state with an exact distribution cell', function() {
+          var workspace = _.merge({}, baseWorkspace, {
+            problem: {
+              performanceTable: [{
+                criterion: 'crit1',
+                dataSource: 'ds1',
+                alternative: 'alt1',
+                performance: {
+                  distribution: {
+                    type: 'exact'
+                  }
+                }
+              }]
+            }
+          });
+
+          var result = manualInputService.createStateFromOldWorkspace(workspace);
+          var expectedResult = _.merge({}, baseExpectedResult, {
+            oldWorkspace: workspace
+          });
+          expect(result).toEqual(expectedResult);
+          expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('distribution');
+          expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.distribution);
+        });
+
+        it('should create a state with a survival distribution cell', function() {
+          var workspace = _.merge({}, baseWorkspace, {
+            problem: {
+              performanceTable: [{
+                criterion: 'crit1',
+                dataSource: 'ds1',
+                alternative: 'alt1',
+                performance: {
+                  distribution: {
+                    type: 'dsurv'
+                  }
+                }
+              }]
+            }
+          });
+
+          var result = manualInputService.createStateFromOldWorkspace(workspace);
+          var expectedResult = _.merge({}, baseExpectedResult, {
+            oldWorkspace: workspace
+          });
+          expect(result).toEqual(expectedResult);
+          expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('distribution');
+          expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.distribution);
+        });
+
+        it('should create a state with a text distribution cell', function() {
+          var workspace = _.merge({}, baseWorkspace, {
+            problem: {
+              performanceTable: [{
+                criterion: 'crit1',
+                dataSource: 'ds1',
+                alternative: 'alt1',
+                performance: {
+                  distribution: {
+                    type: 'empty',
+                    value: 'text'
+                  }
+                }
+              }]
+            }
+          });
+
+          var result = manualInputService.createStateFromOldWorkspace(workspace);
+          var expectedResult = _.merge({}, baseExpectedResult, {
+            oldWorkspace: workspace
+          });
+          expect(result).toEqual(expectedResult);
+          expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.distribution);
+          expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('distribution');
+        });
+      });
+
+      describe('for an old workspace with an effect', function() {
+        describe('with input', function() {
+          it('should create a new state with a value SE cell', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact',
+                      input: {
+                        stdErr: 0.5
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+            expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
+            expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
+          });
+
+          it('should create a new state with a value CI cell', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact',
+                      input: {
+                        lowerBound: 0.5,
+                        upperBound: 'NE'
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+            expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
+            expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
+          });
+
+          it('should create a new state with a value sample size cell', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact',
+                      input: {
+                        sampleSize: 200
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+            expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
+            expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
+          });
+
+          it('should create a new state with an events sample size cell', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact',
+                      input: {
+                        events: 200,
+                        sampleSize: 3000
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+            expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
+            expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
+          });
+        });
+
+        describe('without input', function() {
+          it('should create a new state with a value effect cell', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact'
+                    }
+                  }
+                }]
+              }
+            });
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);            
+            expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
+            expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
+          });
+
+          it('should create a new state with an empty effect cell', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'empty'
+                    }
+                  }
+                }]
+              }
+            });
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+            expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
+            expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
+          });
+
+          it('should create a new state with a text effect cell', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'empty',
+                      value: 'text'
+                    }
+                  }
+                }]
+              }
+            });
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+            expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
+            expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
+          });
+        });
       });
     });
 
@@ -757,6 +1000,27 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             },
             col2: {
               isInvalid: true
+            }
+          }
+        };
+        var result = manualInputService.findDuplicateValues(inputData);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return falsy if there are duplcate text cells in the row', function() {
+        var inputData = {
+          row1: {
+            col1: {
+              firstParameter: 1,
+              inputParameters: {
+                id: 'text'
+              }
+            },
+            col2: {
+              firstParameter: 1,
+              inputParameters: {
+                id: 'text'
+              }
             }
           }
         };

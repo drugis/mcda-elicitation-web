@@ -9,21 +9,13 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
     currentSchemaVersion,
     generateUuid
   ) {
-    var ABSOLUTE_ENTRY_TYPES = [
-      'dnorm',
-      'exact',
-      'dt',
-      'dbeta',
-      'dgamma',
-      'dsurv',
-      'empty'
-    ];
     /***** Changes 
      * 1.0.0 Introduction of data sources
      * 1.1.0 Removal of the value tree
      * 1.2.0 Allow effect cells to contain distribution and effect
      *       Remove properties from data sources
      *       Fix legacy problem: remove scales from criteria and put them on data source(s)
+     * 1.2.1 Adding text option for effects table cells
      * *****/
 
     function updateProblemToCurrentSchema(problem) {
@@ -38,6 +30,10 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
       if (newProblem.schemaVersion === '1.1.0') {
         newProblem = updateToVersion120(newProblem);
+      }
+
+      if(newProblem.schemaVersion === '1.2.0'){
+        newProblem.schemaVersion = '1.2.1';
       }
 
       if (newProblem.schemaVersion === currentSchemaVersion) {

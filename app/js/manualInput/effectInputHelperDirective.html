@@ -10,45 +10,57 @@
             Input parameters
             <select ng-model="inputCell.inputParameters"
               ng-options="option as option.label for option in inputParameterOptions track by option.id"
-              ng-change="inputChanged()" ng-disabled="inputCell.empty"></select>
+              ng-change="inputChanged()"></select>
           </label>
         </div>
+
         <div class="cell" ng-if="inputType === 'effect' && inputCell.inputParameters.constraints">
           <label>
             Constraint
             <select ng-model="inputCell.constraint"
               ng-options="constraint.label as constraint.label for constraint in constraints"
-              ng-change="constraintChanged()" ng-disabled="inputCell.empty"></select>
+              ng-change="constraintChanged()"></select>
           </label>
         </div>
-        <div class="cell" ng-if="inputCell.inputParameters.firstParameter">
+
+        <div class="cell" ng-if="inputCell.inputParameters.id === 'text'">
           <label>
             {{inputCell.inputParameters.firstParameter.label}}
-            <input type="number" ng-model="inputCell.firstParameter" ng-change="inputChanged()"
-              ng-disabled="inputCell.empty">
+            <input type="text" ng-model="inputCell.firstParameter" ng-change="inputChanged()">
           </label>
         </div>
+
+        <div class="cell"
+          ng-if="inputCell.inputParameters.firstParameter && inputCell.inputParameters.id !== 'text'">
+          <label>
+            {{inputCell.inputParameters.firstParameter.label}}
+            <input type="number" ng-model="inputCell.firstParameter" ng-change="inputChanged()">
+          </label>
+        </div>
+
         <div class="cell" ng-if="inputCell.inputParameters.secondParameter">
           <label>
             {{inputCell.inputParameters.secondParameter.label}}
             <span ng-if="inputCell.inputParameters.secondParameter.label === 'Lower bound'">(
-              <input type="checkbox" ng-model="inputCell.lowerBoundNE" ng-disabled="inputCell.empty">
+              <input type="checkbox" ng-model="inputCell.lowerBoundNE">
               Not estimable)
             </span>
             <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()"
-              ng-disabled="inputCell.empty || inputCell.lowerBoundNE">
+              ng-disabled="inputCell.lowerBoundNE">
           </label>
         </div>
+
         <div class="cell" ng-if="inputCell.inputParameters.thirdParameter">
           <label>
             {{inputCell.inputParameters.thirdParameter.label}}
             <span ng-if="inputCell.inputParameters.thirdParameter.label === 'Upper bound'">(
-              <input type="checkbox" ng-model="inputCell.upperBoundNE" ng-disabled="inputCell.empty">Not
+              <input type="checkbox" ng-model="inputCell.upperBoundNE">Not
               estimable)</span>
             <input type="number" ng-model="inputCell.thirdParameter" ng-change="inputChanged()"
-              ng-disabled="inputCell.empty || inputCell.upperBoundNE">
+              ng-disabled="inputCell.upperBoundNE">
           </label>
         </div>
+
         <div class="cell alert" ng-show="error">
           {{error}}
         </div>

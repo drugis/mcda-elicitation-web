@@ -20,6 +20,18 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function (a
       });
     });
 
+    describe('notEmpty', function () {
+      it('should return an object with a function that behaves as expected', function () {
+        var notEmpty = constraintService.notEmpty();
+        expect(notEmpty.validator(0)).toBeFalsy();
+        expect(notEmpty.validator('foo')).toBeFalsy();
+        expect(notEmpty.validator('\\!@#$%^&*(')).toBeFalsy();
+        expect(notEmpty.validator(undefined, 'Value')).toBe('Invalid Value');
+        expect(notEmpty.validator('', 'balue')).toBe('Invalid balue');
+        expect(notEmpty.validator(null, 'Value')).toBe('Invalid Value');
+      });
+    });
+
     describe('notNaNOrNull', function () {
       it('should return an object with a function that behaves as expected', function () {
         var notNaNOrNull = constraintService.notNaNOrNull();

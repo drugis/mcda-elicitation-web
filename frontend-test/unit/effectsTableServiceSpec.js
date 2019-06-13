@@ -80,6 +80,7 @@ define([
           ];
           expect(result).toEqual(expectedResult);
         });
+
         it('should add wether the criterion can be percentage ', function() {
           var criteria = [{
             id: 'crit2',
@@ -162,7 +163,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId2: {
                   effectLabel: 1,
-                  effectValue: 1,
+                  effectValue: '1',
                   distributionLabel: 'Not entered',
                   hasUncertainty: false
                 }
@@ -195,7 +196,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId2: {
                   effectLabel: '1 (0.5)',
-                  effectValue: 1,
+                  effectValue: '1',
                   distributionLabel: 'Not entered',
                   hasUncertainty: false
                 }
@@ -229,7 +230,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId2: {
                   effectLabel: '1 (0.5; 2)',
-                  effectValue: 1,
+                  effectValue: '1',
                   distributionLabel: 'Not entered',
                   hasUncertainty: false
                 }
@@ -262,7 +263,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId2: {
                   effectLabel: '1 / 10',
-                  effectValue: 2,
+                  effectValue: '2',
                   distributionLabel: 'Not entered',
                   hasUncertainty: false
                 }
@@ -295,7 +296,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId2: {
                   effectLabel: '10 / 100',
-                  effectValue: 1,
+                  effectValue: '1',
                   distributionLabel: 'Not entered',
                   hasUncertainty: false
                 }
@@ -492,6 +493,35 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
+        it('should make a label for an empty distribution with a value', function() {
+          var performanceTable = [{
+            criterion: 'criterionId8',
+            alternative: 'alternativeId8',
+            dataSource: 'dsId8',
+            performance: {
+              distribution: {
+                type: 'empty',
+                value: 'text'
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            dsId8: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId8: {
+                  effectLabel: 'Not entered',
+                  effectValue: 'Not entered',
+                  distributionLabel: 'text',
+                  hasUncertainty: false
+                }
+              }
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
         it('should make a label for an empty effect', function() {
           var performanceTable = [{
             criterion: 'criterionId8',
@@ -519,6 +549,35 @@ define([
           };
           expect(result).toEqual(expectedResult);
         });
+
+        it('should make a label for an empty effect with a value', function() {
+          var performanceTable = [{
+            criterion: 'criterionId8',
+            alternative: 'alternativeId8',
+            dataSource: 'dsId8',
+            performance: {
+              effect: {
+                type: 'empty',
+                value: 'text'
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            dsId8: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId8: {
+                  effectLabel: 'text',
+                  effectValue: 'text',
+                  distributionLabel: 'Not entered',
+                  hasUncertainty: false
+                }
+              }
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
       });
 
       describe('isStudyDataAvailable', function() {
@@ -537,6 +596,7 @@ define([
           var result = effectTableService.isStudyDataAvailable(effectsTableInfo);
           expect(result).toBeTruthy();
         });
+
         it('should return false if all entries arerelative', function() {
           var effectsTableInfo = {
             criterionId1: {

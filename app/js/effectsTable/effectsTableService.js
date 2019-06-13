@@ -115,10 +115,12 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function buildEffectValueLabel(performance) {
-      if (performance.effect && performance.effect.type === 'empty') {
-        return '';
-      } else if (performance.effect) {
-        return performance.effect.value;
+      if (performance.effect) {
+        if (performance.effect.type === 'empty') {
+          return performance.effect.value ? performance.effect.value : '';
+        } else {
+          return '' + performance.effect.value;
+        }
       } else {
         return NOT_ENTERED;
       }
@@ -138,7 +140,7 @@ define(['lodash', 'angular'], function(_, angular) {
       } else if (distribution.type === 'exact') {
         return distribution.value + '';
       } else if (distribution.type === 'empty') {
-        return '';
+        return distribution.value ? distribution.value : '';
       }
     }
 
@@ -179,7 +181,7 @@ define(['lodash', 'angular'], function(_, angular) {
       } else if (performance.effect.input) {
         return buildEffectInputLabel(performance.effect.input);
       } else if (performance.effect.type === 'empty') {
-        return '';
+        return performance.effect.value !== undefined ? performance.effect.value : '';
       } else {
         return performance.effect.value;
       }
