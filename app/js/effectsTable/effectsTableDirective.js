@@ -31,13 +31,30 @@ define(['lodash'], function(_) {
         scope.$watch('alternatives', function(newAlternatives) {
           scope.nrAlternatives = _.keys(scope.alternatives).length;
           scope.alternatives = newAlternatives;
+          scope.isCellAnalysisViable = createIsCellAnalysisViable();
         });
 
         scope.$on('elicit.settingsChanged', getWorkspaceSettings);
 
+        function createIsCellAnalysisViable() {
+          return _(scope.rows).reduce(function(accum, row) {
+            if (row.isHeaderRow) {
+              return accum;
+            } else {
+              accum[row.dataSource.id] = _.reduce(scope.alternatives, function(accum, alternative) {
+                accum[alternative.id] = !scope.effectsTableInfo[row.dataSource.id].isAbsolute || scope.effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].effectValue !== '';
+                return accum;
+              }, {});
+              return accum;
+            }
+          }, {});
+        }
+
         function getWorkspaceSettings() {
           scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
           scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
+          scope.isValueView = scope.workspaceSettings.effectsDisplay === 'smaa' ||
+            scope.workspaceSettings.effectsDisplay === 'deterministicMCDA';
         }
 
       }

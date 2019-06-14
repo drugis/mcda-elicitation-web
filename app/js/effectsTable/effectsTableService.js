@@ -66,29 +66,42 @@ define(['lodash', 'angular'], function(_, angular) {
     function createEffectsTableInfo(performanceTable) {
       return _.reduce(performanceTable, function(accum, tableEntry) {
         var dataSourceId = tableEntry.dataSource;
-        if (accum[dataSourceId]) { return accum; }
-        if (tableEntry.alternative) {
-          accum[dataSourceId] = {
-            isAbsolute: true,
-            studyDataLabelsAndUncertainty: _(performanceTable)
-              .filter(['dataSource', dataSourceId])
-              .reduce(buildLabels, {})
-          };
+        if (accum[dataSourceId]) {
+          return accum;
+        } else if (tableEntry.alternative) {
+          accum[dataSourceId] = createAbsoluteInfo(dataSourceId, performanceTable);
         } else {
-          accum[tableEntry.dataSource] = {
-            isAbsolute: false,
-            hasUncertainty: true
-          };
+          accum[dataSourceId] = createRelativeInfo();
         }
         return accum;
       }, {});
+    }
+
+    function createRelativeInfo() {
+      return {
+        isAbsolute: false,
+        hasUncertainty: true
+      };
+    }
+
+    function createAbsoluteInfo(dataSourceId, performanceTable) {
+      return {
+        isAbsolute: true,
+        studyDataLabelsAndUncertainty: createStudyDataLabelsAndUncertainty(dataSourceId, performanceTable)
+      };
+    }
+
+    function createStudyDataLabelsAndUncertainty(dataSourceId, performanceTable) {
+      return _(performanceTable)
+        .filter(['dataSource', dataSourceId])
+        .reduce(buildLabels, {});
     }
 
     function buildLabels(accum, entryForCriterion) {
       accum[entryForCriterion.alternative] = buildLabel(entryForCriterion);
       return accum;
     }
-    
+
     function isStudyDataAvailable(effectsTableInfo) {
       return !!(_.find(effectsTableInfo, function(infoEntry) {
         return infoEntry.distributionType !== 'relative';
