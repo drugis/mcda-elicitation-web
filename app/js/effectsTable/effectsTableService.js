@@ -72,10 +72,7 @@ define(['lodash', 'angular'], function(_, angular) {
             isAbsolute: true,
             studyDataLabelsAndUncertainty: _(performanceTable)
               .filter(['dataSource', dataSourceId])
-              .reduce(function(accum, entryForCriterion) {
-                accum[entryForCriterion.alternative] = buildLabel(entryForCriterion);
-                return accum;
-              }, {})
+              .reduce(buildLabels, {})
           };
         } else {
           accum[tableEntry.dataSource] = {
@@ -87,6 +84,11 @@ define(['lodash', 'angular'], function(_, angular) {
       }, {});
     }
 
+    function buildLabels(accum, entryForCriterion) {
+      accum[entryForCriterion.alternative] = buildLabel(entryForCriterion);
+      return accum;
+    }
+    
     function isStudyDataAvailable(effectsTableInfo) {
       return !!(_.find(effectsTableInfo, function(infoEntry) {
         return infoEntry.distributionType !== 'relative';
