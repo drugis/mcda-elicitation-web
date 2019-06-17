@@ -1,7 +1,8 @@
 <div class="grid-x">
   <div class="cell">
     <span>Problem:</span>
-    <select class="scenario-select" ng-model="subProblem" ng-options="subProblem.title for subProblem in subProblems track by subProblem.id"
+    <select class="scenario-select" ng-model="subProblem"
+      ng-options="subProblem.title for subProblem in subProblems track by subProblem.id"
       ng-change="subProblemChanged(subProblem)"></select>
     <inline-help help-key="problem"></inline-help>
     <a ng-if="editMode.isUserOwner" ng-click="editSubProblemTitle()" tooltip="Edit current problem title">
@@ -15,8 +16,8 @@
 <br>
 <div class="grid-x underlined-div">
   <div class="cell">
-    <effects-table criteria="criteria" alternatives="alternatives" edit-mode="editMode" effects-table-info="effectsTableInfo"
-      scales="scales.observed"></effects-table>
+    <effects-table criteria="criteria" alternatives="alternatives" edit-mode="editMode"
+      effects-table-info="effectsTableInfo" scales="scales.observed"></effects-table>
   </div>
 </div>
 <div class="grid-x">
@@ -26,7 +27,7 @@
     </h4>
   </div>
   <div class="cell large-2">
-    <button data-ng-if="!areTooManyDataSourcesIncluded" class="button small info clipboard-button right"
+    <button data-ng-if="!areTooManyDataSourcesIncluded && !hasRowWithOnlyMissingValues" class="button small info clipboard-button right"
       data-clipboard-target="#scalestable">
       <i class="fa fa-clipboard"></i> Copy to clipboard
     </button>
@@ -34,7 +35,10 @@
   <div class="cell error" ng-if="areTooManyDataSourcesIncluded">
     <em>Multiple data sources selected for at least one criterion, therefore no scales can be set.</em>
   </div>
-  <div class="cell" ng-if="!areTooManyDataSourcesIncluded">
+  <div class="cell error" ng-if="hasRowWithOnlyMissingValues">
+    <em> Criterion with only missing or text values selected, therefore no scales can be set.</em>
+  </div>
+  <div class="cell" ng-if="!areTooManyDataSourcesIncluded && !hasRowWithOnlyMissingValues">
     <table class="full-width" id="scalestable">
       <thead>
         <tr>
@@ -58,14 +62,17 @@
       <tbody>
         <tr ng-repeat="row in scaleTable">
           <td>{{row.criterion.title}}</td>
-          <td> <!-- theo -->
-            {{row.dataSource.scale[0] | number}}, 
+          <td>
+            <!-- theo -->
+            {{row.dataSource.scale[0] | number}},
             {{row.dataSource.scale[1] | number}}</td>
-          <td> <!-- obs -->
+          <td>
+            <!-- obs -->
             <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[0] | number"></span> ,
             <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[1] | number"></span>
           </td>
-          <td>  <!-- conf -->
+          <td>
+            <!-- conf -->
             <span ng-if="row.dataSource.pvf.range">
               {{row.dataSource.pvf.range[0] | number}},
               {{row.dataSource.pvf.range[1] | number}}

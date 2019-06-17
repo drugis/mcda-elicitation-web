@@ -1,9 +1,9 @@
 'use strict';
 define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
   var dependencies = [
-    '$scope', 
-    '$stateParams', 
-    '$modal', 
+    '$scope',
+    '$stateParams',
+    '$modal',
     '$state',
     'intervalHull',
     'subProblems',
@@ -16,9 +16,9 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
   ];
 
   var SubProblemController = function(
-    $scope, 
-    $stateParams, 
-    $modal, 
+    $scope,
+    $stateParams,
+    $modal,
     $state,
     intervalHull,
     subProblems,
@@ -42,19 +42,17 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
     PageTitleService.setPageTitle('SubProblemController', ($scope.problem.title || $scope.workspace.title) + '\'s problem definition');
 
-    $scope.areTooManyDataSourcesIncluded = _.find($scope.aggregateState.problem.criteria, function(criterion) {
+    $scope.areTooManyDataSourcesIncluded = _.some($scope.aggregateState.problem.criteria, function(criterion) {
       return criterion.dataSources.length > 1;
     });
 
-    setScaleTable();
-
-    function setScaleTable() {
-      OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
-        $scope.criteria = orderings.criteria;
-        $scope.alternatives = orderings.alternatives;
-        $scope.scaleTable = _.reject(EffectsTableService.buildEffectsTable(orderings.criteria), 'isHeaderRow');
+    $scope.hasRowWithOnlyMissingValues = !_.some($scope.effectsTableInfo, function(row, dataSourceId) {
+      return !row.isAbsolute || _.some(row.studyDataLabelsAndUncertainty, function(cell, alternativeId) {
+        return cell.effectValue !== '' || ($scope.scales && $scope.scales.observed && $scope.scales.observed[dataSourceId][alternativeId]);
       });
-    }
+    });
+
+    setScaleTable();
 
     $scope.$watch('workspace.scales', function(newScales, oldScales) {
       if (newScales && oldScales && newScales.observed === oldScales.observed) { return; }
@@ -67,6 +65,14 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     });
 
     new Clipboard('.clipboard-button');
+
+    function setScaleTable() {
+      OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
+        $scope.criteria = orderings.criteria;
+        $scope.alternatives = orderings.alternatives;
+        $scope.scaleTable = _.reject(EffectsTableService.buildEffectsTable(orderings.criteria), 'isHeaderRow');
+      });
+    }
 
     function openCreateDialog() {
       $modal.open({
@@ -138,7 +144,6 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
         }
       });
     }
-
   };
 
   return dependencies.concat(SubProblemController);
