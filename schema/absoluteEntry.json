@@ -23,187 +23,63 @@
       "type": "object",
       "properties": {
         "effect": {
-          "type": "object",
-          "required": [
-            "type"
-          ],
-          "properties": {
-            "type": {
-              "type": "string",
-              "enum": [
-                "exact",
-                "empty"
-              ]
+          "oneOf": [
+            {
+              "$ref": "emptyPerformance.json#"
             },
-            "value": {
-              "oneOf": [
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "string"
-                }
-              ]
+            {
+              "$ref": "valueEffect.json#"
             },
-            "input": {
-              "type": "object",
-              "properties": {
-                "value": {
-                  "type": "number"
-                },
-                "sampleSize": {
-                  "type": "number"
-                },
-                "events": {
-                  "type": "number"
-                },
-                "lowerBound": {
-                  "oneOf": [
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "string",
-                      "enum": [
-                        "NE"
-                      ]
-                    }
-                  ]
-                },
-                "upperBound": {
-                  "oneOf": [
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "string",
-                      "enum": [
-                        "NE"
-                      ]
-                    }
-                  ]
-                },
-                "stdErr": {
-                  "type": "number"
-                },
-                "scale": {
-                  "type": "string",
-                  "enum": [
-                    "percentage"
-                  ]
-                }
-              }
+            {
+              "$ref": "valueSEEffect.json#"
+            },
+            {
+              "$ref": "valueCIEffect.json#"
+            },
+            {
+              "$ref": "valueSampleSizeEffect.json#"
+            },
+            {
+              "$ref": "eventsSampleSizeEffect.json#"
             }
-          }
+          ]
         },
         "distribution": {
-          "type": "object",
-          "required": [
-            "type"
-          ],
-          "properties": {
-            "type": {
-              "type": "string",
-              "enum": [
-                "dnorm",
-                "exact",
-                "dt",
-                "dbeta",
-                "dgamma",
-                "dsurv",
-                "empty"
-              ]
+          "oneOf": [
+            {
+              "$ref": "emptyPerformance.json"
             },
-            "value": {
-              "oneOf": [
-                {
-                  "type": "number"
-                },
-                {
-                  "type": "string"
-                }
-              ]
+            {
+              "$ref": "valueEffect.json#"
             },
-            "parameters": {
-              "type": "object",
-              "properties": {
-                "alpha": {
-                  "type": "number"
-                },
-                "beta": {
-                  "type": "number"
-                },
-                "mu": {
-                  "type": "number"
-                },
-                "stdErr": {
-                  "type": "number"
-                },
-                "dof": {
-                  "type": "number"
-                },
-                "sigma": {
-                  "type": "number"
-                }
-              }
+            {
+              "$ref": "valueSEEffect.json#"
             },
-            "input": {
-              "type": "object",
-              "properties": {
-                "value": {
-                  "type": "number"
-                },
-                "sampleSize": {
-                  "type": "number"
-                },
-                "mu": {
-                  "type": "number"
-                },
-                "sigma": {
-                  "type": "number"
-                },
-                "events": {
-                  "type": "number"
-                },
-                "lowerBound": {
-                  "oneOf": [
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "string",
-                      "enum": [
-                        "NE"
-                      ]
-                    }
-                  ]
-                },
-                "upperBound": {
-                  "oneOf": [
-                    {
-                      "type": "number"
-                    },
-                    {
-                      "type": "string",
-                      "enum": [
-                        "NE"
-                      ]
-                    }
-                  ]
-                },
-                "stdErr": {
-                  "type": "number"
-                },
-                "scale": {
-                  "type": "string",
-                  "enum": [
-                    "percentage",
-                    "decimal"
-                  ]
-                }
-              }
+            {
+              "$ref": "valueCIEffect.json#"
+            },
+            {
+              "$ref": "valueSampleSizeEffect.json#"
+            },
+            {
+              "$ref": "eventsSampleSizeEffect.json#"
+            },
+            {
+              "$ref": "normalDistribution.json"
+            },
+            {
+              "$ref": "betaDistribution.json"
+            },
+            {
+              "$ref": "gammaDistribution.json"
+            },
+            {
+              "$ref": "tDistribution.json"
+            },
+            {
+              "$ref": "survivalDistribution.json"
             }
-          }
+          ]
         }
       }
     }

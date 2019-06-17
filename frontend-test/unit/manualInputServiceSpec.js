@@ -4,7 +4,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
   var constraintServiceMock = jasmine.createSpyObj('ConstraintService', ['percentage', 'decimal']);
-  var currentSchemaVersion = '1.2.1';
+  var currentSchemaVersion = '1.2.2';
   var inputKnowledgeServiceMock = jasmine.createSpyObj('InputKnowledgeService', [
     'getOptions'
   ]);
@@ -361,7 +361,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         var result = manualInputService.createProblem(criteria, alternatives, title, description, inputData, useFavorability);
         var expectedResult = {
           title: title,
-          schemaVersion: '1.2.1',
+          schemaVersion: '1.2.2',
           description: description,
           criteria: {
             criterion1id: {

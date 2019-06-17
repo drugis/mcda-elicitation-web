@@ -16,6 +16,7 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
      *       Remove properties from data sources
      *       Fix legacy problem: remove scales from criteria and put them on data source(s)
      * 1.2.1 Adding text option for effects table cells
+     * 1.2.2 Splitting the performance table entry performances, and making them a bit more strict
      * *****/
 
     function updateProblemToCurrentSchema(problem) {
@@ -32,8 +33,8 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
         newProblem = updateToVersion120(newProblem);
       }
 
-      if(newProblem.schemaVersion === '1.2.0'){
-        newProblem.schemaVersion = '1.2.1';
+      if (newProblem.schemaVersion === '1.2.0' || newProblem.schemaVersion === '1.2.1') {
+        newProblem.schemaVersion = '1.2.2';
       }
 
       if (newProblem.schemaVersion === currentSchemaVersion) {
@@ -78,6 +79,19 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
       loadSchema(ajv, 'dataSource.json');
       loadSchema(ajv, 'relativeEntry.json');
       loadSchema(ajv, 'absoluteEntry.json');
+      loadSchema(ajv, 'emptyPerformance.json');
+
+      loadSchema(ajv, 'valueEffect.json');
+      loadSchema(ajv, 'valueSEEffect.json');
+      loadSchema(ajv, 'valueCIEffect.json');
+      loadSchema(ajv, 'valueSampleSizeEffect.json');
+      loadSchema(ajv, 'eventsSampleSizeEffect.json');
+
+      loadSchema(ajv, 'normalDistribution.json');
+      loadSchema(ajv, 'tDistribution.json');
+      loadSchema(ajv, 'betaDistribution.json');
+      loadSchema(ajv, 'gammaDistribution.json');
+      loadSchema(ajv, 'survivalDistribution.json');
       return ajv;
     }
 
