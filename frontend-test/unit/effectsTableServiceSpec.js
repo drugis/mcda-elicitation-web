@@ -762,7 +762,7 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        fit('should set cells without a value label, but with scale values to true', function() {
+        it('should set cells without a value label, but with scale values to true', function() {
           var rows = [{
             dataSource: {
               id: 'ds1'
