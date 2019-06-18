@@ -213,11 +213,48 @@ define(['lodash', 'angular'], function(_, angular) {
       }
     }
 
+    function createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales) {
+      return _.reduce(rows, function(accum, row) {
+        if (row.isHeaderRow) {
+          return accum;
+        } else {
+          accum[row.dataSource.id] = createViabilityRows(row, alternatives, effectsTableInfo, scales);
+          return accum;
+        }
+      }, {});
+    }
+
+    function createViabilityRows(row, alternatives, effectsTableInfo, scales) {
+      return _.reduce(alternatives, function(accum, alternative) {
+        accum[alternative.id] = isCellViable(row, alternative, effectsTableInfo, scales);
+        return accum;
+      }, {});
+    }
+
+    function isCellViable(row, alternative, effectsTableInfo, scales) {
+      return isRelative(row, effectsTableInfo) ||
+        hasEffectValueLabel(row, alternative, effectsTableInfo) ||
+        hasScaleValue(row, alternative, scales);
+    }
+
+    function isRelative(row, effectsTableInfo) {
+      return !effectsTableInfo[row.dataSource.id].isAbsolute;
+    }
+
+    function hasEffectValueLabel(row, alternative, effectsTableInfo) {
+      return effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].effectValue !== '';
+    }
+
+    function hasScaleValue(row, alternative, scales) {
+      return !!scales && !isNaN(scales[row.dataSource.id][alternative.id]['50%']);
+    }
+
     return {
       buildEffectsTable: buildEffectsTable,
       createEffectsTableInfo: createEffectsTableInfo,
       isStudyDataAvailable: isStudyDataAvailable,
-      buildTableRows: buildTableRows
+      buildTableRows: buildTableRows,
+      createIsCellAnalysisViable: createIsCellAnalysisViable
     };
   };
 

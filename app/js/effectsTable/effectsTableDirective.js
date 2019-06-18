@@ -28,26 +28,22 @@ define(['lodash'], function(_) {
           scope.rows = EffectsTableService.buildEffectsTable(scope.keyedCriteria);
         }, true);
 
-        scope.$watch('alternatives', function(newAlternatives) {
+        scope.$watch('alternatives', function() {
           scope.nrAlternatives = _.keys(scope.alternatives).length;
-          scope.alternatives = newAlternatives;
-          scope.isCellAnalysisViable = createIsCellAnalysisViable();
+          isCellAnalysisViable();
         });
+
+        scope.$watch('scales', isCellAnalysisViable);
 
         scope.$on('elicit.settingsChanged', getWorkspaceSettings);
 
-        function createIsCellAnalysisViable() {
-          return _(scope.rows).reduce(function(accum, row) {
-            if (row.isHeaderRow) {
-              return accum;
-            } else {
-              accum[row.dataSource.id] = _.reduce(scope.alternatives, function(accum, alternative) {
-                accum[alternative.id] = !scope.effectsTableInfo[row.dataSource.id].isAbsolute || scope.effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].effectValue !== '';
-                return accum;
-              }, {});
-              return accum;
-            }
-          }, {});
+        function isCellAnalysisViable(){
+          scope.isCellAnalysisViable = EffectsTableService.createIsCellAnalysisViable(
+            scope.rows,
+            scope.alternatives,
+            scope.effectsTableInfo,
+            scope.scales
+          );
         }
 
         function getWorkspaceSettings() {

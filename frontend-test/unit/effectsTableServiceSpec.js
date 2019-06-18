@@ -666,6 +666,135 @@ define([
           expect(result).toEqual(expectedResult);
         });
       });
+
+      describe('createIsCellAnalysisViable', function() {
+        it('should set cells with a value label to true', function() {
+          var rows = [{
+            dataSource: {
+              id: 'ds1'
+            }
+          }];
+          var alternatives = [{
+            id: 'alt1'
+          }];
+          var effectsTableInfo = {
+            ds1: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alt1: {
+                  effectValue: 'an effect value label '
+                }
+              }
+            }
+          };
+          var scales;
+          var result = effectTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
+          var expectedResult = {
+            ds1: {
+              alt1: true
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should ignore headerRows', function() {
+          var scales;
+          var effectsTableInfo = {};
+          var alternatives = [];
+          var rows = [{
+            isHeaderRow: true
+          }];
+          var result = effectTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
+          var expectedResult = {};
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should set relative cells to true', function() {
+          var rows = [{
+            dataSource: {
+              id: 'ds1'
+            }
+          }];
+          var scales;
+          var effectsTableInfo = {
+            ds1: {
+              isAbsolute: false
+            }
+          };
+          var alternatives = [{
+            id: 'alt1'
+          }];
+          var result = effectTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
+          var expectedResult = {
+            ds1: {
+              alt1: true
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should set cells without a value label to false', function() {
+          var rows = [{
+            dataSource: {
+              id: 'ds1'
+            }
+          }];
+          var alternatives = [{
+            id: 'alt1'
+          }];
+          var effectsTableInfo = {
+            ds1: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alt1: {
+                  effectValue: ''
+                }
+              }
+            }
+          };
+          var scales;
+          var result = effectTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
+          var expectedResult = {
+            ds1: {
+              alt1: false
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        fit('should set cells without a value label, but with scale values to true', function() {
+          var rows = [{
+            dataSource: {
+              id: 'ds1'
+            }
+          }];
+          var alternatives = [{
+            id: 'alt1'
+          }];
+          var effectsTableInfo = {
+            ds1: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alt1: {
+                  effectValue: ''
+                }
+              }
+            }
+          };
+          var scales = {ds1: {
+            alt1: {
+              '50%': 0
+            }
+          }};
+          var result = effectTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
+          var expectedResult = {
+            ds1: {
+              alt1: true
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+      });
     });
   });
 });

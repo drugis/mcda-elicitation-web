@@ -23,7 +23,7 @@ define(['lodash'], function(_) {
           scope.uncertainty = hasUncertainty(scope.effectsTableInfo);
           scope.effectsDisplay = scope.workspaceSettings.effectsDisplay;
           scope.isAbsolute = scope.effectsTableInfo.isAbsolute;
-          scope.effectValue = 'Not entered';
+          scope.effectValue = '';
           if (scope.effectsTableInfo.studyDataLabelsAndUncertainty) {
             scope.effectLabel = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId].effectLabel;
             scope.distributionLabel = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId].distributionLabel;

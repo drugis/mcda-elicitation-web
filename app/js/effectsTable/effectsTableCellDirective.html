@@ -3,10 +3,10 @@
 </div>
 
 <div ng-if="effectsDisplay === 'deterministicMCDA'">
-  <div ng-if="effectValue !== 'Not entered'">
+  <div ng-if="effectValue !== ''">
     {{effectValue}}
   </div>
-  <div ng-if="effectValue === 'Not entered'">
+  <div ng-if="effectValue === ''">
     <effects-table-scales-cell scales="scales" uncertainty="false" workspace-settings="workspaceSettings"
       theoretical-scale="theoreticalScale">
     </effects-table-scales-cell>
