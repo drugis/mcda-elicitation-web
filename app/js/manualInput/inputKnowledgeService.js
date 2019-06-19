@@ -3,12 +3,12 @@ define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
     'ConstraintService',
     'PerformanceService',
-    'significantDigits'
+    'GenerateDistributionService'
   ];
   var InputKnowledgeService = function(
     ConstraintService,
     PerformanceService,
-    significantDigits
+    GenerateDistributionService
   ) {
     var INPUT_TYPE_KNOWLEDGE = {
       getKnowledge: function(inputType) {
@@ -34,63 +34,6 @@ define(['lodash', 'angular'], function(_, angular) {
       };
     }
 
-    var VALUE = {
-      id: 'value',
-      label: 'Value',
-      firstParameter: buildDefined('Value'),
-      constraints: true,
-      toString: valueToString,
-      finishInputCell: finishValueCell,
-      buildPerformance: PerformanceService.buildValuePerformance,
-      generateDistribution: generateValueDistribution
-    };
-
-
-    var VALUE_STANDARD_ERROR = {
-      id: 'valueSE',
-      label: 'Value, SE',
-      firstParameter: buildDefined('Value'),
-      secondParameter: buildPositiveFloat('Standard error'),
-      constraints: true,
-      toString: valueSEToString,
-      finishInputCell: finishValueSE,
-      buildPerformance: PerformanceService.buildValueSEPerformance,
-      generateDistribution: generateValueSEDistribution
-    };
-
-    var VALUE_CONFIDENCE_INTERVAL = {
-      id: 'valueCI',
-      label: 'Value, 95% C.I.',
-      firstParameter: buildDefined('Value'),
-      secondParameter: buildLowerBound(),
-      thirdParameter: buildUpperBound(),
-      constraints: true,
-      toString: valueCIToString,
-      finishInputCell: finishValueCI,
-      buildPerformance: PerformanceService.buildValueCIPerformance,
-      generateDistribution: generateValueCIDistribution
-    };
-
-    var EVENTS_SAMPLE_SIZE = {
-      id: 'eventsSampleSize',
-      label: 'Events / Sample size',
-      firstParameter: {
-        label: 'Events',
-        constraints: [
-          ConstraintService.defined(),
-          ConstraintService.positive(),
-          ConstraintService.integer(),
-          ConstraintService.belowOrEqualTo('secondParameter')
-        ]
-      },
-      secondParameter: buildIntegerAboveZero('Sample size'),
-      constraints: false,
-      toString: eventsSampleSizeToString,
-      finishInputCell: finishEventSampleSizeInputCell,
-      buildPerformance: PerformanceService.buildEventsSampleSizePerformance,
-      generateDistribution: generateEventsSampleSizeDistribution
-    };
-
     function getDistributionOptions() {
       return {
         normal: NORMAL,
@@ -102,49 +45,15 @@ define(['lodash', 'angular'], function(_, angular) {
       };
     }
 
-    var EMPTY = {
-      id: 'empty',
-      label: 'Empty cell',
+    var NORMAL = {
+      id: 'normal',
+      label: 'Normal',
+      firstParameter: buildDefined('Mean'),
+      secondParameter: buildPositiveFloat('Standard error'),
       constraints: false,
-      toString: function() {
-        return 'empty cell';
-      },
-      finishInputCell: function() {
-        return {
-          inputParameters: EMPTY
-        };
-      },
-      buildPerformance: function() {
-        return {
-          type: 'empty'
-        };
-      },
-      generateDistribution: function(cell) {
-        return angular.copy(cell);
-      }
-    };
-
-    var TEXT = {
-      id: 'text',
-      label: 'Text',
-      firstParameter: buildNotEmpty(),
-      constraints: false,
-      toString: function(cell) {
-        return cell.firstParameter;
-      },
-      finishInputCell: function(performance) {
-        var inputCell = {
-          inputParameters: TEXT,
-          firstParameter: performance.value
-        };
-        return inputCell;
-      },
-      buildPerformance: function(cell) {
-        return PerformanceService.buildTextPerformance(cell.firstParameter);
-      },
-      generateDistribution: function(cell) {
-        return angular.copy(cell);
-      }
+      toString: normalToString,
+      buildPerformance: PerformanceService.buildNormalPerformance,
+      finishInputCell: finishNormalInputCell
     };
 
     var BETA = {
@@ -192,6 +101,70 @@ define(['lodash', 'angular'], function(_, angular) {
       return 'Normal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
     }
 
+    var VALUE = {
+      id: 'value',
+      label: 'Value',
+      firstParameter: buildDefined('Value'),
+      constraints: true,
+      toString: valueToString,
+      finishInputCell: finishValueCell,
+      buildPerformance: PerformanceService.buildValuePerformance,
+      generateDistribution: GenerateDistributionService.generateValueDistribution
+    };
+
+
+    var VALUE_STANDARD_ERROR = {
+      id: 'valueSE',
+      label: 'Value, SE',
+      firstParameter: buildDefined('Value'),
+      secondParameter: buildPositiveFloat('Standard error'),
+      constraints: true,
+      toString: valueSEToString,
+      finishInputCell: finishValueSE,
+      buildPerformance: PerformanceService.buildValueSEPerformance,
+      generateDistribution: _.partial(GenerateDistributionService.generateValueSEDistribution,
+        NORMAL)
+    };
+
+    var VALUE_CONFIDENCE_INTERVAL = {
+      id: 'valueCI',
+      label: 'Value, 95% C.I.',
+      firstParameter: buildDefined('Value'),
+      secondParameter: buildLowerBound(),
+      thirdParameter: buildUpperBound(),
+      constraints: true,
+      toString: valueCIToString,
+      finishInputCell: finishValueCI,
+      buildPerformance: PerformanceService.buildValueCIPerformance,
+      generateDistribution: _.partial(GenerateDistributionService.generateValueCIDistribution,
+        NORMAL, VALUE)
+    };
+
+    var EVENTS_SAMPLE_SIZE = {
+      id: 'eventsSampleSize',
+      label: 'Events / Sample size',
+      firstParameter: {
+        label: 'Events',
+        constraints: [
+          ConstraintService.defined(),
+          ConstraintService.positive(),
+          ConstraintService.integer(),
+          ConstraintService.belowOrEqualTo('secondParameter')
+        ]
+      },
+      secondParameter: buildIntegerAboveZero('Sample size'),
+      constraints: false,
+      toString: eventsSampleSizeToString,
+      finishInputCell: finishEventSampleSizeInputCell,
+      buildPerformance: PerformanceService.buildEventsSampleSizePerformance,
+      generateDistribution: _.partial(GenerateDistributionService.generateEventsSampleSizeDistribution,
+        BETA)
+    };
+
+    function eventsSampleSizeToString(cell) {
+      return cell.firstParameter + ' / ' + cell.secondParameter;
+    }
+
     var VALUE_SAMPLE_SIZE = {
       id: 'valueSampleSize',
       label: 'Value, sample size',
@@ -201,12 +174,46 @@ define(['lodash', 'angular'], function(_, angular) {
       toString: valueSampleSizeToString,
       finishInputCell: finishValueSampleSizeCell,
       buildPerformance: PerformanceService.buildValueSampleSizePerformance,
-      generateDistribution: generateValueSampleSizeDistribution
+      generateDistribution: _.partial(GenerateDistributionService.generateValueSampleSizeDistribution,
+        VALUE)
     };
 
-    function eventsSampleSizeToString(cell) {
-      return cell.firstParameter + ' / ' + cell.secondParameter;
-    }
+    var EMPTY = {
+      id: 'empty',
+      label: 'Empty cell',
+      constraints: false,
+      toString: function() {
+        return 'empty cell';
+      },
+      finishInputCell: function() {
+        return {
+          inputParameters: EMPTY
+        };
+      },
+      buildPerformance: PerformanceService.buildEmptyPerformance,
+      generateDistribution: GenerateDistributionService.generateEmptyDistribution
+    };
+
+    var TEXT = {
+      id: 'text',
+      label: 'Text',
+      firstParameter: buildNotEmpty(),
+      constraints: false,
+      toString: function(cell) {
+        return cell.firstParameter;
+      },
+      finishInputCell: function(performance) {
+        var inputCell = {
+          inputParameters: TEXT,
+          firstParameter: performance.value
+        };
+        return inputCell;
+      },
+      buildPerformance: function(cell) {
+        return PerformanceService.buildTextPerformance(cell.firstParameter);
+      },
+      generateDistribution: GenerateDistributionService.generateEmptyDistribution
+    };
 
     /**********
      * public *
@@ -239,96 +246,6 @@ define(['lodash', 'angular'], function(_, angular) {
         ]
       };
     }
-
-    // generate distributions
-    function generateValueDistribution(cell) {
-      var distributionCell = angular.copy(cell);
-      if (isPercentage(distributionCell)) {
-        distributionCell.firstParameter = cell.firstParameter / 100;
-      }
-      distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-      return distributionCell;
-    }
-
-    function generateValueSEDistribution(cell) {
-      var distributionCell = angular.copy(cell);
-
-      if (isPercentage(distributionCell)) {
-        distributionCell.firstParameter = cell.firstParameter / 100;
-        distributionCell.secondParameter = cell.secondParameter / 100;
-      }
-
-      distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
-      distributionCell.inputParameters.secondParameter.constraints = removeConstraints(distributionCell.inputParameters.secondParameter.constraints);
-      distributionCell.inputParameters = INPUT_TYPE_KNOWLEDGE.distribution.getOptions().normal;
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-      return distributionCell;
-    }
-
-    function generateValueCIDistribution(cell) {
-      var distributionCell = angular.copy(cell);
-
-      if (areBoundsSymmetric(distributionCell)) {
-        distributionCell.inputParameters = INPUT_TYPE_KNOWLEDGE.distribution.getOptions().normal;
-        distributionCell.secondParameter = boundsToStandardError(cell.secondParameter, cell.thirdParameter);
-      } else {
-        distributionCell.inputParameters = INPUT_TYPE_KNOWLEDGE.distribution.getOptions().value;
-        delete distributionCell.secondParameter;
-      }
-      delete distributionCell.thirdParameter;
-
-      if (isPercentage(cell)) {
-        distributionCell.firstParameter = distributionCell.firstParameter / 100;
-        if (distributionCell.secondParameter) {
-          distributionCell.secondParameter = distributionCell.secondParameter / 100;
-        }
-      }
-      distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
-      if (distributionCell.secondParameter) {
-        distributionCell.inputParameters.secondParameter.constraints = removeConstraints(distributionCell.inputParameters.secondParameter.constraints);
-      }
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-      return distributionCell;
-    }
-
-    function generateValueSampleSizeDistribution(cell) {
-      var distributionCell = angular.copy(cell);
-      if (isPercentage(cell)) {
-        distributionCell.firstParameter = distributionCell.firstParameter / 100;
-      }
-      distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
-      distributionCell.inputParameters = INPUT_TYPE_KNOWLEDGE.distribution.getOptions().value;
-      delete distributionCell.secondParameter;
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-      return distributionCell;
-    }
-
-    function generateEventsSampleSizeDistribution(cell) {
-      var distributionCell = angular.copy(cell);
-      distributionCell.inputParameters = INPUT_TYPE_KNOWLEDGE.distribution.getOptions().beta;
-      distributionCell.firstParameter = cell.firstParameter + 1;
-      distributionCell.secondParameter = cell.secondParameter - cell.firstParameter + 1;
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-      return distributionCell;
-    }
-
-    function removeConstraints(constraints) {
-      return _.reject(constraints, function(constraint) {
-        return constraint.label === 'Proportion (percentage)' || constraint.label === 'Proportion (decimal)';
-      });
-    }
-
-    function areBoundsSymmetric(cell) {
-      return (cell.thirdParameter + cell.secondParameter) / 2 === cell.firstParameter;
-    }
-
-    function boundsToStandardError(lowerBound, upperBound) {
-      return significantDigits((upperBound - lowerBound) / (2 * 1.96));
-    }
-
-    // build performances
-
 
     // finish cell functions
 
