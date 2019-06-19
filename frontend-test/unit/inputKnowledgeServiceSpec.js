@@ -19,16 +19,14 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
   var inputKnowledgeService;
   var performanceServiceMock = jasmine.createSpyObj(
     'PerformanceService', [
-      'buildExactPerformance',
+      'buildValuePerformance',
       'buildNormalPerformance',
       'buildBetaPerformance',
       'buildGammaPerformance',
-      'buildExactConfidencePerformance',
-      'buildExactPercentConfidencePerformance',
-      'buildExactDecimalConfidencePerformance',
-      'buildExactSEPerformance',
-      'buildExactPercentSEPerformance',
-      'buildExactDecimalSEPerformance',
+      'buildValueCIPerformance',
+      'buildValueSEPerformance',
+      'buildEventsSampleSizePerformance',
+      'buildValueSampleSizePerformance',
       'buildTextPerformance'
     ]);
   describe('the input knowledge service', function() {
@@ -64,16 +62,9 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result).toEqual(expectedResult);
         });
 
-        it('should create correct performance', function() {
+        it('should call the correct performance service function', function() {
           inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildBetaPerformance).toHaveBeenCalledWith(30, 40);
-        });
-
-        it('should not create performance for an invalid cell', function() {
-          cell.isInvalid = true;
-          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildBetaPerformance).not.toHaveBeenCalled();
-          expect(result).toBeUndefined();
+          expect(performanceServiceMock.buildBetaPerformance).toHaveBeenCalledWith(cell);
         });
 
         it('should create a finished input cell', function() {
@@ -102,16 +93,9 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result).toEqual(expectedResult);
         });
 
-        it('should create correct performance', function() {
+        it('should call the correct performance service function', function() {
           inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(30, 40);
-        });
-
-        it('should not create performance for an invalid cell', function() {
-          cell.isInvalid = true;
-          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildNormalPerformance).not.toHaveBeenCalled();
-          expect(result).toBeUndefined();
+          expect(performanceServiceMock.buildNormalPerformance).toHaveBeenCalledWith(cell);
         });
 
         it('should create a finished input cell', function() {
@@ -140,16 +124,9 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result).toEqual(expectedResult);
         });
 
-        it('should create correct performance', function() {
+        it('should call the correct performance service function', function() {
           inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildGammaPerformance).toHaveBeenCalledWith(30, 40);
-        });
-
-        it('should not create performance for an invalid cell', function() {
-          cell.isInvalid = true;
-          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildGammaPerformance).not.toHaveBeenCalled();
-          expect(result).toBeUndefined();
+          expect(performanceServiceMock.buildGammaPerformance).toHaveBeenCalledWith(cell);
         });
 
         it('should create a finished input cell', function() {
@@ -169,7 +146,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       describe('for an exact value,', function() {
         beforeEach(function() {
           cell.inputParameters.id = 'value';
-          performanceServiceMock.buildExactPerformance.calls.reset();
+          performanceServiceMock.buildValuePerformance.calls.reset();
         });
 
         it('should render correct non-percentage inputs', function() {
@@ -185,16 +162,9 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result).toEqual(expectedResult);
         });
 
-        it('should create correct performance', function() {
+        it('should call the correct performance service function', function() {
           inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(30);
-        });
-
-        it('should not create performance for an invalid cell', function() {
-          cell.isInvalid = true;
-          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactPerformance).not.toHaveBeenCalled();
-          expect(result).toBeUndefined();
+          expect(performanceServiceMock.buildValuePerformance).toHaveBeenCalledWith(cell);
         });
 
         it('should create a finished input cell', function() {
@@ -210,7 +180,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       describe('for an empty cell', function() {
         beforeEach(function() {
           cell.inputParameters.id = 'empty';
-          performanceServiceMock.buildExactPerformance.calls.reset();
+          performanceServiceMock.buildValuePerformance.calls.reset();
         });
 
         it('should render correct inputs', function() {
@@ -219,7 +189,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result).toEqual(expectedResult);
         });
 
-        it('should create correct performance', function() {
+        it('should call the correct performance service function', function() {
           var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance();
           var expectedResult = {
             type: 'empty'
@@ -247,7 +217,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result).toEqual(expectedResult);
         });
 
-        it('should create correct performance', function() {
+        it('should call the correct performance service function', function() {
           inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
           expect(performanceServiceMock.buildTextPerformance).toHaveBeenCalledWith(cell.firstParameter);
         });
@@ -283,7 +253,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       describe('for a value without dispersion', function() {
         beforeEach(function() {
           cell.inputParameters.id = 'value';
-          performanceServiceMock.buildExactPerformance.calls.reset();
+          performanceServiceMock.buildValuePerformance.calls.reset();
         });
 
         it('should render correct non-percentage inputs', function() {
@@ -299,37 +269,9 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result).toEqual(expectedResult);
         });
 
-        it('should create correct non-percentage performance', function() {
+        it('should call the correct performance service function', function() {
           inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(50);
-        });
-
-        it('should create correct percentage performance', function() {
-          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (percentage)' });
-          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          var input = {
-            scale: 'percentage',
-            value: 50
-          };
-          expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(50 / 100, input);
-        });
-
-
-        it('should create correct decimal performance', function() {
-          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (decimal)' });
-          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          var input = {
-            scale: 'decimal',
-            value: 50
-          };
-          expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(50, input);
-        });
-
-        it('should not create performance for an invalid cell', function() {
-          cell.isInvalid = true;
-          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactPerformance).not.toHaveBeenCalled();
-          expect(result).toBeUndefined();
+          expect(performanceServiceMock.buildValuePerformance).toHaveBeenCalledWith(cell);
         });
 
         it('should create a finished input cell', function() {
@@ -429,7 +371,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         beforeEach(function() {
           cell.inputParameters.id = 'valueSE';
           cell.secondParameter = 0.5;
-          performanceServiceMock.buildExactPerformance.calls.reset();
+          performanceServiceMock.buildValueSEPerformance.calls.reset();
         });
 
         it('should render correct non-percentage inputs', function() {
@@ -447,26 +389,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
 
         it('should create correct non-percentage performance', function() {
           inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactSEPerformance).toHaveBeenCalledWith(50, 0.5);
-        });
-
-        it('should create correct percentage performance', function() {
-          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (percentage)' });
-          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactPercentSEPerformance).toHaveBeenCalledWith(50, 0.5);
-        });
-
-        it('should create correct decimal performance', function() {
-          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (decimal)' });
-          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactDecimalSEPerformance).toHaveBeenCalledWith(50, 0.5);
-        });
-
-        it('should not create performance for an invalid cell', function() {
-          cell.isInvalid = true;
-          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactPerformance).not.toHaveBeenCalled();
-          expect(result).toBeUndefined();
+          expect(performanceServiceMock.buildValueSEPerformance).toHaveBeenCalledWith(cell);
         });
 
         it('should create a finished input cell', function() {
@@ -538,8 +461,8 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           cell.inputParameters.id = 'valueCI';
           cell.secondParameter = 40;
           cell.thirdParameter = 60;
-          performanceServiceMock.buildExactPerformance.calls.reset();
-          performanceServiceMock.buildExactConfidencePerformance.calls.reset();
+          performanceServiceMock.buildValuePerformance.calls.reset();
+          performanceServiceMock.buildValueCIPerformance.calls.reset();
         });
 
         it('should render correct non-percentage inputs', function() {
@@ -555,28 +478,9 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result).toEqual(expectedResult);
         });
 
-        it('should create correct non-percentage performance', function() {
+        it('should call the correct performance service function', function() {
           inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactConfidencePerformance).toHaveBeenCalledWith(cell);
-        });
-
-        it('should create correct percentage performance', function() {
-          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (percentage)' });
-          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactPercentConfidencePerformance).toHaveBeenCalledWith(cell);
-        });
-
-        it('should create correct decimal performance', function() {
-          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (decimal)' });
-          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactDecimalConfidencePerformance).toHaveBeenCalledWith(cell);
-        });
-
-        it('should not create performance for an invalid cell', function() {
-          cell.isInvalid = true;
-          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactConfidencePerformance).not.toHaveBeenCalled();
-          expect(result).toBeUndefined();
+          expect(performanceServiceMock.buildValueCIPerformance).toHaveBeenCalledWith(cell);
         });
 
         it('should create a finished input cell given estimable bounds', function() {
@@ -680,7 +584,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         beforeEach(function() {
           cell.inputParameters.id = 'valueSampleSize';
           cell.secondParameter = 100;
-          performanceServiceMock.buildExactPerformance.calls.reset();
+          performanceServiceMock.buildValueSampleSizePerformance.calls.reset();
         });
 
         it('should render correct non-percentage inputs', function() {
@@ -696,45 +600,9 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result).toEqual(expectedResult);
         });
 
-        it('should create correct non-percentage performance', function() {
-          var value = cell.firstParameter;
-          var input = {
-            value: value,
-            sampleSize: cell.secondParameter
-          };
+        it('should call the correct function of the performance service', function() {
           inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(value, input);
-        });
-
-        it('should create correct percentage performance', function() {
-          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (percentage)' });
-          var value = cell.firstParameter;
-          var input = {
-            value: value,
-            sampleSize: cell.secondParameter,
-            scale: 'percentage'
-          };
-          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(value / 100, input);
-        });
-
-        it('should create correct decimal performance', function() {
-          cell.inputParameters.firstParameter.constraints.push({ label: 'Proportion (decimal)' });
-          var value = cell.firstParameter;
-          var input = {
-            value: value,
-            sampleSize: cell.secondParameter,
-            scale: 'decimal'
-          };
-          inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(value, input);
-        });
-
-        it('should not create performance for an invalid cell', function() {
-          cell.isInvalid = true;
-          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactPerformance).not.toHaveBeenCalled();
-          expect(result).toBeUndefined();
+          expect(performanceServiceMock.buildValueSampleSizePerformance).toHaveBeenCalledWith(cell);
         });
 
         it('should create a finished input cell', function() {
@@ -804,7 +672,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         beforeEach(function() {
           cell.inputParameters.id = 'eventsSampleSize';
           cell.secondParameter = 100;
-          performanceServiceMock.buildExactPerformance.calls.reset();
+          performanceServiceMock.buildEventsSampleSizePerformance.calls.reset();
         });
 
         it('should render correct inputs', function() {
@@ -813,20 +681,9 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result).toEqual(expectedResult);
         });
 
-        it('should create the correct performance', function() {
-          var input = {
-            events: cell.firstParameter,
-            sampleSize: cell.secondParameter
-          };
+        it('should call the correct function of the performance service', function() {
           inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactPerformance).toHaveBeenCalledWith(cell.firstParameter / cell.secondParameter, input);
-        });
-
-        it('should not create performance for an invalid cell', function() {
-          cell.isInvalid = true;
-          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
-          expect(performanceServiceMock.buildExactPerformance).not.toHaveBeenCalled();
-          expect(result).toBeUndefined();
+          expect(performanceServiceMock.buildEventsSampleSizePerformance).toHaveBeenCalledWith(cell);
         });
 
         it('should create a finished input cell', function() {
@@ -856,7 +713,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       describe('for an empty cell', function() {
         beforeEach(function() {
           cell.inputParameters.id = 'empty';
-          performanceServiceMock.buildExactPerformance.calls.reset();
+          performanceServiceMock.buildValuePerformance.calls.reset();
         });
 
         it('should render correct inputs', function() {
@@ -865,7 +722,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result).toEqual(expectedResult);
         });
 
-        it('should create correct performance', function() {
+        it('should call the correct performance service function', function() {
           var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance();
           var expectedResult = {
             type: 'empty'
@@ -898,7 +755,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(result).toEqual(expectedResult);
         });
 
-        it('should create correct performance', function() {
+        it('should call the correct performance service function', function() {
           inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].buildPerformance(cell);
           expect(performanceServiceMock.buildTextPerformance).toHaveBeenCalledWith(cell.firstParameter);
         });

@@ -41,7 +41,7 @@ define(['lodash', 'angular'], function(_, angular) {
       constraints: true,
       toString: valueToString,
       finishInputCell: finishValueCell,
-      buildPerformance: buildValuePerformance,
+      buildPerformance: PerformanceService.buildValuePerformance,
       generateDistribution: generateValueDistribution
     };
 
@@ -54,7 +54,7 @@ define(['lodash', 'angular'], function(_, angular) {
       constraints: true,
       toString: valueSEToString,
       finishInputCell: finishValueSE,
-      buildPerformance: buildValueSEPerformance,
+      buildPerformance: PerformanceService.buildValueSEPerformance,
       generateDistribution: generateValueSEDistribution
     };
 
@@ -67,8 +67,28 @@ define(['lodash', 'angular'], function(_, angular) {
       constraints: true,
       toString: valueCIToString,
       finishInputCell: finishValueCI,
-      buildPerformance: buildValueCIPerformance,
+      buildPerformance: PerformanceService.buildValueCIPerformance,
       generateDistribution: generateValueCIDistribution
+    };
+
+    var EVENTS_SAMPLE_SIZE = {
+      id: 'eventsSampleSize',
+      label: 'Events / Sample size',
+      firstParameter: {
+        label: 'Events',
+        constraints: [
+          ConstraintService.defined(),
+          ConstraintService.positive(),
+          ConstraintService.integer(),
+          ConstraintService.belowOrEqualTo('secondParameter')
+        ]
+      },
+      secondParameter: buildIntegerAboveZero('Sample size'),
+      constraints: false,
+      toString: eventsSampleSizeToString,
+      finishInputCell: finishEventSampleSizeInputCell,
+      buildPerformance: PerformanceService.buildEventsSampleSizePerformance,
+      generateDistribution: generateEventsSampleSizeDistribution
     };
 
     function getDistributionOptions() {
@@ -134,7 +154,7 @@ define(['lodash', 'angular'], function(_, angular) {
       secondParameter: buildIntegerAboveZero('Beta'),
       constraints: false,
       toString: betaToString,
-      buildPerformance: buildBetaPerformance,
+      buildPerformance: PerformanceService.buildBetaPerformance,
       finishInputCell: finishBetaCell
     };
 
@@ -149,7 +169,7 @@ define(['lodash', 'angular'], function(_, angular) {
       secondParameter: buildFloatAboveZero('Beta'),
       constraints: false,
       toString: gammaToString,
-      buildPerformance: buildGammaPerformance,
+      buildPerformance: PerformanceService.buildGammaPerformance,
       finishInputCell: finishGammaCell
     };
 
@@ -164,7 +184,7 @@ define(['lodash', 'angular'], function(_, angular) {
       secondParameter: buildPositiveFloat('Standard error'),
       constraints: false,
       toString: normalToString,
-      buildPerformance: buildNormalPerformance,
+      buildPerformance: PerformanceService.buildNormalPerformance,
       finishInputCell: finishNormalInputCell
     };
 
@@ -180,28 +200,8 @@ define(['lodash', 'angular'], function(_, angular) {
       constraints: true,
       toString: valueSampleSizeToString,
       finishInputCell: finishValueSampleSizeCell,
-      buildPerformance: buildValueSampleSizePerformance,
+      buildPerformance: PerformanceService.buildValueSampleSizePerformance,
       generateDistribution: generateValueSampleSizeDistribution
-    };
-
-    var EVENTS_SAMPLE_SIZE = {
-      id: 'eventsSampleSize',
-      label: 'Events / Sample size',
-      firstParameter: {
-        label: 'Events',
-        constraints: [
-          ConstraintService.defined(),
-          ConstraintService.positive(),
-          ConstraintService.integer(),
-          ConstraintService.belowOrEqualTo('secondParameter')
-        ]
-      },
-      secondParameter: buildIntegerAboveZero('Sample size'),
-      constraints: false,
-      toString: eventsSampleSizeToString,
-      finishInputCell: finishEventSampleSizeInputCell,
-      buildPerformance: buildEventSampleSizePerformance,
-      generateDistribution: generateEventsSampleSizeDistribution
     };
 
     function eventsSampleSizeToString(cell) {
@@ -328,118 +328,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     // build performances
-    function buildValuePerformance(cell) {
-      if (cell.isInvalid) {
-        return undefined;
-      } else {
-        if (isPercentage(cell)) {
-          return buildPercentPerformance(cell);
-        } else if (isDecimal(cell)) {
-          return buildDecimalPerformance(cell);
-        } else {
-          return PerformanceService.buildExactPerformance(cell.firstParameter);
-        }
-      }
-    }
 
-    function buildValueSEPerformance(cell) {
-      if (cell.isInvalid) {
-        return undefined;
-      } else {
-        if (isPercentage(cell)) {
-          return PerformanceService.buildExactPercentSEPerformance(cell.firstParameter, cell.secondParameter);
-        } else if (isDecimal(cell)) {
-          return PerformanceService.buildExactDecimalSEPerformance(cell.firstParameter, cell.secondParameter);
-        } else {
-          return PerformanceService.buildExactSEPerformance(cell.firstParameter, cell.secondParameter);
-        }
-      }
-    }
-
-    function buildValueCIPerformance(cell) {
-      if (cell.isInvalid) {
-        return undefined;
-      } else {
-        if (isPercentage(cell)) {
-          return PerformanceService.buildExactPercentConfidencePerformance(cell);
-        } else if (isDecimal(cell)) {
-          return PerformanceService.buildExactDecimalConfidencePerformance(cell);
-        } else {
-          return PerformanceService.buildExactConfidencePerformance(cell);
-        }
-      }
-    }
-
-    function buildEventSampleSizePerformance(cell) {
-      if (cell.isInvalid) {
-        return undefined;
-      } else {
-        var input = {
-          events: cell.firstParameter,
-          sampleSize: cell.secondParameter
-        };
-        return PerformanceService.buildExactPerformance(cell.firstParameter / cell.secondParameter, input);
-      }
-    }
-
-    function buildValueSampleSizePerformance(cell) {
-      if (cell.isInvalid) {
-        return undefined;
-      } else {
-        var value = cell.firstParameter;
-        var sampleSize = cell.secondParameter;
-        var input = {
-          value: value,
-          sampleSize: sampleSize
-        };
-        if (isDecimal(cell)) {
-          input.scale = 'decimal';
-        }
-        if (isPercentage(cell)) {
-          input.scale = 'percentage';
-          value = value / 100;
-        }
-        return PerformanceService.buildExactPerformance(value, input);
-      }
-    }
-
-    function buildGammaPerformance(cell) {
-      if (cell.isInvalid) {
-        return undefined;
-      } else {
-        return PerformanceService.buildGammaPerformance(cell.firstParameter, cell.secondParameter);
-      }
-    }
-
-    function buildBetaPerformance(cell) {
-      if (cell.isInvalid) {
-        return undefined;
-      } else {
-        return PerformanceService.buildBetaPerformance(cell.firstParameter, cell.secondParameter);
-      }
-    }
-
-    function buildNormalPerformance(cell) {
-      if (cell.isInvalid) {
-        return undefined;
-      } else {
-        return PerformanceService.buildNormalPerformance(cell.firstParameter, cell.secondParameter);
-      }
-    }
-
-    function buildPercentPerformance(cell) {
-      return PerformanceService.buildExactPerformance(cell.firstParameter / 100, {
-        scale: 'percentage',
-        value: cell.firstParameter
-      });
-    }
-
-    function buildDecimalPerformance(cell) {
-      return PerformanceService.buildExactPerformance(cell.firstParameter, {
-        scale: 'decimal',
-        value: cell.firstParameter
-      });
-    }
 
     // finish cell functions
 
@@ -529,8 +418,8 @@ define(['lodash', 'angular'], function(_, angular) {
     function finishBetaCell(performance) {
       var inputCell = {
         inputParameters: BETA,
-        firstParameter : performance.parameters.alpha,
-        secondParameter : performance.parameters.beta
+        firstParameter: performance.parameters.alpha,
+        secondParameter: performance.parameters.beta
       };
       return inputCell;
     }
@@ -590,10 +479,6 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function isPercentage(cell) {
       return _.some(cell.inputParameters.firstParameter.constraints, ['label', 'Proportion (percentage)']);
-    }
-
-    function isDecimal(cell) {
-      return _.some(cell.inputParameters.firstParameter.constraints, ['label', 'Proportion (decimal)']);
     }
 
     // constraints
