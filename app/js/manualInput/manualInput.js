@@ -8,6 +8,7 @@ define([
   './constraintService',
   './performanceService',
   './generateDistributionService',
+  './finishInputCellService',
   './effectInputHelperDirective',
   './inputDataSourceDirective',
   './inProgressResource',
@@ -23,6 +24,7 @@ define([
   ConstraintService,
   PerformanceService,
   GenerateDistributionService,
+  FinishInputCellService,
   effectInputHelper,
   inputDataSource,
   InProgressResource,
@@ -40,6 +42,7 @@ define([
       .factory('ConstraintService', ConstraintService)
       .factory('PerformanceService', PerformanceService)
       .factory('GenerateDistributionService', GenerateDistributionService)
+      .factory('FinishInputCellService', FinishInputCellService)
 
       .directive('effectInputHelper', effectInputHelper)
       .directive('inputDataSource', inputDataSource)
