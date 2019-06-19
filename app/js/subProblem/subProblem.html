@@ -82,8 +82,7 @@
               <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[1] | number"></span>
             </span>
           </td>
-          <td ng-if="!row.criterion.canBePercentage">{{row.criterion.unitOfMeasurement}}</td>
-          <td ng-if="row.criterion.canBePercentage">{{workspaceSettings.showPercentages ? '%' : ''}}</td>
+          <td>{{row.dataSource.unitOfMeasurement}}</td>
         </tr>
       </tbody>
     </table>

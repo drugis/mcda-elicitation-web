@@ -75,7 +75,7 @@ define([
 
     app.constant('Tasks', Config.tasks);
     app.constant('isMcdaStandalone', true);
-    app.constant('currentSchemaVersion', '1.2.2');
+    app.constant('currentSchemaVersion', '1.3.0');
 
     app.config([
       '$stateProvider',

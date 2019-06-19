@@ -112,12 +112,16 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
         var settings = {
           firstCriterion: {
             title: 'firstTitle',
-            dataSources: [{ scale: [-Infinity, Infinity] }]
+            dataSources: [{
+              scale: [-Infinity, Infinity]
+            }]
           },
           secondCriterion: {
             title: 'secondTitle',
-            unitOfMeasurement: 'uom',
-            dataSources: [{ scale: [-Infinity, Infinity] }]
+            dataSources: [{
+              unitOfMeasurement: 'uom',
+              scale: [-Infinity, Infinity]
+            }]
           }
         };
         var coordRanges = {
@@ -202,70 +206,33 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
       it('should return the label for the axis of a non-percentifiable criterion', function() {
         var continuousCriterion = {
           title: 'contCrit',
-          unitOfMeasurement: 'kg',
-          dataSources: [{}]
+          dataSources: [{
+            unitOfMeasurement: 'kg',
+          }]
         };
         var result = tradeOffService.getLabel(continuousCriterion);
         var expectedResult = 'contCrit (kg)';
         expect(result).toEqual(expectedResult);
       });
-
-      it('should return the label for a percentifiable criterion with percentage on', function() {
-        workspaceSettingsServiceMock.usePercentage.and.returnValue(true);
-        var percentCriterion = {
-          title: 'percCrit',
-          dataSources: [{ scale: [0, 1] }]
-        };
-        var result = tradeOffService.getLabel(percentCriterion);
-        var expectedResult = 'percCrit (%)';
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should return the label for a percentifiable criterion without percentages on', function() {
-        workspaceSettingsServiceMock.usePercentage.and.returnValue(false);
-        var noPercentCriterion = {
-          title: 'percCrit',
-          dataSources: [{ scale: [0, 1] }]
-        };
-        var result = tradeOffService.getLabel(noPercentCriterion);
-        var expectedResult = 'percCrit';
-        expect(result).toEqual(expectedResult);
-      });
     });
 
     describe('getUnit', function() {
-      it('should return % if percentages are used and the criterion can be percentage', function() {
-        workspaceSettingsServiceMock.usePercentage.and.returnValue(true);
-        var criterion = {
-          dataSources: [{ scale: [0, 1] }]
-        };
-        var result = tradeOffService.getUnit(criterion);
-        expect(result).toEqual('%');
-      });
-
-      it('should return an empty string if the criterion can be percentage and but percentages are not being used', function() {
+      it('should return the unit of measurement if it is set ', function() {
         workspaceSettingsServiceMock.usePercentage.and.returnValue(false);
         var criterion = {
-          dataSources: [{ scale: [0, 1] }]
-        };
-        var result = tradeOffService.getUnit(criterion);
-        expect(result).toEqual('');
-      });
-
-      it('should return the unit of measurement if it is set and the criterion can not be a percentage', function() {
-        workspaceSettingsServiceMock.usePercentage.and.returnValue(false);
-        var criterion = {
-          unitOfMeasurement: 'kg',
-          dataSources: [{ scale: [-Infinity, Infinity] }]
+          dataSources: [{ 
+            unitOfMeasurement: 'kg',
+            scale: [-Infinity, Infinity] }]
         };
         var result = tradeOffService.getUnit(criterion);
         expect(result).toEqual('kg');
       });
 
-      it('should return an empty string if there is no unit of measurement set and the criterion can not be a percentage', function() {
+      it('should return an empty string if there is no unit of measurement set', function() {
         workspaceSettingsServiceMock.usePercentage.and.returnValue(false);
         var criterion = {
-          dataSources: [{ scale: [-Infinity, Infinity] }]
+          dataSources: [{ 
+            scale: [-Infinity, Infinity] }]
         };
         var result = tradeOffService.getUnit(criterion);
         expect(result).toEqual('');

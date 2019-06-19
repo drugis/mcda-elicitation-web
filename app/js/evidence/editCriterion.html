@@ -16,18 +16,6 @@
       <div class="cell">
         <textarea rows="4" ng-model="criterion.description"></textarea>
       </div>
-      <div class="cell">
-        <label>Unit of measurement
-          <inline-help help-key="criterion-unit"></inline-help>
-        </label>
-      </div>
-      <div class="cell" ng-if="!canBePercentage">
-        <input type="text" ng-model="criterion.unitOfMeasurement">
-      </div>
-      <div class="cell" ng-if="canBePercentage">
-        <input type="text" ng-if="usePercentage" ng-disabled="true" ng-value="'%'">
-        <input type="text" ng-if="!usePercentage" ng-disabled="true" ng-value="''">
-      </div>
       <div class="cell" ng-if="useFavorability">
         <label>Favorability
           <inline-help help-key="favorability"></inline-help>

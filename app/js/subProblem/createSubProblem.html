@@ -93,17 +93,10 @@
                   <span>&nbsp;</span>
                 </div>
               </td>
-              <td ng-if="!row.isHeaderRow && row.isFirstRow && !row.criterion.canBePercentage"
-                rowspan="{{row.criterion.numberOfDataSources}}"
+              <td ng-if="!row.isHeaderRow"
                 ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id]}"
                 ng-show="toggledColumns['units']">
-                {{row.criterion.unitOfMeasurement}}
-              </td>
-              <td ng-if="!row.isHeaderRow && row.isFirstRow && row.criterion.canBePercentage"
-                rowspan="{{row.criterion.numberOfDataSources}}"
-                ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id]}"
-                ng-show="toggledColumns['units']">
-                {{workspaceSettings.showPercentages ? '%' : ''}}
+                {{row.dataSource.unitOfMeasurement}}
               </td>
               <td ng-if="!row.isHeaderRow"
                 ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternative.id] || !subProblemState.criterionInclusions[row.criterion.id] || !subProblemState.dataSourceInclusions[row.dataSource.id]}"
@@ -146,7 +139,8 @@
       <div class="cell alert" ng-if="areTooManyDataSourcesSelected">
         <em>Effects table may not contain multiple data sources per criterion</em>
       </div>
-      <div ng-if="warnings.length && !hasMissingValues && !areTooManyDataSourcesSelected" ng-repeat="warning in warnings">
+      <div ng-if="warnings.length && !hasMissingValues && !areTooManyDataSourcesSelected"
+        ng-repeat="warning in warnings">
         <i class="fa fa-exclamation-triangle"></i> {{warning}}
       </div>
       <!-- Scale ranges -->

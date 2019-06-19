@@ -161,11 +161,7 @@ define(['lodash', 'd3'], function(_, d3) {
     }
 
     function getUnit(criterion) {
-      if (_.isEqual(criterion.dataSources[0].scale, [0, 1])) {
-        return WorkspaceSettingsService.usePercentage() ? '%' : '';
-      } else {
-        return criterion.unitOfMeasurement ? criterion.unitOfMeasurement : '';
-      }
+      return criterion.dataSources[0].unitOfMeasurement ? criterion.dataSources[0].unitOfMeasurement : '';
     }
 
     return {

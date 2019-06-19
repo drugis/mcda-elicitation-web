@@ -280,40 +280,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(performanceServiceMock.buildValuePerformance).toHaveBeenCalledWith(cell);
         });
 
-        it('should create a finished input cell', function() {
-          var performance = {
-            type: 'exact',
-            value: 50
-          };
-          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(performance);
-          expect(result.firstParameter).toEqual(50);
-        });
 
-        it('should create a finished input cell for a cell with percentage scale', function() {
-          var performance = {
-            type: 'exact',
-            value: 0.5,
-            input: {
-              scale: 'percentage'
-            }
-          };
-          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(performance);
-          expect(result.firstParameter).toEqual(50);
-          expect(result.inputParameters.firstParameter.constraints[1].label).toEqual('Proportion (percentage)');
-        });
-
-        it('should create a finished input cell for a cell with decimal scale', function() {
-          var performance = {
-            type: 'exact',
-            value: 0.5,
-            input: {
-              scale: 'decimal'
-            }
-          };
-          var result = inputKnowledgeService.getOptions(inputType)[cell.inputParameters.id].finishInputCell(performance);
-          expect(result.firstParameter).toEqual(0.5);
-          expect(result.inputParameters.firstParameter.constraints[1].label).toEqual('Proportion (decimal)');
-        });
       });
 
       describe('for a value with standard error', function() {

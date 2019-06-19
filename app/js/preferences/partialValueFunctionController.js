@@ -84,8 +84,8 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
       if (_.isEqual(criterion.dataSources[0].scale, [0, 100])) {
         return ' %';
       }
-      if (criterion.unitOfMeasurement) {
-        return ' ' + criterion.unitOfMeasurement;
+      if (criterion.dataSources[0].unitOfMeasurement) {
+        return ' ' + criterion.dataSources[0].unitOfMeasurement;
       }
       return '';
     }

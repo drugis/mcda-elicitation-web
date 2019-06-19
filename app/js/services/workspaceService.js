@@ -65,30 +65,9 @@ define(['lodash', 'angular'], function(_, angular) {
       var criteriaWithUpdatedDataSources = updateDataSources(baseState.problem.criteria, percentifyDataSource);
       return _.merge({}, baseState, {
         problem: {
-          criteria: percentifyCriteriaUnits(criteriaWithUpdatedDataSources)
+          criteria: criteriaWithUpdatedDataSources
         }
       });
-    }
-
-    function percentifyCriteriaUnits(criteria) {
-      return _.mapValues(criteria, _.partial(setUnitForScale, [0, 100], '%'));
-    }
-
-    function fixProportionUnits(criteria) {
-      return _.mapValues(criteria, _.partial(setUnitForScale, [0, 1], ''));
-    }
-
-    function setUnitForScale(scale, unit, criterion) {
-      return _.extend({}, criterion, {
-        unitOfMeasurement: getUnitOfMeasurement(criterion, scale, unit)
-      });
-    }
-
-    function getUnitOfMeasurement(criterion, scale, unit) {
-      var hasPercentScale = _.find(criterion.dataSources, function(dataSource) {
-        return _.isEqual(dataSource.scale, scale);
-      });
-      return hasPercentScale ? unit : criterion.unitOfMeasurement;
     }
 
     function updateDataSources(criteria, fn) {
@@ -160,7 +139,6 @@ define(['lodash', 'angular'], function(_, angular) {
         return _.merge({}, alternative, baseProblem.alternatives[key]);
       });
       newState.problem.criteria = addTheoreticalScales(newState.problem.criteria);
-      newState.problem.criteria = fixProportionUnits(newState.problem.criteria);
       return newState;
     }
 

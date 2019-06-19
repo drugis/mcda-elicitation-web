@@ -204,18 +204,9 @@ define(['lodash', 'angular'], function(_, angular) {
     function copyOldWorkspaceCriteria(workspace) {
       return _.map(workspace.problem.criteria, function(criterion) {
         var newCrit = _.pick(criterion, ['title', 'description', 'isFavorable']); // omit scales, preferences
-        if (canBePercentage(criterion) && criterion.unitOfMeasurement) {
-          newCrit.unitOfMeasurement = criterion.unitOfMeasurement;
-        }
         newCrit.dataSources = copyOldWorkspaceDataSource(criterion);
         newCrit.id = generateUuid();
         return newCrit;
-      });
-    }
-
-    function canBePercentage(criterion) {
-      return !_.some(criterion.dataSources, function(dataSource) {
-        return _.isEqual([0, 1], dataSource.scale);
       });
     }
 
@@ -225,7 +216,8 @@ define(['lodash', 'angular'], function(_, angular) {
           'source',
           'sourceLink',
           'strengthOfEvidence',
-          'uncertainties'
+          'uncertainties',
+          'unitOfMeasurement'
         ]);
         newDataSource.id = generateUuid();
         newDataSource.oldId = dataSource.id;

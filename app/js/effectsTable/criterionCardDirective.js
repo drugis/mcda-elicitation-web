@@ -2,13 +2,11 @@
 define(['lodash'], function(_) {
   var dependencies = [
     '$modal',
-    'WorkspaceSettingsService',
     'swap',
     'isMcdaStandalone'
   ];
   var CriterionCardDirective = function(
     $modal,
-    WorkspaceSettingsService,
     swap,
     isMcdaStandalone
   ) {
@@ -38,11 +36,6 @@ define(['lodash'], function(_) {
         scope.removeDataSource = removeDataSource;
         scope.editDataSource = editDataSource;
 
-        // init
-        setUnit();
-        scope.$on('elicit.settingsChanged', setUnit);
-
-        // public 
         function criterionUp() {
           scope.goUp(scope.idx);
           if (!scope.isInput) {
@@ -101,16 +94,6 @@ define(['lodash'], function(_) {
           swap(array, idx, newIdx);
           if (!scope.isInput) {
             scope.saveOrdering();
-          }
-        }
-
-        function setUnit() {
-          if (_.isEqual(scope.criterion.dataSources[0].scale, [0, 1])) {
-            if (WorkspaceSettingsService.usePercentage()) {
-              scope.criterion.unitOfMeasurement = '%';
-            } else {
-              delete scope.criterion.unitOfMeasurement;
-            }
           }
         }
       }
