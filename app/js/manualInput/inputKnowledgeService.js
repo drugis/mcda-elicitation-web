@@ -3,12 +3,12 @@ define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
     'ConstraintService',
     'PerformanceService',
-    'significantDigits'
+    'GenerateDistributionService'
   ];
   var InputKnowledgeService = function(
     ConstraintService,
     PerformanceService,
-    significantDigits
+    GenerateDistributionService
   ) {
     var INPUT_TYPE_KNOWLEDGE = {
       getKnowledge: function(inputType) {
@@ -34,6 +34,73 @@ define(['lodash', 'angular'], function(_, angular) {
       };
     }
 
+    function getDistributionOptions() {
+      return {
+        normal: NORMAL,
+        beta: BETA,
+        gamma: GAMMA,
+        value: VALUE,
+        empty: EMPTY,
+        text: TEXT
+      };
+    }
+
+    var NORMAL = {
+      id: 'normal',
+      label: 'Normal',
+      firstParameter: buildDefined('Mean'),
+      secondParameter: buildPositiveFloat('Standard error'),
+      constraints: false,
+      toString: normalToString,
+      buildPerformance: PerformanceService.buildNormalPerformance,
+      finishInputCell: finishNormalInputCell
+    };
+
+    var BETA = {
+      id: 'beta',
+      label: 'Beta',
+      firstParameter: buildIntegerAboveZero('Alpha'),
+      secondParameter: buildIntegerAboveZero('Beta'),
+      constraints: false,
+      toString: betaToString,
+      buildPerformance: PerformanceService.buildBetaPerformance,
+      finishInputCell: finishBetaCell
+    };
+
+    function betaToString(cell) {
+      return 'Beta(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+    }
+
+    var GAMMA = {
+      id: 'gamma',
+      label: 'Gamma',
+      firstParameter: buildFloatAboveZero('Alpha'),
+      secondParameter: buildFloatAboveZero('Beta'),
+      constraints: false,
+      toString: gammaToString,
+      buildPerformance: PerformanceService.buildGammaPerformance,
+      finishInputCell: finishGammaCell
+    };
+
+    function gammaToString(cell) {
+      return 'Gamma(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+    }
+
+    var NORMAL = {
+      id: 'normal',
+      label: 'Normal',
+      firstParameter: buildDefined('Mean'),
+      secondParameter: buildPositiveFloat('Standard error'),
+      constraints: false,
+      toString: normalToString,
+      buildPerformance: PerformanceService.buildNormalPerformance,
+      finishInputCell: finishNormalInputCell
+    };
+
+    function normalToString(cell) {
+      return 'Normal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+    }
+
     var VALUE = {
       id: 'value',
       label: 'Value',
@@ -41,8 +108,8 @@ define(['lodash', 'angular'], function(_, angular) {
       constraints: true,
       toString: valueToString,
       finishInputCell: finishValueCell,
-      buildPerformance: buildValuePerformance,
-      generateDistribution: generateValueDistribution
+      buildPerformance: PerformanceService.buildValuePerformance,
+      generateDistribution: GenerateDistributionService.generateValueDistribution
     };
 
 
@@ -54,8 +121,9 @@ define(['lodash', 'angular'], function(_, angular) {
       constraints: true,
       toString: valueSEToString,
       finishInputCell: finishValueSE,
-      buildPerformance: buildValueSEPerformance,
-      generateDistribution: generateValueSEDistribution
+      buildPerformance: PerformanceService.buildValueSEPerformance,
+      generateDistribution: _.partial(GenerateDistributionService.generateValueSEDistribution,
+        NORMAL)
     };
 
     var VALUE_CONFIDENCE_INTERVAL = {
@@ -67,20 +135,48 @@ define(['lodash', 'angular'], function(_, angular) {
       constraints: true,
       toString: valueCIToString,
       finishInputCell: finishValueCI,
-      buildPerformance: buildValueCIPerformance,
-      generateDistribution: generateValueCIDistribution
+      buildPerformance: PerformanceService.buildValueCIPerformance,
+      generateDistribution: _.partial(GenerateDistributionService.generateValueCIDistribution,
+        NORMAL, VALUE)
     };
 
-    function getDistributionOptions() {
-      return {
-        normal: NORMAL,
-        beta: BETA,
-        gamma: GAMMA,
-        value: VALUE,
-        empty: EMPTY,
-        text: TEXT
-      };
+    var EVENTS_SAMPLE_SIZE = {
+      id: 'eventsSampleSize',
+      label: 'Events / Sample size',
+      firstParameter: {
+        label: 'Events',
+        constraints: [
+          ConstraintService.defined(),
+          ConstraintService.positive(),
+          ConstraintService.integer(),
+          ConstraintService.belowOrEqualTo('secondParameter')
+        ]
+      },
+      secondParameter: buildIntegerAboveZero('Sample size'),
+      constraints: false,
+      toString: eventsSampleSizeToString,
+      finishInputCell: finishEventSampleSizeInputCell,
+      buildPerformance: PerformanceService.buildEventsSampleSizePerformance,
+      generateDistribution: _.partial(GenerateDistributionService.generateEventsSampleSizeDistribution,
+        BETA)
+    };
+
+    function eventsSampleSizeToString(cell) {
+      return cell.firstParameter + ' / ' + cell.secondParameter;
     }
+
+    var VALUE_SAMPLE_SIZE = {
+      id: 'valueSampleSize',
+      label: 'Value, sample size',
+      firstParameter: buildDefined('Value'),
+      secondParameter: buildIntegerAboveZero('Sample size'),
+      constraints: true,
+      toString: valueSampleSizeToString,
+      finishInputCell: finishValueSampleSizeCell,
+      buildPerformance: PerformanceService.buildValueSampleSizePerformance,
+      generateDistribution: _.partial(GenerateDistributionService.generateValueSampleSizeDistribution,
+        VALUE)
+    };
 
     var EMPTY = {
       id: 'empty',
@@ -94,14 +190,8 @@ define(['lodash', 'angular'], function(_, angular) {
           inputParameters: EMPTY
         };
       },
-      buildPerformance: function() {
-        return {
-          type: 'empty'
-        };
-      },
-      generateDistribution: function(cell) {
-        return angular.copy(cell);
-      }
+      buildPerformance: PerformanceService.buildEmptyPerformance,
+      generateDistribution: GenerateDistributionService.generateEmptyDistribution
     };
 
     var TEXT = {
@@ -122,91 +212,8 @@ define(['lodash', 'angular'], function(_, angular) {
       buildPerformance: function(cell) {
         return PerformanceService.buildTextPerformance(cell.firstParameter);
       },
-      generateDistribution: function(cell) {
-        return angular.copy(cell);
-      }
+      generateDistribution: GenerateDistributionService.generateEmptyDistribution
     };
-
-    var BETA = {
-      id: 'beta',
-      label: 'Beta',
-      firstParameter: buildIntegerAboveZero('Alpha'),
-      secondParameter: buildIntegerAboveZero('Beta'),
-      constraints: false,
-      toString: betaToString,
-      buildPerformance: buildBetaPerformance,
-      finishInputCell: finishBetaCell
-    };
-
-    function betaToString(cell) {
-      return 'Beta(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
-    }
-
-    var GAMMA = {
-      id: 'gamma',
-      label: 'Gamma',
-      firstParameter: buildFloatAboveZero('Alpha'),
-      secondParameter: buildFloatAboveZero('Beta'),
-      constraints: false,
-      toString: gammaToString,
-      buildPerformance: buildGammaPerformance,
-      finishInputCell: finishGammaCell
-    };
-
-    function gammaToString(cell) {
-      return 'Gamma(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
-    }
-
-    var NORMAL = {
-      id: 'normal',
-      label: 'Normal',
-      firstParameter: buildDefined('Mean'),
-      secondParameter: buildPositiveFloat('Standard error'),
-      constraints: false,
-      toString: normalToString,
-      buildPerformance: buildNormalPerformance,
-      finishInputCell: finishNormalInputCell
-    };
-
-    function normalToString(cell) {
-      return 'Normal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
-    }
-
-    var VALUE_SAMPLE_SIZE = {
-      id: 'valueSampleSize',
-      label: 'Value, sample size',
-      firstParameter: buildDefined('Value'),
-      secondParameter: buildIntegerAboveZero('Sample size'),
-      constraints: true,
-      toString: valueSampleSizeToString,
-      finishInputCell: finishValueSampleSizeCell,
-      buildPerformance: buildValueSampleSizePerformance,
-      generateDistribution: generateValueSampleSizeDistribution
-    };
-
-    var EVENTS_SAMPLE_SIZE = {
-      id: 'eventsSampleSize',
-      label: 'Events / Sample size',
-      firstParameter: {
-        label: 'Events',
-        constraints: [
-          ConstraintService.defined(),
-          ConstraintService.positive(),
-          ConstraintService.integer(),
-          ConstraintService.belowOrEqualTo('secondParameter')
-        ]
-      },
-      secondParameter: buildIntegerAboveZero('Sample size'),
-      constraints: false,
-      toString: eventsSampleSizeToString,
-      finishInputCell: finishEventSampleSizeInputCell,
-      buildPerformance: buildEventSampleSizePerformance,
-      generateDistribution: generateEventsSampleSizeDistribution
-    };
-
-    function eventsSampleSizeToString(cell) {
-      return cell.firstParameter + ' / ' + cell.secondParameter;
-    }
 
     /**********
      * public *
@@ -238,207 +245,6 @@ define(['lodash', 'angular'], function(_, angular) {
           ConstraintService.belowOrEqualTo('firstParameter')
         ]
       };
-    }
-
-    // generate distributions
-    function generateValueDistribution(cell) {
-      var distributionCell = angular.copy(cell);
-      if (isPercentage(distributionCell)) {
-        distributionCell.firstParameter = cell.firstParameter / 100;
-      }
-      distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-      return distributionCell;
-    }
-
-    function generateValueSEDistribution(cell) {
-      var distributionCell = angular.copy(cell);
-
-      if (isPercentage(distributionCell)) {
-        distributionCell.firstParameter = cell.firstParameter / 100;
-        distributionCell.secondParameter = cell.secondParameter / 100;
-      }
-
-      distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
-      distributionCell.inputParameters.secondParameter.constraints = removeConstraints(distributionCell.inputParameters.secondParameter.constraints);
-      distributionCell.inputParameters = INPUT_TYPE_KNOWLEDGE.distribution.getOptions().normal;
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-      return distributionCell;
-    }
-
-    function generateValueCIDistribution(cell) {
-      var distributionCell = angular.copy(cell);
-
-      if (areBoundsSymmetric(distributionCell)) {
-        distributionCell.inputParameters = INPUT_TYPE_KNOWLEDGE.distribution.getOptions().normal;
-        distributionCell.secondParameter = boundsToStandardError(cell.secondParameter, cell.thirdParameter);
-      } else {
-        distributionCell.inputParameters = INPUT_TYPE_KNOWLEDGE.distribution.getOptions().value;
-        delete distributionCell.secondParameter;
-      }
-      delete distributionCell.thirdParameter;
-
-      if (isPercentage(cell)) {
-        distributionCell.firstParameter = distributionCell.firstParameter / 100;
-        if (distributionCell.secondParameter) {
-          distributionCell.secondParameter = distributionCell.secondParameter / 100;
-        }
-      }
-      distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
-      if (distributionCell.secondParameter) {
-        distributionCell.inputParameters.secondParameter.constraints = removeConstraints(distributionCell.inputParameters.secondParameter.constraints);
-      }
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-      return distributionCell;
-    }
-
-    function generateValueSampleSizeDistribution(cell) {
-      var distributionCell = angular.copy(cell);
-      if (isPercentage(cell)) {
-        distributionCell.firstParameter = distributionCell.firstParameter / 100;
-      }
-      distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
-      distributionCell.inputParameters = INPUT_TYPE_KNOWLEDGE.distribution.getOptions().value;
-      delete distributionCell.secondParameter;
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-      return distributionCell;
-    }
-
-    function generateEventsSampleSizeDistribution(cell) {
-      var distributionCell = angular.copy(cell);
-      distributionCell.inputParameters = INPUT_TYPE_KNOWLEDGE.distribution.getOptions().beta;
-      distributionCell.firstParameter = cell.firstParameter + 1;
-      distributionCell.secondParameter = cell.secondParameter - cell.firstParameter + 1;
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-      return distributionCell;
-    }
-
-    function removeConstraints(constraints) {
-      return _.reject(constraints, function(constraint) {
-        return constraint.label === 'Proportion (percentage)' || constraint.label === 'Proportion (decimal)';
-      });
-    }
-
-    function areBoundsSymmetric(cell) {
-      return (cell.thirdParameter + cell.secondParameter) / 2 === cell.firstParameter;
-    }
-
-    function boundsToStandardError(lowerBound, upperBound) {
-      return significantDigits((upperBound - lowerBound) / (2 * 1.96));
-    }
-
-    // build performances
-    function buildValuePerformance(cell) {
-      if (cell.isInvalid) {
-        return undefined;
-      } else {
-        if (isPercentage(cell)) {
-          return buildPercentPerformance(cell);
-        } else if (isDecimal(cell)) {
-          return buildDecimalPerformance(cell);
-        } else {
-          return PerformanceService.buildExactPerformance(cell.firstParameter);
-        }
-      }
-    }
-
-    function buildValueSEPerformance(cell) {
-      if (cell.isInvalid) {
-        return undefined;
-      } else {
-        if (isPercentage(cell)) {
-          return PerformanceService.buildExactPercentSEPerformance(cell.firstParameter, cell.secondParameter);
-        } else if (isDecimal(cell)) {
-          return PerformanceService.buildExactDecimalSEPerformance(cell.firstParameter, cell.secondParameter);
-        } else {
-          return PerformanceService.buildExactSEPerformance(cell.firstParameter, cell.secondParameter);
-        }
-      }
-    }
-
-    function buildValueCIPerformance(cell) {
-      if (cell.isInvalid) {
-        return undefined;
-      } else {
-        if (isPercentage(cell)) {
-          return PerformanceService.buildExactPercentConfidencePerformance(cell);
-        } else if (isDecimal(cell)) {
-          return PerformanceService.buildExactDecimalConfidencePerformance(cell);
-        } else {
-          return PerformanceService.buildExactConfidencePerformance(cell);
-        }
-      }
-    }
-
-    function buildEventSampleSizePerformance(cell) {
-      if (cell.isInvalid) {
-        return undefined;
-      } else {
-        var input = {
-          events: cell.firstParameter,
-          sampleSize: cell.secondParameter
-        };
-        return PerformanceService.buildExactPerformance(cell.firstParameter / cell.secondParameter, input);
-      }
-    }
-
-    function buildValueSampleSizePerformance(cell) {
-      if (cell.isInvalid) {
-        return undefined;
-      } else {
-        var value = cell.firstParameter;
-        var sampleSize = cell.secondParameter;
-        var input = {
-          value: value,
-          sampleSize: sampleSize
-        };
-        if (isDecimal(cell)) {
-          input.scale = 'decimal';
-        }
-        if (isPercentage(cell)) {
-          input.scale = 'percentage';
-          value = value / 100;
-        }
-        return PerformanceService.buildExactPerformance(value, input);
-      }
-    }
-
-    function buildGammaPerformance(cell) {
-      if (cell.isInvalid) {
-        return undefined;
-      } else {
-        return PerformanceService.buildGammaPerformance(cell.firstParameter, cell.secondParameter);
-      }
-    }
-
-    function buildBetaPerformance(cell) {
-      if (cell.isInvalid) {
-        return undefined;
-      } else {
-        return PerformanceService.buildBetaPerformance(cell.firstParameter, cell.secondParameter);
-      }
-    }
-
-    function buildNormalPerformance(cell) {
-      if (cell.isInvalid) {
-        return undefined;
-      } else {
-        return PerformanceService.buildNormalPerformance(cell.firstParameter, cell.secondParameter);
-      }
-    }
-
-    function buildPercentPerformance(cell) {
-      return PerformanceService.buildExactPerformance(cell.firstParameter / 100, {
-        scale: 'percentage',
-        value: cell.firstParameter
-      });
-    }
-
-    function buildDecimalPerformance(cell) {
-      return PerformanceService.buildExactPerformance(cell.firstParameter, {
-        scale: 'decimal',
-        value: cell.firstParameter
-      });
     }
 
     // finish cell functions
@@ -529,8 +335,8 @@ define(['lodash', 'angular'], function(_, angular) {
     function finishBetaCell(performance) {
       var inputCell = {
         inputParameters: BETA,
-        firstParameter : performance.parameters.alpha,
-        secondParameter : performance.parameters.beta
+        firstParameter: performance.parameters.alpha,
+        secondParameter: performance.parameters.beta
       };
       return inputCell;
     }
@@ -590,10 +396,6 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function isPercentage(cell) {
       return _.some(cell.inputParameters.firstParameter.constraints, ['label', 'Proportion (percentage)']);
-    }
-
-    function isDecimal(cell) {
-      return _.some(cell.inputParameters.firstParameter.constraints, ['label', 'Proportion (decimal)']);
     }
 
     // constraints

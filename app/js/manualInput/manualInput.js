@@ -7,6 +7,7 @@ define([
   './inputKnowledgeService',
   './constraintService',
   './performanceService',
+  './generateDistributionService',
   './effectInputHelperDirective',
   './inputDataSourceDirective',
   './inProgressResource',
@@ -21,6 +22,7 @@ define([
   InputKnowledgeService,
   ConstraintService,
   PerformanceService,
+  GenerateDistributionService,
   effectInputHelper,
   inputDataSource,
   InProgressResource,
@@ -37,6 +39,7 @@ define([
       .factory('InputKnowledgeService', InputKnowledgeService)
       .factory('ConstraintService', ConstraintService)
       .factory('PerformanceService', PerformanceService)
+      .factory('GenerateDistributionService', GenerateDistributionService)
 
       .directive('effectInputHelper', effectInputHelper)
       .directive('inputDataSource', inputDataSource)

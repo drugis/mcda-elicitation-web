@@ -1,5 +1,5 @@
 'use strict';
-define(['angular'], function() {
+define(['lodash', 'angular'], function(_) {
   var dependencies = [];
   var PerformanceService = function() {
     function buildExactPerformance(value, input) {
@@ -59,23 +59,35 @@ define(['angular'], function() {
       });
     }
 
-    function buildNormalPerformance(mu, sigma, input) {
-      return {
-        type: 'dnorm',
-        parameters: {
-          mu: mu,
-          sigma: sigma
-        },
-        input: input
-      };
+
+    function buildGammaPerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        return buildAlphaBetaPerformance('dgamma', cell.firstParameter, cell.secondParameter);
+      }
     }
 
-    function buildBetaPerformance(alpha, beta, input) {
-      return buildAlphaBetaPerformance('dbeta', alpha, beta, input);
+    function buildBetaPerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        return buildAlphaBetaPerformance('dbeta', cell.firstParameter, cell.secondParameter);
+      }
     }
 
-    function buildGammaPerformance(alpha, beta, input) {
-      return buildAlphaBetaPerformance('dgamma', alpha, beta, input);
+    function buildNormalPerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        return {
+          type: 'dnorm',
+          parameters: {
+            mu: cell.firstParameter,
+            sigma: cell.secondParameter
+          }
+        };
+      }
     }
 
     function buildEmptyPerformance() {
@@ -84,37 +96,132 @@ define(['angular'], function() {
       };
     }
 
-    function buildAlphaBetaPerformance(type, alpha, beta, input) {
+    function buildAlphaBetaPerformance(type, alpha, beta) {
       return {
         type: type,
         parameters: {
           alpha: alpha,
           beta: beta
-        },
-        input: input
+        }
       };
     }
 
-    function buildTextPerformance(text){
+    function buildTextPerformance(text) {
       return {
         type: 'empty',
         value: text
       };
     }
 
+
+    function buildValuePerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        if (isPercentage(cell)) {
+          return buildPercentPerformance(cell);
+        } else if (isDecimal(cell)) {
+          return buildDecimalPerformance(cell);
+        } else {
+          return buildExactPerformance(cell.firstParameter);
+        }
+      }
+    }
+
+    function buildValueSEPerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        if (isPercentage(cell)) {
+          return buildExactPercentSEPerformance(cell.firstParameter, cell.secondParameter);
+        } else if (isDecimal(cell)) {
+          return buildExactDecimalSEPerformance(cell.firstParameter, cell.secondParameter);
+        } else {
+          return buildExactSEPerformance(cell.firstParameter, cell.secondParameter);
+        }
+      }
+    }
+
+    function buildValueCIPerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        if (isPercentage(cell)) {
+          return buildExactPercentConfidencePerformance(cell);
+        } else if (isDecimal(cell)) {
+          return buildExactDecimalConfidencePerformance(cell);
+        } else {
+          return buildExactConfidencePerformance(cell);
+        }
+      }
+    }
+
+    function buildEventsSampleSizePerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        var input = {
+          events: cell.firstParameter,
+          sampleSize: cell.secondParameter
+        };
+        return buildExactPerformance(cell.firstParameter / cell.secondParameter, input);
+      }
+    }
+
+    function buildValueSampleSizePerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        var value = cell.firstParameter;
+        var sampleSize = cell.secondParameter;
+        var input = {
+          value: value,
+          sampleSize: sampleSize
+        };
+        if (isDecimal(cell)) {
+          input.scale = 'decimal';
+        }
+        if (isPercentage(cell)) {
+          input.scale = 'percentage';
+          value = value / 100;
+        }
+        return buildExactPerformance(value, input);
+      }
+    }
+
+    function buildPercentPerformance(cell) {
+      return buildExactPerformance(cell.firstParameter / 100, {
+        scale: 'percentage',
+        value: cell.firstParameter
+      });
+    }
+
+    function buildDecimalPerformance(cell) {
+      return buildExactPerformance(cell.firstParameter, {
+        scale: 'decimal',
+        value: cell.firstParameter
+      });
+    }
+
+    function isPercentage(cell) {
+      return _.some(cell.inputParameters.firstParameter.constraints, ['label', 'Proportion (percentage)']);
+    }
+
+    function isDecimal(cell) {
+      return _.some(cell.inputParameters.firstParameter.constraints, ['label', 'Proportion (decimal)']);
+    }
+
     return {
-      buildExactPerformance: buildExactPerformance,
-      buildExactSEPerformance: buildExactSEPerformance,
-      buildExactPercentSEPerformance: buildExactPercentSEPerformance,
-      buildExactDecimalSEPerformance: buildExactDecimalSEPerformance,
-      buildExactConfidencePerformance: buildExactConfidencePerformance,
-      buildExactPercentConfidencePerformance: buildExactPercentConfidencePerformance,
-      buildExactDecimalConfidencePerformance: buildExactDecimalConfidencePerformance,
       buildNormalPerformance: buildNormalPerformance,
       buildBetaPerformance: buildBetaPerformance,
       buildGammaPerformance: buildGammaPerformance,
       buildEmptyPerformance: buildEmptyPerformance,
-      buildTextPerformance:buildTextPerformance
+      buildTextPerformance: buildTextPerformance,
+      buildValuePerformance: buildValuePerformance,
+      buildValueSEPerformance: buildValueSEPerformance,
+      buildValueCIPerformance: buildValueCIPerformance,
+      buildEventsSampleSizePerformance: buildEventsSampleSizePerformance,
+      buildValueSampleSizePerformance: buildValueSampleSizePerformance
     };
   };
   return dependencies.concat(PerformanceService);
