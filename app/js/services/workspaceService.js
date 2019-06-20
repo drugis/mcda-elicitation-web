@@ -245,10 +245,10 @@ define(['lodash', 'angular'], function(_, angular) {
       var maximum = -Infinity;
       _.forEach(scales, function(scale) {
         _.forEach(scale, function(value) {
-          if (value < minimum) {
+          if (value !== null && value < minimum) {
             minimum = value;
           }
-          if (value > maximum) {
+          if (value !== null && value > maximum) {
             maximum = value;
           }
         });

@@ -96,57 +96,6 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       });
     });
 
-    describe('checkScaleRanges', () => {
-      it('should check wether there are no missing scale ranges', () => {
-        var criteria1 = {
-          crit1: {
-            dataSources: [{
-
-            }]
-          }
-        };
-        var criteria2 = {
-          crit2: {
-            dataSources: [{
-              pvf: {}
-            }]
-          }
-        };
-        var criteria3 = {
-          crit3: {
-            dataSources: [{
-              pvf: {
-                range: []
-              }
-            }]
-          }
-        };
-        var criteria4 = {
-          crit4: {
-            dataSources: [{
-              pvf: {
-                range: [1]
-              }
-            }]
-          }
-        };
-        var criteria5 = {
-          crit5: {
-            dataSources: [{
-              pvf: {
-                range: [1, 0]
-              }
-            }]
-          }
-        };
-        expect(subProblemService.checkScaleRanges(criteria1)).toBeFalsy();
-        expect(subProblemService.checkScaleRanges(criteria2)).toBeFalsy();
-        expect(subProblemService.checkScaleRanges(criteria3)).toBeFalsy();
-        expect(subProblemService.checkScaleRanges(criteria4)).toBeFalsy();
-        expect(subProblemService.checkScaleRanges(criteria5)).toBeTruthy();
-      });
-    });
-
     describe('excludeDataSourcesForExcludedCriteria', () => {
       it('should exclude data sources when their criterion is excluded', () => {
         var criteria = {

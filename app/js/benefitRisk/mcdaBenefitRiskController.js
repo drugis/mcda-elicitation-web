@@ -165,7 +165,7 @@ define(['lodash'], function(_) {
             return 'Fork';
           },
           callback: function() {
-            return (newTitle) => {
+            return function(newTitle) {
               McdaBenefitRiskService.forkScenarioAndGo(newTitle, $scope.subProblem);
             };
           }
@@ -185,7 +185,7 @@ define(['lodash'], function(_) {
             return 'New';
           },
           callback: function() {
-            return (newTitle) => {
+            return function(newTitle) {
               McdaBenefitRiskService.newScenarioAndGo(newTitle, $scope.workspace, $scope.subProblem);
             };
           }

@@ -49,14 +49,6 @@ define(['lodash', 'angular'], function(_) {
       return returnObject;
     }
 
-    function checkScaleRanges(criteria) {
-      var isMissingScaleRange = _.find(criteria, function(criterion) {
-        return !(criterion.dataSources[0].pvf && criterion.dataSources[0].pvf.range &&
-          criterion.dataSources[0].pvf.range[0] !== undefined && criterion.dataSources[0].pvf.range[1] !== undefined);
-      });
-      return !isMissingScaleRange;
-    }
-
     function excludeDataSourcesForExcludedCriteria(criteria, subProblemState) {
       return _.reduce(criteria, function(accum, criterion, criterionId) {
         if (!subProblemState.criterionInclusions[criterionId]) {
@@ -219,10 +211,23 @@ define(['lodash', 'angular'], function(_) {
       });
     }
 
+    function findRowWithoutValues(effectsTableInfo, scales) {
+      return !_.some(effectsTableInfo, function(row, dataSourceId) {
+        return !row.isAbsolute || _.some(row.studyDataLabelsAndUncertainty, function(cell, alternativeId) {
+          return cell.effectValue !== '' || (scales && scales.observed && scales.observed[dataSourceId][alternativeId]);
+        });
+      });
+    }
+
+    function areTooManyDataSourcesIncluded(criteria){
+      return _.some(criteria, function(criterion) {
+        return criterion.dataSources.length > 1;
+      });
+    }
+    
     return {
       createSubProblemCommand: createSubProblemCommand,
       determineBaseline: determineBaseline,
-      checkScaleRanges: checkScaleRanges,
       excludeDataSourcesForExcludedCriteria: excludeDataSourcesForExcludedCriteria,
       areValuesMissingInEffectsTable: areValuesMissingInEffectsTable,
       getMissingValueWarnings: getMissingValueWarnings,
@@ -231,7 +236,9 @@ define(['lodash', 'angular'], function(_) {
       areTooManyDataSourcesSelected: areTooManyDataSourcesSelected,
       getCriteriaByDataSource: getCriteriaByDataSource,
       createSubProblemState: createSubProblemState,
-      excludeDeselectedAlternatives: excludeDeselectedAlternatives
+      excludeDeselectedAlternatives: excludeDeselectedAlternatives,
+      findRowWithoutValues: findRowWithoutValues,
+      areTooManyDataSourcesIncluded: areTooManyDataSourcesIncluded
     };
   };
 

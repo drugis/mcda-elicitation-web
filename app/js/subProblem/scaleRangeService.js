@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
     'intervalHull',
     'numberFilter',
@@ -92,16 +92,6 @@ define(['lodash', 'angular'], function(_) {
       return 0.5 * (to - from);
     }
 
-    function createRanges(choices) {
-      return _.fromPairs(_.map(choices, function(choice, criterionId) {
-        return [criterionId, {
-          pvf: {
-            range: [choice.from, choice.to]
-          }
-        }];
-      }));
-    }
-
     function getScalesStateAndChoices(observedScales, criteria, performanceTable) {
       return _.reduce(criteria, function(accum, criterion) {
         return _.merge({}, accum, initializeScaleStateAndChoicesForCriterion(observedScales, criterion, performanceTable));
@@ -112,12 +102,7 @@ define(['lodash', 'angular'], function(_) {
       var showPercentage = WorkspaceSettingsService.usePercentage();
       return _.reduce(criterion.dataSources, function(accum, dataSource) {
         // Calculate interval hulls
-        var effectValues = _.reduce(performanceTable, function(accum, entry) {
-          if (entry.dataSource === dataSource.id && entry.performance.effect) {
-            accum.push(entry.performance.effect.value);
-          }
-          return accum;
-        }, []);
+        var effectValues = getEffectValues(performanceTable, dataSource.id);
         var dataSourceRange = intervalHull(observedScales[dataSource.id], effectValues);
         var pvf = dataSource.pvf;
         var problemRange = pvf ? pvf.range : null;
@@ -141,13 +126,35 @@ define(['lodash', 'angular'], function(_) {
         }
       );
     }
+
+    function getEffectValues(performanceTable, dataSourceId) {
+      return _.reduce(performanceTable, function(accum, entry) {
+        if (entry.dataSource === dataSourceId && entry.performance.effect) {
+          accum.push(entry.performance.effect.value);
+        }
+        return accum;
+      }, []);
+    }
+
+    function getScaleTable(table, scales, performanceTable) {
+      var scaleTable = _.reject(table, 'isHeaderRow');
+      return _.map(scaleTable, function(row) {
+        var newRow = angular.copy(row);
+        if (scales && scales.observed) {
+          var effects = getEffectValues(performanceTable, row.dataSource.id);
+          newRow.intervalHull = intervalHull(scales.observed[row.dataSource.id], effects);
+        }
+        return newRow;
+      });
+    }
+
     return {
       nice: nice,
       niceTo: niceTo,
       niceFrom: niceFrom,
       calculateScales: calculateScales,
-      createRanges: createRanges,
-      getScalesStateAndChoices: getScalesStateAndChoices
+      getScalesStateAndChoices: getScalesStateAndChoices,
+      getScaleTable: getScaleTable
     };
   };
 

@@ -80,37 +80,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
       }));
     });
 
-    describe('createRanges', function() {
-      it('should create ranges for each scales choices', inject(function(ScaleRangeService) {
-        var choices = {
-          headacheId: {
-            from: 10,
-            to: 20
-          },
-          nauseaId: {
-            from: 30,
-            to: 40
-          }
-        };
-
-        var ranges = ScaleRangeService.createRanges(choices);
-
-        var expectedRanges = {
-          headacheId: {
-            pvf: {
-              range: [10, 20]
-            }
-          },
-          nauseaId: {
-            pvf: {
-              range: [30, 40]
-            }
-          }
-        };
-        expect(ranges).toEqual(expectedRanges);
-      }));
-    });
-
     describe('getScalesStateAndChoices', function() {
       it('should return the scale state and the choices', inject(function(ScaleRangeService) {
         var observedScales = {
