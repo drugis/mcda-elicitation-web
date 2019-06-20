@@ -541,11 +541,19 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function hasNoStochasticResults(aggregateState) {
-      var isAllExact = !_.find(aggregateState.problem.performanceTable, function(tableEntry) {
-        return tableEntry.performance.type !== 'exact';
+      var isAllExact = !_.some(aggregateState.problem.performanceTable, function(tableEntry) {
+        return tableEntry.performance.distribution && tableEntry.performance.distribution.type !== 'exact';
       });
-      var isExactSwing = _.find(aggregateState.prefs, ['type', 'exact swing']);
+      var isExactSwing = _.some(aggregateState.prefs, ['type', 'exact swing']);
       return isAllExact && isExactSwing;
+    }
+
+
+    function checkForMissingValuesInPerformanceTable(performanceTable) {
+      return _.some(performanceTable, function(entry) {
+        return entry.performance.effect && entry.performance.effect.type === 'empty' &&
+          entry.performance.distribution && entry.performance.distribution.type === 'empty';
+      });
     }
 
     return {
@@ -559,7 +567,8 @@ define(['lodash', 'angular'], function(_, angular) {
       validateWorkspace: validateWorkspace,
       addTheoreticalScales: addTheoreticalScales,
       percentifyCriteria: percentifyCriteria,
-      hasNoStochasticResults: hasNoStochasticResults
+      hasNoStochasticResults: hasNoStochasticResults,
+      checkForMissingValuesInPerformanceTable: checkForMissingValuesInPerformanceTable
     };
   };
 

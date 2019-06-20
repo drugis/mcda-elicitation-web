@@ -71,7 +71,6 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       });
     });
 
-
     describe('determineBaseline', () => {
       it('should determine the baseline alternative', () => {
         var performanceTable = [{
@@ -580,11 +579,77 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         }];
 
         var result = subProblemService.excludeDeselectedAlternatives(performanceTable, alternativeInclusions);
-        
+
         var expectedResult = [{
           alternative: 'a1'
         }];
         expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('areTooManyDataSourcesIncluded', () => {
+      it('return truthy if there is atleast one criterion with multiple selected datasources', () => {
+        var criteria = [{
+          dataSources: [{}, {}]
+        }];
+        var result = subProblemService.areTooManyDataSourcesIncluded(criteria);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return falsy if there is no criterion with multiple dataSources selected', () => {
+        var criteria = [{
+          dataSources: [{}]
+        }];
+        var result = subProblemService.areTooManyDataSourcesIncluded(criteria);
+        expect(result).toBeFalsy();
+      });
+    });
+
+    describe('findRowWithoutValues', function() {
+      it('should return false if there is no row without valid values', function() {
+        var effectsTableInfo = {
+          ds1: {
+            alt1: {
+              isAbsolute: false
+            }
+          },
+          ds2: {
+            alt1: {
+              isAbsolute: true,
+              effectValue: 5
+            }
+          },
+          ds3: {
+            alt1: {
+              isAbsolute: true,
+              effectValue: ''
+            }
+          }
+        };
+        var scales = {
+          observed: {
+            ds3: {
+              alt1: {
+                '50%': 123
+              }
+            }
+          }
+        };
+        var result = subProblemService.findRowWithoutValues(effectsTableInfo, scales);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return true if there is at least one row without valid values', function(){
+        var effectsTableInfo = {
+          ds1: {
+            alt1: {
+              isAbsolute: false
+            }
+          }
+        };
+        var scales = {};
+        var result = subProblemService.findRowWithoutValues(effectsTableInfo, scales);
+        expect(result).toBeFalsy();
       });
     });
   });

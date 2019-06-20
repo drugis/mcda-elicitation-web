@@ -25,7 +25,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         'percentifyCriteria',
         'mergeBaseAndSubProblem',
         'setDefaultObservedScales',
-        'hasNoStochasticResults'
+        'hasNoStochasticResults',
+        'checkForMissingValuesInPerformanceTable'
       ]),
       WorkspaceSettingsService = jasmine.createSpyObj('WorkspaceSetttingsService', ['usePercentage']),
       EffectsTableService = jasmine.createSpyObj('EffectsTableService', ['createEffectsTableInfo']),
@@ -197,9 +198,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
       it('should set the effects table info on the scope', () => {
         expect(scope.effectsTableInfo).toBe(effectsTableInfo);
       });
-      it('should check for missing performance values', () => {
-        expect(scope.hasMissingValues).toBeTruthy();
-      });
     });
     describe('once the scales have been loaded', () => {
       var observedScales = {
@@ -287,7 +285,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
 
       it('should check whether there are stochastic results', () => {
         expect(WorkspaceService.hasNoStochasticResults).toHaveBeenCalled();
-        expect(scope.hasNoStochasticResults).toBe(true);
       });
     });
 

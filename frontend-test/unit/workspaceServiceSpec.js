@@ -1111,5 +1111,117 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
         expect(result).toEqual(expectedResult);
       });
     });
+
+    describe('hasNoStochasticResults', function() {
+      it('should return true is there are no stochastic results', function() {
+        var aggregateState = {
+          problem: {
+            performanceTable: [{
+              performance: {
+                distribution: {
+                  type: 'exact'
+                }
+              }
+            }, {
+              performance: {
+                effect: {}
+              }
+            }]
+          },
+          prefs: [{
+            type: 'exact swing'
+          }]
+        };
+        var result = workspaceService.hasNoStochasticResults(aggregateState);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return false if there is atleast one distribtion', function() {
+        var aggregateState = {
+          problem: {
+            performanceTable: [{
+              performance: {
+                distribution: {
+                  type: 'dbeta'
+                }
+              }
+            }, {
+              performance: {
+                effect: {}
+              }
+            }]
+          },
+          prefs: [{
+            type: 'exact swing'
+          }]
+        };
+        var result = workspaceService.hasNoStochasticResults(aggregateState);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return false if there is uncertainty in the preferences', function() {
+        var aggregateState = {
+          problem: {
+            performanceTable: [{
+              performance: {
+                distribution: {
+                  type: 'exact'
+                }
+              }
+            }, {
+              performance: {
+                effect: {}
+              }
+            }]
+          },
+          prefs: [{
+            type: 'inprecise swing'
+          }]
+        };
+        var result = workspaceService.hasNoStochasticResults(aggregateState);
+        expect(result).toBeFalsy();
+      });
+    });
+
+    describe('checkForMissingValuesInPerformanceTable', function() {
+      it('should return true is there is at least one missing value for both the effect and distribution of a table entry', function() {
+        var performanceTable = [{
+          performance: {
+            effect: {
+              type: 'empty'
+            },
+            distribution: {
+              type: 'empty'
+            }
+          }
+        }];
+        var result = workspaceService.checkForMissingValuesInPerformanceTable(performanceTable);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return false if each entry has atleast one non-empty effect or distribution', function() {
+        var performanceTable = [{
+          performance: {
+            effect: {
+              type: 'empty'
+            },
+            distribution: {
+              type: 'dbeta'
+            }
+          }
+        }, {
+          performance: {
+            effect: {
+              type: 'exact'
+            },
+            distribution: {
+              type: 'empty'
+            }
+          }
+        }];
+        var result = workspaceService.checkForMissingValuesInPerformanceTable(performanceTable);
+        expect(result).toBeFalsy();
+      });
+    });
   });
 });
