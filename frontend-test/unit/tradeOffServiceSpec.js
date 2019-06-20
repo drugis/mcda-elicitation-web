@@ -220,9 +220,10 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
       it('should return the unit of measurement if it is set ', function() {
         workspaceSettingsServiceMock.usePercentage.and.returnValue(false);
         var criterion = {
-          dataSources: [{ 
+          dataSources: [{
             unitOfMeasurement: 'kg',
-            scale: [-Infinity, Infinity] }]
+            scale: [-Infinity, Infinity]
+          }]
         };
         var result = tradeOffService.getUnit(criterion);
         expect(result).toEqual('kg');
@@ -231,8 +232,9 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
       it('should return an empty string if there is no unit of measurement set', function() {
         workspaceSettingsServiceMock.usePercentage.and.returnValue(false);
         var criterion = {
-          dataSources: [{ 
-            scale: [-Infinity, Infinity] }]
+          dataSources: [{
+            scale: [-Infinity, Infinity]
+          }]
         };
         var result = tradeOffService.getUnit(criterion);
         expect(result).toEqual('');

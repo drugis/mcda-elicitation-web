@@ -233,7 +233,11 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function hasScaleValue(row, alternative, scales) {
-      return !!scales && !isNaN(scales[row.dataSource.id][alternative.id]['50%']);
+      var smaaValue;
+      if(scales){
+        smaaValue = scales[row.dataSource.id][alternative.id]['50%'];
+      }
+      return !!scales && !isNaN(smaaValue) && smaaValue !== null;
     }
 
     return {
