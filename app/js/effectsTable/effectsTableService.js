@@ -6,7 +6,7 @@ define(['lodash', 'angular'], function(_, angular) {
     var NOT_ENTERED = 'Not entered';
 
     function buildEffectsTable(criteria) {
-      var tableRows = addCanBePercentageToCriteria(angular.copy(criteria));
+      var tableRows = angular.copy(criteria);
       var useFavorability = _.find(criteria, function(criterion) {
         return criterion.hasOwnProperty('isFavorable');
       });
@@ -30,19 +30,6 @@ define(['lodash', 'angular'], function(_, angular) {
       }
       tableRows = buildTableRows(tableRows);
       return tableRows;
-    }
-
-    function addCanBePercentageToCriteria(criteria) {
-      return _.mapValues(criteria, function(criterion) {
-        criterion.canBePercentage = canBePercentage(criterion);
-        return criterion;
-      });
-    }
-
-    function canBePercentage(criterion) {
-      return !!_.find(criterion.dataSources, function(dataSource) {
-        return _.isEqual(dataSource.scale, [0, 1]) || _.isEqual(dataSource.scale, [0, 100]);
-      });
     }
 
     function buildTableRows(rows) {
@@ -246,7 +233,11 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function hasScaleValue(row, alternative, scales) {
-      return !!scales && !isNaN(scales[row.dataSource.id][alternative.id]['50%']);
+      var smaaValue;
+      if(scales){
+        smaaValue = scales[row.dataSource.id][alternative.id]['50%'];
+      }
+      return !!scales && !isNaN(smaaValue) && smaaValue !== null;
     }
 
     return {

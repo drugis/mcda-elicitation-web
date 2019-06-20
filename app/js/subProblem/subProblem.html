@@ -68,8 +68,8 @@
             {{row.dataSource.scale[1] | number}}</td>
           <td>
             <!-- obs -->
-            <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[0] | number"></span> ,
-            <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[1] | number"></span>
+            <span ng-bind="row.intervalHull[0] | number"></span> ,
+            <span ng-bind="row.intervalHull[1] | number"></span>
           </td>
           <td>
             <!-- conf -->
@@ -78,12 +78,11 @@
               {{row.dataSource.pvf.range[1] | number}}
             </span>
             <span ng-if="!row.dataSource.pvf.range">
-              <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[0] | number"></span> ,
-              <span ng-bind="intervalHull(scales.observed[row.dataSource.id])[1] | number"></span>
+              <span ng-bind="row.intervalHull[0] | number"></span> ,
+              <span ng-bind="row.intervalHull[1] | number"></span>
             </span>
           </td>
-          <td ng-if="!row.criterion.canBePercentage">{{row.criterion.unitOfMeasurement}}</td>
-          <td ng-if="row.criterion.canBePercentage">{{workspaceSettings.showPercentages ? '%' : ''}}</td>
+          <td>{{row.dataSource.unitOfMeasurement}}</td>
         </tr>
       </tbody>
     </table>

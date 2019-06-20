@@ -17,6 +17,7 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
      *       Fix legacy problem: remove scales from criteria and put them on data source(s)
      * 1.2.1 Adding text option for effects table cells
      * 1.2.2 Splitting the performance table entry performances, and making them a bit more strict
+     * 1.3.0 Move unit of measurement to data source
      * *****/
 
     function updateProblemToCurrentSchema(problem) {
@@ -35,6 +36,10 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
       if (newProblem.schemaVersion === '1.2.0' || newProblem.schemaVersion === '1.2.1') {
         newProblem.schemaVersion = '1.2.2';
+      }
+
+      if (newProblem.schemaVersion === '1.2.2') {
+        newProblem = updateToVersion130(newProblem);
       }
 
       if (newProblem.schemaVersion === currentSchemaVersion) {
@@ -210,6 +215,24 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
       ]);
       dataSource.id = generateUuid();
       return dataSource;
+    }
+
+    function updateToVersion130(problem) {
+      var newProblem = angular.copy(problem);
+      newProblem.criteria = _.mapValues(problem.criteria, function(criterion) {
+        var newCriterion = angular.copy(criterion);
+        newCriterion.dataSources = _.map(criterion.dataSources, function(dataSource) {
+          var newDataSource = angular.copy(dataSource);
+          if (criterion.unitOfMeasurement !== undefined) {
+            newDataSource.unitOfMeasurement = criterion.unitOfMeasurement;
+          }
+          return newDataSource;
+        });
+        delete newCriterion.unitOfMeasurement;
+        return newCriterion;
+      });
+      newProblem.schemaVersion = '1.3.0';
+      return newProblem;
     }
 
     return {

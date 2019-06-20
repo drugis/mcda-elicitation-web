@@ -13,7 +13,7 @@
       <ul class="inline-list">
         <li ng-repeat="criterion in criteria">
           {{criterion.title}}: {{criterion.alreadyChosen ? (criterion.best | number) : (criterion.worst | number) }}
-          {{criterion.unitOfMeasurement}}
+          {{criterion.dataSources[0].unitOfMeasurement}}
         </li>
       </ul>
     </div>
@@ -23,8 +23,8 @@
         <input type="radio" ng-model="state.mostImportantCriterionId" value="{{criterion.id}}">
         {{criterion.dataSources[0].pvf.direction}} {{criterion.title}} from {{criterion.worst |
         number}}
-        {{criterion.unitOfMeasurement}} to {{criterion.best | number}}
-        {{criterion.unitOfMeasurement}}
+        {{criterion.dataSources[0].unitOfMeasurement}} to {{criterion.best | number}}
+        {{criterion.dataSources[0].unitOfMeasurement}}
       </label>
     </div>
   </div>
@@ -67,7 +67,7 @@
           <tr ng-repeat="criterion in criteria">
             <td>{{criterion.title}}</td>
             <td>{{criterion.description}}</td>
-            <td>{{criterion.unitOfMeasurement}}</td>
+            <td>{{criterion.dataSources[0].unitOfMeasurement}}</td>
             <td>{{pvf.worst(criterion.dataSources[0]) | number}}</td>
             <td>{{pvf.best(criterion.dataSources[0]) | number}}</td>
             <td ng-if="criterion.id !== state.mostImportantCriterionId">{{isPrecise ? state.values[criterion.id] : (isImprecise ? state.values[criterion.id].low + '-' + state.values[criterion.id].high
@@ -90,8 +90,8 @@
         <tbody>
           <tr ng-repeat="criterion in criteria">
             <td>
-              {{criterion.dataSources[0].pvf.direction}} {{criterion.title}} from {{pvf.worst(criterion.dataSources[0]) | number}} {{criterion.unitOfMeasurement}}
-              to {{pvf.best(criterion.dataSources[0]) | number}} {{criterion.unitOfMeasurement}}
+              {{criterion.dataSources[0].pvf.direction}} {{criterion.title}} from {{pvf.worst(criterion.dataSources[0]) | number}} {{criterion.dataSources[0].unitOfMeasurement}}
+              to {{pvf.best(criterion.dataSources[0]) | number}} {{criterion.dataSources[0].unitOfMeasurement}}
             </td>
             <td ng-if="state.mostImportantCriterionId === criterion.id" style="width:50%">
               <rzslider rz-slider-model="state.mostImportantWeight" rz-slider-options="state.sliderOptionsDisabled"></rzslider>

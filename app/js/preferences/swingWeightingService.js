@@ -40,7 +40,6 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
         OrderingService.getOrderedCriteriaAndAlternatives(scope.aggregateState.problem, $stateParams).then(function(orderings) {
           scope.alternatives = orderings.alternatives;
           scope.criteria = _(orderings.criteria)
-            .map(setUnitOfMeasurement)
             .map(setBestAndWorst)
             .value();
 
@@ -55,15 +54,6 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
             }
           });
         });
-      }
-
-      function setUnitOfMeasurement(criterion) {
-        if (_.isEqual(criterion.dataSources[0].scale, [0, 1])) {
-          criterion.unitOfMeasurement = '';
-        } else if (_.isEqual(criterion.dataSources[0].scale, [0, 100])) {
-          criterion.unitOfMeasurement = '%';
-        }
-        return criterion;
       }
 
       function setBestAndWorst(criterion) {

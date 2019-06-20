@@ -68,7 +68,7 @@ define(['lodash'], function(_) {
     determineActiveTab();
 
     $scope.$watch('scenario.state', updateTaskAccessibility);
-    $scope.$watch('aggregateState', checkHasNoStochasticResults, true);
+    $scope.$watch('aggregateState', WorkspaceService.hasNoStochasticResults, true);
     $scope.$on('$destroy', function() {
       $scope.deregisterTransitionListener();
     });
@@ -84,8 +84,8 @@ define(['lodash'], function(_) {
       $scope.baseAggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
       $scope.aggregateState = WorkspaceSettingsService.usePercentage() ?
         WorkspaceService.percentifyCriteria($scope.baseAggregateState) : $scope.baseAggregateState;
-      checkForMissingValuesInPerformanceTable();
-      checkHasNoStochasticResults();
+      $scope.hasMissingValues = WorkspaceService.checkForMissingValuesInPerformanceTable($scope.aggregateState.problem.performanceTable);
+      $scope.hasNoStochasticResults = WorkspaceService.hasNoStochasticResults($scope.aggregateState);
 
       $scope.scalesPromise.then(function(observedScales) {
         $scope.workspace.scales.base = observedScales;
@@ -94,16 +94,6 @@ define(['lodash'], function(_) {
       });
 
       updateScenarios();
-    }
-
-    function checkForMissingValuesInPerformanceTable() {
-      $scope.hasMissingValues = _.find($scope.aggregateState.problem.performanceTable, function(tableEntry) {
-        return tableEntry.performance.type === 'empty';
-      });
-    }
-
-    function checkHasNoStochasticResults() {
-      $scope.hasNoStochasticResults = WorkspaceService.hasNoStochasticResults($scope.aggregateState);
     }
 
     function updateScales(baseObservedScales) {
@@ -165,7 +155,7 @@ define(['lodash'], function(_) {
             return 'Fork';
           },
           callback: function() {
-            return (newTitle) => {
+            return function(newTitle) {
               McdaBenefitRiskService.forkScenarioAndGo(newTitle, $scope.subProblem);
             };
           }
@@ -185,7 +175,7 @@ define(['lodash'], function(_) {
             return 'New';
           },
           callback: function() {
-            return (newTitle) => {
+            return function(newTitle) {
               McdaBenefitRiskService.newScenarioAndGo(newTitle, $scope.workspace, $scope.subProblem);
             };
           }

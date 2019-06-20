@@ -3,7 +3,6 @@ define(['lodash'], function(_) {
   var dependencies = [
     '$scope',
     '$modalInstance',
-    'WorkspaceSettingsService',
     'oldCriterion',
     'criteria',
     'callback'
@@ -11,7 +10,6 @@ define(['lodash'], function(_) {
   var EditCriterionController = function(
     $scope,
     $modalInstance,
-    WorkspaceSettingsService,
     oldCriterion,
     criteria,
     callback
@@ -26,11 +24,7 @@ define(['lodash'], function(_) {
     $scope.isTitleUnique = true;
     $scope.criteria = criteria;
     $scope.useFavorability = $scope.criterion.hasOwnProperty('isFavorable');
-    $scope.usePercentage = WorkspaceSettingsService.usePercentage();
     $scope.addOrEdit = 'Edit';
-    $scope.canBePercentage = _.find($scope.criterion.dataSources, function(dataSource) {
-      return _.isEqual(dataSource.scale, [0, 1]);
-    });
 
     function save() {
       callback($scope.criterion);

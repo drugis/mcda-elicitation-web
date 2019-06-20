@@ -71,7 +71,6 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       });
     });
 
-
     describe('determineBaseline', () => {
       it('should determine the baseline alternative', () => {
         var performanceTable = [{
@@ -93,57 +92,6 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         };
         var result = subProblemService.determineBaseline(performanceTable, alternatives);
         expect(result).toEqual(expectedResult);
-      });
-    });
-
-    describe('checkScaleRanges', () => {
-      it('should check wether there are no missing scale ranges', () => {
-        var criteria1 = {
-          crit1: {
-            dataSources: [{
-
-            }]
-          }
-        };
-        var criteria2 = {
-          crit2: {
-            dataSources: [{
-              pvf: {}
-            }]
-          }
-        };
-        var criteria3 = {
-          crit3: {
-            dataSources: [{
-              pvf: {
-                range: []
-              }
-            }]
-          }
-        };
-        var criteria4 = {
-          crit4: {
-            dataSources: [{
-              pvf: {
-                range: [1]
-              }
-            }]
-          }
-        };
-        var criteria5 = {
-          crit5: {
-            dataSources: [{
-              pvf: {
-                range: [1, 0]
-              }
-            }]
-          }
-        };
-        expect(subProblemService.checkScaleRanges(criteria1)).toBeFalsy();
-        expect(subProblemService.checkScaleRanges(criteria2)).toBeFalsy();
-        expect(subProblemService.checkScaleRanges(criteria3)).toBeFalsy();
-        expect(subProblemService.checkScaleRanges(criteria4)).toBeFalsy();
-        expect(subProblemService.checkScaleRanges(criteria5)).toBeTruthy();
       });
     });
 
@@ -631,11 +579,77 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         }];
 
         var result = subProblemService.excludeDeselectedAlternatives(performanceTable, alternativeInclusions);
-        
+
         var expectedResult = [{
           alternative: 'a1'
         }];
         expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('areTooManyDataSourcesIncluded', () => {
+      it('return truthy if there is atleast one criterion with multiple selected datasources', () => {
+        var criteria = [{
+          dataSources: [{}, {}]
+        }];
+        var result = subProblemService.areTooManyDataSourcesIncluded(criteria);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return falsy if there is no criterion with multiple dataSources selected', () => {
+        var criteria = [{
+          dataSources: [{}]
+        }];
+        var result = subProblemService.areTooManyDataSourcesIncluded(criteria);
+        expect(result).toBeFalsy();
+      });
+    });
+
+    describe('findRowWithoutValues', function() {
+      it('should return false if there is no row without valid values', function() {
+        var effectsTableInfo = {
+          ds1: {
+            alt1: {
+              isAbsolute: false
+            }
+          },
+          ds2: {
+            alt1: {
+              isAbsolute: true,
+              effectValue: 5
+            }
+          },
+          ds3: {
+            alt1: {
+              isAbsolute: true,
+              effectValue: ''
+            }
+          }
+        };
+        var scales = {
+          observed: {
+            ds3: {
+              alt1: {
+                '50%': 123
+              }
+            }
+          }
+        };
+        var result = subProblemService.findRowWithoutValues(effectsTableInfo, scales);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return true if there is at least one row without valid values', function(){
+        var effectsTableInfo = {
+          ds1: {
+            alt1: {
+              isAbsolute: false
+            }
+          }
+        };
+        var scales = {};
+        var result = subProblemService.findRowWithoutValues(effectsTableInfo, scales);
+        expect(result).toBeFalsy();
       });
     });
   });

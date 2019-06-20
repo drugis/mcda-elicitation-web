@@ -33,9 +33,6 @@
       <div class="cell" ng-if="criterion.description">
         <b>Description:</b> {{criterion.description}}
       </div>
-      <div class="cell" ng-if="criterion.unitOfMeasurement">
-        <b>Unit of measurement:</b> {{criterion.unitOfMeasurement}}
-      </div>
       <div class="cell">
         <b>Data sources:</b>
       </div>
@@ -48,6 +45,9 @@
             <tr>
               <th ng-if="isStandalone">
                 <!-- up and down arrows-->
+              </th>
+              <th>Unit of measurement
+                <inline-help help-key="criterion-unit"></inline-help>
               </th>
               <th style="min-width: 15rem;">Reference
                 <inline-help help-key="criterion-source"></inline-help>
@@ -79,6 +79,9 @@
                   </a>
                   <i ng-if="$last" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
                 </div>
+              </td>
+              <td>
+                {{dataSource.unitOfMeasurement}}
               </td>
               <td>
                 <div ng-if="dataSource.sourceLink">

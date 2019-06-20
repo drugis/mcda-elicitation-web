@@ -34,7 +34,12 @@ define(['lodash', 'angular'], function(_, angular) {
   }
 
   function removeUndefinedValues(effects) {
-    return _.filter(effects, _.identity);
+    return _.reject(effects, function(effect) {
+      return effect === undefined ||
+        effect === null ||
+        isNaN(effect) ||
+        typeof (effect) === 'string';
+    });
   }
 
   function getHull(scaleRanges, percentage) {

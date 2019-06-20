@@ -6,10 +6,10 @@ define([
   'angular-mocks',
   'mcda/preferences/preferences'
 ],
-  function (_, angular) {
+  function(_, angular) {
     var state;
 
-    describe('OrdinalSwingHandler', function () {
+    describe('OrdinalSwingHandler', function() {
       var $scope1;
       var $scope2;
       var orderingServiceMock = jasmine.createSpyObj('OrderingService', ['getOrderedCriteriaAndAlternatives']);
@@ -17,7 +17,7 @@ define([
 
       var workspaceSettingsServiceMock = jasmine.createSpyObj('WorkspaceSettingsService', ['usePercentage']);
 
-      beforeEach(angular.mock.module('elicit.preferences', function ($provide) {
+      beforeEach(angular.mock.module('elicit.preferences', function($provide) {
         $provide.value('WorkspaceSettingsService', workspaceSettingsServiceMock);
       }));
       beforeEach(angular.mock.module('elicit.taskDependencies'));
@@ -32,10 +32,10 @@ define([
         };
 
         orderingServiceMock.getOrderedCriteriaAndAlternatives.and.returnValue({
-          then: function (fn) {
+          then: function(fn) {
             fn({
               alternatives: [],// alternavtives are not used by the controller
-              criteria: _.map(problem.criteria, function (criterion, key) {
+              criteria: _.map(problem.criteria, function(criterion, key) {
                 return _.merge({}, criterion, {
                   id: key
                 }); // criteria are used by the controller
@@ -60,7 +60,7 @@ define([
         return scope;
       }
 
-      beforeEach(inject(function ($controller, $rootScope, TaskDependencies) {
+      beforeEach(inject(function($controller, $rootScope, TaskDependencies) {
         $scope1 = initializeScope($controller, $rootScope, TaskDependencies, exampleProblem());
 
         var problem = exampleProblem();
@@ -68,19 +68,19 @@ define([
         $scope2 = initializeScope($controller, $rootScope, TaskDependencies, problem);
       }));
 
-      describe('initialize', function () {
-        it('should be described as ordinal', function () {
+      describe('initialize', function() {
+        it('should be described as ordinal', function() {
           // stuff is set in the wizard
           expect($scope1.state).toBeDefined();
           expect($scope1.state.title).toEqual('Ranking (1/2)');
         });
 
-        it('should not be the final state', function () {
+        it('should not be the final state', function() {
           expect($scope1.canSave($scope1.state)).toBeFalsy();
           expect($scope1.canProceed($scope1.state)).toBeFalsy();
         });
 
-        it('should have the worst alternative as reference', function () {
+        it('should have the worst alternative as reference', function() {
           expect($scope1.state.reference).toEqual([{
             title: 'Proximal DVT',
             dataSources: [{
@@ -90,9 +90,9 @@ define([
                 type: 'linear',
                 direction: 'decreasing'
               },
-              scale: [0, 1]
+              scale: [0, 1],
+              unitOfMeasurement: 'mg/h',
             }],
-            unitOfMeasurement: '',
             id: 'Prox DVT',
             best: 0,
             worst: 0.25
@@ -124,52 +124,52 @@ define([
             worst: 0.1
           }]);
 
-          expect($scope2.state.reference).toEqual([            {
-              title: 'Proximal DVT',
-              dataSources: [{
-                id: 'proxDvtDS',
+          expect($scope2.state.reference).toEqual([{
+            title: 'Proximal DVT',
+            dataSources: [{
+              id: 'proxDvtDS',
+              pvf: {
+                range: [0, 0.25],
+                type: 'linear',
+                direction: 'decreasing'
+              },
+              scale: [0, 1],
+              unitOfMeasurement: 'mg/h',
+            }],
+            id: 'Prox DVT',
+            best: 0,
+            worst: 0.25
+          }, {
+            title: 'Distal DVT',
+            dataSources: [
+              {
+                id: 'distDvtDS',
                 pvf: {
-                  range: [0, 0.25],
+                  range: [0.15, 0.4],
                   type: 'linear',
                   direction: 'decreasing'
-                },
-                scale: [0, 1]
-              }],
-              unitOfMeasurement: '',
-              id: 'Prox DVT',
-              best: 0,
-              worst: 0.25
-            }, {
-              title: 'Distal DVT',
-              dataSources: [
-                {
-                  id: 'distDvtDS',
-                  pvf: {
-                    range: [0.15, 0.4],
-                    type: 'linear',
-                    direction: 'decreasing'
-                  }
-                }], id: 'Dist DVT',
-              best: 0.15,
-              worst: 0.4
-            }, {
-              title: 'Major bleeding',
-              dataSources: [{
-                id: 'bleedDS',
-                pvf: {
-                  range: [0, 0.1],
-                  type: 'linear',
-                  direction: 'increasing'
                 }
-              }],
-              id: 'Bleed',
-              best: 0.1,
-              worst: 0
-            }
+              }], id: 'Dist DVT',
+            best: 0.15,
+            worst: 0.4
+          }, {
+            title: 'Major bleeding',
+            dataSources: [{
+              id: 'bleedDS',
+              pvf: {
+                range: [0, 0.1],
+                type: 'linear',
+                direction: 'increasing'
+              }
+            }],
+            id: 'Bleed',
+            best: 0.1,
+            worst: 0
+          }
           ]);
         });
 
-        it('should have a single criterion improved from worst to best in each choice', function () {
+        it('should have a single criterion improved from worst to best in each choice', function() {
           expect($scope1.state.choices).toEqual([{
             title: 'Proximal DVT',
             dataSources: [{
@@ -179,9 +179,9 @@ define([
                 type: 'linear',
                 direction: 'decreasing'
               },
-              scale: [0, 1]
+              scale: [0, 1],
+              unitOfMeasurement: 'mg/h'
             }],
-            unitOfMeasurement: '',
             id: 'Prox DVT',
             best: 0,
             worst: 0.25
@@ -214,19 +214,19 @@ define([
           }]);
         });
 
-        it('should have an empty order', function () {
+        it('should have an empty order', function() {
           expect($scope1.state.prefs.ordinal).toEqual([]);
         });
       });
 
-      describe('nextState', function () {
-        it('should not go to next step without valid selection', function () {
+      describe('nextState', function() {
+        it('should not go to next step without valid selection', function() {
           expect($scope1.canProceed($scope1.state)).toEqual(false);
           $scope1.state.choice = 'CHF';
           expect($scope1.canProceed($scope1.state)).toEqual(false);
         });
 
-        it('should have the choice as new reference', function () {
+        it('should have the choice as new reference', function() {
           $scope1.state.choice = 'Prox DVT';
           expect($scope1.canProceed($scope1.state)).toEqual(true);
           $scope1.nextStep($scope1.state);
@@ -239,9 +239,9 @@ define([
                 type: 'linear',
                 direction: 'decreasing'
               },
-              scale: [0, 1]
+              scale: [0, 1],
+              unitOfMeasurement: 'mg/h'
             }],
-            unitOfMeasurement: '',
             id: 'Prox DVT',
             best: 0,
             worst: 0.25
@@ -286,9 +286,9 @@ define([
                 type: 'linear',
                 direction: 'decreasing'
               },
-              scale: [0, 1]
+              scale: [0, 1],
+              unitOfMeasurement: 'mg/h'
             }],
-            unitOfMeasurement: '',
             id: 'Prox DVT',
             best: 0,
             worst: 0.25
@@ -321,13 +321,13 @@ define([
           }]);
         });
 
-        it('should not contain previous choice', function () {
+        it('should not contain previous choice', function() {
           $scope1.state.choice = 'Prox DVT';
           $scope1.nextStep($scope1.state);
           expect(_.map($scope1.state.choices, 'id')).toEqual(['Dist DVT', 'Bleed']);
         });
 
-        it('should improve previous choice on all choices', function () {
+        it('should improve previous choice on all choices', function() {
           $scope1.state.choice = 'Prox DVT';
           $scope1.nextStep($scope1.state);
           expect($scope1.state.choices).toEqual([{
@@ -359,7 +359,7 @@ define([
           }]);
         });
 
-        it('should push the choice onto the order', function () {
+        it('should push the choice onto the order', function() {
           $scope1.state.choice = 'Prox DVT';
           $scope1.nextStep($scope1.state);
           expect($scope1.state.prefs.ordinal).toEqual(['Prox DVT']);

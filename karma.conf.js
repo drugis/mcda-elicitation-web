@@ -43,10 +43,10 @@ module.exports = function(config) {
       'app/js/main.js',
     ],
     reporters: ['progress', 'junit', 'coverage'],
-    coverageReporter: {
-      type : 'html',
-      dir : 'coverage/'
-    },
+    // coverageReporter: {
+    //   type : 'html',
+    //   dir : 'coverage/'
+    // },
     junitReporter: {
       outputFile: 'frontend-test/test-results.xml'
     },

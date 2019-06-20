@@ -44,17 +44,6 @@
             "description": "Is the criterion favorable or not?",
             "type": "boolean"
           },
-          "unitOfMeasurement": {
-            "oneOf": [
-              {
-                "description": "In which unit is the criterion measured",
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
           "description": {
             "description": "Description of the criterion",
             "type": "string"

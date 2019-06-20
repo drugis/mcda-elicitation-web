@@ -65,30 +65,9 @@ define(['lodash', 'angular'], function(_, angular) {
       var criteriaWithUpdatedDataSources = updateDataSources(baseState.problem.criteria, percentifyDataSource);
       return _.merge({}, baseState, {
         problem: {
-          criteria: percentifyCriteriaUnits(criteriaWithUpdatedDataSources)
+          criteria: criteriaWithUpdatedDataSources
         }
       });
-    }
-
-    function percentifyCriteriaUnits(criteria) {
-      return _.mapValues(criteria, _.partial(setUnitForScale, [0, 100], '%'));
-    }
-
-    function fixProportionUnits(criteria) {
-      return _.mapValues(criteria, _.partial(setUnitForScale, [0, 1], ''));
-    }
-
-    function setUnitForScale(scale, unit, criterion) {
-      return _.extend({}, criterion, {
-        unitOfMeasurement: getUnitOfMeasurement(criterion, scale, unit)
-      });
-    }
-
-    function getUnitOfMeasurement(criterion, scale, unit) {
-      var hasPercentScale = _.find(criterion.dataSources, function(dataSource) {
-        return _.isEqual(dataSource.scale, scale);
-      });
-      return hasPercentScale ? unit : criterion.unitOfMeasurement;
     }
 
     function updateDataSources(criteria, fn) {
@@ -160,7 +139,6 @@ define(['lodash', 'angular'], function(_, angular) {
         return _.merge({}, alternative, baseProblem.alternatives[key]);
       });
       newState.problem.criteria = addTheoreticalScales(newState.problem.criteria);
-      newState.problem.criteria = fixProportionUnits(newState.problem.criteria);
       return newState;
     }
 
@@ -267,10 +245,10 @@ define(['lodash', 'angular'], function(_, angular) {
       var maximum = -Infinity;
       _.forEach(scales, function(scale) {
         _.forEach(scale, function(value) {
-          if (value < minimum) {
+          if (value !== null && value < minimum) {
             minimum = value;
           }
-          if (value > maximum) {
+          if (value !== null && value > maximum) {
             maximum = value;
           }
         });
@@ -563,11 +541,19 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function hasNoStochasticResults(aggregateState) {
-      var isAllExact = !_.find(aggregateState.problem.performanceTable, function(tableEntry) {
-        return tableEntry.performance.type !== 'exact';
+      var isAllExact = !_.some(aggregateState.problem.performanceTable, function(tableEntry) {
+        return tableEntry.performance.distribution && tableEntry.performance.distribution.type !== 'exact';
       });
-      var isExactSwing = _.find(aggregateState.prefs, ['type', 'exact swing']);
+      var isExactSwing = _.some(aggregateState.prefs, ['type', 'exact swing']);
       return isAllExact && isExactSwing;
+    }
+
+
+    function checkForMissingValuesInPerformanceTable(performanceTable) {
+      return _.some(performanceTable, function(entry) {
+        return entry.performance.effect && entry.performance.effect.type === 'empty' &&
+          entry.performance.distribution && entry.performance.distribution.type === 'empty';
+      });
     }
 
     return {
@@ -581,7 +567,8 @@ define(['lodash', 'angular'], function(_, angular) {
       validateWorkspace: validateWorkspace,
       addTheoreticalScales: addTheoreticalScales,
       percentifyCriteria: percentifyCriteria,
-      hasNoStochasticResults: hasNoStochasticResults
+      hasNoStochasticResults: hasNoStochasticResults,
+      checkForMissingValuesInPerformanceTable: checkForMissingValuesInPerformanceTable
     };
   };
 

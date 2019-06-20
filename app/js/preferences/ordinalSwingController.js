@@ -36,7 +36,6 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
         $scope.criteria = _.map(orderings.criteria, function(criterion) {
           criterion.best = PartialValueFunctionService.best(criterion.dataSources[0]);
           criterion.worst = PartialValueFunctionService.worst(criterion.dataSources[0]);
-          setUnitOfMeasurement(criterion);
           return criterion;
         });
         $injector.invoke(Wizard, {}, {
@@ -50,14 +49,6 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
           }
         });
       });
-    }
-
-    function setUnitOfMeasurement(criterion) {
-      if (_.isEqual(criterion.dataSources[0].scale, [0, 1])) {
-        criterion.unitOfMeasurement = '';
-      } else if (_.isEqual(criterion.dataSources[0].scale, [0, 100])) {
-        criterion.unitOfMeasurement = '%';
-      }
     }
 
     function save(state) {
