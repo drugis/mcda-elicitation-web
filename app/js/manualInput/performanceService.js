@@ -106,10 +106,10 @@ define(['lodash', 'angular'], function(_) {
       };
     }
 
-    function buildTextPerformance(text) {
+    function buildTextPerformance(cell) {
       return {
         type: 'empty',
-        value: text
+        value: cell.firstParameter
       };
     }
 

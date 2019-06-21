@@ -11,7 +11,10 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
 
     describe('buildTextPerformance', function() {
       it('should build a text performance', function() {
-        expect(performanceService.buildTextPerformance('text')).toEqual({
+        var cell = {
+          firstParameter: 'text'
+        };
+        expect(performanceService.buildTextPerformance(cell)).toEqual({
           type: 'empty',
           value: 'text'
         });
