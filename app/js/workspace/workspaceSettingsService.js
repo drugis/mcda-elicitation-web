@@ -29,15 +29,21 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function loadWorkspaceSettings(params) {
       return WorkspaceSettingsResource.get(params).$promise.then(function(result) {
-        if (!_.includes(result.effectsDisplay, [
-          'deterministic',
-          'deterministicMCDA',
-          'smaaDistributions',
-          'smaa'
-        ]));
         workspaceSettings = result.settings ? result.settings : DEFAULT_SETTINGS;
+        if (!hasValidView(workspaceSettings)) {
+          workspaceSettings.effectsDisplay = 'deterministic';
+        }
         toggledColumns = result.toggledColumns ? result.toggledColumns : DEFAULT_TOGGLED_COLUMNS;
       });
+    }
+
+    function hasValidView(workspaceSettings) {
+      return !_.includes([
+        'deterministic',
+        'deterministicMCDA',
+        'smaaDistributions',
+        'smaa'
+      ], workspaceSettings.effectsDisplay);
     }
 
     function getToggledColumns() {
