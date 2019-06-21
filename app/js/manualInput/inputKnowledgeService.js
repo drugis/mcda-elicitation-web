@@ -28,7 +28,7 @@ define(['lodash'], function(_) {
 
     function getEffectOptions() {
       return {
-        value: VALUE,
+        value:  VALUE,
         valueSE: VALUE_STANDARD_ERROR,
         valueCI: VALUE_CONFIDENCE_INTERVAL,
         valueSampleSize: VALUE_SAMPLE_SIZE,
@@ -47,57 +47,6 @@ define(['lodash'], function(_) {
         empty: EMPTY,
         text: TEXT
       };
-    }
-
-    function optionsBlock(
-      id,
-      label,
-      firstParameter,
-      secondParameter,
-      thirdParameter,
-      constraints,
-      toString,
-      buildPerformance,
-      finishInputCell
-    ) {
-      this.id = id;
-      this.label = label;
-      this.firstParameter = firstParameter;
-      if (secondParameter) {
-        this.secondParameter = secondParameter;
-      }
-      if (thirdParameter) {
-        this.thirdParameter = thirdParameter;
-      }
-      this.constraints = constraints;
-      this.toString = toString;
-      this.buildPerformance = buildPerformance;
-      this.finishInputCell = _.partial(finishInputCell, this);
-    }
-
-    function effectOptionsBlock(
-      id,
-      label,
-      firstParameter,
-      secondParameter,
-      thirdParameter,
-      constraints,
-      toString,
-      buildPerformance,
-      finishInputCell,
-      generateDistribution
-    ) {
-      optionsBlock.call(this,
-        id,
-        label,
-        firstParameter,
-        secondParameter,
-        thirdParameter,
-        constraints,
-        toString,
-        buildPerformance,
-        finishInputCell);
-      this.generateDistribution = generateDistribution;
     }
 
     var NORMAL = new optionsBlock(
@@ -154,6 +103,7 @@ define(['lodash'], function(_) {
       'Value, SE',
       buildDefined('Value'),
       buildPositiveFloat('Standard error'),
+      undefined,
       true,
       ToStringService.valueSEToString,
       PerformanceService.buildValueSEPerformance,
@@ -174,60 +124,57 @@ define(['lodash'], function(_) {
       _.partial(GenerateDistributionService.generateValueCIDistribution, NORMAL, VALUE)
     );
 
-    var EVENTS_SAMPLE_SIZE = {
-      id: 'eventsSampleSize',
-      label: 'Events / Sample size',
-      firstParameter: {
-        label: 'Events',
-        constraints: [
-          ConstraintService.defined(),
-          ConstraintService.positive(),
-          ConstraintService.integer(),
-          ConstraintService.belowOrEqualTo('secondParameter')
-        ]
-      },
-      secondParameter: buildIntegerAboveZero('Sample size'),
-      constraints: false,
-      toString: ToStringService.eventsSampleSizeToString,
-      buildPerformance: PerformanceService.buildEventsSampleSizePerformance,
-      generateDistribution: _.partial(GenerateDistributionService.generateEventsSampleSizeDistribution,
-        BETA)
-    };
-    EVENTS_SAMPLE_SIZE.finishInputCell = _.partial(FinishInputCellService.finishEventSampleSizeInputCell, EVENTS_SAMPLE_SIZE);
+    var EVENTS_SAMPLE_SIZE = new effectOptionsBlock(
+      'eventsSampleSize',
+      'Events / Sample size',
+      buildEvents(),
+      buildIntegerAboveZero('Sample size'),
+      undefined,
+      false,
+      ToStringService.eventsSampleSizeToString,
+      PerformanceService.buildEventsSampleSizePerformance,
+      FinishInputCellService.finishEventSampleSizeInputCell,
+      _.partial(GenerateDistributionService.generateEventsSampleSizeDistribution, BETA)
+    );
 
-    var VALUE_SAMPLE_SIZE = {
-      id: 'valueSampleSize',
-      label: 'Value, sample size',
-      firstParameter: buildDefined('Value'),
-      secondParameter: buildIntegerAboveZero('Sample size'),
-      constraints: true,
-      toString: ToStringService.valueSampleSizeToString,
-      buildPerformance: PerformanceService.buildValueSampleSizePerformance,
-      generateDistribution: _.partial(GenerateDistributionService.generateValueSampleSizeDistribution,
-        VALUE)
-    };
-    VALUE_SAMPLE_SIZE.finishInputCell = _.partial(FinishInputCellService.finishValueSampleSizeCell, VALUE_SAMPLE_SIZE);
+    var VALUE_SAMPLE_SIZE = new effectOptionsBlock(
+      'valueSampleSize',
+      'Value, sample size',
+      buildDefined('Value'),
+      buildIntegerAboveZero('Sample size'),
+      undefined,
+      true,
+      ToStringService.valueSampleSizeToString,
+      PerformanceService.buildValueSampleSizePerformance,
+      FinishInputCellService.finishValueSampleSizeCell,
+      _.partial(GenerateDistributionService.generateValueSampleSizeDistribution, VALUE)
+    );
 
-    var EMPTY = {
-      id: 'empty',
-      label: 'Empty cell',
-      constraints: false,
-      toString: ToStringService.emptyToString,
-      buildPerformance: PerformanceService.buildEmptyPerformance,
-      generateDistribution: GenerateDistributionService.generateEmptyDistribution
-    };
-    EMPTY.finishInputCell = _.partial(FinishInputCellService.finishEmptyCell, EMPTY);
+    var EMPTY = new effectOptionsBlock(
+      'empty',
+      'Empty cell',
+      undefined,
+      undefined,
+      undefined,
+      false,
+      ToStringService.emptyToString,
+      PerformanceService.buildEmptyPerformance,
+      FinishInputCellService.finishEmptyCell,
+      GenerateDistributionService.generateEmptyDistribution
+    );
 
-    var TEXT = {
-      id: 'text',
-      label: 'Text',
-      firstParameter: buildNotEmpty(),
-      constraints: false,
-      toString: ToStringService.textToString,
-      buildPerformance: PerformanceService.buildTextPerformance,
-      generateDistribution: GenerateDistributionService.generateEmptyDistribution
-    };
-    TEXT.finishInputCell = _.partial(FinishInputCellService.finishTextCell, TEXT);
+    var TEXT = new effectOptionsBlock(
+      'text',
+      'Text',
+      buildNotEmpty(),
+      undefined,
+      undefined,
+      false,
+      ToStringService.textToString,
+      PerformanceService.buildTextPerformance,
+      FinishInputCellService.finishTextCell,
+      GenerateDistributionService.generateEmptyDistribution
+    );
 
     /**********
      * public *
@@ -240,6 +187,29 @@ define(['lodash'], function(_) {
     /***********
      * private *
      ***********/
+
+    function optionsBlock(id, label, firstParameter, secondParameter, thirdParameter, constraints, toString, buildPerformance, finishInputCell) {
+      this.id = id;
+      this.label = label;
+      if (firstParameter) {
+        this.firstParameter = firstParameter;
+      }
+      if (secondParameter) {
+        this.secondParameter = secondParameter;
+      }
+      if (thirdParameter) {
+        this.thirdParameter = thirdParameter;
+      }
+      this.constraints = constraints;
+      this.toString = toString;
+      this.buildPerformance = buildPerformance;
+      this.finishInputCell = _.partial(finishInputCell, this);
+    }
+
+    function effectOptionsBlock(id, label, firstParameter, secondParameter, thirdParameter, constraints, toString, buildPerformance, finishInputCell, generateDistribution) {
+      optionsBlock.call(this, id, label, firstParameter, secondParameter, thirdParameter, constraints, toString, buildPerformance, finishInputCell);
+      this.generateDistribution = generateDistribution;
+    }
 
     function buildUpperBound() {
       return {
@@ -290,6 +260,18 @@ define(['lodash'], function(_) {
       return {
         label: 'Text',
         constraints: [ConstraintService.notEmpty()]
+      };
+    }
+
+    function buildEvents() {
+      return {
+        label: 'Events',
+        constraints: [
+          ConstraintService.defined(),
+          ConstraintService.positive(),
+          ConstraintService.integer(),
+          ConstraintService.belowOrEqualTo('secondParameter')
+        ]
       };
     }
 
