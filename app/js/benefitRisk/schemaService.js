@@ -244,7 +244,7 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
       var newProblem = angular.copy(problem);
       newProblem.criteria = _.mapValues(problem.criteria, function(criterion){
         var newCriterion = angular.copy(criterion);
-        if(criterion.isFavorable === undefined){
+        if(criterion.isFavorable === undefined || criterion.isFavorable === null){
           delete newCriterion.isFavorable;
         }
         return newCriterion;

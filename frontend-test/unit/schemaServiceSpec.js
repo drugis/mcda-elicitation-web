@@ -50,7 +50,7 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
               crit2: {
                 title: 'criterion 2',
                 description: 'desc',
-                isFavorable: undefined,
+                isFavorable: null,
                 unitOfMeasurement: 'ms',
                 uncertainties: 'unc',
                 source: 'source2'
