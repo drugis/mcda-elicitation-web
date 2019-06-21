@@ -117,7 +117,7 @@ function exampleProblem() {
         }
       }
     }],
-    schemaVersion: '1.3.0'
+    schemaVersion: '1.3.2'
   };
 }
 
@@ -279,7 +279,8 @@ function exampleProblem110() {
             ],
             type: 'linear',
             direction: 'decreasing'
-          }
+          },
+          scale: null
         }]
       },
       Bleed: {
@@ -295,7 +296,8 @@ function exampleProblem110() {
             ],
             type: 'linear',
             direction: 'decreasing'
-          }
+          },
+          scale: undefined
         }]
       }
     },
