@@ -49,77 +49,130 @@ define(['lodash'], function(_) {
       };
     }
 
-    var NORMAL = {
-      id: 'normal',
-      label: 'Normal',
-      firstParameter: buildDefined('Mean'),
-      secondParameter: buildPositiveFloat('Standard error'),
-      constraints: false,
-      toString: ToStringService.normalToString,
-      buildPerformance: PerformanceService.buildNormalPerformance,
-    };
-    NORMAL.finishInputCell = _.partial(FinishInputCellService.finishNormalInputCell, NORMAL);
+    function optionsBlock(
+      id,
+      label,
+      firstParameter,
+      secondParameter,
+      thirdParameter,
+      constraints,
+      toString,
+      buildPerformance,
+      finishInputCell
+    ) {
+      this.id = id;
+      this.label = label;
+      this.firstParameter = firstParameter;
+      if (secondParameter) {
+        this.secondParameter = secondParameter;
+      }
+      if (thirdParameter) {
+        this.thirdParameter = thirdParameter;
+      }
+      this.constraints = constraints;
+      this.toString = toString;
+      this.buildPerformance = buildPerformance;
+      this.finishInputCell = _.partial(finishInputCell, this);
+    }
 
-    var BETA = {
-      id: 'beta',
-      label: 'Beta',
-      firstParameter: buildIntegerAboveZero('Alpha'),
-      secondParameter: buildIntegerAboveZero('Beta'),
-      constraints: false,
-      toString: ToStringService.betaToString,
-      buildPerformance: PerformanceService.buildBetaPerformance,
-      finishInputCell: _.partial(FinishInputCellService.finishBetaCell, BETA)
-    };
-    BETA.finishInputCell = _.partial(FinishInputCellService.finishBetaCell, BETA);
+    function effectOptionsBlock(
+      id,
+      label,
+      firstParameter,
+      secondParameter,
+      thirdParameter,
+      constraints,
+      toString,
+      buildPerformance,
+      finishInputCell,
+      generateDistribution
+    ) {
+      optionsBlock.call(this,
+        id,
+        label,
+        firstParameter,
+        secondParameter,
+        thirdParameter,
+        constraints,
+        toString,
+        buildPerformance,
+        finishInputCell);
+      this.generateDistribution = generateDistribution;
+    }
 
-    var GAMMA = {
-      id: 'gamma',
-      label: 'Gamma',
-      firstParameter: buildFloatAboveZero('Alpha'),
-      secondParameter: buildFloatAboveZero('Beta'),
-      constraints: false,
-      toString: ToStringService.gammaToString,
-      buildPerformance: PerformanceService.buildGammaPerformance
-    };
-    GAMMA.finishInputCell = _.partial(FinishInputCellService.finishGammaCell, GAMMA);
+    var NORMAL = new optionsBlock(
+      'normal',
+      'Normal',
+      buildDefined('Mean'),
+      buildPositiveFloat('Standard error'),
+      undefined,
+      false,
+      ToStringService.normalToString,
+      PerformanceService.buildNormalPerformance,
+      FinishInputCellService.finishNormalInputCell
+    );
 
-    var VALUE = {
-      id: 'value',
-      label: 'Value',
-      firstParameter: buildDefined('Value'),
-      constraints: true,
-      toString: ToStringService.valueToString,
-      buildPerformance: PerformanceService.buildValuePerformance,
-      generateDistribution: GenerateDistributionService.generateValueDistribution
-    };
-    VALUE.finishInputCell = _.partial(FinishInputCellService.finishValueCell, VALUE);
+    var BETA = new optionsBlock(
+      'beta',
+      'Beta',
+      buildIntegerAboveZero('Alpha'),
+      buildIntegerAboveZero('Beta'),
+      undefined,
+      false,
+      ToStringService.betaToString,
+      PerformanceService.buildBetaPerformance,
+      FinishInputCellService.finishBetaCell
+    );
 
-    var VALUE_STANDARD_ERROR = {
-      id: 'valueSE',
-      label: 'Value, SE',
-      firstParameter: buildDefined('Value'),
-      secondParameter: buildPositiveFloat('Standard error'),
-      constraints: true,
-      toString: ToStringService.valueSEToString,
-      buildPerformance: PerformanceService.buildValueSEPerformance,
-      generateDistribution: _.partial(GenerateDistributionService.generateValueSEDistribution,
-        NORMAL)
-    };
-    VALUE_STANDARD_ERROR.finishInputCell = _.partial(FinishInputCellService.finishValueSE, VALUE_STANDARD_ERROR);
+    var GAMMA = new optionsBlock(
+      'gamma',
+      'Gamma',
+      buildFloatAboveZero('Alpha'),
+      buildFloatAboveZero('Beta'),
+      undefined,
+      false,
+      ToStringService.gammaToString,
+      PerformanceService.buildGammaPerformance,
+      FinishInputCellService.finishGammaCell
+    );
 
-    var VALUE_CONFIDENCE_INTERVAL = {
-      id: 'valueCI',
-      label: 'Value, 95% C.I.',
-      firstParameter: buildDefined('Value'),
-      secondParameter: buildLowerBound(),
-      thirdParameter: buildUpperBound(),
-      constraints: true,
-      toString: ToStringService.valueCIToString,
-      buildPerformance: PerformanceService.buildValueCIPerformance,
-      generateDistribution: _.partial(GenerateDistributionService.generateValueCIDistribution,
-        NORMAL, VALUE)
-    };
-    VALUE_CONFIDENCE_INTERVAL.finishInputCell = _.partial(FinishInputCellService.finishValueCI, VALUE_CONFIDENCE_INTERVAL);
+    var VALUE = new effectOptionsBlock(
+      'value',
+      'Value',
+      buildDefined('Value'),
+      undefined,
+      undefined,
+      true,
+      ToStringService.valueToString,
+      PerformanceService.buildValuePerformance,
+      FinishInputCellService.finishValueCell,
+      GenerateDistributionService.generateValueDistribution
+    );
+
+    var VALUE_STANDARD_ERROR = new effectOptionsBlock(
+      'valueSE',
+      'Value, SE',
+      buildDefined('Value'),
+      buildPositiveFloat('Standard error'),
+      true,
+      ToStringService.valueSEToString,
+      PerformanceService.buildValueSEPerformance,
+      FinishInputCellService.finishValueSE,
+      _.partial(GenerateDistributionService.generateValueSEDistribution, NORMAL)
+    );
+
+    var VALUE_CONFIDENCE_INTERVAL = new effectOptionsBlock(
+      'valueCI',
+      'Value, 95% C.I.',
+      buildDefined('Value'),
+      buildLowerBound(),
+      buildUpperBound(),
+      true,
+      ToStringService.valueCIToString,
+      PerformanceService.buildValueCIPerformance,
+      FinishInputCellService.finishValueCI,
+      _.partial(GenerateDistributionService.generateValueCIDistribution, NORMAL, VALUE)
+    );
 
     var EVENTS_SAMPLE_SIZE = {
       id: 'eventsSampleSize',
