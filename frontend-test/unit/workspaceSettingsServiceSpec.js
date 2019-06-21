@@ -23,6 +23,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
       $provide.value('$stateParams', stateParams);
       $provide.value('WorkspaceSettingsResource', workspaceSettingsResourceMock);
     }));
+    
     beforeEach(inject(function($q, $rootScope, WorkspaceSettingsService) {
       q = $q;
       scope = $rootScope;
@@ -43,6 +44,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
       var loadedPromise;
       var loadResolved = false;
       var resultsDefer;
+
       beforeEach(function() {
         resultsDefer = q.defer();
         workspaceSettingsResourceMock.get.and.returnValue({
@@ -53,27 +55,32 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
           loadResolved = true;
         });
       });
+
       afterEach(function(){
         loadResolved = false;
       });
+
       it('should return a promise and not change settings until the new ones are loaded', function() {
         expect(workspaceSettingsResourceMock.get).toHaveBeenCalledWith(stateParams);
         expect(loadResolved).toBe(false);
         expectToGetDefaultValues();
       });
+
       describe('after load has resolved with values', function() {
         beforeEach(function() {
           resultsDefer.resolve({
-            settings: 'settings',
+            settings: DEFAULT_SETTINGS,
             toggledColumns: 'toggledColumns'
           });
           scope.$apply();
         });
+
         it('should resolve the loadSettings promise and set the loaded values', function() {
           expect(loadResolved).toBe(true);
           expect(workspaceSettingsService.getToggledColumns()).toEqual('toggledColumns');
-          expect(workspaceSettingsService.getWorkspaceSettings()).toEqual('settings');
+          expect(workspaceSettingsService.getWorkspaceSettings()).toEqual(DEFAULT_SETTINGS);
         });
+
         describe('then a new load has resolved without values (so new workspace)', function() {
           beforeEach(function() {
             var emptyResultsDefer = q.defer();
@@ -84,6 +91,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
             workspaceSettingsService.loadWorkspaceSettings();
             scope.$apply();
           });
+
           it('should set default values', function() {
             expectToGetDefaultValues();
           });
@@ -103,6 +111,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
       var newToggledColumns = 'newToggledColumns';
       var deregisterChangeListener;
       var settingsChanged = false;
+
       beforeEach(function() {
         saveDefer = q.defer();
         workspaceSettingsResourceMock.put.and.returnValue({
@@ -117,6 +126,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
           settingsChanged = true;
         });
       });
+
       afterEach(function() {
         deregisterChangeListener();
         saveResolved = false;
@@ -133,16 +143,19 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
         expect(settingsChanged).toBe(false);
         expectToGetDefaultValues();
       });
+
       describe('after save has resolved', function() {
         beforeEach(function() {
           saveDefer.resolve();
           scope.$apply();
         });
+
         it('should resolve the saveSettings promise and set the saved values', function() {
           expect(saveResolved).toBe(true);
           expect(workspaceSettingsService.getToggledColumns()).toEqual(newToggledColumns);
           expect(workspaceSettingsService.getWorkspaceSettings()).toEqual(newSettings);
         });
+
         it('should broadcast that the settings have changed.', function() {
           expect(settingsChanged).toBe(true);
         });
