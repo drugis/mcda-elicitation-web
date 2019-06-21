@@ -38,7 +38,7 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function hasValidView(workspaceSettings) {
-      return !_.includes([
+      return _.includes([
         'deterministic',
         'deterministicMCDA',
         'smaaDistributions',
