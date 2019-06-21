@@ -5,9 +5,9 @@
     "HAM-D": {
       "title": "HAM-D",
       "description": "Responders on the HAM-D rating scale",
-      "unitOfMeasurement": "Proportion",
       "dataSources": [
         {
+          "unitOfMeasurement": "Proportion",
           "pvf": {
             "direction": "increasing",
             "type": "linear",
@@ -26,9 +26,9 @@
     },
     "Diarrhea": {
       "title": "Diarrhea",
-      "unitOfMeasurement": "Proportion",
       "dataSources": [
         {
+          "unitOfMeasurement": "Proportion",
           "pvf": {
             "direction": "decreasing",
             "type": "linear",
@@ -47,9 +47,9 @@
     },
     "Dizziness": {
       "title": "Dizziness",
-      "unitOfMeasurement": "Proportion",
       "dataSources": [
         {
+          "unitOfMeasurement": "Proportion",
           "pvf": {
             "direction": "decreasing",
             "type": "linear",
@@ -68,9 +68,9 @@
     },
     "Headache": {
       "title": "Headache",
-      "unitOfMeasurement": "Proportion",
       "dataSources": [
         {
+          "unitOfMeasurement": "Proportion",
           "pvf": {
             "direction": "decreasing",
             "type": "linear",
@@ -89,9 +89,9 @@
     },
     "Insomnia": {
       "title": "Insomnia",
-      "unitOfMeasurement": "Proportion",
       "dataSources": [
         {
+          "unitOfMeasurement": "Proportion",
           "pvf": {
             "direction": "decreasing",
             "type": "linear",
@@ -110,9 +110,9 @@
     },
     "Nausea": {
       "title": "Nausea",
-      "unitOfMeasurement": "Proportion",
       "dataSources": [
         {
+          "unitOfMeasurement": "Proportion",
           "pvf": {
             "direction": "decreasing",
             "type": "linear",
@@ -630,5 +630,5 @@
     }
   ],
   "preferences": {},
-  "schemaVersion": "1.2.2"
+  "schemaVersion": "1.3.1"
 }

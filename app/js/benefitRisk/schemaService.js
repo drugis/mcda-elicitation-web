@@ -18,6 +18,7 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
      * 1.2.1 Adding text option for effects table cells
      * 1.2.2 Splitting the performance table entry performances, and making them a bit more strict
      * 1.3.0 Move unit of measurement to data source
+     * 1.3.1 Remove favorability property if it is not boolean
      * *****/
 
     function updateProblemToCurrentSchema(problem) {
@@ -40,6 +41,10 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
       if (newProblem.schemaVersion === '1.2.2') {
         newProblem = updateToVersion130(newProblem);
+      }
+
+      if(newProblem.schemaVersion === '1.3.0'){
+        newProblem = updateToVersion131(newProblem);
       }
 
       if (newProblem.schemaVersion === currentSchemaVersion) {
@@ -232,6 +237,19 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
         return newCriterion;
       });
       newProblem.schemaVersion = '1.3.0';
+      return newProblem;
+    }
+
+    function updateToVersion131(problem){
+      var newProblem = angular.copy(problem);
+      newProblem.criteria = _.mapValues(problem.criteria, function(criterion){
+        var newCriterion = angular.copy(criterion);
+        if(criterion.isFavorable === undefined){
+          delete newCriterion.isFavorable;
+        }
+        return newCriterion;
+      });
+      newProblem.schemaVersion = '1.3.1';
       return newProblem;
     }
 
