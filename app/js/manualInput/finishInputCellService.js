@@ -122,6 +122,7 @@ define(['angular'], function() {
         inputParameters: options
       };
     }
+    
     function finishTextCell(options, performance) {
       return {
         inputParameters: options,
