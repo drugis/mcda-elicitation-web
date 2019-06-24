@@ -121,7 +121,9 @@
                       "enum": [
                         "mean difference",
                         "hazard ratio",
-                        "hazard"
+                        "hazard",
+                        "log odds",
+                        "mean"
                       ]
                     },
                     "std.err": {

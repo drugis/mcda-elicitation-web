@@ -20,6 +20,7 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
      * 1.3.0 Move unit of measurement to data source
      * 1.3.1 Remove favorability property if it is not boolean
      * 1.3.2 Remove null/undefined properties from data sources
+     * 1.3.3 Remove alternative property from alternatives
      * *****/
 
     function updateProblemToCurrentSchema(problem) {
@@ -50,6 +51,10 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
       if (newProblem.schemaVersion === '1.3.1') {
         newProblem = updateToVersion132(newProblem);
+      }
+
+      if (newProblem.schemaVersion === '1.3.2') {
+        newProblem = updateToVersion133(newProblem);
       }
 
       if (newProblem.schemaVersion === currentSchemaVersion) {
@@ -276,6 +281,15 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
       });
       newProblem.schemaVersion = '1.3.2';
       return newProblem;
+    }
+
+    function updateToVersion133(problem) {
+      var newProblem = angular.copy(problem); 
+      newProblem.alternatives = _.mapValues(problem.alternatives, function(alternative){
+        return _.pick(alternative, ['title']);
+      });
+      newProblem.schemaVersion = '1.3.3';
+       return newProblem;
     }
 
     return {

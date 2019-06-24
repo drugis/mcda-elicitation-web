@@ -4,7 +4,7 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
   var generateUuidMock = function() {
     return 'uuid';
   };
-  var currentSchemaVersion = '1.3.2';
+  var currentSchemaVersion = '1.3.3';
   var schemaService;
 
   describe('The SchemaService', function() {
@@ -322,7 +322,5 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
         expect(result.isValid).toBeFalsy();
       });
     });
-
   });
-
 });
