@@ -205,37 +205,44 @@ define(['lodash', 'angular'], function(_, angular) {
         if (row.isHeaderRow) {
           return accum;
         } else {
-          accum[row.dataSource.id] = createViabilityRows(row, alternatives, effectsTableInfo, scales);
+          accum[row.dataSource.id] = createViabilityRows(row.dataSource.id, alternatives, effectsTableInfo, scales);
           return accum;
         }
       }, {});
     }
 
-    function createViabilityRows(row, alternatives, effectsTableInfo, scales) {
-      return _.reduce(alternatives, function(accum, alternative) {
-        accum[alternative.id] = isCellViable(row, alternative, effectsTableInfo, scales);
+    function createIsCellAnalysisViableForCriterionCard(criterion, alternatives, effectsTableInfo, scales) {
+      return _.reduce(criterion.dataSources, function(accum, dataSource) {
+        accum[dataSource.id] = createViabilityRows(dataSource.id, alternatives, effectsTableInfo, scales);
         return accum;
       }, {});
     }
 
-    function isCellViable(row, alternative, effectsTableInfo, scales) {
-      return isRelative(row, effectsTableInfo) ||
-        hasEffectValueLabel(row, alternative, effectsTableInfo) ||
-        hasScaleValue(row, alternative, scales);
+    function createViabilityRows(dataSourceId, alternatives, effectsTableInfo, scales) {
+      return _.reduce(alternatives, function(accum, alternative) {
+        accum[alternative.id] = isCellViable(dataSourceId, alternative.id, effectsTableInfo, scales);
+        return accum;
+      }, {});
     }
 
-    function isRelative(row, effectsTableInfo) {
-      return !effectsTableInfo[row.dataSource.id].isAbsolute;
+    function isCellViable(dataSourceId, alternativeId, effectsTableInfo, scales) {
+      return isRelative(dataSourceId, effectsTableInfo) ||
+        hasEffectValueLabel(dataSourceId, alternativeId, effectsTableInfo) ||
+        hasScaleValue(dataSourceId, alternativeId, scales);
     }
 
-    function hasEffectValueLabel(row, alternative, effectsTableInfo) {
-      return effectsTableInfo[row.dataSource.id].studyDataLabelsAndUncertainty[alternative.id].effectValue !== '';
+    function isRelative(dataSourceId, effectsTableInfo) {
+      return !effectsTableInfo[dataSourceId].isAbsolute;
     }
 
-    function hasScaleValue(row, alternative, scales) {
+    function hasEffectValueLabel(dataSourceId, alternativeId, effectsTableInfo) {
+      return effectsTableInfo[dataSourceId].studyDataLabelsAndUncertainty[alternativeId].effectValue !== '';
+    }
+
+    function hasScaleValue(dataSourceId, alternativeId, scales) {
       var smaaValue;
-      if(scales){
-        smaaValue = scales[row.dataSource.id][alternative.id]['50%'];
+      if (scales) {
+        smaaValue = scales[dataSourceId][alternativeId]['50%'];
       }
       return !!scales && !isNaN(smaaValue) && smaaValue !== null;
     }
@@ -245,7 +252,8 @@ define(['lodash', 'angular'], function(_, angular) {
       createEffectsTableInfo: createEffectsTableInfo,
       isStudyDataAvailable: isStudyDataAvailable,
       buildTableRows: buildTableRows,
-      createIsCellAnalysisViable: createIsCellAnalysisViable
+      createIsCellAnalysisViable: createIsCellAnalysisViable,
+      createIsCellAnalysisViableForCriterionCard: createIsCellAnalysisViableForCriterionCard
     };
   };
 

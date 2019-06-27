@@ -219,7 +219,6 @@ define(['lodash', 'angular'], function(_, angular) {
         var newCriterion = _.pick(criterion, [
           'title',
           'description',
-          'unitOfMeasurement',
           'isFavorable'
         ]);
         newCriterion.dataSources = _.map(criterion.dataSources, buildDataSource);
@@ -229,15 +228,18 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function buildDataSource(dataSource) {
-      var newDataSource = addScale(dataSource);
+      var newDataSource = angular.copy(dataSource);
+      newDataSource.scale = getScale(dataSource);
       delete newDataSource.oldId;
       return newDataSource;
     }
 
-    function addScale(dataSource) {
-      var newDataSource = _.cloneDeep(dataSource);
-      newDataSource.scale = [-Infinity, Infinity];
-      return newDataSource;
+    function getScale(dataSource) {
+      if (dataSource.unitOfMeasurement === '%' || dataSource.unitOfMeasurement === 'Proportion') {
+        return [0, 1];
+      } else {
+        return [-Infinity, Infinity];
+      }
     }
 
     function buildAlternatives(alternatives) {
