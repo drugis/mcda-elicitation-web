@@ -270,23 +270,23 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         var criteria = [{
           title: 'favorable criterion',
           description: 'some crit description',
-          unitOfMeasurement: 'particles',
           isFavorable: true,
           id: 'criterion1id',
           oldid: 'criterion1oldId',
           scale: [0, 1],
           omitThis: 'yech',
           dataSources: [{
+            unitOfMeasurement: 'particles',
             id: 'ds1id',
             oldId: 'ds1oldId',
           }]
         }, {
           title: 'unfavorable criterion',
           description: 'some crit description',
-          unitOfMeasurement: 'particles',
           isFavorable: false,
           id: 'criterion2id',
           dataSources: [{
+            unitOfMeasurement: 'particles',
             id: 'ds2id',
           }]
         }, {
@@ -383,20 +383,20 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             criterion1id: {
               title: 'favorable criterion',
               description: 'some crit description',
-              unitOfMeasurement: 'particles',
               isFavorable: true,
               dataSources: [{
                 id: 'ds1id',
+                unitOfMeasurement: 'particles',
                 scale: [-Infinity, Infinity],
               }]
             },
             criterion2id: {
               title: 'unfavorable criterion',
               description: 'some crit description',
-              unitOfMeasurement: 'particles',
               isFavorable: false,
               dataSources: [{
                 id: 'ds2id',
+                unitOfMeasurement: 'particles',
                 scale: [-Infinity, Infinity],
               }]
             },
