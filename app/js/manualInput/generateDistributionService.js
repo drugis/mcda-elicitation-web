@@ -9,23 +9,23 @@ define(['lodash', 'angular'], function(_, angular) {
       if (isPercentage(distributionCell)) {
         distributionCell.firstParameter = cell.firstParameter / 100;
       }
+      
       distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
       distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
+      delete distributionCell.constraint;
       return distributionCell;
     }
 
     function generateValueSEDistribution(normalOption, cell) {
       var distributionCell = angular.copy(cell);
-
       if (isPercentage(distributionCell)) {
         distributionCell.firstParameter = cell.firstParameter / 100;
         distributionCell.secondParameter = cell.secondParameter / 100;
       }
 
-      distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
-      distributionCell.inputParameters.secondParameter.constraints = removeConstraints(distributionCell.inputParameters.secondParameter.constraints);
       distributionCell.inputParameters = normalOption;
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
+      distributionCell.label = distributionCell.inputParameters.toString(distributionCell); 
+      delete distributionCell.constraint;
       return distributionCell;
     }
 
@@ -47,10 +47,8 @@ define(['lodash', 'angular'], function(_, angular) {
           distributionCell.secondParameter = distributionCell.secondParameter / 100;
         }
       }
-      distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
-      if (distributionCell.secondParameter) {
-        distributionCell.inputParameters.secondParameter.constraints = removeConstraints(distributionCell.inputParameters.secondParameter.constraints);
-      }
+
+      delete distributionCell.constraint;
       distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
       return distributionCell;
     }
@@ -63,6 +61,7 @@ define(['lodash', 'angular'], function(_, angular) {
       distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
       distributionCell.inputParameters = valueOption;
       delete distributionCell.secondParameter;
+      delete distributionCell.constraint;
       distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
       return distributionCell;
     }
@@ -72,11 +71,12 @@ define(['lodash', 'angular'], function(_, angular) {
       distributionCell.inputParameters = betaOption;
       distributionCell.firstParameter = cell.firstParameter + 1;
       distributionCell.secondParameter = cell.secondParameter - cell.firstParameter + 1;
+      delete distributionCell.constraint;
       distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
       return distributionCell;
     }
 
-     function generateEmptyDistribution(cell) {
+    function generateEmptyDistribution(cell) {
       return angular.copy(cell);
     }
 
@@ -95,7 +95,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function isPercentage(cell) {
-      return _.some(cell.inputParameters.firstParameter.constraints, ['label', 'Proportion (percentage)']);
+      return cell.constraint === 'Proportion (percentage)';
     }
 
     return {

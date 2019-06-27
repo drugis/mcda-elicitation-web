@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
   var ESC = 27;
   var ENTER = 13;
 
@@ -27,7 +27,6 @@ define(['lodash'], function(_) {
         // functions
         scope.keyCheck = keyCheck;
         scope.inputChanged = inputChanged;
-        scope.constraintChanged = constraintChanged;
 
         //init
         var isEscPressed = false;
@@ -54,7 +53,7 @@ define(['lodash'], function(_) {
 
         function saveState() {
           $timeout(function() {
-            scope.cell = scope.inputCell;
+            scope.cell = angular.copy(scope.inputCell);
             scope.cell.isInvalid = ManualInputService.getInputError(scope.inputCell);
             scope.cell.label = ManualInputService.inputToString(scope.inputCell);
             $timeout(scope.changeCallback);
@@ -71,8 +70,8 @@ define(['lodash'], function(_) {
           if (!scope.cell.constraint) {
             scope.cell.constraint = scope.constraints[0].label;
           }
-          scope.inputCell = _.cloneDeep(scope.cell);
-          constraintChanged();
+          scope.inputCell = ManualInputService.updateParameterConstraints(scope.cell);
+          inputChanged();
           scope.cell.label = ManualInputService.inputToString(scope.inputCell);
           scope.cell.isInvalid = ManualInputService.getInputError(scope.inputCell);
           scope.changeCallback();
@@ -87,20 +86,6 @@ define(['lodash'], function(_) {
 
         function isNotNumeric(value) {
           return isNaN(parseFloat(value)) || !isFinite(value);
-        }
-
-        function constraintChanged() {
-          var inputParameters = scope.inputCell.inputParameters;
-          updateParameter(inputParameters.firstParameter);
-          updateParameter(inputParameters.secondParameter);
-          updateParameter(inputParameters.thirdParameter);
-          inputChanged();
-        }
-
-        function updateParameter(parameter) {
-          if (parameter && parameter.label !== 'Sample size') {
-            parameter.constraints = ManualInputService.updateConstraints(scope.inputCell.constraint, parameter.constraints);
-          }
         }
 
         function keyCheck(event) {

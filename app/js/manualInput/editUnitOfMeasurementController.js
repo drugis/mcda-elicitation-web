@@ -62,7 +62,7 @@ define(['lodash'], function(_) {
     }
 
     function validateInput() {
-      return $scope.values.value === '%' || $scope.values.value === 'Proportion';
+      $scope.saveDisabled =  $scope.values.value === '%' || $scope.values.value === 'Proportion';
     }
 
     function save() {

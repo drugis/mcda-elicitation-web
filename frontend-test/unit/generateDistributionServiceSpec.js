@@ -22,6 +22,10 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       label: 'Proportion (percentage)',
       validator: validator
     };
+    var decimalConstraint = {
+      label: 'Proportion (decimal)',
+      validator: validator
+    };
 
     beforeEach(angular.mock.module('elicit.manualInput'));
 
@@ -53,6 +57,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
 
       it('should generate an exact distribution from a percentage value', function() {
+        cell.constraint = percentageConstraint.label;
         cell.inputParameters.firstParameter.constraints.push(percentageConstraint);
         var result = generateDistributionService.generateValueDistribution(cell);
         var expectedResult = {
@@ -64,10 +69,8 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
 
       it('should generate an exact distribution, removing decimal proportion constraints', function() {
-        cell.inputParameters.firstParameter.constraints.push({
-          label: 'Proportion (decimal)',
-          validator: validator
-        });
+        cell.constraint = decimalConstraint.label;
+        cell.inputParameters.firstParameter.constraints.push(decimalConstraint);
         var result = generateDistributionService.generateValueDistribution(cell);
         var expectedResult = {
           firstParameter: 50,
@@ -107,7 +110,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
 
       it('should generate a normal distribution from a percentage', function() {
-        cell.inputParameters.firstParameter.constraints.push(percentageConstraint);
+        cell.constraint = percentageConstraint.label;
         var result = generateDistributionService.generateValueSEDistribution(options, cell);
         var expectedResult = {
           label: label,
@@ -160,6 +163,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
 
       it('should generate a non-percentage normal distribution given a symmetric interval and a percentage constraint', function() {
+        cell.constraint = percentageConstraint.label;
         cell.inputParameters.firstParameter.constraints.push(percentageConstraint);
         cell.inputParameters.secondParameter.constraints.push(percentageConstraint);
         var result = generateDistributionService.generateValueCIDistribution(options, options, cell);
@@ -198,6 +202,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
 
       it('should generate an exact distribution given a percentage constraint', function() {
+        cell.constraint = percentageConstraint.label;
         cell.inputParameters.firstParameter.constraints.push(percentageConstraint);
         var result = generateDistributionService.generateValueSampleSizeDistribution(options, cell);
         var expectedResult = {

@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], function(angular, _) {
+define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(angular) {
   describe('the finish input service', function() {
     var finishInputCellService;
     var options;
@@ -7,6 +7,12 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       'percentage',
       'decimal'
     ]);
+    constraintServiceMock.percentage.and.returnValue({
+      label: 'Proportion (percentage)'
+    });
+    constraintServiceMock.decimal.and.returnValue({
+      label: 'Proportion (decimal)'
+    });
 
     beforeEach(angular.mock.module('elicit.manualInput', function($provide) {
       $provide.value('ConstraintService', constraintServiceMock);
@@ -17,12 +23,6 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     }));
 
     beforeEach(function() {
-      constraintServiceMock.percentage.and.returnValue({
-        label: 'Proportion (percentage)'
-      });
-      constraintServiceMock.decimal.and.returnValue({
-        label: 'Proportion (decimal)'
-      });
       options = {
         firstParameter: {
           constraints: []
@@ -110,7 +110,6 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     });
 
     describe('finishValueCI', function() {
-
       it('should create a finished input cell given estimable bounds', function() {
         var performance = {
           input: {

@@ -16,6 +16,9 @@
     <div class="cell">
       <button class="button" type="button" ng-click="save()" ng-disabled="saveDisabled">Save</button>
     </div>
+    <div class="cell alert" ng-if="saveDisabled">
+      To use '%' or 'Proportion', please switch to the corresponding type.
+    </div>
     <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
       <span aria-hidden="true">&times;</span>
     </button>

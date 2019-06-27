@@ -13,13 +13,22 @@ define(['lodash', 'angular'], function(_, angular) {
     currentSchemaVersion
   ) {
     var INVALID_INPUT_MESSAGE = 'Missing or invalid input';
+    var PROPORTION_PERCENTAGE = ConstraintService.percentage().label;
+    var PROPORTION_DECIMAL = ConstraintService.decimal().label;
+    var FIRST_PARAMETER = 'firstParameter';
+    var SECOND_PARAMETER = 'secondParameter';
+    var THIRD_PARAMETER = 'thirdParameter';
 
     function getInputError(cell) {
       if (cell.inputParameters.id === 'empty') {
         return;
       }
       var error;
-      var inputParameters = _.pick(cell.inputParameters, ['firstParameter', 'secondParameter', 'thirdParameter']);
+      var inputParameters = _.pick(cell.inputParameters, [
+        FIRST_PARAMETER,
+        SECOND_PARAMETER,
+        THIRD_PARAMETER
+      ]);
       _.find(inputParameters, function(inputParameter, key) {
         if (hasNotEstimableBound(cell, inputParameter)) {
           return;
@@ -64,8 +73,9 @@ define(['lodash', 'angular'], function(_, angular) {
     function prepareInputData(criteria, alternatives, oldInputData) {
       var dataSources = getDataSources(criteria);
       if (oldInputData) {
+        var effectData = createInputTableRows(dataSources, alternatives, oldInputData.effect);
         return {
-          effect: createInputTableRows(dataSources, alternatives, oldInputData.effect),
+          effect: setConstraints(dataSources, effectData),
           distribution: createInputTableRows(dataSources, alternatives, oldInputData.distribution)
         };
       } else {
@@ -74,6 +84,75 @@ define(['lodash', 'angular'], function(_, angular) {
           distribution: createInputTableRows(dataSources, alternatives)
         };
       }
+    }
+
+    function setConstraints(dataSources, effectData) {
+      return _.reduce(dataSources, function(accum, dataSource) {
+        accum[dataSource.id] = setConstraintsOnRow(dataSource, effectData);
+        return accum;
+      }, {});
+    }
+
+    function setConstraintsOnRow(dataSource, effectData) {
+      return _.reduce(effectData[dataSource.id], function(accum, cell, alternativeId) {
+        var newCell = angular.copy(cell);
+        newCell.constraint = getCellConstraint(dataSource);
+        if (newCell.inputParameters) {
+          newCell = updateParameterConstraints(newCell);
+        }
+        accum[alternativeId] = newCell;
+        return accum;
+      }, {});
+    }
+
+    function getCellConstraint(dataSource) {
+      if (dataSource.unitOfMeasurement === '%') {
+        return PROPORTION_PERCENTAGE;
+      } else if (dataSource.unitOfMeasurement === 'Proportion') {
+        return PROPORTION_DECIMAL;
+      } else {
+        return 'None';
+      }
+    }
+
+    function updateParameterConstraints(cell) {
+      var newCell = angular.copy(cell);
+      if (cell.inputParameters.firstParameter) {
+        newCell.inputParameters.firstParameter.constraints = updateConstraints(cell, FIRST_PARAMETER);
+      }
+      if (cell.inputParameters.secondParameter) {
+        newCell.inputParameters.secondParameter.constraints = updateConstraints(cell, SECOND_PARAMETER);
+      }
+      if (cell.inputParameters.thirdParameter) {
+        newCell.inputParameters.thirdParameter.constraints = updateConstraints(cell, THIRD_PARAMETER);
+      }
+      return newCell;
+    }
+
+    function updateConstraints(cell, parameter) {
+      if (cell.inputParameters[parameter].label !== 'Sample size' && cell.inputParameters[parameter].label !== 'Events') {
+        var newConstraints = angular.copy(cell.inputParameters[parameter].constraints);
+        var percentageConstraint = ConstraintService.percentage();
+        var decimalConstraint = ConstraintService.decimal();
+        newConstraints = removeProportionConstraints(newConstraints);
+        switch (cell.constraint) {
+          case percentageConstraint.label:
+            newConstraints.push(percentageConstraint);
+            break;
+          case decimalConstraint.label:
+            newConstraints.push(decimalConstraint);
+            break;
+        }
+        return newConstraints;
+      } else {
+        return;
+      }
+    }
+
+    function removeProportionConstraints(constraints) {
+      return _.reject(constraints, function(constraint) {
+        return constraint.label === PROPORTION_PERCENTAGE || constraint.label === PROPORTION_DECIMAL;
+      });
     }
 
     function createInputTableRows(dataSources, alternatives, oldInputData) {
@@ -364,28 +443,6 @@ define(['lodash', 'angular'], function(_, angular) {
       return cell.inputParameters.generateDistribution(cell);
     }
 
-    function updateConstraints(cellConstraint, constraints) {
-      var newConstraints = angular.copy(constraints);
-      var percentageConstraint = ConstraintService.percentage();
-      var decimalConstraint = ConstraintService.decimal();
-      newConstraints = removeProportionConstraints(constraints, percentageConstraint.label, decimalConstraint.label);
-      switch (cellConstraint) {
-        case percentageConstraint.label:
-          newConstraints.push(percentageConstraint);
-          break;
-        case decimalConstraint.label:
-          newConstraints.push(decimalConstraint);
-          break;
-      }
-      return newConstraints;
-    }
-
-    function removeProportionConstraints(constraints, percentageLabel, decimalLabel) {
-      return _.reject(constraints, function(constraint) {
-        return constraint.label === percentageLabel || constraint.label === decimalLabel;
-      });
-    }
-
     return {
       createProblem: createProblem,
       inputToString: inputToString,
@@ -396,7 +453,7 @@ define(['lodash', 'angular'], function(_, angular) {
       findDuplicateValues: findDuplicateValues,
       findInvalidCell: findInvalidCell,
       generateDistributions: generateDistributions,
-      updateConstraints: updateConstraints
+      updateParameterConstraints: updateParameterConstraints
     };
   };
 

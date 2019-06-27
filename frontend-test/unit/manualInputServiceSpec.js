@@ -1,6 +1,5 @@
 'use strict';
 define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(_, angular) {
-
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
   var constraintServiceMock = jasmine.createSpyObj('ConstraintService', ['percentage', 'decimal']);
@@ -8,6 +7,14 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
   var inputKnowledgeServiceMock = jasmine.createSpyObj('InputKnowledgeService', [
     'getOptions'
   ]);
+  var percentageConstraint = {
+    label: 'Proportion (percentage)'
+  };
+  var decimalConstraint = {
+    label: 'Proportion (decimal)'
+  };
+  constraintServiceMock.percentage.and.returnValue(percentageConstraint);
+  constraintServiceMock.decimal.and.returnValue(decimalConstraint);
 
   describe('The manualInputService', function() {
     beforeEach(angular.mock.module('elicit.manualInput', function($provide) {
@@ -63,7 +70,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(manualInputService.getInputError(cell)).toBeFalsy();
       });
 
-      it('should return no error for bounds that are not estimable', () => {
+      it('should return no error for bounds that are not estimable', function() {
         var cell = {
           lowerBoundNE: true,
           upperBoundNE: true,
@@ -73,7 +80,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             firstParameter: {
               label: 'Lower bound',
               constraints: [
-                () => { }
+                function() { }
               ]
             },
             secondParameter: {
@@ -180,16 +187,19 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
 
       it('should preserve data if there is old data supplied and the criterion type has not changed', function() {
         var oldInputData = {
-          'effect': {
-            'ds2id': {
+          effect: {
+            ds2id: {
               alternative1: {
-                firstParameter: 1
+                firstParameter: 1,
+                inputParameters: {}
               },
-              alternative2: {}
+              alternative2: {
+                inputParameters: {}
+              }
             }
           },
-          'distribution': {
-            'ds2id': {
+          distribution: {
+            ds2id: {
               alternative1: {
                 firstParameter: 2
               },
@@ -200,26 +210,32 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         var result = manualInputService.prepareInputData(criteria, alternatives, oldInputData);
 
         var expectedResult = {
-          'effect': {
-            'ds1id': {
+          effect: {
+            ds1id: {
               alternative1: {
+                constraint: 'None',
                 isInvalid: true
               },
               alternative2: {
+                constraint: 'None',
                 isInvalid: true
               }
             },
-            'ds2id': {
+            ds2id: {
               alternative1: _.extend({}, oldInputData.effect.ds2id.alternative1, {
-                isInvalid: true
+                constraint: 'None',
+                isInvalid: true,
+                inputParameters: {}
               }),
               alternative2: {
-                isInvalid: true
+                constraint: 'None',
+                isInvalid: true,
+                inputParameters: {}
               }
             }
           },
-          'distribution': {
-            'ds1id': {
+          distribution: {
+            ds1id: {
               alternative1: {
                 isInvalid: true
               },
@@ -227,7 +243,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 isInvalid: true
               }
             },
-            'ds2id': {
+            ds2id: {
               alternative1: _.extend({}, oldInputData.distribution.ds2id.alternative1, {
                 isInvalid: true
               }),
@@ -829,7 +845,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             var expectedResult = _.merge({}, baseExpectedResult, {
               oldWorkspace: workspace
             });
-            expect(result).toEqual(expectedResult);            
+            expect(result).toEqual(expectedResult);
             expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
             expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
           });
@@ -1095,42 +1111,84 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
     });
 
-    describe('updateConstraints', function() {
-      var percentageConstraint = {
-        label: 'Proportion (percentage)'
-      };
-      var decimalConstraint = {
-        label: 'Proportion (decimal)'
-      };
+    describe('updateParameterConstraints', function() {
+      var cell;
       beforeEach(function() {
-        constraintServiceMock.percentage.and.returnValue(percentageConstraint);
-        constraintServiceMock.decimal.and.returnValue(decimalConstraint);
+        cell = {
+          inputParameters: {
+            firstParameter: {
+              constraints: [decimalConstraint, percentageConstraint]
+            },
+            secondParameter: {
+              constraints: [decimalConstraint, percentageConstraint]
+            },
+            thirdParameter: {
+              constraints: [decimalConstraint, percentageConstraint]
+            }
+          }
+        };
       });
 
       it('should remove the percentage and/or decimal constraints', function() {
-        var cellConstraint = 'None';
-        var constraints = [decimalConstraint, percentageConstraint];
-        var result = manualInputService.updateConstraints(cellConstraint, constraints);
-        expect(result).toEqual([]);
+        cell.constraint = 'None';
+        var result = manualInputService.updateParameterConstraints(cell);
+
+        var expectedResult = {
+          constraint: 'None',
+          inputParameters: {
+            firstParameter: {
+              constraints: []
+            },
+            secondParameter: {
+              constraints: []
+            },
+            thirdParameter: {
+              constraints: []
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
       });
 
       it('should add the percentage constraint if percentage is chosen', function() {
-        var cellConstraint = percentageConstraint.label;
-        var constraints = [];
-        var result = manualInputService.updateConstraints(cellConstraint, constraints);
-        var expectedResult = [{
-          label: 'Proportion (percentage)'
-        }];
+        cell.constraint = percentageConstraint.label;
+        var result = manualInputService.updateParameterConstraints(cell);
+
+        var expectedResult = {
+          constraint: percentageConstraint.label,
+          inputParameters: {
+            firstParameter: {
+              constraints: [percentageConstraint]
+            },
+            secondParameter: {
+              constraints: [percentageConstraint]
+            },
+            thirdParameter: {
+              constraints: [percentageConstraint]
+            }
+          }
+        };
         expect(result).toEqual(expectedResult);
       });
 
       it('should add the decimal constraint if decimal is chosen', function() {
-        var cellConstraint = decimalConstraint.label;
-        var constraints = [];
-        var result = manualInputService.updateConstraints(cellConstraint, constraints);
-        var expectedResult = [{
-          label: 'Proportion (decimal)'
-        }];
+        cell.constraint = decimalConstraint.label;
+        var result = manualInputService.updateParameterConstraints(cell);
+
+        var expectedResult = {
+          constraint: decimalConstraint.label,
+          inputParameters: {
+            firstParameter: {
+              constraints: [decimalConstraint]
+            },
+            secondParameter: {
+              constraints: [decimalConstraint]
+            },
+            thirdParameter: {
+              constraints: [decimalConstraint]
+            }
+          }
+        };
         expect(result).toEqual(expectedResult);
       });
     });
