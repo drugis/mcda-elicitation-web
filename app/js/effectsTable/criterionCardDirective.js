@@ -3,12 +3,14 @@ define(['lodash'], function(_) {
   var dependencies = [
     '$modal',
     'swap',
-    'isMcdaStandalone'
+    'isMcdaStandalone',
+    'WorkspaceSettingsService'
   ];
   var CriterionCardDirective = function(
     $modal,
     swap,
-    isMcdaStandalone
+    isMcdaStandalone,
+    WorkspaceSettingsService
   ) {
     return {
       restrict: 'E',
@@ -24,7 +26,10 @@ define(['lodash'], function(_) {
         'isInput': '=',
         'saveOrdering': '=',
         'saveWorkspace': '=',
-        'editMode': '='
+        'editMode': '=',
+        'scales': '=',
+        'alternatives': '=',
+        'effectsTableInfo': '='
       },
       templateUrl: '../effectsTable/criterionCardDirective.html',
       link: function(scope) {
@@ -36,6 +41,14 @@ define(['lodash'], function(_) {
         scope.removeDataSource = removeDataSource;
         scope.editDataSource = editDataSource;
 
+        updateSettings();
+        scope.$on('elicit.settingsChanged', updateSettings);
+
+        function updateSettings() {
+          scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
+          scope.isValueView = scope.workspaceSettings.effectsDisplay === 'smaa' || scope.workspaceSettings.effectsDisplay === 'deterministicMCDA';
+        }
+        
         function criterionUp() {
           scope.goUp(scope.idx);
           if (!scope.isInput) {

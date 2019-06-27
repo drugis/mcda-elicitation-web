@@ -56,6 +56,9 @@
                 <inline-help help-key="uncertainties"></inline-help>
                 <inline-help help-key="strength-of-evidence"></inline-help>
               </th>
+              <th ng-repeat="alternative in alternatives" ng-if="!isInput">
+                {{alternative.title}}
+              </th>
               <th ng-if="isStandalone">
                 <!-- edit datasource button -->
               </th>
@@ -96,6 +99,21 @@
                 <br>
                 <b>Unc: </b> {{dataSource.uncertainties}}
               </td>
+
+              <td ng-if="!isInput" class="text-center" ng-repeat="alternative in alternatives"
+                ng-style="isValueView && !isCellAnalysisViable[dataSource.id][alternative.id] ? {'background-color':'#f3d3c8'} : {}">
+                <div ng-if="!isValueView || isCellAnalysisViable[dataSource.id][alternative.id]">
+                  <effects-table-cell effects-table-info="effectsTableInfo[dataSource.id]"
+                    workspace-settings="workspaceSettings" scales="scales[dataSource.id][alternative.id]"
+                    theoretical-scale="dataSource.scale" alternative-id="alternative.id">
+                  </effects-table-cell>
+                </div>
+                <div ng-if="isValueView && !isCellAnalysisViable[row.dataSource.id][alternative.id]"
+                  style="opacity: 0.5;" tooltip="Cells containing text or that are empty can not be used for analysis">
+                  No data
+                </div>
+              </td>
+
               <td ng-if="isStandalone">
                 <a ng-click="editDataSource(dataSource, $index)" tooltip="Edit data source">
                   <i class="fa fa-edit icon-fixed-width"></i>

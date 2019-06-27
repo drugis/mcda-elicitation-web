@@ -52,7 +52,8 @@
           <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['units']">
             {{row.dataSource.unitOfMeasurement}}
           </td>
-          <td ng-if="!row.isHeaderRow" ng-style="isValueView && !isCellAnalysisViable[row.dataSource.id][alternative.id] ? {'background-color':'#f3d3c8'} : {}" class="text-center" ng-repeat="alternative in alternatives">
+          <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives"
+            ng-style="isValueView && !isCellAnalysisViable[row.dataSource.id][alternative.id] ? {'background-color':'#f3d3c8'} : {}">
             <div ng-if="!isValueView || isCellAnalysisViable[row.dataSource.id][alternative.id]">
               <effects-table-cell effects-table-info="effectsTableInfo[row.dataSource.id]"
                 workspace-settings="workspaceSettings" scales="scales[row.dataSource.id][alternative.id]"
