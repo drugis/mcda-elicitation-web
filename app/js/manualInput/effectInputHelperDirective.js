@@ -50,7 +50,7 @@ define(['lodash'], function(_) {
           }
         });
 
-        scope.$watch('cell', initInputParameters);
+        scope.$watch('cell', initInputParameters, true);
 
         function saveState() {
           $timeout(function() {

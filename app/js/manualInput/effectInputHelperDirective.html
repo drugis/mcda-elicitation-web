@@ -14,15 +14,6 @@
           </label>
         </div>
 
-        <div class="cell" ng-if="inputType === 'effect' && inputCell.inputParameters.constraints">
-          <label>
-            Constraint
-            <select ng-model="inputCell.constraint"
-              ng-options="constraint.label as constraint.label for constraint in constraints"
-              ng-change="constraintChanged()"></select>
-          </label>
-        </div>
-
         <div class="cell" ng-if="inputCell.inputParameters.id === 'text'">
           <label>
             {{inputCell.inputParameters.firstParameter.label}}

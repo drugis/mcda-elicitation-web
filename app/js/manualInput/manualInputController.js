@@ -1,6 +1,7 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
-  var dependencies = ['$scope',
+  var dependencies = [
+    '$scope',
     '$state',
     '$stateParams',
     '$transitions',
@@ -16,7 +17,8 @@ define(['lodash', 'angular'], function(_, angular) {
     'generateUuid',
     'swap'
   ];
-  var ManualInputController = function($scope,
+  var ManualInputController = function(
+    $scope,
     $state,
     $stateParams,
     $transitions,

@@ -16,7 +16,14 @@
       </td>
       <td ng-if="state.useFavorability && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">
         {{row.criterion.isFavorable? 'yes' : 'no'}}</td>
-      <td>{{row.dataSource.unitOfMeasurement}}
+      <td>
+        <span>{{row.dataSource.unitOfMeasurement}} </span>
+        <span class="right">
+          <a ng-click="editUnitOfMeasurement(row)" tooltip="Edit unit of measurement">
+            <i class="fa fa-edit icon-fixed-width"></i>
+          </a>
+        </span>
+      </td>
       <td>{{row.dataSource.source}}</td>
       <td ng-repeat="alternative in state.alternatives">
         <effect-input-helper alternative="alternative" input-type="inputType"

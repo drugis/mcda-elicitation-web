@@ -14,6 +14,7 @@ define([
   './inputDataSourceDirective',
   './inProgressResource',
   './manualInputTableDirective',
+  './editUnitOfMeasurementController',
   'angular',
   'angular-resource'
 ], function(
@@ -31,6 +32,7 @@ define([
   inputDataSource,
   InProgressResource,
   manualInputTable,
+  EditUnitOfMeasurementController,
   angular
 ) {
     return angular.module('elicit.manualInput', ['ngResource', 'elicit.util', 'elicit.effectsTable'])
@@ -38,6 +40,7 @@ define([
       .controller('ManualInputController', ManualInputController)
       .controller('AddCriterionController', AddCriterionController)
       .controller('EditDataSourceController', EditDataSourceController)
+      .controller('EditUnitOfMeasurementController', EditUnitOfMeasurementController)
 
       .factory('ManualInputService', ManualInputService)
       .factory('InputKnowledgeService', InputKnowledgeService)
