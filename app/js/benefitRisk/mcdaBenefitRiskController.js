@@ -97,12 +97,14 @@ define(['lodash'], function(_) {
     }
 
     function updateScales(baseObservedScales) {
-      $scope.aggregateState = WorkspaceSettingsService.usePercentage() ?
-        WorkspaceService.percentifyCriteria($scope.baseAggregateState) : $scope.baseAggregateState;
       var baseCriteria = $scope.baseAggregateState.problem.criteria;
-      $scope.workspace.scales.observed = WorkspaceSettingsService.usePercentage() ?
-        WorkspaceService.percentifyScales(baseCriteria, baseObservedScales) : baseObservedScales;
-
+      if (WorkspaceSettingsService.usePercentage()) {
+        $scope.workspace.scales.observed = WorkspaceService.percentifyScales(baseCriteria, baseObservedScales);
+        $scope.aggregateState = WorkspaceService.percentifyCriteria($scope.baseAggregateState);
+      } else {
+        $scope.workspace.scales.observed = baseObservedScales;
+        $scope.aggregateState = $scope.baseAggregateState;
+      }
       $scope.baseAggregateState = addScales($scope.baseAggregateState, $scope.workspace.scales.base);
       $scope.aggregateState = addScales($scope.aggregateState, $scope.workspace.scales.observed);
       updateTaskAccessibility();

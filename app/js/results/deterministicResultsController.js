@@ -94,7 +94,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
       $scope.sensitivityMeasurements.alteredTableCells.push({
         criterion: row.criterion.id,
         alternative: alternative.id,
-        value: newValue
+        value:  usePercentage(row.criterion) ? newValue /100 : newValue
       });
     }
 
