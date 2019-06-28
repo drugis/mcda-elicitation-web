@@ -169,7 +169,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function buildEffectLabel(performance) {
       if (!performance.effect) {
-        if (performance.distribution.input) {
+        if (performance.distribution.input && performance.distribution.type !== 'dt') {
           return buildEffectInputLabel(performance.distribution.input);
         } else if (performance.distribution.type === 'exact') {
           return performance.distribution.value;
