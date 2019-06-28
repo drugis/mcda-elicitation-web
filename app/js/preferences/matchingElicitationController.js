@@ -5,6 +5,7 @@ define(['lodash'],
       '$scope', '$stateParams',
       'SwingWeightingService',
       'PageTitleService',
+      'PartialValueFunctionService',
       'currentScenario',
       'taskDefinition'
     ];
@@ -13,9 +14,11 @@ define(['lodash'],
       $stateParams,
       SwingWeightingService,
       PageTitleService,
+      PartialValueFunctionService,
       currentScenario,
       taskDefinition
     ) {
+      $scope.getUnitOfMeasurement = PartialValueFunctionService.getUnitOfMeasurement;
       $scope.isPrecise = true;
       PageTitleService.setPageTitle('MatchingElicitationController', 'Matching');
 

@@ -99,6 +99,7 @@ define(['lodash', 'angular'], function(_, angular) {
       var newDataSource = angular.copy(dataSource);
       if (_.isEqual([0, 1], newDataSource.scale)) {
         newDataSource.scale = [0, 100];
+        newDataSource.unitOfMeasurement = '%';
         if (newDataSource.pvf) {
           if (newDataSource.pvf.range) {
             newDataSource.pvf.range = _.map(newDataSource.pvf.range, times100);
@@ -107,6 +108,24 @@ define(['lodash', 'angular'], function(_, angular) {
             newDataSource.pvf.cutoffs = _.map(newDataSource.pvf.cutoffs, times100);
           }
         }
+      }
+      return newDataSource;
+    }
+
+    function dePercentifyCriteria(baseState) {
+      var criteriaWithUpdatedDataSources = updateDataSources(baseState.problem.criteria, dePercentifyDataSource);
+      return _.merge({}, baseState, {
+        problem: {
+          criteria: criteriaWithUpdatedDataSources
+        }
+      });
+    }
+
+    function dePercentifyDataSource(dataSource) {
+      var newDataSource = angular.copy(dataSource);
+      if (_.isEqual([0, 100], newDataSource.scale)) {
+        newDataSource.scale = [0, 1];
+        newDataSource.unitOfMeasurement = 'Proportion';
       }
       return newDataSource;
     }
@@ -567,6 +586,7 @@ define(['lodash', 'angular'], function(_, angular) {
       validateWorkspace: validateWorkspace,
       addTheoreticalScales: addTheoreticalScales,
       percentifyCriteria: percentifyCriteria,
+      dePercentifyCriteria: dePercentifyCriteria,
       hasNoStochasticResults: hasNoStochasticResults,
       checkForMissingValuesInPerformanceTable: checkForMissingValuesInPerformanceTable
     };

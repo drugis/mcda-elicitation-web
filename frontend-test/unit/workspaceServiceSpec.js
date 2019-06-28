@@ -1,6 +1,12 @@
 'use strict';
 /* globals exampleProblem, exampleRelativeProblem */
-define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/misc'], function(_, angular) {
+define([
+  'lodash',
+  'angular',
+  'angular-mocks',
+  'mcda/workspace/workspace',
+  'mcda/misc'
+], function(_, angular) {
   describe('The WorkspaceService, ', function() {
     var workspaceService;
     var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsService', ['postAndHandleResults']);
@@ -1081,18 +1087,21 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
                     range: [15, 16]
                   }
                 }, {
-                  scale: [0, 100]
+                  scale: [0, 100],
+                  unitOfMeasurement: '%'
                 }]
               },
               crit2: {
                 dataSources: [{
                   scale: [0, 100],
-                  pvf: {}
+                  pvf: {},
+                  unitOfMeasurement: '%'
                 }, {
                   scale: [0, 100],
                   pvf: {
                     range: [30, 40]
-                  }
+                  },
+                  unitOfMeasurement: '%'
                 }]
               },
               crit3: {
@@ -1108,6 +1117,95 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           }
         };
 
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('dePercentifyCriteria', function() {
+      it('should convert datasource scales and pvf ranges from percentages where appropriate', function() {
+        var state = {
+          problem: {
+            criteria: {
+              crit1: {
+                dataSources: [{
+                  unitOfMeasurement: 'proportion',
+                  scale: [10, 20],
+                  pvf: {
+                    range: [15, 16]
+                  }
+                }, {
+                  scale: [0, 100],
+                  unitOfMeasurement: '%'
+                }]
+              },
+              crit2: {
+                dataSources: [{
+                  scale: [0, 100],
+                  pvf: {},
+                  unitOfMeasurement: '%'
+                }, {
+                  scale: [0, 100],
+                  pvf: {
+                    range: [0.3, 0.4]
+                  },
+                  unitOfMeasurement: '%'
+                }]
+              },
+              crit3: {
+                dataSources: [{
+                  unitOfMeasurement: 'keepUnit',
+                  scale: [-Infinity, Infinity],
+                  pvf: {
+                    range: [10, 20]
+                  }
+                }]
+              }
+            }
+          }
+        };
+
+        var result = workspaceService.dePercentifyCriteria(state);
+
+        var expectedResult = {
+          problem: {
+            criteria: {
+              crit1: {
+                dataSources: [{
+                  unitOfMeasurement: 'proportion',
+                  scale: [10, 20],
+                  pvf: {
+                    range: [15, 16]
+                  }
+                }, {
+                  scale: [0, 1],
+                  unitOfMeasurement: 'Proportion'
+                }]
+              },
+              crit2: {
+                dataSources: [{
+                  scale: [0, 1],
+                  pvf: {},
+                  unitOfMeasurement: 'Proportion'
+                }, {
+                  scale: [0, 1],
+                  pvf: {
+                    range: [0.3, 0.4]
+                  },
+                  unitOfMeasurement: 'Proportion'
+                }]
+              },
+              crit3: {
+                dataSources: [{
+                  unitOfMeasurement: 'keepUnit',
+                  scale: [-Infinity, Infinity],
+                  pvf: {
+                    range: [10, 20]
+                  }
+                }]
+              }
+            }
+          }
+        };
         expect(result).toEqual(expectedResult);
       });
     });

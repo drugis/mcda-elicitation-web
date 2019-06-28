@@ -1,14 +1,21 @@
 'use strict';
 define(['lodash', '../controllers/wizard'], function(_, Wizard) {
   var dependencies = [
-    '$scope', '$state', '$stateParams', '$injector',
+    '$scope',
+    '$state',
+    '$stateParams',
+    '$injector',
     'PartialValueFunctionService',
     'PageTitleService',
     'OrderingService',
     'currentScenario',
     'taskDefinition'
   ];
-  var OrdinalSwingController = function($scope, $state, $stateParams, $injector,
+  var OrdinalSwingController = function(
+    $scope,
+    $state,
+    $stateParams,
+    $injector,
     PartialValueFunctionService,
     PageTitleService,
     OrderingService,
@@ -19,6 +26,7 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
     $scope.save = save;
     $scope.canSave = canSave;
     $scope.cancel = cancel;
+    $scope.getUnitOfMeasurement = PartialValueFunctionService.getUnitOfMeasurement;
 
     //init
     $scope.problem = $scope.aggregateState.problem;

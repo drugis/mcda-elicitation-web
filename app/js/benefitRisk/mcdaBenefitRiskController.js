@@ -82,8 +82,11 @@ define(['lodash'], function(_) {
     function updateState(scenario) {
       $scope.scenario = scenario;
       $scope.baseAggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
-      $scope.aggregateState = WorkspaceSettingsService.usePercentage() ?
-        WorkspaceService.percentifyCriteria($scope.baseAggregateState) : $scope.baseAggregateState;
+      if (WorkspaceSettingsService.usePercentage()) {
+        $scope.aggregateState = WorkspaceService.percentifyCriteria($scope.baseAggregateState);
+      } else {
+        $scope.aggregateState = $scope.baseAggregateState;
+      }
       $scope.hasMissingValues = WorkspaceService.checkForMissingValuesInPerformanceTable($scope.aggregateState.problem.performanceTable);
       $scope.hasNoStochasticResults = WorkspaceService.hasNoStochasticResults($scope.aggregateState);
 
@@ -103,7 +106,7 @@ define(['lodash'], function(_) {
         $scope.aggregateState = WorkspaceService.percentifyCriteria($scope.baseAggregateState);
       } else {
         $scope.workspace.scales.observed = baseObservedScales;
-        $scope.aggregateState = $scope.baseAggregateState;
+        $scope.aggregateState = WorkspaceService.dePercentifyCriteria($scope.baseAggregateState);
       }
       $scope.baseAggregateState = addScales($scope.baseAggregateState, $scope.workspace.scales.base);
       $scope.aggregateState = addScales($scope.aggregateState, $scope.workspace.scales.observed);

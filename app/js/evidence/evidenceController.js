@@ -32,7 +32,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.downloadWorkspace = downloadWorkspace;
 
     // init
-    $scope.problem = $scope.workspace.problem;
+    $scope.problem = $scope.aggregateState.problem;
     $scope.isStandAlone = isMcdaStandalone;
     $scope.useFavorability = _.find($scope.problem.criteria, function(criterion) {
       return criterion.hasOwnProperty('isFavorable');
@@ -48,7 +48,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     new Clipboard('.clipboard-button');
 
     function reloadOrderingsAndScales() {
-      OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
+      OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
         $scope.alternatives = orderings.alternatives;
         $scope.criteria = orderings.criteria;
         $scope.scalesPromise.then(function() {
@@ -68,7 +68,8 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
           },
           callback: function() {
             return function(newTherapeuticContext) {
-              $scope.problem.description = newTherapeuticContext;
+              $scope.workspace.problem.description = newTherapeuticContext;
+              $scope.aggregateState.problem.description = newTherapeuticContext;
               WorkspaceResource.save($stateParams, $scope.workspace);
             };
           }

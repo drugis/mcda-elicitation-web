@@ -5,6 +5,7 @@ define(['lodash'],
       '$scope', '$stateParams',
       'SwingWeightingService',
       'PageTitleService',
+      'PartialValueFunctionService',
       'currentScenario',
       'taskDefinition'
     ];
@@ -12,9 +13,11 @@ define(['lodash'],
       $scope, $stateParams,
       SwingWeightingService,
       PageTitleService,
+      PartialValueFunctionService,
       currentScenario,
       taskDefinition
     ) {
+      $scope.getUnitOfMeasurement = PartialValueFunctionService.getUnitOfMeasurement;
       $scope.isImprecise = true;
       PageTitleService.setPageTitle('ImpreciseSwingWeightingController', 'Imprecise swing weighting');
 

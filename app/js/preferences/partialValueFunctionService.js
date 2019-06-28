@@ -2,7 +2,6 @@
 define(['lodash', 'angular'], function(_) {
   var dependencies = ['WorkspaceSettingsService'];
   var PartialValueFunctionService = function(WorkspaceSettingsService) {
-    // public
     function inv(criterion) {
       var f = pvf(criterion);
       return function(v) {
@@ -130,6 +129,16 @@ define(['lodash', 'angular'], function(_) {
       };
     }
 
+    function getUnitOfMeasurement(criterion) {
+      if (_.isEqual(criterion.dataSources[0].scale, [0, 1])) {
+        return '';
+      }
+      if (criterion.dataSources[0].unitOfMeasurement) {
+        return ' ' + criterion.dataSources[0].unitOfMeasurement;
+      }
+      return '';
+    }
+
     return {
       isIncreasing: isIncreasing,
       inv: inv,
@@ -138,7 +147,8 @@ define(['lodash', 'angular'], function(_) {
       getBounds: getBounds,
       standardizeDataSource: standardizeDataSource,
       getPvfCoordinates: getPvfCoordinates,
-      getPvfCoordinatesForCriterion: getPvfCoordinatesForCriterion
+      getPvfCoordinatesForCriterion: getPvfCoordinatesForCriterion,
+      getUnitOfMeasurement: getUnitOfMeasurement
     };
   };
   return dependencies.concat(PartialValueFunctionService);

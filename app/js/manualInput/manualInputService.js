@@ -230,6 +230,9 @@ define(['lodash', 'angular'], function(_, angular) {
     function buildDataSource(dataSource) {
       var newDataSource = angular.copy(dataSource);
       newDataSource.scale = getScale(dataSource);
+      if(newDataSource.unitOfMeasurement === '%'){
+        newDataSource.unitOfMeasurement = 'Proportion';
+      }
       delete newDataSource.oldId;
       return newDataSource;
     }
