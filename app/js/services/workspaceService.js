@@ -97,7 +97,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function percentifyDataSource(dataSource) {
       var newDataSource = angular.copy(dataSource);
-      if (_.isEqual([0, 1], newDataSource.scale)) {
+      if (_.isEqual([0, 100], newDataSource.scale) || _.isEqual([0, 1], newDataSource.scale)) {
         newDataSource.scale = [0, 100];
         newDataSource.unitOfMeasurement = '%';
         if (newDataSource.pvf) {
@@ -123,7 +123,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function dePercentifyDataSource(dataSource) {
       var newDataSource = angular.copy(dataSource);
-      if (_.isEqual([0, 100], newDataSource.scale)) {
+      if (_.isEqual([0, 100], newDataSource.scale) || _.isEqual([0, 1], newDataSource.scale)) {
         newDataSource.scale = [0, 1];
         newDataSource.unitOfMeasurement = 'Proportion';
       }
