@@ -377,7 +377,8 @@ define(['lodash', 'angular'], function(_, angular) {
         dgamma: 'gamma',
         dbeta: 'beta',
         exact: 'value',
-        dsurv: 'gamma'
+        dsurv: 'gamma',
+        dt: 'value'
       };
       if (performance.distribution.type === 'empty') {
         return performance.distribution.value ? 'text' : 'empty';
