@@ -111,7 +111,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     function downloadWorkspace() {
       var link = document.createElement('a');
       link.download = 'problem' + $scope.workspace.id + '.json';
-      var problemWithTitle = _.merge({}, $scope.problem, { title: $scope.workspace.title });
+      var problemWithTitle = _.merge({}, $scope.workspace.problem, { title: $scope.workspace.title });
       var data = 'text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(problemWithTitle, null, 2));
       link.href = 'data:' + data;
 
