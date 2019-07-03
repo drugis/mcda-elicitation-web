@@ -94,7 +94,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
       $scope.sensitivityMeasurements.alteredTableCells.push({
         criterion: row.criterion.id,
         alternative: alternative.id,
-        value:  usePercentage(row.criterion) ? newValue /100 : newValue
+        value:  usePercentage(row.dataSource) ? newValue /100 : newValue
       });
     }
 
@@ -121,8 +121,8 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
       });
     }
 
-    function usePercentage(criterion) {
-      return _.isEqual(criterion.dataSources[0].scale, [0, 100]);
+    function usePercentage(dataSource) {
+      return _.isEqual(dataSource.scale, [0, 100]);
     }
   };
   return dependencies.concat(DeterministicResultsController);

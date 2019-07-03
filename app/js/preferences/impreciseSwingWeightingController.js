@@ -2,19 +2,19 @@
 define(['lodash'],
   function(_) {
     var dependencies = [
-      '$scope', '$stateParams',
+      '$scope', 
+      '$stateParams',
       'SwingWeightingService',
       'PageTitleService',
       'PartialValueFunctionService',
-      'currentScenario',
       'taskDefinition'
     ];
     var ImpreciseSwingWeightingController = function(
-      $scope, $stateParams,
+      $scope, 
+      $stateParams,
       SwingWeightingService,
       PageTitleService,
       PartialValueFunctionService,
-      currentScenario,
       taskDefinition
     ) {
       $scope.getUnitOfMeasurement = PartialValueFunctionService.getUnitOfMeasurement;
