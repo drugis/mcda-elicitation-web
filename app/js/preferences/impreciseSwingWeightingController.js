@@ -7,6 +7,7 @@ define(['lodash'],
       'SwingWeightingService',
       'PageTitleService',
       'PartialValueFunctionService',
+      'currentScenario',
       'taskDefinition'
     ];
     var ImpreciseSwingWeightingController = function(
@@ -15,6 +16,7 @@ define(['lodash'],
       SwingWeightingService,
       PageTitleService,
       PartialValueFunctionService,
+      currentScenario,
       taskDefinition
     ) {
       $scope.getUnitOfMeasurement = PartialValueFunctionService.getUnitOfMeasurement;
