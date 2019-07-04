@@ -5,13 +5,11 @@ define(['lodash', 'angular'], function(_, angular) {
 
   var dependencies = [
     'ManualInputService',
-    'ConstraintService',
     '$timeout'
   ];
 
   var EffectInputHelperDirective = function(
     ManualInputService,
-    ConstraintService,
     $timeout
   ) {
     return {
@@ -20,7 +18,8 @@ define(['lodash', 'angular'], function(_, angular) {
         'alternative': '=',
         'cell': '=',
         'changeCallback': '=',
-        'inputType': '='
+        'inputType': '=',
+        'unitOfMeasurement': '='
       },
       templateUrl: 'js/manualInput/effectInputHelperDirective.html',
       link: function(scope) {
@@ -30,12 +29,6 @@ define(['lodash', 'angular'], function(_, angular) {
 
         //init
         var isEscPressed = false;
-        scope.constraints = [{
-          label: 'None'
-        },
-        ConstraintService.decimal(),
-        ConstraintService.percentage()
-        ];
 
         initInputParameters();
 
@@ -62,19 +55,31 @@ define(['lodash', 'angular'], function(_, angular) {
 
         function initInputParameters() {
           scope.inputParameterOptions = ManualInputService.getOptions(scope.inputType);
-          if (!scope.cell.inputParameters) {
-            scope.cell.inputParameters = _.values(scope.inputParameterOptions)[0];
-          } else {
-            scope.cell.inputParameters = scope.inputParameterOptions[scope.cell.inputParameters.id];
-          }
-          if (!scope.cell.constraint) {
-            scope.cell.constraint = scope.constraints[0].label;
-          }
+          scope.cell.inputParameters = getInputParameters();
+          scope.cell.constraint = getCellConstraint();
           scope.inputCell = ManualInputService.updateParameterConstraints(scope.cell);
           inputChanged();
           scope.cell.label = ManualInputService.inputToString(scope.inputCell);
           scope.cell.isInvalid = ManualInputService.getInputError(scope.inputCell);
           scope.changeCallback();
+        }
+
+        function getInputParameters() {
+          if (!scope.cell.inputParameters) {
+            return _.values(scope.inputParameterOptions)[0];
+          } else {
+            return scope.inputParameterOptions[scope.cell.inputParameters.id];
+          }
+        }
+
+        function getCellConstraint() {
+          if (scope.unitOfMeasurement === '%') {
+            return 'Proportion (percentage)';
+          } else if (scope.unitOfMeasurement === 'Proportion') {
+            return 'Proportion (decimal)';
+          } else {
+            return 'None';
+          }
         }
 
         function inputChanged() {
