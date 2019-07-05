@@ -28,7 +28,8 @@
         "scale": {
           "type": "string",
           "enum": [
-            "percentage"
+            "percentage",
+            "decimal"
           ]
         }
       }

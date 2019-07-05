@@ -21,6 +21,7 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
      * 1.3.1 Remove favorability property if it is not boolean
      * 1.3.2 Remove null/undefined properties from data sources
      * 1.3.3 Remove alternative property from alternatives
+     * 1.3.4 Add 'decimal' as scale option to input
      * *****/
 
     function updateProblemToCurrentSchema(problem) {
@@ -55,6 +56,10 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
       if (newProblem.schemaVersion === '1.3.2') {
         newProblem = updateToVersion133(newProblem);
+      }
+
+      if(newProblem.schemaVersion === '1.3.3'){
+        newProblem.schemaVersion = '1.3.4';
       }
 
       if (newProblem.schemaVersion === currentSchemaVersion) {
