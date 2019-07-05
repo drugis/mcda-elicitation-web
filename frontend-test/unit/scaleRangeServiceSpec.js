@@ -196,6 +196,35 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
         expect(result).toEqual(expectedResult);
       });
 
+      it('should add the correct interval hull if percentages are being used', function(){
+        var table = [{
+          dataSource: {
+            id: 'ds1',
+            unitOfMeasurement: '%'
+          }
+        }];
+        var scales = {
+          observed: {}
+        };
+        var performanceTable = [{
+          dataSource: 'ds1',
+          performance: {
+            effect:{
+              value: 0.1
+            }
+          }
+        }];
+        var result = scaleRangeService.getScaleTable(table, scales, performanceTable);
+        var expectedResult = [{
+          dataSource: {
+            id: 'ds1',
+            unitOfMeasurement: '%'
+          },
+          intervalHull: [10,10]
+        }];
+        expect(result).toEqual(expectedResult);
+      });
+
       it('should filter out header rows', function() {
         var table = [{ isHeaderRow: true }];
         var scales = {};

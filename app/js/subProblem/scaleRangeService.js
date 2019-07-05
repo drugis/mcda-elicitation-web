@@ -127,10 +127,11 @@ define(['lodash', 'angular'], function(_, angular) {
       );
     }
 
-    function getEffectValues(performanceTable, dataSourceId) {
+    function getEffectValues(performanceTable, dataSource) {
       return _.reduce(performanceTable, function(accum, entry) {
-        if (entry.dataSource === dataSourceId && entry.performance.effect) {
-          accum.push(entry.performance.effect.value);
+        if (entry.dataSource === dataSource.id && entry.performance.effect) {
+          var factor = dataSource.unitOfMeasurement === '%' ? 100 : 1;
+          accum.push(entry.performance.effect.value * factor);
         }
         return accum;
       }, []);
@@ -141,7 +142,7 @@ define(['lodash', 'angular'], function(_, angular) {
       return _.map(scaleTable, function(row) {
         var newRow = angular.copy(row);
         if (scales && scales.observed) {
-          var effects = getEffectValues(performanceTable, row.dataSource.id);
+          var effects = getEffectValues(performanceTable, row.dataSource);
           newRow.intervalHull = intervalHull(scales.observed[row.dataSource.id], effects);
         }
         return newRow;
