@@ -28,6 +28,9 @@ define(['lodash'], function(_) {
             scope.effectLabel = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId].effectLabel;
             scope.distributionLabel = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId].distributionLabel;
             scope.effectValue = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId].effectValue;
+            if(_.isEqual(scope.theoreticalScale, [0,100])){
+              scope.effectValue *= 100;
+            }
           }
         }
 

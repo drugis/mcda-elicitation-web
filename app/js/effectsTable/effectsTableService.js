@@ -95,8 +95,8 @@ define(['lodash', 'angular'], function(_, angular) {
       }));
     }
 
-    function buildLabel(entryForCriterion) {
-      var performance = entryForCriterion.performance;
+    function buildLabel(entry) {
+      var performance = entry.performance;
       var hasUncertainty = determineUncertainty(performance.distribution);
       var effectLabel = buildEffectLabel(performance);
       var effectValue = buildEffectValueLabel(performance);
@@ -118,7 +118,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function buildEffectValueLabel(performance) {
       if (performance.effect && performance.effect.type !== 'empty') {
-        return '' + performance.effect.value;
+        return performance.effect.value;
       } else {
         return '';
       }

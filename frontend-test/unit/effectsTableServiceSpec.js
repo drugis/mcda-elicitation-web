@@ -119,7 +119,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId2: {
                   effectLabel: 1,
-                  effectValue: '1',
+                  effectValue: 1,
                   distributionLabel: 'Not entered',
                   hasUncertainty: false
                 }
@@ -152,7 +152,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId2: {
                   effectLabel: '1 (0.5)',
-                  effectValue: '1',
+                  effectValue: 1,
                   distributionLabel: 'Not entered',
                   hasUncertainty: false
                 }
@@ -186,7 +186,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId2: {
                   effectLabel: '1 (0.5; 2)',
-                  effectValue: '1',
+                  effectValue: 1,
                   distributionLabel: 'Not entered',
                   hasUncertainty: false
                 }
@@ -219,7 +219,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId2: {
                   effectLabel: '1 / 10',
-                  effectValue: '2',
+                  effectValue: 2,
                   distributionLabel: 'Not entered',
                   hasUncertainty: false
                 }
@@ -252,7 +252,7 @@ define([
               studyDataLabelsAndUncertainty: {
                 alternativeId2: {
                   effectLabel: '10 / 100',
-                  effectValue: '1',
+                  effectValue: 1,
                   distributionLabel: 'Not entered',
                   hasUncertainty: false
                 }
