@@ -111,7 +111,7 @@
       criteriaErrors.length" type="button" ng-click="goToStep2()" tooltip="Enter effects table data">
       Enter data
     </button>
-    <button class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty"
+    <button id="step1SaveButton" class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty"
       tooltip="Save current state">Save</button>
   </div>
   <div class="cell" ng-if="!state.title">
@@ -174,7 +174,9 @@
         tooltip="Create problem and proceed to analysis">
         Done
       </button>
-      <button class="button" ng-click="saveInProgress()" ng-disabled="!dirty" tooltip="Save current state">Save</button>
+      <button id="step2SaveButton" class="button" ng-click="saveInProgress()" ng-disabled="!dirty" tooltip="Save current state">
+        Save
+      </button>
       <button type="button" ng-click="goToStep1()" type="button" class="button">Back</button>
       <div ng-if="state.errors.length" class="alert" ng-repeat="error in state.errors">
         {{error}}

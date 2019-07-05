@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
   var dependencies = [
     '$scope',
     '$state',
@@ -160,6 +160,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function saveInProgress() {
+      hideTooltip();
       $scope.dirty = false;
       if ($stateParams.inProgressId) {
         InProgressResource.put($stateParams, $scope.state);
@@ -170,6 +171,12 @@ define(['lodash', 'angular'], function(_, angular) {
           });
         });
       }
+    }
+
+    function hideTooltip(){
+      $('div.tooltip:visible').hide();
+      $('#step1SaveButton').removeClass('open');
+      $('#step2SaveButton').removeClass('open');
     }
 
     function openCriterionModal() {
