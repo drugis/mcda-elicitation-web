@@ -11,8 +11,8 @@ define(['lodash', 'angular'], function(_, angular) {
       }
       
       distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
       delete distributionCell.constraint;
+      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
       return distributionCell;
     }
 

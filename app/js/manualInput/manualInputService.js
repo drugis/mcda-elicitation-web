@@ -130,7 +130,11 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function updateConstraints(cell, parameter) {
-      if (cell.inputParameters[parameter].label !== 'Sample size' && cell.inputParameters[parameter].label !== 'Events') {
+      if (cell.inputParameters[parameter].label === 'Value' ||
+        cell.inputParameters[parameter].label === 'Lower bound' ||
+        cell.inputParameters[parameter].label === 'Upper bound' ||
+        cell.inputParameters[parameter].label === 'Standard error'
+      ) {
         var newConstraints = angular.copy(cell.inputParameters[parameter].constraints);
         var percentageConstraint = ConstraintService.percentage();
         var decimalConstraint = ConstraintService.decimal();
@@ -230,7 +234,7 @@ define(['lodash', 'angular'], function(_, angular) {
     function buildDataSource(dataSource) {
       var newDataSource = angular.copy(dataSource);
       newDataSource.scale = getScale(dataSource);
-      if(newDataSource.unitOfMeasurement === '%'){
+      if (newDataSource.unitOfMeasurement === '%') {
         newDataSource.unitOfMeasurement = 'Proportion';
       }
       delete newDataSource.oldId;
