@@ -180,8 +180,7 @@ define(['lodash', 'angular'], function(_) {
         };
         if (isDecimal(cell)) {
           input.scale = 'decimal';
-        }
-        if (isPercentage(cell)) {
+        } else if (isPercentage(cell)) {
           input.scale = 'percentage';
           value = value / 100;
         }
@@ -204,11 +203,11 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function isPercentage(cell) {
-      return _.some(cell.inputParameters.firstParameter.constraints, ['label', 'Proportion (percentage)']);
+      return cell.constraint === 'Proportion (percentage)';
     }
 
     function isDecimal(cell) {
-      return _.some(cell.inputParameters.firstParameter.constraints, ['label', 'Proportion (decimal)']);
+      return cell.constraint === 'Proportion (decimal)';
     }
 
     return {

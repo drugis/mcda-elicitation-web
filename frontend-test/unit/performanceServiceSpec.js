@@ -53,11 +53,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should build a percentage value performance', function() {
         var cell = {
           isInvalid: false,
-          inputParameters: {
-            firstParameter: {
-              constraints: [{ label: 'Proportion (percentage)' }]
-            }
-          },
+          constraint:'Proportion (percentage)',
           firstParameter: 1
         };
         var result = performanceService.buildValuePerformance(cell);
@@ -75,11 +71,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should build a decimal value performance', function() {
         var cell = {
           isInvalid: false,
-          inputParameters: {
-            firstParameter: {
-              constraints: [{ label: 'Proportion (decimal)' }]
-            }
-          },
+          constraint:'Proportion (decimal)',
           firstParameter: 0.01
         };
         var result = performanceService.buildValuePerformance(cell);
@@ -133,11 +125,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should build a percentage value confidence interval performance', function() {
         var cell = {
           isInvalid: false,
-          inputParameters: {
-            firstParameter: {
-              constraints: [{ label: 'Proportion (percentage)' }]
-            }
-          },
+          constraint:'Proportion (percentage)',
           firstParameter: 10,
           secondParameter: 5,
           thirdParameter: 30
@@ -159,11 +147,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should build a decimal value confidence interval performance', function() {
         var cell = {
           isInvalid: false,
-          inputParameters: {
-            firstParameter: {
-              constraints: [{ label: 'Proportion (decimal)' }]
-            }
-          },
+          constraint:'Proportion (decimal)',
           firstParameter: 0.01,
           secondParameter: 0.001,
           thirdParameter: 0.5
@@ -244,11 +228,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should build a percentage value standard error performance', function() {
         var cell = {
           isInvalid: false,
-          inputParameters: {
-            firstParameter: {
-              constraints: [{ label: 'Proportion (percentage)' }]
-            }
-          },
+          constraint: 'Proportion (percentage)',
           firstParameter: 45,
           secondParameter: 5
         };
@@ -268,11 +248,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should build a decimal value standard error performance', function() {
         var cell = {
           isInvalid: false,
-          inputParameters: {
-            firstParameter: {
-              constraints: [{ label: 'Proportion (decimal)' }]
-            }
-          },
+          constraint: 'Proportion (decimal)',
           firstParameter: 0.1,
           secondParameter: 0.01
         };
@@ -326,11 +302,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should build a percentage value sample size performance', function() {
         var cell = {
           isInvalid: false,
-          inputParameters: {
-            firstParameter: {
-              constraints: [{ label: 'Proportion (percentage)' }]
-            }
-          },
+          constraint:'Proportion (percentage)',
           firstParameter: 1,
           secondParameter: 123
         };
@@ -350,11 +322,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should build a decimal value sample size performance', function() {
         var cell = {
           isInvalid: false,
-          inputParameters: {
-            firstParameter: {
-              constraints: [{ label: 'Proportion (decimal)' }]
-            }
-          },
+          constraint:'Proportion (decimal)',
           firstParameter: 0.01,
           secondParameter: 123
         };
