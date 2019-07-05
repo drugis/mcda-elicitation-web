@@ -145,7 +145,7 @@ define(['lodash', 'angular'], function(_, angular) {
         }
         return newConstraints;
       } else {
-        return;
+        return cell.inputParameters[parameter].constraints;
       }
     }
 
