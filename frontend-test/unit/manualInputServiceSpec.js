@@ -1117,12 +1117,15 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         cell = {
           inputParameters: {
             firstParameter: {
+              label: 'Value',
               constraints: [decimalConstraint, percentageConstraint]
             },
             secondParameter: {
+              label: 'Value',
               constraints: [decimalConstraint, percentageConstraint]
             },
             thirdParameter: {
+              label: 'Value',
               constraints: [decimalConstraint, percentageConstraint]
             }
           }
@@ -1137,12 +1140,15 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           constraint: 'None',
           inputParameters: {
             firstParameter: {
+              label: 'Value',
               constraints: []
             },
             secondParameter: {
+              label: 'Value',
               constraints: []
             },
             thirdParameter: {
+              label: 'Value',
               constraints: []
             }
           }
@@ -1158,12 +1164,15 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           constraint: percentageConstraint.label,
           inputParameters: {
             firstParameter: {
+              label: 'Value',
               constraints: [percentageConstraint]
             },
             secondParameter: {
+              label: 'Value',
               constraints: [percentageConstraint]
             },
             thirdParameter: {
+              label: 'Value',
               constraints: [percentageConstraint]
             }
           }
@@ -1179,12 +1188,15 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           constraint: decimalConstraint.label,
           inputParameters: {
             firstParameter: {
+              label: 'Value',
               constraints: [decimalConstraint]
             },
             secondParameter: {
+              label: 'Value',
               constraints: [decimalConstraint]
             },
             thirdParameter: {
+              label: 'Value',
               constraints: [decimalConstraint]
             }
           }
