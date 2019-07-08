@@ -49,15 +49,15 @@
               <th>Unit of measurement
                 <inline-help help-key="criterion-unit"></inline-help>
               </th>
-              <th style="min-width: 15rem;">Reference
-                <inline-help help-key="criterion-source"></inline-help>
+              <th ng-repeat="alternative in alternatives" ng-if="!isInput">
+                {{alternative.title}}
               </th>
               <th>Strength of evidence / Uncertainties
                 <inline-help help-key="uncertainties"></inline-help>
                 <inline-help help-key="strength-of-evidence"></inline-help>
               </th>
-              <th ng-repeat="alternative in alternatives" ng-if="!isInput">
-                {{alternative.title}}
+              <th style="min-width: 15rem;">Reference
+                <inline-help help-key="criterion-source"></inline-help>
               </th>
               <th ng-if="isStandalone">
                 <!-- edit datasource button -->
@@ -89,19 +89,6 @@
                   {{dataSource.unitOfMeasurement}}
                 </span>
               </td>
-              <td>
-                <div ng-if="dataSource.sourceLink">
-                  <a href="{{dataSource.sourceLink}}">{{dataSource.source}}</a>
-                </div>
-                <div ng-if="!dataSource.sourceLink">
-                  {{dataSource.source}}
-                </div>
-              </td>
-              <td>
-                <b>SoE: </b>{{dataSource.strengthOfEvidence}}
-                <br>
-                <b>Unc: </b> {{dataSource.uncertainties}}
-              </td>
 
               <td ng-if="!isInput" class="text-center" ng-repeat="alternative in alternatives"
                 ng-style="isValueView && !isCellAnalysisViable[dataSource.id][alternative.id] ? {'background-color':'#f3d3c8'} : {}">
@@ -114,6 +101,21 @@
                 <div ng-if="isValueView && !isCellAnalysisViable[dataSource.id][alternative.id]" style="opacity: 0.5;"
                   tooltip="Cells containing text or that are empty can not be used for analysis">
                   No data
+                </div>
+              </td>
+
+              <td>
+                <b>SoE: </b>{{dataSource.strengthOfEvidence}}
+                <br>
+                <b>Unc: </b> {{dataSource.uncertainties}}
+              </td>
+
+              <td>
+                <div ng-if="dataSource.sourceLink">
+                  <a href="{{dataSource.sourceLink}}">{{dataSource.source}}</a>
+                </div>
+                <div ng-if="!dataSource.sourceLink">
+                  {{dataSource.source}}
                 </div>
               </td>
 
