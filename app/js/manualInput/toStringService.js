@@ -1,22 +1,22 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = [];
+  var dependencies = ['significantDigits'];
 
-  var ToStringService = function() {
+  var ToStringService = function(significantDigits) {
     function eventsSampleSizeToString(cell) {
       return cell.firstParameter + ' / ' + cell.secondParameter;
     }
 
     function gammaToString(cell) {
-      return 'Gamma(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+      return 'Gamma(' + significantDigits(cell.firstParameter) + ', ' + significantDigits(cell.secondParameter) + ')';
     }
 
     function normalToString(cell) {
-      return 'Normal(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+      return 'Normal(' + significantDigits(cell.firstParameter) + ', ' + significantDigits(cell.secondParameter) + ')';
     }
 
     function betaToString(cell) {
-      return 'Beta(' + cell.firstParameter + ', ' + cell.secondParameter + ')';
+      return 'Beta(' + significantDigits(cell.firstParameter) + ', ' + significantDigits(cell.secondParameter) + ')';
     }
 
     function valueToString(cell) {

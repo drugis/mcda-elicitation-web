@@ -1,8 +1,10 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
-  var dependencies = [];
+  var dependencies = [
+    'significantDigits'
+  ];
 
-  var EffectsTableService = function() {
+  var EffectsTableService = function(significantDigits) {
     var NOT_ENTERED = 'Not entered';
 
     function buildEffectsTable(criteria) {
@@ -146,27 +148,27 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function buildStudentsTLabel(parameters) {
       return 'Student\'s t(' +
-        parameters.mu + ', ' +
-        parameters.stdErr + ', ' +
-        parameters.dof + ')';
+        significantDigits(parameters.mu) + ', ' +
+        significantDigits(parameters.stdErr) + ', ' +
+        significantDigits(parameters.dof) + ')';
     }
 
     function buildNormalLabel(parameters) {
       return 'Normal(' +
-        parameters.mu + ', ' +
-        parameters.sigma + ')';
+        significantDigits(parameters.mu) + ', ' +
+        significantDigits(parameters.sigma) + ')';
     }
 
     function buildBetaLabel(parameters) {
       return 'Beta(' +
-        parameters.alpha + ', ' +
-        parameters.beta + ')';
+        significantDigits(parameters.alpha) + ', ' +
+        significantDigits(parameters.beta) + ')';
     }
 
     function buildGammaLabel(parameters) {
       return 'Gamma(' +
-        parameters.alpha + ', ' +
-        parameters.beta + ')';
+        significantDigits(parameters.alpha) + ', ' +
+        significantDigits(parameters.beta) + ')';
     }
 
     function buildEffectLabel(performance) {

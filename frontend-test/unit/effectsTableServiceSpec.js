@@ -6,8 +6,13 @@ define([
 ], function(angular) {
   describe('EffectsTableService', function() {
     var effectTableService;
+    var significantDigitsMock = function(value) {
+      return value;
+    };
 
-    beforeEach(angular.mock.module('elicit.effectsTable'));
+    beforeEach(angular.mock.module('elicit.effectsTable', function($provide) {
+      $provide.value('significantDigits', significantDigitsMock);
+    }));
 
     beforeEach(inject(function(EffectsTableService) {
       effectTableService = EffectsTableService;
@@ -747,11 +752,13 @@ define([
               }
             }
           };
-          var scales = {ds1: {
-            alt1: {
-              '50%': 0
+          var scales = {
+            ds1: {
+              alt1: {
+                '50%': 0
+              }
             }
-          }};
+          };
           var result = effectTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
           var expectedResult = {
             ds1: {
