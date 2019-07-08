@@ -46,15 +46,15 @@
         </label>
       </div>
 
-      <div class="cell">
+      <div class="cell" ng-show="settings.effectsDisplay === 'smaa' || settings.effectsDisplay === 'deterministicMCDA'">
         Show percentages or decimals (eligable criteria only)
       </div>
-      <div class="cell">
+      <div class="cell" ng-show="settings.effectsDisplay === 'smaa' || settings.effectsDisplay === 'deterministicMCDA'">
         <label>
           <input type="radio" ng-model="settings.showPercentages" ng-value="true">Percentages
         </label>
       </div>
-      <div class="cell">
+      <div class="cell" ng-show="settings.effectsDisplay === 'smaa' || settings.effectsDisplay === 'deterministicMCDA'">
         <label>
           <input type="radio" ng-model="settings.showPercentages" ng-value="false">Decimals
         </label>

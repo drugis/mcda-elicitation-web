@@ -84,7 +84,10 @@
                 </div>
               </td>
               <td>
-                {{dataSource.unitOfMeasurement}}
+                <span
+                  ng-hide="!isInput && !isValueView && (dataSource.unitOfMeasurement === '%' || dataSource.unitOfMeasurement === 'Proportion')">
+                  {{dataSource.unitOfMeasurement}}
+                </span>
               </td>
               <td>
                 <div ng-if="dataSource.sourceLink">
@@ -108,8 +111,8 @@
                     theoretical-scale="dataSource.scale" alternative-id="alternative.id">
                   </effects-table-cell>
                 </div>
-                <div ng-if="isValueView && !isCellAnalysisViable[dataSource.id][alternative.id]"
-                  style="opacity: 0.5;" tooltip="Cells containing text or that are empty can not be used for analysis">
+                <div ng-if="isValueView && !isCellAnalysisViable[dataSource.id][alternative.id]" style="opacity: 0.5;"
+                  tooltip="Cells containing text or that are empty can not be used for analysis">
                   No data
                 </div>
               </td>

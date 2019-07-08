@@ -50,7 +50,9 @@
             {{row.criterion.description}}
           </td>
           <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['units']">
-            {{row.dataSource.unitOfMeasurement}}
+            <span ng-hide="!isValueView && row.isProportion">
+              {{row.dataSource.unitOfMeasurement}}
+            </span>
           </td>
           <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives"
             ng-style="isValueView && !isCellAnalysisViable[row.dataSource.id][alternative.id] ? {'background-color':'#f3d3c8'} : {}">

@@ -48,7 +48,8 @@ define([
             dataSource: {
               id: 'ds2id'
             },
-            isFirstRow: true
+            isFirstRow: true,
+            isProportion: false
           }, {
             criterion: {
               id: 'crit3',
@@ -58,7 +59,8 @@ define([
             dataSource: {
               id: 'ds3id'
             },
-            isFirstRow: true
+            isFirstRow: true,
+            isProportion: false
           },
           {
             isHeaderRow: true,
@@ -72,7 +74,8 @@ define([
             dataSource: {
               id: 'ds1id'
             },
-            isFirstRow: true
+            isFirstRow: true,
+            isProportion: false
           }
           ];
           expect(result).toEqual(expectedResult);
@@ -574,13 +577,15 @@ define([
             id: 'crit1',
             isFavorable: true,
             dataSources: [{
-              foo: 'bar'
+              foo: 'bar',
+              unitOfMeasurement: '%'
             }]
           }, {
             id: 'crit2',
             isFavorable: false,
             dataSources: [{
-              foo: 'qux'
+              foo: 'qux',
+              unitOfMeasurement: 'Proportion'
             }, {
               zoq: 'fot'
             }]
@@ -588,26 +593,31 @@ define([
 
           var expectedResult = [{
             isFirstRow: true,
+            isProportion: true,
             criterion: {
               id: 'crit1',
               isFavorable: true,
               numberOfDataSources: 1
             },
             dataSource: {
-              foo: 'bar'
+              foo: 'bar',
+              unitOfMeasurement: '%'
             }
           }, {
             isFirstRow: true,
+            isProportion: true,
             criterion: {
               id: 'crit2',
               isFavorable: false,
               numberOfDataSources: 2
             },
             dataSource: {
-              foo: 'qux'
+              foo: 'qux',
+              unitOfMeasurement: 'Proportion'
             }
           }, {
             isFirstRow: false,
+            isProportion: false,
             criterion: {
               id: 'crit2',
               isFavorable: false,

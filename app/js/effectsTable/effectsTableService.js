@@ -37,13 +37,15 @@ define(['lodash', 'angular'], function(_, angular) {
         if (row.isHeaderRow) {
           return accum.concat(row);
         }
-        var rowCriterion = _.omit(row, ['dataSources']);
-        rowCriterion.numberOfDataSources = row.dataSources.length;
+        var criterion = _.omit(row, ['dataSources']);
+        criterion.numberOfDataSources = row.dataSources.length;
         accum = accum.concat(_.map(row.dataSources, function(dataSource, index) {
+          var unit = dataSource.unitOfMeasurement;
           return {
-            criterion: rowCriterion,
+            criterion: criterion,
             isFirstRow: index === 0,
-            dataSource: dataSource
+            dataSource: dataSource,
+            isProportion: unit === '%' || unit === 'Proportion'
           };
         }));
         return accum;
