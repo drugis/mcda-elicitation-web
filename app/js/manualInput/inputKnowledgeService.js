@@ -147,7 +147,7 @@ define(['lodash'], function(_) {
       ToStringService.valueSampleSizeToString,
       PerformanceService.buildValueSampleSizePerformance,
       FinishInputCellService.finishValueSampleSizeCell,
-      _.partial(GenerateDistributionService.generateValueSampleSizeDistribution, VALUE)
+      _.partial(GenerateDistributionService.generateValueSampleSizeDistribution, VALUE, BETA)
     );
 
     var EMPTY = new effectOptionsBlock(

@@ -9,7 +9,7 @@ define(['lodash', 'angular'], function(_, angular) {
       if (isPercentage(distributionCell)) {
         distributionCell.firstParameter = cell.firstParameter / 100;
       }
-      
+
       distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
       delete distributionCell.constraint;
       distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
@@ -24,7 +24,7 @@ define(['lodash', 'angular'], function(_, angular) {
       }
 
       distributionCell.inputParameters = normalOption;
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell); 
+      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
       delete distributionCell.constraint;
       return distributionCell;
     }
@@ -53,17 +53,22 @@ define(['lodash', 'angular'], function(_, angular) {
       return distributionCell;
     }
 
-    function generateValueSampleSizeDistribution(valueOption, cell) {
+    function generateValueSampleSizeDistribution(valueOption, betaOption, cell) {
       var distributionCell = angular.copy(cell);
-      if (isPercentage(cell)) {
-        distributionCell.firstParameter = distributionCell.firstParameter / 100;
+      if (isPercentage(cell) || isDecimal(cell)) {
+        if (isPercentage(cell)) {
+          distributionCell.firstParameter = distributionCell.firstParameter / 100;
+        }
+        distributionCell.firstParameter = Math.round(distributionCell.firstParameter * distributionCell.secondParameter);
+        return generateEventsSampleSizeDistribution(betaOption, distributionCell);
+      } else {
+        distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
+        distributionCell.inputParameters = valueOption;
+        delete distributionCell.secondParameter;
+        delete distributionCell.constraint;
+        distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
+        return distributionCell;
       }
-      distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
-      distributionCell.inputParameters = valueOption;
-      delete distributionCell.secondParameter;
-      delete distributionCell.constraint;
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-      return distributionCell;
     }
 
     function generateEventsSampleSizeDistribution(betaOption, cell) {
@@ -96,6 +101,10 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function isPercentage(cell) {
       return cell.constraint === 'Proportion (percentage)';
+    }
+
+    function isDecimal(cell) {
+      return cell.constraint === 'Proportion (decimal)';
     }
 
     return {

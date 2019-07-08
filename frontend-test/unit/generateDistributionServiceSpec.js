@@ -192,7 +192,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
 
       it('should generate an exact distribution', function() {
-        var result = generateDistributionService.generateValueSampleSizeDistribution(options, cell);
+        var result = generateDistributionService.generateValueSampleSizeDistribution(options, options, cell);
         var expectedResult = {
           label: label,
           firstParameter: 50,
@@ -201,13 +201,28 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(result).toEqual(expectedResult);
       });
 
-      it('should generate an exact distribution given a percentage constraint', function() {
+      it('should generate beta distribution given a percentage constraint', function() {
         cell.constraint = percentageConstraint.label;
         cell.inputParameters.firstParameter.constraints.push(percentageConstraint);
-        var result = generateDistributionService.generateValueSampleSizeDistribution(options, cell);
+        var result = generateDistributionService.generateValueSampleSizeDistribution(options, options, cell);
         var expectedResult = {
           label: label,
-          firstParameter: 0.5,
+          firstParameter: 51,
+          secondParameter: 51,
+          inputParameters: options
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should generate beta distribution given a decimal constraint', function() {
+        cell.constraint = decimalConstraint.label;
+        cell.inputParameters.firstParameter.constraints.push(decimalConstraint);
+        cell.firstParameter = 0.5;
+        var result = generateDistributionService.generateValueSampleSizeDistribution(options, options, cell);
+        var expectedResult = {
+          label: label,
+          firstParameter: 51,
+          secondParameter: 51,
           inputParameters: options
         };
         expect(result).toEqual(expectedResult);
