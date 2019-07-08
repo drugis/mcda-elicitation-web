@@ -12,10 +12,12 @@ var appEnvironmentSettings = {
 };
 var signin = require('signin')(db, appEnvironmentSettings);
 var WorkspaceService = require('./node-backend/workspaceService')(db);
+var WorkspaceRepository = require('./node-backend/workspaceRepository')(db);
 var OrderingService = require('./node-backend/orderingService')(db);
 var SubProblemService = require('./node-backend/subProblemService')(db);
 var ScenarioService = require('./node-backend/scenarioService')(db);
 var WorkspaceSettingsService = require('./node-backend/workspaceSettingsService')(db);
+var rightsManagement = require('rights-management')(WorkspaceRepository.get);
 
 var express = require('express');
 var http = require('http');
