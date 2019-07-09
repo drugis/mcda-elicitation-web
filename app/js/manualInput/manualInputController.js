@@ -95,7 +95,7 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
         }
 
         if (!isEffectDataValid && isDistributionDataValid) {
-          $scope.state.warnings.push('Classical tab contains invalid values and can not be used');
+          $scope.state.warnings.push('Deterministic tab contains invalid values and can not be used');
         }
 
         if (!isEffectDataValid && !isDistributionDataValid) {
@@ -103,11 +103,11 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
         }
 
         if (ManualInputService.findDuplicateValues($scope.state.inputData.effect) && !isDistributionDataValid) {
-          $scope.state.errors.push('Classical tab contains a row with duplicate values');
+          $scope.state.errors.push('Deterministic tab contains a row with duplicate values');
         }
 
         if (ManualInputService.findDuplicateValues($scope.state.inputData.effect) && isDistributionDataValid) {
-          $scope.state.warnings.push('Classical tab contains a row with duplicate values and can not be used');
+          $scope.state.warnings.push('Deterministic tab contains a row with duplicate values and can not be used');
         }
       }
     }
