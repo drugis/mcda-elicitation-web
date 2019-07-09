@@ -30,7 +30,7 @@ var server;
 var authenticationMethod = process.env.MCDAWEB_AUTHENTICATION_METHOD;
 
 var sessionOptions = {
-  store: new(require('connect-pg-simple')(session))({
+  store: new (require('connect-pg-simple')(session))({
     conString: dbUtil.mcdaDBUrl,
   }),
   secret: process.env.MCDAWEB_COOKIE_SECRET,
@@ -43,6 +43,62 @@ var sessionOptions = {
     secure: authenticationMethod === 'SSL'
   }
 };
+
+function makeRights(path, method, requiredRight) {
+  return {
+    path: path,
+    method: method,
+    requiredRight: requiredRight
+  };
+}
+
+rightsManagement.setRequiredRights([
+  makeRights('/patavi', 'POST', 'none'),
+  makeRights('/workspaces', 'GET', 'none'),
+  makeRights('/workspaces', 'POST', 'none'),
+
+  makeRights('/workspaces/:workspaceId', 'GET', 'read'),
+  makeRights('/workspaces/:workspaceId', 'POST', 'write'),
+  makeRights('/workspaces/:workspaceId', 'DELETE', 'owner'),
+  
+  makeRights('/workspaces/inProgress', 'GET', 'owner'),
+  makeRights('/workspaces/inProgress', 'POST', 'owner'),
+  makeRights('/workspaces/inProgress/:workspaceId', 'GET', 'owner'),
+  makeRights('/workspaces/inProgress/:workspaceId', 'PUT', 'owner'),
+  makeRights('/workspaces/inProgress/:workspaceId', 'DELETE', 'owner'),
+  
+  makeRights('/workspaces/:workspaceId/ordering', 'GET', 'read'),
+  makeRights('/workspaces/:workspaceId/ordering', 'PUT', 'write'),
+
+  makeRights('/workspaces/:workspaceId/workspaceSettings', 'GET', 'read'),
+  makeRights('/workspaces/:workspaceId/workspaceSettings', 'PUT', 'write'),
+
+  makeRights('/workspaces/:workspaceId/problems', 'GET', 'read'),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'GET', 'read'),
+  makeRights('/workspaces/:workspaceId/problems', 'POST', 'write'),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'POST', 'write'),
+
+  makeRights('/workspaces/:workspaceId/scenarios', 'GET', 'read'),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios', 'GET', 'read'),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'GET', 'read'),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios', 'POST', 'write'),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'POST', 'write')
+]);
+
+
+
+function initializeRouter() {
+  var router = express.Router();
+  router.get('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
+  router.post('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
+  router.delete('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
+  router.get('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
+  router.put('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
+  router.put('/workspaces/:id/ordering', WorkspaceService.requireUserIsWorkspaceOwner);
+  router.put('/workspaces/:id/workspaceSettings', WorkspaceService.requireUserIsWorkspaceOwner);
+  router.delete('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
+  app.use(router);
+}
 
 var app = express();
 
@@ -68,37 +124,35 @@ switch (authenticationMethod) {
 }
 console.log('Authentication method: ' + authenticationMethod);
 
-app
-  .get('/logout', function(req, res) {
-    req.logout();
-    res.redirect('/');
-  })
-  .use(csurf())
-  .use(function(req, res, next) {
-    res.cookie('XSRF-TOKEN', req.csrfToken());
-    if (req.user) {
-      res.cookie('LOGGED-IN-USER', JSON.stringify(_.omit(req.user, 'email', 'password')));
-    }
-    next();
-  })
-  .get('/', function(req, res) {
-    if (req.user || req.session.user) {
-      res.sendFile(__dirname + '/dist/index.html');
-    } else {
-      res.sendFile(__dirname + '/dist/signin.html');
-    }
-  })
-  .get('/lexicon.json', function(req, res) {
-    res.sendFile(__dirname + '/app/lexicon.json');
-  })
-  .get('/mcda-page-titles.json', function(req, res) {
-    res.sendFile(__dirname + '/app/mcda-page-titles.json');
-  })
-  .use(express.static('dist'))
-  .use(express.static('public'))
-  .use('/examples', express.static(__dirname + '/examples'));
-
-initializeRouter();
+app.get('/logout', function(req, res) {
+  req.logout();
+  res.redirect('/');
+});
+app.use(csurf());
+app.use(function(req, res, next) {
+  res.cookie('XSRF-TOKEN', req.csrfToken());
+  if (req.user) {
+    res.cookie('LOGGED-IN-USER', JSON.stringify(_.omit(req.user, 'email', 'password')));
+  }
+  next();
+});
+app.get('/', function(req, res) {
+  if (req.user || req.session.user) {
+    res.sendFile(__dirname + '/dist/index.html');
+  } else {
+    res.sendFile(__dirname + '/dist/signin.html');
+  }
+});
+app.get('/lexicon.json', function(req, res) {
+  res.sendFile(__dirname + '/app/lexicon.json');
+});
+app.get('/mcda-page-titles.json', function(req, res) {
+  res.sendFile(__dirname + '/app/mcda-page-titles.json');
+});
+app.use(express.static('dist'));
+app.use(express.static('public'));
+app.use('/examples', express.static(__dirname + '/examples'));
+app.use(rightsManagement.expressMiddleware);
 
 // Workspaces in progress
 app.post('/inProgress', WorkspaceService.createInProgress);
@@ -118,7 +172,7 @@ app.delete('/workspaces/:id', WorkspaceService.deleteWorkspace);
 app.get('/workspaces/:workspaceId/ordering', OrderingService.getOrdering);
 app.put('/workspaces/:workspaceId/ordering', OrderingService.updateOrdering);
 
-//Subproblems
+// Subproblems
 app.get('/workspaces/:workspaceId/problems', SubProblemService.querySubProblems);
 app.get('/workspaces/:workspaceId/problems/:subProblemId', SubProblemService.getSubProblem);
 app.post('/workspaces/:workspaceId/problems', SubProblemService.createSubProblem);
@@ -131,7 +185,7 @@ app.get('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', Scenari
 app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios', ScenarioService.createScenario);
 app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', ScenarioService.updateScenario);
 
-//Workspace settings
+// Workspace settings
 app.get('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsService.getWorkspaceSettings);
 app.put('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsService.putWorkspaceSettings);
 
@@ -199,17 +253,4 @@ function useSSLLogin() {
       });
     }
   });
-}
-
-function initializeRouter() {
-  var router = express.Router();
-  router.get('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
-  router.post('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
-  router.delete('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
-  router.get('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
-  router.put('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
-  router.put('/workspaces/:id/ordering', WorkspaceService.requireUserIsWorkspaceOwner);
-  router.put('/workspaces/:id/workspaceSettings', WorkspaceService.requireUserIsWorkspaceOwner);
-  router.delete('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
-  app.use(router);
 }
