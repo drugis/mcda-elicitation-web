@@ -122,7 +122,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function buildEffectValueLabel(performance) {
       if (performance.effect && performance.effect.type !== 'empty') {
-        return performance.effect.value;
+        return significantDigits(performance.effect.value);
       } else {
         return '';
       }
