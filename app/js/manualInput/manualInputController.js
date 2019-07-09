@@ -91,11 +91,11 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
         var isDistributionDataValid = !ManualInputService.findInvalidCell($scope.state.inputData.distribution);
 
         if (isEffectDataValid && !isDistributionDataValid) {
-          $scope.state.warnings.push('SMAA tab contains invalid values and can not be used');
+          $scope.state.warnings.push('SMAA tab contains invalid values which will not be used, Deterministic values for those cells will be used instead');
         }
 
         if (!isEffectDataValid && isDistributionDataValid) {
-          $scope.state.warnings.push('Deterministic tab contains invalid values and can not be used');
+          $scope.state.warnings.push('Deterministic tab contains invalid values which will not be used, SMAA values for those cells will be used instead');
         }
 
         if (!isEffectDataValid && !isDistributionDataValid) {
