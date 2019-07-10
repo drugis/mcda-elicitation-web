@@ -50,7 +50,6 @@ define(['angular'], function (angular) {
           callback(choice, workspace);
           $modalInstance.close();
         });
-
       } else if (choice === 'manual') {
         callback(choice);
         $modalInstance.close();

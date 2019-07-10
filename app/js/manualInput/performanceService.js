@@ -1,5 +1,5 @@
 'use strict';
-define(['angular'], function() {
+define(['lodash', 'angular'], function(_) {
   var dependencies = [];
   var PerformanceService = function() {
     function buildExactPerformance(value, input) {
@@ -8,6 +8,29 @@ define(['angular'], function() {
         value: value,
         input: input
       };
+    }
+
+    function buildExactSEPerformance(firstParameter, secondParameter) {
+      return buildExactPerformance(firstParameter, {
+        value: firstParameter,
+        stdErr: secondParameter
+      });
+    }
+
+    function buildExactPercentSEPerformance(firstParameter, secondParameter) {
+      return buildExactPerformance(firstParameter / 100, {
+        value: firstParameter,
+        stdErr: secondParameter,
+        scale: 'percentage'
+      });
+    }
+
+    function buildExactDecimalSEPerformance(firstParameter, secondParameter) {
+      return buildExactPerformance(firstParameter, {
+        value: firstParameter,
+        stdErr: secondParameter,
+        scale: 'decimal'
+      });
     }
 
     function buildExactConfidencePerformance(cell) {
@@ -26,64 +49,178 @@ define(['angular'], function() {
         scale: 'percentage'
       });
     }
-    function buildNormalPerformance(mu, sigma, input) {
-      return {
-        type: 'dnorm',
-        parameters: {
-          mu: mu,
-          sigma: sigma
-        },
-        input: input
-      };
+
+    function buildExactDecimalConfidencePerformance(cell) {
+      return buildExactPerformance((cell.firstParameter), {
+        value: cell.firstParameter,
+        lowerBound: cell.lowerBoundNE ? 'NE' : cell.secondParameter,
+        upperBound: cell.upperBoundNE ? 'NE' : cell.thirdParameter,
+        scale: 'decimal'
+      });
     }
 
-    function buildBetaPerformance(alpha, beta, input) {
-      return buildAlphaBetaPerformance('dbeta', alpha, beta, input);
+
+    function buildGammaPerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        return buildAlphaBetaPerformance('dgamma', cell.firstParameter, cell.secondParameter);
+      }
     }
 
-    function buildGammaPerformance(alpha, beta, input) {
-      return buildAlphaBetaPerformance('dgamma', alpha, beta, input);
+    function buildBetaPerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        return buildAlphaBetaPerformance('dbeta', cell.firstParameter, cell.secondParameter);
+      }
     }
 
-    function buildStudentTPerformance(mu, sigma, dof, input) {
-      return {
-        type: 'dt',
-        parameters: {
-          mu: mu,
-          stdErr: sigma,
-          dof: dof
-        },
-        input: input
-      };
+    function buildNormalPerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        return {
+          type: 'dnorm',
+          parameters: {
+            mu: cell.firstParameter,
+            sigma: cell.secondParameter
+          }
+        };
+      }
     }
 
-    function buildEmptyPerformance(){
+    function buildEmptyPerformance() {
       return {
         type: 'empty'
       };
     }
-    // privates
 
-    function buildAlphaBetaPerformance(type, alpha, beta, input) {
+    function buildAlphaBetaPerformance(type, alpha, beta) {
       return {
         type: type,
         parameters: {
           alpha: alpha,
           beta: beta
-        },
-        input: input
+        }
       };
     }
 
+    function buildTextPerformance(cell) {
+      return {
+        type: 'empty',
+        value: cell.firstParameter
+      };
+    }
+
+
+    function buildValuePerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        if (isPercentage(cell)) {
+          return buildPercentPerformance(cell);
+        } else if (isDecimal(cell)) {
+          return buildDecimalPerformance(cell);
+        } else {
+          return buildExactPerformance(cell.firstParameter);
+        }
+      }
+    }
+
+    function buildValueSEPerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        if (isPercentage(cell)) {
+          return buildExactPercentSEPerformance(cell.firstParameter, cell.secondParameter);
+        } else if (isDecimal(cell)) {
+          return buildExactDecimalSEPerformance(cell.firstParameter, cell.secondParameter);
+        } else {
+          return buildExactSEPerformance(cell.firstParameter, cell.secondParameter);
+        }
+      }
+    }
+
+    function buildValueCIPerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        if (isPercentage(cell)) {
+          return buildExactPercentConfidencePerformance(cell);
+        } else if (isDecimal(cell)) {
+          return buildExactDecimalConfidencePerformance(cell);
+        } else {
+          return buildExactConfidencePerformance(cell);
+        }
+      }
+    }
+
+    function buildEventsSampleSizePerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        var input = {
+          events: cell.firstParameter,
+          sampleSize: cell.secondParameter
+        };
+        return buildExactPerformance(cell.firstParameter / cell.secondParameter, input);
+      }
+    }
+
+    function buildValueSampleSizePerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        var value = cell.firstParameter;
+        var sampleSize = cell.secondParameter;
+        var input = {
+          value: value,
+          sampleSize: sampleSize
+        };
+        if (isDecimal(cell)) {
+          input.scale = 'decimal';
+        } else if (isPercentage(cell)) {
+          input.scale = 'percentage';
+          value = value / 100;
+        }
+        return buildExactPerformance(value, input);
+      }
+    }
+
+    function buildPercentPerformance(cell) {
+      return buildExactPerformance(cell.firstParameter / 100, {
+        scale: 'percentage',
+        value: cell.firstParameter
+      });
+    }
+
+    function buildDecimalPerformance(cell) {
+      return buildExactPerformance(cell.firstParameter, {
+        scale: 'decimal',
+        value: cell.firstParameter
+      });
+    }
+
+    function isPercentage(cell) {
+      return cell.constraint === 'Proportion (percentage)';
+    }
+
+    function isDecimal(cell) {
+      return cell.constraint === 'Proportion (decimal)';
+    }
+
     return {
-      buildExactPerformance: buildExactPerformance,
-      buildExactConfidencePerformance: buildExactConfidencePerformance,
-      buildExactPercentConfidencePerformance: buildExactPercentConfidencePerformance,
       buildNormalPerformance: buildNormalPerformance,
       buildBetaPerformance: buildBetaPerformance,
       buildGammaPerformance: buildGammaPerformance,
-      buildStudentTPerformance: buildStudentTPerformance,
-      buildEmptyPerformance: buildEmptyPerformance
+      buildEmptyPerformance: buildEmptyPerformance,
+      buildTextPerformance: buildTextPerformance,
+      buildValuePerformance: buildValuePerformance,
+      buildValueSEPerformance: buildValueSEPerformance,
+      buildValueCIPerformance: buildValueCIPerformance,
+      buildEventsSampleSizePerformance: buildEventsSampleSizePerformance,
+      buildValueSampleSizePerformance: buildValueSampleSizePerformance
     };
   };
   return dependencies.concat(PerformanceService);

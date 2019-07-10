@@ -37,11 +37,7 @@ define(['lodash'], function(_) {
       $scope.criterion = {
         id: generateUuid(),
         dataSources: [{
-          id: generateUuid(),
-          inputType: 'distribution',
-          inputMethod: 'assistedDistribution',
-          dataType: 'dichotomous',
-          parameterOfInterest: 'eventProbability'
+          id: generateUuid()
         }],
         isFavorable: false
       };

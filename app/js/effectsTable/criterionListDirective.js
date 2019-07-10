@@ -25,7 +25,10 @@ define(['lodash'], function(_) {
         'errors': '=',
         'isInput': '=',
         'workspace': '=',
-        'editMode': '='
+        'editMode': '=',
+        'scales': '=',
+        'alternatives': '=',
+        'effectsTableInfo': '='
       },
       templateUrl: '../effectsTable/criterionListDirective.html',
       link: function(scope) {
@@ -107,13 +110,12 @@ define(['lodash'], function(_) {
         //private
         function initializeCriteriaLists() {
           if (scope.isInput) {
-            checkForUnknownCriteria();
             checkForMissingFavorability();
           }
           var partition = _.partition(scope.criteria, ['isFavorable', true]);
           scope.criteria = partition[0].concat(partition[1]);
           scope.favorableCriteria = partition[0];
-          scope.unfavorableCriteria =  partition[1];
+          scope.unfavorableCriteria = partition[1];
         }
 
         function swapAndInitialize(array, idx, newIdx) {
@@ -128,18 +130,6 @@ define(['lodash'], function(_) {
             return criterion.isFavorable === undefined;
           })) {
             scope.errors.push('Missing favorability');
-          }
-        }
-
-        function checkForUnknownCriteria() {
-          var error = 'Unknown input type';
-          _.pull(scope.errors, error);
-          if (_.find(scope.criteria, function(criterion) {
-            return _.find(criterion.dataSources, function(dataSource) {
-              return !dataSource.inputType;
-            });
-          })) {
-            scope.errors.push(error);
           }
         }
       }

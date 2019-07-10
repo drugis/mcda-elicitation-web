@@ -100,7 +100,6 @@ define(['lodash', 'angular'], function(_, angular) {
         $scope.subProblemState = SubProblemService.createSubProblemState($scope.problem, newSubProblem, $scope.criteria);
 
         updateInclusions();
-        initializeScales();
         checkDuplicateTitle($scope.subProblemState.title);
       });
     }
@@ -111,20 +110,24 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.subProblemState.numberOfCriteriaSelected = _.filter($scope.subProblemState.criterionInclusions).length;
       $scope.subProblemState.numberOfAlternativesSelected = _.filter($scope.subProblemState.alternativeInclusions).length;
       $scope.subProblemState.numberOfDataSourcesPerCriterion = SubProblemService.getNumberOfDataSourcesPerCriterion($scope.problem.criteria, $scope.subProblemState.dataSourceInclusions);
-      $scope.hasMissingValues = SubProblemService.areValuesMissingInEffectsTable($scope.subProblemState, $scope.scales);
+      $scope.hasMissingValues = SubProblemService.areValuesMissingInEffectsTable($scope.subProblemState, $scope.scales, $scope.problem.performanceTable);
       $scope.areTooManyDataSourcesSelected = SubProblemService.areTooManyDataSourcesSelected($scope.subProblemState.numberOfDataSourcesPerCriterion);
       $scope.scalesDataSources = getDataSourcesForScaleSliders();
+      $scope.warnings = SubProblemService.getMissingValueWarnings($scope.subProblemState, $scope.scales, $scope.problem.performanceTable);
+      initializeScales();
       $timeout(function() {
         $scope.$broadcast('rzSliderForceRender');
       }, 100);
     }
 
     function getDataSourcesForScaleSliders() {
-      return ($scope.hasMissingValues || $scope.areTooManyDataSourcesSelected) ? [] : _.keys(_.pickBy($scope.subProblemState.dataSourceInclusions));
+      return ($scope.hasMissingValues || $scope.areTooManyDataSourcesSelected) ?
+        [] : _.keys(_.pickBy($scope.subProblemState.dataSourceInclusions));
     }
 
     function initializeScales() {
-      var stateAndChoices = ScaleRangeService.getScalesStateAndChoices($scope.originalScales.base, $scope.criteria);
+      var filteredPerformanceTable =SubProblemService.excludeDeselectedAlternatives($scope.problem.performanceTable, $scope.subProblemState.alternativeInclusions);
+      var stateAndChoices = ScaleRangeService.getScalesStateAndChoices($scope.originalScales.base, $scope.criteria, filteredPerformanceTable);
       $scope.scalesState = stateAndChoices.scalesState;
       $scope.choices = stateAndChoices.choices;
 

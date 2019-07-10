@@ -41,32 +41,31 @@
               {{row.headerText}}
             </div>
           </td>
-          <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}" ng-show="toggledColumns['criteria']">
+          <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}"
+            ng-show="toggledColumns['criteria']">
             {{row.criterion.title}}
           </td>
-          <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}" ng-show="toggledColumns['description']">
+          <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}"
+            ng-show="toggledColumns['description']">
             {{row.criterion.description}}
           </td>
-          <td ng-if="!row.isHeaderRow && row.isFirstRow && !row.criterion.canBePercentage" rowspan="{{row.criterion.numberOfDataSources}}"
-            ng-show="toggledColumns['units']">
-            {{row.criterion.unitOfMeasurement}}
+          <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['units']">
+            <span ng-hide="!isValueView && row.isProportion">
+              {{row.dataSource.unitOfMeasurement}}
+            </span>
           </td>
-          <td ng-if="!row.isHeaderRow && row.isFirstRow && row.criterion.canBePercentage" rowspan="{{row.criterion.numberOfDataSources}}"
-            ng-show="toggledColumns['units']">
-            {{workspaceSettings.showPercentages ? '%' : ''}}
-          </td>
-          <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}"
-            id="col{{$index}}">
-
-            <effects-table-cell 
-              effects-table-info="effectsTableInfo[row.dataSource.id]"
-              workspace-settings="workspaceSettings"
-              scales="scales[row.dataSource.id][alternative.id]" 
-              theoretical-scale="row.dataSource.scale"
-              alternative-id="alternative.id"
-              input-type="row.dataSource.inputType">
-            </effects-table-cell>
-
+          <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives"
+            ng-style="isValueView && !isCellAnalysisViable[row.dataSource.id][alternative.id] ? {'background-color':'#f3d3c8'} : {}">
+            <div ng-if="!isValueView || isCellAnalysisViable[row.dataSource.id][alternative.id]">
+              <effects-table-cell effects-table-info="effectsTableInfo[row.dataSource.id]"
+                workspace-settings="workspaceSettings" scales="scales[row.dataSource.id][alternative.id]"
+                theoretical-scale="row.dataSource.scale" alternative-id="alternative.id">
+              </effects-table-cell>
+            </div>
+            <div ng-if="isValueView && !isCellAnalysisViable[row.dataSource.id][alternative.id]" style="opacity: 0.5;"
+              tooltip="Cells containing text or that are empty can not be used for analysis">
+              No data
+            </div>
           </td>
           <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['strength']">
             <div ng-if="row.dataSource.strengthOfEvidence">

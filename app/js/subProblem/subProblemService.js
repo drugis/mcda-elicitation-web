@@ -49,14 +49,6 @@ define(['lodash', 'angular'], function(_) {
       return returnObject;
     }
 
-    function checkScaleRanges(criteria) {
-      var isMissingScaleRange = _.find(criteria, function(criterion) {
-        return !(criterion.dataSources[0].pvf && criterion.dataSources[0].pvf.range &&
-          criterion.dataSources[0].pvf.range[0] !== undefined && criterion.dataSources[0].pvf.range[1] !== undefined);
-      });
-      return !isMissingScaleRange;
-    }
-
     function excludeDataSourcesForExcludedCriteria(criteria, subProblemState) {
       return _.reduce(criteria, function(accum, criterion, criterionId) {
         if (!subProblemState.criterionInclusions[criterionId]) {
@@ -101,13 +93,49 @@ define(['lodash', 'angular'], function(_) {
         .value();
     }
 
-    function areValuesMissingInEffectsTable(subProblemState, scales) {
+    function areValuesMissingInEffectsTable(subProblemState, scales, performanceTable) {
       var includedDataSourcesIds = _.keys(_.pickBy(subProblemState.dataSourceInclusions));
       var includedAlternatives = _.keys(_.pickBy(subProblemState.alternativeInclusions));
-      return _.find(includedDataSourcesIds, function(dataSourceId) {
-        return _.find(includedAlternatives, function(alternativeId) {
-          return isNullNaNorUndefined(scales[dataSourceId][alternativeId]['50%']);
+      return _.some(includedDataSourcesIds, function(dataSourceId) {
+        return _.some(includedAlternatives, function(alternativeId) {
+          return isNullNaNorUndefined(scales[dataSourceId][alternativeId]['50%']) &&
+            missesEffectValue(performanceTable, dataSourceId, alternativeId);
         });
+      });
+    }
+
+    function getMissingValueWarnings(subProblemState, scales, performanceTable) {
+      var warnings = [];
+      var includedDataSourcesIds = _.keys(_.pickBy(subProblemState.dataSourceInclusions));
+      var includedAlternatives = _.keys(_.pickBy(subProblemState.alternativeInclusions));
+
+      if (_.some(includedDataSourcesIds, function(dataSourceId) {
+        return _.some(includedAlternatives, function(alternativeId) {
+          return !isNullNaNorUndefined(scales[dataSourceId][alternativeId]['50%']) &&
+            missesEffectValue(performanceTable, dataSourceId, alternativeId);
+        });
+      })) {
+        warnings.push('Some cell(s) are missing deterministic values. SMAA values will be used for these cell(s).');
+      }
+
+      if (_.some(includedDataSourcesIds, function(dataSourceId) {
+        return _.some(includedAlternatives, function(alternativeId) {
+          return isNullNaNorUndefined(scales[dataSourceId][alternativeId]['50%']) &&
+            !missesEffectValue(performanceTable, dataSourceId, alternativeId);
+        });
+      })) {
+        warnings.push('Some cell(s) are missing SMAA values. Deterministic values will be used for these cell(s).');
+      }
+
+      return warnings;
+    }
+
+    function missesEffectValue(performanceTable, dataSourceId, alternativeId) {
+      return !_.some(performanceTable, function(entry) {
+        return entry.dataSource === dataSourceId &&
+          entry.alternative === alternativeId &&
+          entry.performance.effect &&
+          entry.performance.effect.type !== 'empty';
       });
     }
 
@@ -153,8 +181,8 @@ define(['lodash', 'angular'], function(_) {
         .value();
     }
 
-    function createSubProblemState(problem, subProblem, criteria){
-      return  {
+    function createSubProblemState(problem, subProblem, criteria) {
+      return {
         criterionInclusions: createCriterionInclusions(problem, subProblem),
         alternativeInclusions: createAlternativeInclusions(problem, subProblem),
         dataSourceInclusions: createDataSourceInclusions(problem, subProblem),
@@ -177,17 +205,40 @@ define(['lodash', 'angular'], function(_) {
       }, {});
     }
 
+    function excludeDeselectedAlternatives(performanceTable, alternativeInclusions) {
+      return _.filter(performanceTable, function(entry) {
+        return alternativeInclusions[entry.alternative];
+      });
+    }
+
+    function findRowWithoutValues(effectsTableInfo, scales) {
+      return !_.some(effectsTableInfo, function(row, dataSourceId) {
+        return !row.isAbsolute || _.some(row.studyDataLabelsAndUncertainty, function(cell, alternativeId) {
+          return cell.effectValue !== '' || (scales && scales.observed && scales.observed[dataSourceId][alternativeId]);
+        });
+      });
+    }
+
+    function areTooManyDataSourcesIncluded(criteria){
+      return _.some(criteria, function(criterion) {
+        return criterion.dataSources.length > 1;
+      });
+    }
+    
     return {
       createSubProblemCommand: createSubProblemCommand,
       determineBaseline: determineBaseline,
-      checkScaleRanges: checkScaleRanges,
       excludeDataSourcesForExcludedCriteria: excludeDataSourcesForExcludedCriteria,
       areValuesMissingInEffectsTable: areValuesMissingInEffectsTable,
+      getMissingValueWarnings: getMissingValueWarnings,
       hasInvalidSlider: hasInvalidSlider,
       getNumberOfDataSourcesPerCriterion: getNumberOfDataSourcesPerCriterion,
       areTooManyDataSourcesSelected: areTooManyDataSourcesSelected,
       getCriteriaByDataSource: getCriteriaByDataSource,
-      createSubProblemState: createSubProblemState
+      createSubProblemState: createSubProblemState,
+      excludeDeselectedAlternatives: excludeDeselectedAlternatives,
+      findRowWithoutValues: findRowWithoutValues,
+      areTooManyDataSourcesIncluded: areTooManyDataSourcesIncluded
     };
   };
 

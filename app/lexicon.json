@@ -39,11 +39,6 @@
     "text": "Criterion data can be entered as either study data, or an exact-value distribution.",
     "link": "/manual.html#mcda-manual-entry"
   },
-  "criterion-data-type": {
-    "title": "Criterion data type",
-    "text": "Criterion data can be reported in several ways, either as a proportion (e.g. \"fifty out of a hundred\"), a continuous value (e.g. \"weight increase in grams\") or as survival data (e.g. \"median survival after 20 days)\"",
-    "link": "/manual.html#mcda-manual-entry"
-  },
   "criterion-source": {
     "title": "Reference",
     "text": "An optional indication of where the data for this criterion comes from.",
@@ -94,16 +89,6 @@
     "text": "The process of manually creating a workspace can be paused at any point. This list shows those unfinished workspaces.",
     "link": "/manual.html#mcda-preparing-dataset"
   },
-  "input-type": {
-    "title": "Input type",
-    "text": "The way the measurements for a data source were entered. Input type is either distribution or effect.",
-    "link": "/manual.html#mcda-manual-entry"
-  },
-  "input-method": {
-    "title": "Input method",
-    "text": "The input method shows whether the distributional parameters were specified directly (manual distribution) or derived from user supplied aggregate study data (assisted distribution).",
-    "link": "/manual.html#mcda-manual-entry"
-  },
   "matching": {
     "title": "Matching",
     "text": "Elicitation of the criteria weights through a series of matching questions. This method sets weights by asking users to specify how much the performance with respect to one criterion needs to improve to compensate for a worsening in the performance with respect to another criterion.",
@@ -123,11 +108,6 @@
     "title": "One-way sensitivity analysis",
     "text": "A section that allows exploring of the sensitivity of the results by allowing only one thing to change.",
     "link": "/manual.html#mcda-deterministic-analysis"
-  },
-  "parameter-of-interest": {
-    "title": "Parameter of interest",
-    "text": "The parameter of interest determines what the measured effect depicts.",
-    "link": "/manual.html#mcda-manual-entry"
   },
   "partial-value-function": {
     "title": "Partial Value Function",

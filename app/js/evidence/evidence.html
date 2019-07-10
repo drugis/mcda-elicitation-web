@@ -23,7 +23,8 @@
     </h4>
   </div>
   <div class="cell">
-    <criterion-list criteria="criteria" workspace="workspace" use-favorability="useFavorability" edit-mode="editMode"></criterion-list>
+    <criterion-list criteria="criteria" workspace="workspace" use-favorability="useFavorability" edit-mode="editMode"
+      scales="scales" alternatives="alternatives" effects-table-info="effectsTableInfo"></criterion-list>
   </div>
   <div class="cell">
     <h4>Alternatives
@@ -52,7 +53,8 @@
                   <a ng-click="alternativeDown($index)" class="nav-arrow" ng-if="$index !== alternatives.length-1">
                     <i style="line-height:0px;" class="fa fa-caret-down"></i>
                   </a>
-                  <i ng-if="$index === alternatives.length-1" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
+                  <i ng-if="$index === alternatives.length-1" style="line-height:0px; color:#bbb"
+                    class="fa fa-caret-down"></i>
                 </div>
               </div>
               <div class="cell small-11">
@@ -65,10 +67,5 @@
         </tr>
       </tbody>
     </table>
-  </div>
-  <div class="cell underlined-div"></div>
-  <div class="cell">
-    <effects-table criteria="criteria" alternatives="alternatives" edit-mode="editMode" effects-table-info="effectsTableInfo"
-      scales="scales"></effects-table>
   </div>
 </div>

@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
     'intervalHull',
     'numberFilter',
@@ -92,27 +92,18 @@ define(['lodash', 'angular'], function(_) {
       return 0.5 * (to - from);
     }
 
-    function createRanges(choices) {
-      return _.fromPairs(_.map(choices, function(choice, criterionId) {
-        return [criterionId, {
-          pvf: {
-            range: [choice.from, choice.to]
-          }
-        }];
-      }));
-    }
-
-    function getScalesStateAndChoices(observedScales, criteria) {
+    function getScalesStateAndChoices(observedScales, criteria, performanceTable) {
       return _.reduce(criteria, function(accum, criterion) {
-        return _.merge({}, accum, initializeScaleStateAndChoicesForCriterion(observedScales, criterion));
+        return _.merge({}, accum, initializeScaleStateAndChoicesForCriterion(observedScales, criterion, performanceTable));
       }, {});
     }
 
-    function initializeScaleStateAndChoicesForCriterion(observedScales, criterion) {
+    function initializeScaleStateAndChoicesForCriterion(observedScales, criterion, performanceTable) {
       var showPercentage = WorkspaceSettingsService.usePercentage();
       return _.reduce(criterion.dataSources, function(accum, dataSource) {
         // Calculate interval hulls
-        var dataSourceRange = intervalHull(observedScales[dataSource.id]);
+        var effectValues = getEffectValues(performanceTable, dataSource.id);
+        var dataSourceRange = intervalHull(observedScales[dataSource.id], effectValues);
         var pvf = dataSource.pvf;
         var problemRange = pvf ? pvf.range : null;
         var from = problemRange ? problemRange[0] : dataSourceRange[0];
@@ -135,13 +126,36 @@ define(['lodash', 'angular'], function(_) {
         }
       );
     }
+
+    function getEffectValues(performanceTable, dataSource) {
+      return _.reduce(performanceTable, function(accum, entry) {
+        if (entry.dataSource === dataSource.id && entry.performance.effect) {
+          var factor = dataSource.unitOfMeasurement === '%' ? 100 : 1;
+          accum.push(entry.performance.effect.value * factor);
+        }
+        return accum;
+      }, []);
+    }
+
+    function getScaleTable(table, scales, performanceTable) {
+      var scaleTable = _.reject(table, 'isHeaderRow');
+      return _.map(scaleTable, function(row) {
+        var newRow = angular.copy(row);
+        if (scales && scales.observed) {
+          var effects = getEffectValues(performanceTable, row.dataSource);
+          newRow.intervalHull = intervalHull(scales.observed[row.dataSource.id], effects);
+        }
+        return newRow;
+      });
+    }
+
     return {
       nice: nice,
       niceTo: niceTo,
       niceFrom: niceFrom,
       calculateScales: calculateScales,
-      createRanges: createRanges,
-      getScalesStateAndChoices: getScalesStateAndChoices
+      getScalesStateAndChoices: getScalesStateAndChoices,
+      getScaleTable: getScaleTable
     };
   };
 

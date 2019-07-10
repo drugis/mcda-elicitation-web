@@ -1,6 +1,7 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
-  var dependencies = ['$scope',
+define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
+  var dependencies = [
+    '$scope',
     '$state',
     '$stateParams',
     '$transitions',
@@ -16,7 +17,8 @@ define(['lodash', 'angular'], function(_, angular) {
     'generateUuid',
     'swap'
   ];
-  var ManualInputController = function($scope,
+  var ManualInputController = function(
+    $scope,
     $state,
     $stateParams,
     $transitions,
@@ -45,6 +47,7 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.removeAlternative = removeAlternative;
     $scope.saveInProgress = saveInProgress;
     $scope.openCriterionModal = openCriterionModal;
+    $scope.generateDistributions = generateDistributions;
 
     // init
     $scope.alternativeInput = {}; //scoping
@@ -63,7 +66,6 @@ define(['lodash', 'angular'], function(_, angular) {
       }
     });
 
-    // public functions
     function addAlternative(title) {
       $scope.state.alternatives.push({
         title: title,
@@ -81,8 +83,33 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function checkInputData() {
-      $scope.state.isInputDataValid = !ManualInputService.findInvalidCell($scope.state.inputData);
-      $scope.state.areInputDataRowsValid = !ManualInputService.findInvalidRow($scope.state.inputData);
+      if ($scope.state.inputData) {
+        $scope.state.errors = [];
+        $scope.state.warnings = [];
+
+        var isEffectDataValid = !ManualInputService.findInvalidCell($scope.state.inputData.effect);
+        var isDistributionDataValid = !ManualInputService.findInvalidCell($scope.state.inputData.distribution);
+
+        if (isEffectDataValid && !isDistributionDataValid) {
+          $scope.state.warnings.push('SMAA tab contains invalid values which will not be used, Deterministic values for those cells will be used instead');
+        }
+
+        if (!isEffectDataValid && isDistributionDataValid) {
+          $scope.state.warnings.push('Deterministic tab contains invalid values which will not be used, SMAA values for those cells will be used instead');
+        }
+
+        if (!isEffectDataValid && !isDistributionDataValid) {
+          $scope.state.errors.push('Both tabs contain missing or invalid values');
+        }
+
+        if (ManualInputService.findDuplicateValues($scope.state.inputData.effect) && !isDistributionDataValid) {
+          $scope.state.errors.push('Deterministic tab contains a row with duplicate values');
+        }
+
+        if (ManualInputService.findDuplicateValues($scope.state.inputData.effect) && isDistributionDataValid) {
+          $scope.state.warnings.push('Deterministic tab contains a row with duplicate values and can not be used');
+        }
+      }
     }
 
     function createProblem() {
@@ -115,6 +142,9 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function goToStep2() {
       $scope.state.step = 'step2';
+      if (!$scope.state.currentTab) {
+        $scope.state.currentTab = 'effect';
+      }
       $scope.criteriaRows = EffectsTableService.buildTableRows($scope.state.criteria);
       $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives,
         $scope.state.inputData);
@@ -130,6 +160,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function saveInProgress() {
+      hideTooltip();
       $scope.dirty = false;
       if ($stateParams.inProgressId) {
         InProgressResource.put($stateParams, $scope.state);
@@ -140,6 +171,12 @@ define(['lodash', 'angular'], function(_, angular) {
           });
         });
       }
+    }
+
+    function hideTooltip(){
+      $('div.tooltip:visible').hide();
+      $('#step1SaveButton').removeClass('open');
+      $('#step2SaveButton').removeClass('open');
     }
 
     function openCriterionModal() {
@@ -165,7 +202,15 @@ define(['lodash', 'angular'], function(_, angular) {
       });
     }
 
-    // private functions
+    function generateDistributions() {
+      var answer = confirm('Generating distribution parameters for SMAA will overwrite any existing values in the SMAA tab.');
+      if (answer) {
+        $scope.state.inputData.distribution = ManualInputService.generateDistributions($scope.state.inputData);
+        checkInputData();
+        $scope.state.currentTab = 'distribution';
+      }
+    }
+
     function initState() {
       if ($stateParams.workspace) {
         // copying existing workspace
@@ -187,8 +232,12 @@ define(['lodash', 'angular'], function(_, angular) {
         // unfinished workspace
         InProgressResource.get($stateParams).$promise.then(function(response) {
           $scope.state = response.state;
-          if($scope.state.step === 'step2') {
+          if ($scope.state.step === 'step2') {
             $scope.criteriaRows = EffectsTableService.buildTableRows($scope.state.criteria);
+            if (!$scope.state.inputData.effect && !$scope.state.inputData.distribution) {
+              $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives,
+                $scope.state.inputData);
+            }
           }
           checkInputData();
           setStateWatcher();

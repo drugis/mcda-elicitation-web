@@ -64,12 +64,8 @@
             <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['description']">
               {{row.criterion.description}}
             </td>
-            <td ng-if="!row.isHeaderRow && !row.criterion.canBePercentage" ng-show="toggledColumns['units']">
-              {{row.criterion.unitOfMeasurement}}
-            </td>
-            <td ng-if="!row.isHeaderRow && row.isFirstRow && row.criterion.canBePercentage" rowspan="{{row.criterion.numberOfDataSources}}"
-              ng-show="toggledColumns['units']">
-              {{workspaceSettings.showPercentages ? '%' : ''}}
+            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['units']">
+              {{row.dataSource.unitOfMeasurement}}
             </td>
             <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}">
               <sensitivity-input row="row" alternative="alternative" original-value="scales.observed[row.dataSource.id][alternative.id]['50%']"

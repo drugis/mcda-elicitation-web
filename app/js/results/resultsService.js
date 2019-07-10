@@ -1,7 +1,5 @@
 'use strict';
 define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
-
-
   var dependencies = ['PataviResultsService'];
 
   var MCDAResultsService = function(PataviResultsService) {
@@ -32,6 +30,14 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
 
       state.resultsPromise = PataviResultsService.postAndHandleResults(state.problem, successHandler, updateHandler);
       return state;
+    }
+
+    function addSmaaResults(state) {
+      var newState = _.cloneDeep(state);
+      newState.alternativesByRank = getAlternativesByRank(state);
+      newState.centralWeights = getCentralWeights(state);
+      newState.ranksByAlternatives = getRanksByAlternatives(state);
+      return newState;
     }
 
     function getCentralWeights(state) {
@@ -96,8 +102,16 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
     }
 
     function getResults(scope, state) {
+      if (_.some(state.problem.performanceTable, function(entry) { return entry.performance.distribution; })) {
+        return getResultForType(scope, state, 'distribution');
+      } else {
+        return getResultForType(scope, state, 'effect');
+      }
+    }
+
+    function getResultForType(scope, state, type) {
       var nextState = {
-        problem: _.merge({}, state.problem, {
+        problem: _.merge({}, getProblemForResultType(state.problem, type), {
           preferences: state.prefs,
           method: 'smaa'
         }),
@@ -155,7 +169,7 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
 
     function getDeterministicResults(scope, state) {
       var nextState = {
-        problem: _.merge({}, state.problem, {
+        problem: _.merge({}, getProblemForResultType(state.problem, 'effect'), {
           preferences: state.prefs,
           method: 'deterministic'
         })
@@ -163,7 +177,7 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       return run(scope, nextState);
     }
 
-    function getRecalculatedDeterministicResulsts(scope, state) {
+    function getRecalculatedDeterministicResults(scope, state) {
       var nextState = {
         problem: _.merge({}, state.problem, {
           preferences: state.prefs,
@@ -178,7 +192,7 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
 
     function getMeasurementsSensitivityResults(scope, state) {
       var nextState = {
-        problem: _.merge({}, state.problem, {
+        problem: _.merge({}, getProblemForResultType(state.problem, 'effect'), {
           preferences: state.prefs,
           method: 'sensitivityMeasurementsPlot',
           sensitivityAnalysis: {
@@ -192,7 +206,7 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
 
     function getPreferencesSensitivityResults(scope, state) {
       var nextState = {
-        problem: _.merge({}, state.problem, {
+        problem: _.merge({}, getProblemForResultType(state.problem, 'effect'), {
           preferences: state.prefs,
           method: 'sensitivityWeightPlot',
           sensitivityAnalysis: {
@@ -201,14 +215,6 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
         })
       };
       return run(scope, nextState);
-    }
-
-    function addSmaaResults(state) {
-      var newState = _.cloneDeep(state);
-      newState.alternativesByRank = getAlternativesByRank(state);
-      newState.centralWeights = getCentralWeights(state);
-      newState.ranksByAlternatives = getRanksByAlternatives(state);
-      return newState;
     }
 
     function replaceAlternativeNames(legend, state) {
@@ -224,7 +230,7 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       }, {});
       return newState;
     }
-    
+
     function percentifySensitivityResult(values, coordinate) {
       return _.map(values, function(line) {
         var newLine = angular.copy(line);
@@ -236,13 +242,27 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       });
     }
 
+    function getProblemForResultType(problem, resultType) {
+      var newProblem = angular.copy(problem);
+      newProblem.performanceTable = _.map(problem.performanceTable, function(entry) {
+        var newEntry = angular.copy(entry);
+        if (entry.performance[resultType]) {
+          newEntry.performance = entry.performance[resultType];
+        } else {
+          newEntry.performance = entry.performance.distribution;
+        }
+        return newEntry;
+      });
+      return newProblem;
+    }
+
     return {
       getResults: getResults,
       resetModifiableScales: resetModifiableScales,
       pataviResultToValueProfile: pataviResultToValueProfile,
       pataviResultToLineValues: pataviResultToLineValues,
       getDeterministicResults: getDeterministicResults,
-      getRecalculatedDeterministicResulsts: getRecalculatedDeterministicResulsts,
+      getRecalculatedDeterministicResults: getRecalculatedDeterministicResults,
       getMeasurementsSensitivityResults: getMeasurementsSensitivityResults,
       getPreferencesSensitivityResults: getPreferencesSensitivityResults,
       addSmaaResults: addSmaaResults,
