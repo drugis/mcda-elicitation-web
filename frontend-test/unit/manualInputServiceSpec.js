@@ -213,22 +213,18 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           effect: {
             ds1id: {
               alternative1: {
-                constraint: 'None',
                 isInvalid: true
               },
               alternative2: {
-                constraint: 'None',
                 isInvalid: true
               }
             },
             ds2id: {
               alternative1: _.extend({}, oldInputData.effect.ds2id.alternative1, {
-                constraint: 'None',
                 isInvalid: true,
                 inputParameters: {}
               }),
               alternative2: {
-                constraint: 'None',
                 isInvalid: true,
                 inputParameters: {}
               }

@@ -87,13 +87,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should return the correct label for the percentage cell', function() {
         var cell = {
           firstParameter: 10,
-          inputParameters: {
-            firstParameter: {
-              constraints: [{
-                label: 'Proportion (percentage)'
-              }]
-            }
-          }
+          constraint: 'Proportion (percentage)'
         };
         var result = toStringService.valueToString(cell);
         var expectedResult = '10%';
@@ -121,13 +115,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         var cell = {
           firstParameter: 10,
           secondParameter: 0.5,
-          inputParameters: {
-            firstParameter: {
-              constraints: [{
-                label: 'Proportion (percentage)'
-              }]
-            }
-          }
+          constraint: 'Proportion (percentage)'
         };
         var result = toStringService.valueSEToString(cell);
         var expectedResult = '10% (0.5%)';
@@ -157,13 +145,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
           firstParameter: 10,
           secondParameter: 0.5,
           thirdParameter: 20,
-          inputParameters: {
-            firstParameter: {
-              constraints: [{
-                label: 'Proportion (percentage)'
-              }]
-            }
-          }
+          constraint: 'Proportion (percentage)'
         };
         var result = toStringService.valueCIToString(cell);
         var expectedResult = '10% (0.5%; 20%)';
@@ -207,13 +189,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         var cell = {
           firstParameter: 10,
           secondParameter: 200,
-          inputParameters: {
-            firstParameter: {
-              constraints: [{
-                label: 'Proportion (percentage)'
-              }]
-            }
-          }
+          constraint: 'Proportion (percentage)'
         };
         var result = toStringService.valueSampleSizeToString(cell);
         var expectedResult = '10% (200)';

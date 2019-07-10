@@ -34,7 +34,6 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
     generateUuid,
     swap
   ) {
-
     // functions
     $scope.addAlternative = addAlternative;
     $scope.alternativeDown = alternativeDown;

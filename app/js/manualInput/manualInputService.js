@@ -74,9 +74,8 @@ define(['lodash', 'angular'], function(_, angular) {
     function prepareInputData(criteria, alternatives, oldInputData) {
       var dataSources = getDataSources(criteria);
       if (oldInputData) {
-        var effectData = createInputTableRows(dataSources, alternatives, oldInputData.effect);
         return {
-          effect: setConstraints(dataSources, effectData),
+          effect: createInputTableRows(dataSources, alternatives, oldInputData.effect),
           distribution: createInputTableRows(dataSources, alternatives, oldInputData.distribution)
         };
       } else {
@@ -84,35 +83,6 @@ define(['lodash', 'angular'], function(_, angular) {
           effect: createInputTableRows(dataSources, alternatives),
           distribution: createInputTableRows(dataSources, alternatives)
         };
-      }
-    }
-
-    function setConstraints(dataSources, effectData) {
-      return _.reduce(dataSources, function(accum, dataSource) {
-        accum[dataSource.id] = setConstraintsOnRow(dataSource, effectData);
-        return accum;
-      }, {});
-    }
-
-    function setConstraintsOnRow(dataSource, effectData) {
-      return _.reduce(effectData[dataSource.id], function(accum, cell, alternativeId) {
-        var newCell = angular.copy(cell);
-        newCell.constraint = getCellConstraint(dataSource);
-        if (newCell.inputParameters) {
-          newCell = updateParameterConstraints(newCell);
-        }
-        accum[alternativeId] = newCell;
-        return accum;
-      }, {});
-    }
-
-    function getCellConstraint(dataSource) {
-      if (dataSource.unitOfMeasurement === '%') {
-        return PROPORTION_PERCENTAGE;
-      } else if (dataSource.unitOfMeasurement === 'Proportion') {
-        return PROPORTION_DECIMAL;
-      } else {
-        return 'None';
       }
     }
 

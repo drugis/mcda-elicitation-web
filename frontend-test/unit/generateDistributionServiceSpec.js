@@ -60,24 +60,14 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         cell.constraint = percentageConstraint.label;
         cell.inputParameters.firstParameter.constraints.push(percentageConstraint);
         var result = generateDistributionService.generateValueDistribution(cell);
-        var expectedResult = {
-          firstParameter: 0.5,
-          label: label,
-          inputParameters: options
-        };
-        expect(result).toEqual(expectedResult);
+        expect(result).toEqual(cell);
       });
 
-      it('should generate an exact distribution, removing decimal proportion constraints', function() {
+      it('should generate an exact distribution, keeping decimal proportion constraints', function() {
         cell.constraint = decimalConstraint.label;
         cell.inputParameters.firstParameter.constraints.push(decimalConstraint);
         var result = generateDistributionService.generateValueDistribution(cell);
-        var expectedResult = {
-          firstParameter: 50,
-          label: label,
-          inputParameters: options
-        };
-        expect(result).toEqual(expectedResult);
+        expect(result).toEqual(cell);
       });
     });
 

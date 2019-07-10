@@ -44,6 +44,12 @@ define(['lodash'], function(_) {
             cell.constraint = label;
             return cell;
           });
+          scope.state.inputData.distribution[dataSourceId] = _.mapValues(scope.state.inputData.distribution[dataSourceId], function(cell) {
+            if (cell.inputParameters.id === 'value') {
+              cell.constraint = label;
+            }
+            return cell;
+          });
         }
       }
     };

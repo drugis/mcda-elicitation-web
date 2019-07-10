@@ -1,19 +1,15 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
-    'significantDigits'
+    'significantDigits',
+    'ConstraintService'
   ];
-  var GenerateDistributionService = function(significantDigits) {
+  var GenerateDistributionService = function(
+    significantDigits,
+    ConstraintService
+  ) {
     function generateValueDistribution(cell) {
-      var distributionCell = angular.copy(cell);
-      if (isPercentage(distributionCell)) {
-        distributionCell.firstParameter = cell.firstParameter / 100;
-      }
-
-      distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
-      delete distributionCell.constraint;
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-      return distributionCell;
+      return angular.copy(cell);
     }
 
     function generateValueSEDistribution(normalOption, cell) {
@@ -22,33 +18,28 @@ define(['lodash', 'angular'], function(_, angular) {
         distributionCell.firstParameter = cell.firstParameter / 100;
         distributionCell.secondParameter = cell.secondParameter / 100;
       }
-
       distributionCell.inputParameters = normalOption;
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
       delete distributionCell.constraint;
+      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
       return distributionCell;
     }
 
     function generateValueCIDistribution(normalOption, valueOption, cell) {
       var distributionCell = angular.copy(cell);
-
       if (areBoundsSymmetric(distributionCell)) {
         distributionCell.inputParameters = normalOption;
         distributionCell.secondParameter = boundsToStandardError(cell.secondParameter, cell.thirdParameter);
+        if (isPercentage(cell)) {
+          distributionCell.firstParameter = distributionCell.firstParameter / 100;
+          distributionCell.secondParameter = distributionCell.secondParameter / 100;
+        }
+        delete distributionCell.constraint;
       } else {
         distributionCell.inputParameters = valueOption;
+        distributionCell.inputParameters.firstParameter.constraints = getConstraints(cell);
         delete distributionCell.secondParameter;
       }
       delete distributionCell.thirdParameter;
-
-      if (isPercentage(cell)) {
-        distributionCell.firstParameter = distributionCell.firstParameter / 100;
-        if (distributionCell.secondParameter) {
-          distributionCell.secondParameter = distributionCell.secondParameter / 100;
-        }
-      }
-
-      delete distributionCell.constraint;
       distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
       return distributionCell;
     }
@@ -62,10 +53,8 @@ define(['lodash', 'angular'], function(_, angular) {
         distributionCell.firstParameter = Math.round(distributionCell.firstParameter * distributionCell.secondParameter);
         return generateEventsSampleSizeDistribution(betaOption, distributionCell);
       } else {
-        distributionCell.inputParameters.firstParameter.constraints = removeConstraints(distributionCell.inputParameters.firstParameter.constraints);
         distributionCell.inputParameters = valueOption;
         delete distributionCell.secondParameter;
-        delete distributionCell.constraint;
         distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
         return distributionCell;
       }
@@ -85,10 +74,16 @@ define(['lodash', 'angular'], function(_, angular) {
       return angular.copy(cell);
     }
 
-    function removeConstraints(constraints) {
-      return _.reject(constraints, function(constraint) {
-        return constraint.label === 'Proportion (percentage)' || constraint.label === 'Proportion (decimal)';
-      });
+    function getConstraints(cell) {
+      var constraints = angular.copy(cell.inputParameters.firstParameter.constraints);
+      var options = _.keyBy([
+        ConstraintService.decimal(),
+        ConstraintService.percentage()
+      ], 'label');
+      if (cell.constraint) {
+        constraints.push(options[cell.constraint]);
+      }
+      return constraints;
     }
 
     function areBoundsSymmetric(cell) {
