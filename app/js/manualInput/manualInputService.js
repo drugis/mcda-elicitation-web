@@ -50,8 +50,9 @@ define(['lodash', 'angular'], function(_, angular) {
     function inputToString(cell) {
       if (getInputError(cell)) {
         return INVALID_INPUT_MESSAGE;
+      } else {
+        return cell.inputParameters.toString(cell);
       }
-      return cell.inputParameters.toString(cell);
     }
 
     function getOptions(inputType) {
@@ -130,27 +131,33 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function updateConstraints(cell, parameter) {
-      if (cell.inputParameters[parameter].label === 'Value' ||
-        cell.inputParameters[parameter].label === 'Lower bound' ||
-        cell.inputParameters[parameter].label === 'Upper bound' ||
-        cell.inputParameters[parameter].label === 'Standard error'
-      ) {
-        var newConstraints = angular.copy(cell.inputParameters[parameter].constraints);
-        var percentageConstraint = ConstraintService.percentage();
-        var decimalConstraint = ConstraintService.decimal();
-        newConstraints = removeProportionConstraints(newConstraints);
-        switch (cell.constraint) {
-          case percentageConstraint.label:
-            newConstraints.push(percentageConstraint);
-            break;
-          case decimalConstraint.label:
-            newConstraints.push(decimalConstraint);
-            break;
-        }
-        return newConstraints;
+      var updatetableParameters = [
+        'Value',
+        'Lower bound',
+        'Upper bound',
+        'Standard error'
+      ];
+      if (_.includes(updatetableParameters, cell.inputParameters[parameter].label)) {
+        return getNewConstraints(cell, parameter);
       } else {
         return cell.inputParameters[parameter].constraints;
       }
+    }
+
+    function getNewConstraints(cell, parameter) {
+      var newConstraints = angular.copy(cell.inputParameters[parameter].constraints);
+      var percentageConstraint = ConstraintService.percentage();
+      var decimalConstraint = ConstraintService.decimal();
+      newConstraints = removeProportionConstraints(newConstraints);
+      switch (cell.constraint) {
+        case PROPORTION_PERCENTAGE:
+          newConstraints.push(percentageConstraint);
+          break;
+        case PROPORTION_DECIMAL:
+          newConstraints.push(decimalConstraint);
+          break;
+      }
+      return newConstraints;
     }
 
     function removeProportionConstraints(constraints) {

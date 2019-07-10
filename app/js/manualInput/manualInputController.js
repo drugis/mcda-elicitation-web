@@ -173,7 +173,7 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       }
     }
 
-    function hideTooltip(){
+    function hideTooltip() {
       $('div.tooltip:visible').hide();
       $('#step1SaveButton').removeClass('open');
       $('#step2SaveButton').removeClass('open');
@@ -213,36 +213,45 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
 
     function initState() {
       if ($stateParams.workspace) {
-        // copying existing workspace
-        $scope.state = ManualInputService.createStateFromOldWorkspace(
-          SchemaService.updateWorkspaceToCurrentSchema($stateParams.workspace));
-        $scope.dirty = true;
-        setStateWatcher();
+        copyOldWorkspace();
       } else if (!$stateParams.inProgressId) {
-        // new workspace
-        $scope.state = {
-          step: 'step1',
-          isInputDataValid: false,
-          useFavorability: false,
-          criteria: [],
-          alternatives: []
-        };
-        setStateWatcher();
+        createNewWorkSpace();
       } else {
-        // unfinished workspace
-        InProgressResource.get($stateParams).$promise.then(function(response) {
-          $scope.state = response.state;
-          if ($scope.state.step === 'step2') {
-            $scope.criteriaRows = EffectsTableService.buildTableRows($scope.state.criteria);
-            if (!$scope.state.inputData.effect && !$scope.state.inputData.distribution) {
-              $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives,
-                $scope.state.inputData);
-            }
-          }
-          checkInputData();
-          setStateWatcher();
-        });
+        loadUnfinishedWorkspace();
       }
+    }
+
+    function copyOldWorkspace() {
+      $scope.state = ManualInputService.createStateFromOldWorkspace(
+        SchemaService.updateWorkspaceToCurrentSchema($stateParams.workspace));
+      $scope.dirty = true;
+      setStateWatcher();
+    }
+
+    function createNewWorkSpace() {
+      $scope.state = {
+        step: 'step1',
+        isInputDataValid: false,
+        useFavorability: false,
+        criteria: [],
+        alternatives: []
+      };
+      setStateWatcher();
+    }
+
+    function loadUnfinishedWorkspace() {
+      InProgressResource.get($stateParams).$promise.then(function(response) {
+        $scope.state = response.state;
+        if ($scope.state.step === 'step2') {
+          $scope.criteriaRows = EffectsTableService.buildTableRows($scope.state.criteria);
+          if (!$scope.state.inputData.effect && !$scope.state.inputData.distribution) {
+            $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives,
+              $scope.state.inputData);
+          }
+        }
+        checkInputData();
+        setStateWatcher();
+      });
     }
 
     function setStateWatcher() {
