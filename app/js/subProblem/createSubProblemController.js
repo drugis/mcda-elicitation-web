@@ -100,7 +100,6 @@ define(['lodash', 'angular'], function(_, angular) {
         $scope.subProblemState = SubProblemService.createSubProblemState($scope.problem, newSubProblem, $scope.criteria);
 
         updateInclusions();
-        initializeScales();
         checkDuplicateTitle($scope.subProblemState.title);
       });
     }
