@@ -91,23 +91,23 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
         var isDistributionDataValid = !ManualInputService.findInvalidCell($scope.state.inputData.distribution);
 
         if (isEffectDataValid && !isDistributionDataValid) {
-          $scope.state.warnings.push('SMAA tab contains invalid values which will not be used, Deterministic values for those cells will be used instead');
+          $scope.state.warnings.push('SMAA tab contains invalid inputs which will not be used, Deterministic inputs for those cells will be used instead');
         }
 
         if (!isEffectDataValid && isDistributionDataValid) {
-          $scope.state.warnings.push('Deterministic tab contains invalid values which will not be used, SMAA values for those cells will be used instead');
+          $scope.state.warnings.push('Deterministic tab contains invalid inputs which will not be used, SMAA inputs for those cells will be used instead');
         }
 
         if (!isEffectDataValid && !isDistributionDataValid) {
-          $scope.state.errors.push('Both tabs contain missing or invalid values');
+          $scope.state.errors.push('Both tabs contain missing or invalid inputs');
         }
 
-        if (ManualInputService.findDuplicateValues($scope.state.inputData.effect) && !isDistributionDataValid) {
-          $scope.state.errors.push('Deterministic tab contains a row with duplicate values');
+        if (ManualInputService.findDuplicateValues($scope.state.inputData.effect)) {
+          $scope.state.errors.push('Deterministic tab contains a row with duplicate inputs');
         }
 
-        if (ManualInputService.findDuplicateValues($scope.state.inputData.effect) && isDistributionDataValid) {
-          $scope.state.warnings.push('Deterministic tab contains a row with duplicate values and can not be used');
+        if (ManualInputService.findDuplicateValues($scope.state.inputData.distribution)) {
+          $scope.state.errors.push('Distribution tab contains a row with duplicate inputs');
         }
       }
     }

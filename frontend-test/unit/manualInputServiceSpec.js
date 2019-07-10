@@ -1008,13 +1008,19 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(result).toBeFalsy();
       });
 
-      it('should return falsy if there are not values in the row', function() {
+      it('should return falsy if there are no values in the row', function() {
         var inputData = {
           row1: {
             col1: {
+              inputParameters: {
+                id: 'value'
+              },
               isInvalid: true
             },
             col2: {
+              inputParameters: {
+                id: 'value'
+              },
               isInvalid: true
             }
           }

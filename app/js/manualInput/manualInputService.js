@@ -392,44 +392,43 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function findDuplicateValues(inputData) {
-      return !findInvalidCell(inputData) && !isTextCellRow(inputData) && findRowWithSameValues(inputData);
-    }
-
-    function isTextCellRow(inputData) {
       return _.some(inputData, function(row) {
-        return _.some(row, function(cell) {
-          return cell.inputParameters.id === 'text';
-        });
+        return !isDuplicateValueRow(row);
       });
     }
 
-    function findRowWithSameValues(inputData) {
-      return _.some(inputData, function(row) {
-        if (findCellThatIsDifferent(row)) {
-          return;
-        } else {
-          return row;
-        }
-      });
-    }
-
-    function findCellThatIsDifferent(row) {
+    function isDuplicateValueRow(row) {
+      var nonValueInputs = [
+        'normal',
+        'beta',
+        'gamma',
+        'empty',
+        'text'
+      ];
       return _.some(row, function(cell) {
-        return _.some(row, function(otherCell) {
-          return compareCells(cell, otherCell);
-        });
+        var isNonValueCell = _.includes(nonValueInputs, cell.inputParameters.id);
+        return isNonValueCell || cell.isInvalid || findCellThatIsDifferent(row, cell);
+      });
+    }
+
+    function findCellThatIsDifferent(row, cell) {
+      return _.some(row, function(otherCell) {
+        return compareCells(cell, otherCell);
       });
     }
 
     function compareCells(cell, otherCell) {
-      if (cell.inputParameters && cell.inputParameters.id === 'eventsSampleSize') {
-        if (otherCell.inputParameters.id === 'eventsSampleSize') {
-          return cell.firstParameter !== otherCell.firstParameter || cell.secondParameter !== otherCell.secondParameter;
-        } else {
-          return cell.firstParameter / cell.secondParameter !== otherCell.firstParameter;
-        }
+      var value = getValue(cell);
+      var otherValue = getValue(otherCell);
+      return value !== otherValue;
+    }
+
+    function getValue(cell) {
+      if (cell.inputParameters.id === 'eventsSampleSize') {
+        return cell.firstParameter / cell.secondParameter;
+      } else {
+        return cell.firstParameter;
       }
-      return cell.firstParameter !== otherCell.firstParameter;
     }
 
     function findInvalidCell(inputData) {
