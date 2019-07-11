@@ -44,6 +44,18 @@ define(['lodash', 'angular'], function(_, angular) {
       return distributionCell;
     }
 
+    function getConstraints(cell) {
+      var constraints = angular.copy(cell.inputParameters.firstParameter.constraints);
+      var options = _.keyBy([
+        ConstraintService.decimal(),
+        ConstraintService.percentage()
+      ], 'label');
+      if (_.includes(options, cell.constraint)) {
+        constraints.push(options[cell.constraint]);
+      }
+      return constraints;
+    }
+
     function generateValueSampleSizeDistribution(valueOption, betaOption, cell) {
       var distributionCell = angular.copy(cell);
       if (isPercentage(cell) || isDecimal(cell)) {
@@ -74,17 +86,6 @@ define(['lodash', 'angular'], function(_, angular) {
       return angular.copy(cell);
     }
 
-    function getConstraints(cell) {
-      var constraints = angular.copy(cell.inputParameters.firstParameter.constraints);
-      var options = _.keyBy([
-        ConstraintService.decimal(),
-        ConstraintService.percentage()
-      ], 'label');
-      if (cell.constraint) {
-        constraints.push(options[cell.constraint]);
-      }
-      return constraints;
-    }
 
     function areBoundsSymmetric(cell) {
       return (cell.thirdParameter + cell.secondParameter) / 2 === cell.firstParameter;

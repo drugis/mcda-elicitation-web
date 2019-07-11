@@ -375,6 +375,12 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function isDuplicateValueRow(row) {
+      return _.some(row, function(cell) {
+        return cell.isInvalid || isNonValueCell(cell) || findCellThatIsDifferent(row, cell);
+      });
+    }
+    
+    function isNonValueCell(cell){
       var nonValueInputs = [
         'normal',
         'beta',
@@ -382,10 +388,7 @@ define(['lodash', 'angular'], function(_, angular) {
         'empty',
         'text'
       ];
-      return _.some(row, function(cell) {
-        var isNonValueCell = _.includes(nonValueInputs, cell.inputParameters.id);
-        return isNonValueCell || cell.isInvalid || findCellThatIsDifferent(row, cell);
-      });
+      return  _.includes(nonValueInputs, cell.inputParameters.id);
     }
 
     function findCellThatIsDifferent(row, cell) {

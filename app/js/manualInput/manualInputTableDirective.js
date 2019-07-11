@@ -29,6 +29,7 @@ define(['lodash'], function(_) {
                   var criterion = _.find(scope.state.criteria, ['id', row.criterion.id]);
                   var dataSource = _.find(criterion.dataSources, ['id', row.dataSource.id]);
                   dataSource.unitOfMeasurement = values.value;
+                  row.dataSource.unitOfMeasurement = values.value;
                   setConstraints(values.selectedOption.label, row.dataSource.id);
                 };
               },
@@ -40,11 +41,13 @@ define(['lodash'], function(_) {
         }
 
         function setConstraints(label, dataSourceId) {
-          scope.state.inputData.effect[dataSourceId] = _.mapValues(scope.state.inputData.effect[dataSourceId], function(cell) {
+          var effectRow = scope.state.inputData.effect[dataSourceId];
+          scope.state.inputData.effect[dataSourceId] = _.mapValues(effectRow, function(cell) {
             cell.constraint = label;
             return cell;
           });
-          scope.state.inputData.distribution[dataSourceId] = _.mapValues(scope.state.inputData.distribution[dataSourceId], function(cell) {
+          var distributionRow = scope.state.inputData.distribution[dataSourceId];
+          scope.state.inputData.distribution[dataSourceId] = _.mapValues(distributionRow, function(cell) {
             if (cell.inputParameters.id === 'value') {
               cell.constraint = label;
             }
