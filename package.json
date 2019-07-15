@@ -1,6 +1,6 @@
 {
   "name": "mcda-web",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "description": "MCDA elicitation web interface (remote storage)",
   "main": "index.js",
   "scripts": {
