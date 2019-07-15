@@ -50,8 +50,9 @@ define(['lodash', 'angular'], function(_, angular) {
     function inputToString(cell) {
       if (getInputError(cell)) {
         return INVALID_INPUT_MESSAGE;
+      } else {
+        return cell.inputParameters.toString(cell);
       }
-      return cell.inputParameters.toString(cell);
     }
 
     function getOptions(inputType) {
@@ -73,9 +74,8 @@ define(['lodash', 'angular'], function(_, angular) {
     function prepareInputData(criteria, alternatives, oldInputData) {
       var dataSources = getDataSources(criteria);
       if (oldInputData) {
-        var effectData = createInputTableRows(dataSources, alternatives, oldInputData.effect);
         return {
-          effect: setConstraints(dataSources, effectData),
+          effect: createInputTableRows(dataSources, alternatives, oldInputData.effect),
           distribution: createInputTableRows(dataSources, alternatives, oldInputData.distribution)
         };
       } else {
@@ -83,35 +83,6 @@ define(['lodash', 'angular'], function(_, angular) {
           effect: createInputTableRows(dataSources, alternatives),
           distribution: createInputTableRows(dataSources, alternatives)
         };
-      }
-    }
-
-    function setConstraints(dataSources, effectData) {
-      return _.reduce(dataSources, function(accum, dataSource) {
-        accum[dataSource.id] = setConstraintsOnRow(dataSource, effectData);
-        return accum;
-      }, {});
-    }
-
-    function setConstraintsOnRow(dataSource, effectData) {
-      return _.reduce(effectData[dataSource.id], function(accum, cell, alternativeId) {
-        var newCell = angular.copy(cell);
-        newCell.constraint = getCellConstraint(dataSource);
-        if (newCell.inputParameters) {
-          newCell = updateParameterConstraints(newCell);
-        }
-        accum[alternativeId] = newCell;
-        return accum;
-      }, {});
-    }
-
-    function getCellConstraint(dataSource) {
-      if (dataSource.unitOfMeasurement === '%') {
-        return PROPORTION_PERCENTAGE;
-      } else if (dataSource.unitOfMeasurement === 'Proportion') {
-        return PROPORTION_DECIMAL;
-      } else {
-        return 'None';
       }
     }
 
@@ -130,27 +101,33 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function updateConstraints(cell, parameter) {
-      if (cell.inputParameters[parameter].label === 'Value' ||
-        cell.inputParameters[parameter].label === 'Lower bound' ||
-        cell.inputParameters[parameter].label === 'Upper bound' ||
-        cell.inputParameters[parameter].label === 'Standard error'
-      ) {
-        var newConstraints = angular.copy(cell.inputParameters[parameter].constraints);
-        var percentageConstraint = ConstraintService.percentage();
-        var decimalConstraint = ConstraintService.decimal();
-        newConstraints = removeProportionConstraints(newConstraints);
-        switch (cell.constraint) {
-          case percentageConstraint.label:
-            newConstraints.push(percentageConstraint);
-            break;
-          case decimalConstraint.label:
-            newConstraints.push(decimalConstraint);
-            break;
-        }
-        return newConstraints;
+      var updatetableParameters = [
+        'Value',
+        'Lower bound',
+        'Upper bound',
+        'Standard error'
+      ];
+      if (_.includes(updatetableParameters, cell.inputParameters[parameter].label)) {
+        return getNewConstraints(cell, parameter);
       } else {
         return cell.inputParameters[parameter].constraints;
       }
+    }
+
+    function getNewConstraints(cell, parameter) {
+      var newConstraints = angular.copy(cell.inputParameters[parameter].constraints);
+      var percentageConstraint = ConstraintService.percentage();
+      var decimalConstraint = ConstraintService.decimal();
+      newConstraints = removeProportionConstraints(newConstraints);
+      switch (cell.constraint) {
+        case PROPORTION_PERCENTAGE:
+          newConstraints.push(percentageConstraint);
+          break;
+        case PROPORTION_DECIMAL:
+          newConstraints.push(decimalConstraint);
+          break;
+      }
+      return newConstraints;
     }
 
     function removeProportionConstraints(constraints) {
@@ -392,44 +369,46 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function findDuplicateValues(inputData) {
-      return !findInvalidCell(inputData) && !isTextCellRow(inputData) && findRowWithSameValues(inputData);
-    }
-
-    function isTextCellRow(inputData) {
       return _.some(inputData, function(row) {
-        return _.some(row, function(cell) {
-          return cell.inputParameters.id === 'text';
-        });
+        return !isDuplicateValueRow(row);
       });
     }
 
-    function findRowWithSameValues(inputData) {
-      return _.some(inputData, function(row) {
-        if (findCellThatIsDifferent(row)) {
-          return;
-        } else {
-          return row;
-        }
-      });
-    }
-
-    function findCellThatIsDifferent(row) {
+    function isDuplicateValueRow(row) {
       return _.some(row, function(cell) {
-        return _.some(row, function(otherCell) {
-          return compareCells(cell, otherCell);
-        });
+        return cell.isInvalid || isNonValueCell(cell) || findCellThatIsDifferent(row, cell);
+      });
+    }
+    
+    function isNonValueCell(cell){
+      var nonValueInputs = [
+        'normal',
+        'beta',
+        'gamma',
+        'empty',
+        'text'
+      ];
+      return  _.includes(nonValueInputs, cell.inputParameters.id);
+    }
+
+    function findCellThatIsDifferent(row, cell) {
+      return _.some(row, function(otherCell) {
+        return compareCells(cell, otherCell);
       });
     }
 
     function compareCells(cell, otherCell) {
-      if (cell.inputParameters && cell.inputParameters.id === 'eventsSampleSize') {
-        if (otherCell.inputParameters.id === 'eventsSampleSize') {
-          return cell.firstParameter !== otherCell.firstParameter || cell.secondParameter !== otherCell.secondParameter;
-        } else {
-          return cell.firstParameter / cell.secondParameter !== otherCell.firstParameter;
-        }
+      var value = getValue(cell);
+      var otherValue = getValue(otherCell);
+      return value !== otherValue;
+    }
+
+    function getValue(cell) {
+      if (cell.inputParameters.id === 'eventsSampleSize') {
+        return cell.firstParameter / cell.secondParameter;
+      } else {
+        return cell.firstParameter;
       }
-      return cell.firstParameter !== otherCell.firstParameter;
     }
 
     function findInvalidCell(inputData) {

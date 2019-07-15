@@ -42,12 +42,21 @@ define(['lodash', 'angular'], function(_, angular) {
         var criterion = _.omit(row, ['dataSources']);
         criterion.numberOfDataSources = row.dataSources.length;
         accum = accum.concat(_.map(row.dataSources, function(dataSource, index) {
-          var unit = dataSource.unitOfMeasurement;
+          var newDataSource = angular.copy(dataSource);
+          var scale = dataSource.scale;
+          var isProportion = false;
+          if (_.isEqual(scale, [0, 1])) {
+            newDataSource.unitOfMeasurement = 'Proportion';
+            isProportion = true;
+          } else if (_.isEqual(scale, [0, 100])) {
+            newDataSource.unitOfMeasurement = '%';
+            isProportion = true;
+          }
           return {
             criterion: criterion,
             isFirstRow: index === 0,
-            dataSource: dataSource,
-            isProportion: unit === '%' || unit === 'Proportion'
+            dataSource: newDataSource,
+            isProportion: isProportion
           };
         }));
         return accum;
@@ -122,7 +131,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function buildEffectValueLabel(performance) {
       if (performance.effect && performance.effect.type !== 'empty') {
-        return performance.effect.value;
+        return significantDigits(performance.effect.value);
       } else {
         return '';
       }

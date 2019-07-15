@@ -583,14 +583,16 @@ define([
             isFavorable: true,
             dataSources: [{
               foo: 'bar',
-              unitOfMeasurement: '%'
+              unitOfMeasurement: 'not perc',
+              scale: [0, 100]
             }]
           }, {
             id: 'crit2',
             isFavorable: false,
             dataSources: [{
               foo: 'qux',
-              unitOfMeasurement: 'Proportion'
+              unitOfMeasurement: 'not Proportion',
+              scale: [0, 1]
             }, {
               zoq: 'fot'
             }]
@@ -606,7 +608,8 @@ define([
             },
             dataSource: {
               foo: 'bar',
-              unitOfMeasurement: '%'
+              unitOfMeasurement: '%',
+              scale: [0, 100]
             }
           }, {
             isFirstRow: true,
@@ -618,7 +621,8 @@ define([
             },
             dataSource: {
               foo: 'qux',
-              unitOfMeasurement: 'Proportion'
+              unitOfMeasurement: 'Proportion',
+              scale: [0, 1]
             }
           }, {
             isFirstRow: false,

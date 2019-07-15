@@ -100,7 +100,6 @@ define(['lodash', 'angular'], function(_, angular) {
         $scope.subProblemState = SubProblemService.createSubProblemState($scope.problem, newSubProblem, $scope.criteria);
 
         updateInclusions();
-        initializeScales();
         checkDuplicateTitle($scope.subProblemState.title);
       });
     }
@@ -127,12 +126,13 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function initializeScales() {
-      var filteredPerformanceTable =SubProblemService.excludeDeselectedAlternatives($scope.problem.performanceTable, $scope.subProblemState.alternativeInclusions);
+      var filteredPerformanceTable = SubProblemService.excludeDeselectedAlternatives($scope.problem.performanceTable, $scope.subProblemState.alternativeInclusions);
       var stateAndChoices = ScaleRangeService.getScalesStateAndChoices($scope.originalScales.base, $scope.criteria, filteredPerformanceTable);
       $scope.scalesState = stateAndChoices.scalesState;
       $scope.choices = stateAndChoices.choices;
 
-      $scope.scales = WorkspaceSettingsService.usePercentage() ? WorkspaceService.percentifyScales($scope.problem.criteria, $scope.scales) : $scope.scales;
+      $scope.usePercentage = WorkspaceSettingsService.usePercentage();
+      $scope.scales = $scope.usePercentage ? WorkspaceService.percentifyScales($scope.problem.criteria, $scope.originalScales.base) : $scope.originalScales.base;
       $scope.$watch('choices', function() {
         $scope.invalidSlider = SubProblemService.hasInvalidSlider($scope.scalesDataSources, $scope.choices, $scope.scalesState);
       }, true);

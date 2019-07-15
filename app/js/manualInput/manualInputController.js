@@ -34,7 +34,6 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
     generateUuid,
     swap
   ) {
-
     // functions
     $scope.addAlternative = addAlternative;
     $scope.alternativeDown = alternativeDown;
@@ -91,23 +90,23 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
         var isDistributionDataValid = !ManualInputService.findInvalidCell($scope.state.inputData.distribution);
 
         if (isEffectDataValid && !isDistributionDataValid) {
-          $scope.state.warnings.push('SMAA tab contains invalid values and can not be used');
+          $scope.state.warnings.push('SMAA tab contains invalid inputs which will not be used, Deterministic inputs for those cells will be used instead');
         }
 
         if (!isEffectDataValid && isDistributionDataValid) {
-          $scope.state.warnings.push('Classical tab contains invalid values and can not be used');
+          $scope.state.warnings.push('Deterministic tab contains invalid inputs which will not be used, SMAA inputs for those cells will be used instead');
         }
 
         if (!isEffectDataValid && !isDistributionDataValid) {
-          $scope.state.errors.push('Both tabs contain missing or invalid values');
+          $scope.state.errors.push('Both tabs contain missing or invalid inputs');
         }
 
-        if (ManualInputService.findDuplicateValues($scope.state.inputData.effect) && !isDistributionDataValid) {
-          $scope.state.errors.push('Classical tab contains a row with duplicate values');
+        if (ManualInputService.findDuplicateValues($scope.state.inputData.effect)) {
+          $scope.state.errors.push('Deterministic tab contains a row with duplicate inputs');
         }
 
-        if (ManualInputService.findDuplicateValues($scope.state.inputData.effect) && isDistributionDataValid) {
-          $scope.state.warnings.push('Classical tab contains a row with duplicate values and can not be used');
+        if (ManualInputService.findDuplicateValues($scope.state.inputData.distribution)) {
+          $scope.state.errors.push('Distribution tab contains a row with duplicate inputs');
         }
       }
     }
@@ -173,7 +172,7 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       }
     }
 
-    function hideTooltip(){
+    function hideTooltip() {
       $('div.tooltip:visible').hide();
       $('#step1SaveButton').removeClass('open');
       $('#step2SaveButton').removeClass('open');
@@ -213,36 +212,45 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
 
     function initState() {
       if ($stateParams.workspace) {
-        // copying existing workspace
-        $scope.state = ManualInputService.createStateFromOldWorkspace(
-          SchemaService.updateWorkspaceToCurrentSchema($stateParams.workspace));
-        $scope.dirty = true;
-        setStateWatcher();
+        copyOldWorkspace();
       } else if (!$stateParams.inProgressId) {
-        // new workspace
-        $scope.state = {
-          step: 'step1',
-          isInputDataValid: false,
-          useFavorability: false,
-          criteria: [],
-          alternatives: []
-        };
-        setStateWatcher();
+        createNewWorkSpace();
       } else {
-        // unfinished workspace
-        InProgressResource.get($stateParams).$promise.then(function(response) {
-          $scope.state = response.state;
-          if ($scope.state.step === 'step2') {
-            $scope.criteriaRows = EffectsTableService.buildTableRows($scope.state.criteria);
-            if (!$scope.state.inputData.effect && !$scope.state.inputData.distribution) {
-              $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives,
-                $scope.state.inputData);
-            }
-          }
-          checkInputData();
-          setStateWatcher();
-        });
+        loadUnfinishedWorkspace();
       }
+    }
+
+    function copyOldWorkspace() {
+      $scope.state = ManualInputService.createStateFromOldWorkspace(
+        SchemaService.updateWorkspaceToCurrentSchema($stateParams.workspace));
+      $scope.dirty = true;
+      setStateWatcher();
+    }
+
+    function createNewWorkSpace() {
+      $scope.state = {
+        step: 'step1',
+        isInputDataValid: false,
+        useFavorability: false,
+        criteria: [],
+        alternatives: []
+      };
+      setStateWatcher();
+    }
+
+    function loadUnfinishedWorkspace() {
+      InProgressResource.get($stateParams).$promise.then(function(response) {
+        $scope.state = response.state;
+        if ($scope.state.step === 'step2') {
+          $scope.criteriaRows = EffectsTableService.buildTableRows($scope.state.criteria);
+          if (!$scope.state.inputData.effect && !$scope.state.inputData.distribution) {
+            $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives,
+              $scope.state.inputData);
+          }
+        }
+        checkInputData();
+        setStateWatcher();
+      });
     }
 
     function setStateWatcher() {
