@@ -17,7 +17,7 @@ var OrderingService = require('./node-backend/orderingService')(db);
 var SubProblemService = require('./node-backend/subProblemService')(db);
 var ScenarioService = require('./node-backend/scenarioService')(db);
 var WorkspaceSettingsService = require('./node-backend/workspaceSettingsService')(db);
-var rightsManagement = require('rights-management')(WorkspaceRepository.get);
+var rightsManagement = require('rights-management')();
 
 var express = require('express');
 var http = require('http');
@@ -44,11 +44,12 @@ var sessionOptions = {
   }
 };
 
-function makeRights(path, method, requiredRight) {
+function makeRights(path, method, requiredRight, checkRights) {
   return {
     path: path,
     method: method,
-    requiredRight: requiredRight
+    requiredRight: requiredRight,
+    checkRights: checkRights
   };
 }
 
@@ -57,47 +58,49 @@ rightsManagement.setRequiredRights([
   makeRights('/workspaces', 'GET', 'none'),
   makeRights('/workspaces', 'POST', 'none'),
 
-  makeRights('/workspaces/:workspaceId', 'GET', 'read'),
-  makeRights('/workspaces/:workspaceId', 'POST', 'write'),
-  makeRights('/workspaces/:workspaceId', 'DELETE', 'owner'),
-  
-  makeRights('/workspaces/inProgress', 'GET', 'owner'),
-  makeRights('/workspaces/inProgress', 'POST', 'owner'),
-  makeRights('/workspaces/inProgress/:workspaceId', 'GET', 'owner'),
-  makeRights('/workspaces/inProgress/:workspaceId', 'PUT', 'owner'),
-  makeRights('/workspaces/inProgress/:workspaceId', 'DELETE', 'owner'),
-  
-  makeRights('/workspaces/:workspaceId/ordering', 'GET', 'read'),
-  makeRights('/workspaces/:workspaceId/ordering', 'PUT', 'write'),
+  makeRights('/workspaces/:workspaceId', 'GET', 'read', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId', 'POST', 'write', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId', 'DELETE', 'owner', workspaceOwnerRightsNeeded),
 
-  makeRights('/workspaces/:workspaceId/workspaceSettings', 'GET', 'read'),
-  makeRights('/workspaces/:workspaceId/workspaceSettings', 'PUT', 'write'),
+  makeRights('/inProgress', 'GET', 'none', inProgressOwnerRightsNeeded),
+  makeRights('/inProgress', 'POST', 'none', inProgressOwnerRightsNeeded),
+  makeRights('/inProgress/:workspaceId', 'GET', 'none', inProgressOwnerRightsNeeded),
+  makeRights('/inProgress/:workspaceId', 'PUT', 'none', inProgressOwnerRightsNeeded),
+  makeRights('/inProgress/:workspaceId', 'DELETE', 'none', inProgressOwnerRightsNeeded),
 
-  makeRights('/workspaces/:workspaceId/problems', 'GET', 'read'),
-  makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'GET', 'read'),
-  makeRights('/workspaces/:workspaceId/problems', 'POST', 'write'),
-  makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'POST', 'write'),
+  makeRights('/workspaces/:workspaceId/ordering', 'GET', 'read', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/ordering', 'PUT', 'write', workspaceOwnerRightsNeeded),
 
-  makeRights('/workspaces/:workspaceId/scenarios', 'GET', 'read'),
-  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios', 'GET', 'read'),
-  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'GET', 'read'),
-  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios', 'POST', 'write'),
-  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'POST', 'write')
+  makeRights('/workspaces/:workspaceId/workspaceSettings', 'GET', 'read', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/workspaceSettings', 'PUT', 'write', workspaceOwnerRightsNeeded),
+
+  makeRights('/workspaces/:workspaceId/problems', 'GET', 'read', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'GET', 'read', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/problems', 'POST', 'write', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'POST', 'write', workspaceOwnerRightsNeeded),
+
+  makeRights('/workspaces/:workspaceId/scenarios', 'GET', 'read', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios', 'GET', 'read', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'GET', 'read', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios', 'POST', 'write', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'POST', 'write', workspaceOwnerRightsNeeded)
 ]);
 
+function workspaceOwnerRightsNeeded(response, next, workspaceId, userId) {
+  WorkspaceRepository.get(workspaceId, _.partial(rightsCallback, response, next, userId));
+}
 
+function inProgressOwnerRightsNeeded(response, next, workspaceId, userId) {
+  WorkspaceService.getInProgress(workspaceId, _.partial(rightsCallback, response, next, userId));
+}
 
-function initializeRouter() {
-  var router = express.Router();
-  router.get('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
-  router.post('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
-  router.delete('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
-  router.get('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
-  router.put('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
-  router.put('/workspaces/:id/ordering', WorkspaceService.requireUserIsWorkspaceOwner);
-  router.put('/workspaces/:id/workspaceSettings', WorkspaceService.requireUserIsWorkspaceOwner);
-  router.delete('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
-  app.use(router);
+function rightsCallback(response, next, userId, error, workspace) {
+  if (error) { next(error); }
+  if (workspace.owner !== userId) {
+    response.status(403).send('Insufficient user rights');
+  } else {
+    next();
+  }
 }
 
 var app = express();
@@ -152,6 +155,7 @@ app.get('/mcda-page-titles.json', function(req, res) {
 app.use(express.static('dist'));
 app.use(express.static('public'));
 app.use('/examples', express.static(__dirname + '/examples'));
+app.use('/css/fonts', express.static('./dist/fonts'));
 app.use(rightsManagement.expressMiddleware);
 
 // Workspaces in progress
@@ -206,8 +210,6 @@ app.post('/patavi', function(req, res, next) { // FIXME: separate routes for sca
     });
   });
 });
-
-app.use('/css/fonts', express.static('./dist/fonts'));
 
 app.use((error, request, response, next) => {
   logger.error(JSON.stringify(error.message, null, 2));
