@@ -71,7 +71,6 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
       });
     });
 
-
     describe('determineBaseline', () => {
       it('should determine the baseline alternative', () => {
         var performanceTable = [{
@@ -93,57 +92,6 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         };
         var result = subProblemService.determineBaseline(performanceTable, alternatives);
         expect(result).toEqual(expectedResult);
-      });
-    });
-
-    describe('checkScaleRanges', () => {
-      it('should check wether there are no missing scale ranges', () => {
-        var criteria1 = {
-          crit1: {
-            dataSources: [{
-
-            }]
-          }
-        };
-        var criteria2 = {
-          crit2: {
-            dataSources: [{
-              pvf: {}
-            }]
-          }
-        };
-        var criteria3 = {
-          crit3: {
-            dataSources: [{
-              pvf: {
-                range: []
-              }
-            }]
-          }
-        };
-        var criteria4 = {
-          crit4: {
-            dataSources: [{
-              pvf: {
-                range: [1]
-              }
-            }]
-          }
-        };
-        var criteria5 = {
-          crit5: {
-            dataSources: [{
-              pvf: {
-                range: [1, 0]
-              }
-            }]
-          }
-        };
-        expect(subProblemService.checkScaleRanges(criteria1)).toBeFalsy();
-        expect(subProblemService.checkScaleRanges(criteria2)).toBeFalsy();
-        expect(subProblemService.checkScaleRanges(criteria3)).toBeFalsy();
-        expect(subProblemService.checkScaleRanges(criteria4)).toBeFalsy();
-        expect(subProblemService.checkScaleRanges(criteria5)).toBeTruthy();
       });
     });
 
@@ -226,6 +174,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales);
         expect(result).toBeTruthy();
       });
+
       it('should return falsy if there no missing or invalid values', () => {
         var scales = {
           ds1: {
@@ -234,6 +183,178 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         };
         var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales);
         expect(result).toBeFalsy();
+      });
+
+      it('should return falsy if the distribution is missing, but there is an effect value', function() {
+        var performanceTable = [{
+          alternative: 'alt1',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'value',
+              value: 10
+            }
+          }
+        }];
+        var scales = {
+          ds1: {
+            alt1: { '50%': null }
+          }
+        };
+        var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales, performanceTable);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return falsy if the effect is missing, but there is an distribution value', function() {
+        var performanceTable = [{
+          alternative: 'alt1',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'empty'
+            }
+          }
+        }];
+        var scales = {
+          ds1: {
+            alt1: { '50%': 5 }
+          }
+        };
+        var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales, performanceTable);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return truthy if both the distribution and effect value are missing', function() {
+        var performanceTable = [{
+          alternative: 'alt1',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'empty'
+            }
+          }
+        }];
+        var scales = {
+          ds1: {
+            alt1: { '50%': null }
+          }
+        };
+        var result = subProblemService.areValuesMissingInEffectsTable(subProblemState, scales, performanceTable);
+        expect(result).toBeTruthy();
+      });
+    });
+
+    describe('getMissingValueWarnings', function() {
+      var subProblemState = {
+        dataSourceInclusions: { 'ds1': true },
+        alternativeInclusions: { 'alt1': true }
+      };
+      var noSMAAWarning = 'Some cell(s) are missing SMAA values. Deterministic values will be used for these cell(s).';
+      var noDeterministicWarning = 'Some cell(s) are missing deterministic values. SMAA values will be used for these cell(s).';
+
+      it('should return no warnings if all values are present', function() {
+        var scales = {
+          ds1: {
+            alt1: { '50%': 10 }
+          }
+        };
+        var performanceTable = [{
+          alternative: 'alt1',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'value',
+              value: 10
+            }
+          }
+        }];
+        var warnings = subProblemService.getMissingValueWarnings(subProblemState, scales, performanceTable);
+
+        var expectedWarnings = [];
+        expect(warnings).toEqual(expectedWarnings);
+      });
+
+      it('should warn about missing SMAA values when Deterministic values are present', function() {
+        var scales = {
+          ds1: {
+            alt1: { '50%': null }
+          }
+        };
+        var performanceTable = [{
+          alternative: 'alt1',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'value',
+              value: 10
+            }
+          }
+        }];
+        var warnings = subProblemService.getMissingValueWarnings(subProblemState, scales, performanceTable);
+
+        var expectedWarnings = [noSMAAWarning];
+        expect(warnings).toEqual(expectedWarnings);
+      });
+
+      it('should warn about missing deterministic values when SMAA values are present', function() {
+        var scales = {
+          ds1: {
+            alt1: { '50%': 10 }
+          }
+        };
+        var performanceTable = [{
+          alternative: 'alt1',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'empty'
+            }
+          }
+        }];
+        var warnings = subProblemService.getMissingValueWarnings(subProblemState, scales, performanceTable);
+
+        var expectedWarnings = [noDeterministicWarning];
+        expect(warnings).toEqual(expectedWarnings);
+      });
+
+      it('should warn about missing deterministic and SMAA values', function() {
+        var subProblemStateExtended = {
+          dataSourceInclusions: {
+            ds1: true
+          },
+          alternativeInclusions: {
+            alt1: true,
+            alt2: true
+          }
+        };
+        var scales = {
+          ds1: {
+            alt1: { '50%': 10 },
+            alt2: { '50%': null }
+          }
+        };
+        var performanceTable = [{
+          alternative: 'alt1',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'empty'
+            }
+          }
+        }, {
+          alternative: 'alt2',
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              type: 'value',
+              value: 10
+            }
+          }
+        }];
+        var warnings = subProblemService.getMissingValueWarnings(subProblemStateExtended, scales, performanceTable);
+
+        var expectedWarnings = [noDeterministicWarning, noSMAAWarning];
+        expect(warnings).toEqual(expectedWarnings);
       });
     });
 
@@ -442,6 +563,93 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
           }
         };
         expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('excludeDeselectedAlternatives', function() {
+      it('should return a performance table without the deselected alternatives', function() {
+        var alternativeInclusions = {
+          a1: true,
+          a2: false
+        };
+        var performanceTable = [{
+          alternative: 'a1'
+        }, {
+          alternative: 'a2'
+        }];
+
+        var result = subProblemService.excludeDeselectedAlternatives(performanceTable, alternativeInclusions);
+
+        var expectedResult = [{
+          alternative: 'a1'
+        }];
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('areTooManyDataSourcesIncluded', () => {
+      it('return truthy if there is atleast one criterion with multiple selected datasources', () => {
+        var criteria = [{
+          dataSources: [{}, {}]
+        }];
+        var result = subProblemService.areTooManyDataSourcesIncluded(criteria);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return falsy if there is no criterion with multiple dataSources selected', () => {
+        var criteria = [{
+          dataSources: [{}]
+        }];
+        var result = subProblemService.areTooManyDataSourcesIncluded(criteria);
+        expect(result).toBeFalsy();
+      });
+    });
+
+    describe('findRowWithoutValues', function() {
+      it('should return false if there is no row without valid values', function() {
+        var effectsTableInfo = {
+          ds1: {
+            alt1: {
+              isAbsolute: false
+            }
+          },
+          ds2: {
+            alt1: {
+              isAbsolute: true,
+              effectValue: 5
+            }
+          },
+          ds3: {
+            alt1: {
+              isAbsolute: true,
+              effectValue: ''
+            }
+          }
+        };
+        var scales = {
+          observed: {
+            ds3: {
+              alt1: {
+                '50%': 123
+              }
+            }
+          }
+        };
+        var result = subProblemService.findRowWithoutValues(effectsTableInfo, scales);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return true if there is at least one row without valid values', function(){
+        var effectsTableInfo = {
+          ds1: {
+            alt1: {
+              isAbsolute: false
+            }
+          }
+        };
+        var scales = {};
+        var result = subProblemService.findRowWithoutValues(effectsTableInfo, scales);
+        expect(result).toBeFalsy();
       });
     });
   });

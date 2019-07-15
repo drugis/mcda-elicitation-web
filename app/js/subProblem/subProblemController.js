@@ -1,36 +1,35 @@
 'use strict';
 define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
   var dependencies = [
-    '$scope', 
-    '$stateParams', 
-    '$modal', 
+    '$scope',
+    '$stateParams',
+    '$modal',
     '$state',
-    'intervalHull',
     'subProblems',
     'SubProblemService',
     'ScenarioResource',
     'OrderingService',
     'SubProblemResource',
     'EffectsTableService',
-    'PageTitleService'
+    'PageTitleService',
+    'ScaleRangeService'
   ];
 
   var SubProblemController = function(
-    $scope, 
-    $stateParams, 
-    $modal, 
+    $scope,
+    $stateParams,
+    $modal,
     $state,
-    intervalHull,
     subProblems,
     SubProblemService,
     ScenarioResource,
     OrderingService,
     SubProblemResource,
     EffectsTableService,
-    PageTitleService
+    PageTitleService,
+    ScaleRangeService
   ) {
     // functions 
-    $scope.intervalHull = intervalHull;
     $scope.openCreateDialog = openCreateDialog;
     $scope.subProblemChanged = subProblemChanged;
     $scope.editSubProblemTitle = editSubProblemTitle;
@@ -39,26 +38,17 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     $scope.subProblems = subProblems;
     $scope.scales = $scope.workspace.scales;
     $scope.problem = _.cloneDeep($scope.workspace.problem);
-    $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
+    $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.table = EffectsTableService.b, $scope.problem.alternatives);
     PageTitleService.setPageTitle('SubProblemController', ($scope.problem.title || $scope.workspace.title) + '\'s problem definition');
 
-    $scope.areTooManyDataSourcesIncluded = _.find($scope.aggregateState.problem.criteria, function(criterion) {
-      return criterion.dataSources.length > 1;
-    });
-
+    $scope.areTooManyDataSourcesIncluded = SubProblemService.areTooManyDataSourcesIncluded($scope.aggregateState.problem.criteria);
+    $scope.hasRowWithOnlyMissingValues = SubProblemService.findRowWithoutValues($scope.effectsTableInfo, $scope.scales);
     setScaleTable();
-
-    function setScaleTable() {
-      OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
-        $scope.criteria = orderings.criteria;
-        $scope.alternatives = orderings.alternatives;
-        $scope.scaleTable = _.reject(EffectsTableService.buildEffectsTable(orderings.criteria), 'isHeaderRow');
-      });
-    }
 
     $scope.$watch('workspace.scales', function(newScales, oldScales) {
       if (newScales && oldScales && newScales.observed === oldScales.observed) { return; }
       $scope.scales = newScales;
+      setScaleTable();
     }, true);
 
     $scope.$watch('aggregateState', function(newState, oldState) {
@@ -67,6 +57,15 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     });
 
     new Clipboard('.clipboard-button');
+
+    function setScaleTable() {
+      OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
+        $scope.criteria = orderings.criteria;
+        $scope.alternatives = orderings.alternatives;
+        var effectsTable = EffectsTableService.buildEffectsTable(orderings.criteria);
+        $scope.scaleTable = ScaleRangeService.getScaleTable(effectsTable, $scope.scales, $scope.problem.performanceTable);
+      });
+    }
 
     function openCreateDialog() {
       $modal.open({
@@ -138,7 +137,6 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
         }
       });
     }
-
   };
 
   return dependencies.concat(SubProblemController);

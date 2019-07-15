@@ -101,7 +101,7 @@ module.exports = function(db) {
     logger.debug('create workspace');
 
     function workspaceTransaction(client, callback) {
-      function createWorkspace(callback) {
+      function createNewWorkspace(callback) {
         logger.debug('creating workspace');
 
         // create a new workspace
@@ -119,7 +119,8 @@ module.exports = function(db) {
           ranges: util.getRanges(req.body.problem)
         };
         logger.debug('created definition ' + JSON.stringify(definition));
-        client.query('INSERT INTO subProblem (workspaceid, title, definition) VALUES ($1, $2, $3) RETURNING id', [workspaceId, 'Default', definition], function(err, result) {
+        client.query('INSERT INTO subProblem (workspaceid, title, definition) VALUES ($1, $2, $3) RETURNING id', [
+          workspaceId, 'Default', definition], function(err, result) {
           if (err) {
             logger.error('error creating subproblem');
             return callback(err);
@@ -169,7 +170,7 @@ module.exports = function(db) {
       }
 
       async.waterfall([
-        createWorkspace,
+        createNewWorkspace,
         createSubProblem,
         setDefaultSubProblem,
         createScenario,

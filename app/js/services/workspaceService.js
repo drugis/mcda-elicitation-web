@@ -1,26 +1,43 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
+    '$q',
     'PataviResultsService',
     'significantDigits'
   ];
 
   var WorkspaceService = function(
+    $q,
     PataviResultsService,
     significantDigits
   ) {
     function getObservedScales(problem) {
-      var scalesProblem = _.cloneDeep(problem);
-      var dataSources = _.reduce(scalesProblem.criteria, function(accum, criterion) {
-        return accum.concat(criterion.dataSources);
-      }, []);
-      scalesProblem.criteria = _.keyBy(dataSources, 'id');
-      scalesProblem.performanceTable = _.map(scalesProblem.performanceTable, function(entry) {
+      var newProblem = createProblem(problem);
+      return newProblem ? PataviResultsService.postAndHandleResults(newProblem) : $q.resolve(undefined);
+    }
+
+    function createProblem(problem) {
+      var newProblem = angular.copy(problem);
+      var dataSources = getDataSources(newProblem.criteria);
+      newProblem.criteria = _.keyBy(dataSources, 'id');
+
+      newProblem.performanceTable = createPerformanceTable(newProblem.performanceTable);
+      newProblem.method = 'scales';
+      return newProblem;
+    }
+
+    function createPerformanceTable(performanceTable) {
+      return _.map(performanceTable, function(entry) {
         entry.criterion = entry.dataSource;
+        entry.performance = entry.performance.distribution ? entry.performance.distribution : entry.performance.effect;
         return entry;
       });
-      scalesProblem.method = 'scales';
-      return PataviResultsService.postAndHandleResults(scalesProblem);
+    }
+
+    function getDataSources(criteria) {
+      return _.reduce(criteria, function(accum, criterion) {
+        return accum.concat(criterion.dataSources);
+      }, []);
     }
 
     function percentifyScales(criteria, observedScales) {
@@ -29,12 +46,13 @@ define(['lodash', 'angular'], function(_, angular) {
       }, []), 'id');
 
       return _.reduce(observedScales, function(accum, scaleRow, datasourceId) {
-        if (!dataSources[datasourceId]) { return accum; }
-        accum[datasourceId] = _.reduce(scaleRow, function(accum, scaleCell, alternativeId) {
-          var usePercentage = _.isEqual(dataSources[datasourceId].scale, [0, 1]);
-          accum[alternativeId] = usePercentage ? _.mapValues(scaleCell, times100) : scaleCell;
-          return accum;
-        }, {});
+        if (dataSources[datasourceId]) {
+          accum[datasourceId] = _.reduce(scaleRow, function(accum, scaleCell, alternativeId) {
+            var usePercentage = _.isEqual(dataSources[datasourceId].scale, [0, 1]);
+            accum[alternativeId] = usePercentage ? _.mapValues(scaleCell, times100) : scaleCell;
+            return accum;
+          }, {});
+        }
         return accum;
       }, {});
     }
@@ -47,30 +65,9 @@ define(['lodash', 'angular'], function(_, angular) {
       var criteriaWithUpdatedDataSources = updateDataSources(baseState.problem.criteria, percentifyDataSource);
       return _.merge({}, baseState, {
         problem: {
-          criteria: percentifyCriteriaUnits(criteriaWithUpdatedDataSources)
+          criteria: criteriaWithUpdatedDataSources
         }
       });
-    }
-
-    function percentifyCriteriaUnits(criteria) {
-      return _.mapValues(criteria, _.partial(setUnitForScale, [0, 100], '%'));
-    }
-
-    function fixProportionUnits(criteria) {
-      return _.mapValues(criteria, _.partial(setUnitForScale, [0, 1], ''));
-    }
-
-    function setUnitForScale(scale, unit, criterion) {
-      return _.extend({}, criterion, {
-        unitOfMeasurement: getUnitOfMeasurement(criterion, scale, unit)
-      });
-    }
-
-    function getUnitOfMeasurement(criterion, scale, unit) {
-      var hasPercentScale = _.find(criterion.dataSources, function(dataSource) {
-        return _.isEqual(dataSource.scale, scale);
-      });
-      return hasPercentScale ? unit : criterion.unitOfMeasurement;
     }
 
     function updateDataSources(criteria, fn) {
@@ -100,8 +97,9 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function percentifyDataSource(dataSource) {
       var newDataSource = angular.copy(dataSource);
-      if (_.isEqual([0, 1], newDataSource.scale)) {
+      if (_.isEqual([0, 100], newDataSource.scale) || _.isEqual([0, 1], newDataSource.scale)) {
         newDataSource.scale = [0, 100];
+        newDataSource.unitOfMeasurement = '%';
         if (newDataSource.pvf) {
           if (newDataSource.pvf.range) {
             newDataSource.pvf.range = _.map(newDataSource.pvf.range, times100);
@@ -110,6 +108,24 @@ define(['lodash', 'angular'], function(_, angular) {
             newDataSource.pvf.cutoffs = _.map(newDataSource.pvf.cutoffs, times100);
           }
         }
+      }
+      return newDataSource;
+    }
+
+    function dePercentifyCriteria(baseState) {
+      var criteriaWithUpdatedDataSources = updateDataSources(baseState.problem.criteria, dePercentifyDataSource);
+      return _.merge({}, baseState, {
+        problem: {
+          criteria: criteriaWithUpdatedDataSources
+        }
+      });
+    }
+
+    function dePercentifyDataSource(dataSource) {
+      var newDataSource = angular.copy(dataSource);
+      if (_.isEqual([0, 100], newDataSource.scale) || _.isEqual([0, 1], newDataSource.scale)) {
+        newDataSource.scale = [0, 1];
+        newDataSource.unitOfMeasurement = 'Proportion';
       }
       return newDataSource;
     }
@@ -142,7 +158,6 @@ define(['lodash', 'angular'], function(_, angular) {
         return _.merge({}, alternative, baseProblem.alternatives[key]);
       });
       newState.problem.criteria = addTheoreticalScales(newState.problem.criteria);
-      newState.problem.criteria = fixProportionUnits(newState.problem.criteria);
       return newState;
     }
 
@@ -249,10 +264,10 @@ define(['lodash', 'angular'], function(_, angular) {
       var maximum = -Infinity;
       _.forEach(scales, function(scale) {
         _.forEach(scale, function(value) {
-          if (value < minimum) {
+          if (value !== null && value < minimum) {
             minimum = value;
           }
-          if (value > maximum) {
+          if (value !== null && value > maximum) {
             maximum = value;
           }
         });
@@ -413,7 +428,7 @@ define(['lodash', 'angular'], function(_, angular) {
         return;
       }
       var firstType = workspace.preferences[0].type;
-      if (_.find(workspace.preferences, function(preference) {
+      if (_.some(workspace.preferences, function(preference) {
         return preference.type !== firstType;
       })) {
         return 'Preferences should all be the same type';
@@ -479,7 +494,9 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function isAbsolutePerformance(tableEntry) {
-      return tableEntry.performance.type.indexOf('relative') !== 0;
+      return tableEntry.performance.effect ||
+        tableEntry.performance.distribution ||
+        tableEntry.performance.type.indexOf('relative') !== 0;
     }
 
     function criterionLackingTitle(workspace) {
@@ -543,11 +560,19 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function hasNoStochasticResults(aggregateState) {
-      var isAllExact = !_.find(aggregateState.problem.performanceTable, function(tableEntry) {
-        return tableEntry.performance.type !== 'exact';
+      var isAllExact = !_.some(aggregateState.problem.performanceTable, function(tableEntry) {
+        return tableEntry.performance.distribution && tableEntry.performance.distribution.type !== 'exact';
       });
-      var isExactSwing = _.find(aggregateState.prefs, ['type', 'exact swing']);
+      var isExactSwing = _.some(aggregateState.prefs, ['type', 'exact swing']);
       return isAllExact && isExactSwing;
+    }
+
+
+    function checkForMissingValuesInPerformanceTable(performanceTable) {
+      return _.some(performanceTable, function(entry) {
+        return entry.performance.effect && entry.performance.effect.type === 'empty' &&
+          entry.performance.distribution && entry.performance.distribution.type === 'empty';
+      });
     }
 
     return {
@@ -561,7 +586,9 @@ define(['lodash', 'angular'], function(_, angular) {
       validateWorkspace: validateWorkspace,
       addTheoreticalScales: addTheoreticalScales,
       percentifyCriteria: percentifyCriteria,
-      hasNoStochasticResults: hasNoStochasticResults
+      dePercentifyCriteria: dePercentifyCriteria,
+      hasNoStochasticResults: hasNoStochasticResults,
+      checkForMissingValuesInPerformanceTable: checkForMissingValuesInPerformanceTable
     };
   };
 

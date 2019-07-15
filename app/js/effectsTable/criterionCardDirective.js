@@ -2,15 +2,17 @@
 define(['lodash'], function(_) {
   var dependencies = [
     '$modal',
-    'WorkspaceSettingsService',
     'swap',
-    'isMcdaStandalone'
+    'isMcdaStandalone',
+    'WorkspaceSettingsService',
+    'EffectsTableService'
   ];
   var CriterionCardDirective = function(
     $modal,
-    WorkspaceSettingsService,
     swap,
-    isMcdaStandalone
+    isMcdaStandalone,
+    WorkspaceSettingsService,
+    EffectsTableService
   ) {
     return {
       restrict: 'E',
@@ -26,7 +28,10 @@ define(['lodash'], function(_) {
         'isInput': '=',
         'saveOrdering': '=',
         'saveWorkspace': '=',
-        'editMode': '='
+        'editMode': '=',
+        'scales': '=',
+        'alternatives': '=',
+        'effectsTableInfo': '='
       },
       templateUrl: '../effectsTable/criterionCardDirective.html',
       link: function(scope) {
@@ -38,24 +43,23 @@ define(['lodash'], function(_) {
         scope.removeDataSource = removeDataSource;
         scope.editDataSource = editDataSource;
 
-        // init
-        scope.INPUT_METHODS = {
-          manualDistribution: 'Manual distribution',
-          assistedDistribution: 'Assisted distribution'
-        };
+        updateSettings();
+        setIsCellAnalysisViable();
+        
+        scope.$on('elicit.settingsChanged', updateSettings);
+        scope.$watch('scales',setIsCellAnalysisViable );
 
-        scope.PARAMETERS_OF_INTEREST = {
-          mean: 'Mean',
-          median: 'Median',
-          cumulativeProbability: 'Cumulative probability',
-          eventProbability: 'Event probability',
-          value: 'value'
-        };
+        function setIsCellAnalysisViable() {
+          scope.isCellAnalysisViable = EffectsTableService.createIsCellAnalysisViableForCriterionCard(
+            scope.criterion, scope.alternatives, scope.effectsTableInfo, scope.scales
+          );
+        }
 
-        setUnit();
-        scope.$on('elicit.settingsChanged', setUnit);
+        function updateSettings() {
+          scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
+          scope.isValueView = scope.workspaceSettings.effectsDisplay === 'smaa' || scope.workspaceSettings.effectsDisplay === 'deterministicMCDA';
+        }
 
-        // public 
         function criterionUp() {
           scope.goUp(scope.idx);
           if (!scope.isInput) {
@@ -114,16 +118,6 @@ define(['lodash'], function(_) {
           swap(array, idx, newIdx);
           if (!scope.isInput) {
             scope.saveOrdering();
-          }
-        }
-
-        function setUnit() {
-          if (_.isEqual(scope.criterion.dataSources[0].scale, [0, 1])) {
-            if (WorkspaceSettingsService.usePercentage()) {
-              scope.criterion.unitOfMeasurement = '%';
-            } else {
-              delete scope.criterion.unitOfMeasurement;
-            }
           }
         }
       }

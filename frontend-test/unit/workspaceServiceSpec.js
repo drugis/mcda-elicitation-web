@@ -1,12 +1,20 @@
 'use strict';
 /* globals exampleProblem, exampleRelativeProblem */
-define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/misc'], function(_, angular) {
+define([
+  'lodash',
+  'angular',
+  'angular-mocks',
+  'mcda/workspace/workspace',
+  'mcda/misc'
+], function(_, angular) {
   describe('The WorkspaceService, ', function() {
     var workspaceService;
     var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsService', ['postAndHandleResults']);
+    var qMock = jasmine.createSpyObj('$q', ['resolve']);
 
     beforeEach(angular.mock.module('elicit.workspace', function($provide) {
       $provide.value('PataviResultsService', pataviResultsServiceMock);
+      $provide.value('$q', qMock);
     }));
 
     beforeEach(inject(function(WorkspaceService) {
@@ -14,35 +22,79 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
     }));
 
     describe('getObservedScales', function() {
-      it('should call the pataviResultService', function() {
-        workspaceService.getObservedScales({
+      beforeEach(function() {
+        pataviResultsServiceMock.postAndHandleResults.calls.reset();
+      });
+
+      it('should call the pataviResultService with distribution data', function() {
+        var problem = {
           criteria: {
             crit1: {
               dataSources: [{ id: 'ds1' }]
             }
           },
-          performanceTable: [
-            {
-              criterion: 'crit1',
-              dataSource: 'ds1'
+          performanceTable: [{
+            criterion: 'crit1',
+            dataSource: 'ds1',
+            performance: {
+              distribution: {}
             }
-          ]
-        });
-        expect(pataviResultsServiceMock.postAndHandleResults).toHaveBeenCalledWith({
+          }]
+        };
+        var expectedProblem = {
           criteria: {
             ds1: {
               id: 'ds1'
             }
           },
-          performanceTable: [
-            {
-              criterion: 'ds1',
-              dataSource: 'ds1'
-            }
-          ],
+          performanceTable: [{
+            criterion: 'ds1',
+            dataSource: 'ds1',
+            performance: {}
+          }],
           method: 'scales'
-        });
+        };
+
+        workspaceService.getObservedScales(problem);
+
+        expect(pataviResultsServiceMock.postAndHandleResults).toHaveBeenCalledWith(expectedProblem);
       });
+
+      it('should call the pataviResultService with effect data if distribution data is missing', function() {
+        var problem = {
+          criteria: {
+            crit1: {
+              dataSources: [{ id: 'ds1' }]
+            }
+          },
+          performanceTable: [{
+            criterion: 'crit1',
+            dataSource: 'ds1',
+            performance: {
+              effect: {}
+            }
+          }]
+        };
+
+        var expectedProblem = {
+          criteria: {
+            ds1: {
+              id: 'ds1'
+            }
+          },
+          performanceTable: [{
+            criterion: 'ds1',
+            dataSource: 'ds1',
+            performance: {}
+          }],
+          method: 'scales'
+        };
+
+        workspaceService.getObservedScales(problem);
+
+        expect(pataviResultsServiceMock.postAndHandleResults).toHaveBeenCalledWith(expectedProblem);
+      });
+
     });
 
     describe('mergeBaseAndSubProblem', function() {
@@ -205,8 +257,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
               }]
             },
             critId2: {
-              unitOfMeasurement: 'replaceme',
               dataSources: [{
+                unitOfMeasurement: 'keepme',
                 id: 'ds2',
                 scale: [0, 1]
               }]
@@ -260,9 +312,9 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           problem: {
             criteria: {
               critId2: {
-                unitOfMeasurement: '',
                 dataSources: [{
                   id: 'ds2',
+                  unitOfMeasurement: 'keepme',
                   pvf: {
                     range: [2, 3]
                   },
@@ -270,7 +322,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
                 }]
               },
               critId4: {
-                unitOfMeasurement: undefined,
                 dataSources: [{
                   id: 'ds4',
                   pvf: {
@@ -621,6 +672,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeTruthy();
           expect(validity.errorMessage).toBe(undefined);
         });
+
         it('should fail if a required property is missing', function() {
           var example = exampleProblem();
           var withoutTitle = _.omit(example, 'title');
@@ -632,6 +684,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validitywithoutCriteriaAndAlternatives.isValid).toBeFalsy();
           expect(validitywithoutCriteriaAndAlternatives.errorMessage).toBe('Missing workspace properties: criteria, alternatives');
         });
+
         it('should fail if there are fewer than 2 criteria', function() {
           var example = exampleProblem();
           var exampleWithOneCriterion = _.cloneDeep(example);
@@ -641,6 +694,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Two or more criteria required');
         });
+
         it('should fail if there are fewer than 2 alternatives', function() {
           var example = exampleProblem();
           var exampleWithOneAlternative = _.cloneDeep(example);
@@ -649,6 +703,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Two or more alternatives required');
         });
+
         it('should fail if there is data in the performanceTable for nonexistent criteria', function() {
           var exampleWithExtraPerformanceData = _.cloneDeep(exampleProblem());
           exampleWithExtraPerformanceData.performanceTable.push({
@@ -663,6 +718,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Performance table contains data for nonexistent criterion: "nonsense"');
         });
+
         it('should fail if there is data in the performanceTable for nonexistent alternatives', function() {
           var exampleWithExtraPerformanceData = _.cloneDeep(exampleProblem());
           exampleWithExtraPerformanceData.performanceTable.push({
@@ -677,6 +733,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Performance table contains data for nonexistent alternative: "nonsense"');
         });
+
         it('should fail if a cell of the performance table is left empty', function() {
           var exampleWithMissingPerformanceData = _.cloneDeep(exampleProblem());
           exampleWithMissingPerformanceData.performanceTable.pop();
@@ -684,6 +741,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Performance table is missing data for criterion "Bleed" and alternative "Enox"');
         });
+
         it('should fail if a criterion lacks a title', function() {
           var missingCriterionTitle = _.cloneDeep(exampleProblem());
           delete missingCriterionTitle.criteria.Bleed.title;
@@ -691,6 +749,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Missing title for criterion: "Bleed"');
         });
+
         it('should fail if a alternative lacks a title', function() {
           var missingAlternativeTitle = _.cloneDeep(exampleProblem());
           delete missingAlternativeTitle.alternatives.Hep.title;
@@ -699,6 +758,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.errorMessage).toBe('Missing title for alternative: "Hep"');
         });
       });
+
       describe('for relative performances', function() {
         it('should work for a valid problem', function() {
           var problem = exampleRelativeProblem();
@@ -706,6 +766,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeTruthy();
           expect(validity.errorMessage).toBe(undefined);
         });
+
         it('should fail when the baseline is missing', function() {
           var problemWithMissingBaseline = _.cloneDeep(exampleRelativeProblem());
           delete problemWithMissingBaseline.performanceTable[0].performance.parameters.baseline;
@@ -713,6 +774,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Missing baseline for criterion: "crit1"');
         });
+
         it('should fail when the mu refers to a nonexistent alternative', function() {
           var problemWithNonsenseMu = _.cloneDeep(exampleRelativeProblem());
           var mu = problemWithNonsenseMu.performanceTable[0].performance.parameters.relative.mu;
@@ -722,6 +784,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('The mu of the performance of criterion: "crit1" refers to nonexistent alternative: "nonsense"');
         });
+
         it('should fail when the cov rownames or colnames refer to a nonexistent alternative', function() {
           var problemWithNonsenseRowName = _.cloneDeep(exampleRelativeProblem());
           var cov = problemWithNonsenseRowName.performanceTable[0].performance.parameters.relative.cov;
@@ -752,6 +815,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Preferences contain data for nonexistent criterion: "nonsense"');
         });
+
         it('should fail if there are mixed preferences', function() {
           var preferencesMixed = _.cloneDeep(exampleProblem());
           preferencesMixed.preferences = [{
@@ -766,6 +830,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Preferences should all be the same type');
         });
+
         it('should not fail if ordinal preferences are fine', function() {
           var consistentOrdinal = _.cloneDeep(exampleProblem());
           consistentOrdinal.preferences = [{
@@ -779,6 +844,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeTruthy();
           expect(validity.errorMessage).toBe(undefined);
         });
+
         it('should fail if ordinal preferences are inconsistent', function() {
           var inconsistentOrdinalWithTree = _.cloneDeep(exampleProblem());
           inconsistentOrdinalWithTree.preferences = [{
@@ -835,6 +901,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Inconsistent ordinal preferences');
         });
+
         it('should succeed on consistent exact preferences', function() {
           var consistentExact = _.cloneDeep(exampleProblem());
           consistentExact.preferences = [{
@@ -849,6 +916,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           var validity = workspaceService.validateWorkspace(consistentExact);
           expect(validity.isValid).toBeTruthy();
         });
+
         it('should fail on inconsistent exact preferences', function() {
           var inconsistentWrongRoot = _.cloneDeep(exampleProblem());
           inconsistentWrongRoot.preferences = [{
@@ -972,8 +1040,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           problem: {
             criteria: {
               crit1: {
-                unitOfMeasurement: 'proportion',
                 dataSources: [{
+                  unitOfMeasurement: 'proportion',
                   scale: [10, 20],
                   pvf: {
                     range: [15, 16]
@@ -994,8 +1062,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
                 }]
               },
               crit3: {
-                unitOfMeasurement: 'keepUnit',
                 dataSources: [{
+                  unitOfMeasurement: 'keepUnit',
                   scale: [-Infinity, Infinity],
                   pvf: {
                     range: [10, 20]
@@ -1012,31 +1080,33 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
           problem: {
             criteria: {
               crit1: {
-                unitOfMeasurement: '%',
                 dataSources: [{
+                  unitOfMeasurement: 'proportion',
                   scale: [10, 20],
                   pvf: {
                     range: [15, 16]
                   }
                 }, {
-                  scale: [0, 100]
+                  scale: [0, 100],
+                  unitOfMeasurement: '%'
                 }]
               },
               crit2: {
-                unitOfMeasurement: '%',
                 dataSources: [{
                   scale: [0, 100],
-                  pvf: {}
+                  pvf: {},
+                  unitOfMeasurement: '%'
                 }, {
                   scale: [0, 100],
                   pvf: {
                     range: [30, 40]
-                  }
+                  },
+                  unitOfMeasurement: '%'
                 }]
               },
               crit3: {
-                unitOfMeasurement: 'keepUnit',
                 dataSources: [{
+                  unitOfMeasurement: 'keepUnit',
                   scale: [-Infinity, Infinity],
                   pvf: {
                     range: [10, 20]
@@ -1048,6 +1118,207 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/workspace/workspace', 'mcda/
         };
 
         expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('dePercentifyCriteria', function() {
+      it('should convert datasource scales and pvf ranges from percentages where appropriate', function() {
+        var state = {
+          problem: {
+            criteria: {
+              crit1: {
+                dataSources: [{
+                  unitOfMeasurement: 'proportion',
+                  scale: [10, 20],
+                  pvf: {
+                    range: [15, 16]
+                  }
+                }, {
+                  scale: [0, 100],
+                  unitOfMeasurement: '%'
+                }]
+              },
+              crit2: {
+                dataSources: [{
+                  scale: [0, 100],
+                  pvf: {},
+                  unitOfMeasurement: '%'
+                }, {
+                  scale: [0, 100],
+                  pvf: {
+                    range: [0.3, 0.4]
+                  },
+                  unitOfMeasurement: '%'
+                }]
+              },
+              crit3: {
+                dataSources: [{
+                  unitOfMeasurement: 'keepUnit',
+                  scale: [-Infinity, Infinity],
+                  pvf: {
+                    range: [10, 20]
+                  }
+                }]
+              }
+            }
+          }
+        };
+
+        var result = workspaceService.dePercentifyCriteria(state);
+
+        var expectedResult = {
+          problem: {
+            criteria: {
+              crit1: {
+                dataSources: [{
+                  unitOfMeasurement: 'proportion',
+                  scale: [10, 20],
+                  pvf: {
+                    range: [15, 16]
+                  }
+                }, {
+                  scale: [0, 1],
+                  unitOfMeasurement: 'Proportion'
+                }]
+              },
+              crit2: {
+                dataSources: [{
+                  scale: [0, 1],
+                  pvf: {},
+                  unitOfMeasurement: 'Proportion'
+                }, {
+                  scale: [0, 1],
+                  pvf: {
+                    range: [0.3, 0.4]
+                  },
+                  unitOfMeasurement: 'Proportion'
+                }]
+              },
+              crit3: {
+                dataSources: [{
+                  unitOfMeasurement: 'keepUnit',
+                  scale: [-Infinity, Infinity],
+                  pvf: {
+                    range: [10, 20]
+                  }
+                }]
+              }
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('hasNoStochasticResults', function() {
+      it('should return true is there are no stochastic results', function() {
+        var aggregateState = {
+          problem: {
+            performanceTable: [{
+              performance: {
+                distribution: {
+                  type: 'exact'
+                }
+              }
+            }, {
+              performance: {
+                effect: {}
+              }
+            }]
+          },
+          prefs: [{
+            type: 'exact swing'
+          }]
+        };
+        var result = workspaceService.hasNoStochasticResults(aggregateState);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return false if there is atleast one distribtion', function() {
+        var aggregateState = {
+          problem: {
+            performanceTable: [{
+              performance: {
+                distribution: {
+                  type: 'dbeta'
+                }
+              }
+            }, {
+              performance: {
+                effect: {}
+              }
+            }]
+          },
+          prefs: [{
+            type: 'exact swing'
+          }]
+        };
+        var result = workspaceService.hasNoStochasticResults(aggregateState);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return false if there is uncertainty in the preferences', function() {
+        var aggregateState = {
+          problem: {
+            performanceTable: [{
+              performance: {
+                distribution: {
+                  type: 'exact'
+                }
+              }
+            }, {
+              performance: {
+                effect: {}
+              }
+            }]
+          },
+          prefs: [{
+            type: 'inprecise swing'
+          }]
+        };
+        var result = workspaceService.hasNoStochasticResults(aggregateState);
+        expect(result).toBeFalsy();
+      });
+    });
+
+    describe('checkForMissingValuesInPerformanceTable', function() {
+      it('should return true is there is at least one missing value for both the effect and distribution of a table entry', function() {
+        var performanceTable = [{
+          performance: {
+            effect: {
+              type: 'empty'
+            },
+            distribution: {
+              type: 'empty'
+            }
+          }
+        }];
+        var result = workspaceService.checkForMissingValuesInPerformanceTable(performanceTable);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return false if each entry has atleast one non-empty effect or distribution', function() {
+        var performanceTable = [{
+          performance: {
+            effect: {
+              type: 'empty'
+            },
+            distribution: {
+              type: 'dbeta'
+            }
+          }
+        }, {
+          performance: {
+            effect: {
+              type: 'exact'
+            },
+            distribution: {
+              type: 'empty'
+            }
+          }
+        }];
+        var result = workspaceService.checkForMissingValuesInPerformanceTable(performanceTable);
+        expect(result).toBeFalsy();
       });
     });
   });

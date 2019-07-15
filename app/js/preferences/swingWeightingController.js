@@ -2,18 +2,24 @@
 define(['lodash'],
   function(_) {
     var dependencies = [
-      '$scope', '$stateParams',
+      '$scope',
+      '$stateParams',
       'SwingWeightingService',
       'PageTitleService',
+      'PartialValueFunctionService',
       'currentScenario',
       'taskDefinition'
     ];
-    var SwingWeightingController = function($scope, $stateParams,
+    var SwingWeightingController = function(
+      $scope,
+      $stateParams,
       SwingWeightingService,
       PageTitleService,
+      PartialValueFunctionService,
       currentScenario,
       taskDefinition
     ) {
+      $scope.getUnitOfMeasurement = PartialValueFunctionService.getUnitOfMeasurement;
       $scope.isPrecise = true;
       PageTitleService.setPageTitle('SwingWeightingController', 'Precise swing weighting');
 
@@ -40,7 +46,7 @@ define(['lodash'],
           };
         };
       }
-      
+
       SwingWeightingService.initWeightingScope($scope,
         $stateParams,
         currentScenario,

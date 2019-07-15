@@ -20,38 +20,41 @@
       </div>
 
       <div class="cell">
-        Effects table display mode
+        Effects display mode
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'effects'">Effects
+          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'deterministic'">Deterministic - entered
+          effects
         </label>
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'sourceData'">Source data
+          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'deterministicMCDA'">Deterministic - analysis
+          values
         </label>
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'deterministic'">Deterministic MCDA
+          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'smaaDistributions'">SMAA - distribution
+          parameters
         </label>
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'smaa'">SMAA
+          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'smaa'">SMAA - analysis values
         </label>
       </div>
 
-      <div class="cell">
+      <div class="cell" ng-show="settings.effectsDisplay === 'smaa' || settings.effectsDisplay === 'deterministicMCDA'">
         Show percentages or decimals (eligable criteria only)
       </div>
-      <div class="cell">
+      <div class="cell" ng-show="settings.effectsDisplay === 'smaa' || settings.effectsDisplay === 'deterministicMCDA'">
         <label>
           <input type="radio" ng-model="settings.showPercentages" ng-value="true">Percentages
         </label>
       </div>
-      <div class="cell">
+      <div class="cell" ng-show="settings.effectsDisplay === 'smaa' || settings.effectsDisplay === 'deterministicMCDA'">
         <label>
           <input type="radio" ng-model="settings.showPercentages" ng-value="false">Decimals
         </label>

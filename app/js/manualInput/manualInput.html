@@ -6,7 +6,8 @@
       <h4>Define criteria and alternatives</h4>
     </div>
     <div class="cell">
-      Here you can enter the data for an analysis manually. In this first step, create the criteria and alternatives you wish to
+      Here you can enter the data for an analysis manually. In this first step, create the criteria and alternatives you
+      wish to
       analyse. Alternatives are simply a title, while criteria are more complex.
     </div>
   </div>
@@ -41,8 +42,8 @@
         <i class="fa fa-plus"></i> Add Criterion</button>
     </div>
     <div class="cell">
-      <criterion-list criteria="state.criteria" use-favorability="state.useFavorability" input-data="state.inputData" 
-      errors="criteriaErrors" is-input="true"></criterion-list>
+      <criterion-list criteria="state.criteria" use-favorability="state.useFavorability" input-data="state.inputData"
+        errors="criteriaErrors" is-input="true"></criterion-list>
     </div>
   </div>
   <div class="cell">
@@ -54,10 +55,11 @@
     <span class="input-group-label">
       Alternative title
     </span>
-    <input class="text input-group-field" ng-model="alternativeInput.value" onkeyup="if(event.keyCode===13) document.getElementById('treatmentButton').click()">
+    <input class="text input-group-field" ng-model="alternativeInput.value"
+      onkeyup="if(event.keyCode===13) document.getElementById('treatmentButton').click()">
     <div class="input-group-button">
-      <button ng-disabled="!alternativeInput.value || isDuplicateTitle(alternativeInput.value)" type="button" class="button tiny"
-        ng-click="addAlternative(alternativeInput.value)" id="treatmentButton">
+      <button ng-disabled="!alternativeInput.value || isDuplicateTitle(alternativeInput.value)" type="button"
+        class="button tiny" ng-click="addAlternative(alternativeInput.value)" id="treatmentButton">
         <i class="fa fa-plus"></i> Add Alternative</button>
     </div>
   </div>
@@ -85,10 +87,12 @@
                   <i ng-if="$index === 0" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
                 </div>
                 <div style="line-height: 10px;">
-                  <a ng-click="alternativeDown($index)" class="nav-arrow" ng-if="$index !== state.alternatives.length-1">
+                  <a ng-click="alternativeDown($index)" class="nav-arrow"
+                    ng-if="$index !== state.alternatives.length-1">
                     <i style="line-height:0px;" class="fa fa-caret-down"></i>
                   </a>
-                  <i ng-if="$index === state.alternatives.length-1" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
+                  <i ng-if="$index === state.alternatives.length-1" style="line-height:0px; color:#bbb"
+                    class="fa fa-caret-down"></i>
                 </div>
               </div>
               <div class="cell small-11">
@@ -107,7 +111,8 @@
       criteriaErrors.length" type="button" ng-click="goToStep2()" tooltip="Enter effects table data">
       Enter data
     </button>
-    <button class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty" tooltip="Save current state">Save</button>
+    <button id="step1SaveButton" class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty"
+      tooltip="Save current state">Save</button>
   </div>
   <div class="cell" ng-if="!state.title">
     <em>Missing title</em>
@@ -123,7 +128,7 @@
   </div>
 </div>
 <!-- step 2 -->
-<div ng-if="state.step==='step2'">
+<div ng-if="state.step ==='step2'">
   <div class="grid-x">
     <div class="cell">
       <h3>Create workspace manually — step 2 of 2</h3>
@@ -134,52 +139,50 @@
       </h4>
     </div>
     <div class="cell">
-      Here you enter the data for each combination of criterion and alternative, in the form of results from studies. The corresponding
+      Here you enter the data for each combination of criterion and alternative, in the form of results from studies.
+      The corresponding
       distribution is calculated and displayed in the table. Begin entering data by clicking any of the cells' text.
     </div>
+
     <!-- input -->
     <div class="cell">
       <h4>{{state.title}}</h4>
     </div>
-    <div class="cell">
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Description</th>
-            <th>Unit of measurement</th>
-            <th ng-if="state.useFavorability">Is favorable?</th>
-            <th>Reference</th>
-            <th ng-repeat="alternative in state.alternatives" style="min-width:80px">{{alternative.title}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="row in criteriaRows">
-            <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.title}}</td>
-            <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.description}}</td>
-            <td ng-if="row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.unitOfMeasurement}}</td>
-            <td ng-if="state.useFavorability && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">{{row.criterion.isFavorable? 'yes' : 'no'}}</td>
-            <td>{{row.dataSource.source}}</td>
-            <td ng-repeat="alternative in state.alternatives">
-              <effect-input-helper input-data-source="row.dataSource" alternative="alternative" input-data="state.inputData[row.dataSource.id][alternative.id]"
-                change-callback="checkInputData"></effect-input-helper>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div>
+      <tabset>
+        <tab heading="Deterministic" active="state.currentTab === 'effect'" ng-click="state.currentTab = 'effect'">
+          <manual-input-table input-type="'effect'" state="state" criteria-rows="criteriaRows"
+            check-input-data="checkInputData">
+          </manual-input-table>
+          <div>
+            <button class="button" type="button" ng-click="generateDistributions()"
+              tooltip="Generate distribution parameters for SMAA using values in the Deterministic view. Any existing values in the SMAA tab will be overwritten.">Generate
+              distributions</button>
+          </div>
+        </tab>
+        <tab heading="SMAA" active="state.currentTab === 'distribution'" ng-click="state.currentTab = 'distribution'">
+          <manual-input-table input-type="'distribution'" state="state" criteria-rows="criteriaRows"
+            check-input-data="checkInputData">
+          </manual-input-table>
+        </tab>
+      </tabset>
     </div>
+
     <!-- buttons -->
     <div class="cell">
-      <button ng-disabled="!state.isInputDataValid || !state.areInputDataRowsValid" class="button" type="button" ng-click="createProblem()" tooltip="Create problem and proceed to analysis">
+      <button class="button" ng-disabled="state.errors.length" type="button" ng-click="createProblem()"
+        tooltip="Create problem and proceed to analysis">
         Done
       </button>
-      <button class="button" ng-click="saveInProgress()" ng-disabled="!dirty" tooltip="Save current state">Save</button>
+      <button id="step2SaveButton" class="button" ng-click="saveInProgress()" ng-disabled="!dirty" tooltip="Save current state">
+        Save
+      </button>
       <button type="button" ng-click="goToStep1()" type="button" class="button">Back</button>
-      <div ng-if="!state.isInputDataValid">
-        <em>Invalid input data</em>
+      <div ng-if="state.errors.length" class="alert" ng-repeat="error in state.errors">
+        {{error}}
       </div>
-      <div ng-if="!state.areInputDataRowsValid">
-        <em>Invalid input, rows must contain atleast one distribution or different effect value</em>
+      <div ng-if="state.warnings.length && !state.errors.length" ng-repeat="warning in state.warnings">
+        <i class="fa fa-exclamation-triangle"></i> {{warning}}
       </div>
     </div>
   </div>

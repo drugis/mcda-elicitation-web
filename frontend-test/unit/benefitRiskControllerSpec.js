@@ -23,9 +23,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         'buildAggregateState',
         'percentifyScales',
         'percentifyCriteria',
+        'dePercentifyCriteria',
         'mergeBaseAndSubProblem',
         'setDefaultObservedScales',
-        'hasNoStochasticResults'
+        'hasNoStochasticResults',
+        'checkForMissingValuesInPerformanceTable'
       ]),
       WorkspaceSettingsService = jasmine.createSpyObj('WorkspaceSetttingsService', ['usePercentage']),
       EffectsTableService = jasmine.createSpyObj('EffectsTableService', ['createEffectsTableInfo']),
@@ -181,12 +183,15 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
           }
         });
       });
+
       it('should retrieve the observed scales', () => {
         expect(WorkspaceService.getObservedScales).toHaveBeenCalledWith(workspace.problem);
       });
+
       it('should build a base aggregate state and place it on the scope', () => {
         expect(scope.baseAggregateState).toBe(baseAggregateState);
       });
+
       it('should set the task accessibility', () => {
         expect(TaskDependencies.isAccessible).toHaveBeenCalledTimes(2);
         expect(scope.tasksAccessibility).toEqual({
@@ -194,13 +199,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
           results: true
         });
       });
+
       it('should set the effects table info on the scope', () => {
         expect(scope.effectsTableInfo).toBe(effectsTableInfo);
       });
-      it('should check for missing performance values', () => {
-        expect(scope.hasMissingValues).toBeTruthy();
-      });
     });
+
     describe('once the scales have been loaded', () => {
       var observedScales = {
         id: 'observedScales'
@@ -210,9 +214,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
       var baseProblemWithScales = _.extend({}, baseAggregateState.problem, {
         criteria: percentifiedCriteria
       });
+
       beforeEach(() => {
         observedScalesDefer.resolve(observedScales);
       });
+
       describe('if percentages should be used', () => {
         var stateWithPercentifiedCriteria = _.merge({}, baseAggregateState, {
           problem: {
@@ -247,15 +253,19 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
           });
         });
       });
+
       describe('if percentages should not be used', () => {
         var problemWithBaseCriteria = baseAggregateState;
         beforeEach(() => {
           TaskDependencies.isAccessible.calls.reset();
           WorkspaceSettingsService.usePercentage.and.returnValue(false);
           WorkspaceService.percentifyScales.and.returnValue(percentifiedScales);
+          WorkspaceService.dePercentifyCriteria.and.returnValue(baseAggregateState);
+
           WorkspaceService.setDefaultObservedScales.and.returnValue(problemWithBaseCriteria.problem);
           scope.$apply();
         });
+
         it('should set the scales and properly initalise base- and regular aggregate state', (done) => {
           observedScalesDefer.promise.then(() => {
             expect(scope.workspace.scales.base).toBe(observedScales);
@@ -267,6 +277,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
           });
           scope.$apply();
         });
+
         it('should update the task accessibility', () => {
           expect(TaskDependencies.isAccessible).toHaveBeenCalledTimes(4);
           expect(scope.tasksAccessibility).toEqual({
@@ -276,6 +287,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         });
       });
     });
+
     describe('when the aggregate state changes', () => {
       beforeEach(() => {
         WorkspaceService.hasNoStochasticResults.calls.reset();
@@ -283,11 +295,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         scope.aggregateState = { id: 'changed' };
         scope.$apply();
       });
+
       it('should check whether there are stochastic results', () => {
         expect(WorkspaceService.hasNoStochasticResults).toHaveBeenCalled();
-        expect(scope.hasNoStochasticResults).toBe(true);
       });
     });
+
     describe('when a settings change event triggers', () => {
       it('should update the scales', () => {
         spyOn(scope, 'updateScales');
@@ -297,6 +310,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         expect(scope.updateScales).toHaveBeenCalled();
       });
     });
+
     describe('when a resultsAccessible event triggers', () => {
       it('should update the state', () => {
         spyOn(scope, 'updateState');
@@ -306,6 +320,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         expect(scope.updateState).toHaveBeenCalled();
       });
     });
+
     describe('when a $destroy event triggers', () => {
       it('should call deregisterTransitionListener', () => {
         spyOn(scope, 'deregisterTransitionListener');

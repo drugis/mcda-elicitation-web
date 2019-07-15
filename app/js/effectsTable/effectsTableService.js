@@ -1,10 +1,14 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
-  var dependencies = [];
+  var dependencies = [
+    'significantDigits'
+  ];
 
-  var EffectsTableService = function() {
+  var EffectsTableService = function(significantDigits) {
+    var NOT_ENTERED = 'Not entered';
+
     function buildEffectsTable(criteria) {
-      var tableRows = addCanBePercentageToCriteria(angular.copy(criteria));
+      var tableRows = angular.copy(criteria);
       var useFavorability = _.find(criteria, function(criterion) {
         return criterion.hasOwnProperty('isFavorable');
       });
@@ -29,32 +33,30 @@ define(['lodash', 'angular'], function(_, angular) {
       tableRows = buildTableRows(tableRows);
       return tableRows;
     }
-    
-    function addCanBePercentageToCriteria(criteria) {
-      return _.mapValues(criteria, function(criterion) {
-        criterion.canBePercentage = canBePercentage(criterion);
-        return criterion;
-      });
-    }
-
-    function canBePercentage(criterion) {
-      return !!_.find(criterion.dataSources, function(dataSource) {
-        return _.isEqual(dataSource.scale, [0, 1]) || _.isEqual(dataSource.scale, [0, 100]);
-      });
-    }
 
     function buildTableRows(rows) {
       return _.reduce(rows, function(accum, row) {
         if (row.isHeaderRow) {
           return accum.concat(row);
         }
-        var rowCriterion = _.omit(row, ['dataSources']);
-        rowCriterion.numberOfDataSources = row.dataSources.length;
+        var criterion = _.omit(row, ['dataSources']);
+        criterion.numberOfDataSources = row.dataSources.length;
         accum = accum.concat(_.map(row.dataSources, function(dataSource, index) {
+          var newDataSource = angular.copy(dataSource);
+          var scale = dataSource.scale;
+          var isProportion = false;
+          if (_.isEqual(scale, [0, 1])) {
+            newDataSource.unitOfMeasurement = 'Proportion';
+            isProportion = true;
+          } else if (_.isEqual(scale, [0, 100])) {
+            newDataSource.unitOfMeasurement = '%';
+            isProportion = true;
+          }
           return {
-            criterion: rowCriterion,
+            criterion: criterion,
             isFirstRow: index === 0,
-            dataSource: dataSource
+            dataSource: newDataSource,
+            isProportion: isProportion
           };
         }));
         return accum;
@@ -64,26 +66,40 @@ define(['lodash', 'angular'], function(_, angular) {
     function createEffectsTableInfo(performanceTable) {
       return _.reduce(performanceTable, function(accum, tableEntry) {
         var dataSourceId = tableEntry.dataSource;
-        if (accum[dataSourceId]) { return accum; }
-        if (tableEntry.alternative) {
-          accum[dataSourceId] = {
-            distributionType: tableEntry.performance.type,
-            hasStudyData: true,
-            studyDataLabelsAndUncertainty: _(performanceTable)
-              .filter(['dataSource', dataSourceId])
-              .reduce(function(accum, entryForCriterion) {
-                accum[entryForCriterion.alternative] = buildLabel(entryForCriterion);
-                return accum;
-              }, {})
-          };
+        if (accum[dataSourceId]) {
+          return accum;
+        } else if (tableEntry.alternative) {
+          accum[dataSourceId] = createAbsoluteInfo(dataSourceId, performanceTable);
         } else {
-          accum[tableEntry.dataSource] = {
-            distributionType: 'relative',
-            hasStudyData: false
-          };
+          accum[dataSourceId] = createRelativeInfo();
         }
         return accum;
       }, {});
+    }
+
+    function createRelativeInfo() {
+      return {
+        isAbsolute: false,
+        hasUncertainty: true
+      };
+    }
+
+    function createAbsoluteInfo(dataSourceId, performanceTable) {
+      return {
+        isAbsolute: true,
+        studyDataLabelsAndUncertainty: createStudyDataLabelsAndUncertainty(dataSourceId, performanceTable)
+      };
+    }
+
+    function createStudyDataLabelsAndUncertainty(dataSourceId, performanceTable) {
+      return _(performanceTable)
+        .filter(['dataSource', dataSourceId])
+        .reduce(buildLabels, {});
+    }
+
+    function buildLabels(accum, entryForCriterion) {
+      accum[entryForCriterion.alternative] = buildLabel(entryForCriterion);
+      return accum;
     }
 
     function isStudyDataAvailable(effectsTableInfo) {
@@ -92,91 +108,165 @@ define(['lodash', 'angular'], function(_, angular) {
       }));
     }
 
-    function buildLabel(entryForCriterion) {
-      var label = '';
-      var performance = entryForCriterion.performance;
-      var hasUncertainty = performance.type !== 'empty';
-      var parameters = performance.parameters;
-      if (performance.input) {
-        var input = performance.input;
-        switch (performance.type) {
-          case 'exact':
-            hasUncertainty = false;
-            if (input.events) {
-              label = input.events + ' / ' + input.sampleSize;
-            } else if (input.scale === 'percentage') {
-              label = input.value + '%';
-              label = input.lowerBound ? label + ' (' + input.lowerBound + '%; ' +
-                input.upperBound + '%)' : label;
-              label = input.sampleSize ? label + ' (' + input.sampleSize + ')' : label;
-            } else {
-              label = input.value;
-              label = input.stdErr ? label + ' (' + input.stdErr + ')' : label;
-              label = input.lowerBound ? label + ' (' + input.lowerBound + '; ' +
-                input.upperBound + ')' : label;
-              label = input.sampleSize ? label + ' (' + input.sampleSize + ')' : label;
-            }
-            break;
-          case 'dt':
-            label = input.mu + ' (' + roundToThreeDigits(parameters.stdErr) + '), ' + (input.sampleSize);
-            break;
-          case 'dnorm':
-            if (input.events && input.sampleSize) {
-              label = input.events + ' / ' + input.sampleSize;
-            } else if (input.value && input.sampleSize && input.scale === 'percentage') { //dichotomous
-              label = input.value + '% (' + input.sampleSize + ')';
-            } else if (input.value && input.sampleSize) { //dichotomous
-              label = input.value + ' (' + input.sampleSize + ')';
-            } else if (input.stdErr) {//with stdErr
-              label = input.value ? input.value : input.mu; //exact to dist  vs manual normal dist
-              label += ' (' + input.stdErr + ')';
-            } else if (input.lowerBound) {//with confidence interval
-              label = input.value + ' (' + input.lowerBound + '; ' + input.upperBound + ')';
-            }
-            break;
-          case 'dbeta':
-            label = input.events + ' / ' + input.sampleSize;
-            break;
-        }
-      } else {
-        switch (performance.type) {
-          case 'exact':
-            hasUncertainty = false;
-            label = performance.value;
-            break;
-          case 'dt':
-            label = parameters.mu + ' (' + roundToThreeDigits(parameters.stdErr) + '), ' + (parameters.dof + 1);
-            break;
-          case 'dnorm':
-            label = parameters.mu + ' (' + roundToThreeDigits(parameters.sigma) + ')';
-            break;
-          case 'dbeta':
-            label = (parameters.alpha - 1) + ' / ' + (parameters.beta + parameters.alpha - 2);
-            break;
-          case 'dgamma':
-            label = (parameters.alpha) + ' / ' + (parameters.beta);
-            break;
-          case 'dsurv':
-            label = (parameters.alpha - 0.001) + ' / ' + (parameters.beta - 0.001);
-            break;
-        }
-      }
+    function buildLabel(entry) {
+      var performance = entry.performance;
+      var hasUncertainty = determineUncertainty(performance.distribution);
+      var effectLabel = buildEffectLabel(performance);
+      var effectValue = buildEffectValueLabel(performance);
+      var distributionLabel = buildDistributionLabel(performance.distribution);
+
       return {
-        label: label,
+        effectLabel: effectLabel,
+        effectValue: effectValue,
+        distributionLabel: distributionLabel,
         hasUncertainty: hasUncertainty
       };
     }
 
-    //private
-    function roundToThreeDigits(value) {
-      return Math.round(value * 1000) / 1000;
+    function determineUncertainty(distribution) {
+      return !!distribution &&
+        distribution.type !== 'empty' &&
+        distribution.type !== 'exact';
+    }
+
+    function buildEffectValueLabel(performance) {
+      if (performance.effect && performance.effect.type !== 'empty') {
+        return significantDigits(performance.effect.value);
+      } else {
+        return '';
+      }
+    }
+
+    function buildDistributionLabel(distribution) {
+      if (!distribution) {
+        return NOT_ENTERED;
+      } else if (distribution.type === 'dt') {
+        return buildStudentsTLabel(distribution.parameters);
+      } else if (distribution.type === 'dnorm') {
+        return buildNormalLabel(distribution.parameters);
+      } else if (distribution.type === 'dbeta') {
+        return buildBetaLabel(distribution.parameters);
+      } else if (distribution.type === 'dsurv' || distribution.type === 'dgamma') {
+        return buildGammaLabel(distribution.parameters);
+      } else if (distribution.type === 'exact') {
+        return distribution.value + '';
+      } else if (distribution.type === 'empty') {
+        return distribution.value ? distribution.value : '';
+      }
+    }
+
+    function buildStudentsTLabel(parameters) {
+      return 'Student\'s t(' +
+        significantDigits(parameters.mu) + ', ' +
+        significantDigits(parameters.stdErr) + ', ' +
+        significantDigits(parameters.dof) + ')';
+    }
+
+    function buildNormalLabel(parameters) {
+      return 'Normal(' +
+        significantDigits(parameters.mu) + ', ' +
+        significantDigits(parameters.sigma) + ')';
+    }
+
+    function buildBetaLabel(parameters) {
+      return 'Beta(' +
+        significantDigits(parameters.alpha) + ', ' +
+        significantDigits(parameters.beta) + ')';
+    }
+
+    function buildGammaLabel(parameters) {
+      return 'Gamma(' +
+        significantDigits(parameters.alpha) + ', ' +
+        significantDigits(parameters.beta) + ')';
+    }
+
+    function buildEffectLabel(performance) {
+      if (!performance.effect) {
+        if (performance.distribution.input && performance.distribution.type !== 'dt') {
+          return buildEffectInputLabel(performance.distribution.input);
+        } else if (performance.distribution.type === 'exact') {
+          return performance.distribution.value;
+        } else {
+          return NOT_ENTERED;
+        }
+      } else if (performance.effect.input) {
+        return buildEffectInputLabel(performance.effect.input);
+      } else if (performance.effect.type === 'empty') {
+        return performance.effect.value !== undefined ? performance.effect.value : '';
+      } else {
+        return performance.effect.value;
+      }
+    }
+
+    function buildEffectInputLabel(input) {
+      var percentage = input.scale === 'percentage' ? '%' : '';
+      if (input.stdErr) {
+        return input.value + percentage + ' (' + input.stdErr + percentage + ')';
+      } else if (input.lowerBound && input.upperBound) {
+        return input.value + percentage + ' (' + input.lowerBound + percentage + '; ' + input.upperBound + percentage + ')';
+      } else if (input.value && input.sampleSize) {
+        return input.value + percentage + ' / ' + input.sampleSize;
+      } else if (input.events && input.sampleSize) {
+        return input.events + ' / ' + input.sampleSize;
+      } else {
+        return input.value + percentage;
+      }
+    }
+
+    function createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales) {
+      return _.reduce(rows, function(accum, row) {
+        if (row.isHeaderRow) {
+          return accum;
+        } else {
+          accum[row.dataSource.id] = createViabilityRows(row.dataSource.id, alternatives, effectsTableInfo, scales);
+          return accum;
+        }
+      }, {});
+    }
+
+    function createIsCellAnalysisViableForCriterionCard(criterion, alternatives, effectsTableInfo, scales) {
+      return _.reduce(criterion.dataSources, function(accum, dataSource) {
+        accum[dataSource.id] = createViabilityRows(dataSource.id, alternatives, effectsTableInfo, scales);
+        return accum;
+      }, {});
+    }
+
+    function createViabilityRows(dataSourceId, alternatives, effectsTableInfo, scales) {
+      return _.reduce(alternatives, function(accum, alternative) {
+        accum[alternative.id] = isCellViable(dataSourceId, alternative.id, effectsTableInfo, scales);
+        return accum;
+      }, {});
+    }
+
+    function isCellViable(dataSourceId, alternativeId, effectsTableInfo, scales) {
+      return isRelative(dataSourceId, effectsTableInfo) ||
+        hasEffectValueLabel(dataSourceId, alternativeId, effectsTableInfo) ||
+        hasScaleValue(dataSourceId, alternativeId, scales);
+    }
+
+    function isRelative(dataSourceId, effectsTableInfo) {
+      return !effectsTableInfo[dataSourceId].isAbsolute;
+    }
+
+    function hasEffectValueLabel(dataSourceId, alternativeId, effectsTableInfo) {
+      return effectsTableInfo[dataSourceId].studyDataLabelsAndUncertainty[alternativeId].effectValue !== '';
+    }
+
+    function hasScaleValue(dataSourceId, alternativeId, scales) {
+      var smaaValue;
+      if (scales) {
+        smaaValue = scales[dataSourceId][alternativeId]['50%'];
+      }
+      return !!scales && !isNaN(smaaValue) && smaaValue !== null;
     }
 
     return {
       buildEffectsTable: buildEffectsTable,
       createEffectsTableInfo: createEffectsTableInfo,
       isStudyDataAvailable: isStudyDataAvailable,
-      buildTableRows: buildTableRows
+      buildTableRows: buildTableRows,
+      createIsCellAnalysisViable: createIsCellAnalysisViable,
+      createIsCellAnalysisViableForCriterionCard: createIsCellAnalysisViableForCriterionCard
     };
   };
 

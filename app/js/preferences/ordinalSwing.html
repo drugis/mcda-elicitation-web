@@ -11,7 +11,7 @@
     <div class="cell">
       <ul class="inline-list">
         <li ng-repeat="criterion in criteria">
-          {{criterion.title}}: {{criterion.alreadyChosen ? (criterion.best | number) : (criterion.worst | number) }} {{criterion.unitOfMeasurement}}
+          {{criterion.title}}: {{criterion.alreadyChosen ? (criterion.best | number) : (criterion.worst | number) }} {{getUnitOfMeasurement(criterion)}}
         </li>
       </ul>
     </div>
@@ -19,7 +19,7 @@
     <div class="cell" ng-repeat="criterion in state.choices">
       <label>
         <input type="radio" ng-model="state.choice" value="{{criterion.id}}"> {{criterion.dataSources[0].pvf.direction}} {{criterion.title}} from {{pvf.worst(criterion.dataSources[0]) | number}}
-        {{criterion.unitOfMeasurement}} to {{pvf.best(criterion.dataSources[0]) | number}} {{criterion.unitOfMeasurement}}
+        {{getUnitOfMeasurement(criterion)}} to {{pvf.best(criterion.dataSources[0]) | number}} {{getUnitOfMeasurement(criterion)}}
       </label>
     </div>
   </div>

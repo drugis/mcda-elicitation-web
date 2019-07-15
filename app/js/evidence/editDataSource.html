@@ -4,6 +4,15 @@
       <h3>Edit data source</h3>
     </div>
     <div class="cell">
+      <label>Unit of measurement
+        <inline-help help-key="criterion-unit"></inline-help>
+      </label>
+    </div>
+    <div class="cell">
+      <input type="text" ng-model="dataSource.unitOfMeasurement" ng-change="checkErrors()"
+        ng-disabled="originalUnitOfMeasurement === '%' || originalUnitOfMeasurement === 'Proportion'">
+    </div>
+    <div class="cell">
       <label>Reference
         <inline-help help-key="criterion-source"></inline-help>
       </label>
@@ -12,7 +21,7 @@
       <input type="text" ng-model="dataSource.source" ng-change="checkErrors()">
     </div>
     <div class="cell">
-      <label>Reference link
+      <label>Reference URL (optional)
         <inline-help help-key="criterion-source-link"></inline-help>
       </label>
     </div>
@@ -20,7 +29,7 @@
       <input type="text" ng-model="dataSource.sourceLink" ng-change="checkErrors()">
     </div>
     <div class="cell">
-      <label>Strength of evidence
+      <label>Strength of evidence (optional)
         <inline-help help-key="strength-of-evidence"></inline-help>
       </label>
     </div>
@@ -28,7 +37,7 @@
       <input type="text" ng-model="dataSource.strengthOfEvidence">
     </div>
     <div class="cell">
-      <label>Uncertainties
+      <label>Uncertainties (optional)
         <inline-help help-key="uncertainties"></inline-help>
       </label>
     </div>

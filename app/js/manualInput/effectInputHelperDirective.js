@@ -1,42 +1,36 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
   var ESC = 27;
   var ENTER = 13;
 
   var dependencies = [
     'ManualInputService',
-    '$timeout',
-    'significantDigits'
+    '$timeout'
   ];
 
   var EffectInputHelperDirective = function(
     ManualInputService,
-    $timeout,
-    significantDigits
+    $timeout
   ) {
     return {
       restrict: 'E',
       scope: {
-        'inputDataSource': '=',
         'alternative': '=',
-        'inputData': '=',
-        'changeCallback': '='
+        'cell': '=',
+        'changeCallback': '=',
+        'inputType': '=',
+        'unitOfMeasurement': '='
       },
       templateUrl: 'js/manualInput/effectInputHelperDirective.html',
       link: function(scope) {
         // functions
         scope.keyCheck = keyCheck;
-        scope.updateUpperBound = updateUpperBound;
         scope.inputChanged = inputChanged;
-        scope.confidenceIntervalNEChanged = confidenceIntervalNEChanged;
 
         //init
         var isEscPressed = false;
 
         initInputParameters();
-        scope.inputData.label = ManualInputService.inputToString(scope.inputCell);
-        scope.inputData.isInvalid = ManualInputService.getInputError(scope.inputCell);
-        scope.changeCallback();
 
         scope.$on('open.af.dropdownToggle', function() {
           isEscPressed = false;
@@ -48,40 +42,55 @@ define(['lodash'], function(_) {
           }
         });
 
-        function updateUpperBound() {
-          var id = scope.inputCell.inputParameters.id;
-          if (scope.inputCell.isNormal && id === 'exactValueCI' && scope.inputCell.dataType === 'continuous' && scope.inputCell.parameterOfInterest === 'mean') {
-            var uppperBound = 2 * scope.inputCell.firstParameter - scope.inputCell.secondParameter;
-            scope.inputCell.thirdParameter = significantDigits(uppperBound);
-          }
-        }
+        scope.$watch('cell', initInputParameters, true);
 
         function saveState() {
           $timeout(function() {
-            scope.inputData = scope.inputCell;
-            scope.inputData.isInvalid = ManualInputService.getInputError(scope.inputCell);
-            scope.inputData.label = ManualInputService.inputToString(scope.inputCell);
+            scope.cell = angular.copy(scope.inputCell);
+            scope.cell.isInvalid = ManualInputService.getInputError(scope.inputCell);
+            scope.cell.label = ManualInputService.inputToString(scope.inputCell);
             $timeout(scope.changeCallback);
           });
         }
 
         function initInputParameters() {
-          if (doInputParametersNeedUpdating(scope.inputDataSource, scope.inputData)) {
-            scope.inputCell = _.cloneDeep(scope.inputDataSource);
+          scope.inputParameterOptions = ManualInputService.getOptions(scope.inputType);
+          scope.cell.inputParameters = getInputParameters();
+          scope.cell.constraint = getCellConstraint();
+          scope.inputCell = ManualInputService.updateParameterConstraints(scope.cell);
+          inputChanged();
+          scope.cell.label = ManualInputService.inputToString(scope.inputCell);
+          scope.cell.isInvalid = ManualInputService.getInputError(scope.inputCell);
+          scope.changeCallback();
+        }
+
+        function getInputParameters() {
+          if (!scope.cell.inputParameters) {
+            return _.values(scope.inputParameterOptions)[0];
           } else {
-            scope.inputCell = _.cloneDeep(scope.inputData);
+            return scope.inputParameterOptions[scope.cell.inputParameters.id];
           }
-          scope.inputParameterOptions = ManualInputService.getOptions(scope.inputCell);
-          if (!scope.inputCell.inputParameters) {
-            scope.inputCell.inputParameters = _.values(scope.inputParameterOptions)[0];
+        }
+
+        function getCellConstraint() {
+          if (scope.unitOfMeasurement === '%') {
+            return 'Proportion (percentage)';
+          } else if (scope.unitOfMeasurement === 'Proportion') {
+            return 'Proportion (decimal)';
           } else {
-            scope.inputCell.inputParameters = scope.inputParameterOptions[scope.inputCell.inputParameters.id];
+            return 'None';
           }
         }
 
         function inputChanged() {
-          updateUpperBound();
+          if (scope.inputCell.inputParameters.id !== 'text' && isNotNumeric(scope.inputCell.firstParameter)) {
+            delete scope.inputCell.firstParameter;
+          }
           scope.error = ManualInputService.getInputError(scope.inputCell);
+        }
+
+        function isNotNumeric(value) {
+          return isNaN(parseFloat(value)) || !isFinite(value);
         }
 
         function keyCheck(event) {
@@ -90,27 +99,6 @@ define(['lodash'], function(_) {
             scope.$broadcast('doClose.af.dropdownToggle');
           } else if (event.keyCode === ENTER) {
             scope.$broadcast('doClose.af.dropdownToggle');
-          }
-        }
-
-        function doInputParametersNeedUpdating(inputDataSource, cell) {
-          if (!cell.inputParameters) {
-            return true;
-          }
-          var inputType = inputDataSource.inputType;
-          var inputMethod = inputDataSource.inputMethod;
-          var dataType = inputDataSource.dataType;
-          return inputType !== cell.inputType ||
-            (inputType === 'distribution' && inputMethod !== cell.inputMethod) ||
-            (inputType === 'distribution' && inputMethod === 'assistedDistribution' && dataType !== cell.dataType) ||
-            (inputType === 'effect' && dataType !== cell.dataType) ||
-            (inputType === 'effect' && dataType === 'continuous' &&
-              inputDataSource.parameterOfInterest !== cell.parameterOfInterest);
-        }
-
-        function confidenceIntervalNEChanged() {
-          if (scope.inputCell.lowerBoundNE || scope.inputCell.upperBoundNE) {
-            scope.inputCell.isNormal = false;
           }
         }
       }

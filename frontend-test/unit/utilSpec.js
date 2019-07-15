@@ -9,11 +9,6 @@ define(['angular', 'angular-mocks', 'mcda/util'], function(angular) {
         ih = intervalHull;
       }));
 
-      it('should return infinities if no scale range is set', function() {
-        var result = ih();
-        expect(result).toEqual([-Infinity, +Infinity]);
-      });
-
       it('should return min and max of the scale ranges', function() {
         var ranges = {
           1: {
@@ -27,6 +22,31 @@ define(['angular', 'angular-mocks', 'mcda/util'], function(angular) {
         };
         var result = ih(ranges);
         var expectedResult = [1, 10];
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return min and max of the effects', function() {
+        var ranges = {};
+        var effectValues = [5, 11];
+        var result = ih(ranges, effectValues);
+        var expectedResult = [5, 11];
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return min and max of the scale ranges and effects', function() {
+        var ranges = {
+          1: {
+            '2.5%': 1,
+            '97.5%': 5
+          },
+          2: {
+            '2.5%': 3,
+            '97.5%': 10
+          }
+        };
+        var effectValues = [5, 11];
+        var result = ih(ranges, effectValues);
+        var expectedResult = [1, 11];
         expect(result).toEqual(expectedResult);
       });
 

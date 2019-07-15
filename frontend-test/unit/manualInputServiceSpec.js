@@ -1,21 +1,33 @@
 'use strict';
 define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(_, angular) {
-
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
-  var currentSchemaVersion = '1.1.0';
-  var inputKnowledgeServiceMock = jasmine.createSpyObj('InputKnowledgeService', ['getOptions', 'inputToString',
-    'finishInputCell', 'buildPerformance']);
+  var constraintServiceMock = jasmine.createSpyObj('ConstraintService', ['percentage', 'decimal']);
+  var currentSchemaVersion = '1.2.2';
+  var inputKnowledgeServiceMock = jasmine.createSpyObj('InputKnowledgeService', [
+    'getOptions'
+  ]);
+  var percentageConstraint = {
+    label: 'Proportion (percentage)'
+  };
+  var decimalConstraint = {
+    label: 'Proportion (decimal)'
+  };
+  constraintServiceMock.percentage.and.returnValue(percentageConstraint);
+  constraintServiceMock.decimal.and.returnValue(decimalConstraint);
+
   describe('The manualInputService', function() {
     beforeEach(angular.mock.module('elicit.manualInput', function($provide) {
-
       $provide.value('generateUuid', generateUuidMock);
       $provide.value('currentSchemaVersion', currentSchemaVersion);
       $provide.value('InputKnowledgeService', inputKnowledgeServiceMock);
+      $provide.value('ConstraintService', constraintServiceMock);
     }));
+
     beforeEach(inject(function(ManualInputService) {
       manualInputService = ManualInputService;
     }));
+
     describe('getInputError', function() {
       it('should run all the constraints of a cell\'s parameters, returning the first error found', function() {
         var cell = {
@@ -23,28 +35,42 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           secondParameter: 20,
           inputParameters: {
             firstParameter: {
-              constraints: [
-                function() { }
-              ]
+              constraints: [{
+                validator: function() { }
+              }]
             },
             secondParameter: {
-              constraints: [
-                function() { },
-                function() { return 'error message'; }
-              ]
+              constraints: [{
+                validator: function() { }
+              }, {
+                validator: function() { return 'error message'; }
+              }]
             }
           }
         };
         var result = manualInputService.getInputError(cell);
         expect(result).toBe('error message');
       });
+
       it('should return no error for an empty typed cell', function() {
         var cell = {
-          empty: true
+          inputParameters: {
+            id: 'empty'
+          }
         };
         expect(manualInputService.getInputError(cell)).toBeFalsy();
       });
-      it('should return no error for bounds that are not estimable', () => {
+
+      it('should return no error for an text typed cell', function() {
+        var cell = {
+          inputParameters: {
+            id: 'text'
+          }
+        };
+        expect(manualInputService.getInputError(cell)).toBeFalsy();
+      });
+
+      it('should return no error for bounds that are not estimable', function() {
         var cell = {
           lowerBoundNE: true,
           upperBoundNE: true,
@@ -54,7 +80,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             firstParameter: {
               label: 'Lower bound',
               constraints: [
-                () => { }
+                function() { }
               ]
             },
             secondParameter: {
@@ -66,20 +92,27 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
     });
     describe('inputToString', function() {
-      it('should use the inputknowledgeservice for valid inputs', function() {
-        inputKnowledgeServiceMock.inputToString.and.returnValue('great success');
-        expect(manualInputService.inputToString({})).toEqual('great success');
+      it('should call the toString function on the cell', function() {
+        var cell = {
+          inputParameters: {
+            toString: function() {
+              return 'great success';
+            }
+          }
+        };
+        expect(manualInputService.inputToString(cell)).toEqual('great success');
       });
+
       it('should return an invalid input message if the input is invalid', function() {
         var invalidInput = {
           firstParameter: 10,
           inputParameters: {
             firstParameter: {
-              constraints: [
-                function() {
+              constraints: [{
+                validator: function() {
                   return 'error in input';
                 }
-              ]
+              }]
             }
           }
         };
@@ -99,70 +132,121 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         id: 'crit1id',
         title: 'criterion 1 title',
         dataSources: [{
-          id: 'ds1id',
-          inputType: 'distribution',
-          inputMethod: 'assistedDistribution',
-          dataType: 'other'
+          id: 'ds1id'
         }]
       }, {
         id: 'crit2id',
         title: 'criterion 2 title',
         dataSources: [{
-          id: 'ds2id',
-          inputType: 'effect',
-          dataType: 'other'
+          id: 'ds2id'
         }]
       }];
+
       it('should prepare the cells of the table for input', function() {
         var result = manualInputService.prepareInputData(criteria, alternatives);
         var expectedResult = {
-          'ds1id': {
-            alternative1: _.extend({}, _.omit(criteria[0].dataSources[0], ['id']), {
-              isInvalid: true
-            }),
-            alternative2: _.extend({}, _.omit(criteria[0].dataSources[0], ['id']), {
-              isInvalid: true
-            })
+          'effect': {
+            'ds1id': {
+              alternative1: {
+                isInvalid: true
+              },
+              alternative2: {
+                isInvalid: true
+              }
+            },
+            'ds2id': {
+              alternative1: {
+                isInvalid: true
+              },
+              alternative2: {
+                isInvalid: true
+              }
+            }
           },
-          'ds2id': {
-            alternative1: _.extend({}, _.omit(criteria[1].dataSources[0], ['id']), {
-              isInvalid: true
-            }),
-            alternative2: _.extend({}, _.omit(criteria[1].dataSources[0], ['id']), {
-              isInvalid: true
-            })
+          'distribution': {
+            'ds1id': {
+              alternative1: {
+                isInvalid: true
+              },
+              alternative2: {
+                isInvalid: true
+              }
+            },
+            'ds2id': {
+              alternative1: {
+                isInvalid: true
+              },
+              alternative2: {
+                isInvalid: true
+              }
+            }
           }
         };
         expect(result).toEqual(expectedResult);
       });
+
       it('should preserve data if there is old data supplied and the criterion type has not changed', function() {
         var oldInputData = {
-          'ds2id': {
-            alternative1: {
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution'
-            },
-            alternative2: criteria[1].inputMetaData
+          effect: {
+            ds2id: {
+              alternative1: {
+                firstParameter: 1,
+                inputParameters: {}
+              },
+              alternative2: {
+                inputParameters: {}
+              }
+            }
+          },
+          distribution: {
+            ds2id: {
+              alternative1: {
+                firstParameter: 2
+              },
+              alternative2: {}
+            }
           }
         };
         var result = manualInputService.prepareInputData(criteria, alternatives, oldInputData);
 
         var expectedResult = {
-          'ds1id': {
-            alternative1: _.extend({}, _.omit(criteria[0].dataSources[0], ['id']), {
-              isInvalid: true
-            }),
-            alternative2: _.extend({}, _.omit(criteria[0].dataSources[0], ['id']), {
-              isInvalid: true
-            })
+          effect: {
+            ds1id: {
+              alternative1: {
+                isInvalid: true
+              },
+              alternative2: {
+                isInvalid: true
+              }
+            },
+            ds2id: {
+              alternative1: _.extend({}, oldInputData.effect.ds2id.alternative1, {
+                isInvalid: true,
+                inputParameters: {}
+              }),
+              alternative2: {
+                isInvalid: true,
+                inputParameters: {}
+              }
+            }
           },
-          'ds2id': {
-            alternative1: _.extend({}, oldInputData.ds2id.alternative1, {
-              isInvalid: true
-            }),
-            alternative2: _.extend({}, _.omit(criteria[1].dataSources[0], ['id']), {
-              isInvalid: true
-            })
+          distribution: {
+            ds1id: {
+              alternative1: {
+                isInvalid: true
+              },
+              alternative2: {
+                isInvalid: true
+              }
+            },
+            ds2id: {
+              alternative1: _.extend({}, oldInputData.distribution.ds2id.alternative1, {
+                isInvalid: true
+              }),
+              alternative2: {
+                isInvalid: true
+              }
+            }
           }
         };
         expect(result).toEqual(expectedResult);
@@ -177,33 +261,29 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         id: 'alternative1',
         oldId: 'alternative1Oldid'
       }];
+
       it('should create a problem, ready to go to the workspace, removing old ids', function() {
-        inputKnowledgeServiceMock.buildPerformance.and.returnValue({});
         var criteria = [{
           title: 'favorable criterion',
           description: 'some crit description',
-          unitOfMeasurement: 'particles',
           isFavorable: true,
           id: 'criterion1id',
           oldid: 'criterion1oldId',
           scale: [0, 1],
           omitThis: 'yech',
           dataSources: [{
+            unitOfMeasurement: 'particles',
             id: 'ds1id',
             oldId: 'ds1oldId',
-            inputType: 'effect',
-            dataType: 'other'
           }]
         }, {
           title: 'unfavorable criterion',
           description: 'some crit description',
-          unitOfMeasurement: 'particles',
           isFavorable: false,
           id: 'criterion2id',
           dataSources: [{
+            unitOfMeasurement: 'particles',
             id: 'ds2id',
-            inputType: 'distribution',
-            inputMethod: 'manualDistribution'
           }]
         }, {
           title: 'dichotomousDecimalSampleSize',
@@ -211,40 +291,80 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           isFavorable: false,
           dataSources: [{
             id: 'ds3id',
-            inputType: 'effect',
-            dataType: 'dichotomous'
           }]
         }];
         var inputData = {
-          ds1id: {
-            alternative1: {
-              inputType: 'effect',
-              dataType: 'other',
-              firstParameter: 10,
-              inputParameters: {
-                id: 'valueExact'
+          effect: {
+            ds1id: {
+              alternative1: {
+                firstParameter: 10,
+                inputParameters: {
+                  id: 'value',
+                  buildPerformance: function() {
+                    return {};
+                  }
+                }
+              }
+            },
+            ds2id: {
+              alternative1: {
+                firstParameter: 20,
+                inputParameters: {
+                  id: 'value',
+                  buildPerformance: function() {
+                    return {};
+                  }
+                }
+              }
+            },
+            ds3id: {
+              alternative1: {
+                firstParameter: 0.5,
+                secondParameter: 20,
+                inputParameters: {
+                  id: 'valueSampleSize',
+                  buildPerformance: function() {
+                    return {};
+                  }
+                }
               }
             }
           },
-          ds2id: {
-            alternative1: {
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution',
-              firstParameter: 20,
-              inputParameters: {
-                id: 'valueExact'
+          distribution: {
+            ds1id: {
+              alternative1: {
+                firstParameter: 10,
+                secondParameter: 20,
+                inputParameters: {
+                  id: 'normal',
+                  buildPerformance: function() {
+                    return {};
+                  }
+                }
               }
-            }
-          },
-          ds3id: {
-            alternative1: {
-              inputType: 'effect',
-              dataType: 'dichotomous',
-              isNormal: true,
-              firstParameter: 0.5,
-              secondParameter: 20,
-              inputParameters: {
-                id: 'dichotomousDecimalSampleSize'
+            },
+            ds2id: {
+              alternative1: {
+                firstParameter: 20,
+                secondParameter: 20,
+                inputParameters: {
+                  id: 'beta',
+                  buildPerformance: function() {
+                    return {};
+                  }
+                }
+              }
+            },
+            ds3id: {
+              alternative1: {
+                firstParameter: 0.5,
+                secondParameter: 20,
+                inputParameters: {
+                  id: 'gamma',
+                  buildPerformance: function() {
+                    return {};
+                  }
+                }
               }
             }
           }
@@ -253,31 +373,27 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         var result = manualInputService.createProblem(criteria, alternatives, title, description, inputData, useFavorability);
         var expectedResult = {
           title: title,
-          schemaVersion: '1.1.0',
+          schemaVersion: '1.2.2',
           description: description,
           criteria: {
             criterion1id: {
               title: 'favorable criterion',
               description: 'some crit description',
-              unitOfMeasurement: 'particles',
               isFavorable: true,
               dataSources: [{
                 id: 'ds1id',
+                unitOfMeasurement: 'particles',
                 scale: [-Infinity, Infinity],
-                inputType: 'effect',
-                dataType: 'other'
               }]
             },
             criterion2id: {
               title: 'unfavorable criterion',
               description: 'some crit description',
-              unitOfMeasurement: 'particles',
               isFavorable: false,
               dataSources: [{
                 id: 'ds2id',
+                unitOfMeasurement: 'particles',
                 scale: [-Infinity, Infinity],
-                inputType: 'distribution',
-                inputMethod: 'manualDistribution'
               }]
             },
             criterion3id: {
@@ -285,9 +401,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               isFavorable: false,
               dataSources: [{
                 id: 'ds3id',
-                scale: [0, 1],
-                inputType: 'effect',
-                dataType: 'dichotomous'
+                scale: [-Infinity, Infinity],
               }]
             }
           },
@@ -300,17 +414,26 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             alternative: 'alternative1',
             criterion: 'criterion1id',
             dataSource: 'ds1id',
-            performance: {}
+            performance: {
+              effect: {},
+              distribution: {}
+            }
           }, {
             alternative: 'alternative1',
             criterion: 'criterion2id',
             dataSource: 'ds2id',
-            performance: {}
+            performance: {
+              effect: {},
+              distribution: {}
+            }
           }, {
             alternative: 'alternative1',
             criterion: 'criterion3id',
             dataSource: 'ds3id',
-            performance: {}
+            performance: {
+              effect: {},
+              distribution: {}
+            }
           }]
         };
         expect(result).toEqual(expectedResult);
@@ -318,11 +441,31 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     });
 
     describe('createStateFromOldWorkspace', function() {
+      var baseWorkspace;
+      var baseExpectedResult;
+
+      var option = {
+        finishInputCell: jasmine.createSpy()
+      };
+
       beforeEach(function() {
-        generateUuidMock.and.returnValues('uuid1', 'uuid2', 'uuid3', 'uuid4', 'uuid5', 'uuid6', 'uuid7', 'uuid8', 'uuid9', 'uuid10', 'uuid11', 'uuid12', 'uuid13');
-      });
-      it('should create a new state from an existing workspace', function() {
-        var workspace = {
+        option.finishInputCell.calls.reset();
+
+        inputKnowledgeServiceMock.getOptions.and.returnValue({
+          value: option,
+          valueSE: option,
+          valueCI: option,
+          eventsSampleSize: option,
+          valueSampleSize: option,
+          empty: option,
+          normal: option,
+          gamma: option,
+          beta: option,
+          text: option
+        });
+        generateUuidMock.and.returnValues('uuid1', 'uuid2', 'uuid3', 'uuid4', 'uuid5', 'uuid6',
+          'uuid7', 'uuid8', 'uuid9', 'uuid10', 'uuid11', 'uuid12', 'uuid13', 'uuid14', 'uuid15');
+        baseWorkspace = {
           problem: {
             criteria: {
               crit1: {
@@ -334,61 +477,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                   id: 'ds1',
                   scale: [0, 1],
                   source: 'single study',
-                  sourceLink: 'http://www.drugis.org',
-                  inputType: 'distribution',
-                  inputMethod: 'assistedDistribution',
-                  dataType: 'continuous'
-                }]
-              },
-              crit2: {
-                title: 'criterion 2',
-                unitOfMeasurement: 'Response size',
-                isFavorable: true,
-                dataSources: [{
-                  id: 'ds2',
-                  inputType: 'distribution',
-                  inputMethod: 'manualDistribution',
-                  source: 'single study',
                   sourceLink: 'http://www.drugis.org'
-                }]
-              },
-              crit3: {
-                title: 'criterion 3',
-                isFavorable: false,
-                dataSources: [{
-                  id: 'ds3',
-                  inputType: 'distribution',
-                  inputMethod: 'manualDistribution',
-                  source: 'single study'
-                }]
-              },
-              crit4: {
-                title: 'criterion 4',
-                isFavorable: false,
-                dataSources: [{
-                  id: 'ds4',
-                  inputType: 'distribution',
-                  inputMethod: 'manualDistribution',
-                  source: 'single study'
-                }]
-              },
-              crit5: {
-                title: 'criterion 5',
-                isFavorable: false,
-                dataSources: [{
-                  id: 'ds5',
-                  inputType: 'distribution',
-                  inputMethod: 'manualDistribution',
-                  source: 'single study'
-                }]
-              },
-              crit6: {
-                title: 'durrrvival',
-                isFavorable: false,
-                dataSources: [{
-                  id: 'ds6',
-                  inputType: 'Unknown'
-
                 }]
               }
             },
@@ -396,137 +485,418 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               alt1: {
                 title: 'alternative 1'
               }
-            },
-            performanceTable: [{
-              criterion: 'crit1',
-              dataSource: 'ds1',
-              performance: {
-                type: 'dt'
-              }
-            }, {
-              criterion: 'crit2',
-              dataSource: 'ds2',
-              performance: {
-                type: 'dbeta'
-              }
-            }, {
-              criterion: 'crit3',
-              dataSource: 'ds3',
-              performance: {
-                type: 'dgamma'
-              }
-            }, {
-              criterion: 'crit4',
-              dataSource: 'ds4',
-              performance: {
-                type: 'dnorm'
-              }
-            }, {
-              criterion: 'crit5',
-              dataSource: 'ds5',
-              alternative: 'alt1',
-              performance: {
-                type: 'exact'
-              }
-            }, {
-              criterion: 'crit6',
-              dataSource: 'ds6',
-              performance: {
-                type: 'dsurv'
-              }
-            }]
+            }
           }
         };
-        var result = manualInputService.createStateFromOldWorkspace(workspace);
-        var expectedResult = {
-          oldWorkspace: workspace,
+        baseExpectedResult = {
           useFavorability: true,
           step: 'step1',
           isInputDataValid: false,
           description: undefined,
           criteria: [{
-            id: 'uuid2',
             title: 'criterion 1',
             description: 'bla',
+            isFavorable: true,
             dataSources: [{
               id: 'uuid1',
               oldId: 'ds1',
               source: 'single study',
-              sourceLink: 'http://www.drugis.org',
-              inputType: 'distribution',
-              inputMethod: 'assistedDistribution',
-              dataType: 'continuous'
+              sourceLink: 'http://www.drugis.org'
             }],
-            isFavorable: true
-          }, {
-            id: 'uuid4',
-            title: 'criterion 2',
-            dataSources: [{
-              id: 'uuid3',
-              oldId: 'ds2',
-              source: 'single study',
-              sourceLink: 'http://www.drugis.org',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution'
-            }],
-            isFavorable: true,
-            unitOfMeasurement: 'Response size'
-          }, {
-            id: 'uuid6',
-            title: 'criterion 3',
-            dataSources: [{
-              id: 'uuid5',
-              oldId: 'ds3',
-              source: 'single study',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution'
-            }],
-            isFavorable: false
-
-          }, {
-            id: 'uuid8',
-            title: 'criterion 4',
-            dataSources: [{
-              id: 'uuid7',
-              oldId: 'ds4',
-              source: 'single study',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution',
-            }],
-            isFavorable: false
-          }, {
-            id: 'uuid10',
-            title: 'criterion 5',
-            dataSources: [{
-              id: 'uuid9',
-              oldId: 'ds5',
-              source: 'single study',
-              inputType: 'distribution',
-              inputMethod: 'manualDistribution'
-            }],
-            isFavorable: false,
-          }, {
-            id: 'uuid12',
-            title: 'durrrvival',
-            dataSources: [{
-              id: 'uuid11',
-              oldId: 'ds6',
-              inputType: 'Unknown'
-            }],
-            isFavorable: false,
+            id: 'uuid2'
           }],
           alternatives: [{
-            oldId: 'alt1',
-            id: 'uuid13',
-            title: 'alternative 1'
+            title: 'alternative 1',
+            id: 'uuid3',
+            oldId: 'alt1'
           }],
           inputData: {
-            uuid9: {
-              uuid13: undefined // see input knowledge service spec for tests 
+            effect: {
+              uuid1: {
+                uuid3: undefined
+              }
+            },
+            distribution: {
+              uuid1: {
+                uuid3: undefined
+              }
             }
           }
         };
-        expect(result).toEqual(expectedResult);
+      });
+
+      describe('for an old workspace with a distribution', function() {
+        it('should create a state with an empty distribution cell', function() {
+          var workspace = _.merge({}, baseWorkspace, {
+            problem: {
+              performanceTable: [{
+                criterion: 'crit1',
+                dataSource: 'ds1',
+                alternative: 'alt1',
+                performance: {
+                  distribution: {
+                    type: 'empty'
+                  }
+                }
+              }]
+            }
+          });
+
+          var result = manualInputService.createStateFromOldWorkspace(workspace);
+          var expectedResult = _.merge({}, baseExpectedResult, {
+            oldWorkspace: workspace
+          });
+          expect(result).toEqual(expectedResult);
+          expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('distribution');
+          expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.distribution);
+        });
+
+        it('should create a state with a beta distribution cell', function() {
+          var workspace = _.merge({}, baseWorkspace, {
+            problem: {
+              performanceTable: [{
+                criterion: 'crit1',
+                dataSource: 'ds1',
+                alternative: 'alt1',
+                performance: {
+                  distribution: {
+                    type: 'dbeta'
+                  }
+                }
+              }]
+            }
+          });
+
+          var result = manualInputService.createStateFromOldWorkspace(workspace);
+          var expectedResult = _.merge({}, baseExpectedResult, {
+            oldWorkspace: workspace
+          });
+          expect(result).toEqual(expectedResult);
+          expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('distribution');
+          expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.distribution);
+        });
+
+        it('should create a state with a gamma distribution cell', function() {
+          var workspace = _.merge({}, baseWorkspace, {
+            problem: {
+              performanceTable: [{
+                criterion: 'crit1',
+                dataSource: 'ds1',
+                alternative: 'alt1',
+                performance: {
+                  distribution: {
+                    type: 'dgamma'
+                  }
+                }
+              }]
+            }
+          });
+
+          var result = manualInputService.createStateFromOldWorkspace(workspace);
+          var expectedResult = _.merge({}, baseExpectedResult, {
+            oldWorkspace: workspace
+          });
+          expect(result).toEqual(expectedResult);
+          expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('distribution');
+          expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.distribution);
+        });
+
+        it('should create a state with a normal distribution cell', function() {
+          var workspace = _.merge({}, baseWorkspace, {
+            problem: {
+              performanceTable: [{
+                criterion: 'crit1',
+                dataSource: 'ds1',
+                alternative: 'alt1',
+                performance: {
+                  distribution: {
+                    type: 'dnorm'
+                  }
+                }
+              }]
+            }
+          });
+
+          var result = manualInputService.createStateFromOldWorkspace(workspace);
+          var expectedResult = _.merge({}, baseExpectedResult, {
+            oldWorkspace: workspace
+          });
+          expect(result).toEqual(expectedResult);
+          expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('distribution');
+          expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.distribution);
+        });
+
+        it('should create a state with an exact distribution cell', function() {
+          var workspace = _.merge({}, baseWorkspace, {
+            problem: {
+              performanceTable: [{
+                criterion: 'crit1',
+                dataSource: 'ds1',
+                alternative: 'alt1',
+                performance: {
+                  distribution: {
+                    type: 'exact'
+                  }
+                }
+              }]
+            }
+          });
+
+          var result = manualInputService.createStateFromOldWorkspace(workspace);
+          var expectedResult = _.merge({}, baseExpectedResult, {
+            oldWorkspace: workspace
+          });
+          expect(result).toEqual(expectedResult);
+          expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('distribution');
+          expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.distribution);
+        });
+
+        it('should create a state with a survival distribution cell', function() {
+          var workspace = _.merge({}, baseWorkspace, {
+            problem: {
+              performanceTable: [{
+                criterion: 'crit1',
+                dataSource: 'ds1',
+                alternative: 'alt1',
+                performance: {
+                  distribution: {
+                    type: 'dsurv'
+                  }
+                }
+              }]
+            }
+          });
+
+          var result = manualInputService.createStateFromOldWorkspace(workspace);
+          var expectedResult = _.merge({}, baseExpectedResult, {
+            oldWorkspace: workspace
+          });
+          expect(result).toEqual(expectedResult);
+          expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('distribution');
+          expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.distribution);
+        });
+
+        it('should create a state with a text distribution cell', function() {
+          var workspace = _.merge({}, baseWorkspace, {
+            problem: {
+              performanceTable: [{
+                criterion: 'crit1',
+                dataSource: 'ds1',
+                alternative: 'alt1',
+                performance: {
+                  distribution: {
+                    type: 'empty',
+                    value: 'text'
+                  }
+                }
+              }]
+            }
+          });
+
+          var result = manualInputService.createStateFromOldWorkspace(workspace);
+          var expectedResult = _.merge({}, baseExpectedResult, {
+            oldWorkspace: workspace
+          });
+          expect(result).toEqual(expectedResult);
+          expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.distribution);
+          expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('distribution');
+        });
+      });
+
+      describe('for an old workspace with an effect', function() {
+        describe('with input', function() {
+          it('should create a new state with a value SE cell', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact',
+                      input: {
+                        stdErr: 0.5
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+            expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
+            expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
+          });
+
+          it('should create a new state with a value CI cell', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact',
+                      input: {
+                        lowerBound: 0.5,
+                        upperBound: 'NE'
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+            expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
+            expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
+          });
+
+          it('should create a new state with a value sample size cell', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact',
+                      input: {
+                        sampleSize: 200
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+            expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
+            expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
+          });
+
+          it('should create a new state with an events sample size cell', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact',
+                      input: {
+                        events: 200,
+                        sampleSize: 3000
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+            expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
+            expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
+          });
+        });
+
+        describe('without input', function() {
+          it('should create a new state with a value effect cell', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact'
+                    }
+                  }
+                }]
+              }
+            });
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+            expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
+            expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
+          });
+
+          it('should create a new state with an empty effect cell', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'empty'
+                    }
+                  }
+                }]
+              }
+            });
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+            expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
+            expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
+          });
+
+          it('should create a new state with a text effect cell', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'empty',
+                      value: 'text'
+                    }
+                  }
+                }]
+              }
+            });
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+            expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
+            expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
+          });
+        });
       });
     });
 
@@ -573,8 +943,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
     });
 
-    describe('findInvalidRow', () => {
-      it('should return truthy if there is an invalid row i.e. all inputs are not distributed and have the same effect value', () => {
+    describe('findDuplicateValues', () => {
+      it('should return truthy if there is an invalid row i.e. all inputs have the same effect value', () => {
         var inputData = {
           row1: {
             col1: {
@@ -600,62 +970,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             }
           }
         };
-        var result = manualInputService.findInvalidRow(inputData);
+        var result = manualInputService.findDuplicateValues(inputData);
         expect(result).toBeTruthy();
-      });
-
-      it('should return falsy if the values of a row are the same, but atleast one is marked as normally distributed', () => {
-        var inputData = {
-          row1: {
-            col1: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            },
-            col2: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            },
-            col3: {
-              inputType: 'effect',
-              isNormal: true,
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            }
-          }
-        };
-        var result = manualInputService.findInvalidRow(inputData);
-        expect(result).toBeFalsy();
-      });
-
-      it('should return falsy if atleast one cell is a distribution', () => {
-        var inputData = {
-          row1: {
-            col1: {
-              inputType: 'distribution',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            },
-            col2: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            }
-          }
-        };
-        var result = manualInputService.findInvalidRow(inputData);
-        expect(result).toBeFalsy();
       });
 
       it('should return falsy if atleast one cell has a different value', () => {
@@ -684,8 +1000,210 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             }
           }
         };
-        var result = manualInputService.findInvalidRow(inputData);
+        var result = manualInputService.findDuplicateValues(inputData);
         expect(result).toBeFalsy();
+      });
+
+      it('should return falsy if there are no values in the row', function() {
+        var inputData = {
+          row1: {
+            col1: {
+              inputParameters: {
+                id: 'value'
+              },
+              isInvalid: true
+            },
+            col2: {
+              inputParameters: {
+                id: 'value'
+              },
+              isInvalid: true
+            }
+          }
+        };
+        var result = manualInputService.findDuplicateValues(inputData);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return falsy if there are duplcate text cells in the row', function() {
+        var inputData = {
+          row1: {
+            col1: {
+              firstParameter: 1,
+              inputParameters: {
+                id: 'text'
+              }
+            },
+            col2: {
+              firstParameter: 1,
+              inputParameters: {
+                id: 'text'
+              }
+            }
+          }
+        };
+        var result = manualInputService.findDuplicateValues(inputData);
+        expect(result).toBeFalsy();
+      });
+    });
+
+    describe('generateDistributions', function() {
+      it('should generate a distribution from effect data', function() {
+        var inputData = {
+          effect: {
+            d1: {
+              a1: {
+                inputParameters: {
+                  generateDistribution: jasmine.createSpy()
+                }
+              }
+            }
+          }
+        };
+        manualInputService.generateDistributions(inputData);
+
+        expect(inputData.effect.d1.a1.inputParameters.generateDistribution).toHaveBeenCalledWith(inputData.effect.d1.a1);
+      });
+
+      it('should leave distribution data intact if the effect data is invalid or missing', function() {
+        var inputData = {
+          effect: {
+            d1: {
+              a1: {
+                isInvalid: true
+              }
+            }
+          },
+          distribution: {
+            d1: {
+              a1: {
+                label: 'test'
+              }
+            }
+          }
+        };
+        var result = manualInputService.generateDistributions(inputData);
+
+        expect(result).toEqual(inputData.distribution);
+      });
+
+      it('should overwrite existing distribution data', function() {
+        var inputData = {
+          effect: {
+            d1: {
+              a1: {
+                inputParameters: {
+                  generateDistribution: jasmine.createSpy()
+                }
+              }
+            }
+          },
+          distribution: {
+            d1: {
+              a1: {
+                label: 'test'
+              }
+            }
+          }
+        };
+        inputData.effect.d1.a1.inputParameters.generateDistribution.and.returnValue(inputData.effect.d1.a1);
+        var result = manualInputService.generateDistributions(inputData);
+
+        expect(result).toEqual(inputData.effect);
+      });
+    });
+
+    describe('updateParameterConstraints', function() {
+      var cell;
+      beforeEach(function() {
+        cell = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value',
+              constraints: [decimalConstraint, percentageConstraint]
+            },
+            secondParameter: {
+              label: 'Value',
+              constraints: [decimalConstraint, percentageConstraint]
+            },
+            thirdParameter: {
+              label: 'Value',
+              constraints: [decimalConstraint, percentageConstraint]
+            }
+          }
+        };
+      });
+
+      it('should remove the percentage and/or decimal constraints', function() {
+        cell.constraint = 'None';
+        var result = manualInputService.updateParameterConstraints(cell);
+
+        var expectedResult = {
+          constraint: 'None',
+          inputParameters: {
+            firstParameter: {
+              label: 'Value',
+              constraints: []
+            },
+            secondParameter: {
+              label: 'Value',
+              constraints: []
+            },
+            thirdParameter: {
+              label: 'Value',
+              constraints: []
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should add the percentage constraint if percentage is chosen', function() {
+        cell.constraint = percentageConstraint.label;
+        var result = manualInputService.updateParameterConstraints(cell);
+
+        var expectedResult = {
+          constraint: percentageConstraint.label,
+          inputParameters: {
+            firstParameter: {
+              label: 'Value',
+              constraints: [percentageConstraint]
+            },
+            secondParameter: {
+              label: 'Value',
+              constraints: [percentageConstraint]
+            },
+            thirdParameter: {
+              label: 'Value',
+              constraints: [percentageConstraint]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should add the decimal constraint if decimal is chosen', function() {
+        cell.constraint = decimalConstraint.label;
+        var result = manualInputService.updateParameterConstraints(cell);
+
+        var expectedResult = {
+          constraint: decimalConstraint.label,
+          inputParameters: {
+            firstParameter: {
+              label: 'Value',
+              constraints: [decimalConstraint]
+            },
+            secondParameter: {
+              label: 'Value',
+              constraints: [decimalConstraint]
+            },
+            thirdParameter: {
+              label: 'Value',
+              constraints: [decimalConstraint]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
       });
     });
   });

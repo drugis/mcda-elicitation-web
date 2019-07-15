@@ -1,0 +1,26 @@
+<form ng-submit="save()">
+  <div class="grid-x">
+    <div class="cell">
+      <h3>Edit unit of measurement</h3>
+    </div>
+    <div class="cell">
+      <label>Type</label>
+      <select ng-model="values.selectedOption" ng-change="unitOptionChanged()"
+        ng-options="option as option.label for option in unitOptions"></select>
+    </div>
+    <div class="cell">
+      <label>Unit of measurement</label>
+      <input type="text" ng-disabled="values.selectedOption.id !== 'other'" ng-model="values.value"
+        ng-change="validateInput()">
+    </div>
+    <div class="cell">
+      <button class="button" type="button" ng-click="save()" ng-disabled="saveDisabled">Save</button>
+    </div>
+    <div class="cell alert" ng-if="saveDisabled">
+      To use '%' or 'Proportion', please switch to the corresponding type.
+    </div>
+    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</form>

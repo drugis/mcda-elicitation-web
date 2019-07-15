@@ -28,16 +28,29 @@ define(['lodash'], function(_) {
           scope.rows = EffectsTableService.buildEffectsTable(scope.keyedCriteria);
         }, true);
 
-        scope.$watch('alternatives', function(newAlternatives) {
+        scope.$watch('alternatives', function() {
           scope.nrAlternatives = _.keys(scope.alternatives).length;
-          scope.alternatives = newAlternatives;
+          isCellAnalysisViable();
         });
 
+        scope.$watch('scales', isCellAnalysisViable);
+
         scope.$on('elicit.settingsChanged', getWorkspaceSettings);
+
+        function isCellAnalysisViable(){
+          scope.isCellAnalysisViable = EffectsTableService.createIsCellAnalysisViable(
+            scope.rows,
+            scope.alternatives,
+            scope.effectsTableInfo,
+            scope.scales
+          );
+        }
 
         function getWorkspaceSettings() {
           scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
           scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
+          scope.isValueView = scope.workspaceSettings.effectsDisplay === 'smaa' ||
+            scope.workspaceSettings.effectsDisplay === 'deterministicMCDA';
         }
 
       }

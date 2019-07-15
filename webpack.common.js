@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 let basePath = path.join(__dirname, '/');
 let fs = require('fs');
+const MATOMO_VERSION = process.env.MATOMO_VERSION ? process.env.MATOMO_VERSION : 'Test';
 
 let config = {
   entry: {
@@ -27,9 +28,6 @@ let config = {
         loader: 'angular1-templateurl-loader'
       }],
       exclude: [/.*angular-foundation-6.*/] // uses $templatecache so dont replace 
-    }, {
-      test: /\.json$/,
-      loader: 'json-loader'
     }, {
       test: /\.html$/,
       loader: 'raw-loader'
@@ -57,6 +55,7 @@ let config = {
 
   resolve: {
     alias: {
+      'schema-basePath' : basePath + '/schema/',
       'mcda': basePath + '/app/js',
       'mcdaweb': basePath + '/app/js/mcda-web'
     },
@@ -74,7 +73,7 @@ let config = {
       template: 'app/index.ejs',
       inject: 'head',
       chunks: ['main'],
-      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo.html'))
+      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo'+ MATOMO_VERSION +'.html'))
     }),
     new HtmlWebpackPlugin({
       filename: 'signin.html',
@@ -82,21 +81,21 @@ let config = {
       inject: 'head',
       chunks: ['signin'],
       signin: fs.readFileSync(require.resolve('signin/googleSignin.html')),
-      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo.html'))
+      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo'+ MATOMO_VERSION +'.html'))
     }),
     new HtmlWebpackPlugin({
       filename: 'manual.html',
       template: 'app/manual.ejs',
       inject: 'head',
       chunks: ['manual'],
-      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo.html'))
+      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo'+ MATOMO_VERSION +'.html'))
     }),
     new HtmlWebpackPlugin({
       filename: 'error.html',
       template: 'app/error.ejs',
       inject: 'head',
       chunks: ['error'],
-      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo.html'))
+      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo'+ MATOMO_VERSION +'.html'))
     }),
     new CleanWebpackPlugin(['dist'])
   ],
