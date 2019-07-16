@@ -7,13 +7,6 @@ webpackConfig.optimization = {
   splitChunks: false,
   runtimeChunk: false
 };
-webpackConfig.module.rules.push({
-  enforce: 'post',
-  test: /\.js$/,
-  loader: 'istanbul-instrumenter-loader',
-  include: __dirname + '/app',
-  exclude: ['(node_modules', /Spec.js$/],
-});
 
 module.exports = function(config) {
   config.set({
