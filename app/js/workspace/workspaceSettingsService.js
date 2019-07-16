@@ -77,13 +77,19 @@ define(['angular', 'lodash'], function(angular, _) {
       return workspaceSettings.showPercentages;
     }
 
+    function isValueView() {
+      return workspaceSettings.effectsDisplay === 'smaa' ||
+        workspaceSettings.effectsDisplay === 'deterministicMCDA';
+    }
+
     return {
       loadWorkspaceSettings: loadWorkspaceSettings,
       getToggledColumns: getToggledColumns,
       getWorkspaceSettings: getWorkspaceSettings,
       saveSettings: saveSettings,
       getDefaults: getDefaults,
-      usePercentage: usePercentage
+      usePercentage: usePercentage,
+      isValueView: isValueView
     };
   };
 

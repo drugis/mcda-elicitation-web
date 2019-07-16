@@ -49,6 +49,7 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.createProblemConfiguration = createProblemConfiguration;
     $scope.cancel = $modalInstance.close;
     $scope.reset = reset;
+    $scope.getUnit = getUnit;
 
     // init
     $scope.subProblems = subProblems;
@@ -151,10 +152,23 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.subProblemState.title = titleCache;
     }
 
+    function getUnit(row) {
+      if (row.isProportion) {
+        if (WorkspaceSettingsService.isValueView()) {
+          return $scope.usePercentage ? '%' : 'Proportion';
+        } else {
+          return '';
+        }
+      } else {
+        return row.dataSource.unitOfMeasurement;
+      }
+    }
+
     // private functions
     function checkDuplicateTitle(title) {
       $scope.isTitleDuplicate = _.find($scope.subProblems, ['title', title]);
     }
+
   };
   return dependencies.concat(CreateSubProblemController);
 });

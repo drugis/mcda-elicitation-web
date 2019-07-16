@@ -57,7 +57,7 @@ define(['lodash'], function(_) {
 
         function updateSettings() {
           scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
-          scope.isValueView = scope.workspaceSettings.effectsDisplay === 'smaa' || scope.workspaceSettings.effectsDisplay === 'deterministicMCDA';
+          scope.isValueView = WorkspaceSettingsService.isValueView();
         }
 
         function criterionUp() {

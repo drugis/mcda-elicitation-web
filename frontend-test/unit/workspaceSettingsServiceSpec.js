@@ -40,6 +40,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
         expect(result).toEqual(defaults);
       });
     });
+
     describe('loadWorkspaceSettings', function() {
       var loadedPromise;
       var loadResolved = false;
