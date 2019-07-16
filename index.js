@@ -12,10 +12,12 @@ var appEnvironmentSettings = {
 };
 var signin = require('signin')(db, appEnvironmentSettings);
 var WorkspaceService = require('./node-backend/workspaceService')(db);
+var WorkspaceRepository = require('./node-backend/workspaceRepository')(db);
 var OrderingService = require('./node-backend/orderingService')(db);
 var SubProblemService = require('./node-backend/subProblemService')(db);
 var ScenarioService = require('./node-backend/scenarioService')(db);
 var WorkspaceSettingsService = require('./node-backend/workspaceSettingsService')(db);
+var rightsManagement = require('rights-management')();
 
 var express = require('express');
 var http = require('http');
@@ -28,7 +30,7 @@ var server;
 var authenticationMethod = process.env.MCDAWEB_AUTHENTICATION_METHOD;
 
 var sessionOptions = {
-  store: new(require('connect-pg-simple')(session))({
+  store: new (require('connect-pg-simple')(session))({
     conString: dbUtil.mcdaDBUrl,
   }),
   secret: process.env.MCDAWEB_COOKIE_SECRET,
@@ -41,6 +43,65 @@ var sessionOptions = {
     secure: authenticationMethod === 'SSL'
   }
 };
+
+function makeRights(path, method, requiredRight, checkRights) {
+  return {
+    path: path,
+    method: method,
+    requiredRight: requiredRight,
+    checkRights: checkRights
+  };
+}
+
+rightsManagement.setRequiredRights([
+  makeRights('/patavi', 'POST', 'none'),
+  makeRights('/workspaces', 'GET', 'none'),
+  makeRights('/workspaces', 'POST', 'none'),
+
+  makeRights('/workspaces/:workspaceId', 'GET', 'read', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId', 'POST', 'write', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId', 'DELETE', 'owner', workspaceOwnerRightsNeeded),
+
+  makeRights('/inProgress', 'GET', 'none', inProgressOwnerRightsNeeded),
+  makeRights('/inProgress', 'POST', 'none', inProgressOwnerRightsNeeded),
+  makeRights('/inProgress/:workspaceId', 'GET', 'none', inProgressOwnerRightsNeeded),
+  makeRights('/inProgress/:workspaceId', 'PUT', 'none', inProgressOwnerRightsNeeded),
+  makeRights('/inProgress/:workspaceId', 'DELETE', 'none', inProgressOwnerRightsNeeded),
+
+  makeRights('/workspaces/:workspaceId/ordering', 'GET', 'read', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/ordering', 'PUT', 'write', workspaceOwnerRightsNeeded),
+
+  makeRights('/workspaces/:workspaceId/workspaceSettings', 'GET', 'read', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/workspaceSettings', 'PUT', 'write', workspaceOwnerRightsNeeded),
+
+  makeRights('/workspaces/:workspaceId/problems', 'GET', 'read', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'GET', 'read', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/problems', 'POST', 'write', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'POST', 'write', workspaceOwnerRightsNeeded),
+
+  makeRights('/workspaces/:workspaceId/scenarios', 'GET', 'read', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios', 'GET', 'read', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'GET', 'read', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios', 'POST', 'write', workspaceOwnerRightsNeeded),
+  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'POST', 'write', workspaceOwnerRightsNeeded)
+]);
+
+function workspaceOwnerRightsNeeded(response, next, workspaceId, userId) {
+  WorkspaceRepository.get(workspaceId, _.partial(rightsCallback, response, next, userId));
+}
+
+function inProgressOwnerRightsNeeded(response, next, workspaceId, userId) {
+  WorkspaceService.getInProgress(workspaceId, _.partial(rightsCallback, response, next, userId));
+}
+
+function rightsCallback(response, next, userId, error, workspace) {
+  if (error) { next(error); }
+  if (workspace.owner !== userId) {
+    response.status(403).send('Insufficient user rights');
+  } else {
+    next();
+  }
+}
 
 var app = express();
 
@@ -66,37 +127,36 @@ switch (authenticationMethod) {
 }
 console.log('Authentication method: ' + authenticationMethod);
 
-app
-  .get('/logout', function(req, res) {
-    req.logout();
-    res.redirect('/');
-  })
-  .use(csurf())
-  .use(function(req, res, next) {
-    res.cookie('XSRF-TOKEN', req.csrfToken());
-    if (req.user) {
-      res.cookie('LOGGED-IN-USER', JSON.stringify(_.omit(req.user, 'email', 'password')));
-    }
-    next();
-  })
-  .get('/', function(req, res) {
-    if (req.user || req.session.user) {
-      res.sendFile(__dirname + '/dist/index.html');
-    } else {
-      res.sendFile(__dirname + '/dist/signin.html');
-    }
-  })
-  .get('/lexicon.json', function(req, res) {
-    res.sendFile(__dirname + '/app/lexicon.json');
-  })
-  .get('/mcda-page-titles.json', function(req, res) {
-    res.sendFile(__dirname + '/app/mcda-page-titles.json');
-  })
-  .use(express.static('dist'))
-  .use(express.static('public'))
-  .use('/examples', express.static(__dirname + '/examples'));
-
-initializeRouter();
+app.get('/logout', function(req, res) {
+  req.logout();
+  res.redirect('/');
+});
+app.use(csurf());
+app.use(function(req, res, next) {
+  res.cookie('XSRF-TOKEN', req.csrfToken());
+  if (req.user) {
+    res.cookie('LOGGED-IN-USER', JSON.stringify(_.omit(req.user, 'email', 'password')));
+  }
+  next();
+});
+app.get('/', function(req, res) {
+  if (req.user || req.session.user) {
+    res.sendFile(__dirname + '/dist/index.html');
+  } else {
+    res.sendFile(__dirname + '/dist/signin.html');
+  }
+});
+app.get('/lexicon.json', function(req, res) {
+  res.sendFile(__dirname + '/app/lexicon.json');
+});
+app.get('/mcda-page-titles.json', function(req, res) {
+  res.sendFile(__dirname + '/app/mcda-page-titles.json');
+});
+app.use(express.static('dist'));
+app.use(express.static('public'));
+app.use('/examples', express.static(__dirname + '/examples'));
+app.use('/css/fonts', express.static('./dist/fonts'));
+app.use(rightsManagement.expressMiddleware);
 
 // Workspaces in progress
 app.post('/inProgress', WorkspaceService.createInProgress);
@@ -116,7 +176,7 @@ app.delete('/workspaces/:id', WorkspaceService.deleteWorkspace);
 app.get('/workspaces/:workspaceId/ordering', OrderingService.getOrdering);
 app.put('/workspaces/:workspaceId/ordering', OrderingService.updateOrdering);
 
-//Subproblems
+// Subproblems
 app.get('/workspaces/:workspaceId/problems', SubProblemService.querySubProblems);
 app.get('/workspaces/:workspaceId/problems/:subProblemId', SubProblemService.getSubProblem);
 app.post('/workspaces/:workspaceId/problems', SubProblemService.createSubProblem);
@@ -129,7 +189,7 @@ app.get('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', Scenari
 app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios', ScenarioService.createScenario);
 app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', ScenarioService.updateScenario);
 
-//Workspace settings
+// Workspace settings
 app.get('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsService.getWorkspaceSettings);
 app.put('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsService.putWorkspaceSettings);
 
@@ -150,8 +210,6 @@ app.post('/patavi', function(req, res, next) { // FIXME: separate routes for sca
     });
   });
 });
-
-app.use('/css/fonts', express.static('./dist/fonts'));
 
 app.use((error, request, response, next) => {
   logger.error(JSON.stringify(error.message, null, 2));
@@ -197,17 +255,4 @@ function useSSLLogin() {
       });
     }
   });
-}
-
-function initializeRouter() {
-  var router = express.Router();
-  router.get('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
-  router.post('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
-  router.delete('/workspaces/:id*', WorkspaceService.requireUserIsWorkspaceOwner);
-  router.get('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
-  router.put('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
-  router.put('/workspaces/:id/ordering', WorkspaceService.requireUserIsWorkspaceOwner);
-  router.put('/workspaces/:id/workspaceSettings', WorkspaceService.requireUserIsWorkspaceOwner);
-  router.delete('/workspaces/inProgress/:id', WorkspaceService.requireUserIsInProgressWorkspaceOwner);
-  app.use(router);
 }
