@@ -4,8 +4,8 @@ var logger = require('./logger');
 var async = require('async');
 
 module.exports = function(db) {
-
-
+  var workspaceRepository = require('./workspaceRepository')(db);
+  
   function requireUserIsWorkspaceOwner(req, res, next) {
     db.query('SELECT owner FROM workspace WHERE id = $1', [req.params.id], createOwnershipChecker(req, res, next));
   }
@@ -187,9 +187,9 @@ module.exports = function(db) {
 
   function getWorkspace(req, res, next) {
     logger.debug('GET /workspaces/:id');
-    db.query('SELECT id, owner, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1', [req.params.id], function(err, result) {
-      checkErr(err, next);
-      res.json(result.rows[0]);
+    workspaceRepository.get(req.params.id, function(error,result){
+      checkErr(error, next);
+      res.json(result);
     });
   }
 

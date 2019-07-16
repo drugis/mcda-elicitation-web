@@ -181,7 +181,7 @@
       <div ng-if="state.errors.length" class="alert" ng-repeat="error in state.errors">
         {{error}}
       </div>
-      <div ng-if="state.warnings.length" ng-repeat="warning in state.warnings">
+      <div ng-if="state.warnings.length && !state.errors.length" ng-repeat="warning in state.warnings">
         <i class="fa fa-exclamation-triangle"></i> {{warning}}
       </div>
     </div>

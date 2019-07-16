@@ -213,22 +213,18 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           effect: {
             ds1id: {
               alternative1: {
-                constraint: 'None',
                 isInvalid: true
               },
               alternative2: {
-                constraint: 'None',
                 isInvalid: true
               }
             },
             ds2id: {
               alternative1: _.extend({}, oldInputData.effect.ds2id.alternative1, {
-                constraint: 'None',
                 isInvalid: true,
                 inputParameters: {}
               }),
               alternative2: {
-                constraint: 'None',
                 isInvalid: true,
                 inputParameters: {}
               }
@@ -1008,13 +1004,19 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(result).toBeFalsy();
       });
 
-      it('should return falsy if there are not values in the row', function() {
+      it('should return falsy if there are no values in the row', function() {
         var inputData = {
           row1: {
             col1: {
+              inputParameters: {
+                id: 'value'
+              },
               isInvalid: true
             },
             col2: {
+              inputParameters: {
+                id: 'value'
+              },
               isInvalid: true
             }
           }
