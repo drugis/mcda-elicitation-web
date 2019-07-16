@@ -1,9 +1,9 @@
 'use strict';
 define(['lodash'], function(_) {
 
-  var dependencies = ['$filter'];
+  var dependencies = ['significantDigits'];
 
-  var EffectsTableScalesCellDirective = function() {
+  var EffectsTableScalesCellDirective = function(significantDigits) {
     return {
       restrict: 'E',
       scope: {
@@ -25,12 +25,14 @@ define(['lodash'], function(_) {
           scope.isAbsolute = scope.effectsTableInfo.isAbsolute;
           scope.effectValue = '';
           if (scope.effectsTableInfo.studyDataLabelsAndUncertainty) {
-            scope.effectLabel = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId].effectLabel;
-            scope.distributionLabel = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId].distributionLabel;
-            scope.effectValue = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId].effectValue;
+            var foo = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId];
+            scope.effectLabel = foo.effectLabel;
+            scope.distributionLabel = foo.distributionLabel;
+            scope.effectValue = foo.effectValue;
             if(scope.effectValue !== '' && _.isEqual(scope.theoreticalScale, [0,100])){
               scope.effectValue *= 100;
             }
+            scope.effectValue = significantDigits(scope.effectValue);
           }
         }
 
