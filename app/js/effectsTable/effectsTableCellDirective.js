@@ -25,14 +25,16 @@ define(['lodash'], function(_) {
           scope.isAbsolute = scope.effectsTableInfo.isAbsolute;
           scope.effectValue = '';
           if (scope.effectsTableInfo.studyDataLabelsAndUncertainty) {
-            var foo = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId];
-            scope.effectLabel = foo.effectLabel;
-            scope.distributionLabel = foo.distributionLabel;
-            scope.effectValue = foo.effectValue;
-            if(scope.effectValue !== '' && _.isEqual(scope.theoreticalScale, [0,100])){
-              scope.effectValue *= 100;
+            var labelsAndUncertainty = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId];
+            scope.effectLabel = labelsAndUncertainty.effectLabel;
+            scope.distributionLabel = labelsAndUncertainty.distributionLabel;
+            scope.effectValue = labelsAndUncertainty.effectValue;
+            if (scope.effectValue !== '') {
+              if (_.isEqual(scope.theoreticalScale, [0, 100])) {
+                scope.effectValue *= 100;
+              }
+              scope.effectValue = significantDigits(scope.effectValue);
             }
-            scope.effectValue = significantDigits(scope.effectValue);
           }
         }
 

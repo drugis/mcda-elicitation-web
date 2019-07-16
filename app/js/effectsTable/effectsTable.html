@@ -23,7 +23,7 @@
           <th ng-show="toggledColumns['units']">Units
             <inline-help help-key="criterion-unit"></inline-help>
           </th>
-          <th class="text-center" ng-repeat="alternative in alternatives">
+          <th class="text-center" ng-repeat="alternative in alternatives" style="min-width: 120px">
             {{alternative.title}}</th>
           <th ng-show="toggledColumns['strength']">Strength of evidence / Uncertainties
             <inline-help help-key="strength-of-evidence"></inline-help>

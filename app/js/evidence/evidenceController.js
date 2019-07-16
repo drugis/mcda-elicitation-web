@@ -1,9 +1,9 @@
 'use strict';
 define(['clipboard', 'lodash'], function(Clipboard, _) {
   var dependencies = [
-    '$scope', 
-    '$state', 
-    '$stateParams', 
+    '$scope',
+    '$state',
+    '$stateParams',
     '$modal',
     'WorkspaceResource',
     'isMcdaStandalone',
@@ -13,9 +13,9 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     'swap'
   ];
   var EvidenceController = function(
-    $scope, 
+    $scope,
     $state,
-    $stateParams, 
+    $stateParams,
     $modal,
     WorkspaceResource,
     isMcdaStandalone,
@@ -32,7 +32,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.downloadWorkspace = downloadWorkspace;
 
     // init
-    $scope.problem = $scope.aggregateState.problem;
+    $scope.problem = $scope.workspace.problem;
     $scope.isStandAlone = isMcdaStandalone;
     $scope.useFavorability = _.find($scope.problem.criteria, function(criterion) {
       return criterion.hasOwnProperty('isFavorable');
@@ -48,9 +48,10 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     new Clipboard('.clipboard-button');
 
     function reloadOrderingsAndScales() {
-      OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
-        $scope.alternatives = orderings.alternatives;
-        $scope.criteria = orderings.criteria;
+      var problem = WorkspaceSettingsService.usePercentage() ? $scope.percentifiedBaseState.problem : $scope.dePercentifiedBaseState.problem;
+      OrderingService.getOrderedCriteriaAndAlternatives(problem, $stateParams).then(function(orderings) {
+        $scope.orderedAlternatives = orderings.alternatives;
+        $scope.orderedCriteria = orderings.criteria;
         $scope.scalesPromise.then(function() {
           $scope.scales = WorkspaceSettingsService.usePercentage() ?
             $scope.workspace.scales.basePercentified : $scope.workspace.scales.base;
@@ -69,7 +70,6 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
           callback: function() {
             return function(newTherapeuticContext) {
               $scope.workspace.problem.description = newTherapeuticContext;
-              $scope.aggregateState.problem.description = newTherapeuticContext;
               WorkspaceResource.save($stateParams, $scope.workspace);
             };
           }
@@ -78,11 +78,11 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     }
 
     function alternativeUp(idx) {
-      swapAndSave($scope.alternatives, idx, idx - 1);
+      swapAndSave($scope.orderedAlternatives, idx, idx - 1);
     }
 
     function alternativeDown(idx) {
-      swapAndSave($scope.alternatives, idx, idx + 1);
+      swapAndSave($scope.orderedAlternatives, idx, idx + 1);
     }
 
     function editAlternative(alternative) {
@@ -127,7 +127,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     // private
     function swapAndSave(array, idx, newIdx) {
       swap(array, idx, newIdx);
-      OrderingService.saveOrdering($stateParams, $scope.criteria, $scope.alternatives);
+      OrderingService.saveOrdering($stateParams, $scope.orderedCriteria, $scope.orderedAlternatives);
     }
   };
   return dependencies.concat(EvidenceController);

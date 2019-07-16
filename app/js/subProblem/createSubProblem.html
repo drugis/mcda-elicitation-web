@@ -47,11 +47,13 @@
                 <inline-help help-key="criterion-unit"></inline-help>
               </th>
               <th ng-class="{'disabled-header' : !subProblemState.alternativeInclusions[alternative.id]}"
-                class="text-center" ng-repeat="alternative in alternatives">
+                style="min-width:120px;" class="text-center" ng-repeat="alternative in alternatives">
                 <div class="grid-x">
                   <div class="cell">
-                    <input style="margin:0;" ng-if="!isBaseline[alternative.id]" id="{{alternative.id}}" type="checkbox"
-                      ng-model="subProblemState.alternativeInclusions[alternative.id]" ng-change="updateInclusions()"
+                    <input style="margin:0;" ng-if="!isBaseline[alternative.id]" 
+                      id="{{alternative.id}}" type="checkbox"
+                      ng-model="subProblemState.alternativeInclusions[alternative.id]"
+                       ng-change="updateInclusions()"
                       ng-disabled="subProblemState.alternativeInclusions[alternative.id] && subProblemState.numberOfAlternativesSelected < 3">
                     <i ng-if="isBaseline[alternative.id]" class="fa fa-ban" tooltip="Cannot deselect baseline"></i>
                   </div>
@@ -102,12 +104,12 @@
                 ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternative.id] || !subProblemState.criterionInclusions[row.criterion.id] || !subProblemState.dataSourceInclusions[row.dataSource.id]}"
                 class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
                 <div class="grid-x">
-                  <div class="cell large-1">
+                  <div class="cell large-1" style="min-width:13px;">
                     <input type="checkbox" ng-if="$first"
                       ng-model="subProblemState.dataSourceInclusions[row.dataSource.id]" ng-change="updateInclusions()"
                       ng-disabled="!subProblemState.criterionInclusions[row.criterion.id] || subProblemState.numberOfDataSourcesPerCriterion[row.criterion.id] === 1 && subProblemState.dataSourceInclusions[row.dataSource.id]">
                   </div>
-                  <div class="cell large-11">
+                  <div class="cell large-10">
                     <effects-table-cell effects-table-info="effectsTableInfo[row.dataSource.id]"
                       workspace-settings="workspaceSettings" scales="scales[row.dataSource.id][alternative.id]"
                       theoretical-scale="row.dataSource.scale" alternative-id="alternative.id">

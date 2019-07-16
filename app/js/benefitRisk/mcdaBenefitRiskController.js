@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
     '$scope',
     '$transitions',
@@ -50,7 +50,11 @@ define(['lodash'], function(_) {
     });
 
     // init
-    var baseProblem = $scope.workspace.problem;
+    var baseProblem = angular.copy($scope.workspace.problem);
+    var baseState = { problem: baseProblem };
+    $scope.percentifiedBaseState = WorkspaceService.percentifyCriteria(baseState);
+    $scope.dePercentifiedBaseState = WorkspaceService.dePercentifyCriteria(baseState);
+
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
     $scope.selections = {};
