@@ -1,5 +1,5 @@
 {
-  "title": "Hansen et al. 2005 with Placebo as baseline",
+  "title": "Antidepressants - relative effectiveness analysis (Van Valkenhoef et al, J Clin Epi, 2012)",
   "description": "Based on Hansen et al. (2005), \"Efficacy and Safety of Second-Generation Antidepressants in the Treatment of Major Depressive Disorder\"",
   "criteria": {
     "HAM-D": {

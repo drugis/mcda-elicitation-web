@@ -4,14 +4,18 @@ define(['angular'], function(angular) {
     '$scope',
     '$modalInstance',
     'ExampleResource',
+    'TutorialResource',
     'WorkspaceResource',
     'WorkspaceService',
     'SchemaService',
     'callback'
   ];
 
-  var CreateWorkspaceController = function($scope, $modalInstance,
+  var CreateWorkspaceController = function(
+    $scope,
+    $modalInstance,
     ExampleResource,
+    TutorialResource,
     WorkspaceResource,
     WorkspaceService,
     SchemaService,
@@ -30,6 +34,11 @@ define(['angular'], function(angular) {
     ExampleResource.query().$promise.then(function(examples) {
       $scope.examplesList = examples;
       $scope.model.chosenExample = $scope.examplesList[0];
+    });
+
+    TutorialResource.query().$promise.then(function(tutorials) {
+      $scope.tutorials = tutorials;
+      $scope.model.chosenTutorial = $scope.tutorials[0];
     });
 
     $scope.$watch('local.contents', function(newValue, oldValue) {
@@ -56,7 +65,7 @@ define(['angular'], function(angular) {
       } else if ($scope.model.choice === 'manual') {
         createWorkspaceManually();
       } else if ($scope.model.choide === 'tutorial') {
-        createExampleWorkspace();
+        createTutorialWorkspace();
       } else {
         createExampleWorkspace();
       }
@@ -79,6 +88,19 @@ define(['angular'], function(angular) {
         url: $scope.model.chosenExample.href
       };
       ExampleResource.get(example, function(problem) {
+        var updatedProblem = SchemaService.updateProblemToCurrentSchema(problem);
+        WorkspaceResource.create(updatedProblem.content).$promise.then(function(workspace) {
+          callback($scope.model.choice, workspace);
+          $modalInstance.close();
+        });
+      });
+    }
+
+    function createTutorialWorkspace() {
+      var tutorial = {
+        url: $scope.model.chosenTutorial.href
+      };
+      TutorialResource.get(tutorial, function(problem) {
         var updatedProblem = SchemaService.updateProblemToCurrentSchema(problem);
         WorkspaceResource.create(updatedProblem.content).$promise.then(function(workspace) {
           callback($scope.model.choice, workspace);

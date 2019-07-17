@@ -32,19 +32,18 @@
     </div>
 
     <div class="cell large-8" ng-show="model.choice === 'example'">
-      <select ng-options="example.href as example.title for example in examplesList track by example.href"
+      <select ng-options="example as example.title for example in examplesList track by example.href"
         ng-model="model.chosenExample">
       </select>
     </div>
 
-    <!-- <div class="cell large-8" ng-show="model.choice === 'tutorial'">
-      <select ng-options="example.href as example.title for example in examplesList track by example.href"
-        ng-model="model.chosenExample">
+    <div class="cell large-8" ng-show="model.choice === 'tutorial'">
+      <select ng-options="tutorial.href as tutorial.title for tutorial in tutorials track by tutorial.href"
+        ng-model="model.chosenTutorial">
       </select>
-    </div> -->
+    </div>
 
     <div class="cell" ng-show="model.choice === 'local'">
-      <!-- <label>Choose file to upload</label> -->
       <file-reader model="local"></file-reader>
       <div ng-if="workspaceValidity && !workspaceValidity.isValid" class="alert">
         Invalid workspace: {{workspaceValidity.errorMessage}}.

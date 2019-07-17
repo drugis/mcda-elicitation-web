@@ -11,6 +11,7 @@ define([
   './orderingService',
   './workspaceSettingsService',
   './exampleResource',
+  './tutorialResource',
   './workspaceSettingsDirective',
   'angular',
   '../util',
@@ -26,6 +27,7 @@ define([
   OrderingService,
   WorkspaceSettingService,
   ExampleResource,
+  TutorialResource,
   WorkspaceSettings,
   angular
 ) {
@@ -42,6 +44,7 @@ define([
       .factory('WorkspaceSettingsService', WorkspaceSettingService)
 
       .service('ExampleResource', ExampleResource)
+      .service('TutorialResource', TutorialResource)
 
       .directive('workspaceSettings', WorkspaceSettings)
       ;

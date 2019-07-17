@@ -155,6 +155,7 @@ app.get('/mcda-page-titles.json', function(req, res) {
 app.use(express.static('dist'));
 app.use(express.static('public'));
 app.use('/examples', express.static(__dirname + '/examples'));
+app.use('/tutorials', express.static(__dirname + '/examples/tutorial-examples'));
 app.use('/css/fonts', express.static('./dist/fonts'));
 app.use(rightsManagement.expressMiddleware);
 
