@@ -42,7 +42,6 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     PageTitleService.setPageTitle('SubProblemController', ($scope.problem.title || $scope.workspace.title) + '\'s problem definition');
 
     $scope.areTooManyDataSourcesIncluded = SubProblemService.areTooManyDataSourcesIncluded($scope.aggregateState.problem.criteria);
-    $scope.hasRowWithOnlyMissingValues = SubProblemService.findRowWithoutValues($scope.effectsTableInfo, $scope.scales);
     setScaleTable();
 
     $scope.$watch('workspace.scales', function(newScales, oldScales) {
@@ -64,6 +63,7 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
         $scope.alternatives = orderings.alternatives;
         var effectsTable = EffectsTableService.buildEffectsTable(orderings.criteria);
         $scope.scaleTable = ScaleRangeService.getScaleTable(effectsTable, $scope.scales, $scope.problem.performanceTable);
+        $scope.hasRowWithOnlyMissingValues = SubProblemService.findRowWithoutValues($scope.effectsTableInfo, $scope.scales);
       });
     }
 
