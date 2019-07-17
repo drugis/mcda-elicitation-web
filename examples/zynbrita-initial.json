@@ -1,0 +1,579 @@
+{
+  "schemaVersion": "1.3.4",
+  "title": "Zinbryta - initial regulatory review",
+  "description": "There remains an unmet medical need for new, alternative high-efficacy treatment options that have demonstrated superior efficacy to current standards of MS care, that offer advantages in terms of frequency of administration, and that have manageable risks. the novel IL-2 signalling modulation of daclizumab represents a targeted and reversible therapeutic approach to MS treatment that can selectively impact both grey and white matter MS pathology without causing nonspecific immunodepletion. Daclizumab's mechanism of action is distinct and differentiated from other therapies available to treat RMS. Daclizumab was systematically evaluated in clinical studies to define its risks and benefits in relapsing MS.",
+  "criteria": {
+    "f09b3e30-be30-4cad-93ac-9567c2a3a3da": {
+      "title": "ARR",
+      "description": "Annualised relapse rate",
+      "isFavorable": true,
+      "dataSources": [
+        {
+          "id": "d7dff15e-44a3-4246-b80a-6fc3955464f6",
+          "source": "Study 205MS301",
+          "unitOfMeasurement": "Annual rate",
+          "strengthOfEvidence": "A similar effect was found for the number of new/newly enlarging MRI T2 lesions (2.16 for DAC HYP vs 3.84 for IFN beta)",
+          "scale": [
+            null,
+            null
+          ]
+        }
+      ]
+    },
+    "efa25eea-3a4a-4a83-bd24-613e3fe8657d": {
+      "title": "MRI lesions",
+      "description": "Average number of new/newly enlarging MRI T2 lesions",
+      "isFavorable": true,
+      "dataSources": [
+        {
+          "id": "075e2861-d701-4039-85a8-2bf821e86cb1",
+          "source": "Study 205MS301",
+          "scale": [
+            null,
+            null
+          ]
+        }
+      ]
+    },
+    "019ed801-8206-406e-87b6-1297b6d63e4c": {
+      "title": "EDSS",
+      "description": "Proportion of subjects  ≥ 1.0 point increase on the Expanded Disability Status Scale",
+      "isFavorable": true,
+      "dataSources": [
+        {
+          "id": "7b9db064-c92a-4e25-9de7-ca238b75395f",
+          "source": "Study 205MS301",
+          "uncertainties": "Data on disability was the least robust of endpoints",
+          "unitOfMeasurement": "%",
+          "scale": [
+            0,
+            100
+          ]
+        }
+      ]
+    },
+    "56098114-421b-4e6c-8069-b8048fb09069": {
+      "title": "MSIS-29-PHYS",
+      "description": "Proportion of subjects ≥ 7.5-point worsening in MSIS-29 Physical scale",
+      "isFavorable": true,
+      "dataSources": [
+        {
+          "id": "f5007d97-fd9a-466c-81e5-a92a9a675d13",
+          "source": "Study 205MS301",
+          "uncertainties": "PRO data also with great variability, significant uncertainty",
+          "unitOfMeasurement": "Proportion",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "115dc213-8e7b-43cb-9908-79b15de97d67": {
+      "title": "GI AE",
+      "description": "Proportion of subjects with gastrointestinal events",
+      "isFavorable": false,
+      "dataSources": [
+        {
+          "id": "eda19604-d67b-40da-b98c-d431f5cdd29e",
+          "source": "Study 205MS301",
+          "uncertainties": "Serious GI <1% IFN beta vs. 1% DAC HYP",
+          "unitOfMeasurement": "Proportion",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "a7a2f76c-e161-4374-acd3-918a1312e67d": {
+      "title": "Hep. AE",
+      "description": "Proportion of subjects with hepatic events (SMQ)",
+      "isFavorable": false,
+      "dataSources": [
+        {
+          "id": "7756f53b-2411-42eb-b1e7-f3fd62516d61",
+          "source": "Study 205MS301",
+          "uncertainties": "Most serious hepatic events occured with DAC HYP. 1 fatal liver event with DAC HYP early in the clinical development program",
+          "unitOfMeasurement": "Proportion",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "f12d3802-9de7-466e-8d70-1d74e94997ab": {
+      "title": "Cut. AE",
+      "description": "Proportion of subjects with cutaneous events",
+      "isFavorable": false,
+      "dataSources": [
+        {
+          "id": "d0fbe827-09cb-4be3-9f97-9dd4813ec7f3",
+          "source": "Study 205MS301",
+          "uncertainties": "Serious cutaneous <1% IFN beta vs. 2% DAC HYP",
+          "unitOfMeasurement": "Proportion",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "d8759b33-7423-4ee4-a550-e65f291a3f5e": {
+      "title": "Inf. AE",
+      "description": "Proportion of subjects experiencing an infection",
+      "isFavorable": false,
+      "dataSources": [
+        {
+          "id": "b561ab13-75a4-4508-91d0-8932dbc2d502",
+          "source": "Study 205MS301",
+          "unitOfMeasurement": "Proportion",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "3193e056-d97d-4926-b203-4378b9c9e8cc": {
+      "title": "Fatal events [EXTRAPOLATED]",
+      "description": "Proportion of subjects with fatal hepatic events",
+      "isFavorable": false,
+      "dataSources": [
+        {
+          "id": "4876ce97-a069-42d1-95a9-df456f329def",
+          "source": "Hypothetical scenario",
+          "sourceLink": "",
+          "unitOfMeasurement": "Proportion",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    }
+  },
+  "alternatives": {
+    "16013a52-64ed-4c8a-9c49-f3e6a0db9fe2": {
+      "title": "Daclizumab"
+    },
+    "2615c750-1f9a-469a-a1b0-ec3e63fa3607": {
+      "title": "IFN β-1a"
+    }
+  },
+  "performanceTable": [
+    {
+      "alternative": "16013a52-64ed-4c8a-9c49-f3e6a0db9fe2",
+      "criterion": "f09b3e30-be30-4cad-93ac-9567c2a3a3da",
+      "dataSource": "d7dff15e-44a3-4246-b80a-6fc3955464f6",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.249,
+          "input": {
+            "value": 0.249,
+            "lowerBound": 0.215,
+            "upperBound": 0.283
+          }
+        },
+        "distribution": {
+          "type": "dnorm",
+          "parameters": {
+            "mu": 0.249,
+            "sigma": 0.0173
+          }
+        }
+      }
+    },
+    {
+      "alternative": "2615c750-1f9a-469a-a1b0-ec3e63fa3607",
+      "criterion": "f09b3e30-be30-4cad-93ac-9567c2a3a3da",
+      "dataSource": "d7dff15e-44a3-4246-b80a-6fc3955464f6",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.422,
+          "input": {
+            "value": 0.422,
+            "lowerBound": 0.374,
+            "upperBound": 0.47
+          }
+        },
+        "distribution": {
+          "type": "dnorm",
+          "parameters": {
+            "mu": 0.422,
+            "sigma": 0.0245
+          }
+        }
+      }
+    },
+    {
+      "alternative": "16013a52-64ed-4c8a-9c49-f3e6a0db9fe2",
+      "criterion": "efa25eea-3a4a-4a83-bd24-613e3fe8657d",
+      "dataSource": "075e2861-d701-4039-85a8-2bf821e86cb1",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 2.16,
+          "input": {
+            "value": 2.16,
+            "lowerBound": 1.94,
+            "upperBound": 2.38
+          }
+        },
+        "distribution": {
+          "type": "dnorm",
+          "parameters": {
+            "mu": 2.16,
+            "sigma": 0.112
+          }
+        }
+      }
+    },
+    {
+      "alternative": "2615c750-1f9a-469a-a1b0-ec3e63fa3607",
+      "criterion": "efa25eea-3a4a-4a83-bd24-613e3fe8657d",
+      "dataSource": "075e2861-d701-4039-85a8-2bf821e86cb1",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 3.84,
+          "input": {
+            "value": 3.84,
+            "lowerBound": 3.45,
+            "upperBound": 4.23
+          }
+        },
+        "distribution": {
+          "type": "dnorm",
+          "parameters": {
+            "mu": 3.84,
+            "sigma": 0.199
+          }
+        }
+      }
+    },
+    {
+      "alternative": "16013a52-64ed-4c8a-9c49-f3e6a0db9fe2",
+      "criterion": "019ed801-8206-406e-87b6-1297b6d63e4c",
+      "dataSource": "7b9db064-c92a-4e25-9de7-ca238b75395f",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.07,
+          "input": {
+            "value": 7,
+            "sampleSize": 919,
+            "scale": "percentage"
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 65,
+            "beta": 856
+          }
+        }
+      }
+    },
+    {
+      "alternative": "2615c750-1f9a-469a-a1b0-ec3e63fa3607",
+      "criterion": "019ed801-8206-406e-87b6-1297b6d63e4c",
+      "dataSource": "7b9db064-c92a-4e25-9de7-ca238b75395f",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.08,
+          "input": {
+            "value": 8,
+            "sampleSize": 922,
+            "scale": "percentage"
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 75,
+            "beta": 849
+          }
+        }
+      }
+    },
+    {
+      "alternative": "16013a52-64ed-4c8a-9c49-f3e6a0db9fe2",
+      "criterion": "56098114-421b-4e6c-8069-b8048fb09069",
+      "dataSource": "f5007d97-fd9a-466c-81e5-a92a9a675d13",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.17,
+          "input": {
+            "value": 17,
+            "sampleSize": 919,
+            "scale": "percentage"
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 157,
+            "beta": 764
+          }
+        }
+      }
+    },
+    {
+      "alternative": "2615c750-1f9a-469a-a1b0-ec3e63fa3607",
+      "criterion": "56098114-421b-4e6c-8069-b8048fb09069",
+      "dataSource": "f5007d97-fd9a-466c-81e5-a92a9a675d13",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.2,
+          "input": {
+            "value": 20,
+            "sampleSize": 922,
+            "scale": "percentage"
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 185,
+            "beta": 739
+          }
+        }
+      }
+    },
+    {
+      "alternative": "16013a52-64ed-4c8a-9c49-f3e6a0db9fe2",
+      "criterion": "115dc213-8e7b-43cb-9908-79b15de97d67",
+      "dataSource": "eda19604-d67b-40da-b98c-d431f5cdd29e",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.31,
+          "input": {
+            "value": 31,
+            "sampleSize": 919,
+            "scale": "percentage"
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 286,
+            "beta": 635
+          }
+        }
+      }
+    },
+    {
+      "alternative": "2615c750-1f9a-469a-a1b0-ec3e63fa3607",
+      "criterion": "115dc213-8e7b-43cb-9908-79b15de97d67",
+      "dataSource": "eda19604-d67b-40da-b98c-d431f5cdd29e",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.24,
+          "input": {
+            "value": 24,
+            "sampleSize": 922,
+            "scale": "percentage"
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 222,
+            "beta": 702
+          }
+        }
+      }
+    },
+    {
+      "alternative": "16013a52-64ed-4c8a-9c49-f3e6a0db9fe2",
+      "criterion": "a7a2f76c-e161-4374-acd3-918a1312e67d",
+      "dataSource": "7756f53b-2411-42eb-b1e7-f3fd62516d61",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.16,
+          "input": {
+            "value": 16,
+            "sampleSize": 919,
+            "scale": "percentage"
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 148,
+            "beta": 773
+          }
+        }
+      }
+    },
+    {
+      "alternative": "2615c750-1f9a-469a-a1b0-ec3e63fa3607",
+      "criterion": "a7a2f76c-e161-4374-acd3-918a1312e67d",
+      "dataSource": "7756f53b-2411-42eb-b1e7-f3fd62516d61",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.14,
+          "input": {
+            "value": 14,
+            "sampleSize": 922,
+            "scale": "percentage"
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 130,
+            "beta": 794
+          }
+        }
+      }
+    },
+    {
+      "alternative": "16013a52-64ed-4c8a-9c49-f3e6a0db9fe2",
+      "criterion": "f12d3802-9de7-466e-8d70-1d74e94997ab",
+      "dataSource": "d0fbe827-09cb-4be3-9f97-9dd4813ec7f3",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.37,
+          "input": {
+            "value": 37,
+            "sampleSize": 919,
+            "scale": "percentage"
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 341,
+            "beta": 580
+          }
+        }
+      }
+    },
+    {
+      "alternative": "2615c750-1f9a-469a-a1b0-ec3e63fa3607",
+      "criterion": "f12d3802-9de7-466e-8d70-1d74e94997ab",
+      "dataSource": "d0fbe827-09cb-4be3-9f97-9dd4813ec7f3",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.19,
+          "input": {
+            "value": 19,
+            "sampleSize": 922,
+            "scale": "percentage"
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 176,
+            "beta": 748
+          }
+        }
+      }
+    },
+    {
+      "alternative": "16013a52-64ed-4c8a-9c49-f3e6a0db9fe2",
+      "criterion": "d8759b33-7423-4ee4-a550-e65f291a3f5e",
+      "dataSource": "b561ab13-75a4-4508-91d0-8932dbc2d502",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.65,
+          "input": {
+            "value": 65,
+            "sampleSize": 919,
+            "scale": "percentage"
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 598,
+            "beta": 323
+          }
+        }
+      }
+    },
+    {
+      "alternative": "2615c750-1f9a-469a-a1b0-ec3e63fa3607",
+      "criterion": "d8759b33-7423-4ee4-a550-e65f291a3f5e",
+      "dataSource": "b561ab13-75a4-4508-91d0-8932dbc2d502",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.57,
+          "input": {
+            "value": 57,
+            "sampleSize": 922,
+            "scale": "percentage"
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 527,
+            "beta": 397
+          }
+        }
+      }
+    },
+    {
+      "alternative": "16013a52-64ed-4c8a-9c49-f3e6a0db9fe2",
+      "criterion": "3193e056-d97d-4926-b203-4378b9c9e8cc",
+      "dataSource": "4876ce97-a069-42d1-95a9-df456f329def",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.003,
+          "input": {
+            "events": 3,
+            "sampleSize": 1000
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 4,
+            "beta": 998
+          }
+        }
+      }
+    },
+    {
+      "alternative": "2615c750-1f9a-469a-a1b0-ec3e63fa3607",
+      "criterion": "3193e056-d97d-4926-b203-4378b9c9e8cc",
+      "dataSource": "4876ce97-a069-42d1-95a9-df456f329def",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.001,
+          "input": {
+            "events": 1,
+            "sampleSize": 1000
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 2,
+            "beta": 1000
+          }
+        }
+      }
+    }
+  ]
+}

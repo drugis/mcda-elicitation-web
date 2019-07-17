@@ -1,0 +1,377 @@
+{
+  "schemaVersion": "1.1.0",
+  "title": "Lixisenatide simplified",
+  "description": "Assessment of lixisenatide for the treatment of adults with type 2 diabetes mellitus to achieve glycaemic control in patients not adequately controlled on oral antidiabetics.",
+  "criteria": {
+    "2d70ae4e-df39-47ac-8a30-a311a36238f6": {
+      "title": "HbA1c",
+      "description": "Mean change in HbA1c from baseline",
+      "unitOfMeasurement": "%",
+      "isFavorable": true,
+      "dataSources": [
+        {
+          "id": "306ffddd-8dbe-4f01-8a7b-cf52632e2bf3",
+          "source": "Pooled data from EFC6014 and EFC10743",
+          "dataType": "continuous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "uncertainties": "",
+          "parameterOfInterest": "mean",
+          "scale": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "a68b474c-e9a6-4d55-8127-2955cb287699",
+          "source": "EFC6015",
+          "dataType": "continuous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "uncertainties": "",
+          "parameterOfInterest": "mean",
+          "scale": [
+            null,
+            null
+          ]
+        },
+        {
+          "id": "10bb124a-bdb1-4c7b-9765-55a728c22037",
+          "source": "EFC6019",
+          "dataType": "continuous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "uncertainties": "",
+          "parameterOfInterest": "mean",
+          "scale": [
+            null,
+            null
+          ]
+        }
+      ]
+    },
+    "141e96d5-93f9-4cc5-ba61-b508a81debfc": {
+      "title": "Nausea",
+      "description": "Incidence of nausea",
+      "isFavorable": false,
+      "dataSources": [
+        {
+          "id": "cb7d0f38-fcff-4157-b475-3047fb065cab",
+          "source": "Pooled data from all phase 2/3 controlled studies.",
+          "dataType": "dichotomous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "uncertainties": "",
+          "parameterOfInterest": "eventProbability",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    },
+    "2663228e-529d-485d-a8e1-38b6b8084117": {
+      "title": "Hypoglycaemia",
+      "description": "Incidence of hypoglycaemia",
+      "isFavorable": false,
+      "dataSources": [
+        {
+          "id": "e7d26ce8-7e6c-47d1-9cee-c1aa7981f0dc",
+          "source": "Pooled data from EFC6014 and EFC10743",
+          "dataType": "dichotomous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "uncertainties": "",
+          "parameterOfInterest": "eventProbability",
+          "scale": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "d1687834-dcfe-40ad-a090-0985cea33752",
+          "source": "EFC6015",
+          "dataType": "dichotomous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "uncertainties": "",
+          "parameterOfInterest": "eventProbability",
+          "scale": [
+            0,
+            1
+          ]
+        },
+        {
+          "id": "cf2b6919-6a3b-4eaf-9b32-aadec41937d9",
+          "source": "EFC6019",
+          "dataType": "dichotomous",
+          "inputType": "effect",
+          "inputMethod": "assistedDistribution",
+          "uncertainties": "",
+          "parameterOfInterest": "eventProbability",
+          "scale": [
+            0,
+            1
+          ]
+        }
+      ]
+    }
+  },
+  "alternatives": {
+    "ad1c9842-dfc7-4c85-9e2d-fc6c83b71159": {
+      "title": "Lixisenatide"
+    },
+    "a5e80a8e-314a-400d-b696-243446de43a2": {
+      "title": "Exenatide"
+    },
+    "c52b2906-765d-4801-8223-05fa230419ed": {
+      "title": "Placebo"
+    }
+  },
+  "performanceTable": [
+    {
+      "alternative": "ad1c9842-dfc7-4c85-9e2d-fc6c83b71159",
+      "criterion": "2d70ae4e-df39-47ac-8a30-a311a36238f6",
+      "dataSource": "306ffddd-8dbe-4f01-8a7b-cf52632e2bf3",
+      "performance": {
+        "type": "exact",
+        "value": -0.83,
+        "input": {
+          "value": -0.83,
+          "lowerBound": -0.91,
+          "upperBound": -0.75
+        }
+      }
+    },
+    {
+      "alternative": "a5e80a8e-314a-400d-b696-243446de43a2",
+      "criterion": "2d70ae4e-df39-47ac-8a30-a311a36238f6",
+      "dataSource": "306ffddd-8dbe-4f01-8a7b-cf52632e2bf3",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "c52b2906-765d-4801-8223-05fa230419ed",
+      "criterion": "2d70ae4e-df39-47ac-8a30-a311a36238f6",
+      "dataSource": "306ffddd-8dbe-4f01-8a7b-cf52632e2bf3",
+      "performance": {
+        "type": "exact",
+        "value": -0.19,
+        "input": {
+          "value": -0.19,
+          "lowerBound": -0.43,
+          "upperBound": -0.05
+        }
+      }
+    },
+    {
+      "alternative": "ad1c9842-dfc7-4c85-9e2d-fc6c83b71159",
+      "criterion": "2d70ae4e-df39-47ac-8a30-a311a36238f6",
+      "dataSource": "a68b474c-e9a6-4d55-8127-2955cb287699",
+      "performance": {
+        "type": "exact",
+        "value": -0.82,
+        "input": {
+          "value": -0.82,
+          "lowerBound": -0.91,
+          "upperBound": -0.73
+        }
+      }
+    },
+    {
+      "alternative": "a5e80a8e-314a-400d-b696-243446de43a2",
+      "criterion": "2d70ae4e-df39-47ac-8a30-a311a36238f6",
+      "dataSource": "a68b474c-e9a6-4d55-8127-2955cb287699",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "c52b2906-765d-4801-8223-05fa230419ed",
+      "criterion": "2d70ae4e-df39-47ac-8a30-a311a36238f6",
+      "dataSource": "a68b474c-e9a6-4d55-8127-2955cb287699",
+      "performance": {
+        "type": "exact",
+        "value": -0.1,
+        "input": {
+          "value": -0.1,
+          "lowerBound": -0.24,
+          "upperBound": -0.04
+        }
+      }
+    },
+    {
+      "alternative": "ad1c9842-dfc7-4c85-9e2d-fc6c83b71159",
+      "criterion": "2d70ae4e-df39-47ac-8a30-a311a36238f6",
+      "dataSource": "10bb124a-bdb1-4c7b-9765-55a728c22037",
+      "performance": {
+        "type": "exact",
+        "value": -0.79,
+        "input": {
+          "value": -0.79,
+          "lowerBound": -0.89,
+          "upperBound": -0.68
+        }
+      }
+    },
+    {
+      "alternative": "a5e80a8e-314a-400d-b696-243446de43a2",
+      "criterion": "2d70ae4e-df39-47ac-8a30-a311a36238f6",
+      "dataSource": "10bb124a-bdb1-4c7b-9765-55a728c22037",
+      "performance": {
+        "type": "exact",
+        "value": -0.96,
+        "input": {
+          "value": -0.96,
+          "lowerBound": -1.06,
+          "upperBound": -0.86
+        }
+      }
+    },
+    {
+      "alternative": "c52b2906-765d-4801-8223-05fa230419ed",
+      "criterion": "2d70ae4e-df39-47ac-8a30-a311a36238f6",
+      "dataSource": "10bb124a-bdb1-4c7b-9765-55a728c22037",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "ad1c9842-dfc7-4c85-9e2d-fc6c83b71159",
+      "criterion": "141e96d5-93f9-4cc5-ba61-b508a81debfc",
+      "dataSource": "cb7d0f38-fcff-4157-b475-3047fb065cab",
+      "performance": {
+        "type": "exact",
+        "value": 0.26899999999999996,
+        "input": {
+          "value": 26.9,
+          "scale": "percentage"
+        }
+      }
+    },
+    {
+      "alternative": "a5e80a8e-314a-400d-b696-243446de43a2",
+      "criterion": "141e96d5-93f9-4cc5-ba61-b508a81debfc",
+      "dataSource": "cb7d0f38-fcff-4157-b475-3047fb065cab",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "c52b2906-765d-4801-8223-05fa230419ed",
+      "criterion": "141e96d5-93f9-4cc5-ba61-b508a81debfc",
+      "dataSource": "cb7d0f38-fcff-4157-b475-3047fb065cab",
+      "performance": {
+        "type": "exact",
+        "value": 0.073,
+        "input": {
+          "value": 7.3,
+          "scale": "percentage"
+        }
+      }
+    },
+    {
+      "alternative": "ad1c9842-dfc7-4c85-9e2d-fc6c83b71159",
+      "criterion": "2663228e-529d-485d-a8e1-38b6b8084117",
+      "dataSource": "e7d26ce8-7e6c-47d1-9cee-c1aa7981f0dc",
+      "performance": {
+        "type": "exact",
+        "value": 0.07,
+        "input": {
+          "value": 7,
+          "scale": "percentage"
+        }
+      }
+    },
+    {
+      "alternative": "a5e80a8e-314a-400d-b696-243446de43a2",
+      "criterion": "2663228e-529d-485d-a8e1-38b6b8084117",
+      "dataSource": "e7d26ce8-7e6c-47d1-9cee-c1aa7981f0dc",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "c52b2906-765d-4801-8223-05fa230419ed",
+      "criterion": "2663228e-529d-485d-a8e1-38b6b8084117",
+      "dataSource": "e7d26ce8-7e6c-47d1-9cee-c1aa7981f0dc",
+      "performance": {
+        "type": "exact",
+        "value": 0.048,
+        "input": {
+          "value": 4.8,
+          "scale": "percentage"
+        }
+      }
+    },
+    {
+      "alternative": "ad1c9842-dfc7-4c85-9e2d-fc6c83b71159",
+      "criterion": "2663228e-529d-485d-a8e1-38b6b8084117",
+      "dataSource": "d1687834-dcfe-40ad-a090-0985cea33752",
+      "performance": {
+        "type": "exact",
+        "value": 0.22699999999999998,
+        "input": {
+          "value": 22.7,
+          "scale": "percentage"
+        }
+      }
+    },
+    {
+      "alternative": "a5e80a8e-314a-400d-b696-243446de43a2",
+      "criterion": "2663228e-529d-485d-a8e1-38b6b8084117",
+      "dataSource": "d1687834-dcfe-40ad-a090-0985cea33752",
+      "performance": {
+        "type": "empty"
+      }
+    },
+    {
+      "alternative": "c52b2906-765d-4801-8223-05fa230419ed",
+      "criterion": "2663228e-529d-485d-a8e1-38b6b8084117",
+      "dataSource": "d1687834-dcfe-40ad-a090-0985cea33752",
+      "performance": {
+        "type": "exact",
+        "value": 0.152,
+        "input": {
+          "value": 15.2,
+          "scale": "percentage"
+        }
+      }
+    },
+    {
+      "alternative": "ad1c9842-dfc7-4c85-9e2d-fc6c83b71159",
+      "criterion": "2663228e-529d-485d-a8e1-38b6b8084117",
+      "dataSource": "cf2b6919-6a3b-4eaf-9b32-aadec41937d9",
+      "performance": {
+        "type": "exact",
+        "value": 0.025,
+        "input": {
+          "value": 2.5,
+          "scale": "percentage"
+        }
+      }
+    },
+    {
+      "alternative": "a5e80a8e-314a-400d-b696-243446de43a2",
+      "criterion": "2663228e-529d-485d-a8e1-38b6b8084117",
+      "dataSource": "cf2b6919-6a3b-4eaf-9b32-aadec41937d9",
+      "performance": {
+        "type": "exact",
+        "value": 0.079,
+        "input": {
+          "value": 7.9,
+          "scale": "percentage"
+        }
+      }
+    },
+    {
+      "alternative": "c52b2906-765d-4801-8223-05fa230419ed",
+      "criterion": "2663228e-529d-485d-a8e1-38b6b8084117",
+      "dataSource": "cf2b6919-6a3b-4eaf-9b32-aadec41937d9",
+      "performance": {
+        "type": "empty"
+      }
+    }
+  ]
+}
