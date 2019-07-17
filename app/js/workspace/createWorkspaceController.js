@@ -64,7 +64,7 @@ define(['angular'], function(angular) {
         createWorkspaceFromFile()
       } else if ($scope.model.choice === 'manual') {
         createWorkspaceManually();
-      } else if ($scope.model.choide === 'tutorial') {
+      } else if ($scope.model.choice === 'tutorial') {
         createTutorialWorkspace();
       } else {
         createExampleWorkspace();
