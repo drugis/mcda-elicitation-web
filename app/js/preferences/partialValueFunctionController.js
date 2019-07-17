@@ -184,7 +184,8 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
           validChoice: isValid,
           nextState: nextState,
           initialize: _.partial(initialize, taskDefinition.clean(currentScenario.state)),
-          standardize: _.identity
+          standardize: _.identity,
+          updatePlot: updatePlot
         }
       });
     }

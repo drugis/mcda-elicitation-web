@@ -1,9 +1,17 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
 
-  var dependencies = ['$scope', '$timeout', 'handler'];
+  var dependencies = [
+    '$scope',
+    '$timeout',
+    'handler'
+  ];
 
-  function wizard($scope, $timeout, handler) {
+  function wizard(
+    $scope,
+    $timeout,
+    handler
+  ) {
     // functions
     $scope.canProceed = canProceed;
     $scope.canReturn = canReturn;
@@ -15,15 +23,16 @@ define(['lodash', 'angular'], function(_, angular) {
     var previousStates = [];
     var nextStates = [];
 
-    $scope.state = (function() {
-      var state;
-      if (!_.isUndefined(handler.initialize)) {
-        state = handler.initialize();
-      }
-      return state || {};
-    })();
-
+    $scope.state = initializeState();
     $scope.isFinished = handler.isFinished;
+
+    function initializeState() {
+      if (!_.isUndefined(handler.initialize)) {
+        return handler.initialize();
+      } else {
+        return {};
+      }
+    }
 
     function canProceed(state) {
       return (handler && handler.validChoice(state)) || false;
@@ -62,18 +71,39 @@ define(['lodash', 'angular'], function(_, angular) {
       }
       nextStates.push(angular.copy($scope.state));
       $scope.state = previousStates.pop();
-
-      if ($scope.state.choice) { // ranking
-        var choiceCriterion = _.find($scope.criteria, function(criterion) { return criterion.id === $scope.state.choice; });
-        choiceCriterion.alreadyChosen = false;
-      } else { // swing
-        $timeout(function() {
-          $scope.$broadcast('rzSliderForceRender');
-        }, 100);
+      if (isPvfWizard()) {
+        updatePvfPlot();
+      } else if ($scope.state.choice) {
+        updateRankingCriterion();
+      } else {
+        updateSwingSliders();
       }
       return true;
     }
-  }
 
+    function isPvfWizard() {
+      return $scope.state.choice && $scope.state.choice.pvf;
+    }
+
+    function updatePvfPlot() {
+      handler.updatePlot({
+        dataSources: [$scope.state.choice]
+      });
+    }
+
+    function updateRankingCriterion() {
+      var choiceCriterion = _.find($scope.criteria, function(criterion) {
+        return criterion.id === $scope.state.choice;
+      });
+      choiceCriterion.alreadyChosen = false;
+    }
+
+    function updateSwingSliders() {
+      $timeout(function() {
+        $scope.$broadcast('rzSliderForceRender');
+      }, 100);
+    }
+
+  }
   return dependencies.concat(wizard);
 });
