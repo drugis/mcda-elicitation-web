@@ -1,27 +1,64 @@
 <div class="grid-x">
   <div class="cell">
-    <h3>Your workspaces
+    <button id="create-workspace-btn" class="button" ng-click="openChooseProblemModal()"><i class="fa fa-plus"></i>
+      Add workspace</button>
+  </div>
+  <div class="cell">
+    <h3>Workspaces
       <inline-help help-key="workspace"></inline-help>
     </h3>
   </div>
-  <div class="cell callout secondary">
-      <div ng-repeat="workspace in workspacesList | orderBy:'title'">
-        <a class="fa fa-trash" style="color : red" ng-click="deleteWorkspace(workspace)" tooltip="Delete workspace">  </a>
-        <a class="fa fa-copy" style="color : black" ng-click="copyWorkspace(workspace)" tooltip="Copy workspace">  </a>
-        <a ui-sref="evidence({workspaceId: workspace.id, problemId: workspace.defaultSubProblemId, id: workspace.defaultScenarioId})"> {{workspace.title}}</a>
-      </div>
-      <div ng-hide="workspacesList.length">No workspaces.</div>
+  <div class="cell  large-6 medium-8">
+    <table>
+      <thead>
+        <th> Title </th>
+        <th></th>
+        <th></th>
+      </thead>
+      <tbody>
+        <tr ng-repeat="workspace in workspacesList | orderBy:'title'">
+          <td> <a
+              ui-sref="evidence({workspaceId: workspace.id, problemId: workspace.defaultSubProblemId, id: workspace.defaultScenarioId})">
+              {{workspace.title}}
+            </a>
+          </td>
+          <td class="text-center">
+            <a class="fa fa-copy" style="color : black" ng-click="copyWorkspace(workspace)" tooltip="Copy workspace">
+            </a>
+          </td>
+          <td class="text-center">
+            <a class="fa fa-trash" style="color : red" ng-click="deleteWorkspace(workspace)" tooltip="Delete workspace">
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
   <div class="cell" ng-show="inProgressWorkspaces.length">
     <h3>
-      Your workspaces with incomplete entry <inline-help help-key="incomplete-workspaces"></inline-help>
+      Unfinished workspaces <inline-help help-key="incomplete-workspaces"></inline-help>
     </h3>
-      <div ng-repeat="inProgressWorkspace in inProgressWorkspaces">
-        <a class="fa fa-trash" style="color : red" ng-click="deleteInProgress(inProgressWorkspace.id, inProgressWorkspace.state.title)" tooltip="Delete workspace">  </a>
-        <a ui-sref="manualInputInProgress({inProgressId: inProgressWorkspace.id})"> {{inProgressWorkspace.state.title}}</a>
-      </div>
   </div>
-  <div class="cell">
-    <button id="create-workspace-btn" class="button" ng-click="openChooseProblemModal()"><i class="fa fa-plus"></i> Create workspace</button>
+  <div class="cell large-6 medium-8" ng-show="inProgressWorkspaces.length">
+    <table>
+      <thead>
+        <th>Title</th>
+        <th></th>
+      </thead>
+      <tbody>
+        <tr ng-repeat="inProgressWorkspace in inProgressWorkspaces">
+          <td>
+            <a ui-sref="manualInputInProgress({inProgressId: inProgressWorkspace.id})">
+              {{inProgressWorkspace.state.title}}</a>
+          </td>
+          <td class="text-center">
+            <a class="fa fa-trash" style="color : red"
+              ng-click="deleteInProgress(inProgressWorkspace.id, inProgressWorkspace.state.title)"
+              tooltip="Delete workspace">
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

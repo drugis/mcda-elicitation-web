@@ -119,12 +119,12 @@
                 </div>
               </td>
 
-              <td ng-if="isStandalone">
+              <td ng-if="isStandalone" class="text-center">
                 <a ng-click="editDataSource(dataSource, $index)" tooltip="Edit data source">
                   <i class="fa fa-edit icon-fixed-width"></i>
                 </a>
               </td>
-              <td ng-if="isInput">
+              <td ng-if="isInput" class="text-center">
                 <a ng-click="removeDataSource(dataSource)" tooltip="Remove data source"
                   ng-if="criterion.dataSources.length > 1">
                   <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
