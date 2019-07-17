@@ -1,5 +1,5 @@
 'use strict';
-define(['angular'], function (angular) {
+define(['angular'], function(angular) {
   var dependencies = [
     '$scope',
     '$modalInstance',
@@ -10,7 +10,7 @@ define(['angular'], function (angular) {
     'callback'
   ];
 
-  var CreateWorkspaceController = function ($scope, $modalInstance,
+  var CreateWorkspaceController = function($scope, $modalInstance,
     ExampleResource,
     WorkspaceResource,
     WorkspaceService,
@@ -23,10 +23,16 @@ define(['angular'], function (angular) {
 
     // init
     $scope.isCreating = false;
-    $scope.model = {};
+    $scope.model = {
+      choice: 'example'
+    };
     $scope.local = {};
-    $scope.examplesList = ExampleResource.query();
-    $scope.$watch('local.contents', function (newValue, oldValue) {
+    ExampleResource.query().$promise.then(function(examples) {
+      $scope.examplesList = examples;
+      $scope.model.chosenExample = $scope.examplesList[0];
+    });
+
+    $scope.$watch('local.contents', function(newValue, oldValue) {
       if (oldValue === newValue || !newValue) {
         return;
       }
@@ -36,35 +42,49 @@ define(['angular'], function (angular) {
         var updatedProblem = SchemaService.updateProblemToCurrentSchema(uploadedContent);
         if (updatedProblem.isValid) {
           $scope.updatedProblem = updatedProblem.content;
-        } else { 
+        } else {
           $scope.workspaceValidity.isValid = false;
           $scope.workspaceValidity.errorMessage = updatedProblem.errorMessage;
         }
       }
     }, true);
 
-    function createWorkspace(choice) {
+    function createWorkspace() {
       $scope.isCreating = true;
-      if (choice === 'local') {
-        WorkspaceResource.create($scope.updatedProblem).$promise.then(function (workspace) {
-          callback(choice, workspace);
+      if ($scope.model.choice === 'local') {
+        createWorkspaceFromFile()
+      } else if ($scope.model.choice === 'manual') {
+        createWorkspaceManually();
+      } else if ($scope.model.choide === 'tutorial') {
+        createExampleWorkspace();
+      } else {
+        createExampleWorkspace();
+      }
+    }
+
+    function createWorkspaceFromFile() {
+      WorkspaceResource.create($scope.updatedProblem).$promise.then(function(workspace) {
+        callback($scope.model.choice, workspace);
+        $modalInstance.close();
+      });
+    }
+
+    function createWorkspaceManually() {
+      callback($scope.model.choice);
+      $modalInstance.close();
+    }
+
+    function createExampleWorkspace() {
+      var example = {
+        url: $scope.model.chosenExample.href
+      };
+      ExampleResource.get(example, function(problem) {
+        var updatedProblem = SchemaService.updateProblemToCurrentSchema(problem);
+        WorkspaceResource.create(updatedProblem.content).$promise.then(function(workspace) {
+          callback($scope.model.choice, workspace);
           $modalInstance.close();
         });
-      } else if (choice === 'manual') {
-        callback(choice);
-        $modalInstance.close();
-      } else {
-        var example = {
-          url: choice
-        };
-        ExampleResource.get(example, function (problem) {
-          var updatedProblem = SchemaService.updateProblemToCurrentSchema(problem);
-          WorkspaceResource.create(updatedProblem.content).$promise.then(function (workspace) {
-            callback(choice, workspace);
-            $modalInstance.close();
-          });
-        });
-      }
+      });
     }
 
   };
