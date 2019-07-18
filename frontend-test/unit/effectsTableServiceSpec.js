@@ -128,7 +128,7 @@ define([
                 alternativeId2: {
                   effectLabel: 1,
                   effectValue: 1,
-                  distributionLabel: 'Not entered',
+                  distributionLabel: '',
                   hasUncertainty: false
                 }
               }
@@ -161,7 +161,7 @@ define([
                 alternativeId2: {
                   effectLabel: '1 (0.5)',
                   effectValue: 1,
-                  distributionLabel: 'Not entered',
+                  distributionLabel: '',
                   hasUncertainty: false
                 }
               }
@@ -195,7 +195,7 @@ define([
                 alternativeId2: {
                   effectLabel: '1 (0.5; 2)',
                   effectValue: 1,
-                  distributionLabel: 'Not entered',
+                  distributionLabel: '',
                   hasUncertainty: false
                 }
               }
@@ -228,7 +228,7 @@ define([
                 alternativeId2: {
                   effectLabel: '1 / 10',
                   effectValue: 2,
-                  distributionLabel: 'Not entered',
+                  distributionLabel: '',
                   hasUncertainty: false
                 }
               }
@@ -261,7 +261,7 @@ define([
                 alternativeId2: {
                   effectLabel: '10 / 100',
                   effectValue: 1,
-                  distributionLabel: 'Not entered',
+                  distributionLabel: '',
                   hasUncertainty: false
                 }
               }
@@ -292,7 +292,7 @@ define([
               isAbsolute: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId3: {
-                  effectLabel: 'Not entered',
+                  effectLabel: '',
                   effectValue: '',
                   distributionLabel: 'Student\'s t(5, 1, 10)',
                   hasUncertainty: true
@@ -324,7 +324,7 @@ define([
               isAbsolute: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId4: {
-                  effectLabel: 'Not entered',
+                  effectLabel: '',
                   effectValue: '',
                   distributionLabel: 'Normal(6, 2)',
                   hasUncertainty: true
@@ -356,7 +356,7 @@ define([
               isAbsolute: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId5: {
-                  effectLabel: 'Not entered',
+                  effectLabel: '',
                   effectValue: '',
                   distributionLabel: 'Beta(5, 11)',
                   hasUncertainty: true
@@ -388,7 +388,7 @@ define([
               isAbsolute: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId5: {
-                  effectLabel: 'Not entered',
+                  effectLabel: '',
                   effectValue: '',
                   distributionLabel: 'Gamma(10, 12344321)',
                   hasUncertainty: true
@@ -446,7 +446,7 @@ define([
               isAbsolute: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId8: {
-                  effectLabel: 'Not entered',
+                  effectLabel: '',
                   effectValue: '',
                   distributionLabel: '',
                   hasUncertainty: false
@@ -475,7 +475,7 @@ define([
               isAbsolute: true,
               studyDataLabelsAndUncertainty: {
                 alternativeId8: {
-                  effectLabel: 'Not entered',
+                  effectLabel: '',
                   effectValue: '',
                   distributionLabel: 'text',
                   hasUncertainty: false
@@ -505,7 +505,7 @@ define([
                 alternativeId8: {
                   effectLabel: '',
                   effectValue: '',
-                  distributionLabel: 'Not entered',
+                  distributionLabel: '',
                   hasUncertainty: false
                 }
               }
@@ -534,7 +534,7 @@ define([
                 alternativeId8: {
                   effectLabel: 'text',
                   effectValue: '',
-                  distributionLabel: 'Not entered',
+                  distributionLabel: '',
                   hasUncertainty: false
                 }
               }

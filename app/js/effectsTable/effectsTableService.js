@@ -5,7 +5,7 @@ define(['lodash', 'angular'], function(_, angular) {
   ];
 
   var EffectsTableService = function(significantDigits) {
-    var NOT_ENTERED = 'Not entered';
+    var NOT_ENTERED = '';
 
     function buildEffectsTable(criteria) {
       var tableRows = angular.copy(criteria);
