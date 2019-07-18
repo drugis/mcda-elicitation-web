@@ -38,7 +38,7 @@
     </div>
 
     <div class="cell large-8" ng-show="model.choice === 'tutorial'">
-      <select ng-options="tutorial.href as tutorial.title for tutorial in tutorials track by tutorial.href"
+      <select ng-options="tutorial as tutorial.title for tutorial in tutorials track by tutorial.href"
         ng-model="model.chosenTutorial">
       </select>
     </div>
