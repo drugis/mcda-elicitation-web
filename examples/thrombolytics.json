@@ -4,67 +4,72 @@
     "Prox DVT": {
       "title": "Proximal DVT",
       "description": "Proximal deep vein thrombolytic events, often associated with serious complications.",
-      "unitOfMeasurement": "Proportion",
-      "scale": [0.0, 1.0],
-      "pvf": {
-        "range": [
-          0,
-          0.25
-        ],
-        "type": "linear",
-        "direction": "decreasing"
-      }
+      "dataSources": [
+        {
+          "pvf": {
+            "range": [
+              0,
+              0.25
+            ],
+            "type": "linear",
+            "direction": "decreasing"
+          },
+          "scale": [
+            0,
+            1
+          ],
+          "id": "b2a74a83-6bb6-44c2-b0bb-c0c5cd82bfb7",
+          "unitOfMeasurement": "Proportion"
+        }
+      ],
+      "isFavorable": false
     },
     "Dist DVT": {
       "title": "Distal DVT",
       "description": "Distal deep vein thrombolytic events.",
-      "unitOfMeasurement": "Proportion",
-      "scale": [0.0, 1.0],
-      "pvf": {
-        "range": [
-          0.15,
-          0.4
-        ],
-        "type": "linear",
-        "direction": "decreasing"
-      }
+      "dataSources": [
+        {
+          "pvf": {
+            "range": [
+              0.15,
+              0.4
+            ],
+            "type": "linear",
+            "direction": "decreasing"
+          },
+          "scale": [
+            0,
+            1
+          ],
+          "id": "b0fc69f4-a607-40c3-9690-9ad1980f5d00",
+          "unitOfMeasurement": "Proportion"
+        }
+      ],
+      "isFavorable": false
     },
     "Bleed": {
       "title": "Major bleeding",
       "description": "Major bleeding events.",
-      "unitOfMeasurement": "Proportion",
-      "scale": [0.0, 1.0],
-      "pvf": {
-        "range": [
-          0,
-          0.1
-        ],
-        "type": "linear",
-        "direction": "decreasing"
-      }
-    }
-  },
-  "valueTree": {
-    "title": "Benefit-risk balance", 
-    "children": [
-      {
-        "title": "Favourable effects",
-        "children": [
-          {
-            "title": "Primary efficacy",
-            "criteria": [ "Prox DVT" ]
+      "dataSources": [
+        {
+          "pvf": {
+            "range": [
+              0,
+              0.1
+            ],
+            "type": "linear",
+            "direction": "decreasing"
           },
-          {
-            "title": "Secondary efficacy",
-            "criteria": [ "Dist DVT" ]
-          }
-        ]
-      },
-      {
-        "title": "Unfavourable effects",
-        "criteria": [ "Bleed" ]
-      }
-    ]
+          "scale": [
+            0,
+            1
+          ],
+          "id": "1b280129-1033-461a-bc99-7bd59347cafc",
+          "unitOfMeasurement": "Proportion"
+        }
+      ],
+      "isFavorable": false
+    }
   },
   "alternatives": {
     "Hep": {
@@ -76,53 +81,90 @@
   },
   "performanceTable": [
     {
-    "alternative": "Hep",
-    "criterion": "Prox DVT",
-    "performance": {
-      "type": "dbeta",
-      "parameters": { "alpha": 20, "beta": 116 }
+      "alternative": "Hep",
+      "criterion": "Prox DVT",
+      "performance": {
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 20,
+            "beta": 116
+          }
+        }
+      },
+      "dataSource": "b2a74a83-6bb6-44c2-b0bb-c0c5cd82bfb7"
+    },
+    {
+      "alternative": "Hep",
+      "criterion": "Dist DVT",
+      "performance": {
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 40,
+            "beta": 96
+          }
+        }
+      },
+      "dataSource": "b0fc69f4-a607-40c3-9690-9ad1980f5d00"
+    },
+    {
+      "alternative": "Hep",
+      "criterion": "Bleed",
+      "performance": {
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 1,
+            "beta": 135
+          }
+        }
+      },
+      "dataSource": "1b280129-1033-461a-bc99-7bd59347cafc"
+    },
+    {
+      "alternative": "Enox",
+      "criterion": "Prox DVT",
+      "performance": {
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 8,
+            "beta": 121
+          }
+        }
+      },
+      "dataSource": "b2a74a83-6bb6-44c2-b0bb-c0c5cd82bfb7"
+    },
+    {
+      "alternative": "Enox",
+      "criterion": "Dist DVT",
+      "performance": {
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 32,
+            "beta": 97
+          }
+        }
+      },
+      "dataSource": "b0fc69f4-a607-40c3-9690-9ad1980f5d00"
+    },
+    {
+      "alternative": "Enox",
+      "criterion": "Bleed",
+      "performance": {
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 5,
+            "beta": 124
+          }
+        }
+      },
+      "dataSource": "1b280129-1033-461a-bc99-7bd59347cafc"
     }
-  },
-  {
-    "alternative": "Hep",
-    "criterion": "Dist DVT",
-    "performance": {
-      "type": "dbeta",
-      "parameters": { "alpha": 40, "beta": 96 }
-    }
-  },
-  {
-    "alternative": "Hep",
-    "criterion": "Bleed",
-    "performance": {
-      "type": "dbeta",
-      "parameters": { "alpha": 1, "beta": 135 }
-    }
-  },
-  {
-    "alternative": "Enox",
-    "criterion": "Prox DVT",
-    "performance": {
-      "type": "dbeta",
-      "parameters": { "alpha": 8, "beta": 121 }
-    }
-  },
-  {
-    "alternative": "Enox",
-    "criterion": "Dist DVT",
-    "performance": {
-      "type": "dbeta",
-      "parameters": { "alpha": 32, "beta": 97 }
-    }
-  },
-  {
-    "alternative": "Enox",
-    "criterion": "Bleed",
-    "performance": {
-      "type": "dbeta",
-      "parameters": { "alpha": 5, "beta": 124 }
-    }
-  }
   ],
-  "preferences": {}
+  "preferences": {},
+  "schemaVersion": "1.3.4"
 }
