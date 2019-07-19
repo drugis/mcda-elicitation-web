@@ -1,9 +1,11 @@
 {
+  "schemaVersion": "1.3.4",
   "title": "Thrombolytics - single study B/R analysis",
   "criteria": {
-    "Prox DVT": {
+    "cae083fa-c1e7-427f-8039-c46479392344": {
       "title": "Proximal DVT",
       "description": "Proximal deep vein thrombolytic events, often associated with serious complications.",
+      "isFavorable": false,
       "dataSources": [
         {
           "pvf": {
@@ -14,19 +16,19 @@
             "type": "linear",
             "direction": "decreasing"
           },
+          "id": "7370712d-d283-4cf4-98e5-b0b5786a6840",
+          "unitOfMeasurement": "Proportion",
           "scale": [
             0,
             1
-          ],
-          "id": "b2a74a83-6bb6-44c2-b0bb-c0c5cd82bfb7",
-          "unitOfMeasurement": "Proportion"
+          ]
         }
-      ],
-      "isFavorable": false
+      ]
     },
-    "Dist DVT": {
+    "44e3dd53-ea9f-49af-b622-4a97d853c134": {
       "title": "Distal DVT",
       "description": "Distal deep vein thrombolytic events.",
+      "isFavorable": false,
       "dataSources": [
         {
           "pvf": {
@@ -37,19 +39,19 @@
             "type": "linear",
             "direction": "decreasing"
           },
+          "id": "b978521f-0132-446f-8589-c5f3dd260a0a",
+          "unitOfMeasurement": "Proportion",
           "scale": [
             0,
             1
-          ],
-          "id": "b0fc69f4-a607-40c3-9690-9ad1980f5d00",
-          "unitOfMeasurement": "Proportion"
+          ]
         }
-      ],
-      "isFavorable": false
+      ]
     },
-    "Bleed": {
+    "8af13a34-337b-4e14-b456-3769a5c2021d": {
       "title": "Major bleeding",
       "description": "Major bleeding events.",
+      "isFavorable": false,
       "dataSources": [
         {
           "pvf": {
@@ -60,30 +62,38 @@
             "type": "linear",
             "direction": "decreasing"
           },
+          "id": "d387cf1e-e9c7-4cdc-92e8-7180395790f2",
+          "unitOfMeasurement": "Proportion",
           "scale": [
             0,
             1
-          ],
-          "id": "1b280129-1033-461a-bc99-7bd59347cafc",
-          "unitOfMeasurement": "Proportion"
+          ]
         }
-      ],
-      "isFavorable": false
+      ]
     }
   },
   "alternatives": {
-    "Hep": {
+    "cfcdf6df-f231-4c3d-be83-64aa28d8d5f1": {
       "title": "Heparin"
     },
-    "Enox": {
+    "0b18860b-807f-4457-9b0f-9e6a034945a9": {
       "title": "Enoxaparin"
     }
   },
   "performanceTable": [
     {
-      "alternative": "Hep",
-      "criterion": "Prox DVT",
+      "alternative": "cfcdf6df-f231-4c3d-be83-64aa28d8d5f1",
+      "criterion": "cae083fa-c1e7-427f-8039-c46479392344",
+      "dataSource": "7370712d-d283-4cf4-98e5-b0b5786a6840",
       "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.14705882352941177,
+          "input": {
+            "events": 20,
+            "sampleSize": 136
+          }
+        },
         "distribution": {
           "type": "dbeta",
           "parameters": {
@@ -91,41 +101,21 @@
             "beta": 116
           }
         }
-      },
-      "dataSource": "b2a74a83-6bb6-44c2-b0bb-c0c5cd82bfb7"
+      }
     },
     {
-      "alternative": "Hep",
-      "criterion": "Dist DVT",
+      "alternative": "0b18860b-807f-4457-9b0f-9e6a034945a9",
+      "criterion": "cae083fa-c1e7-427f-8039-c46479392344",
+      "dataSource": "7370712d-d283-4cf4-98e5-b0b5786a6840",
       "performance": {
-        "distribution": {
-          "type": "dbeta",
-          "parameters": {
-            "alpha": 40,
-            "beta": 96
+        "effect": {
+          "type": "exact",
+          "value": 0.06201550387596899,
+          "input": {
+            "events": 8,
+            "sampleSize": 129
           }
-        }
-      },
-      "dataSource": "b0fc69f4-a607-40c3-9690-9ad1980f5d00"
-    },
-    {
-      "alternative": "Hep",
-      "criterion": "Bleed",
-      "performance": {
-        "distribution": {
-          "type": "dbeta",
-          "parameters": {
-            "alpha": 1,
-            "beta": 135
-          }
-        }
-      },
-      "dataSource": "1b280129-1033-461a-bc99-7bd59347cafc"
-    },
-    {
-      "alternative": "Enox",
-      "criterion": "Prox DVT",
-      "performance": {
+        },
         "distribution": {
           "type": "dbeta",
           "parameters": {
@@ -133,13 +123,43 @@
             "beta": 121
           }
         }
-      },
-      "dataSource": "b2a74a83-6bb6-44c2-b0bb-c0c5cd82bfb7"
+      }
     },
     {
-      "alternative": "Enox",
-      "criterion": "Dist DVT",
+      "alternative": "cfcdf6df-f231-4c3d-be83-64aa28d8d5f1",
+      "criterion": "44e3dd53-ea9f-49af-b622-4a97d853c134",
+      "dataSource": "b978521f-0132-446f-8589-c5f3dd260a0a",
       "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.29411764705882354,
+          "input": {
+            "events": 40,
+            "sampleSize": 136
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 40,
+            "beta": 96
+          }
+        }
+      }
+    },
+    {
+      "alternative": "0b18860b-807f-4457-9b0f-9e6a034945a9",
+      "criterion": "44e3dd53-ea9f-49af-b622-4a97d853c134",
+      "dataSource": "b978521f-0132-446f-8589-c5f3dd260a0a",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.24806201550387597,
+          "input": {
+            "events": 32,
+            "sampleSize": 129
+          }
+        },
         "distribution": {
           "type": "dbeta",
           "parameters": {
@@ -147,13 +167,43 @@
             "beta": 97
           }
         }
-      },
-      "dataSource": "b0fc69f4-a607-40c3-9690-9ad1980f5d00"
+      }
     },
     {
-      "alternative": "Enox",
-      "criterion": "Bleed",
+      "alternative": "cfcdf6df-f231-4c3d-be83-64aa28d8d5f1",
+      "criterion": "8af13a34-337b-4e14-b456-3769a5c2021d",
+      "dataSource": "d387cf1e-e9c7-4cdc-92e8-7180395790f2",
       "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.007352941176470588,
+          "input": {
+            "events": 1,
+            "sampleSize": 136
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 1,
+            "beta": 135
+          }
+        }
+      }
+    },
+    {
+      "alternative": "0b18860b-807f-4457-9b0f-9e6a034945a9",
+      "criterion": "8af13a34-337b-4e14-b456-3769a5c2021d",
+      "dataSource": "d387cf1e-e9c7-4cdc-92e8-7180395790f2",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.03875968992248062,
+          "input": {
+            "events": 5,
+            "sampleSize": 129
+          }
+        },
         "distribution": {
           "type": "dbeta",
           "parameters": {
@@ -161,10 +211,7 @@
             "beta": 124
           }
         }
-      },
-      "dataSource": "1b280129-1033-461a-bc99-7bd59347cafc"
+      }
     }
-  ],
-  "preferences": {},
-  "schemaVersion": "1.3.4"
+  ]
 }

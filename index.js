@@ -95,8 +95,11 @@ function inProgressOwnerRightsNeeded(response, next, workspaceId, userId) {
 }
 
 function rightsCallback(response, next, userId, error, workspace) {
-  if (error) { next(error); }
-  if (workspace.owner !== userId) {
+  if (error) {
+    next(error);
+  } else if (!workspace) {
+    response.status(404).send('Workspace not found');
+  } else if (workspace.owner !== userId) {
     response.status(403).send('Insufficient user rights');
   } else {
     next();
