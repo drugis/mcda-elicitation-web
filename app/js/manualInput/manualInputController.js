@@ -50,7 +50,6 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
 
     // init
     $scope.alternativeInput = {}; //scoping
-    $scope.criteriaErrors = [];
     PageTitleService.setPageTitle('ManualInputController', 'Manual input');
     initState();
 
