@@ -6,35 +6,7 @@ var async = require('async');
 module.exports = function(db) {
   var workspaceRepository = require('./workspaceRepository')(db);
   
-  function requireUserIsWorkspaceOwner(req, res, next) {
-    db.query('SELECT owner FROM workspace WHERE id = $1', [req.params.id], createOwnershipChecker(req, res, next));
-  }
-
-  // Workspaces in progress
-  function requireUserIsInProgressWorkspaceOwner(req, res, next) {
-    db.query('SELECT owner FROM inProgressWorkspace WHERE id = $1', [req.params.id], createOwnershipChecker(req, res, next));
-  }
-
-  function createOwnershipChecker(req, res, next) {
-    return function(err, result) {
-      checkErr(err, next);
-      if (!result.rows[0]) {
-        res.status(404).send({
-          'code': 404,
-          'message': 'Workspace does not exist'
-        });
-      } else if (!getUser(req) || result.rows[0].owner !== getUser(req).id) {
-        res.status(403).send({
-          'code': 403,
-          'message': 'Access to resource not authorised'
-        });
-      } else {
-        next();
-      }
-    };
-  }
-
-  function checkErr(err, next) {
+  function checkForError(err, next) {
     if (err) {
       logger.error(JSON.stringify(err, null, 2));
       err.status = 500;
@@ -49,7 +21,7 @@ module.exports = function(db) {
     logger.debug('creating in-progress workspace');
 
     db.query('INSERT INTO inProgressWorkspace (owner, state) VALUES ($1, $2) RETURNING id', [getUser(req).id, req.body], function(err, result) {
-      checkErr(err, next);
+      checkForError(err, next);
       res.json({ id: result.rows[0].id });
     });
   }
@@ -57,7 +29,7 @@ module.exports = function(db) {
   function updateInProgress(req, res, next) {
     logger.debug('updating in-progress workspace');
     db.query('UPDATE inProgressWorkspace SET state = $1 WHERE id = $2 ', [req.body, req.params.id], function(err) {
-      checkErr(err, next);
+      checkForError(err, next);
       res.end();
     });
   }
@@ -65,7 +37,7 @@ module.exports = function(db) {
   function getInProgress(req, res, next) {
     logger.debug('GET /inProgress/:id');
     db.query('SELECT id, owner, state FROM inProgressWorkspace WHERE id = $1', [req.params.id], function(err, result) {
-      checkErr(err, next);
+      checkForError(err, next);
       res.json(result.rows[0]);
     });
   }
@@ -73,7 +45,7 @@ module.exports = function(db) {
   function queryInProgress(req, res, next) {
     logger.debug('GET /inProgress/');
     db.query('SELECT id, owner, state FROM inProgressWorkspace WHERE owner = $1', [getUser(req).id], function(err, result) {
-      checkErr(err, next);
+      checkForError(err, next);
       res.json(result.rows);
     });
   }
@@ -92,7 +64,7 @@ module.exports = function(db) {
   function queryWorkspaces(req, res, next) {
     logger.debug('GET /workspaces');
     db.query('SELECT id, owner, title, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1', [getUser(req).id], function(err, result) {
-      checkErr(err, next);
+      checkForError(err, next);
       res.json(result.rows);
     });
   }
@@ -180,7 +152,7 @@ module.exports = function(db) {
     }
 
     db.runInTransaction(workspaceTransaction, function(err, result) {
-      checkErr(err, next);
+      checkForError(err, next);
       res.json(result);
     });
   }
@@ -188,14 +160,14 @@ module.exports = function(db) {
   function getWorkspace(req, res, next) {
     logger.debug('GET /workspaces/:id');
     workspaceRepository.get(req.params.id, function(error,result){
-      checkErr(error, next);
+      checkForError(error, next);
       res.json(result);
     });
   }
 
   function updateWorkspace(req, res, next) {
     db.query('UPDATE workspace SET title = $1, problem = $2 WHERE id = $3 ', [req.body.problem.title, req.body.problem, req.params.id], function(err) {
-      checkErr(err, next);
+      checkForError(err, next);
       res.end();
     });
   }
@@ -244,7 +216,7 @@ module.exports = function(db) {
     }
 
     db.runInTransaction(deleteEverything, function(err, result) {
-      checkErr(err, next);
+      checkForError(err, next);
       res.json(result);
     });
 
@@ -260,8 +232,6 @@ module.exports = function(db) {
   }
 
   return {
-    requireUserIsWorkspaceOwner: requireUserIsWorkspaceOwner,
-    requireUserIsInProgressWorkspaceOwner: requireUserIsInProgressWorkspaceOwner,
     createInProgress: createInProgress,
     updateInProgress: updateInProgress,
     getInProgress: getInProgress,

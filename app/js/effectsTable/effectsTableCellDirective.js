@@ -1,9 +1,15 @@
 'use strict';
 define(['lodash'], function(_) {
 
-  var dependencies = ['significantDigits'];
+  var dependencies = [
+    'significantDigits',
+    'WorkspaceSettingsService'
+  ];
 
-  var EffectsTableScalesCellDirective = function(significantDigits) {
+  var EffectsTableScalesCellDirective = function(
+    significantDigits,
+    WorkspaceSettingsService
+    ) {
     return {
       restrict: 'E',
       scope: {
@@ -20,9 +26,9 @@ define(['lodash'], function(_) {
         scope.$watch('workspaceSettings', init, true);
 
         function init() {
+          scope.isValueView = WorkspaceSettingsService.isValueView();
           scope.uncertainty = hasUncertainty(scope.effectsTableInfo);
           scope.effectsDisplay = scope.workspaceSettings.effectsDisplay;
-          scope.isAbsolute = scope.effectsTableInfo.isAbsolute;
           scope.effectValue = '';
           if (scope.effectsTableInfo.studyDataLabelsAndUncertainty) {
             var labelsAndUncertainty = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId];
