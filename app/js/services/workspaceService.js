@@ -48,7 +48,7 @@ define(['lodash', 'angular'], function(_, angular) {
       return _.reduce(observedScales, function(accum, scaleRow, datasourceId) {
         if (dataSources[datasourceId]) {
           accum[datasourceId] = _.reduce(scaleRow, function(accum, scaleCell, alternativeId) {
-            var usePercentage = _.isEqual(dataSources[datasourceId].scale, [0, 1]);
+            var usePercentage = _.isEqual(dataSources[datasourceId].scale, [0, 1]) || _.isEqual(dataSources[datasourceId].scale, [0, 100]);
             accum[alternativeId] = usePercentage ? _.mapValues(scaleCell, times100) : scaleCell;
             return accum;
           }, {});
