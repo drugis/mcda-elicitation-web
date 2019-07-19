@@ -27,10 +27,14 @@ define(['lodash'], function(_) {
         }
 
         function getRoundedValue(value) {
-          if (value === null) { return; }
-          if (!canBePercentage()) { return $filter('number')(value); }
-          var numberOfDecimals = getNumberOfDecimals(value);
-          return $filter('number')(value, numberOfDecimals);
+          if (value === null) {
+            return;
+          } else if (!canBePercentage()) {
+            return $filter('number')(value);
+          } else {
+            var numberOfDecimals = getNumberOfDecimals(value);
+            return $filter('number')(value, numberOfDecimals);
+          }
         }
 
         function canBePercentage() {

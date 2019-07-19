@@ -9,7 +9,7 @@ define(['lodash'], function(_) {
   var EffectsTableScalesCellDirective = function(
     significantDigits,
     WorkspaceSettingsService
-    ) {
+  ) {
     return {
       restrict: 'E',
       scope: {
@@ -38,8 +38,10 @@ define(['lodash'], function(_) {
             if (scope.effectValue !== '') {
               if (_.isEqual(scope.theoreticalScale, [0, 100])) {
                 scope.effectValue *= 100;
+                scope.effectValue = significantDigits(scope.effectValue, 1);
+              } else {
+                scope.effectValue = significantDigits(scope.effectValue);
               }
-              scope.effectValue = significantDigits(scope.effectValue);
             }
           }
         }
