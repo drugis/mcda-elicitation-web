@@ -22,7 +22,6 @@ define(['lodash'], function(_) {
         'criteria': '=',
         'useFavorability': '=',
         'inputData': '=',
-        'errors': '=',
         'isInput': '=',
         'workspace': '=',
         'editMode': '=',
@@ -109,9 +108,6 @@ define(['lodash'], function(_) {
 
         //private
         function initializeCriteriaLists() {
-          if (scope.isInput) {
-            checkForMissingFavorability();
-          }
           var partition = _.partition(scope.criteria, ['isFavorable', true]);
           scope.criteria = partition[0].concat(partition[1]);
           scope.favorableCriteria = partition[0];
@@ -121,16 +117,6 @@ define(['lodash'], function(_) {
         function swapAndInitialize(array, idx, newIdx) {
           swap(array, idx, newIdx);
           initializeCriteriaLists();
-        }
-
-        function checkForMissingFavorability() {
-          var error = 'Missing favorability';
-          _.pull(scope.errors, error);
-          if (scope.useFavorability && _.find(scope.criteria, function(criterion) {
-            return criterion.isFavorable === undefined;
-          })) {
-            scope.errors.push('Missing favorability');
-          }
         }
       }
     };

@@ -34,7 +34,7 @@
       <label>
         Use favorability
         <inline-help help-key="favorability"></inline-help>:
-        <input type="checkbox" ng-model="state.useFavorability" ng-change="favorabilityChanged()">
+        <input type="checkbox" ng-model="state.useFavorability">
       </label>
     </div>
     <div class="cell">
@@ -43,7 +43,7 @@
     </div>
     <div class="cell">
       <criterion-list criteria="state.criteria" use-favorability="state.useFavorability" input-data="state.inputData"
-        errors="criteriaErrors" is-input="true"></criterion-list>
+        is-input="true"></criterion-list>
     </div>
   </div>
   <div class="cell">
@@ -107,8 +107,8 @@
     </table>
   </div>
   <div class="cell">
-    <button class="button" ng-disabled="!state.title || state.criteria.length < 2|| state.alternatives.length < 2 ||
-      criteriaErrors.length" type="button" ng-click="goToStep2()" tooltip="Enter effects table data">
+    <button class="button" ng-disabled="!state.title || state.criteria.length < 2|| state.alternatives.length < 2"
+      type="button" ng-click="goToStep2()" tooltip="Enter effects table data">
       Enter data
     </button>
     <button id="step1SaveButton" class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty"
@@ -122,9 +122,6 @@
   </div>
   <div class="cell" ng-if="state.alternatives.length < 2">
     <em>Two alternatives required</em>
-  </div>
-  <div class="cell" ng-repeat="error in criteriaErrors">
-    <em>{{error}}</em>
   </div>
 </div>
 <!-- step 2 -->
@@ -174,7 +171,8 @@
         tooltip="Create problem and proceed to analysis">
         Done
       </button>
-      <button id="step2SaveButton" class="button" ng-click="saveInProgress()" ng-disabled="!dirty" tooltip="Save current state">
+      <button id="step2SaveButton" class="button" ng-click="saveInProgress()" ng-disabled="!dirty"
+        tooltip="Save current state">
         Save
       </button>
       <button type="button" ng-click="goToStep1()" type="button" class="button">Back</button>
