@@ -1,10 +1,12 @@
 {
+  "schemaVersion": "1.3.4",
   "title": "Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)",
-  "description": "Based on C.B. Nemeroff & M.E. Thase (2007), \"A double-blind, placebo-controlled comparison of venlafaxine and fluoxetine treatment in depressed outpatients\".",
+  "description": "Application of SMAA to evaluate the potential benefits and risks of two commonly prescribed second-generation antidepressants in the setting of a published placebo-controlled trial (Tervonen et al, Stat Med, 2011)",
   "criteria": {
-    "response": {
-      "title": "Treatment Responders",
-      "description": "Patients responding to treatment (50% or greater decrease on the HAM-D-21 rating scale)",
+    "de14e778-f723-48d4-8f4e-1e589714f4f2": {
+      "title": "Treatment responders",
+      "description": "Proportion of patients with a 50% or greater decrease on the HAM-D-21 rating scale",
+      "isFavorable": true,
       "dataSources": [
         {
           "pvf": {
@@ -15,17 +17,20 @@
             "direction": "increasing",
             "type": "linear"
           },
+          "id": "029909c4-cb8c-43cb-9816-e8550ef561be",
+          "source": "Nemeroff and Thase (2007)",
+          "unitOfMeasurement": "%",
           "scale": [
             0,
-            1
-          ],
-          "id": "cf1fc587-9d1c-4d2a-ba78-788ecebaad6e",
-          "unitOfMeasurement": "Proportion"
+            100
+          ]
         }
       ]
     },
-    "nausea": {
+    "5b99d1e1-116b-4b9f-9aa2-f81eb1976515": {
       "title": "Nausea ADRs",
+      "description": "Proportion of patients experiencing nausea ADRs",
+      "isFavorable": false,
       "dataSources": [
         {
           "pvf": {
@@ -36,17 +41,20 @@
             "direction": "decreasing",
             "type": "linear"
           },
+          "id": "1300eea2-fa03-4f1f-9abb-d4dfb77b99a1",
+          "source": "Nemeroff and Thase (2007)",
+          "unitOfMeasurement": "Proportion",
           "scale": [
             0,
             1
-          ],
-          "id": "39af3161-55ba-4c83-b9ee-7af48cba89cb",
-          "unitOfMeasurement": "Proportion"
+          ]
         }
       ]
     },
-    "insomnia": {
+    "57711ccd-c57e-46fc-b63a-b1480ff0e2e7": {
       "title": "Insomnia ADRs",
+      "description": "Proportion of patients experiencing insomnia ADRs",
+      "isFavorable": false,
       "dataSources": [
         {
           "pvf": {
@@ -57,17 +65,20 @@
             "direction": "decreasing",
             "type": "linear"
           },
+          "id": "d0f230ea-284b-4c53-8ae4-0c426fa20c71",
+          "source": "Nemeroff and Thase (2007)",
+          "unitOfMeasurement": "Proportion",
           "scale": [
             0,
             1
-          ],
-          "id": "2001c550-428c-4daa-8810-a5ceb147088c",
-          "unitOfMeasurement": "Proportion"
+          ]
         }
       ]
     },
-    "anxiety": {
+    "f5b1f0a8-ff5b-4314-96cb-edf5bb9f83a4": {
       "title": "Anxiety ADRs",
+      "description": "Proportion of patients experiencing anxiety ADRs",
+      "isFavorable": false,
       "dataSources": [
         {
           "pvf": {
@@ -78,60 +89,42 @@
             "direction": "decreasing",
             "type": "linear"
           },
+          "id": "6eeaa6f5-1407-49f2-b0bf-e1a498dfca4f",
+          "source": "Nemeroff and Thase (2007)",
+          "unitOfMeasurement": "Proportion",
           "scale": [
             0,
             1
-          ],
-          "id": "46df887d-23e6-4e8e-9741-4fb1519c9986",
-          "unitOfMeasurement": "Proportion"
+          ]
         }
       ]
     }
   },
   "alternatives": {
-    "fluox": {
+    "38deaf60-9014-4af9-997e-e5f08bc8c8ff": {
+      "title": "Placebo"
+    },
+    "a85db1a0-c045-46b4-958b-eddce3793420": {
       "title": "Fluoxetine"
     },
-    "venla": {
+    "a266d343-4821-47dd-923f-6fff7c32f9fa": {
       "title": "Venlafaxine"
-    },
-    "place": {
-      "title": "Placebo"
     }
   },
   "performanceTable": [
     {
-      "alternative": "venla",
-      "criterion": "response",
+      "alternative": "38deaf60-9014-4af9-997e-e5f08bc8c8ff",
+      "criterion": "de14e778-f723-48d4-8f4e-1e589714f4f2",
+      "dataSource": "029909c4-cb8c-43cb-9816-e8550ef561be",
       "performance": {
-        "distribution": {
-          "type": "dbeta",
-          "parameters": {
-            "alpha": 52,
-            "beta": 46
+        "effect": {
+          "type": "exact",
+          "value": 0.36633663366336633,
+          "input": {
+            "events": 37,
+            "sampleSize": 101
           }
-        }
-      },
-      "dataSource": "cf1fc587-9d1c-4d2a-ba78-788ecebaad6e"
-    },
-    {
-      "alternative": "fluox",
-      "criterion": "response",
-      "performance": {
-        "distribution": {
-          "type": "dbeta",
-          "parameters": {
-            "alpha": 46,
-            "beta": 56
-          }
-        }
-      },
-      "dataSource": "cf1fc587-9d1c-4d2a-ba78-788ecebaad6e"
-    },
-    {
-      "alternative": "place",
-      "criterion": "response",
-      "performance": {
+        },
         "distribution": {
           "type": "dbeta",
           "parameters": {
@@ -139,41 +132,65 @@
             "beta": 65
           }
         }
-      },
-      "dataSource": "cf1fc587-9d1c-4d2a-ba78-788ecebaad6e"
+      }
     },
     {
-      "alternative": "venla",
-      "criterion": "nausea",
+      "alternative": "a85db1a0-c045-46b4-958b-eddce3793420",
+      "criterion": "de14e778-f723-48d4-8f4e-1e589714f4f2",
+      "dataSource": "029909c4-cb8c-43cb-9816-e8550ef561be",
       "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.45,
+          "input": {
+            "events": 45,
+            "sampleSize": 100
+          }
+        },
         "distribution": {
           "type": "dbeta",
           "parameters": {
-            "alpha": 41,
-            "beta": 61
+            "alpha": 46,
+            "beta": 56
           }
         }
-      },
-      "dataSource": "39af3161-55ba-4c83-b9ee-7af48cba89cb"
+      }
     },
     {
-      "alternative": "fluox",
-      "criterion": "nausea",
+      "alternative": "a266d343-4821-47dd-923f-6fff7c32f9fa",
+      "criterion": "de14e778-f723-48d4-8f4e-1e589714f4f2",
+      "dataSource": "029909c4-cb8c-43cb-9816-e8550ef561be",
       "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.53125,
+          "input": {
+            "events": 51,
+            "sampleSize": 96
+          }
+        },
         "distribution": {
           "type": "dbeta",
           "parameters": {
-            "alpha": 23,
-            "beta": 81
+            "alpha": 52,
+            "beta": 46
           }
         }
-      },
-      "dataSource": "39af3161-55ba-4c83-b9ee-7af48cba89cb"
+      }
     },
     {
-      "alternative": "place",
-      "criterion": "nausea",
+      "alternative": "38deaf60-9014-4af9-997e-e5f08bc8c8ff",
+      "criterion": "5b99d1e1-116b-4b9f-9aa2-f81eb1976515",
+      "dataSource": "1300eea2-fa03-4f1f-9abb-d4dfb77b99a1",
       "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.0784313725490196,
+          "input": {
+            "events": 8,
+            "sampleSize": 102
+          }
+        },
         "distribution": {
           "type": "dbeta",
           "parameters": {
@@ -181,41 +198,65 @@
             "beta": 95
           }
         }
-      },
-      "dataSource": "39af3161-55ba-4c83-b9ee-7af48cba89cb"
+      }
     },
     {
-      "alternative": "venla",
-      "criterion": "insomnia",
+      "alternative": "a85db1a0-c045-46b4-958b-eddce3793420",
+      "criterion": "5b99d1e1-116b-4b9f-9aa2-f81eb1976515",
+      "dataSource": "1300eea2-fa03-4f1f-9abb-d4dfb77b99a1",
       "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.21568627450980393,
+          "input": {
+            "events": 22,
+            "sampleSize": 102
+          }
+        },
         "distribution": {
           "type": "dbeta",
           "parameters": {
             "alpha": 23,
-            "beta": 79
+            "beta": 81
           }
         }
-      },
-      "dataSource": "2001c550-428c-4daa-8810-a5ceb147088c"
+      }
     },
     {
-      "alternative": "fluox",
-      "criterion": "insomnia",
+      "alternative": "a266d343-4821-47dd-923f-6fff7c32f9fa",
+      "criterion": "5b99d1e1-116b-4b9f-9aa2-f81eb1976515",
+      "dataSource": "1300eea2-fa03-4f1f-9abb-d4dfb77b99a1",
       "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.4,
+          "input": {
+            "events": 40,
+            "sampleSize": 100
+          }
+        },
         "distribution": {
           "type": "dbeta",
           "parameters": {
-            "alpha": 16,
-            "beta": 88
+            "alpha": 41,
+            "beta": 61
           }
         }
-      },
-      "dataSource": "2001c550-428c-4daa-8810-a5ceb147088c"
+      }
     },
     {
-      "alternative": "place",
-      "criterion": "insomnia",
+      "alternative": "38deaf60-9014-4af9-997e-e5f08bc8c8ff",
+      "criterion": "57711ccd-c57e-46fc-b63a-b1480ff0e2e7",
+      "dataSource": "d0f230ea-284b-4c53-8ae4-0c426fa20c71",
       "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.13725490196078433,
+          "input": {
+            "events": 14,
+            "sampleSize": 102
+          }
+        },
         "distribution": {
           "type": "dbeta",
           "parameters": {
@@ -223,41 +264,65 @@
             "beta": 89
           }
         }
-      },
-      "dataSource": "2001c550-428c-4daa-8810-a5ceb147088c"
+      }
     },
     {
-      "alternative": "venla",
-      "criterion": "anxiety",
+      "alternative": "a85db1a0-c045-46b4-958b-eddce3793420",
+      "criterion": "57711ccd-c57e-46fc-b63a-b1480ff0e2e7",
+      "dataSource": "d0f230ea-284b-4c53-8ae4-0c426fa20c71",
       "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.14705882352941177,
+          "input": {
+            "events": 15,
+            "sampleSize": 102
+          }
+        },
         "distribution": {
           "type": "dbeta",
           "parameters": {
-            "alpha": 11,
-            "beta": 91
+            "alpha": 16,
+            "beta": 88
           }
         }
-      },
-      "dataSource": "46df887d-23e6-4e8e-9741-4fb1519c9986"
+      }
     },
     {
-      "alternative": "fluox",
-      "criterion": "anxiety",
+      "alternative": "a266d343-4821-47dd-923f-6fff7c32f9fa",
+      "criterion": "57711ccd-c57e-46fc-b63a-b1480ff0e2e7",
+      "dataSource": "d0f230ea-284b-4c53-8ae4-0c426fa20c71",
       "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.22,
+          "input": {
+            "events": 22,
+            "sampleSize": 100
+          }
+        },
         "distribution": {
           "type": "dbeta",
           "parameters": {
-            "alpha": 8,
-            "beta": 96
+            "alpha": 23,
+            "beta": 79
           }
         }
-      },
-      "dataSource": "46df887d-23e6-4e8e-9741-4fb1519c9986"
+      }
     },
     {
-      "alternative": "place",
-      "criterion": "anxiety",
+      "alternative": "38deaf60-9014-4af9-997e-e5f08bc8c8ff",
+      "criterion": "f5b1f0a8-ff5b-4314-96cb-edf5bb9f83a4",
+      "dataSource": "6eeaa6f5-1407-49f2-b0bf-e1a498dfca4f",
       "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.00980392156862745,
+          "input": {
+            "events": 1,
+            "sampleSize": 102
+          }
+        },
         "distribution": {
           "type": "dbeta",
           "parameters": {
@@ -265,10 +330,51 @@
             "beta": 102
           }
         }
-      },
-      "dataSource": "46df887d-23e6-4e8e-9741-4fb1519c9986"
+      }
+    },
+    {
+      "alternative": "a85db1a0-c045-46b4-958b-eddce3793420",
+      "criterion": "f5b1f0a8-ff5b-4314-96cb-edf5bb9f83a4",
+      "dataSource": "6eeaa6f5-1407-49f2-b0bf-e1a498dfca4f",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.06862745098039216,
+          "input": {
+            "events": 7,
+            "sampleSize": 102
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 8,
+            "beta": 96
+          }
+        }
+      }
+    },
+    {
+      "alternative": "a266d343-4821-47dd-923f-6fff7c32f9fa",
+      "criterion": "f5b1f0a8-ff5b-4314-96cb-edf5bb9f83a4",
+      "dataSource": "6eeaa6f5-1407-49f2-b0bf-e1a498dfca4f",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0.1,
+          "input": {
+            "events": 10,
+            "sampleSize": 100
+          }
+        },
+        "distribution": {
+          "type": "dbeta",
+          "parameters": {
+            "alpha": 11,
+            "beta": 91
+          }
+        }
+      }
     }
-  ],
-  "preferences": {},
-  "schemaVersion": "1.3.4"
+  ]
 }
