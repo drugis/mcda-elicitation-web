@@ -5,7 +5,8 @@ var async = require('async');
 
 module.exports = function(db) {
   var workspaceRepository = require('./workspaceRepository')(db);
-  
+  var subProblemRepository = require('./subProblemRepository')(db);
+
   function checkForError(err, next) {
     if (err) {
       logger.error(JSON.stringify(err, null, 2));
@@ -69,51 +70,36 @@ module.exports = function(db) {
     });
   }
 
-  function createWorkspace(req, res, next) {
+  function createWorkspace(request, res, next) {
     logger.debug('create workspace');
 
     function workspaceTransaction(client, callback) {
-      function createNewWorkspace(callback) {
-        logger.debug('creating workspace');
-
-        // create a new workspace
-        client.query('INSERT INTO workspace (owner, title, problem) VALUES ($1, $2, $3) RETURNING id', [getUser(req).id, req.body.title, req.body.problem], function(err, result) {
-          if (err) {
-            return callback(err);
-          }
-          callback(null, result.rows[0].id);
-        });
+      function createNewWorkspace() {
+        var owner = getUser(request).id;
+        var title = request.body.title;
+        var problem = request.body.problem;
+        workspaceRepository.create(owner, title, problem, callback);
       }
 
       function createSubProblem(workspaceId, callback) {
         logger.debug('creating subproblem');
         var definition = {
-          ranges: util.getRanges(req.body.problem)
+          ranges: util.getRanges(request.body.problem)
         };
+        subProblemRepository.create(workspaceId, definition, callback);
         logger.debug('created definition ' + JSON.stringify(definition));
-        client.query('INSERT INTO subProblem (workspaceid, title, definition) VALUES ($1, $2, $3) RETURNING id', [
-          workspaceId, 'Default', definition], function(err, result) {
-          if (err) {
-            logger.error('error creating subproblem');
-            return callback(err);
-          }
-          logger.debug('done creating subproblem');
-          callback(null, workspaceId, result.rows[0].id);
-        });
+
       }
 
       function setDefaultSubProblem(workspaceId, subProblemId, callback) {
-        logger.debug('setting default subproblem');
-        client.query('UPDATE workspace SET defaultsubproblemId = $1 WHERE id = $2', [subProblemId, workspaceId], function(err) {
-          callback(err, workspaceId, subProblemId);
-        });
+        workspaceRepository.setDefaultSubProblem(workspaceId, subProblemId, callback);
       }
 
       function createScenario(workspaceId, subProblemId, callback) {
-        logger.debug('creating scenario');
         var state = {
-          problem: util.reduceProblem(req.body.problem)
+          problem: util.reduceProblem(request.body.problem)
         };
+        logger.debug('creating scenario');
         client.query('INSERT INTO scenario (workspace, subproblemId, title, state) VALUES ($1, $2, $3, $4) RETURNING id',
           [workspaceId, subProblemId, 'Default', state],
           function(err, result) {
@@ -125,10 +111,7 @@ module.exports = function(db) {
       }
 
       function setDefaultScenario(workspaceId, scenarioId, callback) {
-        logger.debug('setting default scenario');
-        client.query('UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2', [scenarioId, workspaceId], function(err) {
-          callback(err, workspaceId);
-        });
+        workspaceRepository.setDefaultScenario(workspaceId, scenarioId, callback);
       }
 
       function getWorkspaceInfo(workspaceId, callback) {
@@ -159,7 +142,7 @@ module.exports = function(db) {
 
   function getWorkspace(req, res, next) {
     logger.debug('GET /workspaces/:id');
-    workspaceRepository.get(req.params.id, function(error,result){
+    workspaceRepository.get(req.params.id, function(error, result) {
       checkForError(error, next);
       res.json(result);
     });
