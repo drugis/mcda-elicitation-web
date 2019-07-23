@@ -176,58 +176,100 @@ define(['lodash', 'angular'], function(_, angular) {
       var newProblem = _.cloneDeep(baseProblem);
       if (subProblemDefinition.excludedCriteria) {
         newProblem.criteria = _.omit(newProblem.criteria, subProblemDefinition.excludedCriteria);
-        newProblem.performanceTable = _.reject(newProblem.performanceTable, function(tableEntry) {
-          return _.includes(subProblemDefinition.excludedCriteria, tableEntry.criterionUri) ||
-            _.includes(subProblemDefinition.excludedCriteria, tableEntry.criterion); // addis/mcda standalone difference
-        });
+        newProblem.performanceTable = filterExcludedCriteriaEntries(newProblem, subProblemDefinition.excludedCriteria);
       }
 
       if (subProblemDefinition.excludedAlternatives) {
-        newProblem.alternatives = _.reduce(newProblem.alternatives, function(accum, alternative, key) {
-          if (!_.includes(subProblemDefinition.excludedAlternatives, key)) {
-            accum[key] = alternative;
-          }
-          return accum;
-        }, {});
-
-        var excludedAlternativeNames = subProblemDefinition.excludedAlternatives;
-        // remove all entries that are excluded
-        newProblem.performanceTable = _.reject(newProblem.performanceTable, function(tableEntry) {
-          return _.includes(excludedAlternativeNames, tableEntry.alternative);
-        });
-
-        // update all relative entries which are included
-        _.forEach(newProblem.performanceTable, function(tableEntry) {
-          if (tableEntry.performance.type !== 'exact' && tableEntry.performance.type !== 'dsurv' && tableEntry.performance.parameters &&
-            tableEntry.performance.parameters.relative) {
-            tableEntry.performance.parameters.relative.cov =
-              reduceCov(tableEntry.performance.parameters.relative.cov, excludedAlternativeNames);
-            tableEntry.performance.parameters.relative.mu = reduceMu(tableEntry.performance.parameters.relative.mu,
-              subProblemDefinition.excludedAlternatives);
-          }
-        });
+        newProblem.alternatives = filterExcludedAlternatives(newProblem, subProblemDefinition.excludedAlternatives);
+        newProblem.performanceTable = filterExcludedAlternativesEntries(newProblem, subProblemDefinition.excludedAlternatives);
+        newProblem.performanceTable = updateIncludedEntries(newProblem, subProblemDefinition);
       }
 
       if (subProblemDefinition.excludedDataSources) {
-        _.forEach(newProblem.criteria, function(criterion) {
-          criterion.dataSources = _.filter(criterion.dataSources, function(dataSource) {
-            return !_.includes(subProblemDefinition.excludedDataSources, dataSource.id);
-          });
-        });
-        newProblem.performanceTable = _.reject(newProblem.performanceTable, function(tableEntry) {
-          return _.includes(subProblemDefinition.excludedDataSources, tableEntry.dataSource);
-        });
+        newProblem.criteria = updateCriterionDataSources(newProblem, subProblemDefinition.excludedDataSources);
+        newProblem.performanceTable = filterExcludedDataSourceEntries(newProblem, subProblemDefinition.excludedDataSources);
       }
 
-      newProblem.criteria = _.mapValues(newProblem.criteria, function(criterion) {
+      newProblem.criteria = createCriteriaWithRanges(newProblem, subProblemDefinition.ranges);
+      return newProblem;
+    }
+
+    function createCriteriaWithRanges(problem, ranges) {
+      return _.mapValues(problem.criteria, function(criterion) {
         var newCriterion = _.cloneDeep(criterion);
-        newCriterion.dataSources = _.map(newCriterion.dataSources, function(dataSource) {
-          var ranges = subProblemDefinition.ranges ? subProblemDefinition.ranges[dataSource.id] : {};
-          return _.merge({}, dataSource, ranges);
-        });
+        newCriterion.dataSources = createDataSourcesWithRanges(newCriterion, ranges);
         return newCriterion;
       });
-      return newProblem;
+    }
+
+    function createDataSourcesWithRanges(criterion, ranges) {
+      return _.map(criterion.dataSources, function(dataSource) {
+        var rangesForDataSource = getRanges(dataSource.id, ranges);
+        return _.merge({}, dataSource, rangesForDataSource);
+      });
+    }
+
+    function getRanges(dataSourceId, ranges) {
+      if (ranges) {
+        return ranges[dataSourceId];
+      } else {
+        return {};
+      }
+    }
+
+    function filterExcludedDataSourceEntries(problem, excludedDataSources) {
+      return _.reject(problem.performanceTable, function(tableEntry) {
+        return _.includes(excludedDataSources, tableEntry.dataSource);
+      });
+    }
+
+    function updateCriterionDataSources(problem, excludedDataSources) {
+      return _.mapValues(problem.criteria, function(criterion) {
+        var newCriterion = angular.copy(criterion);
+        newCriterion.dataSources = filterDataSources(newCriterion.dataSources, excludedDataSources);
+        return newCriterion;
+      });
+    }
+
+    function filterDataSources(dataSources, excludedDataSources) {
+      return _.filter(dataSources, function(dataSource) {
+        return !_.includes(excludedDataSources, dataSource.id);
+      });
+    }
+
+    function updateIncludedEntries(problem, subProblemDefinition) {
+      return _.map(problem.performanceTable, function(entry) {
+        if (!isAbsolutePerformance(entry)) {
+          entry.performance.distribution.parameters.relative = updateRelative(entry.performance.distribution.parameters.relative, subProblemDefinition.excludedAlternatives);
+        }
+        return entry;
+      });
+    }
+
+    function updateRelative(relative, excludedAlternatives) {
+      return {
+        cov: reduceCov(relative.cov, excludedAlternatives),
+        mu: reduceMu(relative.mu, excludedAlternatives)
+      };
+    }
+
+    function filterExcludedCriteriaEntries(problem, excludedCriteria) {
+      return _.reject(problem.performanceTable, function(tableEntry) {
+        return _.includes(excludedCriteria, tableEntry.criterionUri) ||
+          _.includes(excludedCriteria, tableEntry.criterion); // addis/mcda standalone difference
+      });
+    }
+
+    function filterExcludedAlternativesEntries(problem, excludedAlternative) {
+      return _.reject(problem.performanceTable, function(tableEntry) {
+        return _.includes(excludedAlternative, tableEntry.alternative);
+      });
+    }
+
+    function filterExcludedAlternatives(problem, excludedAlternatives) {
+      return _.pickBy(problem.alternatives, function(alternative, id) {
+        return !_.includes(excludedAlternatives, id);
+      });
     }
 
     function reduceCov(oldCov, names) {
@@ -495,8 +537,8 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function isAbsolutePerformance(tableEntry) {
       return tableEntry.performance.effect ||
-        tableEntry.performance.distribution ||
-        tableEntry.performance.type.indexOf('relative') !== 0;
+        (tableEntry.performance.distribution &&
+          tableEntry.performance.distribution.type.indexOf('relative') < 0);
     }
 
     function criterionLackingTitle(workspace) {
@@ -523,7 +565,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function relativePerformanceLackingBaseline(workspace) {
       var entryLackingBaseline = _.find(workspace.performanceTable, function(tableEntry) {
-        return !isAbsolutePerformance(tableEntry) && !tableEntry.performance.parameters.baseline;
+        return !isAbsolutePerformance(tableEntry) && !tableEntry.performance.distribution.parameters.baseline;
       });
       if (entryLackingBaseline) {
         return 'Missing baseline for criterion: "' + entryLackingBaseline.criterion + '"';
@@ -533,7 +575,7 @@ define(['lodash', 'angular'], function(_, angular) {
     function relativePerformanceWithBadMu(workspace) {
       var missingAlternativeId;
       var entryWithBadMu = _.find(workspace.performanceTable, function(tableEntry) {
-        return !isAbsolutePerformance(tableEntry) && _.find(_.keys(tableEntry.performance.parameters.relative.mu), function(alternativeId) {
+        return !isAbsolutePerformance(tableEntry) && _.find(_.keys(tableEntry.performance.distribution.parameters.relative.mu), function(alternativeId) {
           missingAlternativeId = alternativeId;
           return !workspace.alternatives[alternativeId];
         });
@@ -546,10 +588,10 @@ define(['lodash', 'angular'], function(_, angular) {
     function relativePerformanceWithBadCov(workspace) {
       var alternativeKey;
       var entryWithBadCov = _.find(workspace.performanceTable, function(tableEntry) {
-        return !isAbsolutePerformance(tableEntry) && (_.find(tableEntry.performance.parameters.relative.cov.rownames, function(rowVal) {
+        return !isAbsolutePerformance(tableEntry) && (_.find(tableEntry.performance.distribution.parameters.relative.cov.rownames, function(rowVal) {
           alternativeKey = rowVal;
           return !workspace.alternatives[rowVal];
-        }) || _.find(tableEntry.performance.parameters.relative.cov.colnames, function(colVal) {
+        }) || _.find(tableEntry.performance.distribution.parameters.relative.cov.colnames, function(colVal) {
           alternativeKey = colVal;
           return !workspace.alternatives[colVal];
         }));

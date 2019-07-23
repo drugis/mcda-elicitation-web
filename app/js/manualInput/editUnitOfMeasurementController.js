@@ -4,65 +4,69 @@ define(['lodash'], function(_) {
     '$scope',
     '$modalInstance',
     'callback',
-    'unitOfMeasurement'
+    'currentValues'
   ];
   var EditUnitOfMeasurementController = function(
     $scope,
     $modalInstance,
     callback,
-    unitOfMeasurement
+    currentValues
   ) {
     // functions
     $scope.cancel = cancel;
     $scope.save = save;
     $scope.unitOptionChanged = unitOptionChanged;
-    $scope.validateInput = validateInput;
 
     // init
     $scope.saveDisabled = false;
     $scope.unitOptions = [{
       label: 'Proportion (decimal)',
       id: 'decimal',
-      defaultValue: 'Proportion'
+      defaultValue: 'Proportion',
+      defaultLowerBound: 0,
+      defaultUpperBound: 1
+
     }, {
       label: 'Proportion (percentage)',
       id: 'percentage',
-      defaultValue: '%'
+      defaultValue: '%',
+      defaultLowerBound: 0,
+      defaultUpperBound: 100
+
     }, {
-      label: 'Other',
-      id: 'other',
-      defaultValue: ''
+      label: 'Default',
+      id: 'default',
+      defaultValue: '',
+      defaultLowerBound: -Infinity,
+      defaultUpperBound: Infinity
     }];
+    $scope.lowerBoundOptions = [-Infinity, 0];
+    $scope.upperBoundOptions = [1, 100, Infinity];
 
-    $scope.values = {
-      selectedOption: initializeOption(),
-    };
-    $scope.values.value= initializeUnit();
+    init();
 
-    function initializeOption() {
-      if (unitOfMeasurement === 'Proportion') {
-        return $scope.unitOptions[0];
-      } else if (unitOfMeasurement === '%') {
-        return $scope.unitOptions[1];
-      } else {
-        return $scope.unitOptions[2];
-      }
+    function init() {
+      var option = initializeOption();
+      $scope.values = {
+        selectedOption: option,
+        value: currentValues.value !== undefined ? currentValues.value : option.defaultValue,
+        lowerBound: currentValues.lowerBound !== undefined ? currentValues.lowerBound : option.defaultLowerBound,
+        upperBound: currentValues.upperBound !== undefined ? currentValues.upperBound : option.defaultUpperBound
+      };
     }
 
-    function initializeUnit() {
-      if (unitOfMeasurement === undefined) {
-        return $scope.values.selectedOption.defaultValue;
+    function initializeOption() {
+      if (!currentValues.selectedOption) {
+        return $scope.unitOptions[2];
       } else {
-        return unitOfMeasurement;
+        return currentValues.selectedOption;
       }
     }
 
     function unitOptionChanged() {
       $scope.values.value = $scope.values.selectedOption.defaultValue;
-    }
-
-    function validateInput() {
-      $scope.saveDisabled =  $scope.values.value === '%' || $scope.values.value === 'Proportion';
+      $scope.values.lowerBound = $scope.values.selectedOption.defaultLowerBound;
+      $scope.values.upperBound = $scope.values.selectedOption.defaultUpperBound;
     }
 
     function save() {
