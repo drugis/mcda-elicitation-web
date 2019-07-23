@@ -5,6 +5,7 @@ define(['lodash'], function(_) {
     '$modalInstance',
     'oldCriterion',
     'criteria',
+    'useFavorability',
     'callback'
   ];
   var EditCriterionController = function(
@@ -12,6 +13,7 @@ define(['lodash'], function(_) {
     $modalInstance,
     oldCriterion,
     criteria,
+    useFavorability,
     callback
   ) {
     // functions
@@ -23,8 +25,15 @@ define(['lodash'], function(_) {
     $scope.criterion = _.cloneDeep(oldCriterion);
     $scope.isTitleUnique = true;
     $scope.criteria = criteria;
-    $scope.useFavorability = $scope.criterion.hasOwnProperty('isFavorable');
+    $scope.useFavorability = useFavorability;
     $scope.addOrEdit = 'Edit';
+    enableRadioButton();
+
+    function enableRadioButton() {
+      if (useFavorability) {
+        $scope.criterion.isFavorable = !!$scope.criterion.isFavorable;
+      }
+    }
 
     function save() {
       callback($scope.criterion);
