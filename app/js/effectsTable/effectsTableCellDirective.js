@@ -30,6 +30,8 @@ define(['lodash'], function(_) {
           scope.uncertainty = hasUncertainty(scope.effectsTableInfo);
           scope.effectsDisplay = scope.workspaceSettings.effectsDisplay;
           scope.effectValue = '';
+          scope.effectLabel = '';
+          scope.distributionLabel = '';
           if (scope.effectsTableInfo.studyDataLabelsAndUncertainty) {
             var labelsAndUncertainty = scope.effectsTableInfo.studyDataLabelsAndUncertainty[scope.alternativeId];
             scope.effectLabel = labelsAndUncertainty.effectLabel;

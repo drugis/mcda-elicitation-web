@@ -8,8 +8,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
     'MCDAResultsService',
     'EffectsTableService',
     'OrderingService',
-    'PageTitleService',
-    'WorkspaceSettingsService'
+    'PageTitleService'
   ];
 
   var DeterministicResultsController = function(
@@ -20,8 +19,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
     MCDAResultsService,
     EffectsTableService,
     OrderingService,
-    PageTitleService,
-    WorkspaceSettingsService
+    PageTitleService
   ) {
     // functions
     $scope.sensitivityScalesChanged = sensitivityScalesChanged;
