@@ -17,7 +17,7 @@
       <td ng-if="state.useFavorability && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">
         {{row.criterion.isFavorable? 'yes' : 'no'}}</td>
       <td>
-        <span>{{row.dataSource.unitOfMeasurement}} </span>
+        <span>{{row.dataSource.unitOfMeasurement.value}} </span>
         <span class="right">
           <a ng-click="editUnitOfMeasurement(row)" tooltip="Edit unit of measurement">
             <i class="fa fa-edit icon-fixed-width"></i>
