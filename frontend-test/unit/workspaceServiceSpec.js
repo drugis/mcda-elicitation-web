@@ -122,42 +122,53 @@ define([
           },
           performanceTable: [{
             criterion: 'critId1',
+            alternative: 'alt2',
             dataSource: 'ds1',
             performance: {
-              type: 'exact'
+              effect: {
+                type: 'exact'
+              }
             }
           }, {
             criterion: 'critId2',
+            alternative: 'alt1',
             dataSource: 'ds2',
             performance: {
-              type: 'exact'
+              effect: {
+                type: 'exact'
+              }
             }
           }, {
             criterion: 'critId2',
+            alternative: 'alt2',
             dataSource: 'ds3',
             performance: {
-              type: 'exact'
+              distribution: {
+                type: 'exact'
+              }
             }
           }, {
             criterion: 'critId4',
             dataSource: 'ds4',
             performance: {
-              type: 'dbeta',
-              parameters: {
-                relative: {
-                  cov: {
-                    colnames: ['alt1', 'alt2', 'alt3'],
-                    rownames: ['alt1', 'alt2', 'alt3'],
-                    data: [
-                      [1, 2, 3],
-                      [4, 5, 6],
-                      [7, 8, 9]
-                    ]
-                  },
-                  mu: {
-                    alt1: 2,
-                    alt2: 5,
-                    alt3: 8
+              distribution: {
+                type: 'relative-something',
+                parameters: {
+                  relative: {
+                    cov: {
+                      colnames: ['alt1', 'alt2', 'alt3'],
+                      rownames: ['alt1', 'alt2', 'alt3'],
+                      data: [
+                        [1, 2, 3],
+                        [4, 5, 6],
+                        [7, 8, 9]
+                      ]
+                    },
+                    mu: {
+                      alt1: 2,
+                      alt2: 5,
+                      alt3: 8
+                    }
                   }
                 }
               }
@@ -210,30 +221,26 @@ define([
             alt2: 'altId2',
             alt3: 'altId3'
           },
-          performanceTable: [{
-            criterion: 'critId2',
-            dataSource: 'ds2',
-            performance: {
-              type: 'exact'
-            }
-          }, {
+          performanceTable: [ {
             criterion: 'critId4',
             dataSource: 'ds4',
             performance: {
-              type: 'dbeta',
-              parameters: {
-                relative: {
-                  cov: {
-                    colnames: ['alt2', 'alt3'],
-                    rownames: ['alt2', 'alt3'],
-                    data: [
-                      [5, 6],
-                      [8, 9]
-                    ]
-                  },
-                  mu: {
-                    alt2: 5,
-                    alt3: 8
+              distribution: {
+                type: 'relative-something',
+                parameters: {
+                  relative: {
+                    cov: {
+                      colnames: ['alt2', 'alt3'],
+                      rownames: ['alt2', 'alt3'],
+                      data: [
+                        [5, 6],
+                        [8, 9]
+                      ]
+                    },
+                    mu: {
+                      alt2: 5,
+                      alt3: 8
+                    }
                   }
                 }
               }
@@ -640,6 +647,7 @@ define([
         expect(validity.isValid).toBeFalsy();
         expect(validity.errorMessage).toBe('Missing workspace properties: title, criteria, alternatives, performanceTable');
       });
+
       it('should fail gracefully when exceptions occur', function() {
         var garbage = {
           title: 'foo',
@@ -665,6 +673,7 @@ define([
         expect(validity.isValid).toBeFalsy();
         expect(validity.errorMessage).toBe('Exception while reading problem. Please make sure the file follows the specifications as laid out in the manual');
       });
+
       describe('for absolute performances', function() {
         it('should return valid for a valid problem', function() {
           var example = exampleProblem();
@@ -710,8 +719,10 @@ define([
             alternative: 'Enox',
             criterion: 'nonsense',
             performance: {
-              type: 'dbeta',
-              parameters: { alpha: 5, beta: 124 }
+              distribution: {
+                type: 'dbeta',
+                parameters: { alpha: 5, beta: 124 }
+              }
             }
           });
           var validity = workspaceService.validateWorkspace(exampleWithExtraPerformanceData);
@@ -725,8 +736,10 @@ define([
             alternative: 'nonsense',
             criterion: 'Bleed',
             performance: {
-              type: 'dbeta',
-              parameters: { alpha: 5, beta: 124 }
+              distribution: {
+                type: 'dbeta',
+                parameters: { alpha: 5, beta: 124 }
+              }
             }
           });
           var validity = workspaceService.validateWorkspace(exampleWithExtraPerformanceData);
@@ -769,7 +782,7 @@ define([
 
         it('should fail when the baseline is missing', function() {
           var problemWithMissingBaseline = _.cloneDeep(exampleRelativeProblem());
-          delete problemWithMissingBaseline.performanceTable[0].performance.parameters.baseline;
+          delete problemWithMissingBaseline.performanceTable[0].performance.distribution.parameters.baseline;
           var validity = workspaceService.validateWorkspace(problemWithMissingBaseline);
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Missing baseline for criterion: "crit1"');
@@ -777,7 +790,7 @@ define([
 
         it('should fail when the mu refers to a nonexistent alternative', function() {
           var problemWithNonsenseMu = _.cloneDeep(exampleRelativeProblem());
-          var mu = problemWithNonsenseMu.performanceTable[0].performance.parameters.relative.mu;
+          var mu = problemWithNonsenseMu.performanceTable[0].performance.distribution.parameters.relative.mu;
           delete mu['4939'];
           mu.nonsense = 3;
           var validity = workspaceService.validateWorkspace(problemWithNonsenseMu);
@@ -787,13 +800,13 @@ define([
 
         it('should fail when the cov rownames or colnames refer to a nonexistent alternative', function() {
           var problemWithNonsenseRowName = _.cloneDeep(exampleRelativeProblem());
-          var cov = problemWithNonsenseRowName.performanceTable[0].performance.parameters.relative.cov;
+          var cov = problemWithNonsenseRowName.performanceTable[0].performance.distribution.parameters.relative.cov;
           cov.rownames[0] = 'nonsense';
           var validity = workspaceService.validateWorkspace(problemWithNonsenseRowName);
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('The covariance matrix of criterion: "crit1" refers to nonexistent alternative: "nonsense"');
           var problemWithNonsenseColName = _.cloneDeep(exampleRelativeProblem());
-          cov = problemWithNonsenseColName.performanceTable[0].performance.parameters.relative.cov;
+          cov = problemWithNonsenseColName.performanceTable[0].performance.distribution.parameters.relative.cov;
           cov.colnames[0] = 'nonsense';
           validity = workspaceService.validateWorkspace(problemWithNonsenseColName);
           expect(validity.isValid).toBeFalsy();
@@ -1234,7 +1247,7 @@ define([
         expect(result).toBeTruthy();
       });
 
-      it('should return false if there is atleast one distribtion', function() {
+      it('should return false if there is atleast one distribution', function() {
         var aggregateState = {
           problem: {
             performanceTable: [{
