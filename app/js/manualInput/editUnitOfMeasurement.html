@@ -1,31 +1,24 @@
+
 <form ng-submit="save()">
   <div class="grid-x">
     <div class="cell">
       <h3>Edit unit of measurement</h3>
     </div>
     <div class="cell">
-      <label>Presets</label>
+      <label>Type</label>
       <select ng-model="values.selectedOption" ng-change="unitOptionChanged()"
         ng-options="option as option.label for option in unitOptions"></select>
     </div>
     <div class="cell">
       <label>Unit of measurement</label>
-      <input type="text" ng-disabled="values.selectedOption.id !== 'default'" ng-model="values.value"
+      <input type="text" ng-disabled="values.selectedOption.id !== 'other'" ng-model="values.value"
         ng-change="validateInput()">
     </div>
-    <div class="cell large-6">
-      <label>Lower bound</label>
-      <select ng-options="lowerBound as lowerBound for lowerBound in lowerBoundOptions"
-        ng-model="values.lowerBound"></select>
-    </div>
-
-    <div class="cell large-6">
-      <label>Upper bound</label>
-      <select ng-options="upperBound as upperBound for upperBound in upperBoundOptions"
-        ng-model="values.upperBound"></select>
-    </div>
     <div class="cell">
-      <button class="button" type="button" ng-click="save()">Save</button>
+      <button class="button" type="button" ng-click="save()" ng-disabled="saveDisabled">Save</button>
+    </div>
+    <div class="cell alert" ng-if="saveDisabled">
+      To use '%' or 'Proportion', please switch to the corresponding type.
     </div>
     <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
       <span aria-hidden="true">&times;</span>

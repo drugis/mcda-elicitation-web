@@ -3,56 +3,76 @@ define(['lodash'], function(_) {
   var dependencies = [
     '$scope',
     '$modalInstance',
-    'oldCriterion',
-    'criteria',
-    'useFavorability',
-    'callback'
+    'callback',
+    'unitOfMeasurement'
   ];
-  var EditCriterionController = function(
+  var EditUnitOfMeasurementController = function(
     $scope,
     $modalInstance,
-    oldCriterion,
-    criteria,
-    useFavorability,
-    callback
+    callback,
+    unitOfMeasurement
   ) {
     // functions
-    $scope.cancel = $modalInstance.close;
+    $scope.cancel = cancel;
     $scope.save = save;
-    $scope.isCreationBlocked = isCreationBlocked;
+    $scope.unitOptionChanged = unitOptionChanged;
+    $scope.validateInput = validateInput;
 
     // init
-    $scope.criterion = _.cloneDeep(oldCriterion);
-    $scope.isTitleUnique = true;
-    $scope.criteria = criteria;
-    $scope.useFavorability = useFavorability;
-    $scope.addOrEdit = 'Edit';
-    enableRadioButton();
+    $scope.saveDisabled = false;
+    $scope.unitOptions = [{
+      label: 'Proportion (decimal)',
+      id: 'decimal',
+      defaultValue: 'Proportion'
+    }, {
+      label: 'Proportion (percentage)',
+      id: 'percentage',
+      defaultValue: '%'
+    }, {
+      label: 'Other',
+      id: 'other',
+      defaultValue: ''
+    }];
 
-    function enableRadioButton() {
-      if (useFavorability) {
-        $scope.criterion.isFavorable = !!$scope.criterion.isFavorable;
+    $scope.values = {
+      selectedOption: initializeOption(),
+    };
+    $scope.values.value= initializeUnit();
+
+    function initializeOption() {
+      if (unitOfMeasurement === 'Proportion') {
+        return $scope.unitOptions[0];
+      } else if (unitOfMeasurement === '%') {
+        return $scope.unitOptions[1];
+      } else {
+        return $scope.unitOptions[2];
       }
+    }
+
+    function initializeUnit() {
+      if (unitOfMeasurement === undefined) {
+        return $scope.values.selectedOption.defaultValue;
+      } else {
+        return unitOfMeasurement;
+      }
+    }
+
+    function unitOptionChanged() {
+      $scope.values.value = $scope.values.selectedOption.defaultValue;
+    }
+
+    function validateInput() {
+      $scope.saveDisabled =  $scope.values.value === '%' || $scope.values.value === 'Proportion';
     }
 
     function save() {
-      callback($scope.criterion);
+      callback($scope.values);
       $modalInstance.close();
     }
 
-    function isCreationBlocked() {
-      $scope.blockedReasons = [];
-      if ($scope.criterion.title !== oldCriterion.title && isTitleDuplicate($scope.criterion.title)) {
-        $scope.blockedReasons.push('Duplicate title');
-      }
-      if (!$scope.criterion.title) {
-        $scope.blockedReasons.push('No title entered');
-      }
-    }
-
-    function isTitleDuplicate(title) {
-      return _.find(criteria, ['title', title]);
+    function cancel() {
+      $modalInstance.close();
     }
   };
-  return dependencies.concat(EditCriterionController);
+  return dependencies.concat(EditUnitOfMeasurementController);
 });
