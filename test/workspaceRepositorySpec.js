@@ -8,157 +8,181 @@ var dbStub = {
   }
 };
 var workspaceRepository = require('../node-backend/workspaceRepository')(dbStub);
+var query;
+
+function initDBStub() {
+  beforeEach(() => {
+    query = sinon.stub(dbStub, 'query');
+  });
+  afterEach(() => {
+    query.restore();
+  });
+}
 
 describe('the workspace repository', function() {
-  var expectedError = 'error';
-  var workspaceId = 1;
+  const expectedError = 'error';
+  const workspaceId = 1;
+  const title = 'title';
+  const problem = {};
+  const ownerId = 14;
+    
 
   describe('get', function() {
-    var query;
-    var expectedQuery = 'SELECT id, owner, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
-    var queryInputValues = [workspaceId];
+    const expectedQuery = 'SELECT id, owner, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
+    const queryInputValues = [workspaceId];
 
-    beforeEach(function() {
-      query = sinon.stub(dbStub, 'query');
-    });
-
-    afterEach(function() {
-      query.restore();
-    });
+    initDBStub();
 
     it('should get the workspace and call the callback with the result', function(done) {
-      var queryResult = {
+      const queryResult = {
         rows: [{}]
       };
-      var expectedResult = {};
+      const expectedResult = {};
       query.onCall(0).yields(null, queryResult);
-      var callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       workspaceRepository.get(workspaceId, callback);
     });
 
     it('should call the callback with only an error', function(done) {
       query.onCall(0).yields(expectedError);
-      var callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
       workspaceRepository.get(workspaceId, callback);
     });
   });
 
   describe('create', function() {
-    var query;
-    var expectedQuery = 'INSERT INTO workspace (owner, title, problem) VALUES ($1, $2, $3) RETURNING id';
-    var owner = 14;
-    var title = 'title';
-    var problem = {};
-    var queryInputValues = [owner, title, problem];
+    const expectedQuery = 'INSERT INTO workspace (owner, title, problem) VALUES ($1, $2, $3) RETURNING id';
+    const queryInputValues = [ownerId, title, problem];
 
-    beforeEach(function() {
-      query = sinon.stub(dbStub, 'query');
-    });
-
-    afterEach(function() {
-      query.restore();
-    });
+    initDBStub();
 
     it('should create a workspace and return the id', function(done) {
-      var queryResult = {
+      const queryResult = {
         rows: [{ id: workspaceId }]
       };
-      var expectedResult = workspaceId;
+      const expectedResult = workspaceId;
       query.onCall(0).yields(null, queryResult);
-      var callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
-      workspaceRepository.create(owner, title, problem, callback);
+      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      workspaceRepository.create(ownerId, title, problem, callback);
     });
 
     it('should call the callback with only an error', function(done) {
       query.onCall(0).yields(expectedError);
-      var callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
-      workspaceRepository.create(owner, title, problem, callback);
+      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      workspaceRepository.create(ownerId, title, problem, callback);
     });
   });
 
   describe('setDefaultSubProblem', function() {
-    var query;
-    var expectedQuery = 'UPDATE workspace SET defaultsubproblemId = $1 WHERE id = $2';
-    var subProblemId = 123;
-    var queryInputValues = [subProblemId, workspaceId];
+    const expectedQuery = 'UPDATE workspace SET defaultsubproblemId = $1 WHERE id = $2';
+    const subProblemId = 123;
+    const queryInputValues = [subProblemId, workspaceId];
 
-    beforeEach(function() {
-      query = sinon.stub(dbStub, 'query');
-    });
-
-    afterEach(function() {
-      query.restore();
-    });
+    initDBStub();
 
     it('should set the default sub problem for the workspace', function(done) {
-      var expectedResult = workspaceId;
+      const expectedResult = workspaceId;
       query.onCall(0).yields(null);
-      var callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       workspaceRepository.setDefaultSubProblem(workspaceId, subProblemId, callback);
     });
 
     it('should call the callback with only an error', function(done) {
       query.onCall(0).yields(expectedError);
-      var callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
       workspaceRepository.setDefaultSubProblem(workspaceId, subProblemId, callback);
     });
   });
 
   describe('setDefaultScenario', function() {
-    var query;
-    var expectedQuery = 'UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2';
-    var scenarioId = 123;
-    var queryInputValues = [scenarioId, workspaceId];
+    const expectedQuery = 'UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2';
+    const scenarioId = 123;
+    const queryInputValues = [scenarioId, workspaceId];
 
-    beforeEach(function() {
-      query = sinon.stub(dbStub, 'query');
-    });
-
-    afterEach(function() {
-      query.restore();
-    });
+    initDBStub();
 
     it('should set the default sub problem for the workspace', function(done) {
-      var expectedResult = workspaceId;
+      const expectedResult = workspaceId;
       query.onCall(0).yields(null);
-      var callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       workspaceRepository.setDefaultScenario(workspaceId, scenarioId, callback);
     });
 
     it('should call the callback with only an error', function(done) {
       query.onCall(0).yields(expectedError);
-      var callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
       workspaceRepository.setDefaultScenario(workspaceId, scenarioId, callback);
     });
   });
 
   describe('getWorkspaceInfo', () => {
-    var query;
     const expectedQuery = 'SELECT id, owner, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
     const queryInputValues = [workspaceId];
 
-    beforeEach(function() {
-      query = sinon.stub(dbStub, 'query');
-    });
-
-    afterEach(function() {
-      query.restore();
-    });
+    initDBStub();
 
     it('should retrieve the workspace information', function(done) {
       const queryResult = {
         rows: [{ id: workspaceId }]
       };
-      var expectedResult = queryResult.rows[0];
+      const expectedResult = queryResult.rows[0];
       query.onCall(0).yields(null, queryResult);
-      var callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       workspaceRepository.getWorkspaceInfo(workspaceId, callback);
     });
 
     it('should call the callback with only an error', function(done) {
       query.onCall(0).yields(expectedError);
-      var callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
       workspaceRepository.getWorkspaceInfo(workspaceId, callback);
+    });
+  });
+
+  describe('update', function() {
+    initDBStub();
+
+    it('should update the workspace', function(done) {
+      const expectedQuery = 'UPDATE workspace SET title = $1, problem = $2 WHERE id = $3';
+      const queryInputValues = [title, problem, workspaceId];
+      const expectedResult = undefined;
+      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      query.onCall(0).yields(null);
+      workspaceRepository.update(title, problem, workspaceId, callback);
+    });
+  });
+
+  describe('delete', () => {
+    initDBStub();
+
+    it('should delete the workspace', (done) => {
+      const expectedQuery = 'DELETE FROM workspace WHERE id=$1';
+      const queryInputValues = [workspaceId];
+      const expectedResult = undefined;
+      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      query.onCall(0).yields(null);
+      workspaceRepository.delete(workspaceId, callback);
+
+    });
+  });
+
+  describe('query', function() {
+    initDBStub();
+
+    const expectedQuery = 'SELECT id, owner, title, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1';
+    const queryInputValues = [ownerId];
+
+    it('should query all in-progress workspaces for the user', function(done) {
+      const queryResult = {};
+      const expectedResult = queryResult;
+      query.onCall(0).yields(null, queryResult);
+      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      workspaceRepository.query(ownerId, callback);
+    });
+
+    it('should call the callback with only an error', function(done) {
+      query.onCall(0).yields(expectedError);
+      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      workspaceRepository.query(ownerId, callback);
     });
   });
 

@@ -53,6 +53,7 @@
     "bcrypt-cli": "^1.1.0",
     "bowser": "~2.0.0-beta.1",
     "c3": "~0.4.23",
+    "chai-spies": "^1.0.0",
     "clean-webpack-plugin": "^0.1.19",
     "clipboard": "~2.0.1",
     "core-js": "^2.5.7",

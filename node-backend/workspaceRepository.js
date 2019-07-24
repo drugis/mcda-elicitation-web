@@ -4,7 +4,7 @@ var logger = require('./logger');
 module.exports = function(db) {
   function get(workspaceId, callback) {
     logger.debug('GET /workspaces/:id');
-    var query = 'SELECT id, owner, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
+    const query = 'SELECT id, owner, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
     db.query(query,
       [workspaceId],
       function(error, result) {
@@ -19,7 +19,7 @@ module.exports = function(db) {
 
   function create(owner, title, problem, callback) {
     logger.debug('creating workspace');
-    var query = 'INSERT INTO workspace (owner, title, problem) VALUES ($1, $2, $3) RETURNING id';
+    const query = 'INSERT INTO workspace (owner, title, problem) VALUES ($1, $2, $3) RETURNING id';
     db.query(query,
       [owner, title, problem],
       function(error, result) {
@@ -65,11 +65,36 @@ module.exports = function(db) {
       });
   }
 
+  function update(title, problem, id, callback) {
+    logger.debug('updating workspace');
+    const query = 'UPDATE workspace SET title = $1, problem = $2 WHERE id = $3';
+    db.query(query,
+      [title, problem, id],
+      callback);
+  }
+
+  function del(workspaceId, callback) {
+    logger.debug('delete workspace');
+    const query = 'DELETE FROM workspace WHERE id=$1';
+    db.query(query,
+      [workspaceId],
+      callback);
+  }
+
+  function query(ownerId, callback) {
+    const query = 'SELECT id, owner, title, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1';
+    db.query(query,
+      [ownerId], callback);
+  }
+
   return {
     get: get,
     create: create,
     setDefaultSubProblem: setDefaultSubProblem,
     setDefaultScenario: setDefaultScenario,
-    getWorkspaceInfo: getWorkspaceInfo
+    getWorkspaceInfo: getWorkspaceInfo,
+    update: update,
+    delete: del,
+    query: query
   };
 };

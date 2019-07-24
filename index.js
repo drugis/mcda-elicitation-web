@@ -12,6 +12,7 @@ var appEnvironmentSettings = {
 };
 var signin = require('signin')(db, appEnvironmentSettings);
 var WorkspaceService = require('./node-backend/workspaceService')(db);
+var InProgressWorkspaceService = require('./node-backend/inProgressWorkspaceService')(db);
 var WorkspaceRepository = require('./node-backend/workspaceRepository')(db);
 var OrderingService = require('./node-backend/orderingService')(db);
 var SubProblemService = require('./node-backend/subProblemService')(db);
@@ -163,18 +164,18 @@ app.use('/css/fonts', express.static('./dist/fonts'));
 app.use(rightsManagement.expressMiddleware);
 
 // Workspaces in progress
-app.post('/inProgress', WorkspaceService.createInProgress);
-app.put('/inProgress/:id', WorkspaceService.updateInProgress);
-app.get('/inProgress/:id', WorkspaceService.getInProgress);
-app.get('/inProgress', WorkspaceService.queryInProgress);
-app.delete('/inProgress/:id', WorkspaceService.deleteInProgress);
+app.post('/inProgress', InProgressWorkspaceService.create);
+app.put('/inProgress/:id', InProgressWorkspaceService.update);
+app.get('/inProgress/:id', InProgressWorkspaceService.get);
+app.get('/inProgress', InProgressWorkspaceService.query);
+app.delete('/inProgress/:id', InProgressWorkspaceService.delete);
 
 // Complete workspaces
-app.get('/workspaces', WorkspaceService.queryWorkspaces);
-app.post('/workspaces', WorkspaceService.createWorkspace);
-app.get('/workspaces/:id', WorkspaceService.getWorkspace);
-app.post('/workspaces/:id', WorkspaceService.updateWorkspace);
-app.delete('/workspaces/:id', WorkspaceService.deleteWorkspace);
+app.get('/workspaces', WorkspaceService.query);
+app.post('/workspaces', WorkspaceService.create);
+app.get('/workspaces/:id', WorkspaceService.get);
+app.post('/workspaces/:id', WorkspaceService.update);
+app.delete('/workspaces/:id', WorkspaceService.delete);
 
 // Orderings
 app.get('/workspaces/:workspaceId/ordering', OrderingService.getOrdering);
