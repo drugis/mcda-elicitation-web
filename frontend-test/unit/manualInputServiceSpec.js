@@ -274,7 +274,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           dataSources: [{
             unitOfMeasurement: 'particles',
             id: 'ds1id',
-            oldId: 'ds1oldId',
+            oldId: 'ds1oldId'
           }]
         }, {
           title: 'unfavorable criterion',
@@ -282,15 +282,16 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           isFavorable: false,
           id: 'criterion2id',
           dataSources: [{
-            unitOfMeasurement: 'particles',
-            id: 'ds2id',
+            unitOfMeasurement: '%',
+            id: 'ds2id'
           }]
         }, {
           title: 'dichotomousDecimalSampleSize',
           id: 'criterion3id',
           isFavorable: false,
           dataSources: [{
-            id: 'ds3id',
+            unitOfMeasurement: 'Proportion',
+            id: 'ds3id'
           }]
         }];
         var inputData = {
@@ -392,8 +393,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               isFavorable: false,
               dataSources: [{
                 id: 'ds2id',
-                unitOfMeasurement: 'particles',
-                scale: [-Infinity, Infinity],
+                unitOfMeasurement: '%',
+                scale: [0, 100],
               }]
             },
             criterion3id: {
@@ -401,7 +402,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               isFavorable: false,
               dataSources: [{
                 id: 'ds3id',
-                scale: [-Infinity, Infinity],
+                unitOfMeasurement: 'Proportion',
+                scale: [0, 1]
               }]
             }
           },

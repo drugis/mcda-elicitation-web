@@ -211,15 +211,14 @@ define(['lodash', 'angular'], function(_, angular) {
     function buildDataSource(dataSource) {
       var newDataSource = angular.copy(dataSource);
       newDataSource.scale = getScale(dataSource);
-      if (newDataSource.unitOfMeasurement === '%') {
-        newDataSource.unitOfMeasurement = 'Proportion';
-      }
       delete newDataSource.oldId;
       return newDataSource;
     }
 
     function getScale(dataSource) {
-      if (dataSource.unitOfMeasurement === '%' || dataSource.unitOfMeasurement === 'Proportion') {
+      if (dataSource.unitOfMeasurement === '%') {
+        return [0, 100];
+      } else if (dataSource.unitOfMeasurement === 'Proportion') {
         return [0, 1];
       } else {
         return [-Infinity, Infinity];
@@ -379,8 +378,8 @@ define(['lodash', 'angular'], function(_, angular) {
         return cell.isInvalid || isNonValueCell(cell) || findCellThatIsDifferent(row, cell);
       });
     }
-    
-    function isNonValueCell(cell){
+
+    function isNonValueCell(cell) {
       var nonValueInputs = [
         'normal',
         'beta',
@@ -388,7 +387,7 @@ define(['lodash', 'angular'], function(_, angular) {
         'empty',
         'text'
       ];
-      return  _.includes(nonValueInputs, cell.inputParameters.id);
+      return _.includes(nonValueInputs, cell.inputParameters.id);
     }
 
     function findCellThatIsDifferent(row, cell) {
