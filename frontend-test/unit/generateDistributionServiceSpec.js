@@ -141,6 +141,18 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(result).toEqual(expectedResult);
       });
 
+      it('should generate a normal distribution given an almost (eps < 0.05) symmetric interval', function() {
+        cell.thirdParameter = 60.2;
+        var result = generateDistributionService.generateValueCIDistribution(options, options, cell);
+        var expectedResult = {
+          label: label,
+          firstParameter: 50,
+          secondParameter: 5.153,
+          inputParameters: options
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
       it('should generate an exact distribution given a asymmetric interval', function() {
         cell.secondParameter = 30;
         var result = generateDistributionService.generateValueCIDistribution(options, options, cell);
