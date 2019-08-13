@@ -42,7 +42,6 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
     $scope.createProblem = createProblem;
     $scope.goToStep1 = goToStep1;
     $scope.goToStep2 = goToStep2;
-    $scope.isDuplicateTitle = isDuplicateTitle;
     $scope.removeAlternative = removeAlternative;
     $scope.saveInProgress = saveInProgress;
     $scope.openCriterionModal = openCriterionModal;
@@ -63,14 +62,6 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
         }
       }
     });
-
-    function addAlternative(title) {
-      $scope.state.alternatives.push({
-        title: title,
-        id: generateUuid()
-      });
-      $scope.alternativeInput.value = '';
-    }
 
     function alternativeDown(idx) {
       swap($scope.state.alternatives, idx, idx + 1);
@@ -149,9 +140,6 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       $timeout(checkInputData);
     }
 
-    function isDuplicateTitle(title) {
-      return _.find($scope.state.alternatives, ['title', title]);
-    }
 
     function removeAlternative(alternative) {
       $scope.state.alternatives = _.reject($scope.state.alternatives, ['id', alternative.id]);
@@ -195,6 +183,27 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
           },
           useFavorability: function() {
             return $scope.state.useFavorability;
+          }
+        }
+      });
+    }
+
+    function addAlternative() {
+      $modal.open({
+        templateUrl: './addAlternative.html',
+        controller: 'AddAlternativeController',
+        size:'small',
+        resolve: {
+          alternatives: function(){
+            return $scope.state.alternatives;
+          },
+          callback: function() {
+            return function(title) {
+              $scope.state.alternatives.push({
+                title: title,
+                id: generateUuid()
+              });
+            };
           }
         }
       });

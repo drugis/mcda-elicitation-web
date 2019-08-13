@@ -10,15 +10,14 @@
       wish to
       analyse. Alternatives are simply a title, while criteria are more complex.
     </div>
-  </div>
-  <div class="grid-x">
     <div class="cell large-6">
       <label>Workspace title
         <input type="text" ng-model="state.title" width="100%">
       </label>
     </div>
-  </div>
-  <div class="grid-x">
+    <div class="cell large-6">
+      <!-- spacer -->
+    </div>
     <div class="cell large-6">
       <label>Therapeutic context
         <inline-help help-key="therapeutic-context"></inline-help>
@@ -45,83 +44,80 @@
       <criterion-list criteria="state.criteria" use-favorability="state.useFavorability" input-data="state.inputData"
         is-input="true"></criterion-list>
     </div>
-  </div>
-  <div class="cell">
-    <h4>Alternatives
-      <inline-help help-key="alternative"></inline-help>
-    </h4>
-  </div>
-  <div class="cell large-6 input-group">
-    <span class="input-group-label">
-      Alternative title
-    </span>
-    <input class="text input-group-field" ng-model="alternativeInput.value"
-      onkeyup="if(event.keyCode===13) document.getElementById('treatmentButton').click()">
-    <div class="input-group-button">
-      <button ng-disabled="!alternativeInput.value || isDuplicateTitle(alternativeInput.value)" type="button"
-        class="button tiny" ng-click="addAlternative(alternativeInput.value)" id="treatmentButton">
-        <i class="fa fa-plus"></i> Add Alternative</button>
+    <div class="cell">
+      <h4>Alternatives
+        <inline-help help-key="alternative"></inline-help>
+      </h4>
     </div>
-  </div>
-  <div class="cell large-6">
-    <table width="100%">
-      <thead>
-        <tr>
-          <th>Alternative title</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr ng-if="!state.alternatives.length">
-          <td>
-            <em>No alternatives defined</em>
-          </td>
-        </tr>
-        <tr ng-repeat="alternative in state.alternatives">
-          <td>
-            <div class="grid-x">
-              <div class="cell small-1">
-                <div style="line-height: 10px; margin-bottom: 4px;">
-                  <a ng-click="alternativeUp($index)" class="nav-arrow" ng-if="$index !== 0">
-                    <i style="line-height:0px;" class="fa fa-caret-up"></i>
-                  </a>
-                  <i ng-if="$index === 0" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
-                </div>
-                <div style="line-height: 10px;">
-                  <a ng-click="alternativeDown($index)" class="nav-arrow"
-                    ng-if="$index !== state.alternatives.length-1">
-                    <i style="line-height:0px;" class="fa fa-caret-down"></i>
-                  </a>
-                  <i ng-if="$index === state.alternatives.length-1" style="line-height:0px; color:#bbb"
-                    class="fa fa-caret-down"></i>
-                </div>
+    <div class="cell">
+      <button type="button" class="button small" ng-click="addAlternative()">
+        <i class="fa fa-plus"></i> Add Alternative
+      </button>
+    </div>
+    <div class="cell large-6">
+      <table width="100%">
+        <thead>
+          <tr>
+            <th>
+              <!-- up and down arrows-->
+            </th>
+            <th width="100%">Alternative title</th>
+            <th>
+              <!-- delete button -->
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-if="!state.alternatives.length">
+            <td>
+              <em>No alternatives defined</em>
+            </td>
+          </tr>
+          <tr ng-repeat="alternative in state.alternatives">
+            <td class="text-center">
+              <div style="line-height: 10px; margin-bottom: 4px;">
+                <a ng-click="alternativeUp($index)" class="nav-arrow" ng-if="$index !== 0">
+                  <i style="line-height:0px;" class="fa fa-caret-up"></i>
+                </a>
+                <i ng-if="$index === 0" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
               </div>
-              <div class="cell small-11">
-                <a ng-click="removeAlternative(alternative)" tooltip="Remove alternative">
-                  <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
-                </a> {{alternative.title}}
+              <div style="line-height: 10px;">
+                <a ng-click="alternativeDown($index)" class="nav-arrow" ng-if="$index !== state.alternatives.length-1">
+                  <i style="line-height:0px;" class="fa fa-caret-down"></i>
+                </a>
+                <i ng-if="$index === state.alternatives.length-1" style="line-height:0px; color:#bbb"
+                  class="fa fa-caret-down"></i>
               </div>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <div class="cell">
-    <button class="button" ng-disabled="!state.title || state.criteria.length < 2|| state.alternatives.length < 2"
-      type="button" ng-click="goToStep2()" tooltip="Enter effects table data">
-      Enter data
-    </button>
-    <button id="step1SaveButton" class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty"
-      tooltip="Save current state">Save</button>
-  </div>
-  <div class="cell" ng-if="!state.title">
-    <em>Missing title</em>
-  </div>
-  <div class="cell" ng-if="state.criteria.length < 2">
-    <em>Two criteria required</em>
-  </div>
-  <div class="cell" ng-if="state.alternatives.length < 2">
-    <em>Two alternatives required</em>
+            </td>
+            <td>
+              {{alternative.title}}
+            </td>
+            <td class="text-center">
+              <a ng-click="removeAlternative(alternative)" tooltip="Remove alternative">
+                <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="cell">
+      <button class="button" ng-disabled="!state.title || state.criteria.length < 2|| state.alternatives.length < 2"
+        type="button" ng-click="goToStep2()" tooltip="Enter effects table data">
+        Enter data
+      </button>
+      <button id="step1SaveButton" class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty"
+        tooltip="Save current state">Save</button>
+    </div>
+    <div class="cell" ng-if="!state.title">
+      <em>Missing title</em>
+    </div>
+    <div class="cell" ng-if="state.criteria.length < 2">
+      <em>Two criteria required</em>
+    </div>
+    <div class="cell" ng-if="state.alternatives.length < 2">
+      <em>Two alternatives required</em>
+    </div>
   </div>
 </div>
 <!-- step 2 -->
