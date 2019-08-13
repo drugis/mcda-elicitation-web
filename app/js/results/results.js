@@ -4,6 +4,7 @@ define([
   './deterministicResultsController',
   './editLegendController',
   './sensitivityInputDirective',
+  './sensitivityTableDirective',
   './valueProfilePlotDirective',
   './legendDirective',
   './resultsService',
@@ -15,6 +16,7 @@ define([
   DeterministicResultsController,
   EditLegendController,
   sensitivityInputDirective,
+  sensitivityTableDirective,
   valueProfilePlotDirective,
   legendDirective,
   MCDAResultsService,
@@ -29,6 +31,7 @@ define([
       .directive('sensitivityInput', sensitivityInputDirective)
       .directive('valueProfilePlot', valueProfilePlotDirective)
       .directive('legend', legendDirective)
+      .directive('sensitivityTable', sensitivityTableDirective)
 
       .factory('MCDAResultsService', MCDAResultsService)
       .factory('PataviResultsService', PataviResultsService)

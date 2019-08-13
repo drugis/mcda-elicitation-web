@@ -9,86 +9,15 @@
   <div class="grid-x">
     <div class="cell">
       <span>Scenario:</span>
-      <select class="scenario-select" ng-model="scenario" ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
+      <select class="scenario-select" ng-model="scenario"
+        ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
         ng-change="scenarioChanged(scenario)"></select>
     </div>
   </div>
   <br>
-  <div class="grid-x">
-    <div class="cell large-8">
-      <h4>Effects table (exact or median values only)
-        <inline-help help-key="effects-table"></inline-help>
-      </h4>
-      <p>
-        <em>Values can be changed by clicking them.</em>
-      </p>
-    </div>
-    <div class="cell large-4">
-      <div class="right button-group">
-        <workspace-settings edit-mode="editMode"></workspace-settings>
-        <button class="button small info clipboard-button" data-clipboard-target="#effectstable">
-          <i class="fa fa-clipboard"></i> Copy to clipboard
-        </button>
-      </div>
-    </div>
-    <div class="cell">
-      <table class="full-width effects-table" id="effectstable">
-        <thead>
-          <tr>
-            <th ng-show="toggledColumns['criteria']">Criterion
-              <inline-help help-key="criterion"></inline-help>
-            </th>
-            <th ng-show="toggledColumns['description']">Description</th>
-            <th ng-show="toggledColumns['units']">Units
-              <inline-help help-key="criterion-unit"></inline-help>
-            </th>
-            <th class="text-center" ng-repeat="alternative in alternatives" style="min-width: 120px">
-              {{scenario.state.legend[alternative.id].baseTitle || alternative.title}}
-            </th>
-            <th ng-show="toggledColumns['strength']">Strength of evidence / Uncertainties
-              <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
-            </th>
-            <th ng-show="toggledColumns['references']">References</th>
-          </tr>
-        </thead>
-        <tbody class="main">
-          <tr ng-repeat="row in tableRows">
-            <td ng-if="row.isHeaderRow" class="group-header" colspan="{{5 + nrAlternatives}}">
-              <div class="main-header">
-                {{row.headerText}}
-              </div>
-            </td>
-            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['criteria']">
-              {{row.criterion.title}}
-            </td>
-            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['description']">
-              {{row.criterion.description}}
-            </td>
-            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['units']">
-              {{row.dataSource.unitOfMeasurement}}
-            </td>
-            <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}">
-              <sensitivity-input row="row" alternative="alternative" original-value="scales.observed[row.dataSource.id][alternative.id]['50%']"
-                current-value="modifiableScales[row.dataSource.id][alternative.id]['50%']" change-callback="sensitivityScalesChanged"
-                is-editing="isEditing"></sensitivity-input>
-            </td>
-            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['strength']">
-              <div ng-if="row.dataSource.strengthOfEvidence">
-                <b>SoE: </b>{{row.dataSource.strengthOfEvidence}}</div>
-              <div ng-if="row.dataSource.uncertainties">
-                <b>Unc: </b> {{row.dataSource.uncertainties}}</div>
-            </td>
-            <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['references']">
-              <a ng-if="row.dataSource.sourceLink" href="{{row.dataSource.sourceLink}}">
-                {{row.dataSource.source}}
-              </a>
-              <span ng-if="!row.dataSource.sourceLink">{{row.dataSource.source}}</span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <sensitivity-table edit-mode="editMode" toggled-columns="toggledColumns" alternatives="alternatives"
+    scenario="scenario" scales="scales"
+    modifiable-scales="modifiableScales" sensitivity-scales-changed="sensitivityScalesChanged" is-editing="isEditing" criteria="criteria"></sensitivity-table>
   <div class="grid-x underlined-div">
     <div class="cell large-4 button-group small expanded">
       <button class="button" ng-click="recalculateResults()" ng-disabled="sensitivityMeasurements.isEditing">
@@ -117,7 +46,8 @@
         </thead>
         <tbody>
           <tr>
-            <td ng-repeat="criterion in criteria">{{deterministicResults.results.weights.data[criterion.id] | number}}</td>
+            <td ng-repeat="criterion in criteria">{{deterministicResults.results.weights.data[criterion.id] | number}}
+            </td>
           </tr>
         </tbody>
       </table>
@@ -157,7 +87,8 @@
             </thead>
             <tbody>
               <tr>
-                <td ng-repeat="alternative in alternatives">{{deterministicResults.results.total.data[alternative.id] | number}}</td>
+                <td ng-repeat="alternative in alternatives">
+                  {{deterministicResults.results.total.data[alternative.id] | number}}</td>
               </tr>
             </tbody>
           </table>
@@ -170,7 +101,8 @@
             </thead>
             <tbody>
               <tr>
-                <td ng-repeat="alternative in alternatives">{{recalculatedDeterministicResults.results.total.data[alternative.id] | number}}</td>
+                <td ng-repeat="alternative in alternatives">
+                  {{recalculatedDeterministicResults.results.total.data[alternative.id] | number}}</td>
               </tr>
             </tbody>
           </table>
@@ -194,8 +126,8 @@
         <div ng-if="recalculatedDeterministicResults" class="cell large-6">
           <h5>Recalculated case</h5>
           <div export legend file-name="'recalculatedcaseplot'">
-            <value-profile-plot values="recalculatedDeterministicResults.results" criteria="criteria" alternatives="alternatives"
-              alternatives-legend="scenario.state.legend"></value-profile-plot>
+            <value-profile-plot values="recalculatedDeterministicResults.results" criteria="criteria"
+              alternatives="alternatives" alternatives-legend="scenario.state.legend"></value-profile-plot>
           </div>
         </div>
       </div>
@@ -216,13 +148,16 @@
       <div class="grid-x grid-margin-x">
         <div class="cell medium-6 large-6">
           <label>Alternative
-            <select ng-options="scenario.state.legend[alternative.id].baseTitle || alternative.title for alternative in alternatives"
-              ng-model="sensitivityMeasurements.measurementsAlternative" ng-change="doMeasurementSensitivity(state)"></select>
+            <select
+              ng-options="scenario.state.legend[alternative.id].baseTitle || alternative.title for alternative in alternatives"
+              ng-model="sensitivityMeasurements.measurementsAlternative"
+              ng-change="doMeasurementSensitivity(state)"></select>
           </label>
         </div>
         <div class="cell medium-6">
           <label>Criterion
-            <select ng-options="criterion.title for criterion in criteria" ng-model="sensitivityMeasurements.measurementsCriterion"
+            <select ng-options="criterion.title for criterion in criteria"
+              ng-model="sensitivityMeasurements.measurementsCriterion"
               ng-change="doMeasurementSensitivity(state)"></select>
           </label>
         </div>
@@ -241,7 +176,8 @@
       <div class="grid-x">
         <div class="cell medium-6 large-6 ">
           <label>Weight given to
-            <select ng-options="criterion.title for criterion in criteria" ng-model="sensitivityMeasurements.preferencesCriterion"
+            <select ng-options="criterion.title for criterion in criteria"
+              ng-model="sensitivityMeasurements.preferencesCriterion"
               ng-change="doPreferencesSensitivity(state)"></select>
           </label>
         </div>

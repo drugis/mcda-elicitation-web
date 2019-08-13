@@ -6,7 +6,6 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
     '$state',
     'currentScenario',
     'MCDAResultsService',
-    'EffectsTableService',
     'OrderingService',
     'PageTitleService'
   ];
@@ -17,7 +16,6 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
     $state,
     currentScenario,
     MCDAResultsService,
-    EffectsTableService,
     OrderingService,
     PageTitleService
   ) {
@@ -32,7 +30,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
 
     // init
     $scope.scenario = currentScenario;
-    $scope.scales = $scope.workspace.scales;
+    $scope.scales = createScales($scope.aggregateState.problem);
     $scope.sensitivityMeasurements = {
       alteredTableCells: [],
       isEditing: false
@@ -51,12 +49,19 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
     var orderingsPromise = $scope.scalesPromise.then(function() {
       return OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(ordering) {
         $scope.criteria = ordering.criteria;
-        $scope.tableRows = EffectsTableService.buildEffectsTable(ordering.criteria);
         $scope.alternatives = ordering.alternatives;
-        $scope.nrAlternatives = _.keys($scope.alternatives).length;
         loadState();
       });
     });
+
+    function createScales(problem) {
+      $scope.scalesPromise.then(function(smaaScales) {
+        $scope.scales = {
+          observed: MCDAResultsService.createDeterministicScales(problem.performanceTable, smaaScales)
+        };
+      });
+    }
+
 
     function loadState() {
       var stateWithAlternativesRenamed = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.baseAggregateState);
@@ -92,7 +97,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
       $scope.sensitivityMeasurements.alteredTableCells.push({
         criterion: row.criterion.id,
         alternative: alternative.id,
-        value:  usePercentage(row.dataSource) ? newValue /100 : newValue
+        value: usePercentage(row.dataSource) ? newValue / 100 : newValue
       });
     }
 
