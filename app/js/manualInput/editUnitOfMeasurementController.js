@@ -19,27 +19,30 @@ define(['lodash'], function(_) {
 
     // init
     $scope.saveDisabled = false;
-    $scope.unitOptions = [{
+    $scope.unitOptions = { 
+      decimal:{
       label: 'Proportion (decimal)',
       id: 'decimal',
       defaultValue: 'Proportion',
       defaultLowerBound: 0,
       defaultUpperBound: 1
 
-    }, {
+    }, 
+    percentage:{
       label: 'Proportion (percentage)',
       id: 'percentage',
       defaultValue: '%',
       defaultLowerBound: 0,
       defaultUpperBound: 100
 
-    }, {
+    }, 
+    default:{
       label: 'Default',
       id: 'default',
       defaultValue: '',
       defaultLowerBound: -Infinity,
       defaultUpperBound: Infinity
-    }];
+    }};
     $scope.lowerBoundOptions = [-Infinity, 0];
     $scope.upperBoundOptions = [1, 100, Infinity];
 
@@ -50,16 +53,20 @@ define(['lodash'], function(_) {
       $scope.values = {
         selectedOption: option,
         value: currentValues.value !== undefined ? currentValues.value : option.defaultValue,
-        lowerBound: currentValues.lowerBound !== undefined ? currentValues.lowerBound : option.defaultLowerBound,
-        upperBound: currentValues.upperBound !== undefined ? currentValues.upperBound : option.defaultUpperBound
+        lowerBound: isNotNullOrUndefined(currentValues.lowerBound) ? currentValues.lowerBound : option.defaultLowerBound,
+        upperBound: isNotNullOrUndefined(currentValues.upperBound) ? currentValues.upperBound : option.defaultUpperBound
       };
+    }
+
+    function isNotNullOrUndefined(value) {
+      return value !== undefined && value !== null;
     }
 
     function initializeOption() {
       if (!currentValues.selectedOption) {
         return $scope.unitOptions[2];
       } else {
-        return currentValues.selectedOption;
+        return $scope.unitOptions[currentValues.selectedOption.id];
       }
     }
 

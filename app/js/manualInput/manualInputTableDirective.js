@@ -31,6 +31,7 @@ define(['lodash'], function(_) {
                   dataSource.unitOfMeasurement = values;
                   row.dataSource.unitOfMeasurement = values;
                   setConstraints(values.selectedOption.label, row.dataSource.id);
+                  scope.checkInputData();
                 };
               },
               currentValues: function() {

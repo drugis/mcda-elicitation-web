@@ -2,7 +2,7 @@
 define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(_, angular) {
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
-  var constraintServiceMock = jasmine.createSpyObj('ConstraintService', ['percentage', 'decimal']);
+  var constraintServiceMock = jasmine.createSpyObj('ConstraintService', ['percentage', 'decimal', 'belowOrEqualTo', 'positive']);
   var currentSchemaVersion = '1.2.2';
   var inputKnowledgeServiceMock = jasmine.createSpyObj('InputKnowledgeService', [
     'getOptions'
@@ -13,8 +13,16 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
   var decimalConstraint = {
     label: 'Proportion (decimal)'
   };
+  var belowOrEqualToConstraint = {
+    label: 'belowOrEqualTo'
+  };
+  var positiveConstraint = {
+    label: 'positive'
+  };
   constraintServiceMock.percentage.and.returnValue(percentageConstraint);
   constraintServiceMock.decimal.and.returnValue(decimalConstraint);
+  constraintServiceMock.belowOrEqualTo.and.returnValue(belowOrEqualToConstraint);
+  constraintServiceMock.positive.and.returnValue(positiveConstraint);
 
   describe('The manualInputService', function() {
     beforeEach(angular.mock.module('elicit.manualInput', function($provide) {
@@ -1114,66 +1122,22 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     });
 
     describe('updateParameterConstraints', function() {
-      var cell;
-      beforeEach(function() {
-        cell = {
+      it('should add percentage constraints', function() {
+        var cell = {
           inputParameters: {
             firstParameter: {
-              label: 'Value',
-              constraints: [decimalConstraint, percentageConstraint]
-            },
-            secondParameter: {
-              label: 'Value',
-              constraints: [decimalConstraint, percentageConstraint]
-            },
-            thirdParameter: {
-              label: 'Value',
-              constraints: [decimalConstraint, percentageConstraint]
+              label: 'Value'
             }
           }
         };
-      });
-
-      it('should remove the percentage and/or decimal constraints', function() {
-        cell.constraint = 'None';
-        var result = manualInputService.updateParameterConstraints(cell);
-
-        var expectedResult = {
-          constraint: 'None',
-          inputParameters: {
-            firstParameter: {
-              label: 'Value',
-              constraints: []
-            },
-            secondParameter: {
-              label: 'Value',
-              constraints: []
-            },
-            thirdParameter: {
-              label: 'Value',
-              constraints: []
-            }
-          }
+        var unitOfMeasurement = {
+          lowerBound: 0,
+          upperBound: 100
         };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should add the percentage constraint if percentage is chosen', function() {
-        cell.constraint = percentageConstraint.label;
-        var result = manualInputService.updateParameterConstraints(cell);
-
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
         var expectedResult = {
-          constraint: percentageConstraint.label,
           inputParameters: {
             firstParameter: {
-              label: 'Value',
-              constraints: [percentageConstraint]
-            },
-            secondParameter: {
-              label: 'Value',
-              constraints: [percentageConstraint]
-            },
-            thirdParameter: {
               label: 'Value',
               constraints: [percentageConstraint]
             }
@@ -1182,22 +1146,22 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(result).toEqual(expectedResult);
       });
 
-      it('should add the decimal constraint if decimal is chosen', function() {
-        cell.constraint = decimalConstraint.label;
-        var result = manualInputService.updateParameterConstraints(cell);
-
-        var expectedResult = {
-          constraint: decimalConstraint.label,
+      it('should add decimal constraints', function() {
+        var cell = {
           inputParameters: {
             firstParameter: {
-              label: 'Value',
-              constraints: [decimalConstraint]
-            },
-            secondParameter: {
-              label: 'Value',
-              constraints: [decimalConstraint]
-            },
-            thirdParameter: {
+              label: 'Value'
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: 0,
+          upperBound: 1
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            firstParameter: {
               label: 'Value',
               constraints: [decimalConstraint]
             }
@@ -1205,6 +1169,136 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         };
         expect(result).toEqual(expectedResult);
       });
+
+      it('should add a positive constraint', function() {
+        var cell = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value'
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: 0,
+          upperBound: Infinity
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value',
+              constraints: [positiveConstraint]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should add a \'below or equal to\' constraint', function() {
+        var cell = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value'
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: -Infinity,
+          upperBound: 100
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value',
+              constraints: [belowOrEqualToConstraint]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should remove no longer applicable constraints, leaving intact other constraints', function() {
+        var cell = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value',
+              constraints: [
+                positiveConstraint,
+                belowOrEqualToConstraint,
+                decimalConstraint,
+                percentageConstraint, {
+                  label: 'other constraint'
+                }]
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: -Infinity,
+          upperBound: Infinity
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value',
+              constraints: [{
+                label: 'other constraint'
+              }]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should add a positive constraint to the second parameter', function() {
+        var cell = {
+          inputParameters: {
+            secondParameter: {
+              label: 'Value'
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: 0,
+          upperBound: Infinity
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            secondParameter: {
+              label: 'Value',
+              constraints: [positiveConstraint]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should add a positive constraint to the third parameter', function() {
+        var cell = {
+          inputParameters: {
+            thirdParameter: {
+              label: 'Value'
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: 0,
+          upperBound: Infinity
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            thirdParameter: {
+              label: 'Value',
+              constraints: [positiveConstraint]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
     });
   });
 });

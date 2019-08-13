@@ -15,6 +15,8 @@ define(['lodash', 'angular'], function(_, angular) {
     var INVALID_INPUT_MESSAGE = 'Missing or invalid input';
     var PROPORTION_PERCENTAGE = ConstraintService.percentage().label;
     var PROPORTION_DECIMAL = ConstraintService.decimal().label;
+    var BELOW_OR_EQUAL_TO = ConstraintService.belowOrEqualTo().label;
+    var POSITIVE = ConstraintService.positive().label;
     var FIRST_PARAMETER = 'firstParameter';
     var SECOND_PARAMETER = 'secondParameter';
     var THIRD_PARAMETER = 'thirdParameter';
@@ -86,21 +88,21 @@ define(['lodash', 'angular'], function(_, angular) {
       }
     }
 
-    function updateParameterConstraints(cell) {
+    function updateParameterConstraints(cell, unitOfMeasurement) {
       var newCell = angular.copy(cell);
       if (cell.inputParameters.firstParameter) {
-        newCell.inputParameters.firstParameter.constraints = updateConstraints(cell, FIRST_PARAMETER);
+        newCell.inputParameters.firstParameter.constraints = updateConstraints(cell, unitOfMeasurement, FIRST_PARAMETER);
       }
       if (cell.inputParameters.secondParameter) {
-        newCell.inputParameters.secondParameter.constraints = updateConstraints(cell, SECOND_PARAMETER);
+        newCell.inputParameters.secondParameter.constraints = updateConstraints(cell, unitOfMeasurement, SECOND_PARAMETER);
       }
       if (cell.inputParameters.thirdParameter) {
-        newCell.inputParameters.thirdParameter.constraints = updateConstraints(cell, THIRD_PARAMETER);
+        newCell.inputParameters.thirdParameter.constraints = updateConstraints(cell, unitOfMeasurement, THIRD_PARAMETER);
       }
       return newCell;
     }
 
-    function updateConstraints(cell, parameter) {
+    function updateConstraints(cell, unitOfMeasurement, parameter) {
       var updatetableParameters = [
         'Value',
         'Lower bound',
@@ -108,31 +110,38 @@ define(['lodash', 'angular'], function(_, angular) {
         'Standard error'
       ];
       if (_.includes(updatetableParameters, cell.inputParameters[parameter].label)) {
-        return getNewConstraints(cell, parameter);
+        return getNewConstraints(cell, unitOfMeasurement, parameter);
       } else {
         return cell.inputParameters[parameter].constraints;
       }
     }
 
-    function getNewConstraints(cell, parameter) {
+    function getNewConstraints(cell, unitOfMeasurement, parameter) {
       var newConstraints = angular.copy(cell.inputParameters[parameter].constraints);
-      var percentageConstraint = ConstraintService.percentage();
-      var decimalConstraint = ConstraintService.decimal();
-      newConstraints = removeProportionConstraints(newConstraints);
-      switch (cell.constraint) {
-        case PROPORTION_PERCENTAGE:
-          newConstraints.push(percentageConstraint);
-          break;
-        case PROPORTION_DECIMAL:
-          newConstraints.push(decimalConstraint);
-          break;
+      newConstraints = removeBoundConstraints(newConstraints);
+      if (unitOfMeasurement.lowerBound === 0) {
+        newConstraints.push(getConstraintWithLowerBound(unitOfMeasurement));
+      } else if (unitOfMeasurement.upperBound < Infinity) {
+        newConstraints.push(ConstraintService.belowOrEqualTo(unitOfMeasurement.upperBound));
       }
       return newConstraints;
     }
 
-    function removeProportionConstraints(constraints) {
+    function getConstraintWithLowerBound(unitOfMeasurement) {
+      if (unitOfMeasurement.upperBound === 100) {
+        return ConstraintService.percentage();
+      } else if (unitOfMeasurement.upperBound === 1) {
+        return ConstraintService.decimal();
+      } else {
+        return ConstraintService.positive();
+      }
+    }
+
+    function removeBoundConstraints(constraints) {
       return _.reject(constraints, function(constraint) {
-        return constraint.label === PROPORTION_PERCENTAGE || constraint.label === PROPORTION_DECIMAL;
+        var label = constraint.label;
+        return label === PROPORTION_PERCENTAGE || label === PROPORTION_DECIMAL ||
+          label === BELOW_OR_EQUAL_TO || label === POSITIVE;
       });
     }
 
@@ -379,8 +388,8 @@ define(['lodash', 'angular'], function(_, angular) {
         return cell.isInvalid || isNonValueCell(cell) || findCellThatIsDifferent(row, cell);
       });
     }
-    
-    function isNonValueCell(cell){
+
+    function isNonValueCell(cell) {
       var nonValueInputs = [
         'normal',
         'beta',
@@ -388,7 +397,7 @@ define(['lodash', 'angular'], function(_, angular) {
         'empty',
         'text'
       ];
-      return  _.includes(nonValueInputs, cell.inputParameters.id);
+      return _.includes(nonValueInputs, cell.inputParameters.id);
     }
 
     function findCellThatIsDifferent(row, cell) {
