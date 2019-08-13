@@ -220,19 +220,13 @@ define(['lodash', 'angular'], function(_, angular) {
     function buildDataSource(dataSource) {
       var newDataSource = angular.copy(dataSource);
       newDataSource.scale = getScale(dataSource);
-      if (newDataSource.unitOfMeasurement === '%') {
-        newDataSource.unitOfMeasurement = 'Proportion';
-      }
+      newDataSource.unitOfMeasurement = dataSource.unitOfMeasurement.value;
       delete newDataSource.oldId;
       return newDataSource;
     }
 
     function getScale(dataSource) {
-      if (dataSource.unitOfMeasurement === '%' || dataSource.unitOfMeasurement === 'Proportion') {
-        return [0, 1];
-      } else {
-        return [-Infinity, Infinity];
-      }
+      return [dataSource.unitOfMeasurement.lowerBound, dataSource.unitOfMeasurement.upperBound];
     }
 
     function buildAlternatives(alternatives) {
