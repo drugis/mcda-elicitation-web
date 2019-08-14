@@ -522,7 +522,15 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               id: 'uuid1',
               oldId: 'ds1',
               source: 'single study',
-              sourceLink: 'http://www.drugis.org'
+              sourceLink: 'http://www.drugis.org',
+              unitOfMeasurement: {
+                value: undefined,
+                lowerBound: 0,
+                upperBound: 1,
+                selectedOption: {
+                  id: 'default'
+                }
+              }
             }],
             id: 'uuid2'
           }],
@@ -839,6 +847,170 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
             expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
           });
+
+          // baseWorkspace = {
+          //   problem: {
+          //     criteria: {
+          //       crit1: {
+          //         title: 'criterion 1',
+          //         description: 'bla',
+          //         unitOfMeasurement: '%',
+          //         isFavorable: true,
+          //         dataSources: [{
+          //           id: 'ds1',
+          //           scale: [0, 1],
+          //           source: 'single study',
+          //           sourceLink: 'http://www.drugis.org'
+          //         }]
+          //       }
+          //     },
+          //     alternatives: {
+          //       alt1: {
+          //         title: 'alternative 1'
+          //       }
+          //     }
+          //   }
+          // };
+          // baseExpectedResult = {
+          //   useFavorability: true,
+          //   step: 'step1',
+          //   isInputDataValid: false,
+          //   description: undefined,
+          //   criteria: [{
+          //     title: 'criterion 1',
+          //     description: 'bla',
+          //     isFavorable: true,
+          //     dataSources: [{
+          //       id: 'uuid1',
+          //       oldId: 'ds1',
+          //       source: 'single study',
+          //       sourceLink: 'http://www.drugis.org',
+          //       unitOfMeasurement: {
+          //         value: undefined,
+          //         lowerBound: 0,
+          //         upperBound: 1,
+          //         selectedOption: {
+          //           id: 'default'
+          //         }
+          //       }
+          //     }],
+          //     id: 'uuid2'
+          //   }],
+          //   alternatives: [{
+          //     title: 'alternative 1',
+          //     id: 'uuid3',
+          //     oldId: 'alt1'
+          //   }],
+          //   inputData: {
+          //     effect: {
+          //       uuid1: {
+          //         uuid3: undefined
+          //       }
+          //     },
+          //     distribution: {
+          //       uuid1: {
+          //         uuid3: undefined
+          //       }
+          //     }
+          //   }
+          // };
+
+          it('should create a new state with a value cell and Proportion (decimal) unit of measurement', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact',
+                      input: {
+                        scale: 'decimal'
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.selectedOption.id = 'Proportion (decimal)';
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+          });
+
+          it('should create a new state with a value cell and Proportion (percentage) unit of measurement', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                criteria: {
+                  crit1: {
+                    dataSources: [{
+                      scale: [0, 100]
+                    }]
+                  }
+                },
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact',
+                      input: {
+                        scale: 'percentage'
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.selectedOption.id = 'Proportion (percentage)';
+            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.upperBound = 100;
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+          });
+
+          it('should create a new state with a value cell and default unit of measurement and with bounds', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                criteria: {
+                  crit1: {
+                    dataSources: [{
+                      scale: [0, Infinity]
+                    }]
+                  }
+                },
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact',
+                      input: {
+                        scale: 'percentage'
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.upperBound = Infinity;
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+          });
+
         });
 
         describe('without input', function() {
