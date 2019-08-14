@@ -29,6 +29,11 @@ define(['lodash'], function(_) {
       delete $scope.dataSource.source;
       $scope.dataSource.id = generateUuid();
       $scope.isAdding = true;
+      $scope.dataSource.unitOfMeasurement = {
+        selectedOption: {
+          id: 'default'
+        }
+      };
     }
     $scope.originalUnitOfMeasurement = $scope.dataSource.unitOfMeasurement;
     $scope.isProportion = isProportion;
@@ -48,7 +53,7 @@ define(['lodash'], function(_) {
     }
 
     //private
-    function isProportion(unitOfMeasurement){
+    function isProportion(unitOfMeasurement) {
       return unitOfMeasurement === '%' || unitOfMeasurement === 'Proportion';
     }
 
@@ -73,8 +78,8 @@ define(['lodash'], function(_) {
       }
     }
 
-    function checkUnitOfMeasureument(){
-      if(!isProportion($scope.originalUnitOfMeasurement) &&  isProportion($scope.dataSource.unitOfMeasurement)){
+    function checkUnitOfMeasureument() {
+      if (!isProportion($scope.originalUnitOfMeasurement) && isProportion($scope.dataSource.unitOfMeasurement)) {
         $scope.errors.push('\'Proportion\' and \'%\' are not allowed as unit of measurement when there is no constraint on the cell values');
       }
     }

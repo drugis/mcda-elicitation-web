@@ -28,12 +28,13 @@ define(['lodash'], function(_) {
                 return function(values) {
                   var criterion = _.find(scope.state.criteria, ['id', row.criterion.id]);
                   var dataSource = _.find(criterion.dataSources, ['id', row.dataSource.id]);
-                  dataSource.unitOfMeasurement = values.value;
-                  row.dataSource.unitOfMeasurement = values.value;
+                  dataSource.unitOfMeasurement = values;
+                  row.dataSource.unitOfMeasurement = values;
                   setConstraints(values.selectedOption.label, row.dataSource.id);
+                  scope.checkInputData();
                 };
               },
-              unitOfMeasurement: function() {
+              currentValues: function() {
                 return row.dataSource.unitOfMeasurement;
               }
             }

@@ -46,7 +46,7 @@
               <th ng-if="isStandalone">
                 <!-- up and down arrows-->
               </th>
-              <th>Unit of measurement
+              <th ng-if="!isInput">Unit of measurement
                 <inline-help help-key="criterion-unit"></inline-help>
               </th>
               <th ng-repeat="alternative in alternatives" ng-if="!isInput">
@@ -83,9 +83,9 @@
                   <i ng-if="$last" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
                 </div>
               </td>
-              <td>
+              <td ng-if="!isInput">
                 <span
-                  ng-hide="!isInput && !isValueView && (dataSource.unitOfMeasurement === '%' || dataSource.unitOfMeasurement === 'Proportion')">
+                  ng-hide="!isValueView && (dataSource.unitOfMeasurement === '%' || dataSource.unitOfMeasurement === 'Proportion')">
                   {{dataSource.unitOfMeasurement}}
                 </span>
               </td>

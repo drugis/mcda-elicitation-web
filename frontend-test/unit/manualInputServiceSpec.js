@@ -2,7 +2,7 @@
 define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(_, angular) {
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
-  var constraintServiceMock = jasmine.createSpyObj('ConstraintService', ['percentage', 'decimal']);
+  var constraintServiceMock = jasmine.createSpyObj('ConstraintService', ['percentage', 'decimal', 'belowOrEqualTo', 'positive']);
   var currentSchemaVersion = '1.2.2';
   var inputKnowledgeServiceMock = jasmine.createSpyObj('InputKnowledgeService', [
     'getOptions'
@@ -13,8 +13,16 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
   var decimalConstraint = {
     label: 'Proportion (decimal)'
   };
+  var belowOrEqualToConstraint = {
+    label: 'belowOrEqualTo'
+  };
+  var positiveConstraint = {
+    label: 'positive'
+  };
   constraintServiceMock.percentage.and.returnValue(percentageConstraint);
   constraintServiceMock.decimal.and.returnValue(decimalConstraint);
+  constraintServiceMock.belowOrEqualTo.and.returnValue(belowOrEqualToConstraint);
+  constraintServiceMock.positive.and.returnValue(positiveConstraint);
 
   describe('The manualInputService', function() {
     beforeEach(angular.mock.module('elicit.manualInput', function($provide) {
@@ -272,7 +280,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           scale: [0, 1],
           omitThis: 'yech',
           dataSources: [{
-            unitOfMeasurement: 'particles',
+            unitOfMeasurement: {
+              value: 'particles',
+              lowerBound: -Infinity,
+              upperBound: Infinity
+            },
             id: 'ds1id',
             oldId: 'ds1oldId'
           }]
@@ -282,7 +294,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           isFavorable: false,
           id: 'criterion2id',
           dataSources: [{
-            unitOfMeasurement: '%',
+            unitOfMeasurement: {
+              value: '%',
+              lowerBound: -Infinity,
+              upperBound: Infinity
+            },
             id: 'ds2id'
           }]
         }, {
@@ -290,8 +306,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           id: 'criterion3id',
           isFavorable: false,
           dataSources: [{
-            unitOfMeasurement: 'Proportion',
-            id: 'ds3id'
+            unitOfMeasurement: {
+              lowerBound: -Infinity,
+              upperBound: Infinity
+            },
+            id: 'ds3id',
           }]
         }];
         var inputData = {
@@ -402,8 +421,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               isFavorable: false,
               dataSources: [{
                 id: 'ds3id',
-                unitOfMeasurement: 'Proportion',
-                scale: [0, 1]
+                unitOfMeasurement: undefined,
+                scale: [-Infinity, Infinity],
               }]
             }
           },
@@ -503,7 +522,15 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               id: 'uuid1',
               oldId: 'ds1',
               source: 'single study',
-              sourceLink: 'http://www.drugis.org'
+              sourceLink: 'http://www.drugis.org',
+              unitOfMeasurement: {
+                value: undefined,
+                lowerBound: 0,
+                upperBound: 1,
+                selectedOption: {
+                  id: 'default'
+                }
+              }
             }],
             id: 'uuid2'
           }],
@@ -820,6 +847,170 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
             expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
           });
+
+          // baseWorkspace = {
+          //   problem: {
+          //     criteria: {
+          //       crit1: {
+          //         title: 'criterion 1',
+          //         description: 'bla',
+          //         unitOfMeasurement: '%',
+          //         isFavorable: true,
+          //         dataSources: [{
+          //           id: 'ds1',
+          //           scale: [0, 1],
+          //           source: 'single study',
+          //           sourceLink: 'http://www.drugis.org'
+          //         }]
+          //       }
+          //     },
+          //     alternatives: {
+          //       alt1: {
+          //         title: 'alternative 1'
+          //       }
+          //     }
+          //   }
+          // };
+          // baseExpectedResult = {
+          //   useFavorability: true,
+          //   step: 'step1',
+          //   isInputDataValid: false,
+          //   description: undefined,
+          //   criteria: [{
+          //     title: 'criterion 1',
+          //     description: 'bla',
+          //     isFavorable: true,
+          //     dataSources: [{
+          //       id: 'uuid1',
+          //       oldId: 'ds1',
+          //       source: 'single study',
+          //       sourceLink: 'http://www.drugis.org',
+          //       unitOfMeasurement: {
+          //         value: undefined,
+          //         lowerBound: 0,
+          //         upperBound: 1,
+          //         selectedOption: {
+          //           id: 'default'
+          //         }
+          //       }
+          //     }],
+          //     id: 'uuid2'
+          //   }],
+          //   alternatives: [{
+          //     title: 'alternative 1',
+          //     id: 'uuid3',
+          //     oldId: 'alt1'
+          //   }],
+          //   inputData: {
+          //     effect: {
+          //       uuid1: {
+          //         uuid3: undefined
+          //       }
+          //     },
+          //     distribution: {
+          //       uuid1: {
+          //         uuid3: undefined
+          //       }
+          //     }
+          //   }
+          // };
+
+          it('should create a new state with a value cell and Proportion (decimal) unit of measurement', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact',
+                      input: {
+                        scale: 'decimal'
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.selectedOption.id = 'Proportion (decimal)';
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+          });
+
+          it('should create a new state with a value cell and Proportion (percentage) unit of measurement', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                criteria: {
+                  crit1: {
+                    dataSources: [{
+                      scale: [0, 100]
+                    }]
+                  }
+                },
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact',
+                      input: {
+                        scale: 'percentage'
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.selectedOption.id = 'Proportion (percentage)';
+            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.upperBound = 100;
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+          });
+
+          it('should create a new state with a value cell and default unit of measurement and with bounds', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                criteria: {
+                  crit1: {
+                    dataSources: [{
+                      scale: [0, Infinity]
+                    }]
+                  }
+                },
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact',
+                      input: {
+                        scale: 'percentage'
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.upperBound = Infinity;
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+          });
+
         });
 
         describe('without input', function() {
@@ -1116,66 +1307,22 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     });
 
     describe('updateParameterConstraints', function() {
-      var cell;
-      beforeEach(function() {
-        cell = {
+      it('should add percentage constraints', function() {
+        var cell = {
           inputParameters: {
             firstParameter: {
-              label: 'Value',
-              constraints: [decimalConstraint, percentageConstraint]
-            },
-            secondParameter: {
-              label: 'Value',
-              constraints: [decimalConstraint, percentageConstraint]
-            },
-            thirdParameter: {
-              label: 'Value',
-              constraints: [decimalConstraint, percentageConstraint]
+              label: 'Value'
             }
           }
         };
-      });
-
-      it('should remove the percentage and/or decimal constraints', function() {
-        cell.constraint = 'None';
-        var result = manualInputService.updateParameterConstraints(cell);
-
-        var expectedResult = {
-          constraint: 'None',
-          inputParameters: {
-            firstParameter: {
-              label: 'Value',
-              constraints: []
-            },
-            secondParameter: {
-              label: 'Value',
-              constraints: []
-            },
-            thirdParameter: {
-              label: 'Value',
-              constraints: []
-            }
-          }
+        var unitOfMeasurement = {
+          lowerBound: 0,
+          upperBound: 100
         };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should add the percentage constraint if percentage is chosen', function() {
-        cell.constraint = percentageConstraint.label;
-        var result = manualInputService.updateParameterConstraints(cell);
-
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
         var expectedResult = {
-          constraint: percentageConstraint.label,
           inputParameters: {
             firstParameter: {
-              label: 'Value',
-              constraints: [percentageConstraint]
-            },
-            secondParameter: {
-              label: 'Value',
-              constraints: [percentageConstraint]
-            },
-            thirdParameter: {
               label: 'Value',
               constraints: [percentageConstraint]
             }
@@ -1184,22 +1331,22 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(result).toEqual(expectedResult);
       });
 
-      it('should add the decimal constraint if decimal is chosen', function() {
-        cell.constraint = decimalConstraint.label;
-        var result = manualInputService.updateParameterConstraints(cell);
-
-        var expectedResult = {
-          constraint: decimalConstraint.label,
+      it('should add decimal constraints', function() {
+        var cell = {
           inputParameters: {
             firstParameter: {
-              label: 'Value',
-              constraints: [decimalConstraint]
-            },
-            secondParameter: {
-              label: 'Value',
-              constraints: [decimalConstraint]
-            },
-            thirdParameter: {
+              label: 'Value'
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: 0,
+          upperBound: 1
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            firstParameter: {
               label: 'Value',
               constraints: [decimalConstraint]
             }
@@ -1207,6 +1354,136 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         };
         expect(result).toEqual(expectedResult);
       });
+
+      it('should add a positive constraint', function() {
+        var cell = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value'
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: 0,
+          upperBound: Infinity
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value',
+              constraints: [positiveConstraint]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should add a \'below or equal to\' constraint', function() {
+        var cell = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value'
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: -Infinity,
+          upperBound: 100
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value',
+              constraints: [belowOrEqualToConstraint]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should remove no longer applicable constraints, leaving intact other constraints', function() {
+        var cell = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value',
+              constraints: [
+                positiveConstraint,
+                belowOrEqualToConstraint,
+                decimalConstraint,
+                percentageConstraint, {
+                  label: 'other constraint'
+                }]
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: -Infinity,
+          upperBound: Infinity
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value',
+              constraints: [{
+                label: 'other constraint'
+              }]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should add a positive constraint to the second parameter', function() {
+        var cell = {
+          inputParameters: {
+            secondParameter: {
+              label: 'Value'
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: 0,
+          upperBound: Infinity
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            secondParameter: {
+              label: 'Value',
+              constraints: [positiveConstraint]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should add a positive constraint to the third parameter', function() {
+        var cell = {
+          inputParameters: {
+            thirdParameter: {
+              label: 'Value'
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: 0,
+          upperBound: Infinity
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            thirdParameter: {
+              label: 'Value',
+              constraints: [positiveConstraint]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
     });
   });
 });

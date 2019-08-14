@@ -15,6 +15,8 @@ define(['lodash', 'angular'], function(_, angular) {
     var INVALID_INPUT_MESSAGE = 'Missing or invalid input';
     var PROPORTION_PERCENTAGE = ConstraintService.percentage().label;
     var PROPORTION_DECIMAL = ConstraintService.decimal().label;
+    var BELOW_OR_EQUAL_TO = ConstraintService.belowOrEqualTo().label;
+    var POSITIVE = ConstraintService.positive().label;
     var FIRST_PARAMETER = 'firstParameter';
     var SECOND_PARAMETER = 'secondParameter';
     var THIRD_PARAMETER = 'thirdParameter';
@@ -86,21 +88,21 @@ define(['lodash', 'angular'], function(_, angular) {
       }
     }
 
-    function updateParameterConstraints(cell) {
+    function updateParameterConstraints(cell, unitOfMeasurement) {
       var newCell = angular.copy(cell);
       if (cell.inputParameters.firstParameter) {
-        newCell.inputParameters.firstParameter.constraints = updateConstraints(cell, FIRST_PARAMETER);
+        newCell.inputParameters.firstParameter.constraints = updateConstraints(cell, unitOfMeasurement, FIRST_PARAMETER);
       }
       if (cell.inputParameters.secondParameter) {
-        newCell.inputParameters.secondParameter.constraints = updateConstraints(cell, SECOND_PARAMETER);
+        newCell.inputParameters.secondParameter.constraints = updateConstraints(cell, unitOfMeasurement, SECOND_PARAMETER);
       }
       if (cell.inputParameters.thirdParameter) {
-        newCell.inputParameters.thirdParameter.constraints = updateConstraints(cell, THIRD_PARAMETER);
+        newCell.inputParameters.thirdParameter.constraints = updateConstraints(cell, unitOfMeasurement, THIRD_PARAMETER);
       }
       return newCell;
     }
 
-    function updateConstraints(cell, parameter) {
+    function updateConstraints(cell, unitOfMeasurement, parameter) {
       var updatetableParameters = [
         'Value',
         'Lower bound',
@@ -108,31 +110,38 @@ define(['lodash', 'angular'], function(_, angular) {
         'Standard error'
       ];
       if (_.includes(updatetableParameters, cell.inputParameters[parameter].label)) {
-        return getNewConstraints(cell, parameter);
+        return getNewConstraints(cell, unitOfMeasurement, parameter);
       } else {
         return cell.inputParameters[parameter].constraints;
       }
     }
 
-    function getNewConstraints(cell, parameter) {
+    function getNewConstraints(cell, unitOfMeasurement, parameter) {
       var newConstraints = angular.copy(cell.inputParameters[parameter].constraints);
-      var percentageConstraint = ConstraintService.percentage();
-      var decimalConstraint = ConstraintService.decimal();
-      newConstraints = removeProportionConstraints(newConstraints);
-      switch (cell.constraint) {
-        case PROPORTION_PERCENTAGE:
-          newConstraints.push(percentageConstraint);
-          break;
-        case PROPORTION_DECIMAL:
-          newConstraints.push(decimalConstraint);
-          break;
+      newConstraints = removeBoundConstraints(newConstraints);
+      if (unitOfMeasurement.lowerBound === 0) {
+        newConstraints.push(getConstraintWithLowerBound(unitOfMeasurement));
+      } else if (unitOfMeasurement.upperBound < Infinity) {
+        newConstraints.push(ConstraintService.belowOrEqualTo(unitOfMeasurement.upperBound));
       }
       return newConstraints;
     }
 
-    function removeProportionConstraints(constraints) {
+    function getConstraintWithLowerBound(unitOfMeasurement) {
+      if (unitOfMeasurement.upperBound === 100) {
+        return ConstraintService.percentage();
+      } else if (unitOfMeasurement.upperBound === 1) {
+        return ConstraintService.decimal();
+      } else {
+        return ConstraintService.positive();
+      }
+    }
+
+    function removeBoundConstraints(constraints) {
       return _.reject(constraints, function(constraint) {
-        return constraint.label === PROPORTION_PERCENTAGE || constraint.label === PROPORTION_DECIMAL;
+        var label = constraint.label;
+        return label === PROPORTION_PERCENTAGE || label === PROPORTION_DECIMAL ||
+          label === BELOW_OR_EQUAL_TO || label === POSITIVE;
       });
     }
 
@@ -211,18 +220,13 @@ define(['lodash', 'angular'], function(_, angular) {
     function buildDataSource(dataSource) {
       var newDataSource = angular.copy(dataSource);
       newDataSource.scale = getScale(dataSource);
+      newDataSource.unitOfMeasurement = dataSource.unitOfMeasurement.value;
       delete newDataSource.oldId;
       return newDataSource;
     }
 
     function getScale(dataSource) {
-      if (dataSource.unitOfMeasurement === '%') {
-        return [0, 100];
-      } else if (dataSource.unitOfMeasurement === 'Proportion') {
-        return [0, 1];
-      } else {
-        return [-Infinity, Infinity];
-      }
+      return [dataSource.unitOfMeasurement.lowerBound, dataSource.unitOfMeasurement.upperBound];
     }
 
     function buildAlternatives(alternatives) {
@@ -268,24 +272,73 @@ define(['lodash', 'angular'], function(_, angular) {
     function copyOldWorkspaceCriteria(workspace) {
       return _.map(workspace.problem.criteria, function(criterion) {
         var newCrit = _.pick(criterion, ['title', 'description', 'isFavorable']); // omit scales, preferences
-        newCrit.dataSources = copyOldWorkspaceDataSource(criterion);
+        newCrit.dataSources = copyOldWorkspaceDataSource(criterion, workspace.problem);
         newCrit.id = generateUuid();
         return newCrit;
       });
     }
 
-    function copyOldWorkspaceDataSource(criterion) {
+    function copyOldWorkspaceDataSource(criterion, problem) {
       return _.map(criterion.dataSources, function(dataSource) {
         var newDataSource = _.pick(dataSource, [
           'source',
           'sourceLink',
           'strengthOfEvidence',
-          'uncertainties',
-          'unitOfMeasurement'
+          'uncertainties'
         ]);
+        newDataSource.unitOfMeasurement = createNewUnitOfMeasurement(dataSource, problem);
         newDataSource.id = generateUuid();
         newDataSource.oldId = dataSource.id;
         return newDataSource;
+      });
+    }
+
+    function createNewUnitOfMeasurement(dataSource, problem) {
+      var newUnitOfMeasurement = {
+        value: dataSource.unitOfMeasurement
+      };
+      if (dataSource.scale) {
+        newUnitOfMeasurement.lowerBound = dataSource.scale[0];
+        newUnitOfMeasurement.upperBound = dataSource.scale[1];
+        newUnitOfMeasurement.selectedOption = {
+          id: getSelectedOption(dataSource, problem)
+        };
+      } else {
+        newUnitOfMeasurement.selectedOption = {
+          id: 'default'
+        };
+      }
+      return newUnitOfMeasurement;
+    }
+
+    function getSelectedOption(dataSource, problem) {
+      if (isDecimalUnit(dataSource, problem)) {
+        return 'Proportion (decimal)';
+      } else if (isPercentagelUnit(dataSource, problem)) {
+        return 'Proportion (percentage)';
+      } else {
+        return 'default';
+      }
+    }
+
+    function isDecimalUnit(dataSource, problem) {
+      return dataSource.scale[0] === 0 &&
+        dataSource.scale[1] === 1 &&
+        hasDefinedEntry(dataSource, problem, 'decimal');
+    }
+
+    function isPercentagelUnit(dataSource, problem) {
+      return dataSource.scale[0] === 0 &&
+        dataSource.scale[1] === 100 &&
+        hasDefinedEntry(dataSource, problem, 'percentage');
+    }
+
+    function hasDefinedEntry(dataSource, problem, entryType) {
+      return _.some(problem.performanceTable, function(entry) {
+        return entry.dataSource === dataSource.id &&
+          entry.performance.effect &&
+          entry.performance.effect.input &&
+          entry.performance.effect.input.scale === entryType;
       });
     }
 
