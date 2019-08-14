@@ -2,19 +2,22 @@
 define(['lodash', 'angular'], function(_, angular) {
   function intervalHull() {
     return function(scaleRanges, effects) {
-      var minHull = [];
-      var maxHull = [];
+      var minHullValues = [];
+      var maxHullValues = [];
       if (scaleRanges) {
-        minHull = getHull(scaleRanges, '2.5%');
-        maxHull = getHull(scaleRanges, '97.5%');
+        minHullValues = getHull(scaleRanges, '2.5%');
+        maxHullValues = getHull(scaleRanges, '97.5%');
       }
       if (effects && effects.length) {
-        minHull = minHull.concat(getMinEffect(effects));
-        maxHull = maxHull.concat(getMaxEffect(effects));
+        minHullValues = minHullValues.concat(getMinEffect(effects));
+        maxHullValues = maxHullValues.concat(getMaxEffect(effects));
       }
+      var minHullValue = Math.min.apply(null, minHullValues);
+      var maxHullValue = Math.max.apply(null, maxHullValues);
+
       return [
-        Math.min.apply(null, minHull),
-        Math.max.apply(null, maxHull)
+        minHullValue,
+        maxHullValue
       ];
     };
   }

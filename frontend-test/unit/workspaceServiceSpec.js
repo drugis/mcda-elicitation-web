@@ -221,7 +221,7 @@ define([
             alt2: 'altId2',
             alt3: 'altId3'
           },
-          performanceTable: [ {
+          performanceTable: [{
             criterion: 'critId4',
             dataSource: 'ds4',
             performance: {
@@ -414,6 +414,7 @@ define([
         };
         expect(result).toEqual(expectedProblem);
       });
+
       it('should not override already-configured scale ranges on the problem or subproblem', function() {
         var scales = {
           observed: {
@@ -486,6 +487,42 @@ define([
             }
           }
         };
+        expect(result).toEqual(expectedProblem);
+      });
+
+      it('should put a margin around ranges where the min and the max are equal', function() {
+        var scales = {
+          observed: {
+            ds1: {
+              alt1: {
+                '50%': 1,
+                '2.5%': 1,
+                '97.5%': 1
+              }
+            }
+          }
+        };
+        var problem = {
+          criteria: {
+            crit1: { dataSources: [{ id: 'ds1' }] }
+          }
+        };
+
+        var result = workspaceService.setDefaultObservedScales(problem, scales.observed);
+
+        var expectedProblem = {
+          criteria: {
+            crit1: {
+              dataSources: [{
+                id: 'ds1',
+                pvf: {
+                  range: [0.999, 1.001]
+                }
+              }]
+            }
+          }
+        };
+        
         expect(result).toEqual(expectedProblem);
       });
     });
