@@ -296,8 +296,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           dataSources: [{
             unitOfMeasurement: {
               value: '%',
-              lowerBound: -Infinity,
-              upperBound: Infinity
+              lowerBound: 0,
+              upperBound: 100
             },
             id: 'ds2id'
           }]
@@ -1133,110 +1133,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         var result = manualInputService.findInvalidCell(inputData);
         expect(result).toBeFalsy();
 
-      });
-    });
-
-    describe('findDuplicateValues', () => {
-      it('should return truthy if there is an invalid row i.e. all inputs have the same effect value', () => {
-        var inputData = {
-          row1: {
-            col1: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            },
-            col2: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            },
-            col3: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            }
-          }
-        };
-        var result = manualInputService.findDuplicateValues(inputData);
-        expect(result).toBeTruthy();
-      });
-
-      it('should return falsy if atleast one cell has a different value', () => {
-        var inputData = {
-          row1: {
-            col1: {
-              inputType: 'distribution',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            },
-            col2: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            },
-            col3: {
-              inputType: 'effect',
-              firstParameter: 51,
-              inputParameters: {
-                id: 'value'
-              }
-            }
-          }
-        };
-        var result = manualInputService.findDuplicateValues(inputData);
-        expect(result).toBeFalsy();
-      });
-
-      it('should return falsy if there are no values in the row', function() {
-        var inputData = {
-          row1: {
-            col1: {
-              inputParameters: {
-                id: 'value'
-              },
-              isInvalid: true
-            },
-            col2: {
-              inputParameters: {
-                id: 'value'
-              },
-              isInvalid: true
-            }
-          }
-        };
-        var result = manualInputService.findDuplicateValues(inputData);
-        expect(result).toBeFalsy();
-      });
-
-      it('should return falsy if there are duplcate text cells in the row', function() {
-        var inputData = {
-          row1: {
-            col1: {
-              firstParameter: 1,
-              inputParameters: {
-                id: 'text'
-              }
-            },
-            col2: {
-              firstParameter: 1,
-              inputParameters: {
-                id: 'text'
-              }
-            }
-          }
-        };
-        var result = manualInputService.findDuplicateValues(inputData);
-        expect(result).toBeFalsy();
       });
     });
 

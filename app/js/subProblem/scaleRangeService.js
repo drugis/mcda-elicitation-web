@@ -64,6 +64,13 @@ define(['lodash', 'angular'], function(_, angular) {
       scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
       scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
 
+      var restrictedRangeFrom = criterionRange[0];
+      var restrictedRangeTo = criterionRange[1];
+      if (restrictedRangeFrom === restrictedRangeTo){
+        restrictedRangeFrom -= Math.abs(restrictedRangeFrom)*0.001;
+        restrictedRangeTo += Math.abs(restrictedRangeTo)*0.001;
+      }
+
       return {
         increaseFrom: function() {
           this.sliderOptions.floor = niceFrom(boundFrom(this.sliderOptions.floor - margin));
@@ -73,8 +80,8 @@ define(['lodash', 'angular'], function(_, angular) {
         },
         sliderOptions: {
           restrictedRange: {
-            from: criterionRange[0],
-            to: criterionRange[1]
+            from: restrictedRangeFrom,
+            to: restrictedRangeTo
           },
           floor: niceFrom(from),
           ceil: niceTo(to),

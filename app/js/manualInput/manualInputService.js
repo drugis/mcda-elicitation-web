@@ -419,50 +419,7 @@ define(['lodash', 'angular'], function(_, angular) {
         return types[performance.distribution.type];
       }
     }
-
-    function findDuplicateValues(inputData) {
-      return _.some(inputData, function(row) {
-        return !isDuplicateValueRow(row);
-      });
-    }
-
-    function isDuplicateValueRow(row) {
-      return _.some(row, function(cell) {
-        return cell.isInvalid || isNonValueCell(cell) || findCellThatIsDifferent(row, cell);
-      });
-    }
-
-    function isNonValueCell(cell) {
-      var nonValueInputs = [
-        'normal',
-        'beta',
-        'gamma',
-        'empty',
-        'text'
-      ];
-      return _.includes(nonValueInputs, cell.inputParameters.id);
-    }
-
-    function findCellThatIsDifferent(row, cell) {
-      return _.some(row, function(otherCell) {
-        return compareCells(cell, otherCell);
-      });
-    }
-
-    function compareCells(cell, otherCell) {
-      var value = getValue(cell);
-      var otherValue = getValue(otherCell);
-      return value !== otherValue;
-    }
-
-    function getValue(cell) {
-      if (cell.inputParameters.id === 'eventsSampleSize') {
-        return cell.firstParameter / cell.secondParameter;
-      } else {
-        return cell.firstParameter;
-      }
-    }
-
+    
     function findInvalidCell(inputData) {
       return _.some(inputData, function(row) {
         return _.some(row, 'isInvalid');
@@ -491,7 +448,6 @@ define(['lodash', 'angular'], function(_, angular) {
       prepareInputData: prepareInputData,
       getOptions: getOptions,
       createStateFromOldWorkspace: createStateFromOldWorkspace,
-      findDuplicateValues: findDuplicateValues,
       findInvalidCell: findInvalidCell,
       generateDistributions: generateDistributions,
       updateParameterConstraints: updateParameterConstraints

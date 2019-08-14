@@ -90,14 +90,6 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
         if (!isEffectDataValid && !isDistributionDataValid) {
           $scope.state.errors.push('Both tabs contain missing or invalid inputs');
         }
-
-        if (ManualInputService.findDuplicateValues($scope.state.inputData.effect)) {
-          $scope.state.errors.push('Deterministic tab contains a row with duplicate inputs');
-        }
-
-        if (ManualInputService.findDuplicateValues($scope.state.inputData.distribution)) {
-          $scope.state.errors.push('Distribution tab contains a row with duplicate inputs');
-        }
       }
     }
 
