@@ -296,8 +296,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           dataSources: [{
             unitOfMeasurement: {
               value: '%',
-              lowerBound: -Infinity,
-              upperBound: Infinity
+              lowerBound: 0,
+              upperBound: 100
             },
             id: 'ds2id'
           }]
