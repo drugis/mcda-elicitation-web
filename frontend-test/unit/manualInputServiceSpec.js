@@ -280,7 +280,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           scale: [0, 1],
           omitThis: 'yech',
           dataSources: [{
-            unitOfMeasurement: 'particles',
+            unitOfMeasurement: {
+              value: 'particles',
+              lowerBound: -Infinity,
+              upperBound: Infinity
+            },
             id: 'ds1id',
             oldId: 'ds1oldId',
           }]
@@ -290,7 +294,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           isFavorable: false,
           id: 'criterion2id',
           dataSources: [{
-            unitOfMeasurement: 'particles',
+            unitOfMeasurement: {
+              value: 'particles',
+              lowerBound: -Infinity,
+              upperBound: Infinity
+            },
             id: 'ds2id',
           }]
         }, {
@@ -298,6 +306,10 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           id: 'criterion3id',
           isFavorable: false,
           dataSources: [{
+            unitOfMeasurement: {
+              lowerBound: -Infinity,
+              upperBound: Infinity
+            },
             id: 'ds3id',
           }]
         }];
@@ -409,6 +421,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               isFavorable: false,
               dataSources: [{
                 id: 'ds3id',
+                unitOfMeasurement: undefined,
                 scale: [-Infinity, Infinity],
               }]
             }

@@ -26,7 +26,6 @@ define(['lodash'], function(_) {
       defaultValue: 'Proportion',
       defaultLowerBound: 0,
       defaultUpperBound: 1
-
     }, 
     percentage:{
       label: 'Proportion (percentage)',
@@ -34,7 +33,6 @@ define(['lodash'], function(_) {
       defaultValue: '%',
       defaultLowerBound: 0,
       defaultUpperBound: 100
-
     }, 
     default:{
       label: 'Default',
@@ -64,7 +62,7 @@ define(['lodash'], function(_) {
 
     function initializeOption() {
       if (!currentValues.selectedOption) {
-        return $scope.unitOptions[2];
+        return $scope.unitOptions.default;
       } else {
         return $scope.unitOptions[currentValues.selectedOption.id];
       }
