@@ -17,6 +17,7 @@ define(['lodash'], function(_) {
       templateUrl: './manualInputTableDirective.html',
       link: function(scope) {
         scope.editUnitOfMeasurement = editUnitOfMeasurement;
+        scope.editSoE = editSoE;
 
         function editUnitOfMeasurement(row) {
           $modal.open({
@@ -36,6 +37,32 @@ define(['lodash'], function(_) {
               },
               currentValues: function() {
                 return row.dataSource.unitOfMeasurement;
+              }
+            }
+          });
+        }
+
+        function editSoE(row) {
+          $modal.open({
+            templateUrl: './editStrengthOfEvidence.html',
+            controller: 'EditStrengthOfEvidenceController',
+            size: 'small',
+            resolve: {
+              callback: function() {
+                return function(values) {
+                  var criterion = _.find(scope.state.criteria, ['id', row.criterion.id]);
+                  var dataSource = _.find(criterion.dataSources, ['id', row.dataSource.id]);
+                  dataSource.strengthOfEvidence = values.strengthOfEvidence;
+                  dataSource.uncertainties = values.uncertainties;
+                  row.dataSource.strengthOfEvidence = values.strengthOfEvidence;
+                  row.dataSource.uncertainties = values.uncertainties;
+                };
+              },
+              currentValues: function() {
+                return {
+                  strengthOfEvidence: row.dataSource.strengthOfEvidence,
+                  uncertainties: row.dataSource.uncertainties
+                };
               }
             }
           });

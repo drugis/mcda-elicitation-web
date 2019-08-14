@@ -52,7 +52,7 @@
               <th ng-repeat="alternative in alternatives" ng-if="!isInput">
                 {{alternative.title}}
               </th>
-              <th>Strength of evidence / Uncertainties
+              <th ng-if="!isInput">Strength of evidence / Uncertainties
                 <inline-help help-key="uncertainties"></inline-help>
                 <inline-help help-key="strength-of-evidence"></inline-help>
               </th>
@@ -104,7 +104,7 @@
                 </div>
               </td>
 
-              <td>
+              <td ng-if="!isInput">
                 <b>SoE: </b>{{dataSource.strengthOfEvidence}}
                 <br>
                 <b>Unc: </b> {{dataSource.uncertainties}}

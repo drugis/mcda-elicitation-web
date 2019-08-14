@@ -6,6 +6,7 @@ define([
   './constraintService',
   '../evidence/editDataSourceController',
   './editUnitOfMeasurementController',
+  './editStrengthOfEvidenceController',
   './finishInputCellService',
   './generateDistributionService',
   './inProgressResource',
@@ -25,6 +26,7 @@ define([
   ConstraintService,
   EditDataSourceController,
   EditUnitOfMeasurementController,
+  EditStrengthOfEvidenceController,
   FinishInputCellService,
   GenerateDistributionService,
   InProgressResource,
@@ -43,6 +45,7 @@ define([
       .controller('AddCriterionController', AddCriterionController)
       .controller('EditDataSourceController', EditDataSourceController)
       .controller('EditUnitOfMeasurementController', EditUnitOfMeasurementController)
+      .controller('EditStrengthOfEvidenceController', EditStrengthOfEvidenceController)
       .controller('AddAlternativeController', AddAlternativeController)
 
       .factory('ManualInputService', ManualInputService)
