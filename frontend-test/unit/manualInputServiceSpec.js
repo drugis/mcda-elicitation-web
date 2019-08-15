@@ -848,73 +848,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
           });
 
-          // baseWorkspace = {
-          //   problem: {
-          //     criteria: {
-          //       crit1: {
-          //         title: 'criterion 1',
-          //         description: 'bla',
-          //         unitOfMeasurement: '%',
-          //         isFavorable: true,
-          //         dataSources: [{
-          //           id: 'ds1',
-          //           scale: [0, 1],
-          //           source: 'single study',
-          //           sourceLink: 'http://www.drugis.org'
-          //         }]
-          //       }
-          //     },
-          //     alternatives: {
-          //       alt1: {
-          //         title: 'alternative 1'
-          //       }
-          //     }
-          //   }
-          // };
-          // baseExpectedResult = {
-          //   useFavorability: true,
-          //   step: 'step1',
-          //   isInputDataValid: false,
-          //   description: undefined,
-          //   criteria: [{
-          //     title: 'criterion 1',
-          //     description: 'bla',
-          //     isFavorable: true,
-          //     dataSources: [{
-          //       id: 'uuid1',
-          //       oldId: 'ds1',
-          //       source: 'single study',
-          //       sourceLink: 'http://www.drugis.org',
-          //       unitOfMeasurement: {
-          //         value: undefined,
-          //         lowerBound: 0,
-          //         upperBound: 1,
-          //         selectedOption: {
-          //           id: 'default'
-          //         }
-          //       }
-          //     }],
-          //     id: 'uuid2'
-          //   }],
-          //   alternatives: [{
-          //     title: 'alternative 1',
-          //     id: 'uuid3',
-          //     oldId: 'alt1'
-          //   }],
-          //   inputData: {
-          //     effect: {
-          //       uuid1: {
-          //         uuid3: undefined
-          //       }
-          //     },
-          //     distribution: {
-          //       uuid1: {
-          //         uuid3: undefined
-          //       }
-          //     }
-          //   }
-          // };
-
           it('should create a new state with a value cell and Proportion (decimal) unit of measurement', function() {
             var workspace = _.merge({}, baseWorkspace, {
               problem: {
@@ -1380,6 +1313,65 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(result).toEqual(expectedResult);
       });
 
+    });
+
+    describe('checkStep1Errors', function() {
+      it('should return an error with a missing title error', function() {
+        var state = {
+          criteria: [{
+            dataSources: [{}]
+          }, {
+            dataSources: [{}]
+          }],
+          alternatives: [{}, {}]
+        };
+        var result = manualInputService.checkStep1Errors(state);
+        var expectedResult = ['Missing title'];
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return an error with a not enough criteria error', function() {
+        var state = {
+          title: 'some title',
+          criteria: [{
+            dataSources: [{}]
+          }],
+          alternatives: [{}, {}]
+        };
+        var result = manualInputService.checkStep1Errors(state);
+        var expectedResult = ['At least two criteria required'];
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return an error with a not enough alternatives error', function() {
+        var state = {
+          title: 'some title',
+          criteria: [{
+            dataSources: [{}]
+          }, {
+            dataSources: [{}]
+          }],
+          alternatives: [{}]
+        };
+        var result = manualInputService.checkStep1Errors(state);
+        var expectedResult = ['At least two alternatives required'];
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return an error with a missing data source error', function() {
+        var state = {
+          title: 'some title',
+          criteria: [{
+            dataSources: [{}]
+          }, {
+            dataSources: []
+          }],
+          alternatives: [{}, {}]
+        };
+        var result = manualInputService.checkStep1Errors(state);
+        var expectedResult = ['All criteria require at least one data source'];
+        expect(result).toEqual(expectedResult);
+      });
     });
   });
 });

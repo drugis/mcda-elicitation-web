@@ -68,6 +68,14 @@
             </tr>
           </thead>
           <tbody>
+            <tr ng-if="!criterion.dataSources.length">
+              <td></td>
+              <td>
+                <em>No data sources defined</em>
+              </td>
+              <td></td>
+              <td></td>
+            </tr>
             <tr ng-repeat="dataSource in criterion.dataSources track by dataSource.id">
               <td ng-if="isStandalone">
                 <div style="line-height: 10px; margin-bottom: 4px;">
@@ -125,12 +133,8 @@
                 </a>
               </td>
               <td ng-if="isInput" class="text-center">
-                <a ng-click="removeDataSource(dataSource)" tooltip="Remove data source"
-                  ng-if="criterion.dataSources.length > 1">
+                <a ng-click="removeDataSource(dataSource)" tooltip="Remove data source">
                   <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
-                </a>
-                <a tooltip="Cannot remove the only data source" ng-if="criterion.dataSources.length < 2">
-                  <i class="fa fa-trash icon-fixed-width" style="color:#bbb"></i>
                 </a>
               </td>
             </tr>

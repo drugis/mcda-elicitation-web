@@ -419,7 +419,7 @@ define(['lodash', 'angular'], function(_, angular) {
         return types[performance.distribution.type];
       }
     }
-    
+
     function findInvalidCell(inputData) {
       return _.some(inputData, function(row) {
         return _.some(row, 'isInvalid');
@@ -441,6 +441,29 @@ define(['lodash', 'angular'], function(_, angular) {
       return cell.inputParameters.generateDistribution(cell);
     }
 
+    function checkStep1Errors(state) {
+      var errors = [];
+      if (!state.title) {
+        errors.push('Missing title');
+      }
+      if (state.criteria.length < 2) {
+        errors.push('At least two criteria required');
+      }
+      if (state.alternatives.length < 2) {
+        errors.push('At least two alternatives required');
+      }
+      if (isCriteriaMissingDataSource(state.criteria)) {
+        errors.push('All criteria require at least one data source');
+      }
+      return errors;
+    }
+
+    function isCriteriaMissingDataSource(criteria) {
+      return _.some(criteria, function(criterion) {
+        return !criterion.dataSources.length;
+      });
+    }
+
     return {
       createProblem: createProblem,
       inputToString: inputToString,
@@ -450,7 +473,8 @@ define(['lodash', 'angular'], function(_, angular) {
       createStateFromOldWorkspace: createStateFromOldWorkspace,
       findInvalidCell: findInvalidCell,
       generateDistributions: generateDistributions,
-      updateParameterConstraints: updateParameterConstraints
+      updateParameterConstraints: updateParameterConstraints,
+      checkStep1Errors: checkStep1Errors
     };
   };
 

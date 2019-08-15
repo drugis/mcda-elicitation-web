@@ -24,7 +24,7 @@ define(['lodash'], function(_) {
     // init
     if (dataSource) {
       $scope.dataSource = _.cloneDeep(dataSource);
-    } else {
+    } else if (dataSources[0]) {
       $scope.dataSource = _.cloneDeep(dataSources[0]);
       delete $scope.dataSource.source;
       $scope.dataSource.id = generateUuid();
@@ -34,7 +34,18 @@ define(['lodash'], function(_) {
           id: 'default'
         }
       };
+    } else {
+      $scope.dataSource = {
+        id: generateUuid(),
+        unitOfMeasurement: {
+          selectedOption: {
+            id: 'default'
+          }
+        }
+      };
+      $scope.isAdding = true;
     }
+
     $scope.originalUnitOfMeasurement = $scope.dataSource.unitOfMeasurement;
     $scope.isProportion = isProportion;
     checkErrors();

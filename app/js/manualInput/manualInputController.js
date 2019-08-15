@@ -73,22 +73,22 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
 
     function checkInputData() {
       if ($scope.state.inputData) {
-        $scope.state.errors = [];
-        $scope.state.warnings = [];
+        $scope.state.step2errors = [];
+        $scope.state.step2warnings = [];
 
         var isEffectDataValid = !ManualInputService.findInvalidCell($scope.state.inputData.effect);
         var isDistributionDataValid = !ManualInputService.findInvalidCell($scope.state.inputData.distribution);
 
         if (isEffectDataValid && !isDistributionDataValid) {
-          $scope.state.warnings.push('SMAA tab contains invalid inputs which will not be used, Deterministic inputs for those cells will be used instead');
+          $scope.state.step2warnings.push('SMAA tab contains invalid inputs which will not be used, Deterministic inputs for those cells will be used instead');
         }
 
         if (!isEffectDataValid && isDistributionDataValid) {
-          $scope.state.warnings.push('Deterministic tab contains invalid inputs which will not be used, SMAA inputs for those cells will be used instead');
+          $scope.state.step2warnings.push('Deterministic tab contains invalid inputs which will not be used, SMAA inputs for those cells will be used instead');
         }
 
         if (!isEffectDataValid && !isDistributionDataValid) {
-          $scope.state.errors.push('Both tabs contain missing or invalid inputs');
+          $scope.state.step2errors.push('Both tabs contain missing or invalid inputs');
         }
       }
     }
@@ -184,9 +184,9 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       $modal.open({
         templateUrl: './addAlternative.html',
         controller: 'AddAlternativeController',
-        size:'small',
+        size: 'small',
         resolve: {
-          alternatives: function(){
+          alternatives: function() {
             return $scope.state.alternatives;
           },
           callback: function() {
@@ -225,6 +225,7 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
         SchemaService.updateWorkspaceToCurrentSchema($stateParams.workspace));
       $scope.dirty = true;
       setStateWatcher();
+      checkStep1Errors();
     }
 
     function createNewWorkSpace() {
@@ -250,6 +251,7 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
         }
         checkInputData();
         setStateWatcher();
+        checkStep1Errors();
       });
     }
 
@@ -257,9 +259,17 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       $scope.$watch('state', function(newValue, oldValue) {
         if (!angular.equals(newValue, oldValue)) {
           $scope.dirty = true;
+          checkStep1Errors();
         }
       }, true);
     }
+
+    function checkStep1Errors(){
+      if($scope.state.step === 'step1'){
+        $scope.state.step1errors = ManualInputService.checkStep1Errors($scope.state);
+      }
+    }
+
   };
   return dependencies.concat(ManualInputController);
 });

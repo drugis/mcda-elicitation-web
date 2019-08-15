@@ -104,21 +104,15 @@
       </table>
     </div>
     <div class="cell">
-      <button class="button" ng-disabled="!state.title || state.criteria.length < 2|| state.alternatives.length < 2"
-        type="button" ng-click="goToStep2()" tooltip="Enter effects table data">
+      <button class="button" ng-disabled="errors.length" type="button" ng-click="goToStep2()"
+        tooltip="Enter effects table data">
         Enter data
       </button>
       <button id="step1SaveButton" class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty"
         tooltip="Save current state">Save</button>
     </div>
-    <div class="cell" ng-if="!state.title">
-      <em>Missing title</em>
-    </div>
-    <div class="cell" ng-if="state.criteria.length < 2">
-      <em>Two criteria required</em>
-    </div>
-    <div class="cell" ng-if="state.alternatives.length < 2">
-      <em>Two alternatives required</em>
+    <div class="cell" ng-repeat="error in state.step1errors">
+      <em>{{error}}</em>
     </div>
   </div>
 </div>
@@ -165,7 +159,7 @@
 
     <!-- buttons -->
     <div class="cell">
-      <button class="button" ng-disabled="state.errors.length" type="button" ng-click="createProblem()"
+      <button class="button" ng-disabled="state.step2errors.length" type="button" ng-click="createProblem()"
         tooltip="Create problem and proceed to analysis">
         Done
       </button>
@@ -174,10 +168,10 @@
         Save
       </button>
       <button type="button" ng-click="goToStep1()" type="button" class="button">Back</button>
-      <div ng-if="state.errors.length" class="alert" ng-repeat="error in state.errors">
-        {{error}}
+      <div ng-if="state.step2errors.length" class="alert" ng-repeat="error in state.step2errors">
+        <em>{{error}}</em>
       </div>
-      <div ng-if="state.warnings.length && !state.errors.length" ng-repeat="warning in state.warnings">
+      <div ng-if="state.step2warnings.length && !state.step2errors.length" ng-repeat="warning in state.step2warnings">
         <i class="fa fa-exclamation-triangle"></i> {{warning}}
       </div>
     </div>

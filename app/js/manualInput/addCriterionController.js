@@ -36,14 +36,7 @@ define(['lodash'], function(_) {
     } else {
       $scope.criterion = {
         id: generateUuid(),
-        dataSources: [{
-          id: generateUuid(),
-          unitOfMeasurement: {
-            selectedOption: {
-              id: 'default'
-            }
-          }
-        }],
+        dataSources: [],
         isFavorable: false
       };
       $scope.addOrEdit = 'Add';
