@@ -9,7 +9,6 @@ module.exports = function(db) {
   function checkForError(err, next) {
     if (err) {
       logger.error(JSON.stringify(err, null, 2));
-      err.status = 500;
       next({
         statusCode: 500,
         message: err
@@ -19,7 +18,6 @@ module.exports = function(db) {
 
   function createInProgress(req, res, next) {
     logger.debug('creating in-progress workspace');
-
     db.query('INSERT INTO inProgressWorkspace (owner, state) VALUES ($1, $2) RETURNING id', [getUser(req).id, req.body], function(err, result) {
       checkForError(err, next);
       res.json({ id: result.rows[0].id });
