@@ -314,6 +314,10 @@ define(['lodash', 'angular'], function(_, angular) {
           }
         });
       });
+      if (minimum === maximum){
+        minimum -= Math.abs(minimum)*0.001;
+        maximum += Math.abs(maximum)*0.001;
+      }
       return [minimum, maximum];
     }
 

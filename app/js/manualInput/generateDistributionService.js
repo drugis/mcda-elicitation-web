@@ -88,7 +88,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
 
     function areBoundsSymmetric(cell) {
-      return (cell.thirdParameter + cell.secondParameter) / 2 === cell.firstParameter;
+      return  Math.abs(1 - (cell.firstParameter - cell.secondParameter) / (cell.thirdParameter - cell.firstParameter) ) < 0.05;
     }
 
     function boundsToStandardError(lowerBound, upperBound) {

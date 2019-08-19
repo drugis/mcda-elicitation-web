@@ -373,6 +373,7 @@ define([
 
         expect(result).toEqual(expectedResult);
       });
+      
       it('should do nothing if there is no legend', function() {
         var state = {
           a: 'b'
@@ -403,6 +404,51 @@ define([
             xy(300, 2)
           ]
         }];
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('createDeterministicScales', function(){
+      var expectedResult = {
+        ds1: {
+          alt1: {
+            '50%': 10
+          }
+        }
+      };
+
+      it('should create deterministic scales from the performance table', function(){
+        var performanceTable = [          {
+            dataSource: 'ds1',
+            performance: {
+              effect: {
+                value: 10
+              }
+            },
+            alternative: 'alt1'
+          }
+        ];
+        var smaaScales = {};
+        var result = resultsService.createDeterministicScales(performanceTable, smaaScales);
+        
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should create deterministic scales from the smaa values if there are no deterministic values in the performance table', function(){
+        var performanceTable = [          {
+            dataSource: 'ds1',
+            performance: {},
+            alternative: 'alt1'
+          }
+        ];
+        var smaaScales = {
+          ds1: {
+            alt1: {
+              '50%': 10
+            }
+          }
+        };
+        var result = resultsService.createDeterministicScales(performanceTable, smaaScales);
         expect(result).toEqual(expectedResult);
       });
     });

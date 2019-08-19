@@ -12,12 +12,14 @@ var appEnvironmentSettings = {
 };
 var signin = require('signin')(db, appEnvironmentSettings);
 var WorkspaceService = require('./node-backend/workspaceService')(db);
-var InProgressWorkspaceService = require('./node-backend/inProgressWorkspaceService')(db);
 var WorkspaceRepository = require('./node-backend/workspaceRepository')(db);
-var OrderingService = require('./node-backend/orderingService')(db);
-var SubProblemService = require('./node-backend/subProblemService')(db);
-var ScenarioService = require('./node-backend/scenarioService')(db);
-var WorkspaceSettingsService = require('./node-backend/workspaceSettingsService')(db);
+var WorkspaceRouter = require('./node-backend/workspaceRouter')(db);
+var InProgressRouter = require('./node-backend/inProgressRouter')(db);
+var OrderingRouter = require('./node-backend/orderingRouter')(db);
+var SubProblemRouter = require('./node-backend/subProblemRouter')(db);
+var ScenarioRouter = require('./node-backend/scenarioRouter')(db);
+var WorkspaceSettingsRouter = require('./node-backend/workspaceSettingsRouter')(db);
+
 var rightsManagement = require('rights-management')();
 
 var express = require('express');
@@ -163,40 +165,12 @@ app.use('/tutorials', express.static(__dirname + '/examples/tutorial-examples'))
 app.use('/css/fonts', express.static('./dist/fonts'));
 app.use(rightsManagement.expressMiddleware);
 
-// Workspaces in progress
-app.post('/inProgress', InProgressWorkspaceService.create);
-app.put('/inProgress/:id', InProgressWorkspaceService.update);
-app.get('/inProgress/:id', InProgressWorkspaceService.get);
-app.get('/inProgress', InProgressWorkspaceService.query);
-app.delete('/inProgress/:id', InProgressWorkspaceService.delete);
-
-// Complete workspaces
-app.get('/workspaces', WorkspaceService.query);
-app.post('/workspaces', WorkspaceService.create);
-app.get('/workspaces/:id', WorkspaceService.get);
-app.post('/workspaces/:id', WorkspaceService.update);
-app.delete('/workspaces/:id', WorkspaceService.delete);
-
-// Orderings
-app.get('/workspaces/:workspaceId/ordering', OrderingService.getOrdering);
-app.put('/workspaces/:workspaceId/ordering', OrderingService.updateOrdering);
-
-// Subproblems
-app.get('/workspaces/:workspaceId/problems', SubProblemService.querySubProblems);
-app.get('/workspaces/:workspaceId/problems/:subProblemId', SubProblemService.getSubProblem);
-app.post('/workspaces/:workspaceId/problems', SubProblemService.createSubProblem);
-app.post('/workspaces/:workspaceId/problems/:subProblemId', SubProblemService.updateSubProblem);
-
-//Scenarios
-app.get('/workspaces/:workspaceId/scenarios', ScenarioService.queryScenarios);
-app.get('/workspaces/:workspaceId/problems/:subProblemId/scenarios', ScenarioService.queryScenariosForSubProblem);
-app.get('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', ScenarioService.getScenario);
-app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios', ScenarioService.createScenario);
-app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', ScenarioService.updateScenario);
-
-// Workspace settings
-app.get('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsService.getWorkspaceSettings);
-app.put('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsService.putWorkspaceSettings);
+app.use('/inProgress', InProgressRouter);
+app.use('/workspaces', WorkspaceRouter);
+app.use('/workspaces/:workspaceId/ordering', OrderingRouter);
+app.use('/workspaces/:workspaceId/problems', SubProblemRouter);
+app.use('/workspaces/:workspaceId', ScenarioRouter);
+app.use('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsRouter);
 
 // patavi
 app.post('/patavi', function(req, res, next) { // FIXME: separate routes for scales and results
@@ -227,7 +201,6 @@ app.use((error, request, response, next) => {
   }
   next();
 });
-
 
 //The 404 Route (ALWAYS Keep this as the last route)
 app.get('*', function(req, res) {

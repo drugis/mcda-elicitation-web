@@ -37,7 +37,7 @@
               Not estimable)
             </span>
             <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()"
-              ng-disabled="inputCell.lowerBoundNE">
+              ng-disabled="inputParameters.secondParameter.label === 'Lower bound' && inputCell.lowerBoundNE">
           </label>
         </div>
 
@@ -48,7 +48,7 @@
               <input type="checkbox" ng-model="inputCell.upperBoundNE">Not
               estimable)</span>
             <input type="number" ng-model="inputCell.thirdParameter" ng-change="inputChanged()"
-              ng-disabled="inputCell.upperBoundNE">
+              ng-disabled="inputCell.inputParameters.thirdParameter.label === 'Upper bound' && inputCell.upperBoundNE">
           </label>
         </div>
 

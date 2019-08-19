@@ -256,6 +256,22 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       return newProblem;
     }
 
+    function createDeterministicScales(performanceTable, smaaScales) {
+      return _.reduce(performanceTable, function(accum, entry) {
+        if (!accum[entry.dataSource]) {
+          accum[entry.dataSource] = {};
+        }
+        if (entry.performance.effect) {
+          accum[entry.dataSource][entry.alternative] = {
+            '50%': entry.performance.effect.value
+          };
+        } else {
+          accum[entry.dataSource][entry.alternative] = smaaScales[entry.dataSource][entry.alternative];
+        }
+        return accum;
+      }, {});
+    }
+
     return {
       getResults: getResults,
       resetModifiableScales: resetModifiableScales,
@@ -267,7 +283,8 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       getPreferencesSensitivityResults: getPreferencesSensitivityResults,
       addSmaaResults: addSmaaResults,
       replaceAlternativeNames: replaceAlternativeNames,
-      percentifySensitivityResult: percentifySensitivityResult
+      percentifySensitivityResult: percentifySensitivityResult,
+      createDeterministicScales: createDeterministicScales
     };
   };
 

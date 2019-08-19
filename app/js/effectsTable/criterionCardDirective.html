@@ -46,13 +46,13 @@
               <th ng-if="isStandalone">
                 <!-- up and down arrows-->
               </th>
-              <th>Unit of measurement
+              <th ng-if="!isInput">Unit of measurement
                 <inline-help help-key="criterion-unit"></inline-help>
               </th>
               <th ng-repeat="alternative in alternatives" ng-if="!isInput">
                 {{alternative.title}}
               </th>
-              <th>Strength of evidence / Uncertainties
+              <th ng-if="!isInput">Strength of evidence / Uncertainties
                 <inline-help help-key="uncertainties"></inline-help>
                 <inline-help help-key="strength-of-evidence"></inline-help>
               </th>
@@ -68,6 +68,14 @@
             </tr>
           </thead>
           <tbody>
+            <tr ng-if="!criterion.dataSources.length">
+              <td></td>
+              <td>
+                <em>No data sources defined</em>
+              </td>
+              <td></td>
+              <td></td>
+            </tr>
             <tr ng-repeat="dataSource in criterion.dataSources track by dataSource.id">
               <td ng-if="isStandalone">
                 <div style="line-height: 10px; margin-bottom: 4px;">
@@ -83,9 +91,9 @@
                   <i ng-if="$last" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
                 </div>
               </td>
-              <td>
+              <td ng-if="!isInput">
                 <span
-                  ng-hide="!isInput && !isValueView && (dataSource.unitOfMeasurement === '%' || dataSource.unitOfMeasurement === 'Proportion')">
+                  ng-hide="!isValueView && (dataSource.unitOfMeasurement === '%' || dataSource.unitOfMeasurement === 'Proportion')">
                   {{dataSource.unitOfMeasurement}}
                 </span>
               </td>
@@ -104,7 +112,7 @@
                 </div>
               </td>
 
-              <td>
+              <td ng-if="!isInput">
                 <b>SoE: </b>{{dataSource.strengthOfEvidence}}
                 <br>
                 <b>Unc: </b> {{dataSource.uncertainties}}
@@ -125,12 +133,8 @@
                 </a>
               </td>
               <td ng-if="isInput" class="text-center">
-                <a ng-click="removeDataSource(dataSource)" tooltip="Remove data source"
-                  ng-if="criterion.dataSources.length > 1">
+                <a ng-click="removeDataSource(dataSource)" tooltip="Remove data source">
                   <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
-                </a>
-                <a tooltip="Cannot remove the only data source" ng-if="criterion.dataSources.length < 2">
-                  <i class="fa fa-trash icon-fixed-width" style="color:#bbb"></i>
                 </a>
               </td>
             </tr>

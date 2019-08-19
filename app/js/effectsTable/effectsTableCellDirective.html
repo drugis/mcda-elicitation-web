@@ -1,5 +1,8 @@
 <div ng-if="effectsDisplay === 'deterministic'">
   {{effectLabel}}
+  <span ng-if="effectLabel === ''" tooltip="No values entered">
+    &nbsp;
+  </span>
 </div>
 
 <div ng-if="effectsDisplay === 'deterministicMCDA'">
@@ -21,8 +24,7 @@
 
 <div ng-if="effectsDisplay === 'smaaDistributions'">
   {{distributionLabel}}
-</div>
-
-<div ng-if="!isValueView" tooltip="No values entered">
-  &nbsp;
+  <span ng-if="distributionLabel === ''" tooltip="No values entered">
+    &nbsp;
+  </span>
 </div>

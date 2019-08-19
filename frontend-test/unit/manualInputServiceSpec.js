@@ -2,7 +2,7 @@
 define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(_, angular) {
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
-  var constraintServiceMock = jasmine.createSpyObj('ConstraintService', ['percentage', 'decimal']);
+  var constraintServiceMock = jasmine.createSpyObj('ConstraintService', ['percentage', 'decimal', 'belowOrEqualTo', 'positive']);
   var currentSchemaVersion = '1.2.2';
   var inputKnowledgeServiceMock = jasmine.createSpyObj('InputKnowledgeService', [
     'getOptions'
@@ -13,8 +13,16 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
   var decimalConstraint = {
     label: 'Proportion (decimal)'
   };
+  var belowOrEqualToConstraint = {
+    label: 'belowOrEqualTo'
+  };
+  var positiveConstraint = {
+    label: 'positive'
+  };
   constraintServiceMock.percentage.and.returnValue(percentageConstraint);
   constraintServiceMock.decimal.and.returnValue(decimalConstraint);
+  constraintServiceMock.belowOrEqualTo.and.returnValue(belowOrEqualToConstraint);
+  constraintServiceMock.positive.and.returnValue(positiveConstraint);
 
   describe('The manualInputService', function() {
     beforeEach(angular.mock.module('elicit.manualInput', function($provide) {
@@ -272,9 +280,13 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           scale: [0, 1],
           omitThis: 'yech',
           dataSources: [{
-            unitOfMeasurement: 'particles',
+            unitOfMeasurement: {
+              value: 'particles',
+              lowerBound: -Infinity,
+              upperBound: Infinity
+            },
             id: 'ds1id',
-            oldId: 'ds1oldId',
+            oldId: 'ds1oldId'
           }]
         }, {
           title: 'unfavorable criterion',
@@ -282,14 +294,22 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           isFavorable: false,
           id: 'criterion2id',
           dataSources: [{
-            unitOfMeasurement: 'particles',
-            id: 'ds2id',
+            unitOfMeasurement: {
+              value: '%',
+              lowerBound: 0,
+              upperBound: 100
+            },
+            id: 'ds2id'
           }]
         }, {
           title: 'dichotomousDecimalSampleSize',
           id: 'criterion3id',
           isFavorable: false,
           dataSources: [{
+            unitOfMeasurement: {
+              lowerBound: -Infinity,
+              upperBound: Infinity
+            },
             id: 'ds3id',
           }]
         }];
@@ -392,8 +412,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               isFavorable: false,
               dataSources: [{
                 id: 'ds2id',
-                unitOfMeasurement: 'particles',
-                scale: [-Infinity, Infinity],
+                unitOfMeasurement: '%',
+                scale: [0, 100],
               }]
             },
             criterion3id: {
@@ -401,6 +421,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               isFavorable: false,
               dataSources: [{
                 id: 'ds3id',
+                unitOfMeasurement: undefined,
                 scale: [-Infinity, Infinity],
               }]
             }
@@ -501,7 +522,15 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               id: 'uuid1',
               oldId: 'ds1',
               source: 'single study',
-              sourceLink: 'http://www.drugis.org'
+              sourceLink: 'http://www.drugis.org',
+              unitOfMeasurement: {
+                value: undefined,
+                lowerBound: 0,
+                upperBound: 1,
+                selectedOption: {
+                  id: 'default'
+                }
+              }
             }],
             id: 'uuid2'
           }],
@@ -818,6 +847,103 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
             expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
           });
+
+          it('should create a new state with a value cell and Proportion (decimal) unit of measurement', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact',
+                      input: {
+                        scale: 'decimal'
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.selectedOption.id = 'Proportion (decimal)';
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+          });
+
+          it('should create a new state with a value cell and Proportion (percentage) unit of measurement', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                criteria: {
+                  crit1: {
+                    dataSources: [{
+                      scale: [0, 100]
+                    }]
+                  }
+                },
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact',
+                      input: {
+                        scale: 'percentage'
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.selectedOption.id = 'Proportion (percentage)';
+            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.upperBound = 100;
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+          });
+
+          it('should create a new state with a value cell and default unit of measurement and with bounds', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                criteria: {
+                  crit1: {
+                    dataSources: [{
+                      scale: [0, Infinity]
+                    }]
+                  }
+                },
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'exact',
+                      input: {
+                        scale: 'percentage'
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.upperBound = Infinity;
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+          });
+
         });
 
         describe('without input', function() {
@@ -943,110 +1069,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
     });
 
-    describe('findDuplicateValues', () => {
-      it('should return truthy if there is an invalid row i.e. all inputs have the same effect value', () => {
-        var inputData = {
-          row1: {
-            col1: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            },
-            col2: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            },
-            col3: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            }
-          }
-        };
-        var result = manualInputService.findDuplicateValues(inputData);
-        expect(result).toBeTruthy();
-      });
-
-      it('should return falsy if atleast one cell has a different value', () => {
-        var inputData = {
-          row1: {
-            col1: {
-              inputType: 'distribution',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            },
-            col2: {
-              inputType: 'effect',
-              firstParameter: 50,
-              inputParameters: {
-                id: 'value'
-              }
-            },
-            col3: {
-              inputType: 'effect',
-              firstParameter: 51,
-              inputParameters: {
-                id: 'value'
-              }
-            }
-          }
-        };
-        var result = manualInputService.findDuplicateValues(inputData);
-        expect(result).toBeFalsy();
-      });
-
-      it('should return falsy if there are no values in the row', function() {
-        var inputData = {
-          row1: {
-            col1: {
-              inputParameters: {
-                id: 'value'
-              },
-              isInvalid: true
-            },
-            col2: {
-              inputParameters: {
-                id: 'value'
-              },
-              isInvalid: true
-            }
-          }
-        };
-        var result = manualInputService.findDuplicateValues(inputData);
-        expect(result).toBeFalsy();
-      });
-
-      it('should return falsy if there are duplcate text cells in the row', function() {
-        var inputData = {
-          row1: {
-            col1: {
-              firstParameter: 1,
-              inputParameters: {
-                id: 'text'
-              }
-            },
-            col2: {
-              firstParameter: 1,
-              inputParameters: {
-                id: 'text'
-              }
-            }
-          }
-        };
-        var result = manualInputService.findDuplicateValues(inputData);
-        expect(result).toBeFalsy();
-      });
-    });
-
     describe('generateDistributions', function() {
       it('should generate a distribution from effect data', function() {
         var inputData = {
@@ -1114,66 +1136,22 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     });
 
     describe('updateParameterConstraints', function() {
-      var cell;
-      beforeEach(function() {
-        cell = {
+      it('should add percentage constraints', function() {
+        var cell = {
           inputParameters: {
             firstParameter: {
-              label: 'Value',
-              constraints: [decimalConstraint, percentageConstraint]
-            },
-            secondParameter: {
-              label: 'Value',
-              constraints: [decimalConstraint, percentageConstraint]
-            },
-            thirdParameter: {
-              label: 'Value',
-              constraints: [decimalConstraint, percentageConstraint]
+              label: 'Value'
             }
           }
         };
-      });
-
-      it('should remove the percentage and/or decimal constraints', function() {
-        cell.constraint = 'None';
-        var result = manualInputService.updateParameterConstraints(cell);
-
-        var expectedResult = {
-          constraint: 'None',
-          inputParameters: {
-            firstParameter: {
-              label: 'Value',
-              constraints: []
-            },
-            secondParameter: {
-              label: 'Value',
-              constraints: []
-            },
-            thirdParameter: {
-              label: 'Value',
-              constraints: []
-            }
-          }
+        var unitOfMeasurement = {
+          lowerBound: 0,
+          upperBound: 100
         };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should add the percentage constraint if percentage is chosen', function() {
-        cell.constraint = percentageConstraint.label;
-        var result = manualInputService.updateParameterConstraints(cell);
-
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
         var expectedResult = {
-          constraint: percentageConstraint.label,
           inputParameters: {
             firstParameter: {
-              label: 'Value',
-              constraints: [percentageConstraint]
-            },
-            secondParameter: {
-              label: 'Value',
-              constraints: [percentageConstraint]
-            },
-            thirdParameter: {
               label: 'Value',
               constraints: [percentageConstraint]
             }
@@ -1182,27 +1160,216 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(result).toEqual(expectedResult);
       });
 
-      it('should add the decimal constraint if decimal is chosen', function() {
-        cell.constraint = decimalConstraint.label;
-        var result = manualInputService.updateParameterConstraints(cell);
-
-        var expectedResult = {
-          constraint: decimalConstraint.label,
+      it('should add decimal constraints', function() {
+        var cell = {
           inputParameters: {
             firstParameter: {
-              label: 'Value',
-              constraints: [decimalConstraint]
-            },
-            secondParameter: {
-              label: 'Value',
-              constraints: [decimalConstraint]
-            },
-            thirdParameter: {
+              label: 'Value'
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: 0,
+          upperBound: 1
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            firstParameter: {
               label: 'Value',
               constraints: [decimalConstraint]
             }
           }
         };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should add a positive constraint', function() {
+        var cell = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value'
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: 0,
+          upperBound: Infinity
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value',
+              constraints: [positiveConstraint]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should add a \'below or equal to\' constraint', function() {
+        var cell = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value'
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: -Infinity,
+          upperBound: 100
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value',
+              constraints: [belowOrEqualToConstraint]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should remove no longer applicable constraints, leaving intact other constraints', function() {
+        var cell = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value',
+              constraints: [
+                positiveConstraint,
+                belowOrEqualToConstraint,
+                decimalConstraint,
+                percentageConstraint, {
+                  label: 'other constraint'
+                }]
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: -Infinity,
+          upperBound: Infinity
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value',
+              constraints: [{
+                label: 'other constraint'
+              }]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should add a positive constraint to the second parameter', function() {
+        var cell = {
+          inputParameters: {
+            secondParameter: {
+              label: 'Value'
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: 0,
+          upperBound: Infinity
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            secondParameter: {
+              label: 'Value',
+              constraints: [positiveConstraint]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should add a positive constraint to the third parameter', function() {
+        var cell = {
+          inputParameters: {
+            thirdParameter: {
+              label: 'Value'
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: 0,
+          upperBound: Infinity
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            thirdParameter: {
+              label: 'Value',
+              constraints: [positiveConstraint]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+    });
+
+    describe('checkStep1Errors', function() {
+      it('should return an error with a missing title error', function() {
+        var state = {
+          criteria: [{
+            dataSources: [{}]
+          }, {
+            dataSources: [{}]
+          }],
+          alternatives: [{}, {}]
+        };
+        var result = manualInputService.checkStep1Errors(state);
+        var expectedResult = ['Missing title'];
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return an error with a not enough criteria error', function() {
+        var state = {
+          title: 'some title',
+          criteria: [{
+            dataSources: [{}]
+          }],
+          alternatives: [{}, {}]
+        };
+        var result = manualInputService.checkStep1Errors(state);
+        var expectedResult = ['At least two criteria required'];
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return an error with a not enough alternatives error', function() {
+        var state = {
+          title: 'some title',
+          criteria: [{
+            dataSources: [{}]
+          }, {
+            dataSources: [{}]
+          }],
+          alternatives: [{}]
+        };
+        var result = manualInputService.checkStep1Errors(state);
+        var expectedResult = ['At least two alternatives required'];
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return an error with a missing data source error', function() {
+        var state = {
+          title: 'some title',
+          criteria: [{
+            dataSources: [{}]
+          }, {
+            dataSources: []
+          }],
+          alternatives: [{}, {}]
+        };
+        var result = manualInputService.checkStep1Errors(state);
+        var expectedResult = ['All criteria require at least one data source'];
         expect(result).toEqual(expectedResult);
       });
     });
