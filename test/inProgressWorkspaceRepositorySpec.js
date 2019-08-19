@@ -70,12 +70,19 @@ describe('the inProgressWorkspace repository', function() {
   describe('update', function() {
     initDBStub();
 
+    const expectedQuery = 'UPDATE inProgressWorkspace SET state = $1 WHERE id = $2';
+    const queryInputValues = [state, inProgressWorkspaceId];
+
     it('should update the inProgressWorkspace', function(done) {
-      const expectedQuery = 'UPDATE inProgressWorkspace SET state = $1 WHERE id = $2';
-      const queryInputValues = [state, inProgressWorkspaceId];
       const expectedResult = undefined;
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       query.onCall(0).yields(null);
+      inProgressWorkspaceRepository.update(state, inProgressWorkspaceId, callback);
+    });
+
+    it('should call the callback with only an error', function(done) {
+      query.onCall(0).yields(expectedError);
+      var callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
       inProgressWorkspaceRepository.update(state, inProgressWorkspaceId, callback);
     });
   });
@@ -83,14 +90,20 @@ describe('the inProgressWorkspace repository', function() {
   describe('delete', () => {
     initDBStub();
 
+    const expectedQuery = 'DELETE FROM inProgressWorkspace WHERE id=$1';
+    const queryInputValues = [inProgressWorkspaceId];
+
     it('should delete the inProgressWorkspace', (done) => {
-      const expectedQuery = 'DELETE FROM inProgressWorkspace WHERE id=$1';
-      const queryInputValues = [inProgressWorkspaceId];
       const expectedResult = undefined;
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       query.onCall(0).yields(null);
       inProgressWorkspaceRepository.delete(inProgressWorkspaceId, callback);
+    });
 
+    it('should call the callback with only an error', function(done) {
+      query.onCall(0).yields(expectedError);
+      var callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      inProgressWorkspaceRepository.delete(inProgressWorkspaceId, callback);
     });
   });
 

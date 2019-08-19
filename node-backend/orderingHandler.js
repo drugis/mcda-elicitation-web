@@ -1,34 +1,29 @@
 'use strict';
-var logger = require('./logger');
+var util = require('./util');
 
 module.exports = function(db) {
+  var orderingRepository = require('./orderingRepository')(db);
+
   function get(req, res, next) {
-    logger.debug('GET /workspaces/' + req.params.workspaceId + '/ordering');
-    db.query('SELECT workspaceId AS "workspaceId", ordering FROM ordering WHERE workspaceId = $1', [req.params.workspaceId], function(err, result) {
-      if (err) {
-        err.status = 500;
-        return next(err);
+    orderingRepository.get(req.params.workspaceId, function(error, result) {
+      util.checkForError(error, next);
+      if (!error) {
+        res.json({
+          ordering: result.rows[0] ? result.rows[0].ordering : undefined
+        });
       }
-      res.json({
-        ordering: result.rows[0] ? result.rows[0].ordering : undefined
-      });
     });
   }
 
   function update(req, res, next) {
-    logger.debug('SET /workspaces/' + req.params.workspaceId + '/ordering/');
-    db.query('insert into ordering(workspaceId, ordering) values($1, $2) ON CONFLICT(workspaceId) DO UPDATE SET ordering=$2', [
-      req.params.workspaceId,
-      req.body
-    ], function(err) {
-      if (err) {
-        err.status = 500;
-        next(err);
+    orderingRepository.update(req.params.workspaceId, req.body, function(error) {
+      util.checkForError(error, next);
+      if (!error) {
+        res.end();
       }
-      res.end();
     });
   }
-  
+
   return {
     get: get,
     update: update

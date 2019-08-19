@@ -44,7 +44,7 @@ module.exports = function(db) {
   }
 
   function del(request, response, next) {
-    db.query('DELETE FROM inProgressWorkspace WHERE id=$1', [request.params.id], function(error) {
+    inProgressWorkspaceRepository.delete(request.params.id, function(error) {
       util.checkForError(error, next);
       if (!error) {
         response.end();

@@ -10,7 +10,6 @@ var dbStub = {
 var subProblemRepository = require('../node-backend/subProblemRepository')(dbStub);
 
 describe('the subproblem repository', function() {
-  var workspaceId = 1;
   var expectedError = 'some expected error';
 
   describe('create', function() {

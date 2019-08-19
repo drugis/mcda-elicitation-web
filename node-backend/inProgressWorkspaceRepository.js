@@ -34,11 +34,11 @@ module.exports = function(db) {
       callback);
   }
 
-  function del(ownerId, callback) {
+  function del(workspaceId, callback) {
     logger.debug('delete in-progress workspace');
     const query = 'DELETE FROM inProgressWorkspace WHERE id=$1';
     db.query(query,
-      [ownerId],
+      [workspaceId],
       callback);
   }
 

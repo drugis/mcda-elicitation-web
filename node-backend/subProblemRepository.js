@@ -18,9 +18,7 @@ module.exports = function(db) {
       });
   }
 
-
   return {
-    // get: get,
     create: create
   };
 };

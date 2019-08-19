@@ -172,7 +172,6 @@ app.use('/workspaces', SubProblemRouter);
 app.use('/workspaces', ScenarioRouter);
 app.use('/workspaces', WorkspaceSettingsRouter);
 
-// patavi
 app.post('/patavi', function(req, res, next) { // FIXME: separate routes for scales and results
   patavi.create(req.body, function(err, taskUri) {
     if (err) {

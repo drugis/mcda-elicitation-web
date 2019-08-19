@@ -20,6 +20,7 @@ function getRanges(problem) {
   }, {});
   return ranges;
 }
+
 function getUser(req) {
   if (req.user) {
     return req.user;
@@ -29,16 +30,16 @@ function getUser(req) {
   }
 }
 
-function checkForError(err, next) {
-  if (err) {
-    logger.error(JSON.stringify(err, null, 2));
-    err.status = 500;
+function checkForError(error, next) {
+  if (error) {
+    logger.error(JSON.stringify(error, null, 2));
     next({
       statusCode: 500,
-      message: err
+      message: error
     });
   }
 }
+
 module.exports = {
   reduceProblem: reduceProblem,
   getRanges: getRanges,
