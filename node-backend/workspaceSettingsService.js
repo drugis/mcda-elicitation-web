@@ -2,7 +2,7 @@
 var logger = require('./logger');
 module.exports = function(db) {
 
-  function getWorkspaceSettings(req, res, next) {
+  function get(req, res, next) {
     logger.debug('GET /workspaces/' + req.params.workspaceId + '/workspaceSettings');
 
     db.query(
@@ -18,7 +18,7 @@ module.exports = function(db) {
     );
   }
 
-  function putWorkspaceSettings(req, res, next) {
+  function put(req, res, next) {
     logger.debug('PUT /workspaces/' + req.params.workspaceId + '/workspaceSettings');
 
     db.query(
@@ -35,8 +35,8 @@ module.exports = function(db) {
   }
 
   return {
-    getWorkspaceSettings: getWorkspaceSettings,
-    putWorkspaceSettings: putWorkspaceSettings
+    get: get,
+    put: put
   };
 
 };

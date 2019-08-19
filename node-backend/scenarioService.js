@@ -4,7 +4,7 @@ var logger = require('./logger');
 
 module.exports = function(db) {
 
-  function queryScenarios(req, res, next) {
+  function query(req, res, next) {
     logger.debug('GET /workspaces/scenarios');
     db.query('SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1', [req.params.workspaceId], function(err, result) {
       if (err) {
@@ -26,7 +26,7 @@ module.exports = function(db) {
     });
   }
 
-  function getScenario(req, res, next) {
+  function get(req, res, next) {
     logger.debug('GET /workspaces/:id/scenarios/:id');
     db.query('SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE id = $1', [req.params.id], function(err, result) {
       if (err) {
@@ -36,7 +36,8 @@ module.exports = function(db) {
       res.json(result.rows[0]);
     });
   }
-  function createScenario(req, res, next) {
+
+  function create(req, res, next) {
   db.query('INSERT INTO scenario (workspace, subProblemId, title, state) VALUES ($1, $2, $3, $4) RETURNING id', [req.params.workspaceId, req.params.subProblemId, req.body.title, {
     problem: req.body.state.problem,
     prefs: req.body.state.prefs
@@ -49,7 +50,7 @@ module.exports = function(db) {
   });
 }
 
-function updateScenario(req, res, next) {
+function update(req, res, next) {
   logger.debug('updating scenario :id');
   db.query('UPDATE scenario SET state = $1, title = $2 WHERE id = $3', [{
       problem: req.body.state.problem,
@@ -67,10 +68,10 @@ function updateScenario(req, res, next) {
 }
 
   return {
-    queryScenarios: queryScenarios,
+    query: query,
     queryScenariosForSubProblem: queryScenariosForSubProblem,
-    getScenario: getScenario,
-    createScenario: createScenario,
-    updateScenario: updateScenario
+    get: get,
+    create: create,
+    update: update
   };
 };

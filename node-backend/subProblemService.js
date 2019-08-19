@@ -2,7 +2,7 @@
 var logger = require('./logger');
 var async = require('async');
 module.exports = function(db) {
-  function querySubProblems(req, res, next) {
+  function query(req, res, next) {
     logger.debug('GET /workspaces/:id1/subProblem/:id2/scenarios');
     db.query('SELECT id, workspaceId AS "workspaceId", title, definition FROM subProblem WHERE workspaceId = $1', [req.params.workspaceId], function(err, result) {
       if (err) {
@@ -13,7 +13,7 @@ module.exports = function(db) {
     });
   }
 
-  function getSubProblem(req, res, next) {
+  function get(req, res, next) {
     logger.debug('GET /workspaces/:id/problems/:subProblemId');
     db.query('SELECT id, workspaceId AS "workspaceId", title, definition FROM subProblem WHERE workspaceId = $1 AND id = $2', [
       req.params.workspaceId, req.params.subProblemId
@@ -26,12 +26,12 @@ module.exports = function(db) {
     });
   }
 
-  function createSubProblem(req, res, next) {
+  function create(req, res, next) {
     logger.debug('POST /workspaces/:workspaceId/problems');
 
     function subProblemTransaction(client, transactionCallback) {
 
-      function createSubProblem(callback) {
+      function create(callback) {
         logger.debug('creating subproblem');
         client.query('INSERT INTO subProblem (workspaceid, title, definition) VALUES ($1, $2, $3) RETURNING id', [req.params.workspaceId, req.body.title, req.body.definition], function(err, result) {
           if (err) {
@@ -66,7 +66,7 @@ module.exports = function(db) {
       }
 
       async.waterfall([
-        createSubProblem,
+        create,
         createScenario,
         retrieveSubProblem
       ], transactionCallback);
@@ -82,7 +82,7 @@ module.exports = function(db) {
     });
   }
 
-  function updateSubProblem(req, res, next) {
+  function update(req, res, next) {
     logger.debug('UPDATE /workspaces/:id/problems/:subProblemId');
     db.query('UPDATE subProblem SET definition = $1, title = $2 WHERE id = $3', [
       req.body.definition,
@@ -99,9 +99,9 @@ module.exports = function(db) {
 
 
   return {
-    querySubProblems: querySubProblems,
-    getSubProblem: getSubProblem,
-    createSubProblem: createSubProblem,
-    updateSubProblem: updateSubProblem
+    query: query,
+    get: get,
+    create: create,
+    update: update
   };
 };
