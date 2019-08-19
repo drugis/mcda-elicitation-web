@@ -2,12 +2,12 @@
 var express = require('express');
 
 module.exports = function(db) {
-  var ScenarioService = require('./scenarioService')(db);
+  var ScenarioHandler = require('./scenarioHandler')(db);
   return express.Router()
-    .get('/scenarios', ScenarioService.query)
-    .get('/problems/:subProblemId/scenarios', ScenarioService.queryScenariosForSubProblem)
-    .get('/problems/:subProblemId/scenarios/:id', ScenarioService.get)
-    .post('/problems/:subProblemId/scenarios', ScenarioService.create)
-    .post('/problems/:subProblemId/scenarios/:id', ScenarioService.update)
+    .get('/:workspaceId/scenarios', ScenarioHandler.query)
+    .get('/:workspaceId/problems/:subProblemId/scenarios', ScenarioHandler.queryScenariosForSubProblem)
+    .get('/:workspaceId/problems/:subProblemId/scenarios/:id', ScenarioHandler.get)
+    .post('/:workspaceId/problems/:subProblemId/scenarios', ScenarioHandler.create)
+    .post('/:workspaceId/problems/:subProblemId/scenarios/:id', ScenarioHandler.update)
     ;
 };

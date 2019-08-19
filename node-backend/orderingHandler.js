@@ -2,7 +2,7 @@
 var logger = require('./logger');
 
 module.exports = function(db) {
-  function getOrdering(req, res, next) {
+  function get(req, res, next) {
     logger.debug('GET /workspaces/' + req.params.workspaceId + '/ordering');
     db.query('SELECT workspaceId AS "workspaceId", ordering FROM ordering WHERE workspaceId = $1', [req.params.workspaceId], function(err, result) {
       if (err) {
@@ -15,7 +15,7 @@ module.exports = function(db) {
     });
   }
 
-  function updateOrdering(req, res, next) {
+  function update(req, res, next) {
     logger.debug('SET /workspaces/' + req.params.workspaceId + '/ordering/');
     db.query('insert into ordering(workspaceId, ordering) values($1, $2) ON CONFLICT(workspaceId) DO UPDATE SET ordering=$2', [
       req.params.workspaceId,
@@ -28,8 +28,9 @@ module.exports = function(db) {
       res.end();
     });
   }
+  
   return {
-    getOrdering: getOrdering,
-    updateOrdering: updateOrdering
+    get: get,
+    update: update
   };
 };

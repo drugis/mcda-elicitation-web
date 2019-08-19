@@ -11,7 +11,7 @@ var appEnvironmentSettings = {
   host: process.env.MCDA_HOST
 };
 var signin = require('signin')(db, appEnvironmentSettings);
-var WorkspaceService = require('./node-backend/workspaceService')(db);
+var InProgressWorkspaceRepository = require('./node-backend/inProgressWorkspaceRepository')(db);
 var WorkspaceRepository = require('./node-backend/workspaceRepository')(db);
 var WorkspaceRouter = require('./node-backend/workspaceRouter')(db);
 var InProgressRouter = require('./node-backend/inProgressRouter')(db);
@@ -94,7 +94,7 @@ function workspaceOwnerRightsNeeded(response, next, workspaceId, userId) {
 }
 
 function inProgressOwnerRightsNeeded(response, next, workspaceId, userId) {
-  WorkspaceService.getInProgress(workspaceId, _.partial(rightsCallback, response, next, userId));
+  InProgressWorkspaceRepository.get(workspaceId, _.partial(rightsCallback, response, next, userId));
 }
 
 function rightsCallback(response, next, userId, error, workspace) {
@@ -167,10 +167,10 @@ app.use(rightsManagement.expressMiddleware);
 
 app.use('/inProgress', InProgressRouter);
 app.use('/workspaces', WorkspaceRouter);
-app.use('/workspaces/:workspaceId/ordering', OrderingRouter);
-app.use('/workspaces/:workspaceId/problems', SubProblemRouter);
-app.use('/workspaces/:workspaceId', ScenarioRouter);
-app.use('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsRouter);
+app.use('/workspaces', OrderingRouter);
+app.use('/workspaces', SubProblemRouter);
+app.use('/workspaces', ScenarioRouter);
+app.use('/workspaces', WorkspaceSettingsRouter);
 
 // patavi
 app.post('/patavi', function(req, res, next) { // FIXME: separate routes for scales and results

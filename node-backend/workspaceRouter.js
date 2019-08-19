@@ -2,12 +2,12 @@
 var express = require('express');
 
 module.exports = function(db) {
-  var WorkspaceService = require('./workspaceService')(db);
+  var WorkspaceHandler = require('./workspaceHandler')(db);
   return express.Router()
-    .get('/', WorkspaceService.query)
-    .post('/', WorkspaceService.create)
-    .get('/:id', WorkspaceService.get)
-    .post('/:id', WorkspaceService.update)
-    .delete('/:id', WorkspaceService.delete)
+    .get('/', WorkspaceHandler.query)
+    .post('/', WorkspaceHandler.create)
+    .get('/:id', WorkspaceHandler.get)
+    .post('/:id', WorkspaceHandler.update)
+    .delete('/:id', WorkspaceHandler.delete)
     ;
 };

@@ -2,9 +2,9 @@
 var express = require('express');
 
 module.exports = function(db) {
-  var OrderingService = require('./orderingService')(db);
+  var OrderingHandler = require('./orderingHandler')(db);
   return express.Router()
-    .get('/', OrderingService.getOrdering)
-    .put('/', OrderingService.updateOrdering)
+    .get('/:workspaceId/ordering/', OrderingHandler.get)
+    .put('/:workspaceId/ordering/', OrderingHandler.update)
     ;
 };

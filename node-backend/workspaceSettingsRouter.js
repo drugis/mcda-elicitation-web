@@ -2,9 +2,9 @@
 var express = require('express');
 
 module.exports = function(db) {
-  var WorkspaceSettingsService = require('./workspaceSettingsService')(db);
+  var WorkspaceSettingsHandler = require('./workspaceSettingsHandler')(db);
   return express.Router()
-    .get('/', WorkspaceSettingsService.get)
-    .put('/', WorkspaceSettingsService.put)
+    .get('/:workspaceId/workspaceSettings', WorkspaceSettingsHandler.get)
+    .put('/:workspaceId/workspaceSettings', WorkspaceSettingsHandler.put)
     ;
 };

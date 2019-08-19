@@ -2,11 +2,11 @@
 var express = require('express');
 
 module.exports = function(db) {
-  var SubProblemService = require('./subProblemService')(db);
+  var SubProblemHandler = require('./subProblemHandler')(db);
   return express.Router()
-    .get('/', SubProblemService.query)
-    .get('/:subProblemId', SubProblemService.get)
-    .post('/', SubProblemService.create)
-    .post('/:subProblemId', SubProblemService.update)
+    .get('/:workspaceId/problems/', SubProblemHandler.query)
+    .get('/:workspaceId/problems/:subProblemId', SubProblemHandler.get)
+    .post('/:workspaceId/problems/', SubProblemHandler.create)
+    .post('/:workspaceId/problems/:subProblemId', SubProblemHandler.update)
     ;
 };
