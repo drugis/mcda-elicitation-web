@@ -373,7 +373,7 @@ define([
 
         expect(result).toEqual(expectedResult);
       });
-      
+
       it('should do nothing if there is no legend', function() {
         var state = {
           a: 'b'
@@ -408,7 +408,7 @@ define([
       });
     });
 
-    describe('createDeterministicScales', function(){
+    describe('createDeterministicScales', function() {
       var expectedResult = {
         ds1: {
           alt1: {
@@ -417,29 +417,29 @@ define([
         }
       };
 
-      it('should create deterministic scales from the performance table', function(){
-        var performanceTable = [          {
-            dataSource: 'ds1',
-            performance: {
-              effect: {
-                value: 10
-              }
-            },
-            alternative: 'alt1'
-          }
+      it('should create deterministic scales from the performance table', function() {
+        var performanceTable = [{
+          dataSource: 'ds1',
+          performance: {
+            effect: {
+              value: 10
+            }
+          },
+          alternative: 'alt1'
+        }
         ];
         var smaaScales = {};
         var result = resultsService.createDeterministicScales(performanceTable, smaaScales);
-        
+
         expect(result).toEqual(expectedResult);
       });
 
-      it('should create deterministic scales from the smaa values if there are no deterministic values in the performance table', function(){
-        var performanceTable = [          {
-            dataSource: 'ds1',
-            performance: {},
-            alternative: 'alt1'
-          }
+      it('should create deterministic scales from the smaa values if there are no deterministic values in the performance table', function() {
+        var performanceTable = [{
+          dataSource: 'ds1',
+          performance: {},
+          alternative: 'alt1'
+        }
         ];
         var smaaScales = {
           ds1: {
@@ -450,6 +450,26 @@ define([
         };
         var result = resultsService.createDeterministicScales(performanceTable, smaaScales);
         expect(result).toEqual(expectedResult);
+      });
+
+      it('should work for relative data', function() {
+        var performanceTable = [{
+          dataSource: 'ds1',
+          performance: {
+            distribution: {}
+          }
+        }
+        ];
+        var smaaScales = {
+          ds1: {
+            alt1: {
+              '50%': 10
+            }
+          }
+        };
+        var result = resultsService.createDeterministicScales(performanceTable, smaaScales);
+        expect(result).toEqual(expectedResult);
+
       });
     });
   });
