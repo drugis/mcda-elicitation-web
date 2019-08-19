@@ -265,8 +265,10 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
           accum[entry.dataSource][entry.alternative] = {
             '50%': entry.performance.effect.value
           };
-        } else {
+        } else if (entry.alternative) {
           accum[entry.dataSource][entry.alternative] = smaaScales[entry.dataSource][entry.alternative];
+        } else {
+          accum[entry.dataSource] = smaaScales[entry.dataSource];
         }
         return accum;
       }, {});
