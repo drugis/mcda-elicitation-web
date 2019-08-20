@@ -184,7 +184,7 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       $modal.open({
         templateUrl: './addAlternative.html',
         controller: 'AddAlternativeController',
-        size: 'small',
+        size: 'tiny',
         resolve: {
           alternatives: function() {
             return $scope.state.alternatives;
