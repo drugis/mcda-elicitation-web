@@ -31,7 +31,7 @@ define(['lodash'], function(_) {
       $scope.isAdding = true;
       $scope.dataSource.unitOfMeasurement = {
         selectedOption: {
-          id: 'default'
+          id: 'custom'
         }
       };
     } else {
@@ -39,7 +39,7 @@ define(['lodash'], function(_) {
         id: generateUuid(),
         unitOfMeasurement: {
           selectedOption: {
-            id: 'default'
+            id: 'custom'
           }
         }
       };

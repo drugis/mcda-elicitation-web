@@ -528,7 +528,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 lowerBound: 0,
                 upperBound: 1,
                 selectedOption: {
-                  id: 'default'
+                  id: 'custom'
                 }
               }
             }],

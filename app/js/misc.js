@@ -7,7 +7,10 @@ function exampleProblem() {
         title: 'Proximal DVT',
         dataSources: [{
           id: 'proxDvtDS',
-          unitOfMeasurement: 'mg/h',
+          unitOfMeasurement: {
+            type: 'custom',
+            label: 'mg/h'
+          },
           pvf: {
             range: [
               0.0,
@@ -23,6 +26,10 @@ function exampleProblem() {
         title: 'Distal DVT',
         dataSources: [{
           id: 'distDvtDS',
+          unitOfMeasurement: {
+            type: 'decimal',
+            label: 'Proportion'
+          },
           pvf: {
             range: [
               0.15,
@@ -30,13 +37,18 @@ function exampleProblem() {
             ],
             type: 'linear',
             direction: 'decreasing'
-          }
+          },
+          scale: [0, 1]
         }]
       },
       Bleed: {
         title: 'Major bleeding',
         dataSources: [{
           id: 'bleedDS',
+          unitOfMeasurement: {
+            type: 'percentage',
+            label: '%'
+          },
           pvf: {
             range: [
               0.0,
@@ -44,7 +56,65 @@ function exampleProblem() {
             ],
             type: 'linear',
             direction: 'decreasing'
-          }
+          },
+          scale: [0, 100]
+        }]
+      },
+      Bleed2: {
+        title: 'Major bleeding',
+        dataSources: [{
+          id: 'bleedDS',
+          unitOfMeasurement: {
+            type: 'custom',
+            label: ''
+          },
+          pvf: {
+            range: [
+              0.0,
+              0.1
+            ],
+            type: 'linear',
+            direction: 'decreasing'
+          },
+          scale: [-Infinity, Infinity]
+        }]
+      },
+      Bleed3: {
+        title: 'Major bleeding',
+        dataSources: [{
+          id: 'bleedDS',
+          unitOfMeasurement: {
+            type: 'custom',
+            label: ''
+          },
+          pvf: {
+            range: [
+              0.0,
+              0.1
+            ],
+            type: 'linear',
+            direction: 'decreasing'
+          },
+          scale: [-Infinity, Infinity]
+        }]
+      },
+      null2Infinity: {
+        title: 'Major bleeding',
+        dataSources: [{
+          id: 'null2Infinity',
+          unitOfMeasurement: {
+            type: 'custom',
+            label: ''
+          },
+          pvf: {
+            range: [
+              0.0,
+              0.1
+            ],
+            type: 'linear',
+            direction: 'decreasing'
+          },
+          scale: [-Infinity, Infinity]
         }]
       }
     },
@@ -117,7 +187,7 @@ function exampleProblem() {
         }
       }
     }],
-    schemaVersion: '1.3.4'
+    schemaVersion: '1.4.0'
   };
 }
 
@@ -145,6 +215,7 @@ function exampleProblem122() {
         title: 'Distal DVT',
         dataSources: [{
           id: 'distDvtDS',
+          unitOfMeasurement: 'Proportion',
           pvf: {
             range: [
               0.15,
@@ -152,10 +223,27 @@ function exampleProblem122() {
             ],
             type: 'linear',
             direction: 'decreasing'
-          }
+          },
+          scale: [0, 1]
         }]
       },
       Bleed: {
+        title: 'Major bleeding',
+        dataSources: [{
+          id: 'bleedDS',
+          unitOfMeasurement: '%',
+          pvf: {
+            range: [
+              0.0,
+              0.1
+            ],
+            type: 'linear',
+            direction: 'decreasing'
+          },
+          scale: [0, 100]
+        }]
+      },
+      Bleed2: {
         title: 'Major bleeding',
         dataSources: [{
           id: 'bleedDS',
@@ -167,6 +255,35 @@ function exampleProblem122() {
             type: 'linear',
             direction: 'decreasing'
           }
+        }]
+      },
+      Bleed3: {
+        title: 'Major bleeding',
+        dataSources: [{
+          id: 'bleedDS',
+          pvf: {
+            range: [
+              0.0,
+              0.1
+            ],
+            type: 'linear',
+            direction: 'decreasing'
+          }
+        }]
+      },
+      null2Infinity: {
+        title: 'Major bleeding',
+        dataSources: [{
+          id: 'null2Infinity',
+          pvf: {
+            range: [
+              0.0,
+              0.1
+            ],
+            type: 'linear',
+            direction: 'decreasing'
+          },
+          scale: [null, null]
         }]
       }
     },
@@ -268,6 +385,7 @@ function exampleProblem110() {
       },
       'Dist DVT': {
         title: 'Distal DVT',
+        unitOfMeasurement: 'Proportion',
         dataSources: [{
           id: 'distDvtDS',
           inputType: 'distribution',
@@ -279,11 +397,29 @@ function exampleProblem110() {
             ],
             type: 'linear',
             direction: 'decreasing'
-          },
-          scale: null
-        }]
+          }
+        }],
+        scale: [0, 1]
       },
       Bleed: {
+        title: 'Major bleeding',
+        unitOfMeasurement: '%',
+        dataSources: [{
+          id: 'bleedDS',
+          inputType: 'distribution',
+          inputMethod: 'manualDistribution',
+          pvf: {
+            range: [
+              0.0,
+              0.1
+            ],
+            type: 'linear',
+            direction: 'decreasing'
+          }
+        }],
+        scale: [0, 100]
+      },
+      Bleed2: {
         title: 'Major bleeding',
         dataSources: [{
           id: 'bleedDS',
@@ -296,9 +432,41 @@ function exampleProblem110() {
             ],
             type: 'linear',
             direction: 'decreasing'
-          },
-          scale: undefined
-        }]
+          }
+        }],
+        scale: undefined
+      },
+      Bleed3: {
+        title: 'Major bleeding',
+        dataSources: [{
+          id: 'bleedDS',
+          inputType: 'distribution',
+          inputMethod: 'manualDistribution',
+          pvf: {
+            range: [
+              0.0,
+              0.1
+            ],
+            type: 'linear',
+            direction: 'decreasing'
+          }
+        }],
+        scale: null
+      },
+      null2Infinity: {
+        title: 'Major bleeding',
+        dataSources: [{
+          id: 'null2Infinity',
+          pvf: {
+            range: [
+              0.0,
+              0.1
+            ],
+            type: 'linear',
+            direction: 'decreasing'
+          }
+        }],
+        scale: [null, null]
       }
     },
     alternatives: {

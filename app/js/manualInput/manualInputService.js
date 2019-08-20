@@ -305,7 +305,7 @@ define(['lodash', 'angular'], function(_, angular) {
         };
       } else {
         newUnitOfMeasurement.selectedOption = {
-          id: 'default'
+          id: 'custom'
         };
       }
       return newUnitOfMeasurement;
@@ -317,7 +317,7 @@ define(['lodash', 'angular'], function(_, angular) {
       } else if (isPercentagelUnit(dataSource, problem)) {
         return 'Proportion (percentage)';
       } else {
-        return 'default';
+        return 'custom';
       }
     }
 

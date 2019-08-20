@@ -736,6 +736,9 @@ define([
           var exampleWithOneCriterion = _.cloneDeep(example);
           delete exampleWithOneCriterion.criteria.Bleed;
           delete exampleWithOneCriterion.criteria['Prox DVT'];
+          delete exampleWithOneCriterion.criteria.Bleed2;
+          delete exampleWithOneCriterion.criteria.Bleed3;
+          delete exampleWithOneCriterion.criteria.null2Infinity;
           var validity = workspaceService.validateWorkspace(exampleWithOneCriterion);
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Two or more criteria required');
@@ -889,13 +892,22 @@ define([
           }, {
             type: 'ordinal',
             criteria: ['Prox DVT', 'Dist DVT']
+          }, {
+            type: 'ordinal',
+            criteria: ['Dist DVT', 'Bleed2']
+          }, {
+            type: 'ordinal',
+            criteria: ['Bleed2', 'Bleed3']
+          }, {
+            type: 'ordinal',
+            criteria: ['Bleed3', 'null2Infinity']
           }];
           var validity = workspaceService.validateWorkspace(consistentOrdinal);
           expect(validity.isValid).toBeTruthy();
           expect(validity.errorMessage).toBe(undefined);
         });
 
-        it('should fail if ordinal preferences are inconsistent', function() {
+        it('should fail if ordinal preferences are inconsistent because one is compared to multiple', function(){
           var inconsistentOrdinalWithTree = _.cloneDeep(exampleProblem());
           inconsistentOrdinalWithTree.preferences = [{
             type: 'ordinal',
@@ -903,19 +915,43 @@ define([
           }, {
             type: 'ordinal',
             criteria: ['Bleed', 'Dist DVT']
+          }, {
+            type: 'ordinal',
+            criteria: ['Dist DVT', 'Bleed2']
+          }, {
+            type: 'ordinal',
+            criteria: ['Bleed2', 'Bleed3']
+          }, {
+            type: 'ordinal',
+            criteria: ['Bleed3', 'null2Infinity']
           }];
           var validity = workspaceService.validateWorkspace(inconsistentOrdinalWithTree);
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Inconsistent ordinal preferences');
+        });
+
+        it('should fail if ordinal preferences are inconsistent', function() {
           var inconsistentOrdinalCycle = _.cloneDeep(exampleProblem());
           inconsistentOrdinalCycle.preferences = [{
             type: 'ordinal',
             criteria: ['Bleed', 'Prox DVT']
           }, {
             type: 'ordinal',
-            criteria: ['Prox DVT', 'Bleed']
+            criteria: ['Prox DVT', 'Dist DVT']
+          }, {
+            type: 'ordinal',
+            criteria: ['Dist DVT', 'Bleed2']
+          }, {
+            type: 'ordinal',
+            criteria: ['Bleed2', 'Bleed3']
+          }, {
+            type: 'ordinal',
+            criteria: ['Bleed3', 'null2Infinity']
+          }, {
+            type: 'ordinal',
+            criteria: ['null2Infinity', 'Bleed']
           }];
-          validity = workspaceService.validateWorkspace(inconsistentOrdinalCycle);
+          var validity = workspaceService.validateWorkspace(inconsistentOrdinalCycle);
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Inconsistent ordinal preferences');
           var inconsistentOrdinalTooLong = _.cloneDeep(exampleProblem());
@@ -946,6 +982,18 @@ define([
           }, {
             type: 'ordinal',
             criteria: ['Bleed', 'Prox DVT']
+          }, {
+            type: 'ordinal',
+            criteria: ['Prox DVT', 'Dist DVT']
+          }, {
+            type: 'ordinal',
+            criteria: ['Dist DVT', 'Bleed2']
+          }, {
+            type: 'ordinal',
+            criteria: ['Bleed2', 'Bleed3']
+          }, {
+            type: 'ordinal',
+            criteria: ['Bleed3', 'null2Infinity']
           }];
           validity = workspaceService.validateWorkspace(inconsistentOrdinalSelfReference);
           expect(validity.isValid).toBeFalsy();

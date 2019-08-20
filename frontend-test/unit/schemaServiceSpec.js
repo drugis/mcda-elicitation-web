@@ -4,7 +4,7 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
   var generateUuidMock = function() {
     return 'uuid';
   };
-  var currentSchemaVersion = '1.3.4';
+  var currentSchemaVersion = '1.4.0';
   var schemaService;
 
   describe('The SchemaService', function() {
@@ -94,9 +94,13 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
                 description: 'desc',
                 dataSources: [{
                   id: 'uuid',
-                  unitOfMeasurement: 'ms',
+                  unitOfMeasurement: {
+                    label: 'ms',
+                    type: 'custom'
+                  },
                   uncertainties: 'unc',
-                  source: 'source1'
+                  source: 'source1',
+                  scale: [-Infinity, Infinity]
                 }]
               },
               crit2: {
@@ -104,9 +108,13 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
                 description: 'desc',
                 dataSources: [{
                   id: 'uuid',
-                  unitOfMeasurement: 'ms',
+                  unitOfMeasurement: {
+                    label: 'ms',
+                    type: 'custom'
+                  },
                   uncertainties: 'unc',
-                  source: 'source2'
+                  source: 'source2',
+                  scale: [-Infinity, Infinity]
                 }]
               }
             },
@@ -220,9 +228,13 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
                 isFavorable: true,
                 dataSources: [{
                   id: 'uuid',
-                  unitOfMeasurement: 'ms',
+                  unitOfMeasurement: {
+                    label: 'ms',
+                    type: 'custom'
+                  },
                   uncertainties: 'unc',
-                  source: 'source'
+                  source: 'source',
+                  scale: [-Infinity, Infinity]
                 }]
               },
               crit2: {
@@ -231,9 +243,13 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
                 isFavorable: true,
                 dataSources: [{
                   id: 'uuid',
-                  unitOfMeasurement: 'ms',
+                  unitOfMeasurement: {
+                    label: 'ms',
+                    type: 'custom'
+                  },
                   uncertainties: 'unc',
-                  source: 'source'
+                  source: 'source',
+                  scale: [-Infinity, Infinity]
                 }]
               }
             },
@@ -291,7 +307,7 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
         expect(result).toEqual(expectedResult);
       });
 
-      it('should update a problem of schema version 1.2.2 to the current version', function(){
+      it('should update a problem of schema version 1.2.2 to the current version', function() {
         var workspace = {
           problem: exampleProblem122()
         };

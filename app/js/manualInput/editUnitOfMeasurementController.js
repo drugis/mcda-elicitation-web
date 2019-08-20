@@ -34,9 +34,9 @@ define(['lodash'], function(_) {
       defaultLowerBound: 0,
       defaultUpperBound: 100
     },
-    default:{
-      label: 'Default',
-      id: 'default',
+    custom:{
+      label: 'Custom',
+      id: 'custom',
       defaultValue: '',
       defaultLowerBound: -Infinity,
       defaultUpperBound: Infinity
@@ -62,7 +62,7 @@ define(['lodash'], function(_) {
 
     function initializeOption() {
       if (!currentValues.selectedOption) {
-        return $scope.unitOptions.default;
+        return $scope.unitOptions.custom;
       } else {
         return $scope.unitOptions[currentValues.selectedOption.id];
       }

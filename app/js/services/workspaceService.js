@@ -314,9 +314,9 @@ define(['lodash', 'angular'], function(_, angular) {
           }
         });
       });
-      if (minimum === maximum){
-        minimum -= Math.abs(minimum)*0.001;
-        maximum += Math.abs(maximum)*0.001;
+      if (minimum === maximum) {
+        minimum -= Math.abs(minimum) * 0.001;
+        maximum += Math.abs(maximum) * 0.001;
       }
       return [minimum, maximum];
     }
@@ -482,41 +482,87 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function inconsistentOrdinalPreferences(workspace) {
-      if (!workspace.preferences || _.isEmpty(workspace.preferences) || _.find(workspace.preferences, function(preference) {
-        return preference.type !== 'ordinal';
-      })) {
+      if (hasNoOrdinalPreferences(workspace)) {
         return;
       }
-      if (workspace.preferences.length !== _.size(workspace.criteria) - 1) {
+      var visitCount = createVisitCounts(workspace);
+      if (
+        hasWrongNumberOfPreferences(workspace) ||
+        hasBadPath(workspace) ||
+        hasBadCoverage(visitCount) ||
+        hasBadVisitCount(visitCount)
+      ) {
         return 'Inconsistent ordinal preferences';
       }
+    }
 
-      var visitCount = _.cloneDeep(workspace.criteria);
-      _.forEach(visitCount, function(node) {
-        node.visits = 0;
+    function hasBadVisitCount(visitCount) {
+      var counts = createVisitCombinationCounts(visitCount);
+      return counts.first !== 1 || counts.last !== 1;
+    }
+
+    function hasBadCoverage(visitCount) {
+      return _.reduce(visitCount, function(accum, visits) {
+        return accum || !((visits.to === 0 && visits.from === 1) ||
+          (visits.to === 1 && visits.from === 1) ||
+          (visits.to === 1 && visits.from === 0));
+      }, false);
+    }
+
+    function createVisitCounts(workspace) {
+      var visitCount = _.mapValues(workspace.criteria, function() {
+        return {
+          from: 0,
+          to: 0
+        };
       });
+      return countVisits(workspace, visitCount);
+    }
 
-      // always visit beginning of path
-      ++visitCount[workspace.preferences[0].criteria[0]].visits;
-
-      var badPath = false;
-      _.forEach(workspace.preferences, function(preference, index) {
+    function countVisits(workspace, visitCount) {
+      return _.reduce(workspace.preferences, function(accum, preference) {
         var origin = preference.criteria[0];
         var destination = preference.criteria[1];
-        ++visitCount[destination].visits;
+        ++accum[origin].from;
+        ++accum[destination].to;
+        return accum;
+      }, visitCount);
+    }
+
+    function hasBadPath(workspace) {
+      return _.find(workspace.preferences, function(preference, index) {
+        var origin = preference.criteria[0];
         if (index > 0) {
           var previousDestination = workspace.preferences[index - 1].criteria[1];
-          badPath = origin !== previousDestination;
+          return origin !== previousDestination;
         }
       });
+    }
 
-      var badCoverage = _.find(visitCount, ['visits', 0]) || _.find(visitCount, function(node) {
-        return node.visits > 1;
+    function createVisitCombinationCounts(visitCount) {
+      var counts = {
+        first: 0,
+        last: 0,
+      };
+      return _.reduce(visitCount, function(accum, visits) {
+        if (visits.to === 0 && visits.from === 1) {
+          ++accum.first;
+        } else if (visits.to === 1 && visits.from === 0) {
+          ++accum.last;
+        }
+        return accum;
+      }, counts);
+
+    }
+
+    function hasNoOrdinalPreferences(workspace) {
+      return !workspace.preferences || _.isEmpty(workspace.preferences) || _.find(workspace.preferences, function(preference) {
+        return preference.type !== 'ordinal';
       });
+    }
 
-      if (badPath || badCoverage) {
-        return 'Inconsistent ordinal preferences';
-      }
+    function hasWrongNumberOfPreferences(workspace) {
+      return workspace.preferences.length !== _.size(workspace.criteria) - 1;
     }
 
     function inconsistentExactPreferences(workspace) {
