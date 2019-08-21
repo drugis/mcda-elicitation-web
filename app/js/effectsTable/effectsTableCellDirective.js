@@ -13,11 +13,10 @@ define(['lodash'], function(_) {
     return {
       restrict: 'E',
       scope: {
-        'effectsTableInfo': '=',
-        'workspaceSettings': '=',
-        'scales': '=',
-        'theoreticalScale': '=',
-        'alternativeId': '='
+        effectsTableInfo: '=',
+        scales: '=',
+        alternativeId: '=',
+        unitOfMeasurementType: '='
       },
       templateUrl: './effectsTableCellDirective.html',
       link: function(scope) {
@@ -26,6 +25,7 @@ define(['lodash'], function(_) {
         scope.$watch('workspaceSettings', init, true);
 
         function init() {
+          scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
           scope.isValueView = WorkspaceSettingsService.isValueView();
           scope.uncertainty = hasUncertainty(scope.effectsTableInfo);
           scope.effectsDisplay = scope.workspaceSettings.effectsDisplay;
@@ -38,7 +38,7 @@ define(['lodash'], function(_) {
             scope.distributionLabel = labelsAndUncertainty.distributionLabel;
             scope.effectValue = labelsAndUncertainty.effectValue;
             if (scope.effectValue !== '') {
-              if (_.isEqual(scope.theoreticalScale, [0, 100])) {
+              if (scope.unitOfMeasurementType === 'percentage') {
                 scope.effectValue *= 100;
                 scope.effectValue = significantDigits(scope.effectValue, 1);
               } else {

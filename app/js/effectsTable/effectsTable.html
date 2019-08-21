@@ -50,16 +50,17 @@
             {{row.criterion.description}}
           </td>
           <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['units']">
-            <span ng-hide="!isValueView && row.isProportion">
-              {{row.dataSource.unitOfMeasurement}}
+            <span
+              ng-hide="!isValueView && (dataSource.unitOfMeasurement.type === 'percentage' || dataSource.unitOfMeasurement.type === 'decimal')">
+              {{row.dataSource.unitOfMeasurement.label}}
             </span>
           </td>
           <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives"
             ng-style="isValueView && !isCellAnalysisViable[row.dataSource.id][alternative.id] ? {'background-color':'#f3d3c8'} : {}">
             <div ng-if="!isValueView || isCellAnalysisViable[row.dataSource.id][alternative.id]">
               <effects-table-cell effects-table-info="effectsTableInfo[row.dataSource.id]"
-                workspace-settings="workspaceSettings" scales="scales[row.dataSource.id][alternative.id]"
-                theoretical-scale="row.dataSource.scale" alternative-id="alternative.id">
+                scales="scales[row.dataSource.id][alternative.id]"
+                unit-of-measurement-type="row.dataSource.unitOfMeasurement.type" alternative-id="alternative.id">
               </effects-table-cell>
             </div>
             <div ng-if="isValueView && !isCellAnalysisViable[row.dataSource.id][alternative.id]" style="opacity: 0.5;"

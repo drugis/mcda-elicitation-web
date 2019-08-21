@@ -96,7 +96,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
       $scope.scalesPromise.then(function(observedScales) {
         $scope.workspace.scales.base = observedScales;
-        $scope.workspace.scales.basePercentified = WorkspaceService.percentifyScales(baseProblem.criteria, observedScales);
+        $scope.workspace.scales.basePercentified = WorkspaceService.percentifyScales($scope.percentifiedBaseState.problem.criteria, observedScales);
         $scope.updateScales(observedScales);
       });
 
@@ -104,10 +104,9 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function updateScales(baseObservedScales) {
-      var baseCriteria = $scope.baseAggregateState.problem.criteria;
       if (WorkspaceSettingsService.usePercentage()) {
-        $scope.workspace.scales.observed = WorkspaceService.percentifyScales(baseCriteria, baseObservedScales);
         $scope.aggregateState = WorkspaceService.percentifyCriteria($scope.baseAggregateState);
+        $scope.workspace.scales.observed = WorkspaceService.percentifyScales($scope.aggregateState.problem.criteria, baseObservedScales);
       } else {
         $scope.workspace.scales.observed = baseObservedScales;
         $scope.aggregateState = WorkspaceService.dePercentifyCriteria($scope.baseAggregateState);

@@ -37,7 +37,7 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     // init
     $scope.subProblems = subProblems;
     $scope.scales = $scope.workspace.scales;
-    $scope.problem = _.cloneDeep($scope.workspace.problem);
+    $scope.problem = $scope.aggregateState.problem;
     $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.table = EffectsTableService.b, $scope.problem.alternatives);
     PageTitleService.setPageTitle('SubProblemController', ($scope.problem.title || $scope.workspace.title) + '\'s problem definition');
 
@@ -61,9 +61,15 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
       OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
         $scope.criteria = orderings.criteria;
         $scope.alternatives = orderings.alternatives;
-        var effectsTable = EffectsTableService.buildEffectsTable(orderings.criteria);
+        var effectsTable = EffectsTableService.buildEffectsTable(getCriteria(orderings.criteria));
         $scope.scaleTable = ScaleRangeService.getScaleTable(effectsTable, $scope.scales, $scope.problem.performanceTable);
         $scope.hasRowWithOnlyMissingValues = SubProblemService.findRowWithoutValues($scope.effectsTableInfo, $scope.scales);
+      });
+    }
+
+    function getCriteria(orderedCriteria) {
+      return _.map(orderedCriteria, function(criterion) {
+        return _.merge({}, $scope.problem.criteria[criterion.id], { id: criterion.id });
       });
     }
 

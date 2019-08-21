@@ -57,7 +57,7 @@
         <tr ng-repeat="criterion in criteria">
           <td>{{criterion.title}}</td>
           <td>{{criterion.description}}</td>
-          <td>{{criterion.dataSources[0].unitOfMeasurement}}</td>
+          <td>{{criterion.dataSources[0].unitOfMeasurement.label}}</td>
           <td>{{criterion.dataSources[0].pvf.range && pvf.worst(criterion.dataSources[0]) | number}}</td>
           <td>{{criterion.dataSources[0].pvf.range && pvf.best(criterion.dataSources[0]) | number}}</td>
           <td>{{importance[criterion.id]}}</td>
@@ -88,5 +88,5 @@
   </div>
 </div>
 <div class="cell" ng-if="criteriaHavePvf">
-  <willingness-to-trade-off problem="baseAggregateState.problem"></willingness-to-trade-off>
+  <willingness-to-trade-off problem="aggregateState.problem"></willingness-to-trade-off>
 </div>

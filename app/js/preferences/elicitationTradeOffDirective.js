@@ -75,8 +75,8 @@ define(['lodash', 'd3', 'c3'],
 
           function setUnfavorableValues() {
             scope.mostImportantCriterionValue = {
-              firstValue: scope.mostImportantCriterion.best, 
-              secondValue: scope.mostImportantCriterion.worst 
+              firstValue: scope.mostImportantCriterion.best,
+              secondValue: scope.mostImportantCriterion.worst
             };
             scope.secondaryCriterionValue = {
               firstValue: scope.secondaryCriterion.worst,
@@ -89,7 +89,7 @@ define(['lodash', 'd3', 'c3'],
 
           function setDefaultValues() {
             scope.mostImportantCriterionValue = {
-              firstValue: scope.mostImportantCriterion.worst, 
+              firstValue: scope.mostImportantCriterion.worst,
               secondValue: scope.mostImportantCriterion.best
             };
             scope.secondaryCriterionValue = {
@@ -131,8 +131,8 @@ define(['lodash', 'd3', 'c3'],
             initialSettings.axis.y.tick.count = 5;
 
             scope.units = {
-              x: TradeOffService.getUnit(scope.secondaryCriterion),
-              y: TradeOffService.getUnit(scope.mostImportantCriterion)
+              x: scope.secondaryCriterion.dataSources[0].unitOfMeasurement.dataSources[0].unitOfMeasurement.label,
+              y: scope.mostImportantCriterion.dataSources[0].unitOfMeasurement.label
             };
 
             chart = c3.generate(initialSettings);

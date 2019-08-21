@@ -220,9 +220,16 @@ define(['lodash', 'angular'], function(_, angular) {
     function buildDataSource(dataSource) {
       var newDataSource = angular.copy(dataSource);
       newDataSource.scale = getScale(dataSource);
-      newDataSource.unitOfMeasurement = dataSource.unitOfMeasurement.value;
+      newDataSource.unitOfMeasurement = createUnitOfMeasurement(dataSource.unitOfMeasurement);
       delete newDataSource.oldId;
       return newDataSource;
+    }
+
+    function createUnitOfMeasurement(unitOfMeasurement) {
+      return {
+        type: unitOfMeasurement.selectedOption.type,
+        label: unitOfMeasurement.value
+      };
     }
 
     function getScale(dataSource) {
@@ -272,13 +279,13 @@ define(['lodash', 'angular'], function(_, angular) {
     function copyOldWorkspaceCriteria(workspace) {
       return _.map(workspace.problem.criteria, function(criterion) {
         var newCrit = _.pick(criterion, ['title', 'description', 'isFavorable']); // omit scales, preferences
-        newCrit.dataSources = copyOldWorkspaceDataSource(criterion, workspace.problem);
+        newCrit.dataSources = copyOldWorkspaceDataSource(criterion);
         newCrit.id = generateUuid();
         return newCrit;
       });
     }
 
-    function copyOldWorkspaceDataSource(criterion, problem) {
+    function copyOldWorkspaceDataSource(criterion) {
       return _.map(criterion.dataSources, function(dataSource) {
         var newDataSource = _.pick(dataSource, [
           'source',
@@ -286,60 +293,24 @@ define(['lodash', 'angular'], function(_, angular) {
           'strengthOfEvidence',
           'uncertainties'
         ]);
-        newDataSource.unitOfMeasurement = createNewUnitOfMeasurement(dataSource, problem);
+        newDataSource.unitOfMeasurement = createNewUnitOfMeasurement(dataSource);
         newDataSource.id = generateUuid();
         newDataSource.oldId = dataSource.id;
         return newDataSource;
       });
     }
 
-    function createNewUnitOfMeasurement(dataSource, problem) {
+    function createNewUnitOfMeasurement(dataSource) {
       var newUnitOfMeasurement = {
-        value: dataSource.unitOfMeasurement
+        value: dataSource.unitOfMeasurement.label
       };
-      if (dataSource.scale) {
-        newUnitOfMeasurement.lowerBound = dataSource.scale[0];
-        newUnitOfMeasurement.upperBound = dataSource.scale[1];
-        newUnitOfMeasurement.selectedOption = {
-          id: getSelectedOption(dataSource, problem)
-        };
-      } else {
-        newUnitOfMeasurement.selectedOption = {
-          id: 'custom'
-        };
-      }
+      newUnitOfMeasurement.lowerBound = dataSource.scale[0];
+      newUnitOfMeasurement.upperBound = dataSource.scale[1];
+      newUnitOfMeasurement.selectedOption = {
+        type: dataSource.unitOfMeasurement.type
+      };
+
       return newUnitOfMeasurement;
-    }
-
-    function getSelectedOption(dataSource, problem) {
-      if (isDecimalUnit(dataSource, problem)) {
-        return 'Proportion (decimal)';
-      } else if (isPercentagelUnit(dataSource, problem)) {
-        return 'Proportion (percentage)';
-      } else {
-        return 'custom';
-      }
-    }
-
-    function isDecimalUnit(dataSource, problem) {
-      return dataSource.scale[0] === 0 &&
-        dataSource.scale[1] === 1 &&
-        hasDefinedEntry(dataSource, problem, 'decimal');
-    }
-
-    function isPercentagelUnit(dataSource, problem) {
-      return dataSource.scale[0] === 0 &&
-        dataSource.scale[1] === 100 &&
-        hasDefinedEntry(dataSource, problem, 'percentage');
-    }
-
-    function hasDefinedEntry(dataSource, problem, entryType) {
-      return _.some(problem.performanceTable, function(entry) {
-        return entry.dataSource === dataSource.id &&
-          entry.performance.effect &&
-          entry.performance.effect.input &&
-          entry.performance.effect.input.scale === entryType;
-      });
     }
 
     function createInputFromOldWorkspace(criteria, alternatives, oldWorkspace) {

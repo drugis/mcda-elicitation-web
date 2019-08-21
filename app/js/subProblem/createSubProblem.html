@@ -98,7 +98,7 @@
               <td ng-if="!row.isHeaderRow"
                 ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id]}"
                 ng-show="toggledColumns['units']">
-                {{getUnit(row)}}
+                {{row.dataSource.unitOfMeasurement.label}}
               </td>
               <td ng-if="!row.isHeaderRow"
                 ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternative.id] || !subProblemState.criterionInclusions[row.criterion.id] || !subProblemState.dataSourceInclusions[row.dataSource.id]}"
@@ -158,7 +158,7 @@
         <ul class="no-bullet">
           <li ng-repeat="dataSource in scalesDataSources">
             <h5 class="subheader">
-              {{problem.criteria[criteriaByDataSource[dataSource]].title}}
+              {{criteria[criteriaByDataSource[dataSource]].title}}
             </h5>
             <div class="grid-x">
               <div class="cell large-1 text-center">

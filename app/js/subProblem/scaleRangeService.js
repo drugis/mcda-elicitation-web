@@ -66,9 +66,9 @@ define(['lodash', 'angular'], function(_, angular) {
 
       var restrictedRangeFrom = criterionRange[0];
       var restrictedRangeTo = criterionRange[1];
-      if (restrictedRangeFrom === restrictedRangeTo){
-        restrictedRangeFrom -= Math.abs(restrictedRangeFrom)*0.001;
-        restrictedRangeTo += Math.abs(restrictedRangeTo)*0.001;
+      if (restrictedRangeFrom === restrictedRangeTo) {
+        restrictedRangeFrom -= Math.abs(restrictedRangeFrom) * 0.001;
+        restrictedRangeTo += Math.abs(restrictedRangeTo) * 0.001;
       }
 
       return {
@@ -134,16 +134,6 @@ define(['lodash', 'angular'], function(_, angular) {
       );
     }
 
-    function getEffectValues(performanceTable, dataSource) {
-      return _.reduce(performanceTable, function(accum, entry) {
-        if (entry.dataSource === dataSource.id && entry.performance.effect) {
-          var factor = dataSource.unitOfMeasurement === '%' ? 100 : 1;
-          accum.push(entry.performance.effect.value * factor);
-        }
-        return accum;
-      }, []);
-    }
-
     function getScaleTable(table, scales, performanceTable) {
       var scaleTable = _.reject(table, 'isHeaderRow');
       return _.map(scaleTable, function(row) {
@@ -154,6 +144,16 @@ define(['lodash', 'angular'], function(_, angular) {
         }
         return newRow;
       });
+    }
+
+    function getEffectValues(performanceTable, dataSource) {
+      return _.reduce(performanceTable, function(accum, entry) {
+        if (entry.dataSource === dataSource.id && entry.performance.effect) {
+          var factor = dataSource.unitOfMeasurement.type === 'percentage' ? 100 : 1;
+          accum.push(entry.performance.effect.value * factor);
+        }
+        return accum;
+      }, []);
     }
 
     return {

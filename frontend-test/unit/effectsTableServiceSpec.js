@@ -54,7 +54,6 @@ define([
               id: 'ds2id'
             },
             isFirstRow: true,
-            isProportion: false
           }, {
             criterion: {
               id: 'crit3',
@@ -65,7 +64,6 @@ define([
               id: 'ds3id'
             },
             isFirstRow: true,
-            isProportion: false
           },
           {
             isHeaderRow: true,
@@ -80,7 +78,6 @@ define([
               id: 'ds1id'
             },
             isFirstRow: true,
-            isProportion: false
           }
           ];
           expect(result).toEqual(expectedResult);
@@ -583,7 +580,10 @@ define([
             isFavorable: true,
             dataSources: [{
               foo: 'bar',
-              unitOfMeasurement: 'not perc',
+              unitOfMeasurement: {
+                label: 'not perc',
+                type: 'custom'
+              },
               scale: [0, 100]
             }]
           }, {
@@ -591,7 +591,10 @@ define([
             isFavorable: false,
             dataSources: [{
               foo: 'qux',
-              unitOfMeasurement: 'not Proportion',
+              unitOfMeasurement: {
+                label: 'not Proportion',
+                type: 'custom'
+              },
               scale: [0, 1]
             }, {
               zoq: 'fot'
@@ -600,7 +603,6 @@ define([
 
           var expectedResult = [{
             isFirstRow: true,
-            isProportion: true,
             criterion: {
               id: 'crit1',
               isFavorable: true,
@@ -608,12 +610,14 @@ define([
             },
             dataSource: {
               foo: 'bar',
-              unitOfMeasurement: '%',
+              unitOfMeasurement: {
+                label: 'not perc',
+                type: 'custom'
+              },
               scale: [0, 100]
             }
           }, {
             isFirstRow: true,
-            isProportion: true,
             criterion: {
               id: 'crit2',
               isFavorable: false,
@@ -621,12 +625,14 @@ define([
             },
             dataSource: {
               foo: 'qux',
-              unitOfMeasurement: 'Proportion',
+              unitOfMeasurement:  {
+                label: 'not Proportion',
+                type: 'custom'
+              },
               scale: [0, 1]
             }
           }, {
             isFirstRow: false,
-            isProportion: false,
             criterion: {
               id: 'crit2',
               isFavorable: false,

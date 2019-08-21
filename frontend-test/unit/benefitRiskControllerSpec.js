@@ -113,27 +113,33 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         TaskDependencies.isAccessible.calls.reset();
         scope.$apply();
       });
+
       it('should place a forkScenario function which opens a modal on the scope.', () => {
         expect(modalMock.open).not.toHaveBeenCalled();
         scope.forkScenario();
         expect(modalMock.open).toHaveBeenCalled();
       });
+
       it('should place a newScenario function which opens a modal on the scope.', () => {
         expect(modalMock.open).not.toHaveBeenCalled();
         scope.newScenario();
         expect(modalMock.open).toHaveBeenCalled();
       });
+
       describe('should place scenarioChanged on the scope', () => {
         beforeEach(() => {
           stateMock.go.calls.reset();
         });
+
         it('which should be a function', () => {
           expect(typeof scope.scenarioChanged).toBe('function');
         });
+
         it('which should do nothing if there is no new scenario', () => {
           scope.scenarioChanged();
           expect(stateMock.go).not.toHaveBeenCalled();
         });
+
         it('which should go to the correct state for smaa-results', () => {
           var oldStateCurrent = stateMock.current;
           stateMock.current = {
@@ -150,6 +156,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
           });
           stateMock.current = oldStateCurrent;
         });
+
         it('which should go to preferences by default', () => {
           var oldStateCurrent = stateMock.current;
           stateMock.current = {
@@ -167,12 +174,14 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
           stateMock.current = oldStateCurrent;
         });
       });
+
       it('should populate the scope with scenarios', () => {
         expect(scope.scenarios).toBe(scenarios);
         expect(scope.scenario).toBe(currentScenario);
         expect(scope.scenariosWithResults).toBe(scenariosWithResults);
         expect(scope.isDuplicateScenarioTitle).toBe(false);
       });
+
       it('should place the tasks on the scope', () => {
         expect(scope.tasks).toEqual({
           'smaa-results': {
@@ -225,15 +234,16 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
             criteria: percentifiedCriteria
           }
         });
+        WorkspaceSettingsService.usePercentage.and.returnValue(true);
+        WorkspaceService.percentifyScales.and.returnValue(percentifiedScales);
+        WorkspaceService.percentifyCriteria.and.returnValue(stateWithPercentifiedCriteria);
+        WorkspaceService.setDefaultObservedScales.and.returnValue(baseProblemWithScales);
 
         beforeEach(() => {
           TaskDependencies.isAccessible.calls.reset();
-          WorkspaceSettingsService.usePercentage.and.returnValue(true);
-          WorkspaceService.percentifyScales.and.returnValue(percentifiedScales);
-          WorkspaceService.percentifyCriteria.and.returnValue(stateWithPercentifiedCriteria);
-          WorkspaceService.setDefaultObservedScales.and.returnValue(baseProblemWithScales);
           scope.$apply();
         });
+        
         it('should percentify the scales and properly initalise base- and regular aggregate state', (done) => {
           observedScalesDefer.promise.then(() => {
             expect(scope.workspace.scales.base).toBe(observedScales);
@@ -241,10 +251,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
             expect(scope.workspace.scales.basePercentified).toBe(percentifiedScales);
             expect(scope.aggregateState).toEqual(stateWithPercentifiedCriteria);
             expect(scope.baseAggregateState).toEqual(stateWithPercentifiedCriteria);
+            expect(scope.percentifiedBaseState).toEqual(stateWithPercentifiedCriteria);
             done();
           });
           scope.$apply();
         });
+        
         it('should update the task accessibility', () => {
           expect(TaskDependencies.isAccessible).toHaveBeenCalledTimes(4);
           expect(scope.tasksAccessibility).toEqual({

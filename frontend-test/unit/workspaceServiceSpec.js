@@ -522,7 +522,7 @@ define([
             }
           }
         };
-        
+
         expect(result).toEqual(expectedProblem);
       });
     });
@@ -907,7 +907,7 @@ define([
           expect(validity.errorMessage).toBe(undefined);
         });
 
-        it('should fail if ordinal preferences are inconsistent because one is compared to multiple', function(){
+        it('should fail if ordinal preferences are inconsistent because one is compared to multiple', function() {
           var inconsistentOrdinalWithTree = _.cloneDeep(exampleProblem());
           inconsistentOrdinalWithTree.preferences = [{
             type: 'ordinal',
@@ -1078,12 +1078,20 @@ define([
           crit1: {
             dataSources: [{
               id: 'ds1',
+              unitOfMeasurement: {
+                type: 'percentage',
+                label: '%'
+              },
               scale: [0, 1]
             }]
           },
           crit2: {
             dataSources: [{
               id: 'ds2',
+              unitOfMeasurement: {
+                type: 'custom',
+                label: 'anything'
+              },
               scale: [-Infinity, Infinity]
             }]
           }
@@ -1139,29 +1147,47 @@ define([
             criteria: {
               crit1: {
                 dataSources: [{
-                  unitOfMeasurement: 'proportion',
-                  scale: [10, 20],
+                  unitOfMeasurement: {
+                    label: 'Proportion',
+                    type: 'decimal'
+                  },
+                  scale: [0, 1],
                   pvf: {
                     range: [15, 16]
                   }
                 }, {
+                  unitOfMeasurement: {
+                    label: 'Proportion',
+                    type: 'decimal'
+                  },
                   scale: [0, 1]
                 }]
               },
               crit2: {
                 dataSources: [{
+                  unitOfMeasurement: {
+                    label: 'Proportion',
+                    type: 'decimal'
+                  },
                   scale: [0, 1],
                   pvf: {}
                 }, {
-                  scale: [0, 1],
+                  unitOfMeasurement: {
+                    label: '%',
+                    type: 'percentage'
+                  },
+                  scale: [0, 100],
                   pvf: {
-                    range: [0.3, 0.4]
+                    range: [30, 40]
                   }
                 }]
               },
               crit3: {
                 dataSources: [{
-                  unitOfMeasurement: 'keepUnit',
+                  unitOfMeasurement: {
+                    label: 'keepUnit',
+                    type: 'custom'
+                  },
                   scale: [-Infinity, Infinity],
                   pvf: {
                     range: [10, 20]
@@ -1179,32 +1205,47 @@ define([
             criteria: {
               crit1: {
                 dataSources: [{
-                  unitOfMeasurement: 'proportion',
-                  scale: [10, 20],
+                  unitOfMeasurement: {
+                    label: '%',
+                    type: 'percentage'
+                  },
+                  scale: [0, 100],
                   pvf: {
-                    range: [15, 16]
+                    range: [1500, 1600]
                   }
                 }, {
                   scale: [0, 100],
-                  unitOfMeasurement: '%'
+                  unitOfMeasurement: {
+                    label: '%',
+                    type: 'percentage'
+                  },
                 }]
               },
               crit2: {
                 dataSources: [{
                   scale: [0, 100],
                   pvf: {},
-                  unitOfMeasurement: '%'
+                  unitOfMeasurement: {
+                    label: '%',
+                    type: 'percentage'
+                  },
                 }, {
+                  unitOfMeasurement: {
+                    label: '%',
+                    type: 'percentage'
+                  },
                   scale: [0, 100],
                   pvf: {
                     range: [30, 40]
-                  },
-                  unitOfMeasurement: '%'
+                  }
                 }]
               },
               crit3: {
                 dataSources: [{
-                  unitOfMeasurement: 'keepUnit',
+                  unitOfMeasurement: {
+                    label: 'keepUnit',
+                    type: 'custom'
+                  },
                   scale: [-Infinity, Infinity],
                   pvf: {
                     range: [10, 20]
@@ -1226,32 +1267,47 @@ define([
             criteria: {
               crit1: {
                 dataSources: [{
-                  unitOfMeasurement: 'proportion',
+                  unitOfMeasurement: {
+                    label: 'proportion',
+                    type: 'custom'
+                  },
                   scale: [10, 20],
                   pvf: {
                     range: [15, 16]
                   }
                 }, {
                   scale: [0, 100],
-                  unitOfMeasurement: '%'
+                  unitOfMeasurement: {
+                    label: '%',
+                    type: 'percentage'
+                  }
                 }]
               },
               crit2: {
                 dataSources: [{
                   scale: [0, 100],
                   pvf: {},
-                  unitOfMeasurement: '%'
+                  unitOfMeasurement: {
+                    label: '%',
+                    type: 'percentage'
+                  }
                 }, {
                   scale: [0, 100],
                   pvf: {
                     range: [0.3, 0.4]
                   },
-                  unitOfMeasurement: '%'
+                  unitOfMeasurement: {
+                    label: '%',
+                    type: 'percentage'
+                  }
                 }]
               },
               crit3: {
                 dataSources: [{
-                  unitOfMeasurement: 'keepUnit',
+                  unitOfMeasurement: {
+                    label: 'keepUnit',
+                    type: 'custom'
+                  },
                   scale: [-Infinity, Infinity],
                   pvf: {
                     range: [10, 20]
@@ -1269,33 +1325,47 @@ define([
             criteria: {
               crit1: {
                 dataSources: [{
-                  unitOfMeasurement: 'proportion',
+                  unitOfMeasurement: {
+                    type: 'custom',
+                    label: 'proportion'
+                  },
                   scale: [10, 20],
                   pvf: {
                     range: [15, 16]
                   }
                 }, {
                   scale: [0, 1],
-                  unitOfMeasurement: 'Proportion'
+                  unitOfMeasurement: {
+                    label: 'Proportion',
+                    type: 'decimal'
+                  }
                 }]
               },
               crit2: {
                 dataSources: [{
                   scale: [0, 1],
                   pvf: {},
-                  unitOfMeasurement: 'Proportion'
+                  unitOfMeasurement: {
+                    label: 'Proportion',
+                    type: 'decimal'
+                  }
                 }, {
                   scale: [0, 1],
                   pvf: {
                     range: [0.3, 0.4]
                   },
-                  unitOfMeasurement: 'Proportion'
+                  unitOfMeasurement: {
+                    label: 'Proportion',
+                    type: 'decimal'
+                  }
                 }]
               },
               crit3: {
                 dataSources: [{
-                  unitOfMeasurement: 'keepUnit',
-                  scale: [-Infinity, Infinity],
+                  unitOfMeasurement: {
+                    label: 'keepUnit',
+                    type: 'custom'
+                  }, scale: [-Infinity, Infinity],
                   pvf: {
                     range: [10, 20]
                   }

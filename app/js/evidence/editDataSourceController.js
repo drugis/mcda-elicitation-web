@@ -31,7 +31,7 @@ define(['lodash'], function(_) {
       $scope.isAdding = true;
       $scope.dataSource.unitOfMeasurement = {
         selectedOption: {
-          id: 'custom'
+          type: 'custom'
         }
       };
     } else {
@@ -39,15 +39,13 @@ define(['lodash'], function(_) {
         id: generateUuid(),
         unitOfMeasurement: {
           selectedOption: {
-            id: 'custom'
+            type: 'custom'
           }
         }
       };
       $scope.isAdding = true;
     }
 
-    $scope.originalUnitOfMeasurement = $scope.dataSource.unitOfMeasurement;
-    $scope.isProportion = isProportion;
     checkErrors();
 
     // public
@@ -59,15 +57,10 @@ define(['lodash'], function(_) {
       $scope.errors = [];
       checkMissingReference();
       checkDuplicateReference();
-      checkUnitOfMeasureument();
       checkUrl();
     }
 
     //private
-    function isProportion(unitOfMeasurement) {
-      return unitOfMeasurement === '%' || unitOfMeasurement === 'Proportion';
-    }
-
     function checkMissingReference() {
       if (dataSources.length > 1 && !$scope.dataSource.source) {
         $scope.errors.push('Missing reference');
@@ -86,12 +79,6 @@ define(['lodash'], function(_) {
         return dataSource.id !== $scope.dataSource.id && dataSource.source === $scope.dataSource.source;
       })) {
         $scope.errors.push('Duplicate reference');
-      }
-    }
-
-    function checkUnitOfMeasureument() {
-      if (!isProportion($scope.originalUnitOfMeasurement) && isProportion($scope.dataSource.unitOfMeasurement)) {
-        $scope.errors.push('\'Proportion\' and \'%\' are not allowed as unit of measurement when there is no constraint on the cell values');
       }
     }
   };

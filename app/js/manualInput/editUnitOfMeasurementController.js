@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define([], function() {
   var dependencies = [
     '$scope',
     '$modalInstance',
@@ -22,21 +22,21 @@ define(['lodash'], function(_) {
     $scope.unitOptions = {
       decimal:{
       label: 'Proportion (decimal)',
-      id: 'decimal',
+      type: 'decimal',
       defaultValue: 'Proportion',
       defaultLowerBound: 0,
       defaultUpperBound: 1
     },
     percentage:{
       label: 'Proportion (percentage)',
-      id: 'percentage',
+      type: 'percentage',
       defaultValue: '%',
       defaultLowerBound: 0,
       defaultUpperBound: 100
     },
     custom:{
       label: 'Custom',
-      id: 'custom',
+      type: 'custom',
       defaultValue: '',
       defaultLowerBound: -Infinity,
       defaultUpperBound: Infinity
@@ -64,7 +64,7 @@ define(['lodash'], function(_) {
       if (!currentValues.selectedOption) {
         return $scope.unitOptions.custom;
       } else {
-        return $scope.unitOptions[currentValues.selectedOption.id];
+        return $scope.unitOptions[currentValues.selectedOption.type];
       }
     }
 

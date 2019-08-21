@@ -43,20 +43,10 @@ define(['lodash', 'angular'], function(_, angular) {
         criterion.numberOfDataSources = row.dataSources.length;
         accum = accum.concat(_.map(row.dataSources, function(dataSource, index) {
           var newDataSource = angular.copy(dataSource);
-          var scale = dataSource.scale;
-          var isProportion = false;
-          if (_.isEqual(scale, [0, 1])) {
-            newDataSource.unitOfMeasurement = 'Proportion';
-            isProportion = true;
-          } else if (_.isEqual(scale, [0, 100])) {
-            newDataSource.unitOfMeasurement = '%';
-            isProportion = true;
-          }
           return {
             criterion: criterion,
             isFirstRow: index === 0,
-            dataSource: newDataSource,
-            isProportion: isProportion
+            dataSource: newDataSource
           };
         }));
         return accum;

@@ -48,7 +48,7 @@ define(['lodash', 'angular'], function(_, angular) {
       return _.reduce(observedScales, function(accum, scaleRow, datasourceId) {
         if (dataSources[datasourceId]) {
           accum[datasourceId] = _.reduce(scaleRow, function(accum, scaleCell, alternativeId) {
-            var usePercentage = _.isEqual(dataSources[datasourceId].scale, [0, 1]) || _.isEqual(dataSources[datasourceId].scale, [0, 100]);
+            var usePercentage = dataSources[datasourceId].unitOfMeasurement.type === 'percentage';
             accum[alternativeId] = usePercentage ? _.mapValues(scaleCell, times100) : scaleCell;
             return accum;
           }, {});
@@ -97,9 +97,12 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function percentifyDataSource(dataSource) {
       var newDataSource = angular.copy(dataSource);
-      if (_.isEqual([0, 100], newDataSource.scale) || _.isEqual([0, 1], newDataSource.scale)) {
+      if (dataSource.unitOfMeasurement.type === 'decimal') {
         newDataSource.scale = [0, 100];
-        newDataSource.unitOfMeasurement = '%';
+        newDataSource.unitOfMeasurement = {
+          label: '%',
+          type: 'percentage'
+        };
         if (newDataSource.pvf) {
           if (newDataSource.pvf.range) {
             newDataSource.pvf.range = _.map(newDataSource.pvf.range, times100);
@@ -123,9 +126,12 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function dePercentifyDataSource(dataSource) {
       var newDataSource = angular.copy(dataSource);
-      if (_.isEqual([0, 100], newDataSource.scale) || _.isEqual([0, 1], newDataSource.scale)) {
+      if (dataSource.unitOfMeasurement.type === 'percentage') {
         newDataSource.scale = [0, 1];
-        newDataSource.unitOfMeasurement = 'Proportion';
+        newDataSource.unitOfMeasurement = {
+          type: 'decimal',
+          label: 'Proportion'
+        };
       }
       return newDataSource;
     }

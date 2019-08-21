@@ -73,10 +73,8 @@ define(['lodash', 'angular'], function(_, angular) {
         }
 
         function getCellConstraint() {
-          if (scope.unitOfMeasurement && scope.unitOfMeasurement.value === '%') {
-            return 'Proportion (percentage)';
-          } else if (scope.unitOfMeasurement && scope.unitOfMeasurement.value === 'Proportion') {
-            return 'Proportion (decimal)';
+          if (scope.unitOfMeasurement.selectedOption.type !== 'custom' ) {
+            return scope.unitOfMeasurement.selectedOption.label;
           } else {
             return 'None';
           }

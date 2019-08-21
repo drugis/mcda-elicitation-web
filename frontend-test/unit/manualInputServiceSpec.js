@@ -283,7 +283,10 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             unitOfMeasurement: {
               value: 'particles',
               lowerBound: -Infinity,
-              upperBound: Infinity
+              upperBound: Infinity,
+              selectedOption: {
+                type: 'custom'
+              }
             },
             id: 'ds1id',
             oldId: 'ds1oldId'
@@ -297,7 +300,10 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             unitOfMeasurement: {
               value: '%',
               lowerBound: 0,
-              upperBound: 100
+              upperBound: 100,
+              selectedOption: {
+                type: 'percentage'
+              }
             },
             id: 'ds2id'
           }]
@@ -308,7 +314,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           dataSources: [{
             unitOfMeasurement: {
               lowerBound: -Infinity,
-              upperBound: Infinity
+              upperBound: Infinity,
+              value: '',
+              selectedOption: {
+                type: 'custom'
+              }
             },
             id: 'ds3id',
           }]
@@ -402,7 +412,10 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               isFavorable: true,
               dataSources: [{
                 id: 'ds1id',
-                unitOfMeasurement: 'particles',
+                unitOfMeasurement: {
+                  label: 'particles',
+                  type: 'custom'
+                },
                 scale: [-Infinity, Infinity],
               }]
             },
@@ -412,7 +425,10 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               isFavorable: false,
               dataSources: [{
                 id: 'ds2id',
-                unitOfMeasurement: '%',
+                unitOfMeasurement: {
+                  label: '%',
+                  type: 'percentage'
+                },
                 scale: [0, 100],
               }]
             },
@@ -421,7 +437,10 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               isFavorable: false,
               dataSources: [{
                 id: 'ds3id',
-                unitOfMeasurement: undefined,
+                unitOfMeasurement: {
+                  label: '',
+                  type: 'custom'
+                },
                 scale: [-Infinity, Infinity],
               }]
             }
@@ -492,13 +511,16 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               crit1: {
                 title: 'criterion 1',
                 description: 'bla',
-                unitOfMeasurement: '%',
                 isFavorable: true,
                 dataSources: [{
                   id: 'ds1',
                   scale: [0, 1],
                   source: 'single study',
-                  sourceLink: 'http://www.drugis.org'
+                  sourceLink: 'http://www.drugis.org',
+                  unitOfMeasurement: {
+                    label: 'label',
+                    type: 'custom'
+                  }
                 }]
               }
             },
@@ -524,11 +546,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               source: 'single study',
               sourceLink: 'http://www.drugis.org',
               unitOfMeasurement: {
-                value: undefined,
+                value: 'label',
                 lowerBound: 0,
                 upperBound: 1,
                 selectedOption: {
-                  id: 'custom'
+                  type: 'custom'
                 }
               }
             }],
@@ -851,6 +873,17 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           it('should create a new state with a value cell and Proportion (decimal) unit of measurement', function() {
             var workspace = _.merge({}, baseWorkspace, {
               problem: {
+                criteria: {
+                  crit1: {
+                    dataSources: [{
+                      scale: [0, 1],
+                      unitOfMeasurement: {
+                        type: 'decimal',
+                        label: 'Proportion'
+                      }
+                    }]
+                  }
+                },
                 performanceTable: [{
                   criterion: 'crit1',
                   dataSource: 'ds1',
@@ -866,7 +899,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 }]
               }
             });
-            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.selectedOption.id = 'Proportion (decimal)';
+            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.selectedOption.type = 'decimal';
+            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.value = 'Proportion';
 
             var result = manualInputService.createStateFromOldWorkspace(workspace);
             var expectedResult = _.merge({}, baseExpectedResult, {
@@ -881,7 +915,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 criteria: {
                   crit1: {
                     dataSources: [{
-                      scale: [0, 100]
+                      scale: [0, 100],
+                      unitOfMeasurement: {
+                        type: 'percentage',
+                        label: '%'
+                      }
                     }]
                   }
                 },
@@ -900,7 +938,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 }]
               }
             });
-            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.selectedOption.id = 'Proportion (percentage)';
+            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.selectedOption.type = 'percentage';
+            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.value = '%';
             baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.upperBound = 100;
 
             var result = manualInputService.createStateFromOldWorkspace(workspace);

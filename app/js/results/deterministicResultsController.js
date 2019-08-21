@@ -55,9 +55,9 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
     });
 
     function createScales(problem) {
-      $scope.scalesPromise.then(function(smaaScales) {
+      $scope.scalesPromise.then(function() {
         $scope.scales = {
-          observed: MCDAResultsService.createDeterministicScales(problem.performanceTable, smaaScales)
+          observed: MCDAResultsService.createDeterministicScales(problem.performanceTable, $scope.workspace.scales.observed)
         };
       });
     }
@@ -111,7 +111,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
       MCDAResultsService.getMeasurementsSensitivityResults($scope, $scope.baseAggregateState).resultsPromise.then(function(result) {
         $scope.measurementValues = MCDAResultsService.pataviResultToLineValues(result.results, $scope.alternatives, $scope.scenario.state.legend);
 
-        if (usePercentage($scope.sensitivityMeasurements.measurementsCriterion)) {
+        if (usePercentage($scope.sensitivityMeasurements.measurementsCriterion.dataSources[0])) {
           $scope.measurementValues = MCDAResultsService.percentifySensitivityResult($scope.measurementValues, 'x');
         }
       });
@@ -125,7 +125,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
     }
 
     function usePercentage(dataSource) {
-      return _.isEqual(dataSource.scale, [0, 100]);
+      return dataSource.unitOfMeasurement.type === 'percentage';
     }
   };
   return dependencies.concat(DeterministicResultsController);

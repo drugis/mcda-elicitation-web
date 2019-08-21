@@ -113,13 +113,20 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
           firstCriterion: {
             title: 'firstTitle',
             dataSources: [{
-              scale: [-Infinity, Infinity]
+              scale: [-Infinity, Infinity],
+              unitOfMeasurement: {
+                type: 'custom',
+                label: ''
+              }
             }]
           },
           secondCriterion: {
             title: 'secondTitle',
             dataSources: [{
-              unitOfMeasurement: 'uom',
+              unitOfMeasurement: {
+                label: 'uom',
+                type: 'custom'
+              },
               scale: [-Infinity, Infinity]
             }]
           }
@@ -207,37 +214,15 @@ define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(an
         var continuousCriterion = {
           title: 'contCrit',
           dataSources: [{
-            unitOfMeasurement: 'kg',
+            unitOfMeasurement: {
+              label: 'kg',
+              type: 'custom'
+            }
           }]
         };
         var result = tradeOffService.getLabel(continuousCriterion);
         var expectedResult = 'contCrit (kg)';
         expect(result).toEqual(expectedResult);
-      });
-    });
-
-    describe('getUnit', function() {
-      it('should return the unit of measurement if it is set ', function() {
-        workspaceSettingsServiceMock.usePercentage.and.returnValue(false);
-        var criterion = {
-          dataSources: [{
-            unitOfMeasurement: 'kg',
-            scale: [-Infinity, Infinity]
-          }]
-        };
-        var result = tradeOffService.getUnit(criterion);
-        expect(result).toEqual('kg');
-      });
-
-      it('should return an empty string if there is no unit of measurement set', function() {
-        workspaceSettingsServiceMock.usePercentage.and.returnValue(false);
-        var criterion = {
-          dataSources: [{
-            scale: [-Infinity, Infinity]
-          }]
-        };
-        var result = tradeOffService.getUnit(criterion);
-        expect(result).toEqual('');
       });
     });
   });
