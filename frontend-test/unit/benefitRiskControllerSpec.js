@@ -247,7 +247,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         it('should percentify the scales and properly initalise base- and regular aggregate state', (done) => {
           observedScalesDefer.promise.then(() => {
             expect(scope.workspace.scales.base).toBe(observedScales);
-            expect(scope.workspace.scales.observed).toBe(percentifiedScales);
             expect(scope.workspace.scales.basePercentified).toBe(percentifiedScales);
             expect(scope.aggregateState).toEqual(stateWithPercentifiedCriteria);
             expect(scope.baseAggregateState).toEqual(stateWithPercentifiedCriteria);
