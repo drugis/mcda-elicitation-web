@@ -3,10 +3,6 @@ define(['lodash'], function(_) {
   var dependencies = ['significantDigits'];
 
   var ToStringService = function(significantDigits) {
-    function eventsSampleSizeToString(cell) {
-      return cell.firstParameter + ' / ' + cell.secondParameter;
-    }
-
     function gammaToString(cell) {
       return 'Gamma(' + significantDigits(cell.firstParameter) + ', ' + significantDigits(cell.secondParameter) + ')';
     }
@@ -24,11 +20,6 @@ define(['lodash'], function(_) {
       return cell.firstParameter + percentage;
     }
 
-    function valueSEToString(cell) {
-      var percentage = isPercentage(cell) ? '%' : '';
-      return cell.firstParameter + percentage + ' (' + cell.secondParameter + percentage + ')';
-    }
-
     function valueCIToString(cell) {
       var percentage = isPercentage(cell) ? '%' : '';
       var returnString = cell.firstParameter + percentage + ' (';
@@ -42,14 +33,6 @@ define(['lodash'], function(_) {
       } else {
         returnString += cell.thirdParameter + percentage + ')';
       }
-      return returnString;
-    }
-
-    function valueSampleSizeToString(cell) {
-      var percentage = isPercentage(cell) ? '%' : '';
-      var value = cell.firstParameter;
-      var sampleSize = cell.secondParameter;
-      var returnString = value + percentage + ' (' + sampleSize + ')';
       return returnString;
     }
 
@@ -70,10 +53,7 @@ define(['lodash'], function(_) {
       normalToString: normalToString,
       betaToString: betaToString,
       valueToString: valueToString,
-      valueSEToString: valueSEToString,
       valueCIToString: valueCIToString,
-      eventsSampleSizeToString: eventsSampleSizeToString,
-      valueSampleSizeToString: valueSampleSizeToString,
       emptyToString: emptyToString,
       textToString: textToString
     };

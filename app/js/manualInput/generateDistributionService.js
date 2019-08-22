@@ -12,18 +12,6 @@ define(['lodash', 'angular'], function(_, angular) {
       return angular.copy(cell);
     }
 
-    function generateValueSEDistribution(normalOption, cell) {
-      var distributionCell = angular.copy(cell);
-      if (isPercentage(distributionCell)) {
-        distributionCell.firstParameter = cell.firstParameter / 100;
-        distributionCell.secondParameter = cell.secondParameter / 100;
-      }
-      distributionCell.inputParameters = normalOption;
-      delete distributionCell.constraint;
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-      return distributionCell;
-    }
-
     function generateValueCIDistribution(normalOption, valueOption, cell) {
       var distributionCell = angular.copy(cell);
       if (areBoundsSymmetric(distributionCell)) {
@@ -56,32 +44,6 @@ define(['lodash', 'angular'], function(_, angular) {
       return constraints;
     }
 
-    function generateValueSampleSizeDistribution(valueOption, betaOption, cell) {
-      var distributionCell = angular.copy(cell);
-      if (isPercentage(cell) || isDecimal(cell)) {
-        if (isPercentage(cell)) {
-          distributionCell.firstParameter = distributionCell.firstParameter / 100;
-        }
-        distributionCell.firstParameter = Math.round(distributionCell.firstParameter * distributionCell.secondParameter);
-        return generateEventsSampleSizeDistribution(betaOption, distributionCell);
-      } else {
-        distributionCell.inputParameters = valueOption;
-        delete distributionCell.secondParameter;
-        distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-        return distributionCell;
-      }
-    }
-
-    function generateEventsSampleSizeDistribution(betaOption, cell) {
-      var distributionCell = angular.copy(cell);
-      distributionCell.inputParameters = betaOption;
-      distributionCell.firstParameter = cell.firstParameter + 1;
-      distributionCell.secondParameter = cell.secondParameter - cell.firstParameter + 1;
-      delete distributionCell.constraint;
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-      return distributionCell;
-    }
-
     function generateEmptyDistribution(cell) {
       return angular.copy(cell);
     }
@@ -99,16 +61,9 @@ define(['lodash', 'angular'], function(_, angular) {
       return cell.constraint === 'Proportion (percentage)';
     }
 
-    function isDecimal(cell) {
-      return cell.constraint === 'Proportion (decimal)';
-    }
-
     return {
       generateValueDistribution: generateValueDistribution,
-      generateValueSEDistribution: generateValueSEDistribution,
       generateValueCIDistribution: generateValueCIDistribution,
-      generateValueSampleSizeDistribution: generateValueSampleSizeDistribution,
-      generateEventsSampleSizeDistribution: generateEventsSampleSizeDistribution,
       generateEmptyDistribution: generateEmptyDistribution
     };
   };

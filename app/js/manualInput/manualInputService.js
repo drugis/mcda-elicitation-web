@@ -73,21 +73,6 @@ define(['lodash', 'angular'], function(_, angular) {
       };
     }
 
-    function prepareInputData(criteria, alternatives, oldInputData) {
-      var dataSources = getDataSources(criteria);
-      if (oldInputData) {
-        return {
-          effect: createInputTableRows(dataSources, alternatives, oldInputData.effect),
-          distribution: createInputTableRows(dataSources, alternatives, oldInputData.distribution)
-        };
-      } else {
-        return {
-          effect: createInputTableRows(dataSources, alternatives),
-          distribution: createInputTableRows(dataSources, alternatives)
-        };
-      }
-    }
-
     function updateParameterConstraints(cell, unitOfMeasurement) {
       var newCell = angular.copy(cell);
       if (cell.inputParameters.firstParameter) {
@@ -106,8 +91,7 @@ define(['lodash', 'angular'], function(_, angular) {
       var updatetableParameters = [
         'Value',
         'Lower bound',
-        'Upper bound',
-        'Standard error'
+        'Upper bound'
       ];
       if (_.includes(updatetableParameters, cell.inputParameters[parameter].label)) {
         return getNewConstraints(cell, unitOfMeasurement, parameter);
@@ -121,7 +105,7 @@ define(['lodash', 'angular'], function(_, angular) {
       newConstraints = removeBoundConstraints(newConstraints);
       if (unitOfMeasurement.lowerBound === 0) {
         newConstraints.push(getConstraintWithLowerBound(unitOfMeasurement));
-      } else if (unitOfMeasurement.upperBound < Infinity) {
+      } else if (unitOfMeasurement.upperBound !== null && unitOfMeasurement.upperBound < Infinity) {
         newConstraints.push(ConstraintService.belowOrEqualTo(unitOfMeasurement.upperBound));
       }
       return newConstraints;
@@ -145,6 +129,21 @@ define(['lodash', 'angular'], function(_, angular) {
       });
     }
 
+    function prepareInputData(criteria, alternatives, oldInputData) {
+      var dataSources = getDataSources(criteria);
+      if (oldInputData) {
+        return {
+          effect: createInputTableRows(dataSources, alternatives, oldInputData.effect),
+          distribution: createInputTableRows(dataSources, alternatives, oldInputData.distribution)
+        };
+      } else {
+        return {
+          effect: createInputTableRows(dataSources, alternatives),
+          distribution: createInputTableRows(dataSources, alternatives)
+        };
+      }
+    }
+    
     function createInputTableRows(dataSources, alternatives, oldInputData) {
       return _.reduce(dataSources, function(accum, dataSource) {
         accum[dataSource.id] = createInputTableCells(dataSource, alternatives, oldInputData);
@@ -354,22 +353,14 @@ define(['lodash', 'angular'], function(_, angular) {
     function getEffectType(performance) {
       if (performance.effect.input) {
         return determineInputType(performance.effect.input);
-      } else if (performance.effect.type === 'empty') {
-        return performance.effect.hasOwnProperty('value') ? 'text' : 'empty';
       } else {
         return 'value';
       }
     }
 
     function determineInputType(input) {
-      if (input.hasOwnProperty('stdErr')) {
-        return 'valueSE';
-      } else if (input.hasOwnProperty('lowerBound')) {
+      if (input.hasOwnProperty('lowerBound')) {
         return 'valueCI';
-      } else if (input.hasOwnProperty('events')) {
-        return 'eventsSampleSize';
-      } else if (input.hasOwnProperty('sampleSize')) {
-        return 'valueSampleSize';
       } else {
         return 'value';
       }

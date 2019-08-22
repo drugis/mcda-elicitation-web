@@ -9,18 +9,6 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       toStringService = ToStringService;
     }));
 
-    describe('eventsSampleSizeToString', function() {
-      it('should return the correct label for the cell', function() {
-        var cell = {
-          firstParameter: 10,
-          secondParameter: 250
-        };
-        var result = toStringService.eventsSampleSizeToString(cell);
-        var expectedResult = '10 / 250';
-        expect(result).toEqual(expectedResult);
-      });
-    });
-
     describe('gammaToString', function() {
       it('should return the correct label for the cell', function() {
         var cell = {
@@ -29,18 +17,6 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         };
         var result = toStringService.gammaToString(cell);
         var expectedResult = 'Gamma(10, 250)';
-        expect(result).toEqual(expectedResult);
-      });
-    });
-
-    describe('normalToString', function() {
-      it('should return the correct label for the cell', function() {
-        var cell = {
-          firstParameter: 10,
-          secondParameter: 0.25
-        };
-        var result = toStringService.normalToString(cell);
-        var expectedResult = 'Normal(10, 0.25)';
         expect(result).toEqual(expectedResult);
       });
     });
@@ -95,34 +71,6 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       });
     });
 
-    describe('valueSEToString', function() {
-      it('should return the correct label for the cell', function() {
-        var cell = {
-          firstParameter: 10,
-          secondParameter: 0.5,
-          inputParameters: {
-            firstParameter: {
-              constraints: []
-            }
-          }
-        };
-        var result = toStringService.valueSEToString(cell);
-        var expectedResult = '10 (0.5)';
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should return the correct label for the percentage cell', function() {
-        var cell = {
-          firstParameter: 10,
-          secondParameter: 0.5,
-          constraint: 'Proportion (percentage)'
-        };
-        var result = toStringService.valueSEToString(cell);
-        var expectedResult = '10% (0.5%)';
-        expect(result).toEqual(expectedResult);
-      });
-    });
-
     describe('valueCIToString', function() {
       it('should return the correct label for the cell', function() {
         var cell = {
@@ -165,34 +113,6 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         };
         var result = toStringService.valueCIToString(cell);
         var expectedResult = '10 (NE; NE)';
-        expect(result).toEqual(expectedResult);
-      });
-    });
-
-    describe('valueToString', function() {
-      it('should return the correct label for the cell', function() {
-        var cell = {
-          firstParameter: 10,
-          secondParameter: 200,
-          inputParameters: {
-            firstParameter: {
-              constraints: []
-            }
-          }
-        };
-        var result = toStringService.valueSampleSizeToString(cell);
-        var expectedResult = '10 (200)';
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should return the correct label for the percentage cell', function() {
-        var cell = {
-          firstParameter: 10,
-          secondParameter: 200,
-          constraint: 'Proportion (percentage)'
-        };
-        var result = toStringService.valueSampleSizeToString(cell);
-        var expectedResult = '10% (200)';
         expect(result).toEqual(expectedResult);
       });
     });

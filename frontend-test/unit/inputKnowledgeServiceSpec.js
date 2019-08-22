@@ -7,18 +7,12 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     'buildBetaPerformance',
     'buildGammaPerformance',
     'buildValueCIPerformance',
-    'buildValueSEPerformance',
-    'buildEventsSampleSizePerformance',
-    'buildValueSampleSizePerformance',
     'buildTextPerformance',
     'buildEmptyPerformance'
   ]);
   var generateDistributionServiceMock = jasmine.createSpyObj('GenerateDistributionService', [
     'generateValueDistribution',
-    'generateValueSEDistribution',
     'generateValueCIDistribution',
-    'generateValueSampleSizeDistribution',
-    'generateEventsSampleSizeDistribution',
     'generateEmptyDistribution'
   ]);
   var toStringServiceMock = jasmine.createSpyObj('ToStringService', [
@@ -26,10 +20,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     'normalToString',
     'betaToString',
     'valueToString',
-    'valueSEToString',
     'valueCIToString',
-    'eventsSampleSizeToString',
-    'valueSampleSizeToString',
     'emptyToString',
     'textToString'
   ]);
@@ -38,10 +29,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     'finishBetaCell',
     'finishGammaCell',
     'finishValueCell',
-    'finishValueSE',
     'finishValueCI',
-    'finishEventSampleSizeInputCell',
-    'finishValueSampleSizeCell',
     'finishEmptyCell',
     'finishTextCell'
   ]);
@@ -78,10 +66,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           var inputType = 'effect';
           expect(_.keys(inputKnowledgeService.getOptions(inputType))).toEqual([
             'value',
-            'valueSE',
             'valueCI',
-            'valueSampleSize',
-            'eventsSampleSize',
             'empty',
             'text'
           ]);

@@ -1271,6 +1271,31 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(result).toEqual(expectedResult);
       });
 
+
+      it('should not add a \'below or equal to\' constraint if the scale is [null, null]', function(){
+        var cell = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value'
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: null,
+          upperBound: null
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            firstParameter: {
+              label: 'Value',
+              constraints: []
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
       it('should remove no longer applicable constraints, leaving intact other constraints', function() {
         var cell = {
           inputParameters: {

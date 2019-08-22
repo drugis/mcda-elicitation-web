@@ -29,10 +29,7 @@ define(['lodash'], function(_) {
     function getEffectOptions() {
       return {
         value:  VALUE,
-        valueSE: VALUE_STANDARD_ERROR,
         valueCI: VALUE_CONFIDENCE_INTERVAL,
-        valueSampleSize: VALUE_SAMPLE_SIZE,
-        eventsSampleSize: EVENTS_SAMPLE_SIZE,
         empty: EMPTY,
         text: TEXT
       };
@@ -98,19 +95,6 @@ define(['lodash'], function(_) {
       GenerateDistributionService.generateValueDistribution
     );
 
-    var VALUE_STANDARD_ERROR = new effectOptionsBlock(
-      'valueSE',
-      'Value, SE',
-      buildDefined('Value'),
-      buildPositiveFloat('Standard error'),
-      undefined,
-      true,
-      ToStringService.valueSEToString,
-      PerformanceService.buildValueSEPerformance,
-      FinishInputCellService.finishValueSE,
-      _.partial(GenerateDistributionService.generateValueSEDistribution, NORMAL)
-    );
-
     var VALUE_CONFIDENCE_INTERVAL = new effectOptionsBlock(
       'valueCI',
       'Value, 95% C.I.',
@@ -122,32 +106,6 @@ define(['lodash'], function(_) {
       PerformanceService.buildValueCIPerformance,
       FinishInputCellService.finishValueCI,
       _.partial(GenerateDistributionService.generateValueCIDistribution, NORMAL, VALUE)
-    );
-
-    var EVENTS_SAMPLE_SIZE = new effectOptionsBlock(
-      'eventsSampleSize',
-      'Events / Sample size',
-      buildEvents(),
-      buildIntegerAboveZero('Sample size'),
-      undefined,
-      false,
-      ToStringService.eventsSampleSizeToString,
-      PerformanceService.buildEventsSampleSizePerformance,
-      FinishInputCellService.finishEventSampleSizeInputCell,
-      _.partial(GenerateDistributionService.generateEventsSampleSizeDistribution, BETA)
-    );
-
-    var VALUE_SAMPLE_SIZE = new effectOptionsBlock(
-      'valueSampleSize',
-      'Value, sample size',
-      buildDefined('Value'),
-      buildIntegerAboveZero('Sample size'),
-      undefined,
-      true,
-      ToStringService.valueSampleSizeToString,
-      PerformanceService.buildValueSampleSizePerformance,
-      FinishInputCellService.finishValueSampleSizeCell,
-      _.partial(GenerateDistributionService.generateValueSampleSizeDistribution, VALUE, BETA)
     );
 
     var EMPTY = new effectOptionsBlock(
