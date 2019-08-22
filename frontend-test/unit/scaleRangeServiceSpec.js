@@ -103,7 +103,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
             pvf: {
               range: [0, 40]
             },
-            id: 'ds1'
+            id: 'ds1',
+            unitOfMeasurement: {
+              label: 'label',
+              type: 'custom'
+            },
+            scale: [-Infinity, Infinity]
           }]
         }, {
           id: 'nauseaId',
@@ -111,7 +116,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
             pvf: {
               range: [10, 40]
             },
-            id: 'ds2'
+            id: 'ds2',
+            unitOfMeasurement: {
+              label: 'label',
+              type: 'custom'
+            },
+            scale: [-Infinity, Infinity]
           }]
         }];
         var result = scaleRangeService.getScalesStateAndChoices(observedScales, criteria);

@@ -59,12 +59,13 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
     $scope.effectsTableInfo = effectsTableInfo;
     $scope.editMode = editMode;
+    var orderedCriteria;
 
-    $scope.$watch('originalScales', function(newScales, oldScales) {
-      if (newScales && oldScales && newScales.observed === oldScales.observed) { return; }
-      $scope.scales = angular.copy(newScales.base);
-      initializeScales();
-    }, true);
+    // $scope.$watch('originalScales', function(newScales, oldScales) {
+    //   if (newScales && oldScales && newScales.observed === oldScales.observed) { return; }
+    //   $scope.scales = angular.copy(newScales.base);
+    //   initializeScales();
+    // }, true);
 
     $scope.$on('elicit.settingsChanged', function() {
       getWorkspaceSettings();
@@ -105,10 +106,10 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.orderingPromise = OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
         $scope.alternatives = orderings.alternatives;
         $scope.nrAlternatives = _.keys($scope.alternatives).length;
-        $scope.criteria = getCriteria(orderings.criteria);
-        setTableRows();
-        $scope.criteriaByDataSource = SubProblemService.getCriteriaByDataSource($scope.criteria);
-        $scope.subProblemState = SubProblemService.createSubProblemState($scope.problem, newSubProblem, $scope.criteria);
+        orderedCriteria = getCriteria(orderings.criteria);
+        $scope.tableRows = EffectsTableService.buildEffectsTable(getCriteria(orderedCriteria));
+        $scope.criteriaByDataSource = SubProblemService.getCriteriaByDataSource(orderedCriteria);
+        $scope.subProblemState = SubProblemService.createSubProblemState($scope.problem, newSubProblem, orderedCriteria);
 
         updateInclusions();
         checkDuplicateTitle($scope.subProblemState.title);
@@ -123,7 +124,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function setTableRows() {
       $scope.orderingPromise.then(function() {
-        $scope.tableRows = EffectsTableService.buildEffectsTable(getCriteria($scope.criteria));
+        $scope.tableRows = EffectsTableService.buildEffectsTable(getCriteria(orderedCriteria));
       });
     }
 
@@ -155,9 +156,9 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function initializeScales() {
-      $scope.scales =  $scope.workspaceSettings.showPercentages ?  $scope.originalScales.basePercentified : $scope.originalScales.base;
+      $scope.scales =  $scope.workspaceSettings.showPercentages ?  angular.copy($scope.originalScales.basePercentified) : angular.copy($scope.originalScales.base);
       var filteredPerformanceTable = SubProblemService.excludeDeselectedAlternatives($scope.problem.performanceTable, $scope.subProblemState.alternativeInclusions);
-      var stateAndChoices = ScaleRangeService.getScalesStateAndChoices($scope.scales, getCriteria($scope.criteria), filteredPerformanceTable);
+      var stateAndChoices = ScaleRangeService.getScalesStateAndChoices($scope.scales, $scope.problem.criteria, filteredPerformanceTable);
       $scope.scalesState = stateAndChoices.scalesState;
       $scope.choices = stateAndChoices.choices;
 

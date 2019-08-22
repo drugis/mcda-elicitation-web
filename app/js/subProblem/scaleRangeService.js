@@ -47,8 +47,7 @@ define(['lodash', 'angular'], function(_, angular) {
       return nice(x, Math.floor);
     }
 
-    function calculateScales(dataSourceScale, from, to, criterionRange, shouldCalcPercentage) {
-      var scale = dataSourceScale || [null, null];
+    function calculateScales(scale, from, to, criterionRange) {
       var boundFrom = function(val) {
         return val < scale[0] ? scale[0] : val;
       };
@@ -57,7 +56,7 @@ define(['lodash', 'angular'], function(_, angular) {
       };
       if (from === to) {
         from *= 0.95;
-        to *= 1.1;
+        to *= 1.05;
       }
       var margin = getMargin(from, to);
 
@@ -89,7 +88,7 @@ define(['lodash', 'angular'], function(_, angular) {
           precision: 4,
           noSwitching: true,
           translate: function(value) {
-            return numberFilter(shouldCalcPercentage ? value * 100 : value);
+            return numberFilter(value);
           }
         }
       };
@@ -106,10 +105,9 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function initializeScaleStateAndChoicesForCriterion(observedScales, criterion, performanceTable) {
-      var showPercentage = WorkspaceSettingsService.usePercentage();
       return _.reduce(criterion.dataSources, function(accum, dataSource) {
         // Calculate interval hulls
-        var effectValues = getEffectValues(performanceTable, dataSource.id);
+        var effectValues = getEffectValues(performanceTable, dataSource);
         var dataSourceRange = intervalHull(observedScales[dataSource.id], effectValues);
         var pvf = dataSource.pvf;
         var problemRange = pvf ? pvf.range : null;
@@ -118,8 +116,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
         // Set scales for slider
         var dataSourceScale = dataSource.scale;
-        var shouldCalcPercentage = _.isEqual([0, 1], dataSourceScale) && showPercentage;
-        accum.scalesState[dataSource.id] = calculateScales(dataSourceScale, from, to, dataSourceRange, shouldCalcPercentage);
+        accum.scalesState[dataSource.id] = calculateScales(dataSourceScale, from, to, dataSourceRange);
 
         // Set inital model value
         accum.choices[dataSource.id] = {

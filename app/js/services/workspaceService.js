@@ -132,6 +132,14 @@ define(['lodash', 'angular'], function(_, angular) {
           type: 'decimal',
           label: 'Proportion'
         };
+        if (newDataSource.pvf) {
+          if (newDataSource.pvf.range) {
+            newDataSource.pvf.range = _.map(newDataSource.pvf.range, div100);
+          }
+          if (newDataSource.pvf.cutoffs) {
+            newDataSource.pvf.cutoffs = _.map(newDataSource.pvf.cutoffs, div100);
+          }
+        }
       }
       return newDataSource;
     }
@@ -139,6 +147,11 @@ define(['lodash', 'angular'], function(_, angular) {
     function times100(value) {
       if (value === null) { return; } //prevent empty cells from becoming 0
       return significantDigits(value * 100, 1);
+    }
+
+    function div100(value) {
+      if (value === null) { return; }
+      return significantDigits(value / 100, 1);
     }
 
     function reduceProblem(problem) {
@@ -658,11 +671,15 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function hasNoStochasticResults(aggregateState) {
-      var isAllExact = !_.some(aggregateState.problem.performanceTable, function(tableEntry) {
-        return tableEntry.performance.distribution && tableEntry.performance.distribution.type !== 'exact';
-      });
-      var isExactSwing = _.some(aggregateState.prefs, ['type', 'exact swing']);
-      return isAllExact && isExactSwing;
+      if (!aggregateState) {
+        return;
+      } else {
+        var isAllExact = !_.some(aggregateState.problem.performanceTable, function(tableEntry) {
+          return tableEntry.performance.distribution && tableEntry.performance.distribution.type !== 'exact';
+        });
+        var isExactSwing = _.some(aggregateState.prefs, ['type', 'exact swing']);
+        return isAllExact && isExactSwing;
+      }
     }
 
 

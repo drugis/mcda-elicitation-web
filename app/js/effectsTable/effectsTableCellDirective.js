@@ -21,9 +21,9 @@ define(['lodash'], function(_) {
       templateUrl: './effectsTableCellDirective.html',
       link: function(scope) {
         init();
-
-        scope.$watch('workspaceSettings', init, true);
-
+        scope.$on('elicit.settingsChanged', init);
+        scope.$watch('scales', init, true);
+        
         function init() {
           scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
           scope.isValueView = WorkspaceSettingsService.isValueView();

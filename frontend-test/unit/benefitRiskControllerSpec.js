@@ -1,64 +1,66 @@
 'use strict';
 define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (_, angular) => {
   describe('MCDA benefit-risk controller', () => {
-
-    var scope,
-      transitions = jasmine.createSpyObj('$transitions', ['onStart']),
-      stateMock = jasmine.createSpyObj('$state', ['go']),
-      stateParams,
-      modalMock = jasmine.createSpyObj('$modal', ['open']),
-      McdaBenefitRiskService = jasmine.createSpyObj('McdaBenefitRiskService', ['newScenarioAndGo', 'forkScenarioAndGo']),
-      Tasks = {
-        available: [{
-          id: 'smaa-results'
-        }, {
-          id: 'evidence'
+    var scope;
+    var transitions = jasmine.createSpyObj('$transitions', ['onStart']);
+    var stateMock = jasmine.createSpyObj('$state', ['go']);
+    var stateParams;
+    var modalMock = jasmine.createSpyObj('$modal', ['open']);
+    var McdaBenefitRiskService = jasmine.createSpyObj('McdaBenefitRiskService', ['newScenarioAndGo', 'forkScenarioAndGo']);
+    var Tasks = {
+      available: [{
+        id: 'smaa-results'
+      }, {
+        id: 'evidence'
+      }]
+    };
+    var TaskDependencies = jasmine.createSpyObj('TaskDependencies', ['isAccessible']);
+    var ScenarioResource = jasmine.createSpyObj('ScenarioResource', ['get', 'save', 'query']);
+    var WorkspaceService = jasmine.createSpyObj('WorkspaceService', [
+      'getObservedScales',
+      'filterScenariosWithResults',
+      'buildAggregateState',
+      'percentifyScales',
+      'percentifyCriteria',
+      'dePercentifyCriteria',
+      'mergeBaseAndSubProblem',
+      'setDefaultObservedScales',
+      'hasNoStochasticResults',
+      'checkForMissingValuesInPerformanceTable'
+    ]);
+    var WorkspaceSettingsService = jasmine.createSpyObj('WorkspaceSetttingsService', ['usePercentage']);
+    var EffectsTableService = jasmine.createSpyObj('EffectsTableService', ['createEffectsTableInfo']);
+    var subProblems;
+    var currentSubProblem = {
+      id: 'subProblemId'
+    };
+    var currentScenario = { id: 'currentScenarioId' };
+    var scenariosWithResults = [currentScenario];
+    var scenarios = [{ id: 'scenarioId' }, currentScenario];
+    var isMcdaStandalone = true;
+    var workspace = {
+      id: 'workspaceId',
+      problem: {
+        id: 'problemId'
+      }
+    };
+    var baseAggregateState = {
+      problem: {
+        criteria: {},
+        performanceTable: [{
+          performance: {
+            type: 'empty'
+          }
         }]
-      },
-      TaskDependencies = jasmine.createSpyObj('TaskDependencies', ['isAccessible']),
-      ScenarioResource = jasmine.createSpyObj('ScenarioResource', ['get', 'save', 'query']),
-      WorkspaceService = jasmine.createSpyObj('WorkspaceService', [
-        'getObservedScales',
-        'filterScenariosWithResults',
-        'buildAggregateState',
-        'percentifyScales',
-        'percentifyCriteria',
-        'dePercentifyCriteria',
-        'mergeBaseAndSubProblem',
-        'setDefaultObservedScales',
-        'hasNoStochasticResults',
-        'checkForMissingValuesInPerformanceTable'
-      ]),
-      WorkspaceSettingsService = jasmine.createSpyObj('WorkspaceSetttingsService', ['usePercentage']),
-      EffectsTableService = jasmine.createSpyObj('EffectsTableService', ['createEffectsTableInfo']),
-      subProblems,
-      currentSubProblem = {
-        id: 'subProblemId'
-      },
-      currentScenario = { id: 'currentScenarioId' },
-      scenariosWithResults = [currentScenario],
-      scenarios = [{ id: 'scenarioId' }, currentScenario],
-      isMcdaStandalone = true,
-      workspace = {
-        id: 'workspaceId',
-        problem: {
-          id: 'problemId'
-        }
-      },
-      baseAggregateState = {
-        problem: {
-          criteria: {},
-          performanceTable: [{
-            performance: {
-              type: 'empty'
-            }
-          }]
-        }
-      },
-      observedScalesDefer,
-      effectsTableInfo = {
-        id: 'effectsTableInfo'
-      };
+      }
+    };
+    var observedScalesDefer;
+    var effectsTableInfo = {
+      id: 'effectsTableInfo'
+    };
+    var observedScales = {
+      id: 'observedScales'
+    };
 
     beforeEach(angular.mock.module('elicit.benefitRisk'));
 
@@ -83,7 +85,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
 
     beforeEach(inject(($controller, $rootScope) => {
       scope = $rootScope.$new();
-
       scope.workspace = workspace;
 
       $controller('MCDABenefitRiskController', {
@@ -175,13 +176,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         });
       });
 
-      it('should populate the scope with scenarios', () => {
-        expect(scope.scenarios).toBe(scenarios);
-        expect(scope.scenario).toBe(currentScenario);
-        expect(scope.scenariosWithResults).toBe(scenariosWithResults);
-        expect(scope.isDuplicateScenarioTitle).toBe(false);
-      });
-
       it('should place the tasks on the scope', () => {
         expect(scope.tasks).toEqual({
           'smaa-results': {
@@ -195,10 +189,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
 
       it('should retrieve the observed scales', () => {
         expect(WorkspaceService.getObservedScales).toHaveBeenCalledWith(workspace.problem);
-      });
-
-      it('should build a base aggregate state and place it on the scope', () => {
-        expect(scope.baseAggregateState).toBe(baseAggregateState);
       });
 
       it('should set the task accessibility', () => {
@@ -215,86 +205,53 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
     });
 
     describe('once the scales have been loaded', () => {
-      var observedScales = {
-        id: 'observedScales'
-      };
       var percentifiedScales = { id: 'percentifiedScales' };
       var percentifiedCriteria = { id: 'percentifiedCriteria' };
       var baseProblemWithScales = _.extend({}, baseAggregateState.problem, {
         criteria: percentifiedCriteria
       });
+      var stateWithPercentifiedCriteria = _.merge({}, baseAggregateState, {
+        problem: {
+          criteria: percentifiedCriteria
+        }
+      });
+      WorkspaceService.percentifyScales.and.returnValue(percentifiedScales);
+      WorkspaceService.setDefaultObservedScales.and.returnValue(baseProblemWithScales);
+      WorkspaceService.percentifyCriteria.and.returnValue(stateWithPercentifiedCriteria);
+      WorkspaceService.percentifyScales.and.returnValue(percentifiedScales);
+      WorkspaceService.dePercentifyCriteria.and.returnValue(baseAggregateState);
+      WorkspaceService.setDefaultObservedScales.and.returnValue(baseAggregateState.problem);
 
       beforeEach(() => {
         observedScalesDefer.resolve(observedScales);
+        TaskDependencies.isAccessible.calls.reset();
+        scope.$apply();
       });
 
-      describe('if percentages should be used', () => {
-        var stateWithPercentifiedCriteria = _.merge({}, baseAggregateState, {
-          problem: {
-            criteria: percentifiedCriteria
-          }
-        });
-        WorkspaceSettingsService.usePercentage.and.returnValue(true);
-        WorkspaceService.percentifyScales.and.returnValue(percentifiedScales);
-        WorkspaceService.percentifyCriteria.and.returnValue(stateWithPercentifiedCriteria);
-        WorkspaceService.setDefaultObservedScales.and.returnValue(baseProblemWithScales);
-
-        beforeEach(() => {
-          TaskDependencies.isAccessible.calls.reset();
-          scope.$apply();
-        });
-        
-        it('should percentify the scales and properly initalise base- and regular aggregate state', (done) => {
-          observedScalesDefer.promise.then(() => {
-            expect(scope.workspace.scales.base).toBe(observedScales);
-            expect(scope.workspace.scales.basePercentified).toBe(percentifiedScales);
-            expect(scope.aggregateState).toEqual(stateWithPercentifiedCriteria);
-            expect(scope.baseAggregateState).toEqual(stateWithPercentifiedCriteria);
-            expect(scope.percentifiedBaseState).toEqual(stateWithPercentifiedCriteria);
-            done();
-          });
-          scope.$apply();
-        });
-        
-        it('should update the task accessibility', () => {
-          expect(TaskDependencies.isAccessible).toHaveBeenCalledTimes(4);
-          expect(scope.tasksAccessibility).toEqual({
-            preferences: true,
-            results: true
-          });
-        });
+      it('should populate the scope with scenarios', () => {
+        expect(scope.scenarios).toBe(scenarios);
+        expect(scope.scenario).toBe(currentScenario);
+        expect(scope.scenariosWithResults).toBe(scenariosWithResults);
+        expect(scope.isDuplicateScenarioTitle).toBe(false);
       });
 
-      describe('if percentages should not be used', () => {
-        var problemWithBaseCriteria = baseAggregateState;
-        beforeEach(() => {
-          TaskDependencies.isAccessible.calls.reset();
-          WorkspaceSettingsService.usePercentage.and.returnValue(false);
-          WorkspaceService.percentifyScales.and.returnValue(percentifiedScales);
-          WorkspaceService.dePercentifyCriteria.and.returnValue(baseAggregateState);
-
-          WorkspaceService.setDefaultObservedScales.and.returnValue(problemWithBaseCriteria.problem);
-          scope.$apply();
+      it('should percentify the scales and properly initalise base- and regular aggregate state', (done) => {
+        observedScalesDefer.promise.then(() => {
+          expect(scope.workspace.scales.base).toBe(observedScales);
+          expect(scope.workspace.scales.basePercentified).toBe(percentifiedScales);
+          expect(scope.aggregateState).toEqual(baseAggregateState);
+          expect(scope.percentifiedBaseState).toEqual(baseAggregateState);
+          expect(scope.dePercentifiedBaseState).toEqual(baseAggregateState);
+          done();
         });
+        scope.$apply();
+      });
 
-        it('should set the scales and properly initalise base- and regular aggregate state', (done) => {
-          observedScalesDefer.promise.then(() => {
-            expect(scope.workspace.scales.base).toBe(observedScales);
-            expect(scope.workspace.scales.observed).toBe(observedScales);
-            expect(scope.workspace.scales.basePercentified).toEqual(percentifiedScales);
-            expect(scope.aggregateState).toEqual(problemWithBaseCriteria);
-            expect(scope.baseAggregateState).toEqual(problemWithBaseCriteria);
-            done();
-          });
-          scope.$apply();
-        });
-
-        it('should update the task accessibility', () => {
-          expect(TaskDependencies.isAccessible).toHaveBeenCalledTimes(4);
-          expect(scope.tasksAccessibility).toEqual({
-            preferences: true,
-            results: true
-          });
+      it('should update the task accessibility', () => {
+        expect(TaskDependencies.isAccessible).toHaveBeenCalledTimes(4);
+        expect(scope.tasksAccessibility).toEqual({
+          preferences: true,
+          results: true
         });
       });
     });
@@ -309,26 +266,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
 
       it('should check whether there are stochastic results', () => {
         expect(WorkspaceService.hasNoStochasticResults).toHaveBeenCalled();
-      });
-    });
-
-    describe('when a settings change event triggers', () => {
-      it('should update the scales', () => {
-        spyOn(scope, 'updateScales');
-        expect(scope.updateScales).not.toHaveBeenCalled();
-        scope.$broadcast('elicit.settingsChanged');
-        scope.$apply();
-        expect(scope.updateScales).toHaveBeenCalled();
-      });
-    });
-
-    describe('when a resultsAccessible event triggers', () => {
-      it('should update the state', () => {
-        spyOn(scope, 'updateState');
-        expect(scope.updateState).not.toHaveBeenCalled();
-        scope.$broadcast('elicit.resultsAccessible');
-        scope.$apply();
-        expect(scope.updateState).toHaveBeenCalled();
       });
     });
 
