@@ -97,15 +97,18 @@ function inProgressOwnerRightsNeeded(response, next, workspaceId, userId) {
   InProgressWorkspaceRepository.get(workspaceId, _.partial(rightsCallback, response, next, userId));
 }
 
-function rightsCallback(response, next, userId, error, workspace) {
+function rightsCallback(response, next, userId, error, result) {
   if (error) {
     next(error);
-  } else if (!workspace) {
-    response.status(404).send('Workspace not found');
-  } else if (workspace.owner !== userId) {
-    response.status(403).send('Insufficient user rights');
   } else {
-    next();
+    var workspace = result.rows[0];
+    if (!workspace) {
+      response.status(404).send('Workspace not found');
+    } else if (workspace.owner !== userId) {
+      response.status(403).send('Insufficient user rights');
+    } else {
+      next();
+    }
   }
 }
 

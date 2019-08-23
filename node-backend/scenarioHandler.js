@@ -1,75 +1,81 @@
 'use strict';
 
-var logger = require('./logger');
-
 module.exports = function(db) {
+  var ScenarioRepository = require('./scenarioRepository')(db);
 
   function query(req, res, next) {
-    logger.debug('GET /workspaces/scenarios');
-    db.query('SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1', [req.params.workspaceId], function(err, result) {
-      if (err) {
-        err.status = 500;
-        return next(err);
-      }
-      res.json(result.rows);
-    });
+    ScenarioRepository.query(
+      req.params.workspaceId,
+      function(error, result) {
+        if (error) {
+          next(error);
+        } else {
+          res.json(result.rows);
+        }
+      });
   }
 
-  function queryScenariosForSubProblem(req, res, next) {
-    logger.debug('GET /workspaces/:id1/subProblem/:id2/scenarios');
-    db.query('SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1 AND subProblemId = $2', [req.params.workspaceId, req.params.subProblemId], function(err, result) {
-      if (err) {
-        err.status = 500;
-        return next(err);
-      }
-      res.json(result.rows);
-    });
+  function queryForSubProblem(req, res, next) {
+    ScenarioRepository.queryForSubProblem(
+      req.params.workspaceId,
+      req.params.subProblemId,
+      function(error, result) {
+        if (error) {
+          next(error);
+        } else {
+          res.json(result.rows);
+        }
+      });
   }
 
   function get(req, res, next) {
-    logger.debug('GET /workspaces/:id/scenarios/:id');
-    db.query('SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE id = $1', [req.params.id], function(err, result) {
-      if (err) {
-        err.status = 500;
-        return next(err);
-      }
-      res.json(result.rows[0]);
-    });
+    ScenarioRepository.get(
+      req.params.id,
+      function(error, result) {
+        if (error) {
+          next(error);
+        } else {
+          res.json(result.rows[0]);
+        }
+      });
   }
 
   function create(req, res, next) {
-  db.query('INSERT INTO scenario (workspace, subProblemId, title, state) VALUES ($1, $2, $3, $4) RETURNING id', [req.params.workspaceId, req.params.subProblemId, req.body.title, {
-    problem: req.body.state.problem,
-    prefs: req.body.state.prefs
-  }], function(err, result) {
-    if (err) {
-      err.status = 500;
-      next(err);
-    }
-    res.json(result.rows[0]);
-  });
-}
+    ScenarioRepository.create(
+      req.params.workspaceId,
+      req.params.subProblemId,
+      req.body.title,
+      {
+        problem: req.body.state.problem,
+        prefs: req.body.state.prefs
+      },
+      function(error, result) {
+        if (error) {
+          next(error);
+        } else {
+          res.json(result.rows[0]);
+        }
+      }
+    );
+  }
 
-function update(req, res, next) {
-  logger.debug('updating scenario :id');
-  db.query('UPDATE scenario SET state = $1, title = $2 WHERE id = $3', [{
-      problem: req.body.state.problem,
-      prefs: req.body.state.prefs,
-      legend: req.body.state.legend
-    },
-    req.body.title, req.body.id
-  ], function(err) {
-    if (err) {
-      err.status = 500;
-      next(err);
-    }
-    res.end();
-  });
-}
+  function update(req, res, next) {
+    ScenarioRepository.update(
+      req.body.state,
+      req.body.title,
+      req.body.id,
+      function(error) {
+        if (error) {
+          next(error);
+        } else {
+          res.end();
+        }
+      });
+  }
 
   return {
     query: query,
-    queryScenariosForSubProblem: queryScenariosForSubProblem,
+    queryForSubProblem: queryForSubProblem,
     get: get,
     create: create,
     update: update

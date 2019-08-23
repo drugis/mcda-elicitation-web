@@ -69,13 +69,11 @@ describe('the inProgressWorkspace repository', function() {
 
   describe('update', function() {
     initDBStub();
-
     const expectedQuery = 'UPDATE inProgressWorkspace SET state = $1 WHERE id = $2';
     const queryInputValues = [state, inProgressWorkspaceId];
 
     it('should update the inProgressWorkspace', function(done) {
-      const expectedResult = undefined;
-      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      const callback = testUtil.createQueryNoArgumentCallbackWithTests(query, expectedQuery, queryInputValues, done);
       query.onCall(0).yields(null);
       inProgressWorkspaceRepository.update(state, inProgressWorkspaceId, callback);
     });
@@ -94,8 +92,7 @@ describe('the inProgressWorkspace repository', function() {
     const queryInputValues = [inProgressWorkspaceId];
 
     it('should delete the inProgressWorkspace', (done) => {
-      const expectedResult = undefined;
-      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      const callback = testUtil.createQueryNoArgumentCallbackWithTests(query, expectedQuery, queryInputValues, done);
       query.onCall(0).yields(null);
       inProgressWorkspaceRepository.delete(inProgressWorkspaceId, callback);
     });

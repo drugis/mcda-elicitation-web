@@ -37,7 +37,7 @@ describe('the workspace repository', function() {
       const queryResult = {
         rows: [{}]
       };
-      const expectedResult = {};
+      const expectedResult = queryResult;
       query.onCall(0).yields(null, queryResult);
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       workspaceRepository.get(workspaceId, callback);
@@ -60,7 +60,7 @@ describe('the workspace repository', function() {
       const queryResult = {
         rows: [{ id: workspaceId }]
       };
-      const expectedResult = workspaceId;
+      const expectedResult = queryResult;
       query.onCall(0).yields(null, queryResult);
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       workspaceRepository.create(ownerId, title, problem, callback);
@@ -81,9 +81,8 @@ describe('the workspace repository', function() {
     initDBStub();
 
     it('should set the default sub problem for the workspace', function(done) {
-      const expectedResult = workspaceId;
       query.onCall(0).yields(null);
-      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      const callback = testUtil.createQueryNoArgumentCallbackWithTests(query, expectedQuery, queryInputValues, done);
       workspaceRepository.setDefaultSubProblem(workspaceId, subProblemId, callback);
     });
 
@@ -102,9 +101,8 @@ describe('the workspace repository', function() {
     initDBStub();
 
     it('should set the default sub problem for the workspace', function(done) {
-      const expectedResult = workspaceId;
       query.onCall(0).yields(null);
-      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      const callback = testUtil.createQueryNoArgumentCallbackWithTests(query, expectedQuery, queryInputValues, done);
       workspaceRepository.setDefaultScenario(workspaceId, scenarioId, callback);
     });
 
@@ -125,7 +123,7 @@ describe('the workspace repository', function() {
       const queryResult = {
         rows: [{ id: workspaceId }]
       };
-      const expectedResult = queryResult.rows[0];
+      const expectedResult = queryResult;
       query.onCall(0).yields(null, queryResult);
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       workspaceRepository.getWorkspaceInfo(workspaceId, callback);

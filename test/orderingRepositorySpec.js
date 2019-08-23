@@ -51,8 +51,7 @@ describe('the ordering repository', function() {
     const queryInputValues = [workspaceId, ordering];
 
     it('should update the ordering', function(done) {
-      const expectedResult = undefined;
-      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      const callback = testUtil.createQueryNoArgumentCallbackWithTests(query, expectedQuery, queryInputValues, done);
       query.onCall(0).yields(null);
       orderingRepository.update(workspaceId, ordering, callback);
     });
@@ -60,7 +59,7 @@ describe('the ordering repository', function() {
     it('should call the callback with only an error', function(done) {
       query.onCall(0).yields(expectedError);
       var callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
-      orderingRepository.update(workspaceId,ordering, callback);
+      orderingRepository.update(workspaceId, ordering, callback);
     });
   });
 });

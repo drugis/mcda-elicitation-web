@@ -5,40 +5,30 @@ module.exports = function(db) {
   function get(workspaceId, callback) {
     logger.debug('GET /workspaces/:id');
     const query = 'SELECT id, owner, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
-    db.query(query,
+    db.query(
+      query,
       [workspaceId],
-      function(error, result) {
-        if (error) {
-          logger.error('error retrieving workspace, error: ' + error);
-          callback(error);
-        } else {
-          callback(error, result.rows[0]);
-        }
-      });
+      callback
+    );
   }
 
   function create(owner, title, problem, callback) {
     logger.debug('creating workspace');
     const query = 'INSERT INTO workspace (owner, title, problem) VALUES ($1, $2, $3) RETURNING id';
-    db.query(query,
+    db.query(
+      query,
       [owner, title, problem],
-      function(error, result) {
-        if (error) {
-          logger.error('error creating workspace, error: ' + error);
-          return callback(error);
-        } else {
-          callback(null, result.rows[0].id);
-        }
-      });
+      callback
+    );
   }
 
   function setDefaultSubProblem(workspaceId, subProblemId, callback) {
     logger.debug('setting default subproblem');
     const query = 'UPDATE workspace SET defaultsubproblemId = $1 WHERE id = $2';
-    db.query(query, [subProblemId, workspaceId],
-      function(error) {
-        callback(error, workspaceId, subProblemId);
-      });
+    db.query(query,
+      [subProblemId, workspaceId],
+      callback
+    );
   }
 
   function setDefaultScenario(workspaceId, scenarioId, callback) {
@@ -46,9 +36,8 @@ module.exports = function(db) {
     const query = 'UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2';
     db.query(query,
       [scenarioId, workspaceId],
-      function(error) {
-        callback(error, workspaceId);
-      });
+      callback
+    );
   }
 
   function getWorkspaceInfo(workspaceId, callback) {
@@ -56,13 +45,8 @@ module.exports = function(db) {
     const query = 'SELECT id, owner, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
     db.query(query,
       [workspaceId],
-      function(error, result) {
-        if (error) {
-          callback(error);
-        } else {
-          callback(null, result.rows[0]);
-        }
-      });
+      callback
+    );
   }
 
   function update(title, problem, id, callback) {
@@ -70,7 +54,8 @@ module.exports = function(db) {
     const query = 'UPDATE workspace SET title = $1, problem = $2 WHERE id = $3';
     db.query(query,
       [title, problem, id],
-      callback);
+      callback
+    );
   }
 
   function del(workspaceId, callback) {
@@ -78,13 +63,16 @@ module.exports = function(db) {
     const query = 'DELETE FROM workspace WHERE id=$1';
     db.query(query,
       [workspaceId],
-      callback);
+      callback
+    );
   }
 
   function query(ownerId, callback) {
     const query = 'SELECT id, owner, title, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1';
     db.query(query,
-      [ownerId], callback);
+      [ownerId],
+      callback
+    );
   }
 
   return {

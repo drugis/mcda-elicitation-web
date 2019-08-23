@@ -3,6 +3,15 @@ const sinon = require('sinon');
 const chai = require('chai');
 const expect = chai.expect;
 
+function createQueryNoArgumentCallbackWithTests(query, expectedQuery, queryInputValues, done) {
+  return function(error, result) {
+    sinon.assert.calledWith(query, expectedQuery, queryInputValues);
+    expect(error).to.be.null;
+    expect(result).to.deep.equal(undefined);
+    done();
+  };
+}
+
 function createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done) {
   return function(error, result) {
     sinon.assert.calledWith(query, expectedQuery, queryInputValues);
@@ -11,7 +20,6 @@ function createQueryCallbackWithTests(query, expectedQuery, queryInputValues, ex
     done();
   };
 }
-
 
 function createQueryTwoArgumentCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult1, expectedResult2, done) {
   return function(error, result1, result2) {
@@ -33,6 +41,7 @@ function createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValue
 }
 
 module.exports = {
+  createQueryNoArgumentCallbackWithTests: createQueryNoArgumentCallbackWithTests,
   createQueryCallbackWithTests: createQueryCallbackWithTests,
   createQueryTwoArgumentCallbackWithTests: createQueryTwoArgumentCallbackWithTests,
   createQueryErrorCallbackWithTests: createQueryErrorCallbackWithTests
