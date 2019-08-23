@@ -48,7 +48,6 @@ define(['lodash'], function(_) {
 
         function getWorkspaceSettings() {
           scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
-          scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
           scope.isValueView = WorkspaceSettingsService.isValueView();
         }
 

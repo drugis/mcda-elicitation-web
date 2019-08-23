@@ -3,13 +3,13 @@
     <div class="cell">
       <h3>Edit data source</h3>
     </div>
-    <div class="cell" ng-hide="originalUnitOfMeasurement === '%' || originalUnitOfMeasurement === 'Proportion'">
+    <div class="cell" ng-show="dataSource.unitOfMeasurement.type === 'custom'">
       <label>Unit of measurement
         <inline-help help-key="criterion-unit"></inline-help>
       </label>
     </div>
-    <div class="cell" ng-hide="originalUnitOfMeasurement === '%' || originalUnitOfMeasurement === 'Proportion'">
-      <input type="text" ng-model="dataSource.unitOfMeasurement" ng-change="checkErrors()">
+    <div class="cell" ng-show="dataSource.unitOfMeasurement.type === 'custom'">
+      <input type="text" ng-model="dataSource.unitOfMeasurement.label">
     </div>
     <div class="cell">
       <label>Reference

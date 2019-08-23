@@ -46,7 +46,7 @@ define(['lodash'], function(_) {
           $modal.open({
             templateUrl: './editStrengthOfEvidence.html',
             controller: 'EditStrengthOfEvidenceController',
-            size: 'small',
+            size: 'tiny',
             resolve: {
               callback: function() {
                 return function(values) {

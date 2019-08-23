@@ -25,19 +25,34 @@ define([
             id: 'crit1',
             isFavorable: false,
             dataSources: [{
-              id: 'ds1id'
+              id: 'ds1id',
+              unitOfMeasurement: {
+                label: 'label',
+                type: 'custom'
+              },
+              scale: [0, 1]
             }]
           }, {
             id: 'crit2',
             isFavorable: true,
             dataSources: [{
-              id: 'ds2id'
+              id: 'ds2id',
+              unitOfMeasurement: {
+                label: 'label',
+                type: 'custom'
+              },
+              scale: [0, 1]
             }]
           }, {
             id: 'crit3',
             isFavorable: true,
             dataSources: [{
-              id: 'ds3id'
+              id: 'ds3id',
+              unitOfMeasurement: {
+                label: 'label',
+                type: 'custom'
+              },
+              scale: [0, 1]
             }]
           }];
           var result = effectTableService.buildEffectsTable(criteria);
@@ -51,10 +66,14 @@ define([
               isFavorable: true,
             },
             dataSource: {
-              id: 'ds2id'
+              id: 'ds2id',
+              unitOfMeasurement: {
+                label: 'label',
+                type: 'custom'
+              },
+              scale: [0, 1]
             },
             isFirstRow: true,
-            isProportion: false
           }, {
             criterion: {
               id: 'crit3',
@@ -62,10 +81,14 @@ define([
               isFavorable: true,
             },
             dataSource: {
-              id: 'ds3id'
+              id: 'ds3id',
+              unitOfMeasurement: {
+                label: 'label',
+                type: 'custom'
+              },
+              scale: [0, 1]
             },
             isFirstRow: true,
-            isProportion: false
           },
           {
             isHeaderRow: true,
@@ -77,10 +100,14 @@ define([
               isFavorable: false,
             },
             dataSource: {
-              id: 'ds1id'
+              id: 'ds1id',
+              unitOfMeasurement: {
+                label: 'label',
+                type: 'custom'
+              },
+              scale: [0, 1]
             },
             isFirstRow: true,
-            isProportion: false
           }
           ];
           expect(result).toEqual(expectedResult);
@@ -583,7 +610,10 @@ define([
             isFavorable: true,
             dataSources: [{
               foo: 'bar',
-              unitOfMeasurement: 'not perc',
+              unitOfMeasurement: {
+                label: 'not perc',
+                type: 'custom'
+              },
               scale: [0, 100]
             }]
           }, {
@@ -591,16 +621,23 @@ define([
             isFavorable: false,
             dataSources: [{
               foo: 'qux',
-              unitOfMeasurement: 'not Proportion',
+              unitOfMeasurement: {
+                label: 'not Proportion',
+                type: 'custom'
+              },
               scale: [0, 1]
             }, {
-              zoq: 'fot'
+              zoq: 'fot',
+              unitOfMeasurement: {
+                label: 'not Proportion',
+                type: 'custom'
+              },
+              scale: [0, 1]
             }]
           }];
 
           var expectedResult = [{
             isFirstRow: true,
-            isProportion: true,
             criterion: {
               id: 'crit1',
               isFavorable: true,
@@ -608,12 +645,14 @@ define([
             },
             dataSource: {
               foo: 'bar',
-              unitOfMeasurement: '%',
+              unitOfMeasurement: {
+                label: 'not perc',
+                type: 'custom'
+              },
               scale: [0, 100]
             }
           }, {
             isFirstRow: true,
-            isProportion: true,
             criterion: {
               id: 'crit2',
               isFavorable: false,
@@ -621,19 +660,87 @@ define([
             },
             dataSource: {
               foo: 'qux',
-              unitOfMeasurement: 'Proportion',
+              unitOfMeasurement:  {
+                label: 'not Proportion',
+                type: 'custom'
+              },
               scale: [0, 1]
             }
           }, {
             isFirstRow: false,
-            isProportion: false,
             criterion: {
               id: 'crit2',
               isFavorable: false,
               numberOfDataSources: 2
             },
             dataSource: {
-              zoq: 'fot'
+              zoq: 'fot',
+              unitOfMeasurement: {
+                label: 'not Proportion',
+                type: 'custom'
+              },
+              scale: [0, 1]
+            }
+          }];
+
+          var result = effectTableService.buildTableRows(criteria);
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should substiute null scales to -/+ infinity', function(){
+          var criteria = [{
+            id: 'crit1',
+            isFavorable: true,
+            dataSources: [{
+              foo: 'bar',
+              unitOfMeasurement: {
+                label: 'not perc',
+                type: 'custom'
+              },
+              scale: [null, null]
+            }]
+          }, {
+            id: 'crit2',
+            isFavorable: false,
+            dataSources: [{
+              foo: 'qux',
+              unitOfMeasurement: {
+                label: 'not Proportion',
+                type: 'custom'
+              },
+              scale: [0, null]
+            }]
+          }];
+
+          var expectedResult = [{
+            isFirstRow: true,
+            criterion: {
+              id: 'crit1',
+              isFavorable: true,
+              numberOfDataSources: 1
+            },
+            dataSource: {
+              foo: 'bar',
+              unitOfMeasurement: {
+                label: 'not perc',
+                type: 'custom'
+              },
+              scale: [-Infinity, Infinity]
+            }
+          }, {
+            isFirstRow: true,
+            criterion: {
+              id: 'crit2',
+              isFavorable: false,
+              numberOfDataSources: 1
+            },
+            dataSource: {
+              foo: 'qux',
+              unitOfMeasurement:  {
+                label: 'not Proportion',
+                type: 'custom'
+              },
+              scale: [0, Infinity]
             }
           }];
 

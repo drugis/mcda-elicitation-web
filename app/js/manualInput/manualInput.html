@@ -104,14 +104,14 @@
       </table>
     </div>
     <div class="cell">
-      <button class="button" ng-disabled="errors.length" type="button" ng-click="goToStep2()"
+      <button class="button" ng-disabled="state.step1errors.length" type="button" ng-click="goToStep2()"
         tooltip="Enter effects table data">
         Enter data
       </button>
       <button id="step1SaveButton" class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty"
         tooltip="Save current state">Save</button>
     </div>
-    <div class="cell" ng-repeat="error in state.step1errors">
+    <div class="cell alert" ng-repeat="error in state.step1errors">
       <em>{{error}}</em>
     </div>
   </div>

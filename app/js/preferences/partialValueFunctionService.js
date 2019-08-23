@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash', 'angular'], function(_) {
-  var dependencies = ['WorkspaceSettingsService'];
-  var PartialValueFunctionService = function(WorkspaceSettingsService) {
+  var dependencies = [];
+  var PartialValueFunctionService = function() {
     function inv(criterion) {
       var f = pvf(criterion);
       return function(v) {
@@ -45,11 +45,11 @@ define(['lodash', 'angular'], function(_) {
         x: best(dataSource),
         y: 1
       },
-      sortByValues(dataSource.pvf),
-      {
-        x: worst(dataSource),
-        y: 0
-      });
+        sortByValues(dataSource.pvf),
+        {
+          x: worst(dataSource),
+          y: 0
+        });
     }
 
     function sortByValues(pvf) {
@@ -76,7 +76,7 @@ define(['lodash', 'angular'], function(_) {
         if (newPvf.direction === 'decreasing') {
           newPvf.values.reverse();
         }
-        if (WorkspaceSettingsService.usePercentage() && _.isEqual([0, 100], dataSource.scale)) {
+        if (dataSource.unitOfMeasurement.type === 'percentage') {
           newPvf.cutoffs = _.map(newPvf.cutoffs, div100);
         }
       }
@@ -130,13 +130,11 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function getUnitOfMeasurement(criterion) {
-      if (_.isEqual(criterion.dataSources[0].scale, [0, 1])) {
+      if (criterion.dataSources[0].unitOfMeasurement.type === 'decimal') {
         return '';
+      } else {
+        return ' ' + criterion.dataSources[0].unitOfMeasurement.label;
       }
-      if (criterion.dataSources[0].unitOfMeasurement) {
-        return ' ' + criterion.dataSources[0].unitOfMeasurement;
-      }
-      return '';
     }
 
     return {

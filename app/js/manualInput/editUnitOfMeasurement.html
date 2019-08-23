@@ -4,26 +4,26 @@
       <h3>Edit unit of measurement</h3>
     </div>
     <div class="cell">
-      <label>Presets</label>
+      <label>Unit of measurement</label>
       <select ng-model="values.selectedOption" ng-change="unitOptionChanged()"
-        ng-options="option as option.label for option in unitOptions track by option.id"></select>
+        ng-options="option as option.label for option in unitOptions track by option.type"></select>
     </div>
     <div class="cell">
-      <label>Unit of measurement</label>
-      <input type="text" ng-disabled="values.selectedOption.id !== 'default'" ng-model="values.value"
+      <label>Label</label>
+      <input type="text" ng-disabled="values.selectedOption.type !== 'custom'" ng-model="values.value"
         ng-change="validateInput()">
     </div>
     <div class="cell large-6">
       <label>Lower bound</label>
       <select ng-options="lowerBound as lowerBound for lowerBound in lowerBoundOptions"
-        ng-disabled="values.selectedOption.id !== 'default'" ng-model="values.lowerBound"></select>
+        ng-disabled="values.selectedOption.type !== 'custom'" ng-model="values.lowerBound"></select>
     </div>
-
     <div class="cell large-6">
       <label>Upper bound</label>
       <select ng-options="upperBound as upperBound for upperBound in upperBoundOptions"
-        ng-disabled="values.selectedOption.id !== 'default'" ng-model="values.upperBound"></select>
+        ng-disabled="values.selectedOption.type !== 'custom'" ng-model="values.upperBound"></select>
     </div>
+
     <div class="cell">
       <button class="button" type="submit">Save</button>
     </div>

@@ -22,6 +22,7 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
      * 1.3.2 Remove null/undefined properties from data sources
      * 1.3.3 Remove alternative property from alternatives
      * 1.3.4 Add 'decimal' as scale option to input
+     * 1.4.0 Add type to unit of measurement; Scales with null ranges updated to minus/plus infinity and are mandatory
      * *****/
 
     function updateProblemToCurrentSchema(problem) {
@@ -58,8 +59,12 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
         newProblem = updateToVersion133(newProblem);
       }
 
-      if(newProblem.schemaVersion === '1.3.3'){
+      if (newProblem.schemaVersion === '1.3.3') {
         newProblem.schemaVersion = '1.3.4';
+      }
+
+      if (newProblem.schemaVersion === '1.3.4') {
+        newProblem = updateToVersion140(newProblem);
       }
 
       if (newProblem.schemaVersion === currentSchemaVersion) {
@@ -289,12 +294,56 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
     }
 
     function updateToVersion133(problem) {
-      var newProblem = angular.copy(problem); 
-      newProblem.alternatives = _.mapValues(problem.alternatives, function(alternative){
+      var newProblem = angular.copy(problem);
+      newProblem.alternatives = _.mapValues(problem.alternatives, function(alternative) {
         return _.pick(alternative, ['title']);
       });
       newProblem.schemaVersion = '1.3.3';
-       return newProblem;
+      return newProblem;
+    }
+
+    function updateToVersion140(problem) {
+      var newProblem = angular.copy(problem);
+      newProblem.criteria = _.mapValues(problem.criteria, function(criterion) {
+        var newCriterion = angular.copy(criterion);
+        newCriterion.dataSources = _.map(criterion.dataSources, function(dataSource) {
+          var newDataSource = angular.copy(dataSource);
+          newDataSource.unitOfMeasurement = {
+            type: getUnitType(dataSource),
+            label: dataSource.unitOfMeasurement ? dataSource.unitOfMeasurement : ''
+          };
+          newDataSource.scale = updateNullScales(dataSource.scale);
+          return newDataSource;
+        });
+        return newCriterion;
+      });
+      newProblem.schemaVersion = '1.4.0';
+      return newProblem;
+    }
+
+    function getUnitType(dataSource) {
+      if (dataSource.unitOfMeasurement === '%' && _.isEqual(dataSource.scale, [0, 100])) {
+        return 'percentage';
+      } else if (dataSource.unitOfMeasurement === 'Proportion' && _.isEqual(dataSource.scale, [0, 1])) {
+        return 'decimal';
+      } else {
+        return 'custom';
+      }
+    }
+
+    function updateNullScales(scale) {
+      if (scale) {
+        var newScale = angular.copy(scale);
+        if (scale[0] === null) {
+          newScale[0] = -Infinity;
+        }
+        if (scale[1] === null) {
+          newScale[1] = Infinity;
+        }
+        return newScale;
+      } else {
+        return [-Infinity, Infinity];
+      }
     }
 
     return {

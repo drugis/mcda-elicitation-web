@@ -41,26 +41,36 @@ define(['lodash', 'angular'], function(_, angular) {
         }
         var criterion = _.omit(row, ['dataSources']);
         criterion.numberOfDataSources = row.dataSources.length;
-        accum = accum.concat(_.map(row.dataSources, function(dataSource, index) {
-          var newDataSource = angular.copy(dataSource);
-          var scale = dataSource.scale;
-          var isProportion = false;
-          if (_.isEqual(scale, [0, 1])) {
-            newDataSource.unitOfMeasurement = 'Proportion';
-            isProportion = true;
-          } else if (_.isEqual(scale, [0, 100])) {
-            newDataSource.unitOfMeasurement = '%';
-            isProportion = true;
-          }
-          return {
-            criterion: criterion,
-            isFirstRow: index === 0,
-            dataSource: newDataSource,
-            isProportion: isProportion
-          };
-        }));
+        accum = accum.concat(createRow(row.dataSources, criterion));
         return accum;
       }, []);
+    }
+
+    function createRow(dataSources, criterion) {
+      return _.map(dataSources, function(dataSource, index) {
+        var newDataSource = angular.copy(dataSource);
+        newDataSource.scale = getScale(dataSource.scale);
+        return {
+          criterion: criterion,
+          isFirstRow: index === 0,
+          dataSource: newDataSource
+        };
+      });
+    }
+
+    function getScale(scale) {
+      var newScale = [];
+      if (_.isNull(scale[0])) {
+        newScale[0] = -Infinity;
+      } else {
+        newScale[0] = scale[0];
+      }
+      if (_.isNull(scale[1])) {
+        newScale[1] = Infinity;
+      } else {
+        newScale[1] = scale[1];
+      }
+      return newScale;
     }
 
     function createEffectsTableInfo(performanceTable) {

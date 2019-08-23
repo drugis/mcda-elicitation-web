@@ -49,26 +49,30 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.createProblemConfiguration = createProblemConfiguration;
     $scope.cancel = $modalInstance.close;
     $scope.reset = reset;
-    $scope.getUnit = getUnit;
 
     // init
     $scope.subProblems = subProblems;
     $scope.scales = angular.copy(scales.base);
     $scope.originalScales = scales;
+    getWorkspaceSettings();
     initSubProblem(subProblem, problem);
     $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.performanceTable, $scope.problem.alternatives);
     $scope.effectsTableInfo = effectsTableInfo;
     $scope.editMode = editMode;
-    $scope.$watch('originalScales', function(newScales, oldScales) {
-      if (newScales && oldScales && newScales.observed === oldScales.observed) { return; }
-      $scope.scales = angular.copy(newScales.base);
-      initializeScales();
-    }, true);
+    var orderedCriteria;
+
+    // $scope.$watch('originalScales', function(newScales, oldScales) {
+    //   if (newScales && oldScales && newScales.observed === oldScales.observed) { return; }
+    //   $scope.scales = angular.copy(newScales.base);
+    //   initializeScales();
+    // }, true);
+
     $scope.$on('elicit.settingsChanged', function() {
       getWorkspaceSettings();
+      setProblem();
+      setTableRows();
       initializeScales();
     });
-    getWorkspaceSettings();
 
     function getWorkspaceSettings() {
       $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
@@ -90,18 +94,43 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function initSubProblem(subProblem, problem) {
       var newSubProblem = angular.copy(subProblem);
-      $scope.problem = angular.copy(problem);
-      OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
+
+      $scope.percentifiedProblem = WorkspaceService.percentifyCriteria({
+        problem: problem
+      }).problem;
+      $scope.dePercentifiedProblem = WorkspaceService.dePercentifyCriteria({
+        problem: problem
+      }).problem;
+      setProblem();
+
+      $scope.orderingPromise = OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
         $scope.alternatives = orderings.alternatives;
         $scope.nrAlternatives = _.keys($scope.alternatives).length;
-        $scope.criteria = orderings.criteria;
-        $scope.tableRows = EffectsTableService.buildEffectsTable(orderings.criteria);
-
-        $scope.criteriaByDataSource = SubProblemService.getCriteriaByDataSource($scope.criteria);
-        $scope.subProblemState = SubProblemService.createSubProblemState($scope.problem, newSubProblem, $scope.criteria);
+        orderedCriteria = getCriteria(orderings.criteria);
+        $scope.tableRows = EffectsTableService.buildEffectsTable(getCriteria(orderedCriteria));
+        $scope.criteriaByDataSource = SubProblemService.getCriteriaByDataSource(orderedCriteria);
+        $scope.subProblemState = SubProblemService.createSubProblemState($scope.problem, newSubProblem, orderedCriteria);
 
         updateInclusions();
         checkDuplicateTitle($scope.subProblemState.title);
+      });
+    }
+
+    function setProblem() {
+      $scope.problem = $scope.workspaceSettings.showPercentages ?
+        $scope.percentifiedProblem :
+        $scope.dePercentifiedProblem;
+    }
+
+    function setTableRows() {
+      $scope.orderingPromise.then(function() {
+        $scope.tableRows = EffectsTableService.buildEffectsTable(getCriteria(orderedCriteria));
+      });
+    }
+
+    function getCriteria(orderedCriteria) {
+      return _.map(orderedCriteria, function(criterion) {
+        return _.merge({}, $scope.problem.criteria[criterion.id], { id: criterion.id });
       });
     }
 
@@ -127,13 +156,12 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function initializeScales() {
+      $scope.scales =  $scope.workspaceSettings.showPercentages ?  angular.copy($scope.originalScales.basePercentified) : angular.copy($scope.originalScales.base);
       var filteredPerformanceTable = SubProblemService.excludeDeselectedAlternatives($scope.problem.performanceTable, $scope.subProblemState.alternativeInclusions);
-      var stateAndChoices = ScaleRangeService.getScalesStateAndChoices($scope.originalScales.base, $scope.criteria, filteredPerformanceTable);
+      var stateAndChoices = ScaleRangeService.getScalesStateAndChoices($scope.scales, $scope.problem.criteria, filteredPerformanceTable);
       $scope.scalesState = stateAndChoices.scalesState;
       $scope.choices = stateAndChoices.choices;
 
-      $scope.usePercentage = WorkspaceSettingsService.usePercentage();
-      $scope.scales = $scope.usePercentage ? WorkspaceService.percentifyScales($scope.problem.criteria, $scope.originalScales.base) : $scope.originalScales.base;
       $scope.$watch('choices', function() {
         $scope.invalidSlider = SubProblemService.hasInvalidSlider($scope.scalesDataSources, $scope.choices, $scope.scalesState);
       }, true);
@@ -150,18 +178,6 @@ define(['lodash', 'angular'], function(_, angular) {
       };
       initSubProblem(newSubProblem, problem);
       $scope.subProblemState.title = titleCache;
-    }
-
-    function getUnit(row) {
-      if (row.isProportion) {
-        if (WorkspaceSettingsService.isValueView()) {
-          return $scope.usePercentage ? '%' : 'Proportion';
-        } else {
-          return '';
-        }
-      } else {
-        return row.dataSource.unitOfMeasurement;
-      }
     }
 
     // private functions

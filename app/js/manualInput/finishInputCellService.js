@@ -28,23 +28,6 @@ define(['angular'], function() {
       return cell;
     }
 
-    function finishValueSE(options, performance) {
-      var cell = {
-        inputParameters: options
-      };
-      if (performance.input.scale === 'percentage') {
-        cell.constraint = percentageConstraint.label;
-        cell.inputParameters.firstParameter.constraints.push(percentageConstraint);
-      }
-      if (performance.input.scale === 'decimal') {
-        cell.constraint = decimalConstraint.label;
-        cell.inputParameters.firstParameter.constraints.push(decimalConstraint);
-      }
-      cell.firstParameter = performance.input.value;
-      cell.secondParameter = performance.input.stdErr;
-      return cell;
-    }
-
     function finishValueCI(options, performance) {
       var cell = {
         inputParameters: options
@@ -72,32 +55,6 @@ define(['angular'], function() {
       }
 
       return cell;
-    }
-
-    function finishValueSampleSizeCell(options, performance) {
-      var cell = {
-        inputParameters: options
-      };
-      if (performance.input.scale === 'percentage') {
-        cell.constraint = percentageConstraint.label;
-        cell.inputParameters.firstParameter.constraints.push(percentageConstraint);
-      }
-      if (performance.input.scale === 'decimal') {
-        cell.constraint = decimalConstraint.label;
-        cell.inputParameters.firstParameter.constraints.push(decimalConstraint);
-      }
-      cell.firstParameter = performance.input.value;
-      cell.secondParameter = performance.input.sampleSize;
-      return cell;
-    }
-
-    function finishEventSampleSizeInputCell(options, performance) {
-      var inputCell = {
-        inputParameters: options,
-        firstParameter: performance.input.events,
-        secondParameter: performance.input.sampleSize
-      };
-      return inputCell;
     }
 
     function finishBetaCell(options, performance) {
@@ -142,10 +99,7 @@ define(['angular'], function() {
 
     return {
       finishValueCell: finishValueCell,
-      finishValueSE: finishValueSE,
       finishValueCI: finishValueCI,
-      finishValueSampleSizeCell: finishValueSampleSizeCell,
-      finishEventSampleSizeInputCell: finishEventSampleSizeInputCell,
       finishBetaCell: finishBetaCell,
       finishGammaCell: finishGammaCell,
       finishNormalInputCell: finishNormalInputCell,

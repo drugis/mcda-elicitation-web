@@ -50,10 +50,8 @@
                 style="min-width:120px;" class="text-center" ng-repeat="alternative in alternatives">
                 <div class="grid-x">
                   <div class="cell">
-                    <input style="margin:0;" ng-if="!isBaseline[alternative.id]" 
-                      id="{{alternative.id}}" type="checkbox"
-                      ng-model="subProblemState.alternativeInclusions[alternative.id]"
-                       ng-change="updateInclusions()"
+                    <input style="margin:0;" ng-if="!isBaseline[alternative.id]" id="{{alternative.id}}" type="checkbox"
+                      ng-model="subProblemState.alternativeInclusions[alternative.id]" ng-change="updateInclusions()"
                       ng-disabled="subProblemState.alternativeInclusions[alternative.id] && subProblemState.numberOfAlternativesSelected < 3">
                     <i ng-if="isBaseline[alternative.id]" class="fa fa-ban" tooltip="Cannot deselect baseline"></i>
                   </div>
@@ -98,7 +96,7 @@
               <td ng-if="!row.isHeaderRow"
                 ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id]}"
                 ng-show="toggledColumns['units']">
-                {{getUnit(row)}}
+                {{row.dataSource.unitOfMeasurement.label}}
               </td>
               <td ng-if="!row.isHeaderRow"
                 ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternative.id] || !subProblemState.criterionInclusions[row.criterion.id] || !subProblemState.dataSourceInclusions[row.dataSource.id]}"
@@ -111,8 +109,8 @@
                   </div>
                   <div class="cell large-10">
                     <effects-table-cell effects-table-info="effectsTableInfo[row.dataSource.id]"
-                      workspace-settings="workspaceSettings" scales="scales[row.dataSource.id][alternative.id]"
-                      theoretical-scale="row.dataSource.scale" alternative-id="alternative.id">
+                      scales="scales[row.dataSource.id][alternative.id]" theoretical-scale="row.dataSource.scale"
+                      alternative-id="alternative.id" unit-of-measurement-type="row.dataSource.unitOfMeasurement.type">
                     </effects-table-cell>
                   </div>
                 </div>

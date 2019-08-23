@@ -103,7 +103,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
             pvf: {
               range: [0, 40]
             },
-            id: 'ds1'
+            id: 'ds1',
+            unitOfMeasurement: {
+              label: 'label',
+              type: 'custom'
+            },
+            scale: [-Infinity, Infinity]
           }]
         }, {
           id: 'nauseaId',
@@ -111,7 +116,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
             pvf: {
               range: [10, 40]
             },
-            id: 'ds2'
+            id: 'ds2',
+            unitOfMeasurement: {
+              label: 'label',
+              type: 'custom'
+            },
+            scale: [-Infinity, Infinity]
           }]
         }];
         var result = scaleRangeService.getScalesStateAndChoices(observedScales, criteria);
@@ -172,7 +182,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
       it('should add the interval hull to the table rows', function() {
         var table = [{
           dataSource: {
-            id: 'ds1'
+            id: 'ds1',
+            unitOfMeasurement: {
+              type: 'custom',
+              label: ''
+            }
           }
         }];
         var scales = {
@@ -181,7 +195,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
         var performanceTable = [{
           dataSource: 'ds1',
           performance: {
-            effect:{
+            effect: {
               value: 10
             }
           }
@@ -189,18 +203,25 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
         var result = scaleRangeService.getScaleTable(table, scales, performanceTable);
         var expectedResult = [{
           dataSource: {
-            id: 'ds1'
+            id: 'ds1',
+            unitOfMeasurement: {
+              type: 'custom',
+              label: ''
+            }
           },
-          intervalHull: [10,10]
+          intervalHull: [10, 10]
         }];
         expect(result).toEqual(expectedResult);
       });
 
-      it('should add the correct interval hull if percentages are being used', function(){
+      it('should add the correct interval hull if percentages are being used', function() {
         var table = [{
           dataSource: {
             id: 'ds1',
-            unitOfMeasurement: '%'
+            unitOfMeasurement: {
+              label: '%',
+              type: 'percentage'
+            }
           }
         }];
         var scales = {
@@ -209,7 +230,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
         var performanceTable = [{
           dataSource: 'ds1',
           performance: {
-            effect:{
+            effect: {
               value: 0.1
             }
           }
@@ -218,9 +239,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
         var expectedResult = [{
           dataSource: {
             id: 'ds1',
-            unitOfMeasurement: '%'
+            unitOfMeasurement: {
+              label: '%',
+              type: 'percentage'
+            }
           },
-          intervalHull: [10,10]
+          intervalHull: [10, 10]
         }];
         expect(result).toEqual(expectedResult);
       });

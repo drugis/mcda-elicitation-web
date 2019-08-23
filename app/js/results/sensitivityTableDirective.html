@@ -49,7 +49,7 @@
               {{row.criterion.description}}
             </td>
             <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['units']">
-              {{row.dataSource.unitOfMeasurement}}
+              {{row.dataSource.unitOfMeasurement.label}}
             </td>
             <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives">
               <sensitivity-input row="row" alternative="alternative" original-value="scales.observed[row.dataSource.id][alternative.id]['50%']"

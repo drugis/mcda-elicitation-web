@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://mcda.drugis.org/problem.json#",
   "title": "MCDA problem schema",
-  "description": "MCDA problem schema for uploaded JSON, version 1.3.4",
+  "description": "MCDA problem schema for uploaded JSON, version 1.4.0",
   "type": "object",
   "required": [
     "schemaVersion",

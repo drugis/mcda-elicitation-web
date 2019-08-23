@@ -71,47 +71,6 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
     });
 
-    describe('generateValueSEDistribution', function() {
-      var cell;
-      beforeEach(function() {
-        cell = {
-          firstParameter: 50,
-          secondParameter: 0.5,
-          inputParameters: {
-            firstParameter: {
-              constraints: []
-            },
-            secondParameter: {
-              constraints: []
-            }
-          }
-        };
-      });
-
-      it('should generate a normal distribution', function() {
-        var result = generateDistributionService.generateValueSEDistribution(options, cell);
-        var expectedResult = {
-          label: label,
-          firstParameter: 50,
-          secondParameter: 0.5,
-          inputParameters: options
-        };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should generate a normal distribution from a percentage', function() {
-        cell.constraint = percentageConstraint.label;
-        var result = generateDistributionService.generateValueSEDistribution(options, cell);
-        var expectedResult = {
-          label: label,
-          firstParameter: 0.5,
-          secondParameter: 0.005,
-          inputParameters: options
-        };
-        expect(result).toEqual(expectedResult);
-      });
-    });
-
     describe('generateValueCIDistribution', function() {
       var cell;
       beforeEach(function() {
@@ -173,75 +132,6 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           label: label,
           firstParameter: 0.5,
           secondParameter: 0.05102,
-          inputParameters: options
-        };
-        expect(result).toEqual(expectedResult);
-      });
-    });
-
-    describe('generateValueSampleSizeDistribution', function() {
-      var cell;
-      beforeEach(function() {
-        cell = {
-          firstParameter: 50,
-          secondParameter: 100,
-          inputParameters: {
-            firstParameter: {
-              constraints: []
-            }
-          }
-        };
-      });
-
-      it('should generate an exact distribution', function() {
-        var result = generateDistributionService.generateValueSampleSizeDistribution(options, options, cell);
-        var expectedResult = {
-          label: label,
-          firstParameter: 50,
-          inputParameters: options
-        };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should generate beta distribution given a percentage constraint', function() {
-        cell.constraint = percentageConstraint.label;
-        cell.inputParameters.firstParameter.constraints.push(percentageConstraint);
-        var result = generateDistributionService.generateValueSampleSizeDistribution(options, options, cell);
-        var expectedResult = {
-          label: label,
-          firstParameter: 51,
-          secondParameter: 51,
-          inputParameters: options
-        };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should generate beta distribution given a decimal constraint', function() {
-        cell.constraint = decimalConstraint.label;
-        cell.inputParameters.firstParameter.constraints.push(decimalConstraint);
-        cell.firstParameter = 0.5;
-        var result = generateDistributionService.generateValueSampleSizeDistribution(options, options, cell);
-        var expectedResult = {
-          label: label,
-          firstParameter: 51,
-          secondParameter: 51,
-          inputParameters: options
-        };
-        expect(result).toEqual(expectedResult);
-      });
-    });
-
-    describe('generateEventsSampleSizeDistribution', function() {
-      it('should generate a beta distribution', function() {
-        var cell = {
-          firstParameter: 50,
-          secondParameter: 100
-        };
-        var result = generateDistributionService.generateEventsSampleSizeDistribution(options, cell);
-        var expectedResult = {
-          label: label,
-          firstParameter: 51,
-          secondParameter: 51,
           inputParameters: options
         };
         expect(result).toEqual(expectedResult);

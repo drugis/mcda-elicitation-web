@@ -93,8 +93,8 @@
               </td>
               <td ng-if="!isInput">
                 <span
-                  ng-hide="!isValueView && (dataSource.unitOfMeasurement === '%' || dataSource.unitOfMeasurement === 'Proportion')">
-                  {{dataSource.unitOfMeasurement}}
+                  ng-hide="!isValueView && (dataSource.unitOfMeasurement.type === 'percentage' || dataSource.unitOfMeasurement.type === 'decimal')">
+                  {{dataSource.unitOfMeasurement.label}}
                 </span>
               </td>
 
@@ -102,8 +102,8 @@
                 ng-style="isValueView && !isCellAnalysisViable[dataSource.id][alternative.id] ? {'background-color':'#f3d3c8'} : {}">
                 <div ng-if="!isValueView || isCellAnalysisViable[dataSource.id][alternative.id]">
                   <effects-table-cell effects-table-info="effectsTableInfo[dataSource.id]"
-                    workspace-settings="workspaceSettings" scales="scales[dataSource.id][alternative.id]"
-                    theoretical-scale="dataSource.scale" alternative-id="alternative.id">
+                    scales="scales[dataSource.id][alternative.id]" workspace-settings="workspaceSettings"
+                    unit-of-measurement-type="dataSource.unitOfMeasurement.type" alternative-id="alternative.id">
                   </effects-table-cell>
                 </div>
                 <div ng-if="isValueView && !isCellAnalysisViable[dataSource.id][alternative.id]" style="opacity: 0.5;"

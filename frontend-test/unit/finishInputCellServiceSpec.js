@@ -67,48 +67,6 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       });
     });
 
-    describe('finishValueSE', function() {
-      it('should create a finished input cell', function() {
-        var performance = {
-          input: {
-            value: 50,
-            stdErr: 0.5
-          }
-        };
-        var result = finishInputCellService.finishValueSE(options, performance);
-        expect(result.firstParameter).toEqual(performance.input.value);
-        expect(result.secondParameter).toEqual(performance.input.stdErr);
-      });
-
-      it('should create a finished input cell with scale percentage', function() {
-        var performance = {
-          input: {
-            value: 50,
-            stdErr: 0.5,
-            scale: 'percentage'
-          }
-        };
-        var result = finishInputCellService.finishValueSE(options, performance);
-        expect(result.firstParameter).toEqual(performance.input.value);
-        expect(result.secondParameter).toEqual(performance.input.stdErr);
-        expect(result.inputParameters.firstParameter.constraints[0].label).toEqual('Proportion (percentage)');
-      });
-
-      it('should create a finished input cell with scale decimal', function() {
-        var performance = {
-          input: {
-            value: 0.5,
-            stdErr: 0.5,
-            scale: 'decimal'
-          }
-        };
-        var result = finishInputCellService.finishValueSE(options, performance);
-        expect(result.firstParameter).toEqual(performance.input.value);
-        expect(result.secondParameter).toEqual(performance.input.stdErr);
-        expect(result.inputParameters.firstParameter.constraints[0].label).toEqual('Proportion (decimal)');
-      });
-    });
-
     describe('finishValueCI', function() {
       it('should create a finished input cell given estimable bounds', function() {
         var performance = {
@@ -170,62 +128,6 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         expect(result.thirdParameter).toBeUndefined();
         expect(result.lowerBoundNE).toBeTruthy();
         expect(result.upperBoundNE).toBeTruthy();
-      });
-    });
-
-    describe('finishValueSampleSize', function() {
-      it('should create a finished input cell', function() {
-        var performance = {
-          input: {
-            value: 50,
-            sampleSize: 100
-          }
-        };
-        var result = finishInputCellService.finishValueSampleSizeCell(options, performance);
-        expect(result.firstParameter).toEqual(performance.input.value);
-        expect(result.secondParameter).toEqual(performance.input.sampleSize);
-      });
-
-      it('should create a finished input percentage cell', function() {
-        var performance = {
-          input: {
-            value: 50,
-            sampleSize: 100,
-            scale: 'percentage'
-          }
-        };
-        var result = finishInputCellService.finishValueSampleSizeCell(options, performance);
-        expect(result.firstParameter).toEqual(performance.input.value);
-        expect(result.secondParameter).toEqual(performance.input.sampleSize);
-        expect(result.inputParameters.firstParameter.constraints[0].label).toEqual('Proportion (percentage)');
-      });
-
-      it('should create a finished input decimal cell', function() {
-        var performance = {
-          input: {
-            value: 0.5,
-            sampleSize: 100,
-            scale: 'decimal'
-          }
-        };
-        var result = finishInputCellService.finishValueSampleSizeCell(options, performance);
-        expect(result.firstParameter).toEqual(performance.input.value);
-        expect(result.secondParameter).toEqual(performance.input.sampleSize);
-        expect(result.inputParameters.firstParameter.constraints[0].label).toEqual('Proportion (decimal)');
-      });
-    });
-
-    describe('finishEventSampleSizeInputCell', function() {
-      it('should create a finished input cell', function() {
-        var performance = {
-          input: {
-            events: 50,
-            sampleSize: 100
-          }
-        };
-        var result = finishInputCellService.finishEventSampleSizeInputCell(options, performance);
-        expect(result.firstParameter).toEqual(performance.input.events);
-        expect(result.secondParameter).toEqual(performance.input.sampleSize);
       });
     });
 

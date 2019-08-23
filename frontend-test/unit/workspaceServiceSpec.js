@@ -522,7 +522,7 @@ define([
             }
           }
         };
-        
+
         expect(result).toEqual(expectedProblem);
       });
     });
@@ -736,6 +736,9 @@ define([
           var exampleWithOneCriterion = _.cloneDeep(example);
           delete exampleWithOneCriterion.criteria.Bleed;
           delete exampleWithOneCriterion.criteria['Prox DVT'];
+          delete exampleWithOneCriterion.criteria.Bleed2;
+          delete exampleWithOneCriterion.criteria.Bleed3;
+          delete exampleWithOneCriterion.criteria.null2Infinity;
           var validity = workspaceService.validateWorkspace(exampleWithOneCriterion);
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Two or more criteria required');
@@ -889,13 +892,22 @@ define([
           }, {
             type: 'ordinal',
             criteria: ['Prox DVT', 'Dist DVT']
+          }, {
+            type: 'ordinal',
+            criteria: ['Dist DVT', 'Bleed2']
+          }, {
+            type: 'ordinal',
+            criteria: ['Bleed2', 'Bleed3']
+          }, {
+            type: 'ordinal',
+            criteria: ['Bleed3', 'null2Infinity']
           }];
           var validity = workspaceService.validateWorkspace(consistentOrdinal);
           expect(validity.isValid).toBeTruthy();
           expect(validity.errorMessage).toBe(undefined);
         });
 
-        it('should fail if ordinal preferences are inconsistent', function() {
+        it('should fail if ordinal preferences are inconsistent because one is compared to multiple', function() {
           var inconsistentOrdinalWithTree = _.cloneDeep(exampleProblem());
           inconsistentOrdinalWithTree.preferences = [{
             type: 'ordinal',
@@ -903,19 +915,43 @@ define([
           }, {
             type: 'ordinal',
             criteria: ['Bleed', 'Dist DVT']
+          }, {
+            type: 'ordinal',
+            criteria: ['Dist DVT', 'Bleed2']
+          }, {
+            type: 'ordinal',
+            criteria: ['Bleed2', 'Bleed3']
+          }, {
+            type: 'ordinal',
+            criteria: ['Bleed3', 'null2Infinity']
           }];
           var validity = workspaceService.validateWorkspace(inconsistentOrdinalWithTree);
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Inconsistent ordinal preferences');
+        });
+
+        it('should fail if ordinal preferences are inconsistent', function() {
           var inconsistentOrdinalCycle = _.cloneDeep(exampleProblem());
           inconsistentOrdinalCycle.preferences = [{
             type: 'ordinal',
             criteria: ['Bleed', 'Prox DVT']
           }, {
             type: 'ordinal',
-            criteria: ['Prox DVT', 'Bleed']
+            criteria: ['Prox DVT', 'Dist DVT']
+          }, {
+            type: 'ordinal',
+            criteria: ['Dist DVT', 'Bleed2']
+          }, {
+            type: 'ordinal',
+            criteria: ['Bleed2', 'Bleed3']
+          }, {
+            type: 'ordinal',
+            criteria: ['Bleed3', 'null2Infinity']
+          }, {
+            type: 'ordinal',
+            criteria: ['null2Infinity', 'Bleed']
           }];
-          validity = workspaceService.validateWorkspace(inconsistentOrdinalCycle);
+          var validity = workspaceService.validateWorkspace(inconsistentOrdinalCycle);
           expect(validity.isValid).toBeFalsy();
           expect(validity.errorMessage).toBe('Inconsistent ordinal preferences');
           var inconsistentOrdinalTooLong = _.cloneDeep(exampleProblem());
@@ -946,6 +982,18 @@ define([
           }, {
             type: 'ordinal',
             criteria: ['Bleed', 'Prox DVT']
+          }, {
+            type: 'ordinal',
+            criteria: ['Prox DVT', 'Dist DVT']
+          }, {
+            type: 'ordinal',
+            criteria: ['Dist DVT', 'Bleed2']
+          }, {
+            type: 'ordinal',
+            criteria: ['Bleed2', 'Bleed3']
+          }, {
+            type: 'ordinal',
+            criteria: ['Bleed3', 'null2Infinity']
           }];
           validity = workspaceService.validateWorkspace(inconsistentOrdinalSelfReference);
           expect(validity.isValid).toBeFalsy();
@@ -1030,12 +1078,20 @@ define([
           crit1: {
             dataSources: [{
               id: 'ds1',
+              unitOfMeasurement: {
+                type: 'percentage',
+                label: '%'
+              },
               scale: [0, 1]
             }]
           },
           crit2: {
             dataSources: [{
               id: 'ds2',
+              unitOfMeasurement: {
+                type: 'custom',
+                label: 'anything'
+              },
               scale: [-Infinity, Infinity]
             }]
           }
@@ -1091,29 +1147,47 @@ define([
             criteria: {
               crit1: {
                 dataSources: [{
-                  unitOfMeasurement: 'proportion',
-                  scale: [10, 20],
+                  unitOfMeasurement: {
+                    label: 'Proportion',
+                    type: 'decimal'
+                  },
+                  scale: [0, 1],
                   pvf: {
                     range: [15, 16]
                   }
                 }, {
+                  unitOfMeasurement: {
+                    label: 'Proportion',
+                    type: 'decimal'
+                  },
                   scale: [0, 1]
                 }]
               },
               crit2: {
                 dataSources: [{
+                  unitOfMeasurement: {
+                    label: 'Proportion',
+                    type: 'decimal'
+                  },
                   scale: [0, 1],
                   pvf: {}
                 }, {
-                  scale: [0, 1],
+                  unitOfMeasurement: {
+                    label: '%',
+                    type: 'percentage'
+                  },
+                  scale: [0, 100],
                   pvf: {
-                    range: [0.3, 0.4]
+                    range: [30, 40]
                   }
                 }]
               },
               crit3: {
                 dataSources: [{
-                  unitOfMeasurement: 'keepUnit',
+                  unitOfMeasurement: {
+                    label: 'keepUnit',
+                    type: 'custom'
+                  },
                   scale: [-Infinity, Infinity],
                   pvf: {
                     range: [10, 20]
@@ -1131,32 +1205,47 @@ define([
             criteria: {
               crit1: {
                 dataSources: [{
-                  unitOfMeasurement: 'proportion',
-                  scale: [10, 20],
+                  unitOfMeasurement: {
+                    label: '%',
+                    type: 'percentage'
+                  },
+                  scale: [0, 100],
                   pvf: {
-                    range: [15, 16]
+                    range: [1500, 1600]
                   }
                 }, {
                   scale: [0, 100],
-                  unitOfMeasurement: '%'
+                  unitOfMeasurement: {
+                    label: '%',
+                    type: 'percentage'
+                  },
                 }]
               },
               crit2: {
                 dataSources: [{
                   scale: [0, 100],
                   pvf: {},
-                  unitOfMeasurement: '%'
+                  unitOfMeasurement: {
+                    label: '%',
+                    type: 'percentage'
+                  },
                 }, {
+                  unitOfMeasurement: {
+                    label: '%',
+                    type: 'percentage'
+                  },
                   scale: [0, 100],
                   pvf: {
                     range: [30, 40]
-                  },
-                  unitOfMeasurement: '%'
+                  }
                 }]
               },
               crit3: {
                 dataSources: [{
-                  unitOfMeasurement: 'keepUnit',
+                  unitOfMeasurement: {
+                    label: 'keepUnit',
+                    type: 'custom'
+                  },
                   scale: [-Infinity, Infinity],
                   pvf: {
                     range: [10, 20]
@@ -1178,32 +1267,47 @@ define([
             criteria: {
               crit1: {
                 dataSources: [{
-                  unitOfMeasurement: 'proportion',
+                  unitOfMeasurement: {
+                    label: 'proportion',
+                    type: 'custom'
+                  },
                   scale: [10, 20],
                   pvf: {
                     range: [15, 16]
                   }
                 }, {
                   scale: [0, 100],
-                  unitOfMeasurement: '%'
+                  unitOfMeasurement: {
+                    label: '%',
+                    type: 'percentage'
+                  }
                 }]
               },
               crit2: {
                 dataSources: [{
                   scale: [0, 100],
                   pvf: {},
-                  unitOfMeasurement: '%'
+                  unitOfMeasurement: {
+                    label: '%',
+                    type: 'percentage'
+                  }
                 }, {
                   scale: [0, 100],
                   pvf: {
-                    range: [0.3, 0.4]
+                    range: [30, 40]
                   },
-                  unitOfMeasurement: '%'
+                  unitOfMeasurement: {
+                    label: '%',
+                    type: 'percentage'
+                  }
                 }]
               },
               crit3: {
                 dataSources: [{
-                  unitOfMeasurement: 'keepUnit',
+                  unitOfMeasurement: {
+                    label: 'keepUnit',
+                    type: 'custom'
+                  },
                   scale: [-Infinity, Infinity],
                   pvf: {
                     range: [10, 20]
@@ -1221,33 +1325,47 @@ define([
             criteria: {
               crit1: {
                 dataSources: [{
-                  unitOfMeasurement: 'proportion',
+                  unitOfMeasurement: {
+                    type: 'custom',
+                    label: 'proportion'
+                  },
                   scale: [10, 20],
                   pvf: {
                     range: [15, 16]
                   }
                 }, {
                   scale: [0, 1],
-                  unitOfMeasurement: 'Proportion'
+                  unitOfMeasurement: {
+                    label: 'Proportion',
+                    type: 'decimal'
+                  }
                 }]
               },
               crit2: {
                 dataSources: [{
                   scale: [0, 1],
                   pvf: {},
-                  unitOfMeasurement: 'Proportion'
+                  unitOfMeasurement: {
+                    label: 'Proportion',
+                    type: 'decimal'
+                  }
                 }, {
                   scale: [0, 1],
                   pvf: {
                     range: [0.3, 0.4]
                   },
-                  unitOfMeasurement: 'Proportion'
+                  unitOfMeasurement: {
+                    label: 'Proportion',
+                    type: 'decimal'
+                  }
                 }]
               },
               crit3: {
                 dataSources: [{
-                  unitOfMeasurement: 'keepUnit',
-                  scale: [-Infinity, Infinity],
+                  unitOfMeasurement: {
+                    label: 'keepUnit',
+                    type: 'custom'
+                  }, scale: [-Infinity, Infinity],
                   pvf: {
                     range: [10, 20]
                   }

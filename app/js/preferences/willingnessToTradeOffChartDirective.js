@@ -4,13 +4,11 @@ define(['c3', 'd3', 'lodash'],
     var dependencies = [
       '$timeout',
       'TradeOffService',
-      'WorkspaceSettingsService',
       'significantDigits'
     ];
     var WillingnessToTradeOffChartDirective = function(
       $timeout,
       TradeOffService,
-      WorkspaceSettingsService,
       significantDigits
     ) {
       return {
@@ -33,7 +31,7 @@ define(['c3', 'd3', 'lodash'],
             onChange: updateSecondPoint,
             translate: function(value) {
               var multiplier = 1;
-              if (usePercentage(scope.settings.firstCriterion.dataSources[0].scale)) {
+              if (scope.settings.firstCriterion.dataSources[0].unitOfMeasurement.type === 'percentage') {
                 multiplier = 100;
               }
               return significantDigits(value * multiplier);
@@ -81,13 +79,9 @@ define(['c3', 'd3', 'lodash'],
 
           function updatePercentageModifier() {
             scope.percentageModifiers = {
-              firstCriterion: usePercentage(scope.settings.firstCriterion.dataSources[0].scale) ? 100 : 1,
-              secondCriterion: usePercentage(scope.settings.secondCriterion.dataSources[0].scale) ? 100 : 1
+              firstCriterion: scope.settings.firstCriterion.dataSources[0].unitOfMeasurement.type === 'percentage' ? 100 : 1,
+              secondCriterion: scope.settings.secondCriterion.dataSources[0].unitOfMeasurement.type === 'percentage' ? 100 : 1
             };
-          }
-
-          function usePercentage(scale) {
-            return _.isEqual([0, 1], scale) && WorkspaceSettingsService.usePercentage();
           }
 
           function updateInputFirstPoint() {
@@ -173,8 +167,8 @@ define(['c3', 'd3', 'lodash'],
             initialSettings.data.columns = [];
 
             scope.units = {
-              x: TradeOffService.getUnit(scope.settings.firstCriterion),
-              y: TradeOffService.getUnit(scope.settings.secondCriterion)
+              x: scope.settings.firstCriterion.dataSources[0].unitOfMeasurement,
+              y: scope.settings.secondCriterion.dataSources[0].unitOfMeasurement
             };
 
             chart = c3.generate(initialSettings);
@@ -197,8 +191,8 @@ define(['c3', 'd3', 'lodash'],
 
           function updateAxisLabels() {
             scope.units = {
-              x: TradeOffService.getUnit(scope.settings.firstCriterion),
-              y: TradeOffService.getUnit(scope.settings.secondCriterion)
+              x: scope.settings.firstCriterion.dataSources[0].unitOfMeasurement.label,
+              y: scope.settings.secondCriterion.dataSources[0].unitOfMeasurement.label
             };
             chart.axis.labels(scope.units);
           }

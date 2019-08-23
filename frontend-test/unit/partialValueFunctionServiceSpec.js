@@ -93,6 +93,10 @@ define(['angular',
               direction: 'increasing',
               cutoffs: [75, 7.5, 50],
               values: [0.25, 0.5, 0.75]
+            },
+            unitOfMeasurement: {
+              type: 'custom',
+              label: ''
             }
           };
           var result = partialValueFunctionService.standardizeDataSource(dataSource);
@@ -113,6 +117,10 @@ define(['angular',
               direction: 'decreasing',
               cutoffs: [75, 7.5, 50],
               values: [0.25, 0.5, 0.75]
+            },
+            unitOfMeasurement: {
+              type: 'custom',
+              label: ''
             }
           };
           var result = partialValueFunctionService.standardizeDataSource(dataSource);
@@ -132,6 +140,10 @@ define(['angular',
               type: 'linear',
               cutoffs: [75, 7.5, 50],
               values: [0.25, 0.5, 0.75]
+            },
+            unitOfMeasurement: {
+              type: 'custom',
+              label: ''
             }
           };
           var result = partialValueFunctionService.standardizeDataSource(dataSource);
@@ -151,7 +163,11 @@ define(['angular',
               cutoffs: [75, 7.5, 50],
               values: [0.25, 0.5, 0.75]
             },
-            scale: [0, 100]
+            scale: [0, 100],
+            unitOfMeasurement: {
+              type: 'percentage',
+              label: '%'
+            }
           };
           var result = partialValueFunctionService.standardizeDataSource(dataSource);
           var expectedResult = {

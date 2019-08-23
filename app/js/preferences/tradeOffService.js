@@ -152,16 +152,12 @@ define(['lodash', 'd3'], function(_, d3) {
     }
 
     function getUnitText(criterion) {
-      var unit = getUnit(criterion);
-      return _.isEqual(unit, '') ? unit : ' (' + unit + ')';
+      var unit = criterion.dataSources[0].unitOfMeasurement.label;
+      return unit === '' ? unit : ' (' + unit + ')';
     }
 
     function areCoordinatesSet(coordinates) {
       return coordinates.x > -Infinity && coordinates.y > -Infinity && coordinates.x !== null && coordinates.y !== null;
-    }
-
-    function getUnit(criterion) {
-      return criterion.dataSources[0].unitOfMeasurement ? criterion.dataSources[0].unitOfMeasurement : '';
     }
 
     return {
@@ -170,8 +166,7 @@ define(['lodash', 'd3'], function(_, d3) {
       getInitialSettings: getInitialSettings,
       getYValue: getYValue,
       areCoordinatesSet: areCoordinatesSet,
-      getLabel: getLabel,
-      getUnit: getUnit
+      getLabel: getLabel
     };
   };
   return dependencies.concat(TradeOffService);
