@@ -41,7 +41,8 @@ define(['lodash'], function(_) {
           selectedOption: {
             type: 'custom'
           }
-        }
+        },
+        scale: [-Infinity, Infinity]
       };
       $scope.isAdding = true;
     }
