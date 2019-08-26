@@ -62,7 +62,8 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
       OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
         $scope.alternatives = orderings.alternatives;
         $scope.criteria = orderings.criteria;
-        $scope.importance = PreferencesService.buildImportance($scope.criteria, $scope.scenario.state.prefs);
+        var preferences = $scope.scenario.state.prefs ? $scope.scenario.state.prefs : [];
+        $scope.importance = PreferencesService.buildImportance($scope.criteria, preferences);
       });
     }
 
