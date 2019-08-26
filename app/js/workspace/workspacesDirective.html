@@ -1,0 +1,33 @@
+<div class="grid-x">
+  <div class="cell">
+    <h3>Workspaces
+      <inline-help help-key="workspace"></inline-help>
+    </h3>
+  </div>
+  <div class="cell  large-6 medium-8">
+    <table>
+      <thead>
+        <th> Title </th>
+        <th></th>
+        <th></th>
+      </thead>
+      <tbody>
+        <tr ng-repeat="workspace in workspacesList | orderBy:'title'">
+          <td> <a
+              ui-sref="evidence({workspaceId: workspace.id, problemId: workspace.defaultSubProblemId, id: workspace.defaultScenarioId})">
+              {{workspace.title}}
+            </a>
+          </td>
+          <td class="text-center">
+            <a class="fa fa-copy" style="color : black" ng-click="copyWorkspace(workspace)" tooltip="Copy workspace">
+            </a>
+          </td>
+          <td class="text-center">
+            <a class="fa fa-trash" style="color : red" ng-click="deleteWorkspace(workspace)" tooltip="Delete workspace">
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

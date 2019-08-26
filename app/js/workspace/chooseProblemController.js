@@ -19,9 +19,6 @@ define(['lodash'], function(_) {
   ) {
     // functions
     $scope.openChooseProblemModal = openChooseProblemModal;
-    $scope.deleteWorkspace = deleteWorkspace;
-    $scope.deleteInProgress = deleteInProgress;
-    $scope.copyWorkspace = copyWorkspace;
 
     // init
     $scope.model = {};
@@ -54,49 +51,6 @@ define(['lodash'], function(_) {
                 });
               }
             };
-          }
-        }
-      });
-    }
-
-    function deleteWorkspace(workspace) {
-      $modal.open({
-        templateUrl: './deleteWorkspace.html',
-        controller: 'DeleteWorkspaceController',
-        resolve: {
-          callback: function() {
-            return function() {
-              $scope.workspacesList = _.reject($scope.workspacesList, ['id', workspace.id]);
-            };
-          },
-          workspace: function() {
-            return workspace;
-          }
-        }
-      });
-    }
-
-    function copyWorkspace(workspace) {
-      $state.go('manualInput', {
-        workspace: workspace
-      });
-    }
-
-    function deleteInProgress(id, title) {
-      $modal.open({
-        templateUrl: './deleteWorkspace.html',
-        controller: 'DeleteInProgressController',
-        resolve: {
-          callback: function() {
-            return function() {
-              $scope.inProgressWorkspaces = _.reject($scope.inProgressWorkspaces, ['id', id]);
-            };
-          },
-          inProgressId: function() {
-            return id;
-          },
-          title: function() {
-            return title;
           }
         }
       });

@@ -13,6 +13,8 @@ define([
   './exampleResource',
   './tutorialResource',
   './workspaceSettingsDirective',
+  './workspacesDirective',
+  './inProgressWorkspacesDirective',
   'angular',
   '../util',
   '../results/results'
@@ -29,6 +31,8 @@ define([
   ExampleResource,
   TutorialResource,
   WorkspaceSettings,
+  Workspaces,
+  InProgressWorkspaces,
   angular
 ) {
     return angular.module('elicit.workspace', ['elicit.util', 'elicit.results'])
@@ -47,5 +51,7 @@ define([
       .service('TutorialResource', TutorialResource)
 
       .directive('workspaceSettings', WorkspaceSettings)
+      .directive('workspaces', Workspaces)
+      .directive('inProgressWorkspaces', InProgressWorkspaces)
       ;
   });
