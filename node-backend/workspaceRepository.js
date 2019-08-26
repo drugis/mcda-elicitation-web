@@ -25,7 +25,8 @@ module.exports = function(db) {
   function setDefaultSubProblem(workspaceId, subProblemId, callback) {
     logger.debug('setting default subproblem');
     const query = 'UPDATE workspace SET defaultsubproblemId = $1 WHERE id = $2';
-    db.query(query,
+    db.query(
+      query,
       [subProblemId, workspaceId],
       callback
     );
@@ -34,7 +35,8 @@ module.exports = function(db) {
   function setDefaultScenario(workspaceId, scenarioId, callback) {
     logger.debug('setting default scenario');
     const query = 'UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2';
-    db.query(query,
+    db.query(
+      query,
       [scenarioId, workspaceId],
       callback
     );
@@ -43,7 +45,8 @@ module.exports = function(db) {
   function getWorkspaceInfo(workspaceId, callback) {
     logger.debug('getting workspace info');
     const query = 'SELECT id, owner, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
-    db.query(query,
+    db.query(
+      query,
       [workspaceId],
       callback
     );
@@ -52,7 +55,8 @@ module.exports = function(db) {
   function update(title, problem, id, callback) {
     logger.debug('updating workspace');
     const query = 'UPDATE workspace SET title = $1, problem = $2 WHERE id = $3';
-    db.query(query,
+    db.query(
+      query,
       [title, problem, id],
       callback
     );
@@ -61,7 +65,8 @@ module.exports = function(db) {
   function del(workspaceId, callback) {
     logger.debug('delete workspace');
     const query = 'DELETE FROM workspace WHERE id=$1';
-    db.query(query,
+    db.query(
+      query,
       [workspaceId],
       callback
     );
@@ -69,7 +74,8 @@ module.exports = function(db) {
 
   function query(ownerId, callback) {
     const query = 'SELECT id, owner, title, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1';
-    db.query(query,
+    db.query(
+      query,
       [ownerId],
       callback
     );

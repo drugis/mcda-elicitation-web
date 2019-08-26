@@ -43,8 +43,9 @@ module.exports = function(db) {
           'Default',
           definition,
           function(error, result) {
-            util.handleError(error, next);
-            if (!error) {
+            if (error) {
+              util.handleError(error, next);
+            } else {
               var subproblemId = result.rows[0].id;
               callback(null, workspaceId, subproblemId);
             }
@@ -85,9 +86,9 @@ module.exports = function(db) {
         );
       }
 
-      function setDefaultScenario(workspaceId, subproblemId, callback) {
+      function setDefaultScenario(workspaceId, scenarioId, callback) {
         logger.debug('setting default scenario');
-        WorkspaceRepository.setDefaultScenario(workspaceId, subproblemId, function(error) {
+        WorkspaceRepository.setDefaultScenario(workspaceId, scenarioId, function(error) {
           if (error) {
             util.handleError(error, next);
           } else {
@@ -142,7 +143,7 @@ module.exports = function(db) {
 
   function del(request, response, next) {
     WorkspaceRepository.delete(request.params.id, function(error) {
-      if (error){
+      if (error) {
         util.handleError(error, next);
       } else {
         response.sendStatus(httpStatus.OK);
