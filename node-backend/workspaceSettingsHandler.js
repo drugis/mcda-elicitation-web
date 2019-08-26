@@ -6,8 +6,9 @@ module.exports = function(db) {
   function get(req, res, next) {
     workspaceSettingsRepository.get(req.params.workspaceId,
       function(error, result) {
-        util.checkForError(error, next);
-        if (!error) {
+        if (error) {
+          util.checkForError(error, next);
+        } else {
           res.json(result.rows.length ? result.rows[0].settings : {});
         }
       }
@@ -18,8 +19,9 @@ module.exports = function(db) {
     workspaceSettingsRepository.put(req.params.workspaceId,
       req.body,
       function(error) {
-        util.checkForError(error, next);
-        if (!error) {
+        if (error) {
+          util.checkForError(error, next);
+        } else {
           res.end();
         }
       }

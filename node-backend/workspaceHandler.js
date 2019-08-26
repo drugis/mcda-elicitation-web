@@ -11,8 +11,9 @@ module.exports = function(db) {
   // Complete workspaces
   function query(request, response, next) {
     WorkspaceRepository.query(util.getUser(request).id, function(error, result) {
-      util.checkForError(error, next);
-      if (!error) {
+      if (error) {
+        util.checkForError(error, next);
+      } else {
         response.json(result.rows);
       }
     });
@@ -21,6 +22,8 @@ module.exports = function(db) {
   function create(request, response, next) {
     function workspaceTransaction(client, transactionCallback) {
       function createNewWorkspace(callback) {
+        logger.debug('creating new workspace');
+
         var owner = util.getUser(request).id;
         var title = request.body.title;
         var problem = request.body.problem;
@@ -28,6 +31,8 @@ module.exports = function(db) {
       }
 
       function createSubProblem(result, callback) {
+        logger.debug('creating subProblem');
+
         var definition = {
           ranges: util.getRanges(request.body.problem)
         };
@@ -48,6 +53,7 @@ module.exports = function(db) {
       }
 
       function setDefaultSubProblem(workspaceId, subproblemId, callback) {
+        logger.debug('setting default subProblem');
         WorkspaceRepository.setDefaultSubProblem(workspaceId, subproblemId, function(error) {
           if (error) {
             util.checkForError(error, next);
@@ -58,6 +64,7 @@ module.exports = function(db) {
       }
 
       function createScenario(workspaceId, subproblemId, callback) {
+        logger.debug('creating scenario');
         var state = {
           problem: util.reduceProblem(request.body.problem)
         };
@@ -67,8 +74,9 @@ module.exports = function(db) {
           'Default',
           state,
           function(error, result) {
-            util.checkForError(error, next);
-            if (!error) {
+            if (error) {
+              util.checkForError(error, next);
+            } else {
               var scenarioId = result.rows[0].id;
               callback(null, workspaceId, scenarioId);
             }
@@ -76,9 +84,10 @@ module.exports = function(db) {
         );
       }
 
-      function setDefaultScenario(workspaceId, subproblemId, callback){
-        WorkspaceRepository.setDefaultScenario(workspaceId, subproblemId, function(error){
-          if(error){
+      function setDefaultScenario(workspaceId, subproblemId, callback) {
+        logger.debug('setting default scenario');
+        WorkspaceRepository.setDefaultScenario(workspaceId, subproblemId, function(error) {
+          if (error) {
             util.checkForError(error, next);
           } else {
             callback(null, workspaceId);
@@ -97,8 +106,9 @@ module.exports = function(db) {
     }
 
     db.runInTransaction(workspaceTransaction, function(error, result) {
-      util.checkForError(error, next);
-      if (!error) {
+      if (error) {
+        util.checkForError(error, next);
+      } else {
         response.json(result.rows[0]);
       }
     });
@@ -106,8 +116,9 @@ module.exports = function(db) {
 
   function get(req, response, next) {
     WorkspaceRepository.get(req.params.id, function(error, result) {
-      util.checkForError(error, next);
-      if (!error) {
+      if (error) {
+        util.checkForError(error, next);
+      } else {
         response.json(result.rows[0]);
       }
     });
@@ -119,8 +130,9 @@ module.exports = function(db) {
       req.body.problem,
       req.params.id,
       function(error) {
-        util.checkForError(error, next);
-        if (!error) {
+        if (error) {
+          util.checkForError(error, next);
+        } else {
           response.end();
         }
       });
@@ -128,8 +140,9 @@ module.exports = function(db) {
 
   function del(req, response, next) {
     WorkspaceRepository.delete(req.params.id, function(error) {
-      util.checkForError(error, next);
-      if (!error) {
+      if (error){
+        util.checkForError(error, next);
+      } else {
         response.end();
       }
     });

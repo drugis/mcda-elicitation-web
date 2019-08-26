@@ -1,6 +1,5 @@
 'use strict';
 const sinon = require('sinon');
-const testUtil = require('./testUtil');
 const proxyquire = require('proxyquire');
 const chai = require('chai');
 const spies = require('chai-spies');

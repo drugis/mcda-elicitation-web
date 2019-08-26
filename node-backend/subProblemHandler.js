@@ -8,103 +8,108 @@ module.exports = function(db) {
   var SubproblemRepository = require('./subProblemRepository')(db);
   var ScenarioRepository = require('./scenarioRepository')(db);
 
-  function query(req, res, next) {
+  function query(request, response, next) {
     SubproblemRepository.query(
-      req.params.workspaceId,
+      request.params.workspaceId,
       function(error, result) {
         if (error) {
           util.checkForError(error, next);
         } else {
-          res.json(result.rows);
+          response.json(result.rows);
         }
       });
   }
 
-  function get(req, res, next) {
+  function get(request, response, next) {
     logger.debug('GET /workspaces/:id/problems/:subProblemId');
     SubproblemRepository.get(
-      req.params.workspaceId,
-      req.params.subProblemId,
+      request.params.workspaceId,
+      request.params.subProblemId,
       function(error, result) {
         if (error) {
           util.checkForError(error, next);
         } else {
-          res.json(result.rows[0]);
+          response.json(result.rows[0]);
         }
       });
   }
 
-  function create(req, res, next) {
+  function create(request, response, next) {
     logger.debug('POST /workspaces/:workspaceId/problems');
-
-    function subProblemTransaction(client, transactionCallback) {
-
-      function create(callback) {
-        logger.debug('creating subproblem');
-        const workspaceId = req.params.workspaceId;
-        SubproblemRepository.create(
-          workspaceId,
-          req.body.title,
-          req.body.definition,
-          function(error, result) {
-            if (error) {
-              util.checkForError(error, next);
-            } else {
-              logger.debug('done creating subproblem');
-              const subproblemId = result.rows[0].id;
-              callback(workspaceId, subproblemId);
-            }
-          });
-      }
-
-      function createScenario(workspaceId, subproblemId, callback) {
-        logger.debug('creating scenario; workspaceid: ' + workspaceId + ', subProblemId: ' + subproblemId);
-        var state = req.body.scenarioState;
-        ScenarioRepository.create(workspaceId, subproblemId, 'Default', state, _.partial(callback, workspaceId, subproblemId));
-      }
-
-      function retrieveSubProblem(workspaceId, subproblemId, callback) {
-        SubproblemRepository.get(workspaceId, subproblemId, function(error, result) {
-          if (error) {
-            util.checkForError(error, next);
-          } else {
-            callback(result.rows[0]);
-          }
-        });
-      }
-
-      async.waterfall([
-        create,
-        createScenario,
-        retrieveSubProblem
-      ], transactionCallback);
-    }
-
-    db.runInTransaction(subProblemTransaction, function(error, subproblem) {
+    db.runInTransaction(_.partial(subProblemTransaction, request, next), function(error, subproblem) {
       if (error) {
         util.checkForError(error, next);
       } else {
         logger.debug('done creating subProblem : ' + JSON.stringify(subproblem));
-        res.json(subproblem);
+        response.json(subproblem);
       }
     });
   }
 
-  function update(req, res, next) {
-    logger.debug('UPDATE /workspaces/:id/problems/:subProblemId');
-    SubproblemRepository.update(
-      req.body.definition,
-      req.body.title,
-      req.params.subProblemId,
+
+  function subProblemTransaction(request, next, client, transactionCallback) {
+    async.waterfall([
+      _.partial(createSubProblem, request, next),
+      _.partial(createScenario, request, next),
+      _.partial(retrieveSubProblem, next)
+    ], transactionCallback);
+  }
+
+  function createSubProblem(request, next, callback) {
+    logger.debug('creating subproblem');
+    const workspaceId = request.params.workspaceId;
+    SubproblemRepository.create(
+      workspaceId,
+      request.body.title,
+      request.body.definition,
       function(error, result) {
         if (error) {
           util.checkForError(error, next);
         } else {
-          res.json(result);
+          logger.debug('done creating subproblem');
+          const subproblemId = result.rows[0].id;
+          callback(null, workspaceId, subproblemId);
         }
       });
   }
 
+  function createScenario(request, next, workspaceId, subproblemId, callback) {
+    logger.debug('creating scenario; workspaceid: ' + workspaceId + ', subProblemId: ' + subproblemId);
+    var state = request.body.scenarioState;
+    ScenarioRepository.create(workspaceId, subproblemId, 'Default', state, (error) => {
+      if (error) {
+        util.checkForError(error, next);
+      } else {
+        callback(null, workspaceId, subproblemId);
+      }
+    });
+  }
+
+  function retrieveSubProblem(next, workspaceId, subproblemId, callback) {
+    logger.debug('retrieving subproblem');
+    SubproblemRepository.get(workspaceId, subproblemId, function(error, result) {
+      if (error) {
+        util.checkForError(error, next);
+      } else {
+        callback(null, result.rows[0]);
+      }
+    });
+  }
+
+  function update(request, response, next) {
+    logger.debug('UPDATE /workspaces/:id/problems/:subProblemId');
+    SubproblemRepository.update(
+      request.body.definition,
+      request.body.title,
+      request.params.subProblemId,
+      function(error, result) {
+        if (error) {
+          util.checkForError(error, next);
+        } else {
+          response.json(result);
+        }
+      });
+  }
 
   return {
     query: query,
