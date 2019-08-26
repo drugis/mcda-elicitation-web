@@ -217,7 +217,7 @@ describe('the in scenario handler', () => {
     var response = {};
 
     beforeEach(() => {
-      response.sendStatus = chai.spy();
+      response.json = chai.spy();
       update = sinon.stub(repoStub, 'update');
     });
 
@@ -246,14 +246,14 @@ describe('the in scenario handler', () => {
       scenarioHandler.update(request, response, next);
       sinon.assert.calledWith(update, state, title, scenarioId);
       expect(next).not.to.have.been.called();
-      expect(response.sendStatus).to.have.been.called.with(200);
+      expect(response.json).to.have.been.called.with(request.body);
     });
 
-    it('should not call reponse.sendStatus if there\'s an error', function() {
+    it('should not call reponse.json if there\'s an error', function() {
       update.onCall(0).yields(error, null);
       scenarioHandler.update(request, response, next);
       sinon.assert.calledWith(update, state, title, scenarioId);
-      expect(response.sendStatus).not.to.have.been.called();
+      expect(response.json).not.to.have.been.called();
       expect(next).to.have.been.called.with(error);
     });
   });

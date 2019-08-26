@@ -4,14 +4,12 @@ define(['lodash', 'd3', 'c3'],
     var dependencies = [
       '$timeout',
       'PartialValueFunctionService',
-      'WorkspaceSettingsService',
       'TradeOffService',
       'significantDigits'
     ];
     var PreferenceElicitationRow = function(
       $timeout,
       PartialValueFunctionService,
-      WorkspaceSettingsService,
       TradeOffService,
       significantDigits
     ) {
@@ -59,7 +57,7 @@ define(['lodash', 'd3', 'c3'],
               onEnd: plotIndifference,
               translate: function(value) {
                 var multiplier = 1;
-                if (usePercentage(scope.mostImportantCriterion.dataSources[0].scale)) {
+                if (scope.mostImportantCriterion.dataSources[0].unitOfMeasurement.type === 'percentage') {
                   multiplier = 100;
                 }
                 return significantDigits(value * multiplier);
@@ -131,15 +129,11 @@ define(['lodash', 'd3', 'c3'],
             initialSettings.axis.y.tick.count = 5;
 
             scope.units = {
-              x: scope.secondaryCriterion.dataSources[0].unitOfMeasurement.dataSources[0].unitOfMeasurement.label,
+              x: scope.secondaryCriterion.dataSources[0].unitOfMeasurement.label,
               y: scope.mostImportantCriterion.dataSources[0].unitOfMeasurement.label
             };
 
             chart = c3.generate(initialSettings);
-          }
-
-          function usePercentage(scale) {
-            return _.isEqual([0, 1], scale) && WorkspaceSettingsService.usePercentage();
           }
 
           function plotIndifference() {

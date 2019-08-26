@@ -70,7 +70,7 @@ module.exports = function(db) {
         if (error) {
           next(error);
         } else {
-          response.sendStatus(httpStatus.OK);
+          response.json(request.body);
         }
       });
   }

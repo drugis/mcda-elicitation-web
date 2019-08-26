@@ -52,7 +52,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     reloadOrderings();
 
     new Clipboard('.clipboard-button');
-    $scope.isOrdinal = _.find($scope.scenario.state.prefs, function(pref) {
+    $scope.isOrdinal = _.some($scope.scenario.state.prefs, function(pref) {
       return pref.type === 'ordinal';
     });
 
@@ -62,7 +62,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
       OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
         $scope.alternatives = orderings.alternatives;
         $scope.criteria = orderings.criteria;
-        var preferences = $scope.scenario.state.prefs ? $scope.scenario.state.prefs : [];
+        var preferences = $scope.scenario.state.prefs;
         $scope.importance = PreferencesService.buildImportance($scope.criteria, preferences);
       });
     }

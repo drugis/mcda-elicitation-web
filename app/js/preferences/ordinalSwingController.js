@@ -65,8 +65,8 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
         {
           prefs: nextState.prefs
         });
-      currentScenario.$save($stateParams, function(scenario) {
-        $scope.$emit('elicit.resultsAccessible', scenario);
+      currentScenario.$save($stateParams, function() {
+        $scope.$emit('elicit.resultsAccessible', currentScenario);
         $state.go('preferences');
       });
     }
