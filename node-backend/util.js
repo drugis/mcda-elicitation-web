@@ -1,6 +1,7 @@
 'use strict';
 var _ = require('lodash');
 var logger = require('./logger');
+var httpStatus = require('http-status-codes');
 
 function reduceProblem(problem) {
   var criteria = _.reduce(problem.criteria, function(accum, criterion, key) {
@@ -30,19 +31,17 @@ function getUser(req) {
   }
 }
 
-function checkForError(error, next) {
-  if (error) {
-    logger.error(JSON.stringify(error, null, 2));
-    next({
-      statusCode: 500,
-      message: error
-    });
-  }
+function handleError(error, next) {
+  logger.error(JSON.stringify(error, null, 2));
+  next({
+    statusCode: httpStatus.INTERNAL_SERVER_ERROR,
+    message: error
+  });
 }
 
 module.exports = {
   reduceProblem: reduceProblem,
   getRanges: getRanges,
   getUser: getUser,
-  checkForError: checkForError
+  handleError: handleError
 }; 

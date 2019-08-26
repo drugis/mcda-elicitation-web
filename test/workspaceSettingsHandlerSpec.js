@@ -41,7 +41,7 @@ describe('the workspaceSettingsHandler', () => {
     beforeEach(() => {
       response.json = chai.spy();
       get = sinon.stub(repoStub, 'get');
-      utilStub.checkForError = chai.spy();
+      utilStub.handleError = chai.spy();
     });
 
     afterEach(() => {
@@ -58,7 +58,7 @@ describe('the workspaceSettingsHandler', () => {
 
       workspaceSettingsHandler.get(request, response, next);
       sinon.assert.calledWith(get, workspaceId);
-      expect(utilStub.checkForError).not.to.have.been.called();
+      expect(utilStub.handleError).not.to.have.been.called();
       expect(response.json).to.have.been.called.with(result.rows[0].settings);
     });
 
@@ -67,7 +67,7 @@ describe('the workspaceSettingsHandler', () => {
       workspaceSettingsHandler.get(request, response, next);
       sinon.assert.calledWith(get, workspaceId);
       expect(response.json).not.to.have.been.called();
-      expect(utilStub.checkForError).to.have.been.called.with(error, next);
+      expect(utilStub.handleError).to.have.been.called.with(error, next);
     });
   });
 
@@ -83,9 +83,9 @@ describe('the workspaceSettingsHandler', () => {
     const next = chai.spy();
     
     beforeEach(() => {
-      response.end = chai.spy();
+      response.sendStatus = chai.spy();
       put = sinon.stub(repoStub, 'put');
-      utilStub.checkForError = chai.spy();
+      utilStub.handleError = chai.spy();
     });
 
     afterEach(() => {
@@ -97,16 +97,16 @@ describe('the workspaceSettingsHandler', () => {
 
       workspaceSettingsHandler.put(request, response, next);
       sinon.assert.calledWith(put, workspaceId);
-      expect(utilStub.checkForError).not.to.have.been.called();
-      expect(response.end).to.have.been.called();
+      expect(utilStub.handleError).not.to.have.been.called();
+      expect(response.sendStatus).to.have.been.called.with(200);
     });
 
-    it('should not call reponse.end if there\'s an error', function() {
+    it('should not call reponse.sendStatus if there\'s an error', function() {
       put.onCall(0).yields(error);
       workspaceSettingsHandler.put(request, response, next);
       sinon.assert.calledWith(put, workspaceId);
-      expect(response.end).not.to.have.been.called();
-      expect(utilStub.checkForError).to.have.been.called.with(error, next);
+      expect(response.sendStatus).not.to.have.been.called();
+      expect(utilStub.handleError).to.have.been.called.with(error, next);
     });
   });
 });

@@ -161,6 +161,7 @@ describe('the in scenario handler', () => {
     var response = {};
 
     beforeEach(() => {
+      response.status = chai.spy();
       response.json = chai.spy();
       create = sinon.stub(repoStub, 'create');
     });
@@ -198,6 +199,7 @@ describe('the in scenario handler', () => {
       sinon.assert.calledWith(create, workspaceId, subproblemId, title, state);
       expect(next).not.to.have.been.called();
       expect(response.json).to.have.been.called.with(result.rows[0]);
+      expect(response.status).to.have.been.called.with(201);
     });
 
     it('should not call reponse.json if there\'s an error', function() {
@@ -205,6 +207,7 @@ describe('the in scenario handler', () => {
       scenarioHandler.create(request, response, next);
       sinon.assert.calledWith(create, workspaceId, subproblemId, title, state);
       expect(response.json).not.to.have.been.called();
+      expect(response.status).to.not.have.been.called();
       expect(next).to.have.been.called.with(error);
     });
   });
@@ -214,7 +217,7 @@ describe('the in scenario handler', () => {
     var response = {};
 
     beforeEach(() => {
-      response.end = chai.spy();
+      response.sendStatus = chai.spy();
       update = sinon.stub(repoStub, 'update');
     });
 
@@ -243,14 +246,14 @@ describe('the in scenario handler', () => {
       scenarioHandler.update(request, response, next);
       sinon.assert.calledWith(update, state, title, scenarioId);
       expect(next).not.to.have.been.called();
-      expect(response.end).to.have.been.called();
+      expect(response.sendStatus).to.have.been.called.with(200);
     });
 
-    it('should not call reponse.end if there\'s an error', function() {
+    it('should not call reponse.sendStatus if there\'s an error', function() {
       update.onCall(0).yields(error, null);
       scenarioHandler.update(request, response, next);
       sinon.assert.calledWith(update, state, title, scenarioId);
-      expect(response.end).not.to.have.been.called();
+      expect(response.sendStatus).not.to.have.been.called();
       expect(next).to.have.been.called.with(error);
     });
   });

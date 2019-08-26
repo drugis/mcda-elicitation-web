@@ -1,28 +1,32 @@
 'use strict';
 var util = require('./util');
+var httpStatus = require('http-status-codes');
+
 module.exports = function(db) {
   var workspaceSettingsRepository = require('./workspaceSettingsRepository')(db);
 
-  function get(req, res, next) {
-    workspaceSettingsRepository.get(req.params.workspaceId,
+  function get(request, response, next) {
+    workspaceSettingsRepository.get(
+      request.params.workspaceId,
       function(error, result) {
         if (error) {
-          util.checkForError(error, next);
+          util.handleError(error, next);
         } else {
-          res.json(result.rows.length ? result.rows[0].settings : {});
+          response.json(result.rows.length ? result.rows[0].settings : {});
         }
       }
     );
   }
 
-  function put(req, res, next) {
-    workspaceSettingsRepository.put(req.params.workspaceId,
-      req.body,
+  function put(request, response, next) {
+    workspaceSettingsRepository.put(
+      request.params.workspaceId,
+      request.body,
       function(error) {
         if (error) {
-          util.checkForError(error, next);
+          util.handleError(error, next);
         } else {
-          res.end();
+          response.sendStatus(httpStatus.OK);
         }
       }
     );
@@ -32,5 +36,4 @@ module.exports = function(db) {
     get: get,
     put: put
   };
-
 };

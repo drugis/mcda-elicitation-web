@@ -5,6 +5,7 @@ var db = require('./node-backend/db')(dbUtil.connectionConfig);
 var _ = require('lodash');
 var patavi = require('./node-backend/patavi');
 var logger = require('./node-backend/logger');
+var httpStatus = require('http-status-codes');
 var appEnvironmentSettings = {
   googleKey: process.env.MCDAWEB_GOOGLE_KEY,
   googleSecret: process.env.MCDAWEB_GOOGLE_SECRET,
@@ -103,9 +104,9 @@ function rightsCallback(response, next, userId, error, result) {
   } else {
     var workspace = result.rows[0];
     if (!workspace) {
-      response.status(404).send('Workspace not found');
+      response.status(httpStatus.NOT_FOUND).send('Workspace not found');
     } else if (workspace.owner !== userId) {
-      response.status(403).send('Insufficient user rights');
+      response.status(httpStatus.FORBIDDEN).send('Insufficient user rights');
     } else {
       next();
     }
@@ -181,11 +182,11 @@ app.post('/patavi', function(req, res, next) { // FIXME: separate routes for sca
       logger.error(err);
       return next({
         err: err,
-        status: 500
+        status: httpStatus.INTERNAL_SERVER_ERROR
       });
     }
     res.location(taskUri);
-    res.status(201);
+    res.status(httpStatus.CREATED);
     res.json({
       'href': taskUri
     });
@@ -195,10 +196,10 @@ app.post('/patavi', function(req, res, next) { // FIXME: separate routes for sca
 app.use((error, request, response, next) => {
   logger.error(JSON.stringify(error.message, null, 2));
   if (error && error.type === signin.SIGNIN_ERROR) {
-    response.send(401, 'login failed');
+    response.send(httpStatus.UNAUTHORIZED, 'login failed');
   } else {
     response
-      .status(error.status || error.statusCode || 500)
+      .status(error.status || error.statusCode || httpStatus.INTERNAL_SERVER_ERROR)
       .send(error.err ? error.err.message : error.message);
   }
   next();
@@ -206,7 +207,7 @@ app.use((error, request, response, next) => {
 
 //The 404 Route (ALWAYS Keep this as the last route)
 app.get('*', function(req, res) {
-  res.status(404).sendFile(__dirname + '/dist/error.html');
+  res.status(httpStatus.NOT_FOUND).sendFile(__dirname + '/dist/error.html');
 });
 
 var port = 3002;

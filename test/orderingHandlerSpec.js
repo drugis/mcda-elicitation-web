@@ -41,7 +41,7 @@ describe('the in ordering handler', () => {
     beforeEach(() => {
       response.json = chai.spy();
       get = sinon.stub(repoStub, 'get');
-      utilStub.checkForError = chai.spy();
+      utilStub.handleError = chai.spy();
     });
 
     afterEach(() => {
@@ -58,7 +58,7 @@ describe('the in ordering handler', () => {
 
       orderingHandler.get(request, response, next);
       sinon.assert.calledWith(get, workspaceId);
-      expect(utilStub.checkForError).to.have.been.called();
+      expect(utilStub.handleError).not.to.have.been.called();
       expect(response.json).to.have.been.called.with({ ordering: result.rows[0].ordering });
     });
 
@@ -67,7 +67,7 @@ describe('the in ordering handler', () => {
       orderingHandler.get(request, response, next);
       sinon.assert.calledWith(get, workspaceId);
       expect(response.json).not.to.have.been.called();
-      expect(utilStub.checkForError).to.have.been.called.with(error, next);
+      expect(utilStub.handleError).to.have.been.called.with(error, next);
     });
   });
 });

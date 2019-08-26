@@ -33,6 +33,7 @@ describe('the in progress workspace handler', () => {
 
     beforeEach(() => {
       response.json = chai.spy();
+      response.status = chai.spy();
       create = sinon.stub(repoStub, 'create');
     });
 
@@ -63,6 +64,7 @@ describe('the in progress workspace handler', () => {
 
       sinon.assert.calledWith(create, userId, problem);
       expect(response.json).to.have.been.called.with({ id: createdId });
+      expect(response.status).to.have.been.called.with(201);
     });
 
     it('should not call reponse.json if there\'s an error', function() {
@@ -70,6 +72,7 @@ describe('the in progress workspace handler', () => {
       inProgressWorkspaceHandler.create(request, response, next);
       sinon.assert.calledWith(create, userId, problem);
       expect(response.json).not.to.have.been.called();
+      expect(response.status).not.to.have.been.called();
       expect(next).to.have.been.called.with({
         statusCode: 500,
         message: error
@@ -83,7 +86,7 @@ describe('the in progress workspace handler', () => {
 
 
     beforeEach(() => {
-      response.end = chai.spy();
+      response.sendStatus = chai.spy();
       update = sinon.stub(repoStub, 'update');
     });
 
@@ -107,14 +110,14 @@ describe('the in progress workspace handler', () => {
       inProgressWorkspaceHandler.update(request, response, next);
 
       sinon.assert.calledWith(update, problem, problemId);
-      expect(response.end).to.have.been.called();
+      expect(response.sendStatus).to.have.been.called.with(200);
     });
 
-    it('should not call reponse.end if there\'s an error', function() {
+    it('should not call reponse.sendStatus if there\'s an error', function() {
       update.onCall(0).yields(error, null);
       inProgressWorkspaceHandler.update(request, response, next);
       sinon.assert.calledWith(update, problem, problemId);
-      expect(response.end).not.to.have.been.called();
+      expect(response.sendStatus).not.to.have.been.called();
       expect(next).to.have.been.called.with({
         statusCode: 500,
         message: error
@@ -128,7 +131,7 @@ describe('the in progress workspace handler', () => {
 
 
     beforeEach(() => {
-      response.end = chai.spy();
+      response.sendStatus = chai.spy();
       del = sinon.stub(repoStub, 'delete');
     });
 
@@ -150,14 +153,14 @@ describe('the in progress workspace handler', () => {
       inProgressWorkspaceHandler.delete(request, response, next);
 
       sinon.assert.calledWith(del, problemId);
-      expect(response.end).to.have.been.called();
+      expect(response.sendStatus).to.have.been.called.with(200);
     });
 
-    it('should not call reponse.end if there\'s an error', function() {
+    it('should not call reponse.sendStatus if there\'s an error', function() {
       del.onCall(0).yields(error, null);
       inProgressWorkspaceHandler.delete(request, response, next);
       sinon.assert.calledWith(del, problemId);
-      expect(response.end).not.to.have.been.called();
+      expect(response.sendStatus).not.to.have.been.called();
       expect(next).to.have.been.called.with({
         statusCode: 500,
         message: error

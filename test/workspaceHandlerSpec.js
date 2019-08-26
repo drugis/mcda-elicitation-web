@@ -24,7 +24,7 @@ var workspaceRepoStub = {
   delete: () => {}
 };
 var utilStub = {
-  checkForError: () => { },
+  handleError: () => { },
   getUser: () => { },
   reduceProblem: () => { },
   getRanges: () => { }
@@ -66,7 +66,7 @@ describe('the workspace handler', () => {
     var getUser;
     const request = {};
     const next = chai.spy();
-    utilStub.checkForError = chai.spy();
+    utilStub.handleError = chai.spy();
 
     beforeEach(() => {
       response.json = chai.spy();
@@ -89,7 +89,7 @@ describe('the workspace handler', () => {
       workspaceHandler.query(request, response, next);
 
       sinon.assert.calledWith(query, userId);
-      expect(utilStub.checkForError).not.to.have.been.called();
+      expect(utilStub.handleError).not.to.have.been.called();
       expect(response.json).to.have.been.called.with(result.rows);
     });
 
@@ -100,7 +100,7 @@ describe('the workspace handler', () => {
 
       sinon.assert.calledWith(query, userId);
       expect(response.json).not.to.have.been.called();
-      expect(utilStub.checkForError).to.have.been.called.with(error, next);
+      expect(utilStub.handleError).to.have.been.called.with(error, next);
     });
   });
 
@@ -145,7 +145,7 @@ describe('the workspace handler', () => {
       setDefaultScenario = sinon.stub(workspaceRepoStub, 'setDefaultScenario');
       getWorkspaceInfo = sinon.stub(workspaceRepoStub, 'getWorkspaceInfo');
 
-      utilStub.checkForError = chai.spy();
+      utilStub.handleError = chai.spy();
       getUser = sinon.stub(utilStub, 'getUser');
       getUser.onCall(0).returns(user);
 
@@ -175,7 +175,8 @@ describe('the workspace handler', () => {
         done();
       };
       var response = {
-        json: expectations
+        json: expectations,
+        status: chai.spy()
       };
 
       workspaceCreate.onCall(0).yields(null, result);
@@ -186,48 +187,63 @@ describe('the workspace handler', () => {
       getWorkspaceInfo.onCall(0).yields(null, result);
 
       workspaceHandler.create(request, response, next);
+      expect(response.status).to.have.been.called.with(201);
     });
 
-    it('should call util.checkForError with an error if it cannot create a worskapce', () => {
-      var response = {};
+    it('should call util.handleError with an error if it cannot create a worskapce', () => {
+      var response = {
+        status: chai.spy()
+      };
       workspaceCreate.onCall(0).yields(error);
 
       workspaceHandler.create(request, response, next);
-      expect(utilStub.checkForError).to.have.been.called.with(error);
+      expect(utilStub.handleError).to.have.been.called.with(error);
+      expect(response.status).to.have.not.been.called();
     });
 
-    it('should call util.checkForError with an error if it cannot create a subproblem', () => {
-      var response = {};
+    it('should call util.handleError with an error if it cannot create a subproblem', () => {
+      var response = {
+        status: chai.spy()
+      };
       workspaceCreate.onCall(0).yields(null, result);
       subProblemCreate.onCall(0).yields(error);
 
       workspaceHandler.create(request, response, next);
-      expect(utilStub.checkForError).to.have.been.called.with(error);
+      expect(utilStub.handleError).to.have.been.called.with(error);
+      expect(response.status).to.have.not.been.called();
     });
 
-    it('should call util.checkForError with an error if it cannot set a default subproblem', () => {
-      var response = {};
+    it('should call util.handleError with an error if it cannot set a default subproblem', () => {
+      var response = {
+        status: chai.spy()
+      };
       workspaceCreate.onCall(0).yields(null, result);
       subProblemCreate.onCall(0).yields(null, result);
       setDefaultSubProblem.onCall(0).yields(error);
 
       workspaceHandler.create(request, response, next);
-      expect(utilStub.checkForError).to.have.been.called.with(error);
+      expect(utilStub.handleError).to.have.been.called.with(error);
+      expect(response.status).to.have.not.been.called();
     });
 
-    it('should call util.checkForError with an error if it cannot create a scenario', () => {
-      var response = {};
+    it('should call util.handleError with an error if it cannot create a scenario', () => {
+      var response = {
+        status: chai.spy()
+      };
       workspaceCreate.onCall(0).yields(null, result);
       subProblemCreate.onCall(0).yields(null, result);
       setDefaultSubProblem.onCall(0).yields(null);
       scenarioCreate.onCall(0).yields(error);
 
       workspaceHandler.create(request, response, next);
-      expect(utilStub.checkForError).to.have.been.called.with(error);
+      expect(utilStub.handleError).to.have.been.called.with(error);
+      expect(response.status).to.have.not.been.called();
     });
 
-    it('should call util.checkForError with an error if it cannot set a default scenario', () => {
-      var response = {};
+    it('should call util.handleError with an error if it cannot set a default scenario', () => {
+      var response = {
+        status: chai.spy()
+      };
       workspaceCreate.onCall(0).yields(null, result);
       subProblemCreate.onCall(0).yields(null, result);
       setDefaultSubProblem.onCall(0).yields(null);
@@ -235,11 +251,14 @@ describe('the workspace handler', () => {
       setDefaultScenario.onCall(0).yields(error);
 
       workspaceHandler.create(request, response, next);
-      expect(utilStub.checkForError).to.have.been.called.with(error);
+      expect(utilStub.handleError).to.have.been.called.with(error);
+      expect(response.status).to.have.not.been.called();
     });
 
-    it('should call util.checkForError with an error if it cannot get workspace info', () => {
-      var response = {};
+    it('should call util.handleError with an error if it cannot get workspace info', () => {
+      var response = {
+        status: chai.spy()
+      };
       workspaceCreate.onCall(0).yields(null, result);
       subProblemCreate.onCall(0).yields(null, result);
       setDefaultSubProblem.onCall(0).yields(null);
@@ -248,7 +267,8 @@ describe('the workspace handler', () => {
       getWorkspaceInfo.onCall(0).yields(error);
 
       workspaceHandler.create(request, response, next);
-      expect(utilStub.checkForError).to.have.been.called.with(error);
+      expect(utilStub.handleError).to.have.been.called.with(error);
+      expect(response.status).to.have.not.been.called();
     });
 
   });
@@ -266,7 +286,7 @@ describe('the workspace handler', () => {
     beforeEach(() => {
       response.json = chai.spy();
       get = sinon.stub(workspaceRepoStub, 'get');
-      utilStub.checkForError = chai.spy();
+      utilStub.handleError = chai.spy();
     });
 
     afterEach(() => {
@@ -282,7 +302,7 @@ describe('the workspace handler', () => {
       workspaceHandler.get(request, response, next);
 
       sinon.assert.calledWith(get, workspaceId);
-      expect(utilStub.checkForError).not.to.have.been.called();
+      expect(utilStub.handleError).not.to.have.been.called();
       expect(response.json).to.have.been.called.with(result.rows[0]);
     });
 
@@ -293,7 +313,7 @@ describe('the workspace handler', () => {
 
       sinon.assert.calledWith(get, workspaceId);
       expect(response.json).not.to.have.been.called();
-      expect(utilStub.checkForError).to.have.been.called.with(error, next);
+      expect(utilStub.handleError).to.have.been.called.with(error, next);
     });
   });
 
@@ -314,9 +334,9 @@ describe('the workspace handler', () => {
     const next = chai.spy();
     
     beforeEach(() => {
-      response.end = chai.spy();
+      response.sendStatus = chai.spy();
       update = sinon.stub(workspaceRepoStub, 'update');
-      utilStub.checkForError = chai.spy();
+      utilStub.handleError = chai.spy();
     });
 
     afterEach(() => {
@@ -329,18 +349,18 @@ describe('the workspace handler', () => {
       workspaceHandler.update(request, response, next);
 
       sinon.assert.calledWith(update, title, request.body.problem, workspaceId);
-      expect(utilStub.checkForError).not.to.have.been.called();
-      expect(response.end).to.have.been.called();
+      expect(utilStub.handleError).not.to.have.been.called();
+      expect(response.sendStatus).to.have.been.called.with(200);
     });
 
-    it('should not call reponse.end if there\'s an error', function() {
+    it('should not call reponse.sendStatus if there\'s an error', function() {
       update.onCall(0).yields(error);
 
       workspaceHandler.update(request, response, next);
 
       sinon.assert.calledWith(update, title, request.body.problem, workspaceId);
-      expect(response.end).not.to.have.been.called();
-      expect(utilStub.checkForError).to.have.been.called.with(error, next);
+      expect(response.sendStatus).not.to.have.been.called();
+      expect(utilStub.handleError).to.have.been.called.with(error, next);
     });
   });
 
@@ -355,9 +375,9 @@ describe('the workspace handler', () => {
     const next = chai.spy();
     
     beforeEach(() => {
-      response.end = chai.spy();
+      response.sendStatus = chai.spy();
       del = sinon.stub(workspaceRepoStub, 'delete');
-      utilStub.checkForError = chai.spy();
+      utilStub.handleError = chai.spy();
     });
 
     afterEach(() => {
@@ -373,18 +393,18 @@ describe('the workspace handler', () => {
       workspaceHandler.delete(request, response, next);
 
       sinon.assert.calledWith(del, workspaceId);
-      expect(utilStub.checkForError).not.to.have.been.called();
-      expect(response.end).to.have.been.called();
+      expect(utilStub.handleError).not.to.have.been.called();
+      expect(response.sendStatus).to.have.been.called.with(200);
     });
 
-    it('should not call reponse.end if there\'s an error', function() {
+    it('should not call reponse.sendStatus if there\'s an error', function() {
       del.onCall(0).yields(error, null);
 
       workspaceHandler.delete(request, response, next);
 
       sinon.assert.calledWith(del, workspaceId);
-      expect(response.end).not.to.have.been.called();
-      expect(utilStub.checkForError).to.have.been.called.with(error, next);
+      expect(response.sendStatus).not.to.have.been.called();
+      expect(utilStub.handleError).to.have.been.called.with(error, next);
     });
   });
 });

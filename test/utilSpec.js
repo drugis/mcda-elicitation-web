@@ -89,11 +89,11 @@ describe('The utility', function() {
     });
   });
 
-  describe('checkForError', function() {
+  describe('handleError', function() {
     it('should call next with an error object if an error occurs', function() {
       const error = 'some error that occured';
       const next = chai.spy();
-      util.checkForError(error, next);
+      util.handleError(error, next);
       var expectedResult = {
         statusCode: 500,
         message: error

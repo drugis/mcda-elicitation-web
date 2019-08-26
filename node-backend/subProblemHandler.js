@@ -3,6 +3,7 @@ var util = require('./util');
 var logger = require('./logger');
 var async = require('async');
 var _ = require('lodash');
+var httpStatus = require('http-status-codes');
 
 module.exports = function(db) {
   var SubproblemRepository = require('./subProblemRepository')(db);
@@ -13,7 +14,7 @@ module.exports = function(db) {
       request.params.workspaceId,
       function(error, result) {
         if (error) {
-          util.checkForError(error, next);
+          util.handleError(error, next);
         } else {
           response.json(result.rows);
         }
@@ -27,7 +28,7 @@ module.exports = function(db) {
       request.params.subProblemId,
       function(error, result) {
         if (error) {
-          util.checkForError(error, next);
+          util.handleError(error, next);
         } else {
           response.json(result.rows[0]);
         }
@@ -38,9 +39,10 @@ module.exports = function(db) {
     logger.debug('POST /workspaces/:workspaceId/problems');
     db.runInTransaction(_.partial(subProblemTransaction, request, next), function(error, subproblem) {
       if (error) {
-        util.checkForError(error, next);
+        util.handleError(error, next);
       } else {
         logger.debug('done creating subProblem : ' + JSON.stringify(subproblem));
+        response.status(httpStatus.CREATED);
         response.json(subproblem);
       }
     });
@@ -64,7 +66,7 @@ module.exports = function(db) {
       request.body.definition,
       function(error, result) {
         if (error) {
-          util.checkForError(error, next);
+          util.handleError(error, next);
         } else {
           logger.debug('done creating subproblem');
           const subproblemId = result.rows[0].id;
@@ -78,7 +80,7 @@ module.exports = function(db) {
     var state = request.body.scenarioState;
     ScenarioRepository.create(workspaceId, subproblemId, 'Default', state, (error) => {
       if (error) {
-        util.checkForError(error, next);
+        util.handleError(error, next);
       } else {
         callback(null, workspaceId, subproblemId);
       }
@@ -89,7 +91,7 @@ module.exports = function(db) {
     logger.debug('retrieving subproblem');
     SubproblemRepository.get(workspaceId, subproblemId, function(error, result) {
       if (error) {
-        util.checkForError(error, next);
+        util.handleError(error, next);
       } else {
         callback(null, result.rows[0]);
       }
@@ -104,7 +106,7 @@ module.exports = function(db) {
       request.params.subProblemId,
       function(error, result) {
         if (error) {
-          util.checkForError(error, next);
+          util.handleError(error, next);
         } else {
           response.json(result);
         }

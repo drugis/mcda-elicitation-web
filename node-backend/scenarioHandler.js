@@ -1,74 +1,76 @@
 'use strict';
+var httpStatus = require('http-status-codes');
 
 module.exports = function(db) {
   var ScenarioRepository = require('./scenarioRepository')(db);
 
-  function query(req, res, next) {
+  function query(request, response, next) {
     ScenarioRepository.query(
-      req.params.workspaceId,
+      request.params.workspaceId,
       function(error, result) {
         if (error) {
           next(error);
         } else {
-          res.json(result.rows);
+          response.json(result.rows);
         }
       });
   }
 
-  function queryForSubProblem(req, res, next) {
+  function queryForSubProblem(request, response, next) {
     ScenarioRepository.queryForSubProblem(
-      req.params.workspaceId,
-      req.params.subProblemId,
+      request.params.workspaceId,
+      request.params.subProblemId,
       function(error, result) {
         if (error) {
           next(error);
         } else {
-          res.json(result.rows);
+          response.json(result.rows);
         }
       });
   }
 
-  function get(req, res, next) {
+  function get(request, response, next) {
     ScenarioRepository.get(
-      req.params.id,
+      request.params.id,
       function(error, result) {
         if (error) {
           next(error);
         } else {
-          res.json(result.rows[0]);
+          response.json(result.rows[0]);
         }
       });
   }
 
-  function create(req, res, next) {
+  function create(request, response, next) {
     ScenarioRepository.create(
-      req.params.workspaceId,
-      req.params.subProblemId,
-      req.body.title,
+      request.params.workspaceId,
+      request.params.subProblemId,
+      request.body.title,
       {
-        problem: req.body.state.problem,
-        prefs: req.body.state.prefs
+        problem: request.body.state.problem,
+        prefs: request.body.state.prefs
       },
       function(error, result) {
         if (error) {
           next(error);
         } else {
-          res.json(result.rows[0]);
+          response.status(httpStatus.CREATED);
+          response.json(result.rows[0]);
         }
       }
     );
   }
 
-  function update(req, res, next) {
+  function update(request, response, next) {
     ScenarioRepository.update(
-      req.body.state,
-      req.body.title,
-      req.body.id,
+      request.body.state,
+      request.body.title,
+      request.body.id,
       function(error) {
         if (error) {
           next(error);
         } else {
-          res.end();
+          response.sendStatus(httpStatus.OK);
         }
       });
   }

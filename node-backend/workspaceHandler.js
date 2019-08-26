@@ -2,6 +2,7 @@
 var util = require('./util');
 var logger = require('./logger');
 var async = require('async');
+var httpStatus = require('http-status-codes');
 
 module.exports = function(db) {
   var WorkspaceRepository = require('./workspaceRepository')(db);
@@ -12,7 +13,7 @@ module.exports = function(db) {
   function query(request, response, next) {
     WorkspaceRepository.query(util.getUser(request).id, function(error, result) {
       if (error) {
-        util.checkForError(error, next);
+        util.handleError(error, next);
       } else {
         response.json(result.rows);
       }
@@ -42,7 +43,7 @@ module.exports = function(db) {
           'Default',
           definition,
           function(error, result) {
-            util.checkForError(error, next);
+            util.handleError(error, next);
             if (!error) {
               var subproblemId = result.rows[0].id;
               callback(null, workspaceId, subproblemId);
@@ -56,7 +57,7 @@ module.exports = function(db) {
         logger.debug('setting default subProblem');
         WorkspaceRepository.setDefaultSubProblem(workspaceId, subproblemId, function(error) {
           if (error) {
-            util.checkForError(error, next);
+            util.handleError(error, next);
           } else {
             callback(null, workspaceId, subproblemId);
           }
@@ -75,7 +76,7 @@ module.exports = function(db) {
           state,
           function(error, result) {
             if (error) {
-              util.checkForError(error, next);
+              util.handleError(error, next);
             } else {
               var scenarioId = result.rows[0].id;
               callback(null, workspaceId, scenarioId);
@@ -88,7 +89,7 @@ module.exports = function(db) {
         logger.debug('setting default scenario');
         WorkspaceRepository.setDefaultScenario(workspaceId, subproblemId, function(error) {
           if (error) {
-            util.checkForError(error, next);
+            util.handleError(error, next);
           } else {
             callback(null, workspaceId);
           }
@@ -107,43 +108,44 @@ module.exports = function(db) {
 
     db.runInTransaction(workspaceTransaction, function(error, result) {
       if (error) {
-        util.checkForError(error, next);
+        util.handleError(error, next);
       } else {
+        response.status(httpStatus.CREATED);
         response.json(result.rows[0]);
       }
     });
   }
 
-  function get(req, response, next) {
-    WorkspaceRepository.get(req.params.id, function(error, result) {
+  function get(request, response, next) {
+    WorkspaceRepository.get(request.params.id, function(error, result) {
       if (error) {
-        util.checkForError(error, next);
+        util.handleError(error, next);
       } else {
         response.json(result.rows[0]);
       }
     });
   }
 
-  function update(req, response, next) {
+  function update(request, response, next) {
     WorkspaceRepository.update(
-      req.body.problem.title,
-      req.body.problem,
-      req.params.id,
+      request.body.problem.title,
+      request.body.problem,
+      request.params.id,
       function(error) {
         if (error) {
-          util.checkForError(error, next);
+          util.handleError(error, next);
         } else {
-          response.end();
+          response.sendStatus(httpStatus.OK);
         }
       });
   }
 
-  function del(req, response, next) {
-    WorkspaceRepository.delete(req.params.id, function(error) {
+  function del(request, response, next) {
+    WorkspaceRepository.delete(request.params.id, function(error) {
       if (error){
-        util.checkForError(error, next);
+        util.handleError(error, next);
       } else {
-        response.end();
+        response.sendStatus(httpStatus.OK);
       }
     });
   }
