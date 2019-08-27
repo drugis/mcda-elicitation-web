@@ -366,7 +366,7 @@ define(['lodash', 'angular'], function(_, angular) {
         }
       }
     }
-[1,2]
+
     function determineEmptyType(effect) {
       if (effect.value !== undefined) {
         return 'text';
