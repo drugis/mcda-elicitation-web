@@ -552,7 +552,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                 selectedOption: {
                   type: 'custom'
                 }
-              }
+              },
+              scale: [0,1]
             }],
             id: 'uuid2'
           }],
@@ -941,7 +942,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.selectedOption.type = 'percentage';
             baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.value = '%';
             baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.upperBound = 100;
-
+            baseExpectedResult.criteria[0].dataSources[0].scale[1]= 100;
+            
             var result = manualInputService.createStateFromOldWorkspace(workspace);
             var expectedResult = _.merge({}, baseExpectedResult, {
               oldWorkspace: workspace
@@ -975,6 +977,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               }
             });
             baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.upperBound = Infinity;
+            baseExpectedResult.criteria[0].dataSources[0].scale[1] = Infinity;
 
             var result = manualInputService.createStateFromOldWorkspace(workspace);
             var expectedResult = _.merge({}, baseExpectedResult, {
