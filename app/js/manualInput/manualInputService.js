@@ -143,7 +143,7 @@ define(['lodash', 'angular'], function(_, angular) {
         };
       }
     }
-    
+
     function createInputTableRows(dataSources, alternatives, oldInputData) {
       return _.reduce(dataSources, function(accum, dataSource) {
         accum[dataSource.id] = createInputTableCells(dataSource, alternatives, oldInputData);
@@ -290,7 +290,8 @@ define(['lodash', 'angular'], function(_, angular) {
           'source',
           'sourceLink',
           'strengthOfEvidence',
-          'uncertainties'
+          'uncertainties',
+          'scale'
         ]);
         newDataSource.unitOfMeasurement = createNewUnitOfMeasurement(dataSource);
         newDataSource.id = generateUuid();
@@ -354,7 +355,23 @@ define(['lodash', 'angular'], function(_, angular) {
       if (performance.effect.input) {
         return determineInputType(performance.effect.input);
       } else {
-        return 'value';
+        return determineEffectType(performance.effect);
+      }
+
+      function determineEffectType(effect) {
+        if (effect.type === 'empty') {
+          return determineEmptyType(effect);
+        } else {
+          return 'value';
+        }
+      }
+    }
+[1,2]
+    function determineEmptyType(effect) {
+      if (effect.value !== undefined) {
+        return 'text';
+      } else {
+        return 'empty';
       }
     }
 
