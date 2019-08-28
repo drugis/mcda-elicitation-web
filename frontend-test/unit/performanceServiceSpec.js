@@ -53,7 +53,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should build a percentage value performance', function() {
         var cell = {
           isInvalid: false,
-          constraint:'Proportion (percentage)',
+          constraint:'percentage',
           firstParameter: 1
         };
         var result = performanceService.buildValuePerformance(cell);
@@ -71,7 +71,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should build a decimal value performance', function() {
         var cell = {
           isInvalid: false,
-          constraint:'Proportion (decimal)',
+          constraint:'decimal',
           firstParameter: 0.01
         };
         var result = performanceService.buildValuePerformance(cell);
@@ -125,7 +125,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should build a percentage value confidence interval performance', function() {
         var cell = {
           isInvalid: false,
-          constraint:'Proportion (percentage)',
+          constraint:'percentage',
           firstParameter: 10,
           secondParameter: 5,
           thirdParameter: 30
@@ -147,7 +147,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should build a decimal value confidence interval performance', function() {
         var cell = {
           isInvalid: false,
-          constraint:'Proportion (decimal)',
+          constraint:'decimal',
           firstParameter: 0.01,
           secondParameter: 0.001,
           thirdParameter: 0.5

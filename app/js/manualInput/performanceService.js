@@ -133,11 +133,11 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function isPercentage(cell) {
-      return cell.constraint === 'Proportion (percentage)';
+      return cell.constraint === 'percentage';
     }
 
     function isDecimal(cell) {
-      return cell.constraint === 'Proportion (decimal)';
+      return cell.constraint === 'decimal';
     }
 
     return {

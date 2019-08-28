@@ -51,7 +51,7 @@
           </td>
           <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['units']">
             <span
-              ng-hide="!isValueView && (dataSource.unitOfMeasurement.type === 'percentage' || dataSource.unitOfMeasurement.type === 'decimal')">
+              ng-hide="!isValueView && (row.dataSource.unitOfMeasurement.type === 'percentage' || row.dataSource.unitOfMeasurement.type === 'decimal')">
               {{row.dataSource.unitOfMeasurement.label}}
             </span>
           </td>

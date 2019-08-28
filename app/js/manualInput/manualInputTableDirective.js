@@ -19,6 +19,16 @@ define(['lodash'], function(_) {
         scope.editUnitOfMeasurement = editUnitOfMeasurement;
         scope.editSoE = editSoE;
 
+        initializeConstraints();
+
+        function initializeConstraints(){
+          _.forEach(scope.state.criteria, function(criterion){
+            _.forEach(criterion.dataSources, function(dataSource){
+              setConstraints(dataSource.unitOfMeasurement.selectedOption.type, dataSource.id);
+            });
+          });
+        }
+
         function editUnitOfMeasurement(row) {
           $modal.open({
             templateUrl: './editUnitOfMeasurement.html',
@@ -68,16 +78,16 @@ define(['lodash'], function(_) {
           });
         }
 
-        function setConstraints(label, dataSourceId) {
+        function setConstraints(type, dataSourceId) {
           var effectRow = scope.state.inputData.effect[dataSourceId];
           scope.state.inputData.effect[dataSourceId] = _.mapValues(effectRow, function(cell) {
-            cell.constraint = label;
+            cell.constraint = type;
             return cell;
           });
           var distributionRow = scope.state.inputData.distribution[dataSourceId];
           scope.state.inputData.distribution[dataSourceId] = _.mapValues(distributionRow, function(cell) {
             if (cell.inputParameters.id === 'value') {
-              cell.constraint = label;
+              cell.constraint = type;
             }
             return cell;
           });

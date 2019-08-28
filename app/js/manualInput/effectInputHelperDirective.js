@@ -74,7 +74,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
         function getCellConstraint() {
           if (scope.unitOfMeasurement.selectedOption.type !== 'custom' ) {
-            return scope.unitOfMeasurement.selectedOption.label;
+            return scope.unitOfMeasurement.selectedOption.type;
           } else {
             return 'None';
           }

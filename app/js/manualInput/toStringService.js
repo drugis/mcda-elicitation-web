@@ -45,7 +45,7 @@ define(['lodash'], function(_) {
     }
 
     function isPercentage(cell) {
-      return cell.constraint ===  'Proportion (percentage)';
+      return cell.constraint ===  'percentage';
     }
 
     return {

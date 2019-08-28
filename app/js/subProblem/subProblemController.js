@@ -46,14 +46,20 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
 
 
     $scope.$watch('workspace.scales', function(newScales, oldScales) {
-      if (newScales && oldScales && newScales.observed === oldScales.observed) { return; }
-      $scope.scales = newScales;
-      setScaleTable();
+      if (newScales && oldScales && newScales.observed === oldScales.observed) {
+        return;
+      } else {
+        $scope.scales = newScales;
+        setScaleTable();
+      }
     }, true);
 
     $scope.$watch('aggregateState', function(newState, oldState) {
-      if (_.isEqual(newState, oldState)) { return; }
-      setScaleTable();
+      if (_.isEqual(newState, oldState)) {
+        return;
+      } else {
+        setScaleTable();
+      }
     }, true);
 
     new Clipboard('.clipboard-button');

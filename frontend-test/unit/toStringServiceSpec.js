@@ -63,7 +63,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should return the correct label for the percentage cell', function() {
         var cell = {
           firstParameter: 10,
-          constraint: 'Proportion (percentage)'
+          constraint: 'percentage'
         };
         var result = toStringService.valueToString(cell);
         var expectedResult = '10%';
@@ -93,7 +93,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
           firstParameter: 10,
           secondParameter: 0.5,
           thirdParameter: 20,
-          constraint: 'Proportion (percentage)'
+          constraint: 'percentage'
         };
         var result = toStringService.valueCIToString(cell);
         var expectedResult = '10% (0.5%; 20%)';

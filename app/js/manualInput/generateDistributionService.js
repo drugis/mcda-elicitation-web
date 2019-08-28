@@ -34,12 +34,11 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function getConstraints(cell) {
       var constraints = angular.copy(cell.inputParameters.firstParameter.constraints);
-      var options = _.keyBy([
-        ConstraintService.decimal(),
-        ConstraintService.percentage()
-      ], 'label');
-      if (_.includes(options, cell.constraint)) {
-        constraints.push(options[cell.constraint]);
+      if(cell.constraint === 'percentage'){
+        constraints.push(ConstraintService.percentage());
+      }
+      if(cell.constraint === 'decimal'){
+        constraints.push(ConstraintService.decimal());
       }
       return constraints;
     }
@@ -58,7 +57,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function isPercentage(cell) {
-      return cell.constraint === 'Proportion (percentage)';
+      return cell.constraint === 'percentage';
     }
 
     return {

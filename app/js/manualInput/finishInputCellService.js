@@ -9,18 +9,21 @@ define(['angular'], function() {
     var percentageConstraint = ConstraintService.percentage();
     var decimalConstraint = ConstraintService.decimal();
 
+    var PERCENTAGE = 'percentage';
+    var DECIMAL = 'decimal';
+
     function finishValueCell(options, performance) {
       var cell = {
         inputParameters: options
       };
       var input = performance.input;
-      if (input && input.scale === 'percentage') {
+      if (input && input.scale === PERCENTAGE) {
         cell.firstParameter = performance.value * 100;
-        cell.constraint = percentageConstraint.label;
+        cell.constraint = PERCENTAGE;
         cell.inputParameters.firstParameter.constraints.push(percentageConstraint);
       } else {
-        if (input && input.scale === 'decimal') {
-          cell.constraint = decimalConstraint.label;
+        if (input && input.scale === DECIMAL) {
+          cell.constraint = DECIMAL;
           cell.inputParameters.firstParameter.constraints.push(decimalConstraint);
         }
         cell.firstParameter = performance.value;
@@ -32,12 +35,12 @@ define(['angular'], function() {
       var cell = {
         inputParameters: options
       };
-      if (performance.input.scale === 'percentage') {
-        cell.constraint = percentageConstraint.label;
+      if (performance.input.scale === PERCENTAGE) {
+        cell.constraint = PERCENTAGE;
         cell.inputParameters.firstParameter.constraints.push(percentageConstraint);
       }
-      if (performance.input.scale === 'decimal') {
-        cell.constraint = decimalConstraint.label;
+      if (performance.input.scale === DECIMAL) {
+        cell.constraint = DECIMAL;
         cell.inputParameters.firstParameter.constraints.push(decimalConstraint);
       }
       cell.firstParameter = performance.input.value;
