@@ -60,7 +60,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
 
     function createScales(problem) {
       $scope.scalesPromise.then(function() {
-        var newScales = MCDAResultsService.createDeterministicScales(problem.performanceTable, $scope.workspace.scales.observed);
+        var newScales = MCDAResultsService.createDeterministicScales(problem.performanceTable, $scope.workspace.scales.base);
         $scope.scales = {
           observed: WorkspaceSettingsService.usePercentage() ? WorkspaceService.percentifyScales($scope.aggregateState.problem.criteria, newScales) : newScales
         };
