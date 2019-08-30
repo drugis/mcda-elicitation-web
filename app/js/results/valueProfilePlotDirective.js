@@ -1,8 +1,8 @@
 'use strict';
 define(['d3', 'nvd3', 'jquery'], function(d3, nv, $) {
-  var dependencies = [ 'MCDAResultsService'];
+  var dependencies = ['DeterministicResultsService'];
 
-  var ValueProfilePlot = function(ResultsService) {
+  var ValueProfilePlot = function(DeterministicResultsService) {
     function getParentDimension(element) {
       function parsePx(str) {
         return parseInt(str.replace(/px/gi, ''));
@@ -31,26 +31,34 @@ define(['d3', 'nvd3', 'jquery'], function(d3, nv, $) {
           .attr('height', '100%');
 
         var dim = getParentDimension(element[0].children);
-        scope.$watch('values', function(newVal) {
-          if (!newVal) {
+        scope.$watch('values', function(results) {
+          if (!results) {
             return;
+          } else {
+            nv.addGraph(createGraph(results));
           }
-          nv.addGraph(function() {
-            var chart = nv.models.multiBarChart().height(dim.height).width(dim.width);
-            var data = ResultsService.pataviResultToValueProfile(newVal, scope.criteria, scope.alternatives, scope.alternativesLegend);
-
-            chart.yAxis.tickFormat(d3.format(',.3g'));
-            chart.stacked(true);
-            chart.reduceXTicks(false);
-            chart.staggerLabels(true);
-            chart.showControls(false);
-
-            svg.datum(data).transition().duration(100).call(chart);
-            svg.style('background', 'white');
-              
-            nv.utils.windowResize(chart.update);
-          });
         });
+
+        function createGraph(results) {
+          var chart = nv.models.multiBarChart().height(dim.height).width(dim.width);
+          var data = DeterministicResultsService.pataviResultToValueProfile(
+            results,
+            scope.criteria,
+            scope.alternatives,
+            scope.alternativesLegend
+          );
+
+          chart.yAxis.tickFormat(d3.format(',.3g'));
+          chart.stacked(true);
+          chart.reduceXTicks(false);
+          chart.staggerLabels(true);
+          chart.showControls(false);
+
+          svg.datum(data).transition().duration(100).call(chart);
+          svg.style('background', 'white');
+
+          nv.utils.windowResize(chart.update);
+        }
       }
     };
   };

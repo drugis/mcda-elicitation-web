@@ -5,6 +5,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
     '$stateParams',
     '$state',
     'currentScenario',
+    'DeterministicResultsService',
     'MCDAResultsService',
     'OrderingService',
     'PageTitleService',
@@ -17,6 +18,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
     $stateParams,
     $state,
     currentScenario,
+    DeterministicResultsService,
     MCDAResultsService,
     OrderingService,
     PageTitleService,
@@ -60,7 +62,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
 
     function createScales(problem) {
       $scope.scalesPromise.then(function() {
-        var newScales = MCDAResultsService.createDeterministicScales(problem.performanceTable, $scope.workspace.scales.base);
+        var newScales = DeterministicResultsService.createDeterministicScales(problem.performanceTable, $scope.workspace.scales.base);
         $scope.scales = {
           observed: WorkspaceSettingsService.usePercentage() ? WorkspaceService.percentifyScales($scope.aggregateState.problem.criteria, newScales) : newScales
         };
@@ -69,13 +71,13 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
 
 
     function loadState() {
-      var stateWithAlternativesRenamed = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.aggregateState);
+      var stateWithAlternativesRenamed = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.dePercentifiedBaseState);
       initSensitivityDropdowns();
       doMeasurementSensitivity();
       doPreferencesSensitivity();
 
-      $scope.deterministicResults = MCDAResultsService.getDeterministicResults($scope, stateWithAlternativesRenamed);
-      $scope.state = MCDAResultsService.getResults($scope, stateWithAlternativesRenamed);
+      $scope.deterministicResults = DeterministicResultsService.getDeterministicResults($scope, stateWithAlternativesRenamed);
+      $scope.state = DeterministicResultsService.getResults($scope, stateWithAlternativesRenamed);
     }
 
     function initSensitivityDropdowns() {
@@ -90,7 +92,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
 
     function resetSensitivityAnalysis() {
       orderingsPromise.then(function() {
-        $scope.modifiableScales = MCDAResultsService.resetModifiableScales(
+        $scope.modifiableScales = DeterministicResultsService.resetModifiableScales(
           $scope.scales.observed, _.keyBy($scope.alternatives, 'id'));
         delete $scope.recalculatedDeterministicResults;
         $scope.sensitivityMeasurements.alteredTableCells = [];
@@ -108,24 +110,24 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
 
     function recalculateResults() {
       delete $scope.recalculatedDeterministicResults;
-      $scope.recalculatedDeterministicResults = MCDAResultsService.getRecalculatedDeterministicResults($scope, $scope.state);
+      $scope.recalculatedDeterministicResults = DeterministicResultsService.getRecalculatedDeterministicResults($scope, $scope.state);
     }
 
     function doMeasurementSensitivity() {
       delete $scope.measurementValues;
-      MCDAResultsService.getMeasurementsSensitivityResults($scope, $scope.dePercentifiedBaseState).resultsPromise.then(function(result) {
-        $scope.measurementValues = MCDAResultsService.pataviResultToLineValues(result.results, $scope.alternatives, $scope.scenario.state.legend);
+      DeterministicResultsService.getMeasurementsSensitivityResults($scope, $scope.dePercentifiedBaseState).resultsPromise.then(function(result) {
+        $scope.measurementValues = DeterministicResultsService.pataviResultToLineValues(result.results, $scope.alternatives, $scope.scenario.state.legend);
 
         if (usePercentage($scope.sensitivityMeasurements.measurementsCriterion.dataSources[0])) {
-          $scope.measurementValues = MCDAResultsService.percentifySensitivityResult($scope.measurementValues, 'x');
+          $scope.measurementValues = DeterministicResultsService.percentifySensitivityResult($scope.measurementValues, 'x');
         }
       });
     }
 
     function doPreferencesSensitivity() {
       delete $scope.preferencesValues;
-      MCDAResultsService.getPreferencesSensitivityResults($scope, $scope.dePercentifiedBaseState).resultsPromise.then(function(result) {
-        $scope.preferencesValues = MCDAResultsService.pataviResultToLineValues(result.results, $scope.alternatives, $scope.scenario.state.legend);
+      DeterministicResultsService.getPreferencesSensitivityResults($scope, $scope.dePercentifiedBaseState).resultsPromise.then(function(result) {
+        $scope.preferencesValues = DeterministicResultsService.pataviResultToLineValues(result.results, $scope.alternatives, $scope.scenario.state.legend);
       });
     }
 

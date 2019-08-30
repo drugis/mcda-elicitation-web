@@ -8,6 +8,7 @@ define([
   './valueProfilePlotDirective',
   './legendDirective',
   './resultsService',
+  './deterministicResultsService',
   './pataviResultsService',
   'angular',
   'angular-patavi-client'
@@ -20,6 +21,7 @@ define([
   valueProfilePlotDirective,
   legendDirective,
   MCDAResultsService,
+  DeterministicResultsService,
   PataviResultsService,
   angular
 ) {
@@ -34,6 +36,7 @@ define([
       .directive('sensitivityTable', sensitivityTableDirective)
 
       .factory('MCDAResultsService', MCDAResultsService)
+      .factory('DeterministicResultsService', DeterministicResultsService)
       .factory('PataviResultsService', PataviResultsService)
       ;
   });
