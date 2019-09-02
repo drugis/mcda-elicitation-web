@@ -38,7 +38,7 @@ define(['lodash', 'angular'], function(_, angular) {
     isMcdaStandalone
   ) {
     // functions
-    $scope.forkScenario = forkScenario;
+    $scope.copyScenario = copyScenario;
     $scope.newScenario = newScenario;
     $scope.scenarioChanged = scenarioChanged;
 
@@ -98,8 +98,6 @@ define(['lodash', 'angular'], function(_, angular) {
 
       updateState();
       $scope.hasMissingValues = WorkspaceService.checkForMissingValuesInPerformanceTable($scope.aggregateState.problem.performanceTable);
-      $scope.hasNoStochasticResults = WorkspaceService.hasNoStochasticResults($scope.aggregateState);
-      updateScenarios();
       updateTaskAccessibility();
     }
 
@@ -111,6 +109,8 @@ define(['lodash', 'angular'], function(_, angular) {
         $scope.workspace.scales.observed = $scope.workspace.scales.base;
         $scope.aggregateState = $scope.dePercentifiedBaseState;
       }
+      $scope.hasNoStochasticResults = WorkspaceService.hasNoStochasticResults($scope.aggregateState);
+      updateScenarios();
     }
 
     function updateAggregateState(scenario){
@@ -148,7 +148,7 @@ define(['lodash', 'angular'], function(_, angular) {
       };
     }
 
-    function forkScenario() {
+    function copyScenario() {
       $modal.open({
         templateUrl: '../preferences/newScenario.html',
         controller: 'NewScenarioController',
@@ -157,11 +157,11 @@ define(['lodash', 'angular'], function(_, angular) {
             return $scope.scenarios;
           },
           type: function() {
-            return 'Fork';
+            return 'Copy';
           },
           callback: function() {
             return function(newTitle) {
-              McdaBenefitRiskService.forkScenarioAndGo(newTitle, $scope.subProblem);
+              McdaBenefitRiskService.copyScenarioAndGo(newTitle, $scope.subProblem);
             };
           }
         }

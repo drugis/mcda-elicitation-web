@@ -343,12 +343,15 @@ define(['lodash', 'angular'], function(_, angular) {
     function filterScenariosWithResults(baseProblem, currentSubProblem, scenarios) {
       return _.filter(scenarios, function(scenario) {
         var state = buildAggregateState(baseProblem, currentSubProblem, scenario);
-        return !_.find(state.problem.criteria, function(criterion) {
-          return !criterion.dataSources[0].pvf || !criterion.dataSources[0].pvf.direction;
+        return !_.some(state.problem.criteria, function(criterion) {
+          return hasPVFDirection(criterion);
         });
       });
     }
 
+    function hasPVFDirection(criterion){
+      return !criterion.dataSources[0].pvf || !criterion.dataSources[0].pvf.direction;
+    }
     /*
      * workspace should have:
      * - title
@@ -677,8 +680,8 @@ define(['lodash', 'angular'], function(_, angular) {
         var isAllExact = !_.some(aggregateState.problem.performanceTable, function(tableEntry) {
           return tableEntry.performance.distribution && tableEntry.performance.distribution.type !== 'exact';
         });
-        var isExactSwing = _.some(aggregateState.prefs, ['type', 'exact swing']);
-        return isAllExact && isExactSwing;
+        var isNotImpreciseSwing = !_.some(aggregateState.prefs, ['type', 'ratio bound']);
+        return isAllExact && isNotImpreciseSwing;
       }
     }
 

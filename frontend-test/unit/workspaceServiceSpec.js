@@ -1441,7 +1441,7 @@ define([
             }]
           },
           prefs: [{
-            type: 'inprecise swing'
+            type: 'ratio bound'
           }]
         };
         var result = workspaceService.hasNoStochasticResults(aggregateState);

@@ -6,7 +6,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
     var stateMock = jasmine.createSpyObj('$state', ['go']);
     var stateParams;
     var modalMock = jasmine.createSpyObj('$modal', ['open']);
-    var McdaBenefitRiskService = jasmine.createSpyObj('McdaBenefitRiskService', ['newScenarioAndGo', 'forkScenarioAndGo']);
+    var McdaBenefitRiskService = jasmine.createSpyObj('McdaBenefitRiskService', ['newScenarioAndGo', 'copyScenarioAndGo']);
     var Tasks = {
       available: [{
         id: 'smaa-results'
@@ -115,9 +115,9 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         scope.$apply();
       });
 
-      it('should place a forkScenario function which opens a modal on the scope.', () => {
+      it('should place a copyScenario function which opens a modal on the scope.', () => {
         expect(modalMock.open).not.toHaveBeenCalled();
-        scope.forkScenario();
+        scope.copyScenario();
         expect(modalMock.open).toHaveBeenCalled();
       });
 

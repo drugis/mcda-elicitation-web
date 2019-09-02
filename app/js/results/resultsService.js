@@ -6,19 +6,9 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
 
     function run($scope, inState) {
       var state = angular.copy(inState);
-      state.problem.criteria = _.mapValues(state.problem.criteria, function(criterion) {
-        if (criterion.dataSources) {
-          return _.merge({}, _.omit(criterion, ['dataSources']), _.omit(criterion.dataSources[0]), []);
-        }
-        return criterion;
-      });
+      state.problem.criteria = mergeDataSourceOntoCriterion(state.problem.criteria);
 
-      function successHandler(results) {
-        state.results = results;
-        return state;
-      }
-
-      var updateHandler = _.throttle(function(update) {
+      var updateCallback = _.throttle(function(update) {
         if (update && update.eventType === 'progress' && update.eventData && $.isNumeric(update.eventData)) {
           var progress = parseInt(update.eventData);
           if (progress > $scope.progress) {
@@ -28,8 +18,22 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       }, 30);
       $scope.progress = 0;
 
-      state.resultsPromise = PataviResultsService.postAndHandleResults(state.problem, successHandler, updateHandler);
+      state.resultsPromise = PataviResultsService.postAndHandleResults(state.problem, _.partial(succesCallback, state), updateCallback);
       return state;
+    }
+
+    function succesCallback(state, results) {
+      state.results = results;
+      return state;
+    }
+
+    function mergeDataSourceOntoCriterion(criteria) {
+      return _.mapValues(criteria, function(criterion) {
+        if (criterion.dataSources) {
+          return _.merge({}, _.omit(criterion, ['dataSources']), _.omit(criterion.dataSources[0]), []);
+        }
+        return criterion;
+      });
     }
 
     function addSmaaResults(state) {
