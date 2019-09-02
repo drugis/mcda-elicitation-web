@@ -9,10 +9,13 @@
         <input type="text" ng-model="title.newTitle" ng-change="checkDuplicateScenarioTitle()">
       </div>
       <div class="cell">
-        <button class="button" type="submit" ng-click="create()" ng-disabled="!title.newTitle || isDuplicateScenarioTitle">Create</button>
+        <button class="button success" type="submit" ng-click="create()"
+          ng-disabled="!title.newTitle || isDuplicateScenarioTitle">
+          Create
+        </button>
       </div>
     </div>
-    <div class="cell alert" ng-if="isDuplicateScenarioTitle">Duplicate title</div> 
+    <div class="cell alert" ng-if="isDuplicateScenarioTitle">Duplicate title</div>
     <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
       <span aria-hidden="true">&times;</span>
     </button>
