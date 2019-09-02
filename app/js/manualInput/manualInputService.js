@@ -104,6 +104,9 @@ define(['lodash', 'angular'], function(_, angular) {
       var newConstraints = angular.copy(cell.inputParameters[parameter].constraints);
       newConstraints = removeBoundConstraints(newConstraints);
       if (unitOfMeasurement.lowerBound === 0) {
+        if (cell.inputParameters[parameter].label === 'Lower bound') {
+          newConstraints.push(ConstraintService.belowOrEqualTo(FIRST_PARAMETER));
+        }
         newConstraints.push(getConstraintWithLowerBound(unitOfMeasurement));
       } else if (unitOfMeasurement.upperBound !== null && unitOfMeasurement.upperBound < Infinity) {
         newConstraints.push(ConstraintService.belowOrEqualTo(unitOfMeasurement.upperBound));

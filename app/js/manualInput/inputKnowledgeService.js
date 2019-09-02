@@ -221,18 +221,6 @@ define(['lodash'], function(_) {
       };
     }
 
-    function buildEvents() {
-      return {
-        label: 'Events',
-        constraints: [
-          ConstraintService.defined(),
-          ConstraintService.positive(),
-          ConstraintService.integer(),
-          ConstraintService.belowOrEqualTo('secondParameter')
-        ]
-      };
-    }
-
     return {
       getOptions: getOptions
     };

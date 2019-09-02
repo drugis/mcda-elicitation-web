@@ -100,21 +100,25 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
         if ($stateParams.inProgressId) {
           InProgressResource.delete($stateParams);
         }
-        var criteria = _.map($scope.state.criteria, _.partialRight(_.pick, ['id']));
-        var alternatives = _.map($scope.state.alternatives, _.partialRight(_.pick, ['id']));
-
-        OrderingService.saveOrdering({
-          workspaceId: workspace.id
-        }, criteria, alternatives).then(function() {
-          $scope.dirty = false;
-          $state.go('evidence', {
-            workspaceId: workspace.id,
-            problemId: workspace.defaultSubProblemId,
-            id: workspace.defaultScenarioId
-          });
-        });
+        createOrdering(workspace);
       });
       return problem;
+    }
+
+    function createOrdering(workspace) {
+      var criteria = _.map($scope.state.criteria, _.partialRight(_.pick, ['id']));
+      var alternatives = _.map($scope.state.alternatives, _.partialRight(_.pick, ['id']));
+
+      OrderingService.saveOrdering({
+        workspaceId: workspace.id
+      }, criteria, alternatives).then(function() {
+        $scope.dirty = false;
+        $state.go('evidence', {
+          workspaceId: workspace.id,
+          problemId: workspace.defaultSubProblemId,
+          id: workspace.defaultScenarioId
+        });
+      });
     }
 
     function goToStep1() {
@@ -264,8 +268,8 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       }, true);
     }
 
-    function checkStep1Errors(){
-      if($scope.state.step === 'step1'){
+    function checkStep1Errors() {
+      if ($scope.state.step === 'step1') {
         $scope.state.step1errors = ManualInputService.checkStep1Errors($scope.state);
       }
     }

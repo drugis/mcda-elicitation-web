@@ -553,7 +553,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                   type: 'custom'
                 }
               },
-              scale: [0,1]
+              scale: [0, 1]
             }],
             id: 'uuid2'
           }],
@@ -942,8 +942,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.selectedOption.type = 'percentage';
             baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.value = '%';
             baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.upperBound = 100;
-            baseExpectedResult.criteria[0].dataSources[0].scale[1]= 100;
-            
+            baseExpectedResult.criteria[0].dataSources[0].scale[1] = 100;
+
             var result = manualInputService.createStateFromOldWorkspace(workspace);
             var expectedResult = _.merge({}, baseExpectedResult, {
               oldWorkspace: workspace
@@ -1275,7 +1275,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
       });
 
 
-      it('should not add a \'below or equal to\' constraint if the scale is [null, null]', function(){
+      it('should not add a \'below or equal to\' constraint if the scale is [null, null]', function() {
         var cell = {
           inputParameters: {
             firstParameter: {
@@ -1374,6 +1374,31 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             thirdParameter: {
               label: 'Value',
               constraints: [positiveConstraint]
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should not remove the lower bound constraint of the cell lower bound if there also is a decimal or percentage constraint', function() {
+        var cell = {
+          inputParameters: {
+            secondParameter: {
+              label: 'Lower bound',
+              constraints: [belowOrEqualToConstraint]
+            }
+          }
+        };
+        var unitOfMeasurement = {
+          lowerBound: 0,
+          upperBound: 100
+        };
+        var result = manualInputService.updateParameterConstraints(cell, unitOfMeasurement);
+        var expectedResult = {
+          inputParameters: {
+            secondParameter: {
+              label: 'Lower bound',
+              constraints: [belowOrEqualToConstraint, percentageConstraint]
             }
           }
         };

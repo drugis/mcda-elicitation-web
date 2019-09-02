@@ -1,6 +1,8 @@
 <dropdown-toggle close-on-click="true" pane-align="right">
   <toggle>
-    <a ng-style="cell.isInvalid ? {color:'red'} : {}" style="white-space: pre-wrap">{{cell.label}}</a>
+    <a ng-style="cell.isInvalid ? {color:'red'} : {}" style="white-space: pre-wrap">
+      {{cell.label}}
+    </a>
   </toggle>
   <pane ng-keydown="keyCheck($event, $close)" ng-keypress="keyCheck($event, $close)">
     <div class="grid-container" style="min-width: 20rem;">
@@ -21,8 +23,7 @@
           </label>
         </div>
 
-        <div class="cell"
-          ng-if="inputCell.inputParameters.firstParameter && inputCell.inputParameters.id !== 'text'">
+        <div class="cell" ng-if="inputCell.inputParameters.firstParameter && inputCell.inputParameters.id !== 'text'">
           <label>
             {{inputCell.inputParameters.firstParameter.label}}
             <input type="number" ng-model="inputCell.firstParameter" ng-change="inputChanged()">
@@ -32,9 +33,8 @@
         <div class="cell" ng-if="inputCell.inputParameters.secondParameter">
           <label>
             {{inputCell.inputParameters.secondParameter.label}}
-            <span ng-if="inputCell.inputParameters.secondParameter.label === 'Lower bound'">(
-              <input type="checkbox" ng-model="inputCell.lowerBoundNE">
-              Not estimable)
+            <span ng-if="inputCell.inputParameters.secondParameter.label === 'Lower bound'">
+              ( <input type="checkbox" ng-model="inputCell.lowerBoundNE"> Not estimable)
             </span>
             <input type="number" ng-model="inputCell.secondParameter" ng-change="inputChanged()"
               ng-disabled="inputCell.inputParameters.secondParameter.label === 'Lower bound' && inputCell.lowerBoundNE">
@@ -44,9 +44,9 @@
         <div class="cell" ng-if="inputCell.inputParameters.thirdParameter">
           <label>
             {{inputCell.inputParameters.thirdParameter.label}}
-            <span ng-if="inputCell.inputParameters.thirdParameter.label === 'Upper bound'">(
-              <input type="checkbox" ng-model="inputCell.upperBoundNE">Not
-              estimable)</span>
+            <span ng-if="inputCell.inputParameters.thirdParameter.label === 'Upper bound'">
+              ( <input type="checkbox" ng-model="inputCell.upperBoundNE"> Not estimable)
+            </span>
             <input type="number" ng-model="inputCell.thirdParameter" ng-change="inputChanged()"
               ng-disabled="inputCell.inputParameters.thirdParameter.label === 'Upper bound' && inputCell.upperBoundNE">
           </label>
