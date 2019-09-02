@@ -50,25 +50,26 @@ define([
           }, true);
 
           function drawPlot(value) {
-            var bla = _.partial(createGraph, value);
-            nv.addGraph(bla);
-
+            var graphGenerator = createGraph(value);
+            nv.addGraph(graphGenerator);
           }
 
           function createGraph(value) {
-            var chart = nv.models.multiBarChart().height(400).width(400);
-            var data = rankGraphData(value);
-
-            chart.yAxis.tickFormat(d3.format(',.3g'));
-            chart.stacked(attrs.stacked);
-            chart.reduceXTicks(false);
-            chart.staggerLabels(true);
-
-            svg.datum(data)
+            return function(){
+              var chart = nv.models.multiBarChart().height(400).width(400);
+              var data = rankGraphData(value);
+              
+              chart.yAxis.tickFormat(d3.format(',.3g'));
+              chart.stacked(attrs.stacked);
+              chart.reduceXTicks(false);
+              chart.staggerLabels(true);
+              
+              svg.datum(data)
               .transition().duration(100).call(chart);
-            svg.style('background', 'white');
-
-            nv.utils.windowResize(chart.update);
+              svg.style('background', 'white');
+              
+              nv.utils.windowResize(chart.update);
+            };
           }
 
           function rankGraphData(data) {

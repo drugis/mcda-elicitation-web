@@ -35,7 +35,7 @@ define(['d3', 'nvd3', 'jquery'], function(d3, nv, $) {
           if (!results) {
             return;
           } else {
-            nv.addGraph(createGraph(results));
+            nv.addGraph(function() { createGraph(results); });
           }
         });
 
