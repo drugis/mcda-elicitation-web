@@ -1404,7 +1404,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         };
         expect(result).toEqual(expectedResult);
       });
-
     });
 
     describe('checkStep1Errors', function() {
