@@ -147,5 +147,19 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(result).toEqual(cell);
       });
     });
+
+    describe('generateRangeDistribution', function() {
+      it('should copy the cell', function() {
+        var cell = {
+          foo: 'bar'
+        };
+        var expectedResult = {
+          foo: 'bar',
+          inputParameters: options
+        };
+        var result = generateDistributionService.generateRangeDistribution(options, cell);
+        expect(result).toEqual(expectedResult);
+      });
+    });
   });
 });

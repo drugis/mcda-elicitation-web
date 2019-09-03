@@ -8,12 +8,15 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     'buildGammaPerformance',
     'buildValueCIPerformance',
     'buildTextPerformance',
-    'buildEmptyPerformance'
+    'buildEmptyPerformance',
+    'buildRangeDistribtutionPerformance',
+    'buildRangeEffectPerformance'
   ]);
   var generateDistributionServiceMock = jasmine.createSpyObj('GenerateDistributionService', [
     'generateValueDistribution',
     'generateValueCIDistribution',
-    'generateEmptyDistribution'
+    'generateEmptyDistribution',
+    'generateRangeDistribution'
   ]);
   var toStringServiceMock = jasmine.createSpyObj('ToStringService', [
     'gammaToString',
@@ -22,7 +25,8 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     'valueToString',
     'valueCIToString',
     'emptyToString',
-    'textToString'
+    'textToString',
+    'rangeToString'
   ]);
   var finishInputCellServiceMock = jasmine.createSpyObj('FinishInputCellService', [
     'finishNormalInputCell',
@@ -31,7 +35,9 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     'finishValueCell',
     'finishValueCI',
     'finishEmptyCell',
-    'finishTextCell'
+    'finishTextCell',
+    'finishRangeDistributionCell',
+    'finishRangeEffectCell'
   ]);
 
   describe('the input knowledge service', function() {
@@ -55,6 +61,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             'beta',
             'gamma',
             'value',
+            'range',
             'empty',
             'text'
           ]);
@@ -67,6 +74,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(_.keys(inputKnowledgeService.getOptions(inputType))).toEqual([
             'value',
             'valueCI',
+            'range',
             'empty',
             'text'
           ]);

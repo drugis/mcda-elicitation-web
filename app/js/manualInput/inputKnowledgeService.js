@@ -28,8 +28,9 @@ define(['lodash'], function(_) {
 
     function getEffectOptions() {
       return {
-        value:  VALUE,
+        value: VALUE,
         valueCI: VALUE_CONFIDENCE_INTERVAL,
+        range: RANGE_EFFECT,
         empty: EMPTY,
         text: TEXT
       };
@@ -41,6 +42,7 @@ define(['lodash'], function(_) {
         beta: BETA,
         gamma: GAMMA,
         value: VALUE,
+        range: RANGE_DISTRIBUTION,
         empty: EMPTY,
         text: TEXT
       };
@@ -106,6 +108,31 @@ define(['lodash'], function(_) {
       PerformanceService.buildValueCIPerformance,
       FinishInputCellService.finishValueCI,
       _.partial(GenerateDistributionService.generateValueCIDistribution, NORMAL, VALUE)
+    );
+
+    var RANGE_DISTRIBUTION = new optionsBlock(
+      'range',
+      'Range',
+      buildLowerRange(),
+      buildUpperBound(),
+      undefined,
+      true,
+      ToStringService.rangeToString,
+      PerformanceService.buildRangeDistribtutionPerformance,
+      FinishInputCellService.finishRangeDistributionCell
+    );
+
+    var RANGE_EFFECT = new effectOptionsBlock(
+      'range',
+      'Range',
+      buildLowerRange(),
+      buildUpperBound(),
+      undefined,
+      true,
+      ToStringService.rangeToString,
+      PerformanceService.buildRangeEffectPerformance,
+      FinishInputCellService.finishRangeEffectCell,
+      _.partial(GenerateDistributionService.generateRangeDistribution, RANGE_DISTRIBUTION)
     );
 
     var EMPTY = new effectOptionsBlock(
@@ -185,6 +212,16 @@ define(['lodash'], function(_) {
         constraints: [
           ConstraintService.defined(),
           ConstraintService.belowOrEqualTo('firstParameter')
+        ]
+      };
+    }
+
+    function buildLowerRange() {
+      return {
+        label: 'Lower bound',
+        constraints: [
+          ConstraintService.defined(),
+          ConstraintService.belowOrEqualTo('secondParameter')
         ]
       };
     }

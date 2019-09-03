@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['angular'], function(angular) {
   var dependencies = [
     'significantDigits',
     'ConstraintService'
@@ -47,6 +47,11 @@ define(['lodash', 'angular'], function(_, angular) {
       return angular.copy(cell);
     }
 
+    function generateRangeDistribution(options, cell){
+      var newCell =  angular.copy(cell);
+      newCell.inputParameters = options;
+      return newCell;
+    }
 
     function areBoundsSymmetric(cell) {
       return  Math.abs(1 - (cell.firstParameter - cell.secondParameter) / (cell.thirdParameter - cell.firstParameter) ) < 0.05;
@@ -63,7 +68,8 @@ define(['lodash', 'angular'], function(_, angular) {
     return {
       generateValueDistribution: generateValueDistribution,
       generateValueCIDistribution: generateValueCIDistribution,
-      generateEmptyDistribution: generateEmptyDistribution
+      generateEmptyDistribution: generateEmptyDistribution,
+      generateRangeDistribution: generateRangeDistribution
     };
   };
   return dependencies.concat(GenerateDistributionService);

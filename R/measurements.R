@@ -87,6 +87,10 @@ sampler.dnorm <- function(perf, N) {
   rnorm(N, perf$parameters['mu'], perf$parameters['sigma'])
 }
 
+sampler.range <- function(perf, N) { 
+  perf$parameters['lowerBound'] + runif(N)*(perf$parameters['upperBound'] - perf$parameters['lowerBound'])
+}
+
 sampler.empty <-function(perf, N){
   rep(NA, N)
 }
@@ -183,7 +187,7 @@ generateSummaryStatistics <- function(params) {
 }
 
 summaryStatistics.absolute <- function(distribution) {
-  analyticalPerformanceTypes <- c("dbeta","dnorm","exact","empty")
+  analyticalPerformanceTypes <- c("dbeta", "dnorm", "range", "exact", "empty")
   canCalculateSummaryStastisticsAnalytically <- distribution$performance[["type"]] %in% analyticalPerformanceTypes
   if (canCalculateSummaryStastisticsAnalytically) { 
     summaryStatistics.absolute.analytical(distribution)
@@ -206,6 +210,12 @@ summaryStatistics.dbeta <- function(performance) {
 summaryStatistics.dnorm <- function(performance) {
   quantiles <- qnorm(c(0.025,0.5,0.975),performance$parameters['mu'],performance$parameters['sigma'])
   mode <- performance$parameters['mu']
+  setNamesSummaryStatistics(c(quantiles,mode))
+}
+
+summaryStatistics.range <- function(performance) {
+  quantiles <- performance$parameters['lowerBound'] + qunif(c(0.025,0.5,0.975))*(performance$parameters['upperBound'] - performance$parameters['lowerBound'])
+  mode <- NA
   setNamesSummaryStatistics(c(quantiles,mode))
 }
 

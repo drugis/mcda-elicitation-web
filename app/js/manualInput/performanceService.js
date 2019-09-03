@@ -132,6 +132,38 @@ define(['lodash', 'angular'], function(_) {
       });
     }
 
+    function buildRangeEffectPerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        var percentageModifier = isPercentage(cell) ? 100 : 1;
+        var value = (cell.firstParameter + cell.secondParameter) / (2 * percentageModifier);
+        var input = {
+          lowerBound: cell.firstParameter,
+          upperBound: cell.secondParameter
+        };
+        if (isPercentage(cell)) {
+          input.scale = 'percentage';
+        }
+        return buildExactPerformance(value, input);
+      }
+    }
+
+    function buildRangeDistribtutionPerformance(cell) {
+      if (cell.isInvalid) {
+        return undefined;
+      } else {
+        var percentageModifier = isPercentage(cell) ? 100 : 1;
+        return {
+          type: 'range',
+          parameters: {
+            lowerBound: cell.firstParameter / percentageModifier,
+            upperBound: cell.secondParameter / percentageModifier
+          }
+        };
+      }
+    }
+
     function isPercentage(cell) {
       return cell.constraint === 'percentage';
     }
@@ -147,7 +179,9 @@ define(['lodash', 'angular'], function(_) {
       buildEmptyPerformance: buildEmptyPerformance,
       buildTextPerformance: buildTextPerformance,
       buildValuePerformance: buildValuePerformance,
-      buildValueCIPerformance: buildValueCIPerformance
+      buildValueCIPerformance: buildValueCIPerformance,
+      buildRangeEffectPerformance: buildRangeEffectPerformance,
+      buildRangeDistribtutionPerformance: buildRangeDistribtutionPerformance
     };
   };
   return dependencies.concat(PerformanceService);

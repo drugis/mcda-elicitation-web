@@ -187,7 +187,7 @@ function exampleProblem() {
         }
       }
     }],
-    schemaVersion: '1.4.0'
+    schemaVersion: '1.4.1'
   };
 }
 

@@ -117,6 +117,30 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       });
     });
 
+    describe('rangeToString', function() {
+      it('should the correct label for a non-percentage range cell', function() {
+        var cell = {
+          constraint: 'none',
+          firstParameter: 10,
+          secondParameter: 20,
+        };
+        var result = toStringService.rangeToString(cell);
+        var expectedResult = '[10, 20]';
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should the correct label for a percentage range cell', function() {
+        var cell = {
+          constraint: 'percentage',
+          firstParameter: 10,
+          secondParameter: 20,
+        };
+        var result = toStringService.rangeToString(cell);
+        var expectedResult = '[10%, 20%]';
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
     describe('emptyToString', function() {
       it('should return the correct label for the cell', function() {
         var result = toStringService.emptyToString();

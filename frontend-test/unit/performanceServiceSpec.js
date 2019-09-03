@@ -291,6 +291,101 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       });
     });
 
+    describe('buildRangeEffectPerformance', function() {
+      it('should build a decimal range performance for an effect', function() {
+        var cell = {
+          constraint: 'decimal',
+          firstParameter: 0.1,
+          secondParameter: 0.2
+        };
+        var result = performanceService.buildRangeEffectPerformance(cell);
+        var expectedResult = {
+          type: 'exact',
+          value: (0.1+0.2)/2,
+          input: {
+            lowerBound: 0.1,
+            upperBound: 0.2
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should build a percentage range performance for an effect', function() {
+        var cell = {
+          constraint: 'percentage',
+          firstParameter: 10,
+          secondParameter: 20
+        };
+        var result = performanceService.buildRangeEffectPerformance(cell);
+        var expectedResult = {
+          type: 'exact',
+          value: 0.15,
+          input: {
+            scale: 'percentage',
+            lowerBound: 10,
+            upperBound: 20
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+
+      it('should return undefined for an invalid cell', function() {
+        var cell = {
+          isInvalid: true
+        };
+        var result = performanceService.buildRangeEffectPerformance(cell);
+        var expectedResult;
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('buildRangeEffectPerformance', function() {
+      it('should build a decimal range performance for a distribution', function() {
+        var cell = {
+          constraint: 'decimal',
+          firstParameter: 0.1,
+          secondParameter: 0.2
+        };
+        var result = performanceService.buildRangeDistribtutionPerformance(cell);
+        var expectedResult = {
+          type: 'range',
+          parameters: {
+            lowerBound: 0.1,
+            upperBound: 0.2
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should build a percentage range performance for a distribution', function() {
+        var cell = {
+          constraint: 'percentage',
+          firstParameter: 10,
+          secondParameter: 20
+        };
+        var result = performanceService.buildRangeDistribtutionPerformance(cell);
+        var expectedResult = {
+          type: 'range',
+          parameters: {
+            lowerBound: 0.1,
+            upperBound: 0.2
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+
+      it('should return undefined for an invalid cell', function() {
+        var cell = {
+          isInvalid: true
+        };
+        var result = performanceService.buildRangeDistribtutionPerformance(cell);
+        var expectedResult;
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
     describe('buildEmptyPerformance', function() {
       it('should build an empty performance', function() {
         expect(performanceService.buildEmptyPerformance()).toEqual({ type: 'empty' });

@@ -4,7 +4,7 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
   var generateUuidMock = function() {
     return 'uuid';
   };
-  var currentSchemaVersion = '1.4.0';
+  var currentSchemaVersion = '1.4.1';
   var schemaService;
 
   describe('The SchemaService', function() {

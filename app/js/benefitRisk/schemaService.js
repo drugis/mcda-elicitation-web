@@ -23,6 +23,7 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
      * 1.3.3 Remove alternative property from alternatives
      * 1.3.4 Add 'decimal' as scale option to input
      * 1.4.0 Add type to unit of measurement; Scales with null ranges updated to minus/plus infinity and are mandatory
+     * 1.4.1 Add ranges
      * *****/
 
     function updateProblemToCurrentSchema(problem) {
@@ -65,6 +66,10 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
       if (newProblem.schemaVersion === '1.3.4') {
         newProblem = updateToVersion140(newProblem);
+      }
+
+      if (newProblem.schemaVersion === '1.4.0') {
+        newProblem.schemaVersion = '1.4.1';
       }
 
       if (newProblem.schemaVersion === currentSchemaVersion) {
@@ -116,12 +121,14 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
       loadSchema(ajv, 'valueCIEffect.json');
       loadSchema(ajv, 'valueSampleSizeEffect.json');
       loadSchema(ajv, 'eventsSampleSizeEffect.json');
+      loadSchema(ajv, 'rangeEffect.json');
 
       loadSchema(ajv, 'normalDistribution.json');
       loadSchema(ajv, 'tDistribution.json');
       loadSchema(ajv, 'betaDistribution.json');
       loadSchema(ajv, 'gammaDistribution.json');
       loadSchema(ajv, 'survivalDistribution.json');
+      loadSchema(ajv, 'rangeDistribution.json');
       return ajv;
     }
 

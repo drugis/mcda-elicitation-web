@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.4.0",
+  "schemaVersion": "1.4.1",
   "title": "Harmonisation (test all inputs)",
   "criteria": {
     "0b4613f7-61a9-4be8-85e6-1a6283cfbffd": {
@@ -571,7 +571,14 @@
           "type": "exact",
           "value": 13.37,
           "input": {
-            "value": 13.37,
+            "lowerBound": 10,
+            "upperBound": 15,
+            "scale": "percentage"
+          }
+        },
+        "distribution":{
+          "type": "range",
+          "parameters":{
             "lowerBound": 10,
             "upperBound": 15
           }

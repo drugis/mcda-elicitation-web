@@ -192,5 +192,36 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         expect(result.secondParameter).toEqual(15);
       });
     });
+
+    describe('finishRangeEffectCell', function() {
+      it('should create a finished input cell', function() {
+        var performance = {
+          value: 12.5,
+          type: 'exact',
+          input: {
+            lowerBound: 10,
+            upperBound: 15,
+          }
+        };
+        var result = finishInputCellService.finishRangeEffectCell(options, performance);
+        expect(result.firstParameter).toEqual(10);
+        expect(result.secondParameter).toEqual(15);
+      });
+    });
+
+    describe('finishRangeDistributionCell', function() {
+      it('should create a finished input cell', function() {
+        var performance = {
+          type: 'range',
+          parameters: {
+            lowerBound: 10,
+            upperBound: 15,
+          }
+        };
+        var result = finishInputCellService.finishRangeDistributionCell(options, performance);
+        expect(result.firstParameter).toEqual(10);
+        expect(result.secondParameter).toEqual(15);
+      });
+    });
   });
 });

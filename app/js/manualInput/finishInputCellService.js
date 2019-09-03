@@ -87,6 +87,22 @@ define(['angular'], function() {
       return inputCell;
     }
 
+    function finishRangeEffectCell(options, performance) {
+      return {
+        inputParameters: options,
+        firstParameter: performance.input.lowerBound,
+        secondParameter: performance.input.upperBound
+      };
+    }
+
+    function finishRangeDistributionCell(options, performance) {
+      return {
+        inputParameters: options,
+        firstParameter: performance.parameters.lowerBound,
+        secondParameter: performance.parameters.upperBound
+      };
+    }
+
     function finishEmptyCell(options) {
       return {
         inputParameters: options
@@ -106,6 +122,8 @@ define(['angular'], function() {
       finishBetaCell: finishBetaCell,
       finishGammaCell: finishGammaCell,
       finishNormalInputCell: finishNormalInputCell,
+      finishRangeEffectCell: finishRangeEffectCell,
+      finishRangeDistributionCell: finishRangeDistributionCell,
       finishEmptyCell: finishEmptyCell,
       finishTextCell: finishTextCell
     };

@@ -36,6 +36,11 @@ define(['lodash'], function(_) {
       return returnString;
     }
 
+    function rangeToString(cell) {
+      var percentage = isPercentage(cell) ? '%' : '';
+      return '[' + cell.firstParameter + percentage + ', ' + cell.secondParameter + percentage + ']';
+    }
+
     function emptyToString() {
       return 'empty cell';
     }
@@ -45,7 +50,7 @@ define(['lodash'], function(_) {
     }
 
     function isPercentage(cell) {
-      return cell.constraint ===  'percentage';
+      return cell.constraint === 'percentage';
     }
 
     return {
@@ -54,6 +59,7 @@ define(['lodash'], function(_) {
       betaToString: betaToString,
       valueToString: valueToString,
       valueCIToString: valueCIToString,
+      rangeToString: rangeToString,
       emptyToString: emptyToString,
       textToString: textToString
     };

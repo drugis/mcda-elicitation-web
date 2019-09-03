@@ -513,6 +513,105 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
+        it('should make a label for a non-percentage range effect', function(){
+          var performanceTable = [{
+            criterion: 'criterionId8',
+            alternative: 'alternativeId8',
+            dataSource: 'dsId8',
+            performance: {
+              effect: {
+                type: 'exact',
+                value: 15,
+                input: {
+                  lowerBound: 10,
+                  upperBound: 20
+                }
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            dsId8: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId8: {
+                  effectLabel: '[10, 20]',
+                  effectValue: 15,
+                  distributionLabel: '',
+                  hasUncertainty: false
+                }
+              }
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should make a label for a percentage range effect', function(){
+          var performanceTable = [{
+            criterion: 'criterionId8',
+            alternative: 'alternativeId8',
+            dataSource: 'dsId8',
+            performance: {
+              effect: {
+                type: 'exact',
+                value: 0.15,
+                input: {
+                  scale: 'percentage',
+                  lowerBound: 10,
+                  upperBound: 20
+                }
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            dsId8: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId8: {
+                  effectLabel: '[10%, 20%]',
+                  effectValue: 0.15,
+                  distributionLabel: '',
+                  hasUncertainty: false
+                }
+              }
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should make a label for a range distribution', function(){
+          var performanceTable = [{
+            criterion: 'criterionId8',
+            alternative: 'alternativeId8',
+            dataSource: 'dsId8',
+            performance: {
+              distribution: {
+                type: 'range',
+                parameters: {
+                  lowerBound: 10,
+                  upperBound: 20
+                }
+              }
+            }
+          }];
+          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            dsId8: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId8: {
+                  effectLabel: '',
+                  effectValue: '',
+                  distributionLabel: '[10, 20]',
+                  hasUncertainty: true
+                }
+              }
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
         it('should make a label for an empty effect', function() {
           var performanceTable = [{
             criterion: 'criterionId8',

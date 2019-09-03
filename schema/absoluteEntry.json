@@ -41,6 +41,9 @@
             },
             {
               "$ref": "eventsSampleSizeEffect.json#"
+            },
+            {
+              "$ref": "rangeEffect.json"
             }
           ]
         },
@@ -78,6 +81,9 @@
             },
             {
               "$ref": "survivalDistribution.json"
+            },
+            {
+              "$ref": "rangeDistribution.json"
             }
           ]
         }

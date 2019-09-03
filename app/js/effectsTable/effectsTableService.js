@@ -160,9 +160,15 @@ define(['lodash', 'angular'], function(_, angular) {
         return buildGammaLabel(distribution.parameters);
       } else if (distribution.type === 'exact') {
         return distribution.value + '';
+      } else if (distribution.type === 'range') {
+        return buildRangeDistributionLabel(distribution.parameters);
       } else if (distribution.type === 'empty') {
         return distribution.value ? distribution.value : '';
       }
+    }
+
+    function buildRangeDistributionLabel(parameters) {
+      return '[' + significantDigits(parameters.lowerBound) + ', ' + significantDigits(parameters.upperBound) + ']';
     }
 
     function buildStudentsTLabel(parameters) {
@@ -210,17 +216,38 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function buildEffectInputLabel(input) {
       var percentage = input.scale === 'percentage' ? '%' : '';
-      if (input.stdErr) {
+      if (input.hasOwnProperty('stdErr')) {
         return input.value + percentage + ' (' + input.stdErr + percentage + ')';
-      } else if (input.lowerBound && input.upperBound) {
+      } else if (isValueCI(input)) {
         return input.value + percentage + ' (' + input.lowerBound + percentage + '; ' + input.upperBound + percentage + ')';
-      } else if (input.value && input.sampleSize) {
+      } else if (isRange(input)) {
+        return '[' + input.lowerBound + percentage + ', ' + input.upperBound + percentage + ']';
+      } else if (isValueSampleSize(input)) {
         return input.value + percentage + ' / ' + input.sampleSize;
-      } else if (input.events && input.sampleSize) {
+      } else if (isEventsSampleSize(input)) {
         return input.events + ' / ' + input.sampleSize;
       } else {
         return input.value + percentage;
       }
+    }
+
+    function isValueCI(input) {
+      return input.hasOwnProperty('lowerBound') &&
+        input.hasOwnProperty('upperBound') &&
+        input.hasOwnProperty('value');
+    }
+
+    function isRange(input) {
+      return input.hasOwnProperty('lowerBound') &&
+        input.hasOwnProperty('upperBound');
+    }
+
+    function isValueSampleSize(input) {
+      return input.value && input.sampleSize;
+    }
+
+    function isEventsSampleSize(input) {
+      return input.events && input.sampleSize;
     }
 
     function createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales) {
