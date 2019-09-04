@@ -8085,6 +8085,12 @@ li.tabs-title.is-active {
   border-bottom: 1px solid #e6e6e6;
 }
 
+/* line 500, ../../sass-shared/_drugis.scss */
+th.resizableColumn {
+  resize: horizontal;
+  overflow: auto;
+}
+
 /* line 8, ../../sass/_mcda-drugis-base.scss */
 .reveal-modal.mcda-reveal-modal {
   position: fixed;
