@@ -13,7 +13,8 @@ define(['angular', 'lodash'], function(angular, _) {
     var DEFAULT_SETTINGS = {
       calculationMethod: 'median',
       showPercentages: true,
-      effectsDisplay: 'deterministic'
+      effectsDisplay: 'deterministic',
+      hasNoEffects: false
     };
 
     var DEFAULT_TOGGLED_COLUMNS = {
@@ -50,8 +51,20 @@ define(['angular', 'lodash'], function(angular, _) {
       return angular.copy(toggledColumns);
     }
 
-    function getWorkspaceSettings() {
+    function getWorkspaceSettings(performanceTable) {
+      if (performanceTable && !hasEffect(performanceTable)) {
+        if(workspaceSettings.effectsDisplay === 'deterministic'){
+          workspaceSettings.effectsDisplay = 'smaa';
+        }
+        workspaceSettings.hasNoEffects = true;
+      }
       return angular.copy(workspaceSettings);
+    }
+
+    function hasEffect(performanceTable) {
+      return _.some(performanceTable, function(entry) {
+        return entry.performance.effect;
+      });
     }
 
     function saveSettings(newWorkspaceSettings, newToggledColumns) {

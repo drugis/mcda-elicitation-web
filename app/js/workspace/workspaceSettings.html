@@ -22,7 +22,7 @@
       <div class="cell">
         Effects display mode
       </div>
-      <div class="cell">
+      <div class="cell" ng-if="!settings.hasNoEffects">
         <label>
           <input type="radio" ng-model="settings.effectsDisplay" ng-value="'deterministic'">Deterministic - entered
           effects

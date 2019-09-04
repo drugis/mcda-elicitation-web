@@ -15,7 +15,8 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
     var DEFAULT_SETTINGS = {
       calculationMethod: 'median',
       showPercentages: true,
-      effectsDisplay: 'deterministic'
+      effectsDisplay: 'deterministic',
+      hasNoEffects: false
     };
     var workspaceSettingsResourceMock = jasmine.createSpyObj('WorkspaceSettingsResource', ['get', 'put']);
 
@@ -23,7 +24,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
       $provide.value('$stateParams', stateParams);
       $provide.value('WorkspaceSettingsResource', workspaceSettingsResourceMock);
     }));
-    
+
     beforeEach(inject(function($q, $rootScope, WorkspaceSettingsService) {
       q = $q;
       scope = $rootScope;
@@ -57,7 +58,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
         });
       });
 
-      afterEach(function(){
+      afterEach(function() {
         loadResolved = false;
       });
 
@@ -160,6 +161,43 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
         it('should broadcast that the settings have changed.', function() {
           expect(settingsChanged).toBe(true);
         });
+      });
+    });
+
+    describe('getWorkspaceSettings', function() {
+      it('should return workspace settings and change the display to SMAA if there are no effects in the performance table', function() {
+        var performanceTable = [{
+          performance: {
+            distribution: {}
+          }
+        }];
+
+        var result = workspaceSettingsService.getWorkspaceSettings(performanceTable);
+
+        var expectedResult = angular.copy(DEFAULT_SETTINGS);
+        expectedResult.effectsDisplay = 'smaa';
+        expectedResult.hasNoEffects = true;
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return workspace settings and keep the display as "deterministic" if there are effects in the performance table', function() {
+        var performanceTable = [{
+          performance: {
+            effect: {}
+          }
+        }];
+
+        var result = workspaceSettingsService.getWorkspaceSettings(performanceTable);
+
+        var expectedResult = DEFAULT_SETTINGS;
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return workspace settings and keep the display as "deterministic" if there is no performance table', function() {
+        var result = workspaceSettingsService.getWorkspaceSettings();
+        
+        var expectedResult = DEFAULT_SETTINGS;
+        expect(result).toEqual(expectedResult);
       });
     });
 
