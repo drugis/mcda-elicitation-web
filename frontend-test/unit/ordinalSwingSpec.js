@@ -1,5 +1,5 @@
 'use strict';
-/* global exampleProblem */
+/* global ordinalTestProblem */
 define([
   'lodash',
   'angular',
@@ -61,9 +61,9 @@ define([
       }
 
       beforeEach(inject(function($controller, $rootScope, TaskDependencies) {
-        $scope1 = initializeScope($controller, $rootScope, TaskDependencies, exampleProblem());
+        $scope1 = initializeScope($controller, $rootScope, TaskDependencies, ordinalTestProblem());
 
-        var problem = exampleProblem();
+        var problem = ordinalTestProblem();
         problem.criteria.Bleed.dataSources[0].pvf.direction = 'increasing';
         $scope2 = initializeScope($controller, $rootScope, TaskDependencies, problem);
       }));
@@ -178,7 +178,7 @@ define([
             type: 'linear',
             direction: 'decreasing'
           },
-          scale: [-Infinity, Infinity],
+          scale: [null, null],
           unitOfMeasurement: {
             label: '',
             type: 'custom'

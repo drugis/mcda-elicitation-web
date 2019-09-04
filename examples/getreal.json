@@ -9,18 +9,21 @@
         {
           "pvf": {
             "range": [
-              0.45,
-              0.65
+              45,
+              65
             ],
             "type": "linear",
             "direction": "increasing"
           },
           "scale": [
             0,
-            1
+            100
           ],
           "id": "c4607341-6760-4653-8587-7bd4847f0e4e",
-          "unitOfMeasurement": "%"
+          "unitOfMeasurement": {
+            "type": "percentage",
+            "label": "%"
+          }
         }
       ],
       "isFavorable": true
@@ -33,17 +36,20 @@
           "pvf": {
             "range": [
               0,
-              0.8
+              80
             ],
             "type": "linear",
             "direction": "decreasing"
           },
           "scale": [
             0,
-            1
+            100
           ],
           "id": "c27f66c0-8f2b-4592-98d1-29719d2f0242",
-          "unitOfMeasurement": "%"
+          "unitOfMeasurement": {
+            "type": "percentage",
+            "label": "%"
+          }
         }
       ],
       "isFavorable": false
@@ -56,17 +62,20 @@
           "pvf": {
             "range": [
               0,
-              0.4
+              40
             ],
             "type": "linear",
             "direction": "decreasing"
           },
           "scale": [
             0,
-            1
+            100
           ],
           "id": "a9e5b4fd-bae8-4d1a-b44d-608f5ebac80c",
-          "unitOfMeasurement": "%"
+          "unitOfMeasurement": {
+            "type": "percentage",
+            "label": "%"
+          }
         }
       ],
       "isFavorable": false
@@ -85,9 +94,13 @@
       "alternative": "alt1",
       "criterion": "OS",
       "performance": {
-        "distribution": {
+        "effect": {
           "type": "exact",
-          "value": 0.6
+          "value": 0.6,
+          "input": {
+            "scale": "percentage",
+            "value": 60
+          }
         }
       },
       "dataSource": "c4607341-6760-4653-8587-7bd4847f0e4e"
@@ -96,9 +109,13 @@
       "alternative": "alt2",
       "criterion": "OS",
       "performance": {
-        "distribution": {
+        "effect": {
           "type": "exact",
-          "value": 0.5
+          "value": 0.5,
+          "input": {
+            "scale": "percentage",
+            "value": 50
+          }
         }
       },
       "dataSource": "c4607341-6760-4653-8587-7bd4847f0e4e"
@@ -107,9 +124,13 @@
       "alternative": "alt1",
       "criterion": "severe",
       "performance": {
-        "distribution": {
+        "effect": {
           "type": "exact",
-          "value": 0.6
+          "value": 0.6,
+          "input": {
+            "scale": "percentage",
+            "value": 60
+          }
         }
       },
       "dataSource": "c27f66c0-8f2b-4592-98d1-29719d2f0242"
@@ -118,9 +139,13 @@
       "alternative": "alt2",
       "criterion": "severe",
       "performance": {
-        "distribution": {
+        "effect": {
           "type": "exact",
-          "value": 0.2
+          "value": 0.2,
+          "input": {
+            "scale": "percentage",
+            "value": 20
+          }
         }
       },
       "dataSource": "c27f66c0-8f2b-4592-98d1-29719d2f0242"
@@ -129,9 +154,13 @@
       "alternative": "alt1",
       "criterion": "moderate",
       "performance": {
-        "distribution": {
+        "effect": {
           "type": "exact",
-          "value": 0.35
+          "value": 0.35,
+          "input": {
+            "scale": "percentage",
+            "value": 35
+          }
         }
       },
       "dataSource": "a9e5b4fd-bae8-4d1a-b44d-608f5ebac80c"
@@ -140,14 +169,18 @@
       "alternative": "alt2",
       "criterion": "moderate",
       "performance": {
-        "distribution": {
+        "effect": {
           "type": "exact",
-          "value": 0.5
+          "value": 0.05,
+          "input": {
+            "scale": "percentage",
+            "value": 5
+          }
         }
       },
       "dataSource": "a9e5b4fd-bae8-4d1a-b44d-608f5ebac80c"
     }
   ],
   "preferences": {},
-  "schemaVersion": "1.3.4"
+  "schemaVersion": "1.4.1"
 }

@@ -2,14 +2,12 @@
 define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
     'intervalHull',
-    'numberFilter',
-    'WorkspaceSettingsService'
+    'numberFilter'
   ];
 
   var ScaleRangeService = function(
     intervalHull,
-    numberFilter,
-    WorkspaceSettingsService
+    numberFilter
   ) {
     function log10(x) {
       return Math.log(x) / Math.log(10);

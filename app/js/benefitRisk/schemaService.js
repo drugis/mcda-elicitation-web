@@ -319,13 +319,49 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
             type: getUnitType(dataSource),
             label: dataSource.unitOfMeasurement ? dataSource.unitOfMeasurement : ''
           };
-          newDataSource.scale = updateNullScales(dataSource.scale);
+          newDataSource.scale = getScale(dataSource.scale);
           return newDataSource;
         });
         return newCriterion;
       });
+
+      newProblem.performanceTable = updatePerformanceTable140(newProblem);
       newProblem.schemaVersion = '1.4.0';
       return newProblem;
+    }
+
+    function updatePerformanceTable140(problem) {
+      var dataSources = getDataSourcesById(problem.criteria);
+      return _.map(problem.performanceTable, _.partial(getUpToDateEntry, dataSources));
+    }
+
+    function getUpToDateEntry(dataSources, entry) {
+      if (doesEntryNeedUpdating(entry, dataSources[entry.dataSource])) {
+        entry.performance.distribution.input = {
+          value: entry.performance.distribution.value, 
+          scale: 'percentage'
+        };
+        entry.performance.distribution.value = entry.performance.distribution.value / 100;
+      }
+      return entry;
+    }
+
+    function getDataSourcesById(criteria) {
+      return _(criteria)
+        .map(function(criterion) {
+          return criterion.dataSources;
+        }, [])
+        .flatten()
+        .keyBy('id')
+        .value();
+    }
+
+    function doesEntryNeedUpdating(entry, dataSource) {
+      return entry.dataSource === dataSource.id &&
+        dataSource.unitOfMeasurement.type === 'percentage' &&
+        !entry.performance.effect &&
+        entry.performance.distribution.type === 'exact' &&
+        !entry.performance.distribution.input;
     }
 
     function getUnitType(dataSource) {
@@ -338,16 +374,9 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
       }
     }
 
-    function updateNullScales(scale) {
+    function getScale(scale) {
       if (scale) {
-        var newScale = angular.copy(scale);
-        if (scale[0] === null) {
-          newScale[0] = -Infinity;
-        }
-        if (scale[1] === null) {
-          newScale[1] = Infinity;
-        }
-        return newScale;
+        return scale;
       } else {
         return [-Infinity, Infinity];
       }

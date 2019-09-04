@@ -34,6 +34,20 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
         expect(result).toEqual(workspace);
       });
 
+      it('should update a workspace of version 1.3.4 to the current version and dividing the distribution exact value by 100 if unit of measurement is percentage', function() {
+        var workspace = {
+          problem: exampleProblem134()
+        };
+        var result = schemaService.updateWorkspaceToCurrentSchema(workspace);
+        var expectedResult = angular.copy(workspace);
+        expectedResult.problem.criteria.c1.dataSources[0].unitOfMeasurement = { type: 'percentage', label: '%' };
+        expectedResult.problem.criteria.c2.dataSources[0].unitOfMeasurement = { type: 'decimal', label: 'Proportion' };
+        expectedResult.problem.performanceTable[0].performance.distribution.value = 0.5;
+        expectedResult.problem.performanceTable[0].performance.distribution.input = { value: 50, scale: 'percentage' };
+        expectedResult.problem.schemaVersion = currentSchemaVersion;
+        expect(result).toEqual(expectedResult);
+      });
+
       it('should update a workspace without schemaversion to the current version', function() {
         var workspace = {
           problem: {
