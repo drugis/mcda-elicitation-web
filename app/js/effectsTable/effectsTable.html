@@ -16,21 +16,23 @@
     <table class="full-width effects-table" id="effectstable">
       <thead>
         <tr>
-          <th class="resizableColumn" ng-show="toggledColumns['criteria']">Criterion
-            <inline-help help-key="criterion"></inline-help>
+          <th class="resizableColumn" ng-show="toggledColumns['criteria']">
+            Criterion <inline-help help-key="criterion"></inline-help>
           </th>
           <th class="resizableColumn" ng-show="toggledColumns['description']">Description</th>
-          <th class="resizableColumn" ng-show="toggledColumns['units']">Units
-            <inline-help help-key="criterion-unit"></inline-help>
+          <th class="resizableColumn" ng-show="toggledColumns['units']">
+            Units <inline-help help-key="criterion-unit"></inline-help>
           </th>
-          <th class="resizableColumn" class="text-center" ng-repeat="alternative in alternatives" style="min-width: 120px">
-            {{alternative.title}}</th>
-          <th class="resizableColumn" ng-show="toggledColumns['strength']">Strength of evidence / Uncertainties
-            <inline-help help-key="strength-of-evidence"></inline-help>
+          <th class="resizableColumn" class="text-center" ng-repeat="alternative in alternatives"
+            style="min-width: 120px">
+            {{alternative.title}}
+          </th>
+          <th class="resizableColumn" ng-show="toggledColumns['strength']">
+            Strength of evidence / Uncertainties <inline-help help-key="strength-of-evidence"></inline-help>
             <inline-help help-key="uncertainties"></inline-help>
           </th>
-          <th class="resizableColumn" ng-show="toggledColumns['references']">References
-            <inline-help help-key="criterion-source"></inline-help>
+          <th class="resizableColumn" ng-show="toggledColumns['references']">
+            References <inline-help help-key="criterion-source"></inline-help>
           </th>
         </tr>
       </thead>

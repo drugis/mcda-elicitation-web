@@ -269,139 +269,138 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         id: 'alternative1',
         oldId: 'alternative1Oldid'
       }];
-
-      it('should create a problem, ready to go to the workspace, removing old ids', function() {
-        var criteria = [{
-          title: 'favorable criterion',
-          description: 'some crit description',
-          isFavorable: true,
-          id: 'criterion1id',
-          oldid: 'criterion1oldId',
-          scale: [0, 1],
-          omitThis: 'yech',
-          dataSources: [{
-            unitOfMeasurement: {
-              value: 'particles',
-              lowerBound: -Infinity,
-              upperBound: Infinity,
-              selectedOption: {
-                type: 'custom'
-              }
-            },
-            id: 'ds1id',
-            oldId: 'ds1oldId'
-          }]
-        }, {
-          title: 'unfavorable criterion',
-          description: 'some crit description',
-          isFavorable: false,
-          id: 'criterion2id',
-          dataSources: [{
-            unitOfMeasurement: {
-              value: '%',
-              lowerBound: 0,
-              upperBound: 100,
-              selectedOption: {
-                type: 'percentage'
-              }
-            },
-            id: 'ds2id'
-          }]
-        }, {
-          title: 'dichotomousDecimalSampleSize',
-          id: 'criterion3id',
-          isFavorable: false,
-          dataSources: [{
-            unitOfMeasurement: {
-              lowerBound: -Infinity,
-              upperBound: Infinity,
-              value: '',
-              selectedOption: {
-                type: 'custom'
-              }
-            },
-            id: 'ds3id',
-          }]
-        }];
-        var inputData = {
-          effect: {
-            ds1id: {
-              alternative1: {
-                firstParameter: 10,
-                inputParameters: {
-                  id: 'value',
-                  buildPerformance: function() {
-                    return {};
-                  }
-                }
-              }
-            },
-            ds2id: {
-              alternative1: {
-                firstParameter: 20,
-                inputParameters: {
-                  id: 'value',
-                  buildPerformance: function() {
-                    return {};
-                  }
-                }
-              }
-            },
-            ds3id: {
-              alternative1: {
-                firstParameter: 0.5,
-                secondParameter: 20,
-                inputParameters: {
-                  id: 'valueSampleSize',
-                  buildPerformance: function() {
-                    return {};
-                  }
+      var criteria = [{
+        title: 'favorable criterion',
+        description: 'some crit description',
+        isFavorable: true,
+        id: 'criterion1id',
+        oldid: 'criterion1oldId',
+        scale: [0, 1],
+        omitThis: 'yech',
+        dataSources: [{
+          unitOfMeasurement: {
+            value: 'particles',
+            lowerBound: -Infinity,
+            upperBound: Infinity,
+            selectedOption: {
+              type: 'custom'
+            }
+          },
+          id: 'ds1id',
+          oldId: 'ds1oldId'
+        }]
+      }, {
+        title: 'unfavorable criterion',
+        description: 'some crit description',
+        isFavorable: false,
+        id: 'criterion2id',
+        dataSources: [{
+          unitOfMeasurement: {
+            value: '%',
+            lowerBound: 0,
+            upperBound: 100,
+            selectedOption: {
+              type: 'percentage'
+            }
+          },
+          id: 'ds2id'
+        }]
+      }, {
+        title: 'dichotomousDecimalSampleSize',
+        id: 'criterion3id',
+        isFavorable: false,
+        dataSources: [{
+          unitOfMeasurement: {
+            lowerBound: -Infinity,
+            upperBound: Infinity,
+            value: '',
+            selectedOption: {
+              type: 'custom'
+            }
+          },
+          id: 'ds3id',
+        }]
+      }];
+      var inputData = {
+        effect: {
+          ds1id: {
+            alternative1: {
+              firstParameter: 10,
+              inputParameters: {
+                id: 'value',
+                buildPerformance: function() {
+                  return {};
                 }
               }
             }
           },
-          distribution: {
-            ds1id: {
-              alternative1: {
-                firstParameter: 10,
-                secondParameter: 20,
-                inputParameters: {
-                  id: 'normal',
-                  buildPerformance: function() {
-                    return {};
-                  }
+          ds2id: {
+            alternative1: {
+              firstParameter: 20,
+              inputParameters: {
+                id: 'value',
+                buildPerformance: function() {
+                  return {};
                 }
               }
-            },
-            ds2id: {
-              alternative1: {
-                firstParameter: 20,
-                secondParameter: 20,
-                inputParameters: {
-                  id: 'beta',
-                  buildPerformance: function() {
-                    return {};
-                  }
-                }
-              }
-            },
-            ds3id: {
-              alternative1: {
-                firstParameter: 0.5,
-                secondParameter: 20,
-                inputParameters: {
-                  id: 'gamma',
-                  buildPerformance: function() {
-                    return {};
-                  }
+            }
+          },
+          ds3id: {
+            alternative1: {
+              firstParameter: 0.5,
+              secondParameter: 20,
+              inputParameters: {
+                id: 'valueSampleSize',
+                buildPerformance: function() {
+                  return {};
                 }
               }
             }
           }
-        };
-        var useFavorability = true;
-        var result = manualInputService.createProblem(criteria, alternatives, title, description, inputData, useFavorability);
-        var expectedResult = {
+        },
+        distribution: {
+          ds1id: {
+            alternative1: {
+              firstParameter: 10,
+              secondParameter: 20,
+              inputParameters: {
+                id: 'normal',
+                buildPerformance: function() {
+                  return {};
+                }
+              }
+            }
+          },
+          ds2id: {
+            alternative1: {
+              firstParameter: 20,
+              secondParameter: 20,
+              inputParameters: {
+                id: 'beta',
+                buildPerformance: function() {
+                  return {};
+                }
+              }
+            }
+          },
+          ds3id: {
+            alternative1: {
+              firstParameter: 0.5,
+              secondParameter: 20,
+              inputParameters: {
+                id: 'gamma',
+                buildPerformance: function() {
+                  return {};
+                }
+              }
+            }
+          }
+        }
+      };
+      var expectedResult; 
+
+      beforeEach(function(){
+        expectedResult = {
           title: title,
           schemaVersion: '1.2.2',
           description: description,
@@ -409,7 +408,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             criterion1id: {
               title: 'favorable criterion',
               description: 'some crit description',
-              isFavorable: true,
               dataSources: [{
                 id: 'ds1id',
                 unitOfMeasurement: {
@@ -422,7 +420,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             criterion2id: {
               title: 'unfavorable criterion',
               description: 'some crit description',
-              isFavorable: false,
               dataSources: [{
                 id: 'ds2id',
                 unitOfMeasurement: {
@@ -434,7 +431,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             },
             criterion3id: {
               title: 'dichotomousDecimalSampleSize',
-              isFavorable: false,
               dataSources: [{
                 id: 'ds3id',
                 unitOfMeasurement: {
@@ -476,6 +472,24 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             }
           }]
         };
+      });
+
+      it('should create a problem, ready to go to the workspace, removing old ids', function() {
+        expectedResult.criteria.criterion1id.isFavorable = true;
+        expectedResult.criteria.criterion2id.isFavorable = false;
+        expectedResult.criteria.criterion3id.isFavorable = false;
+        var useFavorability = true;
+
+        var result = manualInputService.createProblem(criteria, alternatives, title, description, inputData, useFavorability);
+
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should not put favorability on problems for which the state does not use it', function(){
+        var useFavorability = false;
+
+        var result = manualInputService.createProblem(criteria, alternatives, title, description, inputData, useFavorability);
+
         expect(result).toEqual(expectedResult);
       });
     });

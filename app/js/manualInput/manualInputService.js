@@ -61,8 +61,8 @@ define(['lodash', 'angular'], function(_, angular) {
       return angular.copy(InputKnowledgeService.getOptions(inputType));
     }
 
-    function createProblem(criteria, alternatives, title, description, inputData) {
-      var newCriteria = buildCriteria(criteria);
+    function createProblem(criteria, alternatives, title, description, inputData, useFavorability) {
+      var newCriteria = buildCriteria(criteria, useFavorability);
       return {
         schemaVersion: currentSchemaVersion,
         title: title,
@@ -206,13 +206,15 @@ define(['lodash', 'angular'], function(_, angular) {
       });
     }
 
-    function buildCriteria(criteria) {
+    function buildCriteria(criteria, useFavorability) {
       var newCriteria = _.map(criteria, function(criterion) {
         var newCriterion = _.pick(criterion, [
           'title',
-          'description',
-          'isFavorable'
+          'description'
         ]);
+        if (useFavorability){
+          newCriterion.isFavorable = criterion.isFavorable;
+        }
         newCriterion.dataSources = _.map(criterion.dataSources, buildDataSource);
         return [criterion.id, newCriterion];
       });
