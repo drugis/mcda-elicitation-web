@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "1.3.4",
+  "schemaVersion": "1.4.1",
   "title": "Lixisenatide simplified",
   "description": "Assessment of lixisenatide for the treatment of adults with type 2 diabetes mellitus to achieve glycaemic control in patients not adequately controlled on oral antidiabetics.",
   "criteria": {
@@ -15,7 +15,10 @@
             null,
             null
           ],
-          "unitOfMeasurement": "Percentage point"
+          "unitOfMeasurement": {
+            "label": "Percentage point",
+            "type": "custom"
+          }
         },
         {
           "id": "a68b474c-e9a6-4d55-8127-2955cb287699",
@@ -24,7 +27,10 @@
             null,
             null
           ],
-          "unitOfMeasurement": "Percentage point"
+          "unitOfMeasurement": {
+            "label": "Percentage point",
+            "type": "custom"
+          }
         },
         {
           "id": "10bb124a-bdb1-4c7b-9765-55a728c22037",
@@ -33,7 +39,10 @@
             null,
             null
           ],
-          "unitOfMeasurement": "Percentage point"
+          "unitOfMeasurement": {
+            "label": "Percentage point",
+            "type": "custom"
+          }
         }
       ]
     },
@@ -47,8 +56,12 @@
           "source": "Pooled data from all phase 2/3 controlled studies.",
           "scale": [
             0,
-            1
-          ]
+            100
+          ],
+          "unitOfMeasurement": {
+            "label": "%",
+            "type": "percentage"
+          }
         }
       ]
     },
@@ -62,24 +75,36 @@
           "source": "Pooled data from EFC6014 and EFC10743",
           "scale": [
             0,
-            1
-          ]
+            100
+          ],
+          "unitOfMeasurement": {
+            "label": "%",
+            "type": "percentage"
+          }
         },
         {
           "id": "d1687834-dcfe-40ad-a090-0985cea33752",
           "source": "EFC6015",
           "scale": [
             0,
-            1
-          ]
+            100
+          ],
+          "unitOfMeasurement": {
+            "label": "%",
+            "type": "percentage"
+          }
         },
         {
           "id": "cf2b6919-6a3b-4eaf-9b32-aadec41937d9",
           "source": "EFC6019",
           "scale": [
             0,
-            1
-          ]
+            100
+          ],
+          "unitOfMeasurement": {
+            "label": "%",
+            "type": "percentage"
+          }
         }
       ]
     }
