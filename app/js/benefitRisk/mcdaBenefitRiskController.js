@@ -82,7 +82,7 @@ define(['lodash', 'angular'], function(_, angular) {
     });
     $scope.$on('elicit.resultsAccessible', function(event, scenario) {
       $scope.scenario = scenario;
-      updateAggregateState(scenario);
+      updateBaseAggregateStates(scenario);
       updateState();
     });
 
@@ -94,8 +94,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function initState(scenario) {
       $scope.scenario = scenario;
-      updateAggregateState(scenario);
-
+      updateBaseAggregateStates(scenario);
       updateState();
       $scope.hasMissingValues = WorkspaceService.checkForMissingValuesInPerformanceTable($scope.aggregateState.problem.performanceTable);
       updateTaskAccessibility();
@@ -109,13 +108,12 @@ define(['lodash', 'angular'], function(_, angular) {
         $scope.workspace.scales.observed = $scope.workspace.scales.base;
         $scope.aggregateState = $scope.dePercentifiedBaseState;
       }
-      $scope.hasNoStochasticResults = WorkspaceService.hasNoStochasticResults($scope.aggregateState);
       updateScenarios();
     }
 
-    function updateAggregateState(scenario){
-      $scope.percentifiedBaseState = WorkspaceService.buildAggregateState($scope.percentifiedBaseState.problem, currentSubProblem, scenario);
-      $scope.dePercentifiedBaseState = WorkspaceService.buildAggregateState($scope.dePercentifiedBaseState.problem, currentSubProblem, scenario);
+    function updateBaseAggregateStates(scenario){
+      $scope.percentifiedBaseState = WorkspaceService.percentifyCriteria(WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario));
+      $scope.dePercentifiedBaseState = WorkspaceService.dePercentifyCriteria(WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario));
     }
 
 

@@ -104,15 +104,24 @@ define(['lodash', 'angular'], function(_, angular) {
           type: 'percentage'
         };
         if (newDataSource.pvf) {
-          if (newDataSource.pvf.range) {
-            newDataSource.pvf.range = _.map(newDataSource.pvf.range, times100);
-          }
-          if (newDataSource.pvf.cutoffs) {
-            newDataSource.pvf.cutoffs = _.map(newDataSource.pvf.cutoffs, times100);
-          }
+          newDataSource.pvf = percentifyPVF(newDataSource.pvf);
+        }
+      } else if (dataSource.unitOfMeasurement.type === 'percentage') {
+        if (newDataSource.pvf) {
+          newDataSource.pvf = percentifyPVF(newDataSource.pvf);
         }
       }
       return newDataSource;
+    }
+    function percentifyPVF(pvf) {
+      var newPVF = angular.copy(pvf);
+      if (pvf.range) {
+        newPVF.range = _.map(pvf.range, times100);
+      }
+      if (pvf.cutoffs) {
+        newPVF.cutoffs = _.map(pvf.cutoffs, times100);
+      }
+      return newPVF;
     }
 
     function dePercentifyCriteria(baseState) {
@@ -132,14 +141,6 @@ define(['lodash', 'angular'], function(_, angular) {
           type: 'decimal',
           label: 'Proportion'
         };
-        if (newDataSource.pvf) {
-          if (newDataSource.pvf.range) {
-            newDataSource.pvf.range = _.map(newDataSource.pvf.range, div100);
-          }
-          if (newDataSource.pvf.cutoffs) {
-            newDataSource.pvf.cutoffs = _.map(newDataSource.pvf.cutoffs, div100);
-          }
-        }
       }
       return newDataSource;
     }
@@ -147,11 +148,6 @@ define(['lodash', 'angular'], function(_, angular) {
     function times100(value) {
       if (value === null) { return; } //prevent empty cells from becoming 0
       return significantDigits(value * 100, 1);
-    }
-
-    function div100(value) {
-      if (value === null) { return; }
-      return significantDigits(value / 100, 1);
     }
 
     function reduceProblem(problem) {
@@ -169,8 +165,8 @@ define(['lodash', 'angular'], function(_, angular) {
         problem: mergeBaseAndSubProblem(baseProblem, subProblem.definition)
       }, scenario.state);
       newState.problem.preferences = scenario.state.prefs;
-      newState.problem.criteria = _.mapValues(newState.problem.criteria, function(criterion, key) {
-        return _.merge({}, criterion, _.omit(baseProblem.criteria[key], ['pvf', 'dataSources']));
+      newState.problem.criteria = _.mapValues(newState.problem.criteria, function(criterion, criterionId) {
+        return _.merge({}, criterion, _.omit(baseProblem.criteria[criterionId], ['pvf', 'dataSources']));
         // omit because we don't want the base problem pvf to overwrite the current one
       });
       newState.problem.alternatives = _.mapValues(newState.problem.alternatives, function(alternative, key) {
@@ -349,7 +345,7 @@ define(['lodash', 'angular'], function(_, angular) {
       });
     }
 
-    function hasPVFDirection(criterion){
+    function hasPVFDirection(criterion) {
       return !criterion.dataSources[0].pvf || !criterion.dataSources[0].pvf.direction;
     }
     /*

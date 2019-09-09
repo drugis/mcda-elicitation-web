@@ -240,7 +240,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
           expect(scope.workspace.scales.base).toBe(observedScales);
           expect(scope.workspace.scales.basePercentified).toBe(percentifiedScales);
           expect(scope.aggregateState).toEqual(baseAggregateState);
-          expect(scope.percentifiedBaseState).toEqual(baseAggregateState);
+          expect(scope.percentifiedBaseState).toEqual(stateWithPercentifiedCriteria);
           expect(scope.dePercentifiedBaseState).toEqual(baseAggregateState);
           done();
         });

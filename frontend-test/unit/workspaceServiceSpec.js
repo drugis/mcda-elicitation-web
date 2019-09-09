@@ -1178,7 +1178,7 @@ define([
                   },
                   scale: [0, 100],
                   pvf: {
-                    range: [30, 40]
+                    range: [0.3, 0.4]
                   }
                 }]
               },
@@ -1294,7 +1294,7 @@ define([
                 }, {
                   scale: [0, 100],
                   pvf: {
-                    range: [30, 40]
+                    range: [0.3, 0.4]
                   },
                   unitOfMeasurement: {
                     label: '%',
