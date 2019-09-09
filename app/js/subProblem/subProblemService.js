@@ -1,10 +1,14 @@
 'use strict';
 define(['lodash', 'angular'], function(_) {
-  var dependencies = [];
-  var SubProblemService = function() {
+  var dependencies = [
+    'getDataSourcesById'
+  ];
+  var SubProblemService = function(
+    getDataSourcesById
+  ) {
     function createSubProblemCommand(subProblemState, choices, problem) {
       return {
-        definition: createDefinition(subProblemState, choices),
+        definition: createDefinition(subProblemState, choices, problem),
         title: subProblemState.title,
         scenarioState: createDefaultScenarioState(problem, subProblemState)
       };
@@ -16,13 +20,44 @@ define(['lodash', 'angular'], function(_) {
       };
     }
 
-    function createDefinition(subProblemState, scales) {
+    function createDefinition(subProblemState, scales, problem) {
+      var normalizedScales = normalizeScales(scales, problem);
       return {
-        ranges: createRanges(scales, subProblemState.dataSourceInclusions),
+        ranges: createRanges(normalizedScales, subProblemState.dataSourceInclusions),
         excludedCriteria: _.keys(_.omitBy(subProblemState.criterionInclusions)), // values are boolean
         excludedAlternatives: _.keys(_.omitBy(subProblemState.alternativeInclusions)),
         excludedDataSources: _.keys(_.omitBy(subProblemState.dataSourceInclusions))
       };
+    }
+
+    function normalizeScales(scales, problem) {
+      var dataSources = getDataSourcesById(problem.criteria);
+      return _.mapValues(scales, function(scaleChoice, dataSourceId) {
+        if(dataSources[dataSourceId] && dataSources[dataSourceId].unitOfMeasurement.type === 'percentage'){
+          return {
+            from: scaleChoice.from / 100,
+            to: scaleChoice.to / 100
+          };
+        } else{
+          return scaleChoice;
+        }
+      });
+    }
+
+    function createRanges(scales, includedDataSources) {
+      return _(scales)
+        .map(function(scale, dataSourceId) {
+          return [dataSourceId, {
+            pvf: {
+              range: [scale.from, scale.to]
+            }
+          }];
+        })
+        .filter(function(scale) {
+          return _.includes(_.keys(_.pickBy(includedDataSources)), scale[0]);
+        })
+        .fromPairs()
+        .value();
     }
 
     function determineBaseline(performanceTable, alternatives) {
@@ -75,22 +110,6 @@ define(['lodash', 'angular'], function(_) {
         accum[id] = isIncluded;
         return accum;
       }, {});
-    }
-
-    function createRanges(scales, includedDataSources) {
-      return _(scales)
-        .map(function(scale, dataSourceId) {
-          return [dataSourceId, {
-            pvf: {
-              range: [scale.from, scale.to]
-            }
-          }];
-        })
-        .filter(function(scale) {
-          return _.includes(_.keys(_.pickBy(includedDataSources)), scale[0]);
-        })
-        .fromPairs()
-        .value();
     }
 
     function areValuesMissingInEffectsTable(subProblemState, scales, performanceTable) {
@@ -173,7 +192,7 @@ define(['lodash', 'angular'], function(_) {
       return _(criteria)
         .map(function(criterion) {
           return _.map(criterion.dataSources, function(dataSource) {
-            return [dataSource.id, criterion.id];
+            return [dataSource.id, criterion];
           });
         })
         .flatten()
@@ -219,12 +238,12 @@ define(['lodash', 'angular'], function(_) {
       });
     }
 
-    function areTooManyDataSourcesIncluded(criteria){
+    function areTooManyDataSourcesIncluded(criteria) {
       return _.some(criteria, function(criterion) {
         return criterion.dataSources.length > 1;
       });
     }
-    
+
     return {
       createSubProblemCommand: createSubProblemCommand,
       determineBaseline: determineBaseline,

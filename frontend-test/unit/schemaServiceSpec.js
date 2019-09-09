@@ -1,6 +1,11 @@
 'use strict';
-define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(angular) {
-
+define([
+  'angular',
+  'lodash',
+  'angular-mocks',
+  'mcda/benefitRisk/benefitRisk'
+], function(angular, _) {
+  var getDataSourcesByIdMock = jasmine.createSpy();
   var generateUuidMock = function() {
     return 'uuid';
   };
@@ -11,6 +16,7 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
     beforeEach(angular.mock.module('elicit.benefitRisk', function($provide) {
       $provide.value('generateUuid', generateUuidMock);
       $provide.value('currentSchemaVersion', currentSchemaVersion);
+      $provide.value('getDataSourcesById', getDataSourcesByIdMock);
     }));
 
     beforeEach(inject(function(SchemaService) {
@@ -26,6 +32,10 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
     };
 
     describe('updateWorkspaceToCurrentSchema (includes updateProblemToCurrentSchema)', function() {
+      beforeEach(function() {
+        getDataSourcesByIdMock.calls.reset();
+      });
+
       it('should do nothing to a workspace of the current version', function() {
         var workspace = {
           problem: exampleProblem()
@@ -35,6 +45,22 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
       });
 
       it('should update a workspace of version 1.3.4 to the current version and dividing the distribution exact value by 100 if unit of measurement is percentage', function() {
+        const dataSourcesById = {
+          d1: _.merge(exampleProblem134().criteria.c1.dataSources[0], {
+            unitOfMeasurement: {
+              type: 'percentage',
+              label: '%'
+            }
+          }),
+          d2: _.merge(exampleProblem134().criteria.c2.dataSources[0], {
+            unitOfMeasurement: {
+              type: 'decimal',
+              label: 'Proportion'
+            }
+          })
+        };
+        getDataSourcesByIdMock.and.returnValue(dataSourcesById);
+
         var workspace = {
           problem: exampleProblem134()
         };
@@ -49,6 +75,10 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
       });
 
       it('should update a workspace without schemaversion to the current version', function() {
+        const dataSourcesById = {
+          uuid: {}
+        };
+        getDataSourcesByIdMock.and.returnValue(dataSourcesById);
         var workspace = {
           problem: {
             title: 'problem title',
@@ -176,6 +206,10 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
       });
 
       it('should update a workspace of version 1.0.0 to the current version', function() {
+        const dataSourcesById = {
+          uuid: {}
+        };
+        getDataSourcesByIdMock.and.returnValue(dataSourcesById);
         var workspace = {
           problem: {
             title: 'problem title',
@@ -311,6 +345,12 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
       });
 
       it('should update a problem of schema version 1.1.0 to the current version', function() {
+        const dataSourcesById = {
+          proxDvtDS: exampleProblem().criteria['Prox DVT'].dataSources[0],
+          distDvtDS: exampleProblem().criteria['Dist DVT'].dataSources[0],
+          bleedDS: exampleProblem().criteria.Bleed.dataSources[0],
+        };
+        getDataSourcesByIdMock.and.returnValue(dataSourcesById);
         var workspace = {
           problem: exampleProblem110()
         };
@@ -322,6 +362,12 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
       });
 
       it('should update a problem of schema version 1.2.2 to the current version', function() {
+        const dataSourcesById = {
+          proxDvtDS: exampleProblem().criteria['Prox DVT'].dataSources[0],
+          distDvtDS: exampleProblem().criteria['Dist DVT'].dataSources[0],
+          bleedDS: exampleProblem().criteria.Bleed.dataSources[0],
+        };
+        getDataSourcesByIdMock.and.returnValue(dataSourcesById);
         var workspace = {
           problem: exampleProblem122()
         };
@@ -334,6 +380,10 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
     });
 
     describe('isInvalidSchema', function() {
+      beforeEach(function() {
+        getDataSourcesByIdMock.calls.reset();
+      });
+
       it('should return false if the JSON file passed to the function is valid according to the schema', function() {
         var inputJSON = require('./test.json');
         var result = schemaService.updateProblemToCurrentSchema(inputJSON);
@@ -342,9 +392,36 @@ define(['angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], function(an
 
       it('should return false if the JSON file passed to the function contains relative data', function() {
         var inputJSON = require('./hansen-updated.json');
+        const dataSourcesById = createHansenDataSourcesById(inputJSON);
+        getDataSourcesByIdMock.and.returnValue(dataSourcesById);
         var result = schemaService.updateProblemToCurrentSchema(inputJSON);
         expect(result.isValid).toBeTruthy();
       });
+
+      function createHansenDataSourcesById(inputJSON) {
+        var dataSourcesById = {
+        };
+        var proportionUnit = {
+          unitOfMeasurement: {
+            type: 'decimal',
+            label: 'Proportion'
+          }
+        };
+        var criteria = inputJSON.criteria;
+        dataSourcesById[criteria['HAM-D'].dataSources[0].id] =
+          _.merge(dataSourcesById[criteria['HAM-D'].dataSources[0].id], proportionUnit);
+        dataSourcesById[criteria.Diarrhea.dataSources[0].id] =
+          _.merge(dataSourcesById[criteria.Diarrhea.dataSources[0].id], proportionUnit);
+        dataSourcesById[criteria.Dizziness.dataSources[0].id] =
+          _.merge(dataSourcesById[criteria.Dizziness.dataSources[0].id], proportionUnit);
+        dataSourcesById[criteria.Headache.dataSources[0].id] =
+          _.merge(dataSourcesById[criteria.Headache.dataSources[0].id], proportionUnit);
+        dataSourcesById[criteria.Insomnia.dataSources[0].id] =
+          _.merge(dataSourcesById[criteria.Insomnia.dataSources[0].id], proportionUnit);
+        dataSourcesById[criteria.Nausea.dataSources[0].id] =
+          _.merge(dataSourcesById[criteria.Nausea.dataSources[0].id], proportionUnit);
+        return dataSourcesById;
+      }
 
       it('should return true if the JSON file passed to the function is not valid according to the schema', function() {
         var inputJSON = require('./test-false.json');

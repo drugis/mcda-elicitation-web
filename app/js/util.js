@@ -96,10 +96,23 @@ define(['lodash', 'angular'], function(_, angular) {
     };
   }
 
+  function getDataSourcesById() {
+    return function(criteria) {
+      return _(criteria)
+        .map(function(criterion) {
+          return criterion.dataSources;
+        }, [])
+        .flatten()
+        .keyBy('id')
+        .value();
+    };
+  }
+
   return angular.module('elicit.util', [])
     .factory('intervalHull', intervalHull)
     .factory('generateUuid', generateUuid)
     .factory('swap', swap)
     .factory('significantDigits', significantDigits)
+    .factory('getDataSourcesById', getDataSourcesById)
     ;
 });

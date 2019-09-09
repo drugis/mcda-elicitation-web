@@ -3,11 +3,13 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
   var dependencies = [
     'currentSchemaVersion',
-    'generateUuid'
+    'generateUuid',
+    'getDataSourcesById'
   ];
   var SchemaService = function(
     currentSchemaVersion,
-    generateUuid
+    generateUuid,
+    getDataSourcesById
   ) {
     /***** Changes 
      * 1.0.0 Introduction of data sources
@@ -344,16 +346,6 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
         entry.performance.distribution.value = entry.performance.distribution.value / 100;
       }
       return entry;
-    }
-
-    function getDataSourcesById(criteria) {
-      return _(criteria)
-        .map(function(criterion) {
-          return criterion.dataSources;
-        }, [])
-        .flatten()
-        .keyBy('id')
-        .value();
     }
 
     function doesEntryNeedUpdating(entry, dataSource) {

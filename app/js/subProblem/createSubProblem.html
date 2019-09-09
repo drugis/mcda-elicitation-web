@@ -156,7 +156,11 @@
         <ul class="no-bullet">
           <li ng-repeat="dataSource in scalesDataSources">
             <h5 class="subheader">
-              {{problem.criteria[criteriaByDataSource[dataSource]].title}}
+              {{criteriaByDataSource[dataSource].title}}
+              {{criteriaByDataSource[dataSource].dataSources[0].unitOfMeasurement.label ?
+                '(' + criteriaByDataSource[dataSource].dataSources[0].unitOfMeasurement.label + ')' : 
+                '' 
+              }}
             </h5>
             <div class="grid-x">
               <div class="cell large-1 text-center">
