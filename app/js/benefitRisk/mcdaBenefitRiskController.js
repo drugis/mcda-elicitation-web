@@ -58,7 +58,6 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.tasks = _.keyBy(Tasks.available, 'id');
 
     $scope.scalesPromise = WorkspaceService.getObservedScales(baseProblem).then(function(observedScales) {
-
       initState(observedScales, currentScenario);
     });
     $scope.effectsTableInfo = EffectsTableService.createEffectsTableInfo(baseProblem.performanceTable);
@@ -106,7 +105,7 @@ define(['lodash', 'angular'], function(_, angular) {
         scenario = $scope.scenario;
       }
 
-      var aggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
+      var aggregateState = WorkspaceService.buildAggregateState($scope.baseState.dePercentified.problem, currentSubProblem, scenario);
       aggregateState.percentified = WorkspaceService.percentifyCriteria(aggregateState);
       aggregateState.dePercentified = WorkspaceService.dePercentifyCriteria(aggregateState);
 
