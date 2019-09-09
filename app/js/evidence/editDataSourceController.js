@@ -24,16 +24,6 @@ define(['lodash'], function(_) {
     // init
     if (dataSource) {
       $scope.dataSource = _.cloneDeep(dataSource);
-    } else if (dataSources[0]) {
-      $scope.dataSource = _.cloneDeep(dataSources[0]);
-      delete $scope.dataSource.source;
-      $scope.dataSource.id = generateUuid();
-      $scope.isAdding = true;
-      $scope.dataSource.unitOfMeasurement = {
-        selectedOption: {
-          type: 'custom'
-        }
-      };
     } else {
       $scope.dataSource = {
         id: generateUuid(),
