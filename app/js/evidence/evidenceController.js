@@ -39,7 +39,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     });
     $scope.showDecimal = false;
     PageTitleService.setPageTitle('EvidenceController', ($scope.problem.title || $scope.workspace.title) + '\'s overview');
-    reloadOrderingsAndScales();
+    $scope.scalesPromise.then(reloadOrderingsAndScales);
 
     $scope.$on('elicit.settingsChanged', function() {
       reloadOrderingsAndScales();
