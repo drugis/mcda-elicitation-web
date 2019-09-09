@@ -10,6 +10,7 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
     'taskDefinition',
     'PartialValueFunctionService',
     'PageTitleService',
+    'WorkspaceSettingsService',
     'numberFilter'
   ];
 
@@ -23,6 +24,7 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
     taskDefinition,
     PartialValueFunctionService,
     PageTitleService,
+    WorkspaceSettingsService,
     numberFilter
   ) {
     // functions
@@ -33,11 +35,7 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
 
     // init
     $scope.pvf = PartialValueFunctionService;
-    var aggregateProblem = $scope.aggregateState.problem;
-    $scope.$on('elicit.settingsChanged', function() {
-      aggregateProblem = $scope.aggregateState.problem;
-      resetWizard();
-    });
+    $scope.$on('elicit.settingsChanged', resetWizard);
 
     resetWizard();
 
@@ -45,9 +43,9 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
       $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinatesForCriterion(criterion);
     }
 
-    function initialize(state) {
+    function initialize(state, problem) {
       var criterionId = $stateParams.criterion.replace('%3A', ':'); // workaround: see https://github.com/angular-ui/ui-router/issues/2598
-      var criterion = angular.copy(aggregateProblem.criteria[criterionId]);
+      var criterion = angular.copy(problem.criteria[criterionId]);
       if (!criterion) {
         return {};
       }
@@ -177,13 +175,14 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
     }
 
     function resetWizard() {
+      var problem = WorkspaceSettingsService.usePercentage() ? $scope.aggregateState.percentified.problem : $scope.aggregateState.dePercentified.problem;
       $injector.invoke(Wizard, {}, {
         $scope: $scope,
         handler: {
           fields: ['type', 'choice', 'bisections', 'ref', 'criterion'],
           validChoice: isValid,
           nextState: nextState,
-          initialize: _.partial(initialize, taskDefinition.clean(currentScenario.state)),
+          initialize: _.partial(initialize, taskDefinition.clean(currentScenario.state), problem),
           standardize: _.identity,
           updatePlot: updatePlot
         }

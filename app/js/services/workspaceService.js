@@ -70,6 +70,13 @@ define(['lodash', 'angular'], function(_, angular) {
       });
     }
 
+    function percentifyProblem(problem) {
+      var criteriaWithUpdatedDataSources = updateDataSources(problem.criteria, percentifyDataSource);
+      return _.merge({}, problem, {
+        criteria: criteriaWithUpdatedDataSources
+      });
+    }
+
     function updateDataSources(criteria, fn) {
       return _.mapValues(criteria, function(criterion) {
         return _.extend({}, criterion, {
@@ -113,6 +120,7 @@ define(['lodash', 'angular'], function(_, angular) {
       }
       return newDataSource;
     }
+    
     function percentifyPVF(pvf) {
       var newPVF = angular.copy(pvf);
       if (pvf.range) {
@@ -130,6 +138,13 @@ define(['lodash', 'angular'], function(_, angular) {
         problem: {
           criteria: criteriaWithUpdatedDataSources
         }
+      });
+    }
+
+    function dePercentifyProblem(problem) {
+      var criteriaWithUpdatedDataSources = updateDataSources(problem.criteria, dePercentifyDataSource);
+      return _.merge({}, problem, {
+        criteria: criteriaWithUpdatedDataSources
       });
     }
 
@@ -700,6 +715,8 @@ define(['lodash', 'angular'], function(_, angular) {
       validateWorkspace: validateWorkspace,
       addTheoreticalScales: addTheoreticalScales,
       percentifyCriteria: percentifyCriteria,
+      percentifyProblem: percentifyProblem,
+      dePercentifyProblem: dePercentifyProblem,
       dePercentifyCriteria: dePercentifyCriteria,
       hasNoStochasticResults: hasNoStochasticResults,
       checkForMissingValuesInPerformanceTable: checkForMissingValuesInPerformanceTable

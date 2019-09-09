@@ -4,13 +4,15 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
     '$injector',
     '$timeout',
     'PartialValueFunctionService',
-    'OrderingService'
+    'OrderingService',
+    'WorkspaceSettingsService'
   ];
   var SwingWeightingService = function($state,
     $injector,
     $timeout,
     PartialValueFunctionService,
-    OrderingService
+    OrderingService,
+    WorkspaceSettingsService
   ) {
 
     function initWeightingScope(
@@ -37,7 +39,8 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
       resetWizard();
 
       function resetWizard() {
-        OrderingService.getOrderedCriteriaAndAlternatives(scope.aggregateState.problem, $stateParams).then(function(orderings) {
+        var state = WorkspaceSettingsService.usePercentage() ? scope.aggregateState.percentified : scope.aggregateState.dePercentified;
+        OrderingService.getOrderedCriteriaAndAlternatives(state.problem, $stateParams).then(function(orderings) {
           scope.alternatives = orderings.alternatives;
           scope.criteria = _(orderings.criteria)
             .map(setBestAndWorst)
@@ -50,7 +53,7 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
               fields: ['total', 'mostImportantCriterionId', 'step'],
               nextState: nextState,
               standardize: _.identity,
-              initialize: _.partial(initialize, taskDefinition.clean(scope.aggregateState))
+              initialize: _.partial(initialize, taskDefinition.clean(state))
             }
           });
         });

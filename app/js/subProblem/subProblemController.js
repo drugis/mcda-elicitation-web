@@ -12,7 +12,8 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     'SubProblemResource',
     'EffectsTableService',
     'PageTitleService',
-    'ScaleRangeService'
+    'ScaleRangeService',
+    'WorkspaceSettingsService'
   ];
 
   var SubProblemController = function(
@@ -27,7 +28,8 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     SubProblemResource,
     EffectsTableService,
     PageTitleService,
-    ScaleRangeService
+    ScaleRangeService,
+    WorkspaceSettingsService
   ) {
     // functions 
     $scope.openCreateDialog = openCreateDialog;
@@ -54,29 +56,22 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
       }
     }, true);
 
-    $scope.$watch('aggregateState', function(newState, oldState) {
-      if (_.isEqual(newState, oldState)) {
-        return;
-      } else {
-        setScaleTable();
-      }
-    }, true);
-
     new Clipboard('.clipboard-button');
 
     function setScaleTable() {
-      OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
+      var problem = WorkspaceSettingsService.usePercentage() ? $scope.aggregateState.percentified.problem : $scope.aggregateState.dePercentified.problem;
+      OrderingService.getOrderedCriteriaAndAlternatives(problem, $stateParams).then(function(orderings) {
         $scope.criteria = orderings.criteria;
         $scope.alternatives = orderings.alternatives;
-        var effectsTable = EffectsTableService.buildEffectsTable(getCriteria(orderings.criteria));
+        var effectsTable = EffectsTableService.buildEffectsTable(getCriteria(orderings.criteria, problem));
         $scope.scaleTable = ScaleRangeService.getScaleTable(effectsTable, $scope.scales, $scope.aggregateState.problem.performanceTable);
         $scope.hasRowWithOnlyMissingValues = SubProblemService.findRowWithoutValues($scope.effectsTableInfo, $scope.scales);
       });
     }
 
-    function getCriteria(orderedCriteria) {
+    function getCriteria(orderedCriteria, problem) {
       return _.map(orderedCriteria, function(criterion) {
-        return _.merge({}, $scope.aggregateState.problem.criteria[criterion.id], { id: criterion.id });
+        return _.merge({}, problem.criteria[criterion.id], { id: criterion.id });
       });
     }
 
@@ -93,7 +88,7 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
             return $scope.subProblem;
           },
           problem: function() {
-            return $scope.aggregateState.problem;
+            return $scope.baseState.dePercentified.problem;
           },
           scales: function() {
             return $scope.scales;

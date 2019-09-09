@@ -32,7 +32,7 @@ define(['clipboard', 'require'], function(Clipboard) {
     });
 
     function loadState() {
-      $scope.state = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.aggregateState);
+      $scope.state = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.aggregateState.dePercentified);
       $scope.state = MCDAResultsService.getResults($scope, $scope.state);
       $scope.state.resultsPromise.then(function() {
         $scope.state = MCDAResultsService.addSmaaResults($scope.state);

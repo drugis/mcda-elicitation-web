@@ -12,6 +12,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     'PageTitleService',
     'PreferencesService',
     'TaskDependencies',
+    'WorkspaceSettingsService',
     'currentScenario'
   ];
   var PreferencesController = function(
@@ -25,6 +26,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     PageTitleService,
     PreferencesService,
     TaskDependencies,
+    WorkspaceSettingsService,
     currentScenario
   ) {
 
@@ -39,17 +41,12 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     $scope.scenario = currentScenario;
     $scope.scales = $scope.workspace.scales;
     $scope.pvfCoordinates = {};
-    $scope.scalesPromise.then(function() {
-      reloadOrderings();
-      $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinates($scope.aggregateState.problem.criteria);
-    });
-    $scope.$on('elicit.settingsChanged', function() {
-      reloadOrderings();
-      $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinates($scope.aggregateState.problem.criteria);
-    });
+    $scope.scalesPromise.then(resetPvfSchizzle);
+    $scope.$on('elicit.settingsChanged', resetPvfSchizzle);
+
     createIsSafeObject();
     $scope.criteriaHavePvf = doAllCriteriaHavePvf();
-    reloadOrderings();
+    // reloadOrderings();
 
     new Clipboard('.clipboard-button');
     $scope.isOrdinal = _.some($scope.scenario.state.prefs, function(pref) {
@@ -58,8 +55,14 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
 
     PageTitleService.setPageTitle('PreferencesController', ($scope.aggregateState.problem.title || $scope.workspace.title) + '\'s preferences');
 
+    function resetPvfSchizzle() {
+        $scope.problem = WorkspaceSettingsService.usePercentage() ? $scope.aggregateState.percentified.problem : $scope.aggregateState.dePercentified.problem;
+        reloadOrderings();
+        $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinates($scope.problem.criteria);
+    }
+
     function reloadOrderings() {
-      OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
+      OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
         $scope.alternatives = orderings.alternatives;
         $scope.criteria = orderings.criteria;
         var preferences = $scope.scenario.state.prefs;

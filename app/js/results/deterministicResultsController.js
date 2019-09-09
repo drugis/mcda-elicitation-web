@@ -36,7 +36,8 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
 
     // init
     $scope.scenario = currentScenario;
-    $scope.scales = createScales($scope.dePercentifiedBaseState.problem);
+
+    $scope.scales = createScales($scope.aggregateState.dePercentified.problem);
     $scope.sensitivityMeasurements = {
       alteredTableCells: [],
       isEditing: false
@@ -53,7 +54,8 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
     });
 
     var orderingsPromise = $scope.scalesPromise.then(function() {
-      return OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(ordering) {
+      $scope.problem = WorkspaceSettingsService.usePercentage() ? $scope.aggregateState.percentified.problem : $scope.aggregateState.dePercentified.problem;
+      return OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(ordering) {
         $scope.criteria = ordering.criteria;
         $scope.alternatives = ordering.alternatives;
         loadState();
@@ -64,14 +66,16 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
       $scope.scalesPromise.then(function() {
         var newScales = DeterministicResultsService.createDeterministicScales(problem.performanceTable, $scope.workspace.scales.base);
         $scope.scales = {
-          observed: WorkspaceSettingsService.usePercentage() ? WorkspaceService.percentifyScales($scope.aggregateState.problem.criteria, newScales) : newScales
+          observed: WorkspaceSettingsService.usePercentage() ?
+            WorkspaceService.percentifyScales($scope.aggregateState.percentified.problem.criteria, newScales) : newScales
         };
       });
     }
 
 
     function loadState() {
-      var stateWithAlternativesRenamed = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.dePercentifiedBaseState);
+      var stateWithAlternativesRenamed = MCDAResultsService.replaceAlternativeNames($scope.scenario.state.legend,
+        $scope.aggregateState);
       initSensitivityDropdowns();
       doMeasurementSensitivity();
       doPreferencesSensitivity();
@@ -115,7 +119,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
 
     function doMeasurementSensitivity() {
       delete $scope.measurementValues;
-      DeterministicResultsService.getMeasurementsSensitivityResults($scope, $scope.dePercentifiedBaseState).resultsPromise.then(function(result) {
+      DeterministicResultsService.getMeasurementsSensitivityResults($scope, $scope.aggregateState.dePercentified).resultsPromise.then(function(result) {
         $scope.measurementValues = DeterministicResultsService.pataviResultToLineValues(result.results, $scope.alternatives, $scope.scenario.state.legend);
 
         if (usePercentage($scope.sensitivityMeasurements.measurementsCriterion.dataSources[0])) {
@@ -126,7 +130,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
 
     function doPreferencesSensitivity() {
       delete $scope.preferencesValues;
-      DeterministicResultsService.getPreferencesSensitivityResults($scope, $scope.dePercentifiedBaseState).resultsPromise.then(function(result) {
+      DeterministicResultsService.getPreferencesSensitivityResults($scope, $scope.aggregateState.dePercentified).resultsPromise.then(function(result) {
         $scope.preferencesValues = DeterministicResultsService.pataviResultToLineValues(result.results, $scope.alternatives, $scope.scenario.state.legend);
       });
     }
