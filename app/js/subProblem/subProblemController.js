@@ -46,7 +46,6 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
       setScaleTable();
     });
 
-
     $scope.$watch('workspace.scales', function(newScales, oldScales) {
       if (newScales && oldScales && newScales.observed === oldScales.observed) {
         return;

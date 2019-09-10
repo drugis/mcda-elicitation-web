@@ -123,9 +123,9 @@ define(['lodash', 'angular'], function(_, angular) {
         };
         return accum;
       }, {
-          scalesState: {},
-          choices: {}
-        }
+        scalesState: {},
+        choices: {}
+      }
       );
     }
 
@@ -135,7 +135,8 @@ define(['lodash', 'angular'], function(_, angular) {
         var newRow = angular.copy(row);
         if (scales && scales.observed) {
           var effects = getEffectValues(performanceTable, row.dataSource);
-          newRow.intervalHull = intervalHull(scales.observed[row.dataSource.id], effects);
+          var rangeDistributions = getRangeDistributions(performanceTable, row.dataSource);
+          newRow.intervalHull = intervalHull(scales.observed[row.dataSource.id], effects, rangeDistributions);
         }
         return newRow;
       });
@@ -149,6 +150,23 @@ define(['lodash', 'angular'], function(_, angular) {
         }
         return accum;
       }, []);
+    }
+
+    function getRangeDistributions(performanceTable, dataSource) {
+      return _.reduce(performanceTable, function(accum, entry) {
+        if (hasRangeDistribution(entry, dataSource.id)) {
+          var factor = dataSource.unitOfMeasurement.type === 'percentage' ? 100 : 1;
+          accum.push(entry.performance.distribution.parameters.lowerBound * factor);
+          accum.push(entry.performance.distribution.parameters.upperBound * factor);
+        }
+        return accum;
+      }, []);
+    }
+
+    function hasRangeDistribution(entry, dataSourceId) {
+      return entry.dataSource === dataSourceId &&
+        entry.performance.distribution &&
+        entry.performance.distribution.type === 'range';
     }
 
     return {

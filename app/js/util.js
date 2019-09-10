@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
   function intervalHull() {
-    return function(scaleRanges, effects) {
+    return function(scaleRanges, effects, rangeDistributions) {
       var minHullValues = [];
       var maxHullValues = [];
       if (scaleRanges) {
@@ -11,6 +11,10 @@ define(['lodash', 'angular'], function(_, angular) {
       if (effects && effects.length) {
         minHullValues = minHullValues.concat(getMinEffect(effects));
         maxHullValues = maxHullValues.concat(getMaxEffect(effects));
+      }
+      if (rangeDistributions && rangeDistributions.length) {
+        minHullValues = minHullValues.concat(getMinEffect(rangeDistributions));
+        maxHullValues = maxHullValues.concat(getMaxEffect(rangeDistributions));
       }
       var minHullValue = Math.min.apply(null, minHullValues);
       var maxHullValue = Math.max.apply(null, maxHullValues);

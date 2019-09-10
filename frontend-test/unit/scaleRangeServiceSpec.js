@@ -249,6 +249,73 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
         expect(result).toEqual(expectedResult);
       });
 
+      it('should add the correct interval hull for range distributions', function() {
+        var table = [{
+          dataSource: {
+            id: 'ds1',
+            unitOfMeasurement: {
+              label: '%',
+              type: 'percentage'
+            }
+          }
+        }, {
+          dataSource: {
+            id: 'ds2',
+            unitOfMeasurement: {
+              label: '',
+              type: 'custom'
+            }
+          }
+        }];
+        var scales = {
+          observed: {}
+        };
+        var performanceTable = [{
+          dataSource: 'ds1',
+          performance: {
+            distribution: {
+              type: 'range',
+              parameters: {
+                lowerBound: 0,
+                upperBound: 0.8
+              }
+            }
+          }
+        }, {
+          dataSource: 'ds2',
+          performance: {
+            distribution: {
+              type: 'range',
+              parameters: {
+                lowerBound: -5,
+                upperBound: 101
+              }
+            }
+          }
+        }];
+        var result = scaleRangeService.getScaleTable(table, scales, performanceTable);
+        var expectedResult = [{
+          dataSource: {
+            id: 'ds1',
+            unitOfMeasurement: {
+              label: '%',
+              type: 'percentage'
+            }
+          },
+          intervalHull: [0, 80]
+        }, {
+          dataSource: {
+            id: 'ds2',
+            unitOfMeasurement: {
+              label: '',
+              type: 'custom'
+            }
+          },
+          intervalHull: [-5, 101]
+        }];
+        expect(result).toEqual(expectedResult);
+      });
+
       it('should filter out header rows', function() {
         var table = [{ isHeaderRow: true }];
         var scales = {};

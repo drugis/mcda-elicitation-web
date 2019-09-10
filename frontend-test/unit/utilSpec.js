@@ -5,7 +5,7 @@ define(['angular', 'angular-mocks', 'mcda/util'], function(angular) {
 
     describe('intervalHull', function() {
       var ih;
-      
+
       beforeEach(inject(function(intervalHull) {
         ih = intervalHull;
       }));
@@ -66,6 +66,25 @@ define(['angular', 'angular-mocks', 'mcda/util'], function(angular) {
         var expectedResult = [0, 1];
         expect(result).toEqual(expectedResult);
       });
+
+      it('should return min and max of the scale ranges and the range distributions', function() {
+        var ranges = {
+          1: {
+            '2.5%': 1,
+            '97.5%': 5
+          },
+          2: {
+            '2.5%': 3,
+            '97.5%': 10
+          }
+        };
+        var effectValues = [5, 6];
+        var rangeDistributionValues = [0,8];
+        var result = ih(ranges, effectValues, rangeDistributionValues);
+        var expectedResult = [0, 10];
+        expect(result).toEqual(expectedResult);
+      });
+
     });
 
     describe('generateUuid', function() {
