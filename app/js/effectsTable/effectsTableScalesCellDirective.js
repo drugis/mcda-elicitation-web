@@ -16,8 +16,7 @@ define(['lodash'], function(_) {
         'uncertainty': '=',
         'theoreticalScale': '='
       },
-      template: '<div>{{median}}</div>' +
-        '<div class="uncertain" ng-show="uncertainty">{{lowerBound}}, {{upperBound}}</div>',
+      templateUrl: './effectsTableScalesCellDirective.html',
       link: function(scope) {
         scope.$watch('scales', initScales);
         scope.$on('elicit.settingsChanged', initScales);
@@ -26,8 +25,24 @@ define(['lodash'], function(_) {
           scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
           if (scope.scales) {
             scope.lowerBound = getRoundedValue(scope.scales['2.5%']);
-            scope.median = getRoundedValue(scope.workspaceSettings.calculationMethod === 'mode' ? scope.scales.mode : scope.scales['50%']);
+            scope.median = getMedian();
             scope.upperBound = getRoundedValue(scope.scales['97.5%']);
+          }
+        }
+
+        function getMedian(){
+          if (scope.workspaceSettings.calculationMethod === 'mode'){
+            return getMode();
+          } else {
+            return getRoundedValue(scope.scales['50%']);
+          }
+        }
+
+        function getMode(){
+          if (scope.scales.mode !== null){
+            return getRoundedValue(scope.scales.mode);
+          } else {
+            return 'NA';
           }
         }
 

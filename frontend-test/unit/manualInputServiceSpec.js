@@ -149,44 +149,34 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           id: 'ds2id'
         }]
       }];
+      const defaultCell = {
+        isInvalid: true,
+        inputParameters: {
+          id: 'value'
+        }
+      };
 
       it('should prepare the cells of the table for input', function() {
         var result = manualInputService.prepareInputData(criteria, alternatives);
         var expectedResult = {
           'effect': {
             'ds1id': {
-              alternative1: {
-                isInvalid: true
-              },
-              alternative2: {
-                isInvalid: true
-              }
+              alternative1: defaultCell,
+              alternative2: defaultCell
             },
             'ds2id': {
-              alternative1: {
-                isInvalid: true
-              },
-              alternative2: {
-                isInvalid: true
-              }
+              alternative1: defaultCell,
+              alternative2: defaultCell
             }
           },
           'distribution': {
             'ds1id': {
-              alternative1: {
-                isInvalid: true
-              },
-              alternative2: {
-                isInvalid: true
-              }
+              alternative1: defaultCell,
+              alternative2: defaultCell
             },
             'ds2id': {
-              alternative1: {
-                isInvalid: true
-              },
-              alternative2: {
-                isInvalid: true
-              }
+              alternative1: defaultCell,
+              alternative2: defaultCell
             }
           }
         };
@@ -220,12 +210,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         var expectedResult = {
           effect: {
             ds1id: {
-              alternative1: {
-                isInvalid: true
-              },
-              alternative2: {
-                isInvalid: true
-              }
+              alternative1: defaultCell,
+              alternative2: defaultCell
             },
             ds2id: {
               alternative1: _.extend({}, oldInputData.effect.ds2id.alternative1, {
@@ -240,12 +226,8 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           },
           distribution: {
             ds1id: {
-              alternative1: {
-                isInvalid: true
-              },
-              alternative2: {
-                isInvalid: true
-              }
+              alternative1: defaultCell,
+              alternative2: defaultCell
             },
             ds2id: {
               alternative1: _.extend({}, oldInputData.distribution.ds2id.alternative1, {

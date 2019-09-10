@@ -131,8 +131,9 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
         $scope.state.currentTab = 'effect';
       }
       $scope.criteriaRows = EffectsTableService.buildTableRows($scope.state.criteria);
-      $scope.state.inputData = ManualInputService.prepareInputData($scope.state.criteria, $scope.state.alternatives,
-        $scope.state.inputData);
+      $scope.state.inputData = ManualInputService.prepareInputData(
+        $scope.state.criteria, $scope.state.alternatives, $scope.state.inputData
+      );
       $timeout(checkInputData);
     }
 

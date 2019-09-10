@@ -159,7 +159,11 @@ define(['lodash', 'angular'], function(_, angular) {
         if (hasOldInputDataAvailable(oldInputData, dataSource.id, alternative.id)) {
           accum[alternative.id] = oldInputData[dataSource.id][alternative.id];
         } else {
-          accum[alternative.id] = {};
+          accum[alternative.id] = {
+            inputParameters: {
+              id: 'value'
+            }
+          };
         }
         accum[alternative.id].isInvalid = true;
         return accum;
