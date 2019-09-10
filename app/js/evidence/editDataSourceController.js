@@ -30,7 +30,8 @@ define(['lodash'], function(_) {
         unitOfMeasurement: {
           selectedOption: {
             type: 'custom'
-          }
+          },
+          value: ''
         },
         scale: [-Infinity, Infinity]
       };

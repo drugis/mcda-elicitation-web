@@ -39,7 +39,7 @@ define(['lodash'], function(_) {
         }
 
         function getMode(){
-          if (scope.scales.mode !== null){
+          if (scope.scales.mode !== null && scope.scales.mode !== undefined){
             return getRoundedValue(scope.scales.mode);
           } else {
             return 'NA';
