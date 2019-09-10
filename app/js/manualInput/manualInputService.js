@@ -216,7 +216,7 @@ define(['lodash', 'angular'], function(_, angular) {
           'title',
           'description'
         ]);
-        if (useFavorability){
+        if (useFavorability) {
           newCriterion.isFavorable = criterion.isFavorable;
         }
         newCriterion.dataSources = _.map(criterion.dataSources, buildDataSource);
@@ -337,9 +337,9 @@ define(['lodash', 'angular'], function(_, angular) {
         }
         return accum;
       }, {
-          effect: {},
-          distribution: {}
-        });
+        effect: {},
+        distribution: {}
+      });
     }
 
     function createCell(inputType, tableEntry) {
@@ -386,7 +386,11 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function determineInputType(input) {
       if (input.hasOwnProperty('lowerBound')) {
-        return 'valueCI';
+        if (input.hasOwnProperty('value')) {
+          return 'valueCI';
+        } else {
+          return 'range';
+        }
       } else {
         return 'value';
       }
@@ -399,7 +403,8 @@ define(['lodash', 'angular'], function(_, angular) {
         dbeta: 'beta',
         exact: 'value',
         dsurv: 'gamma',
-        dt: 'value'
+        dt: 'value',
+        range: 'range'
       };
       if (performance.distribution.type === 'empty') {
         return performance.distribution.value ? 'text' : 'empty';
