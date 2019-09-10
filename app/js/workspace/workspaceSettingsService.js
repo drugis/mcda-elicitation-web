@@ -14,7 +14,8 @@ define(['angular', 'lodash'], function(angular, _) {
       calculationMethod: 'median',
       showPercentages: true,
       effectsDisplay: 'deterministic',
-      hasNoEffects: false
+      hasNoEffects: false,
+      isRelativeProblem: false
     };
 
     var DEFAULT_TOGGLED_COLUMNS = {
@@ -52,18 +53,35 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function getWorkspaceSettings(performanceTable) {
+      setHasNoEffects(performanceTable);
+      setHasNoAlternatives(performanceTable);
+      return angular.copy(workspaceSettings);
+    }
+
+    function setHasNoEffects(performanceTable) {
       if (performanceTable && !hasEffect(performanceTable)) {
-        if(workspaceSettings.effectsDisplay === 'deterministic'){
+        if (workspaceSettings.effectsDisplay === 'deterministic') {
           workspaceSettings.effectsDisplay = 'smaa';
         }
         workspaceSettings.hasNoEffects = true;
       }
-      return angular.copy(workspaceSettings);
     }
 
     function hasEffect(performanceTable) {
       return _.some(performanceTable, function(entry) {
         return entry.performance.effect;
+      });
+    }
+
+    function setHasNoAlternatives(performanceTable){
+      if(performanceTable && !hasAlternative(performanceTable)){
+        workspaceSettings.isRelativeProblem = true;
+      }
+    }
+
+    function hasAlternative(performanceTable) {
+      return _.some(performanceTable, function(entry) {
+        return entry.alternative;
       });
     }
 
