@@ -6,21 +6,21 @@
       </div>
 
       <div class="cell">
-        Use median or mode in effects table and deterministic analysis
+        Show percentages or decimals (eligible data sources only)
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.calculationMethod" ng-value="'median'">Median
+          <input type="radio" ng-model="settings.showPercentages" ng-value="true">Percentages
         </label>
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.calculationMethod" ng-value="'mode'">Mode
+          <input type="radio" ng-model="settings.showPercentages" ng-value="false">Decimals
         </label>
       </div>
 
       <div class="cell">
-        Effects display mode
+        Effects table display mode
       </div>
       <div class="cell" ng-if="!settings.hasNoEffects">
         <label>
@@ -46,17 +46,17 @@
         </label>
       </div>
 
-      <div class="cell" ng-show="settings.effectsDisplay === 'smaa' || settings.effectsDisplay === 'deterministicMCDA'">
-        Show percentages or decimals (eligable criteria only)
+      <div class="cell">
+        Show median or mode for the SMAA - analysis values view
       </div>
-      <div class="cell" ng-show="settings.effectsDisplay === 'smaa' || settings.effectsDisplay === 'deterministicMCDA'">
+      <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.showPercentages" ng-value="true">Percentages
+          <input type="radio" ng-model="settings.calculationMethod" ng-value="'median'">Median
         </label>
       </div>
-      <div class="cell" ng-show="settings.effectsDisplay === 'smaa' || settings.effectsDisplay === 'deterministicMCDA'">
+      <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.showPercentages" ng-value="false">Decimals
+          <input type="radio" ng-model="settings.calculationMethod" ng-value="'mode'">Mode
         </label>
       </div>
 
