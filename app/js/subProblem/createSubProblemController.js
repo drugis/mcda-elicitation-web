@@ -66,6 +66,7 @@ define(['lodash', 'angular'], function(_, angular) {
       setProblem();
       setTableRows();
       initializeScales();
+      $scope.criteriaByDataSource = SubProblemService.getCriteriaByDataSource($scope.problem.criteria);
     });
 
     function getWorkspaceSettings() {

@@ -73,7 +73,9 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.$on('$destroy', function() {
       $scope.deregisterTransitionListener();
     });
-    $scope.$on('elicit.settingsChanged', updateScales);
+    $scope.$on('elicit.settingsChanged', function() {
+      updateScales(); // prevent event as first argument
+    });
     $scope.$on('elicit.resultsAccessible', function(event, scenario) {
       updateScales(scenario);
     });
