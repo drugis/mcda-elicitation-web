@@ -26,7 +26,7 @@ define(['lodash'], function(_) {
           scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
           if (scope.scales) {
             scope.lowerBound = getRoundedValue(scope.scales['2.5%']);
-            scope.median = getRoundedValue(scope.workspaceSettings.effectsDisplay === 'mode' ? scope.scales.mode : scope.scales['50%']);
+            scope.median = getRoundedValue(scope.workspaceSettings.calculationMethod === 'mode' ? scope.scales.mode : scope.scales['50%']);
             scope.upperBound = getRoundedValue(scope.scales['97.5%']);
           }
         }
