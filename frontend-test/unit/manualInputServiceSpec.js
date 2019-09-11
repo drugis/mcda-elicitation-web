@@ -99,6 +99,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(manualInputService.getInputError(cell)).toBeFalsy();
       });
     });
+    
     describe('inputToString', function() {
       it('should call the toString function on the cell', function() {
         var cell = {
@@ -493,6 +494,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           valueCI: option,
           eventsSampleSize: option,
           valueSampleSize: option,
+          range: option,
           empty: option,
           normal: option,
           gamma: option,
@@ -699,6 +701,31 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.distribution);
         });
 
+        it('should create a state with a range distribution cell', function() {
+          var workspace = _.merge({}, baseWorkspace, {
+            problem: {
+              performanceTable: [{
+                criterion: 'crit1',
+                dataSource: 'ds1',
+                alternative: 'alt1',
+                performance: {
+                  distribution: {
+                    type: 'range'
+                  }
+                }
+              }]
+            }
+          });
+
+          var result = manualInputService.createStateFromOldWorkspace(workspace);
+          var expectedResult = _.merge({}, baseExpectedResult, {
+            oldWorkspace: workspace
+          });
+          expect(result).toEqual(expectedResult);
+          expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('distribution');
+          expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.distribution);
+        });
+
         it('should create a state with a survival distribution cell', function() {
           var workspace = _.merge({}, baseWorkspace, {
             problem: {
@@ -794,6 +821,35 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                       input: {
                         lowerBound: 0.5,
                         upperBound: 'NE'
+                      }
+                    }
+                  }
+                }]
+              }
+            });
+
+            var result = manualInputService.createStateFromOldWorkspace(workspace);
+            var expectedResult = _.merge({}, baseExpectedResult, {
+              oldWorkspace: workspace
+            });
+            expect(result).toEqual(expectedResult);
+            expect(inputKnowledgeServiceMock.getOptions).toHaveBeenCalledWith('effect');
+            expect(option.finishInputCell).toHaveBeenCalledWith(workspace.problem.performanceTable[0].performance.effect);
+          });
+
+          it('should create a new state with a range cell', function() {
+            var workspace = _.merge({}, baseWorkspace, {
+              problem: {
+                performanceTable: [{
+                  criterion: 'crit1',
+                  dataSource: 'ds1',
+                  alternative: 'alt1',
+                  performance: {
+                    effect: {
+                      type: 'range',
+                      input: {
+                        lowerBound: 0.5,
+                        upperBound: 0.6
                       }
                     }
                   }
