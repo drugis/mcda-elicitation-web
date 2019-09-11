@@ -159,29 +159,52 @@ You have now finished preparing your effects table for analysis.
 \noindent \faLightbulbO \, Sending this file via e.g. email to someone else is the recommended way to share workspace data with other users.
 \clearpage
 
+
+
+%=========== APPENDIX =====================
+
+
 \section*{Appendix to Tutorial 1: data source characteristics and data entry options}
 \label{appendix1}
 A treatment effect is a statistical parameter that describes how a given treatment affects the distribution of a criterion in the target population (i.e., all patients for which the evaluated treatment is indicated). The representation of that parameter’s uncertainty in the effects table depends on the specified characteristics of the row’s data source. Indicating that the input type is ‘Distribution’ corresponds to a Bayesian perspective, where the uncertainty is quantified by means of probability distributions. The option ‘Effect’ corresponds to a frequentist perspective where parameters are treated as fixed but unknown constants for which point and interval estimates (e.g., 95\% confidence intervals) are provided.
 
-\subsection*{Types of distributions (Bayesian) ???}
-Distributions can be specified directly by choosing a distributional family and entering its parameters or derived indirectly from summary statistics from a clinical study (option ‘Generate distributions’). ??? \textit{When this latter option is selected, a Bayesian posterior distribution (i.e., a beta distribution for the event probability of a dichotomous outcome variable and a normal distribution for the mean of a continuous outcome variable) is estimated from the summary statistics supplied by the user and a reference prior set by the system.} ???
-The following distributional families are supported:
+\subsection*{Types of distributions (Bayesian)}
+Distributions can be specified directly by choosing a distributional family and entering its parameters or derived indirectly from summary statistics from a clinical study (option ‘Generate distributions’). When this latter option is selected, a Bayesian posterior distribution (i.e., a beta distribution for the event probability of a dichotomous outcome variable and a normal distribution for the mean of a continuous outcome variable) is estimated from the summary statistics supplied by the user and a reference prior set by the system.
+\newline
+
+\noindent The following distributional families are supported:
 \begin{itemize}
 \item Beta
 \item Normal
 \item Gamma
-\item Exact or Value (i.e., degenerate distribution that always results in the same value)
+\item Value (i.e., degenerate distribution that always results in the same value)
+\item Range
 \end{itemize}
+
+\noindent These distributions can be input either as percentages, decimals, or neither, see Section \ref{sec:uom}.
     
-\subsection*{Types of effects (Frequentist) ???}
+\subsection*{Types of effects (Frequentist)}
 The following data entry options are currently available for effects:
 \begin{itemize}
 \item Value (mean)
 \item Value, 95\% confidence interval (mean)
 \item Range
 \end{itemize}
+
+\noindent These effects can be input either as percentages, decimals, or neither, see Section \ref{sec:uom}.
  
 \subsection*{Unit of measurement}
-???
+\label{sec:uom}
+The following units of measurement are supported:
+\begin{itemize}
+\item Custom: you can input a custom label and any lower and upper bounds.
+\item Proportion (decimal): label will be set to 'Proportion', and lower and upper bounds to 0 and 1, respectively.
+\item Proportion (percentage): label will be set to '\%', and lower and upper bounds to 0 and 100, respectively.
+\end{itemize}
+
+\noindent You can switch between 'Percentages' and 'Decimals' views by changing the workspace settings (upper right corner of a finished workspace). This will automatically scale the values were possible, i.e. datasources with either 'Proportion (decimal)' or 'Proportion (percentage)' unit of measurement.
+\newline
+
+\noindent The user can enter '\%' as a label for a custom unit of measurement  for a data source. However, switching between 'Percentages' and 'Decimals' views will not scale the values in this case.
 
 \end{document}
