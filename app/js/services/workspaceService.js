@@ -3,12 +3,14 @@ define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
     '$q',
     'PataviResultsService',
+    'PerformanceTableService',
     'significantDigits'
   ];
 
   var WorkspaceService = function(
     $q,
     PataviResultsService,
+    PerformanceTableService,
     significantDigits
   ) {
     function getObservedScales(problem) {
@@ -120,7 +122,7 @@ define(['lodash', 'angular'], function(_, angular) {
       }
       return newDataSource;
     }
-    
+
     function percentifyPVF(pvf) {
       var newPVF = angular.copy(pvf);
       if (pvf.range) {
@@ -195,11 +197,34 @@ define(['lodash', 'angular'], function(_, angular) {
       var newProblem = _.cloneDeep(problem);
       _.forEach(newProblem.criteria, function(criterion) {
         var scale = observedScales[criterion.dataSources[0].id];
+        var effects = PerformanceTableService.getEffectValues(problem.performanceTable, criterion.dataSources[0]);
+        var rangeDistributionValues = PerformanceTableService.getRangeDistributionValues(problem.performanceTable, criterion.dataSources[0]);
+
         criterion.dataSources[0].pvf = _.merge({
-          range: getMinMax(scale)
+          range: getMinMax(scale, effects.concat(rangeDistributionValues))
         }, criterion.dataSources[0].pvf);
       });
       return newProblem;
+    }
+
+    function getMinMax(scalesByAlternative, effectAndRangeDistributionValues) {
+      var allValues = [].concat(effectAndRangeDistributionValues);
+      _.forEach(scalesByAlternative, function(scale) {
+        _.forEach(scale, function(value) {
+          if (value !== null) {
+            allValues.push(value);
+          }
+        });
+      });
+
+      var minimum = Math.min.apply(null, allValues);
+      var maximum = Math.max.apply(null, allValues);
+
+      if (minimum === maximum) {
+        minimum -= Math.abs(minimum) * 0.001;
+        maximum += Math.abs(maximum) * 0.001;
+      }
+      return [minimum, maximum];
     }
 
     function mergeBaseAndSubProblem(baseProblem, subProblemDefinition) {
@@ -329,26 +354,6 @@ define(['lodash', 'angular'], function(_, angular) {
         }
         return accum;
       }, {});
-    }
-
-    function getMinMax(scales) {
-      var minimum = Infinity;
-      var maximum = -Infinity;
-      _.forEach(scales, function(scale) {
-        _.forEach(scale, function(value) {
-          if (value !== null && value < minimum) {
-            minimum = value;
-          }
-          if (value !== null && value > maximum) {
-            maximum = value;
-          }
-        });
-      });
-      if (minimum === maximum) {
-        minimum -= Math.abs(minimum) * 0.001;
-        maximum += Math.abs(maximum) * 0.001;
-      }
-      return [minimum, maximum];
     }
 
     function filterScenariosWithResults(baseProblem, currentSubProblem, scenarios) {
@@ -705,21 +710,21 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     return {
-      getObservedScales: getObservedScales,
-      percentifyScales: percentifyScales,
-      reduceProblem: reduceProblem,
-      buildAggregateState: buildAggregateState,
-      mergeBaseAndSubProblem: mergeBaseAndSubProblem,
-      setDefaultObservedScales: setDefaultObservedScales,
-      filterScenariosWithResults: filterScenariosWithResults,
-      validateWorkspace: validateWorkspace,
       addTheoreticalScales: addTheoreticalScales,
+      buildAggregateState: buildAggregateState,
+      checkForMissingValuesInPerformanceTable: checkForMissingValuesInPerformanceTable,
+      dePercentifyCriteria: dePercentifyCriteria,
+      dePercentifyProblem: dePercentifyProblem,
+      filterScenariosWithResults: filterScenariosWithResults,
+      getObservedScales: getObservedScales,
+      hasNoStochasticResults: hasNoStochasticResults,
+      mergeBaseAndSubProblem: mergeBaseAndSubProblem,
       percentifyCriteria: percentifyCriteria,
       percentifyProblem: percentifyProblem,
-      dePercentifyProblem: dePercentifyProblem,
-      dePercentifyCriteria: dePercentifyCriteria,
-      hasNoStochasticResults: hasNoStochasticResults,
-      checkForMissingValuesInPerformanceTable: checkForMissingValuesInPerformanceTable
+      percentifyScales: percentifyScales,
+      reduceProblem: reduceProblem,
+      setDefaultObservedScales: setDefaultObservedScales,
+      validateWorkspace: validateWorkspace
     };
   };
 

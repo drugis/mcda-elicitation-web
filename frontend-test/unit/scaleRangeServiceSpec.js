@@ -11,10 +11,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
   describe('The scaleRange service', function() {
     var scaleRangeService;
     var workspaceSettingsMock = jasmine.createSpyObj('WorkspaceSettingsService', ['usePercentage']);
+    var performanceTableServiceMock = jasmine.createSpyObj('PerformanceTableService', ['getEffectValues', 'getRangeDistributionValues']);
 
     beforeEach(angular.mock.module('elicit.util'));
     beforeEach(angular.mock.module('elicit.subProblem', function($provide) {
       $provide.value('WorkspaceSettingsService', workspaceSettingsMock);
+      $provide.value('PerformanceTableService', performanceTableServiceMock);
     }));
 
     beforeEach(inject(function(ScaleRangeService) {
@@ -192,14 +194,9 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
         var scales = {
           observed: {}
         };
-        var performanceTable = [{
-          dataSource: 'ds1',
-          performance: {
-            effect: {
-              value: 10
-            }
-          }
-        }];
+        var performanceTable = [{}];
+        performanceTableServiceMock.getEffectValues.and.returnValues([10]);
+        performanceTableServiceMock.getRangeDistributionValues.and.returnValues([]);
         var result = scaleRangeService.getScaleTable(table, scales, performanceTable);
         var expectedResult = [{
           dataSource: {
@@ -210,108 +207,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
             }
           },
           intervalHull: [10, 10]
-        }];
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should add the correct interval hull if percentages are being used', function() {
-        var table = [{
-          dataSource: {
-            id: 'ds1',
-            unitOfMeasurement: {
-              label: '%',
-              type: 'percentage'
-            }
-          }
-        }];
-        var scales = {
-          observed: {}
-        };
-        var performanceTable = [{
-          dataSource: 'ds1',
-          performance: {
-            effect: {
-              value: 0.1
-            }
-          }
-        }];
-        var result = scaleRangeService.getScaleTable(table, scales, performanceTable);
-        var expectedResult = [{
-          dataSource: {
-            id: 'ds1',
-            unitOfMeasurement: {
-              label: '%',
-              type: 'percentage'
-            }
-          },
-          intervalHull: [10, 10]
-        }];
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should add the correct interval hull for range distributions', function() {
-        var table = [{
-          dataSource: {
-            id: 'ds1',
-            unitOfMeasurement: {
-              label: '%',
-              type: 'percentage'
-            }
-          }
-        }, {
-          dataSource: {
-            id: 'ds2',
-            unitOfMeasurement: {
-              label: '',
-              type: 'custom'
-            }
-          }
-        }];
-        var scales = {
-          observed: {}
-        };
-        var performanceTable = [{
-          dataSource: 'ds1',
-          performance: {
-            distribution: {
-              type: 'range',
-              parameters: {
-                lowerBound: 0,
-                upperBound: 0.8
-              }
-            }
-          }
-        }, {
-          dataSource: 'ds2',
-          performance: {
-            distribution: {
-              type: 'range',
-              parameters: {
-                lowerBound: -5,
-                upperBound: 101
-              }
-            }
-          }
-        }];
-        var result = scaleRangeService.getScaleTable(table, scales, performanceTable);
-        var expectedResult = [{
-          dataSource: {
-            id: 'ds1',
-            unitOfMeasurement: {
-              label: '%',
-              type: 'percentage'
-            }
-          },
-          intervalHull: [0, 80]
-        }, {
-          dataSource: {
-            id: 'ds2',
-            unitOfMeasurement: {
-              label: '',
-              type: 'custom'
-            }
-          },
-          intervalHull: [-5, 101]
         }];
         expect(result).toEqual(expectedResult);
       });

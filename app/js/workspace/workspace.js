@@ -8,6 +8,7 @@ define([
   './workspaceController',
   './workspaceSettingsController',
   '../services/workspaceService',
+  '../services/performanceTableService',
   './orderingService',
   './workspaceSettingsService',
   './exampleResource',
@@ -26,6 +27,7 @@ define([
   WorkspaceController,
   WorkspaceSettingsController,
   WorkspaceService,
+  PerformanceTableService,
   OrderingService,
   WorkspaceSettingService,
   ExampleResource,
@@ -44,6 +46,7 @@ define([
       .controller('WorkspaceSettingsController', WorkspaceSettingsController)
 
       .factory('WorkspaceService', WorkspaceService)
+      .factory('PerformanceTableService', PerformanceTableService)
       .factory('OrderingService', OrderingService)
       .factory('WorkspaceSettingsService', WorkspaceSettingService)
 

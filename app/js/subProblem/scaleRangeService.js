@@ -1,11 +1,13 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
+    'PerformanceTableService',
     'intervalHull',
     'numberFilter'
   ];
 
   var ScaleRangeService = function(
+    PerformanceTableService,
     intervalHull,
     numberFilter
   ) {
@@ -105,7 +107,7 @@ define(['lodash', 'angular'], function(_, angular) {
     function initializeScaleStateAndChoicesForCriterion(observedScales, criterion, performanceTable) {
       return _.reduce(criterion.dataSources, function(accum, dataSource) {
         // Calculate interval hulls
-        var effectValues = getEffectValues(performanceTable, dataSource);
+        var effectValues = PerformanceTableService.getEffectValues(performanceTable, dataSource);
         var dataSourceRange = intervalHull(observedScales[dataSource.id], effectValues);
         var pvf = dataSource.pvf;
         var problemRange = pvf ? pvf.range : null;
@@ -134,39 +136,12 @@ define(['lodash', 'angular'], function(_, angular) {
       return _.map(scaleTable, function(row) {
         var newRow = angular.copy(row);
         if (scales && scales.observed) {
-          var effects = getEffectValues(performanceTable, row.dataSource);
-          var rangeDistributions = getRangeDistributions(performanceTable, row.dataSource);
+          var effects = PerformanceTableService.getEffectValues(performanceTable, row.dataSource);
+          var rangeDistributions = PerformanceTableService.getRangeDistributionValues(performanceTable, row.dataSource);
           newRow.intervalHull = intervalHull(scales.observed[row.dataSource.id], effects, rangeDistributions);
         }
         return newRow;
       });
-    }
-
-    function getEffectValues(performanceTable, dataSource) {
-      return _.reduce(performanceTable, function(accum, entry) {
-        if (entry.dataSource === dataSource.id && entry.performance.effect) {
-          var factor = dataSource.unitOfMeasurement.type === 'percentage' ? 100 : 1;
-          accum.push(entry.performance.effect.value * factor);
-        }
-        return accum;
-      }, []);
-    }
-
-    function getRangeDistributions(performanceTable, dataSource) {
-      return _.reduce(performanceTable, function(accum, entry) {
-        if (hasRangeDistribution(entry, dataSource.id)) {
-          var factor = dataSource.unitOfMeasurement.type === 'percentage' ? 100 : 1;
-          accum.push(entry.performance.distribution.parameters.lowerBound * factor);
-          accum.push(entry.performance.distribution.parameters.upperBound * factor);
-        }
-        return accum;
-      }, []);
-    }
-
-    function hasRangeDistribution(entry, dataSourceId) {
-      return entry.dataSource === dataSourceId &&
-        entry.performance.distribution &&
-        entry.performance.distribution.type === 'range';
     }
 
     return {

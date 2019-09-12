@@ -80,12 +80,6 @@ define(['lodash', 'angular'], function(_, angular) {
       updateScales(scenario);
     });
 
-    function addScales(state, scales) {
-      return _.merge({}, state, {
-        problem: WorkspaceService.setDefaultObservedScales(state.problem, scales)
-      });
-    }
-
     function initState(observedScales, scenario) {
       $scope.workspace.scales.base = observedScales;
       $scope.workspace.scales.basePercentified = WorkspaceService.percentifyScales(percentifiedBaseState.problem.criteria, observedScales);
@@ -98,6 +92,12 @@ define(['lodash', 'angular'], function(_, angular) {
       updateTaskAccessibility();
     }
 
+    function addScales(state, scales) {
+      return _.merge({}, state, {
+        problem: WorkspaceService.setDefaultObservedScales(state.problem, scales)
+      });
+    }
+    
     function updateScales(scenario) {
       if (scenario) {
         $scope.scenario = scenario;
