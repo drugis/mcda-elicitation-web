@@ -112,7 +112,7 @@
   "partial-value-function": {
     "title": "Partial Value Function",
     "text": "A partial value function indicates how the desirability of a criterion's outcome varies with its value.",
-    "link": "manual/#mcda-mavt"
+    "link": "manual.html#mcda-mavt"
   },
   "problem": {
     "title": "Problem definition",
