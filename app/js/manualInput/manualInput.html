@@ -63,6 +63,9 @@
             </th>
             <th width="100%">Alternative title</th>
             <th>
+              <!-- edit title button -->
+            </th>
+            <th>
               <!-- delete button -->
             </th>
           </tr>
@@ -93,6 +96,11 @@
             </td>
             <td>
               {{alternative.title}}
+            </td>
+            <td class="text-center">
+              <a ng-click="editAlternative(alternative)" tooltip="Edit title">
+                <i class="fa fa-edit icon-fixed-width"></i>
+              </a>
             </td>
             <td class="text-center">
               <a ng-click="removeAlternative(alternative)" tooltip="Remove alternative">

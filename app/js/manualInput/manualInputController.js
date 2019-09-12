@@ -46,6 +46,7 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
     $scope.saveInProgress = saveInProgress;
     $scope.openCriterionModal = openCriterionModal;
     $scope.generateDistributions = generateDistributions;
+    $scope.editAlternative = editAlternative;
 
     // init
     $scope.alternativeInput = {}; //scoping
@@ -273,6 +274,26 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       if ($scope.state.step === 'step1') {
         $scope.state.step1errors = ManualInputService.checkStep1Errors($scope.state);
       }
+    }
+
+    function editAlternative(alternative) {
+      $modal.open({
+        template: require('../evidence/editAlternative.html'),
+        controller: 'EditAlternativeController',
+        resolve: {
+          alternative: function() {
+            return alternative;
+          },
+          alternatives: function() {
+            return $scope.state.alternatives;
+          },
+          callback: function() {
+            return function(newAlternative) {
+              $scope.state.alternatives[_.findIndex($scope.state.alternatives, ['id', alternative.id])] = newAlternative;
+            };
+          }
+        }
+      });
     }
 
   };
