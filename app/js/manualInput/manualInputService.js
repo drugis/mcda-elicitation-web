@@ -334,12 +334,22 @@ define(['lodash', 'angular'], function(_, angular) {
           }
           accum.effect[dataSourceForEntry.id][alternative.id] = createCell('effect', tableEntry);
           accum.distribution[dataSourceForEntry.id][alternative.id] = createCell('distribution', tableEntry);
+          if (isPercentageRangeDistribution(accum.distribution[dataSourceForEntry.id][alternative.id], dataSourceForEntry)) {
+            accum.distribution[dataSourceForEntry.id][alternative.id].firstParameter *= 100;
+            accum.distribution[dataSourceForEntry.id][alternative.id].secondParameter *= 100;
+          }
         }
         return accum;
       }, {
         effect: {},
         distribution: {}
       });
+    }
+
+    function isPercentageRangeDistribution(distribution, dataSource) {
+      return distribution &&
+        distribution.inputParameters.id === 'range' &&
+        dataSource.unitOfMeasurement.selectedOption.type === 'percentage';
     }
 
     function createCell(inputType, tableEntry) {
