@@ -8,6 +8,7 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
     'PartialValueFunctionService',
     'PageTitleService',
     'OrderingService',
+    'WorkspaceSettingsService',
     'currentScenario',
     'taskDefinition'
   ];
@@ -19,6 +20,7 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
     PartialValueFunctionService,
     PageTitleService,
     OrderingService,
+    WorkspaceSettingsService,
     currentScenario,
     taskDefinition
   ) {
@@ -29,10 +31,8 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
     $scope.getUnitOfMeasurement = PartialValueFunctionService.getUnitOfMeasurement;
 
     //init
-    $scope.problem = $scope.aggregateState.problem;
     $scope.pvf = PartialValueFunctionService;
     $scope.$on('elicit.settingsChanged', function() {
-      $scope.problem = $scope.aggregateState.problem;
       resetWizard();
     });
 
@@ -40,7 +40,8 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
     resetWizard();
 
     function resetWizard() {
-      OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
+      $scope.problem = WorkspaceSettingsService.usePercentage() ? $scope.aggregateState.percentified.problem : $scope.aggregateState.dePercentified.problem;
+      OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
         $scope.criteria = _.map(orderings.criteria, function(criterion) {
           criterion.best = PartialValueFunctionService.best(criterion.dataSources[0]);
           criterion.worst = PartialValueFunctionService.worst(criterion.dataSources[0]);
@@ -65,8 +66,8 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
         {
           prefs: nextState.prefs
         });
-      currentScenario.$save($stateParams, function(scenario) {
-        $scope.$emit('elicit.resultsAccessible', scenario);
+      currentScenario.$save($stateParams, function() {
+        $scope.$emit('elicit.resultsAccessible', currentScenario);
         $state.go('preferences');
       });
     }

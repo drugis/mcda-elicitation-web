@@ -1,12 +1,15 @@
 'use strict';
 define(['lodash'], function(_) {
   var dependencies = [
+    'WorkspaceSettingsService'
   ];
-  var WillingnessToTradeOffDirective = function() {
+  var WillingnessToTradeOffDirective = function(
+    WorkspaceSettingsService
+  ) {
     return {
       restrict: 'E',
       scope: {
-        problem: '='
+        state: '='
       },
       templateUrl:  './willingnessToTradeOffDirective.html',
       link: function(scope) {
@@ -14,9 +17,10 @@ define(['lodash'], function(_) {
         scope.firstCriterionChanged = firstCriterionChanged;
         scope.secondCriterionChanged = secondCriterionChanged;
 
-        scope.$watch('problem', init, true);
+        scope.$on('elicit.settingsChanged', init);
 
         function init() {
+          scope.problem = WorkspaceSettingsService.usePercentage() ? scope.state.percentified.problem : scope.state.dePercentified.problem;
           scope.criteria = decorateWithId(scope.problem.criteria);
           if(!scope.criteria) { return ;}
           scope.firstCriterionOptions = scope.criteria;

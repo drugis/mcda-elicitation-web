@@ -4,9 +4,11 @@ define([
   './deterministicResultsController',
   './editLegendController',
   './sensitivityInputDirective',
+  './sensitivityTableDirective',
   './valueProfilePlotDirective',
   './legendDirective',
   './resultsService',
+  './deterministicResultsService',
   './pataviResultsService',
   'angular',
   'angular-patavi-client'
@@ -15,9 +17,11 @@ define([
   DeterministicResultsController,
   EditLegendController,
   sensitivityInputDirective,
+  sensitivityTableDirective,
   valueProfilePlotDirective,
   legendDirective,
   MCDAResultsService,
+  DeterministicResultsService,
   PataviResultsService,
   angular
 ) {
@@ -29,8 +33,10 @@ define([
       .directive('sensitivityInput', sensitivityInputDirective)
       .directive('valueProfilePlot', valueProfilePlotDirective)
       .directive('legend', legendDirective)
+      .directive('sensitivityTable', sensitivityTableDirective)
 
       .factory('MCDAResultsService', MCDAResultsService)
+      .factory('DeterministicResultsService', DeterministicResultsService)
       .factory('PataviResultsService', PataviResultsService)
       ;
   });

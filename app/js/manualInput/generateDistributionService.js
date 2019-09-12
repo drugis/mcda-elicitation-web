@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_, angular) {
+define(['angular'], function(angular) {
   var dependencies = [
     'significantDigits',
     'ConstraintService'
@@ -10,18 +10,6 @@ define(['lodash', 'angular'], function(_, angular) {
   ) {
     function generateValueDistribution(cell) {
       return angular.copy(cell);
-    }
-
-    function generateValueSEDistribution(normalOption, cell) {
-      var distributionCell = angular.copy(cell);
-      if (isPercentage(distributionCell)) {
-        distributionCell.firstParameter = cell.firstParameter / 100;
-        distributionCell.secondParameter = cell.secondParameter / 100;
-      }
-      distributionCell.inputParameters = normalOption;
-      delete distributionCell.constraint;
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-      return distributionCell;
     }
 
     function generateValueCIDistribution(normalOption, valueOption, cell) {
@@ -46,49 +34,27 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function getConstraints(cell) {
       var constraints = angular.copy(cell.inputParameters.firstParameter.constraints);
-      var options = _.keyBy([
-        ConstraintService.decimal(),
-        ConstraintService.percentage()
-      ], 'label');
-      if (_.includes(options, cell.constraint)) {
-        constraints.push(options[cell.constraint]);
+      if(cell.constraint === 'percentage'){
+        constraints.push(ConstraintService.percentage());
+      }
+      if(cell.constraint === 'decimal'){
+        constraints.push(ConstraintService.decimal());
       }
       return constraints;
-    }
-
-    function generateValueSampleSizeDistribution(valueOption, betaOption, cell) {
-      var distributionCell = angular.copy(cell);
-      if (isPercentage(cell) || isDecimal(cell)) {
-        if (isPercentage(cell)) {
-          distributionCell.firstParameter = distributionCell.firstParameter / 100;
-        }
-        distributionCell.firstParameter = Math.round(distributionCell.firstParameter * distributionCell.secondParameter);
-        return generateEventsSampleSizeDistribution(betaOption, distributionCell);
-      } else {
-        distributionCell.inputParameters = valueOption;
-        delete distributionCell.secondParameter;
-        distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-        return distributionCell;
-      }
-    }
-
-    function generateEventsSampleSizeDistribution(betaOption, cell) {
-      var distributionCell = angular.copy(cell);
-      distributionCell.inputParameters = betaOption;
-      distributionCell.firstParameter = cell.firstParameter + 1;
-      distributionCell.secondParameter = cell.secondParameter - cell.firstParameter + 1;
-      delete distributionCell.constraint;
-      distributionCell.label = distributionCell.inputParameters.toString(distributionCell);
-      return distributionCell;
     }
 
     function generateEmptyDistribution(cell) {
       return angular.copy(cell);
     }
 
+    function generateRangeDistribution(options, cell){
+      var newCell =  angular.copy(cell);
+      newCell.inputParameters = options;
+      return newCell;
+    }
 
     function areBoundsSymmetric(cell) {
-      return (cell.thirdParameter + cell.secondParameter) / 2 === cell.firstParameter;
+      return  Math.abs(1 - (cell.firstParameter - cell.secondParameter) / (cell.thirdParameter - cell.firstParameter) ) < 0.05;
     }
 
     function boundsToStandardError(lowerBound, upperBound) {
@@ -96,20 +62,14 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function isPercentage(cell) {
-      return cell.constraint === 'Proportion (percentage)';
-    }
-
-    function isDecimal(cell) {
-      return cell.constraint === 'Proportion (decimal)';
+      return cell.constraint === 'percentage';
     }
 
     return {
       generateValueDistribution: generateValueDistribution,
-      generateValueSEDistribution: generateValueSEDistribution,
       generateValueCIDistribution: generateValueCIDistribution,
-      generateValueSampleSizeDistribution: generateValueSampleSizeDistribution,
-      generateEventsSampleSizeDistribution: generateEventsSampleSizeDistribution,
-      generateEmptyDistribution: generateEmptyDistribution
+      generateEmptyDistribution: generateEmptyDistribution,
+      generateRangeDistribution: generateRangeDistribution
     };
   };
   return dependencies.concat(GenerateDistributionService);

@@ -3,10 +3,6 @@ define(['lodash'], function(_) {
   var dependencies = ['significantDigits'];
 
   var ToStringService = function(significantDigits) {
-    function eventsSampleSizeToString(cell) {
-      return cell.firstParameter + ' / ' + cell.secondParameter;
-    }
-
     function gammaToString(cell) {
       return 'Gamma(' + significantDigits(cell.firstParameter) + ', ' + significantDigits(cell.secondParameter) + ')';
     }
@@ -22,11 +18,6 @@ define(['lodash'], function(_) {
     function valueToString(cell) {
       var percentage = isPercentage(cell) ? '%' : '';
       return cell.firstParameter + percentage;
-    }
-
-    function valueSEToString(cell) {
-      var percentage = isPercentage(cell) ? '%' : '';
-      return cell.firstParameter + percentage + ' (' + cell.secondParameter + percentage + ')';
     }
 
     function valueCIToString(cell) {
@@ -45,12 +36,9 @@ define(['lodash'], function(_) {
       return returnString;
     }
 
-    function valueSampleSizeToString(cell) {
+    function rangeToString(cell) {
       var percentage = isPercentage(cell) ? '%' : '';
-      var value = cell.firstParameter;
-      var sampleSize = cell.secondParameter;
-      var returnString = value + percentage + ' (' + sampleSize + ')';
-      return returnString;
+      return '[' + cell.firstParameter + percentage + ', ' + cell.secondParameter + percentage + ']';
     }
 
     function emptyToString() {
@@ -62,7 +50,7 @@ define(['lodash'], function(_) {
     }
 
     function isPercentage(cell) {
-      return cell.constraint ===  'Proportion (percentage)';
+      return cell.constraint === 'percentage';
     }
 
     return {
@@ -70,10 +58,8 @@ define(['lodash'], function(_) {
       normalToString: normalToString,
       betaToString: betaToString,
       valueToString: valueToString,
-      valueSEToString: valueSEToString,
       valueCIToString: valueCIToString,
-      eventsSampleSizeToString: eventsSampleSizeToString,
-      valueSampleSizeToString: valueSampleSizeToString,
+      rangeToString: rangeToString,
       emptyToString: emptyToString,
       textToString: textToString
     };

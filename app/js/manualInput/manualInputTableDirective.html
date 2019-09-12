@@ -7,6 +7,10 @@
       <th>Unit of measurement</th>
       <th>Reference</th>
       <th ng-repeat="alternative in state.alternatives" style="min-width:80px">{{alternative.title}}</th>
+      <th>Strength of evidence / Uncertainties
+        <inline-help help-key="uncertainties"></inline-help>
+        <inline-help help-key="strength-of-evidence"></inline-help>
+      </th>
     </tr>
   </thead>
   <tbody>
@@ -17,7 +21,7 @@
       <td ng-if="state.useFavorability && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">
         {{row.criterion.isFavorable? 'yes' : 'no'}}</td>
       <td>
-        <span>{{row.dataSource.unitOfMeasurement}} </span>
+        <span>{{row.dataSource.unitOfMeasurement.value}} </span>
         <span class="right">
           <a ng-click="editUnitOfMeasurement(row)" tooltip="Edit unit of measurement">
             <i class="fa fa-edit icon-fixed-width"></i>
@@ -26,9 +30,20 @@
       </td>
       <td>{{row.dataSource.source}}</td>
       <td ng-repeat="alternative in state.alternatives">
-        <effect-input-helper alternative="alternative" input-type="inputType" unit-of-measurement="row.dataSource.unitOfMeasurement"
+        <effect-input-helper alternative="alternative" input-type="inputType"
+          unit-of-measurement="row.dataSource.unitOfMeasurement"
           cell="state.inputData[inputType][row.dataSource.id][alternative.id]" change-callback="checkInputData">
         </effect-input-helper>
+      </td>
+      <td ng-if="!isInput">
+          <span><b>SoE: </b>{{row.dataSource.strengthOfEvidence}}</span>
+          <span class="right">
+              <a ng-click="editSoE(row)" tooltip="Edit Strength of evidence / Uncertainties">
+                <i class="fa fa-edit icon-fixed-width"></i>
+              </a>
+            </span>
+          <br>
+          <b>Unc: </b> {{row.dataSource.uncertainties}}
       </td>
     </tr>
   </tbody>

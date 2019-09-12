@@ -25,11 +25,10 @@
         <input type="radio" ng-model="criterion.isFavorable" ng-value="true" id="favorable">
         <label for="favorable">Favorable</label>
       </div>
-      <div class="cell" ng-if="isAddOperation">
-          <input-data-source data-source="criterion.dataSources[0]" is-invalid-source-link="sourceLinkValidity" change-callback="isCreationBlocked"></input-data-source>
-      </div>
       <div class="cell">
-        <button class="button success" type="submit" ng-disabled="blockedReasons.length">Save</button>
+        <button class="button success" type="submit" ng-disabled="blockedReasons.length">
+          {{addOrEdit}}
+        </button>
       </div>
       <div class="cell" ng-when="blockedReasons.length">
         <em ng-repeat="blockedReason in blockedReasons" class="alert">{{blockedReason}}

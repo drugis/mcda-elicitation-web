@@ -3,25 +3,8 @@ define(['angular'], function(angular) {
 
   var dependencies = ['ngResource'];
 
-  function buildUrl(url, serializedParams) {
-    if (serializedParams.length > 0) {
-      url += ((url.indexOf('?') === -1) ? '?' : '&') + serializedParams;
-    }
-    return url;
-  }
-
-  var ScenarioResource = function($resource, $cacheFactory) {
-    var cache = $cacheFactory('scenario');
-
-    var resetCache = function(response) {
-      cache.removeAll();
-      var config = response.config;
-      var url = buildUrl(config.url, config.paramSerializer(config.params));
-      cache.put(url, response.resource);
-      return response.resource;
-    };
-
-    var resource = $resource(
+  var ScenarioResource = function($resource) {
+    return $resource(
       window.config.workspacesRepositoryUrl + ':workspaceId/problems/:problemId/scenarios/:id', {
         id: '@id',
         workspaceId: '@workspaceId',
@@ -32,19 +15,14 @@ define(['angular'], function(angular) {
           isArray: true
         },
         get: {
-          cache: cache,
           method: 'GET'
         },
         save: {
-          method: 'POST',
-          interceptor: { response: resetCache }
+          method: 'POST'
         }
       });
-
-
-    return resource;
   };
 
   return angular.module('elicit.scenarioResource', dependencies)
-    .factory('ScenarioResource', ['$resource', '$cacheFactory', ScenarioResource]);
+    .factory('ScenarioResource', ['$resource', ScenarioResource]);
 });

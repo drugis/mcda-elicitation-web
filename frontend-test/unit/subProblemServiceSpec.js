@@ -2,13 +2,27 @@
 define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angular) {
   describe('The SubProblemService', () => {
     var subProblemService;
-    beforeEach(angular.mock.module('elicit.subProblem'));
+    var getDataSourcesByIdMock = jasmine.createSpy();
+
+    beforeEach(angular.mock.module('elicit.subProblem', function($provide) {
+      $provide.value('getDataSourcesById', getDataSourcesByIdMock);
+    }));
+
     beforeEach(inject(function(SubProblemService) {
       subProblemService = SubProblemService;
     }));
 
+
     describe('createSubProblemCommand', () => {
       it('should create a command ready for the backend to store', () => {
+        const dataSourcesById = {
+          ds1: {
+            unitOfMeasurement: {
+              type: 'custom'
+            }
+          }
+        };
+        getDataSourcesByIdMock.and.returnValue(dataSourcesById);
         var problem = {
           criteria: {
             headacheId: {},
@@ -67,7 +81,126 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
               headacheId: {}
             }
           }
-        }; expect(result).toEqual(expectedResult);
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should the scale ranges which are percentage to decimals', function() {
+        const dataSourcesById = {
+          ds1: {
+            id: 'ds1',
+            unitOfMeasurement: {
+              type: 'percentage'
+            }
+          },
+          ds2: {
+            id: 'ds2',
+            unitOfMeasurement: {
+              type: 'percentage'
+            }
+          },
+          ds3: {
+            id: 'ds3',
+            unitOfMeasurement: {
+              type: 'decimal'
+            }
+          }
+        };
+        getDataSourcesByIdMock.and.returnValue(dataSourcesById); var problem = {
+          criteria: {
+            headacheId: {
+              dataSources: [
+                dataSourcesById.ds1,
+                dataSourcesById.ds2,
+                dataSourcesById.ds3
+              ]
+            }
+          },
+          preferences: {
+            headacheId: {}
+          }
+        };
+        var subProblemState = {
+          title: 'subProblemTitle',
+          criterionInclusions: {
+            headacheId: true
+          },
+          alternativeInclusions: {
+            aspirine: true
+          },
+          dataSourceInclusions: {
+            ds1: true,
+            ds2: true,
+            ds3: true
+          },
+          ranges: {
+            ds1: {
+              pvf: {
+                range: [1, 2]
+              }
+            },
+            ds2: {
+              pvf: {
+                range: [1, 2]
+              }
+            },
+            ds3: {
+              pvf: {
+                range: [0.01, 0.02]
+              }
+            },
+
+          }
+        };
+
+        var choices = {
+          ds1: {
+            from: 1,
+            to: 2
+          },
+          ds2: {
+            from: 1,
+            to: 2
+          },
+          ds3: {
+            from: 0.01,
+            to: 0.02
+          }
+        };
+
+        var result = subProblemService.createSubProblemCommand(subProblemState, choices, problem);
+
+        var expectedResult = {
+          definition: {
+            ranges: {
+              ds1: {
+                pvf: {
+                  range: [0.01, 0.02]
+                }
+              },
+              ds2: {
+                pvf: {
+                  range: [0.01, 0.02]
+                }
+              },
+              ds3: {
+                pvf: {
+                  range: [0.01, 0.02]
+                }
+              }
+            },
+            excludedCriteria: [],
+            excludedAlternatives: [],
+            excludedDataSources: []
+          },
+          title: 'subProblemTitle',
+          scenarioState: {
+            prefs: {
+              headacheId: {}
+            }
+          }
+        };
+        expect(result).toEqual(expectedResult);
       });
     });
 
@@ -484,9 +617,9 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         }];
         var result = subProblemService.getCriteriaByDataSource(criteria);
         var expectedResult = {
-          'ds1.1': 'crit1',
-          'ds1.2': 'crit1',
-          ds2: 'crit2'
+          'ds1.1': criteria[0],
+          'ds1.2': criteria[0],
+          ds2: criteria[1]
         };
         expect(result).toEqual(expectedResult);
       });
@@ -639,7 +772,7 @@ define(['angular', 'angular-mocks', 'mcda/subProblem/subProblem'], function(angu
         expect(result).toBeFalsy();
       });
 
-      it('should return true if there is at least one row without valid values', function(){
+      it('should return true if there is at least one row without valid values', function() {
         var effectsTableInfo = {
           ds1: {
             alt1: {

@@ -13,6 +13,8 @@ database.lock.db
 frontend-test/test-results.xml
 node_modules
 dist
+coverage
+ssl
 
 # Numerous always-ignore extensions
 *.diff
@@ -42,4 +44,4 @@ Chromium_*
 .RData
 R/.Rhistory
 R/*.json
-
+.vscode

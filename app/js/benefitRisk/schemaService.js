@@ -3,11 +3,13 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
   var dependencies = [
     'currentSchemaVersion',
-    'generateUuid'
+    'generateUuid',
+    'getDataSourcesById'
   ];
   var SchemaService = function(
     currentSchemaVersion,
-    generateUuid
+    generateUuid,
+    getDataSourcesById
   ) {
     /***** Changes 
      * 1.0.0 Introduction of data sources
@@ -22,6 +24,8 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
      * 1.3.2 Remove null/undefined properties from data sources
      * 1.3.3 Remove alternative property from alternatives
      * 1.3.4 Add 'decimal' as scale option to input
+     * 1.4.0 Add type to unit of measurement; Scales with null ranges updated to minus/plus infinity and are mandatory
+     * 1.4.1 Add ranges
      * *****/
 
     function updateProblemToCurrentSchema(problem) {
@@ -58,8 +62,16 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
         newProblem = updateToVersion133(newProblem);
       }
 
-      if(newProblem.schemaVersion === '1.3.3'){
+      if (newProblem.schemaVersion === '1.3.3') {
         newProblem.schemaVersion = '1.3.4';
+      }
+
+      if (newProblem.schemaVersion === '1.3.4') {
+        newProblem = updateToVersion140(newProblem);
+      }
+
+      if (newProblem.schemaVersion === '1.4.0') {
+        newProblem.schemaVersion = '1.4.1';
       }
 
       if (newProblem.schemaVersion === currentSchemaVersion) {
@@ -111,12 +123,14 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
       loadSchema(ajv, 'valueCIEffect.json');
       loadSchema(ajv, 'valueSampleSizeEffect.json');
       loadSchema(ajv, 'eventsSampleSizeEffect.json');
+      loadSchema(ajv, 'rangeEffect.json');
 
       loadSchema(ajv, 'normalDistribution.json');
       loadSchema(ajv, 'tDistribution.json');
       loadSchema(ajv, 'betaDistribution.json');
       loadSchema(ajv, 'gammaDistribution.json');
       loadSchema(ajv, 'survivalDistribution.json');
+      loadSchema(ajv, 'rangeDistribution.json');
       return ajv;
     }
 
@@ -289,12 +303,75 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
     }
 
     function updateToVersion133(problem) {
-      var newProblem = angular.copy(problem); 
-      newProblem.alternatives = _.mapValues(problem.alternatives, function(alternative){
+      var newProblem = angular.copy(problem);
+      newProblem.alternatives = _.mapValues(problem.alternatives, function(alternative) {
         return _.pick(alternative, ['title']);
       });
       newProblem.schemaVersion = '1.3.3';
-       return newProblem;
+      return newProblem;
+    }
+
+    function updateToVersion140(problem) {
+      var newProblem = angular.copy(problem);
+      newProblem.criteria = _.mapValues(problem.criteria, function(criterion) {
+        var newCriterion = angular.copy(criterion);
+        newCriterion.dataSources = _.map(criterion.dataSources, function(dataSource) {
+          var newDataSource = angular.copy(dataSource);
+          newDataSource.unitOfMeasurement = {
+            type: getUnitType(dataSource),
+            label: dataSource.unitOfMeasurement ? dataSource.unitOfMeasurement : ''
+          };
+          newDataSource.scale = getScale(dataSource.scale);
+          return newDataSource;
+        });
+        return newCriterion;
+      });
+
+      newProblem.performanceTable = updatePerformanceTable140(newProblem);
+      newProblem.schemaVersion = '1.4.0';
+      return newProblem;
+    }
+
+    function updatePerformanceTable140(problem) {
+      var dataSources = getDataSourcesById(problem.criteria);
+      return _.map(problem.performanceTable, _.partial(getUpToDateEntry, dataSources));
+    }
+
+    function getUpToDateEntry(dataSources, entry) {
+      if (doesEntryNeedUpdating(entry, dataSources[entry.dataSource])) {
+        entry.performance.distribution.input = {
+          value: entry.performance.distribution.value, 
+          scale: 'percentage'
+        };
+        entry.performance.distribution.value = entry.performance.distribution.value / 100;
+      }
+      return entry;
+    }
+
+    function doesEntryNeedUpdating(entry, dataSource) {
+      return entry.dataSource === dataSource.id &&
+        dataSource.unitOfMeasurement.type === 'percentage' &&
+        !entry.performance.effect &&
+        entry.performance.distribution.type === 'exact' &&
+        !entry.performance.distribution.input;
+    }
+
+    function getUnitType(dataSource) {
+      if (dataSource.unitOfMeasurement === '%' && _.isEqual(dataSource.scale, [0, 100])) {
+        return 'percentage';
+      } else if (dataSource.unitOfMeasurement === 'Proportion' && _.isEqual(dataSource.scale, [0, 1])) {
+        return 'decimal';
+      } else {
+        return 'custom';
+      }
+    }
+
+    function getScale(scale) {
+      if (scale) {
+        return scale;
+      } else {
+        return [-Infinity, Infinity];
+      }
     }
 
     return {

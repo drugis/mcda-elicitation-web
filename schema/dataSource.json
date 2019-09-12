@@ -5,7 +5,9 @@
   "description": "MCDA dataSource schema for uploaded JSON",
   "type": "object",
   "required": [
-    "id"
+    "id",
+    "unitOfMeasurement",
+    "scale"
   ],
   "additionalProperties": false,
   "properties": {
@@ -14,15 +16,25 @@
       "type": "string"
     },
     "unitOfMeasurement": {
-      "oneOf": [
-        {
-          "description": "In which unit is the criterion measured",
-          "type": "string"
+      "type": "object",
+      "required": [
+        "type",
+        "label"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "custom",
+            "percentage",
+            "decimal"
+          ]
         },
-        {
-          "type": "null"
+        "label": {
+          "type": "string"
         }
-      ]
+      }
     },
     "source": {
       "description": "Where the data comes from",

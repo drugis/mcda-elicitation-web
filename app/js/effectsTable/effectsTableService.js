@@ -41,26 +41,36 @@ define(['lodash', 'angular'], function(_, angular) {
         }
         var criterion = _.omit(row, ['dataSources']);
         criterion.numberOfDataSources = row.dataSources.length;
-        accum = accum.concat(_.map(row.dataSources, function(dataSource, index) {
-          var newDataSource = angular.copy(dataSource);
-          var scale = dataSource.scale;
-          var isProportion = false;
-          if (_.isEqual(scale, [0, 1])) {
-            newDataSource.unitOfMeasurement = 'Proportion';
-            isProportion = true;
-          } else if (_.isEqual(scale, [0, 100])) {
-            newDataSource.unitOfMeasurement = '%';
-            isProportion = true;
-          }
-          return {
-            criterion: criterion,
-            isFirstRow: index === 0,
-            dataSource: newDataSource,
-            isProportion: isProportion
-          };
-        }));
+        accum = accum.concat(createRow(row.dataSources, criterion));
         return accum;
       }, []);
+    }
+
+    function createRow(dataSources, criterion) {
+      return _.map(dataSources, function(dataSource, index) {
+        var newDataSource = angular.copy(dataSource);
+        newDataSource.scale = getScale(dataSource.scale);
+        return {
+          criterion: criterion,
+          isFirstRow: index === 0,
+          dataSource: newDataSource
+        };
+      });
+    }
+
+    function getScale(scale) {
+      var newScale = [];
+      if (_.isNull(scale[0])) {
+        newScale[0] = -Infinity;
+      } else {
+        newScale[0] = scale[0];
+      }
+      if (_.isNull(scale[1])) {
+        newScale[1] = Infinity;
+      } else {
+        newScale[1] = scale[1];
+      }
+      return newScale;
     }
 
     function createEffectsTableInfo(performanceTable) {
@@ -150,9 +160,15 @@ define(['lodash', 'angular'], function(_, angular) {
         return buildGammaLabel(distribution.parameters);
       } else if (distribution.type === 'exact') {
         return distribution.value + '';
+      } else if (distribution.type === 'range') {
+        return buildRangeDistributionLabel(distribution.parameters);
       } else if (distribution.type === 'empty') {
         return distribution.value ? distribution.value : '';
       }
+    }
+
+    function buildRangeDistributionLabel(parameters) {
+      return '[' + significantDigits(parameters.lowerBound) + ', ' + significantDigits(parameters.upperBound) + ']';
     }
 
     function buildStudentsTLabel(parameters) {
@@ -200,17 +216,38 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function buildEffectInputLabel(input) {
       var percentage = input.scale === 'percentage' ? '%' : '';
-      if (input.stdErr) {
+      if (input.hasOwnProperty('stdErr')) {
         return input.value + percentage + ' (' + input.stdErr + percentage + ')';
-      } else if (input.lowerBound && input.upperBound) {
+      } else if (isValueCI(input)) {
         return input.value + percentage + ' (' + input.lowerBound + percentage + '; ' + input.upperBound + percentage + ')';
-      } else if (input.value && input.sampleSize) {
+      } else if (isRange(input)) {
+        return '[' + input.lowerBound + percentage + ', ' + input.upperBound + percentage + ']';
+      } else if (isValueSampleSize(input)) {
         return input.value + percentage + ' / ' + input.sampleSize;
-      } else if (input.events && input.sampleSize) {
+      } else if (isEventsSampleSize(input)) {
         return input.events + ' / ' + input.sampleSize;
       } else {
         return input.value + percentage;
       }
+    }
+
+    function isValueCI(input) {
+      return input.hasOwnProperty('lowerBound') &&
+        input.hasOwnProperty('upperBound') &&
+        input.hasOwnProperty('value');
+    }
+
+    function isRange(input) {
+      return input.hasOwnProperty('lowerBound') &&
+        input.hasOwnProperty('upperBound');
+    }
+
+    function isValueSampleSize(input) {
+      return input.value && input.sampleSize;
+    }
+
+    function isEventsSampleSize(input) {
+      return input.events && input.sampleSize;
     }
 
     function createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales) {

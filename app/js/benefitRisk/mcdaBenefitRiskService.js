@@ -1,19 +1,18 @@
 'use strict';
-define(['lodash'], (_) => {
+define(['lodash'], function(_) {
   var dependencies = [
     '$state',
     '$stateParams',
     'ScenarioResource',
     'WorkspaceService'
   ];
-  var McdaBenefitRiskService = (
+  var McdaBenefitRiskService = function(
     $state,
     $stateParams,
     ScenarioResource,
     WorkspaceService
-  ) => {
-
-    function forkScenarioAndGo(newTitle, subProblem) {
+  ) {
+    function copyScenarioAndGo(newTitle, subProblem) {
       return ScenarioResource.get($stateParams).$promise // reload because child scopes may have changed scenario
         .then((scenario) => {
           return {
@@ -53,10 +52,9 @@ define(['lodash'], (_) => {
       });
     }
 
-
     return {
       newScenarioAndGo: newScenarioAndGo,
-      forkScenarioAndGo: forkScenarioAndGo
+      copyScenarioAndGo: copyScenarioAndGo
     };
   };
   return dependencies.concat(McdaBenefitRiskService);

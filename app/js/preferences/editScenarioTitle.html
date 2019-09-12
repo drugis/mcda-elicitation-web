@@ -7,7 +7,9 @@
       <input type="text" rows="8" ng-model="scenario.title" ng-change="checkDuplicateScenarioTitle()">
     </div>
     <div class="cell">
-      <button class="button success" ng-disabled="!scenario.title || isDuplicateScenarioTitle" type="submit">Save</button>
+      <button class="button success" ng-disabled="!scenario.title || isDuplicateScenarioTitle" type="submit">
+        Edit
+      </button>
     </div>
     <div class="cell alert" ng-if="isDuplicateScenarioTitle">Duplicate title</div> 
     <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">

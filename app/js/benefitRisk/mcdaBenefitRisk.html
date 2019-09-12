@@ -7,37 +7,45 @@
       <tab heading="Problem definition" active="activeTab === 'problem'" ui-sref="problem">
         <div ng-if="activeTab === 'problem'" ui-view></div>
       </tab>
-      <tab heading="Preferences" active="activeTab === 'preferences'" 
-        ui-sref="preferences" ng-if="tasksAccessibility.preferences && !hasMissingValues">
+      <tab heading="Preferences" active="activeTab === 'preferences'" ui-sref="preferences"
+        ng-if="tasksAccessibility.preferences && !hasMissingValues">
         <div ng-if="activeTab === 'preferences'" ui-view></div>
       </tab>
-      <tab heading="Deterministic results" active="activeTab === 'deterministic-results'" 
+      <tab heading="Deterministic results" active="activeTab === 'deterministic-results'"
         ui-sref="deterministic-results" ng-if="tasksAccessibility.results && !hasMissingValues">
         <div ng-if="activeTab === 'deterministic-results'" ui-view></div>
       </tab>
-      <tab heading="SMAA results" active="activeTab === 'smaa-results'" ui-sref="smaa-results" ng-if="tasksAccessibility.results && !noStochasticResults && !hasMissingValues">
+      <tab heading="SMAA results" active="activeTab === 'smaa-results'" ui-sref="smaa-results"
+        ng-if="tasksAccessibility.results && !hasNoStochasticResults && !hasMissingValues">
         <div ng-if="activeTab === 'smaa-results'" ui-view></div>
       </tab>
       <!-- disabled tabs -->
-      <li class="tabs-title disabled" ng-if="hasMissingValues" 
-        tooltip="Cannot elicit preferences because effects table contains missing values">Preferences
+      <li class="tabs-title disabled" ng-if="hasMissingValues"
+        tooltip="Cannot elicit preferences because effects table contains missing values">
+        Preferences
       </li>
-      <li class="tabs-title disabled" ng-if="!tasksAccessibility.preferences" 
-        tooltip="Cannot set preferences because problem has multiple datasources per criterion">Preferences
+      <li class="tabs-title disabled" ng-if="!tasksAccessibility.preferences"
+        tooltip="Cannot set preferences because problem has multiple datasources per criterion">
+        Preferences
       </li>
-      <li class="tabs-title disabled" ng-if="!tasksAccessibility.results && !hasMissingValues" 
-        tooltip="Cannot perform analysis because not all partial value functions are set">Deterministic results
+      <li class="tabs-title disabled" ng-if="!tasksAccessibility.results && !hasMissingValues"
+        tooltip="Cannot perform analysis because not all partial value functions are set">
+        Deterministic results
       </li>
-      <li class="tabs-title disabled" ng-if="hasMissingValues" 
-        tooltip="Cannot perform analysis because effects table contains missing values">Deterministic results
+      <li class="tabs-title disabled" ng-if="hasMissingValues"
+        tooltip="Cannot perform analysis because effects table contains missing values">
+        Deterministic results
       </li>
-      <li class="tabs-title disabled" ng-if="!tasksAccessibility.results && !hasMissingValues" 
-        tooltip="Cannot perform analysis because not all partial value functions are set">SMAA results
+      <li class="tabs-title disabled" ng-if="!tasksAccessibility.results && !hasMissingValues"
+        tooltip="Cannot perform analysis because not all partial value functions are set">
+        SMAA results
       </li>
-      <li class="tabs-title disabled" ng-if="tasksAccessibility.results && noStochasticResults" 
-        tooltip="Cannot perform analysis because neither the criteria measurements nor the weights are stochastic">SMAA results</li>
-      <li class="tabs-title disabled" ng-if="hasMissingValues" 
-        tooltip="Cannot perform analysis because effects table contains missing values">SMAA results
+      <li class="tabs-title disabled" ng-if="tasksAccessibility.results && hasNoStochasticResults"
+        tooltip="Cannot perform analysis because neither the criteria measurements nor the weights are stochastic">
+        SMAA results</li>
+      <li class="tabs-title disabled" ng-if="hasMissingValues"
+        tooltip="Cannot perform analysis because effects table contains missing values">
+        SMAA results
       </li>
       <li class="tabs-title right" ng-if="!isStandalone">
         <workspace-settings edit-mode="editMode"></workspace-settings>

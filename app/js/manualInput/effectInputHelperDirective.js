@@ -57,7 +57,7 @@ define(['lodash', 'angular'], function(_, angular) {
           scope.inputParameterOptions = ManualInputService.getOptions(scope.inputType);
           scope.cell.inputParameters = getInputParameters();
           scope.cell.constraint = getCellConstraint();
-          scope.inputCell = ManualInputService.updateParameterConstraints(scope.cell);
+          scope.inputCell = ManualInputService.updateParameterConstraints(scope.cell, scope.unitOfMeasurement);
           inputChanged();
           scope.cell.label = ManualInputService.inputToString(scope.inputCell);
           scope.cell.isInvalid = ManualInputService.getInputError(scope.inputCell);
@@ -73,10 +73,8 @@ define(['lodash', 'angular'], function(_, angular) {
         }
 
         function getCellConstraint() {
-          if (scope.unitOfMeasurement === '%') {
-            return 'Proportion (percentage)';
-          } else if (scope.unitOfMeasurement === 'Proportion') {
-            return 'Proportion (decimal)';
+          if (scope.unitOfMeasurement.selectedOption.type !== 'custom' ) {
+            return scope.unitOfMeasurement.selectedOption.type;
           } else {
             return 'None';
           }

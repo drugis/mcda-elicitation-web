@@ -6,7 +6,6 @@
   </div>
   <div class="cell large-4">
     <div class="right button-group">
-      <workspace-settings edit-mode="editMode"></workspace-settings>
       <button class="button small info clipboard-button" data-clipboard-target="#effectstable">
         <i class="fa fa-clipboard"></i> Copy to clipboard
       </button>
@@ -16,21 +15,23 @@
     <table class="full-width effects-table" id="effectstable">
       <thead>
         <tr>
-          <th ng-show="toggledColumns['criteria']">Criterion
-            <inline-help help-key="criterion"></inline-help>
+          <th class="resizableColumn" ng-show="toggledColumns['criteria']">
+            Criterion <inline-help help-key="criterion"></inline-help>
           </th>
-          <th ng-show="toggledColumns['description']">Description</th>
-          <th ng-show="toggledColumns['units']">Units
-            <inline-help help-key="criterion-unit"></inline-help>
+          <th class="resizableColumn" ng-show="toggledColumns['description']">Description</th>
+          <th class="resizableColumn" ng-show="toggledColumns['units']">
+            Units <inline-help help-key="criterion-unit"></inline-help>
           </th>
-          <th class="text-center" ng-repeat="alternative in alternatives" style="min-width: 120px">
-            {{alternative.title}}</th>
-          <th ng-show="toggledColumns['strength']">Strength of evidence / Uncertainties
-            <inline-help help-key="strength-of-evidence"></inline-help>
+          <th class="resizableColumn" class="text-center" ng-repeat="alternative in alternatives"
+            style="min-width: 120px">
+            {{alternative.title}}
+          </th>
+          <th class="resizableColumn" ng-show="toggledColumns['strength']">
+            Strength of evidence / Uncertainties <inline-help help-key="strength-of-evidence"></inline-help>
             <inline-help help-key="uncertainties"></inline-help>
           </th>
-          <th ng-show="toggledColumns['references']">References
-            <inline-help help-key="criterion-source"></inline-help>
+          <th class="resizableColumn" ng-show="toggledColumns['references']">
+            References <inline-help help-key="criterion-source"></inline-help>
           </th>
         </tr>
       </thead>
@@ -50,16 +51,17 @@
             {{row.criterion.description}}
           </td>
           <td ng-if="!row.isHeaderRow" ng-show="toggledColumns['units']">
-            <span ng-hide="!isValueView && row.isProportion">
-              {{row.dataSource.unitOfMeasurement}}
+            <span
+              ng-hide="!isValueView && (row.dataSource.unitOfMeasurement.type === 'percentage' || row.dataSource.unitOfMeasurement.type === 'decimal')">
+              {{row.dataSource.unitOfMeasurement.label}}
             </span>
           </td>
           <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives"
             ng-style="isValueView && !isCellAnalysisViable[row.dataSource.id][alternative.id] ? {'background-color':'#f3d3c8'} : {}">
             <div ng-if="!isValueView || isCellAnalysisViable[row.dataSource.id][alternative.id]">
               <effects-table-cell effects-table-info="effectsTableInfo[row.dataSource.id]"
-                workspace-settings="workspaceSettings" scales="scales[row.dataSource.id][alternative.id]"
-                theoretical-scale="row.dataSource.scale" alternative-id="alternative.id">
+                scales="scales[row.dataSource.id][alternative.id]"
+                unit-of-measurement-type="row.dataSource.unitOfMeasurement.type" alternative-id="alternative.id">
               </effects-table-cell>
             </div>
             <div ng-if="isValueView && !isCellAnalysisViable[row.dataSource.id][alternative.id]" style="opacity: 0.5;"

@@ -3,6 +3,7 @@ var fs = require('fs');
 var https = require('https');
 var logger = require('./logger');
 var _ = require('lodash');
+var httpStatus = require('http-status-codes');
 
 var httpsOptions = {
   hostname: process.env.PATAVI_HOST,
@@ -28,7 +29,7 @@ function createPataviTask(problem, callback) {
   };
   var postReq = https.request(_.extend(httpsOptions, reqOptions), function(res) {
     logger.debug('patavi service task created');
-    if (res.statusCode === 201 && res.headers.location) {
+    if (res.statusCode === httpStatus.CREATED && res.headers.location) {
       callback(null, res.headers.location);
     } else {
       callback({

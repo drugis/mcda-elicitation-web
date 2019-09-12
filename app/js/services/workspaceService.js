@@ -3,12 +3,14 @@ define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
     '$q',
     'PataviResultsService',
+    'PerformanceTableService',
     'significantDigits'
   ];
 
   var WorkspaceService = function(
     $q,
     PataviResultsService,
+    PerformanceTableService,
     significantDigits
   ) {
     function getObservedScales(problem) {
@@ -48,7 +50,7 @@ define(['lodash', 'angular'], function(_, angular) {
       return _.reduce(observedScales, function(accum, scaleRow, datasourceId) {
         if (dataSources[datasourceId]) {
           accum[datasourceId] = _.reduce(scaleRow, function(accum, scaleCell, alternativeId) {
-            var usePercentage = _.isEqual(dataSources[datasourceId].scale, [0, 1]) || _.isEqual(dataSources[datasourceId].scale, [0, 100]);
+            var usePercentage = dataSources[datasourceId].unitOfMeasurement.type === 'percentage';
             accum[alternativeId] = usePercentage ? _.mapValues(scaleCell, times100) : scaleCell;
             return accum;
           }, {});
@@ -67,6 +69,13 @@ define(['lodash', 'angular'], function(_, angular) {
         problem: {
           criteria: criteriaWithUpdatedDataSources
         }
+      });
+    }
+
+    function percentifyProblem(problem) {
+      var criteriaWithUpdatedDataSources = updateDataSources(problem.criteria, percentifyDataSource);
+      return _.merge({}, problem, {
+        criteria: criteriaWithUpdatedDataSources
       });
     }
 
@@ -97,19 +106,32 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function percentifyDataSource(dataSource) {
       var newDataSource = angular.copy(dataSource);
-      if (_.isEqual([0, 100], newDataSource.scale) || _.isEqual([0, 1], newDataSource.scale)) {
+      if (dataSource.unitOfMeasurement.type === 'decimal') {
         newDataSource.scale = [0, 100];
-        newDataSource.unitOfMeasurement = '%';
+        newDataSource.unitOfMeasurement = {
+          label: '%',
+          type: 'percentage'
+        };
         if (newDataSource.pvf) {
-          if (newDataSource.pvf.range) {
-            newDataSource.pvf.range = _.map(newDataSource.pvf.range, times100);
-          }
-          if (newDataSource.pvf.cutoffs) {
-            newDataSource.pvf.cutoffs = _.map(newDataSource.pvf.cutoffs, times100);
-          }
+          newDataSource.pvf = percentifyPVF(newDataSource.pvf);
+        }
+      } else if (dataSource.unitOfMeasurement.type === 'percentage') {
+        if (newDataSource.pvf) {
+          newDataSource.pvf = percentifyPVF(newDataSource.pvf);
         }
       }
       return newDataSource;
+    }
+
+    function percentifyPVF(pvf) {
+      var newPVF = angular.copy(pvf);
+      if (pvf.range) {
+        newPVF.range = _.map(pvf.range, times100);
+      }
+      if (pvf.cutoffs) {
+        newPVF.cutoffs = _.map(pvf.cutoffs, times100);
+      }
+      return newPVF;
     }
 
     function dePercentifyCriteria(baseState) {
@@ -121,11 +143,21 @@ define(['lodash', 'angular'], function(_, angular) {
       });
     }
 
+    function dePercentifyProblem(problem) {
+      var criteriaWithUpdatedDataSources = updateDataSources(problem.criteria, dePercentifyDataSource);
+      return _.merge({}, problem, {
+        criteria: criteriaWithUpdatedDataSources
+      });
+    }
+
     function dePercentifyDataSource(dataSource) {
       var newDataSource = angular.copy(dataSource);
-      if (_.isEqual([0, 100], newDataSource.scale) || _.isEqual([0, 1], newDataSource.scale)) {
+      if (dataSource.unitOfMeasurement.type === 'percentage') {
         newDataSource.scale = [0, 1];
-        newDataSource.unitOfMeasurement = 'Proportion';
+        newDataSource.unitOfMeasurement = {
+          type: 'decimal',
+          label: 'Proportion'
+        };
       }
       return newDataSource;
     }
@@ -150,8 +182,8 @@ define(['lodash', 'angular'], function(_, angular) {
         problem: mergeBaseAndSubProblem(baseProblem, subProblem.definition)
       }, scenario.state);
       newState.problem.preferences = scenario.state.prefs;
-      newState.problem.criteria = _.mapValues(newState.problem.criteria, function(criterion, key) {
-        return _.merge({}, criterion, _.omit(baseProblem.criteria[key], ['pvf', 'dataSources']));
+      newState.problem.criteria = _.mapValues(newState.problem.criteria, function(criterion, criterionId) {
+        return _.merge({}, criterion, _.omit(baseProblem.criteria[criterionId], ['pvf', 'dataSources']));
         // omit because we don't want the base problem pvf to overwrite the current one
       });
       newState.problem.alternatives = _.mapValues(newState.problem.alternatives, function(alternative, key) {
@@ -165,11 +197,34 @@ define(['lodash', 'angular'], function(_, angular) {
       var newProblem = _.cloneDeep(problem);
       _.forEach(newProblem.criteria, function(criterion) {
         var scale = observedScales[criterion.dataSources[0].id];
+        var effects = PerformanceTableService.getEffectValues(problem.performanceTable, criterion.dataSources[0]);
+        var rangeDistributionValues = PerformanceTableService.getRangeDistributionValues(problem.performanceTable, criterion.dataSources[0]);
+
         criterion.dataSources[0].pvf = _.merge({
-          range: getMinMax(scale)
+          range: getMinMax(scale, effects.concat(rangeDistributionValues))
         }, criterion.dataSources[0].pvf);
       });
       return newProblem;
+    }
+
+    function getMinMax(scalesByAlternative, effectAndRangeDistributionValues) {
+      var allValues = [].concat(effectAndRangeDistributionValues);
+      _.forEach(scalesByAlternative, function(scale) {
+        _.forEach(scale, function(value) {
+          if (value !== null) {
+            allValues.push(value);
+          }
+        });
+      });
+
+      var minimum = Math.min.apply(null, allValues);
+      var maximum = Math.max.apply(null, allValues);
+
+      if (minimum === maximum) {
+        minimum -= Math.abs(minimum) * 0.001;
+        maximum += Math.abs(maximum) * 0.001;
+      }
+      return [minimum, maximum];
     }
 
     function mergeBaseAndSubProblem(baseProblem, subProblemDefinition) {
@@ -301,31 +356,18 @@ define(['lodash', 'angular'], function(_, angular) {
       }, {});
     }
 
-    function getMinMax(scales) {
-      var minimum = Infinity;
-      var maximum = -Infinity;
-      _.forEach(scales, function(scale) {
-        _.forEach(scale, function(value) {
-          if (value !== null && value < minimum) {
-            minimum = value;
-          }
-          if (value !== null && value > maximum) {
-            maximum = value;
-          }
-        });
-      });
-      return [minimum, maximum];
-    }
-
     function filterScenariosWithResults(baseProblem, currentSubProblem, scenarios) {
       return _.filter(scenarios, function(scenario) {
         var state = buildAggregateState(baseProblem, currentSubProblem, scenario);
-        return !_.find(state.problem.criteria, function(criterion) {
-          return !criterion.dataSources[0].pvf || !criterion.dataSources[0].pvf.direction;
+        return !_.some(state.problem.criteria, function(criterion) {
+          return hasPVFDirection(criterion);
         });
       });
     }
 
+    function hasPVFDirection(criterion) {
+      return !criterion.dataSources[0].pvf || !criterion.dataSources[0].pvf.direction;
+    }
     /*
      * workspace should have:
      * - title
@@ -478,41 +520,87 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function inconsistentOrdinalPreferences(workspace) {
-      if (!workspace.preferences || _.isEmpty(workspace.preferences) || _.find(workspace.preferences, function(preference) {
-        return preference.type !== 'ordinal';
-      })) {
+      if (hasNoOrdinalPreferences(workspace)) {
         return;
       }
-      if (workspace.preferences.length !== _.size(workspace.criteria) - 1) {
+      var visitCount = createVisitCounts(workspace);
+      if (
+        hasWrongNumberOfPreferences(workspace) ||
+        hasBadPath(workspace) ||
+        hasBadCoverage(visitCount) ||
+        hasBadVisitCount(visitCount)
+      ) {
         return 'Inconsistent ordinal preferences';
       }
+    }
 
-      var visitCount = _.cloneDeep(workspace.criteria);
-      _.forEach(visitCount, function(node) {
-        node.visits = 0;
+    function hasBadVisitCount(visitCount) {
+      var counts = createVisitCombinationCounts(visitCount);
+      return counts.first !== 1 || counts.last !== 1;
+    }
+
+    function hasBadCoverage(visitCount) {
+      return _.reduce(visitCount, function(accum, visits) {
+        return accum || !((visits.to === 0 && visits.from === 1) ||
+          (visits.to === 1 && visits.from === 1) ||
+          (visits.to === 1 && visits.from === 0));
+      }, false);
+    }
+
+    function createVisitCounts(workspace) {
+      var visitCount = _.mapValues(workspace.criteria, function() {
+        return {
+          from: 0,
+          to: 0
+        };
       });
+      return countVisits(workspace, visitCount);
+    }
 
-      // always visit beginning of path
-      ++visitCount[workspace.preferences[0].criteria[0]].visits;
-
-      var badPath = false;
-      _.forEach(workspace.preferences, function(preference, index) {
+    function countVisits(workspace, visitCount) {
+      return _.reduce(workspace.preferences, function(accum, preference) {
         var origin = preference.criteria[0];
         var destination = preference.criteria[1];
-        ++visitCount[destination].visits;
+        ++accum[origin].from;
+        ++accum[destination].to;
+        return accum;
+      }, visitCount);
+    }
+
+    function hasBadPath(workspace) {
+      return _.find(workspace.preferences, function(preference, index) {
+        var origin = preference.criteria[0];
         if (index > 0) {
           var previousDestination = workspace.preferences[index - 1].criteria[1];
-          badPath = origin !== previousDestination;
+          return origin !== previousDestination;
         }
       });
+    }
 
-      var badCoverage = _.find(visitCount, ['visits', 0]) || _.find(visitCount, function(node) {
-        return node.visits > 1;
+    function createVisitCombinationCounts(visitCount) {
+      var counts = {
+        first: 0,
+        last: 0,
+      };
+      return _.reduce(visitCount, function(accum, visits) {
+        if (visits.to === 0 && visits.from === 1) {
+          ++accum.first;
+        } else if (visits.to === 1 && visits.from === 0) {
+          ++accum.last;
+        }
+        return accum;
+      }, counts);
+
+    }
+
+    function hasNoOrdinalPreferences(workspace) {
+      return !workspace.preferences || _.isEmpty(workspace.preferences) || _.find(workspace.preferences, function(preference) {
+        return preference.type !== 'ordinal';
       });
+    }
 
-      if (badPath || badCoverage) {
-        return 'Inconsistent ordinal preferences';
-      }
+    function hasWrongNumberOfPreferences(workspace) {
+      return workspace.preferences.length !== _.size(workspace.criteria) - 1;
     }
 
     function inconsistentExactPreferences(workspace) {
@@ -602,11 +690,15 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function hasNoStochasticResults(aggregateState) {
-      var isAllExact = !_.some(aggregateState.problem.performanceTable, function(tableEntry) {
-        return tableEntry.performance.distribution && tableEntry.performance.distribution.type !== 'exact';
-      });
-      var isExactSwing = _.some(aggregateState.prefs, ['type', 'exact swing']);
-      return isAllExact && isExactSwing;
+      if (!aggregateState) {
+        return;
+      } else {
+        var isAllExact = !_.some(aggregateState.problem.performanceTable, function(tableEntry) {
+          return tableEntry.performance.distribution && tableEntry.performance.distribution.type !== 'exact';
+        });
+        var isNotImpreciseSwing = !_.some(aggregateState.prefs, ['type', 'ratio bound']);
+        return isAllExact && isNotImpreciseSwing;
+      }
     }
 
 
@@ -618,19 +710,21 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     return {
+      addTheoreticalScales: addTheoreticalScales,
+      buildAggregateState: buildAggregateState,
+      checkForMissingValuesInPerformanceTable: checkForMissingValuesInPerformanceTable,
+      dePercentifyCriteria: dePercentifyCriteria,
+      dePercentifyProblem: dePercentifyProblem,
+      filterScenariosWithResults: filterScenariosWithResults,
       getObservedScales: getObservedScales,
+      hasNoStochasticResults: hasNoStochasticResults,
+      mergeBaseAndSubProblem: mergeBaseAndSubProblem,
+      percentifyCriteria: percentifyCriteria,
+      percentifyProblem: percentifyProblem,
       percentifyScales: percentifyScales,
       reduceProblem: reduceProblem,
-      buildAggregateState: buildAggregateState,
-      mergeBaseAndSubProblem: mergeBaseAndSubProblem,
       setDefaultObservedScales: setDefaultObservedScales,
-      filterScenariosWithResults: filterScenariosWithResults,
-      validateWorkspace: validateWorkspace,
-      addTheoreticalScales: addTheoreticalScales,
-      percentifyCriteria: percentifyCriteria,
-      dePercentifyCriteria: dePercentifyCriteria,
-      hasNoStochasticResults: hasNoStochasticResults,
-      checkForMissingValuesInPerformanceTable: checkForMissingValuesInPerformanceTable
+      validateWorkspace: validateWorkspace
     };
   };
 

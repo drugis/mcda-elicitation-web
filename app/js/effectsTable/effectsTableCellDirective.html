@@ -10,15 +10,13 @@
     {{effectValue}}
   </div>
   <div ng-if="effectValue === ''">
-    <effects-table-scales-cell scales="scales" uncertainty="false" workspace-settings="workspaceSettings"
-      theoretical-scale="theoreticalScale">
+    <effects-table-scales-cell scales="scales" uncertainty="false" theoretical-scale="theoreticalScale">
     </effects-table-scales-cell>
   </div>
 </div>
 
 <div ng-if="effectsDisplay === 'smaa'">
-  <effects-table-scales-cell scales="scales" uncertainty="uncertainty" workspace-settings="workspaceSettings"
-    theoretical-scale="theoreticalScale">
+  <effects-table-scales-cell scales="scales" uncertainty="uncertainty" theoretical-scale="theoreticalScale">
   </effects-table-scales-cell>
 </div>
 

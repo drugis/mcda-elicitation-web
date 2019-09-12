@@ -2,37 +2,41 @@
 define([
   './manualInputController',
   './addCriterionController',
-  '../evidence/editDataSourceController',
-  './manualInputService',
-  './inputKnowledgeService',
+  './addAlternativeController',
   './constraintService',
-  './performanceService',
-  './generateDistributionService',
+  '../evidence/editDataSourceController',
+  './editUnitOfMeasurementController',
+  './editStrengthOfEvidenceController',
   './finishInputCellService',
+  './generateDistributionService',
+  './inProgressResource',
+  './inputKnowledgeService',
+  './manualInputService',
+  './performanceService',
   './toStringService',
   './effectInputHelperDirective',
   './inputDataSourceDirective',
-  './inProgressResource',
   './manualInputTableDirective',
-  './editUnitOfMeasurementController',
   'angular',
   'angular-resource'
 ], function(
   ManualInputController,
   AddCriterionController,
-  EditDataSourceController,
-  ManualInputService,
-  InputKnowledgeService,
+  AddAlternativeController,
   ConstraintService,
-  PerformanceService,
-  GenerateDistributionService,
+  EditDataSourceController,
+  EditUnitOfMeasurementController,
+  EditStrengthOfEvidenceController,
   FinishInputCellService,
+  GenerateDistributionService,
+  InProgressResource,
+  InputKnowledgeService,
+  ManualInputService,
+  PerformanceService,
   ToStringService,
   effectInputHelper,
   inputDataSource,
-  InProgressResource,
   manualInputTable,
-  EditUnitOfMeasurementController,
   angular
 ) {
     return angular.module('elicit.manualInput', ['ngResource', 'elicit.util', 'elicit.effectsTable'])
@@ -41,6 +45,8 @@ define([
       .controller('AddCriterionController', AddCriterionController)
       .controller('EditDataSourceController', EditDataSourceController)
       .controller('EditUnitOfMeasurementController', EditUnitOfMeasurementController)
+      .controller('EditStrengthOfEvidenceController', EditStrengthOfEvidenceController)
+      .controller('AddAlternativeController', AddAlternativeController)
 
       .factory('ManualInputService', ManualInputService)
       .factory('InputKnowledgeService', InputKnowledgeService)

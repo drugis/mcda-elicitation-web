@@ -6,19 +6,9 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
 
     function run($scope, inState) {
       var state = angular.copy(inState);
-      state.problem.criteria = _.mapValues(state.problem.criteria, function(criterion) {
-        if (criterion.dataSources) {
-          return _.merge({}, _.omit(criterion, ['dataSources']), _.omit(criterion.dataSources[0]), []);
-        }
-        return criterion;
-      });
+      state.problem.criteria = mergeDataSourceOntoCriterion(state.problem.criteria);
 
-      function successHandler(results) {
-        state.results = results;
-        return state;
-      }
-
-      var updateHandler = _.throttle(function(update) {
+      var updateCallback = _.throttle(function(update) {
         if (update && update.eventType === 'progress' && update.eventData && $.isNumeric(update.eventData)) {
           var progress = parseInt(update.eventData);
           if (progress > $scope.progress) {
@@ -28,8 +18,22 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       }, 30);
       $scope.progress = 0;
 
-      state.resultsPromise = PataviResultsService.postAndHandleResults(state.problem, successHandler, updateHandler);
+      state.resultsPromise = PataviResultsService.postAndHandleResults(state.problem, _.partial(succesCallback, state), updateCallback);
       return state;
+    }
+
+    function succesCallback(state, results) {
+      state.results = results;
+      return state;
+    }
+
+    function mergeDataSourceOntoCriterion(criteria) {
+      return _.mapValues(criteria, function(criterion) {
+        if (criterion.dataSources) {
+          return _.merge({}, _.omit(criterion, ['dataSources']), _.omit(criterion.dataSources[0]), []);
+        }
+        return criterion;
+      });
     }
 
     function addSmaaResults(state) {
@@ -102,16 +106,8 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
     }
 
     function getResults(scope, state) {
-      if (_.some(state.problem.performanceTable, function(entry) { return entry.performance.distribution; })) {
-        return getResultForType(scope, state, 'distribution');
-      } else {
-        return getResultForType(scope, state, 'effect');
-      }
-    }
-
-    function getResultForType(scope, state, type) {
       var nextState = {
-        problem: _.merge({}, getProblemForResultType(state.problem, type), {
+        problem: _.merge({}, getProblem(state.problem), {
           preferences: state.prefs,
           method: 'smaa'
         }),
@@ -121,100 +117,20 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       return run(scope, nextState);
     }
 
-    function resetModifiableScales(observed, alternatives) {
-      var modifiableScales = _.cloneDeep(observed);
-      modifiableScales = _.reduce(modifiableScales, function(accum, criterion, criterionKey) {
-        accum[criterionKey] = _.reduce(criterion, function(accum, scale, key) {
-          if (alternatives[key]) {
-            accum[key] = scale;
-            return accum;
-          } else {
-            return accum;
-          }
-        }, {});
-        return accum;
-      }, {});
-      return modifiableScales;
+    function getProblem(problem) {
+      var newProblem = angular.copy(problem);
+      newProblem.performanceTable = _.map(problem.performanceTable, createEntry);
+      return newProblem;
     }
 
-    function pataviResultToValueProfile(result, criteria, alternatives, legend) {
-      return _.map(criteria, function(criterion) {
-        return {
-          key: criterion.title,
-          values: _.map(alternatives, function(alternative) {
-            return {
-              x: legend ? legend[alternative.id].newTitle : alternative.title,
-              y: result.value.data[alternative.id][criterion.id]
-            };
-          })
-        };
-      });
-    }
-
-    function pataviResultToLineValues(results, alternatives, legend) {
-      return _.map(alternatives, function(alternative) {
-        return {
-          key: legend ? legend[alternative.id].newTitle : alternative.title,
-          values: _(results.total.data[alternative.id]).map(function(entryValue, entryKey) {
-            return {
-              x: parseFloat(entryKey),
-              y: entryValue
-            };
-          })
-            .sortBy('x')
-            .value()
-        };
-      });
-    }
-
-    function getDeterministicResults(scope, state) {
-      var nextState = {
-        problem: _.merge({}, getProblemForResultType(state.problem, 'effect'), {
-          preferences: state.prefs,
-          method: 'deterministic'
-        })
-      };
-      return run(scope, nextState);
-    }
-
-    function getRecalculatedDeterministicResults(scope, state) {
-      var nextState = {
-        problem: _.merge({}, state.problem, {
-          preferences: state.prefs,
-          method: 'sensitivityMeasurements',
-          sensitivityAnalysis: {
-            meas: scope.sensitivityMeasurements.alteredTableCells
-          }
-        })
-      };
-      return run(scope, nextState);
-    }
-
-    function getMeasurementsSensitivityResults(scope, state) {
-      var nextState = {
-        problem: _.merge({}, getProblemForResultType(state.problem, 'effect'), {
-          preferences: state.prefs,
-          method: 'sensitivityMeasurementsPlot',
-          sensitivityAnalysis: {
-            alternative: scope.sensitivityMeasurements.measurementsAlternative.id,
-            criterion: scope.sensitivityMeasurements.measurementsCriterion.id
-          }
-        })
-      };
-      return run(scope, nextState);
-    }
-
-    function getPreferencesSensitivityResults(scope, state) {
-      var nextState = {
-        problem: _.merge({}, getProblemForResultType(state.problem, 'effect'), {
-          preferences: state.prefs,
-          method: 'sensitivityWeightPlot',
-          sensitivityAnalysis: {
-            criterion: scope.sensitivityMeasurements.preferencesCriterion.id
-          }
-        })
-      };
-      return run(scope, nextState);
+    function createEntry(entry) {
+      var newEntry = angular.copy(entry);
+      if (entry.performance.distribution) {
+        newEntry.performance = entry.performance.distribution;
+      } else {
+        newEntry.performance = entry.performance.effect;
+      }
+      return newEntry;
     }
 
     function replaceAlternativeNames(legend, state) {
@@ -231,43 +147,10 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       return newState;
     }
 
-    function percentifySensitivityResult(values, coordinate) {
-      return _.map(values, function(line) {
-        var newLine = angular.copy(line);
-        newLine.values = _.map(newLine.values, function(coordinates) {
-          coordinates[coordinate] *= 100;
-          return coordinates;
-        });
-        return newLine;
-      });
-    }
-
-    function getProblemForResultType(problem, resultType) {
-      var newProblem = angular.copy(problem);
-      newProblem.performanceTable = _.map(problem.performanceTable, function(entry) {
-        var newEntry = angular.copy(entry);
-        if (entry.performance[resultType]) {
-          newEntry.performance = entry.performance[resultType];
-        } else {
-          newEntry.performance = entry.performance.distribution;
-        }
-        return newEntry;
-      });
-      return newProblem;
-    }
-
     return {
       getResults: getResults,
-      resetModifiableScales: resetModifiableScales,
-      pataviResultToValueProfile: pataviResultToValueProfile,
-      pataviResultToLineValues: pataviResultToLineValues,
-      getDeterministicResults: getDeterministicResults,
-      getRecalculatedDeterministicResults: getRecalculatedDeterministicResults,
-      getMeasurementsSensitivityResults: getMeasurementsSensitivityResults,
-      getPreferencesSensitivityResults: getPreferencesSensitivityResults,
       addSmaaResults: addSmaaResults,
-      replaceAlternativeNames: replaceAlternativeNames,
-      percentifySensitivityResult: percentifySensitivityResult
+      replaceAlternativeNames: replaceAlternativeNames
     };
   };
 

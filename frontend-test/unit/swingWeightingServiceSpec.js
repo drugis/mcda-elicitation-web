@@ -58,7 +58,9 @@ define([
       sliderOptions = {};
       scope = $rootScope.$new();
       scope.aggregateState = {
-        problem: exampleProblem()
+        dePercentified: {
+          problem: exampleProblem()
+        }
       };
       currentScenario = jasmine.createSpyObj('currentScenario', ['$save']);
       currentScenario.state = {
@@ -105,7 +107,10 @@ define([
         expect(scopeState.values).toEqual({
           'Prox DVT': 100,
           'Dist DVT': 100,
-          'Bleed': 100
+          'Bleed': 100,
+          'Bleed2': 100,
+          'Bleed3': 100,
+          'null2Infinity': 100
         });
         expect(scopeState.sliderOptions).toEqual(sliderOptions);
         expect(scopeState.sliderOptionsDisabled.disabled).toBe(true);

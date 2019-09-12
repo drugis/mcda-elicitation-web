@@ -8,11 +8,14 @@ define([
   './workspaceController',
   './workspaceSettingsController',
   '../services/workspaceService',
+  '../services/performanceTableService',
   './orderingService',
   './workspaceSettingsService',
   './exampleResource',
   './tutorialResource',
   './workspaceSettingsDirective',
+  './workspacesDirective',
+  './inProgressWorkspacesDirective',
   'angular',
   '../util',
   '../results/results'
@@ -24,11 +27,14 @@ define([
   WorkspaceController,
   WorkspaceSettingsController,
   WorkspaceService,
+  PerformanceTableService,
   OrderingService,
   WorkspaceSettingService,
   ExampleResource,
   TutorialResource,
   WorkspaceSettings,
+  Workspaces,
+  InProgressWorkspaces,
   angular
 ) {
     return angular.module('elicit.workspace', ['elicit.util', 'elicit.results'])
@@ -40,6 +46,7 @@ define([
       .controller('WorkspaceSettingsController', WorkspaceSettingsController)
 
       .factory('WorkspaceService', WorkspaceService)
+      .factory('PerformanceTableService', PerformanceTableService)
       .factory('OrderingService', OrderingService)
       .factory('WorkspaceSettingsService', WorkspaceSettingService)
 
@@ -47,5 +54,7 @@ define([
       .service('TutorialResource', TutorialResource)
 
       .directive('workspaceSettings', WorkspaceSettings)
+      .directive('workspaces', Workspaces)
+      .directive('inProgressWorkspaces', InProgressWorkspaces)
       ;
   });

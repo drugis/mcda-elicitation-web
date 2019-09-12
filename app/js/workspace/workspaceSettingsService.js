@@ -13,7 +13,9 @@ define(['angular', 'lodash'], function(angular, _) {
     var DEFAULT_SETTINGS = {
       calculationMethod: 'median',
       showPercentages: true,
-      effectsDisplay: 'deterministic'
+      effectsDisplay: 'deterministic',
+      hasNoEffects: false,
+      isRelativeProblem: false
     };
 
     var DEFAULT_TOGGLED_COLUMNS = {
@@ -50,8 +52,37 @@ define(['angular', 'lodash'], function(angular, _) {
       return angular.copy(toggledColumns);
     }
 
-    function getWorkspaceSettings() {
+    function getWorkspaceSettings(performanceTable) {
+      setHasNoEffects(performanceTable);
+      setHasNoAlternatives(performanceTable);
       return angular.copy(workspaceSettings);
+    }
+
+    function setHasNoEffects(performanceTable) {
+      if (performanceTable && !hasEffect(performanceTable)) {
+        if (workspaceSettings.effectsDisplay === 'deterministic') {
+          workspaceSettings.effectsDisplay = 'smaa';
+        }
+        workspaceSettings.hasNoEffects = true;
+      }
+    }
+
+    function hasEffect(performanceTable) {
+      return _.some(performanceTable, function(entry) {
+        return entry.performance.effect;
+      });
+    }
+
+    function setHasNoAlternatives(performanceTable){
+      if(performanceTable && !hasAlternative(performanceTable)){
+        workspaceSettings.isRelativeProblem = true;
+      }
+    }
+
+    function hasAlternative(performanceTable) {
+      return _.some(performanceTable, function(entry) {
+        return entry.alternative;
+      });
     }
 
     function saveSettings(newWorkspaceSettings, newToggledColumns) {

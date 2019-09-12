@@ -53,7 +53,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should build a percentage value performance', function() {
         var cell = {
           isInvalid: false,
-          constraint:'Proportion (percentage)',
+          constraint:'percentage',
           firstParameter: 1
         };
         var result = performanceService.buildValuePerformance(cell);
@@ -71,7 +71,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should build a decimal value performance', function() {
         var cell = {
           isInvalid: false,
-          constraint:'Proportion (decimal)',
+          constraint:'decimal',
           firstParameter: 0.01
         };
         var result = performanceService.buildValuePerformance(cell);
@@ -125,7 +125,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should build a percentage value confidence interval performance', function() {
         var cell = {
           isInvalid: false,
-          constraint:'Proportion (percentage)',
+          constraint:'percentage',
           firstParameter: 10,
           secondParameter: 5,
           thirdParameter: 30
@@ -147,7 +147,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
       it('should build a decimal value confidence interval performance', function() {
         var cell = {
           isInvalid: false,
-          constraint:'Proportion (decimal)',
+          constraint:'decimal',
           firstParameter: 0.01,
           secondParameter: 0.001,
           thirdParameter: 0.5
@@ -188,188 +188,6 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
             upperBound: 'NE'
           }
         };
-        expect(result).toEqual(expectedResult);
-      });
-    });
-
-    describe('buildValueSEPerformance', function() {
-      it('should build a value standard error performance', function() {
-        var cell = {
-          isInvalid: false,
-          inputParameters: {
-            firstParameter: {
-              constraints: []
-            }
-          },
-          firstParameter: 1,
-          secondParameter: 0.5
-        };
-        var result = performanceService.buildValueSEPerformance(cell);
-        var expectedResult = {
-          type: 'exact',
-          value: 1,
-          input: {
-            value: 1,
-            stdErr: 0.5
-          }
-        };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should return undefined for an invalid cell', function() {
-        var cell = {
-          isInvalid: true
-        };
-        var result = performanceService.buildValueSEPerformance(cell);
-        var expectedResult;
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should build a percentage value standard error performance', function() {
-        var cell = {
-          isInvalid: false,
-          constraint: 'Proportion (percentage)',
-          firstParameter: 45,
-          secondParameter: 5
-        };
-        var result = performanceService.buildValueSEPerformance(cell);
-        var expectedResult = {
-          type: 'exact',
-          value: 0.45,
-          input: {
-            value: 45,
-            stdErr: 5,
-            scale: 'percentage'
-          }
-        };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should build a decimal value standard error performance', function() {
-        var cell = {
-          isInvalid: false,
-          constraint: 'Proportion (decimal)',
-          firstParameter: 0.1,
-          secondParameter: 0.01
-        };
-        var result = performanceService.buildValueSEPerformance(cell);
-        var expectedResult = {
-          type: 'exact',
-          value: 0.1,
-          input: {
-            value: 0.1,
-            stdErr: 0.01,
-            scale: 'decimal'
-          }
-        };
-        expect(result).toEqual(expectedResult);
-      });
-    });
-
-    describe('buildValueSampleSizePerformance', function() {
-      it('should build a value sample size performance', function() {
-        var cell = {
-          isInvalid: false,
-          inputParameters: {
-            firstParameter: {
-              constraints: []
-            }
-          },
-          firstParameter: 1,
-          secondParameter: 123
-        };
-        var result = performanceService.buildValueSampleSizePerformance(cell);
-        var expectedResult = {
-          type: 'exact',
-          value: 1,
-          input: {
-            value: 1,
-            sampleSize: 123
-          }
-        };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should return undefined for an invalid cell', function() {
-        var cell = {
-          isInvalid: true
-        };
-        var result = performanceService.buildValueSampleSizePerformance(cell);
-        var expectedResult;
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should build a percentage value sample size performance', function() {
-        var cell = {
-          isInvalid: false,
-          constraint:'Proportion (percentage)',
-          firstParameter: 1,
-          secondParameter: 123
-        };
-        var result = performanceService.buildValueSampleSizePerformance(cell);
-        var expectedResult = {
-          type: 'exact',
-          value: 0.01,
-          input: {
-            value: 1,
-            sampleSize: 123,
-            scale: 'percentage'
-          }
-        };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should build a decimal value sample size performance', function() {
-        var cell = {
-          isInvalid: false,
-          constraint:'Proportion (decimal)',
-          firstParameter: 0.01,
-          secondParameter: 123
-        };
-        var result = performanceService.buildValueSampleSizePerformance(cell);
-        var expectedResult = {
-          type: 'exact',
-          value: 0.01,
-          input: {
-            value: 0.01,
-            sampleSize: 123,
-            scale: 'decimal'
-          }
-        };
-        expect(result).toEqual(expectedResult);
-      });
-    });
-
-    describe('buildEventsSampleSizePerformance', function() {
-      it('should build a value sample size performance', function() {
-        var cell = {
-          isInvalid: false,
-          inputParameters: {
-            firstParameter: {
-              constraints: []
-            }
-          },
-          firstParameter: 10,
-          secondParameter: 100
-        };
-        var result = performanceService.buildEventsSampleSizePerformance(cell);
-        var expectedResult = {
-          type: 'exact',
-          value: 0.1,
-          input: {
-            events: 10,
-            sampleSize: 100
-          }
-        };
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should return undefined for an invalid cell', function() {
-        var cell = {
-          isInvalid: true
-        };
-        var result = performanceService.buildEventsSampleSizePerformance(cell);
-        var expectedResult;
         expect(result).toEqual(expectedResult);
       });
     });
@@ -468,6 +286,101 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
           isInvalid: true
         };
         var result = performanceService.buildGammaPerformance(cell);
+        var expectedResult;
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('buildRangeEffectPerformance', function() {
+      it('should build a decimal range performance for an effect', function() {
+        var cell = {
+          constraint: 'decimal',
+          firstParameter: 0.1,
+          secondParameter: 0.2
+        };
+        var result = performanceService.buildRangeEffectPerformance(cell);
+        var expectedResult = {
+          type: 'exact',
+          value: (0.1+0.2)/2,
+          input: {
+            lowerBound: 0.1,
+            upperBound: 0.2
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should build a percentage range performance for an effect', function() {
+        var cell = {
+          constraint: 'percentage',
+          firstParameter: 10,
+          secondParameter: 20
+        };
+        var result = performanceService.buildRangeEffectPerformance(cell);
+        var expectedResult = {
+          type: 'exact',
+          value: 0.15,
+          input: {
+            scale: 'percentage',
+            lowerBound: 10,
+            upperBound: 20
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+
+      it('should return undefined for an invalid cell', function() {
+        var cell = {
+          isInvalid: true
+        };
+        var result = performanceService.buildRangeEffectPerformance(cell);
+        var expectedResult;
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('buildRangeEffectPerformance', function() {
+      it('should build a decimal range performance for a distribution', function() {
+        var cell = {
+          constraint: 'decimal',
+          firstParameter: 0.1,
+          secondParameter: 0.2
+        };
+        var result = performanceService.buildRangeDistribtutionPerformance(cell);
+        var expectedResult = {
+          type: 'range',
+          parameters: {
+            lowerBound: 0.1,
+            upperBound: 0.2
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should build a percentage range performance for a distribution', function() {
+        var cell = {
+          constraint: 'percentage',
+          firstParameter: 10,
+          secondParameter: 20
+        };
+        var result = performanceService.buildRangeDistribtutionPerformance(cell);
+        var expectedResult = {
+          type: 'range',
+          parameters: {
+            lowerBound: 0.1,
+            upperBound: 0.2
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+
+      it('should return undefined for an invalid cell', function() {
+        var cell = {
+          isInvalid: true
+        };
+        var result = performanceService.buildRangeDistribtutionPerformance(cell);
         var expectedResult;
         expect(result).toEqual(expectedResult);
       });

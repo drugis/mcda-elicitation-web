@@ -7,43 +7,37 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
     'buildBetaPerformance',
     'buildGammaPerformance',
     'buildValueCIPerformance',
-    'buildValueSEPerformance',
-    'buildEventsSampleSizePerformance',
-    'buildValueSampleSizePerformance',
     'buildTextPerformance',
-    'buildEmptyPerformance'
+    'buildEmptyPerformance',
+    'buildRangeDistribtutionPerformance',
+    'buildRangeEffectPerformance'
   ]);
   var generateDistributionServiceMock = jasmine.createSpyObj('GenerateDistributionService', [
     'generateValueDistribution',
-    'generateValueSEDistribution',
     'generateValueCIDistribution',
-    'generateValueSampleSizeDistribution',
-    'generateEventsSampleSizeDistribution',
-    'generateEmptyDistribution'
+    'generateEmptyDistribution',
+    'generateRangeDistribution'
   ]);
   var toStringServiceMock = jasmine.createSpyObj('ToStringService', [
     'gammaToString',
     'normalToString',
     'betaToString',
     'valueToString',
-    'valueSEToString',
     'valueCIToString',
-    'eventsSampleSizeToString',
-    'valueSampleSizeToString',
     'emptyToString',
-    'textToString'
+    'textToString',
+    'rangeToString'
   ]);
   var finishInputCellServiceMock = jasmine.createSpyObj('FinishInputCellService', [
     'finishNormalInputCell',
     'finishBetaCell',
     'finishGammaCell',
     'finishValueCell',
-    'finishValueSE',
     'finishValueCI',
-    'finishEventSampleSizeInputCell',
-    'finishValueSampleSizeCell',
     'finishEmptyCell',
-    'finishTextCell'
+    'finishTextCell',
+    'finishRangeDistributionCell',
+    'finishRangeEffectCell'
   ]);
 
   describe('the input knowledge service', function() {
@@ -67,6 +61,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
             'beta',
             'gamma',
             'value',
+            'range',
             'empty',
             'text'
           ]);
@@ -78,10 +73,8 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
           var inputType = 'effect';
           expect(_.keys(inputKnowledgeService.getOptions(inputType))).toEqual([
             'value',
-            'valueSE',
             'valueCI',
-            'valueSampleSize',
-            'eventsSampleSize',
+            'range',
             'empty',
             'text'
           ]);

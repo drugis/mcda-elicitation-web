@@ -4,13 +4,11 @@ define(['c3', 'd3', 'lodash'],
     var dependencies = [
       '$timeout',
       'TradeOffService',
-      'WorkspaceSettingsService',
       'significantDigits'
     ];
     var WillingnessToTradeOffChartDirective = function(
       $timeout,
       TradeOffService,
-      WorkspaceSettingsService,
       significantDigits
     ) {
       return {
@@ -31,13 +29,7 @@ define(['c3', 'd3', 'lodash'],
           scope.sliderOptions = {
             precision: 4,
             onChange: updateSecondPoint,
-            translate: function(value) {
-              var multiplier = 1;
-              if (usePercentage(scope.settings.firstCriterion.dataSources[0].scale)) {
-                multiplier = 100;
-              }
-              return significantDigits(value * multiplier);
-            }
+            translate: significantDigits
           };
 
           var criteria;
@@ -64,7 +56,6 @@ define(['c3', 'd3', 'lodash'],
 
           scope.$watch('settings', function(newSettings) {
             if (newSettings && newSettings.firstCriterion.dataSources[0].pvf.range) {
-              updatePercentageModifier();
               initChart(newSettings);
               criteria = {
                 firstCriterion: newSettings.firstCriterion,
@@ -74,25 +65,13 @@ define(['c3', 'd3', 'lodash'],
           }, true);
 
           scope.$on('elicit.settingsChanged', function() {
-            updatePercentageModifier();
             updateFirstPoint();
             updateAxisLabels();
           });
 
-          function updatePercentageModifier() {
-            scope.percentageModifiers = {
-              firstCriterion: usePercentage(scope.settings.firstCriterion.dataSources[0].scale) ? 100 : 1,
-              secondCriterion: usePercentage(scope.settings.secondCriterion.dataSources[0].scale) ? 100 : 1
-            };
-          }
-
-          function usePercentage(scale) {
-            return _.isEqual([0, 1], scale) && WorkspaceSettingsService.usePercentage();
-          }
-
           function updateInputFirstPoint() {
-            scope.coordinates.x = significantDigits(scope.inputCoordinates.x / scope.percentageModifiers.firstCriterion);
-            scope.coordinates.y = significantDigits(scope.inputCoordinates.y / scope.percentageModifiers.secondCriterion);
+            scope.coordinates.x = significantDigits(scope.inputCoordinates.x);
+            scope.coordinates.y = significantDigits(scope.inputCoordinates.y);
             updateFirstPoint();
           }
 
@@ -102,8 +81,8 @@ define(['c3', 'd3', 'lodash'],
               scope.coordinates.x = _.clamp(scope.coordinates.x, scope.sliderOptions.floor, scope.sliderOptions.ceil);
               scope.coordinates.y = _.clamp(scope.coordinates.y, scope.minY, scope.maxY);
               scope.inputCoordinates = {
-                x: significantDigits(scope.coordinates.x * scope.percentageModifiers.firstCriterion),
-                y: significantDigits(scope.coordinates.y * scope.percentageModifiers.secondCriterion)
+                x: significantDigits(scope.coordinates.x),
+                y: significantDigits(scope.coordinates.y)
               };
               redrawPlot();
             }
@@ -121,8 +100,8 @@ define(['c3', 'd3', 'lodash'],
           }
 
           function updateInputSecondPoint() {
-            scope.coordinates.x2 = significantDigits(scope.inputCoordinates.x2 / scope.percentageModifiers.firstCriterion);
-            scope.coordinates.y2 = significantDigits(scope.inputCoordinates.y2 / scope.percentageModifiers.secondCriterion);
+            scope.coordinates.x2 = significantDigits(scope.inputCoordinates.x2);
+            scope.coordinates.y2 = significantDigits(scope.inputCoordinates.y2);
             updateSecondPoint();
           }
 
@@ -134,8 +113,8 @@ define(['c3', 'd3', 'lodash'],
             data.columns[5] = ['secondPoint', secondPointCoordinates.y];
             scope.coordinates.x2 = secondPointCoordinates.x;
             scope.coordinates.y2 = secondPointCoordinates.y;
-            scope.inputCoordinates.x2 = significantDigits(scope.coordinates.x2 * scope.percentageModifiers.firstCriterion);
-            scope.inputCoordinates.y2 = significantDigits(scope.coordinates.y2 * scope.percentageModifiers.secondCriterion);
+            scope.inputCoordinates.x2 = significantDigits(scope.coordinates.x2);
+            scope.inputCoordinates.y2 = significantDigits(scope.coordinates.y2);
 
             $timeout(function() {
               scope.$broadcast('rzSliderForceRender');
@@ -173,8 +152,8 @@ define(['c3', 'd3', 'lodash'],
             initialSettings.data.columns = [];
 
             scope.units = {
-              x: TradeOffService.getUnit(scope.settings.firstCriterion),
-              y: TradeOffService.getUnit(scope.settings.secondCriterion)
+              x: scope.settings.firstCriterion.dataSources[0].unitOfMeasurement,
+              y: scope.settings.secondCriterion.dataSources[0].unitOfMeasurement
             };
 
             chart = c3.generate(initialSettings);
@@ -197,8 +176,8 @@ define(['c3', 'd3', 'lodash'],
 
           function updateAxisLabels() {
             scope.units = {
-              x: TradeOffService.getUnit(scope.settings.firstCriterion),
-              y: TradeOffService.getUnit(scope.settings.secondCriterion)
+              x: scope.settings.firstCriterion.dataSources[0].unitOfMeasurement.label,
+              y: scope.settings.secondCriterion.dataSources[0].unitOfMeasurement.label
             };
             chart.axis.labels(scope.units);
           }

@@ -1,15 +1,15 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
+    'PerformanceTableService',
     'intervalHull',
-    'numberFilter',
-    'WorkspaceSettingsService'
+    'numberFilter'
   ];
 
   var ScaleRangeService = function(
+    PerformanceTableService,
     intervalHull,
-    numberFilter,
-    WorkspaceSettingsService
+    numberFilter
   ) {
     function log10(x) {
       return Math.log(x) / Math.log(10);
@@ -47,8 +47,7 @@ define(['lodash', 'angular'], function(_, angular) {
       return nice(x, Math.floor);
     }
 
-    function calculateScales(dataSourceScale, from, to, criterionRange, shouldCalcPercentage) {
-      var scale = dataSourceScale || [null, null];
+    function calculateScales(scale, from, to, criterionRange) {
       var boundFrom = function(val) {
         return val < scale[0] ? scale[0] : val;
       };
@@ -57,12 +56,19 @@ define(['lodash', 'angular'], function(_, angular) {
       };
       if (from === to) {
         from *= 0.95;
-        to *= 1.1;
+        to *= 1.05;
       }
       var margin = getMargin(from, to);
 
       scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
       scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
+
+      var restrictedRangeFrom = criterionRange[0];
+      var restrictedRangeTo = criterionRange[1];
+      if (restrictedRangeFrom === restrictedRangeTo) {
+        restrictedRangeFrom -= Math.abs(restrictedRangeFrom) * 0.001;
+        restrictedRangeTo += Math.abs(restrictedRangeTo) * 0.001;
+      }
 
       return {
         increaseFrom: function() {
@@ -73,8 +79,8 @@ define(['lodash', 'angular'], function(_, angular) {
         },
         sliderOptions: {
           restrictedRange: {
-            from: criterionRange[0],
-            to: criterionRange[1]
+            from: restrictedRangeFrom,
+            to: restrictedRangeTo
           },
           floor: niceFrom(from),
           ceil: niceTo(to),
@@ -82,7 +88,7 @@ define(['lodash', 'angular'], function(_, angular) {
           precision: 4,
           noSwitching: true,
           translate: function(value) {
-            return numberFilter(shouldCalcPercentage ? value * 100 : value);
+            return numberFilter(value);
           }
         }
       };
@@ -99,10 +105,9 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function initializeScaleStateAndChoicesForCriterion(observedScales, criterion, performanceTable) {
-      var showPercentage = WorkspaceSettingsService.usePercentage();
       return _.reduce(criterion.dataSources, function(accum, dataSource) {
         // Calculate interval hulls
-        var effectValues = getEffectValues(performanceTable, dataSource.id);
+        var effectValues = PerformanceTableService.getEffectValues(performanceTable, dataSource);
         var dataSourceRange = intervalHull(observedScales[dataSource.id], effectValues);
         var pvf = dataSource.pvf;
         var problemRange = pvf ? pvf.range : null;
@@ -111,8 +116,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
         // Set scales for slider
         var dataSourceScale = dataSource.scale;
-        var shouldCalcPercentage = _.isEqual([0, 1], dataSourceScale) && showPercentage;
-        accum.scalesState[dataSource.id] = calculateScales(dataSourceScale, from, to, dataSourceRange, shouldCalcPercentage);
+        accum.scalesState[dataSource.id] = calculateScales(dataSourceScale, from, to, dataSourceRange);
 
         // Set inital model value
         accum.choices[dataSource.id] = {
@@ -121,20 +125,10 @@ define(['lodash', 'angular'], function(_, angular) {
         };
         return accum;
       }, {
-          scalesState: {},
-          choices: {}
-        }
+        scalesState: {},
+        choices: {}
+      }
       );
-    }
-
-    function getEffectValues(performanceTable, dataSource) {
-      return _.reduce(performanceTable, function(accum, entry) {
-        if (entry.dataSource === dataSource.id && entry.performance.effect) {
-          var factor = dataSource.unitOfMeasurement === '%' ? 100 : 1;
-          accum.push(entry.performance.effect.value * factor);
-        }
-        return accum;
-      }, []);
     }
 
     function getScaleTable(table, scales, performanceTable) {
@@ -142,8 +136,9 @@ define(['lodash', 'angular'], function(_, angular) {
       return _.map(scaleTable, function(row) {
         var newRow = angular.copy(row);
         if (scales && scales.observed) {
-          var effects = getEffectValues(performanceTable, row.dataSource);
-          newRow.intervalHull = intervalHull(scales.observed[row.dataSource.id], effects);
+          var effects = PerformanceTableService.getEffectValues(performanceTable, row.dataSource);
+          var rangeDistributions = PerformanceTableService.getRangeDistributionValues(performanceTable, row.dataSource);
+          newRow.intervalHull = intervalHull(scales.observed[row.dataSource.id], effects, rangeDistributions);
         }
         return newRow;
       });

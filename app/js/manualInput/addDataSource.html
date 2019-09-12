@@ -15,7 +15,9 @@
       </div>
     </div>
     <div class="cell">
-      <button class="button" type="submit" ng-disabled="errors.length">{{isAdding ? 'Add' : 'Edit'}}</button>
+      <button class="button success" type="submit" ng-disabled="errors.length">
+        {{isAdding ? 'Add' : 'Edit'}}
+      </button>
     </div>
     <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
       <span aria-hidden="true">&times;</span>

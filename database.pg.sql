@@ -149,3 +149,13 @@ DROP TABLE toggledColumns;
 
 --changeset reidd:18
 DROP TABLE UserConnection;
+
+--changeset reidd:19
+START TRANSACTION;
+ALTER TABLE scenario DROP CONSTRAINT scenario_workspace_fkey;
+ALTER TABLE scenario ADD CONSTRAINT scenario_workspace_fkey FOREIGN KEY (workspace) REFERENCES workspace(id) ON DELETE CASCADE;
+COMMIT;
+--rollback START TRANSACTION;
+--rollback ALTER TABLE scenario DROP CONSTRAINT scenario_workspace_fkey;
+--rollback ALTER TABLE scenario ADD CONSTRAINT scenario_workspace_fkey FOREIGN KEY (workspace) REFERENCES workspace(id);
+--rollback COMMIT;

@@ -1,23 +1,34 @@
 'use strict';
-define(['lodash', 'jquery', 'angular', 'd3', 'nvd3'],
-  function(_, $, angular, d3, nv) {
-
+define([
+  'lodash',
+  'jquery',
+  'angular',
+  'd3',
+  'nvd3'
+],
+  function(
+    _,
+    $,
+    angular,
+    d3,
+    nv
+  ) {
     var directives = angular.module('elicit.directives', []);
 
     function getParentDimension(element) {
       var width = parsePx($(element[0].parentNode).css('width'));
       var height = parsePx($(element[0].parentNode).css('height'));
-
       return {
         width: width,
         height: height
       };
     }
+
     function parsePx(str) {
       return parseInt(str.replace(/px/gi, ''));
     }
 
-    directives.directive('rankPlot', function() {
+    function rankPlot() {
       return {
         restrict: 'E',
         scope: {
@@ -29,6 +40,37 @@ define(['lodash', 'jquery', 'angular', 'd3', 'nvd3'],
           var svg = d3.select(element[0]).append('svg')
             .attr('width', '100%')
             .attr('height', '100%');
+
+          scope.$watch('value', function(newVal) {
+            if (!newVal) {
+              return;
+            } else {
+              drawPlot(newVal);
+            }
+          }, true);
+
+          function drawPlot(value) {
+            var graphGenerator = createGraph(value);
+            nv.addGraph(graphGenerator);
+          }
+
+          function createGraph(value) {
+            return function(){
+              var chart = nv.models.multiBarChart().height(400).width(400);
+              var data = rankGraphData(value);
+              
+              chart.yAxis.tickFormat(d3.format(',.3g'));
+              chart.stacked(attrs.stacked);
+              chart.reduceXTicks(false);
+              chart.staggerLabels(true);
+              
+              svg.datum(data)
+              .transition().duration(100).call(chart);
+              svg.style('background', 'white');
+              
+              nv.utils.windowResize(chart.update);
+            };
+          }
 
           function rankGraphData(data) {
             var result = [];
@@ -49,34 +91,11 @@ define(['lodash', 'jquery', 'angular', 'd3', 'nvd3'],
             });
             return result;
           }
-
-          function drawPlot(value) {
-            nv.addGraph(function() {
-              var chart = nv.models.multiBarChart().height(400).width(400);
-              var data = rankGraphData(value);
-
-              chart.yAxis.tickFormat(d3.format(',.3g'));
-              chart.stacked(attrs.stacked);
-              chart.reduceXTicks(false);
-              chart.staggerLabels(true);
-
-              svg.datum(data)
-                .transition().duration(100).call(chart);
-              svg.style('background', 'white');
-
-              nv.utils.windowResize(chart.update);
-            });
-          }
-
-          scope.$watch('value', function(newVal) {
-            if (!newVal) {
-              return;
-            }
-            drawPlot(newVal);
-          }, true);
         }
       };
-    });
+    }
+
+    directives.directive('rankPlot', rankPlot);
 
     directives.directive('barChart', function() {
       return {
@@ -119,8 +138,9 @@ define(['lodash', 'jquery', 'angular', 'd3', 'nvd3'],
           scope.$watch('value', function(newVal) {
             if (!newVal) {
               return;
+            } else {
+              drawPlot(newVal);
             }
-            drawPlot(newVal);
           }, true);
         }
       };

@@ -28,7 +28,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
       mcdaBenefitRiskService = McdaBenefitRiskService;
     }));
 
-    describe('forkScenarioAndGo', () => {
+    describe('copyScenarioAndGo', () => {
       var sourceScenario = {
         state: {
           id: 'sourceState'
@@ -61,7 +61,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
           id: 'subProblemId'
         };
 
-        mcdaBenefitRiskService.forkScenarioAndGo(newTitle, subproblem).then(() => {
+        mcdaBenefitRiskService.copyScenarioAndGo(newTitle, subproblem).then(() => {
           expect(scenarioResourceMock.get).toHaveBeenCalledWith(stateParams);
           expect(scenarioResourceMock.save).toHaveBeenCalledWith({
             otherParam: 'something'

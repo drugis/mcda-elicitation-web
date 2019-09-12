@@ -3,14 +3,13 @@
     <div class="cell">
       <h3>Edit data source</h3>
     </div>
-    <div class="cell">
+    <div class="cell" ng-show="dataSource.unitOfMeasurement.type === 'custom'">
       <label>Unit of measurement
         <inline-help help-key="criterion-unit"></inline-help>
       </label>
     </div>
-    <div class="cell">
-      <input type="text" ng-model="dataSource.unitOfMeasurement" ng-change="checkErrors()"
-        ng-disabled="originalUnitOfMeasurement === '%' || originalUnitOfMeasurement === 'Proportion'">
+    <div class="cell" ng-show="dataSource.unitOfMeasurement.type === 'custom'">
+      <input type="text" ng-model="dataSource.unitOfMeasurement.label">
     </div>
     <div class="cell">
       <label>Reference
@@ -48,7 +47,9 @@
       <em>{{error}}</em>
     </div>
     <div class="cell">
-      <button class="button success" type="submit" ng-disabled="errors.length">Save</button>
+      <button class="button success" type="submit" ng-disabled="errors.length">
+        Edit
+      </button>
     </div>
   </div>
   <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">

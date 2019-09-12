@@ -4,14 +4,12 @@ define(['lodash', 'd3', 'c3'],
     var dependencies = [
       '$timeout',
       'PartialValueFunctionService',
-      'WorkspaceSettingsService',
       'TradeOffService',
       'significantDigits'
     ];
     var PreferenceElicitationRow = function(
       $timeout,
       PartialValueFunctionService,
-      WorkspaceSettingsService,
       TradeOffService,
       significantDigits
     ) {
@@ -57,13 +55,7 @@ define(['lodash', 'd3', 'c3'],
             scope.sliderOptions = {
               precision: 4,
               onEnd: plotIndifference,
-              translate: function(value) {
-                var multiplier = 1;
-                if (usePercentage(scope.mostImportantCriterion.dataSources[0].scale)) {
-                  multiplier = 100;
-                }
-                return significantDigits(value * multiplier);
-              },
+              translate: significantDigits,
               floor: significantDigits(minY),
               ceil: significantDigits(maxY)
             };
@@ -75,8 +67,8 @@ define(['lodash', 'd3', 'c3'],
 
           function setUnfavorableValues() {
             scope.mostImportantCriterionValue = {
-              firstValue: scope.mostImportantCriterion.best, 
-              secondValue: scope.mostImportantCriterion.worst 
+              firstValue: scope.mostImportantCriterion.best,
+              secondValue: scope.mostImportantCriterion.worst
             };
             scope.secondaryCriterionValue = {
               firstValue: scope.secondaryCriterion.worst,
@@ -89,7 +81,7 @@ define(['lodash', 'd3', 'c3'],
 
           function setDefaultValues() {
             scope.mostImportantCriterionValue = {
-              firstValue: scope.mostImportantCriterion.worst, 
+              firstValue: scope.mostImportantCriterion.worst,
               secondValue: scope.mostImportantCriterion.best
             };
             scope.secondaryCriterionValue = {
@@ -131,15 +123,11 @@ define(['lodash', 'd3', 'c3'],
             initialSettings.axis.y.tick.count = 5;
 
             scope.units = {
-              x: TradeOffService.getUnit(scope.secondaryCriterion),
-              y: TradeOffService.getUnit(scope.mostImportantCriterion)
+              x: scope.secondaryCriterion.dataSources[0].unitOfMeasurement.label,
+              y: scope.mostImportantCriterion.dataSources[0].unitOfMeasurement.label
             };
 
             chart = c3.generate(initialSettings);
-          }
-
-          function usePercentage(scale) {
-            return _.isEqual([0, 1], scale) && WorkspaceSettingsService.usePercentage();
           }
 
           function plotIndifference() {

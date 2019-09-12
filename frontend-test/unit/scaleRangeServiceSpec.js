@@ -11,10 +11,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
   describe('The scaleRange service', function() {
     var scaleRangeService;
     var workspaceSettingsMock = jasmine.createSpyObj('WorkspaceSettingsService', ['usePercentage']);
+    var performanceTableServiceMock = jasmine.createSpyObj('PerformanceTableService', ['getEffectValues', 'getRangeDistributionValues']);
 
     beforeEach(angular.mock.module('elicit.util'));
     beforeEach(angular.mock.module('elicit.subProblem', function($provide) {
       $provide.value('WorkspaceSettingsService', workspaceSettingsMock);
+      $provide.value('PerformanceTableService', performanceTableServiceMock);
     }));
 
     beforeEach(inject(function(ScaleRangeService) {
@@ -103,7 +105,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
             pvf: {
               range: [0, 40]
             },
-            id: 'ds1'
+            id: 'ds1',
+            unitOfMeasurement: {
+              label: 'label',
+              type: 'custom'
+            },
+            scale: [-Infinity, Infinity]
           }]
         }, {
           id: 'nauseaId',
@@ -111,7 +118,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
             pvf: {
               range: [10, 40]
             },
-            id: 'ds2'
+            id: 'ds2',
+            unitOfMeasurement: {
+              label: 'label',
+              type: 'custom'
+            },
+            scale: [-Infinity, Infinity]
           }]
         }];
         var result = scaleRangeService.getScalesStateAndChoices(observedScales, criteria);
@@ -172,55 +184,29 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
       it('should add the interval hull to the table rows', function() {
         var table = [{
           dataSource: {
-            id: 'ds1'
+            id: 'ds1',
+            unitOfMeasurement: {
+              type: 'custom',
+              label: ''
+            }
           }
         }];
         var scales = {
           observed: {}
         };
-        var performanceTable = [{
-          dataSource: 'ds1',
-          performance: {
-            effect:{
-              value: 10
-            }
-          }
-        }];
-        var result = scaleRangeService.getScaleTable(table, scales, performanceTable);
-        var expectedResult = [{
-          dataSource: {
-            id: 'ds1'
-          },
-          intervalHull: [10,10]
-        }];
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should add the correct interval hull if percentages are being used', function(){
-        var table = [{
-          dataSource: {
-            id: 'ds1',
-            unitOfMeasurement: '%'
-          }
-        }];
-        var scales = {
-          observed: {}
-        };
-        var performanceTable = [{
-          dataSource: 'ds1',
-          performance: {
-            effect:{
-              value: 0.1
-            }
-          }
-        }];
+        var performanceTable = [{}];
+        performanceTableServiceMock.getEffectValues.and.returnValues([10]);
+        performanceTableServiceMock.getRangeDistributionValues.and.returnValues([]);
         var result = scaleRangeService.getScaleTable(table, scales, performanceTable);
         var expectedResult = [{
           dataSource: {
             id: 'ds1',
-            unitOfMeasurement: '%'
+            unitOfMeasurement: {
+              type: 'custom',
+              label: ''
+            }
           },
-          intervalHull: [10,10]
+          intervalHull: [10, 10]
         }];
         expect(result).toEqual(expectedResult);
       });

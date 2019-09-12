@@ -5,18 +5,22 @@ var db = require('./node-backend/db')(dbUtil.connectionConfig);
 var _ = require('lodash');
 var patavi = require('./node-backend/patavi');
 var logger = require('./node-backend/logger');
+var httpStatus = require('http-status-codes');
 var appEnvironmentSettings = {
   googleKey: process.env.MCDAWEB_GOOGLE_KEY,
   googleSecret: process.env.MCDAWEB_GOOGLE_SECRET,
   host: process.env.MCDA_HOST
 };
 var signin = require('signin')(db, appEnvironmentSettings);
-var WorkspaceService = require('./node-backend/workspaceService')(db);
+var InProgressWorkspaceRepository = require('./node-backend/inProgressWorkspaceRepository')(db);
 var WorkspaceRepository = require('./node-backend/workspaceRepository')(db);
-var OrderingService = require('./node-backend/orderingService')(db);
-var SubProblemService = require('./node-backend/subProblemService')(db);
-var ScenarioService = require('./node-backend/scenarioService')(db);
-var WorkspaceSettingsService = require('./node-backend/workspaceSettingsService')(db);
+var WorkspaceRouter = require('./node-backend/workspaceRouter')(db);
+var InProgressRouter = require('./node-backend/inProgressRouter')(db);
+var OrderingRouter = require('./node-backend/orderingRouter')(db);
+var SubProblemRouter = require('./node-backend/subProblemRouter')(db);
+var ScenarioRouter = require('./node-backend/scenarioRouter')(db);
+var WorkspaceSettingsRouter = require('./node-backend/workspaceSettingsRouter')(db);
+
 var rightsManagement = require('rights-management')();
 
 var express = require('express');
@@ -91,18 +95,21 @@ function workspaceOwnerRightsNeeded(response, next, workspaceId, userId) {
 }
 
 function inProgressOwnerRightsNeeded(response, next, workspaceId, userId) {
-  WorkspaceService.getInProgress(workspaceId, _.partial(rightsCallback, response, next, userId));
+  InProgressWorkspaceRepository.get(workspaceId, _.partial(rightsCallback, response, next, userId));
 }
 
-function rightsCallback(response, next, userId, error, workspace) {
+function rightsCallback(response, next, userId, error, result) {
   if (error) {
     next(error);
-  } else if (!workspace) {
-    response.status(404).send('Workspace not found');
-  } else if (workspace.owner !== userId) {
-    response.status(403).send('Insufficient user rights');
   } else {
-    next();
+    var workspace = result.rows[0];
+    if (!workspace) {
+      response.status(httpStatus.NOT_FOUND).send('Workspace not found');
+    } else if (workspace.owner !== userId) {
+      response.status(httpStatus.FORBIDDEN).send('Insufficient user rights');
+    } else {
+      next();
+    }
   }
 }
 
@@ -162,53 +169,24 @@ app.use('/tutorials', express.static(__dirname + '/examples/tutorial-examples'))
 app.use('/css/fonts', express.static('./dist/fonts'));
 app.use(rightsManagement.expressMiddleware);
 
-// Workspaces in progress
-app.post('/inProgress', WorkspaceService.createInProgress);
-app.put('/inProgress/:id', WorkspaceService.updateInProgress);
-app.get('/inProgress/:id', WorkspaceService.getInProgress);
-app.get('/inProgress', WorkspaceService.queryInProgress);
-app.delete('/inProgress/:id', WorkspaceService.deleteInProgress);
+app.use('/inProgress', InProgressRouter);
+app.use('/workspaces', WorkspaceRouter);
+app.use('/workspaces', OrderingRouter);
+app.use('/workspaces', SubProblemRouter);
+app.use('/workspaces', ScenarioRouter);
+app.use('/workspaces', WorkspaceSettingsRouter);
 
-// Complete workspaces
-app.get('/workspaces', WorkspaceService.queryWorkspaces);
-app.post('/workspaces', WorkspaceService.createWorkspace);
-app.get('/workspaces/:id', WorkspaceService.getWorkspace);
-app.post('/workspaces/:id', WorkspaceService.updateWorkspace);
-app.delete('/workspaces/:id', WorkspaceService.deleteWorkspace);
-
-// Orderings
-app.get('/workspaces/:workspaceId/ordering', OrderingService.getOrdering);
-app.put('/workspaces/:workspaceId/ordering', OrderingService.updateOrdering);
-
-// Subproblems
-app.get('/workspaces/:workspaceId/problems', SubProblemService.querySubProblems);
-app.get('/workspaces/:workspaceId/problems/:subProblemId', SubProblemService.getSubProblem);
-app.post('/workspaces/:workspaceId/problems', SubProblemService.createSubProblem);
-app.post('/workspaces/:workspaceId/problems/:subProblemId', SubProblemService.updateSubProblem);
-
-//Scenarios
-app.get('/workspaces/:workspaceId/scenarios', ScenarioService.queryScenarios);
-app.get('/workspaces/:workspaceId/problems/:subProblemId/scenarios', ScenarioService.queryScenariosForSubProblem);
-app.get('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', ScenarioService.getScenario);
-app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios', ScenarioService.createScenario);
-app.post('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:id', ScenarioService.updateScenario);
-
-// Workspace settings
-app.get('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsService.getWorkspaceSettings);
-app.put('/workspaces/:workspaceId/workspaceSettings', WorkspaceSettingsService.putWorkspaceSettings);
-
-// patavi
 app.post('/patavi', function(req, res, next) { // FIXME: separate routes for scales and results
   patavi.create(req.body, function(err, taskUri) {
     if (err) {
       logger.error(err);
       return next({
         err: err,
-        status: 500
+        status: httpStatus.INTERNAL_SERVER_ERROR
       });
     }
     res.location(taskUri);
-    res.status(201);
+    res.status(httpStatus.CREATED);
     res.json({
       'href': taskUri
     });
@@ -218,19 +196,18 @@ app.post('/patavi', function(req, res, next) { // FIXME: separate routes for sca
 app.use((error, request, response, next) => {
   logger.error(JSON.stringify(error.message, null, 2));
   if (error && error.type === signin.SIGNIN_ERROR) {
-    response.send(401, 'login failed');
+    response.send(httpStatus.UNAUTHORIZED, 'login failed');
   } else {
     response
-      .status(error.status || error.statusCode || 500)
+      .status(error.status || error.statusCode || httpStatus.INTERNAL_SERVER_ERROR)
       .send(error.err ? error.err.message : error.message);
   }
   next();
 });
 
-
 //The 404 Route (ALWAYS Keep this as the last route)
 app.get('*', function(req, res) {
-  res.status(404).sendFile(__dirname + '/dist/error.html');
+  res.status(httpStatus.NOT_FOUND).sendFile(__dirname + '/dist/error.html');
 });
 
 var port = 3002;

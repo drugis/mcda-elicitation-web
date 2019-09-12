@@ -28,11 +28,9 @@ define(['lodash'], function(_) {
 
     function getEffectOptions() {
       return {
-        value:  VALUE,
-        valueSE: VALUE_STANDARD_ERROR,
+        value: VALUE,
         valueCI: VALUE_CONFIDENCE_INTERVAL,
-        valueSampleSize: VALUE_SAMPLE_SIZE,
-        eventsSampleSize: EVENTS_SAMPLE_SIZE,
+        range: RANGE_EFFECT,
         empty: EMPTY,
         text: TEXT
       };
@@ -44,6 +42,7 @@ define(['lodash'], function(_) {
         beta: BETA,
         gamma: GAMMA,
         value: VALUE,
+        range: RANGE_DISTRIBUTION,
         empty: EMPTY,
         text: TEXT
       };
@@ -98,19 +97,6 @@ define(['lodash'], function(_) {
       GenerateDistributionService.generateValueDistribution
     );
 
-    var VALUE_STANDARD_ERROR = new effectOptionsBlock(
-      'valueSE',
-      'Value, SE',
-      buildDefined('Value'),
-      buildPositiveFloat('Standard error'),
-      undefined,
-      true,
-      ToStringService.valueSEToString,
-      PerformanceService.buildValueSEPerformance,
-      FinishInputCellService.finishValueSE,
-      _.partial(GenerateDistributionService.generateValueSEDistribution, NORMAL)
-    );
-
     var VALUE_CONFIDENCE_INTERVAL = new effectOptionsBlock(
       'valueCI',
       'Value, 95% C.I.',
@@ -124,30 +110,29 @@ define(['lodash'], function(_) {
       _.partial(GenerateDistributionService.generateValueCIDistribution, NORMAL, VALUE)
     );
 
-    var EVENTS_SAMPLE_SIZE = new effectOptionsBlock(
-      'eventsSampleSize',
-      'Events / Sample size',
-      buildEvents(),
-      buildIntegerAboveZero('Sample size'),
-      undefined,
-      false,
-      ToStringService.eventsSampleSizeToString,
-      PerformanceService.buildEventsSampleSizePerformance,
-      FinishInputCellService.finishEventSampleSizeInputCell,
-      _.partial(GenerateDistributionService.generateEventsSampleSizeDistribution, BETA)
-    );
-
-    var VALUE_SAMPLE_SIZE = new effectOptionsBlock(
-      'valueSampleSize',
-      'Value, sample size',
-      buildDefined('Value'),
-      buildIntegerAboveZero('Sample size'),
+    var RANGE_DISTRIBUTION = new optionsBlock(
+      'range',
+      'Range',
+      buildLowerRange(),
+      buildUpperBound(),
       undefined,
       true,
-      ToStringService.valueSampleSizeToString,
-      PerformanceService.buildValueSampleSizePerformance,
-      FinishInputCellService.finishValueSampleSizeCell,
-      _.partial(GenerateDistributionService.generateValueSampleSizeDistribution, VALUE, BETA)
+      ToStringService.rangeToString,
+      PerformanceService.buildRangeDistribtutionPerformance,
+      FinishInputCellService.finishRangeDistributionCell
+    );
+
+    var RANGE_EFFECT = new effectOptionsBlock(
+      'range',
+      'Range',
+      buildLowerRange(),
+      buildUpperBound(),
+      undefined,
+      true,
+      ToStringService.rangeToString,
+      PerformanceService.buildRangeEffectPerformance,
+      FinishInputCellService.finishRangeEffectCell,
+      _.partial(GenerateDistributionService.generateRangeDistribution, RANGE_DISTRIBUTION)
     );
 
     var EMPTY = new effectOptionsBlock(
@@ -231,6 +216,16 @@ define(['lodash'], function(_) {
       };
     }
 
+    function buildLowerRange() {
+      return {
+        label: 'Lower bound',
+        constraints: [
+          ConstraintService.defined(),
+          ConstraintService.belowOrEqualTo('secondParameter')
+        ]
+      };
+    }
+
     function buildIntegerAboveZero(label) {
       var param = buildFloatAboveZero(label);
       param.constraints.push(ConstraintService.integer());
@@ -260,18 +255,6 @@ define(['lodash'], function(_) {
       return {
         label: 'Text',
         constraints: [ConstraintService.notEmpty()]
-      };
-    }
-
-    function buildEvents() {
-      return {
-        label: 'Events',
-        constraints: [
-          ConstraintService.defined(),
-          ConstraintService.positive(),
-          ConstraintService.integer(),
-          ConstraintService.belowOrEqualTo('secondParameter')
-        ]
       };
     }
 

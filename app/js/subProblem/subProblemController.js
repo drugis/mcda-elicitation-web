@@ -12,7 +12,8 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     'SubProblemResource',
     'EffectsTableService',
     'PageTitleService',
-    'ScaleRangeService'
+    'ScaleRangeService',
+    'WorkspaceSettingsService'
   ];
 
   var SubProblemController = function(
@@ -27,7 +28,8 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     SubProblemResource,
     EffectsTableService,
     PageTitleService,
-    ScaleRangeService
+    ScaleRangeService,
+    WorkspaceSettingsService
   ) {
     // functions 
     $scope.openCreateDialog = openCreateDialog;
@@ -35,35 +37,40 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     $scope.editSubProblemTitle = editSubProblemTitle;
 
     // init
-    $scope.subProblems = subProblems;
-    $scope.scales = $scope.workspace.scales;
-    $scope.problem = _.cloneDeep($scope.workspace.problem);
-    $scope.isBaseline = SubProblemService.determineBaseline($scope.problem.table = EffectsTableService.b, $scope.problem.alternatives);
-    PageTitleService.setPageTitle('SubProblemController', ($scope.problem.title || $scope.workspace.title) + '\'s problem definition');
-
-    $scope.areTooManyDataSourcesIncluded = SubProblemService.areTooManyDataSourcesIncluded($scope.aggregateState.problem.criteria);
-    setScaleTable();
-
-    $scope.$watch('workspace.scales', function(newScales, oldScales) {
-      if (newScales && oldScales && newScales.observed === oldScales.observed) { return; }
-      $scope.scales = newScales;
-      setScaleTable();
-    }, true);
-
-    $scope.$watch('aggregateState', function(newState, oldState) {
-      if (_.isEqual(newState, oldState)) { return; }
+    $scope.scalesPromise.then(function() {
+      $scope.subProblems = subProblems;
+      $scope.scales = $scope.workspace.scales;
+      $scope.isBaseline = SubProblemService.determineBaseline($scope.aggregateState.problem.table, $scope.aggregateState.problem.alternatives);
+      PageTitleService.setPageTitle('SubProblemController', ($scope.aggregateState.problem.title || $scope.workspace.title) + '\'s problem definition');
+      $scope.areTooManyDataSourcesIncluded = SubProblemService.areTooManyDataSourcesIncluded($scope.aggregateState.problem.criteria);
       setScaleTable();
     });
+
+    $scope.$watch('workspace.scales', function(newScales, oldScales) {
+      if (newScales && oldScales && newScales.observed === oldScales.observed) {
+        return;
+      } else {
+        $scope.scales = newScales;
+        setScaleTable();
+      }
+    }, true);
 
     new Clipboard('.clipboard-button');
 
     function setScaleTable() {
-      OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
+      var problem = WorkspaceSettingsService.usePercentage() ? $scope.aggregateState.percentified.problem : $scope.aggregateState.dePercentified.problem;
+      OrderingService.getOrderedCriteriaAndAlternatives(problem, $stateParams).then(function(orderings) {
         $scope.criteria = orderings.criteria;
         $scope.alternatives = orderings.alternatives;
-        var effectsTable = EffectsTableService.buildEffectsTable(orderings.criteria);
-        $scope.scaleTable = ScaleRangeService.getScaleTable(effectsTable, $scope.scales, $scope.problem.performanceTable);
+        var effectsTable = EffectsTableService.buildEffectsTable(getCriteria(orderings.criteria, problem));
+        $scope.scaleTable = ScaleRangeService.getScaleTable(effectsTable, $scope.scales, $scope.aggregateState.problem.performanceTable);
         $scope.hasRowWithOnlyMissingValues = SubProblemService.findRowWithoutValues($scope.effectsTableInfo, $scope.scales);
+      });
+    }
+
+    function getCriteria(orderedCriteria, problem) {
+      return _.map(orderedCriteria, function(criterion) {
+        return _.merge({}, problem.criteria[criterion.id], { id: criterion.id });
       });
     }
 
@@ -80,7 +87,7 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
             return $scope.subProblem;
           },
           problem: function() {
-            return $scope.problem;
+            return $scope.baseState.dePercentified.problem;
           },
           scales: function() {
             return $scope.scales;

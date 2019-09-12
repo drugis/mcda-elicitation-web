@@ -1,28 +1,48 @@
 'use strict';
 define(['lodash'], function(_) {
 
-  var dependencies = ['$filter'];
+  var dependencies = [
+    '$filter',
+    'WorkspaceSettingsService'
+  ];
 
-  var EffectsTableScalesCellDirective = function($filter) {
+  var EffectsTableScalesCellDirective = function(
+    $filter,
+    WorkspaceSettingsService) {
     return {
       restrict: 'E',
       scope: {
         'scales': '=',
         'uncertainty': '=',
-        'theoreticalScale': '=',
-        'workspaceSettings': '='
+        'theoreticalScale': '='
       },
-      template: '<div>{{median}}</div>' +
-        '<div class="uncertain" ng-show="uncertainty">{{lowerBound}}, {{upperBound}}</div>',
+      templateUrl: './effectsTableScalesCellDirective.html',
       link: function(scope) {
         scope.$watch('scales', initScales);
-        scope.$watch('workspaceSettings', initScales, true);
+        scope.$on('elicit.settingsChanged', initScales);
 
         function initScales() {
+          scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
           if (scope.scales) {
             scope.lowerBound = getRoundedValue(scope.scales['2.5%']);
-            scope.median = getRoundedValue(scope.workspaceSettings.effectsDisplay === 'mode' ? scope.scales.mode : scope.scales['50%']);
+            scope.median = getMedian();
             scope.upperBound = getRoundedValue(scope.scales['97.5%']);
+          }
+        }
+
+        function getMedian(){
+          if (scope.workspaceSettings.calculationMethod === 'mode'){
+            return getMode();
+          } else {
+            return getRoundedValue(scope.scales['50%']);
+          }
+        }
+
+        function getMode(){
+          if (scope.scales.mode !== null && scope.scales.mode !== undefined){
+            return getRoundedValue(scope.scales.mode);
+          } else {
+            return 'NA';
           }
         }
 

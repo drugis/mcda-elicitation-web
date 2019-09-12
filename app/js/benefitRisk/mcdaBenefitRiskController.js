@@ -38,13 +38,10 @@ define(['lodash', 'angular'], function(_, angular) {
     isMcdaStandalone
   ) {
     // functions
-    $scope.forkScenario = forkScenario;
+    $scope.copyScenario = copyScenario;
     $scope.newScenario = newScenario;
     $scope.scenarioChanged = scenarioChanged;
 
-    // set on scope for testing purposes
-    $scope.updateScales = updateScales;
-    $scope.updateState = updateState;
     $scope.deregisterTransitionListener = $transitions.onStart({}, function(transition) {
       setActiveTab(transition.to().name, transition.to().name);
     });
@@ -52,17 +49,17 @@ define(['lodash', 'angular'], function(_, angular) {
     // init
     var baseProblem = angular.copy($scope.workspace.problem);
     var baseState = { problem: baseProblem };
-    $scope.percentifiedBaseState = WorkspaceService.percentifyCriteria(baseState);
-    $scope.dePercentifiedBaseState = WorkspaceService.dePercentifyCriteria(baseState);
-
+    var percentifiedBaseState = WorkspaceService.percentifyCriteria(baseState);
+    var dePercentifiedBaseState = WorkspaceService.dePercentifyCriteria(baseState);
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
     $scope.selections = {};
     $scope.isDuplicateScenarioTitle = false;
     $scope.tasks = _.keyBy(Tasks.available, 'id');
 
-    $scope.scalesPromise = WorkspaceService.getObservedScales(baseProblem);
-    $scope.updateState(currentScenario);
+    $scope.scalesPromise = WorkspaceService.getObservedScales(baseProblem).then(function(observedScales) {
+      initState(observedScales, currentScenario);
+    });
     $scope.effectsTableInfo = EffectsTableService.createEffectsTableInfo(baseProblem.performanceTable);
 
     $scope.subProblems = subProblems;
@@ -77,43 +74,21 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.deregisterTransitionListener();
     });
     $scope.$on('elicit.settingsChanged', function() {
-      $scope.updateScales($scope.workspace.scales.base);
+      updateScales(); // prevent event as first argument
     });
     $scope.$on('elicit.resultsAccessible', function(event, scenario) {
-      $scope.updateState(scenario);
+      updateScales(scenario);
     });
 
-    function updateState(scenario) {
-      $scope.scenario = scenario;
-      $scope.baseAggregateState = WorkspaceService.buildAggregateState(baseProblem, currentSubProblem, scenario);
-      if (WorkspaceSettingsService.usePercentage()) {
-        $scope.aggregateState = WorkspaceService.percentifyCriteria($scope.baseAggregateState);
-      } else {
-        $scope.aggregateState = $scope.baseAggregateState;
-      }
+    function initState(observedScales, scenario) {
+      $scope.workspace.scales.base = observedScales;
+      $scope.workspace.scales.basePercentified = WorkspaceService.percentifyScales(percentifiedBaseState.problem.criteria, observedScales);
+      $scope.baseState = {
+        percentified: addScales(percentifiedBaseState, $scope.workspace.scales.basePercentified),
+        dePercentified: addScales(dePercentifiedBaseState, $scope.workspace.scales.base)
+      };
+      updateScales(scenario);
       $scope.hasMissingValues = WorkspaceService.checkForMissingValuesInPerformanceTable($scope.aggregateState.problem.performanceTable);
-      $scope.hasNoStochasticResults = WorkspaceService.hasNoStochasticResults($scope.aggregateState);
-
-      $scope.scalesPromise.then(function(observedScales) {
-        $scope.workspace.scales.base = observedScales;
-        $scope.workspace.scales.basePercentified = WorkspaceService.percentifyScales(baseProblem.criteria, observedScales);
-        $scope.updateScales(observedScales);
-      });
-
-      updateScenarios();
-    }
-
-    function updateScales(baseObservedScales) {
-      var baseCriteria = $scope.baseAggregateState.problem.criteria;
-      if (WorkspaceSettingsService.usePercentage()) {
-        $scope.workspace.scales.observed = WorkspaceService.percentifyScales(baseCriteria, baseObservedScales);
-        $scope.aggregateState = WorkspaceService.percentifyCriteria($scope.baseAggregateState);
-      } else {
-        $scope.workspace.scales.observed = baseObservedScales;
-        $scope.aggregateState = WorkspaceService.dePercentifyCriteria($scope.baseAggregateState);
-      }
-      $scope.baseAggregateState = addScales($scope.baseAggregateState, $scope.workspace.scales.base);
-      $scope.aggregateState = addScales($scope.aggregateState, $scope.workspace.scales.observed);
       updateTaskAccessibility();
     }
 
@@ -121,6 +96,27 @@ define(['lodash', 'angular'], function(_, angular) {
       return _.merge({}, state, {
         problem: WorkspaceService.setDefaultObservedScales(state.problem, scales)
       });
+    }
+    
+    function updateScales(scenario) {
+      if (scenario) {
+        $scope.scenario = scenario;
+      } else {
+        scenario = $scope.scenario;
+      }
+
+      var aggregateState = WorkspaceService.buildAggregateState($scope.baseState.dePercentified.problem, currentSubProblem, scenario);
+      aggregateState.percentified = WorkspaceService.percentifyCriteria(aggregateState);
+      aggregateState.dePercentified = WorkspaceService.dePercentifyCriteria(aggregateState);
+
+      $scope.aggregateState = aggregateState;
+      if (WorkspaceSettingsService.usePercentage()) {
+        $scope.workspace.scales.observed = $scope.workspace.scales.basePercentified;
+      } else {
+        $scope.workspace.scales.observed = $scope.workspace.scales.base;
+      }
+
+      updateScenarios();
     }
 
     function updateScenarios() {
@@ -152,7 +148,7 @@ define(['lodash', 'angular'], function(_, angular) {
       };
     }
 
-    function forkScenario() {
+    function copyScenario() {
       $modal.open({
         templateUrl: '../preferences/newScenario.html',
         controller: 'NewScenarioController',
@@ -161,11 +157,11 @@ define(['lodash', 'angular'], function(_, angular) {
             return $scope.scenarios;
           },
           type: function() {
-            return 'Fork';
+            return 'Copy';
           },
           callback: function() {
             return function(newTitle) {
-              McdaBenefitRiskService.forkScenarioAndGo(newTitle, $scope.subProblem);
+              McdaBenefitRiskService.copyScenarioAndGo(newTitle, $scope.subProblem);
             };
           }
         }
