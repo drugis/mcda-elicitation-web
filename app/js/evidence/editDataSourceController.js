@@ -33,7 +33,8 @@ define(['lodash'], function(_) {
           },
           value: ''
         },
-        scale: [-Infinity, Infinity]
+        scale: [-Infinity, Infinity],
+        source: ''
       };
       $scope.isAdding = true;
     }
