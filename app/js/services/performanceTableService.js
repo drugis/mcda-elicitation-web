@@ -7,7 +7,7 @@ define(['lodash'], function(_) {
   ) {
     function getEffectValues(performanceTable, dataSource) {
       return _.reduce(performanceTable, function(accum, entry) {
-        if (entry.dataSource === dataSource.id && entry.performance.effect) {
+        if (entry.dataSource === dataSource.id && entry.performance.effect && entry.performance.effect.type !== 'empty') {
           var factor = dataSource.unitOfMeasurement.type === 'percentage' ? 100 : 1;
           accum.push(entry.performance.effect.value * factor);
         }
@@ -17,7 +17,7 @@ define(['lodash'], function(_) {
 
     function getRangeDistributionValues(performanceTable, dataSource) {
       return _.reduce(performanceTable, function(accum, entry) {
-        if (hasRangeDistribution(entry, dataSource.id)) {
+        if (hasRangeDistribution(entry, dataSource.id) ) {
           var factor = dataSource.unitOfMeasurement.type === 'percentage' ? 100 : 1;
           accum.push(entry.performance.distribution.parameters.lowerBound * factor);
           accum.push(entry.performance.distribution.parameters.upperBound * factor);

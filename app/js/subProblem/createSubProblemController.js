@@ -109,7 +109,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
         updateInclusions();
         checkDuplicateTitle($scope.subProblemState.title);
-        
+
         $scope.isCellAnalysisViable = EffectsTableService.createIsCellAnalysisViable(
           $scope.tableRows,
           $scope.alternatives,
@@ -117,8 +117,6 @@ define(['lodash', 'angular'], function(_, angular) {
           $scope.scales
         );
       });
-
-
     }
 
     function setProblem() {

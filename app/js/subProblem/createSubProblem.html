@@ -100,7 +100,7 @@
               </td>
               <td ng-if="!row.isHeaderRow"
                 ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternative.id] || !subProblemState.criterionInclusions[row.criterion.id] || !subProblemState.dataSourceInclusions[row.dataSource.id]}"
-                class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}" 
+                class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}"
                 ng-style="isValueView && !isCellAnalysisViable[row.dataSource.id][alternative.id] ? {'background-color':'#f3d3c8'} : {}">
                 <div class="grid-x">
                   <div class="cell large-1" style="min-width:13px;">

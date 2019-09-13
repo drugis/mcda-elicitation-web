@@ -12,19 +12,27 @@ define([
       performanceTableService = PerformanceTableService;
     }));
 
+    const dataSourceId = 'dataSourceId';
+    const customUnitSource = {
+      id: dataSourceId,
+      unitOfMeasurement: {
+        type: 'custom'
+      }
+    };
+    const percentageSource = {
+      id: dataSourceId,
+      unitOfMeasurement: {
+        type: 'percentage'
+      }
+    };
+
     describe('getEffectValues', function() {
       it('should return an empty array if there are no effect values', function() {
-        var dataSourceId = 'dataSourceId';
         var performanceTable = [{
           dataSource: dataSourceId,
           performance: {}
         }];
-        var dataSource = {
-          id: dataSourceId,
-          unitOfMeasurement: {
-            type: 'custom'
-          }
-        };
+        var dataSource = customUnitSource;
 
         var result = performanceTableService.getEffectValues(performanceTable, dataSource);
 
@@ -33,7 +41,6 @@ define([
       });
 
       it('should return an array containing all effect values', function() {
-        var dataSourceId = 'dataSourceId';
         var performanceTable = [{
           dataSource: dataSourceId,
           performance: {
@@ -42,12 +49,7 @@ define([
             }
           }
         }];
-        var dataSource = {
-          id: dataSourceId,
-          unitOfMeasurement: {
-            type: 'custom'
-          }
-        };
+        var dataSource = customUnitSource;
 
         var result = performanceTableService.getEffectValues(performanceTable, dataSource);
 
@@ -56,7 +58,6 @@ define([
       });
 
       it('should return an array containing all effect values percentified', function() {
-        var dataSourceId = 'dataSourceId';
         var performanceTable = [{
           dataSource: dataSourceId,
           performance: {
@@ -65,23 +66,34 @@ define([
             }
           }
         }];
-        var dataSource = {
-          id: dataSourceId,
-          unitOfMeasurement: {
-            type: 'percentage'
-          }
-        };
+        var dataSource = percentageSource;
 
         var result = performanceTableService.getEffectValues(performanceTable, dataSource);
 
         var expectedResult = [100];
         expect(result).toEqual(expectedResult);
       });
+
+      it('should ignore cell that are empty', function() {
+        var performanceTable = [{
+          dataSource: dataSourceId,
+          performance: {
+            effect: {
+              type: 'empty'
+            }
+          }
+        }];
+        var dataSource = customUnitSource;
+
+        var result = performanceTableService.getEffectValues(performanceTable, dataSource);
+
+        var expectedResult = [];
+        expect(result).toEqual(expectedResult);
+      });
     });
 
     describe('getRangeDistributionValues', function() {
       it('should return an empty array if there are no range distribution values', function() {
-        var dataSourceId = 'dataSourceId';
         var performanceTable = [{
           dataSource: dataSourceId,
           performance: {
@@ -93,12 +105,7 @@ define([
           dataSource: dataSourceId,
           performance: {}
         }];
-        var dataSource = {
-          id: dataSourceId,
-          unitOfMeasurement: {
-            type: 'custom'
-          }
-        };
+        var dataSource = customUnitSource;
 
         var result = performanceTableService.getRangeDistributionValues(performanceTable, dataSource);
 
@@ -107,7 +114,6 @@ define([
       });
 
       it('should return an array containing all range distribution values', function() {
-        var dataSourceId = 'dataSourceId';
         var performanceTable = [{
           dataSource: dataSourceId,
           performance: {
@@ -120,12 +126,7 @@ define([
             }
           }
         }];
-        var dataSource = {
-          id: dataSourceId,
-          unitOfMeasurement: {
-            type: 'custom'
-          }
-        };
+        var dataSource = customUnitSource;
 
         var result = performanceTableService.getRangeDistributionValues(performanceTable, dataSource);
 
@@ -134,7 +135,6 @@ define([
       });
 
       it('should return an array containing all range distribution values percentified', function() {
-        var dataSourceId = 'dataSourceId';
         var performanceTable = [{
           dataSource: dataSourceId,
           performance: {
@@ -147,12 +147,7 @@ define([
             }
           }
         }];
-        var dataSource = {
-          id: dataSourceId,
-          unitOfMeasurement: {
-            type: 'percentage'
-          }
-        };
+        var dataSource = percentageSource;
 
         var result = performanceTableService.getRangeDistributionValues(performanceTable, dataSource);
 
