@@ -31,11 +31,11 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function loadWorkspaceSettings(params) {
       return WorkspaceSettingsResource.get(params).$promise.then(function(result) {
-        workspaceSettings = result.settings ? result.settings : DEFAULT_SETTINGS;
+        workspaceSettings = result.settings ? result.settings : angular.copy(DEFAULT_SETTINGS);
         if (!hasValidView(workspaceSettings)) {
           workspaceSettings.effectsDisplay = 'deterministic';
         }
-        toggledColumns = result.toggledColumns ? result.toggledColumns : DEFAULT_TOGGLED_COLUMNS;
+        toggledColumns = result.toggledColumns ? result.toggledColumns : angular.copy(DEFAULT_TOGGLED_COLUMNS);
       });
     }
 
@@ -64,7 +64,7 @@ define(['angular', 'lodash'], function(angular, _) {
           workspaceSettings.effectsDisplay = 'smaa';
         }
         workspaceSettings.hasNoEffects = true;
-      }
+      } 
     }
 
     function hasEffect(performanceTable) {
