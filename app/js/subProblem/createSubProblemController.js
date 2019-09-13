@@ -72,6 +72,7 @@ define(['lodash', 'angular'], function(_, angular) {
     function getWorkspaceSettings() {
       $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
       $scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
+      $scope.isValueView = WorkspaceSettingsService.isValueView();
     }
 
     function createProblemConfiguration() {
@@ -108,7 +109,16 @@ define(['lodash', 'angular'], function(_, angular) {
 
         updateInclusions();
         checkDuplicateTitle($scope.subProblemState.title);
+        
+        $scope.isCellAnalysisViable = EffectsTableService.createIsCellAnalysisViable(
+          $scope.tableRows,
+          $scope.alternatives,
+          $scope.effectsTableInfo,
+          $scope.scales
+        );
       });
+
+
     }
 
     function setProblem() {
