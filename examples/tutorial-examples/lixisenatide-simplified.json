@@ -254,7 +254,7 @@
       "performance": {
         "effect": {
           "type": "exact",
-          "value": 0.26899999999999996,
+          "value": 0.269,
           "input": {
             "value": 26.9,
             "scale": "percentage"
@@ -334,7 +334,7 @@
       "performance": {
         "effect": {
           "type": "exact",
-          "value": 0.22699999999999998,
+          "value": 0.227,
           "input": {
             "value": 22.7,
             "scale": "percentage"

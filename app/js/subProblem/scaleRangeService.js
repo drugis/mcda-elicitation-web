@@ -69,7 +69,8 @@ define(['lodash', 'angular'], function(_, angular) {
         restrictedRangeFrom -= Math.abs(restrictedRangeFrom) * 0.001;
         restrictedRangeTo += Math.abs(restrictedRangeTo) * 0.001;
       }
-
+      var floor = getFloor(from, restrictedRangeFrom);
+      var ceil = getCeil(to, restrictedRangeTo);
       return {
         increaseFrom: function() {
           this.sliderOptions.floor = niceFrom(boundFrom(this.sliderOptions.floor - margin));
@@ -82,8 +83,8 @@ define(['lodash', 'angular'], function(_, angular) {
             from: restrictedRangeFrom,
             to: restrictedRangeTo
           },
-          floor: niceFrom(from),
-          ceil: niceTo(to),
+          floor: floor,
+          ceil: ceil,
           step: Math.abs(niceTo(to) - niceFrom(from)) / 100,
           precision: 4,
           noSwitching: true,
@@ -92,6 +93,22 @@ define(['lodash', 'angular'], function(_, angular) {
           }
         }
       };
+    }
+
+    function getFloor(from, restrictedRangeFrom){
+      var floor =  niceFrom(from);
+      if (floor >= restrictedRangeFrom) {
+        floor = niceFrom(floor * 0.9);
+      }
+      return floor;
+    }
+
+    function getCeil(to, restrictedRangeTo){
+      var ceil = niceTo(to);
+      if (ceil <= restrictedRangeTo) {
+        ceil = niceTo(ceil * 1.1);
+      }
+      return ceil;
     }
 
     function getMargin(from, to) {
@@ -120,8 +137,8 @@ define(['lodash', 'angular'], function(_, angular) {
 
         // Set inital model value
         accum.choices[dataSource.id] = {
-          from: Math.min(niceFrom(from), accum.scalesState[dataSource.id].sliderOptions.restrictedRange.from),
-          to: Math.max(niceTo(to), accum.scalesState[dataSource.id].sliderOptions.restrictedRange.to)
+          from: getFloor(from, accum.scalesState[dataSource.id].sliderOptions.restrictedRange.from),
+          to: getCeil(to, accum.scalesState[dataSource.id].sliderOptions.restrictedRange.to)
         };
         return accum;
       }, {
