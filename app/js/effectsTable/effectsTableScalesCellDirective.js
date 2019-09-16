@@ -12,8 +12,7 @@ define([], function() {
       restrict: 'E',
       scope: {
         'scales': '=',
-        'uncertainty': '=',
-        'theoreticalScale': '='
+        'uncertainty': '='
       },
       templateUrl: './effectsTableScalesCellDirective.html',
       link: function(scope) {

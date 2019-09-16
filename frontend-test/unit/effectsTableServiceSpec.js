@@ -9,7 +9,7 @@ define([
     var significantDigitsMock = function(value) {
       return value;
     };
-    var workspaceSettingsServiceMock = jasmine.createSpyObj('WorkspaceSettingsService', ['usePercentage', 'getWorkspaceSettings']);
+    var workspaceSettingsServiceMock = jasmine.createSpyObj('WorkspaceSettingsService', ['getWorkspaceSettings']);
 
     beforeEach(angular.mock.module('elicit.effectsTable', function($provide) {
       $provide.value('significantDigits', significantDigitsMock);
@@ -982,53 +982,21 @@ define([
       });
 
       describe('getRoundedValue', function() {
-        beforeEach(function() {
-          workspaceSettingsServiceMock.usePercentage.and.returnValue(false);
-          workspaceSettingsServiceMock.usePercentage.calls.reset();
-        });
-
-        it('should return  the input value rounded on 3 significant digits for values lower than one', function() {
+        it('should return  the input value rounded on 3 digits for values', function() {
           var value = 0.4567890;
           var result = effectsTableService.getRoundedValue(value);
           var expectedResult = '0.457';
           expect(result).toEqual(expectedResult);
         });
 
-        it('should return  the input value rounded on 1 significant digit for values greater than one', function() {
-          var value = 123.4567890;
-          var result = effectsTableService.getRoundedValue(value);
-          var expectedResult = '123.5';
-          expect(result).toEqual(expectedResult);
-        });
-
-        it('should return  the input value rounded on 4 significant digits for values lower than 0.01', function() {
-          var value = 0.004567890;
-          var result = effectsTableService.getRoundedValue(value);
-          var expectedResult = '0.0046';
-          expect(result).toEqual(expectedResult);
-        });
-
-        it('should return  the input value rounded on 2 significant digits if it is a percentage lower than 0.01', function() {
-          workspaceSettingsServiceMock.usePercentage.and.returnValue(true);
-          var value = 0.00567890;
-          var result = effectsTableService.getRoundedValue(value);
-          var expectedResult = '0.01';
-          expect(result).toEqual(expectedResult);
-        });
-
-        it('should return undefined if the value is null', function() {
+        it('should return null if the value is null', function() {
           var value = null;
           var result = effectsTableService.getRoundedValue(value);
-          expect(result).toBeUndefined();
+          expect(result).toBeNull();
         });
       });
 
       describe('getRoundedScales', function() {
-        beforeEach(function() {
-          workspaceSettingsServiceMock.usePercentage.and.returnValue(false);
-          workspaceSettingsServiceMock.usePercentage.calls.reset();
-        });
-
         it('should return rounded scales', function() {
           var scales = {
             dataSourceId: {
@@ -1059,8 +1027,6 @@ define([
         beforeEach(function() {
           workspaceSettingsServiceMock.getWorkspaceSettings.calls.reset();
           workspaceSettingsServiceMock.getWorkspaceSettings.and.returnValue({ calculationMethod: 'median' });
-          workspaceSettingsServiceMock.usePercentage.and.returnValue(false);
-          workspaceSettingsServiceMock.usePercentage.calls.reset();
         });
 
         it('should return the median value', function() {
@@ -1068,7 +1034,7 @@ define([
             '50%': 0.4
           };
           var result = effectsTableService.getMedian(scales);
-          var expectedResult = '0.400';
+          var expectedResult = '0.4';
           expect(result).toEqual(expectedResult);
         });
 
@@ -1078,7 +1044,7 @@ define([
             mode: 0.05
           };
           var result = effectsTableService.getMedian(scales);
-          var expectedResult = '0.050';
+          var expectedResult = '0.05';
           expect(result).toEqual(expectedResult);
         });
 
@@ -1102,7 +1068,6 @@ define([
           expect(result).toEqual(expectedResult);
         });
       });
-
     });
   });
 });

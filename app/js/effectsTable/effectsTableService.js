@@ -304,23 +304,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function getRoundedValue(value) {
-      if (value === null) {
-        return;
-      } else {
-        var numberOfDecimals = getNumberOfDecimals(value);
-        return $filter('number')(value, numberOfDecimals);
-      }
-    }
-
-    function getNumberOfDecimals(value) {
-      var numberOfDecimals = 1;
-      if (Math.abs(value) < 0.01) {
-        ++numberOfDecimals;
-      }
-      if (!WorkspaceSettingsService.usePercentage() && Math.abs(value) < 1) {
-        numberOfDecimals += 2;
-      }
-      return numberOfDecimals;
+        return $filter('number')(value);
     }
 
     function getRoundedScales(scales){
