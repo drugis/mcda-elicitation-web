@@ -357,7 +357,7 @@ define(['lodash', 'angular'], function(_, angular) {
       isStudyDataAvailable: isStudyDataAvailable,
       buildTableRows: buildTableRows,
       createIsCellAnalysisViable: createIsCellAnalysisViable,
-      createIsCellAnalysisViableForCriterionCard: createIsCellAnalysisViableForCriterionCard.usePercentage,
+      createIsCellAnalysisViableForCriterionCard: createIsCellAnalysisViableForCriterionCard,
       getRoundedValue: getRoundedValue, 
       getRoundedScales: getRoundedScales,
       getMedian: getMedian
