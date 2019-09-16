@@ -3,6 +3,7 @@ define([
   './smaaResultsController',
   './deterministicResultsController',
   './editLegendController',
+  './smaaTableDirective',
   './sensitivityInputDirective',
   './sensitivityTableDirective',
   './valueProfilePlotDirective',
@@ -16,6 +17,7 @@ define([
   SmaaResultsController,
   DeterministicResultsController,
   EditLegendController,
+  SmaaTableDirective,
   sensitivityInputDirective,
   sensitivityTableDirective,
   valueProfilePlotDirective,
@@ -30,6 +32,7 @@ define([
       .controller('DeterministicResultsController', DeterministicResultsController)
       .controller('EditLegendController', EditLegendController)
 
+      .directive('smaaTable', SmaaTableDirective)
       .directive('sensitivityInput', sensitivityInputDirective)
       .directive('valueProfilePlot', valueProfilePlotDirective)
       .directive('legend', legendDirective)

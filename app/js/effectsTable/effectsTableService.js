@@ -1,10 +1,16 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
+    '$filter',
+    'WorkspaceSettingsService',
     'significantDigits'
   ];
 
-  var EffectsTableService = function(significantDigits) {
+  var EffectsTableService = function(
+    $filter,
+    WorkspaceSettingsService,
+    significantDigits
+  ) {
     var NOT_ENTERED = '';
 
     function buildEffectsTable(criteria) {
@@ -297,13 +303,64 @@ define(['lodash', 'angular'], function(_, angular) {
       return !!scales && !isNaN(smaaValue) && smaaValue !== null;
     }
 
+    function getRoundedValue(value) {
+      if (value === null) {
+        return;
+      } else {
+        var numberOfDecimals = getNumberOfDecimals(value);
+        return $filter('number')(value, numberOfDecimals);
+      }
+    }
+
+    function getNumberOfDecimals(value) {
+      var numberOfDecimals = 1;
+      if (Math.abs(value) < 0.01) {
+        ++numberOfDecimals;
+      }
+      if (!WorkspaceSettingsService.usePercentage() && Math.abs(value) < 1) {
+        numberOfDecimals += 2;
+      }
+      return numberOfDecimals;
+    }
+
+    function getRoundedScales(scales){
+      return _.mapValues(scales, function(scalesByAlternatives) {
+        return _.mapValues(scalesByAlternatives, function(alternative) {
+          return {
+            '2.5%': getRoundedValue(alternative['2.5%']),
+            '50%': getRoundedValue(alternative['50%']),
+            '97.5%': getRoundedValue(alternative['97.5%'])
+          };
+        });
+      });
+    }
+
+    function getMedian(scales){
+      if (WorkspaceSettingsService.getWorkspaceSettings().calculationMethod === 'mode'){
+        return getMode(scales);
+      } else {
+        return getRoundedValue(scales['50%']);
+      }
+    }
+
+    function getMode(scales){
+      if (scales.mode !== null && scales.mode !== undefined){
+        return getRoundedValue(scales.mode);
+      } else {
+        return 'NA';
+      }
+    }
+
     return {
       buildEffectsTable: buildEffectsTable,
       createEffectsTableInfo: createEffectsTableInfo,
       isStudyDataAvailable: isStudyDataAvailable,
       buildTableRows: buildTableRows,
       createIsCellAnalysisViable: createIsCellAnalysisViable,
-      createIsCellAnalysisViableForCriterionCard: createIsCellAnalysisViableForCriterionCard
+      createIsCellAnalysisViableForCriterionCard: createIsCellAnalysisViableForCriterionCard.usePercentage,
+      getRoundedValue: getRoundedValue, 
+      getRoundedScales: getRoundedScales,
+      getMedian: getMedian
     };
   };
 

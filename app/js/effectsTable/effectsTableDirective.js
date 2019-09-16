@@ -24,8 +24,7 @@ define(['lodash'], function(_) {
         getWorkspaceSettings();
 
         scope.$watch('criteria', function(newCriteria) {
-          scope.keyedCriteria = _.keyBy(_.cloneDeep(newCriteria), 'id');
-          scope.rows = EffectsTableService.buildEffectsTable(scope.keyedCriteria);
+          scope.rows = EffectsTableService.buildEffectsTable(newCriteria);
         }, true);
 
         scope.$watch('alternatives', function() {
