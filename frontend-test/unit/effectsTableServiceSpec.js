@@ -1024,6 +1024,11 @@ define([
       });
 
       describe('getRoundedScales', function() {
+        beforeEach(function() {
+          workspaceSettingsServiceMock.usePercentage.and.returnValue(false);
+          workspaceSettingsServiceMock.usePercentage.calls.reset();
+        });
+
         it('should return rounded scales', function() {
           var scales = {
             dataSourceId: {
@@ -1054,6 +1059,8 @@ define([
         beforeEach(function() {
           workspaceSettingsServiceMock.getWorkspaceSettings.calls.reset();
           workspaceSettingsServiceMock.getWorkspaceSettings.and.returnValue({ calculationMethod: 'median' });
+          workspaceSettingsServiceMock.usePercentage.and.returnValue(false);
+          workspaceSettingsServiceMock.usePercentage.calls.reset();
         });
 
         it('should return the median value', function() {
