@@ -56,14 +56,37 @@ define(['lodash', 'angular'], function(_) {
       if (cell.isInvalid) {
         return undefined;
       } else {
-        return {
-          type: 'dnorm',
-          parameters: {
-            mu: cell.firstParameter,
-            sigma: cell.secondParameter
-          }
-        };
+        if (isPercentage(cell)) {
+          return getNormalPercentagePerformance(cell);
+        } else {
+          return getNormalPerformance(cell);
+        }
       }
+    }
+
+    function getNormalPerformance(cell) {
+      return {
+        type: 'dnorm',
+        parameters: {
+          mu: cell.firstParameter,
+          sigma: cell.secondParameter
+        }
+      };
+    }
+
+    function getNormalPercentagePerformance(cell) {
+      return {
+        type: 'dnorm',
+        parameters: {
+          mu: cell.firstParameter / 100,
+          sigma: cell.secondParameter / 100
+        },
+        input: {
+          mu: cell.firstParameter,
+          sigma: cell.secondParameter,
+          scale: 'percentage'
+        }
+      };
     }
 
     function buildEmptyPerformance() {

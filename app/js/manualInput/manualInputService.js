@@ -91,7 +91,9 @@ define(['lodash', 'angular'], function(_, angular) {
       var updatetableParameters = [
         'Value',
         'Lower bound',
-        'Upper bound'
+        'Upper bound',
+        'Standard error',
+        'Mean'
       ];
       if (_.includes(updatetableParameters, cell.inputParameters[parameter].label)) {
         return getNewConstraints(cell, unitOfMeasurement, parameter);

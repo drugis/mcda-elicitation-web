@@ -193,7 +193,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
     });
 
     describe('buildNormalPerformance', function() {
-      it('should build a normal performance', function() {
+      it('should build a normal performance for a non percentage cell', function() {
         var cell = {
           isInvalid: false,
           inputParameters: {
@@ -214,6 +214,36 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         };
         expect(result).toEqual(expectedResult);
       });
+
+      it('should build a normal performance for a percentage cell', function() {
+        var cell = {
+          isInvalid: false,
+          inputParameters: {
+            firstParameter: {
+              constraints: []
+            }
+          },
+          firstParameter: 10,
+          secondParameter: 0.5,
+          constraint: 'percentage'
+        };
+        var result = performanceService.buildNormalPerformance(cell);
+        var expectedResult = {
+          type: 'dnorm',
+          parameters: {
+            mu: 0.1,
+            sigma: 0.005
+          },
+          input: {
+            mu: 10,
+            sigma: 0.5,
+            scale: 'percentage'
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+
+
 
       it('should return undefined for an invalid cell', function() {
         var cell = {

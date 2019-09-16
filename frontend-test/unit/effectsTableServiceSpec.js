@@ -332,7 +332,7 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for a normal distribution', function() {
+        it('should make a label for a non percentage normal distribution', function() {
           var performanceTable = [{
             criterion: 'criterionId4',
             alternative: 'alternativeId4',
@@ -356,6 +356,43 @@ define([
                   effectLabel: '',
                   effectValue: '',
                   distributionLabel: 'Normal(6, 2)',
+                  hasUncertainty: true
+                }
+              }
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should make a label for a percentage normal distribution', function() {
+          var performanceTable = [{
+            criterion: 'criterionId4',
+            alternative: 'alternativeId4',
+            dataSource: 'dsId4',
+            performance: {
+              distribution: {
+                type: 'dnorm',
+                parameters: {
+                  mu: 0.06,
+                  sigma: 0.02
+                },
+                input:{
+                  mu: 6,
+                  sigma: 2,
+                  scale: 'percentage'
+                }
+              }
+            }
+          }];
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            dsId4: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId4: {
+                  effectLabel: '',
+                  effectValue: '',
+                  distributionLabel: 'Normal(6%, 2%)',
                   hasUncertainty: true
                 }
               }

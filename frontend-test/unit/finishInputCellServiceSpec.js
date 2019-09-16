@@ -179,7 +179,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
     });
 
     describe('finishNormalInputCell', function() {
-      it('should create a finished input cell', function() {
+      it('should create a finished input cell for a non percentage normal performance', function() {
         var performance = {
           type: 'dnorm',
           parameters: {
@@ -190,6 +190,25 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         var result = finishInputCellService.finishNormalInputCell(options, performance);
         expect(result.firstParameter).toEqual(10);
         expect(result.secondParameter).toEqual(15);
+      });
+
+      it('should create a finished input cell for a percentage normal performance', function() {
+        var performance = {
+          type: 'dnorm',
+          parameters: {
+            mu: 0.1,
+            sigma: 0.15
+          },
+          input: {
+            mu: 10,
+            sigma: 15,
+            scale: 'percentage'
+          }
+        };
+        var result = finishInputCellService.finishNormalInputCell(options, performance);
+        expect(result.firstParameter).toEqual(10);
+        expect(result.secondParameter).toEqual(15);
+        expect(result.constraint).toEqual('percentage');
       });
     });
 

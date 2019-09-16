@@ -47,14 +47,17 @@ define(['lodash'], function(_) {
         text: TEXT
       };
     }
+    var parameterNotUsed;
+    var useConstraints = true;
+    var dontUseConstraints = false;
 
     var NORMAL = new optionsBlock(
       'normal',
       'Normal',
       buildDefined('Mean'),
       buildPositiveFloat('Standard error'),
-      undefined,
-      false,
+      parameterNotUsed,
+      useConstraints,
       ToStringService.normalToString,
       PerformanceService.buildNormalPerformance,
       FinishInputCellService.finishNormalInputCell
@@ -65,8 +68,8 @@ define(['lodash'], function(_) {
       'Beta',
       buildIntegerAboveZero('Alpha'),
       buildIntegerAboveZero('Beta'),
-      undefined,
-      false,
+      parameterNotUsed,
+      dontUseConstraints,
       ToStringService.betaToString,
       PerformanceService.buildBetaPerformance,
       FinishInputCellService.finishBetaCell
@@ -77,8 +80,8 @@ define(['lodash'], function(_) {
       'Gamma',
       buildFloatAboveZero('Alpha'),
       buildFloatAboveZero('Beta'),
-      undefined,
-      false,
+      parameterNotUsed,
+      dontUseConstraints,
       ToStringService.gammaToString,
       PerformanceService.buildGammaPerformance,
       FinishInputCellService.finishGammaCell
@@ -88,9 +91,9 @@ define(['lodash'], function(_) {
       'value',
       'Value',
       buildDefined('Value'),
-      undefined,
-      undefined,
-      true,
+      parameterNotUsed,
+      parameterNotUsed,
+      useConstraints,
       ToStringService.valueToString,
       PerformanceService.buildValuePerformance,
       FinishInputCellService.finishValueCell,
@@ -103,7 +106,7 @@ define(['lodash'], function(_) {
       buildDefined('Value'),
       buildLowerBound(),
       buildUpperBound(),
-      true,
+      useConstraints,
       ToStringService.valueCIToString,
       PerformanceService.buildValueCIPerformance,
       FinishInputCellService.finishValueCI,
@@ -115,8 +118,8 @@ define(['lodash'], function(_) {
       'Range',
       buildLowerRange(),
       buildUpperBound(),
-      undefined,
-      true,
+      parameterNotUsed,
+      useConstraints,
       ToStringService.rangeToString,
       PerformanceService.buildRangeDistribtutionPerformance,
       FinishInputCellService.finishRangeDistributionCell
@@ -127,8 +130,8 @@ define(['lodash'], function(_) {
       'Range',
       buildLowerRange(),
       buildUpperBound(),
-      undefined,
-      true,
+      parameterNotUsed,
+      useConstraints,
       ToStringService.rangeToString,
       PerformanceService.buildRangeEffectPerformance,
       FinishInputCellService.finishRangeEffectCell,
@@ -138,10 +141,10 @@ define(['lodash'], function(_) {
     var EMPTY = new effectOptionsBlock(
       'empty',
       'Empty cell',
-      undefined,
-      undefined,
-      undefined,
-      false,
+      parameterNotUsed,
+      parameterNotUsed,
+      parameterNotUsed,
+      dontUseConstraints,
       ToStringService.emptyToString,
       PerformanceService.buildEmptyPerformance,
       FinishInputCellService.finishEmptyCell,
@@ -152,9 +155,9 @@ define(['lodash'], function(_) {
       'text',
       'Text',
       buildNotEmpty(),
-      undefined,
-      undefined,
-      false,
+      parameterNotUsed,
+      parameterNotUsed,
+      dontUseConstraints,
       ToStringService.textToString,
       PerformanceService.buildTextPerformance,
       FinishInputCellService.finishTextCell,

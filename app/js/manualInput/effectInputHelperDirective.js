@@ -57,7 +57,7 @@ define(['lodash', 'angular'], function(_, angular) {
           scope.inputParameterOptions = ManualInputService.getOptions(scope.inputType);
           scope.cell.inputParameters = getInputParameters();
           scope.cell.constraint = getCellConstraint();
-          scope.inputCell = ManualInputService.updateParameterConstraints(scope.cell, scope.unitOfMeasurement);
+          scope.inputCell = angular.copy(scope.cell);
           inputChanged();
           scope.cell.label = ManualInputService.inputToString(scope.inputCell);
           scope.cell.isInvalid = ManualInputService.getInputError(scope.inputCell);
@@ -81,6 +81,7 @@ define(['lodash', 'angular'], function(_, angular) {
         }
 
         function inputChanged() {
+          scope.inputCell = ManualInputService.updateParameterConstraints(scope.inputCell, scope.unitOfMeasurement);
           if (scope.inputCell.inputParameters.id !== 'text' && isNotNumeric(scope.inputCell.firstParameter)) {
             delete scope.inputCell.firstParameter;
           }
