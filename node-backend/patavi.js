@@ -4,18 +4,18 @@ var https = require('https');
 var logger = require('./logger');
 var _ = require('lodash');
 var httpStatus = require('http-status-codes');
-
-var httpsOptions = {
-  hostname: process.env.PATAVI_HOST,
-  port: process.env.PATAVI_PORT,
-  key: fs.readFileSync(process.env.PATAVI_CLIENT_KEY),
-  cert: fs.readFileSync(process.env.PATAVI_CLIENT_CRT)
-};
+var httpsOptions;
 
 try {
-  httpsOptions.ca = fs.readFileSync(process.env.PATAVI_CA);
+  httpsOptions = {
+    hostname: process.env.PATAVI_HOST,
+    port: process.env.PATAVI_PORT,
+    key: fs.readFileSync(process.env.PATAVI_CLIENT_KEY),
+    cert: fs.readFileSync(process.env.PATAVI_CLIENT_CRT),
+    ca: fs.readFileSync(process.env.PATAVI_CA)
+  };
 } catch (e) {
-  logger.warn('could not read patavi certivicate authority at: ' + process.env.PATAVI_CA);
+  logger.warn('could not find certificates');
 }
 
 function createPataviTask(problem, callback) {
@@ -27,7 +27,7 @@ function createPataviTask(problem, callback) {
       'Content-Type': 'application/json',
     }
   };
-  var postReq = https.request(_.extend(httpsOptions, reqOptions), function(res) {
+  var postReq = https.request(_.extend(httpsOptions, reqOptions), function (res) {
     logger.debug('patavi service task created');
     if (res.statusCode === httpStatus.CREATED && res.headers.location) {
       callback(null, res.headers.location);
