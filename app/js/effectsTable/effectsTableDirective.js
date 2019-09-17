@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash', 'bowser'], function(_, bowser) {
   var dependencies = [
     'EffectsTableService',
     'WorkspaceSettingsService'
@@ -36,6 +36,10 @@ define(['lodash'], function(_) {
 
         scope.$on('elicit.settingsChanged', getWorkspaceSettings);
 
+        var browser = bowser.getParser(window.navigator.userAgent).getBrowser().name;
+        scope.isFirefox = browser === 'Firefox';
+        scope.isChrome = browser === 'Chrome';
+
         function isCellAnalysisViable(){
           scope.isCellAnalysisViable = EffectsTableService.createIsCellAnalysisViable(
             scope.rows,
@@ -49,7 +53,6 @@ define(['lodash'], function(_) {
           scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
           scope.isValueView = WorkspaceSettingsService.isValueView();
         }
-
       }
     };
   };
