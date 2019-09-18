@@ -7,14 +7,20 @@ const httpStatus = require('http-status-codes');
 
 module.exports = function(db) {
   function runStartupDiagnostics(callback) {
-    const asyncCall = async.applyEach([checkDBConnection, checkPataviConnection]);
-    asyncCall(_.partial(asyncCallback, callback));
+    async.waterfall([
+      checkDBConnection,
+      checkPataviConnection
+    ], function(error, results) {
+      if (error){
+        results.push('Could not execute diagnostics, unknown error: ' + error);
+      }
+      asyncCallback(callback, results);
+    });
   }
 
   function asyncCallback(callback, results) {
     const errors = createErrorArray(results);
     logErrors(errors);
-
     if (errors.length) {
       callback(createErrorBody(errors));
     } else {
@@ -45,28 +51,26 @@ module.exports = function(db) {
     var startupErrors = [];
     if (error) {
       startupErrors.push('Connection to database unsuccessful. ' + error);
-      db.endConnection();
-      callback(startupErrors);
     } else {
       console.log('Connection to database successful');
-      callback();
     }
+    callback(null, startupErrors);
   }
 
-  function checkPataviConnection(callback) {
-    var errors = getCertificateErrors();
-
-    if (!errors.length) {
+  function checkPataviConnection(errors, callback) {
+    var certificateErrors = getCertificateErrors();
+    if (!certificateErrors.length) {
       console.log('All certificates found');
       checkPataviServerConnection(callback, errors);
     } else {
-      callback(errors);
+      errors = errors.concat(certificateErrors);
+      callback(null, errors);
     }
   }
 
   function checkPataviServerConnection(callback, errors) {
     var httpsOptions = getHttpsOptions();
-    var postRequest = https.request(httpsOptions, _.partial(pataviRequestCallback, callback));
+    var postRequest = https.request(httpsOptions, _.partial(pataviRequestCallback, callback, errors));
     postRequest.on('error', _.partial(pataviRequestErrorCallback, callback, errors));
     postRequest.end();
   }
@@ -83,13 +87,13 @@ module.exports = function(db) {
 
   function pataviRequestErrorCallback(callback, errors, error) {
     errors.push('Connection to Patavi unsuccessful: ' + error);
-    callback(errors);
+    callback(null, errors);
   }
 
-  function pataviRequestCallback(callback, result) {
+  function pataviRequestCallback(callback, errors, result) {
     if (result.statusCode === httpStatus.OK) {
       console.log('Connection to Patavi server successful');
-      callback();
+      callback(null, errors);
     }
   }
 
