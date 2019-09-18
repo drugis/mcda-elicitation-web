@@ -50,7 +50,7 @@ module.exports = function(db) {
   function dbCheckCallback(callback, error) {
     var startupErrors = [];
     if (error) {
-      startupErrors.push('Connection to database unsuccessful. ' + error);
+      startupErrors.push('Connection to database unsuccessful. <i>' + error + '</i>.<br> Please make sure the database is running and the environment variables are set correctly.');
     } else {
       console.log('Connection to database successful');
     }
@@ -86,7 +86,7 @@ module.exports = function(db) {
   }
 
   function pataviRequestErrorCallback(callback, errors, error) {
-    errors.push('Connection to Patavi unsuccessful: ' + error);
+    errors.push('Connection to Patavi unsuccessful: <i>' + error + '</i>.<br> Please make sure the Patavi server is running and the environment variables are set correctly.');
     callback(null, errors);
   }
 
@@ -100,21 +100,22 @@ module.exports = function(db) {
   function getCertificateErrors() {
     var errors = [];
     if (!fs.existsSync(process.env.PATAVI_CLIENT_KEY)) {
-      errors.push('Patavi client key not found at: ' + process.env.PATAVI_CLIENT_KEY);
+      errors.push('Patavi client key not found. Please make sure it is accessible at the specified location.');
     }
     if (!fs.existsSync(process.env.PATAVI_CLIENT_CRT)) {
-      errors.push('Patavi client certificate not found at: ' + process.env.PATAVI_CLIENT_CRT);
+      errors.push('Patavi client certificate not found. Please make sure it is accessible at the specified location.');
     }
     if (!fs.existsSync(process.env.PATAVI_CA)) {
-      errors.push('Patavi certificate authority not found at: ' + process.env.PATAVI_CA);
+      errors.push('Patavi certificate authority not found. Please make sure it is accessible at the specified location.');
     }
     return errors;
   }
 
   function createErrorBody(errors) {
+    var errorPageHead = '<h3>MCDA could not be started. The following errors occured:</h3>';
     return _.reduce(errors, function(accum, error) {
-      return accum.concat('<div>' + error + '</div>');
-    }, '');
+      return accum.concat('<div style="padding: 10px">' + error + '</div>');
+    }, errorPageHead);
   }
 
   return {
