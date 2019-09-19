@@ -7,60 +7,96 @@ const spies = require('chai-spies');
 chai.use(spies);
 const expect = chai.expect;
 
-var fsStub = {
-  readFileSync: chai.spy(),
-  existsSync: chai.spy()
-};
-var httpsStub = {
-  request: chai.spy()
-};
-var dbStub = {
-  query: chai.spy()
+const dbStub = {};
+const startupCheckServiceStub = {
+  checkDBConnection: chai.spy(),
+  checkPataviConnection: chai.spy()
 };
 
 const startupDiagnosticsService = proxyquire(
   '../node-backend/startupDiagnosticsService', {
-  'fs': () => {
-    return fsStub;
-  },
-  'https': () => {
-    return httpsStub;
-  }
+  './startupCheckService': () => { return startupCheckServiceStub; }
 })(dbStub);
 
 describe('the startup diagnostics', () => {
   describe('runStartupDiagnostics', () => {
-    var dbQuery;
-    var httpsRequest;
-    var readFileSync;
-    var existsSync;
-    var postRequest = {
-      on: function(argument, callback) {
-        callback();
-      }
-    };
+    var checkDB;
+    var checkPatavi;
+    const errorHeader = '<h3>MCDA could not be started. The following errors occured:</h3>';
+    const divStart = '<div style="padding: 10px">';
+    const divEnd = '</div>';
+    const pataviError = 'patavi connection error';
+    const dbError = 'db connection error';
 
     beforeEach(() => {
-      dbQuery = sinon.stub(dbStub, 'query');
-      httpsRequest = sinon.stub(httpsStub, 'request');
-      readFileSync = sinon.stub(fsStub, 'readFileSync');
-      existsSync = sinon.stub(fsStub, 'existsSync');
+      checkDB = sinon.stub(startupCheckServiceStub, 'checkDBConnection');
+      checkPatavi = sinon.stub(startupCheckServiceStub, 'checkPataviConnection');
     });
 
     afterEach(() => {
-      dbQuery.restore();
-      httpsRequest.restore();
-      readFileSync.restore();
-      existsSync.restore();
+      checkDB.restore();
+      checkPatavi.restore();
     });
 
     it('should call the callback without errors', (done) => {
+      checkDB.onCall(0).yields(null, []);
+      checkPatavi.onCall(0).yields(null, []);
       var callback = function(errors) {
-        expect(errors).to.equal([]);
+        expect(errors).to.equal(undefined);
         done();
       };
 
-      dbQuery.onCall(0).yields(null);
+      startupDiagnosticsService.runStartupDiagnostics(callback);
+    });
+
+    it('should call the callback with a patavi connection error', (done) => {
+      checkDB.onCall(0).yields(null, []);
+      checkPatavi.onCall(0).yields(null, [pataviError]);
+      var expectedError = errorHeader + divStart + pataviError + divEnd;
+      var callback = function(errors) {
+        expect(errors).to.equal(expectedError);
+        done();
+      };
+
+      startupDiagnosticsService.runStartupDiagnostics(callback);
+    });
+
+    it('should call the callback with a DB connection error', (done) => {
+      checkDB.onCall(0).yields(null, [dbError]);
+      checkPatavi.onCall(0).yields(null, []);
+      var expectedError = errorHeader + divStart + dbError + divEnd;
+      var callback = function(errors) {
+        expect(errors).to.equal(expectedError);
+        done();
+      };
+
+      startupDiagnosticsService.runStartupDiagnostics(callback);
+    });
+
+    it('should call the callback with both a DB and a patavi connection error', (done) => {
+      checkDB.onCall(0).yields(null, [dbError]);
+      checkPatavi.onCall(0).yields(null, [pataviError]);
+      var expectedError = errorHeader +
+        divStart + dbError + divEnd +
+        divStart + pataviError + divEnd;
+      var callback = function(errors) {
+        expect(errors).to.equal(expectedError);
+        done();
+      };
+
+      startupDiagnosticsService.runStartupDiagnostics(callback);
+    });
+
+    it('should call the callback with an error if the parallel execution goes wrong', (done) => {
+      var error = 'parallel error';
+      checkDB.onCall(0).yields(null, []);
+      checkPatavi.onCall(0).yields(error, []);
+      var expectedError = errorHeader +
+        divStart + 'Could not execute diagnostics, unknown error: ' + error + divEnd;
+      var callback = function(errors) {
+        expect(errors).to.equal(expectedError);
+        done();
+      };
 
       startupDiagnosticsService.runStartupDiagnostics(callback);
     });
