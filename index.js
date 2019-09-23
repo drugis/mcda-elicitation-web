@@ -1,9 +1,8 @@
 'use strict';
 var dbUtil = require('./node-backend/dbUtil');
 console.log(dbUtil.mcdaDBUrl);
-var db = require('./node-backend/db')(dbUtil.connectionConfig);
 var _ = require('lodash');
-var patavi = require('./node-backend/patavi');
+var db = require('./node-backend/db')(dbUtil.connectionConfig);
 var logger = require('./node-backend/logger');
 var httpStatus = require('http-status-codes');
 var appEnvironmentSettings = {
@@ -20,9 +19,9 @@ var OrderingRouter = require('./node-backend/orderingRouter')(db);
 var SubProblemRouter = require('./node-backend/subProblemRouter')(db);
 var ScenarioRouter = require('./node-backend/scenarioRouter')(db);
 var WorkspaceSettingsRouter = require('./node-backend/workspaceSettingsRouter')(db);
+var StartupDiagnosticsService = require('./node-backend/startupDiagnosticsService')(db);
 
 var rightsManagement = require('rights-management')();
-
 var express = require('express');
 var http = require('http');
 var bodyParser = require('body-parser');
@@ -33,20 +32,153 @@ var server;
 
 var authenticationMethod = process.env.MCDAWEB_AUTHENTICATION_METHOD;
 
-var sessionOptions = {
-  store: new (require('connect-pg-simple')(session))({
-    conString: dbUtil.mcdaDBUrl,
-  }),
-  secret: process.env.MCDAWEB_COOKIE_SECRET,
-  resave: true,
-  proxy: true,
-  rolling: true,
-  saveUninitialized: true,
-  cookie: {
-    maxAge: 60 * 60 * 1000, // 1 hour
-    secure: authenticationMethod === 'SSL'
+var app = express();
+app.use(helmet());
+app.set('trust proxy', 1);
+app.use(bodyParser.json({
+  limit: '5mb'
+}));
+server = http.createServer(app);
+
+StartupDiagnosticsService.runStartupDiagnostics((errorBody) => {
+  if (errorBody) {
+    initError(errorBody);
+  } else {
+    initApp();
   }
-};
+});
+
+function initApp() {
+  var patavi = require('./node-backend/patavi');
+  
+  setRequiredRights();
+  var sessionOptions = {
+    store: new (require('connect-pg-simple')(session))({
+      conString: dbUtil.mcdaDBUrl,
+    }),
+    secret: process.env.MCDAWEB_COOKIE_SECRET,
+    resave: true,
+    proxy: true,
+    rolling: true,
+    saveUninitialized: true,
+    cookie: {
+      maxAge: 60 * 60 * 1000, // 1 hour
+      secure: authenticationMethod === 'SSL'
+    }
+  };
+
+  app.use(session(sessionOptions));
+
+  switch (authenticationMethod) {
+    case 'SSL':
+      useSSLLogin();
+      break;
+    case 'LOCAL':
+      signin.useLocalLogin(app);
+      break;
+    default:
+      authenticationMethod = 'GOOGLE';
+      signin.useGoogleLogin(app);
+  }
+  console.log('Authentication method: ' + authenticationMethod);
+
+  app.get('/logout', function(req, res) {
+    req.logout();
+    res.redirect('/');
+  });
+  app.use(csurf());
+  app.use(function(req, res, next) {
+    res.cookie('XSRF-TOKEN', req.csrfToken());
+    if (req.user) {
+      res.cookie('LOGGED-IN-USER', JSON.stringify(_.omit(req.user, 'email', 'password')));
+    }
+    next();
+  });
+  app.get('/', function(req, res) {
+    if (req.user || req.session.user) {
+      res.sendFile(__dirname + '/dist/index.html');
+    } else {
+      res.sendFile(__dirname + '/dist/signin.html');
+    }
+  });
+  app.get('/lexicon.json', function(req, res) {
+    res.sendFile(__dirname + '/app/lexicon.json');
+  });
+  app.get('/mcda-page-titles.json', function(req, res) {
+    res.sendFile(__dirname + '/app/mcda-page-titles.json');
+  });
+  app.use(express.static('dist'));
+  app.use(express.static('public'));
+  app.use('/examples', express.static(__dirname + '/examples'));
+  app.use('/tutorials', express.static(__dirname + '/examples/tutorial-examples'));
+  app.use('/css/fonts', express.static('./dist/fonts'));
+  app.use(rightsManagement.expressMiddleware);
+
+  app.use('/inProgress', InProgressRouter);
+  app.use('/workspaces', WorkspaceRouter);
+  app.use('/workspaces', OrderingRouter);
+  app.use('/workspaces', SubProblemRouter);
+  app.use('/workspaces', ScenarioRouter);
+  app.use('/workspaces', WorkspaceSettingsRouter);
+
+  app.post('/patavi', function(req, res, next) { // FIXME: separate routes for scales and results
+    patavi.create(req.body, function(err, taskUri) {
+      if (err) {
+        logger.error(err);
+        return next({
+          err: err,
+          status: httpStatus.INTERNAL_SERVER_ERROR
+        });
+      }
+      res.location(taskUri);
+      res.status(httpStatus.CREATED);
+      res.json({
+        'href': taskUri
+      });
+    });
+  });
+
+  app.use((error, request, response, next) => {
+    logger.error(JSON.stringify(error.message, null, 2));
+    if (error && error.type === signin.SIGNIN_ERROR) {
+      response.send(httpStatus.UNAUTHORIZED, 'login failed');
+    } else {
+      response
+        .status(error.status || error.statusCode || httpStatus.INTERNAL_SERVER_ERROR)
+        .send(error.err ? error.err.message : error.message);
+    }
+    next();
+  });
+
+  //The 404 Route (ALWAYS Keep this as the last route)
+  app.get('*', function(req, res) {
+    res.status(httpStatus.NOT_FOUND).sendFile(__dirname + '/dist/error.html');
+  });
+
+  startListening(function(port) {
+    console.log('Listening on http://localhost:' + port);
+  });
+}
+
+function initError(errorBody) {
+  app.get('*', function(req, res) {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR)
+      .set('Content-Type', 'text/html')
+      .send(errorBody);
+  });
+
+  startListening(function(port) {
+    console.error('Access the diagnostics summary at http://localhost:' + port);
+  });
+}
+
+function startListening(listenFunction) {
+  var port = 3002;
+  if (process.argv[2] === 'port' && process.argv[3]) {
+    port = process.argv[3];
+  }
+  server.listen(port, _.partial(listenFunction, port));
+}
 
 function makeRights(path, method, requiredRight, checkRights) {
   return {
@@ -57,38 +189,40 @@ function makeRights(path, method, requiredRight, checkRights) {
   };
 }
 
-rightsManagement.setRequiredRights([
-  makeRights('/patavi', 'POST', 'none'),
-  makeRights('/workspaces', 'GET', 'none'),
-  makeRights('/workspaces', 'POST', 'none'),
+function setRequiredRights() {
+  rightsManagement.setRequiredRights([
+    makeRights('/patavi', 'POST', 'none'),
+    makeRights('/workspaces', 'GET', 'none'),
+    makeRights('/workspaces', 'POST', 'none'),
 
-  makeRights('/workspaces/:workspaceId', 'GET', 'read', workspaceOwnerRightsNeeded),
-  makeRights('/workspaces/:workspaceId', 'POST', 'write', workspaceOwnerRightsNeeded),
-  makeRights('/workspaces/:workspaceId', 'DELETE', 'owner', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId', 'GET', 'read', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId', 'POST', 'write', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId', 'DELETE', 'owner', workspaceOwnerRightsNeeded),
 
-  makeRights('/inProgress', 'GET', 'none', inProgressOwnerRightsNeeded),
-  makeRights('/inProgress', 'POST', 'none', inProgressOwnerRightsNeeded),
-  makeRights('/inProgress/:workspaceId', 'GET', 'none', inProgressOwnerRightsNeeded),
-  makeRights('/inProgress/:workspaceId', 'PUT', 'none', inProgressOwnerRightsNeeded),
-  makeRights('/inProgress/:workspaceId', 'DELETE', 'none', inProgressOwnerRightsNeeded),
+    makeRights('/inProgress', 'GET', 'none', inProgressOwnerRightsNeeded),
+    makeRights('/inProgress', 'POST', 'none', inProgressOwnerRightsNeeded),
+    makeRights('/inProgress/:workspaceId', 'GET', 'none', inProgressOwnerRightsNeeded),
+    makeRights('/inProgress/:workspaceId', 'PUT', 'none', inProgressOwnerRightsNeeded),
+    makeRights('/inProgress/:workspaceId', 'DELETE', 'none', inProgressOwnerRightsNeeded),
 
-  makeRights('/workspaces/:workspaceId/ordering', 'GET', 'read', workspaceOwnerRightsNeeded),
-  makeRights('/workspaces/:workspaceId/ordering', 'PUT', 'write', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId/ordering', 'GET', 'read', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId/ordering', 'PUT', 'write', workspaceOwnerRightsNeeded),
 
-  makeRights('/workspaces/:workspaceId/workspaceSettings', 'GET', 'read', workspaceOwnerRightsNeeded),
-  makeRights('/workspaces/:workspaceId/workspaceSettings', 'PUT', 'write', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId/workspaceSettings', 'GET', 'read', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId/workspaceSettings', 'PUT', 'write', workspaceOwnerRightsNeeded),
 
-  makeRights('/workspaces/:workspaceId/problems', 'GET', 'read', workspaceOwnerRightsNeeded),
-  makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'GET', 'read', workspaceOwnerRightsNeeded),
-  makeRights('/workspaces/:workspaceId/problems', 'POST', 'write', workspaceOwnerRightsNeeded),
-  makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'POST', 'write', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId/problems', 'GET', 'read', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'GET', 'read', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId/problems', 'POST', 'write', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'POST', 'write', workspaceOwnerRightsNeeded),
 
-  makeRights('/workspaces/:workspaceId/scenarios', 'GET', 'read', workspaceOwnerRightsNeeded),
-  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios', 'GET', 'read', workspaceOwnerRightsNeeded),
-  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'GET', 'read', workspaceOwnerRightsNeeded),
-  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios', 'POST', 'write', workspaceOwnerRightsNeeded),
-  makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'POST', 'write', workspaceOwnerRightsNeeded)
-]);
+    makeRights('/workspaces/:workspaceId/scenarios', 'GET', 'read', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios', 'GET', 'read', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'GET', 'read', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios', 'POST', 'write', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'POST', 'write', workspaceOwnerRightsNeeded)
+  ]);
+}
 
 function workspaceOwnerRightsNeeded(response, next, workspaceId, userId) {
   WorkspaceRepository.get(workspaceId, _.partial(rightsCallback, response, next, userId));
@@ -112,112 +246,6 @@ function rightsCallback(response, next, userId, error, result) {
     }
   }
 }
-
-var app = express();
-
-app.use(helmet());
-app.use(session(sessionOptions));
-app.set('trust proxy', 1);
-app.use(bodyParser.json({
-  limit: '5mb'
-}));
-
-server = http.createServer(app);
-
-switch (authenticationMethod) {
-  case 'SSL':
-    useSSLLogin();
-    break;
-  case 'LOCAL':
-    signin.useLocalLogin(app);
-    break;
-  default:
-    authenticationMethod = 'GOOGLE';
-    signin.useGoogleLogin(app);
-}
-console.log('Authentication method: ' + authenticationMethod);
-
-app.get('/logout', function(req, res) {
-  req.logout();
-  res.redirect('/');
-});
-app.use(csurf());
-app.use(function(req, res, next) {
-  res.cookie('XSRF-TOKEN', req.csrfToken());
-  if (req.user) {
-    res.cookie('LOGGED-IN-USER', JSON.stringify(_.omit(req.user, 'email', 'password')));
-  }
-  next();
-});
-app.get('/', function(req, res) {
-  if (req.user || req.session.user) {
-    res.sendFile(__dirname + '/dist/index.html');
-  } else {
-    res.sendFile(__dirname + '/dist/signin.html');
-  }
-});
-app.get('/lexicon.json', function(req, res) {
-  res.sendFile(__dirname + '/app/lexicon.json');
-});
-app.get('/mcda-page-titles.json', function(req, res) {
-  res.sendFile(__dirname + '/app/mcda-page-titles.json');
-});
-app.use(express.static('dist'));
-app.use(express.static('public'));
-app.use('/examples', express.static(__dirname + '/examples'));
-app.use('/tutorials', express.static(__dirname + '/examples/tutorial-examples'));
-app.use('/css/fonts', express.static('./dist/fonts'));
-app.use(rightsManagement.expressMiddleware);
-
-app.use('/inProgress', InProgressRouter);
-app.use('/workspaces', WorkspaceRouter);
-app.use('/workspaces', OrderingRouter);
-app.use('/workspaces', SubProblemRouter);
-app.use('/workspaces', ScenarioRouter);
-app.use('/workspaces', WorkspaceSettingsRouter);
-
-app.post('/patavi', function(req, res, next) { // FIXME: separate routes for scales and results
-  patavi.create(req.body, function(err, taskUri) {
-    if (err) {
-      logger.error(err);
-      return next({
-        err: err,
-        status: httpStatus.INTERNAL_SERVER_ERROR
-      });
-    }
-    res.location(taskUri);
-    res.status(httpStatus.CREATED);
-    res.json({
-      'href': taskUri
-    });
-  });
-});
-
-app.use((error, request, response, next) => {
-  logger.error(JSON.stringify(error.message, null, 2));
-  if (error && error.type === signin.SIGNIN_ERROR) {
-    response.send(httpStatus.UNAUTHORIZED, 'login failed');
-  } else {
-    response
-      .status(error.status || error.statusCode || httpStatus.INTERNAL_SERVER_ERROR)
-      .send(error.err ? error.err.message : error.message);
-  }
-  next();
-});
-
-//The 404 Route (ALWAYS Keep this as the last route)
-app.get('*', function(req, res) {
-  res.status(httpStatus.NOT_FOUND).sendFile(__dirname + '/dist/error.html');
-});
-
-var port = 3002;
-if (process.argv[2] === 'port' && process.argv[3]) {
-  port = process.argv[3];
-}
-
-server.listen(port, function() {
-  console.log('Listening on http://localhost:' + port);
-});
 
 function useSSLLogin() {
   app.get('/signin', function(req, res) {

@@ -9,14 +9,9 @@ var httpsOptions = {
   hostname: process.env.PATAVI_HOST,
   port: process.env.PATAVI_PORT,
   key: fs.readFileSync(process.env.PATAVI_CLIENT_KEY),
-  cert: fs.readFileSync(process.env.PATAVI_CLIENT_CRT)
+  cert: fs.readFileSync(process.env.PATAVI_CLIENT_CRT),
+  ca: fs.readFileSync(process.env.PATAVI_CA)
 };
-
-try {
-  httpsOptions.ca = fs.readFileSync(process.env.PATAVI_CA);
-} catch (e) {
-  logger.warn('could not read patavi certivicate authority at: ' + process.env.PATAVI_CA);
-}
 
 function createPataviTask(problem, callback) {
   logger.debug('pataviTaskRepository.createPataviTask');
@@ -27,6 +22,7 @@ function createPataviTask(problem, callback) {
       'Content-Type': 'application/json',
     }
   };
+
   var postReq = https.request(_.extend(httpsOptions, reqOptions), function(res) {
     logger.debug('patavi service task created');
     if (res.statusCode === httpStatus.CREATED && res.headers.location) {
