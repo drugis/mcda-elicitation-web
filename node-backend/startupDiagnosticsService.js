@@ -7,16 +7,16 @@ module.exports = function(db) {
 
   function runStartupDiagnostics(callback) {
     async.parallel([
-     startupCheckService.checkDBConnection,
-     startupCheckService.checkPataviConnection
+      startupCheckService.checkDBConnection,
+      startupCheckService.checkPataviConnection
     ], function(error, results) {
-      if (error){
+      if (error) {
         results.push('Could not execute diagnostics, unknown error: ' + error);
       }
       asyncCallback(callback, results);
     });
   }
-  
+
   function asyncCallback(callback, results) {
     const errors = createErrorArray(results);
     logErrors(errors);

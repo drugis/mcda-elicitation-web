@@ -3,7 +3,6 @@ var dbUtil = require('./node-backend/dbUtil');
 console.log(dbUtil.mcdaDBUrl);
 var _ = require('lodash');
 var db = require('./node-backend/db')(dbUtil.connectionConfig);
-var patavi = require('./node-backend/patavi');
 var logger = require('./node-backend/logger');
 var httpStatus = require('http-status-codes');
 var appEnvironmentSettings = {
@@ -50,6 +49,8 @@ StartupDiagnosticsService.runStartupDiagnostics((errorBody) => {
 });
 
 function initApp() {
+  var patavi = require('./node-backend/patavi');
+  
   setRequiredRights();
   var sessionOptions = {
     store: new (require('connect-pg-simple')(session))({
@@ -154,12 +155,7 @@ function initApp() {
     res.status(httpStatus.NOT_FOUND).sendFile(__dirname + '/dist/error.html');
   });
 
-  var port = 3002;
-  if (process.argv[2] === 'port' && process.argv[3]) {
-    port = process.argv[3];
-  }
-
-  server.listen(port, function() {
+  startListening(function(port) {
     console.log('Listening on http://localhost:' + port);
   });
 }
@@ -170,14 +166,18 @@ function initError(errorBody) {
       .set('Content-Type', 'text/html')
       .send(errorBody);
   });
+
+  startListening(function(port) {
+    console.error('Access the diagnostics summary at http://localhost:' + port);
+  });
+}
+
+function startListening(listenFunction) {
   var port = 3002;
   if (process.argv[2] === 'port' && process.argv[3]) {
     port = process.argv[3];
   }
-
-  server.listen(port, function() {
-    console.error('Access the diagnostics summary at http://localhost:' + port);
-  });
+  server.listen(port, _.partial(listenFunction, port));
 }
 
 function makeRights(path, method, requiredRight, checkRights) {

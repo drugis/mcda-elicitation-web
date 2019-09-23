@@ -68,8 +68,8 @@ describe('the startup check service', () => {
         statusCode: 200
       };
       var postRequest = {
-        on: () => {},
-        end: () => {}
+        on: () => { },
+        end: () => { }
       };
       existsSync.returns(true);
       readFileSync.returns(true);
@@ -82,7 +82,7 @@ describe('the startup check service', () => {
     it('should call the callback with certificate errors', () => {
       var callback = chai.spy();
       existsSync.returns(false);
-      
+
       startupCheckService.checkPataviConnection(callback);
 
       var expectedError1 = 'Patavi client key not found. Please make sure it is accessible at the specified location.';
@@ -98,12 +98,12 @@ describe('the startup check service', () => {
         on: (event, postRequestCallback) => {
           postRequestCallback(error);
         },
-        end: () => {}
+        end: () => { }
       };
       existsSync.returns(true);
       readFileSync.returns(true);
       httpsRequest.onCall(0).returns(postRequest);
-      
+
       startupCheckService.checkPataviConnection(callback);
 
       var expectedError = 'Connection to Patavi unsuccessful: <i>' + error + '</i>.<br> Please make sure the Patavi server is running and the environment variables are set correctly.';
@@ -116,8 +116,8 @@ describe('the startup check service', () => {
         statusCode: 201
       };
       var postRequest = {
-        on: () => {},
-        end: () => {}
+        on: () => { },
+        end: () => { }
       };
       existsSync.returns(true);
       readFileSync.returns(true);
