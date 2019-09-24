@@ -1,9 +1,9 @@
 'use strict';
 var dbUtil = require('./node-backend/dbUtil');
-console.log(dbUtil.mcdaDBUrl);
 var _ = require('lodash');
 var db = require('./node-backend/db')(dbUtil.connectionConfig);
 var logger = require('./node-backend/logger');
+logger.info(dbUtil.mcdaDBUrl);
 var httpStatus = require('http-status-codes');
 var appEnvironmentSettings = {
   googleKey: process.env.MCDAWEB_GOOGLE_KEY,
@@ -20,7 +20,7 @@ var SubProblemRouter = require('./node-backend/subProblemRouter')(db);
 var ScenarioRouter = require('./node-backend/scenarioRouter')(db);
 var WorkspaceSettingsRouter = require('./node-backend/workspaceSettingsRouter')(db);
 
-var StartupDiagnostics = require('startup-diagnostics')(db, 'MCDA');
+var StartupDiagnostics = require('startup-diagnostics')(db, logger, 'MCDA');
 var rightsManagement = require('rights-management')();
 var express = require('express');
 var http = require('http');
@@ -80,7 +80,7 @@ function initApp() {
       authenticationMethod = 'GOOGLE';
       signin.useGoogleLogin(app);
   }
-  console.log('Authentication method: ' + authenticationMethod);
+  logger.info('Authentication method: ' + authenticationMethod);
 
   app.get('/logout', function(req, res) {
     req.logout();
@@ -156,7 +156,7 @@ function initApp() {
   });
 
   startListening(function(port) {
-    console.log('Listening on http://localhost:' + port);
+    logger.info('Listening on http://localhost:' + port);
   });
 }
 
@@ -168,7 +168,7 @@ function initError(errorBody) {
   });
 
   startListening(function(port) {
-    console.error('Access the diagnostics summary at http://localhost:' + port);
+    logger.error('Access the diagnostics summary at http://localhost:' + port);
   });
 }
 
