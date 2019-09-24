@@ -19,8 +19,8 @@ var OrderingRouter = require('./node-backend/orderingRouter')(db);
 var SubProblemRouter = require('./node-backend/subProblemRouter')(db);
 var ScenarioRouter = require('./node-backend/scenarioRouter')(db);
 var WorkspaceSettingsRouter = require('./node-backend/workspaceSettingsRouter')(db);
-var StartupDiagnosticsService = require('./node-backend/startupDiagnosticsService')(db);
 
+var StartupDiagnostics = require('startup-diagnostics')(db, 'MCDA');
 var rightsManagement = require('rights-management')();
 var express = require('express');
 var http = require('http');
@@ -40,7 +40,7 @@ app.use(bodyParser.json({
 }));
 server = http.createServer(app);
 
-StartupDiagnosticsService.runStartupDiagnostics((errorBody) => {
+StartupDiagnostics.runStartupDiagnostics((errorBody) => {
   if (errorBody) {
     initError(errorBody);
   } else {
@@ -50,7 +50,7 @@ StartupDiagnosticsService.runStartupDiagnostics((errorBody) => {
 
 function initApp() {
   var patavi = require('./node-backend/patavi');
-  
+
   setRequiredRights();
   var sessionOptions = {
     store: new (require('connect-pg-simple')(session))({
