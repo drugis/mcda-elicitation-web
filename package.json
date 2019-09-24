@@ -33,7 +33,7 @@
     "proxyquire": "^2.1.0",
     "signin": "https://github.com/drugis/signin",
     "sinon": "^7.3.2",
-    "startup-diagnostics": "drugis/startup-diagnostics#1.0.0",
+    "startup-diagnostics": "drugis/startup-diagnostics#1.1.1",
     "winston": "~3.0.0"
   },
   "devDependencies": {

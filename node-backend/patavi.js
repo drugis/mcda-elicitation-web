@@ -9,9 +9,14 @@ var httpsOptions = {
   hostname: process.env.PATAVI_HOST,
   port: process.env.PATAVI_PORT,
   key: fs.readFileSync(process.env.PATAVI_CLIENT_KEY),
-  cert: fs.readFileSync(process.env.PATAVI_CLIENT_CRT),
-  ca: fs.readFileSync(process.env.PATAVI_CA)
+  cert: fs.readFileSync(process.env.PATAVI_CLIENT_CRT)
 };
+
+try {
+  httpsOptions.ca = fs.readFileSync(process.env.PATAVI_CA);
+} catch (error) {
+  logger.debug('Certificate autority file not found at: ' + process.env.PATAVI_CA);
+}
 
 function createPataviTask(problem, callback) {
   logger.debug('pataviTaskRepository.createPataviTask');
