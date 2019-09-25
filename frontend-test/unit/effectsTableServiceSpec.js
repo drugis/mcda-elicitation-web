@@ -401,6 +401,43 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
+        it('should make a non percentage distribution label if the input is value samplesize', function(){
+          var performanceTable = [{
+            criterion: 'criterionId4',
+            alternative: 'alternativeId4',
+            dataSource: 'dsId4',
+            performance: {
+              distribution: {
+                type: 'dnorm',
+                parameters: {
+                  mu: 0.06,
+                  sigma: 0.02
+                },
+                input:{
+                  value: 6,
+                  sampleSize: 2,
+                  scale: 'percentage'
+                }
+              }
+            }
+          }];
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            dsId4: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId4: {
+                  effectLabel: '6% / 2',
+                  effectValue: '',
+                  distributionLabel: 'Normal(0.06, 0.02)',
+                  hasUncertainty: true
+                }
+              }
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
         it('should make a label for a beta distribution', function() {
           var performanceTable = [{
             criterion: 'criterionId5',

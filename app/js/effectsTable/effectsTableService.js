@@ -185,7 +185,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function buildNormalLabel(distribution) {
-      if (distribution.input && distribution.input.scale === 'percentage') {
+      if (hasPercentageNormalInput(distribution.input)) {
         return 'Normal(' +
           significantDigits(distribution.input.mu) + '%, ' +
           significantDigits(distribution.input.sigma) + '%)';
@@ -194,6 +194,10 @@ define(['lodash', 'angular'], function(_, angular) {
           significantDigits(distribution.parameters.mu) + ', ' +
           significantDigits(distribution.parameters.sigma) + ')';
       }
+    }
+
+    function hasPercentageNormalInput(input){
+      return input && input.scale === 'percentage' && input.hasOwnProperty('mu') && input.hasOwnProperty('sigma');
     }
 
     function buildBetaLabel(parameters) {
