@@ -8,7 +8,7 @@
         Title
       </div>
       <div class="cell">
-        <input type="text" ng-model="alternative.title" ng-change="checkErrors()">
+        <input id="alternative-title" type="text" ng-model="alternative.title" ng-change="checkErrors()">
       </div>
       <div class="cell" ng-show="errors.length">
         <em ng-repeat="error in errors" class="alert">
@@ -18,7 +18,7 @@
       </div>
     </div>
     <div class="cell">
-      <button class="button success" type="submit" ng-disabled="errors.length">
+      <button id="add-alternative-confirm-button" class="button success" type="submit" ng-disabled="errors.length">
         Add
       </button>
     </div>

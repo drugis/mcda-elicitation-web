@@ -18,11 +18,12 @@
   <div class="cell auto">
     <div class="grid-x">
       <div class="cell large-10">
-        <h5>{{criterion.title}}</h5>
+        <h5 id="criterion-title-{{ criterion.title }}">{{criterion.title}}</h5>
       </div>
       <div ng-if="isStandalone" class="cell large-2">
         <div class="right">
-          <a ng-click="editCriterion(criterion)" tooltip="Edit criterion">
+          <a id="edit-criterion-{{ criterion.title }}-button" ng-click="editCriterion(criterion)"
+            tooltip="Edit criterion">
             <i class="fa fa-edit fa-2x icon-fixed-width"></i>
           </a>
           <a ng-if="isInput" ng-click="removeCriterion(idx)" tooltip="Remove criterion">
@@ -30,14 +31,14 @@
           </a>
         </div>
       </div>
-      <div class="cell" ng-if="criterion.description">
+      <div id="criterion-description-{{ criterion.title }}" class="cell" ng-if="criterion.description">
         <b>Description:</b> {{criterion.description}}
       </div>
       <div class="cell">
         <b>Data sources:</b>
       </div>
       <div class="cell" ng-if="isInput">
-        <button class="button small" ng-click="editDataSource()">
+        <button id="add-data-source-for-{{ criterion.title }}-button" class="button small" ng-click="editDataSource()">
           <i class="fa fa-plus"></i> Add data source
         </button>
       </div>
@@ -121,7 +122,7 @@
               </td>
 
               <td>
-                <div ng-if="dataSource.sourceLink">
+                <div id="data-source-reference-{{ criterion.title }}-{{ dataSource.source }}" ng-if="dataSource.sourceLink">
                   <a href="{{dataSource.sourceLink}}">{{dataSource.source}}</a>
                 </div>
                 <div ng-if="!dataSource.sourceLink">
@@ -130,7 +131,8 @@
               </td>
 
               <td ng-if="isStandalone" class="text-center">
-                <a ng-click="editDataSource(dataSource, $index)" tooltip="Edit data source">
+                <a id="edit-data-source-{{ criterion.title }}-{{ dataSource.source }}"
+                  ng-click="editDataSource(dataSource, $index)" tooltip="Edit data source">
                   <i class="fa fa-edit icon-fixed-width"></i>
                 </a>
               </td>

@@ -8,25 +8,25 @@
         <label>Name</label>
       </div>
       <div class="cell">
-        <input type="text" ng-model="criterion.title" ng-change="isCreationBlocked()">
+        <input id="criterion-title" type="text" ng-model="criterion.title" ng-change="isCreationBlocked()">
       </div>
       <div class="cell">
         <label>Description</label>
       </div>
       <div class="cell">
-        <textarea rows="4" ng-model="criterion.description"></textarea>
+        <textarea id="criterion-description" rows="4" ng-model="criterion.description"></textarea>
       </div>
       <div class="cell" ng-if="useFavorability">
         <label>Favorability
           <inline-help help-key="favorability"></inline-help>
         </label>
-        <input type="radio" ng-model="criterion.isFavorable" ng-value="false" id="not-favorable">
+        <input id="favorability-selector-unfavorable" type="radio" ng-model="criterion.isFavorable" ng-value="false" id="not-favorable">
         <label for="not-favorable">Not favorable</label>
-        <input type="radio" ng-model="criterion.isFavorable" ng-value="true" id="favorable">
+        <input id="favorability-selector-favorable" type="radio" ng-model="criterion.isFavorable" ng-value="true" id="favorable">
         <label for="favorable">Favorable</label>
       </div>
       <div class="cell">
-        <button class="button success" type="submit" ng-disabled="blockedReasons.length">
+        <button id="add-criterion-confirm-button" class="button success" type="submit" ng-disabled="blockedReasons.length">
           {{addOrEdit}}
         </button>
       </div>

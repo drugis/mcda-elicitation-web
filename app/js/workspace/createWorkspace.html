@@ -8,37 +8,37 @@
     </div>
     <div class="cell" style=" margin-left: 1rem;">
       <label>
-        <input type="radio" ng-model="model.choice" value="example">
+        <input id="example-workspace-radio" type="radio" ng-model="model.choice" value="example">
         Select example workspace
       </label>
     </div>
     <div class="cell" style=" margin-left: 1rem;">
       <label>
-        <input type="radio" ng-model="model.choice" value="tutorial">
+        <input id="tutorial-workspace-radio" type="radio" ng-model="model.choice" value="tutorial">
         Select tutorial workspace
       </label>
     </div>
     <div class="cell" style=" margin-left: 1rem;">
       <label>
-        <input type="radio" ng-model="model.choice" value="local">
+        <input id="upload-workspace-radio" type="radio" ng-model="model.choice" value="local">
         Upload file
       </label>
     </div>
     <div class="cell" style=" margin-left: 1rem;">
       <label>
-        <input type="radio" ng-model="model.choice" value="manual">
+        <input id="manual-workspace-radio" type="radio" ng-model="model.choice" value="manual">
         Create new workspace
       </label>
     </div>
 
     <div class="cell large-8" ng-show="model.choice === 'example'">
-      <select ng-options="example as example.title for example in examplesList track by example.href"
+      <select id="example-workspace-selector" ng-options="example as example.title for example in examplesList track by example.href"
         ng-model="model.chosenExample">
       </select>
     </div>
 
     <div class="cell large-8" ng-show="model.choice === 'tutorial'">
-      <select ng-options="tutorial as tutorial.title for tutorial in tutorials track by tutorial.href"
+      <select id="tutorial-workspace-selector" ng-options="tutorial as tutorial.title for tutorial in tutorials track by tutorial.href"
         ng-model="model.chosenTutorial">
       </select>
     </div>
@@ -54,14 +54,14 @@
     </div>
 
     <div class="cell">
-      <button class="button success"
+      <button id="add-workspace-button" class="button success"
         ng-disabled="(model.choice === 'local' && (!workspaceValidity.isValid || !local.contents)) || isCreating"
         ng-click="createWorkspace()">
         Add
       </button>
     </div>
 
-    <button ng-click="close()" class="close-button" aria-label="Close reveal" type="button">
+    <button id="close-button" ng-click="close()" class="close-button" aria-label="Close reveal" type="button">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>

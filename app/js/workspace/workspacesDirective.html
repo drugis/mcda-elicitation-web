@@ -19,17 +19,17 @@
             </a>
           </td>
           <td class="text-center">
-            <a class="fa fa-copy" style="color : black" ng-click="copyWorkspace(workspace)" tooltip="Copy workspace">
+            <a id="copy-workspace-{{ workspace.title }}" class="fa fa-copy" style="color : black" ng-click="copyWorkspace(workspace)" tooltip="Copy workspace">
             </a>
           </td>
           <td class="text-center">
-            <a class="fa fa-trash" style="color : red" ng-click="deleteWorkspace(workspace)" tooltip="Delete workspace">
+            <a id="delete-workspace-{{ workspace.title }}" class="fa fa-trash" style="color : red" ng-click="deleteWorkspace(workspace)" tooltip="Delete workspace">
             </a>
           </td>
         </tr>
         <tr ng-if="!workspacesList.length">
           <td>
-            <em>No workspaces defined</em>
+            <em id="empty-workspace-message">No workspaces defined</em>
           </td>
           <td></td>
           <td></td>

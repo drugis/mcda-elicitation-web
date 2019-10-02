@@ -7,27 +7,28 @@
           different scale ranges.</em>
       </div>
       <div class="cell">
-        <h3>Create new problem</h3>
+        <h3 id="create-subproblem-header">Create new problem</h3>
       </div>
       <div class="cell">
-        Enter new problem name
+        Enter new problem title
       </div>
       <div class="cell large-6">
-        <input type="text" ng-change="checkDuplicateTitle(subProblemState.title)" ng-model="subProblemState.title">
+        <input id="subproblem-title" type="text" ng-change="checkDuplicateTitle(subProblemState.title)"
+          ng-model="subProblemState.title">
       </div>
       <div class="cell large-6"></div>
       <div class="cell">
         <span style="display:block" class="alert" ng-if="isTitleDuplicate">
-          <em>&nbsp;Duplicate name</em>
+          <em>&nbsp;Duplicate title</em>
         </span>
       </div>
       <div class="cell">
-        <span style="display:block" class="alert" ng-if="!subProblemState.title">
-          <em>&nbsp;No name entered</em>
+        <span id="no-title-warning" style="display:block" class="alert" ng-if="!subProblemState.title">
+          <em>&nbsp;No title entered</em>
         </span>
       </div>
       <div class="cell">
-        <button class="button" type="button" ng-click="reset()">Reset to default</button>
+        <button id="reset-subproblem-button" class="button" type="button" ng-click="reset()">Reset to default</button>
       </div>
       <div class="cell large-10">
         <h4>Criterion and alternative selection</h4>
@@ -78,8 +79,8 @@
                 ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id]}"
                 ng-show="toggledColumns['criteria']">
                 <label>
-                  <input type="checkbox" ng-model="subProblemState.criterionInclusions[row.criterion.id]"
-                    ng-change="updateInclusions()"
+                  <input id="{{ row.criterion.id }}" type="checkbox"
+                    ng-model="subProblemState.criterionInclusions[row.criterion.id]" ng-change="updateInclusions()"
                     ng-disabled="subProblemState.criterionInclusions[row.criterion.id] && subProblemState.numberOfCriteriaSelected < 3">
                   {{row.criterion.title}}
                 </label>
@@ -104,7 +105,7 @@
                 ng-style="isValueView && !isCellAnalysisViable[row.dataSource.id][alternative.id] ? {'background-color':'#f3d3c8'} : {}">
                 <div class="grid-x">
                   <div class="cell large-1" style="min-width:13px;">
-                    <input type="checkbox" ng-if="$first"
+                    <input id="{{ row.dataSource.id }}" type="checkbox" ng-if="$first"
                       ng-model="subProblemState.dataSourceInclusions[row.dataSource.id]" ng-change="updateInclusions()"
                       ng-disabled="!subProblemState.criterionInclusions[row.criterion.id] || subProblemState.numberOfDataSourcesPerCriterion[row.criterion.id] === 1 && subProblemState.dataSourceInclusions[row.dataSource.id]">
                   </div>
@@ -141,10 +142,10 @@
           </tbody>
         </table>
       </div>
-      <div class="cell alert" ng-if="hasMissingValues">
+      <div id="missing-values-warning" class="cell alert" ng-if="hasMissingValues">
         <em>Effects table may not contain missing values</em>
       </div>
-      <div class="cell alert" ng-if="areTooManyDataSourcesSelected">
+      <div id="multiple-data-sources-warning" class="cell alert" ng-if="areTooManyDataSourcesSelected">
         <em>Effects table may not contain multiple data sources per criterion</em>
       </div>
       <div ng-if="warnings.length && !hasMissingValues && !areTooManyDataSourcesSelected"

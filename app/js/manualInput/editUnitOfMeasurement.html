@@ -10,7 +10,7 @@
     </div>
     <div class="cell">
       <label>Label</label>
-      <input type="text" ng-disabled="values.selectedOption.type !== 'custom'" ng-model="values.value"
+      <input id="uom-label" type="text" ng-disabled="values.selectedOption.type !== 'custom'" ng-model="values.value"
         ng-change="validateInput()">
     </div>
     <div class="cell large-6">
@@ -25,7 +25,7 @@
     </div>
 
     <div class="cell">
-      <button class="button" type="submit">Save</button>
+      <button id="uom-save-button" class="button" type="submit">Save</button>
     </div>
     <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
       <span aria-hidden="true">&times;</span>
