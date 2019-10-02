@@ -95,18 +95,18 @@ define(['lodash', 'angular'], function(_, angular) {
       };
     }
 
-    function getFloor(from, restrictedRangeFrom){
-      var floor =  niceFrom(from);
+    function getFloor(from, restrictedRangeFrom) {
+      var floor = niceFrom(from);
       if (floor >= restrictedRangeFrom) {
-        floor = niceFrom(floor * 0.9);
+        floor = niceFrom(floor - Math.abs(floor * 0.1));
       }
       return floor;
     }
 
-    function getCeil(to, restrictedRangeTo){
+    function getCeil(to, restrictedRangeTo) {
       var ceil = niceTo(to);
       if (ceil <= restrictedRangeTo) {
-        ceil = niceTo(ceil * 1.1);
+        ceil = niceTo(ceil + Math.abs(ceil * 0.1));
       }
       return ceil;
     }

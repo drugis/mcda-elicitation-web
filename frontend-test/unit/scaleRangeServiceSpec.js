@@ -47,6 +47,19 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
         expect(result.sliderOptions.floor).toEqual(0.1);
         expect(result.sliderOptions.ceil).toEqual(0.30000000000000004);
       });
+
+      it('should consider negative values when calculating the floor and ceiling of bounds', function(){
+        var dataSourceScale = [null, null];
+        var from = -200;
+        var to = -100;
+        var criterionRange = [from, to];
+
+        var result = scaleRangeService.calculateScales(dataSourceScale, from, to, criterionRange);
+        expect(result.sliderOptions.floor).toEqual(-300);
+        expect(result.sliderOptions.ceil).toEqual(-90);
+        expect(result.sliderOptions.restrictedRange.from).toEqual(from);
+        expect(result.sliderOptions.restrictedRange.to).toEqual(to);
+      });
     });
 
     describe('niceFrom', function() {
