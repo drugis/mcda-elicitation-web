@@ -48,7 +48,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
         expect(result.sliderOptions.ceil).toEqual(0.30000000000000004);
       });
 
-      fit('should consider negative values when calculating the floor and ceiling of bounds', function(){
+      it('should consider negative values when calculating the floor and ceiling of bounds', function(){
         var dataSourceScale = [null, null];
         var from = -200;
         var to = -100;
