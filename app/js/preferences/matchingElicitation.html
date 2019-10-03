@@ -2,7 +2,7 @@
 <div ng-if="state.step === 1">
   <div class="grid-x" style="min-height: 450px">
     <div class="cell">
-      <h3>{{state.title}}
+      <h3 id="matching-title-header">{{state.title}}
         <inline-help help-key="matching"></inline-help>
       </h3>
     </div>
@@ -20,7 +20,7 @@
     <div class="cell">Which of the following improvements is most important?</div>
     <div class="cell" ng-repeat="criterion in criteria">
       <label>
-        <input type="radio" ng-model="state.mostImportantCriterionId" value="{{criterion.id}}">
+        <input id="{{ criterion.id }}-option" type="radio" ng-model="state.mostImportantCriterionId" value="{{criterion.id}}">
         {{criterion.dataSources[0].pvf.direction}} {{criterion.title}} from {{criterion.worst |
         number}}
         {{getUnitOfMeasurement(criterion)}} to {{criterion.best | number}}
@@ -32,7 +32,7 @@
     <div class="cell">
       <button class="button" ng-click="cancel()">Cancel</button>
       <button class="button" ng-disabled="true">Previous</button>
-      <button class="button" ng-click="nextStep(state)" ng-disabled="!canProceed(state)">Next</button>
+      <button id="next-button" class="button" ng-click="nextStep(state)" ng-disabled="!canProceed(state)">Next</button>
     </div>
     <div class="cell alert" ng-if="!canProceed(state)">
       Cannot proceed because the most important improvement has not been chosen.
@@ -56,7 +56,7 @@
       <div class="cell">
         <button class="button" ng-click="cancel()">Cancel</button>
         <button class="button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
-        <button class="success button" ng-if="canSave(state)" ng-click="save(state)" ng-disabled="!canProceed(state)">Save</button>
+        <button id="save-button" class="success button" ng-if="canSave(state)" ng-click="save(state)" ng-disabled="!canProceed(state)">Save</button>
       </div>
     </div>
   </div>

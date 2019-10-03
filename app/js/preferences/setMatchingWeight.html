@@ -8,7 +8,7 @@
         weight="weight"></elicitation-trade-off>
     </div>
     <div class="cell">
-      <button class="button success" type="submit" ng-disabled="weight.value === 0" ng-click="saveWeight()">Save</button>
+      <button id="save-matching-weights-button" class="button success" type="submit" ng-disabled="weight.value === 0" ng-click="saveWeight()">Save</button>
     </div>
     <div class="cell alert" ng-show="weight.value === 0">
       Value unchanged

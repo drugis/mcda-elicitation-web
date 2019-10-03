@@ -7,7 +7,7 @@
       <tab id="problem-definition-tab" heading="Problem definition" active="activeTab === 'problem'" ui-sref="problem">
         <div ng-if="activeTab === 'problem'" ui-view></div>
       </tab>
-      <tab heading="Preferences" active="activeTab === 'preferences'" ui-sref="preferences"
+      <tab id="preferences-tab" heading="Preferences" active="activeTab === 'preferences'" ui-sref="preferences"
         ng-if="tasksAccessibility.preferences && !hasMissingValues">
         <div ng-if="activeTab === 'preferences'" ui-view></div>
       </tab>

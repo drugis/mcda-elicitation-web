@@ -10,20 +10,20 @@
       </p>
       {{state.criterion.title}}
       <label>
-        <input type="radio" ng-model="state.choice.pvf.direction" value="decreasing"
+        <input id="decreasing-pvf-option" type="radio" ng-model="state.choice.pvf.direction" value="decreasing"
           ng-change="updatePlot(state.criterion)" ng-selected="state.choice.pvf.direction ==='decreasing'">
         {{state.choice.pvf.range[0] | number}}{{unitOfMeasurement}} is best
       </label>
       <label>
-        <input type="radio" ng-model="state.choice.pvf.direction" value="increasing"
+        <input id="increasing-pvf-option" type="radio" ng-model="state.choice.pvf.direction" value="increasing"
           ng-change="updatePlot(state.criterion)" ng-selected="state.choice.pvf.direction === 'increasing'">
         {{state.choice.pvf.range[1] | number}}{{unitOfMeasurement}} is best
       </label>
       Type of function <inline-help help-key="pvf-type"></inline-help>
       <label>
-        <input type="radio" ng-model="state.choice.pvf.type" value="linear">Linear</label>
+        <input id="linear-pvf-option" type="radio" ng-model="state.choice.pvf.type" value="linear">Linear</label>
       <label>
-        <input type="radio" ng-model="state.choice.pvf.type" value="piecewise-linear">
+        <input id="piece-wise-pvf-option" type="radio" ng-model="state.choice.pvf.type" value="piecewise-linear">
         Piece-wise linear
       </label>
     </div>
@@ -36,9 +36,9 @@
   <div class="grid-x">
     <div class="cell">
       <button class="small button" ng-click="cancel()">Cancel</button>
-      <button class="small button" ng-if="!canSave(state)" ng-click="nextStep(state)"
+      <button id="next-button" class="small button" ng-if="!canSave(state)" ng-click="nextStep(state)"
         ng-disabled="!canProceed(state)">Next</button>
-      <button class="small success button" ng-if="canSave(state)" ng-click="save(state)"
+      <button id="save-button" class="small success button" ng-if="canSave(state)" ng-click="save(state)"
         ng-disabled="!canProceed(state)">Save</button>
     </div>
   </div>
@@ -78,9 +78,9 @@
   <div class="grid-x">
     <div class="cell">
       <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
-      <button class="small button" ng-if="!canSave(state)" ng-click="nextStep(state)"
+      <button id="piece-wise-next-button" class="small button" ng-if="!canSave(state)" ng-click="nextStep(state)"
         ng-disabled="!canProceed(state)">Next</button>
-      <button class="small success button" ng-if="canSave(state)" ng-click="save(state)"
+      <button id="piece-wise-save-button" class="small success button" ng-if="canSave(state)" ng-click="save(state)"
         ng-disabled="!canProceed(state)">Save</button>
     </div>
   </div>
