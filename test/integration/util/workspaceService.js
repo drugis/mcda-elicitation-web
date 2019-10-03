@@ -1,52 +1,69 @@
 'use strict';
 
+const errorService = require('./errorService.js');
+
 function addExample(browser, title) {
   browser
     .waitForElementVisible('#create-workspace-button')
-    .click('#create-workspace-button').pause(5)
-    .click('#example-workspace-radio').pause(5)
-    .click('#example-workspace-selector').pause(5)
-    .click('option[label="' + title + '"]').pause(5)
-    .click('#add-workspace-button').pause(5)
+    .click('#create-workspace-button')
+    .click('#example-workspace-radio')
+    .click('#example-workspace-selector')
+    .click('option[label="' + title + '"]')
+    .click('#add-workspace-button').pause(500);
+
+  errorService.isErrorBarVisible(browser);
+
+  browser
     .assert.containsText('#workspace-title', title)
-    .click('#logo').pause(5);
+    .click('#logo');
 }
 
 function addTutorial(browser, title) {
   browser
-    .waitForElementVisible('#create-workspace-button').pause(5)
-    .click('#create-workspace-button').pause(5)
-    .click('#tutorial-workspace-radio').pause(5)
-    .click('#tutorial-workspace-selector').pause(5)
-    .click('option[label="' + title + '"]').pause(5)
-    .click('#add-workspace-button').pause(5)
+    .waitForElementVisible('#create-workspace-button')
+    .click('#create-workspace-button')
+    .click('#tutorial-workspace-radio')
+    .click('#tutorial-workspace-selector')
+    .click('option[label="' + title + '"]')
+    .click('#add-workspace-button').pause(500);
+
+  errorService.isErrorBarVisible(browser);
+
+  browser
     .assert.containsText('#workspace-title', title)
-    .click('#logo').pause(5);
+    .click('#logo');
 }
 
 function copy(browser, title, newTitle) {
   browser
-    .click('a[id="copy-workspace-' + title + '"]').pause(5)
+    .click('a[id="copy-workspace-' + title + '"]')
     .setValue('#workspace-title', newTitle)
-    .click('#enter-data-button').pause(5)
-    .click('#done-button').pause(5)
+    .click('#enter-data-button')
+    .click('#done-button').pause(500);
+
+  errorService.isErrorBarVisible(browser);
+
+  browser
     .assert.containsText('#workspace-title', newTitle)
-    .click('#logo').pause(5);
+    .click('#logo');
 }
 
 function deleteFromList(browser, title) {
   browser
-    .click('a[id="delete-workspace-' + title + '"]').pause(5)
-    .click('#delete-workspace-confirm-button').pause(5);
+    .click('a[id="delete-workspace-' + title + '"]')
+    .click('#delete-workspace-confirm-button');
+  errorService.isErrorBarVisible(browser);
 }
 
 function uploadTestWorkspace(browser, path) {
   browser
     .waitForElementVisible('#create-workspace-button')
-    .click('#create-workspace-button').pause(5)
-    .click('#upload-workspace-radio').pause(5)
+    .click('#create-workspace-button')
+    .click('#upload-workspace-radio')
     .setValue('#workspace-upload-input', require('path').resolve(__dirname + path))
-    .click('#add-workspace-button').pause(5);
+    .click('#add-workspace-button').pause(500);
+
+  errorService.isErrorBarVisible(browser);
 }
 
 module.exports = {

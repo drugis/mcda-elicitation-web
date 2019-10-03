@@ -29,9 +29,9 @@ module.exports = {
       exclude: ['*/*.js', 'nightwatch.conf.js'],
       desiredCapabilities: {
         browserName: 'firefox',
-        // 'moz:firefoxOptions': {
-        //   args: ['-headless']
-        // },
+        'moz:firefoxOptions': {
+          args: ['-headless']
+        },
         javascriptEnabled: true,
         acceptSslCerts: true,
         acceptInsecureCerts: true
@@ -39,13 +39,14 @@ module.exports = {
     },
     chrome: {
       desiredCapabilities: {
-        browserName: 'chrome',
+        browserName: 'chromium',
         chromeOptions: {
           w3c: false,
           args: [ '--no-sandbox', '--window-size=1366,728']
         },
         javascriptEnabled: true,
-        acceptInsecureCerts: true
+        acceptInsecureCerts: true,
+        acceptSslCerts: true
       }
     }
   }

@@ -21,10 +21,10 @@
   </sensitivity-table>
   <div class="grid-x underlined-div">
     <div class="cell large-4 button-group small expanded">
-      <button class="button" ng-click="recalculateResults()" ng-disabled="sensitivityMeasurements.isEditing">
+      <button id="recalculate-button" class="button" ng-click="recalculateResults()" ng-disabled="sensitivityMeasurements.isEditing">
         Recalculate value profiles
       </button>
-      <button class="button" ng-click="resetSensitivityAnalysis()">
+      <button id="reset-button" class="button" ng-click="resetSensitivityAnalysis()">
         Reset
       </button>
     </div>
@@ -36,18 +36,18 @@
       </h4>
     </div>
     <div clas="cell large-2">
-      <button class="button small info clipboard-button" data-clipboard-target="#weighttable">
+      <button class="button small info clipboard-button" data-clipboard-target="#representative-weights-table">
         <i class="fa fa-clipboard"></i> Copy to clipboard
       </button>
     </div>
     <div class="cell">
-      <table id="weighttable">
+      <table id="representative-weights-table">
         <thead>
           <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
         </thead>
         <tbody>
           <tr>
-            <td ng-repeat="criterion in criteria">{{deterministicResults.results.weights.data[criterion.id] | number}}
+            <td id="{{criterion.id}}-weight" ng-repeat="criterion in criteria">{{deterministicResults.results.weights.data[criterion.id] | number}}
             </td>
           </tr>
         </tbody>
@@ -63,7 +63,7 @@
           </h4>
         </div>
         <div class="cell large-2">
-          <button class="button small info clipboard-button right" data-clipboard-target="#basecasetable">
+          <button class="button small info clipboard-button right" data-clipboard-target="#base-case-table">
             <i class="fa fa-clipboard"></i> Copy to clipboard
           </button>
         </div>
@@ -73,7 +73,7 @@
           </h4>
         </div>
         <div class="cell large-2" ng-if="recalculatedDeterministicResults">
-          <button class="button small info clipboard-button right" data-clipboard-target="#recalculatedcasetable">
+          <button class="button small info clipboard-button right" data-clipboard-target="#recalculated-case-table">
             <i class="fa fa-clipboard"></i> Copy to clipboard
           </button>
         </div>
@@ -81,28 +81,28 @@
           <!-- Keep grid layout consistent  -->
         </div>
         <div class="cell large-6">
-          <table id="basecasetable">
+          <table id="base-case-table">
             <thead>
               <th ng-repeat="alternative in alternatives">{{scenario.state.legend[alternative.id].baseTitle ||
                 alternative.title}}</th>
             </thead>
             <tbody>
               <tr>
-                <td ng-repeat="alternative in alternatives">
+                <td id="{{ alternative.id }}-base-case" ng-repeat="alternative in alternatives">
                   {{deterministicResults.results.total.data[alternative.id] | number}}</td>
               </tr>
             </tbody>
           </table>
         </div>
         <div class="cell large-6" ng-if="recalculatedDeterministicResults" ng-if="recalculatedDeterministicResults">
-          <table id="recalculatedcasetable">
+          <table id="recalculated-case-table">
             <thead>
               <th ng-repeat="alternative in alternatives">{{scenario.state.legend[alternative.id].baseTitle ||
                 alternative.title}}</th>
             </thead>
             <tbody>
               <tr>
-                <td ng-repeat="alternative in alternatives">
+                <td id="{{ alternative.id }}-recalculated-case" ng-repeat="alternative in alternatives">
                   {{recalculatedDeterministicResults.results.total.data[alternative.id] | number}}</td>
               </tr>
             </tbody>
@@ -120,14 +120,14 @@
         <div class="cell large-6">
           <h5>Base case</h5>
           <div export legend file-name="'basecaseplot'">
-            <value-profile-plot values="deterministicResults.results" criteria="criteria" alternatives="alternatives"
+            <value-profile-plot id="base-case-plot" values="deterministicResults.results" criteria="criteria" alternatives="alternatives"
               alternatives-legend="scenario.state.legend"></value-profile-plot>
           </div>
         </div>
         <div ng-if="recalculatedDeterministicResults" class="cell large-6">
           <h5>Recalculated case</h5>
           <div export legend file-name="'recalculatedcaseplot'">
-            <value-profile-plot values="recalculatedDeterministicResults.results" criteria="criteria"
+            <value-profile-plot id="recalculated-case-plot" values="recalculatedDeterministicResults.results" criteria="criteria"
               alternatives="alternatives" alternatives-legend="scenario.state.legend"></value-profile-plot>
           </div>
         </div>
@@ -165,7 +165,7 @@
       </div>
       <div class="grid-x" export legend file-name="'onewaymeasurementsplot'">
         <div class="cell" style="height: 450px; width: 450px">
-          <line-chart label-x-axis="sensitivityMeasurements.measurementsCriterion.title" label-y-axis="'total value'"
+          <line-chart id="measurements-sensitivity-plot" label-x-axis="sensitivityMeasurements.measurementsCriterion.title" label-y-axis="'total value'"
             value="measurementValues" y-margin="true"></line-chart>
         </div>
       </div>
@@ -185,7 +185,7 @@
       </div>
       <div class="grid-x" export legend file-name="'onewaypreferencesplot'">
         <div class="cell" style="height: 450px; width: 450px">
-          <line-chart label-x-axis="'Weight given to ' + sensitivityMeasurements.preferencesCriterion.title"
+          <line-chart id="preferences-sensitivity-plot" label-x-axis="'Weight given to ' + sensitivityMeasurements.preferencesCriterion.title"
             label-y-axis="'total value'" value="preferencesValues"></line-chart>
         </div>
       </div>

@@ -2,15 +2,16 @@
 
 const _ = require('lodash');
 
-const loginService = require('./util/loginService.js');
-const workspaceService = require('./util/workspaceService.js');
+const loginService = require('./util/loginService');
+const workspaceService = require('./util/workspaceService');
+const errorService = require('./util/errorService');
 
 const testUrl = 'http://localhost:3002';
 
 module.exports = {
   'Create subproblem': function(browser) {
     const title = 'Test workspace';
-    const workspacePath = '/create_subproblem.json';
+    const workspacePath = '/createSubproblem.json';
     const subproblem1 = {
       title: 'subproblem1'
     };
@@ -31,12 +32,11 @@ module.exports = {
       .click('#deselectionAlternativeId')
       .click('#deselectionDataSourceId')
       .click('#deselectionCriterionId')
-      .click('#finish-subproblem-creation-button')
-      .click('#logo')
-      ;
+      .click('#finish-subproblem-creation-button');
 
+    errorService.isErrorBarVisible(browser);
+    browser.click('#logo');
     workspaceService.deleteFromList(browser, title);
-    browser.waitForElementVisible('#empty-workspace-message');
     browser.end();
   },
 };

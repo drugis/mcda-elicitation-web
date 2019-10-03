@@ -1,16 +1,14 @@
 'use strict';
 
-const _ = require('lodash');
-
-const loginService = require('./util/loginService.js');
-const workspaceService = require('./util/workspaceService.js');
+const loginService = require('./util/loginService');
+const workspaceService = require('./util/workspaceService');
 
 const testUrl = 'http://localhost:3002';
 
 module.exports = {
   'Create subproblem': function(browser) {
     const title = 'Test workspace';
-    const workspacePath = '/set_pvf.json';
+    const workspacePath = '/setPvf.json';
 
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     workspaceService.uploadTestWorkspace(browser, workspacePath);

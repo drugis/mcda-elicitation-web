@@ -2,8 +2,9 @@
 
 const _ = require('lodash');
 
-const loginService = require('./util/loginService.js');
-const workspaceService = require('./util/workspaceService.js');
+const loginService = require('./util/loginService');
+const workspaceService = require('./util/workspaceService');
+const errorService = require('./util/errorService');
 
 const testUrl = 'http://localhost:3002';
 
@@ -11,10 +12,13 @@ function loadTestWorkspace(browser, title) {
   workspaceService.addExample(browser, title);
   browser
     .click('a[id="' + title + '"]')
-    .waitForElementVisible('#workspace-title')
+    .waitForElementVisible('#workspace-title');
+
+  errorService.isErrorBarVisible(browser);
+
+  browser
     .click('#preferences-tab')
-    .waitForElementVisible('#partial-value-functions-block')
-    ;
+    .waitForElementVisible('#partial-value-functions-block');
 }
 
 function resetWeights(browser) {

@@ -2,9 +2,11 @@
 
 const _ = require('lodash');
 
-const loginService = require('./util/loginService.js');
-const manualInputService = require('./util/manualInputService.js');
-const workspaceService = require('./util/workspaceService.js');
+const loginService = require('./util/loginService');
+const manualInputService = require('./util/manualInputService');
+const workspaceService = require('./util/workspaceService');
+const util = require('./util/util');
+const errorService = require('./util/errorService.js');
 
 const testUrl = 'http://localhost:3002';
 
@@ -41,16 +43,17 @@ function createAlternative(title) {
 
 function createInputDefault(browser) {
   loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+  errorService.isErrorBarVisible(browser);
 
   browser
     .waitForElementVisible('#create-workspace-button')
-    .click('#create-workspace-button').pause(5)
-    .click('#manual-workspace-radio').pause(5)
-    .click('#add-workspace-button').pause(5)
+    .click('#create-workspace-button')
+    .click('#manual-workspace-radio')
+    .click('#add-workspace-button')
     .waitForElementVisible('#manual-input-header-step1')
     .setValue('#workspace-title', title)
     .setValue('#therapeutic-context', therapeuticContext)
-    .click('#favorability-checkbox').pause(5);
+    .click('#favorability-checkbox');
 
   manualInputService.addCriterion(browser, criterion1);
   manualInputService.addCriterion(browser, criterion2);
@@ -63,13 +66,12 @@ function createInputDefault(browser) {
 }
 
 function clickElement(browser, rowNumber, columnNumber, element) {
-  const elementValue = element.value;
-  const elementKey = _.keys(elementValue)[0];
+  const elementId = util.getOnlyProperty(element.value);
   const value = rowNumber + columnNumber;
   browser
-    .elementIdClick(elementValue[elementKey]).pause(500)
+    .elementIdClick(elementId)
     .useXpath()
-    .setValue('/html/body/div[2]/div/div/div[5]/div/div/div[1]/div/manual-input-table/table/tbody/tr[' + rowNumber + ']/td[' + columnNumber + ']/effect-input-helper/dropdown-toggle/div/pane/div/div/div[2]/label/input', value)
+    .setValue('//tr[' + rowNumber + ']/td[' + columnNumber + ']//input', value)
     .useCss()
     .click('#deterministic-tab')
     ;
@@ -80,8 +82,7 @@ function setValuesForRow(browser, rowNumber) {
 }
 
 function setValues(browser, rowNumber, columnNumber) {
-  const path = '/html/body/div[2]/div/div/div[5]/div/div/div[1]/div/manual-input-table/table/tbody/tr[' + rowNumber + ']' +
-    '/td[' + columnNumber + ']/effect-input-helper/dropdown-toggle/span/toggle/a';
+  const path = '//tr[' + rowNumber + ']' + '/td[' + columnNumber + ']//a';
   browser.element('xpath', path, _.partial(clickElement, browser, rowNumber, columnNumber));
 }
 
@@ -98,7 +99,11 @@ module.exports = {
 
     browser
       .click('#done-button')
-      .waitForElementVisible('#workspace-title')
+      .waitForElementVisible('#workspace-title');
+
+    errorService.isErrorBarVisible(browser);
+
+    browser
       .assert.containsText('#workspace-title', title)
       .assert.containsText('#therapeutic-context', therapeuticContext)
       .assert.containsText('#criterion-title-c1', criterion1.title)
@@ -110,15 +115,16 @@ module.exports = {
       .assert.containsText('#alternative-title-a1', alternative1.title)
       .assert.containsText('#alternative-title-a2', alternative2.title)
       .useXpath()
-      .assert.containsText('/html/body/div[2]/div/div[3]/div/div/div/div/div[1]/div/div/div/div[5]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[3]/div/effects-table-cell/div', 7)
-      .assert.containsText('/html/body/div[2]/div/div[3]/div/div/div/div/div[1]/div/div/div/div[5]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[4]/div/effects-table-cell/div', 8)
-      .assert.containsText('/html/body/div[2]/div/div[3]/div/div/div/div/div[1]/div/div/div/div[5]/criterion-list/div[2]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[3]/div/effects-table-cell/div', 8)
-      .assert.containsText('/html/body/div[2]/div/div[3]/div/div/div/div/div[1]/div/div/div/div[5]/criterion-list/div[2]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[4]/div/effects-table-cell/div', 9)
+      .assert.containsText('//criterion-list/div[1]//td[3]//*', 7)
+      .assert.containsText('//criterion-list/div[1]//td[4]//*', 8)
+      .assert.containsText('//criterion-list/div[2]//td[3]//*', 8)
+      .assert.containsText('//criterion-list/div[2]//td[4]//*', 9)
       .useCss()
       .click('#logo')
       .waitForElementVisible('#create-workspace-button')
       ;
 
+    errorService.isErrorBarVisible(browser);
     workspaceService.deleteFromList(browser, title);
     browser.waitForElementVisible('#empty-workspace-message');
     browser.end();
@@ -129,13 +135,13 @@ module.exports = {
     const newDescription = 'newDescription';
     createInputDefault(browser);
     browser
-      .click('#edit-criterion-' + criterion1.title + '-button').pause(5)
+      .click('#edit-criterion-' + criterion1.title + '-button')
       .clearValue('#criterion-title')
       .setValue('#criterion-title', newTitle)
       .clearValue('#criterion-description')
       .setValue('#criterion-description', newDescription)
-      .click('#favorability-selector-unfavorable').pause(5)
-      .click('#add-criterion-confirm-button').pause(5)
+      .click('#favorability-selector-unfavorable')
+      .click('#add-criterion-confirm-button')
       .assert.containsText('#criterion-title-' + newTitle, newTitle)
       .assert.containsText('#criterion-description-' + newTitle, 'Description: ' + newDescription)
       ;
@@ -148,12 +154,12 @@ module.exports = {
     const newUrl = 'www.google.com';
     createInputDefault(browser);
     browser
-      .click('#edit-data-source-' + criterion1.title + '-' + dataSource1.reference).pause(5)
+      .click('#edit-data-source-' + criterion1.title + '-' + dataSource1.reference)
       .clearValue('#data-source-reference')
       .setValue('#data-source-reference', newReference)
       .clearValue('#data-source-url')
       .setValue('#data-source-url', newUrl)
-      .click('#add-data-source-button').pause(5)
+      .click('#add-data-source-button')
       .assert.containsText('#data-source-reference-' + criterion1.title + '-' + newReference, newReference)
       ;
     browser.end();
