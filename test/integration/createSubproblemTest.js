@@ -34,7 +34,7 @@ module.exports = {
       .click('#deselectionCriterionId')
       .click('#finish-subproblem-creation-button');
 
-    errorService.isErrorBarVisible(browser);
+    errorService.isErrorBarHidden(browser);
     browser.click('#logo');
     workspaceService.deleteFromList(browser, title);
     browser.end();

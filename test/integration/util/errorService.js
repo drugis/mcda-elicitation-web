@@ -2,10 +2,15 @@
 
 const util = require('./util');
 
-function isErrorBarVisible(browser) {
+function isErrorBarNotPresent(browser) {
+  util.isElementNotPresent(browser, '/html/body/error-reporting');
+}
+
+function isErrorBarHidden(browser) {
   util.isElementHidden(browser, '/html/body/error-reporting');
 }
 
 module.exports = {
-  isErrorBarVisible: isErrorBarVisible
+  isErrorBarNotPresent: isErrorBarNotPresent,
+  isErrorBarHidden: isErrorBarHidden
 };

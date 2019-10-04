@@ -8,8 +8,7 @@ function getOnlyProperty(value) {
 }
 
 function isElementHidden(browser, path) {
-  browser
-    .element('xpath', path, function(result) {
+  browser.element('xpath', path, function(result) {
       const elementId = getOnlyProperty(result.value);
       browser.elementIdDisplayed(elementId, function(isDisplayedResult) {
         chai.expect(isDisplayedResult.value).to.be.false;
@@ -19,8 +18,7 @@ function isElementHidden(browser, path) {
 }
 
 function isElementNotPresent(browser, path) {
-  browser
-    .element('xpath', path, function(result) {
+  browser.element('xpath', path, function(result) {
       // this test outputs an error message to the console but does not make the overall test fail
       chai.expect(result.state).to.equal('no such element');
     });

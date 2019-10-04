@@ -14,7 +14,7 @@ function loadTestWorkspace(browser, title) {
     .click('a[id="' + title + '"]')
     .waitForElementVisible('#workspace-title');
 
-  errorService.isErrorBarVisible(browser);
+  errorService.isErrorBarHidden(browser);
 
   browser
     .click('#preferences-tab')

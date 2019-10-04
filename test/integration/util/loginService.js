@@ -1,7 +1,5 @@
 'use strict';
 
-const errorService = require('./errorService');
-
 const username = 'user';
 const correctPassword = 'password';
 const incorrectPassword = 'notapassword';
@@ -14,8 +12,6 @@ function login(browser, url, username, password) {
     .setValue('#password', password)
     .click('#signinButton')
     ;
-
-  errorService.isErrorBarVisible(browser);
 }
 
 module.exports = {

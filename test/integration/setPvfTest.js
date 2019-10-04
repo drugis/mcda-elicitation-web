@@ -6,7 +6,7 @@ const workspaceService = require('./util/workspaceService');
 const testUrl = 'http://localhost:3002';
 
 module.exports = {
-  'Create subproblem': function(browser) {
+  'Set partial value functions': function(browser) {
     const title = 'Test workspace';
     const workspacePath = '/setPvf.json';
 

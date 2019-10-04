@@ -43,7 +43,6 @@ function createAlternative(title) {
 
 function createInputDefault(browser) {
   loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-  errorService.isErrorBarVisible(browser);
 
   browser
     .waitForElementVisible('#create-workspace-button')
@@ -101,7 +100,7 @@ module.exports = {
       .click('#done-button')
       .waitForElementVisible('#workspace-title');
 
-    errorService.isErrorBarVisible(browser);
+    errorService.isErrorBarHidden(browser);
 
     browser
       .assert.containsText('#workspace-title', title)
@@ -124,7 +123,7 @@ module.exports = {
       .waitForElementVisible('#create-workspace-button')
       ;
 
-    errorService.isErrorBarVisible(browser);
+    errorService.isErrorBarHidden(browser);
     workspaceService.deleteFromList(browser, title);
     browser.waitForElementVisible('#empty-workspace-message');
     browser.end();
@@ -161,6 +160,19 @@ module.exports = {
       .setValue('#data-source-url', newUrl)
       .click('#add-data-source-button')
       .assert.containsText('#data-source-reference-' + criterion1.title + '-' + newReference, newReference)
+      ;
+    browser.end();
+  },
+
+  'Editing an alternative': function(browser) {
+    const newTitle = 'newTitle';
+    createInputDefault(browser);
+    browser
+      .click('#edit-alternative-' + alternative1.title)
+      .clearValue('#alternative-title')
+      .setValue('#alternative-title', newTitle)
+      .click('#save-alternative-button')
+      .assert.containsText('#alternative-title-' + newTitle, newTitle)
       ;
     browser.end();
   }

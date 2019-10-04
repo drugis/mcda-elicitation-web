@@ -11,7 +11,7 @@ function addExample(browser, title) {
     .click('option[label="' + title + '"]')
     .click('#add-workspace-button').pause(500);
 
-  errorService.isErrorBarVisible(browser);
+  errorService.isErrorBarHidden(browser);
 
   browser
     .assert.containsText('#workspace-title', title)
@@ -27,7 +27,7 @@ function addTutorial(browser, title) {
     .click('option[label="' + title + '"]')
     .click('#add-workspace-button').pause(500);
 
-  errorService.isErrorBarVisible(browser);
+  errorService.isErrorBarHidden(browser);
 
   browser
     .assert.containsText('#workspace-title', title)
@@ -41,7 +41,7 @@ function copy(browser, title, newTitle) {
     .click('#enter-data-button')
     .click('#done-button').pause(500);
 
-  errorService.isErrorBarVisible(browser);
+  errorService.isErrorBarHidden(browser);
 
   browser
     .assert.containsText('#workspace-title', newTitle)
@@ -52,7 +52,7 @@ function deleteFromList(browser, title) {
   browser
     .click('a[id="delete-workspace-' + title + '"]')
     .click('#delete-workspace-confirm-button');
-  errorService.isErrorBarVisible(browser);
+  errorService.isErrorBarHidden(browser);
 }
 
 function uploadTestWorkspace(browser, path) {
@@ -63,7 +63,7 @@ function uploadTestWorkspace(browser, path) {
     .setValue('#workspace-upload-input', require('path').resolve(__dirname + path))
     .click('#add-workspace-button').pause(500);
 
-  errorService.isErrorBarVisible(browser);
+  errorService.isErrorBarHidden(browser);
 }
 
 module.exports = {
