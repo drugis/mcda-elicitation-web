@@ -24,6 +24,31 @@ const dataSource3 = createDataSource('ref3');
 const alternative1 = createAlternative('a1');
 const alternative2 = createAlternative('a2');
 
+const criterion1TitlePath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[1]/h5';
+const criterion1AddDataSourcePath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/button';
+const criterion1EditPath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[2]/div/a[1]';
+const criterion1NewTitlePath = '//div[9]/criterion-list/div[2]/div[2]/criterion-card/div/div[2]/div/div[1]/h5';
+const criterion1NewDescriptionPath = '//div[9]/criterion-list/div[2]/div[2]/criterion-card/div/div[2]/div/div[3]';
+const criterion1DataSource1Path = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr/td[2]';
+const criterion1DeletePath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[2]/div/a[2]';
+
+const criterion2AddDataSourcePath = '//div[9]/criterion-list/div[2]/div[2]/criterion-card/div/div[2]/div/div[5]/button';
+
+const dataSource1ReferencePath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr/td[2]/div';
+const dataSource1EditPath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr/td[3]/a';
+const dataSource1DeletePath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr/td[4]/a';
+
+const alternative1TitlePath = '//div[12]/table/tbody/tr[1]/td[2]';
+const alternative1EditPath = '//div[12]/table/tbody/tr[1]/td[3]/a';
+const alternative1DeletePath = '//div[12]/table/tbody/tr[1]/td[4]/a';
+
+const moveCriterionUpPath = '//criterion-list/div[1]/div[3]/criterion-card/div/div[1]/div/div[1]/a/i';
+const moveCriterionDownPath = '//criterion-list/div[1]/div[2]/criterion-card/div/div[1]/div/div[2]/a/i';
+const moveDataSourceUpPath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr[2]/td[1]/div[1]/a';
+const moveDataSourceDownPath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr[1]/td[1]/div[2]/a';
+const moveAlternativeUpPath = '//div[12]/table/tbody/tr[2]/td[1]/div[1]/a';
+const moveAlternativeDownPath = '//div[12]/table/tbody/tr[1]/td[1]/div[2]/a';
+
 function createCriterion(title, favorability) {
   return {
     title: title,
@@ -59,8 +84,8 @@ function createInputDefault(browser) {
   manualInputService.addCriterion(browser, criterion1);
   manualInputService.addCriterion(browser, criterion2);
 
-  manualInputService.addDataSource(browser, criterion1.title, dataSource1);
-  manualInputService.addDataSource(browser, criterion2.title, dataSource2);
+  manualInputService.addDataSource(browser, criterion1AddDataSourcePath, dataSource1);
+  manualInputService.addDataSource(browser, criterion2AddDataSourcePath, dataSource2);
 
   manualInputService.addAlternative(browser, alternative1);
   manualInputService.addAlternative(browser, alternative2);
@@ -88,6 +113,10 @@ function setValues(browser, rowNumber, columnNumber) {
 }
 
 module.exports = {
+  beforeEach: function(browser) {
+    browser.resizeWindow(1366, 728);
+  },
+
   'Manual input of a workspace': function(browser) {
     createInputDefault(browser);
 
@@ -107,15 +136,15 @@ module.exports = {
     browser
       .assert.containsText('#workspace-title', title)
       .assert.containsText('#therapeutic-context', therapeuticContext)
-      .assert.containsText('#criterion-title-c1', criterion1.title)
-      .assert.containsText('#criterion-title-c2', criterion2.title)
-      .assert.containsText('#criterion-description-c1', criterion1.description)
-      .assert.containsText('#criterion-description-c2', criterion2.description)
-      .assert.containsText('#data-source-reference-c1-ref1', dataSource1.reference)
-      .assert.containsText('#data-source-reference-c2-ref2', dataSource2.reference)
-      .assert.containsText('#alternative-title-a1', alternative1.title)
-      .assert.containsText('#alternative-title-a2', alternative2.title)
       .useXpath()
+      .assert.containsText('//div[5]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[1]/h5', criterion1.title)
+      .assert.containsText('//div[5]/criterion-list/div[2]/div[2]/criterion-card/div/div[2]/div/div[1]/h5', criterion2.title)
+      .assert.containsText('//div[5]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[3]', criterion1.description)
+      .assert.containsText('//div[5]/criterion-list/div[2]/div[2]/criterion-card/div/div[2]/div/div[3]', criterion2.description)
+      .assert.containsText('//div[5]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[6]/div', dataSource1.reference)
+      .assert.containsText('//div[5]/criterion-list/div[2]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[6]/div', dataSource2.reference)
+      .assert.containsText('//div[7]/table/tbody/tr[1]/td[2]', alternative1.title)
+      .assert.containsText('//div[7]/table/tbody/tr[2]/td[2]', alternative2.title)
       .assert.containsText('//criterion-list/div[1]//td[3]//*', 7)
       .assert.containsText('//criterion-list/div[1]//td[4]//*', 8)
       .assert.containsText('//criterion-list/div[2]//td[3]//*', 8)
@@ -127,24 +156,28 @@ module.exports = {
 
     errorService.isErrorBarHidden(browser);
     workspaceService.deleteFromList(browser, title);
-    browser.waitForElementVisible('#empty-workspace-message');
     browser.end();
   },
 
   'Editing a criterion': function(browser) {
     const newTitle = 'newTitle';
     const newDescription = 'newDescription';
+
     createInputDefault(browser);
     browser
-      .click('#edit-criterion-' + criterion1.title + '-button')
+      .useXpath()
+      .click(criterion1EditPath)
+      .useCss()
       .clearValue('#criterion-title')
       .setValue('#criterion-title', newTitle)
       .clearValue('#criterion-description')
       .setValue('#criterion-description', newDescription)
       .click('#favorability-selector-unfavorable')
       .click('#add-criterion-confirm-button')
-      .assert.containsText('#criterion-title-' + newTitle, newTitle)
-      .assert.containsText('#criterion-description-' + newTitle, 'Description: ' + newDescription)
+      .useXpath()
+      .assert.containsText(criterion1NewTitlePath, newTitle)
+      .assert.containsText(criterion1NewDescriptionPath, 'Description: ' + newDescription)
+      .useCss()
       ;
 
     browser.end();
@@ -153,50 +186,73 @@ module.exports = {
   'Editing a data source': function(browser) {
     const newReference = 'newReference';
     const newUrl = 'www.google.com';
+
     createInputDefault(browser);
     browser
-      .click('#edit-data-source-' + criterion1.title + '-' + dataSource1.reference)
+      .useXpath()
+      .click(dataSource1EditPath)
+      .useCss()
       .clearValue('#data-source-reference')
       .setValue('#data-source-reference', newReference)
       .clearValue('#data-source-url')
       .setValue('#data-source-url', newUrl)
       .click('#add-data-source-button')
-      .assert.containsText('#data-source-reference-' + criterion1.title + '-' + newReference, newReference)
+      .useXpath()
+      .assert.containsText(dataSource1ReferencePath, newReference)
+      .useCss()
       ;
     browser.end();
   },
 
   'Editing an alternative': function(browser) {
     const newTitle = 'newTitle';
+
     createInputDefault(browser);
     browser
-      .click('#edit-alternative-' + alternative1.title)
+      .useXpath()
+      .click(alternative1EditPath)
+      .useCss()
       .clearValue('#alternative-title')
       .setValue('#alternative-title', newTitle)
       .click('#save-alternative-button')
-      .assert.containsText('#alternative-title-' + newTitle, newTitle)
+      .useXpath()
+      .assert.containsText(alternative1TitlePath, newTitle)
+      .useCss()
       ;
     browser.end();
   },
 
   'Deleting a criterion': function(browser) {
     createInputDefault(browser);
-    browser.click('#delete-criterion-' + criterion1.title + '-button');
-    util.isElementNotPresent(browser, '//*[@id="criterion-title-' + criterion1.title + '"]');
+    manualInputService.addCriterion(browser, criterion3);
+    browser
+      .useXpath()
+      .click(criterion1DeletePath)
+      .assert.containsText(criterion1TitlePath, criterion3.title)
+      .useCss()
+      ;
     browser.end();
   },
 
   'Deleting a data source': function(browser) {
     createInputDefault(browser);
-    browser.click('#delete-data-source-' + criterion1.title + '-' + dataSource1.reference);
-    util.isElementNotPresent(browser, '//*[@id="data-source-reference-' + criterion1.title + '-' + dataSource1.reference + '"]');
+    browser
+      .useXpath()
+      .click(dataSource1DeletePath)
+      .assert.containsText(criterion1DataSource1Path, 'No data sources defined')
+      .useCss()
+      ;
     browser.end();
   },
 
   'Deleting an alternative': function(browser) {
     createInputDefault(browser);
-    browser.click('#delete-alternative-' + alternative1.title);
-    util.isElementNotPresent(browser, '//*[@id="alternative-title-' + alternative1.title + '"]');
+    browser
+      .useXpath()
+      .click(alternative1DeletePath)
+      .assert.containsText(alternative1TitlePath, alternative2.title)
+      .useCss()
+      ;
     browser.end();
   },
 
@@ -204,33 +260,41 @@ module.exports = {
     createInputDefault(browser);
     manualInputService.addCriterion(browser, criterion3);
 
-    const moveCriterionUpPath = '//criterion-list/div[1]/div[3]/criterion-card/div/div[1]/div/div[1]/a/i';
-    const moveCriterionDownPath = '//criterion-list/div[1]/div[2]/criterion-card/div/div[1]/div/div[2]/a/i';
-    const firstCriterionTitlePath = '//criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[1]/h5';
-
     browser
       .useXpath()
       .click(moveCriterionUpPath)
-      .assert.containsText(firstCriterionTitlePath, criterion3.title)
+      .assert.containsText(criterion1TitlePath, criterion3.title)
       .click(moveCriterionDownPath)
-      .assert.containsText(firstCriterionTitlePath, criterion1.title)
+      .assert.containsText(criterion1TitlePath, criterion1.title)
       .useCss()
       ;
     browser.end();
   },
 
   'Moving data source up and down': function(browser) {
-    createInputDefault(browser);
-    manualInputService.addDataSource(browser, criterion1.title, dataSource3);
+    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
 
-    const firstDataSourceTitlePath = '//criterion-list/div[1]/div[2]/criterion-card//div[6]/table/tbody/tr[1]/td[2]/div';
+    browser
+      .waitForElementVisible('#create-workspace-button')
+      .click('#create-workspace-button')
+      .click('#manual-workspace-radio')
+      .click('#add-workspace-button')
+      .waitForElementVisible('#manual-input-header-step1')
+      .setValue('#workspace-title', title)
+      .setValue('#therapeutic-context', therapeuticContext)
+      .click('#favorability-checkbox');
+
+    manualInputService.addCriterion(browser, criterion1);
+
+    manualInputService.addDataSource(browser, criterion1AddDataSourcePath, dataSource1);
+    manualInputService.addDataSource(browser, criterion1AddDataSourcePath, dataSource3);
 
     browser
       .useXpath()
-      .click('//*[@id="move-up-data-source-' + criterion1.title + '-' + dataSource3.reference + '"]')
-      .assert.containsText(firstDataSourceTitlePath, dataSource3.reference)
-      .click('//*[@id="move-down-data-source-' + criterion1.title + '-' + dataSource3.reference + '"]')
-      .assert.containsText(firstDataSourceTitlePath, dataSource1.reference)
+      .click(moveDataSourceUpPath)
+      .assert.containsText(dataSource1ReferencePath, dataSource3.reference)
+      .click(moveDataSourceDownPath)
+      .assert.containsText(dataSource1ReferencePath, dataSource1.reference)
       .useCss()
       ;
     browser.end();
@@ -239,14 +303,12 @@ module.exports = {
   'Moving an alternative up and down': function(browser) {
     createInputDefault(browser);
 
-    const firstAlternativeTitlePath = '/html/body/div[2]/div/div/div[12]/table/tbody/tr[1]/td[2]';
-
     browser
       .useXpath()
-      .click('//*[@id="move-up-alternative-' + alternative2.title + '"]')
-      .assert.containsText(firstAlternativeTitlePath, alternative2.title)
-      .click('//*[@id="move-down-alternative-' + alternative2.title + '"]')
-      .assert.containsText(firstAlternativeTitlePath, alternative1.title)
+      .click(moveAlternativeUpPath)
+      .assert.containsText(alternative1TitlePath, alternative2.title)
+      .click(moveAlternativeDownPath)
+      .assert.containsText(alternative1TitlePath, alternative1.title)
       .useCss()
       ;
     browser.end();

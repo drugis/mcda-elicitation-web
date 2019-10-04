@@ -2,26 +2,29 @@
 
 function addCriterion(browser, criterion) {
   browser
-    .click('#add-criterion-button').pause(300)
+    .click('#add-criterion-button')
     .setValue('#criterion-title', criterion.title)
     .setValue('#criterion-description', criterion.description)
-    .click('#favorability-selector-' + criterion.favorability).pause(300)
-    .click('#add-criterion-confirm-button').pause(300);
+    .click('#favorability-selector-' + criterion.favorability)
+    .click('#add-criterion-confirm-button');
 }
 
-function addDataSource(browser, criterionTitle, dataSource) {
+function addDataSource(browser, path, dataSource) {
   browser
-    .click('#add-data-source-for-' + criterionTitle + '-button').pause(300)
+    .useXpath()
+    .click(path)
+    .useCss()
     .setValue('#data-source-reference', dataSource.reference)
     .setValue('#data-source-url', dataSource.url)
-    .click('#add-data-source-button').pause(300);
+    .click('#add-data-source-button');
 }
 
 function addAlternative(browser, alternative) {
   browser
-    .click('#add-alternative-button').pause(300)
+    .click('#add-alternative-button')
     .setValue('#alternative-title', alternative.title)
-    .click('#add-alternative-confirm-button').pause(300);
+    .click('#add-alternative-confirm-button')
+    ;
 }
 
 module.exports = {

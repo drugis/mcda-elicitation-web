@@ -29,9 +29,9 @@ module.exports = {
       exclude: ['*/*.js', 'nightwatch.conf.js'],
       desiredCapabilities: {
         browserName: 'firefox',
-        // 'moz:firefoxOptions': {
-        //   args: ['-headless']
-        // },
+        'moz:firefoxOptions': {
+          args: ['-headless']
+        },
         javascriptEnabled: true,
         acceptSslCerts: true,
         acceptInsecureCerts: true

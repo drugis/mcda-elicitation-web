@@ -2,13 +2,13 @@
   <div ng-if="isStandalone" class="cell shrink" style="display:flex; align-items:center;">
     <div style="margin-right: 16px">
       <div style="line-height: 10px; margin-bottom: 10px;">
-        <a id="move-up-criterion-{{ criterion.title }}-button" ng-if="canGoUp" ng-click="criterionUp()" class="nav-arrow">
+        <a id="move-up-criterion-{{ criterion.id }}" ng-if="canGoUp" ng-click="criterionUp()" class="nav-arrow">
           <i style="line-height:0px;" class="fa fa-caret-up fa-2x"></i>
         </a>
         <i ng-if="!canGoUp" style="line-height:0px; color:#bbb" class="fa fa-caret-up fa-2x"></i>
       </div>
       <div style="line-height: 10px;">
-        <a id="move-down-criterion-{{ criterion.title }}-button" ng-if="canGoDown" ng-click="criterionDown()" class="nav-arrow">
+        <a id="move-down-criterion-{{ criterion.id }}" ng-if="canGoDown" ng-click="criterionDown()" class="nav-arrow">
           <i style="line-height:0px;" class="fa fa-caret-down fa-2x"></i>
         </a>
         <i ng-if="!canGoDown" style="line-height:0px; color:#bbb" class="fa fa-caret-down fa-2x"></i>
@@ -18,27 +18,27 @@
   <div class="cell auto">
     <div class="grid-x">
       <div class="cell large-10">
-        <h5 id="criterion-title-{{ criterion.title }}">{{criterion.title}}</h5>
+        <h5 id="criterion-title-{{ criterion.id }}">{{criterion.title}}</h5>
       </div>
       <div ng-if="isStandalone" class="cell large-2">
         <div class="right">
-          <a id="edit-criterion-{{ criterion.title }}-button" ng-click="editCriterion(criterion)"
+          <a id="edit-criterion-{{ criterion.id }}" ng-click="editCriterion(criterion)"
             tooltip="Edit criterion">
             <i class="fa fa-edit fa-2x icon-fixed-width"></i>
           </a>
-          <a id="delete-criterion-{{ criterion.title }}-button" ng-if="isInput" ng-click="removeCriterion(idx)" tooltip="Remove criterion">
+          <a id="delete-criterion-{{ criterion.id }}" ng-if="isInput" ng-click="removeCriterion(idx)" tooltip="Remove criterion">
             <i class="fa fa-trash fa-2x icon-fixed-width" style="color:red"></i>
           </a>
         </div>
       </div>
-      <div id="criterion-description-{{ criterion.title }}" class="cell" ng-if="criterion.description">
+      <div id="criterion-description-{{ criterion.id }}" class="cell" ng-if="criterion.description">
         <b>Description:</b> {{criterion.description}}
       </div>
       <div class="cell">
         <b>Data sources:</b>
       </div>
       <div class="cell" ng-if="isInput">
-        <button id="add-data-source-for-{{ criterion.title }}-button" class="button small" ng-click="editDataSource()">
+        <button class="button small" ng-click="editDataSource()">
           <i class="fa fa-plus"></i> Add data source
         </button>
       </div>
@@ -82,13 +82,13 @@
             <tr ng-repeat="dataSource in criterion.dataSources track by dataSource.id">
               <td ng-if="isStandalone">
                 <div style="line-height: 10px; margin-bottom: 4px;">
-                  <a id="move-up-data-source-{{ criterion.title }}-{{ dataSource.source }}" ng-if="!$first" ng-click="dataSourceUp(criterion, $index)" class="nav-arrow">
+                  <a id="move-up-data-source-{{ criterion.id }}-{{ dataSource.id }}" ng-if="!$first" ng-click="dataSourceUp(criterion, $index)" class="nav-arrow">
                     <i style="line-height:0px;" class="fa fa-caret-up"></i>
                   </a>
                   <i ng-if="$first" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
                 </div>
                 <div style="line-height: 10px;">
-                  <a id="move-down-data-source-{{ criterion.title }}-{{ dataSource.source }}" ng-if="!$last" ng-click="dataSourceDown(criterion, $index)" class="nav-arrow">
+                  <a id="move-down-data-source-{{ criterion.id }}-{{ dataSource.id }}" ng-if="!$last" ng-click="dataSourceDown(criterion, $index)" class="nav-arrow">
                     <i style="line-height:0px;" class="fa fa-caret-down"></i>
                   </a>
                   <i ng-if="$last" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
@@ -122,7 +122,7 @@
               </td>
 
               <td>
-                <div id="data-source-reference-{{ criterion.title }}-{{ dataSource.source }}" ng-if="dataSource.sourceLink">
+                <div id="data-source-reference-{{ criterion.id }}-{{ dataSource.id }}" ng-if="dataSource.sourceLink">
                   <a href="{{dataSource.sourceLink}}">{{dataSource.source}}</a>
                 </div>
                 <div ng-if="!dataSource.sourceLink">
@@ -131,13 +131,13 @@
               </td>
 
               <td ng-if="isStandalone" class="text-center">
-                <a id="edit-data-source-{{ criterion.title }}-{{ dataSource.source }}"
+                <a id="edit-data-source-{{ criterion.id }}-{{ dataSource.id }}"
                   ng-click="editDataSource(dataSource, $index)" tooltip="Edit data source">
                   <i class="fa fa-edit icon-fixed-width"></i>
                 </a>
               </td>
               <td ng-if="isInput" class="text-center">
-                <a id="delete-data-source-{{ criterion.title }}-{{ dataSource.source }}" ng-click="removeDataSource(dataSource)" tooltip="Remove data source">
+                <a ng-click="removeDataSource(dataSource)" tooltip="Remove data source">
                   <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
                 </a>
               </td>
