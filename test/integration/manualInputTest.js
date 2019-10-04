@@ -15,9 +15,11 @@ const therapeuticContext = 'end-to-end test';
 
 const criterion1 = createCriterion('c1', 'favorable');
 const criterion2 = createCriterion('c2', 'unfavorable');
+const criterion3 = createCriterion('c3', 'favorable');
 
 const dataSource1 = createDataSource('ref1');
 const dataSource2 = createDataSource('ref2');
+const dataSource3 = createDataSource('ref3');
 
 const alternative1 = createAlternative('a1');
 const alternative2 = createAlternative('a2');
@@ -174,6 +176,92 @@ module.exports = {
       .click('#save-alternative-button')
       .assert.containsText('#alternative-title-' + newTitle, newTitle)
       ;
+    browser.end();
+  },
+
+  'Deleting a criterion': function(browser) {
+    createInputDefault(browser);
+    browser.click('#delete-criterion-' + criterion1.title + '-button');
+    util.isElementNotPresent(browser, '//*[@id="criterion-title-' + criterion1.title + '"]');
+    browser.end();
+  },
+
+  'Deleting a data source': function(browser) {
+    createInputDefault(browser);
+    browser.click('#delete-data-source-' + criterion1.title + '-' + dataSource1.reference);
+    util.isElementNotPresent(browser, '//*[@id="data-source-reference-' + criterion1.title + '-' + dataSource1.reference + '"]');
+    browser.end();
+  },
+
+  'Deleting an alternative': function(browser) {
+    createInputDefault(browser);
+    browser.click('#delete-alternative-' + alternative1.title);
+    util.isElementNotPresent(browser, '//*[@id="alternative-title-' + alternative1.title + '"]');
+    browser.end();
+  },
+
+  'Moving criterion up and down': function(browser) {
+    createInputDefault(browser);
+    manualInputService.addCriterion(browser, criterion3);
+
+    const moveCriterionUpPath = '//criterion-list/div[1]/div[3]/criterion-card/div/div[1]/div/div[1]/a/i';
+    const moveCriterionDownPath = '//criterion-list/div[1]/div[2]/criterion-card/div/div[1]/div/div[2]/a/i';
+    const firstCriterionTitlePath = '//criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[1]/h5';
+
+    browser
+      .useXpath()
+      .click(moveCriterionUpPath)
+      .assert.containsText(firstCriterionTitlePath, criterion3.title)
+      .click(moveCriterionDownPath)
+      .assert.containsText(firstCriterionTitlePath, criterion1.title)
+      .useCss()
+      ;
+    browser.end();
+  },
+
+  'Moving data source up and down': function(browser) {
+    createInputDefault(browser);
+    manualInputService.addDataSource(browser, criterion1.title, dataSource3);
+
+    const firstDataSourceTitlePath = '//criterion-list/div[1]/div[2]/criterion-card//div[6]/table/tbody/tr[1]/td[2]/div';
+
+    browser
+      .useXpath()
+      .click('//*[@id="move-up-data-source-' + criterion1.title + '-' + dataSource3.reference + '"]')
+      .assert.containsText(firstDataSourceTitlePath, dataSource3.reference)
+      .click('//*[@id="move-down-data-source-' + criterion1.title + '-' + dataSource3.reference + '"]')
+      .assert.containsText(firstDataSourceTitlePath, dataSource1.reference)
+      .useCss()
+      ;
+    browser.end();
+  },
+
+  'Moving an alternative up and down': function(browser) {
+    createInputDefault(browser);
+
+    const firstAlternativeTitlePath = '/html/body/div[2]/div/div/div[12]/table/tbody/tr[1]/td[2]';
+
+    browser
+      .useXpath()
+      .click('//*[@id="move-up-alternative-' + alternative2.title + '"]')
+      .assert.containsText(firstAlternativeTitlePath, alternative2.title)
+      .click('//*[@id="move-down-alternative-' + alternative2.title + '"]')
+      .assert.containsText(firstAlternativeTitlePath, alternative1.title)
+      .useCss()
+      ;
+    browser.end();
+  },
+
+  'Navigating from manual input step2 to step1': function(browser) {
+    createInputDefault(browser);
+
+    browser
+      .click('#enter-data-button')
+      .waitForElementVisible('#manual-input-header-step2')
+      .click('#go-to-step1-button')
+      .waitForElementVisible('#manual-input-header-step1')
+      ;
+
     browser.end();
   }
 };

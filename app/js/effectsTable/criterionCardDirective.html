@@ -1,14 +1,14 @@
 <div class="grid-x callout">
-  <div ng-if="editMode.isUserOwner" class="cell shrink" style="display:flex; align-items:center;">
+  <div ng-if="isStandalone" class="cell shrink" style="display:flex; align-items:center;">
     <div style="margin-right: 16px">
       <div style="line-height: 10px; margin-bottom: 10px;">
-        <a ng-if="canGoUp" ng-click="criterionUp()" class="nav-arrow">
+        <a id="move-up-criterion-{{ criterion.title }}-button" ng-if="canGoUp" ng-click="criterionUp()" class="nav-arrow">
           <i style="line-height:0px;" class="fa fa-caret-up fa-2x"></i>
         </a>
         <i ng-if="!canGoUp" style="line-height:0px; color:#bbb" class="fa fa-caret-up fa-2x"></i>
       </div>
       <div style="line-height: 10px;">
-        <a ng-if="canGoDown" ng-click="criterionDown()" class="nav-arrow">
+        <a id="move-down-criterion-{{ criterion.title }}-button" ng-if="canGoDown" ng-click="criterionDown()" class="nav-arrow">
           <i style="line-height:0px;" class="fa fa-caret-down fa-2x"></i>
         </a>
         <i ng-if="!canGoDown" style="line-height:0px; color:#bbb" class="fa fa-caret-down fa-2x"></i>
@@ -26,7 +26,7 @@
             tooltip="Edit criterion">
             <i class="fa fa-edit fa-2x icon-fixed-width"></i>
           </a>
-          <a ng-if="isInput" ng-click="removeCriterion(idx)" tooltip="Remove criterion">
+          <a id="delete-criterion-{{ criterion.title }}-button" ng-if="isInput" ng-click="removeCriterion(idx)" tooltip="Remove criterion">
             <i class="fa fa-trash fa-2x icon-fixed-width" style="color:red"></i>
           </a>
         </div>
@@ -82,13 +82,13 @@
             <tr ng-repeat="dataSource in criterion.dataSources track by dataSource.id">
               <td ng-if="isStandalone">
                 <div style="line-height: 10px; margin-bottom: 4px;">
-                  <a ng-if="!$first" ng-click="dataSourceUp(criterion, $index)" class="nav-arrow">
+                  <a id="move-up-data-source-{{ criterion.title }}-{{ dataSource.source }}" ng-if="!$first" ng-click="dataSourceUp(criterion, $index)" class="nav-arrow">
                     <i style="line-height:0px;" class="fa fa-caret-up"></i>
                   </a>
                   <i ng-if="$first" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
                 </div>
                 <div style="line-height: 10px;">
-                  <a ng-if="!$last" ng-click="dataSourceDown(criterion, $index)" class="nav-arrow">
+                  <a id="move-down-data-source-{{ criterion.title }}-{{ dataSource.source }}" ng-if="!$last" ng-click="dataSourceDown(criterion, $index)" class="nav-arrow">
                     <i style="line-height:0px;" class="fa fa-caret-down"></i>
                   </a>
                   <i ng-if="$last" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
@@ -137,7 +137,7 @@
                 </a>
               </td>
               <td ng-if="isInput" class="text-center">
-                <a ng-click="removeDataSource(dataSource)" tooltip="Remove data source">
+                <a id="delete-data-source-{{ criterion.title }}-{{ dataSource.source }}" ng-click="removeDataSource(dataSource)" tooltip="Remove data source">
                   <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
                 </a>
               </td>
