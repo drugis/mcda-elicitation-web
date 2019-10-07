@@ -2,7 +2,7 @@
   <div class="cell">
     <div class="graph-root"></div>
   </div>
-  <div class="cell" style="width: 454px;margin-left: 46px" ng-if="areCoordinatesSet">
+  <div id="willingness-slider" class="cell" style="width: 454px;margin-left: 46px" ng-if="areCoordinatesSet">
     <rzslider rz-slider-model="coordinates.x2" rz-slider-options="sliderOptions"></rzslider>
   </div>
   <div class="cell">
@@ -10,24 +10,24 @@
   </div>
   <div class="cell large-6">
     <label>{{settings.firstCriterion.title}}: </label>
-    <input type="number" ng-model="inputCoordinates.x" ng-change="updateInputFirstPoint()" ng-model-options="{ debounce: 1000 }">
+    <input id="first-criterion-outcome-input" type="number" ng-model="inputCoordinates.x" ng-change="updateInputFirstPoint()" ng-model-options="{ debounce: 1000 }">
   </div>
   <div class="cell large-6">
     <label>{{settings.secondCriterion.title}}: </label>
-    <input type="number" ng-model="inputCoordinates.y" ng-change="updateInputFirstPoint()" ng-model-options="{ debounce: 1000 }">
+    <input id="second-criterion-outcome-input" type="number" ng-model="inputCoordinates.y" ng-change="updateInputFirstPoint()" ng-model-options="{ debounce: 1000 }">
   </div>
   <div class="cell" ng-show="areCoordinatesSet">
     <b>Outcome B</b>
   </div>
   <div class="cell large-6" ng-show="areCoordinatesSet">
     <label>{{settings.firstCriterion.title}}: </label>
-    <input type="number" ng-model="inputCoordinates.x2" ng-change="updateInputSecondPoint()" ng-model-options="{ debounce: 1000 }">
+    <input id="first-criterion-outcome-b-input" type="number" ng-model="inputCoordinates.x2" ng-change="updateInputSecondPoint()" ng-model-options="{ debounce: 1000 }">
   </div>
   <div class="cell large-6" ng-show="areCoordinatesSet">
     <label>{{settings.secondCriterion.title}}: </label>
-    <input type="number" ng-disabled="true" ng-model="inputCoordinates.y2">
+    <input id="second-criterion-outcome-b-input" type="number" ng-disabled="true" ng-model="inputCoordinates.y2">
   </div>
-  <div class="cell callout secondary" ng-show="areCoordinatesSet">
+  <div id="willingness-summary" class="cell callout secondary" ng-show="areCoordinatesSet">
     <div class="grid-x">
       <div class="cell">
         Your value judgments imply that you are indifferent between the following options:

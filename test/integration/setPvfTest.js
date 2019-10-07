@@ -31,7 +31,6 @@ module.exports = {
       ;
 
     workspaceService.deleteFromList(browser, title);
-    browser.waitForElementVisible('#empty-workspace-message');
     browser.end();
   },
 };

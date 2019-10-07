@@ -192,11 +192,11 @@
         <em>Invalid scale range</em>
       </div>
       <div class="cell large-6">
-        <button id="finish-subproblem-creation-button" class="button success" type="submit"
+        <button id="create-new-subproblem-button" class="button success" type="submit"
           ng-disabled="isTitleDuplicate || !subProblemState.title || invalidSlider || hasMissingValues || areTooManyDataSourcesSelected">Create</button>
       </div>
     </div>
-    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+    <button id="close-button" ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>
