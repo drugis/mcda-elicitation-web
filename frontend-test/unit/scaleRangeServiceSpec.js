@@ -48,7 +48,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
         expect(result.sliderOptions.ceil).toEqual(0.30000000000000004);
       });
 
-      it('should consider negative values when calculating the floor and ceiling of bounds', function(){
+      it('should consider negative values when calculating the floor and ceiling of bounds', function() {
         var dataSourceScale = [null, null];
         var from = -200;
         var to = -100;
@@ -112,6 +112,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
             }
           }
         };
+
         var criteria = [{
           id: 'headacheId',
           dataSources: [{
@@ -139,7 +140,9 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
             scale: [-Infinity, Infinity]
           }]
         }];
+
         var result = scaleRangeService.getScalesStateAndChoices(observedScales, criteria);
+
         var expectedResult = {
           choices: {
             ds1: {
@@ -180,14 +183,130 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/subProblem/scaleRangeService
             }
           }
         };
+
         expect(typeof result.scalesState.ds1.increaseFrom).toBe('function');
         expect(typeof result.scalesState.ds1.increaseTo).toBe('function');
         expect(typeof result.scalesState.ds2.increaseFrom).toBe('function');
         expect(typeof result.scalesState.ds2.increaseTo).toBe('function');
+
         var relevantProperties = ['restrictedRange', 'floor', 'ceil', 'step', 'precision', 'noSwitching'];
         var subResultDs1 = _.pick(result.scalesState.ds1.sliderOptions, relevantProperties);
-        expect(subResultDs1).toEqual(expectedResult.scalesState.ds1.sliderOptions);
         var subResultDs2 = _.pick(result.scalesState.ds2.sliderOptions, relevantProperties);
+
+        expect(subResultDs1).toEqual(expectedResult.scalesState.ds1.sliderOptions);
+        expect(subResultDs2).toEqual(expectedResult.scalesState.ds2.sliderOptions);
+        expect(result.choices).toEqual(expectedResult.choices);
+      });
+
+      it('should set a margin if all values of a criterion are 0', function() {
+        var observedScales = {
+          ds1: {
+            alt1: {
+              '2.5%': 0,
+              '50%': 0,
+              '97.5%': 0
+            },
+            alt2:{
+              '2.5%': 0,
+              '50%': 0,
+              '97.5%': 0
+            }
+          },
+          ds2:{
+            alt1: {
+              '2.5%': 0,
+              '50%': 0,
+              '97.5%': 0
+            },
+            alt2:{
+              '2.5%': 0,
+              '50%': 0,
+              '97.5%': 0
+            } 
+          }
+        };
+
+        var criteria = [{
+          id: 'headacheId',
+          dataSources: [{
+            pvf: {
+              range: [0, 0]
+            },
+            id: 'ds1',
+            unitOfMeasurement: {
+              label: 'label',
+              type: 'custom'
+            },
+            scale: [-Infinity, Infinity]
+          }]
+        }, {
+          id: 'nauseaId',
+          dataSources: [{
+            pvf: {
+              range: [0, 0]
+            },
+            id: 'ds2',
+            unitOfMeasurement: {
+              label: '%',
+              type: 'percentage'
+            },
+            scale: [0, 100]
+          }]
+        }];
+
+        var result = scaleRangeService.getScalesStateAndChoices(observedScales, criteria);
+
+        var expectedResult = {
+          choices: {
+            ds1: {
+              from: 0,
+              to: 0.002
+            },
+            ds2: {
+              from: 0,
+              to: 0.002
+            }
+          },
+          scalesState: {
+            ds1: {
+              sliderOptions: {
+                restrictedRange: {
+                  from: 0,
+                  to: 0.001
+                },
+                floor: 0,
+                ceil: 0.002,
+                step: 0.00001,
+                precision: 4,
+                noSwitching: true
+              }
+            },
+            ds2: {
+              sliderOptions: {
+                restrictedRange: {
+                  from: 0,
+                  to: 0.001
+                },
+                floor: 0,
+                ceil: 0.002,
+                step: 0.00001,
+                precision: 4,
+                noSwitching: true
+              }
+            }
+          }
+        };
+
+        expect(typeof result.scalesState.ds1.increaseFrom).toBe('function');
+        expect(typeof result.scalesState.ds1.increaseTo).toBe('function');
+        expect(typeof result.scalesState.ds2.increaseFrom).toBe('function');
+        expect(typeof result.scalesState.ds2.increaseTo).toBe('function');
+
+        var relevantProperties = ['restrictedRange', 'floor', 'ceil', 'step', 'precision', 'noSwitching'];
+        var subResultDs1 = _.pick(result.scalesState.ds1.sliderOptions, relevantProperties);
+        var subResultDs2 = _.pick(result.scalesState.ds2.sliderOptions, relevantProperties);
+
+        expect(subResultDs1).toEqual(expectedResult.scalesState.ds1.sliderOptions);
         expect(subResultDs2).toEqual(expectedResult.scalesState.ds2.sliderOptions);
         expect(result.choices).toEqual(expectedResult.choices);
       });

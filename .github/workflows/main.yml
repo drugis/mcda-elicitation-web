@@ -1,0 +1,38 @@
+name: MCDA CI
+
+on:
+  push:
+    branches: feature/nightwatch
+
+jobs:
+  build:
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+        os: [ubuntu-16.04]
+
+    steps:
+    - uses: actions/checkout@v1
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+        
+    - name: install yarn
+      run: |
+        curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+        echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+        sudo apt-get update && sudo apt-get install yarn
+        
+    - name: install packages
+      run: yarn
+      
+    - name: run mocha and karma tests
+      run: npm test
+      
+      env:
+        CI: true
