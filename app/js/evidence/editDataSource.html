@@ -9,7 +9,7 @@
       </label>
     </div>
     <div class="cell" ng-show="dataSource.unitOfMeasurement.type === 'custom'">
-      <input type="text" ng-model="dataSource.unitOfMeasurement.label">
+      <input id="unit-of-measurement-input" type="text" ng-model="dataSource.unitOfMeasurement.label">
     </div>
     <div class="cell">
       <label>Reference
@@ -17,7 +17,7 @@
       </label>
     </div>
     <div class="cell">
-      <input type="text" ng-model="dataSource.source" ng-change="checkErrors()">
+      <input id="reference-input" type="text" ng-model="dataSource.source" ng-change="checkErrors()">
     </div>
     <div class="cell">
       <label>Reference URL (optional)
@@ -25,7 +25,7 @@
       </label>
     </div>
     <div class="cell">
-      <input type="text" ng-model="dataSource.sourceLink" ng-change="checkErrors()">
+      <input id="reference-link-input" type="text" ng-model="dataSource.sourceLink" ng-change="checkErrors()">
     </div>
     <div class="cell">
       <label>Strength of evidence (optional)
@@ -33,7 +33,7 @@
       </label>
     </div>
     <div class="cell">
-      <input type="text" ng-model="dataSource.strengthOfEvidence">
+      <input id="strength-of-evidence-input" type="text" ng-model="dataSource.strengthOfEvidence">
     </div>
     <div class="cell">
       <label>Uncertainties (optional)
@@ -41,13 +41,13 @@
       </label>
     </div>
     <div class="cell">
-      <input type="text" ng-model="dataSource.uncertainties">
+      <input id="uncertainties-input" type="text" ng-model="dataSource.uncertainties">
     </div>
     <div class="cell alert" ng-repeat="error in errors">
       <em>{{error}}</em>
     </div>
     <div class="cell">
-      <button class="button success" type="submit" ng-disabled="errors.length">
+      <button id="edit-data-source-button" class="button success" type="submit" ng-disabled="errors.length">
         Edit
       </button>
     </div>

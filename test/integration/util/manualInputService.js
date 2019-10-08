@@ -3,8 +3,8 @@
 function addCriterion(browser, criterion) {
   browser
     .click('#add-criterion-button')
-    .setValue('#criterion-title', criterion.title)
-    .setValue('#criterion-description', criterion.description)
+    .setValue('#criterion-title-input', criterion.title)
+    .setValue('#criterion-description-input', criterion.description)
     .click('#favorability-selector-' + criterion.favorability)
     .click('#add-criterion-confirm-button');
 }
