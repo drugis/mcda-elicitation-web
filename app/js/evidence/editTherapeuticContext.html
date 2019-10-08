@@ -1,13 +1,13 @@
 <form ng-submit="save()">
   <div class="grid-x">
     <div class="cell">
-      <h3> Edit therapeutic context <inline-help help-key="therapeutic-context"></inline-help></h3>
+      <h3 id="therapeutic-context-header"> Edit therapeutic context <inline-help help-key="therapeutic-context"></inline-help></h3>
     </div>
     <div class="cell">
-      <textarea rows="8" ng-model="context.therapeuticContext"></textarea>
+      <textarea id="therapeutic-context-input" rows="8" ng-model="context.therapeuticContext"></textarea>
     </div>
     <div class="cell">
-      <button class="button success" type="submit">Save</button>
+      <button id="save-button" class="button success" type="submit">Save</button>
     </div>
     <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
       <span aria-hidden="true">&times;</span>
