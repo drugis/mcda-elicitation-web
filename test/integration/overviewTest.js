@@ -20,8 +20,16 @@ function loadTestWorkspace(browser, title) {
 }
 
 module.exports = {
-  'The overview tab': function(browser) {
+  beforeEach: function(browser) {
+    browser.resizeWindow(1366, 728);
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+  },
+
+  afterEach: function(browser) {
+    browser.end();
+  },
+
+  'The overview tab': function(browser) {
     loadTestWorkspace(browser, title);
 
     const firstDistalDVTValue = '//div[1]/div[2]/criterion-card//table//td[3]//*';
@@ -38,11 +46,9 @@ module.exports = {
 
     browser.click('#logo');
     workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Editing the therapeutic context': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     loadTestWorkspace(browser, title);
 
     browser
@@ -56,11 +62,9 @@ module.exports = {
 
     browser.click('#logo');
     workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Editing a criterion': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     loadTestWorkspace(browser, title);
 
     const newTitle = 'new title';
@@ -82,11 +86,9 @@ module.exports = {
 
     browser.click('#logo');
     workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Editing a data source': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     const zynbrita = 'Zinbryta - initial regulatory review';
     loadTestWorkspace(browser, zynbrita);
 
@@ -127,11 +129,9 @@ module.exports = {
 
     browser.click('#logo');
     workspaceService.deleteFromList(browser, zynbrita);
-    browser.end();
   },
 
   'Editing an alternative': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     loadTestWorkspace(browser, title);
     const editHeparinButton = '#alternative-edit-button-cfcdf6df-f231-4c3d-be83-64aa28d8d5f1';
     const newTitle = 'new alternative';
@@ -147,11 +147,9 @@ module.exports = {
 
     browser.click('#logo');
     workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Editing the workspace title': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     loadTestWorkspace(browser, title);
     const newTitle = 'new workspace title';
 
@@ -163,11 +161,9 @@ module.exports = {
       ;
     browser.click('#logo');
     workspaceService.deleteFromList(browser, newTitle);
-    browser.end();
   },
 
   'Reordering criteria': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     loadTestWorkspace(browser, title);
 
     const firstCriterionTitle = '//criterion-list/div/div[1]/criterion-card/div/div[2]/div/div[1]/h5';
@@ -187,11 +183,9 @@ module.exports = {
       ;
     browser.click('#logo');
     workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Reordering alternatives': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     loadTestWorkspace(browser, title);
 
     const firstAlternativeTitle = '/html/body/div[2]/div/div[3]/div/div/div/div/div[1]/div/div/div/div[7]/table/tbody/tr[1]/td[2]';
@@ -213,11 +207,9 @@ module.exports = {
       ;
     browser.click('#logo');
     workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Reordering data sources': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     workspaceService.uploadTestWorkspace(browser, '/createSubproblem.json');
 
     const firstReference = '//criterion-list/div/div[1]/criterion-card/div/div[2]/div/div[4]/table/tbody/tr[1]/td[7]/div';
@@ -239,12 +231,8 @@ module.exports = {
       .assert.containsText(firstReference, 'ref1')
       .useCss()
       ;
-
     browser.click('#logo');
-
     workspaceService.deleteFromList(browser, 'Test workspace');
-    browser.end();
-
   }
 
 };

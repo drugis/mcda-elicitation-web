@@ -69,8 +69,6 @@ function createAlternative(title) {
 }
 
 function createInputDefault(browser) {
-  loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-
   browser
     .waitForElementVisible('#create-workspace-button')
     .click('#create-workspace-button')
@@ -115,6 +113,11 @@ function setValues(browser, rowNumber, columnNumber) {
 module.exports = {
   beforeEach: function(browser) {
     browser.resizeWindow(1366, 728);
+    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+  },
+
+  afterEach: function(browser){
+    browser.end();
   },
 
   'Manual input of a workspace': function(browser) {
@@ -156,7 +159,6 @@ module.exports = {
 
     errorService.isErrorBarHidden(browser);
     workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Editing a criterion': function(browser) {
@@ -179,8 +181,6 @@ module.exports = {
       .assert.containsText(criterion1NewDescriptionPath, 'Description: ' + newDescription)
       .useCss()
       ;
-
-    browser.end();
   },
 
   'Editing a data source': function(browser) {
@@ -201,7 +201,6 @@ module.exports = {
       .assert.containsText(dataSource1ReferencePath, newReference)
       .useCss()
       ;
-    browser.end();
   },
 
   'Editing an alternative': function(browser) {
@@ -219,7 +218,6 @@ module.exports = {
       .assert.containsText(alternative1TitlePath, newTitle)
       .useCss()
       ;
-    browser.end();
   },
 
   'Deleting a criterion': function(browser) {
@@ -231,7 +229,6 @@ module.exports = {
       .assert.containsText(criterion1TitlePath, criterion3.title)
       .useCss()
       ;
-    browser.end();
   },
 
   'Deleting a data source': function(browser) {
@@ -242,7 +239,6 @@ module.exports = {
       .assert.containsText(criterion1DataSource1Path, 'No data sources defined')
       .useCss()
       ;
-    browser.end();
   },
 
   'Deleting an alternative': function(browser) {
@@ -253,7 +249,6 @@ module.exports = {
       .assert.containsText(alternative1TitlePath, alternative2.title)
       .useCss()
       ;
-    browser.end();
   },
 
   'Moving criterion up and down': function(browser) {
@@ -268,12 +263,9 @@ module.exports = {
       .assert.containsText(criterion1TitlePath, criterion1.title)
       .useCss()
       ;
-    browser.end();
   },
 
   'Moving data source up and down': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-
     browser
       .waitForElementVisible('#create-workspace-button')
       .click('#create-workspace-button')
@@ -297,7 +289,6 @@ module.exports = {
       .assert.containsText(dataSource1ReferencePath, dataSource1.reference)
       .useCss()
       ;
-    browser.end();
   },
 
   'Moving an alternative up and down': function(browser) {
@@ -311,7 +302,6 @@ module.exports = {
       .assert.containsText(alternative1TitlePath, alternative1.title)
       .useCss()
       ;
-    browser.end();
   },
 
   'Navigating from manual input step2 to step1': function(browser) {
@@ -323,7 +313,6 @@ module.exports = {
       .click('#go-to-step1-button')
       .waitForElementVisible('#manual-input-header-step1')
       ;
-    browser.end();
   },
 
   'Saving during step 1': function(browser) {
@@ -340,7 +329,6 @@ module.exports = {
 
     browser.click('#logo');
     workspaceService.deleteUnfinishedFromList(browser, title);
-    browser.end();
   },
 
   'Saving during step 2': function(browser) {
@@ -356,7 +344,6 @@ module.exports = {
 
     browser.click('#logo');
     workspaceService.deleteUnfinishedFromList(browser, title);
-    browser.end();
   },
 
   'Delete a saved workspace': function(browser) {
@@ -364,7 +351,6 @@ module.exports = {
     browser.click('#step1-save-button');
     browser.click('#logo');
     workspaceService.deleteUnfinishedFromList(browser, title);
-    browser.end();
   },
 
   'Continuing working on a saved workspace': function(browser) {
@@ -381,6 +367,5 @@ module.exports = {
 
     browser.click('#logo');
     workspaceService.deleteUnfinishedFromList(browser, title);
-    browser.end();
   }
 };

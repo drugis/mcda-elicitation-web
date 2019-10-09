@@ -8,27 +8,30 @@ const errorService = require('./util/errorService');
 
 const testUrl = 'http://localhost:3002';
 const title = 'GetReal course LU 4, activity 4.4';
-
-function loadTestWorkspace(browser, title) {
-  workspaceService.addExample(browser, title);
-  browser
-    .click('a[id="' + title + '"]')
-    .waitForElementVisible('#workspace-title');
-
-  errorService.isErrorBarHidden(browser);
-
-  browser
-    .click('#preferences-tab')
-    .waitForElementVisible('#partial-value-functions-block');
-}
+const scenarioTitle = 'scenario title';
 
 module.exports = {
-  'Creating a new scenario': function(browser) {
-    const scenarioTitle = 'scenario title';
-
+  beforeEach: function(browser) {
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-    loadTestWorkspace(browser, title);
+    workspaceService.addExample(browser, title);
+    browser
+      .click('a[id="' + title + '"]')
+      .waitForElementVisible('#workspace-title');
 
+    errorService.isErrorBarHidden(browser);
+
+    browser
+      .click('#preferences-tab')
+      .waitForElementVisible('#partial-value-functions-block');
+  },
+
+  afterEach: function(browser) {
+    browser.click('#logo');
+    workspaceService.deleteFromList(browser, title);
+    browser.end();
+  },
+
+  'Creating a new scenario': function(browser) {
     browser
       .click('#create-scenario-button')
       .waitForElementVisible('#create-new-scenario-button:disabled')
@@ -42,62 +45,35 @@ module.exports = {
       .pause(50)
       .assert.containsText('#scenario-selector', scenarioTitle)
       ;
-
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Editing the title': function(browser) {
-    const newTitle = 'scenario title';
-
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-    loadTestWorkspace(browser, title);
-
     browser
       .click('#edit-scenario-button')
       .clearValue('#new-scenario-title')
-      .setValue('#new-scenario-title', newTitle)
+      .setValue('#new-scenario-title', scenarioTitle)
       .click('#edit-scenario-title-button')
       .pause(50)
       .waitForElementVisible('#scenario-selector')
-      .assert.containsText('#scenario-selector', newTitle)
+      .assert.containsText('#scenario-selector', scenarioTitle)
       ;
-
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Copying the scenario': function(browser) {
-    const newTitle = 'scenario title';
-
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-    loadTestWorkspace(browser, title);
-
     browser
       .assert.containsText('#scenario-selector', 'Default')
       .click('#copy-scenario-button')
       .waitForElementVisible('#create-new-scenario-button:disabled')
-      .setValue('#new-scenario-title', newTitle)
+      .setValue('#new-scenario-title', scenarioTitle)
       .waitForElementVisible('#create-new-scenario-button:enabled')
       .click('#create-new-scenario-button')
       .pause(50) //pause needed to not get 'stale element' error
       .waitForElementVisible('#scenario-selector')
-      .assert.containsText('#scenario-selector', newTitle)
+      .assert.containsText('#scenario-selector', scenarioTitle)
       ;
-
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Switching scenario in the preferences tab': function(browser) {
-    const scenarioTitle = 'scenario title';
-
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-    loadTestWorkspace(browser, title);
-
     browser
       .click('#create-scenario-button')
       .setValue('#new-scenario-title', scenarioTitle)
@@ -109,18 +85,9 @@ module.exports = {
       .click('option[label="Default"]')
       .assert.containsText('#scenario-selector', 'Default')
       ;
-
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
-  'Switching scenario in the deterministic results tab': function(browser){
-    const scenarioTitle = 'scenario title';
-
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-    loadTestWorkspace(browser, title);
-
+  'Switching scenario in the deterministic results tab': function(browser) {
     browser
       .click('#create-scenario-button')
       .setValue('#new-scenario-title', scenarioTitle)
@@ -134,18 +101,9 @@ module.exports = {
       .click('option[label="Default"]')
       .assert.containsText('#scenario-selector', 'Default')
       ;
-
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
-  'Switching scenario in the deterministic results tab': function(browser){
-    const scenarioTitle = 'scenario title';
-
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-    loadTestWorkspace(browser, title);
-
+  'Switching scenario in the SMAA results tab': function(browser) {
     browser
       .click('#create-scenario-button')
       .setValue('#new-scenario-title', scenarioTitle)
@@ -159,9 +117,5 @@ module.exports = {
       .click('option[label="Default"]')
       .assert.containsText('#scenario-selector', 'Default')
       ;
-
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
-    browser.end();
   }
 };

@@ -15,9 +15,6 @@ const workspacePath = '/createSubproblem.json';
 const title = 'Test workspace';
 
 function setupSubProblem(browser) {
-  loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-  workspaceService.uploadTestWorkspace(browser, workspacePath);
-
   browser
     .waitForElementVisible('#workspace-title')
     .click('#problem-definition-tab')
@@ -37,14 +34,21 @@ function setupSubProblem(browser) {
 }
 
 module.exports = {
-  'Create subproblem': function(browser) {
-    setupSubProblem(browser);
-    browser.click('#create-new-subproblem-button');
+  beforeEach: function(browser) {
+    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    workspaceService.uploadTestWorkspace(browser, workspacePath);
+  },
 
+  afterEach: function(browser) {
     errorService.isErrorBarHidden(browser);
     browser.click('#logo');
     workspaceService.deleteFromList(browser, title);
     browser.end();
+  },
+
+  'Create subproblem': function(browser) {
+    setupSubProblem(browser);
+    browser.click('#create-new-subproblem-button');
   },
 
   'Re-enabling datasources, and criteria during subproblem creation': function(browser) {
@@ -60,11 +64,6 @@ module.exports = {
       .waitForElementVisible('#create-new-subproblem-button:enabled')
       ;
     browser.click('#create-new-subproblem-button');
-
-    errorService.isErrorBarHidden(browser);
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Switching between subproblems': function(browser) {
@@ -77,19 +76,10 @@ module.exports = {
       .click('option[label="Default"]')
       .assert.containsText('#subproblem-selector', 'Default')
       ;
-
-    errorService.isErrorBarHidden(browser);
-    browser.click('#logo');
-
-    workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Edit the title': function(browser) {
     const newTitle = 'not default';
-
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-    workspaceService.uploadTestWorkspace(browser, workspacePath);
 
     browser
       .waitForElementVisible('#workspace-title')
@@ -103,11 +93,6 @@ module.exports = {
       .waitForElementVisible('#effects-table-header')
       .assert.containsText('#subproblem-selector', newTitle)
       ;
-
-    errorService.isErrorBarHidden(browser);
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Reset during subproblem creation': function(browser) {
@@ -123,11 +108,6 @@ module.exports = {
       .waitForElementVisible('#deselectionCriterionId:checked')
       .click('#close-button')
       ;
-
-    errorService.isErrorBarHidden(browser);
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Interact with scale sliders': function(browser) {
@@ -163,10 +143,5 @@ module.exports = {
       .useCss()
       .click('#close-button')
       ;
-
-    errorService.isErrorBarHidden(browser);
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
-    browser.end();
   }
 };

@@ -36,12 +36,21 @@ function matchImportanceColumnContents(browser, value1, value2, value3) {
     ;
 }
 
+const title = 'GetReal course LU 4, activity 4.4';
 module.exports = {
-  'Setting the weights through ranking': function(browser) {
-    const title = 'GetReal course LU 4, activity 4.4';
-
+  beforeEach: function(browser) {
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     loadTestWorkspace(browser, title);
+  },
+
+  afterEach: function(browser) {
+    browser.click('#logo');
+    workspaceService.deleteFromList(browser, title);
+    browser.end();
+  },
+
+  'Setting the weights through ranking': function(browser) {
+
 
     browser
       .click('#ranking-button')
@@ -53,17 +62,9 @@ module.exports = {
 
     matchImportanceColumnContents(browser, 1, 2, 3);
     resetWeights(browser);
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Setting the weights through matching': function(browser) {
-    const title = 'GetReal course LU 4, activity 4.4';
-
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-    loadTestWorkspace(browser, title);
-
     browser
       .click('#matching-button')
       .waitForElementVisible('#matching-title-header')
@@ -79,17 +80,9 @@ module.exports = {
 
     matchImportanceColumnContents(browser, '100%', '100%', '100%');
     resetWeights(browser);
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Setting the weights through precise swing weighting': function(browser) {
-    const title = 'GetReal course LU 4, activity 4.4';
-
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-    loadTestWorkspace(browser, title);
-
     browser
       .click('#precise-swing-button')
       .waitForElementVisible('#swing-weighting-title-header')
@@ -99,17 +92,9 @@ module.exports = {
 
     matchImportanceColumnContents(browser, '100%', '100%', '100%');
     resetWeights(browser);
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Setting the weights through imprecise swing weighting': function(browser) {
-    const title = 'GetReal course LU 4, activity 4.4';
-
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-    loadTestWorkspace(browser, title);
-
     browser
       .click('#imprecise-swing-button')
       .waitForElementVisible('#swing-weighting-title-header')
@@ -119,22 +104,14 @@ module.exports = {
 
     matchImportanceColumnContents(browser, '100%', '1-100%', '1-100%');
     resetWeights(browser);
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 
   'Interacting with Willingness to trade off plot': function(browser) {
-    const title = 'GetReal course LU 4, activity 4.4';
     const outcomeValue = 60;
-
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-    loadTestWorkspace(browser, title);
 
     browser.useXpath();
     browser.expect.element('//*[@id="first-criterion-outcome-input"]').to.not.have.value.which.contains('.');
     browser.expect.element('//*[@id="second-criterion-outcome-input"]').to.not.have.value.which.contains('.');
-
     browser
       .waitForElementVisible('//willingness-to-trade-off-chart/div/div[1]/div')
       .getLocationInView('//willingness-to-trade-off-chart/div/div[1]/div')
@@ -157,9 +134,5 @@ module.exports = {
       .assert.containsText('//willingness-to-trade-off-chart/div/div[2]/div/span[10]', outcomeValue)
       .useCss()
       ;
-
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
-    browser.end();
   },
 };
