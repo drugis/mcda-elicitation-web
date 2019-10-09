@@ -66,10 +66,18 @@ function uploadTestWorkspace(browser, path) {
   errorService.isErrorBarHidden(browser);
 }
 
+function deleteUnfinishedFromList(browser, title) {
+  browser
+    .click('a[id="delete-in-progress-workspace-' + title + '"]')
+    .click('#delete-workspace-confirm-button');
+  errorService.isErrorBarHidden(browser);
+}
+
 module.exports = {
   addExample: addExample,
   addTutorial: addTutorial,
   copy: copy,
   deleteFromList: deleteFromList,
+  deleteUnfinishedFromList: deleteUnfinishedFromList,
   uploadTestWorkspace: uploadTestWorkspace
 };

@@ -323,7 +323,64 @@ module.exports = {
       .click('#go-to-step1-button')
       .waitForElementVisible('#manual-input-header-step1')
       ;
+    browser.end();
+  },
 
+  'Saving during step 1': function(browser) {
+    createInputDefault(browser);
+
+    browser
+      .click('#step1-save-button')
+      .refresh()
+      .waitForElementVisible('#manual-input-header-step1')
+      .useXpath()
+      .assert.containsText(criterion1TitlePath, criterion1.title)
+      .useCss()
+      ;
+
+    browser.click('#logo');
+    workspaceService.deleteUnfinishedFromList(browser, title);
+    browser.end();
+  },
+
+  'Saving during step 2': function(browser) {
+    createInputDefault(browser);
+
+    browser
+      .click('#enter-data-button')
+      .waitForElementVisible('#manual-input-header-step2')
+      .click('#step2-save-button')
+      .refresh()
+      .waitForElementVisible('#manual-input-header-step2')
+      ;
+
+    browser.click('#logo');
+    workspaceService.deleteUnfinishedFromList(browser, title);
+    browser.end();
+  },
+
+  'Delete a saved workspace': function(browser) {
+    createInputDefault(browser);
+    browser.click('#step1-save-button');
+    browser.click('#logo');
+    workspaceService.deleteUnfinishedFromList(browser, title);
+    browser.end();
+  },
+
+  'Continuing working on a saved workspace': function(browser) {
+    createInputDefault(browser);
+    browser.click('#step1-save-button')
+      .click('#logo')
+      .waitForElementVisible('a[id="in-progress-workspace-title-' + title + '"]')
+      .click('a[id="in-progress-workspace-title-' + title + '"]')
+      .waitForElementVisible('#manual-input-header-step1')
+      .useXpath()
+      .assert.containsText(criterion1TitlePath, criterion1.title)
+      .useCss()
+      ;
+
+    browser.click('#logo');
+    workspaceService.deleteUnfinishedFromList(browser, title);
     browser.end();
   }
 };

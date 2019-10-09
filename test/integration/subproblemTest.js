@@ -34,7 +34,6 @@ function setupSubProblem(browser) {
     .click('#deselectionCriterionId')
     .waitForElementVisible('#create-new-subproblem-button:enabled')
     ;
-
 }
 
 module.exports = {

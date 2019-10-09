@@ -170,7 +170,7 @@ module.exports = {
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     loadTestWorkspace(browser, title);
 
-    const firstCriterionTitle = '/html/body/div[2]/div/div[3]/div/div/div/div/div[1]/div/div/div/div[5]/criterion-list/div/div[1]/criterion-card/div/div[2]/div/div[1]/h5';
+    const firstCriterionTitle = '//criterion-list/div/div[1]/criterion-card/div/div[2]/div/div[1]/h5';
     const proximalDown = '#move-down-criterion-cae083fa-c1e7-427f-8039-c46479392344';
     const proximalUp = '#move-up-criterion-cae083fa-c1e7-427f-8039-c46479392344';
 
@@ -214,6 +214,37 @@ module.exports = {
     browser.click('#logo');
     workspaceService.deleteFromList(browser, title);
     browser.end();
+  },
+
+  'Reordering data sources': function(browser) {
+    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    workspaceService.uploadTestWorkspace(browser, '/createSubproblem.json');
+
+    const firstReference = '//criterion-list/div/div[1]/criterion-card/div/div[2]/div/div[4]/table/tbody/tr[1]/td[7]/div';
+    const ref1Down = '#move-down-data-source-c4a470d2-b457-4f65-9b8d-5e22741c24a6-c27f83e0-a563-450d-9327-93fe823ed23f';
+    const ref1Up = '#move-up-data-source-c4a470d2-b457-4f65-9b8d-5e22741c24a6-c27f83e0-a563-450d-9327-93fe823ed23f';
+
+    browser
+      .useXpath()
+      .assert.containsText(firstReference, 'ref1')
+      .useCss()
+
+      .click(ref1Down)
+      .useXpath()
+      .assert.containsText(firstReference, 'ref2')
+      .useCss()
+
+      .click(ref1Up)
+      .useXpath()
+      .assert.containsText(firstReference, 'ref1')
+      .useCss()
+      ;
+
+    browser.click('#logo');
+
+    workspaceService.deleteFromList(browser, 'Test workspace');
+    browser.end();
+
   }
 
 };

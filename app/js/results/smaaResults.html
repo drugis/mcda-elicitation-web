@@ -9,7 +9,7 @@
   <div class="grid-x">
     <div class="cell">
       <span>Scenario:</span>
-      <select class="scenario-select" ng-model="scenario"
+      <select id="scenario-selector" class="scenario-select" ng-model="scenario"
         ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
         ng-change="scenarioChanged(scenario)"></select>
     </div>

@@ -7,6 +7,7 @@ const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
 const testUrl = 'http://localhost:3002';
+const title = 'GetReal course LU 4, activity 4.4';
 
 function loadTestWorkspace(browser, title) {
   workspaceService.addExample(browser, title);
@@ -23,7 +24,6 @@ function loadTestWorkspace(browser, title) {
 
 module.exports = {
   'Creating a new scenario': function(browser) {
-    const title = 'GetReal course LU 4, activity 4.4';
     const scenarioTitle = 'scenario title';
 
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
@@ -49,7 +49,6 @@ module.exports = {
   },
 
   'Editing the title': function(browser) {
-    const title = 'GetReal course LU 4, activity 4.4';
     const newTitle = 'scenario title';
 
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
@@ -71,7 +70,6 @@ module.exports = {
   },
 
   'Copying the scenario': function(browser) {
-    const title = 'GetReal course LU 4, activity 4.4';
     const newTitle = 'scenario title';
 
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
@@ -94,8 +92,7 @@ module.exports = {
     browser.end();
   },
 
-  'Switching scenario': function(browser) {
-    const title = 'GetReal course LU 4, activity 4.4';
+  'Switching scenario in the preferences tab': function(browser) {
     const scenarioTitle = 'scenario title';
 
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
@@ -117,4 +114,54 @@ module.exports = {
     workspaceService.deleteFromList(browser, title);
     browser.end();
   },
+
+  'Switching scenario in the deterministic results tab': function(browser){
+    const scenarioTitle = 'scenario title';
+
+    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loadTestWorkspace(browser, title);
+
+    browser
+      .click('#create-scenario-button')
+      .setValue('#new-scenario-title', scenarioTitle)
+      .waitForElementVisible('#create-new-scenario-button:enabled')
+      .click('#create-new-scenario-button')
+      .pause(50)
+      .assert.containsText('#scenario-selector', scenarioTitle)
+      .click('#deterministic-tab')
+      .waitForElementVisible('#sensitivity-measurements-header')
+      .click('#scenario-selector')
+      .click('option[label="Default"]')
+      .assert.containsText('#scenario-selector', 'Default')
+      ;
+
+    browser.click('#logo');
+    workspaceService.deleteFromList(browser, title);
+    browser.end();
+  },
+
+  'Switching scenario in the deterministic results tab': function(browser){
+    const scenarioTitle = 'scenario title';
+
+    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loadTestWorkspace(browser, title);
+
+    browser
+      .click('#create-scenario-button')
+      .setValue('#new-scenario-title', scenarioTitle)
+      .waitForElementVisible('#create-new-scenario-button:enabled')
+      .click('#create-new-scenario-button')
+      .pause(50)
+      .assert.containsText('#scenario-selector', scenarioTitle)
+      .click('#smaa-tab')
+      .waitForElementVisible('#smaa-measurements-header')
+      .click('#scenario-selector')
+      .click('option[label="Default"]')
+      .assert.containsText('#scenario-selector', 'Default')
+      ;
+
+    browser.click('#logo');
+    workspaceService.deleteFromList(browser, title);
+    browser.end();
+  }
 };
