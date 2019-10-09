@@ -1,7 +1,5 @@
 'use strict';
 
-const _ = require('lodash');
-
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');

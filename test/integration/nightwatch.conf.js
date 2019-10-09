@@ -30,7 +30,7 @@ module.exports = {
       desiredCapabilities: {
         browserName: 'firefox',
         'moz:firefoxOptions': {
-          args: ['-headless']
+          // args: ['-headless']
         },
         javascriptEnabled: true,
         acceptSslCerts: true,

@@ -116,7 +116,7 @@ module.exports = {
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
   },
 
-  afterEach: function(browser){
+  afterEach: function(browser) {
     browser.end();
   },
 
@@ -367,5 +367,54 @@ module.exports = {
 
     browser.click('#logo');
     workspaceService.deleteUnfinishedFromList(browser, title);
+  },
+
+  'Changing unit of measurement': function(browser) {
+    const firstCell = '/html/body/div[2]/div/div/div[5]/div/div/div[1]/div/manual-input-table/table/tbody/tr[1]/td[6]/effect-input-helper/dropdown-toggle/span/toggle/a';
+    const unitLabel = 'UoM label';
+
+    createInputDefault(browser);
+    browser
+      .click('#enter-data-button')
+      .waitForElementVisible('#manual-input-header-step2');
+
+    setValuesForRow(browser, 1);
+    setValuesForRow(browser, 2);
+    browser
+      .useXpath()
+      .assert.containsText(firstCell, 7)
+      .useCss()
+      .click('#edit-unit-of-measurement-' + criterion1.title + '-' + dataSource1.reference)
+      .setValue('#uom-label', unitLabel)
+      .click('#uom-save-button')
+      .assert.containsText('#unit-of-measurement-label-' + criterion1.title + '-' + dataSource1.reference, unitLabel)
+
+      .click('#edit-unit-of-measurement-' + criterion1.title + '-' + dataSource1.reference)
+      .click('#unit-of-measurement-selector')
+      .click('option[label="Proportion (decimal)"]')
+      .click('#uom-save-button')
+      .assert.containsText('#unit-of-measurement-label-' + criterion1.title + '-' + dataSource1.reference, 'Proportion')
+      .useXpath()
+      .assert.containsText(firstCell, 'Missing or invalid input')
+      .useCss()
+      ;
+  },
+
+  'Setting the strength of evidence and uncertainties': function(browser) {
+    const strength = 'very stong';
+    const uncertainties = 'but also very uncertain';
+
+    createInputDefault(browser);
+    browser
+      .click('#enter-data-button')
+      .waitForElementVisible('#manual-input-header-step2')
+      .click('#edit-soe-unc-c1-ref1')
+      .waitForElementVisible('#strength-of-evidence-input')
+      .setValue('#strength-of-evidence-input', strength)
+      .setValue('#uncertainties-input', uncertainties)
+      .click('#save-soe-unc-button')
+      .assert.containsText('#strength-of-evidence-c1-ref1', 'SoE: ' + strength)
+      .assert.containsText('#uncertainties-c1-ref1', 'Unc: ' + uncertainties)
+      ;
   }
 };

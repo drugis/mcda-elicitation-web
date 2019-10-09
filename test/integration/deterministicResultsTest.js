@@ -91,5 +91,25 @@ module.exports = {
     checkResetMeasurementValue(browser, measurementValuePath);
     util.isElementNotPresent(browser, '//*[@id="recalculated-case-table"]');
     util.isElementNotPresent(browser, '//*[@id="recalculated-case-plot"]');
+  },
+
+  'Switch alternative and criterion for one-way sensitivity analysis measurements plot': function(browser) {
+    browser
+      .click('#measurements-alternative-selector')
+      .click('option[label="Fluoxetine"]')
+      .assert.containsText('#measurements-alternative-selector', 'Fluoxetine')
+
+      .click('#measurements-criterion-selector')
+      .click('option[label="Nausea\ ADRs"]')
+      .assert.containsText('#measurements-criterion-selector', 'Nausea\ ADRs')
+      ;
+  },
+
+  'Switch criterion for one-way sensitivity analysis preferences plot': function(browser) {
+    browser
+      .click('#preferences-criterion-selector')
+      .click('option[label="Nausea\ ADRs"]')
+      .assert.containsText('#preferences-criterion-selector', 'Nausea\ ADRs')
+      ;
   }
 };
