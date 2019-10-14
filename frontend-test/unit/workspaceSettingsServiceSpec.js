@@ -16,7 +16,8 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
       calculationMethod: 'median',
       showPercentages: true,
       effectsDisplay: 'deterministic',
-      hasNoEffects: false
+      hasNoEffects: false,
+      isRelativeProblem: false
     };
     var workspaceSettingsResourceMock = jasmine.createSpyObj('WorkspaceSettingsResource', ['get', 'put']);
 
@@ -167,6 +168,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
     describe('getWorkspaceSettings', function() {
       it('should return workspace settings and change the display to SMAA if there are no effects in the performance table', function() {
         var performanceTable = [{
+          alternative: 'alternativeId',
           performance: {
             distribution: {}
           }
@@ -182,6 +184,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
 
       it('should return workspace settings and keep the display as "deterministic" if there are effects in the performance table', function() {
         var performanceTable = [{
+          alternative: 'alternativeId',
           performance: {
             effect: {}
           }
@@ -197,6 +200,20 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
         var result = workspaceSettingsService.getWorkspaceSettings();
         
         var expectedResult = DEFAULT_SETTINGS;
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should set the isRelativeProblem parameter to TRUE if the problem is purely relative', function() {
+        var performanceTable = [{
+          performance: {
+            effect: {}
+          }
+        }];
+
+        var result = workspaceSettingsService.getWorkspaceSettings(performanceTable);
+
+        var expectedResult = angular.copy(DEFAULT_SETTINGS);
+        expectedResult.isRelativeProblem = true;
         expect(result).toEqual(expectedResult);
       });
     });

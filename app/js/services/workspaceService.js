@@ -3,12 +3,14 @@ define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
     '$q',
     'PataviResultsService',
+    'PerformanceTableService',
     'significantDigits'
   ];
 
   var WorkspaceService = function(
     $q,
     PataviResultsService,
+    PerformanceTableService,
     significantDigits
   ) {
     function getObservedScales(problem) {
@@ -70,6 +72,13 @@ define(['lodash', 'angular'], function(_, angular) {
       });
     }
 
+    function percentifyProblem(problem) {
+      var criteriaWithUpdatedDataSources = updateDataSources(problem.criteria, percentifyDataSource);
+      return _.merge({}, problem, {
+        criteria: criteriaWithUpdatedDataSources
+      });
+    }
+
     function updateDataSources(criteria, fn) {
       return _.mapValues(criteria, function(criterion) {
         return _.extend({}, criterion, {
@@ -104,15 +113,25 @@ define(['lodash', 'angular'], function(_, angular) {
           type: 'percentage'
         };
         if (newDataSource.pvf) {
-          if (newDataSource.pvf.range) {
-            newDataSource.pvf.range = _.map(newDataSource.pvf.range, times100);
-          }
-          if (newDataSource.pvf.cutoffs) {
-            newDataSource.pvf.cutoffs = _.map(newDataSource.pvf.cutoffs, times100);
-          }
+          newDataSource.pvf = percentifyPVF(newDataSource.pvf);
+        }
+      } else if (dataSource.unitOfMeasurement.type === 'percentage') {
+        if (newDataSource.pvf) {
+          newDataSource.pvf = percentifyPVF(newDataSource.pvf);
         }
       }
       return newDataSource;
+    }
+
+    function percentifyPVF(pvf) {
+      var newPVF = angular.copy(pvf);
+      if (pvf.range) {
+        newPVF.range = _.map(pvf.range, times100);
+      }
+      if (pvf.cutoffs) {
+        newPVF.cutoffs = _.map(pvf.cutoffs, times100);
+      }
+      return newPVF;
     }
 
     function dePercentifyCriteria(baseState) {
@@ -124,6 +143,13 @@ define(['lodash', 'angular'], function(_, angular) {
       });
     }
 
+    function dePercentifyProblem(problem) {
+      var criteriaWithUpdatedDataSources = updateDataSources(problem.criteria, dePercentifyDataSource);
+      return _.merge({}, problem, {
+        criteria: criteriaWithUpdatedDataSources
+      });
+    }
+
     function dePercentifyDataSource(dataSource) {
       var newDataSource = angular.copy(dataSource);
       if (dataSource.unitOfMeasurement.type === 'percentage') {
@@ -132,14 +158,6 @@ define(['lodash', 'angular'], function(_, angular) {
           type: 'decimal',
           label: 'Proportion'
         };
-        if (newDataSource.pvf) {
-          if (newDataSource.pvf.range) {
-            newDataSource.pvf.range = _.map(newDataSource.pvf.range, div100);
-          }
-          if (newDataSource.pvf.cutoffs) {
-            newDataSource.pvf.cutoffs = _.map(newDataSource.pvf.cutoffs, div100);
-          }
-        }
       }
       return newDataSource;
     }
@@ -147,11 +165,6 @@ define(['lodash', 'angular'], function(_, angular) {
     function times100(value) {
       if (value === null) { return; } //prevent empty cells from becoming 0
       return significantDigits(value * 100, 1);
-    }
-
-    function div100(value) {
-      if (value === null) { return; }
-      return significantDigits(value / 100, 1);
     }
 
     function reduceProblem(problem) {
@@ -169,8 +182,8 @@ define(['lodash', 'angular'], function(_, angular) {
         problem: mergeBaseAndSubProblem(baseProblem, subProblem.definition)
       }, scenario.state);
       newState.problem.preferences = scenario.state.prefs;
-      newState.problem.criteria = _.mapValues(newState.problem.criteria, function(criterion, key) {
-        return _.merge({}, criterion, _.omit(baseProblem.criteria[key], ['pvf', 'dataSources']));
+      newState.problem.criteria = _.mapValues(newState.problem.criteria, function(criterion, criterionId) {
+        return _.merge({}, criterion, _.omit(baseProblem.criteria[criterionId], ['pvf', 'dataSources']));
         // omit because we don't want the base problem pvf to overwrite the current one
       });
       newState.problem.alternatives = _.mapValues(newState.problem.alternatives, function(alternative, key) {
@@ -184,11 +197,34 @@ define(['lodash', 'angular'], function(_, angular) {
       var newProblem = _.cloneDeep(problem);
       _.forEach(newProblem.criteria, function(criterion) {
         var scale = observedScales[criterion.dataSources[0].id];
+        var effects = PerformanceTableService.getEffectValues(problem.performanceTable, criterion.dataSources[0]);
+        var rangeDistributionValues = PerformanceTableService.getRangeDistributionValues(problem.performanceTable, criterion.dataSources[0]);
+
         criterion.dataSources[0].pvf = _.merge({
-          range: getMinMax(scale)
+          range: getMinMax(scale, effects.concat(rangeDistributionValues))
         }, criterion.dataSources[0].pvf);
       });
       return newProblem;
+    }
+
+    function getMinMax(scalesByAlternative, effectAndRangeDistributionValues) {
+      var allValues = [].concat(effectAndRangeDistributionValues);
+      _.forEach(scalesByAlternative, function(scale) {
+        _.forEach(scale, function(value) {
+          if (value !== null) {
+            allValues.push(value);
+          }
+        });
+      });
+
+      var minimum = Math.min.apply(null, allValues);
+      var maximum = Math.max.apply(null, allValues);
+
+      if (minimum === maximum) {
+        minimum -= Math.abs(minimum) * 0.001;
+        maximum += Math.abs(maximum) * 0.001;
+      }
+      return [minimum, maximum];
     }
 
     function mergeBaseAndSubProblem(baseProblem, subProblemDefinition) {
@@ -320,26 +356,6 @@ define(['lodash', 'angular'], function(_, angular) {
       }, {});
     }
 
-    function getMinMax(scales) {
-      var minimum = Infinity;
-      var maximum = -Infinity;
-      _.forEach(scales, function(scale) {
-        _.forEach(scale, function(value) {
-          if (value !== null && value < minimum) {
-            minimum = value;
-          }
-          if (value !== null && value > maximum) {
-            maximum = value;
-          }
-        });
-      });
-      if (minimum === maximum) {
-        minimum -= Math.abs(minimum) * 0.001;
-        maximum += Math.abs(maximum) * 0.001;
-      }
-      return [minimum, maximum];
-    }
-
     function filterScenariosWithResults(baseProblem, currentSubProblem, scenarios) {
       return _.filter(scenarios, function(scenario) {
         var state = buildAggregateState(baseProblem, currentSubProblem, scenario);
@@ -349,7 +365,7 @@ define(['lodash', 'angular'], function(_, angular) {
       });
     }
 
-    function hasPVFDirection(criterion){
+    function hasPVFDirection(criterion) {
       return !criterion.dataSources[0].pvf || !criterion.dataSources[0].pvf.direction;
     }
     /*
@@ -694,19 +710,21 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     return {
+      addTheoreticalScales: addTheoreticalScales,
+      buildAggregateState: buildAggregateState,
+      checkForMissingValuesInPerformanceTable: checkForMissingValuesInPerformanceTable,
+      dePercentifyCriteria: dePercentifyCriteria,
+      dePercentifyProblem: dePercentifyProblem,
+      filterScenariosWithResults: filterScenariosWithResults,
       getObservedScales: getObservedScales,
+      hasNoStochasticResults: hasNoStochasticResults,
+      mergeBaseAndSubProblem: mergeBaseAndSubProblem,
+      percentifyCriteria: percentifyCriteria,
+      percentifyProblem: percentifyProblem,
       percentifyScales: percentifyScales,
       reduceProblem: reduceProblem,
-      buildAggregateState: buildAggregateState,
-      mergeBaseAndSubProblem: mergeBaseAndSubProblem,
       setDefaultObservedScales: setDefaultObservedScales,
-      filterScenariosWithResults: filterScenariosWithResults,
-      validateWorkspace: validateWorkspace,
-      addTheoreticalScales: addTheoreticalScales,
-      percentifyCriteria: percentifyCriteria,
-      dePercentifyCriteria: dePercentifyCriteria,
-      hasNoStochasticResults: hasNoStochasticResults,
-      checkForMissingValuesInPerformanceTable: checkForMissingValuesInPerformanceTable
+      validateWorkspace: validateWorkspace
     };
   };
 

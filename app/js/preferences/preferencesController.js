@@ -1,5 +1,12 @@
 'use strict';
-define(['lodash', 'clipboard'], function(_, Clipboard) {
+define([
+  'lodash',
+  'clipboard',
+  'jquery'
+], function(
+  _,
+  Clipboard,
+  $) {
 
   var dependencies = [
     '$scope',
@@ -12,7 +19,7 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     'PageTitleService',
     'PreferencesService',
     'TaskDependencies',
-    'currentScenario'
+    'WorkspaceSettingsService'
   ];
   var PreferencesController = function(
     $scope,
@@ -25,31 +32,25 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
     PageTitleService,
     PreferencesService,
     TaskDependencies,
-    currentScenario
+    WorkspaceSettingsService
   ) {
 
     // functions
     $scope.isPVFDefined = isPVFDefined;
     $scope.isAccessible = isAccessible;
     $scope.editScenarioTitle = editScenarioTitle;
+    $scope.resetWeights = resetWeights;
 
     // init
     $scope.pvf = PartialValueFunctionService;
     $scope.criteriaHavePvf = true;
-    $scope.scenario = currentScenario;
     $scope.scales = $scope.workspace.scales;
     $scope.pvfCoordinates = {};
-    $scope.scalesPromise.then(function() {
-      reloadOrderings();
-      $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinates($scope.aggregateState.problem.criteria);
-    });
-    $scope.$on('elicit.settingsChanged', function() {
-      reloadOrderings();
-      $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinates($scope.aggregateState.problem.criteria);
-    });
+    $scope.scalesPromise.then(resetPvfCoordinates);
+    $scope.$on('elicit.settingsChanged', resetPvfCoordinates);
+
     createIsSafeObject();
     $scope.criteriaHavePvf = doAllCriteriaHavePvf();
-    reloadOrderings();
 
     new Clipboard('.clipboard-button');
     $scope.isOrdinal = _.some($scope.scenario.state.prefs, function(pref) {
@@ -58,8 +59,26 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
 
     PageTitleService.setPageTitle('PreferencesController', ($scope.aggregateState.problem.title || $scope.workspace.title) + '\'s preferences');
 
+    function resetWeights() {
+      $scope.scenario.state.prefs = [];
+      $scope.importance = PreferencesService.buildImportance($scope.criteria, $scope.scenario.state.prefs);
+      $scope.scenario.$save($stateParams, function() {
+        $scope.$emit('elicit.resultsAccessible');
+        $scope.problem = WorkspaceSettingsService.usePercentage() ? $scope.aggregateState.percentified.problem : $scope.aggregateState.dePercentified.problem;
+        createIsSafeObject();
+        $('div.tooltip:visible').hide();
+        $('#resetWeightsButton').removeClass('open');
+      });
+    }
+
+    function resetPvfCoordinates() {
+      $scope.problem = WorkspaceSettingsService.usePercentage() ? $scope.aggregateState.percentified.problem : $scope.aggregateState.dePercentified.problem;
+      reloadOrderings();
+      $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinates($scope.problem.criteria);
+    }
+
     function reloadOrderings() {
-      OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(orderings) {
+      OrderingService.getOrderedCriteriaAndAlternatives($scope.problem, $stateParams).then(function(orderings) {
         $scope.alternatives = orderings.alternatives;
         $scope.criteria = orderings.criteria;
         var preferences = $scope.scenario.state.prefs;
@@ -113,17 +132,17 @@ define(['lodash', 'clipboard'], function(_, Clipboard) {
       return resets ? 'Saving this preference will reset: ' + resets : null;
     }
 
-    function isTaskSafe(taskId) {
-      var safe = TaskDependencies.isSafe($scope.tasks[taskId], $scope.aggregateState);
-      safe.tooltip = willReset(safe);
-      return safe;
-    }
-
     function createIsSafeObject() {
       $scope.isSafe = _.reduce($scope.tasks, function(accum, task) {
         accum[task.id] = isTaskSafe(task.id);
         return accum;
       }, {});
+    }
+
+    function isTaskSafe(taskId) {
+      var safe = TaskDependencies.isSafe($scope.tasks[taskId], $scope.aggregateState);
+      safe.tooltip = willReset(safe);
+      return safe;
     }
 
   };

@@ -46,7 +46,9 @@ define([
 
         state = jasmine.createSpyObj('$state', ['go']);
         scope.aggregateState = {
-          problem: problem
+          dePercentified: {
+            problem: problem
+          }
         };
         $controller('OrdinalSwingController', {
           $scope: scope,

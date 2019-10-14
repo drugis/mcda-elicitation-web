@@ -61,26 +61,22 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.editMode = editMode;
     var orderedCriteria;
 
-    // $scope.$watch('originalScales', function(newScales, oldScales) {
-    //   if (newScales && oldScales && newScales.observed === oldScales.observed) { return; }
-    //   $scope.scales = angular.copy(newScales.base);
-    //   initializeScales();
-    // }, true);
-
     $scope.$on('elicit.settingsChanged', function() {
       getWorkspaceSettings();
       setProblem();
       setTableRows();
       initializeScales();
+      $scope.criteriaByDataSource = SubProblemService.getCriteriaByDataSource($scope.problem.criteria);
     });
 
     function getWorkspaceSettings() {
       $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
       $scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
+      $scope.isValueView = WorkspaceSettingsService.isValueView();
     }
 
     function createProblemConfiguration() {
-      var subProblemCommand = SubProblemService.createSubProblemCommand($scope.subProblemState, $scope.choices, $scope.problem);
+      var subProblemCommand = SubProblemService.createSubProblemCommand($scope.subProblemState, $scope.choices, $scope.problem, problem);
       SubProblemResource.save(_.omit($stateParams, ['id', 'problemId', 'userUid']), subProblemCommand)
         .$promise.then(function(newProblem) {
           ScenarioResource.query(_.extend({}, _.omit($stateParams, 'id'), {
@@ -113,6 +109,13 @@ define(['lodash', 'angular'], function(_, angular) {
 
         updateInclusions();
         checkDuplicateTitle($scope.subProblemState.title);
+
+        $scope.isCellAnalysisViable = EffectsTableService.createIsCellAnalysisViable(
+          $scope.tableRows,
+          $scope.alternatives,
+          $scope.effectsTableInfo,
+          $scope.scales
+        );
       });
     }
 
@@ -180,7 +183,6 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.subProblemState.title = titleCache;
     }
 
-    // private functions
     function checkDuplicateTitle(title) {
       $scope.isTitleDuplicate = _.find($scope.subProblems, ['title', title]);
     }

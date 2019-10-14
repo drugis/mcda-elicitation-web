@@ -187,7 +187,7 @@ function exampleProblem() {
         }
       }
     }],
-    schemaVersion: '1.4.1'
+    schemaVersion: '1.4.2'
   };
 }
 
@@ -457,7 +457,7 @@ function ordinalTestProblem() {
         }
       }
     }],
-    schemaVersion: '1.4.1'
+    schemaVersion: '1.4.2'
   };
 }
 

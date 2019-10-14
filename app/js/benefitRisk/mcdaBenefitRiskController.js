@@ -49,8 +49,8 @@ define(['lodash', 'angular'], function(_, angular) {
     // init
     var baseProblem = angular.copy($scope.workspace.problem);
     var baseState = { problem: baseProblem };
-    $scope.percentifiedBaseState = WorkspaceService.percentifyCriteria(baseState);
-    $scope.dePercentifiedBaseState = WorkspaceService.dePercentifyCriteria(baseState);
+    var percentifiedBaseState = WorkspaceService.percentifyCriteria(baseState);
+    var dePercentifiedBaseState = WorkspaceService.dePercentifyCriteria(baseState);
     $scope.isEditTitleVisible = false;
     $scope.scenarioTitle = {};
     $scope.selections = {};
@@ -58,11 +58,7 @@ define(['lodash', 'angular'], function(_, angular) {
     $scope.tasks = _.keyBy(Tasks.available, 'id');
 
     $scope.scalesPromise = WorkspaceService.getObservedScales(baseProblem).then(function(observedScales) {
-      $scope.workspace.scales.base = observedScales;
-      $scope.workspace.scales.basePercentified = WorkspaceService.percentifyScales($scope.percentifiedBaseState.problem.criteria, observedScales);
-      $scope.percentifiedBaseState = addScales($scope.percentifiedBaseState, $scope.workspace.scales.basePercentified);
-      $scope.dePercentifiedBaseState = addScales($scope.dePercentifiedBaseState, $scope.workspace.scales.base);
-      initState(currentScenario);
+      initState(observedScales, currentScenario);
     });
     $scope.effectsTableInfo = EffectsTableService.createEffectsTableInfo(baseProblem.performanceTable);
 
@@ -78,46 +74,50 @@ define(['lodash', 'angular'], function(_, angular) {
       $scope.deregisterTransitionListener();
     });
     $scope.$on('elicit.settingsChanged', function() {
-      updateState();
+      updateScales(); // prevent event as first argument
     });
     $scope.$on('elicit.resultsAccessible', function(event, scenario) {
-      $scope.scenario = scenario;
-      updateAggregateState(scenario);
-      updateState();
+      updateScales(scenario);
     });
+
+    function initState(observedScales, scenario) {
+      $scope.workspace.scales.base = observedScales;
+      $scope.workspace.scales.basePercentified = WorkspaceService.percentifyScales(percentifiedBaseState.problem.criteria, observedScales);
+      $scope.baseState = {
+        percentified: addScales(percentifiedBaseState, $scope.workspace.scales.basePercentified),
+        dePercentified: addScales(dePercentifiedBaseState, $scope.workspace.scales.base)
+      };
+      updateScales(scenario);
+      $scope.hasMissingValues = WorkspaceService.checkForMissingValuesInPerformanceTable($scope.aggregateState.problem.performanceTable);
+      updateTaskAccessibility();
+    }
 
     function addScales(state, scales) {
       return _.merge({}, state, {
         problem: WorkspaceService.setDefaultObservedScales(state.problem, scales)
       });
     }
+    
+    function updateScales(scenario) {
+      if (scenario) {
+        $scope.scenario = scenario;
+      } else {
+        scenario = $scope.scenario;
+      }
 
-    function initState(scenario) {
-      $scope.scenario = scenario;
-      updateAggregateState(scenario);
+      var aggregateState = WorkspaceService.buildAggregateState($scope.baseState.dePercentified.problem, currentSubProblem, scenario);
+      aggregateState.percentified = WorkspaceService.percentifyCriteria(aggregateState);
+      aggregateState.dePercentified = WorkspaceService.dePercentifyCriteria(aggregateState);
 
-      updateState();
-      $scope.hasMissingValues = WorkspaceService.checkForMissingValuesInPerformanceTable($scope.aggregateState.problem.performanceTable);
-      updateTaskAccessibility();
-    }
-
-    function updateState() {
+      $scope.aggregateState = aggregateState;
       if (WorkspaceSettingsService.usePercentage()) {
         $scope.workspace.scales.observed = $scope.workspace.scales.basePercentified;
-        $scope.aggregateState = $scope.percentifiedBaseState;
       } else {
         $scope.workspace.scales.observed = $scope.workspace.scales.base;
-        $scope.aggregateState = $scope.dePercentifiedBaseState;
       }
-      $scope.hasNoStochasticResults = WorkspaceService.hasNoStochasticResults($scope.aggregateState);
+
       updateScenarios();
     }
-
-    function updateAggregateState(scenario){
-      $scope.percentifiedBaseState = WorkspaceService.buildAggregateState($scope.percentifiedBaseState.problem, currentSubProblem, scenario);
-      $scope.dePercentifiedBaseState = WorkspaceService.buildAggregateState($scope.dePercentifiedBaseState.problem, currentSubProblem, scenario);
-    }
-
 
     function updateScenarios() {
       ScenarioResource.query(_.omit($stateParams, ['id'])).$promise.then(function(scenarios) {

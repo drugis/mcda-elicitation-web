@@ -58,7 +58,9 @@ define([
       sliderOptions = {};
       scope = $rootScope.$new();
       scope.aggregateState = {
-        problem: exampleProblem()
+        dePercentified: {
+          problem: exampleProblem()
+        }
       };
       currentScenario = jasmine.createSpyObj('currentScenario', ['$save']);
       currentScenario.state = {

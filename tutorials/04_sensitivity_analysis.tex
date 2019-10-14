@@ -41,7 +41,7 @@ MCDA requires exact preference weights. However, in most benefit-risk assessment
 \noindent \faGraduationCap \, Widening the scale ranges of your criteria is one way of incorporating uncertainty in your analyses. Since the partial value function for a criterion by definition returns an extreme value (either 0 or 1) at the minimum or maximum value of the scale range, measurements at these extremes will therefore have either maximally positive or maximally negative value. If you widen your scale ranges so that your measurements are never at these extreme ends, they will always have some positive contribution to that alternative’s value.
 \newline
 
-\noindent \leftpointright \, Let’s see what happens if we want to look at the consequences when the point estimate for ARR is too high for IFN $\beta$-1a 30$\mu$g. Click on this value in the effects table at the top of the page, and change it to approximately 0.353: the lowest value within the 95\% C.I. (Figure \ref{fig:changeARR}). Click the ‘Recalculate value profiles’ button below the effects table, and take a look at the new results. As it turns out, this single change is not sufficient to change the benefit-risk balance.
+\noindent \leftpointright \, Let’s see what happens if we want to consider the case where the point estimate for ARR is too high for IFN $\beta$-1a 30$\mu$g. Click on this value in the effects table at the top of the page, and change it to approximately 0.353: the lowest value within the 95\% C.I. (Figure \ref{fig:changeARR}). Click the ‘Recalculate value profiles’ button below the effects table, and take a look at the new results. As it turns out, this single change is not sufficient to change the benefit-risk balance.
 \newline
 
 \begin{figure}[!h]
@@ -74,7 +74,7 @@ MCDA requires exact preference weights. However, in most benefit-risk assessment
 \end{figure}
 
 \noindent \faGraduationCap \, SMAA models explore uncertainties in the measurements and preferences by systematically varying their values\footnotemark. The set of variations (of which there can be hundreds of thousands) can be analysed in several ways. We here use the rank acceptability: for each variation the alternatives are ranked according to their calculated value, and then the proportion of variations in which an alternative had each specific rank is reported.
-\footnotetext{SMAA samples from probabilistic distributions for these values - for a more in-depth explanation of the process, see the MCDA manual and Tervonen \& Lahdelma (2007)}
+\footnotetext{SMAA samples from probabilistic distributions for these values - for a more in-depth explanation of the process, see the \href{https://mcda.drugis.org/manual.html}{MCDA manual} and Tervonen \& Lahdelma (2007)}
 \newline
 
 \noindent \leftpointright \, Go to the ‘Preferences’ tab, create a new scenario called ‘100-75-50-25’. Set the partial value functions as before, and use Precise Swing to set the Criteria weights as:  ARR 100\%, Hep. AE 75\%, Cut. AE 50\% and Inf. AE 25\%. Go to the ‘Deterministic results’ tab, and you should see that the value of both alternatives is approximately equal. Now navigate to the ‘SMAA’ tab and observe the results. You should see that each alternative is ranked as best in roughly 50\% of all cases. This is consistent with the deterministic analysis, where the value for both alternatives is approximately equal.

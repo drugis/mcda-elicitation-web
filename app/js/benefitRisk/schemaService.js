@@ -3,11 +3,13 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
   var dependencies = [
     'currentSchemaVersion',
-    'generateUuid'
+    'generateUuid',
+    'getDataSourcesById'
   ];
   var SchemaService = function(
     currentSchemaVersion,
-    generateUuid
+    generateUuid,
+    getDataSourcesById
   ) {
     /***** Changes 
      * 1.0.0 Introduction of data sources
@@ -24,6 +26,7 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
      * 1.3.4 Add 'decimal' as scale option to input
      * 1.4.0 Add type to unit of measurement; Scales with null ranges updated to minus/plus infinity and are mandatory
      * 1.4.1 Add ranges
+     * 1.4.2 Add possibility to make constrained normal distributions
      * *****/
 
     function updateProblemToCurrentSchema(problem) {
@@ -72,6 +75,10 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
         newProblem.schemaVersion = '1.4.1';
       }
 
+      if (newProblem.schemaVersion === '1.4.1') {
+        newProblem.schemaVersion = '1.4.2';
+      }
+      
       if (newProblem.schemaVersion === currentSchemaVersion) {
         var error = isInvalidSchema(newProblem);
 
@@ -344,16 +351,6 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
         entry.performance.distribution.value = entry.performance.distribution.value / 100;
       }
       return entry;
-    }
-
-    function getDataSourcesById(criteria) {
-      return _(criteria)
-        .map(function(criterion) {
-          return criterion.dataSources;
-        }, [])
-        .flatten()
-        .keyBy('id')
-        .value();
     }
 
     function doesEntryNeedUpdating(entry, dataSource) {

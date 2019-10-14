@@ -66,7 +66,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
 
     beforeEach(inject(($q) => {
       WorkspaceService.filterScenariosWithResults.and.returnValue(scenariosWithResults);
-      WorkspaceService.buildAggregateState.and.returnValue(baseAggregateState);
+      WorkspaceService.buildAggregateState.and.returnValue(angular.copy(baseAggregateState));
       stateMock.current = {
         name: 'evidence'
       };
@@ -239,9 +239,9 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         observedScalesDefer.promise.then(() => {
           expect(scope.workspace.scales.base).toBe(observedScales);
           expect(scope.workspace.scales.basePercentified).toBe(percentifiedScales);
-          expect(scope.aggregateState).toEqual(baseAggregateState);
-          expect(scope.percentifiedBaseState).toEqual(baseAggregateState);
-          expect(scope.dePercentifiedBaseState).toEqual(baseAggregateState);
+          expect(_.omit(scope.aggregateState, ['percentified', 'dePercentified'])).toEqual(baseAggregateState);
+          expect(scope.aggregateState.percentified).toEqual(stateWithPercentifiedCriteria);
+          expect(scope.aggregateState.dePercentified).toEqual(baseAggregateState);
           done();
         });
         scope.$apply();

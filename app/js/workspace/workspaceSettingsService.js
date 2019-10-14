@@ -14,7 +14,8 @@ define(['angular', 'lodash'], function(angular, _) {
       calculationMethod: 'median',
       showPercentages: true,
       effectsDisplay: 'deterministic',
-      hasNoEffects: false
+      hasNoEffects: false,
+      isRelativeProblem: false
     };
 
     var DEFAULT_TOGGLED_COLUMNS = {
@@ -30,11 +31,11 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function loadWorkspaceSettings(params) {
       return WorkspaceSettingsResource.get(params).$promise.then(function(result) {
-        workspaceSettings = result.settings ? result.settings : DEFAULT_SETTINGS;
+        workspaceSettings = result.settings ? result.settings : angular.copy(DEFAULT_SETTINGS);
         if (!hasValidView(workspaceSettings)) {
           workspaceSettings.effectsDisplay = 'deterministic';
         }
-        toggledColumns = result.toggledColumns ? result.toggledColumns : DEFAULT_TOGGLED_COLUMNS;
+        toggledColumns = result.toggledColumns ? result.toggledColumns : angular.copy(DEFAULT_TOGGLED_COLUMNS);
       });
     }
 
@@ -52,18 +53,35 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function getWorkspaceSettings(performanceTable) {
+      setHasNoEffects(performanceTable);
+      setHasNoAlternatives(performanceTable);
+      return angular.copy(workspaceSettings);
+    }
+
+    function setHasNoEffects(performanceTable) {
       if (performanceTable && !hasEffect(performanceTable)) {
-        if(workspaceSettings.effectsDisplay === 'deterministic'){
+        if (workspaceSettings.effectsDisplay === 'deterministic') {
           workspaceSettings.effectsDisplay = 'smaa';
         }
         workspaceSettings.hasNoEffects = true;
-      }
-      return angular.copy(workspaceSettings);
+      } 
     }
 
     function hasEffect(performanceTable) {
       return _.some(performanceTable, function(entry) {
         return entry.performance.effect;
+      });
+    }
+
+    function setHasNoAlternatives(performanceTable){
+      if(performanceTable && !hasAlternative(performanceTable)){
+        workspaceSettings.isRelativeProblem = true;
+      }
+    }
+
+    function hasAlternative(performanceTable) {
+      return _.some(performanceTable, function(entry) {
+        return entry.alternative;
       });
     }
 

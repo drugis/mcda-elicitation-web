@@ -14,8 +14,8 @@ var httpsOptions = {
 
 try {
   httpsOptions.ca = fs.readFileSync(process.env.PATAVI_CA);
-} catch (e) {
-  logger.warn('could not read patavi certivicate authority at: ' + process.env.PATAVI_CA);
+} catch (error) {
+  logger.debug('Certificate autority file not found at: ' + process.env.PATAVI_CA);
 }
 
 function createPataviTask(problem, callback) {
@@ -27,6 +27,7 @@ function createPataviTask(problem, callback) {
       'Content-Type': 'application/json',
     }
   };
+
   var postReq = https.request(_.extend(httpsOptions, reqOptions), function(res) {
     logger.debug('patavi service task created');
     if (res.statusCode === httpStatus.CREATED && res.headers.location) {

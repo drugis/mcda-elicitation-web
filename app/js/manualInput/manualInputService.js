@@ -91,7 +91,9 @@ define(['lodash', 'angular'], function(_, angular) {
       var updatetableParameters = [
         'Value',
         'Lower bound',
-        'Upper bound'
+        'Upper bound',
+        'Standard error',
+        'Mean'
       ];
       if (_.includes(updatetableParameters, cell.inputParameters[parameter].label)) {
         return getNewConstraints(cell, unitOfMeasurement, parameter);
@@ -159,7 +161,11 @@ define(['lodash', 'angular'], function(_, angular) {
         if (hasOldInputDataAvailable(oldInputData, dataSource.id, alternative.id)) {
           accum[alternative.id] = oldInputData[dataSource.id][alternative.id];
         } else {
-          accum[alternative.id] = {};
+          accum[alternative.id] = {
+            inputParameters: {
+              id: 'value'
+            }
+          };
         }
         accum[alternative.id].isInvalid = true;
         return accum;
@@ -212,7 +218,7 @@ define(['lodash', 'angular'], function(_, angular) {
           'title',
           'description'
         ]);
-        if (useFavorability){
+        if (useFavorability) {
           newCriterion.isFavorable = criterion.isFavorable;
         }
         newCriterion.dataSources = _.map(criterion.dataSources, buildDataSource);
@@ -330,12 +336,22 @@ define(['lodash', 'angular'], function(_, angular) {
           }
           accum.effect[dataSourceForEntry.id][alternative.id] = createCell('effect', tableEntry);
           accum.distribution[dataSourceForEntry.id][alternative.id] = createCell('distribution', tableEntry);
+          if (isPercentageRangeDistribution(accum.distribution[dataSourceForEntry.id][alternative.id], dataSourceForEntry)) {
+            accum.distribution[dataSourceForEntry.id][alternative.id].firstParameter *= 100;
+            accum.distribution[dataSourceForEntry.id][alternative.id].secondParameter *= 100;
+          }
         }
         return accum;
       }, {
-          effect: {},
-          distribution: {}
-        });
+        effect: {},
+        distribution: {}
+      });
+    }
+
+    function isPercentageRangeDistribution(distribution, dataSource) {
+      return distribution &&
+        distribution.inputParameters.id === 'range' &&
+        dataSource.unitOfMeasurement.selectedOption.type === 'percentage';
     }
 
     function createCell(inputType, tableEntry) {
@@ -382,7 +398,11 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function determineInputType(input) {
       if (input.hasOwnProperty('lowerBound')) {
-        return 'valueCI';
+        if (input.hasOwnProperty('value')) {
+          return 'valueCI';
+        } else {
+          return 'range';
+        }
       } else {
         return 'value';
       }
@@ -395,7 +415,8 @@ define(['lodash', 'angular'], function(_, angular) {
         dbeta: 'beta',
         exact: 'value',
         dsurv: 'gamma',
-        dt: 'value'
+        dt: 'value',
+        range: 'range'
       };
       if (performance.distribution.type === 'empty') {
         return performance.distribution.value ? 'text' : 'empty';

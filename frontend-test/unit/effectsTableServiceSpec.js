@@ -5,17 +5,19 @@ define([
   'mcda/effectsTable/effectsTable'
 ], function(angular) {
   describe('EffectsTableService', function() {
-    var effectTableService;
+    var effectsTableService;
     var significantDigitsMock = function(value) {
       return value;
     };
+    var workspaceSettingsServiceMock = jasmine.createSpyObj('WorkspaceSettingsService', ['getWorkspaceSettings']);
 
     beforeEach(angular.mock.module('elicit.effectsTable', function($provide) {
       $provide.value('significantDigits', significantDigitsMock);
+      $provide.value('WorkspaceSettingsService', workspaceSettingsServiceMock);
     }));
 
     beforeEach(inject(function(EffectsTableService) {
-      effectTableService = EffectsTableService;
+      effectsTableService = EffectsTableService;
     }));
 
     describe('EffectsTableService', function() {
@@ -55,7 +57,7 @@ define([
               scale: [0, 1]
             }]
           }];
-          var result = effectTableService.buildEffectsTable(criteria);
+          var result = effectsTableService.buildEffectsTable(criteria);
           var expectedResult = [{
             isHeaderRow: true,
             headerText: 'Favorable effects'
@@ -125,7 +127,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId1: {
               isAbsolute: false,
@@ -147,7 +149,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId2: {
               isAbsolute: true,
@@ -180,7 +182,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId2: {
               isAbsolute: true,
@@ -214,7 +216,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId2: {
               isAbsolute: true,
@@ -247,7 +249,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId2: {
               isAbsolute: true,
@@ -280,7 +282,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId2: {
               isAbsolute: true,
@@ -313,7 +315,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId3: {
               isAbsolute: true,
@@ -330,7 +332,7 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for a normal distribution', function() {
+        it('should make a label for a non percentage normal distribution', function() {
           var performanceTable = [{
             criterion: 'criterionId4',
             alternative: 'alternativeId4',
@@ -345,7 +347,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId4: {
               isAbsolute: true,
@@ -354,6 +356,80 @@ define([
                   effectLabel: '',
                   effectValue: '',
                   distributionLabel: 'Normal(6, 2)',
+                  hasUncertainty: true
+                }
+              }
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should make a label for a percentage normal distribution', function() {
+          var performanceTable = [{
+            criterion: 'criterionId4',
+            alternative: 'alternativeId4',
+            dataSource: 'dsId4',
+            performance: {
+              distribution: {
+                type: 'dnorm',
+                parameters: {
+                  mu: 0.06,
+                  sigma: 0.02
+                },
+                input:{
+                  mu: 6,
+                  sigma: 2,
+                  scale: 'percentage'
+                }
+              }
+            }
+          }];
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            dsId4: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId4: {
+                  effectLabel: '',
+                  effectValue: '',
+                  distributionLabel: 'Normal(6%, 2%)',
+                  hasUncertainty: true
+                }
+              }
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should make a non percentage distribution label if the input is value samplesize', function(){
+          var performanceTable = [{
+            criterion: 'criterionId4',
+            alternative: 'alternativeId4',
+            dataSource: 'dsId4',
+            performance: {
+              distribution: {
+                type: 'dnorm',
+                parameters: {
+                  mu: 0.06,
+                  sigma: 0.02
+                },
+                input:{
+                  value: 6,
+                  sampleSize: 2,
+                  scale: 'percentage'
+                }
+              }
+            }
+          }];
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            dsId4: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId4: {
+                  effectLabel: '6% / 2',
+                  effectValue: '',
+                  distributionLabel: 'Normal(0.06, 0.02)',
                   hasUncertainty: true
                 }
               }
@@ -377,7 +453,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId5: {
               isAbsolute: true,
@@ -409,7 +485,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId5: {
               isAbsolute: true,
@@ -438,7 +514,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId5: {
               isAbsolute: true,
@@ -467,7 +543,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId8: {
               isAbsolute: true,
@@ -496,7 +572,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId8: {
               isAbsolute: true,
@@ -513,7 +589,7 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for a non-percentage range effect', function(){
+        it('should make a label for a non-percentage range effect', function() {
           var performanceTable = [{
             criterion: 'criterionId8',
             alternative: 'alternativeId8',
@@ -529,7 +605,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId8: {
               isAbsolute: true,
@@ -546,7 +622,7 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for a percentage range effect', function(){
+        it('should make a label for a percentage range effect', function() {
           var performanceTable = [{
             criterion: 'criterionId8',
             alternative: 'alternativeId8',
@@ -563,7 +639,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId8: {
               isAbsolute: true,
@@ -580,7 +656,7 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for a range distribution', function(){
+        it('should make a label for a range distribution', function() {
           var performanceTable = [{
             criterion: 'criterionId8',
             alternative: 'alternativeId8',
@@ -595,7 +671,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId8: {
               isAbsolute: true,
@@ -623,7 +699,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId8: {
               isAbsolute: true,
@@ -652,7 +728,7 @@ define([
               }
             }
           }];
-          var result = effectTableService.createEffectsTableInfo(performanceTable);
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
           var expectedResult = {
             dsId8: {
               isAbsolute: true,
@@ -683,7 +759,7 @@ define([
               }
             }
           };
-          var result = effectTableService.isStudyDataAvailable(effectsTableInfo);
+          var result = effectsTableService.isStudyDataAvailable(effectsTableInfo);
           expect(result).toBeTruthy();
         });
 
@@ -696,7 +772,7 @@ define([
               distributionType: 'relative'
             }
           };
-          var result = effectTableService.isStudyDataAvailable(effectsTableInfo);
+          var result = effectsTableService.isStudyDataAvailable(effectsTableInfo);
           expect(result).toBeFalsy();
 
         });
@@ -759,7 +835,7 @@ define([
             },
             dataSource: {
               foo: 'qux',
-              unitOfMeasurement:  {
+              unitOfMeasurement: {
                 label: 'not Proportion',
                 type: 'custom'
               },
@@ -782,11 +858,11 @@ define([
             }
           }];
 
-          var result = effectTableService.buildTableRows(criteria);
+          var result = effectsTableService.buildTableRows(criteria);
           expect(result).toEqual(expectedResult);
         });
 
-        it('should substiute null scales to -/+ infinity', function(){
+        it('should substiute null scales to -/+ infinity', function() {
           var criteria = [{
             id: 'crit1',
             isFavorable: true,
@@ -835,7 +911,7 @@ define([
             },
             dataSource: {
               foo: 'qux',
-              unitOfMeasurement:  {
+              unitOfMeasurement: {
                 label: 'not Proportion',
                 type: 'custom'
               },
@@ -843,7 +919,7 @@ define([
             }
           }];
 
-          var result = effectTableService.buildTableRows(criteria);
+          var result = effectsTableService.buildTableRows(criteria);
           expect(result).toEqual(expectedResult);
         });
       });
@@ -869,7 +945,7 @@ define([
             }
           };
           var scales;
-          var result = effectTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
+          var result = effectsTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
           var expectedResult = {
             ds1: {
               alt1: true
@@ -885,7 +961,7 @@ define([
           var rows = [{
             isHeaderRow: true
           }];
-          var result = effectTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
+          var result = effectsTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
           var expectedResult = {};
           expect(result).toEqual(expectedResult);
         });
@@ -905,7 +981,7 @@ define([
           var alternatives = [{
             id: 'alt1'
           }];
-          var result = effectTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
+          var result = effectsTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
           var expectedResult = {
             ds1: {
               alt1: true
@@ -934,7 +1010,7 @@ define([
             }
           };
           var scales;
-          var result = effectTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
+          var result = effectsTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
           var expectedResult = {
             ds1: {
               alt1: false
@@ -969,12 +1045,100 @@ define([
               }
             }
           };
-          var result = effectTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
+          var result = effectsTableService.createIsCellAnalysisViable(rows, alternatives, effectsTableInfo, scales);
           var expectedResult = {
             ds1: {
               alt1: true
             }
           };
+          expect(result).toEqual(expectedResult);
+        });
+      });
+
+      describe('getRoundedValue', function() {
+        it('should return  the input value rounded on 3 digits for values', function() {
+          var value = 0.4567890;
+          var result = effectsTableService.getRoundedValue(value);
+          var expectedResult = '0.457';
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should return null if the value is null', function() {
+          var value = null;
+          var result = effectsTableService.getRoundedValue(value);
+          expect(result).toBeNull();
+        });
+      });
+
+      describe('getRoundedScales', function() {
+        it('should return rounded scales', function() {
+          var scales = {
+            dataSourceId: {
+              alternativeId: {
+                '2.5%': 0.045,
+                '50%': 0.045,
+                '97.5%': 0.045
+              }
+            }
+          };
+
+          var result = effectsTableService.getRoundedScales(scales);
+
+          var expectedResult = {
+            dataSourceId: {
+              alternativeId: {
+                '2.5%': '0.045',
+                '50%': '0.045',
+                '97.5%': '0.045'
+              }
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
+      });
+
+      describe('getMedian', function() {
+        beforeEach(function() {
+          workspaceSettingsServiceMock.getWorkspaceSettings.calls.reset();
+          workspaceSettingsServiceMock.getWorkspaceSettings.and.returnValue({ calculationMethod: 'median' });
+        });
+
+        it('should return the median value', function() {
+          var scales = {
+            '50%': 0.4
+          };
+          var result = effectsTableService.getMedian(scales);
+          var expectedResult = '0.4';
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should return the mode', function() {
+          workspaceSettingsServiceMock.getWorkspaceSettings.and.returnValue({ calculationMethod: 'mode' });
+          var scales = {
+            mode: 0.05
+          };
+          var result = effectsTableService.getMedian(scales);
+          var expectedResult = '0.05';
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should return \'NA\' if the mode is NULL', function() {
+          workspaceSettingsServiceMock.getWorkspaceSettings.and.returnValue({ calculationMethod: 'mode' });
+          var scales = {
+            mode: null
+          };
+          var result = effectsTableService.getMedian(scales);
+          var expectedResult = 'NA';
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should return \'NA\' if the mode is UNDEFINED', function() {
+          workspaceSettingsServiceMock.getWorkspaceSettings.and.returnValue({ calculationMethod: 'mode' });
+          var scales = {
+            mode: undefined
+          };
+          var result = effectsTableService.getMedian(scales);
+          var expectedResult = 'NA';
           expect(result).toEqual(expectedResult);
         });
       });

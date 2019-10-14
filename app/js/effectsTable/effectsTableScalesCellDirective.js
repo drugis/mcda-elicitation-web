@@ -1,60 +1,30 @@
 'use strict';
-define(['lodash'], function(_) {
+define([], function() {
 
   var dependencies = [
-    '$filter',
-    'WorkspaceSettingsService'
+    'EffectsTableService'
   ];
 
   var EffectsTableScalesCellDirective = function(
-    $filter,
-    WorkspaceSettingsService) {
+    EffectsTableService
+  ) {
     return {
       restrict: 'E',
       scope: {
         'scales': '=',
-        'uncertainty': '=',
-        'theoreticalScale': '='
+        'uncertainty': '='
       },
-      template: '<div>{{median}}</div>' +
-        '<div class="uncertain" ng-show="uncertainty">{{lowerBound}}, {{upperBound}}</div>',
+      templateUrl: './effectsTableScalesCellDirective.html',
       link: function(scope) {
         scope.$watch('scales', initScales);
         scope.$on('elicit.settingsChanged', initScales);
 
         function initScales() {
-          scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
           if (scope.scales) {
-            scope.lowerBound = getRoundedValue(scope.scales['2.5%']);
-            scope.median = getRoundedValue(scope.workspaceSettings.effectsDisplay === 'mode' ? scope.scales.mode : scope.scales['50%']);
-            scope.upperBound = getRoundedValue(scope.scales['97.5%']);
+            scope.lowerBound = EffectsTableService.getRoundedValue(scope.scales['2.5%']);
+            scope.median = EffectsTableService.getMedian(scope.scales);
+            scope.upperBound = EffectsTableService.getRoundedValue(scope.scales['97.5%']);
           }
-        }
-
-        function getRoundedValue(value) {
-          if (value === null) {
-            return;
-          } else if (!canBePercentage()) {
-            return $filter('number')(value);
-          } else {
-            var numberOfDecimals = getNumberOfDecimals(value);
-            return $filter('number')(value, numberOfDecimals);
-          }
-        }
-
-        function canBePercentage() {
-          return _.isEqual(scope.theoreticalScale, [0, 1]);
-        }
-
-        function getNumberOfDecimals(value) {
-          var numberOfDecimals = 1;
-          if (Math.abs(value) < 0.01) {
-            ++numberOfDecimals;
-          }
-          if (!scope.workspaceSettings.showPercentage && Math.abs(value) < 1) {
-            numberOfDecimals += 2;
-          }
-          return numberOfDecimals;
         }
       }
     };

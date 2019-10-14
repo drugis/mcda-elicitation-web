@@ -1,10 +1,16 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
+    '$filter',
+    'WorkspaceSettingsService',
     'significantDigits'
   ];
 
-  var EffectsTableService = function(significantDigits) {
+  var EffectsTableService = function(
+    $filter,
+    WorkspaceSettingsService,
+    significantDigits
+  ) {
     var NOT_ENTERED = '';
 
     function buildEffectsTable(criteria) {
@@ -153,7 +159,7 @@ define(['lodash', 'angular'], function(_, angular) {
       } else if (distribution.type === 'dt') {
         return buildStudentsTLabel(distribution.parameters);
       } else if (distribution.type === 'dnorm') {
-        return buildNormalLabel(distribution.parameters);
+        return buildNormalLabel(distribution);
       } else if (distribution.type === 'dbeta') {
         return buildBetaLabel(distribution.parameters);
       } else if (distribution.type === 'dsurv' || distribution.type === 'dgamma') {
@@ -178,10 +184,20 @@ define(['lodash', 'angular'], function(_, angular) {
         significantDigits(parameters.dof) + ')';
     }
 
-    function buildNormalLabel(parameters) {
-      return 'Normal(' +
-        significantDigits(parameters.mu) + ', ' +
-        significantDigits(parameters.sigma) + ')';
+    function buildNormalLabel(distribution) {
+      if (hasPercentageNormalInput(distribution.input)) {
+        return 'Normal(' +
+          significantDigits(distribution.input.mu) + '%, ' +
+          significantDigits(distribution.input.sigma) + '%)';
+      } else {
+        return 'Normal(' +
+          significantDigits(distribution.parameters.mu) + ', ' +
+          significantDigits(distribution.parameters.sigma) + ')';
+      }
+    }
+
+    function hasPercentageNormalInput(input){
+      return input && input.scale === 'percentage' && input.hasOwnProperty('mu') && input.hasOwnProperty('sigma');
     }
 
     function buildBetaLabel(parameters) {
@@ -198,13 +214,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function buildEffectLabel(performance) {
       if (!performance.effect) {
-        if (performance.distribution.input && performance.distribution.type !== 'dt') {
-          return buildEffectInputLabel(performance.distribution.input);
-        } else if (performance.distribution.type === 'exact') {
-          return performance.distribution.value;
-        } else {
-          return NOT_ENTERED;
-        }
+        return buildEffectLabelFromDistribution(performance);
       } else if (performance.effect.input) {
         return buildEffectInputLabel(performance.effect.input);
       } else if (performance.effect.type === 'empty') {
@@ -214,21 +224,58 @@ define(['lodash', 'angular'], function(_, angular) {
       }
     }
 
+    function buildEffectLabelFromDistribution(performance) {
+      if (isPercentageNormalDistribution(performance)) {
+        return '';
+      } else if (isOldNormalDistributionFromEffect(performance)) {
+        return buildEffectInputLabel(performance.distribution.input);
+      } else if (performance.distribution.type === 'exact') {
+        return performance.distribution.value;
+      } else {
+        return NOT_ENTERED;
+      }
+    }
+
+    function isOldNormalDistributionFromEffect(performance) {
+      return performance.distribution.input && performance.distribution.type !== 'dt';
+    }
+
+    function isPercentageNormalDistribution(performance) {
+      return performance.distribution.input && performance.distribution.input.mu;
+    }
+
     function buildEffectInputLabel(input) {
       var percentage = input.scale === 'percentage' ? '%' : '';
+
       if (input.hasOwnProperty('stdErr')) {
-        return input.value + percentage + ' (' + input.stdErr + percentage + ')';
+        return createSELabel(input, percentage);
       } else if (isValueCI(input)) {
-        return input.value + percentage + ' (' + input.lowerBound + percentage + '; ' + input.upperBound + percentage + ')';
+        return createCILabel(input, percentage);
       } else if (isRange(input)) {
-        return '[' + input.lowerBound + percentage + ', ' + input.upperBound + percentage + ']';
+        return createRangeLabel(input, percentage);
       } else if (isValueSampleSize(input)) {
-        return input.value + percentage + ' / ' + input.sampleSize;
+        return createValueSampleSizeLabel(input, percentage);
       } else if (isEventsSampleSize(input)) {
         return input.events + ' / ' + input.sampleSize;
       } else {
         return input.value + percentage;
       }
+    }
+
+    function createSELabel(input, percentage) {
+      return input.value + percentage + ' (' + input.stdErr + percentage + ')';
+    }
+
+    function createValueSampleSizeLabel(input, percentage) {
+      return input.value + percentage + ' / ' + input.sampleSize;
+    }
+
+    function createRangeLabel(input, percentage) {
+      return '[' + input.lowerBound + percentage + ', ' + input.upperBound + percentage + ']';
+    }
+
+    function createCILabel(input, percentage) {
+      return input.value + percentage + ' (' + input.lowerBound + percentage + '; ' + input.upperBound + percentage + ')';
     }
 
     function isValueCI(input) {
@@ -297,13 +344,48 @@ define(['lodash', 'angular'], function(_, angular) {
       return !!scales && !isNaN(smaaValue) && smaaValue !== null;
     }
 
+    function getRoundedValue(value) {
+      return $filter('number')(value);
+    }
+
+    function getRoundedScales(scales) {
+      return _.mapValues(scales, function(scalesByAlternatives) {
+        return _.mapValues(scalesByAlternatives, function(alternative) {
+          return {
+            '2.5%': getRoundedValue(alternative['2.5%']),
+            '50%': getRoundedValue(alternative['50%']),
+            '97.5%': getRoundedValue(alternative['97.5%'])
+          };
+        });
+      });
+    }
+
+    function getMedian(scales) {
+      if (WorkspaceSettingsService.getWorkspaceSettings().calculationMethod === 'mode') {
+        return getMode(scales);
+      } else {
+        return getRoundedValue(scales['50%']);
+      }
+    }
+
+    function getMode(scales) {
+      if (scales.mode !== null && scales.mode !== undefined) {
+        return getRoundedValue(scales.mode);
+      } else {
+        return 'NA';
+      }
+    }
+
     return {
       buildEffectsTable: buildEffectsTable,
       createEffectsTableInfo: createEffectsTableInfo,
       isStudyDataAvailable: isStudyDataAvailable,
       buildTableRows: buildTableRows,
       createIsCellAnalysisViable: createIsCellAnalysisViable,
-      createIsCellAnalysisViableForCriterionCard: createIsCellAnalysisViableForCriterionCard
+      createIsCellAnalysisViableForCriterionCard: createIsCellAnalysisViableForCriterionCard,
+      getRoundedValue: getRoundedValue,
+      getRoundedScales: getRoundedScales,
+      getMedian: getMedian
     };
   };
 

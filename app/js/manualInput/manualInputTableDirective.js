@@ -21,9 +21,9 @@ define(['lodash'], function(_) {
 
         initializeConstraints();
 
-        function initializeConstraints(){
-          _.forEach(scope.state.criteria, function(criterion){
-            _.forEach(criterion.dataSources, function(dataSource){
+        function initializeConstraints() {
+          _.forEach(scope.state.criteria, function(criterion) {
+            _.forEach(criterion.dataSources, function(dataSource) {
               setConstraints(dataSource.unitOfMeasurement.selectedOption.type, dataSource.id);
             });
           });
@@ -80,13 +80,21 @@ define(['lodash'], function(_) {
 
         function setConstraints(type, dataSourceId) {
           var effectRow = scope.state.inputData.effect[dataSourceId];
-          scope.state.inputData.effect[dataSourceId] = _.mapValues(effectRow, function(cell) {
+          scope.state.inputData.effect[dataSourceId] = setEffectCellConstraint(effectRow, type);
+          var distributionRow = scope.state.inputData.distribution[dataSourceId];
+          scope.state.inputData.distribution[dataSourceId] = setDistributionCellConstraint(distributionRow, type);
+        }
+
+        function setEffectCellConstraint(effectRow, type) {
+          return _.mapValues(effectRow, function(cell) {
             cell.constraint = type;
             return cell;
           });
-          var distributionRow = scope.state.inputData.distribution[dataSourceId];
-          scope.state.inputData.distribution[dataSourceId] = _.mapValues(distributionRow, function(cell) {
-            if (cell.inputParameters.id === 'value') {
+        }
+
+        function setDistributionCellConstraint(distributionRow, type) {
+          return _.mapValues(distributionRow, function(cell) {
+            if (cell.inputParameters.id === 'value' || cell.inputParameters.id === 'normal') {
               cell.constraint = type;
             }
             return cell;

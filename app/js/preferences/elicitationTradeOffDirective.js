@@ -55,13 +55,7 @@ define(['lodash', 'd3', 'c3'],
             scope.sliderOptions = {
               precision: 4,
               onEnd: plotIndifference,
-              translate: function(value) {
-                var multiplier = 1;
-                if (scope.mostImportantCriterion.dataSources[0].unitOfMeasurement.type === 'percentage') {
-                  multiplier = 100;
-                }
-                return significantDigits(value * multiplier);
-              },
+              translate: significantDigits,
               floor: significantDigits(minY),
               ceil: significantDigits(maxY)
             };

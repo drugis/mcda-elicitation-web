@@ -1,11 +1,13 @@
 'use strict';
 define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
+    'PerformanceTableService',
     'intervalHull',
     'numberFilter'
   ];
 
   var ScaleRangeService = function(
+    PerformanceTableService,
     intervalHull,
     numberFilter
   ) {
@@ -49,14 +51,15 @@ define(['lodash', 'angular'], function(_, angular) {
       var boundFrom = function(val) {
         return val < scale[0] ? scale[0] : val;
       };
+
       var boundTo = function(val) {
         return val > scale[1] ? scale[1] : val;
       };
+
       if (from === to) {
         from *= 0.95;
         to *= 1.05;
       }
-      var margin = getMargin(from, to);
 
       scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
       scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
@@ -67,6 +70,10 @@ define(['lodash', 'angular'], function(_, angular) {
         restrictedRangeFrom -= Math.abs(restrictedRangeFrom) * 0.001;
         restrictedRangeTo += Math.abs(restrictedRangeTo) * 0.001;
       }
+      var floor = getFloor(from, restrictedRangeFrom);
+      var ceil = getCeil(to, restrictedRangeTo);
+
+      var margin = getMargin(from, to);
 
       return {
         increaseFrom: function() {
@@ -80,8 +87,8 @@ define(['lodash', 'angular'], function(_, angular) {
             from: restrictedRangeFrom,
             to: restrictedRangeTo
           },
-          floor: niceFrom(from),
-          ceil: niceTo(to),
+          floor: floor,
+          ceil: ceil,
           step: Math.abs(niceTo(to) - niceFrom(from)) / 100,
           precision: 4,
           noSwitching: true,
@@ -90,6 +97,22 @@ define(['lodash', 'angular'], function(_, angular) {
           }
         }
       };
+    }
+
+    function getFloor(from, restrictedRangeFrom) {
+      var floor = niceFrom(from);
+      if (floor >= restrictedRangeFrom) {
+          floor = niceFrom(floor - Math.abs(floor * 0.1));
+      }
+      return floor;
+    }
+
+    function getCeil(to, restrictedRangeTo) {
+      var ceil = niceTo(to);
+      if (ceil <= restrictedRangeTo) {
+        ceil = niceTo(ceil + Math.abs(ceil * 0.1));
+      }
+      return ceil;
     }
 
     function getMargin(from, to) {
@@ -105,12 +128,17 @@ define(['lodash', 'angular'], function(_, angular) {
     function initializeScaleStateAndChoicesForCriterion(observedScales, criterion, performanceTable) {
       return _.reduce(criterion.dataSources, function(accum, dataSource) {
         // Calculate interval hulls
-        var effectValues = getEffectValues(performanceTable, dataSource);
+        var effectValues = PerformanceTableService.getEffectValues(performanceTable, dataSource);
         var dataSourceRange = intervalHull(observedScales[dataSource.id], effectValues);
         var pvf = dataSource.pvf;
         var problemRange = pvf ? pvf.range : null;
         var from = problemRange ? problemRange[0] : dataSourceRange[0];
         var to = problemRange ? problemRange[1] : dataSourceRange[1];
+
+        if (from === 0 && to === 0) {
+          to = 0.001;
+          dataSourceRange[1] = 0.001;
+        }
 
         // Set scales for slider
         var dataSourceScale = dataSource.scale;
@@ -118,14 +146,14 @@ define(['lodash', 'angular'], function(_, angular) {
 
         // Set inital model value
         accum.choices[dataSource.id] = {
-          from: Math.min(niceFrom(from), accum.scalesState[dataSource.id].sliderOptions.restrictedRange.from),
-          to: Math.max(niceTo(to), accum.scalesState[dataSource.id].sliderOptions.restrictedRange.to)
+          from: getFloor(from, accum.scalesState[dataSource.id].sliderOptions.restrictedRange.from),
+          to: getCeil(to, accum.scalesState[dataSource.id].sliderOptions.restrictedRange.to)
         };
         return accum;
       }, {
-          scalesState: {},
-          choices: {}
-        }
+        scalesState: {},
+        choices: {}
+      }
       );
     }
 
@@ -134,21 +162,12 @@ define(['lodash', 'angular'], function(_, angular) {
       return _.map(scaleTable, function(row) {
         var newRow = angular.copy(row);
         if (scales && scales.observed) {
-          var effects = getEffectValues(performanceTable, row.dataSource);
-          newRow.intervalHull = intervalHull(scales.observed[row.dataSource.id], effects);
+          var effects = PerformanceTableService.getEffectValues(performanceTable, row.dataSource);
+          var rangeDistributions = PerformanceTableService.getRangeDistributionValues(performanceTable, row.dataSource);
+          newRow.intervalHull = intervalHull(scales.observed[row.dataSource.id], effects, rangeDistributions);
         }
         return newRow;
       });
-    }
-
-    function getEffectValues(performanceTable, dataSource) {
-      return _.reduce(performanceTable, function(accum, entry) {
-        if (entry.dataSource === dataSource.id && entry.performance.effect) {
-          var factor = dataSource.unitOfMeasurement.type === 'percentage' ? 100 : 1;
-          accum.push(entry.performance.effect.value * factor);
-        }
-        return accum;
-      }, []);
     }
 
     return {

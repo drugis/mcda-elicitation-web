@@ -70,10 +70,8 @@ define(['lodash'], function(_) {
               callback: function() {
                 return function(newCriterion) {
                   scope.criteria[_.findIndex(scope.criteria, ['id', criterion.id])] = newCriterion;
-                  if (scope.isInput) {
-                    initializeCriteriaLists();
-                  } else {
-                    initializeCriteriaLists();
+                  initializeCriteriaLists();
+                  if (!scope.isInput) {
                     saveWorkspace(newCriterion);
                   }
                 };

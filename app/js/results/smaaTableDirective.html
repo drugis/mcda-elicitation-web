@@ -1,0 +1,69 @@
+<div class="grid-x">
+  <div class="cell large-8">
+    <h4>
+      Measurements
+    </h4>
+  </div>
+  <div class="cell large-4">
+    <div class="right button-group">
+      <button class="button small info clipboard-button" data-clipboard-target="#smaatable">
+        <i class="fa fa-clipboard"></i> Copy to clipboard
+      </button>
+    </div>
+  </div>
+  <div class="cell">
+    <table class="full-width effects-table" id="smaatable">
+      <thead>
+        <tr>
+          <th>
+            Criterion <inline-help help-key="criterion"></inline-help>
+          </th>
+          <th>Description</th>
+          <th>
+            Units <inline-help help-key="criterion-unit"></inline-help>
+          </th>
+          <th class="text-center" ng-repeat="alternative in alternatives"
+            style="min-width: 120px">
+            {{alternative.title}}
+          </th>
+          <th>
+            References <inline-help help-key="criterion-source"></inline-help>
+          </th>
+        </tr>
+      </thead>
+      <tbody class="main">
+        <tr ng-repeat="row in rows">
+          <td ng-if="row.isHeaderRow" class="group-header" colspan="{{4 + nrAlternatives}}">
+            <div class="main-header">
+              {{row.headerText}}
+            </div>
+          </td>
+          <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">
+            {{row.criterion.title}}
+          </td>
+          <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">
+            {{row.criterion.description}}
+          </td>
+          <td ng-if="!row.isHeaderRow">
+            <span>
+              {{problem.criteria[row.criterion.id].dataSources[0].unitOfMeasurement.label}}
+            </span>
+          </td>
+          <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives">
+            <div>{{scalesRounded[row.dataSource.id][alternative.id]['50%']}}</div>
+            <div class="uncertain">
+              {{scalesRounded[row.dataSource.id][alternative.id]['2.5%']}},
+              {{scalesRounded[row.dataSource.id][alternative.id]['97.5%']}}
+            </div>
+          </td>
+          <td ng-if="!row.isHeaderRow">
+            <a ng-if="row.dataSource.sourceLink" href="{{row.dataSource.sourceLink}}">
+              {{row.dataSource.source}}
+            </a>
+            <span ng-if="!row.dataSource.sourceLink">{{row.dataSource.source}}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

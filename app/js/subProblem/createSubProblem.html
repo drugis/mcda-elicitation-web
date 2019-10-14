@@ -100,18 +100,26 @@
               </td>
               <td ng-if="!row.isHeaderRow"
                 ng-class="{'disabled-cell' : !subProblemState.alternativeInclusions[alternative.id] || !subProblemState.criterionInclusions[row.criterion.id] || !subProblemState.dataSourceInclusions[row.dataSource.id]}"
-                class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}">
+                class="text-center" ng-repeat="alternative in alternatives" name="col{{$index}}" id="col{{$index}}"
+                ng-style="isValueView && !isCellAnalysisViable[row.dataSource.id][alternative.id] ? {'background-color':'#f3d3c8'} : {}">
                 <div class="grid-x">
                   <div class="cell large-1" style="min-width:13px;">
                     <input type="checkbox" ng-if="$first"
                       ng-model="subProblemState.dataSourceInclusions[row.dataSource.id]" ng-change="updateInclusions()"
                       ng-disabled="!subProblemState.criterionInclusions[row.criterion.id] || subProblemState.numberOfDataSourcesPerCriterion[row.criterion.id] === 1 && subProblemState.dataSourceInclusions[row.dataSource.id]">
                   </div>
-                  <div class="cell large-10">
+                  <div class="cell large-10"
+                    ng-if="!isValueView || isCellAnalysisViable[row.dataSource.id][alternative.id]">
                     <effects-table-cell effects-table-info="effectsTableInfo[row.dataSource.id]"
                       scales="scales[row.dataSource.id][alternative.id]" theoretical-scale="row.dataSource.scale"
                       alternative-id="alternative.id" unit-of-measurement-type="row.dataSource.unitOfMeasurement.type">
                     </effects-table-cell>
+                  </div>
+                  <div class="cell large-10"
+                    ng-if="isValueView && !isCellAnalysisViable[row.dataSource.id][alternative.id]"
+                    style="opacity: 0.5;"
+                    tooltip="Cells containing text or that are empty can not be used for analysis">
+                    No data
                   </div>
                 </div>
               </td>
@@ -156,7 +164,11 @@
         <ul class="no-bullet">
           <li ng-repeat="dataSource in scalesDataSources">
             <h5 class="subheader">
-              {{problem.criteria[criteriaByDataSource[dataSource]].title}}
+              {{criteriaByDataSource[dataSource].title}}
+              {{criteriaByDataSource[dataSource].dataSources[0].unitOfMeasurement.label ?
+                '(' + criteriaByDataSource[dataSource].dataSources[0].unitOfMeasurement.label + ')' : 
+                '' 
+              }}
             </h5>
             <div class="grid-x">
               <div class="cell large-1 text-center">

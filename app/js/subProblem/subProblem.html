@@ -73,11 +73,11 @@
           </td>
           <td>
             <!-- conf -->
-            <span ng-if="row.dataSource.pvf.range">
+            <span ng-if="row.dataSource.pvf.range.length">
               {{row.dataSource.pvf.range[0] | number}},
               {{row.dataSource.pvf.range[1] | number}}
             </span>
-            <span ng-if="!row.dataSource.pvf.range">
+            <span ng-if="!row.dataSource.pvf.range.length">
               <span ng-bind="row.intervalHull[0] | number"></span> ,
               <span ng-bind="row.intervalHull[1] | number"></span>
             </span>

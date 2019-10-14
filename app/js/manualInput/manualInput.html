@@ -63,6 +63,9 @@
             </th>
             <th width="100%">Alternative title</th>
             <th>
+              <!-- edit title button -->
+            </th>
+            <th>
               <!-- delete button -->
             </th>
           </tr>
@@ -73,6 +76,7 @@
             <td>
               <em>No alternatives defined</em>
             </td>
+            <td></td>
             <td></td>
           </tr>
           <tr ng-repeat="alternative in state.alternatives">
@@ -93,6 +97,11 @@
             </td>
             <td>
               {{alternative.title}}
+            </td>
+            <td class="text-center">
+              <a ng-click="editAlternative(alternative)" tooltip="Edit title">
+                <i class="fa fa-edit icon-fixed-width"></i>
+              </a>
             </td>
             <td class="text-center">
               <a ng-click="removeAlternative(alternative)" tooltip="Remove alternative">
@@ -137,7 +146,7 @@
     <div class="cell">
       <h4>{{state.title}}</h4>
     </div>
-    <div>
+    <div class="cell">
       <tabset>
         <tab heading="Deterministic" active="state.currentTab === 'effect'" ng-click="state.currentTab = 'effect'">
           <manual-input-table input-type="'effect'" state="state" criteria-rows="criteriaRows"

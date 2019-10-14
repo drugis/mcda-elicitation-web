@@ -22,13 +22,24 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
     });
 
     describe('normalToString', function() {
-      it('should return the correct label for the cell', function() {
+      it('should return the correct label for a non percentage cell', function() {
         var cell = {
           firstParameter: 10,
           secondParameter: 0.25
         };
         var result = toStringService.normalToString(cell);
         var expectedResult = 'Normal(10, 0.25)';
+        expect(result).toEqual(expectedResult);
+      });
+      
+      it('should return the correct label for a  percentage cell', function() {
+        var cell = {
+          firstParameter: 10,
+          secondParameter: 0.25,
+          constraint: 'percentage'
+        };
+        var result = toStringService.normalToString(cell);
+        var expectedResult = 'Normal(10%, 0.25%)';
         expect(result).toEqual(expectedResult);
       });
     });

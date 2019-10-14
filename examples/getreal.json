@@ -9,8 +9,8 @@
         {
           "pvf": {
             "range": [
-              45,
-              65
+              0.45,
+              0.65
             ],
             "type": "linear",
             "direction": "increasing"
@@ -36,7 +36,7 @@
           "pvf": {
             "range": [
               0,
-              80
+              0.8
             ],
             "type": "linear",
             "direction": "decreasing"
@@ -62,7 +62,7 @@
           "pvf": {
             "range": [
               0,
-              40
+              0.4
             ],
             "type": "linear",
             "direction": "decreasing"
@@ -182,5 +182,5 @@
     }
   ],
   "preferences": {},
-  "schemaVersion": "1.4.1"
+  "schemaVersion": "1.4.2"
 }

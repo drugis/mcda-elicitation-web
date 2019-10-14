@@ -5,6 +5,7 @@ define(['angular', 'angular-mocks', 'mcda/util'], function(angular) {
 
     describe('intervalHull', function() {
       var ih;
+
       beforeEach(inject(function(intervalHull) {
         ih = intervalHull;
       }));
@@ -65,10 +66,30 @@ define(['angular', 'angular-mocks', 'mcda/util'], function(angular) {
         var expectedResult = [0, 1];
         expect(result).toEqual(expectedResult);
       });
+
+      it('should return min and max of the scale ranges and the range distributions', function() {
+        var ranges = {
+          1: {
+            '2.5%': 1,
+            '97.5%': 5
+          },
+          2: {
+            '2.5%': 3,
+            '97.5%': 10
+          }
+        };
+        var effectValues = [5, 6];
+        var rangeDistributionValues = [0,8];
+        var result = ih(ranges, effectValues, rangeDistributionValues);
+        var expectedResult = [0, 10];
+        expect(result).toEqual(expectedResult);
+      });
+
     });
 
     describe('generateUuid', function() {
       var gu;
+
       beforeEach(inject(function(generateUuid) {
         gu = generateUuid;
       }));
@@ -81,12 +102,13 @@ define(['angular', 'angular-mocks', 'mcda/util'], function(angular) {
 
     describe('swap', function() {
       var sw;
+
       beforeEach(inject(function(swap) {
         sw = swap;
       }));
 
       it('should swap 2 elements in an array', function() {
-        var arr = [0, 1, 2]
+        var arr = [0, 1, 2];
         sw(arr, 0, 2);
         expect(arr).toEqual([2, 1, 0]);
       });
@@ -117,5 +139,42 @@ define(['angular', 'angular-mocks', 'mcda/util'], function(angular) {
       });
     });
 
+    describe('getDataSourcesById', function() {
+      var getSources;
+
+      beforeEach(inject(function(getDataSourcesById) {
+        getSources = getDataSourcesById;
+      }));
+
+      it('should return all data sources on the criteria, keyed by their id', function() {
+        var criteria = {
+          c1: {
+            dataSources: [{
+              id: 'ds1'
+            }, {
+              id: 'ds2'
+            }]
+          },
+          c2: {
+            dataSources: [{
+              id: 'ds3'
+            }]
+          }
+        };
+        var result = getSources(criteria);
+        var expectedResult = {
+          ds1: {
+            id: 'ds1'
+          },
+          ds2: {
+            id: 'ds2'
+          },
+          ds3: {
+            id: 'ds3'
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
   });
 });

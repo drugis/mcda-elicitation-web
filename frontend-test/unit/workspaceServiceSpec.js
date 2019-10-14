@@ -10,10 +10,12 @@ define([
   describe('The WorkspaceService, ', function() {
     var workspaceService;
     var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsService', ['postAndHandleResults']);
+    var performanceTableServiceMock = jasmine.createSpyObj('performanceTableService', ['getEffectValues', 'getRangeDistributionValues']);
     var qMock = jasmine.createSpyObj('$q', ['resolve']);
 
     beforeEach(angular.mock.module('elicit.workspace', function($provide) {
       $provide.value('PataviResultsService', pataviResultsServiceMock);
+      $provide.value('PerformanceTableService', performanceTableServiceMock);
       $provide.value('$q', qMock);
     }));
 
@@ -354,6 +356,11 @@ define([
     });
 
     describe('setDefaultObservedScales', function() {
+      beforeEach(function() {
+        performanceTableServiceMock.getEffectValues.and.returnValue([]);
+        performanceTableServiceMock.getRangeDistributionValues.and.returnValue([]);
+      });
+
       it('should set observed scale ranges if none are on the problem & subproblem', function() {
         var scales = {
           observed: {
@@ -1178,7 +1185,7 @@ define([
                   },
                   scale: [0, 100],
                   pvf: {
-                    range: [30, 40]
+                    range: [0.3, 0.4]
                   }
                 }]
               },
@@ -1294,7 +1301,7 @@ define([
                 }, {
                   scale: [0, 100],
                   pvf: {
-                    range: [30, 40]
+                    range: [0.3, 0.4]
                   },
                   unitOfMeasurement: {
                     label: '%',

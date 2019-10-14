@@ -39,7 +39,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     });
     $scope.showDecimal = false;
     PageTitleService.setPageTitle('EvidenceController', ($scope.problem.title || $scope.workspace.title) + '\'s overview');
-    reloadOrderingsAndScales();
+    $scope.scalesPromise.then(reloadOrderingsAndScales);
 
     $scope.$on('elicit.settingsChanged', function() {
       reloadOrderingsAndScales();
@@ -48,7 +48,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     new Clipboard('.clipboard-button');
 
     function reloadOrderingsAndScales() {
-      var problem = WorkspaceSettingsService.usePercentage() ? $scope.percentifiedBaseState.problem : $scope.dePercentifiedBaseState.problem;
+      var problem = WorkspaceSettingsService.usePercentage() ? $scope.baseState.percentified.problem : $scope.baseState.dePercentified.problem;
       OrderingService.getOrderedCriteriaAndAlternatives(problem, $stateParams).then(function(orderings) {
         $scope.orderedAlternatives = orderings.alternatives;
         $scope.orderedCriteria = orderings.criteria;
