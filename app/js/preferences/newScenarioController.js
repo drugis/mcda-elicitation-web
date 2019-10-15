@@ -1,8 +1,20 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modalInstance', 'type', 'scenarios', 'callback'];
+  var dependencies = [
+    '$scope',
+    '$modalInstance',
+    'type',
+    'scenarios',
+    'callback'
+  ];
 
-  function NewScenarioController($scope, $modalInstance, type, scenarios, callback) {
+  function NewScenarioController(
+    $scope,
+    $modalInstance,
+    type,
+    scenarios,
+    callback
+  ) {
     // functions 
     $scope.cancel = cancel;
     $scope.create = create;

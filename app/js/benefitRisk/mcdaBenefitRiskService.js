@@ -6,25 +6,35 @@ define(['lodash'], function(_) {
     'ScenarioResource',
     'WorkspaceService'
   ];
+  
   var McdaBenefitRiskService = function(
     $state,
     $stateParams,
     ScenarioResource,
     WorkspaceService
   ) {
+
     function copyScenarioAndGo(newTitle, subProblem) {
       return ScenarioResource.get($stateParams).$promise // reload because child scopes may have changed scenario
-        .then((scenario) => {
-          return {
-            title: newTitle,
-            state: scenario.state,
-            subProblemId: subProblem.id
-          };
-        }).then((newScenario) => {
-          return ScenarioResource.save(_.omit($stateParams, 'id'), newScenario).$promise;
-        }).then((savedScenario) => {
-          redirect(savedScenario.id, $state.current.name);
-        });
+        .then(_.partial(createNewScenario, newTitle, subProblem))
+        .then(saveNewScenario)
+        .then(goToNewScenario);
+    }
+
+    function createNewScenario(newTitle, subProblem, scenario) {
+      return {
+        title: newTitle,
+        state: scenario.state,
+        subProblemId: subProblem.id
+      };
+    }
+
+    function saveNewScenario(newScenario) {
+      return ScenarioResource.save(_.omit($stateParams, 'id'), newScenario).$promise;
+    }
+
+    function goToNewScenario(savedScenario) {
+      redirect(savedScenario.id, $state.current.name);
     }
 
     function newScenarioAndGo(newTitle, workspace, subProblem) {
@@ -38,9 +48,11 @@ define(['lodash'], function(_) {
         subProblemId: subProblem.id
       };
       return ScenarioResource.save(_.omit($stateParams, 'id'), newScenario).$promise
-        .then((savedScenario) => {
-          redirect(savedScenario.id, 'preferences');
-        });
+        .then(goToPreferences);
+    }
+
+    function goToPreferences(savedScenario) {
+      redirect(savedScenario.id, 'preferences');
     }
 
     function redirect(scenarioId, stateName) {

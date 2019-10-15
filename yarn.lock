@@ -5864,9 +5864,9 @@ packet-reader@1.0.0:
   resolved "https://registry.yarnpkg.com/packet-reader/-/packet-reader-1.0.0.tgz#9238e5480dedabacfe1fe3f2771063f164157d74"
   integrity sha512-HAKu/fG3HpHFO0AA8WE8q2g+gBJaZ9MG7fcKk+IJPLTGAD6Psw4443l+9DGRbOIh3/aXr7Phy0TjilYivJo5XQ==
 
-page-title-service@drugis/page-title-service#1.0.3:
-  version "1.0.3"
-  resolved "https://codeload.github.com/drugis/page-title-service/tar.gz/c3485d3928071e13eee339936396a2ee9c14dc71"
+page-title-service@drugis/page-title-service#1.0.4:
+  version "1.0.4"
+  resolved "https://codeload.github.com/drugis/page-title-service/tar.gz/a6f425958f10f39bbe99ee3996691786a01d2300"
   dependencies:
     angular "~1.6.6"
 
