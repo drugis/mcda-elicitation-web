@@ -10,12 +10,12 @@
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.showPercentages" ng-value="true">Percentages
+          <input id="show-percentages-radio" type="radio" ng-model="settings.showPercentages" ng-value="true">Percentages
         </label>
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.showPercentages" ng-value="false">Decimals
+          <input id="show-decimals-radio" type="radio" ng-model="settings.showPercentages" ng-value="false">Decimals
         </label>
       </div>
 
@@ -24,25 +24,25 @@
       </div>
       <div class="cell" ng-if="!settings.hasNoEffects">
         <label>
-          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'deterministic'">Deterministic - entered
+          <input id="deterministic-entered-radio" type="radio" ng-model="settings.effectsDisplay" ng-value="'deterministic'">Deterministic - entered
           effects
         </label>
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'deterministicMCDA'">Deterministic - analysis
+          <input id="deterministic-analysis-radio" type="radio" ng-model="settings.effectsDisplay" ng-value="'deterministicMCDA'">Deterministic - analysis
           values
         </label>
       </div>
       <div class="cell" ng-if="!settings.isRelativeProblem">
         <label>
-          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'smaaDistributions'">SMAA - distribution
+          <input id="smaa-distribution-radio" type="radio" ng-model="settings.effectsDisplay" ng-value="'smaaDistributions'">SMAA - distribution
           parameters
         </label>
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'smaa'">SMAA - analysis values
+          <input id="smaa-analysis-radio" type="radio" ng-model="settings.effectsDisplay" ng-value="'smaa'">SMAA - analysis values
         </label>
       </div>
 
@@ -51,12 +51,12 @@
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.calculationMethod" ng-value="'median'">Median
+          <input id="show-median-radio" type="radio" ng-model="settings.calculationMethod" ng-value="'median'">Median
         </label>
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.calculationMethod" ng-value="'mode'">Mode
+          <input id="show-mode-radio" type="radio" ng-model="settings.calculationMethod" ng-value="'mode'">Mode
         </label>
       </div>
 
@@ -64,34 +64,34 @@
         Effects table columns to show
       </div>
       <div class="cell">
-        <button class="button tiny" type="button" ng-click="toggleSelection()">(De)select all</button>
+        <button id="toggle-selection-button" class="button tiny" type="button" ng-click="toggleSelection()">(De)select all</button>
       </div>
       <div class="cell">
-        <input type="checkbox" ng-model="toggledColumns['criteria']" id="checkCriteriaColumn">
+        <input id="criterion-column-checkbox" type="checkbox" ng-model="toggledColumns['criteria']" id="checkCriteriaColumn">
         <label for="checkCriteriaColumn">Criterion</label>
       </div>
       <div class="cell">
-        <input type="checkbox" ng-model="toggledColumns['description']" id="checkDescriptionColumn">
+        <input id="description-column-checkbox" type="checkbox" ng-model="toggledColumns['description']" id="checkDescriptionColumn">
         <label for="checkDescriptionColumn">Description
       </div>
       <div class="cell">
-        <input type="checkbox" ng-model="toggledColumns['units']" id="checkUnitsColumn">
+        <input id="units-column-checkbox" type="checkbox" ng-model="toggledColumns['units']" id="checkUnitsColumn">
         <label for="checkUnitsColumn">Units
       </div>
       <div class="cell">
-        <input type="checkbox" ng-model="toggledColumns['references']" id="checkReferencesColumn">
+        <input id="reference-column-checkbox" type="checkbox" ng-model="toggledColumns['references']" id="checkReferencesColumn">
         <label for="checkReferencesColumn">Reference
       </div>
       <div class="cell">
-        <input type="checkbox" ng-model="toggledColumns['strength']" id="checkStrengthColumn">
+        <input id="uncertainties-column-checkbox" type="checkbox" ng-model="toggledColumns['strength']" id="checkStrengthColumn">
         <label for="checkStrengthColumn">Uncertainties / Strength of evidence
       </div>
 
       <div class="cell">
-        <button class="button" type="button" ng-click="resetToDefault()">Default</button>
+        <button id="reset-default-button" class="button" type="button" ng-click="resetToDefault()">Default</button>
       </div>
       <div class="cell">
-        <button class="button success" type="submit">Save</button>
+        <button id="save-settings-button" class="button success" type="submit">Save</button>
       </div>
       <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
         <span aria-hidden="true">&times;</span>

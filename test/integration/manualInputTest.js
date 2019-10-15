@@ -100,6 +100,7 @@ function clickElement(browser, rowNumber, columnNumber, element) {
     .click('#deterministic-tab')
     ;
 }
+
 function setValuesForRow(browser, rowNumber) {
   setValues(browser, rowNumber, 6);
   setValues(browser, rowNumber, 7);
