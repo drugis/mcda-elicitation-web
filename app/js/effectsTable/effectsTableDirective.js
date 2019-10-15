@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash', 'bowser'], function(_, bowser) {
   var dependencies = [
     'EffectsTableService',
     'WorkspaceSettingsService'
@@ -24,8 +24,7 @@ define(['lodash'], function(_) {
         getWorkspaceSettings();
 
         scope.$watch('criteria', function(newCriteria) {
-          scope.keyedCriteria = _.keyBy(_.cloneDeep(newCriteria), 'id');
-          scope.rows = EffectsTableService.buildEffectsTable(scope.keyedCriteria);
+          scope.rows = EffectsTableService.buildEffectsTable(newCriteria);
         }, true);
 
         scope.$watch('alternatives', function() {
@@ -37,7 +36,11 @@ define(['lodash'], function(_) {
 
         scope.$on('elicit.settingsChanged', getWorkspaceSettings);
 
-        function isCellAnalysisViable(){
+        var browser = bowser.getParser(window.navigator.userAgent).getBrowser().name;
+        scope.isFirefox = browser === 'Firefox';
+        scope.isChrome = browser === 'Chrome';
+
+        function isCellAnalysisViable() {
           scope.isCellAnalysisViable = EffectsTableService.createIsCellAnalysisViable(
             scope.rows,
             scope.alternatives,
@@ -48,9 +51,9 @@ define(['lodash'], function(_) {
 
         function getWorkspaceSettings() {
           scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
+          scope.numberOfColumns = _.filter(scope.toggledColumns).length;
           scope.isValueView = WorkspaceSettingsService.isValueView();
         }
-
       }
     };
   };

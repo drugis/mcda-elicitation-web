@@ -80,6 +80,10 @@ module.exports = function(connectionInfo) {
       }
     });
   }
+
+  function endConnection() {
+    pool.end();
+  }
   return {
     // Takes a function work(client, workCallback), where workCallback(error,
     // result). The work will be run in a transaction, and if workCallback is
@@ -89,6 +93,7 @@ module.exports = function(connectionInfo) {
     // If the transaction completed, callback(error, result) will be called
     // with the result of work, otherwise with an error.
     runInTransaction: runInTransaction,
-    query: query
+    query: query,
+    endConnection: endConnection
   };
 };

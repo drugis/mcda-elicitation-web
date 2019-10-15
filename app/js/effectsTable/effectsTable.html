@@ -15,29 +15,42 @@
     <table class="full-width effects-table" id="effectstable">
       <thead>
         <tr>
-          <th class="resizableColumn" ng-show="toggledColumns['criteria']">
-            Criterion <inline-help help-key="criterion"></inline-help>
+          <th ng-show="toggledColumns['criteria']" ng-class="{resizableColumn: isChrome}">
+            <div ng-class="{resizableColumn: isFirefox}">
+              Criterion <inline-help help-key="criterion"></inline-help>
+            </div>
           </th>
-          <th class="resizableColumn" ng-show="toggledColumns['description']">Description</th>
-          <th class="resizableColumn" ng-show="toggledColumns['units']">
-            Units <inline-help help-key="criterion-unit"></inline-help>
+          <th ng-show="toggledColumns['description']" ng-class="{resizableColumn: isChrome}">
+            <div ng-class="{resizableColumn: isFirefox}">
+              Description
+            </div>
           </th>
-          <th class="resizableColumn" class="text-center" ng-repeat="alternative in alternatives"
-            style="min-width: 120px">
-            {{alternative.title}}
+          <th ng-show="toggledColumns['units']" ng-class="{resizableColumn: isChrome}">
+            <div ng-class="{resizableColumn: isFirefox}">
+              Units <inline-help help-key="criterion-unit"></inline-help>
+            </div>
           </th>
-          <th class="resizableColumn" ng-show="toggledColumns['strength']">
-            Strength of evidence / Uncertainties <inline-help help-key="strength-of-evidence"></inline-help>
-            <inline-help help-key="uncertainties"></inline-help>
+          <th class="text-center" ng-repeat="alternative in alternatives" ng-class="{resizableColumn: isChrome}">
+            <div ng-class="{resizableColumn: isFirefox}">
+              {{alternative.title}}
+            </div>
           </th>
-          <th class="resizableColumn" ng-show="toggledColumns['references']">
-            References <inline-help help-key="criterion-source"></inline-help>
+          <th ng-show="toggledColumns['strength']" ng-class="{resizableColumn: isChrome}">
+            <div ng-class="{resizableColumn: isFirefox}">
+              Strength of evidence / Uncertainties <inline-help help-key="strength-of-evidence"></inline-help>
+              <inline-help help-key="uncertainties"></inline-help>
+            </div>
+          </th>
+          <th ng-show="toggledColumns['references']" ng-class="{resizableColumn: isChrome}">
+            <div ng-class="{resizableColumn: isFirefox}">
+              References <inline-help help-key="criterion-source"></inline-help>
+            </div>
           </th>
         </tr>
       </thead>
       <tbody class="main">
         <tr ng-repeat="row in rows">
-          <td ng-if="row.isHeaderRow" class="group-header" colspan="{{5 + nrAlternatives}}">
+          <td ng-if="row.isHeaderRow" class="group-header" colspan="{{numberOfColumns + nrAlternatives}}">
             <div class="main-header">
               {{row.headerText}}
             </div>

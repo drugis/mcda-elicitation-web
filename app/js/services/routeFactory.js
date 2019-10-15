@@ -26,7 +26,7 @@ define(['lodash', 'angular', '../config'], function(_, angular, Config) {
               }],
             currentSubProblem: ['$stateParams', 'SubProblemResource',
               function($stateParams, SubProblemResource) {
-                return SubProblemResource.get(($stateParams)).$promise;
+                return SubProblemResource.get($stateParams).$promise;
               }]
           }
         };

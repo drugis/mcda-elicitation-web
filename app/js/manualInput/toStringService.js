@@ -8,7 +8,8 @@ define(['lodash'], function(_) {
     }
 
     function normalToString(cell) {
-      return 'Normal(' + significantDigits(cell.firstParameter) + ', ' + significantDigits(cell.secondParameter) + ')';
+      var percentage = isPercentage(cell) ? '%' : '';
+      return 'Normal(' + significantDigits(cell.firstParameter) + percentage + ', ' + significantDigits(cell.secondParameter) + percentage + ')';
     }
 
     function betaToString(cell) {

@@ -51,14 +51,15 @@ define(['lodash', 'angular'], function(_, angular) {
       var boundFrom = function(val) {
         return val < scale[0] ? scale[0] : val;
       };
+
       var boundTo = function(val) {
         return val > scale[1] ? scale[1] : val;
       };
+
       if (from === to) {
         from *= 0.95;
         to *= 1.05;
       }
-      var margin = getMargin(from, to);
 
       scale[0] = _.isNull(scale[0]) ? -Infinity : scale[0];
       scale[1] = _.isNull(scale[1]) ? Infinity : scale[1];
@@ -71,6 +72,9 @@ define(['lodash', 'angular'], function(_, angular) {
       }
       var floor = getFloor(from, restrictedRangeFrom);
       var ceil = getCeil(to, restrictedRangeTo);
+
+      var margin = getMargin(from, to);
+
       return {
         increaseFrom: function() {
           this.sliderOptions.floor = niceFrom(boundFrom(this.sliderOptions.floor - margin));
@@ -95,18 +99,18 @@ define(['lodash', 'angular'], function(_, angular) {
       };
     }
 
-    function getFloor(from, restrictedRangeFrom){
-      var floor =  niceFrom(from);
+    function getFloor(from, restrictedRangeFrom) {
+      var floor = niceFrom(from);
       if (floor >= restrictedRangeFrom) {
-        floor = niceFrom(floor * 0.9);
+          floor = niceFrom(floor - Math.abs(floor * 0.1));
       }
       return floor;
     }
 
-    function getCeil(to, restrictedRangeTo){
+    function getCeil(to, restrictedRangeTo) {
       var ceil = niceTo(to);
       if (ceil <= restrictedRangeTo) {
-        ceil = niceTo(ceil * 1.1);
+        ceil = niceTo(ceil + Math.abs(ceil * 0.1));
       }
       return ceil;
     }
@@ -130,6 +134,11 @@ define(['lodash', 'angular'], function(_, angular) {
         var problemRange = pvf ? pvf.range : null;
         var from = problemRange ? problemRange[0] : dataSourceRange[0];
         var to = problemRange ? problemRange[1] : dataSourceRange[1];
+
+        if (from === 0 && to === 0) {
+          to = 0.001;
+          dataSourceRange[1] = 0.001;
+        }
 
         // Set scales for slider
         var dataSourceScale = dataSource.scale;

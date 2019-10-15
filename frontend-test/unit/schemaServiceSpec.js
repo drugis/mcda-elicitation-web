@@ -9,7 +9,7 @@ define([
   var generateUuidMock = function() {
     return 'uuid';
   };
-  var currentSchemaVersion = '1.4.1';
+  var currentSchemaVersion = '1.4.2';
   var schemaService;
 
   describe('The SchemaService', function() {

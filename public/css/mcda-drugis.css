@@ -8084,7 +8084,17 @@ li.tabs-title.is-active {
 /* line 497, ../../sass-shared/_drugis.scss */
 th.resizableColumn {
   resize: horizontal;
-  overflow: auto;
+  overflow: hidden;
+  min-width: inherit;
+  min-height: 100%;
+}
+
+/* line 504, ../../sass-shared/_drugis.scss */
+div.resizableColumn {
+  resize: horizontal;
+  overflow: hidden;
+  min-width: 100%;
+  min-height: 100%;
 }
 
 /* line 8, ../../sass/_mcda-drugis-base.scss */
@@ -8481,64 +8491,59 @@ input[type='file'] {
   overflow: hidden;
 }
 /* line 143, ../../sass/_mcda-drugis-base.scss */
-.full-width .main tr > td:first-child {
-  max-width: 340px;
-  min-width: 200px;
-}
-/* line 148, ../../sass/_mcda-drugis-base.scss */
 .full-width .main-header {
   display: inline-block;
   font-weight: bold;
   margin-right: 1rem;
 }
-/* line 154, ../../sass/_mcda-drugis-base.scss */
+/* line 149, ../../sass/_mcda-drugis-base.scss */
 .full-width .secondary-header {
   display: inline-block;
   font-weight: bold;
   margin-left: 1rem;
   margin-right: 1rem;
 }
-/* line 161, ../../sass/_mcda-drugis-base.scss */
+/* line 156, ../../sass/_mcda-drugis-base.scss */
 .full-width .details {
   max-width: 400px !important;
 }
-/* line 165, ../../sass/_mcda-drugis-base.scss */
+/* line 160, ../../sass/_mcda-drugis-base.scss */
 .full-width .details table {
   border: none;
   width: 100% !important;
 }
-/* line 169, ../../sass/_mcda-drugis-base.scss */
+/* line 164, ../../sass/_mcda-drugis-base.scss */
 .full-width .details table td {
   height: 1.5;
 }
-/* line 174, ../../sass/_mcda-drugis-base.scss */
+/* line 169, ../../sass/_mcda-drugis-base.scss */
 .full-width .details table tr > td:first-child {
   width: auto;
 }
 
-/* line 181, ../../sass/_mcda-drugis-base.scss */
+/* line 176, ../../sass/_mcda-drugis-base.scss */
 .effects-table td {
   height: 4.875;
 }
 
-/* line 186, ../../sass/_mcda-drugis-base.scss */
+/* line 181, ../../sass/_mcda-drugis-base.scss */
 .dropdown-pane {
   padding: 0;
   width: auto;
 }
 
-/* line 191, ../../sass/_mcda-drugis-base.scss */
+/* line 186, ../../sass/_mcda-drugis-base.scss */
 .disabled-cell {
   background: #e9e9e9;
   color: grey;
 }
 
-/* line 196, ../../sass/_mcda-drugis-base.scss */
+/* line 191, ../../sass/_mcda-drugis-base.scss */
 .disabled-header {
   background: #cacaca;
 }
 
-/* line 200, ../../sass/_mcda-drugis-base.scss */
+/* line 195, ../../sass/_mcda-drugis-base.scss */
 .uncertain {
   padding: 0.1rem;
   color: grey;
@@ -8555,54 +8560,54 @@ input[type='file'] {
 }
 
 /* results page */
-/* line 216, ../../sass/_mcda-drugis-base.scss */
+/* line 211, ../../sass/_mcda-drugis-base.scss */
 #ranktable {
   display: inline-block;
   clear: none;
   position: relative;
 }
 
-/* line 222, ../../sass/_mcda-drugis-base.scss */
+/* line 217, ../../sass/_mcda-drugis-base.scss */
 .underlined-div {
   border-bottom: 1px solid #cacaca;
   margin-bottom: 1.5rem !important;
 }
 
 /* ----- preferences table ------ */
-/* line 228, ../../sass/_mcda-drugis-base.scss */
+/* line 223, ../../sass/_mcda-drugis-base.scss */
 .prefs-block {
   padding-bottom: 1.5rem;
   border-bottom: 1px solid #cacaca;
   margin-bottom: 1.5rem;
 }
 
-/* line 234, ../../sass/_mcda-drugis-base.scss */
+/* line 229, ../../sass/_mcda-drugis-base.scss */
 .inline {
   display: inline-block;
 }
 
-/* line 238, ../../sass/_mcda-drugis-base.scss */
+/* line 233, ../../sass/_mcda-drugis-base.scss */
 .block {
   display: block;
 }
 
-/* line 242, ../../sass/_mcda-drugis-base.scss */
+/* line 237, ../../sass/_mcda-drugis-base.scss */
 .round {
   border-radius: 20px;
 }
 
-/* line 246, ../../sass/_mcda-drugis-base.scss */
+/* line 241, ../../sass/_mcda-drugis-base.scss */
 .slider-buttons {
   margin-top: 1.4rem;
 }
 
-/* line 250, ../../sass/_mcda-drugis-base.scss */
+/* line 245, ../../sass/_mcda-drugis-base.scss */
 .none {
   display: none;
 }
 
 /*----- TREEVIEW -----*/
-/* line 257, ../../sass/_mcda-drugis-base.scss */
+/* line 252, ../../sass/_mcda-drugis-base.scss */
 .button.tiny-icon {
   padding-top: 0.325rem;
   padding-right: 0.75rem;
@@ -8611,13 +8616,13 @@ input[type='file'] {
   font-size: 1rem;
 }
 
-/* line 265, ../../sass/_mcda-drugis-base.scss */
+/* line 260, ../../sass/_mcda-drugis-base.scss */
 .workspace-control-tab {
   background-color: #e6e6e6;
   margin-right: 0.5rem;
 }
 
-/* line 270, ../../sass/_mcda-drugis-base.scss */
+/* line 265, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container {
   border-bottom: 1px solid #1976D2;
   -webkit-user-select: none;
@@ -8630,7 +8635,7 @@ input[type='file'] {
   -o-user-select: none;
   user-select: none;
 }
-/* line 281, ../../sass/_mcda-drugis-base.scss */
+/* line 276, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav {
   position: relative;
   display: block;
@@ -8638,20 +8643,20 @@ input[type='file'] {
   margin: 0 0 -2px 0;
   text-align: center;
 }
-/* line 289, ../../sass/_mcda-drugis-base.scss */
+/* line 284, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav > ul {
   bottom: -4px;
   list-style-type: none;
   margin: 2px auto 0 auto;
   position: relative;
 }
-/* line 296, ../../sass/_mcda-drugis-base.scss */
+/* line 291, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li {
   float: left;
   margin: 16px 5px 0 5px;
   list-style: none;
 }
-/* line 300, ../../sass/_mcda-drugis-base.scss */
+/* line 295, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li .scenario-action {
   background: white;
   color: black;
@@ -8659,12 +8664,12 @@ input[type='file'] {
   background-color: white;
   border-color: white;
 }
-/* line 308, ../../sass/_mcda-drugis-base.scss */
+/* line 303, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li .scenario-action:hover {
   background-color: white;
   border-color: white;
 }
-/* line 315, ../../sass/_mcda-drugis-base.scss */
+/* line 310, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li a {
   border: 1px solid #1976D2;
   border-bottom: none;
@@ -8677,22 +8682,22 @@ input[type='file'] {
   display: inline-block;
   margin-bottom: -1px;
 }
-/* line 327, ../../sass/_mcda-drugis-base.scss */
+/* line 322, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li a:hover {
   border-color: #145ca4;
   background-color: #145ca4;
 }
-/* line 331, ../../sass/_mcda-drugis-base.scss */
+/* line 326, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li a.activetab {
   background-color: #fefefe;
   color: #0a0a0a;
 }
-/* line 335, ../../sass/_mcda-drugis-base.scss */
+/* line 330, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li a.disabledtab {
   cursor: auto;
   opacity: 0.7;
 }
-/* line 340, ../../sass/_mcda-drugis-base.scss */
+/* line 335, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav li a.disabledtab:hover {
   cursor: auto;
   opacity: 0.7;
@@ -8700,12 +8705,12 @@ input[type='file'] {
   border: 1px solid #1976D2;
   border-bottom: none;
 }
-/* line 350, ../../sass/_mcda-drugis-base.scss */
+/* line 345, ../../sass/_mcda-drugis-base.scss */
 .overview-nav-container .overview-nav > li:first-child {
   margin-left: 15px;
 }
 
-/* line 355, ../../sass/_mcda-drugis-base.scss */
+/* line 350, ../../sass/_mcda-drugis-base.scss */
 .tab-corners {
   border-top-left-radius: 2px;
   border-top-right-radius: 2px;
@@ -8715,12 +8720,12 @@ input[type='file'] {
   -webkit-border-top-right-radius: 2px;
 }
 
-/* line 364, ../../sass/_mcda-drugis-base.scss */
+/* line 359, ../../sass/_mcda-drugis-base.scss */
 .scenario-menu {
   padding-top: 17px;
 }
 
-/* line 368, ../../sass/_mcda-drugis-base.scss */
+/* line 363, ../../sass/_mcda-drugis-base.scss */
 .scenario-select {
   display: inline;
   width: 190px;
@@ -8730,35 +8735,35 @@ input[type='file'] {
   margin: 2px 4px 1px 0px;
 }
 
-/* line 377, ../../sass/_mcda-drugis-base.scss */
+/* line 372, ../../sass/_mcda-drugis-base.scss */
 .new-scenario-btn {
   color: #1976D2;
 }
 
-/* line 381, ../../sass/_mcda-drugis-base.scss */
+/* line 376, ../../sass/_mcda-drugis-base.scss */
 .new-scenario-btn:hover {
   cursor: pointer;
   color: #1564b3;
 }
 
-/* line 386, ../../sass/_mcda-drugis-base.scss */
+/* line 381, ../../sass/_mcda-drugis-base.scss */
 #newScenarioControl {
   margin-left: -10px;
   margin: 6px;
   width: 220px;
 }
 
-/* line 392, ../../sass/_mcda-drugis-base.scss */
+/* line 387, ../../sass/_mcda-drugis-base.scss */
 .results-button {
   margin-left: 0.5rem;
 }
 
-/* line 398, ../../sass/_mcda-drugis-base.scss */
+/* line 393, ../../sass/_mcda-drugis-base.scss */
 .pref-progress {
   margin: 50px 60px;
 }
 
-/* line 402, ../../sass/_mcda-drugis-base.scss */
+/* line 397, ../../sass/_mcda-drugis-base.scss */
 .circle-container {
   text-align: center;
   display: inline-block;
@@ -8767,24 +8772,24 @@ input[type='file'] {
   margin-top: -17px;
 }
 
-/* line 410, ../../sass/_mcda-drugis-base.scss */
+/* line 405, ../../sass/_mcda-drugis-base.scss */
 .line {
   background-color: #e2e2e2;
   width: 100%;
   height: 5px;
 }
 
-/* line 416, ../../sass/_mcda-drugis-base.scss */
+/* line 411, ../../sass/_mcda-drugis-base.scss */
 .last-line {
   height: 5px;
 }
 
-/* line 420, ../../sass/_mcda-drugis-base.scss */
+/* line 415, ../../sass/_mcda-drugis-base.scss */
 .pref-progress .progress-cell {
   padding: 0px;
 }
 
-/* line 424, ../../sass/_mcda-drugis-base.scss */
+/* line 419, ../../sass/_mcda-drugis-base.scss */
 .circle {
   background-color: #e2e2e2;
   height: 25px;
@@ -8795,26 +8800,26 @@ input[type='file'] {
   margin-left: -15px;
 }
 
-/* line 434, ../../sass/_mcda-drugis-base.scss */
+/* line 429, ../../sass/_mcda-drugis-base.scss */
 .circle-container.next-step .circle,
 .circle-container.completed .circle,
 .line.accessible {
   background-color: #29A329;
 }
 
-/* line 440, ../../sass/_mcda-drugis-base.scss */
+/* line 435, ../../sass/_mcda-drugis-base.scss */
 .circle-container.next-step:hover,
 .circle-container.completed:hover {
   cursor: pointer;
 }
 
-/* line 445, ../../sass/_mcda-drugis-base.scss */
+/* line 440, ../../sass/_mcda-drugis-base.scss */
 .circle-label {
   margin-left: -50%;
   text-align: left;
 }
 
-/* line 451, ../../sass/_mcda-drugis-base.scss */
+/* line 446, ../../sass/_mcda-drugis-base.scss */
 li.disabled {
   background: #efefef;
   border: 1px solid;
@@ -8830,13 +8835,13 @@ li.disabled {
   color: darkgray;
 }
 
-/* line 466, ../../sass/_mcda-drugis-base.scss */
+/* line 461, ../../sass/_mcda-drugis-base.scss */
 span.toggle-text {
   position: relative;
   bottom: 9px;
 }
 
-/* line 471, ../../sass/_mcda-drugis-base.scss */
+/* line 466, ../../sass/_mcda-drugis-base.scss */
 .dropdown.menu a {
   background: #333;
 }

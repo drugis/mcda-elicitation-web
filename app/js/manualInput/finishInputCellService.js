@@ -81,9 +81,15 @@ define(['angular'], function() {
     function finishNormalInputCell(options, performance) {
       var inputCell = {
         inputParameters: options,
-        firstParameter: performance.parameters.mu,
-        secondParameter: performance.parameters.sigma
       };
+      if (performance.input) { 
+        inputCell.firstParameter = performance.input.mu;
+        inputCell.secondParameter = performance.input.sigma;
+        inputCell.constraint = PERCENTAGE;
+      } else {
+        inputCell.firstParameter = performance.parameters.mu;
+        inputCell.secondParameter = performance.parameters.sigma;
+      }
       return inputCell;
     }
 

@@ -123,16 +123,17 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         expect(result).toEqual(expectedResult);
       });
 
-      it('should generate a non-percentage normal distribution given a symmetric interval and a percentage constraint', function() {
+      it('should generate a percentage normal distribution given a symmetric interval and a percentage constraint', function() {
         cell.constraint = 'percentage';
         cell.inputParameters.firstParameter.constraints.push(percentageConstraint);
         cell.inputParameters.secondParameter.constraints.push(percentageConstraint);
         var result = generateDistributionService.generateValueCIDistribution(options, options, cell);
         var expectedResult = {
           label: label,
-          firstParameter: 0.5,
-          secondParameter: 0.05102,
-          inputParameters: options
+          firstParameter: 50,
+          secondParameter: 5.102,
+          inputParameters: options,
+          constraint: 'percentage'
         };
         expect(result).toEqual(expectedResult);
       });

@@ -26,6 +26,7 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
      * 1.3.4 Add 'decimal' as scale option to input
      * 1.4.0 Add type to unit of measurement; Scales with null ranges updated to minus/plus infinity and are mandatory
      * 1.4.1 Add ranges
+     * 1.4.2 Add possibility to make constrained normal distributions
      * *****/
 
     function updateProblemToCurrentSchema(problem) {
@@ -74,6 +75,10 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
         newProblem.schemaVersion = '1.4.1';
       }
 
+      if (newProblem.schemaVersion === '1.4.1') {
+        newProblem.schemaVersion = '1.4.2';
+      }
+      
       if (newProblem.schemaVersion === currentSchemaVersion) {
         var error = isInvalidSchema(newProblem);
 
