@@ -40,7 +40,7 @@ define(['lodash', 'bowser'], function(_, bowser) {
         scope.isFirefox = browser === 'Firefox';
         scope.isChrome = browser === 'Chrome';
 
-        function isCellAnalysisViable(){
+        function isCellAnalysisViable() {
           scope.isCellAnalysisViable = EffectsTableService.createIsCellAnalysisViable(
             scope.rows,
             scope.alternatives,
@@ -51,6 +51,7 @@ define(['lodash', 'bowser'], function(_, bowser) {
 
         function getWorkspaceSettings() {
           scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
+          scope.numberOfColumns = _.filter(scope.toggledColumns).length;
           scope.isValueView = WorkspaceSettingsService.isValueView();
         }
       }
