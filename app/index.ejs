@@ -6,7 +6,6 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width">
   <link rel="shortcut icon" href="img/favicon.png" type="image/x-icon">
-  <title>mcda.drugis.org</title>
   <%= htmlWebpackPlugin.options.matomo %>
 </head>
 
@@ -24,7 +23,9 @@
   <script>
     if (window.location.host.indexOf('test') > -1) {
       document.body.className += ' test';
-      document.title = 'test-' + document.title;
+      document.title = 'mcda-test.drugis.org';
+    } else {
+      document.title = 'mcda.drugis.org';
     }
   </script>
 

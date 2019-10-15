@@ -83,7 +83,7 @@
     "mini-css-extract-plugin": "^0.4.2",
     "nvd3": "~1.8.6",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
-    "page-title-service": "drugis/page-title-service#1.0.3",
+    "page-title-service": "drugis/page-title-service#1.0.4",
     "raw-loader": "^0.5.1",
     "rights-management": "drugis/rights-management#1.0.4",
     "style-loader": "^0.22.1",
