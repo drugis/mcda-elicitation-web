@@ -41,10 +41,7 @@ function createAlternative(title) {
 
 function createInputDefault(browser) {
   browser
-    .waitForElementVisible('#create-workspace-button')
-    .click('#create-workspace-button')
-    .click('#manual-workspace-radio')
-    .click('#add-workspace-button')
+    .useCss()
     .waitForElementVisible('#manual-input-header-step1')
     .setValue('#workspace-title', title)
     .setValue('#therapeutic-context', therapeuticContext)
@@ -60,84 +57,68 @@ function createInputDefault(browser) {
   manualInputService.addAlternative(browser, alternative2);
 }
 
+function addCriterion(browser) {
+  browser
+    .click('//*[@id="add-criterion-button"]')
+    .setValue('//*[@id="criterion-title-input"]', 'c1')
+    .click('//*[@id="add-criterion-confirm-button"]');
+}
 
 module.exports = {
   beforeEach: function(browser) {
     browser.resizeWindow(1366, 728);
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    browser
+      .useXpath()
+      .click('//*[@id="create-workspace-button"]')
+      .click('//*[@id="manual-workspace-radio"]')
+      .click('//*[@id="add-workspace-button"]')
+      ;
   },
 
   afterEach: function(browser) {
-    browser.end();
+    browser.useCss().end();
   },
 
   'During manual input, cancel adding a criterion': function(browser) {
+    addCriterion(browser);
     browser
-      .useXpath()
-      .click('//*[@id="create-workspace-button"]')
-      .click('//*[@id="manual-workspace-radio"]')
-      .click('//*[@id="add-workspace-button"]')
-      .click('//*[@id="add-criterion-button"]')
-      .setValue('//*[@id="criterion-title-input"]', 'c1')
-      .click('//*[@id="add-criterion-confirm-button"]')
       .click('//*[@id="add-criterion-button"]')
       .click('/html/body/div[4]/div/div/form/div/div/button')
       .assert.containsText('/html/body/div[2]/div/div/div[15]/em', 'At least two criteria required')
-      .useCss();
+      ;
   },
 
   'During manual input, cancel adding a data source': function(browser) {
+    addCriterion(browser);
     browser
-      .useXpath()
-      .click('//*[@id="create-workspace-button"]')
-      .click('//*[@id="manual-workspace-radio"]')
-      .click('//*[@id="add-workspace-button"]')
-      .click('//*[@id="add-criterion-button"]')
-      .setValue('//*[@id="criterion-title-input"]', 'c1')
-      .click('//*[@id="add-criterion-confirm-button"]')
       .click('/html/body/div[2]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[4]/button')
       .click('/html/body/div[4]/div/div/div/form/button')
       .assert.containsText('/html/body/div[2]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[2]/em', 'No data sources defined')
-      .useCss();
+      ;
   },
 
   'During manual input, cancel adding an alternative': function(browser) {
     browser
-      .useXpath()
-      .click('//*[@id="create-workspace-button"]')
-      .click('//*[@id="manual-workspace-radio"]')
-      .click('//*[@id="add-workspace-button"]')
       .click('//*[@id="add-alternative-button"]')
       .click('/html/body/div[4]/div/div/div/form/button')
       .assert.containsText('/html/body/div[2]/div/div/div[12]/table/tbody/tr/td[2]/em', 'No alternatives defined')
-      .useCss();
+      ;
   },
 
   'During manual input, cancel editing a criterion': function(browser) {
+    addCriterion(browser);
     browser
-      .useXpath()
-      .click('//*[@id="create-workspace-button"]')
-      .click('//*[@id="manual-workspace-radio"]')
-      .click('//*[@id="add-workspace-button"]')
-      .click('//*[@id="add-criterion-button"]')
-      .setValue('//*[@id="criterion-title-input"]', 'c1')
-      .click('//*[@id="add-criterion-confirm-button"]')
       .click('/html/body/div[2]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[2]/div/a[1]/i')
       .clearValue('//*[@id="criterion-title-input"]')
       .click('/html/body/div[4]/div/div/form/div/div/button')
       .assert.containsText('/html/body/div[2]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[1]/h5', 'c1')
-      .useCss();
+      ;
   },
 
   'During manual input, cancel editing a data source': function(browser) {
+    addCriterion(browser);
     browser
-      .useXpath()
-      .click('//*[@id="create-workspace-button"]')
-      .click('//*[@id="manual-workspace-radio"]')
-      .click('//*[@id="add-workspace-button"]')
-      .click('//*[@id="add-criterion-button"]')
-      .setValue('//*[@id="criterion-title-input"]', 'c1')
-      .click('//*[@id="add-criterion-confirm-button"]')
       .click('/html/body/div[2]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[4]/button')
       .setValue('//*[@id="data-source-reference"]', 'ref')
       .click('//*[@id="add-data-source-button"]')
@@ -145,15 +126,11 @@ module.exports = {
       .clearValue('//*[@id="data-source-reference"]')
       .click('/html/body/div[4]/div/div/div/form/button')
       .assert.containsText('/html/body/div[2]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[2]/div', 'ref')
-      .useCss();
+      ;
   },
 
   'During manual input, cancel editing an alternative': function(browser) {
     browser
-      .useXpath()
-      .click('//*[@id="create-workspace-button"]')
-      .click('//*[@id="manual-workspace-radio"]')
-      .click('//*[@id="add-workspace-button"]')
       .click('//*[@id="add-alternative-button"]')
       .setValue('//*[@id="alternative-title"]', 'a1')
       .click('//*[@id="add-alternative-confirm-button"]')
@@ -161,7 +138,7 @@ module.exports = {
       .click('//*[@id="alternative-title"]')
       .click('//*[@id="close-modal-button"]')
       .assert.containsText('/html/body/div[2]/div/div/div[12]/table/tbody/tr/td[2]', 'a1')
-      .useCss();
+      ;
   },
 
   'During manual input step 2, cancel editing unit of measurement': function(browser) {
@@ -175,8 +152,8 @@ module.exports = {
       .click('//*[@id="edit-unit-of-measurement-c1-ref1"]')
       .setValue('//*[@id="uom-label"]', 'l')
       .click('/html/body/div[4]/div/div/form/div/button')
-      .assert.containsText('//*[@id="unit-of-measurement-label-c1-ref1"]', 'kg')      
-      .useCss();
+      .assert.containsText('//*[@id="unit-of-measurement-label-c1-ref1"]', 'kg')
+      ;
   },
 
   'During manual input step 2, cancel editing uncertainty': function(browser) {
@@ -190,7 +167,7 @@ module.exports = {
       .click('//*[@id="edit-soe-unc-c1-ref1"]')
       .setValue('//*[@id="uncertainties-input"]', 'not none')
       .click('/html/body/div[4]/div/div/form/div/button')
-      .assert.containsText('//*[@id="uncertainties-c1-ref1"]', 'Unc: none')      
-      .useCss();
+      .assert.containsText('//*[@id="uncertainties-c1-ref1"]', 'Unc: none')
+      ;
   }
 };

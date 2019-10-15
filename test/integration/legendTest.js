@@ -17,6 +17,23 @@ const placeboLabelInput = '#label-input-38deaf60-9014-4af9-997e-e5f08bc8c8ff';
 const fluoxLabelInput = '#label-input-a85db1a0-c045-46b4-958b-eddce3793420';
 const venlaLabelInput = '#label-input-a266d343-4821-47dd-923f-6fff7c32f9fa';
 
+function checkDefaultNames(browser) {
+  browser
+    .getValue(placeboLabelInput, _.partial(checkLabel, 'Placebo'))
+    .getValue(fluoxLabelInput, _.partial(checkLabel, 'Fluoxetine'))
+    .getValue(venlaLabelInput, _.partial(checkLabel, 'Venlafaxine'))
+    ;
+}
+
+function setSingleLetterNames(browser) {
+  browser
+    .click('#single-letter-button')
+    .getValue(placeboLabelInput, _.partial(checkLabel, 'A'))
+    .getValue(fluoxLabelInput, _.partial(checkLabel, 'B'))
+    .getValue(venlaLabelInput, _.partial(checkLabel, 'C'))
+    ;
+}
+
 module.exports = {
   beforeEach: function(browser) {
     browser.resizeWindow(1366, 728);
@@ -45,16 +62,16 @@ module.exports = {
       .useXpath()
       .click(measurementsLegendsButton)
       .useCss()
-      .getValue(placeboLabelInput, _.partial(checkLabel, 'Placebo'))
-      .getValue(fluoxLabelInput, _.partial(checkLabel, 'Fluoxetine'))
-      .getValue(venlaLabelInput, _.partial(checkLabel, 'Venlafaxine'))
-      .click('#single-letter-button')
-      .getValue(placeboLabelInput, _.partial(checkLabel, 'A'))
-      .getValue(fluoxLabelInput, _.partial(checkLabel, 'B'))
-      .getValue(venlaLabelInput, _.partial(checkLabel, 'C'))
+      ;
+
+    checkDefaultNames(browser);
+    setSingleLetterNames(browser);
+
+    browser
       .clearValue(placeboLabelInput)
       .setValue(placeboLabelInput, 'plac')
       .getValue(placeboLabelInput, _.partial(checkLabel, 'plac'))
+
       .click('#save-legend-button')
       .pause(500)
       .waitForElementVisible('#sensitivity-measurements-header')
@@ -77,16 +94,16 @@ module.exports = {
       .useXpath()
       .click(measurementsLegendsButton)
       .useCss()
-      .getValue(placeboLabelInput, _.partial(checkLabel, 'Placebo'))
-      .getValue(fluoxLabelInput, _.partial(checkLabel, 'Fluoxetine'))
-      .getValue(venlaLabelInput, _.partial(checkLabel, 'Venlafaxine'))
-      .click('#single-letter-button')
-      .getValue(placeboLabelInput, _.partial(checkLabel, 'A'))
-      .getValue(fluoxLabelInput, _.partial(checkLabel, 'B'))
-      .getValue(venlaLabelInput, _.partial(checkLabel, 'C'))
+      ;
+
+    checkDefaultNames(browser);
+    setSingleLetterNames(browser);
+
+    browser
       .clearValue(placeboLabelInput)
       .setValue(placeboLabelInput, 'plac')
       .getValue(placeboLabelInput, _.partial(checkLabel, 'plac'))
+
       .click('#save-legend-button')
       .pause(500)
       .waitForElementVisible('#smaa-measurements-header')
@@ -96,7 +113,7 @@ module.exports = {
       .assert.containsText(measurementsThirdAlternative, 'B')
       ;
   },
-  
+
   'Reset labels': function(browser) {
     const measurementsLegendsButton = '/html/body/div[2]/div/div[3]/div/div/div/div/div[4]/div/div/div/div[6]/div[1]/button[2]';
     const measurementsFirstAlternative = '#measurements-sensitivity-plot > svg:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > text:nth-child(2)';
@@ -108,11 +125,11 @@ module.exports = {
       .waitForElementVisible('#sensitivity-table')
       .useXpath()
       .click(measurementsLegendsButton)
-      .useCss()
-      .click('#single-letter-button')
-      .getValue(placeboLabelInput, _.partial(checkLabel, 'A'))
-      .getValue(fluoxLabelInput, _.partial(checkLabel, 'B'))
-      .getValue(venlaLabelInput, _.partial(checkLabel, 'C'))
+      .useCss();
+
+    setSingleLetterNames(browser);
+
+    browser
       .click('#save-legend-button')
       .pause(500)
       .waitForElementVisible('#sensitivity-measurements-header')
@@ -126,10 +143,11 @@ module.exports = {
       .useXpath()
       .click(measurementsLegendsButton)
       .useCss()
+
       .click('#reset-labels-button')
-      .getValue(placeboLabelInput, _.partial(checkLabel, 'Placebo'))
-      .getValue(fluoxLabelInput, _.partial(checkLabel, 'Fluoxetine'))
-      .getValue(venlaLabelInput, _.partial(checkLabel, 'Venlafaxine'))
+      ;
+    checkDefaultNames(browser);
+    browser
       .click('#save-legend-button')
       .pause(500)
       .waitForElementVisible('#sensitivity-measurements-header')

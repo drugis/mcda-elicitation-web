@@ -50,8 +50,6 @@ module.exports = {
   },
 
   'Setting the weights through ranking': function(browser) {
-
-
     browser
       .click('#ranking-button')
       .waitForElementVisible('#ranking-title-header')
