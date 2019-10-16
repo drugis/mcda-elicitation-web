@@ -39,6 +39,7 @@ module.exports = {
       .waitForElementVisible('#workspace-title')
       .click('#user-image-link')
       .waitForElementVisible('#create-workspace-button');
+    workspaceService.deleteFromList(browser, title);
   },
 
   'Navigate to problem that does not exists through URL manipulation': function(browser) {
