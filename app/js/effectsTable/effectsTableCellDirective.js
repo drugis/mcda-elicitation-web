@@ -28,7 +28,8 @@ define(['lodash'], function(_) {
           scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
           scope.isValueView = WorkspaceSettingsService.isValueView();
           scope.uncertainty = hasUncertainty(scope.effectsTableInfo);
-          scope.effectsDisplay = scope.workspaceSettings.effectsDisplay;
+          scope.displayMode = scope.workspaceSettings.displayMode;
+          scope.analysisType = scope.workspaceSettings.analysisType;
           scope.effectValue = '';
           scope.effectLabel = '';
           scope.distributionLabel = '';

@@ -1,4 +1,5 @@
 'use strict';
+
 define(['angular', 'lodash'], function(angular, _) {
   var dependencies = [
     '$rootScope',
@@ -13,7 +14,8 @@ define(['angular', 'lodash'], function(angular, _) {
     var DEFAULT_SETTINGS = {
       calculationMethod: 'median',
       showPercentages: true,
-      effectsDisplay: 'deterministic',
+      displayMode: 'enteredData',
+      analysisType: 'deterministic',
       hasNoEffects: false,
       isRelativeProblem: false
     };
@@ -32,20 +34,29 @@ define(['angular', 'lodash'], function(angular, _) {
     function loadWorkspaceSettings(params) {
       return WorkspaceSettingsResource.get(params).$promise.then(function(result) {
         workspaceSettings = result.settings ? result.settings : angular.copy(DEFAULT_SETTINGS);
-        if (!hasValidView(workspaceSettings)) {
-          workspaceSettings.effectsDisplay = 'deterministic';
+        if (workspaceSettings.hasOwnProperty('effectsDisplay')) {
+          workspaceSettings.displayMode = getDisplayMode(workspaceSettings.effectsDisplay);
+          workspaceSettings.analysisType = getAnalysiType(workspaceSettings.effectsDisplay);
+          delete workspaceSettings.effectsDisplay;
         }
         toggledColumns = result.toggledColumns ? result.toggledColumns : angular.copy(DEFAULT_TOGGLED_COLUMNS);
       });
     }
 
-    function hasValidView(workspaceSettings) {
-      return _.includes([
-        'deterministic',
-        'deterministicMCDA',
-        'smaaDistributions',
-        'smaa'
-      ], workspaceSettings.effectsDisplay);
+    function getAnalysiType(effectsDisplay) {
+      if (effectsDisplay === 'smaaDistributions' || effectsDisplay === 'smaa') {
+        return 'smaa';
+      } else {
+        return 'deterministic';
+      }
+    }
+
+    function getDisplayMode(effectsDisplay) {
+      if (effectsDisplay === 'deterministicMCDA' || effectsDisplay === 'smaa') {
+        return 'values';
+      } else {
+        return 'enteredData';
+      }
     }
 
     function getToggledColumns() {
@@ -54,17 +65,18 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function getWorkspaceSettings(performanceTable) {
       setHasNoEffects(performanceTable);
-      setHasNoAlternatives(performanceTable);
+      setIsRelativeProblem(performanceTable);
       return angular.copy(workspaceSettings);
     }
 
     function setHasNoEffects(performanceTable) {
       if (performanceTable && !hasEffect(performanceTable)) {
-        if (workspaceSettings.effectsDisplay === 'deterministic') {
-          workspaceSettings.effectsDisplay = 'smaa';
+        if (workspaceSettings.analysisType === 'deterministic') {
+          workspaceSettings.analysisType = 'smaa';
+          workspaceSettings.displayMode = 'enteredData';
         }
         workspaceSettings.hasNoEffects = true;
-      } 
+      }
     }
 
     function hasEffect(performanceTable) {
@@ -73,9 +85,13 @@ define(['angular', 'lodash'], function(angular, _) {
       });
     }
 
-    function setHasNoAlternatives(performanceTable){
-      if(performanceTable && !hasAlternative(performanceTable)){
+    function setIsRelativeProblem(performanceTable) {
+      if (performanceTable && !hasAlternative(performanceTable)) {
         workspaceSettings.isRelativeProblem = true;
+        if (workspaceSettings.displayMode === 'enteredData') {
+          workspaceSettings.analysisType = 'smaa';
+          workspaceSettings.displayMode = 'values';
+        }
       }
     }
 
@@ -109,8 +125,7 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function isValueView() {
-      return workspaceSettings.effectsDisplay === 'smaa' ||
-        workspaceSettings.effectsDisplay === 'deterministicMCDA';
+      return workspaceSettings.displayMode === 'values';
     }
 
     return {

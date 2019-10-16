@@ -20,29 +20,34 @@
       </div>
 
       <div class="cell">
-        Effects table display mode
+        Display mode
       </div>
-      <div class="cell" ng-if="!settings.hasNoEffects">
+      <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'deterministic'">Deterministic - entered
-          effects
+          <input type="radio" ng-model="settings.displayMode" ng-value="'enteredData'">
+          Entered data (unaffected by percentage/decimal toggle)
         </label>
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'deterministicMCDA'">Deterministic - analysis
-          values
+          <input type="radio" ng-model="settings.displayMode" ng-value="'values'">
+          Analysis values
         </label>
       </div>
-      <div class="cell" ng-if="!settings.isRelativeProblem">
+
+      <div class="cell">
+        Analysis type
+      </div>
+      <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'smaaDistributions'">SMAA - distribution
-          parameters
+          <input type="radio" ng-model="settings.analysisType" ng-value="'deterministic'">
+          Deterministic
         </label>
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.effectsDisplay" ng-value="'smaa'">SMAA - analysis values
+          <input type="radio" ng-model="settings.analysisType" ng-value="'smaa'">
+          SMAA
         </label>
       </div>
 

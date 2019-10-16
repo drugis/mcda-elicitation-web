@@ -15,7 +15,8 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
     var DEFAULT_SETTINGS = {
       calculationMethod: 'median',
       showPercentages: true,
-      effectsDisplay: 'deterministic',
+      displayMode: 'enteredData',
+      analysisType: 'deterministic',
       hasNoEffects: false,
       isRelativeProblem: false
     };
@@ -104,6 +105,70 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
       describe('without loading new settings', function() {
         it('the service should return the default values', expectToGetDefaultValues);
       });
+
+      describe('after loading settings with "effectsDisplay" set to "deterministic"', function() {
+        it('should set analysisType to "deterministic" and displayMode to "enteredData"', function() {
+          resultsDefer.resolve({
+            settings: {
+              effectsDisplay: 'deterministic'
+            }
+          });
+          scope.$apply();
+          const expectedResult = {
+            analysisType: 'deterministic',
+            displayMode: 'enteredData'
+          };
+          expect(workspaceSettingsService.getWorkspaceSettings()).toEqual(expectedResult);
+        });
+      });
+
+      describe('after loading settings with "effectsDisplay" set to "deterministicMCDA"', function() {
+        it('should set analysisType to "deterministic" and displayMode to "values"', function() {
+          resultsDefer.resolve({
+            settings: {
+              effectsDisplay: 'deterministicMCDA'
+            }
+          });
+          scope.$apply();
+          const expectedResult = {
+            analysisType: 'deterministic',
+            displayMode: 'values'
+          };
+          expect(workspaceSettingsService.getWorkspaceSettings()).toEqual(expectedResult);
+        });
+      });
+
+      describe('after loading settings with "effectsDisplay" set to "smaaDistributions"', function() {
+        it('should set analysisType to "smaa" and displayMode to "enteredData"', function() {
+          resultsDefer.resolve({
+            settings: {
+              effectsDisplay: 'smaaDistributions'
+            }
+          });
+          scope.$apply();
+          const expectedResult = {
+            analysisType: 'smaa',
+            displayMode: 'enteredData'
+          };
+          expect(workspaceSettingsService.getWorkspaceSettings()).toEqual(expectedResult);
+        });
+      });
+
+      describe('after loading settings with "effectsDisplay" set to "smaa"', function() {
+        it('should set analysisType to "smaa" and displayMode to "values"', function() {
+          resultsDefer.resolve({
+            settings: {
+              effectsDisplay: 'smaa'
+            }
+          });
+          scope.$apply();
+          const expectedResult = {
+            analysisType: 'smaa',
+            displayMode: 'values'
+          };
+          expect(workspaceSettingsService.getWorkspaceSettings()).toEqual(expectedResult);
+        });
+      });
     });
 
     describe('saveSettings', function() {
@@ -177,7 +242,7 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
         var result = workspaceSettingsService.getWorkspaceSettings(performanceTable);
 
         var expectedResult = angular.copy(DEFAULT_SETTINGS);
-        expectedResult.effectsDisplay = 'smaa';
+        expectedResult.analysisType = 'smaa';
         expectedResult.hasNoEffects = true;
         expect(result).toEqual(expectedResult);
       });
@@ -198,12 +263,11 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
 
       it('should return workspace settings and keep the display as "deterministic" if there is no performance table', function() {
         var result = workspaceSettingsService.getWorkspaceSettings();
-        
         var expectedResult = DEFAULT_SETTINGS;
         expect(result).toEqual(expectedResult);
       });
 
-      it('should set the isRelativeProblem parameter to TRUE if the problem is purely relative', function() {
+      it('should set the isRelativeProblem parameter to TRUE if the problem is purely relative, and set the display to smaa values if the display mode is on entered data', function() {
         var performanceTable = [{
           performance: {
             effect: {}
@@ -214,6 +278,8 @@ define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angula
 
         var expectedResult = angular.copy(DEFAULT_SETTINGS);
         expectedResult.isRelativeProblem = true;
+        expectedResult.displayMode = 'values';
+        expectedResult.analysisType = 'smaa';
         expect(result).toEqual(expectedResult);
       });
     });
