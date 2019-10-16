@@ -21,8 +21,7 @@ function checkDefaultNames(browser) {
   browser
     .getValue(placeboLabelInput, _.partial(checkLabel, 'Placebo'))
     .getValue(fluoxLabelInput, _.partial(checkLabel, 'Fluoxetine'))
-    .getValue(venlaLabelInput, _.partial(checkLabel, 'Venlafaxine'))
-    ;
+    .getValue(venlaLabelInput, _.partial(checkLabel, 'Venlafaxine'));
 }
 
 function setSingleLetterNames(browser) {
@@ -30,8 +29,7 @@ function setSingleLetterNames(browser) {
     .click('#single-letter-button')
     .getValue(placeboLabelInput, _.partial(checkLabel, 'A'))
     .getValue(fluoxLabelInput, _.partial(checkLabel, 'B'))
-    .getValue(venlaLabelInput, _.partial(checkLabel, 'C'))
-    ;
+    .getValue(venlaLabelInput, _.partial(checkLabel, 'C'));
 }
 
 module.exports = {
@@ -61,8 +59,7 @@ module.exports = {
       .waitForElementVisible('#sensitivity-table')
       .useXpath()
       .click(measurementsLegendsButton)
-      .useCss()
-      ;
+      .useCss();
 
     checkDefaultNames(browser);
     setSingleLetterNames(browser);
@@ -78,8 +75,7 @@ module.exports = {
       .waitForElementVisible(measurementsFirstAlternative)
       .assert.containsText(measurementsFirstAlternative, 'plac')
       .assert.containsText(measurementsSecondAlternative, 'B')
-      .assert.containsText(measurementsThirdAlternative, 'C')
-      ;
+      .assert.containsText(measurementsThirdAlternative, 'C');
   },
 
   'Changing alternatives to generated labels in smaa view': function(browser) {
@@ -93,8 +89,7 @@ module.exports = {
       .waitForElementVisible('#smaa-measurements-header')
       .useXpath()
       .click(measurementsLegendsButton)
-      .useCss()
-      ;
+      .useCss();
 
     checkDefaultNames(browser);
     setSingleLetterNames(browser);
@@ -110,8 +105,7 @@ module.exports = {
       .waitForElementVisible(measurementsFirstAlternative)
       .assert.containsText(measurementsFirstAlternative, 'plac')
       .assert.containsText(measurementsSecondAlternative, 'C')
-      .assert.containsText(measurementsThirdAlternative, 'B')
-      ;
+      .assert.containsText(measurementsThirdAlternative, 'B');
   },
 
   'Reset labels': function(browser) {
@@ -143,14 +137,12 @@ module.exports = {
       .useXpath()
       .click(measurementsLegendsButton)
       .useCss()
+      .click('#reset-labels-button');
 
-      .click('#reset-labels-button')
-      ;
     checkDefaultNames(browser);
     browser
       .click('#save-legend-button')
       .pause(500)
-      .waitForElementVisible('#sensitivity-measurements-header')
-      ;
+      .waitForElementVisible('#sensitivity-measurements-header');
   }
 };

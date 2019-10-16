@@ -19,6 +19,11 @@ function loadTestWorkspace(browser, title) {
   errorService.isErrorBarHidden(browser);
 }
 
+function cleanUpWorkspace(browser, title) {
+  browser.click('#logo');
+  workspaceService.deleteFromList(browser, title);
+}
+
 module.exports = {
   beforeEach: function(browser) {
     browser.resizeWindow(1366, 728);
@@ -41,11 +46,9 @@ module.exports = {
       .assert.containsText(proximalDVTCriterionDescription, 'Proximal deep vein thrombolytic events, often associated with serious complications.')
       .useXpath()
       .assert.containsText(firstDistalDVTValue, '40 / 136')
-      .useCss()
-      ;
+      .useCss();
 
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    cleanUpWorkspace(browser, title);
   },
 
   'Editing the therapeutic context': function(browser) {
@@ -57,11 +60,9 @@ module.exports = {
       .waitForElementVisible('#therapeutic-context-header')
       .setValue('#therapeutic-context-input', 'new context')
       .click('#save-button')
-      .assert.containsText('#therapeutic-context', 'new context')
-      ;
+      .assert.containsText('#therapeutic-context', 'new context');
 
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    cleanUpWorkspace(browser, title);
   },
 
   'Editing a criterion': function(browser) {
@@ -81,16 +82,14 @@ module.exports = {
       .setValue('#criterion-description-input', newDescription)
       .click('#add-criterion-confirm-button')
       .assert.containsText(proximalDVTCriterionTitle, newTitle)
-      .assert.containsText(proximalDVTCriterionDescription, newDescription)
-      ;
+      .assert.containsText(proximalDVTCriterionDescription, newDescription);
 
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    cleanUpWorkspace(browser, title);
   },
 
   'Editing a data source': function(browser) {
-    const zynbrita = 'Zinbryta - initial regulatory review';
-    loadTestWorkspace(browser, zynbrita);
+    const zinbryta = 'Zinbryta - initial regulatory review';
+    loadTestWorkspace(browser, zinbryta);
 
     const newUnit = 'new unit';
     const newReference = 'newReference';
@@ -124,11 +123,9 @@ module.exports = {
       .click('#edit-data-source-button')
       .assert.containsText(dataSourceReferenceWithLink, newReference)
       .assert.containsText(soeUnc, 'SoE: ' + newStrength + '\nUnc: ' + newUncertainties)
-      .assert.containsText(unitOfMeasurement, newUnit)
-      ;
+      .assert.containsText(unitOfMeasurement, newUnit);
 
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, zynbrita);
+    cleanUpWorkspace(browser, zinbryta);
   },
 
   'Editing an alternative': function(browser) {
@@ -142,11 +139,9 @@ module.exports = {
       .clearValue('#alternative-title')
       .setValue('#alternative-title', newTitle)
       .click('#save-alternative-button')
-      .assert.containsText(heparinAlternative, newTitle)
-      ;
+      .assert.containsText(heparinAlternative, newTitle);
 
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    cleanUpWorkspace(browser, title);
   },
 
   'Editing the workspace title': function(browser) {
@@ -157,10 +152,9 @@ module.exports = {
       .click('#edit-workspace-title-button')
       .clearValue('#workspace-title-input')
       .setValue('#workspace-title-input', newTitle)
-      .click('#save-workspace-title-button')
-      ;
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, newTitle);
+      .click('#save-workspace-title-button');
+
+    cleanUpWorkspace(browser, newTitle);
   },
 
   'Reordering criteria': function(browser) {
@@ -179,10 +173,9 @@ module.exports = {
       .click(proximalUp)
       .useXpath()
       .assert.containsText(firstCriterionTitle, 'Proximal DVT')
-      .useCss()
-      ;
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+      .useCss();
+
+    cleanUpWorkspace(browser, title);
   },
 
   'Reordering alternatives': function(browser) {
@@ -203,10 +196,9 @@ module.exports = {
       .click(heparinUp)
       .useXpath()
       .assert.containsText(firstAlternativeTitle, 'Heparin')
-      .useCss()
-      ;
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+      .useCss();
+
+    cleanUpWorkspace(browser, title);
   },
 
   'Reordering data sources': function(browser) {
@@ -229,10 +221,8 @@ module.exports = {
       .click(ref1Up)
       .useXpath()
       .assert.containsText(firstReference, 'ref1')
-      .useCss()
-      ;
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, 'Test workspace');
-  }
+      .useCss();
 
+    cleanUpWorkspace(browser, 'Test workspace');
+  }
 };

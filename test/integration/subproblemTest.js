@@ -29,8 +29,7 @@ function setupSubProblem(browser) {
     .click('#deselectionAlternativeId')
     .click('#deselectionDataSourceId')
     .click('#deselectionCriterionId')
-    .waitForElementVisible('#create-new-subproblem-button:enabled')
-    ;
+    .waitForElementVisible('#create-new-subproblem-button:enabled');
 }
 
 module.exports = {
@@ -61,8 +60,7 @@ module.exports = {
       .click('#deselectionCriterionId')
       .waitForElementVisible('#create-new-subproblem-button:disabled')
       .click('#deselectionCriterionId')
-      .waitForElementVisible('#create-new-subproblem-button:enabled')
-      ;
+      .waitForElementVisible('#create-new-subproblem-button:enabled');
     browser.click('#create-new-subproblem-button');
   },
 
@@ -74,13 +72,11 @@ module.exports = {
       .assert.containsText('#subproblem-selector', subproblem1.title)
       .click('#subproblem-selector')
       .click('option[label="Default"]')
-      .assert.containsText('#subproblem-selector', 'Default')
-      ;
+      .assert.containsText('#subproblem-selector', 'Default');
   },
 
   'Edit the title': function(browser) {
     const newTitle = 'not default';
-
     browser
       .waitForElementVisible('#workspace-title')
       .click('#problem-definition-tab')
@@ -91,13 +87,11 @@ module.exports = {
       .setValue('#subproblem-title-input', newTitle)
       .click('#save-subproblem-button')
       .waitForElementVisible('#effects-table-header')
-      .assert.containsText('#subproblem-selector', newTitle)
-      ;
+      .assert.containsText('#subproblem-selector', newTitle);
   },
 
   'Reset during subproblem creation': function(browser) {
     setupSubProblem(browser);
-
     browser
       .waitForElementVisible('#create-new-subproblem-button:enabled')
       .click('#reset-subproblem-button')
@@ -106,13 +100,11 @@ module.exports = {
       .waitForElementVisible('#deselectionAlternativeId:checked')
       .waitForElementVisible('#deselectionDataSourceId:checked')
       .waitForElementVisible('#deselectionCriterionId:checked')
-      .click('#close-button')
-      ;
+      .click('#close-modal-button');
   },
 
   'Interact with scale sliders': function(browser) {
     setupSubProblem(browser);
-
     const lowerValueLabel = '//div[13]/ul/li[1]/div/div[2]/div/span[10]';
     const upperValueLabel = '//div[13]/ul/li[1]/div/div[2]/div/span[11]';
     const moveFloor = '//div[13]/ul/li[1]/div/div[1]/a';
@@ -141,7 +133,6 @@ module.exports = {
       .mouseButtonUp(0)
       .assert.containsText(upperValueLabel, '300')
       .useCss()
-      .click('#close-button')
-      ;
+      .click('#close-modal-button');
   }
 };

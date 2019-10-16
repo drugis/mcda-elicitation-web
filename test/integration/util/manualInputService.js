@@ -23,12 +23,33 @@ function addAlternative(browser, alternative) {
   browser
     .click('#add-alternative-button')
     .setValue('#alternative-title', alternative.title)
-    .click('#add-alternative-confirm-button')
-    ;
+    .click('#add-alternative-confirm-button');
+}
+
+function createCriterion(title, favorability) {
+  return {
+    title: title,
+    description: 'description',
+    favorability: favorability
+  };
+}
+
+function createDataSource(reference) {
+  return {
+    reference: reference,
+    url: 'http://url.com'
+  };
+}
+
+function createAlternative(title) {
+  return { title: title };
 }
 
 module.exports = {
   addCriterion: addCriterion,
   addDataSource: addDataSource,
-  addAlternative: addAlternative
+  addAlternative: addAlternative,
+  createCriterion: createCriterion,
+  createDataSource: createDataSource,
+  createAlternative: createAlternative
 };

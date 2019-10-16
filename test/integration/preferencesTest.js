@@ -62,6 +62,16 @@ module.exports = {
     resetWeights(browser);
   },
 
+  'Ranking previous button': function(browser) {
+    browser
+      .click('#ranking-button')
+      .waitForElementVisible('#ranking-title-header')
+      .click('#OS-ranking-option')
+      .click('#next-button')
+      .click('#previous-button')
+      .assert.containsText('#ranking-title-header', 'Ranking (1/2)');
+  },
+
   'Setting the weights through matching': function(browser) {
     browser
       .click('#matching-button')
@@ -80,6 +90,16 @@ module.exports = {
     resetWeights(browser);
   },
 
+  'Matching previous button': function(browser) {
+    browser
+      .click('#matching-button')
+      .waitForElementVisible('#matching-title-header')
+      .click('#OS-option')
+      .click('#next-button')
+      .click('#previous-button')
+      .assert.containsText('#matching-title-header', 'Matching (1/2)');
+  },
+
   'Setting the weights through precise swing weighting': function(browser) {
     browser
       .click('#precise-swing-button')
@@ -92,6 +112,16 @@ module.exports = {
     resetWeights(browser);
   },
 
+  'Precise swing previous button': function(browser) {
+    browser
+      .click('#precise-swing-button')
+      .waitForElementVisible('#swing-weighting-title-header')
+      .click('#OS-option')
+      .click('#next-button')
+      .click('#previous-button')
+      .assert.containsText('#swing-weighting-title-header', 'Precise swing weighting (1/2)');
+  },
+
   'Setting the weights through imprecise swing weighting': function(browser) {
     browser
       .click('#imprecise-swing-button')
@@ -102,6 +132,16 @@ module.exports = {
 
     matchImportanceColumnContents(browser, '100%', '1-100%', '1-100%');
     resetWeights(browser);
+  },
+
+  'Imprecise swing previous button': function(browser) {
+    browser
+      .click('#imprecise-swing-button')
+      .waitForElementVisible('#swing-weighting-title-header')
+      .click('#OS-option')
+      .click('#next-button')
+      .click('#previous-button')
+      .assert.containsText('#swing-weighting-title-header', 'Imprecise swing weighting (1/2)');
   },
 
   'Interacting with Willingness to trade off plot': function(browser) {

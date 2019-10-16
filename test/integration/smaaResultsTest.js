@@ -62,7 +62,6 @@ module.exports = {
 
     checkElementAbove(browser, measurementElementId, 30);
     checkElementAbove(browser, centralWightElementId, 0);
-
     checkRankTable(browser);
 
     browser.click('#logo');

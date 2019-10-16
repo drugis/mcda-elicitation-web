@@ -41,8 +41,7 @@ module.exports = {
       .waitForElementVisible('#create-new-scenario-button:enabled')
       .click('#create-new-scenario-button')
       .pause(50)
-      .assert.containsText('#scenario-selector', scenarioTitle)
-      ;
+      .assert.containsText('#scenario-selector', scenarioTitle);
   },
 
   'Editing the title': function(browser) {
@@ -53,8 +52,7 @@ module.exports = {
       .click('#edit-scenario-title-button')
       .pause(50)
       .waitForElementVisible('#scenario-selector')
-      .assert.containsText('#scenario-selector', scenarioTitle)
-      ;
+      .assert.containsText('#scenario-selector', scenarioTitle);
   },
 
   'Copying the scenario': function(browser) {
@@ -67,8 +65,7 @@ module.exports = {
       .click('#create-new-scenario-button')
       .pause(50) //pause needed to not get 'stale element' error
       .waitForElementVisible('#scenario-selector')
-      .assert.containsText('#scenario-selector', scenarioTitle)
-      ;
+      .assert.containsText('#scenario-selector', scenarioTitle);
   },
 
   'Switching scenario in the preferences tab': function(browser) {
@@ -81,8 +78,7 @@ module.exports = {
       .assert.containsText('#scenario-selector', scenarioTitle)
       .click('#scenario-selector')
       .click('option[label="Default"]')
-      .assert.containsText('#scenario-selector', 'Default')
-      ;
+      .assert.containsText('#scenario-selector', 'Default');
   },
 
   'Switching scenario in the deterministic results tab': function(browser) {
@@ -97,8 +93,7 @@ module.exports = {
       .waitForElementVisible('#sensitivity-measurements-header')
       .click('#scenario-selector')
       .click('option[label="Default"]')
-      .assert.containsText('#scenario-selector', 'Default')
-      ;
+      .assert.containsText('#scenario-selector', 'Default');
   },
 
   'Switching scenario in the SMAA results tab': function(browser) {
@@ -113,7 +108,6 @@ module.exports = {
       .waitForElementVisible('#smaa-measurements-header')
       .click('#scenario-selector')
       .click('option[label="Default"]')
-      .assert.containsText('#scenario-selector', 'Default')
-      ;
+      .assert.containsText('#scenario-selector', 'Default');
   }
 };

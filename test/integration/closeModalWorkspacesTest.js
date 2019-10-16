@@ -2,6 +2,8 @@
 
 const loginService = require('./util/loginService');
 const testUrl = 'http://localhost:3002';
+const closeModalButton = '//*[@id="close-modal-button"]';
+const deleteWorkspaceButton = '//div[2]/div/div[2]/workspaces/div/div[2]/table/tbody/tr/td[3]/a';
 
 module.exports = {
   beforeEach: function(browser) {
@@ -15,7 +17,7 @@ module.exports = {
 
   'Cancel adding a workspace': function(browser) {
     var actionButtonPath = '//*[@id="create-workspace-button"]';
-    var cancelButtonPath = '//*[@id="close-button"]';
+    var cancelButtonPath = closeModalButton;
     browser
       .useXpath()
       .click(actionButtonPath)
@@ -31,10 +33,10 @@ module.exports = {
       .click('//*[@id="add-workspace-button"]')
       .waitForElementVisible('//*[@id="workspace-title"]')
       .click('//*[@id="logo"]')
-      .click('/html/body/div[2]/div/div[2]/workspaces/div/div[2]/table/tbody/tr/td[3]/a')
-      .click('/html/body/div[4]/div/div/button')
-      .assert.containsText('/html/body/div[2]/div/div[2]/workspaces/div/div[2]/table/tbody/tr/td[1]/a', 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)')
-      .click('/html/body/div[2]/div/div[2]/workspaces/div/div[2]/table/tbody/tr/td[3]/a')
+      .click(deleteWorkspaceButton)
+      .click(closeModalButton)
+      .assert.containsText('//div[2]/div/div[2]/workspaces/div/div[2]/table/tbody/tr/td[1]/a', 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)')
+      .click(deleteWorkspaceButton)
       .click('//*[@id="delete-workspace-confirm-button"]')
       .waitForElementVisible('//*[@id="empty-workspace-message"]')
       .useCss();

@@ -8,10 +8,21 @@ const chai = require('chai');
 
 const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
+function goToPreferences(browser) {
+  browser
+    .click('#create-workspace-button')
+    .click('#add-workspace-button')
+    .click('#preferences-tab');
+}
+
+function cleanUpWorkspace(browser) {
+  browser.click('#logo');
+  workspaceService.deleteFromList(browser, title);
+}
+
 module.exports = {
   beforeEach: function(browser) {
     browser.resizeWindow(1366, 728);
-    // loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
   },
 
   afterEach: function(browser) {
@@ -45,8 +56,7 @@ module.exports = {
       .getTitle(function(result) {
         chai.expect(result).to.equal(title + '\'s overview');
       });
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    cleanUpWorkspace(browser);
   },
 
   'A workspace problem definition': function(browser) {
@@ -59,22 +69,18 @@ module.exports = {
       .getTitle(function(result) {
         chai.expect(result).to.equal(title + '\'s problem definition');
       });
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    cleanUpWorkspace(browser);
   },
 
   'A workspace preferences': function(browser) {
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    goToPreferences(browser);
     browser
-      .click('#create-workspace-button')
-      .click('#add-workspace-button')
-      .click('#preferences-tab')
       .pause(2000)
       .getTitle(function(result) {
         chai.expect(result).to.equal(title + '\'s preferences');
       });
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    cleanUpWorkspace(browser);
   },
 
   'A workspace deterministic results': function(browser) {
@@ -87,8 +93,7 @@ module.exports = {
       .getTitle(function(result) {
         chai.expect(result).to.equal(title + '\'s deterministic results');
       });
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    cleanUpWorkspace(browser);
   },
 
   'A workspace SMAA results': function(browser) {
@@ -101,83 +106,67 @@ module.exports = {
       .getTitle(function(result) {
         chai.expect(result).to.equal(title + '\'s SMAA results');
       });
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    cleanUpWorkspace(browser);
   },
 
   'Partial value function': function(browser) {
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    goToPreferences(browser);
     browser
-      .click('#create-workspace-button')
-      .click('#add-workspace-button')
-      .click('#preferences-tab')
       .click('#de14e778-f723-48d4-8f4e-1e589714f4f2-pvf-button')
       .pause(2000)
       .getTitle(function(result) {
         chai.expect(result).to.equal('Treatment responders\'s partial value function');
       });
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    cleanUpWorkspace(browser);
   },
 
   'Ranking weights': function(browser) {
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    goToPreferences(browser);
     browser
-      .click('#create-workspace-button')
-      .click('#add-workspace-button')
-      .click('#preferences-tab')
       .click('#ranking-button')
       .pause(2000)
       .getTitle(function(result) {
         chai.expect(result).to.equal('Ranking');
       });
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    cleanUpWorkspace(browser);
   },
 
   'Matching weights': function(browser) {
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    goToPreferences(browser);
     browser
-      .click('#create-workspace-button')
-      .click('#add-workspace-button')
-      .click('#preferences-tab')
       .click('#matching-button')
       .pause(2000)
       .getTitle(function(result) {
         chai.expect(result).to.equal('Matching');
       });
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    cleanUpWorkspace(browser);
   },
 
   'Precise swing weighting': function(browser) {
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    goToPreferences(browser);
     browser
-      .click('#create-workspace-button')
-      .click('#add-workspace-button')
-      .click('#preferences-tab')
       .click('#precise-swing-button')
       .pause(2000)
       .getTitle(function(result) {
         chai.expect(result).to.equal('Precise swing weighting');
       });
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    cleanUpWorkspace(browser);
   },
 
   'Imprecise swing weighting': function(browser) {
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    goToPreferences(browser);
     browser
-      .click('#create-workspace-button')
-      .click('#add-workspace-button')
-      .click('#preferences-tab')
       .click('#imprecise-swing-button')
       .pause(2000)
       .getTitle(function(result) {
         chai.expect(result).to.equal('Imprecise swing weighting');
       });
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    cleanUpWorkspace(browser);
   },
 
   'Manual input': function(browser) {

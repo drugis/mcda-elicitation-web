@@ -2,6 +2,13 @@
 
 const errorService = require('./errorService.js');
 
+function goHomeAfterLoading(browser, title) {
+  errorService.isErrorBarHidden(browser);
+  browser
+    .assert.containsText('#workspace-title', title)
+    .click('#logo');
+}
+
 function addExample(browser, title) {
   browser
     .waitForElementVisible('#create-workspace-button')
@@ -10,12 +17,7 @@ function addExample(browser, title) {
     .click('#example-workspace-selector')
     .click('option[label="' + title + '"]')
     .click('#add-workspace-button').pause(500);
-
-  errorService.isErrorBarHidden(browser);
-
-  browser
-    .assert.containsText('#workspace-title', title)
-    .click('#logo');
+  goHomeAfterLoading(browser, title);
 }
 
 function addTutorial(browser, title) {
@@ -26,12 +28,7 @@ function addTutorial(browser, title) {
     .click('#tutorial-workspace-selector')
     .click('option[label="' + title + '"]')
     .click('#add-workspace-button').pause(500);
-
-  errorService.isErrorBarHidden(browser);
-
-  browser
-    .assert.containsText('#workspace-title', title)
-    .click('#logo');
+  goHomeAfterLoading(browser, title);
 }
 
 function copy(browser, title, newTitle) {
@@ -40,12 +37,7 @@ function copy(browser, title, newTitle) {
     .setValue('#workspace-title', newTitle)
     .click('#enter-data-button')
     .click('#done-button').pause(500);
-
-  errorService.isErrorBarHidden(browser);
-
-  browser
-    .assert.containsText('#workspace-title', newTitle)
-    .click('#logo');
+  goHomeAfterLoading(browser, newTitle);
 }
 
 function deleteFromList(browser, title) {

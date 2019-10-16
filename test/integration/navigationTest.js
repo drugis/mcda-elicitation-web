@@ -38,14 +38,13 @@ module.exports = {
       .click('a[id="' + title + '"]')
       .waitForElementVisible('#workspace-title')
       .click('#user-image-link')
-      .waitForElementVisible('#create-workspace-button')
-      ;
+      .waitForElementVisible('#create-workspace-button');
   },
 
-  'Navigate to problem that does not exists through URL manipulation': function(browser){
+  'Navigate to problem that does not exists through URL manipulation': function(browser) {
     loginService.login(browser, url, loginService.username, loginService.correctPassword);
     browser.url('http://localhost:3002/#!/workspaces/0/problems/1/scenarios/1/evidence')
-    .useXpath()
-    .waitForElementVisible('/html/body/error-reporting');
+      .useXpath()
+      .waitForElementVisible('/html/body/error-reporting');
   }
 };

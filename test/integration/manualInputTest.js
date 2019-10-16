@@ -13,16 +13,16 @@ const testUrl = 'http://localhost:3002';
 const title = 'manual input';
 const therapeuticContext = 'end-to-end test';
 
-const criterion1 = createCriterion('c1', 'favorable');
-const criterion2 = createCriterion('c2', 'unfavorable');
-const criterion3 = createCriterion('c3', 'favorable');
+const criterion1 = manualInputService.createCriterion('c1', 'favorable');
+const criterion2 = manualInputService.createCriterion('c2', 'unfavorable');
+const criterion3 = manualInputService.createCriterion('c3', 'favorable');
 
-const dataSource1 = createDataSource('ref1');
-const dataSource2 = createDataSource('ref2');
-const dataSource3 = createDataSource('ref3');
+const dataSource1 = manualInputService.createDataSource('ref1');
+const dataSource2 = manualInputService.createDataSource('ref2');
+const dataSource3 = manualInputService.createDataSource('ref3');
 
-const alternative1 = createAlternative('a1');
-const alternative2 = createAlternative('a2');
+const alternative1 = manualInputService.createAlternative('a1');
+const alternative2 = manualInputService.createAlternative('a2');
 
 const criterion1TitlePath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[1]/h5';
 const criterion1AddDataSourcePath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/button';
@@ -49,25 +49,6 @@ const moveDataSourceDownPath = '//div[9]/criterion-list/div[1]/div[2]/criterion-
 const moveAlternativeUpPath = '//div[12]/table/tbody/tr[2]/td[1]/div[1]/a';
 const moveAlternativeDownPath = '//div[12]/table/tbody/tr[1]/td[1]/div[2]/a';
 
-function createCriterion(title, favorability) {
-  return {
-    title: title,
-    description: 'description',
-    favorability: favorability
-  };
-}
-
-function createDataSource(reference) {
-  return {
-    reference: reference,
-    url: 'http://url.com'
-  };
-}
-
-function createAlternative(title) {
-  return { title: title };
-}
-
 function createInputDefault(browser) {
   browser
     .waitForElementVisible('#create-workspace-button')
@@ -81,10 +62,8 @@ function createInputDefault(browser) {
 
   manualInputService.addCriterion(browser, criterion1);
   manualInputService.addCriterion(browser, criterion2);
-
   manualInputService.addDataSource(browser, criterion1AddDataSourcePath, dataSource1);
   manualInputService.addDataSource(browser, criterion2AddDataSourcePath, dataSource2);
-
   manualInputService.addAlternative(browser, alternative1);
   manualInputService.addAlternative(browser, alternative2);
 }
@@ -97,8 +76,7 @@ function clickElement(browser, rowNumber, columnNumber, element) {
     .useXpath()
     .setValue('//tr[' + rowNumber + ']/td[' + columnNumber + ']//input', value)
     .useCss()
-    .click('#deterministic-tab')
-    ;
+    .click('#deterministic-tab');
 }
 
 function setValuesForRow(browser, rowNumber) {
@@ -155,8 +133,7 @@ module.exports = {
       .assert.containsText('//criterion-list/div[2]//td[4]//*', 9)
       .useCss()
       .click('#logo')
-      .waitForElementVisible('#create-workspace-button')
-      ;
+      .waitForElementVisible('#create-workspace-button');
 
     errorService.isErrorBarHidden(browser);
     workspaceService.deleteFromList(browser, title);
@@ -180,8 +157,7 @@ module.exports = {
       .useXpath()
       .assert.containsText(criterion1NewTitlePath, newTitle)
       .assert.containsText(criterion1NewDescriptionPath, 'Description: ' + newDescription)
-      .useCss()
-      ;
+      .useCss();
   },
 
   'Editing a data source': function(browser) {
@@ -200,8 +176,7 @@ module.exports = {
       .click('#add-data-source-button')
       .useXpath()
       .assert.containsText(dataSource1ReferencePath, newReference)
-      .useCss()
-      ;
+      .useCss();
   },
 
   'Editing an alternative': function(browser) {
@@ -217,8 +192,7 @@ module.exports = {
       .click('#save-alternative-button')
       .useXpath()
       .assert.containsText(alternative1TitlePath, newTitle)
-      .useCss()
-      ;
+      .useCss();
   },
 
   'Deleting a criterion': function(browser) {
@@ -228,8 +202,7 @@ module.exports = {
       .useXpath()
       .click(criterion1DeletePath)
       .assert.containsText(criterion1TitlePath, criterion3.title)
-      .useCss()
-      ;
+      .useCss();
   },
 
   'Deleting a data source': function(browser) {
@@ -238,8 +211,7 @@ module.exports = {
       .useXpath()
       .click(dataSource1DeletePath)
       .assert.containsText(criterion1DataSource1Path, 'No data sources defined')
-      .useCss()
-      ;
+      .useCss();
   },
 
   'Deleting an alternative': function(browser) {
@@ -248,8 +220,7 @@ module.exports = {
       .useXpath()
       .click(alternative1DeletePath)
       .assert.containsText(alternative1TitlePath, alternative2.title)
-      .useCss()
-      ;
+      .useCss();
   },
 
   'Moving criterion up and down': function(browser) {
@@ -262,8 +233,7 @@ module.exports = {
       .assert.containsText(criterion1TitlePath, criterion3.title)
       .click(moveCriterionDownPath)
       .assert.containsText(criterion1TitlePath, criterion1.title)
-      .useCss()
-      ;
+      .useCss();
   },
 
   'Moving data source up and down': function(browser) {
@@ -288,8 +258,7 @@ module.exports = {
       .assert.containsText(dataSource1ReferencePath, dataSource3.reference)
       .click(moveDataSourceDownPath)
       .assert.containsText(dataSource1ReferencePath, dataSource1.reference)
-      .useCss()
-      ;
+      .useCss();
   },
 
   'Moving an alternative up and down': function(browser) {
@@ -301,8 +270,7 @@ module.exports = {
       .assert.containsText(alternative1TitlePath, alternative2.title)
       .click(moveAlternativeDownPath)
       .assert.containsText(alternative1TitlePath, alternative1.title)
-      .useCss()
-      ;
+      .useCss();
   },
 
   'Navigating from manual input step2 to step1': function(browser) {
@@ -312,8 +280,7 @@ module.exports = {
       .click('#enter-data-button')
       .waitForElementVisible('#manual-input-header-step2')
       .click('#go-to-step1-button')
-      .waitForElementVisible('#manual-input-header-step1')
-      ;
+      .waitForElementVisible('#manual-input-header-step1');
   },
 
   'Saving during step 1': function(browser) {
@@ -325,8 +292,7 @@ module.exports = {
       .waitForElementVisible('#manual-input-header-step1')
       .useXpath()
       .assert.containsText(criterion1TitlePath, criterion1.title)
-      .useCss()
-      ;
+      .useCss();
 
     browser.click('#logo');
     workspaceService.deleteUnfinishedFromList(browser, title);
@@ -340,8 +306,7 @@ module.exports = {
       .waitForElementVisible('#manual-input-header-step2')
       .click('#step2-save-button')
       .refresh()
-      .waitForElementVisible('#manual-input-header-step2')
-      ;
+      .waitForElementVisible('#manual-input-header-step2');
 
     browser.click('#logo');
     workspaceService.deleteUnfinishedFromList(browser, title);
@@ -363,8 +328,7 @@ module.exports = {
       .waitForElementVisible('#manual-input-header-step1')
       .useXpath()
       .assert.containsText(criterion1TitlePath, criterion1.title)
-      .useCss()
-      ;
+      .useCss();
 
     browser.click('#logo');
     workspaceService.deleteUnfinishedFromList(browser, title);
@@ -397,8 +361,7 @@ module.exports = {
       .assert.containsText('#unit-of-measurement-label-' + criterion1.title + '-' + dataSource1.reference, 'Proportion')
       .useXpath()
       .assert.containsText(firstCell, 'Missing or invalid input')
-      .useCss()
-      ;
+      .useCss();
   },
 
   'Setting the strength of evidence and uncertainties': function(browser) {
@@ -415,7 +378,6 @@ module.exports = {
       .setValue('#uncertainties-input', uncertainties)
       .click('#save-soe-unc-button')
       .assert.containsText('#strength-of-evidence-c1-ref1', 'SoE: ' + strength)
-      .assert.containsText('#uncertainties-c1-ref1', 'Unc: ' + uncertainties)
-      ;
+      .assert.containsText('#uncertainties-c1-ref1', 'Unc: ' + uncertainties);
   }
 };

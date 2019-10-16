@@ -80,8 +80,7 @@ module.exports = {
       .assert.containsText(measurementValuePath, '63 (36.')
       .waitForElementVisible('//*[@id="recalculated-case-table"]')
       .waitForElementVisible('//*[@id="recalculated-case-plot"]')
-      .useCss()
-      ;
+      .useCss();
 
     const recalculatedCaseValuePath = '//*[@id="38deaf60-9014-4af9-997e-e5f08bc8c8ff-recalculated-case"]';
     checkElementAbove(browser, recalculatedCaseValuePath, 0.85);
@@ -101,15 +100,13 @@ module.exports = {
 
       .click('#measurements-criterion-selector')
       .click('option[label="Nausea\ ADRs"]')
-      .assert.containsText('#measurements-criterion-selector', 'Nausea\ ADRs')
-      ;
+      .assert.containsText('#measurements-criterion-selector', 'Nausea\ ADRs');
   },
 
   'Switch criterion for one-way sensitivity analysis preferences plot': function(browser) {
     browser
       .click('#preferences-criterion-selector')
       .click('option[label="Nausea\ ADRs"]')
-      .assert.containsText('#preferences-criterion-selector', 'Nausea\ ADRs')
-      ;
+      .assert.containsText('#preferences-criterion-selector', 'Nausea\ ADRs');
   }
 };
