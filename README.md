@@ -138,9 +138,13 @@ Development
 Tests
 -----
 
-Executing tests:
+Executing tests (front-end unit tests, and back-end unit tests):
 
     npm test
+
+Executing end-to-end tests (requires a local login build):
+
+    npm run test-end-to-end
 
 Building the frontend with inline source maps for faster debugging:
 
@@ -149,6 +153,10 @@ Building the frontend with inline source maps for faster debugging:
 Continually rebuilding while you develop:
 
     npm run dev
+
+Building a local login version:
+
+    npm run build-local-login
 
 
 Initialize submodules (only needed for CSS rebuilding)

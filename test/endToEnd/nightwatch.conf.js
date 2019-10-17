@@ -5,7 +5,7 @@ const geckodriver = require('geckodriver');
 
 module.exports = {
   src_folders: [
-    'test/integration'
+    'test/endToEnd'
   ],
   selenium: {
     check_process_delay: 1000,

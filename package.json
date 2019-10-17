@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index",
     "test": "mocha && karma start --singleRun",
-    "integration-test": "nightwatch -c test/integration/nightwatch.conf.js",
+    "test-end-to-end": "nightwatch -c test/endToEnd/nightwatch.conf.js",
     "build-dev": "webpack --config webpack.dev.js",
     "build-prod": "webpack --config webpack.prod.js",
     "build-local-login": "webpack --config webpack.local.js",
