@@ -49,7 +49,7 @@ Building the image (optional)
 
 You can build a new local image by executing the `build-docker.sh` script. This would be required for example if you wish to change the default SSL keys. Note that this script assumes that your keys are present in an `ssl` subdirectory of the main mcda directory. Also note that, if your patavi server presents a certificate that is not trusted by default, there should be a CA certificate for the signing certificate authority of your patavi container in this directory. The default patavi server image presents a certificate signed by the Drugis [self-signed certificate authority](https://drugis.org/files/ca-crt.pem)
 
-The `build-docker.sh` script also lets you specify the signin method via command line arugment. The current options are Google OAuth 2.0 (`GOOGLE`) and username/password (`LOCAL`). The default signin method is Google OAuth 2.0.
+The `build-docker.sh` script also lets you specify the signin method via command line argument. The current options are Google OAuth 2.0 (`GOOGLE`) and username/password (`LOCAL`). The default signin method is Google OAuth 2.0.
 
 For local signin, there are several further dependencies (assuming a version of NodeJS of 10.x) to generate the users and passwords:
 
