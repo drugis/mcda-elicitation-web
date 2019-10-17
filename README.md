@@ -142,7 +142,7 @@ Executing tests (front-end unit tests, and back-end unit tests):
 
     npm test
 
-Executing end-to-end tests (requires a local login build):
+Executing end-to-end tests (requires a local login build and a running server):
 
     npm run test-end-to-end
 
