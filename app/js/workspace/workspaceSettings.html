@@ -24,13 +24,13 @@
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.displayMode" ng-value="'enteredData'">
+          <input type="radio" ng-model="settings.displayMode" ng-value="'enteredData'" ng-change="checkForWarnings()">
           Entered data (unaffected by percentage/decimal toggle)
         </label>
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.displayMode" ng-value="'values'">
+          <input type="radio" ng-model="settings.displayMode" ng-value="'values'" ng-change="checkForWarnings()">
           Analysis values
         </label>
       </div>
@@ -40,13 +40,13 @@
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.analysisType" ng-value="'deterministic'">
+          <input type="radio" ng-model="settings.analysisType" ng-value="'deterministic'" ng-change="checkForWarnings()">
           Deterministic
         </label>
       </div>
       <div class="cell">
         <label>
-          <input type="radio" ng-model="settings.analysisType" ng-value="'smaa'">
+          <input type="radio" ng-model="settings.analysisType" ng-value="'smaa'" ng-change="checkForWarnings()">
           SMAA
         </label>
       </div>
@@ -94,6 +94,9 @@
 
       <div class="cell">
         <button class="button" type="button" ng-click="resetToDefault()">Default</button>
+      </div>
+      <div ng-if="warnings.length" ng-repeat="warning in warnings">
+        <i class="fa fa-exclamation-triangle"></i> {{warning}}
       </div>
       <div class="cell">
         <button class="button success" type="submit">Save</button>
