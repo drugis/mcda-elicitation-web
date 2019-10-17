@@ -142,9 +142,16 @@ Executing tests (front-end unit tests, and back-end unit tests):
 
     npm test
 
-Executing end-to-end tests (requires a local login build and a running server):
+Executing end-to-end tests:
 
     npm run test-end-to-end
+
+Requirements for end-to-end tests:
+ 
+ - a local login build
+ - a test user with credentials user/password
+ - a running server
+ - a Firefox browser (tested on 69.0.2)
 
 Building the frontend with inline source maps for faster debugging:
 
