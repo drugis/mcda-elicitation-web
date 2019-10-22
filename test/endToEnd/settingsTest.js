@@ -6,7 +6,7 @@ const util = require('./util/util');
 const chai = require('chai');
 const _ = require('lodash');
 
-const testUrl = 'http://localhost:3002';
+const testUrl = require('./util/constants').testUrl;
 
 const title = 'GetReal course LU 4, activity 4.4';
 

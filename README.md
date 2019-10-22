@@ -150,7 +150,7 @@ Requirements for end-to-end tests:
  
  - a local login build
  - a test user with credentials user/password
- - a running server
+ - a running server (on http://localhost:3002, can be changed in test/endToEnd/util/constants.js'http://localhost:3002')
  - a Firefox browser (tested on 69.0.2)
 
 Building the frontend with inline source maps for faster debugging:

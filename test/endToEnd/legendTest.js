@@ -5,7 +5,7 @@ const workspaceService = require('./util/workspaceService');
 const chai = require('chai');
 const _ = require('lodash');
 
-const testUrl = 'http://localhost:3002';
+const testUrl = require('./util/constants').testUrl;
 
 const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 

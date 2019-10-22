@@ -6,9 +6,9 @@ const util = require('./util/util');
 
 const chai = require('chai');
 
-const testUrl = 'http://localhost:3002';
+const testUrl = require('./util/constants').testUrl;
 
-function checkElementAbove(browser, path, value) {
+function checkElementValueGreaterThan(browser, path, value) {
   browser
     .useXpath()
     .getLocationInView(path)
@@ -61,9 +61,9 @@ module.exports = {
     const weightValuePath = '//*[@id="de14e778-f723-48d4-8f4e-1e589714f4f2-weight"]';
     const baseCaseValuePath = '//*[@id="38deaf60-9014-4af9-997e-e5f08bc8c8ff-base-case"]';
 
-    checkElementAbove(browser, measurementValuePath, 30);
-    checkElementAbove(browser, weightValuePath, 0.2);
-    checkElementAbove(browser, baseCaseValuePath, 0.7);
+    checkElementValueGreaterThan(browser, measurementValuePath, 30);
+    checkElementValueGreaterThan(browser, weightValuePath, 0.2);
+    checkElementValueGreaterThan(browser, baseCaseValuePath, 0.7);
   },
 
   'Deterministic results with recalculated values': function(browser) {
@@ -83,7 +83,7 @@ module.exports = {
       .useCss();
 
     const recalculatedCaseValuePath = '//*[@id="38deaf60-9014-4af9-997e-e5f08bc8c8ff-recalculated-case"]';
-    checkElementAbove(browser, recalculatedCaseValuePath, 0.85);
+    checkElementValueGreaterThan(browser, recalculatedCaseValuePath, 0.85);
 
     browser.click('#reset-button');
 

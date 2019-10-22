@@ -3,7 +3,7 @@
 const loginService = require('./util/loginService');
 const manualInputService = require('./util/manualInputService');
 
-const testUrl = 'http://localhost:3002';
+const testUrl = require('./util/constants').testUrl;
 
 const title = 'manual input';
 const therapeuticContext = 'end-to-end test';
@@ -62,7 +62,7 @@ module.exports = {
     addCriterion(browser);
     browser
       .click('//*[@id="add-criterion-button"]')
-      .click('/html/body/div[4]/div/div/form/div/div/button')
+      .click('//*[@id="close-modal-button"]')
       .assert.containsText('/html/body/div[2]/div/div/div[15]/em', 'At least two criteria required');
   },
 

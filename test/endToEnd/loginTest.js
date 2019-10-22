@@ -3,7 +3,7 @@
 const loginService = require('./util/loginService.js');
 const errorService = require('./util/errorService.js');
 
-const testUrl = 'http://localhost:3002';
+const testUrl = require('./util/constants').testUrl;
 
 module.exports = {
   'MCDA login success': function(browser) {

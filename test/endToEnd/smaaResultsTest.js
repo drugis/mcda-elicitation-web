@@ -5,9 +5,9 @@ const workspaceService = require('./util/workspaceService');
 
 const chai = require('chai');
 
-const testUrl = 'http://localhost:3002';
+const testUrl = require('./util/constants').testUrl;
 
-function checkElementAbove(browser, id, value) {
+function checkElementValueGreaterThan(browser, id, value) {
   browser
     .useXpath()
     .getText('//*[@id="' + id + '"]', function(result) {
@@ -60,8 +60,8 @@ module.exports = {
     const measurementElementId = 'de14e778-f723-48d4-8f4e-1e589714f4f2-38deaf60-9014-4af9-997e-e5f08bc8c8ff-measurement';
     const centralWightElementId = '5b99d1e1-116b-4b9f-9aa2-f81eb1976515-38deaf60-9014-4af9-997e-e5f08bc8c8ff-central-weight';
 
-    checkElementAbove(browser, measurementElementId, 30);
-    checkElementAbove(browser, centralWightElementId, 0);
+    checkElementValueGreaterThan(browser, measurementElementId, 30);
+    checkElementValueGreaterThan(browser, centralWightElementId, 0);
     checkRankTable(browser);
 
     browser.click('#logo');

@@ -1,7 +1,7 @@
 'use strict';
 
 const loginService = require('./util/loginService');
-const testUrl = 'http://localhost:3002';
+const testUrl = require('./util/constants').testUrl;
 const closeModalButton = '//*[@id="close-modal-button"]';
 const deleteWorkspaceButton = '//div[2]/div/div[2]/workspaces/div/div[2]/table/tbody/tr/td[3]/a';
 

@@ -4,7 +4,7 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
-const testUrl = 'http://localhost:3002';
+const testUrl = require('./util/constants').testUrl;
 const title = 'GetReal course LU 4, activity 4.4';
 const scenarioTitle = 'scenario title';
 

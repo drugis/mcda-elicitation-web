@@ -4,7 +4,7 @@ const loginService = require('./util/loginService.js');
 const workspaceService = require('./util/workspaceService.js');
 
 function testTutorial(browser, title) {
-  const testUrl = 'http://localhost:3002';
+  const testUrl = require('./util/constants').testUrl;
   loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
   workspaceService.addTutorial(browser, title);
   workspaceService.deleteFromList(browser, title);

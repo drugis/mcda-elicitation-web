@@ -2,7 +2,7 @@
 
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
-const testUrl = 'http://localhost:3002';
+const testUrl = require('./util/constants').testUrl;
 
 const chai = require('chai');
 
