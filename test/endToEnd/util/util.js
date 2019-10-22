@@ -4,7 +4,7 @@ const _ = require('lodash');
 const chai = require('chai');
 
 function getOnlyProperty(value) {
-  return value[_.keys(value)[0]];
+  return _.values(value)[0];
 }
 
 function isElementHidden(browser, path) {
@@ -17,9 +17,8 @@ function isElementHidden(browser, path) {
 }
 
 function isElementNotPresent(browser, path) {
-  browser.element('xpath', path, function(result) {
-    // this test outputs an error message to the console but does not make the overall test fail
-    chai.expect(result.state).to.equal('no such element');
+  browser.elements('xpath', path, function(result) {
+    chai.expect(result.value.length).to.equal(0);
   });
 }
 
