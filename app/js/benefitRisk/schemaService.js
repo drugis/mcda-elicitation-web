@@ -93,6 +93,11 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
             content: newProblem
           };
         }
+      } else {
+        return {
+          isValid: false,
+          errorMessage: 'Configured current schema version is not the same as the updated schema version'
+        };
       }
     }
 
