@@ -3,7 +3,7 @@
 const loginService = require('./util/loginService.js');
 const workspaceService = require('./util/workspaceService.js');
 
-const testUrl = 'http://localhost:3002';
+const testUrl = require('./util/constants').testUrl;
 
 module.exports = {
   'Delete a workspace' : function (browser) {

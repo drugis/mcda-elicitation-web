@@ -3,7 +3,7 @@
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 
-const testUrl = 'http://localhost:3002';
+const testUrl = require('./util/constants').testUrl;
 
 const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 const preferenceTabPath = '//*[@id="preferences-tab"]';

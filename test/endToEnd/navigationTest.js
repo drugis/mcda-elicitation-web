@@ -2,7 +2,7 @@
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 
-const url = 'http://localhost:3002';
+const url = require('./util/constants').testUrl;
 
 module.exports = {
   afterEach: function(browser) {

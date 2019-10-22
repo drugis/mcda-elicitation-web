@@ -4,7 +4,7 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
-const testUrl = 'http://localhost:3002';
+const testUrl = require('./util/constants').testUrl;
 const title = 'Thrombolytics - single study B/R analysis';
 const proximalDVTCriterionTitle = '#criterion-title-cae083fa-c1e7-427f-8039-c46479392344';
 const proximalDVTCriterionDescription = '#criterion-description-cae083fa-c1e7-427f-8039-c46479392344';
@@ -202,7 +202,7 @@ module.exports = {
   },
 
   'Reordering data sources': function(browser) {
-    workspaceService.uploadTestWorkspace(browser, '/createSubproblem.json');
+    workspaceService.uploadTestWorkspace(browser, '/createSubproblemTestProblem.json');
 
     const firstReference = '//criterion-list/div/div[1]/criterion-card/div/div[2]/div/div[4]/table/tbody/tr[1]/td[7]/div';
     const ref1Down = '#move-down-data-source-c4a470d2-b457-4f65-9b8d-5e22741c24a6-c27f83e0-a563-450d-9327-93fe823ed23f';

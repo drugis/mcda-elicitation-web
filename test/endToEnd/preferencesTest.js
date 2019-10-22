@@ -4,7 +4,7 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
-const testUrl = 'http://localhost:3002';
+const testUrl = require('./util/constants').testUrl;
 
 function loadTestWorkspace(browser, title) {
   workspaceService.addExample(browser, title);

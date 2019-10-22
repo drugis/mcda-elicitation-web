@@ -8,7 +8,7 @@ const workspaceService = require('./util/workspaceService');
 const util = require('./util/util');
 const errorService = require('./util/errorService.js');
 
-const testUrl = 'http://localhost:3002';
+const testUrl = require('./util/constants').testUrl;
 
 const title = 'manual input';
 const therapeuticContext = 'end-to-end test';

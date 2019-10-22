@@ -6,12 +6,12 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
-const testUrl = 'http://localhost:3002';
+const testUrl = require('./util/constants').testUrl;
 
 const subproblem1 = {
   title: 'subproblem1'
 };
-const workspacePath = '/createSubproblem.json';
+const workspacePath = '/createSubproblemTestProblem.json';
 const title = 'Test workspace';
 
 function setupSubProblem(browser) {
