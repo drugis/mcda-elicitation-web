@@ -6,7 +6,7 @@ const loginService = require('./util/loginService');
 const manualInputService = require('./util/manualInputService');
 const workspaceService = require('./util/workspaceService');
 const util = require('./util/util');
-const errorService = require('./util/errorService.js');
+const errorService = require('./util/errorService');
 
 const testUrl = require('./util/constants').testUrl;
 
@@ -48,7 +48,6 @@ const moveDataSourceUpPath = '//div[9]/criterion-list/div[1]/div[2]/criterion-ca
 const moveDataSourceDownPath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr[1]/td[1]/div[2]/a';
 const moveAlternativeUpPath = '//div[12]/table/tbody/tr[2]/td[1]/div[1]/a';
 const moveAlternativeDownPath = '//div[12]/table/tbody/tr[1]/td[1]/div[2]/a';
-
 function createInputDefault(browser) {
   browser
     .waitForElementVisible('#create-workspace-button')
@@ -96,6 +95,7 @@ module.exports = {
   },
 
   afterEach: function(browser) {
+    errorService.isErrorBarHidden(browser);
     browser.end();
   },
 

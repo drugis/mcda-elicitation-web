@@ -2,16 +2,21 @@
 
 const loginService = require('./util/loginService.js');
 const workspaceService = require('./util/workspaceService.js');
+const errorService = require('./util/errorService');
 
 function testExample(browser, title) {
   const testUrl = require('./util/constants').testUrl;
   loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
   workspaceService.addExample(browser, title);
   workspaceService.deleteFromList(browser, title);
-  browser.end();
 }
 
 module.exports = {
+  afterEach: function(browser) {
+    errorService.isErrorBarHidden(browser);
+    browser.end();
+  },
+
   'Add Antidepressants (Tervonen) example': function(browser) {
     const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
     testExample(browser, title);

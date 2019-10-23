@@ -3,6 +3,7 @@
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const util = require('./util/util');
+const errorService = require('./util/errorService');
 
 const chai = require('chai');
 
@@ -46,6 +47,7 @@ module.exports = {
   afterEach: function(browser) {
     browser.click('#logo');
     workspaceService.deleteFromList(browser, title);
+    errorService.isErrorBarHidden(browser);
     browser.end();
   },
 

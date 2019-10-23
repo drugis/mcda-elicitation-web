@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index",
     "test": "mocha && karma start --singleRun",
-    "test-end-to-end": "nightwatch -c test/endToEnd/nightwatch.conf.js",
+    "test-end-to-end": "nightwatch -c nightwatch.conf.js",
     "build-dev": "webpack --config webpack.dev.js",
     "build-prod": "webpack --config webpack.prod.js",
     "build-local-login": "webpack --config webpack.local.js",
@@ -55,7 +55,7 @@
     "angularjs-slider": "~6.6.1",
     "babel-loader": "^8.0.4",
     "bcrypt-cli": "^1.1.0",
-    "bowser": "~2.0.0-beta.1",
+    "bowser": "2.7.0",
     "c3": "~0.4.23",
     "chai-spies": "^1.0.0",
     "clean-webpack-plugin": "^0.1.19",

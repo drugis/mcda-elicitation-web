@@ -6,6 +6,7 @@ const url = require('./util/constants').testUrl;
 
 module.exports = {
   afterEach: function(browser) {
+
     browser.end();
   },
 

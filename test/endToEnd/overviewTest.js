@@ -31,6 +31,7 @@ module.exports = {
   },
 
   afterEach: function(browser) {
+    errorService.isErrorBarHidden(browser);
     browser.end();
   },
 

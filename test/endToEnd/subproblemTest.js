@@ -42,6 +42,7 @@ module.exports = {
     errorService.isErrorBarHidden(browser);
     browser.click('#logo');
     workspaceService.deleteFromList(browser, title);
+    errorService.isErrorBarHidden(browser);
     browser.end();
   },
 

@@ -1,6 +1,8 @@
 'use strict';
 
 const loginService = require('./util/loginService');
+const errorService = require('./util/errorService');
+
 const testUrl = require('./util/constants').testUrl;
 const closeModalButton = '//*[@id="close-modal-button"]';
 const deleteWorkspaceButton = '//div[2]/div/div[2]/workspaces/div/div[2]/table/tbody/tr/td[3]/a';
@@ -12,7 +14,9 @@ module.exports = {
   },
 
   afterEach: function(browser) {
-    browser.end();
+    browser.waitForElementVisible('//*[@id="empty-workspace-message"]');
+    errorService.isErrorBarHidden(browser);
+    browser.useCss().end();
   },
 
   'Cancel adding a workspace': function(browser) {
@@ -21,9 +25,7 @@ module.exports = {
     browser
       .useXpath()
       .click(actionButtonPath)
-      .click(cancelButtonPath)
-      .waitForElementVisible('//*[@id="empty-workspace-message"]')
-      .useCss();
+      .click(cancelButtonPath);
   },
 
   'Cancel deleting a workspace': function(browser) {
@@ -37,8 +39,6 @@ module.exports = {
       .click(closeModalButton)
       .assert.containsText('//div[2]/div/div[2]/workspaces/div/div[2]/table/tbody/tr/td[1]/a', 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)')
       .click(deleteWorkspaceButton)
-      .click('//*[@id="delete-workspace-confirm-button"]')
-      .waitForElementVisible('//*[@id="empty-workspace-message"]')
-      .useCss();
+      .click('//*[@id="delete-workspace-confirm-button"]');
   }
 };

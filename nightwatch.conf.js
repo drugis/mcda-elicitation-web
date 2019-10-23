@@ -22,7 +22,7 @@ module.exports = {
       globals: {
         waitForConditionTimeout: 5000
       },
-      exclude: ['*/*.js', 'nightwatch.conf.js'],
+      exclude: ['*/*.js'],
       desiredCapabilities: {
         browserName: 'firefox',
         'moz:firefoxOptions': {

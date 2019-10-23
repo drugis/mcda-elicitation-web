@@ -2,6 +2,7 @@
 
 const loginService = require('./util/loginService');
 const manualInputService = require('./util/manualInputService');
+const errorService = require('./util/errorService');
 
 const testUrl = require('./util/constants').testUrl;
 
@@ -55,6 +56,7 @@ module.exports = {
   },
 
   afterEach: function(browser) {
+    errorService.isErrorBarHidden(browser);
     browser.useCss().end();
   },
 

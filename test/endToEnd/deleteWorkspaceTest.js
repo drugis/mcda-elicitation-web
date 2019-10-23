@@ -2,6 +2,7 @@
 
 const loginService = require('./util/loginService.js');
 const workspaceService = require('./util/workspaceService.js');
+const errorService = require('./util/errorService');
 
 const testUrl = require('./util/constants').testUrl;
 
@@ -14,7 +15,7 @@ module.exports = {
     workspaceService.addExample(browser, title);
     workspaceService.deleteFromList(browser, title);
     browser.waitForElementVisible('#empty-workspace-message');
-      
+    errorService.isErrorBarHidden(browser);
     browser.end();
   }
 };

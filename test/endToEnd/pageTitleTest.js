@@ -2,6 +2,7 @@
 
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
+const errorService = require('./util/errorService');
 const testUrl = require('./util/constants').testUrl;
 
 const chai = require('chai');
@@ -18,6 +19,7 @@ function goToPreferences(browser) {
 function cleanUpWorkspace(browser) {
   browser.click('#logo');
   workspaceService.deleteFromList(browser, title);
+  errorService.isErrorBarHidden(browser);
 }
 
 module.exports = {
@@ -36,6 +38,7 @@ module.exports = {
       .getTitle(function(result) {
         chai.expect(result).to.equal('mcda.drugis.org');
       });
+    errorService.isErrorBarNotPresent(browser);
   },
 
   'Workspaces': function(browser) {
@@ -45,6 +48,7 @@ module.exports = {
       .getTitle(function(result) {
         chai.expect(result).to.equal('Workspaces');
       });
+    errorService.isErrorBarHidden(browser);
   },
 
   'A workspace overview': function(browser) {
@@ -179,6 +183,7 @@ module.exports = {
       .getTitle(function(result) {
         chai.expect(result).to.equal('Manual input');
       });
+    errorService.isErrorBarHidden(browser);
   },
 
   'Manual input in progress': function(browser) {
@@ -195,5 +200,6 @@ module.exports = {
       });
     browser.click('#logo');
     workspaceService.deleteUnfinishedFromList(browser, 'title');
+    errorService.isErrorBarHidden(browser);
   }
 };
