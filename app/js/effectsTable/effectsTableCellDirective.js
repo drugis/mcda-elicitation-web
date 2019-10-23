@@ -25,7 +25,7 @@ define(['lodash'], function(_) {
         scope.$watch('scales', init, true);
         
         function init() {
-          scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
+          scope.workspaceSettings = WorkspaceSettingsService.setWorkspaceSettings();
           scope.isValueView = WorkspaceSettingsService.isValueView();
           scope.uncertainty = hasUncertainty(scope.effectsTableInfo);
           scope.displayMode = scope.workspaceSettings.displayMode;

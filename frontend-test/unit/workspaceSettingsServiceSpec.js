@@ -47,7 +47,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
 
       it('should get the default for a relative problem', function() {
         const performanceTable = [{ performance: {} }];
-        workspaceSettingsService.getWorkspaceSettings(performanceTable);
+        workspaceSettingsService.setWorkspaceSettings(performanceTable);
         const result = workspaceSettingsService.getDefaults();
         const expectedResult = angular.copy({
           settings: DEFAULT_SETTINGS,
@@ -68,7 +68,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
             distribution: {}
           }
         }];
-        workspaceSettingsService.getWorkspaceSettings(performanceTable);
+        workspaceSettingsService.setWorkspaceSettings(performanceTable);
         const result = workspaceSettingsService.getDefaults();
         const expectedResult = angular.copy({
           settings: DEFAULT_SETTINGS,
@@ -118,7 +118,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
         it('should resolve the loadSettings promise and set the loaded values', function() {
           expect(loadResolved).toBe(true);
           expect(workspaceSettingsService.getToggledColumns()).toEqual('toggledColumns');
-          expect(workspaceSettingsService.getWorkspaceSettings()).toEqual(DEFAULT_SETTINGS);
+          expect(workspaceSettingsService.setWorkspaceSettings()).toEqual(DEFAULT_SETTINGS);
         });
 
         describe('then a new load has resolved without values (so new workspace)', function() {
@@ -140,70 +140,6 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
 
       describe('without loading new settings', function() {
         it('the service should return the default values', expectToGetDefaultValues);
-      });
-
-      describe('after loading settings with "effectsDisplay" set to "deterministic"', function() {
-        it('should set analysisType to "deterministic" and displayMode to "enteredData"', function() {
-          resultsDefer.resolve({
-            settings: {
-              effectsDisplay: 'deterministic'
-            }
-          });
-          scope.$apply();
-          const expectedResult = {
-            analysisType: 'deterministic',
-            displayMode: 'enteredData'
-          };
-          expect(workspaceSettingsService.getWorkspaceSettings()).toEqual(expectedResult);
-        });
-      });
-
-      describe('after loading settings with "effectsDisplay" set to "deterministicMCDA"', function() {
-        it('should set analysisType to "deterministic" and displayMode to "values"', function() {
-          resultsDefer.resolve({
-            settings: {
-              effectsDisplay: 'deterministicMCDA'
-            }
-          });
-          scope.$apply();
-          const expectedResult = {
-            analysisType: 'deterministic',
-            displayMode: 'values'
-          };
-          expect(workspaceSettingsService.getWorkspaceSettings()).toEqual(expectedResult);
-        });
-      });
-
-      describe('after loading settings with "effectsDisplay" set to "smaaDistributions"', function() {
-        it('should set analysisType to "smaa" and displayMode to "enteredData"', function() {
-          resultsDefer.resolve({
-            settings: {
-              effectsDisplay: 'smaaDistributions'
-            }
-          });
-          scope.$apply();
-          const expectedResult = {
-            analysisType: 'smaa',
-            displayMode: 'enteredData'
-          };
-          expect(workspaceSettingsService.getWorkspaceSettings()).toEqual(expectedResult);
-        });
-      });
-
-      describe('after loading settings with "effectsDisplay" set to "smaa"', function() {
-        it('should set analysisType to "smaa" and displayMode to "values"', function() {
-          resultsDefer.resolve({
-            settings: {
-              effectsDisplay: 'smaa'
-            }
-          });
-          scope.$apply();
-          const expectedResult = {
-            analysisType: 'smaa',
-            displayMode: 'values'
-          };
-          expect(workspaceSettingsService.getWorkspaceSettings()).toEqual(expectedResult);
-        });
       });
     });
 
@@ -257,7 +193,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
         it('should resolve the saveSettings promise and set the saved values', function() {
           expect(saveResolved).toBe(true);
           expect(workspaceSettingsService.getToggledColumns()).toEqual(newToggledColumns);
-          expect(workspaceSettingsService.getWorkspaceSettings()).toEqual({ changed: true });
+          expect(workspaceSettingsService.setWorkspaceSettings()).toEqual({ changed: true });
         });
 
         it('should broadcast that the settings have changed.', function() {
@@ -266,7 +202,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
       });
     });
 
-    describe('getWorkspaceSettings', function() {
+    describe('setWorkspaceSettings', function() {
       it('should return workspace settings and change the display to SMAA if there are no effects in the performance table', function() {
         var performanceTable = [{
           alternative: 'alternativeId',
@@ -275,7 +211,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
           }
         }];
 
-        var result = workspaceSettingsService.getWorkspaceSettings(performanceTable);
+        var result = workspaceSettingsService.setWorkspaceSettings(performanceTable);
 
         var expectedResult = angular.copy(DEFAULT_SETTINGS);
         expectedResult.analysisType = 'smaa';
@@ -291,7 +227,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
           }
         }];
 
-        var result = workspaceSettingsService.getWorkspaceSettings(performanceTable);
+        var result = workspaceSettingsService.setWorkspaceSettings(performanceTable);
 
         var expectedResult = angular.copy(DEFAULT_SETTINGS);
         expectedResult.hasNoDistributions = true;
@@ -299,7 +235,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
       });
 
       it('should return workspace settings and keep the display as "deterministic" if there is no performance table', function() {
-        var result = workspaceSettingsService.getWorkspaceSettings();
+        var result = workspaceSettingsService.setWorkspaceSettings();
         var expectedResult = DEFAULT_SETTINGS;
         expect(result).toEqual(expectedResult);
       });
@@ -311,7 +247,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
           }
         }];
 
-        var result = workspaceSettingsService.getWorkspaceSettings(performanceTable);
+        var result = workspaceSettingsService.setWorkspaceSettings(performanceTable);
 
         var expectedResult = angular.copy(DEFAULT_SETTINGS);
         expectedResult.isRelativeProblem = true;
@@ -379,7 +315,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
 
     function expectToGetDefaultValues() {
       expect(workspaceSettingsService.getToggledColumns()).toEqual(DEFAULT_TOGGLED_COLUMNS);
-      expect(workspaceSettingsService.getWorkspaceSettings()).toEqual(DEFAULT_SETTINGS);
+      expect(workspaceSettingsService.setWorkspaceSettings()).toEqual(DEFAULT_SETTINGS);
     }
   });
 });

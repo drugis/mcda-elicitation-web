@@ -56,7 +56,7 @@ define(['lodash'], function(_) {
         }
 
         function updateSettings() {
-          scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
+          scope.workspaceSettings = WorkspaceSettingsService.setWorkspaceSettings();
           scope.isValueView = WorkspaceSettingsService.isValueView();
         }
 

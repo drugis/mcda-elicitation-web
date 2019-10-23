@@ -159,3 +159,49 @@ COMMIT;
 --rollback ALTER TABLE scenario DROP CONSTRAINT scenario_workspace_fkey;
 --rollback ALTER TABLE scenario ADD CONSTRAINT scenario_workspace_fkey FOREIGN KEY (workspace) REFERENCES workspace(id);
 --rollback COMMIT;
+
+--changeset keijserj:20
+START TRANSACTION;
+WITH effectsDisplay AS (
+  SELECT 
+    workspaceId, 
+    settings#>'{settings}'->>'effectsDisplay' AS displayValue 
+  FROM workspacesettings 
+  WHERE settings#>'{settings, effectsDisplay}' IS NOT NULL
+),
+newSettings AS (
+  SELECT 
+    workspaceId, 
+    displayValue,
+    CASE
+      WHEN displayValue = 'deterministic' THEN '{"displayMode": "enteredData"}'::jsonb
+      WHEN displayValue = 'smaaDistributions' THEN '{"displayMode": "enteredData"}'::jsonb
+      WHEN displayValue = 'deterministicMCDA' THEN '{"displayMode": "values"}'::jsonb
+      WHEN displayValue = 'smaa' THEN '{"displayMode": "values"}'::jsonb
+    END AS displayMode,
+    CASE
+      WHEN displayValue = 'deterministic' THEN '{"analysisType": "deterministic"}'::jsonb
+      WHEN displayValue = 'smaaDistributions' THEN '{"analysisType": "smaa"}'::jsonb
+      WHEN displayValue = 'deterministicMCDA' THEN '{"analysisType": "deterministic"}'::jsonb
+      WHEN displayValue = 'smaa' THEN '{"analysisType": "smaa"}'::jsonb
+    END AS analysisType
+  FROM effectsDisplay
+)
+
+UPDATE workspacesettings 
+SET settings = 
+jsonb_set(
+  jsonb_set(settings, '{settings, analysisType}', newSettings.analysisType->'analysisType'), 
+  '{settings, displayMode}', 
+  newSettings.displayMode->'displayMode'
+)
+FROM newSettings 
+WHERE workspacesettings.workspaceId = newSettings.workspaceId;
+
+UPDATE workspacesettings 
+SET settings = settings #-'{settings, effectsDisplay}' 
+WHERE settings#>'{settings, effectsDisplay}' IS NOT NULL;
+
+COMMIT;
+--rollback UPDATE workspacesettings
+--rollback SET settings='{}'::jsonb

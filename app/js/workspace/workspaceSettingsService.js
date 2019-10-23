@@ -37,11 +37,6 @@ define(['angular', 'lodash'], function(angular, _) {
       return WorkspaceSettingsResource.get(params).$promise.then(function(result) {
         if (result.settings) {
           workspaceSettings = result.settings;
-          if (workspaceSettings.hasOwnProperty('effectsDisplay')) {
-            workspaceSettings.displayMode = getDisplayMode(workspaceSettings.effectsDisplay);
-            workspaceSettings.analysisType = getAnalysiType(workspaceSettings.effectsDisplay);
-            delete workspaceSettings.effectsDisplay;
-          }
         } else {
           workspaceSettings = angular.copy(DEFAULT_SETTINGS);
         }
@@ -49,27 +44,11 @@ define(['angular', 'lodash'], function(angular, _) {
       });
     }
 
-    function getAnalysiType(effectsDisplay) {
-      if (effectsDisplay === 'smaaDistributions' || effectsDisplay === 'smaa') {
-        return 'smaa';
-      } else {
-        return 'deterministic';
-      }
-    }
-
-    function getDisplayMode(effectsDisplay) {
-      if (effectsDisplay === 'deterministicMCDA' || effectsDisplay === 'smaa') {
-        return 'values';
-      } else {
-        return 'enteredData';
-      }
-    }
-
     function getToggledColumns() {
       return angular.copy(toggledColumns);
     }
 
-    function getWorkspaceSettings(performanceTable) {
+    function setWorkspaceSettings(performanceTable) {
       setHasNoEffects(performanceTable);
       setHasNoDistributions(performanceTable);
       setIsRelativeProblem(performanceTable);
@@ -134,10 +113,12 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function getDefaults() {
-      var defaultSettings = angular.copy(DEFAULT_SETTINGS);
-      defaultSettings.isRelativeProblem = workspaceSettings.isRelativeProblem;
-      defaultSettings.hasNoEffects = workspaceSettings.hasNoEffects;
-      defaultSettings.hasNoDistributions = workspaceSettings.hasNoDistributions;
+      var defaultSettings = _.merge(
+        {},
+        angular.copy(DEFAULT_SETTINGS),
+        _.pick(workspaceSettings, ['isRelativeProblem', 'hasNoEffects', 'hasNoDistributions'])
+      );
+
       if (defaultSettings.isRelativeProblem) {
         defaultSettings.analysisType = 'smaa';
         defaultSettings.displayMode = 'values';
@@ -190,7 +171,7 @@ define(['angular', 'lodash'], function(angular, _) {
     return {
       loadWorkspaceSettings: loadWorkspaceSettings,
       getToggledColumns: getToggledColumns,
-      getWorkspaceSettings: getWorkspaceSettings,
+      setWorkspaceSettings: setWorkspaceSettings,
       saveSettings: saveSettings,
       getDefaults: getDefaults,
       usePercentage: usePercentage,
@@ -198,7 +179,5 @@ define(['angular', 'lodash'], function(angular, _) {
       getWarnings: getWarnings
     };
   };
-
-
   return dependencies.concat(WorkspaceSettingsService);
 });

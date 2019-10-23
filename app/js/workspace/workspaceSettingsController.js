@@ -20,7 +20,7 @@ define(['lodash'], function(_) {
     $scope.checkForWarnings = checkForWarnings;
 
     //init
-    $scope.settings = WorkspaceSettingsService.getWorkspaceSettings();
+    $scope.settings = WorkspaceSettingsService.setWorkspaceSettings();
     $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
     $scope.warnings = WorkspaceSettingsService.getWarnings($scope.settings);
 

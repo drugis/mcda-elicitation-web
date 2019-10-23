@@ -9,7 +9,7 @@ define([
     var significantDigitsMock = function(value) {
       return value;
     };
-    var workspaceSettingsServiceMock = jasmine.createSpyObj('WorkspaceSettingsService', ['getWorkspaceSettings']);
+    var workspaceSettingsServiceMock = jasmine.createSpyObj('WorkspaceSettingsService', ['setWorkspaceSettings']);
 
     beforeEach(angular.mock.module('elicit.effectsTable', function($provide) {
       $provide.value('significantDigits', significantDigitsMock);
@@ -1099,8 +1099,8 @@ define([
 
       describe('getMedian', function() {
         beforeEach(function() {
-          workspaceSettingsServiceMock.getWorkspaceSettings.calls.reset();
-          workspaceSettingsServiceMock.getWorkspaceSettings.and.returnValue({ calculationMethod: 'median' });
+          workspaceSettingsServiceMock.setWorkspaceSettings.calls.reset();
+          workspaceSettingsServiceMock.setWorkspaceSettings.and.returnValue({ calculationMethod: 'median' });
         });
 
         it('should return the median value', function() {
@@ -1113,7 +1113,7 @@ define([
         });
 
         it('should return the mode', function() {
-          workspaceSettingsServiceMock.getWorkspaceSettings.and.returnValue({ calculationMethod: 'mode' });
+          workspaceSettingsServiceMock.setWorkspaceSettings.and.returnValue({ calculationMethod: 'mode' });
           var scales = {
             mode: 0.05
           };
@@ -1123,7 +1123,7 @@ define([
         });
 
         it('should return \'NA\' if the mode is NULL', function() {
-          workspaceSettingsServiceMock.getWorkspaceSettings.and.returnValue({ calculationMethod: 'mode' });
+          workspaceSettingsServiceMock.setWorkspaceSettings.and.returnValue({ calculationMethod: 'mode' });
           var scales = {
             mode: null
           };
@@ -1133,7 +1133,7 @@ define([
         });
 
         it('should return \'NA\' if the mode is UNDEFINED', function() {
-          workspaceSettingsServiceMock.getWorkspaceSettings.and.returnValue({ calculationMethod: 'mode' });
+          workspaceSettingsServiceMock.setWorkspaceSettings.and.returnValue({ calculationMethod: 'mode' });
           var scales = {
             mode: undefined
           };
