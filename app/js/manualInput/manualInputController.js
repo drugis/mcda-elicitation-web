@@ -50,6 +50,9 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
 
     // init
     $scope.alternativeInput = {}; //scoping
+    $scope.editMode = {
+      isUserOwner: true
+    };
     PageTitleService.setPageTitle('ManualInputController', 'Manual input');
     initState();
 
