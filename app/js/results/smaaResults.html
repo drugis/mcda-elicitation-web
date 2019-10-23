@@ -17,7 +17,8 @@
   <br>
   <div class="grid-x underlined-div">
     <div class="cell">
-      <smaa-table state="aggregateState" criteria="criteria" alternatives="alternatives" scales="workspace.scales.observed" ></smaa-table>
+      <smaa-table state="aggregateState" criteria="criteria" alternatives="alternatives"
+        scales="workspace.scales.observed" toggled-columns="toggledColumns"></smaa-table>
     </div>
   </div>
   <div class="grid-x underlined-div">
@@ -109,7 +110,8 @@
         <thead>
           <tr>
             <th>Alternative</th>
-            <th>Confidence <inline-help help-key="confidence-factor"></inline-help></th>
+            <th>Confidence <inline-help help-key="confidence-factor"></inline-help>
+            </th>
             <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
           </tr>
         </thead>

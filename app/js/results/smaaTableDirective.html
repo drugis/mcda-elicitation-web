@@ -15,18 +15,21 @@
     <table class="full-width effects-table" id="smaatable">
       <thead>
         <tr>
-          <th>
+          <th ng-show="toggledColumns['criteria']">
             Criterion <inline-help help-key="criterion"></inline-help>
           </th>
-          <th>Description</th>
-          <th>
+          <th ng-show="toggledColumns['description']">Description</th>
+          <th ng-show="toggledColumns['units']">
             Units <inline-help help-key="criterion-unit"></inline-help>
           </th>
           <th class="text-center" ng-repeat="alternative in alternatives"
             style="min-width: 120px">
             {{alternative.title}}
           </th>
-          <th>
+          <th ng-show="toggledColumns['strength']">Strength of evidence / Uncertainties
+            <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
+          </th>
+          <th ng-show="toggledColumns['references']">
             References <inline-help help-key="criterion-source"></inline-help>
           </th>
         </tr>
@@ -38,16 +41,14 @@
               {{row.headerText}}
             </div>
           </td>
-          <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">
+          <td ng-show="toggledColumns['criteria']" ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">
             {{row.criterion.title}}
           </td>
-          <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">
+          <td ng-show="toggledColumns['description']" ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">
             {{row.criterion.description}}
           </td>
-          <td ng-if="!row.isHeaderRow">
-            <span>
+          <td ng-show="toggledColumns['units']" ng-if="!row.isHeaderRow">
               {{problem.criteria[row.criterion.id].dataSources[0].unitOfMeasurement.label}}
-            </span>
           </td>
           <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives">
             <div>{{scalesRounded[row.dataSource.id][alternative.id]['50%']}}</div>
@@ -56,7 +57,13 @@
               {{scalesRounded[row.dataSource.id][alternative.id]['97.5%']}}
             </div>
           </td>
-          <td ng-if="!row.isHeaderRow">
+          <td ng-show="toggledColumns['strength']" ng-if="!row.isHeaderRow">
+            <div ng-if="row.dataSource.strengthOfEvidence">
+              <b>SoE: </b>{{row.dataSource.strengthOfEvidence}}</div>
+            <div ng-if="row.dataSource.uncertainties">
+              <b>Unc: </b> {{row.dataSource.uncertainties}}</div>
+          </td>
+          <td ng-show="toggledColumns['references']" ng-if="!row.isHeaderRow">
             <a ng-if="row.dataSource.sourceLink" href="{{row.dataSource.sourceLink}}">
               {{row.dataSource.source}}
             </a>
