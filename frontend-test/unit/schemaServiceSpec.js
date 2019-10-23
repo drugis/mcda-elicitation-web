@@ -31,7 +31,7 @@ define([
       }
     };
 
-    describe('updateWorkspaceToCurrentSchema (includes updateProblemToCurrentSchema)', function() {
+    describe('updateWorkspaceToCurrentSchema', function() {
       beforeEach(function() {
         getDataSourcesByIdMock.calls.reset();
       });
@@ -44,7 +44,7 @@ define([
         expect(result).toEqual(workspace);
       });
 
-      it('should update a workspace of version 1.3.4 to the current version and dividing the distribution exact value by 100 if unit of measurement is percentage', function() {
+      it('should update a workspace of version 1.3.4 to the current version and divide the distribution exact value by 100 if unit of measurement is percentage', function() {
         const dataSourcesById = {
           d1: _.merge(exampleProblem134().criteria.c1.dataSources[0], {
             unitOfMeasurement: {
@@ -374,6 +374,20 @@ define([
         var result = schemaService.updateWorkspaceToCurrentSchema(workspace);
         var expectedResult = {
           problem: exampleProblem()
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('updateProblemToCurrentSchema', function() {
+      it('should return an error if the final schema version is not the current version', function() {
+        const funkyProblem = {
+          schemaVersion: 'can.never.happen'
+        };
+        var result = schemaService.updateProblemToCurrentSchema(funkyProblem);
+        var expectedResult = {
+          isValid: false,
+          errorMessage: 'Configured current schema version is not the same as the updated schema version'
         };
         expect(result).toEqual(expectedResult);
       });
