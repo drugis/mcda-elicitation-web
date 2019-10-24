@@ -2,11 +2,15 @@
   <div class="grid-container">
     <div class="grid-x">
       <div class="cell">
-      	<h3>Rename alternatives in plots</h3>
+        <h3>Rename alternatives in plots</h3>
       </div>
       <div class="cell button-group small">
-        <button class="button" type="button" ng-click="createSingleLetterLegend()">Single-letter labels</button>
-        <button class="button" type="button" ng-click="resetToBase()">Reset to original names</button>
+        <button id="single-letter-button" class="button" type="button" ng-click="createSingleLetterLegend()">
+          Single-letter labels
+        </button>
+        <button id="reset-labels-button" class="button" type="button" ng-click="resetToBase()">
+          Reset to original names
+        </button>
       </div>
       <div>
         <table class="noborder">
@@ -18,26 +22,29 @@
             </tr>
           </thead>
           <tbody>
-            <tr class="input-row" ng-repeat="(key,alternative) in legend">
+            <tr class="input-row" ng-repeat="(alternativeId, alternative) in legend">
               <td class="input-cell-leftpad noborder text-right">{{alternative.baseTitle}}</td>
-              <td class="input-cell-leftpadt noborder text-center"><i class="fa fa-long-arrow-right"></i></td>
+              <td class="input-cell-leftpadt noborder text-center">
+                <i class="fa fa-long-arrow-right"></i>
+              </td>
               <td class="input-cell noborder">
-                <input type="text" ng-model="legend[key].newTitle" ng-change="checkForMissingLabel()">
+                <input id="label-input-{{ alternativeId }}" type="text" ng-model="legend[alternativeId].newTitle"
+                  ng-change="checkForMissingLabel()">
               </td>
             </tr>
           </tbody>
         </table>
       </div>
       <div class="cell">
-        <button class="button success" type="submit" ng-disabled="isLabelMissing">
-          Rename
+        <button id="save-legend-button" class="button success" type="submit" ng-disabled="isLabelMissing">
+          Save
         </button>
       </div>
       <div class="cell alert" ng-if="isLabelMissing">
         Names may not be empty.
       </div>
     </div>
-    <button ng-click="close()" class="close-button" aria-label="Close reveal" type="button">
+    <button id="close-modal-button" ng-click="close()" class="close-button" aria-label="Close reveal" type="button">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>

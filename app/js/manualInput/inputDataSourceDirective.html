@@ -3,12 +3,12 @@
     <label>Reference
       <inline-help help-key="criterion-source"></inline-help>
     </label>
-    <input type="text" ng-model="source.source" ng-change="changeCallback()">
+    <input id="data-source-reference" type="text" ng-model="source.source" ng-change="changeCallback()">
   </div>
   <div class="cell">
     <label>Reference URL (optional)
       <inline-help help-key="criterion-source-link"></inline-help>
     </label>
-    <input type="text" ng-model="source.sourceLink" ng-model-options="{ debounce: 400 }" ng-change="checkSourceLink()">
+    <input id="data-source-url" type="text" ng-model="source.sourceLink" ng-model-options="{ debounce: 400 }" ng-change="checkSourceLink()">
   </div>
 </div>

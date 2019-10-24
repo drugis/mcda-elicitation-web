@@ -1,6 +1,6 @@
 <div class="grid-x">
   <div class="cell large-8">
-    <h4>
+    <h4 id="smaa-measurements-header">
       Measurements
     </h4>
   </div>
@@ -12,7 +12,7 @@
     </div>
   </div>
   <div class="cell">
-    <table class="full-width effects-table" id="smaatable">
+    <table id="smaa-table" class="full-width effects-table" id="smaatable">
       <thead>
         <tr>
           <th ng-show="toggledColumns['criteria']">
@@ -22,8 +22,7 @@
           <th ng-show="toggledColumns['units']">
             Units <inline-help help-key="criterion-unit"></inline-help>
           </th>
-          <th class="text-center" ng-repeat="alternative in alternatives"
-            style="min-width: 120px">
+          <th class="text-center" ng-repeat="alternative in alternatives" style="min-width: 120px">
             {{alternative.title}}
           </th>
           <th ng-show="toggledColumns['strength']">Strength of evidence / Uncertainties
@@ -51,7 +50,9 @@
               {{problem.criteria[row.criterion.id].dataSources[0].unitOfMeasurement.label}}
           </td>
           <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives">
-            <div>{{scalesRounded[row.dataSource.id][alternative.id]['50%']}}</div>
+            <div id="{{ row.criterion.id }}-{{ alternative.id }}-measurement">
+              {{scalesRounded[row.dataSource.id][alternative.id]['50%']}}
+            </div>
             <div class="uncertain">
               {{scalesRounded[row.dataSource.id][alternative.id]['2.5%']}},
               {{scalesRounded[row.dataSource.id][alternative.id]['97.5%']}}

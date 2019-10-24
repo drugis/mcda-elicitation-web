@@ -162,8 +162,8 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
 
     function hideTooltip() {
       $('div.tooltip:visible').hide();
-      $('#step1SaveButton').removeClass('open');
-      $('#step2SaveButton').removeClass('open');
+      $('#step1-save-button').removeClass('open');
+      $('#step2-save-button').removeClass('open');
     }
 
     function openCriterionModal() {

@@ -8561,7 +8561,7 @@ input[type='file'] {
 
 /* results page */
 /* line 211, ../../sass/_mcda-drugis-base.scss */
-#ranktable {
+.rank-table {
   display: inline-block;
   clear: none;
   position: relative;

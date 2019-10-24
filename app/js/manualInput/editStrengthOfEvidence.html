@@ -5,16 +5,16 @@
     </div>
     <div class="cell">
       <label>Strength of Evidence</label>
-      <input type="text" ng-model="values.strengthOfEvidence">
+      <input id="strength-of-evidence-input" type="text" ng-model="values.strengthOfEvidence">
     </div>
     <div class="cell">
       <label>Uncertainties</label>
-      <input type="text" ng-model="values.uncertainties">
+      <input id="uncertainties-input" type="text" ng-model="values.uncertainties">
     </div>
     <div class="cell">
-      <button class="button" type="submit">Save</button>
+      <button id="save-soe-unc-button" class="button" type="submit">Save</button>
     </div>
-    <button ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+    <button id="close-modal-button" ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
       <span aria-hidden="true">&times;</span>
     </button>
   </div>

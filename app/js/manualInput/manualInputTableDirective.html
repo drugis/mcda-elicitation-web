@@ -21,10 +21,13 @@
       <td ng-if="state.useFavorability && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}">
         {{row.criterion.isFavorable? 'yes' : 'no'}}</td>
       <td>
-        <span>{{row.dataSource.unitOfMeasurement.value}} </span>
+        <span
+          id="unit-of-measurement-label-{{ row.criterion.title }}-{{ row.dataSource.source }}">{{row.dataSource.unitOfMeasurement.value}}
+        </span>
         <span class="right">
           <a ng-click="editUnitOfMeasurement(row)" tooltip="Edit unit of measurement">
-            <i class="fa fa-edit icon-fixed-width"></i>
+            <i id="edit-unit-of-measurement-{{ row.criterion.title }}-{{ row.dataSource.source }}"
+              class="fa fa-edit icon-fixed-width"></i>
           </a>
         </span>
       </td>
@@ -36,14 +39,18 @@
         </effect-input-helper>
       </td>
       <td ng-if="!isInput">
-          <span><b>SoE: </b>{{row.dataSource.strengthOfEvidence}}</span>
-          <span class="right">
-              <a ng-click="editSoE(row)" tooltip="Edit Strength of evidence / Uncertainties">
-                <i class="fa fa-edit icon-fixed-width"></i>
-              </a>
-            </span>
-          <br>
+        <span id="strength-of-evidence-{{ row.criterion.title }}-{{ row.dataSource.source }}"><b>SoE:
+          </b>{{row.dataSource.strengthOfEvidence}}</span>
+        <span class="right">
+          <a ng-click="editSoE(row)" tooltip="Edit Strength of evidence / Uncertainties">
+            <i id="edit-soe-unc-{{ row.criterion.title }}-{{ row.dataSource.source }}"
+              class="fa fa-edit icon-fixed-width"></i>
+          </a>
+        </span>
+        <br>
+        <span id="uncertainties-{{ row.criterion.title }}-{{ row.dataSource.source }}">
           <b>Unc: </b> {{row.dataSource.uncertainties}}
+        </span>
       </td>
     </tr>
   </tbody>

@@ -2,7 +2,7 @@
 <div ng-if="state.step==='step1'">
   <div class="grid-x">
     <div class="cell">
-      <h3>Create workspace manually — step 1 of 2</h3>
+      <h3 id="manual-input-header-step1">Create workspace manually — step 1 of 2</h3>
       <h4>Define criteria and alternatives</h4>
     </div>
     <div class="cell">
@@ -12,7 +12,7 @@
     </div>
     <div class="cell large-6">
       <label>Workspace title
-        <input type="text" ng-model="state.title" width="100%">
+        <input id ="workspace-title" type="text" ng-model="state.title" width="100%">
       </label>
     </div>
     <div class="cell large-6">
@@ -21,7 +21,7 @@
     <div class="cell large-6">
       <label>Therapeutic context
         <inline-help help-key="therapeutic-context"></inline-help>
-        <textarea ng-model="state.description" width="100%" rows="5"></textarea>
+        <textarea id="therapeutic-context" ng-model="state.description" width="100%" rows="5"></textarea>
       </label>
     </div>
     <div class="cell">
@@ -33,11 +33,11 @@
       <label>
         Use favorability
         <inline-help help-key="favorability"></inline-help>:
-        <input type="checkbox" ng-model="state.useFavorability">
+        <input id="favorability-checkbox" type="checkbox" ng-model="state.useFavorability">
       </label>
     </div>
     <div class="cell">
-      <button class="button small" type="button" ng-click="openCriterionModal()">
+      <button id="add-criterion-button" class="button small" type="button" ng-click="openCriterionModal()">
         <i class="fa fa-plus"></i> Add Criterion</button>
     </div>
     <div class="cell">
@@ -50,7 +50,7 @@
       </h4>
     </div>
     <div class="cell">
-      <button type="button" class="button small" ng-click="addAlternative()">
+      <button id="add-alternative-button" type="button" class="button small" ng-click="addAlternative()">
         <i class="fa fa-plus"></i> Add Alternative
       </button>
     </div>
@@ -95,7 +95,7 @@
                   class="fa fa-caret-down"></i>
               </div>
             </td>
-            <td>
+            <td id="alternative-title-{{ alternative.id }}">
               {{alternative.title}}
             </td>
             <td class="text-center">
@@ -113,11 +113,11 @@
       </table>
     </div>
     <div class="cell">
-      <button class="button" ng-disabled="state.step1errors.length" type="button" ng-click="goToStep2()"
+      <button id="enter-data-button" class="button" ng-disabled="state.step1errors.length" type="button" ng-click="goToStep2()"
         tooltip="Enter effects table data">
         Enter data
       </button>
-      <button id="step1SaveButton" class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty"
+      <button id="step1-save-button" class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty"
         tooltip="Save current state">Save</button>
     </div>
     <div class="cell alert" ng-repeat="error in state.step1errors">
@@ -129,7 +129,7 @@
 <div ng-if="state.step ==='step2'">
   <div class="grid-x">
     <div class="cell">
-      <h3>Create workspace manually — step 2 of 2</h3>
+      <h3 id="manual-input-header-step2">Create workspace manually — step 2 of 2</h3>
     </div>
     <div class="cell">
       <h4>Enter data in effects table
@@ -148,7 +148,7 @@
     </div>
     <div class="cell">
       <tabset>
-        <tab heading="Deterministic" active="state.currentTab === 'effect'" ng-click="state.currentTab = 'effect'">
+        <tab id="deterministic-tab" heading="Deterministic" active="state.currentTab === 'effect'" ng-click="state.currentTab = 'effect'">
           <manual-input-table input-type="'effect'" state="state" criteria-rows="criteriaRows"
             check-input-data="checkInputData">
           </manual-input-table>
@@ -158,7 +158,7 @@
               distributions</button>
           </div>
         </tab>
-        <tab heading="SMAA" active="state.currentTab === 'distribution'" ng-click="state.currentTab = 'distribution'">
+        <tab id="smaa-tab" heading="SMAA" active="state.currentTab === 'distribution'" ng-click="state.currentTab = 'distribution'">
           <manual-input-table input-type="'distribution'" state="state" criteria-rows="criteriaRows"
             check-input-data="checkInputData">
           </manual-input-table>
@@ -168,15 +168,15 @@
 
     <!-- buttons -->
     <div class="cell">
-      <button class="button" ng-disabled="state.step2errors.length" type="button" ng-click="createProblem()"
+      <button id="done-button" class="button" ng-disabled="state.step2errors.length" type="button" ng-click="createProblem()"
         tooltip="Create problem and proceed to analysis">
         Done
       </button>
-      <button id="step2SaveButton" class="button" ng-click="saveInProgress()" ng-disabled="!dirty"
+      <button id="step2-save-button" class="button" ng-click="saveInProgress()" ng-disabled="!dirty"
         tooltip="Save current state">
         Save
       </button>
-      <button type="button" ng-click="goToStep1()" type="button" class="button">Back</button>
+      <button id="go-to-step1-button" type="button" ng-click="goToStep1()" type="button" class="button">Back</button>
       <div ng-if="state.step2errors.length" class="alert" ng-repeat="error in state.step2errors">
         <em>{{error}}</em>
       </div>
