@@ -77,6 +77,7 @@ module.exports = {
       .click(measurementValuePath)
       .clearValue(measurementValueInputPath)
       .setValue(measurementValueInputPath, 63)
+      .pause(1000)
       .click('//*[@id="sensitivity-measurements-header"]')
       .click('//*[@id="recalculate-button"]')
       .assert.containsText(measurementValuePath, '63 (36.')
