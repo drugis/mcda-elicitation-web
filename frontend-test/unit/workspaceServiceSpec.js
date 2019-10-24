@@ -4,8 +4,7 @@ define([
   'lodash',
   'angular',
   'angular-mocks',
-  'mcda/workspace/workspace',
-  'mcda/misc'
+  'mcda/workspace/workspace'
 ], function(_, angular) {
   describe('The WorkspaceService, ', function() {
     var workspaceService;
