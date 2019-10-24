@@ -141,7 +141,9 @@ function initApp() {
   app.use((error, request, response, next) => {
     logger.error(JSON.stringify(error.message, null, 2));
     if (error && error.type === signin.SIGNIN_ERROR) {
-      response.send(httpStatus.UNAUTHORIZED, 'login failed');
+      response
+        .status(httpStatus.UNAUTHORIZED)
+        .send('login failed');
     } else {
       response
         .status(error.status || error.statusCode || httpStatus.INTERNAL_SERVER_ERROR)
