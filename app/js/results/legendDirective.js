@@ -1,5 +1,11 @@
 'use strict';
-define(['lodash', 'jquery'], function(_, $) {
+define([
+  'lodash',
+  'jquery'
+], function(
+  _,
+  $
+) {
   var dependencies = ['$stateParams', '$modal', '$compile', 'ScenarioResource'];
   var LegendDirective = function($stateParams, $modal, $compile, ScenarioResource) {
     return {
@@ -21,7 +27,7 @@ define(['lodash', 'jquery'], function(_, $) {
             '</table>' +
             (scope.editMode.isUserOwner ? 'Click to change' : '');
         } else {
-          tooltipHtml = scope.editMode.isUserOwner ? 
+          tooltipHtml = scope.editMode.isUserOwner ?
             'Please click the button to create aliases for the alternatives to use in plots' :
             'No legend set.';
         }

@@ -1,15 +1,15 @@
 'use strict';
 define([
   'lodash',
-  'jquery',
   'angular',
+  'jquery',
   'd3',
   'nvd3'
 ],
   function(
     _,
-    $,
     angular,
+    $,
     d3,
     nv
   ) {

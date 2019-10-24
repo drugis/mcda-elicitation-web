@@ -1,5 +1,13 @@
 'use strict';
-define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
+define([
+  'lodash',
+  'angular',
+  'jquery'
+], function(
+  _,
+  angular,
+  $
+) {
   var dependencies = [
     '$scope',
     '$state',

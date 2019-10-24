@@ -1,5 +1,13 @@
 'use strict';
-define(['d3', 'nvd3', 'jquery'], function(d3, nv, $) {
+define([
+  'd3',
+  'nvd3',
+  'jquery'
+], function(
+  d3,
+  nv,
+  $
+) {
   var dependencies = ['DeterministicResultsService'];
 
   var ValueProfilePlot = function(DeterministicResultsService) {
