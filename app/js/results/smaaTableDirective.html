@@ -25,8 +25,9 @@
           <th class="text-center" ng-repeat="alternative in alternatives" style="min-width: 120px">
             {{alternative.title}}
           </th>
-          <th ng-show="toggledColumns['strength']">Strength of evidence / Uncertainties
-            <!-- <inline-help help-key="strength-of-evidence"></inline-help> -->
+          <th ng-show="toggledColumns['strength']">
+            Strength of evidence <inline-help help-key="strength-of-evidence"></inline-help>
+            / Uncertainties <inline-help help-key="uncertainties"></inline-help>
           </th>
           <th ng-show="toggledColumns['references']">
             References <inline-help help-key="criterion-source"></inline-help>
