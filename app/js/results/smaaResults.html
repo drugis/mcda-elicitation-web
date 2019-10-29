@@ -33,7 +33,9 @@
     </div>
     <div class="cell large-6">
       <div export file-name="'rank-acceptability-plot'" legend style="width: 400px; height: 400px">
-        <rank-plot id="rank-plot" value="state.results.ranks.data" stacked="true" problem="state.problem"></rank-plot>
+        <rank-plot id="rank-plot" values="state.results.ranks.data" alternatives="alternatives"
+          labels="scenario.state.legend"></rank-plot>
+        <!-- legend is already the attribute, can't use it as a property -->
       </div>
     </div>
     <div class="cell large-6">
@@ -48,7 +50,7 @@
           <tr ng-repeat="alternative in alternatives">
             <td>{{scenario.state.legend[alternative.id].baseTitle || alternative.title}}</td>
             <td id="{{ alternative.id }}-{{ $index + 1 }}-rank"
-              ng-repeat="rank in state.results.ranks.data[alternative.id] track by $index" class="heat">
+              ng-repeat="rank in state.results.ranks.data[alternative.id] track by $index" class="heat-map">
               {{::rank | number}}
             </td>
           </tr>
@@ -68,8 +70,8 @@
           </option>
         </select>
         <div style="width: 400px; height: 350px">
-          <bar-chart id="alternatives-per-rank-bar-chart" value="state.alternativesByRank[state.selectedRank]"
-            problem="state.problem"></bar-chart>
+          <bar-chart id="alternatives-per-rank-bar-chart" values="state.alternativesByRank[state.selectedRank]">
+          </bar-chart>
         </div>
       </div>
     </div>
@@ -85,7 +87,7 @@
           </option>
         </select>
         <div style="width: 400px; height: 350px">
-          <bar-chart id="rank-per-alternatives-bar-chart" value="state.ranksByAlternatives[state.selectedAlternative]">
+          <bar-chart id="rank-per-alternatives-bar-chart" values="state.ranksByAlternatives[state.selectedAlternative]">
           </bar-chart>
         </div>
       </div>
@@ -97,7 +99,8 @@
   <div class="grid-x">
     <div class="cell">
       <div style="width: 650px; height: 350px" export legend file-name="'central-weights'">
-        <line-chart id="central-weights-line-chart" value="state.centralWeights"></line-chart>
+        <central-weights-plot id="central-weights-central-weights-plot" values="state.centralWeights">
+        </central-weights-plot>
       </div>
     </div>
     <div class="cell large-2 large-offset-10">
@@ -121,7 +124,7 @@
         <tbody>
           <tr ng-repeat="alternative in alternatives">
             <td>{{alternative.title}}</td>
-            <td class="heat">{{state.results.cw.data[alternative.id].cf | number}}</td>
+            <td class="heat-map">{{state.results.cw.data[alternative.id].cf | number}}</td>
             <td id="{{ criterion.id }}-{{ alternative.id }}-central-weight" ng-repeat="criterion in criteria">
               {{::state.results.cw.data[alternative.id].w[criterion.id] | number}}
             </td>

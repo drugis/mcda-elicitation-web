@@ -34,22 +34,37 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function getPvfCoordinatesForCriterion(criterion) {
-      return [{
-        key: 'Partial value function',
-        values: getXY(criterion.dataSources[0])
-      }];
+      var pvfCoordinates = [];
+      
+      var xValues = ['x'];
+      xValues.push(best(criterion.dataSources[0]));
+      xValues = xValues.concat(intermediateX(criterion.dataSources[0].pvf));
+      xValues.push(worst(criterion.dataSources[0]));
+      pvfCoordinates.push(xValues);
+
+      var yValues = [criterion.title];
+      yValues.push(1);
+      yValues = yValues.concat(intermediateY(criterion.dataSources[0].pvf));
+      yValues.push(0);
+      pvfCoordinates.push(yValues);
+
+      return pvfCoordinates;
     }
 
-    function getXY(dataSource) {
-      return [].concat({
-        x: best(dataSource),
-        y: 1
-      },
-        sortByValues(dataSource.pvf),
-        {
-          x: worst(dataSource),
-          y: 0
-        });
+    function intermediateX(pvf) {
+      if (!pvf.cutoffs) {
+        return [];
+      } else {
+        return pvf.cutoffs;
+      }
+    }
+
+    function intermediateY(pvf) {
+      if (!pvf.values) {
+        return [];
+      } else {
+        return pvf.values;
+      }
     }
 
     function sortByValues(pvf) {

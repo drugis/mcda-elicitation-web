@@ -2,11 +2,13 @@
 define([
   'lodash',
   'angular',
-  'jquery'
+  'jquery',
+  'd3'
 ], function(
   _,
   angular,
-  $
+  $,
+  d3
 ) {
   var dependencies = ['PataviResultsService'];
 
@@ -155,7 +157,199 @@ define([
       return newState;
     }
 
+    function smaaResultsToRankPlotValues(results, alternatives, legend) {
+      var values = getRankPlotTitles(alternatives, legend);
+      return values.concat(getRankPlotValues(results, alternatives));
+    }
+
+    function getRankPlotTitles(alternatives, legend) {
+      return [_.reduce(alternatives, function(accum, alternative) {
+        accum.push(legend ? legend[alternative.id].newTitle : alternative.title);
+        return accum;
+      }, ['x'])];
+    }
+
+    function getRankPlotValues(results, alternatives) {
+      var values = _.map(alternatives, function(alternative, index) {
+        return ['Rank ' + (index + 1)];
+      });
+
+      _.forEach(alternatives, function(alternative, index) {
+        _.forEach(results[alternative.id], function(rankResult, key) {
+          values[key][index + 1] = rankResult;
+        });
+      });
+
+      return values;
+    }
+
+    function getRankPlotSettings(results, alternatives, legend, root) {
+      var rankTitles = _.map(alternatives, function(alternative, index) {
+        return 'Rank ' + (index + 1);
+      });
+      var values = smaaResultsToRankPlotValues(results, alternatives, legend);
+      var settings = {
+        bindto: root,
+        data: {
+          x: 'x',
+          columns: values,
+          type: 'bar',
+          groups: [rankTitles]
+        },
+        axis: {
+          x: {
+            type: 'category',
+            tick: {
+              centered: true
+            }
+          },
+          y: {
+            tick: {
+              count: 5,
+              format: d3.format(',.3g')
+            },
+            min: 0,
+            max: 1,
+            padding: {
+              top: 0,
+              bottom: 0
+            }
+          }
+        },
+        grid: {
+          x: {
+            show: false
+          },
+          y: {
+            show: true
+          }
+        },
+        legend: {
+          position: 'bottom'
+        }
+      };
+      return settings;
+    }
+
+    function getBarChartSettings(results, root) {
+      var values = smaaResultsToBarChartValues(results);
+      var settings = {
+        bindto: root,
+        data: {
+          x: 'x',
+          columns: values,
+          type: 'bar'
+        },
+        axis: {
+          x: {
+            type: 'category',
+            tick: {
+              centered: true
+            }
+          },
+          y: {
+            tick: {
+              count: 5,
+              format: d3.format(',.3g')
+            },
+            padding: {
+              top: 0,
+              bottom: 0
+            }
+          }
+        },
+        grid: {
+          x: {
+            show: false
+          },
+          y: {
+            show: true
+          }
+        },
+        legend: {
+          show: false
+        },
+        tooltip: {
+            show: false
+        }
+      };
+      return settings;
+    }
+
+    function smaaResultsToBarChartValues(results) {
+      var values = getBarChartTitles(results[0].values);
+      return values.concat(getBarChartValues(results[0].values));
+    }
+
+    function getBarChartTitles(values) {
+      return [_.reduce(values, function(accum, value) {
+        accum.push(value.label);
+        return accum;
+      }, ['x'])];
+    }
+
+    function getBarChartValues(values) {
+      return [_.reduce(values, function(accum, value) {
+        accum.push(value.value);
+        return accum;
+      }, ['Rank'])];
+    }
+
+    function getCentralWeightsPlotSettings(results, root) {
+      var values = smaaResultsToCentralWeightsChartValues(results);
+      var settings = {
+        bindto: root,
+        data: {
+          x: 'x',
+          columns: values,
+          type: 'bar'
+        },
+        axis: {
+          x: {
+            type: 'category',
+            tick: {
+              centered: true
+            }
+          },
+          y: {
+            tick: {
+              count: 5,
+              format: d3.format(',.3g')
+            },
+          }
+        },
+        grid: {
+          x: {
+            show: false
+          },
+          y: {
+            show: true
+          }
+        },
+        legend: {
+          position: 'bottom'
+        }
+      };
+      return settings;
+    }
+
+    function smaaResultsToCentralWeightsChartValues(results) {
+      var values = [['x'].concat(results[0].labels)];
+      return values.concat(getCentralWeightsValues(results));
+    }
+
+    function getCentralWeightsValues(results) {
+      return _.map(results, function(result) {
+        return [result.key].concat(_.map(result.values, function(value) {
+          return value.y;
+        }));
+      });
+    }
+
     return {
+      getBarChartSettings: getBarChartSettings,
+      getCentralWeightsPlotSettings: getCentralWeightsPlotSettings,
+      getRankPlotSettings: getRankPlotSettings,
       getResults: getResults,
       addSmaaResults: addSmaaResults,
       replaceAlternativeNames: replaceAlternativeNames

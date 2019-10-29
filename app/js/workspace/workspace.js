@@ -7,12 +7,16 @@ define([
   './deleteInProgressController',
   './workspaceController',
   './workspaceSettingsController',
+
   '../services/workspaceService',
   '../services/performanceTableService',
   './orderingService',
   './workspaceSettingsService',
+
   './exampleResource',
   './tutorialResource',
+
+  './fileReaderDirective',
   './workspaceSettingsDirective',
   './workspacesDirective',
   './inProgressWorkspacesDirective',
@@ -26,12 +30,16 @@ define([
   DeleteInProgressController,
   WorkspaceController,
   WorkspaceSettingsController,
+
   WorkspaceService,
   PerformanceTableService,
   OrderingService,
   WorkspaceSettingService,
+
   ExampleResource,
   TutorialResource,
+
+  fileReaderDirective,
   WorkspaceSettings,
   Workspaces,
   InProgressWorkspaces,
@@ -53,6 +61,7 @@ define([
       .service('ExampleResource', ExampleResource)
       .service('TutorialResource', TutorialResource)
 
+      .directive('fileReader', fileReaderDirective)
       .directive('workspaceSettings', WorkspaceSettings)
       .directive('workspaces', Workspaces)
       .directive('inProgressWorkspaces', InProgressWorkspaces)

@@ -1,5 +1,15 @@
 'use strict';
-define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
+define([
+  'lodash',
+  'angular',
+  'jquery',
+  'd3'
+], function(
+  _,
+  angular,
+  $,
+  d3
+) {
   var dependencies = ['PataviResultsService'];
 
   var DeterministicResulstsService = function(PataviResultsService) {
@@ -81,32 +91,38 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
     }
 
     function pataviResultToValueProfile(result, criteria, alternatives, legend) {
+      var plotValues = getAlternativesTitles(alternatives, legend);
+      return plotValues.concat(getProfilePlotValues(criteria, alternatives, result));
+    }
+
+    function getAlternativesTitles(alternatives, legend) {
+      return [_.reduce(alternatives, function(accum, alternative) {
+        accum.push(legend ? legend[alternative.id].newTitle : alternative.title);
+        return accum;
+      }, ['x'])];
+    }
+
+    function getProfilePlotValues(criteria, alternatives, result) {
       return _.map(criteria, function(criterion) {
-        return {
-          key: criterion.title,
-          values: _.map(alternatives, function(alternative) {
-            return {
-              x: legend ? legend[alternative.id].newTitle : alternative.title,
-              y: result.value.data[alternative.id][criterion.id]
-            };
-          })
-        };
+        return _.reduce(alternatives, function(accum, alternative) {
+          accum.push(result.value.data[alternative.id][criterion.id]);
+          return accum;
+        }, [criterion.title]);
       });
     }
 
     function pataviResultToLineValues(results, alternatives, legend) {
+      var plotValues = getLineXValues(results, alternatives);
+      return plotValues.concat(getLineYValues(alternatives, legend, results));
+    }
+
+    function getLineXValues(results, alternatives) {
+      return [['x'].concat(_.keys(results.total.data[alternatives[0].id]))];
+    }
+
+    function getLineYValues(alternatives, legend, results) {
       return _.map(alternatives, function(alternative) {
-        return {
-          key: legend ? legend[alternative.id].newTitle : alternative.title,
-          values: _(results.total.data[alternative.id]).map(function(entryValue, entryKey) {
-            return {
-              x: parseFloat(entryKey),
-              y: entryValue
-            };
-          })
-            .sortBy('x')
-            .value()
-        };
+        return [legend ? legend[alternative.id].newTitle : alternative.title].concat(_.values(results.total.data[alternative.id]));
       });
     }
 
@@ -133,14 +149,14 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       return run(scope, nextState);
     }
 
-    function getMeasurementsSensitivityResults(scope, state) {
+    function getMeasurementSensitivityResults(scope, state) {
       var nextState = {
         problem: _.merge({}, getProblem(state.problem), {
           preferences: state.prefs,
           method: 'sensitivityMeasurementsPlot',
           sensitivityAnalysis: {
-            alternative: scope.sensitivityMeasurements.measurementsAlternative.id,
-            criterion: scope.sensitivityMeasurements.measurementsCriterion.id
+            alternative: scope.measurementsAlternative.id,
+            criterion: scope.measurementsCriterion.id
           }
         })
       };
@@ -153,7 +169,7 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
           preferences: state.prefs,
           method: 'sensitivityWeightPlot',
           sensitivityAnalysis: {
-            criterion: scope.sensitivityMeasurements.preferencesCriterion.id
+            criterion: scope.selectedCriterion.id
           }
         })
       };
@@ -189,14 +205,104 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
       }, {});
     }
 
+    function getSensitivityLineChartSettings(root, values, labelXAxis, labelYAxis) {
+      return {
+        bindto: root,
+        data: {
+          x: 'x',
+          columns: values
+        },
+        axis: {
+          x: {
+            label: {
+              text: labelXAxis,
+              position: 'outer-center'
+            },
+            min: values[0][1],
+            max: values[0][values[0].length - 1],
+            padding: {
+              left: 0,
+              right: 0
+            },
+            tick: {
+              count: 5,
+              format: d3.format(',.3g')
+            }
+          },
+          y: {
+            label: {
+              text: labelYAxis,
+              position: 'outer-middle'
+            }
+          }
+        },
+        grid: {
+          x: {
+            show: true
+          },
+          y: {
+            show: true
+          }
+        },
+        point: {
+          show: false
+        }
+      };
+    }
+
+    function getValueProfilePlotSettings(results, criteria, alternatives, alternativesLegend, root) {
+      var plotValues = pataviResultToValueProfile(
+        results,
+        criteria,
+        alternatives,
+        alternativesLegend
+      );
+      var criteriaTitles = _.map(criteria, 'title');
+      return {
+        bindto: root,
+        data: {
+          x: 'x',
+          columns: plotValues,
+          type: 'bar',
+          groups: [criteriaTitles]
+        },
+        axis: {
+          x: {
+            type: 'category',
+            tick: {
+              centered: true
+            }
+          },
+          y: {
+            tick: {
+              count: 5,
+              format: d3.format(',.3g')
+            },
+          }
+        },
+        grid: {
+          x: {
+            show: false
+          },
+          y: {
+            show: true
+          }
+        },
+        legend: {
+          position: 'inset'
+        }
+      };
+    }
+
     return {
       getResults: getResults,
       resetModifiableScales: resetModifiableScales,
-      pataviResultToValueProfile: pataviResultToValueProfile,
+      getSensitivityLineChartSettings: getSensitivityLineChartSettings,
+      getValueProfilePlotSettings: getValueProfilePlotSettings,
       pataviResultToLineValues: pataviResultToLineValues,
       getDeterministicResults: getDeterministicResults,
       getRecalculatedDeterministicResults: getRecalculatedDeterministicResults,
-      getMeasurementsSensitivityResults: getMeasurementsSensitivityResults,
+      getMeasurementSensitivityResults: getMeasurementSensitivityResults,
       getPreferencesSensitivityResults: getPreferencesSensitivityResults,
       percentifySensitivityResult: percentifySensitivityResult,
       createDeterministicScales: createDeterministicScales

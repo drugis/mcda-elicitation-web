@@ -40,6 +40,10 @@ define([
           'Labels</button>')(scope);
         $element.after(btnElement);
 
+        function emitEvent(){
+          scope.$emit('elicit.legendChanged');
+        }
+
         function editLegend() {
           $modal.open({
             templateUrl: './editLegend.html',
@@ -54,7 +58,7 @@ define([
               callback: function() {
                 return function(newLegend) {
                   scope.scenario.state.legend = newLegend;
-                  ScenarioResource.save($stateParams, scope.scenario).$promise.then(scope.loadState);
+                  ScenarioResource.save($stateParams, scope.scenario).$promise.then(emitEvent);
                 };
               }
             }

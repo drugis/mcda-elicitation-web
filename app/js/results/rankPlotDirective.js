@@ -6,33 +6,32 @@ define([
   d3,
   c3
 ) {
-  var dependencies = ['DeterministicResultsService'];
+  var dependencies = ['MCDAResultsService'];
 
-  var ValueProfilePlot = function(DeterministicResultsService) {
+  var RankPlot = function(MCDAResultsService) {
     return {
       restrict: 'E',
       scope: {
-        values: '=',
-        criteria: '=',
         alternatives: '=',
-        alternativesLegend: '='
+        labels: '=',
+        values: '='
       },
-      template: '<div class="value-plot"></div>',
+      templateUrl: './rankPlotDirective.html',
       link: function(scope, element) {
         scope.$watch('values', function(results) {
           if (!results) {
             return;
           } else {
             var root = d3.select(element[0]);
-            root = root.select('.value-plot');
+            root = root.select('#rank-plot');
             root
             .style('width', '400px')
             .style('height', '400px');
-            var settings = DeterministicResultsService.getValueProfilePlotSettings(
+
+            var settings = MCDAResultsService.getRankPlotSettings(
               results,
-              scope.criteria,
               scope.alternatives,
-              scope.alternativesLegend,
+              scope.labels,
               root);
             c3.generate(settings);
           }
@@ -40,5 +39,5 @@ define([
       }
     };
   };
-  return dependencies.concat(ValueProfilePlot);
+  return dependencies.concat(RankPlot);
 });

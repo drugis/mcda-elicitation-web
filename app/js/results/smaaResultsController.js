@@ -17,13 +17,14 @@ define(['clipboard', 'require'], function(Clipboard) {
     OrderingService,
     PageTitleService
   ) {
-    // functions
-    $scope.loadState = loadState;
-
     // init
     $scope.scenario = currentScenario;
     new Clipboard('.clipboard-button');
     PageTitleService.setPageTitle('SmaaResultsController', ($scope.aggregateState.problem.title || $scope.workspace.title) +'\'s SMAA results');
+
+    $scope.$on('elicit.legendChanged', function() {
+      loadState();
+    });
 
     OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(ordering) {
       $scope.criteria = ordering.criteria;

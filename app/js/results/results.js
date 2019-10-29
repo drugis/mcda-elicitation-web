@@ -1,45 +1,72 @@
 'use strict';
 define([
-  './smaaResultsController',
   './deterministicResultsController',
   './editLegendController',
-  './smaaTableDirective',
+  './smaaResultsController',
+
+  './barChartDirective',
+  './centralWeightsPlotDirective',
+  './heatMapDirective',
+  './legendDirective',
+  './lineChartDirective',
+  './measurementSensitivityDirective',
+  './preferencesSensitivityDirective',
   './sensitivityInputDirective',
   './sensitivityTableDirective',
+  './smaaTableDirective',
+  './rankPlotDirective',
   './valueProfilePlotDirective',
-  './legendDirective',
-  './resultsService',
+
   './deterministicResultsService',
+  './resultsService',
   './pataviResultsService',
+
   'angular',
   'angular-patavi-client'
 ], function(
-  SmaaResultsController,
   DeterministicResultsController,
   EditLegendController,
-  SmaaTableDirective,
+  SmaaResultsController,
+
+  barChartDirective,
+  centralWeightsPlotDirective,
+  heatMapDirective,
+  legendDirective,
+  lineChartDirective,
+  measurementSensitivityDirective,
+  preferencesSensitivityDirective,
   sensitivityInputDirective,
   sensitivityTableDirective,
+  SmaaTableDirective,
+  rankPlotDirective,
   valueProfilePlotDirective,
-  legendDirective,
-  MCDAResultsService,
+
   DeterministicResultsService,
+  MCDAResultsService,
   PataviResultsService,
+
   angular
 ) {
-    return angular.module('elicit.results', ['patavi'])
-      .controller('SmaaResultsController', SmaaResultsController)
-      .controller('DeterministicResultsController', DeterministicResultsController)
-      .controller('EditLegendController', EditLegendController)
+  return angular.module('elicit.results', ['patavi'])
+    .controller('DeterministicResultsController', DeterministicResultsController)
+    .controller('EditLegendController', EditLegendController)
+    .controller('SmaaResultsController', SmaaResultsController)
 
-      .directive('smaaTable', SmaaTableDirective)
-      .directive('sensitivityInput', sensitivityInputDirective)
-      .directive('valueProfilePlot', valueProfilePlotDirective)
-      .directive('legend', legendDirective)
-      .directive('sensitivityTable', sensitivityTableDirective)
+    .directive('barChart', barChartDirective)
+    .directive('centralWeightsPlot', centralWeightsPlotDirective)
+    .directive('heatMap', heatMapDirective)
+    .directive('legend', legendDirective)
+    .directive('lineChart', lineChartDirective)
+    .directive('measurementSensitivity', measurementSensitivityDirective)
+    .directive('preferencesSensitivity', preferencesSensitivityDirective)
+    .directive('sensitivityInput', sensitivityInputDirective)
+    .directive('sensitivityTable', sensitivityTableDirective)
+    .directive('smaaTable', SmaaTableDirective)
+    .directive('rankPlot', rankPlotDirective)
+    .directive('valueProfilePlot', valueProfilePlotDirective)
 
-      .factory('MCDAResultsService', MCDAResultsService)
-      .factory('DeterministicResultsService', DeterministicResultsService)
-      .factory('PataviResultsService', PataviResultsService)
-      ;
-  });
+    .factory('DeterministicResultsService', DeterministicResultsService)
+    .factory('MCDAResultsService', MCDAResultsService)
+    .factory('PataviResultsService', PataviResultsService)
+    ;
+});
