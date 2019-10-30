@@ -1,5 +1,5 @@
 'use strict';
-define(['angular'], function(angular) {
+define(['angular', 'lodash'], function(angular, _) {
   var dependencies = [
     '$scope',
     '$modalInstance',
@@ -52,9 +52,11 @@ define(['angular'], function(angular) {
         try {
           SchemaService.validateProblem(updatedProblem);
           $scope.updatedProblem = updatedProblem;
-        } catch (error) {
+        } catch (errors) {
           $scope.workspaceValidity.isValid = false;
-          $scope.workspaceValidity.errorMessage = error;
+          $scope.workspaceValidity.errorMessage = _.reduce(errors, function(accum,error){
+            return accum.concat(error.message, ';');
+          }, '');
         }
       }
     }, true);

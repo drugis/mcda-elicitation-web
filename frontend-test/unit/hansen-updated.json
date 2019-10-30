@@ -1,5 +1,5 @@
 {
-  "title": "Hansen et al. 2005 with Placebo as baseline",
+  "title": "Antidepressants - relative effectiveness analysis (Van Valkenhoef et al, J Clin Epi, 2012)",
   "description": "Based on Hansen et al. (2005), \"Efficacy and Safety of Second-Generation Antidepressants in the Treatment of Major Depressive Disorder\"",
   "criteria": {
     "HAM-D": {
@@ -7,7 +7,6 @@
       "description": "Responders on the HAM-D rating scale",
       "dataSources": [
         {
-          "unitOfMeasurement": "Proportion",
           "pvf": {
             "direction": "increasing",
             "type": "linear",
@@ -20,7 +19,11 @@
             0,
             1
           ],
-          "id": "9d50ee92-e665-4327-913d-a7b36be48852"
+          "id": "2f07b617-84f0-4d86-9b5b-c86081749845",
+          "unitOfMeasurement": {
+            "type": "decimal",
+            "label": "Proportion"
+          }
         }
       ]
     },
@@ -28,7 +31,6 @@
       "title": "Diarrhea",
       "dataSources": [
         {
-          "unitOfMeasurement": "Proportion",
           "pvf": {
             "direction": "decreasing",
             "type": "linear",
@@ -41,7 +43,11 @@
             0,
             1
           ],
-          "id": "cf0273fb-0e8b-4f5f-b949-262a696eb5f1"
+          "id": "3c974913-2c19-40fa-a18e-25475216ae40",
+          "unitOfMeasurement": {
+            "type": "decimal",
+            "label": "Proportion"
+          }
         }
       ]
     },
@@ -49,7 +55,6 @@
       "title": "Dizziness",
       "dataSources": [
         {
-          "unitOfMeasurement": "Proportion",
           "pvf": {
             "direction": "decreasing",
             "type": "linear",
@@ -62,7 +67,11 @@
             0,
             1
           ],
-          "id": "5980f25b-f0f1-48e9-ba1c-13ab24702073"
+          "id": "a38454bd-401e-436c-ba99-80401f81639b",
+          "unitOfMeasurement": {
+            "type": "decimal",
+            "label": "Proportion"
+          }
         }
       ]
     },
@@ -70,7 +79,6 @@
       "title": "Headache",
       "dataSources": [
         {
-          "unitOfMeasurement": "Proportion",
           "pvf": {
             "direction": "decreasing",
             "type": "linear",
@@ -83,7 +91,11 @@
             0,
             1
           ],
-          "id": "ce3641c7-fe5c-41ae-8c0f-e3d44910e5e8"
+          "id": "2b210b84-fc31-4cf3-9325-02fb589af64a",
+          "unitOfMeasurement": {
+            "type": "decimal",
+            "label": "Proportion"
+          }
         }
       ]
     },
@@ -91,7 +103,6 @@
       "title": "Insomnia",
       "dataSources": [
         {
-          "unitOfMeasurement": "Proportion",
           "pvf": {
             "direction": "decreasing",
             "type": "linear",
@@ -104,7 +115,11 @@
             0,
             1
           ],
-          "id": "45222b46-9fcd-4805-b70d-b14b0f3d0b4d"
+          "id": "4e4e09ca-43ae-4604-9582-5c167262020d",
+          "unitOfMeasurement": {
+            "type": "decimal",
+            "label": "Proportion"
+          }
         }
       ]
     },
@@ -112,7 +127,6 @@
       "title": "Nausea",
       "dataSources": [
         {
-          "unitOfMeasurement": "Proportion",
           "pvf": {
             "direction": "decreasing",
             "type": "linear",
@@ -125,7 +139,11 @@
             0,
             1
           ],
-          "id": "d8f3a6e3-3a47-4993-9fa0-005b58cf0df8"
+          "id": "f869b968-2e1f-4106-a8a6-6b09be8e7f9e",
+          "unitOfMeasurement": {
+            "type": "decimal",
+            "label": "Proportion"
+          }
         }
       ]
     }
@@ -226,7 +244,7 @@
           }
         }
       },
-      "dataSource": "9d50ee92-e665-4327-913d-a7b36be48852"
+      "dataSource": "2f07b617-84f0-4d86-9b5b-c86081749845"
     },
     {
       "criterion": "Diarrhea",
@@ -306,7 +324,7 @@
           }
         }
       },
-      "dataSource": "cf0273fb-0e8b-4f5f-b949-262a696eb5f1"
+      "dataSource": "3c974913-2c19-40fa-a18e-25475216ae40"
     },
     {
       "criterion": "Dizziness",
@@ -386,7 +404,7 @@
           }
         }
       },
-      "dataSource": "5980f25b-f0f1-48e9-ba1c-13ab24702073"
+      "dataSource": "a38454bd-401e-436c-ba99-80401f81639b"
     },
     {
       "criterion": "Headache",
@@ -466,7 +484,7 @@
           }
         }
       },
-      "dataSource": "ce3641c7-fe5c-41ae-8c0f-e3d44910e5e8"
+      "dataSource": "2b210b84-fc31-4cf3-9325-02fb589af64a"
     },
     {
       "criterion": "Insomnia",
@@ -546,7 +564,7 @@
           }
         }
       },
-      "dataSource": "45222b46-9fcd-4805-b70d-b14b0f3d0b4d"
+      "dataSource": "4e4e09ca-43ae-4604-9582-5c167262020d"
     },
     {
       "criterion": "Nausea",
@@ -626,9 +644,9 @@
           }
         }
       },
-      "dataSource": "d8f3a6e3-3a47-4993-9fa0-005b58cf0df8"
+      "dataSource": "f869b968-2e1f-4106-a8a6-6b09be8e7f9e"
     }
   ],
   "preferences": {},
-  "schemaVersion": "1.3.4"
+  "schemaVersion": "1.4.2"
 }

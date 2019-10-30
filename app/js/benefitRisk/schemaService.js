@@ -86,13 +86,6 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
       }
     }
 
-    function validateProblem(problem) {
-      var error = isInvalidSchema(problem);
-      if (error) {
-        return error[0].message;
-      }
-    }
-
     function updateWorkspaceToCurrentSchema(workspace) {
       var newWorkspace = angular.copy(workspace);
       try {
@@ -103,11 +96,10 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
       }
     }
 
-    function isInvalidSchema(uploadedJSON) {
+    function validateProblem(uploadedJSON) {
       var ajv = loadSchemas();
-      var isValid = ajv.validate('problem.json', uploadedJSON);
-      if (!isValid) {
-        return ajv.errors;
+      if (!ajv.validate('problem.json', uploadedJSON)) {
+        throw ajv.errors;
       }
     }
 

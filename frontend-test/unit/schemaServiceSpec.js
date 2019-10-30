@@ -380,36 +380,37 @@ define([
     });
 
     describe('updateProblemToCurrentSchema', function() {
-      it('should return an error if the final schema version is not the current version', function() {
+      it('should throw an error if the final schema version is not the current version', function() {
         const funkyProblem = {
           schemaVersion: 'can.never.happen'
         };
-        var result = schemaService.updateProblemToCurrentSchema(funkyProblem);
-        var expectedResult = {
-          isValid: false,
-          errorMessage: 'Configured current schema version is not the same as the updated schema version'
-        };
-        expect(result).toEqual(expectedResult);
+        const error = 'Configured current schema version is not the same as the updated schema version';
+
+        expect(function() {
+          schemaService.updateProblemToCurrentSchema(funkyProblem);
+        }).toThrow(error);
       });
     });
 
-    describe('isInvalidSchema', function() {
+    describe('validateProblem', function() {
       beforeEach(function() {
         getDataSourcesByIdMock.calls.reset();
       });
 
-      it('should return false if the JSON file passed to the function is valid according to the schema', function() {
+      it('should throw no errors if the JSON file passed to the function is valid according to the schema', function() {
         var inputJSON = require('./test.json');
-        var result = schemaService.updateProblemToCurrentSchema(inputJSON);
-        expect(result.isValid).toBeTruthy();
+        expect(function() {
+          schemaService.validateProblem(inputJSON);
+        }).not.toThrow();
       });
 
-      it('should return false if the JSON file passed to the function contains relative data', function() {
+      it('should throw no errors if the JSON file passed to the function contains correct relative data', function() {
         var inputJSON = require('./hansen-updated.json');
         const dataSourcesById = createHansenDataSourcesById(inputJSON);
         getDataSourcesByIdMock.and.returnValue(dataSourcesById);
-        var result = schemaService.updateProblemToCurrentSchema(inputJSON);
-        expect(result.isValid).toBeTruthy();
+        expect(function() {
+          schemaService.validateProblem(inputJSON);
+        }).not.toThrow();
       });
 
       function createHansenDataSourcesById(inputJSON) {
@@ -439,8 +440,9 @@ define([
 
       it('should return true if the JSON file passed to the function is not valid according to the schema', function() {
         var inputJSON = require('./test-false.json');
-        var result = schemaService.updateProblemToCurrentSchema(inputJSON);
-        expect(result.isValid).toBeFalsy();
+        expect(function() {
+          schemaService.validateProblem(inputJSON);
+        }).toThrow();
       });
     });
   });
