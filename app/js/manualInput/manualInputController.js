@@ -1,5 +1,13 @@
 'use strict';
-define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
+define([
+  'lodash',
+  'angular',
+  'jquery'
+], function(
+  _,
+  angular,
+  $
+) {
   var dependencies = [
     '$scope',
     '$state',
@@ -50,6 +58,9 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
 
     // init
     $scope.alternativeInput = {}; //scoping
+    $scope.editMode = {
+      isUserOwner: true
+    };
     PageTitleService.setPageTitle('ManualInputController', 'Manual input');
     initState();
 
@@ -159,8 +170,8 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
 
     function hideTooltip() {
       $('div.tooltip:visible').hide();
-      $('#step1SaveButton').removeClass('open');
-      $('#step2SaveButton').removeClass('open');
+      $('#step1-save-button').removeClass('open');
+      $('#step2-save-button').removeClass('open');
     }
 
     function openCriterionModal() {
@@ -227,8 +238,9 @@ define(['lodash', 'angular', 'jquery'], function(_, angular, $) {
     }
 
     function copyOldWorkspace() {
-      $scope.state = ManualInputService.createStateFromOldWorkspace(
-        SchemaService.updateWorkspaceToCurrentSchema($stateParams.workspace));
+      var updatedWorkspace = SchemaService.updateWorkspaceToCurrentSchema($stateParams.workspace);
+      SchemaService.validateProblem(updatedWorkspace.problem);
+      $scope.state = ManualInputService.createStateFromOldWorkspace(updatedWorkspace);
       $scope.dirty = true;
       setStateWatcher();
       checkStep1Errors();

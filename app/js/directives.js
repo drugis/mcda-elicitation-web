@@ -1,15 +1,15 @@
 'use strict';
 define([
   'lodash',
-  'jquery',
   'angular',
+  'jquery',
   'd3',
   'nvd3'
 ],
   function(
     _,
-    $,
     angular,
+    $,
     d3,
     nv
   ) {
@@ -266,7 +266,7 @@ define([
           model: '='
         },
         restrict: 'E',
-        template: '<input type="file" accept=".json">',
+        template: '<input id="workspace-upload-input" type="file" accept=".json">',
         link: function(scope, element) {
           function onLoadContents(env) {
             scope.$apply(function() {

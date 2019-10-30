@@ -1,0 +1,94 @@
+{
+  "schemaVersion": "1.4.2",
+  "title": "Test workspace",
+  "criteria": {
+    "c1": {
+      "title": "c1",
+      "dataSources": [
+        {
+          "id": "fe1621d4-23d6-4412-91b9-d07be73ca0b5",
+          "unitOfMeasurement": {
+            "type": "custom",
+            "label": ""
+          },
+          "scale": [
+            null,
+            null
+          ],
+          "source": "ref1"
+        }
+      ]
+    },
+    "c2": {
+      "title": "c2",
+      "dataSources": [
+        {
+          "id": "6bcc506a-4236-4725-9b3e-07093d92e695",
+          "unitOfMeasurement": {
+            "type": "custom",
+            "label": ""
+          },
+          "scale": [
+            null,
+            null
+          ],
+          "source": "ref2"
+        }
+      ]
+    }
+  },
+  "alternatives": {
+    "8d4025a0-d702-4f31-8918-b4d9b998f353": {
+      "title": "a1"
+    },
+    "9829e5a6-8448-4574-84e1-d430a2b43ded": {
+      "title": "a2"
+    }
+  },
+  "performanceTable": [
+    {
+      "alternative": "8d4025a0-d702-4f31-8918-b4d9b998f353",
+      "criterion": "c1",
+      "dataSource": "fe1621d4-23d6-4412-91b9-d07be73ca0b5",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 1
+        }
+      }
+    },
+    {
+      "alternative": "9829e5a6-8448-4574-84e1-d430a2b43ded",
+      "criterion": "c1",
+      "dataSource": "fe1621d4-23d6-4412-91b9-d07be73ca0b5",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 2
+        }
+      }
+    },
+    {
+      "alternative": "8d4025a0-d702-4f31-8918-b4d9b998f353",
+      "criterion": "c2",
+      "dataSource": "6bcc506a-4236-4725-9b3e-07093d92e695",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 3
+        }
+      }
+    },
+    {
+      "alternative": "9829e5a6-8448-4574-84e1-d430a2b43ded",
+      "criterion": "c2",
+      "dataSource": "6bcc506a-4236-4725-9b3e-07093d92e695",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 4
+        }
+      }
+    }
+  ]
+}

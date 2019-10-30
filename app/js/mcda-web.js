@@ -63,7 +63,7 @@ define([
       'ngResource',
       'page-title-service',
       'patavi',
-      'rzModule'
+      'rzSlider'
     ];
 
     var app = angular.module('elicit', dependencies);

@@ -21,7 +21,7 @@
       <td>{{pvf.worst(criterion.dataSources[0]) | number}}</td>
       <td>{{pvf.best(criterion.dataSources[0]) | number}}</td>
       <td ng-if="criterion.id !== mostImportantCriterionId">
-        <a ng-click="openElicitation(criterion.id)">{{isValueSet[criterion.id] ? significantDigits(values[criterion.id] * 100, 0) + '%': '?'}}</a>
+        <a id="{{ criterion.id }}-importance-option" ng-click="openElicitation(criterion.id)">{{isValueSet[criterion.id] ? significantDigits(values[criterion.id] * 100, 0) + '%': '?'}}</a>
       </td>
       <td ng-if="criterion.id === mostImportantCriterionId">100%</td>
     </tr>

@@ -59,7 +59,7 @@ define(['lodash', 'd3', 'c3'],
               floor: significantDigits(minY),
               ceil: significantDigits(maxY)
             };
-            scope.sliderOptions.step = significantDigits((maxY - minY) / 100);
+            scope.sliderOptions.step = significantDigits((maxY - minY) / 50);
 
             initChart();
             plotIndifference();

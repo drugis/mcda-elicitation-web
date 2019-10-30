@@ -4,41 +4,56 @@
       <h3>Define Partial Value Function for: {{state.criterion.title}}</h3>
     </div>
     <div class="cell large-7">
-      <p>
-        The partial value functions <inline-help help-key="partial-value-function"></inline-help>
-        define the mapping between the measurement values and the utility of that value.
-      </p>
-      {{state.criterion.title}}
-      <label>
-        <input type="radio" ng-model="state.choice.pvf.direction" value="decreasing"
-          ng-change="updatePlot(state.criterion)" ng-selected="state.choice.pvf.direction ==='decreasing'">
-        {{state.choice.pvf.range[0] | number}}{{unitOfMeasurement}} is best
-      </label>
-      <label>
-        <input type="radio" ng-model="state.choice.pvf.direction" value="increasing"
-          ng-change="updatePlot(state.criterion)" ng-selected="state.choice.pvf.direction === 'increasing'">
-        {{state.choice.pvf.range[1] | number}}{{unitOfMeasurement}} is best
-      </label>
-      Type of function <inline-help help-key="pvf-type"></inline-help>
-      <label>
-        <input type="radio" ng-model="state.choice.pvf.type" value="linear">Linear</label>
-      <label>
-        <input type="radio" ng-model="state.choice.pvf.type" value="piecewise-linear">
-        Piece-wise linear
-      </label>
+      <div class="grid-x">
+        <div class="cell">
+          The partial value functions <inline-help help-key="partial-value-function"></inline-help>
+          define the mapping between the measurement values and the utility of that value.
+          <br><br>
+        </div>
+        <div id="criterion-title" class="cell">
+          <b>{{state.criterion.title}}</b>
+        </div>
+        <div class="cell">
+          <label>
+            <input id="decreasing-pvf-option" type="radio" ng-model="state.choice.pvf.direction" value="decreasing"
+              ng-change="updatePlot(state.criterion)" ng-selected="state.choice.pvf.direction ==='decreasing'">
+            {{state.choice.pvf.range[0] | number}}{{unitOfMeasurement}} is best
+          </label>
+        </div>
+        <div class="cell">
+          <label>
+            <input id="increasing-pvf-option" type="radio" ng-model="state.choice.pvf.direction" value="increasing"
+              ng-change="updatePlot(state.criterion)" ng-selected="state.choice.pvf.direction === 'increasing'">
+            {{state.choice.pvf.range[1] | number}}{{unitOfMeasurement}} is best
+          </label>
+        </div>
+        <div class="cell">
+          <b>Type of function <inline-help help-key="pvf-type"></inline-help></b>
+        </div>
+        <div class="cell">
+          <label>
+            <input id="linear-pvf-option" type="radio" ng-model="state.choice.pvf.type" value="linear">
+            Linear
+          </label>
+        </div>
+        <div class="cell">
+          <label>
+            <input id="piece-wise-pvf-option" type="radio" ng-model="state.choice.pvf.type" value="piecewise-linear">
+            Piece-wise linear
+          </label>
+        </div>
+      </div>
     </div>
     <div class="cell large-5">
       <div style="width: 400px; height: 400px">
         <line-chart value="pvfCoordinates" show-legend="false"></line-chart>
       </div>
     </div>
-  </div>
-  <div class="grid-x">
     <div class="cell">
-      <button class="small button" ng-click="cancel()">Cancel</button>
-      <button class="small button" ng-if="!canSave(state)" ng-click="nextStep(state)"
+      <button id="cancel-button" class="small button" ng-click="cancel()">Cancel</button>
+      <button id="next-button" class="small button" ng-if="!canSave(state)" ng-click="nextStep(state)"
         ng-disabled="!canProceed(state)">Next</button>
-      <button class="small success button" ng-if="canSave(state)" ng-click="save(state)"
+      <button id="save-button" class="small success button" ng-if="canSave(state)" ng-click="save(state)"
         ng-disabled="!canProceed(state)">Save</button>
     </div>
   </div>
@@ -49,38 +64,40 @@
       <h3>Define Partial Value Function for: {{state.criterion.title}}</h3>
     </div>
     <div class="cell large-7">
-      <p>
-        What is the value of x such that an improvement in
-        {{state.criterion.title}} from {{state.range.from | number}}{{unitOfMeasurement}} to x is equivalent to an
-        improvement from x to {{state.range.to | number}}{{unitOfMeasurement}}?
-      </p>
-      <p><strong>Adjust the slider:</strong></p>
-      <p>
-        <rzslider style="width: 400px; margin-top: 20px;"
-          rz-slider-model="state.choice.pvf.cutoffs[state.choice.pvf.values.length - 1]"
-          rz-slider-options="state.sliderOptions"></rzslider>
-      </p>
-      <strong>So that the following statement is true:</strong>
-      <p>
-        The improvement from {{state.range.from | number}}{{unitOfMeasurement}} to
-        {{state.choice.pvf.cutoffs[state.choice.pvf.values.length - 1] | number}}{{unitOfMeasurement}}
-        <br> is equivalent to the improvement from
-        {{state.choice.pvf.cutoffs[state.choice.pvf.values.length - 1] | number}}{{unitOfMeasurement}} to
-        {{state.range.to | number}}{{unitOfMeasurement}}.
-      </p>
+      <div class="grid-x">
+        <div class="cell">
+          What is the value of x such that an improvement in
+          {{state.criterion.title}} from {{state.range.from | number}}{{unitOfMeasurement}} to x is equivalent to an
+          improvement from x to {{state.range.to | number}}{{unitOfMeasurement}}?
+        </div>
+        <div class="cell">
+          <strong>Adjust the slider:</strong>
+        </div>
+        <div class="cell">
+          <rzslider style="width: 400px; margin-top: 42px;"
+            rz-slider-model="state.choice.pvf.cutoffs[state.choice.pvf.values.length - 1]"
+            rz-slider-options="state.sliderOptions"></rzslider>
+        </div>
+        <strong>So that the following statement is true:</strong>
+        <div class="cell">
+          The improvement from {{state.range.from | number}}{{unitOfMeasurement}} to
+          {{state.choice.pvf.cutoffs[state.choice.pvf.values.length - 1] | number}}{{unitOfMeasurement}}
+          <br> is equivalent to the improvement from
+          {{state.choice.pvf.cutoffs[state.choice.pvf.values.length - 1] | number}}{{unitOfMeasurement}} to
+          {{state.range.to | number}}{{unitOfMeasurement}}.
+        </div>
+      </div>
     </div>
     <div class="cell large-5">
       <div style="width: 400px; height: 400px">
         <line-chart value="pvfCoordinates" show-legend="false"></line-chart>
       </div>
     </div>
-  </div>
-  <div class="grid-x">
     <div class="cell">
-      <button class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
-      <button class="small button" ng-if="!canSave(state)" ng-click="nextStep(state)"
+      <button id="previous-button" class="small button" ng-click="previousStep()" ng-disabled="!canReturn()">Previous</button>
+      <button id="piece-wise-next-button" class="small button" ng-if="!canSave(state)" ng-click="nextStep(state)"
         ng-disabled="!canProceed(state)">Next</button>
-      <button class="small success button" ng-if="canSave(state)" ng-click="save(state)"
+      <button id="piece-wise-save-button" class="small success button" ng-if="canSave(state)" ng-click="save(state)"
         ng-disabled="!canProceed(state)">Save</button>
     </div>
   </div>

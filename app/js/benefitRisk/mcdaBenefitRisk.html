@@ -4,18 +4,18 @@
       <tab heading="Overview" active="activeTab === 'evidence'" ui-sref="evidence">
         <div ng-if="activeTab === 'evidence'" ui-view></div>
       </tab>
-      <tab heading="Problem definition" active="activeTab === 'problem'" ui-sref="problem">
+      <tab id="problem-definition-tab" heading="Problem definition" active="activeTab === 'problem'" ui-sref="problem">
         <div ng-if="activeTab === 'problem'" ui-view></div>
       </tab>
-      <tab heading="Preferences" active="activeTab === 'preferences'" ui-sref="preferences"
+      <tab id="preferences-tab" heading="Preferences" active="activeTab === 'preferences'" ui-sref="preferences"
         ng-if="tasksAccessibility.preferences && !hasMissingValues">
         <div ng-if="activeTab === 'preferences'" ui-view></div>
       </tab>
-      <tab heading="Deterministic results" active="activeTab === 'deterministic-results'"
+      <tab id="deterministic-tab" heading="Deterministic results" active="activeTab === 'deterministic-results'"
         ui-sref="deterministic-results" ng-if="tasksAccessibility.results && !hasMissingValues">
         <div ng-if="activeTab === 'deterministic-results'" ui-view></div>
       </tab>
-      <tab heading="SMAA results" active="activeTab === 'smaa-results'" ui-sref="smaa-results"
+      <tab id="smaa-tab" heading="SMAA results" active="activeTab === 'smaa-results'" ui-sref="smaa-results"
         ng-if="tasksAccessibility.results && !hasNoStochasticResults && !hasMissingValues">
         <div ng-if="activeTab === 'smaa-results'" ui-view></div>
       </tab>

@@ -1,0 +1,222 @@
+{
+  "schemaVersion": "1.4.2",
+  "title": "Test workspace",
+  "criteria": {
+    "c4a470d2-b457-4f65-9b8d-5e22741c24a6": {
+      "title": "c1",
+      "dataSources": [
+        {
+          "id": "c27f83e0-a563-450d-9327-93fe823ed23f",
+          "scale": [
+            null,
+            null
+          ],
+          "source": "ref1",
+          "unitOfMeasurement": {
+            "type": "custom",
+            "label": ""
+          }
+        },
+        {
+          "id": "deselectionDataSourceId",
+          "scale": [
+            null,
+            null
+          ],
+          "source": "ref2",
+          "unitOfMeasurement": {
+            "type": "custom",
+            "label": ""
+          }
+        }
+      ]
+    },
+    "8172c3ac-9488-41ff-adc2-44d2d557d08b": {
+      "title": "c2",
+      "dataSources": [
+        {
+          "id": "aa28d426-7f94-417e-9c93-e72389fc088c",
+          "scale": [
+            null,
+            null
+          ],
+          "source": "ref3",
+          "unitOfMeasurement": {
+            "type": "custom",
+            "label": ""
+          }
+        }
+      ]
+    },
+    "deselectionCriterionId": {
+      "title": "c3",
+      "dataSources": [
+        {
+          "id": "0e61c2c6-cf2f-463c-98ae-4edfc45722b6",
+          "scale": [
+            null,
+            null
+          ],
+          "source": "ref4",
+          "unitOfMeasurement": {
+            "type": "custom",
+            "label": ""
+          }
+        }
+      ]
+    }
+  },
+  "alternatives": {
+    "cd174c10-32b0-4a0b-b914-dc6271bfbc0e": {
+      "title": "a1"
+    },
+    "785c281d-c66a-48a7-8cfa-4aeb8899a2b7": {
+      "title": "a2"
+    },
+    "deselectionAlternativeId": {
+      "title": "a3"
+    }
+  },
+  "performanceTable": [
+    {
+      "alternative": "cd174c10-32b0-4a0b-b914-dc6271bfbc0e",
+      "criterion": "c4a470d2-b457-4f65-9b8d-5e22741c24a6",
+      "dataSource": "c27f83e0-a563-450d-9327-93fe823ed23f",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": -100
+        }
+      }
+    },
+    {
+      "alternative": "785c281d-c66a-48a7-8cfa-4aeb8899a2b7",
+      "criterion": "c4a470d2-b457-4f65-9b8d-5e22741c24a6",
+      "dataSource": "c27f83e0-a563-450d-9327-93fe823ed23f",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 100
+        }
+      }
+    },
+    {
+      "alternative": "deselectionAlternativeId",
+      "criterion": "c4a470d2-b457-4f65-9b8d-5e22741c24a6",
+      "dataSource": "c27f83e0-a563-450d-9327-93fe823ed23f",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0
+        }
+      }
+    },
+    {
+      "alternative": "cd174c10-32b0-4a0b-b914-dc6271bfbc0e",
+      "criterion": "c4a470d2-b457-4f65-9b8d-5e22741c24a6",
+      "dataSource": "deselectionDataSourceId",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0
+        }
+      }
+    },
+    {
+      "alternative": "785c281d-c66a-48a7-8cfa-4aeb8899a2b7",
+      "criterion": "c4a470d2-b457-4f65-9b8d-5e22741c24a6",
+      "dataSource": "deselectionDataSourceId",
+      "performance": {
+        "effect": {
+          "type": "empty"
+        }
+      }
+    },
+    {
+      "alternative": "deselectionAlternativeId",
+      "criterion": "c4a470d2-b457-4f65-9b8d-5e22741c24a6",
+      "dataSource": "deselectionDataSourceId",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0
+        }
+      }
+    },
+    {
+      "alternative": "cd174c10-32b0-4a0b-b914-dc6271bfbc0e",
+      "criterion": "8172c3ac-9488-41ff-adc2-44d2d557d08b",
+      "dataSource": "aa28d426-7f94-417e-9c93-e72389fc088c",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": -50.5,
+          "input": {
+            "lowerBound": -101,
+            "upperBound": 0
+          }
+        }
+      }
+    },
+    {
+      "alternative": "785c281d-c66a-48a7-8cfa-4aeb8899a2b7",
+      "criterion": "8172c3ac-9488-41ff-adc2-44d2d557d08b",
+      "dataSource": "aa28d426-7f94-417e-9c93-e72389fc088c",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0,
+          "input": {
+            "value": 0,
+            "lowerBound": -5,
+            "upperBound": 6
+          }
+        }
+      }
+    },
+    {
+      "alternative": "deselectionAlternativeId",
+      "criterion": "8172c3ac-9488-41ff-adc2-44d2d557d08b",
+      "dataSource": "aa28d426-7f94-417e-9c93-e72389fc088c",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0
+        }
+      }
+    },
+    {
+      "alternative": "cd174c10-32b0-4a0b-b914-dc6271bfbc0e",
+      "criterion": "deselectionCriterionId",
+      "dataSource": "0e61c2c6-cf2f-463c-98ae-4edfc45722b6",
+      "performance": {
+        "effect": {
+          "type": "empty",
+          "value": "text"
+        }
+      }
+    },
+    {
+      "alternative": "785c281d-c66a-48a7-8cfa-4aeb8899a2b7",
+      "criterion": "deselectionCriterionId",
+      "dataSource": "0e61c2c6-cf2f-463c-98ae-4edfc45722b6",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0
+        }
+      }
+    },
+    {
+      "alternative": "deselectionAlternativeId",
+      "criterion": "deselectionCriterionId",
+      "dataSource": "0e61c2c6-cf2f-463c-98ae-4edfc45722b6",
+      "performance": {
+        "effect": {
+          "type": "exact",
+          "value": 0
+        }
+      }
+    }
+  ]
+}
