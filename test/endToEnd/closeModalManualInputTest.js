@@ -65,43 +65,43 @@ module.exports = {
     browser
       .click('//*[@id="add-criterion-button"]')
       .click('//*[@id="close-modal-button"]')
-      .assert.containsText('/html/body/div[2]/div/div/div[15]/em', 'At least two criteria required');
+      .assert.containsText('/html/body/div[1]/div/div/div[15]/em', 'At least two criteria required');
   },
 
   'During manual input, cancel adding a data source': function(browser) {
     addCriterion(browser);
     browser
-      .click('/html/body/div[2]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[4]/button')
-      .click('/html/body/div[4]/div/div/div/form/button')
-      .assert.containsText('/html/body/div[2]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[2]/em', 'No data sources defined');
+      .click('/html/body/div[1]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[4]/button')
+      .click('//*[@id="close-modal-button"]')
+      .assert.containsText('/html/body/div[1]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[2]/em', 'No data sources defined');
   },
 
   'During manual input, cancel adding an alternative': function(browser) {
     browser
       .click('//*[@id="add-alternative-button"]')
-      .click('/html/body/div[4]/div/div/div/form/button')
-      .assert.containsText('/html/body/div[2]/div/div/div[12]/table/tbody/tr/td[2]/em', 'No alternatives defined');
+      .click('//*[@id="close-modal-button"]')
+      .assert.containsText('/html/body/div[1]/div/div/div[12]/table/tbody/tr/td[2]/em', 'No alternatives defined');
   },
 
   'During manual input, cancel editing a criterion': function(browser) {
     addCriterion(browser);
     browser
-      .click('/html/body/div[2]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[2]/div/a[1]/i')
+      .click('/html/body/div[1]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[2]/div/a[1]/i')
       .clearValue('//*[@id="criterion-title-input"]')
-      .click('/html/body/div[4]/div/div/form/div/div/button')
-      .assert.containsText('/html/body/div[2]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[1]/h5', 'c1');
+      .click('//*[@id="close-modal-button"]')
+      .assert.containsText('/html/body/div[1]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[1]/h5', 'c1');
   },
 
   'During manual input, cancel editing a data source': function(browser) {
     addCriterion(browser);
     browser
-      .click('/html/body/div[2]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[4]/button')
+      .click('/html/body/div[1]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[4]/button')
       .setValue('//*[@id="data-source-reference"]', 'ref')
       .click('//*[@id="add-data-source-button"]')
-      .click('/html/body/div[2]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[3]/a/i')
+      .click('/html/body/div[1]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[3]/a/i')
       .clearValue('//*[@id="data-source-reference"]')
-      .click('/html/body/div[4]/div/div/div/form/button')
-      .assert.containsText('/html/body/div[2]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[2]/div', 'ref');
+      .click('//*[@id="close-modal-button"]')
+      .assert.containsText('/html/body/div[1]/div/div/div[9]/criterion-list/div/div/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[2]/div', 'ref');
   },
 
   'During manual input, cancel editing an alternative': function(browser) {
@@ -109,10 +109,10 @@ module.exports = {
       .click('//*[@id="add-alternative-button"]')
       .setValue('//*[@id="alternative-title"]', 'a1')
       .click('//*[@id="add-alternative-confirm-button"]')
-      .click('/html/body/div[2]/div/div/div[12]/table/tbody/tr/td[3]/a/i')
+      .click('/html/body/div[1]/div/div/div[12]/table/tbody/tr/td[3]/a/i')
       .click('//*[@id="alternative-title"]')
       .click('//*[@id="close-modal-button"]')
-      .assert.containsText('/html/body/div[2]/div/div/div[12]/table/tbody/tr/td[2]', 'a1');
+      .assert.containsText('/html/body/div[1]/div/div/div[12]/table/tbody/tr/td[2]', 'a1');
   },
 
   'During manual input step 2, cancel editing unit of measurement': function(browser) {
@@ -125,7 +125,7 @@ module.exports = {
       .click('//*[@id="uom-save-button"]')
       .click('//*[@id="edit-unit-of-measurement-c1-ref1"]')
       .setValue('//*[@id="uom-label"]', 'l')
-      .click('/html/body/div[4]/div/div/form/div/button')
+      .click('//*[@id="close-modal-button"]')
       .assert.containsText('//*[@id="unit-of-measurement-label-c1-ref1"]', 'kg');
   },
 
@@ -139,7 +139,7 @@ module.exports = {
       .click('//*[@id="save-soe-unc-button"]')
       .click('//*[@id="edit-soe-unc-c1-ref1"]')
       .setValue('//*[@id="uncertainties-input"]', 'not none')
-      .click('/html/body/div[4]/div/div/form/div/button')
+      .click('//*[@id="close-modal-button"]')
       .assert.containsText('//*[@id="uncertainties-c1-ref1"]', 'Unc: none');
   }
 };

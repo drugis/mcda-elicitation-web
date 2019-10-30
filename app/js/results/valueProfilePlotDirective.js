@@ -17,14 +17,14 @@ define([
         alternatives: '=',
         alternativesLegend: '='
       },
-      template: '<div class="value-plot"></div>',
+      template: '<div id="value-plot"></div>',
       link: function(scope, element) {
         scope.$watch('values', function(results) {
           if (!results) {
             return;
           } else {
             var root = d3.select(element[0]);
-            root = root.select('.value-plot');
+            root = root.select('#value-plot');
             root
             .style('width', '400px')
             .style('height', '400px');

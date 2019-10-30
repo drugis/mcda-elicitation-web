@@ -58,7 +58,7 @@ module.exports = {
       valueToClear: '//*[@id="therapeutic-context-input"]',
       actionButton: '//*[@id="edit-therapeutic-context-button"]',
       cancelButton: closeModalButtonPath,
-      content: '//div[2]/div/div[3]/div/div/div/div/div[1]/div/div/div/div[3]/span'
+      content: '/html/body/div[1]/div/div[3]/div/div/div/div/div[1]/div/div/div/div[3]/span'
     };
     clearValueCancelAction(browser, paths, 'SMAA');
   },
@@ -95,7 +95,7 @@ module.exports = {
 
   'Cancel settings': function(browser) {
     var actionButtonPath = '//*[@id="settings-button"]';
-    var contentPath = '//div[2]/div/div[3]/div/div/div/div/div[1]/div/div/div/div[5]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[3]/div/effects-table-cell/div';
+    var contentPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[1]/div/div/div/div[5]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[3]/div/effects-table-cell/div';
     browser
       .click(actionButtonPath)
       .click('//*[@id="show-decimals-radio"]')
@@ -130,7 +130,7 @@ module.exports = {
       tab: preferenceTabPath,
       actionButton: '//*[@id="de14e778-f723-48d4-8f4e-1e589714f4f2-pvf-button"]',
       cancelButton: '//*[@id="cancel-button"]',
-      content: '//div[2]/div/div[3]/div/div/div/div/div[3]/div/div/div[2]/h4'
+      content: '/html/body/div[1]/div/div[3]/div/div/div/div/div[3]/div/div/div[2]/h4'
     };
     cancelAction(browser, paths, 'Partial Value Functions');
   },
@@ -211,9 +211,9 @@ module.exports = {
     var paths = {
       valueToClear: '//*[@id="label-input-38deaf60-9014-4af9-997e-e5f08bc8c8ff"]',
       tab: '//*[@id="deterministic-tab"]',
-      actionButton: '/html/body/div[2]/div/div[3]/div/div/div/div/div[4]/div/div/div/div[4]/div/div[3]/div/button[2]',
+      actionButton: '/html/body/div[1]/div/div[3]/div/div/div/div/div[4]/div/div/div/div[4]/div/div[3]/div/button[2]',
       cancelButton: closeModalButtonPath,
-      content: '#measurements-sensitivity-plot > svg:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > text:nth-child(2)'
+      content: '#value-plot > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(2) > text:nth-child(2) > tspan:nth-child(1)'
     };
     browser
     .click(paths.tab)

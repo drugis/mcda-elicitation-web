@@ -13,7 +13,6 @@ define([
   var dependencies = ['PataviResultsService'];
 
   var DeterministicResulstsService = function(PataviResultsService) {
-
     function run($scope, inState) {
       var state = angular.copy(inState);
       state.problem.criteria = mergeDataSourceOntoCriterion(state.problem.criteria);

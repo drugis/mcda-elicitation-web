@@ -6,9 +6,9 @@ define([
   d3,
   c3
 ) {
-  var dependencies = ['MCDAResultsService'];
+  var dependencies = ['SmaaResultsService'];
 
-  var BarChart = function(MCDAResultsService) {
+  var BarChart = function(SmaaResultsService) {
     return {
       restrict: 'E',
       scope: {
@@ -26,7 +26,7 @@ define([
             .style('width', '400px')
             .style('height', '350px');
 
-            var settings = MCDAResultsService.getBarChartSettings(
+            var settings = SmaaResultsService.getBarChartSettings(
               results,
               root);
             c3.generate(settings);

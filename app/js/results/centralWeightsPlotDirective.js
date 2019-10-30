@@ -6,9 +6,9 @@ define([
   d3,
   c3
 ) {
-  var dependencies = ['MCDAResultsService'];
+  var dependencies = ['SmaaResultsService'];
 
-  var CentralWeightsPlot = function(MCDAResultsService) {
+  var CentralWeightsPlot = function(SmaaResultsService) {
     return {
       restrict: 'E',
       scope: {
@@ -26,7 +26,7 @@ define([
               .style('width', '620px')
               .style('height', '350px');
 
-            var settings = MCDAResultsService.getCentralWeightsPlotSettings(
+            var settings = SmaaResultsService.getCentralWeightsPlotSettings(
               results,
               root
             );

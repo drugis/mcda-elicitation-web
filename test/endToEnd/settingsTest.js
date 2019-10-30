@@ -105,7 +105,7 @@ module.exports = {
   'Switching settings in problem definition tab': function(browser) {
     var effectTableCellPath = '//effects-table/div/div[3]/table/tbody/tr[2]/td[4]/div/effects-table-cell/div';
     var unitsCellPath = '//effects-table/div/div[3]/table/tbody/tr[2]/td[3]';
-    var scaleRangeCellPath = '/html/body/div[2]/div/div[3]/div/div/div/div/div[2]/div/div/div[3]/div[3]/table/tbody/tr[1]/td[3]/span[1]';
+    var scaleRangeCellPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[2]/div/div/div[3]/div[3]/table/tbody/tr[1]/td[3]/span[1]';
 
     browser
       .useXpath()
@@ -158,7 +158,7 @@ module.exports = {
   },
 
   'Unselecting criterion column in problem definition tab': function(browser) {
-    var columnPath = '/html/body/div[2]/div/div[3]/div/div/div/div/div[2]/div/div/div[2]/div/effects-table/div/div[3]/table/thead/tr/th[1]/div';
+    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[2]/div/div/div[2]/div/effects-table/div/div[3]/table/thead/tr/th[1]/div';
     browser
       .useXpath()
       .click('//*[@id="problem-definition-tab"]')
@@ -171,7 +171,7 @@ module.exports = {
   },
 
   'Unselecting description column in problem definition tab': function(browser) {
-    var columnPath = '/html/body/div[2]/div/div[3]/div/div/div/div/div[2]/div/div/div[2]/div/effects-table/div/div[3]/table/thead/tr/th[2]/div';
+    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[2]/div/div/div[2]/div/effects-table/div/div[3]/table/thead/tr/th[2]/div';
     browser
       .useXpath()
       .click('//*[@id="problem-definition-tab"]')
@@ -184,7 +184,7 @@ module.exports = {
   },
 
   'Unselecting units column in problem definition tab': function(browser) {
-    var columnPath = '/html/body/div[2]/div/div[3]/div/div/div/div/div[2]/div/div/div[2]/div/effects-table/div/div[3]/table/thead/tr/th[3]/div';
+    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[2]/div/div/div[2]/div/effects-table/div/div[3]/table/thead/tr/th[3]/div';
     browser
       .useXpath()
       .click('//*[@id="problem-definition-tab"]')
@@ -197,7 +197,7 @@ module.exports = {
   },
 
   'Unselecting uncertainties column in problem definition tab': function(browser) {
-    var columnPath = '/html/body/div[2]/div/div[3]/div/div/div/div/div[2]/div/div/div[2]/div/effects-table/div/div[3]/table/thead/tr/th[6]/div';
+    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[2]/div/div/div[2]/div/effects-table/div/div[3]/table/thead/tr/th[6]/div';
     browser
       .useXpath()
       .click('//*[@id="problem-definition-tab"]')
@@ -210,7 +210,7 @@ module.exports = {
   },
 
   'Unselecting reference column in problem definition tab': function(browser) {
-    var columnPath = '/html/body/div[2]/div/div[3]/div/div/div/div/div[2]/div/div/div[2]/div/effects-table/div/div[3]/table/thead/tr/th[7]/div';
+    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[2]/div/div/div[2]/div/effects-table/div/div[3]/table/thead/tr/th[7]/div';
     browser
       .useXpath()
       .click('//*[@id="problem-definition-tab"]')
@@ -223,7 +223,7 @@ module.exports = {
   },
 
   'Unselecting criterion column in deterministic results tab': function(browser) {
-    var columnPath = '/html/body/div[2]/div/div[3]/div/div/div/div/div[4]/div/div/div/sensitivity-table/div/div[3]/table/thead/tr/th[1]';
+    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[4]/div/div/div/sensitivity-table/div/div[3]/table/thead/tr/th[1]';
     browser
       .useXpath()
       .click('//*[@id="deterministic-tab"]')
@@ -237,7 +237,7 @@ module.exports = {
   },
 
   'Unselecting description column in deterministic results tab': function(browser) {
-    var columnPath = '/html/body/div[2]/div/div[3]/div/div/div/div/div[4]/div/div/div/sensitivity-table/div/div[3]/table/thead/tr/th[2]';
+    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[4]/div/div/div/sensitivity-table/div/div[3]/table/thead/tr/th[2]';
     browser
       .useXpath()
       .click('//*[@id="deterministic-tab"]')
@@ -251,7 +251,7 @@ module.exports = {
   },
 
   'Unselecting units column in deterministic results tab': function(browser) {
-    var columnPath = '/html/body/div[2]/div/div[3]/div/div/div/div/div[4]/div/div/div/sensitivity-table/div/div[3]/table/thead/tr/th[3]';
+    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[4]/div/div/div/sensitivity-table/div/div[3]/table/thead/tr/th[3]';
     browser
       .useXpath()
       .click('//*[@id="deterministic-tab"]')
@@ -265,7 +265,7 @@ module.exports = {
   },
 
   'Unselecting uncertainties column in deterministic results tab': function(browser) {
-    var columnPath = '/html/body/div[2]/div/div[3]/div/div/div/div/div[4]/div/div/div/sensitivity-table/div/div[3]/table/thead/tr/th[6]';
+    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[4]/div/div/div/sensitivity-table/div/div[3]/table/thead/tr/th[6]';
     browser
       .useXpath()
       .click('//*[@id="deterministic-tab"]')
@@ -279,7 +279,7 @@ module.exports = {
   },
 
   'Unselecting reference column in deterministic results tab': function(browser) {
-    var columnPath = '/html/body/div[2]/div/div[3]/div/div/div/div/div[4]/div/div/div/sensitivity-table/div/div[3]/table/thead/tr/th[7]';
+    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[4]/div/div/div/sensitivity-table/div/div[3]/table/thead/tr/th[7]';
     browser
       .useXpath()
       .click('//*[@id="deterministic-tab"]')
@@ -350,8 +350,8 @@ module.exports = {
   },
 
   'Switching settings in the preferences tab': function(browser) {
-    var effectCellPath = '/html/body/div[2]/div/div[3]/div/div/div/div/div[3]/div/div/div[3]/div[2]/table/tbody/tr[1]/td[4]';
-    var unitsCellPath = '/html/body/div[2]/div/div[3]/div/div/div/div/div[3]/div/div/div[3]/div[2]/table/tbody/tr[1]/td[3]';
+    var effectCellPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[3]/div/div/div[3]/div[2]/table/tbody/tr[1]/td[4]';
+    var unitsCellPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[3]/div/div/div[3]/div[2]/table/tbody/tr[1]/td[3]';
 
     browser
       .useXpath()
@@ -396,7 +396,7 @@ module.exports = {
   },
 
   'Switching settings while setting the partial value function': function(browser) {
-    var effectCellPath = '/html/body/div[2]/div/div[3]/div/div/div/div/div[3]/div/div/div/div/div[2]/div/div[3]/label';
+    var effectCellPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[3]/div/div/div/div/div[2]/div/div[3]/label';
 
     browser
       .useXpath()
@@ -434,7 +434,7 @@ module.exports = {
   },
 
   'Switching settings while setting the weights': function(browser) {
-    var effectCellPath = '/html/body/div[2]/div/div[3]/div/div/div/div/div[3]/div/div/div[1]/div/div[3]/ul/li[1]';
+    var effectCellPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[3]/div/div/div[1]/div/div[3]/ul/li[1]';
 
     browser
       .useXpath()

@@ -6,9 +6,9 @@ define([
   d3,
   c3
 ) {
-  var dependencies = ['MCDAResultsService'];
+  var dependencies = ['SmaaResultsService'];
 
-  var RankPlot = function(MCDAResultsService) {
+  var RankPlot = function(SmaaResultsService) {
     return {
       restrict: 'E',
       scope: {
@@ -28,7 +28,7 @@ define([
             .style('width', '400px')
             .style('height', '400px');
 
-            var settings = MCDAResultsService.getRankPlotSettings(
+            var settings = SmaaResultsService.getRankPlotSettings(
               results,
               scope.alternatives,
               scope.labels,

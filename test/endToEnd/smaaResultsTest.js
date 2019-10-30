@@ -55,7 +55,7 @@ module.exports = {
       .waitForElementVisible('#rank-table')
       .waitForElementVisible('#alternatives-per-rank-bar-chart')
       .waitForElementVisible('#rank-per-alternatives-bar-chart')
-      .waitForElementVisible('#central-weights-line-chart')
+      .waitForElementVisible('#central-weights-plot')
       .waitForElementVisible('#central-weights-table');
 
     const measurementElementId = 'de14e778-f723-48d4-8f4e-1e589714f4f2-38deaf60-9014-4af9-997e-e5f08bc8c8ff-measurement';

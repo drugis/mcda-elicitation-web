@@ -18,7 +18,7 @@ define([
   './valueProfilePlotDirective',
 
   './deterministicResultsService',
-  './resultsService',
+  './smaaResultsService',
   './pataviResultsService',
 
   'angular',
@@ -42,7 +42,7 @@ define([
   valueProfilePlotDirective,
 
   DeterministicResultsService,
-  MCDAResultsService,
+  SmaaResultsService,
   PataviResultsService,
 
   angular
@@ -66,7 +66,7 @@ define([
     .directive('valueProfilePlot', valueProfilePlotDirective)
 
     .factory('DeterministicResultsService', DeterministicResultsService)
-    .factory('MCDAResultsService', MCDAResultsService)
+    .factory('SmaaResultsService', SmaaResultsService)
     .factory('PataviResultsService', PataviResultsService)
     ;
 });
