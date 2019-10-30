@@ -78,37 +78,28 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
       if (newProblem.schemaVersion === '1.4.1') {
         newProblem.schemaVersion = '1.4.2';
       }
-      
-      if (newProblem.schemaVersion === currentSchemaVersion) {
-        var error = isInvalidSchema(newProblem);
 
-        if (error) {
-          return {
-            isValid: false,
-            errorMessage: error[0].dataPath + ' ' + error[0].message
-          };
-        } else {
-          return {
-            isValid: true,
-            content: newProblem
-          };
-        }
+      if (newProblem.schemaVersion === currentSchemaVersion) {
+        return newProblem;
       } else {
-        return {
-          isValid: false,
-          errorMessage: 'Configured current schema version is not the same as the updated schema version'
-        };
+        throw 'Configured current schema version is not the same as the updated schema version';
+      }
+    }
+
+    function validateProblem(problem) {
+      var error = isInvalidSchema(problem);
+      if (error) {
+        return error[0].message;
       }
     }
 
     function updateWorkspaceToCurrentSchema(workspace) {
       var newWorkspace = angular.copy(workspace);
-      var updatedProblem = updateProblemToCurrentSchema(newWorkspace.problem);
-      if (updatedProblem.errorMessage) {
-        throw (updatedProblem.errorMessage);
-      } else {
-        newWorkspace.problem = updatedProblem.content;
+      try {
+        newWorkspace.problem = updateProblemToCurrentSchema(newWorkspace.problem);
         return newWorkspace;
+      } catch (error) {
+        throw error;
       }
     }
 
@@ -350,7 +341,7 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
     function getUpToDateEntry(dataSources, entry) {
       if (doesEntryNeedUpdating(entry, dataSources[entry.dataSource])) {
         entry.performance.distribution.input = {
-          value: entry.performance.distribution.value, 
+          value: entry.performance.distribution.value,
           scale: 'percentage'
         };
         entry.performance.distribution.value = entry.performance.distribution.value / 100;
@@ -386,7 +377,8 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
     return {
       updateProblemToCurrentSchema: updateProblemToCurrentSchema,
-      updateWorkspaceToCurrentSchema: updateWorkspaceToCurrentSchema
+      updateWorkspaceToCurrentSchema: updateWorkspaceToCurrentSchema,
+      validateProblem: validateProblem
     };
   };
 

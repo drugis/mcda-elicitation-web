@@ -49,11 +49,12 @@ define(['angular'], function(angular) {
       $scope.workspaceValidity = WorkspaceService.validateWorkspace(uploadedContent);
       if ($scope.workspaceValidity.isValid) {
         var updatedProblem = SchemaService.updateProblemToCurrentSchema(uploadedContent);
-        if (updatedProblem.isValid) {
-          $scope.updatedProblem = updatedProblem.content;
-        } else {
+        try {
+          SchemaService.validateProblem(updatedProblem);
+          $scope.updatedProblem = updatedProblem;
+        } catch (error) {
           $scope.workspaceValidity.isValid = false;
-          $scope.workspaceValidity.errorMessage = updatedProblem.errorMessage;
+          $scope.workspaceValidity.errorMessage = error;
         }
       }
     }, true);
@@ -89,7 +90,8 @@ define(['angular'], function(angular) {
       };
       ExampleResource.get(example, function(problem) {
         var updatedProblem = SchemaService.updateProblemToCurrentSchema(problem);
-        WorkspaceResource.create(updatedProblem.content).$promise.then(function(workspace) {
+        SchemaService.validateProblem(updatedProblem);
+        WorkspaceResource.create(updatedProblem).$promise.then(function(workspace) {
           callback($scope.model.choice, workspace);
           $modalInstance.close();
         });
@@ -102,7 +104,8 @@ define(['angular'], function(angular) {
       };
       TutorialResource.get(tutorial, function(problem) {
         var updatedProblem = SchemaService.updateProblemToCurrentSchema(problem);
-        WorkspaceResource.create(updatedProblem.content).$promise.then(function(workspace) {
+        SchemaService.validateProblem(updatedProblem);
+        WorkspaceResource.create(updatedProblem).$promise.then(function(workspace) {
           callback($scope.model.choice, workspace);
           $modalInstance.close();
         });

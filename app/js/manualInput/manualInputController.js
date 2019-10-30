@@ -238,8 +238,9 @@ define([
     }
 
     function copyOldWorkspace() {
-      $scope.state = ManualInputService.createStateFromOldWorkspace(
-        SchemaService.updateWorkspaceToCurrentSchema($stateParams.workspace));
+      var updatedWorkspace = SchemaService.updateWorkspaceToCurrentSchema($stateParams.workspace);
+      SchemaService.validateProblem(updatedWorkspace.problem);
+      $scope.state = ManualInputService.createStateFromOldWorkspace(updatedWorkspace);
       $scope.dirty = true;
       setStateWatcher();
       checkStep1Errors();
