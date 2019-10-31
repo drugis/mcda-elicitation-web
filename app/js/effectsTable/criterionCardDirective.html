@@ -3,13 +3,13 @@
     <div style="margin-right: 16px">
       <div style="line-height: 10px; margin-bottom: 10px;">
         <a ng-if="canGoUp" ng-click="criterionUp()" class="nav-arrow">
-          <i style="line-height:0px;" class="fa fa-caret-up fa-2x"></i>
+          <i id="move-up-criterion-{{ criterion.id }}" style="line-height:0px;" class="fa fa-caret-up fa-2x"></i>
         </a>
         <i ng-if="!canGoUp" style="line-height:0px; color:#bbb" class="fa fa-caret-up fa-2x"></i>
       </div>
       <div style="line-height: 10px;">
         <a ng-if="canGoDown" ng-click="criterionDown()" class="nav-arrow">
-          <i style="line-height:0px;" class="fa fa-caret-down fa-2x"></i>
+          <i id="move-down-criterion-{{ criterion.id }}" style="line-height:0px;" class="fa fa-caret-down fa-2x"></i>
         </a>
         <i ng-if="!canGoDown" style="line-height:0px; color:#bbb" class="fa fa-caret-down fa-2x"></i>
       </div>
@@ -18,19 +18,20 @@
   <div class="cell auto">
     <div class="grid-x">
       <div class="cell large-10">
-        <h5>{{criterion.title}}</h5>
+        <h5 id="criterion-title-{{ criterion.id }}">{{criterion.title}}</h5>
       </div>
       <div ng-if="isStandalone" class="cell large-2">
         <div class="right">
-          <a ng-click="editCriterion(criterion)" tooltip="Edit criterion">
+          <a id="edit-criterion-{{ criterion.id }}" ng-click="editCriterion(criterion)"
+            tooltip="Edit criterion">
             <i class="fa fa-edit fa-2x icon-fixed-width"></i>
           </a>
-          <a ng-if="isInput" ng-click="removeCriterion(idx)" tooltip="Remove criterion">
+          <a id="delete-criterion-{{ criterion.id }}" ng-if="isInput" ng-click="removeCriterion(idx)" tooltip="Remove criterion">
             <i class="fa fa-trash fa-2x icon-fixed-width" style="color:red"></i>
           </a>
         </div>
       </div>
-      <div class="cell" ng-if="criterion.description">
+      <div id="criterion-description-{{ criterion.id }}" class="cell" ng-if="criterion.description">
         <b>Description:</b> {{criterion.description}}
       </div>
       <div class="cell">
@@ -54,9 +55,8 @@
               <th ng-repeat="alternative in alternatives" ng-if="!isInput">
                 {{alternative.title}}
               </th>
-              <th ng-if="!isInput">Strength of evidence / Uncertainties
-                <inline-help help-key="uncertainties"></inline-help>
-                <inline-help help-key="strength-of-evidence"></inline-help>
+              <th ng-if="!isInput">Strength of evidence <inline-help help-key="strength-of-evidence"></inline-help> 
+                / Uncertainties <inline-help help-key="uncertainties"></inline-help> 
               </th>
               <th>Reference
                 <inline-help help-key="criterion-source"></inline-help>
@@ -82,19 +82,19 @@
               <td ng-if="isStandalone">
                 <div style="line-height: 10px; margin-bottom: 4px;">
                   <a ng-if="!$first" ng-click="dataSourceUp(criterion, $index)" class="nav-arrow">
-                    <i style="line-height:0px;" class="fa fa-caret-up"></i>
+                    <i id="move-up-data-source-{{ criterion.id }}-{{ dataSource.id }}" style="line-height:0px;" class="fa fa-caret-up"></i>
                   </a>
                   <i ng-if="$first" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
                 </div>
                 <div style="line-height: 10px;">
                   <a ng-if="!$last" ng-click="dataSourceDown(criterion, $index)" class="nav-arrow">
-                    <i style="line-height:0px;" class="fa fa-caret-down"></i>
+                    <i id="move-down-data-source-{{ criterion.id }}-{{ dataSource.id }}" style="line-height:0px;" class="fa fa-caret-down"></i>
                   </a>
                   <i ng-if="$last" style="line-height:0px; color:#bbb" class="fa fa-caret-down"></i>
                 </div>
               </td>
               <td ng-if="!isInput">
-                <span
+                <span id="unit-of-measurement-{{ criterion.id }}-{{ dataSource.id }}"
                   ng-hide="!isValueView && (dataSource.unitOfMeasurement.type === 'percentage' || dataSource.unitOfMeasurement.type === 'decimal')">
                   {{dataSource.unitOfMeasurement.label}}
                 </span>
@@ -114,23 +114,24 @@
                 </div>
               </td>
 
-              <td ng-if="!isInput">
+              <td id="soe-unc-{{ criterion.id }}-{{ dataSource.id }}" ng-if="!isInput">
                 <b>SoE: </b>{{dataSource.strengthOfEvidence}}
                 <br>
                 <b>Unc: </b> {{dataSource.uncertainties}}
               </td>
 
               <td>
-                <div ng-if="dataSource.sourceLink">
+                <div id="linked-data-source-reference-{{ criterion.id }}-{{ dataSource.id }}" ng-if="dataSource.sourceLink">
                   <a href="{{dataSource.sourceLink}}">{{dataSource.source}}</a>
                 </div>
-                <div ng-if="!dataSource.sourceLink">
+                <div id="data-source-reference-{{ criterion.id }}-{{ dataSource.id }}" ng-if="!dataSource.sourceLink">
                   {{dataSource.source}}
                 </div>
               </td>
 
               <td ng-if="isStandalone" class="text-center">
-                <a ng-click="editDataSource(dataSource, $index)" tooltip="Edit data source">
+                <a id="edit-data-source-{{ criterion.id }}-{{ dataSource.id }}"
+                  ng-click="editDataSource(dataSource, $index)" tooltip="Edit data source">
                   <i class="fa fa-edit icon-fixed-width"></i>
                 </a>
               </td>

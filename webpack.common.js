@@ -1,7 +1,7 @@
 'use strict';
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 let basePath = path.join(__dirname, '/');
 let fs = require('fs');
 const MATOMO_VERSION = process.env.MATOMO_VERSION ? process.env.MATOMO_VERSION : 'Test';
@@ -30,7 +30,7 @@ let config = {
       exclude: [/.*angular-foundation-6.*/] // uses $templatecache so dont replace 
     }, {
       test: /\.html$/,
-      loader: 'raw-loader'
+      use: 'raw-loader'
     }, {
       test: /.(ttf|otf|eot|woff(2)?)(\?[a-z0-9]+)?$/,
       use: [{
@@ -97,7 +97,7 @@ let config = {
       chunks: ['error'],
       matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo'+ MATOMO_VERSION +'.html'))
     }),
-    new CleanWebpackPlugin(['dist'])
+    new CleanWebpackPlugin()
   ],
 
   optimization: {

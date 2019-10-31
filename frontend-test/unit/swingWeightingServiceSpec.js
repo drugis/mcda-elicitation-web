@@ -5,7 +5,6 @@ define([
   'angular',
   'angular-mocks',
   'mcda/preferences/preferences',
-  'mcda/misc'
 ], function(_, angular) {
   describe('Exact swing weighting service', function() {
 

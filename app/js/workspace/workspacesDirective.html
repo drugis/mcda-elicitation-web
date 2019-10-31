@@ -1,6 +1,6 @@
 <div class="grid-x">
   <div class="cell">
-    <h3>Workspaces
+    <h3 id="workspaces-header">Workspaces
       <inline-help help-key="workspace"></inline-help>
     </h3>
   </div>
@@ -13,23 +13,26 @@
       </thead>
       <tbody>
         <tr ng-repeat="workspace in workspacesList | orderBy:'title'">
-          <td> <a
+          <td>
+            <a id="{{ workspace.title }}"
               ui-sref="evidence({workspaceId: workspace.id, problemId: workspace.defaultSubProblemId, id: workspace.defaultScenarioId})">
               {{workspace.title}}
             </a>
           </td>
           <td class="text-center">
-            <a class="fa fa-copy" style="color : black" ng-click="copyWorkspace(workspace)" tooltip="Copy workspace">
+            <a id="copy-workspace-{{ workspace.title }}" class="fa fa-copy" style="color : black"
+              ng-click="copyWorkspace(workspace)" tooltip="Copy workspace">
             </a>
           </td>
           <td class="text-center">
-            <a class="fa fa-trash" style="color : red" ng-click="deleteWorkspace(workspace)" tooltip="Delete workspace">
+            <a id="delete-workspace-{{ workspace.title }}" class="fa fa-trash" style="color : red"
+              ng-click="deleteWorkspace(workspace)" tooltip="Delete workspace">
             </a>
           </td>
         </tr>
         <tr ng-if="!workspacesList.length">
           <td>
-            <em>No workspaces defined</em>
+            <em id="empty-workspace-message">No workspaces defined</em>
           </td>
           <td></td>
           <td></td>

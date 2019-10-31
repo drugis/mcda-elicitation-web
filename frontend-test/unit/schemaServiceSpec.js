@@ -31,7 +31,7 @@ define([
       }
     };
 
-    describe('updateWorkspaceToCurrentSchema (includes updateProblemToCurrentSchema)', function() {
+    describe('updateWorkspaceToCurrentSchema', function() {
       beforeEach(function() {
         getDataSourcesByIdMock.calls.reset();
       });
@@ -44,7 +44,7 @@ define([
         expect(result).toEqual(workspace);
       });
 
-      it('should update a workspace of version 1.3.4 to the current version and dividing the distribution exact value by 100 if unit of measurement is percentage', function() {
+      it('should update a workspace of version 1.3.4 to the current version and divide the distribution exact value by 100 if unit of measurement is percentage', function() {
         const dataSourcesById = {
           d1: _.merge(exampleProblem134().criteria.c1.dataSources[0], {
             unitOfMeasurement: {
@@ -379,23 +379,38 @@ define([
       });
     });
 
-    describe('isInvalidSchema', function() {
+    describe('updateProblemToCurrentSchema', function() {
+      it('should throw an error if the final schema version is not the current version', function() {
+        const funkyProblem = {
+          schemaVersion: 'can.never.happen'
+        };
+        const error = 'Configured current schema version is not the same as the updated schema version';
+
+        expect(function() {
+          schemaService.updateProblemToCurrentSchema(funkyProblem);
+        }).toThrow(error);
+      });
+    });
+
+    describe('validateProblem', function() {
       beforeEach(function() {
         getDataSourcesByIdMock.calls.reset();
       });
 
-      it('should return false if the JSON file passed to the function is valid according to the schema', function() {
+      it('should throw no errors if the JSON file passed to the function is valid according to the schema', function() {
         var inputJSON = require('./test.json');
-        var result = schemaService.updateProblemToCurrentSchema(inputJSON);
-        expect(result.isValid).toBeTruthy();
+        expect(function() {
+          schemaService.validateProblem(inputJSON);
+        }).not.toThrow();
       });
 
-      it('should return false if the JSON file passed to the function contains relative data', function() {
+      it('should throw no errors if the JSON file passed to the function contains correct relative data', function() {
         var inputJSON = require('./hansen-updated.json');
         const dataSourcesById = createHansenDataSourcesById(inputJSON);
         getDataSourcesByIdMock.and.returnValue(dataSourcesById);
-        var result = schemaService.updateProblemToCurrentSchema(inputJSON);
-        expect(result.isValid).toBeTruthy();
+        expect(function() {
+          schemaService.validateProblem(inputJSON);
+        }).not.toThrow();
       });
 
       function createHansenDataSourcesById(inputJSON) {
@@ -425,8 +440,9 @@ define([
 
       it('should return true if the JSON file passed to the function is not valid according to the schema', function() {
         var inputJSON = require('./test-false.json');
-        var result = schemaService.updateProblemToCurrentSchema(inputJSON);
-        expect(result.isValid).toBeFalsy();
+        expect(function() {
+          schemaService.validateProblem(inputJSON);
+        }).toThrow();
       });
     });
   });

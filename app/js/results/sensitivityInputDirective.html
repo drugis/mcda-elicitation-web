@@ -17,7 +17,7 @@
         </div>
         <div class="cell">
           <label> value
-            <input type="number" ng-model="slider.value" ng-change="checkInput()">
+            <input type="number" ng-model="slider.value" ng-change="checkInput()" ng-model-options="{ debounce: 750 }">
           </label>
         </div>
       </div>

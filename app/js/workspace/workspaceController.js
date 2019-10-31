@@ -32,6 +32,7 @@ define(['angular'], function(angular) {
     };
     if (currentWorkspace.problem.schemaVersion !== currentSchemaVersion) {
       $scope.workspace = SchemaService.updateWorkspaceToCurrentSchema(currentWorkspace);
+      SchemaService.validateProblem($scope.workspace.problem);
       WorkspaceResource.save($stateParams, $scope.workspace);
     } else {
       $scope.workspace = currentWorkspace;

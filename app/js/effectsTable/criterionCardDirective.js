@@ -42,7 +42,7 @@ define(['lodash'], function(_) {
         scope.dataSourceUp = dataSourceUp;
         scope.removeDataSource = removeDataSource;
         scope.editDataSource = editDataSource;
-
+        
         updateSettings();
         setIsCellAnalysisViable();
         

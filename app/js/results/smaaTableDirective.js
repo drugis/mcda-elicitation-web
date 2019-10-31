@@ -11,10 +11,11 @@ define(['lodash'], function(_) {
     return {
       restrict: 'E',
       scope: {
-        'state': '=',
-        'criteria': '=',
-        'alternatives': '=',
-        'scales': '='
+        state: '=',
+        criteria: '=',
+        alternatives: '=',
+        scales: '=',
+        toggledColumns: '='
       },
 
       templateUrl: './smaaTableDirective.html',
