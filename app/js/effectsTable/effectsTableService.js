@@ -361,7 +361,7 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function getMedian(scales) {
-      if (WorkspaceSettingsService.getWorkspaceSettings().calculationMethod === 'mode') {
+      if (WorkspaceSettingsService.setWorkspaceSettings().calculationMethod === 'mode') {
         return getMode(scales);
       } else {
         return getRoundedValue(scales['50%']);

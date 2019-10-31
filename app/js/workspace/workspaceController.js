@@ -43,7 +43,7 @@ define(['angular'], function(angular) {
 
     function getWorkspaceSettings() {
       $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
-      $scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings($scope.workspace.problem.performanceTable);
+      $scope.workspaceSettings = WorkspaceSettingsService.setWorkspaceSettings($scope.workspace.problem.performanceTable);
     }
 
     function editTitle() {

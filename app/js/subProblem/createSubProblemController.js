@@ -71,7 +71,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function getWorkspaceSettings() {
       $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
-      $scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings();
+      $scope.workspaceSettings = WorkspaceSettingsService.setWorkspaceSettings();
       $scope.isValueView = WorkspaceSettingsService.isValueView();
     }
 

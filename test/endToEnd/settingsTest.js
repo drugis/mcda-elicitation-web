@@ -45,10 +45,10 @@ module.exports = {
       .click('#settings-button')
       .waitForElementVisible('#show-percentages-radio')
       .waitForElementVisible('#show-decimals-radio')
-      .waitForElementVisible('#deterministic-entered-radio')
-      .waitForElementVisible('#deterministic-analysis-radio')
-      .waitForElementVisible('#smaa-distribution-radio')
-      .waitForElementVisible('#smaa-analysis-radio')
+      .waitForElementVisible('#deterministic-radio')
+      .waitForElementVisible('#smaa-radio')
+      .waitForElementVisible('#values-radio')
+      .waitForElementVisible('#entered-radio')
       .waitForElementVisible('#show-median-radio')
       .waitForElementVisible('#show-mode-radio')
       .waitForElementVisible('#toggle-selection-button')
@@ -66,12 +66,14 @@ module.exports = {
     browser
       .click('#settings-button')
       .click('#show-decimals-radio')
-      .click('#deterministic-analysis-radio')
+      .click('#smaa-radio')
+      .click('#values-radio')
       .click('#show-mode-radio')
       .click('#criterion-column-checkbox')
       .click('#reset-default-button')
       .waitForElementVisible('#show-percentages-radio:checked')
-      .waitForElementVisible('#deterministic-entered-radio:checked')
+      .waitForElementVisible('#deterministic-radio:checked')
+      .waitForElementVisible('#entered-radio:checked')
       .waitForElementVisible('#show-median-radio:checked')
       .waitForElementVisible('#criterion-column-checkbox:checked')
       .waitForElementVisible('#description-column-checkbox:checked')
@@ -120,7 +122,7 @@ module.exports = {
       .assert.containsText(scaleRangeCellPath, '0.5')
       .click('//*[@id="settings-button"]')
       .click('//*[@id="show-percentages-radio"]')
-      .click('//*[@id="deterministic-analysis-radio"]')
+      .click('//*[@id="values-radio"]')
       .click('//*[@id="save-settings-button"]')
       .assert.containsText(unitsCellPath, '%')
       .assert.containsText(effectTableCellPath, '60')
@@ -132,7 +134,8 @@ module.exports = {
       .assert.containsText(scaleRangeCellPath, '0.5')
       .click('//*[@id="settings-button"]')
       .click('//*[@id="show-percentages-radio"]')
-      .click('//*[@id="smaa-distribution-radio"]')
+      .click('//*[@id="smaa-radio"]')
+      .click('//*[@id="entered-radio"]')
       .click('//*[@id="save-settings-button"]')
       .getValue(unitsCellPath, _.partial(checkValue, null))
       .getValue(effectTableCellPath, _.partial(checkValue, null))
@@ -144,7 +147,8 @@ module.exports = {
       .assert.containsText(scaleRangeCellPath, '0.5')
       .click('//*[@id="settings-button"]')
       .click('//*[@id="show-percentages-radio"]')
-      .click('//*[@id="smaa-analysis-radio"]')
+      .click('//*[@id="smaa-radio"]')
+      .click('//*[@id="values-radio"]')
       .click('//*[@id="save-settings-button"]')
       .assert.containsText(unitsCellPath, '%')
       .assert.containsText(effectTableCellPath, '60')
@@ -318,7 +322,7 @@ module.exports = {
       .assert.containsText(effectCellPath, '60%')
       .click('//*[@id="settings-button"]')
       .click('//*[@id="show-percentages-radio"]')
-      .click('//*[@id="deterministic-analysis-radio"]')
+      .click('//*[@id="values-radio"]')
       .click('//*[@id="save-settings-button"]')
       .assert.containsText(unitsCellPath, '%')
       .assert.containsText(effectCellPath, '60');
@@ -328,7 +332,8 @@ module.exports = {
       .assert.containsText(effectCellPath, '0.6')
       .click('//*[@id="settings-button"]')
       .click('//*[@id="show-percentages-radio"]')
-      .click('//*[@id="smaa-distribution-radio"]')
+      .click('//*[@id="entered-radio"]')
+      .click('//*[@id="smaa-radio"]')
       .click('//*[@id="save-settings-button"]')
       .getValue(unitsCellPath, _.partial(checkValue, null))
       .getValue(effectCellPath, _.partial(checkValue, null));
@@ -338,7 +343,8 @@ module.exports = {
       .getValue(effectCellPath, _.partial(checkValue, null))
       .click('//*[@id="settings-button"]')
       .click('//*[@id="show-percentages-radio"]')
-      .click('//*[@id="smaa-analysis-radio"]')
+      .click('//*[@id="values-radio"]')
+      .click('//*[@id="smaa-radio"]')
       .click('//*[@id="save-settings-button"]')
       .assert.containsText(unitsCellPath, '%')
       .assert.containsText(effectCellPath, '60');
@@ -364,7 +370,7 @@ module.exports = {
       .assert.containsText(effectCellPath, '0.45')
       .click('//*[@id="settings-button"]')
       .click('//*[@id="show-percentages-radio"]')
-      .click('//*[@id="deterministic-analysis-radio"]')
+      .click('//*[@id="values-radio"]')
       .click('//*[@id="save-settings-button"]')
       .assert.containsText(unitsCellPath, '%')
       .assert.containsText(effectCellPath, '45');
@@ -374,7 +380,8 @@ module.exports = {
       .assert.containsText(effectCellPath, '0.45')
       .click('//*[@id="settings-button"]')
       .click('//*[@id="show-percentages-radio"]')
-      .click('//*[@id="smaa-distribution-radio"]')
+      .click('//*[@id="smaa-radio"]')
+      .click('//*[@id="entered-radio"]')
       .click('//*[@id="save-settings-button"]')
       .assert.containsText(unitsCellPath, '%')
       .assert.containsText(effectCellPath, '45');
@@ -384,7 +391,7 @@ module.exports = {
       .assert.containsText(effectCellPath, '0.45')
       .click('//*[@id="settings-button"]')
       .click('//*[@id="show-percentages-radio"]')
-      .click('//*[@id="smaa-analysis-radio"]')
+      .click('//*[@id="values-radio"]')
       .click('//*[@id="save-settings-button"]')
       .assert.containsText(unitsCellPath, '%')
       .assert.containsText(effectCellPath, '45');
@@ -408,7 +415,7 @@ module.exports = {
       .assert.containsText(effectCellPath, '0.45 is best')
       .click('//*[@id="settings-button"]')
       .click('//*[@id="show-percentages-radio"]')
-      .click('//*[@id="deterministic-analysis-radio"]')
+      .click('//*[@id="values-radio"]')
       .click('//*[@id="save-settings-button"]')
       .assert.containsText(effectCellPath, '45 % is best');
     showDecimals(browser);
@@ -416,7 +423,8 @@ module.exports = {
       .assert.containsText(effectCellPath, '0.45 is best')
       .click('//*[@id="settings-button"]')
       .click('//*[@id="show-percentages-radio"]')
-      .click('//*[@id="smaa-distribution-radio"]')
+      .click('//*[@id="smaa-radio"]')
+      .click('//*[@id="entered-radio"]')
       .click('//*[@id="save-settings-button"]')
       .assert.containsText(effectCellPath, '45 % is best');
     showDecimals(browser);
@@ -424,7 +432,7 @@ module.exports = {
       .assert.containsText(effectCellPath, '0.45 is best')
       .click('//*[@id="settings-button"]')
       .click('//*[@id="show-percentages-radio"]')
-      .click('//*[@id="smaa-analysis-radio"]')
+      .click('//*[@id="values-radio"]')
       .click('//*[@id="save-settings-button"]')
       .assert.containsText(effectCellPath, '45 % is best');
     showDecimals(browser);
@@ -446,7 +454,7 @@ module.exports = {
       .assert.containsText(effectCellPath, '2-year survival: 0.45')
       .click('//*[@id="settings-button"]')
       .click('//*[@id="show-percentages-radio"]')
-      .click('//*[@id="deterministic-analysis-radio"]')
+      .click('//*[@id="values-radio"]')
       .click('//*[@id="save-settings-button"]')
       .assert.containsText(effectCellPath, '2-year survival: 45 %');
     showDecimals(browser);
@@ -454,7 +462,8 @@ module.exports = {
       .assert.containsText(effectCellPath, '2-year survival: 0.45')
       .click('//*[@id="settings-button"]')
       .click('//*[@id="show-percentages-radio"]')
-      .click('//*[@id="smaa-distribution-radio"]')
+      .click('//*[@id="smaa-radio"]')
+      .click('//*[@id="entered-radio"]')
       .click('//*[@id="save-settings-button"]')
       .assert.containsText(effectCellPath, '2-year survival: 45 %');
     showDecimals(browser);
@@ -462,7 +471,7 @@ module.exports = {
       .assert.containsText(effectCellPath, '2-year survival: 0.45')
       .click('//*[@id="settings-button"]')
       .click('//*[@id="show-percentages-radio"]')
-      .click('//*[@id="smaa-analysis-radio"]')
+      .click('//*[@id="values-radio"]')
       .click('//*[@id="save-settings-button"]')
       .assert.containsText(effectCellPath, '2-year survival: 45 %');
     showDecimals(browser);

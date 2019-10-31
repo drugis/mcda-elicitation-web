@@ -1,4 +1,5 @@
 'use strict';
+
 define(['angular', 'lodash'], function(angular, _) {
   var dependencies = [
     '$rootScope',
@@ -13,9 +14,12 @@ define(['angular', 'lodash'], function(angular, _) {
     var DEFAULT_SETTINGS = {
       calculationMethod: 'median',
       showPercentages: true,
-      effectsDisplay: 'deterministic',
+      displayMode: 'enteredData',
+      analysisType: 'deterministic',
       hasNoEffects: false,
-      isRelativeProblem: false
+      hasNoDistributions: false,
+      isRelativeProblem: false,
+      changed: false
     };
 
     var DEFAULT_TOGGLED_COLUMNS = {
@@ -31,40 +35,40 @@ define(['angular', 'lodash'], function(angular, _) {
 
     function loadWorkspaceSettings(params) {
       return WorkspaceSettingsResource.get(params).$promise.then(function(result) {
-        workspaceSettings = result.settings ? result.settings : angular.copy(DEFAULT_SETTINGS);
-        if (!hasValidView(workspaceSettings)) {
-          workspaceSettings.effectsDisplay = 'deterministic';
+        if (result.settings) {
+          workspaceSettings = result.settings;
+        } else {
+          workspaceSettings = angular.copy(DEFAULT_SETTINGS);
         }
         toggledColumns = result.toggledColumns ? result.toggledColumns : angular.copy(DEFAULT_TOGGLED_COLUMNS);
       });
-    }
-
-    function hasValidView(workspaceSettings) {
-      return _.includes([
-        'deterministic',
-        'deterministicMCDA',
-        'smaaDistributions',
-        'smaa'
-      ], workspaceSettings.effectsDisplay);
     }
 
     function getToggledColumns() {
       return angular.copy(toggledColumns);
     }
 
-    function getWorkspaceSettings(performanceTable) {
+    function setWorkspaceSettings(performanceTable) {
       setHasNoEffects(performanceTable);
-      setHasNoAlternatives(performanceTable);
+      setHasNoDistributions(performanceTable);
+      setIsRelativeProblem(performanceTable);
       return angular.copy(workspaceSettings);
     }
 
     function setHasNoEffects(performanceTable) {
       if (performanceTable && !hasEffect(performanceTable)) {
-        if (workspaceSettings.effectsDisplay === 'deterministic') {
-          workspaceSettings.effectsDisplay = 'smaa';
+        if (!workspaceSettings.changed && workspaceSettings.analysisType === 'deterministic') {
+          workspaceSettings.analysisType = 'smaa';
+          workspaceSettings.displayMode = 'enteredData';
         }
         workspaceSettings.hasNoEffects = true;
-      } 
+      }
+    }
+
+    function setHasNoDistributions(performanceTable) {
+      if (performanceTable && !hasDistribution(performanceTable)) {
+        workspaceSettings.hasNoDistributions = true;
+      }
     }
 
     function hasEffect(performanceTable) {
@@ -73,9 +77,19 @@ define(['angular', 'lodash'], function(angular, _) {
       });
     }
 
-    function setHasNoAlternatives(performanceTable){
-      if(performanceTable && !hasAlternative(performanceTable)){
+    function hasDistribution(performanceTable) {
+      return _.some(performanceTable, function(entry) {
+        return entry.performance.distribution;
+      });
+    }
+
+    function setIsRelativeProblem(performanceTable) {
+      if (performanceTable && !hasAlternative(performanceTable)) {
         workspaceSettings.isRelativeProblem = true;
+        if (!workspaceSettings.changed && workspaceSettings.displayMode === 'enteredData') {
+          workspaceSettings.analysisType = 'smaa';
+          workspaceSettings.displayMode = 'values';
+        }
       }
     }
 
@@ -90,6 +104,7 @@ define(['angular', 'lodash'], function(angular, _) {
         settings: newWorkspaceSettings,
         toggledColumns: newToggledColumns
       };
+      newSettings.settings.changed = true;
       return WorkspaceSettingsResource.put($stateParams, newSettings).$promise.then(function() {
         workspaceSettings = newWorkspaceSettings;
         toggledColumns = newToggledColumns;
@@ -98,8 +113,21 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function getDefaults() {
+      var defaultSettings = _.merge(
+        {},
+        angular.copy(DEFAULT_SETTINGS),
+        _.pick(workspaceSettings, ['isRelativeProblem', 'hasNoEffects', 'hasNoDistributions'])
+      );
+
+      if (defaultSettings.isRelativeProblem) {
+        defaultSettings.analysisType = 'smaa';
+        defaultSettings.displayMode = 'values';
+      } else if (defaultSettings.hasNoEffects) {
+        defaultSettings.analysisType = 'smaa';
+      }
+
       return {
-        settings: angular.copy(DEFAULT_SETTINGS),
+        settings: defaultSettings,
         toggledColumns: angular.copy(DEFAULT_TOGGLED_COLUMNS)
       };
     }
@@ -109,21 +137,47 @@ define(['angular', 'lodash'], function(angular, _) {
     }
 
     function isValueView() {
-      return workspaceSettings.effectsDisplay === 'smaa' ||
-        workspaceSettings.effectsDisplay === 'deterministicMCDA';
+      return workspaceSettings.displayMode === 'values';
+    }
+
+    function getWarnings(settings) {
+      var warnings = [];
+      if (hasNoEnteredData(settings)) {
+        warnings.push('No entered data available.');
+      } else if (hasNoEnteredEffect(settings)) {
+        warnings.push('No entered data available for deterministic analysis.');
+      } else if (hasNoEnteredDistribution(settings)) {
+        warnings.push('No entered data available for SMAA analysis.');
+      }
+      return warnings;
+    }
+
+    function hasNoEnteredData(settings) {
+      return settings.isRelativeProblem && settings.displayMode === 'enteredData';
+    }
+
+    function hasNoEnteredEffect(settings) {
+      return settings.hasNoEffects &&
+        settings.displayMode === 'enteredData' &&
+        settings.analysisType === 'deterministic';
+    }
+
+    function hasNoEnteredDistribution(settings) {
+      return settings.hasNoDistributions &&
+        settings.displayMode === 'enteredData' &&
+        settings.analysisType === 'smaa';
     }
 
     return {
       loadWorkspaceSettings: loadWorkspaceSettings,
       getToggledColumns: getToggledColumns,
-      getWorkspaceSettings: getWorkspaceSettings,
+      setWorkspaceSettings: setWorkspaceSettings,
       saveSettings: saveSettings,
       getDefaults: getDefaults,
       usePercentage: usePercentage,
-      isValueView: isValueView
+      isValueView: isValueView,
+      getWarnings: getWarnings
     };
   };
-
-
   return dependencies.concat(WorkspaceSettingsService);
 });
