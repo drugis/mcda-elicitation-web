@@ -34,7 +34,6 @@ define([
     TaskDependencies,
     WorkspaceSettingsService
   ) {
-
     // functions
     $scope.isPVFDefined = isPVFDefined;
     $scope.isAccessible = isAccessible;

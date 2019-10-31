@@ -30,7 +30,6 @@ define([
   './workspace/orderingResource',
   './workspace/workspace',
   './workspace/workspaceSettingsResource',
-  './directives',
   './navbar/navbar',
   './preferences/preferences'
 ],
@@ -38,7 +37,6 @@ define([
     var dependencies = [
       'ui.router',
       'elicit.benefitRisk',
-      'elicit.directives',
       'elicit.effectsTable',
       'elicit.evidence',
       'elicit.manualInput',

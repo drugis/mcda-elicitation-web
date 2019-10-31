@@ -70,6 +70,9 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
         criterion: criterion,
         choice: criterion.dataSources[0]
       };
+
+      initial.criterion.id = criterionId;
+      
       $timeout(function() {
         $scope.$broadcast('rzSliderForceRender');
       }, 100);

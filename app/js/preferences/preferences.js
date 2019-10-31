@@ -19,6 +19,7 @@ define([
   './willingnessToTradeOffChartDirective',
   './preferenceElicitationTableDirective',
   './elicitationTradeOffDirective',
+  './partialValuePlotDirective',
   '../workspace/workspace',
   '../results/results'
 ], function(
@@ -39,7 +40,8 @@ define([
   willingnessToTradeOff,
   willingnessToTradeOffChart,
   preferenceElicitationTable,
-  elicitationTradeOff
+  elicitationTradeOff,
+  partialValuePlotDirective
 ) {
     return angular.module('elicit.preferences', ['elicit.workspace', 'elicit.results'])
       .controller('PreferencesController', PreferencesController)
@@ -61,5 +63,6 @@ define([
       .directive('willingnessToTradeOffChart', willingnessToTradeOffChart)
       .directive('preferenceElicitationTable', preferenceElicitationTable)
       .directive('elicitationTradeOff', elicitationTradeOff)
+      .directive('partialValuePlot', partialValuePlotDirective)
       ;
   });

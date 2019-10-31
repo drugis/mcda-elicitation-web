@@ -335,7 +335,7 @@ module.exports = {
   },
 
   'Changing unit of measurement': function(browser) {
-    const firstCell = '/html/body/div[2]/div/div/div[5]/div/div/div[1]/div/manual-input-table/table/tbody/tr[1]/td[6]/effect-input-helper/dropdown-toggle/span/toggle/a';
+    const firstCell = '/html/body/div[1]/div/div/div[5]/div/div/div[1]/div/manual-input-table/table/tbody/tr[1]/td[6]/effect-input-helper/dropdown-toggle/span/toggle/a';
     const unitLabel = 'UoM label';
 
     createInputDefault(browser);

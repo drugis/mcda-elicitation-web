@@ -184,17 +184,10 @@ define(['angular',
 
       describe('getPvfCoordinates', function() {
         it('should calculate th-y coordinates for the pvf plots of all coordinates', function() {
-          function xy(x, y) {
-            return {
-              x: x,
-              y: y
-            };
-          }
-
           var criteria = {
             crit1: {
+              title: 'crit1',
               dataSources: [{
-                id: 'ds1',
                 pvf: {
                   direction: 'increasing',
                   range: [0, 1]
@@ -202,6 +195,7 @@ define(['angular',
               }]
             },
             crit2: {
+              title: 'crit2',
               dataSources: [{
                 pvf: {
                   direction: 'decreasing',
@@ -224,16 +218,15 @@ define(['angular',
           var result = partialValueFunctionService.getPvfCoordinates(criteria);
 
           var expectedResult = {
-            crit1: [{
-              key: 'Partial value function',
-              values: [xy(1, 1), xy(0, 0)]
-            }],
-            crit2: [{
-              key: 'Partial value function',
-              values: [xy(0, 1), xy(0.1782, 0.75), xy(0.81, 0.5), xy(0.943, 0.25), xy(1, 0)]
-            }]
+            crit1: [
+              ['x', 1, 0],
+              ['crit1', 1, 0],
+            ],
+            crit2: [
+              ['x', 0, 0.1782, 0.81, 0.943, 1],
+              ['crit2', 1, 0.75, 0.5, 0.25, 0]
+            ]
           };
-
 
           expect(result).toEqual(expectedResult);
         });

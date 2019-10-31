@@ -182,7 +182,7 @@ module.exports = {
   'Reordering alternatives': function(browser) {
     loadTestWorkspace(browser, title);
 
-    const firstAlternativeTitle = '/html/body/div[2]/div/div[3]/div/div/div/div/div[1]/div/div/div/div[7]/table/tbody/tr[1]/td[2]';
+    const firstAlternativeTitle = '/html/body/div[1]/div/div[3]/div/div/div/div/div[1]/div/div/div/div[7]/table/tbody/tr[1]/td[2]';
     const heparinDown = '#move-down-alternative-cfcdf6df-f231-4c3d-be83-64aa28d8d5f1';
     const heparinUp = '#move-up-alternative-cfcdf6df-f231-4c3d-be83-64aa28d8d5f1';
 

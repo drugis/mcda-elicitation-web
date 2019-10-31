@@ -51,10 +51,10 @@ module.exports = {
   },
 
   'Changing alternatives to generated labels in deterministic view': function(browser) {
-    const measurementsLegendsButton = '/html/body/div[2]/div/div[3]/div/div/div/div/div[4]/div/div/div/div[6]/div[1]/button[2]';
-    const measurementsFirstAlternative = '#measurements-sensitivity-plot > svg:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > text:nth-child(2)';
-    const measurementsSecondAlternative = '#measurements-sensitivity-plot > svg:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(2) > text:nth-child(2)';
-    const measurementsThirdAlternative = '#measurements-sensitivity-plot > svg:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(3) > text:nth-child(2)';
+    const measurementsLegendsButton = '/html/body/div[1]/div/div[3]/div/div/div/div/div[4]/div/div/div/div[4]/div/div[3]/div/button[2]';
+    const measurementsFirstAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(1) > text:nth-child(1)';
+    const measurementsSecondAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(2) > text:nth-child(1)';
+    const measurementsThirdAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(3) > text:nth-child(1)';
 
     browser
       .click('#deterministic-tab')
@@ -81,10 +81,10 @@ module.exports = {
   },
 
   'Changing alternatives to generated labels in smaa view': function(browser) {
-    const measurementsLegendsButton = '/html/body/div[2]/div/div[3]/div/div/div/div/div[5]/div/div/div/div[3]/div[3]/button[2]';
-    const measurementsFirstAlternative = 'g.nv-legendWrap:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > text:nth-child(2)';
-    const measurementsSecondAlternative = 'g.nv-legendWrap:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(2) > text:nth-child(2)';
-    const measurementsThirdAlternative = 'g.nv-legendWrap:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(3) > text:nth-child(2)';
+    const measurementsLegendsButton = '/html/body/div[1]/div/div[3]/div/div/div/div/div[5]/div/div/div/div[3]/div[3]/button[2]';
+    const measurementsFirstAlternative = '#alternatives-per-rank-bar-chart > div:nth-child(1) > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(2) > text:nth-child(2) > tspan:nth-child(1)';
+    const measurementsSecondAlternative = '#alternatives-per-rank-bar-chart > div:nth-child(1) > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(3) > text:nth-child(2) > tspan:nth-child(1)';
+    const measurementsThirdAlternative = '#alternatives-per-rank-bar-chart > div:nth-child(1) > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(4) > text:nth-child(2) > tspan:nth-child(1)';
 
     browser
       .click('#smaa-tab')
@@ -111,10 +111,10 @@ module.exports = {
   },
 
   'Reset labels': function(browser) {
-    const measurementsLegendsButton = '/html/body/div[2]/div/div[3]/div/div/div/div/div[4]/div/div/div/div[6]/div[1]/button[2]';
-    const measurementsFirstAlternative = '#measurements-sensitivity-plot > svg:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > text:nth-child(2)';
-    const measurementsSecondAlternative = '#measurements-sensitivity-plot > svg:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(2) > text:nth-child(2)';
-    const measurementsThirdAlternative = '#measurements-sensitivity-plot > svg:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(1) > g:nth-child(3) > text:nth-child(2)';
+    const measurementsLegendsButton = '/html/body/div[1]/div/div[3]/div/div/div/div/div[4]/div/div/div/div[4]/div/div[3]/div/button[2]';
+    const measurementsFirstAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(1) > text:nth-child(1)';
+    const measurementsSecondAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(2) > text:nth-child(1)';
+    const measurementsThirdAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(3) > text:nth-child(1)';
 
     browser
       .click('#deterministic-tab')
