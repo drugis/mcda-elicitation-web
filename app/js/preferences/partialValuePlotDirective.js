@@ -60,7 +60,9 @@ define([
                     }
                   }
                 },
-                point: { show: false },
+                point: {
+                  show: false
+                },
                 legend: {
                   show: false
                 }

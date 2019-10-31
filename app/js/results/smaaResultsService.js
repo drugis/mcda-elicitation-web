@@ -163,10 +163,9 @@ define([
     }
 
     function getRankPlotTitles(alternatives, legend) {
-      return [_.reduce(alternatives, function(accum, alternative) {
-        accum.push(legend ? legend[alternative.id].newTitle : alternative.title);
-        return accum;
-      }, ['x'])];
+      return [['x'].concat(_.map(alternatives, function(alternative) {
+        return legend ? legend[alternative.id].newTitle : alternative.title;
+      }))];
     }
 
     function getRankPlotValues(results, alternatives) {
@@ -270,7 +269,7 @@ define([
           show: false
         },
         tooltip: {
-            show: false
+          show: false
         }
       };
       return settings;
@@ -282,17 +281,11 @@ define([
     }
 
     function getBarChartTitles(values) {
-      return [_.reduce(values, function(accum, value) {
-        accum.push(value.label);
-        return accum;
-      }, ['x'])];
+      return [['x'].concat(_.map(values, 'label'))];
     }
 
     function getBarChartValues(values) {
-      return [_.reduce(values, function(accum, value) {
-        accum.push(value.value);
-        return accum;
-      }, ['Rank'])];
+      return [['Rank'].concat(_.map(values, 'value'))];
     }
 
     function getCentralWeightsPlotSettings(results, root) {

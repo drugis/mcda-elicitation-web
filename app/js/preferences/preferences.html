@@ -15,14 +15,16 @@
 </div>
 <br>
 <div id="partial-value-functions-block" class="prefs-block">
-  <h4>Partial Value Functions <inline-help help-key="partial-value-function"></inline-help>
+  <h4>
+    Partial Value Functions <inline-help help-key="partial-value-function"></inline-help>
   </h4>
   <div id="partial-value-functions" class="grid-x grid-padding-x small-up-1 medium-up-3 large-up-4">
     <div ng-repeat="criterion in criteria">
       <div class="cell">
         <h5>{{criterion.title}}</h5>
         <div style="width: 250px; height: 180px">
-          <partial-value-plot criterion="criterion" values="pvfCoordinates[criterion.id]" width="'250px'" height="'180px'"></partial-value-plot>
+          <partial-value-plot criterion="criterion" values="pvfCoordinates[criterion.id]" width="'250px'"
+            height="'180px'"></partial-value-plot>
           <div ng-if="!isPVFDefined(criterion.dataSources[0])" style="padding-top: 40px; text-align: center; margin: 0">
             <i style="font-size: 100px" class="fa fa-question"></i>
           </div>

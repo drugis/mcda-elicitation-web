@@ -40,7 +40,7 @@ define([
           'Labels</button>')(scope);
         $element.after(btnElement);
 
-        function emitEvent(){
+        function emitEvent() {
           scope.$emit('elicit.legendChanged');
         }
 

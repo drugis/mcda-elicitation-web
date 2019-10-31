@@ -95,19 +95,21 @@ define([
     }
 
     function getAlternativesTitles(alternatives, legend) {
-      return [_.reduce(alternatives, function(accum, alternative) {
-        accum.push(legend ? legend[alternative.id].newTitle : alternative.title);
-        return accum;
-      }, ['x'])];
+      return [['x'].concat(_.map(alternatives, function(alternative) {
+        return legend ? legend[alternative.id].newTitle : alternative.title;
+      }))];
     }
 
     function getProfilePlotValues(criteria, alternatives, result) {
       return _.map(criteria, function(criterion) {
-        return _.reduce(alternatives, function(accum, alternative) {
-          accum.push(result.value.data[alternative.id][criterion.id]);
-          return accum;
-        }, [criterion.title]);
+        return getValueData(criterion, alternatives, result);
       });
+    }
+
+    function getValueData(criterion, alternatives, result) {
+      return [criterion.title].concat(_.map(alternatives, function(alternative) {
+        return result.value.data[alternative.id][criterion.id];
+      }));
     }
 
     function pataviResultToLineValues(results, alternatives, legend) {

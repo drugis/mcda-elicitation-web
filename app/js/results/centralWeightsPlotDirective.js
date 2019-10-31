@@ -21,7 +21,7 @@ define([
             return;
           } else {
             var root = d3.select(element[0]);
-            root = root.select('#central-weights');
+            root = root.select('#central-weights-plot');
             root
               .style('width', '620px')
               .style('height', '350px');

@@ -23,12 +23,13 @@ define([
             var root = d3.select(element[0]);
             root = root.select('#bar-chart');
             root
-            .style('width', '400px')
-            .style('height', '350px');
+              .style('width', '400px')
+              .style('height', '350px');
 
             var settings = SmaaResultsService.getBarChartSettings(
               results,
-              root);
+              root
+            );
             c3.generate(settings);
           }
         });
