@@ -111,8 +111,6 @@ define([
       });
 
       it('should transform a measurements or preferences patavi result to linevalues for the plot and uses the alternative legend', function() {
-
-
         var result = resultsService.pataviResultToLineValues(pataviResult, alternatives, legend);
         var expectedResult = [
           ['x', '0', '1', '2'],
@@ -125,25 +123,9 @@ define([
 
     describe('percentifySensitivityResult', function() {
       it('should return the values of given coordinate multiplied by 100', function() {
-        function xy(x, y) {
-          return { x: x, y: y };
-        }
-        var values = [{
-          values: [
-            xy(1, 0),
-            xy(2, 1),
-            xy(3, 2)
-          ]
-        }];
-        var coordinate = 'x';
-        var result = resultsService.percentifySensitivityResult(values, coordinate);
-        var expectedResult = [{
-          values: [
-            xy(100, 0),
-            xy(200, 1),
-            xy(300, 2)
-          ]
-        }];
+        var values = [['x', 0.6, 0.8]];
+        var result = resultsService.percentifySensitivityResult(values);
+        var expectedResult = [['x', 60, 80]];
         expect(result).toEqual(expectedResult);
       });
     });
@@ -339,13 +321,15 @@ define([
       it('should return the settings for a sensitivity line chart', function() {
         const root = 'root';
         const values = [['x', 0, 1]];
-        const labelXAxis = 'xlabel';
-        const labelYAxis = 'ylabel';
+        const options = {
+          useTooltip: false,
+          labelXAxis: 'xlabel',
+          labelYAxis: 'ylabel'
+        };
 
-        var settings = resultsService.getSensitivityLineChartSettings(root, values, labelXAxis, labelYAxis);
+        var settings = resultsService.getSensitivityLineChartSettings(root, values, options);
 
         delete settings.axis.x.tick.format;
-
 
         var expectedSettings = {
           bindto: root,
@@ -356,7 +340,7 @@ define([
           axis: {
             x: {
               label: {
-                text: labelXAxis,
+                text: options.labelXAxis,
                 position: 'outer-center'
               },
               min: 0,
@@ -371,14 +355,14 @@ define([
             },
             y: {
               label: {
-                text: labelYAxis,
+                text: options.labelYAxis,
                 position: 'outer-middle'
               }
             }
           },
           grid: {
             x: {
-              show: true
+              show: false
             },
             y: {
               show: true
@@ -386,11 +370,13 @@ define([
           },
           point: {
             show: false
+          },
+          tooltip: {
+            show: options.useTooltip
           }
         };
         expect(settings).toEqual(expectedSettings);
       });
-
     });
   });
 });

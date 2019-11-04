@@ -32,6 +32,12 @@ define([],
           }
 
           function doPreferencesSensitivity() {
+            scope.plotOptions = {
+              useTooltip: true,
+              labelXAxis: 'Weight given to ' + scope.selectedCriterion.title,
+              labelYAxis: 'total value',
+            };
+
             delete scope.preferencesValues;
             DeterministicResultsService.getPreferencesSensitivityResults(scope, scope.aggregateState.dePercentified).resultsPromise.then(function(result) {
               scope.values = DeterministicResultsService.pataviResultToLineValues(result.results, scope.alternatives, scope.scenario.state.legend);

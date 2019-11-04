@@ -33,12 +33,18 @@ define([],
           }
 
           function doMeasurementSensitivity() {
+            scope.plotOptions = {
+              useTooltip: false,
+              labelXAxis: scope.measurementsCriterion.title,
+              labelYAxis: 'total value',
+            };
+
             delete scope.measurementValues;
             DeterministicResultsService.getMeasurementSensitivityResults(scope, scope.aggregateState.dePercentified).resultsPromise.then(function(result) {
               scope.measurementValues = DeterministicResultsService.pataviResultToLineValues(result.results, scope.alternatives, scope.scenario.state.legend);
 
               if (usePercentage(scope.measurementsCriterion.dataSources[0])) {
-                scope.measurementValues = DeterministicResultsService.percentifySensitivityResult(scope.measurementValues, 'x');
+                scope.measurementValues = DeterministicResultsService.percentifySensitivityResult(scope.measurementValues);
               }
             });
           }

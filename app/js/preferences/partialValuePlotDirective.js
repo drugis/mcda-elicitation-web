@@ -65,6 +65,9 @@ define([
                 },
                 legend: {
                   show: false
+                },
+                tooltip: {
+                  show: false
                 }
               };
 

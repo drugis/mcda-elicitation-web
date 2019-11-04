@@ -177,15 +177,16 @@ define([
       return run(scope, nextState);
     }
 
-    function percentifySensitivityResult(values, coordinate) {
-      return _.map(values, function(line) {
-        var newLine = angular.copy(line);
-        newLine.values = _.map(newLine.values, function(coordinates) {
-          coordinates[coordinate] *= 100;
-          return coordinates;
-        });
-        return newLine;
+    function percentifySensitivityResult(values) {
+      var newValues = angular.copy(values);
+      newValues[0] = _.map(values[0], function(value) {
+        if (value === 'x') {
+          return value;
+        } else {
+          return value * 100;
+        }
       });
+      return newValues;
     }
 
     function createDeterministicScales(performanceTable, smaaScales) {
@@ -206,7 +207,7 @@ define([
       }, {});
     }
 
-    function getSensitivityLineChartSettings(root, values, labelXAxis, labelYAxis) {
+    function getSensitivityLineChartSettings(root, values, options) {
       return {
         bindto: root,
         data: {
@@ -216,7 +217,7 @@ define([
         axis: {
           x: {
             label: {
-              text: labelXAxis,
+              text: options.labelXAxis,
               position: 'outer-center'
             },
             min: values[0][1],
@@ -232,14 +233,14 @@ define([
           },
           y: {
             label: {
-              text: labelYAxis,
+              text: options.labelYAxis,
               position: 'outer-middle'
             }
           }
         },
         grid: {
           x: {
-            show: true
+            show: false
           },
           y: {
             show: true
@@ -247,6 +248,9 @@ define([
         },
         point: {
           show: false
+        },
+        tooltip: {
+          show: options.useTooltip
         }
       };
     }

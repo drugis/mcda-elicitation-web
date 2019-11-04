@@ -12,9 +12,8 @@ define([
     return {
       restrict: 'E',
       scope: {
+        plotOptions: '=',
         showLegend: '@',
-        labelXAxis: '=',
-        labelYAxis: '=',
         values: '=',
       },
       template: '<div class="preferences-sensitivity-plot"></div>',
@@ -29,7 +28,7 @@ define([
               .style('width', '400px')
               .style('height', '400px');
             var settings = DeterministicResultsService.getSensitivityLineChartSettings(
-              root, scope.values, scope.labelXAxis, scope.labelYAxis
+              root, scope.values, scope.plotOptions
             );
             c3.generate(settings);
           }
