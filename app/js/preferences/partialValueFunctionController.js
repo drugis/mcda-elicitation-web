@@ -72,7 +72,7 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
       };
 
       initial.criterion.id = criterionId;
-      
+
       $timeout(function() {
         $scope.$broadcast('rzSliderForceRender');
       }, 100);
@@ -115,8 +115,8 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
             to: to
           },
           sliderOptions: {
-            floor: Math.min(from, to),
-            ceil: Math.max(from, to),
+            floor: Math.min(from, to) + 0.001,
+            ceil: Math.max(from, to) - 0.001,
             precision: 10,
             step: Math.abs(to - from) / 100,
             rightToLeft: to < from,
