@@ -68,6 +68,12 @@ define([
                 },
                 tooltip: {
                   show: false
+                },
+                padding: {
+                  top: 10,
+                  right: 20,
+                  bottom: 10,
+                  left: 45
                 }
               };
 
