@@ -5,7 +5,7 @@ const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
 const testUrl = require('./util/constants').testUrl;
-const title = 'GetReal course LU 4, activity 4.4';
+const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 const scenarioTitle = 'scenario title';
 
 module.exports = {
@@ -20,6 +20,7 @@ module.exports = {
 
     browser
       .click('#preferences-tab')
+      .pause(50)
       .waitForElementVisible('#partial-value-functions-block');
   },
 

@@ -38,6 +38,7 @@ module.exports = {
     browser
       .click('a[id="' + title + '"]')
       .waitForElementVisible('#workspace-title')
+      .pause(100)
       .click('#user-image-link')
       .waitForElementVisible('#create-workspace-button');
     workspaceService.deleteFromList(browser, title);

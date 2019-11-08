@@ -14,6 +14,7 @@ const cancelStep1Path = '//*[@id="cancel-step1-button"]';
 
 function cancelAction(browser, paths, expectedValue) {
   browser
+    .pause(100)
     .click(paths.tab)
     .click(paths.actionButton)
     .click(paths.cancelButton)
@@ -99,7 +100,7 @@ module.exports = {
     browser
       .click(actionButtonPath)
       .click('//*[@id="show-decimals-radio"]')
-      .click('//*[@id="deterministic-analysis-radio"]')
+      .click('//*[@id="smaa-radio"]')
       .click(closeModalButtonPath)
       .assert.containsText(contentPath, '37 / 101');
   },
@@ -108,6 +109,7 @@ module.exports = {
     var actionButtonPath = '//*[@id="edit-subproblem-button"]';
     var contentPath = '//*[@id="subproblem-selector"]';
     browser
+      .pause(100)
       .click('//*[@id="problem-definition-tab"]')
       .click(actionButtonPath)
       .clearValue('//*[@id="subproblem-title-input"]')
@@ -130,7 +132,7 @@ module.exports = {
       tab: preferenceTabPath,
       actionButton: '//*[@id="de14e778-f723-48d4-8f4e-1e589714f4f2-pvf-button"]',
       cancelButton: '//*[@id="cancel-button"]',
-      content: '/html/body/div[1]/div/div[3]/div/div/div/div/div[3]/div/div/div[2]/h4'
+      content: '//*[@id="partial-value-functions-header"]'
     };
     cancelAction(browser, paths, 'Partial Value Functions');
   },
@@ -180,6 +182,7 @@ module.exports = {
     var cancelButtonPath = closeModalButtonPath;
     var contentPath = '//*[@id="scenario-selector"]';
     browser
+      .pause(100)
       .click(preferenceTabPath)
       .click(actionButtonPath)
       .clearValue('//*[@id="new-scenario-title"]')
@@ -216,11 +219,12 @@ module.exports = {
       content: '#value-plot > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(2) > text:nth-child(2) > tspan:nth-child(1)'
     };
     browser
-    .click(paths.tab)
-    .click(paths.actionButton)
-    .clearValue(paths.valueToClear)
-    .click(paths.cancelButton)
-    .useCss()
-    .assert.containsText(paths.content, 'Placebo');
+      .pause(100)
+      .click(paths.tab)
+      .click(paths.actionButton)
+      .clearValue(paths.valueToClear)
+      .click(paths.cancelButton)
+      .useCss()
+      .assert.containsText(paths.content, 'Placebo');
   }
 };
