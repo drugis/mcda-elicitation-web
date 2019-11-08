@@ -7,7 +7,7 @@ define(['lodash'], function(_) {
     'WorkspaceService'
   ];
   
-  var McdaBenefitRiskService = function(
+  var ScenarioService = function(
     $state,
     $stateParams,
     ScenarioResource,
@@ -69,5 +69,5 @@ define(['lodash'], function(_) {
       copyScenarioAndGo: copyScenarioAndGo
     };
   };
-  return dependencies.concat(McdaBenefitRiskService);
+  return dependencies.concat(ScenarioService);
 });

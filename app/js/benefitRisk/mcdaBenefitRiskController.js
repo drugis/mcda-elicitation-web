@@ -5,8 +5,6 @@ define(['lodash', 'angular'], function(_, angular) {
     '$transitions',
     '$state',
     '$stateParams',
-    '$modal',
-    'McdaBenefitRiskService',
     'Tasks',
     'TaskDependencies',
     'ScenarioResource',
@@ -24,8 +22,6 @@ define(['lodash', 'angular'], function(_, angular) {
     $transitions,
     $state,
     $stateParams,
-    $modal,
-    McdaBenefitRiskService,
     Tasks,
     TaskDependencies,
     ScenarioResource,
@@ -37,16 +33,12 @@ define(['lodash', 'angular'], function(_, angular) {
     currentScenario,
     isMcdaStandalone
   ) {
-    // functions
-    $scope.copyScenario = copyScenario;
-    $scope.newScenario = newScenario;
     $scope.scenarioChanged = scenarioChanged;
 
     $scope.deregisterTransitionListener = $transitions.onStart({}, function(transition) {
       setActiveTab(transition.to().name, transition.to().name);
     });
 
-    // init
     var baseProblem = angular.copy($scope.workspace.problem);
     var baseState = { problem: baseProblem };
     var percentifiedBaseState = WorkspaceService.percentifyCriteria(baseState);
@@ -106,8 +98,9 @@ define(['lodash', 'angular'], function(_, angular) {
       }
 
       var aggregateState = WorkspaceService.buildAggregateState($scope.baseState.dePercentified.problem, currentSubProblem, scenario);
-      aggregateState.percentified = WorkspaceService.percentifyCriteria(aggregateState);
-      aggregateState.dePercentified = WorkspaceService.dePercentifyCriteria(aggregateState);
+      var stateCopy = angular.copy(aggregateState);
+      aggregateState.percentified = WorkspaceService.percentifyCriteria(stateCopy);
+      aggregateState.dePercentified = WorkspaceService.dePercentifyCriteria(stateCopy);
 
       $scope.aggregateState = aggregateState;
       if (WorkspaceSettingsService.usePercentage()) {
@@ -148,46 +141,6 @@ define(['lodash', 'angular'], function(_, angular) {
       };
     }
 
-    function copyScenario() {
-      $modal.open({
-        templateUrl: '../preferences/newScenario.html',
-        controller: 'NewScenarioController',
-        resolve: {
-          scenarios: function() {
-            return $scope.scenarios;
-          },
-          type: function() {
-            return 'Copy';
-          },
-          callback: function() {
-            return function(newTitle) {
-              McdaBenefitRiskService.copyScenarioAndGo(newTitle, $scope.subProblem);
-            };
-          }
-        }
-      });
-    }
-
-    function newScenario() {
-      $modal.open({
-        templateUrl: '../preferences/newScenario.html',
-        controller: 'NewScenarioController',
-        resolve: {
-          scenarios: function() {
-            return $scope.scenarios;
-          },
-          type: function() {
-            return 'New';
-          },
-          callback: function() {
-            return function(newTitle) {
-              McdaBenefitRiskService.newScenarioAndGo(newTitle, $scope.workspace, $scope.subProblem);
-            };
-          }
-        }
-      });
-    }
-
     function scenarioChanged(newScenario) {
       if (!newScenario) {
         return; // just a title edit
@@ -200,7 +153,6 @@ define(['lodash', 'angular'], function(_, angular) {
           problemId: $scope.subProblem.id,
           id: newScenario.id
         });
-
       }
     }
   }

@@ -1,8 +1,8 @@
 'use strict';
-define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (_, angular) => {
-  describe('MCDA benefit-risk service', () => {
+define(['angular', 'angular-mocks'], (angular) => {
+  describe('scenarioService', () => {
 
-    var mcdaBenefitRiskService,
+    var scenarioService,
       q,
       rootScope,
       state = jasmine.createSpyObj('$state', ['go']),
@@ -14,7 +14,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
       workspaceServiceMock = jasmine.createSpyObj('WorkspaceService', ['mergeBaseAndSubProblem', 'reduceProblem']);
 
     beforeEach(() => {
-      angular.mock.module('elicit.benefitRisk', ($provide) => {
+      angular.mock.module('elicit.preferences', ($provide) => {
         $provide.value('$state', state);
         $provide.value('$stateParams', stateParams);
         $provide.value('ScenarioResource', scenarioResourceMock);
@@ -22,10 +22,10 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
       });
     });
 
-    beforeEach(inject(($rootScope, $q, McdaBenefitRiskService) => {
+    beforeEach(inject(($rootScope, $q, ScenarioService) => {
       q = $q;
       rootScope = $rootScope;
-      mcdaBenefitRiskService = McdaBenefitRiskService;
+      scenarioService = ScenarioService;
     }));
 
     describe('copyScenarioAndGo', () => {
@@ -61,15 +61,15 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
           id: 'subProblemId'
         };
 
-        mcdaBenefitRiskService.copyScenarioAndGo(newTitle, subproblem).then(() => {
+        scenarioService.copyScenarioAndGo(newTitle, subproblem).then(() => {
           expect(scenarioResourceMock.get).toHaveBeenCalledWith(stateParams);
           expect(scenarioResourceMock.save).toHaveBeenCalledWith({
             otherParam: 'something'
           }, {
-              title: newTitle,
-              state: sourceScenario.state,
-              subProblemId: subproblem.id
-            });
+            title: newTitle,
+            state: sourceScenario.state,
+            subProblemId: subproblem.id
+          });
           expect(state.go).toHaveBeenCalledWith(state.current.name, {
             otherParam: 'something',
             id: savedScenario.id
@@ -122,7 +122,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
           workspace: workspace.id,
           subProblemId: subproblem.id
         };
-        mcdaBenefitRiskService.newScenarioAndGo('newTitle', workspace, subproblem).then(() => {
+        scenarioService.newScenarioAndGo('newTitle', workspace, subproblem).then(() => {
           expect(scenarioResourceMock.save).toHaveBeenCalledWith({
             otherParam: 'something'
           }, newScenario);
