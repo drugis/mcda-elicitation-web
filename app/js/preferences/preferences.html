@@ -14,5 +14,7 @@
   </div>
 </div>
 <br>
-<individual-scenario aggregate-state="aggregateState" edit-mode="editMode" tasks="tasks" scenario="scenario"
-  scales-promise="scalesPromise"></individual-scenario>
+<div ng-if="aggregateState">
+  <individual-scenario aggregate-state="aggregateState" edit-mode="editMode" tasks="tasks" scenario="scenario">
+  </individual-scenario>
+</div>

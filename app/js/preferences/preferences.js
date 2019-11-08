@@ -58,15 +58,15 @@ define([
 
 ) {
   return angular.module('elicit.preferences', ['elicit.workspace', 'elicit.results'])
-    .controller('PreferencesController', PreferencesController)
     .controller('EditScenarioTitleController', EditScenarioTitleController)
     .controller('OrdinalSwingController', OrdinalSwingController)
-    .controller('SwingWeightingController', SwingWeightingController)
-    .controller('SetMatchingWeightController', SetMatchingWeightController)
-    .controller('MatchingElicitationController', MatchingElicitationController)
     .controller('ImpreciseSwingWeightingController', ImpreciseSwingWeightingController)
-    .controller('PartialValueFunctionController', PartialValueFunctionController)
+    .controller('MatchingElicitationController', MatchingElicitationController)
     .controller('NewScenarioController', NewScenarioController)
+    .controller('PartialValueFunctionController', PartialValueFunctionController)
+    .controller('PreferencesController', PreferencesController)
+    .controller('SetMatchingWeightController', SetMatchingWeightController)
+    .controller('SwingWeightingController', SwingWeightingController)
 
     .factory('PartialValueFunctionService', PartialValueFunctionService)
     .factory('SwingWeightingService', SwingWeightingService)
@@ -74,13 +74,13 @@ define([
     .factory('TradeOffService', TradeOffService)
     .factory('ScenarioService', ScenarioService)
 
+    .directive('elicitationTradeOff', elicitationTradeOffDirective)
+    .directive('individualScenario', individualScenarioDirective)
+    .directive('partialValueFunctions', partialValueFunctionDirective)
+    .directive('partialValuePlot', partialValuePlotDirective)
+    .directive('preferenceElicitationTable', preferenceElicitationTableDirective)
     .directive('tradeOff', tradeOffDirective)
     .directive('willingnessToTradeOff', willingnessToTradeOffDirective)
     .directive('willingnessToTradeOffChart', willingnessToTradeOffChartDirective)
-    .directive('preferenceElicitationTable', preferenceElicitationTableDirective)
-    .directive('elicitationTradeOff', elicitationTradeOffDirective)
-    .directive('partialValuePlot', partialValuePlotDirective)
-    .directive('partialValueFunctions', partialValueFunctionDirective)
-    .directive('individualScenario', individualScenarioDirective)
     ;
 });

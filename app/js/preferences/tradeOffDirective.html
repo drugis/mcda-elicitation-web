@@ -1,0 +1,68 @@
+<div class="grid-x prefs-block" id="trade-off-block">
+  <div class="cell">
+    <h4>
+      Weights <inline-help help-key="weights"></inline-help>
+    </h4>
+  </div>
+  <div class="cell" ng-if="criteriaHavePvf">
+    <table>
+      <thead>
+        <th>Criterion
+          <inline-help help-key="criterion"></inline-help>
+        </th>
+        <th>Description</th>
+        <th>Unit
+          <inline-help help-key="criterion-unit"></inline-help>
+        </th>
+        <th>Worst</th>
+        <th>Best</th>
+        <th ng-if="!isOrdinal">
+          Importance <inline-help help-key="importance"></inline-help>
+        </th>
+        <th ng-if="isOrdinal">
+          Ranking <inline-help help-key="ranking"></inline-help>
+        </th>
+      </thead>
+      <tbody>
+        <tr ng-repeat="criterion in criteria">
+          <td>{{criterion.title}}</td>
+          <td>{{criterion.description}}</td>
+          <td>{{criterion.dataSources[0].unitOfMeasurement.label}}</td>
+          <td>{{criterion.dataSources[0].pvf.range && pvf.worst(criterion.dataSources[0]) | number}}</td>
+          <td>{{criterion.dataSources[0].pvf.range && pvf.best(criterion.dataSources[0]) | number}}</td>
+          <td id="{{ criterion.id }}-ranking">{{importance[criterion.id]}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cell" ng-if="!criteriaHavePvf">
+    <em>Not all partial value functions are defined</em>
+  </div>
+  <div class="cell large-4 button-group" ng-if="editMode.isUserOwner">
+    <button id="reset-button" class="button alert" ng-click="resetWeights()" tooltip="Reset all weight preferences"
+      ng-disabled="!problem.preferences.length" id="resetWeightsButton">
+      Reset weights
+    </button>
+    <button id="ranking-button" class="button" ui-sref="ordinal-swing"
+      ng-disabled="!isAccessible(tasks['ordinal-swing']).accessible" ng-class="{alert: !isSafe['ordinal-swing'].safe}"
+      tooltip="{{isSafe['ordinal-swing'].tooltip}}">
+      Ranking
+    </button>
+    <button id="matching-button" class="button" ui-sref="matching"
+      ng-disabled="!isAccessible(tasks['matching']).accessible" ng-class="{alert: !isSafe['matching'].safe}"
+      tooltip="{{isSafe['matching'].tooltip}}">
+      Matching
+    </button>
+    <button id="precise-swing-button" class="button" ui-sref="swing-weighting"
+      ng-disabled="!isAccessible(tasks['swing-weighting']).accessible"
+      ng-class="{alert: !isSafe['swing-weighting'].safe}" tooltip="{{isSafe['swing-weighting'].tooltip}}">
+      Precise Swing Weighting
+    </button>
+    <button id="imprecise-swing-button" class="button" ui-sref="imprecise-swing-weighting"
+      ng-disabled="!isAccessible(tasks['imprecise-swing-weighting']).accessible"
+      ng-class="{alert: !isSafe['imprecise-swing-weighting'].safe}"
+      tooltip="{{isSafe['imprecise-swing-weighting'].tooltip}}">
+      Imprecise Swing Weighting
+    </button>
+  </div>
+</div>

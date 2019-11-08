@@ -20,15 +20,17 @@ define(['clipboard', 'require'], function(Clipboard) {
     // init
     $scope.scenario = currentScenario;
     new Clipboard('.clipboard-button');
-    PageTitleService.setPageTitle('SmaaResultsController', ($scope.aggregateState.problem.title || $scope.workspace.title) +'\'s SMAA results');
 
-    $scope.$on('elicit.legendChanged', function() {
-      loadState();
+    $scope.scalesPromise.then(function() {
+      PageTitleService.setPageTitle('SmaaResultsController', ($scope.aggregateState.problem.title || $scope.workspace.title) + '\'s SMAA results');
+      OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(ordering) {
+        $scope.criteria = ordering.criteria;
+        $scope.alternatives = ordering.alternatives;
+        loadState();
+      });
     });
 
-    OrderingService.getOrderedCriteriaAndAlternatives($scope.aggregateState.problem, $stateParams).then(function(ordering) {
-      $scope.criteria = ordering.criteria;
-      $scope.alternatives = ordering.alternatives;
+    $scope.$on('elicit.legendChanged', function() {
       loadState();
     });
 

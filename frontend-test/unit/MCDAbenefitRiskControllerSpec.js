@@ -29,6 +29,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
     ]);
     var WorkspaceSettingsService = jasmine.createSpyObj('WorkspaceSetttingsService', ['usePercentage']);
     var EffectsTableService = jasmine.createSpyObj('EffectsTableService', ['createEffectsTableInfo']);
+    var tabServiceMock = jasmine.createSpyObj('TabService', ['getTabStatus']);
     var subProblems;
     var currentSubProblem = {
       id: 'subProblemId'
@@ -98,11 +99,12 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         WorkspaceService: WorkspaceService,
         WorkspaceSettingsService: WorkspaceSettingsService,
         EffectsTableService: EffectsTableService,
+        TabService: tabServiceMock,
         subProblems: subProblems,
         currentSubProblem: currentSubProblem,
         scenarios: scenarios,
         currentScenario: currentScenario,
-        isMcdaStandalone: isMcdaStandalone,
+        isMcdaStandalone: isMcdaStandalone
       });
     }));
 
@@ -239,19 +241,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
           preferences: true,
           results: true
         });
-      });
-    });
-
-    describe('when the aggregate state changes', () => {
-      beforeEach(() => {
-        WorkspaceService.hasNoStochasticResults.calls.reset();
-        WorkspaceService.hasNoStochasticResults.and.returnValue(true);
-        scope.aggregateState = { id: 'changed' };
-        scope.$apply();
-      });
-
-      it('should check whether there are stochastic results', () => {
-        expect(WorkspaceService.hasNoStochasticResults).toHaveBeenCalled();
       });
     });
 

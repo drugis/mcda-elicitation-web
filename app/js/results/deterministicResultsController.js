@@ -34,13 +34,15 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
     // init
     $scope.scenario = currentScenario;
 
-    $scope.scales = createScales($scope.aggregateState.dePercentified.problem);
+    $scope.scalesPromise.then(function() {
+      $scope.scales = createScales($scope.aggregateState.dePercentified.problem);
+      PageTitleService.setPageTitle('DeterministicResultsController', ($scope.aggregateState.problem.title || $scope.workspace.title) + '\'s deterministic results');
+    });
     $scope.sensitivityMeasurements = {
       alteredTableCells: [],
       isEditing: false
     };
     new Clipboard('.clipboard-button');
-    PageTitleService.setPageTitle('DeterministicResultsController', ($scope.aggregateState.problem.title || $scope.workspace.title) + '\'s deterministic results');
 
     $scope.$on('elicit.settingsChanged', function() {
       $state.reload();

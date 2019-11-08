@@ -28,9 +28,11 @@ define([
     $scope.copyScenario = copyScenario;
     $scope.newScenario = newScenario;
 
-    new Clipboard('.clipboard-button')
+    new Clipboard('.clipboard-button');
 
-    PageTitleService.setPageTitle('PreferencesController', ($scope.aggregateState.problem.title || $scope.workspace.title) + '\'s preferences');
+    $scope.scalesPromise.then(function() {
+      PageTitleService.setPageTitle('PreferencesController', ($scope.aggregateState.problem.title || $scope.workspace.title) + '\'s preferences');
+    });
 
     function editScenarioTitle() {
       $modal.open({

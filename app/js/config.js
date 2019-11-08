@@ -6,7 +6,6 @@ define(function() {
       title: 'Evidence',
       controller: 'EvidenceController',
       templateUrl: './evidence/evidence.html',
-      activeTab: 'evidence',
       requires: [],
       resets: []
     }, {
@@ -15,7 +14,6 @@ define(function() {
       title: 'Define Partial Value Functions',
       controller: 'PartialValueFunctionController',
       templateUrl: './preferences/partialValueFunction.html',
-      activeTab: 'preferences',
       requires: [],
       resets: ['criteria-trade-offs']
     }, {
@@ -23,7 +21,6 @@ define(function() {
       title: 'Ranking',
       controller: 'OrdinalSwingController',
       templateUrl: './preferences/ordinalSwing.html',
-      activeTab: 'preferences',
       requires: ['partial-value-function'],
       resets: ['criteria-trade-offs']
     }, {
@@ -31,7 +28,6 @@ define(function() {
       title: 'Matching',
       controller: 'MatchingElicitationController',
       templateUrl: './preferences/matchingElicitation.html',
-      activeTab: 'preferences',
       requires: ['partial-value-function'],
       resets: ['criteria-trade-offs']
     }, {
@@ -39,7 +35,6 @@ define(function() {
       title: 'Swing Weighting Elicitation',
       controller: 'SwingWeightingController',
       templateUrl: './preferences/swingWeighting.html',
-      activeTab: 'preferences',
       requires: ['partial-value-function'],
       resets: ['criteria-trade-offs']
     }, {
@@ -47,7 +42,6 @@ define(function() {
       title: 'Imprecise Swing Weighting Elicitation',
       controller: 'ImpreciseSwingWeightingController',
       templateUrl: './preferences/swingWeighting.html',
-      activeTab: 'preferences',
       requires: ['partial-value-function'],
       resets: ['criteria-trade-offs']
     }, {
@@ -55,7 +49,6 @@ define(function() {
       title: 'Preferences',
       controller: 'PreferencesController',
       templateUrl: './preferences/preferences.html',
-      activeTab: 'preferences',
       requires: ['scale-range'],
       resets: []
     }, {
@@ -69,7 +62,6 @@ define(function() {
       title: 'Smaa results',
       controller: 'SmaaResultsController',
       templateUrl: './results/smaaResults.html',
-      activeTab: 'smaa-results',
       requires: ['scale-range', 'partial-value-function'],
       resets: []
     }, {
@@ -77,7 +69,6 @@ define(function() {
       title: 'Deterministic results',
       controller: 'DeterministicResultsController',
       templateUrl: './results/deterministicResults.html',
-      activeTab: 'deterministic-results',
       requires: ['scale-range', 'partial-value-function'],
       resets: []
     }, {
@@ -85,7 +76,6 @@ define(function() {
       title: 'Problem',
       controller: 'SubProblemController',
       templateUrl: './subProblem/subProblem.html',
-      activeTab: 'problem',
       requires: [],
       resets: []
     }]
