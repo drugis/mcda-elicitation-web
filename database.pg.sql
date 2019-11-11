@@ -162,6 +162,16 @@ COMMIT;
 
 --changeset keijserj:20
 START TRANSACTION;
+ALTER TABLE scenario DROP CONSTRAINT scenario_workspace_fkey;
+ALTER TABLE scenario ADD CONSTRAINT scenario_workspace_fkey FOREIGN KEY (workspace) REFERENCES workspace(id) ON DELETE CASCADE;
+COMMIT;
+--rollback START TRANSACTION;
+--rollback ALTER TABLE scenario DROP CONSTRAINT scenario_workspace_fkey;
+--rollback ALTER TABLE scenario ADD CONSTRAINT scenario_workspace_fkey FOREIGN KEY (workspace) REFERENCES workspace(id);
+--rollback COMMIT;
+
+--changeset keijserj:20
+START TRANSACTION;
 WITH effectsDisplay AS (
   SELECT 
     workspaceId, 
@@ -174,13 +184,17 @@ newSettings AS (
     workspaceId, 
     CASE
       WHEN displayValue = 'deterministic' THEN '{"displayMode": "enteredData"}'::jsonb
+      WHEN displayValue = 'sourceData' THEN '{"displayMode": "enteredData"}'::jsonb
       WHEN displayValue = 'smaaDistributions' THEN '{"displayMode": "enteredData"}'::jsonb
+      WHEN displayValue = 'effects' THEN '{"displayMode": "values"}'::jsonb
       WHEN displayValue = 'deterministicMCDA' THEN '{"displayMode": "values"}'::jsonb
       WHEN displayValue = 'smaa' THEN '{"displayMode": "values"}'::jsonb
     END AS displayMode,
     CASE
       WHEN displayValue = 'deterministic' THEN '{"analysisType": "deterministic"}'::jsonb
+      WHEN displayValue = 'sourceData' THEN '{"analysisType": "deterministic"}'::jsonb
       WHEN displayValue = 'smaaDistributions' THEN '{"analysisType": "smaa"}'::jsonb
+      WHEN displayValue = 'effects' THEN '{"analysisType": "deterministic"}'::jsonb
       WHEN displayValue = 'deterministicMCDA' THEN '{"analysisType": "deterministic"}'::jsonb
       WHEN displayValue = 'smaa' THEN '{"analysisType": "smaa"}'::jsonb
     END AS analysisType
