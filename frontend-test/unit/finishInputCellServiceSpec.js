@@ -65,6 +65,18 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         expect(result.firstParameter).toEqual(0.5);
         expect(result.inputParameters.firstParameter.constraints[0].label).toEqual('Proportion (decimal)');
       });
+
+      it('should create a finished input cell for a cell with percentage scale and set precision to three significant digits', function() {
+        var performance = {
+          type: 'exact',
+          value: 0.500000001,
+          input: {
+            scale: 'percentage'
+          }
+        };
+        var result = finishInputCellService.finishValueCell(options, performance);
+        expect(result.firstParameter).toEqual(50);
+      });
     });
 
     describe('finishValueCI', function() {

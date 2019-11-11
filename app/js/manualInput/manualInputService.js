@@ -3,12 +3,14 @@ define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
     'InputKnowledgeService',
     'generateUuid',
-    'currentSchemaVersion'
+    'currentSchemaVersion',
+    'significantDigits'
   ];
   var ManualInputService = function(
     InputKnowledgeService,
     generateUuid,
-    currentSchemaVersion
+    currentSchemaVersion,
+    significantDigits
   ) {
     function createProblem(criteria, alternatives, title, description, inputData, useFavorability) {
       var newCriteria = buildCriteria(criteria, useFavorability);
@@ -218,22 +220,32 @@ define(['lodash', 'angular'], function(_, angular) {
         var dataSourceForEntry = _.find(dataSources, ['oldId', tableEntry.dataSource]);
         var alternative = _.find(alternatives, ['oldId', tableEntry.alternative]);
         if (dataSourceForEntry && alternative) {
-          if (!accum.effect[dataSourceForEntry.id]) {
-            accum.effect[dataSourceForEntry.id] = {};
-            accum.distribution[dataSourceForEntry.id] = {};
-          }
-          accum.effect[dataSourceForEntry.id][alternative.id] = createCell('effect', tableEntry);
-          accum.distribution[dataSourceForEntry.id][alternative.id] = createCell('distribution', tableEntry);
-          if (isPercentageRangeDistribution(accum.distribution[dataSourceForEntry.id][alternative.id], dataSourceForEntry)) {
-            accum.distribution[dataSourceForEntry.id][alternative.id].firstParameter *= 100;
-            accum.distribution[dataSourceForEntry.id][alternative.id].secondParameter *= 100;
-          }
+          getInput(accum, dataSourceForEntry, alternative.id, tableEntry);
         }
         return accum;
       }, {
         effect: {},
         distribution: {}
       });
+    }
+
+    function getInput(accum, dataSource, alternativeId, tableEntry) {
+      if (!accum.effect[dataSource.id]) {
+        accum.effect[dataSource.id] = {};
+        accum.distribution[dataSource.id] = {};
+      }
+      accum.effect[dataSource.id][alternativeId] = createCell('effect', tableEntry);
+      accum.distribution[dataSource.id][alternativeId] = createCell('distribution', tableEntry);
+      if (isPercentageRangeDistribution(accum.distribution[dataSource.id][alternativeId], dataSource)) {
+        accum.distribution[dataSource.id][alternativeId].firstParameter = getPercentifiedRangeParameter(accum.distribution[dataSource.id][alternativeId].firstParameter);
+        accum.distribution[dataSource.id][alternativeId].secondParameter = getPercentifiedRangeParameter(accum.distribution[dataSource.id][alternativeId].secondParameter);
+        
+      }
+      return accum;
+    }
+
+    function getPercentifiedRangeParameter(parameter) {
+      return significantDigits(parameter * 100);
     }
 
     function isPercentageRangeDistribution(distribution, dataSource) {
