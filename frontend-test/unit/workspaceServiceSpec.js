@@ -1408,7 +1408,7 @@ define([
         expect(result).toBeTruthy();
       });
 
-      it('should return false is the weights are not set', function() {
+      it('should return false is the preferences are empty', function() {
         var aggregateState = {
           problem: {
             performanceTable: [{
@@ -1426,7 +1426,27 @@ define([
           prefs: []
         };
         var result = workspaceService.hasNoStochasticResults(aggregateState);
-        expect(result).toBeTruthy();
+        expect(result).toBeFalsy();
+      });
+
+      it('should return false is the preferences are undefined', function() {
+        var aggregateState = {
+          problem: {
+            performanceTable: [{
+              performance: {
+                distribution: {
+                  type: 'exact'
+                }
+              }
+            }, {
+              performance: {
+                effect: {}
+              }
+            }]
+          },
+          prefs: undefined        };
+        var result = workspaceService.hasNoStochasticResults(aggregateState);
+        expect(result).toBeFalsy();
       });
 
       it('should return false if there is atleast one distribution', function() {
