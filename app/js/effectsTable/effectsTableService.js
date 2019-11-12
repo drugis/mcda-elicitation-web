@@ -165,11 +165,19 @@ define(['lodash', 'angular'], function(_, angular) {
       } else if (distribution.type === 'dsurv' || distribution.type === 'dgamma') {
         return buildGammaLabel(distribution.parameters);
       } else if (distribution.type === 'exact') {
-        return distribution.value + '';
+        return buildExactDistributionLabel(distribution);
       } else if (distribution.type === 'range') {
         return buildRangeDistributionLabel(distribution.parameters);
       } else if (distribution.type === 'empty') {
         return distribution.value ? distribution.value : '';
+      }
+    }
+
+    function buildExactDistributionLabel(distribution) {
+      if (distribution.input) {
+        return buildEffectInputLabel(distribution.input);
+      } else {
+        return distribution.value + '';
       }
     }
 
@@ -196,7 +204,7 @@ define(['lodash', 'angular'], function(_, angular) {
       }
     }
 
-    function hasPercentageNormalInput(input){
+    function hasPercentageNormalInput(input) {
       return input && input.scale === 'percentage' && input.hasOwnProperty('mu') && input.hasOwnProperty('sigma');
     }
 

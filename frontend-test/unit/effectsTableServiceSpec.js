@@ -502,7 +502,7 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
-        it('should make a label for an exact distribution', function() {
+        it('should make a label for an non-percentage exact distribution', function() {
           var performanceTable = [{
             criterion: 'criterionId5',
             alternative: 'alternativeId5',
@@ -531,6 +531,38 @@ define([
           expect(result).toEqual(expectedResult);
         });
 
+        it('should make a label for an percentage exact distribution', function() {
+          var performanceTable = [{
+            criterion: 'criterionId5',
+            alternative: 'alternativeId5',
+            dataSource: 'dsId5',
+            performance: {
+              distribution: {
+                type: 'exact',
+                value: 42,
+                input: {
+                  scale: 'percentage',
+                  value: 42
+                }
+              }
+            }
+          }];
+          var result = effectsTableService.createEffectsTableInfo(performanceTable);
+          var expectedResult = {
+            dsId5: {
+              isAbsolute: true,
+              studyDataLabelsAndUncertainty: {
+                alternativeId5: {
+                  effectLabel: '42%',
+                  effectValue: '',
+                  distributionLabel: '42%',
+                  hasUncertainty: false
+                }
+              }
+            }
+          };
+          expect(result).toEqual(expectedResult);
+        });
 
         it('should make a label for an empty distribution', function() {
           var performanceTable = [{
