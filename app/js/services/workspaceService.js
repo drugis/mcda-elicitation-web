@@ -703,7 +703,6 @@ define(['lodash', 'angular'], function(_, angular) {
       }
     }
 
-
     function checkForMissingValuesInPerformanceTable(performanceTable) {
       return _.some(performanceTable, function(entry) {
         return entry.performance.effect && entry.performance.effect.type === 'empty' &&

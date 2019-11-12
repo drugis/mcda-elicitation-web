@@ -68,18 +68,18 @@
             {{row.dataSource.scale[1] | number}}</td>
           <td>
             <!-- obs -->
-            <span ng-bind="row.intervalHull[0] | number"></span> ,
-            <span ng-bind="row.intervalHull[1] | number"></span>
+            <span ng-bind="row.intervalHull[0]"></span> ,
+            <span ng-bind="row.intervalHull[1]"></span>
           </td>
           <td>
             <!-- conf -->
             <span ng-if="row.dataSource.pvf.range.length">
-              {{row.dataSource.pvf.range[0] | number}},
-              {{row.dataSource.pvf.range[1] | number}}
+              {{significantDigits(row.dataSource.pvf.range[0])}},
+              {{significantDigits(row.dataSource.pvf.range[1])}}
             </span>
             <span ng-if="!row.dataSource.pvf.range.length">
-              <span ng-bind="row.intervalHull[0] | number"></span> ,
-              <span ng-bind="row.intervalHull[1] | number"></span>
+              <span ng-bind="row.intervalHull[0]"></span> ,
+              <span ng-bind="row.intervalHull[1]"></span>
             </span>
           </td>
           <td>{{row.dataSource.unitOfMeasurement.label}}</td>
