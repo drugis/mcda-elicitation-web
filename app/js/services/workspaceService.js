@@ -696,8 +696,10 @@ define(['lodash', 'angular'], function(_, angular) {
         var isAllExact = !_.some(aggregateState.problem.performanceTable, function(tableEntry) {
           return tableEntry.performance.distribution && tableEntry.performance.distribution.type !== 'exact';
         });
-        var isNotImpreciseSwing = !_.some(aggregateState.prefs, ['type', 'ratio bound']);
-        return isAllExact && isNotImpreciseSwing;
+        var isPreciseSwing = aggregateState.prefs && !_.some(aggregateState.prefs, function(pref) {
+          return pref.type !== 'exact swing';
+        });
+        return isAllExact && isPreciseSwing;
       }
     }
 

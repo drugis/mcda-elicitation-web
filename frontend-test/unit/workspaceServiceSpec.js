@@ -1408,6 +1408,27 @@ define([
         expect(result).toBeTruthy();
       });
 
+      it('should return false is the weights are not set', function() {
+        var aggregateState = {
+          problem: {
+            performanceTable: [{
+              performance: {
+                distribution: {
+                  type: 'exact'
+                }
+              }
+            }, {
+              performance: {
+                effect: {}
+              }
+            }]
+          },
+          prefs: []
+        };
+        var result = workspaceService.hasNoStochasticResults(aggregateState);
+        expect(result).toBeTruthy();
+      });
+
       it('should return false if there is atleast one distribution', function() {
         var aggregateState = {
           problem: {
