@@ -7361,9 +7361,9 @@ signal-exit@^3.0.0:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
 
-signin@drugis/signin#0.1.3:
-  version "0.1.3"
-  resolved "https://codeload.github.com/drugis/signin/tar.gz/0b849501b073e68d51087df24f3b8b3b3017d950"
+signin@drugis/signin#0.1.5:
+  version "0.1.5"
+  resolved "https://codeload.github.com/drugis/signin/tar.gz/e740a0cf3a9b5446fbafbb33afe659143563afbf"
   dependencies:
     bcrypt "^3.0.1"
     passport passport-next/passport#^2.1.0
