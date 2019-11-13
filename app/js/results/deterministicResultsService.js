@@ -294,7 +294,7 @@ define([
           }
         },
         legend: {
-          position: 'inset'
+          position: 'bottom'
         }
       };
     }
