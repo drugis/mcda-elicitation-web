@@ -20,7 +20,7 @@ define([
 
   './tradeOffDirective',
   './elicitationTradeOffDirective',
-  './individualScenarioDirective',
+  './scenarioDirective',
   './partialValueFunctionDirective',
   './partialValuePlotDirective',
   './preferenceElicitationTableDirective',
@@ -49,7 +49,7 @@ define([
 
   tradeOffDirective,
   elicitationTradeOffDirective,
-  individualScenarioDirective,
+  scenarioDirective,
   partialValueFunctionDirective,
   partialValuePlotDirective,
   preferenceElicitationTableDirective,
@@ -75,7 +75,7 @@ define([
     .factory('ScenarioService', ScenarioService)
 
     .directive('elicitationTradeOff', elicitationTradeOffDirective)
-    .directive('individualScenario', individualScenarioDirective)
+    .directive('scenario', scenarioDirective)
     .directive('partialValueFunctions', partialValueFunctionDirective)
     .directive('partialValuePlot', partialValuePlotDirective)
     .directive('preferenceElicitationTable', preferenceElicitationTableDirective)

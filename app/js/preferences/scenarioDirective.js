@@ -9,7 +9,7 @@ define(['lodash', 'jquery'],
       'TaskDependencies',
       'WorkspaceSettingsService'
     ];
-    var IndividualScenarioDirective = function(
+    var ScenarioDirective = function(
       $stateParams,
       OrderingService,
       PartialValueFunctionService,
@@ -25,7 +25,7 @@ define(['lodash', 'jquery'],
           scenario: '=',
           tasks: '='
         },
-        templateUrl: './individualScenarioDirective.html',
+        templateUrl: './scenarioDirective.html',
         link: function(scope) {
           scope.isPVFDefined = isPVFDefined;
           scope.isAccessible = isAccessible;
@@ -117,5 +117,5 @@ define(['lodash', 'jquery'],
         }
       };
     };
-    return dependencies.concat(IndividualScenarioDirective);
+    return dependencies.concat(ScenarioDirective);
   });
