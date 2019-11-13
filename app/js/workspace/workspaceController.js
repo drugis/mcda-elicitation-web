@@ -28,7 +28,7 @@ define(['angular'], function(angular) {
     // init
     var user = angular.fromJson($cookies.get('LOGGED-IN-USER'));
     $scope.editMode = {
-      isUserOwner: user ? currentWorkspace.owner === user.id : false
+      canEdit: user ? currentWorkspace.owner === user.id : false
     };
     if (currentWorkspace.problem.schemaVersion !== currentSchemaVersion) {
       $scope.workspace = SchemaService.updateWorkspaceToCurrentSchema(currentWorkspace);

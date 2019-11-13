@@ -8,7 +8,7 @@
     <h4>
       Therapeutic context
       <inline-help help-key="therapeutic-context"></inline-help>
-      <a id="edit-therapeutic-context-button" ng-if="editMode.isUserOwner && isStandAlone"
+      <a id="edit-therapeutic-context-button" ng-if="editMode.canEdit && isStandAlone"
         ng-click="editTherapeuticContext()">
         <i class="fa fa-edit"></i>
       </a>
@@ -37,14 +37,14 @@
     <table width="100%">
       <thead>
         <tr>
-          <th ng-if="editMode.isUserOwner"></th>
+          <th ng-if="editMode.canEdit"></th>
           <th width="100%">Alternative title</th>
-          <th ng-if="editMode.isUserOwner && isStandAlone"></th>
+          <th ng-if="editMode.canEdit && isStandAlone"></th>
         </tr>
       </thead>
       <tbody>
         <tr ng-repeat="alternative in orderedAlternatives" class="text-center">
-          <td ng-if="editMode.isUserOwner">
+          <td ng-if="editMode.canEdit">
             <div style="line-height: 10px; margin-bottom: 4px;">
               <a id="move-up-alternative-{{ alternative.id }}" ng-click="alternativeUp($index)" class="nav-arrow"
                 ng-if="$index !== 0">
@@ -64,8 +64,8 @@
           <td id="alternative-title-{{ alternative.id }}">
             {{alternative.title}}
           </td>
-          <td ng-if="editMode.isUserOwner && isStandAlone" class="text-center">
-            <a id="alternative-edit-button-{{ alternative.id }}" ng-if="editMode.isUserOwner && isStandAlone"
+          <td ng-if="editMode.canEdit && isStandAlone" class="text-center">
+            <a id="alternative-edit-button-{{ alternative.id }}" ng-if="editMode.canEdit && isStandAlone"
               ng-click="editAlternative(alternative)">
               <i class="fa fa-edit"></i>
             </a>

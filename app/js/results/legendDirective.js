@@ -25,14 +25,14 @@ define([
             tableCells +
             '</tbody>' +
             '</table>' +
-            (scope.editMode.isUserOwner ? 'Click to change' : '');
+            (scope.editMode.canEdit ? 'Click to change' : '');
         } else {
-          tooltipHtml = scope.editMode.isUserOwner ?
+          tooltipHtml = scope.editMode.canEdit ?
             'Please click the button to create aliases for the alternatives to use in plots' :
             'No legend set.';
         }
         var btnElement = $compile('<br><button ' +
-          (scope.editMode.isUserOwner ? 'ng-click="editLegend()" ' : '') +
+          (scope.editMode.canEdit ? 'ng-click="editLegend()" ' : '') +
           'class="button export-button info small" ' +
           'tooltip-append-to-body="true" ' +
           'tooltip-html-unsafe="' +

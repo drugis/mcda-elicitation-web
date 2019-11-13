@@ -5,10 +5,10 @@
       ng-options="subProblem.title for subProblem in subProblems track by subProblem.id"
       ng-change="subProblemChanged(subProblem)"></select>
     <inline-help help-key="problem"></inline-help>
-    <a id="edit-subproblem-button" ng-if="editMode.isUserOwner" ng-click="editSubProblemTitle()" tooltip="Edit current problem title">
+    <a id="edit-subproblem-button" ng-if="editMode.canEdit" ng-click="editSubProblemTitle()" tooltip="Edit current problem title">
       <i class="fa fa-edit"></i>
     </a>
-    <a id="create-subproblem-button" ng-if="editMode.isUserOwner" ng-click="openCreateDialog()" tooltip="Create new problem">
+    <a id="create-subproblem-button" ng-if="editMode.canEdit" ng-click="openCreateDialog()" tooltip="Create new problem">
       <i class="fa fa-plus"></i>
     </a>
   </div>

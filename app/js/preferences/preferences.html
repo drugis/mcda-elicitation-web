@@ -5,11 +5,11 @@
       ng-options="scenario.title for scenario in scenarios track by scenario.id"
       ng-change="scenarioChanged(scenario)"></select>
     <inline-help help-key="scenario"></inline-help>
-    <a id="edit-scenario-button" ng-if="editMode.isUserOwner" ng-click="editScenarioTitle()"
+    <a id="edit-scenario-button" ng-if="editMode.canEdit" ng-click="editScenarioTitle()"
       tooltip="Edit current scenario title"><i class="fa fa-edit"></i></a>
-    <a id="create-scenario-button" ng-if="editMode.isUserOwner" ng-click="newScenario()"
+    <a id="create-scenario-button" ng-if="editMode.canEdit" ng-click="newScenario()"
       tooltip="Create clean scenario"><i class="fa fa-plus"></i></a>
-    <a id="copy-scenario-button" ng-if="editMode.isUserOwner" ng-click="copyScenario()"
+    <a id="copy-scenario-button" ng-if="editMode.canEdit" ng-click="copyScenario()"
       tooltip="Copy current scenario"><i class="fa fa-copy"></i></a>
   </div>
 </div>

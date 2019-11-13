@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="cell" style="text-align: center;">
-        <button id="{{ criterion.id }}-pvf-button" class="button" ng-if="editMode.isUserOwner"
+        <button id="{{ criterion.id }}-pvf-button" class="button" ng-if="editMode.canEdit"
           ng-class="{alert: !isSafe['partial-value-function'].safe}"
           tooltip="{{isSafe['partial-value-function'].tooltip}}" tooltip-animation="false"
           ng-disabled="!isAccessible(tasks['partial-value-function']).accessible"

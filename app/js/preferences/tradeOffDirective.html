@@ -38,7 +38,7 @@
   <div class="cell" ng-if="!criteriaHavePvf">
     <em>Not all partial value functions are defined</em>
   </div>
-  <div class="cell large-4 button-group" ng-if="editMode.isUserOwner">
+  <div class="cell large-4 button-group" ng-if="editMode.canEdit">
     <button id="reset-button" class="button alert" ng-click="resetWeights()" tooltip="Reset all weight preferences"
       ng-disabled="!problem.preferences.length" id="resetWeightsButton">
       Reset weights
