@@ -69,5 +69,5 @@ module.exports = {
     workspaceService.deleteFromList(browser, title);
     errorService.isErrorBarHidden(browser);
     browser.end();
-  }
+  },
 };

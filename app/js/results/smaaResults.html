@@ -6,7 +6,6 @@
   </div>
 </div>
 <div ng-if="state.results">
-
   <div class="grid-x">
     <div class="cell large-3">
       Scenario:
@@ -28,14 +27,14 @@
       <div class="grid-x">
         <div class="cell">
           <label>
-            <input type="checkbox" ng-model="scenario.state.uncertaintyOptions.measurements"
+            <input id="uncertainty-measurements-checkbox" type="checkbox" ng-model="scenario.state.uncertaintyOptions.measurements"
               ng-change="uncertaintyOptionsChanged()" ng-disabled="hasNoStochasticMeasurements">
             measurements
           </label>
         </div>
         <div class="cell">
           <label>
-            <input type="checkbox" ng-model="scenario.state.uncertaintyOptions.weights"
+            <input id="uncertainty-weights-checkbox" type="checkbox" ng-model="scenario.state.uncertaintyOptions.weights"
               ng-change="uncertaintyOptionsChanged()" ng-disabled="hasNoStochasticWeights">
             weights
           </label>
@@ -43,16 +42,13 @@
       </div>
     </div>
     <div class="cell">
-      <button class="button" ng-disabled="!uncertaintyOptions.dirty" ng-click="recalculateSmaa()">Recalculate</button>
+      <button id="recalculate-button" class="button" ng-disabled="!uncertaintyOptions.dirty" ng-click="recalculateSmaa()">Recalculate</button>
     </div>
-    <div ng-if="warnings.length" ng-repeat="warning in warnings" class="cell">
+    <div id="warning-{{ $index }}" ng-if="warnings.length" ng-repeat="warning in warnings" class="cell">
       <i class="fa fa-exclamation-triangle"></i> {{ warning }}
     </div>
-
   </div>
-
   <br>
-
   <div class="grid-x underlined-div">
     <div class="cell">
       <smaa-table state="aggregateState" criteria="criteria" alternatives="alternatives"
