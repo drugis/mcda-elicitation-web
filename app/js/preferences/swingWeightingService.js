@@ -36,7 +36,7 @@ define(['lodash', 'angular', '..//controllers/wizard'], function(_, angular, Wiz
       scope.$on('elicit.settingsChanged', function() {
         resetWizard();
       });
-      resetWizard();
+      scope.scalesPromise.then(resetWizard);
 
       function resetWizard() {
         var state = WorkspaceSettingsService.usePercentage() ? scope.aggregateState.percentified : scope.aggregateState.dePercentified;

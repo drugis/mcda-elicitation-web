@@ -37,7 +37,7 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
     $scope.pvf = PartialValueFunctionService;
     $scope.$on('elicit.settingsChanged', resetWizard);
 
-    resetWizard();
+    $scope.scalesPromise.then(resetWizard);
 
     function updatePlot(criterion) {
       $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinatesForCriterion(criterion);

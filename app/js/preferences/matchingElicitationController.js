@@ -29,9 +29,11 @@ define(['lodash'],
           return value + '%';
         }
       };
-
-      var values = _.mapValues($scope.aggregateState.problem.criteria, function() {
-        return -100;
+      var values;
+      $scope.scalesPromise.then(function() {
+        values = _.mapValues($scope.aggregateState.problem.criteria, function() {
+          return -100;
+        });
       });
 
       function getValues() {
