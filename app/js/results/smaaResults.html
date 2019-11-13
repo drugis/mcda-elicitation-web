@@ -6,15 +6,53 @@
   </div>
 </div>
 <div ng-if="state.results">
+
   <div class="grid-x">
-    <div class="cell">
-      <span>Scenario:</span>
-      <select id="scenario-selector" class="scenario-select" ng-model="scenario"
-        ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
-        ng-change="scenarioChanged(scenario)"></select>
+    <div class="cell large-3">
+      Scenario:
+      <br><br>
+    </div>
+    <div class="cell large-9">
+      <select id="scenario-selector" class="scenario-select ng-pristine ng-valid ng-not-empty ng-touched"
+        ng-model="scenario" ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
+        ng-change="scenarioChanged(scenario)">
+      </select>
     </div>
   </div>
+  <div class="grid-x underlined-div">
+    <br><br>
+    <div class="cell large-3">
+      Take into account uncertainty in:
+    </div>
+    <div class="cell large-9">
+      <div class="grid-x">
+        <div class="cell">
+          <label>
+            <input type="checkbox" ng-model="scenario.state.uncertaintyOptions.measurements"
+              ng-change="uncertaintyOptionsChanged()" ng-disabled="hasNoStochasticMeasurements">
+            measurements
+          </label>
+        </div>
+        <div class="cell">
+          <label>
+            <input type="checkbox" ng-model="scenario.state.uncertaintyOptions.weights"
+              ng-change="uncertaintyOptionsChanged()" ng-disabled="hasNoStochasticWeights">
+            weights
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="cell">
+      <button class="button" ng-disabled="!uncertaintyOptions.dirty" ng-click="recalculateSmaa()">Recalculate</button>
+    </div>
+    <div ng-if="warnings.length" ng-repeat="warning in warnings" class="cell">
+      <i class="fa fa-exclamation-triangle"></i> {{ warning }}
+    </div>
+
+  </div>
+
   <br>
+
   <div class="grid-x underlined-div">
     <div class="cell">
       <smaa-table state="aggregateState" criteria="criteria" alternatives="alternatives"

@@ -20,12 +20,12 @@ define(['lodash'], function(_) {
         },
         preferences: getPreferencesTabStatus(stateName, hasMissingValues, tasksAccessibility),
         deterministic: getDeterministicTabStatus(stateName, hasMissingValues, tasksAccessibility),
-        smaa: getSmaaTabStatus(stateName, hasMissingValues, aggregateState, tasksAccessibility)
+        smaa: getSmaaTabStatus(stateName, hasMissingValues, tasksAccessibility)
       };
     }
 
-    function getSmaaTabStatus(stateName, hasMissingValues, aggregateState, tasksAccessibility) {
-      var status = getSmaaEnabledStatus(hasMissingValues, aggregateState, tasksAccessibility);
+    function getSmaaTabStatus(stateName, hasMissingValues, tasksAccessibility) {
+      var status = getSmaaEnabledStatus(hasMissingValues, tasksAccessibility);
       return {
         enabled: status.enabled,
         tooltip: status.tooltip,
@@ -33,8 +33,7 @@ define(['lodash'], function(_) {
       };
     }
 
-    function getSmaaEnabledStatus(hasMissingValues, aggregateState, tasksAccessibility) {
-      var hasNoStochasticResults = WorkspaceService.hasNoStochasticResults(aggregateState);
+    function getSmaaEnabledStatus(hasMissingValues, tasksAccessibility) {
       if (hasMissingValues) {
         return {
           enabled: false,
@@ -49,11 +48,6 @@ define(['lodash'], function(_) {
         return {
           enabled: false,
           tooltip: 'Cannot perform analysis because not all partial value functions are set'
-        };
-      } else if (tasksAccessibility.results && hasNoStochasticResults) {
-        return {
-          enabled: false,
-          tooltip: 'Cannot perform analysis because neither the criteria measurements nor the weights are stochastic'
         };
       } else {
         return {

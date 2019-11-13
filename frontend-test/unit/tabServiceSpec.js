@@ -3,8 +3,7 @@ define(['angular', 'angular-mocks'], function(angular) {
   describe('TabService', function() {
     var tabService;
     var workspaceServiceMock = jasmine.createSpyObj('WorkspaceService', [
-      'checkForMissingValuesInPerformanceTable',
-      'hasNoStochasticResults'
+      'checkForMissingValuesInPerformanceTable'
     ]);
 
     beforeEach(function() {
@@ -23,17 +22,12 @@ define(['angular', 'angular-mocks'], function(angular) {
       var tasksAccessibility;
 
       beforeEach(() => {
-        workspaceServiceMock.hasNoStochasticResults.and.returnValue(false);
         workspaceServiceMock.checkForMissingValuesInPerformanceTable.and.returnValue(false);
         stateName = 'evidence';
         tasksAccessibility = {
           results: true,
           preferences: true
         };
-      });
-
-      afterEach(() => {
-        workspaceServiceMock.hasNoStochasticResults.calls.reset();
       });
 
       var defaultExpectedResult = {
@@ -107,18 +101,6 @@ define(['angular', 'angular-mocks'], function(angular) {
         expectedResult.deterministic.tooltip = 'Cannot perform analysis because effects table contains missing values';
         expectedResult.smaa.enabled = false;
         expectedResult.smaa.tooltip = 'Cannot perform analysis because effects table contains missing values';
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should disable the smaa tab if the criteria measurements nor the weights are stochastic', function() {
-        workspaceServiceMock.hasNoStochasticResults.and.returnValue(true);
-
-        const result = tabService.getTabStatus(stateName, aggregateState, tasksAccessibility);
-
-        var expectedResult = angular.copy(defaultExpectedResult);
-        expectedResult.overview.active = true;
-        expectedResult.smaa.enabled = false;
-        expectedResult.smaa.tooltip = 'Cannot perform analysis because neither the criteria measurements nor the weights are stochastic';
         expect(result).toEqual(expectedResult);
       });
 

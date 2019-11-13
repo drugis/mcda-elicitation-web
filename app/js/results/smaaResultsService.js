@@ -119,7 +119,8 @@ define([
       var nextState = {
         problem: _.merge({}, getProblem(state.problem), {
           preferences: state.prefs,
-          method: 'smaa'
+          method: 'smaa',
+          uncertaintyOptions: scope.scenario.state.uncertaintyOptions
         }),
         selectedAlternative: _.keys(state.problem.alternatives)[0],
         selectedRank: '0'
@@ -339,11 +340,29 @@ define([
       });
     }
 
+    function hasNoStochasticMeasurements(aggregateState) {
+      return !_.some(aggregateState.problem.performanceTable, function(tableEntry) {
+        return tableEntry.performance.distribution && tableEntry.performance.distribution.type !== 'exact';
+      });
+    }
+
+    function hasNoStochasticWeights(aggregateState) {
+      return aggregateState.prefs && aggregateState.prefs.length !== 0 && areAllPreferencesExact(aggregateState);
+    }
+
+    function areAllPreferencesExact(aggregateState) {
+      return !_.some(aggregateState.prefs, function(pref) {
+        return pref.type !== 'exact swing';
+      });
+    }
+
     return {
       getBarChartSettings: getBarChartSettings,
       getCentralWeightsPlotSettings: getCentralWeightsPlotSettings,
       getRankPlotSettings: getRankPlotSettings,
       getResults: getResults,
+      hasNoStochasticMeasurements: hasNoStochasticMeasurements,
+      hasNoStochasticWeights: hasNoStochasticWeights,
       addSmaaResults: addSmaaResults,
       replaceAlternativeNames: replaceAlternativeNames
     };
