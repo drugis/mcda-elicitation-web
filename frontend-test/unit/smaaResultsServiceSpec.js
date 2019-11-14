@@ -465,6 +465,12 @@ define([
                   type: 'not exact'
                 }
               }
+            }, {
+              performance: {
+                distribution: {
+                  type: 'exact'
+                }
+              }
             }]
           }
         };

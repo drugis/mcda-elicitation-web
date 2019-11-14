@@ -54,20 +54,20 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     }
 
     function initUncertaintyOptions() {
-      $scope.hasNoStochasticMeasurements = SmaaResultsService.hasNoStochasticMeasurements($scope.aggregateState);
-      $scope.hasNoStochasticWeights = SmaaResultsService.hasNoStochasticWeights($scope.aggregateState);
+      $scope.noStochasticMeasurements = SmaaResultsService.hasNoStochasticMeasurements($scope.aggregateState);
+      $scope.noStochasticWeights = SmaaResultsService.hasNoStochasticWeights($scope.aggregateState);
 
       if (!$scope.scenario.state.uncertaintyOptions) {
         $scope.scenario.state.uncertaintyOptions = {
-          measurements: !$scope.hasNoStochasticMeasurements,
-          weights: !$scope.hasNoStochasticWeights
+          measurements: !$scope.noStochasticMeasurements,
+          weights: !$scope.noStochasticWeights
         };
       }
 
-      if ($scope.hasNoStochasticMeasurements) {
+      if ($scope.noStochasticMeasurements) {
         $scope.warnings.push(hasNoStochasticMeasurementsWarning);
       }
-      if ($scope.hasNoStochasticWeights) {
+      if ($scope.noStochasticWeights) {
         $scope.warnings.push(hasNoStochasticWeightsWarning);
       }
       uncertaintyOptionsChanged();

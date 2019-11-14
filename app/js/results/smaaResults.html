@@ -12,7 +12,7 @@
       <br><br>
     </div>
     <div class="cell large-9">
-      <select id="scenario-selector" class="scenario-select ng-pristine ng-valid ng-not-empty ng-touched"
+      <select id="scenario-selector" class="scenario-select"
         ng-model="scenario" ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
         ng-change="scenarioChanged(scenario)">
       </select>
@@ -28,14 +28,14 @@
         <div class="cell">
           <label>
             <input id="uncertainty-measurements-checkbox" type="checkbox" ng-model="scenario.state.uncertaintyOptions.measurements"
-              ng-change="uncertaintyOptionsChanged()" ng-disabled="hasNoStochasticMeasurements">
+              ng-change="uncertaintyOptionsChanged()" ng-disabled="noStochasticMeasurements">
             measurements
           </label>
         </div>
         <div class="cell">
           <label>
             <input id="uncertainty-weights-checkbox" type="checkbox" ng-model="scenario.state.uncertaintyOptions.weights"
-              ng-change="uncertaintyOptionsChanged()" ng-disabled="hasNoStochasticWeights">
+              ng-change="uncertaintyOptionsChanged()" ng-disabled="noStochasticWeights">
             weights
           </label>
         </div>
