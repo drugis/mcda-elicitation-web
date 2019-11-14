@@ -13,7 +13,7 @@ module.exports = {
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     browser.waitForElementVisible('#empty-workspace-message');
     workspaceService.addExample(browser, title);
-    workspaceService.deleteFromList(browser, title);
+    workspaceService.deleteFromList(browser, 0);
     browser.waitForElementVisible('#empty-workspace-message');
     errorService.isErrorBarHidden(browser);
     browser.end();

@@ -46,7 +46,7 @@ module.exports = {
     workspaceService.addExample(browser, title);
 
     browser
-      .click('a[id="' + title + '"]')
+      .click('#workspace-0')
       .waitForElementVisible('#workspace-title')
       .click('#smaa-tab')
       .waitForElementVisible('#smaa-measurements-header')
@@ -66,7 +66,7 @@ module.exports = {
     checkRankTable(browser);
 
     browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();
   }

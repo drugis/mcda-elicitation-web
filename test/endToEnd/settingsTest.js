@@ -84,13 +84,13 @@ module.exports = {
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     workspaceService.addExample(browser, title);
     browser
-      .click('a[id="' + title + '"]')
+      .click('#workspace-0')
       .waitForElementVisible('#workspace-title');
   },
 
   afterEach: function(browser) {
     browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();
   },
@@ -344,8 +344,8 @@ module.exports = {
   },
 
   'Switching settings in the preferences tab': function(browser) {
-    var effectCellPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[3]/div/div/div[2]/individual-scenario/trade-off/div/div[2]/table/tbody/tr[1]/td[4]';
-    var unitsCellPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[3]/div/div/div[2]/individual-scenario/trade-off/div/div[2]/table/tbody/tr[1]/td[3]';
+    var effectCellPath = '//*[@id="trade-off-block"]/div[2]/table/tbody/tr[1]/td[4]';
+    var unitsCellPath = '//*[@id="trade-off-block"]/div[2]/table/tbody/tr[1]/td[3]';
 
     browser
       .useXpath()

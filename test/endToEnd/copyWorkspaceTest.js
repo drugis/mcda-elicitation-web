@@ -13,9 +13,9 @@ module.exports = {
 
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     workspaceService.addExample(browser, title);
-    workspaceService.copy(browser, title, newTitle);
-    workspaceService.deleteFromList(browser, newTitle);
-    workspaceService.deleteFromList(browser, title);
+    workspaceService.copy(browser, 0, newTitle);
+    workspaceService.deleteFromList(browser, 1);
+    workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();
   }

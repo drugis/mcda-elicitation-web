@@ -39,13 +39,13 @@ module.exports = {
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     workspaceService.addExample(browser, title);
     browser
-      .click('a[id="' + title + '"]')
+      .click('#workspace-0')
       .waitForElementVisible('#workspace-title');
   },
 
   afterEach: function(browser) {
     browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();
   },

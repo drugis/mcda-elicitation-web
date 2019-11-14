@@ -41,7 +41,7 @@ module.exports = {
   afterEach: function(browser) {
     errorService.isErrorBarHidden(browser);
     browser.pause(50).click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();
   },

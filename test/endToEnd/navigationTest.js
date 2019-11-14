@@ -36,12 +36,12 @@ module.exports = {
     const title = 'GetReal course LU 4, activity 4.4';
     workspaceService.addExample(browser, title);
     browser
-      .click('a[id="' + title + '"]')
+      .click('#workspace-0')
       .waitForElementVisible('#workspace-title')
       .pause(100)
       .click('#user-image-link')
       .waitForElementVisible('#create-workspace-button');
-    workspaceService.deleteFromList(browser, title);
+    workspaceService.deleteFromList(browser, 0);
   },
 
   'Navigate to problem that does not exists through URL manipulation': function(browser) {
