@@ -37,7 +37,7 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
     $scope.pvf = PartialValueFunctionService;
     $scope.$on('elicit.settingsChanged', resetWizard);
 
-    resetWizard();
+    $scope.scalesPromise.then(resetWizard);
 
     function updatePlot(criterion) {
       $scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinatesForCriterion(criterion);
@@ -115,8 +115,8 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
             to: to
           },
           sliderOptions: {
-            floor: Math.min(from, to) + 0.001,
-            ceil: Math.max(from, to) - 0.001,
+            floor: Math.min(from, to) + Math.abs(to - from) / 100,
+            ceil: Math.max(from, to) - Math.abs(to - from) / 100,
             precision: 10,
             step: Math.abs(to - from) / 100,
             rightToLeft: to < from,

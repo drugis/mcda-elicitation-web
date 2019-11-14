@@ -26,6 +26,11 @@ define([
         var scope;
         scope = $rootScope.$new();
         scope.scenario = jasmine.createSpyObj('scenario', ['$save']);
+        scope.scalesPromise = {
+          then: function(fn) {
+            fn();
+          }
+        };
         var task = {
           requires: [],
           resets: []

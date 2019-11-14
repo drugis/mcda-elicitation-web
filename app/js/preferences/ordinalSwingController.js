@@ -37,7 +37,7 @@ define(['lodash', '../controllers/wizard'], function(_, Wizard) {
     });
 
     PageTitleService.setPageTitle('OrdinalSwingController', 'Ranking');
-    resetWizard();
+    $scope.scalesPromise.then(resetWizard);
 
     function resetWizard() {
       $scope.problem = WorkspaceSettingsService.usePercentage() ? $scope.aggregateState.percentified.problem : $scope.aggregateState.dePercentified.problem;

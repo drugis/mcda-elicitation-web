@@ -9,7 +9,7 @@ const testUrl = require('./util/constants').testUrl;
 function loadTestWorkspace(browser, title) {
   workspaceService.addExample(browser, title);
   browser
-    .click('a[id="' + title + '"]')
+    .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
 
   errorService.isErrorBarHidden(browser);
@@ -45,7 +45,7 @@ module.exports = {
 
   afterEach: function(browser) {
     browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();
   },

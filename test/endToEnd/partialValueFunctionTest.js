@@ -5,7 +5,6 @@ const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
 const testUrl = require('./util/constants').testUrl;
-const title = 'Test workspace';
 const workspacePath = '/partialValueFunctionTestProblem.json';
 
 module.exports = {
@@ -20,7 +19,7 @@ module.exports = {
 
   afterEach: function(browser) {
     browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();
 

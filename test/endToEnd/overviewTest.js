@@ -13,15 +13,10 @@ const heparinAlternative = '#alternative-title-cfcdf6df-f231-4c3d-be83-64aa28d8d
 function loadTestWorkspace(browser, title) {
   workspaceService.addExample(browser, title);
   browser
-    .click('a[id="' + title + '"]')
+    .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
 
   errorService.isErrorBarHidden(browser);
-}
-
-function cleanUpWorkspace(browser, title) {
-  browser.click('#logo');
-  workspaceService.deleteFromList(browser, title);
 }
 
 module.exports = {
@@ -31,6 +26,8 @@ module.exports = {
   },
 
   afterEach: function(browser) {
+    browser.click('#logo');
+    workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();
   },
@@ -48,8 +45,6 @@ module.exports = {
       .useXpath()
       .assert.containsText(firstDistalDVTValue, '40 / 136')
       .useCss();
-
-    cleanUpWorkspace(browser, title);
   },
 
   'Editing the therapeutic context': function(browser) {
@@ -62,8 +57,6 @@ module.exports = {
       .setValue('#therapeutic-context-input', 'new context')
       .click('#save-button')
       .assert.containsText('#therapeutic-context', 'new context');
-
-    cleanUpWorkspace(browser, title);
   },
 
   'Editing a criterion': function(browser) {
@@ -84,8 +77,6 @@ module.exports = {
       .click('#add-criterion-confirm-button')
       .assert.containsText(proximalDVTCriterionTitle, newTitle)
       .assert.containsText(proximalDVTCriterionDescription, newDescription);
-
-    cleanUpWorkspace(browser, title);
   },
 
   'Editing a data source': function(browser) {
@@ -125,8 +116,6 @@ module.exports = {
       .assert.containsText(dataSourceReferenceWithLink, newReference)
       .assert.containsText(soeUnc, 'SoE: ' + newStrength + '\nUnc: ' + newUncertainties)
       .assert.containsText(unitOfMeasurement, newUnit);
-
-    cleanUpWorkspace(browser, zinbryta);
   },
 
   'Editing an alternative': function(browser) {
@@ -141,8 +130,6 @@ module.exports = {
       .setValue('#alternative-title', newTitle)
       .click('#save-alternative-button')
       .assert.containsText(heparinAlternative, newTitle);
-
-    cleanUpWorkspace(browser, title);
   },
 
   'Editing the workspace title': function(browser) {
@@ -154,8 +141,6 @@ module.exports = {
       .clearValue('#workspace-title-input')
       .setValue('#workspace-title-input', newTitle)
       .click('#save-workspace-title-button');
-
-    cleanUpWorkspace(browser, newTitle);
   },
 
   'Reordering criteria': function(browser) {
@@ -175,8 +160,6 @@ module.exports = {
       .useXpath()
       .assert.containsText(firstCriterionTitle, 'Proximal DVT')
       .useCss();
-
-    cleanUpWorkspace(browser, title);
   },
 
   'Reordering alternatives': function(browser) {
@@ -198,8 +181,6 @@ module.exports = {
       .useXpath()
       .assert.containsText(firstAlternativeTitle, 'Heparin')
       .useCss();
-
-    cleanUpWorkspace(browser, title);
   },
 
   'Reordering data sources': function(browser) {
@@ -223,7 +204,5 @@ module.exports = {
       .useXpath()
       .assert.containsText(firstReference, 'ref1')
       .useCss();
-
-    cleanUpWorkspace(browser, 'Test workspace');
   }
 };

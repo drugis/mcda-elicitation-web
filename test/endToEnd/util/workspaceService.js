@@ -31,18 +31,18 @@ function addTutorial(browser, title) {
   goHomeAfterLoading(browser, title);
 }
 
-function copy(browser, title, newTitle) {
+function copy(browser, index, newTitle) {
   browser
-    .click('a[id="copy-workspace-' + title + '"]')
+    .click('#copy-workspace-' + index)
     .setValue('#workspace-title', newTitle)
     .click('#enter-data-button')
     .click('#done-button').pause(500);
   goHomeAfterLoading(browser, newTitle);
 }
 
-function deleteFromList(browser, title) {
+function deleteFromList(browser, index) {
   browser
-    .click('a[id="delete-workspace-' + title + '"]')
+    .click('#delete-workspace-' + index)
     .click('#delete-workspace-confirm-button');
   errorService.isErrorBarHidden(browser);
 }
@@ -58,9 +58,9 @@ function uploadTestWorkspace(browser, path) {
   errorService.isErrorBarHidden(browser);
 }
 
-function deleteUnfinishedFromList(browser, title) {
+function deleteUnfinishedFromList(browser, index) {
   browser
-    .click('a[id="delete-in-progress-workspace-' + title + '"]')
+    .click('#delete-in-progress-workspace-' + index)
     .click('#delete-workspace-confirm-button');
   errorService.isErrorBarHidden(browser);
 }

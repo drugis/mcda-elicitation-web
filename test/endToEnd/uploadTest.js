@@ -18,7 +18,7 @@ module.exports = {
       .assert.containsText('#workspace-title', title)
       .click('#logo');
 
-    workspaceService.deleteFromList(browser, title);
+    workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();
   },

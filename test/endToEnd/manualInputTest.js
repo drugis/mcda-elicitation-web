@@ -136,7 +136,7 @@ module.exports = {
       .waitForElementVisible('#create-workspace-button');
 
     errorService.isErrorBarHidden(browser);
-    workspaceService.deleteFromList(browser, title);
+    workspaceService.deleteFromList(browser, 0);
   },
 
   'Editing a criterion': function(browser) {
@@ -295,7 +295,7 @@ module.exports = {
       .useCss();
 
     browser.click('#logo');
-    workspaceService.deleteUnfinishedFromList(browser, title);
+    workspaceService.deleteUnfinishedFromList(browser, 0);
   },
 
   'Saving during step 2': function(browser) {
@@ -309,29 +309,29 @@ module.exports = {
       .waitForElementVisible('#manual-input-header-step2');
 
     browser.click('#logo');
-    workspaceService.deleteUnfinishedFromList(browser, title);
+    workspaceService.deleteUnfinishedFromList(browser, 0);
   },
 
   'Delete a saved workspace': function(browser) {
     createInputDefault(browser);
     browser.click('#step1-save-button');
     browser.click('#logo');
-    workspaceService.deleteUnfinishedFromList(browser, title);
+    workspaceService.deleteUnfinishedFromList(browser, 0);
   },
 
   'Continuing working on a saved workspace': function(browser) {
     createInputDefault(browser);
     browser.click('#step1-save-button')
       .click('#logo')
-      .waitForElementVisible('a[id="in-progress-workspace-title-' + title + '"]')
-      .click('a[id="in-progress-workspace-title-' + title + '"]')
+      .waitForElementVisible('#in-progress-workspace-0')
+      .click('#in-progress-workspace-0')
       .waitForElementVisible('#manual-input-header-step1')
       .useXpath()
       .assert.containsText(criterion1TitlePath, criterion1.title)
       .useCss();
 
     browser.click('#logo');
-    workspaceService.deleteUnfinishedFromList(browser, title);
+    workspaceService.deleteUnfinishedFromList(browser, 0);
   },
 
   'Changing unit of measurement': function(browser) {
