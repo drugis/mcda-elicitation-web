@@ -13,7 +13,6 @@ define([
   var dependencies = ['PataviResultsService'];
 
   var SmaaResultsService = function(PataviResultsService) {
-
     function run($scope, inState) {
       var state = angular.copy(inState);
       state.problem.criteria = mergeDataSourceOntoCriterion(state.problem.criteria);
@@ -351,8 +350,11 @@ define([
     }
 
     function areAllPreferencesExact(aggregateState) {
+      const notExactPrefs = ['ordinal', 'ratio bound'];
       return !_.some(aggregateState.prefs, function(pref) {
-        return pref.type !== 'exact swing';
+        return _.some(notExactPrefs, function(prefType){
+          return pref.type === prefType;
+        });
       });
     }
 

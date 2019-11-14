@@ -521,7 +521,7 @@ define([
       it('should return false if there are any weights that are not exact swing', function() {
         const aggregateState = {
           prefs: [{
-            type: 'not swing'
+            type: 'ordinal'
           }]
         };
         const result = resultsService.hasNoStochasticWeights(aggregateState);
