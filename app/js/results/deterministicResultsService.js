@@ -45,18 +45,6 @@ define([
       });
     }
 
-    function getResults(scope, state) {
-      var nextState = {
-        problem: _.merge({}, getProblem(state.problem), {
-          preferences: state.prefs,
-          method: 'smaa'
-        }),
-        selectedAlternative: _.keys(state.problem.alternatives)[0],
-        selectedRank: '0'
-      };
-      return run(scope, nextState);
-    }
-
     function getProblem(problem) {
       var newProblem = angular.copy(problem);
       newProblem.performanceTable = _.map(problem.performanceTable, createEntry);
@@ -300,7 +288,7 @@ define([
     }
 
     return {
-      getResults: getResults,
+      // getResults: getResults,
       resetModifiableScales: resetModifiableScales,
       getSensitivityLineChartSettings: getSensitivityLineChartSettings,
       getValueProfilePlotSettings: getValueProfilePlotSettings,

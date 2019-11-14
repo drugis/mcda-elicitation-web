@@ -1,11 +1,11 @@
-<div ng-if="!state.results">
-  <div class="grid-x" style="margin-top: 15em">
+<div ng-if="!deterministicResults.problem">
+  <div class="grid-x">
     <div class="cell">
-      <progressbar value="progress"></progressbar>
+      <a class="fa fa-spinner fa-2x fa-spin"></a>
     </div>
   </div>
 </div>
-<div ng-if="state.results">
+<div ng-if="deterministicResults.problem">
   <div class="grid-x">
     <div class="cell">
       <span>Scenario:</span>

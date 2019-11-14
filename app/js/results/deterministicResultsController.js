@@ -81,7 +81,6 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
       initSensitivityDropdowns();
 
       $scope.deterministicResults = DeterministicResultsService.getDeterministicResults($scope, stateWithAlternativesRenamed);
-      $scope.state = DeterministicResultsService.getResults($scope, stateWithAlternativesRenamed);
     }
 
     function initSensitivityDropdowns() {

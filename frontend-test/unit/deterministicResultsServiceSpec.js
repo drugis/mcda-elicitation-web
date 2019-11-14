@@ -262,7 +262,7 @@ define([
             }
           },
           legend: {
-            position: 'inset'
+            position: 'bottom'
           }
         };
         expect(settings).toEqual(expectedSettings);
@@ -310,7 +310,7 @@ define([
             }
           },
           legend: {
-            position: 'inset'
+            position: 'bottom'
           }
         };
         expect(settings).toEqual(expectedSettings);
