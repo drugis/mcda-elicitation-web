@@ -19,12 +19,12 @@ define([
           width: '='
         },
         templateUrl: './partialValuePlotDirective.html',
-        link: function(scope) {
+        link: function(scope, element) {
           scope.$watch('values', function(newVal) {
             if (!newVal) {
               return;
             } else {
-              var root = d3.select('#partial-value-plot-' + scope.criterion.id);
+              var root = d3.select(element[0]).select('.partial-value-plot');
               root
                 .style('width', scope.width)
                 .style('height', scope.height);
