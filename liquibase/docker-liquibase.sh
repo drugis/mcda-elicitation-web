@@ -10,9 +10,10 @@
 #  cat liquibase.properties
 
 docker run --rm -v $(pwd):/liquibase/ \
-  -e "LIQUIBASE_URL=jdbc:postgresql://psql-test.drugis.org:5432/mcdaweb" \
+  --network host \
+  -e "LIQUIBASE_URL=jdbc:postgresql://localhost:5432/mcdaweb" \
   -e "LIQUIBASE_USERNAME=mcdaweb" \
-  -e "LIQUIBASE_PASSWORD=" \
+  -e "LIQUIBASE_PASSWORD=develop" \
   -e "LIQUIBASE_CHANGELOG=liquibase-changelog.sql" \
   webdevops/liquibase:postgres \
   $@

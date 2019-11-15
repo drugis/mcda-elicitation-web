@@ -535,7 +535,7 @@ define([
         const result = resultsService.hasNoStochasticWeights(aggregateState);
         expect(result).toBeFalsy();
       });
-      
+
       it('should return false for legacy empty initialisations of aggregateState', function() {
         const aggregateState = {
           prefs: {}

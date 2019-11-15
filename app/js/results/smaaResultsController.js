@@ -71,6 +71,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
         $scope.warnings.push(hasNoStochasticWeightsWarning);
       }
       uncertaintyOptionsChanged();
+      $scope.uncertaintyOptions.dirty = false;
     }
 
     function uncertaintyOptionsChanged() {

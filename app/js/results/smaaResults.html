@@ -29,14 +29,14 @@
           <label>
             <input id="uncertainty-measurements-checkbox" type="checkbox" ng-model="scenario.state.uncertaintyOptions.measurements"
               ng-change="uncertaintyOptionsChanged()" ng-disabled="noStochasticMeasurements">
-            measurements
+            measurements <inline-help help-key="measurements-smaa-uncertainty"></inline-help>
           </label>
         </div>
         <div class="cell">
           <label>
             <input id="uncertainty-weights-checkbox" type="checkbox" ng-model="scenario.state.uncertaintyOptions.weights"
               ng-change="uncertaintyOptionsChanged()" ng-disabled="noStochasticWeights">
-            weights
+            weights <inline-help help-key="weights-smaa-uncertainty"></inline-help>
           </label>
         </div>
       </div>
