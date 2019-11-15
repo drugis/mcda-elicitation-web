@@ -25,6 +25,7 @@ define(['lodash'], function(_) {
 
         scope.rows = EffectsTableService.buildEffectsTable(scope.criteria);
         scope.nrAlternatives = _.keys(scope.alternatives).length;
+        scope.numberOfColumns = _.filter(scope.toggledColumns).length;
 
         scope.$on('elicit.settingsChanged', setProblem);
         scope.$watch('scales', roundScales, true);
