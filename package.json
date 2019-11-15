@@ -76,7 +76,6 @@
     "jquery": "~3.4.1",
     "karma": "4.4.1",
     "karma-chrome-launcher": "~3.1.0",
-    "karma-coverage": "^2.0.1",
     "karma-firefox-launcher": "~1.2.0",
     "karma-jasmine": "~2.0.1",
     "karma-junit-reporter": "~2.0.1",
@@ -100,7 +99,6 @@
     "webpack-merge": "^4.2.2"
   },
   "resolutions": {
-    "handlebars": "^4.3.0",
     "js-yaml": "3.13.1",
     "https-proxy-agent": "2.2.3",
     "d3": "5.12.0"
