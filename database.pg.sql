@@ -170,7 +170,7 @@ COMMIT;
 --rollback ALTER TABLE scenario ADD CONSTRAINT scenario_workspace_fkey FOREIGN KEY (workspace) REFERENCES workspace(id);
 --rollback COMMIT;
 
---changeset keijserj:20
+--changeset keijserj:21
 START TRANSACTION;
 WITH effectsDisplay AS (
   SELECT 
