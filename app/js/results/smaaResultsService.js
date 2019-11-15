@@ -346,7 +346,7 @@ define([
     }
 
     function hasNoStochasticWeights(aggregateState) {
-      return aggregateState.prefs && aggregateState.prefs.length !== 0 && areAllPreferencesExact(aggregateState);
+      return aggregateState.prefs && !_.isEmpty(aggregateState.prefs) && areAllPreferencesExact(aggregateState);
     }
 
     function areAllPreferencesExact(aggregateState) {

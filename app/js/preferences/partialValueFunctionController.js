@@ -140,7 +140,7 @@ define(['angular', 'lodash', '../controllers/wizard'], function(angular, _, Wiza
         dataSources: [standardizedDataSource]
       };
       currentScenario.state = {
-        prefs: {},
+        prefs: [],
         problem: {
           criteria: criteria
         }

@@ -168,7 +168,7 @@ describe('the scenario repository', function() {
     const title = 'title';
     const state = {
       problem: {},
-      prefs: {},
+      prefs: [],
       legend: {},
       uncertaintyOptions: {}
     };

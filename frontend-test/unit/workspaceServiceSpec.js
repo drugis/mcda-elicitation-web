@@ -619,7 +619,7 @@ define([
       it('should only return the scenarios in which all criteria have fully defined pvfs', function() {
         var scenarios = [{
           state: {
-            prefs: {}
+            prefs: []
           }
         }, {
           state: {
