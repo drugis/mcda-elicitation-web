@@ -327,10 +327,12 @@ sampleWeights <- function(preferences, crit, n, N) {
 
 getSmaaWeights <- function(params, crit, n, N) {
   weights <- sampleWeights(params$preferences, crit, n, N)
-  if (!params$uncertaintyOptions["weights"]) {
-    mean.weights <- colMeans(weights) 
-    for (i in 1:N) {
-      weights[i, ] <- mean.weights
+  if(!is.null(params$uncertaintyOptions)) {
+    if (!params$uncertaintyOptions["weights"]) {
+      mean.weights <- colMeans(weights) 
+      for (i in 1:N) {
+        weights[i, ] <- mean.weights
+      }
     }
   }
   return(weights)
@@ -338,14 +340,16 @@ getSmaaWeights <- function(params, crit, n, N) {
 
 getSmaaMeasurements <- function(params, N, crit) {
   meas <- sample.partialValues(params, N)
-  if (!params$uncertaintyOptions["measurements"]) {
-    median.meas <- genMedianMeasurements(params) 
-    pvf <- lapply(params$criteria, create.pvf)
-    for (criterion in crit) {
-      median.meas[,criterion] <- pvf[[criterion]](median.meas[,criterion])
-    }
-    for (i in 1:N) {
-      meas[i, , ] <- median.meas
+  if(!is.null(params$uncertaintyOptions)) {
+    if (!params$uncertaintyOptions["measurements"]) {
+      median.meas <- genMedianMeasurements(params) 
+      pvf <- lapply(params$criteria, create.pvf)
+      for (criterion in crit) {
+        median.meas[,criterion] <- pvf[[criterion]](median.meas[,criterion])
+      }
+      for (i in 1:N) {
+        meas[i, , ] <- median.meas
+      }
     }
   }
   return(meas)
