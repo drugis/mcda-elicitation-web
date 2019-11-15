@@ -13,6 +13,8 @@ define([
   var dependencies = ['PataviResultsService'];
 
   var SmaaResultsService = function(PataviResultsService) {
+    const NON_EXACT_PREFERENCE_TYPES = ['ordinal', 'ratio bound'];
+
     function run($scope, inState) {
       var state = angular.copy(inState);
       state.problem.criteria = mergeDataSourceOntoCriterion(state.problem.criteria);
@@ -333,9 +335,7 @@ define([
 
     function getCentralWeightsValues(results) {
       return _.map(results, function(result) {
-        return [result.key].concat(_.map(result.values, function(value) {
-          return value.y;
-        }));
+        return [result.key].concat(_.map(result.values, 'y'));
       });
     }
 
@@ -350,11 +350,8 @@ define([
     }
 
     function areAllPreferencesExact(aggregateState) {
-      const notExactPrefs = ['ordinal', 'ratio bound'];
       return !_.some(aggregateState.prefs, function(pref) {
-        return _.some(notExactPrefs, function(prefType){
-          return pref.type === prefType;
-        });
+        return NON_EXACT_PREFERENCE_TYPES.indexOf(pref.type) >= 0;
       });
     }
 

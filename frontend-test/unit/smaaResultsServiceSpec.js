@@ -508,7 +508,7 @@ define([
     });
 
     describe('hasNoStochasticWeights', function() {
-      it('should return true if there are no weights that are not exact swing', function() {
+      it('should return true if there are no weights that are stochastic', function() {
         const aggregateState = {
           prefs: [{
             type: 'exact swing'
@@ -518,7 +518,7 @@ define([
         expect(result).toBeTruthy();
       });
 
-      it('should return false if there are any weights that are not exact swing', function() {
+      it('should return false if there are any weights that are stochastic', function() {
         const aggregateState = {
           prefs: [{
             type: 'ordinal'
@@ -536,7 +536,7 @@ define([
         expect(result).toBeFalsy();
       });
 
-      it('should return false if there are no prefs', function() {
+      it('should return false if there are no preferences', function() {
         const aggregateState = {};
         const result = resultsService.hasNoStochasticWeights(aggregateState);
         expect(result).toBeFalsy();
