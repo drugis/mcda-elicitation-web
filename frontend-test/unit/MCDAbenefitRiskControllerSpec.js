@@ -24,7 +24,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
       'dePercentifyCriteria',
       'mergeBaseAndSubProblem',
       'setDefaultObservedScales',
-      'hasNoStochasticResults',
       'checkForMissingValuesInPerformanceTable'
     ]);
     var WorkspaceSettingsService = jasmine.createSpyObj('WorkspaceSetttingsService', ['usePercentage']);

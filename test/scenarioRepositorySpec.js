@@ -169,7 +169,8 @@ describe('the scenario repository', function() {
     const state = {
       problem: {},
       prefs: {},
-      legend: {}
+      legend: {},
+      uncertaintyOptions: {}
     };
     const queryInputValues = [state, title, scenarioId];
 

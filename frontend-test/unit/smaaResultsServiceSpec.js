@@ -332,8 +332,8 @@ define([
 
     describe('getRankPlotSettings', function() {
       const results = {
-        alt1: [1,2],
-        alt2: [3,4]
+        alt1: [1, 2],
+        alt2: [3, 4]
       };
       const alternatives = [{
         id: 'alt1',
@@ -452,6 +452,94 @@ define([
           }
         };
         expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('hasNoStochasticMeasurements', function() {
+      it('should return false if there is a performance that has a distribution that is not exact', function() {
+        const aggregateState = {
+          problem: {
+            performanceTable: [{
+              performance: {
+                distribution: {
+                  type: 'not exact'
+                }
+              }
+            }, {
+              performance: {
+                distribution: {
+                  type: 'exact'
+                }
+              }
+            }]
+          }
+        };
+        const result = resultsService.hasNoStochasticMeasurements(aggregateState);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return true if there is no performance that has a distribution that is not exact', function() {
+        const aggregateState = {
+          problem: {
+            performanceTable: [{
+              performance: {
+                distribution: {
+                  type: 'exact'
+                }
+              }
+            }]
+          }
+        };
+        const result = resultsService.hasNoStochasticMeasurements(aggregateState);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return true if there is no performance that has a distribution', function() {
+        const aggregateState = {
+          problem: {
+            performanceTable: [{
+              performance: {}
+            }]
+          }
+        };
+        const result = resultsService.hasNoStochasticMeasurements(aggregateState);
+        expect(result).toBeTruthy();
+      });
+    });
+
+    describe('hasNoStochasticWeights', function() {
+      it('should return true if there are no weights that are stochastic', function() {
+        const aggregateState = {
+          prefs: [{
+            type: 'exact swing'
+          }]
+        };
+        const result = resultsService.hasNoStochasticWeights(aggregateState);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return false if there are any weights that are stochastic', function() {
+        const aggregateState = {
+          prefs: [{
+            type: 'ordinal'
+          }]
+        };
+        const result = resultsService.hasNoStochasticWeights(aggregateState);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return false if there are no weights', function() {
+        const aggregateState = {
+          prefs: []
+        };
+        const result = resultsService.hasNoStochasticWeights(aggregateState);
+        expect(result).toBeFalsy();
+      });
+
+      it('should return false if there are no preferences', function() {
+        const aggregateState = {};
+        const result = resultsService.hasNoStochasticWeights(aggregateState);
+        expect(result).toBeFalsy();
       });
     });
   });
