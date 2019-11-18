@@ -111,7 +111,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
 
     function recalculateResults() {
       delete $scope.recalculatedDeterministicResults;
-      $scope.recalculatedDeterministicResults = DeterministicResultsService.getRecalculatedDeterministicResults($scope, $scope.state);
+      $scope.recalculatedDeterministicResults = DeterministicResultsService.getRecalculatedDeterministicResults($scope, $scope.deterministicResults);
     }
 
     function usePercentage(dataSource) {
