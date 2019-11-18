@@ -16,17 +16,15 @@ define([
         labels: '=',
         values: '='
       },
-      templateUrl: './rankPlotDirective.html',
       link: function(scope, element) {
         scope.$watch('values', function(results) {
           if (!results) {
             return;
           } else {
             var root = d3.select(element[0]);
-            root = root.select('#rank-plot');
             root
-            .style('width', '400px')
-            .style('height', '400px');
+              .style('width', '400px')
+              .style('height', '400px');
 
             var settings = SmaaResultsService.getRankPlotSettings(
               results,
