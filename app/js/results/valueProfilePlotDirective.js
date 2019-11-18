@@ -26,8 +26,8 @@ define([
             var root = d3.select(element[0]);
             root = root.select('#value-plot');
             root
-            .style('width', '400px')
-            .style('height', '400px');
+              .style('width', '400px')
+              .style('height', '400px');
             var settings = DeterministicResultsService.getValueProfilePlotSettings(
               results,
               scope.criteria,

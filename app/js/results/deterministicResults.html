@@ -85,13 +85,15 @@
         <div class="cell large-6">
           <table id="base-case-table">
             <thead>
-              <th ng-repeat="alternative in alternatives">{{scenario.state.legend[alternative.id].baseTitle ||
-                alternative.title}}</th>
+              <th ng-repeat="alternative in alternatives">
+                {{scenario.state.legend[alternative.id].baseTitle || alternative.title}}
+              </th>
             </thead>
             <tbody>
               <tr>
                 <td id="{{ alternative.id }}-base-case" ng-repeat="alternative in alternatives">
-                  {{deterministicResults.results.total.data[alternative.id] | number}}</td>
+                  {{deterministicResults.results.total.data[alternative.id] | number}}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -105,7 +107,8 @@
             <tbody>
               <tr>
                 <td id="{{ alternative.id }}-recalculated-case" ng-repeat="alternative in alternatives">
-                  {{recalculatedDeterministicResults.results.total.data[alternative.id] | number}}</td>
+                  {{recalculatedDeterministicResults.results.total.data[alternative.id] | number}}
+                </td>
               </tr>
             </tbody>
           </table>
