@@ -159,3 +159,93 @@ COMMIT;
 --rollback ALTER TABLE scenario DROP CONSTRAINT scenario_workspace_fkey;
 --rollback ALTER TABLE scenario ADD CONSTRAINT scenario_workspace_fkey FOREIGN KEY (workspace) REFERENCES workspace(id);
 --rollback COMMIT;
+
+--changeset keijserj:20
+START TRANSACTION;
+ALTER TABLE scenario DROP CONSTRAINT scenario_workspace_fkey;
+ALTER TABLE scenario ADD CONSTRAINT scenario_workspace_fkey FOREIGN KEY (workspace) REFERENCES workspace(id) ON DELETE CASCADE;
+COMMIT;
+--rollback START TRANSACTION;
+--rollback ALTER TABLE scenario DROP CONSTRAINT scenario_workspace_fkey;
+--rollback ALTER TABLE scenario ADD CONSTRAINT scenario_workspace_fkey FOREIGN KEY (workspace) REFERENCES workspace(id);
+--rollback COMMIT;
+
+--changeset keijserj:21
+START TRANSACTION;
+WITH effectsDisplay AS (
+  SELECT 
+    workspaceId, 
+    settings#>'{settings}'->>'effectsDisplay' AS displayValue 
+  FROM workspacesettings 
+  WHERE settings#>'{settings, effectsDisplay}' IS NOT NULL
+),
+newSettings AS (
+  SELECT 
+    workspaceId, 
+    CASE
+      WHEN displayValue = 'deterministic' THEN '{"displayMode": "enteredData"}'::jsonb
+      WHEN displayValue = 'sourceData' THEN '{"displayMode": "enteredData"}'::jsonb
+      WHEN displayValue = 'smaaDistributions' THEN '{"displayMode": "enteredData"}'::jsonb
+      WHEN displayValue = 'effects' THEN '{"displayMode": "values"}'::jsonb
+      WHEN displayValue = 'deterministicMCDA' THEN '{"displayMode": "values"}'::jsonb
+      WHEN displayValue = 'smaa' THEN '{"displayMode": "values"}'::jsonb
+    END AS displayMode,
+    CASE
+      WHEN displayValue = 'deterministic' THEN '{"analysisType": "deterministic"}'::jsonb
+      WHEN displayValue = 'sourceData' THEN '{"analysisType": "deterministic"}'::jsonb
+      WHEN displayValue = 'smaaDistributions' THEN '{"analysisType": "smaa"}'::jsonb
+      WHEN displayValue = 'effects' THEN '{"analysisType": "deterministic"}'::jsonb
+      WHEN displayValue = 'deterministicMCDA' THEN '{"analysisType": "deterministic"}'::jsonb
+      WHEN displayValue = 'smaa' THEN '{"analysisType": "smaa"}'::jsonb
+    END AS analysisType
+  FROM effectsDisplay
+)
+
+UPDATE workspacesettings 
+SET settings = 
+jsonb_set(
+  jsonb_set(settings, '{settings, analysisType}', newSettings.analysisType->'analysisType'), 
+  '{settings, displayMode}', 
+  newSettings.displayMode->'displayMode'
+)
+FROM newSettings 
+WHERE workspacesettings.workspaceId = newSettings.workspaceId;
+
+UPDATE workspacesettings 
+SET settings = settings #-'{settings, effectsDisplay}';
+COMMIT;
+
+--rollback START TRANSACTION;
+--rollback WITH oldSettings AS (
+--rollback   SELECT 
+--rollback     workspaceId, 
+--rollback     settings#>'{settings}'->>'analysisType' AS analysisType,
+--rollback     settings#>'{settings}'->>'displayMode' AS displayMode 
+--rollback   FROM workspacesettings 
+--rollback   WHERE settings#>'{settings, analysisType}' IS NOT NULL
+--rollback   AND settings#>'{settings, displayMode}' IS NOT NULL
+--rollback ),
+--rollback 
+--rollback newSettings AS (
+--rollback   SELECT 
+--rollback     workspaceId, 
+--rollback     CASE
+--rollback       WHEN analysisType = 'deterministic' AND displayMode = 'enteredData' THEN '{"effectsDisplay": "deterministic"}'::jsonb
+--rollback       WHEN analysisType = 'smaa' AND displayMode = 'enteredData' THEN '{"effectsDisplay": "smaaDistributions"}'::jsonb
+--rollback       WHEN analysisType = 'deterministic' AND displayMode = 'values' THEN '{"effectsDisplay": "deterministicMCDA"}'::jsonb
+--rollback       WHEN analysisType = 'smaa' AND displayMode = 'values' THEN '{"effectsDisplay": "smaa"}'::jsonb
+--rollback     END AS effectsDisplay
+--rollback   FROM oldSettings
+--rollback )
+--rollback 
+--rollback UPDATE workspacesettings 
+--rollback SET settings = jsonb_set(settings, '{settings, effectsDisplay}', newSettings.effectsDisplay->'effectsDisplay') 
+--rollback FROM newSettings 
+--rollback WHERE workspacesettings.workspaceId = newSettings.workspaceId;
+--rollback 
+--rollback UPDATE workspacesettings 
+--rollback SET settings = settings #-'{settings, analysisType}';
+--rollback 
+--rollback UPDATE workspacesettings 
+--rollback SET settings = settings #-'{settings, displayMode}';
+--rollback COMMIT;

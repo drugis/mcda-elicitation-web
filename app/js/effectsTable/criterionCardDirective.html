@@ -1,5 +1,5 @@
 <div class="grid-x callout">
-  <div ng-if="editMode.isUserOwner" class="cell shrink" style="display:flex; align-items:center;">
+  <div ng-if="editMode.canEdit" class="cell shrink" style="display:flex; align-items:center;">
     <div style="margin-right: 16px">
       <div style="line-height: 10px; margin-bottom: 10px;">
         <a ng-if="canGoUp" ng-click="criterionUp()" class="nav-arrow">

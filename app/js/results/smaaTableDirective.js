@@ -28,7 +28,10 @@ define(['lodash'], function(_) {
 
         scope.$on('elicit.settingsChanged', setProblem);
         scope.$watch('scales', roundScales, true);
-
+        scope.$watch('toggledColumns', function() {
+          scope.numberOfColumns = _.filter(scope.toggledColumns).length;
+        }, true);
+        
         function setProblem() {
           scope.problem = WorkspaceSettingsService.usePercentage() ? scope.state.percentified.problem : scope.state.dePercentified.problem;
         }

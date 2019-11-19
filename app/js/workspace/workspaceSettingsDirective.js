@@ -12,7 +12,7 @@ define([], function() {
         callback: '=',
         editMode: '='
       },
-      template: '<button id="settings-button" class="button right" style="margin-bottom: 0;" type="button" ng-if="editMode.isUserOwner" ng-click="openSettingsModal()"><i class="fa fa-cog"></i> Settings</button>',
+      template: '<button id="settings-button" class="button right" style="margin-bottom: 0;" type="button" ng-if="editMode.canEdit" ng-click="openSettingsModal()"><i class="fa fa-cog"></i> Settings</button>',
       link: function(scope) {
         // functions
         scope.openSettingsModal = openSettingsModal;

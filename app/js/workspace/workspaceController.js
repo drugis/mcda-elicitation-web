@@ -28,7 +28,7 @@ define(['angular'], function(angular) {
     // init
     var user = angular.fromJson($cookies.get('LOGGED-IN-USER'));
     $scope.editMode = {
-      isUserOwner: user ? currentWorkspace.owner === user.id : false
+      canEdit: user ? currentWorkspace.owner === user.id : false
     };
     if (currentWorkspace.problem.schemaVersion !== currentSchemaVersion) {
       $scope.workspace = SchemaService.updateWorkspaceToCurrentSchema(currentWorkspace);
@@ -43,7 +43,7 @@ define(['angular'], function(angular) {
 
     function getWorkspaceSettings() {
       $scope.toggledColumns = WorkspaceSettingsService.getToggledColumns();
-      $scope.workspaceSettings = WorkspaceSettingsService.getWorkspaceSettings($scope.workspace.problem.performanceTable);
+      $scope.workspaceSettings = WorkspaceSettingsService.setWorkspaceSettings($scope.workspace.problem.performanceTable);
     }
 
     function editTitle() {

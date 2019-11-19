@@ -7,11 +7,45 @@
 </div>
 <div ng-if="state.results">
   <div class="grid-x">
+    <div class="cell large-3">
+      Scenario:
+      <br><br>
+    </div>
+    <div class="cell large-9">
+      <select id="scenario-selector" class="scenario-select"
+        ng-model="scenario" ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
+        ng-change="scenarioChanged(scenario)">
+      </select>
+    </div>
+  </div>
+  <div class="grid-x underlined-div">
+    <br><br>
+    <div class="cell large-3">
+      Take into account uncertainty in:
+    </div>
+    <div class="cell large-9">
+      <div class="grid-x">
+        <div class="cell">
+          <label>
+            <input id="uncertainty-measurements-checkbox" type="checkbox" ng-model="scenario.state.uncertaintyOptions.measurements"
+              ng-change="uncertaintyOptionsChanged()" ng-disabled="noStochasticMeasurements">
+            measurements <inline-help help-key="measurements-smaa-uncertainty"></inline-help>
+          </label>
+        </div>
+        <div class="cell">
+          <label>
+            <input id="uncertainty-weights-checkbox" type="checkbox" ng-model="scenario.state.uncertaintyOptions.weights"
+              ng-change="uncertaintyOptionsChanged()" ng-disabled="noStochasticWeights">
+            weights <inline-help help-key="weights-smaa-uncertainty"></inline-help>
+          </label>
+        </div>
+      </div>
+    </div>
     <div class="cell">
-      <span>Scenario:</span>
-      <select id="scenario-selector" class="scenario-select" ng-model="scenario"
-        ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
-        ng-change="scenarioChanged(scenario)"></select>
+      <button id="recalculate-button" class="button" ng-disabled="!uncertaintyOptions.dirty" ng-click="recalculateSmaa()">Recalculate</button>
+    </div>
+    <div id="warning-{{ $index }}" ng-if="warnings.length" ng-repeat="warning in warnings" class="cell">
+      <i class="fa fa-exclamation-triangle"></i> {{ warning }}
     </div>
   </div>
   <br>
@@ -27,13 +61,14 @@
       </h4>
     </div>
     <div class="cell large-2 large-offset-9">
-      <button class="button small info clipboard-button" data-clipboard-target="#ranktable">
+      <button class="button small info clipboard-button" data-clipboard-target="#rank-table">
         <i class="fa fa-clipboard"></i> Copy to clipboard
       </button>
     </div>
     <div class="cell large-6">
       <div export file-name="'rank-acceptability-plot'" legend style="width: 400px; height: 400px">
-        <rank-plot id="rank-plot" value="state.results.ranks.data" stacked="true" problem="state.problem"></rank-plot>
+        <rank-plot id="rank-plot" values="state.results.ranks.data" alternatives="alternatives"
+          labels="scenario.state.legend"></rank-plot>
       </div>
     </div>
     <div class="cell large-6">
@@ -48,7 +83,7 @@
           <tr ng-repeat="alternative in alternatives">
             <td>{{scenario.state.legend[alternative.id].baseTitle || alternative.title}}</td>
             <td id="{{ alternative.id }}-{{ $index + 1 }}-rank"
-              ng-repeat="rank in state.results.ranks.data[alternative.id] track by $index" class="heat">
+              ng-repeat="rank in state.results.ranks.data[alternative.id] track by $index" class="heat-map">
               {{::rank | number}}
             </td>
           </tr>
@@ -68,8 +103,8 @@
           </option>
         </select>
         <div style="width: 400px; height: 350px">
-          <bar-chart id="alternatives-per-rank-bar-chart" value="state.alternativesByRank[state.selectedRank]"
-            problem="state.problem"></bar-chart>
+          <bar-chart id="alternatives-per-rank-bar-chart" values="state.alternativesByRank[state.selectedRank]">
+          </bar-chart>
         </div>
       </div>
     </div>
@@ -85,7 +120,7 @@
           </option>
         </select>
         <div style="width: 400px; height: 350px">
-          <bar-chart id="rank-per-alternatives-bar-chart" value="state.ranksByAlternatives[state.selectedAlternative]">
+          <bar-chart id="rank-per-alternatives-bar-chart" values="state.ranksByAlternatives[state.selectedAlternative]">
           </bar-chart>
         </div>
       </div>
@@ -97,7 +132,8 @@
   <div class="grid-x">
     <div class="cell">
       <div style="width: 650px; height: 350px" export legend file-name="'central-weights'">
-        <line-chart id="central-weights-line-chart" value="state.centralWeights"></line-chart>
+        <central-weights-plot id="central-weights-plot" values="state.centralWeights">
+        </central-weights-plot>
       </div>
     </div>
     <div class="cell large-2 large-offset-10">
@@ -121,7 +157,7 @@
         <tbody>
           <tr ng-repeat="alternative in alternatives">
             <td>{{alternative.title}}</td>
-            <td class="heat">{{state.results.cw.data[alternative.id].cf | number}}</td>
+            <td class="heat-map">{{state.results.cw.data[alternative.id].cf | number}}</td>
             <td id="{{ criterion.id }}-{{ alternative.id }}-central-weight" ng-repeat="criterion in criteria">
               {{::state.results.cw.data[alternative.id].w[criterion.id] | number}}
             </td>

@@ -331,7 +331,7 @@ define(['angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(an
         var result = performanceService.buildRangeEffectPerformance(cell);
         var expectedResult = {
           type: 'exact',
-          value: (0.1+0.2)/2,
+          value: 0.15,
           input: {
             lowerBound: 0.1,
             upperBound: 0.2

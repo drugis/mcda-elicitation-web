@@ -689,19 +689,6 @@ define(['lodash', 'angular'], function(_, angular) {
       }
     }
 
-    function hasNoStochasticResults(aggregateState) {
-      if (!aggregateState) {
-        return;
-      } else {
-        var isAllExact = !_.some(aggregateState.problem.performanceTable, function(tableEntry) {
-          return tableEntry.performance.distribution && tableEntry.performance.distribution.type !== 'exact';
-        });
-        var isNotImpreciseSwing = !_.some(aggregateState.prefs, ['type', 'ratio bound']);
-        return isAllExact && isNotImpreciseSwing;
-      }
-    }
-
-
     function checkForMissingValuesInPerformanceTable(performanceTable) {
       return _.some(performanceTable, function(entry) {
         return entry.performance.effect && entry.performance.effect.type === 'empty' &&
@@ -717,7 +704,6 @@ define(['lodash', 'angular'], function(_, angular) {
       dePercentifyProblem: dePercentifyProblem,
       filterScenariosWithResults: filterScenariosWithResults,
       getObservedScales: getObservedScales,
-      hasNoStochasticResults: hasNoStochasticResults,
       mergeBaseAndSubProblem: mergeBaseAndSubProblem,
       percentifyCriteria: percentifyCriteria,
       percentifyProblem: percentifyProblem,

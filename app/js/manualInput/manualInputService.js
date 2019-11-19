@@ -2,65 +2,16 @@
 define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
     'InputKnowledgeService',
-    'ConstraintService',
     'generateUuid',
-    'currentSchemaVersion'
+    'currentSchemaVersion',
+    'significantDigits'
   ];
   var ManualInputService = function(
     InputKnowledgeService,
-    ConstraintService,
     generateUuid,
-    currentSchemaVersion
+    currentSchemaVersion,
+    significantDigits
   ) {
-    var INVALID_INPUT_MESSAGE = 'Missing or invalid input';
-    var PROPORTION_PERCENTAGE = ConstraintService.percentage().label;
-    var PROPORTION_DECIMAL = ConstraintService.decimal().label;
-    var BELOW_OR_EQUAL_TO = ConstraintService.belowOrEqualTo().label;
-    var POSITIVE = ConstraintService.positive().label;
-    var FIRST_PARAMETER = 'firstParameter';
-    var SECOND_PARAMETER = 'secondParameter';
-    var THIRD_PARAMETER = 'thirdParameter';
-
-    function getInputError(cell) {
-      if (cell.inputParameters.id === 'empty') {
-        return;
-      }
-      var error;
-      var inputParameters = _.pick(cell.inputParameters, [
-        FIRST_PARAMETER,
-        SECOND_PARAMETER,
-        THIRD_PARAMETER
-      ]);
-      _.find(inputParameters, function(inputParameter, key) {
-        if (hasNotEstimableBound(cell, inputParameter)) {
-          return;
-        }
-        var inputValue = cell[key];
-        return _.find(inputParameter.constraints, function(constraint) {
-          error = constraint.validator(inputValue, inputParameter.label, cell);
-          return error;
-        });
-      });
-      return error;
-    }
-
-    function hasNotEstimableBound(cell, parameter) {
-      return (parameter.label === 'Lower bound' && cell.lowerBoundNE) ||
-        (parameter.label === 'Upper bound' && cell.upperBoundNE);
-    }
-
-    function inputToString(cell) {
-      if (getInputError(cell)) {
-        return INVALID_INPUT_MESSAGE;
-      } else {
-        return cell.inputParameters.toString(cell);
-      }
-    }
-
-    function getOptions(inputType) {
-      return angular.copy(InputKnowledgeService.getOptions(inputType));
-    }
-
     function createProblem(criteria, alternatives, title, description, inputData, useFavorability) {
       var newCriteria = buildCriteria(criteria, useFavorability);
       return {
@@ -71,67 +22,6 @@ define(['lodash', 'angular'], function(_, angular) {
         alternatives: buildAlternatives(alternatives),
         performanceTable: buildPerformanceTable(inputData, newCriteria, alternatives)
       };
-    }
-
-    function updateParameterConstraints(cell, unitOfMeasurement) {
-      var newCell = angular.copy(cell);
-      if (cell.inputParameters.firstParameter) {
-        newCell.inputParameters.firstParameter.constraints = updateConstraints(cell, unitOfMeasurement, FIRST_PARAMETER);
-      }
-      if (cell.inputParameters.secondParameter) {
-        newCell.inputParameters.secondParameter.constraints = updateConstraints(cell, unitOfMeasurement, SECOND_PARAMETER);
-      }
-      if (cell.inputParameters.thirdParameter) {
-        newCell.inputParameters.thirdParameter.constraints = updateConstraints(cell, unitOfMeasurement, THIRD_PARAMETER);
-      }
-      return newCell;
-    }
-
-    function updateConstraints(cell, unitOfMeasurement, parameter) {
-      var updatetableParameters = [
-        'Value',
-        'Lower bound',
-        'Upper bound',
-        'Standard error',
-        'Mean'
-      ];
-      if (_.includes(updatetableParameters, cell.inputParameters[parameter].label)) {
-        return getNewConstraints(cell, unitOfMeasurement, parameter);
-      } else {
-        return cell.inputParameters[parameter].constraints;
-      }
-    }
-
-    function getNewConstraints(cell, unitOfMeasurement, parameter) {
-      var newConstraints = angular.copy(cell.inputParameters[parameter].constraints);
-      newConstraints = removeBoundConstraints(newConstraints);
-      if (unitOfMeasurement.lowerBound === 0) {
-        if (cell.inputParameters[parameter].label === 'Lower bound') {
-          newConstraints.push(ConstraintService.belowOrEqualTo(FIRST_PARAMETER));
-        }
-        newConstraints.push(getConstraintWithLowerBound(unitOfMeasurement));
-      } else if (unitOfMeasurement.upperBound !== null && unitOfMeasurement.upperBound < Infinity) {
-        newConstraints.push(ConstraintService.belowOrEqualTo(unitOfMeasurement.upperBound));
-      }
-      return newConstraints;
-    }
-
-    function getConstraintWithLowerBound(unitOfMeasurement) {
-      if (unitOfMeasurement.upperBound === 100) {
-        return ConstraintService.percentage();
-      } else if (unitOfMeasurement.upperBound === 1) {
-        return ConstraintService.decimal();
-      } else {
-        return ConstraintService.positive();
-      }
-    }
-
-    function removeBoundConstraints(constraints) {
-      return _.reject(constraints, function(constraint) {
-        var label = constraint.label;
-        return label === PROPORTION_PERCENTAGE || label === PROPORTION_DECIMAL ||
-          label === BELOW_OR_EQUAL_TO || label === POSITIVE;
-      });
     }
 
     function prepareInputData(criteria, alternatives, oldInputData) {
@@ -330,22 +220,32 @@ define(['lodash', 'angular'], function(_, angular) {
         var dataSourceForEntry = _.find(dataSources, ['oldId', tableEntry.dataSource]);
         var alternative = _.find(alternatives, ['oldId', tableEntry.alternative]);
         if (dataSourceForEntry && alternative) {
-          if (!accum.effect[dataSourceForEntry.id]) {
-            accum.effect[dataSourceForEntry.id] = {};
-            accum.distribution[dataSourceForEntry.id] = {};
-          }
-          accum.effect[dataSourceForEntry.id][alternative.id] = createCell('effect', tableEntry);
-          accum.distribution[dataSourceForEntry.id][alternative.id] = createCell('distribution', tableEntry);
-          if (isPercentageRangeDistribution(accum.distribution[dataSourceForEntry.id][alternative.id], dataSourceForEntry)) {
-            accum.distribution[dataSourceForEntry.id][alternative.id].firstParameter *= 100;
-            accum.distribution[dataSourceForEntry.id][alternative.id].secondParameter *= 100;
-          }
+          getInput(accum, dataSourceForEntry, alternative.id, tableEntry);
         }
         return accum;
       }, {
         effect: {},
         distribution: {}
       });
+    }
+
+    function getInput(accum, dataSource, alternativeId, tableEntry) {
+      if (!accum.effect[dataSource.id]) {
+        accum.effect[dataSource.id] = {};
+        accum.distribution[dataSource.id] = {};
+      }
+      accum.effect[dataSource.id][alternativeId] = createCell('effect', tableEntry);
+      accum.distribution[dataSource.id][alternativeId] = createCell('distribution', tableEntry);
+      if (isPercentageRangeDistribution(accum.distribution[dataSource.id][alternativeId], dataSource)) {
+        accum.distribution[dataSource.id][alternativeId].firstParameter = getPercentifiedRangeParameter(accum.distribution[dataSource.id][alternativeId].firstParameter);
+        accum.distribution[dataSource.id][alternativeId].secondParameter = getPercentifiedRangeParameter(accum.distribution[dataSource.id][alternativeId].secondParameter);
+        
+      }
+      return accum;
+    }
+
+    function getPercentifiedRangeParameter(parameter) {
+      return significantDigits(parameter * 100);
     }
 
     function isPercentageRangeDistribution(distribution, dataSource) {
@@ -471,14 +371,10 @@ define(['lodash', 'angular'], function(_, angular) {
 
     return {
       createProblem: createProblem,
-      inputToString: inputToString,
-      getInputError: getInputError,
       prepareInputData: prepareInputData,
-      getOptions: getOptions,
       createStateFromOldWorkspace: createStateFromOldWorkspace,
       findInvalidCell: findInvalidCell,
       generateDistributions: generateDistributions,
-      updateParameterConstraints: updateParameterConstraints,
       checkStep1Errors: checkStep1Errors
     };
   };

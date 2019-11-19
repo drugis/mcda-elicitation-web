@@ -35,11 +35,7 @@ module.exports = function(config) {
     exclude: [
       'app/js/main.js',
     ],
-    reporters: ['progress', 'junit', 'coverage'],
-    // coverageReporter: {
-    //   type : 'html',
-    //   dir : 'coverage/'
-    // },
+    reporters: ['progress', 'junit'],
     junitReporter: {
       outputFile: 'frontend-test/test-results.xml'
     },

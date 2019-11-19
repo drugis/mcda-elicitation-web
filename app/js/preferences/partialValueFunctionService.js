@@ -34,35 +34,40 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function getPvfCoordinatesForCriterion(criterion) {
-      return [{
-        key: 'Partial value function',
-        values: getXY(criterion.dataSources[0])
-      }];
+      var pvfCoordinates = [];
+      var xValues = getXValues(criterion.dataSources[0]);
+      pvfCoordinates.push(xValues);
+
+      var yValues = getYValues(criterion);
+      pvfCoordinates.push(yValues);
+
+      return pvfCoordinates;
     }
 
-    function getXY(dataSource) {
-      return [].concat({
-        x: best(dataSource),
-        y: 1
-      },
-        sortByValues(dataSource.pvf),
-        {
-          x: worst(dataSource),
-          y: 0
-        });
+    function getXValues(dataSource) {
+      return [].concat(
+        'x',
+        best(dataSource),
+        intermediateX(dataSource.pvf),
+        worst(dataSource)
+      );
     }
 
-    function sortByValues(pvf) {
-      if (!pvf.cutoffs || !pvf.values) {
-        return [];
-      }
-      var pairs = _.zipWith(pvf.cutoffs, pvf.values, function(cutoff, value) {
-        return {
-          x: cutoff,
-          y: value
-        };
-      });
-      return _.reverse(_.sortBy(pairs, 'y'));
+    function getYValues(criterion) {
+      return [].concat(
+        criterion.title,
+        1,
+        intermediateY(criterion.dataSources[0].pvf),
+        0
+      );
+    }
+
+    function intermediateX(pvf) {
+      return pvf.cutoffs ? pvf.cutoffs : [];
+    }
+
+    function intermediateY(pvf) {
+      return pvf.values ? pvf.values : [];
     }
 
     function standardizeDataSource(dataSource) {

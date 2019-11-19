@@ -1,28 +1,32 @@
-<div ng-if="effectsDisplay === 'deterministic'">
-  {{effectLabel}}
-  <span ng-if="effectLabel === ''" tooltip="No values entered">
-    &nbsp;
-  </span>
+<div ng-if="analysisType === 'deterministic'">
+  <div ng-if="displayMode === 'enteredData'">
+    {{effectLabel}}
+    <span ng-if="effectLabel === ''" tooltip="No values entered">
+      &nbsp;
+    </span>
+  </div>
+
+  <div ng-if="displayMode === 'values'">
+    <div ng-if="effectValue !== ''">
+      {{effectValue}}
+    </div>
+    <div ng-if="effectValue === ''">
+      <effects-table-scales-cell scales="scales" uncertainty="false">
+      </effects-table-scales-cell>
+    </div>
+  </div>
 </div>
 
-<div ng-if="effectsDisplay === 'deterministicMCDA'">
-  <div ng-if="effectValue !== ''">
-    {{effectValue}}
+<div ng-if="analysisType === 'smaa'">
+  <div ng-if="displayMode === 'enteredData'">
+    {{distributionLabel}}
+    <span ng-if="distributionLabel === ''" tooltip="No values entered">
+      &nbsp;
+    </span>
   </div>
-  <div ng-if="effectValue === ''">
-    <effects-table-scales-cell scales="scales" uncertainty="false">
+
+  <div ng-if="displayMode === 'values'">
+    <effects-table-scales-cell scales="scales" uncertainty="true">
     </effects-table-scales-cell>
   </div>
-</div>
-
-<div ng-if="effectsDisplay === 'smaa'">
-  <effects-table-scales-cell scales="scales" uncertainty="uncertainty">
-  </effects-table-scales-cell>
-</div>
-
-<div ng-if="effectsDisplay === 'smaaDistributions'">
-  {{distributionLabel}}
-  <span ng-if="distributionLabel === ''" tooltip="No values entered">
-    &nbsp;
-  </span>
 </div>

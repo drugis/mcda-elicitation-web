@@ -13,12 +13,12 @@
       <tbody>
         <tr ng-repeat="inProgressWorkspace in inProgressWorkspaces">
           <td>
-            <a id="in-progress-workspace-title-{{ inProgressWorkspace.state.title }}"
+            <a id="in-progress-workspace-{{ $index }}"
               ui-sref="manualInputInProgress({inProgressId: inProgressWorkspace.id})">
               {{inProgressWorkspace.state.title}}</a>
           </td>
           <td class="text-center">
-            <a id="delete-in-progress-workspace-{{ inProgressWorkspace.state.title }}" class="fa fa-trash"
+            <a id="delete-in-progress-workspace-{{ $index }}" class="fa fa-trash"
               style="color : red" ng-click="deleteInProgress(inProgressWorkspace.id, inProgressWorkspace.state.title)"
               tooltip="Delete workspace">
             </a>

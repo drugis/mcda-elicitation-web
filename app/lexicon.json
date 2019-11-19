@@ -99,6 +99,11 @@
     "text": "In mcda, it is possible to input data directly as a distribution of the effects for the treatment for a criterion, or to input the data measured in a study, after which the application will calculate the corresponding distribution automatically.",
     "link": "/manual.html#mcda-preparing-dataset"
   },
+  "measurements-smaa-uncertainty": {
+    "title": "Uncertainty in measurements",
+    "text": "Some measurements may include uncertainty, usually expressed as a confidence interval. SMAA can take this uncertainty into account when calculating the rank acceptiblities.",
+    "link": "/manual.html#mcda-smaa-analysis"
+  },
   "observed-range": {
     "title": "Observed range",
     "text": "The observed range within which all the effects of a given analysis lie. The lower bound is the lowest among the effects (or of their low end of the 95% CrI in the case of non-exact effect distributions). The upper bound is the maximum of these values.",
@@ -121,7 +126,7 @@
   },
   "pvf-type": {
     "title": "Type of partial value function",
-    "text": "Partial vlaue functions can be either linear (a straight line between two points) or piece-wise linear, meaning the function consists of several linear segments.",
+    "text": "Partial value functions can be either linear (a straight line between two points) or piece-wise linear, meaning the function consists of several linear segments.",
     "link": "/manual.html#mcda-value-tradeoffs"
   },
   "rank-acceptabilities": {
@@ -228,6 +233,11 @@
     "title": "Weights",
     "text": "Weights indicate how much importance the user places on improving each criterion. Weights can be specified directly through swing weighting. Alternatively, they can be derived through a series of ranking and matching questions.",
     "link": "/manual.html#mcda-value-tradeoffs"
+  },
+  "weights-smaa-uncertainty": {
+    "title": "Uncertainty in weights",
+    "text": "Some preference scenarios may include uncertainty for example when alternatives are ranked, or no preference is expressed. SMAA can take this uncertainty into account when calculating the rank acceptiblities.",
+    "link": "/manual.html#mcda-smaa-analysis"
   },
   "willingness-to-trade-off": {
     "title": "Willingness to trade off chart",

@@ -1,0 +1,23 @@
+<h5>Measurements
+  <inline-help help-key="sensitivity-measurements"></inline-help>
+</h5>
+<div class="grid-x grid-margin-x">
+  <div class="cell medium-6 large-6">
+    <label>Alternative
+      <select id="measurements-alternative-selector"
+        ng-options="scenario.state.legend[alternative.id].baseTitle || alternative.title for alternative in alternatives"
+        ng-model="measurementsAlternative" ng-change="doMeasurementSensitivity()"></select>
+    </label>
+  </div>
+  <div class="cell medium-6">
+    <label>Criterion
+      <select id="measurements-criterion-selector" ng-options="criterion.title for criterion in criteria"
+        ng-model="measurementsCriterion" ng-change="doMeasurementSensitivity()"></select>
+    </label>
+  </div>
+</div>
+<div class="grid-x" export legend file-name="'onewaymeasurementsplot'">
+  <div class="cell" style="height: 450px; width: 450px">
+    <line-chart id="measurements-sensitivity-plot" values="measurementValues" plot-options="plotOptions"></line-chart>
+  </div>
+</div>

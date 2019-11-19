@@ -8,7 +8,7 @@ function testExample(browser, title) {
   const testUrl = require('./util/constants').testUrl;
   loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
   workspaceService.addExample(browser, title);
-  workspaceService.deleteFromList(browser, title);
+  workspaceService.deleteFromList(browser, 0);
 }
 
 module.exports = {

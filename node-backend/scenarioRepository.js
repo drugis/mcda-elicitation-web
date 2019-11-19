@@ -49,7 +49,8 @@ module.exports = function(db) {
       [{
         problem: state.problem,
         prefs: state.prefs,
-        legend: state.legend
+        legend: state.legend,
+        uncertaintyOptions: state.uncertaintyOptions
       },
         title,
         scenarioId

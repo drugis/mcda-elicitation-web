@@ -1,10 +1,12 @@
 'use strict';
 define(['angular'], function() {
   var dependencies = [
-    'ConstraintService'
+    'ConstraintService',
+    'significantDigits'
   ];
   var FinishInputCellService = function(
-    ConstraintService
+    ConstraintService,
+    significantDigits
   ) {
     var percentageConstraint = ConstraintService.percentage();
     var decimalConstraint = ConstraintService.decimal();
@@ -18,7 +20,7 @@ define(['angular'], function() {
       };
       var input = performance.input;
       if (input && input.scale === PERCENTAGE) {
-        cell.firstParameter = performance.value * 100;
+        cell.firstParameter = significantDigits(performance.value * 100);
         cell.constraint = PERCENTAGE;
         cell.inputParameters.firstParameter.constraints.push(percentageConstraint);
       } else {

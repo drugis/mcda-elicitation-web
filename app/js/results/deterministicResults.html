@@ -1,11 +1,11 @@
-<div ng-if="!state.results">
-  <div class="grid-x" style="margin-top: 15em">
+<div ng-if="!deterministicResults.problem">
+  <div class="grid-x">
     <div class="cell">
-      <progressbar value="progress"></progressbar>
+      <a class="fa fa-spinner fa-2x fa-spin"></a>
     </div>
   </div>
 </div>
-<div ng-if="state.results">
+<div ng-if="deterministicResults.problem">
   <div class="grid-x">
     <div class="cell">
       <span>Scenario:</span>
@@ -85,13 +85,15 @@
         <div class="cell large-6">
           <table id="base-case-table">
             <thead>
-              <th ng-repeat="alternative in alternatives">{{scenario.state.legend[alternative.id].baseTitle ||
-                alternative.title}}</th>
+              <th ng-repeat="alternative in alternatives">
+                {{scenario.state.legend[alternative.id].baseTitle || alternative.title}}
+              </th>
             </thead>
             <tbody>
               <tr>
                 <td id="{{ alternative.id }}-base-case" ng-repeat="alternative in alternatives">
-                  {{deterministicResults.results.total.data[alternative.id] | number}}</td>
+                  {{deterministicResults.results.total.data[alternative.id] | number}}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -105,7 +107,8 @@
             <tbody>
               <tr>
                 <td id="{{ alternative.id }}-recalculated-case" ng-repeat="alternative in alternatives">
-                  {{recalculatedDeterministicResults.results.total.data[alternative.id] | number}}</td>
+                  {{recalculatedDeterministicResults.results.total.data[alternative.id] | number}}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -146,54 +149,12 @@
   </div>
   <div class="grid-x grid-margin-x">
     <div class="cell medium-6 large-6">
-      <h5>Measurements
-        <inline-help help-key="sensitivity-measurements"></inline-help>
-      </h5>
-      <div class="grid-x grid-margin-x">
-        <div class="cell medium-6 large-6">
-          <label>Alternative
-            <select id="measurements-alternative-selector"
-              ng-options="scenario.state.legend[alternative.id].baseTitle || alternative.title for alternative in alternatives"
-              ng-model="sensitivityMeasurements.measurementsAlternative"
-              ng-change="doMeasurementSensitivity(state)"></select>
-          </label>
-        </div>
-        <div class="cell medium-6">
-          <label>Criterion
-            <select id="measurements-criterion-selector" ng-options="criterion.title for criterion in criteria"
-              ng-model="sensitivityMeasurements.measurementsCriterion"
-              ng-change="doMeasurementSensitivity(state)"></select>
-          </label>
-        </div>
-      </div>
-      <div class="grid-x" export legend file-name="'onewaymeasurementsplot'">
-        <div class="cell" style="height: 450px; width: 450px">
-          <line-chart id="measurements-sensitivity-plot"
-            label-x-axis="sensitivityMeasurements.measurementsCriterion.title" label-y-axis="'total value'"
-            value="measurementValues" y-margin="true"></line-chart>
-        </div>
-      </div>
+      <measurement-sensitivity scenario="scenario" alternatives="alternatives" aggregate-state="aggregateState"
+        criteria="criteria" edit-mode="editMode"></measurement-sensitivity>
     </div>
     <div class="cell medium-6 large-6">
-      <h5>Preferences
-        <inline-help help-key="sensitivity-preferences"></inline-help>
-      </h5>
-      <div class="grid-x">
-        <div class="cell medium-6 large-6 ">
-          <label>Weight given to
-            <select id="preferences-criterion-selector" ng-options="criterion.title for criterion in criteria"
-              ng-model="sensitivityMeasurements.preferencesCriterion"
-              ng-change="doPreferencesSensitivity(state)"></select>
-          </label>
-        </div>
-      </div>
-      <div class="grid-x" export legend file-name="'onewaypreferencesplot'">
-        <div class="cell" style="height: 450px; width: 450px">
-          <line-chart id="preferences-sensitivity-plot"
-            label-x-axis="'Weight given to ' + sensitivityMeasurements.preferencesCriterion.title"
-            label-y-axis="'total value'" value="preferencesValues"></line-chart>
-        </div>
-      </div>
+      <preferences-sensitivity scenario="scenario" alternatives="alternatives" aggregate-state="aggregateState"
+        criteria="criteria" edit-mode="editMode"></preferences-sensitivity>
     </div>
   </div>
 </div>

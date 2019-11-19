@@ -5,7 +5,7 @@ const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
 const testUrl = require('./util/constants').testUrl;
-const title = 'GetReal course LU 4, activity 4.4';
+const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 const scenarioTitle = 'scenario title';
 
 module.exports = {
@@ -13,19 +13,20 @@ module.exports = {
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     workspaceService.addExample(browser, title);
     browser
-      .click('a[id="' + title + '"]')
+      .click('#workspace-0')
       .waitForElementVisible('#workspace-title');
 
     errorService.isErrorBarHidden(browser);
 
     browser
       .click('#preferences-tab')
+      .pause(50)
       .waitForElementVisible('#partial-value-functions-block');
   },
 
   afterEach: function(browser) {
     browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();
   },

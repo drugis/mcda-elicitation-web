@@ -1,7 +1,7 @@
 'use strict';
 
 const username = 'user';
-const correctPassword = 'password';
+const correctPassword = 'test';
 const incorrectPassword = 'notapassword';
 
 function login(browser, url, username, password) {

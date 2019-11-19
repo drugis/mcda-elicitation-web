@@ -61,6 +61,11 @@ define([
           problem: exampleProblem()
         }
       };
+      scope.scalesPromise = {
+        then: function(fn) {
+          fn();
+        }
+      };
       currentScenario = jasmine.createSpyObj('currentScenario', ['$save']);
       currentScenario.state = {
         problem: exampleProblem()

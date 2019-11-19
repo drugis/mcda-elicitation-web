@@ -13,7 +13,8 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     'EffectsTableService',
     'PageTitleService',
     'ScaleRangeService',
-    'WorkspaceSettingsService'
+    'WorkspaceSettingsService',
+    'significantDigits'
   ];
 
   var SubProblemController = function(
@@ -29,12 +30,14 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     EffectsTableService,
     PageTitleService,
     ScaleRangeService,
-    WorkspaceSettingsService
+    WorkspaceSettingsService,
+    significantDigits
   ) {
     // functions 
     $scope.openCreateDialog = openCreateDialog;
     $scope.subProblemChanged = subProblemChanged;
     $scope.editSubProblemTitle = editSubProblemTitle;
+    $scope.significantDigits = significantDigits;
 
     // init
     $scope.scalesPromise.then(function() {

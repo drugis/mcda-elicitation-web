@@ -1,50 +1,35 @@
 <div class="grid-x">
   <div class="cell">
     <tabset>
-      <tab heading="Overview" active="activeTab === 'evidence'" ui-sref="evidence">
-        <div ng-if="activeTab === 'evidence'" ui-view></div>
+      <tab heading="Overview" active="tabStatus['overview'].active" ui-sref="evidence">
+        <div ng-if="tabStatus['overview'].active" ui-view></div>
       </tab>
-      <tab id="problem-definition-tab" heading="Problem definition" active="activeTab === 'problem'" ui-sref="problem">
-        <div ng-if="activeTab === 'problem'" ui-view></div>
+      <tab id="problem-definition-tab" heading="Problem definition" active="tabStatus['problemDefinition'].active"
+        ui-sref="problem">
+        <div ng-if="tabStatus['problemDefinition'].active" ui-view></div>
       </tab>
-      <tab id="preferences-tab" heading="Preferences" active="activeTab === 'preferences'" ui-sref="preferences"
-        ng-if="tasksAccessibility.preferences && !hasMissingValues">
-        <div ng-if="activeTab === 'preferences'" ui-view></div>
+      <tab id="preferences-tab" heading="Preferences" active="tabStatus['preferences'].active" ui-sref="preferences"
+        ng-if="tabStatus['preferences'].enabled">
+        <div ng-if="tabStatus['preferences'].active" ui-view></div>
       </tab>
-      <tab id="deterministic-tab" heading="Deterministic results" active="activeTab === 'deterministic-results'"
-        ui-sref="deterministic-results" ng-if="tasksAccessibility.results && !hasMissingValues">
-        <div ng-if="activeTab === 'deterministic-results'" ui-view></div>
+      <tab id="deterministic-tab" heading="Deterministic results" active="tabStatus['deterministic'].active"
+        ui-sref="deterministic-results" ng-if="tabStatus['deterministic'].enabled">
+        <div ng-if="tabStatus['deterministic'].active" ui-view></div>
       </tab>
-      <tab id="smaa-tab" heading="SMAA results" active="activeTab === 'smaa-results'" ui-sref="smaa-results"
-        ng-if="tasksAccessibility.results && !hasNoStochasticResults && !hasMissingValues">
-        <div ng-if="activeTab === 'smaa-results'" ui-view></div>
+      <tab id="smaa-tab" heading="SMAA results" active="tabStatus['smaa'].active" ui-sref="smaa-results"
+        ng-if="tabStatus['smaa'].enabled">
+        <div ng-if="tabStatus['smaa'].active" ui-view></div>
       </tab>
-      <!-- disabled tabs -->
-      <li class="tabs-title disabled" ng-if="hasMissingValues"
-        tooltip="Cannot elicit preferences because effects table contains missing values">
+
+      <li class="tabs-title disabled" ng-if="!tabStatus['preferences'].enabled"
+        tooltip="{{tabStatus['preferences'].tooltip}}">
         Preferences
       </li>
-      <li class="tabs-title disabled" ng-if="!tasksAccessibility.preferences"
-        tooltip="Cannot set preferences because problem has multiple datasources per criterion">
-        Preferences
-      </li>
-      <li class="tabs-title disabled" ng-if="!tasksAccessibility.results && !hasMissingValues"
-        tooltip="Cannot perform analysis because not all partial value functions are set">
+      <li class="tabs-title disabled" ng-if="!tabStatus['deterministic'].enabled"
+        tooltip="{{tabStatus['deterministic'].tooltip}}">
         Deterministic results
       </li>
-      <li class="tabs-title disabled" ng-if="hasMissingValues"
-        tooltip="Cannot perform analysis because effects table contains missing values">
-        Deterministic results
-      </li>
-      <li class="tabs-title disabled" ng-if="!tasksAccessibility.results && !hasMissingValues"
-        tooltip="Cannot perform analysis because not all partial value functions are set">
-        SMAA results
-      </li>
-      <li class="tabs-title disabled" ng-if="tasksAccessibility.results && hasNoStochasticResults"
-        tooltip="Cannot perform analysis because neither the criteria measurements nor the weights are stochastic">
-        SMAA results</li>
-      <li class="tabs-title disabled" ng-if="hasMissingValues"
-        tooltip="Cannot perform analysis because effects table contains missing values">
+      <li class="tabs-title disabled" ng-if="!tabStatus['smaa'].enabled" tooltip="{{tabStatus['smaa'].tooltip}}">
         SMAA results
       </li>
       <li class="tabs-title right" ng-if="!isStandalone">

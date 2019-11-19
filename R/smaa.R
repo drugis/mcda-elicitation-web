@@ -12,15 +12,21 @@ wrap.matrix <- function(m) {
 }
 
 smaa_v2 <- function(params) {
-  allowed <- c('scales','smaa','deterministic',
-   'sensitivityMeasurements','sensitivityMeasurementsPlot',
-   'sensitivityWeightPlot','indifferenceCurve',
-   'matchingElicitationCurve')
+  allowed <- c(
+   'deterministic',
+   'indifferenceCurve',
+   'matchingElicitationCurve',
+   'scales',
+   'sensitivityMeasurements',
+   'sensitivityMeasurementsPlot',
+   'sensitivityWeightPlot',
+   'smaa'
+  )
 
   if(params$method %in% allowed) {
     do.call(paste("run", params$method, sep="_"), list(params))
   } else {
-    stop(paste("method ", params$method, " not really allowed"))
+    stop(paste("method ", params$method, " not allowed"))
   }
 }
 
@@ -290,6 +296,65 @@ run_indifferenceCurve <- function(params) {
   wrap.result(coordinates, 'IndifferenceCoordinates')  
 }
 
+
+harSample <- function(constr, n, N, harBatches=20, harBatchProgress=4) {
+  stopifnot(N %% harBatches == 0)
+  if (length(constr$rhs) > 0) {
+    constr <- mergeConstraints(constr, simplexConstraints(n))
+    state <- har.init(constr)
+    samples <- matrix(0, nrow=N, ncol=n)
+    Nb <- N/harBatches
+    for(i in 1:harBatches) {
+      out <- har.run(state, Nb)
+      samples[(1 + Nb * (i - 1)):(Nb * i), ] <- out$samples
+      state <- out$state
+      update(i * harBatchProgress)
+    }
+    samples
+  } else {
+    samples <- simplex.sample(n, N)$samples
+    update(harBatches * harBatchProgress)
+    samples
+  }
+}
+
+sampleWeights <- function(preferences, crit, n, N) {
+  constr <- mergeConstraints(lapply(preferences,genHARconstraint,crit=crit)) # parse preference information
+  weights <- harSample(constr, n, N)
+  colnames(weights) <- crit
+  weights
+}
+
+getSmaaWeights <- function(params, crit, n, N) {
+  weights <- sampleWeights(params$preferences, crit, n, N)
+  if(!is.null(params$uncertaintyOptions)) {
+    if (!params$uncertaintyOptions["weights"]) {
+      mean.weights <- colMeans(weights) 
+      for (i in 1:N) {
+        weights[i, ] <- mean.weights
+      }
+    }
+  }
+  return(weights)
+}
+
+getSmaaMeasurements <- function(params, N, crit) {
+  meas <- sample.partialValues(params, N)
+  if(!is.null(params$uncertaintyOptions)) {
+    if (!params$uncertaintyOptions["measurements"]) {
+      median.meas <- genMedianMeasurements(params) 
+      pvf <- lapply(params$criteria, create.pvf)
+      for (criterion in crit) {
+        median.meas[,criterion] <- pvf[[criterion]](median.meas[,criterion])
+      }
+      for (i in 1:N) {
+        meas[i, , ] <- median.meas
+      }
+    }
+  }
+  return(meas)
+}
+
 run_smaa <- function(params) {
   N <- 1E4
   n <- length(params$criteria)
@@ -298,46 +363,12 @@ run_smaa <- function(params) {
   alts <- names(params$alternatives)
 
   update(0)
-
-  harBatches <- 20
-  harBatchProgress <- 4
-  harSample <- function(constr, n, N) {
-    stopifnot(N %% harBatches == 0)
-    if (length(constr$rhs) > 0) {
-      constr <- mergeConstraints(constr, simplexConstraints(n))
-      state <- har.init(constr)
-      samples <- matrix(0, nrow=N, ncol=n)
-      Nb <- N/harBatches
-      for(i in 1:harBatches) {
-          out <- har.run(state, Nb)
-          samples[(1 + Nb * (i - 1)):(Nb * i), ] <- out$samples
-          state <- out$state
-          update(i * harBatchProgress)
-      }
-      samples
-    } else {
-      samples <- simplex.sample(n, N)$samples
-      update(harBatches * harBatchProgress)
-      samples
-    }
-  }
-
-  # parse preference information
-  constr <- mergeConstraints(lapply(params$preferences,genHARconstraint,crit=crit))
+  weights <- getSmaaWeights(params, crit, n, N)
+  meas <- getSmaaMeasurements(params, N, crit)
   
-  weights <- harSample(constr, n, N)
-  colnames(weights) <- crit
-
-  meas <- sample.partialValues(params, N)
-  update(95)
-
   utils <- smaa.values(meas, weights)
-  update(96)
   ranks <- smaa.ranks(utils)
-  update(97)
-
   cw <- smaa.cw(ranks, weights)
-  update(98)
   cf <- smaa.cf(meas, cw)
   update(100)
 

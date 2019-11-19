@@ -3,10 +3,11 @@ define([
   './manualInputController',
   './addCriterionController',
   './addAlternativeController',
-  './constraintService',
   '../evidence/editDataSourceController',
   './editUnitOfMeasurementController',
   './editStrengthOfEvidenceController',
+
+  './constraintService',
   './finishInputCellService',
   './generateDistributionService',
   './inProgressResource',
@@ -14,6 +15,8 @@ define([
   './manualInputService',
   './performanceService',
   './toStringService',
+  './effectInputHelperService',
+
   './effectInputHelperDirective',
   './inputDataSourceDirective',
   './manualInputTableDirective',
@@ -23,10 +26,11 @@ define([
   ManualInputController,
   AddCriterionController,
   AddAlternativeController,
-  ConstraintService,
   EditDataSourceController,
   EditUnitOfMeasurementController,
   EditStrengthOfEvidenceController,
+
+  ConstraintService,
   FinishInputCellService,
   GenerateDistributionService,
   InProgressResource,
@@ -34,6 +38,8 @@ define([
   ManualInputService,
   PerformanceService,
   ToStringService,
+  EffectInputHelperService,
+  
   effectInputHelper,
   inputDataSource,
   manualInputTable,
@@ -55,6 +61,7 @@ define([
       .factory('GenerateDistributionService', GenerateDistributionService)
       .factory('FinishInputCellService', FinishInputCellService)
       .factory('ToStringService', ToStringService)
+      .factory('EffectInputHelperService', EffectInputHelperService)
 
       .directive('effectInputHelper', effectInputHelper)
       .directive('inputDataSource', inputDataSource)

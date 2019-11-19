@@ -59,7 +59,7 @@ define([
     // init
     $scope.alternativeInput = {}; //scoping
     $scope.editMode = {
-      isUserOwner: true
+      canEdit: true
     };
     PageTitleService.setPageTitle('ManualInputController', 'Manual input');
     initState();

@@ -5,8 +5,8 @@ FROM patavi/worker-amqp
 
 USER root
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q r-cran-mass
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -y -q libgmp-dev
+RUN DEBIAN_FRONTEND=noninteractive apt install -y -q r-cran-mass
+RUN DEBIAN_FRONTEND=noninteractive apt install -y -q libgmp-dev
 
 RUN R -e 'install.packages("hitandrun", repos="http://cran.rstudio.com/"); if (!require("hitandrun")) quit(save="no", status=8)'
 RUN R -e 'install.packages("smaa", repos="http://cran.rstudio.com/"); if (!require("smaa")) quit(save="no", status=8)'

@@ -175,7 +175,7 @@ describe('the in scenario handler', () => {
     const title = 'title';
     const state = {
       problem: {},
-      prefs: {}
+      prefs: []
     };
     const request = {
       params: {

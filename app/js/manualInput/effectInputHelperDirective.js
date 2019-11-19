@@ -5,11 +5,13 @@ define(['lodash', 'angular'], function(_, angular) {
 
   var dependencies = [
     'ManualInputService',
+    'EffectInputHelperService',
     '$timeout'
   ];
 
   var EffectInputHelperDirective = function(
     ManualInputService,
+    EffectInputHelperService,
     $timeout
   ) {
     return {
@@ -46,50 +48,26 @@ define(['lodash', 'angular'], function(_, angular) {
 
         function saveState() {
           $timeout(function() {
-            scope.cell = angular.copy(scope.inputCell);
-            scope.cell.isInvalid = ManualInputService.getInputError(scope.inputCell);
-            scope.cell.label = ManualInputService.inputToString(scope.inputCell);
+            scope.cell = EffectInputHelperService.saveCell(scope.inputCell);
             $timeout(scope.changeCallback);
           });
         }
 
         function initInputParameters() {
-          scope.inputParameterOptions = ManualInputService.getOptions(scope.inputType);
-          scope.cell.inputParameters = getInputParameters();
-          scope.cell.constraint = getCellConstraint();
+          scope.inputParameterOptions = EffectInputHelperService.getOptions(scope.inputType);
+          scope.cell.inputParameters = EffectInputHelperService.getInputParameters(scope.cell.inputParameters, scope.inputParameterOptions);
+          scope.cell.constraint = EffectInputHelperService.getCellConstraint(scope.unitOfMeasurement.selectedOption.type);
           scope.inputCell = angular.copy(scope.cell);
           inputChanged();
-          scope.cell.label = ManualInputService.inputToString(scope.inputCell);
-          scope.cell.isInvalid = ManualInputService.getInputError(scope.inputCell);
+          scope.cell.label = EffectInputHelperService.inputToString(scope.inputCell);
+          scope.cell.isInvalid = EffectInputHelperService.getInputError(scope.inputCell);
           scope.changeCallback();
         }
 
-        function getInputParameters() {
-          if (!scope.cell.inputParameters) {
-            return _.values(scope.inputParameterOptions)[0];
-          } else {
-            return scope.inputParameterOptions[scope.cell.inputParameters.id];
-          }
-        }
-
-        function getCellConstraint() {
-          if (scope.unitOfMeasurement.selectedOption.type !== 'custom' ) {
-            return scope.unitOfMeasurement.selectedOption.type;
-          } else {
-            return 'None';
-          }
-        }
-
         function inputChanged() {
-          scope.inputCell = ManualInputService.updateParameterConstraints(scope.inputCell, scope.unitOfMeasurement);
-          if (scope.inputCell.inputParameters.id !== 'text' && isNotNumeric(scope.inputCell.firstParameter)) {
-            delete scope.inputCell.firstParameter;
-          }
-          scope.error = ManualInputService.getInputError(scope.inputCell);
-        }
-
-        function isNotNumeric(value) {
-          return isNaN(parseFloat(value)) || !isFinite(value);
+          scope.inputCell = EffectInputHelperService.updateParameterConstraints(scope.inputCell, scope.unitOfMeasurement);
+          scope.inputCell = EffectInputHelperService.removeTextValue(scope.inputCell);
+          scope.error = EffectInputHelperService.getInputError(scope.inputCell);
         }
 
         function keyCheck(event) {

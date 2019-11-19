@@ -20,8 +20,8 @@ define(['lodash', 'angular'], function(_, angular) {
       var maxHullValue = Math.max.apply(null, maxHullValues);
 
       return [
-        minHullValue,
-        maxHullValue
+        significantDigits()(minHullValue),
+        significantDigits()(maxHullValue)
       ];
     };
   }

@@ -2,17 +2,17 @@
 define([
   './mcdaBenefitRiskController',
   './schemaService',
-  './mcdaBenefitRiskService',
+  './tabService',
   'angular'
 ], function(
   MCDABenefitRiskController,
   SchemaService,
-  McdaBenefitRiskService,
+  TabService,
   angular
 ) {
-    return angular.module('elicit.benefitRisk', ['elicit.util'])
-      .controller('MCDABenefitRiskController', MCDABenefitRiskController)
-      .factory('SchemaService', SchemaService)
-      .factory('McdaBenefitRiskService', McdaBenefitRiskService)
-      ;
-  });
+  return angular.module('elicit.benefitRisk', ['elicit.util'])
+    .controller('MCDABenefitRiskController', MCDABenefitRiskController)
+    .factory('SchemaService', SchemaService)
+    .factory('TabService', TabService)
+    ;
+});

@@ -40,8 +40,8 @@ module.exports = {
 
   afterEach: function(browser) {
     errorService.isErrorBarHidden(browser);
-    browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    browser.pause(50).click('#logo');
+    workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();
   },

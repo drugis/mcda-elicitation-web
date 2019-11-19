@@ -5,7 +5,7 @@ const errorService = require('./util/errorService');
 
 const testUrl = require('./util/constants').testUrl;
 const closeModalButton = '//*[@id="close-modal-button"]';
-const deleteWorkspaceButton = '//div[2]/div/div[2]/workspaces/div/div[2]/table/tbody/tr/td[3]/a';
+const deleteWorkspaceButton = '//*[@id="delete-workspace-0"]';
 
 module.exports = {
   beforeEach: function(browser) {
@@ -37,7 +37,7 @@ module.exports = {
       .click('//*[@id="logo"]')
       .click(deleteWorkspaceButton)
       .click(closeModalButton)
-      .assert.containsText('//div[2]/div/div[2]/workspaces/div/div[2]/table/tbody/tr/td[1]/a', 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)')
+      .assert.containsText('//*[@id="workspace-0"]', 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)')
       .click(deleteWorkspaceButton)
       .click('//*[@id="delete-workspace-confirm-button"]');
   }

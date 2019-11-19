@@ -9,13 +9,13 @@
   </div>
   <div class="cell large-4">
     <div class="right button-group">
-      <button class="button small info clipboard-button" data-clipboard-target="#effectstable">
+      <button class="button small info clipboard-button" data-clipboard-target="#sensitivity-table">
         <i class="fa fa-clipboard"></i> Copy to clipboard
       </button>
     </div>
   </div>
   <div class="cell">
-    <table id="sensitivity-table" class="full-width effects-table" id="effectstable">
+    <table id="sensitivity-table" class="full-width effects-table">
       <thead>
         <tr>
           <th ng-show="toggledColumns['criteria']">Criterion
@@ -39,7 +39,7 @@
       </thead>
       <tbody class="main">
         <tr ng-repeat="row in tableRows">
-          <td ng-if="row.isHeaderRow" class="group-header" colspan="{{5 + nrAlternatives}}">
+          <td ng-if="row.isHeaderRow" class="group-header" colspan="{{numberOfColumns + nrAlternatives}}">
             <div class="main-header">
               {{row.headerText}}
             </div>

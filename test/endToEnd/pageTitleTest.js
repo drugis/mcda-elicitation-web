@@ -18,7 +18,7 @@ function goToPreferences(browser) {
 
 function cleanUpWorkspace(browser) {
   browser.click('#logo');
-  workspaceService.deleteFromList(browser, title);
+  workspaceService.deleteFromList(browser, 0);
   errorService.isErrorBarHidden(browser);
 }
 
@@ -199,7 +199,7 @@ module.exports = {
         chai.expect(result).to.equal('Manual input');
       });
     browser.click('#logo');
-    workspaceService.deleteUnfinishedFromList(browser, 'title');
+    workspaceService.deleteUnfinishedFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
   }
 };

@@ -6,13 +6,13 @@
   </div>
   <div class="cell large-4">
     <div class="right button-group">
-      <button class="button small info clipboard-button" data-clipboard-target="#smaatable">
+      <button class="button small info clipboard-button" data-clipboard-target="#smaa-table">
         <i class="fa fa-clipboard"></i> Copy to clipboard
       </button>
     </div>
   </div>
   <div class="cell">
-    <table id="smaa-table" class="full-width effects-table" id="smaatable">
+    <table id="smaa-table" class="full-width effects-table">
       <thead>
         <tr>
           <th ng-show="toggledColumns['criteria']">
@@ -36,7 +36,7 @@
       </thead>
       <tbody class="main">
         <tr ng-repeat="row in rows">
-          <td ng-if="row.isHeaderRow" class="group-header" colspan="{{4 + nrAlternatives}}">
+          <td ng-if="row.isHeaderRow" class="group-header" colspan="{{numberOfColumns + nrAlternatives}}">
             <div class="main-header">
               {{row.headerText}}
             </div>

@@ -6,7 +6,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
     var stateMock = jasmine.createSpyObj('$state', ['go']);
     var stateParams;
     var modalMock = jasmine.createSpyObj('$modal', ['open']);
-    var McdaBenefitRiskService = jasmine.createSpyObj('McdaBenefitRiskService', ['newScenarioAndGo', 'copyScenarioAndGo']);
     var Tasks = {
       available: [{
         id: 'smaa-results'
@@ -25,11 +24,11 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
       'dePercentifyCriteria',
       'mergeBaseAndSubProblem',
       'setDefaultObservedScales',
-      'hasNoStochasticResults',
       'checkForMissingValuesInPerformanceTable'
     ]);
     var WorkspaceSettingsService = jasmine.createSpyObj('WorkspaceSetttingsService', ['usePercentage']);
     var EffectsTableService = jasmine.createSpyObj('EffectsTableService', ['createEffectsTableInfo']);
+    var tabServiceMock = jasmine.createSpyObj('TabService', ['getTabStatus']);
     var subProblems;
     var currentSubProblem = {
       id: 'subProblemId'
@@ -93,18 +92,18 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         $state: stateMock,
         $stateParams: stateParams,
         $modal: modalMock,
-        McdaBenefitRiskService: McdaBenefitRiskService,
         Tasks: Tasks,
         TaskDependencies: TaskDependencies,
         ScenarioResource: ScenarioResource,
         WorkspaceService: WorkspaceService,
         WorkspaceSettingsService: WorkspaceSettingsService,
         EffectsTableService: EffectsTableService,
+        TabService: tabServiceMock,
         subProblems: subProblems,
         currentSubProblem: currentSubProblem,
         scenarios: scenarios,
         currentScenario: currentScenario,
-        isMcdaStandalone: isMcdaStandalone,
+        isMcdaStandalone: isMcdaStandalone
       });
     }));
 
@@ -113,18 +112,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
         modalMock.open.calls.reset();
         TaskDependencies.isAccessible.calls.reset();
         scope.$apply();
-      });
-
-      it('should place a copyScenario function which opens a modal on the scope.', () => {
-        expect(modalMock.open).not.toHaveBeenCalled();
-        scope.copyScenario();
-        expect(modalMock.open).toHaveBeenCalled();
-      });
-
-      it('should place a newScenario function which opens a modal on the scope.', () => {
-        expect(modalMock.open).not.toHaveBeenCalled();
-        scope.newScenario();
-        expect(modalMock.open).toHaveBeenCalled();
       });
 
       describe('should place scenarioChanged on the scope', () => {
@@ -253,19 +240,6 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/benefitRisk/benefitRisk'], (
           preferences: true,
           results: true
         });
-      });
-    });
-
-    describe('when the aggregate state changes', () => {
-      beforeEach(() => {
-        WorkspaceService.hasNoStochasticResults.calls.reset();
-        WorkspaceService.hasNoStochasticResults.and.returnValue(true);
-        scope.aggregateState = { id: 'changed' };
-        scope.$apply();
-      });
-
-      it('should check whether there are stochastic results', () => {
-        expect(WorkspaceService.hasNoStochasticResults).toHaveBeenCalled();
       });
     });
 

@@ -1,7 +1,7 @@
 'use strict';
 define(['lodash', 'angular'], function(_) {
-  var dependencies = [];
-  var PerformanceService = function() {
+  var dependencies = ['significantDigits'];
+  var PerformanceService = function(significantDigits) {
     function buildExactPerformance(value, input) {
       return {
         type: 'exact',
@@ -11,7 +11,8 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function buildExactConfidencePerformance(cell) {
-      return buildExactPerformance(cell.firstParameter, {
+      return buildExactPerformance(
+        cell.firstParameter, {
         value: cell.firstParameter,
         lowerBound: cell.lowerBoundNE ? 'NE' : cell.secondParameter,
         upperBound: cell.upperBoundNE ? 'NE' : cell.thirdParameter
@@ -19,7 +20,8 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function buildExactPercentConfidencePerformance(cell) {
-      return buildExactPerformance((cell.firstParameter / 100), {
+      return buildExactPerformance(
+        significantDigits(cell.firstParameter / 100), {
         value: cell.firstParameter,
         lowerBound: cell.lowerBoundNE ? 'NE' : cell.secondParameter,
         upperBound: cell.upperBoundNE ? 'NE' : cell.thirdParameter,
@@ -28,7 +30,8 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function buildExactDecimalConfidencePerformance(cell) {
-      return buildExactPerformance((cell.firstParameter), {
+      return buildExactPerformance(
+        cell.firstParameter, {
         value: cell.firstParameter,
         lowerBound: cell.lowerBoundNE ? 'NE' : cell.secondParameter,
         upperBound: cell.upperBoundNE ? 'NE' : cell.thirdParameter,
@@ -78,8 +81,8 @@ define(['lodash', 'angular'], function(_) {
       return {
         type: 'dnorm',
         parameters: {
-          mu: cell.firstParameter / 100,
-          sigma: cell.secondParameter / 100
+          mu: significantDigits(cell.firstParameter / 100),
+          sigma: significantDigits(cell.secondParameter / 100)
         },
         input: {
           mu: cell.firstParameter,
@@ -142,7 +145,8 @@ define(['lodash', 'angular'], function(_) {
     }
 
     function buildPercentPerformance(cell) {
-      return buildExactPerformance(cell.firstParameter / 100, {
+      return buildExactPerformance(
+        significantDigits(cell.firstParameter / 100), {
         scale: 'percentage',
         value: cell.firstParameter
       });
@@ -160,7 +164,7 @@ define(['lodash', 'angular'], function(_) {
         return undefined;
       } else {
         var percentageModifier = isPercentage(cell) ? 100 : 1;
-        var value = (cell.firstParameter + cell.secondParameter) / (2 * percentageModifier);
+        var value = significantDigits((cell.firstParameter + cell.secondParameter) / (2 * percentageModifier));
         var input = {
           lowerBound: cell.firstParameter,
           upperBound: cell.secondParameter
@@ -180,8 +184,8 @@ define(['lodash', 'angular'], function(_) {
         return {
           type: 'range',
           parameters: {
-            lowerBound: cell.firstParameter / percentageModifier,
-            upperBound: cell.secondParameter / percentageModifier
+            lowerBound: significantDigits(cell.firstParameter / percentageModifier),
+            upperBound: significantDigits(cell.secondParameter / percentageModifier)
           }
         };
       }

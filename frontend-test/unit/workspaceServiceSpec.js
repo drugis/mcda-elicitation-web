@@ -619,7 +619,7 @@ define([
       it('should only return the scenarios in which all criteria have fully defined pvfs', function() {
         var scenarios = [{
           state: {
-            prefs: {}
+            prefs: []
           }
         }, {
           state: {
@@ -1381,77 +1381,6 @@ define([
           }
         };
         expect(result).toEqual(expectedResult);
-      });
-    });
-
-    describe('hasNoStochasticResults', function() {
-      it('should return true is there are no stochastic results', function() {
-        var aggregateState = {
-          problem: {
-            performanceTable: [{
-              performance: {
-                distribution: {
-                  type: 'exact'
-                }
-              }
-            }, {
-              performance: {
-                effect: {}
-              }
-            }]
-          },
-          prefs: [{
-            type: 'exact swing'
-          }]
-        };
-        var result = workspaceService.hasNoStochasticResults(aggregateState);
-        expect(result).toBeTruthy();
-      });
-
-      it('should return false if there is atleast one distribution', function() {
-        var aggregateState = {
-          problem: {
-            performanceTable: [{
-              performance: {
-                distribution: {
-                  type: 'dbeta'
-                }
-              }
-            }, {
-              performance: {
-                effect: {}
-              }
-            }]
-          },
-          prefs: [{
-            type: 'exact swing'
-          }]
-        };
-        var result = workspaceService.hasNoStochasticResults(aggregateState);
-        expect(result).toBeFalsy();
-      });
-
-      it('should return false if there is uncertainty in the preferences', function() {
-        var aggregateState = {
-          problem: {
-            performanceTable: [{
-              performance: {
-                distribution: {
-                  type: 'exact'
-                }
-              }
-            }, {
-              performance: {
-                effect: {}
-              }
-            }]
-          },
-          prefs: [{
-            type: 'ratio bound'
-          }]
-        };
-        var result = workspaceService.hasNoStochasticResults(aggregateState);
-        expect(result).toBeFalsy();
       });
     });
 

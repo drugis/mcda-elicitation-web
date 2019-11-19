@@ -21,9 +21,11 @@ define(['lodash'], function(_) {
       },
       templateUrl: './sensitivityTableDirective.html',
       link: function(scope) {
-        // init
         scope.nrAlternatives = _.keys(scope.alternatives).length;
         scope.tableRows = EffectsTableService.buildEffectsTable(scope.criteria);
+        scope.$watch('toggledColumns', function() {
+          scope.numberOfColumns = _.filter(scope.toggledColumns).length;
+        }, true);
       }
     };
   };

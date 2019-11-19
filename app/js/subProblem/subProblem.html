@@ -5,10 +5,10 @@
       ng-options="subProblem.title for subProblem in subProblems track by subProblem.id"
       ng-change="subProblemChanged(subProblem)"></select>
     <inline-help help-key="problem"></inline-help>
-    <a id="edit-subproblem-button" ng-if="editMode.isUserOwner" ng-click="editSubProblemTitle()" tooltip="Edit current problem title">
+    <a id="edit-subproblem-button" ng-if="editMode.canEdit" ng-click="editSubProblemTitle()" tooltip="Edit current problem title">
       <i class="fa fa-edit"></i>
     </a>
-    <a id="create-subproblem-button" ng-if="editMode.isUserOwner" ng-click="openCreateDialog()" tooltip="Create new problem">
+    <a id="create-subproblem-button" ng-if="editMode.canEdit" ng-click="openCreateDialog()" tooltip="Create new problem">
       <i class="fa fa-plus"></i>
     </a>
   </div>
@@ -68,18 +68,18 @@
             {{row.dataSource.scale[1] | number}}</td>
           <td>
             <!-- obs -->
-            <span ng-bind="row.intervalHull[0] | number"></span> ,
-            <span ng-bind="row.intervalHull[1] | number"></span>
+            <span ng-bind="row.intervalHull[0]"></span> ,
+            <span ng-bind="row.intervalHull[1]"></span>
           </td>
           <td>
             <!-- conf -->
             <span ng-if="row.dataSource.pvf.range.length">
-              {{row.dataSource.pvf.range[0] | number}},
-              {{row.dataSource.pvf.range[1] | number}}
+              {{significantDigits(row.dataSource.pvf.range[0])}},
+              {{significantDigits(row.dataSource.pvf.range[1])}}
             </span>
             <span ng-if="!row.dataSource.pvf.range.length">
-              <span ng-bind="row.intervalHull[0] | number"></span> ,
-              <span ng-bind="row.intervalHull[1] | number"></span>
+              <span ng-bind="row.intervalHull[0]"></span> ,
+              <span ng-bind="row.intervalHull[1]"></span>
             </span>
           </td>
           <td>{{row.dataSource.unitOfMeasurement.label}}</td>
