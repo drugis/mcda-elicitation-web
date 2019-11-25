@@ -4,24 +4,28 @@
   </h4>
   <div id="partial-value-functions" class="grid-x grid-padding-x small-up-1 medium-up-3 large-up-4">
     <div ng-repeat="criterion in criteria">
-      <div class="cell" style="text-align: center; padding-top: 30px;">
-        <div style="width: 250px; height: 50px; text-align: center; display: flex; flex-direction: column;">
-          <h5 style="margin-top: auto;">{{criterion.title}}</h5>
+      <div class="cell partial-value-plot-container">
+        <div class="partial-value-function-plot-header">
+          <span class="partial-value-function-plot-header" title="{{criterion.title}}">
+            {{criterion.title}}
+          </span>
         </div>
-        <div style="width: 250px; height: 180px">
+        <div class="partial-value-plot">
           <partial-value-plot ng-if="isPVFDefined(criterion.dataSources[0])" criterion="criterion"
             values="pvfCoordinates[criterion.id]" width="'250px'" height="'180px'"></partial-value-plot>
-          <div ng-if="!isPVFDefined(criterion.dataSources[0])" style="padding-top: 40px; text-align: center; margin: 0">
+          <div class="undefined-partial-value-function" ng-if="!isPVFDefined(criterion.dataSources[0])">
             <i style="font-size: 100px" class="fa fa-question"></i>
           </div>
         </div>
       </div>
-      <div class="cell" style="text-align: center;">
-        <button id="{{ criterion.id }}-pvf-button" class="button" ng-if="editMode.canEdit"
+      <div class="cell text-centered">
+        <button id="{{ criterion.id }}-pvf-button" class="button text-centered" ng-if="editMode.canEdit"
           ng-class="{alert: !isSafe['partial-value-function'].safe}"
           tooltip="{{isSafe['partial-value-function'].tooltip}}" tooltip-animation="false"
           ng-disabled="!isAccessible(tasks['partial-value-function']).accessible"
-          ui-sref="partial-value-function({criterion: criterion.id})">Define</button>
+          ui-sref="partial-value-function({criterion: criterion.id})">
+          Define
+        </button>
       </div>
     </div>
   </div>
