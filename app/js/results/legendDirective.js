@@ -6,8 +6,20 @@ define([
   _,
   $
 ) {
-  var dependencies = ['$stateParams', '$modal', '$compile', 'ScenarioResource'];
-  var LegendDirective = function($stateParams, $modal, $compile, ScenarioResource) {
+  var dependencies = [
+    '$rootScope',
+    '$stateParams',
+    '$modal',
+    '$compile',
+    'ScenarioResource'
+  ];
+  var LegendDirective = function(
+    $rootScope,
+    $stateParams,
+    $modal,
+    $compile,
+    ScenarioResource
+  ) {
     return {
       restrict: 'A',
       link: function(scope, element) {
@@ -40,8 +52,8 @@ define([
           'Labels</button>')(scope);
         $element.after(btnElement);
 
-        function emitEvent() {
-          scope.$emit('elicit.legendChanged');
+        function broadcastEvent() {
+          $rootScope.$broadcast('elicit.legendChanged');
         }
 
         function editLegend() {
@@ -58,7 +70,7 @@ define([
               callback: function() {
                 return function(newLegend) {
                   scope.scenario.state.legend = newLegend;
-                  ScenarioResource.save($stateParams, scope.scenario).$promise.then(emitEvent);
+                  ScenarioResource.save($stateParams, scope.scenario).$promise.then(broadcastEvent);
                 };
               }
             }

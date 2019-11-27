@@ -288,7 +288,6 @@ define([
     }
 
     return {
-      // getResults: getResults,
       resetModifiableScales: resetModifiableScales,
       getSensitivityLineChartSettings: getSensitivityLineChartSettings,
       getValueProfilePlotSettings: getValueProfilePlotSettings,
