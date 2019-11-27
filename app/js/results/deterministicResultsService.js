@@ -195,26 +195,6 @@ define([
       }, {});
     }
 
-    function getLineChartMin(xValues) {
-      return _.reduce(xValues, function(accum, value, idx) {
-        if (idx !== 0 && parseFloat(value) < parseFloat(accum)) {
-          return value;
-        } else {
-          return accum;
-        }
-      }, Infinity);
-    }
-
-    function getLineChartMax(xValues) {
-      return _.reduce(xValues, function(accum, value, idx) {
-        if (idx !== 0 && parseFloat(value) > parseFloat(accum)) {
-          return value;
-        } else {
-          return accum;
-        }
-      }, -Infinity);
-    }
-
     function getSensitivityLineChartSettings(root, values, options) {
       return {
         bindto: root,
@@ -261,6 +241,26 @@ define([
           show: options.useTooltip
         }
       };
+    }
+
+    function getLineChartMin(xValues) {
+      return _.reduce(xValues, function(accum, value, idx) {
+        if (idx !== 0 && parseFloat(value) < parseFloat(accum)) {
+          return parseFloat(value);
+        } else {
+          return accum;
+        }
+      }, Infinity);
+    }
+
+    function getLineChartMax(xValues) {
+      return _.reduce(xValues, function(accum, value, idx) {
+        if (idx !== 0 && parseFloat(value) > parseFloat(accum)) {
+          return parseFloat(value);
+        } else {
+          return accum;
+        }
+      }, -Infinity);
     }
 
     function getValueProfilePlotSettings(results, criteria, alternatives, alternativesLegend, root) {

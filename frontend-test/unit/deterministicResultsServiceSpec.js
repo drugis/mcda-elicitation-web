@@ -403,8 +403,8 @@ define([
                 text: options.labelXAxis,
                 position: 'outer-center'
               },
-              min: '-30',
-              max: '-10',
+              min: -30,
+              max: -10,
               padding: {
                 left: 0,
                 right: 0
