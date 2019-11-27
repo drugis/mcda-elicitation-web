@@ -104,12 +104,13 @@ define(['lodash'], function(_) {
           });
         }
 
-        //private
         function initializeCriteriaLists() {
-          var partition = _.partition(scope.criteria, ['isFavorable', true]);
-          scope.criteria = partition[0].concat(partition[1]);
-          scope.favorableCriteria = partition[0];
-          scope.unfavorableCriteria = partition[1];
+          if (scope.useFavorability) {
+            var partition = _.partition(scope.criteria, ['isFavorable', true]);
+            scope.criteria = partition[0].concat(partition[1]);
+            scope.favorableCriteria = partition[0];
+            scope.unfavorableCriteria = partition[1];
+          }
         }
 
         function swapAndInitialize(array, idx, newIdx) {
