@@ -8891,3 +8891,15 @@ div.undefined-partial-value-function {
 .text-centered {
   text-align: center;
 }
+
+/* line 631, ../../sass/_mcda-drugis-base.scss */
+.c3-axis-x text {
+  font-family: sans-serif;
+  font-size: 12px;
+}
+
+/* line 636, ../../sass/_mcda-drugis-base.scss */
+.c3-axis-y text {
+  font-family: sans-serif;
+  font-size: 12px;
+}
