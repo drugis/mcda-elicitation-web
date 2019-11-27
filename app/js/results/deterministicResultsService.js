@@ -195,6 +195,26 @@ define([
       }, {});
     }
 
+    function getLineChartMin(xValues) {
+      return _.reduce(xValues, function(accum, value, idx) {
+        if (idx !== 0 && parseFloat(value) < parseFloat(accum)) {
+          return value;
+        } else {
+          return accum;
+        }
+      }, Infinity);
+    }
+
+    function getLineChartMax(xValues) {
+      return _.reduce(xValues, function(accum, value, idx) {
+        if (idx !== 0 && parseFloat(value) > parseFloat(accum)) {
+          return value;
+        } else {
+          return accum;
+        }
+      }, -Infinity);
+    }
+
     function getSensitivityLineChartSettings(root, values, options) {
       return {
         bindto: root,
@@ -208,8 +228,8 @@ define([
               text: options.labelXAxis,
               position: 'outer-center'
             },
-            min: values[0][1],
-            max: values[0][values[0].length - 1],
+            min: getLineChartMin(values[0]),
+            max: getLineChartMax(values[0]),
             padding: {
               left: 0,
               right: 0

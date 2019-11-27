@@ -13,7 +13,6 @@ define([
       restrict: 'E',
       scope: {
         plotOptions: '=',
-        showLegend: '@',
         values: '=',
       },
       template: '<div class="preferences-sensitivity-plot"></div>',
