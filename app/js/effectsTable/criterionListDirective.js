@@ -19,15 +19,15 @@ define(['lodash'], function(_) {
     return {
       restrict: 'E',
       scope: {
+        'alternatives': '=',
         'criteria': '=',
-        'useFavorability': '=',
+        'editMode': '=',
+        'effectsTableInfo': '=',
         'inputData': '=',
         'isInput': '=',
-        'workspace': '=',
-        'editMode': '=',
         'scales': '=',
-        'alternatives': '=',
-        'effectsTableInfo': '='
+        'useFavorability': '=',
+        'workspace': '='
       },
       templateUrl: '../effectsTable/criterionListDirective.html',
       link: function(scope) {
@@ -100,13 +100,10 @@ define(['lodash'], function(_) {
         }
 
         function saveOrdering() {
-          function decorateWithId(alternative, alternativeId) {
-            return _.merge({}, { id: alternativeId }, alternative);
-          }
-          var criteria = getCriteria();
-
-          OrderingService.saveOrdering($stateParams, criteria,
-            _.map(scope.workspace.problem.alternatives, decorateWithId)
+          OrderingService.saveOrdering(
+            $stateParams,
+            getCriteria(),
+            scope.alternatives
           );
         }
 
