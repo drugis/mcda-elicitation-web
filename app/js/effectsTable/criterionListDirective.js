@@ -69,21 +69,34 @@ define(['lodash'], function(_) {
               },
               callback: function() {
                 return function(newCriterion) {
-                  scope.criteria[_.findIndex(scope.criteria, ['id', criterion.id])] = newCriterion;
+                  replaceOrderedCriterion(criterion.id, newCriterion);
                   initializeCriteriaLists();
                   if (!scope.isInput) {
-                    saveWorkspace(newCriterion);
+                    scope.workspace.problem.criteria[criterion.id] = newCriterion;
+                    saveWorkspace();
                   }
                 };
               },
               oldCriterion: function() {
-                return criterion;
+                if (scope.isInput) {
+                  return criterion;
+                } else {
+                  return scope.workspace.problem.criteria[criterion.id];
+                }
               },
               useFavorability: function() {
                 return scope.useFavorability;
               }
             }
           });
+        }
+
+        function replaceOrderedCriterion(criterionId, newCriterion) {
+          var criterionIndex = _.findIndex(scope.criteria, ['id', criterionId]);
+          scope.criteria[criterionIndex] = _.merge({},
+            _.find(scope.criteria, ['id', criterionId]),
+            newCriterion
+          );
         }
 
         function saveOrdering() {
@@ -105,8 +118,7 @@ define(['lodash'], function(_) {
           }
         }
 
-        function saveWorkspace(criterion) {
-          scope.workspace.problem.criteria[criterion.id] = _.omit(criterion, 'id');
+        function saveWorkspace() {
           saveOrdering();
           WorkspaceResource.save($stateParams, scope.workspace).$promise.then(function() {
             $state.reload(); //must reload to update effectsTable
