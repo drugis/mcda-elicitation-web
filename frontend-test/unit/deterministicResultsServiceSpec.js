@@ -377,6 +377,66 @@ define([
         };
         expect(settings).toEqual(expectedSettings);
       });
+
+      it('should return the settings for a sensitivity line chart setting the correct min and max values for the x axis, when the order is not correct in the values', function() {
+        const root = 'root';
+        const values = [['x', '-10', '-30']];
+        const options = {
+          useTooltip: false,
+          labelXAxis: 'xlabel',
+          labelYAxis: 'ylabel'
+        };
+
+        var settings = resultsService.getSensitivityLineChartSettings(root, values, options);
+
+        delete settings.axis.x.tick.format;
+
+        var expectedSettings = {
+          bindto: root,
+          data: {
+            x: 'x',
+            columns: values
+          },
+          axis: {
+            x: {
+              label: {
+                text: options.labelXAxis,
+                position: 'outer-center'
+              },
+              min: -30,
+              max: -10,
+              padding: {
+                left: 0,
+                right: 0
+              },
+              tick: {
+                count: 5,
+              }
+            },
+            y: {
+              label: {
+                text: options.labelYAxis,
+                position: 'outer-middle'
+              }
+            }
+          },
+          grid: {
+            x: {
+              show: false
+            },
+            y: {
+              show: true
+            }
+          },
+          point: {
+            show: false
+          },
+          tooltip: {
+            show: options.useTooltip
+          }
+        };
+        expect(settings).toEqual(expectedSettings);
+      });
     });
   });
 });
