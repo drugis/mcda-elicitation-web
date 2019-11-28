@@ -16,7 +16,7 @@ module.exports = {
     workspaceService.addExample(browser, title);
 
     browser
-      .click('a[id="' + title + '"]')
+      .click('a[id="workspace-0"]')
       .waitForElementVisible('#workspace-title')
       .click('#smaa-tab')
       .waitForElementVisible('#uncertainty-measurements-checkbox:disabled')
@@ -24,7 +24,7 @@ module.exports = {
       ;
 
     browser.click('#logo');
-    workspaceService.deleteFromList(browser, title);
+    workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();
   }
