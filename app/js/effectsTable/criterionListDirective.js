@@ -90,10 +90,19 @@ define(['lodash'], function(_) {
           function decorateWithId(alternative, alternativeId) {
             return _.merge({}, { id: alternativeId }, alternative);
           }
-          var criteria = scope.favorableCriteria.concat(scope.unfavorableCriteria);
+          var criteria = getCriteria();
+
           OrderingService.saveOrdering($stateParams, criteria,
             _.map(scope.workspace.problem.alternatives, decorateWithId)
           );
+        }
+
+        function getCriteria() {
+          if (scope.useFavorability) {
+            return scope.favorableCriteria.concat(scope.unfavorableCriteria);
+          } else {
+            return scope.criteria;
+          }
         }
 
         function saveWorkspace(criterion) {
