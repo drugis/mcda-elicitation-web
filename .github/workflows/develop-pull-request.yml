@@ -35,8 +35,8 @@ jobs:
 
       - name: setup mcda database
         run: |
-           docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE USER mcdaweb WITH PASSWORD 'develop'"
-           docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE DATABASE mcdaweb ENCODING 'utf-8' OWNER mcdaweb"
+          docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE USER mcdaweb WITH PASSWORD 'develop'"
+          docker exec ${{ job.services.postgres.id }} psql -U postgres -c "CREATE DATABASE mcdaweb ENCODING 'utf-8' OWNER mcdaweb"
 
       - name: initialize mcda database
         run: |
@@ -63,8 +63,8 @@ jobs:
         uses: rtCamp/action-slack-notify@master
         env:
           SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
-          SLACK_TITLE: 'Development pull request:'
-          SLACK_MESSAGE: 'Front-end tests failed'
+          SLACK_TITLE: "Development pull request:"
+          SLACK_MESSAGE: "Front-end tests failed"
 
       - name: back-end tests
         id: mocha
@@ -75,8 +75,8 @@ jobs:
         uses: rtCamp/action-slack-notify@master
         env:
           SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
-          SLACK_TITLE: 'Development pull request:'
-          SLACK_MESSAGE: 'Back-end tests failed'
+          SLACK_TITLE: "Development pull request:"
+          SLACK_MESSAGE: "Back-end tests failed"
 
       - name: run webpack
         run: npm run build-local-login
@@ -85,7 +85,7 @@ jobs:
         run: node index.js &
         env:
           MCDAWEB_AUTHENTICATION_METHOD: LOCAL
-          MCDAWEB_DB_USER: mcdaweb 
+          MCDAWEB_DB_USER: mcdaweb
           MCDAWEB_DB_PASSWORD: develop
           MCDAWEB_DB_HOST: localhost
           MCDAWEB_DB_NAME: mcdaweb
@@ -98,17 +98,17 @@ jobs:
           PATAVI_CLIENT_KEY: key.pem
           PATAVI_CLIENT_CRT: crt.pem
 
-      # - name: run nightwatch tests
-      #   id: nightwatch
-      #   run: npm run test-end-to-end
+      - name: run nightwatch tests
+        id: nightwatch
+        run: npm run test-end-to-end
 
-      # - name: notify on slack channel on nightwatch failure
-      #   if: failure()
-      #   uses: rtCamp/action-slack-notify@master
-      #   env:
-      #     SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
-      #     SLACK_TITLE: 'Development pull request:'
-      #     SLACK_MESSAGE: 'End-to-end tests failed'
+      - name: notify on slack channel on nightwatch failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+          SLACK_TITLE: "Development pull request:"
+          SLACK_MESSAGE: "End-to-end tests failed"
 
       - name: stop mcda
         run: sudo pkill -9 node
@@ -117,5 +117,5 @@ jobs:
         uses: rtCamp/action-slack-notify@master
         env:
           SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
-          SLACK_TITLE: 'Development pull request:'
-          SLACK_MESSAGE: 'Tests passed'
+          SLACK_TITLE: "Development pull request:"
+          SLACK_MESSAGE: "Tests passed"
