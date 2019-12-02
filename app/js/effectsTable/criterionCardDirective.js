@@ -96,7 +96,7 @@ define(['lodash'], function(_) {
                   if (dataSource) {
                     scope.criterion.dataSources[dataSourceIndex] = newDataSource;
                     if (!scope.isInput) {
-                      scope.saveWorkspace(scope.criterion);
+                      scope.saveWorkspace(scope.criterion, scope.criterion.id);
                     }
                   } else {
                     scope.criterion.dataSources.push(newDataSource);

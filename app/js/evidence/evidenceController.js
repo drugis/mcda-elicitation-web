@@ -45,6 +45,10 @@ define(['clipboard', 'lodash', 'angular'], function(Clipboard, _, angular) {
       reloadOrderingsAndScales();
     });
 
+    $scope.$watch('workspace.problem', function(){
+      $scope.problem = angular.copy($scope.workspace.problem);
+    }, true);
+
     new Clipboard('.clipboard-button');
 
     function reloadOrderingsAndScales() {

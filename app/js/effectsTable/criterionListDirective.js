@@ -1,8 +1,7 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
     '$modal',
-    '$state',
     '$stateParams',
     'OrderingService',
     'WorkspaceResource',
@@ -10,7 +9,6 @@ define(['lodash'], function(_) {
   ];
   var CriterionListDirective = function(
     $modal,
-    $state,
     $stateParams,
     OrderingService,
     WorkspaceResource,
@@ -72,7 +70,7 @@ define(['lodash'], function(_) {
                   replaceOrderedCriterion(criterion.id, newCriterion);
                   initializeCriteriaLists();
                   if (!scope.isInput) {
-                    saveWorkspace(newCriterion);
+                    saveWorkspace(newCriterion, criterion.id);
                   }
                 };
               },
@@ -101,25 +99,16 @@ define(['lodash'], function(_) {
         function saveOrdering() {
           OrderingService.saveOrdering(
             $stateParams,
-            getCriteria(),
+            scope.criteria,
             scope.alternatives
           );
         }
 
-        function getCriteria() {
-          if (scope.useFavorability) {
-            return scope.favorableCriteria.concat(scope.unfavorableCriteria);
-          } else {
-            return scope.criteria;
-          }
-        }
-
-        function saveWorkspace(criterion) {
-          scope.workspace.problem.criteria[criterion.id] = criterion;
-          saveOrdering();
-          WorkspaceResource.save($stateParams, scope.workspace).$promise.then(function() {
-            $state.reload(); //must reload to update effectsTable
-          });
+        function saveWorkspace(criterion, criterionId) {
+          var newCriterion = angular.copy(criterion);
+          delete newCriterion.id;
+          scope.workspace.problem.criteria[criterionId] = newCriterion;
+          WorkspaceResource.save($stateParams, scope.workspace);
         }
 
         function initializeCriteriaLists() {
