@@ -30,7 +30,7 @@ jobs:
 
       - name: check branches
         run: |
-          git rev-parse --abbrev-ref HEAD
+          git branch
 
       # - name: create ssl files
       #   run: |
