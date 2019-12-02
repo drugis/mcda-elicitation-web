@@ -57,8 +57,7 @@ jobs:
       - name: front-end tests
         id: karma
         run: |
-          # npx karma start --singleRun
-          exit 1
+          npx karma start --singleRun
           echo ::set-output name=status::success
 
       - name: back-end tests

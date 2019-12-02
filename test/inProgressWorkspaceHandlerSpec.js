@@ -68,6 +68,7 @@ describe('the in progress workspace handler', () => {
     });
 
     it('should not call reponse.json if there\'s an error', function() {
+      fail();
       create.onCall(0).yields(error, null);
       inProgressWorkspaceHandler.create(request, response, next);
       sinon.assert.calledWith(create, userId, problem);
