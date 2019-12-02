@@ -72,8 +72,7 @@ define(['lodash'], function(_) {
                   replaceOrderedCriterion(criterion.id, newCriterion);
                   initializeCriteriaLists();
                   if (!scope.isInput) {
-                    scope.workspace.problem.criteria[criterion.id] = newCriterion;
-                    saveWorkspace();
+                    saveWorkspace(newCriterion);
                   }
                 };
               },
@@ -116,9 +115,7 @@ define(['lodash'], function(_) {
         }
 
         function saveWorkspace(criterion) {
-          if (criterion) {
-            scope.workspace.problem.criteria[criterion.id] = criterion;
-          }
+          scope.workspace.problem.criteria[criterion.id] = criterion;
           saveOrdering();
           WorkspaceResource.save($stateParams, scope.workspace).$promise.then(function() {
             $state.reload(); //must reload to update effectsTable
