@@ -1,7 +1,7 @@
 name: MCDA develop pull request
 
 on:
-  pull_request:
+  push:
     branches: feature/workflow
 
 jobs:
@@ -44,7 +44,7 @@ jobs:
           docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -f database.pg.sql
 
       - name: add local user
-        run: docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('user', 'john', 'dough', '$2a$14$ZjMqaDjVymMrgaA.kUFJxe0R4gWyOE4vZMUVZ4OlIq4p.wT48hy3u')"
+        run: docker exec ${{ job.services.postgres.id }} psql -U mcdaweb -c "INSERT INTO Account (username, firstName, lastName, password) VALUES ('user', 'john', 'dough', '\$2a$14\$ZjMqaDjVymMrgaA.kUFJxe0R4gWyOE4vZMUVZ4OlIq4p.wT48hy3u')"
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
