@@ -54,11 +54,11 @@ jobs:
       - name: run yarn
         run: yarn
 
-      - name: front-end tests
-        run: npx karma start --singleRun
+      # - name: front-end tests
+      #   run: npx karma start --singleRun
 
-      - name: back-end tests
-        run: npx mocha --exit
+      # - name: back-end tests
+      #   run: npx mocha --exit
 
       - name: run webpack
         run: npm run build-local-login
@@ -80,8 +80,8 @@ jobs:
           PATAVI_CLIENT_KEY: key.pem
           PATAVI_CLIENT_CRT: crt.pem
 
-      # - name: run nightwatch tests
-      #   run: npm run test-end-to-end
+      - name: run nightwatch tests
+        run: npm run test-end-to-end
 
       - name: stop mcda
         run: sudo pkill -9 node
