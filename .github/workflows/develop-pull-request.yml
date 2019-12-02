@@ -102,20 +102,20 @@ jobs:
         id: nightwatch
         run: npm run test-end-to-end
 
-      - name: notify on slack channel on nightwatch failure
-        if: failure()
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
-          SLACK_TITLE: "Development pull request:"
-          SLACK_MESSAGE: "End-to-end tests failed"
+      # - name: notify on slack channel on nightwatch failure
+      #   if: failure()
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+      #     SLACK_TITLE: "Development pull request:"
+      #     SLACK_MESSAGE: "End-to-end tests failed"
 
       - name: stop mcda
         run: sudo pkill -9 node
 
-      - name: notify on slack channel on success
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
-          SLACK_TITLE: "Development pull request:"
-          SLACK_MESSAGE: "Tests passed"
+      # - name: notify on slack channel on success
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+      #     SLACK_TITLE: "Development pull request:"
+      #     SLACK_MESSAGE: "Tests passed"
