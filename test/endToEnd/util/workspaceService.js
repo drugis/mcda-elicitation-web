@@ -8,6 +8,7 @@ function goHomeAfterLoading(browser, title) {
     .assert.containsText('#workspace-title', title)
     .waitForElementVisible('#logo')
     .click('#logo')
+    .pause(500)
     .source(function(result){
       console.log(result.value);
     });
