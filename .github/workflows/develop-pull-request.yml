@@ -56,15 +56,27 @@ jobs:
 
       - name: front-end tests
         id: karma
-        run: |
-          npx karma start --singleRun
-          echo ::set-output name=status::success
+        run: npx karma start --singleRun
+
+      - name: notify on slack channel on karma failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+          SLACK_TITLE: 'Development pull request:'
+          SLACK_MESSAGE: 'Front-end tests failed'
 
       - name: back-end tests
         id: mocha
-        run: |
-          npx mocha --exit
-          echo ::set-output name=status::success
+        run: npx mocha --exit
+
+      - name: notify on slack channel on mocha failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+          SLACK_TITLE: 'Development pull request:'
+          SLACK_MESSAGE: 'Back-end tests failed'
 
       - name: run webpack
         run: npm run build-local-login
@@ -88,34 +100,22 @@ jobs:
 
       # - name: run nightwatch tests
       #   id: nightwatch
-      #   run: | 
-            #npm run test-end-to-end
-            #echo ::set-output name=status::success
+      #   run: npm run test-end-to-end
+
+      # - name: notify on slack channel on nightwatch failure
+      #   if: failure()
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+      #     SLACK_TITLE: 'Development pull request:'
+      #     SLACK_MESSAGE: 'End-to-end tests failed'
 
       - name: stop mcda
         run: sudo pkill -9 node
 
-  notify:
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        node-version: ["12"]
-        os: [ubuntu-16.04]
-
-    steps:
       - name: notify on slack channel on success
-        if: test.steps.mocha.outputs.status == 'success'
         uses: rtCamp/action-slack-notify@master
         env:
           SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
           SLACK_TITLE: 'Development pull request:'
           SLACK_MESSAGE: 'Tests passed'
-
-      - name: notify on slack channel on success
-        if: test.steps.mocha.outputs.status != 'success' || test.steps.karma.outputs.status != 'success'
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
-          SLACK_TITLE: 'Development pull request:'
-          SLACK_MESSAGE: 'Tests failed'
