@@ -6,7 +6,8 @@ function goHomeAfterLoading(browser, title) {
   errorService.isErrorBarHidden(browser);
   browser
     .assert.containsText('#workspace-title', title)
-    .click('#logo');
+    .click('#logo')
+    .waitForElementVisible('#workspaces-header');
 }
 
 function addExample(browser, title) {
