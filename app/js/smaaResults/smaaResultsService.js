@@ -145,20 +145,6 @@ define([
       return newEntry;
     }
 
-    function replaceAlternativeNames(legend, state) {
-      if (!legend) {
-        return state;
-      }
-      var newState = _.cloneDeep(state);
-      newState.problem.alternatives = _.reduce(state.problem.alternatives, function(accum, alternative, alternativeKey) {
-        var newAlternative = _.cloneDeep(alternative);
-        newAlternative.title = legend[alternativeKey].newTitle;
-        accum[alternativeKey] = newAlternative;
-        return accum;
-      }, {});
-      return newState;
-    }
-
     function smaaResultsToRankPlotValues(results, alternatives, legend) {
       var values = getRankPlotTitles(alternatives, legend);
       return values.concat(getRankPlotValues(results, alternatives));
@@ -362,8 +348,7 @@ define([
       getResults: getResults,
       hasNoStochasticMeasurements: hasNoStochasticMeasurements,
       hasNoStochasticWeights: hasNoStochasticWeights,
-      addSmaaResults: addSmaaResults,
-      replaceAlternativeNames: replaceAlternativeNames
+      addSmaaResults: addSmaaResults
     };
   };
 
