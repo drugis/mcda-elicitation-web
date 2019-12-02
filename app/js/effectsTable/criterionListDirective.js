@@ -115,7 +115,10 @@ define(['lodash'], function(_) {
           }
         }
 
-        function saveWorkspace() {
+        function saveWorkspace(criterion) {
+          if (criterion) {
+            scope.workspace.problem.criteria[criterion.id] = criterion;
+          }
           saveOrdering();
           WorkspaceResource.save($stateParams, scope.workspace).$promise.then(function() {
             $state.reload(); //must reload to update effectsTable
