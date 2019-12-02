@@ -54,11 +54,15 @@ jobs:
       - name: run yarn
         run: yarn
 
-      # - name: front-end tests
-      #   run: npx karma start --singleRun
+      - name: front-end tests
+        id: karma
+        run: npx karma start --singleRun
+        run: echo ::set-output name=status::success
 
-      # - name: back-end tests
-      #   run: npx mocha --exit
+      - name: back-end tests
+        id: mocha
+        run: npx mocha --exit
+        run: echo ::set-output name=status::success
 
       - name: run webpack
         run: npm run build-local-login
@@ -80,14 +84,18 @@ jobs:
           PATAVI_CLIENT_KEY: key.pem
           PATAVI_CLIENT_CRT: crt.pem
 
-      - name: run nightwatch tests
-        run: npm run test-end-to-end
+      # - name: run nightwatch tests
+      #   id: nightwatch
+      #   run: npm run test-end-to-end
+      #   run: echo ::set-output name=status::success
 
       - name: stop mcda
         run: sudo pkill -9 node
 
-      - name: notify on slack channel
+      - name: notify on slack channel on success
+        if: steps.mocha.outputs.status == 'success'
         uses: rtCamp/action-slack-notify@master
         env:
           SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
           SLACK_TITLE: 'Development pull request:'
+          SLACK_MESSAGE: 'Tests successful'
