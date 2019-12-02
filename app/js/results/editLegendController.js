@@ -3,6 +3,7 @@ define(['lodash'], function(_) {
   var dependencies = [
     '$scope',
     '$modalInstance',
+    'LegendService',
     'legend',
     'alternatives',
     'callback'
@@ -11,6 +12,7 @@ define(['lodash'], function(_) {
   var EditLegendController = function(
     $scope,
     $modalInstance,
+    LegendService,
     legend,
     alternatives,
     callback
@@ -25,7 +27,7 @@ define(['lodash'], function(_) {
     // init
     $scope.legend = _.cloneDeep(legend);
     if (!$scope.legend) {
-      $scope.legend = createBaseCase();
+      $scope.legend = LegendService.createBaseCase(alternatives);
     }
     checkForMissingLabel();
 
@@ -48,18 +50,7 @@ define(['lodash'], function(_) {
     }
 
     function resetToBase() {
-       delete $scope.legend;
-       $scope.legend = createBaseCase();
-    }
-
-    function createBaseCase() {
-      return _.reduce(alternatives, function(accum, alternative) {
-        accum[alternative.id] = {
-          baseTitle: alternative.title,
-          newTitle: alternative.title
-        };
-        return accum;
-      }, {});
+       $scope.legend = LegendService.createBaseCase(alternatives);
     }
 
   };

@@ -60,9 +60,20 @@ define([
       }, '');
     }
 
+    function createBaseCase(alternatives) {
+      return _.reduce(alternatives, function(accum, alternative) {
+        accum[alternative.id] = {
+          baseTitle: alternative.title,
+          newTitle: alternative.title
+        };
+        return accum;
+      }, {});
+    }
+
     return {
       replaceAlternativeNames: replaceAlternativeNames,
-      createButtonElement: createButtonElement
+      createButtonElement: createButtonElement,
+      createBaseCase: createBaseCase
     };
   };
 

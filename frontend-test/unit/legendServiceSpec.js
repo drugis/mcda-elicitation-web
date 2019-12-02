@@ -140,5 +140,29 @@ define([
         });
       });
     });
+
+    describe('createBaseCase', function() {
+      it('should return the alternatives with base and new title the same', function() {
+        const alternatives = [{
+          id: 'alt1id',
+          title: 'alt1'
+        }, {
+          id: 'alt2id',
+          title: 'alt2'
+        }];
+        const result = legendService.createBaseCase(alternatives);
+        const expectedResult = {
+          alt1id: {
+            baseTitle: 'alt1',
+            newTitle: 'alt1'
+          },
+          alt2id: {
+            baseTitle: 'alt2',
+            newTitle: 'alt2'
+          }
+        };
+        expect(result).toEqual(expectedResult);
+      });
+    });
   });
 });
