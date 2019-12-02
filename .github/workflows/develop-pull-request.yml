@@ -95,8 +95,17 @@ jobs:
       - name: stop mcda
         run: sudo pkill -9 node
 
+  notify:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node-version: ["12"]
+        os: [ubuntu-16.04]
+
+    steps:
       - name: notify on slack channel on success
-        if: steps.mocha.outputs.status == 'success'
+        if: jobs.test.steps.mocha.outputs.status == 'success'
         uses: rtCamp/action-slack-notify@master
         env:
           SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
@@ -104,7 +113,7 @@ jobs:
           SLACK_MESSAGE: 'Tests passed'
 
       - name: notify on slack channel on success
-        if: steps.mocha.outputs.status != 'success' || steps.karma.outputs.status != 'success'
+        if: jobs.test.steps.mocha.outputs.status != 'success' || steps.karma.outputs.status != 'success'
         uses: rtCamp/action-slack-notify@master
         env:
           SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
