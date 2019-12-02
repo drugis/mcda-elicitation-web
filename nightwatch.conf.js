@@ -2,6 +2,7 @@
 
 const seleniumServer = require('selenium-server');
 const geckodriver = require('geckodriver');
+const chromedriver = require('chromedriver');
 
 module.exports = {
   src_folders: [
@@ -14,7 +15,7 @@ module.exports = {
     host: 'localhost',
     port: 4444,
     cli_args: {
-      'webdriver.gecko.driver': geckodriver.path
+      'webdriver.chrome.driver': chromedriver.path
     }
   },
   test_settings: {
@@ -24,9 +25,10 @@ module.exports = {
       },
       exclude: ['*/*.js'],
       desiredCapabilities: {
-        browserName: 'firefox',
-        'moz:firefoxOptions': {
-          args: ['-headless']
+        browserName: 'chrome',
+        chromeOptions: {
+          w3c: false,
+          args: ['--headless','--no-sandbox']
         },
         javascriptEnabled: true,
         acceptSslCerts: true,
