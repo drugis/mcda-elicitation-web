@@ -30,7 +30,7 @@ jobs:
 
       - name: check branches
         run: |
-          git branch
+          ls
 
       # - name: create ssl files
       #   run: |
