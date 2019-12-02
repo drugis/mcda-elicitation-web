@@ -56,13 +56,15 @@ jobs:
 
       - name: front-end tests
         id: karma
-        run: npx karma start --singleRun
-        run: echo ::set-output name=status::success
+        run: |
+          npx karma start --singleRun
+          echo ::set-output name=status::success
 
       - name: back-end tests
         id: mocha
-        run: npx mocha --exit
-        run: echo ::set-output name=status::success
+        run: |
+          npx mocha --exit
+          echo ::set-output name=status::success
 
       - name: run webpack
         run: npm run build-local-login
@@ -86,8 +88,9 @@ jobs:
 
       # - name: run nightwatch tests
       #   id: nightwatch
-      #   run: npm run test-end-to-end
-      #   run: echo ::set-output name=status::success
+      #   run: | 
+            #npm run test-end-to-end
+            #echo ::set-output name=status::success
 
       - name: stop mcda
         run: sudo pkill -9 node
