@@ -10,7 +10,8 @@ function login(browser, url, username, password) {
     .waitForElementVisible('#signinButton')
     .setValue('#username', username)
     .setValue('#password', password)
-    .click('#signinButton');
+    .click('#signinButton')
+    .pause(5000);
 }
 
 module.exports = {
