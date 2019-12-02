@@ -4,6 +4,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     '$scope',
     '$stateParams',
     'currentScenario',
+    'LegendService',
     'SmaaResultsService',
     'OrderingService',
     'PageTitleService'
@@ -13,6 +14,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope,
     $stateParams,
     currentScenario,
+    LegendService,
     SmaaResultsService,
     OrderingService,
     PageTitleService
@@ -46,7 +48,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     });
 
     function loadState() {
-      $scope.state = SmaaResultsService.replaceAlternativeNames($scope.scenario.state.legend, $scope.aggregateState.dePercentified);
+      $scope.state = LegendService.replaceAlternativeNames($scope.scenario.state.legend, $scope.aggregateState.dePercentified);
       $scope.state = SmaaResultsService.getResults($scope, $scope.state);
       $scope.state.resultsPromise.then(function() {
         $scope.state = SmaaResultsService.addSmaaResults($scope.state);

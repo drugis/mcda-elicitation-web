@@ -3,24 +3,25 @@ define([
   'angular',
   'angular-mocks',
   'mcda/results/results',
+  'mcda/smaaResults/smaaResults',
   'angular-patavi-client',
   'angularjs-slider'
 ], function(angular) {
   describe('The SmaaResultsService', function() {
-    var resultsService;
+    var smaaResultsService;
     var pataviServiceMock = jasmine.createSpyObj('PataviServiceMock', ['somefunction']);
 
     const root = 'root';
 
     beforeEach(function() {
       angular.mock.module('patavi', function() { });
-      angular.mock.module('elicit.results', function($provide) {
+      angular.mock.module('elicit.smaaResults', function($provide) {
         $provide.value('PataviService', pataviServiceMock);
       });
     });
 
     beforeEach(inject(function(SmaaResultsService) {
-      resultsService = SmaaResultsService;
+      smaaResultsService = SmaaResultsService;
     }));
 
     describe('addSmaaResults', function() {
@@ -65,7 +66,7 @@ define([
             }
           }
         };
-        var result = resultsService.addSmaaResults(state);
+        var result = smaaResultsService.addSmaaResults(state);
         var expectedResult = {
           results: {
             ranks: {
@@ -167,54 +168,6 @@ define([
       });
     });
 
-    describe('replaceAlternativeNames', function() {
-      it('should replace all titles with their legend/label', function() {
-        var state = {
-          problem: {
-            alternatives: {
-              alt1: {
-                title: 'alt1 old title'
-              },
-              alt2: {
-                title: 'alt2 old title'
-              }
-            }
-          }
-        };
-        var legend = {
-          alt1: {
-            newTitle: 'new alt1 title'
-          },
-          alt2: {
-            newTitle: 'new alt2 title'
-          }
-        };
-        var expectedResult = {
-          problem: {
-            alternatives: {
-              alt1: {
-                title: 'new alt1 title'
-              },
-              alt2: {
-                title: 'new alt2 title'
-              }
-            }
-          }
-        };
-        var result = resultsService.replaceAlternativeNames(legend, state);
-
-        expect(result).toEqual(expectedResult);
-      });
-
-      it('should do nothing if there is no legend', function() {
-        var state = {
-          a: 'b'
-        };
-        var result = resultsService.replaceAlternativeNames(undefined, state);
-        expect(result).toEqual(state);
-      });
-    });
-
     describe('getBarChartSettings', function() {
       it('should return the settings for a bar chart', function() {
         const results = [{
@@ -227,7 +180,7 @@ define([
           }]
         }];
 
-        var result = resultsService.getBarChartSettings(results, root);
+        var result = smaaResultsService.getBarChartSettings(results, root);
         delete result.axis.y.tick.format;
 
         const values = [
@@ -287,7 +240,7 @@ define([
             { y: 2 }
           ]
         }];
-        var result = resultsService.getCentralWeightsPlotSettings(results, root);
+        var result = smaaResultsService.getCentralWeightsPlotSettings(results, root);
         delete result.axis.y.tick.format;
 
         const values = [
@@ -345,7 +298,7 @@ define([
 
       it('should return the settings for the rank plot', function() {
         var legend;
-        var result = resultsService.getRankPlotSettings(results, alternatives, legend, root);
+        var result = smaaResultsService.getRankPlotSettings(results, alternatives, legend, root);
         delete result.axis.y.tick.format;
 
         const values = [
@@ -404,7 +357,7 @@ define([
             newTitle: 'newalt2'
           }
         };
-        var result = resultsService.getRankPlotSettings(results, alternatives, legend, root);
+        var result = smaaResultsService.getRankPlotSettings(results, alternatives, legend, root);
         delete result.axis.y.tick.format;
 
         const values = [
@@ -474,7 +427,7 @@ define([
             }]
           }
         };
-        const result = resultsService.hasNoStochasticMeasurements(aggregateState);
+        const result = smaaResultsService.hasNoStochasticMeasurements(aggregateState);
         expect(result).toBeFalsy();
       });
 
@@ -490,7 +443,7 @@ define([
             }]
           }
         };
-        const result = resultsService.hasNoStochasticMeasurements(aggregateState);
+        const result = smaaResultsService.hasNoStochasticMeasurements(aggregateState);
         expect(result).toBeTruthy();
       });
 
@@ -502,7 +455,7 @@ define([
             }]
           }
         };
-        const result = resultsService.hasNoStochasticMeasurements(aggregateState);
+        const result = smaaResultsService.hasNoStochasticMeasurements(aggregateState);
         expect(result).toBeTruthy();
       });
     });
@@ -514,7 +467,7 @@ define([
             type: 'exact swing'
           }]
         };
-        const result = resultsService.hasNoStochasticWeights(aggregateState);
+        const result = smaaResultsService.hasNoStochasticWeights(aggregateState);
         expect(result).toBeTruthy();
       });
 
@@ -524,7 +477,7 @@ define([
             type: 'ordinal'
           }]
         };
-        const result = resultsService.hasNoStochasticWeights(aggregateState);
+        const result = smaaResultsService.hasNoStochasticWeights(aggregateState);
         expect(result).toBeFalsy();
       });
 
@@ -532,7 +485,7 @@ define([
         const aggregateState = {
           prefs: []
         };
-        const result = resultsService.hasNoStochasticWeights(aggregateState);
+        const result = smaaResultsService.hasNoStochasticWeights(aggregateState);
         expect(result).toBeFalsy();
       });
 
@@ -540,13 +493,13 @@ define([
         const aggregateState = {
           prefs: {}
         };
-        const result = resultsService.hasNoStochasticWeights(aggregateState);
+        const result = smaaResultsService.hasNoStochasticWeights(aggregateState);
         expect(result).toBeFalsy();
       });
 
       it('should return false if there are no preferences', function() {
         const aggregateState = {};
-        const result = resultsService.hasNoStochasticWeights(aggregateState);
+        const result = smaaResultsService.hasNoStochasticWeights(aggregateState);
         expect(result).toBeFalsy();
       });
     });

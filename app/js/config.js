@@ -61,14 +61,14 @@ define(function() {
       id: 'smaa-results',
       title: 'Smaa results',
       controller: 'SmaaResultsController',
-      templateUrl: './results/smaaResults.html',
+      templateUrl: './smaaResults/smaaResults.html',
       requires: ['scale-range', 'partial-value-function'],
       resets: []
     }, {
       id: 'deterministic-results',
       title: 'Deterministic results',
       controller: 'DeterministicResultsController',
-      templateUrl: './results/deterministicResults.html',
+      templateUrl: './deterministicResults/deterministicResults.html',
       requires: ['scale-range', 'partial-value-function'],
       resets: []
     }, {

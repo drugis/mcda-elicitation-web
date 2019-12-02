@@ -1,8 +1,20 @@
 'use strict';
 define(['lodash'], function(_) {
-  var dependencies = ['$scope', '$modalInstance', 'legend', 'alternatives', 'callback'];
+  var dependencies = [
+    '$scope',
+    '$modalInstance',
+    'legend',
+    'alternatives',
+    'callback'
+  ];
 
-  var EditLegendController = function($scope, $modalInstance, legend, alternatives, callback) {
+  var EditLegendController = function(
+    $scope,
+    $modalInstance,
+    legend,
+    alternatives,
+    callback
+  ) {
     // functions
     $scope.saveLegend = saveLegend;
     $scope.close = $modalInstance.close;
@@ -17,9 +29,8 @@ define(['lodash'], function(_) {
     }
     checkForMissingLabel();
 
-
-    function checkForMissingLabel(){
-      $scope.isLabelMissing = _.find($scope.legend, function(legendEntry){
+    function checkForMissingLabel() {
+      $scope.isLabelMissing = _.find($scope.legend, function(legendEntry) {
         return !legendEntry.newTitle;
       });
     }
@@ -37,11 +48,8 @@ define(['lodash'], function(_) {
     }
 
     function resetToBase() {
-      $scope.legend = _.reduce($scope.legend,function(accum, legendEntry, legendKey){
-        accum[legendKey] = legendEntry;
-        accum[legendKey].newTitle = accum[legendKey].baseTitle;
-        return accum;
-      },{});
+       delete $scope.legend;
+       $scope.legend = createBaseCase();
     }
 
     function createBaseCase() {
