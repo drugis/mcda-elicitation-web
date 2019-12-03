@@ -1,4 +1,4 @@
-name: MCDA develop pull request
+name: MCDA develop pull request end-to-end tests
 
 on:
   push:
@@ -60,32 +60,6 @@ jobs:
       - name: run yarn
         run: yarn
 
-      # - name: front-end tests
-      #   id: karma
-      #   run: npx karma start --singleRun
-
-      # - name: notify on slack channel on karma failure
-      #   if: failure()
-      #   uses: rtCamp/action-slack-notify@master
-      #   env:
-      #     SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
-      #     SLACK_USERNAME: gitbot
-      #     SLACK_TITLE: "Development pull request:"
-      #     SLACK_MESSAGE: "Front-end tests failed"
-
-      # - name: back-end tests
-      #   id: mocha
-      #   run: npx mocha --exit
-
-      # - name: notify on slack channel on mocha failure
-      #   if: failure()
-      #   uses: rtCamp/action-slack-notify@master
-      #   env:
-      #     SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
-      #     SLACK_USERNAME: gitbot
-      #     SLACK_TITLE: "Development pull request:"
-      #     SLACK_MESSAGE: "Back-end tests failed"
-
       - name: run webpack
         run: npm run build-local-login
 
@@ -128,4 +102,4 @@ jobs:
       #     SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
       #     SLACK_USERNAME: gitbot
       #     SLACK_TITLE: "Development pull request:"
-      #     SLACK_MESSAGE: "Tests passed"
+      #     SLACK_MESSAGE: "End-to-end tests passed"
