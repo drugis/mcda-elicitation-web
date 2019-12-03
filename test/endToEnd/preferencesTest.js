@@ -80,19 +80,14 @@ module.exports = {
       .waitForElementVisible('#matching-title-header')
       .click('#OS-option')
       .click('#next-button')
-      .waitForElementVisible('#severe-importance-option')
       .click('#severe-importance-option')
-      .waitForElementVisible('#elicitation-trade-off-button')
       .click('#elicitation-trade-off-button')
-      .waitForElementVisible('#save-matching-weights-button')
       .click('#save-matching-weights-button')
-      .waitForElementVisible('#moderate-importance-option')
+      .assert.containsText('#severe-importance-option', '100%')
       .click('#moderate-importance-option')
-      .waitForElementVisible('#elicitation-trade-off-button')
       .click('#elicitation-trade-off-button')
-      .waitForElementVisible('#save-matching-weights-button')
       .click('#save-matching-weights-button')
-      .waitForElementVisible('#save-button')
+      .assert.containsText('#moderate-importance-option', '100%')
       .click('#save-button');
 
     matchImportanceColumnContents(browser, '100%', '100%', '100%');
