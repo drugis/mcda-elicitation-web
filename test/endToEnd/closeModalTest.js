@@ -33,7 +33,7 @@ function clearValueCancelAction(browser, paths, expectedValue) {
 
 module.exports = {
   beforeEach: function(browser) {
-    browser.resizeWindow(1366, 728).useCss();
+    browser.resizeWindow(1366, 728);
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     workspaceService.addExample(browser, title);
     browser
