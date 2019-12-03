@@ -51,108 +51,108 @@ module.exports = {
     browser.end();
   },
 
-  'Setting the weights through ranking': function(browser) {
-    browser
-      .click('#ranking-button')
-      .waitForElementVisible('#ranking-title-header')
-      .click('#OS-ranking-option')
-      .click('#next-button')
-      .click('#severe-ranking-option')
-      .click('#save-button');
+  // 'Setting the weights through ranking': function(browser) {
+  //   browser
+  //     .click('#ranking-button')
+  //     .waitForElementVisible('#ranking-title-header')
+  //     .click('#OS-ranking-option')
+  //     .click('#next-button')
+  //     .click('#severe-ranking-option')
+  //     .click('#save-button');
 
-    matchImportanceColumnContents(browser, 1, 2, 3);
-    resetWeights(browser);
-  },
+  //   matchImportanceColumnContents(browser, 1, 2, 3);
+  //   resetWeights(browser);
+  // },
 
-  'Ranking previous button': function(browser) {
-    browser
-      .click('#ranking-button')
-      .waitForElementVisible('#ranking-title-header')
-      .click('#OS-ranking-option')
-      .click('#next-button')
-      .click('#previous-button')
-      .assert.containsText('#ranking-title-header', 'Ranking (1/2)');
-  },
+  // 'Ranking previous button': function(browser) {
+  //   browser
+  //     .click('#ranking-button')
+  //     .waitForElementVisible('#ranking-title-header')
+  //     .click('#OS-ranking-option')
+  //     .click('#next-button')
+  //     .click('#previous-button')
+  //     .assert.containsText('#ranking-title-header', 'Ranking (1/2)');
+  // },
 
-  'Setting the weights through matching': function(browser) {
-    browser
-      .click('#matching-button')
-      .waitForElementVisible('#matching-title-header')
-      .click('#OS-option')
-      .click('#next-button')
-      .click('#severe-importance-option')
-      .moveToElement('#elicitation-trade-off-button', 0, 0)
-      .pause(500)
-      .click('#elicitation-trade-off-button')
-      .pause(500)
-      .click('#save-matching-weights-button')
-      .assert.containsText('#severe-importance-option', '100%')
-      .click('#moderate-importance-option')
-      .moveToElement('#elicitation-trade-off-button', 0, 0)
-      .pause(500)
-      .click('#elicitation-trade-off-button')
-      .pause(500)
-      .click('#save-matching-weights-button')
-      .assert.containsText('#moderate-importance-option', '100%')
-      .click('#save-button');
+  // 'Setting the weights through matching': function(browser) {
+  //   browser
+  //     .click('#matching-button')
+  //     .waitForElementVisible('#matching-title-header')
+  //     .click('#OS-option')
+  //     .click('#next-button')
+  //     .click('#severe-importance-option')
+  //     .moveToElement('#elicitation-trade-off-button', 0, 0)
+  //     .pause(500)
+  //     .click('#elicitation-trade-off-button')
+  //     .pause(500)
+  //     .click('#save-matching-weights-button')
+  //     .assert.containsText('#severe-importance-option', '100%')
+  //     .click('#moderate-importance-option')
+  //     .moveToElement('#elicitation-trade-off-button', 0, 0)
+  //     .pause(500)
+  //     .click('#elicitation-trade-off-button')
+  //     .pause(500)
+  //     .click('#save-matching-weights-button')
+  //     .assert.containsText('#moderate-importance-option', '100%')
+  //     .click('#save-button');
 
-    matchImportanceColumnContents(browser, '100%', '100%', '100%');
-    resetWeights(browser);
-  },
+  //   matchImportanceColumnContents(browser, '100%', '100%', '100%');
+  //   resetWeights(browser);
+  // },
 
-  'Matching previous button': function(browser) {
-    browser
-      .click('#matching-button')
-      .waitForElementVisible('#matching-title-header')
-      .click('#OS-option')
-      .click('#next-button')
-      .click('#previous-button')
-      .assert.containsText('#matching-title-header', 'Matching (1/2)');
-  },
+  // 'Matching previous button': function(browser) {
+  //   browser
+  //     .click('#matching-button')
+  //     .waitForElementVisible('#matching-title-header')
+  //     .click('#OS-option')
+  //     .click('#next-button')
+  //     .click('#previous-button')
+  //     .assert.containsText('#matching-title-header', 'Matching (1/2)');
+  // },
 
-  'Setting the weights through precise swing weighting': function(browser) {
-    browser
-      .click('#precise-swing-button')
-      .waitForElementVisible('#swing-weighting-title-header')
-      .click('#OS-option')
-      .click('#next-button')
-      .click('#save-button');
+  // 'Setting the weights through precise swing weighting': function(browser) {
+  //   browser
+  //     .click('#precise-swing-button')
+  //     .waitForElementVisible('#swing-weighting-title-header')
+  //     .click('#OS-option')
+  //     .click('#next-button')
+  //     .click('#save-button');
 
-    matchImportanceColumnContents(browser, '100%', '100%', '100%');
-    resetWeights(browser);
-  },
+  //   matchImportanceColumnContents(browser, '100%', '100%', '100%');
+  //   resetWeights(browser);
+  // },
 
-  'Precise swing previous button': function(browser) {
-    browser
-      .click('#precise-swing-button')
-      .waitForElementVisible('#swing-weighting-title-header')
-      .click('#OS-option')
-      .click('#next-button')
-      .click('#previous-button')
-      .assert.containsText('#swing-weighting-title-header', 'Precise swing weighting (1/2)');
-  },
+  // 'Precise swing previous button': function(browser) {
+  //   browser
+  //     .click('#precise-swing-button')
+  //     .waitForElementVisible('#swing-weighting-title-header')
+  //     .click('#OS-option')
+  //     .click('#next-button')
+  //     .click('#previous-button')
+  //     .assert.containsText('#swing-weighting-title-header', 'Precise swing weighting (1/2)');
+  // },
 
-  'Setting the weights through imprecise swing weighting': function(browser) {
-    browser
-      .click('#imprecise-swing-button')
-      .waitForElementVisible('#swing-weighting-title-header')
-      .click('#OS-option')
-      .click('#next-button')
-      .click('#save-button');
+  // 'Setting the weights through imprecise swing weighting': function(browser) {
+  //   browser
+  //     .click('#imprecise-swing-button')
+  //     .waitForElementVisible('#swing-weighting-title-header')
+  //     .click('#OS-option')
+  //     .click('#next-button')
+  //     .click('#save-button');
 
-    matchImportanceColumnContents(browser, '100%', '1-100%', '1-100%');
-    resetWeights(browser);
-  },
+  //   matchImportanceColumnContents(browser, '100%', '1-100%', '1-100%');
+  //   resetWeights(browser);
+  // },
 
-  'Imprecise swing previous button': function(browser) {
-    browser
-      .click('#imprecise-swing-button')
-      .waitForElementVisible('#swing-weighting-title-header')
-      .click('#OS-option')
-      .click('#next-button')
-      .click('#previous-button')
-      .assert.containsText('#swing-weighting-title-header', 'Imprecise swing weighting (1/2)');
-  },
+  // 'Imprecise swing previous button': function(browser) {
+  //   browser
+  //     .click('#imprecise-swing-button')
+  //     .waitForElementVisible('#swing-weighting-title-header')
+  //     .click('#OS-option')
+  //     .click('#next-button')
+  //     .click('#previous-button')
+  //     .assert.containsText('#swing-weighting-title-header', 'Imprecise swing weighting (1/2)');
+  // },
 
   'Interacting with Willingness to trade off plot': function(browser) {
     const outcomeValue = 60;
@@ -177,11 +177,10 @@ module.exports = {
       .waitForElementVisible('//*[@id="willingness-summary"]')
       .waitForElementVisible('//*[@id="willingness-slider"]');
 
-    browser.expect.element('//*[@id="first-criterion-outcome-b-input"]').to.have.value.which.contains('.');
+    browser.expect.element('//*[@id="first-criterion-outcome-b-input"]').to.have.value.which.contains('45');
     browser.expect.element('//*[@id="second-criterion-outcome-b-input"]').to.have.value.which.contains('.');
 
     browser
-      .clearValue('//*[@id="first-criterion-outcome-b-input"]')
       .setValue('//*[@id="first-criterion-outcome-b-input"]', outcomeValue)
       .assert.containsText('//*[@id="first-criterion-outcome-b-input"]', outcomeValue)
       .assert.containsText('//*[@id="willingness-slider"]/div/span[10]', outcomeValue)
