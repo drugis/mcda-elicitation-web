@@ -1,5 +1,5 @@
 'use strict';
-define(['clipboard', 'lodash'], function(Clipboard, _) {
+define(['clipboard', 'lodash', 'angular'], function(Clipboard, _, angular) {
   var dependencies = [
     '$scope',
     '$state',
@@ -32,7 +32,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.downloadWorkspace = downloadWorkspace;
 
     // init
-    $scope.problem = $scope.workspace.problem;
+    $scope.problem = angular.copy($scope.workspace.problem);
     $scope.isStandAlone = isMcdaStandalone;
     $scope.useFavorability = _.find($scope.problem.criteria, function(criterion) {
       return criterion.hasOwnProperty('isFavorable');
@@ -44,6 +44,10 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
     $scope.$on('elicit.settingsChanged', function() {
       reloadOrderingsAndScales();
     });
+
+    $scope.$watch('workspace.problem', function(){
+      $scope.problem = angular.copy($scope.workspace.problem);
+    }, true);
 
     new Clipboard('.clipboard-button');
 

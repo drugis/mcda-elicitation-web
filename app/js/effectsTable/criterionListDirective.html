@@ -1,46 +1,34 @@
-<div class="grid-x callout secondary" ng-if="useFavorability">
-  <div class="cell">
-    <h5>Favorable criteria</h5>
+<div ng-if="useFavorability">
+  <div class="grid-x callout secondary">
+    <div class="cell">
+      <h5>Favorable criteria</h5>
+    </div>
+    <div class="cell" ng-repeat="criterion in favorableCriteria">
+      <criterion-card criterion="criterion" can-go-up="!$first" can-go-down="!$last" go-up="goUp" go-down="goDown"
+        remove-criterion="removeCriterion" idx="$index" edit-criterion="openCriterionModal" is-input="isInput"
+        save-ordering="saveOrdering" save-workspace="saveWorkspace" edit-mode="editMode" scales="scales"
+        alternatives="alternatives" effects-table-info="effectsTableInfo">
+    </div>
   </div>
-  <div class="cell" ng-repeat="criterion in favorableCriteria">
-    <criterion-card
-            criterion="criterion"
-            can-go-up="!$first"
-            can-go-down="!$last"
-            go-up="goUp"
-            go-down="goDown"
-            remove-criterion="removeCriterion"
-            idx="$index"
-            edit-criterion="openCriterionModal"
-            is-input="isInput"
-            save-ordering="saveOrdering"
-            save-workspace="saveWorkspace"
-            edit-mode="editMode"
-            scales="scales"
-            alternatives="alternatives"
-            effects-table-info="effectsTableInfo">
+  <div class="grid-x callout secondary">
+    <div class="cell">
+      <h5>Unfavorable criteria</h5>
+    </div>
+    <div class="cell" ng-repeat="criterion in unfavorableCriteria">
+      <criterion-card criterion="criterion" can-go-up="!$first" can-go-down="!$last" go-up="goUp" go-down="goDown"
+        remove-criterion="removeCriterion" idx="($index+favorableCriteria.length)" edit-criterion="openCriterionModal"
+        is-input="isInput" save-ordering="saveOrdering" save-workspace="saveWorkspace" edit-mode="editMode"
+        scales="scales" alternatives="alternatives" effects-table-info="effectsTableInfo">
+    </div>
   </div>
 </div>
-<div class="grid-x callout secondary">
-  <div class="cell" ng-if="useFavorability">
-    <h5>Unfavorable criteria</h5>
-  </div>
-  <div class="cell" ng-repeat="criterion in unfavorableCriteria">
-    <criterion-card
-            criterion="criterion"
-            can-go-up="!$first"
-            can-go-down="!$last"
-            go-up="goUp"
-            go-down="goDown"
-            remove-criterion="removeCriterion"
-            idx="($index+favorableCriteria.length)"
-            edit-criterion="openCriterionModal"
-            is-input="isInput"
-            save-ordering="saveOrdering"
-            save-workspace="saveWorkspace"
-            edit-mode="editMode"
-            scales="scales"
-            alternatives="alternatives"
-            effects-table-info="effectsTableInfo">
+<div ng-if="!useFavorability">
+  <div class="grid-x callout secondary">
+    <div class="cell" ng-repeat="criterion in criteria">
+      <criterion-card criterion="criterion" can-go-up="!$first" can-go-down="!$last" go-up="goUp" go-down="goDown"
+        remove-criterion="removeCriterion" idx="$index" edit-criterion="openCriterionModal" is-input="isInput"
+        save-ordering="saveOrdering" save-workspace="saveWorkspace" edit-mode="editMode" scales="scales"
+        alternatives="alternatives" effects-table-info="effectsTableInfo">
+    </div>
   </div>
 </div>

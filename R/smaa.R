@@ -183,7 +183,7 @@ run_sensitivityWeightPlot <- function(params) {
   
   index <- which(names(weights)==crit)
   
-  weight.crit <- seq(0,1,length.out=11)
+  weight.crit <- seq(0,1,length.out=101)
   total.value <- c()
   
   for (value in weight.crit) {

@@ -3,22 +3,23 @@ define([
   'angular',
   'angular-mocks',
   'mcda/results/results',
+  'mcda/deterministicResults/deterministicResults',
   'angular-patavi-client',
   'angularjs-slider'
 ], function(angular) {
   describe('The DeterministicResultsService', function() {
-    var resultsService;
+    var deterministicResultsService;
     var pataviServiceMock = jasmine.createSpyObj('PataviServiceMock', ['somefunction']);
 
     beforeEach(function() {
       angular.mock.module('patavi', function() { });
-      angular.mock.module('elicit.results', function($provide) {
+      angular.mock.module('elicit.deterministicResults', function($provide) {
         $provide.value('PataviService', pataviServiceMock);
       });
     });
 
     beforeEach(inject(function(DeterministicResultsService) {
-      resultsService = DeterministicResultsService;
+      deterministicResultsService = DeterministicResultsService;
     }));
 
     var alternatives = [{
@@ -63,7 +64,7 @@ define([
             }
           }
         };
-        var result = resultsService.resetModifiableScales(observed, alternatives);
+        var result = deterministicResultsService.resetModifiableScales(observed, alternatives);
         var expectedResult = {
           crit1: {
             alt1: {
@@ -101,7 +102,7 @@ define([
       };
 
       it('should transform a measurements or preferences patavi result to linevalues for the plot', function() {
-        var result = resultsService.pataviResultToLineValues(pataviResult, alternatives);
+        var result = deterministicResultsService.pataviResultToLineValues(pataviResult, alternatives);
         var expectedResult = [
           ['x', '0', '1', '2'],
           ['Fluoxetine', 1, 3, 6],
@@ -111,7 +112,7 @@ define([
       });
 
       it('should transform a measurements or preferences patavi result to linevalues for the plot and uses the alternative legend', function() {
-        var result = resultsService.pataviResultToLineValues(pataviResult, alternatives, legend);
+        var result = deterministicResultsService.pataviResultToLineValues(pataviResult, alternatives, legend);
         var expectedResult = [
           ['x', '0', '1', '2'],
           ['newfluox', 1, 3, 6],
@@ -124,7 +125,7 @@ define([
     describe('percentifySensitivityResult', function() {
       it('should return the values of given coordinate multiplied by 100', function() {
         var values = [['x', 0.6, 0.8]];
-        var result = resultsService.percentifySensitivityResult(values);
+        var result = deterministicResultsService.percentifySensitivityResult(values);
         var expectedResult = [['x', 60, 80]];
         expect(result).toEqual(expectedResult);
       });
@@ -151,7 +152,7 @@ define([
         }
         ];
         var smaaScales = {};
-        var result = resultsService.createDeterministicScales(performanceTable, smaaScales);
+        var result = deterministicResultsService.createDeterministicScales(performanceTable, smaaScales);
 
         expect(result).toEqual(expectedResult);
       });
@@ -170,7 +171,7 @@ define([
             }
           }
         };
-        var result = resultsService.createDeterministicScales(performanceTable, smaaScales);
+        var result = deterministicResultsService.createDeterministicScales(performanceTable, smaaScales);
         expect(result).toEqual(expectedResult);
       });
 
@@ -189,7 +190,7 @@ define([
             }
           }
         };
-        var result = resultsService.createDeterministicScales(performanceTable, smaaScales);
+        var result = deterministicResultsService.createDeterministicScales(performanceTable, smaaScales);
         expect(result).toEqual(expectedResult);
 
       });
@@ -223,7 +224,7 @@ define([
         var undefinedLegend;
         const root = {};
 
-        var settings = resultsService.getValueProfilePlotSettings(pataviResult, criteria, alternatives, undefinedLegend, root);
+        var settings = deterministicResultsService.getValueProfilePlotSettings(pataviResult, criteria, alternatives, undefinedLegend, root);
 
         delete settings.axis.y.tick.format;
 
@@ -271,7 +272,7 @@ define([
       it('should return the settings for a value profile plot using alternative legend', function() {
         const root = 'root';
 
-        var settings = resultsService.getValueProfilePlotSettings(pataviResult, criteria, alternatives, legend, root);
+        var settings = deterministicResultsService.getValueProfilePlotSettings(pataviResult, criteria, alternatives, legend, root);
 
         delete settings.axis.y.tick.format;
 
@@ -327,7 +328,7 @@ define([
           labelYAxis: 'ylabel'
         };
 
-        var settings = resultsService.getSensitivityLineChartSettings(root, values, options);
+        var settings = deterministicResultsService.getSensitivityLineChartSettings(root, values, options);
 
         delete settings.axis.x.tick.format;
 
@@ -345,6 +346,66 @@ define([
               },
               min: 0,
               max: 1,
+              padding: {
+                left: 0,
+                right: 0
+              },
+              tick: {
+                count: 5,
+              }
+            },
+            y: {
+              label: {
+                text: options.labelYAxis,
+                position: 'outer-middle'
+              }
+            }
+          },
+          grid: {
+            x: {
+              show: false
+            },
+            y: {
+              show: true
+            }
+          },
+          point: {
+            show: false
+          },
+          tooltip: {
+            show: options.useTooltip
+          }
+        };
+        expect(settings).toEqual(expectedSettings);
+      });
+
+      it('should return the settings for a sensitivity line chart setting the correct min and max values for the x axis, when the order is not correct in the values', function() {
+        const root = 'root';
+        const values = [['x', '-10', '-30']];
+        const options = {
+          useTooltip: false,
+          labelXAxis: 'xlabel',
+          labelYAxis: 'ylabel'
+        };
+
+        var settings = deterministicResultsService.getSensitivityLineChartSettings(root, values, options);
+
+        delete settings.axis.x.tick.format;
+
+        var expectedSettings = {
+          bindto: root,
+          data: {
+            x: 'x',
+            columns: values
+          },
+          axis: {
+            x: {
+              label: {
+                text: options.labelXAxis,
+                position: 'outer-center'
+              },
+              min: -30,
+              max: -10,
               padding: {
                 left: 0,
                 right: 0

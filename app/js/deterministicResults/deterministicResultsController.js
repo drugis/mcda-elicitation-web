@@ -6,7 +6,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
     '$state',
     'currentScenario',
     'DeterministicResultsService',
-    'SmaaResultsService',
+    'LegendService',
     'OrderingService',
     'PageTitleService',
     'WorkspaceService',
@@ -19,7 +19,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
     $state,
     currentScenario,
     DeterministicResultsService,
-    SmaaResultsService,
+    LegendService,
     OrderingService,
     PageTitleService,
     WorkspaceService,
@@ -76,7 +76,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
     }
 
     function loadState() {
-      var stateWithAlternativesRenamed = SmaaResultsService.replaceAlternativeNames($scope.scenario.state.legend,
+      var stateWithAlternativesRenamed = LegendService.replaceAlternativeNames($scope.scenario.state.legend,
         $scope.aggregateState);
       initSensitivityDropdowns();
 

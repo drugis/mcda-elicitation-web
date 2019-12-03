@@ -24,30 +24,31 @@ const dataSource3 = manualInputService.createDataSource('ref3');
 const alternative1 = manualInputService.createAlternative('a1');
 const alternative2 = manualInputService.createAlternative('a2');
 
-const criterion1TitlePath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[1]/h5';
-const criterion1AddDataSourcePath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/button';
-const criterion1EditPath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[2]/div/a[1]';
-const criterion1NewTitlePath = '//div[9]/criterion-list/div[2]/div[2]/criterion-card/div/div[2]/div/div[1]/h5';
-const criterion1NewDescriptionPath = '//div[9]/criterion-list/div[2]/div[2]/criterion-card/div/div[2]/div/div[3]';
-const criterion1DataSource1Path = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr/td[2]';
-const criterion1DeletePath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[2]/div/a[2]';
+const criterion1TitlePath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[1]/h5';
+const criterion1AddDataSourcePath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/button';
+const criterion1EditPath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[2]/div/a[1]';
+const criterion1NewTitlePath = '//div[9]/criterion-list/div/div[2]/div[2]/criterion-card/div/div[2]/div/div[1]/h5';
+const criterion1NewDescriptionPath = '//div[9]/criterion-list/div/div[2]/div[2]/criterion-card/div/div[2]/div/div[3]';
+const criterion1DataSource1Path = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr/td[2]';
+const criterion1DeletePath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[2]/div/a[2]';
 
-const criterion2AddDataSourcePath = '//div[9]/criterion-list/div[2]/div[2]/criterion-card/div/div[2]/div/div[5]/button';
+const criterion2AddDataSourcePath = '//div[9]/criterion-list/div/div[2]/div[2]/criterion-card/div/div[2]/div/div[5]/button';
 
-const dataSource1ReferencePath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr/td[2]/div';
-const dataSource1EditPath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr/td[3]/a';
-const dataSource1DeletePath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr/td[4]/a';
+const dataSource1ReferencePath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr/td[2]/div';
+const dataSource1EditPath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr/td[3]/a';
+const dataSource1DeletePath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr/td[4]/a';
 
 const alternative1TitlePath = '//div[12]/table/tbody/tr[1]/td[2]';
 const alternative1EditPath = '//div[12]/table/tbody/tr[1]/td[3]/a';
 const alternative1DeletePath = '//div[12]/table/tbody/tr[1]/td[4]/a';
 
-const moveCriterionUpPath = '//criterion-list/div[1]/div[3]/criterion-card/div/div[1]/div/div[1]/a/i';
-const moveCriterionDownPath = '//criterion-list/div[1]/div[2]/criterion-card/div/div[1]/div/div[2]/a/i';
-const moveDataSourceUpPath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr[2]/td[1]/div[1]/a';
-const moveDataSourceDownPath = '//div[9]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr[1]/td[1]/div[2]/a';
+const moveCriterionUpPath = '//criterion-list/div/div[1]/div[3]/criterion-card/div/div[1]/div/div[1]/a/i';
+const moveCriterionDownPath = '//criterion-list/div/div[1]/div[2]/criterion-card/div/div[1]/div/div[2]/a/i';
+const moveDataSourceUpPath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr[2]/td[1]/div[1]/a';
+const moveDataSourceDownPath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr[1]/td[1]/div[2]/a';
 const moveAlternativeUpPath = '//div[12]/table/tbody/tr[2]/td[1]/div[1]/a';
 const moveAlternativeDownPath = '//div[12]/table/tbody/tr[1]/td[1]/div[2]/a';
+
 function createInputDefault(browser) {
   browser
     .waitForElementVisible('#create-workspace-button')
@@ -119,18 +120,18 @@ module.exports = {
       .assert.containsText('#workspace-title', title)
       .assert.containsText('#therapeutic-context', therapeuticContext)
       .useXpath()
-      .assert.containsText('//div[5]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[1]/h5', criterion1.title)
-      .assert.containsText('//div[5]/criterion-list/div[2]/div[2]/criterion-card/div/div[2]/div/div[1]/h5', criterion2.title)
-      .assert.containsText('//div[5]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[3]', criterion1.description)
-      .assert.containsText('//div[5]/criterion-list/div[2]/div[2]/criterion-card/div/div[2]/div/div[3]', criterion2.description)
-      .assert.containsText('//div[5]/criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[6]/div', dataSource1.reference)
-      .assert.containsText('//div[5]/criterion-list/div[2]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[6]/div', dataSource2.reference)
+      .assert.containsText('//div[5]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[1]/h5', criterion1.title)
+      .assert.containsText('//div[5]/criterion-list/div/div[2]/div[2]/criterion-card/div/div[2]/div/div[1]/h5', criterion2.title)
+      .assert.containsText('//div[5]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[3]', criterion1.description)
+      .assert.containsText('//div[5]/criterion-list/div/div[2]/div[2]/criterion-card/div/div[2]/div/div[3]', criterion2.description)
+      .assert.containsText('//div[5]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[6]/div', dataSource1.reference)
+      .assert.containsText('//div[5]/criterion-list/div/div[2]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[6]/div', dataSource2.reference)
       .assert.containsText('//div[7]/table/tbody/tr[1]/td[2]', alternative1.title)
       .assert.containsText('//div[7]/table/tbody/tr[2]/td[2]', alternative2.title)
-      .assert.containsText('//criterion-list/div[1]//td[3]//*', 7)
-      .assert.containsText('//criterion-list/div[1]//td[4]//*', 8)
-      .assert.containsText('//criterion-list/div[2]//td[3]//*', 8)
-      .assert.containsText('//criterion-list/div[2]//td[4]//*', 9)
+      .assert.containsText('//criterion-list/div/div[1]//td[3]//*', 7)
+      .assert.containsText('//criterion-list/div/div[1]//td[4]//*', 8)
+      .assert.containsText('//criterion-list/div/div[2]//td[3]//*', 8)
+      .assert.containsText('//criterion-list/div/div[2]//td[4]//*', 9)
       .useCss()
       .click('#logo')
       .waitForElementVisible('#create-workspace-button');
@@ -379,5 +380,19 @@ module.exports = {
       .click('#save-soe-unc-button')
       .assert.containsText('#strength-of-evidence-c1-ref1', 'SoE: ' + strength)
       .assert.containsText('#uncertainties-c1-ref1', 'Unc: ' + uncertainties);
+  },
+
+  'Checking and unchecking the favorability button should keep the criteria': function(browser) {
+    createInputDefault(browser);
+    manualInputService.addCriterion(browser, criterion3);
+    browser
+      .click('#favorability-checkbox')
+      .useXpath()
+      .assert.containsText('//criterion-list/div/div/div[1]/criterion-card/div/div[2]/div/div[1]/h5', criterion1.title)
+      .assert.containsText('//criterion-list/div/div/div[2]/criterion-card/div/div[2]/div/div[1]/h5', criterion3.title)
+      .assert.containsText('//criterion-list/div/div/div[3]/criterion-card/div/div[2]/div/div[1]/h5', criterion2.title)
+      .useCss()
+      ;
+
   }
 };

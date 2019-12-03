@@ -6,42 +6,35 @@ define([
   _,
   $
 ) {
-  var dependencies = ['$stateParams', '$modal', '$compile', 'ScenarioResource'];
-  var LegendDirective = function($stateParams, $modal, $compile, ScenarioResource) {
+  var dependencies = [
+    '$rootScope',
+    '$stateParams',
+    '$modal',
+    'LegendService',
+    'ScenarioResource'
+  ];
+  var LegendDirective = function(
+    $rootScope,
+    $stateParams,
+    $modal,
+    LegendService,
+    ScenarioResource
+  ) {
     return {
       restrict: 'A',
       link: function(scope, element) {
         scope.editLegend = editLegend;
-        var $element = $(element);
-        $element.css('float', 'left');
+        createTooltip();
 
-        var tooltipHtml;
-        if (scope.scenario.state.legend) {
-          var tableCells = _.reduce(scope.scenario.state.legend, function(accum, alt) {
-            return accum + '<tr><td><b>' + alt.newTitle + '</b>:</td>' + '<td>' + alt.baseTitle + '</td></tr>';
-          }, '');
-          tooltipHtml = '<table class=\'legend-table\'>' +
-            '<tbody>' +
-            tableCells +
-            '</tbody>' +
-            '</table>' +
-            (scope.editMode.canEdit ? 'Click to change' : '');
-        } else {
-          tooltipHtml = scope.editMode.canEdit ?
-            'Please click the button to create aliases for the alternatives to use in plots' :
-            'No legend set.';
+        function createTooltip() {
+          var $element = $(element);
+          $element.css('float', 'left');
+          var btnElement = LegendService.createButtonElement(scope.scenario.state.legend, scope.editMode.canEdit, scope);
+          $element.after(btnElement);
         }
-        var btnElement = $compile('<br><button ' +
-          (scope.editMode.canEdit ? 'ng-click="editLegend()" ' : '') +
-          'class="button export-button info small" ' +
-          'tooltip-append-to-body="true" ' +
-          'tooltip-html-unsafe="' +
-          tooltipHtml + '">' +
-          'Labels</button>')(scope);
-        $element.after(btnElement);
 
-        function emitEvent() {
-          scope.$emit('elicit.legendChanged');
+        function broadcastEvent() {
+          $rootScope.$broadcast('elicit.legendChanged');
         }
 
         function editLegend() {
@@ -58,7 +51,7 @@ define([
               callback: function() {
                 return function(newLegend) {
                   scope.scenario.state.legend = newLegend;
-                  ScenarioResource.save($stateParams, scope.scenario).$promise.then(emitEvent);
+                  ScenarioResource.save($stateParams, scope.scenario).$promise.then(broadcastEvent);
                 };
               }
             }

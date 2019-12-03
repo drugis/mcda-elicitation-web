@@ -160,9 +160,9 @@ module.exports = {
   },
 
   'Switching settings in problem definition tab': function(browser) {
-    var effectTableCellPath = '//effects-table/div/div[3]/table/tbody/tr[2]/td[4]/div/effects-table-cell/div';
-    var unitsCellPath = '//effects-table/div/div[3]/table/tbody/tr[2]/td[3]';
-    var scaleRangeCellPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[2]/div/div/div[3]/div[3]/table/tbody/tr[1]/td[3]/span[1]';
+    var effectTableCellPath = '//*[@id="effectstable"]/tbody/tr[2]/td[4]/div/effects-table-cell/div/div';
+    var unitsCellPath = '//*[@id="effectstable"]/tbody/tr[2]/td[3]';
+    var scaleRangeCellPath = '//*[@id="scalestable"]/tbody/tr[1]/td[3]/span[1]';
 
     browser
       .useXpath()
@@ -294,8 +294,8 @@ module.exports = {
   },
 
   'Switching settings in the overview tab': function(browser) {
-    var effectCellPath = '//criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[3]/div/effects-table-cell/div';
-    var unitsCellPath = '//criterion-list/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[2]';
+    var effectCellPath = '//criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[3]/div/effects-table-cell/div';
+    var unitsCellPath = '//criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[2]';
 
     browser
       .useXpath()

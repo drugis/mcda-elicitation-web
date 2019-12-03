@@ -1,8 +1,7 @@
 'use strict';
-define(['lodash'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
     '$modal',
-    '$state',
     '$stateParams',
     'OrderingService',
     'WorkspaceResource',
@@ -10,7 +9,6 @@ define(['lodash'], function(_) {
   ];
   var CriterionListDirective = function(
     $modal,
-    $state,
     $stateParams,
     OrderingService,
     WorkspaceResource,
@@ -19,15 +17,15 @@ define(['lodash'], function(_) {
     return {
       restrict: 'E',
       scope: {
+        'alternatives': '=',
         'criteria': '=',
-        'useFavorability': '=',
+        'editMode': '=',
+        'effectsTableInfo': '=',
         'inputData': '=',
         'isInput': '=',
-        'workspace': '=',
-        'editMode': '=',
         'scales': '=',
-        'alternatives': '=',
-        'effectsTableInfo': '='
+        'useFavorability': '=',
+        'workspace': '='
       },
       templateUrl: '../effectsTable/criterionListDirective.html',
       link: function(scope) {
@@ -69,15 +67,19 @@ define(['lodash'], function(_) {
               },
               callback: function() {
                 return function(newCriterion) {
-                  scope.criteria[_.findIndex(scope.criteria, ['id', criterion.id])] = newCriterion;
+                  replaceOrderedCriterion(criterion.id, newCriterion);
                   initializeCriteriaLists();
                   if (!scope.isInput) {
-                    saveWorkspace(newCriterion);
+                    saveWorkspace(newCriterion, criterion.id);
                   }
                 };
               },
               oldCriterion: function() {
-                return criterion;
+                if (scope.isInput) {
+                  return criterion;
+                } else {
+                  return scope.workspace.problem.criteria[criterion.id];
+                }
               },
               useFavorability: function() {
                 return scope.useFavorability;
@@ -86,30 +88,36 @@ define(['lodash'], function(_) {
           });
         }
 
-        function saveOrdering() {
-          function decorateWithId(alternative, alternativeId) {
-            return _.merge({}, { id: alternativeId }, alternative);
-          }
-          var criteria = scope.favorableCriteria.concat(scope.unfavorableCriteria);
-          OrderingService.saveOrdering($stateParams, criteria,
-            _.map(scope.workspace.problem.alternatives, decorateWithId)
+        function replaceOrderedCriterion(criterionId, newCriterion) {
+          var criterionIndex = _.findIndex(scope.criteria, ['id', criterionId]);
+          scope.criteria[criterionIndex] = _.merge({},
+            _.find(scope.criteria, ['id', criterionId]),
+            newCriterion
           );
         }
 
-        function saveWorkspace(criterion) {
-          scope.workspace.problem.criteria[criterion.id] = _.omit(criterion, 'id');
-          saveOrdering();
-          WorkspaceResource.save($stateParams, scope.workspace).$promise.then(function() {
-            $state.reload(); //must reload to update effectsTable
-          });
+        function saveOrdering() {
+          OrderingService.saveOrdering(
+            $stateParams,
+            scope.criteria,
+            scope.alternatives
+          );
         }
 
-        //private
+        function saveWorkspace(criterion, criterionId) {
+          var newCriterion = angular.copy(criterion);
+          delete newCriterion.id;
+          scope.workspace.problem.criteria[criterionId] = newCriterion;
+          WorkspaceResource.save($stateParams, scope.workspace);
+        }
+
         function initializeCriteriaLists() {
-          var partition = _.partition(scope.criteria, ['isFavorable', true]);
-          scope.criteria = partition[0].concat(partition[1]);
-          scope.favorableCriteria = partition[0];
-          scope.unfavorableCriteria = partition[1];
+          if (scope.useFavorability) {
+            var partition = _.partition(scope.criteria, ['isFavorable', true]);
+            scope.criteria = partition[0].concat(partition[1]);
+            scope.favorableCriteria = partition[0];
+            scope.unfavorableCriteria = partition[1];
+          }
         }
 
         function swapAndInitialize(array, idx, newIdx) {
