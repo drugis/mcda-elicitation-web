@@ -1,8 +1,8 @@
 name: MCDA develop pull request
 
 on:
-  push:
-    branches: feature/workflow
+  pull_request:
+    branches: develop
 
 jobs:
   test:
