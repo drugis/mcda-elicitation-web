@@ -26,6 +26,8 @@ function showDecimals(browser) {
 function changeDeterministicTabSetting(browser, settingsPath, columnPath) {
   browser
     .useXpath()
+    .moveToElement('//*[@id="deterministic-tab"]', 0, 0)
+    .pause(500)
     .click('//*[@id="deterministic-tab"]')
     .pause(50)
     .click('//*[@id="settings-button"]')
@@ -41,7 +43,8 @@ function changeDeterministicTabSetting(browser, settingsPath, columnPath) {
 function changeProblemDefinitionTabSetting(browser, settingsPath, columnPath) {
   browser
     .useXpath()
-    .pause(50)
+    .moveToElement('//*[@id="problem-definition-tab"]', 0, 0)
+    .pause(500)
     .click('//*[@id="problem-definition-tab"]')
     .pause(50)
     .click('//*[@id="settings-button"]')
@@ -166,7 +169,8 @@ module.exports = {
 
     browser
       .useXpath()
-      .pause(50)
+      .moveToElement('//*[@id="problem-definition-tab"]', 0, 0)
+      .pause(500)
       .click('//*[@id="problem-definition-tab"]')
       .getValue(unitsCellPath, _.partial(checkValue, null))
       .assert.containsText(effectTableCellPath, '60%')
@@ -283,6 +287,8 @@ module.exports = {
   'Switching between median and mode in deterministic tab': function(browser) {
     browser
       .useXpath()
+      .moveToElement('//*[@id="deterministic-tab"]', 0, 0)
+      .pause(500)
       .click('//*[@id="deterministic-tab"]')
       .pause(50)
       .click('//*[@id="settings-button"]')
@@ -349,6 +355,8 @@ module.exports = {
 
     browser
       .useXpath()
+      .moveToElement('//*[@id="preferences-tab"]', 0, 0)
+      .pause(500)
       .click('//*[@id="preferences-tab"]')
       .pause(50)
       .assert.containsText(unitsCellPath, '%')
@@ -400,6 +408,8 @@ module.exports = {
 
     browser
       .useXpath()
+      .moveToElement('//*[@id="preferences-tab"]', 0, 0)
+      .pause(500)
       .click('//*[@id="preferences-tab"]')
       .pause(50)
       .click('//*[@id="OS-pvf-button"]')
@@ -429,6 +439,8 @@ module.exports = {
 
     browser
       .useXpath()
+      .moveToElement('//*[@id="preferences-tab"]', 0, 0)
+      .pause(500)
       .click('//*[@id="preferences-tab"]')
       .pause(50)
       .click('//*[@id="ranking-button"]')

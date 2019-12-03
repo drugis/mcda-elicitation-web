@@ -17,6 +17,8 @@ const title = 'Test workspace';
 function setupSubProblem(browser) {
   browser
     .waitForElementVisible('#workspace-title')
+    .moveToElement('#problem-definition-tab')
+    .pause(500)
     .click('#problem-definition-tab')
     .waitForElementVisible('#effects-table-header')
     .click('#create-subproblem-button')
