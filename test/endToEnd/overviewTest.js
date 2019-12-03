@@ -150,18 +150,14 @@ module.exports = {
     loadTestWorkspace(browser, title);
 
     const firstCriterionTitle = '//criterion-list/div/div/div[1]/criterion-card/div/div[2]/div/div[1]/h5';
-    const proximalDown = '#move-down-criterion-cae083fa-c1e7-427f-8039-c46479392344';
-    const proximalUp = '#move-up-criterion-cae083fa-c1e7-427f-8039-c46479392344';
+    const proximalDown = '//*[@id="move-down-criterion-cae083fa-c1e7-427f-8039-c46479392344"]';
+    const distalDown = '//*[@id="move-down-criterion-44e3dd53-ea9f-49af-b622-4a97d853c134"]';
 
     browser
-      .useCss()
+    .useXpath()
       .click(proximalDown)
-      .useXpath()
       .assert.containsText(firstCriterionTitle, 'Distal DVT')
-      .useCss()
-
-      .click(proximalUp)
-      .useXpath()
+      .click(distalDown)
       .assert.containsText(firstCriterionTitle, 'Proximal DVT')
       .useCss();
   },
