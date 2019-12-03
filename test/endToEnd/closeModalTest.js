@@ -117,7 +117,7 @@ module.exports = {
     browser
       .pause(100)
       .moveToElement('//*[@id="problem-definition-tab"]', 0, 0)
-      .pause(100)
+      .pause(200)
       .click('//*[@id="problem-definition-tab"]')
       .click(actionButtonPath)
       .clearValue('//*[@id="subproblem-title-input"]')
