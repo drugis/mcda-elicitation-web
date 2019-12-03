@@ -34,6 +34,8 @@ module.exports = {
       .click('//*[@id="create-workspace-button"]')
       .click('//*[@id="add-workspace-button"]')
       .waitForElementVisible('//*[@id="workspace-title"]')
+      .moveToElement('//*[@id="logo"]')
+      .pause(500)
       .click('//*[@id="logo"]')
       .click(deleteWorkspaceButton)
       .click(closeModalButton)

@@ -15,6 +15,8 @@ const cancelStep1Path = '//*[@id="cancel-step1-button"]';
 function cancelAction(browser, paths, expectedValue) {
   browser
     .pause(100)
+    .moveToElement(paths.tab)
+    .pause(500)
     .click(paths.tab)
     .click(paths.actionButton)
     .click(paths.cancelButton)
@@ -41,7 +43,11 @@ module.exports = {
   },
 
   afterEach: function(browser) {
-    browser.useCss().click('#logo');
+    browser
+      .useCss()
+      .moveToElement('#logo')
+      .pause(500)
+      .click('#logo');
     workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();
@@ -110,6 +116,8 @@ module.exports = {
     var contentPath = '//*[@id="subproblem-selector"]';
     browser
       .pause(100)
+      .moveToElement('//*[@id="problem-definition-tab"]')
+      .pause(500)
       .click('//*[@id="problem-definition-tab"]')
       .click(actionButtonPath)
       .clearValue('//*[@id="subproblem-title-input"]')
@@ -183,6 +191,8 @@ module.exports = {
     var contentPath = '//*[@id="scenario-selector"]';
     browser
       .pause(100)
+      .moveToElement(preferenceTabPath)
+      .pause(500)
       .click(preferenceTabPath)
       .click(actionButtonPath)
       .clearValue('//*[@id="new-scenario-title"]')
@@ -220,6 +230,8 @@ module.exports = {
     };
     browser
       .pause(100)
+      .moveToElement(paths.tab)
+      .pause(500)
       .click(paths.tab)
       .click(paths.actionButton)
       .clearValue(paths.valueToClear)
