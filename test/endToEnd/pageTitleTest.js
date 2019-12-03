@@ -13,6 +13,8 @@ function goToPreferences(browser) {
   browser
     .click('#create-workspace-button')
     .click('#add-workspace-button')
+    .moveToElement('#preferences-tab', 0, 0)
+    .pause(500)
     .click('#preferences-tab');
 }
 
@@ -68,6 +70,8 @@ module.exports = {
     browser
       .click('#create-workspace-button')
       .click('#add-workspace-button')
+      .moveToElement('#problem-definition-tab', 0, 0)
+      .pause(500)
       .click('#problem-definition-tab')
       .pause(2000)
       .getTitle(function(result) {
@@ -92,6 +96,8 @@ module.exports = {
     browser
       .click('#create-workspace-button')
       .click('#add-workspace-button')
+      .moveToElement('#deterministic-tab', 0, 0)
+      .pause(500)
       .click('#deterministic-tab')
       .pause(2000)
       .getTitle(function(result) {
@@ -105,6 +111,8 @@ module.exports = {
     browser
       .click('#create-workspace-button')
       .click('#add-workspace-button')
+      .moveToElement('#smaa-tab', 0, 0)
+      .pause(500)
       .click('#smaa-tab')
       .pause(2000)
       .getTitle(function(result) {
