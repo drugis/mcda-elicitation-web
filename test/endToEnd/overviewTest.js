@@ -154,6 +154,7 @@ module.exports = {
     const proximalUp = '#move-up-criterion-cae083fa-c1e7-427f-8039-c46479392344';
 
     browser
+      .getLocationInView(proximalDown)
       .moveToElement(proximalDown, 0, 0)
       .pause(500)
       .click(proximalDown)
@@ -161,6 +162,7 @@ module.exports = {
       .assert.containsText(firstCriterionTitle, 'Distal DVT')
       .useCss()
 
+      .getLocationInView(proximalUp)
       .moveToElement(proximalUp, 0, 0)
       .pause(500)
       .click(proximalUp)
