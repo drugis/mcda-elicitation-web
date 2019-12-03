@@ -16,7 +16,7 @@ function cancelAction(browser, paths, expectedValue) {
   browser
     .pause(100)
     .moveToElement(paths.tab, 0, 0)
-    .pause(500)
+    .pause(100)
     .click(paths.tab)
     .click(paths.actionButton)
     .click(paths.cancelButton)
@@ -117,7 +117,7 @@ module.exports = {
     browser
       .pause(100)
       .moveToElement('//*[@id="problem-definition-tab"]', 0, 0)
-      .pause(500)
+      .pause(100)
       .click('//*[@id="problem-definition-tab"]')
       .click(actionButtonPath)
       .clearValue('//*[@id="subproblem-title-input"]')
@@ -192,7 +192,7 @@ module.exports = {
     browser
       .pause(100)
       .moveToElement(preferenceTabPath, 0, 0)
-      .pause(500)
+      .pause(100)
       .click(preferenceTabPath)
       .click(actionButtonPath)
       .clearValue('//*[@id="new-scenario-title"]')
@@ -231,7 +231,7 @@ module.exports = {
     browser
       .pause(100)
       .moveToElement(paths.tab, 0, 0)
-      .pause(500)
+      .pause(100)
       .click(paths.tab)
       .click(paths.actionButton)
       .clearValue(paths.valueToClear)
