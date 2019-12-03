@@ -30,6 +30,7 @@ function resetWeights(browser) {
 
 function matchImportanceColumnContents(browser, value1, value2, value3) {
   browser
+    .waitForElementVisible('#trade-off-block')
     .assert.containsText('#OS-ranking', value1)
     .assert.containsText('#severe-ranking', value2)
     .assert.containsText('#moderate-ranking', value3)
@@ -79,12 +80,19 @@ module.exports = {
       .waitForElementVisible('#matching-title-header')
       .click('#OS-option')
       .click('#next-button')
+      .waitForElementVisible('#severe-importance-option')
       .click('#severe-importance-option')
+      .waitForElementVisible('#elicitation-trade-off-button')
       .click('#elicitation-trade-off-button')
+      .waitForElementVisible('#save-matching-weights-button')
       .click('#save-matching-weights-button')
+      .waitForElementVisible('#moderate-importance-option')
       .click('#moderate-importance-option')
+      .waitForElementVisible('#elicitation-trade-off-button')
       .click('#elicitation-trade-off-button')
+      .waitForElementVisible('#save-matching-weights-button')
       .click('#save-matching-weights-button')
+      .waitForElementVisible('#save-button')
       .click('#save-button');
 
     matchImportanceColumnContents(browser, '100%', '100%', '100%');
