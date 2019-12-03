@@ -39,7 +39,7 @@ module.exports = {
       .click('#workspace-0')
       .waitForElementVisible('#workspace-title')
       .pause(100)
-      .moveToElement('#user-image-link')
+      .moveToElement('#user-image-link', 0, 0)
       .pause(500)
       .click('#user-image-link')
       .waitForElementVisible('#create-workspace-button');

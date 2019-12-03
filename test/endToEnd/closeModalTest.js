@@ -15,7 +15,7 @@ const cancelStep1Path = '//*[@id="cancel-step1-button"]';
 function cancelAction(browser, paths, expectedValue) {
   browser
     .pause(100)
-    .moveToElement(paths.tab)
+    .moveToElement(paths.tab, 0, 0)
     .pause(500)
     .click(paths.tab)
     .click(paths.actionButton)
@@ -33,7 +33,7 @@ function clearValueCancelAction(browser, paths, expectedValue) {
 
 module.exports = {
   beforeEach: function(browser) {
-    browser.resizeWindow(1366, 728);
+    browser.resizeWindow(1366, 728).useCss();
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     workspaceService.addExample(browser, title);
     browser
@@ -45,7 +45,7 @@ module.exports = {
   afterEach: function(browser) {
     browser
       .useCss()
-      .moveToElement('#logo')
+      .moveToElement('#logo', 0, 0)
       .pause(500)
       .click('#logo');
     workspaceService.deleteFromList(browser, 0);
@@ -116,7 +116,7 @@ module.exports = {
     var contentPath = '//*[@id="subproblem-selector"]';
     browser
       .pause(100)
-      .moveToElement('//*[@id="problem-definition-tab"]')
+      .moveToElement('//*[@id="problem-definition-tab"]', 0, 0)
       .pause(500)
       .click('//*[@id="problem-definition-tab"]')
       .click(actionButtonPath)
@@ -191,7 +191,7 @@ module.exports = {
     var contentPath = '//*[@id="scenario-selector"]';
     browser
       .pause(100)
-      .moveToElement(preferenceTabPath)
+      .moveToElement(preferenceTabPath, 0, 0)
       .pause(500)
       .click(preferenceTabPath)
       .click(actionButtonPath)
@@ -230,7 +230,7 @@ module.exports = {
     };
     browser
       .pause(100)
-      .moveToElement(paths.tab)
+      .moveToElement(paths.tab, 0, 0)
       .pause(500)
       .click(paths.tab)
       .click(paths.actionButton)
