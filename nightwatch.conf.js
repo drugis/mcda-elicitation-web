@@ -8,7 +8,7 @@ module.exports = {
     'test/endToEnd'
   ],
   selenium: {
-    check_process_delay: 20000,
+    check_process_delay: 10000,
     start_process: true,
     server_path: seleniumServer.path,
     host: 'localhost',
