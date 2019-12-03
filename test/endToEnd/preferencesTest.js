@@ -175,13 +175,15 @@ module.exports = {
       .waitForElementVisible('//*[@id="first-criterion-outcome-b-input"]')
       .waitForElementVisible('//*[@id="second-criterion-outcome-b-input"]')
       .waitForElementVisible('//*[@id="willingness-summary"]')
-      .waitForElementVisible('//*[@id="willingness-slider"]')
+      .waitForElementVisible('//*[@id="willingness-slider"]');
+
+    browser.expect.element('//*[@id="first-criterion-outcome-b-input"]').to.have.value.which.contains('.');
+    browser.expect.element('//*[@id="second-criterion-outcome-b-input"]').to.have.value.which.contains('.');
+
+    browser
       .clearValue('//*[@id="first-criterion-outcome-b-input"]')
-      .pause(500)
       .setValue('//*[@id="first-criterion-outcome-b-input"]', outcomeValue)
-      .pause(500)
       .assert.containsText('//*[@id="first-criterion-outcome-b-input"]', outcomeValue)
-      .pause(2000)
       .assert.containsText('//*[@id="willingness-slider"]/div/span[10]', outcomeValue)
       .useCss()
       ;
