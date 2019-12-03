@@ -82,6 +82,8 @@ module.exports = {
     const newTitle = 'not default';
     browser
       .waitForElementVisible('#workspace-title')
+      .moveToElement('#problem-definition-tab', 0, 0)
+      .pause(500)
       .click('#problem-definition-tab')
       .waitForElementVisible('#effects-table-header')
       .click('#edit-subproblem-button')
