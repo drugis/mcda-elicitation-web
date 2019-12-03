@@ -51,6 +51,12 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('yarn.lock') }}
+
       - name: run yarn
         run: yarn install --force
 
@@ -63,6 +69,7 @@ jobs:
       #   uses: rtCamp/action-slack-notify@master
       #   env:
       #     SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+      #     SLACK_USERNAME: gitbot
       #     SLACK_TITLE: "Development pull request:"
       #     SLACK_MESSAGE: "Front-end tests failed"
 
@@ -75,6 +82,7 @@ jobs:
       #   uses: rtCamp/action-slack-notify@master
       #   env:
       #     SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+      #     SLACK_USERNAME: gitbot
       #     SLACK_TITLE: "Development pull request:"
       #     SLACK_MESSAGE: "Back-end tests failed"
 
@@ -107,15 +115,16 @@ jobs:
       #   uses: rtCamp/action-slack-notify@master
       #   env:
       #     SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+      #     SLACK_USERNAME: gitbot
       #     SLACK_TITLE: "Development pull request:"
       #     SLACK_MESSAGE: "End-to-end tests failed"
 
       - name: stop mcda
         run: sudo pkill -9 node
-
       # - name: notify on slack channel on success
       #   uses: rtCamp/action-slack-notify@master
       #   env:
       #     SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+      #     SLACK_USERNAME: gitbot
       #     SLACK_TITLE: "Development pull request:"
       #     SLACK_MESSAGE: "Tests passed"

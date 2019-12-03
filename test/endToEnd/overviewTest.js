@@ -26,7 +26,10 @@ module.exports = {
   },
 
   afterEach: function(browser) {
-    browser.click('#logo');
+    browser
+      .moveToElement('#logo', 0, 0)
+      .pause(500)
+      .click('#logo');
     workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();
