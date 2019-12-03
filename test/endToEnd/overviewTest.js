@@ -28,7 +28,7 @@ module.exports = {
   afterEach: function(browser) {
     browser
       .moveToElement('#logo', 0, 0)
-      .pause(500)
+      .pause(1000)
       .click('#logo');
     workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
@@ -154,11 +154,15 @@ module.exports = {
     const proximalUp = '#move-up-criterion-cae083fa-c1e7-427f-8039-c46479392344';
 
     browser
+      .moveToElement(proximalDown, 0, 0)
+      .pause(500)
       .click(proximalDown)
       .useXpath()
       .assert.containsText(firstCriterionTitle, 'Distal DVT')
       .useCss()
 
+      .moveToElement(proximalUp, 0, 0)
+      .pause(500)
       .click(proximalUp)
       .useXpath()
       .assert.containsText(firstCriterionTitle, 'Proximal DVT')

@@ -46,7 +46,7 @@ module.exports = {
     browser
       .useCss()
       .moveToElement('#logo', 0, 0)
-      .pause(500)
+      .pause(1000)
       .click('#logo');
     workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
