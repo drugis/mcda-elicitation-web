@@ -2,7 +2,7 @@ name: MCDA develop | push | deploy
 
 on:
   push:
-    branches: feature/workflow
+    branches: develop
 
 jobs:
   test:
