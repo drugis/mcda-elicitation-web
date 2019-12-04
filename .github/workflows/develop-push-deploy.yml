@@ -38,6 +38,15 @@ jobs:
         id: karma
         run: npx karma start --singleRun
 
+      - name: notify on slack channel on failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+          SLACK_USERNAME: gitbot
+          SLACK_TITLE: "Development push:"
+          SLACK_MESSAGE: "MCDA-test deploy failed"
+
       # - name: make ssh keys
       #   run: |
       #     mkdir ~/.ssh
@@ -73,12 +82,3 @@ jobs:
           SLACK_USERNAME: gitbot
           SLACK_TITLE: "Development push:"
           SLACK_MESSAGE: "MCDA-test deployed"
-
-      - name: notify on slack channel on success
-        if: cancelled()
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
-          SLACK_USERNAME: gitbot
-          SLACK_TITLE: "Development push:"
-          SLACK_MESSAGE: "MCDA-test deploy failed"
