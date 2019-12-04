@@ -1,4 +1,4 @@
-name: MCDA develop pull request back-end tests
+name: MCDA develop | pull request | back-end tests
 
 on:
   pull_request:
