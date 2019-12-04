@@ -1,0 +1,84 @@
+name: MCDA develop push deploy
+
+on:
+  push:
+    branches: feature/workflow
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        node-version: ["12"]
+        os: [ubuntu-16.04]
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('package.json') }}
+
+      - name: run yarn
+        run: yarn
+
+      - name: back-end tests
+        id: mocha
+        run: npx mocha --exit
+
+      - name: front-end tests
+        id: karma
+        run: npx karma start --singleRun
+
+      # - name: make ssh keys
+      #   run: |
+      #     mkdir ~/.ssh
+      #     echo "${{ secrets.deployPrivateKey }}" > ~/.ssh/id_rsa
+      #     echo "${{ secrets.deployPublicKey }}" > ~/.ssh/id_rsa.pub
+      #     sudo chmod -R 640 ~/.ssh
+
+      # - name: set matomo version
+      #   run: sudo ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'export MATOMO_VERSION=Test'
+
+      # - name: pull latest from drugis
+      #   run: sudo ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'cd mcda-elicitation-web && git checkout develop && git pull'
+
+      # - name: build docker container in test server
+      #   run: sudo ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'cd mcda-elicitation-web && docker build --no-cache --tag mcda .'
+
+      # - name: stop MCDA docker container
+      #   run: sudo ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker stop mcda'
+
+      # - name: delete docker container
+      #   run: sudo ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker rm mcda'
+
+      # - name: run MCDA container
+      #   run: sudo ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'mcda-elicitation-web/run-mcda.sh'
+
+      # - name: prune docker
+      #   run: sudo ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no deploy@mcda-test.drugis.org 'docker system prune -f'
+
+      - name: notify on slack channel on success
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+          SLACK_USERNAME: gitbot
+          SLACK_TITLE: "Development push:"
+          SLACK_MESSAGE: "MCDA-test deployed"
+
+      - name: notify on slack channel on success
+        if: cancelled()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+          SLACK_USERNAME: gitbot
+          SLACK_TITLE: "Development push:"
+          SLACK_MESSAGE: "MCDA-test deploy failed"

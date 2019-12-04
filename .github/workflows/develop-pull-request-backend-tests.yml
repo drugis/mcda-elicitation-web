@@ -1,8 +1,8 @@
 name: MCDA develop pull request back-end tests
 
 on:
-  push:
-    branches: feature/workflow
+  pull_request:
+    branches: develop
 
 jobs:
   test:
@@ -34,19 +34,20 @@ jobs:
         id: mocha
         run: npx mocha --exit
 
-      # - name: notify on slack channel on mocha failure
-      #   if: failure()
-      #   uses: rtCamp/action-slack-notify@master
-      #   env:
-      #     SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
-      #     SLACK_USERNAME: gitbot
-      #     SLACK_TITLE: "Development pull request:"
-      #     SLACK_MESSAGE: "Back-end tests failed"
+      - name: notify on slack channel on mocha failure
+        if: failure()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+          SLACK_USERNAME: gitbot
+          SLACK_TITLE: "Development pull request:"
+          SLACK_MESSAGE: "Back-end tests failed"
       
-      # - name: notify on slack channel on success
-      #   uses: rtCamp/action-slack-notify@master
-      #   env:
-      #     SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
-      #     SLACK_USERNAME: gitbot
-      #     SLACK_TITLE: "Development pull request:"
-      #     SLACK_MESSAGE: "Back-end tests passed"
+      - name: notify on slack channel on success
+        if: success()
+        uses: rtCamp/action-slack-notify@master
+        env:
+          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+          SLACK_USERNAME: gitbot
+          SLACK_TITLE: "Development pull request:"
+          SLACK_MESSAGE: "Back-end tests passed"
