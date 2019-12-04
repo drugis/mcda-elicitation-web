@@ -2,7 +2,7 @@ name: MCDA develop | pull request | back-end tests
 
 on:
   pull_request:
-    branches: feature/workflow
+    branches: develop
 
 jobs:
   test:
