@@ -52,7 +52,6 @@ describe('the in progress workspace handler', () => {
     const next = chai.spy();
 
     it('should call the in progress workspace repository with the correct arguments', () => {
-      fail();
       const createdId = 321;
       const result = {
         rows: [{
