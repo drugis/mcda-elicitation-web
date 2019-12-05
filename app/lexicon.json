@@ -145,7 +145,7 @@
     "link": "/manual.html#mcda-value-tradeoffs"
   },
   "representative-weights": {
-    "title": "Representative weights",
+    "title": "Weights",
     "text": "Weights representative of how important each criterion is. The total weights add up to one.",
     "link": "/manual.html#mcda-deterministic-analysis"
   },
