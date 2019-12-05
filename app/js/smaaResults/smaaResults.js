@@ -7,6 +7,7 @@ define([
   './heatMapDirective',
   './smaaTableDirective',
   './rankPlotDirective',
+  './smaaWeightsTableDirective',
 
   './smaaResultsService',
 
@@ -20,6 +21,7 @@ define([
   heatMapDirective,
   SmaaTableDirective,
   rankPlotDirective,
+  smaaWeightsTableDirective,
 
   SmaaResultsService,
 
@@ -33,6 +35,7 @@ define([
     .directive('heatMap', heatMapDirective)
     .directive('smaaTable', SmaaTableDirective)
     .directive('rankPlot', rankPlotDirective)
+    .directive('smaaWeightsTable', smaaWeightsTableDirective)
 
     .factory('SmaaResultsService', SmaaResultsService)
     ;
