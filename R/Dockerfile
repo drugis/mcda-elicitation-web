@@ -12,7 +12,8 @@ RUN R -e 'install.packages("hitandrun", repos="http://cran.rstudio.com/"); if (!
 RUN R -e 'install.packages("smaa", repos="http://cran.rstudio.com/"); if (!require("smaa")) quit(save="no", status=8)'
 
 ADD measurements.R /tmp/
-ADD smaa.R /tmp/
+ADD smaa_open.R /tmp/
+ADD smaa_common.R /tmp/
 RUN cat /tmp/*.R > /var/lib/patavi/smaa_service.R
 
 USER patavi
