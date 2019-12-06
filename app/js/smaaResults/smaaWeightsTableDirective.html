@@ -1,0 +1,23 @@
+<div class="grid-x">
+  <div class="cell">
+    <h4> Weights <inline-help help-key="representative-weights"></inline-help>
+    </h4>
+  </div>
+  <div class="cell">
+    <table>
+      <thead>
+        <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="text-centered" ng-repeat="criterion in criteria">
+            <div>
+              {{weights['50%'][criterion.id] | number}}</div>
+            <div class="uncertain">
+              {{weights['2.5%'][criterion.id] | number}}, {{weights['97.5%'][criterion.id] | number}}</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
