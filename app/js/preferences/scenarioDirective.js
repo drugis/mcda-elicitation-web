@@ -88,7 +88,13 @@ define(['lodash', 'jquery'],
           function resetWeights() {
             scope.scenario.state.prefs = [];
             scope.importance = PreferencesService.buildImportance(scope.criteria, scope.scenario.state.prefs);
-            scope.scenario.$save($stateParams, updateView);
+            scope.scenario.$save($stateParams, updateView).then(loadWeights);
+          }
+
+          function loadWeights(){
+            PreferencesService.getWeights(scope.problem).then(function(result) {
+              scope.weights = result.data;
+            });
           }
 
           function updateView() {
@@ -112,9 +118,7 @@ define(['lodash', 'jquery'],
               scope.criteria = orderings.criteria;
               var preferences = scope.scenario.state.prefs;
               scope.importance = PreferencesService.buildImportance(scope.criteria, preferences);
-              PreferencesService.getWeights(scope.problem).then(function(result){
-                scope.weights = result.data;
-              });
+              loadWeights();
             });
           }
         }
