@@ -22,6 +22,7 @@
         <th ng-if="isOrdinal">
           Ranking <inline-help help-key="ranking"></inline-help>
         </th>
+        <th> Weight </th>
       </thead>
       <tbody>
         <tr ng-repeat="criterion in criteria">
@@ -31,6 +32,7 @@
           <td>{{criterion.dataSources[0].pvf.range && pvf.worst(criterion.dataSources[0]) | number}}</td>
           <td>{{criterion.dataSources[0].pvf.range && pvf.best(criterion.dataSources[0]) | number}}</td>
           <td id="{{ criterion.id }}-ranking">{{importance[criterion.id]}}</td>
+          <td>{{weights[criterion.id] | number}}</td>
         </tr>
       </tbody>
     </table>
