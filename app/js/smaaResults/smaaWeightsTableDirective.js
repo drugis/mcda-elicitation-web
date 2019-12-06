@@ -1,6 +1,6 @@
 'use strict';
-define([],
-  function() {
+define(['clipboard'],
+  function(Clipboard) {
     var dependencies = [];
     var ScenarioDirective = function() {
       return {
@@ -9,7 +9,10 @@ define([],
           weights: '=',
           criteria: '='
         },
-        templateUrl: './smaaWeightsTableDirective.html'
+        templateUrl: './smaaWeightsTableDirective.html', 
+        link: function(scope){
+          new Clipboard('.clipboard-button');
+        }
       };
     };
     return dependencies.concat(ScenarioDirective);

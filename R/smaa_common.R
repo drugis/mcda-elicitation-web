@@ -332,6 +332,7 @@ getSmaaResults <- function(params) {
   cf <- smaa.cf(meas, cw)
   
   weights.quantiles <- apply(weights, 2, quantile, probs=c(0.025, 0.5, 0.975))
+  weights.quantiles[2,] <- colMeans(weights)
   
   list(ra=ra, cw=cw, cf=cf, weights.quantiles=weights.quantiles)
 }

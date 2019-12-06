@@ -1,10 +1,17 @@
 <div class="grid-x">
-  <div class="cell">
+  <div class="cell large-8 medium-8">
     <h4> Weights <inline-help help-key="representative-weights"></inline-help>
     </h4>
   </div>
+  <div class="cell large-4 medium-4">
+    <div class="right button-group">
+      <button class="button small info clipboard-button" data-clipboard-target="#smaa-weights-table">
+        <i class="fa fa-clipboard"></i> Copy to clipboard
+      </button>
+    </div>
+  </div>
   <div class="cell">
-    <table>
+    <table id="smaa-weights-table">
       <thead>
         <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
       </thead>
