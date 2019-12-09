@@ -163,7 +163,7 @@ module.exports = {
     browser
       .waitForElementVisible('//willingness-to-trade-off-chart/div/div[1]/div')
       .getLocationInView('//willingness-to-trade-off-chart/div/div[1]/div')
-      .moveToElement('//willingness-to-trade-off-chart/div/div[1]/div', 50, 100)
+      .moveToElement('//willingness-to-trade-off-chart/div/div[1]/div', 100, 100)
       .mouseButtonDown(0)
       .mouseButtonUp(0)
       ;
