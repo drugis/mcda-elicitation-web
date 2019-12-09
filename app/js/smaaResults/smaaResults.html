@@ -12,8 +12,8 @@
       <br><br>
     </div>
     <div class="cell large-9">
-      <select id="scenario-selector" class="scenario-select"
-        ng-model="scenario" ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
+      <select id="scenario-selector" class="scenario-select" ng-model="scenario"
+        ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
         ng-change="scenarioChanged(scenario)">
       </select>
     </div>
@@ -27,22 +27,25 @@
       <div class="grid-x">
         <div class="cell">
           <label>
-            <input id="uncertainty-measurements-checkbox" type="checkbox" ng-model="scenario.state.uncertaintyOptions.measurements"
-              ng-change="uncertaintyOptionsChanged()" ng-disabled="noStochasticMeasurements">
+            <input id="uncertainty-measurements-checkbox" type="checkbox"
+              ng-model="scenario.state.uncertaintyOptions.measurements" ng-change="uncertaintyOptionsChanged()"
+              ng-disabled="noStochasticMeasurements">
             measurements <inline-help help-key="measurements-smaa-uncertainty"></inline-help>
           </label>
         </div>
         <div class="cell">
           <label>
-            <input id="uncertainty-weights-checkbox" type="checkbox" ng-model="scenario.state.uncertaintyOptions.weights"
-              ng-change="uncertaintyOptionsChanged()" ng-disabled="noStochasticWeights">
+            <input id="uncertainty-weights-checkbox" type="checkbox"
+              ng-model="scenario.state.uncertaintyOptions.weights" ng-change="uncertaintyOptionsChanged()"
+              ng-disabled="noStochasticWeights">
             weights <inline-help help-key="weights-smaa-uncertainty"></inline-help>
           </label>
         </div>
       </div>
     </div>
     <div class="cell">
-      <button id="recalculate-button" class="button" ng-disabled="!uncertaintyOptions.dirty" ng-click="recalculateSmaa()">Recalculate</button>
+      <button id="recalculate-button" class="button" ng-disabled="!uncertaintyOptions.dirty"
+        ng-click="recalculateSmaa()">Recalculate</button>
     </div>
     <div id="warning-{{ $index }}" ng-if="warnings.length" ng-repeat="warning in warnings" class="cell">
       <i class="fa fa-exclamation-triangle"></i> {{ warning }}
@@ -72,8 +75,8 @@
     </div>
     <div class="cell large-6">
       <div export file-name="'rank-acceptability-plot'" legend style="width: 400px; height: 400px">
-        <rank-plot values="state.results.ranks.data" alternatives="alternatives"
-          labels="scenario.state.legend"></rank-plot>
+        <rank-plot values="state.results.ranks.data" alternatives="alternatives" labels="scenario.state.legend">
+        </rank-plot>
       </div>
     </div>
     <div class="cell large-6">
@@ -88,7 +91,8 @@
           <tr ng-repeat="alternative in alternatives">
             <td>{{scenario.state.legend[alternative.id].baseTitle || alternative.title}}</td>
             <td id="{{ alternative.id }}-{{ $index + 1 }}-rank"
-              ng-repeat="rank in state.results.ranks.data[alternative.id] track by $index" class="heat-map">
+              ng-repeat="rank in state.results.ranks.data[alternative.id] track by $index"
+              class="heat-map text-centered">
               {{::rank | number}}
             </td>
           </tr>
@@ -131,25 +135,24 @@
       </div>
     </div>
   </div>
-  <h4>
-    Central Weights <inline-help help-key="central-weights"></inline-help>
-  </h4>
   <div class="grid-x">
+    <div class="cell">
+      <h4>
+        Central Weights <inline-help help-key="central-weights"></inline-help>
+      </h4>
+    </div>
     <div class="cell">
       <div style="width: 650px; height: 350px" export legend file-name="'central-weights'">
         <central-weights-plot id="central-weights-plot" values="state.centralWeights">
         </central-weights-plot>
       </div>
     </div>
-    <div class="cell large-2 large-offset-10">
-      <button class="button small info clipboard-button" data-clipboard-target="#central-weights-table">
+    <div class="cell">
+      <button class="button small info clipboard-button right" data-clipboard-target="#central-weights-table">
         <i class="fa fa-clipboard"></i> Copy to clipboard
       </button>
     </div>
     <div class="cell">
-      <h4>
-        Central Weights <inline-help help-key="central-weights-table"></inline-help>
-      </h4>
       <table id="central-weights-table">
         <thead>
           <tr>
@@ -163,7 +166,8 @@
           <tr ng-repeat="alternative in alternatives">
             <td>{{alternative.title}}</td>
             <td class="heat-map">{{state.results.cw.data[alternative.id].cf | number}}</td>
-            <td id="{{ criterion.id }}-{{ alternative.id }}-central-weight" ng-repeat="criterion in criteria">
+            <td id="{{ criterion.id }}-{{ alternative.id }}-central-weight" ng-repeat="criterion in criteria"
+              class="text-centered">
               {{::state.results.cw.data[alternative.id].w[criterion.id] | number}}
             </td>
           </tr>

@@ -68,11 +68,11 @@
             <td>{{criterion.title}}</td>
             <td>{{criterion.description}}</td>
             <td>{{getUnitOfMeasurement(criterion)}}</td>
-            <td>{{pvf.worst(criterion.dataSources[0]) | number}}</td>
-            <td>{{pvf.best(criterion.dataSources[0]) | number}}</td>
-            <td ng-if="criterion.id !== state.mostImportantCriterionId">{{isPrecise ? state.values[criterion.id] : (isImprecise ? state.values[criterion.id].low + '-' + state.values[criterion.id].high
+            <td class="text-centered">{{pvf.worst(criterion.dataSources[0]) | number}}</td>
+            <td class="text-centered">{{pvf.best(criterion.dataSources[0]) | number}}</td>
+            <td class="text-centered" ng-if="criterion.id !== state.mostImportantCriterionId">{{isPrecise ? state.values[criterion.id] : (isImprecise ? state.values[criterion.id].low + '-' + state.values[criterion.id].high
               : 'error')}}%</td>
-            <td ng-if="criterion.id === state.mostImportantCriterionId">100%</td>
+            <td class="text-centered" ng-if="criterion.id === state.mostImportantCriterionId">100%</td>
           </tr>
         </tbody>
       </table>
