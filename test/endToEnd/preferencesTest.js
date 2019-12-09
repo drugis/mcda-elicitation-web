@@ -176,7 +176,7 @@ module.exports = {
       .waitForElementVisible('//*[@id="second-criterion-outcome-b-input"]')
       .waitForElementVisible('//*[@id="willingness-summary"]')
       .waitForElementVisible('//*[@id="willingness-slider"]')
-      .clearValue('//*[@id="first-criterion-outcome-b-input"]')
+      // .clearValue('//*[@id="first-criterion-outcome-b-input"]')
       .setValue('//*[@id="first-criterion-outcome-b-input"]', outcomeValue)
       .pause(500)
       .assert.containsText('//willingness-to-trade-off-chart/div/div[2]/div/span[10]', outcomeValue)
