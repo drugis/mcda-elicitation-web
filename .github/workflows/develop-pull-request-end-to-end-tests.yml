@@ -1,8 +1,8 @@
 name: MCDA develop | pull request | end-to-end tests
 
 on:
-  pull_request:
-    branches: develop
+  push:
+    branches: feature/worklfow
 
 jobs:
   test:
@@ -80,27 +80,32 @@ jobs:
           PATAVI_CLIENT_KEY: key.pem
           PATAVI_CLIENT_CRT: crt.pem
 
+      # - name: run nightwatch tests
+      #   id: nightwatch
+      #   run: npm run test-end-to-end
+
       - name: run nightwatch tests
         id: nightwatch
-        run: npm run test-end-to-end
+        run: npx nightwatch -c nightwatch.conf.js --test test/endToEnd/aggregatedAnalysisTest.js --testcase 'Interacting with Willingness to trade off plot'
 
-      - name: notify on slack channel on nightwatch failure
-        if: failure()
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
-          SLACK_USERNAME: gitbot
-          SLACK_TITLE: "Development pull request:"
-          SLACK_MESSAGE: "End-to-end tests failed"
 
-      - name: notify on slack channel on success
-        if: success()
-        uses: rtCamp/action-slack-notify@master
-        env:
-          SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
-          SLACK_USERNAME: gitbot
-          SLACK_TITLE: "Development pull request:"
-          SLACK_MESSAGE: "End-to-end tests passed"
+      # - name: notify on slack channel on nightwatch failure
+      #   if: failure()
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+      #     SLACK_USERNAME: gitbot
+      #     SLACK_TITLE: "Development pull request:"
+      #     SLACK_MESSAGE: "End-to-end tests failed"
+
+      # - name: notify on slack channel on success
+      #   if: success()
+      #   uses: rtCamp/action-slack-notify@master
+      #   env:
+      #     SLACK_WEBHOOK: ${{ secrets.slack_webhook }}
+      #     SLACK_USERNAME: gitbot
+      #     SLACK_TITLE: "Development pull request:"
+      #     SLACK_MESSAGE: "End-to-end tests passed"
 
       - name: stop mcda
         run: sudo pkill -9 node

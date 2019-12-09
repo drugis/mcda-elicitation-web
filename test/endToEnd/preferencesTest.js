@@ -152,5 +152,35 @@ module.exports = {
       .click('#next-button')
       .click('#previous-button')
       .assert.containsText('#swing-weighting-title-header', 'Imprecise swing weighting (1/2)');
+  },
+
+  'Interacting with Willingness to trade off plot': function(browser) {
+    const outcomeValue = 60;
+
+    browser.useXpath();
+    browser.expect.element('//*[@id="first-criterion-outcome-input"]').to.not.have.value.which.contains('.');
+    browser.expect.element('//*[@id="second-criterion-outcome-input"]').to.not.have.value.which.contains('.');
+    browser
+      .waitForElementVisible('//willingness-to-trade-off-chart/div/div[1]/div')
+      .getLocationInView('//willingness-to-trade-off-chart/div/div[1]/div')
+      .moveToElement('//willingness-to-trade-off-chart/div/div[1]/div', 0, 0)
+      .mouseButtonDown(0)
+      .mouseButtonUp(0)
+      ;
+
+    browser.expect.element('//*[@id="first-criterion-outcome-input"]').to.have.value.which.contains('.');
+    browser.expect.element('//*[@id="second-criterion-outcome-input"]').to.have.value.which.contains('.');
+
+    browser
+      .waitForElementVisible('//*[@id="first-criterion-outcome-b-input"]')
+      .waitForElementVisible('//*[@id="second-criterion-outcome-b-input"]')
+      .waitForElementVisible('//*[@id="willingness-summary"]')
+      .waitForElementVisible('//*[@id="willingness-slider"]')
+      .clearValue('//*[@id="first-criterion-outcome-b-input"]')
+      .setValue('//*[@id="first-criterion-outcome-b-input"]', outcomeValue)
+      .pause(500)
+      .assert.containsText('//willingness-to-trade-off-chart/div/div[2]/div/span[10]', outcomeValue)
+      .useCss()
+      ;
   }
 };
