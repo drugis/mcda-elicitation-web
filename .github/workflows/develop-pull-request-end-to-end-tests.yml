@@ -86,7 +86,7 @@ jobs:
 
       - name: run nightwatch tests
         id: nightwatch
-        run: npx nightwatch -c nightwatch.conf.js --test test/endToEnd/aggregatedAnalysisTest.js --testcase 'Interacting with Willingness to trade off plot'
+        run: npx nightwatch -c nightwatch.conf.js --test test/endToEnd/preferencesTest.js --testcase 'Interacting with Willingness to trade off plot'
 
 
       # - name: notify on slack channel on nightwatch failure
