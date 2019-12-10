@@ -1,0 +1,26 @@
+<div class="grid-x underlined-div">
+  <div class="cell large-10">
+    <h4>
+      Weights <inline-help help-key="representative-weights"></inline-help>
+    </h4>
+  </div>
+  <div class="cell large-2">
+    <button class="button small info clipboard-button right" data-clipboard-target="#representative-weights-table">
+      <i class="fa fa-clipboard"></i> Copy to clipboard
+    </button>
+  </div>
+  <div class="cell">
+    <table id="representative-weights-table">
+      <thead>
+        <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
+      </thead>
+      <tbody>
+        <tr>
+          <td id="{{criterion.id}}-weight" ng-repeat="criterion in criteria" class="text-centered">
+            {{weights[criterion.id] | number}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

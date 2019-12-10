@@ -1,0 +1,70 @@
+<div class="grid-x underlined-div">
+  <div class="cell">
+    <h4>Rank acceptabilities <inline-help help-key="rank-acceptabilities"></inline-help>
+    </h4>
+  </div>
+  <div class="cell large-2 large-offset-9">
+    <button class="button small info clipboard-button" data-clipboard-target="#rank-table">
+      <i class="fa fa-clipboard"></i> Copy to clipboard
+    </button>
+  </div>
+  <div class="cell large-6">
+    <div export file-name="'rank-acceptability-plot'" legend style="width: 400px; height: 400px">
+      <rank-plot values="state.results.ranks.data" alternatives="alternatives" labels="scenario.state.legend">
+      </rank-plot>
+    </div>
+  </div>
+  <div class="cell large-6">
+    <table id="rank-table" class="rank-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th ng-repeat="alternative in alternatives">Rank {{::$index + 1}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="alternative in alternatives">
+          <td>{{scenario.state.legend[alternative.id].baseTitle || alternative.title}}</td>
+          <td id="{{ alternative.id }}-{{ $index + 1 }}-rank"
+            ng-repeat="rank in state.results.ranks.data[alternative.id] track by $index" class="heat-map text-centered">
+            {{::rank | number}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="cell large-6">
+    <div export legend file-name="'alternatives-per-rank'">
+      <h4>
+        Alternatives per rank <inline-help help-key="alternatives-per-rank"></inline-help>
+      </h4>
+      <select ng-model="state.selectedRank" class="large-3">
+        <option ng-repeat="alternative in alternatives" value="{{$index}}" ng-selected="$index == state.selectedRank">
+          Rank {{::$index + 1}}
+        </option>
+      </select>
+      <div style="width: 400px; height: 350px">
+        <bar-chart id="alternatives-per-rank-bar-chart" values="state.alternativesByRank[state.selectedRank]">
+        </bar-chart>
+      </div>
+    </div>
+  </div>
+  <div class="cell large-6">
+    <div export legend file-name="'ranks-per-alternative'">
+      <h4>
+        Ranks per alternative <inline-help help-key="ranks-per-alternative"></inline-help>
+      </h4>
+      <select ng-model="state.selectedAlternative" class="large-3">
+        <option ng-repeat="alternative in alternatives" value="{{alternative.id}}"
+          ng-selected="alternative.id == state.selectedAlternative">
+          {{scenario.state.legend[alternative.id].baseTitle || alternative.title}}
+        </option>
+      </select>
+      <div style="width: 400px; height: 350px">
+        <bar-chart id="rank-per-alternatives-bar-chart" values="state.ranksByAlternatives[state.selectedAlternative]">
+        </bar-chart>
+      </div>
+    </div>
+  </div>
+</div>
