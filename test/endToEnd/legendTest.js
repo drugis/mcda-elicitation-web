@@ -51,16 +51,16 @@ module.exports = {
   },
 
   'Changing alternatives to generated labels in deterministic view': function(browser) {
-    const measurementsLegendsButton = '/html/body/div[1]/div/div[3]/div/div/div/div/div[4]/div/div/div/div[6]/div[1]/measurement-sensitivity/button[2]';
-    const measurementsFirstAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(1) > text:nth-child(1)';
-    const measurementsSecondAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(2) > text:nth-child(1)';
-    const measurementsThirdAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(3) > text:nth-child(1)';
+    const legendButton = '//*[@id="value-profile-container"]/button[2]';
+    const firstAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(1) > text:nth-child(1)';
+    const secondAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(2) > text:nth-child(1)';
+    const thirdAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(3) > text:nth-child(1)';
 
     browser
       .click('#deterministic-tab')
       .waitForElementVisible('#sensitivity-table')
       .useXpath()
-      .click(measurementsLegendsButton)
+      .click(legendButton)
       .useCss();
 
     checkDefaultNames(browser);
@@ -74,23 +74,23 @@ module.exports = {
       .click('#save-legend-button')
       .pause(500)
       .waitForElementVisible('#sensitivity-measurements-header')
-      .waitForElementVisible(measurementsFirstAlternative)
-      .assert.containsText(measurementsFirstAlternative, 'plac')
-      .assert.containsText(measurementsSecondAlternative, 'B')
-      .assert.containsText(measurementsThirdAlternative, 'C');
+      .waitForElementVisible(firstAlternative)
+      .assert.containsText(firstAlternative, 'plac')
+      .assert.containsText(secondAlternative, 'B')
+      .assert.containsText(thirdAlternative, 'C');
   },
 
   'Changing alternatives to generated labels in smaa view': function(browser) {
-    const measurementsLegendsButton = '/html/body/div[1]/div/div[3]/div/div/div/div/div[5]/div/div/div/div[4]/div[3]/button[2]';
-    const measurementsFirstAlternative = '#alternatives-per-rank-bar-chart > div:nth-child(1) > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(2) > text:nth-child(2) > tspan:nth-child(1)';
-    const measurementsSecondAlternative = '#alternatives-per-rank-bar-chart > div:nth-child(1) > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(3) > text:nth-child(2) > tspan:nth-child(1)';
-    const measurementsThirdAlternative = '#alternatives-per-rank-bar-chart > div:nth-child(1) > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(4) > text:nth-child(2) > tspan:nth-child(1)';
+    const legendButton = '//*[@id="rank-plot-container"]/button[2]';
+    const firstAlternative = '#alternatives-per-rank-bar-chart > div:nth-child(1) > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(2) > text:nth-child(2) > tspan:nth-child(1)';
+    const secondAlternative = '#alternatives-per-rank-bar-chart > div:nth-child(1) > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(3) > text:nth-child(2) > tspan:nth-child(1)';
+    const thirdAlternative = '#alternatives-per-rank-bar-chart > div:nth-child(1) > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(4) > text:nth-child(2) > tspan:nth-child(1)';
 
     browser
       .click('#smaa-tab')
       .waitForElementVisible('#smaa-measurements-header')
       .useXpath()
-      .click(measurementsLegendsButton)
+      .click(legendButton)
       .useCss();
 
     checkDefaultNames(browser);
@@ -104,23 +104,23 @@ module.exports = {
       .click('#save-legend-button')
       .pause(500)
       .waitForElementVisible('#smaa-measurements-header')
-      .waitForElementVisible(measurementsFirstAlternative)
-      .assert.containsText(measurementsFirstAlternative, 'plac')
-      .assert.containsText(measurementsSecondAlternative, 'C')
-      .assert.containsText(measurementsThirdAlternative, 'B');
+      .waitForElementVisible(firstAlternative)
+      .assert.containsText(firstAlternative, 'plac')
+      .assert.containsText(secondAlternative, 'C')
+      .assert.containsText(thirdAlternative, 'B');
   },
 
   'Reset labels': function(browser) {
-    const measurementsLegendsButton = '/html/body/div[1]/div/div[3]/div/div/div/div/div[4]/div/div/div/div[4]/div/div[3]/div/button[2]';
-    const measurementsFirstAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(1) > text:nth-child(1)';
-    const measurementsSecondAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(2) > text:nth-child(1)';
-    const measurementsThirdAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(3) > text:nth-child(1)';
+    const legendButton = '//*[@id="value-profile-container"]/button[2]';
+    const firstAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(1) > text:nth-child(1)';
+    const secondAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(2) > text:nth-child(1)';
+    const thirdAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(3) > text:nth-child(1)';
 
     browser
       .click('#deterministic-tab')
       .waitForElementVisible('#sensitivity-table')
       .useXpath()
-      .click(measurementsLegendsButton)
+      .click(legendButton)
       .useCss();
 
     setSingleLetterNames(browser);
@@ -129,15 +129,15 @@ module.exports = {
       .click('#save-legend-button')
       .pause(500)
       .waitForElementVisible('#sensitivity-measurements-header')
-      .waitForElementVisible(measurementsFirstAlternative)
-      .assert.containsText(measurementsFirstAlternative, 'A')
-      .assert.containsText(measurementsSecondAlternative, 'B')
-      .assert.containsText(measurementsThirdAlternative, 'C')
+      .waitForElementVisible(firstAlternative)
+      .assert.containsText(firstAlternative, 'A')
+      .assert.containsText(secondAlternative, 'B')
+      .assert.containsText(thirdAlternative, 'C')
 
       .click('#deterministic-tab')
       .waitForElementVisible('#sensitivity-table')
       .useXpath()
-      .click(measurementsLegendsButton)
+      .click(legendButton)
       .useCss()
       .click('#reset-labels-button');
 
