@@ -3,9 +3,11 @@ define([
   './smaaResultsController',
 
   './barChartDirective',
+  './centralWeightsDirective',
   './centralWeightsPlotDirective',
   './heatMapDirective',
   './smaaTableDirective',
+  './rankAcceptabilitiesDirective',
   './rankPlotDirective',
   './smaaWeightsTableDirective',
 
@@ -17,9 +19,11 @@ define([
   SmaaResultsController,
 
   barChartDirective,
+  centralWeightsDirective,
   centralWeightsPlotDirective,
   heatMapDirective,
   SmaaTableDirective,
+  rankAcceptabilitiesDirective,
   rankPlotDirective,
   smaaWeightsTableDirective,
 
@@ -31,9 +35,11 @@ define([
     .controller('SmaaResultsController', SmaaResultsController)
 
     .directive('barChart', barChartDirective)
+    .directive('centralWeights', centralWeightsDirective)
     .directive('centralWeightsPlot', centralWeightsPlotDirective)
     .directive('heatMap', heatMapDirective)
     .directive('smaaTable', SmaaTableDirective)
+    .directive('rankAcceptabilities', rankAcceptabilitiesDirective)
     .directive('rankPlot', rankPlotDirective)
     .directive('smaaWeightsTable', smaaWeightsTableDirective)
 

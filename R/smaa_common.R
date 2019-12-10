@@ -129,7 +129,6 @@ run_sensitivityMeasurementsPlot <- function(params) {
     xCoordinates <- c(range[1],params$criteria[[crit]]$pvf$cutoffs,range[2])
   }
   
-  
   total.value <- c()
   for (value in xCoordinates) {
     cur.meas <- meas

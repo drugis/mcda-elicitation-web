@@ -2,7 +2,7 @@
 define(['clipboard'],
   function(Clipboard) {
     var dependencies = [];
-    var ScenarioDirective = function() {
+    var SmaaWeightsTableDirective = function() {
       return {
         restrict: 'E',
         scope: {
@@ -10,10 +10,10 @@ define(['clipboard'],
           criteria: '='
         },
         templateUrl: './smaaWeightsTableDirective.html', 
-        link: function(scope){
+        link: function(){
           new Clipboard('.clipboard-button');
         }
       };
     };
-    return dependencies.concat(ScenarioDirective);
+    return dependencies.concat(SmaaWeightsTableDirective);
   });
