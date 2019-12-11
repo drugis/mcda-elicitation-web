@@ -2,18 +2,18 @@
 define(['clipboard'],
   function(Clipboard) {
     var dependencies = [];
-    var SmaaWeightsTableDirective = function() {
+    var DeterministicWeightsTableDirective = function() {
       return {
         restrict: 'E',
         scope: {
           weights: '=',
           criteria: '='
         },
-        templateUrl: './smaaWeightsTableDirective.html', 
+        templateUrl: './deterministicWeightsTableDirective.html', 
         link: function(){
           new Clipboard('.clipboard-button');
         }
       };
     };
-    return dependencies.concat(SmaaWeightsTableDirective);
+    return dependencies.concat(DeterministicWeightsTableDirective);
   });

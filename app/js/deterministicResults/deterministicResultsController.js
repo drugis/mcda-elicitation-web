@@ -76,15 +76,10 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
     }
 
     function loadState() {
+      $scope.sensitivityMeasurements.preferencesCriterion = $scope.criteria[0];
       var stateWithAlternativesRenamed = LegendService.replaceAlternativeNames($scope.scenario.state.legend,
         $scope.aggregateState);
-      initSensitivityDropdowns();
-
       $scope.deterministicResults = DeterministicResultsService.getDeterministicResults($scope, stateWithAlternativesRenamed);
-    }
-
-    function initSensitivityDropdowns() {
-      $scope.sensitivityMeasurements.preferencesCriterion = $scope.criteria[0];
     }
 
     function isEditing(value) {

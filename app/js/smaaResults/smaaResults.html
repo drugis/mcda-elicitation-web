@@ -5,6 +5,7 @@
     </div>
   </div>
 </div>
+
 <div ng-if="state.results">
   <div class="grid-x">
     <div class="cell large-3">
@@ -18,6 +19,7 @@
       </select>
     </div>
   </div>
+
   <div class="grid-x underlined-div">
     <br><br>
     <div class="cell large-3">
@@ -51,131 +53,14 @@
       <i class="fa fa-exclamation-triangle"></i> {{ warning }}
     </div>
   </div>
-  <br>
-  <div class="grid-x underlined-div">
-    <div class="cell">
-      <smaa-table state="aggregateState" criteria="criteria" alternatives="alternatives"
-        scales="workspace.scales.observed" toggled-columns="toggledColumns"></smaa-table>
-    </div>
-  </div>
-  <div class="grid-x underlined-div">
-    <div class="cell">
-      <smaa-weights-table weights="state.results.weightsQuantiles.data" criteria="criteria"></smaa-weights-table>
-    </div>
-  </div>
-  <div class="grid-x underlined-div">
-    <div class="cell">
-      <h4>Rank acceptabilities <inline-help help-key="rank-acceptabilities"></inline-help>
-      </h4>
-    </div>
-    <div class="cell large-2 large-offset-9">
-      <button class="button small info clipboard-button" data-clipboard-target="#rank-table">
-        <i class="fa fa-clipboard"></i> Copy to clipboard
-      </button>
-    </div>
-    <div id="rank-plot-container" class="cell large-6">
-      <div export file-name="'rank-acceptability-plot'" legend style="width: 400px; height: 400px">
-        <rank-plot values="state.results.ranks.data" alternatives="alternatives" labels="scenario.state.legend">
-        </rank-plot>
-      </div>
-    </div>
-    <div class="cell large-6">
-      <table id="rank-table" class="rank-table">
-        <thead>
-          <tr>
-            <th></th>
-            <th ng-repeat="alternative in alternatives">Rank {{::$index + 1}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="alternative in alternatives">
-            <td>{{scenario.state.legend[alternative.id].baseTitle || alternative.title}}</td>
-            <td id="{{ alternative.id }}-{{ $index + 1 }}-rank"
-              ng-repeat="rank in state.results.ranks.data[alternative.id] track by $index"
-              class="heat-map text-centered">
-              {{::rank | number}}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="grid-x underlined-div">
-    <div class="cell large-6">
-      <div export legend file-name="'alternatives-per-rank'">
-        <h4>
-          Alternatives per rank <inline-help help-key="alternatives-per-rank"></inline-help>
-        </h4>
-        <select ng-model="state.selectedRank" class="large-3">
-          <option ng-repeat="alternative in alternatives" value="{{$index}}" ng-selected="$index == state.selectedRank">
-            Rank {{::$index + 1}}
-          </option>
-        </select>
-        <div style="width: 400px; height: 350px">
-          <bar-chart id="alternatives-per-rank-bar-chart" values="state.alternativesByRank[state.selectedRank]">
-          </bar-chart>
-        </div>
-      </div>
-    </div>
-    <div class="cell large-6">
-      <div export legend file-name="'ranks-per-alternative'">
-        <h4>
-          Ranks per alternative <inline-help help-key="ranks-per-alternative"></inline-help>
-        </h4>
-        <select ng-model="state.selectedAlternative" class="large-3">
-          <option ng-repeat="alternative in alternatives" value="{{alternative.id}}"
-            ng-selected="alternative.id == state.selectedAlternative">
-            {{scenario.state.legend[alternative.id].baseTitle || alternative.title}}
-          </option>
-        </select>
-        <div style="width: 400px; height: 350px">
-          <bar-chart id="rank-per-alternatives-bar-chart" values="state.ranksByAlternatives[state.selectedAlternative]">
-          </bar-chart>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="grid-x">
-    <div class="cell">
-      <h4>
-        Central Weights <inline-help help-key="central-weights"></inline-help>
-      </h4>
-    </div>
-    <div class="cell">
-      <div style="width: 650px; height: 350px" export legend file-name="'central-weights'">
-        <central-weights-plot id="central-weights-plot" values="state.centralWeights">
-        </central-weights-plot>
-      </div>
-    </div>
-    <div class="cell">
-      <button class="button small info clipboard-button right" data-clipboard-target="#central-weights-table">
-        <i class="fa fa-clipboard"></i> Copy to clipboard
-      </button>
-    </div>
-    <div class="cell">
-      <table id="central-weights-table">
-        <thead>
-          <tr>
-            <th>Alternative</th>
-            <th>Confidence <inline-help help-key="confidence-factor"></inline-help>
-            </th>
-            <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="alternative in alternatives">
-            <td>{{alternative.title}}</td>
-            <td class="heat-map text-centered">{{state.results.cw.data[alternative.id].cf | number}}</td>
-            <td id="{{ criterion.id }}-{{ alternative.id }}-central-weight" ng-repeat="criterion in criteria"
-              class="text-centered">
-              {{::state.results.cw.data[alternative.id].w[criterion.id] | number}}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="cell">
-      <em>An empty row indicates an alternative which is being dominated by one or more others.</em>
-    </div>
-  </div>
+
+  <smaa-table state="aggregateState" criteria="criteria" alternatives="alternatives" scales="workspace.scales.observed"
+    toggled-columns="toggledColumns"></smaa-table>
+
+  <smaa-weights-table weights="state.results.weightsQuantiles.data" criteria="criteria"></smaa-weights-table>
+
+  <rank-acceptabilities alternatives="alternatives" edit-mode="editMode" state="state" scenario="scenario">
+  </rank-acceptabilities>
+
+  <central-weights alternatives="alternatives" criteria="criteria" edit-mode="editMode" scenario="scenario" state="state"></central-weights>
 </div>
