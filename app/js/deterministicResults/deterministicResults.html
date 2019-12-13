@@ -7,11 +7,15 @@
 </div>
 <div ng-if="deterministicResults.problem">
   <div class="grid-x">
-    <div class="cell">
-      <span>Scenario:</span>
+    <div class="cell large-3">
+      Scenario:
+    </div>
+    <div class="cell large-9">
       <select id="scenario-selector" class="scenario-select" ng-model="scenario"
         ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
-        ng-change="scenarioChanged(scenario)"></select>
+        ng-change="scenarioChanged(scenario)">
+      </select>
+      <inline-help help-key="scenario"></inline-help>
     </div>
   </div>
   <br>
@@ -36,8 +40,8 @@
   <deterministic-weights-table criteria="criteria" weights="deterministicResults.results.weights.data">
   </deterministic-weights-table>
 
-  <value-profiles alternatives="alternatives" criteria="criteria" results="deterministicResults"
-    edit-mode="editMode" recalculated-results="recalculatedDeterministicResults" scenario="scenario">
+  <value-profiles alternatives="alternatives" criteria="criteria" results="deterministicResults" edit-mode="editMode"
+    recalculated-results="recalculatedDeterministicResults" scenario="scenario">
   </value-profiles>
 
   <div class="grid-x">

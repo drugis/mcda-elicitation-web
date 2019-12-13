@@ -1,19 +1,22 @@
 <div class="grid-x">
-  <div class="cell">
-    <span>Scenario:</span>
+  <div class="cell large-3">
+    Scenario:
+  </div>
+  <div class="cell large-9">
     <select id="scenario-selector" class="scenario-select" ng-model="scenario"
       ng-options="scenario.title for scenario in scenarios track by scenario.id"
       ng-change="scenarioChanged(scenario)"></select>
     <inline-help help-key="scenario"></inline-help>
     <a id="edit-scenario-button" ng-if="editMode.canEdit" ng-click="editScenarioTitle()"
       tooltip="Edit current scenario title"><i class="fa fa-edit"></i></a>
-    <a id="create-scenario-button" ng-if="editMode.canEdit" ng-click="newScenario()"
-      tooltip="Create clean scenario"><i class="fa fa-plus"></i></a>
-    <a id="copy-scenario-button" ng-if="editMode.canEdit" ng-click="copyScenario()"
-      tooltip="Copy current scenario"><i class="fa fa-copy"></i></a>
+    <a id="create-scenario-button" ng-if="editMode.canEdit" ng-click="newScenario()" tooltip="Create clean scenario"><i
+        class="fa fa-plus"></i></a>
+    <a id="copy-scenario-button" ng-if="editMode.canEdit" ng-click="copyScenario()" tooltip="Copy current scenario"><i
+        class="fa fa-copy"></i></a>
   </div>
 </div>
 <br>
+
 <div ng-if="aggregateState">
   <scenario aggregate-state="aggregateState" edit-mode="editMode" tasks="tasks" scenario="scenario">
   </scenario>

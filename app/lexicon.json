@@ -9,6 +9,11 @@
     "text": "How likely each alterntive is to have a specific rank (with 1 being best) overall.",
     "link": "/manual.html#mcda-smaa-results"
   },
+  "analysis-type": {
+    "title": "Analysis type",
+    "text": "Choose whether to display Deterministic (effects) or SMAA (distribution) values",
+    "link": "/manual.html#"
+  },
   "central-weights": {
     "title": "Central weights",
     "text": "The typical weights that would make an alternative the highest ranked treatment.",
@@ -99,9 +104,19 @@
     "text": "In mcda, it is possible to input data directly as a distribution of the effects for the treatment for a criterion, or to input the data measured in a study, after which the application will calculate the corresponding distribution automatically.",
     "link": "/manual.html#mcda-preparing-dataset"
   },
+  "measurements-display-mode": {
+    "title": "Measurements display mode",
+    "text": "Choose whether to display the input values of the effects table or the values used for calculation during the analysis",
+    "link": "/manual.html#"
+  },
   "measurements-smaa-uncertainty": {
     "title": "Uncertainty in measurements",
     "text": "Some measurements may include uncertainty, usually expressed as a confidence interval. SMAA can take this uncertainty into account when calculating the rank acceptiblities.",
+    "link": "/manual.html#mcda-smaa-analysis"
+  },
+  "median-mode": {
+    "title": "Median and mode selection",
+    "text": "Choose whether the median or the mode should be displayed when looking to the SMAA analysis values in the effects table. Mode values are informative only and will not be used while calculation analysis results.",
     "link": "/manual.html#mcda-smaa-analysis"
   },
   "observed-range": {
@@ -118,6 +133,11 @@
     "title": "Partial Value Function",
     "text": "A partial value function indicates how the desirability of a criterion's outcome varies with its value.",
     "link": "manual.html#mcda-mavt"
+  },
+  "percentages": {
+    "title": "Percentages",
+    "text": "Choose whether to display percentages or decimals for applicable effect table values.",
+    "link": "manual.html#"
   },
   "problem": {
     "title": "Problem definition",
@@ -208,6 +228,11 @@
     "title": "Theoretical range",
     "text": "The theoretically maximal range in which effect sizes can lie",
     "link": "/manual.html#mcda-value-tradeoffs."
+  },
+  "toggled-columns":{
+    "title": "Toggled columns",
+    "text": "Select which columns to show/hide in the effects table.",
+    "link": "/manual.html#"
   },
   "total-value": {
     "title": "Total value",

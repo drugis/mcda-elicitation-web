@@ -10,14 +10,15 @@
   <div class="grid-x">
     <div class="cell large-3">
       Scenario:
-      <br><br>
     </div>
     <div class="cell large-9">
       <select id="scenario-selector" class="scenario-select" ng-model="scenario"
         ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
         ng-change="scenarioChanged(scenario)">
       </select>
+      <inline-help help-key="scenario"></inline-help>
     </div>
+    <br><br>
   </div>
 
   <div class="grid-x underlined-div">
@@ -62,5 +63,6 @@
   <rank-acceptabilities alternatives="alternatives" edit-mode="editMode" state="state" scenario="scenario">
   </rank-acceptabilities>
 
-  <central-weights alternatives="alternatives" criteria="criteria" edit-mode="editMode" scenario="scenario" state="state"></central-weights>
+  <central-weights alternatives="alternatives" criteria="criteria" edit-mode="editMode" scenario="scenario"
+    state="state"></central-weights>
 </div>
