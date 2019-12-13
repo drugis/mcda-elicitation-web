@@ -33,9 +33,13 @@ define([
           $element.after(btnElement);
         }
 
-        function broadcastEvent() {
-          $rootScope.$broadcast('elicit.legendChanged');
+        function broadcastEvent(newLegend) {
+          $rootScope.$broadcast('elicit.legendChanged', newLegend);
         }
+
+        scope.$on('elicit.legendChanged', function(newLegend) {
+
+        })
 
         function editLegend() {
           $modal.open({
@@ -51,7 +55,10 @@ define([
               callback: function() {
                 return function(newLegend) {
                   scope.scenario.state.legend = newLegend;
-                  ScenarioResource.save($stateParams, scope.scenario).$promise.then(broadcastEvent);
+                  ScenarioResource.save($stateParams, scope.scenario)
+                    .$promise.then(function() {
+                      broadcastEvent(newLegend);
+                    });
                 };
               }
             }
