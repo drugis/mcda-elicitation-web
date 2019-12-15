@@ -124,7 +124,7 @@
                 <div id="linked-data-source-reference-{{ idx }}-{{ $index }}" ng-if="dataSource.sourceLink">
                   <a href="{{dataSource.sourceLink}}">{{dataSource.source}}</a>
                 </div>
-                <div id="data-source-reference-{{ idx }}-{{ dataSource.id }}" ng-if="!dataSource.sourceLink">
+                <div id="data-source-reference-{{ idx }}-{{ $index }}" ng-if="!dataSource.sourceLink">
                   {{dataSource.source}}
                 </div>
               </td>
