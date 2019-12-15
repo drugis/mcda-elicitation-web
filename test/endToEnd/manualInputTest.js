@@ -24,30 +24,30 @@ const dataSource3 = manualInputService.createDataSource('ref3');
 const alternative1 = manualInputService.createAlternative('a1');
 const alternative2 = manualInputService.createAlternative('a2');
 
-const criterion1TitlePath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[1]/h5';
-const criterion1AddDataSourcePath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/button';
-const criterion1EditPath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[2]/div/a[1]';
-const criterion1NewTitlePath = '//div[9]/criterion-list/div/div[2]/div[2]/criterion-card/div/div[2]/div/div[1]/h5';
-const criterion1NewDescriptionPath = '//div[9]/criterion-list/div/div[2]/div[2]/criterion-card/div/div[2]/div/div[3]';
-const criterion1DataSource1Path = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr/td[2]';
-const criterion1DeletePath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[2]/div/a[2]';
+const criterion1TitlePath = '//*[@id="criterion-title-0"]';
+const criterion1AddDataSourcePath = '//*[@id="add-data-source-0"]';
+const criterion1EditPath = '//*[@id="edit-criterion-0"]';
+const criterion1NewTitlePath = '//*[@id="criterion-title-0"]';
+const criterion1NewDescriptionPath = '//*[@id="criterion-description-0"]';
+const criterion1DataSource1Path = '//*[@id="criterion-0"]/div[2]/div/div[5]/table/tbody/tr/td[2]/em';
+const criterion1DeletePath = '//*[@id="delete-criterion-0"]';
 
-const criterion2AddDataSourcePath = '//div[9]/criterion-list/div/div[2]/div[2]/criterion-card/div/div[2]/div/div[5]/button';
+const criterion2AddDataSourcePath = '//*[@id="add-data-source-1"]';
 
-const dataSource1ReferencePath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr/td[2]/div';
-const dataSource1EditPath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr/td[3]/a';
-const dataSource1DeletePath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr/td[4]/a';
+const dataSource1ReferencePath = '//*[@id="data-source-reference-0-0"]';
+const dataSource1EditPath = '//*[@id="edit-data-source-0-0"]';
+const dataSource1DeletePath = '//*[@id="delete-data-source-0-0"]';
 
-const alternative1TitlePath = '//div[12]/table/tbody/tr[1]/td[2]';
-const alternative1EditPath = '//div[12]/table/tbody/tr[1]/td[3]/a';
-const alternative1DeletePath = '//div[12]/table/tbody/tr[1]/td[4]/a';
+const alternative1TitlePath = '//*[@id="alternative-title-0"]';
+const alternative1EditPath = '//*[@id="edit-alternative-0"]';
+const alternative1DeletePath = '//*[@id="delete-alternative-0"]';
 
-const moveCriterionUpPath = '//criterion-list/div/div[1]/div[3]/criterion-card/div/div[1]/div/div[1]/a/i';
-const moveCriterionDownPath = '//criterion-list/div/div[1]/div[2]/criterion-card/div/div[1]/div/div[2]/a/i';
-const moveDataSourceUpPath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr[2]/td[1]/div[1]/a';
-const moveDataSourceDownPath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[6]/table/tbody/tr[1]/td[1]/div[2]/a';
-const moveAlternativeUpPath = '//div[12]/table/tbody/tr[2]/td[1]/div[1]/a';
-const moveAlternativeDownPath = '//div[12]/table/tbody/tr[1]/td[1]/div[2]/a';
+const moveCriterionUpPath = '//*[@id="move-up-criterion-0"]';
+const moveCriterionDownPath = '//*[@id="move-down-criterion-0"]';
+const moveDataSourceUpPath = '//*[@id="move-up-data-source-0-0"]';
+const moveDataSourceDownPath = '//*[@id="move-down-data-source-0-0"]';
+const moveAlternativeUpPath = '//*[@id="move-up-alternative-0"]';
+const moveAlternativeDownPath = '//*[@id="move-down-alternative-0"]';
 
 function createInputDefault(browser) {
   browser

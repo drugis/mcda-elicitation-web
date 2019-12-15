@@ -83,7 +83,7 @@
             <td class="text-center">
               <div style="line-height: 10px; margin-bottom: 4px;">
                 <a ng-click="alternativeUp($index)" class="nav-arrow" ng-if="$index !== 0">
-                  <i style="line-height:0px;" class="fa fa-caret-up"></i>
+                  <i id="move-up-alternative-{{ $index }}" style="line-height:0px;" class="fa fa-caret-up"></i>
                 </a>
                 <i ng-if="$index === 0" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
               </div>
@@ -91,7 +91,7 @@
                 <a ng-click="alternativeDown($index)" class="nav-arrow" ng-if="$index !== state.alternatives.length-1">
                   <i style="line-height:0px;" class="fa fa-caret-down"></i>
                 </a>
-                <i ng-if="$index === state.alternatives.length-1" style="line-height:0px; color:#bbb"
+                <i id="move-down-alternative-{{ $index }}" ng-if="$index === state.alternatives.length-1" style="line-height:0px; color:#bbb"
                   class="fa fa-caret-down"></i>
               </div>
             </td>
