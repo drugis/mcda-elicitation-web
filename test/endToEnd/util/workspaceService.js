@@ -1,6 +1,7 @@
 'use strict';
 
 const errorService = require('./errorService.js');
+const util = require('./util.js');
 
 function goHomeAfterLoading(browser, title) {
   errorService.isErrorBarHidden(browser);
