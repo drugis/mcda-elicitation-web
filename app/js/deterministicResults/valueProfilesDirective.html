@@ -49,7 +49,7 @@
             </thead>
             <tbody>
               <tr>
-                <td id="{{ alternative.id }}-recalculated-case" ng-repeat="alternative in alternatives"
+                <td id="alternative-{{ $index }}-recalculated-case" ng-repeat="alternative in alternatives"
                   class="text-centered">
                   {{recalculatedResults.results.total.data[alternative.id] | number}}
                 </td>

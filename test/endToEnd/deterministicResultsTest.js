@@ -85,7 +85,7 @@ module.exports = {
       .waitForElementVisible('//*[@id="recalculated-case-plot"]')
       .useCss();
 
-    const recalculatedCaseValuePath = '//*[@id="38deaf60-9014-4af9-997e-e5f08bc8c8ff-recalculated-case"]';
+    const recalculatedCaseValuePath = '//*[@id="alternative-0-recalculated-case"]';
     checkElementValueGreaterThan(browser, recalculatedCaseValuePath, 0.85);
 
     browser.click('#reset-button');
