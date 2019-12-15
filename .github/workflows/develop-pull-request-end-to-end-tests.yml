@@ -86,7 +86,8 @@ jobs:
 
       - name: run nightwatch tests
         id: nightwatch
-        run: npx nightwatch -c nightwatch.github.conf.js --test test/endToEnd/deterministicResultsTest.js --testcase 'Deterministic results with recalculated values'
+        run: npx nightwatch -c nightwatch.github.conf.js --test test/endToEnd/legendTest.js
+        #  --testcase 'Deterministic results with recalculated values'
 
       # - name: notify on slack channel on nightwatch failure
       #   if: failure()

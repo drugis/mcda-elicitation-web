@@ -14,9 +14,9 @@ function checkLabel(expectedValue, result) {
   chai.expect(result.value).to.equal(expectedValue);
 }
 
-const placeboLabelInput = '#label-input-38deaf60-9014-4af9-997e-e5f08bc8c8ff';
-const fluoxLabelInput = '#label-input-a85db1a0-c045-46b4-958b-eddce3793420';
-const venlaLabelInput = '#label-input-a266d343-4821-47dd-923f-6fff7c32f9fa';
+const placeboLabelInput = '#label-input-0';
+const fluoxLabelInput = '#label-input-1';
+const venlaLabelInput = '#label-input-2';
 
 function checkDefaultNames(browser) {
   browser
