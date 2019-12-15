@@ -109,10 +109,10 @@ module.exports = {
       .click('//*[@id="add-alternative-button"]')
       .setValue('//*[@id="alternative-title"]', 'a1')
       .click('//*[@id="add-alternative-confirm-button"]')
-      .click('/html/body/div[1]/div/div/div[12]/table/tbody/tr/td[3]/a/i')
+      .click('//*[@id="edit-alternative-0"]')
       .clearValue('//*[@id="alternative-title"]')
       .click('//*[@id="close-modal-button"]')
-      .assert.containsText('/html/body/div[1]/div/div/div[12]/table/tbody/tr/td[2]', 'a1');
+      .assert.containsText('//*[@id="alternative-title-0"]', 'a1');
   },
 
   'During manual input step 2, cancel editing unit of measurement': function(browser) {

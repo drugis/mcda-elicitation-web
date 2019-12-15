@@ -95,16 +95,16 @@
                   class="fa fa-caret-down"></i>
               </div>
             </td>
-            <td id="alternative-title-{{ alternative.id }}">
+            <td id="alternative-title-{{ $index }}">
               {{alternative.title}}
             </td>
             <td class="text-center">
-              <a ng-click="editAlternative(alternative)" tooltip="Edit title">
+              <a id="edit-alternative-{{ $index }}" ng-click="editAlternative(alternative)" tooltip="Edit title">
                 <i class="fa fa-edit icon-fixed-width"></i>
               </a>
             </td>
             <td class="text-center">
-              <a ng-click="removeAlternative(alternative)" tooltip="Remove alternative">
+              <a id="delete-alternative-{{ $index }}" ng-click="removeAlternative(alternative)" tooltip="Remove alternative">
                 <i class="fa fa-trash icon-fixed-width" style="color:red"></i>
               </a>
             </td>
