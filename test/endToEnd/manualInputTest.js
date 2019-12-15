@@ -34,7 +34,7 @@ const criterion1DeletePath = '//*[@id="delete-criterion-0"]';
 
 const criterion2AddDataSourcePath = '//*[@id="add-data-source-1"]';
 
-const dataSource1ReferencePath = '//*[@id="data-source-reference-0-0"]';
+const dataSource1ReferencePath = '//*[@id="linked-data-source-reference-0-0"]';
 const dataSource1EditPath = '//*[@id="edit-data-source-0-0"]';
 const dataSource1DeletePath = '//*[@id="delete-data-source-0-0"]';
 
