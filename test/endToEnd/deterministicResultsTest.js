@@ -60,8 +60,8 @@ module.exports = {
       .waitForElementVisible('#preferences-sensitivity-plot');
 
     const measurementValuePath = '//sensitivity-table//tr[2]/td[4]//span[1]';
-    const weightValuePath = '//*[@id="de14e778-f723-48d4-8f4e-1e589714f4f2-weight"]';
-    const baseCaseValuePath = '//*[@id="38deaf60-9014-4af9-997e-e5f08bc8c8ff-base-case"]';
+    const weightValuePath = '//*[@id="criterion-0-weight"]';
+    const baseCaseValuePath = '//*[@id="alternative-0-base-case"]';
 
     checkElementValueGreaterThan(browser, measurementValuePath, 30);
     checkElementValueGreaterThan(browser, weightValuePath, 0.2);
