@@ -69,7 +69,7 @@ function createInputDefault(browser) {
 }
 
 function clickElement(browser, rowNumber, columnNumber, element) {
-  const elementId = util.getOnlyProperty(element.value);
+  const elementId = util.getFirstProperty(element.value);
   const value = rowNumber + columnNumber;
   browser
     .elementIdClick(elementId)

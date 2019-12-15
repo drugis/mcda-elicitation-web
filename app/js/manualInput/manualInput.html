@@ -180,7 +180,7 @@
       <div ng-if="state.step2errors.length" class="alert" ng-repeat="error in state.step2errors">
         <em>{{error}}</em>
       </div>
-      <div ng-if="state.step2warnings.length && !state.step2errors.length" ng-repeat="warning in state.step2warnings">
+      <div id="warning-{{ $index }}" ng-if="state.step2warnings.length && !state.step2errors.length" ng-repeat="warning in state.step2warnings">
         <i class="fa fa-exclamation-triangle"></i> {{warning}}
       </div>
     </div>

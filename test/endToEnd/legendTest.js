@@ -51,7 +51,7 @@ module.exports = {
   },
 
   'Changing alternatives to generated labels in deterministic view': function(browser) {
-    const legendButton = '//*[@id="value-profile-container"]/button[2]';
+    const legendButton = '//*[@id="value-profile-container"]/div[2]/button';
     const firstAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(1) > text:nth-child(1)';
     const secondAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(2) > text:nth-child(1)';
     const thirdAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(3) > text:nth-child(1)';

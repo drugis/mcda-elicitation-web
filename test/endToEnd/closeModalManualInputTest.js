@@ -18,8 +18,8 @@ const dataSource2 = manualInputService.createDataSource('ref2');
 const alternative1 = manualInputService.createAlternative('a1');
 const alternative2 = manualInputService.createAlternative('a2');
 
-const criterion1AddDataSourcePath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/button';
-const criterion2AddDataSourcePath = '//div[9]/criterion-list/div/div[2]/div[2]/criterion-card/div/div[2]/div/div[5]/button';
+const criterion1AddDataSourcePath = '//*[@id="add-datasource-0"]';
+const criterion2AddDataSourcePath = '//*[@id="add-datasource-1"]';
 
 function createInputDefault(browser) {
   browser
@@ -65,7 +65,7 @@ module.exports = {
     browser
       .click('//*[@id="add-criterion-button"]')
       .click('//*[@id="close-modal-button"]')
-      .assert.containsText('/html/body/div[1]/div/div/div[15]/em', 'At least two criteria required');
+      .assert.containsText('//*[@id="warning-1"]', 'At least two criteria required');
   },
 
   'During manual input, cancel adding a data source': function(browser) {
