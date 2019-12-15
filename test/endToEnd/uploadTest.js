@@ -3,6 +3,7 @@
 const loginService = require('./util/loginService.js');
 const workspaceService = require('./util/workspaceService.js');
 const errorService = require('./util/errorService');
+const util = require('./util/util');
 
 const testUrl = require('./util/constants').testUrl;
 
@@ -13,13 +14,8 @@ module.exports = {
 
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     workspaceService.uploadTestWorkspace(browser, workspacePath);
-
-    browser
-      .assert.containsText('#workspace-title', title)
-      .moveToElement('#logo', 0, 0)
-      .pause(500)
-      .click('#logo');
-
+    browser.assert.containsText('#workspace-title', title);
+    util.delayedClick(browser, '#logo', '#workspaces-header');
     workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();

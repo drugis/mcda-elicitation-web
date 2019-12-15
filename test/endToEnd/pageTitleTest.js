@@ -4,6 +4,7 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 const testUrl = require('./util/constants').testUrl;
+const util = require('./util/util');
 
 const chai = require('chai');
 
@@ -12,10 +13,9 @@ const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat
 function goToPreferences(browser) {
   browser
     .click('#create-workspace-button')
-    .click('#add-workspace-button')
-    .moveToElement('#preferences-tab', 0, 0)
-    .pause(500)
-    .click('#preferences-tab');
+    .click('#add-workspace-button');
+
+  util.delayedClick(browser, '#preferences-tab', '#partial-value-functions-header');
 }
 
 function cleanUpWorkspace(browser) {
@@ -69,14 +69,13 @@ module.exports = {
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     browser
       .click('#create-workspace-button')
-      .click('#add-workspace-button')
-      .moveToElement('#problem-definition-tab', 0, 0)
-      .pause(500)
-      .click('#problem-definition-tab')
-      .pause(2000)
-      .getTitle(function(result) {
-        chai.expect(result).to.equal(title + '\'s problem definition');
-      });
+      .click('#add-workspace-button');
+
+    util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header');
+
+    browser.getTitle(function(result) {
+      chai.expect(result).to.equal(title + '\'s problem definition');
+    });
     cleanUpWorkspace(browser);
   },
 
@@ -95,14 +94,13 @@ module.exports = {
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     browser
       .click('#create-workspace-button')
-      .click('#add-workspace-button')
-      .moveToElement('#deterministic-tab', 0, 0)
-      .pause(500)
-      .click('#deterministic-tab')
-      .pause(2000)
-      .getTitle(function(result) {
-        chai.expect(result).to.equal(title + '\'s deterministic results');
-      });
+      .click('#add-workspace-button');
+
+    util.delayedClick(browser, '#deterministic-tab', '#sensitivity-measurements-header');
+
+    browser.getTitle(function(result) {
+      chai.expect(result).to.equal(title + '\'s deterministic results');
+    });
     cleanUpWorkspace(browser);
   },
 
@@ -110,14 +108,13 @@ module.exports = {
     loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
     browser
       .click('#create-workspace-button')
-      .click('#add-workspace-button')
-      .moveToElement('#smaa-tab', 0, 0)
-      .pause(500)
-      .click('#smaa-tab')
-      .pause(2000)
-      .getTitle(function(result) {
-        chai.expect(result).to.equal(title + '\'s SMAA results');
-      });
+      .click('#add-workspace-button');
+
+    util.delayedClick(browser, '#smaa-tab', '#smaa-measurements-header');
+
+    browser.getTitle(function(result) {
+      chai.expect(result).to.equal(title + '\'s SMAA results');
+    });
     cleanUpWorkspace(browser);
   },
 

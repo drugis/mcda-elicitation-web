@@ -5,6 +5,7 @@ const _ = require('lodash');
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
+const util = require('./util/util');
 
 const testUrl = require('./util/constants').testUrl;
 
@@ -12,15 +13,11 @@ const subproblem1 = {
   title: 'subproblem1'
 };
 const workspacePath = '/createSubproblemTestProblem.json';
-const title = 'Test workspace';
 
 function setupSubProblem(browser) {
-  browser
-    .waitForElementVisible('#workspace-title')
-    .moveToElement('#problem-definition-tab', 0, 0)
-    .pause(500)
-    .click('#problem-definition-tab')
-    .waitForElementVisible('#effects-table-header')
+  browser.waitForElementVisible('#workspace-title');
+  util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header');
+  browser.waitForElementVisible('#effects-table-header')
     .click('#create-subproblem-button')
     .waitForElementVisible('#create-subproblem-header')
     .waitForElementVisible('#create-new-subproblem-button:disabled')
@@ -42,7 +39,7 @@ module.exports = {
 
   afterEach: function(browser) {
     errorService.isErrorBarHidden(browser);
-    browser.moveToElement('#logo', 0, 0).pause(500).click('#logo');
+    util.delayedClick(browser, '#logo', '#workspaces-header');
     workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();
@@ -80,12 +77,9 @@ module.exports = {
 
   'Edit the title': function(browser) {
     const newTitle = 'not default';
-    browser
-      .waitForElementVisible('#workspace-title')
-      .moveToElement('#problem-definition-tab', 0, 0)
-      .pause(500)
-      .click('#problem-definition-tab')
-      .waitForElementVisible('#effects-table-header')
+    browser.waitForElementVisible('#workspace-title');
+    util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header');
+    browser.waitForElementVisible('#effects-table-header')
       .click('#edit-subproblem-button')
       .clearValue('#subproblem-title-input')
       .waitForElementVisible('#save-subproblem-button:disabled')

@@ -3,6 +3,7 @@
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
+const util = require('./util/util');
 
 const testUrl = require('./util/constants').testUrl;
 const title = 'Thrombolytics - single study B/R analysis';
@@ -26,10 +27,7 @@ module.exports = {
   },
 
   afterEach: function(browser) {
-    browser
-      .moveToElement('#logo', 0, 0)
-      .pause(1000)
-      .click('#logo');
+    util.delayedClick(browser, '#logo', '#workspaces-header');
     workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();

@@ -4,13 +4,9 @@ const errorService = require('./errorService.js');
 
 function goHomeAfterLoading(browser, title) {
   errorService.isErrorBarHidden(browser);
-  browser
-    .assert.containsText('#workspace-title', title)
-    .waitForElementVisible('#logo')
-    .moveToElement('#logo', 0, 0)
-    .pause(1000)
-    .click('#logo')
-    .waitForElementVisible('#workspaces-header');
+  browser.assert.containsText('#workspace-title', title);
+  util.delayedClick(browser, '#logo', '#workspaces-header');
+  browser.waitForElementVisible('#workspaces-header');
 }
 
 function addExample(browser, title) {

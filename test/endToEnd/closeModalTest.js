@@ -3,6 +3,7 @@
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
+const util = require('./util/util');
 
 const testUrl = require('./util/constants').testUrl;
 
@@ -13,11 +14,8 @@ const closeModalButtonPath = '//*[@id="close-modal-button"]';
 const cancelStep1Path = '//*[@id="cancel-step1-button"]';
 
 function cancelAction(browser, paths, expectedValue) {
+  util.delayedClick(browser, paths.tab, paths.actionButton, util.xpathSelectorType);
   browser
-    .pause(100)
-    .moveToElement(paths.tab, 0, 0)
-    .pause(500)
-    .click(paths.tab)
     .click(paths.actionButton)
     .click(paths.cancelButton)
     .assert.containsText(paths.content, expectedValue);
@@ -43,11 +41,8 @@ module.exports = {
   },
 
   afterEach: function(browser) {
-    browser
-      .useCss()
-      .moveToElement('#logo', 0, 0)
-      .pause(1000)
-      .click('#logo');
+    browser.useCss();
+    util.delayedClick(browser, '#logo', '#workspaces-header');
     workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
     browser.end();
@@ -114,11 +109,8 @@ module.exports = {
   'Cancel editing a subproblem title': function(browser) {
     var actionButtonPath = '//*[@id="edit-subproblem-button"]';
     var contentPath = '//*[@id="subproblem-selector"]';
+    util.delayedClick(browser, '//*[@id="problem-definition-tab"]', actionButtonPath, util.xpathSelectorType);
     browser
-      .pause(100)
-      .moveToElement('//*[@id="problem-definition-tab"]', 0, 0)
-      .pause(500)
-      .click('//*[@id="problem-definition-tab"]')
       .click(actionButtonPath)
       .clearValue('//*[@id="subproblem-title-input"]')
       .click(closeModalButtonPath)
@@ -189,11 +181,8 @@ module.exports = {
     var actionButtonPath = '//*[@id="edit-scenario-button"]';
     var cancelButtonPath = closeModalButtonPath;
     var contentPath = '//*[@id="scenario-selector"]';
+    util.delayedClick(browser, '//*[@id="preferences-tab"]', actionButtonPath, util.xpathSelectorType);
     browser
-      .pause(100)
-      .moveToElement(preferenceTabPath, 0, 0)
-      .pause(100)
-      .click(preferenceTabPath)
       .click(actionButtonPath)
       .clearValue('//*[@id="new-scenario-title"]')
       .click(cancelButtonPath)
@@ -228,11 +217,8 @@ module.exports = {
       cancelButton: closeModalButtonPath,
       content: '#value-plot > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(2) > text:nth-child(2) > tspan:nth-child(1)'
     };
+    util.delayedClick(browser, paths.tab, paths.actionButton, util.xpathSelectorType);
     browser
-      .pause(100)
-      .moveToElement(paths.tab, 0, 0)
-      .pause(100)
-      .click(paths.tab)
       .click(paths.actionButton)
       .clearValue(paths.valueToClear)
       .click(paths.cancelButton)

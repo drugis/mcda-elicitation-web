@@ -1,6 +1,7 @@
 'use strict';
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
+const util = require('./util/util');
 
 const url = require('./util/constants').testUrl;
 
@@ -37,12 +38,8 @@ module.exports = {
     workspaceService.addExample(browser, title);
     browser
       .click('#workspace-0')
-      .waitForElementVisible('#workspace-title')
-      .pause(100)
-      .moveToElement('#user-image-link', 0, 0)
-      .pause(500)
-      .click('#user-image-link')
-      .waitForElementVisible('#create-workspace-button');
+      .waitForElementVisible('#workspace-title');
+    util.delayedClick(browser, '#user-image-link', '#create-workspace-button');
     workspaceService.deleteFromList(browser, 0);
   },
 

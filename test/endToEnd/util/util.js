@@ -3,13 +3,32 @@
 const _ = require('lodash');
 const chai = require('chai');
 
-function getOnlyProperty(value) {
+const xpathSelectorType = 'xpath';
+const TIMEOUT = 10;
+
+function delayedClick(browser, clickPath, expectPath, selectorType = 'css selector', attempts = 500) {
+  if (attempts === 0) {
+    throw new Error('! Could not locate "' + expectPath + '".');
+  } else {
+    browser.waitForElementVisible(clickPath);
+    browser.click(clickPath);
+    browser.elements(selectorType, expectPath, function(result) {
+      if (result.value.length === 0) {
+        console.log('! Could not locate "' + expectPath + '". Attempting again in ' + TIMEOUT + ' milliseconds.');
+        browser.pause(TIMEOUT);
+        delayedClick(browser, clickPath, expectPath, selectorType, --attempts);
+      }
+    });
+  }
+}
+
+function getFirstProperty(value) {
   return _.values(value)[0];
 }
 
 function isElementHidden(browser, path) {
   browser.element('xpath', path, function(result) {
-    const elementId = getOnlyProperty(result.value);
+    const elementId = getFirstProperty(result.value);
     browser.elementIdDisplayed(elementId, function(isDisplayedResult) {
       chai.expect(isDisplayedResult.value).to.be.false;
     });
@@ -23,7 +42,9 @@ function isElementNotPresent(browser, path) {
 }
 
 module.exports = {
-  getOnlyProperty: getOnlyProperty,
+  delayedClick: delayedClick,
+  getFirstProperty: getFirstProperty,
   isElementHidden: isElementHidden,
-  isElementNotPresent: isElementNotPresent
+  isElementNotPresent: isElementNotPresent,
+  xpathSelectorType: xpathSelectorType
 };

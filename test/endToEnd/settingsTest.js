@@ -24,16 +24,12 @@ function showDecimals(browser) {
 }
 
 function changeDeterministicTabSetting(browser, settingsPath, columnPath) {
-  browser
-    .useXpath()
-    .moveToElement('//*[@id="deterministic-tab"]', 0, 0)
-    .pause(500)
-    .click('//*[@id="deterministic-tab"]')
-    .pause(50)
-    .click('//*[@id="settings-button"]')
+
+  browser.useXpath();
+  util.delayedClick(browser, '//*[@id="deterministic-tab"]', '//*[@id="sensitivity-measurements-header"]', util.xpathSelectorType);
+  browser.click('//*[@id="settings-button"]')
     .click(settingsPath)
     .click('//*[@id="save-settings-button"]')
-    .pause(300)
     .waitForElementVisible('//*[@id="sensitivity-measurements-header"]');
 
   util.isElementHidden(browser, columnPath);
@@ -41,13 +37,9 @@ function changeDeterministicTabSetting(browser, settingsPath, columnPath) {
 }
 
 function changeProblemDefinitionTabSetting(browser, settingsPath, columnPath) {
-  browser
-    .useXpath()
-    .moveToElement('//*[@id="problem-definition-tab"]', 0, 0)
-    .pause(500)
-    .click('//*[@id="problem-definition-tab"]')
-    .pause(50)
-    .click('//*[@id="settings-button"]')
+  browser.useXpath();
+  util.delayedClick(browser, '//*[@id="problem-definition-tab"]', '//*[@id="effects-table-header"]', util.xpathSelectorType);
+  browser.click('//*[@id="settings-button"]')
     .click(settingsPath)
     .click('//*[@id="save-settings-button"]');
 
@@ -167,12 +159,9 @@ module.exports = {
     var unitsCellPath = '//*[@id="effectstable"]/tbody/tr[2]/td[3]';
     var scaleRangeCellPath = '//*[@id="scalestable"]/tbody/tr[1]/td[3]/span[1]';
 
-    browser
-      .useXpath()
-      .moveToElement('//*[@id="problem-definition-tab"]', 0, 0)
-      .pause(500)
-      .click('//*[@id="problem-definition-tab"]')
-      .getValue(unitsCellPath, _.partial(checkValue, null))
+    browser.useXpath();
+    util.delayedClick(browser, '//*[@id="problem-definition-tab"]', '//*[@id="effects-table-header"]', util.xpathSelectorType);
+    browser.getValue(unitsCellPath, _.partial(checkValue, null))
       .assert.containsText(effectTableCellPath, '60%')
       .assert.containsText(scaleRangeCellPath, '50');
 
@@ -285,13 +274,9 @@ module.exports = {
   },
 
   'Switching between median and mode in deterministic tab': function(browser) {
-    browser
-      .useXpath()
-      .moveToElement('//*[@id="deterministic-tab"]', 0, 0)
-      .pause(500)
-      .click('//*[@id="deterministic-tab"]')
-      .pause(50)
-      .click('//*[@id="settings-button"]')
+    browser.useXpath();
+    util.delayedClick(browser, '//*[@id="deterministic-tab"]', '//*[@id="sensitivity-measurements-header"]', util.xpathSelectorType);
+    browser.click('//*[@id="settings-button"]')
       .click('//*[@id="show-mode-radio"]')
       .click('//*[@id="save-settings-button"]')
       .waitForElementVisible('//*[@id="sensitivity-measurements-header"]');
@@ -353,12 +338,9 @@ module.exports = {
     var effectCellPath = '//*[@id="trade-off-block"]/div[2]/table/tbody/tr[1]/td[4]';
     var unitsCellPath = '//*[@id="trade-off-block"]/div[2]/table/tbody/tr[1]/td[3]';
 
+    browser.useXpath();
+    util.delayedClick(browser, '//*[@id="preferences-tab"]', '//*[@id="partial-value-functions-header"]', util.xpathSelectorType);
     browser
-      .useXpath()
-      .moveToElement('//*[@id="preferences-tab"]', 0, 0)
-      .pause(500)
-      .click('//*[@id="preferences-tab"]')
-      .pause(50)
       .assert.containsText(unitsCellPath, '%')
       .assert.containsText(effectCellPath, '45');
 
@@ -406,13 +388,9 @@ module.exports = {
   'Switching settings while setting the partial value function': function(browser) {
     var effectCellPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[3]/div/div/div/div/div[2]/div/div[3]/label';
 
-    browser
-      .useXpath()
-      .moveToElement('//*[@id="preferences-tab"]', 0, 0)
-      .pause(500)
-      .click('//*[@id="preferences-tab"]')
-      .pause(50)
-      .click('//*[@id="OS-pvf-button"]')
+    browser.useXpath();
+    util.delayedClick(browser, '//*[@id="preferences-tab"]', '//*[@id="partial-value-functions-header"]', util.xpathSelectorType);
+    browser.click('//*[@id="OS-pvf-button"]')
       .assert.containsText(effectCellPath, '45 % is best');
 
     showDecimals(browser);
@@ -437,13 +415,9 @@ module.exports = {
   'Switching settings while setting the weights': function(browser) {
     var effectCellPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[3]/div/div/div[1]/div/div[3]/ul/li[1]';
 
-    browser
-      .useXpath()
-      .moveToElement('//*[@id="preferences-tab"]', 0, 0)
-      .pause(500)
-      .click('//*[@id="preferences-tab"]')
-      .pause(50)
-      .click('//*[@id="ranking-button"]')
+    browser.useXpath();
+    util.delayedClick(browser, '//*[@id="preferences-tab"]', '//*[@id="partial-value-functions-header"]', util.xpathSelectorType);
+    browser.click('//*[@id="ranking-button"]')
       .assert.containsText(effectCellPath, '2-year survival: 45 %');
 
     showDecimals(browser);

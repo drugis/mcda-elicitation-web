@@ -2,6 +2,7 @@
 
 const loginService = require('./util/loginService');
 const errorService = require('./util/errorService');
+const util = require('./util/util');
 
 const testUrl = require('./util/constants').testUrl;
 const closeModalButton = '//*[@id="close-modal-button"]';
@@ -33,11 +34,11 @@ module.exports = {
       .useXpath()
       .click('//*[@id="create-workspace-button"]')
       .click('//*[@id="add-workspace-button"]')
-      .waitForElementVisible('//*[@id="workspace-title"]')
-      .moveToElement('//*[@id="logo"]', 0, 0)
-      .pause(500)
-      .click('//*[@id="logo"]')
-      .click(deleteWorkspaceButton)
+      .waitForElementVisible('//*[@id="workspace-title"]');
+
+    util.delayedClick(browser, '//*[@id="logo"]', deleteWorkspaceButton, util.xpathSelectorType);
+
+    browser.click(deleteWorkspaceButton)
       .click(closeModalButton)
       .assert.containsText('//*[@id="workspace-0"]', 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)')
       .click(deleteWorkspaceButton)
