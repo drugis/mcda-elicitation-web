@@ -29,7 +29,8 @@ const criterion1AddDataSourcePath = '//*[@id="add-data-source-0"]';
 const criterion1EditPath = '//*[@id="edit-criterion-0"]';
 const criterion1NewTitlePath = '//*[@id="criterion-title-0"]';
 const criterion1NewDescriptionPath = '//*[@id="criterion-description-0"]';
-const criterion1DataSource1Path = '//*[@id="criterion-0"]/div[2]/div/div[5]/table/tbody/tr/td[2]/em';
+// const criterion1DataSource1Path = '//*[@id="criterion-0"]/div[2]/div/div[5]/table/tbody/tr/td[2]/em';
+const criterion1DataSource1Path = '//*[@id="data-source-reference-0-0"]';
 const criterion1DeletePath = '//*[@id="delete-criterion-0"]';
 
 const criterion2AddDataSourcePath = '//*[@id="add-data-source-1"]';
