@@ -81,7 +81,7 @@ module.exports = {
   },
 
   'Changing alternatives to generated labels in smaa view': function(browser) {
-    const legendButton = '//*[@id="rank-plot-container"]/button[2]';
+    const legendButton = '//*[@id="rank-plot-container"]/div[2]/button';
     const firstAlternative = '#alternatives-per-rank-bar-chart > div:nth-child(1) > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(2) > text:nth-child(2) > tspan:nth-child(1)';
     const secondAlternative = '#alternatives-per-rank-bar-chart > div:nth-child(1) > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(3) > text:nth-child(2) > tspan:nth-child(1)';
     const thirdAlternative = '#alternatives-per-rank-bar-chart > div:nth-child(1) > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(4) > text:nth-child(2) > tspan:nth-child(1)';
@@ -111,7 +111,7 @@ module.exports = {
   },
 
   'Reset labels': function(browser) {
-    const legendButton = '//*[@id="value-profile-container"]/button[2]';
+    const legendButton = '//*[@id="value-profile-container"]/div[2]/button';
     const firstAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(1) > text:nth-child(1)';
     const secondAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(2) > text:nth-child(1)';
     const thirdAlternative = '#measurements-sensitivity-plot > div:nth-child(1) > svg:nth-child(1) > g:nth-child(4) > g:nth-child(3) > text:nth-child(1)';
