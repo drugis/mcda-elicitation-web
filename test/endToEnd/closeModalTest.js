@@ -88,9 +88,9 @@ module.exports = {
   'Cancel editing an alternative': function(browser) {
     var paths = {
       valueToClear: '//*[@id="alternative-title"]',
-      actionButton: '//*[@id="alternative-edit-button-38deaf60-9014-4af9-997e-e5f08bc8c8ff"]',
+      actionButton: '//*[@id="edit-alternative-0"]',
       cancelButton: closeModalButtonPath,
-      content: '//*[@id="alternative-title-38deaf60-9014-4af9-997e-e5f08bc8c8ff"]'
+      content: '//*[@id="alternative-title-0"]'
     };
     clearValueCancelAction(browser, paths, 'Placebo');
   },
