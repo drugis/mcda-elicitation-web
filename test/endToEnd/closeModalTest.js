@@ -130,7 +130,7 @@ module.exports = {
   'Cancel setting a partial value function': function(browser) {
     var paths = {
       tab: preferenceTabPath,
-      actionButton: '//*[@id="de14e778-f723-48d4-8f4e-1e589714f4f2-pvf-button"]',
+      actionButton: '//*[@id="criterion-0-pvf-button"]',
       cancelButton: '//*[@id="cancel-button"]',
       content: '//*[@id="partial-value-functions-header"]'
     };
