@@ -18,8 +18,8 @@ const dataSource2 = manualInputService.createDataSource('ref2');
 const alternative1 = manualInputService.createAlternative('a1');
 const alternative2 = manualInputService.createAlternative('a2');
 
-const criterion1AddDataSourcePath = '//*[@id="add-datasource-0"]';
-const criterion2AddDataSourcePath = '//*[@id="add-datasource-1"]';
+const criterion1AddDataSourcePath = '//*[@id="add-data-source-0"]';
+const criterion2AddDataSourcePath = '//*[@id="add-data-source-1"]';
 
 function createInputDefault(browser) {
   browser
@@ -71,7 +71,7 @@ module.exports = {
   'During manual input, cancel adding a data source': function(browser) {
     addCriterion(browser);
     browser
-      .click('//*[@id="add-datasource-0"]')
+      .click('//*[@id="add-data-source-0"]')
       .click('//*[@id="close-modal-button"]')
       .assert.containsText('//*[@id="criterion-0"]/div[2]/div/div[5]/table/tbody/tr/td[2]/em', 'No data sources defined');
   },
@@ -95,13 +95,13 @@ module.exports = {
   'During manual input, cancel editing a data source': function(browser) {
     addCriterion(browser);
     browser
-      .click('/html/body/div[1]/div/div/div[9]/criterion-list/div/div/div/criterion-card/div/div[2]/div/div[4]/button')
+      .click('//*[@id="add-data-source-0"]')
       .setValue('//*[@id="data-source-reference"]', 'ref')
       .click('//*[@id="add-data-source-button"]')
-      .click('/html/body/div[1]/div/div/div[9]/criterion-list/div/div/div/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[3]/a/i')
+      .click('//*[@id="edit-data-source-0-0"]')
       .clearValue('//*[@id="data-source-reference"]')
       .click('//*[@id="close-modal-button"]')
-      .assert.containsText('/html/body/div[1]/div/div/div[9]/criterion-list/div/div/div/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[2]/div', 'ref');
+      .assert.containsText('//*[@id="data-source-reference-0-0"]', 'ref');
   },
 
   'During manual input, cancel editing an alternative': function(browser) {

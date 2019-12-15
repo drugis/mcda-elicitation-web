@@ -38,7 +38,7 @@
         <b>Data sources:</b>
       </div>
       <div class="cell" ng-if="isInput">
-        <button id="add-datasource-{{ idx }}" class="button small" ng-click="editDataSource()">
+        <button id="add-data-source-{{ idx }}" class="button small" ng-click="editDataSource()">
           <i class="fa fa-plus"></i> Add data source
         </button>
       </div>
@@ -121,7 +121,7 @@
               </td>
 
               <td>
-                <div id="linked-data-source-reference-{{ idx }}-{{ dataSource.id }}" ng-if="dataSource.sourceLink">
+                <div id="linked-data-source-reference-{{ idx }}-{{ $index }}" ng-if="dataSource.sourceLink">
                   <a href="{{dataSource.sourceLink}}">{{dataSource.source}}</a>
                 </div>
                 <div id="data-source-reference-{{ idx }}-{{ dataSource.id }}" ng-if="!dataSource.sourceLink">
@@ -130,7 +130,7 @@
               </td>
 
               <td ng-if="isStandalone" class="text-center">
-                <a id="edit-data-source-{{ idx }}-{{ dataSource.id }}"
+                <a id="edit-data-source-{{ idx }}-{{ $index }}"
                   ng-click="editDataSource(dataSource, $index)" tooltip="Edit data source">
                   <i class="fa fa-edit icon-fixed-width"></i>
                 </a>
