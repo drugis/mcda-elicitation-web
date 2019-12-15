@@ -68,9 +68,9 @@ module.exports = {
   'Cancel editing a criterion': function(browser) {
     var paths = {
       valueToClear: '//*[@id="criterion-title-input"]',
-      actionButton: '//*[@id="edit-criterion-de14e778-f723-48d4-8f4e-1e589714f4f2"]',
+      actionButton: '//*[@id="edit-criterion-0"]',
       cancelButton: closeModalButtonPath,
-      content: '//*[@id="criterion-title-de14e778-f723-48d4-8f4e-1e589714f4f2"]'
+      content: '//*[@id="criterion-title-0"]'
     };
     clearValueCancelAction(browser, paths, 'Treatment responders');
   },
@@ -78,9 +78,9 @@ module.exports = {
   'Cancel editing a data source': function(browser) {
     var paths = {
       valueToClear: '//*[@id="reference-input"]',
-      actionButton: '//*[@id="edit-data-source-de14e778-f723-48d4-8f4e-1e589714f4f2-029909c4-cb8c-43cb-9816-e8550ef561be"]',
+      actionButton: '//*[@id="edit-data-source-0-0"]',
       cancelButton: closeModalButtonPath,
-      content: '//*[@id="data-source-reference-de14e778-f723-48d4-8f4e-1e589714f4f2-029909c4-cb8c-43cb-9816-e8550ef561be"]'
+      content: '//*[@id="data-source-reference-0-0"]'
     };
     clearValueCancelAction(browser, paths, 'Nemeroff and Thase (2007)');
   },

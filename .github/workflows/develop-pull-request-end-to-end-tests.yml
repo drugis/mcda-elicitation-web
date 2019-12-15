@@ -86,8 +86,8 @@ jobs:
 
       - name: run nightwatch tests
         id: nightwatch
-        run: npx nightwatch -c nightwatch.github.conf.js --test test/endToEnd/closeModalTest.js --testcase 'Cancel editing the therapeutic context'
-
+        run: npx nightwatch -c nightwatch.github.conf.js --test test/endToEnd/closeModalTest.js --testcase 'Cancel editing a criterion'
+        
       # - name: notify on slack channel on nightwatch failure
       #   if: failure()
       #   uses: rtCamp/action-slack-notify@master
