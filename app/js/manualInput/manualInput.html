@@ -120,7 +120,7 @@
       <button id="step1-save-button" class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty"
         tooltip="Save current state">Save</button>
     </div>
-    <div  id="error-{{ $index }} class="cell alert" ng-repeat="error in state.step1errors">
+    <div id="error-{{ $index }}" class="cell alert" ng-repeat="error in state.step1errors">
       <em>{{error}}</em>
     </div>
   </div>
