@@ -86,7 +86,7 @@ jobs:
 
       - name: run nightwatch tests
         id: nightwatch
-        run: npx nightwatch -c nightwatch.github.conf.js --test test/endToEnd/closeModalManualInputTest.js --testcase 'During manual input, cancel adding a data source'
+        run: npx nightwatch -c nightwatch.github.conf.js --test test/endToEnd/closeModalManualInputTest.js --testcase 'During manual input, cancel adding an alternative'
 
       # - name: notify on slack channel on nightwatch failure
       #   if: failure()
