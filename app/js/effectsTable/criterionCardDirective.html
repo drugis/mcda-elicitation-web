@@ -102,7 +102,7 @@
 
               <td ng-if="!isInput" class="text-center" ng-repeat="alternative in alternatives"
                 ng-style="isValueView && !isCellAnalysisViable[dataSource.id][alternative.id] ? {'background-color':'#f3d3c8'} : {}">
-                <div ng-if="!isValueView || isCellAnalysisViable[dataSource.id][alternative.id]">
+                <div id="criterion-{{ idx }}-alternative-{{ $index }}-effects-table-cell" ng-if="!isValueView || isCellAnalysisViable[dataSource.id][alternative.id]">
                   <effects-table-cell effects-table-info="effectsTableInfo[dataSource.id]"
                     scales="scales[dataSource.id][alternative.id]" workspace-settings="workspaceSettings"
                     unit-of-measurement-type="dataSource.unitOfMeasurement.type" alternative-id="alternative.id">
