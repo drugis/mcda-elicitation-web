@@ -55,7 +55,7 @@
       </button>
     </div>
     <div class="cell large-6">
-      <table width="100%">
+      <table id="alternatives-table" width="100%">
         <thead>
           <tr>
             <th>
@@ -120,7 +120,7 @@
       <button id="step1-save-button" class="button" ng-click="saveInProgress()" ng-disabled="!state.title || !dirty"
         tooltip="Save current state">Save</button>
     </div>
-    <div class="cell alert" ng-repeat="error in state.step1errors">
+    <div  id="error-{{ $index }} class="cell alert" ng-repeat="error in state.step1errors">
       <em>{{error}}</em>
     </div>
   </div>
@@ -180,7 +180,7 @@
       <div ng-if="state.step2errors.length" class="alert" ng-repeat="error in state.step2errors">
         <em>{{error}}</em>
       </div>
-      <div id="warning-{{ $index }}" ng-if="state.step2warnings.length && !state.step2errors.length" ng-repeat="warning in state.step2warnings">
+      <div" ng-if="state.step2warnings.length && !state.step2errors.length" ng-repeat="warning in state.step2warnings">
         <i class="fa fa-exclamation-triangle"></i> {{warning}}
       </div>
     </div>

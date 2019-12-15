@@ -65,22 +65,22 @@ module.exports = {
     browser
       .click('//*[@id="add-criterion-button"]')
       .click('//*[@id="close-modal-button"]')
-      .assert.containsText('//*[@id="warning-1"]', 'At least two criteria required');
+      .assert.containsText('//*[@id="error-1"]', 'At least two criteria required');
   },
 
   'During manual input, cancel adding a data source': function(browser) {
     addCriterion(browser);
     browser
-      .click('//criterion-list/div/div/div/criterion-card/div/div[2]/div/div[4]/button')
+      .click('//*[@id="add-datasource-0"]')
       .click('//*[@id="close-modal-button"]')
-      .assert.containsText('//criterion-list/div/div/div/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[2]/em', 'No data sources defined');
+      .assert.containsText('//*[@id="criterion-0"]/div[2]/div/div[5]/table/tbody/tr/td[2]/em', 'No data sources defined');
   },
 
   'During manual input, cancel adding an alternative': function(browser) {
     browser
       .click('//*[@id="add-alternative-button"]')
       .click('//*[@id="close-modal-button"]')
-      .assert.containsText('/html/body/div[1]/div/div/div[12]/table/tbody/tr/td[2]/em', 'No alternatives defined');
+      .assert.containsText('//*[@id="alternatives-table"]/tbody/tr/td[2]/em', 'No alternatives defined');
   },
 
   'During manual input, cancel editing a criterion': function(browser) {
