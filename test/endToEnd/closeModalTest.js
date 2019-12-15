@@ -213,7 +213,7 @@ module.exports = {
     var paths = {
       valueToClear: '//*[@id="label-input-38deaf60-9014-4af9-997e-e5f08bc8c8ff"]',
       tab: '//*[@id="deterministic-tab"]',
-      actionButton: '/html/body/div[1]/div/div[3]/div/div/div/div/div[4]/div/div/div/div[4]/div/div[3]/div/button[2]',
+      actionButton: '/html/body/div[1]/div/div[3]/div/div/div/div/div[4]/div/div/div/value-profiles/div/div/div[3]/div/div[2]/button',
       cancelButton: closeModalButtonPath,
       content: '#value-plot > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(2) > text:nth-child(2) > tspan:nth-child(1)'
     };

@@ -74,32 +74,6 @@ module.exports = {
       .assert.containsText('#ranking-title-header', 'Ranking (1/2)');
   },
 
-  'Setting the weights through matching': function(browser) {
-    browser
-      .click('#matching-button')
-      .waitForElementVisible('#matching-title-header')
-      .click('#OS-option')
-      .click('#next-button')
-      .click('#severe-importance-option')
-      .moveToElement('#elicitation-trade-off-button', 0, 0)
-      .pause(500)
-      .click('#elicitation-trade-off-button')
-      .pause(500)
-      .click('#save-matching-weights-button')
-      .assert.containsText('#severe-importance-option', '100%')
-      .click('#moderate-importance-option')
-      .moveToElement('#elicitation-trade-off-button', 0, 0)
-      .pause(500)
-      .click('#elicitation-trade-off-button')
-      .pause(500)
-      .click('#save-matching-weights-button')
-      .assert.containsText('#moderate-importance-option', '100%')
-      .click('#save-button');
-
-    matchImportanceColumnContents(browser, '100%', '100%', '100%');
-    resetWeights(browser);
-  },
-
   'Matching previous button': function(browser) {
     browser
       .click('#matching-button')
