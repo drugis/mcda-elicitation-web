@@ -60,7 +60,7 @@ module.exports = {
       valueToClear: '//*[@id="therapeutic-context-input"]',
       actionButton: '//*[@id="edit-therapeutic-context-button"]',
       cancelButton: closeModalButtonPath,
-      content: '/html/body/div[1]/div/div[3]/div/div/div/div/div[1]/div/div/div/div[3]/span'
+      content: '//*[@id="therapeutic-context"]'
     };
     clearValueCancelAction(browser, paths, 'SMAA');
   },
