@@ -86,10 +86,10 @@ module.exports = {
   'During manual input, cancel editing a criterion': function(browser) {
     addCriterion(browser);
     browser
-      .click('/html/body/div[1]/div/div/div[9]/criterion-list/div/div/div/criterion-card/div/div[2]/div/div[2]/div/a[1]/i')
+      .click('//*[@id="edit-criterion-0"]')
       .clearValue('//*[@id="criterion-title-input"]')
       .click('//*[@id="close-modal-button"]')
-      .assert.containsText('/html/body/div[1]/div/div/div[9]/criterion-list/div/div/div/criterion-card/div/div[2]/div/div[1]/h5', 'c1');
+      .assert.containsText('//*[@id="criterion-title-0"]', 'c1');
   },
 
   'During manual input, cancel editing a data source': function(browser) {
