@@ -211,9 +211,9 @@ module.exports = {
 
   'Cancel editing graph labels': function(browser) {
     var paths = {
-      valueToClear: '//*[@id="label-input-38deaf60-9014-4af9-997e-e5f08bc8c8ff"]',
+      valueToClear: '//*[@id="label-input-0"]',
       tab: '//*[@id="deterministic-tab"]',
-      actionButton: '/html/body/div[1]/div/div[3]/div/div/div/div/div[4]/div/div/div/value-profiles/div/div/div[3]/div/div[2]/button',
+      actionButton: '//*[@id="value-profile-container"]/div[2]/button',
       cancelButton: closeModalButtonPath,
       content: '#value-plot > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(2) > text:nth-child(2) > tspan:nth-child(1)'
     };
