@@ -69,15 +69,15 @@ define([
     });
 
     describe('createButtonElement', function() {
-      const lastPartOfTooltip = '">Labels</button>';
+      const lastPartOfTooltip = '">Labels</button></div>';
       const scope = {};
 
-      const firstPartOfTooltipNoEdit = '<br><button ' +
+      const firstPartOfTooltipNoEdit = '<div class="legend"><button ' +
         'class="button export-button info small" ' +
         'tooltip-append-to-body="true" ' +
         'tooltip-html-unsafe="';
 
-      const firstPartOfTooltipCanEdit = '<br><button ' +
+      const firstPartOfTooltipCanEdit = '<div class="legend"><button ' +
         'ng-click="editLegend()" ' +
         'class="button export-button info small" ' +
         'tooltip-append-to-body="true" ' +

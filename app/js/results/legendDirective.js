@@ -1,11 +1,5 @@
 'use strict';
-define([
-  'lodash',
-  'jquery'
-], function(
-  _,
-  $
-) {
+define(['jquery'], function($) {
   var dependencies = [
     '$rootScope',
     '$stateParams',
@@ -26,6 +20,11 @@ define([
         scope.editLegend = editLegend;
         createTooltip();
 
+        scope.$on('elicit.legendChanged', function(_event, newLegend) {
+          var btnElement = LegendService.createButtonElement(newLegend, scope.editMode.canEdit, scope);
+          $(element).siblings('.legend').replaceWith(btnElement);
+        });
+
         function createTooltip() {
           var $element = $(element);
           $element.css('float', 'left');
@@ -33,8 +32,8 @@ define([
           $element.after(btnElement);
         }
 
-        function broadcastEvent() {
-          $rootScope.$broadcast('elicit.legendChanged');
+        function broadcastEvent(newLegend) {
+          $rootScope.$broadcast('elicit.legendChanged', newLegend);
         }
 
         function editLegend() {
@@ -51,7 +50,10 @@ define([
               callback: function() {
                 return function(newLegend) {
                   scope.scenario.state.legend = newLegend;
-                  ScenarioResource.save($stateParams, scope.scenario).$promise.then(broadcastEvent);
+                  ScenarioResource.save($stateParams, scope.scenario)
+                    .$promise.then(function() {
+                      broadcastEvent(newLegend);
+                    });
                 };
               }
             }

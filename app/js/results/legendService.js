@@ -11,7 +11,6 @@ define([
   var LegendService = function(
     $compile
   ) {
-
     function replaceAlternativeNames(legend, state) {
       if (!legend) {
         return state;
@@ -28,14 +27,13 @@ define([
 
     function createButtonElement(legend, canEdit, scope) {
       var tooltipHtml = createTooltipHtml(legend, canEdit);
-      return $compile('<br><button ' +
+      return $compile('<div class="legend"><button ' +
         (canEdit ? 'ng-click="editLegend()" ' : '') +
         'class="button export-button info small" ' +
         'tooltip-append-to-body="true" ' +
         'tooltip-html-unsafe="' +
         tooltipHtml + '">' +
-
-        'Labels</button>')(scope);
+        'Labels</button></div>')(scope);
     }
 
     function createTooltipHtml(legend, canEdit) {

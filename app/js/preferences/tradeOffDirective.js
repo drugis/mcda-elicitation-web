@@ -18,7 +18,8 @@ define([],
           isSafe: '=',
           problem: '=',
           resetWeights: '=',
-          tasks: '='
+          tasks: '=',
+          weights: '='
         },
         templateUrl: './tradeOffDirective.html',
         link: function(scope) {

@@ -1,0 +1,44 @@
+<div class="grid-x">
+  <div class="cell">
+    <h4>
+      Central Weights <inline-help help-key="central-weights"></inline-help>
+    </h4>
+  </div>
+  <div class="cell">
+    <div style="width: 650px; height: 350px" export legend file-name="'central-weights'">
+      <central-weights-plot id="central-weights-plot" values="state.centralWeights">
+      </central-weights-plot>
+    </div>
+  </div>
+  <div class="cell">
+    <button class="button small info clipboard-button right" data-clipboard-target="#central-weights-table">
+      <i class="fa fa-clipboard"></i> Copy to clipboard
+    </button>
+  </div>
+  
+  <div class="cell">
+    <table id="central-weights-table">
+      <thead>
+        <tr>
+          <th>Alternative</th>
+          <th>Confidence <inline-help help-key="confidence-factor"></inline-help>
+          </th>
+          <th ng-repeat="criterion in criteria">{{criterion.title}}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="alternative in alternatives">
+          <td>{{alternative.title}}</td>
+          <td class="heat-map text-centered">{{state.results.cw.data[alternative.id].cf | number}}</td>
+          <td id="{{ criterion.id }}-{{ alternative.id }}-central-weight" ng-repeat="criterion in criteria"
+            class="text-centered">
+            {{::state.results.cw.data[alternative.id].w[criterion.id] | number}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cell">
+    <em>An empty row indicates an alternative which is being dominated by one or more others.</em>
+  </div>
+</div>

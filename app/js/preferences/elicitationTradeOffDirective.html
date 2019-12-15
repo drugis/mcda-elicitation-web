@@ -15,16 +15,16 @@
       <tbody>
         <tr>
           <td>{{mostImportantCriterion.title}}</td>
-          <td>{{mostImportantCriterionValue.firstValue}}</td>
-          <td>{{mostImportantCriterionValue.secondValue}} 
+          <td class="text-centered">{{mostImportantCriterionValue.firstValue}}</td>
+          <td class="text-centered">{{mostImportantCriterionValue.secondValue}} 
             <a id="elicitation-trade-off-button" ng-click="showSlider = true"><i class="fa fa-edit"></i></a>
             <rzslider ng-if="showSlider" rz-slider-model="mostImportantCriterionValue.secondValue" rz-slider-options="sliderOptions"></rzslider>
           </td>
         </tr>
         <tr>
           <td>{{secondaryCriterion.title}}</td>
-          <td>{{secondaryCriterionValue.firstValue}}</td>
-          <td>{{secondaryCriterionValue.secondValue}}</td>
+          <td class="text-centered">{{secondaryCriterionValue.firstValue}}</td>
+          <td class="text-centered">{{secondaryCriterionValue.secondValue}}</td>
         </tr>
       </tbody>
   </div>

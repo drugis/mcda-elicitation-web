@@ -32,7 +32,7 @@
         </span>
       </td>
       <td>{{row.dataSource.source}}</td>
-      <td ng-repeat="alternative in state.alternatives">
+      <td ng-repeat="alternative in state.alternatives" class="text-centered">
         <effect-input-helper alternative="alternative" input-type="inputType"
           unit-of-measurement="row.dataSource.unitOfMeasurement"
           cell="state.inputData[inputType][row.dataSource.id][alternative.id]" change-callback="checkInputData">

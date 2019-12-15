@@ -1,6 +1,6 @@
 {
   "name": "mcda-web",
-  "version": "0.21.0-RC2",
+  "version": "0.21.1",
   "description": "MCDA elicitation web interface (remote storage)",
   "main": "index.js",
   "scripts": {
@@ -42,7 +42,7 @@
     "@babel/core": "^7.6.4",
     "@babel/preset-env": "^7.6.3",
     "ajv": "~6.10.2",
-    "angular": "~1.7.8",
+    "angular": "~1.7.9",
     "angular-animate": "~1.7.8",
     "angular-cookies": "~1.7.8",
     "angular-foundation-6": "drugis/angular-foundation-6#master",
