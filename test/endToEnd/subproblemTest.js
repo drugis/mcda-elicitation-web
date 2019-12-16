@@ -10,7 +10,6 @@ const util = require('./util/util');
 const subproblem1 = {
   title: 'subproblem1'
 };
-const workspacePath = '/createSubproblemTestProblem.json';
 
 function setupSubProblem(browser) {
   browser.waitForElementVisible('#workspace-title');
@@ -32,7 +31,7 @@ function setupSubProblem(browser) {
 module.exports = {
   beforeEach: function(browser) {
     loginService.login(browser);
-    workspaceService.uploadTestWorkspace(browser, workspacePath);
+    workspaceService.uploadTestWorkspace(browser, '/createSubproblemTestProblem.json');
   },
 
   afterEach: function(browser) {
@@ -102,14 +101,14 @@ module.exports = {
 
   'Interact with scale sliders': function(browser) {
     setupSubProblem(browser);
-    const lowerValueLabel = '//div[13]/ul/li[1]/div/div[2]/div/span[10]';
-    const upperValueLabel = '//div[13]/ul/li[1]/div/div[2]/div/span[11]';
-    const moveFloor = '//div[13]/ul/li[1]/div/div[1]/a';
-    const moveCeil = '//div[13]/ul/li[1]/div/div[3]/a';
-    const floorLabel = '//div[13]/ul/li[1]/div/div[2]/div/span[8]';
-    const ceilLabel = '//div[13]/ul/li[1]/div/div[2]/div/span[9]';
-    const moveLowerValue = '//div[13]/ul/li[1]/div/div[2]/div/span[6]';
-    const moveUpperValue = '//div[13]/ul/li[1]/div/div[2]/div/span[7]';
+    const lowerValueLabel = '//*[@id="slider-0"]/div/span[10]';
+    const upperValueLabel = '//*[@id="slider-0"]/div/span[11]';
+    const moveFloor = '//*[@id="slider-0-floor"]';
+    const moveCeil = '//*[@id="slider-0-ceil"]';
+    const floorLabel = '//*[@id="slider-0"]/div/span[8]';
+    const ceilLabel = '//*[@id="slider-0"]/div/span[9]';
+    const moveLowerValue = '//*[@id="slider-0"]/div/span[6]';
+    const moveUpperValue = '//*[@id="slider-0"]/div/span[7]';
 
     browser
       .useXpath()

@@ -4,8 +4,8 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
-function loadTestWorkspace(browser, title) {
-  workspaceService.addExample(browser, title);
+function loadTestWorkspace(browser) {
+  workspaceService.addExample(browser, 'GetReal course LU 4, activity 4.4');
   browser
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
@@ -20,26 +20,25 @@ function loadTestWorkspace(browser, title) {
 function resetWeights(browser) {
   browser
     .click('#reset-button')
-    .assert.containsText('#OS-ranking', '?')
-    .assert.containsText('#severe-ranking', '?')
-    .assert.containsText('#moderate-ranking', '?')
+    .assert.containsText('#ranking-criterion-0', '?')
+    .assert.containsText('#ranking-criterion-1', '?')
+    .assert.containsText('#ranking-criterion-2', '?')
     ;
 }
 
 function matchImportanceColumnContents(browser, value1, value2, value3) {
   browser
     .waitForElementVisible('#trade-off-block')
-    .assert.containsText('#OS-ranking', value1)
-    .assert.containsText('#severe-ranking', value2)
-    .assert.containsText('#moderate-ranking', value3)
+    .assert.containsText('#ranking-criterion-0', value1)
+    .assert.containsText('#ranking-criterion-1', value2)
+    .assert.containsText('#ranking-criterion-2', value3)
     ;
 }
 
-const title = 'GetReal course LU 4, activity 4.4';
 module.exports = {
   beforeEach: function(browser) {
     loginService.login(browser);
-    loadTestWorkspace(browser, title);
+    loadTestWorkspace(browser);
   },
 
   afterEach: function(browser) {
@@ -53,9 +52,9 @@ module.exports = {
     browser
       .click('#ranking-button')
       .waitForElementVisible('#ranking-title-header')
-      .click('#OS-ranking-option')
+      .click('#ranking-option-0')
       .click('#next-button')
-      .click('#severe-ranking-option')
+      .click('#ranking-option-0')
       .click('#save-button');
 
     matchImportanceColumnContents(browser, 1, 2, 3);
@@ -66,7 +65,7 @@ module.exports = {
     browser
       .click('#ranking-button')
       .waitForElementVisible('#ranking-title-header')
-      .click('#OS-ranking-option')
+      .click('#ranking-option-0')
       .click('#next-button')
       .click('#previous-button')
       .assert.containsText('#ranking-title-header', 'Ranking (1/2)');
@@ -76,7 +75,7 @@ module.exports = {
     browser
       .click('#matching-button')
       .waitForElementVisible('#matching-title-header')
-      .click('#OS-option')
+      .click('#matching-option-0')
       .click('#next-button')
       .click('#previous-button')
       .assert.containsText('#matching-title-header', 'Matching (1/2)');
@@ -86,7 +85,7 @@ module.exports = {
     browser
       .click('#precise-swing-button')
       .waitForElementVisible('#swing-weighting-title-header')
-      .click('#OS-option')
+      .click('#swing-option-0')
       .click('#next-button')
       .click('#save-button');
 
@@ -98,7 +97,7 @@ module.exports = {
     browser
       .click('#precise-swing-button')
       .waitForElementVisible('#swing-weighting-title-header')
-      .click('#OS-option')
+      .click('#swing-option-0')
       .click('#next-button')
       .click('#previous-button')
       .assert.containsText('#swing-weighting-title-header', 'Precise swing weighting (1/2)');
@@ -108,7 +107,7 @@ module.exports = {
     browser
       .click('#imprecise-swing-button')
       .waitForElementVisible('#swing-weighting-title-header')
-      .click('#OS-option')
+      .click('#swing-option-0')
       .click('#next-button')
       .click('#save-button');
 
@@ -120,7 +119,7 @@ module.exports = {
     browser
       .click('#imprecise-swing-button')
       .waitForElementVisible('#swing-weighting-title-header')
-      .click('#OS-option')
+      .click('#swing-option-0')
       .click('#next-button')
       .click('#previous-button')
       .assert.containsText('#swing-weighting-title-header', 'Imprecise swing weighting (1/2)');

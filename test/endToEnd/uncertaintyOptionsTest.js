@@ -47,7 +47,7 @@ module.exports = {
       .click('#preferences-tab')
       .click('#precise-swing-button')
       .waitForElementVisible('#swing-weighting-title-header')
-      .click('#de14e778-f723-48d4-8f4e-1e589714f4f2-option')
+      .click('#swing-option-0')
       .click('#next-button')
       .click('#save-button')
       .click('#smaa-tab')

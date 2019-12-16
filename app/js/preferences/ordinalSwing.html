@@ -10,7 +10,7 @@
     </div>
     <div class="cell">
       <ul class="inline-list">
-        <li ng-repeat="criterion in criteria">
+        <li id="criterion-{{ $index }}" ng-repeat="criterion in criteria">
           {{criterion.title}}: {{criterion.alreadyChosen ? (criterion.best | number) : (criterion.worst | number) }}
           {{getUnitOfMeasurement(criterion)}}
         </li>
@@ -19,7 +19,7 @@
     <div class="cell">Which of the following improvements is most important?</div>
     <div class="cell" ng-repeat="criterion in state.choices">
       <label>
-        <input id="{{ criterion.id }}-ranking-option" type="radio" ng-model="state.choice" value="{{criterion.id}}">
+        <input id="ranking-option-{{ $index }}" type="radio" ng-model="state.choice" value="{{criterion.id}}">
         {{criterion.dataSources[0].pvf.direction}} {{criterion.title}} from
         {{pvf.worst(criterion.dataSources[0]) | number}}
         {{getUnitOfMeasurement(criterion)}} to {{pvf.best(criterion.dataSources[0]) | number}}

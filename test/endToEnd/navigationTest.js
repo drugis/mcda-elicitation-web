@@ -7,7 +7,6 @@ const TEST_URL = require('./util/constants').TEST_URL;
 
 module.exports = {
   afterEach: function(browser) {
-
     browser.end();
   },
 

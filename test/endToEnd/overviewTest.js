@@ -6,9 +6,9 @@ const errorService = require('./util/errorService');
 const util = require('./util/util');
 
 const title = 'Thrombolytics - single study B/R analysis';
-const proximalDVTCriterionTitle = '#criterion-title-cae083fa-c1e7-427f-8039-c46479392344';
-const proximalDVTCriterionDescription = '#criterion-description-cae083fa-c1e7-427f-8039-c46479392344';
-const heparinAlternative = '#alternative-title-cfcdf6df-f231-4c3d-be83-64aa28d8d5f1';
+const proximalDVTCriterionTitle = '#criterion-title-0';
+const proximalDVTCriterionDescription = '#criterion-description-0';
+const heparinAlternative = '#alternative-title-0';
 
 function loadTestWorkspace(browser, title) {
   workspaceService.addExample(browser, title);
@@ -35,7 +35,7 @@ module.exports = {
   'The overview tab': function(browser) {
     loadTestWorkspace(browser, title);
 
-    const firstDistalDVTValue = '//div[1]/div[2]/criterion-card//table//td[3]//*';
+    const firstDistalDVTValue = '//*[@id="c-1-ds-0-a-0-table-cell"]/effects-table-cell/div/div';
 
     browser
       .assert.containsText('#therapeutic-context', 'No description given.')
@@ -65,10 +65,8 @@ module.exports = {
     const newTitle = 'new title';
     const newDescription = 'new description';
 
-    const editProximalDVTbutton = '#edit-criterion-cae083fa-c1e7-427f-8039-c46479392344';
-
     browser
-      .click(editProximalDVTbutton)
+      .click('#edit-criterion-0')
       .waitForElementVisible('#criterion-title-input')
       .clearValue('#criterion-title-input')
       .setValue('#criterion-title-input', newTitle)
@@ -90,16 +88,10 @@ module.exports = {
     const newUncertainties = 'very uncertain';
     const originalReference = 'Study 205MS301';
 
-    const dataSourceReference = '#data-source-reference-f09b3e30-be30-4cad-93ac-9567c2a3a3da-d7dff15e-44a3-4246-b80a-6fc3955464f6';
-    const editDataSourceButton = '#edit-data-source-f09b3e30-be30-4cad-93ac-9567c2a3a3da-d7dff15e-44a3-4246-b80a-6fc3955464f6';
-    const dataSourceReferenceWithLink = '#linked-data-source-reference-f09b3e30-be30-4cad-93ac-9567c2a3a3da-d7dff15e-44a3-4246-b80a-6fc3955464f6';
-    const soeUnc = '#soe-unc-f09b3e30-be30-4cad-93ac-9567c2a3a3da-d7dff15e-44a3-4246-b80a-6fc3955464f6';
-    const unitOfMeasurement = '#unit-of-measurement-f09b3e30-be30-4cad-93ac-9567c2a3a3da-d7dff15e-44a3-4246-b80a-6fc3955464f6';
-
     browser
-      .assert.containsText(dataSourceReference, originalReference)
-      .assert.containsText(unitOfMeasurement, 'Annual rate')
-      .click(editDataSourceButton)
+      .assert.containsText('#data-source-reference-0-0', originalReference)
+      .assert.containsText('#unit-of-measurement-0-0', 'Annual rate')
+      .click('#edit-data-source-0-0')
       .waitForElementVisible('#unit-of-measurement-input')
       .clearValue('#unit-of-measurement-input')
       .setValue('#unit-of-measurement-input', newUnit)
@@ -113,18 +105,17 @@ module.exports = {
       .setValue('#uncertainties-input', newUncertainties)
 
       .click('#edit-data-source-button')
-      .assert.containsText(dataSourceReferenceWithLink, newReference)
-      .assert.containsText(soeUnc, 'SoE: ' + newStrength + '\nUnc: ' + newUncertainties)
-      .assert.containsText(unitOfMeasurement, newUnit);
+      .assert.containsText('#linked-data-source-reference-0-0', newReference)
+      .assert.containsText('#soe-unc-0-0', 'SoE: ' + newStrength + '\nUnc: ' + newUncertainties)
+      .assert.containsText('#unit-of-measurement-0-0', newUnit);
   },
 
   'Editing an alternative': function(browser) {
     loadTestWorkspace(browser, title);
-    const editHeparinButton = '#alternative-edit-button-cfcdf6df-f231-4c3d-be83-64aa28d8d5f1';
     const newTitle = 'new alternative';
 
     browser
-      .click(editHeparinButton)
+      .click('#edit-alternative-0')
       .waitForElementVisible('#alternative-title')
       .clearValue('#alternative-title')
       .setValue('#alternative-title', newTitle)
@@ -146,60 +137,44 @@ module.exports = {
   'Reordering criteria': function(browser) {
     loadTestWorkspace(browser, title);
 
-    const firstCriterionTitle = '//criterion-list/div/div/div[1]/criterion-card/div/div[2]/div/div[1]/h5';
-    const proximalDown = '//*[@id="move-down-criterion-cae083fa-c1e7-427f-8039-c46479392344"]';
-    const distalDown = '//*[@id="move-down-criterion-44e3dd53-ea9f-49af-b622-4a97d853c134"]';
+    const firstCriterionTitle = '#criterion-title-0';
+    const firstCriterionDown = '#move-down-criterion-0';
 
     browser
-      .useXpath()
-      .click(proximalDown)
+      .click(firstCriterionDown)
       .assert.containsText(firstCriterionTitle, 'Distal DVT')
-      .click(distalDown)
-      .assert.containsText(firstCriterionTitle, 'Proximal DVT')
-      .useCss();
+      .click(firstCriterionDown)
+      .assert.containsText(firstCriterionTitle, 'Proximal DVT');
   },
 
   'Reordering alternatives': function(browser) {
     loadTestWorkspace(browser, title);
 
-    const firstAlternativeTitle = '/html/body/div[1]/div/div[3]/div/div/div/div/div[1]/div/div/div/div[7]/table/tbody/tr[1]/td[2]';
-    const heparinDown = '#move-down-alternative-cfcdf6df-f231-4c3d-be83-64aa28d8d5f1';
-    const heparinUp = '#move-up-alternative-cfcdf6df-f231-4c3d-be83-64aa28d8d5f1';
+    const firstAlternativeTitle = '#alternative-title-0';
+    const heparinDown = '#move-down-alternative-0';
+    const heparinUp = '#move-up-alternative-1';
 
     browser
       .getLocationInView(heparinDown)
       .waitForElementVisible(heparinDown)
       .click(heparinDown)
-      .useXpath()
       .assert.containsText(firstAlternativeTitle, 'Enoxaparin')
-      .useCss()
-
       .click(heparinUp)
-      .useXpath()
-      .assert.containsText(firstAlternativeTitle, 'Heparin')
-      .useCss();
+      .assert.containsText(firstAlternativeTitle, 'Heparin');
   },
 
   'Reordering data sources': function(browser) {
     workspaceService.uploadTestWorkspace(browser, '/createSubproblemTestProblem.json');
 
-    const firstReference = '//criterion-list/div/div/div[1]/criterion-card/div/div[2]/div/div[4]/table/tbody/tr[1]/td[7]/div';
-    const ref1Down = '#move-down-data-source-c4a470d2-b457-4f65-9b8d-5e22741c24a6-c27f83e0-a563-450d-9327-93fe823ed23f';
-    const ref1Up = '#move-up-data-source-c4a470d2-b457-4f65-9b8d-5e22741c24a6-c27f83e0-a563-450d-9327-93fe823ed23f';
+    const firstReference = '#data-source-reference-0-0';
+    const ref1Down = '#move-down-data-source-0-0';
+    const ref1Up = '#move-up-data-source-0-1';
 
     browser
-      .useXpath()
       .assert.containsText(firstReference, 'ref1')
-      .useCss()
-
       .click(ref1Down)
-      .useXpath()
       .assert.containsText(firstReference, 'ref2')
-      .useCss()
-
       .click(ref1Up)
-      .useXpath()
-      .assert.containsText(firstReference, 'ref1')
-      .useCss();
+      .assert.containsText(firstReference, 'ref1');
   }
 };

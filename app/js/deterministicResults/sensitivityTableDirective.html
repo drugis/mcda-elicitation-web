@@ -16,21 +16,22 @@
     <table id="sensitivity-table" class="full-width effects-table">
       <thead>
         <tr>
-          <th ng-show="toggledColumns['criteria']">Criterion
+          <th id="column-criterion" ng-show="toggledColumns['criteria']">Criterion
             <inline-help help-key="criterion"></inline-help>
           </th>
-          <th ng-show="toggledColumns['description']">Description</th>
-          <th ng-show="toggledColumns['units']">Units
-            <inline-help help-key="criterion-unit"></inline-help>
+          <th id="column-description" ng-show="toggledColumns['description']">
+            Description</th>
+          <th id="column-unit-of-measurement" ng-show="toggledColumns['units']">
+            Units <inline-help help-key="criterion-unit"></inline-help>
           </th>
-          <th class="text-center" ng-repeat="alternative in alternatives" style="min-width: 120px">
+          <th id="column-alternative-{{ $index }}" class="text-center" ng-repeat="alternative in alternatives" style="min-width: 120px">
             {{scenario.state.legend[alternative.id].baseTitle || alternative.title}}
           </th>
-          <th ng-show="toggledColumns['strength']">
+          <th id="column-strength-of-evidence" ng-show="toggledColumns['strength']">
             Strength of evidence <inline-help help-key="strength-of-evidence"></inline-help>
             / Uncertainties <inline-help help-key="uncertainties"></inline-help>
           </th>
-          <th ng-show="toggledColumns['references']">
+          <th id="column-references" ng-show="toggledColumns['references']">
             References <inline-help help-key="criterion-source"></inline-help>
           </th>
         </tr>

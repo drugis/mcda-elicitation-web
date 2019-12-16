@@ -22,7 +22,6 @@ function showDecimals(browser) {
 }
 
 function changeDeterministicTabSetting(browser, settingsPath, columnPath) {
-
   browser.useXpath();
   util.delayedClick(browser, '//*[@id="deterministic-tab"]', '//*[@id="sensitivity-measurements-header"]', util.xpathSelectorType);
   browser.click('//*[@id="settings-button"]')
@@ -212,61 +211,61 @@ module.exports = {
   },
 
   'Unselecting criterion column in problem definition tab': function(browser) {
-    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[2]/div/div/div[2]/div/effects-table/div/div[3]/table/thead/tr/th[1]/div';
+    var columnPath = '//*[@id="column-criterion"]';
     var settingPath = '//*[@id="criterion-column-checkbox"]';
     changeProblemDefinitionTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting description column in problem definition tab': function(browser) {
-    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[2]/div/div/div[2]/div/effects-table/div/div[3]/table/thead/tr/th[2]/div';
+    var columnPath = '//*[@id="column-description"]';
     var settingPath = '//*[@id="description-column-checkbox"]';
     changeProblemDefinitionTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting units column in problem definition tab': function(browser) {
-    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[2]/div/div/div[2]/div/effects-table/div/div[3]/table/thead/tr/th[3]/div';
+    var columnPath = '//*[@id="column-unit-of-measurement"]';
     var settingPath = '//*[@id="units-column-checkbox"]';
     changeProblemDefinitionTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting uncertainties column in problem definition tab': function(browser) {
-    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[2]/div/div/div[2]/div/effects-table/div/div[3]/table/thead/tr/th[6]/div';
+    var columnPath = '//*[@id="column-strength-of-evidence"]';
     var settingPath = '//*[@id="uncertainties-column-checkbox"]';
     changeProblemDefinitionTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting reference column in problem definition tab': function(browser) {
-    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[2]/div/div/div[2]/div/effects-table/div/div[3]/table/thead/tr/th[7]/div';
+    var columnPath = '//*[@id="column-references"]';
     var settingPath = '//*[@id="reference-column-checkbox"]';
     changeProblemDefinitionTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting criterion column in deterministic results tab': function(browser) {
-    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[4]/div/div/div/sensitivity-table/div/div[3]/table/thead/tr/th[1]';
+    var columnPath = '//*[@id="column-criterion"]';
     var settingPath = '//*[@id="criterion-column-checkbox"]';
     changeDeterministicTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting description column in deterministic results tab': function(browser) {
-    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[4]/div/div/div/sensitivity-table/div/div[3]/table/thead/tr/th[2]';
+    var columnPath = '//*[@id="column-description"]';
     var settingPath = '//*[@id="description-column-checkbox"]';
     changeDeterministicTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting units column in deterministic results tab': function(browser) {
-    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[4]/div/div/div/sensitivity-table/div/div[3]/table/thead/tr/th[3]';
+    var columnPath = '//*[@id="column-unit-of-measurement"]';
     var settingPath = '//*[@id="units-column-checkbox"]';
     changeDeterministicTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting uncertainties column in deterministic results tab': function(browser) {
-    var columnPath = '//*[@id="sensitivity-table"]/thead/tr/th[6]';
+    var columnPath = '//*[@id="column-strength-of-evidence"]';
     var settingPath = '//*[@id="uncertainties-column-checkbox"]';
     changeDeterministicTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting reference column in deterministic results tab': function(browser) {
-    var columnPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[4]/div/div/div/sensitivity-table/div/div[3]/table/thead/tr/th[7]';
+    var columnPath = '//*[@id="column-references"]';
     var settingPath = '//*[@id="reference-column-checkbox"]';
     changeDeterministicTabSetting(browser, settingPath, columnPath);
   },
@@ -283,8 +282,8 @@ module.exports = {
   },
 
   'Switching settings in the overview tab': function(browser) {
-    var effectCellPath = '//criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[3]/div/effects-table-cell/div';
-    var unitsCellPath = '//criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[2]';
+    var effectCellPath = '//*[@id="c-0-ds-0-a-0-table-cell"]/effects-table-cell/div/div';
+    var unitsCellPath = '//*[@id="criterion-0"]/div[2]/div/div[5]/table/tbody/tr/td[2]';
 
     browser
       .useXpath()
@@ -384,56 +383,56 @@ module.exports = {
   },
 
   'Switching settings while setting the partial value function': function(browser) {
-    var effectCellPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[3]/div/div/div/div/div[2]/div/div[3]/label';
+    var lowestOption = '//*[@id="decreasing-pvf-option"]';
 
     browser.useXpath();
     util.delayedClick(browser, '//*[@id="preferences-tab"]', '//*[@id="partial-value-functions-header"]', util.xpathSelectorType);
-    browser.click('//*[@id="OS-pvf-button"]')
-      .assert.containsText(effectCellPath, '45 % is best');
+    browser.click('//*[@id="criterion-0-pvf-button"]')
+      .assert.containsText(lowestOption, '45 % is best');
 
     showDecimals(browser);
-    browser.assert.containsText(effectCellPath, '0.45 is best');
+    browser.assert.containsText(lowestOption, '0.45 is best');
     showPercentagesAndValues(browser);
-    browser.assert.containsText(effectCellPath, '45 % is best');
+    browser.assert.containsText(lowestOption, '45 % is best');
     showDecimals(browser);
-    browser.assert.containsText(effectCellPath, '0.45 is best');
+    browser.assert.containsText(lowestOption, '0.45 is best');
     showPercentagesAndSmaaEntered(browser);
-    browser.assert.containsText(effectCellPath, '45 % is best');
+    browser.assert.containsText(lowestOption, '45 % is best');
     showDecimals(browser);
-    browser.assert.containsText(effectCellPath, '0.45 is best');
+    browser.assert.containsText(lowestOption, '0.45 is best');
     showPercentagesAndSmaaValues(browser);
-    browser.assert.containsText(effectCellPath, '45 % is best');
+    browser.assert.containsText(lowestOption, '45 % is best');
     showDecimals(browser);
 
     browser
-      .assert.containsText(effectCellPath, '0.45 is best')
+      .assert.containsText(lowestOption, '0.45 is best')
       .useCss();
   },
 
   'Switching settings while setting the weights': function(browser) {
-    var effectCellPath = '/html/body/div[1]/div/div[3]/div/div/div/div/div[3]/div/div/div[1]/div/div[3]/ul/li[1]';
+    var firstCriterion = '//*[@id="criterion-0"]';
 
     browser.useXpath();
     util.delayedClick(browser, '//*[@id="preferences-tab"]', '//*[@id="partial-value-functions-header"]', util.xpathSelectorType);
     browser.click('//*[@id="ranking-button"]')
-      .assert.containsText(effectCellPath, '2-year survival: 45 %');
+      .assert.containsText(firstCriterion, '2-year survival: 45 %');
 
     showDecimals(browser);
-    browser.assert.containsText(effectCellPath, '2-year survival: 0.45');
+    browser.assert.containsText(firstCriterion, '2-year survival: 0.45');
     showPercentagesAndValues(browser);
-    browser.assert.containsText(effectCellPath, '2-year survival: 45 %');
+    browser.assert.containsText(firstCriterion, '2-year survival: 45 %');
     showDecimals(browser);
-    browser.assert.containsText(effectCellPath, '2-year survival: 0.45');
+    browser.assert.containsText(firstCriterion, '2-year survival: 0.45');
     showPercentagesAndSmaaEntered(browser);
-    browser.assert.containsText(effectCellPath, '2-year survival: 45 %');
+    browser.assert.containsText(firstCriterion, '2-year survival: 45 %');
     showDecimals(browser);
-    browser.assert.containsText(effectCellPath, '2-year survival: 0.45');
+    browser.assert.containsText(firstCriterion, '2-year survival: 0.45');
     showPercentagesAndSmaaValues(browser);
-    browser.assert.containsText(effectCellPath, '2-year survival: 45 %');
+    browser.assert.containsText(firstCriterion, '2-year survival: 45 %');
     showDecimals(browser);
 
     browser
-      .assert.containsText(effectCellPath, '2-year survival: 0.45')
+      .assert.containsText(firstCriterion, '2-year survival: 0.45')
       .useCss();
   }
 };

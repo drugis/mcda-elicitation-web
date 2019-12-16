@@ -173,15 +173,15 @@
             </h5>
             <div class="grid-x">
               <div class="cell large-1 text-center">
-                <a ng-click="scalesState[dataSource].increaseFrom()" class="tiny round button slider-buttons">&lt;</a>
+                <a id="slider-{{ $index }}-floor" ng-click="scalesState[dataSource].increaseFrom()" class="tiny round button slider-buttons">&lt;</a>
               </div>
-              <div class="cell large-10">
+              <div id="slider-{{ $index }}" class="cell large-10">
                 <rzslider rz-slider-model="choices[dataSource].from" rz-slider-high="choices[dataSource].to"
                   rz-slider-options="scalesState[dataSource].sliderOptions">
                 </rzslider>
               </div>
               <div class="cell large-1 pull-3 text-center">
-                <a ng-click="scalesState[dataSource].increaseTo()" class="tiny round button slider-buttons">&gt;</a>
+                <a id="slider-{{ $index }}-ceil" ng-click="scalesState[dataSource].increaseTo()" class="tiny round button slider-buttons">&gt;</a>
               </div>
             </div>
             <br>
