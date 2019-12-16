@@ -5,8 +5,6 @@ const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 const util = require('./util/util');
 
-const testUrl = require('./util/constants').testUrl;
-
 const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 const preferenceTabPath = '//*[@id="preferences-tab"]';
 const rankingCellPath = '//*[@id="de14e778-f723-48d4-8f4e-1e589714f4f2-ranking"]';
@@ -32,7 +30,7 @@ function clearValueCancelAction(browser, paths, expectedValue) {
 module.exports = {
   beforeEach: function(browser) {
     browser.resizeWindow(1366, 728);
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     workspaceService.addExample(browser, title);
     browser
       .click('#workspace-0')

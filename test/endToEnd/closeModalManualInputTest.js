@@ -4,8 +4,6 @@ const loginService = require('./util/loginService');
 const manualInputService = require('./util/manualInputService');
 const errorService = require('./util/errorService');
 
-const testUrl = require('./util/constants').testUrl;
-
 const title = 'manual input';
 const therapeuticContext = 'end-to-end test';
 
@@ -47,7 +45,7 @@ function addCriterion(browser) {
 module.exports = {
   beforeEach: function(browser) {
     browser.resizeWindow(1366, 728);
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     browser
       .useXpath()
       .click('//*[@id="create-workspace-button"]')

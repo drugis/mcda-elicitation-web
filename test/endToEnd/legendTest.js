@@ -6,8 +6,6 @@ const errorService = require('./util/errorService');
 const chai = require('chai');
 const _ = require('lodash');
 
-const testUrl = require('./util/constants').testUrl;
-
 const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
 function checkLabel(expectedValue, result) {
@@ -36,7 +34,7 @@ function setSingleLetterNames(browser) {
 module.exports = {
   beforeEach: function(browser) {
     browser.resizeWindow(1366, 728);
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     workspaceService.addExample(browser, title);
     browser
       .click('#workspace-0')

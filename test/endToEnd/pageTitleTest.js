@@ -3,7 +3,7 @@
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
-const testUrl = require('./util/constants').testUrl;
+const TEST_URL = require('./util/constants').TEST_URL;
 const util = require('./util/util');
 
 const chai = require('chai');
@@ -35,7 +35,7 @@ module.exports = {
 
   'Login page': function(browser) {
     browser
-      .url(testUrl)
+      .url(TEST_URL)
       .waitForElementVisible('#signinButton')
       .getTitle(function(result) {
         chai.expect(result).to.equal('mcda.drugis.org');
@@ -44,7 +44,7 @@ module.exports = {
   },
 
   'Workspaces': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     browser
       .pause(3000)
       .getTitle(function(result) {
@@ -54,7 +54,7 @@ module.exports = {
   },
 
   'A workspace overview': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     browser
       .click('#create-workspace-button')
       .click('#add-workspace-button')
@@ -66,7 +66,7 @@ module.exports = {
   },
 
   'A workspace problem definition': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     browser
       .click('#create-workspace-button')
       .click('#add-workspace-button');
@@ -80,7 +80,7 @@ module.exports = {
   },
 
   'A workspace preferences': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     goToPreferences(browser);
     browser
       .pause(2000)
@@ -91,7 +91,7 @@ module.exports = {
   },
 
   'A workspace deterministic results': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     browser
       .click('#create-workspace-button')
       .click('#add-workspace-button');
@@ -105,7 +105,7 @@ module.exports = {
   },
 
   'A workspace SMAA results': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     browser
       .click('#create-workspace-button')
       .click('#add-workspace-button');
@@ -119,7 +119,7 @@ module.exports = {
   },
 
   'Partial value function': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     goToPreferences(browser);
     browser
       .click('#de14e778-f723-48d4-8f4e-1e589714f4f2-pvf-button')
@@ -131,7 +131,7 @@ module.exports = {
   },
 
   'Ranking weights': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     goToPreferences(browser);
     browser
       .click('#ranking-button')
@@ -143,7 +143,7 @@ module.exports = {
   },
 
   'Matching weights': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     goToPreferences(browser);
     browser
       .click('#matching-button')
@@ -155,7 +155,7 @@ module.exports = {
   },
 
   'Precise swing weighting': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     goToPreferences(browser);
     browser
       .click('#precise-swing-button')
@@ -167,7 +167,7 @@ module.exports = {
   },
 
   'Imprecise swing weighting': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     goToPreferences(browser);
     browser
       .click('#imprecise-swing-button')
@@ -179,7 +179,7 @@ module.exports = {
   },
 
   'Manual input': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     browser
       .click('#create-workspace-button')
       .click('#manual-workspace-radio')
@@ -192,7 +192,7 @@ module.exports = {
   },
 
   'Manual input in progress': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     browser
       .click('#create-workspace-button')
       .click('#manual-workspace-radio')

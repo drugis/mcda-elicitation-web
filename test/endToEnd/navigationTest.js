@@ -3,7 +3,7 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const util = require('./util/util');
 
-const url = require('./util/constants').testUrl;
+const TEST_URL = require('./util/constants').TEST_URL;
 
 module.exports = {
   afterEach: function(browser) {
@@ -13,7 +13,7 @@ module.exports = {
 
   'Open manual from login page': function(browser) {
     browser
-      .url(url)
+      .url(TEST_URL)
       .waitForElementVisible('#manual-link')
       .click('#manual-link')
       .windowHandles(function(result) {
@@ -23,7 +23,7 @@ module.exports = {
   },
 
   'Open manual while logged in': function(browser) {
-    loginService.login(browser, url, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     browser
       .click('#manual-link')
       .windowHandles(function(result) {
@@ -33,7 +33,7 @@ module.exports = {
   },
 
   'Home navigation from login name': function(browser) {
-    loginService.login(browser, url, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     const title = 'GetReal course LU 4, activity 4.4';
     workspaceService.addExample(browser, title);
     browser
@@ -44,7 +44,7 @@ module.exports = {
   },
 
   'Navigate to problem that does not exists through URL manipulation': function(browser) {
-    loginService.login(browser, url, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     browser.url('http://localhost:3002/#!/workspaces/0/problems/1/scenarios/1/evidence')
       .useXpath()
       .waitForElementVisible('/html/body/error-reporting');

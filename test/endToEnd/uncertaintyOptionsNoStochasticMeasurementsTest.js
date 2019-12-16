@@ -4,15 +4,13 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
-const testUrl = require('./util/constants').testUrl;
-
 var hasNoStochasticMeasurementsWarning = 'Measurements are not stochastic';
 
 module.exports = {
   'Warning when measurements are not stochastic': function(browser) {
     const title = 'GetReal course LU 4, activity 4.4';
 
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     workspaceService.addExample(browser, title);
 
     browser

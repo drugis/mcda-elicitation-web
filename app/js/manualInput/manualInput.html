@@ -89,9 +89,9 @@
               </div>
               <div style="line-height: 10px;">
                 <a ng-click="alternativeDown($index)" class="nav-arrow" ng-if="$index !== state.alternatives.length-1">
-                  <i style="line-height:0px;" class="fa fa-caret-down"></i>
+                  <i id="move-down-alternative-{{ $index }}" style="line-height:0px;" class="fa fa-caret-down"></i>
                 </a>
-                <i id="move-down-alternative-{{ $index }}" ng-if="$index === state.alternatives.length-1" style="line-height:0px; color:#bbb"
+                <i ng-if="$index === state.alternatives.length-1" style="line-height:0px; color:#bbb"
                   class="fa fa-caret-down"></i>
               </div>
             </td>

@@ -2,11 +2,9 @@
 
 const loginService = require('./util/loginService.js');
 
-const testUrl = require('./util/constants').testUrl;
-
 module.exports = {
   'MCDA logout': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
 
     browser
       .waitForElementVisible('#workspaces-header')

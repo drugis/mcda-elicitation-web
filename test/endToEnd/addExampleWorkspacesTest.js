@@ -5,8 +5,7 @@ const workspaceService = require('./util/workspaceService.js');
 const errorService = require('./util/errorService');
 
 function testExample(browser, title) {
-  const testUrl = require('./util/constants').testUrl;
-  loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+  loginService.login(browser);
   workspaceService.addExample(browser, title);
   workspaceService.deleteFromList(browser, 0);
 }

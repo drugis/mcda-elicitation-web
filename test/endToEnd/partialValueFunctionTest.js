@@ -4,12 +4,11 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
-const testUrl = require('./util/constants').testUrl;
 const workspacePath = '/partialValueFunctionTestProblem.json';
 
 module.exports = {
   beforeEach: function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     workspaceService.uploadTestWorkspace(browser, workspacePath);
     browser
       .waitForElementVisible('#workspace-title')

@@ -6,8 +6,6 @@ const errorService = require('./util/errorService');
 
 const chai = require('chai');
 
-const testUrl = require('./util/constants').testUrl;
-
 function checkElementValueGreaterThan(browser, id, value) {
   browser
     .useXpath()
@@ -42,7 +40,7 @@ module.exports = {
   'SMAA results': function(browser) {
     const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     workspaceService.addExample(browser, title);
 
     browser

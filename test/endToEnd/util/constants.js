@@ -1,4 +1,4 @@
 'use strict';
 module.exports = {
-  testUrl: 'http://localhost:3002'
+  TEST_URL: 'http://localhost:3002'
 };

@@ -4,14 +4,13 @@ const loginService = require('./util/loginService');
 const errorService = require('./util/errorService');
 const util = require('./util/util');
 
-const testUrl = require('./util/constants').testUrl;
 const closeModalButton = '//*[@id="close-modal-button"]';
 const deleteWorkspaceButton = '//*[@id="delete-workspace-0"]';
 
 module.exports = {
   beforeEach: function(browser) {
     browser.resizeWindow(1366, 728);
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
   },
 
   afterEach: function(browser) {

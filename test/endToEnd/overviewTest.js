@@ -5,7 +5,6 @@ const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 const util = require('./util/util');
 
-const testUrl = require('./util/constants').testUrl;
 const title = 'Thrombolytics - single study B/R analysis';
 const proximalDVTCriterionTitle = '#criterion-title-cae083fa-c1e7-427f-8039-c46479392344';
 const proximalDVTCriterionDescription = '#criterion-description-cae083fa-c1e7-427f-8039-c46479392344';
@@ -23,7 +22,7 @@ function loadTestWorkspace(browser, title) {
 module.exports = {
   beforeEach: function(browser) {
     browser.resizeWindow(1366, 728);
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
   },
 
   afterEach: function(browser) {

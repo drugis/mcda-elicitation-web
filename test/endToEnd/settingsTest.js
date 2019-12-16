@@ -7,8 +7,6 @@ const util = require('./util/util');
 const chai = require('chai');
 const _ = require('lodash');
 
-const testUrl = require('./util/constants').testUrl;
-
 const title = 'GetReal course LU 4, activity 4.4';
 
 function checkValue(expectedValue, result) {
@@ -76,7 +74,7 @@ function showPercentagesAndSmaaValues(browser) {
 module.exports = {
   beforeEach: function(browser) {
     browser.resizeWindow(1366, 728);
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     workspaceService.addExample(browser, title);
     browser
       .click('#workspace-0')

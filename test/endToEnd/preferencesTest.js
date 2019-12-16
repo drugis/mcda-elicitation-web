@@ -4,8 +4,6 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
-const testUrl = require('./util/constants').testUrl;
-
 function loadTestWorkspace(browser, title) {
   workspaceService.addExample(browser, title);
   browser
@@ -40,7 +38,7 @@ function matchImportanceColumnContents(browser, value1, value2, value3) {
 const title = 'GetReal course LU 4, activity 4.4';
 module.exports = {
   beforeEach: function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     loadTestWorkspace(browser, title);
   },
 

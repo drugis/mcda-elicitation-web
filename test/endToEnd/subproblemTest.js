@@ -7,8 +7,6 @@ const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 const util = require('./util/util');
 
-const testUrl = require('./util/constants').testUrl;
-
 const subproblem1 = {
   title: 'subproblem1'
 };
@@ -33,7 +31,7 @@ function setupSubProblem(browser) {
 
 module.exports = {
   beforeEach: function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     workspaceService.uploadTestWorkspace(browser, workspacePath);
   },
 

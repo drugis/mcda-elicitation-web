@@ -4,8 +4,6 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
-const testUrl = require('./util/constants').testUrl;
-
 var deterministicWarning = 'SMAA results will be identical to the deterministic results because there are no stochastic inputs';
 var hasNoStochasticWeightsWarning = 'Weights are not stochastic';
 
@@ -13,7 +11,7 @@ const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat
 
 module.exports = {
   beforeEach: function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+    loginService.login(browser);
     workspaceService.addExample(browser, title);
     browser
       .click('a[id="workspace-0"]')
