@@ -95,7 +95,7 @@ module.exports = {
 
   'Cancel settings': function(browser) {
     var actionButtonPath = '//*[@id="settings-button"]';
-    var contentPath = '//*[@id="criterion-0-alternative-0-table-cell"]';
+    var contentPath = '//*[@id="c-0-ds-0-a-0-table-cell"]';
     browser
       .click(actionButtonPath)
       .click('//*[@id="show-decimals-radio"]')
