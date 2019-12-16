@@ -13,7 +13,7 @@ module.exports = {
   },
 
   'MCDA login fail': function(browser) {
-    loginService.login(browser, loginService.username, loginService.incorrectPassword);
+    loginService.login(browser, 'wrong name', 'wrong password');
     browser
       .waitForElementVisible('#loginWarning')
       .end();
