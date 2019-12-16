@@ -80,15 +80,11 @@ jobs:
           PATAVI_CLIENT_KEY: key.pem
           PATAVI_CLIENT_CRT: crt.pem
 
-      # - name: run nightwatch tests
-      #   id: nightwatch
-      #   run: npm run test-end-to-end
-
       - name: run nightwatch tests
         id: nightwatch
-        run: npx nightwatch -c nightwatch.github.conf.js --test test/endToEnd/manualInputTest.js --testcase 'Deleting a data source'
-        #  --testcase 'Deterministic results with recalculated values'
-
+        run: npx nightwatch -c nightwatch.github.conf.js
+        #  --test test/endToEnd/manualInputTest.js --testcase 'Deleting a data source'
+        
       # - name: notify on slack channel on nightwatch failure
       #   if: failure()
       #   uses: rtCamp/action-slack-notify@master
@@ -109,4 +105,3 @@ jobs:
 
       - name: stop mcda
         run: sudo pkill -9 node
-
