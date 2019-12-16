@@ -81,7 +81,7 @@ module.exports = {
   },
 
   'Changing unit of measurement': function(browser) {
-    const firstCell = '//*[@id="ds-0-a-0-input-cell"]';
+    const firstCell = '#ds-0-a-0-input-cell';
     const unitLabel = 'UoM label';
 
     manualInputService.createInputDefault(browser);
@@ -92,22 +92,18 @@ module.exports = {
     manualInputService.setValuesForRow(browser, 1);
     manualInputService.setValuesForRow(browser, 2);
     browser
-      .useXpath()
       .assert.containsText(firstCell, 7)
-      .useCss()
-      .click('#edit-unit-of-measurement-' + manualInputService.CRITERION1.title + '-' + manualInputService.DATA_SOURCE1.reference)
+      .click('#unit-of-measurement-0-edit')
       .setValue('#uom-label', unitLabel)
       .click('#uom-save-button')
-      .assert.containsText('#unit-of-measurement-label-' + manualInputService.CRITERION1.title + '-' + manualInputService.DATA_SOURCE1.reference, unitLabel)
+      .assert.containsText('#unit-of-measurement-0', unitLabel)
 
-      .click('#edit-unit-of-measurement-' + manualInputService.CRITERION1.title + '-' + manualInputService.DATA_SOURCE1.reference)
+      .click('#unit-of-measurement-0-edit')
       .click('#unit-of-measurement-selector')
       .click('option[label="Proportion (decimal)"]')
       .click('#uom-save-button')
-      .assert.containsText('#unit-of-measurement-label-' + manualInputService.CRITERION1.title + '-' + manualInputService.DATA_SOURCE1.reference, 'Proportion')
-      .useXpath()
-      .assert.containsText(firstCell, 'Missing or invalid input')
-      .useCss();
+      .assert.containsText('#unit-of-measurement-0', 'Proportion')
+      .assert.containsText(firstCell, 'Missing or invalid input');
   },
 
   'Setting the strength of evidence and uncertainties': function(browser) {
@@ -118,12 +114,38 @@ module.exports = {
     browser
       .click('#enter-data-button')
       .waitForElementVisible('#manual-input-header-step2')
-      .click('#edit-soe-unc-c1-ref1')
+      .click('#strength-of-evidence-0-edit')
       .waitForElementVisible('#strength-of-evidence-input')
       .setValue('#strength-of-evidence-input', strength)
       .setValue('#uncertainties-input', uncertainties)
       .click('#save-soe-unc-button')
-      .assert.containsText('#strength-of-evidence-c1-ref1', 'SoE: ' + strength)
-      .assert.containsText('#uncertainties-c1-ref1', 'Unc: ' + uncertainties);
+      .assert.containsText('#strength-of-evidence-0', 'SoE: ' + strength)
+      .assert.containsText('#uncertainties-0', 'Unc: ' + uncertainties);
+  },
+
+  'Cancel editing unit of measurement': function(browser) {
+    manualInputService.createInputDefault(browser);
+    browser
+      .click('#enter-data-button')
+      .click('#unit-of-measurement-0-edit')
+      .setValue('#uom-label', 'kg')
+      .click('#uom-save-button')
+      .click('#unit-of-measurement-0-edit')
+      .setValue('#uom-label', 'l')
+      .click('#close-modal-button')
+      .assert.containsText('#unit-of-measurement-0', 'kg');
+  },
+
+  'Cancel editing uncertainty': function(browser) {
+    manualInputService.createInputDefault(browser);
+    browser
+      .click('#enter-data-button')
+      .click('#strength-of-evidence-0-edit')
+      .setValue('#uncertainties-input', 'none')
+      .click('#save-soe-unc-button')
+      .click('#strength-of-evidence-0-edit')
+      .setValue('#uncertainties-input', 'not none')
+      .click('#close-modal-button')
+      .assert.containsText('#uncertainties-0', 'Unc: none');
   }
 };
