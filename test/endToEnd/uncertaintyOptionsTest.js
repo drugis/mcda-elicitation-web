@@ -14,7 +14,7 @@ module.exports = {
     loginService.login(browser);
     workspaceService.addExample(browser, title);
     browser
-      .click('a[id="workspace-0"]')
+      .click('#workspace-0')
       .waitForElementVisible('#workspace-title');
   },
 

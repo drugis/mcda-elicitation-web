@@ -26,9 +26,9 @@ module.exports = {
 
   'Set partial value functions': function(browser) {
     browser
-      .click('#c1-pvf-button')
+      .click('#criterion-0-pvf-button')
       .click('#save-button')
-      .click('#c2-pvf-button')
+      .click('#criterion-1-pvf-button')
       .click('#increasing-pvf-option')
       .click('#piece-wise-pvf-option')
       .click('#next-button')
@@ -40,7 +40,7 @@ module.exports = {
 
   'Go to previous step': function(browser) {
     browser
-      .click('#c1-pvf-button')
+      .click('#criterion-0-pvf-button')
       .click('#piece-wise-pvf-option')
       .click('#next-button')
       .click('#previous-button')

@@ -26,8 +26,8 @@ function getFirstProperty(value) {
   return _.values(value)[0];
 }
 
-function isElementHidden(browser, path) {
-  browser.element('xpath', path, function(result) {
+function isElementHidden(browser, path, selectorType = 'xpath') {
+  browser.element(selectorType, path, function(result) {
     const elementId = getFirstProperty(result.value);
     browser.elementIdDisplayed(elementId, function(isDisplayedResult) {
       chai.expect(isDisplayedResult.value).to.be.false;

@@ -15,59 +15,63 @@ function checkValue(expectedValue, result) {
 
 function showDecimals(browser) {
   browser
-    .click('//*[@id="settings-button"]')
-    .click('//*[@id="show-decimals-radio"]')
-    .click('//*[@id="save-settings-button"]')
+    .useCss()
+    .click('#settings-button')
+    .click('#show-decimals-radio')
+    .click('#save-settings-button')
+    .useXpath()
     ;
 }
 
 function changeDeterministicTabSetting(browser, settingsPath, columnPath) {
-  browser.useXpath();
-  util.delayedClick(browser, '//*[@id="deterministic-tab"]', '//*[@id="sensitivity-measurements-header"]', util.xpathSelectorType);
-  browser.click('//*[@id="settings-button"]')
+  util.delayedClick(browser, '#deterministic-tab', '#sensitivity-measurements-header');
+  browser.click('#settings-button')
     .click(settingsPath)
-    .click('//*[@id="save-settings-button"]')
-    .waitForElementVisible('//*[@id="sensitivity-measurements-header"]');
+    .click('#save-settings-button')
+    .waitForElementVisible('#sensitivity-measurements-header');
 
-  util.isElementHidden(browser, columnPath);
-  browser.useCss();
+  util.isElementHidden(browser, columnPath, 'css selector');
 }
 
 function changeProblemDefinitionTabSetting(browser, settingsPath, columnPath) {
-  browser.useXpath();
-  util.delayedClick(browser, '//*[@id="problem-definition-tab"]', '//*[@id="effects-table-header"]', util.xpathSelectorType);
-  browser.click('//*[@id="settings-button"]')
+  util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header');
+  browser.click('#settings-button')
     .click(settingsPath)
-    .click('//*[@id="save-settings-button"]');
+    .click('#save-settings-button');
 
-  util.isElementHidden(browser, columnPath);
-  browser.useCss();
+  util.isElementHidden(browser, columnPath, 'css selector');
 }
 
 function showPercentagesAndValues(browser) {
   browser
-    .click('//*[@id="settings-button"]')
-    .click('//*[@id="show-percentages-radio"]')
-    .click('//*[@id="values-radio"]')
-    .click('//*[@id="save-settings-button"]');
+    .useCss()
+    .click('#settings-button')
+    .click('#show-percentages-radio')
+    .click('#values-radio')
+    .click('#save-settings-button')
+    .useXpath();
 }
 
 function showPercentagesAndSmaaEntered(browser) {
   browser
-    .click('//*[@id="settings-button"]')
-    .click('//*[@id="show-percentages-radio"]')
-    .click('//*[@id="entered-radio"]')
-    .click('//*[@id="smaa-radio"]')
-    .click('//*[@id="save-settings-button"]');
+    .useCss()
+    .click('#settings-button')
+    .click('#show-percentages-radio')
+    .click('#entered-radio')
+    .click('#smaa-radio')
+    .click('#save-settings-button')
+    .useXpath();
 }
 
 function showPercentagesAndSmaaValues(browser) {
   browser
-    .click('//*[@id="settings-button"]')
-    .click('//*[@id="show-percentages-radio"]')
-    .click('//*[@id="values-radio"]')
-    .click('//*[@id="smaa-radio"]')
-    .click('//*[@id="save-settings-button"]');
+    .useCss()
+    .click('#settings-button')
+    .click('#show-percentages-radio')
+    .click('#values-radio')
+    .click('#smaa-radio')
+    .click('#save-settings-button')
+    .useXpath();
 }
 
 module.exports = {
@@ -81,6 +85,7 @@ module.exports = {
   },
 
   afterEach: function(browser) {
+    browser.useCss();
     browser.click('#logo');
     workspaceService.deleteFromList(browser, 0);
     errorService.isErrorBarHidden(browser);
@@ -156,9 +161,10 @@ module.exports = {
     var unitsCellPath = '//*[@id="effectstable"]/tbody/tr[2]/td[3]';
     var scaleRangeCellPath = '//*[@id="scalestable"]/tbody/tr[1]/td[3]/span[1]';
 
-    browser.useXpath();
-    util.delayedClick(browser, '//*[@id="problem-definition-tab"]', '//*[@id="effects-table-header"]', util.xpathSelectorType);
-    browser.getValue(unitsCellPath, _.partial(checkValue, null))
+    util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header');
+    browser
+      .useXpath()
+      .getValue(unitsCellPath, _.partial(checkValue, null))
       .assert.containsText(effectTableCellPath, '60%')
       .assert.containsText(scaleRangeCellPath, '50');
 
@@ -211,74 +217,71 @@ module.exports = {
   },
 
   'Unselecting criterion column in problem definition tab': function(browser) {
-    var columnPath = '//*[@id="column-criterion"]';
-    var settingPath = '//*[@id="criterion-column-checkbox"]';
+    var columnPath = '#column-criterion';
+    var settingPath = '#criterion-column-checkbox';
     changeProblemDefinitionTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting description column in problem definition tab': function(browser) {
-    var columnPath = '//*[@id="column-description"]';
-    var settingPath = '//*[@id="description-column-checkbox"]';
+    var columnPath = '#column-description';
+    var settingPath = '#description-column-checkbox';
     changeProblemDefinitionTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting units column in problem definition tab': function(browser) {
-    var columnPath = '//*[@id="column-unit-of-measurement"]';
-    var settingPath = '//*[@id="units-column-checkbox"]';
+    var columnPath = '#column-unit-of-measurement';
+    var settingPath = '#units-column-checkbox';
     changeProblemDefinitionTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting uncertainties column in problem definition tab': function(browser) {
-    var columnPath = '//*[@id="column-strength-of-evidence"]';
-    var settingPath = '//*[@id="uncertainties-column-checkbox"]';
+    var columnPath = '#column-strength-of-evidence';
+    var settingPath = '#uncertainties-column-checkbox';
     changeProblemDefinitionTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting reference column in problem definition tab': function(browser) {
-    var columnPath = '//*[@id="column-references"]';
-    var settingPath = '//*[@id="reference-column-checkbox"]';
+    var columnPath = '#column-references';
+    var settingPath = '#reference-column-checkbox';
     changeProblemDefinitionTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting criterion column in deterministic results tab': function(browser) {
-    var columnPath = '//*[@id="column-criterion"]';
-    var settingPath = '//*[@id="criterion-column-checkbox"]';
+    var columnPath = '#column-criterion';
+    var settingPath = '#criterion-column-checkbox';
     changeDeterministicTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting description column in deterministic results tab': function(browser) {
-    var columnPath = '//*[@id="column-description"]';
-    var settingPath = '//*[@id="description-column-checkbox"]';
+    var columnPath = '#column-description';
+    var settingPath = '#description-column-checkbox';
     changeDeterministicTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting units column in deterministic results tab': function(browser) {
-    var columnPath = '//*[@id="column-unit-of-measurement"]';
-    var settingPath = '//*[@id="units-column-checkbox"]';
+    var columnPath = '#column-unit-of-measurement';
+    var settingPath = '#units-column-checkbox';
     changeDeterministicTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting uncertainties column in deterministic results tab': function(browser) {
-    var columnPath = '//*[@id="column-strength-of-evidence"]';
-    var settingPath = '//*[@id="uncertainties-column-checkbox"]';
+    var columnPath = '#column-strength-of-evidence';
+    var settingPath = '#uncertainties-column-checkbox';
     changeDeterministicTabSetting(browser, settingPath, columnPath);
   },
 
   'Unselecting reference column in deterministic results tab': function(browser) {
-    var columnPath = '//*[@id="column-references"]';
-    var settingPath = '//*[@id="reference-column-checkbox"]';
+    var columnPath = '#column-references';
+    var settingPath = '#reference-column-checkbox';
     changeDeterministicTabSetting(browser, settingPath, columnPath);
   },
 
   'Switching between median and mode in deterministic tab': function(browser) {
-    browser.useXpath();
-    util.delayedClick(browser, '//*[@id="deterministic-tab"]', '//*[@id="sensitivity-measurements-header"]', util.xpathSelectorType);
-    browser.click('//*[@id="settings-button"]')
-      .click('//*[@id="show-mode-radio"]')
-      .click('//*[@id="save-settings-button"]')
-      .waitForElementVisible('//*[@id="sensitivity-measurements-header"]');
-
-    browser.useCss();
+    util.delayedClick(browser, '#deterministic-tab', '#sensitivity-measurements-header');
+    browser.click('#settings-button')
+      .click('#show-mode-radio')
+      .click('#save-settings-button')
+      .waitForElementVisible('#sensitivity-measurements-header');
   },
 
   'Switching settings in the overview tab': function(browser) {
@@ -327,17 +330,16 @@ module.exports = {
 
     browser
       .assert.containsText(unitsCellPath, 'Proportion')
-      .assert.containsText(effectCellPath, '0.6')
-      .useCss();
+      .assert.containsText(effectCellPath, '0.6');
   },
 
   'Switching settings in the preferences tab': function(browser) {
     var effectCellPath = '//*[@id="trade-off-block"]/div[2]/table/tbody/tr[1]/td[4]';
     var unitsCellPath = '//*[@id="trade-off-block"]/div[2]/table/tbody/tr[1]/td[3]';
 
-    browser.useXpath();
-    util.delayedClick(browser, '//*[@id="preferences-tab"]', '//*[@id="partial-value-functions-header"]', util.xpathSelectorType);
+    util.delayedClick(browser, '#preferences-tab', '#partial-value-functions-header');
     browser
+      .useXpath()
       .assert.containsText(unitsCellPath, '%')
       .assert.containsText(effectCellPath, '45');
 
@@ -378,16 +380,16 @@ module.exports = {
 
     browser
       .assert.containsText(unitsCellPath, 'Proportion')
-      .assert.containsText(effectCellPath, '0.45')
-      .useCss();
+      .assert.containsText(effectCellPath, '0.45');
   },
 
   'Switching settings while setting the partial value function': function(browser) {
     var lowestOption = '//*[@id="decreasing-pvf-option"]';
 
-    browser.useXpath();
-    util.delayedClick(browser, '//*[@id="preferences-tab"]', '//*[@id="partial-value-functions-header"]', util.xpathSelectorType);
-    browser.click('//*[@id="criterion-0-pvf-button"]')
+    util.delayedClick(browser, '#preferences-tab', '#partial-value-functions-header');
+    browser
+      .click('#criterion-0-pvf-button')
+      .useXpath()
       .assert.containsText(lowestOption, '45 % is best');
 
     showDecimals(browser);
@@ -403,18 +405,16 @@ module.exports = {
     showPercentagesAndSmaaValues(browser);
     browser.assert.containsText(lowestOption, '45 % is best');
     showDecimals(browser);
-
-    browser
-      .assert.containsText(lowestOption, '0.45 is best')
-      .useCss();
+    browser.assert.containsText(lowestOption, '0.45 is best');
   },
 
   'Switching settings while setting the weights': function(browser) {
     var firstCriterion = '//*[@id="criterion-0"]';
 
-    browser.useXpath();
-    util.delayedClick(browser, '//*[@id="preferences-tab"]', '//*[@id="partial-value-functions-header"]', util.xpathSelectorType);
-    browser.click('//*[@id="ranking-button"]')
+    util.delayedClick(browser, '#preferences-tab', '#partial-value-functions-header');
+    browser
+      .click('#ranking-button')
+      .useXpath()
       .assert.containsText(firstCriterion, '2-year survival: 45 %');
 
     showDecimals(browser);
@@ -430,9 +430,6 @@ module.exports = {
     showPercentagesAndSmaaValues(browser);
     browser.assert.containsText(firstCriterion, '2-year survival: 45 %');
     showDecimals(browser);
-
-    browser
-      .assert.containsText(firstCriterion, '2-year survival: 0.45')
-      .useCss();
+    browser.assert.containsText(firstCriterion, '2-year survival: 0.45');
   }
 };

@@ -14,7 +14,7 @@ module.exports = {
     workspaceService.addExample(browser, title);
 
     browser
-      .click('a[id="workspace-0"]')
+      .click('#workspace-0')
       .waitForElementVisible('#workspace-title')
       .click('#smaa-tab')
       .waitForElementVisible('#uncertainty-measurements-checkbox:disabled')

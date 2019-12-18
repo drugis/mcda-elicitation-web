@@ -4,8 +4,8 @@ const loginService = require('./util/loginService');
 const errorService = require('./util/errorService');
 const util = require('./util/util');
 
-const closeModalButton = '//*[@id="close-modal-button"]';
-const deleteWorkspaceButton = '//*[@id="delete-workspace-0"]';
+const closeModalButton = '#close-modal-button';
+const deleteWorkspaceButton = '#delete-workspace-0';
 
 module.exports = {
   beforeEach: function(browser) {
@@ -14,33 +14,29 @@ module.exports = {
   },
 
   afterEach: function(browser) {
-    browser.waitForElementVisible('//*[@id="empty-workspace-message"]');
+    browser.waitForElementVisible('#empty-workspace-message');
     errorService.isErrorBarHidden(browser);
-    browser.useCss().end();
+    browser.end();
   },
 
   'Cancel adding a workspace': function(browser) {
-    var actionButtonPath = '//*[@id="create-workspace-button"]';
-    var cancelButtonPath = closeModalButton;
     browser
-      .useXpath()
-      .click(actionButtonPath)
-      .click(cancelButtonPath);
+      .click('#create-workspace-button')
+      .click(closeModalButton);
   },
 
   'Cancel deleting a workspace': function(browser) {
     browser
-      .useXpath()
-      .click('//*[@id="create-workspace-button"]')
-      .click('//*[@id="add-workspace-button"]')
-      .waitForElementVisible('//*[@id="workspace-title"]');
+      .click('#create-workspace-button')
+      .click('#add-workspace-button')
+      .waitForElementVisible('#workspace-title');
 
-    util.delayedClick(browser, '//*[@id="logo"]', deleteWorkspaceButton, util.xpathSelectorType);
+    util.delayedClick(browser, '#logo', deleteWorkspaceButton);
 
     browser.click(deleteWorkspaceButton)
       .click(closeModalButton)
-      .assert.containsText('//*[@id="workspace-0"]', 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)')
+      .assert.containsText('#workspace-0', 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)')
       .click(deleteWorkspaceButton)
-      .click('//*[@id="delete-workspace-confirm-button"]');
+      .click('#delete-workspace-confirm-button');
   }
 };

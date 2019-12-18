@@ -122,7 +122,7 @@ module.exports = {
     loginService.login(browser);
     goToPreferences(browser);
     browser
-      .click('#de14e778-f723-48d4-8f4e-1e589714f4f2-pvf-button')
+      .click('#criterion-0-pvf-button')
       .pause(2000)
       .getTitle(function(result) {
         chai.expect(result).to.equal('Treatment responders\'s partial value function');

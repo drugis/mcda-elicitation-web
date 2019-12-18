@@ -128,28 +128,30 @@ module.exports = {
   'Interacting with Willingness to trade off plot': function(browser) {
     const outcomeValue = 60;
 
-    browser.useXpath();
-    browser.expect.element('//*[@id="first-criterion-outcome-input"]').to.not.have.value.which.contains('.');
-    browser.expect.element('//*[@id="second-criterion-outcome-input"]').to.not.have.value.which.contains('.');
+    browser.expect.element('#first-criterion-outcome-input').to.not.have.value.which.contains('.');
+    browser.expect.element('#second-criterion-outcome-input').to.not.have.value.which.contains('.');
     browser
+      .useXpath()
       .waitForElementVisible('//willingness-to-trade-off-chart/div/div[1]/div')
       .getLocationInView('//willingness-to-trade-off-chart/div/div[1]/div')
       .moveToElement('//willingness-to-trade-off-chart/div/div[1]/div', 180, 170)
       .mouseButtonDown(0)
       .mouseButtonUp(0)
+      .useCss()
       ;
 
-    browser.expect.element('//*[@id="first-criterion-outcome-input"]').to.have.value.which.contains('.');
-    browser.expect.element('//*[@id="second-criterion-outcome-input"]').to.have.value.which.contains('.');
+    browser.expect.element('#first-criterion-outcome-input').to.have.value.which.contains('.');
+    browser.expect.element('#second-criterion-outcome-input').to.have.value.which.contains('.');
 
     browser
-      .waitForElementVisible('//*[@id="first-criterion-outcome-b-input"]')
-      .waitForElementVisible('//*[@id="second-criterion-outcome-b-input"]')
-      .waitForElementVisible('//*[@id="willingness-summary"]')
-      .waitForElementVisible('//*[@id="willingness-slider"]')
-      .clearValue('//*[@id="first-criterion-outcome-b-input"]')
-      .setValue('//*[@id="first-criterion-outcome-b-input"]', outcomeValue)
+      .waitForElementVisible('#first-criterion-outcome-b-input')
+      .waitForElementVisible('#second-criterion-outcome-b-input')
+      .waitForElementVisible('#willingness-summary')
+      .waitForElementVisible('#willingness-slider')
+      .clearValue('#first-criterion-outcome-b-input')
+      .setValue('#first-criterion-outcome-b-input', outcomeValue)
       .pause(500)
+      .useXpath()
       .assert.containsText('//willingness-to-trade-off-chart/div/div[2]/div/span[10]', outcomeValue)
       .useCss()
       ;
