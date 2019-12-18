@@ -14,7 +14,6 @@ module.exports = {
     workspaceService.copy(browser, 0, newTitle);
     workspaceService.deleteFromList(browser, 1);
     workspaceService.deleteFromList(browser, 0);
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   }
 };

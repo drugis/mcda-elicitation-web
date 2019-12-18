@@ -8,34 +8,33 @@ function addCriterion(browser) {
     .click('#add-criterion-button')
     .setValue('#criterion-title-input', 'c1')
     .click('#add-criterion-confirm-button');
+  return browser;
 }
 
 module.exports = {
   beforeEach: function(browser) {
     browser.resizeWindow(1366, 728);
-    loginService.login(browser);
-    browser
+    loginService.login(browser)
       .click('#create-workspace-button')
       .click('#manual-workspace-radio')
       .click('#add-workspace-button');
   },
 
   afterEach: function(browser) {
-    errorService.isErrorBarHidden(browser);
-    browser.useCss().end();
+    errorService.isErrorBarHidden(browser)
+      .useCss()
+      .end();
   },
 
   'During manual input, cancel adding a criterion': function(browser) {
-    addCriterion(browser);
-    browser
+    addCriterion(browser)
       .click('#add-criterion-button')
       .click('#close-modal-button')
       .assert.containsText('#error-1', 'At least two criteria required');
   },
 
   'During manual input, cancel adding a data source': function(browser) {
-    addCriterion(browser);
-    browser
+    addCriterion(browser)
       .click('#add-data-source-0')
       .click('#close-modal-button')
       .useXpath()
@@ -53,8 +52,7 @@ module.exports = {
   },
 
   'During manual input, cancel editing a criterion': function(browser) {
-    addCriterion(browser);
-    browser
+    addCriterion(browser)
       .click('#edit-criterion-0')
       .clearValue('#criterion-title-input')
       .click('#close-modal-button')
@@ -62,8 +60,7 @@ module.exports = {
   },
 
   'During manual input, cancel editing a data source': function(browser) {
-    addCriterion(browser);
-    browser
+    addCriterion(browser)
       .click('#add-data-source-0')
       .setValue('#data-source-reference', 'ref')
       .click('#add-data-source-button')

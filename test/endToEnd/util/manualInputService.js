@@ -21,6 +21,7 @@ function addCriterion(browser, criterion) {
     .setValue('#criterion-description-input', criterion.description)
     .click('#favorability-selector-' + criterion.favorability)
     .click('#add-criterion-confirm-button');
+  return browser;
 }
 
 function addDataSource(browser, path, dataSource) {
@@ -31,6 +32,7 @@ function addDataSource(browser, path, dataSource) {
     .setValue('#data-source-reference', dataSource.reference)
     .setValue('#data-source-url', dataSource.url)
     .click('#add-data-source-button');
+  return browser;
 }
 
 function addAlternative(browser, alternative) {
@@ -76,6 +78,7 @@ function createInputDefault(browser) {
   addDataSource(browser, CRITERION2_ADD_DATA_SOURCE, DATA_SOURCE2);
   addAlternative(browser, ALTERNATIVE1);
   addAlternative(browser, ALTERNATIVE2);
+  return browser;
 }
 
 function setValuesForRow(browser, rowNumber) {

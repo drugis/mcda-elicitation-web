@@ -33,8 +33,7 @@ module.exports = {
   beforeEach: function(browser) {
     browser.resizeWindow(1366, 728);
     loginService.login(browser);
-    workspaceService.addExample(browser, title);
-    browser
+    workspaceService.addExample(browser, title)
       .click('#workspace-0')
       .waitForElementVisible('#workspace-title')
       .click('#deterministic-tab')
@@ -45,8 +44,7 @@ module.exports = {
   afterEach: function(browser) {
     browser.click('#logo');
     workspaceService.deleteFromList(browser, 0);
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   },
 
   'Deterministic results': function(browser) {

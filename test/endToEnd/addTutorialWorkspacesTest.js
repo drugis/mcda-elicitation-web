@@ -12,8 +12,7 @@ function testTutorial(browser, title) {
 
 module.exports = {
   afterEach: function(browser) {
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   },
 
   'Add Lixisenatide simplified tutorial': function(browser) {

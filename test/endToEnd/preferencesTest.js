@@ -5,14 +5,11 @@ const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
 function loadTestWorkspace(browser) {
-  workspaceService.addExample(browser, 'GetReal course LU 4, activity 4.4');
-  browser
+  workspaceService.addExample(browser, 'GetReal course LU 4, activity 4.4')
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
 
-  errorService.isErrorBarHidden(browser);
-
-  browser
+  errorService.isErrorBarHidden(browser)
     .click('#preferences-tab')
     .waitForElementVisible('#partial-value-functions-block');
 }
@@ -44,8 +41,7 @@ module.exports = {
   afterEach: function(browser) {
     browser.click('#logo');
     workspaceService.deleteFromList(browser, 0);
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   },
 
   'Setting the weights through ranking': function(browser) {
@@ -137,8 +133,7 @@ module.exports = {
       .moveToElement('//willingness-to-trade-off-chart/div/div[1]/div', 180, 170)
       .mouseButtonDown(0)
       .mouseButtonUp(0)
-      .useCss()
-      ;
+      .useCss();
 
     browser.expect.element('#first-criterion-outcome-input').to.have.value.which.contains('.');
     browser.expect.element('#second-criterion-outcome-input').to.have.value.which.contains('.');
@@ -153,7 +148,6 @@ module.exports = {
       .pause(500)
       .useXpath()
       .assert.containsText('//willingness-to-trade-off-chart/div/div[2]/div/span[10]', outcomeValue)
-      .useCss()
-      ;
+      .useCss();
   }
 };

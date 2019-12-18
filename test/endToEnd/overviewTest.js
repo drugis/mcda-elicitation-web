@@ -11,12 +11,10 @@ const proximalDVTCriterionDescription = '#criterion-description-0';
 const heparinAlternative = '#alternative-title-0';
 
 function loadTestWorkspace(browser, title) {
-  workspaceService.addExample(browser, title);
-  browser
+  workspaceService.addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
-
-  errorService.isErrorBarHidden(browser);
+  return errorService.isErrorBarHidden(browser);
 }
 
 module.exports = {
@@ -28,16 +26,13 @@ module.exports = {
   afterEach: function(browser) {
     util.delayedClick(browser, '#logo', '#workspaces-header');
     workspaceService.deleteFromList(browser, 0);
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   },
 
   'The overview tab': function(browser) {
-    loadTestWorkspace(browser, title);
-
     const firstDistalDVTValue = '//*[@id="c-1-ds-0-a-0-table-cell"]/effects-table-cell/div/div';
 
-    browser
+    loadTestWorkspace(browser, title)
       .assert.containsText('#therapeutic-context', 'No description given.')
       .assert.containsText(proximalDVTCriterionTitle, 'Proximal DVT')
       .assert.containsText(heparinAlternative, 'Heparin')
@@ -48,9 +43,7 @@ module.exports = {
   },
 
   'Editing the therapeutic context': function(browser) {
-    loadTestWorkspace(browser, title);
-
-    browser
+    loadTestWorkspace(browser, title)
       .assert.containsText('#therapeutic-context', 'No description given.')
       .click('#edit-therapeutic-context-button')
       .waitForElementVisible('#therapeutic-context-header')
@@ -60,12 +53,10 @@ module.exports = {
   },
 
   'Editing a criterion': function(browser) {
-    loadTestWorkspace(browser, title);
-
     const newTitle = 'new title';
     const newDescription = 'new description';
 
-    browser
+    loadTestWorkspace(browser, title)
       .click('#edit-criterion-0')
       .waitForElementVisible('#criterion-title-input')
       .clearValue('#criterion-title-input')
@@ -79,8 +70,6 @@ module.exports = {
 
   'Editing a data source': function(browser) {
     const zinbryta = 'Zinbryta - initial regulatory review';
-    loadTestWorkspace(browser, zinbryta);
-
     const newUnit = 'new unit';
     const newReference = 'newReference';
     const newUrl = 'www.google.com';
@@ -88,7 +77,7 @@ module.exports = {
     const newUncertainties = 'very uncertain';
     const originalReference = 'Study 205MS301';
 
-    browser
+    loadTestWorkspace(browser, zinbryta)
       .assert.containsText('#data-source-reference-0-0', originalReference)
       .assert.containsText('#unit-of-measurement-0-0', 'Annual rate')
       .click('#edit-data-source-0-0')
@@ -111,10 +100,9 @@ module.exports = {
   },
 
   'Editing an alternative': function(browser) {
-    loadTestWorkspace(browser, title);
     const newTitle = 'new alternative';
 
-    browser
+    loadTestWorkspace(browser, title)
       .click('#edit-alternative-0')
       .waitForElementVisible('#alternative-title')
       .clearValue('#alternative-title')
@@ -124,10 +112,9 @@ module.exports = {
   },
 
   'Editing the workspace title': function(browser) {
-    loadTestWorkspace(browser, title);
     const newTitle = 'new workspace title';
 
-    browser
+    loadTestWorkspace(browser, title)
       .click('#edit-workspace-title-button')
       .clearValue('#workspace-title-input')
       .setValue('#workspace-title-input', newTitle)
@@ -135,12 +122,10 @@ module.exports = {
   },
 
   'Reordering criteria': function(browser) {
-    loadTestWorkspace(browser, title);
-
     const firstCriterionTitle = '#criterion-title-0';
     const firstCriterionDown = '#move-down-criterion-0';
 
-    browser
+    loadTestWorkspace(browser, title)
       .click(firstCriterionDown)
       .assert.containsText(firstCriterionTitle, 'Distal DVT')
       .click(firstCriterionDown)
@@ -148,13 +133,11 @@ module.exports = {
   },
 
   'Reordering alternatives': function(browser) {
-    loadTestWorkspace(browser, title);
-
     const firstAlternativeTitle = '#alternative-title-0';
     const heparinDown = '#move-down-alternative-0';
     const heparinUp = '#move-up-alternative-1';
 
-    browser
+    loadTestWorkspace(browser, title)
       .getLocationInView(heparinDown)
       .waitForElementVisible(heparinDown)
       .click(heparinDown)

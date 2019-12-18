@@ -8,10 +8,6 @@ const _ = require('lodash');
 
 const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
-function checkLabel(expectedValue, result) {
-  chai.expect(result.value).to.equal(expectedValue);
-}
-
 const placeboLabelInput = '#label-input-0';
 const fluoxLabelInput = '#label-input-1';
 const venlaLabelInput = '#label-input-2';
@@ -21,6 +17,11 @@ function checkDefaultNames(browser) {
     .getValue(placeboLabelInput, _.partial(checkLabel, 'Placebo'))
     .getValue(fluoxLabelInput, _.partial(checkLabel, 'Fluoxetine'))
     .getValue(venlaLabelInput, _.partial(checkLabel, 'Venlafaxine'));
+  return browser;
+}
+
+function checkLabel(expectedValue, result) {
+  chai.expect(result.value).to.equal(expectedValue);
 }
 
 function setSingleLetterNames(browser) {
@@ -29,14 +30,14 @@ function setSingleLetterNames(browser) {
     .getValue(placeboLabelInput, _.partial(checkLabel, 'A'))
     .getValue(fluoxLabelInput, _.partial(checkLabel, 'B'))
     .getValue(venlaLabelInput, _.partial(checkLabel, 'C'));
+  return browser;
 }
 
 module.exports = {
   beforeEach: function(browser) {
     browser.resizeWindow(1366, 728);
     loginService.login(browser);
-    workspaceService.addExample(browser, title);
-    browser
+    workspaceService.addExample(browser, title)
       .click('#workspace-0')
       .waitForElementVisible('#workspace-title');
   },
@@ -44,8 +45,7 @@ module.exports = {
   afterEach: function(browser) {
     browser.click('#logo');
     workspaceService.deleteFromList(browser, 0);
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   },
 
   'Changing alternatives to generated labels in deterministic view': function(browser) {
@@ -62,9 +62,7 @@ module.exports = {
       .useCss();
 
     checkDefaultNames(browser);
-    setSingleLetterNames(browser);
-
-    browser
+    setSingleLetterNames(browser)
       .clearValue(placeboLabelInput)
       .setValue(placeboLabelInput, 'plac')
       .getValue(placeboLabelInput, _.partial(checkLabel, 'plac'))
@@ -92,9 +90,7 @@ module.exports = {
       .useCss();
 
     checkDefaultNames(browser);
-    setSingleLetterNames(browser);
-
-    browser
+    setSingleLetterNames(browser)
       .clearValue(placeboLabelInput)
       .setValue(placeboLabelInput, 'plac')
       .getValue(placeboLabelInput, _.partial(checkLabel, 'plac'))
@@ -121,9 +117,7 @@ module.exports = {
       .click(legendButton)
       .useCss();
 
-    setSingleLetterNames(browser);
-
-    browser
+    setSingleLetterNames(browser)
       .click('#save-legend-button')
       .pause(500)
       .waitForElementVisible('#sensitivity-measurements-header')
@@ -139,8 +133,7 @@ module.exports = {
       .useCss()
       .click('#reset-labels-button');
 
-    checkDefaultNames(browser);
-    browser
+    checkDefaultNames(browser)
       .click('#save-legend-button')
       .pause(500)
       .waitForElementVisible('#sensitivity-measurements-header');

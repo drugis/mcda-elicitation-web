@@ -15,7 +15,6 @@ module.exports = {
     browser.assert.containsText('#workspace-title', title);
     util.delayedClick(browser, '#logo', '#workspaces-header');
     workspaceService.deleteFromList(browser, 0);
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   },
 };

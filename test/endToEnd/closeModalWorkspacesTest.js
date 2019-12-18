@@ -15,8 +15,7 @@ module.exports = {
 
   afterEach: function(browser) {
     browser.waitForElementVisible('#empty-workspace-message');
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   },
 
   'Cancel adding a workspace': function(browser) {
@@ -31,9 +30,8 @@ module.exports = {
       .click('#add-workspace-button')
       .waitForElementVisible('#workspace-title');
 
-    util.delayedClick(browser, '#logo', deleteWorkspaceButton);
-
-    browser.click(deleteWorkspaceButton)
+    util.delayedClick(browser, '#logo', deleteWorkspaceButton)
+      .click(deleteWorkspaceButton)
       .click(closeModalButton)
       .assert.containsText('#workspace-0', 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)')
       .click(deleteWorkspaceButton)

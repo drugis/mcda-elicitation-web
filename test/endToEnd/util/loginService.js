@@ -11,6 +11,7 @@ function login(browser, username = USER_NAME, password = CORRECT_PASSWORD) {
     .setValue('#username', username)
     .setValue('#password', password)
     .click('#signinButton');
+    return browser;
 }
 
 module.exports = {

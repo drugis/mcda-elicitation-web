@@ -10,14 +10,11 @@ const scenarioTitle = 'scenario title';
 module.exports = {
   beforeEach: function(browser) {
     loginService.login(browser);
-    workspaceService.addExample(browser, title);
-    browser
+    workspaceService.addExample(browser, title)
       .click('#workspace-0')
       .waitForElementVisible('#workspace-title');
 
-    errorService.isErrorBarHidden(browser);
-
-    browser
+    errorService.isErrorBarHidden(browser)
       .click('#preferences-tab')
       .pause(50)
       .waitForElementVisible('#partial-value-functions-block');
@@ -26,8 +23,7 @@ module.exports = {
   afterEach: function(browser) {
     browser.click('#logo');
     workspaceService.deleteFromList(browser, 0);
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   },
 
   'Creating a new scenario': function(browser) {

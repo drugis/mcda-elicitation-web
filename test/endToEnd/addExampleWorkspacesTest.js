@@ -12,8 +12,7 @@ function testExample(browser, title) {
 
 module.exports = {
   afterEach: function(browser) {
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   },
 
   'Add Antidepressants (Tervonen) example': function(browser) {

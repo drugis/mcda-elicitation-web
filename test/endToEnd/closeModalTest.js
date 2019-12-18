@@ -12,8 +12,7 @@ const closeModalButtonPath = '#close-modal-button';
 const cancelStep1Path = '#cancel-step1-button';
 
 function cancelAction(browser, paths, expectedValue) {
-  util.delayedClick(browser, paths.tab, paths.actionButton);
-  browser
+  util.delayedClick(browser, paths.tab, paths.actionButton)
     .click(paths.actionButton)
     .click(paths.cancelButton)
     .assert.containsText(paths.content, expectedValue);
@@ -31,8 +30,7 @@ module.exports = {
   beforeEach: function(browser) {
     browser.resizeWindow(1366, 728);
     loginService.login(browser);
-    workspaceService.addExample(browser, title);
-    browser
+    workspaceService.addExample(browser, title)
       .click('#workspace-0')
       .waitForElementVisible('#workspace-title');
   },
@@ -40,8 +38,7 @@ module.exports = {
   afterEach: function(browser) {
     util.delayedClick(browser, '#logo', '#workspaces-header');
     workspaceService.deleteFromList(browser, 0);
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   },
 
   'Cancel editing workspace title': function(browser) {
@@ -105,8 +102,7 @@ module.exports = {
   'Cancel editing a subproblem title': function(browser) {
     var actionButtonPath = '#edit-subproblem-button';
     var contentPath = '#subproblem-selector';
-    util.delayedClick(browser, '#problem-definition-tab', actionButtonPath);
-    browser
+    util.delayedClick(browser, '#problem-definition-tab', actionButtonPath)
       .click(actionButtonPath)
       .clearValue('#subproblem-title-input')
       .click(closeModalButtonPath)
@@ -177,8 +173,7 @@ module.exports = {
     var actionButtonPath = '#edit-scenario-button';
     var cancelButtonPath = closeModalButtonPath;
     var contentPath = '#scenario-selector';
-    util.delayedClick(browser, '#preferences-tab', actionButtonPath);
-    browser
+    util.delayedClick(browser, '#preferences-tab', actionButtonPath)
       .click(actionButtonPath)
       .clearValue('#new-scenario-title')
       .click(cancelButtonPath)
@@ -213,8 +208,7 @@ module.exports = {
       cancelButton: closeModalButtonPath,
       content: '#value-plot > svg:nth-child(1) > g:nth-child(2) > g:nth-child(6) > g:nth-child(2) > text:nth-child(2) > tspan:nth-child(1)'
     };
-    util.delayedClick(browser, paths.tab, paths.actionButton, util.xpathSelectorType);
-    browser
+    util.delayedClick(browser, paths.tab, paths.actionButton, util.xpathSelectorType)
       .useXpath()
       .click(paths.actionButton)
       .useCss()

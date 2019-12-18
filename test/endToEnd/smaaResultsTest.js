@@ -8,8 +8,8 @@ const chai = require('chai');
 
 function checkElementValueGreaterThan(browser, id, value) {
   browser.getText(id, function(result) {
-      chai.expect(parseFloat(result.value)).to.be.above(value);
-    });
+    chai.expect(parseFloat(result.value)).to.be.above(value);
+  });
 }
 
 function checkRankTable(browser) {
@@ -36,9 +36,7 @@ module.exports = {
     const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
     loginService.login(browser);
-    workspaceService.addExample(browser, title);
-
-    browser
+    workspaceService.addExample(browser, title)
       .click('#workspace-0')
       .waitForElementVisible('#workspace-title')
       .click('#smaa-tab')
@@ -60,7 +58,6 @@ module.exports = {
 
     browser.click('#logo');
     workspaceService.deleteFromList(browser, 0);
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   }
 };

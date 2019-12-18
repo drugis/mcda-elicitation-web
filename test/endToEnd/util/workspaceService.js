@@ -4,10 +4,10 @@ const errorService = require('./errorService.js');
 const util = require('./util.js');
 
 function goHomeAfterLoading(browser, title) {
-  errorService.isErrorBarHidden(browser);
-  browser.assert.containsText('#workspace-title', title);
-  util.delayedClick(browser, '#logo', '#workspaces-header');
-  browser.waitForElementVisible('#workspaces-header');
+  errorService.isErrorBarHidden(browser)
+    .assert.containsText('#workspace-title', title);
+  util.delayedClick(browser, '#logo', '#workspaces-header')
+    .waitForElementVisible('#workspaces-header');
 }
 
 function addExample(browser, title) {
@@ -19,6 +19,7 @@ function addExample(browser, title) {
     .click('option[label="' + title + '"]')
     .click('#add-workspace-button').pause(500);
   goHomeAfterLoading(browser, title);
+  return browser;
 }
 
 function addTutorial(browser, title) {
@@ -55,7 +56,6 @@ function uploadTestWorkspace(browser, path) {
     .click('#upload-workspace-radio')
     .setValue('#workspace-upload-input', require('path').resolve(__dirname + path))
     .click('#add-workspace-button').pause(500);
-
   errorService.isErrorBarHidden(browser);
 }
 

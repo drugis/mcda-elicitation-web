@@ -13,8 +13,8 @@ const subproblem1 = {
 
 function setupSubProblem(browser) {
   browser.waitForElementVisible('#workspace-title');
-  util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header');
-  browser.waitForElementVisible('#effects-table-header')
+  util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header')
+    .waitForElementVisible('#effects-table-header')
     .click('#create-subproblem-button')
     .waitForElementVisible('#create-subproblem-header')
     .waitForElementVisible('#create-new-subproblem-button:disabled')
@@ -26,6 +26,7 @@ function setupSubProblem(browser) {
     .click('#deselectionDataSourceId')
     .click('#deselectionCriterionId')
     .waitForElementVisible('#create-new-subproblem-button:enabled');
+  return browser;
 }
 
 module.exports = {
@@ -38,18 +39,17 @@ module.exports = {
     errorService.isErrorBarHidden(browser);
     util.delayedClick(browser, '#logo', '#workspaces-header');
     workspaceService.deleteFromList(browser, 0);
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   },
 
   'Create subproblem': function(browser) {
-    setupSubProblem(browser);
-    browser.click('#create-new-subproblem-button');
+    setupSubProblem(browser)
+      .click('#create-new-subproblem-button');
   },
 
   'Re-enabling datasources, and criteria during subproblem creation': function(browser) {
-    setupSubProblem(browser);
-    browser.click('#deselectionDataSourceId')
+    setupSubProblem(browser)
+      .click('#deselectionDataSourceId')
       .waitForElementVisible('#create-new-subproblem-button:disabled')
       .click('#deselectionDataSourceId')
       .waitForElementVisible('#create-new-subproblem-button:enabled')
@@ -62,8 +62,7 @@ module.exports = {
   },
 
   'Switching between subproblems': function(browser) {
-    setupSubProblem(browser);
-    browser
+    setupSubProblem(browser)
       .waitForElementVisible('#create-new-subproblem-button:enabled')
       .click('#create-new-subproblem-button')
       .assert.containsText('#subproblem-selector', subproblem1.title)
@@ -75,8 +74,8 @@ module.exports = {
   'Edit the title': function(browser) {
     const newTitle = 'not default';
     browser.waitForElementVisible('#workspace-title');
-    util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header');
-    browser.waitForElementVisible('#effects-table-header')
+    util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header')
+      .waitForElementVisible('#effects-table-header')
       .click('#edit-subproblem-button')
       .clearValue('#subproblem-title-input')
       .waitForElementVisible('#save-subproblem-button:disabled')
@@ -87,8 +86,7 @@ module.exports = {
   },
 
   'Reset during subproblem creation': function(browser) {
-    setupSubProblem(browser);
-    browser
+    setupSubProblem(browser)
       .waitForElementVisible('#create-new-subproblem-button:enabled')
       .click('#reset-subproblem-button')
       .waitForElementVisible('#create-new-subproblem-button:disabled')
@@ -100,7 +98,6 @@ module.exports = {
   },
 
   'Interact with scale sliders': function(browser) {
-    setupSubProblem(browser);
     const lowerValueLabel = '//*[@id="slider-0"]/div/span[10]';
     const upperValueLabel = '//*[@id="slider-0"]/div/span[11]';
     const moveFloor = '//*[@id="slider-0-floor"]';
@@ -110,7 +107,7 @@ module.exports = {
     const moveLowerValue = '//*[@id="slider-0"]/div/span[6]';
     const moveUpperValue = '//*[@id="slider-0"]/div/span[7]';
 
-    browser
+    setupSubProblem(browser)
       .useXpath()
       .assert.containsText(lowerValueLabel, '-200')
       .assert.containsText(upperValueLabel, '200')

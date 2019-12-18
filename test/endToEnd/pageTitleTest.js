@@ -14,8 +14,7 @@ function goToPreferences(browser) {
   browser
     .click('#create-workspace-button')
     .click('#add-workspace-button');
-
-  util.delayedClick(browser, '#preferences-tab', '#partial-value-functions-header');
+  return util.delayedClick(browser, '#preferences-tab', '#partial-value-functions-header');
 }
 
 function cleanUpWorkspace(browser) {
@@ -44,8 +43,7 @@ module.exports = {
   },
 
   'Workspaces': function(browser) {
-    loginService.login(browser);
-    browser
+    loginService.login(browser)
       .pause(3000)
       .getTitle(function(result) {
         chai.expect(result).to.equal('Workspaces');
@@ -54,8 +52,7 @@ module.exports = {
   },
 
   'A workspace overview': function(browser) {
-    loginService.login(browser);
-    browser
+    loginService.login(browser)
       .click('#create-workspace-button')
       .click('#add-workspace-button')
       .pause(2000)
@@ -66,23 +63,20 @@ module.exports = {
   },
 
   'A workspace problem definition': function(browser) {
-    loginService.login(browser);
-    browser
+    loginService.login(browser)
       .click('#create-workspace-button')
       .click('#add-workspace-button');
 
-    util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header');
-
-    browser.getTitle(function(result) {
-      chai.expect(result).to.equal(title + '\'s problem definition');
-    });
+    util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header')
+      .getTitle(function(result) {
+        chai.expect(result).to.equal(title + '\'s problem definition');
+      });
     cleanUpWorkspace(browser);
   },
 
   'A workspace preferences': function(browser) {
     loginService.login(browser);
-    goToPreferences(browser);
-    browser
+    goToPreferences(browser)
       .pause(2000)
       .getTitle(function(result) {
         chai.expect(result).to.equal(title + '\'s preferences');
@@ -91,37 +85,32 @@ module.exports = {
   },
 
   'A workspace deterministic results': function(browser) {
-    loginService.login(browser);
-    browser
+    loginService.login(browser)
       .click('#create-workspace-button')
       .click('#add-workspace-button');
 
-    util.delayedClick(browser, '#deterministic-tab', '#sensitivity-measurements-header');
-
-    browser.getTitle(function(result) {
-      chai.expect(result).to.equal(title + '\'s deterministic results');
-    });
+    util.delayedClick(browser, '#deterministic-tab', '#sensitivity-measurements-header')
+      .getTitle(function(result) {
+        chai.expect(result).to.equal(title + '\'s deterministic results');
+      });
     cleanUpWorkspace(browser);
   },
 
   'A workspace SMAA results': function(browser) {
-    loginService.login(browser);
-    browser
+    loginService.login(browser)
       .click('#create-workspace-button')
       .click('#add-workspace-button');
 
-    util.delayedClick(browser, '#smaa-tab', '#smaa-measurements-header');
-
-    browser.getTitle(function(result) {
-      chai.expect(result).to.equal(title + '\'s SMAA results');
-    });
+    util.delayedClick(browser, '#smaa-tab', '#smaa-measurements-header')
+      .getTitle(function(result) {
+        chai.expect(result).to.equal(title + '\'s SMAA results');
+      });
     cleanUpWorkspace(browser);
   },
 
   'Partial value function': function(browser) {
     loginService.login(browser);
-    goToPreferences(browser);
-    browser
+    goToPreferences(browser)
       .click('#criterion-0-pvf-button')
       .pause(2000)
       .getTitle(function(result) {
@@ -132,8 +121,7 @@ module.exports = {
 
   'Ranking weights': function(browser) {
     loginService.login(browser);
-    goToPreferences(browser);
-    browser
+    goToPreferences(browser)
       .click('#ranking-button')
       .pause(2000)
       .getTitle(function(result) {
@@ -144,8 +132,7 @@ module.exports = {
 
   'Matching weights': function(browser) {
     loginService.login(browser);
-    goToPreferences(browser);
-    browser
+    goToPreferences(browser)
       .click('#matching-button')
       .pause(2000)
       .getTitle(function(result) {
@@ -156,8 +143,7 @@ module.exports = {
 
   'Precise swing weighting': function(browser) {
     loginService.login(browser);
-    goToPreferences(browser);
-    browser
+    goToPreferences(browser)
       .click('#precise-swing-button')
       .pause(2000)
       .getTitle(function(result) {
@@ -168,8 +154,7 @@ module.exports = {
 
   'Imprecise swing weighting': function(browser) {
     loginService.login(browser);
-    goToPreferences(browser);
-    browser
+    goToPreferences(browser)
       .click('#imprecise-swing-button')
       .pause(2000)
       .getTitle(function(result) {
@@ -179,8 +164,7 @@ module.exports = {
   },
 
   'Manual input': function(browser) {
-    loginService.login(browser);
-    browser
+    loginService.login(browser)
       .click('#create-workspace-button')
       .click('#manual-workspace-radio')
       .click('#add-workspace-button')
@@ -192,8 +176,7 @@ module.exports = {
   },
 
   'Manual input in progress': function(browser) {
-    loginService.login(browser);
-    browser
+    loginService.login(browser)
       .click('#create-workspace-button')
       .click('#manual-workspace-radio')
       .click('#add-workspace-button')

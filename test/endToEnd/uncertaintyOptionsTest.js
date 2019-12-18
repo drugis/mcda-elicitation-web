@@ -12,8 +12,7 @@ const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat
 module.exports = {
   beforeEach: function(browser) {
     loginService.login(browser);
-    workspaceService.addExample(browser, title);
-    browser
+    workspaceService.addExample(browser, title)
       .click('#workspace-0')
       .waitForElementVisible('#workspace-title');
   },
@@ -21,16 +20,14 @@ module.exports = {
   afterEach: function(browser) {
     browser.click('#logo');
     workspaceService.deleteFromList(browser, 0);
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   },
 
   'Both selected by default': function(browser) {
     browser
       .click('#smaa-tab')
       .waitForElementVisible('#uncertainty-measurements-checkbox:checked')
-      .waitForElementVisible('#uncertainty-weights-checkbox:checked')
-      ;
+      .waitForElementVisible('#uncertainty-weights-checkbox:checked');
   },
 
   'Warning when both deselected': function(browser) {
@@ -38,8 +35,7 @@ module.exports = {
       .click('#smaa-tab')
       .click('#uncertainty-measurements-checkbox')
       .click('#uncertainty-weights-checkbox')
-      .assert.containsText('#warning-0', deterministicWarning)
-      ;
+      .assert.containsText('#warning-0', deterministicWarning);
   },
 
   'Warning when weights are not stochastic': function(browser) {
@@ -52,8 +48,7 @@ module.exports = {
       .click('#save-button')
       .click('#smaa-tab')
       .waitForElementVisible('#uncertainty-weights-checkbox:disabled')
-      .assert.containsText('#warning-0', hasNoStochasticWeightsWarning)
-      ;
+      .assert.containsText('#warning-0', hasNoStochasticWeightsWarning);
   },
 
   'Save settings': function(browser) {
@@ -62,7 +57,6 @@ module.exports = {
       .click('#uncertainty-weights-checkbox')
       .click('#recalculate-button')
       .waitForElementVisible('#uncertainty-measurements-checkbox:checked')
-      .assert.elementNotPresent('#uncertainty-weights-checkbox:checked')
-      ;
+      .assert.elementNotPresent('#uncertainty-weights-checkbox:checked');
   }
 };

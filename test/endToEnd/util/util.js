@@ -20,6 +20,7 @@ function delayedClick(browser, clickPath, expectPath, selectorType = 'css select
       }
     });
   }
+  return browser;
 }
 
 function getFirstProperty(value) {

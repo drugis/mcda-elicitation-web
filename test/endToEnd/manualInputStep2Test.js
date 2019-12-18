@@ -12,14 +12,11 @@ module.exports = {
   },
 
   afterEach: function(browser) {
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   },
 
   'Manual input of a workspace': function(browser) {
-    manualInputService.createInputDefault(browser);
-
-    browser
+    manualInputService.createInputDefault(browser)
       .click('#enter-data-button')
       .waitForElementVisible('#manual-input-header-step2');
 
@@ -30,9 +27,7 @@ module.exports = {
       .click('#done-button')
       .waitForElementVisible('#workspace-title');
 
-    errorService.isErrorBarHidden(browser);
-
-    browser
+    errorService.isErrorBarHidden(browser)
       .assert.containsText('#workspace-title', manualInputService.TITLE)
       .assert.containsText('#therapeutic-context', manualInputService.THERAPEUTIC_CONTEXT)
       .assert.containsText('#criterion-title-0', manualInputService.CRITERION1.title)
@@ -57,9 +52,7 @@ module.exports = {
   },
 
   'Navigating from manual input step2 to step1': function(browser) {
-    manualInputService.createInputDefault(browser);
-
-    browser
+    manualInputService.createInputDefault(browser)
       .click('#enter-data-button')
       .waitForElementVisible('#manual-input-header-step2')
       .click('#go-to-step1-button')
@@ -67,16 +60,13 @@ module.exports = {
   },
 
   'Saving during step 2': function(browser) {
-    manualInputService.createInputDefault(browser);
-
-    browser
+    manualInputService.createInputDefault(browser)
       .click('#enter-data-button')
       .waitForElementVisible('#manual-input-header-step2')
       .click('#step2-save-button')
       .refresh()
-      .waitForElementVisible('#manual-input-header-step2');
-
-    browser.click('#logo');
+      .waitForElementVisible('#manual-input-header-step2')
+      .click('#logo');
     workspaceService.deleteUnfinishedFromList(browser, 0);
   },
 
@@ -84,8 +74,7 @@ module.exports = {
     const firstCell = '#ds-0-a-0-input-cell';
     const unitLabel = 'UoM label';
 
-    manualInputService.createInputDefault(browser);
-    browser
+    manualInputService.createInputDefault(browser)
       .click('#enter-data-button')
       .waitForElementVisible('#manual-input-header-step2');
 
@@ -110,8 +99,7 @@ module.exports = {
     const strength = 'very strong';
     const uncertainties = 'but also very uncertain';
 
-    manualInputService.createInputDefault(browser);
-    browser
+    manualInputService.createInputDefault(browser)
       .click('#enter-data-button')
       .waitForElementVisible('#manual-input-header-step2')
       .click('#strength-of-evidence-0-edit')
@@ -124,8 +112,7 @@ module.exports = {
   },
 
   'Cancel editing unit of measurement': function(browser) {
-    manualInputService.createInputDefault(browser);
-    browser
+    manualInputService.createInputDefault(browser)
       .click('#enter-data-button')
       .click('#unit-of-measurement-0-edit')
       .setValue('#uom-label', 'kg')
@@ -137,8 +124,7 @@ module.exports = {
   },
 
   'Cancel editing uncertainty': function(browser) {
-    manualInputService.createInputDefault(browser);
-    browser
+    manualInputService.createInputDefault(browser)
       .click('#enter-data-button')
       .click('#strength-of-evidence-0-edit')
       .setValue('#uncertainties-input', 'none')
