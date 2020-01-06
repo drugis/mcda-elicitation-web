@@ -114,10 +114,9 @@
           <div class="js-toc-content cell large-9 medium-12 end">
             <h2 id="mcda-introduction">Introduction</h2>
             <p>This is the manual for the MCDA user interface for benefit-risk analysis. It starts with instructions
-              about
-              creating a workspace (based on a dataset), followed by a brief introduction to benefit-risk analysis, and
-              a
-              guide to the MCDA user interface itself.
+              about creating a workspace (based on a dataset), followed by a brief introduction to benefit-risk
+              analysis, and
+              a guide to the MCDA user interface itself.
             </p>
             <h3 id="mcda-preparing-dataset">Preparing your dataset</h3>
             <p>This section only applies to the stand-alone version of MCDA, hosted on <a
@@ -125,20 +124,17 @@
               In ADDIS (<a href="https://addis.drugis.org/">https://addis.drugis.org/</a>), this step is not necessary.
             </p>
             <p>After signing in to MCDA, you will be redirected to your personal home page. It contains a list of your
-              previously
-              created workspaces (which will be empty until you create one). A <i>workspace</i> is an abstract container
-              for a set of evidence, plus any filterings, transformations and analyses you may have performed for that
-              set
-              of evidence. Any unfinished workspaces in the process of manual entry will also be shown here. Clicking
-              the
-              'Create workspace' button will open a dialog that lets you choose what to base your workspace on: an
-              example
-              dataset selected by us, a file uploaded by you, or manual entry by you.</p>
+              previously-created workspaces (which will be empty until you create one). A <i>workspace</i> is an
+              abstract container for a set of evidence, plus any filterings, transformations and analyses you may have
+              performed for that set of evidence. Any unfinished workspaces in the process of manual entry will also be
+              shown here. Clicking the 'Create workspace' button will open a dialog that lets you choose what to base
+              your workspace on: an example dataset selected by us, a file uploaded by you, or manual entry by you.</p>
             <h4 id="data-upload">Data upload</h4>
             <p>
-              Datasets can be uploaded in JSON format. The JSON should contain the following entries (note that JSON is
-              case-sensitive):
+              Datasets can be uploaded in <a href="http://www.json.org/">JSON</a> format. The JSON should contain the
+              following entries (note that JSON is case-sensitive):
               <ul>
+                <li>schemaVersion</li>
                 <li>title</li>
                 <li>description</li>
                 <li>criteria</li>
@@ -148,7 +144,10 @@
               </ul>
             </p>
             <p>
-              The title and description properties should contain text.
+              The `schemaversion` property should indicate which version of our <a
+                href="https://github.com/drugis/mcda-elicitation-web/tree/master/schema">JSON schema</a> the file
+              follows.
+              The `title` and `description` properties should contain text.
             </p>
             <p>
               The criteria property should contain a series of properties with the names and details of the different
@@ -158,14 +157,15 @@
               "criteria": {
                 "HAM-D": {
                   "title": "HAM-D",
-                  "scale": [0.0, 1.0],
-                  "unitOfMeasurement": "Proportion",
+                  "id": "some-random-id",
                   "description": "Responders on the HAM-D rating scale",
-                  "pvf": {
-                    "direction": "increasing",
-                    "type": "linear",
-                    "range": [0.0, 1.0]
-                  }
+                  "dataSources": [{
+                    "source": "A certain study",
+                    "sourceLink": "https://example.com/studies/3",
+                    "scale": [0, 1]
+                    ],
+                    "unitOfMeasurement": "Proportion",
+                  }]
                 }
               }
             </pre>
@@ -174,13 +174,13 @@
               The alternatives property should contain the alternatives under investigation. For example:
               <pre>
               "alternatives": {
-                "Placebo": {
+                "placebo-id": {
                   "title": "Placebo"
                 },
-                "Fluox": {
+                "fluox-id": {
                   "title": "Fluoxetine"
                 },
-                "Parox": {
+                "parox-id": {
                   "title": "Paroxetine"
                 }
               }
