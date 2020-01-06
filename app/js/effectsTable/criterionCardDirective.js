@@ -95,9 +95,9 @@ define(['lodash'], function(_) {
               callback: function() {
                 return function(newDataSource) {
                   if (dataSource) {
-                    scope.problemCriterion.dataSources[dataSourceIndex] = newDataSource;
                     scope.criterion.dataSources[dataSourceIndex] = _.merge({}, dataSource, newDataSource);
                     if (!scope.isInput) {
+                      scope.problemCriterion.dataSources[dataSourceIndex] = newDataSource;
                       scope.saveWorkspace(scope.problemCriterion, scope.criterion.id);
                     }
                   } else {
@@ -106,10 +106,10 @@ define(['lodash'], function(_) {
                 };
               },
               dataSources: function() {
-                return scope.problemCriterion.dataSources;
+                return scope.isInput? scope.criterion.dataSources : scope.problemCriterion.dataSources;
               },
               dataSource: function() {
-                return scope.problemCriterion.dataSources[dataSourceIndex];
+                return  scope.isInput? scope.criterion.dataSources[dataSourceIndex] : scope.problemCriterion.dataSources[dataSourceIndex];
               }
             }
           });
