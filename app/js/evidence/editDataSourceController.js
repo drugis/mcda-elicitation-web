@@ -41,7 +41,6 @@ define(['lodash'], function(_) {
 
     checkErrors();
 
-    // public
     function save() {
       callback($scope.dataSource);
       $modalInstance.close();
@@ -53,7 +52,6 @@ define(['lodash'], function(_) {
       checkUrl();
     }
 
-    //private
     function checkMissingReference() {
       if (dataSources.length > 1 && !$scope.dataSource.source) {
         $scope.errors.push('Missing reference');
