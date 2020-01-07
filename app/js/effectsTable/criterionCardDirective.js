@@ -23,7 +23,7 @@ define(['lodash'], function(_) {
         'goUp': '=',
         'goDown': '=',
         'removeCriterion': '=',
-        'idx': '=',
+        'criterionIndex': '=',
         'editCriterion': '=',
         'isInput': '=',
         'saveOrdering': '=',
@@ -61,25 +61,25 @@ define(['lodash'], function(_) {
         }
 
         function criterionUp() {
-          scope.goUp(scope.idx);
+          scope.goUp(scope.criterionIndex);
           if (!scope.isInput) {
             scope.saveOrdering();
           }
         }
 
         function criterionDown() {
-          scope.goDown(scope.idx);
+          scope.goDown(scope.criterionIndex);
           if (!scope.isInput) {
             scope.saveOrdering();
           }
         }
 
-        function dataSourceDown(criterion, idx) {
-          swapAndSave(criterion.dataSources, idx, idx + 1);
+        function dataSourceDown(criterion, dataSourceIndex) {
+          swapAndSave(criterion.dataSources, dataSourceIndex, dataSourceIndex + 1);
         }
 
-        function dataSourceUp(criterion, idx) {
-          swapAndSave(criterion.dataSources, idx, idx - 1);
+        function dataSourceUp(criterion, dataSourceIndex) {
+          swapAndSave(criterion.dataSources, dataSourceIndex, dataSourceIndex - 1);
         }
 
         function removeDataSource(dataSource) {
@@ -114,8 +114,8 @@ define(['lodash'], function(_) {
         }
 
         // private
-        function swapAndSave(array, idx, newIdx) {
-          swap(array, idx, newIdx);
+        function swapAndSave(array, dataSourceIndex, newDataSourceIndex) {
+          swap(array, dataSourceIndex, newDataSourceIndex);
           if (!scope.isInput) {
             scope.saveOrdering();
           }

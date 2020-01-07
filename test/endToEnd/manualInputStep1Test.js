@@ -5,12 +5,12 @@ const manualInputService = require('./util/manualInputService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
-const CRITERION1_TITLE = '#criterion-title-0';
-const CRITERION3 = manualInputService.createCriterion('c3', 'favorable');
+const CRITERION_TITLE = '#criterion-title-0';
+const EXTRA_CRITERION = manualInputService.createCriterion('c3', 'favorable');
 
-const DATA_SOURCE1_TITLE = '//*[@id="criterion-0"]/div[2]/div/div[6]/table/tbody/tr/td[2]/em';
-const DATA_SOURCE1_REFERENCE = '#linked-data-source-reference-0-0';
-const DATA_SOURCE3 = manualInputService.createDataSource('ref3');
+const DATA_SOURCE_TITLE = '//*[@id="criterion-0"]/div[2]/div/div[6]/table/tbody/tr/td[2]/em';
+const DATA_SOURCE_REFERENCE = '#linked-data-source-reference-0-0';
+const EXTRA_DATA_SOURCE = manualInputService.createDataSource('ref3');
 
 const ALTERNATIVE1_TITLE = '#alternative-title-0';
 
@@ -36,7 +36,7 @@ module.exports = {
       .setValue('#criterion-description-input', newDescription)
       .click('#favorability-selector-unfavorable')
       .click('#add-criterion-confirm-button')
-      .assert.containsText(CRITERION1_TITLE, newTitle)
+      .assert.containsText(CRITERION_TITLE, newTitle)
       .assert.containsText('#criterion-description-0', 'Description: ' + newDescription);
   },
 
@@ -51,7 +51,7 @@ module.exports = {
       .clearValue('#data-source-url')
       .setValue('#data-source-url', newUrl)
       .click('#add-data-source-button')
-      .assert.containsText(DATA_SOURCE1_REFERENCE, newReference);
+      .assert.containsText(DATA_SOURCE_REFERENCE, newReference);
   },
 
   'Editing an alternative': function(browser) {
@@ -67,16 +67,16 @@ module.exports = {
 
   'Deleting a criterion': function(browser) {
     manualInputService.createInputDefault(browser);
-    manualInputService.addCriterion(browser, CRITERION3)
+    manualInputService.addCriterion(browser, EXTRA_CRITERION)
       .click('#delete-criterion-0')
-      .assert.containsText(CRITERION1_TITLE, CRITERION3.title);
+      .assert.containsText(CRITERION_TITLE, EXTRA_CRITERION.title);
   },
 
   'Deleting a data source': function(browser) {
     manualInputService.createInputDefault(browser)
       .click('#delete-data-source-0-0')
       .useXpath()
-      .assert.containsText(DATA_SOURCE1_TITLE, 'No data sources defined')
+      .assert.containsText(DATA_SOURCE_TITLE, 'No data sources defined')
       .useCss();
   },
 
@@ -88,11 +88,11 @@ module.exports = {
 
   'Moving criterion up and down': function(browser) {
     manualInputService.createInputDefault(browser);
-    manualInputService.addCriterion(browser, CRITERION3)
+    manualInputService.addCriterion(browser, EXTRA_CRITERION)
       .click('#move-up-criterion-1')
-      .assert.containsText(CRITERION1_TITLE, CRITERION3.title)
+      .assert.containsText(CRITERION_TITLE, EXTRA_CRITERION.title)
       .click('#move-down-criterion-0')
-      .assert.containsText(CRITERION1_TITLE, manualInputService.CRITERION1.title);
+      .assert.containsText(CRITERION_TITLE, manualInputService.CRITERION1.title);
   },
 
   'Moving data source up and down': function(browser) {
@@ -108,11 +108,11 @@ module.exports = {
 
     manualInputService.addCriterion(browser, manualInputService.CRITERION1);
     manualInputService.addDataSource(browser, manualInputService.CRITERION1_ADD_DATA_SOURCE, manualInputService.DATA_SOURCE1);
-    manualInputService.addDataSource(browser, manualInputService.CRITERION1_ADD_DATA_SOURCE, DATA_SOURCE3)
+    manualInputService.addDataSource(browser, manualInputService.CRITERION1_ADD_DATA_SOURCE, EXTRA_DATA_SOURCE)
       .click('#move-up-data-source-0-1')
-      .assert.containsText(DATA_SOURCE1_REFERENCE, DATA_SOURCE3.reference)
+      .assert.containsText(DATA_SOURCE_REFERENCE, EXTRA_DATA_SOURCE.reference)
       .click('#move-down-data-source-0-0')
-      .assert.containsText(DATA_SOURCE1_REFERENCE, manualInputService.DATA_SOURCE1.reference);
+      .assert.containsText(DATA_SOURCE_REFERENCE, manualInputService.DATA_SOURCE1.reference);
   },
 
   'Moving an alternative up and down': function(browser) {
@@ -128,7 +128,7 @@ module.exports = {
       .click('#step1-save-button')
       .refresh()
       .waitForElementVisible('#manual-input-header-step1')
-      .assert.containsText(CRITERION1_TITLE, manualInputService.CRITERION1.title)
+      .assert.containsText(CRITERION_TITLE, manualInputService.CRITERION1.title)
       .click('#logo');
     workspaceService.deleteUnfinishedFromList(browser, 0);
   },
@@ -147,17 +147,17 @@ module.exports = {
       .waitForElementVisible('#in-progress-workspace-0')
       .click('#in-progress-workspace-0')
       .waitForElementVisible('#manual-input-header-step1')
-      .assert.containsText(CRITERION1_TITLE, manualInputService.CRITERION1.title)
+      .assert.containsText(CRITERION_TITLE, manualInputService.CRITERION1.title)
       .click('#logo');
     workspaceService.deleteUnfinishedFromList(browser, 0);
   },
 
   'Checking and unchecking the favorability button should keep the criteria': function(browser) {
     manualInputService.createInputDefault(browser);
-    manualInputService.addCriterion(browser, CRITERION3)
+    manualInputService.addCriterion(browser, EXTRA_CRITERION)
       .click('#favorability-checkbox')
       .assert.containsText('#criterion-title-0', manualInputService.CRITERION1.title)
-      .assert.containsText('#criterion-title-1', CRITERION3.title)
+      .assert.containsText('#criterion-title-1', EXTRA_CRITERION.title)
       .assert.containsText('#criterion-title-2', manualInputService.CRITERION2.title);
   }
 };

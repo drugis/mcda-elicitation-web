@@ -39,10 +39,10 @@ module.exports = {
       .assert.containsText('#alternative-title-0', manualInputService.ALTERNATIVE1.title)
       .assert.containsText('#alternative-title-1', manualInputService.ALTERNATIVE2.title)
       .useXpath()
-      .assert.containsText('//*[@id="c-0-ds-0-a-0-table-cell"]/effects-table-cell/div/div', 7)
-      .assert.containsText('//*[@id="c-0-ds-0-a-1-table-cell"]/effects-table-cell/div/div', 8)
-      .assert.containsText('//*[@id="c-1-ds-0-a-0-table-cell"]/effects-table-cell/div/div', 8)
-      .assert.containsText('//*[@id="c-1-ds-0-a-1-table-cell"]/effects-table-cell/div/div', 9)
+      .assert.containsText('//*[@id="c-0-ds-0-a-0-table-cell"]/effects-table-cell/div/div', '7')
+      .assert.containsText('//*[@id="c-0-ds-0-a-1-table-cell"]/effects-table-cell/div/div', '8')
+      .assert.containsText('//*[@id="c-1-ds-0-a-0-table-cell"]/effects-table-cell/div/div', '8')
+      .assert.containsText('//*[@id="c-1-ds-0-a-1-table-cell"]/effects-table-cell/div/div', '9')
       .useCss()
       .click('#logo')
       .waitForElementVisible('#create-workspace-button');
@@ -62,10 +62,24 @@ module.exports = {
   'Saving during step 2': function(browser) {
     manualInputService.createInputDefault(browser)
       .click('#enter-data-button')
-      .waitForElementVisible('#manual-input-header-step2')
+      .waitForElementVisible('#manual-input-header-step2');
+
+    manualInputService.setValuesForRow(browser, 1);
+
+    browser
       .click('#step2-save-button')
       .refresh()
       .waitForElementVisible('#manual-input-header-step2')
+      .useXpath()
+      .assert.containsText('//*[@id="ds-0-a-0-input-cell"]', '7')
+      .assert.containsText('//*[@id="ds-0-a-1-input-cell"]', '8')
+      .useCss()
+      .click('#logo')
+      .click('#in-progress-workspace-0')
+      .useXpath()
+      .assert.containsText('//*[@id="ds-0-a-0-input-cell"]', '7')
+      .assert.containsText('//*[@id="ds-0-a-1-input-cell"]', '8')
+      .useCss()
       .click('#logo');
     workspaceService.deleteUnfinishedFromList(browser, 0);
   },
