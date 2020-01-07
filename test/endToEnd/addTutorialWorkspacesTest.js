@@ -5,16 +5,14 @@ const workspaceService = require('./util/workspaceService.js');
 const errorService = require('./util/errorService');
 
 function testTutorial(browser, title) {
-  const testUrl = require('./util/constants').testUrl;
-  loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+  loginService.login(browser);
   workspaceService.addTutorial(browser, title);
   workspaceService.deleteFromList(browser, 0);
 }
 
 module.exports = {
   afterEach: function(browser) {
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   },
 
   'Add Lixisenatide simplified tutorial': function(browser) {

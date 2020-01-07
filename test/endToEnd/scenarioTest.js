@@ -4,21 +4,17 @@ const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
 
-const testUrl = require('./util/constants').testUrl;
 const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 const scenarioTitle = 'scenario title';
 
 module.exports = {
   beforeEach: function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-    workspaceService.addExample(browser, title);
-    browser
+    loginService.login(browser);
+    workspaceService.addExample(browser, title)
       .click('#workspace-0')
       .waitForElementVisible('#workspace-title');
 
-    errorService.isErrorBarHidden(browser);
-
-    browser
+    errorService.isErrorBarHidden(browser)
       .click('#preferences-tab')
       .pause(50)
       .waitForElementVisible('#partial-value-functions-block');
@@ -27,8 +23,7 @@ module.exports = {
   afterEach: function(browser) {
     browser.click('#logo');
     workspaceService.deleteFromList(browser, 0);
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   },
 
   'Creating a new scenario': function(browser) {

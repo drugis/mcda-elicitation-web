@@ -5,19 +5,15 @@ const _ = require('lodash');
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
-
-const testUrl = require('./util/constants').testUrl;
+const util = require('./util/util');
 
 const subproblem1 = {
   title: 'subproblem1'
 };
-const workspacePath = '/createSubproblemTestProblem.json';
-const title = 'Test workspace';
 
 function setupSubProblem(browser) {
-  browser
-    .waitForElementVisible('#workspace-title')
-    .click('#problem-definition-tab')
+  browser.waitForElementVisible('#workspace-title');
+  util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header')
     .waitForElementVisible('#effects-table-header')
     .click('#create-subproblem-button')
     .waitForElementVisible('#create-subproblem-header')
@@ -30,30 +26,30 @@ function setupSubProblem(browser) {
     .click('#deselectionDataSourceId')
     .click('#deselectionCriterionId')
     .waitForElementVisible('#create-new-subproblem-button:enabled');
+  return browser;
 }
 
 module.exports = {
   beforeEach: function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-    workspaceService.uploadTestWorkspace(browser, workspacePath);
+    loginService.login(browser);
+    workspaceService.uploadTestWorkspace(browser, '/createSubproblemTestProblem.json');
   },
 
   afterEach: function(browser) {
     errorService.isErrorBarHidden(browser);
-    browser.pause(50).click('#logo');
+    util.delayedClick(browser, '#logo', '#workspaces-header');
     workspaceService.deleteFromList(browser, 0);
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   },
 
   'Create subproblem': function(browser) {
-    setupSubProblem(browser);
-    browser.click('#create-new-subproblem-button');
+    setupSubProblem(browser)
+      .click('#create-new-subproblem-button');
   },
 
   'Re-enabling datasources, and criteria during subproblem creation': function(browser) {
-    setupSubProblem(browser);
-    browser.click('#deselectionDataSourceId')
+    setupSubProblem(browser)
+      .click('#deselectionDataSourceId')
       .waitForElementVisible('#create-new-subproblem-button:disabled')
       .click('#deselectionDataSourceId')
       .waitForElementVisible('#create-new-subproblem-button:enabled')
@@ -66,8 +62,7 @@ module.exports = {
   },
 
   'Switching between subproblems': function(browser) {
-    setupSubProblem(browser);
-    browser
+    setupSubProblem(browser)
       .waitForElementVisible('#create-new-subproblem-button:enabled')
       .click('#create-new-subproblem-button')
       .assert.containsText('#subproblem-selector', subproblem1.title)
@@ -78,9 +73,8 @@ module.exports = {
 
   'Edit the title': function(browser) {
     const newTitle = 'not default';
-    browser
-      .waitForElementVisible('#workspace-title')
-      .click('#problem-definition-tab')
+    browser.waitForElementVisible('#workspace-title');
+    util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header')
       .waitForElementVisible('#effects-table-header')
       .click('#edit-subproblem-button')
       .clearValue('#subproblem-title-input')
@@ -92,8 +86,7 @@ module.exports = {
   },
 
   'Reset during subproblem creation': function(browser) {
-    setupSubProblem(browser);
-    browser
+    setupSubProblem(browser)
       .waitForElementVisible('#create-new-subproblem-button:enabled')
       .click('#reset-subproblem-button')
       .waitForElementVisible('#create-new-subproblem-button:disabled')
@@ -105,17 +98,16 @@ module.exports = {
   },
 
   'Interact with scale sliders': function(browser) {
-    setupSubProblem(browser);
-    const lowerValueLabel = '//div[13]/ul/li[1]/div/div[2]/div/span[10]';
-    const upperValueLabel = '//div[13]/ul/li[1]/div/div[2]/div/span[11]';
-    const moveFloor = '//div[13]/ul/li[1]/div/div[1]/a';
-    const moveCeil = '//div[13]/ul/li[1]/div/div[3]/a';
-    const floorLabel = '//div[13]/ul/li[1]/div/div[2]/div/span[8]';
-    const ceilLabel = '//div[13]/ul/li[1]/div/div[2]/div/span[9]';
-    const moveLowerValue = '//div[13]/ul/li[1]/div/div[2]/div/span[6]';
-    const moveUpperValue = '//div[13]/ul/li[1]/div/div[2]/div/span[7]';
+    const lowerValueLabel = '//*[@id="slider-0"]/div/span[10]';
+    const upperValueLabel = '//*[@id="slider-0"]/div/span[11]';
+    const moveFloor = '//*[@id="slider-0-floor"]';
+    const moveCeil = '//*[@id="slider-0-ceil"]';
+    const floorLabel = '//*[@id="slider-0"]/div/span[8]';
+    const ceilLabel = '//*[@id="slider-0"]/div/span[9]';
+    const moveLowerValue = '//*[@id="slider-0"]/div/span[6]';
+    const moveUpperValue = '//*[@id="slider-0"]/div/span[7]';
 
-    browser
+    setupSubProblem(browser)
       .useXpath()
       .assert.containsText(lowerValueLabel, '-200')
       .assert.containsText(upperValueLabel, '200')

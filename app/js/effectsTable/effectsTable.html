@@ -15,33 +15,33 @@
     <table class="full-width effects-table" id="effectstable">
       <thead>
         <tr>
-          <th ng-show="toggledColumns['criteria']" ng-class="{resizableColumn: isChrome}">
+          <th id="column-criterion" ng-show="toggledColumns['criteria']" ng-class="{resizableColumn: isChrome}">
             <div ng-class="{resizableColumn: isFirefox}">
               Criterion <inline-help help-key="criterion"></inline-help>
             </div>
           </th>
-          <th ng-show="toggledColumns['description']" ng-class="{resizableColumn: isChrome}">
+          <th id="column-description" ng-show="toggledColumns['description']" ng-class="{resizableColumn: isChrome}">
             <div ng-class="{resizableColumn: isFirefox}">
               Description
             </div>
           </th>
-          <th ng-show="toggledColumns['units']" ng-class="{resizableColumn: isChrome}">
+          <th id="column-unit-of-measurement" ng-show="toggledColumns['units']" ng-class="{resizableColumn: isChrome}">
             <div ng-class="{resizableColumn: isFirefox}">
               Units <inline-help help-key="criterion-unit"></inline-help>
             </div>
           </th>
-          <th class="text-center" ng-repeat="alternative in alternatives" ng-class="{resizableColumn: isChrome}">
+          <th id="column-alternative-{{ $index }}" class="text-center" ng-repeat="alternative in alternatives" ng-class="{resizableColumn: isChrome}">
             <div ng-class="{resizableColumn: isFirefox}">
               {{alternative.title}}
             </div>
           </th>
-          <th ng-show="toggledColumns['strength']" ng-class="{resizableColumn: isChrome}">
+          <th id="column-strength-of-evidence" ng-show="toggledColumns['strength']" ng-class="{resizableColumn: isChrome}">
             <div ng-class="{resizableColumn: isFirefox}">
               Strength of evidence <inline-help help-key="strength-of-evidence"></inline-help> 
               / Uncertainties <inline-help help-key="uncertainties"></inline-help>
             </div>
           </th>
-          <th ng-show="toggledColumns['references']" ng-class="{resizableColumn: isChrome}">
+          <th id="column-references" ng-show="toggledColumns['references']" ng-class="{resizableColumn: isChrome}">
             <div ng-class="{resizableColumn: isFirefox}">
               References <inline-help help-key="criterion-source"></inline-help>
             </div>

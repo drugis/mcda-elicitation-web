@@ -8,6 +8,7 @@ function isErrorBarNotPresent(browser) {
 
 function isErrorBarHidden(browser) {
   util.isElementHidden(browser, '/html/body/error-reporting');
+  return browser;
 }
 
 module.exports = {

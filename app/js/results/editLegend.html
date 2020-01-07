@@ -28,7 +28,7 @@
                 <i class="fa fa-long-arrow-right"></i>
               </td>
               <td class="input-cell noborder">
-                <input id="label-input-{{ alternativeId }}" type="text" ng-model="legend[alternativeId].newTitle"
+                <input id="label-input-{{ $index }}" type="text" ng-model="legend[alternativeId].newTitle"
                   ng-change="checkForMissingLabel()">
               </td>
             </tr>

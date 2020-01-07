@@ -14,15 +14,15 @@
           <b>{{state.criterion.title}}</b>
         </div>
         <div class="cell">
-          <label>
-            <input id="decreasing-pvf-option" type="radio" ng-model="state.choice.pvf.direction" value="decreasing"
+          <label id="decreasing-pvf-option" >
+            <input type="radio" ng-model="state.choice.pvf.direction" value="decreasing"
               ng-change="updatePlot(state.criterion)" ng-selected="state.choice.pvf.direction ==='decreasing'">
             {{state.choice.pvf.range[0] | number}}{{unitOfMeasurement}} is best
           </label>
         </div>
         <div class="cell">
-          <label>
-            <input id="increasing-pvf-option" type="radio" ng-model="state.choice.pvf.direction" value="increasing"
+          <label id="increasing-pvf-option">
+            <input type="radio" ng-model="state.choice.pvf.direction" value="increasing"
               ng-change="updatePlot(state.criterion)" ng-selected="state.choice.pvf.direction === 'increasing'">
             {{state.choice.pvf.range[1] | number}}{{unitOfMeasurement}} is best
           </label>
@@ -31,14 +31,14 @@
           <b>Type of function <inline-help help-key="pvf-type"></inline-help></b>
         </div>
         <div class="cell">
-          <label>
-            <input id="linear-pvf-option" type="radio" ng-model="state.choice.pvf.type" value="linear">
+          <label id="linear-pvf-option">
+            <input type="radio" ng-model="state.choice.pvf.type" value="linear">
             Linear
           </label>
         </div>
         <div class="cell">
-          <label>
-            <input id="piece-wise-pvf-option" type="radio" ng-model="state.choice.pvf.type" value="piecewise-linear">
+          <label id="piece-wise-pvf-option">
+            <input type="radio" ng-model="state.choice.pvf.type" value="piecewise-linear">
             Piece-wise linear
           </label>
         </div>
