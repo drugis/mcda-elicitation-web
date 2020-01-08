@@ -46,14 +46,14 @@
         <tr ng-repeat="alternative in orderedAlternatives" class="text-center">
           <td ng-if="editMode.canEdit">
             <div style="line-height: 10px; margin-bottom: 4px;">
-              <a id="move-up-alternative-{{ alternative.id }}" ng-click="alternativeUp($index)" class="nav-arrow"
+              <a id="move-up-alternative-{{ $index }}" ng-click="alternativeUp($index)" class="nav-arrow"
                 ng-if="$index !== 0">
                 <i style="line-height:0px;" class="fa fa-caret-up"></i>
               </a>
               <i ng-if="$index === 0" style="line-height:0px; color:#bbb" class="fa fa-caret-up"></i>
             </div>
             <div style="line-height: 10px;">
-              <a id="move-down-alternative-{{ alternative.id }}" ng-click="alternativeDown($index)" class="nav-arrow"
+              <a id="move-down-alternative-{{ $index }}" ng-click="alternativeDown($index)" class="nav-arrow"
                 ng-if="$index !== orderedAlternatives.length-1">
                 <i style="line-height:0px;" class="fa fa-caret-down"></i>
               </a>
@@ -61,11 +61,11 @@
                 class="fa fa-caret-down"></i>
             </div>
           </td>
-          <td id="alternative-title-{{ alternative.id }}">
+          <td id="alternative-title-{{ $index }}">
             {{alternative.title}}
           </td>
           <td ng-if="editMode.canEdit && isStandAlone" class="text-center">
-            <a id="alternative-edit-button-{{ alternative.id }}" ng-if="editMode.canEdit && isStandAlone"
+            <a id="edit-alternative-{{ $index }}" ng-if="editMode.canEdit && isStandAlone"
               ng-click="editAlternative(alternative)">
               <i class="fa fa-edit"></i>
             </a>

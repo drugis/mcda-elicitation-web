@@ -51,7 +51,7 @@
             {{problem.criteria[row.criterion.id].dataSources[0].unitOfMeasurement.label}}
           </td>
           <td ng-if="!row.isHeaderRow" class="text-center" ng-repeat="alternative in alternatives">
-            <div id="{{ row.criterion.id }}-{{ alternative.id }}-measurement">
+            <div id="criterion-{{ $parent.$index }}-alternative-{{ $index }}-measurement">
               {{scalesRounded[row.dataSource.id][alternative.id]['50%']}}
             </div>
             <div class="uncertain">

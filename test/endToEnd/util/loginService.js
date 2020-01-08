@@ -1,21 +1,19 @@
 'use strict';
 
-const username = 'user';
-const correctPassword = 'test';
-const incorrectPassword = 'notapassword';
+const TEST_URL = require('./constants').TEST_URL;
+const USER_NAME = 'user';
+const CORRECT_PASSWORD = 'test';
 
-function login(browser, url, username, password) {
+function login(browser, username = USER_NAME, password = CORRECT_PASSWORD) {
   browser
-    .url(url)
+    .url(TEST_URL)
     .waitForElementVisible('#signinButton')
     .setValue('#username', username)
     .setValue('#password', password)
     .click('#signinButton');
+    return browser;
 }
 
 module.exports = {
-  login: login,
-  username: username,
-  correctPassword: correctPassword,
-  incorrectPassword: incorrectPassword
+  login: login
 };

@@ -7,8 +7,6 @@ const errorService = require('./util/errorService');
 
 const chai = require('chai');
 
-const testUrl = require('./util/constants').testUrl;
-
 function checkElementValueGreaterThan(browser, path, value) {
   browser
     .useXpath()
@@ -34,9 +32,8 @@ const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat
 module.exports = {
   beforeEach: function(browser) {
     browser.resizeWindow(1366, 728);
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-    workspaceService.addExample(browser, title);
-    browser
+    loginService.login(browser);
+    workspaceService.addExample(browser, title)
       .click('#workspace-0')
       .waitForElementVisible('#workspace-title')
       .click('#deterministic-tab')
@@ -47,8 +44,7 @@ module.exports = {
   afterEach: function(browser) {
     browser.click('#logo');
     workspaceService.deleteFromList(browser, 0);
-    errorService.isErrorBarHidden(browser);
-    browser.end();
+    errorService.isErrorBarHidden(browser).end();
   },
 
   'Deterministic results': function(browser) {
@@ -60,8 +56,8 @@ module.exports = {
       .waitForElementVisible('#preferences-sensitivity-plot');
 
     const measurementValuePath = '//sensitivity-table//tr[2]/td[4]//span[1]';
-    const weightValuePath = '//*[@id="de14e778-f723-48d4-8f4e-1e589714f4f2-weight"]';
-    const baseCaseValuePath = '//*[@id="38deaf60-9014-4af9-997e-e5f08bc8c8ff-base-case"]';
+    const weightValuePath = '//*[@id="criterion-0-weight"]';
+    const baseCaseValuePath = '//*[@id="alternative-0-base-case"]';
 
     checkElementValueGreaterThan(browser, measurementValuePath, 30);
     checkElementValueGreaterThan(browser, weightValuePath, 0.2);
@@ -85,7 +81,7 @@ module.exports = {
       .waitForElementVisible('//*[@id="recalculated-case-plot"]')
       .useCss();
 
-    const recalculatedCaseValuePath = '//*[@id="38deaf60-9014-4af9-997e-e5f08bc8c8ff-recalculated-case"]';
+    const recalculatedCaseValuePath = '//*[@id="alternative-0-recalculated-case"]';
     checkElementValueGreaterThan(browser, recalculatedCaseValuePath, 0.85);
 
     browser.click('#reset-button');
