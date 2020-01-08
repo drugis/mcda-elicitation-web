@@ -168,68 +168,6 @@ define([
       });
     });
 
-    describe('getBarChartSettings', function() {
-      it('should return the settings for a bar chart', function() {
-        const results = [{
-          values: [{
-            value: 1,
-            label: 'label 1'
-          }, {
-            value: 2,
-            label: 'label 2'
-          }]
-        }];
-
-        var result = smaaResultsService.getBarChartSettings(results, root);
-        delete result.axis.y.tick.format;
-
-        const values = [
-          ['x', 'label 1', 'label 2'],
-          ['Rank', 1, 2]
-        ];
-        const expectedResult = {
-          bindto: root,
-          data: {
-            x: 'x',
-            columns: values,
-            type: 'bar'
-          },
-          axis: {
-            x: {
-              type: 'category',
-              tick: {
-                centered: true
-              }
-            },
-            y: {
-              tick: {
-                count: 5,
-              },
-              padding: {
-                top: 0,
-                bottom: 0
-              }
-            }
-          },
-          grid: {
-            x: {
-              show: false
-            },
-            y: {
-              show: true
-            }
-          },
-          legend: {
-            show: false
-          },
-          tooltip: {
-            show: false
-          }
-        };
-        expect(result).toEqual(expectedResult);
-      });
-    });
-
     describe('getCentralWeightsPlotSettings', function() {
       it('should return the settings for the central weights plot', function() {
         const results = [{

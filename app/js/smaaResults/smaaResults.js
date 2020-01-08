@@ -2,7 +2,6 @@
 define([
   './smaaResultsController',
 
-  './barChartDirective',
   './centralWeightsDirective',
   './centralWeightsPlotDirective',
   './heatMapDirective',
@@ -18,7 +17,6 @@ define([
 ], function(
   SmaaResultsController,
 
-  barChartDirective,
   centralWeightsDirective,
   centralWeightsPlotDirective,
   heatMapDirective,
@@ -34,7 +32,6 @@ define([
   return angular.module('elicit.smaaResults', ['patavi', 'elicit.results'])
     .controller('SmaaResultsController', SmaaResultsController)
 
-    .directive('barChart', barChartDirective)
     .directive('centralWeights', centralWeightsDirective)
     .directive('centralWeightsPlot', centralWeightsPlotDirective)
     .directive('heatMap', heatMapDirective)

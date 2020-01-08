@@ -44,8 +44,6 @@ module.exports = {
       .waitForElementVisible('#smaa-table')
       .waitForElementVisible('#rank-plot')
       .waitForElementVisible('#rank-table')
-      .waitForElementVisible('#alternatives-per-rank-bar-chart')
-      .waitForElementVisible('#rank-per-alternatives-bar-chart')
       .waitForElementVisible('#central-weights-plot')
       .waitForElementVisible('#central-weights-table');
 

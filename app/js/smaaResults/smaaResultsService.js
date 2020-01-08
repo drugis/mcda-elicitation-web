@@ -218,64 +218,6 @@ define([
       return settings;
     }
 
-    function getBarChartSettings(results, root) {
-      var values = smaaResultsToBarChartValues(results);
-      var settings = {
-        bindto: root,
-        data: {
-          x: 'x',
-          columns: values,
-          type: 'bar'
-        },
-        axis: {
-          x: {
-            type: 'category',
-            tick: {
-              centered: true
-            }
-          },
-          y: {
-            tick: {
-              count: 5,
-              format: d3.format(',.3g')
-            },
-            padding: {
-              top: 0,
-              bottom: 0
-            }
-          }
-        },
-        grid: {
-          x: {
-            show: false
-          },
-          y: {
-            show: true
-          }
-        },
-        legend: {
-          show: false
-        },
-        tooltip: {
-          show: false
-        }
-      };
-      return settings;
-    }
-
-    function smaaResultsToBarChartValues(results) {
-      var values = getBarChartTitles(results[0].values);
-      return values.concat(getBarChartValues(results[0].values));
-    }
-
-    function getBarChartTitles(values) {
-      return [['x'].concat(_.map(values, 'label'))];
-    }
-
-    function getBarChartValues(values) {
-      return [['Rank'].concat(_.map(values, 'value'))];
-    }
-
     function getCentralWeightsPlotSettings(results, root) {
       var values = smaaResultsToCentralWeightsChartValues(results);
       var settings = {
@@ -342,7 +284,6 @@ define([
     }
 
     return {
-      getBarChartSettings: getBarChartSettings,
       getCentralWeightsPlotSettings: getCentralWeightsPlotSettings,
       getRankPlotSettings: getRankPlotSettings,
       getResults: getResults,
