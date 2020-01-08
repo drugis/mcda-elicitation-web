@@ -32,12 +32,9 @@ function addTutorial(browser, title) {
 }
 
 function copy(browser, index, newTitle) {
-  browser
+  return browser
     .click('#copy-workspace-' + index)
-    .setValue('#workspace-title', newTitle)
-    .click('#enter-data-button')
-    .click('#done-button').pause(500);
-  goHomeAfterLoading(browser, newTitle);
+    .setValue('#workspace-title', newTitle);
 }
 
 function deleteFromList(browser, index) {
@@ -71,5 +68,6 @@ module.exports = {
   copy: copy,
   deleteFromList: deleteFromList,
   deleteUnfinishedFromList: deleteUnfinishedFromList,
-  uploadTestWorkspace: uploadTestWorkspace
+  uploadTestWorkspace: uploadTestWorkspace,
+  goHomeAfterLoading: goHomeAfterLoading
 };
