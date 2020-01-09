@@ -2,7 +2,6 @@
 
 const loginService = require('./util/loginService.js');
 const workspaceService = require('./util/workspaceService.js');
-const errorService = require('./util/errorService');
 
 function testExample(browser, title) {
   loginService.login(browser);
@@ -12,7 +11,7 @@ function testExample(browser, title) {
 
 module.exports = {
   afterEach: function(browser) {
-    errorService.isErrorBarHidden(browser).end();
+    browser.end();
   },
 
   'Add Antidepressants (Tervonen) example': function(browser) {
