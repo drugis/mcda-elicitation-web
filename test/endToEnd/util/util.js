@@ -1,7 +1,6 @@
 'use strict';
 
 const _ = require('lodash');
-const chai = require('chai');
 
 const xpathSelectorType = 'xpath';
 const TIMEOUT = 10;
@@ -27,25 +26,8 @@ function getFirstProperty(value) {
   return _.values(value)[0];
 }
 
-function isElementHidden(browser, path, selectorType = 'xpath') {
-  browser.element(selectorType, path, function(result) {
-    const elementId = getFirstProperty(result.value);
-    browser.elementIdDisplayed(elementId, function(isDisplayedResult) {
-      chai.expect(isDisplayedResult.value).to.be.false;
-    });
-  });
-}
-
-function isElementNotPresent(browser, path) {
-  browser.elements('xpath', path, function(result) {
-    chai.expect(result.value.length).to.equal(0);
-  });
-}
-
 module.exports = {
   delayedClick: delayedClick,
   getFirstProperty: getFirstProperty,
-  isElementHidden: isElementHidden,
-  isElementNotPresent: isElementNotPresent,
   xpathSelectorType: xpathSelectorType
 };
