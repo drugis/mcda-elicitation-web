@@ -53,7 +53,6 @@ define(['lodash', 'angular'], function(_, angular) {
     function getWeights(problem) {
       var newProblem = angular.copy(problem);
       newProblem.method = 'representativeWeights';
-      console.log(PataviResultsService)
       return PataviResultsService.postAndHandleResults(newProblem);
     }
 

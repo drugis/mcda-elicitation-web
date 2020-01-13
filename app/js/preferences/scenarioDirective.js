@@ -46,7 +46,7 @@ define(['lodash', 'jquery'],
           }
 
           function doAllCriteriaHavePvf() {
-            return !_.find(scope.aggregateState.problem.criteria, function(criterion) {
+            return !_.some(scope.aggregateState.problem.criteria, function(criterion) {
               return !isPVFDefined(criterion.dataSources[0]);
             });
           }
@@ -91,10 +91,12 @@ define(['lodash', 'jquery'],
             scope.scenario.$save($stateParams, updateView).then(loadWeights);
           }
 
-          function loadWeights(){
-            PreferencesService.getWeights(scope.problem).then(function(result) {
-              scope.weights = result.data;
-            });
+          function loadWeights() {
+            if (scope.criteriaHavePvf) {
+              PreferencesService.getWeights(scope.problem).then(function(result) {
+                scope.weights = result.data;
+              });
+            }
           }
 
           function updateView() {
