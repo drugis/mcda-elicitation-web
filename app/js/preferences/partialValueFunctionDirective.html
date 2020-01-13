@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="cell text-centered">
-        <button id="{{ criterion.id }}-pvf-button" class="button text-centered" ng-if="editMode.canEdit"
+        <button id="criterion-{{ $index }}-pvf-button" class="button text-centered" ng-if="editMode.canEdit"
           ng-class="{alert: !isSafe['partial-value-function'].safe}"
           tooltip="{{isSafe['partial-value-function'].tooltip}}" tooltip-animation="false"
           ng-disabled="!isAccessible(tasks['partial-value-function']).accessible"

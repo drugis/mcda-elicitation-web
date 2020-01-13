@@ -1,12 +1,13 @@
 'use strict';
 
 const errorService = require('./errorService.js');
+const util = require('./util.js');
 
 function goHomeAfterLoading(browser, title) {
-  errorService.isErrorBarHidden(browser);
-  browser
-    .assert.containsText('#workspace-title', title)
-    .click('#logo');
+  errorService.isErrorBarHidden(browser)
+    .assert.containsText('#workspace-title', title);
+  util.delayedClick(browser, '#logo', '#workspaces-header')
+    .waitForElementVisible('#workspaces-header');
 }
 
 function addExample(browser, title) {
@@ -18,6 +19,7 @@ function addExample(browser, title) {
     .click('option[label="' + title + '"]')
     .click('#add-workspace-button').pause(500);
   goHomeAfterLoading(browser, title);
+  return browser;
 }
 
 function addTutorial(browser, title) {
@@ -32,12 +34,9 @@ function addTutorial(browser, title) {
 }
 
 function copy(browser, index, newTitle) {
-  browser
+  return browser
     .click('#copy-workspace-' + index)
-    .setValue('#workspace-title', newTitle)
-    .click('#enter-data-button')
-    .click('#done-button').pause(500);
-  goHomeAfterLoading(browser, newTitle);
+    .setValue('#workspace-title', newTitle);
 }
 
 function deleteFromList(browser, index) {
@@ -54,7 +53,6 @@ function uploadTestWorkspace(browser, path) {
     .click('#upload-workspace-radio')
     .setValue('#workspace-upload-input', require('path').resolve(__dirname + path))
     .click('#add-workspace-button').pause(500);
-
   errorService.isErrorBarHidden(browser);
 }
 
@@ -71,5 +69,6 @@ module.exports = {
   copy: copy,
   deleteFromList: deleteFromList,
   deleteUnfinishedFromList: deleteUnfinishedFromList,
-  uploadTestWorkspace: uploadTestWorkspace
+  uploadTestWorkspace: uploadTestWorkspace,
+  goHomeAfterLoading: goHomeAfterLoading
 };

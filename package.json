@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index",
     "test": "mocha && karma start --singleRun",
-    "test-end-to-end": "nightwatch -c nightwatch.conf.js",
+    "test-end-to-end": "nightwatch -c nightwatch.local.conf.js",
     "build-dev": "webpack --config webpack.dev.js",
     "build-prod": "webpack --config webpack.prod.js",
     "build-local-login": "webpack --config webpack.local.js",
@@ -83,7 +83,7 @@
     "karma-webpack": "^4.0.2",
     "katex": "^0.11.1",
     "mini-css-extract-plugin": "^0.8.0",
-    "nightwatch": "^1.2.4",
+    "nightwatch": "^1.3.2",
     "optimize-css-assets-webpack-plugin": "^5.0.3",
     "page-title-service": "drugis/page-title-service#1.0.5",
     "raw-loader": "~1.0.0",
