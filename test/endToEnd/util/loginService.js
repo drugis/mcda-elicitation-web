@@ -8,10 +8,12 @@ function login(browser, username = USER_NAME, password = CORRECT_PASSWORD) {
   browser
     .url(TEST_URL)
     .waitForElementVisible('#signinButton')
+    .clearValue('#username')
+    .clearValue('#password')
     .setValue('#username', username)
     .setValue('#password', password)
     .click('#signinButton');
-    return browser;
+  return browser;
 }
 
 module.exports = {
