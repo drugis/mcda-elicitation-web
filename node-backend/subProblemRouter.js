@@ -8,5 +8,6 @@ module.exports = function(db) {
     .get('/:workspaceId/problems/:subProblemId', SubProblemHandler.get)
     .post('/:workspaceId/problems/', SubProblemHandler.create)
     .post('/:workspaceId/problems/:subProblemId', SubProblemHandler.update)
+    .delete('/:workspaceId/problems/:subproblemId', SubProblemHandler.delete)
     ;
 };

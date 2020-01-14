@@ -12,8 +12,7 @@ const subproblem1 = {
 };
 
 function setupSubProblem(browser) {
-  browser.waitForElementVisible('#workspace-title');
-  util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header')
+  browser
     .waitForElementVisible('#effects-table-header')
     .click('#create-subproblem-button')
     .waitForElementVisible('#create-subproblem-header')
@@ -32,13 +31,13 @@ function setupSubProblem(browser) {
 function beforeEach(browser) {
   loginService.login(browser);
   workspaceService.uploadTestWorkspace(browser, '/createSubproblemTestProblem.json');
+  util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header');
 }
 
 function afterEach(browser) {
   errorService.isErrorBarHidden(browser);
   util.delayedClick(browser, '#logo', '#workspaces-header');
-  workspaceService.deleteFromList(browser, 0);
-  errorService.isErrorBarHidden(browser).end();
+  workspaceService.deleteFromList(browser, 0).end();
 }
 
 function create(browser) {
@@ -72,8 +71,7 @@ function switchSubproblem(browser) {
 
 function edit(browser) {
   const newTitle = 'not default';
-  browser.waitForElementVisible('#workspace-title');
-  util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header')
+  browser
     .waitForElementVisible('#effects-table-header')
     .click('#edit-subproblem-button')
     .clearValue('#subproblem-title-input')
@@ -128,6 +126,29 @@ function changeScale(browser) {
     .click('#close-modal-button');
 }
 
+function deleteSubproblem(browser) {
+  browser.waitForElementVisible('#delete-subproblem-disabled');
+  setupSubProblem(browser)
+    .click('#create-new-subproblem-button')
+    .click('#delete-subproblem-button')
+    .waitForElementVisible('#delete-subproblem-header')
+    .click('#delete-subproblem-confirm-button')
+    .waitForElementVisible('#delete-subproblem-disabled')
+    .assert.containsText('#subproblem-selector', 'Default');
+}
+
+function cancelDeleteSubproblem(browser) {
+  browser.waitForElementVisible('#delete-subproblem-disabled');
+  setupSubProblem(browser)
+    .click('#create-new-subproblem-button')
+    .click('#delete-subproblem-button')
+    .waitForElementVisible('#delete-subproblem-header')
+    .click('#close-modal-button')
+    .waitForElementVisible('#delete-subproblem-button')
+    .assert.containsText('#subproblem-selector', subproblem1.title);
+
+}
+
 module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
@@ -136,5 +157,7 @@ module.exports = {
   'Switching between subproblems': switchSubproblem,
   'Edit the title': edit,
   'Reset during subproblem creation': reset,
-  'Interact with scale sliders': changeScale
+  'Interact with scale sliders': changeScale,
+  'Deleting': deleteSubproblem,
+  'Cancel deleting': cancelDeleteSubproblem
 };
