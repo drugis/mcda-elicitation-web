@@ -59,11 +59,30 @@ module.exports = function(db) {
     );
   }
 
+  function deleteScenario(subproblemId, callback) {
+    const query = 'DELETE FROM scenario WHERE id = $1';
+    db.query(
+      query,
+      [subproblemId],
+      callback
+    );
+  }
+
+  function countScenariosForSubproblem(subproblemId, callback) {
+    const query = 'SELECT COUNT(*) FROM scenario WHERE subproblemid = $1';
+    db.query(
+      query,
+      [subproblemId],
+      callback
+    );
+  }
   return {
     create: create,
     query: query,
     queryForSubProblem: queryForSubProblem,
     get: get,
-    update: update
+    update: update,
+    delete: deleteScenario,
+    countScenariosForSubproblem: countScenariosForSubproblem
   };
 };

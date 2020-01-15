@@ -1,8 +1,12 @@
 'use strict';
-var httpStatus = require('http-status-codes');
+const httpStatus = require('http-status-codes');
+const logger = require('./logger');
+const async = require('async');
+const util = require('./util');
+const _ = require('lodash');
 
 module.exports = function(db) {
-  var ScenarioRepository = require('./scenarioRepository')(db);
+  const ScenarioRepository = require('./scenarioRepository')(db);
 
   function query(request, response, next) {
     ScenarioRepository.query(
@@ -75,11 +79,58 @@ module.exports = function(db) {
       });
   }
 
+  function deleteScenario(request, response, next) {
+    const subproblemId = request.params.subproblemId;
+    const scenarioId = request.params.id;
+    logger.debug('Deleting subproblem ' + subproblemId);
+    db.runInTransaction(_.partial(deleteTransaction, subproblemId, scenarioId, next), function(error) {
+      if (error) {
+        util.handleError(error, next);
+      } else {
+        logger.debug('done deleting subProblem : ' + JSON.stringify(subproblemId));
+        response.sendStatus(httpStatus.OK);
+      }
+    });
+  }
+
+  function deleteTransaction(subproblemId, scenarioId, next, client, transactionCallback) {
+    async.waterfall([
+      _.partial(blockIfOnlyOneScenario, subproblemId, next),
+      _.partial(deleteScenarioAction, scenarioId, next)
+    ], transactionCallback);
+  }
+
+  function blockIfOnlyOneScenario(subproblemId, next, callback) {
+    ScenarioRepository.countScenariosForSubproblem(subproblemId, function(error, result) {
+      if (error) {
+        util.handleError(error, next);
+      } else if (result.rows[0] === 1) {
+        util.handleError('Cannot delete the only scenario for subproblem', next);
+      } else {
+        callback(null);
+      }
+    });
+  }
+
+  function deleteScenarioAction(subproblemId, next, callback) {
+    ScenarioRepository.delete(
+      subproblemId,
+      function(error) {
+        if (error) {
+          util.handleError(error, next);
+        } else {
+          callback(null);
+        }
+      }
+    );
+  }
+
   return {
     query: query,
     queryForSubProblem: queryForSubProblem,
     get: get,
     create: create,
-    update: update
+    update: update,
+    delete: deleteScenario
   };
 };

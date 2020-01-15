@@ -3,22 +3,22 @@ define(['lodash'], function(_) {
   var dependencies = [
     '$scope',
     '$modalInstance',
-    'subproblem',
+    'scenario',
     'callback'
   ];
-  var DeleteSubproblemController = function(
+  var DeleteScenarioController = function(
     $scope, 
     $modalInstance, 
-    subproblem, 
+    scenario, 
     callback
     ) {
     // functions
     $scope.cancel = cancel;
     $scope.delete = confirmDelete;
-    $scope.subproblem = subproblem;
+    $scope.scenario = scenario;
     
     function confirmDelete() {
-      callback($scope.subproblem.id);
+      callback($scope.scenario.id);
       $modalInstance.close();
     }
 
@@ -26,5 +26,5 @@ define(['lodash'], function(_) {
       $modalInstance.close();
     }
   };
-  return dependencies.concat(DeleteSubproblemController);
+  return dependencies.concat(DeleteScenarioController);
 });

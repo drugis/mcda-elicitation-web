@@ -217,13 +217,14 @@ function setRequiredRights() {
     makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'GET', 'read', workspaceOwnerRightsNeeded),
     makeRights('/workspaces/:workspaceId/problems', 'POST', 'write', workspaceOwnerRightsNeeded),
     makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'POST', 'write', workspaceOwnerRightsNeeded), 
-    makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'DELETE', 'owner', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'DELETE', 'write', workspaceOwnerRightsNeeded),
 
     makeRights('/workspaces/:workspaceId/scenarios', 'GET', 'read', workspaceOwnerRightsNeeded),
     makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios', 'GET', 'read', workspaceOwnerRightsNeeded),
     makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'GET', 'read', workspaceOwnerRightsNeeded),
     makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios', 'POST', 'write', workspaceOwnerRightsNeeded),
-    makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'POST', 'write', workspaceOwnerRightsNeeded)
+    makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'POST', 'write', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId/problems/:subproblemId/scenarios/:scenarioId', 'DELETE', 'write', workspaceOwnerRightsNeeded)
   ]);
 }
 

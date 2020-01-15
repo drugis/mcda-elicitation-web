@@ -1,10 +1,5 @@
 'use strict';
-define([
-  'clipboard'
-], function(
-  Clipboard
-) {
-
+define(['clipboard'], function(Clipboard) {
   var dependencies = [
     '$scope',
     '$modal',
@@ -27,6 +22,7 @@ define([
     $scope.editScenarioTitle = editScenarioTitle;
     $scope.copyScenario = copyScenario;
     $scope.newScenario = newScenario;
+    $scope.deleteScenario = deleteScenario;
 
     new Clipboard('.clipboard-button');
 
@@ -91,6 +87,26 @@ define([
           callback: function() {
             return function(newTitle) {
               ScenarioService.newScenarioAndGo(newTitle, $scope.workspace, $scope.subProblem);
+            };
+          }
+        }
+      });
+    }
+
+    function deleteScenario() {
+      $modal.open({
+        templateUrl: './deleteScenario.html',
+        controller: 'DeleteScenarioController',
+        resolve: {
+          scenario: function() {
+            return $scope.scenario;
+          },
+          callback: function() {
+            return function() {
+              ScenarioResource.delete($stateParams).$promise.then(function() {
+                var otherScenario = _.reject($scope.scenarios, ['id', $scope.scenario.id])[0];
+                $scope.scenarioChanged(otherScenario);
+              });
             };
           }
         }
