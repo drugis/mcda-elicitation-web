@@ -194,4 +194,58 @@ describe('the scenario repository', function() {
       scenarioRepository.update(state, title, scenarioId, callback);
     });
   });
+
+  describe('delete', function() {
+    var query;
+    const expectedQuery = 'DELETE FROM scenario WHERE id = $1';
+    const scenarioId = 37;
+    const queryInputValues = [scenarioId];
+
+    beforeEach(function() {
+      query = sinon.stub(dbStub, 'query');
+    });
+
+    afterEach(function() {
+      query.restore();
+    });
+
+    it('should delete the subproblem', function(done) {
+      query.onCall(0).yields(null);
+      var callback = testUtil.createQueryNoArgumentCallbackWithTests(query, expectedQuery, queryInputValues, done);
+      scenarioRepository.delete(scenarioId, callback);
+    });
+
+    it('should call the callback with only an error', function(done) {
+      query.onCall(0).yields(expectedError);
+      var callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      scenarioRepository.delete(scenarioId, callback);
+    });
+  });
+
+  describe('countScenariosForSubproblem', function() {
+    var query;
+    const expectedQuery = 'SELECT COUNT(*) FROM scenario WHERE subproblemid = $1';
+    const subproblemId = 37;
+    const queryInputValues = [subproblemId];
+
+    beforeEach(function() {
+      query = sinon.stub(dbStub, 'query');
+    });
+
+    afterEach(function() {
+      query.restore();
+    });
+
+    it('should count the scenarios for the subproblem', function(done) {
+      query.onCall(0).yields(null);
+      var callback = testUtil.createQueryNoArgumentCallbackWithTests(query, expectedQuery, queryInputValues, done);
+      scenarioRepository.countScenariosForSubproblem(subproblemId, callback);
+    });
+
+    it('should call the callback with only an error', function(done) {
+      query.onCall(0).yields(expectedError);
+      var callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      scenarioRepository.countScenariosForSubproblem(subproblemId, callback);
+    });
+  });
 });

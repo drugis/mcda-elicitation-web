@@ -11,6 +11,7 @@ define([
   './preferencesController',
   './setMatchingWeightController',
   './swingWeightingController',
+  './deleteScenarioController',
 
   './partialValueFunctionService',
   './preferencesService',
@@ -40,6 +41,7 @@ define([
   PreferencesController,
   SetMatchingWeightController,
   SwingWeightingController,
+  DeleteScenarioController,
 
   PartialValueFunctionService,
   PreferencesService,
@@ -67,6 +69,7 @@ define([
     .controller('PreferencesController', PreferencesController)
     .controller('SetMatchingWeightController', SetMatchingWeightController)
     .controller('SwingWeightingController', SwingWeightingController)
+    .controller('DeleteScenarioController', DeleteScenarioController)
 
     .factory('PartialValueFunctionService', PartialValueFunctionService)
     .factory('SwingWeightingService', SwingWeightingService)

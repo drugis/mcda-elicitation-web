@@ -13,17 +13,27 @@ var repoStub = {
   get: () => { },
   create: () => { },
   update: () => { },
+  delete: () => { },
+  countScenariosForSubproblem: () => { }
 };
+const utilStub = chai.spy();
 
 const dbArgumement = {
   './scenarioRepository': () => {
     return repoStub;
+  },
+  './util': utilStub
+};
+
+const db = {
+  runInTransaction: (transactions, callback) => {
+    transactions(undefined, callback);
   }
 };
 
 const scenarioHandler = proxyquire(
   '../node-backend/scenarioHandler',
-  dbArgumement)({});
+  dbArgumement)(db);
 
 describe('the in scenario handler', () => {
   const error = 'error';
@@ -255,6 +265,72 @@ describe('the in scenario handler', () => {
       sinon.assert.calledWith(update, state, title, scenarioId);
       expect(response.json).not.to.have.been.called();
       expect(next).to.have.been.called.with(error);
+    });
+  });
+
+  describe('delete', function() {
+    var deleteStub;
+    var countScenariosForSubproblem;
+    const scenarioId = 37;
+    const subproblemId = 42;
+    const request = {
+      params: {
+        id: scenarioId,
+        subproblemId: subproblemId
+      }
+    };
+
+    beforeEach(() => {
+      deleteStub = sinon.stub(repoStub, 'delete');
+      countScenariosForSubproblem = sinon.stub(repoStub, 'countScenariosForSubproblem');
+      utilStub.handleError = chai.spy();
+    });
+
+    afterEach(() => {
+      deleteStub.restore();
+      countScenariosForSubproblem.restore();
+    });
+
+    it('should call reponse.sendstatus with ok', (done) => {
+      const next = chai.spy();
+      const expectations = function(status) {
+        expect(next).to.have.not.been.called();
+        expect(status).to.equal(200);
+        done();
+      };
+      const response = {
+        sendStatus: expectations,
+      };
+      deleteStub.onCall(0).yields(null);
+      countScenariosForSubproblem.onCall(0).yields(null, { rows: [2] });
+      scenarioHandler.delete(request, response, next);
+      sinon.assert.calledWith(countScenariosForSubproblem, subproblemId);
+      sinon.assert.calledWith(deleteStub, scenarioId);
+      expect(utilStub.handleError).not.to.have.been.called();
+    });
+
+    it('should call util.handleError if there\'s an error deleting', function() {
+      deleteStub.onCall(0).yields(error);
+      countScenariosForSubproblem.onCall(0).yields(null, { rows: [2] });
+      scenarioHandler.delete(request, undefined, undefined);
+      sinon.assert.calledWith(countScenariosForSubproblem, subproblemId);
+      sinon.assert.calledWith(deleteStub, scenarioId);
+      expect(utilStub.handleError).to.have.been.called();
+    });
+
+    it('should call util.handleError if there\'s an error counting', function() {
+      countScenariosForSubproblem.onCall(0).yields(error);
+      scenarioHandler.delete(request, undefined, undefined);
+      sinon.assert.calledWith(countScenariosForSubproblem, subproblemId);
+      expect(utilStub.handleError).to.have.been.called();
+    });
+
+    it('should call util.handleError if there is only one subproblem', function() {
+      const notEnoughError = 'Cannot delete the only scenario for subproblem';
+      countScenariosForSubproblem.onCall(0).yields(null, { rows: [1] });
+      scenarioHandler.delete(request, undefined, undefined);
+      sinon.assert.calledWith(countScenariosForSubproblem, subproblemId);
+      expect(utilStub.handleError).to.have.been.called.with(notEnoughError);
     });
   });
 });

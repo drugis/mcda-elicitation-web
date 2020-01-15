@@ -1,0 +1,20 @@
+<form ng-submit="delete()">
+  <div class="grid-x">
+    <div class="cell">
+      <h3 id="delete-scenario-header"> Delete problem</h3>
+    </div>
+    <div class="cell">
+      <i class="fa fa-triangle"></i>Are you certain you want to permanently delete <em>{{scenario.title}}</em>?
+    </div>
+    <br>
+    <br>
+    <div class="cell">
+      <button id="delete-scenario-confirm-button" class="button alert" type="submit">
+        Delete
+      </button>
+    </div>
+    <button id="close-modal-button" ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</form>

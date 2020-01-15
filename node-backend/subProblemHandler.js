@@ -1,13 +1,13 @@
 'use strict';
-var util = require('./util');
-var logger = require('./logger');
-var async = require('async');
-var _ = require('lodash');
-var httpStatus = require('http-status-codes');
+const util = require('./util');
+const logger = require('./logger');
+const async = require('async');
+const _ = require('lodash');
+const httpStatus = require('http-status-codes');
 
 module.exports = function(db) {
-  var SubproblemRepository = require('./subProblemRepository')(db);
-  var ScenarioRepository = require('./scenarioRepository')(db);
+  const SubproblemRepository = require('./subProblemRepository')(db);
+  const ScenarioRepository = require('./scenarioRepository')(db);
 
   function query(request, response, next) {
     SubproblemRepository.query(

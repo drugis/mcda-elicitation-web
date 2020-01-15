@@ -13,6 +13,10 @@
         class="fa fa-plus"></i></a>
     <a id="copy-scenario-button" ng-if="editMode.canEdit" ng-click="copyScenario()" tooltip="Copy current scenario"><i
         class="fa fa-copy"></i></a>
+    <a id="delete-scenario-button" ng-if="editMode.canEdit && scenarios.length > 1" ng-click="deleteScenario()"
+      tooltip="Delete current scenario." class="fa fa-trash" style="color: red"></a>
+    <i id="delete-scenario-disabled" ng-if="editMode.canEdit && scenarios.length === 1"
+      tooltip="Cannot delete scenario if there is only 1 scenario." class="fa fa-trash" style="color: gray"></i>
   </div>
 </div>
 <br>
