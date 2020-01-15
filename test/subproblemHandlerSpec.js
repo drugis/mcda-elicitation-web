@@ -304,23 +304,6 @@ describe('the subproblem handler', () => {
       countSubproblemsForWorkspace.restore();
     });
 
-    // var expectations = function(subproblem) {
-    //   expect(subproblem).to.equal(result.rows[0]);
-    //   expect(next).to.have.not.been.called();
-    //   done();
-    // };
-    // var response = {
-    //   json: expectations,
-    //   status: chai.spy()
-    // };
-
-    // subproblemCreate.onCall(0).yields(null, result);
-    // subProblemGet.onCall(0).yields(null, result);
-    // scenarioCreate.onCall(0).yields(null);
-
-    // subProblemHandler.create(request, response, next);
-    // expect(response.status).to.have.been.called.with(201);
-
     it('should call reponse.sendstatus with ok', (done) => {
       const next = chai.spy();
       const expectations = function(status) {

@@ -128,12 +128,12 @@ module.exports = function(db) {
 
   function deleteTransaction(workspaceId, subproblemId, next, client, transactionCallback) {
     async.waterfall([
-      _.partial(countSubProblems, workspaceId, next),
+      _.partial(blockIfOnlyOneSubproblem, workspaceId, next),
       _.partial(deleteSubproblemAction, subproblemId, next)
     ], transactionCallback);
   }
 
-  function countSubProblems(workspaceId, next, callback) {
+  function blockIfOnlyOneSubproblem(workspaceId, next, callback) {
     SubproblemRepository.countSubproblemsForWorkspace(workspaceId, function(error, result) {
       if (error) {
         util.handleError(error, next);
