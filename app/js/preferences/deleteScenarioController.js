@@ -6,7 +6,7 @@ define(['lodash'], function(_) {
     'scenario',
     'callback'
   ];
-  var EditScenarioTitleController = function(
+  var DeleteScenarioController = function(
     $scope, 
     $modalInstance, 
     scenario, 
@@ -26,5 +26,5 @@ define(['lodash'], function(_) {
       $modalInstance.close();
     }
   };
-  return dependencies.concat(EditScenarioTitleController);
+  return dependencies.concat(DeleteScenarioController);
 });

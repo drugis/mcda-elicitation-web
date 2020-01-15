@@ -6,7 +6,7 @@ define(['lodash'], function(_) {
     'subproblem',
     'callback'
   ];
-  var EditSubproblemTitleController = function(
+  var DeleteSubproblemController = function(
     $scope, 
     $modalInstance, 
     subproblem, 
@@ -26,5 +26,5 @@ define(['lodash'], function(_) {
       $modalInstance.close();
     }
   };
-  return dependencies.concat(EditSubproblemTitleController);
+  return dependencies.concat(DeleteSubproblemController);
 });
