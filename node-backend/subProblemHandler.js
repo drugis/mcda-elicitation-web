@@ -48,7 +48,6 @@ module.exports = function(db) {
     });
   }
 
-
   function subProblemTransaction(request, next, client, transactionCallback) {
     async.waterfall([
       _.partial(createSubProblem, request, next),
@@ -113,10 +112,57 @@ module.exports = function(db) {
       });
   }
 
+  function deleteSubproblem(request, response, next) {
+    const subproblemId = request.params.subproblemId;
+    const workspaceId = request.params.workspaceId;
+    logger.debug('Deleting subproblem ' + subproblemId);
+    db.runInTransaction(_.partial(deleteTransaction, workspaceId, subproblemId, next), function(error) {
+      if (error) {
+        util.handleError(error, next);
+      } else {
+        logger.debug('done deleting subProblem : ' + JSON.stringify(subproblemId));
+        response.sendStatus(httpStatus.OK);
+      }
+    });
+  }
+
+  function deleteTransaction(workspaceId, subproblemId, next, client, transactionCallback) {
+    async.waterfall([
+      _.partial(blockIfOnlyOneSubproblem, workspaceId, next),
+      _.partial(deleteSubproblemAction, subproblemId, next)
+    ], transactionCallback);
+  }
+
+  function blockIfOnlyOneSubproblem(workspaceId, next, callback) {
+    SubproblemRepository.countSubproblemsForWorkspace(workspaceId, function(error, result) {
+      if (error) {
+        util.handleError(error, next);
+      } else if (result.rows[0] === 1) {
+        util.handleError('Cannot delete the only subproblem for workspace', next);
+      } else {
+        callback(null);
+      }
+    });
+  }
+
+  function deleteSubproblemAction(subproblemId, next, callback) {
+    SubproblemRepository.delete(
+      subproblemId,
+      function(error) {
+        if (error) {
+          util.handleError(error, next);
+        } else {
+          callback(null);
+        }
+      }
+    );
+  }
+
   return {
     query: query,
     get: get,
     create: create,
-    update: update
+    update: update,
+    delete: deleteSubproblem
   };
 };

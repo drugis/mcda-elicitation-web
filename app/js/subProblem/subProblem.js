@@ -3,6 +3,7 @@ define([
   './subProblemController',
   './createSubProblemController',
   './editSubProblemTitleController',
+  './deleteSubproblemController',
   './subProblemService',
   './scaleRangeService',
   'angular'
@@ -10,6 +11,7 @@ define([
   SubProblemController,
   CreateSubProblemController,
   EditSubProblemTitleController,
+  DeleteSubproblemController,
   SubProblemService,
   ScaleRangeService,
   angular
@@ -18,6 +20,7 @@ define([
       .controller('SubProblemController', SubProblemController)
       .controller('CreateSubProblemController', CreateSubProblemController)
       .controller('EditSubProblemTitleController', EditSubProblemTitleController)
+      .controller('DeleteSubproblemController', DeleteSubproblemController)
       .factory('SubProblemService', SubProblemService)
       .factory('ScaleRangeService', ScaleRangeService)
       ;

@@ -11,7 +11,9 @@ var subproblemRepoStub = {
   query: () => { },
   get: () => { },
   create: () => { },
-  update: () => { }
+  update: () => { },
+  delete: () => { },
+  countSubproblemsForWorkspace: () => { }
 };
 
 var scenarioRepoStub = {
@@ -279,4 +281,69 @@ describe('the subproblem handler', () => {
     });
   });
 
+  describe('delete', function() {
+    var deleteStub;
+    var countSubproblemsForWorkspace;
+    const subproblemId = 37;
+    const workspaceId = 42;
+    const request = {
+      params: {
+        subproblemId: subproblemId,
+        workspaceId: workspaceId
+      }
+    };
+
+    beforeEach(() => {
+      deleteStub = sinon.stub(subproblemRepoStub, 'delete');
+      countSubproblemsForWorkspace = sinon.stub(subproblemRepoStub, 'countSubproblemsForWorkspace');
+      utilStub.handleError = chai.spy();
+    });
+
+    afterEach(() => {
+      deleteStub.restore();
+      countSubproblemsForWorkspace.restore();
+    });
+
+    it('should call reponse.sendstatus with ok', (done) => {
+      const next = chai.spy();
+      const expectations = function(status) {
+        expect(next).to.have.not.been.called();
+        expect(status).to.equal(200);
+        done();
+      };
+      const response = {
+        sendStatus: expectations,
+      };
+      deleteStub.onCall(0).yields(null);
+      countSubproblemsForWorkspace.onCall(0).yields(null, { rows: [2] });
+      subProblemHandler.delete(request, response, next);
+      sinon.assert.calledWith(countSubproblemsForWorkspace, workspaceId);
+      sinon.assert.calledWith(deleteStub, subproblemId);
+      expect(utilStub.handleError).not.to.have.been.called();
+    });
+
+    it('should call util.handleError if there\'s an error deleting', function() {
+      deleteStub.onCall(0).yields(error);
+      countSubproblemsForWorkspace.onCall(0).yields(null, { rows: [2] });
+      subProblemHandler.delete(request, undefined, undefined);
+      sinon.assert.calledWith(countSubproblemsForWorkspace, workspaceId);
+      sinon.assert.calledWith(deleteStub, subproblemId);
+      expect(utilStub.handleError).to.have.been.called();
+    });
+
+    it('should call util.handleError if there\'s an error counting', function() {
+      countSubproblemsForWorkspace.onCall(0).yields(error);
+      subProblemHandler.delete(request, undefined, undefined);
+      sinon.assert.calledWith(countSubproblemsForWorkspace, workspaceId);
+      expect(utilStub.handleError).to.have.been.called();
+    });
+
+    it('should call util.handleError if there is only one subproblem', function() {
+      const notEnoughError = 'Cannot delete the only subproblem for workspace';
+      countSubproblemsForWorkspace.onCall(0).yields(null, { rows: [1] });
+      subProblemHandler.delete(request, undefined, undefined);
+      sinon.assert.calledWith(countSubproblemsForWorkspace, workspaceId);
+      expect(utilStub.handleError).to.have.been.called.with(notEnoughError);
+    });
+  });
 });

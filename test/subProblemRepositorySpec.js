@@ -133,4 +133,58 @@ describe('the subproblem repository', function() {
       subProblemRepository.update(definition, title, subproblemId, callback);
     });
   });
+
+  describe('delete', function(){
+    var query;
+    const expectedQuery = 'DELETE FROM subproblem WHERE id = $1';
+    const subproblemId = 37;
+    const queryInputValues = [subproblemId];
+
+    beforeEach(function() {
+      query = sinon.stub(dbStub, 'query');
+    });
+
+    afterEach(function() {
+      query.restore();
+    });
+
+    it('should delete the subproblem', function(done) {
+      query.onCall(0).yields(null);
+      var callback = testUtil.createQueryNoArgumentCallbackWithTests(query, expectedQuery, queryInputValues,  done);
+      subProblemRepository.delete(subproblemId, callback);
+    });
+
+    it('should call the callback with only an error', function(done) {
+      query.onCall(0).yields(expectedError);
+      var callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      subProblemRepository.delete(subproblemId, callback);
+    });
+  });
+
+  describe('countSubproblemsForWorkspace', function(){
+    var query;
+    const expectedQuery = 'SELECT COUNT(*) FROM subProblem WHERE workspaceid = $1';
+    const workspaceId = 37;
+    const queryInputValues = [workspaceId];
+
+    beforeEach(function() {
+      query = sinon.stub(dbStub, 'query');
+    });
+
+    afterEach(function() {
+      query.restore();
+    });
+
+    it('should countSubproblemsForWorkspace the subproblem', function(done) {
+      query.onCall(0).yields(null);
+      var callback = testUtil.createQueryNoArgumentCallbackWithTests(query, expectedQuery, queryInputValues,  done);
+      subProblemRepository.countSubproblemsForWorkspace(workspaceId, callback);
+    });
+
+    it('should call the callback with only an error', function(done) {
+      query.onCall(0).yields(expectedError);
+      var callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      subProblemRepository.countSubproblemsForWorkspace(workspaceId, callback);
+    });
+  });
 });

@@ -38,6 +38,7 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
     $scope.subProblemChanged = subProblemChanged;
     $scope.editSubProblemTitle = editSubProblemTitle;
     $scope.significantDigits = significantDigits;
+    $scope.deleteSubproblem = deleteSubproblem;
 
     // init
     $scope.scalesPromise.then(function() {
@@ -113,18 +114,6 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
       });
     }
 
-    function subProblemChanged(newSubProblem) {
-      var coords = _.omit($stateParams, 'id');
-      coords.problemId = newSubProblem.id;
-      ScenarioResource.query(coords).$promise.then(function(scenarios) {
-        $state.go('problem', {
-          workspaceId: $scope.workspace.id,
-          problemId: newSubProblem.id,
-          id: scenarios[0].id
-        });
-      });
-    }
-
     function editSubProblemTitle() {
       $modal.open({
         templateUrl: './editSubProblemTitle.html',
@@ -145,6 +134,38 @@ define(['lodash', 'clipboard', 'angular'], function(_, Clipboard) {
             };
           }
         }
+      });
+    }
+
+    function deleteSubproblem() {
+      $modal.open({
+        templateUrl: './deleteSubproblem.html',
+        controller: 'DeleteSubproblemController',
+        resolve: {
+          subproblem: function() {
+            return $scope.subProblem;
+          },
+          callback: function() {
+            return function() {
+              SubProblemResource.delete($stateParams).$promise.then(function() {
+                var otherSubproblem = _.reject($scope.subProblems, ['id', $scope.subProblem.id])[0];
+                subProblemChanged(otherSubproblem);
+              });
+            };
+          }
+        }
+      });
+    }
+
+    function subProblemChanged(newSubProblem) {
+      var coords = _.omit($stateParams, 'id');
+      coords.problemId = newSubProblem.id;
+      ScenarioResource.query(coords).$promise.then(function(scenarios) {
+        $state.go('problem', {
+          workspaceId: $scope.workspace.id,
+          problemId: newSubProblem.id,
+          id: scenarios[0].id
+        });
       });
     }
   };

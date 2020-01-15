@@ -6,7 +6,7 @@ const util = require('./util.js');
 function goHomeAfterLoading(browser, title) {
   errorService.isErrorBarHidden(browser)
     .assert.containsText('#workspace-title', title);
-  util.delayedClick(browser, '#logo', '#workspaces-header')
+  return util.delayedClick(browser, '#logo', '#workspaces-header')
     .waitForElementVisible('#workspaces-header');
 }
 
@@ -18,8 +18,7 @@ function addExample(browser, title) {
     .click('#example-workspace-selector')
     .click('option[label="' + title + '"]')
     .click('#add-workspace-button').pause(500);
-  goHomeAfterLoading(browser, title);
-  return browser;
+  return goHomeAfterLoading(browser, title);
 }
 
 function addTutorial(browser, title) {
@@ -30,7 +29,7 @@ function addTutorial(browser, title) {
     .click('#tutorial-workspace-selector')
     .click('option[label="' + title + '"]')
     .click('#add-workspace-button').pause(500);
-  goHomeAfterLoading(browser, title);
+  return goHomeAfterLoading(browser, title);
 }
 
 function copy(browser, index, newTitle) {
@@ -43,7 +42,7 @@ function deleteFromList(browser, index) {
   browser
     .click('#delete-workspace-' + index)
     .click('#delete-workspace-confirm-button');
-  errorService.isErrorBarHidden(browser);
+  return errorService.isErrorBarHidden(browser);
 }
 
 function uploadTestWorkspace(browser, path) {
@@ -53,14 +52,15 @@ function uploadTestWorkspace(browser, path) {
     .click('#upload-workspace-radio')
     .setValue('#workspace-upload-input', require('path').resolve(__dirname + path))
     .click('#add-workspace-button').pause(500);
-  errorService.isErrorBarHidden(browser);
+  return errorService.isErrorBarHidden(browser);
 }
 
 function deleteUnfinishedFromList(browser, index) {
   browser
     .click('#delete-in-progress-workspace-' + index)
     .click('#delete-workspace-confirm-button');
-  errorService.isErrorBarHidden(browser);
+  return errorService.isErrorBarHidden(browser);
+
 }
 
 module.exports = {

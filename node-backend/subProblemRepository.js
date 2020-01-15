@@ -43,10 +43,30 @@ module.exports = function(db) {
     );
   }
 
+  function deleteSubproblem(subproblemId, callback) {
+    const query = 'DELETE FROM subproblem WHERE id = $1';
+    db.query(
+      query,
+      [subproblemId],
+      callback
+    );
+  }
+
+  function countSubproblemsForWorkspace(workspaceId, callback) {
+    const query = 'SELECT COUNT(*) FROM subProblem WHERE workspaceid = $1';
+    db.query(
+      query,
+      [workspaceId],
+      callback
+    );
+  }
+
   return {
     create: create,
     get: get,
     query: query,
-    update: update
+    update: update,
+    delete: deleteSubproblem,
+    countSubproblemsForWorkspace: countSubproblemsForWorkspace
   };
 };
