@@ -10,23 +10,33 @@
             {{criterion.title}}
           </span>
         </div>
-        <div class="partial-value-plot">
-          <partial-value-plot ng-if="isPVFDefined(criterion.dataSources[0])" criterion="criterion"
-            values="pvfCoordinates[criterion.id]" width="'250px'" height="'180px'"></partial-value-plot>
-          <div class="undefined-partial-value-function" ng-if="!isPVFDefined(criterion.dataSources[0])">
-            <i style="font-size: 100px" class="fa fa-question"></i>
+        <div class="grid-x partial-value-plot">
+          <div id="defined-pvf-{{$index}}" class="cell large-11 medium-11" ng-if="isPVFDefined(criterion.dataSources[0])">
+            <partial-value-plot criterion="criterion" values="pvfCoordinates[criterion.id]" width="'300px'"
+              height="'216px'"></partial-value-plot>
+          </div>
+          <div id="undefined-pvf-{{$index}}" class="cell large-11 medium-11 undefined-partial-value-function"
+            ng-if="!isPVFDefined(criterion.dataSources[0])">
+            <i style="font-size: 176px" class="fa fa-question"></i>
+          </div>
+          <div class="cell large-1 medium-1">
+            <div>
+              <a id="set-increasing-pvf-{{$index}}" class="fa fa-arrow-up" ng-click="setPVF(criterion, 'increasing')" tooltip="Set increasing PVF."></a>
+            </div>
+            <div>
+              <a id="set-decreasing-pvf-{{$index}}" class="fa fa-arrow-down" ng-click="setPVF(criterion, 'decreasing')" tooltip="Set decreasing PVF"></a>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="cell text-centered">
-        <button id="criterion-{{ $index }}-pvf-button" class="button text-centered" ng-if="editMode.canEdit"
-          ng-class="{alert: !isSafe['partial-value-function'].safe}"
-          tooltip="{{isSafe['partial-value-function'].tooltip}}" tooltip-animation="false"
-          ng-disabled="!isAccessible(tasks['partial-value-function']).accessible"
-          ui-sref="partial-value-function({criterion: criterion.id})">
-          Define
-        </button>
+        <div class="cell text-centered">
+          <button id="criterion-{{ $index }}-pvf-button" class="button text-centered" ng-if="editMode.canEdit"
+            ng-class="{alert: !isSafe['partial-value-function'].safe}"
+            tooltip="{{isSafe['partial-value-function'].tooltip}}" tooltip-animation="false"
+            ng-disabled="!isAccessible(tasks['partial-value-function']).accessible"
+            ui-sref="partial-value-function({criterion: criterion.id})">
+            Define
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
