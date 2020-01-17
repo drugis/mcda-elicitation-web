@@ -57,7 +57,7 @@ function initApp() {
       conString: dbUtil.mcdaDBUrl,
     }),
     secret: process.env.MCDAWEB_COOKIE_SECRET,
-    resave: true,
+    resave: false,
     proxy: true,
     rolling: true,
     saveUninitialized: true,
@@ -84,7 +84,9 @@ function initApp() {
 
   app.get('/logout', function(req, res) {
     req.logout();
-    res.redirect('/');
+    req.session.destroy(function(error) {
+      res.redirect('/');
+    });
   });
   app.use(csurf());
   app.use(function(req, res, next) {
@@ -216,7 +218,7 @@ function setRequiredRights() {
     makeRights('/workspaces/:workspaceId/problems', 'GET', 'read', workspaceOwnerRightsNeeded),
     makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'GET', 'read', workspaceOwnerRightsNeeded),
     makeRights('/workspaces/:workspaceId/problems', 'POST', 'write', workspaceOwnerRightsNeeded),
-    makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'POST', 'write', workspaceOwnerRightsNeeded), 
+    makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'POST', 'write', workspaceOwnerRightsNeeded),
     makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'DELETE', 'write', workspaceOwnerRightsNeeded),
 
     makeRights('/workspaces/:workspaceId/scenarios', 'GET', 'read', workspaceOwnerRightsNeeded),

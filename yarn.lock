@@ -1424,7 +1424,7 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bcrypt@^3.0.1:
+bcrypt@^3.0.7:
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/bcrypt/-/bcrypt-3.0.7.tgz#1187d29df2e1cde44268152b13e3d4a655a7c7de"
   integrity sha512-K5UglF9VQvBMHl/1elNyyFvAfOY9Bj+rpKrCSR9sFwcW8FywAYJSRwTURNej5TaAK2TEJkcJ6r6lh1YPmspx5Q==
@@ -1692,10 +1692,10 @@ bytes@3.1.0:
   resolved "https://registry.yarnpkg.com/bytes/-/bytes-3.1.0.tgz#f6cf7933a360e0588fa9fde85651cdc7f805d1f6"
   integrity sha512-zauLjrfCG+xvoyaqLoV8bLVXXNGC4JqlxFCutSDWA6fJrTo2ZuvLYTqZ7aHBLZSMOopbzwv8f+wZcVzfVTI2Dg==
 
-c3@~0.7.11:
-  version "0.7.12"
-  resolved "https://registry.yarnpkg.com/c3/-/c3-0.7.12.tgz#ad6205703bab9c2cbedc0223ba7fb2aabc31e94b"
-  integrity sha512-8gXyKMr9oM171aRGCOqezwEbWwEtIKmEkyvdfgH4oIunSsiTVWyw9Cz6os78LkYPRLMbHDgKcjkQh4EPCrRupQ==
+c3@0.7.11:
+  version "0.7.11"
+  resolved "https://registry.yarnpkg.com/c3/-/c3-0.7.11.tgz#3efa9d98d40939a8774fd5b43c75d2857d6e1cdf"
+  integrity sha512-+051dE9Bqaz3NHJvl7sprWSofd2jE4TSHbSRBURTHXRhj0f/75Qj33XhmIW7JklSeM1T3dO0n00p4HPReRZ1qg==
   dependencies:
     d3 "^5.8.0"
 
@@ -5804,22 +5804,6 @@ node-libs-browser@^2.2.1:
     util "^0.11.0"
     vm-browserify "^1.0.1"
 
-node-pre-gyp@*:
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.14.0.tgz#9a0596533b877289bcad4e143982ca3d904ddc83"
-  integrity sha512-+CvDC7ZttU/sSt9rFjix/P05iS43qHCOOGzcr3Ry99bXG7VX953+vFyEuph/tfqoYu8dttBkE86JSKBO2OzcxA==
-  dependencies:
-    detect-libc "^1.0.2"
-    mkdirp "^0.5.1"
-    needle "^2.2.1"
-    nopt "^4.0.1"
-    npm-packlist "^1.1.6"
-    npmlog "^4.0.2"
-    rc "^1.2.7"
-    rimraf "^2.6.1"
-    semver "^5.3.0"
-    tar "^4.4.2"
-
 node-pre-gyp@0.13.0:
   version "0.13.0"
   resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.13.0.tgz#df9ab7b68dd6498137717838e4f92a33fc9daa42"
@@ -6284,10 +6268,10 @@ pascalcase@^0.1.1:
   resolved "https://registry.yarnpkg.com/pascalcase/-/pascalcase-0.1.1.tgz#b363e55e8006ca6fe21784d2db22bd15d7917f14"
   integrity sha1-s2PlXoAGym/iF4TS2yK9FdeRfxQ=
 
-passport-google-oauth20@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/passport-google-oauth20/-/passport-google-oauth20-1.0.0.tgz#3b960e8a1d70d1dbe794615c827c68c40392a5d0"
-  integrity sha1-O5YOih1w0dvnlGFcgnxoxAOSpdA=
+passport-google-oauth20@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/passport-google-oauth20/-/passport-google-oauth20-2.0.0.tgz#0d241b2d21ebd3dc7f2b60669ec4d587e3a674ef"
+  integrity sha512-KSk6IJ15RoxuGq7D1UKK/8qKhNfzbLeLrG3gkLZ7p4A6DBCcv7xpyQwuXtWdpyR0+E0mwkpjY1VfPOhxQrKzdQ==
   dependencies:
     passport-oauth2 "1.x.x"
 
@@ -6314,9 +6298,9 @@ passport-strategy@1.x.x:
   resolved "https://registry.yarnpkg.com/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
   integrity sha1-tVOaqPwiWj0a0XlHbd8ja0QPUuQ=
 
-passport@passport-next/passport#^2.1.0:
-  version "2.1.1"
-  resolved "https://codeload.github.com/passport-next/passport/tar.gz/a8551357dc1d2613a13e2876bef5bee0f88ff5b5"
+passport@passport-next/passport#^3.1.0:
+  version "3.1.0"
+  resolved "https://codeload.github.com/passport-next/passport/tar.gz/cfbd611f465bc4d674b588ab14dc4f3911c8dfe9"
   dependencies:
     "@passport-next/passport-strategy" "1.x.x"
 
@@ -7580,13 +7564,13 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
   integrity sha1-tf3AjxKH6hF4Yo5BXiUTK3NkbG0=
 
-signin@drugis/signin#0.1.5:
-  version "0.1.5"
-  resolved "https://codeload.github.com/drugis/signin/tar.gz/e740a0cf3a9b5446fbafbb33afe659143563afbf"
+signin@drugis/signin#0.1.6:
+  version "0.1.6"
+  resolved "https://codeload.github.com/drugis/signin/tar.gz/82a631b6543d31b7894aa8c656f7b0f32396e94f"
   dependencies:
-    bcrypt "^3.0.1"
-    passport passport-next/passport#^2.1.0
-    passport-google-oauth20 "^1.0.0"
+    bcrypt "^3.0.7"
+    passport passport-next/passport#^3.1.0
+    passport-google-oauth20 "^2.0.0"
     passport-local "^1.0.0"
 
 simple-swizzle@^0.2.2:
@@ -8072,7 +8056,7 @@ tar@4.4.2:
     safe-buffer "^5.1.2"
     yallist "^3.0.2"
 
-tar@^4, tar@^4.4.2:
+tar@^4:
   version "4.4.13"
   resolved "https://registry.yarnpkg.com/tar/-/tar-4.4.13.tgz#43b364bc52888d555298637b10d60790254ab525"
   integrity sha512-w2VwSrBoHa5BsSyH+KxEqeQBAllHhccyMFVHtGtdMpF4W7IRWfZjFiQceJPChOeTsSDVUpER2T8FA93pr0L+QA==
