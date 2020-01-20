@@ -1,25 +1,25 @@
 <div class="grid-container full">
   <div class="grid-x" style="margin-bottom: 10px;">
     <!-- Enabled tabs -->
-    <div ng-class="tabStatus['overview'].active ? 'tab-is-active' : 'tab-is-inactive'" class="cell shrink tab-common"
+    <div id="overview-tab" ng-class="tabStatus['overview'].active ? 'tab-is-active' : 'tab-is-inactive'" class="cell shrink tab-common"
       ui-sref="evidence">
       Overview
     </div>
-    <div ng-class="tabStatus['problemDefinition'].active ? 'tab-is-active' : 'tab-is-inactive'"
+    <div id="problem-definition-tab" ng-class="tabStatus['problemDefinition'].active ? 'tab-is-active' : 'tab-is-inactive'"
       class="cell shrink tab-common" ui-sref="problem">
       Problem definition
     </div>
-    <div ng-if="tabStatus['preferences'].enabled"
+    <div id="preferences-tab" ng-if="tabStatus['preferences'].enabled"
       ng-class="tabStatus['preferences'].active ? 'tab-is-active' : 'tab-is-inactive'" class="cell shrink tab-common"
       ui-sref="preferences">
       Preferences
     </div>
-    <div ng-if="tabStatus['deterministic'].enabled"
+    <div id="deterministic-tab" ng-if="tabStatus['deterministic'].enabled"
       ng-class="tabStatus['deterministic'].active ? 'tab-is-active' : 'tab-is-inactive'" class="cell shrink tab-common"
       ui-sref="deterministic-results">
       Deterministic results
     </div>
-    <div ng-if="tabStatus['smaa'].enabled" ng-class="tabStatus['smaa'].active ? 'tab-is-active' : 'tab-is-inactive'"
+    <div id="smaa-tab" ng-if="tabStatus['smaa'].enabled" ng-class="tabStatus['smaa'].active ? 'tab-is-active' : 'tab-is-inactive'"
       class="cell shrink tab-common" ui-sref="smaa-results">
       SMAA results
     </div>
