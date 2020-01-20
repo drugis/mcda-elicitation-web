@@ -1,6 +1,6 @@
 'use strict';
-define(['lodash', 'jquery'],
-  function(_, $) {
+define(['lodash', 'jquery', 'angular'],
+  function(_, $, angular) {
     var dependencies = [
       '$stateParams',
       'OrderingService',
@@ -34,6 +34,7 @@ define(['lodash', 'jquery'],
           scope.pvfCoordinates = {};
           init();
           scope.$on('elicit.settingsChanged', resetPvfCoordinates);
+          scope.$watch('aggregateState', resetPvfCoordinates);
 
           function init() {
             scope.criteriaHavePvf = doAllCriteriaHavePvf();
@@ -108,14 +109,17 @@ define(['lodash', 'jquery'],
           }
 
           function resetPvfCoordinates() {
-            scope.problem = WorkspaceSettingsService.usePercentage() ? scope.aggregateState.percentified.problem : scope.aggregateState.dePercentified.problem;
-            reloadOrderings();
-            scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinates(scope.problem.criteria);
-            scope.isSafe = createIsSafe();
+            scope.problem = WorkspaceSettingsService.usePercentage() ?
+              angular.copy(scope.aggregateState.percentified.problem) :
+              angular.copy(scope.aggregateState.dePercentified.problem);
+            reloadOrderings().then(function() {
+              scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinates(scope.problem.criteria);
+              scope.isSafe = createIsSafe();
+            });
           }
 
           function reloadOrderings() {
-            OrderingService.getOrderedCriteriaAndAlternatives(scope.problem, $stateParams).then(function(orderings) {
+            return OrderingService.getOrderedCriteriaAndAlternatives(scope.problem, $stateParams).then(function(orderings) {
               scope.alternatives = orderings.alternatives;
               scope.criteria = orderings.criteria;
               var preferences = scope.scenario.state.prefs;

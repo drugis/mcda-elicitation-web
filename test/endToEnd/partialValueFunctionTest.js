@@ -2,7 +2,6 @@
 
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
-const errorService = require('./util/errorService');
 
 const workspacePath = '/partialValueFunctionTestProblem.json';
 
@@ -17,8 +16,9 @@ function beforeEach(browser) {
 
 function afterEach(browser) {
   browser.click('#logo');
-  workspaceService.deleteFromList(browser, 0);
-  errorService.isErrorBarHidden(browser).end();
+  workspaceService
+    .deleteFromList(browser, 0)
+    .end();
 
 }
 
@@ -45,9 +45,22 @@ function navigate(browser) {
     .waitForElementVisible('#criterion-title');
 }
 
+function setLinearPVF(browser) {
+  browser
+    .waitForElementVisible('#undefined-pvf-0')
+    .waitForElementVisible('#undefined-pvf-1')
+    .click('#set-increasing-pvf-0')
+    .waitForElementVisible('#defined-pvf-0')
+    .click('#set-decreasing-pvf-0')
+    .waitForElementVisible('#defined-pvf-0')
+    .click('#set-decreasing-pvf-1')
+    .waitForElementVisible('#defined-pvf-1');
+}
+
 module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
   'Set partial value functions': set,
-  'Go to previous step': navigate
+  'Go to previous step': navigate,
+  'Set linear partial value functions via button': setLinearPVF
 };

@@ -146,7 +146,6 @@ function cancelDeleteSubproblem(browser) {
     .click('#close-modal-button')
     .waitForElementVisible('#delete-subproblem-button')
     .assert.containsText('#subproblem-selector', subproblem1.title);
-
 }
 
 module.exports = {
