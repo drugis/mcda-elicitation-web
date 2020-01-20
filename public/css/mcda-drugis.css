@@ -8903,3 +8903,10 @@ div.undefined-partial-value-function {
   font-family: sans-serif;
   font-size: 12px;
 }
+
+/* line 641, ../../sass/_mcda-drugis-base.scss */
+button img {
+  margin-bottom: 2px;
+  height: 14px;
+  width: 12px;
+}

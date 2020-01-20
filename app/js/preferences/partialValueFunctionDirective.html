@@ -11,30 +11,31 @@
           </span>
         </div>
         <div class="grid-x partial-value-plot">
-          <div id="defined-pvf-{{$index}}" class="cell large-11 medium-11" ng-if="isPVFDefined(criterion.dataSources[0])">
+          <div id="defined-pvf-{{$index}}" class="cell" ng-if=" isPVFDefined(criterion.dataSources[0])">
             <partial-value-plot criterion="criterion" values="pvfCoordinates[criterion.id]" width="'300px'"
               height="'216px'"></partial-value-plot>
           </div>
-          <div id="undefined-pvf-{{$index}}" class="cell large-11 medium-11 undefined-partial-value-function"
+          <div id="undefined-pvf-{{$index}}" class="cell undefined-partial-value-function"
             ng-if="!isPVFDefined(criterion.dataSources[0])">
             <i style="font-size: 176px" class="fa fa-question"></i>
           </div>
-          <div class="cell large-1 medium-1">
-            <div>
-              <a id="set-increasing-pvf-{{$index}}" class="fa fa-arrow-up" ng-click="setPVF(criterion, 'increasing')" tooltip="Set increasing PVF."></a>
-            </div>
-            <div>
-              <a id="set-decreasing-pvf-{{$index}}" class="fa fa-arrow-down" ng-click="setPVF(criterion, 'decreasing')" tooltip="Set decreasing PVF"></a>
-            </div>
-          </div>
         </div>
-        <div class="cell text-centered">
+        <div class="cell button-group small">
+          <button id="set-increasing-pvf-{{$index}}" ng-click="setPVF(criterion, 'increasing')" class="button"
+            type="button" tooltip="Set increasing PVF.">
+            <img src="img/upchart.png" alt="increasing PVF">
+            Increasing
+          </button>
+          <button id="set-decreasing-pvf-{{$index}}" ng-click="setPVF(criterion, 'decreasing')" class="button"
+            type="button" tooltip="Set decreasing PVF">
+            <img src="img/downchart.png" alt="decreasing PVF">
+            Decreasing
+          </button>
           <button id="criterion-{{ $index }}-pvf-button" class="button text-centered" ng-if="editMode.canEdit"
             ng-class="{alert: !isSafe['partial-value-function'].safe}"
-            tooltip="{{isSafe['partial-value-function'].tooltip}}" tooltip-animation="false"
-            ng-disabled="!isAccessible(tasks['partial-value-function']).accessible"
+            tooltip="{{isSafe['partial-value-function'].tooltip}}"
             ui-sref="partial-value-function({criterion: criterion.id})">
-            Define
+            <i class="fa fa-line-chart"></i> Advanced
           </button>
         </div>
       </div>
