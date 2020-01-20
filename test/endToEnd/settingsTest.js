@@ -106,6 +106,7 @@ function verifyComponents(browser) {
     .waitForElementVisible('#units-column-checkbox')
     .waitForElementVisible('#reference-column-checkbox')
     .waitForElementVisible('#uncertainties-column-checkbox')
+    .waitForElementVisible('#random-seed')
     .waitForElementVisible('#reset-default-button')
     .waitForElementVisible('#save-settings-button')
     .click('#save-settings-button');
@@ -129,6 +130,9 @@ function reset(browser) {
     .waitForElementVisible('#units-column-checkbox:checked')
     .waitForElementVisible('#reference-column-checkbox:checked')
     .waitForElementVisible('#uncertainties-column-checkbox:checked')
+    .getValue('#random-seed', function(result) {
+      browser.assert.equal(result.value, 1234);
+    })
     .click('#save-settings-button');
 }
 

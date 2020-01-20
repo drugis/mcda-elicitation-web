@@ -144,6 +144,11 @@
     "text": "Partial value functions can be either linear (a straight line between two points) or piece-wise linear, meaning the function consists of several linear segments.",
     "link": "/manual.html#mcda-value-tradeoffs"
   },
+  "random-seed": {
+    "title": "Random seed",
+    "text": "The random seed that is used in R calculations.",
+    "link": "/manual.html#mcda-benefit-risk-analysis"
+  },
   "rank-acceptabilities": {
     "title": "Rank acceptabilities",
     "text": "How likely each intervention is to overall be the best, worst, or any rank in between, based on the SMAA model results for the given preferences and data.",

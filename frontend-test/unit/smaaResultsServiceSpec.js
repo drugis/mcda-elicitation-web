@@ -9,14 +9,14 @@ define([
 ], function(angular) {
   describe('The SmaaResultsService', function() {
     var smaaResultsService;
-    var pataviServiceMock = jasmine.createSpyObj('PataviServiceMock', ['somefunction']);
+    var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsServiceMock', ['somefunction']);
 
     const root = 'root';
 
     beforeEach(function() {
       angular.mock.module('patavi', function() { });
       angular.mock.module('elicit.smaaResults', function($provide) {
-        $provide.value('PataviService', pataviServiceMock);
+        $provide.value('PataviResultsService', pataviResultsServiceMock);
       });
     });
 

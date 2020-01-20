@@ -1,9 +1,12 @@
 'use strict';
-define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], function(angular, _) {
+define(['angular', 'angular-mocks', 'mcda/workspace/workspace'], function(angular) {
   describe('the WorkspaceSettingsService', function() {
     var workspaceSettingsService, q, scope;
-    var stateParams = {
-      id: 'stateParams'
+    const state = {
+      params: {
+        id: 'stateParams'
+      },
+      reload: jasmine.createSpy('reload')
     };
     var DEFAULT_TOGGLED_COLUMNS = {
       criteria: true,
@@ -20,12 +23,13 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
       hasNoEffects: false,
       hasNoDistributions: false,
       isRelativeProblem: false,
-      changed: false
+      changed: false,
+      randomSeed: 1234
     };
     var workspaceSettingsResourceMock = jasmine.createSpyObj('WorkspaceSettingsResource', ['get', 'put']);
 
     beforeEach(angular.mock.module('elicit.workspace', function($provide) {
-      $provide.value('$stateParams', stateParams);
+      $provide.value('$state', state);
       $provide.value('WorkspaceSettingsResource', workspaceSettingsResourceMock);
     }));
 
@@ -90,7 +94,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
         workspaceSettingsResourceMock.get.and.returnValue({
           $promise: resultsDefer.promise
         });
-        loadedPromise = workspaceSettingsService.loadWorkspaceSettings(stateParams);
+        loadedPromise = workspaceSettingsService.loadWorkspaceSettings(state.params);
         loadedPromise.then(function() {
           loadResolved = true;
         });
@@ -101,7 +105,7 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
       });
 
       it('should return a promise and not change settings until the new ones are loaded', function() {
-        expect(workspaceSettingsResourceMock.get).toHaveBeenCalledWith(stateParams);
+        expect(workspaceSettingsResourceMock.get).toHaveBeenCalledWith(state.params);
         expect(loadResolved).toBe(false);
         expectToGetDefaultValues();
       });
@@ -147,7 +151,9 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
       var savedPromise;
       var saveResolved = false;
       var saveDefer;
-      var newSettings = {};
+      var newSettings = {
+        randomSeed: 1234
+      };
       var newToggledColumns = 'newToggledColumns';
       var deregisterChangeListener;
       var settingsChanged = false;
@@ -170,14 +176,16 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
       afterEach(function() {
         deregisterChangeListener();
         saveResolved = false;
-        newSettings = {};
+        newSettings = {
+          randomSeed: 1234
+        };
         newToggledColumns = 'newToggledColumns';
         settingsChanged = false;
       });
 
       it('should call the save function of the settings resource and return a promise', function() {
-        expect(workspaceSettingsResourceMock.put).toHaveBeenCalledWith(stateParams, {
-          settings: { changed: true }, toggledColumns: newToggledColumns
+        expect(workspaceSettingsResourceMock.put).toHaveBeenCalledWith(state.params, {
+          settings: { changed: true, randomSeed: 1234 }, toggledColumns: newToggledColumns
         });
         expect(saveResolved).toBe(false);
         expect(settingsChanged).toBe(false);
@@ -191,14 +199,43 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
         });
 
         it('should resolve the saveSettings promise and set the saved values', function() {
+          var expectedSettings = {
+            randomSeed: 1234,
+            changed: true
+          };
           expect(saveResolved).toBe(true);
           expect(workspaceSettingsService.getToggledColumns()).toEqual(newToggledColumns);
-          expect(workspaceSettingsService.setWorkspaceSettings()).toEqual({ changed: true });
+          expect(workspaceSettingsService.setWorkspaceSettings()).toEqual(expectedSettings);
         });
 
         it('should broadcast that the settings have changed.', function() {
           expect(settingsChanged).toBe(true);
         });
+      });
+    });
+
+    describe('saveSettings with new random seed', function() {
+      it('should reload state if random seed has changed', function() {
+        var newSettings = {
+          randomSeed: 1337
+        };
+        var saveResolved = false;
+        var saveDefer = q.defer();
+
+        workspaceSettingsResourceMock.put.and.returnValue({
+          $promise: saveDefer.promise
+        });
+
+        var savedPromise = workspaceSettingsService.saveSettings(angular.copy(newSettings), {});
+        savedPromise.then(function() {
+          saveResolved = true;
+        });
+
+        saveDefer.resolve();
+        scope.$apply();
+
+        expect(saveResolved).toBe(true);
+        expect(state.reload).toHaveBeenCalled();
       });
     });
 
@@ -309,6 +346,14 @@ define(['angular', 'lodash', 'angular-mocks', 'mcda/workspace/workspace'], funct
         };
         const result = workspaceSettingsService.getWarnings(settings);
         const expectedResult = ['No entered data available for SMAA analysis.'];
+        expect(result).toEqual(expectedResult);
+      });
+    });
+
+    describe('getRandomSeed', function() {
+      it('should resturn the random seed', function() {
+        const result = workspaceSettingsService.getRandomSeed();
+        const expectedResult = 1234;
         expect(result).toEqual(expectedResult);
       });
     });
