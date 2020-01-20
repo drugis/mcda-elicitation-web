@@ -8876,8 +8876,8 @@ span.partial-value-function-plot-header {
 
 /* line 616, ../../sass/_mcda-drugis-base.scss */
 div.partial-value-plot {
-  width: 250px;
-  height: 180px;
+  width: 330px;
+  height: 216;
 }
 
 /* line 621, ../../sass/_mcda-drugis-base.scss */
@@ -8902,4 +8902,11 @@ div.undefined-partial-value-function {
 .c3-axis-y text {
   font-family: sans-serif;
   font-size: 12px;
+}
+
+/* line 641, ../../sass/_mcda-drugis-base.scss */
+.image-in-button {
+  margin-bottom: 2px;
+  height: 14px;
+  width: 12px;
 }

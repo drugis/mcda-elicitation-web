@@ -1,8 +1,14 @@
 'use strict';
 define([],
   function() {
-    var dependencies = [];
-    var PartialValueFunctionDirective = function() {
+    var dependencies = [
+      '$state',
+      'PartialValueFunctionService'
+    ];
+    var PartialValueFunctionDirective = function(
+      $state,
+      PartialValueFunctionService
+    ) {
       return {
         restrict: 'E',
         scope: {
@@ -11,14 +17,23 @@ define([],
           isAccessible: '=',
           isSafe: '=',
           pvfCoordinates: '=',
+          scenario: '=',
           tasks: '='
         },
         templateUrl: './partialValueFunctionDirective.html',
         link: function(scope) {
           scope.isPVFDefined = isPVFDefined;
+          scope.setPVF = setPVF;
 
           function isPVFDefined(dataSource) {
             return dataSource.pvf && dataSource.pvf.type;
+          }
+
+          function setPVF(criterion, direction) {
+            scope.scenario.state = PartialValueFunctionService.getNewScenarioState(scope.scenario, criterion, direction);
+            scope.scenario.$save($state.params, function(scenario) {
+              scope.$emit('elicit.resultsAccessible', scenario);
+            });
           }
         }
       };

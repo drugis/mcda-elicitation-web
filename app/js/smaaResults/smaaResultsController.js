@@ -43,9 +43,7 @@ define(['clipboard', 'lodash'], function(Clipboard, _) {
       });
     });
 
-    $scope.$on('elicit.legendChanged', function() {
-      loadState();
-    });
+    $scope.$on('elicit.legendChanged', loadState);
 
     function loadState() {
       $scope.state = LegendService.replaceAlternativeNames($scope.scenario.state.legend, $scope.aggregateState.dePercentified);

@@ -93,6 +93,13 @@
       </div>
 
       <div class="cell">
+        Set random seed <inline-help help-key="random-seed"></inline-help>
+      </div>
+      <div class="cell large-6 medium-6">
+        <input id="random-seed" type="number" min="0" step="1" ng-model="settings.randomSeed">
+      </div>
+
+      <div class="cell">
         <button id="reset-default-button" class="button" type="button" ng-click="resetToDefault()">Default</button>
       </div>
       <div ng-if="warnings.length" ng-repeat="warning in warnings">

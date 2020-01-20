@@ -44,17 +44,9 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
     };
     new Clipboard('.clipboard-button');
 
-    $scope.$on('elicit.settingsChanged', function() {
-      $state.reload();
-    });
-
-    $scope.$watch('scales.observed', function() {
-      resetSensitivityAnalysis();
-    });
-
-    $scope.$on('elicit.legendChanged', function() {
-      loadState();
-    });
+    $scope.$on('elicit.settingsChanged', $state.reload);
+    $scope.$watch('scales.observed', resetSensitivityAnalysis);
+    $scope.$on('elicit.legendChanged', loadState);
 
     var orderingsPromise = $scope.scalesPromise.then(function() {
       $scope.problem = WorkspaceSettingsService.usePercentage() ? $scope.aggregateState.percentified.problem : $scope.aggregateState.dePercentified.problem;

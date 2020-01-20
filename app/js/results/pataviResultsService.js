@@ -1,9 +1,21 @@
 'use strict';
 define(['angular'], function() {
-  var dependencies = ['$http', '$q', '$rootScope', 'PataviService'];
-  var PataviResultsService = function($http, $q, $rootScope, PataviService) {
-
+  var dependencies = [
+    '$http',
+    '$q',
+    '$rootScope',
+    'PataviService',
+    'WorkspaceSettingsService'
+  ];
+  var PataviResultsService = function(
+    $http,
+    $q,
+    $rootScope,
+    PataviService,
+    WorkspaceSettingsService
+  ) {
     function postAndHandleResults(problem, successHandler, updateHandler) {
+      problem.seed = WorkspaceSettingsService.getRandomSeed();
       return $http.post('/patavi', problem)
         .then(function(result) {
           var uri = result.headers('Location');
@@ -26,7 +38,7 @@ define(['angular'], function() {
         type: 'PATAVI',
         message: pataviError.cause
       });
-      return($q.reject(pataviError));
+      return ($q.reject(pataviError));
     }
 
     function defaultSuccessHandler(result) {

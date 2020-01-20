@@ -1,8 +1,12 @@
 'use strict';
-define(['angular','angular-mocks', 'mcda/preferences/preferences'], function(angular) {
+define(['angular', 'angular-mocks', 'mcda/preferences/preferences'], function(angular) {
   describe('Preferences service', function() {
     var preferencesService;
-    beforeEach(angular.mock.module('elicit.preferences'));
+    var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsServiceMock', ['somefunction']);
+
+    beforeEach(angular.mock.module('elicit.preferences', function($provide) {
+      $provide.value('PataviResultsService', pataviResultsServiceMock);
+    }));
     beforeEach(inject(function(PreferencesService) {
       preferencesService = PreferencesService;
     }));
@@ -32,13 +36,13 @@ define(['angular','angular-mocks', 'mcda/preferences/preferences'], function(ang
       });
       it('should work for ordinal preferences', function() {
         var prefs = [{
-            type: 'ordinal',
-            criteria: ['crit2', 'crit1']
-          },
-          {
-            type: 'ordinal',
-            criteria: ['crit1', 'crit3']
-          }
+          type: 'ordinal',
+          criteria: ['crit2', 'crit1']
+        },
+        {
+          type: 'ordinal',
+          criteria: ['crit1', 'crit3']
+        }
         ];
         var result = preferencesService.buildImportance(criteria, prefs);
         var expectedResult = {
@@ -50,15 +54,15 @@ define(['angular','angular-mocks', 'mcda/preferences/preferences'], function(ang
       });
       it('should work for precise preferences', function() {
         var prefs = [{
-            type: 'exact swing',
-            criteria: ['crit2', 'crit1'],
-            ratio: 2
-          },
-          {
-            type: 'exact swing',
-            criteria: ['crit2', 'crit3'],
-            ratio: 5
-          }
+          type: 'exact swing',
+          criteria: ['crit2', 'crit1'],
+          ratio: 2
+        },
+        {
+          type: 'exact swing',
+          criteria: ['crit2', 'crit3'],
+          ratio: 5
+        }
         ];
         var result = preferencesService.buildImportance(criteria, prefs);
         var expectedResult = {
@@ -70,15 +74,15 @@ define(['angular','angular-mocks', 'mcda/preferences/preferences'], function(ang
       });
       it('should work for imprecise preferences', function() {
         var prefs = [{
-            type: 'ratio bound',
-            criteria: ['crit2', 'crit1'],
-            bounds: [2, 4]
-          },
-          {
-            type: 'ratio bound',
-            criteria: ['crit2', 'crit3'],
-            bounds: [4, 5]
-          }
+          type: 'ratio bound',
+          criteria: ['crit2', 'crit1'],
+          bounds: [2, 4]
+        },
+        {
+          type: 'ratio bound',
+          criteria: ['crit2', 'crit3'],
+          bounds: [4, 5]
+        }
         ];
         var result = preferencesService.buildImportance(criteria, prefs);
         var expectedResult = {

@@ -614,8 +614,8 @@ span.partial-value-function-plot-header {
 }
 
 div.partial-value-plot {
-  width: 250px;
-  height: 180px;
+  width: 330px;
+  height: 216;
 }
 
 div.undefined-partial-value-function {
@@ -636,4 +636,10 @@ div.undefined-partial-value-function {
 .c3-axis-y text {
   font-family: sans-serif;
   font-size: 12px;
+}
+
+.image-in-button {
+  margin-bottom: 2px;
+  height: 14px;
+  width: 12px;
 }
