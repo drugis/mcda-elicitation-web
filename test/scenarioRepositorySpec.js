@@ -222,10 +222,10 @@ describe('the scenario repository', function() {
     });
   });
 
-  describe('countScenariosForSubproblem', function() {
+  describe('getScenarioIdsForSubproblem', function(){
     var query;
-    const expectedQuery = 'SELECT COUNT(*) FROM scenario WHERE subproblemid = $1';
-    const subproblemId = 37;
+    const expectedQuery = 'SELECT id FROM scenario WHERE subproblemId = $1';
+    const subproblemId = 10;
     const queryInputValues = [subproblemId];
 
     beforeEach(function() {
@@ -236,16 +236,22 @@ describe('the scenario repository', function() {
       query.restore();
     });
 
-    it('should count the scenarios for the subproblem', function(done) {
-      query.onCall(0).yields(null);
-      var callback = testUtil.createQueryNoArgumentCallbackWithTests(query, expectedQuery, queryInputValues, done);
-      scenarioRepository.countScenariosForSubproblem(subproblemId, callback);
+    it('should get the scenario ids for a subproblem and call the callback with results', function(done) {
+      const queryResult = {
+        rows: [{
+          id: 10
+        }]
+      };
+      query.onCall(0).yields(null, queryResult);
+      const expectedResult = queryResult;
+      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      scenarioRepository.getScenarioIdsForSubproblem(subproblemId, callback);
     });
 
     it('should call the callback with only an error', function(done) {
       query.onCall(0).yields(expectedError);
-      var callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
-      scenarioRepository.countScenariosForSubproblem(subproblemId, callback);
+      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      scenarioRepository.getScenarioIdsForSubproblem(subproblemId, callback);
     });
   });
 });

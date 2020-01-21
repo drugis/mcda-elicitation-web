@@ -25,10 +25,10 @@ describe('the workspace repository', function() {
   const title = 'title';
   const problem = {};
   const ownerId = 14;
-    
+
 
   describe('get', function() {
-    const expectedQuery = 'SELECT id, owner, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
+    const expectedQuery = 'SELECT id, owner, problem, defaultSubproblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
     const queryInputValues = [workspaceId];
 
     initDBStub();
@@ -74,7 +74,7 @@ describe('the workspace repository', function() {
   });
 
   describe('setDefaultSubProblem', function() {
-    const expectedQuery = 'UPDATE workspace SET defaultsubproblemId = $1 WHERE id = $2';
+    const expectedQuery = 'UPDATE workspace SET defaultSubproblemId = $1 WHERE id = $2';
     const subProblemId = 123;
     const queryInputValues = [subProblemId, workspaceId];
 
@@ -92,6 +92,27 @@ describe('the workspace repository', function() {
       workspaceRepository.setDefaultSubProblem(workspaceId, subProblemId, callback);
     });
   });
+
+  describe('getDefaultSubProblem', function() {
+    const expectedQuery = 'SELECT defaultSubproblemId FROM workspace WHERE id = $1';
+    const expectedResult = [123];
+    const queryInputValues = [workspaceId];
+
+    initDBStub();
+
+    it('should get the default sub problem for the workspace', function(done) {
+      query.onCall(0).yields(null, expectedResult);
+      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      workspaceRepository.getDefaultSubproblem(workspaceId, callback);
+    });
+
+    it('should call the callback with only an error', function(done) {
+      query.onCall(0).yields(expectedError);
+      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      workspaceRepository.getDefaultSubproblem(workspaceId, callback);
+    });
+  });
+
 
   describe('setDefaultScenario', function() {
     const expectedQuery = 'UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2';
@@ -114,7 +135,7 @@ describe('the workspace repository', function() {
   });
 
   describe('getWorkspaceInfo', () => {
-    const expectedQuery = 'SELECT id, owner, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
+    const expectedQuery = 'SELECT id, owner, problem, defaultSubproblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
     const queryInputValues = [workspaceId];
 
     initDBStub();
@@ -166,7 +187,7 @@ describe('the workspace repository', function() {
   describe('query', function() {
     initDBStub();
 
-    const expectedQuery = 'SELECT id, owner, title, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1';
+    const expectedQuery = 'SELECT id, owner, title, problem, defaultSubproblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1';
     const queryInputValues = [ownerId];
 
     it('should query all in-progress workspaces for the user', function(done) {

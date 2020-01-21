@@ -3,7 +3,7 @@ var logger = require('./logger');
 
 module.exports = function(db) {
   function create(workspaceId, subproblemId, title, state, callback) {
-    logger.debug('creating scenario');
+    logger.debug('Creating scenario');
     const query = 'INSERT INTO scenario (workspace, subProblemId, title, state) VALUES ($1, $2, $3, $4) RETURNING id';
     db.query(query,
       [workspaceId, subproblemId, title, state],
@@ -11,9 +11,8 @@ module.exports = function(db) {
     );
   }
 
-
   function query(workspaceId, callback) {
-    logger.debug('GET /workspaces/scenarios');
+    logger.debug('Getting scenarios for workspace: '+ workspaceId);
     const query = 'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1';
     db.query(
       query,
@@ -32,7 +31,7 @@ module.exports = function(db) {
   }
 
   function get(scenarioId, callback) {
-    logger.debug('GET /workspaces/:id/scenarios/:id');
+    logger.debug('Getting scenario: '+  scenarioId);
     const query = 'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE id = $1';
     db.query(
       query,
@@ -42,7 +41,7 @@ module.exports = function(db) {
   }
 
   function update(state, title, scenarioId, callback) {
-    logger.debug('updating scenario :id');
+    logger.debug('updating scenario:' +  scenarioId);
     const query = 'UPDATE scenario SET state = $1, title = $2 WHERE id = $3';
     db.query(
       query,
@@ -68,14 +67,16 @@ module.exports = function(db) {
     );
   }
 
-  function countScenariosForSubproblem(subproblemId, callback) {
-    const query = 'SELECT COUNT(*) FROM scenario WHERE subproblemid = $1';
+  function getScenarioIdsForSubproblem(subproblemId, callback) {
+    logger.debug('Getting scenario ids for: '+  subproblemId);
+    const query = 'SELECT id FROM scenario WHERE subproblemId = $1';
     db.query(
       query,
       [subproblemId],
       callback
     );
   }
+
   return {
     create: create,
     query: query,
@@ -83,6 +84,6 @@ module.exports = function(db) {
     get: get,
     update: update,
     delete: deleteScenario,
-    countScenariosForSubproblem: countScenariosForSubproblem
+    getScenarioIdsForSubproblem: getScenarioIdsForSubproblem
   };
 };

@@ -4,7 +4,7 @@ var logger = require('./logger');
 module.exports = function(db) {
   function get(workspaceId, callback) {
     logger.debug('GET /workspaces/:id');
-    const query = 'SELECT id, owner, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
+    const query = 'SELECT id, owner, problem, defaultSubproblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
     db.query(
       query,
       [workspaceId],
@@ -22,18 +22,28 @@ module.exports = function(db) {
     );
   }
 
-  function setDefaultSubProblem(workspaceId, subProblemId, callback) {
-    logger.debug('setting default subproblem');
-    const query = 'UPDATE workspace SET defaultsubproblemId = $1 WHERE id = $2';
+  function setDefaultSubProblem(workspaceId, subproblemId, callback) {
+    logger.debug('setting default subproblem for: ' + workspaceId);
+    const query = 'UPDATE workspace SET defaultSubproblemId = $1 WHERE id = $2';
     db.query(
       query,
-      [subProblemId, workspaceId],
+      [subproblemId, workspaceId],
+      callback
+    );
+  }
+
+  function getDefaultSubproblem(workspaceId, callback) {
+    logger.debug('getting default subproblem for: ' + workspaceId);
+    const query = 'SELECT defaultSubproblemId FROM workspace WHERE id = $1';
+    db.query(
+      query,
+      [workspaceId],
       callback
     );
   }
 
   function setDefaultScenario(workspaceId, scenarioId, callback) {
-    logger.debug('setting default scenario');
+    logger.debug('setting default scenario of ' + workspaceId + ' to ' + scenarioId);
     const query = 'UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2';
     db.query(
       query,
@@ -44,7 +54,7 @@ module.exports = function(db) {
 
   function getWorkspaceInfo(workspaceId, callback) {
     logger.debug('getting workspace info');
-    const query = 'SELECT id, owner, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
+    const query = 'SELECT id, owner, problem, defaultSubproblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM workspace WHERE id = $1';
     db.query(
       query,
       [workspaceId],
@@ -73,7 +83,7 @@ module.exports = function(db) {
   }
 
   function query(ownerId, callback) {
-    const query = 'SELECT id, owner, title, problem, defaultSubProblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1';
+    const query = 'SELECT id, owner, title, problem, defaultSubproblemId as "defaultSubProblemId", defaultScenarioId AS "defaultScenarioId" FROM Workspace WHERE owner = $1';
     db.query(
       query,
       [ownerId],
@@ -85,6 +95,7 @@ module.exports = function(db) {
     get: get,
     create: create,
     setDefaultSubProblem: setDefaultSubProblem,
+    getDefaultSubproblem: getDefaultSubproblem,
     setDefaultScenario: setDefaultScenario,
     getWorkspaceInfo: getWorkspaceInfo,
     update: update,

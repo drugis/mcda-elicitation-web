@@ -6,8 +6,9 @@ const _ = require('lodash');
 const httpStatus = require('http-status-codes');
 
 module.exports = function(db) {
-  const SubproblemRepository = require('./subProblemRepository')(db);
-  const ScenarioRepository = require('./scenarioRepository')(db);
+  var SubproblemRepository = require('./subProblemRepository')(db);
+  var ScenarioRepository = require('./scenarioRepository')(db);
+  var WorkspaceRepository = require('./workspaceRepository')(db);
 
   function query(request, response, next) {
     SubproblemRepository.query(
@@ -115,7 +116,7 @@ module.exports = function(db) {
   function deleteSubproblem(request, response, next) {
     const subproblemId = request.params.subproblemId;
     const workspaceId = request.params.workspaceId;
-    logger.debug('Deleting subproblem ' + subproblemId);
+    logger.debug('Start deleting subproblem ' + subproblemId);
     db.runInTransaction(_.partial(deleteTransaction, workspaceId, subproblemId, next), function(error) {
       if (error) {
         util.handleError(error, next);
@@ -128,19 +129,75 @@ module.exports = function(db) {
 
   function deleteTransaction(workspaceId, subproblemId, next, client, transactionCallback) {
     async.waterfall([
-      _.partial(blockIfOnlyOneSubproblem, workspaceId, next),
-      _.partial(deleteSubproblemAction, subproblemId, next)
+      _.partial(getSubproblemIds, workspaceId, next),
+      getDefaultSubproblem,
+      _.partial(setDefaultSubproblem, subproblemId),
+      _.partial(deleteSubproblemAction, subproblemId)
     ], transactionCallback);
   }
 
-  function blockIfOnlyOneSubproblem(workspaceId, next, callback) {
-    SubproblemRepository.countSubproblemsForWorkspace(workspaceId, function(error, result) {
+  function getSubproblemIds(workspaceId, next, callback) {
+    SubproblemRepository.getSubproblemIds(workspaceId, function(error, result) {
       if (error) {
         util.handleError(error, next);
-      } else if (result.rows[0] === 1) {
+      } else if (result.rows.length === 1) {
         util.handleError('Cannot delete the only subproblem for workspace', next);
       } else {
-        callback(null);
+        callback(null, workspaceId, result.rows, next);
+      }
+    });
+  }
+  
+  function getDefaultSubproblem(workspaceId, subproblemIds, next, callback) {
+    WorkspaceRepository.getDefaultSubproblem(workspaceId, function(error, result) {
+      if (error) {
+        util.handleError(error, next);
+      } else {
+        const currentDefault = result.rows[0].defaultsubproblemid;
+        callback(null, workspaceId, subproblemIds, currentDefault, next);
+      }
+    });
+  }
+  
+  function setDefaultSubproblem(subproblemId, workspaceId, subproblemIds, defaultId, next, callback) {
+    if (subproblemId+'' === defaultId+'') {
+      setNewDefaultSubproblem(subproblemId, workspaceId, subproblemIds, next, callback);
+    } else {
+      callback(null, next);
+    }
+  }
+  
+  function setNewDefaultSubproblem(subproblemId, workspaceId, subproblemIds, next, callback) {
+    const newDefault = _.find(subproblemIds, function(row) {
+      return (row.id)+'' !== subproblemId;
+    }).id;
+    WorkspaceRepository.setDefaultSubProblem(workspaceId, newDefault, function(error) {
+      if (error) {
+        util.handleError(error, next);
+      } else {
+        determineAndSetNewDefaultScenario(newDefault, workspaceId, next, callback);
+        
+      }
+    });
+  }
+  
+  function determineAndSetNewDefaultScenario(subproblemId, workspaceId, next, callback) {
+    ScenarioRepository.getScenarioIdsForSubproblem(subproblemId, function(error, result) {
+      if (error) {
+        util.handleError(error, next);
+      } else {
+        const newDefaultScenario = result.rows[0].id;
+        setDefaultScenario(workspaceId, newDefaultScenario, next, callback);
+      }
+    });
+  }
+
+  function setDefaultScenario(workspaceId, newDefaultScenario, next, callback) {
+    WorkspaceRepository.setDefaultScenario(workspaceId, newDefaultScenario, function(error) {
+      if (error) {
+        util.handleError(error, next);
+      } else {
+        callback(null, next);
       }
     });
   }
