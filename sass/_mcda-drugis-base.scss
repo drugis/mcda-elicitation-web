@@ -317,6 +317,14 @@ input[type="file"] {
   background: $medium-gray;
 }
 
+.tab-is-disabled {
+  background: #efefef;
+  border-bottom: none;
+  border-bottom: 1px solid #e6e6e6;
+  color: darkgray;
+  cursor: not-allowed;
+}
+
 .uncertain {
   padding: 0.1rem;
   color: grey;
@@ -565,21 +573,6 @@ $preferences-progress-inactive-color: #e2e2e2;
   text-align: left;
 }
 
-li.disabled {
-  background: #efefef;
-  border: 1px solid;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  padding-top: 17px;
-  padding-bottom: 6px;
-  padding-left: 20px;
-  padding-right: 20px;
-  border-color: #e6e6e6;
-  border-bottom: none;
-  font-size: 0.75rem;
-  color: darkgray;
-}
-
 span.toggle-text {
   position: relative;
   bottom: 9px;
@@ -625,7 +618,7 @@ div.undefined-partial-value-function {
 }
 
 .text-centered {
-    text-align: center;
+  text-align: center;
 }
 
 .c3-axis-x text {
@@ -642,4 +635,8 @@ div.undefined-partial-value-function {
   margin-bottom: 2px;
   height: 14px;
   width: 12px;
+}
+
+.menu-border-bottom {
+  border-bottom: 1px solid #e6e6e6;
 }
