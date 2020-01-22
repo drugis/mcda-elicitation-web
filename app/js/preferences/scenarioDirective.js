@@ -115,6 +115,8 @@ define(['lodash', 'jquery', 'angular'],
             reloadOrderings().then(function() {
               scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinates(scope.problem.criteria);
               scope.isSafe = createIsSafe();
+              scope.criteriaHavePvf = doAllCriteriaHavePvf();
+              loadWeights();
             });
           }
 
