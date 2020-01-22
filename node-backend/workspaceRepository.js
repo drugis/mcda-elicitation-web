@@ -33,7 +33,7 @@ module.exports = function(db) {
   }
 
   function getDefaultSubproblem(workspaceId, callback) {
-    logger.debug('getting default subproblem for: ' + workspaceId);
+    logger.debug('getting default subproblem id for: ' + workspaceId);
     const query = 'SELECT defaultSubproblemId FROM workspace WHERE id = $1';
     db.query(
       query,
@@ -48,6 +48,16 @@ module.exports = function(db) {
     db.query(
       query,
       [scenarioId, workspaceId],
+      callback
+    );
+  }
+  
+  function getDefaultScenario(workspaceId, callback){
+    logger.debug('getting default scenario id for: ' + workspaceId);
+    const query = 'SELECT defaultScenarioId FROM workspace WHERE id = $1';
+    db.query(
+      query,
+      [workspaceId],
       callback
     );
   }
@@ -97,6 +107,7 @@ module.exports = function(db) {
     setDefaultSubProblem: setDefaultSubProblem,
     getDefaultSubproblem: getDefaultSubproblem,
     setDefaultScenario: setDefaultScenario,
+    getDefaultScenario: getDefaultScenario,
     getWorkspaceInfo: getWorkspaceInfo,
     update: update,
     delete: del,
