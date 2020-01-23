@@ -19,7 +19,6 @@ function afterEach(browser) {
   workspaceService
     .deleteFromList(browser, 0)
     .end();
-
 }
 
 function set(browser) {
@@ -57,10 +56,21 @@ function setLinearPVF(browser) {
     .waitForElementVisible('#defined-pvf-1');
 }
 
+function displayWeights(browser) {
+  browser
+    .waitForElementVisible('#not-all-pvfs-set-warning')
+    .click('#set-increasing-pvf-0')
+    .waitForElementVisible('#not-all-pvfs-set-warning')
+    .click('#set-increasing-pvf-1')
+    .waitForElementVisible('#weight-criterion-0')
+    .waitForElementVisible('#weight-criterion-1');
+}
+
 module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
   'Set partial value functions': set,
   'Go to previous step': navigate,
-  'Set linear partial value functions via button': setLinearPVF
+  'Set linear partial value functions via button': setLinearPVF,
+  'Display weights when all PVFs are set': displayWeights
 };
