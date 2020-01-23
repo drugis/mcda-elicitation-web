@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'd3'], function(_, d3) {
+define(['lodash', 'd3', 'angular'], function(_, d3, angular) {
   var dependencies = [
     'PataviResultsService',
     'WorkspaceSettingsService',
@@ -52,7 +52,7 @@ define(['lodash', 'd3'], function(_, d3) {
         point: {
           r: getRadius
         },
-        data: data,
+        data: angular.copy(data),
         legend: { item: { onclick: function() { } } },
         axis: {
           x: {

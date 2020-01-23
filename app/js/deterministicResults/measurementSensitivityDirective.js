@@ -20,11 +20,9 @@ define([],
         link: function(scope) {
           scope.doMeasurementSensitivity = doMeasurementSensitivity;
 
-          init();
+          scope.$on('elicit.legendChanged', init);
 
-          scope.$on('elicit.legendChanged', function() {
-            init();
-          });
+          init();
 
           function init() {
             scope.measurementsAlternative = scope.alternatives[0];

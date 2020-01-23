@@ -1,22 +1,18 @@
-<div ng-if="!deterministicResults.problem">
-  <div class="grid-x">
-    <div class="cell">
-      <a class="fa fa-spinner fa-2x fa-spin"></a>
-    </div>
+<div class="grid-x" ng-if="!deterministicResults.problem">
+  <div class="cell text-centered">
+    <a class="fa fa-spinner fa-2x fa-spin"></a>
   </div>
 </div>
-<div ng-if="deterministicResults.problem">
-  <div class="grid-x">
-    <div class="cell large-3">
-      Scenario:
-    </div>
-    <div class="cell large-9">
-      <select id="scenario-selector" class="scenario-select" ng-model="scenario"
-        ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
-        ng-change="scenarioChanged(scenario)">
-      </select>
-      <inline-help help-key="scenario"></inline-help>
-    </div>
+<div class="grid-x" ng-if="deterministicResults.problem">
+  <div class="cell large-3">
+    Scenario:
+  </div>
+  <div class="cell large-9">
+    <select id="scenario-selector" class="scenario-select" ng-model="scenario"
+      ng-options="scenario.title for scenario in scenariosWithResults track by scenario.id"
+      ng-change="scenarioChanged(scenario)">
+    </select>
+    <inline-help help-key="scenario"></inline-help>
   </div>
   <br>
 
@@ -25,40 +21,37 @@
     sensitivity-scales-changed="sensitivityScalesChanged" is-editing="isEditing" criteria="criteria">
   </sensitivity-table>
 
-  <div class="grid-x underlined-div">
-    <div class="cell large-4 button-group small expanded">
-      <button id="recalculate-button" class="button" ng-click="recalculateResults()"
-        ng-disabled="sensitivityMeasurements.isEditing">
-        Recalculate value profiles
-      </button>
-      <button id="reset-button" class="button" ng-click="resetSensitivityAnalysis()">
-        Reset
-      </button>
-    </div>
+  <div class="cell button-group small">
+    <button id="recalculate-button" class="button" ng-click="recalculateResults()"
+      ng-disabled="sensitivityMeasurements.isEditing">
+      Recalculate value profiles
+    </button>
+    <button id="reset-button" class="button" ng-click="resetSensitivityAnalysis()">
+      Reset
+    </button>
   </div>
+  <div class="cell underlined-div"></div>
 
   <deterministic-weights-table criteria="criteria" weights="deterministicResults.results.weights.data">
   </deterministic-weights-table>
+  <div class="cell underlined-div"></div>
 
   <value-profiles alternatives="alternatives" criteria="criteria" results="deterministicResults" edit-mode="editMode"
     recalculated-results="recalculatedDeterministicResults" scenario="scenario">
   </value-profiles>
+  <div class="cell underlined-div"></div>
 
-  <div class="grid-x">
-    <div class="cell">
-      <h4>One-way sensitivity analysis
-        <inline-help help-key="one-way-sensitivity-analysis"></inline-help>
-      </h4>
-    </div>
+  <div class="cell">
+    <h4>One-way sensitivity analysis
+      <inline-help help-key="one-way-sensitivity-analysis"></inline-help>
+    </h4>
   </div>
-  <div class="grid-x grid-margin-x">
-    <div class="cell medium-6 large-6">
-      <measurement-sensitivity scenario="scenario" alternatives="alternatives" aggregate-state="aggregateState"
-        criteria="criteria" edit-mode="editMode"></measurement-sensitivity>
-    </div>
-    <div class="cell medium-6 large-6">
-      <preferences-sensitivity scenario="scenario" alternatives="alternatives" aggregate-state="aggregateState"
-        criteria="criteria" edit-mode="editMode"></preferences-sensitivity>
-    </div>
+  <div class="cell medium-6 large-6">
+    <measurement-sensitivity scenario="scenario" alternatives="alternatives" aggregate-state="aggregateState"
+      criteria="criteria" edit-mode="editMode"></measurement-sensitivity>
+  </div>
+  <div class="cell medium-6 large-6">
+    <preferences-sensitivity scenario="scenario" alternatives="alternatives" aggregate-state="aggregateState"
+      criteria="criteria" edit-mode="editMode"></preferences-sensitivity>
   </div>
 </div>

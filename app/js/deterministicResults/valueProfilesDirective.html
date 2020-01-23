@@ -1,86 +1,97 @@
-
-  <div class="grid-x underlined-div">
-    <div class="cell">
-      <div class="grid-x grid-margin-x">
-        <div class="cell large-4">
-          <h4>Total value (base case)
-            <inline-help help-key="total-value"></inline-help>
-          </h4>
-        </div>
-        <div class="cell large-2">
-          <button class="button small info clipboard-button right" data-clipboard-target="#base-case-table">
-            <i class="fa fa-clipboard"></i> Copy to clipboard
-          </button>
-        </div>
-        <div ng-if="recalculatedResults" class="cell large-4">
-          <h4>Total value (recalculated case)
-            <inline-help help-key="total-value"></inline-help>
-          </h4>
-        </div>
-        <div class="cell large-2" ng-if="recalculatedResults">
-          <button class="button small info clipboard-button right" data-clipboard-target="#recalculated-case-table">
-            <i class="fa fa-clipboard"></i> Copy to clipboard
-          </button>
-        </div>
-        <div class="cell large-6" ng-if="!recalculatedResults">
-          <!-- Keep grid layout consistent  -->
-        </div>
-        <div class="cell large-6">
-          <table id="base-case-table">
-            <thead>
-              <th ng-repeat="alternative in alternatives">
-                {{scenario.state.legend[alternative.id].baseTitle || alternative.title}}
-              </th>
-            </thead>
-            <tbody>
-              <tr>
-                <td id="alternative-{{ $index }}-base-case" ng-repeat="alternative in alternatives" class="text-centered">
-                  {{results.results.total.data[alternative.id] | number}}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="cell large-6" ng-if="recalculatedResults" ng-if="recalculatedResults">
-          <table id="recalculated-case-table">
-            <thead>
-              <th ng-repeat="alternative in alternatives">{{scenario.state.legend[alternative.id].baseTitle ||
+<div class="grid-x">
+  <div class="cell">
+    <div class="grid-x grid-margin-x">
+      <div class="cell large-4">
+        <h4>Total value (base case)
+          <inline-help help-key="total-value"></inline-help>
+        </h4>
+      </div>
+      <div class="cell large-2">
+        <button class="button small info clipboard-button right" data-clipboard-target="#base-case-table">
+          <i class="fa fa-clipboard"></i> Copy to clipboard
+        </button>
+      </div>
+      <div ng-if="recalculatedResults" class="cell large-4">
+        <h4>Total value (recalculated case)
+          <inline-help help-key="total-value"></inline-help>
+        </h4>
+      </div>
+      <div class="cell large-2" ng-if="recalculatedResults">
+        <button class="button small info clipboard-button right" data-clipboard-target="#recalculated-case-table">
+          <i class="fa fa-clipboard"></i> Copy to clipboard
+        </button>
+      </div>
+      <div class="cell large-6" ng-if="!recalculatedResults">
+        <!-- Keep grid layout consistent  -->
+      </div>
+      <div class="cell large-6">
+        <table id="base-case-table">
+          <thead>
+            <th ng-repeat="alternative in alternatives">
+              {{scenario.state.legend[alternative.id].baseTitle || alternative.title}}
+            </th>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="alternative-{{ $index }}-base-case" ng-repeat="alternative in alternatives"
+                ng-if="results.results.total.data[alternative.id]" class="text-centered">
+                {{results.results.total.data[alternative.id] | number}}
+              </td>
+              <td class="text-centered" ng-repeat="alternative in alternatives"
+                ng-if="!results.results.total.data[alternative.id]">
+                <i class="fa fa-spinner fa-spin"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="cell large-6" ng-if="recalculatedResults" ng-if="recalculatedResults">
+        <table id="recalculated-case-table">
+          <thead>
+            <th ng-repeat="alternative in alternatives">{{scenario.state.legend[alternative.id].baseTitle ||
                 alternative.title}}</th>
-            </thead>
-            <tbody>
-              <tr>
-                <td id="alternative-{{ $index }}-recalculated-case" ng-repeat="alternative in alternatives"
-                  class="text-centered">
-                  {{recalculatedResults.results.total.data[alternative.id] | number}}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="alternative-{{ $index }}-recalculated-case" ng-repeat="alternative in alternatives"
+                ng-if="recalculatedResults.results.total.data[alternative.id]" class="text-centered">
+                {{recalculatedResults.results.total.data[alternative.id] | number}}
+              </td>
+              <td class="text-centered" ng-repeat="alternative in alternatives"
+                ng-if="!recalculatedResults.results.total.data[alternative.id]">
+                <i class="fa fa-spinner fa-spin"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="cell">
+        <h4>Value profiles
+          <inline-help help-key="value-profiles"></inline-help>
+        </h4>
+      </div>
+      <div id="value-profile-container" class="cell large-6">
+        <h5>Base case</h5>
+        <div ng-if="results.results" export legend file-name="'basecaseplot'">
+          <value-profile-plot id="base-case-plot" values="results.results" criteria="criteria"
+            alternatives="alternatives" alternatives-legend="scenario.state.legend"></value-profile-plot>
+        </div>
+        <div ng-if="!results.results">
+          <i class="fa fa-spinner fa-2x fa-spin"></i>
         </div>
       </div>
-      <div class="grid-x grid-margin-x">
-        <div class="cell">
-          <h4>Value profiles
-            <inline-help help-key="value-profiles"></inline-help>
-          </h4>
+      <div ng-if="recalculatedResults" class="cell large-6">
+        <h5>Recalculated case</h5>
+        <div ng-if="recalculatedResults.results" export legend file-name="'recalculatedcaseplot'">
+          <value-profile-plot id="recalculated-case-plot" values="recalculatedResults.results" criteria="criteria"
+            alternatives="alternatives" alternatives-legend="scenario.state.legend">
+          </value-profile-plot>
         </div>
-      </div>
-      <div class="grid-x">
-        <div id="value-profile-container" class="cell large-6">
-          <h5>Base case</h5>
-          <div export legend file-name="'basecaseplot'">
-            <value-profile-plot id="base-case-plot" values="results.results" criteria="criteria"
-              alternatives="alternatives" alternatives-legend="scenario.state.legend"></value-profile-plot>
-          </div>
-        </div>
-        <div ng-if="recalculatedResults" class="cell large-6">
-          <h5>Recalculated case</h5>
-          <div export legend file-name="'recalculatedcaseplot'">
-            <value-profile-plot id="recalculated-case-plot" values="recalculatedResults.results"
-              criteria="criteria" alternatives="alternatives" alternatives-legend="scenario.state.legend">
-            </value-profile-plot>
-          </div>
+        <div ng-if="!recalculatedResults.results">
+          <i class="fa fa-spinner fa-2x fa-spin"></i>
         </div>
       </div>
     </div>
   </div>
+</div>
