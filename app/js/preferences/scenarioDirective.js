@@ -126,7 +126,6 @@ define(['lodash', 'jquery', 'angular'],
               scope.criteria = orderings.criteria;
               var preferences = scope.scenario.state.prefs;
               scope.importance = PreferencesService.buildImportance(scope.criteria, preferences);
-              loadWeights();
             });
           }
         }
