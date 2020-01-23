@@ -66,7 +66,7 @@ function results(browser) {
   const measurementValuePath = '//sensitivity-table//tr[2]/td[4]//span[1]';
   const weightValuePath = '//*[@id="criterion-0-weight"]';
   const baseCaseValuePath = '//*[@id="alternative-0-base-case"]';
-  const baseCaseValueTablePath = '//value-profile-table/table/tbody/tr[1]/td[2]';
+  const baseCaseValueTablePath = '//*[@id="base-value-profile-table"]/tbody/tr[1]/td[2]';
 
   checkElementValueGreaterThan(browser, measurementValuePath, 30);
   checkElementValueGreaterThan(browser, weightValuePath, 0.2);
@@ -93,7 +93,9 @@ function recalculatedResults(browser) {
     .useCss();
 
   const recalculatedCaseValuePath = '//*[@id="alternative-0-recalculated-case"]';
+  const recalculatedCaseValueTablePath = '//*[@id="recalculated-value-profile-table"]/tbody/tr[1]/td[2]';
   checkElementValueGreaterThan(browser, recalculatedCaseValuePath, 0.85);
+  checkElementValueGreaterThan(browser, recalculatedCaseValueTablePath, 0.1);
 
   browser.click('#reset-button');
 

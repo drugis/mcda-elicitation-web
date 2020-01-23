@@ -2,7 +2,9 @@
   <thead>
     <tr>
       <th></th>
-      <th ng-repeat="alternative in alternatives">{{legend[alternative.id].newTitle || alternative.title}}</th>
+      <th ng-repeat="alternative in alternatives">
+        {{legend[alternative.id].newTitle || alternative.title}}
+      </th>
     </tr>
   </thead>
   <tbody>
