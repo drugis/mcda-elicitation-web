@@ -18,7 +18,7 @@ function checkElementValueGreaterThan(browser, path, value) {
   browser
     .useXpath()
     .getLocationInView(path)
-    .getText(path, function (result) {
+    .getText(path, function(result) {
       chai.expect(parseFloat(result.value)).to.be.above(value);
     })
     .useCss();
@@ -27,7 +27,7 @@ function checkElementValueGreaterThan(browser, path, value) {
 function checkResetMeasurementValue(browser, path) {
   browser
     .useXpath()
-    .getText(path, function (result) {
+    .getText(path, function(result) {
       chai.expect(parseFloat(result.value)).to.be.below(60);
       chai.expect(parseFloat(result.value)).to.be.above(36);
     })
