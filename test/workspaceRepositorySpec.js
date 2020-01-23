@@ -133,23 +133,28 @@ describe('the workspace repository', function() {
     });
   });
 
-  describe('getDefaultScenario', function() {
+  describe('getDefaultScenarioId', function() {
     const expectedQuery = 'SELECT defaultScenarioId FROM workspace WHERE id = $1';
-    const expectedResult = [123];
+    const expectedResult = 123; 
+    const queryResult = {
+      rows: [{
+        defaultscenarioid: expectedResult
+      }]
+    };
     const queryInputValues = [workspaceId];
 
     initDBStub();
 
     it('should get the default scenario for the workspace', function(done) {
-      query.onCall(0).yields(null, expectedResult);
+      query.onCall(0).yields(null, queryResult);
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
-      workspaceRepository.getDefaultScenario(workspaceId, callback);
+      workspaceRepository.getDefaultScenarioId(workspaceId, callback);
     });
 
     it('should call the callback with only an error', function(done) {
       query.onCall(0).yields(expectedError);
       const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
-      workspaceRepository.getDefaultScenario(workspaceId, callback);
+      workspaceRepository.getDefaultScenarioId(workspaceId, callback);
     });
   });
 

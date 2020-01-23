@@ -99,7 +99,7 @@ module.exports = function(db) {
   }
 
   function update(request, response, next) {
-    logger.debug('Update subproblem: '+ request.params.subProblemId);
+    logger.debug('Updating workspace/' + request.params.workspaceId + '/problem/' + request.params.subproblemId);
     SubproblemRepository.update(
       request.body.definition,
       request.body.title,
@@ -116,12 +116,12 @@ module.exports = function(db) {
   function deleteSubproblem(request, response, next) {
     const subproblemId = request.params.subproblemId;
     const workspaceId = request.params.workspaceId;
-    logger.debug('Start deleting subproblem: ' + subproblemId);
+    logger.debug('Deleting workspace/' + workspaceId + '/problem/' + subproblemId);
     db.runInTransaction(_.partial(deleteTransaction, workspaceId, subproblemId, next), function(error) {
       if (error) {
         util.handleError(error, next);
       } else {
-        logger.debug('Done deleting subproblem: ' + JSON.stringify(subproblemId));
+        logger.debug('Done deleting subproblem: ' + subproblemId);
         response.sendStatus(httpStatus.OK);
       }
     });

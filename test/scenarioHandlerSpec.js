@@ -17,7 +17,7 @@ var repoStub = {
   getScenarioIdsForSubproblem: () => { }
 };
 var workspaceRepoStub = {
-  getDefaultScenario: () => { },
+  getDefaultScenarioId: () => { },
   setDefaultScenario: () => { }
 };
 const utilStub = chai.spy();
@@ -278,7 +278,7 @@ describe('the in scenario handler', () => {
   describe('delete', function() {
     var deleteStub;
     var getScenarioIdsForSubproblem;
-    var getDefaultScenario;
+    var getDefaultScenarioId;
     var setDefaultScenario;
     const scenarioId = 37;
     const otherScenarioId = 100;
@@ -291,26 +291,24 @@ describe('the in scenario handler', () => {
         workspaceId: workspaceId
       }
     };
-    const scenarioIdsForSubproblem = {
-      rows: [{
-        id: scenarioId
-      }, {
-        id: otherScenarioId
-      }]
-    };
+    const scenarioIdsForSubproblem = [{
+      id: scenarioId
+    }, {
+      id: otherScenarioId
+    }];
 
     beforeEach(() => {
       deleteStub = sinon.stub(repoStub, 'delete');
       getScenarioIdsForSubproblem = sinon.stub(repoStub, 'getScenarioIdsForSubproblem');
       utilStub.handleError = chai.spy();
-      getDefaultScenario = sinon.stub(workspaceRepoStub, 'getDefaultScenario');
+      getDefaultScenarioId = sinon.stub(workspaceRepoStub, 'getDefaultScenarioId');
       setDefaultScenario = sinon.stub(workspaceRepoStub, 'setDefaultScenario');
     });
 
     afterEach(() => {
       deleteStub.restore();
       getScenarioIdsForSubproblem.restore();
-      getDefaultScenario.restore();
+      getDefaultScenarioId.restore();
       setDefaultScenario.restore();
     });
 
@@ -325,12 +323,12 @@ describe('the in scenario handler', () => {
         sendStatus: expectations,
       };
       getScenarioIdsForSubproblem.onCall(0).yields(null, scenarioIdsForSubproblem);
-      getDefaultScenario.onCall(0).yields(null, { rows: [{ defaultscenarioid: otherScenarioId }] });
+      getDefaultScenarioId.onCall(0).yields(null, { rows: [{ defaultscenarioid: otherScenarioId }] });
       deleteStub.onCall(0).yields(null);
 
       scenarioHandler.delete(request, response, next);
       sinon.assert.calledWith(getScenarioIdsForSubproblem, subproblemId);
-      sinon.assert.calledWith(getDefaultScenario, workspaceId);
+      sinon.assert.calledWith(getDefaultScenarioId, workspaceId);
       sinon.assert.calledWith(deleteStub, scenarioId);
       expect(utilStub.handleError).not.to.have.been.called();
     });
@@ -346,12 +344,12 @@ describe('the in scenario handler', () => {
         sendStatus: expectations,
       };
       getScenarioIdsForSubproblem.onCall(0).yields(null, scenarioIdsForSubproblem);
-      getDefaultScenario.onCall(0).yields(null, { rows: [{ defaultscenarioid: scenarioId }] });
+      getDefaultScenarioId.onCall(0).yields(null, { rows: [{ defaultscenarioid: scenarioId }] });
       setDefaultScenario.onCall(0).yields(null, null);
       deleteStub.onCall(0).yields(null);
       scenarioHandler.delete(request, response, next);
       sinon.assert.calledWith(getScenarioIdsForSubproblem, subproblemId);
-      sinon.assert.calledWith(getDefaultScenario, workspaceId);
+      sinon.assert.calledWith(getDefaultScenarioId, workspaceId);
       sinon.assert.calledWith(setDefaultScenario, workspaceId, otherScenarioId);
       sinon.assert.calledWith(deleteStub, scenarioId);
       expect(utilStub.handleError).not.to.have.been.called();
@@ -359,7 +357,7 @@ describe('the in scenario handler', () => {
 
     it('should call util.handleError if there is only one scenario', function() {
       const notEnoughError = 'Cannot delete the only scenario for subproblem';
-      getScenarioIdsForSubproblem.onCall(0).yields(null, { rows: [{ id: scenarioId }] });
+      getScenarioIdsForSubproblem.onCall(0).yields(null, [{ id: scenarioId }]);
       scenarioHandler.delete(request, undefined, undefined);
       sinon.assert.calledWith(getScenarioIdsForSubproblem, subproblemId);
       expect(utilStub.handleError).to.have.been.called.with(notEnoughError);
@@ -367,11 +365,11 @@ describe('the in scenario handler', () => {
 
     it('should call util.handleError if there\'s an error deleting', function() {
       getScenarioIdsForSubproblem.onCall(0).yields(null, scenarioIdsForSubproblem);
-      getDefaultScenario.onCall(0).yields(null, { rows: [{ defaultscenarioid: otherScenarioId }] });
+      getDefaultScenarioId.onCall(0).yields(null, { rows: [{ defaultscenarioid: otherScenarioId }] });
       deleteStub.onCall(0).yields(error);
       scenarioHandler.delete(request, undefined, undefined);
       sinon.assert.calledWith(getScenarioIdsForSubproblem, subproblemId);
-      sinon.assert.calledWith(getDefaultScenario, workspaceId);
+      sinon.assert.calledWith(getDefaultScenarioId, workspaceId);
       sinon.assert.calledWith(deleteStub, scenarioId + '');
       expect(utilStub.handleError).to.have.been.called();
     });
@@ -385,21 +383,21 @@ describe('the in scenario handler', () => {
 
     it('should call util.handleError if there\'s an error getting the default scenario', function() {
       getScenarioIdsForSubproblem.onCall(0).yields(null, scenarioIdsForSubproblem);
-      getDefaultScenario.onCall(0).yields(error);
+      getDefaultScenarioId.onCall(0).yields(error);
       scenarioHandler.delete(request, undefined, undefined);
       sinon.assert.calledWith(getScenarioIdsForSubproblem, subproblemId);
-      sinon.assert.calledWith(getDefaultScenario, workspaceId);
+      sinon.assert.calledWith(getDefaultScenarioId, workspaceId);
       expect(utilStub.handleError).to.have.been.called();
     });
 
     it('should call util.handleError if there\'s an error setting the default scenario', function() {
       getScenarioIdsForSubproblem.onCall(0).yields(null, scenarioIdsForSubproblem);
-      getDefaultScenario.onCall(0).yields(null, { rows: [{ defaultscenarioid: scenarioId }] });
+      getDefaultScenarioId.onCall(0).yields(null, scenarioId);
       setDefaultScenario.onCall(0).yields(error);
 
       scenarioHandler.delete(request, undefined, undefined);
       sinon.assert.calledWith(getScenarioIdsForSubproblem, subproblemId);
-      sinon.assert.calledWith(getDefaultScenario, workspaceId);
+      sinon.assert.calledWith(getDefaultScenarioId, workspaceId);
       sinon.assert.calledWith(setDefaultScenario, workspaceId, otherScenarioId);
       expect(utilStub.handleError).to.have.been.called();
     });

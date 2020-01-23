@@ -84,12 +84,12 @@ module.exports = function(db) {
     const subproblemId = request.params.subproblemId;
     const scenarioId = request.params.id;
     const workspaceId = request.params.workspaceId;
-    logger.debug('Deleting scenario: ' + scenarioId);
+    logger.debug('Deleting workspace/' + workspaceId + '/problem/' + subproblemId + '/scenario/' + scenarioId);
     db.runInTransaction(_.partial(deleteTransaction, workspaceId, subproblemId, scenarioId), function(error) {
       if (error) {
         util.handleError(error, next);
       } else {
-        logger.debug('Done deleting scenario: ' + JSON.stringify(scenarioId));
+        logger.debug('Done deleting scenario: ' + scenarioId);
         response.sendStatus(httpStatus.OK);
       }
     });
@@ -97,46 +97,36 @@ module.exports = function(db) {
 
   function deleteTransaction(workspaceId, subproblemId, scenarioId, client, transactionCallback) {
     async.waterfall([
-      _.partial(getScenarioIds, subproblemId),
+      _.partial(ScenarioRepository.getScenarioIdsForSubproblem, subproblemId),
       _.partial(getDefaultScenario, workspaceId),
       _.partial(setDefaultScenario, workspaceId, scenarioId),
       _.partial(deleteScenarioAction, scenarioId)
     ], transactionCallback);
   }
 
-  function getScenarioIds(subproblemId, callback) {
-    ScenarioRepository.getScenarioIdsForSubproblem(subproblemId, callback);
-  }
-
   function getDefaultScenario(workspaceId, scenarioIds, callback) {
-    if (scenarioIds && scenarioIds.rows.length === 1) {
+    if (scenarioIds.length === 1) {
       callback('Cannot delete the only scenario for subproblem');
     } else {
-      WorkspaceRepository.getDefaultScenario(workspaceId, function(error, result) {
-        callback(error, result, scenarioIds.rows);
+      WorkspaceRepository.getDefaultScenarioId(workspaceId, function(error, result) {
+        callback(error, result, scenarioIds);
       });
     }
   }
 
-  function setDefaultScenario(workspaceId, scenarioId, defaultId, scenarioIds, callback) {
-    if (defaultId.rows[0].defaultscenarioid + '' === scenarioId) {
+  function setDefaultScenario(workspaceId, scenarioId, defaultScenarioId, scenarioIds, callback) {
+    if (defaultScenarioId + '' === scenarioId) {
       const newDefaultScenario = getNewDefaultScenario(scenarioIds, scenarioId);
-      changeDefaultScenarioId(workspaceId, newDefaultScenario, callback);
+      WorkspaceRepository.setDefaultScenario(workspaceId, newDefaultScenario, callback);
     } else {
       callback(null, null);
     }
   }
   
-  function getNewDefaultScenario(scenarioIds, scenarioId) {
-    return _.find(scenarioIds, function(row) {
-      return row.id + '' !== scenarioId;
-    }).id;
+  function getNewDefaultScenario(scenarioIds, currentDefaultScenarioId) {
+    return _.reject(scenarioIds, ['id', parseInt(currentDefaultScenarioId)])[0].id;
   }
-
-  function changeDefaultScenarioId(workspaceId, scenarioId, callback) {
-    WorkspaceRepository.setDefaultScenario(workspaceId, scenarioId, callback);
-  }
-
+  
   function deleteScenarioAction(scenarioId, setDefaultScenarioResult, callback) {
     ScenarioRepository.delete(scenarioId, callback);
   }

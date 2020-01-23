@@ -51,14 +51,20 @@ module.exports = function(db) {
       callback
     );
   }
-  
-  function getDefaultScenario(workspaceId, callback){
+
+  function getDefaultScenarioId(workspaceId, callback) {
     logger.debug('getting default scenario id for: ' + workspaceId);
     const query = 'SELECT defaultScenarioId FROM workspace WHERE id = $1';
     db.query(
       query,
       [workspaceId],
-      callback
+      function(error, result) {
+        if (error) {
+          callback(error);
+        } else {
+          callback(error, result.rows[0].defaultscenarioid);
+        }
+      }
     );
   }
 
@@ -107,7 +113,7 @@ module.exports = function(db) {
     setDefaultSubProblem: setDefaultSubProblem,
     getDefaultSubproblem: getDefaultSubproblem,
     setDefaultScenario: setDefaultScenario,
-    getDefaultScenario: getDefaultScenario,
+    getDefaultScenarioId: getDefaultScenarioId,
     getWorkspaceInfo: getWorkspaceInfo,
     update: update,
     delete: del,
