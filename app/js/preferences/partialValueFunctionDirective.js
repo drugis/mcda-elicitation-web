@@ -17,6 +17,7 @@ define([],
           isAccessible: '=',
           isSafe: '=',
           pvfCoordinates: '=',
+          resetWeights: '=',
           scenario: '=',
           tasks: '='
         },
@@ -31,6 +32,7 @@ define([],
 
           function setPVF(criterion, direction) {
             scope.scenario.state = PartialValueFunctionService.getNewScenarioState(scope.scenario, criterion, direction);
+            scope.resetWeights();
             scope.scenario.$save($state.params, function(scenario) {
               scope.$emit('elicit.resultsAccessible', scenario);
             });

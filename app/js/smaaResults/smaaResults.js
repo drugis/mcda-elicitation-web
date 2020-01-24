@@ -4,7 +4,6 @@ define([
 
   './centralWeightsDirective',
   './centralWeightsPlotDirective',
-  './heatMapDirective',
   './smaaTableDirective',
   './rankAcceptabilitiesDirective',
   './rankPlotDirective',
@@ -19,7 +18,6 @@ define([
 
   centralWeightsDirective,
   centralWeightsPlotDirective,
-  heatMapDirective,
   SmaaTableDirective,
   rankAcceptabilitiesDirective,
   rankPlotDirective,
@@ -34,7 +32,6 @@ define([
 
     .directive('centralWeights', centralWeightsDirective)
     .directive('centralWeightsPlot', centralWeightsPlotDirective)
-    .directive('heatMap', heatMapDirective)
     .directive('smaaTable', SmaaTableDirective)
     .directive('rankAcceptabilities', rankAcceptabilitiesDirective)
     .directive('rankPlot', rankPlotDirective)

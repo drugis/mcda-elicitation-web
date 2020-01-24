@@ -17,18 +17,18 @@ function loadTestWorkspace(browser) {
 function resetWeights(browser) {
   browser
     .click('#reset-button')
-    .assert.containsText('#ranking-criterion-0', '?')
-    .assert.containsText('#ranking-criterion-1', '?')
-    .assert.containsText('#ranking-criterion-2', '?')
+    .assert.containsText('#importance-criterion-0', '?')
+    .assert.containsText('#importance-criterion-1', '?')
+    .assert.containsText('#importance-criterion-2', '?')
     ;
 }
 
 function matchImportanceColumnContents(browser, value1, value2, value3) {
   browser
     .waitForElementVisible('#trade-off-block')
-    .assert.containsText('#ranking-criterion-0', value1)
-    .assert.containsText('#ranking-criterion-1', value2)
-    .assert.containsText('#ranking-criterion-2', value3)
+    .assert.containsText('#importance-criterion-0', value1)
+    .assert.containsText('#importance-criterion-1', value2)
+    .assert.containsText('#importance-criterion-2', value3)
     ;
 }
 
