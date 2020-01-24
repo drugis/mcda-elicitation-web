@@ -95,36 +95,6 @@
           </tbody>
         </table>
       </div>
-<<<<<<< HEAD
-
-      <div class="cell">
-        <h4>Value profiles
-          <inline-help help-key="value-profiles"></inline-help>
-        </h4>
-      </div>
-      <div id="value-profile-container" class="cell large-6">
-        <h5>Base case</h5>
-        <div ng-if="results.results" export legend file-name="'basecaseplot'">
-          <value-profile-plot id="base-case-plot" values="results.results" criteria="criteria"
-            alternatives="alternatives" alternatives-legend="scenario.state.legend"></value-profile-plot>
-        </div>
-        <div ng-if="!results.results">
-          <i class="fa fa-spinner fa-2x fa-spin"></i>
-        </div>
-      </div>
-      <div ng-if="recalculatedResults" class="cell large-6">
-        <h5>Recalculated case</h5>
-        <div ng-if="recalculatedResults.results" export legend file-name="'recalculatedcaseplot'">
-          <value-profile-plot id="recalculated-case-plot" values="recalculatedResults.results" criteria="criteria"
-            alternatives="alternatives" alternatives-legend="scenario.state.legend">
-          </value-profile-plot>
-        </div>
-        <div ng-if="!recalculatedResults.results">
-          <i class="fa fa-spinner fa-2x fa-spin"></i>
-        </div>
-      </div>
-=======
->>>>>>> d940bd48263b17035699a5de214c6032858b52a8
       <div class="cell large-6" ng-if="!recalculatedResults">
         <!-- Keep grid layout consistent  -->
       </div>
@@ -175,8 +145,4 @@
       </div>
     </div>
   </div>
-<<<<<<< HEAD
 </div>
-=======
-</div>
->>>>>>> d940bd48263b17035699a5de214c6032858b52a8
