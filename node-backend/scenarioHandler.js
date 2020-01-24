@@ -100,7 +100,7 @@ module.exports = function(db) {
       _.partial(ScenarioRepository.getScenarioIdsForSubproblem, subproblemId),
       _.partial(getDefaultScenario, workspaceId),
       _.partial(setDefaultScenario, workspaceId, scenarioId),
-      _.partial(deleteScenarioAction, scenarioId)
+      _.partial(ScenarioRepository.delete, scenarioId)
     ], transactionCallback);
   }
 
@@ -117,18 +117,19 @@ module.exports = function(db) {
   function setDefaultScenario(workspaceId, scenarioId, defaultScenarioId, scenarioIds, callback) {
     if (defaultScenarioId + '' === scenarioId) {
       const newDefaultScenario = getNewDefaultScenario(scenarioIds, scenarioId);
-      WorkspaceRepository.setDefaultScenario(workspaceId, newDefaultScenario, callback);
+      WorkspaceRepository.setDefaultScenario(workspaceId, newDefaultScenario, (error) => {
+        // discarding extra result arguments to make waterfall cleaner
+        callback(error);
+      });
     } else {
-      callback(null, null);
+      callback();
     }
   }
-  
+
   function getNewDefaultScenario(scenarioIds, currentDefaultScenarioId) {
-    return _.reject(scenarioIds, ['id', parseInt(currentDefaultScenarioId)])[0].id;
-  }
-  
-  function deleteScenarioAction(scenarioId, setDefaultScenarioResult, callback) {
-    ScenarioRepository.delete(scenarioId, callback);
+    return _.reject(scenarioIds, function(id) {
+      return id + '' === currentDefaultScenarioId;
+    })[0];
   }
 
   return {

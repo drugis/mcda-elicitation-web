@@ -1,5 +1,6 @@
 'use strict';
 var logger = require('./logger');
+const _ = require('lodash');
 
 module.exports = function(db) {
   function create(workspaceId, subproblemId, title, state, callback) {
@@ -74,11 +75,7 @@ module.exports = function(db) {
       query,
       [subproblemId],
       function(error, result) {
-        if (error) {
-          callback(error);
-        } else {
-          callback(error, result.rows);
-        }
+        callback(error, error || _.map(result.rows, 'id'));
       }
     );
   }

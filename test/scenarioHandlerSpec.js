@@ -291,11 +291,7 @@ describe('the in scenario handler', () => {
         workspaceId: workspaceId
       }
     };
-    const scenarioIdsForSubproblem = [{
-      id: scenarioId
-    }, {
-      id: otherScenarioId
-    }];
+    const scenarioIdsForSubproblem = [scenarioId, otherScenarioId];
 
     beforeEach(() => {
       deleteStub = sinon.stub(repoStub, 'delete');
@@ -323,7 +319,7 @@ describe('the in scenario handler', () => {
         sendStatus: expectations,
       };
       getScenarioIdsForSubproblem.onCall(0).yields(null, scenarioIdsForSubproblem);
-      getDefaultScenarioId.onCall(0).yields(null, { rows: [{ defaultscenarioid: otherScenarioId }] });
+      getDefaultScenarioId.onCall(0).yields(null, otherScenarioId);
       deleteStub.onCall(0).yields(null);
 
       scenarioHandler.delete(request, response, next);
@@ -344,7 +340,7 @@ describe('the in scenario handler', () => {
         sendStatus: expectations,
       };
       getScenarioIdsForSubproblem.onCall(0).yields(null, scenarioIdsForSubproblem);
-      getDefaultScenarioId.onCall(0).yields(null, { rows: [{ defaultscenarioid: scenarioId }] });
+      getDefaultScenarioId.onCall(0).yields(null, scenarioId);
       setDefaultScenario.onCall(0).yields(null, null);
       deleteStub.onCall(0).yields(null);
       scenarioHandler.delete(request, response, next);
@@ -357,7 +353,7 @@ describe('the in scenario handler', () => {
 
     it('should call util.handleError if there is only one scenario', function() {
       const notEnoughError = 'Cannot delete the only scenario for subproblem';
-      getScenarioIdsForSubproblem.onCall(0).yields(null, [{ id: scenarioId }]);
+      getScenarioIdsForSubproblem.onCall(0).yields(null, [scenarioId]);
       scenarioHandler.delete(request, undefined, undefined);
       sinon.assert.calledWith(getScenarioIdsForSubproblem, subproblemId);
       expect(utilStub.handleError).to.have.been.called.with(notEnoughError);
@@ -365,7 +361,7 @@ describe('the in scenario handler', () => {
 
     it('should call util.handleError if there\'s an error deleting', function() {
       getScenarioIdsForSubproblem.onCall(0).yields(null, scenarioIdsForSubproblem);
-      getDefaultScenarioId.onCall(0).yields(null, { rows: [{ defaultscenarioid: otherScenarioId }] });
+      getDefaultScenarioId.onCall(0).yields(null, otherScenarioId);
       deleteStub.onCall(0).yields(error);
       scenarioHandler.delete(request, undefined, undefined);
       sinon.assert.calledWith(getScenarioIdsForSubproblem, subproblemId);
