@@ -100,7 +100,7 @@ describe('the workspace repository', function() {
 
     initDBStub();
 
-    it('should get the default sub problem for the workspace', function(done) {
+    it('should get the default subproblem for the workspace', function(done) {
       query.onCall(0).yields(null, expectedResult);
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       workspaceRepository.getDefaultSubproblem(workspaceId, callback);
@@ -112,7 +112,6 @@ describe('the workspace repository', function() {
       workspaceRepository.getDefaultSubproblem(workspaceId, callback);
     });
   });
-
 
   describe('setDefaultScenario', function() {
     const expectedQuery = 'UPDATE workspace SET defaultScenarioId = $1 WHERE id = $2';
@@ -131,6 +130,31 @@ describe('the workspace repository', function() {
       query.onCall(0).yields(expectedError);
       const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
       workspaceRepository.setDefaultScenario(workspaceId, scenarioId, callback);
+    });
+  });
+
+  describe('getDefaultScenarioId', function() {
+    const expectedQuery = 'SELECT defaultScenarioId FROM workspace WHERE id = $1';
+    const expectedResult = 123; 
+    const queryResult = {
+      rows: [{
+        defaultscenarioid: expectedResult
+      }]
+    };
+    const queryInputValues = [workspaceId];
+
+    initDBStub();
+
+    it('should get the default scenario for the workspace', function(done) {
+      query.onCall(0).yields(null, queryResult);
+      const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      workspaceRepository.getDefaultScenarioId(workspaceId, callback);
+    });
+
+    it('should call the callback with only an error', function(done) {
+      query.onCall(0).yields(expectedError);
+      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);
+      workspaceRepository.getDefaultScenarioId(workspaceId, callback);
     });
   });
 

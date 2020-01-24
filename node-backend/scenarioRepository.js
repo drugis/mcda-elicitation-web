@@ -1,5 +1,6 @@
 'use strict';
 var logger = require('./logger');
+const _ = require('lodash');
 
 module.exports = function(db) {
   function create(workspaceId, subproblemId, title, state, callback) {
@@ -12,7 +13,7 @@ module.exports = function(db) {
   }
 
   function query(workspaceId, callback) {
-    logger.debug('Getting scenarios for workspace: '+ workspaceId);
+    logger.debug('Getting scenarios for workspace: ' + workspaceId);
     const query = 'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1';
     db.query(
       query,
@@ -31,7 +32,7 @@ module.exports = function(db) {
   }
 
   function get(scenarioId, callback) {
-    logger.debug('Getting scenario: '+  scenarioId);
+    logger.debug('Getting scenario: ' + scenarioId);
     const query = 'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE id = $1';
     db.query(
       query,
@@ -41,7 +42,7 @@ module.exports = function(db) {
   }
 
   function update(state, title, scenarioId, callback) {
-    logger.debug('updating scenario:' +  scenarioId);
+    logger.debug('updating scenario:' + scenarioId);
     const query = 'UPDATE scenario SET state = $1, title = $2 WHERE id = $3';
     db.query(
       query,
@@ -68,12 +69,14 @@ module.exports = function(db) {
   }
 
   function getScenarioIdsForSubproblem(subproblemId, callback) {
-    logger.debug('Getting scenario ids for: '+  subproblemId);
+    logger.debug('Getting scenario ids for: ' + subproblemId);
     const query = 'SELECT id FROM scenario WHERE subproblemId = $1';
     db.query(
       query,
       [subproblemId],
-      callback
+      function(error, result) {
+        callback(error, error || _.map(result.rows, 'id'));
+      }
     );
   }
 

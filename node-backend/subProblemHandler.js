@@ -99,7 +99,7 @@ module.exports = function(db) {
   }
 
   function update(request, response, next) {
-    logger.debug('UPDATE /workspaces/:id/problems/:subProblemId');
+    logger.debug('Updating workspace/' + request.params.workspaceId + '/problem/' + request.params.subproblemId);
     SubproblemRepository.update(
       request.body.definition,
       request.body.title,
@@ -116,12 +116,12 @@ module.exports = function(db) {
   function deleteSubproblem(request, response, next) {
     const subproblemId = request.params.subproblemId;
     const workspaceId = request.params.workspaceId;
-    logger.debug('Start deleting subproblem ' + subproblemId);
+    logger.debug('Deleting workspace/' + workspaceId + '/problem/' + subproblemId);
     db.runInTransaction(_.partial(deleteTransaction, workspaceId, subproblemId), function(error) {
       if (error) {
         util.handleError(error, next);
       } else {
-        logger.debug('done deleting subProblem : ' + JSON.stringify(subproblemId));
+        logger.debug('Done deleting subproblem: ' + subproblemId);
         response.sendStatus(httpStatus.OK);
       }
     });
@@ -147,7 +147,7 @@ module.exports = function(db) {
       }
     });
   }
-  
+
   function getDefaultSubproblem(workspaceId, subproblemIds, callback) {
     WorkspaceRepository.getDefaultSubproblem(workspaceId, function(error, result) {
       if (error) {
@@ -158,29 +158,29 @@ module.exports = function(db) {
       }
     });
   }
-  
+
   function setDefaultSubproblem(subproblemId, workspaceId, subproblemIds, defaultId, callback) {
-    if (subproblemId+'' === defaultId+'') {
+    if (subproblemId + '' === defaultId + '') {
       setNewDefaultSubproblem(subproblemId, workspaceId, subproblemIds, callback);
     } else {
       callback(null);
     }
   }
-  
+
   function setNewDefaultSubproblem(subproblemId, workspaceId, subproblemIds, callback) {
     const newDefault = _.find(subproblemIds, function(row) {
-      return (row.id)+'' !== subproblemId;
+      return (row.id) + '' !== subproblemId;
     }).id;
     WorkspaceRepository.setDefaultSubProblem(workspaceId, newDefault, function(error) {
       if (error) {
         callback(error);
       } else {
         determineAndSetNewDefaultScenario(newDefault, workspaceId, callback);
-        
+
       }
     });
   }
-  
+
   function determineAndSetNewDefaultScenario(subproblemId, workspaceId, callback) {
     ScenarioRepository.getScenarioIdsForSubproblem(subproblemId, function(error, result) {
       if (error) {
@@ -194,7 +194,7 @@ module.exports = function(db) {
 
   function setDefaultScenario(workspaceId, newDefaultScenario, callback) {
     WorkspaceRepository.setDefaultScenario(workspaceId, newDefaultScenario, function(error) {
-        callback(error);
+      callback(error);
     });
   }
 
