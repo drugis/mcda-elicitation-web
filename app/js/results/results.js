@@ -2,7 +2,6 @@
 define([
   './editLegendController',
 
-  './heatMapDirective',
   './legendDirective',
 
   './legendService',
@@ -13,7 +12,6 @@ define([
 ], function(
   EditLegendController,
 
-  heatMapDirective,
   legendDirective,
 
   LegendService,
@@ -24,7 +22,6 @@ define([
   return angular.module('elicit.results', ['patavi'])
     .controller('EditLegendController', EditLegendController)
 
-    .directive('heatMap', heatMapDirective)
     .directive('legend', legendDirective)
 
     .factory('LegendService', LegendService)

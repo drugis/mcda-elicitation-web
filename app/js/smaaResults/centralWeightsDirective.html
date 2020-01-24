@@ -29,7 +29,7 @@
       <tbody>
         <tr ng-repeat="alternative in alternatives">
           <td>{{alternative.title}}</td>
-          <td class="heat-map text-centered">{{state.results.cw.data[alternative.id].cf | number}}</td>
+          <td class="text-centered">{{state.results.cw.data[alternative.id].cf | number}}</td>
           <td id="alternative-{{ $parent.$index }}-criterion-{{ $index }}-central-weight" ng-repeat="criterion in criteria"
             class="text-centered">
             {{::state.results.cw.data[alternative.id].w[criterion.id] | number}}
