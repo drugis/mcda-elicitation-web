@@ -33,7 +33,7 @@
             {{criterion.dataSources[0].pvf.range && pvf.worst(criterion.dataSources[0]) | number}}</td>
           <td class="text-centered">
             {{criterion.dataSources[0].pvf.range && pvf.best(criterion.dataSources[0]) | number}}</td>
-          <td id="ranking-criterion-{{ $index }}" class="text-centered">{{importance[criterion.id]}}</td>
+          <td id="importance-criterion-{{ $index }}" class="text-centered">{{importance[criterion.id]}}</td>
           <td id="weight-criterion-{{ $index }}" class="text-centered">{{weights[criterion.id] | number}}</td>
         </tr>
       </tbody>

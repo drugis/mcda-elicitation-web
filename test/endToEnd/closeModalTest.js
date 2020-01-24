@@ -7,7 +7,7 @@ const util = require('./util/util');
 
 const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 const preferenceTabPath = '#preferences-tab';
-const rankingCellPath = '#ranking-criterion-0';
+const importanceCellPath = '#importance-criterion-0';
 const closeModalButtonPath = '#close-modal-button';
 const cancelStep1Path = '#cancel-step1-button';
 
@@ -133,7 +133,7 @@ function cancelSettingRankingWeights(browser) {
     tab: preferenceTabPath,
     actionButton: '#ranking-button',
     cancelButton: '#cancel-button',
-    content: rankingCellPath
+    content: importanceCellPath
   };
   cancelAction(browser, paths, '?');
 }
@@ -143,7 +143,7 @@ function cancelSettingMatchingWeights(browser) {
     tab: preferenceTabPath,
     actionButton: '#matching-button',
     cancelButton: cancelStep1Path,
-    content: rankingCellPath
+    content: importanceCellPath
   };
   cancelAction(browser, paths, '?');
 }
@@ -153,7 +153,7 @@ function cancelSettingPreciseSwingWeights(browser) {
     tab: preferenceTabPath,
     actionButton: '#precise-swing-button',
     cancelButton: cancelStep1Path,
-    content: rankingCellPath
+    content: importanceCellPath
   };
   cancelAction(browser, paths, '?');
 }
@@ -163,7 +163,7 @@ function cancelSettingImpreciseSwingWeights(browser) {
     tab: preferenceTabPath,
     actionButton: '#imprecise-swing-button',
     cancelButton: cancelStep1Path,
-    content: rankingCellPath
+    content: importanceCellPath
   };
   cancelAction(browser, paths, '?');
 }

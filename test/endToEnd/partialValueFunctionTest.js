@@ -66,11 +66,32 @@ function displayWeights(browser) {
     .waitForElementVisible('#weight-criterion-1');
 }
 
+function resetTradeOffs(browser) {
+  browser
+    .waitForElementVisible('#not-all-pvfs-set-warning')
+    .click('#set-increasing-pvf-0')
+    .waitForElementVisible('#not-all-pvfs-set-warning')
+    .click('#set-increasing-pvf-1')
+    .assert.containsText('#importance-criterion-0', '?')
+    .assert.containsText('#importance-criterion-1', '?')
+    .click('#ranking-button')
+    .waitForElementVisible('#ranking-title-header')
+    .click('#ranking-option-0')
+    .click('#save-button')
+    .assert.containsText('#importance-criterion-0', '1')
+    .assert.containsText('#importance-criterion-1', '2')
+    .click('#set-decreasing-pvf-0')
+    .assert.containsText('#importance-criterion-0', '?')
+    .assert.containsText('#importance-criterion-1', '?')
+    ;
+}
+
 module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
   'Set partial value functions': set,
   'Go to previous step': navigate,
   'Set linear partial value functions via button': setLinearPVF,
-  'Display weights when all PVFs are set': displayWeights
+  'Display weights when all PVFs are set': displayWeights,
+  'Reset set trade-offs when setting a PVF': resetTradeOffs
 };
