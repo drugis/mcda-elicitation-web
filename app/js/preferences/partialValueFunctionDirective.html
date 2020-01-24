@@ -22,18 +22,18 @@
         </div>
         <div class="cell button-group small">
           <button id="set-increasing-pvf-{{$index}}" ng-click="setPVF(criterion, 'increasing')" class="button" ng-class="{alert: !isSafe['partial-value-function'].safe}"
-            type="button" tooltip="Set increasing PVF. Setting a PVF will reset all set trade-offs.">
+            type="button" tooltip="Set increasing PVF. Setting a PVF will reset all trade-off preferences.">
             <img src="img/upchart.png" alt="increasing PVF" class="image-in-button">
             Increasing
           </button>
           <button id="set-decreasing-pvf-{{$index}}" ng-click="setPVF(criterion, 'decreasing')" class="button" ng-class="{alert: !isSafe['partial-value-function'].safe}"
-            type="button" tooltip="Set decreasing PVF. Setting a PVF will reset all set trade-offs.">
+            type="button" tooltip="Set decreasing PVF. Setting a PVF will reset all trade-off preferences.">
             <img src="img/downchart.png" alt="decreasing PVF" class="image-in-button">
             Decreasing
           </button>
           <button id="criterion-{{ $index }}-pvf-button" class="button text-centered" ng-if="editMode.canEdit"
             ng-class="{alert: !isSafe['partial-value-function'].safe}"
-            tooltip="Set linear or piece-wise linear PVF via a guided process. Setting a PVF will reset all set trade-offs."
+            tooltip="Set linear or piece-wise linear PVF via a guided process. Setting a PVF will reset all trade-off preferences."
             ui-sref="partial-value-function({criterion: criterion.id})">
             <i class="fa fa-line-chart"></i> Advanced
           </button>
