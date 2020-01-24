@@ -38,7 +38,7 @@ module.exports = function(db) {
 
   function create(request, response, next) {
     logger.debug('POST /workspaces/:workspaceId/problems');
-    db.runInTransaction(_.partial(subProblemTransaction, request, next), function(error, subproblem) {
+    db.runInTransaction(_.partial(subProblemTransaction, request), function(error, subproblem) {
       if (error) {
         util.handleError(error, next);
       } else {
@@ -49,15 +49,15 @@ module.exports = function(db) {
     });
   }
 
-  function subProblemTransaction(request, next, client, transactionCallback) {
+  function subProblemTransaction(request, client, transactionCallback) {
     async.waterfall([
-      _.partial(createSubProblem, request, next),
-      _.partial(createScenario, request, next),
-      _.partial(retrieveSubProblem, next)
+      _.partial(createSubProblem, request),
+      _.partial(createScenario, request),
+      _.partial(retrieveSubProblem)
     ], transactionCallback);
   }
 
-  function createSubProblem(request, next, callback) {
+  function createSubProblem(request, callback) {
     logger.debug('creating subproblem');
     const workspaceId = request.params.workspaceId;
     SubproblemRepository.create(
@@ -66,7 +66,7 @@ module.exports = function(db) {
       request.body.definition,
       function(error, result) {
         if (error) {
-          util.handleError(error, next);
+          callback(error);
         } else {
           logger.debug('done creating subproblem');
           const subproblemId = result.rows[0].id;
@@ -75,23 +75,23 @@ module.exports = function(db) {
       });
   }
 
-  function createScenario(request, next, workspaceId, subproblemId, callback) {
+  function createScenario(request, workspaceId, subproblemId, callback) {
     logger.debug('creating scenario; workspaceid: ' + workspaceId + ', subProblemId: ' + subproblemId);
     var state = request.body.scenarioState;
     ScenarioRepository.create(workspaceId, subproblemId, 'Default', state, (error) => {
       if (error) {
-        util.handleError(error, next);
+        callback(error);
       } else {
         callback(null, workspaceId, subproblemId);
       }
     });
   }
 
-  function retrieveSubProblem(next, workspaceId, subproblemId, callback) {
+  function retrieveSubProblem(workspaceId, subproblemId, callback) {
     logger.debug('retrieving subproblem');
     SubproblemRepository.get(workspaceId, subproblemId, function(error, result) {
       if (error) {
-        util.handleError(error, next);
+        callback(error);
       } else {
         callback(null, result.rows[0]);
       }
@@ -117,7 +117,7 @@ module.exports = function(db) {
     const subproblemId = request.params.subproblemId;
     const workspaceId = request.params.workspaceId;
     logger.debug('Start deleting subproblem ' + subproblemId);
-    db.runInTransaction(_.partial(deleteTransaction, workspaceId, subproblemId, next), function(error) {
+    db.runInTransaction(_.partial(deleteTransaction, workspaceId, subproblemId), function(error) {
       if (error) {
         util.handleError(error, next);
       } else {
@@ -127,90 +127,82 @@ module.exports = function(db) {
     });
   }
 
-  function deleteTransaction(workspaceId, subproblemId, next, client, transactionCallback) {
+  function deleteTransaction(workspaceId, subproblemId, client, transactionCallback) {
     async.waterfall([
-      _.partial(getSubproblemIds, workspaceId, next),
+      _.partial(getSubproblemIds, workspaceId),
       getDefaultSubproblem,
       _.partial(setDefaultSubproblem, subproblemId),
       _.partial(deleteSubproblemAction, subproblemId)
     ], transactionCallback);
   }
 
-  function getSubproblemIds(workspaceId, next, callback) {
+  function getSubproblemIds(workspaceId, callback) {
     SubproblemRepository.getSubproblemIds(workspaceId, function(error, result) {
       if (error) {
-        util.handleError(error, next);
+        callback(error);
       } else if (result.rows.length === 1) {
-        util.handleError('Cannot delete the only subproblem for workspace', next);
+        callback('Cannot delete the only subproblem for workspace');
       } else {
-        callback(null, workspaceId, result.rows, next);
+        callback(null, workspaceId, result.rows);
       }
     });
   }
   
-  function getDefaultSubproblem(workspaceId, subproblemIds, next, callback) {
+  function getDefaultSubproblem(workspaceId, subproblemIds, callback) {
     WorkspaceRepository.getDefaultSubproblem(workspaceId, function(error, result) {
       if (error) {
-        util.handleError(error, next);
+        callback(error);
       } else {
         const currentDefault = result.rows[0].defaultsubproblemid;
-        callback(null, workspaceId, subproblemIds, currentDefault, next);
+        callback(null, workspaceId, subproblemIds, currentDefault);
       }
     });
   }
   
-  function setDefaultSubproblem(subproblemId, workspaceId, subproblemIds, defaultId, next, callback) {
+  function setDefaultSubproblem(subproblemId, workspaceId, subproblemIds, defaultId, callback) {
     if (subproblemId+'' === defaultId+'') {
-      setNewDefaultSubproblem(subproblemId, workspaceId, subproblemIds, next, callback);
+      setNewDefaultSubproblem(subproblemId, workspaceId, subproblemIds, callback);
     } else {
-      callback(null, next);
+      callback(null);
     }
   }
   
-  function setNewDefaultSubproblem(subproblemId, workspaceId, subproblemIds, next, callback) {
+  function setNewDefaultSubproblem(subproblemId, workspaceId, subproblemIds, callback) {
     const newDefault = _.find(subproblemIds, function(row) {
       return (row.id)+'' !== subproblemId;
     }).id;
     WorkspaceRepository.setDefaultSubProblem(workspaceId, newDefault, function(error) {
       if (error) {
-        util.handleError(error, next);
+        callback(error);
       } else {
-        determineAndSetNewDefaultScenario(newDefault, workspaceId, next, callback);
+        determineAndSetNewDefaultScenario(newDefault, workspaceId, callback);
         
       }
     });
   }
   
-  function determineAndSetNewDefaultScenario(subproblemId, workspaceId, next, callback) {
+  function determineAndSetNewDefaultScenario(subproblemId, workspaceId, callback) {
     ScenarioRepository.getScenarioIdsForSubproblem(subproblemId, function(error, result) {
       if (error) {
-        util.handleError(error, next);
+        callback(error);
       } else {
         const newDefaultScenario = result.rows[0].id;
-        setDefaultScenario(workspaceId, newDefaultScenario, next, callback);
+        setDefaultScenario(workspaceId, newDefaultScenario, callback);
       }
     });
   }
 
-  function setDefaultScenario(workspaceId, newDefaultScenario, next, callback) {
+  function setDefaultScenario(workspaceId, newDefaultScenario, callback) {
     WorkspaceRepository.setDefaultScenario(workspaceId, newDefaultScenario, function(error) {
-      if (error) {
-        util.handleError(error, next);
-      } else {
-        callback(null, next);
-      }
+        callback(error);
     });
   }
 
-  function deleteSubproblemAction(subproblemId, next, callback) {
+  function deleteSubproblemAction(subproblemId, callback) {
     SubproblemRepository.delete(
       subproblemId,
       function(error) {
-        if (error) {
-          util.handleError(error, next);
-        } else {
-          callback(null);
-        }
+        callback(error);
       }
     );
   }

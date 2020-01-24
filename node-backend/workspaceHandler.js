@@ -22,6 +22,15 @@ module.exports = function(db) {
 
   function create(request, response, next) {
     function workspaceTransaction(client, transactionCallback) {
+      async.waterfall([
+        createNewWorkspace,
+        createSubProblem,
+        setDefaultSubProblem,
+        createScenario,
+        setDefaultScenario,
+        WorkspaceRepository.getWorkspaceInfo
+      ], transactionCallback);
+
       function createNewWorkspace(callback) {
         logger.debug('creating new workspace');
 
@@ -44,7 +53,7 @@ module.exports = function(db) {
           definition,
           function(error, result) {
             if (error) {
-              util.handleError(error, next);
+              callback(error);
             } else {
               var subproblemId = result.rows[0].id;
               callback(null, workspaceId, subproblemId);
@@ -58,7 +67,7 @@ module.exports = function(db) {
         logger.debug('setting default subProblem');
         WorkspaceRepository.setDefaultSubProblem(workspaceId, subproblemId, function(error) {
           if (error) {
-            util.handleError(error, next);
+            callback(error);
           } else {
             callback(null, workspaceId, subproblemId);
           }
@@ -77,7 +86,7 @@ module.exports = function(db) {
           state,
           function(error, result) {
             if (error) {
-              util.handleError(error, next);
+              callback(error);
             } else {
               var scenarioId = result.rows[0].id;
               callback(null, workspaceId, scenarioId);
@@ -90,21 +99,12 @@ module.exports = function(db) {
         logger.debug('setting default scenario');
         WorkspaceRepository.setDefaultScenario(workspaceId, scenarioId, function(error) {
           if (error) {
-            util.handleError(error, next);
+            callback(error);
           } else {
             callback(null, workspaceId);
           }
         });
       }
-
-      async.waterfall([
-        createNewWorkspace,
-        createSubProblem,
-        setDefaultSubProblem,
-        createScenario,
-        setDefaultScenario,
-        WorkspaceRepository.getWorkspaceInfo
-      ], transactionCallback);
     }
 
     db.runInTransaction(workspaceTransaction, function(error, result) {
