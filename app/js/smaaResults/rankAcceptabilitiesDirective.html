@@ -25,8 +25,8 @@
       <tbody>
         <tr ng-repeat="alternative in alternatives">
           <td>{{scenario.state.legend[alternative.id].baseTitle || alternative.title}}</td>
-          <td id="alternative-{{ $parent.$index }}-rank-{{ $index + 1 }}"
-            ng-repeat="rank in state.results.ranks.data[alternative.id] track by $index" class="heat-map text-centered">
+          <td id="alternative-{{ $parent.$index }}-rank-{{ $index + 1 }}" class="text-centered"
+            ng-repeat="rank in state.results.ranks.data[alternative.id] track by $index">
             {{::rank | number}}
           </td>
         </tr>

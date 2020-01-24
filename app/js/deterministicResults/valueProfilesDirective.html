@@ -123,7 +123,6 @@
       <div class="cell large-6" ng-if="!recalculatedResults">
         <!-- Keep grid layout consistent  -->
       </div>
-      <!-- ng-if on div (results.results) needed so that heat-map has values to color -->
       <div id="value-profile-table-container" class="cell large-6" ng-if="results.results">
         <value-profile-table alternatives="alternatives" criteria="criteria" data="results.results.value.data"
           alternativesLegend="scenario.state.legend" case="'base'"></value-profile-table>

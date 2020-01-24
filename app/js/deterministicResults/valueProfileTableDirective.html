@@ -10,7 +10,7 @@
   <tbody>
     <tr ng-repeat="criterion in criteria">
       <td>{{criterion.title}}</td>
-      <td ng-repeat="alternative in alternatives" class="heat-map text-centered">
+      <td ng-repeat="alternative in alternatives" class="text-centered">
         {{data[alternative.id][criterion.id] | number}}
       </td>
     </tr>
