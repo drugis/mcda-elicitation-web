@@ -8057,31 +8057,36 @@ ul.tabs {
 }
 
 /* line 475, ../../sass-shared/_drugis.scss */
-li.tabs-title.is-active {
-  margin-bottom: -1px;
-  border-bottom: 1px solid white;
-}
-
-/* line 480, ../../sass-shared/_drugis.scss */
-.tabs-title > a {
-  background: #efefef;
+.tab-common {
   border: 1px solid;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  padding-bottom: 10px;
+  padding-top: 17px;
+  padding-bottom: 6px;
   padding-left: 20px;
   padding-right: 20px;
   border-color: #e6e6e6;
-  border-bottom: 0;
+  font-size: 0.75rem;
 }
 
-/* line 492, ../../sass-shared/_drugis.scss */
-.tabs-title {
-  margin-bottom: -2px;
+/* line 485, ../../sass-shared/_drugis.scss */
+.tab-is-active {
+  background: white;
+  border-bottom: none;
+}
+
+/* line 490, ../../sass-shared/_drugis.scss */
+.tab-is-inactive {
+  background: #efefef;
   border-bottom: 1px solid #e6e6e6;
+  cursor: pointer;
+  color: #1976D2;
 }
 
 /* line 497, ../../sass-shared/_drugis.scss */
+.tab-is-inactive:hover {
+  background: white;
+}
+
+/* line 501, ../../sass-shared/_drugis.scss */
 th.resizableColumn {
   resize: horizontal;
   overflow: hidden;
@@ -8089,7 +8094,7 @@ th.resizableColumn {
   min-height: 100%;
 }
 
-/* line 504, ../../sass-shared/_drugis.scss */
+/* line 508, ../../sass-shared/_drugis.scss */
 div.resizableColumn {
   resize: horizontal;
   overflow: hidden;
