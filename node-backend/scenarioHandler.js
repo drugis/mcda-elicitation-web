@@ -7,6 +7,7 @@ const _ = require('lodash');
 
 module.exports = function(db) {
   const ScenarioRepository = require('./scenarioRepository')(db);
+  const WorkspaceRepository = require('./workspaceRepository')(db);
 
   function query(request, response, next) {
     ScenarioRepository.query(
@@ -82,47 +83,53 @@ module.exports = function(db) {
   function deleteScenario(request, response, next) {
     const subproblemId = request.params.subproblemId;
     const scenarioId = request.params.id;
-    logger.debug('Deleting subproblem ' + subproblemId);
-    db.runInTransaction(_.partial(deleteTransaction, subproblemId, scenarioId, next), function(error) {
+    const workspaceId = request.params.workspaceId;
+    logger.debug('Deleting workspace/' + workspaceId + '/problem/' + subproblemId + '/scenario/' + scenarioId);
+    db.runInTransaction(_.partial(deleteTransaction, workspaceId, subproblemId, scenarioId), function(error) {
       if (error) {
         util.handleError(error, next);
       } else {
-        logger.debug('done deleting subProblem : ' + JSON.stringify(subproblemId));
+        logger.debug('Done deleting scenario: ' + scenarioId);
         response.sendStatus(httpStatus.OK);
       }
     });
   }
 
-  function deleteTransaction(subproblemId, scenarioId, next, client, transactionCallback) {
+  function deleteTransaction(workspaceId, subproblemId, scenarioId, client, transactionCallback) {
     async.waterfall([
-      _.partial(blockIfOnlyOneScenario, subproblemId, next),
-      _.partial(deleteScenarioAction, scenarioId, next)
+      _.partial(ScenarioRepository.getScenarioIdsForSubproblem, subproblemId),
+      _.partial(getDefaultScenario, workspaceId),
+      _.partial(setDefaultScenario, workspaceId, scenarioId),
+      _.partial(ScenarioRepository.delete, scenarioId)
     ], transactionCallback);
   }
 
-  function blockIfOnlyOneScenario(subproblemId, next, callback) {
-    ScenarioRepository.countScenariosForSubproblem(subproblemId, function(error, result) {
-      if (error) {
-        util.handleError(error, next);
-      } else if (result.rows[0] === 1) {
-        util.handleError('Cannot delete the only scenario for subproblem', next);
-      } else {
-        callback(null);
-      }
-    });
+  function getDefaultScenario(workspaceId, scenarioIds, callback) {
+    if (scenarioIds.length === 1) {
+      callback('Cannot delete the only scenario for subproblem');
+    } else {
+      WorkspaceRepository.getDefaultScenarioId(workspaceId, function(error, result) {
+        callback(error, result, scenarioIds);
+      });
+    }
   }
 
-  function deleteScenarioAction(subproblemId, next, callback) {
-    ScenarioRepository.delete(
-      subproblemId,
-      function(error) {
-        if (error) {
-          util.handleError(error, next);
-        } else {
-          callback(null);
-        }
-      }
-    );
+  function setDefaultScenario(workspaceId, scenarioId, defaultScenarioId, scenarioIds, callback) {
+    if (defaultScenarioId + '' === scenarioId) {
+      const newDefaultScenario = getNewDefaultScenario(scenarioIds, scenarioId);
+      WorkspaceRepository.setDefaultScenario(workspaceId, newDefaultScenario, (error) => {
+        // discarding extra result arguments to make waterfall cleaner
+        callback(error);
+      });
+    } else {
+      callback();
+    }
+  }
+
+  function getNewDefaultScenario(scenarioIds, currentDefaultScenarioId) {
+    return _.reject(scenarioIds, function(id) {
+      return id + '' === currentDefaultScenarioId;
+    })[0];
   }
 
   return {

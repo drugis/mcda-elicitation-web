@@ -8,6 +8,7 @@ define([
   './preferencesSensitivityDirective',
   './sensitivityInputDirective',
   './sensitivityTableDirective',
+  './valueProfileTableDirective',
   './valueProfilePlotDirective',
   './valueProfilesDirective',
 
@@ -24,6 +25,7 @@ define([
   preferencesSensitivityDirective,
   sensitivityInputDirective,
   sensitivityTableDirective,
+  valueProfileTableDirective,
   valueProfilePlotDirective,
   valueProfilesDirective,
 
@@ -40,6 +42,7 @@ define([
     .directive('preferencesSensitivity', preferencesSensitivityDirective)
     .directive('sensitivityInput', sensitivityInputDirective)
     .directive('sensitivityTable', sensitivityTableDirective)
+    .directive('valueProfileTable', valueProfileTableDirective)
     .directive('valueProfilePlot', valueProfilePlotDirective)
     .directive('valueProfiles', valueProfilesDirective)
 

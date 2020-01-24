@@ -243,7 +243,7 @@ describe('the scenario repository', function() {
         }]
       };
       query.onCall(0).yields(null, queryResult);
-      const expectedResult = queryResult;
+      const expectedResult = [queryResult.rows[0].id];
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       scenarioRepository.getScenarioIdsForSubproblem(subproblemId, callback);
     });

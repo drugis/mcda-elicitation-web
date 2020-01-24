@@ -115,6 +115,8 @@ define(['lodash', 'jquery', 'angular'],
             reloadOrderings().then(function() {
               scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinates(scope.problem.criteria);
               scope.isSafe = createIsSafe();
+              scope.criteriaHavePvf = doAllCriteriaHavePvf();
+              loadWeights();
             });
           }
 
@@ -124,7 +126,6 @@ define(['lodash', 'jquery', 'angular'],
               scope.criteria = orderings.criteria;
               var preferences = scope.scenario.state.prefs;
               scope.importance = PreferencesService.buildImportance(scope.criteria, preferences);
-              loadWeights();
             });
           }
         }
