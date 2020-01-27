@@ -2,14 +2,14 @@
 define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [
     '$modal',
-    '$stateParams',
+    '$state',
     'OrderingService',
     'WorkspaceResource',
     'swap'
   ];
   var CriterionListDirective = function(
     $modal,
-    $stateParams,
+    $state,
     OrderingService,
     WorkspaceResource,
     swap
@@ -67,10 +67,11 @@ define(['lodash', 'angular'], function(_, angular) {
               },
               callback: function() {
                 return function(newCriterion) {
-                  replaceOrderedCriterion(criterion.id, newCriterion);
-                  initializeCriteriaLists();
                   if (!scope.isInput) {
                     saveWorkspace(newCriterion, criterion.id);
+                  } else {
+                    replaceOrderedCriterion(criterion.id, newCriterion);
+                    initializeCriteriaLists();
                   }
                 };
               },
@@ -98,7 +99,7 @@ define(['lodash', 'angular'], function(_, angular) {
 
         function saveOrdering() {
           OrderingService.saveOrdering(
-            $stateParams,
+            $state.params,
             scope.criteria,
             scope.alternatives
           );
@@ -108,7 +109,9 @@ define(['lodash', 'angular'], function(_, angular) {
           var newCriterion = angular.copy(criterion);
           delete newCriterion.id;
           scope.workspace.problem.criteria[criterionId] = newCriterion;
-          WorkspaceResource.save($stateParams, scope.workspace);
+          WorkspaceResource.save($state.params, scope.workspace).$promise.then(function() {
+            $state.reload();
+          });
         }
 
         function initializeCriteriaLists() {
