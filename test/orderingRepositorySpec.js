@@ -30,10 +30,23 @@ describe('the ordering repository', function() {
     var queryInputValues = [workspaceId];
 
     it('should get the ordering and call the callback with the result', function(done) {
-      var queryResult = {};
-      var expectedResult = queryResult;
+      var queryResult = {
+        rows: [{
+          ordering: {}
+        }]
+      };
+      var expectedResult = queryResult.rows[0].ordering;
       query.onCall(0).yields(null, queryResult);
       var callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      orderingRepository.get(workspaceId, callback);
+    });
+
+    it('should call the callback with undefined if the results are empty', function(done) {
+      var queryResult = {
+        rows: []
+      };
+      query.onCall(0).yields(null, queryResult);
+      var callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, undefined, done);
       orderingRepository.get(workspaceId, callback);
     });
 

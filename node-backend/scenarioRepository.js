@@ -8,7 +8,9 @@ module.exports = function(db) {
     const query = 'INSERT INTO scenario (workspace, subProblemId, title, state) VALUES ($1, $2, $3, $4) RETURNING id';
     db.query(query,
       [workspaceId, subproblemId, title, state],
-      callback
+      function(error, result) {
+        callback(error, error || result.rows[0]);
+      }
     );
   }
 
@@ -18,17 +20,20 @@ module.exports = function(db) {
     db.query(
       query,
       [workspaceId],
-      callback
-    );
+      function(error, result) {
+        callback(error, error || result.rows);
+      });
   }
 
   function queryForSubProblem(workspaceId, subproblemId, callback) {
-    logger.debug('GET /workspaces/:id1/subProblem/:id2/scenarios');
+    logger.debug('getting /workspaces/' + workspaceId + '/subProblem/' + subproblemId + '/scenarios');
     const query = 'SELECT id, title, state, subproblemId AS "subProblemId", workspace AS "workspaceId" FROM scenario WHERE workspace = $1 AND subProblemId = $2';
     db.query(
       query,
       [workspaceId, subproblemId],
-      callback);
+      function(error, result) {
+        callback(error, error || result.rows);
+      });
   }
 
   function get(scenarioId, callback) {
@@ -37,7 +42,15 @@ module.exports = function(db) {
     db.query(
       query,
       [scenarioId],
-      callback
+      function(error, result) {
+        if (error) {
+          callback(error);
+        } else if (!result.rows.length) {
+          callback('No scenario with ID ' + scenarioId + ' found.');
+        } else {
+          callback(null, result.rows[0]);
+        }
+      }
     );
   }
 

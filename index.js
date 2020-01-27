@@ -242,7 +242,7 @@ function rightsCallback(response, next, userId, error, result) {
   if (error) {
     next(error);
   } else {
-    var workspace = result.rows[0];
+    var workspace = result;
     if (!workspace) {
       response.status(httpStatus.NOT_FOUND).send('Workspace not found');
     } else if (workspace.owner !== userId) {

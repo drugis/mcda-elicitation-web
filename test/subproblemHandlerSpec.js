@@ -77,16 +77,14 @@ describe('the subproblem handler', () => {
     utilStub.handleError = chai.spy();
 
     it('should call the subproblem repository with the correct arguments', () => {
-      const result = {
-        rows: []
-      };
+      const result = [];
       query.onCall(0).yields(null, result);
 
       subProblemHandler.query(request, response, next);
 
       sinon.assert.calledWith(query, workspaceId);
       expect(utilStub.handleError).not.to.have.been.called();
-      expect(response.json).to.have.been.called.with(result.rows);
+      expect(response.json).to.have.been.called.with(result);
     });
 
     it('should not call reponse.json if there\'s an error', function() {
@@ -125,17 +123,13 @@ describe('the subproblem handler', () => {
     const next = chai.spy();
 
     it('should call the subproblem repository with the correct arguments', () => {
-      const result = {
-        rows: [
-          {}
-        ]
-      };
+      const result = {};
       get.onCall(0).yields(null, result);
 
       subProblemHandler.get(request, response, next);
       sinon.assert.calledWith(get, workspaceId, subProblemId);
       expect(utilStub.handleError).not.to.have.been.called();
-      expect(response.json).to.have.been.called.with(result.rows[0]);
+      expect(response.json).to.have.been.called.with(result);
     });
 
     it('should not call reponse.json if there\'s an error', function() {
@@ -170,9 +164,7 @@ describe('the subproblem handler', () => {
     const next = chai.spy();
 
     const result = {
-      rows: [{
-        id: subProblemId
-      }]
+      id: subProblemId
     };
 
     beforeEach(() => {
@@ -190,7 +182,7 @@ describe('the subproblem handler', () => {
 
     it('should call res.json with the created subproblem', (done) => {
       var expectations = function(subproblem) {
-        expect(subproblem).to.equal(result.rows[0]);
+        expect(subproblem).to.equal(result);
         expect(next).to.have.not.been.called();
         done();
       };
@@ -301,13 +293,18 @@ describe('the subproblem handler', () => {
     var setDefaultScenario;
 
     const subproblemId = 37;
-    const workspaceId = 42;
+    const workspaceId = 40;
+    const nonDefaultSubproblemId = 42;
     const request = {
       params: {
         subproblemId: subproblemId,
         workspaceId: workspaceId
       }
     };
+    const subproblemIds = [
+      { id: subproblemId },
+      { id: nonDefaultSubproblemId }
+    ];
 
     beforeEach(() => {
       deleteStub = sinon.stub(subproblemRepoStub, 'delete');
@@ -338,17 +335,11 @@ describe('the subproblem handler', () => {
       const response = {
         sendStatus: expectations,
       };
-      getSubproblemIds.onCall(0).yields(null, {
-        rows: [
-          subproblemId,
-          42
-        ]
-      });
-      getDefaultSubproblem.onCall(0).yields(null, {
-        rows: [{
-          defaultsubproblemid: 42
-        }]
-      });
+      getSubproblemIds.onCall(0).yields(null, [
+        subproblemId,
+        nonDefaultSubproblemId
+      ]);
+      getDefaultSubproblem.onCall(0).yields(null, nonDefaultSubproblemId);
       deleteStub.onCall(0).yields(null);
       subProblemHandler.delete(request, response, next);
       sinon.assert.calledWith(getSubproblemIds, workspaceId);
@@ -366,20 +357,11 @@ describe('the subproblem handler', () => {
       const response = {
         sendStatus: expectations,
       };
-      getSubproblemIds.onCall(0).yields(null, {
-        rows: [
-          { id: subproblemId },
-          { id: 42 }
-        ]
-      });
-      getDefaultSubproblem.onCall(0).yields(null, {
-        rows: [{
-          defaultsubproblemid: subproblemId
-        }]
-      });
+      getSubproblemIds.onCall(0).yields(null, subproblemIds);
+      getDefaultSubproblem.onCall(0).yields(null, subproblemId);
 
       setDefaultSubProblem.onCall(0).yields(null);
-      getScenarioIdsForSubproblem.onCall(0).yields(null, { rows: [{ id: 1337 }] });
+      getScenarioIdsForSubproblem.onCall(0).yields(null, [{ id: 1337 }]);
       setDefaultScenario.onCall(0).yields(null);
       deleteStub.onCall(0).yields(null);
       subProblemHandler.delete(request, response, next);
@@ -397,7 +379,7 @@ describe('the subproblem handler', () => {
 
     it('should call util.handleError if there is only one subproblem', function() {
       const notEnoughError = 'Cannot delete the only subproblem for workspace';
-      getSubproblemIds.onCall(0).yields(null, { rows: [1] });
+      getSubproblemIds.onCall(0).yields(null, [1]);
       subProblemHandler.delete(request, undefined, undefined);
       sinon.assert.calledWith(getSubproblemIds, workspaceId);
       expect(utilStub.handleError).to.have.been.called.with(notEnoughError);
@@ -406,12 +388,7 @@ describe('the subproblem handler', () => {
     it('should call util.handleError if there\'s an error getting the default subproblem', function() {
       const next = chai.spy();
       const response = {};
-      getSubproblemIds.onCall(0).yields(null, {
-        rows: [
-          { id: subproblemId },
-          { id: 42 }
-        ]
-      });
+      getSubproblemIds.onCall(0).yields(null, subproblemIds);
       getDefaultSubproblem.onCall(0).yields(error);
       subProblemHandler.delete(request, response, next);
       sinon.assert.calledWith(getSubproblemIds, workspaceId);
@@ -421,17 +398,8 @@ describe('the subproblem handler', () => {
     it('should call util.handleError if there\'s an error setting the default subproblem', function() {
       const next = chai.spy();
       const response = {};
-      getSubproblemIds.onCall(0).yields(null, {
-        rows: [
-          { id: subproblemId },
-          { id: 42 }
-        ]
-      });
-      getDefaultSubproblem.onCall(0).yields(null, {
-        rows: [{
-          defaultsubproblemid: subproblemId
-        }]
-      });
+      getSubproblemIds.onCall(0).yields(null, subproblemIds);
+      getDefaultSubproblem.onCall(0).yields(null, subproblemId);
 
       setDefaultSubProblem.onCall(0).yields(error);
       subProblemHandler.delete(request, response, next);
@@ -442,17 +410,8 @@ describe('the subproblem handler', () => {
     it('should call util.handleError if there\'s an error getting the scenario ids for the new default subproblem', function() {
       const next = chai.spy();
       const response = {};
-      getSubproblemIds.onCall(0).yields(null, {
-        rows: [
-          { id: subproblemId },
-          { id: 42 }
-        ]
-      });
-      getDefaultSubproblem.onCall(0).yields(null, {
-        rows: [{
-          defaultsubproblemid: subproblemId
-        }]
-      });
+      getSubproblemIds.onCall(0).yields(null, subproblemIds);
+      getDefaultSubproblem.onCall(0).yields(null, subproblemId);
 
       setDefaultSubProblem.onCall(0).yields(null);
       getScenarioIdsForSubproblem.onCall(0).yields(error);
@@ -464,20 +423,11 @@ describe('the subproblem handler', () => {
     it('should call util.handleError if there\'s an error setting the default scenario', function() {
       const next = chai.spy();
       const response = {};
-      getSubproblemIds.onCall(0).yields(null, {
-        rows: [
-          { id: subproblemId },
-          { id: 42 }
-        ]
-      });
-      getDefaultSubproblem.onCall(0).yields(null, {
-        rows: [{
-          defaultsubproblemid: subproblemId
-        }]
-      });
+      getSubproblemIds.onCall(0).yields(null, subproblemIds);
+      getDefaultSubproblem.onCall(0).yields(null, subproblemId);
 
       setDefaultSubProblem.onCall(0).yields(null);
-      getScenarioIdsForSubproblem.onCall(0).yields(null, { rows: [{ id: 1337 }] });
+      getScenarioIdsForSubproblem.onCall(0).yields(null, [{ id: 1337 }]);
       setDefaultScenario.onCall(0).yields(error);
       subProblemHandler.delete(request, response, next);
       sinon.assert.calledWith(getSubproblemIds, workspaceId);
@@ -486,17 +436,8 @@ describe('the subproblem handler', () => {
 
     it('should call util.handleError if there\'s an error deleting', function() {
       deleteStub.onCall(0).yields(error);
-      getSubproblemIds.onCall(0).yields(null, {
-        rows: [
-          subproblemRepoStub,
-          42
-        ]
-      });
-      getDefaultSubproblem.onCall(0).yields(null, {
-        rows: [{
-          defaultsubproblemid: 42
-        }]
-      });
+      getSubproblemIds.onCall(0).yields(null, subproblemIds);
+      getDefaultSubproblem.onCall(0).yields(null, nonDefaultSubproblemId);
       subProblemHandler.delete(request, undefined, undefined);
       sinon.assert.calledWith(getSubproblemIds, workspaceId);
       sinon.assert.calledWith(deleteStub, subproblemId);

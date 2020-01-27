@@ -36,7 +36,7 @@ describe('the scenario repository', function() {
       const queryResult = {
         rows: [{ id: createdId }]
       };
-      const expectedResult = queryResult;
+      const expectedResult = queryResult.rows[0];
       query.onCall(0).yields(null, queryResult);
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       scenarioRepository.create(workspaceId, subproblemId, title, state, callback);
@@ -74,7 +74,7 @@ describe('the scenario repository', function() {
         }]
       };
       query.onCall(0).yields(null, queryResult);
-      const expectedResult = queryResult;
+      const expectedResult = queryResult.rows;
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       scenarioRepository.query(workspaceId, callback);
     });
@@ -112,7 +112,7 @@ describe('the scenario repository', function() {
         }]
       };
       query.onCall(0).yields(null, queryResult);
-      const expectedResult = queryResult;
+      const expectedResult = queryResult.rows;
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       scenarioRepository.queryForSubProblem(workspaceId, subproblemId, callback);
     });
@@ -149,8 +149,15 @@ describe('the scenario repository', function() {
         }]
       };
       query.onCall(0).yields(null, queryResult);
-      const expectedResult = queryResult;
+      const expectedResult = queryResult.rows[0];
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      scenarioRepository.get(scenarioId, callback);
+    });
+
+    it('should call the callback with only an error', function(done) {
+      const expectedEmptyResultError = 'No scenario with ID 10 found.';
+      query.onCall(0).yields(expectedEmptyResultError);
+      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedEmptyResultError, done);
       scenarioRepository.get(scenarioId, callback);
     });
 

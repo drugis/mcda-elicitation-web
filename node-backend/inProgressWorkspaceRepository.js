@@ -3,11 +3,19 @@ var logger = require('./logger');
 
 module.exports = function(db) {
   function get(workspaceId, callback) {
-    logger.debug('GET /inProgress/:id');
+    logger.debug('getting in progress workspace: ' + workspaceId);
     const query = 'SELECT id, owner, state FROM inProgressWorkspace WHERE id = $1';
     db.query(query,
       [workspaceId],
-      callback);
+      function(error, result) {
+        if (error) {
+          callback(error);
+        } else if (!result.rows.length) {
+          callback('In progress workspace with ID ' + workspaceId + ' not found.');
+        } else {
+          callback(null, result.rows[0]);
+        }
+      });
   }
 
   function create(ownerId, state, callback) {
@@ -15,7 +23,9 @@ module.exports = function(db) {
     const query = 'INSERT INTO inProgressWorkspace (owner, state) VALUES ($1, $2) RETURNING id';
     db.query(query,
       [ownerId, state],
-      callback);
+      function(error, result) {
+        callback(error, error || result.rows[0]);
+      });
   }
 
   function update(state, workspaceId, callback) {
@@ -27,11 +37,13 @@ module.exports = function(db) {
   }
 
   function query(ownerId, callback) {
-    logger.debug('GET /inProgress/');
+    logger.debug('getting in progress workspaces');
     const query = 'SELECT id, owner, state FROM inProgressWorkspace WHERE owner = $1';
     db.query(query,
       [ownerId],
-      callback);
+      function(error, result) {
+        callback(error, error || result.rows);
+      });
   }
 
   function del(workspaceId, callback) {

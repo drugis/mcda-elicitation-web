@@ -17,7 +17,7 @@ module.exports = function(db) {
         if (error) {
           util.handleError(error, next);
         } else {
-          response.json(result.rows);
+          response.json(result);
         }
       });
   }
@@ -31,7 +31,7 @@ module.exports = function(db) {
         if (error) {
           util.handleError(error, next);
         } else {
-          response.json(result.rows[0]);
+          response.json(result);
         }
       });
   }
@@ -69,8 +69,7 @@ module.exports = function(db) {
           callback(error);
         } else {
           logger.debug('done creating subproblem');
-          const subproblemId = result.rows[0].id;
-          callback(null, workspaceId, subproblemId);
+          callback(null, workspaceId, result);
         }
       });
   }
@@ -93,7 +92,7 @@ module.exports = function(db) {
       if (error) {
         callback(error);
       } else {
-        callback(null, result.rows[0]);
+        callback(null, result);
       }
     });
   }
@@ -140,10 +139,10 @@ module.exports = function(db) {
     SubproblemRepository.getSubproblemIds(workspaceId, function(error, result) {
       if (error) {
         callback(error);
-      } else if (result.rows.length === 1) {
+      } else if (result.length === 1) {
         callback('Cannot delete the only subproblem for workspace');
       } else {
-        callback(null, workspaceId, result.rows);
+        callback(null, workspaceId, result);
       }
     });
   }
@@ -153,8 +152,7 @@ module.exports = function(db) {
       if (error) {
         callback(error);
       } else {
-        const currentDefault = result.rows[0].defaultsubproblemid;
-        callback(null, workspaceId, subproblemIds, currentDefault);
+        callback(null, workspaceId, subproblemIds, result);
       }
     });
   }
@@ -186,7 +184,7 @@ module.exports = function(db) {
       if (error) {
         callback(error);
       } else {
-        const newDefaultScenario = result.rows[0].id;
+        const newDefaultScenario = result[0].id;
         setDefaultScenario(workspaceId, newDefaultScenario, callback);
       }
     });

@@ -37,9 +37,19 @@ describe('the workspace repository', function() {
       const queryResult = {
         rows: [{}]
       };
-      const expectedResult = queryResult;
+      const expectedResult = queryResult.rows[0];
       query.onCall(0).yields(null, queryResult);
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      workspaceRepository.get(workspaceId, callback);
+    });
+
+    it('should call the callback with only an error', function(done) {
+      const queryResult = {
+        rows: []
+      };
+      const expectedEmptyResultError = 'No workspace with ID ' + workspaceId + ' found.';
+      query.onCall(0).yields(null, queryResult);
+      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedEmptyResultError, done);
       workspaceRepository.get(workspaceId, callback);
     });
 
@@ -60,7 +70,7 @@ describe('the workspace repository', function() {
       const queryResult = {
         rows: [{ id: workspaceId }]
       };
-      const expectedResult = queryResult;
+      const expectedResult = queryResult.rows[0].id;
       query.onCall(0).yields(null, queryResult);
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       workspaceRepository.create(ownerId, title, problem, callback);
@@ -168,9 +178,19 @@ describe('the workspace repository', function() {
       const queryResult = {
         rows: [{ id: workspaceId }]
       };
-      const expectedResult = queryResult;
+      const expectedResult = queryResult.rows[0];
       query.onCall(0).yields(null, queryResult);
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      workspaceRepository.getWorkspaceInfo(workspaceId, callback);
+    });
+
+    it('should call the callback with an error if result is empty', function(done) {
+      const queryResult = {
+        rows: []
+      };
+      const expectedEmptyResultError = 'No workspace with ID ' + workspaceId + ' found.';
+      query.onCall(0).yields(null, queryResult);
+      const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedEmptyResultError, done);
       workspaceRepository.getWorkspaceInfo(workspaceId, callback);
     });
 
@@ -215,8 +235,10 @@ describe('the workspace repository', function() {
     const queryInputValues = [ownerId];
 
     it('should query all in-progress workspaces for the user', function(done) {
-      const queryResult = {};
-      const expectedResult = queryResult;
+      const queryResult = {
+        rows: []
+      };
+      const expectedResult = queryResult.rows;
       query.onCall(0).yields(null, queryResult);
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       workspaceRepository.query(ownerId, callback);

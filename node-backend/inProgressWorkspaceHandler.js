@@ -14,7 +14,7 @@ module.exports = function(db) {
           util.handleError(error, next);
         } else {
           response.status(httpStatus.CREATED);
-          response.json({ id: result.rows[0].id });
+          response.json(result);
         }
       });
   }
@@ -34,7 +34,7 @@ module.exports = function(db) {
       if (error) {
         util.handleError(error, next);
       } else {
-        response.json(result.rows[0]);
+        response.json(result);
       }
     });
   }
@@ -44,7 +44,7 @@ module.exports = function(db) {
       if (error) {
         util.handleError(error, next);
       } else {
-        response.json(result.rows);
+        response.json(result);
       }
     });
   }

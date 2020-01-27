@@ -8,7 +8,15 @@ module.exports = function(db) {
     db.query(
       query,
       [workspaceId],
-      callback
+      function(error, result) {
+        if (error) {
+          callback(error);
+        } else if (!result.rows.length) {
+          callback('No workspace with ID ' + workspaceId + ' found.');
+        } else {
+          callback(null, result.rows[0]);
+        }
+      }
     );
   }
 
@@ -18,7 +26,9 @@ module.exports = function(db) {
     db.query(
       query,
       [owner, title, problem],
-      callback
+      function(error, result) {
+        callback(error, error || result.rows[0].id);
+      }
     );
   }
 
@@ -74,7 +84,15 @@ module.exports = function(db) {
     db.query(
       query,
       [workspaceId],
-      callback
+      function(error, result) {
+        if (error) {
+          callback(error);
+        } else if (!result.rows.length) {
+          callback('No workspace with ID ' + workspaceId + ' found.');
+        } else {
+          callback(null, result.rows[0]);
+        }
+      }
     );
   }
 
@@ -103,7 +121,9 @@ module.exports = function(db) {
     db.query(
       query,
       [ownerId],
-      callback
+      function(error, result) {
+        callback(error, error || result.rows);
+      }
     );
   }
 
