@@ -55,7 +55,7 @@
               {{row.headerText}}
             </div>
           </td>
-          <td ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}"
+          <td id="criterion-title-{{$index}}" ng-if="!row.isHeaderRow && row.isFirstRow" rowspan="{{row.criterion.numberOfDataSources}}"
             ng-show="toggledColumns['criteria']">
             {{row.criterion.title}}
           </td>

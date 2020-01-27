@@ -24,8 +24,9 @@ function beforeEach(browser) {
 
 function afterEach(browser) {
   util.delayedClick(browser, '#logo', '#workspaces-header');
-  workspaceService.deleteFromList(browser, 0);
-  errorService.isErrorBarHidden(browser).end();
+  workspaceService
+  .deleteFromList(browser, 0)
+  .end();
 }
 
 function assertContents(browser) {
@@ -65,6 +66,22 @@ function editCriterion(browser) {
     .click('#add-criterion-confirm-button')
     .assert.containsText(proximalDVTCriterionTitle, newTitle)
     .assert.containsText(proximalDVTCriterionDescription, newDescription);
+}
+
+function editCriterionSwitchTabs(browser) {
+  const newTitle = 'new title';
+
+  loadTestWorkspace(browser, title)
+    .click('#edit-criterion-0')
+    .waitForElementVisible('#criterion-title-input')
+    .clearValue('#criterion-title-input')
+    .setValue('#criterion-title-input', newTitle)
+    .click('#add-criterion-confirm-button')
+    .waitForElementVisible('#workspace-title')
+    .assert.containsText('#criterion-title-0', newTitle)
+    .click('#problem-definition-tab')
+    .waitForElementVisible('#effects-table-header')
+    .assert.containsText('#criterion-title-0', newTitle);
 }
 
 function editDataSource(browser) {
@@ -166,6 +183,7 @@ module.exports = {
   'The overview tab': assertContents,
   'Editing the therapeutic context': editTherapeuticContext,
   'Editing a criterion': editCriterion,
+  'Editing a criterion and switching tabs': editCriterionSwitchTabs,
   'Editing a data source': editDataSource,
   'Editing an alternative': editAlternative,
   'Editing the workspace title': editTitle,
