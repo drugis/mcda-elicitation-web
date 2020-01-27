@@ -110,7 +110,7 @@ define(['lodash', 'angular'], function(_, angular) {
           delete newCriterion.id;
           scope.workspace.problem.criteria[criterionId] = newCriterion;
           WorkspaceResource.save($state.params, scope.workspace).$promise.then(function() {
-            $state.reload();
+            $state.reload(); // workaround to not call reload with the argument passed to callback
           });
         }
 
