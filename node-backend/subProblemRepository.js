@@ -8,7 +8,9 @@ module.exports = function(db) {
     db.query(
       query,
       [workspaceId, title, definition],
-      callback
+      function(error, result){
+        callback(error, error || result.rows[0].id);
+      }
     );
   }
 
@@ -18,7 +20,9 @@ module.exports = function(db) {
     db.query(
       query,
       [workspaceId, subproblemId],
-      callback
+      function(error, result){
+        callback(error, error || result.rows[0]);
+      }
     );
   }
 
@@ -29,7 +33,9 @@ module.exports = function(db) {
     db.query(
       query,
       [workspaceId],
-      callback
+      function(error,result){
+        callback(error, error || result.rows);
+      }
     );
   }
 
@@ -59,7 +65,9 @@ module.exports = function(db) {
     db.query(
       query,
       [workspaceId],
-      callback
+      function(error, result){
+        callback(error, error || result.rows);
+      }
     );
   }
 

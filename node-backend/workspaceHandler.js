@@ -9,13 +9,12 @@ module.exports = function(db) {
   var SubProblemRepository = require('./subProblemRepository')(db);
   var ScenarioRepository = require('./scenarioRepository')(db);
 
-  // Complete workspaces
   function query(request, response, next) {
     WorkspaceRepository.query(util.getUser(request).id, function(error, result) {
       if (error) {
         util.handleError(error, next);
       } else {
-        response.json(result.rows);
+        response.json(result);
       }
     });
   }
@@ -46,7 +45,7 @@ module.exports = function(db) {
         var definition = {
           ranges: util.getRanges(request.body.problem)
         };
-        var workspaceId = result.rows[0].id;
+        const workspaceId = result;
         SubProblemRepository.create(
           workspaceId,
           'Default',
@@ -55,7 +54,7 @@ module.exports = function(db) {
             if (error) {
               callback(error);
             } else {
-              var subproblemId = result.rows[0].id;
+              const subproblemId = result;
               callback(null, workspaceId, subproblemId);
             }
           }
@@ -88,7 +87,7 @@ module.exports = function(db) {
             if (error) {
               callback(error);
             } else {
-              var scenarioId = result.rows[0].id;
+              const scenarioId = result.id;
               callback(null, workspaceId, scenarioId);
             }
           }
@@ -112,7 +111,7 @@ module.exports = function(db) {
         util.handleError(error, next);
       } else {
         response.status(httpStatus.CREATED);
-        response.json(result.rows[0]);
+        response.json(result);
       }
     });
   }
@@ -122,7 +121,7 @@ module.exports = function(db) {
       if (error) {
         util.handleError(error, next);
       } else {
-        response.json(result.rows[0]);
+        response.json(result);
       }
     });
   }

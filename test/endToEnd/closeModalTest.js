@@ -2,7 +2,6 @@
 
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
-const errorService = require('./util/errorService');
 const util = require('./util/util');
 
 const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
@@ -36,8 +35,9 @@ function beforeEach(browser) {
 
 function afterEach(browser) {
   util.delayedClick(browser, '#logo', '#workspaces-header');
-  workspaceService.deleteFromList(browser, 0);
-  errorService.isErrorBarHidden(browser).end();
+  workspaceService
+  .deleteFromList(browser, 0)
+  .end();
 }
 
 function cancelEditingWorkspaceTitle(browser) {

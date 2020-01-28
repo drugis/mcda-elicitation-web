@@ -67,15 +67,13 @@ describe('the in scenario handler', () => {
     const next = chai.spy();
 
     it('should call the in scenario repository with the correct arguments', () => {
-      const result = {
-        rows: []
-      };
+      const result = [];
       query.onCall(0).yields(null, result);
 
       scenarioHandler.query(request, response, next);
       sinon.assert.calledWith(query, workspaceId);
       expect(next).not.to.have.been.called();
-      expect(response.json).to.have.been.called.with(result.rows);
+      expect(response.json).to.have.been.called.with(result);
     });
 
     it('should not call reponse.json if there\'s an error', function() {
@@ -111,15 +109,13 @@ describe('the in scenario handler', () => {
     const next = chai.spy();
 
     it('should call the in scenario repository with the correct arguments', () => {
-      const result = {
-        rows: []
-      };
+      const result = [];
       queryForSubProblem.onCall(0).yields(null, result);
 
       scenarioHandler.queryForSubProblem(request, response, next);
       sinon.assert.calledWith(queryForSubProblem, workspaceId, subproblemId);
       expect(next).not.to.have.been.called();
-      expect(response.json).to.have.been.called.with(result.rows);
+      expect(response.json).to.have.been.called.with(result);
     });
 
     it('should not call reponse.json if there\'s an error', function() {
@@ -153,15 +149,13 @@ describe('the in scenario handler', () => {
     const next = chai.spy();
 
     it('should call the in scenario repository with the correct arguments', () => {
-      const result = {
-        rows: [{}]
-      };
+      const result = {};
       get.onCall(0).yields(null, result);
 
       scenarioHandler.get(request, response, next);
       sinon.assert.calledWith(get, scenarioId);
       expect(next).not.to.have.been.called();
-      expect(response.json).to.have.been.called.with(result.rows[0]);
+      expect(response.json).to.have.been.called.with(result);
     });
 
     it('should not call reponse.json if there\'s an error', function() {
@@ -208,14 +202,14 @@ describe('the in scenario handler', () => {
 
     it('should call the in scenario repository with the correct arguments', () => {
       const result = {
-        rows: [{}]
+        id: 123
       };
       create.onCall(0).yields(null, result);
 
       scenarioHandler.create(request, response, next);
       sinon.assert.calledWith(create, workspaceId, subproblemId, title, state);
       expect(next).not.to.have.been.called();
-      expect(response.json).to.have.been.called.with(result.rows[0]);
+      expect(response.json).to.have.been.called.with(result);
       expect(response.status).to.have.been.called.with(201);
     });
 

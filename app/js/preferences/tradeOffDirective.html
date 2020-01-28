@@ -35,10 +35,10 @@
           <td class="text-centered">
             {{criterion.dataSources[0].pvf.range && pvf.best(criterion.dataSources[0]) | number}}
           </td>
-          <td id="ranking-criterion-{{ $index }}" class="text-centered">
+          <td id="importance-criterion-{{ $index }}" class="text-centered">
             {{importance[criterion.id]}}
           </td>
-          <td class="text-centered" ng-if="weights[criterion.id]">
+          <td id="weight-criterion-{{ $index }}" class="text-centered" ng-if="weights[criterion.id]">
             {{weights[criterion.id] | number}}
           </td>
           <td class="text-centered" ng-if="!weights[criterion.id]">

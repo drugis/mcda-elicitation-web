@@ -13,7 +13,7 @@ module.exports = function(db) {
           util.handleError(error, next);
         } else {
           response.json({
-            ordering: result.rows[0] ? result.rows[0].ordering : undefined
+            ordering: result
           });
         }
       });
