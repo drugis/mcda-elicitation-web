@@ -11,7 +11,10 @@ module.exports = function(db) {
         if (error) {
           callback(error);
         } else if (!result.rows.length) {
-          callback('In progress workspace with ID ' + workspaceId + ' not found.');
+          callback({
+            message: 'In progress workspace with ID ' + workspaceId + ' not found.',
+            statusCode: 404
+          });
         } else {
           callback(null, result.rows[0]);
         }

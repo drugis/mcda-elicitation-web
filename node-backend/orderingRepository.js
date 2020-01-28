@@ -10,7 +10,7 @@ module.exports = function(db) {
         if (error) {
           callback(error);
         } else if (!result.rows.length) {
-          callback(null, undefined);
+          callback(null);
         } else {
           callback(null, result.rows[0].ordering);
         }

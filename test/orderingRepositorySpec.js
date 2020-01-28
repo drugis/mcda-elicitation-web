@@ -41,7 +41,7 @@ describe('the ordering repository', function() {
       orderingRepository.get(workspaceId, callback);
     });
 
-    it('should call the callback with undefined if the results are empty', function(done) {
+    it('should call the callback without arguments if the results are empty', function(done) {
       var queryResult = {
         rows: []
       };

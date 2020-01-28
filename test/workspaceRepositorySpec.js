@@ -47,7 +47,10 @@ describe('the workspace repository', function() {
       const queryResult = {
         rows: []
       };
-      const expectedEmptyResultError = 'No workspace with ID ' + workspaceId + ' found.';
+      const expectedEmptyResultError = {
+        message: 'No workspace with ID ' + workspaceId + ' found.',
+        statusCode: 404
+      };
       query.onCall(0).yields(null, queryResult);
       const callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedEmptyResultError, done);
       workspaceRepository.get(workspaceId, callback);
@@ -145,7 +148,7 @@ describe('the workspace repository', function() {
 
   describe('getDefaultScenarioId', function() {
     const expectedQuery = 'SELECT defaultScenarioId FROM workspace WHERE id = $1';
-    const expectedResult = 123; 
+    const expectedResult = 123;
     const queryResult = {
       rows: [{
         defaultscenarioid: expectedResult

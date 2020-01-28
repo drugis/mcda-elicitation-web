@@ -24,13 +24,13 @@ describe('the inProgressWorkspace repository', function() {
   var inProgressWorkspaceId = 1;
   var state = {};
   var expectedError = 'error';
-  
+
   describe('get', function() {
     initDBStub();
-    
+
     var expectedQuery = 'SELECT id, owner, state FROM inProgressWorkspace WHERE id = $1';
     var queryInputValues = [inProgressWorkspaceId];
-    
+
     it('should get the inProgressWorkspace and call the callback with the result', function(done) {
       var queryResult = {
         rows: [{}]
@@ -40,17 +40,20 @@ describe('the inProgressWorkspace repository', function() {
       var callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       inProgressWorkspaceRepository.get(inProgressWorkspaceId, callback);
     });
-    
+
     it('should call the callback with an error if result is empty', function(done) {
       var queryResult = {
         rows: []
       };
-      var expectedEmptyResultError = 'In progress workspace with ID 1 not found.';
+      var expectedEmptyResultError = {
+        message: 'In progress workspace with ID 1 not found.',
+        statusCode: 404
+      };
       query.onCall(0).yields(null, queryResult);
       var callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedEmptyResultError, done);
       inProgressWorkspaceRepository.get(inProgressWorkspaceId, callback);
     });
-    
+
     it('should call the callback with only an error', function(done) {
       query.onCall(0).yields(expectedError);
       var callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done);

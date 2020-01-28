@@ -46,7 +46,10 @@ module.exports = function(db) {
         if (error) {
           callback(error);
         } else if (!result.rows.length) {
-          callback('No scenario with ID ' + scenarioId + ' found.');
+          callback({
+            message: 'No scenario with ID ' + scenarioId + ' found.',
+            statusCode: 404
+          });
         } else {
           callback(null, result.rows[0]);
         }
