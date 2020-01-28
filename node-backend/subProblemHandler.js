@@ -174,7 +174,6 @@ module.exports = function(db) {
         callback(error);
       } else {
         determineAndSetNewDefaultScenario(newDefault, workspaceId, callback);
-
       }
     });
   }
@@ -184,7 +183,7 @@ module.exports = function(db) {
       if (error) {
         callback(error);
       } else {
-        const newDefaultScenario = result[0].id;
+        const newDefaultScenario = result[0];
         setDefaultScenario(workspaceId, newDefaultScenario, callback);
       }
     });
