@@ -6,13 +6,14 @@ const errorService = require('./util/errorService');
 
 function testTutorial(browser, title) {
   loginService.login(browser);
+  workspaceService.cleanList(browser);
   workspaceService.addTutorial(browser, title);
   workspaceService.deleteFromList(browser, 0);
 }
 
 module.exports = {
   afterEach: function(browser) {
-    errorService.isErrorBarHidden(browser).end();
+    browser.end();
   },
 
   'Add Lixisenatide simplified tutorial': function(browser) {

@@ -1,5 +1,18 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Creating a new scenario': create,
+  'Editing the title': edit,
+  'Copying the scenario': copy,
+  'Switching scenario in the preferences tab': switchinPreferences,
+  'Switching scenario in the deterministic results tab': switchInDeterministic,
+  'Switching scenario in the SMAA results tab': switchInSmaa,
+  'Delete scenario': deleteScenario,
+  'Cancel deleting': cancelDeleteScenario
+};
+
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
@@ -9,6 +22,7 @@ const scenarioTitle = 'scenario title';
 
 function beforeEach(browser) {
   loginService.login(browser);
+  workspaceService.cleanList(browser);
   workspaceService.addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
@@ -21,8 +35,9 @@ function beforeEach(browser) {
 
 function afterEach(browser) {
   browser.click('#logo');
-  workspaceService.deleteFromList(browser, 0);
-  errorService.isErrorBarHidden(browser).end();
+  workspaceService
+    .deleteFromList(browser, 0)
+    .end();
 }
 
 function create(browser) {
@@ -141,15 +156,3 @@ function cancelDeleteScenario(browser) {
     .waitForElementVisible('#delete-scenario-button')
     .assert.containsText('#scenario-selector', scenarioTitle);
 }
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Creating a new scenario': create,
-  'Editing the title': edit,
-  'Copying the scenario': copy,
-  'Switching scenario in the preferences tab': switchinPreferences,
-  'Switching scenario in the deterministic results tab': switchInDeterministic,
-  'Switching scenario in the SMAA results tab': switchInSmaa,
-  'Delete scenario': deleteScenario,
-  'Cancel deleting': cancelDeleteScenario
-};

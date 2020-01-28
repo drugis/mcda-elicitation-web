@@ -1,5 +1,18 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Create subproblem': create,
+  'Re-enabling datasources, and criteria during subproblem creation': toggleDataSourcesAndCriteria,
+  'Switching between subproblems': switchSubproblem,
+  'Edit the title': edit,
+  'Reset during subproblem creation': reset,
+  'Interact with scale sliders': changeScale,
+  'Deleting': deleteSubproblem,
+  'Cancel deleting': cancelDeleteSubproblem
+};
+
 const _ = require('lodash');
 
 const loginService = require('./util/loginService');
@@ -30,6 +43,7 @@ function setupSubProblem(browser) {
 
 function beforeEach(browser) {
   loginService.login(browser);
+  workspaceService.cleanList(browser);
   workspaceService.uploadTestWorkspace(browser, '/createSubproblemTestProblem.json');
   util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header');
 }
@@ -37,7 +51,9 @@ function beforeEach(browser) {
 function afterEach(browser) {
   errorService.isErrorBarHidden(browser);
   util.delayedClick(browser, '#logo', '#workspaces-header');
-  workspaceService.deleteFromList(browser, 0).end();
+  workspaceService
+    .deleteFromList(browser, 0)
+    .end();
 }
 
 function create(browser) {
@@ -147,16 +163,3 @@ function cancelDeleteSubproblem(browser) {
     .waitForElementVisible('#delete-subproblem-button')
     .assert.containsText('#subproblem-selector', subproblem1.title);
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Create subproblem': create,
-  'Re-enabling datasources, and criteria during subproblem creation': toggleDataSourcesAndCriteria,
-  'Switching between subproblems': switchSubproblem,
-  'Edit the title': edit,
-  'Reset during subproblem creation': reset,
-  'Interact with scale sliders': changeScale,
-  'Deleting': deleteSubproblem,
-  'Cancel deleting': cancelDeleteSubproblem
-};

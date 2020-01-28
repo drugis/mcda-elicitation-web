@@ -1,5 +1,15 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Set partial value functions': set,
+  'Go to previous step': navigate,
+  'Set linear partial value functions via button': setLinearPVF,
+  'Display weights when all PVFs are set': displayWeights,
+  'Reset set trade-offs when setting a PVF': resetTradeOffs
+};
+
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 
@@ -7,6 +17,7 @@ const workspacePath = '/partialValueFunctionTestProblem.json';
 
 function beforeEach(browser) {
   loginService.login(browser);
+  workspaceService.cleanList(browser);
   workspaceService.uploadTestWorkspace(browser, workspacePath);
   browser
     .waitForElementVisible('#workspace-title')
@@ -85,13 +96,3 @@ function resetTradeOffs(browser) {
     .assert.containsText('#importance-criterion-1', '?')
     ;
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Set partial value functions': set,
-  'Go to previous step': navigate,
-  'Set linear partial value functions via button': setLinearPVF,
-  'Display weights when all PVFs are set': displayWeights,
-  'Reset set trade-offs when setting a PVF': resetTradeOffs
-};

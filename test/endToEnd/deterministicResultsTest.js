@@ -39,6 +39,7 @@ const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat
 function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser);
+  workspaceService.cleanList(browser);
   workspaceService.addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title')

@@ -1,8 +1,31 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Verifying all components are visible': verifyComponents,
+  'Default button resetting options': reset,
+  '(De)select all button deselects and selects all column options': deselectAll,
+  'Switching settings in problem definition tab': switchSettingsInProblemDefition,
+  'Unselecting criterion column in problem definition tab': unselectCriterionInProblemDefinition,
+  'Unselecting description column in problem definition tab': unselectDescriptionInProblemDefinition,
+  'Unselecting units column in problem definition tab': unselectUnitsInProblemDefinition,
+  'Unselecting uncertainties column in problem definition tab': unselectUncertaintiesInProblemDefinition,
+  'Unselecting reference column in problem definition tab': unselectReferenceInProblemDefinition,
+  'Unselecting criterion column in deterministic results tab': unselectCriterionInDeterministic,
+  'Unselecting description column in deterministic results tab': unselectDescriptionInDeterministic,
+  'Unselecting units column in deterministic results tab': unselectUnitsInDeterministic,
+  'Unselecting uncertainties column in deterministic results tab': unselectUncertaintiesInDeterministic,
+  'Unselecting reference column in deterministic results tab': unselectReferenceInDeterministic,
+  'Switching between median and mode in deterministic tab': switchMedianInDeterministic,
+  'Switching settings in the overview tab': switchSettingsInOverview,
+  'Switching settings in the preferences tab': switchSettingsInPreferences,
+  'Switching settings while setting the partial value function': switchSettingsWhileSettingPVF,
+  'Switching settings while setting the weights': switchSettingsWhileSettingWeights
+};
+
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
-const errorService = require('./util/errorService');
 const util = require('./util/util');
 const _ = require('lodash');
 
@@ -77,6 +100,7 @@ function showPercentagesAndSmaaValues(browser) {
 function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser);
+  workspaceService.cleanList(browser);
   workspaceService.addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
@@ -85,8 +109,9 @@ function beforeEach(browser) {
 function afterEach(browser) {
   browser.useCss();
   browser.click('#logo');
-  workspaceService.deleteFromList(browser, 0);
-  errorService.isErrorBarHidden(browser).end();
+  workspaceService
+    .deleteFromList(browser, 0)
+    .end();
 }
 
 function verifyComponents(browser) {
@@ -130,7 +155,7 @@ function reset(browser) {
     .waitForElementVisible('#units-column-checkbox:checked')
     .waitForElementVisible('#reference-column-checkbox:checked')
     .waitForElementVisible('#uncertainties-column-checkbox:checked')
-    .getValue('#random-seed', function(result) {
+    .getValue('#random-seed', function (result) {
       browser.assert.equal(result.value, 1234);
     })
     .click('#save-settings-button');
@@ -396,27 +421,3 @@ function switchSettingsWhileSettingWeights(browser) {
   showDecimals(browser)
     .assert.containsText(firstCriterion, '2-year survival: 0.45');
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Verifying all components are visible': verifyComponents,
-  'Default button resetting options': reset,
-  '(De)select all button deselects and selects all column options': deselectAll,
-  'Switching settings in problem definition tab': switchSettingsInProblemDefition,
-  'Unselecting criterion column in problem definition tab': unselectCriterionInProblemDefinition,
-  'Unselecting description column in problem definition tab': unselectDescriptionInProblemDefinition,
-  'Unselecting units column in problem definition tab': unselectUnitsInProblemDefinition,
-  'Unselecting uncertainties column in problem definition tab': unselectUncertaintiesInProblemDefinition,
-  'Unselecting reference column in problem definition tab': unselectReferenceInProblemDefinition,
-  'Unselecting criterion column in deterministic results tab': unselectCriterionInDeterministic,
-  'Unselecting description column in deterministic results tab': unselectDescriptionInDeterministic,
-  'Unselecting units column in deterministic results tab': unselectUnitsInDeterministic,
-  'Unselecting uncertainties column in deterministic results tab': unselectUncertaintiesInDeterministic,
-  'Unselecting reference column in deterministic results tab': unselectReferenceInDeterministic,
-  'Switching between median and mode in deterministic tab': switchMedianInDeterministic,
-  'Switching settings in the overview tab': switchSettingsInOverview,
-  'Switching settings in the preferences tab': switchSettingsInPreferences,
-  'Switching settings while setting the partial value function': switchSettingsWhileSettingPVF,
-  'Switching settings while setting the weights': switchSettingsWhileSettingWeights
-};

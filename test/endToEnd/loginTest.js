@@ -1,5 +1,10 @@
 'use strict';
 
+module.exports = {
+  'MCDA login success': login,
+  'MCDA login fail': loginFail
+};
+
 const loginService = require('./util/loginService.js');
 const errorService = require('./util/errorService.js');
 
@@ -16,8 +21,3 @@ function loginFail(browser) {
     .waitForElementVisible('#loginWarning')
     .end();
 }
-
-module.exports = {
-  'MCDA login success': login,
-  'MCDA login fail': loginFail
-};

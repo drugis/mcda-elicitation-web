@@ -1,5 +1,12 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Set random seed': set,
+  'Set invalid random seed': setInvalid
+};
+
 const loginService = require('./util/loginService.js');
 const workspaceService = require('./util/workspaceService');
 
@@ -7,12 +14,13 @@ const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat
 
 function beforeEach(browser) {
   loginService.login(browser);
+  workspaceService.cleanList(browser);
   workspaceService
     .addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title')
     .click('#settings-button')
-    .getValue('#random-seed', function(result) {
+    .getValue('#random-seed', function (result) {
       browser.assert.equal(result.value, 1234);
     })
     .clearValue('#random-seed');
@@ -33,7 +41,7 @@ function set(browser) {
     .setValue('#random-seed', 1337)
     .click('#save-settings-button')
     .click('#settings-button')
-    .getValue('#random-seed', function(result) {
+    .getValue('#random-seed', function (result) {
       browser.assert.equal(result.value, 1337);
     });
 }
@@ -44,10 +52,3 @@ function setInvalid(browser) {
     .click('#save-settings-button')
     .waitForElementVisible('#random-seed');
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Set random seed': set,
-  'Set invalid random seed': setInvalid
-};

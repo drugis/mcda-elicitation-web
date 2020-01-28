@@ -1,5 +1,27 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Cancel editing workspace title': cancelEditingWorkspaceTitle,
+  'Cancel editing the therapeutic context': cancelEditingTherapeuticContext,
+  'Cancel editing a criterion': cancelEditingCriterion,
+  'Cancel editing a data source': cancelEditingDataSource,
+  'Cancel editing an alternative': cancelEditingAlternative,
+  'Cancel settings': cancelSettings,
+  'Cancel editing a subproblem title': cancelEditingSubroblemTitle,
+  'Cancel creating a new subproblem': cancelCreatingSubproblem,
+  'Cancel setting a partial value function': cancelSettingPartialValueFunction,
+  'Cancel setting weights via ranking': cancelSettingRankingWeights,
+  'Cancel setting weights via matching': cancelSettingMatchingWeights,
+  'Cancel precise swing weighting':  cancelSettingPreciseSwingWeights,
+  'Cancel imprecise swing weighting':  cancelSettingImpreciseSwingWeights,
+  'Cancel editing a scenario':  cancelEditingScenario,
+  'Cancel creating a new scenario':  cancelCreatingScenario,
+  'Cancel copying a scenario':  cancelCopyingScenario,
+  'Cancel editing graph labels':  cancelEditingGraphLabels
+};
+
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const util = require('./util/util');
@@ -28,6 +50,7 @@ function clearValueCancelAction(browser, paths, expectedValue) {
 function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser);
+  workspaceService.cleanList(browser);
   workspaceService.addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
@@ -215,25 +238,3 @@ function cancelEditingGraphLabels(browser) {
     .click(paths.cancelButton)
     .assert.containsText(paths.content, 'Placebo');
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Cancel editing workspace title': cancelEditingWorkspaceTitle,
-  'Cancel editing the therapeutic context': cancelEditingTherapeuticContext,
-  'Cancel editing a criterion': cancelEditingCriterion,
-  'Cancel editing a data source': cancelEditingDataSource,
-  'Cancel editing an alternative': cancelEditingAlternative,
-  'Cancel settings': cancelSettings,
-  'Cancel editing a subproblem title': cancelEditingSubroblemTitle,
-  'Cancel creating a new subproblem': cancelCreatingSubproblem,
-  'Cancel setting a partial value function': cancelSettingPartialValueFunction,
-  'Cancel setting weights via ranking': cancelSettingRankingWeights,
-  'Cancel setting weights via matching': cancelSettingMatchingWeights,
-  'Cancel precise swing weighting':  cancelSettingPreciseSwingWeights,
-  'Cancel imprecise swing weighting':  cancelSettingImpreciseSwingWeights,
-  'Cancel editing a scenario':  cancelEditingScenario,
-  'Cancel creating a new scenario':  cancelCreatingScenario,
-  'Cancel copying a scenario':  cancelCopyingScenario,
-  'Cancel editing graph labels':  cancelEditingGraphLabels
-};

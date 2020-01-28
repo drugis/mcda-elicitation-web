@@ -1,8 +1,14 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Changing alternatives to generated labels in deterministic view': changeAlternativeLabels,
+  'Reset labels': reset
+};
+
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
-const errorService = require('./util/errorService');
 const _ = require('lodash');
 
 const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
@@ -35,6 +41,7 @@ function setSingleLetterNames(browser) {
 function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser);
+  workspaceService.cleanList(browser);
   workspaceService.addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
@@ -42,8 +49,9 @@ function beforeEach(browser) {
 
 function afterEach(browser) {
   browser.click('#logo');
-  workspaceService.deleteFromList(browser, 0);
-  errorService.isErrorBarHidden(browser).end();
+  workspaceService
+    .deleteFromList(browser, 0)
+    .end();
 }
 
 function changeAlternativeLabels(browser) {
@@ -108,10 +116,3 @@ function reset(browser) {
     .pause(500)
     .waitForElementVisible('#sensitivity-measurements-header');
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Changing alternatives to generated labels in deterministic view': changeAlternativeLabels,
-  'Reset labels': reset
-};

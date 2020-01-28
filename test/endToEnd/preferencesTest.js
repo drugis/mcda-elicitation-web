@@ -1,5 +1,18 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Setting the weights through ranking': ranking,
+  'Ranking previous button': rankingGoBack,
+  'Matching previous button': matchingGoBack,
+  'Setting the weights through precise swing weighting': preciseSwing,
+  'Precise swing previous button': preciseSwingGoBack,
+  'Setting the weights through imprecise swing weighting': impreciseSwing,
+  'Imprecise swing previous button': impreciseSwingGoBack,
+  'Interacting with Willingness to trade off plot': interactWithPlot
+};
+
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
@@ -34,13 +47,15 @@ function matchImportanceColumnContents(browser, value1, value2, value3) {
 
 function beforeEach(browser) {
   loginService.login(browser);
+  workspaceService.cleanList(browser);
   loadTestWorkspace(browser);
 }
 
 function afterEach(browser) {
   browser.click('#logo');
-  workspaceService.deleteFromList(browser, 0);
-  errorService.isErrorBarHidden(browser).end();
+  workspaceService
+    .deleteFromList(browser, 0)
+    .end();
 }
 
 function ranking(browser) {
@@ -149,16 +164,3 @@ function interactWithPlot(browser) {
     .assert.containsText('//willingness-to-trade-off-chart/div/div[2]/div/span[10]', outcomeValue)
     .useCss();
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Setting the weights through ranking': ranking,
-  'Ranking previous button': rankingGoBack,
-  'Matching previous button': matchingGoBack,
-  'Setting the weights through precise swing weighting': preciseSwing,
-  'Precise swing previous button': preciseSwingGoBack,
-  'Setting the weights through imprecise swing weighting': impreciseSwing,
-  'Imprecise swing previous button': impreciseSwingGoBack,
-  'Interacting with Willingness to trade off plot': interactWithPlot
-};

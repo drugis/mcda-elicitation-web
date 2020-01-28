@@ -1,5 +1,23 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Editing a criterion': editCriterion,
+  'Editing a data source': editDataSource,
+  'Editing an alternative': editAlternative,
+  'Deleting a criterion': deleteCriterion,
+  'Deleting a data source': deleteDataSource,
+  'Deleting an alternative': deleteAlternative,
+  'Moving criterion up and down': moveCriterion,
+  'Moving data source up and down': moveDataSource,
+  'Moving an alternative up and down': moveAlternative,
+  'Saving during step 1': save,
+  'Delete a saved workspace': deleteWorkspace,
+  'Continuing working on a saved workspace': continueWorkspace,
+  'Checking and unchecking the favorability button should keep the criteria': favorability
+};
+
 const loginService = require('./util/loginService');
 const manualInputService = require('./util/manualInputService');
 const workspaceService = require('./util/workspaceService');
@@ -159,21 +177,3 @@ function favorability(browser) {
     .assert.containsText('#criterion-title-1', EXTRA_CRITERION.title)
     .assert.containsText('#criterion-title-2', manualInputService.CRITERION2.title);
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Editing a criterion': editCriterion,
-  'Editing a data source': editDataSource,
-  'Editing an alternative': editAlternative,
-  'Deleting a criterion': deleteCriterion,
-  'Deleting a data source': deleteDataSource,
-  'Deleting an alternative': deleteAlternative,
-  'Moving criterion up and down': moveCriterion,
-  'Moving data source up and down': moveDataSource,
-  'Moving an alternative up and down': moveAlternative,
-  'Saving during step 1': save,
-  'Delete a saved workspace': deleteWorkspace,
-  'Continuing working on a saved workspace': continueWorkspace,
-  'Checking and unchecking the favorability button should keep the criteria': favorability
-};
