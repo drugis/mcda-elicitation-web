@@ -51,7 +51,13 @@ module.exports = function(db) {
     db.query(
       query,
       [workspaceId],
-      callback
+      function(error, result) {
+        if (error) {
+          callback(error);
+        } else {
+          callback(error, result.rows[0].defaultsubproblemid);
+        }
+      }
     );
   }
 

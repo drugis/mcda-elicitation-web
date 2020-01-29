@@ -108,13 +108,18 @@ describe('the workspace repository', function() {
 
   describe('getDefaultSubProblem', function() {
     const expectedQuery = 'SELECT defaultSubproblemId FROM workspace WHERE id = $1';
-    const expectedResult = [123];
+    const expectedResult = 123;
+    const queryResult = {
+      rows: [{
+        defaultsubproblemid: expectedResult
+      }]
+    };
     const queryInputValues = [workspaceId];
 
     initDBStub();
 
     it('should get the default subproblem for the workspace', function(done) {
-      query.onCall(0).yields(null, expectedResult);
+      query.onCall(0).yields(null, queryResult);
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       workspaceRepository.getDefaultSubproblem(workspaceId, callback);
     });
