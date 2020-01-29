@@ -38,7 +38,11 @@ define([],
             };
 
             delete scope.measurementValues;
-            DeterministicResultsService.getMeasurementSensitivityResults(scope, scope.aggregateState.dePercentified).resultsPromise.then(function(result) {
+            DeterministicResultsService.getMeasurementSensitivityResults(
+              scope.measurementsAlternative.id,
+              scope.measurementsCriterion.id,
+              scope.aggregateState.dePercentified
+            ).resultsPromise.then(function(result) {
               scope.measurementValues = DeterministicResultsService.pataviResultToLineValues(result.results, scope.alternatives, scope.scenario.state.legend);
 
               if (usePercentage(scope.measurementsCriterion.dataSources[0])) {

@@ -9,7 +9,7 @@ define([
 ], function(angular) {
   describe('The DeterministicResultsService', function() {
     var deterministicResultsService;
-    var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsServiceMock', ['somefunction']);
+    var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsServiceMock', ['postAndHandleResults']);
 
     beforeEach(function() {
       angular.mock.module('patavi', function() { });
@@ -437,6 +437,19 @@ define([
           }
         };
         expect(settings).toEqual(expectedSettings);
+      });
+    });
+
+    fdescribe('getDeterministicResults', function() {
+      it('should call the PataviResultsService.postAndHandleResults with the correct arguments', function() {
+        var state = {
+          problem: {},
+          prefs: {}
+        };
+        var expectedProblem = {};
+        pataviResultsServiceMock.postAndHandleResults.and.returnValue('somePromise');
+        var result = deterministicResultsService.getDeterministicResults(state);
+        expect(result.problem).toEqual(expectedProblem);
       });
     });
   });
