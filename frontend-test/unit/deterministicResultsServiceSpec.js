@@ -9,7 +9,7 @@ define([
 ], function(angular) {
   describe('The DeterministicResultsService', function() {
     var deterministicResultsService;
-    var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsServiceMock', ['postAndHandleResults']);
+    const pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsServiceMock', ['postAndHandleResults']);
 
     beforeEach(function() {
       angular.mock.module('patavi', function() { });
@@ -22,7 +22,7 @@ define([
       deterministicResultsService = DeterministicResultsService;
     }));
 
-    var alternatives = [{
+    const alternatives = [{
       id: 'Fluox',
       title: 'Fluoxetine'
     }, {
@@ -30,7 +30,7 @@ define([
       title: 'Paroxetine'
     }];
 
-    var legend = {
+    const legend = {
       Fluox: {
         newTitle: 'newfluox'
       },
@@ -38,6 +38,34 @@ define([
         newTitle: 'newparox'
       }
     };
+
+    const state = {
+      problem: {
+        criteria: {
+          criterion1: {
+            dataSources: [{
+              some: 'thing'
+            }]
+          }
+        },
+        performanceTable: [{
+          performance: {
+            effect: 'effect'
+          }
+        }, {
+          performance: {
+            distribution: 'distribution'
+          }
+        }]
+      },
+      prefs: {}
+    };
+
+    const transformedPerformaceTable = [{
+      performance: 'effect'
+    }, {
+      performance: 'distribution'
+    }];
 
     describe('resetModifiableScales', function() {
       it('it should reset the scales to their original values', function() {
@@ -440,15 +468,84 @@ define([
       });
     });
 
-    fdescribe('getDeterministicResults', function() {
-      it('should call the PataviResultsService.postAndHandleResults with the correct arguments', function() {
-        var state = {
-          problem: {},
-          prefs: {}
+    describe('getDeterministicResults', function() {
+      it('should call the PataviResultsService.postAndHandleResults with a patavi ready problem', function() {
+        const expectedProblem = {
+          preferences: state.prefs,
+          method: 'deterministic',
+          performanceTable: transformedPerformaceTable,
+          criteria: {
+            criterion1: {
+              some: 'thing',
+            }
+          }
         };
-        var expectedProblem = {};
-        pataviResultsServiceMock.postAndHandleResults.and.returnValue('somePromise');
-        var result = deterministicResultsService.getDeterministicResults(state);
+        const result = deterministicResultsService.getDeterministicResults(state);
+        expect(result.problem).toEqual(expectedProblem);
+      });
+    });
+
+    describe('getRecalculatedDeterministicResults', function() {
+      it('should call the PataviResultsService.postAndHandleResults with a patavi ready problem', function() {
+        const alteredTableCells = [{}, {}];
+        const expectedProblem = {
+          preferences: state.prefs,
+          method: 'sensitivityMeasurements',
+          criteria: {
+            criterion1: {
+              some: 'thing',
+            }
+          },
+          performanceTable: state.problem.performanceTable,
+          sensitivityAnalysis: {
+            meas: alteredTableCells
+          }
+        };
+        const result = deterministicResultsService.getRecalculatedDeterministicResults(alteredTableCells, state);
+        expect(result.problem).toEqual(expectedProblem);
+      });
+    });
+
+    describe('getMeasurementSensitivityResults', function() {
+      it('should call the PataviResultsService.postAndHandleResults with a patavi ready problem', function() {
+        const measurementsAlternativeId = 1;
+        const measurementsCriterionId = 37;
+        const expectedProblem = {
+          preferences: state.prefs,
+          method: 'sensitivityMeasurementsPlot',
+          criteria: {
+            criterion1: {
+              some: 'thing',
+            }
+          },
+          performanceTable: transformedPerformaceTable,
+          sensitivityAnalysis: {
+            alternative: measurementsAlternativeId,
+            criterion: measurementsCriterionId
+          }
+        };
+        const result = deterministicResultsService.getMeasurementSensitivityResults(measurementsAlternativeId, measurementsCriterionId, state);
+        expect(result.problem).toEqual(expectedProblem);
+      });
+    });
+
+    describe('getPreferencesSensitivityResults', function() {
+      it('should call the PataviResultsService.postAndHandleResults with a patavi ready problem', function() {
+        const selectedCriterionId = 37;
+        const expectedProblem = {
+          preferences: state.prefs,
+          method: 'sensitivityWeightPlot',
+          criteria: {
+            criterion1: {
+              some: 'thing',
+            }
+          },
+          performanceTable: transformedPerformaceTable,
+          sensitivityAnalysis: {
+            criterion: selectedCriterionId
+          }
+        };
+        const result = deterministicResultsService.getPreferencesSensitivityResults(selectedCriterionId, state);
         expect(result.problem).toEqual(expectedProblem);
       });
     });

@@ -9,7 +9,7 @@ define([
 ], function(angular) {
   describe('The SmaaResultsService', function() {
     var smaaResultsService;
-    var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsServiceMock', ['somefunction']);
+    var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsServiceMock', ['postAndHandleResults']);
 
     const root = 'root';
 
@@ -439,6 +439,60 @@ define([
         const aggregateState = {};
         const result = smaaResultsService.hasNoStochasticWeights(aggregateState);
         expect(result).toBeFalsy();
+      });
+    });
+
+    describe('getResults', function() {
+      it('should call the PataviResultsService.postAndHandleResults with a patavi ready problem', function() {
+        const uncertaintyOptions = {
+          un: 'certain'
+        };
+        const state = {
+          problem: {
+            criteria: {
+              criterion1: {
+                dataSources: [{
+                  some: 'thing'
+                }]
+              }
+            },
+            alternatives: {
+              'alternative1': {}
+            },
+            performanceTable: [{
+              performance: {
+                effect: 'effect'
+              }
+            }, {
+              performance: {
+                distribution: 'distribution'
+              }
+            }]
+          },
+          prefs: {}
+        };
+        const expectedProblem = {
+          preferences: state.prefs,
+          method: 'smaa',
+          uncertaintyOptions: uncertaintyOptions,
+          performanceTable: [{
+            performance: 'effect'
+          }, {
+            performance: 'distribution'
+          }],
+          criteria: {
+            criterion1: {
+              some: 'thing'
+            }
+          },
+          alternatives: {
+            'alternative1': {}
+          }
+        };
+        const result = smaaResultsService.getResults(uncertaintyOptions, state);
+        expect(result.problem).toEqual(expectedProblem);
+        expect(result.selectedAlternative).toEqual('alternative1');
+        expect(result.selectedRank).toEqual('0');
       });
     });
   });

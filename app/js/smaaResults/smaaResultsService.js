@@ -13,6 +13,35 @@ define([
   var SmaaResultsService = function(PataviResultsService) {
     const NON_EXACT_PREFERENCE_TYPES = ['ordinal', 'ratio bound'];
 
+    function getResults(uncertaintyOptions, state) {
+      var nextState = {
+        problem: _.merge({}, getProblem(state.problem), {
+          preferences: state.prefs,
+          method: 'smaa',
+          uncertaintyOptions: uncertaintyOptions
+        }),
+        selectedAlternative: _.keys(state.problem.alternatives)[0],
+        selectedRank: '0'
+      };
+      return run(nextState);
+    }
+
+    function getProblem(problem) {
+      var newProblem = angular.copy(problem);
+      newProblem.performanceTable = _.map(problem.performanceTable, createEntry);
+      return newProblem;
+    }
+
+    function createEntry(entry) {
+      var newEntry = angular.copy(entry);
+      if (entry.performance.distribution) {
+        newEntry.performance = entry.performance.distribution;
+      } else {
+        newEntry.performance = entry.performance.effect;
+      }
+      return newEntry;
+    }
+    
     function run(inState) {
       var state = angular.copy(inState);
       state.problem.criteria = mergeDataSourceOntoCriterion(state.problem.criteria);
@@ -101,35 +130,6 @@ define([
         }];
         return accum;
       }, {});
-    }
-
-    function getResults(uncertaintyOptions, state) {
-      var nextState = {
-        problem: _.merge({}, getProblem(state.problem), {
-          preferences: state.prefs,
-          method: 'smaa',
-          uncertaintyOptions: uncertaintyOptions
-        }),
-        selectedAlternative: _.keys(state.problem.alternatives)[0],
-        selectedRank: '0'
-      };
-      return run(nextState);
-    }
-
-    function getProblem(problem) {
-      var newProblem = angular.copy(problem);
-      newProblem.performanceTable = _.map(problem.performanceTable, createEntry);
-      return newProblem;
-    }
-
-    function createEntry(entry) {
-      var newEntry = angular.copy(entry);
-      if (entry.performance.distribution) {
-        newEntry.performance = entry.performance.distribution;
-      } else {
-        newEntry.performance = entry.performance.effect;
-      }
-      return newEntry;
     }
 
     function smaaResultsToRankPlotValues(results, alternatives, legend) {
