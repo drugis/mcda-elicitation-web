@@ -61,7 +61,7 @@ define([
       prefs: {}
     };
 
-    const transformedPerformaceTable = [{
+    const transformedPerformanceTable = [{
       performance: 'effect'
     }, {
       performance: 'distribution'
@@ -473,7 +473,7 @@ define([
         const expectedProblem = {
           preferences: state.prefs,
           method: 'deterministic',
-          performanceTable: transformedPerformaceTable,
+          performanceTable: transformedPerformanceTable,
           criteria: {
             criterion1: {
               some: 'thing',
@@ -518,7 +518,7 @@ define([
               some: 'thing',
             }
           },
-          performanceTable: transformedPerformaceTable,
+          performanceTable: transformedPerformanceTable,
           sensitivityAnalysis: {
             alternative: measurementsAlternativeId,
             criterion: measurementsCriterionId
@@ -540,7 +540,7 @@ define([
               some: 'thing',
             }
           },
-          performanceTable: transformedPerformaceTable,
+          performanceTable: transformedPerformanceTable,
           sensitivityAnalysis: {
             criterion: selectedCriterionId
           }
