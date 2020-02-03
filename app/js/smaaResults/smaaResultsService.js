@@ -2,12 +2,10 @@
 define([
   'lodash',
   'angular',
-  'jquery',
   'd3'
 ], function(
   _,
   angular,
-  $,
   d3
 ) {
   var dependencies = ['PataviResultsService'];
@@ -15,21 +13,39 @@ define([
   var SmaaResultsService = function(PataviResultsService) {
     const NON_EXACT_PREFERENCE_TYPES = ['ordinal', 'ratio bound'];
 
-    function run($scope, inState) {
+    function getResults(uncertaintyOptions, state) {
+      var nextState = {
+        problem: _.merge({}, getProblem(state.problem), {
+          preferences: state.prefs,
+          method: 'smaa',
+          uncertaintyOptions: uncertaintyOptions
+        }),
+        selectedAlternative: _.keys(state.problem.alternatives)[0],
+        selectedRank: '0'
+      };
+      return run(nextState);
+    }
+
+    function getProblem(problem) {
+      var newProblem = angular.copy(problem);
+      newProblem.performanceTable = _.map(problem.performanceTable, createEntry);
+      return newProblem;
+    }
+
+    function createEntry(entry) {
+      var newEntry = angular.copy(entry);
+      if (entry.performance.distribution) {
+        newEntry.performance = entry.performance.distribution;
+      } else {
+        newEntry.performance = entry.performance.effect;
+      }
+      return newEntry;
+    }
+    
+    function run(inState) {
       var state = angular.copy(inState);
       state.problem.criteria = mergeDataSourceOntoCriterion(state.problem.criteria);
-
-      var updateCallback = _.throttle(function(update) {
-        if (update && update.eventType === 'progress' && update.eventData && $.isNumeric(update.eventData)) {
-          var progress = parseInt(update.eventData);
-          if (progress > $scope.progress) {
-            $scope.progress = progress;
-          }
-        }
-      }, 30);
-      $scope.progress = 0;
-
-      state.resultsPromise = PataviResultsService.postAndHandleResults(state.problem, _.partial(succesCallback, state), updateCallback);
+      state.resultsPromise = PataviResultsService.postAndHandleResults(state.problem, _.partial(succesCallback, state));
       return state;
     }
 
@@ -114,35 +130,6 @@ define([
         }];
         return accum;
       }, {});
-    }
-
-    function getResults(scope, state) {
-      var nextState = {
-        problem: _.merge({}, getProblem(state.problem), {
-          preferences: state.prefs,
-          method: 'smaa',
-          uncertaintyOptions: scope.scenario.state.uncertaintyOptions
-        }),
-        selectedAlternative: _.keys(state.problem.alternatives)[0],
-        selectedRank: '0'
-      };
-      return run(scope, nextState);
-    }
-
-    function getProblem(problem) {
-      var newProblem = angular.copy(problem);
-      newProblem.performanceTable = _.map(problem.performanceTable, createEntry);
-      return newProblem;
-    }
-
-    function createEntry(entry) {
-      var newEntry = angular.copy(entry);
-      if (entry.performance.distribution) {
-        newEntry.performance = entry.performance.distribution;
-      } else {
-        newEntry.performance = entry.performance.effect;
-      }
-      return newEntry;
     }
 
     function smaaResultsToRankPlotValues(results, alternatives, legend) {

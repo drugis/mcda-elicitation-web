@@ -37,7 +37,10 @@ define([],
             };
 
             delete scope.values;
-            DeterministicResultsService.getPreferencesSensitivityResults(scope, scope.aggregateState.dePercentified).resultsPromise.then(function(result) {
+            DeterministicResultsService.getPreferencesSensitivityResults(
+              scope.selectedCriterion.id,
+              scope.aggregateState.dePercentified
+            ).resultsPromise.then(function(result) {
               scope.values = DeterministicResultsService.pataviResultToLineValues(result.results, scope.alternatives, scope.scenario.state.legend);
             });
           }
