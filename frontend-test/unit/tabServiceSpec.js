@@ -96,11 +96,46 @@ define(['angular', 'angular-mocks'], function(angular) {
         var expectedResult = angular.copy(defaultExpectedResult);
         expectedResult.overview.active = true;
         expectedResult.preferences.enabled = false;
-        expectedResult.preferences.tooltip = 'Cannot elicit preferences because effects table contains missing values';
+        expectedResult.preferences.tooltip = 'Cannot elicit preferences because the effects table contains missing values.';
         expectedResult.deterministic.enabled = false;
-        expectedResult.deterministic.tooltip = 'Cannot perform analysis because effects table contains missing values';
+        expectedResult.deterministic.tooltip = 'Cannot perform analysis because the effects table contains missing values.';
         expectedResult.smaa.enabled = false;
-        expectedResult.smaa.tooltip = 'Cannot perform analysis because effects table contains missing values';
+        expectedResult.smaa.tooltip = 'Cannot perform analysis because the effects table contains missing values.';
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should disable the preferences, deterministic, and smaa tabs if there are more then 12 criteria in the effects table', function() {
+        workspaceServiceMock.checkForMissingValuesInPerformanceTable.and.returnValue(false);
+        const aggregateStateWithAlotOfCriteria = {
+          problem: {
+            criteria: {
+              id1: {},
+              id2: {},
+              id3: {},
+              id4: {},
+              id5: {},
+              id6: {},
+              id7: {},
+              id8: {},
+              id9: {},
+              id10: {},
+              id11: {},
+              id12: {},
+              id13: {}
+            }
+          }
+        };
+
+        const result = tabService.getTabStatus(stateName, aggregateStateWithAlotOfCriteria, tasksAccessibility);
+
+        var expectedResult = angular.copy(defaultExpectedResult);
+        expectedResult.overview.active = true;
+        expectedResult.preferences.enabled = false;
+        expectedResult.preferences.tooltip = 'Cannot elicit preferences because the effects table contains more than 12 criteria.';
+        expectedResult.deterministic.enabled = false;
+        expectedResult.deterministic.tooltip = 'Cannot perform analysis because the effects table contains more than 12 criteria.';
+        expectedResult.smaa.enabled = false;
+        expectedResult.smaa.tooltip = 'Cannot perform analysis because the effects table contains more than 12 criteria.';
         expect(result).toEqual(expectedResult);
       });
 
@@ -112,9 +147,9 @@ define(['angular', 'angular-mocks'], function(angular) {
         var expectedResult = angular.copy(defaultExpectedResult);
         expectedResult.overview.active = true;
         expectedResult.deterministic.enabled = false;
-        expectedResult.deterministic.tooltip = 'Cannot perform analysis because not all partial value functions are set';
+        expectedResult.deterministic.tooltip = 'Cannot perform analysis because not all partial value functions are set.';
         expectedResult.smaa.enabled = false;
-        expectedResult.smaa.tooltip = 'Cannot perform analysis because not all partial value functions are set';
+        expectedResult.smaa.tooltip = 'Cannot perform analysis because not all partial value functions are set.';
         expect(result).toEqual(expectedResult);
       });
 
@@ -127,11 +162,11 @@ define(['angular', 'angular-mocks'], function(angular) {
         var expectedResult = angular.copy(defaultExpectedResult);
         expectedResult.overview.active = true;
         expectedResult.preferences.enabled = false;
-        expectedResult.preferences.tooltip = 'Cannot set preferences because problem has multiple datasources per criterion';
+        expectedResult.preferences.tooltip = 'Cannot elicit preferences because the problem has multiple datasources per criterion.';
         expectedResult.deterministic.enabled = false;
-        expectedResult.deterministic.tooltip = 'Cannot set preferences because problem has multiple datasources per criterion';
+        expectedResult.deterministic.tooltip = 'Cannot perform analysis because the problem has multiple datasources per criterion.';
         expectedResult.smaa.enabled = false;
-        expectedResult.smaa.tooltip = 'Cannot set preferences because problem has multiple datasources per criterion';
+        expectedResult.smaa.tooltip = 'Cannot perform analysis because the problem has multiple datasources per criterion.';
         expect(result).toEqual(expectedResult);
       });
     });
