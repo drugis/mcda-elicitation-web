@@ -109,19 +109,19 @@ define(['angular', 'angular-mocks'], function(angular) {
         const aggregateStateWithAlotOfCriteria = {
           problem: {
             criteria: {
-              id1: {},
-              id2: {},
-              id3: {},
-              id4: {},
-              id5: {},
-              id6: {},
-              id7: {},
-              id8: {},
-              id9: {},
-              id10: {},
-              id11: {},
-              id12: {},
-              id13: {}
+              theseAre13RandomIds: {we: 'dont'},
+              banana: {care: 'about'},
+              apple: {these: 'ojects'},
+              kiwi: {etc:'etc'},
+              dragonfrtui: {etc:'etc'},
+              grapefruit: {etc:'etc'},
+              mineola: {etc:'etc'},
+              orange: {etc:'etc'},
+              grape: {etc:'etc'},
+              peach: {etc:'etc'},
+              abricot: {etc:'etc'},
+              prune: {etc:'etc'},
+              tomato: {etc:'etc'}
             }
           }
         };
