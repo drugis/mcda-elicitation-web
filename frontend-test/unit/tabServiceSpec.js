@@ -1,5 +1,5 @@
 'use strict';
-define(['angular', 'angular-mocks'], function(angular) {
+define(['angular', 'lodash', 'angular-mocks'], function(angular, _) {
   describe('TabService', function() {
     var tabService;
     var workspaceServiceMock = jasmine.createSpyObj('WorkspaceService', [
@@ -106,27 +106,16 @@ define(['angular', 'angular-mocks'], function(angular) {
 
       it('should disable the preferences, deterministic, and smaa tabs if there are more then 12 criteria in the effects table', function() {
         workspaceServiceMock.checkForMissingValuesInPerformanceTable.and.returnValue(false);
-        const aggregateStateWithAlotOfCriteria = {
+        const aggregateStateWithmoreThan12Criteria = {
           problem: {
-            criteria: {
-              theseAre13RandomIds: {we: 'dont'},
-              banana: {care: 'about'},
-              apple: {these: 'ojects'},
-              kiwi: {etc:'etc'},
-              dragonfrtui: {etc:'etc'},
-              grapefruit: {etc:'etc'},
-              mineola: {etc:'etc'},
-              orange: {etc:'etc'},
-              grape: {etc:'etc'},
-              peach: {etc:'etc'},
-              abricot: {etc:'etc'},
-              prune: {etc:'etc'},
-              tomato: {etc:'etc'}
-            }
+            criteria: _(_.range(0, 13))
+              .map(function(n) { return [n, {}]; })
+              .fromPairs()
+              .value()
           }
         };
 
-        const result = tabService.getTabStatus(stateName, aggregateStateWithAlotOfCriteria, tasksAccessibility);
+        const result = tabService.getTabStatus(stateName, aggregateStateWithmoreThan12Criteria, tasksAccessibility);
 
         var expectedResult = angular.copy(defaultExpectedResult);
         expectedResult.overview.active = true;
