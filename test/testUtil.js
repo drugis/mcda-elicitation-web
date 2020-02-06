@@ -35,7 +35,7 @@ function createQueryTwoArgumentCallbackWithTests(query, expectedQuery, queryInpu
 function createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedError, done) {
   return function(error) {
     sinon.assert.calledWith(query, expectedQuery, queryInputValues);
-    expect(error).to.equal(expectedError);
+    expect(error).to.deep.equal(expectedError);
     done();
   };
 }

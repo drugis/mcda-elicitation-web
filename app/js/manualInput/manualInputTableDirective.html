@@ -22,33 +22,33 @@
         {{row.criterion.isFavorable? 'yes' : 'no'}}</td>
       <td>
         <span
-          id="unit-of-measurement-label-{{ row.criterion.title }}-{{ row.dataSource.source }}">{{row.dataSource.unitOfMeasurement.value}}
+          id="unit-of-measurement-{{ $index }}">{{row.dataSource.unitOfMeasurement.value}}
         </span>
         <span class="right">
           <a ng-click="editUnitOfMeasurement(row)" tooltip="Edit unit of measurement">
-            <i id="edit-unit-of-measurement-{{ row.criterion.title }}-{{ row.dataSource.source }}"
+            <i id="unit-of-measurement-{{ $index }}-edit"
               class="fa fa-edit icon-fixed-width"></i>
           </a>
         </span>
       </td>
       <td>{{row.dataSource.source}}</td>
-      <td ng-repeat="alternative in state.alternatives" class="text-centered">
+      <td id="ds-{{ $parent.$index }}-a-{{ $index }}-input-cell" ng-repeat="alternative in state.alternatives" class="text-centered">
         <effect-input-helper alternative="alternative" input-type="inputType"
           unit-of-measurement="row.dataSource.unitOfMeasurement"
           cell="state.inputData[inputType][row.dataSource.id][alternative.id]" change-callback="checkInputData">
         </effect-input-helper>
       </td>
       <td ng-if="!isInput">
-        <span id="strength-of-evidence-{{ row.criterion.title }}-{{ row.dataSource.source }}"><b>SoE:
+        <span id="strength-of-evidence-{{ $index }}"><b>SoE:
           </b>{{row.dataSource.strengthOfEvidence}}</span>
         <span class="right">
           <a ng-click="editSoE(row)" tooltip="Edit Strength of evidence / Uncertainties">
-            <i id="edit-soe-unc-{{ row.criterion.title }}-{{ row.dataSource.source }}"
+            <i id="strength-of-evidence-{{ $index }}-edit"
               class="fa fa-edit icon-fixed-width"></i>
           </a>
         </span>
         <br>
-        <span id="uncertainties-{{ row.criterion.title }}-{{ row.dataSource.source }}">
+        <span id="uncertainties-{{ $index }}">
           <b>Unc: </b> {{row.dataSource.uncertainties}}
         </span>
       </td>

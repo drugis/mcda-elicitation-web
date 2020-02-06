@@ -49,17 +49,13 @@ describe('the in ordering handler', () => {
     });
 
     it('should call the ordering repository with the correct arguments', () => {
-      const result = {
-        rows: [{
-          ordering: {}
-        }]
-      };
+      const result = {};
       get.onCall(0).yields(null, result);
 
       orderingHandler.get(request, response, next);
       sinon.assert.calledWith(get, workspaceId);
       expect(utilStub.handleError).not.to.have.been.called();
-      expect(response.json).to.have.been.called.with({ ordering: result.rows[0].ordering });
+      expect(response.json).to.have.been.called.with({ ordering: result });
     });
 
     it('should not call reponse.json if there\'s an error', function() {

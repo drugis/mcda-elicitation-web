@@ -231,5 +231,56 @@ define(['angular',
           expect(result).toEqual(expectedResult);
         });
       });
+
+      describe('getNewScenarioState', function() {
+        const direction = 'increasing';
+        const criterion = {
+          id: 'crit1'
+        };
+        const expectedResult = {
+          problem: {
+            criteria: {
+              crit1: {
+                dataSources: [{
+                  pvf: {
+                    direction: direction,
+                    type: 'linear'
+                  }
+                }]
+              }
+            }
+          }
+        };
+
+        it('should set a linear partial value function of a given direction for a criterion with an existing PVF', function() {
+          const scenario = {
+            state: {
+              problem: {
+                criteria: {
+                  crit1: {
+                    dataSources: [{
+                      pvf: {
+                        direction: 'decreasing',
+                        type: 'piecewise-linear',
+                        values: [0.75, 0.5, 0.25],
+                        cutoffs: [0.1782, 0.81, 0.943]
+                      }
+                    }]
+                  }
+                }
+              }
+            }
+          };
+
+          const result = partialValueFunctionService.getNewScenarioState(scenario, criterion, direction);
+          expect(result).toEqual(expectedResult);
+        });
+
+        it('should set a linear partial value function of a given direction for a criterion without a PVF', function() {
+          const scenario = {};
+          const result = partialValueFunctionService.getNewScenarioState(scenario, criterion, direction);
+          expect(result).toEqual(expectedResult);
+        });
+      });
     });
   });

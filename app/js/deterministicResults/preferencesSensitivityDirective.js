@@ -20,11 +20,9 @@ define([],
         link: function(scope) {
           scope.doPreferencesSensitivity = doPreferencesSensitivity;
 
-          init();
+          scope.$on('elicit.legendChanged', init);
 
-          scope.$on('elicit.legendChanged', function() {
-            init();
-          });
+          init();
 
           function init() {
             scope.selectedCriterion = scope.criteria[0];
@@ -38,8 +36,11 @@ define([],
               labelYAxis: 'total value',
             };
 
-            delete scope.preferencesValues;
-            DeterministicResultsService.getPreferencesSensitivityResults(scope, scope.aggregateState.dePercentified).resultsPromise.then(function(result) {
+            delete scope.values;
+            DeterministicResultsService.getPreferencesSensitivityResults(
+              scope.selectedCriterion.id,
+              scope.aggregateState.dePercentified
+            ).resultsPromise.then(function(result) {
               scope.values = DeterministicResultsService.pataviResultToLineValues(result.results, scope.alternatives, scope.scenario.state.legend);
             });
           }

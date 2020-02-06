@@ -3,12 +3,12 @@
 define(['angular', 'lodash'], function(angular, _) {
   var dependencies = [
     '$rootScope',
-    '$stateParams',
+    '$state',
     'WorkspaceSettingsResource'
   ];
   var WorkspaceSettingsService = function(
     $rootScope,
-    $stateParams,
+    $state,
     WorkspaceSettingsResource
   ) {
     var DEFAULT_SETTINGS = {
@@ -19,7 +19,8 @@ define(['angular', 'lodash'], function(angular, _) {
       hasNoEffects: false,
       hasNoDistributions: false,
       isRelativeProblem: false,
-      changed: false
+      changed: false,
+      randomSeed: 1234
     };
 
     var DEFAULT_TOGGLED_COLUMNS = {
@@ -36,7 +37,7 @@ define(['angular', 'lodash'], function(angular, _) {
     function loadWorkspaceSettings(params) {
       return WorkspaceSettingsResource.get(params).$promise.then(function(result) {
         if (result.settings) {
-          workspaceSettings = result.settings;
+          workspaceSettings = _.merge({}, DEFAULT_SETTINGS, result.settings);
         } else {
           workspaceSettings = angular.copy(DEFAULT_SETTINGS);
         }
@@ -105,11 +106,20 @@ define(['angular', 'lodash'], function(angular, _) {
         toggledColumns: newToggledColumns
       };
       newSettings.settings.changed = true;
-      return WorkspaceSettingsResource.put($stateParams, newSettings).$promise.then(function() {
+      return WorkspaceSettingsResource.put($state.params, newSettings).$promise.then(function() {
+        var randomSeedChanged = hasRandomSeedChanged(newWorkspaceSettings.randomSeed);
         workspaceSettings = newWorkspaceSettings;
         toggledColumns = newToggledColumns;
-        $rootScope.$broadcast('elicit.settingsChanged', newSettings);
+        if (randomSeedChanged) {
+          $state.reload();
+        } else {
+          $rootScope.$broadcast('elicit.settingsChanged', newSettings);
+        }
       });
+    }
+
+    function hasRandomSeedChanged(newRandomSeed) {
+      return workspaceSettings.randomSeed !== newRandomSeed;
     }
 
     function getDefaults() {
@@ -168,6 +178,10 @@ define(['angular', 'lodash'], function(angular, _) {
         settings.analysisType === 'smaa';
     }
 
+    function getRandomSeed() {
+      return workspaceSettings.randomSeed;
+    }
+
     return {
       loadWorkspaceSettings: loadWorkspaceSettings,
       getToggledColumns: getToggledColumns,
@@ -176,7 +190,8 @@ define(['angular', 'lodash'], function(angular, _) {
       getDefaults: getDefaults,
       usePercentage: usePercentage,
       isValueView: isValueView,
-      getWarnings: getWarnings
+      getWarnings: getWarnings,
+      getRandomSeed: getRandomSeed
     };
   };
   return dependencies.concat(WorkspaceSettingsService);

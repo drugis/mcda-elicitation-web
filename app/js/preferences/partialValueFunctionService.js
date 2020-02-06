@@ -1,5 +1,5 @@
 'use strict';
-define(['lodash', 'angular'], function(_) {
+define(['lodash', 'angular'], function(_, angular) {
   var dependencies = [];
   var PartialValueFunctionService = function() {
     function inv(criterion) {
@@ -142,6 +142,27 @@ define(['lodash', 'angular'], function(_) {
       }
     }
 
+    function getNewScenarioState(scenario, criterion, direction) {
+      var existingState = scenario.state ? angular.copy(scenario.state) : {};
+      if (existingState.problem) {
+        delete existingState.problem.criteria[criterion.id];
+      }
+      var newState = {
+        problem: {
+          criteria: {}
+        }
+      };
+      newState.problem.criteria[criterion.id] = {
+        dataSources: [{
+          pvf: {
+            direction: direction,
+            type: 'linear'
+          }
+        }]
+      };
+      return _.merge({}, existingState, newState);
+    }
+
     return {
       isIncreasing: isIncreasing,
       inv: inv,
@@ -151,7 +172,8 @@ define(['lodash', 'angular'], function(_) {
       standardizeDataSource: standardizeDataSource,
       getPvfCoordinates: getPvfCoordinates,
       getPvfCoordinatesForCriterion: getPvfCoordinatesForCriterion,
-      getUnitOfMeasurement: getUnitOfMeasurement
+      getUnitOfMeasurement: getUnitOfMeasurement,
+      getNewScenarioState: getNewScenarioState
     };
   };
   return dependencies.concat(PartialValueFunctionService);

@@ -1,12 +1,13 @@
 'use strict';
 
 const errorService = require('./errorService.js');
+const util = require('./util.js');
 
 function goHomeAfterLoading(browser, title) {
-  errorService.isErrorBarHidden(browser);
-  browser
-    .assert.containsText('#workspace-title', title)
-    .click('#logo');
+  errorService.isErrorBarHidden(browser)
+    .assert.containsText('#workspace-title', title);
+  return util.delayedClick(browser, '#logo', '#workspaces-header')
+    .waitForElementVisible('#workspaces-header');
 }
 
 function addExample(browser, title) {
@@ -17,7 +18,7 @@ function addExample(browser, title) {
     .click('#example-workspace-selector')
     .click('option[label="' + title + '"]')
     .click('#add-workspace-button').pause(500);
-  goHomeAfterLoading(browser, title);
+  return goHomeAfterLoading(browser, title);
 }
 
 function addTutorial(browser, title) {
@@ -28,23 +29,20 @@ function addTutorial(browser, title) {
     .click('#tutorial-workspace-selector')
     .click('option[label="' + title + '"]')
     .click('#add-workspace-button').pause(500);
-  goHomeAfterLoading(browser, title);
+  return goHomeAfterLoading(browser, title);
 }
 
 function copy(browser, index, newTitle) {
-  browser
+  return browser
     .click('#copy-workspace-' + index)
-    .setValue('#workspace-title', newTitle)
-    .click('#enter-data-button')
-    .click('#done-button').pause(500);
-  goHomeAfterLoading(browser, newTitle);
+    .setValue('#workspace-title', newTitle);
 }
 
 function deleteFromList(browser, index) {
   browser
     .click('#delete-workspace-' + index)
     .click('#delete-workspace-confirm-button');
-  errorService.isErrorBarHidden(browser);
+  return errorService.isErrorBarHidden(browser);
 }
 
 function uploadTestWorkspace(browser, path) {
@@ -54,15 +52,31 @@ function uploadTestWorkspace(browser, path) {
     .click('#upload-workspace-radio')
     .setValue('#workspace-upload-input', require('path').resolve(__dirname + path))
     .click('#add-workspace-button').pause(500);
-
-  errorService.isErrorBarHidden(browser);
+  return errorService.isErrorBarHidden(browser);
 }
 
 function deleteUnfinishedFromList(browser, index) {
   browser
     .click('#delete-in-progress-workspace-' + index)
     .click('#delete-workspace-confirm-button');
-  errorService.isErrorBarHidden(browser);
+  return errorService.isErrorBarHidden(browser);
+}
+
+function cleanList(browser) {
+  var expectPath = '#delete-workspace-0';
+  browser.waitForElementVisible('#workspaces-header');
+  browser.elements('css selector', expectPath, function (result) {
+    if (result.value.length !== 0) {
+      console.log('! Workspace list is not empty. Deleting a workspace.');
+      browser.click(expectPath);
+      browser.waitForElementVisible('#delete-workspace-confirm-button');
+      browser.click('#delete-workspace-confirm-button');
+      cleanList(browser);
+    } else {
+      console.log('✔ Workspace list is empty.');
+    }
+  });
+  return browser;
 }
 
 module.exports = {
@@ -71,5 +85,7 @@ module.exports = {
   copy: copy,
   deleteFromList: deleteFromList,
   deleteUnfinishedFromList: deleteUnfinishedFromList,
-  uploadTestWorkspace: uploadTestWorkspace
+  uploadTestWorkspace: uploadTestWorkspace,
+  goHomeAfterLoading: goHomeAfterLoading,
+  cleanList: cleanList
 };

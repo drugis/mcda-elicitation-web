@@ -57,7 +57,7 @@ function initApp() {
       conString: dbUtil.mcdaDBUrl,
     }),
     secret: process.env.MCDAWEB_COOKIE_SECRET,
-    resave: true,
+    resave: false,
     proxy: true,
     rolling: true,
     saveUninitialized: true,
@@ -84,7 +84,9 @@ function initApp() {
 
   app.get('/logout', function(req, res) {
     req.logout();
-    res.redirect('/');
+    req.session.destroy(function(error) {
+      res.redirect('/');
+    });
   });
   app.use(csurf());
   app.use(function(req, res, next) {
@@ -122,12 +124,12 @@ function initApp() {
   app.use('/workspaces', WorkspaceSettingsRouter);
 
   app.post('/patavi', function(req, res, next) { // FIXME: separate routes for scales and results
-    patavi.create(req.body, function(err, taskUri) {
-      if (err) {
-        logger.error(err);
+    patavi.create(req.body, function(error, taskUri) {
+      if (error) {
+        logger.error(error);
         return next({
-          err: err,
-          status: httpStatus.INTERNAL_SERVER_ERROR
+          message: error,
+          statusCode: httpStatus.INTERNAL_SERVER_ERROR
         });
       }
       res.location(taskUri);
@@ -217,12 +219,14 @@ function setRequiredRights() {
     makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'GET', 'read', workspaceOwnerRightsNeeded),
     makeRights('/workspaces/:workspaceId/problems', 'POST', 'write', workspaceOwnerRightsNeeded),
     makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'POST', 'write', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId/problems/:subProblemId', 'DELETE', 'write', workspaceOwnerRightsNeeded),
 
     makeRights('/workspaces/:workspaceId/scenarios', 'GET', 'read', workspaceOwnerRightsNeeded),
     makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios', 'GET', 'read', workspaceOwnerRightsNeeded),
     makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'GET', 'read', workspaceOwnerRightsNeeded),
     makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios', 'POST', 'write', workspaceOwnerRightsNeeded),
-    makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'POST', 'write', workspaceOwnerRightsNeeded)
+    makeRights('/workspaces/:workspaceId/problems/:subProblemId/scenarios/:scenarioId', 'POST', 'write', workspaceOwnerRightsNeeded),
+    makeRights('/workspaces/:workspaceId/problems/:subproblemId/scenarios/:scenarioId', 'DELETE', 'write', workspaceOwnerRightsNeeded)
   ]);
 }
 
@@ -238,7 +242,7 @@ function rightsCallback(response, next, userId, error, result) {
   if (error) {
     next(error);
   } else {
-    var workspace = result.rows[0];
+    var workspace = result;
     if (!workspace) {
       response.status(httpStatus.NOT_FOUND).send('Workspace not found');
     } else if (workspace.owner !== userId) {

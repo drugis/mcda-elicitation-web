@@ -9,14 +9,14 @@ define([
 ], function(angular) {
   describe('The SmaaResultsService', function() {
     var smaaResultsService;
-    var pataviServiceMock = jasmine.createSpyObj('PataviServiceMock', ['somefunction']);
+    var pataviResultsServiceMock = jasmine.createSpyObj('PataviResultsServiceMock', ['postAndHandleResults']);
 
     const root = 'root';
 
     beforeEach(function() {
       angular.mock.module('patavi', function() { });
       angular.mock.module('elicit.smaaResults', function($provide) {
-        $provide.value('PataviService', pataviServiceMock);
+        $provide.value('PataviResultsService', pataviResultsServiceMock);
       });
     });
 
@@ -162,68 +162,6 @@ define([
                 value: [0.2]
               },]
             }]
-          }
-        };
-        expect(result).toEqual(expectedResult);
-      });
-    });
-
-    describe('getBarChartSettings', function() {
-      it('should return the settings for a bar chart', function() {
-        const results = [{
-          values: [{
-            value: 1,
-            label: 'label 1'
-          }, {
-            value: 2,
-            label: 'label 2'
-          }]
-        }];
-
-        var result = smaaResultsService.getBarChartSettings(results, root);
-        delete result.axis.y.tick.format;
-
-        const values = [
-          ['x', 'label 1', 'label 2'],
-          ['Rank', 1, 2]
-        ];
-        const expectedResult = {
-          bindto: root,
-          data: {
-            x: 'x',
-            columns: values,
-            type: 'bar'
-          },
-          axis: {
-            x: {
-              type: 'category',
-              tick: {
-                centered: true
-              }
-            },
-            y: {
-              tick: {
-                count: 5,
-              },
-              padding: {
-                top: 0,
-                bottom: 0
-              }
-            }
-          },
-          grid: {
-            x: {
-              show: false
-            },
-            y: {
-              show: true
-            }
-          },
-          legend: {
-            show: false
-          },
-          tooltip: {
-            show: false
           }
         };
         expect(result).toEqual(expectedResult);
@@ -501,6 +439,60 @@ define([
         const aggregateState = {};
         const result = smaaResultsService.hasNoStochasticWeights(aggregateState);
         expect(result).toBeFalsy();
+      });
+    });
+
+    describe('getResults', function() {
+      it('should call the PataviResultsService.postAndHandleResults with a patavi ready problem', function() {
+        const uncertaintyOptions = {
+          un: 'certain'
+        };
+        const state = {
+          problem: {
+            criteria: {
+              criterion1: {
+                dataSources: [{
+                  some: 'thing'
+                }]
+              }
+            },
+            alternatives: {
+              'alternative1': {}
+            },
+            performanceTable: [{
+              performance: {
+                effect: 'effect'
+              }
+            }, {
+              performance: {
+                distribution: 'distribution'
+              }
+            }]
+          },
+          prefs: {}
+        };
+        const expectedProblem = {
+          preferences: state.prefs,
+          method: 'smaa',
+          uncertaintyOptions: uncertaintyOptions,
+          performanceTable: [{
+            performance: 'effect'
+          }, {
+            performance: 'distribution'
+          }],
+          criteria: {
+            criterion1: {
+              some: 'thing'
+            }
+          },
+          alternatives: {
+            'alternative1': {}
+          }
+        };
+        const result = smaaResultsService.getResults(uncertaintyOptions, state);
+        expect(result.problem).toEqual(expectedProblem);
+        expect(result.selectedAlternative).toEqual('alternative1');
+        expect(result.selectedRank).toEqual('0');
       });
     });
   });

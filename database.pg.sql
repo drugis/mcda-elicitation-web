@@ -249,3 +249,9 @@ COMMIT;
 --rollback UPDATE workspacesettings 
 --rollback SET settings = settings #-'{settings, displayMode}';
 --rollback COMMIT;
+
+--changeset keijserj:22
+ALTER TABLE workspace DROP CONSTRAINT workspace_defaultsubproblemid_fkey;
+ALTER TABLE workspace ADD CONSTRAINT workspace_defaultsubproblemid_fkey FOREIGN KEY (defaultSubproblemId) REFERENCES subproblem(id);
+--rollback ALTER TABLE workspace DROP CONSTRAINT workspace_defaultsubproblemid_fkey;
+--rollback ALTER TABLE workspace ADD CONSTRAINT workspace_defaultsubproblemid_fkey FOREIGN KEY (defaultSubproblemId) REFERENCES subproblem(id) ON DELETE CASCADE;

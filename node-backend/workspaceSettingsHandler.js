@@ -12,7 +12,7 @@ module.exports = function(db) {
         if (error) {
           util.handleError(error, next);
         } else {
-          response.json(result.rows.length ? result.rows[0].settings : {});
+          response.json(result);
         }
       }
     );

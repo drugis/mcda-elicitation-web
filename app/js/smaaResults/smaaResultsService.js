@@ -2,12 +2,10 @@
 define([
   'lodash',
   'angular',
-  'jquery',
   'd3'
 ], function(
   _,
   angular,
-  $,
   d3
 ) {
   var dependencies = ['PataviResultsService'];
@@ -15,21 +13,39 @@ define([
   var SmaaResultsService = function(PataviResultsService) {
     const NON_EXACT_PREFERENCE_TYPES = ['ordinal', 'ratio bound'];
 
-    function run($scope, inState) {
+    function getResults(uncertaintyOptions, state) {
+      var nextState = {
+        problem: _.merge({}, getProblem(state.problem), {
+          preferences: state.prefs,
+          method: 'smaa',
+          uncertaintyOptions: uncertaintyOptions
+        }),
+        selectedAlternative: _.keys(state.problem.alternatives)[0],
+        selectedRank: '0'
+      };
+      return run(nextState);
+    }
+
+    function getProblem(problem) {
+      var newProblem = angular.copy(problem);
+      newProblem.performanceTable = _.map(problem.performanceTable, createEntry);
+      return newProblem;
+    }
+
+    function createEntry(entry) {
+      var newEntry = angular.copy(entry);
+      if (entry.performance.distribution) {
+        newEntry.performance = entry.performance.distribution;
+      } else {
+        newEntry.performance = entry.performance.effect;
+      }
+      return newEntry;
+    }
+    
+    function run(inState) {
       var state = angular.copy(inState);
       state.problem.criteria = mergeDataSourceOntoCriterion(state.problem.criteria);
-
-      var updateCallback = _.throttle(function(update) {
-        if (update && update.eventType === 'progress' && update.eventData && $.isNumeric(update.eventData)) {
-          var progress = parseInt(update.eventData);
-          if (progress > $scope.progress) {
-            $scope.progress = progress;
-          }
-        }
-      }, 30);
-      $scope.progress = 0;
-
-      state.resultsPromise = PataviResultsService.postAndHandleResults(state.problem, _.partial(succesCallback, state), updateCallback);
+      state.resultsPromise = PataviResultsService.postAndHandleResults(state.problem, _.partial(succesCallback, state));
       return state;
     }
 
@@ -116,35 +132,6 @@ define([
       }, {});
     }
 
-    function getResults(scope, state) {
-      var nextState = {
-        problem: _.merge({}, getProblem(state.problem), {
-          preferences: state.prefs,
-          method: 'smaa',
-          uncertaintyOptions: scope.scenario.state.uncertaintyOptions
-        }),
-        selectedAlternative: _.keys(state.problem.alternatives)[0],
-        selectedRank: '0'
-      };
-      return run(scope, nextState);
-    }
-
-    function getProblem(problem) {
-      var newProblem = angular.copy(problem);
-      newProblem.performanceTable = _.map(problem.performanceTable, createEntry);
-      return newProblem;
-    }
-
-    function createEntry(entry) {
-      var newEntry = angular.copy(entry);
-      if (entry.performance.distribution) {
-        newEntry.performance = entry.performance.distribution;
-      } else {
-        newEntry.performance = entry.performance.effect;
-      }
-      return newEntry;
-    }
-
     function smaaResultsToRankPlotValues(results, alternatives, legend) {
       var values = getRankPlotTitles(alternatives, legend);
       return values.concat(getRankPlotValues(results, alternatives));
@@ -218,64 +205,6 @@ define([
       return settings;
     }
 
-    function getBarChartSettings(results, root) {
-      var values = smaaResultsToBarChartValues(results);
-      var settings = {
-        bindto: root,
-        data: {
-          x: 'x',
-          columns: values,
-          type: 'bar'
-        },
-        axis: {
-          x: {
-            type: 'category',
-            tick: {
-              centered: true
-            }
-          },
-          y: {
-            tick: {
-              count: 5,
-              format: d3.format(',.3g')
-            },
-            padding: {
-              top: 0,
-              bottom: 0
-            }
-          }
-        },
-        grid: {
-          x: {
-            show: false
-          },
-          y: {
-            show: true
-          }
-        },
-        legend: {
-          show: false
-        },
-        tooltip: {
-          show: false
-        }
-      };
-      return settings;
-    }
-
-    function smaaResultsToBarChartValues(results) {
-      var values = getBarChartTitles(results[0].values);
-      return values.concat(getBarChartValues(results[0].values));
-    }
-
-    function getBarChartTitles(values) {
-      return [['x'].concat(_.map(values, 'label'))];
-    }
-
-    function getBarChartValues(values) {
-      return [['Rank'].concat(_.map(values, 'value'))];
-    }
-
     function getCentralWeightsPlotSettings(results, root) {
       var values = smaaResultsToCentralWeightsChartValues(results);
       var settings = {
@@ -342,7 +271,6 @@ define([
     }
 
     return {
-      getBarChartSettings: getBarChartSettings,
       getCentralWeightsPlotSettings: getCentralWeightsPlotSettings,
       getRankPlotSettings: getRankPlotSettings,
       getResults: getResults,

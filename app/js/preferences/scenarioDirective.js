@@ -1,6 +1,6 @@
 'use strict';
-define(['lodash', 'jquery'],
-  function(_, $) {
+define(['lodash', 'jquery', 'angular'],
+  function(_, $, angular) {
     var dependencies = [
       '$stateParams',
       'OrderingService',
@@ -34,6 +34,7 @@ define(['lodash', 'jquery'],
           scope.pvfCoordinates = {};
           init();
           scope.$on('elicit.settingsChanged', resetPvfCoordinates);
+          scope.$watch('aggregateState', resetPvfCoordinates);
 
           function init() {
             scope.criteriaHavePvf = doAllCriteriaHavePvf();
@@ -46,7 +47,7 @@ define(['lodash', 'jquery'],
           }
 
           function doAllCriteriaHavePvf() {
-            return !_.find(scope.aggregateState.problem.criteria, function(criterion) {
+            return !_.some(scope.aggregateState.problem.criteria, function(criterion) {
               return !isPVFDefined(criterion.dataSources[0]);
             });
           }
@@ -91,10 +92,12 @@ define(['lodash', 'jquery'],
             scope.scenario.$save($stateParams, updateView).then(loadWeights);
           }
 
-          function loadWeights(){
-            PreferencesService.getWeights(scope.problem).then(function(result) {
-              scope.weights = result.data;
-            });
+          function loadWeights() {
+            if (scope.criteriaHavePvf) {
+              PreferencesService.getWeights(scope.problem).then(function(result) {
+                scope.weights = result.data;
+              });
+            }
           }
 
           function updateView() {
@@ -106,19 +109,23 @@ define(['lodash', 'jquery'],
           }
 
           function resetPvfCoordinates() {
-            scope.problem = WorkspaceSettingsService.usePercentage() ? scope.aggregateState.percentified.problem : scope.aggregateState.dePercentified.problem;
-            reloadOrderings();
-            scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinates(scope.problem.criteria);
-            scope.isSafe = createIsSafe();
+            scope.problem = WorkspaceSettingsService.usePercentage() ?
+              angular.copy(scope.aggregateState.percentified.problem) :
+              angular.copy(scope.aggregateState.dePercentified.problem);
+            reloadOrderings().then(function() {
+              scope.pvfCoordinates = PartialValueFunctionService.getPvfCoordinates(scope.problem.criteria);
+              scope.isSafe = createIsSafe();
+              scope.criteriaHavePvf = doAllCriteriaHavePvf();
+              loadWeights();
+            });
           }
 
           function reloadOrderings() {
-            OrderingService.getOrderedCriteriaAndAlternatives(scope.problem, $stateParams).then(function(orderings) {
+            return OrderingService.getOrderedCriteriaAndAlternatives(scope.problem, $stateParams).then(function(orderings) {
               scope.alternatives = orderings.alternatives;
               scope.criteria = orderings.criteria;
               var preferences = scope.scenario.state.prefs;
               scope.importance = PreferencesService.buildImportance(scope.criteria, preferences);
-              loadWeights();
             });
           }
         }
