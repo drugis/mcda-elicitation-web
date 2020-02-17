@@ -255,3 +255,19 @@ ALTER TABLE workspace DROP CONSTRAINT workspace_defaultsubproblemid_fkey;
 ALTER TABLE workspace ADD CONSTRAINT workspace_defaultsubproblemid_fkey FOREIGN KEY (defaultSubproblemId) REFERENCES subproblem(id);
 --rollback ALTER TABLE workspace DROP CONSTRAINT workspace_defaultsubproblemid_fkey;
 --rollback ALTER TABLE workspace ADD CONSTRAINT workspace_defaultsubproblemid_fkey FOREIGN KEY (defaultSubproblemId) REFERENCES subproblem(id) ON DELETE CASCADE;
+
+--changeset zalitek:23
+DROP TABLE accountroles;
+ALTER TABLE inprogressworkspace DROP CONSTRAINT inprogressworkspace_owner_fkey;
+ALTER TABLE inprogressworkspace ADD CONSTRAINT inprogressworkspace_owner_fkey FOREIGN KEY (owner) REFERENCES account(id) ON DELETE CASCADE;
+ALTER TABLE workspace DROP CONSTRAINT workspace_owner_fkey;
+ALTER TABLE workspace ADD CONSTRAINT workspace_owner_fkey FOREIGN KEY (owner) REFERENCES account(id) ON DELETE CASCADE;
+--rollback CREATE TABLE AccountRoles (
+--rollback     accountId INT,
+--rollback     role VARCHAR NOT NULL,
+--rollback     FOREIGN KEY (accountId) REFERENCES Account(id)
+--rollback );
+--rollback ALTER TABLE inprogressworkspace DROP CONSTRAINT inprogressworkspace_owner_fkey;
+--rollback ALTER TABLE inprogressworkspace ADD CONSTRAINT inprogressworkspace_owner_fkey FOREIGN KEY (owner) REFERENCES account(id);
+--rollback ALTER TABLE workspace DROP CONSTRAINT workspace_owner_fkey;
+--rollback ALTER TABLE workspace ADD CONSTRAINT workspace_owner_fkey FOREIGN KEY (owner) REFERENCES account(id);
