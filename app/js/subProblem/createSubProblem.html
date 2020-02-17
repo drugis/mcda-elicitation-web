@@ -143,7 +143,7 @@
           </tbody>
         </table>
       </div>
-      <div ng-if="missingValueWarnings.length" ng-repeat="warning in missingValueWarnings">
+      <div id="missing-value-warning-{{$index}}" ng-if="missingValueWarnings.length" ng-repeat="warning in missingValueWarnings">
         <i class="fa fa-exclamation-triangle"></i> {{warning}}
       </div>
       <!-- Scale ranges -->
@@ -152,7 +152,7 @@
           <inline-help help-key="scale-ranges"></inline-help>
         </h4>
       </div>
-      <div ng-if="scaleBlockingWarnings.length" ng-repeat="warning in scaleBlockingWarnings">
+      <div id="scale-blocking-warning-{{$index}}" ng-if="scaleBlockingWarnings.length" ng-repeat="warning in scaleBlockingWarnings">
         <i class="fa fa-exclamation-triangle"></i> {{warning}}, therefore no scales can be set and this problem cannot be analyzed.
       </div>
       <div class="cell" ng-if="!scaleBlockingWarnings.length">

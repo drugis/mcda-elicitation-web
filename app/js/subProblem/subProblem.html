@@ -39,10 +39,10 @@
       <i class="fa fa-clipboard"></i> Copy to clipboard
     </button>
   </div>
-  <div class="cell error" ng-if="areTooManyDataSourcesIncluded">
+  <div id="no-scales-warning-0" class="cell" ng-if="areTooManyDataSourcesIncluded">
     <i class="fa fa-exclamation-triangle"></i> Multiple data sources selected for at least one criterion, therefore no scales can be set.
   </div>
-  <div class="cell error" ng-if="hasRowWithOnlyMissingValues">
+  <div id="no-scales-warning-1" class="cell" ng-if="hasRowWithOnlyMissingValues">
     <i class="fa fa-exclamation-triangle"></i> Criterion with only missing or text values selected, therefore no scales can be set.
   </div>
   <div class="cell" ng-if="!areTooManyDataSourcesIncluded && !hasRowWithOnlyMissingValues">

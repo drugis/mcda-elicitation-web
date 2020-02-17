@@ -4,13 +4,13 @@ module.exports = {
   beforeEach: beforeEach,
   afterEach: afterEach,
   'Create subproblem': create,
-  'Re-enabling datasources, and criteria during subproblem creation': toggleDataSourcesAndCriteria,
   'Switching between subproblems': switchSubproblem,
   'Edit the title': edit,
   'Reset during subproblem creation': reset,
   'Interact with scale sliders': changeScale,
   'Deleting': deleteSubproblem,
-  'Cancel deleting': cancelDeleteSubproblem
+  'Cancel deleting': cancelDeleteSubproblem,
+  'Create non-analyzable problem': createNonAnalyzableProblem
 };
 
 const loginService = require('./util/loginService');
@@ -29,13 +29,13 @@ function setupSubProblem(browser) {
     .waitForElementVisible('#create-subproblem-header')
     .waitForElementVisible('#create-new-subproblem-button:disabled')
     .assert.containsText('#no-title-warning', 'No title entered')
-    .assert.containsText('#missing-values-warning', 'Effects table may not contain missing values')
-    .assert.containsText('#multiple-data-sources-warning', 'Effects table may not contain multiple data sources per criterion')
+    .assert.containsText('#scale-blocking-warning-0', 'Effects table contains missing values, therefore no scales can be set and this problem cannot be analyzed.')
+    .assert.containsText('#scale-blocking-warning-1', 'Effects table contains multiple data sources per criterion, therefore no scales can be set and this problem cannot be analyzed.')
     .setValue('#subproblem-title', subproblem1.title)
+    .waitForElementVisible('#create-new-subproblem-button:enabled')
     .click('#alternative-2')
     .click('#datasource-1')
-    .click('#criterion-3')
-    .waitForElementVisible('#create-new-subproblem-button:enabled');
+    .click('#criterion-3');
   return browser;
 }
 
@@ -57,20 +57,6 @@ function afterEach(browser) {
 function create(browser) {
   setupSubProblem(browser)
     .click('#create-new-subproblem-button');
-}
-
-function toggleDataSourcesAndCriteria(browser) {
-  setupSubProblem(browser)
-    .click('#datasource-1')
-    .waitForElementVisible('#create-new-subproblem-button:disabled')
-    .click('#datasource-1')
-    .waitForElementVisible('#create-new-subproblem-button:enabled')
-
-    .click('#criterion-3')
-    .waitForElementVisible('#create-new-subproblem-button:disabled')
-    .click('#criterion-3')
-    .waitForElementVisible('#create-new-subproblem-button:enabled');
-  browser.click('#create-new-subproblem-button');
 }
 
 function switchSubproblem(browser) {
@@ -98,7 +84,6 @@ function edit(browser) {
 
 function reset(browser) {
   setupSubProblem(browser)
-    .waitForElementVisible('#create-new-subproblem-button:enabled')
     .click('#reset-subproblem-button')
     .waitForElementVisible('#create-new-subproblem-button:disabled')
     .assert.containsText('#subproblem-title', '')
@@ -160,4 +145,11 @@ function cancelDeleteSubproblem(browser) {
     .click('#close-modal-button')
     .waitForElementVisible('#delete-subproblem-button')
     .assert.containsText('#subproblem-selector', subproblem1.title);
+}
+
+function createNonAnalyzableProblem(browser) {
+  setupSubProblem(browser)
+    .click('#datasource-1')
+    .click('#create-new-subproblem-button')
+    .waitForElementVisible('#no-scales-warning-0');
 }
