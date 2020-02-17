@@ -25,7 +25,6 @@ const errorService = require('./util/errorService');
 const TEST_URL = require('./util/constants').TEST_URL;
 const util = require('./util/util');
 
-const errorService = require('./util/errorService');
 const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
 function goToPreferences(browser) {
