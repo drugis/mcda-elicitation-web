@@ -1385,7 +1385,7 @@ define([
     });
 
     describe('checkForMissingValuesInPerformanceTable', function() {
-      it('should return true is there is at least one missing value for both the effect and distribution of a table entry', function() {
+      it('should return true is there both the effect and distribution have missing values', function() {
         var performanceTable = [{
           performance: {
             effect: {
@@ -1422,6 +1422,30 @@ define([
         }];
         var result = workspaceService.checkForMissingValuesInPerformanceTable(performanceTable);
         expect(result).toBeFalsy();
+      });
+
+      it('should return true is the effect has a missing value and there is no distribution', function() {
+        var performanceTable = [{
+          performance: {
+            effect: {
+              type: 'empty'
+            }
+          }
+        }];
+        var result = workspaceService.checkForMissingValuesInPerformanceTable(performanceTable);
+        expect(result).toBeTruthy();
+      });
+
+      it('should return true is the distribution has a missing value and there is no effect', function() {
+        var performanceTable = [{
+          performance: {
+            distribution: {
+              type: 'empty'
+            }
+          }
+        }];
+        var result = workspaceService.checkForMissingValuesInPerformanceTable(performanceTable);
+        expect(result).toBeTruthy();
       });
     });
   });
