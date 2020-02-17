@@ -28,14 +28,14 @@ define(['lodash', 'angular'], function(_, angular) {
     }
 
     function formatNumbers(cell) {
-      cell.firstParameter = formatNumber(cell.firstParameter);
+      cell.firstParameter = formatNumber(cell.firstParameter, cell.inputParameters.firstParameter.label);
       cell.secondParameter = formatNumber(cell.secondParameter);
       cell.thirdParameter = formatNumber(cell.thirdParameter);
       return cell;
     }
 
-    function formatNumber(value) {
-      if (!isNotNumeric(value)) {
+    function formatNumber(value, type) {
+      if (((type && type !== 'Text') || !type) && !isNotNumeric(value)) {
         return significantDigits(value);
       } else {
         return value;
