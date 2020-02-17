@@ -33,12 +33,12 @@ define(['lodash', 'angular'], function(_) {
     function normalizeScales(scales, problem) {
       var dataSources = getDataSourcesById(problem.criteria);
       return _.mapValues(scales, function(scaleChoice, dataSourceId) {
-        if(dataSources[dataSourceId] && dataSources[dataSourceId].unitOfMeasurement.type === 'percentage'){
+        if (dataSources[dataSourceId] && dataSources[dataSourceId].unitOfMeasurement.type === 'percentage') {
           return {
             from: scaleChoice.from / 100,
             to: scaleChoice.to / 100
           };
-        } else{
+        } else {
           return scaleChoice;
         }
       });
@@ -127,26 +127,42 @@ define(['lodash', 'angular'], function(_) {
       var warnings = [];
       var includedDataSourcesIds = _.keys(_.pickBy(subProblemState.dataSourceInclusions));
       var includedAlternatives = _.keys(_.pickBy(subProblemState.alternativeInclusions));
+      if (areDeterministicValuesMissing(includedDataSourcesIds, includedAlternatives, scales, performanceTable)) {
+        warnings.push('Some cell(s) are missing deterministic values. SMAA values will be used for these cell(s).');
+      }
+      if (areSmaaValuesMissing(includedDataSourcesIds, includedAlternatives, scales, performanceTable)) {
+        warnings.push('Some cell(s) are missing SMAA values. Deterministic values will be used for these cell(s).');
+      }
+      return warnings;
+    }
 
-      if (_.some(includedDataSourcesIds, function(dataSourceId) {
+    function getScaleBlockingWarnings(subProblemState, scales, performanceTable) {
+      var warnings = [];
+      if (areValuesMissingInEffectsTable(subProblemState, scales, performanceTable)) {
+        warnings.push('Effects table contains missing values');
+      }
+      if (areTooManyDataSourcesSelected(subProblemState.numberOfDataSourcesPerCriterion)) {
+        warnings.push('Effects table contains multiple data sources per criterion');
+      }
+      return warnings;
+    }
+
+    function areDeterministicValuesMissing(includedDataSourcesIds, includedAlternatives, scales, performanceTable) {
+      return _.some(includedDataSourcesIds, function(dataSourceId) {
         return _.some(includedAlternatives, function(alternativeId) {
           return !isNullNaNorUndefined(scales[dataSourceId][alternativeId]['50%']) &&
             missesEffectValue(performanceTable, dataSourceId, alternativeId);
         });
-      })) {
-        warnings.push('Some cell(s) are missing deterministic values. SMAA values will be used for these cell(s).');
-      }
+      });
+    }
 
-      if (_.some(includedDataSourcesIds, function(dataSourceId) {
+    function areSmaaValuesMissing(includedDataSourcesIds, includedAlternatives, scales, performanceTable) {
+      return _.some(includedDataSourcesIds, function(dataSourceId) {
         return _.some(includedAlternatives, function(alternativeId) {
           return isNullNaNorUndefined(scales[dataSourceId][alternativeId]['50%']) &&
             !missesEffectValue(performanceTable, dataSourceId, alternativeId);
         });
-      })) {
-        warnings.push('Some cell(s) are missing SMAA values. Deterministic values will be used for these cell(s).');
-      }
-
-      return warnings;
+      });
     }
 
     function missesEffectValue(performanceTable, dataSourceId, alternativeId) {
@@ -248,19 +264,17 @@ define(['lodash', 'angular'], function(_) {
       createSubProblemCommand: createSubProblemCommand,
       determineBaseline: determineBaseline,
       excludeDataSourcesForExcludedCriteria: excludeDataSourcesForExcludedCriteria,
-      areValuesMissingInEffectsTable: areValuesMissingInEffectsTable,
       getMissingValueWarnings: getMissingValueWarnings,
       hasInvalidSlider: hasInvalidSlider,
       getNumberOfDataSourcesPerCriterion: getNumberOfDataSourcesPerCriterion,
-      areTooManyDataSourcesSelected: areTooManyDataSourcesSelected,
       getCriteriaByDataSource: getCriteriaByDataSource,
       createSubProblemState: createSubProblemState,
       excludeDeselectedAlternatives: excludeDeselectedAlternatives,
       findRowWithoutValues: findRowWithoutValues,
-      areTooManyDataSourcesIncluded: areTooManyDataSourcesIncluded
+      areTooManyDataSourcesIncluded: areTooManyDataSourcesIncluded,
+      getScaleBlockingWarnings: getScaleBlockingWarnings
     };
   };
-
 
   return dependencies.concat(SubProblemService);
 });

@@ -40,10 +40,10 @@
     </button>
   </div>
   <div class="cell error" ng-if="areTooManyDataSourcesIncluded">
-    <em>Multiple data sources selected for at least one criterion, therefore no scales can be set.</em>
+    <i class="fa fa-exclamation-triangle"></i> Multiple data sources selected for at least one criterion, therefore no scales can be set.
   </div>
   <div class="cell error" ng-if="hasRowWithOnlyMissingValues">
-    <em> Criterion with only missing or text values selected, therefore no scales can be set.</em>
+    <i class="fa fa-exclamation-triangle"></i> Criterion with only missing or text values selected, therefore no scales can be set.
   </div>
   <div class="cell" ng-if="!areTooManyDataSourcesIncluded && !hasRowWithOnlyMissingValues">
     <table class="full-width" id="scalestable">
