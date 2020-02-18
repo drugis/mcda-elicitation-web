@@ -1385,7 +1385,7 @@ define([
     });
 
     describe('checkForMissingValuesInPerformanceTable', function() {
-      it('should return true is there both the effect and distribution have missing values', function() {
+      it('should return true is there are missing values for both the effect and distribution', function() {
         var performanceTable = [{
           performance: {
             effect: {
@@ -1424,7 +1424,7 @@ define([
         expect(result).toBeFalsy();
       });
 
-      it('should return true is the effect has a missing value and there is no distribution', function() {
+      it('should return true if the effect has a missing value and there is no distribution', function() {
         var performanceTable = [{
           performance: {
             effect: {
