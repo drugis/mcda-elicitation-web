@@ -34,8 +34,8 @@ define(['lodash', 'angular'], function(_, angular) {
       return cell;
     }
 
-    function formatNumber(value, type) {
-      if (((type && type !== 'Text') || !type) && !isNotNumeric(value)) {
+    function formatNumber(value, label) {
+      if (((label && label !== 'Text') || !label) && !isNotNumeric(value)) {
         return significantDigits(value);
       } else {
         return value;
