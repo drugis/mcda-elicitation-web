@@ -1,6 +1,8 @@
 # Required packages: hitandrun
 library(hitandrun)
 
+hitAndRunSamples <- 1E4
+
 applyWrapResult <- function(results, descriptions) {
   mapply(wrap.result,
          results,
@@ -12,21 +14,25 @@ wrap.result <- function(result, description) {
   list(data = result, description = description)
 }
 
-wrap.matrix <- function(m) {
-  l <- lapply(rownames(m), function(name) { m[name,] })
-  names(l) <- rownames(m)
-  l
+wrap.matrix <- function(matrix) {
+  resultingList <- lapply(rownames(matrix), function(name) { matrix[name,] })
+  names(resultingList) <- rownames(matrix)
+  return(resultingList)
 }
 
 run_scales <- function(params) {
   apply(generateSummaryStatistics(params), 1, wrap.matrix)
 }
 
-ratioConstraint <- function(n, i1, i2, x) {
-  a <- rep(0, n)
-  a[i1] <- -1
-  a[i2] <- x
-  list(constr = t(a), rhs = c(0), dir = c("="))
+getRatioConstraint <- function(times, index1, index2, value) {
+  array <- rep(0, times)
+  array[index1] <- -1
+  array[index2] <- value
+  constraints <- list(
+    "constr" = t(array),
+    "rhs" = c(0),
+    "dir" = c("="))
+  return(constraints)
 }
 
 run_deterministic <- function(params) {
@@ -36,7 +42,7 @@ run_deterministic <- function(params) {
 
 getDeterministicResults <- function(params, measurements) {
   weights <- genRepresentativeWeights(params)
-  valueProfiles <- calculateTotalValue(params, measurements, weights)
+  valueProfiles <- calculateValueProfiles(params, measurements, weights)
   totalValue <- rowSums(valueProfiles)
 
   results <- list(
@@ -48,288 +54,351 @@ getDeterministicResults <- function(params, measurements) {
 }
 
 run_representativeWeights <- function(params) {
-  list(data = genRepresentativeWeights(params), description = "Representative weights")
+  weights <- list(
+    "data" = genRepresentativeWeights(params),
+    "description" = "Representative weights")
+  return(weights)
 }
 
 genRepresentativeWeights <- function(params) {
-  N <- 1E4
-  crit <- names(params$criteria)
-  n <- length(crit)
-  weights <- sampleWeights(params$preferences, crit, n, N)
-  rep.weights <- colMeans(weights)
-  names(rep.weights) <- crit
-  rep.weights
+  criteria <- names(params$criteria)
+  weights <- sampleWeights(params$preferences, criteria)
+  representativeWeights <- colMeans(weights)
+  names(representativeWeights) <- criteria
+  return(representativeWeights)
 }
 
 genMedianMeasurements <- function(params) {
   t(generateSummaryStatistics(params)[,, "50%"])
 }
 
-genHARconstraint <- function(statement, crit) {
-  n <- length(crit)
-  i1 <- which(crit == statement$criteria[1])
-  i2 <- which(crit == statement$criteria[2])
+genHARconstraint <- function(statement, criteria) {
+  numberOfCriteria <- length(criteria)
+  index1 <- which(criteria == statement$criteria[1])
+  index2 <- which(criteria == statement$criteria[2])
+
   if (statement$type == "ordinal") {
-    ordinalConstraint(n, i1, i2)
-  } else if (statement['type'] == "ratio bound") {
-    l <- statement$bounds[1]
-    u <- statement$bounds[2]
-    mergeConstraints(
-      lowerRatioConstraint(n, i1, i2, l),
-      upperRatioConstraint(n, i1, i2, u)
-    )
-  } else if (statement['type'] == "exact swing") {
-    ratioConstraint(n, i1, i2, statement$ratio);
+    return(ordinalConstraint(numberOfCriteria, index1, index2))
+  } else if (statement$type == "ratio bound") {
+    return(getRatioBoundConstraint(statement$bounds, numberOfCriteria, index1, index2))
+  } else if (statement$type == "exact swing") {
+    return(getRatioConstraint(numberOfCriteria, index1, index2, statement$ratio))
   }
 }
 
-# Use PVFs to rescale the criteria measurements and multiply by weight to obtain value contributions
-calculateTotalValue <- function(params, meas, weights) {
+getRatioBoundConstraint <- function(bounds, numberOfCriteria, index1, index2) {
+  lowerBound <- bounds[1]
+  upperBound <- bounds[2]
+  return(mergeConstraints(
+    lowerRatioConstraint(numberOfCriteria, index1, index2, lowerBound),
+    upperRatioConstraint(numberOfCriteria, index1, index2, upperBound)
+  ))
+}
+
+calculateValueProfiles <- function(params, measurements, weights) {
   pvf <- lapply(params$criteria, create.pvf)
   for (criterion in names(params$criteria)) {
-    meas[, criterion] <- pvf[[criterion]](meas[, criterion]) * weights[criterion]
+    measurements[, criterion] <- pvf[[criterion]](measurements[, criterion]) * weights[criterion]
   }
-  meas
+  return(measurements)
 }
 
 run_sensitivityMeasurements <- function(params) {
   measurements <- genMedianMeasurements(params)
   for (entry in params$sensitivityAnalysis$meas) {
-    # Replace median value by the desired value for the sensitivity analysis
     measurements[entry$alternative, entry$criterion] <- entry$value
   }
   results <- getDeterministicResults(params, measurements)
   results$weights <- NULL
-  results
+  return(results)
 }
 
 run_sensitivityMeasurementsPlot <- function(params) {
+  alternative <- params$sensitivityAnalysis["alternative"]
+  criterion <- params$sensitivityAnalysis["criterion"]
+  totalValue <- getTotalValueForSensitivityMeasurementsPlot(params, alternative, criterion)
+
+  results <- list(
+      "alt" = alternative,
+      "crit" = criterion,
+      "total" = totalValue)
+  descriptions <- list("Alternative", "Criterion", "Total value")
+  return(applyWrapResult(results, descriptions))
+}
+
+getTotalValueForSensitivityMeasurementsPlot <- function(params, alternative, criterion) {
+  xCoordinates <- getXCoordinates(params$criteria[[criterion]]$pvf)
+  measurements <- genMedianMeasurements(params)
   weights <- genRepresentativeWeights(params)
 
-  meas <- genMedianMeasurements(params)
-  alt <- params$sensitivityAnalysis["alternative"]
-  crit <- params$sensitivityAnalysis["criterion"]
-
-  range <- params$criteria[[crit]]$pvf$range
-  if (params$criteria[[crit]]$pvf$type == 'linear') {
-    xCoordinates <- range
-  } else {
-    xCoordinates <- c(range[1], params$criteria[[crit]]$pvf$cutoffs, range[2])
-  }
-
-  total.value <- c()
+  totalValue <- c()
   for (value in xCoordinates) {
-    cur.meas <- meas
-    cur.meas[alt, crit] <- value
-    total.value <- cbind(total.value, rowSums(calculateTotalValue(params, cur.meas, weights)))
+    measurements[alternative, criterion] <- value
+    totalValue <- cbind(totalValue, rowSums(calculateValueProfiles(params, measurements, weights)))
   }
+  colnames(totalValue) <- xCoordinates
+  return(wrap.matrix(totalValue))
+}
 
-  colnames(total.value) <- xCoordinates
-  results <- list(
-      "alt" = alt,
-      "crit" = crit,
-      "total" = wrap.matrix(total.value))
-  descriptions <- list("Alternative", "Criterion", "Total value")
-  applyWrapResult(results, descriptions)
+getXCoordinates <- function(pvf) {
+  if (pvf$type == 'linear') {
+    xCoordinates <- pvf$range
+  } else {
+    xCoordinates <- c(pvf$range[1], pvf$cutoffs, pvf$range[2])
+  }
+  return(xCoordinates)
 }
 
 run_sensitivityWeightPlot <- function(params) {
-  crit <- params$sensitivityAnalysis["criterion"]
-
-  meas <- genMedianMeasurements(params)
-  weights <- genRepresentativeWeights(params)
-
-  index <- which(names(weights) == crit)
-
-  weight.crit <- seq(0, 1, length.out = 101)
-  total.value <- c()
-
-  for (value in weight.crit) {
-
-    adjust <- (1 - value) / sum(weights[-index])
-    cur.weights <- adjust * weights
-    cur.weights[index] <- value
-
-    valueProfiles <- calculateTotalValue(params, meas, cur.weights)
-    total.value <- cbind(total.value, rowSums(valueProfiles))
-
-  }
-
-  colnames(total.value) <- weight.crit
+  criterion <- params$sensitivityAnalysis["criterion"]
+  totalValue <- getTotalValueForSensitivityWeightPlot(criterion, params)
 
   results <- list(
-      "crit" = crit,
-      "total" = wrap.matrix(total.value))
+      "crit" = criterion,
+      "total" = totalValue)
   descriptions <- list("Criterion", "Total value")
   applyWrapResult(results, descriptions)
 }
 
-getCutoffs <- function(params, crit) {
-  cutoffs <- params$criteria[[crit]]$pvf$range
-
-  if (params$criteria[[crit]]$pvf$type != "linear") {
-    cutoffs <- c(cutoffs, params$criteria[[crit]]$pvf$cutoffs)
+getTotalValueForSensitivityWeightPlot <- function(criterion, params) {
+  weightRange <- seq(0, 1, length.out = 101)
+  measurements <- genMedianMeasurements(params)
+  weights <- genRepresentativeWeights(params)
+  criterionIndex <- which(names(weights) == criterion)
+  totalValue <- c()
+  for (value in weightRange) {
+    valueProfiles <- getValueProfilesForSensitivityWeightPlot(criterionIndex, params, measurements, weights, value)
+    totalValue <- cbind(totalValue, rowSums(valueProfiles))
   }
-  cutoffs
+  colnames(totalValue) <- weightRange
+  return(wrap.matrix(totalValue))
+}
+
+getValueProfilesForSensitivityWeightPlot <- function(criterionIndex, params, measurements, weights, value) {
+  adjust <- (1 - value) / sum(weights[-criterionIndex])
+  currentWeights <- adjust * weights
+  currentWeights[criterionIndex] <- value
+  valueProfiles <- calculateValueProfiles(params, measurements, currentWeights)
+  return(valueProfiles)
+}
+
+getCutoffs <- function(params, criteria) {
+  cutoffs <- list(
+    "x" = getCutoffsForCriterion(params$criteria[[criteria$x]]$pvf),
+    "y" = getCutoffsForCriterion(params$criteria[[criteria$y]]$pvf)
+  )
+  return(cutoffs)
+}
+
+getCutoffsForCriterion <- function(pvf) {
+  cutoffs <- pvf$range
+  if (pvf$type != "linear") {
+    cutoffs <- c(cutoffs, pvf$cutoffs)
+  }
+  return(cutoffs)
 }
 
 run_matchingElicitationCurve <- function(params) {
-  criterionX <- params$indifferenceCurve$criterionX
-  criterionY <- params$indifferenceCurve$criterionY
-  chosenY <- params$indifferenceCurve$chosenY
-
-  pvf <- create.pvf(params[['criteria']][[criterionY]])
-
-  if (!is.null(params[['criteria']][[criterionY]]$isFavorable) && !params[['criteria']][[criterionY]]$isFavorable) {
-    weight <- 1 - pvf(chosenY)
-  } else {
-    weight <- pvf(chosenY)
-  }
+  criteria <- getSelectedCriteria(params$indifferenceCurve)
+  weight <- getMatchingWeight(params, criteria$y)
 
   params$preferences <- list(list(
     type = 'exact swing',
     ratio = weight,
-    criteria = c(criterionX, criterionY))
+    criteria = c(criteria$x, criteria$y))
   )
 
   result <- run_indifferenceCurve(params)
   result$weight <- weight
-  result
+  return(result)
+}
+
+getMatchingWeight <- function(params, criterionY) {
+  pvf <- create.pvf(params$criteria[[criterionY]])
+  chosenY <- params$indifferenceCurve$chosenY
+  if (!is.null(params$criteria[[criterionY]]$isFavorable) && !params$criteria[[criterionY]]$isFavorable) {
+    return(1 - pvf(chosenY))
+  } else {
+    return(pvf(chosenY))
+  }
 }
 
 run_indifferenceCurve <- function(params) {
-  criterionX <- params$indifferenceCurve$criterionX
-  criterionY <- params$indifferenceCurve$criterionY
-  ref.point <- c(params$indifferenceCurve$x, params$indifferenceCurve$y)
+  criteria <- getSelectedCriteria(params$indifferenceCurve)
+  getDifferenceWithReference <- getDifferenceWithReferenceFunction(params, criteria)
+  cutOffs <- getCutoffs(params, criteria)
+  ranges <- getRanges(params$criteria, criteria)
+  coordinatesForCutoffs <- getCoordinatesForCutoffs(cutOffs, getDifferenceWithReference, ranges)
+  coordinates <- getCoordinates(cutOffs, coordinatesForCutoffs, ranges)
+  return(wrap.result(coordinates, 'IndifferenceCoordinates'))
+}
 
-  # Value function
+getDifferenceWithReferenceFunction <- function(params, criteria) {
   weights <- genRepresentativeWeights(params)
   pvf <- lapply(params$criteria, create.pvf)
-
-  # Value associated with the reference point
-  xWeight <- weights[criterionX] * pvf[[criterionX]](ref.point[1])
-  yWeight <- weights[criterionY] * pvf[[criterionY]](ref.point[2])
-  Indifference.value <- as.numeric(xWeight + yWeight)
-
-  # Difference in value between the reference point and the point (x,y)
-  value.difference <- function(x, y) {
-    as.numeric(weights[criterionX] * pvf[[criterionX]](x) + weights[criterionY] * pvf[[criterionY]](y) - Indifference.value)
+  referencePoint <- c(params$indifferenceCurve$x, params$indifferenceCurve$y)
+  indifferenceValue <- getIndifferenceValue(weights, criteria, pvf, referencePoint)
+  getDifferenceWithReference <- function(x, y) {
+    as.numeric(weights[criteria$x] * pvf[[criteria$x]](x) + weights[criteria$y] * pvf[[criteria$y]](y) - indifferenceValue)
   }
+  return(getDifferenceWithReference)
+}
 
-  xCutOffs <- getCutoffs(params, criterionX)
-  yCutOffs <- getCutoffs(params, criterionY)
+getCoordinatesForCutoffs <- function(cutOffs, getDifferenceWithReference, ranges) {
+  coordinatesForCutoffs <- list(
+    "xForY" = getXCoordinateForYCutOff(cutOffs$y, getDifferenceWithReference, ranges$y),
+    "yForX" = getYCoordinateForXCutoff(cutOffs$x, getDifferenceWithReference, ranges$y)
+  )
+  return(coordinatesForCutoffs)
+}
 
-  xRange <- params$criteria[[criterionX]]$pvf$range
-  yRange <- params$criteria[[criterionY]]$pvf$range
+getSelectedCriteria <- function(selectedCriteria) {
+  criteria <- list(
+    "x" = selectedCriteria$criterionX,
+    "y" = selectedCriteria$criterionY
+  )
+  return(criteria)
+}
 
-  yCoordinateForXCutoff <- getYCoordinateForXCutoff(xCutOffs, yCoordinateForXCutoff, value.difference, yRange)
-  xCoordinateForYCutoff <- getXCoordinateForYCutOff(yCutOffs, yCoordinateForXCutoff, value.difference, yRange)
+getRanges <- function(criteria, selectedCriteria) {
+  ranges <- list(
+    "x" = criteria[[selectedCriteria$x]]$pvf$range,
+    "y" = criteria[[selectedCriteria$y]]$pvf$range
+  )
+  return(ranges)
+}
 
-  coordinates <- data.frame(x = c(xCutOffs, xCoordinateForYCutoff), y = c(yCoordinateForXCutoff, yCutOffs))
+getIndifferenceValue <- function(weights, criteria, pvf, referencePoint) {
+  xWeight <- weights[criteria$x] * pvf[[criteria$x]](referencePoint[1])
+  yWeight <- weights[criteria$y] * pvf[[criteria$y]](referencePoint[2])
+  indifferenceValue <- as.numeric(xWeight + yWeight)
+  return(indifferenceValue)
+}
+
+getCoordinates <- function(cutOffs, coordinatesForCutoffs, ranges) {
+  coordinates <- data.frame(x = c(cutOffs$x, coordinatesForCutoffs$xForY), y = c(coordinatesForCutoffs$yForX, cutOffs$y))
   coordinates <- coordinates[order(coordinates$x),]
-
-  coordinates <- removeCoordinatesOutsideOfRange(coordinates, coordinates$x, xRange)
-  coordinates <- removeCoordinatesOutsideOfRange(coordinates, coordinates$y, yRange)
+  coordinates <- removeCoordinatesOutsideOfRange(coordinates, coordinates$x, ranges$x)
+  coordinates <- removeCoordinatesOutsideOfRange(coordinates, coordinates$y, ranges$y)
   rownames(coordinates) <- NULL
-  wrap.result(coordinates, 'IndifferenceCoordinates')
+  return(coordinates)
 }
 
 removeCoordinatesOutsideOfRange <- function(coordinates, values, range) {
   epsilon <- 0.001 * (range[2] - range[1]);
   coordinates <- coordinates[values + epsilon >= range[1] & values - epsilon <= range[2],]
-  coordinates
+  return(coordinates)
 }
 
-getYCoordinateForXCutoff <- function(xCutOffs, yCoordinateForXCutoff, value.difference, yRange) {
+getYCoordinateForXCutoff <- function(xCutOffs, getValueDifference, yRange) {
   yCoordinateForXCutoff <- c()
   for (x in xCutOffs) {
-    yCoordinateForXCutoff <- c(yCoordinateForXCutoff, uniroot(f = value.difference, interval = yRange, x = x, extendInt = "yes")$root)
+    yCoordinateForXCutoff <- c(yCoordinateForXCutoff, uniroot(f = getValueDifference, interval = yRange, x = x, extendInt = "yes")$root)
   }
+  return(yCoordinateForXCutoff)
 }
 
-getXCoordinateForYCutOff <- function(yCutOffs, xCoordinateForYCutoff, value.difference, yRange) {
+getXCoordinateForYCutOff <- function(yCutOffs, getValueDifference, yRange) {
   xCoordinateForYCutoff <- c()
   for (y in yCutOffs) {
-    xCoordinateForYCutoff <- c(xCoordinateForYCutoff, uniroot(f = value.difference, interval = yRange, y = y, extendInt = "yes")$root)
+    xCoordinateForYCutoff <- c(xCoordinateForYCutoff, uniroot(f = getValueDifference, interval = yRange, y = y, extendInt = "yes")$root)
   }
+  return(xCoordinateForYCutoff)
 }
 
-sampleWeights <- function(preferences, crit, n, N) {
-  constr <- mergeConstraints(lapply(preferences, genHARconstraint, crit = crit))
-  constr <- mergeConstraints(simplexConstraints(n), constr)
-  weights <- hitandrun(constr, n.samples = N)
-  colnames(weights) <- crit
-  weights
+sampleWeights <- function(preferences, criteria) {
+  numberOfCriteria <- length(criteria)
+  constr <- mergeConstraints(lapply(preferences, genHARconstraint, crit = criteria))
+  constr <- mergeConstraints(simplexConstraints(numberOfCriteria), constr)
+  weights <- hitandrun(constr, n.samples = hitAndRunSamples)
+  colnames(weights) <- criteria
+  return(weights)
 }
 
-getSmaaWeights <- function(params, crit, n, N) {
-  weights <- sampleWeights(params$preferences, crit, n, N)
-  if (!is.null(params$uncertaintyOptions)) {
+getSmaaWeights <- function(params, criteria) {
+  weights <- sampleWeights(params$preferences, criteria)
+  if (isOldScenario(params)) {
     if (!params$uncertaintyOptions["weights"]) {
-      mean.weights <- colMeans(weights)
-      for (i in 1:N) {
-        weights[i,] <- mean.weights
+      meanWeights <- colMeans(weights)
+      for (i in 1:hitAndRunSamples) {
+        weights[i,] <- meanWeights
       }
     }
   }
   return(weights)
 }
 
-getSmaaMeasurements <- function(params, N, crit) {
-  meas <- sample.partialValues(params, N)
-  if (!is.null(params$uncertaintyOptions)) {
+getSmaaMeasurements <- function(params, criteria) {
+  measurements <- sample.partialValues(params, hitAndRunSamples)
+  if (isOldScenario(params)) {
     if (!params$uncertaintyOptions["measurements"]) {
-      median.meas <- genMedianMeasurements(params)
-      pvf <- lapply(params$criteria, create.pvf)
-      for (criterion in crit) {
-        median.meas[, criterion] <- pvf[[criterion]](median.meas[, criterion])
-      }
-      for (i in 1:N) {
-        meas[i,,] <- median.meas
-      }
+      measurements <- applyMeasurementUncertainty(params, criteria, measurements)
     }
   }
-  return(meas)
+  return(measurements)
 }
 
-getSmaaResults <- function(params) {
-  N <- 1E4
-  n <- length(params$criteria)
-  m <- length(params$alternatives)
-  crit <- names(params$criteria)
-  alts <- names(params$alternatives)
-
-  weights <- getSmaaWeights(params, crit, n, N)
-  meas <- getSmaaMeasurements(params, N, crit)
-
-  utils <- smaa.values(meas, weights)
-  ranks <- smaa.ranks(utils)
-
-  ra <- smaa.ra(ranks)
-  cw <- smaa.cw(ranks, weights)
-  cf <- smaa.cf(meas, cw)
-
-  weights.quantiles <- apply(weights, 2, quantile, probs = c(0.025, 0.5, 0.975))
-  weights.quantiles[2,] <- colMeans(weights)
-
-  list(ra = ra, cw = cw, cf = cf, weights.quantiles = weights.quantiles)
+isOldScenario <- function(params) {
+  return(!is.null(params$uncertaintyOptions))
 }
 
-formatSmaaResults <- function(smaa.results, alts.names) {
-  cw <- lapply(alts.names, function(alt) {
-    list(cf = unname(smaa.results$cf$cf[alt]), w = smaa.results$cf$cw[alt,])
-  })
-  names(cw) <- alts.names
-
-  results <- list(
-      "cw" = cw,
-      "ranks" = wrap.matrix(smaa.results$ra),
-      "weightsQuantiles" = wrap.matrix(smaa.results$weights.quantiles))
-  descriptions <- list("Central weights", "Rank acceptabilities", "Quantiles of the sampled weights")
-  applyWrapResult(results, descriptions)
+applyMeasurementUncertainty <- function(params, criteria, measurements) {
+  medianMeasurements <- genMedianMeasurements(params)
+  pvf <- lapply(params$criteria, create.pvf)
+  for (criterion in criteria) {
+    medianMeasurements[, criterion] <- pvf[[criterion]](medianMeasurements[, criterion])
+  }
+  for (i in 1:hitAndRunSamples) {
+    measurements[i,,] <- medianMeasurements
+  }
+  return(measurements)
 }
 
 run_smaa <- function(params) {
-  smaa.results <- getSmaaResults(params)
-  formatSmaaResults(smaa.results, names(params$alternatives))
+  smaaResults <- getSmaaResults(params)
+  formatSmaaResults(smaaResults, names(params$alternatives))
+}
+
+getSmaaResults <- function(params) {
+  criteriaNames <- names(params$criteria)
+  weights <- getSmaaWeights(params, criteriaNames)
+  measurements <- getSmaaMeasurements(params, criteriaNames)
+  ranks <- getRanks(measurements, weights)
+  rankAcceptability <- smaa.ra(ranks)
+  cf <- getCF(ranks, weights, measurements)
+  weightsQuantiles <- getWeightsQuantiles(weights)
+  results <- list(rankAcceptability = rankAcceptability, cf = cf, weightsQuantiles = weightsQuantiles)
+  return(results)
+}
+
+getWeightsQuantiles <- function(weights) {
+  weightsQuantiles <- apply(weights, 2, quantile, probs = c(0.025, 0.5, 0.975))
+  weightsQuantiles[2,] <- colMeans(weights)
+  return(weightsQuantiles)
+}
+
+getRanks <- function(measurements, weights) {
+  utils <- smaa.values(measurements, weights)
+  ranks <- smaa.ranks(utils)
+  return(ranks)
+}
+
+getCF <- function(ranks, weights, measurements) {
+  centralWeights <- smaa.cw(ranks, weights)
+  cf <- smaa.cf(measurements, centralWeights)
+  return(cf)
+}
+
+formatSmaaResults <- function(smaaResults, alternativeNames) {
+  centralWeights <- lapply(alternativeNames, function(alt) {
+    list(cf = unname(smaaResults$cf$cf[alt]), w = smaaResults$cf$cw[alt,])
+  })
+  names(centralWeights) <- alternativeNames
+
+  results <- list(
+      "cw" = centralWeights,
+      "ranks" = wrap.matrix(smaaResults$rankAcceptability),
+      "weightsQuantiles" = wrap.matrix(smaaResults$weightsQuantiles))
+  descriptions <- list("Central weights", "Rank acceptabilities", "Quantiles of the sampled weights")
+  return(applyWrapResult(results, descriptions))
 }
