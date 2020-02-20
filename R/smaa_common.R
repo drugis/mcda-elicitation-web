@@ -3,15 +3,14 @@ library(hitandrun)
 
 hitAndRunSamples <- 1E4
 
-applyWrapResult <- function(results, descriptions) {
+applyWrapResult <- function(results) {
   mapply(wrap.result,
          results,
-         descriptions,
          SIMPLIFY = F)
 }
 
-wrap.result <- function(result, description) {
-  list(data = result, description = description)
+wrap.result <- function(result) {
+  list(data = result)
 }
 
 wrap.matrix <- function(matrix) {
@@ -49,14 +48,11 @@ getDeterministicResults <- function(params, measurements) {
       "weights" = weights,
       "value" = wrap.matrix(valueProfiles),
       "total" = totalValue)
-  descriptions <- list("Representative weights", "Value profile", "Total value")
-  applyWrapResult(results, descriptions)
+  applyWrapResult(results)
 }
 
 run_representativeWeights <- function(params) {
-  weights <- list(
-    "data" = genRepresentativeWeights(params),
-    "description" = "Representative weights")
+  weights <- list("data" = genRepresentativeWeights(params))
   return(weights)
 }
 
@@ -122,8 +118,7 @@ run_sensitivityMeasurementsPlot <- function(params) {
       "alt" = alternative,
       "crit" = criterion,
       "total" = totalValue)
-  descriptions <- list("Alternative", "Criterion", "Total value")
-  return(applyWrapResult(results, descriptions))
+  return(applyWrapResult(results))
 }
 
 getTotalValueForSensitivityMeasurementsPlot <- function(params, alternative, criterion) {
@@ -156,8 +151,7 @@ run_sensitivityWeightPlot <- function(params) {
   results <- list(
       "crit" = criterion,
       "total" = totalValue)
-  descriptions <- list("Criterion", "Total value")
-  applyWrapResult(results, descriptions)
+  applyWrapResult(results)
 }
 
 getTotalValueForSensitivityWeightPlot <- function(criterion, params) {
@@ -230,7 +224,7 @@ run_indifferenceCurve <- function(params) {
   ranges <- getRanges(params$criteria, criteria)
   coordinatesForCutoffs <- getCoordinatesForCutoffs(cutOffs, getDifferenceWithReference, ranges)
   coordinates <- getCoordinates(cutOffs, coordinatesForCutoffs, ranges)
-  return(wrap.result(coordinates, 'IndifferenceCoordinates'))
+  return(wrap.result(coordinates))
 }
 
 getDifferenceWithReferenceFunction <- function(params, criteria) {
@@ -399,6 +393,5 @@ formatSmaaResults <- function(smaaResults, alternativeNames) {
       "cw" = centralWeights,
       "ranks" = wrap.matrix(smaaResults$rankAcceptability),
       "weightsQuantiles" = wrap.matrix(smaaResults$weightsQuantiles))
-  descriptions <- list("Central weights", "Rank acceptabilities", "Quantiles of the sampled weights")
-  return(applyWrapResult(results, descriptions))
+  return(applyWrapResult(results))
 }
