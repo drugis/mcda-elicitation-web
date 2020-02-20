@@ -12,7 +12,7 @@ echo Enter password:
 read -s PASSWORD
 
 echo Generating hash
-HASH=$(npx bcrypt-cli $PASSWORD 14)
+HASH=$(npx bcrypt-cli $PASSWORD 10)
 
 echo Adding user to database
 docker run -i -v `pwd`:`pwd` -w `pwd` --rm --link postgres:postgres postgres psql -h postgres -U mcda \

@@ -33,12 +33,12 @@ define(['lodash', 'angular'], function(_) {
     function normalizeScales(scales, problem) {
       var dataSources = getDataSourcesById(problem.criteria);
       return _.mapValues(scales, function(scaleChoice, dataSourceId) {
-        if(dataSources[dataSourceId] && dataSources[dataSourceId].unitOfMeasurement.type === 'percentage'){
+        if (dataSources[dataSourceId] && dataSources[dataSourceId].unitOfMeasurement.type === 'percentage') {
           return {
             from: scaleChoice.from / 100,
             to: scaleChoice.to / 100
           };
-        } else{
+        } else {
           return scaleChoice;
         }
       });
@@ -232,9 +232,13 @@ define(['lodash', 'angular'], function(_) {
 
     function findRowWithoutValues(effectsTableInfo, scales) {
       return !_.some(effectsTableInfo, function(row, dataSourceId) {
-        return !row.isAbsolute || _.some(row.studyDataLabelsAndUncertainty, function(cell, alternativeId) {
-          return cell.effectValue !== '' || (scales && scales.observed && scales.observed[dataSourceId][alternativeId]);
-        });
+        return !row.isAbsolute || hasCellWithValue(row, scales, dataSourceId);
+      });
+    }
+
+    function hasCellWithValue(row, scales, dataSourceId) {
+      return _.some(row.studyDataLabelsAndUncertainty, function(cell, alternativeId) {
+        return cell.effectValue !== '' || (scales && scales.observed && scales.observed[dataSourceId][alternativeId]['50%']);
       });
     }
 

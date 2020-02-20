@@ -39,7 +39,6 @@ define(['lodash', 'jquery', 'angular'],
           function init() {
             scope.criteriaHavePvf = doAllCriteriaHavePvf();
             scope.isOrdinal = isWeightingOrdinal();
-            resetPvfCoordinates();
           }
 
           function isPVFDefined(dataSource) {

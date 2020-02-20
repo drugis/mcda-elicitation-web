@@ -452,6 +452,9 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         const inputCell = {
           inputParameters: {
             id: 'valueCI',
+            firstParameter: {
+              label: 'valueCI'
+            },
             toString: function(){
               return 'labelString';
             }
@@ -463,11 +466,44 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
         const result = effectInputHelperService.saveCell(inputCell);
         const expectedResult = {
           inputParameters: {
-            id: 'valueCI'
+            id: 'valueCI',
+            firstParameter: {
+              label: 'valueCI'
+            }
           },
           firstParameter: 37,
           secondParameter: 0.00001,
           thirdParameter: 42,
+          label: 'labelString'
+        };
+        delete result.inputParameters.toString;
+        expect(result).toEqual(expectedResult);
+      });
+
+      it('should return a cell without formatting the numbers if the input is text', function() {
+        const inputCell = {
+          inputParameters: {
+            id: 'Text',
+            firstParameter: {
+              label: 'Text'
+            },
+            toString: function(){
+              return 'labelString';
+            }
+          },
+          firstParameter: 37.0000000001
+        };
+        const result = effectInputHelperService.saveCell(inputCell);
+        const expectedResult = {
+          inputParameters: {
+            id: 'Text',
+            firstParameter: {
+              label: 'Text'
+            }
+          },
+          firstParameter: 37.0000000001,
+          secondParameter: undefined,
+          thirdParameter: undefined,
           label: 'labelString'
         };
         delete result.inputParameters.toString;

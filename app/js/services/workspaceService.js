@@ -691,9 +691,23 @@ define(['lodash', 'angular'], function(_, angular) {
 
     function checkForMissingValuesInPerformanceTable(performanceTable) {
       return _.some(performanceTable, function(entry) {
-        return entry.performance.effect && entry.performance.effect.type === 'empty' &&
-          entry.performance.distribution && entry.performance.distribution.type === 'empty';
+        return hasTextEffectWithoutDistribution(entry.performance) ||
+          hasTextDistributionWithoutEffect(entry.performance) ||
+          hasTextDistributionAndEffect(entry.performance);
       });
+    }
+
+    function hasTextEffectWithoutDistribution(performance) {
+      return performance.effect && performance.effect.type === 'empty' && !performance.distribution;
+    }
+
+    function hasTextDistributionWithoutEffect(performance) {
+      return performance.distribution && performance.distribution.type === 'empty' && !performance.effect;
+    }
+
+    function hasTextDistributionAndEffect(performance) {
+      return performance.effect && performance.effect.type === 'empty' &&
+        performance.distribution && performance.distribution.type === 'empty';
     }
 
     return {

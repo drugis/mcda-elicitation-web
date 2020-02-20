@@ -149,7 +149,6 @@ define([
       $timeout(checkInputData);
     }
 
-
     function removeAlternative(alternative) {
       $scope.state.alternatives = _.reject($scope.state.alternatives, ['id', alternative.id]);
     }
@@ -268,8 +267,8 @@ define([
           }
         }
         checkInputData();
-        setStateWatcher();
         checkStep1Errors();
+        $timeout(setStateWatcher); //make sure watcher is set after initializing table cells
       });
     }
 
