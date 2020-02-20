@@ -3,16 +3,6 @@ library(hitandrun)
 
 hitAndRunSamples <- 1E4
 
-applyWrapResult <- function(results) {
-  mapply(wrap.result,
-         results,
-         SIMPLIFY = F)
-}
-
-wrap.result <- function(result) {
-  list(data = result)
-}
-
 wrap.matrix <- function(matrix) {
   resultingList <- lapply(rownames(matrix), function(name) { matrix[name,] })
   names(resultingList) <- rownames(matrix)
@@ -48,12 +38,11 @@ getDeterministicResults <- function(params, measurements) {
       "weights" = weights,
       "value" = wrap.matrix(valueProfiles),
       "total" = totalValue)
-  applyWrapResult(results)
+  return(results)
 }
 
 run_representativeWeights <- function(params) {
-  weights <- list("data" = genRepresentativeWeights(params))
-  return(weights)
+  return(genRepresentativeWeights(params))
 }
 
 genRepresentativeWeights <- function(params) {
@@ -118,7 +107,7 @@ run_sensitivityMeasurementsPlot <- function(params) {
       "alt" = alternative,
       "crit" = criterion,
       "total" = totalValue)
-  return(applyWrapResult(results))
+  return(results)
 }
 
 getTotalValueForSensitivityMeasurementsPlot <- function(params, alternative, criterion) {
@@ -151,7 +140,7 @@ run_sensitivityWeightPlot <- function(params) {
   results <- list(
       "crit" = criterion,
       "total" = totalValue)
-  applyWrapResult(results)
+  return(results)
 }
 
 getTotalValueForSensitivityWeightPlot <- function(criterion, params) {
@@ -202,8 +191,13 @@ run_matchingElicitationCurve <- function(params) {
     criteria = c(criteria$x, criteria$y))
   )
 
-  result <- run_indifferenceCurve(params)
-  result$weight <- weight
+  coordinates <- run_indifferenceCurve(params)
+
+  result <- list(
+    "x" = coordinates$x,
+    "y" = coordinates$y,
+    "weight" = weight
+  )
   return(result)
 }
 
@@ -224,7 +218,15 @@ run_indifferenceCurve <- function(params) {
   ranges <- getRanges(params$criteria, criteria)
   coordinatesForCutoffs <- getCoordinatesForCutoffs(cutOffs, getDifferenceWithReference, ranges)
   coordinates <- getCoordinates(cutOffs, coordinatesForCutoffs, ranges)
-  return(wrap.result(coordinates))
+  return(coordinates)
+}
+
+getCoordinates <- function(cutOffs, coordinatesForCutoffs, ranges) {
+  coordinates <- data.frame(x = c(cutOffs$x, coordinatesForCutoffs$xForY), y = c(coordinatesForCutoffs$yForX, cutOffs$y))
+  coordinates <- coordinates[order(coordinates$x),]
+  coordinates <- removeCoordinatesOutsideOfRange(coordinates, coordinates$x, ranges$x)
+  coordinates <- removeCoordinatesOutsideOfRange(coordinates, coordinates$y, ranges$y)
+  return(coordinates)
 }
 
 getDifferenceWithReferenceFunction <- function(params, criteria) {
@@ -267,15 +269,6 @@ getIndifferenceValue <- function(weights, criteria, pvf, referencePoint) {
   yWeight <- weights[criteria$y] * pvf[[criteria$y]](referencePoint[2])
   indifferenceValue <- as.numeric(xWeight + yWeight)
   return(indifferenceValue)
-}
-
-getCoordinates <- function(cutOffs, coordinatesForCutoffs, ranges) {
-  coordinates <- data.frame(x = c(cutOffs$x, coordinatesForCutoffs$xForY), y = c(coordinatesForCutoffs$yForX, cutOffs$y))
-  coordinates <- coordinates[order(coordinates$x),]
-  coordinates <- removeCoordinatesOutsideOfRange(coordinates, coordinates$x, ranges$x)
-  coordinates <- removeCoordinatesOutsideOfRange(coordinates, coordinates$y, ranges$y)
-  rownames(coordinates) <- NULL
-  return(coordinates)
 }
 
 removeCoordinatesOutsideOfRange <- function(coordinates, values, range) {
@@ -393,5 +386,5 @@ formatSmaaResults <- function(smaaResults, alternativeNames) {
       "cw" = centralWeights,
       "ranks" = wrap.matrix(smaaResults$rankAcceptability),
       "weightsQuantiles" = wrap.matrix(smaaResults$weightsQuantiles))
-  return(applyWrapResult(results))
+  return(results)
 }

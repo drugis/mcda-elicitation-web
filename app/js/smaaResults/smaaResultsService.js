@@ -73,7 +73,7 @@ define([
 
     function getCentralWeights(state) {
       var problem = state.problem;
-      var data = state.results.cw.data;
+      var data = state.results.cw;
       var result = [];
       _.each(_.toPairs(data), function(alternative) {
         var values = _.map(_.toPairs(alternative[1].w), function(criterion, index) {
@@ -96,7 +96,7 @@ define([
     }
 
     function getAlternativesByRank(state) {
-      var data = state.results.ranks.data;
+      var data = state.results.ranks;
       var ranks = _.range(_.size(state.problem.alternatives));
       return _.map(ranks, function(rank) {
         var values = _.map(_.toPairs(data), function(alternative) {
@@ -115,7 +115,7 @@ define([
     }
 
     function getRanksByAlternatives(state) {
-      var data = state.results.ranks.data;
+      var data = state.results.ranks;
       return _.reduce(state.problem.alternatives, function(accum, alternative, alternativeKey) {
         var values = [];
         _.each(data[alternativeKey], function(rank, index) {

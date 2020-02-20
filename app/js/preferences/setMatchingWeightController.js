@@ -16,11 +16,12 @@ define(
       secondaryCriterion,
       callback
     ) {
+      $scope.saveWeight = saveWeight;
+      $scope.cancel = $modalInstance.close;
+      
       $scope.weight = {};
       $scope.mostImportantCriterion = mostImportantCriterion;
       $scope.secondaryCriterion = secondaryCriterion;
-      $scope.saveWeight = saveWeight;
-      $scope.cancel = $modalInstance.close;
 
       function saveWeight() {
         callback($scope.weight.value);
