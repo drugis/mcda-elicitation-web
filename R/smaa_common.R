@@ -3,30 +3,31 @@ library(hitandrun)
 
 hitAndRunSamples <- 1E4
 
-wrap.matrix <- function(matrix) {
+wrapMatrix <- function(matrix) {
   resultingList <- lapply(rownames(matrix), function(name) { matrix[name,] })
   names(resultingList) <- rownames(matrix)
   return(resultingList)
 }
 
 run_scales <- function(params) {
-  apply(generateSummaryStatistics(params), 1, wrap.matrix)
+  return(apply(generateSummaryStatistics(params), 1, wrapMatrix))
 }
 
-getRatioConstraint <- function(times, index1, index2, value) {
-  array <- rep(0, times)
+getRatioConstraint <- function(numberOfCriteria, index1, index2, value) {
+  array <- rep(0, numberOfCriteria)
   array[index1] <- -1
   array[index2] <- value
   constraints <- list(
     "constr" = t(array),
     "rhs" = c(0),
-    "dir" = c("="))
+    "dir" = c("=")
+  )
   return(constraints)
 }
 
 run_deterministic <- function(params) {
   measurements <- genMedianMeasurements(params)
-  getDeterministicResults(params, measurements)
+  return(getDeterministicResults(params, measurements))
 }
 
 getDeterministicResults <- function(params, measurements) {
@@ -36,7 +37,7 @@ getDeterministicResults <- function(params, measurements) {
 
   results <- list(
       "weights" = weights,
-      "value" = wrap.matrix(valueProfiles),
+      "value" = wrapMatrix(valueProfiles),
       "total" = totalValue)
   return(results)
 }
@@ -54,7 +55,7 @@ genRepresentativeWeights <- function(params) {
 }
 
 genMedianMeasurements <- function(params) {
-  t(generateSummaryStatistics(params)[,, "50%"])
+  return(t(generateSummaryStatistics(params)[,, "50%"]))
 }
 
 genHARconstraint <- function(statement, criteria) {
@@ -121,7 +122,7 @@ getTotalValueForSensitivityMeasurementsPlot <- function(params, alternative, cri
     totalValue <- cbind(totalValue, rowSums(calculateValueProfiles(params, measurements, weights)))
   }
   colnames(totalValue) <- xCoordinates
-  return(wrap.matrix(totalValue))
+  return(wrapMatrix(totalValue))
 }
 
 getXCoordinates <- function(pvf) {
@@ -154,7 +155,7 @@ getTotalValueForSensitivityWeightPlot <- function(criterion, params) {
     totalValue <- cbind(totalValue, rowSums(valueProfiles))
   }
   colnames(totalValue) <- weightRange
-  return(wrap.matrix(totalValue))
+  return(wrapMatrix(totalValue))
 }
 
 getValueProfilesForSensitivityWeightPlot <- function(criterionIndex, params, measurements, weights, value) {
@@ -222,10 +223,19 @@ run_indifferenceCurve <- function(params) {
 }
 
 getCoordinates <- function(cutOffs, coordinatesForCutoffs, ranges) {
-  coordinates <- data.frame(x = c(cutOffs$x, coordinatesForCutoffs$xForY), y = c(coordinatesForCutoffs$yForX, cutOffs$y))
+  coordinates <- data.frame(
+    "x" = c(cutOffs$x, coordinatesForCutoffs$xForY),
+    "y" = c(coordinatesForCutoffs$yForX, cutOffs$y)
+  )
   coordinates <- coordinates[order(coordinates$x),]
   coordinates <- removeCoordinatesOutsideOfRange(coordinates, coordinates$x, ranges$x)
   coordinates <- removeCoordinatesOutsideOfRange(coordinates, coordinates$y, ranges$y)
+  return(coordinates)
+}
+
+removeCoordinatesOutsideOfRange <- function(coordinates, values, range) {
+  epsilon <- 0.001 * (range[2] - range[1]);
+  coordinates <- coordinates[values + epsilon >= range[1] & values - epsilon <= range[2],]
   return(coordinates)
 }
 
@@ -269,12 +279,6 @@ getIndifferenceValue <- function(weights, criteria, pvf, referencePoint) {
   yWeight <- weights[criteria$y] * pvf[[criteria$y]](referencePoint[2])
   indifferenceValue <- as.numeric(xWeight + yWeight)
   return(indifferenceValue)
-}
-
-removeCoordinatesOutsideOfRange <- function(coordinates, values, range) {
-  epsilon <- 0.001 * (range[2] - range[1]);
-  coordinates <- coordinates[values + epsilon >= range[1] & values - epsilon <= range[2],]
-  return(coordinates)
 }
 
 getYCoordinateForXCutoff <- function(xCutOffs, getValueDifference, yRange) {
@@ -352,9 +356,9 @@ getSmaaResults <- function(params) {
   measurements <- getSmaaMeasurements(params, criteriaNames)
   ranks <- getRanks(measurements, weights)
   rankAcceptability <- smaa.ra(ranks)
-  cf <- getCF(ranks, weights, measurements)
+  confidenceFactors <- getConfidenceFactors(ranks, weights, measurements)
   weightsQuantiles <- getWeightsQuantiles(weights)
-  results <- list(rankAcceptability = rankAcceptability, cf = cf, weightsQuantiles = weightsQuantiles)
+  results <- list(rankAcceptability = rankAcceptability, confidenceFactors = confidenceFactors, weightsQuantiles = weightsQuantiles)
   return(results)
 }
 
@@ -370,7 +374,7 @@ getRanks <- function(measurements, weights) {
   return(ranks)
 }
 
-getCF <- function(ranks, weights, measurements) {
+getConfidenceFactors <- function(ranks, weights, measurements) {
   centralWeights <- smaa.cw(ranks, weights)
   cf <- smaa.cf(measurements, centralWeights)
   return(cf)
@@ -378,13 +382,13 @@ getCF <- function(ranks, weights, measurements) {
 
 formatSmaaResults <- function(smaaResults, alternativeNames) {
   centralWeights <- lapply(alternativeNames, function(alt) {
-    list(cf = unname(smaaResults$cf$cf[alt]), w = smaaResults$cf$cw[alt,])
+    list(cf = unname(smaaResults$confidenceFactors$cf[alt]), w = smaaResults$confidenceFactors$cw[alt,])
   })
   names(centralWeights) <- alternativeNames
 
   results <- list(
       "cw" = centralWeights,
-      "ranks" = wrap.matrix(smaaResults$rankAcceptability),
-      "weightsQuantiles" = wrap.matrix(smaaResults$weightsQuantiles))
+      "ranks" = wrapMatrix(smaaResults$rankAcceptability),
+      "weightsQuantiles" = wrapMatrix(smaaResults$weightsQuantiles))
   return(results)
 }
