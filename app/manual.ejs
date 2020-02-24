@@ -114,10 +114,9 @@
           <div class="js-toc-content cell large-9 medium-12 end">
             <h2 id="mcda-introduction">Introduction</h2>
             <p>This is the manual for the MCDA user interface for benefit-risk analysis. It starts with instructions
-              about
-              creating a workspace (based on a dataset), followed by a brief introduction to benefit-risk analysis, and
-              a
-              guide to the MCDA user interface itself.
+              about creating a workspace (based on a dataset), followed by a brief introduction to benefit-risk
+              analysis, and
+              a guide to the MCDA user interface itself.
             </p>
             <h3 id="mcda-preparing-dataset">Preparing your dataset</h3>
             <p>This section only applies to the stand-alone version of MCDA, hosted on <a
@@ -133,9 +132,10 @@
               you.</p>
             <h4 id="data-upload">Data upload</h4>
             <p>
-              Datasets can be uploaded in JSON format. The JSON should contain the following entries (note that JSON is
-              case-sensitive):
+              Datasets can be uploaded in <a href="http://www.json.org/">JSON</a> format. The JSON may contain the
+              following entries (note that JSON is case-sensitive):
               <ul>
+                <li>schemaVersion</li>
                 <li>title</li>
                 <li>description</li>
                 <li>criteria</li>
@@ -145,39 +145,42 @@
               </ul>
             </p>
             <p>
-              The title and description properties should contain text.
+              The `schemaversion` property should indicate which version of our <a
+                href="https://github.com/drugis/mcda-elicitation-web/tree/master/schema">JSON schema</a> the file
+              follows.
+              The `title` and `description` properties should contain text.
             </p>
             <p>
-              The criteria property should contain a series of properties with the names and details of the different
-              criteria in your
-              analysis. The following is an example of JSON describing a single criterion (HAM-D):
+              The `criteria` property should contain a series of properties with the names and details of the different
+              criteria in your analysis. The following is an example of JSON describing a single criterion (HAM-D):
               <pre>
               "criteria": {
-                "HAM-D": {
+                "hamd-id": {
                   "title": "HAM-D",
-                  "scale": [0.0, 1.0],
-                  "unitOfMeasurement": "Proportion",
+                  "id": "hamd-id",
                   "description": "Responders on the HAM-D rating scale",
-                  "pvf": {
-                    "direction": "increasing",
-                    "type": "linear",
-                    "range": [0.0, 1.0]
-                  }
+                  "dataSources": [{
+                    "source": "A certain study",
+                    "sourceLink": "https://example.com/studies/3",
+                    "scale": [0, 1]
+                    ],
+                    "unitOfMeasurement": "Proportion",
+                  }]
                 }
               }
             </pre>
             </p>
             <p>
-              The alternatives property should contain the alternatives under investigation. For example:
+              The `alternatives` property should contain the alternatives under investigation. For example:
               <pre>
               "alternatives": {
-                "Placebo": {
+                "placebo-id": {
                   "title": "Placebo"
                 },
-                "Fluox": {
+                "fluox-id": {
                   "title": "Fluoxetine"
                 },
-                "Parox": {
+                "parox-id": {
                   "title": "Paroxetine"
                 }
               }
@@ -186,27 +189,43 @@
             <p>
               The performanceTable property should contain the actual data of the measurements for each criterion for
               each alternative.
-              Performance can be measured either in relative or exact terms. If relative, the performance should contain
-              a baseline plus a matrix of relative deviations. If exact, simply the value suffices.
+              Performance can be measured either in relative or absolute terms. If relative, the performance should
+              contain
+              a baseline plus a matrix of relative deviations. If absolute, performance can be specified directly as
+              effect value, as distribution, or both.
             </p>
             <p>
-              An example of exact performance:
+              An example of exact performance with both effect and distribution specified:
               <pre>
-              "performanceTable": [
+                "performanceTable": [
                 {
-                  "alternative": "Placebo",
-                  "criterion": "Hypo",
+                  "alternative": "placebo-id,
+                  "criterion": "hamd-id",
                   "performance": {
-                    "type": "exact",
-                    "value": 0.02
+                    "effect": {
+                      "type": "exact",
+                      "value": 0.249,
+                      "input": {
+                        "value": 0.249,
+                        "lowerBound": 0.215,
+                        "upperBound": 0.283
+                      }
+                    },
+                    "distribution": {
+                      "type": "dnorm",
+                      "parameters": {
+                        "mu": 0.249,
+                        "sigma": 0.0173
+                      }
+                    }
                   }
                 }
               ]
-            </pre> An example of relative performance:
+            </pre>
+              An example of relative performance:
               <pre>
-              "performanceTable": [
-                {
-                "criterion": "HAM-D",
+              "performanceTable": [{
+                "criterion": "hamd-id",
                 "performance": {
                   "type": "relative-logit-normal",
                   "parameters": {
@@ -224,8 +243,8 @@
                         "Paroxetine": 0.725
                       },
                       "cov": {
-                        "rownames": ["Placebo", "Fluox", "Parox"],
-                        "colnames": ["Placebo", "Fluox", "Parox"],
+                        "rownames": ["placebo-id", "fluox-id", "parox-id"],
+                        "colnames": ["placebo-id", "fluox-id", "parox-id"],
                         "data":
                           [ [0, 0,      0],
                             [0, 0.0134, 0.0103],
@@ -238,20 +257,21 @@
             </pre>
             </p>
             <p>
-              The preferences property should generally consist of an empty object. This will be filled in by performing
-              preference elicitation
-              within the MCDA app.
+              The `preferences` property is optional and should generally be omitted. It will be filled in by
+              performing preference elicitation within the MCDA app after the upload step.
             </p>
             <p>
-              A list of complete examples is available on the <a
+              A list of examples is available on the <a
                 href="https://github.com/drugis/mcda-elicitation-web/tree/master/examples" target="_blank">MCDA
                 repository</a>.
+              The JSON schema is available from our <a
+                href="https://github.com/drugis/mcda-elicitation-web/tree/master/schema">GitHub repository</a>.
             </p>
             <h4 id="mcda-manual-entry">Manual entry</h4>
             <p>
               Selecting the 'Manual entry' option in the workspace creation dialog takes you to the manual workspace
-              creation screen. Here,
-              you can input the title, therapeutic context, criteria, and alternatives as well as the measurement data.
+              creation screen. Here, you can input the title, therapeutic context, criteria, and alternatives as well as
+              the measurement data.
             </p>
             <div class="figure">
               <img src="img/manualEntry1.jpg" />
@@ -268,7 +288,7 @@
               later, and continue where you left off.
             </p>
             <div class="figure">
-              <img src="img/manualEntry2.jpg" />
+              <img src="img/manualEntry2.png" />
               <div class="caption">Manual entry, second step.</div>
             </div>
             <p>
