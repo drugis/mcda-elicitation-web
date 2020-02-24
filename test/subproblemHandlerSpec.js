@@ -13,12 +13,20 @@ var subproblemRepoStub = {
   create: () => { },
   update: () => { },
   delete: () => { },
-  countSubproblemsForWorkspace: () => { }
+  getSubproblemIds: () => { }
 };
 
 var scenarioRepoStub = {
-  create: () => { }
+  create: () => { },
+  getScenarioIdsForSubproblem: () => { }
 };
+
+var workspaceRepoStub = {
+  getDefaultSubproblem: () => { },
+  setDefaultSubProblem: () => { },
+  setDefaultScenario: () => { }
+};
+
 var utilStub = chai.spy();
 
 const dbArgumement = {
@@ -27,6 +35,9 @@ const dbArgumement = {
   },
   './scenarioRepository': () => {
     return scenarioRepoStub;
+  },
+  './workspaceRepository': () => {
+    return workspaceRepoStub;
   },
   './util': utilStub
 };
@@ -66,16 +77,14 @@ describe('the subproblem handler', () => {
     utilStub.handleError = chai.spy();
 
     it('should call the subproblem repository with the correct arguments', () => {
-      const result = {
-        rows: []
-      };
+      const result = [];
       query.onCall(0).yields(null, result);
 
       subProblemHandler.query(request, response, next);
 
       sinon.assert.calledWith(query, workspaceId);
       expect(utilStub.handleError).not.to.have.been.called();
-      expect(response.json).to.have.been.called.with(result.rows);
+      expect(response.json).to.have.been.called.with(result);
     });
 
     it('should not call reponse.json if there\'s an error', function() {
@@ -114,17 +123,13 @@ describe('the subproblem handler', () => {
     const next = chai.spy();
 
     it('should call the subproblem repository with the correct arguments', () => {
-      const result = {
-        rows: [
-          {}
-        ]
-      };
+      const result = {};
       get.onCall(0).yields(null, result);
 
       subProblemHandler.get(request, response, next);
       sinon.assert.calledWith(get, workspaceId, subProblemId);
       expect(utilStub.handleError).not.to.have.been.called();
-      expect(response.json).to.have.been.called.with(result.rows[0]);
+      expect(response.json).to.have.been.called.with(result);
     });
 
     it('should not call reponse.json if there\'s an error', function() {
@@ -159,9 +164,7 @@ describe('the subproblem handler', () => {
     const next = chai.spy();
 
     const result = {
-      rows: [{
-        id: subProblemId
-      }]
+      id: subProblemId
     };
 
     beforeEach(() => {
@@ -179,7 +182,7 @@ describe('the subproblem handler', () => {
 
     it('should call res.json with the created subproblem', (done) => {
       var expectations = function(subproblem) {
-        expect(subproblem).to.equal(result.rows[0]);
+        expect(subproblem).to.equal(result);
         expect(next).to.have.not.been.called();
         done();
       };
@@ -283,28 +286,46 @@ describe('the subproblem handler', () => {
 
   describe('delete', function() {
     var deleteStub;
-    var countSubproblemsForWorkspace;
+    var getSubproblemIds;
+    var getDefaultSubproblem;
+    var setDefaultSubProblem;
+    var getScenarioIdsForSubproblem;
+    var setDefaultScenario;
+
     const subproblemId = 37;
-    const workspaceId = 42;
+    const workspaceId = 40;
+    const nonDefaultSubproblemId = 42;
     const request = {
       params: {
         subproblemId: subproblemId,
         workspaceId: workspaceId
       }
     };
+    const subproblemIds = [
+      { id: subproblemId },
+      { id: nonDefaultSubproblemId }
+    ];
 
     beforeEach(() => {
       deleteStub = sinon.stub(subproblemRepoStub, 'delete');
-      countSubproblemsForWorkspace = sinon.stub(subproblemRepoStub, 'countSubproblemsForWorkspace');
+      getSubproblemIds = sinon.stub(subproblemRepoStub, 'getSubproblemIds');
+      getDefaultSubproblem = sinon.stub(workspaceRepoStub, 'getDefaultSubproblem');
+      setDefaultSubProblem = sinon.stub(workspaceRepoStub, 'setDefaultSubProblem');
+      getScenarioIdsForSubproblem = sinon.stub(scenarioRepoStub, 'getScenarioIdsForSubproblem');
+      setDefaultScenario = sinon.stub(workspaceRepoStub, 'setDefaultScenario');
       utilStub.handleError = chai.spy();
     });
 
     afterEach(() => {
       deleteStub.restore();
-      countSubproblemsForWorkspace.restore();
+      getSubproblemIds.restore();
+      getDefaultSubproblem.restore();
+      setDefaultSubProblem.restore();
+      getScenarioIdsForSubproblem.restore();
+      setDefaultScenario.restore();
     });
 
-    it('should call reponse.sendstatus with ok', (done) => {
+    it('should call reponse.sendstatus with ok when deleting a non-default problem', (done) => {
       const next = chai.spy();
       const expectations = function(status) {
         expect(next).to.have.not.been.called();
@@ -314,36 +335,113 @@ describe('the subproblem handler', () => {
       const response = {
         sendStatus: expectations,
       };
+      getSubproblemIds.onCall(0).yields(null, [
+        subproblemId,
+        nonDefaultSubproblemId
+      ]);
+      getDefaultSubproblem.onCall(0).yields(null, nonDefaultSubproblemId);
       deleteStub.onCall(0).yields(null);
-      countSubproblemsForWorkspace.onCall(0).yields(null, { rows: [2] });
       subProblemHandler.delete(request, response, next);
-      sinon.assert.calledWith(countSubproblemsForWorkspace, workspaceId);
+      sinon.assert.calledWith(getSubproblemIds, workspaceId);
       sinon.assert.calledWith(deleteStub, subproblemId);
       expect(utilStub.handleError).not.to.have.been.called();
     });
 
-    it('should call util.handleError if there\'s an error deleting', function() {
-      deleteStub.onCall(0).yields(error);
-      countSubproblemsForWorkspace.onCall(0).yields(null, { rows: [2] });
-      subProblemHandler.delete(request, undefined, undefined);
-      sinon.assert.calledWith(countSubproblemsForWorkspace, workspaceId);
+    it('should call reponse.sendstatus with ok when deleting the default problem', (done) => {
+      const next = chai.spy();
+      const expectations = function(status) {
+        expect(next).to.have.not.been.called();
+        expect(status).to.equal(200);
+        done();
+      };
+      const response = {
+        sendStatus: expectations,
+      };
+      getSubproblemIds.onCall(0).yields(null, subproblemIds);
+      getDefaultSubproblem.onCall(0).yields(null, subproblemId);
+
+      setDefaultSubProblem.onCall(0).yields(null);
+      getScenarioIdsForSubproblem.onCall(0).yields(null, [{ id: 1337 }]);
+      setDefaultScenario.onCall(0).yields(null);
+      deleteStub.onCall(0).yields(null);
+      subProblemHandler.delete(request, response, next);
+      sinon.assert.calledWith(getSubproblemIds, workspaceId);
       sinon.assert.calledWith(deleteStub, subproblemId);
-      expect(utilStub.handleError).to.have.been.called();
+      expect(utilStub.handleError).not.to.have.been.called();
     });
 
-    it('should call util.handleError if there\'s an error counting', function() {
-      countSubproblemsForWorkspace.onCall(0).yields(error);
+    it('should call util.handleError if there\'s an error getting the subproblem ids', function() {
+      getSubproblemIds.onCall(0).yields(error);
       subProblemHandler.delete(request, undefined, undefined);
-      sinon.assert.calledWith(countSubproblemsForWorkspace, workspaceId);
+      sinon.assert.calledWith(getSubproblemIds, workspaceId);
       expect(utilStub.handleError).to.have.been.called();
     });
 
     it('should call util.handleError if there is only one subproblem', function() {
       const notEnoughError = 'Cannot delete the only subproblem for workspace';
-      countSubproblemsForWorkspace.onCall(0).yields(null, { rows: [1] });
+      getSubproblemIds.onCall(0).yields(null, [1]);
       subProblemHandler.delete(request, undefined, undefined);
-      sinon.assert.calledWith(countSubproblemsForWorkspace, workspaceId);
+      sinon.assert.calledWith(getSubproblemIds, workspaceId);
       expect(utilStub.handleError).to.have.been.called.with(notEnoughError);
+    });
+
+    it('should call util.handleError if there\'s an error getting the default subproblem', function() {
+      const next = chai.spy();
+      const response = {};
+      getSubproblemIds.onCall(0).yields(null, subproblemIds);
+      getDefaultSubproblem.onCall(0).yields(error);
+      subProblemHandler.delete(request, response, next);
+      sinon.assert.calledWith(getSubproblemIds, workspaceId);
+      expect(utilStub.handleError).to.have.been.called();
+    });
+
+    it('should call util.handleError if there\'s an error setting the default subproblem', function() {
+      const next = chai.spy();
+      const response = {};
+      getSubproblemIds.onCall(0).yields(null, subproblemIds);
+      getDefaultSubproblem.onCall(0).yields(null, subproblemId);
+
+      setDefaultSubProblem.onCall(0).yields(error);
+      subProblemHandler.delete(request, response, next);
+      sinon.assert.calledWith(getSubproblemIds, workspaceId);
+      expect(utilStub.handleError).to.have.been.called();
+    });
+
+    it('should call util.handleError if there\'s an error getting the scenario ids for the new default subproblem', function() {
+      const next = chai.spy();
+      const response = {};
+      getSubproblemIds.onCall(0).yields(null, subproblemIds);
+      getDefaultSubproblem.onCall(0).yields(null, subproblemId);
+
+      setDefaultSubProblem.onCall(0).yields(null);
+      getScenarioIdsForSubproblem.onCall(0).yields(error);
+      subProblemHandler.delete(request, response, next);
+      sinon.assert.calledWith(getSubproblemIds, workspaceId);
+      expect(utilStub.handleError).to.have.been.called();
+    });
+
+    it('should call util.handleError if there\'s an error setting the default scenario', function() {
+      const next = chai.spy();
+      const response = {};
+      getSubproblemIds.onCall(0).yields(null, subproblemIds);
+      getDefaultSubproblem.onCall(0).yields(null, subproblemId);
+
+      setDefaultSubProblem.onCall(0).yields(null);
+      getScenarioIdsForSubproblem.onCall(0).yields(null, [{ id: 1337 }]);
+      setDefaultScenario.onCall(0).yields(error);
+      subProblemHandler.delete(request, response, next);
+      sinon.assert.calledWith(getSubproblemIds, workspaceId);
+      expect(utilStub.handleError).to.have.been.called();
+    });
+
+    it('should call util.handleError if there\'s an error deleting', function() {
+      deleteStub.onCall(0).yields(error);
+      getSubproblemIds.onCall(0).yields(null, subproblemIds);
+      getDefaultSubproblem.onCall(0).yields(null, nonDefaultSubproblemId);
+      subProblemHandler.delete(request, undefined, undefined);
+      sinon.assert.calledWith(getSubproblemIds, workspaceId);
+      sinon.assert.calledWith(deleteStub, subproblemId);
+      expect(utilStub.handleError).to.have.been.called();
     });
   });
 });

@@ -34,8 +34,8 @@ function getUser(req) {
 function handleError(error, next) {
   logger.error(JSON.stringify(error, null, 2));
   next({
-    statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-    message: error
+    statusCode: error.statusCode || httpStatus.INTERNAL_SERVER_ERROR,
+    message: error.message || error
   });
 }
 

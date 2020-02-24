@@ -4,13 +4,11 @@ define(['lodash', 'angular'], function(_, angular) {
   var ENTER = 13;
 
   var dependencies = [
-    'ManualInputService',
     'EffectInputHelperService',
     '$timeout'
   ];
 
   var EffectInputHelperDirective = function(
-    ManualInputService,
     EffectInputHelperService,
     $timeout
   ) {

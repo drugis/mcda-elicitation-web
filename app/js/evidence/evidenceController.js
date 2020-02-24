@@ -104,7 +104,7 @@ define(['clipboard', 'lodash', 'angular'], function(Clipboard, _, angular) {
             return function(newAlternative) {
               $scope.workspace.problem.alternatives[alternative.id].title = newAlternative.title;
               WorkspaceResource.save($stateParams, $scope.workspace).$promise.then(function() {
-                $state.reload();
+                $state.reload(); // workaround to not call reload with the argument passed to callback
               });
             };
           }

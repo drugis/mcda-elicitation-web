@@ -1,6 +1,14 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Cancel adding a workspace':  cancelAdding,
+  'Cancel deleting a workspace':  cancelDeleting
+};
+
 const loginService = require('./util/loginService');
+const workspaceService = require('./util/workspaceService.js');
 const errorService = require('./util/errorService');
 const util = require('./util/util');
 
@@ -10,6 +18,7 @@ const deleteWorkspaceButton = '#delete-workspace-0';
 function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser);
+  workspaceService.cleanList(browser);
 }
 
 function afterEach(browser) {
@@ -36,10 +45,3 @@ function cancelDeleting(browser) {
     .click(deleteWorkspaceButton)
     .click('#delete-workspace-confirm-button');
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Cancel adding a workspace':  cancelAdding,
-  'Cancel deleting a workspace':  cancelDeleting
-};

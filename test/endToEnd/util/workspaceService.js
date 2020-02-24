@@ -60,7 +60,23 @@ function deleteUnfinishedFromList(browser, index) {
     .click('#delete-in-progress-workspace-' + index)
     .click('#delete-workspace-confirm-button');
   return errorService.isErrorBarHidden(browser);
+}
 
+function cleanList(browser) {
+  var expectPath = '#delete-workspace-0';
+  browser.waitForElementVisible('#workspaces-header');
+  browser.elements('css selector', expectPath, function (result) {
+    if (result.value.length !== 0) {
+      console.log('! Workspace list is not empty. Deleting a workspace.');
+      browser.click(expectPath);
+      browser.waitForElementVisible('#delete-workspace-confirm-button');
+      browser.click('#delete-workspace-confirm-button');
+      cleanList(browser);
+    } else {
+      console.log('✔ Workspace list is empty.');
+    }
+  });
+  return browser;
 }
 
 module.exports = {
@@ -70,5 +86,6 @@ module.exports = {
   deleteFromList: deleteFromList,
   deleteUnfinishedFromList: deleteUnfinishedFromList,
   uploadTestWorkspace: uploadTestWorkspace,
-  goHomeAfterLoading: goHomeAfterLoading
+  goHomeAfterLoading: goHomeAfterLoading,
+  cleanList: cleanList
 };

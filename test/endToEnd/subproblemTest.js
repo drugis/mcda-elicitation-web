@@ -1,6 +1,17 @@
 'use strict';
 
-const _ = require('lodash');
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Create subproblem': create,
+  'Re-enabling datasources, and criteria during subproblem creation': toggleDataSourcesAndCriteria,
+  'Switching between subproblems': switchSubproblem,
+  'Edit the title': edit,
+  'Reset during subproblem creation': reset,
+  'Interact with scale sliders': changeScale,
+  'Deleting': deleteSubproblem,
+  'Cancel deleting': cancelDeleteSubproblem
+};
 
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
@@ -21,15 +32,16 @@ function setupSubProblem(browser) {
     .assert.containsText('#missing-values-warning', 'Effects table may not contain missing values')
     .assert.containsText('#multiple-data-sources-warning', 'Effects table may not contain multiple data sources per criterion')
     .setValue('#subproblem-title', subproblem1.title)
-    .click('#deselectionAlternativeId')
-    .click('#deselectionDataSourceId')
-    .click('#deselectionCriterionId')
+    .click('#alternative-2')
+    .click('#datasource-1')
+    .click('#criterion-3')
     .waitForElementVisible('#create-new-subproblem-button:enabled');
   return browser;
 }
 
 function beforeEach(browser) {
   loginService.login(browser);
+  workspaceService.cleanList(browser);
   workspaceService.uploadTestWorkspace(browser, '/createSubproblemTestProblem.json');
   util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header');
 }
@@ -37,7 +49,9 @@ function beforeEach(browser) {
 function afterEach(browser) {
   errorService.isErrorBarHidden(browser);
   util.delayedClick(browser, '#logo', '#workspaces-header');
-  workspaceService.deleteFromList(browser, 0).end();
+  workspaceService
+    .deleteFromList(browser, 0)
+    .end();
 }
 
 function create(browser) {
@@ -47,14 +61,14 @@ function create(browser) {
 
 function toggleDataSourcesAndCriteria(browser) {
   setupSubProblem(browser)
-    .click('#deselectionDataSourceId')
+    .click('#datasource-1')
     .waitForElementVisible('#create-new-subproblem-button:disabled')
-    .click('#deselectionDataSourceId')
+    .click('#datasource-1')
     .waitForElementVisible('#create-new-subproblem-button:enabled')
 
-    .click('#deselectionCriterionId')
+    .click('#criterion-3')
     .waitForElementVisible('#create-new-subproblem-button:disabled')
-    .click('#deselectionCriterionId')
+    .click('#criterion-3')
     .waitForElementVisible('#create-new-subproblem-button:enabled');
   browser.click('#create-new-subproblem-button');
 }
@@ -88,9 +102,9 @@ function reset(browser) {
     .click('#reset-subproblem-button')
     .waitForElementVisible('#create-new-subproblem-button:disabled')
     .assert.containsText('#subproblem-title', '')
-    .waitForElementVisible('#deselectionAlternativeId:checked')
-    .waitForElementVisible('#deselectionDataSourceId:checked')
-    .waitForElementVisible('#deselectionCriterionId:checked')
+    .waitForElementVisible('#alternative-2:checked')
+    .waitForElementVisible('#datasource-1:checked')
+    .waitForElementVisible('#criterion-3:checked')
     .click('#close-modal-button');
 }
 
@@ -147,16 +161,3 @@ function cancelDeleteSubproblem(browser) {
     .waitForElementVisible('#delete-subproblem-button')
     .assert.containsText('#subproblem-selector', subproblem1.title);
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Create subproblem': create,
-  'Re-enabling datasources, and criteria during subproblem creation': toggleDataSourcesAndCriteria,
-  'Switching between subproblems': switchSubproblem,
-  'Edit the title': edit,
-  'Reset during subproblem creation': reset,
-  'Interact with scale sliders': changeScale,
-  'Deleting': deleteSubproblem,
-  'Cancel deleting': cancelDeleteSubproblem
-};

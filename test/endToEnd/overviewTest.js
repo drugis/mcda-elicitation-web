@@ -1,5 +1,20 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'The overview tab': assertContents,
+  'Editing the therapeutic context': editTherapeuticContext,
+  'Editing a criterion': editCriterion,
+  'Editing a criterion and switching tabs': editCriterionSwitchTabs,
+  'Editing a data source': editDataSource,
+  'Editing an alternative': editAlternative,
+  'Editing the workspace title': editTitle,
+  'Reordering criteria': reorderCriteria,
+  'Reordering alternatives': reorderAlternatives,
+  'Reordering data sources': reorderDataSources
+};
+
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
@@ -20,12 +35,14 @@ function loadTestWorkspace(browser, title) {
 function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser);
+  workspaceService.cleanList(browser);
 }
 
 function afterEach(browser) {
   util.delayedClick(browser, '#logo', '#workspaces-header');
-  workspaceService.deleteFromList(browser, 0);
-  errorService.isErrorBarHidden(browser).end();
+  workspaceService
+    .deleteFromList(browser, 0)
+    .end();
 }
 
 function assertContents(browser) {
@@ -65,6 +82,22 @@ function editCriterion(browser) {
     .click('#add-criterion-confirm-button')
     .assert.containsText(proximalDVTCriterionTitle, newTitle)
     .assert.containsText(proximalDVTCriterionDescription, newDescription);
+}
+
+function editCriterionSwitchTabs(browser) {
+  const newTitle = 'new title';
+
+  loadTestWorkspace(browser, title)
+    .click('#edit-criterion-0')
+    .waitForElementVisible('#criterion-title-input')
+    .clearValue('#criterion-title-input')
+    .setValue('#criterion-title-input', newTitle)
+    .click('#add-criterion-confirm-button')
+    .waitForElementVisible('#workspace-title')
+    .assert.containsText('#criterion-title-0', newTitle)
+    .click('#problem-definition-tab')
+    .waitForElementVisible('#effects-table-header')
+    .assert.containsText('#criterion-title-0', newTitle);
 }
 
 function editDataSource(browser) {
@@ -159,17 +192,3 @@ function reorderDataSources(browser) {
     .click(ref1Up)
     .assert.containsText(firstReference, 'ref1');
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'The overview tab': assertContents,
-  'Editing the therapeutic context': editTherapeuticContext,
-  'Editing a criterion': editCriterion,
-  'Editing a data source': editDataSource,
-  'Editing an alternative': editAlternative,
-  'Editing the workspace title': editTitle,
-  'Reordering criteria': reorderCriteria,
-  'Reordering alternatives': reorderAlternatives,
-  'Reordering data sources': reorderDataSources
-};

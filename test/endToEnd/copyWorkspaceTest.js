@@ -1,5 +1,12 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Copy a workspace': copy,
+  'Copy and modify a workspace': copyAndModify
+};
+
 const loginService = require('./util/loginService.js');
 const workspaceService = require('./util/workspaceService.js');
 const errorService = require('./util/errorService');
@@ -10,6 +17,7 @@ const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat
 
 function beforeEach(browser) {
   loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
+  workspaceService.cleanList(browser);
   workspaceService.addExample(browser, title);
   workspaceService.copy(browser, 0, NEW_TITLE);
 }
@@ -17,7 +25,6 @@ function beforeEach(browser) {
 function afterEach(browser) {
   workspaceService.deleteFromList(browser, 1);
   workspaceService.deleteFromList(browser, 0);
-  errorService.isErrorBarHidden(browser);
   browser.end();
 }
 
@@ -34,10 +41,3 @@ function copyAndModify(browser) {
     .click('#done-button').pause(500);
   workspaceService.goHomeAfterLoading(browser, NEW_TITLE);  
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Copy a workspace': copy,
-  'Copy and modify a workspace': copyAndModify
-};

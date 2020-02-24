@@ -9,11 +9,11 @@
       tooltip="Edit current problem title.">
       <i class="fa fa-edit"></i>
     </a>
-    <a id="create-subproblem-button" ng-if="editMode.canEdit" ng-click="openCreateDialog()"
+    <a id="create-subproblem-button" ng-if="isStandalone && editMode.canEdit" ng-click="openCreateDialog()"
       tooltip="Create new problem.">
       <i class="fa fa-plus"></i>
     </a>
-    <a id="delete-subproblem-button" ng-if="editMode.canEdit && subProblems.length > 1" ng-click="deleteSubproblem()"
+    <a id="delete-subproblem-button" ng-if="isStandalone && editMode.canEdit && subProblems.length > 1" ng-click="deleteSubproblem()"
       tooltip="Delete current problem." class="fa fa-trash" style="color : red">
     </a>
     <i id="delete-subproblem-disabled" ng-if="editMode.canEdit && subProblems.length === 1"

@@ -1,13 +1,34 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Cancel editing workspace title': cancelEditingWorkspaceTitle,
+  'Cancel editing the therapeutic context': cancelEditingTherapeuticContext,
+  'Cancel editing a criterion': cancelEditingCriterion,
+  'Cancel editing a data source': cancelEditingDataSource,
+  'Cancel editing an alternative': cancelEditingAlternative,
+  'Cancel settings': cancelSettings,
+  'Cancel editing a subproblem title': cancelEditingSubroblemTitle,
+  'Cancel creating a new subproblem': cancelCreatingSubproblem,
+  'Cancel setting a partial value function': cancelSettingPartialValueFunction,
+  'Cancel setting weights via ranking': cancelSettingRankingWeights,
+  'Cancel setting weights via matching': cancelSettingMatchingWeights,
+  'Cancel precise swing weighting':  cancelSettingPreciseSwingWeights,
+  'Cancel imprecise swing weighting':  cancelSettingImpreciseSwingWeights,
+  'Cancel editing a scenario':  cancelEditingScenario,
+  'Cancel creating a new scenario':  cancelCreatingScenario,
+  'Cancel copying a scenario':  cancelCopyingScenario,
+  'Cancel editing graph labels':  cancelEditingGraphLabels
+};
+
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
-const errorService = require('./util/errorService');
 const util = require('./util/util');
 
 const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 const preferenceTabPath = '#preferences-tab';
-const rankingCellPath = '#ranking-criterion-0';
+const importanceCellPath = '#importance-criterion-0';
 const closeModalButtonPath = '#close-modal-button';
 const cancelStep1Path = '#cancel-step1-button';
 
@@ -29,6 +50,7 @@ function clearValueCancelAction(browser, paths, expectedValue) {
 function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser);
+  workspaceService.cleanList(browser);
   workspaceService.addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title');
@@ -36,8 +58,9 @@ function beforeEach(browser) {
 
 function afterEach(browser) {
   util.delayedClick(browser, '#logo', '#workspaces-header');
-  workspaceService.deleteFromList(browser, 0);
-  errorService.isErrorBarHidden(browser).end();
+  workspaceService
+  .deleteFromList(browser, 0)
+  .end();
 }
 
 function cancelEditingWorkspaceTitle(browser) {
@@ -133,7 +156,7 @@ function cancelSettingRankingWeights(browser) {
     tab: preferenceTabPath,
     actionButton: '#ranking-button',
     cancelButton: '#cancel-button',
-    content: rankingCellPath
+    content: importanceCellPath
   };
   cancelAction(browser, paths, '?');
 }
@@ -143,7 +166,7 @@ function cancelSettingMatchingWeights(browser) {
     tab: preferenceTabPath,
     actionButton: '#matching-button',
     cancelButton: cancelStep1Path,
-    content: rankingCellPath
+    content: importanceCellPath
   };
   cancelAction(browser, paths, '?');
 }
@@ -153,7 +176,7 @@ function cancelSettingPreciseSwingWeights(browser) {
     tab: preferenceTabPath,
     actionButton: '#precise-swing-button',
     cancelButton: cancelStep1Path,
-    content: rankingCellPath
+    content: importanceCellPath
   };
   cancelAction(browser, paths, '?');
 }
@@ -163,7 +186,7 @@ function cancelSettingImpreciseSwingWeights(browser) {
     tab: preferenceTabPath,
     actionButton: '#imprecise-swing-button',
     cancelButton: cancelStep1Path,
-    content: rankingCellPath
+    content: importanceCellPath
   };
   cancelAction(browser, paths, '?');
 }
@@ -215,25 +238,3 @@ function cancelEditingGraphLabels(browser) {
     .click(paths.cancelButton)
     .assert.containsText(paths.content, 'Placebo');
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Cancel editing workspace title': cancelEditingWorkspaceTitle,
-  'Cancel editing the therapeutic context': cancelEditingTherapeuticContext,
-  'Cancel editing a criterion': cancelEditingCriterion,
-  'Cancel editing a data source': cancelEditingDataSource,
-  'Cancel editing an alternative': cancelEditingAlternative,
-  'Cancel settings': cancelSettings,
-  'Cancel editing a subproblem title': cancelEditingSubroblemTitle,
-  'Cancel creating a new subproblem': cancelCreatingSubproblem,
-  'Cancel setting a partial value function': cancelSettingPartialValueFunction,
-  'Cancel setting weights via ranking': cancelSettingRankingWeights,
-  'Cancel setting weights via matching': cancelSettingMatchingWeights,
-  'Cancel precise swing weighting':  cancelSettingPreciseSwingWeights,
-  'Cancel imprecise swing weighting':  cancelSettingImpreciseSwingWeights,
-  'Cancel editing a scenario':  cancelEditingScenario,
-  'Cancel creating a new scenario':  cancelCreatingScenario,
-  'Cancel copying a scenario':  cancelCopyingScenario,
-  'Cancel editing graph labels':  cancelEditingGraphLabels
-};

@@ -1,5 +1,18 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Setting the weights through ranking': ranking,
+  'Ranking previous button': rankingGoBack,
+  'Matching previous button': matchingGoBack,
+  'Setting the weights through precise swing weighting': preciseSwing,
+  'Precise swing previous button': preciseSwingGoBack,
+  'Setting the weights through imprecise swing weighting': impreciseSwing,
+  'Imprecise swing previous button': impreciseSwingGoBack,
+  'Interacting with Willingness to trade off plot': interactWithPlot
+};
+
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
@@ -17,30 +30,32 @@ function loadTestWorkspace(browser) {
 function resetWeights(browser) {
   browser
     .click('#reset-button')
-    .assert.containsText('#ranking-criterion-0', '?')
-    .assert.containsText('#ranking-criterion-1', '?')
-    .assert.containsText('#ranking-criterion-2', '?')
+    .assert.containsText('#importance-criterion-0', '?')
+    .assert.containsText('#importance-criterion-1', '?')
+    .assert.containsText('#importance-criterion-2', '?')
     ;
 }
 
 function matchImportanceColumnContents(browser, value1, value2, value3) {
   browser
     .waitForElementVisible('#trade-off-block')
-    .assert.containsText('#ranking-criterion-0', value1)
-    .assert.containsText('#ranking-criterion-1', value2)
-    .assert.containsText('#ranking-criterion-2', value3)
+    .assert.containsText('#importance-criterion-0', value1)
+    .assert.containsText('#importance-criterion-1', value2)
+    .assert.containsText('#importance-criterion-2', value3)
     ;
 }
 
 function beforeEach(browser) {
   loginService.login(browser);
+  workspaceService.cleanList(browser);
   loadTestWorkspace(browser);
 }
 
 function afterEach(browser) {
   browser.click('#logo');
-  workspaceService.deleteFromList(browser, 0);
-  errorService.isErrorBarHidden(browser).end();
+  workspaceService
+    .deleteFromList(browser, 0)
+    .end();
 }
 
 function ranking(browser) {
@@ -149,16 +164,3 @@ function interactWithPlot(browser) {
     .assert.containsText('//willingness-to-trade-off-chart/div/div[2]/div/span[10]', outcomeValue)
     .useCss();
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Setting the weights through ranking': ranking,
-  'Ranking previous button': rankingGoBack,
-  'Matching previous button': matchingGoBack,
-  'Setting the weights through precise swing weighting': preciseSwing,
-  'Precise swing previous button': preciseSwingGoBack,
-  'Setting the weights through imprecise swing weighting': impreciseSwing,
-  'Imprecise swing previous button': impreciseSwingGoBack,
-  'Interacting with Willingness to trade off plot': interactWithPlot
-};

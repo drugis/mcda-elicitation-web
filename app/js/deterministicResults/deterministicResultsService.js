@@ -2,32 +2,19 @@
 define([
   'lodash',
   'angular',
-  'jquery',
   'd3'
 ], function(
   _,
   angular,
-  $,
   d3
 ) {
   var dependencies = ['PataviResultsService'];
 
   var DeterministicResulstsService = function(PataviResultsService) {
-    function run($scope, inState) {
+    function run(inState) {
       var state = angular.copy(inState);
       state.problem.criteria = mergeDataSourceOntoCriterion(state.problem.criteria);
-
-      var updateCallback = _.throttle(function(update) {
-        if (update && update.eventType === 'progress' && update.eventData && $.isNumeric(update.eventData)) {
-          var progress = parseInt(update.eventData);
-          if (progress > $scope.progress) {
-            $scope.progress = progress;
-          }
-        }
-      }, 30);
-      $scope.progress = 0;
-
-      state.resultsPromise = PataviResultsService.postAndHandleResults(state.problem, _.partial(succesCallback, state), updateCallback);
+      state.resultsPromise = PataviResultsService.postAndHandleResults(state.problem, _.partial(succesCallback, state));
       return state;
     }
 
@@ -115,54 +102,54 @@ define([
       });
     }
 
-    function getDeterministicResults(scope, state) {
+    function getDeterministicResults(state) {
       var deterministicResultsState = {
         problem: _.merge({}, getProblem(state.problem), {
           preferences: state.prefs,
           method: 'deterministic'
         })
       };
-      return run(scope, deterministicResultsState);
+      return run(deterministicResultsState);
     }
 
-    function getRecalculatedDeterministicResults(scope, state) {
+    function getRecalculatedDeterministicResults(alteredTableCells, state) {
       var nextState = {
         problem: _.merge({}, state.problem, {
           preferences: state.prefs,
           method: 'sensitivityMeasurements',
           sensitivityAnalysis: {
-            meas: scope.sensitivityMeasurements.alteredTableCells
+            meas: alteredTableCells
           }
         })
       };
-      return run(scope, nextState);
+      return run(nextState);
     }
 
-    function getMeasurementSensitivityResults(scope, state) {
+    function getMeasurementSensitivityResults(measurementsAlternativeId, measurementsCriterionId, state) {
       var nextState = {
         problem: _.merge({}, getProblem(state.problem), {
           preferences: state.prefs,
           method: 'sensitivityMeasurementsPlot',
           sensitivityAnalysis: {
-            alternative: scope.measurementsAlternative.id,
-            criterion: scope.measurementsCriterion.id
+            alternative: measurementsAlternativeId,
+            criterion: measurementsCriterionId
           }
         })
       };
-      return run(scope, nextState);
+      return run(nextState);
     }
 
-    function getPreferencesSensitivityResults(scope, state) {
+    function getPreferencesSensitivityResults(selectedCriterionId, state) {
       var nextState = {
         problem: _.merge({}, getProblem(state.problem), {
           preferences: state.prefs,
           method: 'sensitivityWeightPlot',
           sensitivityAnalysis: {
-            criterion: scope.selectedCriterion.id
+            criterion: selectedCriterionId
           }
         })
       };
-      return run(scope, nextState);
+      return run(nextState);
     }
 
     function percentifySensitivityResult(values) {

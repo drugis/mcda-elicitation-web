@@ -2,17 +2,16 @@
 
 const loginService = require('./util/loginService.js');
 const workspaceService = require('./util/workspaceService.js');
-const errorService = require('./util/errorService');
 
 module.exports = {
   'Delete a workspace': function(browser) {
     const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
-    loginService.login(browser)
-      .waitForElementVisible('#empty-workspace-message');
+    loginService.login(browser);
+    workspaceService.cleanList(browser);
     workspaceService.addExample(browser, title);
     workspaceService.deleteFromList(browser, 0);
     browser.waitForElementVisible('#empty-workspace-message');
-    errorService.isErrorBarHidden(browser).end();
+    browser.end();
   }
 };

@@ -124,12 +124,12 @@ function initApp() {
   app.use('/workspaces', WorkspaceSettingsRouter);
 
   app.post('/patavi', function(req, res, next) { // FIXME: separate routes for scales and results
-    patavi.create(req.body, function(err, taskUri) {
-      if (err) {
-        logger.error(err);
+    patavi.create(req.body, function(error, taskUri) {
+      if (error) {
+        logger.error(error);
         return next({
-          err: err,
-          status: httpStatus.INTERNAL_SERVER_ERROR
+          message: error,
+          statusCode: httpStatus.INTERNAL_SERVER_ERROR
         });
       }
       res.location(taskUri);
@@ -242,7 +242,7 @@ function rightsCallback(response, next, userId, error, result) {
   if (error) {
     next(error);
   } else {
-    var workspace = result.rows[0];
+    var workspace = result;
     if (!workspace) {
       response.status(httpStatus.NOT_FOUND).send('Workspace not found');
     } else if (workspace.owner !== userId) {

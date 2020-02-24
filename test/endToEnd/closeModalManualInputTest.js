@@ -1,6 +1,18 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Cancel adding a criterion': cancelAddingCriterion,
+  'Cancel adding a data source': cancelAddingDataSource,
+  'Cancel adding an alternative': cancelAddingAlternative,
+  'Cancel editing a criterion': cancelEditingCriterion,
+  'Cancel editing a data source': cancelEditingDataSource,
+  'Cancel editing an alternative': cancelEditingAlternative
+};
+
 const loginService = require('./util/loginService');
+const workspaceService = require('./util/workspaceService.js');
 const errorService = require('./util/errorService');
 
 function addCriterion(browser) {
@@ -13,7 +25,8 @@ function addCriterion(browser) {
 
 function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
-  loginService.login(browser)
+  loginService.login(browser);
+  workspaceService.cleanList(browser)
     .click('#create-workspace-button')
     .click('#manual-workspace-radio')
     .click('#add-workspace-button');
@@ -77,14 +90,3 @@ function cancelEditingAlternative(browser) {
     .click('#close-modal-button')
     .assert.containsText('#alternative-title-0', 'a1');
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Cancel adding a criterion': cancelAddingCriterion,
-  'Cancel adding a data source': cancelAddingDataSource,
-  'Cancel adding an alternative': cancelAddingAlternative,
-  'Cancel editing a criterion': cancelEditingCriterion,
-  'Cancel editing a data source': cancelEditingDataSource,
-  'Cancel editing an alternative': cancelEditingAlternative
-};

@@ -14,7 +14,7 @@ define(['angular'], function() {
     PataviService,
     WorkspaceSettingsService
   ) {
-    function postAndHandleResults(problem, successHandler, updateHandler) {
+    function postAndHandleResults(problem, successHandler) {
       problem.seed = WorkspaceSettingsService.getRandomSeed();
       return $http.post('/patavi', problem)
         .then(function(result) {
@@ -29,7 +29,7 @@ define(['angular'], function() {
           }
         })
         .then(PataviService.listen)
-        .then(successHandler || defaultSuccessHandler, errorHandler, updateHandler)
+        .then(successHandler || defaultSuccessHandler, errorHandler)
         .catch(errorHandler);
     }
 

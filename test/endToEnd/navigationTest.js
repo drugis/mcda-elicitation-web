@@ -1,4 +1,13 @@
 'use strict';
+
+module.exports = {
+  afterEach: afterEach,
+  'Open manual from login page': goToManualFromLogin,
+  'Open manual while logged in': goToManual,
+  'Home navigation from login name': goToHomeFromLoginName,
+  'Navigate to problem that does not exists through URL manipulation': invalidUrl
+};
+
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const util = require('./util/util');
@@ -14,7 +23,7 @@ function goToManualFromLogin(browser) {
     .url(TEST_URL)
     .waitForElementVisible('#manual-link')
     .click('#manual-link')
-    .windowHandles(function(result) {
+    .windowHandles(function (result) {
       browser.switchWindow(result.value[1])
         .waitForElementVisible('#manual-title-header');
     });
@@ -23,7 +32,7 @@ function goToManualFromLogin(browser) {
 function goToManual(browser) {
   loginService.login(browser)
     .click('#manual-link')
-    .windowHandles(function(result) {
+    .windowHandles(function (result) {
       browser.switchWindow(result.value[1])
         .waitForElementVisible('#manual-title-header');
     });
@@ -45,11 +54,3 @@ function invalidUrl(browser) {
     .useXpath()
     .waitForElementVisible('/html/body/error-reporting');
 }
-
-module.exports = {
-  afterEach: afterEach,
-  'Open manual from login page': goToManualFromLogin,
-  'Open manual while logged in': goToManual,
-  'Home navigation from login name': goToHomeFromLoginName,
-  'Navigate to problem that does not exists through URL manipulation': invalidUrl
-};

@@ -54,9 +54,7 @@ describe('the in progress workspace handler', () => {
     it('should call the in progress workspace repository with the correct arguments', () => {
       const createdId = 321;
       const result = {
-        rows: [{
-          id: createdId
-        }]
+        id: createdId
       };
       create.onCall(0).yields(null, result);
 
@@ -192,16 +190,14 @@ describe('the in progress workspace handler', () => {
     it('should call the in progress workspace repository with the correct arguments', () => {
       const workspaceId = 321;
       const result = {
-        rows: [{
           id: workspaceId
-        }]
       };
       get.onCall(0).yields(null, result);
 
       inProgressWorkspaceHandler.get(request, response, next);
 
       sinon.assert.calledWith(get, problemId);
-      expect(response.json).to.have.been.called.with(result.rows[0]);
+      expect(response.json).to.have.been.called.with(result);
     });
 
     it('should not call reponse.json if there\'s an error', function() {
@@ -239,17 +235,15 @@ describe('the in progress workspace handler', () => {
 
     it('should call the in progress workspace repository with the correct arguments', () => {
       const workspaceId = 321;
-      const result = {
-        rows: [{
+      const result = [{
           id: workspaceId
-        }]
-      };
+        }];
       query.onCall(0).yields(null, result);
 
       inProgressWorkspaceHandler.query(request, response, next);
 
       sinon.assert.calledWith(query, userId);
-      expect(response.json).to.have.been.called.with(result.rows);
+      expect(response.json).to.have.been.called.with(result);
     });
 
     it('should not call reponse.json if there\'s an error', function() {

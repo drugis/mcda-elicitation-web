@@ -1,5 +1,17 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Manual input of a workspace': manualInput,
+  'Navigating from manual input step2 to step1': goToStep1,
+  'Saving during step 2': save,
+  'Changing unit of measurement': editUnit,
+  'Setting the strength of evidence and uncertainties': setStrengthAndUncertainty,
+  'Cancel editing unit of measurement': cancelEditingUnit,
+  'Cancel editing uncertainty': cancelEditingUncertainty
+};
+
 const loginService = require('./util/loginService');
 const manualInputService = require('./util/manualInputService');
 const workspaceService = require('./util/workspaceService');
@@ -147,15 +159,3 @@ function cancelEditingUncertainty(browser) {
     .click('#close-modal-button')
     .assert.containsText('#uncertainties-0', 'Unc: none');
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Manual input of a workspace': manualInput,
-  'Navigating from manual input step2 to step1': goToStep1,
-  'Saving during step 2': save,
-  'Changing unit of measurement': editUnit,
-  'Setting the strength of evidence and uncertainties': setStrengthAndUncertainty,
-  'Cancel editing unit of measurement': cancelEditingUnit,
-  'Cancel editing uncertainty': cancelEditingUncertainty
-};

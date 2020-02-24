@@ -71,7 +71,7 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
       $scope.sensitivityMeasurements.preferencesCriterion = $scope.criteria[0];
       var stateWithAlternativesRenamed = LegendService.replaceAlternativeNames($scope.scenario.state.legend,
         $scope.aggregateState);
-      $scope.deterministicResults = DeterministicResultsService.getDeterministicResults($scope, stateWithAlternativesRenamed);
+      $scope.deterministicResults = DeterministicResultsService.getDeterministicResults(stateWithAlternativesRenamed);
     }
 
     function isEditing(value) {
@@ -98,7 +98,10 @@ define(['clipboard', 'lodash',], function(Clipboard, _) {
 
     function recalculateResults() {
       delete $scope.recalculatedDeterministicResults;
-      $scope.recalculatedDeterministicResults = DeterministicResultsService.getRecalculatedDeterministicResults($scope, $scope.deterministicResults);
+      $scope.recalculatedDeterministicResults = DeterministicResultsService.getRecalculatedDeterministicResults(
+        $scope.sensitivityMeasurements.alteredTableCells,
+        $scope.deterministicResults
+      );
     }
 
     function usePercentage(dataSource) {

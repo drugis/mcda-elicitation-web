@@ -18,6 +18,6 @@ cp -f Dockerfile docker
 cp -f yarn.lock docker
 cp -f index.js docker
 cd docker
-docker build --build-arg WEBPACK_COMMAND=$WEBPACK_COMMAND --tag addis/mcda .
+docker build --build-arg WEBPACK_COMMAND=$WEBPACK_COMMAND --build-arg MATOMO_VERSION=$MATOMO_VERSION --tag addis/mcda .
 cd ..
 rm -rf docker

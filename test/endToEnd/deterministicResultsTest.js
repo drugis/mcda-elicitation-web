@@ -1,8 +1,16 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Deterministic results': results,
+  'Deterministic results with recalculated values': recalculatedResults,
+  'Switch alternative and criterion for one-way sensitivity analysis measurements plot': modifyMeasurementsPlot,
+  'Switch criterion for one-way sensitivity analysis preferences plot': modifyPreferencesPlot
+};
+
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
-const errorService = require('./util/errorService');
 
 const chai = require('chai');
 
@@ -31,6 +39,7 @@ const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat
 function beforeEach(browser) {
   browser.resizeWindow(1366, 728);
   loginService.login(browser);
+  workspaceService.cleanList(browser);
   workspaceService.addExample(browser, title)
     .click('#workspace-0')
     .waitForElementVisible('#workspace-title')
@@ -41,8 +50,9 @@ function beforeEach(browser) {
 
 function afterEach(browser) {
   browser.click('#logo');
-  workspaceService.deleteFromList(browser, 0);
-  errorService.isErrorBarHidden(browser).end();
+  workspaceService
+    .deleteFromList(browser, 0)
+    .end();
 }
 
 function results(browser) {
@@ -51,15 +61,18 @@ function results(browser) {
     .waitForElementVisible('#base-case-table')
     .waitForElementVisible('#base-case-plot')
     .waitForElementVisible('#measurements-sensitivity-plot')
-    .waitForElementVisible('#preferences-sensitivity-plot');
+    .waitForElementVisible('#preferences-sensitivity-plot')
+    .waitForElementVisible('#base-value-profile-table');
 
   const measurementValuePath = '//sensitivity-table//tr[2]/td[4]//span[1]';
   const weightValuePath = '//*[@id="criterion-0-weight"]';
   const baseCaseValuePath = '//*[@id="alternative-0-base-case"]';
+  const baseCaseValueTablePath = '//*[@id="base-value-profile-table"]/tbody/tr[1]/td[2]';
 
   checkElementValueGreaterThan(browser, measurementValuePath, 30);
   checkElementValueGreaterThan(browser, weightValuePath, 0.2);
   checkElementValueGreaterThan(browser, baseCaseValuePath, 0.7);
+  checkElementValueGreaterThan(browser, baseCaseValueTablePath, 0.01);
 }
 
 function recalculatedResults(browser) {
@@ -77,18 +90,22 @@ function recalculatedResults(browser) {
     .assert.containsText(measurementValuePath, '63 (36.')
     .waitForElementVisible('//*[@id="recalculated-case-table"]')
     .waitForElementVisible('//*[@id="recalculated-case-plot"]')
+    .waitForElementVisible('//*[@id="recalculated-value-profile-table"]')
     .useCss();
 
   const recalculatedCaseValuePath = '//*[@id="alternative-0-recalculated-case"]';
+  const recalculatedCaseValueTablePath = '//*[@id="recalculated-value-profile-table"]/tbody/tr[1]/td[2]';
   checkElementValueGreaterThan(browser, recalculatedCaseValuePath, 0.85);
+  checkElementValueGreaterThan(browser, recalculatedCaseValueTablePath, 0.1);
 
   browser.click('#reset-button');
 
   checkResetMeasurementValue(browser, measurementValuePath);
 
   browser
-.assert.not.elementPresent('#recalculated-case-table')
-.assert.not.elementPresent('#recalculated-case-plot');
+    .assert.not.elementPresent('#recalculated-case-table')
+    .assert.not.elementPresent('#recalculated-case-plot')
+    .assert.not.elementPresent('#recalculated-value-profile-table');
 }
 
 function modifyMeasurementsPlot(browser) {
@@ -108,12 +125,3 @@ function modifyPreferencesPlot(browser) {
     .click('option[label="Nausea\ ADRs"]')
     .assert.containsText('#preferences-criterion-selector', 'Nausea\ ADRs');
 }
-
-module.exports = {
-  beforeEach: beforeEach,
-  afterEach: afterEach,
-  'Deterministic results': results,
-  'Deterministic results with recalculated values': recalculatedResults,
-  'Switch alternative and criterion for one-way sensitivity analysis measurements plot': modifyMeasurementsPlot,
-  'Switch criterion for one-way sensitivity analysis preferences plot': modifyPreferencesPlot
-};

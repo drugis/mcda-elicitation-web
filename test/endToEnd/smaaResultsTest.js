@@ -2,12 +2,11 @@
 
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
-const errorService = require('./util/errorService');
 
 const chai = require('chai');
 
 function checkElementValueGreaterThan(browser, id, value) {
-  browser.getText(id, function(result) {
+  browser.getText(id, function (result) {
     chai.expect(parseFloat(result.value)).to.be.above(value);
   });
 }
@@ -18,24 +17,25 @@ function checkRankTable(browser) {
   var venla;
 
   browser
-    .getText('#alternative-0-rank-1', function(result) {
+    .getText('#alternative-0-rank-1', function (result) {
       placebo = parseFloat(result.value);
     })
-    .getText('#alternative-1-rank-1', function(result) {
+    .getText('#alternative-1-rank-1', function (result) {
       fluox = parseFloat(result.value);
       chai.expect(placebo).to.be.above(fluox);
     })
-    .getText('#alternative-2-rank-1', function(result) {
+    .getText('#alternative-2-rank-1', function (result) {
       venla = parseFloat(result.value);
       chai.expect(fluox).to.be.above(venla);
     });
 }
 
 module.exports = {
-  'SMAA results': function(browser) {
+  'SMAA results': function (browser) {
     const title = 'Antidepressants - single study B/R analysis (Tervonen et al, Stat Med, 2011)';
 
     loginService.login(browser);
+    workspaceService.cleanList(browser);
     workspaceService.addExample(browser, title)
       .click('#workspace-0')
       .waitForElementVisible('#workspace-title')
@@ -55,7 +55,8 @@ module.exports = {
     checkRankTable(browser);
 
     browser.click('#logo');
-    workspaceService.deleteFromList(browser, 0);
-    errorService.isErrorBarHidden(browser).end();
+    workspaceService
+      .deleteFromList(browser, 0)
+      .end();
   }
 };

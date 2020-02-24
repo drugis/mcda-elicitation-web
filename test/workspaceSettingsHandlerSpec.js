@@ -37,7 +37,7 @@ describe('the workspaceSettingsHandler', () => {
       }
     };
     const next = chai.spy();
-    
+
     beforeEach(() => {
       response.json = chai.spy();
       get = sinon.stub(repoStub, 'get');
@@ -49,17 +49,13 @@ describe('the workspaceSettingsHandler', () => {
     });
 
     it('should call the workspace settings repository with the correct arguments', () => {
-      const result = {
-        rows: [{
-          settings: {}
-        }]
-      };
+      const result = {};
       get.onCall(0).yields(null, result);
 
       workspaceSettingsHandler.get(request, response, next);
       sinon.assert.calledWith(get, workspaceId);
       expect(utilStub.handleError).not.to.have.been.called();
-      expect(response.json).to.have.been.called.with(result.rows[0].settings);
+      expect(response.json).to.have.been.called.with(result);
     });
 
     it('should not call reponse.json if there\'s an error', function() {
@@ -81,7 +77,7 @@ describe('the workspaceSettingsHandler', () => {
       body: {}
     };
     const next = chai.spy();
-    
+
     beforeEach(() => {
       response.sendStatus = chai.spy();
       put = sinon.stub(repoStub, 'put');

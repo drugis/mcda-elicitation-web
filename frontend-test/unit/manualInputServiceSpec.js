@@ -2,7 +2,7 @@
 define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(_, angular) {
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
-  var currentSchemaVersion = '1.4.2';
+  var currentSchemaVersion = '1.4.3';
   var inputKnowledgeServiceMock = jasmine.createSpyObj('InputKnowledgeService', [
     'getOptions'
   ]);
