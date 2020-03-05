@@ -4,25 +4,15 @@ library(hitandrun)
 hitAndRunSamples <- 1E4
 
 wrapMatrix <- function(matrix) {
-  resultingList <- lapply(rownames(matrix), function(name) { matrix[name,] })
-  names(resultingList) <- rownames(matrix)
+  alternativeTitles <- rownames(matrix)
+  resultingList <- lapply(alternativeTitles, function(alternativeTitle) { matrix[alternativeTitle,] })
+  names(resultingList) <- alternativeTitles
   return(resultingList)
 }
 
 run_scales <- function(params) {
-  return(apply(generateSummaryStatistics(params), 1, wrapMatrix))
-}
-
-getRatioConstraint <- function(numberOfCriteria, index1, index2, value) {
-  array <- rep(0, numberOfCriteria)
-  array[index1] <- -1
-  array[index2] <- value
-  constraints <- list(
-    "constr" = t(array),
-    "rhs" = c(0),
-    "dir" = c("=")
-  )
-  return(constraints)
+  applyOverRows <- 1
+  return(apply(generateSummaryStatistics(params), applyOverRows, wrapMatrix))
 }
 
 run_deterministic <- function(params) {
@@ -70,6 +60,18 @@ genHARconstraint <- function(statement, criteria) {
   } else if (statement$type == "exact swing") {
     return(getRatioConstraint(numberOfCriteria, index1, index2, statement$ratio))
   }
+}
+
+getRatioConstraint <- function(numberOfCriteria, index1, index2, value) {
+  array <- rep(0, numberOfCriteria)
+  array[index1] <- -1
+  array[index2] <- value
+  constraints <- list(
+    "constr" = t(array),
+    "rhs" = c(0),
+    "dir" = c("=")
+  )
+  return(constraints)
 }
 
 getRatioBoundConstraint <- function(bounds, numberOfCriteria, index1, index2) {
@@ -258,29 +260,6 @@ getCoordinatesForCutoffs <- function(cutOffs, getDifferenceWithReference, ranges
   return(coordinatesForCutoffs)
 }
 
-getSelectedCriteria <- function(selectedCriteria) {
-  criteria <- list(
-    "x" = selectedCriteria$criterionX,
-    "y" = selectedCriteria$criterionY
-  )
-  return(criteria)
-}
-
-getRanges <- function(criteria, selectedCriteria) {
-  ranges <- list(
-    "x" = criteria[[selectedCriteria$x]]$pvf$range,
-    "y" = criteria[[selectedCriteria$y]]$pvf$range
-  )
-  return(ranges)
-}
-
-getIndifferenceValue <- function(weights, criteria, pvf, referencePoint) {
-  xWeight <- weights[criteria$x] * pvf[[criteria$x]](referencePoint[1])
-  yWeight <- weights[criteria$y] * pvf[[criteria$y]](referencePoint[2])
-  indifferenceValue <- as.numeric(xWeight + yWeight)
-  return(indifferenceValue)
-}
-
 getYCoordinateForXCutoff <- function(xCutOffs, getValueDifference, yRange) {
   yCoordinateForXCutoff <- c()
   for (x in xCutOffs) {
@@ -297,13 +276,27 @@ getXCoordinateForYCutOff <- function(yCutOffs, getValueDifference, yRange) {
   return(xCoordinateForYCutoff)
 }
 
-sampleWeights <- function(preferences, criteria) {
-  numberOfCriteria <- length(criteria)
-  constr <- mergeConstraints(lapply(preferences, genHARconstraint, crit = criteria))
-  constr <- mergeConstraints(simplexConstraints(numberOfCriteria), constr)
-  weights <- hitandrun(constr, n.samples = hitAndRunSamples)
-  colnames(weights) <- criteria
-  return(weights)
+getSelectedCriteria <- function(selectedCriteria) {
+  criteria <- list(
+    "x" = selectedCriteria$criterionX,
+    "y" = selectedCriteria$criterionY
+  )
+  return(criteria)
+}
+
+getRanges <- function(criteria, selectedCriteria) {
+  ranges <- list(
+    "x" = criteria[[selectedCriteria$x]]$pvf$range,
+    "y" = criteria[[selectedCriteria$y]]$pvf$range
+  )
+  return(ranges)
+}
+
+getIndifferenceValue <- function(weights, criteria, pvfsByCriterion, referencePoint) {
+  xWeight <- weights[criteria$x] * pvfsByCriterion[[criteria$x]](referencePoint[1])
+  yWeight <- weights[criteria$y] * pvfsByCriterion[[criteria$y]](referencePoint[2])
+  indifferenceValue <- as.numeric(xWeight + yWeight)
+  return(indifferenceValue)
 }
 
 getSmaaWeights <- function(params, criteria) {
@@ -316,6 +309,15 @@ getSmaaWeights <- function(params, criteria) {
       }
     }
   }
+  return(weights)
+}
+
+sampleWeights <- function(preferences, criteria) {
+  numberOfCriteria <- length(criteria)
+  constr <- mergeConstraints(lapply(preferences, genHARconstraint, crit = criteria))
+  constr <- mergeConstraints(simplexConstraints(numberOfCriteria), constr)
+  weights <- hitandrun(constr, n.samples = hitAndRunSamples)
+  colnames(weights) <- criteria
   return(weights)
 }
 
