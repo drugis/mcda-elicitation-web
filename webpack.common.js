@@ -24,10 +24,12 @@ let config = {
   module: {
     rules: [{
       test: /\.js$/,
-      use: [{
-        loader: 'angular1-templateurl-loader'
-      }],
-      exclude: [/.*angular-foundation-6.*/] // uses $templatecache so dont replace 
+      use: ['babel-loader', 'angular1-templateurl-loader'],
+      exclude: [/.*angular-foundation-6.*/, /node_modules/] // uses $templatecache so dont replace 
+    }, {
+      test: /\.ts(x?)$/,
+      use: 'ts-loader',
+      exclude: [/frontend-test/, /node_modules/] // uses $templatecache so dont replace 
     }, {
       test: /\.html$/,
       use: 'raw-loader'
