@@ -57,7 +57,7 @@ let config = {
 
   resolve: {
     alias: {
-      'schema-basePath' : basePath + '/schema/',
+      'schema-basePath': basePath + '/schema/',
       'mcda': basePath + '/app/js',
       'mcdaweb': basePath + '/app/js/mcda-web'
     },
@@ -75,7 +75,7 @@ let config = {
       template: 'app/index.ejs',
       inject: 'head',
       chunks: ['main'],
-      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo'+ MATOMO_VERSION +'.html'))
+      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html'))
     }),
     new HtmlWebpackPlugin({
       filename: 'signin.html',
@@ -83,21 +83,21 @@ let config = {
       inject: 'head',
       chunks: ['signin'],
       signin: fs.readFileSync(require.resolve('signin/googleSignin.html')),
-      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo'+ MATOMO_VERSION +'.html'))
+      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html'))
     }),
     new HtmlWebpackPlugin({
       filename: 'manual.html',
       template: 'app/manual.ejs',
       inject: 'head',
       chunks: ['manual'],
-      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo'+ MATOMO_VERSION +'.html'))
+      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html'))
     }),
     new HtmlWebpackPlugin({
       filename: 'error.html',
       template: 'app/error.ejs',
       inject: 'head',
       chunks: ['error'],
-      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo'+ MATOMO_VERSION +'.html'))
+      matomo: fs.readFileSync(require.resolve(basePath + '/app/matomo' + MATOMO_VERSION + '.html'))
     }),
     new CleanWebpackPlugin()
   ],
