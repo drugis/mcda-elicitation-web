@@ -19,7 +19,7 @@ function initDBStub() {
   });
 }
 
-describe('the ordering repository', function() {
+describe('the workspace settings repository', function() {
   var expectedError = 'error';
   var workspaceId = 1;
 
@@ -29,9 +29,23 @@ describe('the ordering repository', function() {
     var expectedQuery = 'SELECT settings FROM workspaceSettings WHERE workspaceId = $1';
     var queryInputValues = [workspaceId];
 
-    it('should get the ordering and call the callback with the result', function(done) {
-      var queryResult = {};
-      var expectedResult = queryResult;
+    it('should get the settings and call the callback with the result', function(done) {
+      var queryResult = {
+        rows: [{
+          settings: {}
+        }]
+      };
+      var expectedResult = queryResult.rows[0].settings;
+      query.onCall(0).yields(null, queryResult);
+      var callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      workspaceSettingsRepository.get(workspaceId, callback);
+    });
+
+    it('should return an empty object if there are no settings', function(done) {
+      var queryResult = {
+        rows: []
+      };
+      var expectedResult = {};
       query.onCall(0).yields(null, queryResult);
       var callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       workspaceSettingsRepository.get(workspaceId, callback);

@@ -51,7 +51,7 @@
                 style="min-width:120px;" class="text-center" ng-repeat="alternative in alternatives">
                 <div class="grid-x">
                   <div class="cell">
-                    <input style="margin:0;" ng-if="!isBaseline[alternative.id]" id="{{alternative.id}}" type="checkbox"
+                    <input style="margin:0;" ng-if="!isBaseline[alternative.id]" id="alternative-{{$index}}" type="checkbox"
                       ng-model="subProblemState.alternativeInclusions[alternative.id]" ng-change="updateInclusions()"
                       ng-disabled="subProblemState.alternativeInclusions[alternative.id] && subProblemState.numberOfAlternativesSelected < 3">
                     <i ng-if="isBaseline[alternative.id]" class="fa fa-ban" tooltip="Cannot deselect baseline"></i>
@@ -79,7 +79,7 @@
                 ng-class="{'disabled-cell' : !subProblemState.criterionInclusions[row.criterion.id]}"
                 ng-show="toggledColumns['criteria']">
                 <label>
-                  <input id="{{ row.criterion.id }}" type="checkbox"
+                  <input id="criterion-{{$index}}" type="checkbox"
                     ng-model="subProblemState.criterionInclusions[row.criterion.id]" ng-change="updateInclusions()"
                     ng-disabled="subProblemState.criterionInclusions[row.criterion.id] && subProblemState.numberOfCriteriaSelected < 3">
                   {{row.criterion.title}}
@@ -105,7 +105,7 @@
                 ng-style="isValueView && !isCellAnalysisViable[row.dataSource.id][alternative.id] ? {'background-color':'#f3d3c8'} : {}">
                 <div class="grid-x">
                   <div class="cell large-1" style="min-width:13px;">
-                    <input id="{{ row.dataSource.id }}" type="checkbox" ng-if="$first"
+                    <input id="datasource-{{$parent.$parent.$parent.$index}}" type="checkbox" ng-if="$first" 
                       ng-model="subProblemState.dataSourceInclusions[row.dataSource.id]" ng-change="updateInclusions()"
                       ng-disabled="!subProblemState.criterionInclusions[row.criterion.id] || subProblemState.numberOfDataSourcesPerCriterion[row.criterion.id] === 1 && subProblemState.dataSourceInclusions[row.dataSource.id]">
                   </div>
@@ -173,15 +173,15 @@
             </h5>
             <div class="grid-x">
               <div class="cell large-1 text-center">
-                <a ng-click="scalesState[dataSource].increaseFrom()" class="tiny round button slider-buttons">&lt;</a>
+                <a id="slider-{{ $index }}-floor" ng-click="scalesState[dataSource].increaseFrom()" class="tiny round button slider-buttons">&lt;</a>
               </div>
-              <div class="cell large-10">
+              <div id="slider-{{ $index }}" class="cell large-10">
                 <rzslider rz-slider-model="choices[dataSource].from" rz-slider-high="choices[dataSource].to"
                   rz-slider-options="scalesState[dataSource].sliderOptions">
                 </rzslider>
               </div>
               <div class="cell large-1 pull-3 text-center">
-                <a ng-click="scalesState[dataSource].increaseTo()" class="tiny round button slider-buttons">&gt;</a>
+                <a id="slider-{{ $index }}-ceil" ng-click="scalesState[dataSource].increaseTo()" class="tiny round button slider-buttons">&gt;</a>
               </div>
             </div>
             <br>

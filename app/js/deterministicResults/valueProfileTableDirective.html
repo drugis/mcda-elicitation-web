@@ -1,0 +1,18 @@
+<table id="{{ case }}-value-profile-table">
+  <thead>
+    <tr>
+      <th></th>
+      <th ng-repeat="alternative in alternatives">
+        {{legend[alternative.id].newTitle || alternative.title}}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr ng-repeat="criterion in criteria">
+      <td>{{criterion.title}}</td>
+      <td ng-repeat="alternative in alternatives" class="text-centered">
+        {{data[alternative.id][criterion.id] | number}}
+      </td>
+    </tr>
+  </tbody>
+</table>

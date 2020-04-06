@@ -19,9 +19,9 @@ var workspaceRepoStub = {
   setDefaultScenario: () => { },
   setDefaultSubProblem: () => { },
   getWorkspaceInfo: () => { },
-  get: () => {},
-  update: () => {},
-  delete: () => {}
+  get: () => { },
+  update: () => { },
+  delete: () => { }
 };
 var utilStub = {
   handleError: () => { },
@@ -81,16 +81,14 @@ describe('the workspace handler', () => {
     });
 
     it('should call the workspace repository with the correct arguments', () => {
-      const result = {
-        rows: []
-      };
+      const result = [];
       query.onCall(0).yields(null, result);
 
       workspaceHandler.query(request, response, next);
 
       sinon.assert.calledWith(query, userId);
       expect(utilStub.handleError).not.to.have.been.called();
-      expect(response.json).to.have.been.called.with(result.rows);
+      expect(response.json).to.have.been.called.with(result);
     });
 
     it('should not call reponse.json if there\'s an error', function() {
@@ -132,9 +130,7 @@ describe('the workspace handler', () => {
     const next = chai.spy();
 
     const result = {
-      rows: [{
-        id: subProblemId
-      }]
+      id: subProblemId
     };
 
     beforeEach(() => {
@@ -170,7 +166,7 @@ describe('the workspace handler', () => {
 
     it('should call response.json with the created workspace', (done) => {
       var expectations = function(workspace) {
-        expect(workspace).to.equal(result.rows[0]);
+        expect(workspace).to.equal(result);
         expect(next).to.have.not.been.called();
         done();
       };
@@ -282,7 +278,7 @@ describe('the workspace handler', () => {
       }
     };
     const next = chai.spy();
-    
+
     beforeEach(() => {
       response.json = chai.spy();
       get = sinon.stub(workspaceRepoStub, 'get');
@@ -294,16 +290,14 @@ describe('the workspace handler', () => {
     });
 
     it('should call the workspace repository with the correct arguments', () => {
-      const result = {
-        rows: []
-      };
+      const result = {};
       get.onCall(0).yields(null, result);
 
       workspaceHandler.get(request, response, next);
 
       sinon.assert.calledWith(get, workspaceId);
       expect(utilStub.handleError).not.to.have.been.called();
-      expect(response.json).to.have.been.called.with(result.rows[0]);
+      expect(response.json).to.have.been.called.with(result);
     });
 
     it('should not call reponse.json if there\'s an error', function() {
@@ -332,7 +326,7 @@ describe('the workspace handler', () => {
       }
     };
     const next = chai.spy();
-    
+
     beforeEach(() => {
       response.sendStatus = chai.spy();
       update = sinon.stub(workspaceRepoStub, 'update');
@@ -373,7 +367,7 @@ describe('the workspace handler', () => {
       }
     };
     const next = chai.spy();
-    
+
     beforeEach(() => {
       response.sendStatus = chai.spy();
       del = sinon.stub(workspaceRepoStub, 'delete');

@@ -1,145 +1,92 @@
 'use strict';
 
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Cancel adding a criterion': cancelAddingCriterion,
+  'Cancel adding a data source': cancelAddingDataSource,
+  'Cancel adding an alternative': cancelAddingAlternative,
+  'Cancel editing a criterion': cancelEditingCriterion,
+  'Cancel editing a data source': cancelEditingDataSource,
+  'Cancel editing an alternative': cancelEditingAlternative
+};
+
 const loginService = require('./util/loginService');
-const manualInputService = require('./util/manualInputService');
+const workspaceService = require('./util/workspaceService.js');
 const errorService = require('./util/errorService');
-
-const testUrl = require('./util/constants').testUrl;
-
-const title = 'manual input';
-const therapeuticContext = 'end-to-end test';
-
-const criterion1 = manualInputService.createCriterion('c1', 'favorable');
-const criterion2 = manualInputService.createCriterion('c2', 'unfavorable');
-
-const dataSource1 = manualInputService.createDataSource('ref1');
-const dataSource2 = manualInputService.createDataSource('ref2');
-
-const alternative1 = manualInputService.createAlternative('a1');
-const alternative2 = manualInputService.createAlternative('a2');
-
-const criterion1AddDataSourcePath = '//div[9]/criterion-list/div/div[1]/div[2]/criterion-card/div/div[2]/div/div[5]/button';
-const criterion2AddDataSourcePath = '//div[9]/criterion-list/div/div[2]/div[2]/criterion-card/div/div[2]/div/div[5]/button';
-
-function createInputDefault(browser) {
-  browser
-    .useCss()
-    .waitForElementVisible('#manual-input-header-step1')
-    .setValue('#workspace-title', title)
-    .setValue('#therapeutic-context', therapeuticContext)
-    .click('#favorability-checkbox');
-
-  manualInputService.addCriterion(browser, criterion1);
-  manualInputService.addCriterion(browser, criterion2);
-  manualInputService.addDataSource(browser, criterion1AddDataSourcePath, dataSource1);
-  manualInputService.addDataSource(browser, criterion2AddDataSourcePath, dataSource2);
-  manualInputService.addAlternative(browser, alternative1);
-  manualInputService.addAlternative(browser, alternative2);
-}
 
 function addCriterion(browser) {
   browser
-    .click('//*[@id="add-criterion-button"]')
-    .setValue('//*[@id="criterion-title-input"]', 'c1')
-    .click('//*[@id="add-criterion-confirm-button"]');
+    .click('#add-criterion-button')
+    .setValue('#criterion-title-input', 'c1')
+    .click('#add-criterion-confirm-button');
+  return browser;
 }
 
-module.exports = {
-  beforeEach: function(browser) {
-    browser.resizeWindow(1366, 728);
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-    browser
-      .useXpath()
-      .click('//*[@id="create-workspace-button"]')
-      .click('//*[@id="manual-workspace-radio"]')
-      .click('//*[@id="add-workspace-button"]');
-  },
+function beforeEach(browser) {
+  browser.resizeWindow(1366, 728);
+  loginService.login(browser);
+  workspaceService.cleanList(browser)
+    .click('#create-workspace-button')
+    .click('#manual-workspace-radio')
+    .click('#add-workspace-button');
+}
 
-  afterEach: function(browser) {
-    errorService.isErrorBarHidden(browser);
-    browser.useCss().end();
-  },
+function afterEach(browser) {
+  errorService.isErrorBarHidden(browser).end();
+}
 
-  'During manual input, cancel adding a criterion': function(browser) {
-    addCriterion(browser);
-    browser
-      .click('//*[@id="add-criterion-button"]')
-      .click('//*[@id="close-modal-button"]')
-      .assert.containsText('/html/body/div[1]/div/div/div[15]/em', 'At least two criteria required');
-  },
+function cancelAddingCriterion(browser) {
+  addCriterion(browser)
+    .click('#add-criterion-button')
+    .click('#close-modal-button')
+    .assert.containsText('#error-1', 'At least two criteria required');
+}
 
-  'During manual input, cancel adding a data source': function(browser) {
-    addCriterion(browser);
-    browser
-      .click('//criterion-list/div/div/div/criterion-card/div/div[2]/div/div[4]/button')
-      .click('//*[@id="close-modal-button"]')
-      .assert.containsText('//criterion-list/div/div/div/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[2]/em', 'No data sources defined');
-  },
+function cancelAddingDataSource(browser) {
+  addCriterion(browser)
+    .click('#add-data-source-0')
+    .click('#close-modal-button')
+    .useXpath()
+    .assert.containsText('//*[@id="criterion-0"]/div[2]/div/div[5]/table/tbody/tr/td[2]/em', 'No data sources defined')
+    .useCss();
+}
 
-  'During manual input, cancel adding an alternative': function(browser) {
-    browser
-      .click('//*[@id="add-alternative-button"]')
-      .click('//*[@id="close-modal-button"]')
-      .assert.containsText('/html/body/div[1]/div/div/div[12]/table/tbody/tr/td[2]/em', 'No alternatives defined');
-  },
+function cancelAddingAlternative(browser) {
+  browser
+    .click('#add-alternative-button')
+    .click('#close-modal-button')
+    .useXpath()
+    .assert.containsText('//*[@id="alternatives-table"]/tbody/tr/td[2]/em', 'No alternatives defined')
+    .useCss();
+}
 
-  'During manual input, cancel editing a criterion': function(browser) {
-    addCriterion(browser);
-    browser
-      .click('/html/body/div[1]/div/div/div[9]/criterion-list/div/div/div/criterion-card/div/div[2]/div/div[2]/div/a[1]/i')
-      .clearValue('//*[@id="criterion-title-input"]')
-      .click('//*[@id="close-modal-button"]')
-      .assert.containsText('/html/body/div[1]/div/div/div[9]/criterion-list/div/div/div/criterion-card/div/div[2]/div/div[1]/h5', 'c1');
-  },
+function cancelEditingCriterion(browser) {
+  addCriterion(browser)
+    .click('#edit-criterion-0')
+    .clearValue('#criterion-title-input')
+    .click('#close-modal-button')
+    .assert.containsText('#criterion-title-0', 'c1');
+}
 
-  'During manual input, cancel editing a data source': function(browser) {
-    addCriterion(browser);
-    browser
-      .click('/html/body/div[1]/div/div/div[9]/criterion-list/div/div/div/criterion-card/div/div[2]/div/div[4]/button')
-      .setValue('//*[@id="data-source-reference"]', 'ref')
-      .click('//*[@id="add-data-source-button"]')
-      .click('/html/body/div[1]/div/div/div[9]/criterion-list/div/div/div/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[3]/a/i')
-      .clearValue('//*[@id="data-source-reference"]')
-      .click('//*[@id="close-modal-button"]')
-      .assert.containsText('/html/body/div[1]/div/div/div[9]/criterion-list/div/div/div/criterion-card/div/div[2]/div/div[5]/table/tbody/tr/td[2]/div', 'ref');
-  },
+function cancelEditingDataSource(browser) {
+  addCriterion(browser)
+    .click('#add-data-source-0')
+    .setValue('#data-source-reference', 'ref')
+    .click('#add-data-source-button')
+    .click('#edit-data-source-0-0')
+    .clearValue('#data-source-reference')
+    .click('#close-modal-button')
+    .assert.containsText('#data-source-reference-0-0', 'ref');
+}
 
-  'During manual input, cancel editing an alternative': function(browser) {
-    browser
-      .click('//*[@id="add-alternative-button"]')
-      .setValue('//*[@id="alternative-title"]', 'a1')
-      .click('//*[@id="add-alternative-confirm-button"]')
-      .click('/html/body/div[1]/div/div/div[12]/table/tbody/tr/td[3]/a/i')
-      .click('//*[@id="alternative-title"]')
-      .click('//*[@id="close-modal-button"]')
-      .assert.containsText('/html/body/div[1]/div/div/div[12]/table/tbody/tr/td[2]', 'a1');
-  },
-
-  'During manual input step 2, cancel editing unit of measurement': function(browser) {
-    createInputDefault(browser);
-    browser
-      .useXpath()
-      .click('//*[@id="enter-data-button"]')
-      .click('//*[@id="edit-unit-of-measurement-c1-ref1"]')
-      .setValue('//*[@id="uom-label"]', 'kg')
-      .click('//*[@id="uom-save-button"]')
-      .click('//*[@id="edit-unit-of-measurement-c1-ref1"]')
-      .setValue('//*[@id="uom-label"]', 'l')
-      .click('//*[@id="close-modal-button"]')
-      .assert.containsText('//*[@id="unit-of-measurement-label-c1-ref1"]', 'kg');
-  },
-
-  'During manual input step 2, cancel editing uncertainty': function(browser) {
-    createInputDefault(browser);
-    browser
-      .useXpath()
-      .click('//*[@id="enter-data-button"]')
-      .click('//*[@id="edit-soe-unc-c1-ref1"]')
-      .setValue('//*[@id="uncertainties-input"]', 'none')
-      .click('//*[@id="save-soe-unc-button"]')
-      .click('//*[@id="edit-soe-unc-c1-ref1"]')
-      .setValue('//*[@id="uncertainties-input"]', 'not none')
-      .click('//*[@id="close-modal-button"]')
-      .assert.containsText('//*[@id="uncertainties-c1-ref1"]', 'Unc: none');
-  }
-};
+function cancelEditingAlternative(browser) {
+  browser
+    .click('#add-alternative-button')
+    .setValue('#alternative-title', 'a1')
+    .click('#add-alternative-confirm-button')
+    .click('#edit-alternative-0')
+    .clearValue('#alternative-title')
+    .click('#close-modal-button')
+    .assert.containsText('#alternative-title-0', 'a1');
+}

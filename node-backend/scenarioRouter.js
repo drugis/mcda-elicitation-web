@@ -9,5 +9,6 @@ module.exports = function(db) {
     .get('/:workspaceId/problems/:subProblemId/scenarios/:id', ScenarioHandler.get)
     .post('/:workspaceId/problems/:subProblemId/scenarios', ScenarioHandler.create)
     .post('/:workspaceId/problems/:subProblemId/scenarios/:id', ScenarioHandler.update)
+    .delete('/:workspaceId/problems/:subproblemId/scenarios/:id', ScenarioHandler.delete)
     ;
 };

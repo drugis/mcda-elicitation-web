@@ -20,7 +20,7 @@
     <div class="cell">Which of the following improvements is most important?</div>
     <div class="cell" ng-repeat="criterion in criteria">
       <label>
-        <input id="{{ criterion.id }}-option" type="radio" ng-model="state.mostImportantCriterionId" value="{{criterion.id}}">
+        <input id="matching-option-{{ $index }}" type="radio" ng-model="state.mostImportantCriterionId" value="{{criterion.id}}">
         {{criterion.dataSources[0].pvf.direction}} {{criterion.title}} from {{criterion.worst |
         number}}
         {{getUnitOfMeasurement(criterion)}} to {{criterion.best | number}}

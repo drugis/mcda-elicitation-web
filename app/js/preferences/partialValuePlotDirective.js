@@ -1,12 +1,6 @@
 'use strict';
-define([
-  'd3',
-  'c3'
-],
-  function(
-    d3,
-    c3
-  ) {
+define(['d3', 'c3'],
+  function(d3, c3) {
     var dependencies = [];
     var PartialValuePlotDirective = function() {
       return {

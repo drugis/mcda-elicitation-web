@@ -1,8 +1,13 @@
 'use strict';
-var httpStatus = require('http-status-codes');
+const httpStatus = require('http-status-codes');
+const logger = require('./logger');
+const async = require('async');
+const util = require('./util');
+const _ = require('lodash');
 
 module.exports = function(db) {
-  var ScenarioRepository = require('./scenarioRepository')(db);
+  const ScenarioRepository = require('./scenarioRepository')(db);
+  const WorkspaceRepository = require('./workspaceRepository')(db);
 
   function query(request, response, next) {
     ScenarioRepository.query(
@@ -11,7 +16,7 @@ module.exports = function(db) {
         if (error) {
           next(error);
         } else {
-          response.json(result.rows);
+          response.json(result);
         }
       });
   }
@@ -24,7 +29,7 @@ module.exports = function(db) {
         if (error) {
           next(error);
         } else {
-          response.json(result.rows);
+          response.json(result);
         }
       });
   }
@@ -36,7 +41,7 @@ module.exports = function(db) {
         if (error) {
           next(error);
         } else {
-          response.json(result.rows[0]);
+          response.json(result);
         }
       });
   }
@@ -55,7 +60,7 @@ module.exports = function(db) {
           next(error);
         } else {
           response.status(httpStatus.CREATED);
-          response.json(result.rows[0]);
+          response.json(result);
         }
       }
     );
@@ -75,11 +80,64 @@ module.exports = function(db) {
       });
   }
 
+  function deleteScenario(request, response, next) {
+    const subproblemId = request.params.subproblemId;
+    const scenarioId = request.params.id;
+    const workspaceId = request.params.workspaceId;
+    logger.debug('Deleting workspace/' + workspaceId + '/problem/' + subproblemId + '/scenario/' + scenarioId);
+    db.runInTransaction(_.partial(deleteTransaction, workspaceId, subproblemId, scenarioId), function(error) {
+      if (error) {
+        util.handleError(error, next);
+      } else {
+        logger.debug('Done deleting scenario: ' + scenarioId);
+        response.sendStatus(httpStatus.OK);
+      }
+    });
+  }
+
+  function deleteTransaction(workspaceId, subproblemId, scenarioId, client, transactionCallback) {
+    async.waterfall([
+      _.partial(ScenarioRepository.getScenarioIdsForSubproblem, subproblemId),
+      _.partial(getDefaultScenario, workspaceId),
+      _.partial(setDefaultScenario, workspaceId, scenarioId),
+      _.partial(ScenarioRepository.delete, scenarioId)
+    ], transactionCallback);
+  }
+
+  function getDefaultScenario(workspaceId, scenarioIds, callback) {
+    if (scenarioIds.length === 1) {
+      callback('Cannot delete the only scenario for subproblem');
+    } else {
+      WorkspaceRepository.getDefaultScenarioId(workspaceId, function(error, result) {
+        callback(error, result, scenarioIds);
+      });
+    }
+  }
+
+  function setDefaultScenario(workspaceId, scenarioId, defaultScenarioId, scenarioIds, callback) {
+    if (defaultScenarioId + '' === scenarioId) {
+      const newDefaultScenario = getNewDefaultScenario(scenarioIds, scenarioId);
+      WorkspaceRepository.setDefaultScenario(workspaceId, newDefaultScenario, (error) => {
+        // discarding extra result arguments to make waterfall cleaner
+        callback(error);
+      });
+    } else {
+      callback();
+    }
+  }
+
+  function getNewDefaultScenario(scenarioIds, currentDefaultScenarioId) {
+    return _.reject(scenarioIds, function(id) {
+      return id + '' === currentDefaultScenarioId;
+    })[0];
+  }
+
   return {
     query: query,
     queryForSubProblem: queryForSubProblem,
     get: get,
     create: create,
-    update: update
+    update: update,
+    delete: deleteScenario
   };
 };

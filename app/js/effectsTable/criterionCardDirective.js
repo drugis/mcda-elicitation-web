@@ -23,7 +23,7 @@ define(['lodash'], function(_) {
         'goUp': '=',
         'goDown': '=',
         'removeCriterion': '=',
-        'idx': '=',
+        'criterionIndex': '=',
         'editCriterion': '=',
         'isInput': '=',
         'saveOrdering': '=',
@@ -31,7 +31,8 @@ define(['lodash'], function(_) {
         'editMode': '=',
         'scales': '=',
         'alternatives': '=',
-        'effectsTableInfo': '='
+        'effectsTableInfo': '=',
+        'problemCriterion': '='
       },
       templateUrl: '../effectsTable/criterionCardDirective.html',
       link: function(scope) {
@@ -42,12 +43,12 @@ define(['lodash'], function(_) {
         scope.dataSourceUp = dataSourceUp;
         scope.removeDataSource = removeDataSource;
         scope.editDataSource = editDataSource;
-        
+
         updateSettings();
         setIsCellAnalysisViable();
-        
+
         scope.$on('elicit.settingsChanged', updateSettings);
-        scope.$watch('scales',setIsCellAnalysisViable );
+        scope.$watch('scales', setIsCellAnalysisViable);
 
         function setIsCellAnalysisViable() {
           scope.isCellAnalysisViable = EffectsTableService.createIsCellAnalysisViableForCriterionCard(
@@ -61,25 +62,25 @@ define(['lodash'], function(_) {
         }
 
         function criterionUp() {
-          scope.goUp(scope.idx);
+          scope.goUp(scope.criterionIndex);
           if (!scope.isInput) {
             scope.saveOrdering();
           }
         }
 
         function criterionDown() {
-          scope.goDown(scope.idx);
+          scope.goDown(scope.criterionIndex);
           if (!scope.isInput) {
             scope.saveOrdering();
           }
         }
 
-        function dataSourceDown(criterion, idx) {
-          swapAndSave(criterion.dataSources, idx, idx + 1);
+        function dataSourceDown(criterion, dataSourceIndex) {
+          swapAndSave(criterion.dataSources, dataSourceIndex, dataSourceIndex + 1);
         }
 
-        function dataSourceUp(criterion, idx) {
-          swapAndSave(criterion.dataSources, idx, idx - 1);
+        function dataSourceUp(criterion, dataSourceIndex) {
+          swapAndSave(criterion.dataSources, dataSourceIndex, dataSourceIndex - 1);
         }
 
         function removeDataSource(dataSource) {
@@ -94,9 +95,10 @@ define(['lodash'], function(_) {
               callback: function() {
                 return function(newDataSource) {
                   if (dataSource) {
-                    scope.criterion.dataSources[dataSourceIndex] = newDataSource;
+                    scope.criterion.dataSources[dataSourceIndex] = _.merge({}, dataSource, newDataSource);
                     if (!scope.isInput) {
-                      scope.saveWorkspace(scope.criterion, scope.criterion.id);
+                      scope.problemCriterion.dataSources[dataSourceIndex] = newDataSource;
+                      scope.saveWorkspace(scope.problemCriterion, scope.criterion.id);
                     }
                   } else {
                     scope.criterion.dataSources.push(newDataSource);
@@ -104,18 +106,17 @@ define(['lodash'], function(_) {
                 };
               },
               dataSources: function() {
-                return scope.criterion.dataSources;
+                return scope.isInput? scope.criterion.dataSources : scope.problemCriterion.dataSources;
               },
               dataSource: function() {
-                return dataSource;
+                return  scope.isInput? scope.criterion.dataSources[dataSourceIndex] : scope.problemCriterion.dataSources[dataSourceIndex];
               }
             }
           });
         }
 
-        // private
-        function swapAndSave(array, idx, newIdx) {
-          swap(array, idx, newIdx);
+        function swapAndSave(array, dataSourceIndex, newDataSourceIndex) {
+          swap(array, dataSourceIndex, newDataSourceIndex);
           if (!scope.isInput) {
             scope.saveOrdering();
           }

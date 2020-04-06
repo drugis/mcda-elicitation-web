@@ -1,4 +1,4 @@
-<div class="grid-x underlined-div">
+<div class="grid-x">
   <div class="cell large-10">
     <h4>
       Weights <inline-help help-key="representative-weights"></inline-help>
@@ -16,8 +16,11 @@
       </thead>
       <tbody>
         <tr>
-          <td id="{{criterion.id}}-weight" ng-repeat="criterion in criteria" class="text-centered">
+          <td id="criterion-{{ $index }}-weight" ng-if="weights[criterion.id]" ng-repeat="criterion in criteria" class="text-centered">
             {{weights[criterion.id] | number}}
+          </td>
+          <td ng-if="!weights[criterion.id]" ng-repeat="criterion in criteria" class="text-centered">
+            <i class="fa fa-spinner fa-spin"></i>
           </td>
         </tr>
       </tbody>

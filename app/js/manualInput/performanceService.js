@@ -111,7 +111,7 @@ define(['lodash', 'angular'], function(_) {
     function buildTextPerformance(cell) {
       return {
         type: 'empty',
-        value: cell.firstParameter
+        value: '' + cell.firstParameter // make sure entered numbers are saved as strings
       };
     }
 

@@ -30,16 +30,25 @@
           <td>{{criterion.description}}</td>
           <td>{{criterion.dataSources[0].unitOfMeasurement.label}}</td>
           <td class="text-centered">
-            {{criterion.dataSources[0].pvf.range && pvf.worst(criterion.dataSources[0]) | number}}</td>
+            {{criterion.dataSources[0].pvf.range && pvf.worst(criterion.dataSources[0]) | number}}
+          </td>
           <td class="text-centered">
-            {{criterion.dataSources[0].pvf.range && pvf.best(criterion.dataSources[0]) | number}}</td>
-          <td class="text-centered" id="{{ criterion.id }}-ranking">{{importance[criterion.id]}}</td>
-          <td class="text-centered">{{weights[criterion.id] | number}}</td>
+            {{criterion.dataSources[0].pvf.range && pvf.best(criterion.dataSources[0]) | number}}
+          </td>
+          <td id="importance-criterion-{{ $index }}" class="text-centered">
+            {{importance[criterion.id]}}
+          </td>
+          <td id="weight-criterion-{{ $index }}" class="text-centered" ng-if="weights[criterion.id]">
+            {{weights[criterion.id] | number}}
+          </td>
+          <td class="text-centered" ng-if="!weights[criterion.id]">
+            <i class="fa fa-spinner fa-spin"></i>
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
-  <div class="cell" ng-if="!criteriaHavePvf">
+  <div id="not-all-pvfs-set-warning" class="cell" ng-if="!criteriaHavePvf">
     <em>Not all partial value functions are defined</em>
   </div>
   <div class="cell large-4 button-group" ng-if="editMode.canEdit">

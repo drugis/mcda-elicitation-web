@@ -1,23 +1,29 @@
 'use strict';
 
-const _ = require('lodash');
+module.exports = {
+  beforeEach: beforeEach,
+  afterEach: afterEach,
+  'Create subproblem': create,
+  'Re-enabling datasources, and criteria during subproblem creation': toggleDataSourcesAndCriteria,
+  'Switching between subproblems': switchSubproblem,
+  'Edit the title': edit,
+  'Reset during subproblem creation': reset,
+  'Interact with scale sliders': changeScale,
+  'Deleting': deleteSubproblem,
+  'Cancel deleting': cancelDeleteSubproblem
+};
 
 const loginService = require('./util/loginService');
 const workspaceService = require('./util/workspaceService');
 const errorService = require('./util/errorService');
-
-const testUrl = require('./util/constants').testUrl;
+const util = require('./util/util');
 
 const subproblem1 = {
   title: 'subproblem1'
 };
-const workspacePath = '/createSubproblemTestProblem.json';
-const title = 'Test workspace';
 
 function setupSubProblem(browser) {
   browser
-    .waitForElementVisible('#workspace-title')
-    .click('#problem-definition-tab')
     .waitForElementVisible('#effects-table-header')
     .click('#create-subproblem-button')
     .waitForElementVisible('#create-subproblem-header')
@@ -26,114 +32,132 @@ function setupSubProblem(browser) {
     .assert.containsText('#missing-values-warning', 'Effects table may not contain missing values')
     .assert.containsText('#multiple-data-sources-warning', 'Effects table may not contain multiple data sources per criterion')
     .setValue('#subproblem-title', subproblem1.title)
-    .click('#deselectionAlternativeId')
-    .click('#deselectionDataSourceId')
-    .click('#deselectionCriterionId')
+    .click('#alternative-2')
+    .click('#datasource-1')
+    .click('#criterion-3')
     .waitForElementVisible('#create-new-subproblem-button:enabled');
+  return browser;
 }
 
-module.exports = {
-  beforeEach: function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-    workspaceService.uploadTestWorkspace(browser, workspacePath);
-  },
+function beforeEach(browser) {
+  loginService.login(browser);
+  workspaceService.cleanList(browser);
+  workspaceService.uploadTestWorkspace(browser, '/createSubproblemTestProblem.json');
+  util.delayedClick(browser, '#problem-definition-tab', '#effects-table-header');
+}
 
-  afterEach: function(browser) {
-    errorService.isErrorBarHidden(browser);
-    browser.pause(50).click('#logo');
-    workspaceService.deleteFromList(browser, 0);
-    errorService.isErrorBarHidden(browser);
-    browser.end();
-  },
+function afterEach(browser) {
+  errorService.isErrorBarHidden(browser);
+  util.delayedClick(browser, '#logo', '#workspaces-header');
+  workspaceService
+    .deleteFromList(browser, 0)
+    .end();
+}
 
-  'Create subproblem': function(browser) {
-    setupSubProblem(browser);
-    browser.click('#create-new-subproblem-button');
-  },
+function create(browser) {
+  setupSubProblem(browser)
+    .click('#create-new-subproblem-button');
+}
 
-  'Re-enabling datasources, and criteria during subproblem creation': function(browser) {
-    setupSubProblem(browser);
-    browser.click('#deselectionDataSourceId')
-      .waitForElementVisible('#create-new-subproblem-button:disabled')
-      .click('#deselectionDataSourceId')
-      .waitForElementVisible('#create-new-subproblem-button:enabled')
+function toggleDataSourcesAndCriteria(browser) {
+  setupSubProblem(browser)
+    .click('#datasource-1')
+    .waitForElementVisible('#create-new-subproblem-button:disabled')
+    .click('#datasource-1')
+    .waitForElementVisible('#create-new-subproblem-button:enabled')
 
-      .click('#deselectionCriterionId')
-      .waitForElementVisible('#create-new-subproblem-button:disabled')
-      .click('#deselectionCriterionId')
-      .waitForElementVisible('#create-new-subproblem-button:enabled');
-    browser.click('#create-new-subproblem-button');
-  },
+    .click('#criterion-3')
+    .waitForElementVisible('#create-new-subproblem-button:disabled')
+    .click('#criterion-3')
+    .waitForElementVisible('#create-new-subproblem-button:enabled');
+  browser.click('#create-new-subproblem-button');
+}
 
-  'Switching between subproblems': function(browser) {
-    setupSubProblem(browser);
-    browser
-      .waitForElementVisible('#create-new-subproblem-button:enabled')
-      .click('#create-new-subproblem-button')
-      .assert.containsText('#subproblem-selector', subproblem1.title)
-      .click('#subproblem-selector')
-      .click('option[label="Default"]')
-      .assert.containsText('#subproblem-selector', 'Default');
-  },
+function switchSubproblem(browser) {
+  setupSubProblem(browser)
+    .waitForElementVisible('#create-new-subproblem-button:enabled')
+    .click('#create-new-subproblem-button')
+    .assert.containsText('#subproblem-selector', subproblem1.title)
+    .click('#subproblem-selector')
+    .click('option[label="Default"]')
+    .assert.containsText('#subproblem-selector', 'Default');
+}
 
-  'Edit the title': function(browser) {
-    const newTitle = 'not default';
-    browser
-      .waitForElementVisible('#workspace-title')
-      .click('#problem-definition-tab')
-      .waitForElementVisible('#effects-table-header')
-      .click('#edit-subproblem-button')
-      .clearValue('#subproblem-title-input')
-      .waitForElementVisible('#save-subproblem-button:disabled')
-      .setValue('#subproblem-title-input', newTitle)
-      .click('#save-subproblem-button')
-      .waitForElementVisible('#effects-table-header')
-      .assert.containsText('#subproblem-selector', newTitle);
-  },
+function edit(browser) {
+  const newTitle = 'not default';
+  browser
+    .waitForElementVisible('#effects-table-header')
+    .click('#edit-subproblem-button')
+    .clearValue('#subproblem-title-input')
+    .waitForElementVisible('#save-subproblem-button:disabled')
+    .setValue('#subproblem-title-input', newTitle)
+    .click('#save-subproblem-button')
+    .waitForElementVisible('#effects-table-header')
+    .assert.containsText('#subproblem-selector', newTitle);
+}
 
-  'Reset during subproblem creation': function(browser) {
-    setupSubProblem(browser);
-    browser
-      .waitForElementVisible('#create-new-subproblem-button:enabled')
-      .click('#reset-subproblem-button')
-      .waitForElementVisible('#create-new-subproblem-button:disabled')
-      .assert.containsText('#subproblem-title', '')
-      .waitForElementVisible('#deselectionAlternativeId:checked')
-      .waitForElementVisible('#deselectionDataSourceId:checked')
-      .waitForElementVisible('#deselectionCriterionId:checked')
-      .click('#close-modal-button');
-  },
+function reset(browser) {
+  setupSubProblem(browser)
+    .waitForElementVisible('#create-new-subproblem-button:enabled')
+    .click('#reset-subproblem-button')
+    .waitForElementVisible('#create-new-subproblem-button:disabled')
+    .assert.containsText('#subproblem-title', '')
+    .waitForElementVisible('#alternative-2:checked')
+    .waitForElementVisible('#datasource-1:checked')
+    .waitForElementVisible('#criterion-3:checked')
+    .click('#close-modal-button');
+}
 
-  'Interact with scale sliders': function(browser) {
-    setupSubProblem(browser);
-    const lowerValueLabel = '//div[13]/ul/li[1]/div/div[2]/div/span[10]';
-    const upperValueLabel = '//div[13]/ul/li[1]/div/div[2]/div/span[11]';
-    const moveFloor = '//div[13]/ul/li[1]/div/div[1]/a';
-    const moveCeil = '//div[13]/ul/li[1]/div/div[3]/a';
-    const floorLabel = '//div[13]/ul/li[1]/div/div[2]/div/span[8]';
-    const ceilLabel = '//div[13]/ul/li[1]/div/div[2]/div/span[9]';
-    const moveLowerValue = '//div[13]/ul/li[1]/div/div[2]/div/span[6]';
-    const moveUpperValue = '//div[13]/ul/li[1]/div/div[2]/div/span[7]';
+function changeScale(browser) {
+  const lowerValueLabel = '//*[@id="slider-0"]/div/span[10]';
+  const upperValueLabel = '//*[@id="slider-0"]/div/span[11]';
+  const moveFloor = '//*[@id="slider-0-floor"]';
+  const moveCeil = '//*[@id="slider-0-ceil"]';
+  const floorLabel = '//*[@id="slider-0"]/div/span[8]';
+  const ceilLabel = '//*[@id="slider-0"]/div/span[9]';
+  const moveLowerValue = '//*[@id="slider-0"]/div/span[6]';
+  const moveUpperValue = '//*[@id="slider-0"]/div/span[7]';
 
-    browser
-      .useXpath()
-      .assert.containsText(lowerValueLabel, '-200')
-      .assert.containsText(upperValueLabel, '200')
-      .click(moveFloor)
-      .click(moveCeil)
-      .assert.containsText(floorLabel, '-300')
-      .assert.containsText(ceilLabel, '300')
-      .moveToElement(moveLowerValue, 0, 0)
-      .mouseButtonDown(0)
-      .moveToElement(moveFloor, 0, 0)
-      .mouseButtonUp(0)
-      .assert.containsText(lowerValueLabel, '-300')
-      .moveToElement(moveUpperValue, 0, 0)
-      .mouseButtonDown(0)
-      .moveToElement(moveCeil, 0, 0)
-      .mouseButtonUp(0)
-      .assert.containsText(upperValueLabel, '300')
-      .useCss()
-      .click('#close-modal-button');
-  }
-};
+  setupSubProblem(browser)
+    .useXpath()
+    .assert.containsText(lowerValueLabel, '-200')
+    .assert.containsText(upperValueLabel, '200')
+    .click(moveFloor)
+    .click(moveCeil)
+    .assert.containsText(floorLabel, '-300')
+    .assert.containsText(ceilLabel, '300')
+    .moveToElement(moveLowerValue, 0, 0)
+    .mouseButtonDown(0)
+    .moveToElement(moveFloor, 0, 0)
+    .mouseButtonUp(0)
+    .assert.containsText(lowerValueLabel, '-300')
+    .moveToElement(moveUpperValue, 0, 0)
+    .mouseButtonDown(0)
+    .moveToElement(moveCeil, 0, 0)
+    .mouseButtonUp(0)
+    .assert.containsText(upperValueLabel, '300')
+    .useCss()
+    .click('#close-modal-button');
+}
+
+function deleteSubproblem(browser) {
+  browser.waitForElementVisible('#delete-subproblem-disabled');
+  setupSubProblem(browser)
+    .click('#create-new-subproblem-button')
+    .click('#delete-subproblem-button')
+    .waitForElementVisible('#delete-subproblem-header')
+    .click('#delete-subproblem-confirm-button')
+    .waitForElementVisible('#delete-subproblem-disabled')
+    .assert.containsText('#subproblem-selector', 'Default');
+}
+
+function cancelDeleteSubproblem(browser) {
+  browser.waitForElementVisible('#delete-subproblem-disabled');
+  setupSubProblem(browser)
+    .click('#create-new-subproblem-button')
+    .click('#delete-subproblem-button')
+    .waitForElementVisible('#delete-subproblem-header')
+    .click('#close-modal-button')
+    .waitForElementVisible('#delete-subproblem-button')
+    .assert.containsText('#subproblem-selector', subproblem1.title);
+}

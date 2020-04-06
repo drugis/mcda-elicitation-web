@@ -7,8 +7,17 @@ module.exports = function(db) {
     db.query(
       'SELECT settings FROM workspaceSettings WHERE workspaceId = $1',
       [workspaceId],
-      callback);
+      function(error, result) {
+        if (error) {
+          callback(error);
+        } else if (!result.rows.length) {
+          callback(null, {});
+        } else {
+          callback(null, result.rows[0].settings);
+        }
+      });
   }
+
   function put(workspaceId, settings, callback) {
     logger.debug('PUT /workspaces/' + workspaceId + '/workspaceSettings');
     db.query(

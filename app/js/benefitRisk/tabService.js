@@ -8,7 +8,7 @@ define(['lodash'], function(_) {
   ) {
     function getTabStatus(stateName, aggregateState, tasksAccessibility) {
       var hasMissingValues = WorkspaceService.checkForMissingValuesInPerformanceTable(aggregateState.problem.performanceTable);
-
+      var hasTooManyCriteria = _.keys(aggregateState.problem.criteria).length > 12;
       return {
         overview: {
           enabled: true,
@@ -18,14 +18,14 @@ define(['lodash'], function(_) {
           enabled: true,
           active: stateName === 'problem'
         },
-        preferences: getPreferencesTabStatus(stateName, hasMissingValues, tasksAccessibility),
-        deterministic: getDeterministicTabStatus(stateName, hasMissingValues, tasksAccessibility),
-        smaa: getSmaaTabStatus(stateName, hasMissingValues, tasksAccessibility)
+        preferences: getPreferencesTabStatus(stateName, hasMissingValues, hasTooManyCriteria, tasksAccessibility),
+        deterministic: getDeterministicTabStatus(stateName, hasMissingValues, hasTooManyCriteria, tasksAccessibility),
+        smaa: getSmaaTabStatus(stateName, hasMissingValues, hasTooManyCriteria, tasksAccessibility)
       };
     }
 
-    function getSmaaTabStatus(stateName, hasMissingValues, tasksAccessibility) {
-      var status = getSmaaEnabledStatus(hasMissingValues, tasksAccessibility);
+    function getSmaaTabStatus(stateName, hasMissingValues, hasTooManyCriteria, tasksAccessibility) {
+      var status = getSmaaEnabledStatus(hasMissingValues, hasTooManyCriteria, tasksAccessibility);
       return {
         enabled: status.enabled,
         tooltip: status.tooltip,
@@ -33,21 +33,26 @@ define(['lodash'], function(_) {
       };
     }
 
-    function getSmaaEnabledStatus(hasMissingValues, tasksAccessibility) {
+    function getSmaaEnabledStatus(hasMissingValues, hasTooManyCriteria, tasksAccessibility) {
       if (hasMissingValues) {
         return {
           enabled: false,
-          tooltip: 'Cannot perform analysis because effects table contains missing values'
+          tooltip: 'Cannot perform analysis because the effects table contains missing values.'
+        };
+      } else if (hasTooManyCriteria) {
+        return {
+          enabled: false,
+          tooltip: 'Cannot perform analysis because the effects table contains more than 12 criteria.'
         };
       } else if (!tasksAccessibility.preferences) {
         return {
           enabled: false,
-          tooltip: 'Cannot set preferences because problem has multiple datasources per criterion'
+          tooltip: 'Cannot perform analysis because the problem has multiple datasources per criterion.'
         };
       } else if (!tasksAccessibility.results) {
         return {
           enabled: false,
-          tooltip: 'Cannot perform analysis because not all partial value functions are set'
+          tooltip: 'Cannot perform analysis because not all partial value functions are set.'
         };
       } else {
         return {
@@ -56,8 +61,8 @@ define(['lodash'], function(_) {
       }
     }
 
-    function getDeterministicTabStatus(stateName, hasMissingValues, tasksAccessibility) {
-      var status = getDeterministicEnabledStatus(hasMissingValues, tasksAccessibility);
+    function getDeterministicTabStatus(stateName, hasMissingValues, hasTooManyCriteria, tasksAccessibility) {
+      var status = getDeterministicEnabledStatus(hasMissingValues, hasTooManyCriteria, tasksAccessibility);
       return {
         enabled: status.enabled,
         tooltip: status.tooltip,
@@ -65,21 +70,26 @@ define(['lodash'], function(_) {
       };
     }
 
-    function getDeterministicEnabledStatus(hasMissingValues, tasksAccessibility) {
+    function getDeterministicEnabledStatus(hasMissingValues, hasTooManyCriteria, tasksAccessibility) {
       if (hasMissingValues) {
         return {
           enabled: false,
-          tooltip: 'Cannot perform analysis because effects table contains missing values'
+          tooltip: 'Cannot perform analysis because the effects table contains missing values.'
+        };
+      } else if (hasTooManyCriteria) {
+        return {
+          enabled: false,
+          tooltip: 'Cannot perform analysis because the effects table contains more than 12 criteria.'
         };
       } else if (!tasksAccessibility.preferences) {
         return {
           enabled: false,
-          tooltip: 'Cannot set preferences because problem has multiple datasources per criterion'
+          tooltip: 'Cannot perform analysis because the problem has multiple datasources per criterion.'
         };
       } else if (!tasksAccessibility.results) {
         return {
           enabled: false,
-          tooltip: 'Cannot perform analysis because not all partial value functions are set'
+          tooltip: 'Cannot perform analysis because not all partial value functions are set.'
         };
       } else {
         return {
@@ -88,8 +98,8 @@ define(['lodash'], function(_) {
       }
     }
 
-    function getPreferencesTabStatus(stateName, hasMissingValues, tasksAccessibility) {
-      var status = getPreferencesEnabledStatus(hasMissingValues, tasksAccessibility);
+    function getPreferencesTabStatus(stateName, hasMissingValues, hasTooManyCriteria, tasksAccessibility) {
+      var status = getPreferencesEnabledStatus(hasMissingValues, hasTooManyCriteria, tasksAccessibility);
       return {
         enabled: status.enabled,
         tooltip: status.tooltip,
@@ -97,16 +107,21 @@ define(['lodash'], function(_) {
       };
     }
 
-    function getPreferencesEnabledStatus(hasMissingValues, tasksAccessibility) {
+    function getPreferencesEnabledStatus(hasMissingValues, hasTooManyCriteria, tasksAccessibility) {
       if (hasMissingValues) {
         return {
           enabled: false,
-          tooltip: 'Cannot elicit preferences because effects table contains missing values'
+          tooltip: 'Cannot elicit preferences because the effects table contains missing values.'
+        };
+      } else if (hasTooManyCriteria) {
+        return {
+          enabled: false,
+          tooltip: 'Cannot elicit preferences because the effects table contains more than 12 criteria.'
         };
       } else if (!tasksAccessibility.preferences) {
         return {
           enabled: false,
-          tooltip: 'Cannot set preferences because problem has multiple datasources per criterion'
+          tooltip: 'Cannot elicit preferences because the problem has multiple datasources per criterion.'
         };
       } else {
         return {

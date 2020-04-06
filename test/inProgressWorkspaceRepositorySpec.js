@@ -21,9 +21,9 @@ function initDBStub() {
 }
 
 describe('the inProgressWorkspace repository', function() {
-  var expectedError = 'error';
   var inProgressWorkspaceId = 1;
   var state = {};
+  var expectedError = 'error';
 
   describe('get', function() {
     initDBStub();
@@ -32,10 +32,25 @@ describe('the inProgressWorkspace repository', function() {
     var queryInputValues = [inProgressWorkspaceId];
 
     it('should get the inProgressWorkspace and call the callback with the result', function(done) {
-      var queryResult = {};
-      var expectedResult = queryResult;
+      var queryResult = {
+        rows: [{}]
+      };
+      var expectedResult = queryResult.rows[0];
       query.onCall(0).yields(null, queryResult);
       var callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
+      inProgressWorkspaceRepository.get(inProgressWorkspaceId, callback);
+    });
+
+    it('should call the callback with an error if result is empty', function(done) {
+      var queryResult = {
+        rows: []
+      };
+      var expectedEmptyResultError = {
+        message: 'In progress workspace with ID 1 not found.',
+        statusCode: 404
+      };
+      query.onCall(0).yields(null, queryResult);
+      var callback = testUtil.createQueryErrorCallbackWithTests(query, expectedQuery, queryInputValues, expectedEmptyResultError, done);
       inProgressWorkspaceRepository.get(inProgressWorkspaceId, callback);
     });
 
@@ -53,8 +68,12 @@ describe('the inProgressWorkspace repository', function() {
     var queryInputValues = [ownerId, state];
 
     it('should create a inProgressWorkspace and return the id', function(done) {
-      var queryResult = {};
-      var expectedResult = queryResult;
+      var queryResult = {
+        rows: [{
+          id: 123
+        }]
+      };
+      var expectedResult = queryResult.rows[0];
       query.onCall(0).yields(null, queryResult);
       var callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       inProgressWorkspaceRepository.create(ownerId, state, callback);
@@ -111,8 +130,10 @@ describe('the inProgressWorkspace repository', function() {
     const queryInputValues = [ownerId];
 
     it('should query all in-progress workspaces for the user', function(done) {
-      const queryResult = {};
-      const expectedResult = queryResult;
+      const queryResult = {
+        rows: []
+      };
+      const expectedResult = queryResult.rows;
       query.onCall(0).yields(null, queryResult);
       const callback = testUtil.createQueryCallbackWithTests(query, expectedQuery, queryInputValues, expectedResult, done);
       inProgressWorkspaceRepository.query(ownerId, callback);

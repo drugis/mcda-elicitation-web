@@ -1,9 +1,7 @@
-<div ng-if="!state.results">
-  <div class="grid-x" style="margin-top: 15em">
-    <div class="cell">
-      <progressbar value="progress"></progressbar>
+<div class="grid-x" ng-if="!state.results">
+    <div class="cell text-centered">
+      <a class="fa fa-spinner fa-2x fa-spin"></a>
     </div>
-  </div>
 </div>
 
 <div ng-if="state.results">

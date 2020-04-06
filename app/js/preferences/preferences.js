@@ -11,6 +11,7 @@ define([
   './preferencesController',
   './setMatchingWeightController',
   './swingWeightingController',
+  './deleteScenarioController',
 
   './partialValueFunctionService',
   './preferencesService',
@@ -20,6 +21,7 @@ define([
 
   './tradeOffDirective',
   './elicitationTradeOffDirective',
+  './elicitationTradeOffPlotDirective',
   './scenarioDirective',
   './partialValueFunctionDirective',
   './partialValuePlotDirective',
@@ -40,6 +42,7 @@ define([
   PreferencesController,
   SetMatchingWeightController,
   SwingWeightingController,
+  DeleteScenarioController,
 
   PartialValueFunctionService,
   PreferencesService,
@@ -49,6 +52,7 @@ define([
 
   tradeOffDirective,
   elicitationTradeOffDirective,
+  elicitationTradeOffPlotDirective,
   scenarioDirective,
   partialValueFunctionDirective,
   partialValuePlotDirective,
@@ -67,20 +71,22 @@ define([
     .controller('PreferencesController', PreferencesController)
     .controller('SetMatchingWeightController', SetMatchingWeightController)
     .controller('SwingWeightingController', SwingWeightingController)
+    .controller('DeleteScenarioController', DeleteScenarioController)
 
     .factory('PartialValueFunctionService', PartialValueFunctionService)
     .factory('SwingWeightingService', SwingWeightingService)
     .factory('PreferencesService', PreferencesService)
     .factory('TradeOffService', TradeOffService)
     .factory('ScenarioService', ScenarioService)
-
+    
+    .directive('tradeOff', tradeOffDirective)
     .directive('elicitationTradeOff', elicitationTradeOffDirective)
+    .directive('elicitationTradeOffPlot', elicitationTradeOffPlotDirective)
     .directive('scenario', scenarioDirective)
     .directive('partialValueFunctions', partialValueFunctionDirective)
     .directive('partialValuePlot', partialValuePlotDirective)
     .directive('preferenceElicitationTable', preferenceElicitationTableDirective)
-    .directive('tradeOff', tradeOffDirective)
-    .directive('willingnessToTradeOff', willingnessToTradeOffDirective)
     .directive('willingnessToTradeOffChart', willingnessToTradeOffChartDirective)
+    .directive('willingnessToTradeOff', willingnessToTradeOffDirective)
     ;
 });

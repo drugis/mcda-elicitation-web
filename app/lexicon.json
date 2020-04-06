@@ -4,11 +4,6 @@
     "text": "An alternative is one of the different options for treatment/intervention being explored in a benefit-risk analysis, e.g. \"aspirin 40 mg/day\" or \"meditation therapy\".",
     "link": "/manual.html#mcda-manual-entry"
   },
-  "alternatives-per-rank": {
-    "title": "Alternatives per rank",
-    "text": "How likely each alterntive is to have a specific rank (with 1 being best) overall.",
-    "link": "/manual.html#mcda-smaa-results"
-  },
   "analysis-type": {
     "title": "Analysis type",
     "text": "Choose whether to display Deterministic (effects) or SMAA (distribution) values",
@@ -149,15 +144,15 @@
     "text": "Partial value functions can be either linear (a straight line between two points) or piece-wise linear, meaning the function consists of several linear segments.",
     "link": "/manual.html#mcda-value-tradeoffs"
   },
+  "random-seed": {
+    "title": "Random seed",
+    "text": "The random seed that is used in R calculations.",
+    "link": "/manual.html#mcda-benefit-risk-analysis"
+  },
   "rank-acceptabilities": {
     "title": "Rank acceptabilities",
     "text": "How likely each intervention is to overall be the best, worst, or any rank in between, based on the SMAA model results for the given preferences and data.",
     "link": "/manual.html#mcda-benefit-risk-analysis"
-  },
-  "ranks-per-alternative": {
-    "title": "Ranks per alternative",
-    "text": "How likely a specific alterntive is to have each rank (with 1 being best) overall.",
-    "link": "/manual.html#mcda-smaa-results"
   },
   "ranking": {
     "title": "Ranking",

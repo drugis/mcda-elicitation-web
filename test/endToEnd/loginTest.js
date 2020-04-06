@@ -1,23 +1,23 @@
 'use strict';
 
+module.exports = {
+  'MCDA login success': login,
+  'MCDA login fail': loginFail
+};
+
 const loginService = require('./util/loginService.js');
 const errorService = require('./util/errorService.js');
 
-const testUrl = require('./util/constants').testUrl;
+function login(browser) {
+  loginService.login(browser);
+  errorService.isErrorBarNotPresent(browser);
+  browser
+    .waitForElementVisible('#workspaces-header')
+    .end();
+}
 
-module.exports = {
-  'MCDA login success': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.correctPassword);
-    errorService.isErrorBarNotPresent(browser);
-    browser
-      .waitForElementVisible('#workspaces-header')
-      .end();
-  },
-
-  'MCDA login fail': function(browser) {
-    loginService.login(browser, testUrl, loginService.username, loginService.incorrectPassword);
-    browser
-      .waitForElementVisible('#loginWarning')
-      .end();
-  }
-};
+function loginFail(browser) {
+  loginService.login(browser, 'wrong name', 'wrong password')
+    .waitForElementVisible('#loginWarning')
+    .end();
+}
