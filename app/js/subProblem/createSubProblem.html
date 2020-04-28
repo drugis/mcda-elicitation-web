@@ -51,8 +51,9 @@
                 style="min-width:120px;" class="text-center" ng-repeat="alternative in alternatives">
                 <div class="grid-x">
                   <div class="cell">
-                    <input style="margin:0;" ng-if="!isBaseline[alternative.id]" id="alternative-{{$index}}" type="checkbox"
-                      ng-model="subProblemState.alternativeInclusions[alternative.id]" ng-change="updateInclusions()"
+                    <input style="margin:0;" ng-if="!isBaseline[alternative.id]" id="alternative-{{$index}}"
+                      type="checkbox" ng-model="subProblemState.alternativeInclusions[alternative.id]"
+                      ng-change="updateInclusions()"
                       ng-disabled="subProblemState.alternativeInclusions[alternative.id] && subProblemState.numberOfAlternativesSelected < 3">
                     <i ng-if="isBaseline[alternative.id]" class="fa fa-ban" tooltip="Cannot deselect baseline"></i>
                   </div>
@@ -105,7 +106,7 @@
                 ng-style="isValueView && !isCellAnalysisViable[row.dataSource.id][alternative.id] ? {'background-color':'#f3d3c8'} : {}">
                 <div class="grid-x">
                   <div class="cell large-1" style="min-width:13px;">
-                    <input id="datasource-{{$parent.$parent.$parent.$index}}" type="checkbox" ng-if="$first" 
+                    <input id="datasource-{{$parent.$parent.$parent.$index}}" type="checkbox" ng-if="$first"
                       ng-model="subProblemState.dataSourceInclusions[row.dataSource.id]" ng-change="updateInclusions()"
                       ng-disabled="!subProblemState.criterionInclusions[row.criterion.id] || subProblemState.numberOfDataSourcesPerCriterion[row.criterion.id] === 1 && subProblemState.dataSourceInclusions[row.dataSource.id]">
                   </div>
@@ -142,14 +143,7 @@
           </tbody>
         </table>
       </div>
-      <div id="missing-values-warning" class="cell alert" ng-if="hasMissingValues">
-        <em>Effects table may not contain missing values</em>
-      </div>
-      <div id="multiple-data-sources-warning" class="cell alert" ng-if="areTooManyDataSourcesSelected">
-        <em>Effects table may not contain multiple data sources per criterion</em>
-      </div>
-      <div ng-if="warnings.length && !hasMissingValues && !areTooManyDataSourcesSelected"
-        ng-repeat="warning in warnings">
+      <div id="missing-value-warning-{{$index}}" ng-if="missingValueWarnings.length" ng-repeat="warning in missingValueWarnings">
         <i class="fa fa-exclamation-triangle"></i> {{warning}}
       </div>
       <!-- Scale ranges -->
@@ -157,11 +151,15 @@
         <h4>Scale ranges
           <inline-help help-key="scale-ranges"></inline-help>
         </h4>
-        <p>The area in red indicates the estimated 95% Credible Interval (CrI) of the measurements and should not be
-          moved
-          into or over.</p>
       </div>
-      <div class="cell">
+      <div id="scale-blocking-warning-{{$index}}" ng-if="scaleBlockingWarnings.length" ng-repeat="warning in scaleBlockingWarnings">
+        <i class="fa fa-exclamation-triangle"></i> {{warning}}, therefore no scales can be set and this problem cannot be analyzed.
+      </div>
+      <div class="cell" ng-if="!scaleBlockingWarnings.length">
+        <p>The area in red indicates the estimated 95% Credible Interval (CrI) of the measurements and should not be
+          moved into or over.</p>
+      </div>
+      <div class="cell" ng-if="!scaleBlockingWarnings.length">
         <ul class="no-bullet">
           <li ng-repeat="dataSource in scalesDataSources">
             <h5 class="subheader">
@@ -173,7 +171,8 @@
             </h5>
             <div class="grid-x">
               <div class="cell large-1 text-center">
-                <a id="slider-{{ $index }}-floor" ng-click="scalesState[dataSource].increaseFrom()" class="tiny round button slider-buttons">&lt;</a>
+                <a id="slider-{{ $index }}-floor" ng-click="scalesState[dataSource].increaseFrom()"
+                  class="tiny round button slider-buttons">&lt;</a>
               </div>
               <div id="slider-{{ $index }}" class="cell large-10">
                 <rzslider rz-slider-model="choices[dataSource].from" rz-slider-high="choices[dataSource].to"
@@ -181,7 +180,8 @@
                 </rzslider>
               </div>
               <div class="cell large-1 pull-3 text-center">
-                <a id="slider-{{ $index }}-ceil" ng-click="scalesState[dataSource].increaseTo()" class="tiny round button slider-buttons">&gt;</a>
+                <a id="slider-{{ $index }}-ceil" ng-click="scalesState[dataSource].increaseTo()"
+                  class="tiny round button slider-buttons">&gt;</a>
               </div>
             </div>
             <br>
@@ -193,7 +193,7 @@
       </div>
       <div class="cell large-6">
         <button id="create-new-subproblem-button" class="button success" type="submit"
-          ng-disabled="isTitleDuplicate || !subProblemState.title || invalidSlider || hasMissingValues || areTooManyDataSourcesSelected">Create</button>
+          ng-disabled="isTitleDuplicate || !subProblemState.title || invalidSlider">Create</button>
       </div>
     </div>
     <button id="close-modal-button" ng-click="cancel()" class="close-button" aria-label="Close reveal" type="button">
