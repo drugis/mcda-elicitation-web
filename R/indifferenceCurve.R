@@ -1,16 +1,19 @@
+# import getSelectedCriteria from util.R
+# import genRepresentativeWeights from weights.R
+# import createPvf from pvf.R
+
 run_indifferenceCurve <- function(params) {
   criteria <- getSelectedCriteria(params$indifferenceCurve)
   getDifferenceWithReference <- getDifferenceWithReferenceFunction(params, criteria)
   cutOffs <- getCutoffs(params, criteria)
   ranges <- getRanges(params$criteria, criteria)
   coordinatesForCutoffs <- getCoordinatesForCutoffs(cutOffs, getDifferenceWithReference, ranges)
-  coordinates <- getCoordinates(cutOffs, coordinatesForCutoffs, ranges)
-  return(coordinates)
+  return(calculateIndifferenceCurve(cutOffs, coordinatesForCutoffs, ranges))
 }
 
 getDifferenceWithReferenceFunction <- function(params, criteria) {
   weights <- genRepresentativeWeights(params)
-  pvf <- lapply(params$criteria, create.pvf)
+  pvf <- lapply(params$criteria, createPvf)
   referencePoint <- c(params$indifferenceCurve$x, params$indifferenceCurve$y)
   indifferenceValue <- getIndifferenceValue(weights, criteria, pvf, referencePoint)
   getDifferenceWithReference <- function(x, y) {
@@ -28,13 +31,13 @@ getIndifferenceValue <- function(weights, criteria, pvfsByCriterion, referencePo
 
 getCutoffs <- function(params, criteria) {
   cutoffs <- list(
-    "x" = getCutoffsForCriterion(params$criteria[[criteria$x]]$pvf),
-    "y" = getCutoffsForCriterion(params$criteria[[criteria$y]]$pvf)
+    "x" = getCutoffsForPvf(params$criteria[[criteria$x]]$pvf),
+    "y" = getCutoffsForPvf(params$criteria[[criteria$y]]$pvf)
   )
   return(cutoffs)
 }
 
-getCutoffsForCriterion <- function(pvf) {
+getCutoffsForPvf <- function(pvf) {
   cutoffs <- pvf$range
   if (pvf$type != "linear") {
     cutoffs <- c(cutoffs, pvf$cutoffs)
@@ -58,23 +61,23 @@ getCoordinatesForCutoffs <- function(cutOffs, getDifferenceWithReference, ranges
   return(coordinatesForCutoffs)
 }
 
-getYCoordinateForXCutoff <- function(xCutOffs, getValueDifference, yRange) {
+getYCoordinateForXCutoff <- function(xCutOffs, getDifferenceWithReference, yRange) {
   yCoordinateForXCutoff <- c()
   for (x in xCutOffs) {
-    yCoordinateForXCutoff <- c(yCoordinateForXCutoff, uniroot(f = getValueDifference, interval = yRange, x = x, extendInt = "yes")$root)
+    yCoordinateForXCutoff <- c(yCoordinateForXCutoff, uniroot(f = getDifferenceWithReference, interval = yRange, x = x, extendInt = "yes")$root)
   }
   return(yCoordinateForXCutoff)
 }
 
-getXCoordinateForYCutOff <- function(yCutOffs, getValueDifference, yRange) {
+getXCoordinateForYCutOff <- function(yCutOffs, getDifferenceWithReference, yRange) {
   xCoordinateForYCutoff <- c()
   for (y in yCutOffs) {
-    xCoordinateForYCutoff <- c(xCoordinateForYCutoff, uniroot(f = getValueDifference, interval = yRange, y = y, extendInt = "yes")$root)
+    xCoordinateForYCutoff <- c(xCoordinateForYCutoff, uniroot(f = getDifferenceWithReference, interval = yRange, y = y, extendInt = "yes")$root)
   }
   return(xCoordinateForYCutoff)
 }
 
-getCoordinates <- function(cutOffs, coordinatesForCutoffs, ranges) {
+calculateIndifferenceCurve <- function(cutOffs, coordinatesForCutoffs, ranges) {
   coordinates <- data.frame(
     "x" = c(cutOffs$x, coordinatesForCutoffs$xForY),
     "y" = c(coordinatesForCutoffs$yForX, cutOffs$y)

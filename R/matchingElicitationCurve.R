@@ -1,3 +1,6 @@
+# import getSelectedCriteria from util.R
+# import createPvf from pvf.R
+
 run_matchingElicitationCurve <- function(params) {
   criteria <- getSelectedCriteria(params$indifferenceCurve)
   weight <- getMatchingWeight(params, criteria$y)
@@ -19,7 +22,7 @@ run_matchingElicitationCurve <- function(params) {
 }
 
 getMatchingWeight <- function(params, criterionY) {
-  pvf <- create.pvf(params$criteria[[criterionY]])
+  pvf <- createPvf(params$criteria[[criterionY]])
   chosenY <- params$indifferenceCurve$chosenY
   if (!is.null(params$criteria[[criterionY]]$isFavorable) && !params$criteria[[criterionY]]$isFavorable) {
     return(1 - pvf(chosenY))

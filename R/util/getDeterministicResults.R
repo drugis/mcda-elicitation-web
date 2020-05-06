@@ -1,3 +1,6 @@
+# import wrapMatrix from util.R
+# import genRepresentativeWeights from weights.R
+
 getDeterministicResults <- function(params, measurements) {
   weights <- genRepresentativeWeights(params)
   valueProfiles <- calculateValueProfiles(params, measurements, weights)

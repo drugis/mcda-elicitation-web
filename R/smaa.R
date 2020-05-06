@@ -1,3 +1,8 @@
+# import wrapMatrix from util.R
+# import sampleWeights from weights.R
+# import hitAndRunSamples from constants.R
+# import createPvf from pvf.R
+
 run_smaa <- function(params) {
   smaaResults <- getSmaaResults(params)
   return(formatSmaaResults(smaaResults, names(params$alternatives)))
@@ -44,7 +49,7 @@ getSmaaMeasurements <- function(params, criteria) {
 
 applyMeasurementUncertainty <- function(params, criteria, measurements) {
   medianMeasurements <- genMedianMeasurements(params)
-  pvf <- lapply(params$criteria, create.pvf)
+  pvf <- lapply(params$criteria, createPvf)
   for (criterion in criteria) {
     medianMeasurements[, criterion] <- pvf[[criterion]](medianMeasurements[, criterion])
   }

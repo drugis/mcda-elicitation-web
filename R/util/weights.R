@@ -1,3 +1,6 @@
+# import hitAndRunSamples from constants.R
+# import genHARconstraint from constraint.R
+
 genRepresentativeWeights <- function(params) {
   criteria <- names(params$criteria)
   weights <- sampleWeights(params$preferences, criteria)

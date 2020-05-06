@@ -1,3 +1,6 @@
+# import wrapMatrix from util.R
+# import genRepresentativeWeights from weights.R
+
 run_sensitivityMeasurementsPlot <- function(params) {
   alternative <- params$sensitivityAnalysis["alternative"]
   criterion <- params$sensitivityAnalysis["criterion"]

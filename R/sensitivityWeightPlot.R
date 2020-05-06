@@ -1,3 +1,6 @@
+# import wrapMatrix from util.R
+# import genRepresentativeWeights from weights.R
+
 run_sensitivityWeightPlot <- function(params) {
   criterion <- params$sensitivityAnalysis["criterion"]
   totalValue <- getTotalValueForSensitivityWeightPlot(criterion, params)

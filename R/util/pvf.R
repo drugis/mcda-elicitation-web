@@ -1,4 +1,7 @@
-create.pvf <- function(criterion) {
+# import sample form sampler.R
+# import createPvf from pvf.R
+
+createPvf <- function(criterion) {
   pvf <- criterion$pvf
   if (pvf$direction == 'increasing') {
     worst <- pvf$range[1]
@@ -35,7 +38,7 @@ partialValue <- function(best, worst, cutoffs=numeric(), values=numeric()) {
 }
 
 sample.partialValues <- function(params, N) {
-  pvf <- lapply(params$criteria, create.pvf);
+  pvf <- lapply(params$criteria, createPvf);
   measurements <- sample(names(params$alternatives), names(params$criteria), params$performanceTable, N)
   for (criterion in names(params$criteria)) {
     measurements[,,criterion] <- pvf[[criterion]](measurements[,,criterion])

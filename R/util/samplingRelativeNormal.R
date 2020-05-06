@@ -1,3 +1,5 @@
+# import logit from util.R
+
 icloglog <- function(x) {
   return(1 - exp(-exp(x)))
 }

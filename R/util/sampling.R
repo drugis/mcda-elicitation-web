@@ -1,12 +1,12 @@
 sample <- function(alternatives, criteria, performanceTable, N) {
   measurements <- array(dim=c(N,length(alternatives), length(criteria)), dimnames=list(NULL, alternatives, criteria))
   for (measurement in performanceTable) {
-    measurements <- assign.sample(measurement, measurements)
+    measurements <- assignSample(measurement, measurements)
   }
   return(measurements)
 }
 
-assign.sample <- function(performanceEntry, samples) {
+assignSample <- function(performanceEntry, samples) {
   if (!is.null(performanceEntry$alternative)) { 
     return(getAbsoluteEstimates(samples, performanceEntry))
   } else {

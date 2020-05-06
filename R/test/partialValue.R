@@ -1,7 +1,7 @@
 library('RJSONIO')
 
-pvf1 <- create.pvf(list(pvf=list(type="linear", direction="increasing", range=c(-0.15, 0.35))))
-pvf2 <- create.pvf(list(pvf=list(type="linear", direction="decreasing", range=c(50, 100))))
+pvf1 <- createPvf(list(pvf=list(type="linear", direction="increasing", range=c(-0.15, 0.35))))
+pvf2 <- createPvf(list(pvf=list(type="linear", direction="decreasing", range=c(50, 100))))
 
 stopifnot(all.equal(pvf1(0.35), 1))
 stopifnot(all.equal(pvf1(-0.15), 0))
@@ -25,8 +25,8 @@ crit2 <- list(type="piecewise-linear",
               cutoffs=c(75, 90),
               values=c(0.8, 0.5))
 
-pvf3 <- create.pvf(list(pvf=crit1))
-pvf4 <- create.pvf(list(pvf=crit2))
+pvf3 <- createPvf(list(pvf=crit1))
+pvf4 <- createPvf(list(pvf=crit2))
 
 stopifnot(all.equal(pvf3(0.35), 1.0))
 stopifnot(all.equal(pvf3(-0.15), 0.0))

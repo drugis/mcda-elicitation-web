@@ -1,3 +1,6 @@
+# import logit from util.R
+# import cloglog from util.R
+
 sampler.dbeta <- function(performance, N) {
   return(rbeta(N, performance$parameters['alpha'], performance$parameters['beta']))
 }
