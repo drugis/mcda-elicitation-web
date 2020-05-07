@@ -138,7 +138,7 @@ Development
 Tests
 -----
 
-Executing tests (front-end unit tests, and back-end unit tests):
+Executing tests (front-end unit tests, back-end, and R unit tests):
 
     npm test
 

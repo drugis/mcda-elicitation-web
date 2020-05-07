@@ -29,20 +29,15 @@ define([
         var state = {
           results: {
             ranks: {
-              data: {
-                altKey1: [0.2, 0.8],
-                altKey2: [0.8, 0.2]
-              }
+              altKey1: [0.2, 0.8],
+              altKey2: [0.8, 0.2]
             },
             cw: {
-              data: {
-                altKey1: {
-                  cf: 0.123,
-                  w: {
-                    critKey1: 0.5,
-                    critKey2: 0.5
-                  }
-
+              altKey1: {
+                cf: 0.123,
+                w: {
+                  critKey1: 0.5,
+                  critKey2: 0.5
                 }
               }
             }
@@ -70,20 +65,15 @@ define([
         var expectedResult = {
           results: {
             ranks: {
-              data: {
-                altKey1: [0.2, 0.8],
-                altKey2: [0.8, 0.2]
-              }
+              altKey1: [0.2, 0.8],
+              altKey2: [0.8, 0.2]
             },
             cw: {
-              data: {
-                altKey1: {
-                  cf: 0.123,
-                  w: {
-                    critKey1: 0.5,
-                    critKey2: 0.5
-                  }
-
+              altKey1: {
+                cf: 0.123,
+                w: {
+                  critKey1: 0.5,
+                  critKey2: 0.5
                 }
               }
             }

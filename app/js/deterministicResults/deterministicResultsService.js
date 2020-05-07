@@ -83,7 +83,7 @@ define([
 
     function getValueData(criterion, alternatives, result) {
       return [criterion.title].concat(_.map(alternatives, function(alternative) {
-        return result.value.data[alternative.id][criterion.id];
+        return result.value[alternative.id][criterion.id];
       }));
     }
 
@@ -93,12 +93,12 @@ define([
     }
 
     function getLineXValues(results, alternatives) {
-      return [['x'].concat(_.keys(results.total.data[alternatives[0].id]))];
+      return [['x'].concat(_.keys(results.total[alternatives[0].id]))];
     }
 
     function getLineYValues(alternatives, legend, results) {
       return _.map(alternatives, function(alternative) {
-        return [legend ? legend[alternative.id].newTitle : alternative.title].concat(_.values(results.total.data[alternative.id]));
+        return [legend ? legend[alternative.id].newTitle : alternative.title].concat(_.values(results.total[alternative.id]));
       });
     }
 

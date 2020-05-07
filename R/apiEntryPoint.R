@@ -1,3 +1,7 @@
+# make sure all files have trailing new lines at the end of the file
+library(MASS)
+library(hitandrun)
+
 smaa_v2 <- function(params) {
   allowed <- c(
     'deterministic',

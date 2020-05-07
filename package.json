@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node index",
-    "test": "mocha && karma start --singleRun",
+    "test": "mocha && karma start --singleRun && npm run test-R",
     "test-end-to-end": "nightwatch -c nightwatch.local.conf.js",
     "build-dev": "webpack --config webpack.dev.js",
     "build-prod": "webpack --config webpack.prod.js",
     "build-local-login": "webpack --config webpack.local.js",
     "dev": "webpack --config webpack.dev.js --watch",
-    "dev-local": "webpack --config webpack.local.js --watch"
+    "dev-local": "webpack --config webpack.local.js --watch",
+    "test-R": "Rscript R/unit-tests/run-tests.R root"
   },
   "repository": {
     "type": "git",

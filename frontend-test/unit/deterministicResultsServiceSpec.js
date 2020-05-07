@@ -114,17 +114,15 @@ define([
     describe('pataviResultToLineValues', function() {
       const pataviResult = {
         total: {
-          data: {
-            Fluox: {
-              0: 1,
-              1: 3,
-              2: 6
-            },
-            Parox: {
-              0: 4,
-              1: 7,
-              2: 5
-            }
+          Fluox: {
+            0: 1,
+            1: 3,
+            2: 6
+          },
+          Parox: {
+            0: 4,
+            1: 7,
+            2: 5
           }
         }
       };
@@ -227,15 +225,13 @@ define([
     describe('getValueProfilePlotSettings', function() {
       const pataviResult = {
         value: {
-          data: {
-            Fluox: {
-              crit1: 1,
-              crit2: 2
-            },
-            Parox: {
-              crit1: 1,
-              crit2: 2
-            }
+          Fluox: {
+            crit1: 1,
+            crit2: 2
+          },
+          Parox: {
+            crit1: 1,
+            crit2: 2
           }
         }
       };

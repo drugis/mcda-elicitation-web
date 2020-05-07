@@ -107,8 +107,8 @@ define([],
             return {
               xs: { line: 'line_x' },
               columns: [
-                ['line_x'].concat(results.data.x),
-                ['line'].concat(results.data.y)
+                ['line_x'].concat(results.x),
+                ['line'].concat(results.y)
               ],
               type: 'line',
             };
