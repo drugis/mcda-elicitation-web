@@ -1,10 +1,23 @@
 'use strict';
-define(['../manualInput/ManualInput', 'react2angular', 'angular'], function (
+define([
+  './inProgressResource',
+  './ManualInput',
+  './manualInputController',
+  'angular',
+  'react2angular'
+], function (
+  InProgressResource,
   ManualInput,
-  react2angular,
-  angular
+  ManualInputController,
+  angular,
+  react2angular
 ) {
   return angular
     .module('elicit.manualInput', [])
-    .component('manualInput', react2angular.react2angular(ManualInput, []));
+    .controller('ManualInputController', ManualInputController)
+    .service('InProgressResource', InProgressResource)
+    .component(
+      'manualInput',
+      react2angular.react2angular(ManualInput.default, [])
+    );
 });
