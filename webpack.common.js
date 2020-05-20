@@ -66,7 +66,7 @@ let config = {
       'node_modules',
       basePath + '/app'
     ],
-    extensions: ['.css', 'html', '.js'] // File types
+    extensions: ['.css', 'html', '.js', '.ts', '.tsx'] // File types
   },
 
   plugins: [
