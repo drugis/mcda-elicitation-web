@@ -1,9 +1,12 @@
 import {Grid} from '@material-ui/core';
-import React from 'react';
+import _ from 'lodash';
+import React, {useContext} from 'react';
+import {ManualInputContext} from '../../ManualInputContext';
 import AddCriterion from './AddCriterion/AddCriterion';
 import Favourability from './Favourability/Favourability';
 
 export default function Criteria() {
+  const {criteria} = useContext(ManualInputContext);
   return (
     <Grid item container xs={12}>
       <Grid item xs={12}>
@@ -12,7 +15,9 @@ export default function Criteria() {
       <Favourability />
       <AddCriterion />
       <Grid item xs={12}>
-        {/* <criterion-list> is-input="true" edit-mode="editMode"></criterion-list> */}
+        {_.map(criteria, (criterion) => {
+          return <div>{criterion.title}</div>;
+        })}
       </Grid>
     </Grid>
   );
