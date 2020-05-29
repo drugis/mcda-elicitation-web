@@ -44,7 +44,7 @@ export default function AddCriterion() {
   }
 
   return (
-    <Grid item xs={12}>
+    <Grid item sm={12}>
       <Button
         id="add-criterion-button"
         variant="contained"
@@ -57,13 +57,13 @@ export default function AddCriterion() {
         open={isDialogOpen}
         onClose={toggleDialog}
         fullWidth
-        maxWidth={'md'}
+        maxWidth={'sm'}
       >
         <DialogTitle id="add-criterion-dialog" onClose={toggleDialog}>
           Add Criterion
         </DialogTitle>
         <DialogContent>
-          <Grid container spacing={2}>
+          <Grid container spacing={1}>
             <CriterionTitle title={title} setTitle={setTitle} />
             <CriterionDescription
               description={description}
@@ -76,12 +76,7 @@ export default function AddCriterion() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={handleSaveClick}
-            color="primary"
-            variant="contained"
-            disabled={!title}
-          >
+          <Button onClick={handleSaveClick} color="primary" disabled={!title}>
             Add
           </Button>
         </DialogActions>

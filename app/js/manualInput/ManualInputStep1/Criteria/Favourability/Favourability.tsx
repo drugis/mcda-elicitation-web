@@ -1,6 +1,6 @@
+import {Checkbox, Grid} from '@material-ui/core';
 import React, {useContext} from 'react';
 import {ManualInputContext} from '../../../ManualInputContext';
-import {Grid, Checkbox} from '@material-ui/core';
 
 export default function Favourability() {
   const {useFavourability, setUseFavourability} = useContext(
@@ -12,7 +12,7 @@ export default function Favourability() {
   }
 
   return (
-    <Grid item xs={12}>
+    <Grid item sm={12}>
       <label>
         Use favourability:
         <Checkbox

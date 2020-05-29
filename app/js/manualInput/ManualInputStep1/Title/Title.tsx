@@ -1,6 +1,6 @@
+import {Grid, TextField} from '@material-ui/core';
 import React, {useContext} from 'react';
 import {ManualInputContext} from '../../ManualInputContext';
-import {Grid, TextField} from '@material-ui/core';
 
 export default function Title() {
   const {title, setTitle} = useContext(ManualInputContext);
@@ -10,17 +10,15 @@ export default function Title() {
   }
 
   return (
-    <Grid container item xs={12}>
-      <Grid item xs={6}>
-        <TextField
-          id="workspace-title"
-          label="Title"
-          variant="outlined"
-          onChange={handleTitleChange}
-          value={title}
-          fullWidth
-        />
-      </Grid>
+    <Grid item sm={12}>
+      <TextField
+        id="workspace-title"
+        label="Title"
+        variant="outlined"
+        onChange={handleTitleChange}
+        value={title}
+        fullWidth
+      />
     </Grid>
   );
 }
