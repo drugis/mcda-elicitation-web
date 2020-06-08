@@ -156,7 +156,7 @@ define(['lodash', 'angular'], function(_, angular) {
         newDataSource.scale = [0, 1];
         newDataSource.unitOfMeasurement = {
           type: 'decimal',
-          label: 'Proportion'
+          label: ''
         };
       }
       return newDataSource;

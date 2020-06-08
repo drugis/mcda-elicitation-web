@@ -28,7 +28,7 @@ function exampleProblem() {
           id: 'distDvtDS',
           unitOfMeasurement: {
             type: 'decimal',
-            label: 'Proportion'
+            label: ''
           },
           pvf: {
             range: [
@@ -187,7 +187,7 @@ function exampleProblem() {
         }
       }
     }],
-    schemaVersion: '1.4.3'
+    schemaVersion: '1.4.4'
   };
 }
 
@@ -298,7 +298,7 @@ function ordinalTestProblem() {
           id: 'distDvtDS',
           unitOfMeasurement: {
             type: 'decimal',
-            label: 'Proportion'
+            label: ''
           },
           pvf: {
             range: [
@@ -457,7 +457,7 @@ function ordinalTestProblem() {
         }
       }
     }],
-    schemaVersion: '1.4.3'
+    schemaVersion: '1.4.4'
   };
 }
 
