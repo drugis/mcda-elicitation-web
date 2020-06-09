@@ -1,4 +1,4 @@
-import {Checkbox, Grid} from '@material-ui/core';
+import {Checkbox} from '@material-ui/core';
 import React, {useContext} from 'react';
 import {ManualInputContext} from '../../../ManualInputContext';
 
@@ -12,16 +12,14 @@ export default function Favourability() {
   }
 
   return (
-    <Grid item sm={12}>
-      <label>
-        Use favourability:
-        <Checkbox
-          id="favourability-checkbox"
-          checked={useFavourability}
-          onChange={handleChangeFavourability}
-          color="primary"
-        />
-      </label>
-    </Grid>
+    <label>
+      Use favourability:
+      <Checkbox
+        id="favourability-checkbox"
+        checked={useFavourability}
+        onChange={handleChangeFavourability}
+        color="primary"
+      />
+    </label>
   );
 }

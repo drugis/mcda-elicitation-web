@@ -1,7 +1,7 @@
 'use strict';
 define([
   './inProgressResource',
-  './ManualInput',
+  './ManualInputWrapper',
   './manualInputController',
   'angular',
   'react2angular'

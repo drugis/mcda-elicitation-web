@@ -1,4 +1,4 @@
-import {Grid, TextField} from '@material-ui/core';
+import {TextField} from '@material-ui/core';
 import React, {useContext} from 'react';
 import {ManualInputContext} from '../../ManualInputContext';
 
@@ -12,17 +12,15 @@ export default function TherapeuticContext() {
   }
 
   return (
-    <Grid item sm={12}>
-      <TextField
-        id="therapeutic-context"
-        label="Therapeutic Context"
-        value={therapeuticContext}
-        variant="outlined"
-        onChange={handleContextChange}
-        fullWidth
-        multiline
-        rows={5}
-      />
-    </Grid>
+    <TextField
+      id="therapeutic-context"
+      label="Therapeutic Context"
+      value={therapeuticContext}
+      variant="outlined"
+      onChange={handleContextChange}
+      fullWidth
+      multiline
+      rows={5}
+    />
   );
 }
