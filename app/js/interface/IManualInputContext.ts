@@ -1,5 +1,6 @@
-import IAlternative from '../manualInput/ManualInput/Interfaces/IAlternative';
+import IAlternative from './IAlternative';
 import ICriterion from './ICriterion';
+import IDataSource from './IDataSource';
 
 export default interface IManualInputContext {
   title: string;
@@ -12,4 +13,6 @@ export default interface IManualInputContext {
   setUseFavourability: (useFavourability: boolean) => void;
   addCriterion: (criterion: ICriterion) => void;
   addAlternative: (alternative: IAlternative) => void;
+  addDataSource: (criterion: ICriterion, dataSource: IDataSource) => void;
+  setCriterion: (criterion: ICriterion) => void;
 }

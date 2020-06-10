@@ -1,8 +1,12 @@
 import React, {useContext} from 'react';
-import {ErrorContext} from './ErrorContext';
 import Error from './Error';
+import {ErrorContext} from './ErrorContext';
 
 export default function ErrorHandler({children}: any) {
   const {error} = useContext(ErrorContext);
-  return error ? <Error/> : children;
+  return (
+    <span>
+      {children} {error ? <Error /> : <></>}
+    </span>
+  );
 }

@@ -18,6 +18,8 @@ export default function AddCriterion() {
   const [title, setTitle] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [isFavourable, setIsFavourable] = useState<boolean>(false);
+  const [id, setId] = useState<string>('');
+  const [unitOfMeasurement, setUnitOfMeasurement] = useState<string>('');
 
   const {addCriterion} = useContext(ManualInputContext);
 
@@ -36,9 +38,11 @@ export default function AddCriterion() {
   function handleSaveClick() {
     toggleDialog();
     const criterion: ICriterion = {
+      id: id,
       title: title,
       description: description,
-      isFavourable: isFavourable
+      isFavourable: isFavourable,
+      dataSources: []
     };
     addCriterion(criterion);
   }
