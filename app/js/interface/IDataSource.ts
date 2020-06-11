@@ -5,4 +5,5 @@ export default interface IDataSource {
   title: string;
   unitOfMeasurement: IUnitOfMeasurement;
   uncertainty: string;
+  strengthOfEvidence: string;
 }

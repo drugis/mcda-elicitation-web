@@ -23,7 +23,8 @@ const placeholderCriteria: ICriterion[] = [
         id: generateUuid(),
         title: 'ds1',
         unitOfMeasurement: defaultUnitOfMeasurement,
-        uncertainty: ''
+        uncertainty: 'unc',
+        strengthOfEvidence: 'soe'
       }
     ],
     isFavourable: true,
@@ -37,7 +38,8 @@ const placeholderCriteria: ICriterion[] = [
         id: generateUuid(),
         title: 'ds1',
         unitOfMeasurement: defaultUnitOfMeasurement,
-        uncertainty: ''
+        uncertainty: 'unc',
+        strengthOfEvidence: 'soe'
       }
     ],
     isFavourable: false,
@@ -57,15 +59,14 @@ export const ManualInputContext = createContext<IManualInputContext>(
 export function ManualInputContextProviderComponent(props: {children: any}) {
   const [title, setTitle] = useState<string>('');
   const [therapeuticContext, setTherapeuticContext] = useState<string>('');
-  const [useFavourability, setUseFavourability] = useState<boolean>(false);
+  const [useFavourability, setUseFavourability] = useState<boolean>(true);
   const [criteria, setCriteria] = useState<ICriterion[]>(placeholderCriteria);
   const [alternatives, setAlternatives] = useState<IAlternative[]>(
     placeholderAlternatives
   );
 
   function addCriterion(isFavourable: boolean) {
-    let criteriaCopy = _.cloneDeep(criteria);
-    criteriaCopy.push({
+    const newCriterion = {
       id: generateUuid(),
       title: 'new criterion',
       description: '',
@@ -75,11 +76,12 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
           id: generateUuid(),
           title: 'new reference',
           uncertainty: '',
-          unitOfMeasurement: defaultUnitOfMeasurement
+          unitOfMeasurement: defaultUnitOfMeasurement,
+          strengthOfEvidence: 'soe'
         }
       ]
-    });
-    setCriteria(criteriaCopy);
+    };
+    setCriteria([...criteria, newCriterion]);
   }
 
   function setCriterion(criterion: ICriterion) {
@@ -90,14 +92,15 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
   }
 
   function deleteCriterion(criterionId: string) {
-    const criteriaCopy = _.reject(_.cloneDeep(criteria), ['id', criterionId]);
-    setCriteria(criteriaCopy);
+    setCriteria(_.reject([...criteria], ['id', criterionId]));
   }
 
-  function addAlternative(alternative: IAlternative) {
-    let alternativesCopy = _.cloneDeep(alternatives);
-    alternativesCopy.push(alternative);
-    setAlternatives(alternativesCopy);
+  function addAlternative() {
+    const newAlternative = {
+      id: generateUuid(),
+      title: 'new alternative'
+    }
+    setAlternatives([...alternatives, newAlternative]);
   }
 
   function setAlternative(alternative: IAlternative) {
@@ -122,15 +125,16 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
       id: generateUuid(),
       title: 'new reference',
       unitOfMeasurement: defaultUnitOfMeasurement,
-      uncertainty: ''
+      uncertainty: 'unc',
+      strengthOfEvidence: 'soe'
     });
     criteriaCopy[index] = criterion;
     setCriteria(criteriaCopy);
   }
 
   function setDataSource(criterion: ICriterion, dataSource: IDataSource) {
-    let criterionCopy = _.cloneDeep(criterion);
-    const index = _.findIndex(criterionCopy.dataSources, ['id', dataSource.id]);
+    const index = _.findIndex(criterion.dataSources, ['id', dataSource.id]);
+    let criterionCopy = {...criterion};
     criterionCopy.dataSources[index] = dataSource;
     setCriterion(criterionCopy);
   }

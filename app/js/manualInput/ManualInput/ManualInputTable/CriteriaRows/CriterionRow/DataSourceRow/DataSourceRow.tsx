@@ -8,6 +8,8 @@ import {ManualInputContext} from '../../../../../ManualInputContext';
 import CriterionDescriptionCell from './CriterionDescriptionCell/CriterionDescriptionCell';
 import CriterionTitleCell from './CriterionTitleCell/CriterionTitleCell';
 import DeleteDataSourceButton from './DeleteDataSourceButton/DeleteDataSourceButton';
+import ReferenceCell from './ReferenceCell/ReferenceCell';
+import SoEUncertaintyCell from './SoEUncertaintyCell/SoEUncertaintyCell';
 import UnitOfMeasurementCell from './UnitOfMeasurementCell/UnitOfMeasurementCell';
 
 export default function DataSourceRow({
@@ -24,7 +26,7 @@ export default function DataSourceRow({
   const {alternatives, deleteCriterion} = useContext(ManualInputContext);
   const numberOfDataSourceRows = criterion.dataSources.length + 1;
 
-  function createCells() {
+  function createValueCells() {
     return _.map(alternatives, (alternative) => {
       return <TableCell key={alternative.id}>0.01</TableCell>;
     });
@@ -38,11 +40,11 @@ export default function DataSourceRow({
     <TableRow>
       {isFirst ? (
         <>
-          <TableCell rowSpan={numberOfDataSourceRows}>
+          <TableCell rowSpan={numberOfDataSourceRows} align={'center'}>
             <Tooltip title="Delete criterion">
               <IconButton
                 size="small"
-                color="primary"
+                color="secondary"
                 onClick={handleDeleteCriterion}
               >
                 <Delete />
@@ -56,18 +58,18 @@ export default function DataSourceRow({
       ) : (
         <></>
       )}
-      <TableCell>
+      <TableCell align={'center'}>
         <DeleteDataSourceButton
           criterion={criterion}
           dataSourceId={dataSource.id}
         />
       </TableCell>
       <TableCell>mv</TableCell>
-      <UnitOfMeasurementCell dataSource={dataSource} />
-      {createCells()}
+      <UnitOfMeasurementCell criterion={criterion} dataSource={dataSource} />
+      {createValueCells()}
       <TableCell></TableCell>
-      <TableCell>{dataSource.uncertainty}</TableCell>
-      <TableCell>{dataSource.title}</TableCell>
+      <SoEUncertaintyCell criterion={criterion} dataSource={dataSource} />
+      <ReferenceCell criterion={criterion} dataSource={dataSource} />
     </TableRow>
   );
 }

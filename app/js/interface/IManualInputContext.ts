@@ -12,7 +12,7 @@ export default interface IManualInputContext {
   setTherapeuticContext: (therapeuticContext: string) => void;
   setUseFavourability: (useFavourability: boolean) => void;
   addCriterion: (isFavourable: boolean) => void;
-  addAlternative: (alternative: IAlternative) => void;
+  addAlternative: () => void;
   addDataSource: (criterion: ICriterion) => void;
   setCriterion: (criterion: ICriterion) => void;
   setAlternative: (alternative: IAlternative) => void;

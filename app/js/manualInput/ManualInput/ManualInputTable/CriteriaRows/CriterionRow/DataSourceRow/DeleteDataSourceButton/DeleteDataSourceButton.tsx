@@ -33,7 +33,7 @@ export default function DeleteDataSourceButton({
       <span>
         <IconButton
           size="small"
-          color="primary"
+          color="secondary"
           onClick={handleDeleteDataSource}
           disabled={criterion.dataSources.length === 1}
         >
