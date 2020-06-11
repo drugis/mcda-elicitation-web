@@ -1,10 +1,12 @@
-import {TableCell, TableRow} from '@material-ui/core';
+import {IconButton, TableCell, TableRow, Tooltip} from '@material-ui/core';
+import Delete from '@material-ui/icons/Delete';
 import _ from 'lodash';
 import React, {useContext} from 'react';
 import ICriterion from '../../../../../../interface/ICriterion';
 import IDataSource from '../../../../../../interface/IDataSource';
 import {ManualInputContext} from '../../../../../ManualInputContext';
 import CriterionTitleCell from './CriterionTitleCell/CriterionTitleCell';
+import DeleteDataSourceButton from './DeleteDataSourceButton/DeleteDataSourceButton';
 
 export default function DataSourceRow({
   criterion,
@@ -17,7 +19,7 @@ export default function DataSourceRow({
   isFirst: boolean;
   isLast: boolean;
 }) {
-  const {alternatives} = useContext(ManualInputContext);
+  const {alternatives, deleteCriterion} = useContext(ManualInputContext);
   const numberOfDataSourceRows = criterion.dataSources.length + 1;
 
   function createCells() {
@@ -26,10 +28,25 @@ export default function DataSourceRow({
     });
   }
 
+  function handleDeleteCriterion() {
+    deleteCriterion(criterion.id);
+  }
+
   return (
     <TableRow>
       {isFirst ? (
         <>
+          <TableCell rowSpan={numberOfDataSourceRows}>
+            <Tooltip title="Delete criterion">
+              <IconButton
+                size="small"
+                color="primary"
+                onClick={handleDeleteCriterion}
+              >
+                <Delete />
+              </IconButton>
+            </Tooltip>
+          </TableCell>
           <TableCell rowSpan={numberOfDataSourceRows}>mv</TableCell>
           <CriterionTitleCell criterion={criterion} />
           <TableCell rowSpan={numberOfDataSourceRows}>
@@ -39,6 +56,12 @@ export default function DataSourceRow({
       ) : (
         <></>
       )}
+      <TableCell>
+        <DeleteDataSourceButton
+          criterion={criterion}
+          dataSourceId={dataSource.id}
+        />
+      </TableCell>
       <TableCell>mv</TableCell>
       <TableCell>{dataSource.unitOfMeasurement}</TableCell>
       {createCells()}

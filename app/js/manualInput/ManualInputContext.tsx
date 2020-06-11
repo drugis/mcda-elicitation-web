@@ -61,9 +61,36 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     setCriteria(criteriaCopy);
   }
 
+  function setCriterion(criterion: ICriterion) {
+    const index = _.findIndex(criteria, ['id', criterion.id]);
+    let criteriaCopy = _.cloneDeep(criteria);
+    criteriaCopy[index] = criterion;
+    setCriteria(criteriaCopy);
+  }
+
+  function deleteCriterion(criterionId: string) {
+    const criteriaCopy = _.reject(_.cloneDeep(criteria), ['id', criterionId]);
+    setCriteria(criteriaCopy);
+  }
+
   function addAlternative(alternative: IAlternative) {
     let alternativesCopy = _.cloneDeep(alternatives);
     alternativesCopy.push(alternative);
+    setAlternatives(alternativesCopy);
+  }
+
+  function setAlternative(alternative: IAlternative) {
+    const index = _.findIndex(alternatives, ['id', alternative.id]);
+    let alternativesCopy = _.cloneDeep(alternatives);
+    alternativesCopy[index] = alternative;
+    setAlternatives(alternativesCopy);
+  }
+
+  function deleteAlternative(alternativeId: string) {
+    const alternativesCopy = _.reject(_.cloneDeep(alternatives), [
+      'id',
+      alternativeId
+    ]);
     setAlternatives(alternativesCopy);
   }
 
@@ -71,13 +98,6 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     const index = _.findIndex(criteria, ['id', criterion.id]);
     let criteriaCopy = _.cloneDeep(criteria);
     criterion.dataSources.push(dataSource);
-    criteriaCopy[index] = criterion;
-    setCriteria(criteriaCopy);
-  }
-
-  function setCriterion(criterion: ICriterion) {
-    const index = _.findIndex(criteria, ['id', criterion.id]);
-    let criteriaCopy = _.cloneDeep(criteria);
     criteriaCopy[index] = criterion;
     setCriteria(criteriaCopy);
   }
@@ -96,7 +116,10 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
         addCriterion: addCriterion,
         addAlternative: addAlternative,
         addDataSource: addDataSource,
-        setCriterion: setCriterion
+        setCriterion: setCriterion,
+        setAlternative: setAlternative,
+        deleteCriterion: deleteCriterion,
+        deleteAlternative: deleteAlternative
       }}
     >
       {props.children}

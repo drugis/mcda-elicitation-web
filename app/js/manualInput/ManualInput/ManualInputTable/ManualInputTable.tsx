@@ -3,6 +3,7 @@ import _ from 'lodash';
 import React, {useContext} from 'react';
 import {ManualInputContext} from '../../ManualInputContext';
 import AddAlternativeButton from './AddAlternativeButton/AddAlternativeButton';
+import AlternativeHeader from './AlternativeHeader/AlternativeHeader';
 import CriteriaRows from './CriteriaRows/CriteriaRows';
 
 export default function ManualInputTable() {
@@ -10,7 +11,9 @@ export default function ManualInputTable() {
 
   function createAlternativeHeaders() {
     return _.map(alternatives, (alternative) => {
-      return <TableCell key={alternative.id}>{alternative.title}</TableCell>;
+      return (
+        <AlternativeHeader key={alternative.id} alternative={alternative} />
+      );
     });
   }
 
@@ -18,8 +21,9 @@ export default function ManualInputTable() {
     <Table size="small">
       <TableHead>
         <TableRow>
-          <TableCell colSpan={2}>Criterion</TableCell>
+          <TableCell colSpan={3}>Criterion</TableCell>
           <TableCell>Description</TableCell>
+          <TableCell></TableCell>
           <TableCell></TableCell>
           <TableCell>Unit of measurement</TableCell>
           {createAlternativeHeaders()}

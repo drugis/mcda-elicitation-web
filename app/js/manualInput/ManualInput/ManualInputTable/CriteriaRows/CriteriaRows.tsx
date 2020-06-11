@@ -10,7 +10,7 @@ export default function CriteriaRows() {
   const {useFavourability, alternatives, criteria} = useContext(
     ManualInputContext
   );
-  const numberOfColumns = alternatives.length + 5;
+  const numberOfColumns = alternatives.length + 6;
 
   function createFavourableCriteriaRows(): JSX.Element[][] {
     return _(criteria)
@@ -28,7 +28,7 @@ export default function CriteriaRows() {
           );
         }).concat(
           <TableRow key={'lastRow'}>
-            <TableCell colSpan={numberOfColumns}>
+            <TableCell colSpan={numberOfColumns} align="center">
               <AddDataSourceButton criterion={criterion} />
             </TableCell>
           </TableRow>
@@ -53,7 +53,7 @@ export default function CriteriaRows() {
           );
         }).concat(
           <TableRow key={'lastRow'}>
-            <TableCell colSpan={numberOfColumns}>
+            <TableCell colSpan={numberOfColumns} align="center">
               <AddDataSourceButton criterion={criterion} />
             </TableCell>
           </TableRow>
@@ -76,7 +76,7 @@ export default function CriteriaRows() {
         );
       }).concat(
         <TableRow key={'lastRow'}>
-          <TableCell colSpan={numberOfColumns}>
+          <TableCell colSpan={numberOfColumns} align="center">
             <AddDataSourceButton criterion={criterion} />
           </TableCell>
         </TableRow>
@@ -88,24 +88,24 @@ export default function CriteriaRows() {
     return (
       <TableBody>
         <TableRow>
-          <TableCell colSpan={8 + alternatives.length}>
+          <TableCell colSpan={10 + alternatives.length}>
             Favourable criteria
           </TableCell>
         </TableRow>
         {createFavourableCriteriaRows()}
         <TableRow>
-          <TableCell colSpan={8 + alternatives.length}>
+          <TableCell colSpan={10 + alternatives.length} align="center">
             <AddCriterionButton isFavourable={true} />
           </TableCell>
         </TableRow>
         <TableRow>
-          <TableCell colSpan={8 + alternatives.length}>
+          <TableCell colSpan={10 + alternatives.length}>
             Unfavourable criteria
           </TableCell>
         </TableRow>
         {createUnfavourableCriteriaRows()}
         <TableRow>
-          <TableCell colSpan={8 + alternatives.length}>
+          <TableCell colSpan={10 + alternatives.length} align="center">
             <AddCriterionButton isFavourable={false} />
           </TableCell>
         </TableRow>
@@ -116,7 +116,7 @@ export default function CriteriaRows() {
       <TableBody>
         {createCriteriaRows()}
         <TableRow>
-          <TableCell colSpan={8 + alternatives.length}>
+          <TableCell colSpan={10 + alternatives.length} align="center">
             <AddCriterionButton isFavourable={false} />
           </TableCell>
         </TableRow>
