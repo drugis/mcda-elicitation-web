@@ -1,6 +1,6 @@
 import {Checkbox} from '@material-ui/core';
 import React, {useContext} from 'react';
-import {ManualInputContext} from '../../../ManualInputContext';
+import {ManualInputContext} from '../../ManualInputContext';
 
 export default function Favourability() {
   const {useFavourability, setUseFavourability} = useContext(

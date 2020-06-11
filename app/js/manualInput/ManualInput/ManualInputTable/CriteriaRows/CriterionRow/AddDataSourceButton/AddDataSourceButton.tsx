@@ -3,7 +3,6 @@ import AddBox from '@material-ui/icons/AddBox';
 import React, {useContext} from 'react';
 import ICriterion from '../../../../../../interface/ICriterion';
 import {ManualInputContext} from '../../../../../ManualInputContext';
-import {generateUuid} from '../../../../ManualInputService/ManualInputService';
 
 export default function AddDataSourceButton({
   criterion
@@ -13,12 +12,7 @@ export default function AddDataSourceButton({
   const {addDataSource} = useContext(ManualInputContext);
 
   function handleClick() {
-    addDataSource(criterion, {
-      id: generateUuid(),
-      title: 'new reference',
-      unitOfMeasurement: '',
-      uncertainty: ''
-    });
+    addDataSource(criterion);
   }
 
   return (

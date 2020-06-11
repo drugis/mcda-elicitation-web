@@ -5,8 +5,10 @@ import React, {useContext} from 'react';
 import ICriterion from '../../../../../../interface/ICriterion';
 import IDataSource from '../../../../../../interface/IDataSource';
 import {ManualInputContext} from '../../../../../ManualInputContext';
+import CriterionDescriptionCell from './CriterionDescriptionCell/CriterionDescriptionCell';
 import CriterionTitleCell from './CriterionTitleCell/CriterionTitleCell';
 import DeleteDataSourceButton from './DeleteDataSourceButton/DeleteDataSourceButton';
+import UnitOfMeasurementCell from './UnitOfMeasurementCell/UnitOfMeasurementCell';
 
 export default function DataSourceRow({
   criterion,
@@ -49,9 +51,7 @@ export default function DataSourceRow({
           </TableCell>
           <TableCell rowSpan={numberOfDataSourceRows}>mv</TableCell>
           <CriterionTitleCell criterion={criterion} />
-          <TableCell rowSpan={numberOfDataSourceRows}>
-            {criterion.description}
-          </TableCell>
+          <CriterionDescriptionCell criterion={criterion} />
         </>
       ) : (
         <></>
@@ -63,7 +63,7 @@ export default function DataSourceRow({
         />
       </TableCell>
       <TableCell>mv</TableCell>
-      <TableCell>{dataSource.unitOfMeasurement}</TableCell>
+      <UnitOfMeasurementCell dataSource={dataSource} />
       {createCells()}
       <TableCell></TableCell>
       <TableCell>{dataSource.uncertainty}</TableCell>

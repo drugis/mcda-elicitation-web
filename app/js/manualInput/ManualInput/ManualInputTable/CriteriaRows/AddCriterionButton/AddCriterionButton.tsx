@@ -2,7 +2,6 @@ import {IconButton, Tooltip} from '@material-ui/core';
 import AddBox from '@material-ui/icons/AddBox';
 import React, {useContext} from 'react';
 import {ManualInputContext} from '../../../../ManualInputContext';
-import {generateUuid} from '../../../ManualInputService/ManualInputService';
 
 export default function AddCriterionButton({
   isFavourable
@@ -12,20 +11,7 @@ export default function AddCriterionButton({
   const {addCriterion} = useContext(ManualInputContext);
 
   function handleClick() {
-    addCriterion({
-      id: generateUuid(),
-      title: 'new criterion',
-      description: '',
-      isFavourable: isFavourable,
-      dataSources: [
-        {
-          id: generateUuid(),
-          title: 'new reference',
-          uncertainty: '',
-          unitOfMeasurement: ''
-        }
-      ]
-    });
+    addCriterion(isFavourable);
   }
 
   return (

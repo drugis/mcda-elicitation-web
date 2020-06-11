@@ -3,7 +3,7 @@ import _ from 'lodash';
 import React, {useContext, useEffect} from 'react';
 import {ErrorContext} from '../../Error/ErrorContext';
 import {ManualInputContext} from '../ManualInputContext';
-import Favourability from './Criteria/Favourability/Favourability';
+import Favourability from './Favourability/Favourability';
 import ManualInputTable from './ManualInputTable/ManualInputTable';
 import TherapeuticContext from './TherapeuticContext/TherapeuticContext';
 import Title from './Title/Title';
