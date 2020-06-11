@@ -2,7 +2,7 @@
 define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], function(_, angular) {
   var generateUuidMock = jasmine.createSpy('generateUuid');
   var manualInputService;
-  var currentSchemaVersion = '1.4.3';
+  var currentSchemaVersion = '1.4.4';
   var inputKnowledgeServiceMock = jasmine.createSpyObj('InputKnowledgeService', [
     'getOptions'
   ]);
@@ -821,7 +821,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
                       scale: [0, 1],
                       unitOfMeasurement: {
                         type: 'decimal',
-                        label: 'Proportion'
+                        label: ''
                       }
                     }]
                   }
@@ -842,7 +842,7 @@ define(['lodash', 'angular', 'angular-mocks', 'mcda/manualInput/manualInput'], f
               }
             });
             baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.selectedOption.type = 'decimal';
-            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.value = 'Proportion';
+            baseExpectedResult.criteria[0].dataSources[0].unitOfMeasurement.value = '';
 
             var result = manualInputService.createStateFromOldWorkspace(workspace);
             var expectedResult = _.merge({}, baseExpectedResult, {

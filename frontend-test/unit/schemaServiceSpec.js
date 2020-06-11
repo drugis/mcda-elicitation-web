@@ -9,7 +9,7 @@ define([
   var generateUuidMock = function() {
     return 'uuid';
   };
-  var currentSchemaVersion = '1.4.3';
+  var currentSchemaVersion = '1.4.4';
   var schemaService;
 
   describe('The SchemaService', function() {
@@ -67,7 +67,7 @@ define([
         var result = schemaService.updateWorkspaceToCurrentSchema(workspace);
         var expectedResult = angular.copy(workspace);
         expectedResult.problem.criteria.c1.dataSources[0].unitOfMeasurement = { type: 'percentage', label: '%' };
-        expectedResult.problem.criteria.c2.dataSources[0].unitOfMeasurement = { type: 'decimal', label: 'Proportion' };
+        expectedResult.problem.criteria.c2.dataSources[0].unitOfMeasurement = { type: 'decimal', label: '' };
         expectedResult.problem.performanceTable[0].performance.distribution.value = 0.5;
         expectedResult.problem.performanceTable[0].performance.distribution.input = { value: 50, scale: 'percentage' };
         expectedResult.problem.schemaVersion = currentSchemaVersion;

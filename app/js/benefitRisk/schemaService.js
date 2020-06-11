@@ -1,17 +1,16 @@
 'use strict';
-define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
-
+define(['lodash', 'angular', 'ajv'], function (_, angular, Ajv) {
   var dependencies = [
     'currentSchemaVersion',
     'generateUuid',
     'getDataSourcesById'
   ];
-  var SchemaService = function(
+  var SchemaService = function (
     currentSchemaVersion,
     generateUuid,
     getDataSourcesById
   ) {
-    /***** Changes 
+    /***** Changes
      * 1.0.0 Introduction of data sources
      * 1.1.0 Removal of the value tree
      * 1.2.0 Allow effect cells to contain distribution and effect
@@ -28,6 +27,7 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
      * 1.4.1 Add ranges
      * 1.4.2 Add possibility to make constrained normal distributions
      * 1.4.3 Allow numbers on text cells
+     * 1.4.4 Set proportion, decimal unit of measurement to empty label
      * *****/
 
     function updateProblemToCurrentSchema(problem) {
@@ -44,7 +44,10 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
         newProblem = updateToVersion120(newProblem);
       }
 
-      if (newProblem.schemaVersion === '1.2.0' || newProblem.schemaVersion === '1.2.1') {
+      if (
+        newProblem.schemaVersion === '1.2.0' ||
+        newProblem.schemaVersion === '1.2.1'
+      ) {
         newProblem.schemaVersion = '1.2.2';
       }
 
@@ -84,6 +87,10 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
         newProblem.schemaVersion = '1.4.3';
       }
 
+      if (newProblem.schemaVersion === '1.4.3') {
+        newProblem = updateToVersion144(newProblem);
+      }
+
       if (newProblem.schemaVersion === currentSchemaVersion) {
         return newProblem;
       } else {
@@ -94,7 +101,9 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
     function updateWorkspaceToCurrentSchema(workspace) {
       var newWorkspace = angular.copy(workspace);
       try {
-        newWorkspace.problem = updateProblemToCurrentSchema(newWorkspace.problem);
+        newWorkspace.problem = updateProblemToCurrentSchema(
+          newWorkspace.problem
+        );
         return newWorkspace;
       } catch (error) {
         throw error;
@@ -165,7 +174,7 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
     }
 
     function movePerfomancesToDistribution(problem) {
-      return _.map(problem.performanceTable, function(entry) {
+      return _.map(problem.performanceTable, function (entry) {
         var newEntry = angular.copy(entry);
         newEntry.performance = {
           distribution: newEntry.performance
@@ -175,8 +184,10 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
     }
 
     function moveCriterionScaleToDataSource(problem) {
-      return _.mapValues(problem.criteria, function(criterion) {
-        criterion.dataSources = _.map(criterion.dataSources, function(dataSource) {
+      return _.mapValues(problem.criteria, function (criterion) {
+        criterion.dataSources = _.map(criterion.dataSources, function (
+          dataSource
+        ) {
           if (!dataSource.scale && criterion.scale) {
             dataSource.scale = criterion.scale;
           }
@@ -188,8 +199,10 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
     }
 
     function removeObsoletePropertiesFromDataSource(problem) {
-      return _.mapValues(problem.criteria, function(criterion) {
-        criterion.dataSources = _.map(criterion.dataSources, function(dataSource) {
+      return _.mapValues(problem.criteria, function (criterion) {
+        criterion.dataSources = _.map(criterion.dataSources, function (
+          dataSource
+        ) {
           delete dataSource.inputType;
           delete dataSource.inputMethod;
           delete dataSource.dataType;
@@ -202,25 +215,31 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
     }
 
     function putFavorabilityOnCriteria(problem) {
-      return _.mapValues(problem.criteria, function(criterion, criterionId) {
+      return _.mapValues(problem.criteria, function (criterion, criterionId) {
         var newCriterion = angular.copy(criterion);
         if (problem.valueTree.children[0].criteria) {
-          newCriterion.isFavorable = _.includes(problem.valueTree.children[0].criteria, criterionId);
+          newCriterion.isFavorable = _.includes(
+            problem.valueTree.children[0].criteria,
+            criterionId
+          );
         } else {
-          newCriterion.isFavorable = _.includes(_.flatten(_.map(problem.valueTree.children[0].children, 'criteria')));
+          newCriterion.isFavorable = _.includes(
+            _.flatten(_.map(problem.valueTree.children[0].children, 'criteria'))
+          );
         }
         return newCriterion;
       });
     }
 
     function createNewPerformanceTable(problem) {
-      return _.map(problem.performanceTable, function(tableEntry) {
+      return _.map(problem.performanceTable, function (tableEntry) {
         var newEntry = angular.copy(tableEntry);
         if (tableEntry.criterionUri) {
           newEntry.criterion = tableEntry.criterionUri;
           delete newEntry.criterionUri;
         }
-        newEntry.dataSource = problem.criteria[newEntry.criterion].dataSources[0].id;
+        newEntry.dataSource =
+          problem.criteria[newEntry.criterion].dataSources[0].id;
         return newEntry;
       });
     }
@@ -251,9 +270,11 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
     function updateToVersion130(problem) {
       var newProblem = angular.copy(problem);
-      newProblem.criteria = _.mapValues(problem.criteria, function(criterion) {
+      newProblem.criteria = _.mapValues(problem.criteria, function (criterion) {
         var newCriterion = angular.copy(criterion);
-        newCriterion.dataSources = _.map(criterion.dataSources, function(dataSource) {
+        newCriterion.dataSources = _.map(criterion.dataSources, function (
+          dataSource
+        ) {
           var newDataSource = angular.copy(dataSource);
           if (criterion.unitOfMeasurement !== undefined) {
             newDataSource.unitOfMeasurement = criterion.unitOfMeasurement;
@@ -269,9 +290,12 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
     function updateToVersion131(problem) {
       var newProblem = angular.copy(problem);
-      newProblem.criteria = _.mapValues(problem.criteria, function(criterion) {
+      newProblem.criteria = _.mapValues(problem.criteria, function (criterion) {
         var newCriterion = angular.copy(criterion);
-        if (criterion.isFavorable === undefined || criterion.isFavorable === null) {
+        if (
+          criterion.isFavorable === undefined ||
+          criterion.isFavorable === null
+        ) {
           delete newCriterion.isFavorable;
         }
         return newCriterion;
@@ -282,16 +306,22 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
     function updateToVersion132(problem) {
       var newProblem = angular.copy(problem);
-      newProblem.criteria = _.mapValues(problem.criteria, function(criterion) {
+      newProblem.criteria = _.mapValues(problem.criteria, function (criterion) {
         var newCriterion = angular.copy(criterion);
-        newCriterion.dataSources = _.map(criterion.dataSources, function(dataSource) {
+        newCriterion.dataSources = _.map(criterion.dataSources, function (
+          dataSource
+        ) {
           var properties = _.keys(dataSource);
-          var newDataSource = _.reduce(properties, function(accum, property) {
-            if (dataSource[property]) {
-              accum[property] = dataSource[property];
-            }
-            return accum;
-          }, {});
+          var newDataSource = _.reduce(
+            properties,
+            function (accum, property) {
+              if (dataSource[property]) {
+                accum[property] = dataSource[property];
+              }
+              return accum;
+            },
+            {}
+          );
           return newDataSource;
         });
         return newCriterion;
@@ -302,7 +332,9 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
     function updateToVersion133(problem) {
       var newProblem = angular.copy(problem);
-      newProblem.alternatives = _.mapValues(problem.alternatives, function(alternative) {
+      newProblem.alternatives = _.mapValues(problem.alternatives, function (
+        alternative
+      ) {
         return _.pick(alternative, ['title']);
       });
       newProblem.schemaVersion = '1.3.3';
@@ -311,13 +343,17 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
     function updateToVersion140(problem) {
       var newProblem = angular.copy(problem);
-      newProblem.criteria = _.mapValues(problem.criteria, function(criterion) {
+      newProblem.criteria = _.mapValues(problem.criteria, function (criterion) {
         var newCriterion = angular.copy(criterion);
-        newCriterion.dataSources = _.map(criterion.dataSources, function(dataSource) {
+        newCriterion.dataSources = _.map(criterion.dataSources, function (
+          dataSource
+        ) {
           var newDataSource = angular.copy(dataSource);
           newDataSource.unitOfMeasurement = {
             type: getUnitType(dataSource),
-            label: dataSource.unitOfMeasurement ? dataSource.unitOfMeasurement : ''
+            label: dataSource.unitOfMeasurement
+              ? dataSource.unitOfMeasurement
+              : ''
           };
           newDataSource.scale = getScale(dataSource.scale);
           return newDataSource;
@@ -332,7 +368,10 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
 
     function updatePerformanceTable140(problem) {
       var dataSources = getDataSourcesById(problem.criteria);
-      return _.map(problem.performanceTable, _.partial(getUpToDateEntry, dataSources));
+      return _.map(
+        problem.performanceTable,
+        _.partial(getUpToDateEntry, dataSources)
+      );
     }
 
     function getUpToDateEntry(dataSources, entry) {
@@ -341,23 +380,32 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
           value: entry.performance.distribution.value,
           scale: 'percentage'
         };
-        entry.performance.distribution.value = entry.performance.distribution.value / 100;
+        entry.performance.distribution.value =
+          entry.performance.distribution.value / 100;
       }
       return entry;
     }
 
     function doesEntryNeedUpdating(entry, dataSource) {
-      return entry.dataSource === dataSource.id &&
+      return (
+        entry.dataSource === dataSource.id &&
         dataSource.unitOfMeasurement.type === 'percentage' &&
         !entry.performance.effect &&
         entry.performance.distribution.type === 'exact' &&
-        !entry.performance.distribution.input;
+        !entry.performance.distribution.input
+      );
     }
 
     function getUnitType(dataSource) {
-      if (dataSource.unitOfMeasurement === '%' && _.isEqual(dataSource.scale, [0, 100])) {
+      if (
+        dataSource.unitOfMeasurement === '%' &&
+        _.isEqual(dataSource.scale, [0, 100])
+      ) {
         return 'percentage';
-      } else if (dataSource.unitOfMeasurement === 'Proportion' && _.isEqual(dataSource.scale, [0, 1])) {
+      } else if (
+        dataSource.unitOfMeasurement === 'Proportion' &&
+        _.isEqual(dataSource.scale, [0, 1])
+      ) {
         return 'decimal';
       } else {
         return 'custom';
@@ -370,6 +418,29 @@ define(['lodash', 'angular', 'ajv'], function(_, angular, Ajv) {
       } else {
         return [-Infinity, Infinity];
       }
+    }
+
+    function updateToVersion144(problem) {
+      var newProblem = angular.copy(problem);
+      newProblem.criteria = _.mapValues(newProblem.criteria, function (
+        criterion
+      ) {
+        var newCriterion = angular.copy(criterion);
+        newCriterion.dataSources = _.map(newCriterion.dataSources, function (
+          dataSource
+        ) {
+          if (dataSource.unitOfMeasurement.type === 'decimal') {
+            var newDataSource = angular.copy(dataSource);
+            newDataSource.unitOfMeasurement.label = '';
+            return newDataSource;
+          } else {
+            return dataSource;
+          }
+        });
+        return newCriterion;
+      });
+      newProblem.schemaVersion = '1.4.4';
+      return newProblem;
     }
 
     return {

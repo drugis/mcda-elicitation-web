@@ -23,7 +23,7 @@ define([], function() {
       decimal:{
       label: 'Proportion (decimal)',
       type: 'decimal',
-      defaultValue: 'Proportion',
+      defaultValue: '',
       defaultLowerBound: 0,
       defaultUpperBound: 1
     },

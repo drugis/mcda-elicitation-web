@@ -18,6 +18,7 @@ var WorkspaceRepository = require('./node-backend/workspaceRepository')(db);
 var WorkspaceRouter = require('./node-backend/workspaceRouter')(db);
 var InProgressRouter = require('./node-backend/inProgressRouter')(db);
 var OrderingRouter = require('./node-backend/orderingRouter')(db);
+var patavi = require('./node-backend/patavi');
 var SubProblemRouter = require('./node-backend/subProblemRouter')(db);
 var ScenarioRouter = require('./node-backend/scenarioRouter')(db);
 var WorkspaceSettingsRouter = require('./node-backend/workspaceSettingsRouter')(
@@ -55,8 +56,6 @@ StartupDiagnostics.runStartupDiagnostics((errorBody) => {
 });
 
 function initApp() {
-  var patavi = require('./node-backend/patavi');
-
   setRequiredRights();
   var sessionOptions = {
     store: new (require('connect-pg-simple')(session))({
@@ -88,14 +87,14 @@ function initApp() {
   }
   logger.info('Authentication method: ' + authenticationMethod);
 
-  app.get('/logout', function(request, response) {
+  app.get('/logout', function (request, response) {
     request.logout();
-    request.session.destroy(function(error) {
+    request.session.destroy(function (error) {
       response.redirect('/');
     });
   });
   app.use(csurf());
-  app.use(function(request, response, next) {
+  app.use(function (request, response, next) {
     response.cookie('XSRF-TOKEN', request.csrfToken());
     if (request.user) {
       response.cookie(
@@ -105,17 +104,17 @@ function initApp() {
     }
     next();
   });
-  app.get('/', function(request, response) {
+  app.get('/', function (request, response) {
     if (request.user || request.session.user) {
       response.sendFile(__dirname + '/dist/index.html');
     } else {
       response.sendFile(__dirname + '/dist/signin.html');
     }
   });
-  app.get('/lexicon.json', function(req, res) {
+  app.get('/lexicon.json', function (req, res) {
     res.sendFile(__dirname + '/app/lexicon.json');
   });
-  app.get('/mcda-page-titles.json', function(req, res) {
+  app.get('/mcda-page-titles.json', function (req, res) {
     res.sendFile(__dirname + '/app/mcda-page-titles.json');
   });
   app.use(express.static('dist'));
@@ -140,18 +139,18 @@ function initApp() {
   app.use(errorHandler);
 
   //The 404 Route (ALWAYS Keep this as the last route)
-  app.get('*', function(req, res) {
+  app.get('*', function (req, res) {
     res.status(httpStatus.NOT_FOUND).sendFile(__dirname + '/dist/error.html');
   });
 
-  startListening(function(port) {
+  startListening(function (port) {
     logger.info('Listening on http://localhost:' + port);
   });
 }
 
 function pataviHandler(request, response, next) {
   // FIXME: separate routes for scales and results
-  patavi.create(request.body, function(error, taskUri) {
+  patavi.create(request.body, function (error, taskUri) {
     if (error) {
       logger.error(error);
       return next({
@@ -171,7 +170,7 @@ function errorHandler(error, request, response, next) {
   logger.error(JSON.stringify(error.message, null, 2));
   if (error && error.type === signin.SIGNIN_ERROR) {
     response.status(httpStatus.UNAUTHORIZED).send('login failed');
-  } else if(error){
+  } else if (error) {
     response
       .status(
         error.status || error.statusCode || httpStatus.INTERNAL_SERVER_ERROR
@@ -183,14 +182,14 @@ function errorHandler(error, request, response, next) {
 }
 
 function initError(errorBody) {
-  app.get('*', function(request, response) {
+  app.get('*', function (request, response) {
     response
       .status(httpStatus.INTERNAL_SERVER_ERROR)
       .set('Content-Type', 'text/html')
       .send(errorBody);
   });
 
-  startListening(function(port) {
+  startListening(function (port) {
     logger.error('Access the diagnostics summary at http://localhost:' + port);
   });
 }
@@ -384,12 +383,12 @@ function rightsCallback(response, next, userId, error, result) {
 }
 
 function useSSLLogin() {
-  app.get('/signin', function(request, response) {
+  app.get('/signin', function (request, response) {
     var clientString = request.header('X-SSL-CLIENT-DN');
     var emailRegex = /emailAddress=([^,]*)/;
     var email = clientString.match(emailRegex)[1];
     if (email) {
-      signin.findUserByEmail(email, function(error, result) {
+      signin.findUserByEmail(email, function (error, result) {
         if (error) {
           logger.error(error);
         } else {

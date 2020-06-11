@@ -107,7 +107,7 @@ define([
             },
             scale: [0, 1],
             unitOfMeasurement: {
-              label: 'Proportion',
+              label: '',
               type: 'decimal'
             }
           }],
