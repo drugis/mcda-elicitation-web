@@ -1,6 +1,6 @@
 import {Grid, IconButton, TextField, Tooltip} from '@material-ui/core';
 import Edit from '@material-ui/icons/Edit';
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
 
 export default function InlineEditor({
   value,
@@ -25,7 +25,7 @@ export default function InlineEditor({
     setAreWeEditing(!areWeEditing);
   }
 
-  function handleKey(event: {keyCode: number}) {
+  function handleKey(event: KeyboardEvent<HTMLDivElement>): void {
     if (event.keyCode === 13) {
       callback(newValue);
       toggleEdit();

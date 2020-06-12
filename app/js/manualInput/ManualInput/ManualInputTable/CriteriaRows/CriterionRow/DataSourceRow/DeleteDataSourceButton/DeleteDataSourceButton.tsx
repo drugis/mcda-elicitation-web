@@ -1,41 +1,28 @@
 import {IconButton, Tooltip} from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
-import _ from 'lodash';
 import React, {useContext} from 'react';
-import ICriterion from '../../../../../../../interface/ICriterion';
 import {ManualInputContext} from '../../../../../../ManualInputContext';
 
 export default function DeleteDataSourceButton({
-  criterion,
+  criterionId,
   dataSourceId
 }: {
-  criterion: ICriterion;
+  criterionId: string;
   dataSourceId: string;
 }) {
-  const {setCriterion} = useContext(ManualInputContext);
+  const {deleteDataSource} = useContext(ManualInputContext);
 
   function handleDeleteDataSource() {
-    const dataSourcesCopy = _.reject(_.cloneDeep(criterion.dataSources), [
-      'id',
-      dataSourceId
-    ]);
-    setCriterion({...criterion, dataSources: dataSourcesCopy});
+    deleteDataSource(criterionId, dataSourceId);
   }
 
   return (
-    <Tooltip
-      title={
-        criterion.dataSources.length === 1
-          ? 'Cannot delete the only reference'
-          : 'Delete reference'
-      }
-    >
+    <Tooltip title="Delete reference">
       <span>
         <IconButton
           size="small"
           color="secondary"
           onClick={handleDeleteDataSource}
-          disabled={criterion.dataSources.length === 1}
         >
           <Delete />
         </IconButton>

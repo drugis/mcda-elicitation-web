@@ -1,85 +1,51 @@
 import {TableBody, TableCell, TableRow} from '@material-ui/core';
 import _ from 'lodash';
 import React, {useContext} from 'react';
+import ICriterion from '../../../../interface/ICriterion';
+import IDataSource from '../../../../interface/IDataSource';
 import {ManualInputContext} from '../../../ManualInputContext';
+import {DUMMY_ID} from '../../constants';
 import AddCriterionButton from './AddCriterionButton/AddCriterionButton';
-import AddDataSourceButton from './CriterionRow/AddDataSourceButton/AddDataSourceButton';
 import DataSourceRow from './CriterionRow/DataSourceRow/DataSourceRow';
 
 export default function CriteriaRows() {
   const {useFavourability, alternatives, criteria} = useContext(
     ManualInputContext
   );
-  const numberOfColumns = alternatives.length + 6;
 
-  function createFavourableCriteriaRows(): JSX.Element[][] {
-    return _(criteria)
-      .filter('isFavourable')
-      .map((criterion) => {
-        return _.map(criterion.dataSources, (dataSource, index) => {
-          return (
-            <DataSourceRow
-              key={dataSource.id}
-              criterion={criterion}
-              dataSource={dataSource}
-              isFirst={index === 0}
-              isLast={index === criterion.dataSources.length - 1}
-            />
-          );
-        }).concat(
-          <TableRow key={'lastRow'}>
-            <TableCell colSpan={numberOfColumns} align="center">
-              <AddDataSourceButton criterion={criterion} />
-            </TableCell>
-          </TableRow>
-        );
-      })
-      .value();
+  function createFavourableCriteriaRows(crits: ICriterion[]): JSX.Element[][] {
+    return createCriteriaRows(_.filter(crits, ['isFavourable', true]));
   }
 
-  function createUnfavourableCriteriaRows(): JSX.Element[][] {
-    return _(criteria)
-      .filter(['isFavourable', false])
-      .map((criterion) => {
-        return _.map(criterion.dataSources, (dataSource, index) => {
-          return (
-            <DataSourceRow
-              key={dataSource.id}
-              criterion={criterion}
-              dataSource={dataSource}
-              isFirst={index === 0}
-              isLast={index === criterion.dataSources.length - 1}
-            />
-          );
-        }).concat(
-          <TableRow key={'lastRow'}>
-            <TableCell colSpan={numberOfColumns} align="center">
-              <AddDataSourceButton criterion={criterion} />
-            </TableCell>
-          </TableRow>
-        );
-      })
-      .value();
+  function createUnfavourableCriteriaRows(
+    crits: ICriterion[]
+  ): JSX.Element[][] {
+    return createCriteriaRows(_.filter(crits, ['isFavourable', false]));
   }
 
-  function createCriteriaRows(): JSX.Element[][] {
-    return _.map(criteria, (criterion) => {
-      return _.map(criterion.dataSources, (dataSource, index) => {
-        return (
-          <DataSourceRow
-            key={dataSource.id}
-            criterion={criterion}
-            dataSource={dataSource}
-            isFirst={index === 0}
-            isLast={index === criterion.dataSources.length - 1}
-          />
-        );
-      }).concat(
-        <TableRow key={'lastRow'}>
-          <TableCell colSpan={numberOfColumns} align="center">
-            <AddDataSourceButton criterion={criterion} />
-          </TableCell>
-        </TableRow>
+  function createCriteriaRows(crits: ICriterion[]): JSX.Element[][] {
+    return _(crits).map(addDummyDataSource).map(buildDataSourceRows).value();
+  }
+
+  function addDummyDataSource(criterion: ICriterion): ICriterion {
+    return {
+      ...criterion,
+      dataSources: criterion.dataSources.concat({
+        id: DUMMY_ID
+      } as IDataSource)
+    };
+  }
+
+  function buildDataSourceRows(criterion: ICriterion) {
+    return _.map(criterion.dataSources, (dataSource, index) => {
+      return (
+        <DataSourceRow
+          key={dataSource.id}
+          criterion={criterion}
+          dataSource={dataSource}
+          isFirst={index === 0}
+          isLast={index === criterion.dataSources.length - 1}
+        />
       );
     });
   }
@@ -92,7 +58,7 @@ export default function CriteriaRows() {
             Favourable criteria
           </TableCell>
         </TableRow>
-        {createFavourableCriteriaRows()}
+        {createFavourableCriteriaRows(criteria)}
         <TableRow>
           <TableCell colSpan={10 + alternatives.length} align="center">
             <AddCriterionButton isFavourable={true} />
@@ -103,7 +69,7 @@ export default function CriteriaRows() {
             Unfavourable criteria
           </TableCell>
         </TableRow>
-        {createUnfavourableCriteriaRows()}
+        {createUnfavourableCriteriaRows(criteria)}
         <TableRow>
           <TableCell colSpan={10 + alternatives.length} align="center">
             <AddCriterionButton isFavourable={false} />
@@ -114,7 +80,7 @@ export default function CriteriaRows() {
   } else {
     return (
       <TableBody>
-        {createCriteriaRows()}
+        {createCriteriaRows(criteria)}
         <TableRow>
           <TableCell colSpan={10 + alternatives.length} align="center">
             <AddCriterionButton isFavourable={false} />

@@ -1,16 +1,16 @@
-import React, {useState, ChangeEvent, useEffect} from 'react';
 import {
+  Button,
   Dialog,
+  DialogActions,
   DialogContent,
   Grid,
-  Select,
   MenuItem,
-  TextField,
-  DialogActions,
-  Button
+  Select,
+  TextField
 } from '@material-ui/core';
-import DialogTitle from '../../../../../../../../DialogTitle/DialogTitle';
 import _ from 'lodash';
+import React, {ChangeEvent, KeyboardEvent, useEffect, useState} from 'react';
+import DialogTitle from '../../../../../../../../DialogTitle/DialogTitle';
 import IUnitOfMeasurement, {
   UnitOfMeasurementType
 } from '../../../../../../../../interface/IUnitOfMeasurement';
@@ -70,6 +70,14 @@ export default function UnitOfMeasurementDialog({
     setLabel(event.target.value);
   }
 
+  function handleKey(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.keyCode === 13) {
+      handleEditButtonClick();
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+
   function handleLowerBoundChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void {
@@ -120,6 +128,7 @@ export default function UnitOfMeasurementDialog({
             <TextField
               value={label}
               onChange={handleLabelChange}
+              onKeyDown={handleKey}
               disabled={unitType !== custom}
             />
           </Grid>

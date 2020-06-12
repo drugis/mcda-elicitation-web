@@ -13,10 +13,16 @@ export default interface IManualInputContext {
   setUseFavourability: (useFavourability: boolean) => void;
   addCriterion: (isFavourable: boolean) => void;
   addAlternative: () => void;
-  addDataSource: (criterion: ICriterion) => void;
+  addDefaultDataSource: (criterionId: string) => void;
+  deleteDataSource: (criteriondId: string, dataSourceId: string) => void;
   setCriterion: (criterion: ICriterion) => void;
+  setCriterionProperty: (
+    criterionId: string,
+    propertyName: string,
+    value: string
+  ) => void;
   setAlternative: (alternative: IAlternative) => void;
-  setDataSource: (criterion: ICriterion, dataSource: IDataSource) => void;
+  setDataSource: (criterionId: string, dataSource: IDataSource) => void;
   deleteCriterion: (criterionId: string) => void;
   deleteAlternative: (alternativeId: string) => void;
 }

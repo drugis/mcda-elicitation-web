@@ -18,18 +18,22 @@ export default function UnitOfMeasurementCell({
 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
-  function toggleDialog(): void {
-    setIsDialogOpen(!isDialogOpen);
+  function openDialog(): void {
+    setIsDialogOpen(true);
+  }
+
+  function closeDialog(): void {
+    setIsDialogOpen(false);
   }
 
   function handleUnitOfMeasurementChanged(
     newUnitOfMeasurement: IUnitOfMeasurement
   ): void {
-    setDataSource(criterion, {
+    closeDialog();
+    setDataSource(criterion.id, {
       ...dataSource,
       unitOfMeasurement: newUnitOfMeasurement
     });
-    toggleDialog();
   }
 
   return (
@@ -40,7 +44,7 @@ export default function UnitOfMeasurementCell({
         </Grid>
         <Grid item xs={2} style={{textAlign: 'right'}}>
           <Tooltip title="Edit unit of measurement">
-            <IconButton size="small" color="primary" onClick={toggleDialog}>
+            <IconButton size="small" color="primary" onClick={openDialog}>
               <Edit />
             </IconButton>
           </Tooltip>
@@ -51,7 +55,7 @@ export default function UnitOfMeasurementCell({
         unitOfMeasurement={dataSource.unitOfMeasurement}
         callback={handleUnitOfMeasurementChanged}
         isDialogOpen={isDialogOpen}
-        cancel={toggleDialog}
+        cancel={closeDialog}
       />
     </TableCell>
   );

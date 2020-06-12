@@ -9,10 +9,10 @@ export default function AddDataSourceButton({
 }: {
   criterion: ICriterion;
 }) {
-  const {addDataSource} = useContext(ManualInputContext);
+  const {addDefaultDataSource} = useContext(ManualInputContext);
 
   function handleClick() {
-    addDataSource(criterion);
+    addDefaultDataSource(criterion.id);
   }
 
   return (

@@ -9,11 +9,11 @@ export default function CriterionDescriptionCell({
 }: {
   criterion: ICriterion;
 }) {
-  const {setCriterion} = useContext(ManualInputContext);
-  const numberOfDataSourceRows = criterion.dataSources.length + 1;
+  const {setCriterionProperty} = useContext(ManualInputContext);
+  const numberOfDataSourceRows = criterion.dataSources.length;
 
   function handleDescriptionChanged(newDescription: string) {
-    setCriterion({...criterion, description: newDescription});
+    setCriterionProperty(criterion.id, 'description', newDescription);
   }
 
   return (

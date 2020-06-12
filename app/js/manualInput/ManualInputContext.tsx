@@ -84,6 +84,26 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     setCriteria([...criteria, newCriterion]);
   }
 
+  function setCriterionProperty(
+    criterionId: string,
+    propertyName: string,
+    value: string
+  ) {
+    let criteriaCopy = _.cloneDeep(criteria);
+    let criterion = _.find(criteriaCopy, ['id', criterionId]);
+    switch (propertyName) {
+      case 'title':
+        criterion.title = value;
+        break;
+      case 'description':
+        criterion.description = value;
+        break;
+      default:
+        throw 'unknown criterion property being updated: ' + propertyName;
+    }
+    setCriteria(criteriaCopy);
+  }
+
   function setCriterion(criterion: ICriterion) {
     const index = _.findIndex(criteria, ['id', criterion.id]);
     let criteriaCopy = _.cloneDeep(criteria);
@@ -99,7 +119,7 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     const newAlternative = {
       id: generateUuid(),
       title: 'new alternative'
-    }
+    };
     setAlternatives([...alternatives, newAlternative]);
   }
 
@@ -118,9 +138,9 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     setAlternatives(alternativesCopy);
   }
 
-  function addDataSource(criterion: ICriterion) {
-    const index = _.findIndex(criteria, ['id', criterion.id]);
+  function addDefaultDataSource(criterionId: string) {
     let criteriaCopy = _.cloneDeep(criteria);
+    let criterion = _.find(criteriaCopy, ['id', criterionId]);
     criterion.dataSources.push({
       id: generateUuid(),
       title: 'new reference',
@@ -128,15 +148,25 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
       uncertainty: 'unc',
       strengthOfEvidence: 'soe'
     });
-    criteriaCopy[index] = criterion;
     setCriteria(criteriaCopy);
   }
 
-  function setDataSource(criterion: ICriterion, dataSource: IDataSource) {
+  function deleteDataSource(criterionId: string, dataSourceId: string) {
+    let criteriaCopy = _.cloneDeep(criteria);
+    let criterion = _.find(criteriaCopy, ['id', criterionId]);
+    criterion.dataSources = _.reject(criterion.dataSources, [
+      'id',
+      dataSourceId
+    ]);
+    setCriteria(criteriaCopy);
+  }
+
+  function setDataSource(criterionId: string, dataSource: IDataSource) {
+    let criteriaCopy = _.cloneDeep(criteria);
+    let criterion = _.find(criteriaCopy, ['id', criterionId]);
     const index = _.findIndex(criterion.dataSources, ['id', dataSource.id]);
-    let criterionCopy = {...criterion};
-    criterionCopy.dataSources[index] = dataSource;
-    setCriterion(criterionCopy);
+    criterion.dataSources[index] = dataSource;
+    setCriteria(criteriaCopy);
   }
 
   return (
@@ -152,8 +182,10 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
         setUseFavourability: setUseFavourability,
         addCriterion: addCriterion,
         addAlternative: addAlternative,
-        addDataSource: addDataSource,
+        addDefaultDataSource: addDefaultDataSource,
+        deleteDataSource: deleteDataSource,
         setCriterion: setCriterion,
+        setCriterionProperty: setCriterionProperty,
         setAlternative: setAlternative,
         setDataSource: setDataSource,
         deleteCriterion: deleteCriterion,

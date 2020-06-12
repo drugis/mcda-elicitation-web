@@ -9,11 +9,11 @@ export default function CriterionTitleCell({
 }: {
   criterion: ICriterion;
 }) {
-  const {setCriterion} = useContext(ManualInputContext);
-  const numberOfDataSourceRows = criterion.dataSources.length + 1;
+  const {setCriterionProperty} = useContext(ManualInputContext);
+  const numberOfDataSourceRows = criterion.dataSources.length;
 
   function handleChange(newTitle: string) {
-    setCriterion({...criterion, title: newTitle});
+    setCriterionProperty(criterion.id, 'title', newTitle);
   }
 
   return (

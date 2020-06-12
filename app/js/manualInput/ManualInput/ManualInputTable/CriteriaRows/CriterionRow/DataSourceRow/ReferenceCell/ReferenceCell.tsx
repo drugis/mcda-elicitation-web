@@ -15,7 +15,7 @@ export default function ReferenceCell({
   const {setDataSource} = useContext(ManualInputContext);
 
   function handleChange(newTitle: string) {
-    setDataSource(criterion, {...dataSource, title: newTitle});
+    setDataSource(criterion.id, {...dataSource, title: newTitle});
   }
 
   return (

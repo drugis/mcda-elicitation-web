@@ -15,11 +15,11 @@ export default function SoEUncertaintyCell({
   const {setDataSource} = useContext(ManualInputContext);
 
   function handleSoEChange(newSoE: string) {
-    setDataSource(criterion, {...dataSource, strengthOfEvidence: newSoE});
+    setDataSource(criterion.id, {...dataSource, strengthOfEvidence: newSoE});
   }
 
   function handleUncertaintyChange(newUncertainty: string) {
-    setDataSource(criterion, {...dataSource, uncertainty: newUncertainty});
+    setDataSource(criterion.id, {...dataSource, uncertainty: newUncertainty});
   }
 
   return (
