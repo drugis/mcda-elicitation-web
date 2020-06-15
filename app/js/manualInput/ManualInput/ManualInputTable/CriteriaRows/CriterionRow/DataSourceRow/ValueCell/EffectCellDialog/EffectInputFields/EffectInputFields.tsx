@@ -1,6 +1,5 @@
-import React, {useContext, ChangeEvent} from 'react';
-import {effectType} from '../../../../../../../../../interface/IEffect';
-import {Input, Grid, TextField} from '@material-ui/core';
+import {Grid, Input, TextField} from '@material-ui/core';
+import React, {ChangeEvent, useContext} from 'react';
 import {DataSourceRowContext} from '../../../../DataSourceRowContext/DataSourceRowContext';
 import {EffectCellContext} from '../../EffectCellContext/EffectCellContext';
 
@@ -15,7 +14,9 @@ export default function EffectInputFields() {
     upperBound,
     setUpperBound,
     text,
-    setText
+    setText,
+    setIsEditDisabled,
+    validateInput
   } = useContext(EffectCellContext);
 
   function getInputFields() {
@@ -38,7 +39,7 @@ export default function EffectInputFields() {
           Effect value
         </Grid>
         <Grid item xs={6}>
-          <Input
+          <TextField
             value={value}
             type="number"
             onChange={valueChanged}
@@ -46,6 +47,8 @@ export default function EffectInputFields() {
               min: dataSource.unitOfMeasurement.lowerBound,
               max: dataSource.unitOfMeasurement.upperBound
             }}
+            error={!value && value !== 0}
+            helperText={!value && value !== 0 ? 'Please provide a value' : ''}
           />
         </Grid>
       </>
@@ -55,7 +58,13 @@ export default function EffectInputFields() {
   function valueChanged(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) {
-    setValue(Number.parseFloat(event.target.value));
+    if (!event.target.value && event.target.value !== '0') {
+      setIsEditDisabled(true);
+    } else {
+      setIsEditDisabled(false);
+      setValue(Number.parseFloat(event.target.value));
+    }
+    validateInput();
   }
 
   function getValueCIInput() {

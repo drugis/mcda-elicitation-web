@@ -1,8 +1,8 @@
-import React, {useContext, useState} from 'react';
 import {TableCell} from '@material-ui/core';
+import React, {MouseEvent, useContext, useState} from 'react';
 import {ManualInputContext} from '../../../../../../ManualInputContext';
+import {EffectCellContextProviderComponent} from './EffectCellContext/EffectCellContext';
 import EffectCellDialog from './EffectCellDialog/EffectCellDialog';
-import { EffectCellContextProviderComponent } from './EffectCellContext/EffectCellContext';
 
 export default function ValueCell() {
   const {} = useContext(ManualInputContext);
@@ -13,9 +13,12 @@ export default function ValueCell() {
     setIsDialogOpen(true);
   }
 
-  function closeDialog(): void {
+  function closeDialog(event: MouseEvent<HTMLAnchorElement, MouseEvent>): void {
+    event.preventDefault();
+    event.stopPropagation();
     setIsDialogOpen(false);
   }
+
   return (
     <TableCell onClick={openDialog}>
       <EffectCellContextProviderComponent>

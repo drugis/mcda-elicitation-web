@@ -7,11 +7,11 @@ import {
   MenuItem,
   Select
 } from '@material-ui/core';
-import React, {ChangeEvent, useState, useContext} from 'react';
+import React, {ChangeEvent, MouseEvent, useContext} from 'react';
 import DialogTitle from '../../../../../../../../DialogTitle/DialogTitle';
 import {Effect, effectType} from '../../../../../../../../interface/IEffect';
-import EffectInputFields from './EffectInputFields/EffectInputFields';
 import {EffectCellContext} from '../EffectCellContext/EffectCellContext';
+import EffectInputFields from './EffectInputFields/EffectInputFields';
 
 export default function EffectCellDialog({
   isDialogOpen,
@@ -20,14 +20,17 @@ export default function EffectCellDialog({
 }: {
   isDialogOpen: boolean;
   callback: (effectValue: Effect) => void;
-  cancel: () => void;
+  cancel: (event: MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }) {
-  const {inputType, setInputType} = useContext(EffectCellContext);
+  const {inputType, setInputType, isEditDisabled, validateInput} = useContext(
+    EffectCellContext
+  );
 
   function handleTypeChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void {
     setInputType(event.target.value as effectType);
+    validateInput();
   }
 
   function handleEditButtonClick(): void {
@@ -68,6 +71,7 @@ export default function EffectCellDialog({
               color="primary"
               onClick={handleEditButtonClick}
               variant="contained"
+              disabled={isEditDisabled}
             >
               Edit
             </Button>
