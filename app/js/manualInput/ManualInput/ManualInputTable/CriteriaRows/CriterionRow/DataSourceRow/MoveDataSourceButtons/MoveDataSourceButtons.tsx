@@ -10,17 +10,17 @@ export default function MoveDataSourceButtons() {
   const {swapDataSources} = useContext(ManualInputContext);
   const {
     criterion,
-    dataSourceId,
+    dataSource,
     previousDataSource,
     nextDataSource
   } = useContext(DataSourceRowContext);
 
   function moveUp() {
-    swapDataSources(criterion.id, dataSourceId, previousDataSource.id);
+    swapDataSources(criterion.id, dataSource.id, previousDataSource.id);
   }
 
   function moveDown() {
-    swapDataSources(criterion.id, dataSourceId, nextDataSource.id);
+    swapDataSources(criterion.id, dataSource.id, nextDataSource.id);
   }
 
   return (

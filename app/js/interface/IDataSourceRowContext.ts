@@ -3,7 +3,7 @@ import IDataSource from './IDataSource';
 
 export default interface IDataSourceRowContext {
   criterion: ICriterion;
-  dataSourceId: string;
+  dataSource: IDataSource;
   previousCriterion: ICriterion | undefined;
   nextCriterion: ICriterion | undefined;
   previousDataSource: IDataSource | undefined;

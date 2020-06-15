@@ -15,6 +15,7 @@ import MoveDataSourceButtons from './MoveDataSourceButtons/MoveDataSourceButtons
 import ReferenceCell from './ReferenceCell/ReferenceCell';
 import SoEUncertaintyCell from './SoEUncertaintyCell/SoEUncertaintyCell';
 import UnitOfMeasurementCell from './UnitOfMeasurementCell/UnitOfMeasurementCell';
+import ValueCell from './ValueCell/ValueCell';
 
 export default function DataSourceRow({
   dataSource,
@@ -38,7 +39,7 @@ export default function DataSourceRow({
 
   function createValueCells() {
     return _.map(alternatives, (alternative) => {
-      return <TableCell key={alternative.id}>0.01</TableCell>;
+      return <ValueCell key={alternative.id} />;
     });
   }
 

@@ -9,7 +9,7 @@ export const DataSourceRowContext = createContext<IDataSourceRowContext>(
 
 export function DataSourceRowContextProviderComponent({
   criterion,
-  dataSourceId,
+  dataSource,
   previousCriterion,
   nextCriterion,
   previousDataSource,
@@ -17,7 +17,7 @@ export function DataSourceRowContextProviderComponent({
   children
 }: {
   criterion: ICriterion;
-  dataSourceId: string;
+  dataSource: IDataSource;
   previousCriterion: ICriterion | undefined;
   nextCriterion: ICriterion | undefined;
   previousDataSource: IDataSource | undefined;
@@ -28,7 +28,7 @@ export function DataSourceRowContextProviderComponent({
     <DataSourceRowContext.Provider
       value={{
         criterion: criterion,
-        dataSourceId: dataSourceId,
+        dataSource: dataSource,
         previousCriterion: previousCriterion,
         nextCriterion: nextCriterion,
         previousDataSource: previousDataSource,

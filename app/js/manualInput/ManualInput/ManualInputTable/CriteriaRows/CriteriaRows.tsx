@@ -43,7 +43,7 @@ export default function CriteriaRows() {
         <DataSourceRowContextProviderComponent
           key={dataSource.id}
           criterion={criterion}
-          dataSourceId={dataSource.id}
+          dataSource={dataSource}
           nextCriterion={crits[criterionIndex + 1]}
           previousCriterion={crits[criterionIndex - 1]}
           previousDataSource={criterion.dataSources[dataSourceIndex - 1]}
