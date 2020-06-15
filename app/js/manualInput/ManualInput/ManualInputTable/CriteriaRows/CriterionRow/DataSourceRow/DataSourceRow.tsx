@@ -2,41 +2,39 @@ import {IconButton, TableCell, TableRow, Tooltip} from '@material-ui/core';
 import Delete from '@material-ui/icons/Delete';
 import _ from 'lodash';
 import React, {useContext} from 'react';
-import ICriterion from '../../../../../../interface/ICriterion';
 import IDataSource from '../../../../../../interface/IDataSource';
 import {ManualInputContext} from '../../../../../ManualInputContext';
 import {DUMMY_ID} from '../../../../constants';
 import AddDataSourceButton from '../AddDataSourceButton/AddDataSourceButton';
+import {DataSourceRowContext} from '../DataSourceRowContext/DataSourceRowContext';
+import MoveCriterionButtons from '../MoveCriterionButtons/MoveCriterionButtons';
 import CriterionDescriptionCell from './CriterionDescriptionCell/CriterionDescriptionCell';
 import CriterionTitleCell from './CriterionTitleCell/CriterionTitleCell';
 import DeleteDataSourceButton from './DeleteDataSourceButton/DeleteDataSourceButton';
+import MoveDataSourceButtons from './MoveDataSourceButtons/MoveDataSourceButtons';
 import ReferenceCell from './ReferenceCell/ReferenceCell';
 import SoEUncertaintyCell from './SoEUncertaintyCell/SoEUncertaintyCell';
 import UnitOfMeasurementCell from './UnitOfMeasurementCell/UnitOfMeasurementCell';
 
 export default function DataSourceRow({
-  criterion,
   dataSource,
-  isFirst,
-  isLast
+  isFirstRowForCriterion
 }: {
-  criterion: ICriterion;
   dataSource: IDataSource;
-  isFirst: boolean;
-  isLast: boolean;
+  isFirstRowForCriterion: boolean;
 }) {
+  const {criterion} = useContext(DataSourceRowContext);
   const {alternatives, deleteCriterion} = useContext(ManualInputContext);
   const numberOfColumns = alternatives.length + 6;
   const numberOfDataSourceRows = criterion.dataSources.length;
 
-  const dataSourceCells =
-    dataSource.id === DUMMY_ID ? (
-      <TableCell colSpan={numberOfColumns} align="center">
-        <AddDataSourceButton criterion={criterion} />
-      </TableCell>
-    ) : (
-      createDataSourceCells()
-    );
+  const dataSourceCells = dataSource.id.startsWith(DUMMY_ID) ? (
+    <TableCell colSpan={numberOfColumns} align="center">
+      <AddDataSourceButton criterion={criterion} />
+    </TableCell>
+  ) : (
+    createDataSourceCells()
+  );
 
   function createValueCells() {
     return _.map(alternatives, (alternative) => {
@@ -57,7 +55,9 @@ export default function DataSourceRow({
             dataSourceId={dataSource.id}
           />
         </TableCell>
-        <TableCell>mv</TableCell>
+        <TableCell>
+          <MoveDataSourceButtons />
+        </TableCell>
         <UnitOfMeasurementCell criterion={criterion} dataSource={dataSource} />
         {createValueCells()}
         <TableCell></TableCell>
@@ -69,7 +69,7 @@ export default function DataSourceRow({
 
   return (
     <TableRow>
-      {isFirst ? (
+      {isFirstRowForCriterion ? (
         <>
           <TableCell rowSpan={numberOfDataSourceRows} align={'center'}>
             <Tooltip title="Delete criterion">
@@ -82,7 +82,9 @@ export default function DataSourceRow({
               </IconButton>
             </Tooltip>
           </TableCell>
-          <TableCell rowSpan={numberOfDataSourceRows}>mv</TableCell>
+          <TableCell rowSpan={numberOfDataSourceRows}>
+            <MoveCriterionButtons />
+          </TableCell>
           <CriterionTitleCell criterion={criterion} />
           <CriterionDescriptionCell criterion={criterion} />
         </>

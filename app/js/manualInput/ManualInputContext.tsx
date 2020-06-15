@@ -104,6 +104,18 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     setCriteria(criteriaCopy);
   }
 
+  function swapCriteria(criterion1Id: string, criterion2Id: string): void {
+    const index1 = _.findIndex(criteria, ['id', criterion1Id]);
+    const index2 = _.findIndex(criteria, ['id', criterion2Id]);
+    let criteriaCopy = _.cloneDeep(criteria);
+    // ES6 swap trick below, don't even worry about it
+    [criteriaCopy[index1], criteriaCopy[index2]] = [
+      criteriaCopy[index2],
+      criteriaCopy[index1]
+    ];
+    setCriteria(criteriaCopy);
+  }
+
   function setCriterion(criterion: ICriterion) {
     const index = _.findIndex(criteria, ['id', criterion.id]);
     let criteriaCopy = _.cloneDeep(criteria);
@@ -169,6 +181,31 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     setCriteria(criteriaCopy);
   }
 
+  function swapDataSources(
+    criterionId: string,
+    dataSource1Id: string,
+    dataSource2Id: string
+  ): void {
+    let criteriaCopy = _.cloneDeep(criteria);
+    const criterion = _.find(criteriaCopy, ['id', criterionId]);
+    const dataSource1Index = _.findIndex(criterion.dataSources, [
+      'id',
+      dataSource1Id
+    ]);
+    const dataSource2Index = _.findIndex(criterion.dataSources, [
+      'id',
+      dataSource2Id
+    ]);
+    [
+      criterion.dataSources[dataSource1Index],
+      criterion.dataSources[dataSource2Index]
+    ] = [
+      criterion.dataSources[dataSource2Index],
+      criterion.dataSources[dataSource1Index]
+    ];
+    setCriteria(criteriaCopy);
+  }
+
   return (
     <ManualInputContext.Provider
       value={{
@@ -185,9 +222,11 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
         addDefaultDataSource: addDefaultDataSource,
         deleteDataSource: deleteDataSource,
         setCriterion: setCriterion,
+        swapCriteria: swapCriteria,
         setCriterionProperty: setCriterionProperty,
         setAlternative: setAlternative,
         setDataSource: setDataSource,
+        swapDataSources: swapDataSources,
         deleteCriterion: deleteCriterion,
         deleteAlternative: deleteAlternative
       }}

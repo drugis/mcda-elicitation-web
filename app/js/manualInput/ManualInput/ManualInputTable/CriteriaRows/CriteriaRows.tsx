@@ -7,45 +7,53 @@ import {ManualInputContext} from '../../../ManualInputContext';
 import {DUMMY_ID} from '../../constants';
 import AddCriterionButton from './AddCriterionButton/AddCriterionButton';
 import DataSourceRow from './CriterionRow/DataSourceRow/DataSourceRow';
+import {DataSourceRowContextProviderComponent} from './CriterionRow/DataSourceRowContext/DataSourceRowContext';
 
 export default function CriteriaRows() {
   const {useFavourability, alternatives, criteria} = useContext(
     ManualInputContext
   );
 
-  function createFavourableCriteriaRows(crits: ICriterion[]): JSX.Element[][] {
-    return createCriteriaRows(_.filter(crits, ['isFavourable', true]));
-  }
-
-  function createUnfavourableCriteriaRows(
-    crits: ICriterion[]
-  ): JSX.Element[][] {
-    return createCriteriaRows(_.filter(crits, ['isFavourable', false]));
-  }
+  const favourableCriteria = _.filter(criteria, ['isFavourable', true]);
+  const unfavourableCriteria = _.filter(criteria, ['isFavourable', false]);
 
   function createCriteriaRows(crits: ICriterion[]): JSX.Element[][] {
-    return _(crits).map(addDummyDataSource).map(buildDataSourceRows).value();
+    return _(crits)
+      .map(addDummyDataSource)
+      .map(_.partial(buildDataSourceRows, crits))
+      .value();
   }
 
   function addDummyDataSource(criterion: ICriterion): ICriterion {
     return {
       ...criterion,
       dataSources: criterion.dataSources.concat({
-        id: DUMMY_ID
+        id: DUMMY_ID + criterion.id
       } as IDataSource)
     };
   }
 
-  function buildDataSourceRows(criterion: ICriterion) {
-    return _.map(criterion.dataSources, (dataSource, index) => {
+  function buildDataSourceRows(
+    crits: ICriterion[],
+    criterion: ICriterion,
+    criterionIndex: number
+  ): JSX.Element[] {
+    return _.map(criterion.dataSources, (dataSource, dataSourceIndex) => {
       return (
-        <DataSourceRow
+        <DataSourceRowContextProviderComponent
           key={dataSource.id}
           criterion={criterion}
-          dataSource={dataSource}
-          isFirst={index === 0}
-          isLast={index === criterion.dataSources.length - 1}
-        />
+          dataSourceId={dataSource.id}
+          nextCriterion={crits[criterionIndex + 1]}
+          previousCriterion={crits[criterionIndex - 1]}
+          previousDataSource={criterion.dataSources[dataSourceIndex - 1]}
+          nextDataSource={criterion.dataSources[dataSourceIndex + 1]}
+        >
+          <DataSourceRow
+            dataSource={dataSource}
+            isFirstRowForCriterion={dataSourceIndex === 0}
+          />
+        </DataSourceRowContextProviderComponent>
       );
     });
   }
@@ -58,7 +66,7 @@ export default function CriteriaRows() {
             Favourable criteria
           </TableCell>
         </TableRow>
-        {createFavourableCriteriaRows(criteria)}
+        {createCriteriaRows(favourableCriteria)}
         <TableRow>
           <TableCell colSpan={10 + alternatives.length} align="center">
             <AddCriterionButton isFavourable={true} />
@@ -69,7 +77,7 @@ export default function CriteriaRows() {
             Unfavourable criteria
           </TableCell>
         </TableRow>
-        {createUnfavourableCriteriaRows(criteria)}
+        {createCriteriaRows(unfavourableCriteria)}
         <TableRow>
           <TableCell colSpan={10 + alternatives.length} align="center">
             <AddCriterionButton isFavourable={false} />

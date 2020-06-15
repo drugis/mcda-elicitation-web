@@ -1,17 +1,44 @@
-import {ButtonGroup, Tooltip} from '@material-ui/core';
+import {Button, ButtonGroup} from '@material-ui/core';
 import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUp from '@material-ui/icons/ArrowDropUp';
-import React from 'react';
+import React, {useContext} from 'react';
+import {ManualInputContext} from '../../../../../../ManualInputContext';
+import {DUMMY_ID} from '../../../../../constants';
+import {DataSourceRowContext} from '../../DataSourceRowContext/DataSourceRowContext';
 
 export default function MoveDataSourceButtons() {
+  const {swapDataSources} = useContext(ManualInputContext);
+  const {
+    criterion,
+    dataSourceId,
+    previousDataSource,
+    nextDataSource
+  } = useContext(DataSourceRowContext);
+
+  function moveUp() {
+    swapDataSources(criterion.id, dataSourceId, previousDataSource.id);
+  }
+
+  function moveDown() {
+    swapDataSources(criterion.id, dataSourceId, nextDataSource.id);
+  }
+
   return (
-    <ButtonGroup orientation="vertical" color="primary" size="small">
-      <Tooltip title="Move reference up">
+    <ButtonGroup
+      orientation="vertical"
+      color="primary"
+      variant="text"
+      size="small"
+    >
+      <Button disabled={!previousDataSource} onClick={moveUp}>
         <ArrowDropUp />
-      </Tooltip>
-      <Tooltip title="Move reference down">
+      </Button>
+      <Button
+        disabled={!nextDataSource || nextDataSource.id.startsWith(DUMMY_ID)}
+        onClick={moveDown}
+      >
         <ArrowDropDown />
-      </Tooltip>
+      </Button>
     </ButtonGroup>
   );
 }

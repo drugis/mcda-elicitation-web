@@ -1,17 +1,37 @@
-import {ButtonGroup, Tooltip} from '@material-ui/core';
+import {Button, ButtonGroup} from '@material-ui/core';
 import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUp from '@material-ui/icons/ArrowDropUp';
-import React from 'react';
+import React, {useContext} from 'react';
+import {ManualInputContext} from '../../../../../ManualInputContext';
+import {DataSourceRowContext} from '../DataSourceRowContext/DataSourceRowContext';
 
 export default function MoveCriterionButtons() {
+  const {swapCriteria} = useContext(ManualInputContext);
+  const {criterion, previousCriterion, nextCriterion} = useContext(
+    DataSourceRowContext
+  );
+
+  function moveUp() {
+    swapCriteria(criterion.id, previousCriterion.id);
+  }
+
+  function moveDown() {
+    swapCriteria(criterion.id, nextCriterion.id);
+  }
+
   return (
-    <ButtonGroup orientation="vertical" color="primary" size="small">
-      <Tooltip title="Move criterion up">
+    <ButtonGroup
+      orientation="vertical"
+      color="primary"
+      variant="text"
+      size="small"
+    >
+      <Button disabled={!previousCriterion} onClick={moveUp}>
         <ArrowDropUp />
-      </Tooltip>
-      <Tooltip title="Move criterion down">
+      </Button>
+      <Button disabled={!nextCriterion} onClick={moveDown}>
         <ArrowDropDown />
-      </Tooltip>
+      </Button>
     </ButtonGroup>
   );
 }
