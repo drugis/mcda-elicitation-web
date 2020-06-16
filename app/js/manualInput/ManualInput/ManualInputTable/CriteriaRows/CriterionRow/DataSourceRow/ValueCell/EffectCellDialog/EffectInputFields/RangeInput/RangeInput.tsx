@@ -5,8 +5,8 @@ import UpperBoundInput from '../UpperBoundInput/UpperBountInput';
 export default function RangeInput() {
   return (
     <>
-      <UpperBoundInput />
       <LowerBoundInput />
+      <UpperBoundInput />
     </>
   );
 }

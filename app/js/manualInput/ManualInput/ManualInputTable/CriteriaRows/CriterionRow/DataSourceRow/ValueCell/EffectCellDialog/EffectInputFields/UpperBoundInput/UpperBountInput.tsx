@@ -10,12 +10,12 @@ export default function UpperBoundInput() {
     upperBound,
     lowerBound,
     setUpperBound,
-    setIsEditDisabled,
+    setIsValidUpperBound,
     inputType
   } = useContext(EffectCellContext);
   const [inputError, setInputError] = useState<string>('');
 
-  useEffect(validateInput, [upperBound]);
+  useEffect(validateInput, [value, upperBound]);
 
   function valueChanged(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -27,28 +27,28 @@ export default function UpperBoundInput() {
     const parsedValue = Number.parseFloat(upperBound);
     if (isNaN(parsedValue)) {
       setInputError('Please provide a numeric input');
-      setIsEditDisabled(true);
+      setIsValidUpperBound(false);
     } else if (
       inputType === 'valueCI' &&
       (parsedValue < Number.parseFloat(value) ||
         parsedValue > dataSource.unitOfMeasurement.upperBound)
     ) {
       setInputError(
-        `Input out of bounds (${value}, ${dataSource.unitOfMeasurement.upperBound})`
+        `Input out of bounds [${value}, ${dataSource.unitOfMeasurement.upperBound}]`
       );
-      setIsEditDisabled(true);
+      setIsValidUpperBound(false);
     } else if (
       inputType === 'range' &&
       (parsedValue < Number.parseFloat(lowerBound) ||
         parsedValue > dataSource.unitOfMeasurement.upperBound)
     ) {
       setInputError(
-        `Input out of bounds (${lowerBound}, ${dataSource.unitOfMeasurement.upperBound})`
+        `Input out of bounds [${lowerBound}, ${dataSource.unitOfMeasurement.upperBound}]`
       );
-      setIsEditDisabled(true);
+      setIsValidUpperBound(false);
     } else {
       setInputError('');
-      setIsEditDisabled(false);
+      setIsValidUpperBound(true);
     }
   }
 

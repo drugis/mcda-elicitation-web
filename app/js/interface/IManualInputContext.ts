@@ -33,9 +33,14 @@ export default interface IManualInputContext {
   ) => void;
   deleteCriterion: (criterionId: string) => void;
   deleteAlternative: (alternativeId: string) => void;
-  getEffectValue: (
-    alternativeId: string,
-    dataSoureId: string,
-    criteironId: string
+  getEffect: (
+    criterionId: string,
+    dataSourceId: string,
+    alternativeId: string
   ) => Effect;
+  setEffect: (
+    effect: Effect,
+    dataSourceId: string,
+    alternativeId: string
+  ) => void;
 }

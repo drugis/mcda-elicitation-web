@@ -7,8 +7,8 @@ export default function ValueCIInput() {
   return (
     <>
       <ValueInput />
-      <UpperBoundInput />
       <LowerBoundInput />
+      <UpperBoundInput />
     </>
   );
 }

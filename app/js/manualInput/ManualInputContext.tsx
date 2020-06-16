@@ -6,7 +6,6 @@ import IDataSource from '../interface/IDataSource';
 import {Effect} from '../interface/IEffect';
 import IManualInputContext from '../interface/IManualInputContext';
 import {UnitOfMeasurementType} from '../interface/IUnitOfMeasurement';
-import IValueEffect from '../interface/IValueEffect';
 import {generateUuid} from './ManualInput/ManualInputService/ManualInputService';
 
 const defaultUnitOfMeasurement = {
@@ -68,7 +67,7 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
   );
   const [effectValues, setEffectValues] = useState<
     Record<string, Record<string, Effect>>
-  >();
+  >({});
 
   function addCriterion(isFavourable: boolean) {
     const newCriterion = {
@@ -211,10 +210,10 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     setCriteria(criteriaCopy);
   }
 
-  function getEffectValue(
+  function getEffect(
+    criterionId: string,
     dataSourceId: string,
-    alternativeId: string,
-    criterionId: string
+    alternativeId: string
   ): Effect {
     if (
       effectValues &&
@@ -223,15 +222,27 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     ) {
       return effectValues[dataSourceId][alternativeId];
     } else {
-      // create one, and return
       return {
         alternativeId: alternativeId,
         dataSourceId: dataSourceId,
         criterionId: criterionId,
         type: 'value',
         value: undefined
-      } as IValueEffect;
+      };
     }
+  }
+
+  function setEffect(
+    effect: Effect,
+    dataSourceId: string,
+    alternativeId: string
+  ): void {
+    let effectValuesCopy = _.cloneDeep(effectValues);
+    if (!effectValuesCopy[dataSourceId]) {
+      effectValuesCopy[dataSourceId] = {};
+    }
+    effectValuesCopy[dataSourceId][alternativeId] = effect;
+    setEffectValues(effectValuesCopy);
   }
 
   return (
@@ -258,7 +269,8 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
         swapDataSources: swapDataSources,
         deleteCriterion: deleteCriterion,
         deleteAlternative: deleteAlternative,
-        getEffectValue: getEffectValue
+        getEffect: getEffect,
+        setEffect: setEffect
       }}
     >
       {props.children}

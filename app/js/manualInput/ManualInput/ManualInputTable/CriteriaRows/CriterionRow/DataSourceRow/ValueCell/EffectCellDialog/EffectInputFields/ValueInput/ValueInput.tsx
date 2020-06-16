@@ -5,7 +5,7 @@ import {EffectCellContext} from '../../../EffectCellContext/EffectCellContext';
 
 export default function ValueInput() {
   const {dataSource} = useContext(DataSourceRowContext);
-  const {value, setValue, setIsEditDisabled} = useContext(EffectCellContext);
+  const {value, setValue, setIsValidValue} = useContext(EffectCellContext);
   const [inputError, setInputError] = useState<string>('');
 
   useEffect(validateInput, [value]);
@@ -20,18 +20,18 @@ export default function ValueInput() {
     const parsedValue = Number.parseFloat(value);
     if (isNaN(parsedValue)) {
       setInputError('Please provide a numeric input');
-      setIsEditDisabled(true);
+      setIsValidValue(false);
     } else if (
       parsedValue < dataSource.unitOfMeasurement.lowerBound ||
       parsedValue > dataSource.unitOfMeasurement.upperBound
     ) {
       setInputError(
-        `Input out of bounds (${dataSource.unitOfMeasurement.lowerBound}, ${dataSource.unitOfMeasurement.upperBound})`
+        `Input out of bounds [${dataSource.unitOfMeasurement.lowerBound}, ${dataSource.unitOfMeasurement.upperBound}]`
       );
-      setIsEditDisabled(true);
+      setIsValidValue(false);
     } else {
       setInputError('');
-      setIsEditDisabled(false);
+      setIsValidValue(true);
     }
   }
 

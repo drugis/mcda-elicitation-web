@@ -6,8 +6,10 @@ export const EffectCellContext = createContext<IEffectCellContext>(
   {} as IEffectCellContext
 );
 export function EffectCellContextProviderComponent({
+  alternativeId,
   children
 }: {
+  alternativeId: string;
   children: any;
 }) {
   const [inputType, setInputType] = useState<effectType>('value');
@@ -15,23 +17,30 @@ export function EffectCellContextProviderComponent({
   const [lowerBound, setLowerBound] = useState<string>('0');
   const [upperBound, setUpperBound] = useState<string>('0');
   const [text, setText] = useState<string>('');
-  const [isEditDisabled, setIsEditDisabled] = useState(false);
+  const [isValidValue, setIsValidValue] = useState(false);
+  const [isValidLowerBound, setIsValidLowerBound] = useState(false);
+  const [isValidUpperBound, setIsValidUpperBound] = useState(false);
 
   return (
     <EffectCellContext.Provider
       value={{
+        alternativeId: alternativeId,
         inputType: inputType,
         value: value,
+        isValidValue: isValidValue,
         lowerBound: lowerBound,
+        isValidLowerBound: isValidLowerBound,
         upperBound: upperBound,
+        isValidUpperBound: isValidUpperBound,
         text: text,
-        isEditDisabled: isEditDisabled,
         setInputType: setInputType,
         setValue: setValue,
+        setIsValidValue: setIsValidValue,
         setLowerBound: setLowerBound,
+        setIsValidLowerBound: setIsValidLowerBound,
         setUpperBound: setUpperBound,
-        setText: setText,
-        setIsEditDisabled: setIsEditDisabled
+        setIsValidUpperBound: setIsValidUpperBound,
+        setText: setText
       }}
     >
       {children}

@@ -1,15 +1,9 @@
 import {Grid, TextField} from '@material-ui/core';
-import React, {ChangeEvent, useContext, useEffect} from 'react';
+import React, {ChangeEvent, useContext} from 'react';
 import {EffectCellContext} from '../../../EffectCellContext/EffectCellContext';
 
 export default function TextInput() {
-  const {value, setValue, setIsEditDisabled} = useContext(EffectCellContext);
-
-  useEffect(validateInput, [value]);
-
-  function validateInput() {
-    setIsEditDisabled(false);
-  }
+  const {value, setValue} = useContext(EffectCellContext);
 
   function handleTextChanged(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

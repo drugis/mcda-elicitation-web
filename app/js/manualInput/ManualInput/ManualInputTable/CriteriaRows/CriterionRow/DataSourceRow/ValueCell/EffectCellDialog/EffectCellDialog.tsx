@@ -10,6 +10,12 @@ import {
 import React, {ChangeEvent, MouseEvent, useContext} from 'react';
 import DialogTitle from '../../../../../../../../DialogTitle/DialogTitle';
 import {Effect, effectType} from '../../../../../../../../interface/IEffect';
+import IEmptyEffect from '../../../../../../../../interface/IEmptyEffect';
+import IRangeEffect from '../../../../../../../../interface/IRangeEffect';
+import ITextEffect from '../../../../../../../../interface/ITextEffect';
+import IValueCIEffect from '../../../../../../../../interface/IValueCIEffect';
+import IValueEffect from '../../../../../../../../interface/IValueEffect';
+import {DataSourceRowContext} from '../../../DataSourceRowContext/DataSourceRowContext';
 import {EffectCellContext} from '../EffectCellContext/EffectCellContext';
 import EffectInputFields from './EffectInputFields/EffectInputFields';
 
@@ -22,9 +28,18 @@ export default function EffectCellDialog({
   callback: (effectValue: Effect) => void;
   cancel: (event: MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }) {
-  const {inputType, setInputType, isEditDisabled} = useContext(
-    EffectCellContext
-  );
+  const {
+    alternativeId,
+    inputType,
+    setInputType,
+    value,
+    isValidValue,
+    lowerBound,
+    isValidLowerBound,
+    upperBound,
+    isValidUpperBound
+  } = useContext(EffectCellContext);
+  const {criterion, dataSource} = useContext(DataSourceRowContext);
 
   function handleTypeChange(
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -33,8 +48,61 @@ export default function EffectCellDialog({
   }
 
   function handleEditButtonClick(): void {
-    const newEffectValue = {} as Effect;
-    callback(newEffectValue);
+    let newEffectValue = {
+      type: inputType,
+      criterionId: criterion.id,
+      dataSourceId: dataSource.id,
+      alternativeId: alternativeId
+    };
+    switch (inputType) {
+      case 'value':
+        callback({
+          ...newEffectValue,
+          value: Number.parseFloat(value)
+        } as IValueEffect);
+        break;
+      case 'valueCI':
+        callback({
+          ...newEffectValue,
+          value: Number.parseFloat(value),
+          lowerBound: Number.parseFloat(lowerBound),
+          upperBound: Number.parseFloat(upperBound)
+        } as IValueCIEffect);
+        break;
+      case 'range':
+        callback({
+          ...newEffectValue,
+          lowerBound: Number.parseFloat(lowerBound),
+          upperBound: Number.parseFloat(upperBound)
+        } as IRangeEffect);
+        break;
+      case 'text':
+        callback({
+          ...newEffectValue,
+          value: value
+        } as ITextEffect);
+        break;
+      case 'empty':
+        callback(newEffectValue as IEmptyEffect);
+        break;
+      default:
+        throw `unknown input type ${inputType}`;
+    }
+  }
+
+  function isInputInvalid(): boolean {
+    switch (inputType) {
+      case 'value':
+        return !isValidValue;
+      case 'valueCI':
+        return !isValidValue || !isValidLowerBound || !isValidUpperBound;
+      case 'range':
+        return !isValidLowerBound || !isValidUpperBound;
+      case 'text':
+        return false;
+      case 'empty':
+        return false;
+    }
   }
 
   return (
@@ -70,7 +138,7 @@ export default function EffectCellDialog({
               color="primary"
               onClick={handleEditButtonClick}
               variant="contained"
-              disabled={isEditDisabled}
+              disabled={isInputInvalid()}
             >
               Edit
             </Button>
