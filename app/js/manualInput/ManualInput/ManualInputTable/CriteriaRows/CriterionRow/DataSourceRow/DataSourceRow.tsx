@@ -39,7 +39,7 @@ export default function DataSourceRow({
 
   function createValueCells() {
     return _.map(alternatives, (alternative) => {
-      return <ValueCell key={alternative.id} />;
+      return <ValueCell key={alternative.id} alternativeId={alternative.id} />;
     });
   }
 
@@ -56,7 +56,7 @@ export default function DataSourceRow({
             dataSourceId={dataSource.id}
           />
         </TableCell>
-        <TableCell>
+        <TableCell align={'center'}>
           <MoveDataSourceButtons />
         </TableCell>
         <UnitOfMeasurementCell criterion={criterion} dataSource={dataSource} />
@@ -83,7 +83,7 @@ export default function DataSourceRow({
               </IconButton>
             </Tooltip>
           </TableCell>
-          <TableCell rowSpan={numberOfDataSourceRows}>
+          <TableCell rowSpan={numberOfDataSourceRows} align="center">
             <MoveCriterionButtons />
           </TableCell>
           <CriterionTitleCell criterion={criterion} />

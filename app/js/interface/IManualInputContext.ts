@@ -1,6 +1,7 @@
 import IAlternative from './IAlternative';
 import ICriterion from './ICriterion';
 import IDataSource from './IDataSource';
+import {Effect} from './IEffect';
 
 export default interface IManualInputContext {
   title: string;
@@ -8,6 +9,7 @@ export default interface IManualInputContext {
   useFavourability: boolean;
   criteria: ICriterion[];
   alternatives: IAlternative[];
+  effectValues: Record<string, Record<string, Effect>>;
   setTitle: (title: string) => void;
   setTherapeuticContext: (therapeuticContext: string) => void;
   setUseFavourability: (useFavourability: boolean) => void;
@@ -31,4 +33,9 @@ export default interface IManualInputContext {
   ) => void;
   deleteCriterion: (criterionId: string) => void;
   deleteAlternative: (alternativeId: string) => void;
+  getEffectValue: (
+    alternativeId: string,
+    dataSoureId: string,
+    criteironId: string
+  ) => Effect;
 }

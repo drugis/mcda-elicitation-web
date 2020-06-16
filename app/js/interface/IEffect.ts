@@ -1,8 +1,8 @@
-import IValueEffect from './IValueEffect';
-import IValueCIEffect from './IValueCIEffect';
+import IEmptyEffect from './IEmptyEffect';
 import IRangeEffect from './IRangeEffect';
 import ITextEffect from './ITextEffect';
-import IEmptyEffect from './IEmptyEffect';
+import IValueCIEffect from './IValueCIEffect';
+import IValueEffect from './IValueEffect';
 export type Effect =
   | IValueEffect
   | IValueCIEffect
@@ -10,10 +10,7 @@ export type Effect =
   | ITextEffect
   | IEmptyEffect;
 
-export type effectType = 'value' | 'valueCI' | 'range' | 'empty' | 'text';
-
 export default interface IEffect {
-  type: effectType;
   alternativeId: string;
   dataSourceId: string;
   criterionId: string;

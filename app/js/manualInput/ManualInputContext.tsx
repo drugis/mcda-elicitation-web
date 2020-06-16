@@ -3,8 +3,10 @@ import React, {createContext, useState} from 'react';
 import IAlternative from '../interface/IAlternative';
 import ICriterion from '../interface/ICriterion';
 import IDataSource from '../interface/IDataSource';
+import {Effect} from '../interface/IEffect';
 import IManualInputContext from '../interface/IManualInputContext';
 import {UnitOfMeasurementType} from '../interface/IUnitOfMeasurement';
+import IValueEffect from '../interface/IValueEffect';
 import {generateUuid} from './ManualInput/ManualInputService/ManualInputService';
 
 const defaultUnitOfMeasurement = {
@@ -64,6 +66,9 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
   const [alternatives, setAlternatives] = useState<IAlternative[]>(
     placeholderAlternatives
   );
+  const [effectValues, setEffectValues] = useState<
+    Record<string, Record<string, Effect>>
+  >();
 
   function addCriterion(isFavourable: boolean) {
     const newCriterion = {
@@ -206,6 +211,29 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
     setCriteria(criteriaCopy);
   }
 
+  function getEffectValue(
+    dataSourceId: string,
+    alternativeId: string,
+    criterionId: string
+  ): Effect {
+    if (
+      effectValues &&
+      effectValues[dataSourceId] &&
+      effectValues[dataSourceId][alternativeId]
+    ) {
+      return effectValues[dataSourceId][alternativeId];
+    } else {
+      // create one, and return
+      return {
+        alternativeId: alternativeId,
+        dataSourceId: dataSourceId,
+        criterionId: criterionId,
+        type: 'value',
+        value: undefined
+      } as IValueEffect;
+    }
+  }
+
   return (
     <ManualInputContext.Provider
       value={{
@@ -214,6 +242,7 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
         useFavourability: useFavourability,
         criteria: criteria,
         alternatives: alternatives,
+        effectValues: effectValues,
         setTitle: setTitle,
         setTherapeuticContext: setTherapeuticContext,
         setUseFavourability: setUseFavourability,
@@ -228,7 +257,8 @@ export function ManualInputContextProviderComponent(props: {children: any}) {
         setDataSource: setDataSource,
         swapDataSources: swapDataSources,
         deleteCriterion: deleteCriterion,
-        deleteAlternative: deleteAlternative
+        deleteAlternative: deleteAlternative,
+        getEffectValue: getEffectValue
       }}
     >
       {props.children}
