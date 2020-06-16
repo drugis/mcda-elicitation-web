@@ -11,28 +11,11 @@ export function EffectCellContextProviderComponent({
   children: any;
 }) {
   const [inputType, setInputType] = useState<effectType>('value');
-  const [value, setValue] = useState<number>(0);
-  const [lowerBound, setLowerBound] = useState<number>(0);
-  const [upperBound, setUpperBound] = useState<number>(0);
+  const [value, setValue] = useState<string>('0');
+  const [lowerBound, setLowerBound] = useState<string>('0');
+  const [upperBound, setUpperBound] = useState<string>('0');
   const [text, setText] = useState<string>('');
   const [isEditDisabled, setIsEditDisabled] = useState(false);
-
-  function validateInput() {
-    setIsEditDisabled(false);
-    switch (inputType) {
-      case 'value':
-        if (!value && value !== 0) {
-          setIsEditDisabled(true);
-        }
-        break;
-      case 'valueCI':
-        break;
-      case 'range':
-        break;
-      case 'text':
-        break;
-    }
-  }
 
   return (
     <EffectCellContext.Provider
@@ -48,8 +31,7 @@ export function EffectCellContextProviderComponent({
         setLowerBound: setLowerBound,
         setUpperBound: setUpperBound,
         setText: setText,
-        setIsEditDisabled: setIsEditDisabled,
-        validateInput: validateInput
+        setIsEditDisabled: setIsEditDisabled
       }}
     >
       {children}

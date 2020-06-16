@@ -2,16 +2,15 @@ import {effectType} from './IEffect';
 
 export default interface IEffectCellContext {
   inputType: effectType;
-  value: number;
-  lowerBound: number;
-  upperBound: number;
+  value: string;
+  lowerBound: string;
+  upperBound: string;
   text: string;
   isEditDisabled: boolean;
   setInputType: (inputType: effectType) => void;
-  setValue: (value: number) => void;
-  setLowerBound: (lowerBound: number) => void;
-  setUpperBound: (upperBound: number) => void;
+  setValue: (value: string) => void;
+  setLowerBound: (lowerBound: string) => void;
+  setUpperBound: (upperBound: string) => void;
   setText: (text: string) => void;
   setIsEditDisabled: (isEditDisabled: boolean) => void;
-  validateInput: () => void;
 }

@@ -22,7 +22,7 @@ export default function EffectCellDialog({
   callback: (effectValue: Effect) => void;
   cancel: (event: MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }) {
-  const {inputType, setInputType, isEditDisabled, validateInput} = useContext(
+  const {inputType, setInputType, isEditDisabled} = useContext(
     EffectCellContext
   );
 
@@ -30,7 +30,6 @@ export default function EffectCellDialog({
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void {
     setInputType(event.target.value as effectType);
-    validateInput();
   }
 
   function handleEditButtonClick(): void {
