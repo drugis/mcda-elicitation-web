@@ -10,6 +10,8 @@ export type Effect =
   | ITextEffect
   | IEmptyEffect;
 
+export type effectType = 'value' | 'valueCI' | 'range' | 'empty' | 'text';
+
 export default interface IEffect {
   alternativeId: string;
   dataSourceId: string;
